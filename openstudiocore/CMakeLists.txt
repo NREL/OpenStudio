@@ -72,10 +72,14 @@ OPTION( ENABLE_TEST_RUNNER_TARGETS "Create test runner targets" OFF )
 OPTION( BUILD_WITH_OPENSSL "Build With OpenSSL Support For SSH Connections" ON )
 
 # Build SimXML
+# DLM: I think this is deprecated, can we remove it?
 OPTION( BUILD_SIMXML "Build with SimXml support" OFF )
 
 # Build SDD
 OPTION( BUILD_SDD "Build with SDD support" ON )
+
+# Build CONTAM
+OPTION( BUILD_CONTAM "Build with CONTAM support" OFF )
 
 # Build with Dakota support
 OPTION( BUILD_WITH_DAKOTA "Build with Dakota algorithm library support" OFF )
@@ -145,6 +149,10 @@ SET( project_directories
 IF( BUILD_SDD )
   LIST(APPEND project_directories sdd)
 ENDIF( BUILD_SDD ) 
+
+IF( BUILD_CONTAM )
+  LIST(APPEND project_directories contam)
+ENDIF( BUILD_CONTAM ) 
 
 ###############################################################################
 
