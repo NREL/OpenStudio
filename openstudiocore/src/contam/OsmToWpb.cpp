@@ -19,7 +19,7 @@
 
 #include <contam/ForwardTranslator.hpp>
 #include <model/Model.hpp>
-
+#include <osversion/VersionTranslator.hpp>
 #include <utilities/core/CommandLine.hpp>
 #include <utilities/core/Path.hpp>
 
@@ -64,7 +64,8 @@ int main(int argc, char *argv[]) {
   }
   if (vm.count("inputPath")) {
     openstudio::path inputPath = openstudio::toPath(inputPathString);
-    boost::optional<openstudio::model::Model> model = openstudio::model::Model::load(inputPath);
+    openstudio::osversion::VersionTranslator vt;
+    boost::optional<openstudio::model::Model> model = vt.loadModel(inputPath);
     
     if(!model) {
       std::cout << "Unable to load file '"<< inputPathString << "' as an OpenStudio model." 

@@ -47,18 +47,18 @@ ENDIF()
 #MAKE_SWIG_TARGET( OpenStudioContam Contam "${CMAKE_CURRENT_SOURCE_DIR}/Contam.i" "${${target_name}_swig_src}" ${target_name} "${target_name}" )
 
 add_executable(OsmToPrj OsmToPrj.cpp)
-#AddPCH(gbXMLToIdf)
 
 TARGET_LINK_LIBRARIES( OsmToPrj
   ${${target_name}_depends}
+  openstudio_osversion
   openstudio_contam
 )
 
 add_executable(OsmToWpb OsmToWpb.cpp)
-#AddPCH(gbXMLToIdf)
 
 TARGET_LINK_LIBRARIES( OsmToWpb
   ${${target_name}_depends}
+  openstudio_osversion
   openstudio_contam
 )
 
