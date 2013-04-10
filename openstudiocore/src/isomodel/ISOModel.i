@@ -6,6 +6,7 @@
 #endif
 
 #define UTILITIES_API
+#define ISOMODEL_API
 
 %include <utilities/core/CommonInclude.i>
 %import <utilities/core/CommonImport.i>
@@ -21,6 +22,7 @@
   using namespace openstudio;
   
   #include <model/Model.hpp>
+  #include <utilities/data/EndUses.hpp>
 %}
 
 // #ifdef SWIGCSHARP
