@@ -19,6 +19,8 @@
 
 #include <isomodel/SimModel.hpp>
 
+#include <utilities/data/EndUses.hpp>
+
 namespace openstudio {
 namespace isomodel {
 
@@ -28,6 +30,11 @@ namespace isomodel {
 
   SimModel::~SimModel()
   {
+  }
+
+  EndUses SimModel::simulate() const
+  {
+    return EndUses();
   }
 
 } // isomodel

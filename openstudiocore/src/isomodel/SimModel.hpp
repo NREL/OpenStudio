@@ -26,6 +26,8 @@
 
 namespace openstudio {
 
+  class EndUses;
+
 namespace isomodel {
 
   class ISOMODEL_API SimModel {
@@ -34,6 +36,8 @@ namespace isomodel {
     SimModel();
 
     virtual ~SimModel();
+
+    EndUses simulate() const;
   
   private:
 
