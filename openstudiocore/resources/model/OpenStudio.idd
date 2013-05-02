@@ -10915,7 +10915,280 @@ OS:ZoneHVAC:FourPipeFanCoil,
         \type real
         \minimum> 0.0
         \default 0.001       
+        
+OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
+        \min-fields 10
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name
+       \required-field
+   A3 , \field Availability Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A4 , \field Zone Name
+        \note Name of zone system is serving
+        \type object-list
+        \object-list ThermalZoneNames
+   A5 , \field Low Temp Radiant Variable Flow Heating Coil Name
+        \type object-List
+        \required-field 
+        \object-list CoilHeatingLowTemRadiantVariableFlow
+   A6 , \field Low Temp Radiant Variable Flow Cooling Coil Name
+        \type object-List
+        \required-field
+        \object-list CoilCoolingLowTempRadiantVariableFlow    
+   A7 , \field Surface Name or Radiant Surface Group Name
+       \note Identifies surfaces that radiant system is embedded in.
+       \note For a system with multiple surfaces, enter the name of
+       \note a ZoneHVAC:LowTemperatureRadiant:SurfaceGroup object.
+       \type object-list
+       \object-list RadGroupAndSurfNames
+   N1 , \field Hydronic Tubing Inside Diameter
+        \units m
+        \minimum> 0
+        \default 0.013
+        \ip-units in
+   N2 , \field Hydronic Tubing Length
+        \note (total length of pipe embedded in surface)
+        \units m
+        \minimum> 0
+        \autosizable
+        \default autosize
+   A8 ; \field Temperature Control Type
+        \note (Temperature on which unit is controlled)
+        \type choice
+        \key MeanAirTemperature
+        \key MeanRadiantTemperature
+        \key OperativeTemperature
+        \key OutdoorDryBulbTemperature
+        \key OutdoorWetBulbTemperature
+        \default MeanAirTemperature       
+        
+OS:Coil:Heating:LowTemperatureRadiant:VariableFlow,
+        \min-fields 7
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name
+        \required-field
+        \reference CoilHeatingLowTempRadiantVariableFlow
+        \reference ConnectionObject
+   N1 , \field Maximum Hot Water Flow
+        \units m3/s
+        \minimum 0
+        \autosizable
+        \ip-units gal/min
+        \default autosize
+   A3 , \field Heating Water Inlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A4 , \field Heating Water Outlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   N2 , \field Heating Control Throttling Range
+        \units deltaC
+        \minimum 0.5
+        \default 0.5
+   A5 ; \field Heating Control Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        
+OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow,  
+        \min-fields 7
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name
+        \required-field
+        \reference CoilCoolingLowTempRadiantVariableFlow
+        \reference ConnectionObject        
+   N1 , \field Maximum Cold Water Flow
+        \units m3/s
+        \minimum 0
+        \autosizable
+        \ip-units gal/min
+        \default autosize        
+   A3 , \field Cooling Water Inlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A4, \field Cooling Water Outlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   N2 , \field Cooling Control Throttling Range
+        \units deltaC
+        \minimum 0.5
+        \default 0.5
+   A5, \field Cooling Control Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A6, \field Condensation Control Type
+        \type choice
+        \key Off
+        \key SimpleOff
+        \key VariableOff
+        \default SimpleOff
+   N3 ; \field Condensation Control Dewpoint Offset
+        \units C
+        \default 1.0
 
+OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
+        \min-fields 16
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name
+        \required-field
+   A3 , \field Availability Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A4 , \field Zone Name
+        \note Name of zone system is serving
+        \type object-list
+        \object-list ThermalZoneNames
+   A5 , \field Surface Name or Radiant Surface Group Name
+        \note Identifies surfaces that radiant system is embedded in.
+        \note For a system with multiple surfaces, enter the name of
+        \note a ZoneHVAC:LowTemperatureRadiant:SurfaceGroup object.
+        \type object-list
+        \object-list RadGroupAndSurfNames
+   N1 , \field Hydronic Tubing Inside Diameter
+        \units m
+        \minimum> 0
+        \default 0.013
+   N2 , \field Hydronic Tubing Length
+        \note Total length of pipe embedded in surface
+        \units m
+        \minimum> 0
+   A6 , \field Temperature Control Type
+        \note Temperature used to control system
+        \type choice
+        \key MeanAirTemperature
+        \key MeanRadiantTemperature
+        \key OperativeTemperature
+        \key OutdoorDryBulbTemperature
+        \key OutdoorWetBulbTemperature
+        \default MeanAirTemperature
+   A7 , \field Low Temp Radiant Constant Flow Heating Coil Name
+        \type object-List
+        \required-field 
+        \object-list CoilHeatingLowTemRadiantConstantFlow
+   A8 , \field Low Temp Radiant Constant Flow Cooling Coil Name
+        \type object-List
+        \required-field 
+        \object-list CoilCoolingLowTempRadiantConstantFlow    
+   N3 , \field Rated Flow Rate
+        \units m3/s
+   A9 , \field Pump Flow Rate Schedule Name
+        \note Modifies the Rated Flow Rate of the pump on a time basis
+        \note the default is that the pump is ON and runs according to its other
+        \note operational requirements specified above.  The schedule is for special
+        \note pump operations. Values here are between 0 and 1 and are multipliers
+        \note on the previous field (Rated Flow Rate).
+        \type object-list
+        \object-list ScheduleNames
+   N4 , \field Rated Pump Head
+        \units Pa
+        \default 179352
+        \note default head is 60 feet
+   N5 , \field Rated Power Consumption
+        \units W
+   N6 , \field Motor Efficiency
+        \type real
+        \minimum 0.0
+        \maximum 1.0
+        \default 0.9
+   N7 , \field Fraction of Motor Inefficiencies to Fluid Stream
+        \minimum 0.0
+        \maximum 1.0
+        \default 0.0
+       
+OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow,
+        \min-fields 8
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name      
+        \required-field
+        \reference CoilHeatingLowTempRadiantConstantFlow
+        \reference ConnectionObject     
+   A3 , \field Heating Water Inlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A4 , \field Heating Water Outlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A5 , \field Heating High Water Temperature Schedule Name
+        \note Water and control temperatures for heating work together to provide
+        \note a linear function that determines the water temperature sent to the
+        \note radiant system.  The current control temperature (see Temperature Control Type above) is
+        \note compared to the high and low control temperatures at the current time.
+        \note If the control temperature is above the high temperature, then the
+        \note inlet water temperature is set to the low water temperature.  If the
+        \note control temperature is below the low temperature, then the inlet
+        \note water temperature is set to the high water temperature.  If the control
+        \note temperature is between the high and low value, then the inlet water
+        \note temperature is linearly interpolated between the low and high water
+        \note temperature values.
+        \type object-list
+        \object-list ScheduleNames
+   A6, \field Heating Low Water Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A7, \field Heating High Control Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A8, \field Heating Low Control Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        
+OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow,
+        \min-fields 10
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name      
+        \required-field
+        \reference CoilCoolingLowTempRadiantConstantFlow
+        \reference ConnectionObject 
+   A3, \field Cooling Water Inlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A4, \field Cooling Water Outlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A5, \field Cooling High Water Temperature Schedule Name
+        \note See note for Heating High Water Temperature Schedule above for
+        \note interpretation information (or see the Input/Output Reference).
+        \type object-list
+        \object-list ScheduleNames
+   A6, \field Cooling Low Water Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A7, \field Cooling High Control Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A8, \field Cooling Low Control Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A9, \field Condensation Control Type
+        \type choice
+        \key Off
+        \key SimpleOff
+        \key VariableOff
+        \default SimpleOff
+   N1 ; \field Condensation Control Dewpoint Offset
+        \units C
+        \default 1.0
+        
 OS:ZoneHVAC:PackagedTerminalHeatPump,
        \min-fields 24
   A1, \field Handle
