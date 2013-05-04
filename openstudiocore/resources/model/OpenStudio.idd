@@ -4549,7 +4549,6 @@ OS:Surface,
        \reference HeatTranBaseSurfNames
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
        \reference SurfGroupAndHTSurfNames
        \reference AllShadingAndHTSurfNames
   A3, \field Surface Type
@@ -4654,7 +4653,6 @@ OS:SubSurface,
        \reference AllHeatTranSurfNames
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
        \reference SurfGroupAndHTSurfNames
        \reference AllShadingAndHTSurfNames
   A3, \field Sub Surface Type
@@ -7172,8 +7170,6 @@ OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow,
         \required-field
         \object-list ConnectionNames
    A5, \field Cooling High Water Temperature Schedule Name
-        \note See note for Heating High Water Temperature Schedule above for
-        \note interpretation information (or see the Input/Output Reference).
         \type object-list
         \object-list ScheduleNames
    A6, \field Cooling Low Water Temperature Schedule Name
@@ -10804,32 +10800,28 @@ OS:ZoneHVAC:Baseboard:Convective:Water,
        \object-list BaseboardHeatingCoil
 
 OS:ZoneHVAC:LowTemperatureRadiant:Electric,
-			  \min-fields 9
+			  \min-fields 8
    A1 , \field Handle
         \type handle
         \required-field
 	 A2 , \field Name
         \required-field
    A3 , \field Availability Schedule Name
+        \required-field
         \type object-list
         \object-list ScheduleNames
-   A4 , \field Zone Name
-        \note Name of zone system is serving
+   A4 , \field Radiant Surface Group Name
+        \note Identifies surfaces that radiant system is embedded in
+        \note via a ZoneHVAC:LowTemperatureRadiant:SurfaceGroup object.
         \type object-list
-        \object-list ThermalZoneNames
-   A5 , \field Surface Name or Radiant Surface Group Name
-        \note Identifies surfaces that radiant system is embedded in.
-        \note For a system with multiple surfaces, enter the name of
-        \note a ZoneHVAC:LowTemperatureRadiant:SurfaceGroup object.
-        \type object-list
-        \object-list RadGroupAndSurfNames
+        \object-list RadSurfGroupNames
    N1 , \field Maximum Electrical Power to Panel
         \units W
         \minimum 0
         \autosizable
 				\default autosize
         \ip-units W
-   A6 , \field Temperature Control Type
+   A5 , \field Temperature Control Type
         \note Temperature used to control unit
         \type choice
         \key MeanAirTemperature
@@ -10842,7 +10834,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:Electric,
         \units deltaC
         \minimum 0
         \default 0
-   A7 ; \field Heating Setpoint Temperature Schedule Name
+   A6 ; \field Heating Setpoint Temperature Schedule Name
         \type object-list
         \object-list ScheduleNames
 
@@ -10859,7 +10851,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:SurfaceGroup,
 	 A2 , \field Name
         \required-field
         \type alpha
-        \reference RadGroupAndSurfNames
+        \reference RadSurfGroupNames
    A3 , \field Surface 1 Name
         \begin-extensible
         \required-field
@@ -11161,7 +11153,7 @@ OS:ZoneHVAC:FourPipeFanCoil,
         \default 0.001       
 
 OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
-        \min-fields 16
+        \min-fields 15
    A1 , \field Handle
         \type handle
         \required-field
@@ -11169,17 +11161,13 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \required-field
    A3 , \field Availability Schedule Name
         \type object-list
+        \required-field
         \object-list ScheduleNames
-   A4 , \field Zone Name
-        \note Name of zone system is serving
+   A4 , \field Radiant Surface Group Name
+        \note Identifies surfaces that radiant system is embedded in
+        \note via a ZoneHVAC:LowTemperatureRadiant:SurfaceGroup object.
         \type object-list
-        \object-list ThermalZoneNames
-   A5 , \field Surface Name or Radiant Surface Group Name
-        \note Identifies surfaces that radiant system is embedded in.
-        \note For a system with multiple surfaces, enter the name of
-        \note a ZoneHVAC:LowTemperatureRadiant:SurfaceGroup object.
-        \type object-list
-        \object-list RadGroupAndSurfNames
+        \object-list RadSurfGroupNames
    N1 , \field Hydronic Tubing Inside Diameter
         \units m
         \minimum> 0
@@ -11188,7 +11176,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \note Total length of pipe embedded in surface
         \units m
         \minimum> 0
-   A6 , \field Temperature Control Type
+   A5 , \field Temperature Control Type
         \note Temperature used to control system
         \type choice
         \key MeanAirTemperature
@@ -11197,17 +11185,17 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \key OutdoorDryBulbTemperature
         \key OutdoorWetBulbTemperature
         \default MeanAirTemperature
-   A7 , \field Low Temp Radiant Constant Flow Heating Coil Name
+   A6 , \field Low Temp Radiant Constant Flow Heating Coil Name
         \type object-List
         \required-field 
         \object-list CoilHeatingLowTemRadiantConstantFlow
-   A8 , \field Low Temp Radiant Constant Flow Cooling Coil Name
+   A7 , \field Low Temp Radiant Constant Flow Cooling Coil Name
         \type object-List
         \required-field 
         \object-list CoilCoolingLowTempRadiantConstantFlow    
    N3 , \field Rated Flow Rate
         \units m3/s
-   A9 , \field Pump Flow Rate Schedule Name
+   A8 , \field Pump Flow Rate Schedule Name
         \note Modifies the Rated Flow Rate of the pump on a time basis
         \note the default is that the pump is ON and runs according to its other
         \note operational requirements specified above.  The schedule is for special
@@ -11232,33 +11220,29 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \default 0.0
         
 OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
-        \min-fields 10
+        \min-fields 9
    A1 , \field Handle
         \type handle
         \required-field
    A2 , \field Name
-       \required-field
+        \required-field
    A3 , \field Availability Schedule Name
         \type object-list
+        \required-field
         \object-list ScheduleNames
-   A4 , \field Zone Name
-        \note Name of zone system is serving
-        \type object-list
-        \object-list ThermalZoneNames
-   A5 , \field Low Temp Radiant Variable Flow Heating Coil Name
+   A4 , \field Low Temp Radiant Variable Flow Heating Coil Name
         \type object-List
         \required-field 
         \object-list CoilHeatingLowTemRadiantVariableFlow
-   A6 , \field Low Temp Radiant Variable Flow Cooling Coil Name
+   A5 , \field Low Temp Radiant Variable Flow Cooling Coil Name
         \type object-List
         \required-field
         \object-list CoilCoolingLowTempRadiantVariableFlow    
-   A7 , \field Surface Name or Radiant Surface Group Name
-       \note Identifies surfaces that radiant system is embedded in.
-       \note For a system with multiple surfaces, enter the name of
-       \note a ZoneHVAC:LowTemperatureRadiant:SurfaceGroup object.
+   A6 , \field Radiant Surface Group Name
+       \note Identifies surfaces that radiant system is embedded in
+       \note via a ZoneHVAC:LowTemperatureRadiant:SurfaceGroup object.
        \type object-list
-       \object-list RadGroupAndSurfNames
+       \object-list RadSurfGroupNames
    N1 , \field Hydronic Tubing Inside Diameter
         \units m
         \minimum> 0
@@ -11270,7 +11254,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \minimum> 0
         \autosizable
         \default autosize
-   A8 ; \field Temperature Control Type
+   A7 ; \field Temperature Control Type
         \note (Temperature on which unit is controlled)
         \type choice
         \key MeanAirTemperature
