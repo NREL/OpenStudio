@@ -67,8 +67,7 @@ namespace contam {
     double volume;
   };
 
-  bool ForwardTranslator::modelToContam(const openstudio::model::Model& model, 
-					const openstudio::path& path)
+  bool ForwardTranslator::modelToContam(const openstudio::model::Model& model, const openstudio::path& path)
   {
     ForwardTranslator translator;
 
@@ -78,7 +77,8 @@ namespace contam {
       return false;
 
     QFile file(toQString(path));
-    if(file.open(QFile::WriteOnly)){
+    if(file.open(QFile::WriteOnly))
+    {
       QTextStream textStream(&file);
       textStream << *output;
       file.close();
@@ -428,120 +428,163 @@ namespace contam {
 
     // Generate airflow zone list
     entryTxtList.clear();
-    // Loop over the zones and generate one airflow zone per space
-    BOOST_FOREACH(const model::ThermalZone& zone, model.getModelObjects<model::ThermalZone>()){
-      QString zoneName = QString::fromStdString(zone.name().get());
-      BOOST_FOREACH(const model::Space& space, zone.spaces()){
-	QStringList txtList;
-	double volume = space.volume();
-	txtList << quoted.arg("name").arg(QString::fromStdString(space.name().get()));
-	txtList << unquoted.arg("volume").arg(volume);
-	
-	boost::optional<openstudio::model::BuildingStory> story = space.buildingStory();
-	if(story){
-	  txtList << quoted.arg("level").arg(QString::fromStdString(story->name().get()));
-	  double ht = story->nominalFloortoFloorHeight();
-	  if(ht>0.0)
-	    txtList << unquoted.arg("area").arg(volume/ht);
+	std::vector<model::Space> spaces = model.getModelObjects<model::Space>();
+	//std::cout<<spaces.size()<<'\n';
+	// Loop over the spaces and generate an airflow zone
+	BOOST_FOREACH(const model::Space& space, spaces)
+	{
+		QStringList txtList;
+		double volume = space.volume();
+	    txtList << quoted.arg("name").arg(QString::fromStdString(space.name().get()));
+	    txtList << unquoted.arg("volume").arg(volume);
+	    boost::optional<openstudio::model::BuildingStory> story = space.buildingStory();
+	    if(story)
+		{
+			txtList << quoted.arg("level").arg(QString::fromStdString(story->name().get()));
+			double ht = story->nominalFloortoFloorHeight();
+			if(ht>0.0)
+				txtList << unquoted.arg("area").arg(volume/ht);
+		}
+		boost::optional<model::ThermalZone> zone = space.thermalZone();
+		if(zone)
+		{
+			QString zoneName = QString::fromStdString(zone->name().get());
+			txtList << QString("\"%1\":[{\"system\":\"%2\"}]").arg("supplyAir").arg(zoneName);
+	        txtList << QString("\"%1\":[{\"system\":\"%2\"}]").arg("returnAir").arg(zoneName);
+		}
+		entryTxtList << QString("{")+txtList.join(",")+QString("}");
 	}
-	// This isn't quite right, but whatever
-	txtList << QString("\"%1\":[{\"system\":\"%2\"}]").arg("supplyAir").arg(zoneName);
-	txtList << QString("\"%1\":[{\"system\":\"%2\"}]").arg("returnAir").arg(zoneName);
 
-	entryTxtList << QString("{")+txtList.join(",")+QString("}");
-      }
-      // these are probably useful, will have to ask Kyle
-      // Kyle, should these functions be const?
-      //boost::optional<model::ModelObject> airInletModelObject = zone.airInletModelObject();
-      //boost::optional<model::ModelObject> returnAirModelObject = zone.returnAirModelObject();
-      //boost::optional<model::Node> exhaustAirNode = zone.exhaustAirNode();
-      //boost::optional<model::Node> zoneAirNode = zone.zoneAirNode();
+    // Loop over the zones and generate one airflow zone per space
+ //   BOOST_FOREACH(const model::ThermalZone& zone, model.getModelObjects<model::ThermalZone>())
+	//{
+	//	QString zoneName = QString::fromStdString(zone.name().get());
+	//	BOOST_FOREACH(const model::Space& space, zone.spaces()){
+	//		QStringList txtList;
+	//		double volume = space.volume();
+	//		txtList << quoted.arg("name").arg(QString::fromStdString(space.name().get()));
+	//		txtList << unquoted.arg("volume").arg(volume);
+	//		
+	//		boost::optional<openstudio::model::BuildingStory> story = space.buildingStory();
+	//		if(story){
+	//			txtList << quoted.arg("level").arg(QString::fromStdString(story->name().get()));
+	//			double ht = story->nominalFloortoFloorHeight();
+	//			if(ht>0.0)
+	//				txtList << unquoted.arg("area").arg(volume/ht);
+	//		}
+	//		// This isn't quite right, but whatever
+	//        txtList << QString("\"%1\":[{\"system\":\"%2\"}]").arg("supplyAir").arg(zoneName);
+	//		txtList << QString("\"%1\":[{\"system\":\"%2\"}]").arg("returnAir").arg(zoneName);
+
+	//		entryTxtList << QString("{")+txtList.join(",")+QString("}");
+	//	}
+ //     // these are probably useful, will have to ask Kyle
+ //     // Kyle, should these functions be const?
+ //     //boost::optional<model::ModelObject> airInletModelObject = zone.airInletModelObject();
+ //     //boost::optional<model::ModelObject> returnAirModelObject = zone.returnAirModelObject();
+ //     //boost::optional<model::Node> exhaustAirNode = zone.exhaustAirNode();
+ //     //boost::optional<model::Node> zoneAirNode = zone.zoneAirNode();
+	//}
+    if(entryTxtList.size())
+        outputTxtList << QString("\"zones\":[")+entryTxtList.join(",")+QString("]");
+
+    // Loop over thermal zones and create air handling systems
+    entryTxtList.clear();
+    std::vector<model::ThermalZone> zones = model.getModelObjects<model::ThermalZone>();
+    BOOST_FOREACH(const model::ThermalZone& zone, zones)
+    {
+        QStringList txtList;
+        QString zoneName = QString::fromStdString(zone.name().get());
+        txtList << quoted.arg("name").arg(zoneName);
+
+        entryTxtList << QString("{")+txtList.join(",")+QString("}");
     }
     if(entryTxtList.size())
-      outputTxtList << QString("\"nodes\":[")+entryTxtList.join(",")+QString("]");
+        outputTxtList << QString("\"ahs\":[")+entryTxtList.join(",")+QString("]");
 
     // Loop over surfaces and generate paths - keep track of an
     // adjacent surface list to avoid ouputing the same wall twice
     entryTxtList.clear();
     QList <model::Surface> adjacentList;
-    BOOST_FOREACH(const model::Surface& surface, model.getModelObjects<model::Surface>()){
-      QString wallType;
-      std::string surfaceType = surface.surfaceType();
+    std::vector<model::Surface> surfaces = model.getModelObjects<model::Surface>();
+    //std::cout<<surfaces.size()<<'\n';
+    BOOST_FOREACH(const model::Surface& surface, surfaces)
+    {
+        QString wallType;
+        std::string surfaceType = surface.surfaceType();
+        
+        if(adjacentList.contains(surface))
+            continue;
 
-      if(adjacentList.contains(surface))
-	continue;
+        // Disallow below-grade airflow.  Note that this does not
+        // preclude below-grade infiltration, but it has to be modeled
+        // differently.
+        if(istringEqual("Ground", surface.outsideBoundaryCondition()))
+            continue;
 
-      // Disallow below-grade airflow.  Note that this does not
-      // preclude below-grade infiltration, but it has to be modeled
-      // differently.
-      if(istringEqual("Ground", surface.outsideBoundaryCondition()))
-	continue;
+        // Get the type of partition we're dealing with - this may get
+        // changed below (if it should be a floor, for example)
+        if(istringEqual("Wall", surfaceType))
+            wallType = QString("wall");
+        else if(istringEqual("RoofCeiling", surfaceType))
+            wallType = QString("roof");
+        else if(istringEqual("Floor", surfaceType))
+            wallType = QString("floor");
+        else
+            continue;
 
-      // Get the type of partition we're dealing with - this may get
-      // changed below (if it should be a floor, for example)
-      if(istringEqual("Wall", surfaceType)){
-	wallType = QString("wall");
-      }
-      else if(istringEqual("RoofCeiling", surfaceType)){
-	wallType = QString("roof");
-      }
-      else if(istringEqual("Floor", surfaceType)){
-	wallType = QString("floor");
-      }
-      else{
-	continue;
-      }
+        boost::optional<model::Space> space = surface.space();
+        if (!space) continue;
 
-      boost::optional<model::Space> space = surface.space();
-      if (!space) continue;
+        //boost::optional<model::ThermalZone> zone = space->thermalZone();
+        //if (!zone) continue;
+        
+        QStringList txtList;
+        txtList << quoted.arg("name").arg(QString::fromStdString(surface.name().get()));
+        QString name0 = QString::fromStdString(space->name().get());
 
-      boost::optional<model::ThermalZone> zone = space->thermalZone();
-      if (!zone) continue;
+        double averageZ = 0;
+        double numVertices = surface.vertices().size();
+        BOOST_FOREACH(const Point3d& point, surface.vertices())
+        {
+            averageZ += point.z();
+        }
+        averageZ = averageZ / numVertices;
+        txtList << unquoted.arg("elevation").arg(averageZ);
 
-      QStringList txtList;
-      txtList << quoted.arg("name").arg(QString::fromStdString(surface.name().get()));
-      QString name0 = QString::fromStdString(space->name().get());
+        // Should this use netArea or grossArea?
+        txtList << unquoted.arg("area").arg(surface.netArea());
 
-      double averageZ = 0;
-      double numVertices = surface.vertices().size();
-      BOOST_FOREACH(const Point3d& point, surface.vertices()){
-        averageZ += point.z();
-      }
-      averageZ = averageZ / numVertices;
-      txtList << unquoted.arg("elevation").arg(averageZ);
-
-      // Should this use netArea or grossArea?
-      txtList << unquoted.arg("area").arg(surface.netArea());
-
-      boost::optional<model::Surface> adjacentSurface = surface.adjacentSurface();
-      boost::optional<model::Space> adjacentSpace;
-      boost::optional<model::ThermalZone> adjacentZone;
-      if (adjacentSurface){
-        adjacentSpace = adjacentSurface->space();
-	adjacentList << *adjacentSurface;
-	QString name1 =QString::fromStdString(adjacentSpace->name().get());
-	txtList << QString("\"nodes\":[\"%1\",\"%2\"]").arg(name0).arg(name1);
-	if(istringEqual("RoofCeiling", surfaceType))
-	  wallType=QString("floor");
-      }
-      else{
-	txtList << QString("\"nodes\":[\"%1\"]").arg(name0);
-	txtList << unquoted.arg("azimuth").arg(180.0*surface.azimuth()/pi);
-	txtList << unquoted.arg("tilt").arg(180.0*surface.tilt()/pi);
-      }
-      txtList << quoted.arg("type").arg(wallType);
-      entryTxtList << QString("{")+txtList.join(",")+QString("}");
+        boost::optional<model::Surface> adjacentSurface = surface.adjacentSurface();
+        boost::optional<model::Space> adjacentSpace;
+        boost::optional<model::ThermalZone> adjacentZone;
+        if (adjacentSurface)
+        {
+            adjacentSpace = adjacentSurface->space();
+            adjacentList << *adjacentSurface;
+            QString name1 = QString::fromStdString(adjacentSpace->name().get());
+            txtList << QString("\"zones\":[\"%1\",\"%2\"]").arg(name0).arg(name1);
+            if(istringEqual("RoofCeiling", surfaceType))
+                wallType=QString("floor");
+        }
+        else
+        {
+            txtList << QString("\"zones\":[\"%1\"]").arg(name0);
+            txtList << unquoted.arg("azimuth").arg(180.0*surface.azimuth()/pi);
+            txtList << unquoted.arg("tilt").arg(180.0*surface.tilt()/pi);
+        }
+        txtList << quoted.arg("type").arg(wallType);
+        entryTxtList << QString("{")+txtList.join(",")+QString("}");
     } 
     if(entryTxtList.size())
-      outputTxtList << QString("\"paths\":[")+entryTxtList.join(",")+QString("]");
+        outputTxtList << QString("\"walls\":[")+entryTxtList.join(",")+QString("]");
 
     // Wrap up and get out
     if(outputTxtList.size())
-      output += outputTxtList.join(",");
+        output += outputTxtList.join(",");
     
     output += QString("}");
-
     return boost::optional<QString>(output);
-  }
+}
 } // contam
 } // openstudio

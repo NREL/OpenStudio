@@ -4,7 +4,26 @@ SET( ${target_name}_src
   ContamAPI.hpp
   ForwardTranslator.hpp
   ForwardTranslator.cpp
+  ReverseTranslator.hpp
+  ReverseTranslator.cpp
+  PrjReader.hpp
+  PrjReader.cpp
+  PrjWriter.hpp
+  PrjWriter.cpp
+  PrjObjects.hpp
+  PrjObjects.cpp
+  IconDefs.hpp
+  PrjData.hpp
+  PrjData.cpp
 )
+
+# resource files
+SET( ${target_name}_qrc
+  contam.qrc
+)
+
+# generate rules for building source files from the resources
+qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
 
 SET( ${target_name}_test_src
   Test/ContamFixture.hpp
@@ -25,8 +44,13 @@ SET( ${target_name}_depends
   boost_log
 )
 
-ADD_LIBRARY( ${target_name} SHARED ${${target_name}_src} )
+ADD_LIBRARY( ${target_name} 
+             SHARED 
+			 ${${target_name}_src} 
+			 ${${target_name}_qrcs} )
+
 TARGET_LINK_LIBRARIES( ${target_name} ${${target_name}_depends} )
+
 AddPCH(${target_name})
 
 #IF( NOT APPLE )
@@ -57,6 +81,14 @@ TARGET_LINK_LIBRARIES( OsmToPrj
 add_executable(OsmToWpb OsmToWpb.cpp)
 
 TARGET_LINK_LIBRARIES( OsmToWpb
+  ${${target_name}_depends}
+  openstudio_osversion
+  openstudio_contam
+)
+
+add_executable(PrjToOsm PrjToOsm.cpp)
+
+TARGET_LINK_LIBRARIES( PrjToOsm
   ${${target_name}_depends}
   openstudio_osversion
   openstudio_contam
