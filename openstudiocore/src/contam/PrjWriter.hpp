@@ -7,7 +7,7 @@ namespace openstudio {
 namespace contam {
 namespace prj {
 
-template <class T> QString writeSection(QList<T*> list, QString label=QString())
+template <class T> QString writeSection(QList<T> list, QString label=QString())
 {
     QString string;
     if(label.isNull())
@@ -15,7 +15,7 @@ template <class T> QString writeSection(QList<T*> list, QString label=QString())
     else
         string += QString("%1 ! %2\n").arg(list.size()).arg(label);
     for(int i=0;i<list.size();i++)
-        string += list[i]->write() + "\n";
+        string += list[i].write() + "\n";
     string += "-999\n";
     return string;
 }

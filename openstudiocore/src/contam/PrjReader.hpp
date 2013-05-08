@@ -1,8 +1,6 @@
 #ifndef PRJREADER_H
 #define PRJREADER_H
 
-#include "ContamAPI.hpp"
-
 #include <QTextStream>
 #include <QStringList>
 #include <utilities/core/Logger.hpp>
@@ -11,7 +9,7 @@ namespace openstudio {
 namespace contam {
 namespace prj {
 
-class CONTAM_API Reader
+class Reader
 {
 public:
     explicit Reader(QTextStream *stream);
@@ -28,7 +26,7 @@ public:
     QString storeSection();
     int lineNumber(){return m_lineNumber;}
     QList<int> readIntArray(bool terminated=false);
-    template <class T> QList<T*> readSection();
+    template <class T> QList<T> readSection();
     template <class T> T readNumber();
 
 
@@ -41,16 +39,15 @@ private:
     REGISTER_LOGGER("openstudio.contam.prj.Reader");
 };
 
-template <class T> QList<T*> Reader::readSection()
+template <class T> QList<T> Reader::readSection()
 {
-    QList<T*> list;
-    T *object;
+    QList<T> list;
     int n = readInt();
     for(int i=0;i<n;i++)
     {
-        object = new T();
+        T object;
+        object.read(this);
         list << object;
-        object->read(this);
     }
     read999();
     return list;

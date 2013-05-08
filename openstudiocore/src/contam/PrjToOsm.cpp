@@ -18,7 +18,7 @@
  **********************************************************************/
 
 #include <contam/ReverseTranslator.hpp>
-#include <contam/PrjReader.hpp>
+#include <contam/PrjData.hpp>
 #include <model/Model.hpp>
 #include <osversion/VersionTranslator.hpp>
 #include <utilities/core/CommandLine.hpp>
@@ -73,20 +73,27 @@ int main(int argc, char *argv[])
     {
         openstudio::path inputPath = openstudio::toPath(inputPathString);
 
-        QFile fp(openstudio::toQString(inputPath));
-        if (fp.open(QFile::ReadOnly))
+        openstudio::contam::prj::Data data(openstudio::toQString(inputPath),false);
+        std::cout << "Number of paths: " << data.paths.size() << std::endl;
+        for(int i=0; i<data.paths.size();i++)
         {
-            QTextStream stream(&fp);
-            openstudio::contam::prj::Reader input(&stream);
-            std::cout<<input.readString().toStdString()<<std::endl;
-            std::cout<<input.readString().toStdString()<<std::endl;
-            std::cout<<input.readString().toStdString()<<std::endl;
-            std::cout<<input.readLine().toStdString()<<std::endl;
-            std::cout<<input.readString().toStdString()<<std::endl;
-            std::cout<<input.readString().toStdString()<<std::endl;
-
-
+            std::cout << data.paths[i].nr << std::endl;
         }
+
+        //QFile fp(openstudio::toQString(inputPath));
+        //if (fp.open(QFile::ReadOnly))
+        //{
+        //    QTextStream stream(&fp);
+        //    openstudio::contam::prj::Reader input(&stream);
+        //    std::cout<<input.readString().toStdString()<<std::endl;
+        //    std::cout<<input.readString().toStdString()<<std::endl;
+        //    std::cout<<input.readString().toStdString()<<std::endl;
+        //    std::cout<<input.readLine().toStdString()<<std::endl;
+        //    std::cout<<input.readString().toStdString()<<std::endl;
+        //    std::cout<<input.readString().toStdString()<<std::endl;
+
+
+        //}
         //openstudio::osversion::VersionTranslator vt;
         //boost::optional<openstudio::model::Model> model = vt.loadModel(inputPath);
     

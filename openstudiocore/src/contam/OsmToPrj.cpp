@@ -32,60 +32,69 @@ void printHelp( boost::program_options::options_description desc) {
   std::cout << desc << std::endl;
 }
 
-int main(int argc, char *argv[]) {
-  std::string inputPathString;
+int main(int argc, char *argv[])
+{
+    std::string inputPathString;
   
-  boost::program_options::options_description desc("Allowed options");
-  desc.add_options()
-      ("help", "print help message")
-      ("inputPath", boost::program_options::value<std::string>(&inputPathString), 
-       "path to OSM file");
-
-  boost::program_options::positional_options_description pos;
-  pos.add("inputPath", -1);
-
-  boost::program_options::variables_map vm;
-  // The following try/catch block is necessary to avoid uncaught
-  // exceptions when the program is executed with more than one
-  // "positional" argument - there's got to be a better way.
-  try {
-    boost::program_options::store(boost::program_options::command_line_parser(argc, argv).
-				  options(desc).positional(pos).run(), vm);
-    boost::program_options::notify(vm);
-  }
-  catch(std::exception&) {
-    std::cout << "Execution failed: check arguments and retry."<< std::endl << std::endl;
-    printHelp(desc);
-    return EXIT_FAILURE;
-  }
-  if (vm.count("help")) {
-    printHelp(desc);
-    return EXIT_SUCCESS;
-  }
-  if (vm.count("inputPath")) {
-    openstudio::path inputPath = openstudio::toPath(inputPathString);
-    openstudio::osversion::VersionTranslator vt;
-    boost::optional<openstudio::model::Model> model = vt.loadModel(inputPath);
+    boost::program_options::options_description desc("Allowed options");
+    desc.add_options()
+        ("help", "print help message")
+        ("inputPath", boost::program_options::value<std::string>(&inputPathString), "path to OSM file");
     
-    if(!model) {
-      std::cout << "Unable to load file '"<< inputPathString << "' as an OpenStudio model." 
-		<< std::endl;
-      return EXIT_FAILURE;
+    boost::program_options::positional_options_description pos;
+    pos.add("inputPath", -1);
+    
+    boost::program_options::variables_map vm;
+    // The following try/catch block is necessary to avoid uncaught
+    // exceptions when the program is executed with more than one
+    // "positional" argument - there's got to be a better way.
+    try
+    {
+        boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(desc).positional(pos).run(), vm);
+        boost::program_options::notify(vm);
     }
-    openstudio::path prjPath = inputPath.replace_extension(openstudio::toPath("prj").string());
-    bool success = openstudio::contam::ForwardTranslator::modelToContam(*model, prjPath);
-    if(!success) {
-      std::cout << "Failed to write file '"<< openstudio::toString(prjPath.string()) << "'." << std::endl;
-      std::cout << "Check that this file location is accessible and may be written." << std::endl;
-      return EXIT_FAILURE;
+  
+    catch(std::exception&)
+    {
+        std::cout << "Execution failed: check arguments and retry."<< std::endl << std::endl;
+        printHelp(desc);
+        return EXIT_FAILURE;
     }
-  }
-  else { 
-    std::cout << "No input path given." << std::endl << std::endl;
-    printHelp(desc);
-    return EXIT_FAILURE;
-  }
-  return EXIT_SUCCESS;
+  
+    if (vm.count("help"))
+    {
+        printHelp(desc);
+        return EXIT_SUCCESS;
+    }
+    
+    if (vm.count("inputPath"))
+    {
+        openstudio::path inputPath = openstudio::toPath(inputPathString);
+        openstudio::osversion::VersionTranslator vt;
+        boost::optional<openstudio::model::Model> model = vt.loadModel(inputPath);
+    
+        if(!model)
+        {
+            std::cout << "Unable to load file '"<< inputPathString << "' as an OpenStudio model." << std::endl;
+            return EXIT_FAILURE;
+        }
+        
+        openstudio::path prjPath = inputPath.replace_extension(openstudio::toPath("prj").string());
+        bool success = openstudio::contam::ForwardTranslator::modelToContam(*model, prjPath);
+        //if(!success)
+        //{
+        //    std::cout << "Failed to write file '"<< openstudio::toString(prjPath.string()) << "'." << std::endl;
+        //    std::cout << "Check that this file location is accessible and may be written." << std::endl;
+        //    return EXIT_FAILURE;
+        //}
+    }
+    else
+    {
+        std::cout << "No input path given." << std::endl << std::endl;
+        printHelp(desc);
+        return EXIT_FAILURE;
+    }
+    return EXIT_SUCCESS;
 }
 
 

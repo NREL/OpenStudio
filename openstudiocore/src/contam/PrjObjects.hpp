@@ -32,8 +32,7 @@ public:
 class RunControl
 {
 public:
-    RunControl(){rvals=NULL;}
-    ~RunControl(){if(rvals)delete rvals;}
+    //RunControl(){rvals=NULL;}
     void read(Reader *input);
     QString write();
     QString name;  /* program name "ContamW" (I1) */
@@ -179,8 +178,8 @@ public:
     int srfsave;  /* (0/1) save text surface result file (I1) */
     int logsave;  /* (0/1) save text controls log file (I1) */
     int save[16];  /* (unused by CONTAM; subject to change without notice) (I1) */
-    int nrvals;  /* number of real values in the vector (I2) */
-    RX *rvals;  /* real values (R4) */
+    //int nrvals;  /* number of real values in the vector (I2) */
+    QList<RX> rvals;  /* real values (R4) */
     int BldgFlowZ;  /* output building airflow test (zones) (IX) */
     int BldgFlowD;  /* output building airflow test (ducts) (IX) */
     int BldgFlowC;  /* output building airflow test (classified flows) (IX) */
@@ -198,6 +197,12 @@ public:
     Zone();
     void read(Reader *input);
     QString write();
+    // Custom getters/setters
+    void setVariablePressure(bool b);
+    bool variablePressure();
+    void setVariableContaminants(bool b);
+    bool variableContaminants();
+
     int nr;  // zone number (IX); in order from 1 to _nzone
     unsigned int flags;  // zone flags - bits defined in contam.h (U2)
     int ps;  // week schedule index (IX); converted to pointer
@@ -248,17 +253,16 @@ class Level
 {
 public:
     Level();
-    ~Level();
     void read(Reader *input);
     QString write();
     int nr;  // level number (IX), in order from 1 to nlev
     RX refht;  // reference elevation of level [m] (R4)
     RX delht;  // delta elevation to next level [m] (R4) {W}
-    int nicon;  // number of icons on this level (IX)
+    //int nicon;  // number of icons on this level (IX)
     int u_rfht;  // units of reference elevation (I2) {W}
     int u_dlht;  // units of delta elevation (I2) {W}
     QString name;  // level name (CS)
-    Icon *icons; /* Icons on this level */
+    QList<Icon> icons; /* Icons on this level */
 };
 
 class Species

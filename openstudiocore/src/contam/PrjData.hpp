@@ -1,6 +1,8 @@
 #ifndef PRJDATA_H
 #define PRJDATA_H
 
+#include "ContamAPI.hpp"
+
 #include "PrjObjects.hpp"
 #include "PrjReader.hpp"
 
@@ -17,8 +19,7 @@ public:
         : start(start), end(end), type(type), left(left), right(right), parent(parent){}
     int length();
     void reorient();
-    void getZones(int nx, int ny, int *grid, Zone *zones);
-    void getZones(int nx, int ny, int *grid, QList<Zone*>zones);
+    void getZones(int nx, int ny, int *grid, QList<Zone>zones);
 
     Icon *start;
     Icon *end;
@@ -58,19 +59,17 @@ private:
     void buildLoops(QList<Wall*> walls);
 };
 
-class Data
+class CONTAM_API Data
 {
 public:
     Data(QString filename, bool process=true);
-    ~Data();
-    QString summary();
-    bool write(QString filename);
+    QString write();
+    bool writeFile(QString filename);
 
     bool valid;
     RunControl rc;
-    QList<int> contaminants;
-    QList<Species*> species;
-    QList<Level*> levels;
+    QString ctmandspcs;
+    QList<Level> levels;
     QString dsch;
     QString wsch;
     QString wpf;
@@ -82,10 +81,10 @@ public:
     QString dfe;
     QString selmt;
     QString ctrl;
-    QList<Ahs*> ahs;
-    QList<Zone*> zones;
+    QList<Ahs> ahs;
+    QList<Zone> zones;
     QString zoneic;
-    QList<Path*> paths;
+    QList<Path> paths;
     QString jct;
     QString jctic;
     QString dct;
@@ -101,24 +100,9 @@ public:
 };
 
 void error(QString mesg, const char *file, int line);
-QList<Wall*> findWalls(int w, int h, int *skpd, int nicons, Icon *icons);
+QList<Wall*> findWalls(int w, int h, int *skpd, int nicons, QList<Icon> icons);
 void fillFromPoint(int value, int x, int y, int nx, int ny, int *map);
 QList<Wall*> zoneWalls(Zone *zone, QList<Wall *> walls);
-
-template <class T> QList<T*> readSection(Reader *input)
-{
-    QList<T*> list;
-    T *object;
-    int n = input->readInt();
-    for(int i=0;i<n;i++)
-    {
-        object = new T();
-        list << object;
-        object->read(input);
-    }
-    input->read999();
-    return list;
-}
 
 }
 }

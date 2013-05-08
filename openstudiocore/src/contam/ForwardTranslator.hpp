@@ -47,7 +47,7 @@ namespace contam {
     boost::optional<QString> translateToPrj(const openstudio::model::Model& model);
     boost::optional<QString> translateToJson(const openstudio::model::Model& model);
     
-    REGISTER_LOGGER("contam.ForwardTranslator");
+    REGISTER_LOGGER("openstudio.contam.ForwardTranslator");
   };
 
 } // contam

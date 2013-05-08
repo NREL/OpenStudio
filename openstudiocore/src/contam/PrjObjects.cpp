@@ -1,6 +1,28 @@
 #include "PrjObjects.hpp"
 #include "IconDefs.hpp"
 
+// Zone flags from contam.h
+// Zone flag bit 1; variable pressure
+#define  VAR_P 0x0001
+#define NVAR_P 0xFFFE
+// Zone flag bit 2; variable contaminants
+#define  VAR_C 0x0002
+#define NVAR_C 0xFFFD
+// Zone flag bit 3; variable temperature
+#define  VAR_T 0x0004
+#define NVAR_T 0xFFFB
+// Zone flag bit 4; system zone: to avoid zone volume check
+#define  SYS_N 0x0008 
+//#define NSYS_N 0xFFF7
+// Zone flag bit 5; un|conditioned space: to compute air change rate
+#define  UNCZN 0x0010   // flags | UNCZN to indicate unconditioned zone
+#define SETCZN 0xFFEF   // flags & SETCZN to indicate conditioned zone
+// Zone flag bit 6; CFD zone
+#define  CFDZN 0x0020   // flags | CFDZN to set CFD zone / flags & CFDZN to test for CFD zone
+#define NCFDZN 0xFFDF   // flags & NCFDZN to unset CFD zone
+
+#define FLAG_N 0x003F   /* all zone flag bits, used in PrjRead() */
+
 static QString formatter(const char * format, QString value)
 {
     return QString(format).arg(value);
@@ -200,10 +222,10 @@ void RunControl::read(Reader *input)
     logsave = input->readInt();
     for(int i=0;i<16;i++)
         save[i] = input->readInt();
-    nrvals = input->readInt();
-    rvals = new RX[nrvals];
+    int nrvals = input->readInt();
+    //rvals = new RX[nrvals];
     for(int i=0;i<nrvals;i++)
-        rvals[i] = input->readNumber<RX>();
+        rvals << input->readNumber<RX>();
     BldgFlowZ = input->readInt();
     BldgFlowD = input->readInt();
     BldgFlowC = input->readInt();
@@ -361,8 +383,9 @@ QString RunControl::write()
     string += formatter(" %1\n",logsave);
     for(int i=0;i<16;i++)
         string += formatter(" %1",save[i]);
-    string += formatter("\n%1\n",nrvals);
-    for(int i=0;i<nrvals;i++)
+    //string += formatter("\n%1\n",nrvals);
+    string += formatter("\n%1\n",rvals.size());
+    for(int i=0;i<rvals.size();i++)
         string += formatter(" %1",rvals[i]);
     string += formatter("\n%1",BldgFlowZ);
     string += formatter(" %1",BldgFlowD);
@@ -442,31 +465,34 @@ Level::Level()
     nr=0;
     refht=RX_INIT;
     delht=RX_INIT;
-    nicon=0;
     u_rfht=0;
     u_dlht=0;
-    name=QString();
-    icons = NULL;
 }
 
-Level::~Level()
-{
-    if(icons)
-        delete icons;
-}
+//Level::~Level()
+//{
+//    if(icons)
+//    {
+//        delete icons;
+//        icons = NULL;
+//    }
+//}
 
 void Level::read(Reader *input)
 {
     nr = input->readInt();
     refht = input->readNumber<RX>();
     delht = input->readNumber<RX>();
-    nicon = input->readInt();
+    int nicon = input->readInt();
     u_rfht = input->readInt();
     u_dlht = input->readInt();
     name = input->readString();
-    icons = new Icon[nicon];
     for(int i=0;i<nicon;i++)
-        icons[i].read(input);
+    {
+        Icon icon;
+        icon.read(input);
+        icons << icon;
+    }
 }
 
 QString Level::write()
@@ -474,15 +500,15 @@ QString Level::write()
     QString string = formatter(" %1",nr);
     string += formatter(" %1",refht);
     string += formatter(" %1",delht);
-    string += formatter(" %1",nicon);
+    string += formatter(" %1",icons.size());
     string += formatter(" %1",u_rfht);
     string += formatter(" %1",u_dlht);
     string += formatter(" %1\n",name);
-    if(nicon > 0)
+    if(icons.size())
     {
-        for(int i=0;i<nicon-1;i++)
+        for(int i=0;i<icons.size()-1;i++)
             string += icons[i].write() + '\n';
-        string += icons[nicon-1].write();
+        string += icons[icons.size()-1].write();
     }
     return string;
 }
@@ -696,6 +722,32 @@ QString Zone::write()
     return string;
 }
 
+void Zone::setVariablePressure(bool b)
+{
+    if(b)
+        flags |= VAR_P;
+    else
+        flags &= NVAR_P;
+}
+
+bool Zone::variablePressure()
+{
+    return flags & VAR_P;
+}
+
+void Zone::setVariableContaminants(bool b)
+{
+    if(b)
+        flags |= VAR_C;
+    else
+        flags &= NVAR_C;
+}
+
+bool Zone::variableContaminants()
+{
+    return flags & VAR_C;
+}
+
 Path::Path()
 {
     nr=0;
@@ -814,3 +866,18 @@ QString Path::write()
 }
 }
 }
+
+// Kill off the zone flags
+#undef  VAR_P
+#undef NVAR_P
+#undef  VAR_C
+#undef NVAR_C
+#undef  VAR_T
+#undef NVAR_T
+#undef  SYS_N 
+//#define NSYS_N 0xFFF7
+#undef  UNCZN
+#undef SETCZN
+#undef  CFDZN
+#undef NCFDZN
+#undef FLAG_N
