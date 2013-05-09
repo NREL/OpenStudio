@@ -10841,10 +10841,8 @@ OS:ZoneHVAC:LowTemperatureRadiant:Electric,
 OS:ZoneHVAC:LowTemperatureRadiant:SurfaceGroup,
         \memo This is used to allow the coordinate control of several radiant system surfaces.
         \memo Note that the following flow fractions must sum up to 1.0
-        \extensible:2 - repeat last two fields, remembering to remove ; from "inner" fields.
-        \memo The number of surfaces can be expanded beyond 100, if necessary, by adding more
-        \memo groups to the end of the list
-				\min-fields 13
+        \memo currently only allows two surfaces: floor and or ceiling
+				\min-fields 6
    A1 , \field Handle
         \type handle
         \required-field
@@ -10852,39 +10850,21 @@ OS:ZoneHVAC:LowTemperatureRadiant:SurfaceGroup,
         \required-field
         \type alpha
         \reference RadSurfGroupNames
-   A3 , \field Surface 1 Name
-        \begin-extensible
+   A3 , \field Surface 1 Name 
         \required-field
         \type object-list
         \object-list SurfaceNames
    N1 , \field Flow Fraction for Surface 1
         \required-field
+        \type real
         \minimum 0.0
-   A4 , \field Surface 2 Name
+   A4 , \field Surface 2 Name 
         \type object-list
         \object-list SurfaceNames
-   N2 , \field Flow Fraction for Surface 2
-        \minimum 0.0
-   A5 , \field Surface 3 Name
-        \type object-list
-        \object-list SurfaceNames
-   N3 , \field Flow Fraction for Surface 3
-        \minimum 0.0
-   A6 , \field Surface 4 Name
-        \type object-list
-        \object-list SurfaceNames
-   N4 , \field Flow Fraction for Surface 4
-        \minimum 0.0
-   A7 , \field Surface 5 Name
-        \type object-list
-        \object-list SurfaceNames
-   N5 , \field Flow Fraction for Surface 5
-        \minimum 0.0
-   A8 , \field Surface 6 Name
-        \type object-list
-        \object-list SurfaceNames
-   N6 , \field Flow Fraction for Surface 6
-        \minimum 0.0
+   N2 ; \field Flow Fraction for Surface 2
+        \type real
+        \minimum 0.0        
+
 				
 OS:ZoneHVAC:IdealLoadsAirSystem,
        \min-fields 26
