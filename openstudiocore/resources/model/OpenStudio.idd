@@ -10813,8 +10813,11 @@ OS:ZoneHVAC:LowTemperatureRadiant:Electric,
    A4 , \field Radiant Surface Group Name
         \note Identifies surfaces that radiant system is embedded in
         \note via a ZoneHVAC:LowTemperatureRadiant:SurfaceGroup object.
-        \type object-list
-        \object-list RadSurfGroupNames
+        \type choice
+        \key Ceilings
+        \key Floors
+        \key CeilingsAndFloors
+        \key AllSurfaces
    N1 , \field Maximum Electrical Power to Panel
         \units W
         \minimum 0
@@ -10837,35 +10840,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:Electric,
    A6 ; \field Heating Setpoint Temperature Schedule Name
         \type object-list
         \object-list ScheduleNames
-
-OS:ZoneHVAC:LowTemperatureRadiant:SurfaceGroup,
-        \memo This is used to allow the coordinate control of several radiant system surfaces.
-        \memo Note that the following flow fractions must sum up to 1.0
-        \memo currently only allows two surfaces: floor and or ceiling
-				\min-fields 6
-   A1 , \field Handle
-        \type handle
-        \required-field
-	 A2 , \field Name
-        \required-field
-        \type alpha
-        \reference RadSurfGroupNames
-   A3 , \field Surface 1 Name 
-        \required-field
-        \type object-list
-        \object-list SurfaceNames
-   N1 , \field Flow Fraction for Surface 1
-        \required-field
-        \type real
-        \minimum 0.0
-   A4 , \field Surface 2 Name 
-        \type object-list
-        \object-list SurfaceNames
-   N2 ; \field Flow Fraction for Surface 2
-        \type real
-        \minimum 0.0        
-
-				
+	
 OS:ZoneHVAC:IdealLoadsAirSystem,
        \min-fields 26
   A1 , \field Handle
@@ -11146,8 +11121,11 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
    A4 , \field Radiant Surface Group Name
         \note Identifies surfaces that radiant system is embedded in
         \note via a ZoneHVAC:LowTemperatureRadiant:SurfaceGroup object.
-        \type object-list
-        \object-list RadSurfGroupNames
+        \type choice
+        \key Ceilings
+        \key Floors
+        \key CeilingsAndFloors
+        \key AllSurfaces
    N1 , \field Hydronic Tubing Inside Diameter
         \units m
         \minimum> 0
@@ -11219,10 +11197,13 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \required-field
         \object-list CoilCoolingLowTempRadiantVariableFlow    
    A6 , \field Radiant Surface Group Name
-       \note Identifies surfaces that radiant system is embedded in
-       \note via a ZoneHVAC:LowTemperatureRadiant:SurfaceGroup object.
-       \type object-list
-       \object-list RadSurfGroupNames
+        \note Identifies surfaces that radiant system is embedded in
+        \note via a ZoneHVAC:LowTemperatureRadiant:SurfaceGroup object.
+        \type choice
+        \key Ceilings
+        \key Floors
+        \key CeilingsAndFloors
+        \key AllSurfaces
    N1 , \field Hydronic Tubing Inside Diameter
         \units m
         \minimum> 0
