@@ -11146,7 +11146,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
    A6 , \field Low Temp Radiant Constant Flow Heating Coil Name
         \type object-List
         \required-field 
-        \object-list CoilHeatingLowTemRadiantConstantFlow
+        \object-list CoilHeatingLowTempRadiantConstantFlow
    A7 , \field Low Temp Radiant Constant Flow Cooling Coil Name
         \type object-List
         \required-field 
@@ -11191,7 +11191,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
    A4 , \field Low Temp Radiant Variable Flow Heating Coil Name
         \type object-List
         \required-field 
-        \object-list CoilHeatingLowTemRadiantVariableFlow
+        \object-list CoilHeatingLowTempRadiantVariableFlow
    A5 , \field Low Temp Radiant Variable Flow Cooling Coil Name
         \type object-List
         \required-field

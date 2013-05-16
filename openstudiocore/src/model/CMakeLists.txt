@@ -103,6 +103,9 @@ SET( ${target_name}_src
   CoilCoolingDXTwoSpeed.hpp
   CoilCoolingDXTwoSpeed_Impl.hpp
   CoilCoolingDXTwoSpeed.cpp
+  CoilCoolingLowTempRadiantConstFlow.hpp
+  CoilCoolingLowTempRadiantConstFlow_Impl.hpp
+  CoilCoolingLowTempRadiantConstFlow.cpp    
   CoilCoolingWater.hpp
   CoilCoolingWater_Impl.hpp
   CoilCoolingWater.cpp
@@ -118,6 +121,9 @@ SET( ${target_name}_src
   CoilHeatingGas.hpp
   CoilHeatingGas_Impl.hpp
   CoilHeatingGas.cpp
+  CoilHeatingLowTempRadiantConstFlow.hpp
+  CoilHeatingLowTempRadiantConstFlow_Impl.hpp
+  CoilHeatingLowTempRadiantConstFlow.cpp  
   CoilHeatingWater.hpp
   CoilHeatingWater_Impl.hpp
   CoilHeatingWater.cpp
@@ -735,6 +741,9 @@ SET( ${target_name}_src
   ZoneHVACFourPipeFanCoil.hpp
   ZoneHVACFourPipeFanCoil_Impl.hpp
   ZoneHVACFourPipeFanCoil.cpp  
+  ZoneHVACLowTempRadiantConstFlow.hpp
+  ZoneHVACLowTempRadiantConstFlow_Impl.hpp
+  ZoneHVACLowTempRadiantConstFlow.cpp    
   ZoneHVACPackagedTerminalHeatPump.hpp
   ZoneHVACPackagedTerminalHeatPump_Impl.hpp
   ZoneHVACPackagedTerminalHeatPump.cpp
