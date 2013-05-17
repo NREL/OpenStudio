@@ -9,6 +9,24 @@ SET( ${target_name}_src
   SimModel.cpp
   UserModel.hpp
   UserModel.cpp  
+  Building.cpp
+  Cooling.cpp
+  Heating.cpp
+  Lighting.cpp
+  Location.cpp
+  Population.cpp
+  Structure.cpp
+  Ventilation.cpp
+  WeatherData.cpp
+  Building.hpp
+  Cooling.hpp
+  Heating.hpp
+  Lighting.hpp
+  Location.hpp
+  Population.hpp
+  Structure.hpp
+  Ventilation.hpp
+  WeatherData.hpp
 )
 
 SET( ${target_name}_test_src
