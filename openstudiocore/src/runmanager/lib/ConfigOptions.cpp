@@ -268,12 +268,19 @@ namespace runmanager {
     static const char exeext[] = "";
 #endif
 
+    std::string exename = "expandobjects";
+
+    if (eplus.first.getMajor() && eplus.first.getMajor() >= 8)
+    {
+      exename = "ExpandObjects";
+    }
+
     return openstudio::runmanager::ToolInfo(
         "expandobjects",
         eplus.first,
-        change_extension(eplus.second.binaryDir / toPath("expandobjects"), exeext),
+        change_extension(eplus.second.binaryDir / toPath(exename), exeext),
         eplus.second.linuxBinaryArchive,
-        toPath("expandobjects"),
+        toPath(exename),
         boost::regex("expanded\\.idf"));
   } 
 
@@ -290,6 +297,11 @@ namespace runmanager {
     if (!boost::filesystem::exists(basementlocation))
     {
       basementlocation = change_extension(eplus.second.binaryDir / toPath("PreProcess/GrndTempCalc/basement"), exeext);
+    }
+
+    if (!boost::filesystem::exists(basementlocation))
+    {
+      basementlocation = change_extension(eplus.second.binaryDir / toPath("PreProcess/GrndTempCalc/Basement"), exeext);
     }
 
 
@@ -314,6 +326,11 @@ namespace runmanager {
     if (!boost::filesystem::exists(slablocation))
     {
       slablocation = change_extension(eplus.second.binaryDir / toPath("PreProcess/GrndTempCalc/slab"), exeext);
+    }
+
+    if (!boost::filesystem::exists(slablocation))
+    {
+      slablocation = change_extension(eplus.second.binaryDir / toPath("PreProcess/GrndTempCalc/Slab"), exeext);
     }
 
     return openstudio::runmanager::ToolInfo(
@@ -351,12 +368,20 @@ namespace runmanager {
     static const char exeext[] = "";
 #endif
 
+    std::string exename = "expandobjects";
+
+    if (eplus.first.getMajor() && eplus.first.getMajor() >= 8)
+    {
+      exename = "EnergyPlus";
+    }
+
+
     return openstudio::runmanager::ToolInfo(
         "energyplus",
         eplus.first,
-        change_extension(eplus.second.binaryDir / toPath("energyplus"), exeext),
+        change_extension(eplus.second.binaryDir / toPath(exename), exeext),
         eplus.second.linuxBinaryArchive,
-        toPath("energyplus"),
+        toPath(exename),
         boost::regex("eplus.*"));
   }
 
