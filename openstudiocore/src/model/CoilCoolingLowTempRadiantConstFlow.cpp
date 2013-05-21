@@ -112,27 +112,24 @@ namespace detail {
 
   boost::optional<ZoneHVACComponent> CoilCoolingLowTempRadiantConstFlow_Impl::containingZoneHVACComponent() const
   {
-    // this coil can only be found in a ZoneHVACLowTempRadiantConstFlow 
-    // check all ZoneHVACLowTempRadiantConstFlow in the model, seeing if this coil 
-    // is inside of one of them.  Return the one it is inside of
+  
+    std::vector<ZoneHVACLowTempRadiantConstFlow> zoneHVACLowTempRadiantConstFlows;
 
-    // declare a vector to hold all of the zoneHVACBaseboardConvectiveWater
-    std::vector<ZoneHVACLowTempRadiantConstFlow> zoneHVACLowTempRadiantConstFlows ;
-    // populate the vector with all of them
     zoneHVACLowTempRadiantConstFlows = this->model().getModelObjects<ZoneHVACLowTempRadiantConstFlow>();
-    // loop through each one, seeing if the coil is contained by the zonehvaclowtempradiantconstflow
+
     for( std::vector<ZoneHVACLowTempRadiantConstFlow>::iterator it = zoneHVACLowTempRadiantConstFlows.begin();
     it < zoneHVACLowTempRadiantConstFlows.end();
     it++ )
     {
       if( boost::optional<HVACComponent> coil = it->coolingCoil() )
       {
-        if( coil->handle() == this->handle() )  //if the handles match, this coil is inside of a zonehvacbaseboard
+        if( coil->handle() == this->handle() )  
         {
           return *it;
         }
       }
     }
+    return boost::none;
   }
 
   boost::optional<Schedule> CoilCoolingLowTempRadiantConstFlow_Impl::coolingHighWaterTemperatureSchedule() const {
@@ -361,6 +358,19 @@ namespace detail {
   : StraightComponent(CoilCoolingLowTempRadiantConstFlow::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::CoilCoolingLowTempRadiantConstFlow_Impl>());
+
+  bool ok = setCoolingHighWaterTemperatureSchedule(coolingHighWaterTemperatureSchedule);
+  BOOST_ASSERT(ok);
+
+  ok = setCoolingLowWaterTemperatureSchedule(coolingLowWaterTemperatureSchedule);
+  BOOST_ASSERT(ok);
+
+  ok = setCoolingHighControlTemperatureSchedule(coolingHighControlTemperatureSchedule);
+  BOOST_ASSERT(ok);
+
+  ok = setCoolingLowControlTemperatureSchedule(coolingLowControlTemperatureSchedule);
+  BOOST_ASSERT(ok);
+
 }
 
  IddObjectType CoilCoolingLowTempRadiantConstFlow::iddObjectType() {

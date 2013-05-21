@@ -72,8 +72,6 @@ namespace detail {
     /** @name Getters */
     //@{
 
-
-
     boost::optional<Schedule> heatingHighWaterTemperatureSchedule() const;
 
     boost::optional<Schedule> heatingLowWaterTemperatureSchedule() const;
