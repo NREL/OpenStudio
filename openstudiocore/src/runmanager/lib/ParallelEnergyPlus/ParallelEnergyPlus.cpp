@@ -18,6 +18,7 @@
 #include <boost/algorithm/string/iter_find.hpp>
 
 #include <utilities/idf/IdfFile.hpp>
+#include <utilities/idf/IdfObject.hpp>
 #include <utilities/idd/RunPeriod_FieldEnums.hxx>
 
 #include <energyplus/ReverseTranslator.hpp>
@@ -173,6 +174,7 @@ std::vector<std::pair<boost::gregorian::date, boost::gregorian::date> > Parallel
 void ParallelEnergyPlus::writePartition(int t_partition, const openstudio::path &t_path) const
 {
   openstudio::WorkspaceObject wo = m_runPeriod.second;
+  openstudio::Workspace ws = m_runPeriod.first;
 
   wo.setInt(openstudio::RunPeriodFields::BeginMonth, m_partitions[t_partition].first.month().as_number());
   wo.setInt(openstudio::RunPeriodFields::BeginDayofMonth, m_partitions[t_partition].first.day().as_number());
@@ -183,7 +185,32 @@ void ParallelEnergyPlus::writePartition(int t_partition, const openstudio::path 
 
   wo.setString(openstudio::RunPeriodFields::DayofWeekforStartDay, wd.as_long_string());
 
-  m_runPeriod.first.toIdfFile().save(t_path, true);
+  // make sure at least some meters exist
+  if (ws.getObjectsByType(openstudio::IddObjectType::Output_Meter).size() == 0)
+  {
+    ws.insertObject(*openstudio::IdfObject::load("Output:Meter,Electricity:Facility,HOURLY"));
+    ws.insertObject(*openstudio::IdfObject::load("Output:Meter,Gas:Facility,HOURLY"));
+    ws.insertObject(*openstudio::IdfObject::load("Output:Meter,Gasoline:Facility,HOURLY"));
+    ws.insertObject(*openstudio::IdfObject::load("Output:Meter,Diesel:Facility,HOURLY"));
+    ws.insertObject(*openstudio::IdfObject::load("Output:Meter,Propane:Facility,HOURLY"));
+    ws.insertObject(*openstudio::IdfObject::load("Output:Meter,FuelOil_1:Facility,HOURLY"));
+    ws.insertObject(*openstudio::IdfObject::load("Output:Meter,FuelOil_2:Facility,HOURLY"));
+    ws.insertObject(*openstudio::IdfObject::load("Output:Meter,DistrictHeating:Facility,HOURLY"));
+    ws.insertObject(*openstudio::IdfObject::load("Output:Meter,DistrictCooling:Facility,HOURLY"));
+//    ws.insertObject(*openstudio::IdfObject::load("Output:Meter,EnergyTransfer:Facility,HOURLY"));
+    ws.insertObject(*openstudio::IdfObject::load("Output:Meter,Steam:Facility,HOURLY"));
+    ws.insertObject(*openstudio::IdfObject::load("Output:Meter,Water:Facility,HOURLY"));
+  } 
+
+  // and that sqlite output is enabled
+  if (ws.getObjectsByType(openstudio::IddObjectType::Output_SQLite).size() == 0)
+  {
+    ws.insertObject(*openstudio::IdfObject::load("Output:SQLite, Simple;"));
+  }
+
+  // And that SQL output is enabled
+
+  ws.toIdfFile().save(t_path, true);
 
   //	building.remove("output");
   //	building.update("simulationcontrol,yes,yes,yes, no, yes;");

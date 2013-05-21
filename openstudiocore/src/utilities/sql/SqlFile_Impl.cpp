@@ -834,7 +834,7 @@ namespace openstudio{
         LOG(Warn, "Tabular results were not found, trying to calculate it ourselves");
         std::string s = " \
           select sum(VariableValue)/1000000000 from ReportMeterData, ReportMeterDataDictionary \
-          where (ReportMeterData.ReportMeterDataDictionaryIndex = ReportMeterDataDictionary.ReportMeterDataDictionaryIndex)\
+          where (ReportMeterData.ReportMeterDataDictionaryIndex = ReportMeterDataDictionary.ReportMeterDataDictionaryIndex and variablename not like '%EnergyTransfer%')\
           group by ReportingFrequency;\
           ";
         d = execAndReturnFirstDouble(s);
