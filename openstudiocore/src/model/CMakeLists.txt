@@ -105,7 +105,10 @@ SET( ${target_name}_src
   CoilCoolingDXTwoSpeed.cpp
   CoilCoolingLowTempRadiantConstFlow.hpp
   CoilCoolingLowTempRadiantConstFlow_Impl.hpp
-  CoilCoolingLowTempRadiantConstFlow.cpp    
+  CoilCoolingLowTempRadiantConstFlow.cpp
+	CoilCoolingLowTempRadiantVarFlow.hpp
+	CoilCoolingLowTempRadiantVarFlow_Impl.hpp
+	CoilCoolingLowTempRadiantVarFlow.cpp
   CoilCoolingWater.hpp
   CoilCoolingWater_Impl.hpp
   CoilCoolingWater.cpp
@@ -123,7 +126,10 @@ SET( ${target_name}_src
   CoilHeatingGas.cpp
   CoilHeatingLowTempRadiantConstFlow.hpp
   CoilHeatingLowTempRadiantConstFlow_Impl.hpp
-  CoilHeatingLowTempRadiantConstFlow.cpp  
+  CoilHeatingLowTempRadiantConstFlow.cpp
+	CoilHeatingLowTempRadiantVarFlow.hpp
+  CoilHeatingLowTempRadiantVarFlow_Impl.hpp
+	CoilHeatingLowTempRadiantVarFlow.cpp
   CoilHeatingWater.hpp
   CoilHeatingWater_Impl.hpp
   CoilHeatingWater.cpp
@@ -740,10 +746,16 @@ SET( ${target_name}_src
   ZoneHVACIdealLoadsAirSystem.cpp
   ZoneHVACFourPipeFanCoil.hpp
   ZoneHVACFourPipeFanCoil_Impl.hpp
-  ZoneHVACFourPipeFanCoil.cpp  
+  ZoneHVACFourPipeFanCoil.cpp
+  ZoneHVACLowTemperatureRadiantElectric.hpp
+  ZoneHVACLowTemperatureRadiantElectric_Impl.hpp
+  ZoneHVACLowTemperatureRadiantElectric.cpp
   ZoneHVACLowTempRadiantConstFlow.hpp
   ZoneHVACLowTempRadiantConstFlow_Impl.hpp
-  ZoneHVACLowTempRadiantConstFlow.cpp    
+  ZoneHVACLowTempRadiantConstFlow.cpp
+	ZoneHVACLowTempRadiantVarFlow.hpp
+	ZoneHVACLowTempRadiantVarFlow_Impl.hpp
+	ZoneHVACLowTempRadiantVarFlow.cpp
   ZoneHVACPackagedTerminalHeatPump.hpp
   ZoneHVACPackagedTerminalHeatPump_Impl.hpp
   ZoneHVACPackagedTerminalHeatPump.cpp
@@ -803,11 +815,13 @@ SET( ${target_name}_moc
   ClimateZones_Impl.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
   CoilCoolingDXTwoSpeed_Impl.hpp
+	CoilCoolingLowTempRadiantVarFlow_Impl.hpp
   CoilCoolingWater_Impl.hpp
   CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp
   CoilHeatingDXSingleSpeed_Impl.hpp
   CoilHeatingElectric_Impl.hpp
   CoilHeatingGas_Impl.hpp
+	CoilHeatingLowTempRadiantVarFlow_Impl.hpp
   CoilHeatingWater_Impl.hpp
   CoilHeatingWaterBaseboard_Impl.hpp
   ComponentCostAdjustments_Impl.hpp
@@ -1011,7 +1025,9 @@ SET( ${target_name}_moc
   ZoneHVACBaseboardConvectiveWater_Impl.hpp
   ZoneHVACEquipmentList_Impl.hpp   
   ZoneHVACIdealLoadsAirSystem_Impl.hpp
-  ZoneHVACFourPipeFanCoil_Impl.hpp  
+  ZoneHVACFourPipeFanCoil_Impl.hpp
+  ZoneHVACLowTemperatureRadiantElectric_Impl.hpp
+	ZoneHVACLowTempRadiantVarFlow_Impl.hpp
   ZoneHVACPackagedTerminalHeatPump_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
   ZoneHVACUnitHeater_Impl.hpp
@@ -1177,6 +1193,7 @@ SET( ${target_name}_test_src
   test/ZoneHVACBaseboardConvectiveWater_GTest.cpp
   test/ZoneHVACFourPipeFanCoil_GTest.cpp
   test/ZoneHVACLowTempRadiantConstFlow_GTest.cpp
+  test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp
   test/ZoneHVACPackagedTerminalAirConditioner_GTest.cpp
   test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp    

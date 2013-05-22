@@ -159,6 +159,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateZoneHVACEquipmentList.cpp
   ForwardTranslator/ForwardTranslateZoneHVACFourPipeFanCoil.cpp    
   ForwardTranslator/ForwardTranslateZoneHVACIdealLoadsAirSystem.cpp
+  ForwardTranslator/ForwardTranslateZoneHVACLowTemperatureRadiantElectric.cpp
   ForwardTranslator/ForwardTranslateZoneHVACPackagedTerminalHeatPump.cpp
   ForwardTranslator/ForwardTranslateZoneHVACPackagedTerminalAirConditioner.cpp
   ForwardTranslator/ForwardTranslateZoneHVACWaterToAirHeatPump.cpp 

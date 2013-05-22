@@ -1,0 +1,547 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#include <model/ZoneHVACLowTemperatureRadiantElectric.hpp>
+#include <model/ZoneHVACLowTemperatureRadiantElectric_Impl.hpp>
+
+#include <model/Schedule.hpp>
+#include <model/Schedule_Impl.hpp>
+#include <model/ScheduleTypeLimits.hpp>
+#include <model/ScheduleTypeRegistry.hpp>
+#include <model/HVACComponent.hpp>
+#include <model/HVACComponent_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
+
+#include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/OS_ZoneHVAC_LowTemperatureRadiant_Electric_FieldEnums.hxx>
+
+#include <utilities/units/Unit.hpp>
+#include <utilities/core/Assert.hpp>
+
+namespace openstudio {
+namespace model {
+
+namespace detail {
+
+  ZoneHVACLowTemperatureRadiantElectric_Impl::ZoneHVACLowTemperatureRadiantElectric_Impl(const IdfObject& idfObject,
+                                                                                         Model_Impl* model,
+                                                                                         bool keepHandle)
+    : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
+				{
+    BOOST_ASSERT(idfObject.iddObject().type() == ZoneHVACLowTemperatureRadiantElectric::iddObjectType());
+				}
+
+  ZoneHVACLowTemperatureRadiantElectric_Impl::ZoneHVACLowTemperatureRadiantElectric_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                         Model_Impl* model,
+                                                                                         bool keepHandle)
+    : ZoneHVACComponent_Impl(other,model,keepHandle)
+				{
+    BOOST_ASSERT(other.iddObject().type() == ZoneHVACLowTemperatureRadiantElectric::iddObjectType());
+				}
+
+  ZoneHVACLowTemperatureRadiantElectric_Impl::ZoneHVACLowTemperatureRadiantElectric_Impl(const ZoneHVACLowTemperatureRadiantElectric_Impl& other,
+                                                                                         Model_Impl* model,
+                                                                                         bool keepHandle)
+    : ZoneHVACComponent_Impl(other,model,keepHandle)
+				{}
+				
+		ModelObject ZoneHVACLowTemperatureRadiantElectric_Impl::clone(Model model) const
+  {
+				ZoneHVACLowTemperatureRadiantElectric zoneHVACLowTemperatureRadiantElectricClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACLowTemperatureRadiantElectric>();
+
+				return zoneHVACLowTemperatureRadiantElectricClone;
+  }
+
+  const std::vector<std::string>& ZoneHVACLowTemperatureRadiantElectric_Impl::outputVariableNames() const
+  {
+    static std::vector<std::string> result;
+    if (result.empty())
+    {
+    }
+    return result;
+  }
+
+  IddObjectType ZoneHVACLowTemperatureRadiantElectric_Impl::iddObjectType() const 
+  {
+    return ZoneHVACLowTemperatureRadiantElectric::iddObjectType();
+  }
+
+  std::vector<ScheduleTypeKey> ZoneHVACLowTemperatureRadiantElectric_Impl::getScheduleTypeKeys(const Schedule& schedule) const
+  {
+    std::vector<ScheduleTypeKey> result;
+    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+    if (std::find(b,e,OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::AvailabilityScheduleName) != e)
+    {
+      result.push_back(ScheduleTypeKey("ZoneHVACLowTemperatureRadiantElectric","Availability"));
+    }
+    if (std::find(b,e,OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::HeatingSetpointTemperatureScheduleName) != e)
+    {
+      result.push_back(ScheduleTypeKey("ZoneHVACLowTemperatureRadiantElectric","Heating Setpoint Temperature"));
+    }
+    return result;
+  }
+
+  unsigned ZoneHVACLowTemperatureRadiantElectric_Impl::inletPort()
+  {
+    return (0); // this object has no inlet or outlet node
+  }
+
+  unsigned ZoneHVACLowTemperatureRadiantElectric_Impl::outletPort()
+  {
+    return (0); // this object has no inlet or outlet node
+  }
+
+  Schedule ZoneHVACLowTemperatureRadiantElectric_Impl::availabilitySchedule() const 
+  {
+    boost::optional<Schedule> value = optionalAvailabilitySchedule();
+    if (!value) 
+    {
+      // it is an error if we get here, however we don't want to crash
+      // so we hook up to global always on schedule
+      LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
+      value = this->model().alwaysOnDiscreteSchedule();
+      BOOST_ASSERT(value);
+      const_cast<ZoneHVACLowTemperatureRadiantElectric_Impl*>(this)->setAvailabilitySchedule(*value);
+      value = optionalAvailabilitySchedule();
+    }
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+  
+  Schedule ZoneHVACLowTemperatureRadiantElectric_Impl::heatingSetpointTemperatureSchedule() const 
+  {
+    boost::optional<Schedule> value = optionalHeatingSetpointTemperatureSchedule();
+    
+    if (!value) 
+    {
+    //  // it is an error if we get here, however we don't want to crash
+    //  // so we hook up to global temperature schedule
+      LOG(Error, "Required heating temperature setpoint schedule not set");
+    //  value = this->model().alwaysOnDiscreteSchedule();
+    //  BOOST_ASSERT(value);
+    //  const_cast<ZoneHVACLowTemperatureRadiantElectric_Impl*>(this)->setAvailabilitySchedule(*value);
+    //  value = optionalAvailabilitySchedule();
+    }
+    //BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  boost::optional<std::string> ZoneHVACLowTemperatureRadiantElectric_Impl::radiantSurfaceGroupName() const 
+  {
+    return getString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::RadiantSurfaceGroupName,true);
+  }
+
+  boost::optional<double> ZoneHVACLowTemperatureRadiantElectric_Impl::maximumElectricalPowertoPanel() const 
+  {
+    return getDouble(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::MaximumElectricalPowertoPanel,true);
+  }
+
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::isMaximumElectricalPowertoPanelDefaulted() const 
+  {
+    return isEmpty(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::MaximumElectricalPowertoPanel);
+  }
+
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::isMaximumElectricalPowertoPanelAutosized() const 
+  {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::MaximumElectricalPowertoPanel, true);
+    if (value) 
+    {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
+  }
+
+  std::string ZoneHVACLowTemperatureRadiantElectric_Impl::temperatureControlType() const 
+  {
+    boost::optional<std::string> value = getString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::TemperatureControlType,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::isTemperatureControlTypeDefaulted() const 
+  {
+    return isEmpty(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::TemperatureControlType);
+  }
+
+  double ZoneHVACLowTemperatureRadiantElectric_Impl::heatingThrottlingRange() const 
+  {
+    boost::optional<double> value = getDouble(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::HeatingThrottlingRange,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::isHeatingThrottlingRangeDefaulted() const 
+  {
+    return isEmpty(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::HeatingThrottlingRange);
+  }
+
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::setAvailabilitySchedule(Schedule& schedule) 
+  {
+    bool result = setSchedule(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::AvailabilityScheduleName,
+                              "ZoneHVACLowTemperatureRadiantElectric",
+                              "Availability",
+                              schedule);
+    return result;
+  }
+  
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::setHeatingSetpointTemperatureSchedule(Schedule& schedule) 
+  {
+    bool result = setSchedule(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::HeatingSetpointTemperatureScheduleName,
+                              "ZoneHVACLowTemperatureRadiantElectric",
+                              "Heating Setpoint Temperature",
+                              schedule);
+    return result;
+  }
+
+  //void ZoneHVACLowTemperatureRadiantElectric_Impl::resetHeatingSetpointTemperatureSchedule() 
+  //{
+  //  bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::HeatingSetpointTemperatureScheduleName, "");
+  //  BOOST_ASSERT(result);
+  //}
+
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::setRadiantSurfaceGroupName(boost::optional<std::string> radiantSurfaceGroupName) 
+  {
+    bool result(false);
+    if (radiantSurfaceGroupName) 
+    {
+      result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::RadiantSurfaceGroupName, radiantSurfaceGroupName.get());
+    }
+    else 
+    {
+      resetRadiantSurfaceGroupName();
+      result = true;
+    }
+    return result;
+  }
+
+  void ZoneHVACLowTemperatureRadiantElectric_Impl::resetRadiantSurfaceGroupName() 
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::RadiantSurfaceGroupName, "");
+    BOOST_ASSERT(result);
+  }
+
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::setMaximumElectricalPowertoPanel(boost::optional<double> maximumElectricalPowertoPanel) 
+  {
+    bool result(false);
+    if (maximumElectricalPowertoPanel) 
+    {
+      result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::MaximumElectricalPowertoPanel, maximumElectricalPowertoPanel.get());
+    }
+    else 
+    {
+      resetMaximumElectricalPowertoPanel();
+      result = true;
+    }
+    return result;
+  }
+
+  void ZoneHVACLowTemperatureRadiantElectric_Impl::resetMaximumElectricalPowertoPanel() 
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::MaximumElectricalPowertoPanel, "");
+    BOOST_ASSERT(result);
+  }
+
+  void ZoneHVACLowTemperatureRadiantElectric_Impl::autosizeMaximumElectricalPowertoPanel() 
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::MaximumElectricalPowertoPanel, "autosize");
+    BOOST_ASSERT(result);
+  }
+
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::setTemperatureControlType(std::string temperatureControlType) 
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::TemperatureControlType, temperatureControlType);
+    return result;
+  }
+
+  void ZoneHVACLowTemperatureRadiantElectric_Impl::resetTemperatureControlType() 
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::TemperatureControlType, "");
+    BOOST_ASSERT(result);
+  }
+
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::setHeatingThrottlingRange(double heatingThrottlingRange) 
+  {
+    bool result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::HeatingThrottlingRange, heatingThrottlingRange);
+    return result;
+  }
+
+  void ZoneHVACLowTemperatureRadiantElectric_Impl::resetHeatingThrottlingRange() 
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::HeatingThrottlingRange, "");
+    BOOST_ASSERT(result);
+  }
+
+  boost::optional<Schedule> ZoneHVACLowTemperatureRadiantElectric_Impl::optionalAvailabilitySchedule() const 
+  {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::AvailabilityScheduleName);
+  }
+  
+  boost::optional<Schedule> ZoneHVACLowTemperatureRadiantElectric_Impl::optionalHeatingSetpointTemperatureSchedule() const 
+  {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::HeatingSetpointTemperatureScheduleName);
+  }
+
+  std::vector<std::string> ZoneHVACLowTemperatureRadiantElectric_Impl::radiantSurfaceGroupNameValues() const 
+  {
+    return ZoneHVACLowTemperatureRadiantElectric::radiantSurfaceGroupNameValues();
+  }
+
+  std::vector<std::string> ZoneHVACLowTemperatureRadiantElectric_Impl::temperatureControlTypeValues() const 
+  {
+    return ZoneHVACLowTemperatureRadiantElectric::temperatureControlTypeValues();
+  }
+  
+  boost::optional<ModelObject> ZoneHVACLowTemperatureRadiantElectric_Impl::availabilityScheduleAsModelObject() const 
+  {
+    OptionalModelObject result = availabilitySchedule();
+    return result;
+  }
+  
+  boost::optional<ModelObject> ZoneHVACLowTemperatureRadiantElectric_Impl::heatingSetpointTemperatureScheduleAsModelObject() const 
+  {
+    OptionalModelObject result = heatingSetpointTemperatureSchedule();
+    return result;
+  }
+  
+  //boost::optional<Schedule> ZoneHVACLowTemperatureRadiantElectric_Impl::optionalHeatingTemperatureSchedule() const 
+  //{
+  //  return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::HeatingSetpointTemperatureScheduleName);
+  //}
+
+  //boost::optional<ModelObject> ZoneHVACLowTemperatureRadiantElectric_Impl::heatingSetpointTemperatureScheduleAsModelObject() const 
+  //{
+  //  OptionalModelObject result;
+  //  OptionalSchedule intermediate = heatingTemperatureSchedule(); 
+  //  if (intermediate) 
+  //  {
+  //    result = *intermediate;
+  //  }
+  //  return result;
+  //}
+
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) 
+  {
+    if (modelObject) {
+      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+      if (intermediate) 
+      {
+        Schedule schedule(*intermediate);
+        return setAvailabilitySchedule(schedule);
+      }
+    }
+    return false;
+  }
+
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::setHeatingSetpointTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) 
+  {
+    if (modelObject) 
+    {
+      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+      if (intermediate) 
+      {
+        Schedule schedule(*intermediate);
+        return setHeatingSetpointTemperatureSchedule(schedule);
+      }
+    }
+    return false;
+  }
+
+} // detail
+
+ZoneHVACLowTemperatureRadiantElectric::ZoneHVACLowTemperatureRadiantElectric(const Model& model,
+																																																																																			Schedule & availabilitySchedule,
+																																																																																			Schedule & heatingTemperatureSchedule)
+  : ZoneHVACComponent(ZoneHVACLowTemperatureRadiantElectric::iddObjectType(),model)
+{
+  BOOST_ASSERT(getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>());
+
+
+  bool ok = true;
+  
+  ok = setAvailabilitySchedule(availabilitySchedule);
+     
+  if (!ok) 
+  {
+    //remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s availability schedule to "
+                << availabilitySchedule.briefDescription() << ".");
+  }
+  
+  ok = setHeatingSetpointTemperatureSchedule(heatingTemperatureSchedule);
+     
+  if (!ok) 
+  {
+    //remove();
+    //LOG_AND_THROW("Unable to set " << briefDescription() << "'s heating temperature schedule to "
+    //            << schedule.briefDescription() << ".");
+  }
+  
+  setRadiantSurfaceGroupName("Floors");
+  autosizeMaximumElectricalPowertoPanel();
+  setTemperatureControlType("MeanAirTemperature");
+  setHeatingThrottlingRange(2.0);
+  //setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::HeatingSetpointTemperatureScheduleName,"");
+  
+}
+
+IddObjectType ZoneHVACLowTemperatureRadiantElectric::iddObjectType() 
+{
+  return IddObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
+}
+
+std::vector<std::string> ZoneHVACLowTemperatureRadiantElectric::radiantSurfaceGroupNameValues() 
+{
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::RadiantSurfaceGroupName);
+}
+
+std::vector<std::string> ZoneHVACLowTemperatureRadiantElectric::temperatureControlTypeValues() 
+{
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::TemperatureControlType);
+}
+
+Schedule ZoneHVACLowTemperatureRadiantElectric::availabilitySchedule() const 
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->availabilitySchedule();
+}
+
+Schedule ZoneHVACLowTemperatureRadiantElectric::heatingSetpointTemperatureSchedule() const 
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->heatingSetpointTemperatureSchedule();
+}
+
+boost::optional<std::string> ZoneHVACLowTemperatureRadiantElectric::radiantSurfaceGroupName() const 
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->radiantSurfaceGroupName();
+}
+
+boost::optional<double> ZoneHVACLowTemperatureRadiantElectric::maximumElectricalPowertoPanel() const 
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->maximumElectricalPowertoPanel();
+}
+
+bool ZoneHVACLowTemperatureRadiantElectric::isMaximumElectricalPowertoPanelDefaulted() const 
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->isMaximumElectricalPowertoPanelDefaulted();
+}
+
+bool ZoneHVACLowTemperatureRadiantElectric::isMaximumElectricalPowertoPanelAutosized() const 
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->isMaximumElectricalPowertoPanelAutosized();
+}
+
+std::string ZoneHVACLowTemperatureRadiantElectric::temperatureControlType() const 
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->temperatureControlType();
+}
+
+bool ZoneHVACLowTemperatureRadiantElectric::isTemperatureControlTypeDefaulted() const 
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->isTemperatureControlTypeDefaulted();
+}
+
+double ZoneHVACLowTemperatureRadiantElectric::heatingThrottlingRange() const 
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->heatingThrottlingRange();
+}
+
+bool ZoneHVACLowTemperatureRadiantElectric::isHeatingThrottlingRangeDefaulted() const 
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->isHeatingThrottlingRangeDefaulted();
+}
+
+//boost::optional<Schedule> ZoneHVACLowTemperatureRadiantElectric::heatingSetpointTemperatureSchedule() const 
+//{
+//  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->heatingSetpointTemperatureSchedule();
+//}
+
+bool ZoneHVACLowTemperatureRadiantElectric::setAvailabilitySchedule(Schedule& schedule) 
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->setAvailabilitySchedule(schedule);
+}
+
+bool ZoneHVACLowTemperatureRadiantElectric::setHeatingSetpointTemperatureSchedule(Schedule& schedule) 
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->setHeatingSetpointTemperatureSchedule(schedule);
+}
+
+//void ZoneHVACLowTemperatureRadiantElectric::resetHeatingSetpointTemperatureSchedule() 
+//{
+//  getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->resetHeatingSetpointTemperatureSchedule();
+//}
+
+bool ZoneHVACLowTemperatureRadiantElectric::setRadiantSurfaceGroupName(std::string radiantSurfaceGroupName) 
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->setRadiantSurfaceGroupName(radiantSurfaceGroupName);
+}
+
+void ZoneHVACLowTemperatureRadiantElectric::resetRadiantSurfaceGroupName() 
+{
+  getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->resetRadiantSurfaceGroupName();
+}
+
+bool ZoneHVACLowTemperatureRadiantElectric::setMaximumElectricalPowertoPanel(double maximumElectricalPowertoPanel) 
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->setMaximumElectricalPowertoPanel(maximumElectricalPowertoPanel);
+}
+
+void ZoneHVACLowTemperatureRadiantElectric::resetMaximumElectricalPowertoPanel() 
+{
+  getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->resetMaximumElectricalPowertoPanel();
+}
+
+void ZoneHVACLowTemperatureRadiantElectric::autosizeMaximumElectricalPowertoPanel() 
+{
+  getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->autosizeMaximumElectricalPowertoPanel();
+}
+
+bool ZoneHVACLowTemperatureRadiantElectric::setTemperatureControlType(std::string temperatureControlType) 
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->setTemperatureControlType(temperatureControlType);
+}
+
+void ZoneHVACLowTemperatureRadiantElectric::resetTemperatureControlType() 
+{
+  getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->resetTemperatureControlType();
+}
+
+bool ZoneHVACLowTemperatureRadiantElectric::setHeatingThrottlingRange(double heatingThrottlingRange) 
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->setHeatingThrottlingRange(heatingThrottlingRange);
+}
+
+void ZoneHVACLowTemperatureRadiantElectric::resetHeatingThrottlingRange() 
+{
+  getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->resetHeatingThrottlingRange();
+}
+
+
+/// @cond
+ZoneHVACLowTemperatureRadiantElectric::ZoneHVACLowTemperatureRadiantElectric(boost::shared_ptr<detail::ZoneHVACLowTemperatureRadiantElectric_Impl> impl)
+  : ZoneHVACComponent(impl)
+{}
+/// @endcond
+
+} // model
+} // openstudio
+
