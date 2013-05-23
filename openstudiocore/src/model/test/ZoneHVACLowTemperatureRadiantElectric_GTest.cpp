@@ -40,7 +40,7 @@ using namespace openstudio::model;
 TEST_F(ModelFixture,ZoneHVACLowTemperatureRadiantElectric_Check_Constructor) 
 {
 
-		// Test constructor
+  // Test constructor
 
   Model model;
   ScheduleConstant availabilitySchedule(model);
@@ -48,8 +48,8 @@ TEST_F(ModelFixture,ZoneHVACLowTemperatureRadiantElectric_Check_Constructor)
   ScheduleConstant temperatureSchedule(model);
   temperatureSchedule.setValue(70.0); // Fixed at 70
   ZoneHVACLowTemperatureRadiantElectric zoneHVACLowTemperatureRadiantElectric(model,
-																																																																													 availabilitySchedule,
-																																																																													 temperatureSchedule);
+																																							availabilitySchedule,
+																																							temperatureSchedule);
   // Testing .idd object type
     
   EXPECT_EQ(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric,zoneHVACLowTemperatureRadiantElectric.iddObjectType().value());
@@ -59,14 +59,14 @@ TEST_F(ModelFixture,ZoneHVACLowTemperatureRadiantElectric_Check_Constructor)
 TEST_F(ModelFixture,ZoneHVACLowTemperatureRadiantElectric_Check_Schedules) 
 {
 
-		Model model;
+	Model model;
   ScheduleConstant availabilitySchedule(model);
   availabilitySchedule.setValue(1.0); // Always on
   ScheduleConstant temperatureSchedule(model);
   temperatureSchedule.setValue(70.0); // Fixed at 70
   ZoneHVACLowTemperatureRadiantElectric zoneHVACLowTemperatureRadiantElectric(model,
-																																																																													 availabilitySchedule,
-																																																																													 temperatureSchedule);
+																																							availabilitySchedule,
+																																							temperatureSchedule);
 		//Test set and get availability schedule
   
   ScheduleConstant test_availability_schedule(model);

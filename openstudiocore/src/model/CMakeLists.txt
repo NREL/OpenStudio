@@ -1078,12 +1078,14 @@ SET( ${target_name}_test_src
   test/CoilCoolingDXSingleSpeed_GTest.cpp
   test/CoilCoolingDXTwoSpeed_GTest.cpp
   test/CoilCoolingLowTempRadiantConstFlow_GTest.cpp
+  test/CoilCoolingLowTempRadiantVarFlow_GTest.cpp
   test/CoilCoolingWater_GTest.cpp
   test/CoilCoolingWaterToAirHeatPumpEquationFit_GTest.cpp
   test/CoilHeatingDXSingleSpeed_GTest.cpp
   test/CoilHeatingElectric_GTest.cpp
   test/CoilHeatingGas_GTest.cpp
-  test/CoilHeatingLowTempRadiantConstFlow_GTest.cpp    
+  test/CoilHeatingLowTempRadiantConstFlow_GTest.cpp
+  test/CoilHeatingLowTempRadiantVarFlow_GTest.cpp
   test/CoilHeatingWater_GTest.cpp
   test/CoilHeatingWaterToAirHeatPumpEquationFit_GTest.cpp
   test/CoilHeatingWaterBaseboard_GTest.cpp
@@ -1192,8 +1194,9 @@ SET( ${target_name}_test_src
   test/ZoneHVACBaseboardConvectiveElectric_GTest.cpp
   test/ZoneHVACBaseboardConvectiveWater_GTest.cpp
   test/ZoneHVACFourPipeFanCoil_GTest.cpp
-  test/ZoneHVACLowTempRadiantConstFlow_GTest.cpp
   test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp
+  test/ZoneHVACLowTempRadiantConstFlow_GTest.cpp
+  test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
   test/ZoneHVACPackagedTerminalAirConditioner_GTest.cpp
   test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp    

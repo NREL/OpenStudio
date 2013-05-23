@@ -154,6 +154,7 @@ SWIG_MODELOBJECT(CoilHeatingDXSingleSpeed);
 SWIG_MODELOBJECT(CoilHeatingElectric);
 SWIG_MODELOBJECT(CoilHeatingGas);
 SWIG_MODELOBJECT(CoilHeatingLowTempRadiantConstFlow);
+SWIG_MODELOBJECT(CoilHeatingLowTempRadiantVarFlow);
 SWIG_MODELOBJECT(CoilCoolingLowTempRadiantVarFlow);
 SWIG_MODELOBJECT(CoolingTowerSingleSpeed);
 SWIG_MODELOBJECT(EvaporativeCoolerDirectResearchSpecial);
