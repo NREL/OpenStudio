@@ -126,6 +126,11 @@ namespace openstudio {
       }
     }
 
+    std::map<openstudio::FuelType, double> FuelUses::data() const
+    {
+      return m_uses;
+    }
+
     openstudio::Unit FuelUses::units() const
     {
       return m_units;
@@ -133,8 +138,8 @@ namespace openstudio {
 
 
 
-    ErrorEstimation::ErrorEstimation(const std::string &t_baselineSourceName)
-      : m_baselineSourceName(t_baselineSourceName)
+    ErrorEstimation::ErrorEstimation(const std::string &t_baselineSourceName, const size_t t_numVariables)
+      : m_baselineSourceName(t_baselineSourceName), m_numVariables(t_numVariables)
     {
 
     }
@@ -148,61 +153,94 @@ namespace openstudio {
     /// \param[in] t_value The value of t_variable for this datapoint
     /// \param[in] t_singleVariableChange Did only one variable change for this data?
     ///
-    /// \returns The error corrected values, or the input values if error correction was possible
-    FuelUses ErrorEstimation::add(const SqlFile &t_sql, const std::string &t_sourceName, const std::string &t_variable, 
-        const double t_value, const bool t_singleVariableChange)
+    /// \returns The error corrected values, or the input values if error correction was not possible
+    FuelUses ErrorEstimation::add(const SqlFile &t_sql, const std::string &t_sourceName, const std::vector<double> &t_variables)
     {
       FuelUses origUses = getUses(t_sql);
 
-      m_data[t_variable][t_value][t_sourceName] = origUses;
+      std::map<openstudio::FuelType, double> data = origUses.data();
 
-      FuelUses error = getError(t_sourceName, t_variable, t_value);
-
+      for (std::map<openstudio::FuelType, double>::const_iterator itr = data.begin();
+           itr != data.end();
+           ++itr)
+      {
+        m_data.insert(std::make_pair(std::make_pair(t_sourceName, itr->first), LinearApproximation(m_numVariables)))
+          .first->second.addVals(t_variables, itr->second);
+      }
+      
+      FuelUses error = getError(t_sourceName, t_variables);
       origUses += error;
+
       return origUses;
     }
 
-    FuelUses ErrorEstimation::getError(const std::string &t_sourceName, const std::string &/*t_variable*/, const double /*t_value*/) const
+    FuelUses ErrorEstimation::getError(const std::string &t_sourceName, const std::vector<double> &t_variables) const
     {
       // The baseline is the good value, no error
       if (t_sourceName == m_baselineSourceName) return FuelUses();
 
-      FuelUses error;
-      int numfound = 0;
+      std::set<int> allFuelUses = openstudio::FuelType::getValues();
 
-      // For now, let's just average the error across all variables
-      for (std::map<std::string, std::map<double, std::map<std::string, FuelUses> > >::const_iterator itr = m_data.begin();
-           itr != m_data.end();
+      FuelUses retval;
+
+      for (std::set<int>::const_iterator itr = allFuelUses.begin();
+           itr != allFuelUses.end();
            ++itr)
       {
-        for (std::map<double, std::map<std::string, FuelUses> >::const_iterator itr2 = itr->second.begin();
-             itr2 != itr->second.end();
-             ++itr2)
+        std::map<std::pair<std::string, openstudio::FuelType>, LinearApproximation>::const_iterator baseline = 
+          m_data.find(std::make_pair(m_baselineSourceName, openstudio::FuelType(*itr)));
+
+        std::map<std::pair<std::string, openstudio::FuelType>, LinearApproximation>::const_iterator thisOne = 
+          m_data.find(std::make_pair(t_sourceName, openstudio::FuelType(*itr)));
+
+        double error = 0;
+
+        if (baseline != m_data.end() && thisOne != m_data.end())
         {
-          std::map<std::string, FuelUses>::const_iterator baseline = itr2->second.find(m_baselineSourceName);
-          std::map<std::string, FuelUses>::const_iterator thisone = itr2->second.find(t_sourceName);
+          LinearApproximation diff = baseline->second - thisOne->second;
 
-          if (baseline != itr2->second.end() 
-              && thisone != itr2->second.end())
-          {
-            error += baseline->second - thisone->second;
-            ++numfound;
+
+          try {
+            error = diff.approximate(t_variables);
+          } catch (const std::exception &) {
+            // not enough data to run approximation
+            error = diff.average();
           }
-
         }
+
+        std::cout << "Adding error for: " << openstudio::FuelType(*itr).valueName() << " of " << error << std::endl;
+        retval += FuelUse(openstudio::FuelType(*itr), error, *openstudio::createUnit("J"));
       }
 
-      return error / numfound;
+      return retval;
     }
 
     /// Returns an estimated FuelUsage for the given variable at the given value
     /// 
-    /// \param[in] t_variable The variable to 
-    FuelUses ErrorEstimation::estimate(const std::string &t_variable, const double t_value) const
+    FuelUses ErrorEstimation::approximate(const std::vector<double> &t_values) const
     {
-      assert("Not yet Implemented");
-      throw std::runtime_error("ErrorEstimation::estimate is not yet implemented");
-    }
+      std::set<int> allFuelUses = openstudio::FuelType::getValues();
+
+      FuelUses retval;
+
+      for (std::set<int>::const_iterator itr = allFuelUses.begin();
+           itr != allFuelUses.end();
+           ++itr)
+      {
+        std::map<std::pair<std::string, openstudio::FuelType>, LinearApproximation>::const_iterator baseline = 
+          m_data.find(std::make_pair(m_baselineSourceName, openstudio::FuelType(*itr)));
+
+
+        if (baseline != m_data.end())
+        {
+          double value = baseline->second.approximate(t_values);
+          retval += FuelUse(openstudio::FuelType(*itr), value, *openstudio::createUnit("J"));
+        }
+
+      }
+
+      return retval;
+     }
 
     FuelUses ErrorEstimation::getUses(const SqlFile &t_sql)
     {
@@ -225,3 +263,4 @@ namespace openstudio {
     }
   }
 }
+

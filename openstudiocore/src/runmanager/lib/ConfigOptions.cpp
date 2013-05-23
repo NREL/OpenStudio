@@ -368,7 +368,7 @@ namespace runmanager {
     static const char exeext[] = "";
 #endif
 
-    std::string exename = "expandobjects";
+    std::string exename = "energyplus";
 
     if (eplus.first.getMajor() && eplus.first.getMajor() >= 8)
     {

@@ -131,6 +131,9 @@ SET( runmanager_src
 
   ErrorEstimation.hpp
   ErrorEstimation.cpp
+
+  LinearApproximation.hpp
+  LinearApproximation.cpp
 )
 
 IF( BUILD_TESTING OR BUILD_PACKAGE )
