@@ -50,7 +50,10 @@
     <rule IddField="Outdoor Dry-Bulb Temperature Sensor Node Name" Access="HIDDEN"/>
     <rule IddField="Availability Manager List Name" Access="HIDDEN"/>
   </POLICY>
-  
+  <POLICY IddObjectType="OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow">
+    <rule IddField="Low Temp Radiant Constant Flow Heating Coil Name" Access="LOCKED"/>
+    <rule IddField="Low Temp Radiant Constant Flow Cooling Coil Name" Access="LOCKED"/>
+  </POLICY>    
   <POLICY IddObjectType="OS_Connector_Splitter">
     <rule IddField="Inlet Branch Name" Access="HIDDEN"/>
     <rule IddField="Outlet Branch Name" Access="HIDDEN"/>
@@ -228,7 +231,11 @@
     <rule IddField="Region number for calculating HSPF" Access="HIDDEN"/>
     <rule IddField="Evaporator Air Inlet Node Name" Access="HIDDEN"/>
   </POLICY>
-    <POLICY IddObjectType="OS_Coil_Cooling_WaterToAirHeatPump_EquationFit">
+  <POLICY IddObjectType="OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlow">
+    <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>  
+  <POLICY IddObjectType="OS_Coil_Cooling_WaterToAirHeatPump_EquationFit">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
@@ -301,6 +308,10 @@
     <rule IddField="Part Load Fraction Correlation Curve Name" Access="HIDDEN"/>
     <rule IddField="Temperature Setpoint Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_Coil_Heating_LowTemperatureRadiant_ConstantFlow">
+    <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>  
   <POLICY IddObjectType="OS_AirLoopHVAC_ZoneSplitter">
     <rule IddField="Name" Access="LOCKED"/>
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>

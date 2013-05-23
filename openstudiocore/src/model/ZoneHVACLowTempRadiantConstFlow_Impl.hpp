@@ -165,6 +165,12 @@ namespace detail {
 
     void resetFractionofMotorInefficienciestoFluidStream();
 
+    boost::optional<ThermalZone> thermalZone();
+
+    bool addToThermalZone(ThermalZone & thermalZone);
+
+    void removeFromThermalZone();
+
     //@}
     /** @name Other */
     //@{

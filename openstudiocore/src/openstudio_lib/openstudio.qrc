@@ -70,6 +70,7 @@
     <file>images/loop_button_over.png</file>
     <file>images/loop_button_press.png</file>
     <file>images/loop_name_icon.png</file>
+    <file>images/lowtempradiant_constflow.png</file>   
     <file>images/mixer.png</file>
     <file>images/OAMixer.png</file>
     <file>images/off_building_stories_tab.png</file>
@@ -237,6 +238,7 @@
     <file>images/mini_icons/internal_mass_definition.png</file>
     <file>images/mini_icons/lights.png</file>
     <file>images/mini_icons/lights_definition.png</file>
+    <file>images/mini_icons/lowtempradiant_constflow.png</file>
     <file>images/mini_icons/luminaire.png</file>
     <file>images/mini_icons/luminaire_definition.png</file>
     <file>images/mini_icons/material.png</file>

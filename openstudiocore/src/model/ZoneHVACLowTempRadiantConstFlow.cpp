@@ -34,6 +34,8 @@
 #include <model/ScheduleTypeRegistry.hpp>
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
+#include <model/ThermalZone.hpp>
+#include <model/ThermalZone_Impl.hpp>
 
 
 #include <utilities/idd/IddFactory.hxx>
@@ -536,6 +538,66 @@ namespace detail {
     return true;
   }
 
+  boost::optional<ThermalZone> ZoneHVACLowTempRadiantConstFlow_Impl::thermalZone()
+  {
+    boost::optional<ThermalZone> result;
+    Model m = this->model();
+    std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
+    BOOST_FOREACH(ThermalZone& thermalZone, thermalZones){
+      std::vector<ModelObject> equipments = thermalZone.equipment(); 
+      BOOST_FOREACH(ModelObject& equipment, equipments){
+        if (equipment.handle() == this->handle()){
+          result = thermalZone;
+        }
+      }
+    }
+
+    return result;
+  }
+
+  //reimplemented to override the base-class method in ZoneHVACComponent
+  //because this component doesn't get attached to the zone inlet and zone outlet nodes
+  bool ZoneHVACLowTempRadiantConstFlow_Impl::addToThermalZone(ThermalZone & thermalZone)
+  {
+    Model m = this->model();
+
+    if( thermalZone.model() != m )
+    {
+      return false;
+    }
+
+    removeFromThermalZone();
+
+    thermalZone.setUseIdealAirLoads(false);
+
+    thermalZone.addEquipment(this->getObject<ZoneHVACComponent>());
+
+    return true;
+  }
+
+  //reimplemented to override the base-class method in ZoneHVACComponent
+  //because this component doesn't get attached to the zone inlet and zone outlet nodes
+  //and therefore doesn't need to be removed from them when removed from the zone
+  void ZoneHVACLowTempRadiantConstFlow_Impl::removeFromThermalZone()
+  {
+    boost::optional<ThermalZone> thermalZone = this->thermalZone();
+    Model m = this->model();
+    ModelObject thisObject = this->getObject<ModelObject>();
+    std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
+    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
+         it != thermalZones.end();
+         it++ )
+    {
+      std::vector<ModelObject> equipment = it->equipment();
+
+      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
+      {
+        it->removeEquipment(thisObject);
+
+        break;
+      }
+    }
+  }
 } // detail
 
 ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(const Model& model, 
@@ -738,6 +800,20 @@ void ZoneHVACLowTempRadiantConstFlow::resetFractionofMotorInefficienciestoFluidS
   getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->resetFractionofMotorInefficienciestoFluidStream();
 }
 
+boost::optional<ThermalZone> ZoneHVACLowTempRadiantConstFlow::thermalZone()
+{
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->thermalZone();
+}
+
+bool ZoneHVACLowTempRadiantConstFlow::addToThermalZone(ThermalZone & thermalZone)
+{
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->addToThermalZone(thermalZone);
+}
+
+void ZoneHVACLowTempRadiantConstFlow::removeFromThermalZone()
+{
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->removeFromThermalZone();
+}
 /// @cond
 ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(boost::shared_ptr<detail::ZoneHVACLowTempRadiantConstFlow_Impl> impl)
   : ZoneHVACComponent(impl)

@@ -50,6 +50,8 @@
 #include <model/ZoneHVACBaseboardConvectiveWater_Impl.hpp>
 #include <model/ZoneHVACFourPipeFanCoil.hpp>
 #include <model/ZoneHVACFourPipeFanCoil_Impl.hpp>
+#include <model/ZoneHVACLowTempRadiantConstFlow.hpp>
+#include <model/ZoneHVACLowTempRadiantConstFlow_Impl.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
 #include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
@@ -787,6 +789,117 @@ void ZoneHVACFourPipeFanCoilInspectorView::layoutModelObject( model::ModelObject
     m_coolingLoopChooserView->layoutModelObject(moCool);
   }
 }
+
+
+
+
+
+ZoneHVACLowTempRadiantConstFlowInspectorView::ZoneHVACLowTempRadiantConstFlowInspectorView( QWidget * parent )
+  : BaseInspectorView(parent)
+{
+  m_inspectorGadget = new InspectorGadget();
+  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                             m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
+  BOOST_ASSERT(isConnected);
+
+  m_heatingLoopChooserView = new LoopChooserView();
+  m_coolingLoopChooserView = new LoopChooserView();
+
+  m_libraryTabWidget->addTab( m_inspectorGadget,
+                              ":images/properties_icon_on.png",
+                              ":images/properties_icon_off.png" );
+
+  m_libraryTabWidget->addTab( m_heatingLoopChooserView,
+                              ":images/link_icon_on.png",
+                              ":images/link_icon_off.png" );
+
+  m_libraryTabWidget->addTab( m_coolingLoopChooserView,
+                              ":images/link_icon_on.png",
+                              ":images/link_icon_off.png" );
+
+  m_libraryTabWidget->setCurrentIndex(0);
+
+  connect( m_heatingLoopChooserView, SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+  
+  connect( m_heatingLoopChooserView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+
+  connect( m_coolingLoopChooserView, SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+  
+  connect( m_coolingLoopChooserView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+
+
+}
+
+void ZoneHVACLowTempRadiantConstFlowInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP )
+{
+  
+  m_modelObject = modelObject;
+
+  bool force=false;
+  bool recursive=true;
+  bool locked=readOnly;
+  bool hideChildren=false;
+  if( displayIP )
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::IP);
+  }
+  else
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::SI);
+  }
+  m_inspectorGadget->layoutModelObj(modelObject, force, recursive, locked, hideChildren);
+
+  bool waterHeatingCoil = false;
+  bool waterCoolingCoil = false;
+
+  if( boost::optional<model::ZoneHVACLowTempRadiantConstFlow> fourPipe = 
+        modelObject.optionalCast<model::ZoneHVACLowTempRadiantConstFlow>() )
+  {
+    if( boost::optional<model::HVACComponent> coil = fourPipe->heatingCoil() )
+    {
+      if( boost::optional<model::WaterToAirComponent> waterToAirCoil = coil->optionalCast<model::WaterToAirComponent>() )
+      {
+        boost::optional<model::ModelObject> moHeat = waterToAirCoil.get();
+
+        m_heatingLoopChooserView->layoutModelObject(moHeat);
+
+        waterHeatingCoil = true;
+      }
+    }
+    if( boost::optional<model::HVACComponent> coil = fourPipe->coolingCoil() )
+    {
+      if( boost::optional<model::WaterToAirComponent> waterToAirCoil = coil->optionalCast<model::WaterToAirComponent>() )
+      {
+        boost::optional<model::ModelObject> moCool = waterToAirCoil.get();
+
+        m_coolingLoopChooserView->layoutModelObject(moCool);
+
+        waterCoolingCoil = true;
+      }
+    }
+  }
+
+  if( ! waterHeatingCoil )
+  {
+    boost::optional<model::ModelObject> moHeat;
+
+    m_heatingLoopChooserView->layoutModelObject(moHeat);
+  }
+  if( ! waterCoolingCoil )
+  {
+    boost::optional<model::ModelObject> moCool;
+
+    m_coolingLoopChooserView->layoutModelObject(moCool);
+  }
+
+}
+
+
+
 
 ZoneHVACWaterToAirHeatPumpInspectorView::ZoneHVACWaterToAirHeatPumpInspectorView( QWidget * parent )
   : BaseInspectorView(parent)

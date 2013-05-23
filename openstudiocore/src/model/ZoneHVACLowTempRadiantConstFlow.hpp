@@ -80,7 +80,7 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
   HVACComponent heatingCoil() const;
 
   HVACComponent coolingCoil() const;
-
+ 
   boost::optional<double> ratedFlowRate() const;
 
   boost::optional<Schedule> pumpFlowRateSchedule() const;
@@ -148,6 +148,12 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
   bool setFractionofMotorInefficienciestoFluidStream(double fractionofMotorInefficienciestoFluidStream);
 
   void resetFractionofMotorInefficienciestoFluidStream();
+
+  boost::optional<ThermalZone> thermalZone();
+
+  bool addToThermalZone(ThermalZone & thermalZone);
+
+  void removeFromThermalZone();
 
   //@}
   /** @name Other */
