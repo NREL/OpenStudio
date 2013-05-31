@@ -2,37 +2,42 @@
 #define PRJOBJECTS_H
 
 #include "PrjReader.hpp"
+#include <QVector>
 
 #define RX_IS_STRING
 #define RX QString
 #define RX_C(v) v
+#define RX_I(v) QString("v")
 #define RX_INIT QString("0.0")
 
 namespace openstudio {
 namespace contam {
 namespace prj {
 
+// Section 1: Project, Weather, Simulation, and Output Controls
+
 class Weather
 {
 public:
+	Weather();
     void read(Reader *input);
     QString write();
-    RX Tambt;  /* ambient temperature [K] (R4) */
-    RX barpres;  /* barometric pressure [Pa] NOT corrected to sea level (R4) */
-    RX windspd;  /* wind speed [m/s] (R4) */
-    RX winddir;  /* wind direction: 0 = N, 90 = E, 180 = S, ...; (R4) */
-    RX relhum;  /* relative humidity: 0.0 to 1.0 (R4) */
-    int daytyp;  /* type of day (1-12) (I2) */
-    int uTa;  /* units for Tambt (I2) {W} */
-    int ubP;  /* units for barpres (I2) {W} */
-    int uws;  /* units for windspd (I2) {W} */
-    int uwd;  /* units for winddir (I2) {W} */
+    RX Tambt;  // ambient temperature [K] (R4)
+    RX barpres;  // barometric pressure [Pa] NOT corrected to sea level (R4)
+    RX windspd;  // wind speed [m/s] (R4)
+    RX winddir;  // wind direction: 0 = N, 90 = E, 180 = S, ...; (R4)
+    RX relhum;  // relative humidity: 0.0 to 1.0 (R4)
+    int daytyp;  // type of day (1-12) (I2)
+    int uTa;  // units for Tambt (I2) {W}
+    int ubP;  // units for barpres (I2) {W}
+    int uws;  // units for windspd (I2) {W}
+    int uwd;  // units for winddir (I2) {W}
 };
 
 class RunControl
 {
 public:
-    //RunControl(){rvals=NULL;}
+    RunControl();
     void read(Reader *input);
     QString write();
     QString name;  /* program name "ContamW" (I1) */
@@ -142,10 +147,10 @@ public:
     int tsdens;  /* (0/1) vary density during time step (I2) */
     RX tsrelax;  /* (inactive) under-relaxation factor for calculating dM/dt (R4) */
     int tsmaxi;  /* maximum number of iterations for density changes (I2) */
-    QString cnvgSS;  /* (0/1) converge density in steady state init (I1) {2.4b} */
-    QString densZP;  /* (0/1) density = f(zone pressure) (I1) {2.4b, 3.1} */
-    QString stackD;  /* (0/1) density varies hydrostatically (I1) {2.4b, 3.1} */
-    QString dodMdt;  /* (0/1) include dM/dt in airflow calc (I1) {2.4b, 3.1} */
+    int cnvgSS;  /* (0/1) converge density in steady state init (I1) {2.4b} */
+    int densZP;  /* (0/1) density = f(zone pressure) (I1) {2.4b, 3.1} */
+    int stackD;  /* (0/1) density varies hydrostatically (I1) {2.4b, 3.1} */
+    int dodMdt;  /* (0/1) include dM/dt in airflow calc (I1) {2.4b, 3.1} */
     QString date_st;  /* day-of-year to start steady simulation (mmmdd) */
     QString time_st;  /* time-of-day to start steady simulation (hh:mm:ss) */
     QString date_0;  /* day-of-year to start transient simulation (mmmdd) */
@@ -179,7 +184,7 @@ public:
     int logsave;  /* (0/1) save text controls log file (I1) */
     int save[16];  /* (unused by CONTAM; subject to change without notice) (I1) */
     //int nrvals;  /* number of real values in the vector (I2) */
-    QList<RX> rvals;  /* real values (R4) */
+    QVector<RX> rvals;  /* real values (R4) */
     int BldgFlowZ;  /* output building airflow test (zones) (IX) */
     int BldgFlowD;  /* output building airflow test (ducts) (IX) */
     int BldgFlowC;  /* output building airflow test (classified flows) (IX) */
@@ -190,6 +195,67 @@ public:
     int cfd_imax;  /* max number of dynamic coupling iterations (I2) */
     int cfd_dtcmo;  /* number of iterations between outputs to .cmo file (I2) */
 };
+
+// Section 2: Species and Contaminants
+
+class Species
+{
+public:
+    Species();
+    void read(Reader *input);
+    QString write();
+    int nr;  // species number (IX), in order from 1 to _nspcs
+    int sflag;  // 1 = simulated, 0 = unsimulated species (I2) {W}
+    int ntflag;  // 1 = non-trace, 0 = trace species (I2) {W}
+    RX molwt;  // molar mass [kg/kmol] - gas (R4)
+    RX mdiam;  // mean diameter - particle [m] (R4)
+    RX edens;  // effective density - particle [kg/m^3] (R4)
+    RX decay;  // decay constant [1/s] (R4) {W}
+    RX Dm;  // molecular diffusion coefficient [m2/s] (R4)
+    RX ccdef;  // default concentration [kg/kg air] (R4)
+    RX Cp;  // (unused) specific heat at constant pressure [J/kgK] (R4)
+    int ucc;  // units to display concentration (I2) {W}
+    int umd;  // units to display mean diameter (I2) {W}
+    int ued;  // units to display effective density (I2) {W}
+    int udm;  // units to display diffusion coefficient (I2) {W}
+    int ucp;  // units to display specific heat (I2) {W}
+    QString name;  // species name (CS)
+    QString desc;  // species description (CS) {W}
+};
+
+// Section 3: Level and Icon Data
+
+class Icon
+{
+public:
+    Icon();
+    void read(Reader *input);
+    QString write();
+    bool isWall();
+    uint bits();
+    int icon;  /* icon type - see 'special symbols' in contam.h (I2) {W} */
+    int row;  /* row position on the SketchPad (I2) {W} */
+    int col;  /* column position on the SketchPad (I2) {W} */
+    int nr;  /* zone, path, duct, etc., number (I2) {W} */
+};
+
+class Level
+{
+public:
+    Level();
+    void read(Reader *input);
+    QString write();
+    int nr;  // level number (IX), in order from 1 to nlev
+    RX refht;  // reference elevation of level [m] (R4)
+    RX delht;  // delta elevation to next level [m] (R4) {W}
+    //int nicon;  // number of icons on this level (IX)
+    int u_rfht;  // units of reference elevation (I2) {W}
+    int u_dlht;  // units of delta elevation (I2) {W}
+    QString name;  // level name (CS)
+    QVector<Icon> icons; /* Icons on this level */
+};
+
+// Section 14: Zones
 
 class Zone
 {
@@ -233,61 +299,6 @@ public:
     RX axialD;  // axial diffusion coeff [m^2/s] (R4)
     int u_aD;  // units of axial diffusion (I2)
     int u_L;  // units of c/d axis limits (I2)
-};
-
-class Icon
-{
-public:
-    Icon();
-    void read(Reader *input);
-    QString write();
-    bool isWall();
-    uint bits();
-    int icon;  /* icon type - see 'special symbols' in contam.h (I2) {W} */
-    int row;  /* row position on the SketchPad (I2) {W} */
-    int col;  /* column position on the SketchPad (I2) {W} */
-    int nr;  /* zone, path, duct, etc., number (I2) {W} */
-};
-
-class Level
-{
-public:
-    Level();
-    void read(Reader *input);
-    QString write();
-    int nr;  // level number (IX), in order from 1 to nlev
-    RX refht;  // reference elevation of level [m] (R4)
-    RX delht;  // delta elevation to next level [m] (R4) {W}
-    //int nicon;  // number of icons on this level (IX)
-    int u_rfht;  // units of reference elevation (I2) {W}
-    int u_dlht;  // units of delta elevation (I2) {W}
-    QString name;  // level name (CS)
-    QList<Icon> icons; /* Icons on this level */
-};
-
-class Species
-{
-public:
-    Species();
-    void read(Reader *input);
-    QString write();
-    int nr;  // species number (IX), in order from 1 to _nspcs
-    int sflag;  // 1 = simulated, 0 = unsimulated species (I2) {W}
-    int ntflag;  // 1 = non-trace, 0 = trace species (I2) {W}
-    RX molwt;  // molar mass [kg/kmol] - gas (R4)
-    RX mdiam;  // mean diameter - particle [m] (R4)
-    RX edens;  // effective density - particle [kg/m^3] (R4)
-    RX decay;  // decay constant [1/s] (R4) {W}
-    RX Dm;  // molecular diffusion coefficient [m2/s] (R4)
-    RX ccdef;  // default concentration [kg/kg air] (R4)
-    RX Cp;  // (unused) specific heat at constant pressure [J/kgK] (R4)
-    int ucc;  // units to display concentration (I2) {W}
-    int umd;  // units to display mean diameter (I2) {W}
-    int ued;  // units to display effective density (I2) {W}
-    int udm;  // units to display diffusion coefficient (I2) {W}
-    int ucp;  // units to display specific heat (I2) {W}
-    QString name;  // species name (CS)
-    QString desc;  // species description (CS) {W}
 };
 
 class Path

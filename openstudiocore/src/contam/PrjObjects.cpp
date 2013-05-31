@@ -47,6 +47,22 @@ namespace openstudio {
 namespace contam {
 namespace prj {
 
+// Section 1: Project, Weather, Simulation, and Output Controls
+
+Weather::Weather()
+{
+    Tambt=RX_I(0);
+    barpres=RX_I(0);
+    windspd=RX_I(0);
+    winddir=RX_I(0);
+    relhum=RX_I(0);
+    daytyp=0;
+    uTa=0;
+    ubP=0;
+    uws=0;
+    uwd=0;
+}
+
 void Weather::read(Reader *input)
 {
     Tambt = input->readNumber<RX>();
@@ -74,6 +90,136 @@ QString Weather::write()
     string += formatter(" %1",uws);
     string += formatter(" %1",uwd);
     return string;
+}
+
+RunControl::RunControl()
+{
+    echo=0;
+    skheight=0;
+    skwidth=0;
+    def_units=0;
+    def_flows=0;
+    def_T=RX_I(0);
+    udefT=0;
+    rel_N=RX_I(0);
+    wind_H=RX_I(0);
+    uwH=0;
+    wind_Ao=RX_I(0);
+    wind_a=RX_I(0);
+    scale=RX_I(0);
+    uScale=0;
+    orgRow=0;
+    orgCol=0;
+    invYaxis=0;
+    showGeom=0;
+    X0=RX_I(0);
+    Y0=RX_I(0);
+    Z0=RX_I(0);
+    angle=RX_I(0);
+    u_XYZ=0;
+    epsPath=RX_I(0);
+    epsSpcs=RX_I(0);
+    tShift=QString();
+    useWPCwp=0;
+    useWPCmf=0;
+    wpctrig=0;
+    latd=RX_I(0);
+    lgtd=RX_I(0);
+    Tznr=RX_I(0);
+    altd=RX_I(0);
+    Tgrnd=RX_I(0);
+    utg=0;
+    u_a=0;
+    sim_af=0;
+    afcalc=0;
+    afmaxi=0;
+    afrcnvg=RX_I(0);
+    afacnvg=RX_I(0);
+    afrelax=RX_I(0);
+    uac2=0;
+    Pres=RX_I(0);
+    uPres=0;
+    afslae=0;
+    afrseq=0;
+    aflmaxi=0;
+    aflcnvg=RX_I(0);
+    aflinit=0;
+    Tadj=0;
+    sim_mf=0;
+    ccmaxi=0;
+    ccrcnvg=RX_I(0);
+    ccacnvg=RX_I(0);
+    ccrelax=RX_I(0);
+    uccc=0;
+    mfnmthd=0;
+    mfnrseq=0;
+    mfnmaxi=0;
+    mfnrcnvg=RX_I(0);
+    mfnacnvg=RX_I(0);
+    mfnrelax=RX_I(0);
+    mfngamma=RX_I(0);
+    uccn=0;
+    mftmthd=0;
+    mftrseq=0;
+    mftmaxi=0;
+    mftrcnvg=RX_I(0);
+    mftacnvg=RX_I(0);
+    mftrelax=RX_I(0);
+    mftgamma=RX_I(0);
+    ucct=0;
+    mfvmthd=0;
+    mfvrseq=0;
+    mfvmaxi=0;
+    mfvrcnvg=RX_I(0);
+    mfvacnvg=RX_I(0);
+    mfvrelax=RX_I(0);
+    uccv=0;
+    mf_solver=0;
+    sim_1dz=0;
+    sim_1dd=0;
+    celldx=RX_I(0);
+    sim_vjt=0;
+    udx=0;
+    cvode_mth=0;
+    cvode_rcnvg=RX_I(0);
+    cvode_acnvg=RX_I(0);
+    cvode_dtmax=RX_I(0);
+    tsdens=0;
+    tsrelax=RX_I(0);
+    tsmaxi=0;
+    cnvgSS=0;
+    densZP=0;
+    stackD=0;
+    dodMdt=0;
+    restart=0;
+    list=0;
+    doDlg=0;
+    pfsave=0;
+    zfsave=0;
+    zcsave=0;
+    achvol=0;
+    achsave=0;
+    abwsave=0;
+    cbwsave=0;
+    expsave=0;
+    ebwsave=0;
+    zaasave=0;
+    zbwsave=0;
+    rzfsave=0;
+    rzmsave=0;
+    rz1save=0;
+    csmsave=0;
+    srfsave=0;
+    logsave=0;
+    BldgFlowZ=0;
+    BldgFlowD=0;
+    BldgFlowC=0;
+    cfd_ctype=0;
+    cfd_convcpl=RX_I(0);
+    cfd_var=0;
+    cfd_zref=0;
+    cfd_imax=0;
+    cfd_dtcmo=0;
 }
 
 void RunControl::read(Reader *input)
@@ -185,10 +331,10 @@ void RunControl::read(Reader *input)
     tsdens = input->readInt();
     tsrelax = input->readNumber<RX>();
     tsmaxi = input->readInt();
-    cnvgSS = input->readString();
-    densZP = input->readString();
-    stackD = input->readString();
-    dodMdt = input->readString();
+    cnvgSS = input->readInt();
+    densZP = input->readInt();
+    stackD = input->readInt();
+    dodMdt = input->readInt();
     date_st = input->readString();
     time_st = input->readString();
     date_0 = input->readString();
@@ -224,8 +370,9 @@ void RunControl::read(Reader *input)
         save[i] = input->readInt();
     int nrvals = input->readInt();
     //rvals = new RX[nrvals];
+	rvals.resize(nrvals);
     for(int i=0;i<nrvals;i++)
-        rvals << input->readNumber<RX>();
+        rvals[i] = input->readNumber<RX>();
     BldgFlowZ = input->readInt();
     BldgFlowD = input->readInt();
     BldgFlowC = input->readInt();
@@ -399,119 +546,7 @@ QString RunControl::write()
     return string;
 }
 
-Icon::Icon()
-{
-    icon=0;
-    col=0;
-    row=0;
-    nr=0;
-}
-
-void Icon::read(Reader *input)
-{
-    this->icon = input->readInt();
-    this->col = input->readInt();
-    this->row = input->readInt();
-    this->nr = input->readInt();
-}
-
-QString Icon::write()
-{
-    QString string = formatter(" %1",icon);
-    string += formatter(" %1",col);
-    string += formatter(" %1",row);
-    string += formatter(" %1",nr);
-    return string;
-}
-
-bool Icon::isWall()
-{
-    return (this->icon >= WL_EW) && (this->icon <= WL_NESW);
-}
-
-uint Icon::bits()
-{
-    if(isWall())
-        switch(icon)
-        {
-        case WL_EW:
-            return BIT_EW;
-        case WL_NS:
-            return BIT_NS;
-        case WL_ES:
-            return BIT_ES;
-        case WL_SW:
-            return BIT_SW;
-        case WL_NW:
-            return BIT_NW;
-        case WL_NE:
-            return BIT_NE;
-        case WL_NES:
-            return BIT_NES;
-        case WL_ESW:
-            return BIT_ESW;
-        case WL_NSW:
-            return BIT_NSW;
-        case WL_NEW:
-            return BIT_NEW;
-        case WL_NESW:
-            return BIT_NESW;
-        }
-    return 0;
-}
-
-Level::Level()
-{
-    nr=0;
-    refht=RX_INIT;
-    delht=RX_INIT;
-    u_rfht=0;
-    u_dlht=0;
-}
-
-//Level::~Level()
-//{
-//    if(icons)
-//    {
-//        delete icons;
-//        icons = NULL;
-//    }
-//}
-
-void Level::read(Reader *input)
-{
-    nr = input->readInt();
-    refht = input->readNumber<RX>();
-    delht = input->readNumber<RX>();
-    int nicon = input->readInt();
-    u_rfht = input->readInt();
-    u_dlht = input->readInt();
-    name = input->readString();
-    for(int i=0;i<nicon;i++)
-    {
-        Icon icon;
-        icon.read(input);
-        icons << icon;
-    }
-}
-
-QString Level::write()
-{
-    QString string = formatter(" %1",nr);
-    string += formatter(" %1",refht);
-    string += formatter(" %1",delht);
-    string += formatter(" %1",icons.size());
-    string += formatter(" %1",u_rfht);
-    string += formatter(" %1",u_dlht);
-    string += formatter(" %1\n",name);
-    if(icons.size())
-    {
-        for(int i=0;i<icons.size()-1;i++)
-            string += icons[i].write() + '\n';
-        string += icons[icons.size()-1].write();
-    }
-    return string;
-}
+// Section 2: Species and Contaminants
 
 Species::Species()
 {
@@ -572,6 +607,109 @@ QString Species::write()
     string += formatter(" %1",ucp);
     string += formatter(" %1\n",name);
     string += formatter("%1",desc);
+    return string;
+}
+
+// Section 3: Level and Icon Data
+
+Icon::Icon()
+{
+    icon=0;
+    col=0;
+    row=0;
+    nr=0;
+}
+
+void Icon::read(Reader *input)
+{
+    this->icon = input->readInt();
+    this->col = input->readInt();
+    this->row = input->readInt();
+    this->nr = input->readInt();
+}
+
+QString Icon::write()
+{
+    return QString("%1 %2 %3 %4").arg(icon).arg(col).arg(row).arg(nr);
+}
+
+bool Icon::isWall()
+{
+    return (this->icon >= WL_EW) && (this->icon <= WL_NESW);
+}
+
+uint Icon::bits()
+{
+    if(isWall())
+        switch(icon)
+        {
+        case WL_EW:
+            return BIT_EW;
+        case WL_NS:
+            return BIT_NS;
+        case WL_ES:
+            return BIT_ES;
+        case WL_SW:
+            return BIT_SW;
+        case WL_NW:
+            return BIT_NW;
+        case WL_NE:
+            return BIT_NE;
+        case WL_NES:
+            return BIT_NES;
+        case WL_ESW:
+            return BIT_ESW;
+        case WL_NSW:
+            return BIT_NSW;
+        case WL_NEW:
+            return BIT_NEW;
+        case WL_NESW:
+            return BIT_NESW;
+        }
+    return 0;
+}
+
+Level::Level()
+{
+    nr=0;
+    refht=RX_INIT;
+    delht=RX_INIT;
+    u_rfht=0;
+    u_dlht=0;
+}
+
+void Level::read(Reader *input)
+{
+    nr = input->readInt();
+    refht = input->readNumber<RX>();
+    delht = input->readNumber<RX>();
+    int nicon = input->readInt();
+    u_rfht = input->readInt();
+    u_dlht = input->readInt();
+    name = input->readString();
+    for(int i=0;i<nicon;i++)
+    {
+        Icon icon;
+        icon.read(input);
+        icons << icon;
+    }
+}
+
+QString Level::write()
+{
+    QString string = formatter(" %1",nr);
+    string += formatter(" %1",refht);
+    string += formatter(" %1",delht);
+    string += formatter(" %1",icons.size());
+    string += formatter(" %1",u_rfht);
+    string += formatter(" %1",u_dlht);
+    string += formatter(" %1\n",name);
+    if(icons.size())
+    {
+        for(int i=0;i<icons.size()-1;i++)
+            string += icons[i].write() + '\n';
+        string += icons[icons.size()-1].write();
+    }
     return string;
 }
 
