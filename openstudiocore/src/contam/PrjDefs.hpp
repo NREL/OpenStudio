@@ -1,5 +1,29 @@
-#ifndef icondefs_h
-#define icondefs_h
+#ifndef PRJDEFS_H
+#define PRJDEFS_H
+
+#define NOFILELINE
+
+#ifdef NOFILELINE
+#define DECFILELINE
+#define DECFILELINEC
+#define DECCFILELINE
+#define ARGFILELINE
+#define ARGFILELINEC
+#define ARGCFILELINE
+#define FILELINE
+#define CFILELINE
+#define FILELINEC
+#else
+#define DECFILELINE const char *file, int line
+#define DECFILELINEC const char *file, int line,
+#define DECCFILELINE ,const char *file, int line
+#define ARGFILELINE file,line
+#define ARGFILELINEC file,line,
+#define ARGCFILELINE ,file,line
+#define FILELINE __FILE__,__LINE__
+#define CFILELINE ,__FILE__,__LINE__
+#define FILELINEC __FILE__,__LINE__,
+#endif
 
 // CONTAM icon definitions
 #define FLOW_E      1  /* flow arrow - pointing east */

@@ -2,6 +2,8 @@ SET( target_name openstudio_contam )
 
 SET( ${target_name}_src
   ContamAPI.hpp
+  Error.hpp
+  Error.cpp
   ForwardTranslator.hpp
   ForwardTranslator.cpp
   ReverseTranslator.hpp
@@ -12,7 +14,7 @@ SET( ${target_name}_src
   PrjWriter.cpp
   PrjObjects.hpp
   PrjObjects.cpp
-  IconDefs.hpp
+  PrjDefs.hpp
   PrjData.hpp
   PrjData.cpp
 )

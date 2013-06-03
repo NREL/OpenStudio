@@ -3,7 +3,7 @@
 #include <QFile>
 //#include <iostream>
 #include <math.h>
-#include "IconDefs.hpp"
+#include "PrjDefs.hpp"
 #include "PrjWriter.hpp"
 
 namespace openstudio {
