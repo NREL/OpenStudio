@@ -107,6 +107,8 @@ namespace openstudio
             openstudio::contam::prj::Data data(":/templates/template.prj",false);
             if(!data.valid)
                 return false;
+			// The template is a legal PRJ file, so it has one level. Not for long.
+			data.levels.clear();
             //std::cout << "Number of paths: " << data.paths.size() << std::endl;
             //std::cout << data.afe.toStdString() << std::endl;
             QString output;
@@ -146,13 +148,16 @@ namespace openstudio
 
             // Translate each thermal zone and generate a lookup table by name.
             QMap <QString, int> zoneMap;
-            nr=1;
+            nr=0;
             BOOST_FOREACH(openstudio::model::ThermalZone thermalZone, model.getConcreteModelObjects<openstudio::model::ThermalZone>())
             {
+				nr++;
                 openstudio::contam::prj::Zone zone;
                 QString name = QString::fromStdString(thermalZone.name().get());
                 zoneMap[name] = nr;
+				zone.nr = nr;
                 zone.name = QString("Zone_%1").arg(nr);
+				std::cout << name << std::endl;
                 boost::optional<double> volume = thermalZone.volume();
                 QString volString("0.0");
                 if(volume)
@@ -161,7 +166,18 @@ namespace openstudio
                 }
                 else
                 {
-                    LOG(Warn, "Zone '" << name.toStdString() << "' has zero volume");
+                    LOG(Warn, "Zone '" << name.toStdString() << "' has zero volume, trying to sum space volumes");
+					double vol=0.0;
+					BOOST_FOREACH(openstudio::model::Space space, thermalZone.spaces())
+					{
+						vol += space.volume();
+					}
+					if(vol == 0.0)
+					{
+						LOG(Warn, "Failed to compute volume for Zone '" << name.toStdString() << "'");
+					}
+					else
+						volString = QString("%1").arg(vol);
                 }
                 zone.Vol = volString;
                 zone.setVariablePressure(true);
@@ -190,23 +206,68 @@ namespace openstudio
                 }
                 // set T0
                 // set P0
+				data.zones << zone;
             }
 
             // Create paths and generate a lookup table by name
             QMap <QString, int> pathMap;
-            nr = 1;
+            nr = 0;
             // Loop over surfaces and generate paths
             QList <openstudio::model::Surface*>used;
             BOOST_FOREACH(openstudio::model::Surface surface, model.getConcreteModelObjects<openstudio::model::Surface>())
             {
                 openstudio::contam::prj::Path path;
-                if(!used.contains(&surface))
+				std::string bc = surface.outsideBoundaryCondition();
+                if(!used.contains(&surface) && bc != "Ground")
                 {
-                    std::string bc = surface.outsideBoundaryCondition();
-                    std::cout << bc << std::endl;
+					// Get the associated thermal zone
+					boost::optional<openstudio::model::Space> space = surface.space();
+					if(!space)
+					{
+						LOG(Warn, "Unattached surface '" << surface.name().get() << "'");
+						continue;
+					}
+					boost::optional<openstudio::model::ThermalZone> thermalZone = space->thermalZone();
+					if(!thermalZone)
+					{
+						LOG(Warn, "Unattached space '" << space->name().get() << "'");
+						continue;
+					}
+					// Use the lookup table to get the zone info
+					int zoneNr = zoneMap.value(QString::fromStdString(thermalZone->name().get()),0);
+					if(!zoneNr)
+					{
+						LOG(Warn, "Unable to look up airflow zone for '" << thermalZone->name().get() << "'");
+						continue;
+					}
+					openstudio::contam::prj::Zone *zone = &(data.zones[zoneNr-1]);
+					double levelHt = data.levels[zone->pl-1].delht.toDouble();
+					// Get the surface area - will need to do more work here later
+					double area = surface.grossArea();
+					//std::cout << thermalZone->name().get() << " " << data.levels.size() << " " << zone->pl << std::endl;
+					std::string type = surface.surfaceType();
+                    //std::cout << bc << " " << surface.surfaceType() << std::endl;
+					//std::cout << "\t" << surface.netArea() << " " << surface.grossArea() << std::endl;
                     if(bc == "Outdoors") // Is there something about wind here?
                     {
                         // Make an exterior flow path
+						// Set basic info
+						path.nr = ++nr;
+						path.pzm = zone->nr;
+						path.pzn = -1;
+						path.pld = zone->pl;
+						// Set flow element and height
+						if(type == "RoofCeiling")
+						{
+							path.relHt = data.levels[zone->pl-1].delht;
+						}
+						else
+						{
+							path.relHt = QString().sprintf("%g",0.5*levelHt);
+						}
+						// Set the multiplier
+						path.mult = QString().sprintf("%g",area);
+						// Set the flag here! At some point!
                     }
                     else if (bc == "Surface")
                     {
@@ -219,9 +280,14 @@ namespace openstudio
                         {
                             LOG(Warn, "Unable to find adjacent surface for surface '" << surface.name().get() << "'");
                         }
+						//used << SOMETHING THAT IDS THIS SURFACE;
                     }
+					data.paths << path;
                 }
             }
+
+			return boost::optional<QString>(data.print());
+			//return boost::optional<QString>(QString());
 
           //BOOST_FOREACH(openstudio::model::Space space, thermalZone.spaces())
           //{
@@ -583,7 +649,7 @@ namespace openstudio
  //   while (!zoneList.isEmpty())
  //     delete zoneList.takeFirst();
 
-    return boost::optional<QString>(output);
+    //return boost::optional<QString>(output);
 
   }
 

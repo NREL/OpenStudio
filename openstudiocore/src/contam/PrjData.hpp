@@ -77,6 +77,7 @@ public:
     //~PrjData();
     QString summary();
     bool write(QString filename);
+	QString print();
 
     bool valid;
     RunControl rc;

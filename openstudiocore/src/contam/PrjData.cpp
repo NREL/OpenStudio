@@ -498,7 +498,10 @@ QString Data::writeZoneIC(int start)
     for(int i=start;i<zones.size();i++)
     {
         string += QString("\n%1").arg(i);
-        for(int j=0;j<contaminants.size();j++)
+		int ncc = qMin(contaminants.size(),zones[i].ic.size());
+		if(ncc != contaminants.size())
+			std::cout << "Warning: mismatch in zone IC size and contaminant count" << std::endl;
+        for(int j=0;j<ncc;j++)
             string += QString(" %1").arg(zones[i].ic[j]);
     }
     return string  + QString("\n-999");
@@ -727,7 +730,7 @@ bool Data::write(QString filename)
             out << writeSection(zones, QString("zones:"),start);
             // Section 15: Initial Zone Concentrations
             //out << zoneic;
-            out << writeZoneIC(1) + '\n';
+            out << writeZoneIC(start) + '\n';
             // Section 16: Airflow Paths
             out << writeSection(paths,QString("flow paths:"));
             // Section 17: Duct Junctions
@@ -750,6 +753,73 @@ bool Data::write(QString filename)
         }
     }
     return false;
+}
+
+QString Data::print()
+{
+    QString out;
+    if(valid)
+    {
+        // Section 1: Project, Weather, Simulation, and Output Controls
+        out += (rc.write() + QString("\n-999\n"));
+        // Section 2: Species and Contaminants
+        out += writeArray(contaminants, QString("contaminants:")) + QString('\n');
+        out += writeSection<Species>(species,QString("species:"));
+        // Section 3: Level and Icon Data
+        out += writeSection(levels,QString("levels plus icon data:"));
+        // Section 4: Day Schedules
+        out += writeSection(daySchedules,QString("day-schedules:"));
+        // Section 5: Week Schedules
+        out += writeSection(weekSchedules,QString("day-schedules:"));
+        // Section 6: Wind Pressure Profiles
+        out += writeSection(windPressureProfiles,QString("wind pressure profiles:"));
+        // Section 7: Kinetic Reactions
+        out += kinr;
+        // Section 8a: Filter Elements
+        //out << writeSection(filterElements,QString("filter elements:"));
+        out += flte;
+        // Section 8b: Filters
+        out += writeSection(filters,QString("filters:"));
+        //out << filt;
+        // Section 9: Source/Sink Elements
+        out += writeSection(sourceSinkElements,QString("source/sink elements:"));
+        // Section 10: Airflow Elements
+        out += writeSection(airflowElements,QString("flow elements:"));
+        // Section 11: Duct Elements
+        out += dfe;
+        // Section 12a: Control Super Elements
+        out += selmt;
+        // Section 12b: Control Nodes
+        out += ctrl;
+        // Section 13: Simple Air Handling System (AHS)
+        out += writeSection(ahs, QString("Simple AHS:"));
+        // Section 14: Zones
+        int start=0;
+        if(zones[0].name == QString("Ambient"))
+            start = 1;
+        out += writeSection(zones, QString("zones:"),start);
+        // Section 15: Initial Zone Concentrations
+        //out << zoneic;
+        out += writeZoneIC(start) + '\n';
+        // Section 16: Airflow Paths
+        out += writeSection(paths,QString("flow paths:"));
+        // Section 17: Duct Junctions
+        out += jct;
+        // Section 18: Initial Junction Concentrations
+        out += jctic;
+        // Section 19: Duct Segments
+        out += dct;
+        // Section 20: Source/Sinks
+        out += writeSection(sourceSinks,QString("source/sinks:"));
+        // Section 21: Occupancy Schedules
+        out += osch;
+        // Section 22: Exposures
+        out += pexp;
+        // Section 23: Annotations
+        out += note;
+        out += QString("* end project file.\n");
+    }
+    return out;
 }
 
 int drawLine(int i, int j, int di, int dj, int value, int w, int h, int *skpd)
