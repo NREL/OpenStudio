@@ -304,7 +304,7 @@ namespace openstudio
       nr = 1;
       // AHS loop
 
-      output = data.write();
+//      output = data.write();
  //     ahs->nr=nahs;
  //     ahs->supplyVolume = 0.0;
  //     ahs->returnVolume = 0.0;

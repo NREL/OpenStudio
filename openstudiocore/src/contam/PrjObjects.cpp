@@ -1,6 +1,10 @@
 #include "PrjObjects.hpp"
 #include "PrjDefs.hpp"
-#include "error.h"
+#include "Error.hpp"
+
+CONTAMNAMESPACESTART
+namespace prj
+{
 
 // Section 1: Project, Weather, Simulation, and Output Controls
 
@@ -18,7 +22,7 @@ Weather::Weather()
     uwd=0;
 }
 
-void Weather::read(PrjReader *input)
+void Weather::read(Reader *input)
 {
     Tambt = input->readNumber<RX>(FILELINE);
     barpres = input->readNumber<RX>(FILELINE);
@@ -168,7 +172,7 @@ RunControl::RunControl()
     cfd_dtcmo=0;
 }
 
-void RunControl::read(PrjReader *input)
+void RunControl::read(Reader *input)
 {
     name = input->readString(FILELINE);
     version = input->readString(FILELINE);
@@ -406,7 +410,7 @@ Species::Species()
     ucp=0;
 }
 
-void Species::read(PrjReader *input)
+void Species::read(Reader *input)
 {
     nr = input->readInt(FILELINE);
     sflag = input->readInt(FILELINE);
@@ -444,7 +448,7 @@ Icon::Icon()
     nr=0;
 }
 
-void Icon::read(PrjReader *input)
+void Icon::read(Reader *input)
 {
     this->icon = input->readInt(FILELINE);
     this->col = input->readInt(FILELINE);
@@ -502,7 +506,7 @@ Level::Level()
     u_dlht=0;
 }
 
-void Level::read(PrjReader *input)
+void Level::read(Reader *input)
 {
     nr = input->readInt(FILELINE);
     refht = input->readNumber<RX>(FILELINE);
@@ -536,7 +540,7 @@ DaySchedule::DaySchedule()
     ucnv=0;
 }
 
-void DaySchedule::read(PrjReader *input)
+void DaySchedule::read(Reader *input)
 {
     nr = input->readInt(FILELINE);
     int npts = input->readInt(FILELINE);
@@ -574,7 +578,7 @@ WeekSchedule::WeekSchedule()
     ucnv=0;
 }
 
-void WeekSchedule::read(PrjReader *input)
+void WeekSchedule::read(Reader *input)
 {
     nr = input->readInt(FILELINE);
     utyp = input->readInt(FILELINE);
@@ -603,7 +607,7 @@ WindPressureProfile::WindPressureProfile()
     type=0;
 }
 
-void WindPressureProfile::read(PrjReader *input)
+void WindPressureProfile::read(Reader *input)
 {
     nr = input->readInt(FILELINE);
     int npts = input->readInt(FILELINE);
@@ -632,7 +636,7 @@ QString WindPressureProfile::write()
 
 // Section 8a: Filter Elements
 
-FilterElement* FilterElement::readElement(PrjReader *input)
+FilterElement* FilterElement::readElement(Reader *input)
 {
     FilterElement *out=NULL;
     int nr = input->readInt(FILELINE);
@@ -709,7 +713,7 @@ Fle_Cef::Fle_Cef(int nr,QString ftype,RX area,RX depth,RX dens,int ual,int ud,QS
     type = FilterElement::FLE_CEF;
 }
 
-void Fle_Cef::readDetails(PrjReader *input)
+void Fle_Cef::readDetails(Reader *input)
 {
     int nspcs = input->readInt(FILELINE);
     spcs.resize(nspcs);
@@ -749,7 +753,7 @@ Fle_Pf0::Fle_Pf0(int nr,QString ftype,RX area,RX depth,RX dens,int ual,int ud,QS
     type = FilterElement::FLE_PF0;
 }
 
-void Fle_Pf0::readDetails(PrjReader *input)
+void Fle_Pf0::readDetails(Reader *input)
 {
     int npts = input->readInt(FILELINE);
     usz = input->readInt(FILELINE);
@@ -789,7 +793,7 @@ Fle_Gf0::Fle_Gf0(int nr,QString ftype,RX area,RX depth,RX dens,int ual,int ud,QS
     type = FilterElement::FLE_GF0;
 }
 
-void Fle_Gf0::readDetails(PrjReader *input)
+void Fle_Gf0::readDetails(Reader *input)
 {
     int nspcs = input->readInt(FILELINE);
     spcs.resize(nspcs);
@@ -845,7 +849,7 @@ Fle_Spf::Fle_Spf(int nr,QString ftype,RX area,RX depth,RX dens,int ual,int ud,QS
     type = FilterElement::FLE_SPF;
 }
 
-void Fle_Spf::readDetails(PrjReader *input)
+void Fle_Spf::readDetails(Reader *input)
 {
     int nselmt = input->readInt(FILELINE);
     elmt.resize(nselmt);
@@ -876,7 +880,7 @@ Filter::Filter()
     //load=RX_I(0);
 }
 
-void Filter::read(PrjReader *input)
+void Filter::read(Reader *input)
 {
     nr = input->readInt(FILELINE);
     fe = input->readInt(FILELINE);
@@ -906,7 +910,7 @@ QString Filter::write()
 
 // Section 9: Source/Sink Elements
 
-SourceSinkElement* SourceSinkElement::readElement(PrjReader *input)
+SourceSinkElement* SourceSinkElement::readElement(Reader *input)
 {
     SourceSinkElement *out=NULL;
     int nr = input->readInt(FILELINE);
@@ -1040,7 +1044,7 @@ Cse_Ccf::Cse_Ccf(int nr,QString spcs,QString ctype,QString name,QString desc)
     type = SourceSinkElement::CSE_CCF;
 }
 
-void Cse_Ccf::readDetails(PrjReader *input)
+void Cse_Ccf::readDetails(Reader *input)
 {
     G = input->readNumber<RX>(FILELINE);
     D = input->readNumber<RX>(FILELINE);
@@ -1071,7 +1075,7 @@ Cse_Prs::Cse_Prs(int nr,QString spcs,QString ctype,QString name,QString desc)
     type = SourceSinkElement::CSE_PRS;
 }
 
-void Cse_Prs::readDetails(PrjReader *input)
+void Cse_Prs::readDetails(Reader *input)
 {
     G = input->readNumber<RX>(FILELINE);
     x = input->readNumber<RX>(FILELINE);
@@ -1102,7 +1106,7 @@ Cse_Cut::Cse_Cut(int nr,QString spcs,QString ctype,QString name,QString desc)
     type = SourceSinkElement::CSE_CUT;
 }
 
-void Cse_Cut::readDetails(PrjReader *input)
+void Cse_Cut::readDetails(Reader *input)
 {
     G = input->readNumber<RX>(FILELINE);
     Co = input->readNumber<RX>(FILELINE);
@@ -1134,7 +1138,7 @@ Cse_Eds::Cse_Eds(int nr,QString spcs,QString ctype,QString name,QString desc)
     type = SourceSinkElement::CSE_EDS;
 }
 
-void Cse_Eds::readDetails(PrjReader *input)
+void Cse_Eds::readDetails(Reader *input)
 {
     G0 = input->readNumber<RX>(FILELINE);
     k = input->readNumber<RX>(FILELINE);
@@ -1169,7 +1173,7 @@ Cse_Bls::Cse_Bls(int nr,QString spcs,QString ctype,QString name,QString desc)
     type = SourceSinkElement::CSE_BLS;
 }
 
-void Cse_Bls::readDetails(PrjReader *input)
+void Cse_Bls::readDetails(Reader *input)
 {
     hm = input->readNumber<RX>(FILELINE);
     rho = input->readNumber<RX>(FILELINE);
@@ -1202,7 +1206,7 @@ Cse_Brs::Cse_Brs(int nr,QString spcs,QString ctype,QString name,QString desc)
     type = SourceSinkElement::CSE_BRS;
 }
 
-void Cse_Brs::readDetails(PrjReader *input)
+void Cse_Brs::readDetails(Reader *input)
 {
     M = input->readNumber<RX>(FILELINE);
     u_M = input->readInt(FILELINE);
@@ -1232,7 +1236,7 @@ Cse_Dvs::Cse_Dvs(int nr,QString spcs,QString ctype,QString name,QString desc)
     type = SourceSinkElement::CSE_DVS;
 }
 
-void Cse_Dvs::readDetails(PrjReader *input)
+void Cse_Dvs::readDetails(Reader *input)
 {
     dV = input->readNumber<RX>(FILELINE);
     dA = input->readNumber<RX>(FILELINE);
@@ -1262,7 +1266,7 @@ Cse_Drs::Cse_Drs(int nr,QString spcs,QString ctype,QString name,QString desc)
     type = SourceSinkElement::CSE_DRS;
 }
 
-void Cse_Drs::readDetails(PrjReader *input)
+void Cse_Drs::readDetails(Reader *input)
 {
     kd = input->readNumber<RX>(FILELINE);
     u_k = input->readInt(FILELINE);
@@ -1296,7 +1300,7 @@ Cse_Dvr::Cse_Dvr(int nr,QString spcs,QString ctype,QString name,QString desc)
     type = SourceSinkElement::CSE_DVR;
 }
 
-void Cse_Dvr::readDetails(PrjReader *input)
+void Cse_Dvr::readDetails(Reader *input)
 {
     dV = input->readNumber<RX>(FILELINE);
     R = input->readNumber<RX>(FILELINE);
@@ -1333,7 +1337,7 @@ Cse_Plm::Cse_Plm(int nr,QString spcs,QString ctype,QString name,QString desc)
     type = SourceSinkElement::CSE_PLM;
 }
 
-void Cse_Plm::readDetails(PrjReader *input)
+void Cse_Plm::readDetails(Reader *input)
 {
     a = input->readNumber<RX>(FILELINE);
     b = input->readNumber<RX>(FILELINE);
@@ -1367,7 +1371,7 @@ Cse_Pkm::Cse_Pkm(int nr,QString spcs,QString ctype,QString name,QString desc)
     type = SourceSinkElement::CSE_PKM;
 }
 
-void Cse_Pkm::readDetails(PrjReader *input)
+void Cse_Pkm::readDetails(Reader *input)
 {
     a = input->readNumber<RX>(FILELINE);
     b = input->readNumber<RX>(FILELINE);
@@ -1396,7 +1400,7 @@ Cse_Sup::Cse_Sup(int nr,QString spcs,QString ctype,QString name,QString desc)
     type = SourceSinkElement::CSE_SUP;
 }
 
-void Cse_Sup::readDetails(PrjReader *input)
+void Cse_Sup::readDetails(Reader *input)
 {
     int n = input->readInt(FILELINE);
     elmt.resize(n);
@@ -1417,7 +1421,7 @@ QString Cse_Sup::write()
 
 // Section 10: Airflow Elements
 
-AirflowElement *AirflowElement::readElement(PrjReader *input)
+AirflowElement *AirflowElement::readElement(Reader *input)
 {
     int nr = input->readInt(FILELINE);
     int icon = input->readInt(FILELINE);
@@ -1638,7 +1642,7 @@ Plr_Conn::Plr_Conn(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::PLR_CONN;
 }
 
-void Plr_Conn::readDetails(PrjReader *input)
+void Plr_Conn::readDetails(Reader *input)
 {
     lam = input->readNumber<RX>(FILELINE);
     turb = input->readNumber<RX>(FILELINE);
@@ -1669,7 +1673,7 @@ Qfr_Qab::Qfr_Qab(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::QFR_QAB;
 }
 
-void Qfr_Qab::readDetails(PrjReader *input)
+void Qfr_Qab::readDetails(Reader *input)
 {
     a = input->readNumber<RX>(FILELINE);
     b = input->readNumber<RX>(FILELINE);
@@ -1699,7 +1703,7 @@ Plr_Bdf::Plr_Bdf(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::PLR_BDF;
 }
 
-void Plr_Bdf::readDetails(PrjReader *input)
+void Plr_Bdf::readDetails(Reader *input)
 {
     lam = input->readNumber<RX>(FILELINE);
     Cp = input->readNumber<RX>(FILELINE);
@@ -1739,7 +1743,7 @@ Plr_Leak::Plr_Leak(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::PLR_LEAK;
 }
 
-void Plr_Leak::readDetails(PrjReader *input)
+void Plr_Leak::readDetails(Reader *input)
 {
     lam = input->readNumber<RX>(FILELINE);
     turb = input->readNumber<RX>(FILELINE);
@@ -1784,7 +1788,7 @@ Afe_Dor::Afe_Dor(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::AFE_DOR;
 }
 
-void Afe_Dor::readDetails(PrjReader *input)
+void Afe_Dor::readDetails(Reader *input)
 {
     lam = input->readNumber<RX>(FILELINE);
     turb = input->readNumber<RX>(FILELINE);
@@ -1823,7 +1827,7 @@ Afe_Sup::Afe_Sup(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::AFE_SUP;
 }
 
-void Afe_Sup::readDetails(PrjReader *input)
+void Afe_Sup::readDetails(Reader *input)
 {
     nse = input->readInt(FILELINE);
     sched = input->readInt(FILELINE);
@@ -1865,7 +1869,7 @@ Afe_Fan::Afe_Fan(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::AFE_FAN;
 }
 
-void Afe_Fan::readDetails(PrjReader *input)
+void Afe_Fan::readDetails(Reader *input)
 {
     lam = input->readNumber<RX>(FILELINE);
     turb = input->readNumber<RX>(FILELINE);
@@ -1929,7 +1933,7 @@ Plr_Bdq::Plr_Bdq(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::PLR_BDQ;
 }
 
-void Plr_Bdq::readDetails(PrjReader *input)
+void Plr_Bdq::readDetails(Reader *input)
 {
     lam = input->readNumber<RX>(FILELINE);
     Cp = input->readNumber<RX>(FILELINE);
@@ -1959,7 +1963,7 @@ Afe_Cmf::Afe_Cmf(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::AFE_CMF;
 }
 
-void Afe_Cmf::readDetails(PrjReader *input)
+void Afe_Cmf::readDetails(Reader *input)
 {
     Flow = input->readNumber<RX>(FILELINE);
     u_F = input->readInt(FILELINE);
@@ -1993,7 +1997,7 @@ Plr_Stair::Plr_Stair(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::PLR_STAIR;
 }
 
-void Plr_Stair::readDetails(PrjReader *input)
+void Plr_Stair::readDetails(Reader *input)
 {
     lam = input->readNumber<RX>(FILELINE);
     turb = input->readNumber<RX>(FILELINE);
@@ -2028,7 +2032,7 @@ Plr_Qcn::Plr_Qcn(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::PLR_QCN;
 }
 
-void Plr_Qcn::readDetails(PrjReader *input)
+void Plr_Qcn::readDetails(Reader *input)
 {
     lam = input->readNumber<RX>(FILELINE);
     turb = input->readNumber<RX>(FILELINE);
@@ -2056,7 +2060,7 @@ Qfr_Fab::Qfr_Fab(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::QFR_FAB;
 }
 
-void Qfr_Fab::readDetails(PrjReader *input)
+void Qfr_Fab::readDetails(Reader *input)
 {
     a = input->readNumber<RX>(FILELINE);
     b = input->readNumber<RX>(FILELINE);
@@ -2092,7 +2096,7 @@ Plr_Shaft::Plr_Shaft(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::PLR_SHAFT;
 }
 
-void Plr_Shaft::readDetails(PrjReader *input)
+void Plr_Shaft::readDetails(Reader *input)
 {
     lam = input->readNumber<RX>(FILELINE);
     turb = input->readNumber<RX>(FILELINE);
@@ -2136,7 +2140,7 @@ Qfr_Test2::Qfr_Test2(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::QFR_TEST2;
 }
 
-void Qfr_Test2::readDetails(PrjReader *input)
+void Qfr_Test2::readDetails(Reader *input)
 {
     a = input->readNumber<RX>(FILELINE);
     b = input->readNumber<RX>(FILELINE);
@@ -2176,7 +2180,7 @@ Plr_Crack::Plr_Crack(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::PLR_CRACK;
 }
 
-void Plr_Crack::readDetails(PrjReader *input)
+void Plr_Crack::readDetails(Reader *input)
 {
     lam = input->readNumber<RX>(FILELINE);
     turb = input->readNumber<RX>(FILELINE);
@@ -2208,7 +2212,7 @@ Afe_Cvf::Afe_Cvf(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::AFE_CVF;
 }
 
-void Afe_Cvf::readDetails(PrjReader *input)
+void Afe_Cvf::readDetails(Reader *input)
 {
     Flow = input->readNumber<RX>(FILELINE);
     u_F = input->readInt(FILELINE);
@@ -2244,7 +2248,7 @@ Plr_Test2::Plr_Test2(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::PLR_TEST2;
 }
 
-void Plr_Test2::readDetails(PrjReader *input)
+void Plr_Test2::readDetails(Reader *input)
 {
     lam = input->readNumber<RX>(FILELINE);
     turb = input->readNumber<RX>(FILELINE);
@@ -2287,7 +2291,7 @@ Dr_Pl2::Dr_Pl2(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::DR_PL2;
 }
 
-void Dr_Pl2::readDetails(PrjReader *input)
+void Dr_Pl2::readDetails(Reader *input)
 {
     lam = input->readNumber<RX>(FILELINE);
     turb = input->readNumber<RX>(FILELINE);
@@ -2326,7 +2330,7 @@ Plr_Test1::Plr_Test1(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::PLR_TEST1;
 }
 
-void Plr_Test1::readDetails(PrjReader *input)
+void Plr_Test1::readDetails(Reader *input)
 {
     lam = input->readNumber<RX>(FILELINE);
     turb = input->readNumber<RX>(FILELINE);
@@ -2365,7 +2369,7 @@ Qfr_Crack::Qfr_Crack(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::QFR_CRACK;
 }
 
-void Qfr_Crack::readDetails(PrjReader *input)
+void Qfr_Crack::readDetails(Reader *input)
 {
     a = input->readNumber<RX>(FILELINE);
     b = input->readNumber<RX>(FILELINE);
@@ -2402,7 +2406,7 @@ Afe_Csf::Afe_Csf(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::AFE_CSF;
 }
 
-void Afe_Csf::readDetails(PrjReader *input)
+void Afe_Csf::readDetails(Reader *input)
 {
     npts = input->readInt(FILELINE);
     u_x = input->readInt(FILELINE);
@@ -2434,7 +2438,7 @@ Plr_Fcn::Plr_Fcn(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::PLR_FCN;
 }
 
-void Plr_Fcn::readDetails(PrjReader *input)
+void Plr_Fcn::readDetails(Reader *input)
 {
     lam = input->readNumber<RX>(FILELINE);
     turb = input->readNumber<RX>(FILELINE);
@@ -2469,7 +2473,7 @@ Plr_Orf::Plr_Orf(int nr,int icon,QString dtype,QString name,QString desc)
     type = AirflowElement::PLR_ORF;
 }
 
-void Plr_Orf::readDetails(PrjReader *input)
+void Plr_Orf::readDetails(Reader *input)
 {
     lam = input->readNumber<RX>(FILELINE);
     turb = input->readNumber<RX>(FILELINE);
@@ -2503,7 +2507,7 @@ Ahs::Ahs()
     path_x=0;
 }
 
-void Ahs::read(PrjReader *input)
+void Ahs::read(Reader *input)
 {
     nr = input->readInt(FILELINE);
     zone_r = input->readInt(FILELINE);
@@ -2558,7 +2562,7 @@ Zone::Zone()
     u_L=0;
 }
 
-void Zone::read(PrjReader *input)
+void Zone::read(Reader *input)
 {
     nr = input->readInt(FILELINE);
     flags = input->readInt(FILELINE);
@@ -2715,7 +2719,7 @@ Path::Path(Path::Type type)
     //switch(type)
 }
 
-void Path::read(PrjReader *input)
+void Path::read(Reader *input)
 {
     nr = input->readInt(FILELINE);
     flags = input->readInt(FILELINE);
@@ -2786,7 +2790,7 @@ SourceSink::SourceSink()
     cfd=0;
 }
 
-void SourceSink::read(PrjReader *input)
+void SourceSink::read(Reader *input)
 {
     nr = input->readInt(FILELINE);
     pz = input->readInt(FILELINE);
@@ -2816,3 +2820,6 @@ QString SourceSink::write()
         string += " " + cfdname;
     return string;
 }
+
+}
+CONTAMNAMESPACEEND

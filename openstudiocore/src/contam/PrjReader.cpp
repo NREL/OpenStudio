@@ -4,23 +4,27 @@
 #include "PrjData.hpp"
 #include "Error.hpp"
 
-PrjReader::PrjReader(QTextStream *stream):stream(stream),m_lineNumber(0),allocated(false)
+CONTAMNAMESPACESTART
+namespace prj
+{
+
+Reader::Reader(QTextStream *stream):stream(stream),m_lineNumber(0),allocated(false)
 {
 }
 
-PrjReader::PrjReader(QString string, int starting):m_lineNumber(starting),allocated(true)
+Reader::Reader(QString string, int starting):m_lineNumber(starting),allocated(true)
 {
     stream = new QTextStream(&string);
 }
 
-PrjReader::~PrjReader()
+Reader::~Reader()
 {
     if(allocated)
         delete stream;
     allocated = false;
 }
 
-float PrjReader::readFloat(DECFILELINE)
+float Reader::readFloat(DECFILELINE)
 {
     bool ok;
     QString string = readString(ARGFILELINE);
@@ -30,7 +34,7 @@ float PrjReader::readFloat(DECFILELINE)
     return value;
 }
 
-double PrjReader::readDouble(DECFILELINE)
+double Reader::readDouble(DECFILELINE)
 {
     bool ok;
     QString string = readString(ARGFILELINE);
@@ -40,7 +44,7 @@ double PrjReader::readDouble(DECFILELINE)
     return value;
 }
 
-QString PrjReader::readString(DECFILELINE)
+QString Reader::readString(DECFILELINE)
 {
     while(1)
     {
@@ -67,7 +71,7 @@ QString PrjReader::readString(DECFILELINE)
     }
 }
 
-int PrjReader::readInt(DECFILELINE)
+int Reader::readInt(DECFILELINE)
 {
     bool ok;
     QString string = readString(ARGFILELINE);
@@ -77,7 +81,7 @@ int PrjReader::readInt(DECFILELINE)
     return value;
 }
 
-QString PrjReader::readLine(DECFILELINE)
+QString Reader::readLine(DECFILELINE)
 {
     /* Dump any other input */
     if(entries.size())
@@ -96,28 +100,28 @@ QString PrjReader::readLine(DECFILELINE)
     return input;
 }
 
-void PrjReader::read999(DECFILELINE)
+void Reader::read999(DECFILELINE)
 {
     QString input = readLine(ARGFILELINE);
     if(!input.startsWith(QString("-999")))
         error(QString("Failed to read -999 at line %1").arg(m_lineNumber) ARGCFILELINE);
 }
 
-void PrjReader::read999(QString mesg DECCFILELINE)
+void Reader::read999(QString mesg DECCFILELINE)
 {
     QString input = readLine(ARGFILELINE);
     if(!input.startsWith(QString("-999")))
         error(mesg+(QString(" at line %1").arg(m_lineNumber)) ARGCFILELINE);
 }
 
-void PrjReader::readEnd(DECFILELINE)
+void Reader::readEnd(DECFILELINE)
 {
     QString input = readLine(ARGFILELINE);
     if(!input.startsWith(QString("* end project file.")))
         error(QString("Failed to read file end at line %1").arg(m_lineNumber) ARGCFILELINE);
 }
 
-void PrjReader::skipSection(DECFILELINE)
+void Reader::skipSection(DECFILELINE)
 {
     QString input;
     while(1)
@@ -128,7 +132,7 @@ void PrjReader::skipSection(DECFILELINE)
     }
 }
 
-QString PrjReader::storeSection(DECFILELINE)
+QString Reader::storeSection(DECFILELINE)
 {
     QString section;
     while(1)
@@ -155,7 +159,7 @@ QString PrjReader::storeSection(DECFILELINE)
 //    return list;
 //}
 
-QVector<int> PrjReader::readIntArray(DECFILELINEC bool terminated)
+QVector<int> Reader::readIntArray(DECFILELINEC bool terminated)
 {
     int n = readInt(ARGFILELINE);
     QVector<int> list(n);
@@ -166,37 +170,37 @@ QVector<int> PrjReader::readIntArray(DECFILELINEC bool terminated)
     return list;
 }
 
-template <> int PrjReader::read<int>(DECFILELINE)
+template <> int Reader::read<int>(DECFILELINE)
 {
     return readInt(ARGFILELINE);
 }
 
-template <> double PrjReader::read<double>(DECFILELINE)
+template <> double Reader::read<double>(DECFILELINE)
 {
     return readDouble(ARGFILELINE);
 }
 
-template <> float PrjReader::read<float>(DECFILELINE)
+template <> float Reader::read<float>(DECFILELINE)
 {
     return readFloat(ARGFILELINE);
 }
 
-template <> QString PrjReader::read<QString>(DECFILELINE)
+template <> QString Reader::read<QString>(DECFILELINE)
 {
     return readString(ARGFILELINE);
 }
 
-template <> double PrjReader::readNumber<double>(DECFILELINE)
+template <> double Reader::readNumber<double>(DECFILELINE)
 {
     return readInt(ARGFILELINE);
 }
 
-template <> float PrjReader::readNumber<float>(DECFILELINE)
+template <> float Reader::readNumber<float>(DECFILELINE)
 {
     return readFloat(ARGFILELINE);
 }
 
-template <> QString PrjReader::readNumber<QString>(DECFILELINE)
+template <> QString Reader::readNumber<QString>(DECFILELINE)
 {
     bool ok;
     QString string = readString(ARGFILELINE);
@@ -206,4 +210,5 @@ template <> QString PrjReader::readNumber<QString>(DECFILELINE)
     return string;
 }
 
-
+}
+CONTAMNAMESPACEEND

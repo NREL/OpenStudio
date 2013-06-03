@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+CONTAMNAMESPACESTART
+
 void error(QString mesg DECCFILELINE)
 {
 #ifdef NOFILELINE
@@ -11,4 +13,6 @@ void error(QString mesg DECCFILELINE)
 #endif
     exit(EXIT_FAILURE);
 }
+
+CONTAMNAMESPACEEND
 

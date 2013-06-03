@@ -7,12 +7,16 @@
 
 #include "PrjDefs.hpp"
 
-class PrjReader
+CONTAMNAMESPACESTART
+namespace prj
+{
+
+class Reader
 {
 public:
-    explicit PrjReader(QTextStream *stream);
-    explicit PrjReader(QString string, int starting=0);
-    ~PrjReader();
+    explicit Reader(QTextStream *stream);
+    explicit Reader(QString string, int starting=0);
+    ~Reader();
     float readFloat(DECFILELINE);
     double readDouble(DECFILELINE);
     QString readString(DECFILELINE);
@@ -40,7 +44,7 @@ private:
     QStringList entries;
 };
 
-template <class T> QList<T*> PrjReader::readSectionPointers(DECFILELINEC QString name)
+template <class T> QList<T*> Reader::readSectionPointers(DECFILELINEC QString name)
 {
     QList<T*> list;
     T *object;
@@ -58,7 +62,7 @@ template <class T> QList<T*> PrjReader::readSectionPointers(DECFILELINEC QString
     return list;
 }
 
-template <class T> QList<T> PrjReader::readSectionList(DECFILELINEC QString name)
+template <class T> QList<T> Reader::readSectionList(DECFILELINEC QString name)
 {
     QList<T> list;
     int n = readInt(ARGFILELINE);
@@ -75,7 +79,7 @@ template <class T> QList<T> PrjReader::readSectionList(DECFILELINEC QString name
     return list;
 }
 
-template <class T> QVector<T> PrjReader::readSectionVector(DECFILELINEC QString name)
+template <class T> QVector<T> Reader::readSectionVector(DECFILELINEC QString name)
 {
     int n = readInt(ARGFILELINE);
     QVector<T> vector(n);
@@ -88,17 +92,25 @@ template <class T> QVector<T> PrjReader::readSectionVector(DECFILELINEC QString 
     return vector;
 }
 
-template <class T> QVector<QSharedPointer<T> > PrjReader::readElementVector(DECFILELINEC QString name)
+template <class T> QVector<QSharedPointer<T> > Reader::readElementVector(DECFILELINEC QString name)
 {
     int n = readInt(ARGFILELINE);
     QVector<QSharedPointer<T> > vector(n);
     for(int i=0;i<n;i++)
-        vector[i].reset(T::readElement(this));
+	{
+		// No reset in 4.8
+        QSharedPointer<T> element(T::readElement(this));
+        vector[i].swap(element);
+        //vector[i].reset(T::readElement(this));
+	}
     if(name.isNull())
         read999(QString("Failed to find section termination") ARGCFILELINE);
     else
         read999(QString("Failed to find %1 section termination").arg(name) ARGCFILELINE);
     return vector;
 }
+
+}
+CONTAMNAMESPACEEND
 
 #endif // PRJREADER_H

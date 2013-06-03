@@ -1,10 +1,8 @@
-#include "PrjReader.hpp"
-//#include <iostream>
-#include <stdlib.h>
+#include "PrjWriter.hpp"
 
-namespace openstudio {
-namespace contam {
-namespace prj {
+CONTAMNAMESPACESTART
+namespace prj
+{
 
 QString writeEmptySection(QString label)
 {
@@ -17,5 +15,4 @@ QString writeEmptySection(QString label)
 }
 
 }
-}
-}
+CONTAMNAMESPACEEND

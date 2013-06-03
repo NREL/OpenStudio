@@ -1,6 +1,9 @@
 #ifndef PRJDEFS_H
 #define PRJDEFS_H
 
+#define CONTAMNAMESPACESTART namespace openstudio{ namespace contam {
+#define CONTAMNAMESPACEEND }}
+
 #define NOFILELINE
 
 #ifdef NOFILELINE

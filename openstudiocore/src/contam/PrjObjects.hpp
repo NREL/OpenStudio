@@ -11,8 +11,8 @@
  *     5               Week Schedules                Supported
  *     6           Wind Pressure Profiles            Supported
  *     7              Kinetic Reactions            Not supported
- *    8a               Filter Elements           Partially tested
- *    8b                   Filters                   Untested
+ *    8a               Filter Elements                 Broken
+ *    8b                   Filters                   Supported
  *     9            Source/Sink Elements         Partially tested
  *    10              Airflow Elements           Partially tested
  *    11                Duct Elements              Not supported
@@ -38,7 +38,11 @@
 #define RX_IS_STRING
 #define RX QString
 #define RX_C(v) v
-#define RX_I(v) QString("v")
+#define RX_I(v) QString(#v)
+
+CONTAMNAMESPACESTART
+namespace prj
+{
 
 // Section 1: Project, Weather, Simulation, and Output Controls
 
@@ -46,7 +50,7 @@ class Weather
 {
 public:
     Weather();
-    void read(PrjReader *input);
+    void read(Reader *input);
     QString write();
     RX Tambt;  // ambient temperature [K] (R4)
     RX barpres;  // barometric pressure [Pa] NOT corrected to sea level (R4)
@@ -64,7 +68,7 @@ class RunControl
 {
 public:
     RunControl();
-    void read(PrjReader *input);
+    void read(Reader *input);
     QString write();
     QString name;  /* program name "ContamW" (I1) */
     QString version;  /* program version "3.1" (I1) */
@@ -228,7 +232,7 @@ class Species
 {
 public:
     Species();
-    void read(PrjReader *input);
+    void read(Reader *input);
     QString write();
     int nr;  // species number (IX), in order from 1 to _nspcs
     int sflag;  // 1 = simulated, 0 = unsimulated species (I2) {W}
@@ -255,7 +259,7 @@ class Icon
 {
 public:
     Icon();
-    void read(PrjReader *input);
+    void read(Reader *input);
     QString write();
     bool isWall();
     uint bits();
@@ -269,7 +273,7 @@ class Level
 {
 public:
     Level();
-    void read(PrjReader *input);
+    void read(Reader *input);
     QString write();
     int nr;  // level number (IX), in order from 1 to nlev
     RX refht;  // reference elevation of level [m] (R4)
@@ -287,7 +291,7 @@ class DaySchedule
 {
 public:
     DaySchedule();
-    void read(PrjReader *input);
+    void read(Reader *input);
     QString write();
     int nr;  // schedule number (IX); in order from 1 to _ndsch
     //int npts;  // number of data points (I2)
@@ -306,7 +310,7 @@ class WeekSchedule
 {
 public:
     WeekSchedule();
-    void read(PrjReader *input);
+    void read(Reader *input);
     QString write();
     int nr;  // schedule number (IX); in order from 1 to _nwsch
     int utyp;  // type of units (I2) {W}
@@ -322,7 +326,7 @@ class WindPressureProfile
 {
 public:
     WindPressureProfile();
-    void read(PrjReader *input);
+    void read(Reader *input);
     QString write();
     int nr;  // profile number (IX); in order from 1 to _nwpf
     //int npts;  // number of data points (I2)
@@ -352,7 +356,7 @@ public:
     QString name;  // element name (CS) {W}
     QString desc;  // filter description (I1) {W} may be blank
     Type type;
-    static FilterElement* readElement(PrjReader *input);
+    static FilterElement* readElement(Reader *input);
 };
 
 class Fle_Cef : public FilterElement
@@ -360,7 +364,7 @@ class Fle_Cef : public FilterElement
 public:
     Fle_Cef(int nr=0,QString ftype=QString(),RX area=RX_I(0),RX depth=RX_I(0),RX dens=RX_I(0),
             int ual=0,int ud=0,QString name=QString(),QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     //int nspcs;  // number of species (IX)
     QVector<QString> spcs;  // species name (I1)
@@ -372,7 +376,7 @@ class Fle_Pf0 : public FilterElement
 public:
     Fle_Pf0(int nr=0,QString ftype=QString(),RX area=RX_I(0),RX depth=RX_I(0),RX dens=RX_I(0),
             int ual=0,int ud=0,QString name=QString(),QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     //int npts;  // number of data points (I2)
     int usz;  // units of particle size (I2) {W}
@@ -385,7 +389,7 @@ class Fle_Gf0 : public FilterElement
 public:
     Fle_Gf0(int nr=0,QString ftype=QString(),RX area=RX_I(0),RX depth=RX_I(0),RX dens=RX_I(0),
             int ual=0,int ud=0,QString name=QString(),QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     // int nspcs;  // number of species (IX)
     QVector<QString> spcs;  // species name (CS)
@@ -400,7 +404,7 @@ class Fle_Spf : public FilterElement
 public:
     Fle_Spf(int nr=0,QString ftype=QString(),RX area=RX_I(0),RX depth=RX_I(0),RX dens=RX_I(0),
             int ual=0,int ud=0,QString name=QString(),QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     //int nselmt;  // number of sub-elements(I2)
     QVector<int> elmt;  // sub-element numbers (IX) – converted to pointers
@@ -412,7 +416,7 @@ class Filter
 {
 public:
     Filter();
-    void read(PrjReader *input);
+    void read(Reader *input);
     QString write();
     int nr;  // filter number (IX); in order from 1 to _nfilt
     int fe;  // filter element number (IX)
@@ -438,14 +442,14 @@ public:
     QString desc;  // element description (CS) {W} may be blank
     Type type;
     static Type convertType(QString string);
-    static SourceSinkElement* readElement(PrjReader *input);
+    static SourceSinkElement* readElement(Reader *input);
 };
 
 class Cse_Ccf : public SourceSinkElement
 {
 public:
     Cse_Ccf(int nr=0,QString spcs=QString(),QString ctype=0,QString name=QString(),QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX G;  // generation rate [kg/s] (R4)
     RX D;  // deposition rate [kg/s] (R4)
@@ -457,7 +461,7 @@ class Cse_Prs : public SourceSinkElement
 {
 public:
     Cse_Prs(int nr=0,QString spcs=QString(),QString ctype=0,QString name=QString(),QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX G;  // generation rate [kg/s] (R4)
     RX x;  // pressure exponent [-] (R4)
@@ -468,7 +472,7 @@ class Cse_Cut : public SourceSinkElement
 {
 public:
     Cse_Cut(int nr=0,QString spcs=QString(),QString ctype=0,QString name=QString(),QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX G;  // generation rate [kg/s] (R4)
     RX Co;  // cutoff concentration [kg/kg] (R4)
@@ -480,7 +484,7 @@ class Cse_Eds : public SourceSinkElement
 {
 public:
     Cse_Eds(int nr=0,QString spcs=QString(),QString ctype=0,QString name=QString(),QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX G0;  // initial generation rate [kg/s] (R4)
     RX k;  // decay constant [1/s] (R4)
@@ -492,7 +496,7 @@ class Cse_Bls : public SourceSinkElement
 {
 public:
     Cse_Bls(int nr=0,QString spcs=QString(),QString ctype=0,QString name=QString(),QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX hm;  // average film mass transfer coefficient [m/s] (R4)
     RX rho;  // film density of air [kg/m^3] (R4)
@@ -507,7 +511,7 @@ class Cse_Brs : public SourceSinkElement
 {
 public:
     Cse_Brs(int nr=0,QString spcs=QString(),QString ctype=0,QString name=QString(),QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX M;  // mass added to zone in one time step [kg] (R4)
     int u_M;  // units of mass (I2) {W}
@@ -517,7 +521,7 @@ class Cse_Dvs : public SourceSinkElement
 {
 public:
     Cse_Dvs(int nr=0,QString spcs=QString(),QString ctype=0,QString name=QString(),QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX dV;  // deposition velocity [m/s] (R4)
     RX dA;  // deposition area [m^2] (R4)
@@ -529,7 +533,7 @@ class Cse_Drs : public SourceSinkElement
 {
 public:
     Cse_Drs(int nr=0,QString spcs=QString(),QString ctype=0,QString name=QString(),QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX kd;  // deposition rate [1/s] (R4)
     int u_k;  // units of deposition rate (I2) {W}
@@ -539,7 +543,7 @@ class Cse_Dvr : public SourceSinkElement
 {
 public:
     Cse_Dvr(int nr=0,QString spcs=QString(),QString ctype=0,QString name=QString(),QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX dV;  // deposition velocity [m/s] (R4)
     RX R;  // resuspension rate [1/s] (R4)
@@ -555,7 +559,7 @@ class Cse_Plm : public SourceSinkElement
 {
 public:
     Cse_Plm(int nr=0,QString spcs=QString(),QString ctype=0,QString name=QString(),QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX a;  // coefficient(R4) [kg/s]
     RX b;  // exponent (R4)
@@ -568,7 +572,7 @@ class Cse_Pkm : public SourceSinkElement
 {
 public:
     Cse_Pkm(int nr=0,QString spcs=QString(),QString ctype=0,QString name=QString(),QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX a;  // peak emission rate(R4) [kg/s]
     RX b;  // fitting parameter (R4)
@@ -581,7 +585,7 @@ class Cse_Sup : public SourceSinkElement
 {
 public:
     Cse_Sup(int nr=0,QString spcs=QString(),QString ctype=0,QString name=QString(),QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     //int n;  // number of sub-elements (IX)
     QVector<int> elmt;  // sub-element numbers (IX) - converted to pointers
@@ -606,7 +610,7 @@ public:
     QString desc;  // element description (CS) {W} may be blank
 
     static Type convertType(QString string);
-    static AirflowElement *readElement(PrjReader *input);
+    static AirflowElement *readElement(Reader *input);
 };
 
 class Plr_Orf : public AirflowElement
@@ -614,7 +618,7 @@ class Plr_Orf : public AirflowElement
 public:
     Plr_Orf(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
             QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX lam;  // laminar flow coefficient (R4)
     RX turb;  // turbulent flow coefficient (R4)
@@ -632,7 +636,7 @@ class Plr_Leak : public AirflowElement
 public:
     Plr_Leak(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
              QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX lam;  // laminar flow coefficient (R4)
     RX turb;  // turbulent flow coefficient (R4)
@@ -653,7 +657,7 @@ class Plr_Conn : public AirflowElement
 public:
     Plr_Conn(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
              QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX lam;  // laminar flow coefficient (R4)
     RX turb;  // turbulent flow coefficient (R4)
@@ -668,7 +672,7 @@ class Plr_Qcn : public AirflowElement
 public:
     Plr_Qcn(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
             QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX lam;  // laminar flow coefficient (R4)
     RX turb;  // turbulent flow coefficient (R4)
@@ -680,7 +684,7 @@ class Plr_Fcn : public AirflowElement
 public:
     Plr_Fcn(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
             QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX lam;  // laminar flow coefficient (R4)
     RX turb;  // turbulent flow coefficient (R4)
@@ -692,7 +696,7 @@ class Plr_Test1 : public AirflowElement
 public:
     Plr_Test1(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
               QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX lam;  // laminar flow coefficient (R4)
     RX turb;  // turbulent flow coefficient (R4)
@@ -708,7 +712,7 @@ class Plr_Test2 : public AirflowElement
 public:
     Plr_Test2(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
               QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX lam;  // laminar flow coefficient (R4)
     RX turb;  // turbulent flow coefficient (R4)
@@ -728,7 +732,7 @@ class Plr_Crack : public AirflowElement
 public:
     Plr_Crack(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
               QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX lam;  // laminar flow coefficient (R4)
     RX turb;  // turbulent flow coefficient (R4)
@@ -744,7 +748,7 @@ class Plr_Stair : public AirflowElement
 public:
     Plr_Stair(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
               QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX lam;  // laminar flow coefficient (R4)
     RX turb;  // turbulent flow coefficient (R4)
@@ -762,7 +766,7 @@ class Plr_Shaft : public AirflowElement
 public:
     Plr_Shaft(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
               QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX lam;  // laminar flow coefficient (R4)
     RX turb;  // turbulent flow coefficient (R4)
@@ -782,7 +786,7 @@ class Plr_Bdq : public AirflowElement
 public:
     Plr_Bdq(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
             QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX lam;  // laminar flow coefficient {R4}
     RX Cp;  // turbulent flow coefficient ( dP > 0 ) {R4}
@@ -796,7 +800,7 @@ class Plr_Bdf : public AirflowElement
 public:
     Plr_Bdf(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
             QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX lam;  // laminar flow coefficient {R4}
     RX Cp;  // turbulent flow coefficient ( dP > 0 ) {R4}
@@ -810,7 +814,7 @@ class Qfr_Qab : public AirflowElement
 public:
     Qfr_Qab(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
             QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX a;  // dP = a*Q + b*Q*Q {R4}
     RX b;  // {R4}
@@ -821,7 +825,7 @@ class Qfr_Fab : public AirflowElement
 public:
     Qfr_Fab(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
             QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX a;  // dP = a*F + b*F*F {R4}
     RX b;  // {R4}
@@ -832,7 +836,7 @@ class Qfr_Crack : public AirflowElement
 public:
     Qfr_Crack(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
               QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX a;  // dP = a*F + b*F*F {R4}
     RX b;  // {R4}
@@ -850,7 +854,7 @@ class Qfr_Test2 : public AirflowElement
 public:
     Qfr_Test2(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
               QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX a;  // dP = a*F + b*F*F {R4}
     RX b;  // {R4}
@@ -869,7 +873,7 @@ class Afe_Dor : public AirflowElement
 public:
     Afe_Dor(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
             QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX lam;  // laminar flow coefficient (R4)
     RX turb;  // turbulent flow coefficient (R4)
@@ -888,7 +892,7 @@ class Dr_Pl2 : public AirflowElement
 public:
     Dr_Pl2(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
            QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX lam;  // laminar flow coefficient (R4)
     RX turb;  // turbulent flow coefficient (R4)
@@ -906,7 +910,7 @@ class Afe_Cmf : public AirflowElement
 public:
     Afe_Cmf(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
             QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX Flow;  // design flow rate [kg/s] (R4)
     int u_F;  // units of flow (I2) {W}
@@ -917,7 +921,7 @@ class Afe_Cvf : public AirflowElement
 public:
     Afe_Cvf(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
             QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX Flow;  // design flow rate [m^3/s] (R4)
     int u_F;  // units of flow (I2) {W}
@@ -928,7 +932,7 @@ class Afe_Fan : public AirflowElement
 public:
     Afe_Fan(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
             QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     RX lam;  // laminar flow coefficient (R4)
     RX turb;  // turbulent flow coefficient (R4)
@@ -954,7 +958,7 @@ class Afe_Csf : public AirflowElement
 public:
     Afe_Csf(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
             QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     int npts;  // number of data points (I2)
     int u_x;  // units for x (I2)
@@ -968,7 +972,7 @@ class Afe_Sup : public AirflowElement
 public:
     Afe_Sup(int nr=0,int icon=0,QString dtype=QString(),QString name=QString(),
             QString desc=QString());
-    void readDetails(PrjReader *input);
+    void readDetails(Reader *input);
     QString write();
     int nse;  // number of sub-elements(I2)
     int sched;  // scheduled sub-element number (IX) (only one)
@@ -988,7 +992,7 @@ class Ahs
 {
 public:
     Ahs();
-    void read(PrjReader *input);
+    void read(Reader *input);
     QString write();
     int nr;  // AHS number (IX); in order from 1 to _nahs
     int zone_r;  // return zone number (IX)
@@ -1022,7 +1026,7 @@ public:
         NCFDZN=0xFFDF,   // flags & NCFDZN to unset CFD zone
         FLAG_N=0x003F};   // all zone flag bits, used in PrjRead()
     Zone();
-    void read(PrjReader *input);
+    void read(Reader *input);
     QString write();
     // Custom getters/setters
     void setVariablePressure(bool b);
@@ -1069,7 +1073,7 @@ public:
     enum Type {Standard, Recirculation, Exhaust, OA};
     Path(Type type=Standard);
     void setType(Type type);
-    void read(PrjReader *input);
+    void read(Reader *input);
     QString write();
     int nr;  // path number (IX); in order from 1 to _npath
     int flags;  // airflow path flag values (I2)
@@ -1109,7 +1113,7 @@ class SourceSink
 {
 public:
     SourceSink();
-    void read(PrjReader *input);
+    void read(Reader *input);
     QString write();
     int nr;  // source/sink number (IX); in order from 1 to _ncss
     int pz;  // zone index (IX); converted to pointer
@@ -1128,5 +1132,8 @@ public:
     int cfd;  // cfd path (0=no, 1=yes) (I2) {CONTAM 3.0}
     QString cfdname;  // cfd path id (CS)
 };
+
+}
+CONTAMNAMESPACEEND
 
 #endif
