@@ -5959,6 +5959,61 @@ OS:AirTerminal:SingleDuct:Uncontrolled,
        \units m3/s
        \minimum 0
 
+OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
+       \min-fields 5
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference ConnectionObject
+  A3, \field Availability Schedule Name
+       \type object-list
+       \required-field
+       \object-list ScheduleNames
+  A4, \field Air Outlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  A5, \field Air Inlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  N1, \field Maximum Air Flow Rate
+       \type real
+       \autosizable
+       \units m3/s
+       \minimum 0
+  A6, \field Reheat Coil Name
+       \type object-list
+       \object-list HeatingCoilName
+  N2, \field Maximum Hot Water or Steam Flow Rate
+       \note Not used when reheat coil type is gas or electric
+       \type real
+       \autosizable
+       \units m3/s
+       \ip-units gal/min
+       \minimum 0
+  N3, \field Minimum Hot Water or Steam Flow Rate
+       \note Not used when reheat coil type is gas or electric
+       \type real
+       \units m3/s
+       \ip-units gal/min
+       \minimum 0
+       \default 0.0
+  N4, \field Convergence Tolerance
+       \type real
+       \minimum> 0
+       \default 0.001
+  N5; \field Maximum Reheat Air Temperature
+       \note Specifies the maximum allowable supply air temperature leaving the reheat coil.
+       \note If left blank, there is no limit and no default. If unknown, 35C (95F) is recommended.
+       \type real
+       \units C
+       \minimum> 0
+       \default 35.0
+
 OS:AirTerminal:SingleDuct:VAV:Reheat,
        \min-fields 1
   A1, \field Handle

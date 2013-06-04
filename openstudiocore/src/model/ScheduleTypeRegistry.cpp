@@ -133,6 +133,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
   {
     {"AirLoopHVACUnitaryHeatPumpAirToAir","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirLoopHVACUnitaryHeatPumpAirToAir","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
+    {"AirTerminalSingleDuctConstantVolumeReheat","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirTerminalSingleDuctParallelPIUReheat","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirTerminalSingleDuctUncontrolled","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirTerminalSingleDuctVAVReheat","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
