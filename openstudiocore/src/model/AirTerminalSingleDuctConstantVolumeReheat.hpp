@@ -23,6 +23,9 @@
 #include <model/ModelAPI.hpp>
 #include <model/StraightComponent.hpp>
 
+#include <model/Connection.hpp>
+#include <model/ModelObject.hpp>
+
 namespace openstudio {
 
 class Quantity;
@@ -33,7 +36,7 @@ namespace model {
 // TODO: Check the following class names against object getters and setters.
 class Schedule;
 class Connection;
-class Connection;
+/*class Connection;*/
 class HVACComponent;
 
 namespace detail {
@@ -75,7 +78,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeReheat : public StraightCompo
   bool isMaximumAirFlowRateAutosized() const;
 
   // TODO: Check return type. From object lists, some candidates are: HeatingCoilName.
-  boost::optional<HVACComponent> reheatCoil() const;
+  HVACComponent reheatCoil() const;
 
   boost::optional<double> maximumHotWaterorSteamFlowRate() const;
 

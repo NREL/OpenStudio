@@ -267,7 +267,7 @@ namespace detail {
   std::vector<ModelObject> AirTerminalSingleDuctConstantVolumeReheat_Impl::children() const
   {
     std::vector<ModelObject> result;
-    if (OptionalHVACComponent intermediate = reheatCoil()) {
+    if (OptionalHVACComponent intermediate = optionalReheatCoil()) {
       result.push_back(*intermediate);
     }
     return result;
@@ -320,7 +320,14 @@ namespace detail {
     return result;
   }
 
-  boost::optional<HVACComponent> AirTerminalSingleDuctConstantVolumeReheat_Impl::reheatCoil() const {
+  HVACComponent AirTerminalSingleDuctConstantVolumeReheat_Impl::reheatCoil() const
+  {
+    boost::optional<HVACComponent> coil = optionalReheatCoil();
+    BOOST_ASSERT(coil);
+    return coil.get();
+  }
+
+  boost::optional<HVACComponent> AirTerminalSingleDuctConstantVolumeReheat_Impl::optionalReheatCoil() const {
     return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ReheatCoilName);
   }
 
@@ -448,7 +455,64 @@ namespace detail {
     BOOST_ASSERT(result);
   }
 
-  bool AirTerminalSingleDuctConstantVolumeReheat_Impl::setReheatCoil(const boost::optional<HVACComponent>& heatingCoilName) {
+  bool AirTerminalSingleDuctConstantVolumeReheat_Impl::setReheatCoil(const HVACComponent& heatingCoilName) {
+    /*
+    bool isTypeCorrect = false;
+
+    if( heatingCoilName.iddObjectType() == IddObjectType::OS_Coil_Heating_Electric )
+    {
+      isTypeCorrect = true;
+    }
+    else if( heatingCoilName.iddObjectType() == IddObjectType::OS_Coil_Heating_Gas )
+    {
+      isTypeCorrect = true;
+    }
+    else if( heatingCoilName.iddObjectType() == IddObjectType::OS_Coil_Heating_Water )
+    {
+      isTypeCorrect = true;
+    }
+
+    if( isTypeCorrect )
+    {
+      setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ReheatCoilName,heatingCoilName.handle());
+    }*/
+
+
+
+    bool result = false;
+
+    switch(heatingCoilName.iddObject().type().value())
+    {
+    case openstudio::IddObjectType::OS_Coil_Heating_Gas :
+      {
+        result = true;
+        break;
+      }
+    case openstudio::IddObjectType::OS_Coil_Heating_Water :
+      {
+        result = true;
+        break;
+      }
+    case openstudio::IddObjectType::OS_Coil_Heating_Electric :
+      {
+        result = true;
+        break;
+      }
+    default:
+      {
+        LOG(Warn, "Unsupported or invalid IddObjectType: '" << heatingCoilName.iddObject().name() << "'");
+        result = false;
+      }
+    }
+
+    if( result )
+    {
+      result = this->setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ReheatCoilName,heatingCoilName.handle());
+    } 
+
+    return result;
+
+/*
     bool result(false);
     if (heatingCoilName) {
       result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ReheatCoilName, heatingCoilName.get().handle());
@@ -458,6 +522,7 @@ namespace detail {
       result = true;
     }
     return result;
+    */
   }
 
   void AirTerminalSingleDuctConstantVolumeReheat_Impl::resetReheatCoil() {
@@ -732,7 +797,7 @@ bool AirTerminalSingleDuctConstantVolumeReheat::isMaximumAirFlowRateAutosized() 
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->isMaximumAirFlowRateAutosized();
 }
 
-boost::optional<HVACComponent> AirTerminalSingleDuctConstantVolumeReheat::reheatCoil() const {
+HVACComponent AirTerminalSingleDuctConstantVolumeReheat::reheatCoil() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->reheatCoil();
 }
 

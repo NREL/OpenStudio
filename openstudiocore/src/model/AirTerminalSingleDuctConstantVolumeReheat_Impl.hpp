@@ -134,7 +134,7 @@ namespace detail {
     bool isMaximumAirFlowRateAutosized() const;
 
     // TODO: Check return type. From object lists, some candidates are: HeatingCoilName.
-    boost::optional<HVACComponent> reheatCoil() const;
+    HVACComponent reheatCoil() const;
 
     boost::optional<double> maximumHotWaterorSteamFlowRate() const;
 
@@ -182,7 +182,7 @@ namespace detail {
     void autosizeMaximumAirFlowRate();
 
     // TODO: Check argument type. From object lists, some candidates are: HeatingCoilName.
-    bool setReheatCoil(const boost::optional<HVACComponent>& heatingCoilName);
+    bool setReheatCoil(const HVACComponent& heatingCoilName);
 
     void resetReheatCoil();
 
@@ -225,6 +225,7 @@ namespace detail {
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
+    boost::optional<HVACComponent> optionalReheatCoil() const;
     boost::optional<Schedule> optionalAvailabilitySchedule() const;
     boost::optional<Connection> optionalAirOutletNode() const;
     boost::optional<Connection> optionalAirInletNode() const;
