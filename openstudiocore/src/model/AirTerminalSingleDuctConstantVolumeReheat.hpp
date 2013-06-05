@@ -23,20 +23,13 @@
 #include <model/ModelAPI.hpp>
 #include <model/StraightComponent.hpp>
 
-#include <model/Connection.hpp>
 #include <model/ModelObject.hpp>
 
 namespace openstudio {
-
-class Quantity;
-class OSOptionalQuantity;
-
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
 class Schedule;
-class Connection;
-/*class Connection;*/
 class HVACComponent;
 
 namespace detail {
@@ -51,7 +44,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeReheat : public StraightCompo
   /** @name Constructors and Destructors */
   //@{
 
-  explicit AirTerminalSingleDuctConstantVolumeReheat(const Model& model);
+  explicit AirTerminalSingleDuctConstantVolumeReheat(const Model& model, Schedule& availabilitySchedule, HVACComponent& coil);
 
   virtual ~AirTerminalSingleDuctConstantVolumeReheat() {}
 
@@ -65,15 +58,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeReheat : public StraightCompo
   // TODO: Check return type. From object lists, some candidates are: Schedule.
   Schedule availabilitySchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection airOutletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection airInletNode() const;
-
   boost::optional<double> maximumAirFlowRate() const;
-
-  OSOptionalQuantity getMaximumAirFlowRate(bool returnIP=false) const;
 
   bool isMaximumAirFlowRateAutosized() const;
 
@@ -82,25 +67,17 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeReheat : public StraightCompo
 
   boost::optional<double> maximumHotWaterorSteamFlowRate() const;
 
-  OSOptionalQuantity getMaximumHotWaterorSteamFlowRate(bool returnIP=false) const;
-
   bool isMaximumHotWaterorSteamFlowRateAutosized() const;
 
   double minimumHotWaterorSteamFlowRate() const;
-
-  Quantity getMinimumHotWaterorSteamFlowRate(bool returnIP=false) const;
 
   bool isMinimumHotWaterorSteamFlowRateDefaulted() const;
 
   double convergenceTolerance() const;
 
-  Quantity getConvergenceTolerance(bool returnIP=false) const;
-
   bool isConvergenceToleranceDefaulted() const;
 
   double maximumReheatAirTemperature() const;
-
-  Quantity getMaximumReheatAirTemperature(bool returnIP=false) const;
 
   bool isMaximumReheatAirTemperatureDefaulted() const;
 
@@ -111,28 +88,18 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeReheat : public StraightCompo
   // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setAvailabilitySchedule(Schedule& schedule);
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setAirOutletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setAirInletNode(const Connection& connection);
-
   bool setMaximumAirFlowRate(double maximumAirFlowRate);
-
-  bool setMaximumAirFlowRate(const Quantity& maximumAirFlowRate);
 
   void resetMaximumAirFlowRate();
 
   void autosizeMaximumAirFlowRate();
 
   // TODO: Check argument type. From object lists, some candidates are: HeatingCoilName.
-  bool setReheatCoil(const HVACComponent& heatingCoilName);
+  bool setReheatCoil(const HVACComponent& coil);
 
   void resetReheatCoil();
 
   bool setMaximumHotWaterorSteamFlowRate(double maximumHotWaterorSteamFlowRate);
-
-  bool setMaximumHotWaterorSteamFlowRate(const Quantity& maximumHotWaterorSteamFlowRate);
 
   void resetMaximumHotWaterorSteamFlowRate();
 
@@ -140,19 +107,13 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeReheat : public StraightCompo
 
   bool setMinimumHotWaterorSteamFlowRate(double minimumHotWaterorSteamFlowRate);
 
-  bool setMinimumHotWaterorSteamFlowRate(const Quantity& minimumHotWaterorSteamFlowRate);
-
   void resetMinimumHotWaterorSteamFlowRate();
 
   bool setConvergenceTolerance(double convergenceTolerance);
 
-  bool setConvergenceTolerance(const Quantity& convergenceTolerance);
-
   void resetConvergenceTolerance();
 
   bool setMaximumReheatAirTemperature(double maximumReheatAirTemperature);
-
-  bool setMaximumReheatAirTemperature(const Quantity& maximumReheatAirTemperature);
 
   void resetMaximumReheatAirTemperature();
 
@@ -169,7 +130,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeReheat : public StraightCompo
 
   friend class detail::AirTerminalSingleDuctConstantVolumeReheat_Impl;
   friend class Model;
-  friend class IdfObject;
+  friend class openstudio::IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
   /// @endcond
  private:

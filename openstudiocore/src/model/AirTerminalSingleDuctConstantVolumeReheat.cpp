@@ -23,10 +23,6 @@
 // TODO: Check the following class names against object getters and setters.
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
 #include <model/HVACComponent.hpp>
 #include <model/HVACComponent_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
@@ -286,29 +282,8 @@ namespace detail {
     return modelObjectClone;
   }
 
-  Connection AirTerminalSingleDuctConstantVolumeReheat_Impl::airOutletNode() const {
-    boost::optional<Connection> value = optionalAirOutletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Air Outlet Node attached.");
-    }
-    return value.get();
-  }
-
-  Connection AirTerminalSingleDuctConstantVolumeReheat_Impl::airInletNode() const {
-    boost::optional<Connection> value = optionalAirInletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Air Inlet Node attached.");
-    }
-    return value.get();
-  }
-
   boost::optional<double> AirTerminalSingleDuctConstantVolumeReheat_Impl::maximumAirFlowRate() const {
     return getDouble(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumAirFlowRate,true);
-  }
-
-  OSOptionalQuantity AirTerminalSingleDuctConstantVolumeReheat_Impl::getMaximumAirFlowRate(bool returnIP) const {
-    OptionalDouble value = maximumAirFlowRate();
-    return getQuantityFromDouble(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumAirFlowRate, value, returnIP);
   }
 
   bool AirTerminalSingleDuctConstantVolumeReheat_Impl::isMaximumAirFlowRateAutosized() const {
@@ -335,11 +310,6 @@ namespace detail {
     return getDouble(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumHotWaterorSteamFlowRate,true);
   }
 
-  OSOptionalQuantity AirTerminalSingleDuctConstantVolumeReheat_Impl::getMaximumHotWaterorSteamFlowRate(bool returnIP) const {
-    OptionalDouble value = maximumHotWaterorSteamFlowRate();
-    return getQuantityFromDouble(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumHotWaterorSteamFlowRate, value, returnIP);
-  }
-
   bool AirTerminalSingleDuctConstantVolumeReheat_Impl::isMaximumHotWaterorSteamFlowRateAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumHotWaterorSteamFlowRate, true);
@@ -355,13 +325,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity AirTerminalSingleDuctConstantVolumeReheat_Impl::getMinimumHotWaterorSteamFlowRate(bool returnIP) const {
-    OptionalDouble value = minimumHotWaterorSteamFlowRate();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MinimumHotWaterorSteamFlowRate, value, returnIP);
-    BOOST_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool AirTerminalSingleDuctConstantVolumeReheat_Impl::isMinimumHotWaterorSteamFlowRateDefaulted() const {
     return isEmpty(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MinimumHotWaterorSteamFlowRate);
   }
@@ -370,13 +333,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ConvergenceTolerance,true);
     BOOST_ASSERT(value);
     return value.get();
-  }
-
-  Quantity AirTerminalSingleDuctConstantVolumeReheat_Impl::getConvergenceTolerance(bool returnIP) const {
-    OptionalDouble value = convergenceTolerance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ConvergenceTolerance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool AirTerminalSingleDuctConstantVolumeReheat_Impl::isConvergenceToleranceDefaulted() const {
@@ -389,13 +345,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity AirTerminalSingleDuctConstantVolumeReheat_Impl::getMaximumReheatAirTemperature(bool returnIP) const {
-    OptionalDouble value = maximumReheatAirTemperature();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumReheatAirTemperature, value, returnIP);
-    BOOST_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool AirTerminalSingleDuctConstantVolumeReheat_Impl::isMaximumReheatAirTemperatureDefaulted() const {
     return isEmpty(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumReheatAirTemperature);
   }
@@ -405,16 +354,6 @@ namespace detail {
                               "AirTerminalSingleDuctConstantVolumeReheat",
                               "Availability",
                               schedule);
-    return result;
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeReheat_Impl::setAirOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::AirOutletNodeName, connection.handle());
-    return result;
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeReheat_Impl::setAirInletNode(const Connection& connection) {
-    bool result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::AirInletNodeName, connection.handle());
     return result;
   }
 
@@ -430,21 +369,6 @@ namespace detail {
     return result;
   }
 
-  bool AirTerminalSingleDuctConstantVolumeReheat_Impl::setMaximumAirFlowRate(const OSOptionalQuantity& maximumAirFlowRate) {
-    bool result(false);
-    OptionalDouble value;
-    if (maximumAirFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumAirFlowRate,maximumAirFlowRate.get());
-      if (value) {
-        result = setMaximumAirFlowRate(value);
-      }
-    }
-    else {
-      result = setMaximumAirFlowRate(value);
-    }
-    return result;
-  }
-
   void AirTerminalSingleDuctConstantVolumeReheat_Impl::resetMaximumAirFlowRate() {
     bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumAirFlowRate, "");
     BOOST_ASSERT(result);
@@ -455,33 +379,10 @@ namespace detail {
     BOOST_ASSERT(result);
   }
 
-  bool AirTerminalSingleDuctConstantVolumeReheat_Impl::setReheatCoil(const HVACComponent& heatingCoilName) {
-    /*
-    bool isTypeCorrect = false;
-
-    if( heatingCoilName.iddObjectType() == IddObjectType::OS_Coil_Heating_Electric )
-    {
-      isTypeCorrect = true;
-    }
-    else if( heatingCoilName.iddObjectType() == IddObjectType::OS_Coil_Heating_Gas )
-    {
-      isTypeCorrect = true;
-    }
-    else if( heatingCoilName.iddObjectType() == IddObjectType::OS_Coil_Heating_Water )
-    {
-      isTypeCorrect = true;
-    }
-
-    if( isTypeCorrect )
-    {
-      setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ReheatCoilName,heatingCoilName.handle());
-    }*/
-
-
-
+  bool AirTerminalSingleDuctConstantVolumeReheat_Impl::setReheatCoil(const HVACComponent& coil) {
     bool result = false;
 
-    switch(heatingCoilName.iddObject().type().value())
+    switch(coil.iddObject().type().value())
     {
     case openstudio::IddObjectType::OS_Coil_Heating_Gas :
       {
@@ -500,29 +401,17 @@ namespace detail {
       }
     default:
       {
-        LOG(Warn, "Unsupported or invalid IddObjectType: '" << heatingCoilName.iddObject().name() << "'");
+        LOG(Warn, "Unsupported or invalid IddObjectType: '" << coil.iddObject().name() << "'");
         result = false;
       }
     }
 
     if( result )
     {
-      result = this->setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ReheatCoilName,heatingCoilName.handle());
+      result = this->setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ReheatCoilName,coil.handle());
     } 
 
     return result;
-
-/*
-    bool result(false);
-    if (heatingCoilName) {
-      result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ReheatCoilName, heatingCoilName.get().handle());
-    }
-    else {
-      resetReheatCoil();
-      result = true;
-    }
-    return result;
-    */
   }
 
   void AirTerminalSingleDuctConstantVolumeReheat_Impl::resetReheatCoil() {
@@ -542,21 +431,6 @@ namespace detail {
     return result;
   }
 
-  bool AirTerminalSingleDuctConstantVolumeReheat_Impl::setMaximumHotWaterorSteamFlowRate(const OSOptionalQuantity& maximumHotWaterorSteamFlowRate) {
-    bool result(false);
-    OptionalDouble value;
-    if (maximumHotWaterorSteamFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumHotWaterorSteamFlowRate,maximumHotWaterorSteamFlowRate.get());
-      if (value) {
-        result = setMaximumHotWaterorSteamFlowRate(value);
-      }
-    }
-    else {
-      result = setMaximumHotWaterorSteamFlowRate(value);
-    }
-    return result;
-  }
-
   void AirTerminalSingleDuctConstantVolumeReheat_Impl::resetMaximumHotWaterorSteamFlowRate() {
     bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumHotWaterorSteamFlowRate, "");
     BOOST_ASSERT(result);
@@ -572,14 +446,6 @@ namespace detail {
     return result;
   }
 
-  bool AirTerminalSingleDuctConstantVolumeReheat_Impl::setMinimumHotWaterorSteamFlowRate(const Quantity& minimumHotWaterorSteamFlowRate) {
-    OptionalDouble value = getDoubleFromQuantity(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MinimumHotWaterorSteamFlowRate,minimumHotWaterorSteamFlowRate);
-    if (!value) {
-      return false;
-    }
-    return setMinimumHotWaterorSteamFlowRate(value.get());
-  }
-
   void AirTerminalSingleDuctConstantVolumeReheat_Impl::resetMinimumHotWaterorSteamFlowRate() {
     bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MinimumHotWaterorSteamFlowRate, "");
     BOOST_ASSERT(result);
@@ -588,14 +454,6 @@ namespace detail {
   bool AirTerminalSingleDuctConstantVolumeReheat_Impl::setConvergenceTolerance(double convergenceTolerance) {
     bool result = setDouble(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ConvergenceTolerance, convergenceTolerance);
     return result;
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeReheat_Impl::setConvergenceTolerance(const Quantity& convergenceTolerance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ConvergenceTolerance,convergenceTolerance);
-    if (!value) {
-      return false;
-    }
-    return setConvergenceTolerance(value.get());
   }
 
   void AirTerminalSingleDuctConstantVolumeReheat_Impl::resetConvergenceTolerance() {
@@ -608,14 +466,6 @@ namespace detail {
     return result;
   }
 
-  bool AirTerminalSingleDuctConstantVolumeReheat_Impl::setMaximumReheatAirTemperature(const Quantity& maximumReheatAirTemperature) {
-    OptionalDouble value = getDoubleFromQuantity(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumReheatAirTemperature,maximumReheatAirTemperature);
-    if (!value) {
-      return false;
-    }
-    return setMaximumReheatAirTemperature(value.get());
-  }
-
   void AirTerminalSingleDuctConstantVolumeReheat_Impl::resetMaximumReheatAirTemperature() {
     bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumReheatAirTemperature, "");
     BOOST_ASSERT(result);
@@ -625,66 +475,8 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::AvailabilityScheduleName);
   }
 
-  boost::optional<Connection> AirTerminalSingleDuctConstantVolumeReheat_Impl::optionalAirOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::AirOutletNodeName);
-  }
-
-  boost::optional<Connection> AirTerminalSingleDuctConstantVolumeReheat_Impl::optionalAirInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::AirInletNodeName);
-  }
-
-  openstudio::OSOptionalQuantity AirTerminalSingleDuctConstantVolumeReheat_Impl::maximumAirFlowRate_SI() const {
-    return getMaximumAirFlowRate(false);
-  }
-
-  openstudio::OSOptionalQuantity AirTerminalSingleDuctConstantVolumeReheat_Impl::maximumAirFlowRate_IP() const {
-    return getMaximumAirFlowRate(true);
-  }
-
-  openstudio::OSOptionalQuantity AirTerminalSingleDuctConstantVolumeReheat_Impl::maximumHotWaterorSteamFlowRate_SI() const {
-    return getMaximumHotWaterorSteamFlowRate(false);
-  }
-
-  openstudio::OSOptionalQuantity AirTerminalSingleDuctConstantVolumeReheat_Impl::maximumHotWaterorSteamFlowRate_IP() const {
-    return getMaximumHotWaterorSteamFlowRate(true);
-  }
-
-  openstudio::Quantity AirTerminalSingleDuctConstantVolumeReheat_Impl::minimumHotWaterorSteamFlowRate_SI() const {
-    return getMinimumHotWaterorSteamFlowRate(false);
-  }
-
-  openstudio::Quantity AirTerminalSingleDuctConstantVolumeReheat_Impl::minimumHotWaterorSteamFlowRate_IP() const {
-    return getMinimumHotWaterorSteamFlowRate(true);
-  }
-
-  openstudio::Quantity AirTerminalSingleDuctConstantVolumeReheat_Impl::convergenceTolerance_SI() const {
-    return getConvergenceTolerance(false);
-  }
-
-  openstudio::Quantity AirTerminalSingleDuctConstantVolumeReheat_Impl::convergenceTolerance_IP() const {
-    return getConvergenceTolerance(true);
-  }
-
-  openstudio::Quantity AirTerminalSingleDuctConstantVolumeReheat_Impl::maximumReheatAirTemperature_SI() const {
-    return getMaximumReheatAirTemperature(false);
-  }
-
-  openstudio::Quantity AirTerminalSingleDuctConstantVolumeReheat_Impl::maximumReheatAirTemperature_IP() const {
-    return getMaximumReheatAirTemperature(true);
-  }
-
   boost::optional<ModelObject> AirTerminalSingleDuctConstantVolumeReheat_Impl::availabilityScheduleAsModelObject() const {
     OptionalModelObject result = availabilitySchedule();
-    return result;
-  }
-
-  boost::optional<ModelObject> AirTerminalSingleDuctConstantVolumeReheat_Impl::airOutletNodeAsModelObject() const {
-    OptionalModelObject result = airOutletNode();
-    return result;
-  }
-
-  boost::optional<ModelObject> AirTerminalSingleDuctConstantVolumeReheat_Impl::airInletNodeAsModelObject() const {
-    OptionalModelObject result = airInletNode();
     return result;
   }
 
@@ -708,34 +500,12 @@ namespace detail {
     return false;
   }
 
-  bool AirTerminalSingleDuctConstantVolumeReheat_Impl::setAirOutletNodeAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalConnection intermediate = modelObject->optionalCast<Connection>();
-      if (intermediate) {
-        Connection connection(*intermediate);
-        return setAirOutletNode(connection);
-      }
-    }
-    return false;
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeReheat_Impl::setAirInletNodeAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalConnection intermediate = modelObject->optionalCast<Connection>();
-      if (intermediate) {
-        Connection connection(*intermediate);
-        return setAirInletNode(connection);
-      }
-    }
-    return false;
-  }
-
   bool AirTerminalSingleDuctConstantVolumeReheat_Impl::setReheatCoilAsModelObject(const boost::optional<ModelObject>& modelObject) {
     if (modelObject) {
       OptionalHVACComponent intermediate = modelObject->optionalCast<HVACComponent>();
       if (intermediate) {
-        HVACComponent heatingCoilName(*intermediate);
-        return setReheatCoil(heatingCoilName);
+        HVACComponent coil(*intermediate);
+        return setReheatCoil(coil);
       }
       else {
         return false;
@@ -749,24 +519,31 @@ namespace detail {
 
 } // detail
 
-AirTerminalSingleDuctConstantVolumeReheat::AirTerminalSingleDuctConstantVolumeReheat(const Model& model)
-  : StraightComponent(AirTerminalSingleDuctConstantVolumeReheat::iddObjectType(),model)
+AirTerminalSingleDuctConstantVolumeReheat::AirTerminalSingleDuctConstantVolumeReheat(const Model& model, 
+                                                                Schedule& availabilitySchedule,
+                                                                HVACComponent& coil)
+  : StraightComponent(AirTerminalSingleDuctConstantVolumeReheat::iddObjectType(),model) 
 {
   BOOST_ASSERT(getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::AvailabilityScheduleName
-  //     OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::AirOutletNodeName
-  //     OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::AirInletNodeName
-  bool ok = true;
-  // ok = setHandle();
-  BOOST_ASSERT(ok);
-  // ok = setAvailabilitySchedule();
-  BOOST_ASSERT(ok);
-  // ok = setAirOutletNode();
-  BOOST_ASSERT(ok);
-  // ok = setAirInletNode();
-  BOOST_ASSERT(ok);
+  bool test = setAvailabilitySchedule(availabilitySchedule);
+  if (!test) {
+    remove();
+    LOG_AND_THROW("Unable to construct " << briefDescription() << ", because cannot set its "
+        << "availability schedule to " << availabilitySchedule.briefDescription() << ".");
+  }
+
+  this->autosizeMaximumAirFlowRate();
+
+  this->setReheatCoil(coil);
+
+  this->autosizeMaximumHotWaterorSteamFlowRate();
+
+  this->setMinimumHotWaterorSteamFlowRate(0.0);
+
+  this->setConvergenceTolerance(0.001);
+
+  this->setMaximumReheatAirTemperature(35.0);
 }
 
 IddObjectType AirTerminalSingleDuctConstantVolumeReheat::iddObjectType() {
@@ -777,20 +554,8 @@ Schedule AirTerminalSingleDuctConstantVolumeReheat::availabilitySchedule() const
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->availabilitySchedule();
 }
 
-Connection AirTerminalSingleDuctConstantVolumeReheat::airOutletNode() const {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->airOutletNode();
-}
-
-Connection AirTerminalSingleDuctConstantVolumeReheat::airInletNode() const {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->airInletNode();
-}
-
 boost::optional<double> AirTerminalSingleDuctConstantVolumeReheat::maximumAirFlowRate() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->maximumAirFlowRate();
-}
-
-OSOptionalQuantity AirTerminalSingleDuctConstantVolumeReheat::getMaximumAirFlowRate(bool returnIP) const {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->getMaximumAirFlowRate(returnIP);
 }
 
 bool AirTerminalSingleDuctConstantVolumeReheat::isMaximumAirFlowRateAutosized() const {
@@ -805,20 +570,12 @@ boost::optional<double> AirTerminalSingleDuctConstantVolumeReheat::maximumHotWat
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->maximumHotWaterorSteamFlowRate();
 }
 
-OSOptionalQuantity AirTerminalSingleDuctConstantVolumeReheat::getMaximumHotWaterorSteamFlowRate(bool returnIP) const {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->getMaximumHotWaterorSteamFlowRate(returnIP);
-}
-
 bool AirTerminalSingleDuctConstantVolumeReheat::isMaximumHotWaterorSteamFlowRateAutosized() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->isMaximumHotWaterorSteamFlowRateAutosized();
 }
 
 double AirTerminalSingleDuctConstantVolumeReheat::minimumHotWaterorSteamFlowRate() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->minimumHotWaterorSteamFlowRate();
-}
-
-Quantity AirTerminalSingleDuctConstantVolumeReheat::getMinimumHotWaterorSteamFlowRate(bool returnIP) const {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->getMinimumHotWaterorSteamFlowRate(returnIP);
 }
 
 bool AirTerminalSingleDuctConstantVolumeReheat::isMinimumHotWaterorSteamFlowRateDefaulted() const {
@@ -829,20 +586,12 @@ double AirTerminalSingleDuctConstantVolumeReheat::convergenceTolerance() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->convergenceTolerance();
 }
 
-Quantity AirTerminalSingleDuctConstantVolumeReheat::getConvergenceTolerance(bool returnIP) const {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->getConvergenceTolerance(returnIP);
-}
-
 bool AirTerminalSingleDuctConstantVolumeReheat::isConvergenceToleranceDefaulted() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->isConvergenceToleranceDefaulted();
 }
 
 double AirTerminalSingleDuctConstantVolumeReheat::maximumReheatAirTemperature() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->maximumReheatAirTemperature();
-}
-
-Quantity AirTerminalSingleDuctConstantVolumeReheat::getMaximumReheatAirTemperature(bool returnIP) const {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->getMaximumReheatAirTemperature(returnIP);
 }
 
 bool AirTerminalSingleDuctConstantVolumeReheat::isMaximumReheatAirTemperatureDefaulted() const {
@@ -853,19 +602,7 @@ bool AirTerminalSingleDuctConstantVolumeReheat::setAvailabilitySchedule(Schedule
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->setAvailabilitySchedule(schedule);
 }
 
-bool AirTerminalSingleDuctConstantVolumeReheat::setAirOutletNode(const Connection& connection) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->setAirOutletNode(connection);
-}
-
-bool AirTerminalSingleDuctConstantVolumeReheat::setAirInletNode(const Connection& connection) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->setAirInletNode(connection);
-}
-
 bool AirTerminalSingleDuctConstantVolumeReheat::setMaximumAirFlowRate(double maximumAirFlowRate) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->setMaximumAirFlowRate(maximumAirFlowRate);
-}
-
-bool AirTerminalSingleDuctConstantVolumeReheat::setMaximumAirFlowRate(const Quantity& maximumAirFlowRate) {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->setMaximumAirFlowRate(maximumAirFlowRate);
 }
 
@@ -877,8 +614,8 @@ void AirTerminalSingleDuctConstantVolumeReheat::autosizeMaximumAirFlowRate() {
   getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->autosizeMaximumAirFlowRate();
 }
 
-bool AirTerminalSingleDuctConstantVolumeReheat::setReheatCoil(const HVACComponent& heatingCoilName) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->setReheatCoil(heatingCoilName);
+bool AirTerminalSingleDuctConstantVolumeReheat::setReheatCoil(const HVACComponent& coil) {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->setReheatCoil(coil);
 }
 
 void AirTerminalSingleDuctConstantVolumeReheat::resetReheatCoil() {
@@ -886,10 +623,6 @@ void AirTerminalSingleDuctConstantVolumeReheat::resetReheatCoil() {
 }
 
 bool AirTerminalSingleDuctConstantVolumeReheat::setMaximumHotWaterorSteamFlowRate(double maximumHotWaterorSteamFlowRate) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->setMaximumHotWaterorSteamFlowRate(maximumHotWaterorSteamFlowRate);
-}
-
-bool AirTerminalSingleDuctConstantVolumeReheat::setMaximumHotWaterorSteamFlowRate(const Quantity& maximumHotWaterorSteamFlowRate) {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->setMaximumHotWaterorSteamFlowRate(maximumHotWaterorSteamFlowRate);
 }
 
@@ -905,10 +638,6 @@ bool AirTerminalSingleDuctConstantVolumeReheat::setMinimumHotWaterorSteamFlowRat
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->setMinimumHotWaterorSteamFlowRate(minimumHotWaterorSteamFlowRate);
 }
 
-bool AirTerminalSingleDuctConstantVolumeReheat::setMinimumHotWaterorSteamFlowRate(const Quantity& minimumHotWaterorSteamFlowRate) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->setMinimumHotWaterorSteamFlowRate(minimumHotWaterorSteamFlowRate);
-}
-
 void AirTerminalSingleDuctConstantVolumeReheat::resetMinimumHotWaterorSteamFlowRate() {
   getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->resetMinimumHotWaterorSteamFlowRate();
 }
@@ -917,19 +646,11 @@ bool AirTerminalSingleDuctConstantVolumeReheat::setConvergenceTolerance(double c
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->setConvergenceTolerance(convergenceTolerance);
 }
 
-bool AirTerminalSingleDuctConstantVolumeReheat::setConvergenceTolerance(const Quantity& convergenceTolerance) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->setConvergenceTolerance(convergenceTolerance);
-}
-
 void AirTerminalSingleDuctConstantVolumeReheat::resetConvergenceTolerance() {
   getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->resetConvergenceTolerance();
 }
 
 bool AirTerminalSingleDuctConstantVolumeReheat::setMaximumReheatAirTemperature(double maximumReheatAirTemperature) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->setMaximumReheatAirTemperature(maximumReheatAirTemperature);
-}
-
-bool AirTerminalSingleDuctConstantVolumeReheat::setMaximumReheatAirTemperature(const Quantity& maximumReheatAirTemperature) {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->setMaximumReheatAirTemperature(maximumReheatAirTemperature);
 }
 
