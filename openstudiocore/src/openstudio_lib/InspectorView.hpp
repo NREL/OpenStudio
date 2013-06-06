@@ -202,7 +202,64 @@ class WaterToAirInspectorView : public BaseInspectorView
   bool m_displayIP;
 };
 
-class AirTerminalSingleDuctVAVReheatInspectorView : public BaseInspectorView
+class AirTerminalInspectorView : public BaseInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  AirTerminalInspectorView(QWidget * parent = 0);
+
+  virtual ~AirTerminalInspectorView() {}
+
+  signals:
+
+  void addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  void removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  protected:
+
+  template <class T>
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
+
+  private:
+
+  boost::optional<model::ModelObject> m_modelObject;
+
+  InspectorGadget * m_inspectorGadget;
+
+  LoopChooserView * m_loopChooserView;
+};
+
+class AirTerminalSingleDuctConstantVolumeReheatInspectorView : public AirTerminalInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  AirTerminalSingleDuctConstantVolumeReheatInspectorView(QWidget * parent = 0);
+
+  virtual ~AirTerminalSingleDuctConstantVolumeReheatInspectorView() {}
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
+
+  signals:
+
+  void addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  void removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  private:
+
+  boost::optional<model::ModelObject> m_modelObject;
+
+  InspectorGadget * m_inspectorGadget;
+
+  LoopChooserView * m_loopChooserView;
+};
+
+class AirTerminalSingleDuctVAVReheatInspectorView : public AirTerminalInspectorView
 {
   Q_OBJECT;
 

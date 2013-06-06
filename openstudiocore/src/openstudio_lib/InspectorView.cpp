@@ -44,6 +44,8 @@
 #include <model/ConnectorMixer_Impl.hpp>
 #include <model/HVACComponent.hpp>
 #include <model/HVACComponent_Impl.hpp>
+#include <model/AirTerminalSingleDuctConstantVolumeReheat.hpp>
+#include <model/AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
 #include <model/ZoneHVACBaseboardConvectiveWater.hpp>
@@ -136,6 +138,28 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       }
 
       m_currentView = new WaterToAirInspectorView();
+      isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                            m_currentView, SIGNAL(toggleUnitsClicked(bool)));
+      BOOST_ASSERT(isConnected);
+  
+      m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
+
+      m_vLayout->addWidget(m_currentView);
+
+      connect( m_currentView, SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+               this,  SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+      
+      connect( m_currentView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+               this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+    }
+    else if( boost::optional<model::AirTerminalSingleDuctConstantVolumeReheat> component = modelObject->optionalCast<model::AirTerminalSingleDuctConstantVolumeReheat>()  )
+    {
+      if( m_currentView )
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new AirTerminalSingleDuctConstantVolumeReheatInspectorView();
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             m_currentView, SIGNAL(toggleUnitsClicked(bool)));
       BOOST_ASSERT(isConnected);
@@ -551,7 +575,19 @@ void WaterToAirInspectorView::layoutControllerObject()
   }
 }
 
+AirTerminalSingleDuctConstantVolumeReheatInspectorView::AirTerminalSingleDuctConstantVolumeReheatInspectorView( QWidget * parent )
+  : AirTerminalInspectorView(parent)
+{
+
+}
+
 AirTerminalSingleDuctVAVReheatInspectorView::AirTerminalSingleDuctVAVReheatInspectorView( QWidget * parent )
+  : AirTerminalInspectorView(parent)
+{
+
+}
+
+AirTerminalInspectorView::AirTerminalInspectorView( QWidget * parent )
   : BaseInspectorView(parent)
 {
   m_inspectorGadget = new InspectorGadget();
@@ -578,7 +614,18 @@ AirTerminalSingleDuctVAVReheatInspectorView::AirTerminalSingleDuctVAVReheatInspe
            this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
 }
 
+void AirTerminalSingleDuctConstantVolumeReheatInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
+{
+  AirTerminalInspectorView::layoutModelObject<model::AirTerminalSingleDuctConstantVolumeReheat>(modelObject, readOnly, displayIP);
+}
+
 void AirTerminalSingleDuctVAVReheatInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
+{
+  AirTerminalInspectorView::layoutModelObject<model::AirTerminalSingleDuctVAVReheat>(modelObject, readOnly, displayIP);
+}
+
+template <class T>
+void AirTerminalInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
 {
   m_modelObject = modelObject;
 
@@ -598,7 +645,7 @@ void AirTerminalSingleDuctVAVReheatInspectorView::layoutModelObject( model::Mode
 
   bool waterCoil = false;
 
-  if( boost::optional<model::AirTerminalSingleDuctVAVReheat> terminal = modelObject.optionalCast<model::AirTerminalSingleDuctVAVReheat>() )
+  if( boost::optional<T> terminal = modelObject.optionalCast<T>() )
   {
     if( boost::optional<model::HVACComponent> coil = terminal->reheatCoil() )
     {
