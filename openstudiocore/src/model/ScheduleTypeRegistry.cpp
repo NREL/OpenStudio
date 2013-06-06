@@ -131,7 +131,10 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
 {
   const ScheduleType scheduleTypes[] =
   {
-    {"AirLoopHVACUnitaryHeatPumpAirToAir","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+   
+	 {"EvaporativeFluidCoolerSingleSpeed","Availability","availabilitySchedule",false,"Availability",0.0,1.0}, 
+	  
+	 {"AirLoopHVACUnitaryHeatPumpAirToAir","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirLoopHVACUnitaryHeatPumpAirToAir","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"AirTerminalSingleDuctParallelPIUReheat","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirTerminalSingleDuctUncontrolled","Availability","availabilitySchedule",false,"Availability",0.0,1.0},

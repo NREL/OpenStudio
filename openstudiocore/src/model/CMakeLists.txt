@@ -1,6 +1,11 @@
 SET( target_name openstudio_model )
 
 SET( ${target_name}_src 
+  
+ EvaporativeFluidCoolerSingleSpeed.hpp
+ EvaporativeFluidCoolerSingleSpeed_Impl.hpp
+ EvaporativeFluidCoolerSingleSpeed.cpp
+ 
   mainpage.hpp 
   ModelAPI.hpp
   Model.hpp
@@ -768,6 +773,7 @@ SET( ${target_name}_moc
   ComponentWatcher_Impl.hpp
   ModelObject_Impl.hpp
   GenericModelObject_Impl.hpp
+   EvaporativeFluidCoolerSingleSpeed_Impl.hpp
   
   AirGap_Impl.hpp
   AirLoopHVAC_Impl.hpp
@@ -1169,6 +1175,7 @@ SET( ${target_name}_test_src
   test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp    
   test/ZoneHVACUnitHeater_GTest.cpp
+  test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
 )
 
 SET (${target_name}_test_depends

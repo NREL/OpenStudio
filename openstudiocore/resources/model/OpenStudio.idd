@@ -5514,6 +5514,178 @@ OS:LightingSimulationZone,
 
 \group OpenStudio HVAC
 
+OS:EvaporativeFluidCooler:SingleSpeed,
+       \min-fields 10
+       \memo This model is based on Merkel's theory, which is also the basis
+       \memo for the cooling tower model in EnergyPlus. The Evaporative fluid cooler
+       \memo is modeled as a counter flow heat exchanger.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ConnectionObject
+       \note Fluid Cooler Name
+  A3 , \field Water Inlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+       \note Name of Fluid Cooler water inlet node
+  A4 , \field Water Outlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+       \note Name of Fluid Cooler water outlet node
+  N1 , \field Design Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+  N2 , \field Fan Power at Design Air Flow Rate
+       \required-field
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+       \ip-units W
+       \note This is the fan motor electric input power
+  N3 , \field Design Spray Water Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \ip-units gal/min
+  A5 , \field Performance Input Method
+       \type Choice
+       \key UFactorTimesAreaAndDesignWaterFlowRate
+       \key StandardDesignCapacity
+       \key UserSpecifiedDesignCapacity
+       \note User can define fluid cooler thermal performance by specifying the fluid cooler UA
+       \note and the Design Water Flow Rate, or by specifying the fluid cooler Standard Design
+       \note Capacity or by specifying Design Capacity for Non standard conditions.
+  A6 , \field Outdoor Air Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \note Enter the name of an outdoor air node
+  N4 , \field Standard Design Capacity
+       \type real
+       \units W
+       \minimum> 0.0
+       \note Standard design capacity with entering water at 35C (95F), leaving water at
+       \note 29.44C (85F), entering air at 25.56C (78F) wet-bulb temperature and 35C (95F)
+       \note dry-bulb temperature. Design water flow rate assumed to be 5.382E-8 m3/s per watt
+       \note (3 gpm/ton). Standard design capacity times (1.25) gives the actual fluid cooler
+       \note heat rejection at these operating conditions.
+       \note Only used for Performance Input Method = StandardDesignCapacity;
+       \note for other input methods, this field is ignored.
+       \note The standard conditions mentioned above for Standard design capacity are already
+       \note specified in the EnergyPlus. So the input fields such as design entering water
+       \note temp., design entering air wet-bulb and dry-bulb temp. and design water flow rate, if
+       \note provided in the input, will be ignored for the StandardDesignCapacity performance input
+       \note method. Also, the standard conditions are for water as a fluid type so this performance input
+       \note method can only be used with water as a fluid type (as specified in CondenserLoop object).
+  N5 , \field U-factor Times Area Value at Design Air Flow Rate
+       \type real
+       \units W/K
+       \minimum> 0.0
+       \maximum 2100000.0
+       \autosizable
+       \note Only used for Performance Input Method = UFactorTimesAreaAndDesignWaterFlowRate;
+       \note for other Performance Input Methods, this field is ignored.
+  N6 , \field Design Water Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+       \ip-units gal/min
+       \note Input value is ignored if fluid cooler Performance Input Method= StandardDesignCapacity.
+  N7 , \field User Specified Design Capacity
+       \type real
+       \units W
+       \minimum> 0.0
+       \note Only used for Performance Input Method = UserSpecifiedDesignCapacity;
+       \note for other Performance Input Methods, this field is ignored.
+  N8 , \field Design Entering Water Temperature
+       \type real
+       \units C
+       \minimum> 0.0
+       \ip-units F
+       \note Only used for Performance Input Method = UserSpecifiedDesignCapacity;
+       \note for other Performance Input Methods, this field is ignored.
+       \note Design Entering Water Temperature must be greater than Design Entering Air Temperature.
+  N9 , \field Design Entering Air Temperature
+       \type real
+       \units C
+       \minimum> 0.0
+       \ip-units F
+       \note Only used for Performance Input Method = UserSpecifiedDesignCapacity;
+       \note for other Performance Input Methods, this field is ignored.
+       \note Design Entering Air Temperature must be greater than Design Entering Air Wet-bulb
+       \note Temperature.
+  N10, \field Design Entering Air Wet-bulb Temperature
+       \type real
+       \units C
+       \minimum> 0.0
+       \ip-units F
+       \note Only used for Performance Input Method = UserSpecifiedDesignCapacity;
+       \note for other Performance Input Methods, this field is ignored.
+       \note Design Entering Air Wet-bulb Temperature must be less than Design Entering Air
+       \note Temperature.
+  A7 , \field Capacity Control
+       \type choice
+       \key FanCycling
+       \key FluidBypass
+       \default FanCycling
+  N11, \field Sizing Factor
+       \note Multiplies the autosized capacity and flow rates
+       \type real
+       \minimum> 0.0
+       \default 1.0
+  A8 , \field Evaporation Loss Mode
+       \type choice
+       \key LossFactor
+       \key SaturatedExit
+       \default SaturatedExit
+  N12, \field Evaporation Loss Factor
+       \type real
+       \units percent/K
+       \note Rate of water evaporation from the Fluid Cooler and lost to the outdoor air [%/K]
+       \note Empirical correlation is used to calculate default loss factor if it not explicitly provided.
+  N13, \field Drift Loss Percent
+       \type real
+       \default 0.008
+       \units percent
+       \note Rate of drift loss as a percentage of circulating spray water flow rate
+       \note Default value for this field in under investigation. For now Cooling towerӳ drift loss
+       \note percent default value is taken here.
+  A9 , \field Blowdown Calculation Mode
+       \type choice
+       \key ConcentrationRatio
+       \key ScheduledRate
+       \default ConcentrationRatio
+  N14, \field Blowdown Concentration Ratio
+       \type real
+       \minimum 2.0
+       \default 3.0
+       \note Characterizes the rate of blowdown in the Evaporative Fluid Cooler.
+       \note Blowdown is water intentionally drained from the basin in order to offset the build
+       \note up of solids in the water that would otherwise occur because of evaporation.
+       \note Ratio of solids in the blowdown water to solids in the make up water.
+       \note Default value for this field in under investigation. For now Cooling towerӳ
+       \note Blowdown Concentration Ratio percent default value is taken here.
+  A10, \field Blowdown Makeup Water Usage Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Makeup water usage due to blowdown results from occasionally draining a small
+       \note amount of water in the Fluid Cooler basin to purge scale or other contaminants to
+       \note reduce their concentration in order to maintain an acceptable level of water quality.
+       \note Schedule values should reflect water usage in m3/s.
+  A11; \field Supply Water Storage Tank Name
+       \type object-list
+       \object-list WaterStorageTankNames
+
 OS:AirLoopHVAC,
        \memo Defines a central forced air system
        \min-fields 11

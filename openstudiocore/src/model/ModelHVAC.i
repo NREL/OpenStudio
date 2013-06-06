@@ -23,6 +23,8 @@
   
 #endif
 
+MODELOBJECT_TEMPLATES(EvaporativeFluidCoolerSingleSpeed);
+
 MODELOBJECT_TEMPLATES(PortList);
 MODELOBJECT_TEMPLATES(Loop);
 MODELOBJECT_TEMPLATES(ZoneHVACComponent);
@@ -98,6 +100,7 @@ MODELOBJECT_TEMPLATES(WaterUseEquipment);
 MODELOBJECT_TEMPLATES(WaterUseConnections);
 MODELOBJECT_TEMPLATES(HeatExchangerAirToAirSensibleAndLatent);
 
+SWIG_MODELOBJECT(EvaporativeFluidCoolerSingleSpeed);
 SWIG_MODELOBJECT(PortList);
 SWIG_MODELOBJECT(Loop);
 SWIG_MODELOBJECT(ZoneHVACComponent);
