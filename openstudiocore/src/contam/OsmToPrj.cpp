@@ -80,13 +80,14 @@ int main(int argc, char *argv[])
         }
         
         openstudio::path prjPath = inputPath.replace_extension(openstudio::toPath("prj").string());
-        bool success = openstudio::contam::ForwardTranslator::modelToContam(*model, prjPath);
-        //if(!success)
-        //{
-        //    std::cout << "Failed to write file '"<< openstudio::toString(prjPath.string()) << "'." << std::endl;
-        //    std::cout << "Check that this file location is accessible and may be written." << std::endl;
-        //    return EXIT_FAILURE;
-        //}
+		openstudio::path mapPath = inputPath.replace_extension(openstudio::toPath("map").string());
+		bool success = openstudio::contam::ForwardTranslator::modelToContam(*model, prjPath, mapPath);
+        if(!success)
+        {
+            std::cout << "Failed to write file '"<< openstudio::toString(prjPath.string()) << "'." << std::endl;
+            std::cout << "Check that this file location is accessible and may be written." << std::endl;
+            return EXIT_FAILURE;
+        }
     }
     else
     {

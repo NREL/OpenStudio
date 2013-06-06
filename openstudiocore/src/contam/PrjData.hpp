@@ -1,5 +1,9 @@
 #ifndef PRJDATA_H
 #define PRJDATA_H
+
+#include "ContamAPI.hpp"
+#include <utilities/core/Logger.hpp>
+
 #include <QPoint>
 #include <QSharedPointer>
 #include <QVector>
@@ -32,7 +36,6 @@ public:
     Type type;
     Zone *left;  // Zone on the left side of this wall
     Zone *right; // Zone on the right side of this wall
-    //Wall *other; // Pointer to wall that goes the other direction (if there is one)
 };
 
 class Loop
@@ -71,7 +74,7 @@ private:
     void buildLoops(QList<QSharedPointer<Wall> > &walls);
 };
 
-class Data
+class CONTAM_API Data
 {
 public:
     Data(QString filename, bool process=true);
@@ -117,6 +120,12 @@ public:
 private:
     void readZoneIC(Reader &input);
     QString writeZoneIC(int start);
+	void error(QString mesg DECCFILELINE);
+	void warning(QString mesg DECCFILELINE);
+	int drawLine(int i, int j, int di, int dj, int value, int w, int h, int *skpd);
+	QList<QSharedPointer<Wall> > findWalls(int w, int h, int *skpd, QVector<Icon> &icons);
+
+	REGISTER_LOGGER("openstudio.contam.prj.Data");
 
 };
 

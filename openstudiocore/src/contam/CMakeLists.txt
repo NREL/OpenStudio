@@ -2,8 +2,6 @@ SET( target_name openstudio_contam )
 
 SET( ${target_name}_src
   ContamAPI.hpp
-  Error.hpp
-  Error.cpp
   ForwardTranslator.hpp
   ForwardTranslator.cpp
   ReverseTranslator.hpp
@@ -80,13 +78,13 @@ TARGET_LINK_LIBRARIES( OsmToPrj
   openstudio_contam
 )
 
-add_executable(OsmToWpb OsmToWpb.cpp)
-
-TARGET_LINK_LIBRARIES( OsmToWpb
-  ${${target_name}_depends}
-  openstudio_osversion
-  openstudio_contam
-)
+#add_executable(OsmToWpb OsmToWpb.cpp)
+#
+#TARGET_LINK_LIBRARIES( OsmToWpb
+#  ${${target_name}_depends}
+#  openstudio_osversion
+#  openstudio_contam
+#)
 
 add_executable(PrjToOsm PrjToOsm.cpp)
 

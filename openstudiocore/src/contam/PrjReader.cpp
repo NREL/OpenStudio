@@ -2,7 +2,6 @@
 #include <iostream>
 #include <stdlib.h>
 #include "PrjData.hpp"
-#include "Error.hpp"
 
 CONTAMNAMESPACESTART
 namespace prj
@@ -208,6 +207,17 @@ template <> QString Reader::readNumber<QString>(DECFILELINE)
     if(!ok)
         error(QString("Invalid number \"%2\" on line %1").arg(m_lineNumber).arg(string) ARGCFILELINE);
     return string;
+}
+
+void Reader::error(QString mesg DECCFILELINE)
+{
+	LOG(Error, mesg.toStdString());
+//#ifdef NOFILELINE
+//    std::cout << mesg.toStdString() << std::endl;
+//#else
+//    std::cout << mesg.toStdString() << '(' << file << ',' << line << ")\n";
+//#endif
+//    exit(EXIT_FAILURE);
 }
 
 }

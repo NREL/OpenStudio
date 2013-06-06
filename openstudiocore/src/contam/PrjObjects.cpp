@@ -1,10 +1,22 @@
 #include "PrjObjects.hpp"
 #include "PrjDefs.hpp"
-#include "Error.hpp"
+
+#include <utilities/core/Logger.hpp>
 
 CONTAMNAMESPACESTART
 namespace prj
 {
+
+static void error(QString mesg DECCFILELINE)
+{
+	//LOG_FREE(Error, mesg.toStdString());
+//#ifdef NOFILELINE
+//    std::cout << mesg.toStdString() << std::endl;
+//#else
+//    std::cout << mesg.toStdString() << '(' << file << ',' << line << ")\n";
+//#endif
+    exit(EXIT_FAILURE);
+}
 
 // Section 1: Project, Weather, Simulation, and Output Controls
 

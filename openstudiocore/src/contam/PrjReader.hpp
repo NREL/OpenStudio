@@ -1,6 +1,8 @@
 #ifndef PRJREADER_H
 #define PRJREADER_H
 
+#include <utilities/core/Logger.hpp>
+
 #include <QTextStream>
 #include <QStringList>
 #include <QSharedPointer>
@@ -42,6 +44,9 @@ private:
     int m_lineNumber;
     bool allocated;
     QStringList entries;
+	void error(QString mesg DECCFILELINE);
+
+	REGISTER_LOGGER("openstudio.contam.prj.Reader");
 };
 
 template <class T> QList<T*> Reader::readSectionPointers(DECFILELINEC QString name)

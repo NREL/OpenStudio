@@ -6,7 +6,6 @@
 
 #include "PrjDefs.hpp"
 #include "PrjWriter.hpp"
-#include "Error.hpp"
 
 CONTAMNAMESPACESTART
 namespace prj
@@ -142,11 +141,11 @@ Loop::Loop(QList<QSharedPointer<Wall> > &onleft)
     walls << wall;
     valid = false;
     bool found = false;
-    //int count = 0;
     while(end != lookingFor) // This is a bad idea and should be rewritten
     {
         if(!onleft.size())
-            error("Failed to build loop - insufficient walls available" CFILELINE);
+			return;
+            //error("Failed to build loop - insufficient walls available" CFILELINE);
         while(onleft.size()) // Ugh
         {
             wall = onleft.takeFirst();
@@ -168,35 +167,16 @@ Loop::Loop(QList<QSharedPointer<Wall> > &onleft)
     }
     // If we make it here, then we've found a complete loop
     valid = true;
-    //std::cout << summary().toStdString() << std::endl;
 }
-
-//Loop::~Loop()
-//{
-//    Wall *current;
-//    QListIterator<Wall*> i(walls);
-//    while(i.hasNext())
-//    {
-//        current = i.next();
-//        //if(current->parent) // Delete those walls generated in buildLoops
-//        //    delete current;
-//    }
-//}
 
 double Loop::area()
 {
     double value=0.0,b,h;
-    //std::cout << summary().toStdString() << std::endl;
-    //std::cout << "Loop address: " << this << " " << walls[0]->left->name.toStdString() << std::endl;
     if(valid)
     {
         foreach(QSharedPointer<Wall> wall, walls)
-        //QListIterator<Wall*> i(walls);
-        //while(i.hasNext())
         {
-            //Wall *wall = i.next();
             b = wall->length();
-            std::cout << wall->start->row << " " << wall->start->col << std::endl;
             if(wall->type == Wall::Horizontal)
             {
                 h = wall->start->row;
@@ -211,7 +191,6 @@ double Loop::area()
                 // Somedaaaaay, your time will come!
                 h = 0.0;
             }
-            std::cout << '*' << b << " " << h << " " << -0.5*b*h << std::endl;
             value -= 0.5*b*h;
         }
     }
@@ -233,7 +212,6 @@ bool Loop::rectangular()
                 y += wall->length();
             // Add general here, someday
         }
-        //std::cout<<x<<' '<<y<<std::endl;
         result = fabs(x+y) < tolerance;
     }
     return result;
@@ -262,40 +240,6 @@ ZoneGeometry::ZoneGeometry(Zone *zone, QList<QSharedPointer<Wall> > &walls):zone
     buildLoops(walls);
 }
 
-//ZoneGeometry::~ZoneGeometry()
-//{
-//    qDeleteAll(loops);
-//}
-
-/*
-void ZoneGeometry::buildLoops(QList<Wall*> walls)
-{
-    QList<Wall*> onleft;
-    Wall *current;
-    // Collect up the walls that border this zone
-    QListIterator<Wall*> i(walls);
-    while(i.hasNext()) // Ugh
-    {
-        current = i.next();
-        if(current->left == zone)
-            onleft << current;
-        else if(current->right == zone) // Need to swap
-            onleft << new Wall(current->end,current->start,current->type,
-                               current->right,current->left,current);
-    }
-    // Create one or more loops out of the walls
-    valid = true;
-    QList<Wall*> unused = onleft;
-    while(unused.size()) // Need a bailout or something
-    {
-        Loop *loop = new Loop(zone,&unused);
-        loops << loop;
-        if(!loop->valid)
-            valid = false;
-    }
-}
-*/
-
 void ZoneGeometry::buildLoops(QList<QSharedPointer<Wall> > &walls)
 {
     QList<QSharedPointer<Wall> > onleft;
@@ -310,12 +254,16 @@ void ZoneGeometry::buildLoops(QList<QSharedPointer<Wall> > &walls)
     QList<QSharedPointer<Wall> > unused = onleft;
     while(unused.size()) // Need a bailout or something
     {
-        //std::cout << unused.size() << std::endl;
-        //Loop loop(unused);
         loops << QSharedPointer<Loop>(new Loop(unused));
-        //if(!loop.valid)
-        //    valid = false;
     }
+	foreach(QSharedPointer<Loop> loop, loops)
+	{
+		if(!loop->valid)
+		{
+			valid=false;
+			break;
+		}
+	}
 }
 
 double ZoneGeometry::area()
@@ -324,10 +272,7 @@ double ZoneGeometry::area()
     if(valid)
     {
         for(int i=0;i<loops.size();i++)
-        {
             value += loops[i]->area();
-            std::cout << "&& " << value <<std::endl;
-        }
     }
     return value;
 }
@@ -448,9 +393,7 @@ Data::Data(QString filename, bool process)
                 QList <QSharedPointer<Wall> > others;
                 for(int i=0;i<walls.size();i++)
                 {
-                    //std::cout << zones[0].name.toStdString() << " " << zones[0].nr << std::endl;
                     walls[i]->getZones(rc.skwidth, rc.skheight, grid, zones);
-                    // std::cout << i << ' ' << walls[i]->left->nr << ' ' << walls[i]->right->nr << ' ' << walls[i]->left->name.toStdString() << std::endl;
                     // Don't need left-hand side walls for the ambient zone
                     if(walls[i]->left->nr == 0)
                         walls[i]->reorient();
@@ -463,6 +406,8 @@ Data::Data(QString filename, bool process)
                 for(int i=1;i<zones.size();i++)
                 {
                     ZoneGeometry geom(&(zones[i]),walls);
+					if(!geom.valid)
+						error("Creation of zone geometry has failed due to invalid geometry");
                     geometry << geom;
                 }
             }
@@ -502,7 +447,7 @@ QString Data::writeZoneIC(int start)
             string += QString("\n%1").arg(i);
 		    int ncc = qMin(contaminants.size(),zones[i].ic.size());
 		    if(ncc != contaminants.size())
-			    std::cout << "Warning: mismatch in zone IC size and contaminant count" << std::endl;
+			    warning("Mismatch in zone IC size and contaminant count");
             for(int j=0;j<ncc;j++)
                 string += QString(" %1").arg(zones[i].ic[j]);
         }
@@ -825,7 +770,28 @@ QString Data::print()
     return out;
 }
 
-int drawLine(int i, int j, int di, int dj, int value, int w, int h, int *skpd)
+void Data::error(QString mesg DECCFILELINE)
+{
+	LOG(Error, mesg.toStdString());
+//#ifdef NOFILELINE
+//    std::cout << mesg.toStdString() << std::endl;
+//#else
+//    std::cout << mesg.toStdString() << '(' << file << ',' << line << ")\n";
+//#endif
+//    exit(EXIT_FAILURE);
+}
+
+void Data::warning(QString mesg DECCFILELINE)
+{
+	LOG(Warn, mesg.toStdString());
+//#ifdef NOFILELINE
+//    std::cout << mesg.toStdString() << std::endl;
+//#else
+//    std::cout << mesg.toStdString() << '(' << file << ',' << line << ")\n";
+//#endif
+}
+
+int Data::drawLine(int i, int j, int di, int dj, int value, int w, int h, int *skpd)
 {
     int ij = i+j*w;
     if(skpd[ij] != 0)
@@ -848,37 +814,8 @@ int drawLine(int i, int j, int di, int dj, int value, int w, int h, int *skpd)
     return skpd[ij];
 }
 
-void drawWalls(int w, int h, int *skpd, int nicons, Icon *icons)
+QList<QSharedPointer<Wall> > Data::findWalls(int w, int h, int *skpd, QVector<Icon> &icons)
 {
-    //QList<Icon*> wallIcons;
-    int ij;
-    for(int ij=0;ij<w*h;ij++)
-        skpd[ij] = 0;
-    for(int i=0;i<nicons;i++)
-    {
-        if(icons[i].isWall())
-        {
-            /* Should check to see if icon is legit here */
-            ij = icons[i].col + w*icons[i].row;
-            skpd[ij] = i+1;
-            //wallIcons << &(icons[i]);
-        }
-    }
-//    for(int i=0;i<nicons;i++)
-//    {
-//        if(icons[i].isWall())
-//        {
-//            /* Should check to see if icon is legit here */
-//            ij = icons[i].col + w*icons[i].row;
-//            skpd[ij] = icons[i].nr;
-//        }
-//    }
-
-}
-
-QList<QSharedPointer<Wall> > findWalls(int w, int h, int *skpd, QVector<Icon> &icons)
-{
-    //QList<Icon*> wallIcons;
     QList<QSharedPointer<Wall> > walls;
     int ij;
     int other;
@@ -901,46 +838,34 @@ QList<QSharedPointer<Wall> > findWalls(int w, int h, int *skpd, QVector<Icon> &i
             uint bits = icons[i].bits();
             if(bits & BIT_E)
             {
-                //std::cout << i << ' ' << bits << std::endl;
                 other = drawLine(icons[i].col+1, icons[i].row, 1, 0, -1, w, h, skpd);
                 if(other)
-                {
-                    //Wall wall(&(icons[i]),&(icons[other-1]),Wall::Horizontal);
-                    //walls << wall;
+				{
                     walls << QSharedPointer<Wall>(new Wall(&(icons[i]),&(icons[other-1]),Wall::Horizontal));
                 }
             }
             if(bits & BIT_S)
             {
-                //std::cout << i << ' ' << bits << std::endl;
                 other = drawLine(icons[i].col, icons[i].row+1, 0, 1, -1, w, h, skpd);
                 if(other)
                 {
-                    //Wall wall(&(icons[i]),&(icons[other-1]),Wall::Vertical);
-                    //walls << wall;
                     walls << QSharedPointer<Wall>(new Wall(&(icons[i]),&(icons[other-1]),Wall::Vertical));
                 }
             }
             /* These two will only result in actual changes if a non-canonical ordering is used */
             if(bits & BIT_W)
             {
-                //std::cout << i << ' ' << bits << std::endl;
                 other = drawLine(icons[i].col-1, icons[i].row, -1, 0, -1, w, h, skpd);
                 if(other)
                 {
-                    //Wall wall(&(icons[i]),&(icons[other-1]),Wall::Horizontal);
-                    //walls << wall;
                     walls << QSharedPointer<Wall>(new Wall(&(icons[i]),&(icons[other-1]),Wall::Horizontal));
                 }
             }
             if(bits & BIT_N)
             {
-                //std::cout << i << ' ' << bits << std::endl;
                 other = drawLine(icons[i].col, icons[i].row-1, 0, -1, -1, w, h, skpd);
                 if(other)
                 {
-                    //Wall wall(&(icons[i]),&(icons[other-1]),Wall::Vertical);
-                    //walls << wall;
                     walls << QSharedPointer<Wall>(new Wall(&(icons[i]),&(icons[other-1]),Wall::Vertical));
                 }
             }
@@ -1000,23 +925,6 @@ void fillFromPoint(int value, int x, int y, int nx, int ny, int *map)
     int xy = x+y*nx;
     fill2D(map[xy],value,map,map,x,y,nx,ny);
 }
-
-//QList<Wall*> zoneWalls(Zone *zone, QList<Wall *> walls)
-//{
-//    QList<Wall*> onleft;
-//    Wall *current;
-//    QListIterator<Wall*> i(walls);
-//    while(i.hasNext()) // Ugh
-//    {
-//        current = i.next();
-//        if(current->left == zone)
-//            onleft << current;
-//        else if(current->right == zone) // Need to swap
-//            onleft << new Wall(current->end,current->start,current->type,
-//                               current->right,current->left,current);
-//    }
-//    return onleft;
-//}
 
 }
 CONTAMNAMESPACEEND
