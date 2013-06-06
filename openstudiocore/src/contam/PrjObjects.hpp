@@ -1033,6 +1033,8 @@ public:
     bool variablePressure();
     void setVariableContaminants(bool b);
     bool variableContaminants();
+    void setSystem(bool b);
+    bool system();
 
     int nr;  // zone number (IX); in order from 1 to _nzone
     unsigned int flags;  // zone flags - bits defined in contam.h (U2)
@@ -1070,11 +1072,34 @@ public:
 class Path
 {
 public:
-    enum Type {Standard, Recirculation, Exhaust, OA};
-    Path(Type type=Standard);
-    void setType(Type type);
+    enum Flags {
+        WIND=0x0001, // Path is subject to wind pressure
+        WPC_P=0x0002, // Path uses WPC file pressure
+        WPC_C=0x0004, // Path uses WPC file contaminants
+        WPC_F=0x0006, // Path uses WPC pressure or contaminants
+        AHS_S=0x0008, // Path is a system (supply or return) flow path
+        AHS_R=0x0010, // Path is a recirculation flow path
+        AHS_O=0x0020, // Path is an outside air flow path
+        AHS_X=0x0040, // Path is an exhaust flow path
+        AHS_P=0x0078, // Path is any AHS path
+        LIM_P=0x0080, // Path is pressure limited
+        LIM_F=0x0100, // Path is flow limited
+        FAN_F=0x0200}; // Path is a constant flow fan element
+    Path();
     void read(Reader *input);
     QString write();
+    // Custom getters/setters
+    void setWindPressure(bool b);
+    bool windPressure();
+    void setSystem(bool b);
+    bool system();
+    void setRecirculation(bool b);
+    bool recirculation();
+    void setOutsideAir(bool b);
+    bool outsideAir();
+    void setExhaust(bool b);
+    bool exhaust();
+
     int nr;  // path number (IX); in order from 1 to _npath
     int flags;  // airflow path flag values (I2)
     int pzn;  // zone N index (IX); converted to pointer

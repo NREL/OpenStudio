@@ -54,13 +54,12 @@ WPC description
 !cfd  cfdcnvg   var zref  maxi dtcmo
   0  1.00e-002   0   0    1000   1
 -999
-2 ! contaminants:
-   1 2
+0 ! contaminants:
 2 ! species:
 ! # s t   molwt    mdiam       edens       decay       Dm          CCdef        Cp    u...  name
-  1 1 0  44.0100 0.0000e+000 0.0000e+000 0.0000e+000 2.0000e-005 6.0795e-004    0.000 0 0 0 0 0 CO2
+  1 0 0  44.0100 0.0000e+000 0.0000e+000 0.0000e+000 2.0000e-005 6.0795e-004    0.000 0 0 0 0 0 CO2
 Carbon dioxide tracer gas
-  2 1 0 146.0600 0.0000e+000 0.0000e+000 0.0000e+000 2.0000e-005 0.0000e+000    0.000 0 0 0 0 0 SF6
+  2 0 0 146.0600 0.0000e+000 0.0000e+000 0.0000e+000 2.0000e-005 0.0000e+000    0.000 0 0 0 0 0 SF6
 Sulfur Hexafluoride tracer gas
 -999
 1 ! levels plus icon data:

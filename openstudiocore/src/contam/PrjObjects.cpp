@@ -2641,6 +2641,19 @@ bool Zone::variableContaminants()
     return flags & VAR_C;
 }
 
+void Zone::setSystem(bool b)
+{
+    if(b)
+        flags |= SYS_N;
+    else
+        flags &= NSYS_N;
+}
+
+bool Zone::system()
+{
+    return flags & SYS_N;
+}
+
 /*
 Path::Path(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,
            RX X,RX Y,RX relHt,RX mult,RX wPset,RX wPmod,RX wazm,RX Fahs,RX Xmax,RX Xmin,
@@ -2682,7 +2695,7 @@ Path::Path(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,i
 }
 */
 
-Path::Path(Path::Type type)
+Path::Path()
 {
     nr=0;
     flags=0;
@@ -2698,7 +2711,7 @@ Path::Path(Path::Type type)
     X=RX_I(0);
     Y=RX_I(0);
     relHt=RX_I(0);
-    mult=RX_I(0);
+    mult=RX_I(1);
     wPset=RX_I(0);
     wPmod=RX_I(0);
     wazm=RX_I(0);
@@ -2769,6 +2782,72 @@ QString Path::write()
     if(cfd)
         string += QString(" %1 %2 %3 %4").arg(name).arg(cfd_ptype).arg(cfd_btype).arg(cfd_capp);
     return string;
+}
+
+void Path::setWindPressure(bool b)
+{
+    if(b)
+        flags |= WIND;
+    else
+        flags &= 0xFFFE;
+}
+
+bool Path::windPressure()
+{
+    return flags & WIND;
+}
+
+void Path::setSystem(bool b)
+{
+    if(b)
+        flags |= AHS_S;
+    else
+        flags &= 0xFFF7;
+}
+
+bool Path::system()
+{
+    return flags & AHS_S;
+}
+
+void Path::setExhaust(bool b)
+{
+    if(b)
+        flags |= AHS_X;
+    else
+        flags &= 0xFFBF;
+}
+
+bool Path::exhaust()
+{
+    return flags & AHS_X;
+}
+
+
+void Path::setRecirculation(bool b)
+{
+    if(b)
+        flags |= AHS_R;
+    else
+        flags &= 0xFFEF;
+}
+
+bool Path::recirculation()
+{
+    return flags & AHS_R;
+}
+
+void Path::setOutsideAir(bool b)
+{
+    if(b)
+        flags |= AHS_O;
+    else
+        flags &= 0xFFDF;
+}
+
+bool Path::outsideAir()
+{
+    return flags & AHS_O;
 }
 
 SourceSink::SourceSink()

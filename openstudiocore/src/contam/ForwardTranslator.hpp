@@ -30,19 +30,30 @@ namespace openstudio {
 namespace model {
   class Model;
 }
-namespace contam {
 
-  class CONTAM_API ForwardTranslator {
-  public:
+namespace contam
+{
+    class CONTAM_API ForwardTranslator 
+    {
+    public:
+        static bool modelToContam(const openstudio::model::Model& model, const openstudio::path& path);
+        static bool modelToJson(const openstudio::model::Model& model, const openstudio::path& path);
 
-    static bool modelToContam(const openstudio::model::Model& model, 
-			      const openstudio::path& path);
-    static bool modelToJson(const openstudio::model::Model& model, 
-			    const openstudio::path& path);
+        // Maps - will be populated after a call of modelToContam
+        // These map element names to the CONTAM index (1,2,...,nElement)
+        QMap<QString,int> afeMap;
+        QMap <std::string, int> levelMap;
+        QMap <std::string, int> zoneMap;
+        QMap <std::string, int> pathMap;
+        QMap <std::string, int> ahsMap;
+
 
   private:
 
     ForwardTranslator();
+
+    int tableLookup(QMap<std::string,int> map, std::string str, const char *name);
+    std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
 
     boost::optional<QString> translateToPrj(const openstudio::model::Model& model);
     boost::optional<QString> translateToJson(const openstudio::model::Model& model);

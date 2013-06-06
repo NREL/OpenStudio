@@ -73,12 +73,12 @@ int main(int argc, char *argv[])
     {
         openstudio::path inputPath = openstudio::toPath(inputPathString);
 
-        openstudio::contam::prj::Data data(openstudio::toQString(inputPath),false);
-        std::cout << "Number of paths: " << data.paths.size() << std::endl;
-        for(int i=0; i<data.paths.size();i++)
-        {
-            std::cout << data.paths[i].nr << std::endl;
-        }
+        //openstudio::contam::prj::Data data(openstudio::toQString(inputPath),false);
+        //std::cout << "Number of paths: " << data.paths.size() << std::endl;
+        //for(int i=0; i<data.paths.size();i++)
+        //{
+        //    std::cout << data.paths[i].nr << std::endl;
+        //}
 
         //QFile fp(openstudio::toQString(inputPath));
         //if (fp.open(QFile::ReadOnly))

@@ -495,14 +495,17 @@ void Data::readZoneIC(Reader &input)
 QString Data::writeZoneIC(int start)
 {
     QString string = QString("%1 ! initial zone concentrations:").arg(contaminants.size()*(zones.size()-start));
-    for(int i=start;i<zones.size();i++)
+    if(contaminants.size())
     {
-        string += QString("\n%1").arg(i);
-		int ncc = qMin(contaminants.size(),zones[i].ic.size());
-		if(ncc != contaminants.size())
-			std::cout << "Warning: mismatch in zone IC size and contaminant count" << std::endl;
-        for(int j=0;j<ncc;j++)
-            string += QString(" %1").arg(zones[i].ic[j]);
+        for(int i=start;i<zones.size();i++)
+        {
+            string += QString("\n%1").arg(i);
+		    int ncc = qMin(contaminants.size(),zones[i].ic.size());
+		    if(ncc != contaminants.size())
+			    std::cout << "Warning: mismatch in zone IC size and contaminant count" << std::endl;
+            for(int j=0;j<ncc;j++)
+                string += QString(" %1").arg(zones[i].ic[j]);
+        }
     }
     return string  + QString("\n-999");
 }

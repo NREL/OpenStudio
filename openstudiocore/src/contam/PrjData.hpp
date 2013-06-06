@@ -6,6 +6,7 @@
 
 #include "PrjObjects.hpp"
 #include "PrjReader.hpp"
+#include "PrjDefs.hpp"
 
 CONTAMNAMESPACESTART
 namespace prj
