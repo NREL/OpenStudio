@@ -399,6 +399,85 @@ OS:AirTerminal:SingleDuct:Uncontrolled,
   ,                                       ! Zone Supply Air Node Name
   AutoSize;                               ! Maximum Air Flow Rate {m3/s}
 
+OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
+  {36193791-ae10-4f59-90dc-2bc06cf598d2}, !- Handle
+  AirTerminal CAV With Electric Reheat,   !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  autosize,                               !- Maximum Air Flow Rate {m3/s}
+  {49bb683c-774e-43f1-b346-cecc2a17abcf}, !- Reheat Coil Name
+  autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
+  0.001,                                  !- Convergence Tolerance
+  35;                                     !- Maximum Reheat Air Temperature {C}
+
+OS:Coil:Heating:Electric,
+  {49bb683c-774e-43f1-b346-cecc2a17abcf}, !- Handle
+  AirTerminal CAV Coil Heating Electric,  !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Efficiency
+  ,                                       !- Nominal Capacity {W}
+  ,                                       !- Air Inlet Node Name
+  ;                                       !- Air Outlet Node Name
+
+OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
+  {ddebc341-dda2-4ce9-b273-e5c04d43dd3b}, !- Handle
+  AirTerminal CAV With Gas Reheat,        !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  autosize,                               !- Maximum Air Flow Rate {m3/s}
+  {b31fd95d-d7a3-4acc-9f00-fa5fc59ac08a}, !- Reheat Coil Name
+  autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
+  0.001,                                  !- Convergence Tolerance
+  35;                                     !- Maximum Reheat Air Temperature {C}
+
+OS:Coil:Heating:Gas,
+  {b31fd95d-d7a3-4acc-9f00-fa5fc59ac08a}, !- Handle
+  AirTerminal CAV Coil Heating Gas,       !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  0.8,                                    !- Gas Burner Efficiency
+  AutoSize,                               !- Nominal Capacity {W}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Temperature Setpoint Node Name
+  0,                                      !- Parasitic Electric Load {W}
+  ,                                       !- Part Load Fraction Correlation Curve Name
+  0;                                      !- Parasitic Gas Load {W}
+
+OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
+  {a713621f-ee1b-4f97-84bb-2cec78fad3ed}, !- Handle
+  AirTerminal CAV With Hot Water Reheat,  !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  autosize,                               !- Maximum Air Flow Rate {m3/s}
+  {512b3639-980e-402f-9767-207776852799}, !- Reheat Coil Name
+  autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
+  0.001,                                  !- Convergence Tolerance
+  35;                                     !- Maximum Reheat Air Temperature {C}
+
+OS:Coil:Heating:Water,
+  {512b3639-980e-402f-9767-207776852799}, !- Handle
+  AirTerminal CAV Coil Heating Water,     !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- U-Factor Times Area Value {W/K}
+  ,                                       !- Maximum Water Flow Rate {m3/s}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Performance Input Method
+  ,                                       !- Rated Capacity {W}
+  ,                                       !- Rated Inlet Water Temperature {C}
+  ,                                       !- Rated Inlet Air Temperature {C}
+  ,                                       !- Rated Outlet Water Temperature {C}
+  ,                                       !- Rated Outlet Air Temperature {C}
+  ;                                       !- Rated Ratio for Air and Water Convection
+
 OS:AirTerminal:SingleDuct:VAV:Reheat,
   {293eff65-3e25-4c91-97bc-a0d600b4e09b}, ! Handle
   AirTerminal With Gas Reheat,            ! Name
