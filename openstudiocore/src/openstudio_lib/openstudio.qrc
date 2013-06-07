@@ -1,6 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
   <qresource>
-    <file>images/add-small.png</file>
+   <file>images/Evap_Fluid_Cooler.png</file>
+   <file>images/add-small.png</file>
     <file>images/add_disabled.png</file>
     <file>images/add_off.png</file>
     <file>images/add_over.png</file>
@@ -189,6 +190,7 @@
 
     <file>images/mini_icons/baseboard_electric.png</file>
     <file>images/mini_icons/baseboard_water.png</file>
+    <file>images/mini_icons/Evap_Fluid_Cooler.png</file>
     <file>images/mini_icons/boiler.png</file>
     <file>images/mini_icons/boiler_steam.png</file>
     <file>images/mini_icons/building.png</file>

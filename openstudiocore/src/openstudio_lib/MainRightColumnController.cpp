@@ -680,6 +680,9 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   myLibraryList->setItemsType(OSItem::LIBRARY_ITEM);
   myLibraryList->setShowFilterLayout(true);
 
+  EvaporativeFluidCooler_SingleSpeed
+  myLibraryList->addModelObjectType(IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed,"Evaporative Fluid Cooler SingleSpeed");
+  
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil,"Four Pipe Fan Coil");
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump,"PTHP");
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner,"PTAC");
@@ -747,8 +750,10 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
   libraryWidget->setItemsRemoveable(false);
   libraryWidget->setItemsType(OSItem::LIBRARY_ITEM);
   libraryWidget->setShowFilterLayout(true);
-    
-  libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric,"Baseboard Convective Electric");
+  
+  libraryWidget->addModelObjectType(IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed,"Evaporative Fluid Cooler SingleSpeed");
+ 
+ libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric,"Baseboard Convective Electric");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water,"Baseboard Convective Water");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil,"Four Pipe Fan Coil");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump,"PTHP");
@@ -780,7 +785,10 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   myModelList->setItemsRemoveable(false);
   myModelList->setItemsType(OSItem::LIBRARY_ITEM);
   myModelList->setShowFilterLayout(true);
-
+EvaporativeFluidCooler_SingleSpeed
+  
+  myModelList->addModelObjectType(IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed,"Evaporative Fluid Cooler SingleSpeed");  
+  
   myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Equipment_Definition,"Water Use Equipment Definition");  
   myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Connections,"Water Use Connections");  
   myModelList->addModelObjectType(IddObjectType::OS_ThermalZone,"Thermal Zone");  
@@ -802,6 +810,8 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->setItemsType(OSItem::LIBRARY_ITEM);
   libraryWidget->setShowFilterLayout(true);
 
+  EvaporativeFluidCooler_SingleSpeed
+  libraryWidget->addModelObjectType(IddObjectType::OS_WEvaporativeFluidCooler_SingleSpeed,"Evaporative Fluid Cooler SingleSpeed");
   libraryWidget->addModelObjectType(IddObjectType::OS_WaterUse_Equipment,"Water Use Equipment");
   libraryWidget->addModelObjectType(IddObjectType::OS_WaterUse_Connections,"Water Use Connections");
   libraryWidget->addModelObjectType(IddObjectType::OS_WaterHeater_Mixed,"Water Heater Mixed");
