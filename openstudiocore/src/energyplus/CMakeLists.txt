@@ -165,6 +165,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateZoneHVACUnitHeater.cpp
   ForwardTranslator/CreateAirLoopHVACSupplyPath.cpp
   ForwardTranslator/CreateAirLoopHVACReturnPath.cpp
+  ForwardTranslator/CreateAirTerminalSingleDuctVAVNoReheat.cpp
 
   ReverseTranslator.hpp
   ReverseTranslator.cpp
