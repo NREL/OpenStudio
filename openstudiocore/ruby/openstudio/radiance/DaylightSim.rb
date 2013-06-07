@@ -53,6 +53,7 @@ require 'ostruct'
 require 'fileutils'
 require 'csv'
 require 'tempfile'
+require 'date'
 
 class ParseOptions
 
@@ -255,7 +256,8 @@ def exec_statement(s)
 end
 
 def writeTimeSeriesToSql(sqlfile, simDateTimes, illum, space_name, ts_name, ts_units)
-
+  puts DateTime.now.to_s + " Beginning timeseries write to sql"
+  puts DateTime.now.to_s + " Creating data vector"
   data = OpenStudio::Vector.new(illum.length)
   illum.length.times do |n|
     begin
@@ -265,11 +267,14 @@ def writeTimeSeriesToSql(sqlfile, simDateTimes, illum, space_name, ts_name, ts_u
       data[n] = 0;
     end
   end
+  puts DateTime.now.to_s + " Creating TimeSeries Object"
   illumTS = OpenStudio::TimeSeries.new(simDateTimes, data, ts_units);
+  puts DateTime.now.to_s + " Inserting into SQLFile"
   sqlfile.insertTimeSeriesData(
     "Average", "Zone", "Zone", space_name, ts_name, OpenStudio::ReportingFrequency.new("Hourly"),
     OpenStudio::OptionalString.new(),
     ts_units, illumTS);
+  puts DateTime.now.to_s + " Ending timeseries write to sql"
 end
 
 def mergeSpaces(t_space_names_to_calculate, t_outPath)
@@ -1170,6 +1175,8 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
         sqlOutFile.insertIlluminanceMap(space_name, space_name + " DAYLIGHT MAP", t_epwFile.get().wmoNumber(),
                                         simDateTimes, xs, ys, map.originZCoordinate, 
                                         illuminanceMatrixMaps)
+
+        sqlOutFile.createIndexes
       end
 
 
