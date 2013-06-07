@@ -223,7 +223,7 @@ class AirTerminalInspectorView : public BaseInspectorView
   template <class T>
   void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
 
-  private:
+  //private:
 
   boost::optional<model::ModelObject> m_modelObject;
 
@@ -243,20 +243,6 @@ class AirTerminalSingleDuctConstantVolumeReheatInspectorView : public AirTermina
   virtual ~AirTerminalSingleDuctConstantVolumeReheatInspectorView() {}
 
   void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
-
-  signals:
-
-  void addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
-
-  void removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
-
-  private:
-
-  boost::optional<model::ModelObject> m_modelObject;
-
-  InspectorGadget * m_inspectorGadget;
-
-  LoopChooserView * m_loopChooserView;
 };
 
 class AirTerminalSingleDuctVAVReheatInspectorView : public AirTerminalInspectorView
@@ -270,20 +256,6 @@ class AirTerminalSingleDuctVAVReheatInspectorView : public AirTerminalInspectorV
   virtual ~AirTerminalSingleDuctVAVReheatInspectorView() {}
 
   void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
-
-  signals:
-
-  void addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
-
-  void removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
-
-  private:
-
-  boost::optional<model::ModelObject> m_modelObject;
-
-  InspectorGadget * m_inspectorGadget;
-
-  LoopChooserView * m_loopChooserView;
 };
 
 class ZoneHVACPackagedTerminalAirConditionerInspectorView : public BaseInspectorView

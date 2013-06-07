@@ -37,6 +37,8 @@
 #include <model/Node_Impl.hpp>
 #include <model/ScheduleCompact.hpp>
 #include <model/ScheduleCompact_Impl.hpp>
+#include <model/AirTerminalSingleDuctConstantVolumeReheat.hpp>
+#include <model/AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
@@ -374,6 +376,25 @@ namespace detail{
 
     for( std::vector<AirTerminalSingleDuctVAVReheat>::iterator it = airTerminalSingleDuctVAVReheatObjects.begin();
     it < airTerminalSingleDuctVAVReheatObjects.end();
+    it++ )
+    {
+      if( boost::optional<HVACComponent> coil = it->reheatCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
+
+    // AirTerminalSingleDuctConstantVolumeReheat
+
+    std::vector<AirTerminalSingleDuctConstantVolumeReheat> airTerminalSingleDuctConstantVolumeReheatObjects;
+
+    airTerminalSingleDuctConstantVolumeReheatObjects = this->model().getModelObjects<AirTerminalSingleDuctConstantVolumeReheat>();
+
+    for( std::vector<AirTerminalSingleDuctConstantVolumeReheat>::iterator it = airTerminalSingleDuctConstantVolumeReheatObjects.begin();
+    it < airTerminalSingleDuctConstantVolumeReheatObjects.end();
     it++ )
     {
       if( boost::optional<HVACComponent> coil = it->reheatCoil() )
