@@ -24,31 +24,30 @@
 #include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
 #include <model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp>
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/PlantLoop_Impl.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
 
 
-TEST_F(ModelFixture,EvaporativeFluidCoolerSingleSpeed_addToLoop) {
+TEST_F(ModelFixture,EvaporativeFluidCoolerSingleSpeed_addToLoop) 
+{
   Model model;
+  PlantLoop loop(model);
 
-  P
+  EXPECT_EQ( (unsigned)5,loop.supplyComponents().size() );
+
+  EvaporativeFluidCoolerSingleSpeed evapCooler(model);
+
+  loop.addSupplyBranchForComponent(evapCooler);
+
+  EXPECT_EQ( (unsigned)7,loop.supplyComponents().size() );
+
+  loop.removeSupplyBranchWithComponent(evapCooler);
+
+  EXPECT_EQ( (unsigned)5,loop.supplyComponents().size() );
 }
-lantLoop loop(model);
-
-  ASSERT_EQ( (unsigned)5,loop.supplyComponents().size() );
-
-	EvaporativeFluidCoolerSingleSpeed evapCooler(model);
-
-	loop.addSupplyBranchForComponent(evapCooler);
-
-  ASSERT_EQ( (unsigned)7,loop.supplyComponents().size() );
-
-    loop.removeSupplyBranchWithComponent(evapCooler);
-
-	ASSERT_EQ( (unsigned)5,loop.supplyComponents().size() );
 
 
 

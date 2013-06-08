@@ -200,7 +200,7 @@ namespace detail {
   }
 
   boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::designWaterFlowRate() const {
-    return getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::designWaterFlowRate,true);
+    return getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignWaterFlowRate,true);
   }
   
   /*OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::getDesignWaterFlowRate(bool returnIP) const {

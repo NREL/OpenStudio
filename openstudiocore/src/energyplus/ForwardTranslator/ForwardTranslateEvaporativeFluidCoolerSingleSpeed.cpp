@@ -99,7 +99,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::DesignWaterFlowRate,d.get());
   }
-  else if( modelObject.isdesignAirFlowRateAutosized() )
+  else if( modelObject.isDesignWaterFlowRateAutosized() )
   {
     idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::DesignWaterFlowRate,"Autosize");
   }
@@ -108,7 +108,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
   
   if( (d = modelObject.designSprayWaterFlowRate()) )
   {
-    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::designSprayWaterFlowRate,d.get());
+    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::DesignSprayWaterFlowRate,d.get());
   }
 
   
@@ -116,12 +116,12 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
 
   if( (s = modelObject.performanceInputMethod()) )
   {
-    idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::performanceInputMethod,s.get());
+    idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::PerformanceInputMethod,s.get());
   }
  
 // OutdoorAirInletNodeName
 
-  temp = modelObject.OutletModelObject();
+  temp = modelObject.outletModelObject();
   if(temp)
   {
     idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::OutdoorAirInletNodeName,temp->name().get());
@@ -132,18 +132,18 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
 
    if( (d = modelObject.standardDesignCapacity()) )
   {
-    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::standardDesignCapacity,d.get());
+    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::StandardDesignCapacity,d.get());
   }
  
   // UFactorTimesAreaValueatDesignAirFlowRate
 
-  if( (d = modelObject.uFactorTimesAreaValueatDesignAirFlowRate()) )
+  if( (d = modelObject.ufactorTimesAreaValueatDesignAirFlowRate()) )
   {
-    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::UFactorTimesAreaValueatDesignAirFlowRate,d.get());
+    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::UfactorTimesAreaValueatDesignAirFlowRate,d.get());
   }
-  else if( modelObject.isUFactorTimesAreaValueatFreeConvectionAirFlowRateAutosized() )
+  else if( modelObject.isUfactorTimesAreaValueatDesignAirFlowRateAutosized() )
   {
-    idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::UFactorTimesAreaValueatDesignAirFlowRate,"Autosize");
+    idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::UfactorTimesAreaValueatDesignAirFlowRate,"Autosize");
   }
 
 
@@ -151,7 +151,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
 
   if( (d = modelObject.userSpecifiedDesignCapacity()) )
   {
-    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::userSpecifiedDesignCapacity,d.get());
+    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::UserSpecifiedDesignCapacity,d.get());
   }
 
     
@@ -159,20 +159,20 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
 		
   if( (d = modelObject.designEnteringWaterTemperature()) )
   {
-    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::designEnteringWaterTemperature,d.get());
+    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringWaterTemperature,d.get());
   }
 	
 // DesignEnteringAirTemperature
 		
   if( (d = modelObject.designEnteringAirTemperature()) )
   {
-    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::designEnteringAirTemperature,d.get());
+    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirTemperature,d.get());
   }	
 	
 // DesignEnteringAirWetbulbTemperature
 	if( (d = modelObject.designEnteringAirWetbulbTemperature()) )
   {
-    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::designEnteringAirWetbulbTemperature,d.get());
+    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirWetbulbTemperature,d.get());
   }	
 
   // CapacityControl
@@ -236,10 +236,10 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
 
  // supplyWaterStorageTankName
 
-  if( (s = modelObject.supplyWaterStorageTankName()) )
-  {
-    idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::supplyWaterStorageTankName,s.get());
-  }
+  //if( (s = modelObject.supplyWaterStorageTankName()) )
+  //{
+  //  idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::SupplyWaterStorageTankName,s.get());
+  //}
 
   return boost::optional<IdfObject>(idfObject);
 }
