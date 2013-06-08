@@ -173,7 +173,72 @@ TEST_F(RunManagerTestFixture, ErrorEstimationTest)
 //  std::pair<double, double> run5 = runSimulation(ee, 225);
 //  LOG(Info, "Run5 initialerror: " << run5.first*1000000000 << " adjustederror: " << run5.second);
 
+}
 
+
+TEST_F(RunManagerTestFixture, LinearApproximationTestSimple)
+{
+    LinearApproximation la(1);
+    
+    std::vector<double> vals;
+    vals.push_back(0);
+    la.addVals(vals, 0);
+    vals[0] = 2;
+    la.addVals(vals, 2);
+
+    EXPECT_EQ(la.approximate(vals), 2.0);
+    vals[0] = 0;
+    EXPECT_EQ(la.approximate(vals), 0.0);
+    vals[0] = 1;
+    EXPECT_EQ(la.approximate(vals), 1.0);
+
+}
+
+TEST_F(RunManagerTestFixture, LinearApproximationTestHuge)
+{
+  const size_t size = 200;
+
+  LinearApproximation la(size);
+  
+  std::vector<double> vals(size);
+
+  // just establish a baseline
+  for (size_t i = 0; i < size; ++i)
+  {
+    vals[i] = i;
+  }
+
+  // let's say that this equals 100
+  la.addVals(vals, 100);
+
+  // and we should be able to get back the value we just put in
+  EXPECT_EQ(la.approximate(vals), 100.0);
+
+  // now we'll modify one variable at a time
+  for (size_t i = 0; i < size; ++i)
+  {
+    std::vector<double> newvals(vals);
+
+    double origVariable = newvals[i];
+    double newVariable = origVariable * 2.0;
+
+    newvals[i] = newVariable;
+
+    double valueAtThisPoint = 100.0 + newvals[i];
+
+    la.addVals(newvals, valueAtThisPoint);
+    EXPECT_DOUBLE_EQ(la.approximate(newvals), valueAtThisPoint);
+
+    newvals[i] = (origVariable + newVariable) / 2;
+
+    EXPECT_DOUBLE_EQ(la.approximate(newvals), (valueAtThisPoint + 100.0) / 2);
+  }
+
+  vals[size/4] = 62.4;
+  vals[size/3] = 99;
+  vals[size/2] = 102;
+
+  la.approximate(vals);
 }
 
 

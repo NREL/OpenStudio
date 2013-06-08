@@ -1,6 +1,11 @@
 
 #include "LinearApproximation.hpp"
 
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/io.hpp>
+#include <boost/numeric/ublas/lu.hpp>
+
+
 LinearApproximation::LinearApproximation(const size_t t_numVars)
   : m_numVars(t_numVars)
 {
@@ -108,6 +113,60 @@ void LinearApproximation::addVals(std::vector<double> t_vals, const double t_res
 }
 
 
+std::set<std::pair<size_t, std::vector<double> > > LinearApproximation::sortByCommonality(const std::vector<double> &t_vals, 
+    const std::vector<std::vector<double> > &t_data) const
+{
+  std::set<std::pair<size_t, std::vector<double> > > sorted;
+
+  for (std::vector<std::vector<double> >::const_iterator itr = t_data.begin();
+       itr != t_data.end();
+       ++itr)
+  {
+    size_t commonality = 0;
+    for (size_t i = 0; i < m_numVars; ++i)
+    {
+      if (t_vals[i] == (*itr)[i])
+      {
+        ++commonality;
+      }
+    }
+
+    sorted.insert(std::make_pair(m_numVars - commonality, *itr));
+  }
+
+  return sorted;
+}
+
+// right now we only know how to filter int the case that all but one variable is the same
+std::vector<std::vector<double> > LinearApproximation::filterForProblemReduction(const std::vector<double> &t_vals,
+    const std::vector<std::vector<double> > &t_data) const
+{
+  std::set<std::pair<size_t, std::vector<double> > > sorted = sortByCommonality(t_vals, t_data);
+  
+
+  std::vector<std::vector<double> > retval;
+
+  for (std::set<std::pair<size_t, std::vector<double> > >::const_iterator itr = sorted.begin();
+       itr != sorted.end();
+       ++itr)
+  {
+    if (itr->first <= 1)
+    {
+      retval.push_back(itr->second);
+    }
+  }
+
+
+  if (retval.size() >= 2)
+  {
+    // we need at least two points that are this similar to do what we need to do
+    return retval;
+  } else {
+    return t_data;
+  }
+  return filterForSimilarity(t_vals, retval);
+}
+
 
 double LinearApproximation::approximate(const std::vector<double> &t_vals) const
 {
@@ -117,23 +176,31 @@ double LinearApproximation::approximate(const std::vector<double> &t_vals) const
 
   print("Approximating: ", t_vals);
 
-  print("Starting points: ", m_values);
-  std::vector<std::vector<double> > sortedPoints = sortByDistance(t_vals, m_values);
+  std::vector<std::vector<double> > optimalPoints = filterForProblemReduction(t_vals, m_values);
 
-  print("Sorted Points: ", sortedPoints);
+//  print("Starting points: ", m_values);
+  std::vector<std::vector<double> > sortedPoints = sortByDistance(t_vals, optimalPoints);
+
+  if (!sortedPoints.empty() && distance(t_vals, sortedPoints[0]) == 0)
+  {
+    //return exact match
+    return sortedPoints[0].back();
+  }
+
+//  print("Sorted Points: ", sortedPoints);
   std::vector<std::vector<double> > chosenPoints = filterForSimilarity(t_vals, sortedPoints);
 
-  print("Chosen points: ", chosenPoints);
+//  print("Chosen points: ", chosenPoints);
 
 
   std::vector<std::vector<std::vector<double> > > coefficientMatrices = buildCoefficientMatrices(chosenPoints);
 
-  print("Coefficients: ", coefficientMatrices);
+//  print("Coefficients: ", coefficientMatrices);
 
 
   std::vector<double> coefficients = solveDeterminates(coefficientMatrices);
 
-  print("Coefficients: ", coefficients);
+//  print("Coefficients: ", coefficients);
   assert(coefficients.size() == m_numVars + 1);
 
 
@@ -204,8 +271,6 @@ const std::vector<std::vector<double> > LinearApproximation::filterForSimilarity
       ss << "Not enough data available for the " << i << " variable position";
       throw std::runtime_error(ss.str());
     }
-
-    // todo: deal with the case where we can remove a dimension from the calculation
 
     if (allTheSame || (differencePosition >= pointsNeeded))
     {
@@ -300,15 +365,15 @@ std::vector<std::vector<double> > LinearApproximation::removeCol(const std::vect
 
 double LinearApproximation::determinate(const std::vector<std::vector<double> > &t_matrix) const
 {
-  bool docache = true;
-
+/*
+  bool docache = false;
 
   if (docache)
   {
     std::map<std::vector<std::vector<double> >, double>::const_iterator itr = m_cache.find(t_matrix);
     if (itr != m_cache.end())
     {
-      //        print("Cache success: ", itr->first);
+      std::cout << "Cache hit" << std::endl; 
       return itr->second;
     }
   }
@@ -333,6 +398,68 @@ double LinearApproximation::determinate(const std::vector<std::vector<double> > 
     }
     return d;
   }
+  */
+
+  namespace bnu = boost::numeric::ublas;
+
+  class Determinant 
+  {
+
+    static int determinant_sign(const bnu::permutation_matrix<std::size_t>& pm)
+    {
+      int pm_sign=1;
+      std::size_t size = pm.size();
+      for (std::size_t i = 0; i < size; ++i)
+      {
+        if (i != pm(i)) {
+          pm_sign *= -1.0; // swap_rows would swap a pair of rows here, so we change sign
+        }
+      }
+      return pm_sign;
+    }
+
+    static double determinant( bnu::matrix<double>& m ) {
+      bnu::permutation_matrix<std::size_t> pm(m.size1());
+      double det = 1.0;
+      if( bnu::lu_factorize(m,pm) ) {
+        det = 0.0;
+      } else {
+        for(size_t i = 0; i < m.size1(); i++) {
+          det *= m(i,i); // multiply by elements on diagonal
+        }
+
+        det = det * determinant_sign( pm );
+      }
+      return det;
+    }
+
+    public:
+    static double determinant(const std::vector<std::vector<double> > &t_matrix)
+    {
+      bnu::matrix<double> matrix(t_matrix.size(), t_matrix.size());
+
+      for (size_t i = 0; i < t_matrix.size(); ++i)
+      {
+        for (size_t j = 0; j < t_matrix[i].size(); ++j)
+        {
+          matrix(i, j) = t_matrix[i][j];
+        }
+      }
+
+      return determinant(matrix);
+    }
+  };
+
+  double retval = Determinant::determinant(t_matrix);
+
+  /*
+  if (docache)
+  {
+    m_cache[t_matrix] = retval;
+  }
+  */
+
+  return retval;
 }
 
 std::vector<double> LinearApproximation::solveDeterminates(const std::vector<std::vector<std::vector<double> > > &t_matrices) const

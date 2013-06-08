@@ -160,6 +160,7 @@ namespace openstudio{
 
     SqlFile_Impl::~SqlFile_Impl ()
     {
+      createIndexes(); // make sure they are created
       close();
     }
 

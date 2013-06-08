@@ -16,7 +16,7 @@
 class LinearApproximation
 {
   public:
-    LinearApproximation(const size_t t_numVars);
+    explicit LinearApproximation(const size_t t_numVars);
 
     ~LinearApproximation();
 
@@ -33,6 +33,11 @@ class LinearApproximation
 
     void validateVariableSize(const std::vector<double> &t_vals) const;
     const std::vector<std::vector<double> > filterForSimilarity(const std::vector<double> &t_point, const std::vector<std::vector<double> > &t_vals) const;
+    std::vector<std::vector<double> > filterForProblemReduction(const std::vector<double> &t_vals,
+        const std::vector<std::vector<double> > &t_data) const;
+
+    std::set<std::pair<size_t, std::vector<double> > > sortByCommonality(const std::vector<double> &t_vals, 
+        const std::vector<std::vector<double> > &t_data) const;
 
     std::vector<std::vector<std::vector<double> > > buildCoefficientMatrices(
         const std::vector<std::vector<double> > &t_points) const;
