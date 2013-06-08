@@ -774,6 +774,13 @@ ELSE( WIN32 )
   SET(QTWINMIGRATE_EXPORT "")
 ENDIF( WIN32 )
 
+IF( BUILD_CONTAM )
+  SET(OPENSTUDIO_CONTAM "openstudio_contam")
+ELSE( BUILD_CONTAM )
+  SET(OPENSTUDIO_CONTAM "")
+ENDIF( BUILD_CONTAM )
+
+
 export(TARGETS openstudio_runmanager 
                openstudio_project
                openstudio_osversion
@@ -789,6 +796,7 @@ export(TARGETS openstudio_runmanager
                openstudio_lib
                openstudio_plugin
                openstudio_sdd
+               ${OPENSTUDIO_CONTAM}
                ${LIBSSH_EXPORT}
                ${QTWINMIGRATE_EXPORT}
                zkexpat
