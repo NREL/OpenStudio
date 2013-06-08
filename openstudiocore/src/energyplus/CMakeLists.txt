@@ -21,6 +21,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctParallelPIUReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctUncontrolled.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVReheat.cpp
+  ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVNoReheat.cpp
   ForwardTranslator/ForwardTranslateAirWallMaterial.cpp
   ForwardTranslator/ForwardTranslateBlind.cpp
   ForwardTranslator/ForwardTranslateBoilerHotWater.cpp
@@ -165,7 +166,6 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateZoneHVACUnitHeater.cpp
   ForwardTranslator/CreateAirLoopHVACSupplyPath.cpp
   ForwardTranslator/CreateAirLoopHVACReturnPath.cpp
-  ForwardTranslator/CreateAirTerminalSingleDuctVAVNoReheat.cpp
 
   ReverseTranslator.hpp
   ReverseTranslator.cpp
