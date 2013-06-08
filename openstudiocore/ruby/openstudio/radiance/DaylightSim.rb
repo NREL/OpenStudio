@@ -1176,11 +1176,11 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
                                         simDateTimes, xs, ys, map.originZCoordinate, 
                                         illuminanceMatrixMaps)
 
-        sqlOutFile.createIndexes
       end
-
-
     end
+
+    sqlOutFile.createIndexes
+
   end
 end
 
