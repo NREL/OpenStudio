@@ -13,7 +13,6 @@ LinearApproximation::LinearApproximation(const size_t t_numVars)
 
 LinearApproximation::~LinearApproximation()
 {
-  std::cout << "Cache size: " << m_cache.size();
 }
 
 double LinearApproximation::average() const
@@ -30,9 +29,6 @@ double LinearApproximation::average() const
 
 LinearApproximation LinearApproximation::operator-(const LinearApproximation &t_rhs) const
 {
-  print("Subtracting", t_rhs.m_values);
-  print("From", m_values);
-
   if (m_numVars != t_rhs.m_numVars)
   {
     throw std::runtime_error("Unable to subtract, different number of variables");
@@ -65,7 +61,6 @@ LinearApproximation LinearApproximation::operator-(const LinearApproximation &t_
       if (match)
       {
         double value = (*lhsitr)[m_numVars] - (*rhsitr)[m_numVars];
-        std::cout << " Found a match for our subtraction " << (*lhsitr)[m_numVars] << " " << (*rhsitr)[m_numVars] << std::endl;
         retval.addVals(vals, value);
         break;
       }
@@ -113,58 +108,96 @@ void LinearApproximation::addVals(std::vector<double> t_vals, const double t_res
 }
 
 
-std::set<std::pair<size_t, std::vector<double> > > LinearApproximation::sortByCommonality(const std::vector<double> &t_vals, 
+
+
+std::vector<std::vector<double> > LinearApproximation::findMinimalDifferences(
+    size_t t_numDifferences,
+    const std::vector<std::vector<double> > &t_vals,
     const std::vector<std::vector<double> > &t_data) const
 {
-  std::set<std::pair<size_t, std::vector<double> > > sorted;
-
-  for (std::vector<std::vector<double> >::const_iterator itr = t_data.begin();
-       itr != t_data.end();
-       ++itr)
+  // t_vals includes the baseline requested value, so we want one more than that
+  if (t_data.empty() || t_numDifferences + 2 == t_vals.size())
   {
-    size_t commonality = 0;
-    for (size_t i = 0; i < m_numVars; ++i)
+    // this is as good as we're going to get / can use right now
+    std::vector<std::vector<double> > retval = t_vals;
+
+    if (!t_vals.empty())
     {
-      if (t_vals[i] == (*itr)[i])
+      retval.erase(retval.begin());
+    }
+    return retval;
+  }
+
+  std::vector<std::vector<double> > candidates;
+  std::vector<std::vector<double> > remainder;
+
+  for (size_t i = 0; i < t_data.size(); ++i)
+  {
+    size_t numDifferences = 0;
+
+    for (size_t j = 0; j < m_numVars; ++j)
+    {
+      for (size_t i2 = 0; i2 < t_vals.size(); ++i2)
       {
-        ++commonality;
+        if (t_data[i][j] != t_vals[i2][j])
+        {
+          ++numDifferences;
+          break; // don't check any further input rows
+        }
+      }
+
+      if (numDifferences > t_numDifferences)
+      {
+        // don't continue with this data row
+        break;
       }
     }
 
-    sorted.insert(std::make_pair(m_numVars - commonality, *itr));
-  }
-
-  return sorted;
-}
-
-// right now we only know how to filter int the case that all but one variable is the same
-std::vector<std::vector<double> > LinearApproximation::filterForProblemReduction(const std::vector<double> &t_vals,
-    const std::vector<std::vector<double> > &t_data) const
-{
-  std::set<std::pair<size_t, std::vector<double> > > sorted = sortByCommonality(t_vals, t_data);
-  
-
-  std::vector<std::vector<double> > retval;
-
-  for (std::set<std::pair<size_t, std::vector<double> > >::const_iterator itr = sorted.begin();
-       itr != sorted.end();
-       ++itr)
-  {
-    if (itr->first <= 1)
+    if (numDifferences <= t_numDifferences)
     {
-      retval.push_back(itr->second);
+      candidates.push_back(t_data[i]);
+    } else {
+      remainder.push_back(t_data[i]);
     }
   }
 
+  std::vector<std::vector<double> > keptresult = t_vals;
+  keptresult.erase(keptresult.begin());
 
-  if (retval.size() >= 2)
+  for (size_t i = 0; i < candidates.size(); ++i)
   {
-    // we need at least two points that are this similar to do what we need to do
-    return retval;
-  } else {
-    return t_data;
+    std::vector<std::vector<double> > newvals(t_vals);
+    newvals.push_back(candidates[i]);
+
+    std::vector<std::vector<double> > newdata(t_data);
+    newdata.erase(std::remove(newdata.begin(), newdata.end(), candidates[i]), newdata.end());
+
+    std::vector<std::vector<double> > result = findMinimalDifferences(t_numDifferences, newvals, newdata);
+    if (result.size() > keptresult.size())
+    {
+      keptresult = result;
+    }
   }
-  return filterForSimilarity(t_vals, retval);
+
+  return keptresult;
+}
+
+std::vector<std::vector<double> > LinearApproximation::filterForProblemReduction(const std::vector<double> &t_vals,
+    const std::vector<std::vector<double> > &t_data) const
+{
+  std::vector<std::vector<double> > testData;
+  testData.push_back(t_vals);
+
+  for (size_t i = 1; i < m_numVars; ++i)
+  {
+    std::vector<std::vector<double> > results = findMinimalDifferences(i, testData, t_data);
+    if (results.size() > i)
+    {
+      return results;
+    }
+  }
+
+  return t_data;
 }
 
 
@@ -174,12 +207,9 @@ double LinearApproximation::approximate(const std::vector<double> &t_vals) const
   // A(x-x0) + B(y-y0) + C(z-z0) = 0
   validateVariableSize(t_vals);
 
-  print("Approximating: ", t_vals);
+//  print("Approximating: ", t_vals);
 
-  std::vector<std::vector<double> > optimalPoints = filterForProblemReduction(t_vals, m_values);
-
-//  print("Starting points: ", m_values);
-  std::vector<std::vector<double> > sortedPoints = sortByDistance(t_vals, optimalPoints);
+  std::vector<std::vector<double> > sortedPoints = sortByDistance(t_vals, m_values);
 
   if (!sortedPoints.empty() && distance(t_vals, sortedPoints[0]) == 0)
   {
@@ -187,8 +217,12 @@ double LinearApproximation::approximate(const std::vector<double> &t_vals) const
     return sortedPoints[0].back();
   }
 
+  std::vector<std::vector<double> > optimalPoints = filterForProblemReduction(t_vals, sortedPoints);
+
+//  print("Starting points: ", m_values);
+
 //  print("Sorted Points: ", sortedPoints);
-  std::vector<std::vector<double> > chosenPoints = filterForSimilarity(t_vals, sortedPoints);
+  std::vector<std::vector<double> > chosenPoints = filterForSimilarity(t_vals, optimalPoints);
 
 //  print("Chosen points: ", chosenPoints);
 
@@ -221,7 +255,7 @@ double LinearApproximation::approximate(const std::vector<double> &t_vals) const
 
   approximation = (approximation + chosenPoints[0][m_numVars] * coefficients[m_numVars]) / coefficients[m_numVars];
 
-  std::cout << "final approximation: " << approximation << std::endl;
+//  std::cout << "final approximation: " << approximation << std::endl;
 
   return approximation;
 }

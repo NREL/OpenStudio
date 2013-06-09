@@ -186,11 +186,11 @@ TEST_F(RunManagerTestFixture, LinearApproximationTestSimple)
     vals[0] = 2;
     la.addVals(vals, 2);
 
-    EXPECT_EQ(la.approximate(vals), 2.0);
+    EXPECT_DOUBLE_EQ(2.0, la.approximate(vals));
     vals[0] = 0;
-    EXPECT_EQ(la.approximate(vals), 0.0);
+    EXPECT_DOUBLE_EQ(0.0, la.approximate(vals));
     vals[0] = 1;
-    EXPECT_EQ(la.approximate(vals), 1.0);
+    EXPECT_DOUBLE_EQ(1.0, la.approximate(vals));
 
 }
 
@@ -212,7 +212,7 @@ TEST_F(RunManagerTestFixture, LinearApproximationTestHuge)
   la.addVals(vals, 100);
 
   // and we should be able to get back the value we just put in
-  EXPECT_EQ(la.approximate(vals), 100.0);
+  EXPECT_EQ(100.0, la.approximate(vals));
 
   // now we'll modify one variable at a time
   for (size_t i = 0; i < size; ++i)
@@ -227,16 +227,19 @@ TEST_F(RunManagerTestFixture, LinearApproximationTestHuge)
     double valueAtThisPoint = 100.0 + newvals[i];
 
     la.addVals(newvals, valueAtThisPoint);
-    EXPECT_DOUBLE_EQ(la.approximate(newvals), valueAtThisPoint);
+    EXPECT_DOUBLE_EQ(valueAtThisPoint, la.approximate(newvals));
 
     newvals[i] = (origVariable + newVariable) / 2;
 
-    EXPECT_DOUBLE_EQ(la.approximate(newvals), (valueAtThisPoint + 100.0) / 2);
+    EXPECT_DOUBLE_EQ((valueAtThisPoint + 100.0) / 2, la.approximate(newvals));
   }
 
-  vals[size/4] = 62.4;
-  vals[size/3] = 99;
+  vals[size/10] = 62.4;
+  vals[size/8] = 99;
+  vals[size/6] = 99;
+  vals[size/4] = 102;
   vals[size/2] = 102;
+
 
   la.approximate(vals);
 }
