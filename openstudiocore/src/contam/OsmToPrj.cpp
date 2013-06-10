@@ -26,7 +26,8 @@
 #include <string>
 #include <iostream>
 
-void printHelp( boost::program_options::options_description desc) {
+void usage( boost::program_options::options_description desc)
+{
   std::cout << "Usage: OsmToPrj --inputPath=./path/to/input.osm" << std::endl;
   std::cout << "   or: OsmToPrj input.osm" << std::endl;
   std::cout << desc << std::endl;
@@ -34,69 +35,84 @@ void printHelp( boost::program_options::options_description desc) {
 
 int main(int argc, char *argv[])
 {
-    std::string inputPathString;
+  std::string inputPathString;
+  boost::program_options::options_description desc("Allowed options");
+  desc.add_options()
+    ("help", "print help message")
+    ("inputPath", boost::program_options::value<std::string>(&inputPathString), "path to OSM file");
+
+  boost::program_options::positional_options_description pos;
+  pos.add("inputPath", -1);
+    
+  boost::program_options::variables_map vm;
+  // The following try/catch block is necessary to avoid uncaught
+  // exceptions when the program is executed with more than one
+  // "positional" argument - there's got to be a better way.
+  try
+  {
+    boost::program_options::store(boost::program_options::command_line_parser(argc,
+      argv).options(desc).positional(pos).run(), vm);
+    boost::program_options::notify(vm);
+  }
+
+  catch(std::exception&)
+  {
+    std::cout << "Execution failed: check arguments and retry."<< std::endl << std::endl;
+    usage(desc);
+    return EXIT_FAILURE;
+  }
   
-    boost::program_options::options_description desc("Allowed options");
-    desc.add_options()
-        ("help", "print help message")
-        ("inputPath", boost::program_options::value<std::string>(&inputPathString), "path to OSM file");
-    
-    boost::program_options::positional_options_description pos;
-    pos.add("inputPath", -1);
-    
-    boost::program_options::variables_map vm;
-    // The following try/catch block is necessary to avoid uncaught
-    // exceptions when the program is executed with more than one
-    // "positional" argument - there's got to be a better way.
-    try
+  if (vm.count("help"))
+  {
+    usage(desc);
+    return EXIT_SUCCESS;
+  }
+
+  if (vm.count("inputPath"))
+  {
+    openstudio::path inputPath = openstudio::toPath(inputPathString);
+    openstudio::osversion::VersionTranslator vt;
+    boost::optional<openstudio::model::Model> model = vt.loadModel(inputPath);
+
+    if(!model)
     {
-        boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(desc).positional(pos).run(), vm);
-        boost::program_options::notify(vm);
+      std::cout << "Unable to load file '"<< inputPathString << "' as an OpenStudio model." << std::endl;
+      return EXIT_FAILURE;
     }
-  
-    catch(std::exception&)
+
+    openstudio::path prjPath = inputPath.replace_extension(openstudio::toPath("prj").string());
+    openstudio::contam::ForwardTranslator translator;
+    QFile file(openstudio::toQString(prjPath));
+    if(file.open(QFile::WriteOnly))
     {
-        std::cout << "Execution failed: check arguments and retry."<< std::endl << std::endl;
-        printHelp(desc);
+      QTextStream textStream(&file);
+      boost::optional<QString> output = translator.translateToPrj(*model);
+      if(output)
+      {
+        textStream << *output;
+      }
+      else
+      {
+        std::cout << "Translation failed, check errors and warnings for more information." << std::endl;
         return EXIT_FAILURE;
-    }
-  
-    if (vm.count("help"))
-    {
-        printHelp(desc);
-        return EXIT_SUCCESS;
-    }
-    
-    if (vm.count("inputPath"))
-    {
-        openstudio::path inputPath = openstudio::toPath(inputPathString);
-        openstudio::osversion::VersionTranslator vt;
-        boost::optional<openstudio::model::Model> model = vt.loadModel(inputPath);
-    
-        if(!model)
-        {
-            std::cout << "Unable to load file '"<< inputPathString << "' as an OpenStudio model." << std::endl;
-            return EXIT_FAILURE;
-        }
-        
-        openstudio::path prjPath = inputPath.replace_extension(openstudio::toPath("prj").string());
-		openstudio::path mapPath = inputPath.replace_extension(openstudio::toPath("map").string());
-		bool success = openstudio::contam::ForwardTranslator::modelToContam(*model, prjPath, mapPath);
-        if(!success)
-        {
-            std::cout << "Failed to write file '"<< openstudio::toString(prjPath.string()) << "'." << std::endl;
-            std::cout << "Check that this file location is accessible and may be written." << std::endl;
-            return EXIT_FAILURE;
-        }
+      }
     }
     else
     {
-        std::cout << "No input path given." << std::endl << std::endl;
-        printHelp(desc);
-        return EXIT_FAILURE;
+      std::cout << "Failed to open file '"<< openstudio::toString(prjPath) << "'." << std::endl;
+      std::cout << "Check that this file location is accessible and may be written." << std::endl;
+      return EXIT_FAILURE;
     }
-    return EXIT_SUCCESS;
+    file.close();
+    // The details on what we should do with these maps are still unclear
+    openstudio::path mapPath = inputPath.replace_extension(openstudio::toPath("map").string());
+    translator.writeMaps(mapPath);
+  }
+  else
+  {
+    std::cout << "No input path given." << std::endl << std::endl;
+    usage(desc);
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
 }
-
-
-

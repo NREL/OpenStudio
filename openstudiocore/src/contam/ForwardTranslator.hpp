@@ -27,42 +27,38 @@
 #include <utilities/core/Logger.hpp>
 
 namespace openstudio {
-	namespace model {
-		class Model;
-	}
+namespace model {
+class Model;
+}
 
-	namespace contam
-	{
-		class CONTAM_API ForwardTranslator 
-		{
-		public:
-			static bool modelToContam(const openstudio::model::Model& model,
-				const openstudio::path& path, const openstudio::path& mapPath);
+namespace contam
+{
 
-			// Maps - will be populated after a call of translateToPrj
-			// I'm not clear on how this information will be propagated for
-			// postprocessing purpose - write a file?
-			// These map element names to the CONTAM index (1,2,...,nElement)
-			QMap<QString,int> afeMap;
-			QMap <std::string, int> levelMap;
-			QMap <std::string, int> zoneMap;
-			QMap <std::string, int> pathMap;
-			QMap <std::string, int> ahsMap;
+  class CONTAM_API ForwardTranslator
+  {
+  public:
+    ForwardTranslator();
+    boost::optional<QString> translateToPrj(const openstudio::model::Model& model);
+    bool writeMaps(const openstudio::path& path);
+    static bool modelToContam(const openstudio::model::Model& model, const openstudio::path& path);
 
-		private:
+  private:
+    int tableLookup(QMap<std::string,int> map, std::string str, const char *name);
+    std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
+    // Maps - will be populated after a call of translateToPrj
+    // I'm not clear on how this information will be propagated for
+    // postprocessing purposes - write a file?
+    // These map element names to the CONTAM index (1,2,...,nElement)
+    QMap<QString,int> afeMap;
+    QMap <std::string, int> levelMap;
+    QMap <std::string, int> zoneMap;
+    QMap <std::string, int> pathMap;
+    QMap <std::string, int> ahsMap;
 
-			ForwardTranslator();
+    REGISTER_LOGGER("openstudio.contam.ForwardTranslator");
+  };
 
-			int tableLookup(QMap<std::string,int> map, std::string str, const char *name);
-			std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
-
-			boost::optional<QString> translateToPrj(const openstudio::model::Model& model);
-			bool writeMaps(const openstudio::path& path);
-
-			REGISTER_LOGGER("openstudio.contam.ForwardTranslator");
-		};
-
-	} // contam
+} // contam
 } // openstudio
 
 #endif // CONTAM_FORWARDTRANSLATOR_HPP

@@ -36,7 +36,6 @@ TEST_F(ContamFixture, ForwardTranslator_exampleModel)
 {
   Model model = exampleModel();
 
-  //path p = resourcesPath() / openstudio::toPath("contam/exampleModel.json");
   path p = openstudio::toPath("exampleModel.prj");
 
   bool test = ForwardTranslator::modelToContam(model, p);
