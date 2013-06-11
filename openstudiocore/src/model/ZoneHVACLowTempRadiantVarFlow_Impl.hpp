@@ -115,13 +115,13 @@ namespace detail {
 
     bool setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter);
 
-    bool setHydronicTubingInsideDiameter(const Quantity& hydronicTubingInsideDiameter);
+    // bool setHydronicTubingInsideDiameter(const Quantity& hydronicTubingInsideDiameter);
 
     void resetHydronicTubingInsideDiameter();
 
     bool setHydronicTubingLength(boost::optional<double> hydronicTubingLength);
 
-    bool setHydronicTubingLength(const OSOptionalQuantity& hydronicTubingLength);
+    // bool setHydronicTubingLength(const OSOptionalQuantity& hydronicTubingLength);
 
     void resetHydronicTubingLength();
 
@@ -130,6 +130,12 @@ namespace detail {
     bool setTemperatureControlType(std::string temperatureControlType);
 
     void resetTemperatureControlType();
+    
+    boost::optional<ThermalZone> thermalZone();
+
+    bool addToThermalZone(ThermalZone & thermalZone);
+
+    void removeFromThermalZone();
 
     //@}
     /** @name Other */

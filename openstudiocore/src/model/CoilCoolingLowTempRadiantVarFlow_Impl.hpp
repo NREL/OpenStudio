@@ -128,12 +128,12 @@ namespace detail {
 							
     std::vector<std::string> condensationControlTypeValues() const;
 
-    boost::optional<ModelObject> coolingWaterInletNodeAsModelObject() const;
-    boost::optional<ModelObject> coolingWaterOutletNodeAsModelObject() const;
+    //boost::optional<ModelObject> coolingWaterInletNodeAsModelObject() const;
+    //boost::optional<ModelObject> coolingWaterOutletNodeAsModelObject() const;
     boost::optional<ModelObject> coolingControlTemperatureScheduleAsModelObject() const;
 
-    bool setCoolingWaterInletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setCoolingWaterOutletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
+    //bool setCoolingWaterInletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
+    //bool setCoolingWaterOutletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setCoolingControlTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
   };
 

@@ -44,28 +44,27 @@ namespace model {
 namespace detail {
 
   CoilCoolingLowTempRadiantVarFlow_Impl::CoilCoolingLowTempRadiantVarFlow_Impl(const IdfObject& idfObject,
-                                                                               Model_Impl* model,
-                                                                               bool keepHandle)
+                                                                                   Model_Impl* model,
+                                                                                   bool keepHandle)
     : StraightComponent_Impl(idfObject,model,keepHandle)
   {
     BOOST_ASSERT(idfObject.iddObject().type() == CoilCoolingLowTempRadiantVarFlow::iddObjectType());
   }
 
   CoilCoolingLowTempRadiantVarFlow_Impl::CoilCoolingLowTempRadiantVarFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                               Model_Impl* model,
-                                                                               bool keepHandle)
+                                                                                   Model_Impl* model,
+                                                                                   bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
     BOOST_ASSERT(other.iddObject().type() == CoilCoolingLowTempRadiantVarFlow::iddObjectType());
   }
 
   CoilCoolingLowTempRadiantVarFlow_Impl::CoilCoolingLowTempRadiantVarFlow_Impl(const CoilCoolingLowTempRadiantVarFlow_Impl& other,
-                                                                               Model_Impl* model,
-                                                                               bool keepHandle)
+                                                                                   Model_Impl* model,
+                                                                                   bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {}
-  
-  
+
   const std::vector<std::string>& CoilCoolingLowTempRadiantVarFlow_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
@@ -79,7 +78,7 @@ namespace detail {
   {
     return CoilCoolingLowTempRadiantVarFlow::iddObjectType();
   }
-  
+
   unsigned CoilCoolingLowTempRadiantVarFlow_Impl::inletPort()
   {
     return OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingWaterInletNodeName;
@@ -95,42 +94,41 @@ namespace detail {
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    
-    if (std::find(b,e,OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingControlTemperatureScheduleName) != e)
+				if (std::find(b,e,OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingControlTemperatureScheduleName) != e)
     {
       result.push_back(ScheduleTypeKey("CoilCoolingLowTempRadiantVarFlow","Cooling Control Temperature Schedule"));
     }
     return result;
   }
-  
+
   boost::optional<ZoneHVACComponent> CoilCoolingLowTempRadiantVarFlow_Impl::containingZoneHVACComponent() const
   {
-    // this coil can only be found in a CoilCoolingLowTempRadiantVarFlow 
-    // check all ZoneHVACLowTempRadiantVarFlow in the model, seeing if this coil 
-    // is inside of one of them.  Return the one it is inside of
-
-    // declare a vector to hold all of the zoneHVACLowTempRadiantVarFlow
+  
     std::vector<ZoneHVACLowTempRadiantVarFlow> zoneHVACLowTempRadiantVarFlows;
-    // populate the vector with all of them
+
     zoneHVACLowTempRadiantVarFlows = this->model().getModelObjects<ZoneHVACLowTempRadiantVarFlow>();
-    // loop through each one, seeing if the coil is contained by the zoneHVACLowTempRadiantVarFlow
+
     for( std::vector<ZoneHVACLowTempRadiantVarFlow>::iterator it = zoneHVACLowTempRadiantVarFlows.begin();
-    it < zoneHVACLowTempRadiantVarFlows.end(); 
+    it < zoneHVACLowTempRadiantVarFlows.end();
     it++ )
     {
       if( boost::optional<HVACComponent> coil = it->coolingCoil() )
       {
-        if( coil->handle() == this->handle() )  //if the handles match, this coil is inside of a ZoneHVACLowTempRadiantVarFlow
+        if( coil->handle() == this->handle() )  
         {
           return *it;
         }
       }
     }
-    // if the coil isn't inside any zoneHVACLowTempRadiantVarFlow (which currently should never happen), return nothing  
     return boost::none;
   }
-  
-  boost::optional<double> CoilCoolingLowTempRadiantVarFlow_Impl::maximumColdWaterFlow() const 
+
+  boost::optional<Schedule> CoilCoolingLowTempRadiantVarFlow_Impl::coolingControlTemperatureSchedule() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingControlTemperatureScheduleName);
+  }
+
+		boost::optional<double> CoilCoolingLowTempRadiantVarFlow_Impl::maximumColdWaterFlow() const 
   {
     return getDouble(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::MaximumColdWaterFlow,true);
   }
@@ -163,11 +161,10 @@ namespace detail {
     return isEmpty(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingControlThrottlingRange);
   }
 
-  boost::optional<Schedule> CoilCoolingLowTempRadiantVarFlow_Impl::coolingControlTemperatureSchedule() const
-  {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingControlTemperatureScheduleName);
-  }
 
+//
+  
+  
   std::string CoilCoolingLowTempRadiantVarFlow_Impl::condensationControlType() const 
   {
     boost::optional<std::string> value = getString(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CondensationControlType,true);
@@ -191,7 +188,22 @@ namespace detail {
   {
     return isEmpty(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CondensationControlDewpointOffset);
   }
+  
+  bool CoilCoolingLowTempRadiantVarFlow_Impl::setCoolingControlTemperatureSchedule(Schedule& schedule) 
+  {
+    bool result = setSchedule(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingControlTemperatureScheduleName,
+                              "CoilCoolingLowTempRadiantVarFlow",
+                              "Cooling Control Temperature Schedule",
+                              schedule);
+    return result;
+  }
 
+  void CoilCoolingLowTempRadiantVarFlow_Impl::resetCoolingControlTemperatureSchedule() 
+  {
+    bool result = setString(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingControlTemperatureScheduleName, "");
+    BOOST_ASSERT(result);
+  }
+  
   bool CoilCoolingLowTempRadiantVarFlow_Impl::setMaximumColdWaterFlow(boost::optional<double> maximumColdWaterFlow) 
   {
     bool result(false);
@@ -228,21 +240,6 @@ namespace detail {
   void CoilCoolingLowTempRadiantVarFlow_Impl::resetCoolingControlThrottlingRange() 
   {
     bool result = setString(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingControlThrottlingRange, "");
-    BOOST_ASSERT(result);
-  }
-
-  bool CoilCoolingLowTempRadiantVarFlow_Impl::setCoolingControlTemperatureSchedule(Schedule& schedule) 
-  {
-    bool result = setSchedule(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingControlTemperatureScheduleName,
-                              "CoilCoolingLowTempRadiantVarFlow",
-                              "Cooling Control Temperature Schedule",
-                              schedule);
-    return result;
-  }
-
-  void CoilCoolingLowTempRadiantVarFlow_Impl::resetCoolingControlTemperatureSchedule() 
-  {
-    bool result = setString(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingControlTemperatureScheduleName, "");
     BOOST_ASSERT(result);
   }
 
@@ -285,56 +282,55 @@ namespace detail {
     }
     return result;
   }
-
+  
   bool CoilCoolingLowTempRadiantVarFlow_Impl::setCoolingControlTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) 
   {
-    if (modelObject) {
+    if (modelObject) 
+    {
       OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
-      if (intermediate) {
+      if (intermediate) 
+      {
         Schedule schedule(*intermediate);
         return setCoolingControlTemperatureSchedule(schedule);
       }
-      else {
+      else 
+      {
         return false;
       }
     }
-    else {
+    else 
+    {
       resetCoolingControlTemperatureSchedule();
     }
     return true;
   }
-
+ 
 } // detail
 
-CoilCoolingLowTempRadiantVarFlow::CoilCoolingLowTempRadiantVarFlow(const Model& model,
-																																																																		 Schedule& coolingControlTemperatureSchedule)
+ CoilCoolingLowTempRadiantVarFlow::CoilCoolingLowTempRadiantVarFlow(const Model& model,
+                                                                       Schedule& coolingControlTemperatureSchedule)
   : StraightComponent(CoilCoolingLowTempRadiantVarFlow::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>());
-  
+
   bool ok = setCoolingControlTemperatureSchedule(coolingControlTemperatureSchedule);
   BOOST_ASSERT(ok);
 }
 
-unsigned CoilCoolingLowTempRadiantVarFlow::inletPort()
-{
-  return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->inletPort();
-}
-
-unsigned CoilCoolingLowTempRadiantVarFlow::outletPort()
-{
-  return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->outletPort();
-}
-
-IddObjectType CoilCoolingLowTempRadiantVarFlow::iddObjectType() 
-{
+ IddObjectType CoilCoolingLowTempRadiantVarFlow::iddObjectType() 
+ {
   return IddObjectType(IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_VariableFlow);
-}
+	}
 
 std::vector<std::string> CoilCoolingLowTempRadiantVarFlow::condensationControlTypeValues() 
 {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CondensationControlType);
+}
+
+boost::optional<Schedule> CoilCoolingLowTempRadiantVarFlow::coolingControlTemperatureSchedule() const 
+{
+  return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->coolingControlTemperatureSchedule();
 }
 
 boost::optional<double> CoilCoolingLowTempRadiantVarFlow::maximumColdWaterFlow() const 
@@ -362,18 +358,13 @@ bool CoilCoolingLowTempRadiantVarFlow::isCoolingControlThrottlingRangeDefaulted(
   return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->isCoolingControlThrottlingRangeDefaulted();
 }
 
-boost::optional<Schedule> CoilCoolingLowTempRadiantVarFlow::coolingControlTemperatureSchedule() const {
-
-  return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->coolingControlTemperatureSchedule();
-}
-
 std::string CoilCoolingLowTempRadiantVarFlow::condensationControlType() const 
 {
   return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->condensationControlType();
 }
 
-bool CoilCoolingLowTempRadiantVarFlow::isCondensationControlTypeDefaulted() const {
-
+bool CoilCoolingLowTempRadiantVarFlow::isCondensationControlTypeDefaulted() const 
+{
   return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->isCondensationControlTypeDefaulted();
 }
 
@@ -417,7 +408,7 @@ bool CoilCoolingLowTempRadiantVarFlow::setCoolingControlTemperatureSchedule(Sche
   return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->setCoolingControlTemperatureSchedule(schedule);
 }
 
-void CoilCoolingLowTempRadiantVarFlow::resetCoolingControlTemperatureSchedule() 
+void CoilCoolingLowTempRadiantVarFlow::resetCoolingControlTemperatureSchedule()
 {
   getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->resetCoolingControlTemperatureSchedule();
 }

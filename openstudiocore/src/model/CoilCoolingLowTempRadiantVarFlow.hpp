@@ -51,9 +51,9 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow : public StraightComponent {
 
   static IddObjectType iddObjectType();
   
-  unsigned inletPort();
+  //unsigned inletPort();
 
-  unsigned outletPort();
+  //unsigned outletPort();
 
   static std::vector<std::string> condensationControlTypeValues();
 

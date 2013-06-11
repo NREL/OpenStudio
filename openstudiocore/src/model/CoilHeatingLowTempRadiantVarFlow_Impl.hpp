@@ -160,12 +160,14 @@ namespace detail {
     //openstudio::Quantity heatingControlThrottlingRange_SI() const;
     //openstudio::Quantity heatingControlThrottlingRange_IP() const;
 
-    boost::optional<ModelObject> heatingWaterInletNodeAsModelObject() const;
-    boost::optional<ModelObject> heatingWaterOutletNodeAsModelObject() const;
+    //boost::optional<ModelObject> heatingWaterInletNodeAsModelObject() const;
+    //boost::optional<ModelObject> heatingWaterOutletNodeAsModelObject() const;
+    
     boost::optional<ModelObject> heatingControlTemperatureScheduleAsModelObject() const;
 
-    bool setHeatingWaterInletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setHeatingWaterOutletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
+    //bool setHeatingWaterInletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
+    //bool setHeatingWaterOutletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
+    
     bool setHeatingControlTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
   };
 

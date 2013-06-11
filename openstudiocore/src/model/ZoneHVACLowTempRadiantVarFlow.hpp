@@ -87,14 +87,14 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
   //@{
 
   bool setAvailabilitySchedule(Schedule& schedule);
+  
+  bool setRadiantSurfaceGroupName(std::string radiantSurfaceGroupName);
+  
+  void resetRadiantSurfaceGroupName();
 
   bool setHeatingCoil(HVACComponent& heatingCoil);
 
   bool setCoolingCoil(HVACComponent& coolingCoil);
-  
-  bool setRadiantSurfaceGroupName(std::string radiantSurfaceGroupName);
-
-  void resetRadiantSurfaceGroupName();
 
   bool setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter);
 
@@ -109,6 +109,12 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
   bool setTemperatureControlType(std::string temperatureControlType);
 
   void resetTemperatureControlType();
+  
+  boost::optional<ThermalZone> thermalZone();
+
+  bool addToThermalZone(ThermalZone & thermalZone);
+
+  void removeFromThermalZone();
 
   //@}
   /** @name Other */
