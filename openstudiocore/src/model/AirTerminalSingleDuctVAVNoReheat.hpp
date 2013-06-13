@@ -24,17 +24,9 @@
 #include <model/StraightComponent.hpp>
 
 namespace openstudio {
-
-//class Quantity;
-//class OSOptionalQuantity;
-
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
-//class Connection;
-//class Connection;
-//class Schedule;
 class DesignSpecificationOutdoorAir;
 
 namespace detail {
@@ -50,7 +42,7 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
   //@{
 
 
-  explicit AirTerminalSingleDuctVAVNoReheat(const Model& model);
+  explicit AirTerminalSingleDuctVAVNoReheat(const Model& model, Schedule& schedule);
 
   virtual ~AirTerminalSingleDuctVAVNoReheat() {}
 
@@ -66,33 +58,31 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
   // TODO: Check return type. From object lists, some candidates are: Schedule.
   Schedule availabilitySchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  //Connection airOutletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  //Connection airInletNode() const;
-
   boost::optional<double> maximumAirFlowRate() const;
-
-//  OSOptionalQuantity getMaximumAirFlowRate(bool returnIP=false) const;
 
   bool isMaximumAirFlowRateAutosized() const;
 
   boost::optional<std::string> zoneMinimumAirFlowInputMethod() const;
 
+  bool isZoneMinimumAirFlowInputMethodDefaulted() const;
+
   boost::optional<double> constantMinimumAirFlowFraction() const;
 
-//  OSOptionalQuantity getConstantMinimumAirFlowFraction(bool returnIP=false) const;
+  bool isConstantMinimumAirFlowFractionDefaulted() const;
 
   boost::optional<double> fixedMinimumAirFlowRate() const;
 
-//  OSOptionalQuantity getFixedMinimumAirFlowRate(bool returnIP=false) const;
+  bool isFixedMinimumAirFlowRateDefaulted() const;
 
   // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
 
+  bool isMinimumAirFlowFractionScheduleDefaulted() const;
+
   // TODO: Check return type. From object lists, some candidates are: DesignSpecificationOutdoorAir.
   boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAirObject() const;
+
+  bool isDesignSpecificationOutdoorAirObjectDefaulted() const;
 
   //@}
   /** @name Setters */
@@ -101,15 +91,7 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
   // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setAvailabilitySchedule(Schedule& schedule);
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  //bool setAirOutletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  //bool setAirInletNode(const Connection& connection);
-
   bool setMaximumAirFlowRate(double maximumAirFlowRate);
-
-//  bool setMaximumAirFlowRate(const Quantity& maximumAirFlowRate);
 
   void resetMaximumAirFlowRate();
 
@@ -119,15 +101,11 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
 
   void resetZoneMinimumAirFlowInputMethod();
 
-  void setConstantMinimumAirFlowFraction(double constantMinimumAirFlowFraction);
-
-//  bool setConstantMinimumAirFlowFraction(const Quantity& constantMinimumAirFlowFraction);
+  bool setConstantMinimumAirFlowFraction(double constantMinimumAirFlowFraction);
 
   void resetConstantMinimumAirFlowFraction();
 
-  void setFixedMinimumAirFlowRate(double fixedMinimumAirFlowRate);
-
-//  bool setFixedMinimumAirFlowRate(const Quantity& fixedMinimumAirFlowRate);
+  bool setFixedMinimumAirFlowRate(double fixedMinimumAirFlowRate);
 
   void resetFixedMinimumAirFlowRate();
 

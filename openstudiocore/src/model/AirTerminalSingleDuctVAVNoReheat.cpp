@@ -20,9 +20,6 @@
 #include <model/AirTerminalSingleDuctVAVNoReheat.hpp>
 #include <model/AirTerminalSingleDuctVAVNoReheat_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
-//#include <model/Connection.hpp>
-//#include <model/Connection_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/DesignSpecificationOutdoorAir.hpp>
@@ -30,12 +27,7 @@
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/OS_AirTerminal_SingleDuct_VAV_NoReheat_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
-#include <model/ScheduleCompact.hpp>
 
-//copy from AirTerminal_SingleDuct_VAV_Reheat
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/Node.hpp>
@@ -52,9 +44,10 @@
 #include <model/ThermalZone_Impl.hpp>
 #include <model/Model.hpp>
 #include <utilities/idd/OS_AirTerminal_SingleDuct_VAV_NoReheat_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
+//#include <utilities/units/Unit.hpp>
+//#include <utilities/core/Compare.hpp>
 #include <utilities/core/Assert.hpp>
-#include <boost/foreach.hpp>
+//#include <boost/foreach.hpp>
 
 namespace openstudio {
 namespace model {
@@ -120,30 +113,9 @@ namespace detail {
     return value.get();
   }
 
-  //Connection AirTerminalSingleDuctVAVNoReheat_Impl::airOutletNode() const {
-  //  boost::optional<Connection> value = optionalAirOutletNode();
-  //  if (!value) {
-  //    LOG_AND_THROW(briefDescription() << " does not have an Air Outlet Node attached.");
-  //  }
-  //  return value.get();
-  //}
-
-  //Connection AirTerminalSingleDuctVAVNoReheat_Impl::airInletNode() const {
-  //  boost::optional<Connection> value = optionalAirInletNode();
-  //  if (!value) {
-  //    LOG_AND_THROW(briefDescription() << " does not have an Air Inlet Node attached.");
-  //  }
-  //  return value.get();
-  //}
-
   boost::optional<double> AirTerminalSingleDuctVAVNoReheat_Impl::maximumAirFlowRate() const {
     return getDouble(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumAirFlowRate,true);
   }
-
-//  OSOptionalQuantity AirTerminalSingleDuctVAVNoReheat_Impl::getMaximumAirFlowRate(bool returnIP) const {
-//    OptionalDouble value = maximumAirFlowRate();
-//    return getQuantityFromDouble(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumAirFlowRate, value, returnIP);
-//  }
 
   bool AirTerminalSingleDuctVAVNoReheat_Impl::isMaximumAirFlowRateAutosized() const {
     bool result = false;
@@ -158,30 +130,40 @@ namespace detail {
     return getString(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ZoneMinimumAirFlowInputMethod,true);
   }
 
+  bool AirTerminalSingleDuctVAVNoReheat_Impl::isZoneMinimumAirFlowInputMethodDefaulted() const {
+    return isEmpty(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ZoneMinimumAirFlowInputMethod);
+  }
+
   boost::optional<double> AirTerminalSingleDuctVAVNoReheat_Impl::constantMinimumAirFlowFraction() const {
     return getDouble(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction,true);
   }
 
-//  OSOptionalQuantity AirTerminalSingleDuctVAVNoReheat_Impl::getConstantMinimumAirFlowFraction(bool returnIP) const {
-//    OptionalDouble value = constantMinimumAirFlowFraction();
-//    return getQuantityFromDouble(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction, value, returnIP);
-//  }
+  bool AirTerminalSingleDuctVAVNoReheat_Impl::isConstantMinimumAirFlowFractionDefaulted() const {
+    return isEmpty(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction);
+  }
 
   boost::optional<double> AirTerminalSingleDuctVAVNoReheat_Impl::fixedMinimumAirFlowRate() const {
     return getDouble(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate,true);
   }
 
-//  OSOptionalQuantity AirTerminalSingleDuctVAVNoReheat_Impl::getFixedMinimumAirFlowRate(bool returnIP) const {
-//    OptionalDouble value = fixedMinimumAirFlowRate();
-//    return getQuantityFromDouble(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate, value, returnIP);
-//  }
+  bool AirTerminalSingleDuctVAVNoReheat_Impl::isFixedMinimumAirFlowRateDefaulted() const {
+    return isEmpty(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate);
+  }
 
   boost::optional<Schedule> AirTerminalSingleDuctVAVNoReheat_Impl::minimumAirFlowFractionSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowFractionScheduleName);
   }
 
+  bool AirTerminalSingleDuctVAVNoReheat_Impl::isMinimumAirFlowFractionScheduleDefaulted() const {
+    return isEmpty(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowFractionScheduleName);
+  }
+
   boost::optional<DesignSpecificationOutdoorAir> AirTerminalSingleDuctVAVNoReheat_Impl::designSpecificationOutdoorAirObject() const {
     return getObject<ModelObject>().getModelObjectTarget<DesignSpecificationOutdoorAir>(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::DesignSpecificationOutdoorAirObjectName);
+  }
+
+  bool AirTerminalSingleDuctVAVNoReheat_Impl::isDesignSpecificationOutdoorAirObjectDefaulted() const {
+    return isEmpty(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::DesignSpecificationOutdoorAirObjectName);
   }
 
   bool AirTerminalSingleDuctVAVNoReheat_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -202,16 +184,6 @@ namespace detail {
     return OS_AirTerminal_SingleDuct_VAV_NoReheatFields::AirOutletNodeName;
   }
 
- ///* bool AirTerminalSingleDuctVAVNoReheat_Impl::setAirOutletNode(const Connection& connection) {
- //   bool result = setPointer(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::AirOutletNodeName, connection.handle());
- //   return result;
- // }
-
- // bool AirTerminalSingleDuctVAVNoReheat_Impl::setAirInletNode(const Connection& connection) {
- //   bool result = setPointer(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::AirInletNodeName, connection.handle());
- //   return result;
- // }*/
-
   bool AirTerminalSingleDuctVAVNoReheat_Impl::setMaximumAirFlowRate(boost::optional<double> maximumAirFlowRate) {
     bool result(false);
     if (maximumAirFlowRate) {
@@ -223,21 +195,6 @@ namespace detail {
     }
     return result;
   }
-
-//  bool AirTerminalSingleDuctVAVNoReheat_Impl::setMaximumAirFlowRate(const OSOptionalQuantity& maximumAirFlowRate) {
-//    bool result(false);
-//    OptionalDouble value;
-//    if (maximumAirFlowRate.isSet()) {
-//      value = getDoubleFromQuantity(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumAirFlowRate,maximumAirFlowRate.get());
-//      if (value) {
-//        result = setMaximumAirFlowRate(value);
-//      }
-//    }
-//    else {
-//      result = setMaximumAirFlowRate(value);
-//    }
-//    return result;
-//  }
 
   void AirTerminalSingleDuctVAVNoReheat_Impl::resetMaximumAirFlowRate() {
     bool result = setString(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumAirFlowRate, "");
@@ -266,7 +223,7 @@ namespace detail {
     BOOST_ASSERT(result);
   }
 
-  void AirTerminalSingleDuctVAVNoReheat_Impl::setConstantMinimumAirFlowFraction(boost::optional<double> constantMinimumAirFlowFraction) {
+  bool AirTerminalSingleDuctVAVNoReheat_Impl::setConstantMinimumAirFlowFraction(boost::optional<double> constantMinimumAirFlowFraction) {
     bool result(false);
     if (constantMinimumAirFlowFraction) {
       result = setDouble(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction, constantMinimumAirFlowFraction.get());
@@ -276,31 +233,15 @@ namespace detail {
       result = true;
     }
     BOOST_ASSERT(result);
+    return result;
   }
-
-//  bool AirTerminalSingleDuctVAVNoReheat_Impl::setConstantMinimumAirFlowFraction(const OSOptionalQuantity& constantMinimumAirFlowFraction) {
-//    bool result(false);
-//    OptionalDouble value;
-//    if (constantMinimumAirFlowFraction.isSet()) {
-//      value = getDoubleFromQuantity(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction,constantMinimumAirFlowFraction.get());
-//      if (value) {
-//        setConstantMinimumAirFlowFraction(value);
-//		result = true;
-//      }
-//    }
-//    else {
-//      setConstantMinimumAirFlowFraction(value);
-//      result = true;
-//    }
-//    return result;
-//  }
 
   void AirTerminalSingleDuctVAVNoReheat_Impl::resetConstantMinimumAirFlowFraction() {
     bool result = setString(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction, "");
     BOOST_ASSERT(result);
   }
 
-  void AirTerminalSingleDuctVAVNoReheat_Impl::setFixedMinimumAirFlowRate(boost::optional<double> fixedMinimumAirFlowRate) {
+  bool AirTerminalSingleDuctVAVNoReheat_Impl::setFixedMinimumAirFlowRate(boost::optional<double> fixedMinimumAirFlowRate) {
     bool result(false);
     if (fixedMinimumAirFlowRate) {
       result = setDouble(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate, fixedMinimumAirFlowRate.get());
@@ -310,24 +251,8 @@ namespace detail {
       result = true;
     }
     BOOST_ASSERT(result);
+    return result;
   }
-
-//  bool AirTerminalSingleDuctVAVNoReheat_Impl::setFixedMinimumAirFlowRate(const OSOptionalQuantity& fixedMinimumAirFlowRate) {
-//    bool result(false);
-//    OptionalDouble value;
-//    if (fixedMinimumAirFlowRate.isSet()) {
-//      value = getDoubleFromQuantity(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate,fixedMinimumAirFlowRate.get());
-//      if (value) {
-//        setFixedMinimumAirFlowRate(value);
-//		result = true;
-//      }
-//    }
-//    else {
-//      setFixedMinimumAirFlowRate(value);
-//      result = true;
-//    }
-//    return result;
-//  }
 
   void AirTerminalSingleDuctVAVNoReheat_Impl::resetFixedMinimumAirFlowRate() {
     bool result = setString(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate, "");
@@ -368,56 +293,14 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::AvailabilityScheduleName);
   }
 
- ///* boost::optional<Connection> AirTerminalSingleDuctVAVNoReheat_Impl::optionalAirOutletNode() const {
- //   return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::AirOutletNodeName);
- // }
-
- // boost::optional<Connection> AirTerminalSingleDuctVAVNoReheat_Impl::optionalAirInletNode() const {
- //   return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::AirInletNodeName);
- // }*/
-
-//  openstudio::OSOptionalQuantity AirTerminalSingleDuctVAVNoReheat_Impl::maximumAirFlowRate_SI() const {
-//    return getMaximumAirFlowRate(false);
-//  }
-
-//  openstudio::OSOptionalQuantity AirTerminalSingleDuctVAVNoReheat_Impl::maximumAirFlowRate_IP() const {
-//    return getMaximumAirFlowRate(true);
-//  }
-
   std::vector<std::string> AirTerminalSingleDuctVAVNoReheat_Impl::zoneMinimumAirFlowInputMethodValues() const {
     return AirTerminalSingleDuctVAVNoReheat::zoneMinimumAirFlowInputMethodValues();
   }
-
-//  openstudio::OSOptionalQuantity AirTerminalSingleDuctVAVNoReheat_Impl::constantMinimumAirFlowFraction_SI() const {
-//    return getConstantMinimumAirFlowFraction(false);
-//  }
-
-//  openstudio::OSOptionalQuantity AirTerminalSingleDuctVAVNoReheat_Impl::constantMinimumAirFlowFraction_IP() const {
-//    return getConstantMinimumAirFlowFraction(true);
-//  }
-
-//  openstudio::OSOptionalQuantity AirTerminalSingleDuctVAVNoReheat_Impl::fixedMinimumAirFlowRate_SI() const {
-//    return getFixedMinimumAirFlowRate(false);
-//  }
-
-//  openstudio::OSOptionalQuantity AirTerminalSingleDuctVAVNoReheat_Impl::fixedMinimumAirFlowRate_IP() const {
-//    return getFixedMinimumAirFlowRate(true);
-//  }
 
   boost::optional<ModelObject> AirTerminalSingleDuctVAVNoReheat_Impl::availabilityScheduleAsModelObject() const {
     OptionalModelObject result = availabilitySchedule();
     return result;
   }
-
-  //boost::optional<ModelObject> AirTerminalSingleDuctVAVNoReheat_Impl::airOutletNodeAsModelObject() const {
-  //  OptionalModelObject result = airOutletNode();
-  //  return result;
-  //}
-
-  //boost::optional<ModelObject> AirTerminalSingleDuctVAVNoReheat_Impl::airInletNodeAsModelObject() const {
-  //  OptionalModelObject result = airInletNode();
-  //  return result;
-  //}
 
   boost::optional<ModelObject> AirTerminalSingleDuctVAVNoReheat_Impl::minimumAirFlowFractionScheduleAsModelObject() const {
     OptionalModelObject result;
@@ -447,28 +330,6 @@ namespace detail {
     }
     return false;
   }
-
-  ///*bool AirTerminalSingleDuctVAVNoReheat_Impl::setAirOutletNodeAsModelObject(const boost::optional<ModelObject>& modelObject) {
-  //  if (modelObject) {
-  //    OptionalConnection intermediate = modelObject->optionalCast<Connection>();
-  //    if (intermediate) {
-  //      Connection connection(*intermediate);
-  //      return setAirOutletNode(connection);
-  //    }
-  //  }
-  //  return false;
-  //}*/
-
- ///* bool AirTerminalSingleDuctVAVNoReheat_Impl::setAirInletNodeAsModelObject(const boost::optional<ModelObject>& modelObject) {
- //   if (modelObject) {
- //     OptionalConnection intermediate = modelObject->optionalCast<Connection>();
- //     if (intermediate) {
- //       Connection connection(*intermediate);
- //       return setAirInletNode(connection);
- //     }
- //   }
- //   return false;
- // }*/
 
 bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
   {
@@ -530,6 +391,68 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
     return false;
   }
 
+  std::vector<IdfObject> AirTerminalSingleDuctVAVNoReheat_Impl::remove()
+  {
+    Model _model = this->model();
+    ModelObject thisObject = this->getObject<ModelObject>();
+
+    std::vector<IdfObject> result;
+
+    boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
+    boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
+    
+    boost::optional<ModelObject> targetModelObject = this->outletModelObject();
+    boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
+
+    std::vector<ThermalZone> thermalZones = _model.getModelObjects<ThermalZone>();
+    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
+         it != thermalZones.end();
+         it++ )
+    {
+      std::vector<ModelObject> equipment = it->equipment();
+
+      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
+      {
+        it->removeEquipment(thisObject);
+
+        break;
+      }
+    }
+
+    if( sourcePort && sourceModelObject
+        && targetPort && targetModelObject )
+    {
+      if( boost::optional<Node> inletNode = sourceModelObject->optionalCast<Node>() )
+      {
+        if( boost::optional<ModelObject> source2ModelObject = inletNode->inletModelObject() )
+        {
+          if( boost::optional<unsigned> source2Port = inletNode->connectedObjectPort(inletNode->inletPort()) )
+          {
+            _model.connect( source2ModelObject.get(),
+                            source2Port.get(),
+                            targetModelObject.get(),
+                            targetPort.get() );
+
+            inletNode->disconnect();
+            inletNode->remove();
+
+            return StraightComponent_Impl::remove();
+          }
+        }
+      }
+    }
+
+    model().disconnect(getObject<ModelObject>(),inletPort());
+    model().disconnect(getObject<ModelObject>(),outletPort());
+
+    return StraightComponent_Impl::remove();
+  }
+
+  bool AirTerminalSingleDuctVAVNoReheat_Impl::isRemovable() const
+  {
+    return true;
+  }
+
   bool AirTerminalSingleDuctVAVNoReheat_Impl::setMinimumAirFlowFractionScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
     if (modelObject) {
       OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
@@ -566,27 +489,23 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
 
 } // detail
 
-AirTerminalSingleDuctVAVNoReheat::AirTerminalSingleDuctVAVNoReheat(const Model& model)
+AirTerminalSingleDuctVAVNoReheat::AirTerminalSingleDuctVAVNoReheat(const Model& model, Schedule& schedule)
   : StraightComponent(AirTerminalSingleDuctVAVNoReheat::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_AirTerminal_SingleDuct_VAV_NoReheatFields::AvailabilityScheduleName
-  //     OS_AirTerminal_SingleDuct_VAV_NoReheatFields::AirOutletNodeName
-  //     OS_AirTerminal_SingleDuct_VAV_NoReheatFields::AirInletNodeName
-  bool ok = true;
-  // ok = setHandle();
-  BOOST_ASSERT(ok);
+  bool test = setAvailabilitySchedule(schedule);
+  if (!test) {
+    remove();
+    LOG_AND_THROW("Unable to construct " << briefDescription() << ", because cannot set its "
+        << "availability schedule to " << schedule.briefDescription() << ".");
+  }
 
-  model::ScheduleCompact availabilitySchedule(model);
-  setAvailabilitySchedule(availabilitySchedule); 
+  this->autosizeMaximumAirFlowRate();
+  this->setZoneMinimumAirFlowInputMethod("Constant");
+  this->setConstantMinimumAirFlowFraction(0.3);
+  this->setString(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::DesignSpecificationOutdoorAirObjectName,"");
 
-  BOOST_ASSERT(ok);
-  // ok = setAirOutletNode();
-  BOOST_ASSERT(ok);
-  // ok = setAirInletNode();
-  BOOST_ASSERT(ok);
 }
 
 IddObjectType AirTerminalSingleDuctVAVNoReheat::iddObjectType() {
@@ -602,21 +521,9 @@ Schedule AirTerminalSingleDuctVAVNoReheat::availabilitySchedule() const {
   return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->availabilitySchedule();
 }
 
-//Connection AirTerminalSingleDuctVAVNoReheat::airOutletNode() const {
-//  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->airOutletNode();
-//}
-//
-//Connection AirTerminalSingleDuctVAVNoReheat::airInletNode() const {
-//  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->airInletNode();
-//}
-
 boost::optional<double> AirTerminalSingleDuctVAVNoReheat::maximumAirFlowRate() const {
   return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->maximumAirFlowRate();
 }
-
-//OSOptionalQuantity AirTerminalSingleDuctVAVNoReheat::getMaximumAirFlowRate(bool returnIP) const {
-//  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->getMaximumAirFlowRate(returnIP);
-//}
 
 bool AirTerminalSingleDuctVAVNoReheat::isMaximumAirFlowRateAutosized() const {
   return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->isMaximumAirFlowRateAutosized();
@@ -626,49 +533,48 @@ boost::optional<std::string> AirTerminalSingleDuctVAVNoReheat::zoneMinimumAirFlo
   return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->zoneMinimumAirFlowInputMethod();
 }
 
+bool AirTerminalSingleDuctVAVNoReheat::isZoneMinimumAirFlowInputMethodDefaulted() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->isZoneMinimumAirFlowInputMethodDefaulted();
+}
+
 boost::optional<double> AirTerminalSingleDuctVAVNoReheat::constantMinimumAirFlowFraction() const {
   return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->constantMinimumAirFlowFraction();
 }
-
-//OSOptionalQuantity AirTerminalSingleDuctVAVNoReheat::getConstantMinimumAirFlowFraction(bool returnIP) const {
-//  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->getConstantMinimumAirFlowFraction(returnIP);
-//}
+bool AirTerminalSingleDuctVAVNoReheat::isConstantMinimumAirFlowFractionDefaulted() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->isConstantMinimumAirFlowFractionDefaulted();
+}
 
 boost::optional<double> AirTerminalSingleDuctVAVNoReheat::fixedMinimumAirFlowRate() const {
   return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->fixedMinimumAirFlowRate();
 }
 
-//OSOptionalQuantity AirTerminalSingleDuctVAVNoReheat::getFixedMinimumAirFlowRate(bool returnIP) const {
-//  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->getFixedMinimumAirFlowRate(returnIP);
-//}
+bool AirTerminalSingleDuctVAVNoReheat::isFixedMinimumAirFlowRateDefaulted() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->isFixedMinimumAirFlowRateDefaulted();
+}
 
 boost::optional<Schedule> AirTerminalSingleDuctVAVNoReheat::minimumAirFlowFractionSchedule() const {
   return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->minimumAirFlowFractionSchedule();
+}
+
+bool AirTerminalSingleDuctVAVNoReheat::isMinimumAirFlowFractionScheduleDefaulted() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->isMinimumAirFlowFractionScheduleDefaulted();
 }
 
 boost::optional<DesignSpecificationOutdoorAir> AirTerminalSingleDuctVAVNoReheat::designSpecificationOutdoorAirObject() const {
   return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->designSpecificationOutdoorAirObject();
 }
 
+bool AirTerminalSingleDuctVAVNoReheat::isDesignSpecificationOutdoorAirObjectDefaulted() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->isDesignSpecificationOutdoorAirObjectDefaulted();
+}
+
 bool AirTerminalSingleDuctVAVNoReheat::setAvailabilitySchedule(Schedule& schedule) {
   return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setAvailabilitySchedule(schedule);
 }
 
-//bool AirTerminalSingleDuctVAVNoReheat::setAirOutletNode(const Connection& connection) {
-//  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setAirOutletNode(connection);
-//}
-//
-//bool AirTerminalSingleDuctVAVNoReheat::setAirInletNode(const Connection& connection) {
-//  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setAirInletNode(connection);
-//}
-
 bool AirTerminalSingleDuctVAVNoReheat::setMaximumAirFlowRate(double maximumAirFlowRate) {
   return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setMaximumAirFlowRate(maximumAirFlowRate);
 }
-
-//bool AirTerminalSingleDuctVAVNoReheat::setMaximumAirFlowRate(const Quantity& maximumAirFlowRate) {
-//  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setMaximumAirFlowRate(maximumAirFlowRate);
-//}
 
 void AirTerminalSingleDuctVAVNoReheat::resetMaximumAirFlowRate() {
   getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->resetMaximumAirFlowRate();
@@ -686,25 +592,17 @@ void AirTerminalSingleDuctVAVNoReheat::resetZoneMinimumAirFlowInputMethod() {
   getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->resetZoneMinimumAirFlowInputMethod();
 }
 
-void AirTerminalSingleDuctVAVNoReheat::setConstantMinimumAirFlowFraction(double constantMinimumAirFlowFraction) {
-  getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setConstantMinimumAirFlowFraction(constantMinimumAirFlowFraction);
+bool AirTerminalSingleDuctVAVNoReheat::setConstantMinimumAirFlowFraction(double constantMinimumAirFlowFraction) {
+  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setConstantMinimumAirFlowFraction(constantMinimumAirFlowFraction);
 }
-
-//bool AirTerminalSingleDuctVAVNoReheat::setConstantMinimumAirFlowFraction(const Quantity& constantMinimumAirFlowFraction) {
-//  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setConstantMinimumAirFlowFraction(constantMinimumAirFlowFraction);
-//}
 
 void AirTerminalSingleDuctVAVNoReheat::resetConstantMinimumAirFlowFraction() {
   getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->resetConstantMinimumAirFlowFraction();
 }
 
-void AirTerminalSingleDuctVAVNoReheat::setFixedMinimumAirFlowRate(double fixedMinimumAirFlowRate) {
-  getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setFixedMinimumAirFlowRate(fixedMinimumAirFlowRate);
+bool AirTerminalSingleDuctVAVNoReheat::setFixedMinimumAirFlowRate(double fixedMinimumAirFlowRate) {
+  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setFixedMinimumAirFlowRate(fixedMinimumAirFlowRate);
 }
-
-//bool AirTerminalSingleDuctVAVNoReheat::setFixedMinimumAirFlowRate(const Quantity& fixedMinimumAirFlowRate) {
-//  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->setFixedMinimumAirFlowRate(fixedMinimumAirFlowRate);
-//}
 
 void AirTerminalSingleDuctVAVNoReheat::resetFixedMinimumAirFlowRate() {
   getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->resetFixedMinimumAirFlowRate();
