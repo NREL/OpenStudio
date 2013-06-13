@@ -391,6 +391,18 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
   0,                                      ! Drift Loss Fraction
   0;                                      ! Blowdown Concentration Ratio
 
+OS:EvaporativeFluidCooler:SingleSpeed,
+  {d1d0a481-eb9c-41d0-93dd-bc680179680a}, !- Handle
+  Evaporative Fluid Cooler SingleSpeed,   !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  autosize,                               !- Design Air Flow Rate {m3/s}
+  autosize,                               !- Fan Power at Design Air Flow Rate {W}
+  0.03,                                   !- Design Spray Water Flow Rate {m3/s}
+  ,                                       !- Performance Input Method
+  ,                                       !- Outdoor Air Inlet Node Name
+  ;                                       !- Standard Design Capacity {W}
+
 OS:AirTerminal:SingleDuct:Uncontrolled,
   {b883cca7-f436-48ce-ad23-7e8310c7a85d}, ! Handle
   OS:AirTerminal:SingleDuct:Uncontrolled 1, ! Name

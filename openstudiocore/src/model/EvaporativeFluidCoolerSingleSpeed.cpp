@@ -29,13 +29,28 @@
 //#include <model/WaterStorageTank_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/PlantLoop_Impl.hpp>
+#include <model/ConnectorSplitter.hpp>
+#include <model/ConnectorSplitter_Impl.hpp>
+#include <model/ConnectorMixer.hpp>
+#include <model/ConnectorMixer_Impl.hpp>
+#include <model/ModelObject.hpp>
+#include <model/ModelObject_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/PortList.hpp>
+#include <model/PortList_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_EvaporativeFluidCooler_SingleSpeed_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
-
+//#include <utilities/units/Unit.hpp>
+//#include <utilities/core/Compare.hpp>
 #include <utilities/core/Assert.hpp>
+//#include <boost/foreach.hpp>
 
 namespace openstudio {
 namespace model {
@@ -115,14 +130,58 @@ namespace detail {
   //  return value.get();
  // }
 
+  bool EvaporativeFluidCoolerSingleSpeed_Impl::addToNode(Node& node)
+  {
+    Model _model = node.model();
+
+    if( boost::optional<PlantLoop> _plantLoop = node.plantLoop() )
+    {
+      PlantLoop plantLoop = _plantLoop.get();
+      if( plantLoop.supplyComponent(node.handle()) )
+      {
+        if( boost::optional<ModelObject> outlet = node.outletModelObject() )
+        {
+          if( outlet->optionalCast<ConnectorMixer>() )
+          {
+            if( boost::optional<ModelObject> inlet = node.inletModelObject() )
+            {
+              if( boost::optional<ConnectorSplitter> splitter = inlet->optionalCast<ConnectorSplitter>() )
+              {
+                boost::optional<ModelObject> sourceModelObject = inlet;
+                boost::optional<unsigned> sourcePort = node.connectedObjectPort(node.inletPort());
+
+                if( sourcePort && sourceModelObject )
+                {
+                  Node inletNode(_model);
+
+                  _model.connect( sourceModelObject.get(),
+                                  sourcePort.get(),
+                                  inletNode,
+                                  inletNode.inletPort() );
+                  
+                  _model.connect( inletNode,
+                                  inletNode.outletPort(),
+                                  this->getObject<ModelObject>(),
+                                  this->inletPort() );
+
+                  _model.connect( this->getObject<ModelObject>(),
+                                  outletPort(),
+                                  node,
+                                  node.inletPort() );
+                  return true; 
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
   boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::designAirFlowRate() const {
     return getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRate,true);
   }
-
- /* OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::getDesignAirFlowRate(bool returnIP) const {
-    OptionalDouble value = designAirFlowRate();
-    return getQuantityFromDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRate, value, returnIP);
-  }*/
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::isDesignAirFlowRateAutosized() const {
     bool result = false;
@@ -136,11 +195,6 @@ namespace detail {
   boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::fanPoweratDesignAirFlowRate() const {
     return getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::FanPoweratDesignAirFlowRate,true);
   }
-
- /* OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::getFanPoweratDesignAirFlowRate(bool returnIP) const {
-    OptionalDouble value = fanPoweratDesignAirFlowRate();
-    return getQuantityFromDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::FanPoweratDesignAirFlowRate, value, returnIP);
-  }*/
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::isFanPoweratDesignAirFlowRateAutosized() const {
     bool result = false;
@@ -157,13 +211,6 @@ namespace detail {
     return value.get();
   }
 
- /* Quantity EvaporativeFluidCoolerSingleSpeed_Impl::getDesignSprayWaterFlowRate(bool returnIP) const {
-    OptionalDouble value = designSprayWaterFlowRate();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignSprayWaterFlowRate, value, returnIP);
-    BOOST_ASSERT(result.isSet());
-    return result.get();
-  }*/
-
   boost::optional<std::string> EvaporativeFluidCoolerSingleSpeed_Impl::performanceInputMethod() const {
     return getString(OS_EvaporativeFluidCooler_SingleSpeedFields::PerformanceInputMethod,true);
   }
@@ -176,19 +223,9 @@ namespace detail {
     return getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::StandardDesignCapacity,true);
   }
 
-  /*OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::getStandardDesignCapacity(bool returnIP) const {
-    OptionalDouble value = standardDesignCapacity();
-    return getQuantityFromDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::StandardDesignCapacity, value, returnIP);
-  }*/
-
   boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::ufactorTimesAreaValueatDesignAirFlowRate() const {
     return getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::UfactorTimesAreaValueatDesignAirFlowRate,true);
   }
-
-  /*OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::getUfactorTimesAreaValueatDesignAirFlowRate(bool returnIP) const {
-    OptionalDouble value = ufactorTimesAreaValueatDesignAirFlowRate();
-    return getQuantityFromDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::UfactorTimesAreaValueatDesignAirFlowRate, value, returnIP);
-  }*/
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::isUfactorTimesAreaValueatDesignAirFlowRateAutosized() const {
     bool result = false;
@@ -202,11 +239,6 @@ namespace detail {
   boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::designWaterFlowRate() const {
     return getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignWaterFlowRate,true);
   }
-  
-  /*OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::getDesignWaterFlowRate(bool returnIP) const {
-    OptionalDouble value = designWaterFlowRate();
-    return getQuantityFromDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignWaterFlowRate, value, returnIP);
-  }*/
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::isDesignWaterFlowRateAutosized() const {
     bool result = false;
@@ -221,37 +253,17 @@ namespace detail {
     return getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::UserSpecifiedDesignCapacity,true);
   }
 
-  /*OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::getUserSpecifiedDesignCapacity(bool returnIP) const {
-    OptionalDouble value = userSpecifiedDesignCapacity();
-    return getQuantityFromDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::UserSpecifiedDesignCapacity, value, returnIP);
-  }*/
-
   boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::designEnteringWaterTemperature() const {
     return getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringWaterTemperature,true);
   }
-
-  /*OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::getDesignEnteringWaterTemperature(bool returnIP) const {
-    OptionalDouble value = designEnteringWaterTemperature();
-    return getQuantityFromDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringWaterTemperature, value, returnIP);
-  }*/
 
   boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::designEnteringAirTemperature() const {
     return getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirTemperature,true);
   }
 
-  /*OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::getDesignEnteringAirTemperature(bool returnIP) const {
-    OptionalDouble value = designEnteringAirTemperature();
-    return getQuantityFromDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirTemperature, value, returnIP);
-  }*/
-
   boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::designEnteringAirWetbulbTemperature() const {
     return getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirWetbulbTemperature,true);
   }
-
- /* OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::getDesignEnteringAirWetbulbTemperature(bool returnIP) const {
-    OptionalDouble value = designEnteringAirWetbulbTemperature();
-    return getQuantityFromDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirWetbulbTemperature, value, returnIP);
-  }*/
 
   std::string EvaporativeFluidCoolerSingleSpeed_Impl::capacityControl() const {
     boost::optional<std::string> value = getString(OS_EvaporativeFluidCooler_SingleSpeedFields::CapacityControl,true);
@@ -268,13 +280,6 @@ namespace detail {
     BOOST_ASSERT(value);
     return value.get();
   }
-
-  /*Quantity EvaporativeFluidCoolerSingleSpeed_Impl::getSizingFactor(bool returnIP) const {
-    OptionalDouble value = sizingFactor();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::SizingFactor, value, returnIP);
-    BOOST_ASSERT(result.isSet());
-    return result.get();
-  }*/
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::isSizingFactorDefaulted() const {
     return isEmpty(OS_EvaporativeFluidCooler_SingleSpeedFields::SizingFactor);
@@ -294,23 +299,11 @@ namespace detail {
     return getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::EvaporationLossFactor,true);
   }
 
- /* OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::getEvaporationLossFactor(bool returnIP) const {
-    OptionalDouble value = evaporationLossFactor();
-    return getQuantityFromDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::EvaporationLossFactor, value, returnIP);
-  }*/
-
   double EvaporativeFluidCoolerSingleSpeed_Impl::driftLossPercent() const {
     boost::optional<double> value = getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DriftLossPercent,true);
     BOOST_ASSERT(value);
     return value.get();
   }
-
- /* Quantity EvaporativeFluidCoolerSingleSpeed_Impl::getDriftLossPercent(bool returnIP) const {
-    OptionalDouble value = driftLossPercent();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DriftLossPercent, value, returnIP);
-    BOOST_ASSERT(result.isSet());
-    return result.get();
-  }*/
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::isDriftLossPercentDefaulted() const {
     return isEmpty(OS_EvaporativeFluidCooler_SingleSpeedFields::DriftLossPercent);
@@ -331,13 +324,6 @@ namespace detail {
     BOOST_ASSERT(value);
     return value.get();
   }
-
-  /*Quantity EvaporativeFluidCoolerSingleSpeed_Impl::getBlowdownConcentrationRatio(bool returnIP) const {
-    OptionalDouble value = blowdownConcentrationRatio();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::BlowdownConcentrationRatio, value, returnIP);
-    BOOST_ASSERT(result.isSet());
-    return result.get();
-  }*/
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::isBlowdownConcentrationRatioDefaulted() const {
     return isEmpty(OS_EvaporativeFluidCooler_SingleSpeedFields::BlowdownConcentrationRatio);
@@ -369,21 +355,6 @@ namespace detail {
     return result;
   }
 
-  /*bool EvaporativeFluidCoolerSingleSpeed_Impl::setDesignAirFlowRate(const OSOptionalQuantity& designAirFlowRate) {
-    bool result(false);
-    OptionalDouble value;
-    if (designAirFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRate,designAirFlowRate.get());
-      if (value) {
-        result = setDesignAirFlowRate(value);
-      }
-    }
-    else {
-      result = setDesignAirFlowRate(value);
-    }
-    return result;
-  }*/
-
   void EvaporativeFluidCoolerSingleSpeed_Impl::autosizeDesignAirFlowRate() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRate, "autosize");
     BOOST_ASSERT(result);
@@ -397,21 +368,6 @@ namespace detail {
     return result;
   }
 
-  /*bool EvaporativeFluidCoolerSingleSpeed_Impl::setFanPoweratDesignAirFlowRate(const OSOptionalQuantity& fanPoweratDesignAirFlowRate) {
-    bool result(false);
-    OptionalDouble value;
-    if (fanPoweratDesignAirFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_EvaporativeFluidCooler_SingleSpeedFields::FanPoweratDesignAirFlowRate,fanPoweratDesignAirFlowRate.get());
-      if (value) {
-        result = setFanPoweratDesignAirFlowRate(value);
-      }
-    }
-    else {
-      result = setFanPoweratDesignAirFlowRate(value);
-    }
-    return result;
-  }*/
-
   void EvaporativeFluidCoolerSingleSpeed_Impl::autosizeFanPoweratDesignAirFlowRate() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::FanPoweratDesignAirFlowRate, "autosize");
     BOOST_ASSERT(result);
@@ -421,14 +377,6 @@ namespace detail {
     bool result = setDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignSprayWaterFlowRate, designSprayWaterFlowRate);
     return result;
   }
-
-  /*bool EvaporativeFluidCoolerSingleSpeed_Impl::setDesignSprayWaterFlowRate(const Quantity& designSprayWaterFlowRate) {
-    OptionalDouble value = getDoubleFromQuantity(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignSprayWaterFlowRate,designSprayWaterFlowRate);
-    if (!value) {
-      return false;
-    }
-    return setDesignSprayWaterFlowRate(value.get());
-  }*/
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setPerformanceInputMethod(boost::optional<std::string> performanceInputMethod) {
     bool result(false);
@@ -476,21 +424,6 @@ namespace detail {
     return result;
   }
 
-  /*bool EvaporativeFluidCoolerSingleSpeed_Impl::setStandardDesignCapacity(const OSOptionalQuantity& standardDesignCapacity) {
-    bool result(false);
-    OptionalDouble value;
-    if (standardDesignCapacity.isSet()) {
-      value = getDoubleFromQuantity(OS_EvaporativeFluidCooler_SingleSpeedFields::StandardDesignCapacity,standardDesignCapacity.get());
-      if (value) {
-        result = setStandardDesignCapacity(value);
-      }
-    }
-    else {
-      result = setStandardDesignCapacity(value);
-    }
-    return result;
-  }*/
-
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetStandardDesignCapacity() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::StandardDesignCapacity, "");
     BOOST_ASSERT(result);
@@ -507,21 +440,6 @@ namespace detail {
     }
     return result;
   }
-
-  /*bool EvaporativeFluidCoolerSingleSpeed_Impl::setUfactorTimesAreaValueatDesignAirFlowRate(const OSOptionalQuantity& ufactorTimesAreaValueatDesignAirFlowRate) {
-    bool result(false);
-    OptionalDouble value;
-    if (ufactorTimesAreaValueatDesignAirFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_EvaporativeFluidCooler_SingleSpeedFields::UfactorTimesAreaValueatDesignAirFlowRate,ufactorTimesAreaValueatDesignAirFlowRate.get());
-      if (value) {
-        result = setUfactorTimesAreaValueatDesignAirFlowRate(value);
-      }
-    }
-    else {
-      result = setUfactorTimesAreaValueatDesignAirFlowRate(value);
-    }
-    return result;
-  }*/
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetUfactorTimesAreaValueatDesignAirFlowRate() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::UfactorTimesAreaValueatDesignAirFlowRate, "");
@@ -545,21 +463,6 @@ namespace detail {
     return result;
   }
 
-  /*bool EvaporativeFluidCoolerSingleSpeed_Impl::setDesignWaterFlowRate(const OSOptionalQuantity& designWaterFlowRate) {
-    bool result(false);
-    OptionalDouble value;
-    if (designWaterFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignWaterFlowRate,designWaterFlowRate.get());
-      if (value) {
-        result = setDesignWaterFlowRate(value);
-      }
-    }
-    else {
-      result = setDesignWaterFlowRate(value);
-    }
-    return result;
-  }*/
-
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetDesignWaterFlowRate() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignWaterFlowRate, "");
     BOOST_ASSERT(result);
@@ -582,21 +485,6 @@ namespace detail {
     return result;
   }
 
-  /*bool EvaporativeFluidCoolerSingleSpeed_Impl::setUserSpecifiedDesignCapacity(const OSOptionalQuantity& userSpecifiedDesignCapacity) {
-    bool result(false);
-    OptionalDouble value;
-    if (userSpecifiedDesignCapacity.isSet()) {
-      value = getDoubleFromQuantity(OS_EvaporativeFluidCooler_SingleSpeedFields::UserSpecifiedDesignCapacity,userSpecifiedDesignCapacity.get());
-      if (value) {
-        result = setUserSpecifiedDesignCapacity(value);
-      }
-    }
-    else {
-      result = setUserSpecifiedDesignCapacity(value);
-    }
-    return result;
-  }*/
-
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetUserSpecifiedDesignCapacity() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::UserSpecifiedDesignCapacity, "");
     BOOST_ASSERT(result);
@@ -613,21 +501,6 @@ namespace detail {
     }
     return result;
   }
-
-  /*bool EvaporativeFluidCoolerSingleSpeed_Impl::setDesignEnteringWaterTemperature(const OSOptionalQuantity& designEnteringWaterTemperature) {
-    bool result(false);
-    OptionalDouble value;
-    if (designEnteringWaterTemperature.isSet()) {
-      value = getDoubleFromQuantity(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringWaterTemperature,designEnteringWaterTemperature.get());
-      if (value) {
-        result = setDesignEnteringWaterTemperature(value);
-      }
-    }
-    else {
-      result = setDesignEnteringWaterTemperature(value);
-    }
-    return result;
-  }*/
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetDesignEnteringWaterTemperature() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringWaterTemperature, "");
@@ -646,21 +519,6 @@ namespace detail {
     return result;
   }
 
-  /*bool EvaporativeFluidCoolerSingleSpeed_Impl::setDesignEnteringAirTemperature(const OSOptionalQuantity& designEnteringAirTemperature) {
-    bool result(false);
-    OptionalDouble value;
-    if (designEnteringAirTemperature.isSet()) {
-      value = getDoubleFromQuantity(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirTemperature,designEnteringAirTemperature.get());
-      if (value) {
-        result = setDesignEnteringAirTemperature(value);
-      }
-    }
-    else {
-      result = setDesignEnteringAirTemperature(value);
-    }
-    return result;
-  }*/
-
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetDesignEnteringAirTemperature() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirTemperature, "");
     BOOST_ASSERT(result);
@@ -677,21 +535,6 @@ namespace detail {
     }
     return result;
   }
-
-  /*bool EvaporativeFluidCoolerSingleSpeed_Impl::setDesignEnteringAirWetbulbTemperature(const OSOptionalQuantity& designEnteringAirWetbulbTemperature) {
-    bool result(false);
-    OptionalDouble value;
-    if (designEnteringAirWetbulbTemperature.isSet()) {
-      value = getDoubleFromQuantity(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirWetbulbTemperature,designEnteringAirWetbulbTemperature.get());
-      if (value) {
-        result = setDesignEnteringAirWetbulbTemperature(value);
-      }
-    }
-    else {
-      result = setDesignEnteringAirWetbulbTemperature(value);
-    }
-    return result;
-  }*/
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetDesignEnteringAirWetbulbTemperature() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirWetbulbTemperature, "");
@@ -712,14 +555,6 @@ namespace detail {
     bool result = setDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::SizingFactor, sizingFactor);
     return result;
   }
-
-  /*bool EvaporativeFluidCoolerSingleSpeed_Impl::setSizingFactor(const Quantity& sizingFactor) {
-    OptionalDouble value = getDoubleFromQuantity(OS_EvaporativeFluidCooler_SingleSpeedFields::SizingFactor,sizingFactor);
-    if (!value) {
-      return false;
-    }
-    return setSizingFactor(value.get());
-  }*/
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetSizingFactor() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::SizingFactor, "");
@@ -748,23 +583,6 @@ namespace detail {
     BOOST_ASSERT(result);
   }
 
- /* bool EvaporativeFluidCoolerSingleSpeed_Impl::setEvaporationLossFactor(const OSOptionalQuantity& evaporationLossFactor) {
-    bool result(false);
-    OptionalDouble value;
-    if (evaporationLossFactor.isSet()) {
-      value = getDoubleFromQuantity(OS_EvaporativeFluidCooler_SingleSpeedFields::EvaporationLossFactor,evaporationLossFactor.get());
-      if (value) {
-        setEvaporationLossFactor(value);
-		result = true;
-      }
-    }
-    else {
-      setEvaporationLossFactor(value);
-      result = true;
-    }
-    return result;
-  }*/
-
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetEvaporationLossFactor() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::EvaporationLossFactor, "");
     BOOST_ASSERT(result);
@@ -774,15 +592,6 @@ namespace detail {
     bool result = setDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DriftLossPercent, driftLossPercent);
     BOOST_ASSERT(result);
   }
-
- /* bool EvaporativeFluidCoolerSingleSpeed_Impl::setDriftLossPercent(const Quantity& driftLossPercent) {
-    OptionalDouble value = getDoubleFromQuantity(OS_EvaporativeFluidCooler_SingleSpeedFields::DriftLossPercent,driftLossPercent);
-    if (!value) {
-      return false;
-    }
-    setDriftLossPercent(value.get());
-    return true;
-  }*/
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetDriftLossPercent() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::DriftLossPercent, "");
@@ -803,14 +612,6 @@ namespace detail {
     bool result = setDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::BlowdownConcentrationRatio, blowdownConcentrationRatio);
     return result;
   }
-
- /* bool EvaporativeFluidCoolerSingleSpeed_Impl::setBlowdownConcentrationRatio(const Quantity& blowdownConcentrationRatio) {
-    OptionalDouble value = getDoubleFromQuantity(OS_EvaporativeFluidCooler_SingleSpeedFields::BlowdownConcentrationRatio,blowdownConcentrationRatio);
-    if (!value) {
-      return false;
-    }
-    return setBlowdownConcentrationRatio(value.get());
-  }*/
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetBlowdownConcentrationRatio() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::BlowdownConcentrationRatio, "");
@@ -855,131 +656,21 @@ namespace detail {
  //   return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_EvaporativeFluidCooler_SingleSpeedFields::WaterOutletNodeName);
  // }
 
-  /*openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::designAirFlowRate_SI() const {
-    return getDesignAirFlowRate(false);
-  }*/
-  /*openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::designAirFlowRate_IP() const {
-    return getDesignAirFlowRate(true);
-  }*/
-
-  /*openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::fanPoweratDesignAirFlowRate_SI() const {
-    return getFanPoweratDesignAirFlowRate(false);
-  }*/
-
-  /*openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::fanPoweratDesignAirFlowRate_IP() const {
-    return getFanPoweratDesignAirFlowRate(true);
-  }*/
-
-  /*openstudio::Quantity EvaporativeFluidCoolerSingleSpeed_Impl::designSprayWaterFlowRate_SI() const {
-    return getDesignSprayWaterFlowRate(false);
-  }*/
-
-  /*openstudio::Quantity EvaporativeFluidCoolerSingleSpeed_Impl::designSprayWaterFlowRate_IP() const {
-    return getDesignSprayWaterFlowRate(true);
-  }*/
-
   std::vector<std::string> EvaporativeFluidCoolerSingleSpeed_Impl::performanceInputMethodValues() const {
     return EvaporativeFluidCoolerSingleSpeed::performanceInputMethodValues();
   }
-
-  /*openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::standardDesignCapacity_SI() const {
-    return getStandardDesignCapacity(false);
-  }*/
-
-  /*openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::standardDesignCapacity_IP() const {
-    return getStandardDesignCapacity(true);
-  }
-
-  openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::ufactorTimesAreaValueatDesignAirFlowRate_SI() const {
-    return getUfactorTimesAreaValueatDesignAirFlowRate(false);
-  }
-
-  openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::ufactorTimesAreaValueatDesignAirFlowRate_IP() const {
-    return getUfactorTimesAreaValueatDesignAirFlowRate(true);
-  }
-
-  openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::designWaterFlowRate_SI() const {
-    return getDesignWaterFlowRate(false);
-  }*/
-
-  /*openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::designWaterFlowRate_IP() const {
-    return getDesignWaterFlowRate(true);
-  }
-
-  openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::userSpecifiedDesignCapacity_SI() const {
-    return getUserSpecifiedDesignCapacity(false);
-  }
-
-  openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::userSpecifiedDesignCapacity_IP() const {
-    return getUserSpecifiedDesignCapacity(true);
-  }
-
-  openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::designEnteringWaterTemperature_SI() const {
-    return getDesignEnteringWaterTemperature(false);
-  }
-
-  openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::designEnteringWaterTemperature_IP() const {
-    return getDesignEnteringWaterTemperature(true);
-  }
-
-  openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::designEnteringAirTemperature_SI() const {
-    return getDesignEnteringAirTemperature(false);
-  }
-
-  openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::designEnteringAirTemperature_IP() const {
-    return getDesignEnteringAirTemperature(true);
-  }
-
-  openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::designEnteringAirWetbulbTemperature_SI() const {
-    return getDesignEnteringAirWetbulbTemperature(false);
-  }
-
-  openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::designEnteringAirWetbulbTemperature_IP() const {
-    return getDesignEnteringAirWetbulbTemperature(true);
-  }*/
 
   std::vector<std::string> EvaporativeFluidCoolerSingleSpeed_Impl::capacityControlValues() const {
     return EvaporativeFluidCoolerSingleSpeed::capacityControlValues();
   }
 
- /* openstudio::Quantity EvaporativeFluidCoolerSingleSpeed_Impl::sizingFactor_SI() const {
-    return getSizingFactor(false);
-  }*/
-
-  /*openstudio::Quantity EvaporativeFluidCoolerSingleSpeed_Impl::sizingFactor_IP() const {
-    return getSizingFactor(true);
-  }*/
-
   std::vector<std::string> EvaporativeFluidCoolerSingleSpeed_Impl::evaporationLossModeValues() const {
     return EvaporativeFluidCoolerSingleSpeed::evaporationLossModeValues();
   }
 
-  /*openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::evaporationLossFactor_SI() const {
-    return getEvaporationLossFactor(false);
-  }
-
-  openstudio::OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed_Impl::evaporationLossFactor_IP() const {
-    return getEvaporationLossFactor(true);
-  }
-
-  openstudio::Quantity EvaporativeFluidCoolerSingleSpeed_Impl::driftLossPercent_SI() const {
-    return getDriftLossPercent(false);
-  }
-
-  openstudio::Quantity EvaporativeFluidCoolerSingleSpeed_Impl::driftLossPercent_IP() const {
-    return getDriftLossPercent(true);
-  } */
-
   std::vector<std::string> EvaporativeFluidCoolerSingleSpeed_Impl::blowdownCalculationModeValues() const {
     return EvaporativeFluidCoolerSingleSpeed::blowdownCalculationModeValues();
   }
- /* openstudio::Quantity EvaporativeFluidCoolerSingleSpeed_Impl::blowdownConcentrationRatio_SI() const {
-    return getBlowdownConcentrationRatio(false);
-  }
-
-  openstudio::Quantity EvaporativeFluidCoolerSingleSpeed_Impl::blowdownConcentrationRatio_IP() const {
-    return getBlowdownConcentrationRatio(true);
-  }*/
 
   ///*boost::optional<ModelObject> EvaporativeFluidCoolerSingleSpeed_Impl::waterInletNodeAsModelObject() const {
   //  OptionalModelObject result = waterInletNode();
@@ -1105,6 +796,9 @@ EvaporativeFluidCoolerSingleSpeed::EvaporativeFluidCoolerSingleSpeed(const Model
    autosizeDesignAirFlowRate();
    autosizeFanPoweratDesignAirFlowRate();
    setDesignSprayWaterFlowRate(0.03);
+   // TODO: Need to fix this and determine best defaults
+   setPerformanceInputMethod("StandardDesignCapacity");
+   setStandardDesignCapacity(1.0);
   
 }
 
@@ -1144,10 +838,6 @@ boost::optional<double> EvaporativeFluidCoolerSingleSpeed::designAirFlowRate() c
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->designAirFlowRate();
 }
 
-//OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed::getDesignAirFlowRate(bool returnIP) const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->getDesignAirFlowRate(returnIP);
-//}
-
 bool EvaporativeFluidCoolerSingleSpeed::isDesignAirFlowRateAutosized() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->isDesignAirFlowRateAutosized();
 }
@@ -1156,10 +846,6 @@ boost::optional<double> EvaporativeFluidCoolerSingleSpeed::fanPoweratDesignAirFl
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->fanPoweratDesignAirFlowRate();
 }
 
-//OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed::getFanPoweratDesignAirFlowRate(bool returnIP) const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->getFanPoweratDesignAirFlowRate(returnIP);
-//}
-
 bool EvaporativeFluidCoolerSingleSpeed::isFanPoweratDesignAirFlowRateAutosized() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->isFanPoweratDesignAirFlowRateAutosized();
 }
@@ -1167,10 +853,6 @@ bool EvaporativeFluidCoolerSingleSpeed::isFanPoweratDesignAirFlowRateAutosized()
 double EvaporativeFluidCoolerSingleSpeed::designSprayWaterFlowRate() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->designSprayWaterFlowRate();
 }
-
-//Quantity EvaporativeFluidCoolerSingleSpeed::getDesignSprayWaterFlowRate(bool returnIP) const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->getDesignSprayWaterFlowRate(returnIP);
-//}
 
 boost::optional<std::string> EvaporativeFluidCoolerSingleSpeed::performanceInputMethod() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->performanceInputMethod();
@@ -1184,17 +866,9 @@ boost::optional<double> EvaporativeFluidCoolerSingleSpeed::standardDesignCapacit
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->standardDesignCapacity();
 }
 
-//OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed::getStandardDesignCapacity(bool returnIP) const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->getStandardDesignCapacity(returnIP);
-//}
-
 boost::optional<double> EvaporativeFluidCoolerSingleSpeed::ufactorTimesAreaValueatDesignAirFlowRate() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->ufactorTimesAreaValueatDesignAirFlowRate();
 }
-
-//OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed::getUfactorTimesAreaValueatDesignAirFlowRate(bool returnIP) const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->getUfactorTimesAreaValueatDesignAirFlowRate(returnIP);
-//}
 
 bool EvaporativeFluidCoolerSingleSpeed::isUfactorTimesAreaValueatDesignAirFlowRateAutosized() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->isUfactorTimesAreaValueatDesignAirFlowRateAutosized();
@@ -1204,10 +878,6 @@ boost::optional<double> EvaporativeFluidCoolerSingleSpeed::designWaterFlowRate()
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->designWaterFlowRate();
 }
 
-//OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed::getDesignWaterFlowRate(bool returnIP) const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->getDesignWaterFlowRate(returnIP);
-//}
-
 bool EvaporativeFluidCoolerSingleSpeed::isDesignWaterFlowRateAutosized() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->isDesignWaterFlowRateAutosized();
 }
@@ -1216,49 +886,29 @@ boost::optional<double> EvaporativeFluidCoolerSingleSpeed::userSpecifiedDesignCa
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->userSpecifiedDesignCapacity();
 }
 
-//OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed::getUserSpecifiedDesignCapacity(bool returnIP) const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->getUserSpecifiedDesignCapacity(returnIP);
-//}
-
 boost::optional<double> EvaporativeFluidCoolerSingleSpeed::designEnteringWaterTemperature() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->designEnteringWaterTemperature();
 }
-
-//OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed::getDesignEnteringWaterTemperature(bool returnIP) const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->getDesignEnteringWaterTemperature(returnIP);
-//}
 
 boost::optional<double> EvaporativeFluidCoolerSingleSpeed::designEnteringAirTemperature() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->designEnteringAirTemperature();
 }
 
-//OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed::getDesignEnteringAirTemperature(bool returnIP) const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->getDesignEnteringAirTemperature(returnIP);
-//}
-
 boost::optional<double> EvaporativeFluidCoolerSingleSpeed::designEnteringAirWetbulbTemperature() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->designEnteringAirWetbulbTemperature();
 }
-
-//OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed::getDesignEnteringAirWetbulbTemperature(bool returnIP) const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->getDesignEnteringAirWetbulbTemperature(returnIP);
-//}
 
 std::string EvaporativeFluidCoolerSingleSpeed::capacityControl() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->capacityControl();
 }
 
-//bool EvaporativeFluidCoolerSingleSpeed::isCapacityControlDefaulted() const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->isCapacityControlDefaulted();
-//}
+bool EvaporativeFluidCoolerSingleSpeed::isCapacityControlDefaulted() const {
+  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->isCapacityControlDefaulted();
+}
 
 double EvaporativeFluidCoolerSingleSpeed::sizingFactor() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->sizingFactor();
 }
-
-//Quantity EvaporativeFluidCoolerSingleSpeed::getSizingFactor(bool returnIP) const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->getSizingFactor(returnIP);
-//}
 
 bool EvaporativeFluidCoolerSingleSpeed::isSizingFactorDefaulted() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->isSizingFactorDefaulted();
@@ -1276,17 +926,9 @@ boost::optional<double> EvaporativeFluidCoolerSingleSpeed::evaporationLossFactor
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->evaporationLossFactor();
 }
 
-//OSOptionalQuantity EvaporativeFluidCoolerSingleSpeed::getEvaporationLossFactor(bool returnIP) const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->getEvaporationLossFactor(returnIP);
-//}
-
 double EvaporativeFluidCoolerSingleSpeed::driftLossPercent() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->driftLossPercent();
 }
-
-//Quantity EvaporativeFluidCoolerSingleSpeed::getDriftLossPercent(bool returnIP) const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->getDriftLossPercent(returnIP);
-//}
 
 bool EvaporativeFluidCoolerSingleSpeed::isDriftLossPercentDefaulted() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->isDriftLossPercentDefaulted();
@@ -1303,10 +945,6 @@ bool EvaporativeFluidCoolerSingleSpeed::isBlowdownCalculationModeDefaulted() con
 double EvaporativeFluidCoolerSingleSpeed::blowdownConcentrationRatio() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->blowdownConcentrationRatio();
 }
-
-//Quantity EvaporativeFluidCoolerSingleSpeed::getBlowdownConcentrationRatio(bool returnIP) const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->getBlowdownConcentrationRatio(returnIP);
-//}
 
 bool EvaporativeFluidCoolerSingleSpeed::isBlowdownConcentrationRatioDefaulted() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->isBlowdownConcentrationRatioDefaulted();
@@ -1332,10 +970,6 @@ bool EvaporativeFluidCoolerSingleSpeed::setDesignAirFlowRate(double designAirFlo
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDesignAirFlowRate(designAirFlowRate);
 }
 
-//bool EvaporativeFluidCoolerSingleSpeed::setDesignAirFlowRate(const Quantity& designAirFlowRate) {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDesignAirFlowRate(designAirFlowRate);
-//}
-
 void EvaporativeFluidCoolerSingleSpeed::autosizeDesignAirFlowRate() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->autosizeDesignAirFlowRate();
 }
@@ -1344,10 +978,6 @@ bool EvaporativeFluidCoolerSingleSpeed::setFanPoweratDesignAirFlowRate(double fa
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setFanPoweratDesignAirFlowRate(fanPoweratDesignAirFlowRate);
 }
 
-//bool EvaporativeFluidCoolerSingleSpeed::setFanPoweratDesignAirFlowRate(const Quantity& fanPoweratDesignAirFlowRate) {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setFanPoweratDesignAirFlowRate(fanPoweratDesignAirFlowRate);
-//}
-
 void EvaporativeFluidCoolerSingleSpeed::autosizeFanPoweratDesignAirFlowRate() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->autosizeFanPoweratDesignAirFlowRate();
 }
@@ -1355,10 +985,6 @@ void EvaporativeFluidCoolerSingleSpeed::autosizeFanPoweratDesignAirFlowRate() {
 bool EvaporativeFluidCoolerSingleSpeed::setDesignSprayWaterFlowRate(double designSprayWaterFlowRate) {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDesignSprayWaterFlowRate(designSprayWaterFlowRate);
 }
-
-//bool EvaporativeFluidCoolerSingleSpeed::setDesignSprayWaterFlowRate(const Quantity& designSprayWaterFlowRate) {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDesignSprayWaterFlowRate(designSprayWaterFlowRate);
-//}
 
 bool EvaporativeFluidCoolerSingleSpeed::setPerformanceInputMethod(std::string performanceInputMethod) {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setPerformanceInputMethod(performanceInputMethod);
@@ -1380,10 +1006,6 @@ bool EvaporativeFluidCoolerSingleSpeed::setStandardDesignCapacity(double standar
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setStandardDesignCapacity(standardDesignCapacity);
 }
 
-//bool EvaporativeFluidCoolerSingleSpeed::setStandardDesignCapacity(const Quantity& standardDesignCapacity) {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setStandardDesignCapacity(standardDesignCapacity);
-//}
-
 void EvaporativeFluidCoolerSingleSpeed::resetStandardDesignCapacity() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetStandardDesignCapacity();
 }
@@ -1391,10 +1013,6 @@ void EvaporativeFluidCoolerSingleSpeed::resetStandardDesignCapacity() {
 bool EvaporativeFluidCoolerSingleSpeed::setUfactorTimesAreaValueatDesignAirFlowRate(double ufactorTimesAreaValueatDesignAirFlowRate) {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setUfactorTimesAreaValueatDesignAirFlowRate(ufactorTimesAreaValueatDesignAirFlowRate);
 }
-
-//bool EvaporativeFluidCoolerSingleSpeed::setUfactorTimesAreaValueatDesignAirFlowRate(const Quantity& ufactorTimesAreaValueatDesignAirFlowRate) {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setUfactorTimesAreaValueatDesignAirFlowRate(ufactorTimesAreaValueatDesignAirFlowRate);
-//}
 
 void EvaporativeFluidCoolerSingleSpeed::resetUfactorTimesAreaValueatDesignAirFlowRate() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetUfactorTimesAreaValueatDesignAirFlowRate();
@@ -1408,10 +1026,6 @@ bool EvaporativeFluidCoolerSingleSpeed::setDesignWaterFlowRate(double designWate
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDesignWaterFlowRate(designWaterFlowRate);
 }
 
-//bool EvaporativeFluidCoolerSingleSpeed::setDesignWaterFlowRate(const Quantity& designWaterFlowRate) {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDesignWaterFlowRate(designWaterFlowRate);
-//}
-
 void EvaporativeFluidCoolerSingleSpeed::resetDesignWaterFlowRate() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetDesignWaterFlowRate();
 }
@@ -1424,10 +1038,6 @@ bool EvaporativeFluidCoolerSingleSpeed::setUserSpecifiedDesignCapacity(double us
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setUserSpecifiedDesignCapacity(userSpecifiedDesignCapacity);
 }
 
-//bool EvaporativeFluidCoolerSingleSpeed::setUserSpecifiedDesignCapacity(const Quantity& userSpecifiedDesignCapacity) {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setUserSpecifiedDesignCapacity(userSpecifiedDesignCapacity);
-//}
-
 void EvaporativeFluidCoolerSingleSpeed::resetUserSpecifiedDesignCapacity() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetUserSpecifiedDesignCapacity();
 }
@@ -1435,10 +1045,6 @@ void EvaporativeFluidCoolerSingleSpeed::resetUserSpecifiedDesignCapacity() {
 bool EvaporativeFluidCoolerSingleSpeed::setDesignEnteringWaterTemperature(double designEnteringWaterTemperature) {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDesignEnteringWaterTemperature(designEnteringWaterTemperature);
 }
-
-//bool EvaporativeFluidCoolerSingleSpeed::setDesignEnteringWaterTemperature(const Quantity& designEnteringWaterTemperature) {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDesignEnteringWaterTemperature(designEnteringWaterTemperature);
-//}
 
 void EvaporativeFluidCoolerSingleSpeed::resetDesignEnteringWaterTemperature() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetDesignEnteringWaterTemperature();
@@ -1448,10 +1054,6 @@ bool EvaporativeFluidCoolerSingleSpeed::setDesignEnteringAirTemperature(double d
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDesignEnteringAirTemperature(designEnteringAirTemperature);
 }
 
-//bool EvaporativeFluidCoolerSingleSpeed::setDesignEnteringAirTemperature(const Quantity& designEnteringAirTemperature) {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDesignEnteringAirTemperature(designEnteringAirTemperature);
-//}
-
 void EvaporativeFluidCoolerSingleSpeed::resetDesignEnteringAirTemperature() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetDesignEnteringAirTemperature();
 }
@@ -1459,10 +1061,6 @@ void EvaporativeFluidCoolerSingleSpeed::resetDesignEnteringAirTemperature() {
 bool EvaporativeFluidCoolerSingleSpeed::setDesignEnteringAirWetbulbTemperature(double designEnteringAirWetbulbTemperature) {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDesignEnteringAirWetbulbTemperature(designEnteringAirWetbulbTemperature);
 }
-
-//bool EvaporativeFluidCoolerSingleSpeed::setDesignEnteringAirWetbulbTemperature(const Quantity& designEnteringAirWetbulbTemperature) {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDesignEnteringAirWetbulbTemperature(designEnteringAirWetbulbTemperature);
-//}
 
 void EvaporativeFluidCoolerSingleSpeed::resetDesignEnteringAirWetbulbTemperature() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetDesignEnteringAirWetbulbTemperature();
@@ -1480,10 +1078,6 @@ bool EvaporativeFluidCoolerSingleSpeed::setSizingFactor(double sizingFactor) {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setSizingFactor(sizingFactor);
 }
 
-//bool EvaporativeFluidCoolerSingleSpeed::setSizingFactor(const Quantity& sizingFactor) {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setSizingFactor(sizingFactor);
-//}
-
 void EvaporativeFluidCoolerSingleSpeed::resetSizingFactor() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetSizingFactor();
 }
@@ -1500,10 +1094,6 @@ void EvaporativeFluidCoolerSingleSpeed::setEvaporationLossFactor(double evaporat
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
 }
 
-//bool EvaporativeFluidCoolerSingleSpeed::setEvaporationLossFactor(const Quantity& evaporationLossFactor) {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
-//}
-
 void EvaporativeFluidCoolerSingleSpeed::resetEvaporationLossFactor() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetEvaporationLossFactor();
 }
@@ -1511,10 +1101,6 @@ void EvaporativeFluidCoolerSingleSpeed::resetEvaporationLossFactor() {
 void EvaporativeFluidCoolerSingleSpeed::setDriftLossPercent(double driftLossPercent) {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
 }
-
-//bool EvaporativeFluidCoolerSingleSpeed::setDriftLossPercent(const Quantity& driftLossPercent) {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
-//}
 
 void EvaporativeFluidCoolerSingleSpeed::resetDriftLossPercent() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetDriftLossPercent();
@@ -1531,10 +1117,6 @@ void EvaporativeFluidCoolerSingleSpeed::resetBlowdownCalculationMode() {
 bool EvaporativeFluidCoolerSingleSpeed::setBlowdownConcentrationRatio(double blowdownConcentrationRatio) {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setBlowdownConcentrationRatio(blowdownConcentrationRatio);
 }
-
-//bool EvaporativeFluidCoolerSingleSpeed::setBlowdownConcentrationRatio(const Quantity& blowdownConcentrationRatio) {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setBlowdownConcentrationRatio(blowdownConcentrationRatio);
-//}
 
 void EvaporativeFluidCoolerSingleSpeed::resetBlowdownConcentrationRatio() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetBlowdownConcentrationRatio();
