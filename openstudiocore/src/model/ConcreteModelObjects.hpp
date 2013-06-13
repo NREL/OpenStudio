@@ -110,6 +110,7 @@
 #include <model/GasMixture.hpp>
 #include <model/GenericModelObject.hpp>
 #include <model/GlareSensor.hpp>
+#include <model/GroundHeatExchangerVertical.hpp>
 #include <model/HeatBalanceAlgorithm.hpp>
 #include <model/HeatExchangerAirToAirSensibleAndLatent.hpp>
 #include <model/HotWaterEquipment.hpp>
@@ -321,6 +322,7 @@
 #include <model/GasMixture_Impl.hpp>
 #include <model/GenericModelObject_Impl.hpp>
 #include <model/GlareSensor_Impl.hpp>
+#include <model/GroundHeatExchangerVertical_Impl.hpp>
 #include <model/HeatBalanceAlgorithm_Impl.hpp>
 #include <model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp>
 #include <model/HotWaterEquipment_Impl.hpp>
