@@ -407,10 +407,10 @@ namespace detail {
   //  return result;
   //}
 
-  void EvaporativeFluidCoolerSingleSpeed_Impl::resetOutdoorAirInletNode() {
+  /*void EvaporativeFluidCoolerSingleSpeed_Impl::resetOutdoorAirInletNode() {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::OutdoorAirInletNodeName, "");
     BOOST_ASSERT(result);
-  }
+  }*/
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setStandardDesignCapacity(boost::optional<double> standardDesignCapacity) {
     bool result(false);
@@ -788,18 +788,27 @@ EvaporativeFluidCoolerSingleSpeed::EvaporativeFluidCoolerSingleSpeed(const Model
   : StraightComponent(EvaporativeFluidCoolerSingleSpeed::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_EvaporativeFluidCooler_SingleSpeedFields::WaterInletNodeName
-  //     OS_EvaporativeFluidCooler_SingleSpeedFields::WaterOutletNodeName
  
    autosizeDesignAirFlowRate();
    autosizeFanPoweratDesignAirFlowRate();
    setDesignSprayWaterFlowRate(0.03);
-   // TODO: Need to fix this and determine best defaults
-   setPerformanceInputMethod("StandardDesignCapacity");
-   setStandardDesignCapacity(1.0);
-  
+   setPerformanceInputMethod("UFactorTimesAreaAndDesignWaterFlowRate");
+   resetStandardDesignCapacity();
+   autosizeUfactorTimesAreaValueatDesignAirFlowRate();
+   autosizeDesignWaterFlowRate();
+   resetUserSpecifiedDesignCapacity();
+   resetDesignEnteringWaterTemperature();
+   resetDesignEnteringAirTemperature();
+   resetDesignEnteringAirWetbulbTemperature();
+   setCapacityControl("FanCycling");
+   setSizingFactor(1.0);
+   setEvaporationLossMode("SaturatedExit");
+   setDriftLossPercent(0.008);
+   setBlowdownCalculationMode("ConcentrationRatio");
+   setBlowdownConcentrationRatio(3.0);
+   //Schedule blowdownMakeupWaterUsageSchedule = model.alwaysOnDiscreteSchedule();
+   //setBlowdownMakeupWaterUsageSchedule(blowdownMakeupWaterUsageSchedule);
+   resetBlowdownMakeupWaterUsageSchedule();
 }
 
 IddObjectType EvaporativeFluidCoolerSingleSpeed::iddObjectType() {
@@ -998,9 +1007,9 @@ void EvaporativeFluidCoolerSingleSpeed::resetPerformanceInputMethod() {
  // return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setOutdoorAirInletNode(connection);
 //}
 
-void EvaporativeFluidCoolerSingleSpeed::resetOutdoorAirInletNode() {
+/*void EvaporativeFluidCoolerSingleSpeed::resetOutdoorAirInletNode() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetOutdoorAirInletNode();
-}
+}*/
 
 bool EvaporativeFluidCoolerSingleSpeed::setStandardDesignCapacity(double standardDesignCapacity) {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setStandardDesignCapacity(standardDesignCapacity);
