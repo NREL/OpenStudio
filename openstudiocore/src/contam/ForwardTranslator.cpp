@@ -98,7 +98,8 @@ namespace contam
     }
   }
 
-  bool ForwardTranslator::modelToContam(const openstudio::model::Model& model, const openstudio::path& path)
+  bool ForwardTranslator::modelToContam(const openstudio::model::Model& model, const openstudio::path& path,
+    const openstudio::path& mapPath)
   {
     ForwardTranslator translator;
 
@@ -114,11 +115,11 @@ namespace contam
       textStream << *output;
       file.close();
     }
-    //else
-    //  return false;
+    else
+      return false;
 
-    //if(translator.writeMaps(mapPath))
-    //  return true;
+    if(translator.writeMaps(mapPath))
+      return true;
 
     return false;
   }

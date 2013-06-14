@@ -40,7 +40,8 @@ namespace contam
     ForwardTranslator();
     boost::optional<QString> translateToPrj(const openstudio::model::Model& model);
     bool writeMaps(const openstudio::path& path);
-    static bool modelToContam(const openstudio::model::Model& model, const openstudio::path& path);
+    static bool modelToContam(const openstudio::model::Model& model, const openstudio::path& path,
+      const openstudio::path& mapPath);
 
   private:
     int tableLookup(QMap<std::string,int> map, std::string str, const char *name);
