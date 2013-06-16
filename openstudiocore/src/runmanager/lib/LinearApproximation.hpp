@@ -29,6 +29,8 @@ class LinearApproximation
 
     double approximate(const std::vector<double> &t_vals) const;
 
+    std::pair<double, double> nearestFurthestNeighborDistances(const std::vector<double> &t_vals) const;
+
   private:
     std::vector<std::vector<double> > findMinimalDifferences(
         size_t t_numDifferences,

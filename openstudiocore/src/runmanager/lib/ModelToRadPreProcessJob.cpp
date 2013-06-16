@@ -359,6 +359,21 @@ namespace detail {
     Files f;
     FileInfo fi(outpath / toPath("out.osm"), "osm");
     fi.requiredFiles = m_osm->requiredFiles;
+
+    try {
+      /// \todo we need better handling of OSM files and their attachments
+      fi.getRequiredFile(openstudio::toPath("in.epw"));
+    } catch (const std::exception &) {
+      // epw wasn't found, look for parent one
+      openstudio::path possibleepw = m_osm->fullPath.parent_path() / openstudio::toPath("in.epw");
+
+      if (boost::filesystem::exists(possibleepw))
+      {
+        LOG(Info, "Fixing up EPW file for incoming OSM attachment to " << openstudio::toString(possibleepw));
+        fi.addRequiredFile(possibleepw, openstudio::toPath("in.epw"));
+      }
+    }
+
     f.append(fi);
     return f;
   }

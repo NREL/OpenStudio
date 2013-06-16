@@ -134,6 +134,9 @@ SET( runmanager_src
 
   LinearApproximation.hpp
   LinearApproximation.cpp
+
+  SimulationEngine.hpp
+  SimulationEngine.cpp
 )
 
 IF( BUILD_TESTING OR BUILD_PACKAGE )
@@ -203,6 +206,7 @@ SET( runmanager_moc
   ModelToRadJob.hpp
   ModelToRadPreProcessJob.hpp
   DakotaJob.hpp
+  SimulationEngine.hpp
 )
 
 SET( runmanager_test_moc

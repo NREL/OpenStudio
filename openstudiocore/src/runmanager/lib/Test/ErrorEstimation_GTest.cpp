@@ -138,7 +138,7 @@ std::pair<double, double> runSimulation(openstudio::runmanager::ErrorEstimation 
 
   std::vector<double> variables;
   variables.push_back(t_rotation);
-  openstudio::runmanager::FuelUses fuses0;
+  openstudio::runmanager::FuelUses fuses0(0);
   try {
     fuses0 = t_ee.approximate(variables);
   } catch (const std::exception &e) {
@@ -156,7 +156,9 @@ std::pair<double, double> runSimulation(openstudio::runmanager::ErrorEstimation 
 
 TEST_F(RunManagerTestFixture, ErrorEstimationTest)
 {
-  openstudio::runmanager::ErrorEstimation ee("FullRun", 1);
+  openstudio::runmanager::ErrorEstimation ee(1);
+  ee.setConfidence("FullRun", 1.0);
+  ee.setConfidence("Estimation", 0.75);
 
   std::pair<double, double> run1 = runSimulation(ee, 0);
   LOG(Info, "Run1 initialerror: " << run1.first*1000000000 << " adjustederror: " << run1.second);

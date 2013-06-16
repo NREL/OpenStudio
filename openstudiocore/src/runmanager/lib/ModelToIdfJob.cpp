@@ -327,6 +327,15 @@ namespace detail {
                   }
                 }
 
+                if (!boost::filesystem::exists(wp))
+                {
+                  if (openstudio::toString(modelFile.fullPath.extension()) == ".osm")
+                  {
+                    openstudio::path osmdir = modelFile.fullPath.parent_path();
+                    LOG(Debug, "Attempting to find weather file that already exists as in.epw");
+                    wp /= openstudio::toPath("in.epw");
+                  }
+                }
 
                 if (boost::filesystem::exists(wp)){
                   if (weatherFilePath && (checksum(*weatherFilePath) != checksum(wp))){

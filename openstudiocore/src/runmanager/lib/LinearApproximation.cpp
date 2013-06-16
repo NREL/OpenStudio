@@ -580,6 +580,18 @@ void LinearApproximation::print(const std::string &t_str, const std::vector<std:
   }
 }
 
+std::pair<double, double> LinearApproximation::nearestFurthestNeighborDistances(const std::vector<double> &t_vals) const
+{
+  std::vector<std::vector<double> > sorted = sortByDistance(t_vals, m_values);
+
+  if (sorted.size() < 1)
+  {
+    throw std::range_error("no neighbors");
+  }
+
+  return std::make_pair(distance(t_vals, sorted.front()), distance(t_vals, sorted.back()));
+}
+
 void LinearApproximation::print(const std::string &t_str, const std::vector<std::vector<std::vector<double> > > &t_vals)
 {
   if (!t_str.empty())

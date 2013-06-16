@@ -1253,6 +1253,16 @@ else
   puts "weather file object is empty"
 end
 
+if (weatherFile.empty? || epwFile.empty? || !File.exists?(epwFile.get.to_s))
+  puts "EPW From model not found"
+  possibleEpw = modelPath.parent_path() / OpenStudio::Path.new("in.epw");
+
+  if (File.exists?(possibleEpw.to_s))
+    puts "EPW not found, but found one here: " + possibleEpw.to_s
+    epwFile = OpenStudio::OptionalEpwFile.new(OpenStudio::EpwFile.new(possibleEpw))
+  end
+end
+
 site_name = site.getString(1, true).get
 site_latitude = site.getString(2, true).get
 site_longitude = site.getString(3, true).get
