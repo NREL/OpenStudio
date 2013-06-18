@@ -56,17 +56,17 @@ boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerVertic
 
   // Inlet Node Name
 
-  if( s = modelObject.inletNodeName() )
-  {
-    idfObject.setString(GroundHeatExchanger_VerticalFields::InletNodeName,s.get());
-  }
+  //if( s = modelObject.inletNodeName() )
+  //{
+  //  idfObject.setString(GroundHeatExchanger_VerticalFields::InletNodeName,s.get());
+  //}
 
   // Outlet Node Name
 
-  if( s = modelObject.outletNodeName() )
-  {
-    idfObject.setString(GroundHeatExchanger_VerticalFields::OutletNodeName,s.get());
-  }
+  //if( s = modelObject.outletNodeName() )
+  //{
+  //  idfObject.setString(GroundHeatExchanger_VerticalFields::OutletNodeName,s.get());
+  //}
 
   // Maximum Flow Rate
   
@@ -86,7 +86,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerVertic
   
   if( value = modelObject.boreHoleRadius() )
   {
-    idfObject.setDouble(GroundHeatExchanger_VerticalFields::BoreHoleRadium,value.get());
+    idfObject.setDouble(GroundHeatExchanger_VerticalFields::BoreHoleRadius,value.get());
   }
 
   // Ground Thermal Conductivity

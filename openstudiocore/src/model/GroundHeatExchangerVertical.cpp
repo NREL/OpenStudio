@@ -24,16 +24,8 @@
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
-//#include <model/Connection.hpp>
-//#include <model/Connection_Impl.hpp>
-//#include <model/Connection.hpp>
-//#include <model/Connection_Impl.hpp>
-
 #include <utilities/idd/OS_GroundHeatExchanger_Vertical_FieldEnums.hxx>
-
 #include <utilities/units/Unit.hpp>
-
 #include <utilities/core/Assert.hpp>
 
 namespace openstudio {
@@ -75,30 +67,9 @@ namespace detail {
     return GroundHeatExchangerVertical::iddObjectType();
   }
 
-//  Connection GroundHeatExchangerVertical_Impl::inletNode() const {
-//    boost::optional<Connection> value = optionalInletNode();
-//    if (!value) {
-//      LOG_AND_THROW(briefDescription() << " does not have an Inlet Node attached.");
-//    }
-//    return value.get();
-//  }
-
-//  Connection GroundHeatExchangerVertical_Impl::outletNode() const {
-//    boost::optional<Connection> value = optionalOutletNode();
-//    if (!value) {
-//      LOG_AND_THROW(briefDescription() << " does not have an Outlet Node attached.");
-//    }
-//    return value.get();
-//  }
-
   boost::optional<double> GroundHeatExchangerVertical_Impl::maximumFlowRate() const {
     return getDouble(OS_GroundHeatExchanger_VerticalFields::MaximumFlowRate,true);
   }
-
-//  OSOptionalQuantity GroundHeatExchangerVertical_Impl::getMaximumFlowRate(bool returnIP) const {
-//    OptionalDouble value = maximumFlowRate();
-//    return getQuantityFromDouble(OS_GroundHeatExchanger_VerticalFields::MaximumFlowRate, value, returnIP);
-//  }
 
   boost::optional<int> GroundHeatExchangerVertical_Impl::numberofBoreHoles() const {
     return getInt(OS_GroundHeatExchanger_VerticalFields::NumberofBoreHoles,true);
@@ -108,122 +79,55 @@ namespace detail {
     return getDouble(OS_GroundHeatExchanger_VerticalFields::BoreHoleLength,true);
   }
 
-//  OSOptionalQuantity GroundHeatExchangerVertical_Impl::getBoreHoleLength(bool returnIP) const {
-//    OptionalDouble value = boreHoleLength();
-//    return getQuantityFromDouble(OS_GroundHeatExchanger_VerticalFields::BoreHoleLength, value, returnIP);
-//  }
-
   boost::optional<double> GroundHeatExchangerVertical_Impl::boreHoleRadius() const {
     return getDouble(OS_GroundHeatExchanger_VerticalFields::BoreHoleRadius,true);
   }
-
-//  OSOptionalQuantity GroundHeatExchangerVertical_Impl::getBoreHoleRadius(bool returnIP) const {
-//    OptionalDouble value = boreHoleRadius();
-//    return getQuantityFromDouble(OS_GroundHeatExchanger_VerticalFields::BoreHoleRadius, value, returnIP);
-//  }
 
   boost::optional<double> GroundHeatExchangerVertical_Impl::groundThermalConductivity() const {
     return getDouble(OS_GroundHeatExchanger_VerticalFields::GroundThermalConductivity,true);
   }
 
-//  OSOptionalQuantity GroundHeatExchangerVertical_Impl::getGroundThermalConductivity(bool returnIP) const {
-//    OptionalDouble value = groundThermalConductivity();
-//    return getQuantityFromDouble(OS_GroundHeatExchanger_VerticalFields::GroundThermalConductivity, value, returnIP);
-//  }
-
   boost::optional<double> GroundHeatExchangerVertical_Impl::groundThermalHeatCapacity() const {
     return getDouble(OS_GroundHeatExchanger_VerticalFields::GroundThermalHeatCapacity,true);
   }
-
-//  OSOptionalQuantity GroundHeatExchangerVertical_Impl::getGroundThermalHeatCapacity(bool returnIP) const {
-//    OptionalDouble value = groundThermalHeatCapacity();
-//    return getQuantityFromDouble(OS_GroundHeatExchanger_VerticalFields::GroundThermalHeatCapacity, value, returnIP);
-//  }
 
   boost::optional<double> GroundHeatExchangerVertical_Impl::groundTemperature() const {
     return getDouble(OS_GroundHeatExchanger_VerticalFields::GroundTemperature,true);
   }
 
-//  OSOptionalQuantity GroundHeatExchangerVertical_Impl::getGroundTemperature(bool returnIP) const {
-//    OptionalDouble value = groundTemperature();
-//    return getQuantityFromDouble(OS_GroundHeatExchanger_VerticalFields::GroundTemperature, value, returnIP);
-//  }
-
   boost::optional<double> GroundHeatExchangerVertical_Impl::designFlowRate() const {
     return getDouble(OS_GroundHeatExchanger_VerticalFields::DesignFlowRate,true);
   }
-
-//  OSOptionalQuantity GroundHeatExchangerVertical_Impl::getDesignFlowRate(bool returnIP) const {
-//    OptionalDouble value = designFlowRate();
-//    return getQuantityFromDouble(OS_GroundHeatExchanger_VerticalFields::DesignFlowRate, value, returnIP);
-//  }
 
   boost::optional<double> GroundHeatExchangerVertical_Impl::groutThermalConductivity() const {
     return getDouble(OS_GroundHeatExchanger_VerticalFields::GroutThermalConductivity,true);
   }
 
-//  OSOptionalQuantity GroundHeatExchangerVertical_Impl::getGroutThermalConductivity(bool returnIP) const {
-//    OptionalDouble value = groutThermalConductivity();
-//    return getQuantityFromDouble(OS_GroundHeatExchanger_VerticalFields::GroutThermalConductivity, value, returnIP);
-//  }
-
   boost::optional<double> GroundHeatExchangerVertical_Impl::pipeThermalConductivity() const {
     return getDouble(OS_GroundHeatExchanger_VerticalFields::PipeThermalConductivity,true);
   }
-
-//  OSOptionalQuantity GroundHeatExchangerVertical_Impl::getPipeThermalConductivity(bool returnIP) const {
-//    OptionalDouble value = pipeThermalConductivity();
-//    return getQuantityFromDouble(OS_GroundHeatExchanger_VerticalFields::PipeThermalConductivity, value, returnIP);
-//  }
 
   boost::optional<double> GroundHeatExchangerVertical_Impl::pipeOutDiameter() const {
     return getDouble(OS_GroundHeatExchanger_VerticalFields::PipeOutDiameter,true);
   }
 
-//  OSOptionalQuantity GroundHeatExchangerVertical_Impl::getPipeOutDiameter(bool returnIP) const {
-//    OptionalDouble value = pipeOutDiameter();
-//    return getQuantityFromDouble(OS_GroundHeatExchanger_VerticalFields::PipeOutDiameter, value, returnIP);
-//  }
-
   boost::optional<double> GroundHeatExchangerVertical_Impl::uTubeDistance() const {
     return getDouble(OS_GroundHeatExchanger_VerticalFields::UTubeDistance,true);
   }
-
-//  OSOptionalQuantity GroundHeatExchangerVertical_Impl::getUTubeDistance(bool returnIP) const {
-//    OptionalDouble value = uTubeDistance();
-//    return getQuantityFromDouble(OS_GroundHeatExchanger_VerticalFields::UTubeDistance, value, returnIP);
-//  }
 
   boost::optional<double> GroundHeatExchangerVertical_Impl::pipeThickness() const {
     return getDouble(OS_GroundHeatExchanger_VerticalFields::PipeThickness,true);
   }
 
-//  OSOptionalQuantity GroundHeatExchangerVertical_Impl::getPipeThickness(bool returnIP) const {
-//    OptionalDouble value = pipeThickness();
-//    return getQuantityFromDouble(OS_GroundHeatExchanger_VerticalFields::PipeThickness, value, returnIP);
-//  }
-
   boost::optional<double> GroundHeatExchangerVertical_Impl::maximumLengthofSimulation() const {
     return getDouble(OS_GroundHeatExchanger_VerticalFields::MaximumLengthofSimulation,true);
   }
-
-//  OSOptionalQuantity GroundHeatExchangerVertical_Impl::getMaximumLengthofSimulation(bool returnIP) const {
-//    OptionalDouble value = maximumLengthofSimulation();
-//    return getQuantityFromDouble(OS_GroundHeatExchanger_VerticalFields::MaximumLengthofSimulation, value, returnIP);
-//  }
 
   double GroundHeatExchangerVertical_Impl::gFunctionReferenceRatio() const {
     boost::optional<double> value = getDouble(OS_GroundHeatExchanger_VerticalFields::GFunctionReferenceRatio,true);
     BOOST_ASSERT(value);
     return value.get();
   }
-
-//  Quantity GroundHeatExchangerVertical_Impl::getGFunctionReferenceRatio(bool returnIP) const {
-//    OptionalDouble value = gFunctionReferenceRatio();
-//    OSOptionalQuantity result = getQuantityFromDouble(OS_GroundHeatExchanger_VerticalFields::GFunctionReferenceRatio, value, returnIP);
-//    BOOST_ASSERT(result.isSet());
-//    return result.get();
-//  }
 
   bool GroundHeatExchangerVertical_Impl::isGFunctionReferenceRatioDefaulted() const {
     return isEmpty(OS_GroundHeatExchanger_VerticalFields::GFunctionReferenceRatio);
@@ -232,16 +136,6 @@ namespace detail {
   boost::optional<int> GroundHeatExchangerVertical_Impl::numberofDataPairsoftheGFunction() const {
     return getInt(OS_GroundHeatExchanger_VerticalFields::NumberofDataPairsoftheGFunction,true);
   }
-
-//  bool GroundHeatExchangerVertical_Impl::setInletNode(const Connection& connection) {
-//    bool result = setPointer(OS_GroundHeatExchanger_VerticalFields::InletNodeName, connection.handle());
-//    return result;
-//  }
-
-//  bool GroundHeatExchangerVertical_Impl::setOutletNode(const Connection& connection) {
-//    bool result = setPointer(OS_GroundHeatExchanger_VerticalFields::OutletNodeName, connection.handle());
-//    return result;
-//  }
 
   bool GroundHeatExchangerVertical_Impl::setMaximumFlowRate(boost::optional<double> maximumFlowRate) {
     bool result(false);
@@ -254,21 +148,6 @@ namespace detail {
     }
     return result;
   }
-
-//  bool GroundHeatExchangerVertical_Impl::setMaximumFlowRate(const OSOptionalQuantity& maximumFlowRate) {
-//    bool result(false);
-//    OptionalDouble value;
-//    if (maximumFlowRate.isSet()) {
-//      value = getDoubleFromQuantity(OS_GroundHeatExchanger_VerticalFields::MaximumFlowRate,maximumFlowRate.get());
-//      if (value) {
-//        result = setMaximumFlowRate(value);
-//      }
-//    }
-//    else {
-//      result = setMaximumFlowRate(value);
-//    }
-//    return result;
-//  }
 
   void GroundHeatExchangerVertical_Impl::resetMaximumFlowRate() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::MaximumFlowRate, "");
@@ -304,21 +183,6 @@ namespace detail {
     return result;
   }
 
-//  bool GroundHeatExchangerVertical_Impl::setBoreHoleLength(const OSOptionalQuantity& boreHoleLength) {
-//    bool result(false);
-//    OptionalDouble value;
-//    if (boreHoleLength.isSet()) {
-//      value = getDoubleFromQuantity(OS_GroundHeatExchanger_VerticalFields::BoreHoleLength,boreHoleLength.get());
-//      if (value) {
-//        result = setBoreHoleLength(value);
-//      }
-//    }
-//    else {
-//      result = setBoreHoleLength(value);
-//    }
-//    return result;
-//  }
-
   void GroundHeatExchangerVertical_Impl::resetBoreHoleLength() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::BoreHoleLength, "");
     BOOST_ASSERT(result);
@@ -335,21 +199,6 @@ namespace detail {
     }
     return result;
   }
-
-//  bool GroundHeatExchangerVertical_Impl::setBoreHoleRadius(const OSOptionalQuantity& boreHoleRadius) {
-//    bool result(false);
-//    OptionalDouble value;
-//    if (boreHoleRadius.isSet()) {
-//      value = getDoubleFromQuantity(OS_GroundHeatExchanger_VerticalFields::BoreHoleRadius,boreHoleRadius.get());
-//      if (value) {
-//        result = setBoreHoleRadius(value);
-//      }
-//    }
-//    else {
-//      result = setBoreHoleRadius(value);
-//    }
-//    return result;
-//  }
 
   void GroundHeatExchangerVertical_Impl::resetBoreHoleRadius() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::BoreHoleRadius, "");
@@ -368,21 +217,6 @@ namespace detail {
     return result;
   }
 
-//  bool GroundHeatExchangerVertical_Impl::setGroundThermalConductivity(const OSOptionalQuantity& groundThermalConductivity) {
-//    bool result(false);
-//    OptionalDouble value;
-//    if (groundThermalConductivity.isSet()) {
-//      value = getDoubleFromQuantity(OS_GroundHeatExchanger_VerticalFields::GroundThermalConductivity,groundThermalConductivity.get());
-//      if (value) {
-//        result = setGroundThermalConductivity(value);
-//      }
-//    }
-//    else {
-//      result = setGroundThermalConductivity(value);
-//    }
-//    return result;
-//  }
-
   void GroundHeatExchangerVertical_Impl::resetGroundThermalConductivity() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::GroundThermalConductivity, "");
     BOOST_ASSERT(result);
@@ -399,21 +233,6 @@ namespace detail {
     }
     return result;
   }
-
-//  bool GroundHeatExchangerVertical_Impl::setGroundThermalHeatCapacity(const OSOptionalQuantity& groundThermalHeatCapacity) {
-//    bool result(false);
-//    OptionalDouble value;
-//    if (groundThermalHeatCapacity.isSet()) {
-//      value = getDoubleFromQuantity(OS_GroundHeatExchanger_VerticalFields::GroundThermalHeatCapacity,groundThermalHeatCapacity.get());
-//      if (value) {
-//        result = setGroundThermalHeatCapacity(value);
-//      }
-//    }
-//    else {
-//      result = setGroundThermalHeatCapacity(value);
-//    }
-//    return result;
-//  }
 
   void GroundHeatExchangerVertical_Impl::resetGroundThermalHeatCapacity() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::GroundThermalHeatCapacity, "");
@@ -432,21 +251,6 @@ namespace detail {
     return result;
   }
 
-//  bool GroundHeatExchangerVertical_Impl::setGroundTemperature(const OSOptionalQuantity& groundTemperature) {
-//    bool result(false);
-//    OptionalDouble value;
-//    if (groundTemperature.isSet()) {
-//      value = getDoubleFromQuantity(OS_GroundHeatExchanger_VerticalFields::GroundTemperature,groundTemperature.get());
-//      if (value) {
-//        result = setGroundTemperature(value);
-//      }
-//    }
-//    else {
-//      result = setGroundTemperature(value);
-//    }
-//    return result;
-//  }
-
   void GroundHeatExchangerVertical_Impl::resetGroundTemperature() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::GroundTemperature, "");
     BOOST_ASSERT(result);
@@ -463,21 +267,6 @@ namespace detail {
     }
     return result;
   }
-
-//  bool GroundHeatExchangerVertical_Impl::setDesignFlowRate(const OSOptionalQuantity& designFlowRate) {
-//    bool result(false);
-//    OptionalDouble value;
-//    if (designFlowRate.isSet()) {
-//      value = getDoubleFromQuantity(OS_GroundHeatExchanger_VerticalFields::DesignFlowRate,designFlowRate.get());
-//      if (value) {
-//        result = setDesignFlowRate(value);
-//      }
-//    }
-//    else {
-//      result = setDesignFlowRate(value);
-//    }
-//    return result;
-//  }
 
   void GroundHeatExchangerVertical_Impl::resetDesignFlowRate() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::DesignFlowRate, "");
@@ -496,21 +285,6 @@ namespace detail {
     return result;
   }
 
-//  bool GroundHeatExchangerVertical_Impl::setGroutThermalConductivity(const OSOptionalQuantity& groutThermalConductivity) {
-//    bool result(false);
-//    OptionalDouble value;
-//    if (groutThermalConductivity.isSet()) {
-//      value = getDoubleFromQuantity(OS_GroundHeatExchanger_VerticalFields::GroutThermalConductivity,groutThermalConductivity.get());
-//      if (value) {
-//        result = setGroutThermalConductivity(value);
-//      }
-//    }
-//    else {
-//      result = setGroutThermalConductivity(value);
-//    }
-//    return result;
-//  }
-
   void GroundHeatExchangerVertical_Impl::resetGroutThermalConductivity() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::GroutThermalConductivity, "");
     BOOST_ASSERT(result);
@@ -527,21 +301,6 @@ namespace detail {
     }
     return result;
   }
-
-//  bool GroundHeatExchangerVertical_Impl::setPipeThermalConductivity(const OSOptionalQuantity& pipeThermalConductivity) {
-//    bool result(false);
-//    OptionalDouble value;
-//    if (pipeThermalConductivity.isSet()) {
-//      value = getDoubleFromQuantity(OS_GroundHeatExchanger_VerticalFields::PipeThermalConductivity,pipeThermalConductivity.get());
-//      if (value) {
-//        result = setPipeThermalConductivity(value);
-//      }
- //   }
-//    else {
-//      result = setPipeThermalConductivity(value);
-//    }
-//    return result;
-//  }
 
   void GroundHeatExchangerVertical_Impl::resetPipeThermalConductivity() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::PipeThermalConductivity, "");
@@ -560,21 +319,6 @@ namespace detail {
     return result;
   }
 
-//  bool GroundHeatExchangerVertical_Impl::setPipeOutDiameter(const OSOptionalQuantity& pipeOutDiameter) {
-//    bool result(false);
-//    OptionalDouble value;
-//    if (pipeOutDiameter.isSet()) {
-//      value = getDoubleFromQuantity(OS_GroundHeatExchanger_VerticalFields::PipeOutDiameter,pipeOutDiameter.get());
-//      if (value) {
-//        result = setPipeOutDiameter(value);
-//      }
-//    }
-//    else {
-//      result = setPipeOutDiameter(value);
-//    }
-//    return result;
-//  }
-
   void GroundHeatExchangerVertical_Impl::resetPipeOutDiameter() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::PipeOutDiameter, "");
     BOOST_ASSERT(result);
@@ -591,22 +335,6 @@ namespace detail {
     }
     return result;
   }
-
-//  bool GroundHeatExchangerVertical_Impl::setUTubeDistance(const OSOptionalQuantity& uTubeDistance) {
-//    bool result(false);
-//    OptionalDouble value;
-//    if (uTubeDistance.isSet()) {
-//      value = getDoubleFromQuantity(OS_GroundHeatExchanger_VerticalFields::UTubeDistance,uTubeDistance.get());
-//      if (value) {
-//        result = setUTubeDistance(value);
-//      }
-//    }
-//    else {
-//      result = setUTubeDistance(value);
-//    }
-//    return result;
-//  }
-
   void GroundHeatExchangerVertical_Impl::resetUTubeDistance() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::UTubeDistance, "");
     BOOST_ASSERT(result);
@@ -623,21 +351,6 @@ namespace detail {
     }
     return result;
   }
-
-//  bool GroundHeatExchangerVertical_Impl::setPipeThickness(const OSOptionalQuantity& pipeThickness) {
-//    bool result(false);
-  //  OptionalDouble value;
-  //  if (pipeThickness.isSet()) {
-  //    value = getDoubleFromQuantity(OS_GroundHeatExchanger_VerticalFields::PipeThickness,pipeThickness.get());
-  //    if (value) {
-  //      result = setPipeThickness(value);
-  //    }
-  //  }
-  //  else {
-  //    result = setPipeThickness(value);
-  //  }
-  //  return result;
-  //}
 
   void GroundHeatExchangerVertical_Impl::resetPipeThickness() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::PipeThickness, "");
@@ -656,21 +369,6 @@ namespace detail {
     return result;
   }
 
-  //bool GroundHeatExchangerVertical_Impl::setMaximumLengthofSimulation(const OSOptionalQuantity& maximumLengthofSimulation) {
-  //  bool result(false);
-  //  OptionalDouble value;
-  //  if (maximumLengthofSimulation.isSet()) {
-  //    value = getDoubleFromQuantity(OS_GroundHeatExchanger_VerticalFields::MaximumLengthofSimulation,maximumLengthofSimulation.get());
-  //    if (value) {
-  //      result = setMaximumLengthofSimulation(value);
-  //    }
-  //  }
-  //  else {
-  //    result = setMaximumLengthofSimulation(value);
-  //  }
-  //  return result;
-  //}
-
   void GroundHeatExchangerVertical_Impl::resetMaximumLengthofSimulation() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::MaximumLengthofSimulation, "");
     BOOST_ASSERT(result);
@@ -680,14 +378,6 @@ namespace detail {
     bool result = setDouble(OS_GroundHeatExchanger_VerticalFields::GFunctionReferenceRatio, gFunctionReferenceRatio);
     return result;
   }
-
-  //bool GroundHeatExchangerVertical_Impl::setGFunctionReferenceRatio(const Quantity& gFunctionReferenceRatio) {
-  //  OptionalDouble value = getDoubleFromQuantity(OS_GroundHeatExchanger_VerticalFields::GFunctionReferenceRatio,gFunctionReferenceRatio);
-  //  if (!value) {
-  //    return false;
-  //  }
-  //  return setGFunctionReferenceRatio(value.get());
-  //}
 
   void GroundHeatExchangerVertical_Impl::resetGFunctionReferenceRatio() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::GFunctionReferenceRatio, "");
@@ -710,159 +400,6 @@ namespace detail {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::NumberofDataPairsoftheGFunction, "");
     BOOST_ASSERT(result);
   }
-
-//  boost::optional<Connection> GroundHeatExchangerVertical_Impl::optionalInletNode() const {
-//    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_GroundHeatExchanger_VerticalFields::InletNodeName);
-//  }
-
-//  boost::optional<Connection> GroundHeatExchangerVertical_Impl::optionalOutletNode() const {
-//    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_GroundHeatExchanger_VerticalFields::OutletNodeName);
-//  }
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::maximumFlowRate_SI() const {
-  //  return getMaximumFlowRate(false);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::maximumFlowRate_IP() const {
-  //  return getMaximumFlowRate(true);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::boreHoleLength_SI() const {
-  //  return getBoreHoleLength(false);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::boreHoleLength_IP() const {
-  //  return getBoreHoleLength(true);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::boreHoleRadius_SI() const {
-  //  return getBoreHoleRadius(false);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::boreHoleRadius_IP() const {
-  //  return getBoreHoleRadius(true);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::groundThermalConductivity_SI() const {
-  //  return getGroundThermalConductivity(false);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::groundThermalConductivity_IP() const {
-  //  return getGroundThermalConductivity(true);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::groundThermalHeatCapacity_SI() const {
-  //  return getGroundThermalHeatCapacity(false);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::groundThermalHeatCapacity_IP() const {
-  //  return getGroundThermalHeatCapacity(true);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::groundTemperature_SI() const {
-  //  return getGroundTemperature(false);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::groundTemperature_IP() const {
-  //  return getGroundTemperature(true);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::designFlowRate_SI() const {
-  //  return getDesignFlowRate(false);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::designFlowRate_IP() const {
-  //  return getDesignFlowRate(true);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::groutThermalConductivity_SI() const {
-  //  return getGroutThermalConductivity(false);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::groutThermalConductivity_IP() const {
-  //  return getGroutThermalConductivity(true);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::pipeThermalConductivity_SI() const {
-  //  return getPipeThermalConductivity(false);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::pipeThermalConductivity_IP() const {
-  //  return getPipeThermalConductivity(true);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::pipeOutDiameter_SI() const {
-  //  return getPipeOutDiameter(false);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::pipeOutDiameter_IP() const {
-  //  return getPipeOutDiameter(true);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::uTubeDistance_SI() const {
-  //  return getUTubeDistance(false);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::uTubeDistance_IP() const {
-  //  return getUTubeDistance(true);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::pipeThickness_SI() const {
-  //  return getPipeThickness(false);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::pipeThickness_IP() const {
-  //  return getPipeThickness(true);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::maximumLengthofSimulation_SI() const {
-  //  return getMaximumLengthofSimulation(false);
-  //}
-
-  //openstudio::OSOptionalQuantity GroundHeatExchangerVertical_Impl::maximumLengthofSimulation_IP() const {
-  //  return getMaximumLengthofSimulation(true);
-  //}
-
-  //openstudio::Quantity GroundHeatExchangerVertical_Impl::gFunctionReferenceRatio_SI() const {
-  //  return getGFunctionReferenceRatio(false);
-  //}
-
-  //openstudio::Quantity GroundHeatExchangerVertical_Impl::gFunctionReferenceRatio_IP() const {
-  //  return getGFunctionReferenceRatio(true);
-  //}
-
-//  boost::optional<ModelObject> GroundHeatExchangerVertical_Impl::inletNodeAsModelObject() const {
-//    OptionalModelObject result = inletNode();
-//    OptionalModelObject result = InletNode();
-//    return result;
-//  }
-
-//  boost::optional<ModelObject> GroundHeatExchangerVertical_Impl::outletNodeAsModelObject() const {
-//    OptionalModelObject result = outletNode();
-//    return result;
-//  }
-
-//  bool GroundHeatExchangerVertical_Impl::setInletNodeAsModelObject(const boost::optional<ModelObject>& modelObject) {
-//    if (modelObject) {
-//      OptionalConnection intermediate = modelObject->optionalCast<Connection>();
-//      if (intermediate) {
-//        Connection connection(*intermediate);
-//        return setInletNode(connection);
-//      }
-//    }
-//    return false;
-//  }
-
-//  bool GroundHeatExchangerVertical_Impl::setOutletNodeAsModelObject(const boost::optional<ModelObject>& modelObject) {
-//    if (modelObject) {
-//      OptionalConnection intermediate = modelObject->optionalCast<Connection>();
-//      if (intermediate) {
-//        Connection connection(*intermediate);
-//        return setOutletNode(connection);
-//      }
-//    }
-//    return false;
-//  }
 
   unsigned GroundHeatExchangerVertical_Impl::inletPort()
   {
@@ -1026,21 +563,9 @@ IddObjectType GroundHeatExchangerVertical::iddObjectType() {
   return IddObjectType(IddObjectType::OS_GroundHeatExchanger_Vertical);
 }
 
-//Connection GroundHeatExchangerVertical::inletNode() const {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->inletNode();
-//}
-
-//Connection GroundHeatExchangerVertical::outletNode() const {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->outletNode();
-//}
-
 boost::optional<double> GroundHeatExchangerVertical::maximumFlowRate() const {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->maximumFlowRate();
 }
-
-//OSOptionalQuantity GroundHeatExchangerVertical::getMaximumFlowRate(bool returnIP) const {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->getMaximumFlowRate(returnIP);
-//}
 
 boost::optional<int> GroundHeatExchangerVertical::numberofBoreHoles() const {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->numberofBoreHoles();
@@ -1050,105 +575,53 @@ boost::optional<double> GroundHeatExchangerVertical::boreHoleLength() const {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->boreHoleLength();
 }
 
-//OSOptionalQuantity GroundHeatExchangerVertical::getBoreHoleLength(bool returnIP) const {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->getBoreHoleLength(returnIP);
-//}
-
 boost::optional<double> GroundHeatExchangerVertical::boreHoleRadius() const {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->boreHoleRadius();
 }
-
-//OSOptionalQuantity GroundHeatExchangerVertical::getBoreHoleRadius(bool returnIP) const {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->getBoreHoleRadius(returnIP);
-//}
 
 boost::optional<double> GroundHeatExchangerVertical::groundThermalConductivity() const {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->groundThermalConductivity();
 }
 
-//OSOptionalQuantity GroundHeatExchangerVertical::getGroundThermalConductivity(bool returnIP) const {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->getGroundThermalConductivity(returnIP);
-//}
-
 boost::optional<double> GroundHeatExchangerVertical::groundThermalHeatCapacity() const {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->groundThermalHeatCapacity();
 }
-
-//OSOptionalQuantity GroundHeatExchangerVertical::getGroundThermalHeatCapacity(bool returnIP) const {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->getGroundThermalHeatCapacity(returnIP);
-//}
 
 boost::optional<double> GroundHeatExchangerVertical::groundTemperature() const {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->groundTemperature();
 }
 
-//OSOptionalQuantity GroundHeatExchangerVertical::getGroundTemperature(bool returnIP) const {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->getGroundTemperature(returnIP);
-//}
-
 boost::optional<double> GroundHeatExchangerVertical::designFlowRate() const {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->designFlowRate();
 }
-
-//OSOptionalQuantity GroundHeatExchangerVertical::getDesignFlowRate(bool returnIP) const {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->getDesignFlowRate(returnIP);
-//}
 
 boost::optional<double> GroundHeatExchangerVertical::groutThermalConductivity() const {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->groutThermalConductivity();
 }
 
-//OSOptionalQuantity GroundHeatExchangerVertical::getGroutThermalConductivity(bool returnIP) const {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->getGroutThermalConductivity(returnIP);
-//}
-
 boost::optional<double> GroundHeatExchangerVertical::pipeThermalConductivity() const {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->pipeThermalConductivity();
 }
-
-//OSOptionalQuantity GroundHeatExchangerVertical::getPipeThermalConductivity(bool returnIP) const {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->getPipeThermalConductivity(returnIP);
-//}
 
 boost::optional<double> GroundHeatExchangerVertical::pipeOutDiameter() const {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->pipeOutDiameter();
 }
 
-//OSOptionalQuantity GroundHeatExchangerVertical::getPipeOutDiameter(bool returnIP) const {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->getPipeOutDiameter(returnIP);
-//}
-
 boost::optional<double> GroundHeatExchangerVertical::uTubeDistance() const {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->uTubeDistance();
 }
-
-//OSOptionalQuantity GroundHeatExchangerVertical::getUTubeDistance(bool returnIP) const {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->getUTubeDistance(returnIP);
-//}
 
 boost::optional<double> GroundHeatExchangerVertical::pipeThickness() const {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->pipeThickness();
 }
 
-//OSOptionalQuantity GroundHeatExchangerVertical::getPipeThickness(bool returnIP) const {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->getPipeThickness(returnIP);
-//}
-
 boost::optional<double> GroundHeatExchangerVertical::maximumLengthofSimulation() const {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->maximumLengthofSimulation();
 }
 
-//OSOptionalQuantity GroundHeatExchangerVertical::getMaximumLengthofSimulation(bool returnIP) const {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->getMaximumLengthofSimulation(returnIP);
-//}
-
 double GroundHeatExchangerVertical::gFunctionReferenceRatio() const {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->gFunctionReferenceRatio();
 }
-
-//Quantity GroundHeatExchangerVertical::getGFunctionReferenceRatio(bool returnIP) const {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->getGFunctionReferenceRatio(returnIP);
-//}
 
 bool GroundHeatExchangerVertical::isGFunctionReferenceRatioDefaulted() const {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->isGFunctionReferenceRatioDefaulted();
@@ -1158,21 +631,9 @@ boost::optional<int> GroundHeatExchangerVertical::numberofDataPairsoftheGFunctio
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->numberofDataPairsoftheGFunction();
 }
 
-//bool GroundHeatExchangerVertical::setInletNode(const Connection& connection) {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setInletNode(connection);
-//}
-
-//bool GroundHeatExchangerVertical::setOutletNode(const Connection& connection) {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setOutletNode(connection);
-//}
-
 bool GroundHeatExchangerVertical::setMaximumFlowRate(double maximumFlowRate) {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setMaximumFlowRate(maximumFlowRate);
 }
-
-//bool GroundHeatExchangerVertical::setMaximumFlowRate(const Quantity& maximumFlowRate) {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setMaximumFlowRate(maximumFlowRate);
-//}
 
 void GroundHeatExchangerVertical::resetMaximumFlowRate() {
   getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetMaximumFlowRate();
@@ -1190,10 +651,6 @@ bool GroundHeatExchangerVertical::setBoreHoleLength(double boreHoleLength) {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setBoreHoleLength(boreHoleLength);
 }
 
-//bool GroundHeatExchangerVertical::setBoreHoleLength(const Quantity& boreHoleLength) {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setBoreHoleLength(boreHoleLength);
-//}
-
 void GroundHeatExchangerVertical::resetBoreHoleLength() {
   getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetBoreHoleLength();
 }
@@ -1201,10 +658,6 @@ void GroundHeatExchangerVertical::resetBoreHoleLength() {
 bool GroundHeatExchangerVertical::setBoreHoleRadius(double boreHoleRadius) {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setBoreHoleRadius(boreHoleRadius);
 }
-
-//bool GroundHeatExchangerVertical::setBoreHoleRadius(const Quantity& boreHoleRadius) {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setBoreHoleRadius(boreHoleRadius);
-//}
 
 void GroundHeatExchangerVertical::resetBoreHoleRadius() {
   getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetBoreHoleRadius();
@@ -1214,10 +667,6 @@ bool GroundHeatExchangerVertical::setGroundThermalConductivity(double groundTher
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setGroundThermalConductivity(groundThermalConductivity);
 }
 
-//bool GroundHeatExchangerVertical::setGroundThermalConductivity(const Quantity& groundThermalConductivity) {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setGroundThermalConductivity(groundThermalConductivity);
-//}
-
 void GroundHeatExchangerVertical::resetGroundThermalConductivity() {
   getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetGroundThermalConductivity();
 }
@@ -1225,10 +674,6 @@ void GroundHeatExchangerVertical::resetGroundThermalConductivity() {
 bool GroundHeatExchangerVertical::setGroundThermalHeatCapacity(double groundThermalHeatCapacity) {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setGroundThermalHeatCapacity(groundThermalHeatCapacity);
 }
-
-//bool GroundHeatExchangerVertical::setGroundThermalHeatCapacity(const Quantity& groundThermalHeatCapacity) {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setGroundThermalHeatCapacity(groundThermalHeatCapacity);
-//}
 
 void GroundHeatExchangerVertical::resetGroundThermalHeatCapacity() {
   getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetGroundThermalHeatCapacity();
@@ -1238,10 +683,6 @@ bool GroundHeatExchangerVertical::setGroundTemperature(double groundTemperature)
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setGroundTemperature(groundTemperature);
 }
 
-//bool GroundHeatExchangerVertical::setGroundTemperature(const Quantity& groundTemperature) {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setGroundTemperature(groundTemperature);
-//}
-
 void GroundHeatExchangerVertical::resetGroundTemperature() {
   getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetGroundTemperature();
 }
@@ -1249,10 +690,6 @@ void GroundHeatExchangerVertical::resetGroundTemperature() {
 bool GroundHeatExchangerVertical::setDesignFlowRate(double designFlowRate) {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setDesignFlowRate(designFlowRate);
 }
-
-//bool GroundHeatExchangerVertical::setDesignFlowRate(const Quantity& designFlowRate) {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setDesignFlowRate(designFlowRate);
-//}
 
 void GroundHeatExchangerVertical::resetDesignFlowRate() {
   getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetDesignFlowRate();
@@ -1262,10 +699,6 @@ bool GroundHeatExchangerVertical::setGroutThermalConductivity(double groutTherma
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setGroutThermalConductivity(groutThermalConductivity);
 }
 
-//bool GroundHeatExchangerVertical::setGroutThermalConductivity(const Quantity& groutThermalConductivity) {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setGroutThermalConductivity(groutThermalConductivity);
-//}
-
 void GroundHeatExchangerVertical::resetGroutThermalConductivity() {
   getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetGroutThermalConductivity();
 }
@@ -1273,10 +706,6 @@ void GroundHeatExchangerVertical::resetGroutThermalConductivity() {
 bool GroundHeatExchangerVertical::setPipeThermalConductivity(double pipeThermalConductivity) {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setPipeThermalConductivity(pipeThermalConductivity);
 }
-
-//bool GroundHeatExchangerVertical::setPipeThermalConductivity(const Quantity& pipeThermalConductivity) {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setPipeThermalConductivity(pipeThermalConductivity);
-//}
 
 void GroundHeatExchangerVertical::resetPipeThermalConductivity() {
   getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetPipeThermalConductivity();
@@ -1286,10 +715,6 @@ bool GroundHeatExchangerVertical::setPipeOutDiameter(double pipeOutDiameter) {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setPipeOutDiameter(pipeOutDiameter);
 }
 
-//bool GroundHeatExchangerVertical::setPipeOutDiameter(const Quantity& pipeOutDiameter) {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setPipeOutDiameter(pipeOutDiameter);
-//}
-
 void GroundHeatExchangerVertical::resetPipeOutDiameter() {
   getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetPipeOutDiameter();
 }
@@ -1297,10 +722,6 @@ void GroundHeatExchangerVertical::resetPipeOutDiameter() {
 bool GroundHeatExchangerVertical::setUTubeDistance(double uTubeDistance) {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setUTubeDistance(uTubeDistance);
 }
-
-//bool GroundHeatExchangerVertical::setUTubeDistance(const Quantity& uTubeDistance) {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setUTubeDistance(uTubeDistance);
-//}
 
 void GroundHeatExchangerVertical::resetUTubeDistance() {
   getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetUTubeDistance();
@@ -1310,10 +731,6 @@ bool GroundHeatExchangerVertical::setPipeThickness(double pipeThickness) {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setPipeThickness(pipeThickness);
 }
 
-//bool GroundHeatExchangerVertical::setPipeThickness(const Quantity& pipeThickness) {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setPipeThickness(pipeThickness);
-//}
-
 void GroundHeatExchangerVertical::resetPipeThickness() {
   getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetPipeThickness();
 }
@@ -1322,10 +739,6 @@ bool GroundHeatExchangerVertical::setMaximumLengthofSimulation(double maximumLen
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setMaximumLengthofSimulation(maximumLengthofSimulation);
 }
 
-//bool GroundHeatExchangerVertical::setMaximumLengthofSimulation(const Quantity& maximumLengthofSimulation) {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setMaximumLengthofSimulation(maximumLengthofSimulation);
-//}
-
 void GroundHeatExchangerVertical::resetMaximumLengthofSimulation() {
   getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetMaximumLengthofSimulation();
 }
@@ -1333,10 +746,6 @@ void GroundHeatExchangerVertical::resetMaximumLengthofSimulation() {
 bool GroundHeatExchangerVertical::setGFunctionReferenceRatio(double gFunctionReferenceRatio) {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setGFunctionReferenceRatio(gFunctionReferenceRatio);
 }
-
-//bool GroundHeatExchangerVertical::setGFunctionReferenceRatio(const Quantity& gFunctionReferenceRatio) {
-//  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setGFunctionReferenceRatio(gFunctionReferenceRatio);
-//}
 
 void GroundHeatExchangerVertical::resetGFunctionReferenceRatio() {
   getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetGFunctionReferenceRatio();

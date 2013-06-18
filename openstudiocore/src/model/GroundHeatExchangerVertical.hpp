@@ -24,16 +24,7 @@
 #include <model/StraightComponent.hpp>
 
 namespace openstudio {
-
-//class Quantity;
-//class OSOptionalQuantity;
-
 namespace model {
-
-// TODO: Check the following class names against object getters and setters.
-//class Connection;
-//class Connection;
-
 namespace detail {
 
   class GroundHeatExchangerVertical_Impl;
@@ -57,69 +48,35 @@ class MODEL_API GroundHeatExchangerVertical : public StraightComponent {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-//  Connection inletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-//  Connection outletNode() const;
-
   boost::optional<double> maximumFlowRate() const;
-
-//  OSOptionalQuantity getMaximumFlowRate(bool returnIP=false) const;
 
   boost::optional<int> numberofBoreHoles() const;
 
   boost::optional<double> boreHoleLength() const;
 
-//  OSOptionalQuantity getBoreHoleLength(bool returnIP=false) const;
-
   boost::optional<double> boreHoleRadius() const;
-
-//  OSOptionalQuantity getBoreHoleRadius(bool returnIP=false) const;
 
   boost::optional<double> groundThermalConductivity() const;
 
-//  OSOptionalQuantity getGroundThermalConductivity(bool returnIP=false) const;
-
   boost::optional<double> groundThermalHeatCapacity() const;
-
-//  OSOptionalQuantity getGroundThermalHeatCapacity(bool returnIP=false) const;
 
   boost::optional<double> groundTemperature() const;
 
-//  OSOptionalQuantity getGroundTemperature(bool returnIP=false) const;
-
   boost::optional<double> designFlowRate() const;
-
-//  OSOptionalQuantity getDesignFlowRate(bool returnIP=false) const;
 
   boost::optional<double> groutThermalConductivity() const;
 
-//  OSOptionalQuantity getGroutThermalConductivity(bool returnIP=false) const;
-
   boost::optional<double> pipeThermalConductivity() const;
-
-//  OSOptionalQuantity getPipeThermalConductivity(bool returnIP=false) const;
 
   boost::optional<double> pipeOutDiameter() const;
 
-//  OSOptionalQuantity getPipeOutDiameter(bool returnIP=false) const;
-
   boost::optional<double> uTubeDistance() const;
-
-//  OSOptionalQuantity getUTubeDistance(bool returnIP=false) const;
 
   boost::optional<double> pipeThickness() const;
 
-//  OSOptionalQuantity getPipeThickness(bool returnIP=false) const;
-
   boost::optional<double> maximumLengthofSimulation() const;
 
-//  OSOptionalQuantity getMaximumLengthofSimulation(bool returnIP=false) const;
-
   double gFunctionReferenceRatio() const;
-
-//  Quantity getGFunctionReferenceRatio(bool returnIP=false) const;
 
   bool isGFunctionReferenceRatioDefaulted() const;
 
@@ -132,15 +89,7 @@ class MODEL_API GroundHeatExchangerVertical : public StraightComponent {
 
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-//  bool setInletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-//  bool setOutletNode(const Connection& connection);
-
   bool setMaximumFlowRate(double maximumFlowRate);
-
-//  bool setMaximumFlowRate(const Quantity& maximumFlowRate);
 
   void resetMaximumFlowRate();
 
@@ -150,79 +99,53 @@ class MODEL_API GroundHeatExchangerVertical : public StraightComponent {
 
   bool setBoreHoleLength(double boreHoleLength);
 
-//  bool setBoreHoleLength(const Quantity& boreHoleLength);
-
   void resetBoreHoleLength();
 
   bool setBoreHoleRadius(double boreHoleRadius);
-
-//  bool setBoreHoleRadius(const Quantity& boreHoleRadius);
 
   void resetBoreHoleRadius();
 
   bool setGroundThermalConductivity(double groundThermalConductivity);
 
-//  bool setGroundThermalConductivity(const Quantity& groundThermalConductivity);
-
   void resetGroundThermalConductivity();
 
   bool setGroundThermalHeatCapacity(double groundThermalHeatCapacity);
-
-//  bool setGroundThermalHeatCapacity(const Quantity& groundThermalHeatCapacity);
 
   void resetGroundThermalHeatCapacity();
 
   bool setGroundTemperature(double groundTemperature);
 
-//  bool setGroundTemperature(const Quantity& groundTemperature);
-
   void resetGroundTemperature();
 
   bool setDesignFlowRate(double designFlowRate);
-
-//  bool setDesignFlowRate(const Quantity& designFlowRate);
 
   void resetDesignFlowRate();
 
   bool setGroutThermalConductivity(double groutThermalConductivity);
 
-//  bool setGroutThermalConductivity(const Quantity& groutThermalConductivity);
-
   void resetGroutThermalConductivity();
 
   bool setPipeThermalConductivity(double pipeThermalConductivity);
-
-//  bool setPipeThermalConductivity(const Quantity& pipeThermalConductivity);
 
   void resetPipeThermalConductivity();
 
   bool setPipeOutDiameter(double pipeOutDiameter);
 
-//  bool setPipeOutDiameter(const Quantity& pipeOutDiameter);
-
   void resetPipeOutDiameter();
 
   bool setUTubeDistance(double uTubeDistance);
-
-//  bool setUTubeDistance(const Quantity& uTubeDistance);
 
   void resetUTubeDistance();
 
   bool setPipeThickness(double pipeThickness);
 
-//  bool setPipeThickness(const Quantity& pipeThickness);
-
   void resetPipeThickness();
 
   bool setMaximumLengthofSimulation(double maximumLengthofSimulation);
 
-//  bool setMaximumLengthofSimulation(const Quantity& maximumLengthofSimulation);
-
   void resetMaximumLengthofSimulation();
 
   bool setGFunctionReferenceRatio(double gFunctionReferenceRatio);
-
-//  bool setGFunctionReferenceRatio(const Quantity& gFunctionReferenceRatio);
 
   void resetGFunctionReferenceRatio();
 

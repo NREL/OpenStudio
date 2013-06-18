@@ -99,6 +99,7 @@ class FFactorGroundFloorConstruction;
 class Gas;
 class GasEquipment;
 class GasMixture;
+class GroundHeatExchangerVertical;
 class HeatBalanceAlgorithm;
 class HeatExchangerAirToAirSensibleAndLatent;
 class HotWaterEquipment;
