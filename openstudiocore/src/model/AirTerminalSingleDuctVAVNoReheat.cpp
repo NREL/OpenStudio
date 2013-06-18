@@ -107,9 +107,16 @@ namespace detail {
 
   Schedule AirTerminalSingleDuctVAVNoReheat_Impl::availabilitySchedule() const {
     boost::optional<Schedule> value = optionalAvailabilitySchedule();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
+    if (!value){
+      // it is an error if we get here, however we don't want to crash
+      // so we hook up to global always on schedule
+      LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
+      value = this->model().alwaysOnDiscreteSchedule();
+      BOOST_ASSERT(value);
+      const_cast<AirTerminalSingleDuctVAVNoReheat_Impl*>(this)->setAvailabilitySchedule(*value);
+      value = optionalAvailabilitySchedule();
     }
+    BOOST_ASSERT(value);
     return value.get();
   }
 
@@ -128,10 +135,6 @@ namespace detail {
 
   boost::optional<std::string> AirTerminalSingleDuctVAVNoReheat_Impl::zoneMinimumAirFlowInputMethod() const {
     return getString(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ZoneMinimumAirFlowInputMethod,true);
-  }
-
-  bool AirTerminalSingleDuctVAVNoReheat_Impl::isZoneMinimumAirFlowInputMethodDefaulted() const {
-    return isEmpty(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::ZoneMinimumAirFlowInputMethod);
   }
 
   boost::optional<double> AirTerminalSingleDuctVAVNoReheat_Impl::constantMinimumAirFlowFraction() const {
@@ -154,16 +157,8 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowFractionScheduleName);
   }
 
-  bool AirTerminalSingleDuctVAVNoReheat_Impl::isMinimumAirFlowFractionScheduleDefaulted() const {
-    return isEmpty(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowFractionScheduleName);
-  }
-
   boost::optional<DesignSpecificationOutdoorAir> AirTerminalSingleDuctVAVNoReheat_Impl::designSpecificationOutdoorAirObject() const {
     return getObject<ModelObject>().getModelObjectTarget<DesignSpecificationOutdoorAir>(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::DesignSpecificationOutdoorAirObjectName);
-  }
-
-  bool AirTerminalSingleDuctVAVNoReheat_Impl::isDesignSpecificationOutdoorAirObjectDefaulted() const {
-    return isEmpty(OS_AirTerminal_SingleDuct_VAV_NoReheatFields::DesignSpecificationOutdoorAirObjectName);
   }
 
   bool AirTerminalSingleDuctVAVNoReheat_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -533,10 +528,6 @@ boost::optional<std::string> AirTerminalSingleDuctVAVNoReheat::zoneMinimumAirFlo
   return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->zoneMinimumAirFlowInputMethod();
 }
 
-bool AirTerminalSingleDuctVAVNoReheat::isZoneMinimumAirFlowInputMethodDefaulted() const {
-  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->isZoneMinimumAirFlowInputMethodDefaulted();
-}
-
 boost::optional<double> AirTerminalSingleDuctVAVNoReheat::constantMinimumAirFlowFraction() const {
   return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->constantMinimumAirFlowFraction();
 }
@@ -556,16 +547,8 @@ boost::optional<Schedule> AirTerminalSingleDuctVAVNoReheat::minimumAirFlowFracti
   return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->minimumAirFlowFractionSchedule();
 }
 
-bool AirTerminalSingleDuctVAVNoReheat::isMinimumAirFlowFractionScheduleDefaulted() const {
-  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->isMinimumAirFlowFractionScheduleDefaulted();
-}
-
 boost::optional<DesignSpecificationOutdoorAir> AirTerminalSingleDuctVAVNoReheat::designSpecificationOutdoorAirObject() const {
   return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->designSpecificationOutdoorAirObject();
-}
-
-bool AirTerminalSingleDuctVAVNoReheat::isDesignSpecificationOutdoorAirObjectDefaulted() const {
-  return getImpl<detail::AirTerminalSingleDuctVAVNoReheat_Impl>()->isDesignSpecificationOutdoorAirObjectDefaulted();
 }
 
 bool AirTerminalSingleDuctVAVNoReheat::setAvailabilitySchedule(Schedule& schedule) {

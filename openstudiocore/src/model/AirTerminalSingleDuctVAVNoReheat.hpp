@@ -64,8 +64,6 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
 
   boost::optional<std::string> zoneMinimumAirFlowInputMethod() const;
 
-  bool isZoneMinimumAirFlowInputMethodDefaulted() const;
-
   boost::optional<double> constantMinimumAirFlowFraction() const;
 
   bool isConstantMinimumAirFlowFractionDefaulted() const;
@@ -77,12 +75,8 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
   // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
 
-  bool isMinimumAirFlowFractionScheduleDefaulted() const;
-
   // TODO: Check return type. From object lists, some candidates are: DesignSpecificationOutdoorAir.
   boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAirObject() const;
-
-  bool isDesignSpecificationOutdoorAirObjectDefaulted() const;
 
   //@}
   /** @name Setters */
