@@ -42,6 +42,8 @@
 #include <model/ThermalZone_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
+#include <model/ScheduleCompact.hpp>
+#include <model/ScheduleCompact_Impl.hpp>
 
 //using namespace openstudio;
 using namespace openstudio::model;
@@ -421,11 +423,19 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_BlowdownMakeupWaterUsageS
 
   Schedule alwaysOn = model.alwaysOnDiscreteSchedule();
 
+  ScheduleCompact alwaysOnSchedule(model);
+  alwaysOnSchedule.setName("ALWAYS_ON");
+  alwaysOnSchedule.setString(3,"Through: 12/31");
+  alwaysOnSchedule.setString(4,"For: AllDays");
+  alwaysOnSchedule.setString(5,"Until: 24:00");
+  alwaysOnSchedule.setString(6,"1");
+
   EXPECT_FALSE(testObject.setBlowdownMakeupWaterUsageSchedule(alwaysOn));
   EXPECT_FALSE(testObject.blowdownMakeupWaterUsageSchedule());
 
-
-  EXPECT_FALSE(testObject.setBlowdownMakeupWaterUsageSchedule(alwaysOn));
-  EXPECT_FALSE(testObject.blowdownMakeupWaterUsageSchedule());
-
+  EXPECT_TRUE(testObject.setBlowdownMakeupWaterUsageSchedule(alwaysOnSchedule));
+  EXPECT_TRUE(testObject.blowdownMakeupWaterUsageSchedule());
+  EXPECT_EQ(alwaysOnSchedule, testObject.blowdownMakeupWaterUsageSchedule().get());
 }
+
+
