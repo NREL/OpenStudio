@@ -20,10 +20,10 @@
 #include <model/CoilCoolingLowTempRadiantVarFlow.hpp>
 #include <model/CoilCoolingLowTempRadiantVarFlow_Impl.hpp>
 
-#include <model/ZoneHVACLowTempRadiantVarFlow.hpp>
-#include <model/ZoneHVACLowTempRadiantVarFlow_Impl.hpp>
 #include <model/ZoneHVACComponent.hpp>
 #include <model/ZoneHVACComponent_Impl.hpp>
+#include <model/ZoneHVACLowTempRadiantVarFlow.hpp>
+#include <model/ZoneHVACLowTempRadiantVarFlow_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
@@ -37,6 +37,7 @@
 #include <utilities/units/Unit.hpp>
 
 #include <utilities/core/Assert.hpp>
+
 
 namespace openstudio {
 namespace model {
@@ -160,10 +161,6 @@ namespace detail {
   {
     return isEmpty(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingControlThrottlingRange);
   }
-
-
-//
-  
   
   std::string CoilCoolingLowTempRadiantVarFlow_Impl::condensationControlType() const 
   {

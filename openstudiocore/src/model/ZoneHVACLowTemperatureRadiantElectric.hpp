@@ -105,6 +105,13 @@ class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
   bool setHeatingThrottlingRange(double heatingThrottlingRange);
 
   void resetHeatingThrottlingRange();
+  
+  boost::optional<ThermalZone> thermalZone();
+
+  bool addToThermalZone(ThermalZone & thermalZone);
+
+  void removeFromThermalZone();
+
 
   /** @name Other */
 

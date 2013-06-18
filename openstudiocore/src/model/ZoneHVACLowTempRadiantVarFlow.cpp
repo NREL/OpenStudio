@@ -475,7 +475,7 @@ namespace detail {
 } // detail
 
 ZoneHVACLowTempRadiantVarFlow::ZoneHVACLowTempRadiantVarFlow(const Model& model,
-																																																													Schedule& availabilitySchedule,
+																														 Schedule& availabilitySchedule,
                                                              HVACComponent& heatingCoil,
                                                              HVACComponent& coolingCoil)
                                                              

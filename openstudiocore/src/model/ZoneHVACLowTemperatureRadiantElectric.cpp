@@ -28,6 +28,8 @@
 #include <model/HVACComponent_Impl.hpp>
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
+#include <model/ThermalZone.hpp>
+#include <model/ThermalZone_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ZoneHVAC_LowTemperatureRadiant_Electric_FieldEnums.hxx>
@@ -364,6 +366,67 @@ namespace detail {
     }
     return false;
   }
+  
+  boost::optional<ThermalZone> ZoneHVACLowTemperatureRadiantElectric_Impl::thermalZone()
+  {
+    boost::optional<ThermalZone> result;
+    Model m = this->model();
+    std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
+    BOOST_FOREACH(ThermalZone& thermalZone, thermalZones){
+      std::vector<ModelObject> equipments = thermalZone.equipment(); 
+      BOOST_FOREACH(ModelObject& equipment, equipments){
+        if (equipment.handle() == this->handle()){
+          result = thermalZone;
+        }
+      }
+    }
+
+    return result;
+  }
+
+  //reimplemented to override the base-class method in ZoneHVACComponent
+  //because this component doesn't get attached to the zone inlet and zone outlet nodes
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::addToThermalZone(ThermalZone & thermalZone)
+  {
+    Model m = this->model();
+
+    if( thermalZone.model() != m )
+    {
+      return false;
+    }
+
+    removeFromThermalZone();
+
+    thermalZone.setUseIdealAirLoads(false);
+
+    thermalZone.addEquipment(this->getObject<ZoneHVACComponent>());
+
+    return true;
+  }
+
+  //reimplemented to override the base-class method in ZoneHVACComponent
+  //because this component doesn't get attached to the zone inlet and zone outlet nodes
+  //and therefore doesn't need to be removed from them when removed from the zone
+  void ZoneHVACLowTemperatureRadiantElectric_Impl::removeFromThermalZone()
+  {
+    boost::optional<ThermalZone> thermalZone = this->thermalZone();
+    Model m = this->model();
+    ModelObject thisObject = this->getObject<ModelObject>();
+    std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
+    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
+         it != thermalZones.end();
+         it++ )
+    {
+      std::vector<ModelObject> equipment = it->equipment();
+
+      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
+      {
+        it->removeEquipment(thisObject);
+
+        break;
+      }
+    }
+  }
 
 } // detail
 
@@ -535,6 +598,20 @@ void ZoneHVACLowTemperatureRadiantElectric::resetHeatingThrottlingRange()
   getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->resetHeatingThrottlingRange();
 }
 
+boost::optional<ThermalZone> ZoneHVACLowTemperatureRadiantElectric::thermalZone()
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->thermalZone();
+}
+
+bool ZoneHVACLowTemperatureRadiantElectric::addToThermalZone(ThermalZone & thermalZone)
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->addToThermalZone(thermalZone);
+}
+
+void ZoneHVACLowTemperatureRadiantElectric::removeFromThermalZone()
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->removeFromThermalZone();
+}
 
 /// @cond
 ZoneHVACLowTemperatureRadiantElectric::ZoneHVACLowTemperatureRadiantElectric(boost::shared_ptr<detail::ZoneHVACLowTemperatureRadiantElectric_Impl> impl)

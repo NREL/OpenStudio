@@ -29,7 +29,6 @@
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
 
-//#include <utilities/units/Quantity.hpp>
 #include <utilities/units/Unit.hpp>
 
 using namespace openstudio;
@@ -53,6 +52,14 @@ TEST_F(ModelFixture,ZoneHVACLowTemperatureRadiantElectric_Check_Constructor)
   // Testing .idd object type
     
   EXPECT_EQ(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric,zoneHVACLowTemperatureRadiantElectric.iddObjectType().value());
+  
+  //test add and remove from thermal zone
+  ThermalZone thermalZone(model);
+  EXPECT_EQ(0u,thermalZone.equipment().size());
+
+  EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.addToThermalZone(thermalZone));
+  
+  EXPECT_EQ(1u,thermalZone.equipment().size());
   
 }
 

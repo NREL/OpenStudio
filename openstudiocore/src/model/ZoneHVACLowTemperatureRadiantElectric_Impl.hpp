@@ -117,6 +117,12 @@ namespace detail {
     //bool setHeatingThrottlingRange(const Quantity& heatingThrottlingRange);
 
     void resetHeatingThrottlingRange();
+    
+    boost::optional<ThermalZone> thermalZone();
+
+    bool addToThermalZone(ThermalZone & thermalZone);
+
+    void removeFromThermalZone();
 
     //@}
     /** @name Other */

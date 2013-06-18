@@ -1,0 +1,145 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#include <gtest/gtest.h>
+
+#include <model/test/ModelFixture.hpp>
+#include <model/Model.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/HVACComponent.hpp>
+#include <model/HVACComponent_Impl.hpp>
+#include <model/ZoneHVACLowTempRadiantVarFlow.hpp>
+#include <model/ZoneHVACLowTempRadiantVarFlow_Impl.hpp>
+#include <model/CoilCoolingLowTempRadiantVarFlow.hpp>
+#include <model/CoilCoolingLowTempRadiantVarFlow_Impl.hpp>
+#include <model/CoilHeatingLowTempRadiantVarFlow.hpp>
+#include <model/CoilHeatingLowTempRadiantVarFlow_Impl.hpp>
+#include <model/ScheduleConstant.hpp>
+#include <model/ScheduleConstant_Impl.hpp>
+#include <model/ThermalZone.hpp>
+#include <model/ThermalZone_Impl.hpp>
+
+#include <utilities/units/Unit.hpp>
+
+using namespace openstudio;
+using namespace openstudio::model;
+
+TEST_F(ModelFixture,ZoneHVACLowTempRadiantVarFlow_Check_Constructor) 
+{
+  Model model;
+  ScheduleConstant availabilitySched(model);
+  ScheduleConstant coolingControlTemperatureSchedule(model);
+  ScheduleConstant heatingControlTemperatureSchedule(model);
+  
+  availabilitySched.setValue(1.0);
+  coolingControlTemperatureSchedule.setValue(15.0);
+  heatingControlTemperatureSchedule.setValue(10.0);
+
+  CoilCoolingLowTempRadiantVarFlow testCC(model,coolingControlTemperatureSchedule);
+  CoilHeatingLowTempRadiantVarFlow testHC(model,heatingControlTemperatureSchedule);
+  
+  HVACComponent testCC1 = testCC.cast<HVACComponent>();
+  HVACComponent testHC1 = testHC.cast<HVACComponent>();
+
+  ZoneHVACLowTempRadiantVarFlow testRad(model,availabilitySched,testHC1,testCC1);
+
+		// Test set and get heating coils
+  testRad.setHeatingCoil(testHC1);
+  EXPECT_EQ(testRad.heatingCoil(),testHC1);
+
+  testRad.setCoolingCoil(testCC1);
+  EXPECT_EQ(testRad.coolingCoil(),testCC1);
+  
+  // Test clone
+		testRad.setHydronicTubingInsideDiameter(5);
+				
+				 Clone into the same model
+				 ZoneHVACLowTempRadiantVarFlow cloneRad = testRad.clone(model).cast<model::ZoneHVACLowTempRadiantVarFlow>();
+				
+				 HVACComponent cloneCC1 = cloneRad.coolingCoil();
+				 HVACComponent cloneHC1 = cloneRad.heatingCoil();
+				
+				 ASSERT_EQ(testRad.hydronicTubingInsideDiameter(), cloneRad.hydronicTubingInsideDiameter());
+				 ASSERT_EQ(testHC1,cloneHC1);
+				
+					//Clone into another model
+				 Model model2;
+				 ZoneHVACLowTempRadiantVarFlow cloneRad2 = 	cloneRad.clone(model2).cast<model::ZoneHVACLowTempRadiantVarFlow>();
+				 ASSERT_EQ(cloneRad.hydronicTubingInsideDiameter(), cloneRad2.hydronicTubingInsideDiameter());
+  
+  //test add to and remove from Thermal zone
+  ThermalZone thermalZone(model);
+  EXPECT_TRUE(testRad.addToThermalZone(thermalZone));
+  boost::optional<ThermalZone> testThermalZone = testRad.thermalZone();
+  EXPECT_EQ(*(testThermalZone),testRad.thermalZone());
+  
+  EXPECT_TRUE(testRad.inletNode());
+  EXPECT_TRUE(testRad.outletNode());
+
+  testRad.removeFromThermalZone();
+  EXPECT_FALSE(testRad.thermalZone());
+  
+  // Test set and get radiant surface group
+  
+  testRad.setRadiantSurfaceGroupName("Ceilings");
+  boost::optional<std::string> str1 = testRad.radiantSurfaceGroupName();
+  EXPECT_EQ(*str1,"Ceilings");
+  
+  testRad.resetRadiantSurfaceGroupName();
+  str1 = testRad.radiantSurfaceGroupName();
+  EXPECT_EQ(*str1,"");
+  
+
+  // Test set and get Hydronic Tubing Inside Diameter
+  testRad.setHydronicTubingInsideDiameter(0.01);
+  double inDia = testRad.hydronicTubingInsideDiameter();
+  EXPECT_EQ(inDia, 0.01);
+  EXPECT_FALSE(testRad.isHydronicTubingInsideDiameterDefaulted());
+  
+  testRad.resetHydronicTubingInsideDiameter();
+  EXPECT_TRUE(testRad.isHydronicTubingInsideDiameterDefaulted());
+  double inDia1 = testRad.hydronicTubingInsideDiameter();
+  EXPECT_EQ(inDia1,0.013);
+
+  // Test set and get Hydronic Tubing Length
+  testRad.setHydronicTubingLength(200);
+  boost::optional<double> length = testRad.hydronicTubingLength();
+  EXPECT_EQ(*length, 200);
+  EXPECT_FALSE(testRad.isHydronicTubingLengthDefaulted());
+  EXPECT_FALSE(testRad.isHydronicTubingLengthAutosized());
+   
+  testRad.resetHydronicTubingLength();
+  EXPECT_TRUE(testRad.isHydronicTubingLengthDefaulted());
+  
+		testRad.autosizeHydronicTubingLength();
+		EXPECT_TRUE(testRad.isHydronicTubingLengthAutosized());
+  
+  // Test set and get Temperature Control Type
+  testRad.setTemperatureControlType("OutdoorDryBulbTemperature");
+  boost::optional<std::string> str2 = testRad.temperatureControlType();
+  EXPECT_EQ(*str2,"OutdoorDryBulbTemperature");
+  EXPECT_FALSE(testRad.isTemperatureControlTypeDefaulted());
+  
+  testRad.resetTemperatureControlType();
+  EXPECT_TRUE(testRad.isTemperatureControlTypeDefaulted());
+  boost::optional<std::string> str3 = testRad.temperatureControlType();
+  EXPECT_EQ(*str3,"MeanAirTemperature");
+}
+
