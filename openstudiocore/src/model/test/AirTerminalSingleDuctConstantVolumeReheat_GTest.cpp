@@ -115,6 +115,44 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddToNode)
   EXPECT_TRUE(testObject.outletPort());   
 }
 
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddToNodeAirLoopSupplySide)
+{
+  Model model;
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
+  CoilHeatingElectric coil = CoilHeatingElectric(model,schedule);
+  
+  AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
+
+  AirLoopHVAC airLoop(model);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());  
+}
+
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddToNodePlantLoop)
+{
+  Model model;
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
+  CoilHeatingWater coil = CoilHeatingWater(model,schedule);
+  PlantLoop plantLoop(model);
+  
+  AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
+
+  EXPECT_EQ( (unsigned)5,plantLoop.demandComponents().size() );
+
+  Node demandInletNode = plantLoop.demandSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(demandInletNode));
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());  
+
+  Node supplyInletNode = plantLoop.supplySplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(supplyInletNode));
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());  
+}
+
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddToNodeWithThermalZone)
 {
   Model model;
@@ -361,6 +399,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_CloneTwoModelsWit
   EXPECT_DOUBLE_EQ(0.0, testObjectClone2.minimumHotWaterorSteamFlowRate());
   EXPECT_DOUBLE_EQ(0.001, testObjectClone2.convergenceTolerance());
   EXPECT_DOUBLE_EQ(35.0, testObjectClone2.maximumReheatAirTemperature());
+  EXPECT_NE(testObjectClone2, testObjectClone);
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_SetNewReheatCoil)
@@ -391,6 +430,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumAirFlowRat
   testObject.setMaximumAirFlowRate(999.0);
   EXPECT_DOUBLE_EQ(999.0, testObject.maximumAirFlowRate().get());
 
+  testObject.setMaximumAirFlowRate(0.0);
+  EXPECT_DOUBLE_EQ(0.0, testObject.maximumAirFlowRate().get());
+
   EXPECT_FALSE(testObject.setMaximumAirFlowRate(-1.0));
 
   testObject.resetMaximumAirFlowRate();
@@ -398,84 +440,93 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumAirFlowRat
 
   testObject.autosizeMaximumAirFlowRate();
   EXPECT_TRUE(testObject.isMaximumAirFlowRateAutosized());
-
-
-
-  /*ASSERT_EQ("autosize",testObject.MaximumAirFlowRate().get());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);*/
-
-  // TODO: Check that value is appropriate (within bounds)
-  /*ASSERT_EQ("Autosize",coil.getRatedHighSpeedTotalCoolingCapacity().get());
-
-  coil.setBasinHeaterSetpointTemperature(35);
-  ASSERT_EQ(35,coil.getBasinHeaterSetpointTemperature().get());
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(airTerminalSingleDuctConstantVolumeReheat.setMaximumAirFlowRate(testQ));
-  OSOptionalQuantity q = airTerminalSingleDuctConstantVolumeReheat.getMaximumAirFlowRate(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);*/
-}
-/*
-TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeReheat_MaximumHotWaterorSteamFlowRate_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  AirTerminalSingleDuctConstantVolumeReheat airTerminalSingleDuctConstantVolumeReheat(model);
-
-  Unit units = airTerminalSingleDuctConstantVolumeReheat.getMaximumHotWaterorSteamFlowRate(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(airTerminalSingleDuctConstantVolumeReheat.setMaximumHotWaterorSteamFlowRate(testQ));
-  OSOptionalQuantity q = airTerminalSingleDuctConstantVolumeReheat.getMaximumHotWaterorSteamFlowRate(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
 }
 
-TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeReheat_MinimumHotWaterorSteamFlowRate_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  AirTerminalSingleDuctConstantVolumeReheat airTerminalSingleDuctConstantVolumeReheat(model);
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumHotWaterorSteamFlowRate) 
+{
+  Model m;
+  ScheduleCompact s(m);
+  CoilHeatingWater coil = CoilHeatingWater(m,s);
+  AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(m,s,coil);
 
-  Unit units = airTerminalSingleDuctConstantVolumeReheat.getMinimumHotWaterorSteamFlowRate(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(airTerminalSingleDuctConstantVolumeReheat.setMinimumHotWaterorSteamFlowRate(testQ));
-  Quantity q = airTerminalSingleDuctConstantVolumeReheat.getMinimumHotWaterorSteamFlowRate(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  EXPECT_TRUE(testObject.isMaximumHotWaterorSteamFlowRateAutosized());
+
+  testObject.setMaximumHotWaterorSteamFlowRate(999.0);
+  EXPECT_DOUBLE_EQ(999.0, testObject.maximumHotWaterorSteamFlowRate().get());
+
+  testObject.setMaximumHotWaterorSteamFlowRate(0.0);
+  EXPECT_DOUBLE_EQ(0.0, testObject.maximumHotWaterorSteamFlowRate().get());
+
+  EXPECT_FALSE(testObject.setMaximumHotWaterorSteamFlowRate(-1.0));
+
+  testObject.resetMaximumHotWaterorSteamFlowRate();
+  EXPECT_FALSE(testObject.isMaximumHotWaterorSteamFlowRateAutosized());
+
+  testObject.autosizeMaximumHotWaterorSteamFlowRate();
+  EXPECT_TRUE(testObject.isMaximumHotWaterorSteamFlowRateAutosized());
 }
 
-TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeReheat_ConvergenceTolerance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  AirTerminalSingleDuctConstantVolumeReheat airTerminalSingleDuctConstantVolumeReheat(model);
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MinimumHotWaterorSteamFlowRate) 
+{
+  Model m;
+  ScheduleCompact s(m);
+  CoilHeatingWater coil = CoilHeatingWater(m,s);
+  AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(m,s,coil);
 
-  Unit units = airTerminalSingleDuctConstantVolumeReheat.getConvergenceTolerance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(airTerminalSingleDuctConstantVolumeReheat.setConvergenceTolerance(testQ));
-  Quantity q = airTerminalSingleDuctConstantVolumeReheat.getConvergenceTolerance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  testObject.setMinimumHotWaterorSteamFlowRate(999.0);
+  EXPECT_DOUBLE_EQ(999.0, testObject.minimumHotWaterorSteamFlowRate());
+
+  testObject.setMinimumHotWaterorSteamFlowRate(0.0);
+  EXPECT_DOUBLE_EQ(0.0, testObject.minimumHotWaterorSteamFlowRate());
+
+  EXPECT_FALSE(testObject.setMinimumHotWaterorSteamFlowRate(-1.0));
+
+  testObject.resetMinimumHotWaterorSteamFlowRate();
+  EXPECT_TRUE(testObject.isMinimumHotWaterorSteamFlowRateDefaulted());
+  EXPECT_DOUBLE_EQ(0.0, testObject.minimumHotWaterorSteamFlowRate());
 }
 
-TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeReheat_MaximumReheatAirTemperature_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  AirTerminalSingleDuctConstantVolumeReheat airTerminalSingleDuctConstantVolumeReheat(model);
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_ConvergenceTolerance) 
+{
+  Model m;
+  ScheduleCompact s(m);
+  CoilHeatingWater coil = CoilHeatingWater(m,s);
+  AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(m,s,coil);
 
-  Unit units = airTerminalSingleDuctConstantVolumeReheat.getMaximumReheatAirTemperature(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(airTerminalSingleDuctConstantVolumeReheat.setMaximumReheatAirTemperature(testQ));
-  Quantity q = airTerminalSingleDuctConstantVolumeReheat.getMaximumReheatAirTemperature(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}*/
+  testObject.setConvergenceTolerance(999.0);
+  EXPECT_DOUBLE_EQ(999.0, testObject.convergenceTolerance());
+
+  EXPECT_FALSE(testObject.setConvergenceTolerance(0.0));
+
+  EXPECT_TRUE(testObject.setConvergenceTolerance(1.0));
+  EXPECT_DOUBLE_EQ(1.0, testObject.convergenceTolerance());
+
+  EXPECT_FALSE(testObject.setConvergenceTolerance(-1.0));
+
+  testObject.resetConvergenceTolerance();
+  EXPECT_TRUE(testObject.isConvergenceToleranceDefaulted());
+  EXPECT_DOUBLE_EQ(0.001, testObject.convergenceTolerance());
+}
+
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumReheatAirTemperature) 
+{
+  Model m;
+  ScheduleCompact s(m);
+  CoilHeatingWater coil = CoilHeatingWater(m,s);
+  AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(m,s,coil);
+
+  testObject.setMaximumReheatAirTemperature(999.0);
+  EXPECT_DOUBLE_EQ(999.0, testObject.maximumReheatAirTemperature());
+
+  EXPECT_FALSE(testObject.setMaximumReheatAirTemperature(0.0));
+  
+  EXPECT_TRUE(testObject.setMaximumReheatAirTemperature(35.0));
+  EXPECT_DOUBLE_EQ(35.0, testObject.maximumReheatAirTemperature());
+
+  EXPECT_FALSE(testObject.setMaximumReheatAirTemperature(-1.0));
+
+  testObject.resetMaximumReheatAirTemperature();
+  EXPECT_TRUE(testObject.isMaximumReheatAirTemperatureDefaulted());
+  EXPECT_DOUBLE_EQ(35.0, testObject.maximumReheatAirTemperature());
+}
 
