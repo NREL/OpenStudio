@@ -1,0 +1,7 @@
+!  Version,
+!    7.2.0.002;              !- Version Identifier
+ 
+  Output:Meter:MeterFileOnly,ElectricityNet:Facility,RunPeriod;
+ 
+  Output:Meter:MeterFileOnly,Gas:Facility,RunPeriod;
+ 

@@ -1,0 +1,53 @@
+! Type: Roof:Metal Building
+! Description: R-19 + R-11 Ls
+! Effective R-Value (SI): 4.812
+! Layer 1: Metal Roofing
+! Layer 2: Roof Insulation [22]
+ 
+!  Version,
+!    7.2.0.002;              !- Version Identifier
+ 
+  Material,
+    Metal Roofing,           !- Name
+    MediumSmooth,            !- Roughness
+    0.001524,                !- Thickness
+    45.006,                  !- Conductivity
+    7680,                    !- Density
+    418.4,                   !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0.7,                     !- Solar Absorptance
+    0.3;                     !- Visible Absorptance
+ 
+  Material,
+    Roof Insulation [22],    !- Name
+    MediumRough,             !- Roughness
+    0.23578,                 !- Thickness
+    0.049,                   !- Conductivity
+    265,                     !- Density
+    836.8,                   !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0.7,                     !- Solar Absorptance
+    0.7;                     !- Visible Absorptance
+ 
+  Construction,
+    Metal Building_R-19 + R-11 Ls_Roof,  !- Name
+    Metal Roofing,           !- Outside Layer
+    Roof Insulation [22];    !- Layer 2
+ 
+! Cost Source: Linear interpolation on U-Value from 90.1 project committee data (2006-05-31)
+ 
+  ComponentCost:LineItem,
+    Metal Building_R-19 + R-11 Ls_Roof,  !- Name
+    ,                        !- Type
+    Construction,            !- Line Item Type
+    Metal Building_R-19 + R-11 Ls_Roof,  !- Item Name
+    ,                        !- Object End Use Key
+    ,                        !- Cost per Each
+    47.657,                  !- Cost per Area
+    ,                        !- Cost per Unit of Output Capacity
+    ,                        !- Cost per Unit of Output Capacity per COP
+    ,                        !- Cost per Volume
+    ,                        !- Cost per Volume Rate
+    ,                        !- Cost per Energy per Temperature Difference
+    ;                        !- Quantity
+ 

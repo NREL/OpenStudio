@@ -1,0 +1,28 @@
+DummyObject,
+  Object1, ! Name
+  Dummy; ! Type
+
+DummyObject,
+  Object2, ! Name
+  Smart; ! Type
+
+Building,
+  Building1,               !- Name
+  Big,                     !- North Axis
+  ,                        !- Terrain
+  ,                        !- Loads Convergence Tolerance Value
+  ,                        !- Temperature Convergence Tolerance Value
+  ,                        !- Solar Distribution
+  ,                        !- Maximum Number of Warmup Days
+  ;                        !- Minimum Number of Warmup Days
+
+Building,
+  Building2,               !- Name
+  Small,                   !- North Axis
+  ,                        !- Terrain
+  ,                        !- Loads Convergence Tolerance Value
+  ,                        !- Temperature Convergence Tolerance Value
+  ,                        !- Solar Distribution
+  ,                        !- Maximum Number of Warmup Days
+  ;                        !- Minimum Number of Warmup Days
+

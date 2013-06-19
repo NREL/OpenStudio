@@ -1,0 +1,45 @@
+Unsure if we should match class to idd name including _ or not, inconsistent but not including _ seems to be most common.
+
+Groups should be used in model editor to determine where top level objects are presented, groups should be collapsable in model editor
+
+These classes/data models need work:
+
+OS:ComponentCost:LineItem
+OS:Meter
+OS:Variable
+
+These classes do not match idd entries (will need to change either class name or idd):
+
+AirGap
+AirWallMaterial
+Blind
+CFactorUndergroundWallConstruction
+ConstructionWithInternalSource
+DaylightSavingsTime
+DesignDay
+FFactorGroundFloorConstruction
+Gas
+GasMixture
+InfraredTransparentMaterial
+InsideSurfaceConvectionAlgorithm
+LightShelf
+MasslessOpaqueMaterial
+OutsideSurfaceConvectionAlgorithm
+RefractionExtinctionGlazing
+RoofVegetation
+Screen
+Shade
+SimpleGlazing
+Site
+SkyTemperature
+SpecialDays
+StandardGlazing
+StandardOpaqueMaterial
+SubSurface
+Surface
+ThermochromicGlazing
+WeatherFileConditionType
+WeatherFileDays
+WindowDataFile
+
+Be very consistent on attribute names, follow algorithm (concat and lower case first letter) and stick to it!  We can change field names now...

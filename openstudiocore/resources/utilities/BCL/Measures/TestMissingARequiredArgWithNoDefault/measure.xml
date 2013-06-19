@@ -1,0 +1,39 @@
+<measure>
+  <name>Test Missing A Required Arg With No Default</name>
+  <uid>cb163577-78e2-4bd5-886a-a37c7f217ffb</uid>
+  <version_id>8138b0a0-3ebd-4ee4-a0d5-819212201de4</version_id>
+  <description>Measure for testing ability of best practice UserScript writing to capture case when an argument is required but no value (including no default value) is provided.</description>
+  <modeler_description></modeler_description>
+  <provenances/>
+  <tags/>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Function</name>
+      <value>Measure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Requires EnergyPlus Results</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>5C8ED3AC</checksum>
+    </file>
+  </files>
+</measure>

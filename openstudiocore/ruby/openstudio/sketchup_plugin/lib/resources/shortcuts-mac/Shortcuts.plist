@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<string> </string>
+	<integer>0</integer>
+	<string>selectSelectionTool:</string>
+	<string>e</string>
+	<integer>0</integer>
+	<string>selectZoomTool:</string>
+	<string>q</string>
+	<integer>0</integer>
+	<string>selectDollyTool:</string>
+	<string>w</string>
+	<integer>0</integer>
+	<string>selectOrbitTool:</string>
+	<string>v</string>
+	<integer>524288</integer>
+	<string>pasteInPlace:</string>
+	<string>`</string>
+	<integer>0</integer>
+	<string>/Edit/Context Menu Flyout/Edit Group</string>
+	<string>r</string>
+	<integer>0</integer>
+	<string>viewZoomExtents:</string>
+	<string>a</string>
+	<integer>0</integer>
+	<string>selectMoveTool:</string>
+	<string>s</string>
+	<integer>0</integer>
+	<string>selectPushPullTool:</string>
+	<string>d</string>
+	<integer>0</integer>
+	<string>selectScaleTool:</string>
+	<string>z</string>
+	<integer>0</integer>
+	<string>selectRectangleTool:</string>
+	<string>x</string>
+	<integer>0</integer>
+	<string>selectLineTool:</string>
+	<string>c</string>
+	<integer>0</integer>
+	<string>selectMeasureTool:</string>
+	<string>h</string>
+	<integer>0</integer>
+	<string>/Plugins/OpenStudio/Info Tool</string>
+	<string>j</string>
+	<integer>0</integer>
+	<string>/Plugins/OpenStudio/Object Info</string>
+	<string>k</string>
+	<integer>0</integer>
+	<string>showOutliner:</string>
+	<string>l</string>
+	<integer>0</integer>
+	<string>/Plugins/OpenStudio/Surface Search</string>
+	<string>;</string>
+	<integer>0</integer>
+	<string>/Plugins/OpenStudio/Surface Matching</string>
+	<string>'</string>
+	<integer>0</integer>
+	<string>/Plugins/OpenStudio/Default Constructions</string>
+	<string>]</string>
+	<integer>0</integer>
+	<string>/Plugins/OpenStudio/Rendering/By Layer</string>
+	<string>g</string>
+	<integer>0</integer>
+	<string>selectSectionPlaneTool:</string>
+	<string>t</string>
+	<integer>0</integer>
+	<string>sectionToggleDisplay:</string>
+	<string>y</string>
+	<integer>0</integer>
+	<string>sectionToggleActivation:</string>
+	<string>i</string>
+	<integer>0</integer>
+	<string>viewShowHidden:</string>
+	<string>o</string>
+	<integer>0</integer>
+	<string>toggleGlobalTransparency:</string>
+	<string>p</string>
+	<integer>0</integer>
+	<string>toggleShadows:</string>
+	<string>]</string>
+	<integer>524288</integer>
+	<string>/Plugins/OpenStudio/Rendering/By Surface Normal</string>
+	<string>\</string>
+	<integer>0</integer>
+	<string>/Plugins/OpenStudio/Rendering/By Surface Class</string>
+	<string>\</string>
+	<integer>524288</integer>
+	<string>/Plugins/OpenStudio/Rendering/By Boundary</string>
+	<string>f</string>
+	<integer>0</integer>
+	<string>selectEraseTool:</string>
+	<string>b</string>
+	<integer>0</integer>
+	<string>/Plugins/OpenStudio/New Shading Group Tool</string>
+	<string>n</string>
+	<integer>0</integer>
+	<string>/Plugins/OpenStudio/New Daylighting Control Tool</string>
+	<string>m</string>
+	<integer>0</integer>
+	<string>/Plugins/OpenStudio/New Illuminance Map Tool</string>
+	<string>.</string>
+	<integer>0</integer>
+	<string>/Plugins/OpenStudio/Zone Loads</string>
+	<string>v</string>
+	<integer>0</integer>
+	<string>/Plugins/OpenStudio/New Zone Tool</string>
+</array>
+</plist>

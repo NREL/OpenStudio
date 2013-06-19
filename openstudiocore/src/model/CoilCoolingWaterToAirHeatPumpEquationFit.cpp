@@ -1,0 +1,996 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#include <model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp>
+#include <model/CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp>
+#include <model/ZoneHVACComponent.hpp>
+#include <model/ZoneHVACComponent_Impl.hpp> 
+
+#include <model/ZoneHVACWaterToAirHeatPump.hpp>
+#include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+
+#include <utilities/idd/OS_Coil_Cooling_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
+
+#include <utilities/units/Unit.hpp>
+#include <utilities/core/Compare.hpp>
+#include <utilities/core/Assert.hpp>
+#include <boost/foreach.hpp>
+
+namespace openstudio {
+namespace model {
+
+namespace detail {
+
+  CoilCoolingWaterToAirHeatPumpEquationFit_Impl::CoilCoolingWaterToAirHeatPumpEquationFit_Impl (const IdfObject& idfObject,
+																																																																																														 Model_Impl* model,
+																																																																																															bool keepHandle)
+    : WaterToAirComponent_Impl(idfObject,model,keepHandle)
+				{
+								BOOST_ASSERT(idfObject.iddObject().type() == CoilCoolingWaterToAirHeatPumpEquationFit::iddObjectType());
+				}
+
+  CoilCoolingWaterToAirHeatPumpEquationFit_Impl::CoilCoolingWaterToAirHeatPumpEquationFit_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                               Model_Impl* model,
+                                                                                               bool keepHandle)
+    : WaterToAirComponent_Impl(other,model,keepHandle)
+				{
+								BOOST_ASSERT(other.iddObject().type() == CoilCoolingWaterToAirHeatPumpEquationFit::iddObjectType());
+				}
+
+  CoilCoolingWaterToAirHeatPumpEquationFit_Impl::CoilCoolingWaterToAirHeatPumpEquationFit_Impl(const CoilCoolingWaterToAirHeatPumpEquationFit_Impl& other,
+                                                                                               Model_Impl* model,
+                                                                                               bool keepHandle)
+    : WaterToAirComponent_Impl(other,model,keepHandle)
+				{}
+				
+		ModelObject CoilCoolingWaterToAirHeatPumpEquationFit_Impl::clone(Model model) const
+  {
+    CoilCoolingWaterToAirHeatPumpEquationFit newCoil = WaterToAirComponent_Impl::clone(model).optionalCast<CoilCoolingWaterToAirHeatPumpEquationFit>().get();
+
+    return newCoil;
+  }
+		
+  const std::vector<std::string>& CoilCoolingWaterToAirHeatPumpEquationFit_Impl::outputVariableNames() const
+  {
+    static std::vector<std::string> result;
+    if (result.empty())
+				{
+						result.push_back("WatertoAirHP Power");
+						result.push_back("WatertoAirHP Load Side Total Heat Transfer Rate");
+						result.push_back("WatertoAirHP Load Side Sensible Heat Transfer Rate");
+						result.push_back("WatertoAirHP Source Side Total Heat Transfer Rate");
+						result.push_back("WatertoAirHP Part-Load Ratio");
+						result.push_back("WatertoAirHP Duty Factor");
+						result.push_back("WatertoAirHP Load Side Mass Flow Rate");
+						result.push_back("WatertoAirHP Load Side Inlet Dry Bulb Temperature");
+						result.push_back("WatertoAirHP Load Side Inlet Humidity Ratio");
+						result.push_back("WatertoAirHP Load Side Outlet Dry Bulb Temperature");
+						result.push_back("WatertoAirHP Load Side Outlet Humidity Ratio");
+						result.push_back("WatertoAirHP Source Side Mass Flow Rate");
+						result.push_back("WatertoAirHP Source Side Inlet Temperature");
+						result.push_back("WatertoAirHP Source Side Outlet Temperature");
+						result.push_back("WatertoAirHP Cooling Electric Consumption");
+						result.push_back("WatertoAirHP Load Side Total Cooling Energy");
+						result.push_back("WatertoAirHP Load Side Sensible Cooling Energy");
+						result.push_back("WatertoAirHP Load Side Latent Cooling Energy");
+						result.push_back("WatertoAirHP Source Side Cooling Energy");		
+				}
+    return result;
+  }
+  
+  IddObjectType CoilCoolingWaterToAirHeatPumpEquationFit_Impl::iddObjectType() const 
+  {
+    return CoilCoolingWaterToAirHeatPumpEquationFit::iddObjectType();
+  }
+
+  std::vector<openstudio::IdfObject> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::remove()
+  {
+    if( isRemovable() )
+    {
+      return WaterToAirComponent_Impl::remove();
+    }
+
+    return std::vector<IdfObject>();
+  }
+ 
+  boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::ratedAirFlowRate() const  
+  {
+    return getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate,true);
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::isRatedAirFlowRateDefaulted() const 
+  {
+    return isEmpty(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate);
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::isRatedAirFlowRateAutosized() const 
+  {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate, true);
+    if (value) 
+    {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
+  }
+
+  boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::ratedWaterFlowRate() const 
+  {
+    return getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate,true);
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::isRatedWaterFlowRateDefaulted() const 
+  {
+    return isEmpty(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate);
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::isRatedWaterFlowRateAutosized() const 
+  {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate, true);
+    if (value) 
+    {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
+  }
+
+  boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::ratedTotalCoolingCapacity() const 
+  {
+    return getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedTotalCoolingCapacity,true);
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::isRatedTotalCoolingCapacityDefaulted() const 
+  {
+    return isEmpty(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedTotalCoolingCapacity);
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::isRatedTotalCoolingCapacityAutosized() const 
+  {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedTotalCoolingCapacity, true);
+    if (value) 
+    {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
+  }
+
+  boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::ratedSensibleCoolingCapacity() const 
+  {
+    return getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedSensibleCoolingCapacity,true);
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::isRatedSensibleCoolingCapacityDefaulted() const 
+  {
+    return isEmpty(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedSensibleCoolingCapacity);
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::isRatedSensibleCoolingCapacityAutosized() const 
+  {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedSensibleCoolingCapacity, true);
+    if (value) 
+    {
+      result = openstudio::istringEqual(value.get(), "autosize");
+    }
+    return result;
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::ratedCoolingCoefficientofPerformance() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedCoolingCoefficientofPerformance,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+ 
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::isRatedCoolingCoefficientofPerformanceDefaulted() const {
+    return isEmpty(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedCoolingCoefficientofPerformance);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::totalCoolingCapacityCoefficient1() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient1,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::totalCoolingCapacityCoefficient2() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient2,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::totalCoolingCapacityCoefficient3() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient3,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::totalCoolingCapacityCoefficient4() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient4,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::totalCoolingCapacityCoefficient5() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient5,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::sensibleCoolingCapacityCoefficient1() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient1,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::sensibleCoolingCapacityCoefficient2() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient2,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::sensibleCoolingCapacityCoefficient3() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient3,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::sensibleCoolingCapacityCoefficient4() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient4,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::sensibleCoolingCapacityCoefficient5() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient5,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::sensibleCoolingCapacityCoefficient6() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient6,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::coolingPowerConsumptionCoefficient1() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient1,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::coolingPowerConsumptionCoefficient2() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient2,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::coolingPowerConsumptionCoefficient3() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient3,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::coolingPowerConsumptionCoefficient4() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient4,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::coolingPowerConsumptionCoefficient5() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient5,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::nominalTimeforCondensateRemovaltoBegin() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::NominalTimeforCondensateRemovaltoBegin,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::isNominalTimeforCondensateRemovaltoBeginDefaulted() const 
+  {
+    return isEmpty(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::NominalTimeforCondensateRemovaltoBegin);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() const 
+  {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity,true);
+    BOOST_ASSERT(value);
+    return value.get();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::isRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacityDefaulted() const 
+  {
+    return isEmpty(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate) {
+    bool result(false);
+    if (ratedAirFlowRate) 
+    {
+      result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate, ratedAirFlowRate.get());
+    }
+    else 
+    {
+      resetRatedAirFlowRate();
+      result = true;
+    }
+    return result;
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::resetRatedAirFlowRate() 
+  {
+    bool result = setString(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate, "");
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::autosizeRatedAirFlowRate() 
+  {
+    bool result = setString(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate, "autosize");
+    BOOST_ASSERT(result);
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setRatedWaterFlowRate(boost::optional<double> ratedWaterFlowRate) 
+  {
+    bool result(false);
+    if (ratedWaterFlowRate) 
+    {
+      result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate, ratedWaterFlowRate.get());
+    }
+    else 
+    {
+      resetRatedWaterFlowRate();
+      result = true;
+    }
+    return result;
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::resetRatedWaterFlowRate() 
+  {
+    bool result = setString(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate, "");
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::autosizeRatedWaterFlowRate() 
+  {
+    bool result = setString(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate, "autosize");
+    BOOST_ASSERT(result);
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setRatedTotalCoolingCapacity(boost::optional<double> ratedTotalCoolingCapacity) 
+  {
+    bool result(false);
+    if (ratedTotalCoolingCapacity) 
+    {
+      result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedTotalCoolingCapacity, ratedTotalCoolingCapacity.get());
+    }
+    else 
+    {
+      resetRatedTotalCoolingCapacity();
+      result = true;
+    }
+    return result;
+  }
+  
+    unsigned CoilCoolingWaterToAirHeatPumpEquationFit_Impl::airInletPort()
+  {
+    return OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirInletNodeName;
+  }
+
+  unsigned CoilCoolingWaterToAirHeatPumpEquationFit_Impl::airOutletPort()
+  {
+    return OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName;
+  }
+
+  unsigned CoilCoolingWaterToAirHeatPumpEquationFit_Impl::waterInletPort()
+  {
+    return OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::WaterInletNodeName;
+  }
+
+  unsigned CoilCoolingWaterToAirHeatPumpEquationFit_Impl::waterOutletPort()
+  {
+    return OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::WaterOutletNodeName;
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::resetRatedTotalCoolingCapacity() 
+  {
+    bool result = setString(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedTotalCoolingCapacity, "");
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::autosizeRatedTotalCoolingCapacity() 
+  {
+    bool result = setString(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedTotalCoolingCapacity, "autosize");
+    BOOST_ASSERT(result);
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setRatedSensibleCoolingCapacity(boost::optional<double> ratedSensibleCoolingCapacity) 
+  {
+    bool result(false);
+    if (ratedSensibleCoolingCapacity) 
+    {
+      result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedSensibleCoolingCapacity, ratedSensibleCoolingCapacity.get());
+    }
+    else 
+    {
+      resetRatedSensibleCoolingCapacity();
+      result = true;
+    }
+    return result;
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::resetRatedSensibleCoolingCapacity() 
+  {
+    bool result = setString(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedSensibleCoolingCapacity, "");
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::autosizeRatedSensibleCoolingCapacity() 
+  {
+    bool result = setString(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedSensibleCoolingCapacity, "autosize");
+    BOOST_ASSERT(result);
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setRatedCoolingCoefficientofPerformance(double ratedCoolingCoefficientofPerformance) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedCoolingCoefficientofPerformance, ratedCoolingCoefficientofPerformance);
+    return result;
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setTotalCoolingCapacityCoefficient1(double totalCoolingCapacityCoefficient1) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient1, totalCoolingCapacityCoefficient1);
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setTotalCoolingCapacityCoefficient2(double totalCoolingCapacityCoefficient2) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient2, totalCoolingCapacityCoefficient2);
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setTotalCoolingCapacityCoefficient3(double totalCoolingCapacityCoefficient3) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient3, totalCoolingCapacityCoefficient3);
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setTotalCoolingCapacityCoefficient4(double totalCoolingCapacityCoefficient4) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient4, totalCoolingCapacityCoefficient4);
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setTotalCoolingCapacityCoefficient5(double totalCoolingCapacityCoefficient5) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient5, totalCoolingCapacityCoefficient5);
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient1(double sensibleCoolingCapacityCoefficient1) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient1, sensibleCoolingCapacityCoefficient1);
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient2(double sensibleCoolingCapacityCoefficient2) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient2, sensibleCoolingCapacityCoefficient2);
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient3(double sensibleCoolingCapacityCoefficient3) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient3, sensibleCoolingCapacityCoefficient3);
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient4(double sensibleCoolingCapacityCoefficient4) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient4, sensibleCoolingCapacityCoefficient4);
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient5(double sensibleCoolingCapacityCoefficient5) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient5, sensibleCoolingCapacityCoefficient5);
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient6(double sensibleCoolingCapacityCoefficient6) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient6, sensibleCoolingCapacityCoefficient6);
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setCoolingPowerConsumptionCoefficient1(double coolingPowerConsumptionCoefficient1) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient1, coolingPowerConsumptionCoefficient1);
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setCoolingPowerConsumptionCoefficient2(double coolingPowerConsumptionCoefficient2) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient2, coolingPowerConsumptionCoefficient2);
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setCoolingPowerConsumptionCoefficient3(double coolingPowerConsumptionCoefficient3) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient3, coolingPowerConsumptionCoefficient3);
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setCoolingPowerConsumptionCoefficient4(double coolingPowerConsumptionCoefficient4) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient4, coolingPowerConsumptionCoefficient4);
+    BOOST_ASSERT(result);
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setCoolingPowerConsumptionCoefficient5(double coolingPowerConsumptionCoefficient5) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient5, coolingPowerConsumptionCoefficient5);
+    BOOST_ASSERT(result);
+  }
+  
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::NominalTimeforCondensateRemovaltoBegin, nominalTimeforCondensateRemovaltoBegin);
+    return result;
+  }
+  
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::resetNominalTimeforCondensateRemovaltoBegin() 
+  {
+    bool result = setString(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::NominalTimeforCondensateRemovaltoBegin, "");
+    BOOST_ASSERT(result);
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity) 
+  {
+    bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity, ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
+    return result;
+  }
+
+  void CoilCoolingWaterToAirHeatPumpEquationFit_Impl::resetRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() 
+  {
+    bool result = setString(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity, "");
+    BOOST_ASSERT(result);
+  }
+
+
+   boost::optional<ZoneHVACComponent> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::containingZoneHVACComponent() const
+  {
+    // ZoneHVACWaterToAirHeatPump
+
+    std::vector<ZoneHVACWaterToAirHeatPump> zoneHVACWaterToAirHeatPumps;
+
+    zoneHVACWaterToAirHeatPumps = this->model().getModelObjects<ZoneHVACWaterToAirHeatPump>();
+
+    for( std::vector<ZoneHVACWaterToAirHeatPump>::iterator it = zoneHVACWaterToAirHeatPumps.begin();
+    it < zoneHVACWaterToAirHeatPumps.end();
+    it++ )
+    {
+      if( boost::optional<HVACComponent> coil = it->coolingCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
+
+    return boost::none;
+  }
+} // detail
+
+		CoilCoolingWaterToAirHeatPumpEquationFit::CoilCoolingWaterToAirHeatPumpEquationFit(const Model& model)
+  : WaterToAirComponent(CoilCoolingWaterToAirHeatPumpEquationFit::iddObjectType(),model)
+		{
+				BOOST_ASSERT(getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>());
+
+        setTotalCoolingCapacityCoefficient1(-0.68126221);
+				setTotalCoolingCapacityCoefficient2(1.99529297);
+				setTotalCoolingCapacityCoefficient3(-0.93611888);
+				setTotalCoolingCapacityCoefficient4(0.02081177);
+				setTotalCoolingCapacityCoefficient5(0.008438868);
+				setSensibleCoolingCapacityCoefficient1(2.24209455);
+				setSensibleCoolingCapacityCoefficient2(7.28913391);
+				setSensibleCoolingCapacityCoefficient3(-9.06079896);
+				setSensibleCoolingCapacityCoefficient4(-0.36729404);
+				setSensibleCoolingCapacityCoefficient5(0.218826161);
+				setSensibleCoolingCapacityCoefficient6(0.00901534);
+				setCoolingPowerConsumptionCoefficient1(-3.20456384);
+				setCoolingPowerConsumptionCoefficient2(0.47656454);
+				setCoolingPowerConsumptionCoefficient3(3.16734236);
+				setCoolingPowerConsumptionCoefficient4(0.10244637);
+				setCoolingPowerConsumptionCoefficient5(-0.038132556);
+		}
+
+		IddObjectType CoilCoolingWaterToAirHeatPumpEquationFit::iddObjectType() 
+		{
+				return IddObjectType(IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit);
+		}
+
+		boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit::ratedAirFlowRate() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->ratedAirFlowRate();
+		}
+
+		bool CoilCoolingWaterToAirHeatPumpEquationFit::isRatedAirFlowRateDefaulted() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->isRatedAirFlowRateDefaulted();
+		}
+
+		bool CoilCoolingWaterToAirHeatPumpEquationFit::isRatedAirFlowRateAutosized() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->isRatedAirFlowRateAutosized();
+		}
+
+		boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit::ratedWaterFlowRate() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->ratedWaterFlowRate();
+		}
+
+		bool CoilCoolingWaterToAirHeatPumpEquationFit::isRatedWaterFlowRateDefaulted() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->isRatedWaterFlowRateDefaulted();
+		}
+
+		bool CoilCoolingWaterToAirHeatPumpEquationFit::isRatedWaterFlowRateAutosized() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->isRatedWaterFlowRateAutosized();
+		}
+
+		boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit::ratedTotalCoolingCapacity() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->ratedTotalCoolingCapacity();
+		}
+
+		bool CoilCoolingWaterToAirHeatPumpEquationFit::isRatedTotalCoolingCapacityDefaulted() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->isRatedTotalCoolingCapacityDefaulted();
+		}
+
+		bool CoilCoolingWaterToAirHeatPumpEquationFit::isRatedTotalCoolingCapacityAutosized() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->isRatedTotalCoolingCapacityAutosized();
+		}
+
+		boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit::ratedSensibleCoolingCapacity() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->ratedSensibleCoolingCapacity();
+		}
+
+		bool CoilCoolingWaterToAirHeatPumpEquationFit::isRatedSensibleCoolingCapacityDefaulted() const 
+		{
+			 return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->isRatedSensibleCoolingCapacityDefaulted();
+		}
+
+		bool CoilCoolingWaterToAirHeatPumpEquationFit::isRatedSensibleCoolingCapacityAutosized() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->isRatedSensibleCoolingCapacityAutosized();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::ratedCoolingCoefficientofPerformance() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->ratedCoolingCoefficientofPerformance();
+		}
+
+    bool CoilCoolingWaterToAirHeatPumpEquationFit::isRatedCoolingCoefficientofPerformanceDefaulted() const {
+      return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->isRatedCoolingCoefficientofPerformanceDefaulted();
+    }
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCoefficient1() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCoefficient1();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCoefficient2() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCoefficient2();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCoefficient3() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCoefficient3();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCoefficient4() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCoefficient4();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCoefficient5() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCoefficient5();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient1() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCoefficient1();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient2() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCoefficient2();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient3() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCoefficient3();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient4() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCoefficient4();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient5() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCoefficient5();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient6() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCoefficient6();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCoefficient1() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCoefficient1();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCoefficient2() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCoefficient2();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCoefficient3() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCoefficient3();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCoefficient4() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCoefficient4();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCoefficient5() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCoefficient5();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::nominalTimeforCondensateRemovaltoBegin() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->nominalTimeforCondensateRemovaltoBegin();
+		}
+
+		bool CoilCoolingWaterToAirHeatPumpEquationFit::isNominalTimeforCondensateRemovaltoBeginDefaulted() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->isNominalTimeforCondensateRemovaltoBeginDefaulted();
+		}
+
+		double CoilCoolingWaterToAirHeatPumpEquationFit::ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity();
+		}
+
+		bool CoilCoolingWaterToAirHeatPumpEquationFit::isRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacityDefaulted() const 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->isRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacityDefaulted();
+		}
+
+		bool CoilCoolingWaterToAirHeatPumpEquationFit::setRatedAirFlowRate(double ratedAirFlowRate) 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setRatedAirFlowRate(ratedAirFlowRate);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::resetRatedAirFlowRate() 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->resetRatedAirFlowRate();
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::autosizeRatedAirFlowRate() 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->autosizeRatedAirFlowRate();
+		}
+
+		bool CoilCoolingWaterToAirHeatPumpEquationFit::setRatedWaterFlowRate(double ratedWaterFlowRate) 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setRatedWaterFlowRate(ratedWaterFlowRate);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::resetRatedWaterFlowRate() 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->resetRatedWaterFlowRate();
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::autosizeRatedWaterFlowRate() 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->autosizeRatedWaterFlowRate();
+		}
+
+		bool CoilCoolingWaterToAirHeatPumpEquationFit::setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity) 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setRatedTotalCoolingCapacity(ratedTotalCoolingCapacity);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::resetRatedTotalCoolingCapacity() 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->resetRatedTotalCoolingCapacity();
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::autosizeRatedTotalCoolingCapacity() 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->autosizeRatedTotalCoolingCapacity();
+		}
+
+		bool CoilCoolingWaterToAirHeatPumpEquationFit::setRatedSensibleCoolingCapacity(double ratedSensibleCoolingCapacity) 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setRatedSensibleCoolingCapacity(ratedSensibleCoolingCapacity);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::resetRatedSensibleCoolingCapacity() 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->resetRatedSensibleCoolingCapacity();
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::autosizeRatedSensibleCoolingCapacity() 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->autosizeRatedSensibleCoolingCapacity();
+		}
+
+		bool CoilCoolingWaterToAirHeatPumpEquationFit::setRatedCoolingCoefficientofPerformance(double ratedCoolingCoefficientofPerformance) 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setRatedCoolingCoefficientofPerformance(ratedCoolingCoefficientofPerformance);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::setTotalCoolingCapacityCoefficient1(double totalCoolingCapacityCoefficient1) 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setTotalCoolingCapacityCoefficient1(totalCoolingCapacityCoefficient1);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::setTotalCoolingCapacityCoefficient2(double totalCoolingCapacityCoefficient2) 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setTotalCoolingCapacityCoefficient2(totalCoolingCapacityCoefficient2);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::setTotalCoolingCapacityCoefficient3(double totalCoolingCapacityCoefficient3) 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setTotalCoolingCapacityCoefficient3(totalCoolingCapacityCoefficient3);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::setTotalCoolingCapacityCoefficient4(double totalCoolingCapacityCoefficient4) 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setTotalCoolingCapacityCoefficient4(totalCoolingCapacityCoefficient4);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::setTotalCoolingCapacityCoefficient5(double totalCoolingCapacityCoefficient5) 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setTotalCoolingCapacityCoefficient5(totalCoolingCapacityCoefficient5);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient1(double sensibleCoolingCapacityCoefficient1) 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setSensibleCoolingCapacityCoefficient1(sensibleCoolingCapacityCoefficient1);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient2(double sensibleCoolingCapacityCoefficient2) 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setSensibleCoolingCapacityCoefficient2(sensibleCoolingCapacityCoefficient2);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient3(double sensibleCoolingCapacityCoefficient3) 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setSensibleCoolingCapacityCoefficient3(sensibleCoolingCapacityCoefficient3);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient4(double sensibleCoolingCapacityCoefficient4) 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setSensibleCoolingCapacityCoefficient4(sensibleCoolingCapacityCoefficient4);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient5(double sensibleCoolingCapacityCoefficient5) 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setSensibleCoolingCapacityCoefficient5(sensibleCoolingCapacityCoefficient5);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient6(double sensibleCoolingCapacityCoefficient6) 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setSensibleCoolingCapacityCoefficient6(sensibleCoolingCapacityCoefficient6);
+		}
+
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::setCoolingPowerConsumptionCoefficient1(double coolingPowerConsumptionCoefficient1) 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setCoolingPowerConsumptionCoefficient1(coolingPowerConsumptionCoefficient1);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::setCoolingPowerConsumptionCoefficient2(double coolingPowerConsumptionCoefficient2) 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setCoolingPowerConsumptionCoefficient2(coolingPowerConsumptionCoefficient2);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::setCoolingPowerConsumptionCoefficient3(double coolingPowerConsumptionCoefficient3) 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setCoolingPowerConsumptionCoefficient3(coolingPowerConsumptionCoefficient3);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::setCoolingPowerConsumptionCoefficient4(double coolingPowerConsumptionCoefficient4) 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setCoolingPowerConsumptionCoefficient4(coolingPowerConsumptionCoefficient4);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::setCoolingPowerConsumptionCoefficient5(double coolingPowerConsumptionCoefficient5) 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setCoolingPowerConsumptionCoefficient5(coolingPowerConsumptionCoefficient5);
+		}
+
+		bool CoilCoolingWaterToAirHeatPumpEquationFit::setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin) 
+		{
+				return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setNominalTimeforCondensateRemovaltoBegin(nominalTimeforCondensateRemovaltoBegin);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::resetNominalTimeforCondensateRemovaltoBegin() 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->resetNominalTimeforCondensateRemovaltoBegin();
+		}
+
+		bool CoilCoolingWaterToAirHeatPumpEquationFit::setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity) 
+		{
+								return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
+		}
+
+		void CoilCoolingWaterToAirHeatPumpEquationFit::resetRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() 
+		{
+				getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->resetRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity();
+		}
+
+/// @cond
+CoilCoolingWaterToAirHeatPumpEquationFit::CoilCoolingWaterToAirHeatPumpEquationFit(boost::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl> impl)
+  : WaterToAirComponent(impl)
+{}
+/// @endcond
+
+} // model
+} // openstudio
+

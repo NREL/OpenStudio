@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE database SYSTEM "litesql.dtd">
+<database name="ModelObjectDatabase" namespace="ModelDatabase">
+  <object name="DbObjModelEditor">
+    <field name="name" type="string"/>
+  </object>
+  <object name="DbObjRunManager">
+    <field name="name" type="string"/>
+  </object>
+  <object name="DbObjModel">
+    <field name="name" type="string"/>
+    <field name="ptr" type="string"/>
+    <field name="state" type="string"/>
+    <field name="priority" type="integer"/>
+  </object>
+  <relation>
+    <relate object="DbObjRunManager" handle="models" limit="one"/>
+    <relate object="DbObjModel" handle="dbObjRunManager"/>
+  </relation>
+  <relation>
+    <relate object="DbObjModelEditor" handle="models" limit="one"/>
+    <relate object="DbObjModel" handle="dbObjModelEditor"/>
+  </relation>
+</database>
+

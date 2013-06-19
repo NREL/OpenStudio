@@ -1,0 +1,131 @@
+,EnergyPlus Object,OpenStudio ModelObject (if different),SketchUp Plug-in,SystemOutliner
+Required,       ,,,
+  ,Version,,Yes,
+  ,SimulationControl,,Yes,
+  ,Timestep,,Yes,
+  ,Building,,Yes,
+  ,RunPeriod,,Yes,
+  ,(all in ScheduleNames list),(would be nice) ,(would be nice) ,(would be nice) 
+  ,Site:Location,,Yes,
+  ,SizingPeriod:DesignDay,,(would be nice) ,
+  ,(all in ConstructionNames list),,(would be nice) ,
+  ,(all in MaterialNames list),,(would be nice) ,
+  ,Zone,,Yes,
+  ,(all in SurfNames list),Surface,Yes,
+  ,(all in SubSurfNames list),SubSurface,Yes,
+  ,(all in AllShadingSurfNames list),ShadingSurface,Yes,
+  ,Daylighting:Controls,,Yes,
+  ,Daylighting:DELight:Controls,,Yes,
+  ,Daylighting:DELight:ReferencePoint,,Yes,
+  ,DaylightingDevice:Tubular,,(would be nice) ,
+  ,DaylightingDevice:Shelf,,(would be nice) ,
+  ,DaylightingDevice:LightWell,,(would be nice) ,
+  ,Output:IlluminanceMap,,Yes,
+  ,People,(split into definition and instance),(would be nice) ,
+  ,Lights,(split into definition and instance),(would be nice) ,
+  ,ElectricEquipment,(split into definition and instance),(would be nice) ,
+  ,GasEquipment,(split into definition and instance),(would be nice) ,
+  ,HotWaterEquipment,(split into definition and instance),(would be nice) ,
+  ,SteamEquipment,(split into definition and instance),(would be nice) ,
+  ,OtherEquipment,(split into definition and instance),(would be nice) ,
+  ,ExteriorLights,(split into definition and instance),(would be nice) ,
+  ,ExteriorEquipment,(split into definition and instance),(would be nice) ,
+  ,ZoneInfiltration:DesignFlowRate,,(would be nice) ,
+  ,ZoneVentilation:DesignFlowRate,,(would be nice) ,
+  ,ZoneMixing,,(would be nice) ,
+  ,ZoneCrossMixing,,(would be nice) ,
+  ,InternalMass,(split into definition and instance),(would be nice) ,
+  ,Fan:ConstantVolume,,,Yes
+  ,Coil:Heating:Gas,,,Yes
+  ,Coil:Cooling:DX:SingleSpeed,,,Yes
+  ,ZoneControl:Thermostat,,,?
+  ,ThermostatSetpoint:DualSetpoint,,,?
+  ,SetpointManager:SingleZone:Reheat,,,?
+  ,Controller:OutdoorAir,,,Yes
+  ,Curve:Quadratic,,,(would be nice) 
+  ,Curve:Cubic,,,(would be nice) 
+  ,Curve:Biquadratic,,,(would be nice) 
+  ,AirLoopHVAC,,,Yes
+  ,ZoneHVAC:EquipmentConnections,,,Yes
+  ,AirTerminal:SingleDuct:Uncontrolled,,,Yes
+  ,BranchList,,,Yes
+  ,Branch,,,Yes
+  ,AirLoopHVAC:ControllerList,,,Yes
+  ,AirLoopHVAC:OutdoorAirSystem:EquipmentList,,,Yes
+  ,AirLoopHVAC:OutdoorAirSystem,,,Yes
+  ,OutdoorAir:NodeList,,,Yes
+  ,OutdoorAir:Node,,,Yes
+  ,OutdoorAir:Mixer,,,Yes
+  ,SetpointManager:MixedAir,,,Yes
+  ,AirLoopHVAC:ZoneSplitter,,,Yes
+  ,AirLoopHVAC:ZoneMixer,,,Yes
+  ,UtilityCost:Tariff     ,,,
+  ,UtilityCost:Charge:Block     ,,,
+  ,UtilityCost:Charge:Simple      ,,,
+  ,UtilityCost:Ratchet      ,,,
+  ,UtilityCost:Qualify      ,,,
+  ,UtilityCost:Variable     ,,,
+  ,Output:Meter,,"Yes, needs work",
+  ,Output:Variable,,"Yes, needs work",
+  ,LifeCycleCost:Parameters     ,,,
+  ,LifeCycleCost:RecurringCosts     ,,,
+  ,LifeCycleCost:NonrecurringCost     ,,,
+  ,LifeCycleCost:UsePriceEscalation     ,,,
+  ,LifeCycleCost:UseAdjustment      ,,,
+  ,ComponentCost:Adjustments      ,,,
+  ,ComponentCost:LineItem     ,,,
+  ,Site:GroundTemperature:BuildingSurface,,(would be nice) ,
+  ,Site:GroundTemperature:FCfactorMethod,,(would be nice) ,
+  ,Site:GroundTemperature:Shallow,,(would be nice) ,
+  ,Site:GroundTemperature:Deep,,(would be nice) ,
+  ,Site:WaterMainsTemperature,,(would be nice) ,
+        ,,,,
+Would be Nice,        ,,,
+  ,ScheduleTypeLimits     ,,,
+  ,Sizing:Parameters,,,(would be nice) 
+  ,Sizing:Zone,,,(would be nice) 
+  ,Sizing:System,,,(would be nice) 
+  ,AvailabilityManagerAssignmentList,,,(would be nice) 
+  ,AvailabilityManager:NightCycle,,,(would be nice) 
+  ,WaterHeater:Mixed,,,(would be nice) 
+  ,Pump:ConstantSpeed,,,(would be nice) 
+  ,WaterUse:Equipment,,,(would be nice) 
+  ,PlantEquipmentList,,,(would be nice) 
+  ,Sizing:Plant,,,(would be nice) 
+  ,SetpointManager:Scheduled,,,(would be nice) 
+  ,PlantEquipmentOperationSchemes,,,(would be nice) 
+  ,PlantEquipmentOperation:HeatingLoad,,,(would be nice) 
+  ,PlantLoop,,,(would be nice) 
+  ,ConnectorList,,,(would be nice) 
+  ,WaterUse:Connections     (would be nice),,,(would be nice) 
+  ,Connector:Splitter,,,(would be nice) 
+  ,Connector:Mixer,,,(would be nice) 
+  ,Pipe:Adiabatic,,,(would be nice) 
+  ,OutputControl:Table:Style      ,,,
+  ,Output:Table:SummaryReports      ,,,
+  ,Output:Table:Monthly     ,,,
+  ,Output:Table:TimeBins      ,,,
+  ,Output:EnvironmentalImpactFactors      ,,,
+  ,FuelFactors      ,,,
+  ,EnvironmentalImpactFactors     ,,,
+  ,RunPeriodControl:DaylightSavingTime      ,,,
+  ,RunPeriodControl:SpecialDays     ,,,
+  ,SurfaceConvectionAlgorithm:Inside      ,,,
+  ,SurfaceConvectionAlgorithm:Outside     ,,,
+  ,HeatBalanceAlgorithm     ,,,
+  ,ZoneAirHeatBalanceAlgorithm      ,,,
+  ,ConvergenceLimits      ,,,
+  ,ShadowCalculation      ,,,
+  ,Generator:Photovoltaic,,(would be nice) ,
+  ,PhotovoltaicPerformance:Simple,,(would be nice) ,
+  ,ElectricLoadCenter:Generators,,(would be nice) ,
+  ,(other generators and energy storage)      ,,,
+  ,(refrigeration objects)      ,,,
+        ,,,,
+Generated On Translation,       ,,,
+  ,GlobalGeometryRules      ,,,
+  ,ZoneHVAC:EquipmentList     ,,,
+  ,NodeList     ,,,
+  ,AirLoopHVAC:UnitaryCoolOnly      ,,,
+  ,AirLoopHVAC:SupplyPath     ,,,
+  ,AirLoopHVAC:ReturnPath     ,,,

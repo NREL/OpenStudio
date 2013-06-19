@@ -1,0 +1,63 @@
+<measure>
+  <name>Set Window to Wall Ratio by Facade</name>
+  <uid>f347ae80-48b4-4c40-bfd4-6c5139b38136</uid>
+  <version_id>45c147fc-6e23-4894-b2cd-38f89f266324</version_id>
+  <description>Description should be asked for upon creation.</description>
+  <modeler_description>Modeler description needs to be hand-edited.</modeler_description>
+  <provenances/>
+  <tags>
+    <tag>Envelope</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Function</name>
+      <value>Measure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Requires EnergyPlus Results</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>0.10.2</identifier>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>37114538</checksum>
+    </file>
+    <file>
+      <filename>ExampleModel_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>0F6C8BE5</checksum>
+    </file>
+    <file>
+      <filename>SimpleModel.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>B5D57FBB</checksum>
+    </file>
+    <file>
+      <filename>SimpleModel_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>30F2A3F6</checksum>
+    </file>
+  </files>
+</measure>

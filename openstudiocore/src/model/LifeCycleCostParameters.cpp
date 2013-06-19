@@ -1,0 +1,1221 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#include <model/LifeCycleCostParameters.hpp>
+#include <model/LifeCycleCostParameters_Impl.hpp>
+
+#include <model/Model_Impl.hpp>
+
+#include <utilities/idd/OS_LifeCycleCost_Parameters_FieldEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
+#include <utilities/time/Date.hpp>
+
+#include <utilities/core/Assert.hpp>
+
+#include <boost/algorithm/string.hpp>
+
+namespace openstudio {
+namespace model  {
+
+namespace detail {
+
+  LifeCycleCostParameters_Impl::LifeCycleCostParameters_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+    : ParentObject_Impl(idfObject, model, keepHandle)
+  {
+    BOOST_ASSERT(idfObject.iddObject().type() == LifeCycleCostParameters::iddObjectType());
+  }
+
+  LifeCycleCostParameters_Impl::LifeCycleCostParameters_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                             Model_Impl* model,
+                                             bool keepHandle)
+    : ParentObject_Impl(other,model,keepHandle)
+  {
+    BOOST_ASSERT(other.iddObject().type() == LifeCycleCostParameters::iddObjectType());
+  }
+
+  LifeCycleCostParameters_Impl::LifeCycleCostParameters_Impl(const LifeCycleCostParameters_Impl& other,Model_Impl* model,bool keepHandle)
+    : ParentObject_Impl(other,model,keepHandle)
+  {
+  }
+
+  // return the parent object in the hierarchy
+  boost::optional<ParentObject> LifeCycleCostParameters_Impl::parent() const
+  {
+    return boost::optional<ParentObject>();
+  }
+
+  // return any children objects in the hierarchy
+  std::vector<ModelObject> LifeCycleCostParameters_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    return result;
+  }
+
+  std::vector<IddObjectType> LifeCycleCostParameters_Impl::allowableChildTypes() const {
+    IddObjectTypeVector result;
+    return result;
+  }
+
+  // Get all output variable names that could be associated with this object.
+  const std::vector<std::string>& LifeCycleCostParameters_Impl::outputVariableNames() const
+  {
+    static std::vector<std::string> result;
+    if (result.empty()){
+    }
+    return result;
+  }
+
+  std::string LifeCycleCostParameters_Impl::analysisType() const{
+    OptionalString os = getString(OS_LifeCycleCost_ParametersFields::AnalysisType,true);
+    BOOST_ASSERT(os); BOOST_ASSERT(!os->empty());
+    return *os;
+  }
+
+  bool LifeCycleCostParameters_Impl::isAnalysisTypeDefaulted() const{
+    return isEmpty(OS_LifeCycleCost_ParametersFields::AnalysisType);
+  }
+
+  bool LifeCycleCostParameters_Impl::isFEMPAnalysis() const{
+    return ("FEMP" == this->analysisType());
+  }
+
+  std::string LifeCycleCostParameters_Impl::discountingConvention() const {
+    OptionalString os = getString(OS_LifeCycleCost_ParametersFields::DiscountingConvention,true);
+    BOOST_ASSERT(os); BOOST_ASSERT(!os->empty());
+    return *os;
+  }
+
+  bool LifeCycleCostParameters_Impl::isDiscountingConventionDefaulted() const{
+    return isEmpty(OS_LifeCycleCost_ParametersFields::DiscountingConvention);
+  }
+
+  std::string LifeCycleCostParameters_Impl::inflationApproach() const {
+    OptionalString os = getString(OS_LifeCycleCost_ParametersFields::InflationApproach,true);
+    BOOST_ASSERT(os); BOOST_ASSERT(!os->empty());
+    return *os;
+  }
+
+  bool LifeCycleCostParameters_Impl::isInflationApproachDefaulted() const{
+    return isEmpty(OS_LifeCycleCost_ParametersFields::InflationApproach);
+  }
+
+  bool LifeCycleCostParameters_Impl::isConstantDollarAnalysis() const{
+    return ("ConstantDollar" == this->inflationApproach());
+  }
+  
+  boost::optional<double> LifeCycleCostParameters_Impl::realDiscountRate() const {
+    boost::optional<double> result;
+    if (this->isConstantDollarAnalysis()){
+      result = getDouble(OS_LifeCycleCost_ParametersFields::RealDiscountRate,true);
+      if (!result){
+        // default is not in the IDD, act like it is here
+        result = LifeCycleCostParameters::fempRealDiscountRate();
+      }
+    }
+    return result;
+  }
+
+  boost::optional<double> LifeCycleCostParameters_Impl::nominalDiscountRate() const {
+    boost::optional<double> result;
+    if (!this->isConstantDollarAnalysis()){
+      result = getDouble(OS_LifeCycleCost_ParametersFields::NominalDiscountRate,true);
+      if (!result){
+        // default is not in the IDD, act like it is here
+        result = LifeCycleCostParameters::fempNominalDiscountRate();
+      }
+    }
+    return result;
+  }
+
+  boost::optional<double> LifeCycleCostParameters_Impl::inflation() const {
+    boost::optional<double> result;
+    if (!this->isConstantDollarAnalysis()){
+      result = getDouble(OS_LifeCycleCost_ParametersFields::Inflation,true);
+      if (!result){
+        // default is not in the IDD, act like it is here
+        result = LifeCycleCostParameters::fempInflation();
+      }
+    }
+    return result;
+  }
+
+  MonthOfYear LifeCycleCostParameters_Impl::baseDateMonth() const {
+    OptionalString os = getString(OS_LifeCycleCost_ParametersFields::BaseDateMonth,true);
+    BOOST_ASSERT(os); BOOST_ASSERT(!os->empty());
+    return MonthOfYear(*os);
+  }
+
+  bool LifeCycleCostParameters_Impl::isBaseDateMonthDefaulted() const{
+    return isEmpty(OS_LifeCycleCost_ParametersFields::BaseDateMonth);
+  }
+
+  int LifeCycleCostParameters_Impl::baseDateYear() const {
+    boost::optional<int> result = getInt(OS_LifeCycleCost_ParametersFields::BaseDateYear,true);
+    if (!result){
+      result = LifeCycleCostParameters::nistYear();
+    }
+    return *result;
+  }
+
+  bool LifeCycleCostParameters_Impl::isBaseDateYearDefaulted() const{
+    return isEmpty(OS_LifeCycleCost_ParametersFields::BaseDateYear);
+  }
+
+  MonthOfYear LifeCycleCostParameters_Impl::serviceDateMonth() const {
+    OptionalString os = getString(OS_LifeCycleCost_ParametersFields::ServiceDateMonth,true);
+    BOOST_ASSERT(os); BOOST_ASSERT(!os->empty());
+    return MonthOfYear(*os);
+  }
+
+  bool LifeCycleCostParameters_Impl::isServiceDateMonthDefaulted() const{
+    return isEmpty(OS_LifeCycleCost_ParametersFields::BaseDateMonth);
+  }
+
+  int LifeCycleCostParameters_Impl::serviceDateYear() const {
+    boost::optional<int> result = getInt(OS_LifeCycleCost_ParametersFields::ServiceDateYear,true);
+    if (!result){
+      result = LifeCycleCostParameters::nistYear();
+    }
+    return *result;
+  }
+
+  bool LifeCycleCostParameters_Impl::isServiceDateYearDefaulted() const{
+    return isEmpty(OS_LifeCycleCost_ParametersFields::ServiceDateYear);
+  }
+
+  int LifeCycleCostParameters_Impl::lengthOfStudyPeriodInYears() const {
+    OptionalInt result = getInt(OS_LifeCycleCost_ParametersFields::LengthofStudyPeriodinYears,true);
+    BOOST_ASSERT(result);
+    return *result;
+  }
+
+  bool LifeCycleCostParameters_Impl::isLengthOfStudyPeriodInYearsDefaulted() const{
+    return isEmpty(OS_LifeCycleCost_ParametersFields::LengthofStudyPeriodinYears);
+  }
+  
+  boost::optional<double> LifeCycleCostParameters_Impl::taxRate() const {
+    return getDouble(OS_LifeCycleCost_ParametersFields::TaxRate,true);
+  }
+
+  std::string LifeCycleCostParameters_Impl::depreciationMethod() const {
+    OptionalString os = getString(OS_LifeCycleCost_ParametersFields::DepreciationMethod,true);
+    BOOST_ASSERT(os); BOOST_ASSERT(!os->empty());
+    return *os;
+  }
+    
+  bool LifeCycleCostParameters_Impl::isDepreciationMethodDefaulted() const{
+    return isEmpty(OS_LifeCycleCost_ParametersFields::DepreciationMethod);
+  }
+  
+  bool LifeCycleCostParameters_Impl::useNISTFuelEscalationRates() const {
+    OptionalString os = getString(OS_LifeCycleCost_ParametersFields::UseNISTFuelEscalationRates, true);
+    BOOST_ASSERT(os); BOOST_ASSERT(!os->empty());
+    return ("Yes" == *os);
+  }
+    
+  bool LifeCycleCostParameters_Impl::isUseNISTFuelEscalationRatesDefaulted() const{
+    return isEmpty(OS_LifeCycleCost_ParametersFields::UseNISTFuelEscalationRates);
+  }
+  
+  boost::optional<std::string> LifeCycleCostParameters_Impl::nistRegion() const
+  {
+    boost::optional<std::string> result;
+    if (this->useNISTFuelEscalationRates()){
+      result = getString(OS_LifeCycleCost_ParametersFields::NISTRegion, true);
+    }
+    return result;
+  }
+
+  bool LifeCycleCostParameters_Impl::isNISTRegionDefaulted() const{
+    return isEmpty(OS_LifeCycleCost_ParametersFields::NISTRegion);
+  }
+  
+  boost::optional<std::string> LifeCycleCostParameters_Impl::nistSector() const
+  {
+    boost::optional<std::string> result;
+    if (this->useNISTFuelEscalationRates()){
+      result = getString(OS_LifeCycleCost_ParametersFields::NISTSector, true);
+    }
+    return result;
+  }
+
+  bool LifeCycleCostParameters_Impl::isNISTSectorDefaulted() const{
+    return isEmpty(OS_LifeCycleCost_ParametersFields::NISTSector);
+  }
+ 
+  boost::optional<double> LifeCycleCostParameters_Impl::electricityInflation() const
+  {
+    boost::optional<double> result;
+    if (!this->useNISTFuelEscalationRates()){
+      result = getDouble(OS_LifeCycleCost_ParametersFields::ElectricityInflation, true);
+
+      // DLM: provide "equivalent" FEMP fuel escalation rates based on nist data and analysis length if no result?
+    }
+    return result;
+  }
+
+  boost::optional<double> LifeCycleCostParameters_Impl::naturalGasInflation() const
+  {
+    boost::optional<double> result;
+    if (!this->useNISTFuelEscalationRates()){
+      result = getDouble(OS_LifeCycleCost_ParametersFields::NaturalGasInflation, true);
+
+      // DLM: provide "equivalent" FEMP fuel escalation rates based on nist data and analysis length if no result?
+    }
+    return result;
+  }
+
+  boost::optional<double> LifeCycleCostParameters_Impl::steamInflation() const
+  {
+    boost::optional<double> result;
+    if (!this->useNISTFuelEscalationRates()){
+      result = getDouble(OS_LifeCycleCost_ParametersFields::SteamInflation, true);
+
+      // DLM: provide "equivalent" FEMP fuel escalation rates based on nist data and analysis length if no result?
+    }
+    return result;
+  }
+
+  boost::optional<double> LifeCycleCostParameters_Impl::gasolineInflation() const
+  {
+    boost::optional<double> result;
+    if (!this->useNISTFuelEscalationRates()){
+      result = getDouble(OS_LifeCycleCost_ParametersFields::GasolineInflation, true);
+
+      // DLM: provide "equivalent" FEMP fuel escalation rates based on nist data and analysis length if no result?
+    }
+    return result;
+  }
+
+  boost::optional<double> LifeCycleCostParameters_Impl::dieselInflation() const
+  {
+    boost::optional<double> result;
+    if (!this->useNISTFuelEscalationRates()){
+      result = getDouble(OS_LifeCycleCost_ParametersFields::DieselInflation, true);
+
+      // DLM: provide "equivalent" FEMP fuel escalation rates based on nist data and analysis length if no result?
+    }
+    return result;
+  }
+
+  boost::optional<double> LifeCycleCostParameters_Impl::coalInflation() const
+  {
+    boost::optional<double> result;
+    if (!this->useNISTFuelEscalationRates()){
+      result = getDouble(OS_LifeCycleCost_ParametersFields::CoalInflation, true);
+
+      // DLM: provide "equivalent" FEMP fuel escalation rates based on nist data and analysis length if no result?
+    }
+    return result;
+  }
+
+  boost::optional<double> LifeCycleCostParameters_Impl::fuelOil1Inflation() const
+  {
+    boost::optional<double> result;
+    if (!this->useNISTFuelEscalationRates()){
+      result = getDouble(OS_LifeCycleCost_ParametersFields::FuelOil1Inflation, true);
+
+      // DLM: provide "equivalent" FEMP fuel escalation rates based on nist data and analysis length if no result?
+    }
+    return result;
+  }
+
+  boost::optional<double> LifeCycleCostParameters_Impl::fuelOil2Inflation() const
+  {
+    boost::optional<double> result;
+    if (!this->useNISTFuelEscalationRates()){
+      result = getDouble(OS_LifeCycleCost_ParametersFields::FuelOil2Inflation, true);
+
+      // DLM: provide "equivalent" FEMP fuel escalation rates based on nist data and analysis length if no result?
+    }
+    return result;
+  }
+
+  boost::optional<double> LifeCycleCostParameters_Impl::propaneInflation() const
+  {
+    boost::optional<double> result;
+    if (!this->useNISTFuelEscalationRates()){
+      result = getDouble(OS_LifeCycleCost_ParametersFields::PropaneInflation, true);
+
+      // DLM: provide "equivalent" FEMP fuel escalation rates based on nist data and analysis length if no result?
+    }
+    return result;
+  }
+
+  boost::optional<double> LifeCycleCostParameters_Impl::waterInflation() const
+  {
+    boost::optional<double> result;
+    if (!this->useNISTFuelEscalationRates()){
+      result = getDouble(OS_LifeCycleCost_ParametersFields::WaterInflation, true);
+
+      // DLM: provide "equivalent" FEMP fuel escalation rates based on nist data and analysis length if no result?
+    }
+    return result;
+  }
+
+  // set the parent, child may have to call methods on the parent
+  bool LifeCycleCostParameters_Impl::setParent(ParentObject& newParent) {
+    return false;
+  }
+
+  bool LifeCycleCostParameters_Impl::setAnalysisType(const std::string& analysisType)
+  {
+    bool changed = (this->analysisType() != analysisType);
+
+    bool result = setString(OS_LifeCycleCost_ParametersFields::AnalysisType, analysisType);
+    if (result && changed){
+      if (isFEMPAnalysis()){
+        if (isConstantDollarAnalysis()){
+          setRealDiscountRate(LifeCycleCostParameters::fempRealDiscountRate());
+        }else{  
+          setNominalDiscountRate(LifeCycleCostParameters::fempNominalDiscountRate());
+          setInflation(LifeCycleCostParameters::fempInflation());
+        }
+
+        if (lengthOfStudyPeriodInYears() > 25){
+          setLengthOfStudyPeriodInYears(25);
+        }
+      }
+    }
+
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetAnalysisType()
+  {
+    bool test = setAnalysisType("FEMP");
+    BOOST_ASSERT(test);
+    test = setString(OS_LifeCycleCost_ParametersFields::AnalysisType, "");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setDiscountingConvention(const std::string& discountingConvention)
+  {
+    return setString(OS_LifeCycleCost_ParametersFields::DiscountingConvention,discountingConvention);
+  }
+
+  void LifeCycleCostParameters_Impl::resetDiscountingConvention()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::DiscountingConvention,"");
+    BOOST_ASSERT(test);
+  }
+   
+  bool LifeCycleCostParameters_Impl::setInflationApproach(const std::string& inflationApproach)
+  {
+    bool changed = (this->inflationApproach() != inflationApproach);
+
+    bool result = setString(OS_LifeCycleCost_ParametersFields::InflationApproach, inflationApproach);
+    if (result && changed){
+      if (isConstantDollarAnalysis()){
+        setRealDiscountRate(LifeCycleCostParameters::fempRealDiscountRate());
+        setString(OS_LifeCycleCost_ParametersFields::NominalDiscountRate, "");
+        setString(OS_LifeCycleCost_ParametersFields::Inflation, "");
+      }else{  
+        setString(OS_LifeCycleCost_ParametersFields::RealDiscountRate, "");
+        setNominalDiscountRate(LifeCycleCostParameters::fempNominalDiscountRate());
+        setInflation(LifeCycleCostParameters::fempInflation());
+      }
+    }
+
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetInflationApproach()
+  {
+    bool test = setAnalysisType("ConstantDollar");
+    BOOST_ASSERT(test);
+    test = setString(OS_LifeCycleCost_ParametersFields::AnalysisType, "");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setRealDiscountRate(double realDiscountRate)
+  {
+    bool result = false;
+    if (isConstantDollarAnalysis()){
+      if (!isFEMPAnalysis()){
+        result = setDouble(OS_LifeCycleCost_ParametersFields::RealDiscountRate,realDiscountRate);
+      }
+    }
+    return result;
+  }
+
+  bool LifeCycleCostParameters_Impl::setNominalDiscountRate(double nominalDiscountRate)
+  {
+    bool result = false;
+    if (!isConstantDollarAnalysis()){
+      if (!isFEMPAnalysis()){
+        result = setDouble(OS_LifeCycleCost_ParametersFields::NominalDiscountRate,nominalDiscountRate);
+      }
+    }
+    return result;
+  }
+
+  bool LifeCycleCostParameters_Impl::setInflation(double inflation)
+  {
+    bool result = false;
+    if (!isConstantDollarAnalysis()){
+      if (!isFEMPAnalysis()){
+        result = setDouble(OS_LifeCycleCost_ParametersFields::Inflation,inflation);
+      }
+    }
+    return result;
+  }
+
+  bool LifeCycleCostParameters_Impl::setBaseDateMonth(const MonthOfYear& baseDateMonth)
+  {
+    return setString(OS_LifeCycleCost_ParametersFields::BaseDateMonth,baseDateMonth.valueDescription());
+  }
+
+  void LifeCycleCostParameters_Impl::resetBaseDateMonth()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::BaseDateMonth,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setBaseDateYear(int baseDateYear)
+  {
+    return setInt(OS_LifeCycleCost_ParametersFields::BaseDateYear,baseDateYear);
+  }
+
+  void LifeCycleCostParameters_Impl::resetBaseDateYear()  
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::BaseDateYear,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setServiceDateMonth(const MonthOfYear& serviceDateMonth)
+  {
+    return setString(OS_LifeCycleCost_ParametersFields::ServiceDateMonth,serviceDateMonth.valueDescription());
+  }
+
+  void LifeCycleCostParameters_Impl::resetServiceDateMonth()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::ServiceDateMonth,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setServiceDateYear(int serviceDateYear)
+  {
+    return setInt(OS_LifeCycleCost_ParametersFields::ServiceDateYear,serviceDateYear);
+  }
+
+  void LifeCycleCostParameters_Impl::resetServiceDateYear()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::ServiceDateYear,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setLengthOfStudyPeriodInYears(int lengthOfStudyPeriodInYears)
+  {
+    bool result = false;
+    if (isFEMPAnalysis()){
+      if (lengthOfStudyPeriodInYears <= 25){
+        result = setInt(OS_LifeCycleCost_ParametersFields::LengthofStudyPeriodinYears,lengthOfStudyPeriodInYears);
+      }
+    }else if (useNISTFuelEscalationRates()){
+      if (lengthOfStudyPeriodInYears <= 30){
+        result = setInt(OS_LifeCycleCost_ParametersFields::LengthofStudyPeriodinYears,lengthOfStudyPeriodInYears);
+      }
+    }else{
+      result = setInt(OS_LifeCycleCost_ParametersFields::LengthofStudyPeriodinYears,lengthOfStudyPeriodInYears);
+    }
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetLengthOfStudyPeriodInYears()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::LengthofStudyPeriodinYears,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setTaxRate(double TaxRate)
+  {
+    return setDouble(OS_LifeCycleCost_ParametersFields::TaxRate,TaxRate);
+  }
+
+  void LifeCycleCostParameters_Impl::resetTaxRate()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::TaxRate,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setDepreciationMethod(const std::string& depreciationMethod)
+  {
+    return setString(OS_LifeCycleCost_ParametersFields::DepreciationMethod,depreciationMethod);
+  }
+
+  void LifeCycleCostParameters_Impl::resetDepreciationMethod()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::DepreciationMethod,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setUseNISTFuelEscalationRates(bool useNISTFuelEscalationRates)
+  {
+    bool changed = (useNISTFuelEscalationRates != this->useNISTFuelEscalationRates());
+
+    bool result = false;
+    if (useNISTFuelEscalationRates){
+      result = setString(OS_LifeCycleCost_ParametersFields::UseNISTFuelEscalationRates,"Yes");
+      BOOST_ASSERT(result);
+
+      if (lengthOfStudyPeriodInYears() > 30){
+        setLengthOfStudyPeriodInYears(30);
+      }
+    }else{
+      result = setString(OS_LifeCycleCost_ParametersFields::UseNISTFuelEscalationRates,"No");
+      BOOST_ASSERT(result);
+    }
+
+    // DLM: provide "equivalent" FEMP fuel escalation rates based on nist data and analysis length?
+
+    if (changed){
+      result = setString(OS_LifeCycleCost_ParametersFields::NISTRegion,"");
+      BOOST_ASSERT(result);
+      result = setString(OS_LifeCycleCost_ParametersFields::NISTSector,"");
+      BOOST_ASSERT(result);
+      result = setString(OS_LifeCycleCost_ParametersFields::ElectricityInflation,"");
+      BOOST_ASSERT(result);
+      result = setString(OS_LifeCycleCost_ParametersFields::NaturalGasInflation,"");
+      BOOST_ASSERT(result);
+      result = setString(OS_LifeCycleCost_ParametersFields::SteamInflation,"");
+      BOOST_ASSERT(result);
+      result = setString(OS_LifeCycleCost_ParametersFields::GasolineInflation,"");
+      BOOST_ASSERT(result);
+      result = setString(OS_LifeCycleCost_ParametersFields::DieselInflation,"");
+      BOOST_ASSERT(result);
+      result = setString(OS_LifeCycleCost_ParametersFields::CoalInflation,"");
+      BOOST_ASSERT(result);
+      result = setString(OS_LifeCycleCost_ParametersFields::FuelOil1Inflation,"");
+      BOOST_ASSERT(result);
+      result = setString(OS_LifeCycleCost_ParametersFields::FuelOil2Inflation,"");
+      BOOST_ASSERT(result);
+      result = setString(OS_LifeCycleCost_ParametersFields::PropaneInflation,"");
+      BOOST_ASSERT(result);
+      result = setString(OS_LifeCycleCost_ParametersFields::WaterInflation,"");
+      BOOST_ASSERT(result);
+    }
+
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetUseNISTFuelEscalationRates()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::UseNISTFuelEscalationRates,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setNISTRegion(const std::string& nistRegion)
+  {
+    bool result = false;
+    if (useNISTFuelEscalationRates()){
+      result = setString(OS_LifeCycleCost_ParametersFields::NISTRegion,nistRegion);
+    }
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetNISTRegion()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::NISTRegion,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setNISTSector(const std::string& nistSector)
+  {
+    bool result = false;
+    if (useNISTFuelEscalationRates()){
+      result = setString(OS_LifeCycleCost_ParametersFields::NISTSector,nistSector);
+    }
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetNISTSector()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::NISTSector,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setElectricityInflation(double electricityInflation)
+  {
+    bool result = false;
+    if (!useNISTFuelEscalationRates()){
+      result = setDouble(OS_LifeCycleCost_ParametersFields::ElectricityInflation,electricityInflation);
+    }
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetElectricityInflation()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::ElectricityInflation,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setNaturalGasInflation(double naturalGasInflation)
+  {
+    bool result = false;
+    if (!useNISTFuelEscalationRates()){
+      result = setDouble(OS_LifeCycleCost_ParametersFields::NaturalGasInflation,naturalGasInflation);
+    }
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetNaturalGasInflation()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::NaturalGasInflation,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setSteamInflation(double steamInflation)
+  {
+    bool result = false;
+    if (!useNISTFuelEscalationRates()){
+      result = setDouble(OS_LifeCycleCost_ParametersFields::SteamInflation,steamInflation);
+    }
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetSteamInflation()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::SteamInflation,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setGasolineInflation(double gasolineInflation)
+  {
+    bool result = false;
+    if (!useNISTFuelEscalationRates()){
+      result = setDouble(OS_LifeCycleCost_ParametersFields::GasolineInflation,gasolineInflation);
+    }
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetGasolineInflation()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::GasolineInflation,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setDieselInflation(double dieselInflation)
+  {
+    bool result = false;
+    if (!useNISTFuelEscalationRates()){
+      result = setDouble(OS_LifeCycleCost_ParametersFields::DieselInflation,dieselInflation);
+    }
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetDieselInflation()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::DieselInflation,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setCoalInflation(double coalInflation)
+  {
+    bool result = false;
+    if (!useNISTFuelEscalationRates()){
+      result = setDouble(OS_LifeCycleCost_ParametersFields::CoalInflation,coalInflation);
+    }
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetCoalInflation()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::CoalInflation,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setFuelOil1Inflation(double fuelOil1Inflation)
+  {
+    bool result = false;
+    if (!useNISTFuelEscalationRates()){
+      result = setDouble(OS_LifeCycleCost_ParametersFields::FuelOil1Inflation,fuelOil1Inflation);
+    }
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetFuelOil1Inflation()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::FuelOil1Inflation,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setFuelOil2Inflation(double fuelOil2Inflation)
+  {
+    bool result = false;
+    if (!useNISTFuelEscalationRates()){
+      result = setDouble(OS_LifeCycleCost_ParametersFields::FuelOil2Inflation,fuelOil2Inflation);
+    }
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetFuelOil2Inflation()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::FuelOil2Inflation,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setPropaneInflation(double propaneInflation)
+  {
+    bool result = false;
+    if (!useNISTFuelEscalationRates()){
+      result = setDouble(OS_LifeCycleCost_ParametersFields::PropaneInflation,propaneInflation);
+    }
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetPropaneInflation()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::PropaneInflation,"");
+    BOOST_ASSERT(test);
+  }
+
+  bool LifeCycleCostParameters_Impl::setWaterInflation(double waterInflation)
+  {
+    bool result = false;
+    if (!useNISTFuelEscalationRates()){
+      result = setDouble(OS_LifeCycleCost_ParametersFields::WaterInflation,waterInflation);
+    }
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetWaterInflation()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::WaterInflation,"");
+    BOOST_ASSERT(test);
+  }
+
+} // detail
+
+/// constructor
+LifeCycleCostParameters::LifeCycleCostParameters(const Model& model)
+  : ParentObject(LifeCycleCostParameters::iddObjectType(),model)
+{
+  BOOST_ASSERT(getImpl<detail::LifeCycleCostParameters_Impl>());
+}
+
+// constructor
+LifeCycleCostParameters::LifeCycleCostParameters(boost::shared_ptr<detail::LifeCycleCostParameters_Impl> impl)
+  : ParentObject(impl)
+{}
+
+int LifeCycleCostParameters::nistYear()
+{
+  return 2011;
+}
+
+double LifeCycleCostParameters::fempRealDiscountRate()
+{
+  return 0.03;
+}
+
+double LifeCycleCostParameters::fempNominalDiscountRate()
+{
+  return 0.035;
+}
+
+double LifeCycleCostParameters::fempInflation()
+{
+  return 0.005;
+}
+
+std::string LifeCycleCostParameters::analysisType() const{
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->analysisType();
+}
+
+bool LifeCycleCostParameters::isAnalysisTypeDefaulted() const{
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->isAnalysisTypeDefaulted();
+}
+
+bool LifeCycleCostParameters::isFEMPAnalysis() const{
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->isFEMPAnalysis();
+}
+
+std::string LifeCycleCostParameters::discountingConvention() const{
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->discountingConvention();
+}
+
+bool LifeCycleCostParameters::isDiscountingConventionDefaulted() const{
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->isDiscountingConventionDefaulted();
+}
+
+std::string LifeCycleCostParameters::inflationApproach() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->inflationApproach();
+}
+
+bool LifeCycleCostParameters::isInflationApproachDefaulted() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->isInflationApproachDefaulted();
+}
+
+bool LifeCycleCostParameters::isConstantDollarAnalysis() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->isConstantDollarAnalysis();
+}
+
+boost::optional<double> LifeCycleCostParameters::realDiscountRate() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->realDiscountRate();
+}
+
+boost::optional<double> LifeCycleCostParameters::nominalDiscountRate() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->nominalDiscountRate();
+}
+
+boost::optional<double> LifeCycleCostParameters::inflation() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->inflation();
+}
+  
+MonthOfYear LifeCycleCostParameters::baseDateMonth() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->baseDateMonth();
+}
+
+bool LifeCycleCostParameters::isBaseDateMonthDefaulted() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->isBaseDateMonthDefaulted();
+}
+
+int LifeCycleCostParameters::baseDateYear() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->baseDateYear();
+}
+
+bool LifeCycleCostParameters::isBaseDateYearDefaulted() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->isBaseDateYearDefaulted();
+}
+
+MonthOfYear LifeCycleCostParameters::serviceDateMonth() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->serviceDateMonth();
+}
+
+bool LifeCycleCostParameters::isServiceDateMonthDefaulted() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->isServiceDateMonthDefaulted();
+}
+
+int LifeCycleCostParameters::serviceDateYear() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->serviceDateYear();
+}
+
+bool LifeCycleCostParameters::isServiceDateYearDefaulted() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->isServiceDateYearDefaulted();
+}
+
+int LifeCycleCostParameters::lengthOfStudyPeriodInYears() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->lengthOfStudyPeriodInYears();
+}
+
+bool LifeCycleCostParameters::isLengthOfStudyPeriodInYearsDefaulted() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->isLengthOfStudyPeriodInYearsDefaulted();
+}
+  
+boost::optional<double> LifeCycleCostParameters::taxRate() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->taxRate();
+}
+
+std::string LifeCycleCostParameters::depreciationMethod() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->depreciationMethod();
+}
+
+bool LifeCycleCostParameters::isDepreciationMethodDefaulted() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->isDepreciationMethodDefaulted();
+}
+
+bool LifeCycleCostParameters::useNISTFuelEscalationRates() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->useNISTFuelEscalationRates();
+}
+
+bool LifeCycleCostParameters::isUseNISTFuelEscalationRatesDefaulted() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->isUseNISTFuelEscalationRatesDefaulted();
+}
+
+boost::optional<std::string> LifeCycleCostParameters::nistRegion() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->nistRegion();
+}
+
+bool LifeCycleCostParameters::isNISTRegionDefaulted() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->isNISTRegionDefaulted();
+}
+
+boost::optional<std::string> LifeCycleCostParameters::nistSector() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->nistSector();
+}
+
+bool LifeCycleCostParameters::isNISTSectorDefaulted() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->isNISTSectorDefaulted();
+}
+
+boost::optional<double> LifeCycleCostParameters::electricityInflation() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->electricityInflation();
+}
+
+boost::optional<double> LifeCycleCostParameters::naturalGasInflation() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->naturalGasInflation();
+}
+
+boost::optional<double> LifeCycleCostParameters::steamInflation() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->steamInflation();
+}
+
+boost::optional<double> LifeCycleCostParameters::gasolineInflation() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->gasolineInflation();
+}
+
+boost::optional<double> LifeCycleCostParameters::dieselInflation() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->dieselInflation();
+}
+
+boost::optional<double> LifeCycleCostParameters::coalInflation() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->coalInflation();
+}
+
+boost::optional<double> LifeCycleCostParameters::fuelOil1Inflation() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->fuelOil1Inflation();
+}
+
+boost::optional<double> LifeCycleCostParameters::fuelOil2Inflation() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->fuelOil2Inflation();
+}
+
+boost::optional<double> LifeCycleCostParameters::propaneInflation() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->propaneInflation();
+}
+
+boost::optional<double> LifeCycleCostParameters::waterInflation() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->waterInflation();
+}
+
+bool LifeCycleCostParameters::setAnalysisType(const std::string& analysisType){
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setAnalysisType(analysisType);
+}
+
+void LifeCycleCostParameters::resetAnalysisType(){
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetAnalysisType();
+}
+
+bool LifeCycleCostParameters::setDiscountingConvention(const std::string& discountingConvention){
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setDiscountingConvention(discountingConvention);
+}
+
+void LifeCycleCostParameters::resetDiscountingConvention(){
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetDiscountingConvention();
+}
+  
+bool LifeCycleCostParameters::setInflationApproach(const std::string& inflationApproach) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setInflationApproach(inflationApproach);
+}
+
+void LifeCycleCostParameters::resetInflationApproach() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetInflationApproach();
+}
+
+bool LifeCycleCostParameters::setRealDiscountRate(double realDiscountRate) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setRealDiscountRate(realDiscountRate);
+}
+
+bool LifeCycleCostParameters::setNominalDiscountRate(double nominalDiscountRate) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setNominalDiscountRate(nominalDiscountRate);
+}
+
+bool LifeCycleCostParameters::setInflation(double inflation) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setInflation(inflation);
+}
+  
+bool LifeCycleCostParameters::setBaseDateMonth(const MonthOfYear& baseDateMonth) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setBaseDateMonth(baseDateMonth);
+}
+
+void LifeCycleCostParameters::resetBaseDateMonth() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetBaseDateMonth();
+}
+
+bool LifeCycleCostParameters::setBaseDateYear(int baseDateYear) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setBaseDateYear(baseDateYear);
+}
+
+void LifeCycleCostParameters::resetBaseDateYear() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetBaseDateYear();
+}
+
+bool LifeCycleCostParameters::setServiceDateMonth(const MonthOfYear& serviceDateMonth) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setServiceDateMonth(serviceDateMonth);
+}
+
+void LifeCycleCostParameters::resetServiceDateMonth() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetServiceDateMonth();
+}
+
+bool LifeCycleCostParameters::setServiceDateYear(int serviceDateYear) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setServiceDateYear(serviceDateYear);
+}
+
+void LifeCycleCostParameters::resetServiceDateYear() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetServiceDateYear();
+}
+  
+bool LifeCycleCostParameters::setLengthOfStudyPeriodInYears(int lengthOfStudyPeriodInYears) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setLengthOfStudyPeriodInYears(lengthOfStudyPeriodInYears);
+}
+
+void LifeCycleCostParameters::resetLengthOfStudyPeriodInYears() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetLengthOfStudyPeriodInYears();
+}
+
+bool LifeCycleCostParameters::setTaxRate(double taxRate) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setTaxRate(taxRate);
+}
+
+void LifeCycleCostParameters::resetTaxRate() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetTaxRate();
+}
+
+bool LifeCycleCostParameters::setDepreciationMethod(const std::string& depreciationMethod) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setDepreciationMethod(depreciationMethod);
+}
+
+void LifeCycleCostParameters::resetDepreciationMethod() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetDepreciationMethod();
+}
+
+bool LifeCycleCostParameters::setUseNISTFuelEscalationRates(bool useNISTFuelEscalationRates) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setUseNISTFuelEscalationRates(useNISTFuelEscalationRates);
+}
+
+void LifeCycleCostParameters::resetUseNISTFuelEscalationRates() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetUseNISTFuelEscalationRates();
+} 
+
+bool LifeCycleCostParameters::setNISTRegion(const std::string& nistRegion) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setNISTRegion(nistRegion);
+}
+
+void LifeCycleCostParameters::resetNISTRegion() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetNISTRegion();
+} 
+
+bool LifeCycleCostParameters::setNISTSector(const std::string& nistSector) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setNISTSector(nistSector);
+}
+
+void LifeCycleCostParameters::resetNISTSector() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetNISTSector();
+} 
+
+bool LifeCycleCostParameters::setElectricityInflation(double electricityInflation) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setElectricityInflation(electricityInflation);
+}
+
+void LifeCycleCostParameters::resetElectricityInflation() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetElectricityInflation();
+} 
+
+bool LifeCycleCostParameters::setNaturalGasInflation(double naturalGasInflation) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setNaturalGasInflation(naturalGasInflation);
+}
+
+void LifeCycleCostParameters::resetNaturalGasInflation() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetNaturalGasInflation();
+} 
+
+bool LifeCycleCostParameters::setSteamInflation(double steamInflation) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setSteamInflation(steamInflation);
+}
+
+void LifeCycleCostParameters::resetSteamInflation() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetSteamInflation();
+} 
+
+bool LifeCycleCostParameters::setGasolineInflation(double gasolineInflation) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setGasolineInflation(gasolineInflation);
+}
+
+void LifeCycleCostParameters::resetGasolineInflation() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetGasolineInflation();
+} 
+
+bool LifeCycleCostParameters::setDieselInflation(double dieselInflation) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setDieselInflation(dieselInflation);
+}
+
+void LifeCycleCostParameters::resetDieselInflation() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetDieselInflation();
+} 
+
+bool LifeCycleCostParameters::setCoalInflation(double coalInflation) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setCoalInflation(coalInflation);
+}
+
+void LifeCycleCostParameters::resetCoalInflation() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetCoalInflation();
+} 
+
+bool LifeCycleCostParameters::setFuelOil1Inflation(double fuelOil1Inflation) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setFuelOil1Inflation(fuelOil1Inflation);
+}
+
+void LifeCycleCostParameters::resetFuelOil1Inflation() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetFuelOil1Inflation();
+} 
+
+bool LifeCycleCostParameters::setFuelOil2Inflation(double fuelOil2Inflation) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setFuelOil2Inflation(fuelOil2Inflation);
+}
+
+void LifeCycleCostParameters::resetFuelOil2Inflation() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetFuelOil2Inflation();
+} 
+
+bool LifeCycleCostParameters::setPropaneInflation(double propaneInflation) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setPropaneInflation(propaneInflation);
+}
+
+void LifeCycleCostParameters::resetPropaneInflation() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetPropaneInflation();
+} 
+
+bool LifeCycleCostParameters::setWaterInflation(double waterInflation) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setWaterInflation(waterInflation);
+}
+
+void LifeCycleCostParameters::resetWaterInflation() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetWaterInflation();
+} 
+
+std::vector<std::string> LifeCycleCostParameters::validAnalysisTypeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_LifeCycleCost_ParametersFields::AnalysisType);
+}
+
+std::vector<std::string> LifeCycleCostParameters::validDiscountingConventionValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_LifeCycleCost_ParametersFields::DiscountingConvention);
+}
+
+std::vector<std::string> LifeCycleCostParameters::validInflationApproachValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_LifeCycleCost_ParametersFields::InflationApproach);
+}
+
+std::vector<std::string> LifeCycleCostParameters::validDepreciationMethodValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_LifeCycleCost_ParametersFields::DepreciationMethod);
+}
+
+IddObjectType LifeCycleCostParameters::iddObjectType()
+{
+  IddObjectType result(IddObjectType::OS_LifeCycleCost_Parameters);
+  return result;
+}
+
+} // model
+} // openstudio

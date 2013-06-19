@@ -1,0 +1,187 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  All rights reserved.
+ *  
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *  
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#ifndef OPENSTUDIO_OSLISTCONTROLLER_H
+#define OPENSTUDIO_OSLISTCONTROLLER_H
+
+#include <QObject>
+#include <QSharedPointer>
+#include <QPointer>
+#include <vector>
+
+namespace openstudio {
+
+class OSListItem;
+class OSItemSelectionController;
+
+/** The purpose of OSListController is to provide an ordered list of items and signal when items have been added and removed.
+ *  The OSListController class can also manage item selection, however this capability requires that OSListItem objects are 
+ *  constructed with a pointer to the OSListController they are associated with -or- the item's controller has been set after creation.
+ */
+class OSListController : public QObject
+{
+  Q_OBJECT
+
+  public:
+
+  OSListController();
+
+  virtual ~OSListController();
+
+  virtual QSharedPointer<OSListItem> itemAt(int i) = 0;
+
+  virtual int count() = 0;
+
+  // The OSListController is initialized with a default OSItemSelectionController class.  
+  // If several lists are intended to share selections, for example if only one selection is allowed
+  // among several lists, use setSelectionController to share one selection controller among many list constrollers.
+  QSharedPointer<OSItemSelectionController> selectionController() const;
+
+  void setSelectionController(QSharedPointer<OSItemSelectionController> controller);
+
+  signals:
+
+  // Emit this signal when an item has been added to the underlying model or data structure.
+  void itemInserted(int index); 
+
+  // Emit this signal when an item has been removed from the underlying model or data structure.
+  void itemRemoved(int index);
+
+  // If the model or data structure beneath a single item has changed, 
+  // emit this signal to update the view attached to the item at this index.
+  void itemChanged(int index);
+
+  // If the underlying model or data structure has been invalidated,
+  // emit this signal to trigger a complete update of the attached views.
+  void modelReset();
+
+  private:
+
+  friend class OSListItem;
+  friend class OSItemSelectionController;
+
+  // OSListItem classes use these methods to add and remove themselves from the list controller's internal vector, m_items.
+  // These methods are used when a new item is constructed with a list controller argument, or when OSItem::setController is called.
+  // The order of items in m_items is inconsequential.  Derived classes should not need to interact with these methods in any way.
+  // The internal list m_items and the associated accessor methods are used to support internal logic related to item selection.
+  // There is possibly a better choice for internal storage then std::vector.
+  void registerItem(QPointer<OSListItem> item);
+
+  void unregisterItem(QPointer<OSListItem> item);
+
+  QSharedPointer<OSItemSelectionController> m_selectionController;
+
+  std::vector<QPointer<OSListItem> > m_registeredItems;
+};
+
+/** The purpose of OSListItem is to encapsulate data and if necessary notify when the data changes.
+ * The data encapsulated by OSListItem will often come from a separate domain model rather than from directly within the OSListItem.
+ * OSListItem will commonly be subclassed and it is considered part of the controller hierarchy.
+ */
+class OSListItem : public QObject
+{
+  Q_OBJECT
+
+  public:
+
+  OSListItem(OSListController * listController = 0);
+
+  virtual ~OSListItem();
+
+  void setController(OSListController * controller);
+  
+  OSListController * controller() const { return m_listController; }
+
+  bool isSelected() const;
+
+  public slots:
+
+  virtual void setSelected(bool isSelected);
+
+  void toggleSelected();
+
+  signals:
+
+  void selectedChanged(bool isSelected);
+
+  protected:
+
+  QPointer<OSListController> m_listController;
+};
+
+// The purpose of OSItemSelectionController is to manage item selections.  You shouldn't often need to subclass.
+// OSListController classes get initialized with one of these.
+class OSItemSelectionController : public QObject
+{
+  Q_OBJECT
+
+  public:
+
+  OSItemSelectionController();
+
+  virtual ~OSItemSelectionController() {}
+
+  void setAllowMultipleSelections(bool multipleSelections);
+
+  bool allowMultipleSelections() const;
+
+  std::vector<QPointer<OSListItem> > selectedItems() const;
+
+  public slots:
+
+  void unselectAllItems();
+
+  void selectAllItems();
+
+  signals:
+
+  void selectionChanged(std::vector<QPointer<OSListItem> > selectedItems);
+
+  private:
+
+  friend class OSListItem;
+  friend class OSListController;
+
+  // Accessor methods for m_listControllers. This class keeps a record of the list controllers it is associated with.
+  void registerListController(OSListController * listController);
+
+  void unregisterListController(OSListController * listController);
+
+  // Accessor methods for m_selectedItems.  These are used by OSListItem to select and unselect items.
+  // These methods will assert if item is NULL.
+  //
+  // This method is unintelligent so it will add items multiple times.  Thus avoiding the need to search.  Use carefully.
+  void addSelectedItem(OSListItem * item);
+
+  // This method will do nothing if the item is not selected.
+  void removeSelectedItem(OSListItem * item);
+
+  std::vector<QPointer<OSListItem> > m_selectedItems;
+
+  // The list controllers that this selection controller is associated with
+  // This member supports select all.
+  std::vector<QPointer<OSListController> > m_listControllers;
+
+  bool m_allowMultipleSelections;
+};
+
+} // openstudio
+
+#endif // OPENSTUDIO_OSLISTCONTROLLER_H
+

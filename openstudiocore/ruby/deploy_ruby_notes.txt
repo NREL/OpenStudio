@@ -1,0 +1,20 @@
+ksb: notes on lessons learned about deploying qt plugins especially for ruby interpreter.
+
+Plugins that are not in system QtDir/plugins are generally found relative to the QCoreApplication::applicationDirPath().
+
+In order to use QCoreApplication::applicationDirPath you must have an instance of QCoreApplication.
+
+QCoreApplication::applicationDirPath() points to the ruby executable.  Since we don't want to install plugins in the systems's 
+ruby directory applicationDirPath is not useful to us.
+
+QCoreApplication has addLibraryPath which we can use to setup additional places to look for plugins.  Combining this with the 
+PathHelpers in OpenStudio provides a workable solution to locating plugins with the ruby environment.
+
+Mac OS X has extra hoops because the plugins have qt dependences, thus the plugins need to be fixed up.
+
+Fixed up libraries on Mac OS X cannot use @executable_path in the ruby environment because this again points to the ruby interpreter.
+
+Mac OS X can use @loader_path to fixup the plugins for use in the ruby environment.
+
+Much pain could probably be avoided by making a custom build of qt with -qt-sql-sqlite.
+

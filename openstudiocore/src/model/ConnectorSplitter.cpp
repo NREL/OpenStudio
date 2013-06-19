@@ -1,0 +1,161 @@
+/**********************************************************************
+*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  All rights reserved.
+*
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+*
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*  Lesser General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+**********************************************************************/
+
+#include <model/ConnectorSplitter.hpp>
+#include <model/ConnectorSplitter_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/AirTerminalSingleDuctUncontrolled.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
+#include <utilities/idd/OS_Connector_Splitter_FieldEnums.hxx>
+#include <utilities/core/Compare.hpp>
+#include <utilities/core/Assert.hpp>
+#include <boost/foreach.hpp>
+
+namespace openstudio {
+
+namespace model {
+
+namespace detail{
+
+  ConnectorSplitter_Impl::ConnectorSplitter_Impl(const IdfObject& idfObject,
+                                                 Model_Impl* model,
+                                                 bool keepHandle)
+                                                   : Splitter_Impl(idfObject,model,keepHandle)
+  {
+    BOOST_ASSERT(idfObject.iddObject().type() == ConnectorSplitter::iddObjectType());
+  }
+
+  ConnectorSplitter_Impl::ConnectorSplitter_Impl(
+      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+        : Splitter_Impl(other,model,keepHandle)
+  {
+    BOOST_ASSERT(other.iddObject().type() == ConnectorSplitter::iddObjectType());
+  }
+
+  ConnectorSplitter_Impl::ConnectorSplitter_Impl(
+      const ConnectorSplitter_Impl& other, Model_Impl* model, bool keepHandle)
+        : Splitter_Impl(other,model,keepHandle)
+  {}
+
+  ConnectorSplitter_Impl::~ConnectorSplitter_Impl()
+  {
+  }
+
+  const std::vector<std::string> & ConnectorSplitter_Impl::outputVariableNames() const
+  {
+    static std::vector<std::string> result;
+    if (result.empty()){
+    }
+    return result;
+  }
+
+  IddObjectType ConnectorSplitter_Impl::iddObjectType() const {
+    return ConnectorSplitter::iddObjectType();
+  }
+
+  std::vector<openstudio::IdfObject> ConnectorSplitter_Impl::remove()
+  {
+    OptionalConnectorSplitter self = model().getModelObject<ConnectorSplitter>(handle());
+    model().disconnect(*self,inletPort());
+    for( int i = 0; i < int(nextBranchIndex()) - 1; i++ )
+    {
+      model().disconnect(*self,outletPort(i));
+    }
+    return ModelObject_Impl::remove();
+  }
+
+  unsigned ConnectorSplitter_Impl::inletPort()
+  {
+    return OS_Connector_SplitterFields::InletBranchName;
+  }
+
+  unsigned ConnectorSplitter_Impl::outletPort(unsigned branchIndex)
+  {
+    unsigned result;
+    result = numNonextensibleFields();
+    result = result + branchIndex;
+    return result;
+  }
+
+  unsigned ConnectorSplitter_Impl::nextOutletPort()
+  {
+    return outletPort( this->nextBranchIndex() );
+  }
+
+  bool ConnectorSplitter_Impl::addToNode(Node & node)
+  {
+    return false;
+  }
+
+  ModelObject ConnectorSplitter_Impl::clone(Model model) const
+  {
+    return HVACComponent_Impl::clone( model );
+  }
+
+} // detail
+
+ConnectorSplitter::ConnectorSplitter(const Model& model)
+  : Splitter(ConnectorSplitter::iddObjectType(),model)
+{
+  BOOST_ASSERT(getImpl<detail::ConnectorSplitter_Impl>());
+}
+
+ConnectorSplitter::ConnectorSplitter(boost::shared_ptr<detail::ConnectorSplitter_Impl> p)
+  : Splitter(p)
+{}
+
+std::vector<openstudio::IdfObject> ConnectorSplitter::remove()
+{
+  return getImpl<detail::ConnectorSplitter_Impl>()->remove();
+}
+
+unsigned ConnectorSplitter::inletPort()
+{
+  return getImpl<detail::ConnectorSplitter_Impl>()->inletPort();
+}
+
+unsigned ConnectorSplitter::outletPort(unsigned branchIndex)
+{
+  return getImpl<detail::ConnectorSplitter_Impl>()->outletPort(branchIndex);
+}
+
+unsigned ConnectorSplitter::nextOutletPort()
+{
+  return getImpl<detail::ConnectorSplitter_Impl>()->nextOutletPort();
+}
+
+bool ConnectorSplitter::addToNode(Node & node)
+{
+  return getImpl<detail::ConnectorSplitter_Impl>()->addToNode( node );
+}
+
+ModelObject ConnectorSplitter::clone(Model model) const
+{
+  return getImpl<detail::ConnectorSplitter_Impl>()->clone( model );
+}
+
+IddObjectType ConnectorSplitter::iddObjectType() {
+  IddObjectType result(IddObjectType::OS_Connector_Splitter);
+  return result;
+}
+
+} // model
+} // openstudio
+

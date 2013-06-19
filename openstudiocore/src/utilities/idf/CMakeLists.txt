@@ -1,0 +1,75 @@
+SET( idf_src
+  idf/page.hpp
+  idf/Handle.hpp
+  idf/Handle.cpp
+  idf/URLSearchPath.hpp
+  idf/IdfExtensibleGroup.hpp
+  idf/IdfExtensibleGroup.cpp
+  idf/IdfFile.hpp
+  idf/IdfFile.cpp
+  idf/IdfObject.hpp
+  idf/IdfObject.cpp
+  idf/IdfObject_Impl.hpp
+  idf/IdfObjectDiff.hpp
+  idf/IdfObjectDiff.cpp
+  idf/IdfObjectDiff_Impl.hpp
+  idf/IdfObjectWatcher.hpp
+  idf/IdfObjectWatcher.cpp
+  idf/IdfRegex.hpp
+  idf/IdfRegex.cpp
+  idf/ImfFile.hpp
+  idf/ImfFile.cpp
+  idf/ObjectOrderBase.hpp
+  idf/ObjectOrderBase.cpp
+  idf/ObjectPointer.hpp
+  idf/ValidityEnums.hpp
+  idf/ValidityReport.hpp
+  idf/ValidityReport.cpp
+  idf/DataError.hpp
+  idf/DataError.cpp
+  idf/Workspace.hpp
+  idf/Workspace.cpp
+  idf/Workspace_Impl.hpp
+  idf/WorkspaceExtensibleGroup.hpp
+  idf/WorkspaceExtensibleGroup.cpp
+  idf/WorkspaceObject.hpp
+  idf/WorkspaceObject.cpp
+  idf/WorkspaceObject_Impl.hpp
+  idf/WorkspaceObjectDiff.hpp
+  idf/WorkspaceObjectDiff.cpp
+  idf/WorkspaceObjectDiff_Impl.hpp
+  idf/WorkspaceObjectWatcher.hpp
+  idf/WorkspaceObjectWatcher.cpp
+  idf/WorkspaceObjectOrder.hpp
+  idf/WorkspaceObjectOrder.cpp
+  idf/WorkspaceWatcher.hpp
+  idf/WorkspaceWatcher.cpp
+)
+
+SET( idf_test_src
+  idf/Test/IdfFixture.hpp
+  idf/Test/IdfFixture.cpp
+  idf/Test/IdfFile_GTest.cpp
+  idf/Test/IdfObject_GTest.cpp
+  idf/Test/IdfObjectWatcher_GTest.cpp
+  idf/Test/ExtensibleGroup_GTest.cpp
+  idf/Test/IdfRegex_GTest.cpp
+  idf/Test/ImfFile_GTest.cpp
+  idf/Test/ObjectOrderBase_GTest.cpp
+  idf/Test/Workspace_GTest.cpp
+  idf/Test/WorkspaceObject_GTest.cpp
+  idf/Test/WorkspaceObjectWatcher_GTest.cpp
+  idf/Test/WorkspaceObjectOrder_GTest.cpp
+  idf/Test/WorkspaceWatcher_GTest.cpp
+  idf/Test/Validity_GTest.cpp
+)
+
+SET( idf_test_moc
+  idf/Test/IdfTestQObjects.hpp
+)
+
+qt4_wrap_cpp( idf_test_moc_src ${idf_test_moc} )
+
+SET( idf_swig_src
+  idf/Idf.i
+)

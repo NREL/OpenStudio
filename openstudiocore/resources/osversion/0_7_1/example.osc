@@ -1,0 +1,49 @@
+
+
+OS:Construction,
+  Exterior Window,          !- Name
+  ,                         !- Surface Rendering Name
+  Clear 3mm,                !- Outside Layer
+  Air 13mm,                 !- Layer 2
+  Clear 3mm;                !- Layer 3
+
+OS:WindowMaterial:Glazing,
+  Clear 3mm,                !- Name
+  SpectralAverage,          !- Optical Data Type
+  ,                         !- Window Glass Spectral Data Set Name
+  0.003,                    !- Thickness {m}
+  0.837,                    !- Solar Transmittance at Normal Incidence
+  0.075,                    !- Front Side Solar Reflectance at Normal Incidence
+  0.075,                    !- Back Side Solar Reflectance at Normal Incidence
+  0.898,                    !- Visible Transmittance at Normal Incidence
+  0.081,                    !- Front Side Visible Reflectance at Normal Incidence
+  0.081,                    !- Back Side Visible Reflectance at Normal Incidence
+  0,                        !- Infrared Transmittance at Normal Incidence
+  0.84,                     !- Front Side Infrared Hemispherical Emissivity
+  0.84,                     !- Back Side Infrared Hemispherical Emissivity
+  0.9;                      !- Conductivity {W/m-K}
+
+OS:WindowMaterial:Gas,
+  Air 13mm,                 !- Name
+  Air,                      !- Gas Type
+  0.0127;                   !- Thickness {m}
+
+OS:ComponentData:Tags,
+  OS:ComponentData 1;       ! ComponentData Name
+
+OS:ComponentData:Attributes,
+  OS:ComponentData 1;       ! ComponentData Name
+
+OS:ComponentData,
+  OS:ComponentData 1,       ! Name
+  {afe650e9-cb91-4423-96d3-24a7e381d689},  ! UUID
+  {9363664e-b72f-43c2-8428-97e97cbeb8bc},  ! Version UUID
+  ,                         ! Description
+  ,                         ! Fidelity Level
+  OS_Construction,          ! Type of Object 1
+  Exterior Window,          ! Name of Object 1
+  OS_WindowMaterial_Glazing,  ! Type of Object 2
+  Clear 3mm,                ! Name of Object 2
+  OS_WindowMaterial_Gas,    ! Type of Object 3
+  Air 13mm;                 ! Name of Object 3
+

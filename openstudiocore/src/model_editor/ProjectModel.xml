@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE database SYSTEM "litesql.dtd">
+<database name="ProjectModelDatabase" namespace="ProjectModel">
+  <object name="Project">
+    <field name="name" type="string"/>
+    <field name="projecttype" type="string"/>
+  </object>
+  <object name="Analysis">
+    <field name="name" type="string"/>
+    <field name="analysistype" type="string"/>
+  </object>
+  <object name="Model">
+    <field name="name" type="string"/>
+    <field name="path" type="string"/>
+    <field name="guid" type="string"/>
+  </object>
+  <object name="Result">
+    <field name="value" type="integer"/>
+  </object>
+  <object name="ResultQuery">
+    <field name="query" type="string"/>
+  </object>
+  <object name="RequestedResult">
+    <field name="result" type="string"/>
+  </object>
+  <relation>
+    <relate object="Analysis" handle="project"/>
+    <relate object="Project" handle="analyses" limit="one"/>
+  </relation>
+  <relation>
+    <relate object="Model" handle="analyses" limit="many"/>
+    <relate object="Analysis" handle="models" limit="many"/>
+  </relation>
+  <relation>
+    <relate object="Result" handle="model"/>
+    <relate object="Model" handle="results" limit="one"/>
+  </relation>
+  <relation>
+    <relate object="ResultQuery" handle="result"/>
+    <relate object="Result" handle="resultqueries" limit="one"/>
+  </relation>
+  <relation>
+    <relate object="RequestedResult" handle="resultquery"/>
+    <relate object="ResultQuery" handle="requestedresults" limit="one"/>
+  </relation>
+</database>
+

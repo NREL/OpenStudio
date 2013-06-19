@@ -1,0 +1,111 @@
+Above Grade Story Count,integer,,T24/CBC/Nonres Compliance Manual: ÿThe total number of stories in the building that have the finished floor surface entirely above the plane of grade or 50% of its volume above grade.
+Air Infiltration Rate,decimal,,"T24: Infiltration is uncontrolled inward air leakage from outside a building or unconditioned space, including leakage through cracks and interstices, around windows and doors, and through any other exterior or demising partition or pipe or duct penetration. 
+Section 116 defines mandatory air infiltration rates for fenestration products"
+Assembly Framing Size,enumerated list,2x10;#15;#2x4;#12;#2x6;#13;#2x8;#14,"In Joint Appendix 4 many tables include Framing Size defines the size of the framing members ÿand is one of the follwing values: 
+2x4, 2x6, 2x8, 2x10, 2x12, 2x14."
+Assembly Framing Spacing,enumerated list,16InchesOC;#52;#24InchesOC;#53,"In Joint Appendix 4 many tables include Assembly Framing Spacing as an attribute with values such as 16 inch OC (on center), 24 inches OC, and 48 inches OC.."
+Assembly Masonry Type,enumerated list,ClayBrick;#323;#Concrete;#324;#ConcreteMasonryUnitLightWeight  ;#7;#ConcreteMasonryUnitMediumWeight  ;#8;#ConcreteMasonryUnitNormalWeight  ;#9,"In Joint Appendix 4 some tables include Masonry Type defined asÿ
+Hollow Masonry Units: lightweight concrete masonry units (CMU), medium weight CMU, normal weight CMU, and hollow clay masonry units. (defined by ASTM C-90)
+ÿ
+Solid Unit Masonry:ÿlight weight CMU, medium weight CMU, normal weight CMU,ÿclayÿbrick and concrete
+ÿ"
+Assembly SIPS Spacer Type,enumerated list,OSBSpline;#48;#WoodSpacers;#49,"In Joint Appendix 4 some tables include structurally insulated wall panels (SIPS) and defines whether the spacer is wood or oriented strand board. Values include OSB splines, wood spacers, (new types to be added) ÿThis is used in assigning thermal factors in the Joint Appendix 4 for performance compliance"
+Building Story Above Grade percentage,decimal,,"T24: Section 100 ? Scope (c) Floors and Habitable Stories:
+Only habitable floors that have at least 50 percent of their volume above grade as defined in the CBC shall be
+counted in determining how many habitable stories a building has
+ÿ
+BELOW-GRADE WALL is the portion of a wall, enclosing conditioned space that is below the grade line.
+ÿ
+TABLE 151-B COMPONENT PACKAGE C has a category of wall defined as Below-grade walls"
+Ceiling Construction Type,enumerated list,Metal Building Ceiling;#360;#Wood Framing and Other Ceiling;#361,"Title 24 Part 6 Tables 143A/B/Cÿuse the same construction types for Roof andÿCeiling
+ÿ
+JA 4 has several tables of Roof and Ceiling construciton assemblies. "
+Concrete Web Percentage,decimal,,"Joint Appendix 4 Table 4.3.7 ? Properties of Concrete Sandwich Panels: ÿassigned values are dependent on the percentage of wall that is solid concrete and ties together two concrete layers, which isÿthe Concrete Web Percentage. "
+Construction Assembly Name,enumerated list,Metal Framed Attic Roofs;#333;#Structurally Insulated Panels (SIPS) Roof/Ceilings;#332;#Wood Framed Attic Roofs;#330;#Wood Framed Rafter Roofs;#331;#Insulated Ceiling with Removable Panels;#337;#Insulated Metal Panel Roofs and Ceilings;#338;#Metal Framed Rafter Roofs;#334;#Metal Building Roofs;#336;#Span Deck and Concrete Roofs;#335,"The tables inÿJA 4 assign U-factor and other thermal characteristics based on a unique construction assembly which is named in the title ofÿthe table. 
+ÿ
+For example: The title of Table 4.4.5, Standard U-factors for Metal-Framed Floors without a Crawl Space, contains the Construction Assembly Name of Metal-Framed Floors without a Crawl Space."
+Construction Specification Method,enumerated list,Layers;#362;#UFactor;#363,The Standards only use the building compliance performance metrics assignment approach in the Joint Appendix 4 tables
+Display Perimeter,decimal,,"T24: DISPLAY PERIMETER is the length of an exterior wall in a building of CBC Occupancy Group B; F Div1, orÿM, ÿthat immediately abuts a public sidewalk, measured at the sidewalk level for each story that abuts a public sidewalk."
+Divider Minimal Spacing,decimal,,"T24: Section 116 Table 116-A Note 1a instructs that if Divider Minimal Spacing is less than 7/16 inch wide, 0.05 should be added to theÿfenestration U-Factor."
+Divider Through Panes,boolean,,T24: Section 116 table 116-A Note 1 adjusts fenestration product U-Factors if they have dividers through the double pane
+Door Type,enumerated list,Non-swinging;#298;#Swinging;#297,Title 24 Table 143-A/B and C assign U-Factor based on whether the door is swinging or non swinging. 
+DoorNumber,enumerated list,DoubleDoor;#307;#SingleDoor;#306,T24: Used in assigning air leakage rate in Section 116 (a)
+Emissivity,decimal,,"From Title 24 Section 101 Defintions
+EMITTANCE, THERMAL is the ratio of the radiant heat flux emitted by a sample to that emitted by a blackbody radiator at the same temperature.
+ÿ
+Emittance is assigned to roofing products in Table 143A
+ÿ
+This is actually emissivity that is being defined based on ASHRAE use of the term."
+Envelope Prescriptive Method,enumerated list,Envelope Component Approach;#286;#Envelope Overall Approach;#287,"T24: Section 143 
+(a) Envelope Component Approach.
+(b) Overall Envelope TDV Energy Approach."
+Exterior Wall Gross Area,decimal,,"GROSS EXTERIOR WALL AREA is the sum of the window area, door area, and exterior wall area."
+Fenestration Framing,enumerated list,Metal Framing Curtain Wall;#344;#Metal Framing Door;#345;#Metal Framing Other;#292;#NonMetal Framing;#293,Fenestration Framing in Tables 116A/B areÿdefined as metal or nonmetal and metal is furtherÿbroken into frames with thermal break and those with no thermal break.ÿÿ 
+Fenestration Framing Thermal Break,enumerated list,No Thermal Break;#340;#Thermal Break;#339,Section 116 Tables 116-A/B assign U Factor and SHGC depending on the fenestration frame type which may or may not have a thermal break
+Fenestration Operability,enumerated list,Fixed;#348;#Operable;#349,Fenestration Operability is evalutes in assigningÿdefault Solar Heat Gain Coeeficient andÿU Factor values in tables 116-A & B
+Floor Construction Type,enumerated list,Mass Heavy Floor;#357;#Mass Medium Floor;#356;#Metal Framing Floor;#358;#Wood Framing and Other Floor;#359,"Title 24ÿ Part 6 Table 143A assigns UFactor for floors based on the construction types defined as Mass and Other.ÿ NR ACM Table N2-1 has floor construction types of Mass heavy, mass medium and other.ÿ Joint Appendix 4 also has tables for metal framing and wood framingÿfloor construction types.ÿÿ"
+Floor to Ceiling Height,decimal,,"Floor to Ceiling Height measurement is used in several places in the Standards e.g. in Section Section 131 ? Indoor Lighting Controls That Shall Be Installed, Floor to Ceiling Height is used in calculating skylit daylight areas."
+Glazing Geometry,enumerated list,Glazing Block;#294;#GlazingPanel;#321;#Glazing Pane;#57,Section 116 Tables 116 - A/B use the glazing geometry to assign U Factor and SHGC values.
+Glazing Material,enumerated list,Glass Glazing;#289;#Plastic Glazing;#288,Tables 143-A/B assign U Factor depending on the Skylight Glazing Material which is either glass or plastic
+Glazing Tint ,enumerated list,Clear Glazing;#54;#Tinted Glazing;#55,Table 116-B assignment of SHGC is dependent on Glazing Tint
+Insulation Form,enumerated list,Batt;#82;#Foam;#86;#rigid board;#85,In Joint Appendix 4 some tables for roofs and walls assign different U Factors for cavity insulation depending on two forms of insulation: batt or ÿfoamed plastic or cellulose. ÿRigid board is the form used for continuous insulation.
+Insulation Placement,enumerated list,AtticCavity;#310;#ContinuousAboveDeck;#313;#ContinuousBelowDeck;#314;#FramingCavity;#311;#FurringCavity;#312;#InsideLayer;#316;#OutsideLayer;#317;#OverSuspendedCeiling;#315;#SlabFullyInsulated;#320;#SlabHorizontal;#318;#SlabVertical;#319,JA 4 tables specify RValues specific to the placement of the insulation in the construction assembly
+Insulation Type,enumerated list,Cellulose;#87;#Fiberglass;#58;#Mineral Wool ;#88;#Polystyrene/Polyisocyanurate ;#89;#Urea Formaldehyde;#305,ÿ
+Layer,text,,The Standards currently do not use a layer by layer approach to construction assemblies although JA 4 does describeÿunderlying layer calculations used in theÿconstruction assembly tables that assign values for U-Factor and other thermal measurements. 
+Masonry Grout,enumerated list,PartialGrout;#5;#PartialInsulatedGrout;#6;#SolidGrout;#4,"Masonry Grout describes how the grout is applied in hollow masonry walls. ÿValues include solid ( every cell is grouted), partial ( some cells are grouted) partial insulated ( cells not grouted are filled with ÿinsulation)."
+Material Name,text,,"JA 4 has tables for different types of construction assemblies and in each table there are attributes of materials used in the construction assembly that are evaluated to assign values such as U Factor.ÿ However,ÿthere are no lists of materials with material names and their thermal attributes."
+Material Type,enumerated list,Air Layers;#364;#Concrete;#324;#Exterior Finishes;#366;#Framing With Insulation;#367;#Interior Finishes;#368;#Insulation;#369;#Masonry;#370,Joint Appendix 4 tables describe construction assemblies that are combinations of materials.ÿ It does not use the layer approach.
+Panes Divider,enumerated list,Divider;#308;#NoDivider;#309,T24: Section 116 Table 166-A Note 1 gives adjustments for fenestration U-Factor based on divider characteristics
+Panes Per Lite,enumerated list,Double Pane;#295;#Single Pane;#56;#Triple Pane;#296,Section 116 Tables 116 - A/B use the number of panes per lite to assign U Factor and SHGC values
+Partition Construction,text,,"JA 4 contains tables, each one for a different construction assembly."
+Partition Name,text,,"NR ACM has references to project name and zone names but not to wall, roof or floor although fenestration and doors inherit their orientation and tilt from the containing partition, there is no mention of naming it."
+Partition Thermal Type,enumerated list,Adiabatic;#325;#Demising;#3;#Exterior;#2;#Interzone;#354;#Underground;#355,"The Standards define exterior, demising and adiabatic thermal types of Partitions"
+Partition Type,enumerated list,Ceiling;#350;#Floor;#351;#Roof;#352;#Wall;#353,"Title 24 glossary and JA II glossary definitions for Exterior Floor, Exterior Wall and Roof define them as a partition.ÿ "
+Relative Solar Heat Gain ,decimal,,"ÿ
+From Section 143 (a)5.C
+The relative solar heat gain of windows is:
+i. The solar heat gain coefficient of the windows; or
+ii. Relative solar heat gain as calculated by EQUATION 143-A, if an overhang extends beyond both sides of the window jamb a distance equal to the overhang projection."
+Roof Construction Type,enumerated list,Wood Framing And Other Roof;#347;#Metal Building Roof;#346,"Title 24 Part 6 Table 143A assigns thermal attributes to roofs depending on the roof type which has two values: metal building; wood framed and other.
+ÿ
+JA 4: The tables for roofs divide roofs into these subtypes:
+Wood Framed Attic Roof
+Wood Framed Rafter Roof
+Structurally Insulated Panels (SIPS) Roof/Ceiling
+Metal Framed Attic Roof
+Metal Framed Rafter Roof
+Span Deck or Concrete Roof
+Metal Building Roof
+Insulated Metal Panel Roofÿ "
+Roofing Product Type,enumerated list,Asphalt Shingles;#62;#Clay;#10;#Clay Roofing Tiles;#63,"In Title 24 EXCEPTION to Section 118(i), aged reflectanceÿ and emittance values are assigned based on whether the roofing product type is asphalt shingles or not."
+Roofing Product Weight,decimal,,In Title 24 Table 143-A/B/C Roofing product weight expressed as less thanÿpoundsÿper square foot ÿis used to assign prescriptive limits on roof reflectance and emittance
+Roughness,enumerated list,Medium Rough;#377;#Medium Smooth;#376;#Smooth;#375;#Very Rough;#379;#Very Smooth;#374,Not found.
+Skylight Curb Type,enumerated list,Curb;#290;#No Curb;#291,Tables 143 A/B assign U Factor dependent on whether the ÿskylight is mounted on a curb or directly on the roof. 
+Skylight Roof Ratio,decimal,,"Skylight-Roof-Ratio is mentioned in Section 143 (b) Overall Envelope TDV Energy Approach
+Also in Appendix NA5 ? Overall Envelope TDV Energy Approach (Envelope Tradeoff Procedure):
+Calculate the proposed skylight-roof-ratio (SRRpd) by dividing the proposed design skylight area by the gross exterior roof area."
+Solar Absorptance ,decimal,,"NR ACM uses solar absorptance and describes it as follows:
+Absorptance is the fraction of the incident solar radiation absorbed as heat on the construction assembly?s opaque exterior surface.
+ú Reflectance is the fraction of incident solar radiation that is reflected. Reflectance plus absorptance equal one."
+Solar Heat Gain Coefficient,decimal,,"SOLAR HEAT GAIN COEFFICIENT (SHGC) is the ratio of the solar heat gain entering the space through the fenestration area to the incident solar radiation. Solar heat gain includes directly transmitted solar heat and absorbed solar radiation, which is then reradiated, conducted, or convected into the space."
+Solar Reflectance,decimal,,"From Title 24 Section 101 Defintions 
+SOLAR REFLECTANCE is the ratio of the reflected solar flux to the incident solar flux.
+ÿ
+This is measured for roofing products and the three years aged reflectance value is assigned in Table 143A"
+Solar Reflectance Aged,decimal,,Assigned prescriptive value in table 143-A
+Steel Through Insulation,boolean,,"Joint Appendix 4 Table 4.3.7 evalutes Steel Through Insulation to assign UFactor, CFactor and Heat Capacity"
+Surface Boundary Condition,enumerated list,Adiabatic;#380;#Demising;#381;#Ground;#382;#Outdoor Environment;#383,There are requirements that vary depending onÿwhat type of conditioning is on either side of a wall or floor.ÿ
+Total Skylight Area,decimal,,"Total Skylight Area combines areas of smaller skylights into one large square skylight having an area weighted average U-factor, SHGC and visible light transmittance. ÿ
+ÿ
+T24: ÿSkylight Area is the rough opening for the skylight."
+Ventilation Rate per Floor Area,decimal,,New: Amount of outside air provided to a space during occupied hours divided by the floor area of that space. May be a minimum or design value.
+Visible Transmittance,decimal,,"The NR ACM only refers to VT in the section5, ÿReference Method Comparison Tests .ÿ Title 24 part 6 has only a definition for the term but never explicitly applies it.
+ÿ
+VISIBLE TRANSMITTANCE (VT) is the ratio (expressed as a decimal) of visible light that is transmitted through a
+glazing to the light that strikes the material as calculated in NFRC 200."
+Wall Construction Type,enumerated list,Mass Heavy Wall;#304;#Mass Light Wall;#302;#Mass Medium Wall;#303;#Metal Building Wall;#299;#Metal Framing Wall;#50;#Wood Framing and Other Wall;#51,Title 24ÿ Part 6 Table 143A assigns UFactor for walls based on the Wall Construction Type.
+Window Style,enumerated list,Garden Window;#342;#Glazed Door;#341;#Window Other;#343,Table 116-A Default Fenestration Product U-Factors requires differentiating betweenÿGreenhouse/Garden Window and other windows defined as fixed or operable.
+Window Wall Ratio,decimal,,"T24: Window Wall Ratio is the ratio of the window area to the gross exterior wall area.
+ÿ
+Prescriptive compliance requires that the Window Wall Ratio  is not greater than 40%.ÿ In Performance compliance the Window Wall Ratio of the proposed wall can be greater than 40% but the standard building will have the wall and fenestration adjusted to maintain the cap of 40% Window Wall Ratio .ÿ Window Wall Ratio  is used with the climate zone and orientation of the wall, to establish prescriptive RelativeSolarHeatGain for windows in the wall.ÿ
+References: Section 143 Table 143-A, 143-B 143-C"

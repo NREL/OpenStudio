@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>RunManagerStatus</class>
+ <widget class="QDialog" name="RunManagerStatus">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>650</width>
+    <height>272</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>RunManager Job Status</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+      <widget class="QToolBar" name="toolBar">
+       <property name="windowTitle">
+        <string>toolBar</string>
+       </property>
+       <attribute name="toolBarArea">
+        <enum>TopToolBarArea</enum>
+       </attribute>
+       <attribute name="toolBarBreak">
+        <bool>false</bool>
+       </attribute>
+      </widget>
+    </item>
+    <item>
+    <layout class="QVBoxLayout" name="mainLayout">
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="RunManager.qrc"/>
+ </resources>
+ <connections/>
+</ui>

@@ -1,0 +1,14 @@
+ ! The following Location and Design Day data are produced as possible from the indicated data source.
+ ! Wind Speeds follow the indicated design conditions rather than traditional values (6.7 m/s heating, 3.35 m/s cooling)
+ ! No special attempts at re-creating or determining missing data parts (e.g. Wind speed or direction)
+ ! are done.  Therefore, you should look at the data and fill in any incorrect values as you desire.
+  
+ Site:Location,
+  Climate Zone 14_CA_USA Design_Conditions,     !- Location Name
+      35.70,     !- Latitude {N+ S-}
+    -117.70,     !- Longitude {W- E+}
+      -8.00,     !- Time Zone Relative to GMT {GMT+/-}
+     699.00;     !- Elevation {m}
+
+
+ ! No Design Conditions found for this Location

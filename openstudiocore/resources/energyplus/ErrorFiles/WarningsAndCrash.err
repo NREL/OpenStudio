@@ -1,0 +1,32 @@
+Program Version,EnergyPlus 5.0.0.031, 6/1/2010 10:49 AM,IDD_Version 5.0.0.031
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning condition:
+   **   ~~~   ** Reordered Verts for ULC convention
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** DCV used in RTU6_ShoeStockRm but OA per person value blank.
+   **   ~~~   ** Check inputs.
+   ************* Beginning Zone Sizing Calculations
+   ** Warning ** Calculated design cooling load for zone=RTU3_FITTINGRMSE is zero.
+   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.
+   ** Warning ** Calculated design cooling load for zone=RTU4_FITTINGRMNW is zero.
+   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.
+   ** Warning ** Calculated design cooling load for zone=RTU4_FITTINGRMWEST is zero.
+   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.
+   ************* Beginning System Sizing Calculations
+   ************* Beginning Plant Sizing Calculations
+   ** Warning ** Check input. Calculated Pump Efficiency=22.48% which is less than 50%, for pump=SWHSYS1 PUMP
+   **   ~~~   ** Calculated Pump_Efficiency % =Total_Efficiency % [20.2] / Motor_Efficiency % [90.0]
+   **   ~~~   ** Total_Efficiency % =(Rated_Volume_Flow_Rate [3.2E-004] * Rated_Pump_Head [59781.8] / Rated_Power_Use [93.2]) * 100.
+   ** Warning ** Output:Meter:MeterFileOnly requested for "Electricity:Building" (Monthly), already on "Output:Meter". Will report to both eplusout.eso and eplusout.mtr.
+   ** Warning ** Output:Meter:MeterFileOnly requested for "Gas:Building" (Monthly), already on "Output:Meter". Will report to both eplusout.eso and eplusout.mtr.
+   ************* Testing Individual Branch Integrity
+   ************* All Branches passed integrity testing
+   ************* Testing Individual Supply Air Path Integrity
+   ************* All Supply Air Paths passed integrity testing
+   ************* Testing Individual Return Air Path Integrity
+   ************* All Return Air Paths passed integrity testing
+   ************* No node connection errors were found.
+   ************* Beginning Simulation
+   ** Warning ** In AirLoopHVAC RTU9_CAV there is unbalanced exhaust air flow.
+   **   ~~~   **  During Warmup, Environment=FORT_WORTH TX USA TMY2-03927 WMO#=722596, at Simulation time=01/01 11:00 - 11:15
+   **   ~~~   **   Unless there is balancing infiltration / ventilation air flow, this will result in
+   **   ~~~   **   load due to induced outdoor air being neglected in the simulation.

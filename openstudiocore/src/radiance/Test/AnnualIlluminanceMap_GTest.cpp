@@ -1,0 +1,73 @@
+/**********************************************************************
+*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  All rights reserved.
+*  
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+*  
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*  Lesser General Public License for more details.
+*  
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+**********************************************************************/
+
+#include <gtest/gtest.h>
+
+#include <radiance/AnnualIlluminanceMap.hpp>
+
+#include <resources.hxx>
+
+#include <boost/filesystem.hpp>
+#include <boost/foreach.hpp>
+
+using namespace std;
+using namespace boost;
+using namespace openstudio::radiance;
+using openstudio::toPath;
+
+///////////////////////////////////////////////////////////////////////////////
+// *** BEGIN FIXTURE ***
+///////////////////////////////////////////////////////////////////////////////
+
+class RadAnnualIlluminanceMapFixture : public ::testing::Test {
+protected:
+
+  // initiallize for each test
+  virtual void SetUp() {}
+
+  // tear down after for each test
+  virtual void TearDown() {}
+
+  // initiallize static members
+  static void SetUpTestCase()
+  {
+    openstudio::path path = resourcesPath() / toPath("radiance/Daylighting/annual_day.ill");
+    outFile = AnnualIlluminanceMap(path);
+  }
+
+  // tear down static members
+  static void TearDownTestCase() {}
+
+public:
+  // pointer to AnnualIlluminanceMap
+  static AnnualIlluminanceMap outFile;
+};
+
+// define static storage
+AnnualIlluminanceMap RadAnnualIlluminanceMapFixture::outFile;
+
+///////////////////////////////////////////////////////////////////////////////
+// *** BEGIN TESTS ***
+///////////////////////////////////////////////////////////////////////////////
+
+TEST_F(RadAnnualIlluminanceMapFixture, AnnualIlluminanceMap)
+{
+
+}
+

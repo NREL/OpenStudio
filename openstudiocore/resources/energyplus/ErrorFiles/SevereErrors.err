@@ -1,0 +1,36 @@
+Program Version,EnergyPlus, Windows, VERSION 5.0.0.027,IDD_Version 5.0.0.027
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-1527598.22490, range={>=0}, in LIGHTS=ZN_1_FLR_1_SEC_1_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-1527598.22490, range={>=0}, in LIGHTS=ZN_1_FLR_2_SEC_1_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-1527598.22490, range={>=0}, in LIGHTS=ZN_1_FLR_3_SEC_1_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-1162034.78490, range={>=0}, in LIGHTS=ZN_1_FLR_1_SEC_2_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-1162034.78490, range={>=0}, in LIGHTS=ZN_1_FLR_2_SEC_2_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-1162034.78490, range={>=0}, in LIGHTS=ZN_1_FLR_3_SEC_2_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-685431.45000, range={>=0}, in LIGHTS=ZN_1_FLR_1_SEC_3_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-685431.45000, range={>=0}, in LIGHTS=ZN_1_FLR_2_SEC_3_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-685431.45000, range={>=0}, in LIGHTS=ZN_1_FLR_3_SEC_3_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-1827817.20000, range={>=0}, in LIGHTS=ZN_1_FLR_1_SEC_4_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-1827817.20000, range={>=0}, in LIGHTS=ZN_1_FLR_2_SEC_4_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-1827817.20000, range={>=0}, in LIGHTS=ZN_1_FLR_3_SEC_4_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-842166.77490, range={>=0}, in LIGHTS=ZN_1_FLR_1_SEC_5_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-842166.77490, range={>=0}, in LIGHTS=ZN_1_FLR_2_SEC_5_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-842166.77490, range={>=0}, in LIGHTS=ZN_1_FLR_3_SEC_5_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-2989851.98490, range={>=0}, in LIGHTS=ZN_1_FLR_1_SEC_6_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-2989851.98490, range={>=0}, in LIGHTS=ZN_1_FLR_2_SEC_6_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-2989851.98490, range={>=0}, in LIGHTS=ZN_1_FLR_3_SEC_6_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-4574140.54020, range={>=0}, in LIGHTS=ZN_1_FLR_1_SEC_7_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-4574140.54020, range={>=0}, in LIGHTS=ZN_1_FLR_2_SEC_7_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-4574140.54020, range={>=0}, in LIGHTS=ZN_1_FLR_3_SEC_7_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-6988899.04020, range={>=0}, in LIGHTS=ZN_1_FLR_1_SEC_8_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-6988899.04020, range={>=0}, in LIGHTS=ZN_1_FLR_2_SEC_8_LIGHTS
+   ** Severe  ** Out of range value Numeric Field#1 (Lighting Level), value=-6988899.04020, range={>=0}, in LIGHTS=ZN_1_FLR_3_SEC_8_LIGHTS
+   ** Severe  ** IP: Out of "range" values found in input
+   ** Severe  ** IP: Out of "range" values and/or blank required fields found in input
+   **  Fatal  ** IP: Errors occurred on processing IDF file. Preceding condition(s) cause termination.
+   ...Summary of Errors that led to program termination:
+   ..... Reference severe error count=26
+   ..... Last severe error=IP: Out of "range" values and/or blank required fields found in input
+   ************* Warning:  Node connection errors not checked - most system input has not been read (see previous warning).
+   ************* Fatal error -- final processing.  Program exited before simulations began.  See previous error messages.
+   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Sizing Error Summary. During Sizing: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Terminated--Fatal Error Detected. 0 Warning; 26 Severe Errors; Elapsed Time=00hr 00min  3.09sec

@@ -1,0 +1,3418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2009 sp1 (http://www.altova.com) by ERIC BONNEMA (NREL) -->
+<!--Written by HPBxmlManager procedure by NREL-->
+<HPBParametization xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\Users\ebonnema\Working\Preprocessor\schema\HPBxml.xsd">
+  <HPBXmlSettings>
+    <HPBXmlVersion>0.1.2.4</HPBXmlVersion>
+  </HPBXmlSettings>
+  <OptEPlusMetadata>
+    <OptEPlusVersion>0.1.2.160</OptEPlusVersion>
+    <OptEPlusDatabase>D:\working\optimization\projectfiles\test.opt</OptEPlusDatabase>
+  </OptEPlusMetadata>
+  <SimSettings>
+    <TimeStepInHour>6</TimeStepInHour>
+    <UpdateShadowInterval>7</UpdateShadowInterval>
+    <BaseCase>true</BaseCase>
+    <RunWeatherFile>true</RunWeatherFile>
+    <DoPlantSizingCalc>false</DoPlantSizingCalc>
+    <SQLiteOutput>true</SQLiteOutput>
+    <MaxHVACIterations>25</MaxHVACIterations>
+    <MinSystemTimeStep>5</MinSystemTimeStep>
+    <EnergyPlusVersion>6.0</EnergyPlusVersion>
+  </SimSettings>
+  <SiteParams>
+    <WeatherFile filename="USA_SD_Sioux.Falls_TMY2.epw"/>
+    <DesignDays instance="USA_SD_SIOUX_FALLS"/>
+    <UtilityCosts instance="None"/>
+    <PrimarySpaceType>Retail</PrimarySpaceType>
+    <SecondarySpaceType>Whole Building</SecondarySpaceType>
+    <ClimateZones>
+      <ClimateZone>ASHRAE_1999_B-19</ClimateZone>
+      <ClimateZone>ASHRAE_2004_6A</ClimateZone>
+      <ClimateZone>NREL_2009_6A</ClimateZone>
+    </ClimateZones>
+    <SiteMetaData SiteStatsIndex="0" WeightFactor="0" BldgID="0" CensusDivision="0" CensusRegion="0" PrincipleBuildingActivity="25" MoreDetailedActivity="0"/>
+  </SiteParams>
+  <SpecificConstructs StaticObjectsFile="HPBStandardConstructions.imf">
+    <FenestrationSystem>
+      <south>
+        <ConstructionName instance="std_window_UValue_3.237_SHGC_0.49_VT_0.622" CostPer="209.729" InstallCost="292.5" FixedOM="2.34" ExpectedLife="15" CostUnits="$/m^2" DataSource="Closest match from 90.1 database (1999)"/>
+        <Performance>
+          <Type>fixed</Type>
+          <UValue>3.237</UValue>
+          <SHGC>0.49</SHGC>
+          <VisibleTrans>0.622</VisibleTrans>
+        </Performance>
+        <WindowGlass MaterialName="Theoretical Glass [67]" Thickness="0.003" SolarTrans="0.482641" SolarReflectFront="0.467359" SolarReflectBack="0.467359" VisibleTrans="0.621562" VisibleReflectFront="0.328438" VisibleReflectBack="0.328438" IRTrans="0" IREmmFront="0.9" IREmmBack="0.9" Conductivity="0.0198746"/>
+      </south>
+      <east>
+        <ConstructionName instance="std_window_UValue_3.237_SHGC_0.49_VT_0.622" CostPer="209.729" InstallCost="292.5" FixedOM="2.34" ExpectedLife="15" CostUnits="$/m^2" DataSource="Closest match from 90.1 database (1999)"/>
+        <Performance>
+          <Type>fixed</Type>
+          <UValue>3.237</UValue>
+          <SHGC>0.49</SHGC>
+          <VisibleTrans>0.622</VisibleTrans>
+        </Performance>
+        <WindowGlass MaterialName="Theoretical Glass [67]" Thickness="0.003" SolarTrans="0.482641" SolarReflectFront="0.467359" SolarReflectBack="0.467359" VisibleTrans="0.621562" VisibleReflectFront="0.328438" VisibleReflectBack="0.328438" IRTrans="0" IREmmFront="0.9" IREmmBack="0.9" Conductivity="0.0198746"/>
+      </east>
+      <north>
+        <ConstructionName instance="std_window_UValue_3.237_SHGC_0.49_VT_0.622" CostPer="209.729" InstallCost="292.5" FixedOM="2.34" ExpectedLife="15" CostUnits="$/m^2" DataSource="Closest match from 90.1 database (1999)"/>
+        <Performance>
+          <Type>fixed</Type>
+          <UValue>3.237</UValue>
+          <SHGC>0.49</SHGC>
+          <VisibleTrans>0.622</VisibleTrans>
+        </Performance>
+        <WindowGlass MaterialName="Theoretical Glass [67]" Thickness="0.003" SolarTrans="0.482641" SolarReflectFront="0.467359" SolarReflectBack="0.467359" VisibleTrans="0.621562" VisibleReflectFront="0.328438" VisibleReflectBack="0.328438" IRTrans="0" IREmmFront="0.9" IREmmBack="0.9" Conductivity="0.0198746"/>
+      </north>
+      <west>
+        <ConstructionName instance="std_window_UValue_3.237_SHGC_0.49_VT_0.622" CostPer="209.729" InstallCost="292.5" FixedOM="2.34" ExpectedLife="15" CostUnits="$/m^2" DataSource="Closest match from 90.1 database (1999)"/>
+        <Performance>
+          <Type>fixed</Type>
+          <UValue>3.237</UValue>
+          <SHGC>0.49</SHGC>
+          <VisibleTrans>0.622</VisibleTrans>
+        </Performance>
+        <WindowGlass MaterialName="Theoretical Glass [67]" Thickness="0.003" SolarTrans="0.482641" SolarReflectFront="0.467359" SolarReflectBack="0.467359" VisibleTrans="0.621562" VisibleReflectFront="0.328438" VisibleReflectBack="0.328438" IRTrans="0" IREmmFront="0.9" IREmmBack="0.9" Conductivity="0.0198746"/>
+      </west>
+      <SkylightConst>
+        <ConstructionName instance="std_window_UValue_3.919_SHGC_0.49_VT_0.622" CostPer="215.97" InstallCost="292.5" FixedOM="2.34" ExpectedLife="15" CostUnits="$/m^2" DataSource="Closest match from 90.1 database (1999)"/>
+        <Performance>
+          <Type>All Skylights without Curb</Type>
+          <UValue>3.919</UValue>
+          <SHGC>0.49</SHGC>
+          <VisibleTrans>0.622</VisibleTrans>
+        </Performance>
+        <WindowGlass MaterialName="Theoretical Glass [81]" Thickness="0.003" SolarTrans="0.481761" SolarReflectFront="0.468239" SolarReflectBack="0.468239" VisibleTrans="0.621562" VisibleReflectFront="0.328438" VisibleReflectBack="0.328438" IRTrans="0" IREmmFront="0.9" IREmmBack="0.9" Conductivity="0.03026"/>
+      </SkylightConst>
+    </FenestrationSystem>
+    <OpaqueConstructs>
+      <roofs>
+        <ConstructionName instance="Roof" description="R-20 ci" CostPer="36.9675" InstallCost="15.9285" CostUnits="$/m^2" DataSource="Linear interpolation on U-Value from 90.1 project committee data (2006-05-31)"/>
+        <Performance>
+          <UValue>0.2874</UValue>
+        </Performance>
+        <Material MaterialName="Roof Membrane" Roughness="VeryRough" Thickness="0.0095" Conductivity="0.16" Density="1121.29" SpecificHeat="1460" AbsorThermal="0.9" AbsorSolar="0.7" AbsorVis="0.7"/>
+        <Material MaterialName="Roof Insulation" Roughness="MediumRough" Thickness="0.167563" Conductivity="0.049" Density="265" SpecificHeat="836.8" AbsorThermal="0.9" AbsorSolar="0.7" AbsorVis="0.7"/>
+        <Material MaterialName="Metal Decking" Roughness="MediumSmooth" Thickness="0.001524" Conductivity="45.006" Density="7680" SpecificHeat="418.4" AbsorThermal="0.9" AbsorSolar="0.7" AbsorVis="0.3"/>
+      </roofs>
+      <int-walls>
+        <ConstructionName instance="Standard_Int-Wall"/>
+        <Performance>
+          <Type>Standard</Type>
+        </Performance>
+        <Material MaterialName="GP01 1/2 GYPSUM" Roughness="Smooth" Thickness="0.01271" Conductivity="0.16" Density="800" SpecificHeat="1090" AbsorThermal="0.9" AbsorSolar="0.7" AbsorVis="0.5"/>
+        <Material MaterialName="GP01 1/2 GYPSUM" Roughness="Smooth" Thickness="0.01271" Conductivity="0.16" Density="800" SpecificHeat="1090" AbsorThermal="0.9" AbsorSolar="0.7" AbsorVis="0.5"/>
+      </int-walls>
+      <ext-walls>
+        <ConstructionName instance="Ext-wall" description="R-13.3 ci" CostPer="47.4916" InstallCost="20.463" CostUnits="$/m^2" DataSource="Linear interpolation on U-Value from 90.1 project committee data (2006-05-31)"/>
+        <Performance>
+          <UValue>0.4878</UValue>
+        </Performance>
+        <Material MaterialName="1IN Stucco " Roughness="Smooth" Thickness="0.0253" Conductivity="0.6918" Density="1858" SpecificHeat="837" AbsorThermal="0.9" AbsorSolar="0.92" AbsorVis="0.92"/>
+        <Material MaterialName="8IN Concrete HW" Roughness="MediumRough" Thickness="0.2033" Conductivity="1.7296" Density="2243" SpecificHeat="837" AbsorThermal="0.9" AbsorSolar="0.65" AbsorVis="0.65"/>
+        <Material MaterialName="Wall Insulation" Roughness="MediumRough" Thickness="0.0784782" Conductivity="0.0432" Density="91" SpecificHeat="837" AbsorThermal="0.9" AbsorSolar="0.5" AbsorVis="0.5"/>
+        <Material MaterialName="1/2IN Gypsum" Roughness="Smooth" Thickness="0.01271" Conductivity="0.16" Density="784.9" SpecificHeat="830" AbsorThermal="0.9" AbsorSolar="0.92" AbsorVis="0.92"/>
+      </ext-walls>
+      <ext-slab>
+        <ConstructionName instance="Unheated - 8in Slab with Carpet_Ext-slab" CostPer="24.86" InstallCost="20.66" CostUnits="$/m^2" DataSource="MEANS 2005 - B1010.258"/>
+        <Performance>
+          <Type>Unheated - 8in Slab with Carpet</Type>
+          <UValue>2.692</UValue>
+        </Performance>
+        <Material MaterialName="MAT-CC05 8 HW CONCRETE" Roughness="Rough" Thickness="0.20321" Conductivity="1.311" Density="2240" SpecificHeat="836.8" AbsorThermal="0.9" AbsorSolar="0.7" AbsorVis="0.7"/>
+        <Material-R MaterialName="CP02 CARPET PAD" Roughness="VeryRough" ThermalResistance="0.21648" AbsorThermal="0.9" AbsorSolar="0.7" AbsorVis="0.8"/>
+      </ext-slab>
+      <exposed-floor>
+        <ConstructionName instance="Mass_R-8.3 ci_ExposedFloor" description="R-8.3 ci" CostPer="34.6727" InstallCost="14.9397" CostUnits="$/m^2" DataSource="Linear interpolation on U-Value from 90.1 project committee data (2006-05-31)"/>
+        <Performance>
+          <Type>Mass</Type>
+          <UValue>0.5605</UValue>
+        </Performance>
+        <Material MaterialName="Floor Insulation [2]" Roughness="MediumRough" Thickness="0.0635689" Conductivity="0.045" Density="265" SpecificHeat="836.8" AbsorThermal="0.9" AbsorSolar="0.7" AbsorVis="0.7"/>
+        <Material MaterialName="MAT-CC05 8 HW CONCRETE" Roughness="Rough" Thickness="0.20321" Conductivity="1.311" Density="2240" SpecificHeat="836.8" AbsorThermal="0.9" AbsorSolar="0.7" AbsorVis="0.7"/>
+        <Material-R MaterialName="CP02 CARPET PAD" Roughness="VeryRough" ThermalResistance="0.21648" AbsorThermal="0.9" AbsorSolar="0.7" AbsorVis="0.8"/>
+      </exposed-floor>
+      <door>
+        <ConstructionName instance="Swinging_NR_door" description="NR"/>
+        <Performance>
+          <Type>Swinging</Type>
+          <UValue>3.975</UValue>
+        </Performance>
+        <Material MaterialName="METAL Door Medium 18Ga_1" Roughness="Smooth" Thickness="0.0013106" Conductivity="45.3149" Density="7833.03" SpecificHeat="502.08" AbsorThermal="0.8" AbsorSolar="0.5" AbsorVis="0.5"/>
+        <Material-R MaterialName="AIR" Roughness="Smooth" ThermalResistance="0.251489" AbsorThermal="0.8" AbsorSolar="0.5" AbsorVis="0.5"/>
+        <Material MaterialName="METAL Door Medium 18Ga_2" Roughness="Smooth" Thickness="0.0013106" Conductivity="45.3149" Density="7833.03" SpecificHeat="502.08" AbsorThermal="0.8" AbsorSolar="0.5" AbsorVis="0.5"/>
+      </door>
+      <non-swinging-door>
+        <ConstructionName instance="Non-Swinging_NR_door" description="NR"/>
+        <Performance>
+          <Type>Non-Swinging</Type>
+          <UValue>2.84</UValue>
+        </Performance>
+        <Material MaterialName="METAL Door Medium 18Ga_1" Roughness="Smooth" Thickness="0.0013106" Conductivity="45.3149" Density="7833.03" SpecificHeat="502.08" AbsorThermal="0.8" AbsorSolar="0.5" AbsorVis="0.5"/>
+        <Material-R MaterialName="AIR [2]" Roughness="Smooth" ThermalResistance="0.352085" AbsorThermal="0.8" AbsorSolar="0.5" AbsorVis="0.5"/>
+        <Material MaterialName="METAL Door Medium 18Ga_2" Roughness="Smooth" Thickness="0.0013106" Conductivity="45.3149" Density="7833.03" SpecificHeat="502.08" AbsorThermal="0.8" AbsorSolar="0.5" AbsorVis="0.5"/>
+      </non-swinging-door>
+    </OpaqueConstructs>
+  </SpecificConstructs>
+  <Building>
+    <Name>Target - New Construction</Name>
+    <Area>0</Area>
+    <NumFloors>0</NumFloors>
+    <PerimDepth>0</PerimDepth>
+    <FloortoFloorHeight>0</FloortoFloorHeight>
+    <Rotation>0</Rotation>
+    <SuppressRoofMultipliers>true</SuppressRoofMultipliers>
+    <Footprint>false</Footprint>
+    <Zone>
+      <Name>Grocery</Name>
+      <ZoneType>Normal</ZoneType>
+      <PrimarySpaceType>Retail</PrimarySpaceType>
+      <SecondarySpaceType>Whole Building</SecondarySpaceType>
+      <CustomXYZ>
+        <NorthAxis>0</NorthAxis>
+        <XOrigin>100.584</XOrigin>
+        <YOrigin>0</YOrigin>
+        <ZOrigin>0</ZOrigin>
+        <CustomXYZSurfaces>
+          <SurfaceName>E2579F</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-85.344" Y1="19.812" Z1="6.4008"/>
+          <Vertices X1="-85.344" Y1="19.812" Z1="0"/>
+          <Vertices X1="-85.344" Y1="0" Z1="0"/>
+          <Vertices X1="-85.344" Y1="0" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Grocery Ext Wall South</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-85.344" Y1="0" Z1="6.4008"/>
+          <Vertices X1="-85.344" Y1="0" Z1="0"/>
+          <Vertices X1="-9.144" Y1="0" Z1="0"/>
+          <Vertices X1="-9.144" Y1="0" Z1="6.4008"/>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Grocery Door 1</SubSurfaceName>
+            <SubSurfaceType>Door</SubSurfaceType>
+            <SubSurfaceSpecificType>Swinging</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="-85.0392" Y1="0" Z1="2.1336"/>
+            <SubVertices X1="-85.0392" Y1="0" Z1="0"/>
+            <SubVertices X1="-83.2104" Y1="0" Z1="0"/>
+            <SubVertices X1="-83.2104" Y1="0" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Grocery Roof</SurfaceName>
+          <SurfaceType>Roof</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-85.344" Y1="19.812" Z1="6.4008"/>
+          <Vertices X1="-85.344" Y1="0" Z1="6.4008"/>
+          <Vertices X1="-9.144" Y1="0" Z1="6.4008"/>
+          <Vertices X1="-9.144" Y1="19.812" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>C320FF</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-9.144" Y1="19.812" Z1="6.4008"/>
+          <Vertices X1="-9.144" Y1="19.812" Z1="0"/>
+          <Vertices X1="-47.244" Y1="19.812" Z1="0"/>
+          <Vertices X1="-47.244" Y1="19.812" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Grocery Floor</SurfaceName>
+          <SurfaceType>Floor</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-9.144" Y1="19.812" Z1="0"/>
+          <Vertices X1="-9.144" Y1="0" Z1="0"/>
+          <Vertices X1="-85.344" Y1="0" Z1="0"/>
+          <Vertices X1="-85.344" Y1="19.812" Z1="0"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>3E5EEF</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-9.144" Y1="0" Z1="6.4008"/>
+          <Vertices X1="-9.144" Y1="0" Z1="0"/>
+          <Vertices X1="-9.144" Y1="19.812" Z1="0"/>
+          <Vertices X1="-9.144" Y1="19.812" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>23772E</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-47.244" Y1="19.812" Z1="6.4008"/>
+          <Vertices X1="-47.244" Y1="19.812" Z1="0"/>
+          <Vertices X1="-85.344" Y1="19.812" Z1="0"/>
+          <Vertices X1="-85.344" Y1="19.812" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+      </CustomXYZ>
+      <InternalGains>
+        <People>
+          <PeopleDensity>10.76</PeopleDensity>
+        </People>
+        <Lights>
+          <PowerDensity>8.89</PowerDensity>
+          <FractionRadiant>0.7</FractionRadiant>
+          <FractionReturn>0</FractionReturn>
+          <Schedule>SALES_LIGHT_SCH</Schedule>
+        </Lights>
+      </InternalGains>
+      <Infiltration>
+        <FlowPerExtWallArea>0.000559</FlowPerExtWallArea>
+      </Infiltration>
+    </Zone>
+    <Zone>
+      <Name>Kitchen</Name>
+      <ZoneType>Normal</ZoneType>
+      <PrimarySpaceType>Retail</PrimarySpaceType>
+      <SecondarySpaceType>Whole Building</SecondarySpaceType>
+      <CustomXYZ>
+        <NorthAxis>0</NorthAxis>
+        <XOrigin>91.44</XOrigin>
+        <YOrigin>85.344</YOrigin>
+        <ZOrigin>0</ZOrigin>
+        <CustomXYZSurfaces>
+          <SurfaceName>Kitchen Floor</SurfaceName>
+          <SurfaceType>Floor</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="9.144" Y1="18.288" Z1="0"/>
+          <Vertices X1="9.144" Y1="5.91194E-015" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="5.91194E-015" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="18.288" Z1="0"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Kitchen Ext Wall East</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="9.144" Y1="5.91194E-015" Z1="6.4008"/>
+          <Vertices X1="9.144" Y1="5.91194E-015" Z1="0"/>
+          <Vertices X1="9.144" Y1="18.288" Z1="0"/>
+          <Vertices X1="9.144" Y1="18.288" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>E0152F</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="18.288" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="18.288" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="5.91194E-015" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="5.91194E-015" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Kitchen Roof</SurfaceName>
+          <SurfaceType>Roof</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="18.288" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="5.91194E-015" Z1="6.4008"/>
+          <Vertices X1="9.144" Y1="5.91194E-015" Z1="6.4008"/>
+          <Vertices X1="9.144" Y1="18.288" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>392F4A</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="9.144" Y1="18.288" Z1="6.4008"/>
+          <Vertices X1="9.144" Y1="18.288" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="18.288" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="18.288" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>E8EBB8</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="5.91194E-015" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="5.91194E-015" Z1="0"/>
+          <Vertices X1="9.144" Y1="5.91194E-015" Z1="0"/>
+          <Vertices X1="9.144" Y1="5.91194E-015" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+      </CustomXYZ>
+      <InternalGains>
+        <People>
+          <PeopleDensity>21.53</PeopleDensity>
+        </People>
+        <Lights>
+          <PowerDensity>17.01</PowerDensity>
+          <FractionRadiant>0.7</FractionRadiant>
+          <FractionReturn>0</FractionReturn>
+        </Lights>
+        <Equipment>
+          <EquipmentName>PlugMisc</EquipmentName>
+          <EquipmentType>Electric</EquipmentType>
+          <PowerDensity>151.59</PowerDensity>
+          <RadiantFraction>0.6</RadiantFraction>
+          <LatentFraction>0.071</LatentFraction>
+        </Equipment>
+      </InternalGains>
+      <Infiltration>
+        <FlowPerExtWallArea>0.000559</FlowPerExtWallArea>
+      </Infiltration>
+    </Zone>
+    <Zone>
+      <Name>Office</Name>
+      <ZoneType>Normal</ZoneType>
+      <PrimarySpaceType>Retail</PrimarySpaceType>
+      <SecondarySpaceType>Whole Building</SecondarySpaceType>
+      <CustomXYZ>
+        <NorthAxis>0</NorthAxis>
+        <XOrigin>100.584</XOrigin>
+        <YOrigin>85.344</YOrigin>
+        <ZOrigin>0</ZOrigin>
+        <CustomXYZSurfaces>
+          <SurfaceName>937E97</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-9.144" Y1="-19.812" Z1="6.4008"/>
+          <Vertices X1="-9.144" Y1="-19.812" Z1="0"/>
+          <Vertices X1="-9.144" Y1="-65.532" Z1="0"/>
+          <Vertices X1="-9.144" Y1="-65.532" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>FFB553</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-9.144" Y1="-65.532" Z1="6.4008"/>
+          <Vertices X1="-9.144" Y1="-65.532" Z1="0"/>
+          <Vertices X1="-3.18495E-015" Y1="-65.532" Z1="0"/>
+          <Vertices X1="-3.18495E-015" Y1="-65.532" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>C075EC</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-3.18495E-015" Y1="-19.812" Z1="6.4008"/>
+          <Vertices X1="-3.18495E-015" Y1="-19.812" Z1="0"/>
+          <Vertices X1="-9.144" Y1="-19.812" Z1="0"/>
+          <Vertices X1="-9.144" Y1="-19.812" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Office Roof</SurfaceName>
+          <SurfaceType>Roof</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-9.144" Y1="-19.812" Z1="6.4008"/>
+          <Vertices X1="-9.144" Y1="-65.532" Z1="6.4008"/>
+          <Vertices X1="-3.18495E-015" Y1="-65.532" Z1="6.4008"/>
+          <Vertices X1="-3.18495E-015" Y1="-19.812" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Office Ext Wall East</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-3.18495E-015" Y1="-65.532" Z1="6.4008"/>
+          <Vertices X1="-3.18495E-015" Y1="-65.532" Z1="0"/>
+          <Vertices X1="-3.18495E-015" Y1="-19.812" Z1="0"/>
+          <Vertices X1="-3.18495E-015" Y1="-19.812" Z1="6.4008"/>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Office View Window 1</SubSurfaceName>
+            <SubSurfaceType>Window</SubSurfaceType>
+            <SubSurfaceSpecificType>Non-Operable</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="-3.18495E-015" Y1="-62.484" Z1="2.1336"/>
+            <SubVertices X1="-3.18495E-015" Y1="-62.484" Z1="0.9144"/>
+            <SubVertices X1="-3.18495E-015" Y1="-61.2648" Z1="0.9144"/>
+            <SubVertices X1="-3.18495E-015" Y1="-61.2648" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Office View Window 2</SubSurfaceName>
+            <SubSurfaceType>Window</SubSurfaceType>
+            <SubSurfaceSpecificType>Non-Operable</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="-3.18495E-015" Y1="-56.9976" Z1="2.1336"/>
+            <SubVertices X1="-3.18495E-015" Y1="-56.9976" Z1="0.9144"/>
+            <SubVertices X1="-3.18495E-015" Y1="-55.7784" Z1="0.9144"/>
+            <SubVertices X1="-3.18495E-015" Y1="-55.7784" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Office View Window 3</SubSurfaceName>
+            <SubSurfaceType>Window</SubSurfaceType>
+            <SubSurfaceSpecificType>Non-Operable</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="-3.18495E-015" Y1="-51.5112" Z1="2.1336"/>
+            <SubVertices X1="-3.18495E-015" Y1="-51.5112" Z1="0.9144"/>
+            <SubVertices X1="-3.18495E-015" Y1="-50.292" Z1="0.9144"/>
+            <SubVertices X1="-3.18495E-015" Y1="-50.292" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Office View Window 4</SubSurfaceName>
+            <SubSurfaceType>Window</SubSurfaceType>
+            <SubSurfaceSpecificType>Non-Operable</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="-3.18495E-015" Y1="-46.0248" Z1="2.1336"/>
+            <SubVertices X1="-3.18495E-015" Y1="-46.0248" Z1="0.9144"/>
+            <SubVertices X1="-3.18495E-015" Y1="-44.8056" Z1="0.9144"/>
+            <SubVertices X1="-3.18495E-015" Y1="-44.8056" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Office View Window 5</SubSurfaceName>
+            <SubSurfaceType>Window</SubSurfaceType>
+            <SubSurfaceSpecificType>Non-Operable</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="-3.18495E-015" Y1="-40.5384" Z1="2.1336"/>
+            <SubVertices X1="-3.18495E-015" Y1="-40.5384" Z1="0.9144"/>
+            <SubVertices X1="-3.18495E-015" Y1="-39.3192" Z1="0.9144"/>
+            <SubVertices X1="-3.18495E-015" Y1="-39.3192" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Office View Window 6</SubSurfaceName>
+            <SubSurfaceType>Window</SubSurfaceType>
+            <SubSurfaceSpecificType>Non-Operable</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="-3.18495E-015" Y1="-35.052" Z1="2.1336"/>
+            <SubVertices X1="-3.18495E-015" Y1="-35.052" Z1="0.9144"/>
+            <SubVertices X1="-3.18495E-015" Y1="-33.8328" Z1="0.9144"/>
+            <SubVertices X1="-3.18495E-015" Y1="-33.8328" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Office View Window 7</SubSurfaceName>
+            <SubSurfaceType>Window</SubSurfaceType>
+            <SubSurfaceSpecificType>Non-Operable</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="-3.18495E-015" Y1="-29.5656" Z1="2.1336"/>
+            <SubVertices X1="-3.18495E-015" Y1="-29.5656" Z1="0.9144"/>
+            <SubVertices X1="-3.18495E-015" Y1="-28.3464" Z1="0.9144"/>
+            <SubVertices X1="-3.18495E-015" Y1="-28.3464" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Office View Window 8</SubSurfaceName>
+            <SubSurfaceType>Window</SubSurfaceType>
+            <SubSurfaceSpecificType>Non-Operable</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="-3.18495E-015" Y1="-24.0792" Z1="2.1336"/>
+            <SubVertices X1="-3.18495E-015" Y1="-24.0792" Z1="0.9144"/>
+            <SubVertices X1="-3.18495E-015" Y1="-22.86" Z1="0.9144"/>
+            <SubVertices X1="-3.18495E-015" Y1="-22.86" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Office Door 1</SubSurfaceName>
+            <SubSurfaceType>Door</SubSurfaceType>
+            <SubSurfaceSpecificType>Swinging</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="-3.18495E-015" Y1="-65.2272" Z1="2.1336"/>
+            <SubVertices X1="-3.18495E-015" Y1="-65.2272" Z1="0"/>
+            <SubVertices X1="-3.18495E-015" Y1="-64.3128" Z1="0"/>
+            <SubVertices X1="-3.18495E-015" Y1="-64.3128" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Office Door 2</SubSurfaceName>
+            <SubSurfaceType>Door</SubSurfaceType>
+            <SubSurfaceSpecificType>Swinging</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="-3.18495E-015" Y1="-43.1292" Z1="2.1336"/>
+            <SubVertices X1="-3.18495E-015" Y1="-43.1292" Z1="0"/>
+            <SubVertices X1="-3.18495E-015" Y1="-42.2148" Z1="0"/>
+            <SubVertices X1="-3.18495E-015" Y1="-42.2148" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Office Door 3</SubSurfaceName>
+            <SubSurfaceType>Door</SubSurfaceType>
+            <SubSurfaceSpecificType>Swinging</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="-3.18495E-015" Y1="-32.1564" Z1="2.1336"/>
+            <SubVertices X1="-3.18495E-015" Y1="-32.1564" Z1="0"/>
+            <SubVertices X1="-3.18495E-015" Y1="-31.242" Z1="0"/>
+            <SubVertices X1="-3.18495E-015" Y1="-31.242" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Office Floor</SurfaceName>
+          <SurfaceType>Floor</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-3.18495E-015" Y1="-19.812" Z1="0"/>
+          <Vertices X1="-3.18495E-015" Y1="-65.532" Z1="0"/>
+          <Vertices X1="-9.144" Y1="-65.532" Z1="0"/>
+          <Vertices X1="-9.144" Y1="-19.812" Z1="0"/>
+        </CustomXYZSurfaces>
+      </CustomXYZ>
+      <InternalGains>
+        <People>
+          <PeopleDensity>7.53</PeopleDensity>
+        </People>
+        <Lights>
+          <PowerDensity>10.98</PowerDensity>
+          <FractionRadiant>0.7</FractionRadiant>
+          <FractionReturn>0</FractionReturn>
+        </Lights>
+        <Equipment>
+          <EquipmentName>PlugMisc</EquipmentName>
+          <EquipmentType>Electric</EquipmentType>
+          <PowerDensity>10.72</PowerDensity>
+          <RadiantFraction>0.6</RadiantFraction>
+          <LatentFraction>0</LatentFraction>
+        </Equipment>
+      </InternalGains>
+      <Infiltration>
+        <FlowPerExtWallArea>0.000559</FlowPerExtWallArea>
+      </Infiltration>
+    </Zone>
+    <Zone>
+      <Name>Pharmacy</Name>
+      <ZoneType>Normal</ZoneType>
+      <PrimarySpaceType>Retail</PrimarySpaceType>
+      <SecondarySpaceType>Whole Building</SecondarySpaceType>
+      <CustomXYZ>
+        <NorthAxis>0</NorthAxis>
+        <XOrigin>100.584</XOrigin>
+        <YOrigin>65.532</YOrigin>
+        <ZOrigin>0</ZOrigin>
+        <CustomXYZSurfaces>
+          <SurfaceName>Pharmacy Roof</SurfaceName>
+          <SurfaceType>Roof</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-9.144" Y1="19.812" Z1="6.4008"/>
+          <Vertices X1="-9.144" Y1="3.52496E-015" Z1="6.4008"/>
+          <Vertices X1="-3.18495E-015" Y1="3.52496E-015" Z1="6.4008"/>
+          <Vertices X1="-3.18495E-015" Y1="19.812" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>50371F</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-9.144" Y1="19.812" Z1="6.4008"/>
+          <Vertices X1="-9.144" Y1="19.812" Z1="0"/>
+          <Vertices X1="-9.144" Y1="7.62" Z1="0"/>
+          <Vertices X1="-9.144" Y1="7.62" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>B67887</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-3.18495E-015" Y1="19.812" Z1="6.4008"/>
+          <Vertices X1="-3.18495E-015" Y1="19.812" Z1="0"/>
+          <Vertices X1="-9.144" Y1="19.812" Z1="0"/>
+          <Vertices X1="-9.144" Y1="19.812" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>60482G</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-9.144" Y1="3.52496E-015" Z1="6.4008"/>
+          <Vertices X1="-9.144" Y1="3.52496E-015" Z1="0"/>
+          <Vertices X1="-3.18495E-015" Y1="3.52496E-015" Z1="0"/>
+          <Vertices X1="-3.18495E-015" Y1="3.52496E-015" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Pharmacy Floor</SurfaceName>
+          <SurfaceType>Floor</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-3.18495E-015" Y1="19.812" Z1="0"/>
+          <Vertices X1="-3.18495E-015" Y1="3.52496E-015" Z1="0"/>
+          <Vertices X1="-9.144" Y1="3.52496E-015" Z1="0"/>
+          <Vertices X1="-9.144" Y1="19.812" Z1="0"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Pharmacy Ext Wall East</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-3.18495E-015" Y1="3.52496E-015" Z1="6.4008"/>
+          <Vertices X1="-3.18495E-015" Y1="3.52496E-015" Z1="0"/>
+          <Vertices X1="-3.18495E-015" Y1="19.812" Z1="0"/>
+          <Vertices X1="-3.18495E-015" Y1="19.812" Z1="6.4008"/>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Pharmacy Door</SubSurfaceName>
+            <SubSurfaceType>Door</SubSurfaceType>
+            <SubSurfaceSpecificType>Swinging</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="-3.18495E-015" Y1="0.3048" Z1="2.1336"/>
+            <SubVertices X1="-3.18495E-015" Y1="0.3048" Z1="0"/>
+            <SubVertices X1="-3.18495E-015" Y1="2.1336" Z1="0"/>
+            <SubVertices X1="-3.18495E-015" Y1="2.1336" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>2E89B6</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-9.144" Y1="7.62" Z1="6.4008"/>
+          <Vertices X1="-9.144" Y1="7.62" Z1="0"/>
+          <Vertices X1="-9.144" Y1="3.52496E-015" Z1="0"/>
+          <Vertices X1="-9.144" Y1="3.52496E-015" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+      </CustomXYZ>
+      <InternalGains>
+        <People>
+          <PeopleDensity>7.53</PeopleDensity>
+        </People>
+        <Lights>
+          <PowerDensity>11.93</PowerDensity>
+          <FractionRadiant>0.7</FractionRadiant>
+          <FractionReturn>0</FractionReturn>
+        </Lights>
+        <Equipment>
+          <EquipmentName>PlugMisc</EquipmentName>
+          <EquipmentType>Electric</EquipmentType>
+          <PowerDensity>3.75</PowerDensity>
+          <RadiantFraction>0.6</RadiantFraction>
+          <LatentFraction>0.151</LatentFraction>
+        </Equipment>
+      </InternalGains>
+      <Infiltration>
+        <FlowPerExtWallArea>0.000559</FlowPerExtWallArea>
+      </Infiltration>
+    </Zone>
+    <Zone>
+      <Name>Restroom</Name>
+      <ZoneType>Normal</ZoneType>
+      <PrimarySpaceType>Retail</PrimarySpaceType>
+      <SecondarySpaceType>Whole Building</SecondarySpaceType>
+      <CustomXYZ>
+        <NorthAxis>0</NorthAxis>
+        <XOrigin>101.194</XOrigin>
+        <YOrigin>118.262</YOrigin>
+        <ZOrigin>0</ZOrigin>
+        <CustomXYZSurfaces>
+          <SurfaceName>Restroom Floor</SurfaceName>
+          <SurfaceType>Floor</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-0.6096" Y1="8.2296" Z1="0"/>
+          <Vertices X1="-0.6096" Y1="-0.9144" Z1="0"/>
+          <Vertices X1="-9.7536" Y1="-0.9144" Z1="0"/>
+          <Vertices X1="-9.7536" Y1="8.2296" Z1="0"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Restroom Ext Wall East</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-0.6096" Y1="-0.9144" Z1="6.4008"/>
+          <Vertices X1="-0.6096" Y1="-0.9144" Z1="0"/>
+          <Vertices X1="-0.6096" Y1="8.2296" Z1="0"/>
+          <Vertices X1="-0.6096" Y1="8.2296" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Restroom Roof</SurfaceName>
+          <SurfaceType>Roof</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-9.7536" Y1="8.2296" Z1="6.4008"/>
+          <Vertices X1="-9.7536" Y1="-0.9144" Z1="6.4008"/>
+          <Vertices X1="-0.6096" Y1="-0.9144" Z1="6.4008"/>
+          <Vertices X1="-0.6096" Y1="8.2296" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Restroom Ext Wall North</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-0.6096" Y1="8.2296" Z1="6.4008"/>
+          <Vertices X1="-0.6096" Y1="8.2296" Z1="0"/>
+          <Vertices X1="-9.7536" Y1="8.2296" Z1="0"/>
+          <Vertices X1="-9.7536" Y1="8.2296" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>AA4ED9</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-9.7536" Y1="8.2296" Z1="6.4008"/>
+          <Vertices X1="-9.7536" Y1="8.2296" Z1="0"/>
+          <Vertices X1="-9.7536" Y1="-0.9144" Z1="0"/>
+          <Vertices X1="-9.7536" Y1="-0.9144" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>988BDE</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-9.7536" Y1="-0.9144" Z1="6.4008"/>
+          <Vertices X1="-9.7536" Y1="-0.9144" Z1="0"/>
+          <Vertices X1="-0.6096" Y1="-0.9144" Z1="0"/>
+          <Vertices X1="-0.6096" Y1="-0.9144" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+      </CustomXYZ>
+      <InternalGains>
+        <People>
+          <PeopleDensity>10.76</PeopleDensity>
+        </People>
+        <Lights>
+          <PowerDensity>10.55</PowerDensity>
+          <FractionRadiant>0.7</FractionRadiant>
+          <FractionReturn>0</FractionReturn>
+        </Lights>
+      </InternalGains>
+      <Infiltration>
+        <FlowPerExtWallArea>0.000559</FlowPerExtWallArea>
+      </Infiltration>
+    </Zone>
+    <Zone>
+      <Name>Sales 1</Name>
+      <ZoneType>Normal</ZoneType>
+      <PrimarySpaceType>Retail</PrimarySpaceType>
+      <SecondarySpaceType>Whole Building</SecondarySpaceType>
+      <CustomXYZ>
+        <NorthAxis>0</NorthAxis>
+        <XOrigin>91.44</XOrigin>
+        <YOrigin>127.406</YOrigin>
+        <ZOrigin>0</ZOrigin>
+        <CustomXYZSurfaces>
+          <SurfaceName>Sales 1 Ext Wall West</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-38.1" Y1="-0.9144" Z1="6.4008"/>
+          <Vertices X1="-38.1" Y1="-0.9144" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Sales 1 Ext Wall North</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="-0.9144" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="-0.9144" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-0.9144" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-0.9144" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Sales 1 Roof</SurfaceName>
+          <SurfaceType>Roof</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-38.1" Y1="-0.9144" Z1="6.4008"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="-54.2544" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="-0.9144" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Sales 1 Floor</SurfaceName>
+          <SurfaceType>Floor</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="-0.9144" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-0.9144" Z1="0"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>C65BC3</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="6.4008"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-54.2544" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>222AA7</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="-10.0584" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="-10.0584" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-0.9144" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-0.9144" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>2A26E9</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="-23.7744" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="-23.7744" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-10.0584" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-10.0584" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>1DC517</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="-42.0624" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="-42.0624" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-23.7744" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-23.7744" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>26EF60</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="-54.2544" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-42.0624" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-42.0624" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+      </CustomXYZ>
+      <InternalGains>
+        <People>
+          <PeopleDensity>10.76</PeopleDensity>
+        </People>
+        <Lights>
+          <PowerDensity>9.34</PowerDensity>
+          <FractionRadiant>0.7</FractionRadiant>
+          <FractionReturn>0</FractionReturn>
+          <Schedule>SALES_LIGHT_SCH</Schedule>
+        </Lights>
+        <Equipment>
+          <EquipmentName>PlugMisc</EquipmentName>
+          <EquipmentType>Electric</EquipmentType>
+          <PowerDensity>5.91</PowerDensity>
+          <RadiantFraction>0.6</RadiantFraction>
+          <LatentFraction>0.072</LatentFraction>
+        </Equipment>
+      </InternalGains>
+      <Infiltration>
+        <FlowPerExtWallArea>0.000559</FlowPerExtWallArea>
+      </Infiltration>
+    </Zone>
+    <Zone>
+      <Name>Sales 2</Name>
+      <ZoneType>Normal</ZoneType>
+      <PrimarySpaceType>Retail</PrimarySpaceType>
+      <SecondarySpaceType>Whole Building</SecondarySpaceType>
+      <CustomXYZ>
+        <NorthAxis>0</NorthAxis>
+        <XOrigin>91.44</XOrigin>
+        <YOrigin>127.406</YOrigin>
+        <ZOrigin>0</ZOrigin>
+        <CustomXYZSurfaces>
+          <SurfaceName>Sales 2 Ext Wall West</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-76.2" Y1="-0.9144" Z1="6.4008"/>
+          <Vertices X1="-76.2" Y1="-0.9144" Z1="0"/>
+          <Vertices X1="-76.2" Y1="-27.432" Z1="0"/>
+          <Vertices X1="-76.2" Y1="-27.432" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>85F20E</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-76.2" Y1="-27.432" Z1="6.4008"/>
+          <Vertices X1="-76.2" Y1="-27.432" Z1="0"/>
+          <Vertices X1="-76.2" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="-76.2" Y1="-54.2544" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>267105</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="6.4008"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-0.9144" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-0.9144" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>BCEBDF</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-76.2" Y1="-54.2544" Z1="6.4008"/>
+          <Vertices X1="-76.2" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Sales 2 Roof</SurfaceName>
+          <SurfaceType>Roof</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-76.2" Y1="-0.9144" Z1="6.4008"/>
+          <Vertices X1="-76.2" Y1="-54.2544" Z1="6.4008"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="6.4008"/>
+          <Vertices X1="-38.1" Y1="-0.9144" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Sales 2 Floor</SurfaceName>
+          <SurfaceType>Floor</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-38.1" Y1="-0.9144" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="-76.2" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="-76.2" Y1="-0.9144" Z1="0"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Sales 2 Ext Wall North</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-38.1" Y1="-0.9144" Z1="6.4008"/>
+          <Vertices X1="-38.1" Y1="-0.9144" Z1="0"/>
+          <Vertices X1="-76.2" Y1="-0.9144" Z1="0"/>
+          <Vertices X1="-76.2" Y1="-0.9144" Z1="6.4008"/>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Sales 2 Door</SubSurfaceName>
+            <SubSurfaceType>Door</SubSurfaceType>
+            <SubSurfaceSpecificType>Swinging</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="-49.9872" Y1="-0.9144" Z1="2.1336"/>
+            <SubVertices X1="-49.9872" Y1="-0.9144" Z1="0"/>
+            <SubVertices X1="-51.816" Y1="-0.9144" Z1="0"/>
+            <SubVertices X1="-51.816" Y1="-0.9144" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+        </CustomXYZSurfaces>
+      </CustomXYZ>
+      <InternalGains>
+        <People>
+          <PeopleDensity>10.76</PeopleDensity>
+        </People>
+        <Lights>
+          <PowerDensity>9.34</PowerDensity>
+          <FractionRadiant>0.7</FractionRadiant>
+          <FractionReturn>0</FractionReturn>
+          <Schedule>SALES_LIGHT_SCH</Schedule>
+        </Lights>
+        <Equipment>
+          <EquipmentName>PlugMisc</EquipmentName>
+          <EquipmentType>Electric</EquipmentType>
+          <PowerDensity>5.91</PowerDensity>
+          <RadiantFraction>0.6</RadiantFraction>
+          <LatentFraction>0.072</LatentFraction>
+        </Equipment>
+      </InternalGains>
+      <Infiltration>
+        <FlowPerExtWallArea>0.000559</FlowPerExtWallArea>
+      </Infiltration>
+    </Zone>
+    <Zone>
+      <Name>Sales 3</Name>
+      <ZoneType>Normal</ZoneType>
+      <PrimarySpaceType>Retail</PrimarySpaceType>
+      <SecondarySpaceType>Whole Building</SecondarySpaceType>
+      <CustomXYZ>
+        <NorthAxis>0</NorthAxis>
+        <XOrigin>91.44</XOrigin>
+        <YOrigin>127.406</YOrigin>
+        <ZOrigin>0</ZOrigin>
+        <CustomXYZSurfaces>
+          <SurfaceName>FEB318</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-76.2" Y1="-54.2544" Z1="6.4008"/>
+          <Vertices X1="-76.2" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="-76.2" Y1="-107.594" Z1="0"/>
+          <Vertices X1="-76.2" Y1="-107.594" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>3BDD0F</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-38.1" Y1="-107.594" Z1="6.4008"/>
+          <Vertices X1="-38.1" Y1="-107.594" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>C53693</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-76.2" Y1="-107.594" Z1="6.4008"/>
+          <Vertices X1="-76.2" Y1="-107.594" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-107.594" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-107.594" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>713B97</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="6.4008"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="-76.2" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="-76.2" Y1="-54.2544" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Sales 3 Roof</SurfaceName>
+          <SurfaceType>Roof</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-76.2" Y1="-54.2544" Z1="6.4008"/>
+          <Vertices X1="-76.2" Y1="-107.594" Z1="6.4008"/>
+          <Vertices X1="-38.1" Y1="-107.594" Z1="6.4008"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Sales 3 Floor</SurfaceName>
+          <SurfaceType>Floor</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-107.594" Z1="0"/>
+          <Vertices X1="-76.2" Y1="-107.594" Z1="0"/>
+          <Vertices X1="-76.2" Y1="-54.2544" Z1="0"/>
+        </CustomXYZSurfaces>
+      </CustomXYZ>
+      <InternalGains>
+        <People>
+          <PeopleDensity>10.76</PeopleDensity>
+        </People>
+        <Lights>
+          <PowerDensity>9.34</PowerDensity>
+          <FractionRadiant>0.7</FractionRadiant>
+          <FractionReturn>0</FractionReturn>
+          <Schedule>SALES_LIGHT_SCH</Schedule>
+        </Lights>
+        <Equipment>
+          <EquipmentName>PlugMisc</EquipmentName>
+          <EquipmentType>Electric</EquipmentType>
+          <PowerDensity>5.91</PowerDensity>
+          <RadiantFraction>0.6</RadiantFraction>
+          <LatentFraction>0.072</LatentFraction>
+        </Equipment>
+      </InternalGains>
+    </Zone>
+    <Zone>
+      <Name>Sales 4</Name>
+      <ZoneType>Normal</ZoneType>
+      <PrimarySpaceType>Retail</PrimarySpaceType>
+      <SecondarySpaceType>Whole Building</SecondarySpaceType>
+      <CustomXYZ>
+        <NorthAxis>0</NorthAxis>
+        <XOrigin>91.44</XOrigin>
+        <YOrigin>127.406</YOrigin>
+        <ZOrigin>0</ZOrigin>
+        <CustomXYZSurfaces>
+          <SurfaceName>687E9D</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="6.4008"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-107.594" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-107.594" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>21D61E</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="-107.594" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="-107.594" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-61.8744" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-61.8744" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>D6C8E0</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-38.1" Y1="-107.594" Z1="6.4008"/>
+          <Vertices X1="-38.1" Y1="-107.594" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-107.594" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-107.594" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>DDC56D</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="-54.2544" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Sales 4 Roof</SurfaceName>
+          <SurfaceType>Roof</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="6.4008"/>
+          <Vertices X1="-38.1" Y1="-107.594" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="-107.594" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="-54.2544" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Sales 4 Floor</SurfaceName>
+          <SurfaceType>Floor</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-107.594" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-107.594" Z1="0"/>
+          <Vertices X1="-38.1" Y1="-54.2544" Z1="0"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>C8ACE2</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="-61.8744" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="-61.8744" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-54.2544" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-54.2544" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+      </CustomXYZ>
+      <InternalGains>
+        <People>
+          <PeopleDensity>10.76</PeopleDensity>
+        </People>
+        <Lights>
+          <PowerDensity>9.34</PowerDensity>
+          <FractionRadiant>0.7</FractionRadiant>
+          <FractionReturn>0</FractionReturn>
+          <Schedule>SALES_LIGHT_SCH</Schedule>
+        </Lights>
+        <Equipment>
+          <EquipmentName>PlugMisc</EquipmentName>
+          <EquipmentType>Electric</EquipmentType>
+          <PowerDensity>5.91</PowerDensity>
+          <RadiantFraction>0.6</RadiantFraction>
+          <LatentFraction>0.072</LatentFraction>
+        </Equipment>
+      </InternalGains>
+    </Zone>
+    <Zone>
+      <Name>Stockroom</Name>
+      <ZoneType>Normal</ZoneType>
+      <PrimarySpaceType>Retail</PrimarySpaceType>
+      <SecondarySpaceType>Whole Building</SecondarySpaceType>
+      <CustomXYZ>
+        <NorthAxis>0</NorthAxis>
+        <XOrigin>0</XOrigin>
+        <YOrigin>0</YOrigin>
+        <ZOrigin>0</ZOrigin>
+        <CustomXYZSurfaces>
+          <SurfaceName>Stockroom Floor</SurfaceName>
+          <SurfaceType>Floor</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="15.24" Y1="99.9744" Z1="0"/>
+          <Vertices X1="15.24" Y1="0" Z1="0"/>
+          <Vertices X1="0" Y1="0" Z1="0"/>
+          <Vertices X1="0" Y1="99.9744" Z1="0"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Stockroom Ext Wall South</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="0" Y1="0" Z1="6.4008"/>
+          <Vertices X1="0" Y1="0" Z1="0"/>
+          <Vertices X1="15.24" Y1="0" Z1="0"/>
+          <Vertices X1="15.24" Y1="0" Z1="6.4008"/>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Stockroom Door 1</SubSurfaceName>
+            <SubSurfaceType>Door</SubSurfaceType>
+            <SubSurfaceSpecificType>Swinging</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="14.0208" Y1="0" Z1="2.1336"/>
+            <SubVertices X1="14.0208" Y1="0" Z1="0"/>
+            <SubVertices X1="14.9352" Y1="0" Z1="0"/>
+            <SubVertices X1="14.9352" Y1="0" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Stockroom Ext Wall North</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="15.24" Y1="99.9744" Z1="6.4008"/>
+          <Vertices X1="15.24" Y1="99.9744" Z1="0"/>
+          <Vertices X1="0" Y1="99.9744" Z1="0"/>
+          <Vertices X1="0" Y1="99.9744" Z1="6.4008"/>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Stockroom Overhead Door 1</SubSurfaceName>
+            <SubSurfaceType>Door</SubSurfaceType>
+            <SubSurfaceSpecificType>Swinging</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="10.9728" Y1="99.9744" Z1="3.048"/>
+            <SubVertices X1="10.9728" Y1="99.9744" Z1="0"/>
+            <SubVertices X1="8.5344" Y1="99.9744" Z1="0"/>
+            <SubVertices X1="8.5344" Y1="99.9744" Z1="3.048"/>
+          </CustomXYZSubSurfaces>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Stockroom Overhead Door 2</SubSurfaceName>
+            <SubSurfaceType>Door</SubSurfaceType>
+            <SubSurfaceSpecificType>Swinging</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="7.3152" Y1="99.9744" Z1="3.048"/>
+            <SubVertices X1="7.3152" Y1="99.9744" Z1="0"/>
+            <SubVertices X1="4.8768" Y1="99.9744" Z1="0"/>
+            <SubVertices X1="4.8768" Y1="99.9744" Z1="3.048"/>
+          </CustomXYZSubSurfaces>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Stockroom Overhead Door 3</SubSurfaceName>
+            <SubSurfaceType>Door</SubSurfaceType>
+            <SubSurfaceSpecificType>Swinging</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="3.6576" Y1="99.9744" Z1="3.048"/>
+            <SubVertices X1="3.6576" Y1="99.9744" Z1="0"/>
+            <SubVertices X1="1.2192" Y1="99.9744" Z1="0"/>
+            <SubVertices X1="1.2192" Y1="99.9744" Z1="3.048"/>
+          </CustomXYZSubSurfaces>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Stockroom Door 4</SubSurfaceName>
+            <SubSurfaceType>Door</SubSurfaceType>
+            <SubSurfaceSpecificType>Swinging</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="14.9352" Y1="99.9744" Z1="2.1336"/>
+            <SubVertices X1="14.9352" Y1="99.9744" Z1="0"/>
+            <SubVertices X1="14.0208" Y1="99.9744" Z1="0"/>
+            <SubVertices X1="14.0208" Y1="99.9744" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Stockroom Ext Wall West</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="0" Y1="99.9744" Z1="6.4008"/>
+          <Vertices X1="0" Y1="99.9744" Z1="0"/>
+          <Vertices X1="0" Y1="0" Z1="0"/>
+          <Vertices X1="0" Y1="0" Z1="6.4008"/>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Stockroom Door 2</SubSurfaceName>
+            <SubSurfaceType>Door</SubSurfaceType>
+            <SubSurfaceSpecificType>Swinging</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="0" Y1="50.9016" Z1="2.1336"/>
+            <SubVertices X1="0" Y1="50.9016" Z1="0"/>
+            <SubVertices X1="0" Y1="49.0728" Z1="0"/>
+            <SubVertices X1="0" Y1="49.0728" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Stockroom Door 3</SubSurfaceName>
+            <SubSurfaceType>Door</SubSurfaceType>
+            <SubSurfaceSpecificType>Swinging</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="0" Y1="99.6696" Z1="2.1336"/>
+            <SubVertices X1="0" Y1="99.6696" Z1="0"/>
+            <SubVertices X1="0" Y1="98.7552" Z1="0"/>
+            <SubVertices X1="0" Y1="98.7552" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>A8B33B</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="15.24" Y1="0" Z1="6.4008"/>
+          <Vertices X1="15.24" Y1="0" Z1="0"/>
+          <Vertices X1="15.24" Y1="19.812" Z1="0"/>
+          <Vertices X1="15.24" Y1="19.812" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Stockroom Roof</SurfaceName>
+          <SurfaceType>Roof</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="0" Y1="99.9744" Z1="6.4008"/>
+          <Vertices X1="0" Y1="0" Z1="6.4008"/>
+          <Vertices X1="15.24" Y1="0" Z1="6.4008"/>
+          <Vertices X1="15.24" Y1="99.9744" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>57E734</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="15.24" Y1="19.812" Z1="6.4008"/>
+          <Vertices X1="15.24" Y1="19.812" Z1="0"/>
+          <Vertices X1="15.24" Y1="73.152" Z1="0"/>
+          <Vertices X1="15.24" Y1="73.152" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>4D0164</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="15.24" Y1="73.152" Z1="6.4008"/>
+          <Vertices X1="15.24" Y1="73.152" Z1="0"/>
+          <Vertices X1="15.24" Y1="99.9744" Z1="0"/>
+          <Vertices X1="15.24" Y1="99.9744" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+      </CustomXYZ>
+      <InternalGains>
+        <People>
+          <PeopleDensity>2.15</PeopleDensity>
+        </People>
+        <Lights>
+          <PowerDensity>13.78</PowerDensity>
+          <FractionRadiant>0.7</FractionRadiant>
+          <FractionReturn>0</FractionReturn>
+        </Lights>
+        <Equipment>
+          <EquipmentName>PlugMisc</EquipmentName>
+          <EquipmentType>Electric</EquipmentType>
+          <PowerDensity>5.34</PowerDensity>
+          <RadiantFraction>0.6</RadiantFraction>
+          <LatentFraction>0</LatentFraction>
+        </Equipment>
+      </InternalGains>
+      <Infiltration>
+        <FlowPerExtWallArea>0.000559</FlowPerExtWallArea>
+      </Infiltration>
+    </Zone>
+    <Zone>
+      <Name>Vestibule</Name>
+      <ZoneType>Normal</ZoneType>
+      <PrimarySpaceType>Retail</PrimarySpaceType>
+      <SecondarySpaceType>Whole Building</SecondarySpaceType>
+      <CustomXYZ>
+        <NorthAxis>0</NorthAxis>
+        <XOrigin>91.44</XOrigin>
+        <YOrigin>103.632</YOrigin>
+        <ZOrigin>0</ZOrigin>
+        <CustomXYZSurfaces>
+          <SurfaceName>Vestibule Floor</SurfaceName>
+          <SurfaceType>Floor</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="13.716" Y1="13.716" Z1="0"/>
+          <Vertices X1="13.716" Y1="-5.00294E-015" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-5.00294E-015" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="13.716" Z1="0"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Vestibule Ext Wall South</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="13.716" Y1="-5.00294E-015" Z1="6.4008"/>
+          <Vertices X1="13.716" Y1="-5.00294E-015" Z1="0"/>
+          <Vertices X1="13.716" Y1="13.716" Z1="0"/>
+          <Vertices X1="13.716" Y1="13.716" Z1="6.4008"/>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Vestibule Window 2</SubSurfaceName>
+            <SubSurfaceType>Window</SubSurfaceType>
+            <SubSurfaceSpecificType>Non-Operable</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="13.716" Y1="0.3048" Z1="6.096"/>
+            <SubVertices X1="13.716" Y1="0.3048" Z1="3.048"/>
+            <SubVertices X1="13.716" Y1="13.4112" Z1="3.048"/>
+            <SubVertices X1="13.716" Y1="13.4112" Z1="6.096"/>
+          </CustomXYZSubSurfaces>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Vestibule Window 1</SubSurfaceName>
+            <SubSurfaceType>Window</SubSurfaceType>
+            <SubSurfaceSpecificType>Non-Operable</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="13.716" Y1="0.3048" Z1="2.7432"/>
+            <SubVertices X1="13.716" Y1="0.3048" Z1="0.3048"/>
+            <SubVertices X1="13.716" Y1="13.4112" Z1="0.3048"/>
+            <SubVertices X1="13.716" Y1="13.4112" Z1="2.7432"/>
+          </CustomXYZSubSurfaces>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>81F659</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="-5.00294E-015" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="-5.00294E-015" Z1="0"/>
+          <Vertices X1="9.144" Y1="-5.00294E-015" Z1="0"/>
+          <Vertices X1="9.144" Y1="-5.00294E-015" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Vestibule Roof</SurfaceName>
+          <SurfaceType>Roof</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="13.716" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="-5.00294E-015" Z1="6.4008"/>
+          <Vertices X1="13.716" Y1="-5.00294E-015" Z1="6.4008"/>
+          <Vertices X1="13.716" Y1="13.716" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Vestibule Ext Wall East</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="13.716" Y1="13.716" Z1="6.4008"/>
+          <Vertices X1="13.716" Y1="13.716" Z1="0"/>
+          <Vertices X1="9.144" Y1="13.716" Z1="0"/>
+          <Vertices X1="9.144" Y1="13.716" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>A4C01A</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="13.716" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="13.716" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-5.00294E-015" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-5.00294E-015" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>9D1E1F</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="9.144" Y1="13.716" Z1="6.4008"/>
+          <Vertices X1="9.144" Y1="13.716" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="13.716" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="13.716" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Vestibule Ext Wall West</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="9.144" Y1="-5.00294E-015" Z1="6.4008"/>
+          <Vertices X1="9.144" Y1="-5.00294E-015" Z1="0"/>
+          <Vertices X1="13.716" Y1="-5.00294E-015" Z1="0"/>
+          <Vertices X1="13.716" Y1="-5.00294E-015" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+      </CustomXYZ>
+      <InternalGains>
+        <People>
+          <PeopleDensity>10.76</PeopleDensity>
+        </People>
+        <Lights>
+          <PowerDensity>11.85</PowerDensity>
+          <FractionRadiant>0.7</FractionRadiant>
+          <FractionReturn>0</FractionReturn>
+        </Lights>
+      </InternalGains>
+      <Infiltration>
+        <FlowPerExtWallArea>0.000559</FlowPerExtWallArea>
+      </Infiltration>
+    </Zone>
+    <Zone>
+      <Name>Walkin</Name>
+      <ZoneType>Normal</ZoneType>
+      <PrimarySpaceType>Retail</PrimarySpaceType>
+      <SecondarySpaceType>Whole Building</SecondarySpaceType>
+      <CustomXYZ>
+        <NorthAxis>0</NorthAxis>
+        <XOrigin>91.44</XOrigin>
+        <YOrigin>19.812</YOrigin>
+        <ZOrigin>0</ZOrigin>
+        <CustomXYZSurfaces>
+          <SurfaceName>Walkin Floor</SurfaceName>
+          <SurfaceType>Floor</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="9.144" Y1="-1.16573E-015" Z1="0"/>
+          <Vertices X1="9.144" Y1="-19.812" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-19.812" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-1.16573E-015" Z1="0"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>3E13A3</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="9.144" Y1="-1.16573E-015" Z1="6.4008"/>
+          <Vertices X1="9.144" Y1="-1.16573E-015" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-1.16573E-015" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-1.16573E-015" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Walkin Roof</SurfaceName>
+          <SurfaceType>Roof</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="-1.16573E-015" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="-19.812" Z1="6.4008"/>
+          <Vertices X1="9.144" Y1="-19.812" Z1="6.4008"/>
+          <Vertices X1="9.144" Y1="-1.16573E-015" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Walkin Ext Wall East</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="9.144" Y1="-19.812" Z1="6.4008"/>
+          <Vertices X1="9.144" Y1="-19.812" Z1="0"/>
+          <Vertices X1="9.144" Y1="-1.16573E-015" Z1="0"/>
+          <Vertices X1="9.144" Y1="-1.16573E-015" Z1="6.4008"/>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Walking Door 1</SubSurfaceName>
+            <SubSurfaceType>Door</SubSurfaceType>
+            <SubSurfaceSpecificType>Swinging</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="9.144" Y1="-19.5072" Z1="2.1336"/>
+            <SubVertices X1="9.144" Y1="-19.5072" Z1="0"/>
+            <SubVertices X1="9.144" Y1="-17.6784" Z1="0"/>
+            <SubVertices X1="9.144" Y1="-17.6784" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+          <CustomXYZSubSurfaces>
+            <SubSurfaceName>Walkin Door 2</SubSurfaceName>
+            <SubSurfaceType>Door</SubSurfaceType>
+            <SubSurfaceSpecificType>Swinging</SubSurfaceSpecificType>
+            <ConstructionName>Default</ConstructionName>
+            <OutsideFaceEnvObject/>
+            <Multiplier>1</Multiplier>
+            <SubVertices X1="9.144" Y1="-1.2192" Z1="2.1336"/>
+            <SubVertices X1="9.144" Y1="-1.2192" Z1="0"/>
+            <SubVertices X1="9.144" Y1="-0.3048" Z1="0"/>
+            <SubVertices X1="9.144" Y1="-0.3048" Z1="2.1336"/>
+          </CustomXYZSubSurfaces>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>Walkin Ext Wall South</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="-19.812" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="-19.812" Z1="0"/>
+          <Vertices X1="9.144" Y1="-19.812" Z1="0"/>
+          <Vertices X1="9.144" Y1="-19.812" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+        <CustomXYZSurfaces>
+          <SurfaceName>AF28FD</SurfaceName>
+          <SurfaceType>Wall</SurfaceType>
+          <ConstructionName>Default</ConstructionName>
+          <OutsideFaceEnv>Unknown</OutsideFaceEnv>
+          <OutsideFaceEnvObject/>
+          <SolarExposure>Unknown</SolarExposure>
+          <WindExposure>Unknown</WindExposure>
+          <Vertices X1="2.27596E-015" Y1="-1.16573E-015" Z1="6.4008"/>
+          <Vertices X1="2.27596E-015" Y1="-1.16573E-015" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-19.812" Z1="0"/>
+          <Vertices X1="2.27596E-015" Y1="-19.812" Z1="6.4008"/>
+        </CustomXYZSurfaces>
+      </CustomXYZ>
+      <InternalGains>
+        <People>
+          <PeopleDensity>2.15</PeopleDensity>
+        </People>
+        <Lights>
+          <PowerDensity>13.79</PowerDensity>
+          <FractionRadiant>0.7</FractionRadiant>
+          <FractionReturn>0</FractionReturn>
+        </Lights>
+      </InternalGains>
+      <Infiltration>
+        <FlowPerExtWallArea>0.000559</FlowPerExtWallArea>
+      </Infiltration>
+    </Zone>
+  </Building>
+  <ScheduleSet instance="Substitution"/>
+  <HVACSystem>
+    <DetailedHVAC>
+      <ZoneScope>Each Zone Separate</ZoneScope>
+      <SystemScope>Building</SystemScope>
+      <Zone>
+        <ZoneName>Grocery</ZoneName>
+        <SpaceConditioning>
+          <Thermostat>
+            <CoolingSetpointSchedule>GROCERY_CLGSETP_SCH</CoolingSetpointSchedule>
+          </Thermostat>
+          <Equipment>
+            <DirectAir>
+              <AirSystemName>AHU Grocery</AirSystemName>
+            </DirectAir>
+          </Equipment>
+        </SpaceConditioning>
+        <ProcessLoads>
+          <RefrigeratedCases>
+            <CaseType>SingleDeckIceCream</CaseType>
+            <DataSetKey>OpenWellIceCreamDisplayCase</DataSetKey>
+            <NameOfCompressorRack>RackA</NameOfCompressorRack>
+            <CoolingCapacityPerLength>312.49</CoolingCapacityPerLength>
+            <Length>2.44</Length>
+            <OperatingTemperature>-24.44</OperatingTemperature>
+            <FanPowerPerLength>98.43</FanPowerPerLength>
+            <OperatingFanPowerPerLength>98.43</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>0</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>0</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>137.8</AntiSweatHeaterPowerPerLength>
+            <DefrostType>None</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>SingleDeckIceCream</CaseType>
+            <DataSetKey>OpenWellIceCreamDisplayCase</DataSetKey>
+            <NameOfCompressorRack>RackA</NameOfCompressorRack>
+            <CoolingCapacityPerLength>312.49</CoolingCapacityPerLength>
+            <Length>2.44</Length>
+            <OperatingTemperature>-24.44</OperatingTemperature>
+            <FanPowerPerLength>98.43</FanPowerPerLength>
+            <OperatingFanPowerPerLength>98.43</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>0</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>0</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>137.8</AntiSweatHeaterPowerPerLength>
+            <DefrostType>None</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>SingleDeckIceCream</CaseType>
+            <DataSetKey>OpenWellIceCreamDisplayCase</DataSetKey>
+            <NameOfCompressorRack>RackA</NameOfCompressorRack>
+            <CoolingCapacityPerLength>1855.7</CoolingCapacityPerLength>
+            <Length>1.83</Length>
+            <OperatingTemperature>-24.44</OperatingTemperature>
+            <FanPowerPerLength>65.62</FanPowerPerLength>
+            <OperatingFanPowerPerLength>65.62</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>0</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>0</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>85.3</AntiSweatHeaterPowerPerLength>
+            <DefrostType>None</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>VertDoorsFrozenFood</CaseType>
+            <DataSetKey>GlassDoorFrozenFood</DataSetKey>
+            <NameOfCompressorRack>RackA</NameOfCompressorRack>
+            <CoolingCapacityPerLength>448.7</CoolingCapacityPerLength>
+            <Length>12.8</Length>
+            <OperatingTemperature>-24.44</OperatingTemperature>
+            <FanPowerPerLength>119.99</FanPowerPerLength>
+            <OperatingFanPowerPerLength>119.99</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>33.75</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>33.75</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>160.29</AntiSweatHeaterPowerPerLength>
+            <DefrostType>None</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>VertDoorsFrozenFood</CaseType>
+            <DataSetKey>GlassDoorFrozenFood</DataSetKey>
+            <NameOfCompressorRack>RackA</NameOfCompressorRack>
+            <CoolingCapacityPerLength>448.7</CoolingCapacityPerLength>
+            <Length>12.8</Length>
+            <OperatingTemperature>-24.44</OperatingTemperature>
+            <FanPowerPerLength>119.99</FanPowerPerLength>
+            <OperatingFanPowerPerLength>119.99</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>33.75</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>33.75</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>160.29</AntiSweatHeaterPowerPerLength>
+            <DefrostType>None</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>VertDoorsFrozenFood</CaseType>
+            <DataSetKey>GlassDoorFrozenFood</DataSetKey>
+            <NameOfCompressorRack>RackA</NameOfCompressorRack>
+            <CoolingCapacityPerLength>448.7</CoolingCapacityPerLength>
+            <Length>14.63</Length>
+            <OperatingTemperature>-24.44</OperatingTemperature>
+            <FanPowerPerLength>111.55</FanPowerPerLength>
+            <OperatingFanPowerPerLength>111.55</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>32.81</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>32.81</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>160.76</AntiSweatHeaterPowerPerLength>
+            <DefrostType>None</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>VertDoorsFrozenFood</CaseType>
+            <DataSetKey>GlassDoorFrozenFood</DataSetKey>
+            <NameOfCompressorRack>RackA</NameOfCompressorRack>
+            <CoolingCapacityPerLength>448.7</CoolingCapacityPerLength>
+            <Length>12.8</Length>
+            <OperatingTemperature>-24.44</OperatingTemperature>
+            <FanPowerPerLength>119.99</FanPowerPerLength>
+            <OperatingFanPowerPerLength>119.99</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>33.75</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>33.75</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>160.29</AntiSweatHeaterPowerPerLength>
+            <DefrostType>None</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>MultiDeckDairyDeli</CaseType>
+            <DataSetKey>MultiDeckDairyAndDeliCase</DataSetKey>
+            <NameOfCompressorRack>RackB</NameOfCompressorRack>
+            <CoolingCapacityPerLength>455.43</CoolingCapacityPerLength>
+            <Length>7.32</Length>
+            <OperatingTemperature>-2.22</OperatingTemperature>
+            <FanPowerPerLength>78.74</FanPowerPerLength>
+            <OperatingFanPowerPerLength>78.74</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>147.64</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>147.64</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>0</AntiSweatHeaterPowerPerLength>
+            <DefrostType>OffCycle</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>MultiDeckDairyDeli</CaseType>
+            <DataSetKey>MultiDeckDairyAndDeliCase</DataSetKey>
+            <NameOfCompressorRack>RackB</NameOfCompressorRack>
+            <CoolingCapacityPerLength>455.43</CoolingCapacityPerLength>
+            <Length>3.66</Length>
+            <OperatingTemperature>-2.22</OperatingTemperature>
+            <FanPowerPerLength>78.74</FanPowerPerLength>
+            <OperatingFanPowerPerLength>78.74</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>147.64</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>147.64</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>0</AntiSweatHeaterPowerPerLength>
+            <DefrostType>OffCycle</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>MultiDeckDairyDeli</CaseType>
+            <DataSetKey>MultiDeckDairyAndDeliCase</DataSetKey>
+            <NameOfCompressorRack>RackB</NameOfCompressorRack>
+            <CoolingCapacityPerLength>455.43</CoolingCapacityPerLength>
+            <Length>7.32</Length>
+            <OperatingTemperature>-2.22</OperatingTemperature>
+            <FanPowerPerLength>78.74</FanPowerPerLength>
+            <OperatingFanPowerPerLength>78.74</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>147.64</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>147.64</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>0</AntiSweatHeaterPowerPerLength>
+            <DefrostType>OffCycle</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>MultiDeckDairyDeli</CaseType>
+            <DataSetKey>MultiDeckDairyAndDeliCase</DataSetKey>
+            <NameOfCompressorRack>RackB</NameOfCompressorRack>
+            <CoolingCapacityPerLength>455.43</CoolingCapacityPerLength>
+            <Length>3.66</Length>
+            <OperatingTemperature>-2.22</OperatingTemperature>
+            <FanPowerPerLength>78.74</FanPowerPerLength>
+            <OperatingFanPowerPerLength>78.74</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>147.64</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>147.64</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>0</AntiSweatHeaterPowerPerLength>
+            <DefrostType>OffCycle</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>MultiDeckDairyDeli</CaseType>
+            <DataSetKey>MultiDeckDairyAndDeliCase</DataSetKey>
+            <NameOfCompressorRack>RackB</NameOfCompressorRack>
+            <CoolingCapacityPerLength>285.25</CoolingCapacityPerLength>
+            <Length>10.06</Length>
+            <OperatingTemperature>0</OperatingTemperature>
+            <FanPowerPerLength>89.48</FanPowerPerLength>
+            <OperatingFanPowerPerLength>89.48</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>33.4</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>33.4</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>58.46</AntiSweatHeaterPowerPerLength>
+            <DefrostType>OffCycle</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>MultiDeckDairyDeli</CaseType>
+            <DataSetKey>MultiDeckDairyAndDeliCase</DataSetKey>
+            <NameOfCompressorRack>RackB</NameOfCompressorRack>
+            <CoolingCapacityPerLength>285.25</CoolingCapacityPerLength>
+            <Length>8.23</Length>
+            <OperatingTemperature>0</OperatingTemperature>
+            <FanPowerPerLength>71.45</FanPowerPerLength>
+            <OperatingFanPowerPerLength>71.45</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>33.54</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>33.54</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>45.2</AntiSweatHeaterPowerPerLength>
+            <DefrostType>OffCycle</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>MultiDeckDairyDeli</CaseType>
+            <DataSetKey>MultiDeckDairyAndDeliCase</DataSetKey>
+            <NameOfCompressorRack>RackB</NameOfCompressorRack>
+            <CoolingCapacityPerLength>285.25</CoolingCapacityPerLength>
+            <Length>1.83</Length>
+            <OperatingTemperature>0</OperatingTemperature>
+            <FanPowerPerLength>85.3</FanPowerPerLength>
+            <OperatingFanPowerPerLength>85.3</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>32.81</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>32.81</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>157.48</AntiSweatHeaterPowerPerLength>
+            <DefrostType>OffCycle</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>MultiDeckDairyDeli</CaseType>
+            <DataSetKey>MultiDeckDairyAndDeliCase</DataSetKey>
+            <NameOfCompressorRack>RackB</NameOfCompressorRack>
+            <CoolingCapacityPerLength>285.25</CoolingCapacityPerLength>
+            <Length>1.83</Length>
+            <OperatingTemperature>0</OperatingTemperature>
+            <FanPowerPerLength>85.3</FanPowerPerLength>
+            <OperatingFanPowerPerLength>85.3</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>32.81</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>32.81</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>157.48</AntiSweatHeaterPowerPerLength>
+            <DefrostType>OffCycle</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>MultiDeckDairyDeli</CaseType>
+            <DataSetKey>MultiDeckDairyAndDeliCase</DataSetKey>
+            <NameOfCompressorRack>RackA</NameOfCompressorRack>
+            <CoolingCapacityPerLength>448.7</CoolingCapacityPerLength>
+            <Length>4.57</Length>
+            <OperatingTemperature>-24.44</OperatingTemperature>
+            <FanPowerPerLength>123.36</FanPowerPerLength>
+            <OperatingFanPowerPerLength>123.36</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>34.12</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>34.12</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>160.1</AntiSweatHeaterPowerPerLength>
+            <DefrostType>OffCycle</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>MultiDeckDairyDeli</CaseType>
+            <DataSetKey>MultiDeckDairyAndDeliCase</DataSetKey>
+            <NameOfCompressorRack>RackA</NameOfCompressorRack>
+            <CoolingCapacityPerLength>448.7</CoolingCapacityPerLength>
+            <Length>4.57</Length>
+            <OperatingTemperature>-24.44</OperatingTemperature>
+            <FanPowerPerLength>123.36</FanPowerPerLength>
+            <OperatingFanPowerPerLength>123.36</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>34.12</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>34.12</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>160.1</AntiSweatHeaterPowerPerLength>
+            <DefrostType>OffCycle</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>MultiDeckDairyDeli</CaseType>
+            <DataSetKey>MultiDeckDairyAndDeliCase</DataSetKey>
+            <NameOfCompressorRack>RackA</NameOfCompressorRack>
+            <CoolingCapacityPerLength>448.7</CoolingCapacityPerLength>
+            <Length>3.66</Length>
+            <OperatingTemperature>-24.44</OperatingTemperature>
+            <FanPowerPerLength>111.55</FanPowerPerLength>
+            <OperatingFanPowerPerLength>111.55</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>32.81</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>32.81</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>160.76</AntiSweatHeaterPowerPerLength>
+            <DefrostType>OffCycle</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>MultiDeckDairyDeli</CaseType>
+            <DataSetKey>MultiDeckDairyAndDeliCase</DataSetKey>
+            <NameOfCompressorRack>RackA</NameOfCompressorRack>
+            <CoolingCapacityPerLength>448.7</CoolingCapacityPerLength>
+            <Length>3.66</Length>
+            <OperatingTemperature>-24.44</OperatingTemperature>
+            <FanPowerPerLength>111.55</FanPowerPerLength>
+            <OperatingFanPowerPerLength>111.55</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>32.81</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>32.81</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>160.76</AntiSweatHeaterPowerPerLength>
+            <DefrostType>OffCycle</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>MultiDeckDairyDeli</CaseType>
+            <DataSetKey>MultiDeckDairyAndDeliCase</DataSetKey>
+            <NameOfCompressorRack>RackA</NameOfCompressorRack>
+            <CoolingCapacityPerLength>448.7</CoolingCapacityPerLength>
+            <Length>2.74</Length>
+            <OperatingTemperature>-24.44</OperatingTemperature>
+            <FanPowerPerLength>118.11</FanPowerPerLength>
+            <OperatingFanPowerPerLength>118.11</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>35</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>35</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>157.48</AntiSweatHeaterPowerPerLength>
+            <DefrostType>None</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>MultiDeckDairyDeli</CaseType>
+            <DataSetKey>MultiDeckDairyAndDeliCase</DataSetKey>
+            <NameOfCompressorRack>RackB</NameOfCompressorRack>
+            <CoolingCapacityPerLength>285.25</CoolingCapacityPerLength>
+            <Length>1.83</Length>
+            <OperatingTemperature>0</OperatingTemperature>
+            <FanPowerPerLength>85.3</FanPowerPerLength>
+            <OperatingFanPowerPerLength>85.3</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>32.81</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>32.81</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>157.48</AntiSweatHeaterPowerPerLength>
+            <DefrostType>None</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>MultiDeckDairyDeli</CaseType>
+            <DataSetKey>MultiDeckDairyAndDeliCase</DataSetKey>
+            <NameOfCompressorRack>RackB</NameOfCompressorRack>
+            <CoolingCapacityPerLength>285.25</CoolingCapacityPerLength>
+            <Length>1.83</Length>
+            <OperatingTemperature>0</OperatingTemperature>
+            <FanPowerPerLength>85.3</FanPowerPerLength>
+            <OperatingFanPowerPerLength>85.3</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>32.81</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>32.81</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>157.48</AntiSweatHeaterPowerPerLength>
+            <DefrostType>None</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+        </ProcessLoads>
+      </Zone>
+      <Zone>
+        <ZoneName>Kitchen</ZoneName>
+        <SpaceConditioning>
+          <Sizing>
+            <OAPerZone>0.337442</OAPerZone>
+          </Sizing>
+          <Equipment>
+            <DirectAir>
+              <AirSystemName>AHU Kitchen</AirSystemName>
+            </DirectAir>
+          </Equipment>
+        </SpaceConditioning>
+        <ProcessLoads>
+          <RefrigeratedCases>
+            <CaseType>Walkin</CaseType>
+            <DataSetKey>WalkInFreezer</DataSetKey>
+            <NameOfCompressorRack>RackA</NameOfCompressorRack>
+            <CoolingCapacityPerLength>677.63</CoolingCapacityPerLength>
+            <Length>2</Length>
+            <OperatingTemperature>-26.11</OperatingTemperature>
+            <FanPowerPerLength>103.99</FanPowerPerLength>
+            <OperatingFanPowerPerLength>103.99</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>0</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>0</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>0</AntiSweatHeaterPowerPerLength>
+            <DefrostType>Electric</DefrostType>
+            <DefrostPowerPerLength>811.1</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>Walkin</CaseType>
+            <DataSetKey>WalkInFreezer</DataSetKey>
+            <NameOfCompressorRack>RackB</NameOfCompressorRack>
+            <CoolingCapacityPerLength>751.32</CoolingCapacityPerLength>
+            <Length>2.23</Length>
+            <OperatingTemperature>2.22</OperatingTemperature>
+            <FanPowerPerLength>186.64</FanPowerPerLength>
+            <OperatingFanPowerPerLength>186.64</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>0</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>0</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>0</AntiSweatHeaterPowerPerLength>
+            <DefrostType>OffCycle</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>MultiDeckDairyDeli</CaseType>
+            <DataSetKey>MultiDeckDairyAndDeliCase</DataSetKey>
+            <NameOfCompressorRack>RackB</NameOfCompressorRack>
+            <CoolingCapacityPerLength>258</CoolingCapacityPerLength>
+            <Length>1.83</Length>
+            <OperatingTemperature>1.11</OperatingTemperature>
+            <FanPowerPerLength>41.99</FanPowerPerLength>
+            <OperatingFanPowerPerLength>41.99</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>95.14</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>95.14</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>48.56</AntiSweatHeaterPowerPerLength>
+            <DefrostType>OffCycle</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+        </ProcessLoads>
+      </Zone>
+      <Zone>
+        <ZoneName>Office</ZoneName>
+        <SpaceConditioning>
+          <Sizing>
+            <OAPerZone>0.225018</OAPerZone>
+          </Sizing>
+          <Equipment>
+            <DirectAir>
+              <AirSystemName>AHU Office</AirSystemName>
+            </DirectAir>
+          </Equipment>
+        </SpaceConditioning>
+      </Zone>
+      <Zone>
+        <ZoneName>Pharmacy</ZoneName>
+        <SpaceConditioning>
+          <Sizing>
+            <OAPerZone>0.097508</OAPerZone>
+          </Sizing>
+          <Thermostat>
+            <HeatingSetpointSchedule>PHARMACY_HTGSETP_SCH</HeatingSetpointSchedule>
+            <CoolingSetpointSchedule>PHARMACY_CLGSETP_SCH</CoolingSetpointSchedule>
+          </Thermostat>
+          <Equipment>
+            <DirectAir>
+              <AirSystemName>AHU Pharmacy</AirSystemName>
+            </DirectAir>
+          </Equipment>
+        </SpaceConditioning>
+      </Zone>
+      <Zone>
+        <ZoneName>Restroom</ZoneName>
+        <SpaceConditioning>
+          <Sizing>
+            <OAPerZone>0.165182</OAPerZone>
+          </Sizing>
+          <Equipment>
+            <DirectAir>
+              <AirSystemName>AHU Restroom</AirSystemName>
+            </DirectAir>
+          </Equipment>
+        </SpaceConditioning>
+      </Zone>
+      <Zone>
+        <ZoneName>Sales 1</ZoneName>
+        <SpaceConditioning>
+          <Sizing>
+            <OAPerZone>1.416</OAPerZone>
+          </Sizing>
+          <Equipment>
+            <DirectAir>
+              <AirSystemName>AHU Sales 1</AirSystemName>
+            </DirectAir>
+          </Equipment>
+        </SpaceConditioning>
+      </Zone>
+      <Zone>
+        <ZoneName>Sales 2</ZoneName>
+        <SpaceConditioning>
+          <Sizing>
+            <OAPerZone>0.566</OAPerZone>
+          </Sizing>
+          <Equipment>
+            <DirectAir>
+              <AirSystemName>AHU Sales 2</AirSystemName>
+            </DirectAir>
+          </Equipment>
+        </SpaceConditioning>
+      </Zone>
+      <Zone>
+        <ZoneName>Sales 3</ZoneName>
+        <SpaceConditioning>
+          <Sizing>
+            <OAPerZone>1.416</OAPerZone>
+          </Sizing>
+          <Equipment>
+            <DirectAir>
+              <AirSystemName>AHU Sales 3</AirSystemName>
+            </DirectAir>
+          </Equipment>
+        </SpaceConditioning>
+      </Zone>
+      <Zone>
+        <ZoneName>Sales 4</ZoneName>
+        <SpaceConditioning>
+          <Sizing>
+            <OAPerZone>0.566</OAPerZone>
+          </Sizing>
+          <Equipment>
+            <DirectAir>
+              <AirSystemName>AHU Sales 4</AirSystemName>
+            </DirectAir>
+          </Equipment>
+        </SpaceConditioning>
+      </Zone>
+      <Zone>
+        <ZoneName>Stockroom</ZoneName>
+        <SpaceConditioning>
+          <Sizing>
+            <OAPerZone>0.476667</OAPerZone>
+          </Sizing>
+          <Thermostat>
+            <HeatingSetpointSchedule>STOCK_HTGSETP_SCH</HeatingSetpointSchedule>
+            <CoolingSetpointSchedule>STOCK_CLGSETP_SCH</CoolingSetpointSchedule>
+          </Thermostat>
+          <Equipment>
+            <DirectAir>
+              <AirSystemName>AHU Stockroom</AirSystemName>
+            </DirectAir>
+          </Equipment>
+        </SpaceConditioning>
+      </Zone>
+      <Zone>
+        <ZoneName>Vestibule</ZoneName>
+        <SpaceConditioning>
+          <Thermostat>
+            <HeatingSetpointSchedule>VESTIBULE_HTGSETP_SCH</HeatingSetpointSchedule>
+            <CoolingSetpointSchedule>VESTIBULE_CLGSETP_SCH</CoolingSetpointSchedule>
+          </Thermostat>
+          <Equipment>
+            <DirectAir>
+              <AirSystemName>AHU Vestibule</AirSystemName>
+            </DirectAir>
+          </Equipment>
+        </SpaceConditioning>
+      </Zone>
+      <Zone>
+        <ZoneName>Walkin</ZoneName>
+        <SpaceConditioning>
+          <Sizing>
+            <OAPerZone>0.097508</OAPerZone>
+          </Sizing>
+          <Equipment>
+            <DirectAir>
+              <AirSystemName>AHU Walkin</AirSystemName>
+            </DirectAir>
+          </Equipment>
+        </SpaceConditioning>
+        <ProcessLoads>
+          <RefrigeratedCases>
+            <CaseType>Walkin</CaseType>
+            <DataSetKey>WalkInFreezer</DataSetKey>
+            <NameOfCompressorRack>RackA</NameOfCompressorRack>
+            <CoolingCapacityPerLength>470.03</CoolingCapacityPerLength>
+            <Length>14.67</Length>
+            <OperatingTemperature>-26.11</OperatingTemperature>
+            <FanPowerPerLength>113.44</FanPowerPerLength>
+            <OperatingFanPowerPerLength>113.44</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>40.09</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>40.09</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>0</AntiSweatHeaterPowerPerLength>
+            <DefrostType>Electric</DefrostType>
+            <DefrostPowerPerLength>445.25</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>Walkin</CaseType>
+            <DataSetKey>WalkInFreezer</DataSetKey>
+            <NameOfCompressorRack>RackB</NameOfCompressorRack>
+            <CoolingCapacityPerLength>391.66</CoolingCapacityPerLength>
+            <Length>11.33</Length>
+            <OperatingTemperature>2.22</OperatingTemperature>
+            <FanPowerPerLength>55.05</FanPowerPerLength>
+            <OperatingFanPowerPerLength>55.05</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>51.88</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>51.88</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>0</AntiSweatHeaterPowerPerLength>
+            <DefrostType>OffCycle</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>Walkin</CaseType>
+            <DataSetKey>WalkInFreezer</DataSetKey>
+            <NameOfCompressorRack>RackB</NameOfCompressorRack>
+            <CoolingCapacityPerLength>611.09</CoolingCapacityPerLength>
+            <Length>6.86</Length>
+            <OperatingTemperature>-2.22</OperatingTemperature>
+            <FanPowerPerLength>42.46</FanPowerPerLength>
+            <OperatingFanPowerPerLength>42.46</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>28.58</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>28.58</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>0</AntiSweatHeaterPowerPerLength>
+            <DefrostType>Electric</DefrostType>
+            <DefrostPowerPerLength>527.73</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>Walkin</CaseType>
+            <DataSetKey>WalkInFreezer</DataSetKey>
+            <NameOfCompressorRack>RackB</NameOfCompressorRack>
+            <CoolingCapacityPerLength>541.52</CoolingCapacityPerLength>
+            <Length>5.95</Length>
+            <OperatingTemperature>4.44</OperatingTemperature>
+            <FanPowerPerLength>62.89</FanPowerPerLength>
+            <OperatingFanPowerPerLength>62.89</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>32.92</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>32.92</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>0</AntiSweatHeaterPowerPerLength>
+            <DefrostType>OffCycle</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+          <RefrigeratedCases>
+            <CaseType>Walkin</CaseType>
+            <DataSetKey>WalkInFreezer</DataSetKey>
+            <NameOfCompressorRack>RackB</NameOfCompressorRack>
+            <CoolingCapacityPerLength>499.98</CoolingCapacityPerLength>
+            <Length>28.96</Length>
+            <OperatingTemperature>12.78</OperatingTemperature>
+            <FanPowerPerLength>19.39</FanPowerPerLength>
+            <OperatingFanPowerPerLength>19.39</OperatingFanPowerPerLength>
+            <LightingPowerPerLength>23.31</LightingPowerPerLength>
+            <InstalledLightingPowerPerLength>23.31</InstalledLightingPowerPerLength>
+            <LightingScheduleName>CASE_LIGHT_SCH</LightingScheduleName>
+            <FractionLightsToCase>1</FractionLightsToCase>
+            <AntiSweatHeaterPowerPerLength>0</AntiSweatHeaterPowerPerLength>
+            <DefrostType>OffCycle</DefrostType>
+            <DefrostPowerPerLength>0</DefrostPowerPerLength>
+          </RefrigeratedCases>
+        </ProcessLoads>
+      </Zone>
+      <Systems>
+        <HVACSystems>
+          <AirSystem>
+            <DistributionType>SingleZone</DistributionType>
+            <Name>AHU Grocery</Name>
+            <OperationSchedule>HVACOperationSchd</OperationSchedule>
+            <UseNightCycle>false</UseNightCycle>
+            <SATManagerType>Scheduled</SATManagerType>
+            <Equipment>
+              <OutsideAirSystem>
+                <UseEconomizer>true</UseEconomizer>
+                <EconomizerControlType>DifferentialDryBulb</EconomizerControlType>
+                <MotorizedDamper>false</MotorizedDamper>
+                <MinOAMultiplierSchedule>MinOA_Sched</MinOAMultiplierSchedule>
+                <EconomizerControlSchedule>MinOA_Sched</EconomizerControlSchedule>
+                <UseControllerMechVent>false</UseControllerMechVent>
+              </OutsideAirSystem>
+              <UnitaryPackage>
+                <Type>AirtoAirHeatCool</Type>
+                <HeatingEfficiency>0.8</HeatingEfficiency>
+                <CoolingCOP>4</CoolingCOP>
+                <DXCoilType>DX</DXCoilType>
+                <Fan>
+                  <Type>Constant</Type>
+                  <Efficiency>0.45</Efficiency>
+                  <PressureDrop>250</PressureDrop>
+                </Fan>
+                <FanOperation>CycleFan</FanOperation>
+                <DataSetKey>LennoxSGA120H4B</DataSetKey>
+              </UnitaryPackage>
+            </Equipment>
+          </AirSystem>
+          <AirSystem>
+            <DistributionType>SingleZone</DistributionType>
+            <Name>AHU Kitchen</Name>
+            <OperationSchedule>HVACOperationSchd</OperationSchedule>
+            <UseNightCycle>false</UseNightCycle>
+            <SATManagerType>Scheduled</SATManagerType>
+            <Equipment>
+              <OutsideAirSystem>
+                <UseEconomizer>true</UseEconomizer>
+                <EconomizerControlType>DifferentialDryBulb</EconomizerControlType>
+                <MotorizedDamper>false</MotorizedDamper>
+                <MinOAMultiplierSchedule>MinOA_Sched</MinOAMultiplierSchedule>
+                <EconomizerControlSchedule>MinOA_Sched</EconomizerControlSchedule>
+                <UseControllerMechVent>false</UseControllerMechVent>
+              </OutsideAirSystem>
+              <UnitaryPackage>
+                <Type>AirtoAirHeatCool</Type>
+                <HeatingEfficiency>0.8</HeatingEfficiency>
+                <CoolingCOP>4</CoolingCOP>
+                <DXCoilType>DX</DXCoilType>
+                <Fan>
+                  <Type>Constant</Type>
+                  <Efficiency>0.45</Efficiency>
+                  <PressureDrop>250</PressureDrop>
+                </Fan>
+                <FanOperation>CycleFan</FanOperation>
+                <DataSetKey>LennoxSGA120H4B</DataSetKey>
+              </UnitaryPackage>
+            </Equipment>
+          </AirSystem>
+          <AirSystem>
+            <DistributionType>SingleZone</DistributionType>
+            <Name>AHU Office</Name>
+            <OperationSchedule>HVACOperationSchd</OperationSchedule>
+            <UseNightCycle>false</UseNightCycle>
+            <SATManagerType>Scheduled</SATManagerType>
+            <Equipment>
+              <OutsideAirSystem>
+                <UseEconomizer>true</UseEconomizer>
+                <EconomizerControlType>DifferentialDryBulb</EconomizerControlType>
+                <MotorizedDamper>false</MotorizedDamper>
+                <MinOAMultiplierSchedule>MinOA_Sched</MinOAMultiplierSchedule>
+                <EconomizerControlSchedule>MinOA_Sched</EconomizerControlSchedule>
+                <UseControllerMechVent>false</UseControllerMechVent>
+              </OutsideAirSystem>
+              <UnitaryPackage>
+                <Type>AirtoAirHeatCool</Type>
+                <HeatingEfficiency>0.8</HeatingEfficiency>
+                <CoolingCOP>4</CoolingCOP>
+                <DXCoilType>DX</DXCoilType>
+                <Fan>
+                  <Type>Constant</Type>
+                  <Efficiency>0.45</Efficiency>
+                  <PressureDrop>250</PressureDrop>
+                </Fan>
+                <FanOperation>CycleFan</FanOperation>
+                <DataSetKey>LennoxSGA120H4B</DataSetKey>
+              </UnitaryPackage>
+            </Equipment>
+          </AirSystem>
+          <AirSystem>
+            <DistributionType>SingleZone</DistributionType>
+            <Name>AHU Pharmacy</Name>
+            <OperationSchedule>HVACOperationSchd</OperationSchedule>
+            <UseNightCycle>false</UseNightCycle>
+            <SATManagerType>Scheduled</SATManagerType>
+            <Equipment>
+              <OutsideAirSystem>
+                <UseEconomizer>true</UseEconomizer>
+                <EconomizerControlType>DifferentialDryBulb</EconomizerControlType>
+                <MotorizedDamper>false</MotorizedDamper>
+                <MinOAMultiplierSchedule>MinOA_Sched</MinOAMultiplierSchedule>
+                <EconomizerControlSchedule>MinOA_Sched</EconomizerControlSchedule>
+                <UseControllerMechVent>false</UseControllerMechVent>
+              </OutsideAirSystem>
+              <UnitaryPackage>
+                <Type>AirtoAirHeatCool</Type>
+                <HeatingEfficiency>0.8</HeatingEfficiency>
+                <CoolingCOP>4</CoolingCOP>
+                <DXCoilType>DX</DXCoilType>
+                <Fan>
+                  <Type>Constant</Type>
+                  <Efficiency>0.45</Efficiency>
+                  <PressureDrop>250</PressureDrop>
+                </Fan>
+                <FanOperation>CycleFan</FanOperation>
+                <DataSetKey>LennoxSGA120H4B</DataSetKey>
+              </UnitaryPackage>
+            </Equipment>
+          </AirSystem>
+          <AirSystem>
+            <DistributionType>SingleZone</DistributionType>
+            <Name>AHU Restroom</Name>
+            <OperationSchedule>HVACOperationSchd</OperationSchedule>
+            <UseNightCycle>false</UseNightCycle>
+            <SATManagerType>Scheduled</SATManagerType>
+            <Equipment>
+              <OutsideAirSystem>
+                <UseEconomizer>true</UseEconomizer>
+                <EconomizerControlType>DifferentialDryBulb</EconomizerControlType>
+                <MotorizedDamper>false</MotorizedDamper>
+                <MinOAMultiplierSchedule>MinOA_Sched</MinOAMultiplierSchedule>
+                <EconomizerControlSchedule>MinOA_Sched</EconomizerControlSchedule>
+                <UseControllerMechVent>false</UseControllerMechVent>
+              </OutsideAirSystem>
+              <UnitaryPackage>
+                <Type>AirtoAirHeatCool</Type>
+                <HeatingEfficiency>0.8</HeatingEfficiency>
+                <CoolingCOP>4</CoolingCOP>
+                <DXCoilType>DX</DXCoilType>
+                <Fan>
+                  <Type>Constant</Type>
+                  <Efficiency>0.45</Efficiency>
+                  <PressureDrop>250</PressureDrop>
+                </Fan>
+                <FanOperation>CycleFan</FanOperation>
+                <DataSetKey>LennoxSGA120H4B</DataSetKey>
+              </UnitaryPackage>
+            </Equipment>
+          </AirSystem>
+          <AirSystem>
+            <DistributionType>SingleZone</DistributionType>
+            <Name>AHU Sales 1</Name>
+            <OperationSchedule>SalesOperationSchd</OperationSchedule>
+            <UseNightCycle>false</UseNightCycle>
+            <SATManagerType>Scheduled</SATManagerType>
+            <Equipment>
+              <OutsideAirSystem>
+                <UseEconomizer>false</UseEconomizer>
+                <MotorizedDamper>false</MotorizedDamper>
+                <MinOAMultiplierSchedule>Sales_MinOA_Sched</MinOAMultiplierSchedule>
+                <EconomizerControlSchedule>Sales_MinOA_Sched</EconomizerControlSchedule>
+                <UseControllerMechVent>false</UseControllerMechVent>
+              </OutsideAirSystem>
+              <UnitaryPackage>
+                <Type>AirtoAirHeatCool</Type>
+                <HeatingEfficiency>0.8</HeatingEfficiency>
+                <CoolingCOP>4</CoolingCOP>
+                <DXCoilType>DX</DXCoilType>
+                <Fan>
+                  <Type>Constant</Type>
+                  <Efficiency>0.45</Efficiency>
+                  <PressureDrop>250</PressureDrop>
+                </Fan>
+                <FanOperation>ContinuousFan</FanOperation>
+                <DataSetKey>LennoxSGA120H4B</DataSetKey>
+              </UnitaryPackage>
+            </Equipment>
+          </AirSystem>
+          <AirSystem>
+            <DistributionType>SingleZone</DistributionType>
+            <Name>AHU Sales 2</Name>
+            <OperationSchedule>SalesOperationSchd</OperationSchedule>
+            <UseNightCycle>false</UseNightCycle>
+            <SATManagerType>Scheduled</SATManagerType>
+            <Equipment>
+              <OutsideAirSystem>
+                <UseEconomizer>true</UseEconomizer>
+                <EconomizerControlType>DifferentialDryBulb</EconomizerControlType>
+                <MotorizedDamper>false</MotorizedDamper>
+                <MinOAMultiplierSchedule>Sales_MinOA_Sched</MinOAMultiplierSchedule>
+                <EconomizerControlSchedule>Sales_MinOA_Sched</EconomizerControlSchedule>
+                <UseControllerMechVent>false</UseControllerMechVent>
+              </OutsideAirSystem>
+              <UnitaryPackage>
+                <Type>AirtoAirHeatCool</Type>
+                <HeatingEfficiency>0.8</HeatingEfficiency>
+                <CoolingCOP>4</CoolingCOP>
+                <DXCoilType>DX</DXCoilType>
+                <Fan>
+                  <Type>Constant</Type>
+                  <Efficiency>0.45</Efficiency>
+                  <PressureDrop>250</PressureDrop>
+                </Fan>
+                <FanOperation>ContinuousFan</FanOperation>
+                <DataSetKey>LennoxSGA120H4B</DataSetKey>
+              </UnitaryPackage>
+            </Equipment>
+          </AirSystem>
+          <AirSystem>
+            <DistributionType>SingleZone</DistributionType>
+            <Name>AHU Sales 3</Name>
+            <OperationSchedule>SalesOperationSchd</OperationSchedule>
+            <UseNightCycle>false</UseNightCycle>
+            <SATManagerType>Scheduled</SATManagerType>
+            <Equipment>
+              <OutsideAirSystem>
+                <UseEconomizer>false</UseEconomizer>
+                <MotorizedDamper>false</MotorizedDamper>
+                <MinOAMultiplierSchedule>Sales_MinOA_Sched</MinOAMultiplierSchedule>
+                <EconomizerControlSchedule>Sales_MinOA_Sched</EconomizerControlSchedule>
+                <UseControllerMechVent>false</UseControllerMechVent>
+              </OutsideAirSystem>
+              <UnitaryPackage>
+                <Type>AirtoAirHeatCool</Type>
+                <HeatingEfficiency>0.8</HeatingEfficiency>
+                <CoolingCOP>4</CoolingCOP>
+                <DXCoilType>DX</DXCoilType>
+                <Fan>
+                  <Type>Constant</Type>
+                  <Efficiency>0.45</Efficiency>
+                  <PressureDrop>250</PressureDrop>
+                </Fan>
+                <FanOperation>ContinuousFan</FanOperation>
+                <DataSetKey>LennoxSGA120H4B</DataSetKey>
+              </UnitaryPackage>
+            </Equipment>
+          </AirSystem>
+          <AirSystem>
+            <DistributionType>SingleZone</DistributionType>
+            <Name>AHU Sales 4</Name>
+            <OperationSchedule>SalesOperationSchd</OperationSchedule>
+            <UseNightCycle>false</UseNightCycle>
+            <SATManagerType>Scheduled</SATManagerType>
+            <Equipment>
+              <OutsideAirSystem>
+                <UseEconomizer>true</UseEconomizer>
+                <EconomizerControlType>DifferentialDryBulb</EconomizerControlType>
+                <MotorizedDamper>false</MotorizedDamper>
+                <MinOAMultiplierSchedule>Sales_MinOA_Sched</MinOAMultiplierSchedule>
+                <EconomizerControlSchedule>Sales_MinOA_Sched</EconomizerControlSchedule>
+                <UseControllerMechVent>false</UseControllerMechVent>
+              </OutsideAirSystem>
+              <UnitaryPackage>
+                <Type>AirtoAirHeatCool</Type>
+                <HeatingEfficiency>0.8</HeatingEfficiency>
+                <CoolingCOP>4</CoolingCOP>
+                <DXCoilType>DX</DXCoilType>
+                <Fan>
+                  <Type>Constant</Type>
+                  <Efficiency>0.45</Efficiency>
+                  <PressureDrop>250</PressureDrop>
+                </Fan>
+                <FanOperation>ContinuousFan</FanOperation>
+                <DataSetKey>LennoxSGA120H4B</DataSetKey>
+              </UnitaryPackage>
+            </Equipment>
+          </AirSystem>
+          <AirSystem>
+            <DistributionType>SingleZone</DistributionType>
+            <Name>AHU Stockroom</Name>
+            <OperationSchedule>HVACOperationSchd</OperationSchedule>
+            <UseNightCycle>false</UseNightCycle>
+            <SATManagerType>Scheduled</SATManagerType>
+            <Equipment>
+              <OutsideAirSystem>
+                <UseEconomizer>true</UseEconomizer>
+                <EconomizerControlType>DifferentialDryBulb</EconomizerControlType>
+                <MotorizedDamper>false</MotorizedDamper>
+                <MinOAMultiplierSchedule>MinOA_Sched</MinOAMultiplierSchedule>
+                <EconomizerControlSchedule>MinOA_Sched</EconomizerControlSchedule>
+                <UseControllerMechVent>false</UseControllerMechVent>
+              </OutsideAirSystem>
+              <UnitaryPackage>
+                <Type>AirtoAirHeatCool</Type>
+                <HeatingEfficiency>0.8</HeatingEfficiency>
+                <CoolingCOP>4</CoolingCOP>
+                <DXCoilType>DX</DXCoilType>
+                <Fan>
+                  <Type>Constant</Type>
+                  <Efficiency>0.45</Efficiency>
+                  <PressureDrop>250</PressureDrop>
+                </Fan>
+                <FanOperation>CycleFan</FanOperation>
+                <DataSetKey>LennoxSGA120H4B</DataSetKey>
+              </UnitaryPackage>
+            </Equipment>
+          </AirSystem>
+          <AirSystem>
+            <DistributionType>SingleZone</DistributionType>
+            <Name>AHU Vestibule</Name>
+            <OperationSchedule>HVACOperationSchd</OperationSchedule>
+            <UseNightCycle>false</UseNightCycle>
+            <SATManagerType>Scheduled</SATManagerType>
+            <Equipment>
+              <OutsideAirSystem>
+                <UseEconomizer>true</UseEconomizer>
+                <EconomizerControlType>DifferentialDryBulb</EconomizerControlType>
+                <MotorizedDamper>false</MotorizedDamper>
+                <MinOAMultiplierSchedule>MinOA_Sched</MinOAMultiplierSchedule>
+                <EconomizerControlSchedule>MinOA_Sched</EconomizerControlSchedule>
+                <UseControllerMechVent>false</UseControllerMechVent>
+              </OutsideAirSystem>
+              <UnitaryPackage>
+                <Type>AirtoAirHeatCool</Type>
+                <HeatingEfficiency>0.8</HeatingEfficiency>
+                <CoolingCOP>4</CoolingCOP>
+                <DXCoilType>DX</DXCoilType>
+                <Fan>
+                  <Type>Constant</Type>
+                  <Efficiency>0.45</Efficiency>
+                  <PressureDrop>250</PressureDrop>
+                </Fan>
+                <FanOperation>CycleFan</FanOperation>
+                <DataSetKey>LennoxSGA120H4B</DataSetKey>
+              </UnitaryPackage>
+            </Equipment>
+          </AirSystem>
+          <AirSystem>
+            <DistributionType>SingleZone</DistributionType>
+            <Name>AHU Walkin</Name>
+            <OperationSchedule>HVACOperationSchd</OperationSchedule>
+            <UseNightCycle>false</UseNightCycle>
+            <SATManagerType>Scheduled</SATManagerType>
+            <Equipment>
+              <OutsideAirSystem>
+                <UseEconomizer>true</UseEconomizer>
+                <EconomizerControlType>DifferentialDryBulb</EconomizerControlType>
+                <MotorizedDamper>false</MotorizedDamper>
+                <MinOAMultiplierSchedule>MinOA_Sched</MinOAMultiplierSchedule>
+                <EconomizerControlSchedule>MinOA_Sched</EconomizerControlSchedule>
+                <UseControllerMechVent>false</UseControllerMechVent>
+              </OutsideAirSystem>
+              <UnitaryPackage>
+                <Type>AirtoAirHeatCool</Type>
+                <HeatingEfficiency>0.8</HeatingEfficiency>
+                <CoolingCOP>4</CoolingCOP>
+                <DXCoilType>DX</DXCoilType>
+                <Fan>
+                  <Type>Constant</Type>
+                  <Efficiency>0.45</Efficiency>
+                  <PressureDrop>250</PressureDrop>
+                </Fan>
+                <FanOperation>CycleFan</FanOperation>
+                <DataSetKey>LennoxSGA120H4B</DataSetKey>
+              </UnitaryPackage>
+            </Equipment>
+          </AirSystem>
+        </HVACSystems>
+        <RefrigerationCompressorRack>
+          <Name>RackA</Name>
+          <DataSetKey>LowTempRack</DataSetKey>
+          <COP>1.9</COP>
+          <CondenserType>AirCooled</CondenserType>
+          <FanPower>4500</FanPower>
+          <HeatRejectionLocation>Outdoors</HeatRejectionLocation>
+        </RefrigerationCompressorRack>
+        <RefrigerationCompressorRack>
+          <Name>RackB</Name>
+          <DataSetKey>MediumTempRack</DataSetKey>
+          <COP>2.5</COP>
+          <CondenserType>AirCooled</CondenserType>
+          <FanPower>4500</FanPower>
+          <HeatRejectionLocation>Outdoors</HeatRejectionLocation>
+        </RefrigerationCompressorRack>
+      </Systems>
+    </DetailedHVAC>
+  </HVACSystem>
+  <ExteriorLoads>
+    <ExteriorFacadeLights>
+      <TotalPower>21200</TotalPower>
+      <ScheduleName>EXT_LIGHT_SCH</ScheduleName>
+      <ControlOption>AstronomicalClock</ControlOption>
+    </ExteriorFacadeLights>
+  </ExteriorLoads>
+  <MacroControl path="./include" ReportVarSetKey="EnergyPlusPredefinedAnnualSummaryReports_SI"/>
+  <TextInput>
+    <DirectSubstitution>
+      <SubCategory instance="ScheduleSet"/>
+      <SubText>Schedule:Compact,
+  ALWAYS_ON,
+  Fraction,
+  Through: 12/31,
+  For: AllDays,
+  Until: 24:00, 1.0;
+
+Schedule:Compact,
+  HVACOperationSchd,
+  On/Off,
+  Through: 12/31,
+  For: AllDays,
+  Until: 07:00, 0.0,
+  Until: 23:00, 1.0,
+  Until: 24:00, 0.0;
+
+Schedule:Compact,
+  SalesOperationSchd,
+  On/Off,
+  Through: 12/31,
+  For: AllDays,
+  Until: 24:00, 1.0;
+
+Schedule:Compact,
+  ACTIVITY_SCH,
+  Any Number,
+  Through: 12/31,
+  For: AllDays,
+  Until: 24:00, 120.;
+
+Schedule:Compact,
+  WORK_EFF_SCH,
+  Fraction,
+  Through: 12/31,
+  For: AllDays,
+  Until: 24:00,  0.0;
+
+Schedule:Compact,
+  AIR_VELO_SCH,
+  Any Number,
+  Through: 12/31,
+  For: AllDays,
+  Until: 24:00, 0.2;
+
+Schedule:Compact,
+  CLOTHING_SCH,
+  Any Number,
+  Through: 04/30,
+  For: AllDays,
+  Until: 24:00, 1.0,
+  Through: 09/30,
+  For: AllDays,
+  Until: 24:00, 0.5,
+  Through: 12/31,
+  For: AllDays,
+  Until: 24:00, 1.0;
+
+ Schedule:Compact,
+  MinRelHumSetSch,
+  Humidity,
+  Through: 12/31,
+  For: AllDays,
+  Until: 24:00, 30;
+  
+Schedule:Compact,
+  MaxRelHumSetSch,
+  Humidity,
+  Through: 12/31,
+  For: AllDays,
+  Until: 24:00, 55;
+
+Schedule:Compact,
+  Dual Zone Control Type Sched,
+  Control Type,
+  Through: 12/31,
+  For: AllDays,
+  Until: 24:00, 4;
+  
+Schedule:Compact,
+  BLDG_OCC_SCH,
+  Fraction,
+  Through: 12/31,
+  For: AllDays,
+  Until: 05:00, 0.000,
+  Until: 07:00, 0.300,
+  Until: 08:00, 0.500,
+  Until: 10:00, 0.700,
+  Until: 13:00, 0.900,
+  Until: 16:00, 0.700,
+  Until: 18:00, 0.900,
+  Until: 20:00, 0.700,
+  Until: 22:00, 0.500,
+  Until: 24:00, 0.300;
+
+Schedule:Compact,
+  SALES_LIGHT_SCH,
+  Fraction,
+  Through: 08/10,
+  For: AllDays,
+  Until: 04:00, 0.050,
+  Until: 05:00, 0.125,
+  Until: 09:00, 0.250,
+  Until: 23:00, 1.000,
+  Until: 24:00, 0.250,
+  Through: 12/31,
+  For: AllDays,
+  Until: 08:00, 0.250,
+  Until: 22:00, 1.000,
+  Until: 24:00, 0.250;
+
+Schedule:Compact,
+  BLDG_LIGHT_SCH,
+  Fraction,
+  Through: 12/31,
+  For: AllDays,
+  Until: 09:00, 0.100,
+  Until: 22:00, 0.550,
+  Until: 24:00, 0.100;
+
+Schedule:Compact,
+  CASE_LIGHT_SCH,
+  Fraction,
+  Through: 12/31,
+  For: AllDays,
+  Until: 08:00, 0.000,
+  Until: 22:00, 1.000,
+  Until: 24:00, 0.000;
+
+Schedule:Compact,
+  EXT_LIGHT_SCH,
+  Fraction,
+  Through: 12/31,
+  For: AllDays,
+  Until: 04:00, 0.000,
+  Until: 09:00, 0.250,
+  Until: 23:00, 1.000,
+  Until: 24:00, 0.000;
+
+Schedule:Compact,
+  BLDG_EQUIP_SCH,
+  Fraction,
+  Through: 12/31,
+  For: WinterDesignDay,
+  Until: 24:00, 0.000,
+  For: AllOtherDays,
+  Until: 07:00, 0.400,
+  Until: 23:00, 0.950,
+  Until: 24:00, 0.400;
+
+Schedule:Compact,
+  MinOA_Sched,
+  Fraction,
+  Through: 12/31,
+  For: AllDays,
+  Until: 07:00, 0.000,
+  Until: 22:00, 1.000,
+  Until: 24:00, 0.000;
+  
+Schedule:Compact,
+  Sales_MinOA_Sched,
+  Fraction,
+  Through: 12/31,
+  For: AllDays,
+  Until: 24:00, 1.000;
+
+Schedule:Compact,
+  INFIL_SCH,
+  Fraction,
+  Through: 12/31,
+  For: AllDays,
+  Until: 24:00, 1.000;
+
+Schedule:Compact,
+  HTGSETP_SCH,
+  Temperature,
+  Through: 12/31,
+  For: AllDays,
+  Until: 07:00, 15.000,
+  Until: 22:00, 20.000,
+  Until: 24:00, 15.000;
+
+Schedule:Compact,
+  CLGSETP_SCH,
+  Temperature,
+  Through: 12/31,
+  For: AllDays,
+  Until: 07:00, 27.222,
+  Until: 22:00, 23.333,
+  Until: 24:00, 27.222;
+
+Schedule:Compact,
+  STOCK_HTGSETP_SCH,
+  Temperature,
+  Through: 12/31,
+  For: AllDays,
+  Until: 07:00, 15.000,
+  Until: 22:00, 18.889,
+  Until: 24:00, 15.000;
+
+Schedule:Compact,
+  STOCK_CLGSETP_SCH,
+  Temperature,
+  Through: 12/31,
+  For: AllDays,
+  Until: 07:00, 27.222,
+  Until: 22:00, 23.333,
+  Until: 24:00, 27.222;
+
+Schedule:Compact,
+  PHARMACY_HTGSETP_SCH,
+  Temperature,
+  Through: 12/31,
+  For: AllDays,
+  Until: 07:00, 15.000,
+  Until: 22:00, 21.111,
+  Until: 24:00, 15.000;
+
+Schedule:Compact,
+  PHARMACY_CLGSETP_SCH,
+  Temperature,
+  Through: 12/31,
+  For: AllDays,
+  Until: 07:00, 23.889,
+  Until: 22:00, 23.333,
+  Until: 24:00, 23.889;
+
+Schedule:Compact,
+  VESTIBULE_HTGSETP_SCH,
+  Temperature,
+  Through: 12/31,
+  For: AllDays,
+  Until: 07:00, 15.000,
+  Until: 22:00, 18.333,
+  Until: 24:00, 15.000;
+
+Schedule:Compact,
+  VESTIBULE_CLGSETP_SCH,
+  Temperature,
+  Through: 12/31,
+  For: AllDays,
+  Until: 07:00, 27.222,
+  Until: 22:00, 26.667,
+  Until: 24:00, 27.222;
+
+!Output:Variable,*,Total Electric Power Purchased,hourly;
+!Output:Variable,*,Lights Electric Power,hourly;
+!Output:Variable,*,Fan Electric Power,hourly;
+!Output:Variable,*,DX Cooling Coil Electric Power,hourly;
+!Output:Variable,*,Refrigeration Compressor Rack Electric Power,hourly;
+!Output:Variable,*,Refrigeration Compressor Rack Condenser Fan Electric Power,hourly;
+!Output:Variable,*,Refrigerated Case Evaporator Fan Electric Power,hourly;
+!Output:Variable,*,Refrigerated Case Lighting Electric Power,hourly;
+!Output:Variable,*,Refrigerated Case Anti-Sweat Electric Power,hourly;
+!Output:Variable,*,Refrigerated Case Defrost Electric Power,hourly;
+!Output:Variable,*,Exterior Lights Electric Power,hourly;
+!Output:Variable,*,AirLoopHVAC Outdoor Air Mass Flow Rate,hourly;
+!Output:Variable,*,Zone Mean Air Humidity Ratio,hourly;
+!Output:Variable,AHU SALES 1:6_Unitary_Package_Fan,Fan Electric Consumption,runperiod;
+!Output:Variable,AHU SALES 3:8_Unitary_Package_Fan,Fan Electric Consumption,runperiod;
+!Output:Variable,AHU SALES 1:6_Unitary_Package_CoolCoil,DX Cooling Coil Electric Consumption,runperiod;
+!Output:Variable,AHU SALES 3:8_Unitary_Package_CoolCoil,DX Cooling Coil Electric Consumption,runperiod;
+!Output:Variable,AHU SALES 1:6_Unitary_Package_HeatCoil,Heating Coil Gas Consumption,runperiod;
+!Output:Variable,AHU SALES 3:8_Unitary_Package_HeatCoil,Heating Coil Gas Consumption,runperiod;
+
+ZoneMixing,
+  Sales 1 -&gt; Sales 2,  !- Name
+  Sales 2,  !- Zone Name
+  ALWAYS_ON,  !- Schedule Name
+  Flow/Zone,  !- Design Flow Rate Calculation Method
+  1.416,  !- Design Flow Rate {m3/s}
+  ,  !- Flow Rate per Zone Floor Area {m3/s/m2}
+  ,  !- Flow Rate per Person {m3/s/person}
+  ,  !- Air Changes Per Hour
+  Sales 1,  !- Source Zone Name
+  0.0;  !- Delta Temperature
+
+ZoneMixing,
+  Sales 2 -&gt; Sales 1,  !- Name
+  Sales 1,  !- Zone Name
+  ALWAYS_ON,  !- Schedule Name
+  Flow/Zone,  !- Design Flow Rate Calculation Method
+  0.566,  !- Design Flow Rate {m3/s}
+  ,  !- Flow Rate per Zone Floor Area {m3/s/m2}
+  ,  !- Flow Rate per Person {m3/s/person}
+  ,  !- Air Changes Per Hour
+  Sales 2,  !- Source Zone Name
+  0.0;  !- Delta Temperature
+
+ZoneMixing,
+  Sales 2 -&gt; Sales 3,  !- Name
+  Sales 3,  !- Zone Name
+  ALWAYS_ON,  !- Schedule Name
+  Flow/Zone,  !- Design Flow Rate Calculation Method
+  0.566,  !- Design Flow Rate {m3/s}
+  ,  !- Flow Rate per Zone Floor Area {m3/s/m2}
+  ,  !- Flow Rate per Person {m3/s/person}
+  ,  !- Air Changes Per Hour
+  Sales 2,  !- Source Zone Name
+  0.0;  !- Delta Temperature
+
+ZoneMixing,
+  Sales 3 -&gt; Sales 2,  !- Name
+  Sales 2,  !- Zone Name
+  ALWAYS_ON,  !- Schedule Name
+  Flow/Zone,  !- Design Flow Rate Calculation Method
+  1.416,  !- Design Flow Rate {m3/s}
+  ,  !- Flow Rate per Zone Floor Area {m3/s/m2}
+  ,  !- Flow Rate per Person {m3/s/person}
+  ,  !- Air Changes Per Hour
+  Sales 3,  !- Source Zone Name
+  0.0;  !- Delta Temperature
+
+ZoneMixing,
+  Sales 3 -&gt; Sales 4,  !- Name
+  Sales 4,  !- Zone Name
+  ALWAYS_ON,  !- Schedule Name
+  Flow/Zone,  !- Design Flow Rate Calculation Method
+  1.416,  !- Design Flow Rate {m3/s}
+  ,  !- Flow Rate per Zone Floor Area {m3/s/m2}
+  ,  !- Flow Rate per Person {m3/s/person}
+  ,  !- Air Changes Per Hour
+  Sales 3,  !- Source Zone Name
+  0.0;  !- Delta Temperature
+
+ZoneMixing,
+  Sales 4 -&gt; Sales 3,  !- Name
+  Sales 3,  !- Zone Name
+  ALWAYS_ON,  !- Schedule Name
+  Flow/Zone,  !- Design Flow Rate Calculation Method
+  0.566,  !- Design Flow Rate {m3/s}
+  ,  !- Flow Rate per Zone Floor Area {m3/s/m2}
+  ,  !- Flow Rate per Person {m3/s/person}
+  ,  !- Air Changes Per Hour
+  Sales 4,  !- Source Zone Name
+  0.0;  !- Delta Temperature
+
+ZoneMixing,
+  Sales 4 -&gt; Sales 1,  !- Name
+  Sales 1,  !- Zone Name
+  ALWAYS_ON,  !- Schedule Name
+  Flow/Zone,  !- Design Flow Rate Calculation Method
+  0.566,  !- Design Flow Rate {m3/s}
+  ,  !- Flow Rate per Zone Floor Area {m3/s/m2}
+  ,  !- Flow Rate per Person {m3/s/person}
+  ,  !- Air Changes Per Hour
+  Sales 4,  !- Source Zone Name
+  0.0;  !- Delta Temperature
+
+ZoneMixing,
+  Sales 1 -&gt; Sales 4,  !- Name
+  Sales 4,  !- Zone Name
+  ALWAYS_ON,  !- Schedule Name
+  Flow/Zone,  !- Design Flow Rate Calculation Method
+  1.416,  !- Design Flow Rate {m3/s}
+  ,  !- Flow Rate per Zone Floor Area {m3/s/m2}
+  ,  !- Flow Rate per Person {m3/s/person}
+  ,  !- Air Changes Per Hour
+  Sales 1,  !- Source Zone Name
+  0.0;  !- Delta Temperature
+
+ZoneMixing,
+  Sales 3 -&gt; Grocery,  !- Name
+  Grocery,  !- Zone Name
+  ALWAYS_ON,  !- Schedule Name
+  Flow/Zone,  !- Design Flow Rate Calculation Method
+  1.416,  !- Design Flow Rate {m3/s}
+  ,  !- Flow Rate per Zone Floor Area {m3/s/m2}
+  ,  !- Flow Rate per Person {m3/s/person}
+  ,  !- Air Changes Per Hour
+  Sales 3,  !- Source Zone Name
+  0.0;  !- Delta Temperature
+
+ZoneMixing,
+  Grocery -&gt; Sales 3,  !- Name
+  Sales 3,  !- Zone Name
+  ALWAYS_ON,  !- Schedule Name
+  Flow/Zone,  !- Design Flow Rate Calculation Method
+  1.416,  !- Design Flow Rate {m3/s}
+  ,  !- Flow Rate per Zone Floor Area {m3/s/m2}
+  ,  !- Flow Rate per Person {m3/s/person}
+  ,  !- Air Changes Per Hour
+  Grocery,  !- Source Zone Name
+  0.0;  !- Delta Temperature
+
+ZoneMixing,
+  Sales 4 -&gt; Grocery,  !- Name
+  Grocery,  !- Zone Name
+  ALWAYS_ON,  !- Schedule Name
+  Flow/Zone,  !- Design Flow Rate Calculation Method
+  0.566,  !- Design Flow Rate {m3/s}
+  ,  !- Flow Rate per Zone Floor Area {m3/s/m2}
+  ,  !- Flow Rate per Person {m3/s/person}
+  ,  !- Air Changes Per Hour
+  Sales 4,  !- Source Zone Name
+  0.0;  !- Delta Temperature
+
+ZoneMixing,
+  Grocery -&gt; Sales 4,  !- Name
+  Sales 4,  !- Zone Name
+  ALWAYS_ON,  !- Schedule Name
+  Flow/Zone,  !- Design Flow Rate Calculation Method
+  0.566,  !- Design Flow Rate {m3/s}
+  ,  !- Flow Rate per Zone Floor Area {m3/s/m2}
+  ,  !- Flow Rate per Person {m3/s/person}
+  ,  !- Air Changes Per Hour
+  Grocery,  !- Source Zone Name
+  0.0;  !- Delta Temperature
+
+OutputControl:ReportingTolerances,1.0,1.0;
+
+Output:Table:Monthly,
+  Energy Consumption,
+  2, 
+  Electricity:Facility,
+  SumOrAverage,
+  Gas:Facility,
+  SumOrAverage;
+
+Output:Table:Monthly,
+  Peak Demand,
+  2,
+  Electricity:Facility,
+  Maximum;
+
+Schedule:Compact,
+  GROCERY_CLGSETP_SCH,
+  Temperature,
+  Through: 12/31,
+  For: AllDays,
+  Until: 07:00, 27.222,
+  Until: 22:00, 23.333,
+  Until: 24:00, 27.222;
+
+Output:Variable,Grocery,Zone Mean Air Temperature,hourly;
+Output:Variable,Grocery,Zone Air Humidity Ratio,hourly;
+Output:Variable,Grocery_ClgSetP_Sch,Schedule Value,hourly;
+Output:Variable,Environment,Outdoor Barometric Pressure,hourly;</SubText>
+    </DirectSubstitution>
+  </TextInput>
+</HPBParametization>

@@ -1,0 +1,317 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  All rights reserved.
+ *  
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *  
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#ifndef OPENSTUDIO_HVACSYSTEMSCONTROLLER_H
+#define OPENSTUDIO_HVACSYSTEMSCONTROLLER_H
+
+#include <model/Model.hpp>
+#include <model/ModelObject.hpp>
+#include <model/Loop.hpp>
+#include <openstudio_lib/OSDropZone.hpp>
+#include <openstudio_lib/ModelObjectItem.hpp>
+#include <openstudio_lib/ModelObjectVectorController.hpp>
+#include <boost/smart_ptr.hpp>
+#include <openstudio_lib/SOConstants.hpp>
+#include "../shared_gui_components/OSQObjectController.hpp"
+#include <openstudio_lib/OSItem.hpp>
+#include "../shared_gui_components/OSComboBox.hpp"
+#include <QAbstractListModel>
+#include <QPointer>
+
+namespace openstudio {
+
+namespace model {
+
+class HVACComponent;
+class AirLoopHVAC;
+class SetpointManagerScheduled;
+
+}
+
+class LoopView;
+class HVACSystemsView;
+class HVACControlsView;
+class LoopListModel;
+class HVACGraphicsView;
+class HVACLayoutController;
+class HVACControlsController;
+class MechanicalVentilationView;
+class SingleZoneReheatSPMView;
+class NoSupplyAirTempControlView;
+class NoMechanicalVentilationView;
+class ScheduledSPMView;
+class SystemAvailabilityVectorController;
+class OSDropZone;
+class FollowOATempSPMView;
+class OAResetSPMView;
+class AirLoopHVACUnitaryHeatPumpAirToAirControlView;
+class NoControlsView;
+
+class HVACSystemsController : public QObject
+{
+  Q_OBJECT
+
+  public:
+
+  enum SceneType {TOPOLOGY, CONTROLS};
+
+  HVACSystemsController(const model::Model & model);
+
+  virtual ~HVACSystemsController();
+
+  HVACSystemsView * hvacSystemsView() const;
+
+  boost::shared_ptr<HVACLayoutController> hvacLayoutController() const;
+
+  boost::shared_ptr<HVACControlsController> hvacControlsController() const;
+
+  model::Model model() const;
+
+  // Indicates what object or system to display
+  // This handle may correspond to a Loop, a ModelObject, such as a WaterUseConnection object,
+  // or it may be NULL when displaying the service hot water overview.
+  Handle currentHandle() const;
+
+  void setCurrentHandle(const Handle & handle);
+
+  boost::optional<model::Loop> currentLoop() const;
+
+  void clearSceneSelection();
+
+  public slots:
+  
+  void updateLater();
+
+  private slots:
+
+  void update();
+
+  void addToModel(AddToModelEnum addToModelEnum);
+
+  void onAddSystemClicked();
+
+  void onRemoveLoopClicked();
+
+  void onShowTopologyClicked();
+
+  void onShowControlsClicked();
+
+  void onObjectAdded(const WorkspaceObject&);
+
+  void onObjectRemoved(const WorkspaceObject&);
+
+  void onObjectChanged();
+
+  void onSystemComboBoxIndexChanged(int i);
+
+  private:
+
+  std::vector<IddObjectType> systemComboBoxTypes() const;
+
+  QPointer<HVACSystemsView> m_hvacSystemsView;
+
+  QPointer<NoControlsView> m_noControlsView;
+
+  boost::shared_ptr<HVACLayoutController> m_hvacLayoutController;
+
+  boost::shared_ptr<HVACControlsController> m_hvacControlsController;
+
+  Handle m_currentHandle;
+
+  bool m_dirty;
+
+  model::Model m_model;
+};
+
+class HVACControlsController : public QObject
+{
+  Q_OBJECT;
+
+  public:
+
+  HVACControlsController(HVACSystemsController * hvacSystemsController);
+
+  virtual ~HVACControlsController();
+
+  HVACControlsView * hvacControlsView() const;
+
+  boost::optional<model::AirLoopHVAC> airLoopHVAC() const;
+
+  public slots:
+
+  void updateLater();
+
+  private slots:
+  
+  void update();
+
+  void onEconomizerComboBoxIndexChanged(int index);
+
+  void onVentilationCalcMethodComboBoxIndexChanged(int index);
+
+  void onNightCycleComboBoxIndexChanged(int index);
+
+  void onControlZoneComboBoxChanged(int index);
+
+  void onUnitaryHeatPumpControlZoneChanged(int index);
+
+  private:
+
+  QPointer<HVACControlsView> m_hvacControlsView;
+
+  QPointer<MechanicalVentilationView> m_mechanicalVentilationView;
+
+  QPointer<SingleZoneReheatSPMView> m_singleZoneReheatSPMView;
+
+  QPointer<ScheduledSPMView> m_scheduledSPMView;
+
+  QPointer<NoSupplyAirTempControlView> m_noSupplyAirTempControlView;
+
+  QPointer<NoMechanicalVentilationView> m_noMechanicalVentilationView;
+
+  QPointer<OSDropZone> m_systemAvailabilityDropZone;
+
+  QPointer<OSDropZone> m_supplyAirTempScheduleDropZone;
+
+  QPointer<FollowOATempSPMView> m_followOATempSPMView;
+
+  QPointer<OAResetSPMView> m_oaResetSPMView;
+
+  QPointer<AirLoopHVACUnitaryHeatPumpAirToAirControlView> m_airLoopHVACUnitaryHeatPumpAirToAirControlView;
+
+  QPointer<NoControlsView> m_noControlsView;
+
+  QPointer<HVACSystemsController> m_hvacSystemsController;
+
+  bool m_dirty;
+};
+
+class HVACLayoutController : public QObject
+{
+  Q_OBJECT;
+
+  public:
+
+  HVACLayoutController(HVACSystemsController * hvacSystemsController);
+
+  virtual ~HVACLayoutController();
+
+  HVACGraphicsView * hvacGraphicsView() const;
+
+  void clearSceneSelection();
+
+  public slots:
+
+  void updateLater();
+
+  private slots:
+  
+  void update();
+
+  void onModelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
+
+  void addLibraryObjectToModelNode(OSItemId itemid, model::HVACComponent & comp);
+
+  void removeModelObject(model::ModelObject & modelObject);
+
+  void goToOtherLoop( model::ModelObject & modelObject );
+
+  void addLibraryObjectToTopLevel(OSItemId itemid);
+
+  void goToServiceWaterScene();
+
+  private:
+
+  QPointer<HVACGraphicsView> m_hvacGraphicsView;
+
+  QPointer<HVACSystemsController> m_hvacSystemsController;
+
+  bool m_dirty;
+};
+
+class SystemAvailabilityVectorController : public ModelObjectVectorController
+{
+  Q_OBJECT;
+
+  public:
+
+  virtual ~SystemAvailabilityVectorController() {}
+
+  boost::optional<model::AirLoopHVAC> airLoopHVAC();
+
+  void attach(const model::ModelObject& modelObject);
+
+  void detach();
+
+  public slots:
+
+  void reportItemsLater();
+
+  void reportItems();
+
+  protected:
+
+  std::vector<OSItemId> makeVector();
+
+  void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
+
+  void onDrop(const OSItemId& itemId);
+
+  private:
+
+  bool m_reportScheduled;
+};
+
+class SupplyAirTempScheduleVectorController : public ModelObjectVectorController
+{
+  Q_OBJECT;
+
+  public:
+
+  virtual ~SupplyAirTempScheduleVectorController() {}
+
+  boost::optional<model::SetpointManagerScheduled> setpointManagerScheduled();
+
+  void attach(const model::ModelObject& modelObject);
+
+  void detach();
+
+  public slots:
+
+  void reportItemsLater();
+
+  void reportItems();
+
+  protected:
+
+  std::vector<OSItemId> makeVector();
+
+  void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
+
+  void onDrop(const OSItemId& itemId);
+
+  private:
+
+  bool m_reportScheduled;
+};
+
+} // openstudio
+
+#endif // OPENSTUDIO_HVACSYSTEMSCONTROLLER_H
+

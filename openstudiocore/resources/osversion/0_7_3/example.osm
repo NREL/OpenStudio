@@ -1,0 +1,1970 @@
+
+
+OS:Version,
+  0.7.3;                    ! Version Identifier
+
+OS:SimulationControl,
+  Yes,                      ! Do Zone Sizing Calculation
+  Yes,                      ! Do System Sizing Calculation
+  ,                         ! Do Plant Sizing Calculation
+  No,                       ! Run Simulation for Sizing Periods
+  Yes;                      ! Run Simulation for Weather File Run Periods
+
+OS:Timestep,
+  6;                        ! Number of Timesteps per Hour
+
+OS:RunPeriod,
+  OS:RunPeriod 1,           ! Name
+  1,                        ! Begin Month
+  1,                        ! Begin Day of Month
+  12,                       ! End Month
+  31,                       ! End Day of Month
+  No,                       ! Use Weather File Holidays and Special Days
+  No,                       ! Use Weather File Daylight Saving Period
+  No,                       ! Apply Weekend Holiday Rule
+  Yes,                      ! Use Weather File Rain Indicators
+  Yes,                      ! Use Weather File Snow Indicators
+  1;                        ! Number of Times Runperiod to be Repeated
+
+OS:SurfaceConvectionAlgorithm:Inside,
+  TARP;                     ! Algorithm
+
+OS:SurfaceConvectionAlgorithm:Outside,
+  DOE-2;                    ! Algorithm
+
+OS:HeatBalanceAlgorithm,
+  ConductionTransferFunction,  ! Algorithm
+  200;                      ! Surface Temperature Upper Limit {F}
+
+OS:ZoneAirHeatBalanceAlgorithm,
+  AnalyticalSolution;       ! Algorithm
+
+OS:ConvergenceLimits;
+
+OS:ShadowCalculation,
+  7,                        ! Calculation Frequency
+  15000;                    ! Maximum Figures in Shadow Overlap Calculations
+
+OS:Site,
+  OS:Site 1,                ! Name
+  41.77,                    ! Latitude {deg}
+  -87.75,                   ! Longitude {deg}
+  -6,                       ! Time Zone {hr}
+  190,                      ! Elevation {m}
+  ;                         ! Terrain
+
+OS:Site:GroundTemperature:BuildingSurface,
+  19.527,                   ! January Ground Temperature {C}
+  19.502,                   ! February Ground Temperature {C}
+  19.536,                   ! March Ground Temperature {C}
+  19.598,                   ! April Ground Temperature {C}
+  20.002,                   ! May Ground Temperature {C}
+  21.64,                    ! June Ground Temperature {C}
+  22.225,                   ! July Ground Temperature {C}
+  22.375,                   ! August Ground Temperature {C}
+  21.449,                   ! September Ground Temperature {C}
+  20.121,                   ! October Ground Temperature {C}
+  19.802,                   ! November Ground Temperature {C}
+  19.633;                   ! December Ground Temperature {C}
+
+OS:Site:WaterMainsTemperature,
+  Correlation,              ! Calculation Method
+  ,                         ! Temperature Schedule Name
+  9.69,                     ! Annual Average Outdoor Air Temperature {C}
+  28.1;                     ! Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
+
+OS:SizingPeriod:DesignDay,
+  OS:SizingPeriod:DesignDay 1,  ! Name
+  -20.6,                    ! Maximum Dry-Bulb Temperature {C}
+  0,                        ! Daily Dry-Bulb Temperature Range {deltaC}
+  -20.6,                    ! Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
+  99063,                    ! Barometric Pressure {Pa}
+  4.9,                      ! Wind Speed {m/s}
+  270,                      ! Wind Direction {deg}
+  0,                        ! Sky Clearness
+  0,                        ! Rain Indicator
+  0,                        ! Snow Indicator
+  21,                       ! Day of Month
+  1,                        ! Month
+  WinterDesignDay,          ! Day Type
+  0,                        ! Daylight Saving Time Indicator
+  WetBulb,                  ! Humidity Indicating Type
+  ,                         ! Humidity Indicating Day Schedule Name
+  DefaultMultipliers,       ! Dry-Bulb Temperature Range Modifier Type
+  ,                         ! Dry-Bulb Temperature Range Modifier Schedule Name
+  AshraeClearSky;           ! Solar Model Indicator
+
+OS:SizingPeriod:DesignDay,
+  OS:SizingPeriod:DesignDay 2,  ! Name
+  33.2,                     ! Maximum Dry-Bulb Temperature {C}
+  10.7,                     ! Daily Dry-Bulb Temperature Range {deltaC}
+  23.8,                     ! Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
+  99063,                    ! Barometric Pressure {Pa}
+  5.3,                      ! Wind Speed {m/s}
+  230,                      ! Wind Direction {deg}
+  1,                        ! Sky Clearness
+  0,                        ! Rain Indicator
+  0,                        ! Snow Indicator
+  21,                       ! Day of Month
+  7,                        ! Month
+  SummerDesignDay,          ! Day Type
+  0,                        ! Daylight Saving Time Indicator
+  WetBulb,                  ! Humidity Indicating Type
+  ,                         ! Humidity Indicating Day Schedule Name
+  DefaultMultipliers,       ! Dry-Bulb Temperature Range Modifier Type
+  ,                         ! Dry-Bulb Temperature Range Modifier Schedule Name
+  AshraeClearSky;           ! Solar Model Indicator
+
+OS:DefaultScheduleSet,
+  Medium Office Schedules,  ! Name
+  ,                         !- Hours of Operation Schedule Name
+  Medium Office Number of People Schedule,  !- Number of People Schedule Name
+  Medium Office People Activity Level Schedule,  !- People Activity Level Schedule Name
+  Medium Office Lighting Schedule,  !- Lighting Schedule Name
+  Medium Office Electric Equipment Schedule,  !- Electric Equipment Schedule Name
+  Medium Office Gas Equipment Schedule,  !- Gas Equipment Schedule Name
+  Medium Office Hot Water Equipment Schedule,  !- Hot Water Equipment Schedule Name
+  ,                         !- Ventilation per Person Schedule Name
+  ,                         !- Ventilation per Floor Area Schedule Name
+  Medium Office Infiltration Schedule;  !- Infiltration Schedule Name
+
+OS:ScheduleTypeLimits,
+  Fraction,                 !- Name
+  0.0,                      !- Lower Limit Value
+  1.0,                      !- Upper Limit Value
+  CONTINUOUS;               !- Numeric Type
+
+OS:ScheduleTypeLimits,
+  Any Number;               !- Name
+
+OS:ScheduleTypeLimits,
+  On/Off,                   !- Name
+  0,                        !- Lower Limit Value
+  1,                        !- Upper Limit Value
+  DISCRETE;                 !- Numeric Type
+
+OS:ScheduleTypeLimits,
+  Control Type,             !- Name
+  0,                        !- Lower Limit Value
+  4,                        !- Upper Limit Value
+  DISCRETE;                 !- Numeric Type
+
+OS:ScheduleTypeLimits,
+  Temperature,              !- Name
+  -60,                      !- Lower Limit Value
+  200,                      !- Upper Limit Value
+  CONTINUOUS;               !- Numeric Type
+
+OS:Schedule:Compact,
+  Medium Office Number of People Schedule,  !- Name
+  Fraction,                 !- Schedule Type Limits Name
+  Through: 12/31,           !- Field 1
+  For: SummerDesignDay,     !- Field 2
+  Until: 06:00,             ! Field 3
+  0.0,                      !- Field 3
+  Until: 22:00,             ! Field 5
+  1.0,                      !- Field 5
+  Until: 24:00,             ! Field 7
+  0.05,                     !- Field 7
+  For: Weekdays,            !- Field 9
+  Until: 06:00,             ! Field 10
+  0.0,                      !- Field 10
+  Until: 07:00,             ! Field 12
+  0.1,                      !- Field 12
+  Until: 08:00,             ! Field 14
+  0.2,                      !- Field 14
+  Until: 12:00,             ! Field 16
+  0.95,                     !- Field 16
+  Until: 13:00,             ! Field 18
+  0.5,                      !- Field 18
+  Until: 17:00,             ! Field 20
+  0.95,                     !- Field 20
+  Until: 18:00,             ! Field 22
+  0.7,                      !- Field 22
+  Until: 20:00,             ! Field 24
+  0.4,                      !- Field 24
+  Until: 22:00,             ! Field 26
+  0.1,                      !- Field 26
+  Until: 24:00,             ! Field 28
+  0.05,                     !- Field 28
+  For: Saturday,            !- Field 30
+  Until: 06:00,             ! Field 31
+  0.0,                      !- Field 31
+  Until: 08:00,             ! Field 33
+  0.1,                      !- Field 33
+  Until: 14:00,             ! Field 35
+  0.5,                      !- Field 35
+  Until: 17:00,             ! Field 37
+  0.1,                      !- Field 37
+  Until: 24:00,             ! Field 39
+  0.0,                      !- Field 39
+  For: AllOtherDays,        !- Field 41
+  Until: 24:00,             ! Field 42
+  0.0;                      !- Field 42
+
+OS:Schedule:Compact,
+  Medium Office People Activity Level Schedule,  !- Name
+  Any Number,               !- Schedule Type Limits Name
+  Through: 12/31,           !- Field 1
+  For: AllDays,             !- Field 2
+  Until: 24:00,             ! Field 3
+  120.;                     !- Field 3
+
+OS:Schedule:Compact,
+  Medium Office Lighting Schedule,  !- Name
+  Fraction,                 !- Schedule Type Limits Name
+  Through: 12/31,           !- Field 1
+  For: Weekdays,            !- Field 2
+  Until: 05:00,             ! Field 3
+  0.05,                     !- Field 3
+  Until: 07:00,             ! Field 5
+  0.1,                      !- Field 5
+  Until: 08:00,             ! Field 7
+  0.3,                      !- Field 7
+  Until: 17:00,             ! Field 9
+  0.9,                      !- Field 9
+  Until: 18:00,             ! Field 11
+  0.7,                      !- Field 11
+  Until: 20:00,             ! Field 13
+  0.5,                      !- Field 13
+  Until: 22:00,             ! Field 15
+  0.3,                      !- Field 15
+  Until: 23:00,             ! Field 17
+  0.1,                      !- Field 17
+  Until: 24:00,             ! Field 19
+  0.05,                     !- Field 19
+  For: Saturday,            !- Field 21
+  Until: 06:00,             ! Field 22
+  0.05,                     !- Field 22
+  Until: 08:00,             ! Field 24
+  0.1,                      !- Field 24
+  Until: 14:00,             ! Field 26
+  0.5,                      !- Field 26
+  Until: 17:00,             ! Field 28
+  0.15,                     !- Field 28
+  Until: 24:00,             ! Field 30
+  0.05,                     !- Field 30
+  For: SummerDesignDay,     !- Field 32
+  Until: 24:00,             ! Field 33
+  1.0,                      !- Field 33
+  For: WinterDesignDay,     !- Field 35
+  Until: 24:00,             ! Field 36
+  0.0,                      !- Field 36
+  For: AllOtherDays,        !- Field 38
+  Until: 24:00,             ! Field 39
+  0.05;                     !- Field 39
+
+OS:Schedule:Compact,
+  Medium Office Electric Equipment Schedule,  !- Name
+  Fraction,                 !- Schedule Type Limits Name
+  Through: 12/31,           !- Field 1
+  For: Weekdays,            !- Field 2
+  Until: 08:00,             ! Field 3
+  0.40,                     !- Field 3
+  Until: 12:00,             ! Field 5
+  0.90,                     !- Field 5
+  Until: 13:00,             ! Field 7
+  0.80,                     !- Field 7
+  Until: 17:00,             ! Field 9
+  0.90,                     !- Field 9
+  Until: 18:00,             ! Field 11
+  0.80,                     !- Field 11
+  Until: 20:00,             ! Field 13
+  0.60,                     !- Field 13
+  Until: 22:00,             ! Field 15
+  0.50,                     !- Field 15
+  Until: 24:00,             ! Field 17
+  0.40,                     !- Field 17
+  For: Saturday,            !- Field 19
+  Until: 06:00,             ! Field 20
+  0.30,                     !- Field 20
+  Until: 08:00,             ! Field 22
+  0.4,                      !- Field 22
+  Until: 14:00,             ! Field 24
+  0.5,                      !- Field 24
+  Until: 17:00,             ! Field 26
+  0.35,                     !- Field 26
+  Until: 24:00,             ! Field 28
+  0.30,                     !- Field 28
+  For: SummerDesignDay,     !- Field 30
+  Until: 24:00,             ! Field 31
+  1.0,                      !- Field 31
+  For: WinterDesignDay,     !- Field 33
+  Until: 24:00,             ! Field 34
+  0.0,                      !- Field 34
+  For: AllOtherDays,        !- Field 36
+  Until: 24:00,             ! Field 37
+  0.30;                     !- Field 37
+
+OS:Schedule:Compact,
+  Medium Office Gas Equipment Schedule,  !- Name
+  Fraction,                 !- Schedule Type Limits Name
+  Through: 12/31,           !- Field 1
+  For: Weekdays,            !- Field 2
+  Until: 08:00,             ! Field 3
+  0.40,                     !- Field 3
+  Until: 12:00,             ! Field 5
+  0.90,                     !- Field 5
+  Until: 13:00,             ! Field 7
+  0.80,                     !- Field 7
+  Until: 17:00,             ! Field 9
+  0.90,                     !- Field 9
+  Until: 18:00,             ! Field 11
+  0.80,                     !- Field 11
+  Until: 20:00,             ! Field 13
+  0.60,                     !- Field 13
+  Until: 22:00,             ! Field 15
+  0.50,                     !- Field 15
+  Until: 24:00,             ! Field 17
+  0.40,                     !- Field 17
+  For: Saturday,            !- Field 19
+  Until: 06:00,             ! Field 20
+  0.30,                     !- Field 20
+  Until: 08:00,             ! Field 22
+  0.4,                      !- Field 22
+  Until: 14:00,             ! Field 24
+  0.5,                      !- Field 24
+  Until: 17:00,             ! Field 26
+  0.35,                     !- Field 26
+  Until: 24:00,             ! Field 28
+  0.30,                     !- Field 28
+  For: SummerDesignDay,     !- Field 30
+  Until: 24:00,             ! Field 31
+  1.0,                      !- Field 31
+  For: WinterDesignDay,     !- Field 33
+  Until: 24:00,             ! Field 34
+  0.0,                      !- Field 34
+  For: AllOtherDays,        !- Field 36
+  Until: 24:00,             ! Field 37
+  0.30;                     !- Field 37
+
+OS:Schedule:Compact,
+  Medium Office Hot Water Equipment Schedule,  !- Name
+  Fraction,                 !- Schedule Type Limits Name
+  Through: 12/31,           !- Field 1
+  For: Weekdays SummerDesignDay,  !- Field 2
+  Until: 05:00,             ! Field 3
+  0.05,                     !- Field 3
+  Until: 06:00,             ! Field 5
+  0.08,                     !- Field 5
+  Until: 07:00,             ! Field 7
+  0.07,                     !- Field 7
+  Until: 08:00,             ! Field 9
+  0.19,                     !- Field 9
+  Until: 09:00,             ! Field 11
+  0.35,                     !- Field 11
+  Until: 10:00,             ! Field 13
+  0.38,                     !- Field 13
+  Until: 11:00,             ! Field 15
+  0.39,                     !- Field 15
+  Until: 12:00,             ! Field 17
+  0.47,                     !- Field 17
+  Until: 13:00,             ! Field 19
+  0.57,                     !- Field 19
+  Until: 14:00,             ! Field 21
+  0.54,                     !- Field 21
+  Until: 15:00,             ! Field 23
+  0.34,                     !- Field 23
+  Until: 16:00,             ! Field 25
+  0.33,                     !- Field 25
+  Until: 17:00,             ! Field 27
+  0.44,                     !- Field 27
+  Until: 18:00,             ! Field 29
+  0.26,                     !- Field 29
+  Until: 19:00,             ! Field 31
+  0.21,                     !- Field 31
+  Until: 20:00,             ! Field 33
+  0.15,                     !- Field 33
+  Until: 21:00,             ! Field 35
+  0.17,                     !- Field 35
+  Until: 22:00,             ! Field 37
+  0.08,                     !- Field 37
+  Until: 24:00,             ! Field 39
+  0.05,                     !- Field 39
+  For: Saturday WinterDesignDay,  !- Field 41
+  Until: 05:00,             ! Field 42
+  0.05,                     !- Field 42
+  Until: 06:00,             ! Field 44
+  0.08,                     !- Field 44
+  Until: 07:00,             ! Field 46
+  0.07,                     !- Field 46
+  Until: 08:00,             ! Field 48
+  0.11,                     !- Field 48
+  Until: 09:00,             ! Field 50
+  0.15,                     !- Field 50
+  Until: 10:00,             ! Field 52
+  0.21,                     !- Field 52
+  Until: 11:00,             ! Field 54
+  0.19,                     !- Field 54
+  Until: 12:00,             ! Field 56
+  0.23,                     !- Field 56
+  Until: 13:00,             ! Field 58
+  0.20,                     !- Field 58
+  Until: 14:00,             ! Field 60
+  0.19,                     !- Field 60
+  Until: 15:00,             ! Field 62
+  0.15,                     !- Field 62
+  Until: 16:00,             ! Field 64
+  0.13,                     !- Field 64
+  Until: 17:00,             ! Field 66
+  0.14,                     !- Field 66
+  Until: 21:00,             ! Field 68
+  0.07,                     !- Field 68
+  Until: 22:00,             ! Field 70
+  0.09,                     !- Field 70
+  Until: 24:00,             ! Field 72
+  0.05,                     !- Field 72
+  For: Sunday Holidays AllOtherDays,  !- Field 74
+  Until: 05:00,             ! Field 75
+  0.04,                     !- Field 75
+  Until: 06:00,             ! Field 77
+  0.07,                     !- Field 77
+  Until: 11:00,             ! Field 79
+  0.04,                     !- Field 79
+  Until: 13:00,             ! Field 81
+  0.06,                     !- Field 81
+  Until: 14:00,             ! Field 83
+  0.09,                     !- Field 83
+  Until: 15:00,             ! Field 85
+  0.06,                     !- Field 85
+  Until: 21:00,             ! Field 87
+  0.04,                     !- Field 87
+  Until: 22:00,             ! Field 89
+  0.07,                     !- Field 89
+  Until: 24:00,             ! Field 91
+  0.04;                     !- Field 91
+
+OS:Schedule:Compact,
+  Medium Office Infiltration Schedule,  !- Name
+  Fraction,                 !- Schedule Type Limits Name
+  Through: 12/31,           !- Field 1
+  For: Weekdays SummerDesignDay,  !- Field 2
+  Until: 06:00,             ! Field 3
+  1.0,                      !- Field 3
+  Until: 22:00,             ! Field 5
+  0.25,                     !- Field 5
+  Until: 24:00,             ! Field 7
+  1.0,                      !- Field 7
+  For: Saturday WinterDesignDay,  !- Field 9
+  Until: 06:00,             ! Field 10
+  1.0,                      !- Field 10
+  Until: 18:00,             ! Field 12
+  0.25,                     !- Field 12
+  Until: 24:00,             ! Field 14
+  1.0,                      !- Field 14
+  For: Sunday Holidays AllOtherDays,  !- Field 16
+  Until: 24:00,             ! Field 17
+  1.0;                      !- Field 17
+
+OS:Schedule:Compact,
+  Medium Office Cooling Setpoint Schedule,  !- Name
+  Temperature,              !- Schedule Type Limits Name
+  Through: 12/31,           !- Field 1
+  For: Weekdays SummerDesignDay,  !- Field 2
+  Until: 06:00,             ! Field 3
+  26.7,                     !- Field 3
+  Until: 22:00,             ! Field 5
+  24.0,                     !- Field 5
+  Until: 24:00,             ! Field 7
+  26.7,                     !- Field 7
+  For: Saturday,            !- Field 9
+  Until: 06:00,             ! Field 10
+  26.7,                     !- Field 10
+  Until: 18:00,             ! Field 12
+  24.0,                     !- Field 12
+  Until: 24:00,             ! Field 14
+  26.7,                     !- Field 14
+  For WinterDesignDay,      !- Field 16
+  Until: 24:00,             ! Field 17
+  26.7,                     !- Field 17
+  For: AllOtherDays,        !- Field 19
+  Until: 24:00,             ! Field 20
+  26.7;                     !- Field 20
+
+OS:Schedule:Compact,
+  Medium Office Heating Setpoint Schedule,  !- Name
+  Temperature,              !- Schedule Type Limits Name
+  Through: 12/31,           !- Field 1
+  For: Weekdays,            !- Field 2
+  Until: 06:00,             ! Field 3
+  15.6,                     !- Field 3
+  Until: 22:00,             ! Field 5
+  21.0,                     !- Field 5
+  Until: 24:00,             ! Field 7
+  15.6,                     !- Field 7
+  For SummerDesignDay,      !- Field 9
+  Until: 24:00,             ! Field 10
+  15.6,                     !- Field 10
+  For: Saturday,            !- Field 12
+  Until: 06:00,             ! Field 13
+  15.6,                     !- Field 13
+  Until: 18:00,             ! Field 15
+  21.0,                     !- Field 15
+  Until: 24:00,             ! Field 17
+  15.6,                     !- Field 17
+  For: WinterDesignDay,     !- Field 19
+  Until: 24:00,             ! Field 20
+  21.0,                     !- Field 20
+  For: AllOtherDays,        !- Field 22
+  Until: 24:00,             ! Field 23
+  15.6;                     !- Field 23
+
+OS:DefaultConstructionSet,
+  Default Constructions,    !- Name
+  Exterior Surface Constructions,  !- Default Exterior Surface Constructions Name
+  Interior Surface Constructions,  !- Default Interior Surface Constructions Name
+  Ground Contact Surface Constructions,  !- Default Ground Contact Surface Constructions Name
+  Exterior SubSurface Constructions,  !- Default Exterior SubSurface Constructions Name
+  Interior SubSurface Constructions,  !- Default Interior SubSurface Constructions Name
+  Interior Partition,       !- Interior Partition Construction Name
+  ,                         !- Space Shading Construction Name
+  ,                         !- Building Shading Construction Name
+  ;                         !- Site Shading Construction Name
+
+OS:DefaultSurfaceConstructions,
+  Exterior Surface Constructions,  !- Name
+  ,                         !- Floor Construction Name
+  Exterior Wall,            !- Wall Construction Name
+  Exterior Roof;            !- Roof Ceiling Construction
+
+OS:DefaultSurfaceConstructions,
+  Interior Surface Constructions,  !- Name
+  Interior Floor,           !- Floor Construction Name
+  Air Wall,                 !- Wall Construction Name
+  Interior Ceiling;         !- Roof Ceiling Construction
+
+OS:DefaultSurfaceConstructions,
+  Ground Contact Surface Constructions,  !- Name
+  Slab,                     !- Floor Construction Name
+  ,                         !- Wall Construction Name
+  ;                         !- Roof Ceiling Construction
+
+OS:DefaultSubSurfaceConstructions,
+  Exterior SubSurface Constructions,  !- Name
+  Exterior Window,          !- Fixed Window Construction Name
+  Exterior Window,          !- Operable Window Construction Name
+  Exterior Door,            !- Door Construction Name
+  Exterior Window,          !- Glass Door Construction Name
+  Exterior Door,            !- Overhead Door Construction Name
+  Exterior Window,          !- Skylight Construction Name
+  Exterior Window,          !- Tubular Daylight Dome Construction Name
+  Exterior Window;          !- Tubular Daylight Diffuser Construction Name
+
+OS:DefaultSubSurfaceConstructions,
+  Interior SubSurface Constructions,  !- Name
+  Interior Window,          !- Fixed Window Construction Name
+  Interior Window,          !- Operable Window Construction Name
+  Interior Door,            !- Door Construction Name
+  Interior Window,          !- Glass Door Construction Name
+  Interior Door,            !- Overhead Door Construction Name
+  Interior Window,          !- Skylight Construction Name
+  Interior Window,          !- Tubular Daylight Dome Construction Name
+  Interior Window;          !- Tubular Daylight Diffuser Construction Name
+
+OS:Construction,
+  Exterior Wall,            !- Name
+  ,                         !- Surface Rendering Name
+  M01 100mm brick,          !- Outside Layer
+  M15 200mm heavyweight concrete,  !- Layer 2
+  I02 50mm insulation board,  !- Layer 3
+  F04 Wall air space resistance,  !- Layer 4
+  G01a 19mm gypsum board;   !- Layer 5
+
+OS:Material,
+  M01 100mm brick,          !- Name
+  MediumRough,              !- Roughness
+  0.1016,                   !- Thickness {m}
+  0.89,                     !- Conductivity {W/m-K}
+  1920,                     !- Density {kg/m3}
+  790;                      !- Specific Heat {J/kg-K}
+
+OS:Material,
+  M15 200mm heavyweight concrete,  !- Name
+  MediumRough,              !- Roughness
+  0.2032,                   !- Thickness {m}
+  1.95,                     !- Conductivity {W/m-K}
+  2240,                     !- Density {kg/m3}
+  900;                      !- Specific Heat {J/kg-K}
+
+OS:Material,
+  I02 50mm insulation board,  !- Name
+  MediumRough,              !- Roughness
+  0.0508,                   !- Thickness {m}
+  0.03,                     !- Conductivity {W/m-K}
+  43,                       !- Density {kg/m3}
+  1210;                     !- Specific Heat {J/kg-K}
+
+OS:Material:AirGap,
+  F04 Wall air space resistance,  !- Name
+  0.15;                     !- Thermal Resistance {m2-K/W}
+
+OS:Material,
+  G01a 19mm gypsum board,   !- Name
+  MediumSmooth,             !- Roughness
+  0.019,                    !- Thickness {m}
+  0.16,                     !- Conductivity {W/m-K}
+  800,                      !- Density {kg/m3}
+  1090;                     !- Specific Heat {J/kg-K}
+
+OS:Construction,
+  Exterior Roof,            !- Name
+  ,                         !- Surface Rendering Name
+  M11 100mm lightweight concrete,  !- Outside Layer
+  F05 Ceiling air space resistance,  !- Layer 2
+  F16 Acoustic tile;        !- Layer 3
+
+OS:Material,
+  M11 100mm lightweight concrete,  !- Name
+  MediumRough,              !- Roughness
+  0.1016,                   !- Thickness {m}
+  0.53,                     !- Conductivity {W/m-K}
+  1280,                     !- Density {kg/m3}
+  840;                      !- Specific Heat {J/kg-K}
+
+OS:Material:AirGap,
+  F05 Ceiling air space resistance,  !- Name
+  0.18;                     !- Thermal Resistance {m2-K/W}
+
+OS:Material,
+  F16 Acoustic tile,        !- Name
+  MediumSmooth,             !- Roughness
+  0.0191,                   !- Thickness {m}
+  0.06,                     !- Conductivity {W/m-K}
+  368,                      !- Density {kg/m3}
+  590;                      !- Specific Heat {J/kg-K}
+
+OS:Construction,
+  Interior Floor,           !- Name
+  ,                         !- Surface Rendering Name
+  F16 Acoustic tile,        !- Outside Layer
+  F05 Ceiling air space resistance,  !- Layer 2
+  M11 100mm lightweight concrete;  !- Layer 3
+
+OS:Construction,
+  Air Wall,                 !- Name
+  ,                         !- Surface Rendering Name
+  Air Wall Material;        !- Outside Layer
+
+OS:Material:AirWall,
+  Air Wall Material;        !- Name
+
+OS:Construction,
+  Interior Ceiling,         !- Name
+  ,                         !- Surface Rendering Name
+  M11 100mm lightweight concrete,  !- Outside Layer
+  F05 Ceiling air space resistance,  !- Layer 2
+  F16 Acoustic tile;        !- Layer 3
+
+OS:Construction,
+  Slab,                     !- Name
+  ,                         !- Surface Rendering Name
+  MAT-CC05 8 HW CONCRETE,   !- Outside Layer
+  CP02 CARPET PAD;          !- Layer 2
+
+OS:Material,
+  MAT-CC05 8 HW CONCRETE,   !- Name
+  Rough,                    !- Roughness
+  0.2032,                   !- Thickness {m}
+  1.3110,                   !- Conductivity {W/m-K}
+  2240.0000,                !- Density {kg/m3}
+  836.8000,                 !- Specific Heat {J/kg-K}
+  0.9000,                   !- Thermal Absorptance
+  0.7000,                   !- Solar Absorptance
+  0.7000;                   !- Visible Absorptance
+
+OS:Material:NoMass,
+  CP02 CARPET PAD,          !- Name
+  VeryRough,                !- Roughness
+  0.2165,                   !- Thermal Resistance {m2-K/W}
+  0.9000,                   !- Thermal Absorptance
+  0.7000,                   !- Solar Absorptance
+  0.8000;                   !- Visible Absorptance
+
+OS:Construction,
+  Exterior Window,          !- Name
+  ,                         !- Surface Rendering Name
+  Clear 3mm,                !- Outside Layer
+  Air 13mm,                 !- Layer 2
+  Clear 3mm;                !- Layer 3
+
+OS:WindowMaterial:Glazing,
+  Clear 3mm,                !- Name
+  SpectralAverage,          !- Optical Data Type
+  ,                         !- Window Glass Spectral Data Set Name
+  0.003,                    !- Thickness {m}
+  0.837,                    !- Solar Transmittance at Normal Incidence
+  0.075,                    !- Front Side Solar Reflectance at Normal Incidence
+  0.075,                    !- Back Side Solar Reflectance at Normal Incidence
+  0.898,                    !- Visible Transmittance at Normal Incidence
+  0.081,                    !- Front Side Visible Reflectance at Normal Incidence
+  0.081,                    !- Back Side Visible Reflectance at Normal Incidence
+  0,                        !- Infrared Transmittance at Normal Incidence
+  0.84,                     !- Front Side Infrared Hemispherical Emissivity
+  0.84,                     !- Back Side Infrared Hemispherical Emissivity
+  0.9;                      !- Conductivity {W/m-K}
+
+OS:WindowMaterial:Gas,
+  Air 13mm,                 !- Name
+  Air,                      !- Gas Type
+  0.0127;                   !- Thickness {m}
+
+OS:Construction,
+  Exterior Door,            !- Name
+  ,                         !- Surface Rendering Name
+  F08 Metal surface,        !- Outside Layer
+  I01 25mm insulation board;  !- Layer 2
+
+OS:Material,
+  F08 Metal surface,        !- Name
+  Smooth,                   !- Roughness
+  0.0008,                   !- Thickness {m}
+  45.28,                    !- Conductivity {W/m-K}
+  7824,                     !- Density {kg/m3}
+  500;                      !- Specific Heat {J/kg-K}
+
+OS:Material,
+  I01 25mm insulation board,  !- Name
+  MediumRough,              !- Roughness
+  0.0254,                   !- Thickness {m}
+  0.03,                     !- Conductivity {W/m-K}
+  43,                       !- Density {kg/m3}
+  1210;                     !- Specific Heat {J/kg-K}
+
+OS:Construction,
+  Interior Window,          !- Name
+  ,                         !- Surface Rendering Name
+  Clear 3mm;                !- Outside Layer
+
+OS:Construction,
+  Interior Door,            !- Name
+  ,                         !- Surface Rendering Name
+  G05 25mm wood;            !- Outside Layer
+
+OS:Material,
+  G05 25mm wood,            !- Name
+  MediumSmooth,             !- Roughness
+  0.0254,                   !- Thickness {m}
+  0.15,                     !- Conductivity {W/m-K}
+  608,                      !- Density {kg/m3}
+  1630;                     !- Specific Heat {J/kg-K}
+
+OS:Construction,
+  Interior Partition,       !- Name
+  ,                         !- Surface Rendering Name
+  G05 25mm wood;            !- Outside Layer
+
+OS:StandardsInformation:Construction,
+  Exterior Wall,            ! Construction Name
+  ,                         ! Intended Surface Type
+  ,                         ! Construction Type
+  2,                        ! Perturbable Layer
+  Insulation,               ! Perturbable Layer Type
+  ;                         ! Other Perturbable Layer Type
+
+OS:SpaceType,
+  OS:SpaceType 1;           ! Name
+
+OS:Lights:Definition,
+  OS:Lights:Definition 1,   ! Name
+  Watts/Area,               ! Design Level Calculation Method
+  ,                         ! Lighting Level {W}
+  10,                       ! Watts per Space Floor Area {W/m2}
+  ;                         ! Watts per Person {W/person}
+
+OS:Lights,
+  OS:Lights 1,              ! Name
+  OS:Lights:Definition 1,   ! Lights Definition Name
+  OS:SpaceType 1;           ! Space or SpaceType Name
+
+OS:ElectricEquipment:Definition,
+  OS:ElectricEquipment:Definition 1,  ! Name
+  Watts/Area,               ! Design Level Calculation Method
+  ,                         ! Design Level {W}
+  5,                        ! Watts per Space Floor Area {W/m2}
+  ;                         ! Watts per Person {W/person}
+
+OS:ElectricEquipment,
+  OS:ElectricEquipment 1,   ! Name
+  OS:ElectricEquipment:Definition 1,  ! Electric Equipment Definition Name
+  OS:SpaceType 1;           ! Space or SpaceType Name
+
+OS:People:Definition,
+  OS:People:Definition 1,   ! Name
+  People/Area,              ! Number of People Calculation Method
+  ,                         ! Number of People
+  0.05,                     ! People per Space Floor Area {person/m2}
+  ,                         ! Space Floor Area per Person {m2/person}
+  0.3;                      ! Fraction Radiant
+
+OS:People,
+  OS:People 1,              ! Name
+  OS:People:Definition 1,   ! People Definition Name
+  OS:SpaceType 1;           ! Space or SpaceType Name
+
+OS:Facility;
+
+OS:Building,
+  OS:Building 1,            ! Name
+  ,                         ! Building Type
+  ,                         ! North Axis {deg}
+  ,                         ! Nominal Floor to Floor Height {m}
+  OS:SpaceType 1,           ! Space Type Name
+  Default Constructions,    ! Default Construction Set Name
+  Medium Office Schedules;  ! Default Schedule Set Name
+
+OS:ThermalZone,
+  OS:ThermalZone 1,         ! Name
+  ,                         ! Multiplier
+  ,                         ! Ceiling Height {m}
+  ,                         ! Volume {m3}
+  ,                         ! Floor Area {m2}
+  ,                         ! Zone Inside Convection Algorithm
+  ,                         ! Zone Outside Convection Algorithm
+  ,                         ! Zone Conditioning Equipment List Name
+  OS:Connection 13,         ! Zone Air Inlet Node or NodeList Name
+  OS:Connection 2,          ! Zone Air Exhaust Node or NodeList Name
+  OS:Connection 1,          ! Zone Air Node Name
+  OS:Connection 14,         ! Zone Return Air Node Name
+  OS:Daylighting:Control 1,  ! Primary Daylighting Control Name
+  0.25,                     ! Fraction of Zone Controlled by Primary Daylighting Control
+  ,                         ! Secondary Daylighting Control Name
+  ,                         ! Fraction of Zone Controlled by Secondary Daylighting Control
+  OS:IlluminanceMap 1,      ! Illuminance Map Name
+  ,                         ! Group Rendering Name
+  OS:ThermostatSetpoint:DualSetpoint 1,  ! Thermostat Name
+  No;                       ! Use Ideal Air Loads
+
+OS:Node,
+  OS:Node 1,                ! Name
+  OS:Connection 1,          ! Inlet Port
+  ;                         ! Outlet Port
+
+OS:Connection,
+  OS:Connection 1,          ! Name
+  OS:ThermalZone 1,         ! Source Object
+  10,                       ! Outlet Port
+  OS:Node 1,                ! Target Object
+  1;                        ! Inlet Port
+
+OS:Node,
+  OS:Node 2,                ! Name
+  OS:Connection 2,          ! Inlet Port
+  ;                         ! Outlet Port
+
+OS:Connection,
+  OS:Connection 2,          ! Name
+  OS:ThermalZone 1,         ! Source Object
+  9,                        ! Outlet Port
+  OS:Node 2,                ! Target Object
+  1;                        ! Inlet Port
+
+OS:Sizing:Zone,
+  OS:ThermalZone 1,         ! Zone or ZoneList Name
+  14,                       ! Zone Cooling Design Supply Air Temperature {C}
+  40,                       ! Zone Heating Design Supply Air Temperature {C}
+  0.0085,                   ! Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  0.008,                    ! Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
+  ,                         ! Zone Heating Sizing Factor
+  ,                         ! Zone Cooling Sizing Factor
+  DesignDay,                ! Cooling Design Air Flow Method
+  ,                         ! Cooling Design Air Flow Rate {m3/s}
+  ,                         ! Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                         ! Cooling Minimum Air Flow {m3/s}
+  ,                         ! Cooling Minimum Air Flow Fraction
+  DesignDay,                ! Heating Design Air Flow Method
+  ,                         ! Heating Design Air Flow Rate {m3/s}
+  ,                         ! Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
+  ,                         ! Heating Maximum Air Flow {m3/s}
+  ,                         ! Heating Maximum Air Flow Fraction
+  ,                         ! Design Zone Air Distribution Effectiveness in Cooling Mode
+  ;                         ! Design Zone Air Distribution Effectiveness in Heating Mode
+
+OS:ThermostatSetpoint:DualSetpoint,
+  OS:ThermostatSetpoint:DualSetpoint 1,  ! Name
+  Medium Office Heating Setpoint Schedule,  ! Heating Setpoint Temperature Schedule Name
+  Medium Office Cooling Setpoint Schedule;  ! Cooling Setpoint Temperature Schedule Name
+
+OS:BuildingStory,
+  OS:BuildingStory 1,       ! Name
+  0,                        ! Nominal Z Coordinate {m}
+  3,                        ! Nominal Floor to Floor Height {m}
+  ,                         ! Default Construction Set Name
+  ,                         ! Default Schedule Set Name
+  ;                         ! Group Rendering Name
+
+OS:Space,
+  OS:Space 1,               ! Name
+  ,                         ! Space Type Name
+  ,                         ! Default Construction Set Name
+  ,                         ! Default Schedule Set Name
+  ,                         ! Direction of Relative North {deg}
+  ,                         ! X Origin {m}
+  ,                         ! Y Origin {m}
+  ,                         ! Z Origin {m}
+  OS:BuildingStory 1,       ! Building Story Name
+  OS:ThermalZone 1;         ! Thermal Zone Name
+
+OS:Surface,
+  OS:Surface 1,             ! Name
+  Floor,                    ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 1,               ! Space Name
+  Ground,                   ! Outside Boundary Condition
+  ,                         ! Outside Boundary Condition Object
+  NoSun,                    ! Sun Exposure
+  NoWind,                   ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  0,0,0,                    ! X,Y,Z Vertex 1 {m}
+  0,10,0,                   ! X,Y,Z Vertex 2 {m}
+  10,10,0,                  ! X,Y,Z Vertex 3 {m}
+  10,0,0;                   ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 2,             ! Name
+  Wall,                     ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 1,               ! Space Name
+  Outdoors,                 ! Outside Boundary Condition
+  ,                         ! Outside Boundary Condition Object
+  SunExposed,               ! Sun Exposure
+  WindExposed,              ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  0,10,3,                   ! X,Y,Z Vertex 1 {m}
+  0,10,0,                   ! X,Y,Z Vertex 2 {m}
+  0,0,0,                    ! X,Y,Z Vertex 3 {m}
+  0,0,3;                    ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 3,             ! Name
+  Wall,                     ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 1,               ! Space Name
+  Surface,                  ! Outside Boundary Condition
+  OS:Surface 16,            ! Outside Boundary Condition Object
+  NoSun,                    ! Sun Exposure
+  NoWind,                   ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  10,10,3,                  ! X,Y,Z Vertex 1 {m}
+  10,10,0,                  ! X,Y,Z Vertex 2 {m}
+  0,10,0,                   ! X,Y,Z Vertex 3 {m}
+  0,10,3;                   ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 4,             ! Name
+  Wall,                     ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 1,               ! Space Name
+  Surface,                  ! Outside Boundary Condition
+  OS:Surface 12,            ! Outside Boundary Condition Object
+  NoSun,                    ! Sun Exposure
+  NoWind,                   ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  10,0,3,                   ! X,Y,Z Vertex 1 {m}
+  10,0,0,                   ! X,Y,Z Vertex 2 {m}
+  10,10,0,                  ! X,Y,Z Vertex 3 {m}
+  10,10,3;                  ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 5,             ! Name
+  Wall,                     ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 1,               ! Space Name
+  Outdoors,                 ! Outside Boundary Condition
+  ,                         ! Outside Boundary Condition Object
+  SunExposed,               ! Sun Exposure
+  WindExposed,              ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  0,0,3,                    ! X,Y,Z Vertex 1 {m}
+  0,0,0,                    ! X,Y,Z Vertex 2 {m}
+  10,0,0,                   ! X,Y,Z Vertex 3 {m}
+  10,0,3;                   ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 6,             ! Name
+  RoofCeiling,              ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 1,               ! Space Name
+  Outdoors,                 ! Outside Boundary Condition
+  ,                         ! Outside Boundary Condition Object
+  SunExposed,               ! Sun Exposure
+  WindExposed,              ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  10,0,3,                   ! X,Y,Z Vertex 1 {m}
+  10,10,3,                  ! X,Y,Z Vertex 2 {m}
+  0,10,3,                   ! X,Y,Z Vertex 3 {m}
+  0,0,3;                    ! X,Y,Z Vertex 4 {m}
+
+OS:Space,
+  OS:Space 2,               ! Name
+  ,                         ! Space Type Name
+  ,                         ! Default Construction Set Name
+  ,                         ! Default Schedule Set Name
+  ,                         ! Direction of Relative North {deg}
+  10,                       ! X Origin {m}
+  ,                         ! Y Origin {m}
+  ,                         ! Z Origin {m}
+  OS:BuildingStory 1,       ! Building Story Name
+  OS:ThermalZone 1;         ! Thermal Zone Name
+
+OS:Surface,
+  OS:Surface 7,             ! Name
+  RoofCeiling,              ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 2,               ! Space Name
+  Outdoors,                 ! Outside Boundary Condition
+  ,                         ! Outside Boundary Condition Object
+  SunExposed,               ! Sun Exposure
+  WindExposed,              ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  10,0,3,                   ! X,Y,Z Vertex 1 {m}
+  10,10,3,                  ! X,Y,Z Vertex 2 {m}
+  0,10,3,                   ! X,Y,Z Vertex 3 {m}
+  0,0,3;                    ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 8,             ! Name
+  Wall,                     ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 2,               ! Space Name
+  Surface,                  ! Outside Boundary Condition
+  OS:Surface 22,            ! Outside Boundary Condition Object
+  NoSun,                    ! Sun Exposure
+  NoWind,                   ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  10,10,3,                  ! X,Y,Z Vertex 1 {m}
+  10,10,0,                  ! X,Y,Z Vertex 2 {m}
+  0,10,0,                   ! X,Y,Z Vertex 3 {m}
+  0,10,3;                   ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 9,             ! Name
+  Floor,                    ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 2,               ! Space Name
+  Ground,                   ! Outside Boundary Condition
+  ,                         ! Outside Boundary Condition Object
+  NoSun,                    ! Sun Exposure
+  NoWind,                   ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  0,0,0,                    ! X,Y,Z Vertex 1 {m}
+  0,10,0,                   ! X,Y,Z Vertex 2 {m}
+  10,10,0,                  ! X,Y,Z Vertex 3 {m}
+  10,0,0;                   ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 10,            ! Name
+  Wall,                     ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 2,               ! Space Name
+  Outdoors,                 ! Outside Boundary Condition
+  ,                         ! Outside Boundary Condition Object
+  SunExposed,               ! Sun Exposure
+  WindExposed,              ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  0,0,3,                    ! X,Y,Z Vertex 1 {m}
+  0,0,0,                    ! X,Y,Z Vertex 2 {m}
+  10,0,0,                   ! X,Y,Z Vertex 3 {m}
+  10,0,3;                   ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 11,            ! Name
+  Wall,                     ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 2,               ! Space Name
+  Outdoors,                 ! Outside Boundary Condition
+  ,                         ! Outside Boundary Condition Object
+  SunExposed,               ! Sun Exposure
+  WindExposed,              ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  10,0,3,                   ! X,Y,Z Vertex 1 {m}
+  10,0,0,                   ! X,Y,Z Vertex 2 {m}
+  10,10,0,                  ! X,Y,Z Vertex 3 {m}
+  10,10,3;                  ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 12,            ! Name
+  Wall,                     ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 2,               ! Space Name
+  Surface,                  ! Outside Boundary Condition
+  OS:Surface 4,             ! Outside Boundary Condition Object
+  NoSun,                    ! Sun Exposure
+  NoWind,                   ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  0,10,3,                   ! X,Y,Z Vertex 1 {m}
+  0,10,0,                   ! X,Y,Z Vertex 2 {m}
+  0,0,0,                    ! X,Y,Z Vertex 3 {m}
+  0,0,3;                    ! X,Y,Z Vertex 4 {m}
+
+OS:Space,
+  OS:Space 3,               ! Name
+  ,                         ! Space Type Name
+  ,                         ! Default Construction Set Name
+  ,                         ! Default Schedule Set Name
+  ,                         ! Direction of Relative North {deg}
+  ,                         ! X Origin {m}
+  10,                       ! Y Origin {m}
+  ,                         ! Z Origin {m}
+  OS:BuildingStory 1,       ! Building Story Name
+  OS:ThermalZone 1;         ! Thermal Zone Name
+
+OS:Surface,
+  OS:Surface 13,            ! Name
+  RoofCeiling,              ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 3,               ! Space Name
+  Outdoors,                 ! Outside Boundary Condition
+  ,                         ! Outside Boundary Condition Object
+  SunExposed,               ! Sun Exposure
+  WindExposed,              ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  10,0,3,                   ! X,Y,Z Vertex 1 {m}
+  10,10,3,                  ! X,Y,Z Vertex 2 {m}
+  0,10,3,                   ! X,Y,Z Vertex 3 {m}
+  0,0,3;                    ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 14,            ! Name
+  Wall,                     ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 3,               ! Space Name
+  Outdoors,                 ! Outside Boundary Condition
+  ,                         ! Outside Boundary Condition Object
+  SunExposed,               ! Sun Exposure
+  WindExposed,              ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  10,10,3,                  ! X,Y,Z Vertex 1 {m}
+  10,10,0,                  ! X,Y,Z Vertex 2 {m}
+  0,10,0,                   ! X,Y,Z Vertex 3 {m}
+  0,10,3;                   ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 15,            ! Name
+  Floor,                    ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 3,               ! Space Name
+  Ground,                   ! Outside Boundary Condition
+  ,                         ! Outside Boundary Condition Object
+  NoSun,                    ! Sun Exposure
+  NoWind,                   ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  0,0,0,                    ! X,Y,Z Vertex 1 {m}
+  0,10,0,                   ! X,Y,Z Vertex 2 {m}
+  10,10,0,                  ! X,Y,Z Vertex 3 {m}
+  10,0,0;                   ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 16,            ! Name
+  Wall,                     ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 3,               ! Space Name
+  Surface,                  ! Outside Boundary Condition
+  OS:Surface 3,             ! Outside Boundary Condition Object
+  NoSun,                    ! Sun Exposure
+  NoWind,                   ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  0,0,3,                    ! X,Y,Z Vertex 1 {m}
+  0,0,0,                    ! X,Y,Z Vertex 2 {m}
+  10,0,0,                   ! X,Y,Z Vertex 3 {m}
+  10,0,3;                   ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 17,            ! Name
+  Wall,                     ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 3,               ! Space Name
+  Surface,                  ! Outside Boundary Condition
+  OS:Surface 24,            ! Outside Boundary Condition Object
+  NoSun,                    ! Sun Exposure
+  NoWind,                   ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  10,0,3,                   ! X,Y,Z Vertex 1 {m}
+  10,0,0,                   ! X,Y,Z Vertex 2 {m}
+  10,10,0,                  ! X,Y,Z Vertex 3 {m}
+  10,10,3;                  ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 18,            ! Name
+  Wall,                     ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 3,               ! Space Name
+  Outdoors,                 ! Outside Boundary Condition
+  ,                         ! Outside Boundary Condition Object
+  SunExposed,               ! Sun Exposure
+  WindExposed,              ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  0,10,3,                   ! X,Y,Z Vertex 1 {m}
+  0,10,0,                   ! X,Y,Z Vertex 2 {m}
+  0,0,0,                    ! X,Y,Z Vertex 3 {m}
+  0,0,3;                    ! X,Y,Z Vertex 4 {m}
+
+OS:Space,
+  OS:Space 4,               ! Name
+  ,                         ! Space Type Name
+  ,                         ! Default Construction Set Name
+  ,                         ! Default Schedule Set Name
+  ,                         ! Direction of Relative North {deg}
+  10,                       ! X Origin {m}
+  10,                       ! Y Origin {m}
+  ,                         ! Z Origin {m}
+  OS:BuildingStory 1,       ! Building Story Name
+  OS:ThermalZone 1;         ! Thermal Zone Name
+
+OS:Surface,
+  OS:Surface 19,            ! Name
+  RoofCeiling,              ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 4,               ! Space Name
+  Outdoors,                 ! Outside Boundary Condition
+  ,                         ! Outside Boundary Condition Object
+  SunExposed,               ! Sun Exposure
+  WindExposed,              ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  10,0,3,                   ! X,Y,Z Vertex 1 {m}
+  10,10,3,                  ! X,Y,Z Vertex 2 {m}
+  0,10,3,                   ! X,Y,Z Vertex 3 {m}
+  0,0,3;                    ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 20,            ! Name
+  Wall,                     ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 4,               ! Space Name
+  Outdoors,                 ! Outside Boundary Condition
+  ,                         ! Outside Boundary Condition Object
+  SunExposed,               ! Sun Exposure
+  WindExposed,              ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  10,10,3,                  ! X,Y,Z Vertex 1 {m}
+  10,10,0,                  ! X,Y,Z Vertex 2 {m}
+  0,10,0,                   ! X,Y,Z Vertex 3 {m}
+  0,10,3;                   ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 21,            ! Name
+  Floor,                    ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 4,               ! Space Name
+  Ground,                   ! Outside Boundary Condition
+  ,                         ! Outside Boundary Condition Object
+  NoSun,                    ! Sun Exposure
+  NoWind,                   ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  0,0,0,                    ! X,Y,Z Vertex 1 {m}
+  0,10,0,                   ! X,Y,Z Vertex 2 {m}
+  10,10,0,                  ! X,Y,Z Vertex 3 {m}
+  10,0,0;                   ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 22,            ! Name
+  Wall,                     ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 4,               ! Space Name
+  Surface,                  ! Outside Boundary Condition
+  OS:Surface 8,             ! Outside Boundary Condition Object
+  NoSun,                    ! Sun Exposure
+  NoWind,                   ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  0,0,3,                    ! X,Y,Z Vertex 1 {m}
+  0,0,0,                    ! X,Y,Z Vertex 2 {m}
+  10,0,0,                   ! X,Y,Z Vertex 3 {m}
+  10,0,3;                   ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 23,            ! Name
+  Wall,                     ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 4,               ! Space Name
+  Outdoors,                 ! Outside Boundary Condition
+  ,                         ! Outside Boundary Condition Object
+  SunExposed,               ! Sun Exposure
+  WindExposed,              ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  10,0,3,                   ! X,Y,Z Vertex 1 {m}
+  10,0,0,                   ! X,Y,Z Vertex 2 {m}
+  10,10,0,                  ! X,Y,Z Vertex 3 {m}
+  10,10,3;                  ! X,Y,Z Vertex 4 {m}
+
+OS:Surface,
+  OS:Surface 24,            ! Name
+  Wall,                     ! Surface Type
+  ,                         ! Construction Name
+  OS:Space 4,               ! Space Name
+  Surface,                  ! Outside Boundary Condition
+  OS:Surface 17,            ! Outside Boundary Condition Object
+  NoSun,                    ! Sun Exposure
+  NoWind,                   ! Wind Exposure
+  ,                         ! View Factor to Ground
+  ,                         ! Number of Vertices
+  0,10,3,                   ! X,Y,Z Vertex 1 {m}
+  0,10,0,                   ! X,Y,Z Vertex 2 {m}
+  0,0,0,                    ! X,Y,Z Vertex 3 {m}
+  0,0,3;                    ! X,Y,Z Vertex 4 {m}
+
+OS:SubSurface,
+  OS:SubSurface 1,          ! Name
+  Door,                     ! Sub Surface Type
+  ,                         ! Construction Name
+  OS:Surface 5,             ! Surface Name
+  ,                         ! Outside Boundary Condition Object
+  ,                         ! View Factor to Ground
+  ,                         ! Shading Control Name
+  ,                         ! Frame and Divider Name
+  ,                         ! Multiplier
+  ,                         ! Number of Vertices
+  2,0,2,                    ! X,Y,Z Vertex 1 {m}
+  2,0,0,                    ! X,Y,Z Vertex 2 {m}
+  4,0,0,                    ! X,Y,Z Vertex 3 {m}
+  4,0,2;                    ! X,Y,Z Vertex 4 {m}
+
+OS:SubSurface,
+  OS:SubSurface 2,          ! Name
+  FixedWindow,              ! Sub Surface Type
+  ,                         ! Construction Name
+  OS:Surface 11,            ! Surface Name
+  ,                         ! Outside Boundary Condition Object
+  ,                         ! View Factor to Ground
+  ,                         ! Shading Control Name
+  ,                         ! Frame and Divider Name
+  ,                         ! Multiplier
+  ,                         ! Number of Vertices
+  10,2,2,                   ! X,Y,Z Vertex 1 {m}
+  10,2,1,                   ! X,Y,Z Vertex 2 {m}
+  10,8,1,                   ! X,Y,Z Vertex 3 {m}
+  10,8,2;                   ! X,Y,Z Vertex 4 {m}
+
+OS:ShadingSurfaceGroup,
+  OS:ShadingSurfaceGroup 1,  ! Name
+  Space,                    ! Shading Surface Type
+  OS:Space 2;               ! Space Name
+
+OS:ShadingSurface,
+  OS:ShadingSurface 1,      ! Name
+  ,                         ! Construction Name
+  OS:ShadingSurfaceGroup 1,  ! Shading Surface Group Name
+  ,                         ! Transmittance Schedule Name
+  ,                         ! Number of Vertices
+  10,8.1,2.1,               ! X,Y,Z Vertex 1 {m}
+  10,1.9,2.1,               ! X,Y,Z Vertex 2 {m}
+  10.55,1.9,2.1,            ! X,Y,Z Vertex 3 {m}
+  10.55,8.1,2.1;            ! X,Y,Z Vertex 4 {m}
+
+OS:Daylighting:Control,
+  OS:Daylighting:Control 1,  ! Name
+  OS:Space 2,               ! Space Name
+  5,                        ! Position X-Coordinate {m}
+  5,                        ! Position Y-Coordinate {m}
+  1.1;                      ! Position Z-Coordinate {m}
+
+OS:IlluminanceMap,
+  OS:IlluminanceMap 1,      ! Name
+  OS:Space 2,               ! Space Name
+  1,                        ! Origin X-Coordinate {m}
+  1,                        ! Origin Y-Coordinate {m}
+  1.1,                      ! Origin Z-Coordinate {m}
+  ,                         ! Psi Rotation Around X-Axis {deg}
+  ,                         ! Theta Rotation Around Y-Axis {deg}
+  ,                         ! Phi Rotation Around Z-Axis {deg}
+  8,                        ! X Length {m}
+  ,                         ! Number of X Grid Points
+  8;                        ! Y Length {m}
+
+OS:InteriorPartitionSurfaceGroup,
+  OS:InteriorPartitionSurfaceGroup 1,  ! Name
+  OS:Space 2;               ! Space Name
+
+OS:InteriorPartitionSurface,
+  OS:InteriorPartitionSurface 1,  ! Name
+  ,                         ! Construction Name
+  OS:InteriorPartitionSurfaceGroup 1,  ! Interior Partition Surface Group Name
+  ,                         ! Convert to Internal Mass
+  ,                         ! Surface Area {m2}
+  ,                         ! Number of Vertices
+  5,8,1,                    ! X,Y,Z Vertex 1 {m}
+  5,6,1,                    ! X,Y,Z Vertex 2 {m}
+  8,6,1,                    ! X,Y,Z Vertex 3 {m}
+  8,8,1;                    ! X,Y,Z Vertex 4 {m}
+
+OS:ElectricEquipment:Definition,
+  Printer Definition,       ! Name
+  EquipmentLevel,           ! Design Level Calculation Method
+  200,                      ! Design Level {W}
+  ,                         ! Watts per Space Floor Area {W/m2}
+  ;                         ! Watts per Person {W/person}
+
+OS:ElectricEquipment,
+  Printer,                  ! Name
+  Printer Definition,       ! Electric Equipment Definition Name
+  OS:Space 4;               ! Space or SpaceType Name
+
+OS:ShadingSurfaceGroup,
+  OS:ShadingSurfaceGroup 2,  ! Name
+  Building,                 ! Shading Surface Type
+  ;                         ! Space Name
+
+OS:ShadingSurface,
+  OS:ShadingSurface 2,      ! Name
+  ,                         ! Construction Name
+  OS:ShadingSurfaceGroup 2,  ! Shading Surface Group Name
+  ,                         ! Transmittance Schedule Name
+  ,                         ! Number of Vertices
+  2,0,2,                    ! X,Y,Z Vertex 1 {m}
+  2,-1,2,                   ! X,Y,Z Vertex 2 {m}
+  4,-1,2,                   ! X,Y,Z Vertex 3 {m}
+  4,0,2;                    ! X,Y,Z Vertex 4 {m}
+
+OS:ShadingSurfaceGroup,
+  OS:ShadingSurfaceGroup 3,  ! Name
+  Site,                     ! Shading Surface Type
+  ;                         ! Space Name
+
+OS:ShadingSurface,
+  OS:ShadingSurface 3,      ! Name
+  ,                         ! Construction Name
+  OS:ShadingSurfaceGroup 3,  ! Shading Surface Group Name
+  ,                         ! Transmittance Schedule Name
+  ,                         ! Number of Vertices
+  -30,0,20,                 ! X,Y,Z Vertex 1 {m}
+  -30,0,0,                  ! X,Y,Z Vertex 2 {m}
+  -30,20,0,                 ! X,Y,Z Vertex 3 {m}
+  -30,20,20;                ! X,Y,Z Vertex 4 {m}
+
+OS:Schedule:Compact,
+  ALWAYS_ON,                ! Name
+  ,                         ! Schedule Type Limits Name
+  Through: 12/31,           ! Field 1
+  For: AllDays,             ! Field 2
+  Until: 24:00,             ! Field 3
+  1;                        ! Field 4
+
+OS:Fan:ConstantVolume,
+  Standard Fan,             ! Name
+  ALWAYS_ON,                ! Availability Schedule Name
+  ,                         ! Fan Efficiency
+  ,                         ! Pressure Rise {Pa}
+  AutoSize,                 ! Maximum Flow Rate {m3/s}
+  ,                         ! Motor Efficiency
+  ,                         ! Motor In Airstream Fraction
+  OS:Connection 23,         ! Air Inlet Node Name
+  OS:Connection 20,         ! Air Outlet Node Name
+  ;                         ! End-Use Subcategory
+
+OS:Coil:Heating:Gas,
+  OS:Coil:Heating:Gas 1,    ! Name
+  ALWAYS_ON,                ! Availability Schedule Name
+  0.8,                      ! Gas Burner Efficiency
+  AutoSize,                 ! Nominal Capacity {W}
+  OS:Connection 26,         ! Air Inlet Node Name
+  OS:Connection 22,         ! Air Outlet Node Name
+  ,                         ! Temperature Setpoint Node Name
+  0,                        ! Parasitic Electric Load {W}
+  ,                         ! Part Load Fraction Correlation Curve Name
+  0;                        ! Parasitic Gas Load {W}
+
+OS:Curve:Biquadratic,
+  OS:Curve:Biquadratic 1,   ! Name
+  0.42415,                  ! Coefficient1 Constant
+  0.04426,                  ! Coefficient2 x
+  -0.00042,                 ! Coefficient3 x**2
+  0.00333,                  ! Coefficient4 y
+  -8e-005,                  ! Coefficient5 y**2
+  -0.00021,                 ! Coefficient6 x*y
+  17,                       ! Minimum Value of x {BasedOnField A2}
+  22,                       ! Maximum Value of x {BasedOnField A2}
+  13,                       ! Minimum Value of y {BasedOnField A3}
+  46,                       ! Maximum Value of y {BasedOnField A3}
+  -1000,                    ! Minimum Curve Output {BasedOnField A4}
+  1000;                     ! Maximum Curve Output {BasedOnField A4}
+
+OS:Curve:Quadratic,
+  OS:Curve:Quadratic 1,     ! Name
+  0.77136,                  ! Coefficient1 Constant
+  0.34053,                  ! Coefficient2 x
+  -0.11088,                 ! Coefficient3 x**2
+  0.75918,                  ! Minimum Value of x {BasedOnField A2}
+  1.13877,                  ! Maximum Value of x {BasedOnField A2}
+  -1000,                    ! Minimum Curve Output {BasedOnField A3}
+  1000;                     ! Maximum Curve Output {BasedOnField A3}
+
+OS:Curve:Biquadratic,
+  OS:Curve:Biquadratic 2,   ! Name
+  1.23649,                  ! Coefficient1 Constant
+  -0.02431,                 ! Coefficient2 x
+  0.00057,                  ! Coefficient3 x**2
+  -0.01434,                 ! Coefficient4 y
+  0.00063,                  ! Coefficient5 y**2
+  -0.00038,                 ! Coefficient6 x*y
+  17,                       ! Minimum Value of x {BasedOnField A2}
+  22,                       ! Maximum Value of x {BasedOnField A2}
+  0,                        ! Minimum Value of y {BasedOnField A3}
+  46,                       ! Maximum Value of y {BasedOnField A3}
+  -1000,                    ! Minimum Curve Output {BasedOnField A4}
+  1000;                     ! Maximum Curve Output {BasedOnField A4}
+
+OS:Curve:Quadratic,
+  OS:Curve:Quadratic 2,     ! Name
+  1.2055,                   ! Coefficient1 Constant
+  -0.32953,                 ! Coefficient2 x
+  0.12308,                  ! Coefficient3 x**2
+  0.75918,                  ! Minimum Value of x {BasedOnField A2}
+  1.13877,                  ! Maximum Value of x {BasedOnField A2}
+  -1000,                    ! Minimum Curve Output {BasedOnField A3}
+  1000;                     ! Maximum Curve Output {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  OS:Curve:Quadratic 3,     ! Name
+  0.771,                    ! Coefficient1 Constant
+  0.229,                    ! Coefficient2 x
+  0,                        ! Coefficient3 x**2
+  0,                        ! Minimum Value of x {BasedOnField A2}
+  1,                        ! Maximum Value of x {BasedOnField A2}
+  0.71,                     ! Minimum Curve Output {BasedOnField A3}
+  1;                        ! Maximum Curve Output {BasedOnField A3}
+
+OS:Coil:Cooling:DX:SingleSpeed,
+  OS:Coil:Cooling:DX:SingleSpeed 1,  ! Name
+  ALWAYS_ON,                ! Availability Schedule Name
+  Autosize,                 ! Rated Total Cooling Capacity {W}
+  Autosize,                 ! Rated Sensible Heat Ratio
+  3,                        ! Rated COP {W/W}
+  Autosize,                 ! Rated Air Flow Rate {m3/s}
+  773.3,                    ! Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+  OS:Connection 29,         ! Air Inlet Node Name
+  OS:Connection 25,         ! Air Outlet Node Name
+  OS:Curve:Biquadratic 1,   ! Total Cooling Capacity Function of Temperature Curve Name
+  OS:Curve:Quadratic 1,     ! Total Cooling Capacity Function of Flow Fraction Curve Name
+  OS:Curve:Biquadratic 2,   ! Energy Input Ratio Function of Temperature Curve Name
+  OS:Curve:Quadratic 2,     ! Energy Input Ratio Function of Flow Fraction Curve Name
+  OS:Curve:Quadratic 3,     ! Part Load Fraction Correlation Curve Name
+  ,                         ! Nominal Time for Condensate Removal to Begin {s}
+  ,                         ! Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  ,                         ! Maximum Cycling Rate {cycles/hr}
+  ,                         ! Latent Capacity Time Constant {s}
+  ,                         ! Condenser Air Inlet Node Name
+  AirCooled,                ! Condenser Type
+  0,                        ! Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                 ! Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                 ! Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                        ! Crankcase Heater Capacity {W}
+  0,                        ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                         ! Supply Water Storage Tank Name
+  ,                         ! Condensate Collection Water Storage Tank Name
+  0,                        ! Basin Heater Capacity {W/K}
+  10,                       ! Basin Heater Setpoint Temperature {C}
+  ;                         ! Basin Heater Operating Schedule Name
+
+OS:EvaporativeCooler:Direct:ResearchSpecial,
+  OS:EvaporativeCooler:Direct:ResearchSpecial 1,  ! Name
+  ALWAYS_ON,                ! Availability Schedule Name
+  1,                        ! Cooler Effectiveness
+  0,                        ! Recirculating Water Pump Power Consumption {W}
+  OS:Connection 30,         ! Air Inlet Node Name
+  OS:Connection 31,         ! Air Outlet Node Name
+  OS:Node 16,               ! Sensor Node Name
+  0,                        ! Drift Loss Fraction
+  0;                        ! Blowdown Concentration Ratio
+
+OS:AirTerminal:SingleDuct:Uncontrolled,
+  OS:AirTerminal:SingleDuct:Uncontrolled 1,  ! Name
+  ALWAYS_ON,                ! Availability Schedule Name
+  OS:Connection 17,         ! Inlet Air Node Name
+  OS:Connection 18,         ! Zone Supply Air Node Name
+  AutoSize;                 ! Maximum Air Flow Rate {m3/s}
+
+OS:Controller:OutdoorAir,
+  OS:Controller:OutdoorAir 1,  ! Name
+  ,                         ! Relief Air Outlet Node Name
+  ,                         ! Return Air Node Name
+  ,                         ! Mixed Air Node Name
+  ,                         ! Actuator Node Name
+  Autosize,                 ! Minimum Outdoor Air Flow Rate {m3/s}
+  Autosize,                 ! Maximum Outdoor Air Flow Rate {m3/s}
+  NoEconomizer,             ! Economizer Control Type
+  ModulateFlow,             ! Economizer Control Action Type
+  28,                       ! Economizer Maximum Limit Dry-Bulb Temperature {C}
+  64000,                    ! Economizer Maximum Limit Enthalpy {J/kg}
+  ,                         ! Economizer Maximum Limit Dewpoint Temperature {C}
+  ,                         ! Electronic Enthalpy Limit Curve Name
+  -100,                     ! Economizer Minimum Limit Dry-Bulb Temperature {C}
+  NoLockout,                ! Lockout Type
+  FixedMinimum,             ! Minimum Limit Type
+  ,                         ! Minimum Outdoor Air Schedule Name
+  ,                         ! Minimum Fraction of Outdoor Air Schedule Name
+  ,                         ! Maximum Fraction of Outdoor Air Schedule Name
+  ,                         ! Mechanical Ventilation Controller Name
+  ,                         ! Time of Day Economizer Control Schedule Name
+  No,                       ! High Humidity Control
+  ,                         ! Humidistat Control Zone Name
+  ,                         ! High Humidity Outdoor Air Flow Ratio
+  ,                         ! Control High Indoor Humidity Based on Outdoor Humidity Ratio
+  BypassWhenOAFlowGreaterThanMinimum;  ! Heat Recovery Bypass Control Type
+
+OS:AirLoopHVAC:OutdoorAirSystem,
+  OS:AirLoopHVAC:OutdoorAirSystem 1,  ! Name
+  OS:Controller:OutdoorAir 1,  ! Controller Name
+  ,                         ! Outdoor Air Equipment List Name
+  ,                         ! Availability Manager List Name
+  OS:Connection 28,         ! Mixed Air Node Name
+  OS:Connection 32,         ! Outdoor Air Stream Node Name
+  OS:Connection 4,          ! Relief Air Stream Node Name
+  OS:Connection 27;         ! Return Air Stream Node Name
+
+OS:Node,
+  OS:Node 3,                ! Name
+  ,                         ! Inlet Port
+  OS:Connection 30;         ! Outlet Port
+
+OS:Node,
+  OS:Node 4,                ! Name
+  OS:Connection 4,          ! Inlet Port
+  ;                         ! Outlet Port
+
+OS:Connection,
+  OS:Connection 4,          ! Name
+  OS:AirLoopHVAC:OutdoorAirSystem 1,  ! Source Object
+  6,                        ! Outlet Port
+  OS:Node 4,                ! Target Object
+  1;                        ! Inlet Port
+
+OS:AirLoopHVAC,
+  OS:AirLoopHVAC 1,         ! Name
+  ,                         ! Controller List Name
+  ,                         ! Availability Manager List Name
+  AutoSize,                 ! Design Supply Air Flow Rate {m3/s}
+  ,                         ! Branch List Name
+  ,                         ! Connector List Name
+  OS:Connection 5,          ! Supply Side Inlet Node Name
+  OS:Connection 9,          ! Demand Side Outlet Node Name
+  OS:Connection 8,          ! Demand Side Inlet Node Names
+  OS:Connection 7;          ! Supply Side Outlet Node Names
+
+OS:Node,
+  OS:Node 5,                ! Name
+  OS:Connection 5,          ! Inlet Port
+  OS:Connection 27;         ! Outlet Port
+
+OS:Node,
+  OS:Node 6,                ! Name
+  OS:Connection 20,         ! Inlet Port
+  OS:Connection 7;          ! Outlet Port
+
+OS:Connection,
+  OS:Connection 5,          ! Name
+  OS:AirLoopHVAC 1,         ! Source Object
+  6,                        ! Outlet Port
+  OS:Node 5,                ! Target Object
+  1;                        ! Inlet Port
+
+OS:Connection,
+  OS:Connection 7,          ! Name
+  OS:Node 6,                ! Source Object
+  2,                        ! Outlet Port
+  OS:AirLoopHVAC 1,         ! Target Object
+  9;                        ! Inlet Port
+
+OS:Node,
+  OS:Node 8,                ! Name
+  OS:Connection 8,          ! Inlet Port
+  OS:Connection 10;         ! Outlet Port
+
+OS:Node,
+  OS:Node 10,               ! Name
+  OS:Connection 11,         ! Inlet Port
+  OS:Connection 9;          ! Outlet Port
+
+OS:Connection,
+  OS:Connection 8,          ! Name
+  OS:AirLoopHVAC 1,         ! Source Object
+  8,                        ! Outlet Port
+  OS:Node 8,                ! Target Object
+  1;                        ! Inlet Port
+
+OS:Connection,
+  OS:Connection 9,          ! Name
+  OS:Node 10,               ! Source Object
+  2,                        ! Outlet Port
+  OS:AirLoopHVAC 1,         ! Target Object
+  7;                        ! Inlet Port
+
+OS:AirLoopHVAC:ZoneSplitter,
+  OS:AirLoopHVAC:ZoneSplitter 1,  ! Name
+  OS:Connection 10,         ! Inlet Node Name
+  OS:Connection 17;         ! Outlet Node Name 1
+
+OS:AirLoopHVAC:ZoneMixer,
+  OS:AirLoopHVAC:ZoneMixer 1,  ! Name
+  OS:Connection 11,         ! Outlet Node Name
+  OS:Connection 16;         ! Inlet Node Name 1
+
+OS:Connection,
+  OS:Connection 10,         ! Name
+  OS:Node 8,                ! Source Object
+  2,                        ! Outlet Port
+  OS:AirLoopHVAC:ZoneSplitter 1,  ! Target Object
+  1;                        ! Inlet Port
+
+OS:Connection,
+  OS:Connection 11,         ! Name
+  OS:AirLoopHVAC:ZoneMixer 1,  ! Source Object
+  1,                        ! Outlet Port
+  OS:Node 10,               ! Target Object
+  1;                        ! Inlet Port
+
+OS:Sizing:System,
+  OS:AirLoopHVAC 1,         ! AirLoop Name
+  Sensible,                 ! Type of Load to Size On
+  Autosize,                 ! Design Outdoor Air Flow Rate {m3/s}
+  0.3,                      ! Minimum System Air Flow Ratio
+  7,                        ! Preheat Design Temperature {C}
+  0.008,                    ! Preheat Design Humidity Ratio {kg-H2O/kg-Air}
+  12.8,                     ! Precool Design Temperature {C}
+  0.008,                    ! Precool Design Humidity Ratio {kg-H2O/kg-Air}
+  12.8,                     ! Central Cooling Design Supply Air Temperature {C}
+  16.7,                     ! Central Heating Design Supply Air Temperature {C}
+  NonCoincident,            ! Sizing Option
+  Yes,                      ! 100% Outdoor Air in Cooling
+  Yes,                      ! 100% Outdoor Air in Heating
+  0.0085,                   ! Central Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-Air}
+  0.008,                    ! Central Heating Design Supply Air Humidity Ratio {kg-H2O/kg-Air}
+  DesignDay,                ! Cooling Design Air Flow Method
+  0,                        ! Cooling Design Air Flow Rate {m3/s}
+  DesignDay,                ! Heating Design Air Flow Method
+  0,                        ! Heating Design Air Flow Rate {m3/s}
+  ZoneSum;                  ! System Outdoor Air Method
+
+OS:Node,
+  OS:Node 11,               ! Name
+  OS:Connection 18,         ! Inlet Port
+  OS:Connection 13;         ! Outlet Port
+
+OS:Connection,
+  OS:Connection 13,         ! Name
+  OS:Node 11,               ! Source Object
+  2,                        ! Outlet Port
+  OS:ThermalZone 1,         ! Target Object
+  8;                        ! Inlet Port
+
+OS:Node,
+  OS:Node 12,               ! Name
+  OS:Connection 14,         ! Inlet Port
+  OS:Connection 16;         ! Outlet Port
+
+OS:Connection,
+  OS:Connection 14,         ! Name
+  OS:ThermalZone 1,         ! Source Object
+  11,                       ! Outlet Port
+  OS:Node 12,               ! Target Object
+  1;                        ! Inlet Port
+
+OS:Connection,
+  OS:Connection 16,         ! Name
+  OS:Node 12,               ! Source Object
+  2,                        ! Outlet Port
+  OS:AirLoopHVAC:ZoneMixer 1,  ! Target Object
+  2;                        ! Inlet Port
+
+OS:Connection,
+  OS:Connection 17,         ! Name
+  OS:AirLoopHVAC:ZoneSplitter 1,  ! Source Object
+  2,                        ! Outlet Port
+  OS:AirTerminal:SingleDuct:Uncontrolled 1,  ! Target Object
+  2;                        ! Inlet Port
+
+OS:Connection,
+  OS:Connection 18,         ! Name
+  OS:AirTerminal:SingleDuct:Uncontrolled 1,  ! Source Object
+  3,                        ! Outlet Port
+  OS:Node 11,               ! Target Object
+  1;                        ! Inlet Port
+
+OS:Connection,
+  OS:Connection 20,         ! Name
+  Standard Fan,             ! Source Object
+  8,                        ! Outlet Port
+  OS:Node 6,                ! Target Object
+  1;                        ! Inlet Port
+
+OS:Node,
+  OS:Node 13,               ! Name
+  OS:Connection 22,         ! Inlet Port
+  OS:Connection 23;         ! Outlet Port
+
+OS:Connection,
+  OS:Connection 22,         ! Name
+  OS:Coil:Heating:Gas 1,    ! Source Object
+  5,                        ! Outlet Port
+  OS:Node 13,               ! Target Object
+  1;                        ! Inlet Port
+
+OS:Connection,
+  OS:Connection 23,         ! Name
+  OS:Node 13,               ! Source Object
+  2,                        ! Outlet Port
+  Standard Fan,             ! Target Object
+  7;                        ! Inlet Port
+
+OS:Node,
+  OS:Node 14,               ! Name
+  OS:Connection 25,         ! Inlet Port
+  OS:Connection 26;         ! Outlet Port
+
+OS:Connection,
+  OS:Connection 25,         ! Name
+  OS:Coil:Cooling:DX:SingleSpeed 1,  ! Source Object
+  8,                        ! Outlet Port
+  OS:Node 14,               ! Target Object
+  1;                        ! Inlet Port
+
+OS:Connection,
+  OS:Connection 26,         ! Name
+  OS:Node 14,               ! Source Object
+  2,                        ! Outlet Port
+  OS:Coil:Heating:Gas 1,    ! Target Object
+  4;                        ! Inlet Port
+
+OS:Node,
+  OS:Node 15,               ! Name
+  OS:Connection 28,         ! Inlet Port
+  OS:Connection 29;         ! Outlet Port
+
+OS:Connection,
+  OS:Connection 27,         ! Name
+  OS:Node 5,                ! Source Object
+  2,                        ! Outlet Port
+  OS:AirLoopHVAC:OutdoorAirSystem 1,  ! Target Object
+  7;                        ! Inlet Port
+
+OS:Connection,
+  OS:Connection 28,         ! Name
+  OS:AirLoopHVAC:OutdoorAirSystem 1,  ! Source Object
+  4,                        ! Outlet Port
+  OS:Node 15,               ! Target Object
+  1;                        ! Inlet Port
+
+OS:Connection,
+  OS:Connection 29,         ! Name
+  OS:Node 15,               ! Source Object
+  2,                        ! Outlet Port
+  OS:Coil:Cooling:DX:SingleSpeed 1,  ! Target Object
+  7;                        ! Inlet Port
+
+OS:Node,
+  OS:Node 16,               ! Name
+  OS:Connection 31,         ! Inlet Port
+  OS:Connection 32;         ! Outlet Port
+
+OS:Connection,
+  OS:Connection 30,         ! Name
+  OS:Node 3,                ! Source Object
+  2,                        ! Outlet Port
+  OS:EvaporativeCooler:Direct:ResearchSpecial 1,  ! Target Object
+  4;                        ! Inlet Port
+
+OS:Connection,
+  OS:Connection 31,         ! Name
+  OS:EvaporativeCooler:Direct:ResearchSpecial 1,  ! Source Object
+  5,                        ! Outlet Port
+  OS:Node 16,               ! Target Object
+  1;                        ! Inlet Port
+
+OS:Connection,
+  OS:Connection 32,         ! Name
+  OS:Node 16,               ! Source Object
+  2,                        ! Outlet Port
+  OS:AirLoopHVAC:OutdoorAirSystem 1,  ! Target Object
+  5;                        ! Inlet Port
+
+OS:SetpointManager:MixedAir,
+  OS:SetpointManager:MixedAir 1,  ! Name
+  ,                         ! Control Variable
+  OS:Node 6,                ! Reference Setpoint Node Name
+  OS:Node 13,               ! Fan Inlet Node Name
+  OS:Node 6,                ! Fan Outlet Node Name
+  OS:Node 15;               ! Setpoint Node or NodeList Name
+
+OS:SetpointManager:MixedAir,
+  OS:SetpointManager:MixedAir 2,  ! Name
+  ,                         ! Control Variable
+  OS:Node 6,                ! Reference Setpoint Node Name
+  OS:Node 13,               ! Fan Inlet Node Name
+  OS:Node 6,                ! Fan Outlet Node Name
+  OS:Node 14;               ! Setpoint Node or NodeList Name
+
+OS:SetpointManager:MixedAir,
+  OS:SetpointManager:MixedAir 3,  ! Name
+  ,                         ! Control Variable
+  OS:Node 6,                ! Reference Setpoint Node Name
+  OS:Node 13,               ! Fan Inlet Node Name
+  OS:Node 6,                ! Fan Outlet Node Name
+  OS:Node 13;               ! Setpoint Node or NodeList Name
+
+OS:SetpointManager:MixedAir,
+  OS:SetpointManager:MixedAir 4,  ! Name
+  ,                         ! Control Variable
+  OS:Node 6,                ! Reference Setpoint Node Name
+  OS:Node 13,               ! Fan Inlet Node Name
+  OS:Node 6,                ! Fan Outlet Node Name
+  OS:Node 16;               ! Setpoint Node or NodeList Name
+
+OS:SetpointManager:SingleZone:Reheat,
+  OS:SetpointManager:SingleZone:Reheat 1,  ! Name
+  -99,                      ! Minimum Supply Air Temperature {C}
+  99,                       ! Maximum Supply Air Temperature {C}
+  OS:ThermalZone 1,         ! Control Zone Name
+  OS:Node 6;                ! Setpoint Node or NodeList Name
+
+OS:Output:Variable,
+  OS:Output:Variable 1,     ! Name
+  ,                         ! Key Value
+  Zone Outdoor Dry Bulb;    ! Variable Name
+
+OS:Output:Variable,
+  OS:Output:Variable 2,     ! Name
+  ,                         ! Key Value
+  Zone Outdoor Wet Bulb;    ! Variable Name
+
+OS:Output:Variable,
+  OS:Output:Variable 3,     ! Name
+  ,                         ! Key Value
+  Surface Inside Temperature;  ! Variable Name
+
+OS:Output:Variable,
+  OS:Output:Variable 4,     ! Name
+  ,                         ! Key Value
+  Surface Outside Temperature;  ! Variable Name
+
+OS:Meter,
+  Electricity:Facility,     ! Name
+  Hourly;                   ! Reporting Frequency
+
+OS:Meter,
+  Gas:Facility,             ! Name
+  Hourly;                   ! Reporting Frequency
+
+OS:Meter,
+  Propane:Facility,         ! Name
+  Hourly;                   ! Reporting Frequency
+

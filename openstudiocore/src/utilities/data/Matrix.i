@@ -1,0 +1,128 @@
+#ifndef UTILITIES_DATA_MATRIX_I
+#define UTILITIES_DATA_MATRIX_I
+
+%{
+  #include <utilities/data/Matrix.hpp>
+%}
+
+// create an instantiation of the vector class
+%template(MatrixVector) std::vector< openstudio::Matrix >;
+
+namespace openstudio{
+
+class Matrix{
+public:
+
+  // constructors
+  Matrix();
+  Matrix(unsigned M, unsigned N);
+  Matrix(unsigned M, unsigned N, double x0);
+  Matrix(const Matrix& m);
+
+  // sizing
+  unsigned size1() const;
+  unsigned size2() const;
+  void resize(unsigned M, unsigned N, bool preserve);
+  
+};
+
+%extend Matrix{
+
+  double __getitem__(unsigned i, unsigned j) const {
+    return (*self)(i,j);
+  }
+
+  void __setitem__(unsigned i, unsigned j, double x) {
+    (*self)(i,j) = x;
+  }
+  
+  bool __eq__(const Matrix& other) {
+    return operator==((*self), other);
+  }
+
+  Matrix __add__(const Matrix& m) const {
+    return ((*self) + m);
+  }
+
+  Matrix __add__(double d) const {
+    return ((*self) + Matrix(self->size1(), self->size2(), d));
+  }
+ 
+  Matrix __sub__(const Matrix& m) const {
+    return ((*self) - m);
+  }
+
+  Matrix __sub__(double d) const {
+    return ((*self) - Matrix(self->size1(), self->size2(), d));
+  }
+  
+  Matrix __mul__(const Matrix& m) const {
+    return prod(*self, m);
+  }
+
+  Vector __mul__(const Vector& v) const {
+    return prod(*self, v);
+  }
+
+  Matrix __mul__(double d) const {
+    return ((*self) * d);
+  }
+  
+  Matrix __div__(double d) const {
+    return ((*self) / d);
+  }
+ 
+  std::string __str__() const{
+    std::ostringstream os;
+    os << *self;
+    return os.str();
+  }
+};
+
+//////////////////////////////////////////////////////////////////////////
+// Copy and paste free function declarations here from Matrix.hpp
+//////////////////////////////////////////////////////////////////////////
+
+/// new operators
+
+//bool operator==(const Matrix& lhs, const Matrix& rhs);
+//bool operator!=(const Matrix& lhs, const Matrix& rhs);
+
+/// common methods
+
+/// linear interpolation of the function v = f(x, y) at point xi, yi
+/// assumes that x and y are strictly increasing
+double interp(const Vector& x, const Vector& y, const Matrix& v, double xi, double yi, InterpMethod interpMethod = linearInterp, ExtrapMethod extrapMethod = noneExtrap);
+
+/// linear interpolation of the function v = f(x, y) at points xi, yi
+/// assumes that x and y are strictly increasing
+Matrix interp(const Vector& x, const Vector& y, const Matrix& v, const Vector& xi, const Vector& yi, InterpMethod interpMethod = linearInterp, ExtrapMethod extrapMethod = noneExtrap);
+
+/// outer product
+Matrix outerProd(const Vector& lhs, const Vector& rhs);
+
+/// take the natural logarithm of a Matrix
+Matrix log(const Matrix& v);
+
+/// take the logarithm of a Matrix with certain base
+Matrix log(const Matrix& v, double base);
+
+/// generates a Matrix of N points randomly drawn between and including a and b.
+Matrix randMatrix(double a, double b, unsigned M, unsigned N);
+
+/// sum
+double sum(const Matrix& matrix);
+
+/// maximum
+double maximum(const Matrix& matrix);
+
+/// minimum
+double minimum(const Matrix& matrix);
+
+/// mean
+double mean(const Matrix& matrix);
+
+} // openstudio
+
+#endif //UTILITIES_DATA_MATRIX_I 
+

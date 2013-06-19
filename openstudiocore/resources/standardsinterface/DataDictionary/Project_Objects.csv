@@ -1,0 +1,27 @@
+Building,"The Standards refer to any construction project as a building.  Entire Building is the term used to represent a stand alone structure and the ensemble of all enclosed spaces including the space for which a permit is sought, plus all existing conditioned and unconditioned space within the structure."
+Building Story,"T24:  No definition, but the number of stories is used to differentiate between low rise residential and high rise residential which uses the nonresidential standards for the most part
+ 
+In Section 131 – Indoor Lighting Controls That Shall Be Installed (d) Shut-off Controls:  there is a rule that every story shall have a lighting control shut off all the lights"
+Compliance Choices,Much of this information is captured in compliance forms. 
+Geographic and Climate Data,The data in Geographic and Climate Data is found in tables the Joint Appendix 2
+Load Schedule Daily,Found in Schedule tables N2-8 through N2-12
+Load Schedule Identifier,NR ACM Tables N2-8 thorugh N2-12 contain schedules for the Load Schedule Occupancy types and in each schedule the different Load Schedule Types
+Load Schedule Weekly,Found in N2-8 through N2-12 Schedule tables
+Load Schedules, Load Schedules are all found in tables N2-8 through N2-12
+Occupant Load,NR ACM tables N2-5 and N2-6 assign occupancy loads for either whole building occupancy type or area occupancy type.
+Project Data,"Projects are defined in terms of the applied building permit coverage.  Much of the project level information is recorded on the compliance forms, e.g. CF-1R, that are filed for the permitted construction project"
+Receptacle Load,NR ACM Tables N2-5 and N2-6 assign values for Receptacle Loads based on occupancy types.
+Rule Binding Information,"Rule Binding Information is found throughout the Standards often in the form of a table that provides a matrix of attributes which have differernt values and each unique combination is assigned a value to the table's rule target.  For example Table 143-A contains binding information for assigning U Factor values to the walls, roof and floor of the building envelope. "
+Rule Target Attribution,"Throughout the Standards there are references to authorities for assigning values to rule targets.  In the NR ACM some values are input by the user and others are assigned following a rule.   In a compliance analysis, it will be important to record what agent provided the information and if it is based on an outside authority."
+Schedules,NR ACM refers to different types of equipment schedules as well as the load schedules in tables N2-8 through N2-12
+Space Loads,NR ACM tables N2-5 and N2-6 contain the space loads
+Sub Zone Space,There are a number of times when a zone is subdivided into spaces usually for lighting regulations.
+Sub Zone Spaces,Not found.
+Thermal Block,"Zones are grouped when they share some attributes that require unique handling such as perimeter systems, but there is no concept similar to thermal block"
+Thermal Blocks,not found
+Thermal Data,NR ACM Table N2-5 – Occupancy Assumptions and Table N2-6 – Area Occupancy Assumptions assign load attributes based on the occupancy type and schedules contained in N2-8-N2-12
+Zone,"Title 24 Part 6 Section 101 definitions:
+ZONE, SPACE-CONDITIONING, is a space or group of spaces within a building with sufficiently similar comfort conditioning requirements so that comfort conditions, as specified in Section 144(b)3 or 150(h), as applicable, can be maintained throughout the zone by a single controlling device."
+Zone Geometry,"NR ACM: Although zone orientation and size are required as explained in section 4.3.6.1 Thermal Zones, there is no mention of how to enter a zone's geometry. "
+Zone Loads,NR ACM table N2-6 assigns load values for what it calls an Area which would relate to a Zone or a Subzone Space
+Zones,NR ACM In 2.5.1 Thermal Zoning there are rules regarding how many zones are required beforezone multipliers can be used.  

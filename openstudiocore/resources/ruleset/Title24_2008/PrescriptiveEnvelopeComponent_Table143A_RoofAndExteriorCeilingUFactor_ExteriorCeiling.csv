@@ -1,0 +1,24 @@
+Compliance Approach,Prescriptive Envelope Component,,,
+"Table 143-A, Exterior Ceiling U-Factor",,,,
+,,,,
+Building,Ceiling,Ceiling,,Ceiling
+Climate Zone,Partition Thermal Type,Ceiling Construction Type,,U Factor
+,,,,less than or equal to
+,,,,(Btu/h*ft^2*R)
+,Exterior,Metal Building Ceiling,,0.065
+1,Exterior,Wood Framing and Other Ceiling,,0.049
+2,Exterior,Wood Framing and Other Ceiling,,0.039
+3,Exterior,Wood Framing and Other Ceiling,,0.039
+4,Exterior,Wood Framing and Other Ceiling,,0.039
+5,Exterior,Wood Framing and Other Ceiling,,0.049
+6,Exterior,Wood Framing and Other Ceiling,,0.075
+7,Exterior,Wood Framing and Other Ceiling,,0.067
+8,Exterior,Wood Framing and Other Ceiling,,0.067
+9,Exterior,Wood Framing and Other Ceiling,,0.039
+10,Exterior,Wood Framing and Other Ceiling,,0.039
+11,Exterior,Wood Framing and Other Ceiling,,0.039
+12,Exterior,Wood Framing and Other Ceiling,,0.039
+13,Exterior,Wood Framing and Other Ceiling,,0.039
+14,Exterior,Wood Framing and Other Ceiling,,0.039
+15,Exterior,Wood Framing and Other Ceiling,,0.039
+16,Exterior,Wood Framing and Other Ceiling,,0.039

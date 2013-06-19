@@ -1,0 +1,95 @@
+/**********************************************************************
+*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  All rights reserved.
+*
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+*
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*  Lesser General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+**********************************************************************/
+
+#include <shared_gui_components/OSCheckBox.hpp>
+#include <model/ModelObject.hpp>
+#include <model/ModelObject_Impl.hpp>
+#include <QString>
+
+namespace openstudio {
+
+OSCheckBox::OSCheckBox( QWidget * parent )
+  : QPushButton(parent)
+{
+  setObjectName("StandardGrayButton");
+  this->setAcceptDrops(false);
+
+  this->setCheckable(true);
+  
+  setEnabled(false);
+}
+
+void OSCheckBox::bind(model::ModelObject & modelObject, const char * property)
+{
+  m_modelObject = modelObject;
+
+  m_property = property;
+
+  setEnabled(true);
+
+  connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
+           this,SLOT(onModelObjectChange()) );
+
+  connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
+           this,SLOT(onModelObjectRemove(Handle)) );
+
+  connect( this, SIGNAL(toggled(bool)), this, SLOT(onToggled(bool)) );
+
+  bool checked = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str()).toBool();
+
+  this->setChecked(checked);
+}
+
+void OSCheckBox::unbind()
+{
+  if (m_modelObject){
+    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+    m_modelObject.reset();
+    m_property = "";
+    setEnabled(false);
+  }
+}
+
+void OSCheckBox::onToggled(bool checked)
+{
+  if( m_modelObject )
+  {
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(),checked);
+  }
+}
+
+void OSCheckBox::onModelObjectChange()
+{
+  if( m_modelObject )
+  {
+    bool checked = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str()).toBool();
+
+    this->setChecked(checked);
+  }
+}
+
+void OSCheckBox::onModelObjectRemove(Handle handle)
+{
+  m_modelObject.reset();
+  m_property = "";
+  setEnabled(false);
+}
+
+} // openstudio
+

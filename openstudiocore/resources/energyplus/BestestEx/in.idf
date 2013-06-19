@@ -1,0 +1,1370 @@
+!-Generator IDFEditor 1.34
+!-Option OriginalOrderTop UseSpecialFormat
+!-NOTE: All comments with '!-' are ignored by the IDFEditor and are generated automatically.
+!-      Use '!' comments if they need to be retained when using the IDFEditor.
+!BESTEST-EX Case L200EX-PH BASE-CASE, developed by NREL
+!Use EnergyPlus IDFEditor to view inputs in IP units
+ 
+  Version,7.2;
+ 
+  SimulationControl,
+    No,                      !- Do Zone Sizing Calculation
+    No,                      !- Do System Sizing Calculation
+    No,                      !- Do Plant Sizing Calculation
+    No,                      !- Run Simulation for Sizing Periods
+    Yes;                     !- Run Simulation for Weather File Run Periods
+ 
+  Building,
+    L200EX-PH BASE-CASE,     !- Name
+    0.0,                     !- North Axis
+    Suburbs,                 !- Terrain
+    0.04,                    !- Loads Convergence Tolerance Value
+    0.004,                   !- Temperature Convergence Tolerance Value
+    MinimalShadowing,        !- Solar Distribution
+    ,                        !- Maximum Number of Warmup Days
+    6;                       !- Minimum Number of Warmup Days
+ 
+  ShadowCalculation,
+    1;                       !- Calculation Frequency
+ 
+  SurfaceConvectionAlgorithm:Inside,TARP;
+ 
+  SurfaceConvectionAlgorithm:Outside,DOE-2;
+ 
+  HeatBalanceAlgorithm,ConductionTransferFunction;
+ 
+  Timestep,6;
+ 
+  RunPeriod,
+    ,                        !- Name
+    1,                       !- Begin Month
+    1,                       !- Begin Day of Month
+    12,                      !- End Month
+    31,                      !- End Day of Month
+    UseWeatherFile,          !- Day of Week for Start Day
+    No,                      !- Use Weather File Holidays and Special Days
+    No,                      !- Use Weather File Daylight Saving Period
+    No,                      !- Apply Weekend Holiday Rule
+    No,                      !- Use Weather File Rain Indicators
+    No,                      !- Use Weather File Snow Indicators
+    1;                       !- Number of Times Runperiod to be Repeated
+ 
+  Site:GroundReflectance,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2;
+ 
+!===========SCHEDULES===========
+ 
+  ScheduleTypeLimits,
+    Any Number;              !- Name
+ 
+  Schedule:Day:Hourly,
+    OCCUPANTS,               !- Name
+    Any Number,              !- Schedule Type Limits Name
+    0.061,                   !- Hour 1
+    0.061,                   !- Hour 2
+    0.061,                   !- Hour 3
+    0.061,                   !- Hour 4
+    0.061,                   !- Hour 5
+    0.061,                   !- Hour 6
+    0.061,                   !- Hour 7
+    0.052,                   !- Hour 8
+    0.024,                   !- Hour 9
+    0.015,                   !- Hour 10
+    0.015,                   !- Hour 11
+    0.015,                   !- Hour 12
+    0.015,                   !- Hour 13
+    0.015,                   !- Hour 14
+    0.015,                   !- Hour 15
+    0.015,                   !- Hour 16
+    0.018,                   !- Hour 17
+    0.032,                   !- Hour 18
+    0.053,                   !- Hour 19
+    0.053,                   !- Hour 20
+    0.053,                   !- Hour 21
+    0.061,                   !- Hour 22
+    0.061,                   !- Hour 23
+    0.061;                   !- Hour 24
+ 
+  Schedule:Day:Hourly,
+    ELECTRIC,                !- Name
+    Any Number,              !- Schedule Type Limits Name
+    0.022,                   !- Hour 1
+    0.02,                    !- Hour 2
+    0.019,                   !- Hour 3
+    0.02,                    !- Hour 4
+    0.025,                   !- Hour 5
+    0.038,                   !- Hour 6
+    0.048,                   !- Hour 7
+    0.05,                    !- Hour 8
+    0.038,                   !- Hour 9
+    0.034,                   !- Hour 10
+    0.032,                   !- Hour 11
+    0.031,                   !- Hour 12
+    0.03,                    !- Hour 13
+    0.029,                   !- Hour 14
+    0.029,                   !- Hour 15
+    0.034,                   !- Hour 16
+    0.051,                   !- Hour 17
+    0.065,                   !- Hour 18
+    0.077,                   !- Hour 19
+    0.083,                   !- Hour 20
+    0.082,                   !- Hour 21
+    0.066,                   !- Hour 22
+    0.046,                   !- Hour 23
+    0.031;                   !- Hour 24
+ 
+  Schedule:Day:Hourly,
+    GAS,                     !- Name
+    Any Number,              !- Schedule Type Limits Name
+    0.036,                   !- Hour 1
+    0.035,                   !- Hour 2
+    0.035,                   !- Hour 3
+    0.035,                   !- Hour 4
+    0.036,                   !- Hour 5
+    0.039,                   !- Hour 6
+    0.046,                   !- Hour 7
+    0.048,                   !- Hour 8
+    0.048,                   !- Hour 9
+    0.047,                   !- Hour 10
+    0.045,                   !- Hour 11
+    0.044,                   !- Hour 12
+    0.043,                   !- Hour 13
+    0.042,                   !- Hour 14
+    0.041,                   !- Hour 15
+    0.041,                   !- Hour 16
+    0.042,                   !- Hour 17
+    0.043,                   !- Hour 18
+    0.044,                   !- Hour 19
+    0.044,                   !- Hour 20
+    0.044,                   !- Hour 21
+    0.043,                   !- Hour 22
+    0.041,                   !- Hour 23
+    0.038;                   !- Hour 24
+ 
+!No Cooling
+ 
+  Schedule:Day:Interval,
+    Cooling Daily,           !- Name
+    Any Number,              !- Schedule Type Limits Name
+    No,                      !- Interpolate to Timestep
+    07:00,                   !- Time 1
+    100,                     !- Value Until Time 1
+    17:00,                   !- Time 2
+    100,                     !- Value Until Time 2
+    24:00,                   !- Time 3
+    100;                     !- Value Until Time 3
+ 
+!No Cooling
+ 
+  Schedule:Day:Interval,
+    Cooling Off,             !- Name
+    Any Number,              !- Schedule Type Limits Name
+    No,                      !- Interpolate to Timestep
+    24:00,                   !- Time 1
+    100;                     !- Value Until Time 1
+ 
+  Schedule:Day:Interval,
+    Heating Daily,           !- Name
+    Any Number,              !- Schedule Type Limits Name
+    No,                      !- Interpolate to Timestep
+    06:00,                   !- Time 1
+    20,                      !- Value Until Time 1
+    22:00,                   !- Time 2
+    20,                      !- Value Until Time 2
+    24:00,                   !- Time 3
+    20;                      !- Value Until Time 3
+ 
+  Schedule:Day:Interval,
+    Heating Off,             !- Name
+    Any Number,              !- Schedule Type Limits Name
+    No,                      !- Interpolate to Timestep
+    24:00,                   !- Time 1
+    -100;                    !- Value Until Time 1
+ 
+  Schedule:Week:Daily,
+    OCCUPANTS,               !- Name
+    OCCUPANTS,               !- Sunday Schedule:Day Name
+    OCCUPANTS,               !- Monday Schedule:Day Name
+    OCCUPANTS,               !- Tuesday Schedule:Day Name
+    OCCUPANTS,               !- Wednesday Schedule:Day Name
+    OCCUPANTS,               !- Thursday Schedule:Day Name
+    OCCUPANTS,               !- Friday Schedule:Day Name
+    OCCUPANTS,               !- Saturday Schedule:Day Name
+    OCCUPANTS,               !- Holiday Schedule:Day Name
+    OCCUPANTS,               !- SummerDesignDay Schedule:Day Name
+    OCCUPANTS,               !- WinterDesignDay Schedule:Day Name
+    OCCUPANTS,               !- CustomDay1 Schedule:Day Name
+    OCCUPANTS;               !- CustomDay2 Schedule:Day Name
+ 
+  Schedule:Week:Daily,
+    ELECTRIC,                !- Name
+    ELECTRIC,                !- Sunday Schedule:Day Name
+    ELECTRIC,                !- Monday Schedule:Day Name
+    ELECTRIC,                !- Tuesday Schedule:Day Name
+    ELECTRIC,                !- Wednesday Schedule:Day Name
+    ELECTRIC,                !- Thursday Schedule:Day Name
+    ELECTRIC,                !- Friday Schedule:Day Name
+    ELECTRIC,                !- Saturday Schedule:Day Name
+    ELECTRIC,                !- Holiday Schedule:Day Name
+    ELECTRIC,                !- SummerDesignDay Schedule:Day Name
+    ELECTRIC,                !- WinterDesignDay Schedule:Day Name
+    ELECTRIC,                !- CustomDay1 Schedule:Day Name
+    ELECTRIC;                !- CustomDay2 Schedule:Day Name
+ 
+  Schedule:Week:Daily,
+    GAS,                     !- Name
+    GAS,                     !- Sunday Schedule:Day Name
+    GAS,                     !- Monday Schedule:Day Name
+    GAS,                     !- Tuesday Schedule:Day Name
+    GAS,                     !- Wednesday Schedule:Day Name
+    GAS,                     !- Thursday Schedule:Day Name
+    GAS,                     !- Friday Schedule:Day Name
+    GAS,                     !- Saturday Schedule:Day Name
+    GAS,                     !- Holiday Schedule:Day Name
+    GAS,                     !- SummerDesignDay Schedule:Day Name
+    GAS,                     !- WinterDesignDay Schedule:Day Name
+    GAS,                     !- CustomDay1 Schedule:Day Name
+    GAS;                     !- CustomDay2 Schedule:Day Name
+ 
+!No Cooling
+ 
+  Schedule:Week:Daily,
+    COOLING,                 !- Name
+    Cooling Daily,           !- Sunday Schedule:Day Name
+    Cooling Daily,           !- Monday Schedule:Day Name
+    Cooling Daily,           !- Tuesday Schedule:Day Name
+    Cooling Daily,           !- Wednesday Schedule:Day Name
+    Cooling Daily,           !- Thursday Schedule:Day Name
+    Cooling Daily,           !- Friday Schedule:Day Name
+    Cooling Daily,           !- Saturday Schedule:Day Name
+    Cooling Daily,           !- Holiday Schedule:Day Name
+    Cooling Daily,           !- SummerDesignDay Schedule:Day Name
+    Cooling Daily,           !- WinterDesignDay Schedule:Day Name
+    Cooling Daily,           !- CustomDay1 Schedule:Day Name
+    Cooling Daily;           !- CustomDay2 Schedule:Day Name
+ 
+!No Cooling
+ 
+  Schedule:Week:Daily,
+    COOLING OFF,             !- Name
+    Cooling Off,             !- Sunday Schedule:Day Name
+    Cooling Off,             !- Monday Schedule:Day Name
+    Cooling Off,             !- Tuesday Schedule:Day Name
+    Cooling Off,             !- Wednesday Schedule:Day Name
+    Cooling Off,             !- Thursday Schedule:Day Name
+    Cooling Off,             !- Friday Schedule:Day Name
+    Cooling Off,             !- Saturday Schedule:Day Name
+    Cooling Off,             !- Holiday Schedule:Day Name
+    Cooling Off,             !- SummerDesignDay Schedule:Day Name
+    Cooling Off,             !- WinterDesignDay Schedule:Day Name
+    Cooling Off,             !- CustomDay1 Schedule:Day Name
+    Cooling Off;             !- CustomDay2 Schedule:Day Name
+ 
+  Schedule:Week:Daily,
+    HEATING,                 !- Name
+    Heating Daily,           !- Sunday Schedule:Day Name
+    Heating Daily,           !- Monday Schedule:Day Name
+    Heating Daily,           !- Tuesday Schedule:Day Name
+    Heating Daily,           !- Wednesday Schedule:Day Name
+    Heating Daily,           !- Thursday Schedule:Day Name
+    Heating Daily,           !- Friday Schedule:Day Name
+    Heating Daily,           !- Saturday Schedule:Day Name
+    Heating Daily,           !- Holiday Schedule:Day Name
+    Heating Daily,           !- SummerDesignDay Schedule:Day Name
+    Heating Daily,           !- WinterDesignDay Schedule:Day Name
+    Heating Daily,           !- CustomDay1 Schedule:Day Name
+    Heating Daily;           !- CustomDay2 Schedule:Day Name
+ 
+  Schedule:Week:Daily,
+    HEATING OFF,             !- Name
+    Heating Off,             !- Sunday Schedule:Day Name
+    Heating Off,             !- Monday Schedule:Day Name
+    Heating Off,             !- Tuesday Schedule:Day Name
+    Heating Off,             !- Wednesday Schedule:Day Name
+    Heating Off,             !- Thursday Schedule:Day Name
+    Heating Off,             !- Friday Schedule:Day Name
+    Heating Off,             !- Saturday Schedule:Day Name
+    Heating Off,             !- Holiday Schedule:Day Name
+    Heating Off,             !- SummerDesignDay Schedule:Day Name
+    Heating Off,             !- WinterDesignDay Schedule:Day Name
+    Heating Off,             !- CustomDay1 Schedule:Day Name
+    Heating Off;             !- CustomDay2 Schedule:Day Name
+ 
+  Schedule:Year,
+    OCCUPANTS YEAR,          !- Name
+    Any Number,              !- Schedule Type Limits Name
+    OCCUPANTS,               !- Schedule:Week Name 1
+    1,                       !- Start Month 1
+    1,                       !- Start Day 1
+    12,                      !- End Month 1
+    31;                      !- End Day 1
+ 
+  Schedule:Year,
+    ELECTRIC YEAR,           !- Name
+    Any Number,              !- Schedule Type Limits Name
+    ELECTRIC,                !- Schedule:Week Name 1
+    1,                       !- Start Month 1
+    1,                       !- Start Day 1
+    12,                      !- End Month 1
+    31;                      !- End Day 1
+ 
+  Schedule:Year,
+    GAS YEAR,                !- Name
+    Any Number,              !- Schedule Type Limits Name
+    GAS,                     !- Schedule:Week Name 1
+    1,                       !- Start Month 1
+    1,                       !- Start Day 1
+    12,                      !- End Month 1
+    31;                      !- End Day 1
+ 
+!No Cooling
+ 
+  Schedule:Year,
+    COOLING YEAR,            !- Name
+    Any Number,              !- Schedule Type Limits Name
+    COOLING OFF,             !- Schedule:Week Name 1
+    1,                       !- Start Month 1
+    1,                       !- Start Day 1
+    5,                       !- End Month 1
+    15,                      !- End Day 1
+    COOLING,                 !- Schedule:Week Name 2
+    5,                       !- Start Month 2
+    16,                      !- Start Day 2
+    10,                      !- End Month 2
+    15,                      !- End Day 2
+    COOLING OFF,             !- Schedule:Week Name 3
+    10,                      !- Start Month 3
+    16,                      !- Start Day 3
+    12,                      !- End Month 3
+    31;                      !- End Day 3
+ 
+  Schedule:Year,
+    HEATING YEAR,            !- Name
+    Any Number,              !- Schedule Type Limits Name
+    HEATING,                 !- Schedule:Week Name 1
+    1,                       !- Start Month 1
+    1,                       !- Start Day 1
+    5,                       !- End Month 1
+    16,                      !- End Day 1
+    HEATING OFF,             !- Schedule:Week Name 2
+    5,                       !- Start Month 2
+    17,                      !- Start Day 2
+    10,                      !- End Month 2
+    6,                       !- End Day 2
+    HEATING,                 !- Schedule:Week Name 3
+    10,                      !- Start Month 3
+    7,                       !- Start Day 3
+    12,                      !- End Month 3
+    31;                      !- End Day 3
+ 
+  Schedule:Compact,
+    ALWAYS 1,                !- Name
+    Any Number,              !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,1;          !- Field 3
+ 
+  Schedule:Compact,
+    ALWAYS 4,                !- Name
+    Any Number,              !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,4;          !- Field 3
+ 
+!===========MATERIAL===========
+ 
+  Material,
+    FLOOR JOISTS 2X8 16 IN OC,  !- Name
+    Rough,                   !- Roughness
+    0.15875032180756,        !- Thickness
+    0.115417683566297,       !- Conductivity
+    512.590493468479,        !- Density
+    1380.7200104479,         !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0,                       !- Solar Absorptance
+    0;                       !- Visible Absorptance
+ 
+  Material,
+    PRE-RETROFIT FIBERGLASS BATT,  !- Name
+    Rough,                   !- Roughness
+    0.0889,                  !- Thickness
+    4.58556014168944E-02,    !- Conductivity
+    9.61107175253399,        !- Density
+    836.800006332062,        !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0.6,                     !- Solar Absorptance
+    0.6;                     !- Visible Absorptance
+ 
+  Material,
+    PRE-RETROFIT JOIST 2X6 24 OC,  !- Name
+    Rough,                   !- Roughness
+    0.0889,                  !- Thickness
+    0.115417683566297,       !- Conductivity
+    512.590493468479,        !- Density
+    1380.7200104479,         !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0.6,                     !- Solar Absorptance
+    0.6;                     !- Visible Absorptance
+ 
+!Door is modeled using "interior" and "exterior" materials so external solar absorptance can be varied
+ 
+  Material,
+    DOOR INTERIOR,           !- Name
+    Rough,                   !- Roughness
+    2.22250450530584E-02,    !- Thickness
+    0.11576376357699,        !- Conductivity
+    512.590493468479,        !- Density
+    1380.7200104479,         !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0.6,                     !- Solar Absorptance
+    0.6;                     !- Visible Absorptance
+ 
+  Material,
+    DOOR EXTERIOR,           !- Name
+    Rough,                   !- Roughness
+    2.22250450530584E-02,    !- Thickness
+    0.11576376357699,        !- Conductivity
+    512.590493468479,        !- Density
+    1380.7200104479,         !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0.6,                     !- Solar Absorptance
+    0.6;                     !- Visible Absorptance
+ 
+  Material,
+    ASPHALT SHINGLE 1/4 IN,  !- Name
+    Rough,                   !- Roughness
+    6.3500128723024E-03,     !- Thickness
+    8.18479225290229E-02,    !- Conductivity
+    1121.2917044623,         !- Density
+    1255.20000949809,        !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0.6,                     !- Solar Absorptance
+    0.6;                     !- Visible Absorptance
+ 
+  Material,
+    FRAME 2X4 16 inch OC,    !- Name
+    Rough,                   !- Roughness
+    8.89001802122336E-02,    !- Thickness
+    0.115417683566297,       !- Conductivity
+    512.590493468479,        !- Density
+    1380.7200104479,         !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0.6,                     !- Solar Absorptance
+    0.6;                     !- Visible Absorptance
+ 
+  Material,
+    PLASTERBOARD,            !- Name
+    Rough,                   !- Roughness
+    1.27000257446048E-02,    !- Thickness
+    0.16023504495111,        !- Conductivity
+    800.922646044499,        !- Density
+    1087.84000823168,        !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0.6,                     !- Solar Absorptance
+    0.6;                     !- Visible Absorptance
+ 
+  Material,
+    EXT WALL HARDBOARD SIDING(7/16''),  !- Name
+    Rough,                   !- Roughness
+    0.011176,                !- Thickness
+    9.41337629086437E-02,    !- Conductivity
+    640.738116835599,        !- Density
+    1171.52000886489,        !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0.6,                     !- Solar Absorptance
+    0.6;                     !- Visible Absorptance
+ 
+  Material,
+    FIBERGLASS BATT R19,     !- Name
+    Rough,                   !- Roughness
+    0.15875032180756,        !- Thickness
+    4.74129614650154E-02,    !- Conductivity
+    9.61107175253399,        !- Density
+    836.800006332062,        !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0,                       !- Solar Absorptance
+    0;                       !- Visible Absorptance
+ 
+  Material,
+    PLYWOOD 3/4 IN,          !- Name
+    Rough,                   !- Roughness
+    1.90500386169072E-02,    !- Thickness
+    0.115417683566297,       !- Conductivity
+    544.627399310259,        !- Density
+    1213.36000918149,        !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0.6,                     !- Solar Absorptance
+    0.6;                     !- Visible Absorptance
+ 
+  Material,
+    FIBERBOARD SHEATHING,    !- Name
+    Rough,                   !- Roughness
+    1.27000257446048E-02,    !- Thickness
+    5.46806416895798E-02,    !- Conductivity
+    288.33215257602,         !- Density
+    1297.0400098147,         !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0.6,                     !- Solar Absorptance
+    0.6;                     !- Visible Absorptance
+ 
+  Material,
+    PLYWOOD 1/2 IN,          !- Name
+    Rough,                   !- Roughness
+    1.27000257446048E-02,    !- Thickness
+    0.115417683566297,       !- Conductivity
+    544.627399310259,        !- Density
+    1213.36000918149,        !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0.6,                     !- Solar Absorptance
+    0.6;                     !- Visible Absorptance
+ 
+  Material,
+    HARDBOARD SIDING(7/16''),!- Name
+    Rough,                   !- Roughness
+    1.11760226552522E-02,    !- Thickness
+    9.41337629086437E-02,    !- Conductivity
+    640.738116835599,        !- Density
+    1171.52000886489,        !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0.6,                     !- Solar Absorptance
+    0.6;                     !- Visible Absorptance
+ 
+  Material:NoMass,
+    CARPET W/ FIBROUS PAD,   !- Name
+    Rough,                   !- Roughness
+    0.366309191974828,       !- Thermal Resistance
+    0.9,                     !- Thermal Absorptance
+    0.6,                     !- Solar Absorptance
+    0.6;                     !- Visible Absorptance
+ 
+  Material:NoMass,
+    ALUM FRAME,              !- Name
+    VerySmooth,              !- Roughness
+    0.019372120729438,       !- Thermal Resistance
+    0.9,                     !- Thermal Absorptance
+    0.6,                     !- Solar Absorptance
+    0.6;                     !- Visible Absorptance
+ 
+  Material:AirGap,
+    MATERIALAIRGAP,          !- Name
+    0.177871290333931;       !- Thermal Resistance
+ 
+  WindowMaterial:Glazing,
+    SINGLE PANE GLASS,       !- Name
+    SpectralAverage,         !- Optical Data Type
+    ,                        !- Window Glass Spectral Data Set Name
+    2.99720607572673E-03,    !- Thickness
+    0.837,                   !- Solar Transmittance at Normal Incidence
+    0.075,                   !- Front Side Solar Reflectance at Normal Incidence
+    0.075,                   !- Back Side Solar Reflectance at Normal Incidence
+    0.837,                   !- Visible Transmittance at Normal Incidence
+    0.075,                   !- Front Side Visible Reflectance at Normal Incidence
+    0.075,                   !- Back Side Visible Reflectance at Normal Incidence
+    0.0,                     !- Infrared Transmittance at Normal Incidence
+    0.84,                    !- Front Side Infrared Hemispherical Emissivity
+    0.84,                    !- Back Side Infrared Hemispherical Emissivity
+    0.899808027803211;       !- Conductivity
+ 
+!===========CONSTRUCTION===========
+ 
+  Construction,
+    ALUM WIN FRAME,          !- Name
+    ALUM FRAME;              !- Outside Layer
+ 
+  Construction,
+    WINDOW SINGLE PANE,      !- Name
+    SINGLE PANE GLASS;       !- Outside Layer
+ 
+  Construction,
+    INTERIOR WALL FRAMED,    !- Name
+    PLASTERBOARD,            !- Outside Layer
+    FRAME 2X4 16 inch OC,    !- Layer 2
+    PLASTERBOARD;            !- Layer 3
+ 
+  Construction,
+    ATTIC FLOOR BATT,        !- Name
+    PLASTERBOARD,            !- Outside Layer
+    PRE-RETROFIT FIBERGLASS BATT;  !- Layer 2
+ 
+  Construction,
+    ATTIC FLOOR JOISTS,      !- Name
+    PLASTERBOARD,            !- Outside Layer
+    PRE-RETROFIT JOIST 2X6 24 OC;  !- Layer 2
+ 
+  Construction,
+    ROOF,                    !- Name
+    ASPHALT SHINGLE 1/4 IN,  !- Outside Layer
+    PLYWOOD 1/2 IN;          !- Layer 2
+ 
+  Construction,
+    END GABLE,               !- Name
+    HARDBOARD SIDING(7/16''),!- Outside Layer
+    PLYWOOD 1/2 IN;          !- Layer 2
+ 
+  Construction,
+    CEILING BATT,            !- Name
+    PRE-RETROFIT FIBERGLASS BATT,  !- Outside Layer
+    PLASTERBOARD;            !- Layer 2
+ 
+  Construction,
+    CEILING JOISTS,          !- Name
+    PRE-RETROFIT JOIST 2X6 24 OC,  !- Outside Layer
+    PLASTERBOARD;            !- Layer 2
+ 
+  Construction,
+    FLOOR OVCS BATTING,      !- Name
+    FIBERGLASS BATT R19,     !- Outside Layer
+    PLYWOOD 3/4 IN,          !- Layer 2
+    CARPET W/ FIBROUS PAD;   !- Layer 3
+ 
+  Construction,
+    FLOOR OVCS JOISTS,       !- Name
+    FLOOR JOISTS 2X8 16 IN OC,  !- Outside Layer
+    PLYWOOD 3/4 IN,          !- Layer 2
+    CARPET W/ FIBROUS PAD;   !- Layer 3
+ 
+  Construction,
+    EXTERIOR WALL (BATTING), !- Name
+    EXT WALL HARDBOARD SIDING(7/16''),  !- Outside Layer
+    FIBERBOARD SHEATHING,    !- Layer 2
+    MATERIALAIRGAP,          !- Layer 3
+    PLASTERBOARD;            !- Layer 4
+ 
+  Construction,
+    EXTERIOR WALL (FRAMING), !- Name
+    EXT WALL HARDBOARD SIDING(7/16''),  !- Outside Layer
+    FIBERBOARD SHEATHING,    !- Layer 2
+    FRAME 2X4 16 inch OC,    !- Layer 3
+    PLASTERBOARD;            !- Layer 4
+ 
+  Construction,
+    INTERIOR WALL AIR,       !- Name
+    PLASTERBOARD,            !- Outside Layer
+    PLASTERBOARD;            !- Layer 2
+ 
+  Construction,
+    DOOR,                    !- Name
+    DOOR EXTERIOR,           !- Outside Layer
+    DOOR INTERIOR;           !- Layer 2
+ 
+  GlobalGeometryRules,
+    UpperLeftCorner,         !- Starting Vertex Position
+    Counterclockwise,        !- Vertex Entry Direction
+    Relative;                !- Coordinate System
+ 
+  Zone,
+    ZONE ONE,                !- Name
+    0,                       !- Direction of Relative North
+    0,                       !- X Origin
+    0,                       !- Y Origin
+    0,                       !- Z Origin
+    1,                       !- Type
+    1,                       !- Multiplier
+    autocalculate,           !- Ceiling Height
+    autocalculate,           !- Volume
+    autocalculate,           !- Floor Area
+    ,                        !- Zone Inside Convection Algorithm
+    ,                        !- Zone Outside Convection Algorithm
+    Yes;                     !- Part of Total Floor Area
+ 
+  Zone,
+    ZONE TWO ATTIC,          !- Name
+    0,                       !- Direction of Relative North
+    0,                       !- X Origin
+    0,                       !- Y Origin
+    2.43828108701145,        !- Z Origin
+    1,                       !- Type
+    1,                       !- Multiplier
+    autocalculate,           !- Ceiling Height
+    autocalculate,           !- Volume
+    autocalculate,           !- Floor Area
+    ,                        !- Zone Inside Convection Algorithm
+    ,                        !- Zone Outside Convection Algorithm
+    No;                      !- Part of Total Floor Area
+ 
+!===========BuildingSurface:Detailed===========
+ 
+  BuildingSurface:Detailed,
+    Z1 FLOOR BATTING,        !- Name
+    Floor,                   !- Surface Type
+    FLOOR OVCS BATTING,      !- Construction Name
+    ZONE ONE,                !- Zone Name
+    Outdoors,                !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    ,                        !- View Factor to Ground
+    4,                       !- Number of Vertices
+    1.737275,8.229199,0.000000,  !- X,Y,Z ==> Vertex 1
+    17.372753,8.229199,0.000000,  !- X,Y,Z ==> Vertex 2
+    17.372753,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3
+    1.737275,0.000000,0.000000;  !- X,Y,Z ==> Vertex 4
+ 
+  BuildingSurface:Detailed,
+    Z1 CEILING BATT,         !- Name
+    Ceiling,                 !- Surface Type
+    CEILING BATT,            !- Construction Name
+    ZONE ONE,                !- Zone Name
+    Surface,                 !- Outside Boundary Condition
+    Z2 FLOOR BATT,           !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    0.0,                     !- View Factor to Ground
+    4,                       !- Number of Vertices
+    1.737275,8.229199,2.438281,  !- X,Y,Z ==> Vertex 1
+    1.737275,0.000000,2.438281,  !- X,Y,Z ==> Vertex 2
+    17.372753,0.000000,2.438281,  !- X,Y,Z ==> Vertex 3
+    17.372753,8.229199,2.438281;  !- X,Y,Z ==> Vertex 4
+ 
+  BuildingSurface:Detailed,
+    Z2 FLOOR BATT,           !- Name
+    Floor,                   !- Surface Type
+    ATTIC FLOOR BATT,        !- Construction Name
+    ZONE TWO ATTIC,          !- Zone Name
+    Surface,                 !- Outside Boundary Condition
+    Z1 CEILING BATT,         !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    0.0,                     !- View Factor to Ground
+    4,                       !- Number of Vertices
+    17.372753,0.000000,0.000000,  !- X,Y,Z ==> Vertex 1
+    1.737275,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2
+    1.737275,8.229199,0.000000,  !- X,Y,Z ==> Vertex 3
+    17.372753,8.229199,0.000000;  !- X,Y,Z ==> Vertex 4
+ 
+  BuildingSurface:Detailed,
+    Z1 FlOOR FRAMED,         !- Name
+    Floor,                   !- Surface Type
+    FLOOR OVCS JOISTS,       !- Construction Name
+    ZONE ONE,                !- Zone Name
+    Outdoors,                !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    ,                        !- View Factor to Ground
+    4,                       !- Number of Vertices
+    0.000000,8.229199,0.000000,  !- X,Y,Z ==> Vertex 1
+    1.737275,8.229199,0.000000,  !- X,Y,Z ==> Vertex 2
+    1.737275,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3
+    0.000000,0.000000,0.000000;  !- X,Y,Z ==> Vertex 4
+ 
+  BuildingSurface:Detailed,
+    Z1 SOUTH WALL BATTING,   !- Name
+    Wall,                    !- Surface Type
+    EXTERIOR WALL (BATTING), !- Construction Name
+    ZONE ONE,                !- Zone Name
+    Outdoors,                !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    SunExposed,              !- Sun Exposure
+    WindExposed,             !- Wind Exposure
+    ,                        !- View Factor to Ground
+    4,                       !- Number of Vertices
+    0.000000,0.000000,2.438281,  !- X,Y,Z ==> Vertex 1
+    0.000000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2
+    17.372753,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3
+    17.372753,0.000000,2.438281;  !- X,Y,Z ==> Vertex 4
+ 
+  BuildingSurface:Detailed,
+    Z1 CEILING FRAMED,       !- Name
+    Ceiling,                 !- Surface Type
+    CEILING JOISTS,          !- Construction Name
+    ZONE ONE,                !- Zone Name
+    Surface,                 !- Outside Boundary Condition
+    Z2 FLOOR FRAMED,         !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    0.0,                     !- View Factor to Ground
+    4,                       !- Number of Vertices
+    0.000000,0.000000,2.438281,  !- X,Y,Z ==> Vertex 1
+    1.737275,0.000000,2.438281,  !- X,Y,Z ==> Vertex 2
+    1.737275,8.229199,2.438281,  !- X,Y,Z ==> Vertex 3
+    0.000000,8.229199,2.438281;  !- X,Y,Z ==> Vertex 4
+ 
+  BuildingSurface:Detailed,
+    Z1 WEST WALL BATTING,    !- Name
+    Wall,                    !- Surface Type
+    EXTERIOR WALL (BATTING), !- Construction Name
+    ZONE ONE,                !- Zone Name
+    Outdoors,                !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    SunExposed,              !- Sun Exposure
+    WindExposed,             !- Wind Exposure
+    ,                        !- View Factor to Ground
+    4,                       !- Number of Vertices
+    0.000000,8.229199,2.438281,  !- X,Y,Z ==> Vertex 1
+    0.000000,8.229199,0.000000,  !- X,Y,Z ==> Vertex 2
+    0.000000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3
+    0.000000,0.000000,2.438281;  !- X,Y,Z ==> Vertex 4
+ 
+  BuildingSurface:Detailed,
+    Z1 EAST WALL BATTING,    !- Name
+    Wall,                    !- Surface Type
+    EXTERIOR WALL (BATTING), !- Construction Name
+    ZONE ONE,                !- Zone Name
+    Outdoors,                !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    SunExposed,              !- Sun Exposure
+    WindExposed,             !- Wind Exposure
+    ,                        !- View Factor to Ground
+    4,                       !- Number of Vertices
+    17.372753,0.000000,2.438281,  !- X,Y,Z ==> Vertex 1
+    17.372753,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2
+    17.372753,8.229199,0.000000,  !- X,Y,Z ==> Vertex 3
+    17.372753,8.229199,2.438281;  !- X,Y,Z ==> Vertex 4
+ 
+  BuildingSurface:Detailed,
+    Z1 NORTH WALL BATTING,   !- Name
+    Wall,                    !- Surface Type
+    EXTERIOR WALL (BATTING), !- Construction Name
+    ZONE ONE,                !- Zone Name
+    Outdoors,                !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    SunExposed,              !- Sun Exposure
+    WindExposed,             !- Wind Exposure
+    ,                        !- View Factor to Ground
+    4,                       !- Number of Vertices
+    17.372753,8.229199,2.438281,  !- X,Y,Z ==> Vertex 1
+    17.372753,8.229199,0.000000,  !- X,Y,Z ==> Vertex 2
+    0.000000,8.229199,0.000000,  !- X,Y,Z ==> Vertex 3
+    0.000000,8.229199,2.438281;  !- X,Y,Z ==> Vertex 4
+ 
+  BuildingSurface:Detailed,
+    Z2 FLOOR FRAMED,         !- Name
+    Floor,                   !- Surface Type
+    ATTIC FLOOR JOISTS,      !- Construction Name
+    ZONE TWO ATTIC,          !- Zone Name
+    Surface,                 !- Outside Boundary Condition
+    Z1 CEILING FRAMED,       !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    0.0,                     !- View Factor to Ground
+    4,                       !- Number of Vertices
+    0.000000,8.229199,0.000000,  !- X,Y,Z ==> Vertex 1
+    1.737275,8.229199,0.000000,  !- X,Y,Z ==> Vertex 2
+    1.737275,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3
+    0.000000,0.000000,0.000000;  !- X,Y,Z ==> Vertex 4
+ 
+  BuildingSurface:Detailed,
+    Z2 WEST GABLE,           !- Name
+    Wall,                    !- Surface Type
+    END GABLE,               !- Construction Name
+    ZONE TWO ATTIC,          !- Zone Name
+    Outdoors,                !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    SunExposed,              !- Sun Exposure
+    WindExposed,             !- Wind Exposure
+    ,                        !- View Factor to Ground
+    3,                       !- Number of Vertices
+    0.000000,8.229199,0.000000,  !- X,Y,Z ==> Vertex 1
+    0.000000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2
+    0.000000,4.114599,1.371533;  !- X,Y,Z ==> Vertex 3
+ 
+  BuildingSurface:Detailed,
+    Z2 NORTH ROOF,           !- Name
+    Roof,                    !- Surface Type
+    ROOF,                    !- Construction Name
+    ZONE TWO ATTIC,          !- Zone Name
+    Outdoors,                !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    SunExposed,              !- Sun Exposure
+    WindExposed,             !- Wind Exposure
+    ,                        !- View Factor to Ground
+    4,                       !- Number of Vertices
+    17.372753,4.114599,1.371533,  !- X,Y,Z ==> Vertex 1
+    17.372753,8.229199,0.000000,  !- X,Y,Z ==> Vertex 2
+    0.000000,8.229199,0.000000,  !- X,Y,Z ==> Vertex 3
+    0.000000,4.114599,1.371533;  !- X,Y,Z ==> Vertex 4
+ 
+  BuildingSurface:Detailed,
+    Z2 EAST GABLE,           !- Name
+    Wall,                    !- Surface Type
+    END GABLE,               !- Construction Name
+    ZONE TWO ATTIC,          !- Zone Name
+    Outdoors,                !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    SunExposed,              !- Sun Exposure
+    WindExposed,             !- Wind Exposure
+    ,                        !- View Factor to Ground
+    3,                       !- Number of Vertices
+    17.372753,0.000000,0.000000,  !- X,Y,Z ==> Vertex 1
+    17.372753,8.229199,0.000000,  !- X,Y,Z ==> Vertex 2
+    17.372753,4.114599,1.371533;  !- X,Y,Z ==> Vertex 3
+ 
+  BuildingSurface:Detailed,
+    Z2 SOUTH ROOF,           !- Name
+    Roof,                    !- Surface Type
+    ROOF,                    !- Construction Name
+    ZONE TWO ATTIC,          !- Zone Name
+    Outdoors,                !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    SunExposed,              !- Sun Exposure
+    WindExposed,             !- Wind Exposure
+    ,                        !- View Factor to Ground
+    4,                       !- Number of Vertices
+    0.000000,4.114599,1.371533,  !- X,Y,Z ==> Vertex 1
+    0.000000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2
+    17.372753,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3
+    17.372753,4.114599,1.371533;  !- X,Y,Z ==> Vertex 4
+ 
+!===========FenestrationSurface:Detailed===========
+ 
+  FenestrationSurface:Detailed,
+    NORTH DOOR,              !- Name
+    Door,                    !- Surface Type
+    DOOR,                    !- Construction Name
+    Z1 NORTH WALL BATTING,   !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    6.095703,8.229199,2.032917,  !- X,Y,Z ==> Vertex 1
+    6.095703,8.229199,0.000000,  !- X,Y,Z ==> Vertex 2
+    5.181347,8.229199,0.000000,  !- X,Y,Z ==> Vertex 3
+    5.181347,8.229199,2.032917;  !- X,Y,Z ==> Vertex 4
+ 
+  FenestrationSurface:Detailed,
+    SOUTH DOOR,              !- Name
+    Door,                    !- Surface Type
+    DOOR,                    !- Construction Name
+    Z1 SOUTH WALL BATTING,   !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    11.277050,0.000000,2.032917,  !- X,Y,Z ==> Vertex 1
+    11.277050,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2
+    12.191405,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3
+    12.191405,0.000000,2.032917;  !- X,Y,Z ==> Vertex 4
+ 
+  FenestrationSurface:Detailed,
+    SOUTH FRAMED 1,          !- Name
+    Door,                    !- Surface Type
+    EXTERIOR WALL (FRAMING), !- Construction Name
+    Z1 SOUTH WALL BATTING,   !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    0.609570,0.000000,1.828711,  !- X,Y,Z ==> Vertex 1
+    0.609570,0.000000,0.609570,  !- X,Y,Z ==> Vertex 2
+    3.904298,0.000000,0.609570,  !- X,Y,Z ==> Vertex 3
+    3.904298,0.000000,1.828711;  !- X,Y,Z ==> Vertex 4
+ 
+  FenestrationSurface:Detailed,
+    EAST FRAMED 1,           !- Name
+    Door,                    !- Surface Type
+    EXTERIOR WALL (FRAMING), !- Construction Name
+    Z1 EAST WALL BATTING,    !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    17.372753,0.609570,1.828711,  !- X,Y,Z ==> Vertex 1
+    17.372753,0.609570,0.609570,  !- X,Y,Z ==> Vertex 2
+    17.372753,2.240171,0.609570,  !- X,Y,Z ==> Vertex 3
+    17.372753,2.240171,1.828711;  !- X,Y,Z ==> Vertex 4
+ 
+  FenestrationSurface:Detailed,
+    EAST FRAMED 2,           !- Name
+    Door,                    !- Surface Type
+    EXTERIOR WALL (FRAMING), !- Construction Name
+    Z1 EAST WALL BATTING,    !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    17.372753,6.095703,1.828711,  !- X,Y,Z ==> Vertex 1
+    17.372753,6.095703,0.609570,  !- X,Y,Z ==> Vertex 2
+    17.372753,7.726303,0.609570,  !- X,Y,Z ==> Vertex 3
+    17.372753,7.726303,1.828711;  !- X,Y,Z ==> Vertex 4
+ 
+  FenestrationSurface:Detailed,
+    EAST ALUM FRAME,         !- Name
+    Door,                    !- Surface Type
+    ALUM WIN FRAME,          !- Construction Name
+    Z1 EAST WALL BATTING,    !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    17.372753,5.181347,2.285896,  !- X,Y,Z ==> Vertex 1
+    17.372753,5.181347,0.457185,  !- X,Y,Z ==> Vertex 2
+    17.372753,5.796099,0.457185,  !- X,Y,Z ==> Vertex 3
+    17.372753,5.796099,2.285896;  !- X,Y,Z ==> Vertex 4
+ 
+  FenestrationSurface:Detailed,
+    EAST WINDOW,             !- Name
+    Window,                  !- Surface Type
+    WINDOW SINGLE PANE,      !- Construction Name
+    Z1 EAST WALL BATTING,    !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    17.372753,3.047851,2.285896,  !- X,Y,Z ==> Vertex 1
+    17.372753,3.047851,0.457185,  !- X,Y,Z ==> Vertex 2
+    17.372753,4.718988,0.457185,  !- X,Y,Z ==> Vertex 3
+    17.372753,4.718988,2.285896;  !- X,Y,Z ==> Vertex 4
+ 
+  FenestrationSurface:Detailed,
+    WEST FRAMED 1,           !- Name
+    Door,                    !- Surface Type
+    EXTERIOR WALL (FRAMING), !- Construction Name
+    Z1 WEST WALL BATTING,    !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    0.000000,7.619628,1.828711,  !- X,Y,Z ==> Vertex 1
+    0.000000,7.619628,0.609570,  !- X,Y,Z ==> Vertex 2
+    0.000000,5.989028,0.609570,  !- X,Y,Z ==> Vertex 3
+    0.000000,5.989028,1.828711;  !- X,Y,Z ==> Vertex 4
+ 
+  FenestrationSurface:Detailed,
+    WEST FRAMED 2,           !- Name
+    Door,                    !- Surface Type
+    EXTERIOR WALL (FRAMING), !- Construction Name
+    Z1 WEST WALL BATTING,    !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    0.000000,2.133496,1.828711,  !- X,Y,Z ==> Vertex 1
+    0.000000,2.133496,0.609570,  !- X,Y,Z ==> Vertex 2
+    0.000000,0.502895,0.609570,  !- X,Y,Z ==> Vertex 3
+    0.000000,0.502895,1.828711;  !- X,Y,Z ==> Vertex 4
+ 
+  FenestrationSurface:Detailed,
+    WEST ALUM FRAME,         !- Name
+    Door,                    !- Surface Type
+    ALUM WIN FRAME,          !- Construction Name
+    Z1 WEST WALL BATTING,    !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    0.000000,3.047851,2.285896,  !- X,Y,Z ==> Vertex 1
+    0.000000,3.047851,0.457185,  !- X,Y,Z ==> Vertex 2
+    0.000000,2.433100,0.457185,  !- X,Y,Z ==> Vertex 3
+    0.000000,2.433100,2.285896;  !- X,Y,Z ==> Vertex 4
+ 
+  FenestrationSurface:Detailed,
+    WEST WINDOW,             !- Name
+    Window,                  !- Surface Type
+    WINDOW SINGLE PANE,      !- Construction Name
+    Z1 WEST WALL BATTING,    !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    0.000000,5.181347,2.285896,  !- X,Y,Z ==> Vertex 1
+    0.000000,5.181347,0.457185,  !- X,Y,Z ==> Vertex 2
+    0.000000,3.510210,0.457185,  !- X,Y,Z ==> Vertex 3
+    0.000000,3.510210,2.285896;  !- X,Y,Z ==> Vertex 4
+ 
+  FenestrationSurface:Detailed,
+    NORTH ALUM FRAME,        !- Name
+    Door,                    !- Surface Type
+    ALUM WIN FRAME,          !- Construction Name
+    Z1 NORTH WALL BATTING,   !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    12.496191,8.229199,2.285896,  !- X,Y,Z ==> Vertex 1
+    12.496191,8.229199,0.457185,  !- X,Y,Z ==> Vertex 2
+    11.267906,8.229199,0.457185,  !- X,Y,Z ==> Vertex 3
+    11.267906,8.229199,2.285896;  !- X,Y,Z ==> Vertex 4
+ 
+  FenestrationSurface:Detailed,
+    NORTH FRAMED 2,          !- Name
+    Door,                    !- Surface Type
+    EXTERIOR WALL (FRAMING), !- Construction Name
+    Z1 NORTH WALL BATTING,   !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    4.266992,8.229199,1.828711,  !- X,Y,Z ==> Vertex 1
+    4.266992,8.229199,0.609570,  !- X,Y,Z ==> Vertex 2
+    0.972265,8.229199,0.609570,  !- X,Y,Z ==> Vertex 3
+    0.972265,8.229199,1.828711;  !- X,Y,Z ==> Vertex 4
+ 
+  FenestrationSurface:Detailed,
+    NORTH WINDOW,            !- Name
+    Window,                  !- Surface Type
+    WINDOW SINGLE PANE,      !- Construction Name
+    Z1 NORTH WALL BATTING,   !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    10.362695,8.229199,2.285896,  !- X,Y,Z ==> Vertex 1
+    10.362695,8.229199,0.457185,  !- X,Y,Z ==> Vertex 2
+    7.019202,8.229199,0.457185,  !- X,Y,Z ==> Vertex 3
+    7.019202,8.229199,2.285896;  !- X,Y,Z ==> Vertex 4
+ 
+  FenestrationSurface:Detailed,
+    NORTH FRAMED 1,          !- Name
+    Door,                    !- Surface Type
+    EXTERIOR WALL (FRAMING), !- Construction Name
+    Z1 NORTH WALL BATTING,   !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    16.763182,8.229199,1.828711,  !- X,Y,Z ==> Vertex 1
+    16.763182,8.229199,0.609570,  !- X,Y,Z ==> Vertex 2
+    13.468455,8.229199,0.609570,  !- X,Y,Z ==> Vertex 3
+    13.468455,8.229199,1.828711;  !- X,Y,Z ==> Vertex 4
+ 
+  FenestrationSurface:Detailed,
+    SOUTH WINDOW,            !- Name
+    Window,                  !- Surface Type
+    WINDOW SINGLE PANE,      !- Construction Name
+    Z1 SOUTH WALL BATTING,   !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    7.010058,0.000000,2.285896,  !- X,Y,Z ==> Vertex 1
+    7.010058,0.000000,0.457185,  !- X,Y,Z ==> Vertex 2
+    10.353551,0.000000,0.457185,  !- X,Y,Z ==> Vertex 3
+    10.353551,0.000000,2.285896;  !- X,Y,Z ==> Vertex 4
+ 
+  FenestrationSurface:Detailed,
+    SOUTH ALUM FRAME,        !- Name
+    Door,                    !- Surface Type
+    ALUM WIN FRAME,          !- Construction Name
+    Z1 SOUTH WALL BATTING,   !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    4.876562,0.000000,2.285896,  !- X,Y,Z ==> Vertex 1
+    4.876562,0.000000,0.457185,  !- X,Y,Z ==> Vertex 2
+    6.104846,0.000000,0.457185,  !- X,Y,Z ==> Vertex 3
+    6.104846,0.000000,2.285896;  !- X,Y,Z ==> Vertex 4
+ 
+  FenestrationSurface:Detailed,
+    SOUTH FRAMED 2,          !- Name
+    Door,                    !- Surface Type
+    EXTERIOR WALL (FRAMING), !- Construction Name
+    Z1 SOUTH WALL BATTING,   !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    autocalculate,           !- View Factor to Ground
+    ,                        !- Shading Control Name
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    4,                       !- Number of Vertices
+    13.105761,0.000000,1.828711,  !- X,Y,Z ==> Vertex 1
+    13.105761,0.000000,0.609570,  !- X,Y,Z ==> Vertex 2
+    16.400488,0.000000,0.609570,  !- X,Y,Z ==> Vertex 3
+    16.400488,0.000000,1.828711;  !- X,Y,Z ==> Vertex 4
+ 
+  InternalMass,
+    INTERIOR WALLS AIR,      !- Name
+    INTERIOR WALL AIR,       !- Construction Name
+    ZONE ONE,                !- Zone Name
+    171.222167776412;        !- Surface Area
+ 
+  InternalMass,
+    INTERIOR WALLS FRAMED,   !- Name
+    INTERIOR WALL FRAMED,    !- Construction Name
+    ZONE ONE,                !- Zone Name
+    19.0246853084902;        !- Surface Area
+ 
+  ElectricEquipment,
+    OCCUPANT GAINS,          !- Name
+    ZONE ONE,                !- Zone or ZoneList Name
+    OCCUPANTS YEAR,          !- Schedule Name
+    EquipmentLevel,          !- Design Level Calculation Method
+    2548,                    !- Design Level
+    ,                        !- Watts per Zone Floor Area
+    ,                        !- Watts per Person
+    0,                       !- Fraction Latent
+    0.7,                     !- Fraction Radiant
+    0,                       !- Fraction Lost
+    General;                 !- End-Use Subcategory
+ 
+  ElectricEquipment,
+    ELECTRIC GAINS,          !- Name
+    ZONE ONE,                !- Zone or ZoneList Name
+    ELECTRIC YEAR,           !- Schedule Name
+    EquipmentLevel,          !- Design Level Calculation Method
+    10687.7,                 !- Design Level
+    ,                        !- Watts per Zone Floor Area
+    ,                        !- Watts per Person
+    0,                       !- Fraction Latent
+    0.7,                     !- Fraction Radiant
+    0,                       !- Fraction Lost
+    General;                 !- End-Use Subcategory
+ 
+  ElectricEquipment,
+    GAS GAINS,               !- Name
+    ZONE ONE,                !- Zone or ZoneList Name
+    GAS YEAR,                !- Schedule Name
+    EquipmentLevel,          !- Design Level Calculation Method
+    4375,                    !- Design Level
+    ,                        !- Watts per Zone Floor Area
+    ,                        !- Watts per Person
+    0,                       !- Fraction Latent
+    0.7,                     !- Fraction Radiant
+    0,                       !- Fraction Lost
+    General;                 !- End-Use Subcategory
+ 
+  ZoneInfiltration:DesignFlowRate,
+    ZONE TWO INFILTRATION,   !- Name
+    ZONE TWO ATTIC,          !- Zone or ZoneList Name
+    ALWAYS 1,                !- Schedule Name
+    AirChanges/Hour,         !- Design Flow Rate Calculation Method
+    ,                        !- Design Flow Rate
+    ,                        !- Flow per Zone Floor Area
+    ,                        !- Flow per Exterior Surface Area
+    2.4,                     !- Air Changes per Hour
+    1,                       !- Constant Term Coefficient
+    0,                       !- Temperature Term Coefficient
+    0,                       !- Velocity Term Coefficient
+    0;                       !- Velocity Squared Term Coefficient
+ 
+  ZoneInfiltration:DesignFlowRate,
+    ZONE ONE INFILTRATION,   !- Name
+    ZONE ONE,                !- Zone or ZoneList Name
+    ALWAYS 1,                !- Schedule Name
+    AirChanges/Hour,         !- Design Flow Rate Calculation Method
+    ,                        !- Design Flow Rate
+    ,                        !- Flow per Zone Floor Area
+    ,                        !- Flow per Exterior Surface Area
+    0,                       !- Air Changes per Hour
+    1,                       !- Constant Term Coefficient
+    0,                       !- Temperature Term Coefficient
+    0,                       !- Velocity Term Coefficient
+    0;                       !- Velocity Squared Term Coefficient
+ 
+  ZoneInfiltration:EffectiveLeakageArea,
+    ShermanGrimsrud,         !- Name
+    ZONE ONE,                !- Zone Name
+    ALWAYS 1,                !- Schedule Name
+    1266.4,                  !- Effective Air Leakage Area
+    0.000145,                !- Stack Coefficient
+    0.000032;                !- Wind Coefficient
+ 
+  ZoneControl:Thermostat,
+    ZONE ONE Thermostat,     !- Name
+    ZONE ONE,                !- Zone or ZoneList Name
+    ALWAYS 4,                !- Control Type Schedule Name
+    ThermostatSetpoint:DualSetpoint,  !- Control 1 Object Type
+    Thermostat Dual SP Control;  !- Control 1 Name
+ 
+  ThermostatSetpoint:DualSetpoint,
+    Thermostat Dual SP Control,  !- Name
+    HEATING YEAR,            !- Heating Setpoint Temperature Schedule Name
+    COOLING YEAR;            !- Cooling Setpoint Temperature Schedule Name
+ 
+  ZoneHVAC:IdealLoadsAirSystem,
+    ZONE ONE Purchased Air,  !- Name
+    ,                        !- Availability Schedule Name
+    ZONE ONE Supply Inlet,   !- Zone Supply Air Node Name
+    ,                        !- Zone Exhaust Air Node Name
+    50,                      !- Maximum Heating Supply Air Temperature
+    10,                      !- Minimum Cooling Supply Air Temperature
+    0.015,                   !- Maximum Heating Supply Air Humidity Ratio
+    0.01,                    !- Minimum Cooling Supply Air Humidity Ratio
+    NoLimit,                 !- Heating Limit
+    ,                        !- Maximum Heating Air Flow Rate
+    ,                        !- Maximum Sensible Heating Capacity
+    NoLimit,                 !- Cooling Limit
+    ,                        !- Maximum Cooling Air Flow Rate
+    ,                        !- Maximum Total Cooling Capacity
+    ,                        !- Heating Availability Schedule Name
+    ,                        !- Cooling Availability Schedule Name
+    ConstantSupplyHumidityRatio,  !- Dehumidification Control Type
+    ,                        !- Cooling Sensible Heat Ratio
+    ConstantSupplyHumidityRatio,  !- Humidification Control Type
+    ,                        !- Design Specification Outdoor Air Object Name
+    ,                        !- Outdoor Air Inlet Node Name
+    ,                        !- Demand Controlled Ventilation Type
+    ,                        !- Outdoor Air Economizer Type
+    ,                        !- Heat Recovery Type
+    ,                        !- Sensible Heat Recovery Effectiveness
+    ;                        !- Latent Heat Recovery Effectiveness
+ 
+  ZoneHVAC:EquipmentList,
+    ZONE ONE Equipment,      !- Name
+    ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
+    ZONE ONE Purchased Air,  !- Zone Equipment 1 Name
+    1,                       !- Zone Equipment 1 Cooling Sequence
+    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+ 
+  ZoneHVAC:EquipmentConnections,
+    ZONE ONE,                !- Zone Name
+    ZONE ONE Equipment,      !- Zone Conditioning Equipment List Name
+    ZONE ONE Supply Inlet,   !- Zone Air Inlet Node or NodeList Name
+    ,                        !- Zone Air Exhaust Node or NodeList Name
+    ZONE ONE Zone Air Node,  !- Zone Air Node Name
+    ZONE ONE Return Outlet;  !- Zone Return Air Node Name
+ 
+!===========OUTPUT===========
+ 
+  Output:VariableDictionary,Regular;
+ 
+  Output:Surfaces:List,Details;
+ 
+  Output:Surfaces:Drawing,DXF;
+ 
+  Output:Constructions,Constructions;
+ 
+  Output:Table:SummaryReports,
+    AnnualBuildingUtilityPerformanceSummary,  !- Report 1 Name
+    InputVerificationandResultsSummary,  !- Report 2 Name
+    ClimaticDataSummary,     !- Report 3 Name
+    EnvelopeSummary;         !- Report 4 Name
+ 
+  OutputControl:Table:Style,
+    HTML;                    !- Column Separator
+ 
+  Output:Variable,*,Zone/Sys Sensible Cooling Energy,Monthly;
+ 
+  Output:Variable,*,Zone/Sys Sensible Heating Energy,Monthly;
+ 
+  Output:Meter,DistrictHeating:Facility,Monthly;
+ 
+  Output:Meter,DistrictCooling:Facility,Monthly;
+ 
+  Output:Diagnostics,
+    DisplayAllWarnings,      !- Key 1
+    DisplayExtraWarnings;    !- Key 2
+ 

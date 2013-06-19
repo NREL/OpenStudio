@@ -1,0 +1,17 @@
+<RCC>
+  <qresource prefix="app">
+    <file alias="selectnone">images/select-none.png</file>
+    <file alias="open_folder">images/open-folder.png</file>
+    <file alias="checkselected">images/check-all-selected.png</file>
+    <file alias="addtoqueue">images/add-to-queue.png</file>
+    <file alias="addcheckedtoqueue">images/add-checked-to-queue.png</file>
+    <file alias="selectall">images/select-all.png</file>
+    <file alias="invertchecked">images/invert_checked.png</file>
+    <file alias="checkall">images/check_all.png</file>
+    <file alias="checknone">images/check_none.png</file>
+    <file alias="running">images/running.png</file>
+    <file alias="simulate">images/server_lightning.png</file>
+    <file alias="weather">images/weather_cloudy.png</file>
+    <file alias="idf">images/map_edit.png</file>
+  </qresource>
+</RCC>

@@ -1,0 +1,52 @@
+
+
+OS:ComponentCost:LineItem,
+  std_window_UValue_1.988_SHGC_0.64_VT_0.64,  ! Name
+  ,                         ! Type
+  Construction,             ! Line Item Type
+  std_window_UValue_1.988_SHGC_0.64_VT_0.64,  ! Item Name
+  ,                         ! Object End Use Key
+  ,                         ! Quantity {dimensionless}
+  572.599,                  ! Material Cost {$}
+  CostPerArea;              ! Material Cost Units
+
+OS:WindowMaterial:Glazing,
+  Theoretical Glass [260],  ! Name
+  SpectralAverage,          ! Optical Data Type
+  ,                         ! Window Glass Spectral Data Set Name
+  0.003,                    ! Thickness {m}
+  0.618894,                 ! Solar Transmittance at Normal Incidence
+  0.331106,                 ! Front Side Solar Reflectance at Normal Incidence
+  0.331106,                 ! Back Side Solar Reflectance at Normal Incidence
+  0.639644,                 ! Visible Transmittance at Normal Incidence
+  0.310356,                 ! Front Side Visible Reflectance at Normal Incidence
+  0.310356,                 ! Back Side Visible Reflectance at Normal Incidence
+  0,                        ! Infrared Transmittance at Normal Incidence
+  0.9,                      ! Front Side Infrared Hemispherical Emissivity
+  0.9,                      ! Back Side Infrared Hemispherical Emissivity
+  0.00892277;               ! Conductivity {W/m-K}
+
+OS:Construction,
+  std_window_UValue_1.988_SHGC_0.64_VT_0.64,  ! Name
+  ,                         ! Surface Rendering Name
+  Theoretical Glass [260];  ! Layer 1
+
+OS:ComponentData,
+  OS:ComponentData 1,       ! Name
+  {85ac7b98-9948-400d-ae18-d8fe69af4f0e},  ! UUID
+  {3b219770-cd36-44fb-b196-ec73e866a4ae},  ! Version UUID
+  ,                         ! Description
+  ,                         ! Fidelity Level
+  OS_Construction,          ! Type of Object 1
+  std_window_UValue_1.988_SHGC_0.64_VT_0.64,  ! Name of Object 1
+  OS_WindowMaterial_Glazing,  ! Type of Object 2
+  Theoretical Glass [260],  ! Name of Object 2
+  OS_ComponentCost_LineItem,  ! Type of Object 3
+  std_window_UValue_1.988_SHGC_0.64_VT_0.64;  ! Name of Object 3
+
+OS:ComponentData:Attributes,
+  OS:ComponentData 1;       ! ComponentData Name
+
+OS:ComponentData:Tags,
+  OS:ComponentData 1;       ! ComponentData Name
+

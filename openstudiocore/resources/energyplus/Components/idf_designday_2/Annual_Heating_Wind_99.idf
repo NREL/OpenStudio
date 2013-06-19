@@ -1,0 +1,33 @@
+! WILMINGTON_NC_USA Annual Heating Wind 99% Design Conditions WS=>MCDB, WS=9.7m/s
+
+!  Version,
+!    7.2.0.002;              !- Version Identifier
+ 
+  SizingPeriod:DesignDay,
+    WILMINGTON Ann Htg Wind 99% Condns WS=>MCDB,  !- Name
+    1,                       !- Month
+    21,                      !- Day of Month
+    WinterDesignDay,         !- Day Type
+    10.6,                    !- Maximum Dry-Bulb Temperature
+    0.0,                     !- Daily Dry-Bulb Temperature Range
+    ,                        !- Dry-Bulb Temperature Range Modifier Type
+    ,                        !- Dry-Bulb Temperature Range Modifier Schedule Name
+    Wetbulb,                 !- Humidity Condition Type
+    10.6,                    !- Wetbulb or DewPoint at Maximum Dry-Bulb
+    ,                        !- Humidity Condition Day Schedule Name
+    ,                        !- Humidity Ratio at Maximum Dry-Bulb
+    ,                        !- Enthalpy at Maximum Dry-Bulb
+    ,                        !- Daily Wet-Bulb Temperature Range
+    101217.,                 !- Barometric Pressure
+    9.7,                     !- Wind Speed
+    0,                       !- Wind Direction
+    No,                      !- Rain Indicator
+    No,                      !- Snow Indicator
+    No,                      !- Daylight Saving Time Indicator
+    ASHRAEClearSky,          !- Solar Model Indicator
+    ,                        !- Beam Solar Day Schedule Name
+    ,                        !- Diffuse Solar Day Schedule Name
+    ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub)
+    ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud)
+    0.00;                    !- Sky Clearness
+ 

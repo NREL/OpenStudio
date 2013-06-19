@@ -1,0 +1,48 @@
+
+OS:Version,
+  {d43eac8a-da63-4522-ba2f-595590d2c064},  ! Handle
+  0.7.4;                    ! Version Identifier
+
+OS:Material,
+  {c470dca5-16df-43a1-8de5-89beca1f1038},  ! Handle
+  M11 100mm lightweight concrete,  ! Name
+  MediumRough,              ! Roughness
+  0.1016,                   ! Thickness {m}
+  0.53,                     ! Conductivity {W/m-K}
+  1280,                     ! Density {kg/m3}
+  840;                      ! Specific Heat {J/kg-K}
+
+OS:Material:AirGap,
+  {c05ec82f-90d5-40eb-812e-0f3140203e8f},  ! Handle
+  F05 Ceiling air space resistance,  ! Name
+  0.18;                     ! Thermal Resistance {m2-K/W}
+
+OS:Material,
+  {f157c13b-4ea9-4ab1-9de2-6997e6165bbc},  ! Handle
+  F16 Acoustic tile,        ! Name
+  MediumSmooth,             ! Roughness
+  0.0191,                   ! Thickness {m}
+  0.06,                     ! Conductivity {W/m-K}
+  368,                      ! Density {kg/m3}
+  590;                      ! Specific Heat {J/kg-K}
+
+OS:Construction,
+  {3c615d14-818c-4296-b2ad-3cc6934b69c3},  ! Handle
+  Exterior Roof,            ! Name
+  ,                         ! Surface Rendering Name
+  {c470dca5-16df-43a1-8de5-89beca1f1038},  ! Layer 1
+  {c05ec82f-90d5-40eb-812e-0f3140203e8f},  ! Layer 2
+  {f157c13b-4ea9-4ab1-9de2-6997e6165bbc};  ! Layer 3
+
+OS:ComponentData,
+  {acfd070b-657b-4bbc-a924-1e639de008cf},  ! Handle
+  OS:ComponentData 1,       ! Name
+  {4888065a-c94a-419b-baff-6079ca6719af},  ! UUID
+  {b19caca8-de9a-43e7-9778-ca37ad894e4a},  ! Version UUID
+  1337293279,               ! Creation Timestamp
+  1337293279,               ! Version Timestamp
+  {3c615d14-818c-4296-b2ad-3cc6934b69c3},  ! Name of Object 1
+  {c470dca5-16df-43a1-8de5-89beca1f1038},  ! Name of Object 2
+  {c05ec82f-90d5-40eb-812e-0f3140203e8f},  ! Name of Object 3
+  {f157c13b-4ea9-4ab1-9de2-6997e6165bbc};  ! Name of Object 4
+

@@ -1,0 +1,119 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#include <energyplus/ForwardTranslator.hpp>
+
+#include <model/Model.hpp>
+#include <model/Surface.hpp>
+#include <model/Surface_Impl.hpp>
+#include <model/SubSurface.hpp>
+#include <model/SubSurface_Impl.hpp>
+#include <model/Space.hpp>
+#include <model/Space_Impl.hpp>
+#include <model/ThermalZone.hpp>
+#include <model/ThermalZone_Impl.hpp>
+#include <model/ConstructionBase.hpp>
+#include <model/ConstructionBase_Impl.hpp>
+
+#include <utilities/idf/IdfExtensibleGroup.hpp>
+
+#include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
+
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
+
+using namespace openstudio::model;
+
+using namespace std;
+
+namespace openstudio {
+
+namespace energyplus {
+
+boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface & modelObject )
+{
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::BuildingSurface_Detailed, 
+                                                       modelObject);
+  
+  std::string surfaceType = modelObject.surfaceType();
+  if (istringEqual("RoofCeiling", surfaceType)){
+    if (modelObject.isPartOfEnvelope()){
+      surfaceType = "Roof";
+    }else{
+      surfaceType = "Ceiling";
+    }
+  }
+  idfObject.setString(BuildingSurface_DetailedFields::SurfaceType, surfaceType);
+
+  boost::optional<ConstructionBase> construction = modelObject.construction();
+  if (construction){
+    idfObject.setString(BuildingSurface_DetailedFields::ConstructionName, construction->name().get());
+  }
+
+  boost::optional<Space> space = modelObject.space();
+  if (space){
+    boost::optional<ThermalZone> thermalZone = space->thermalZone();
+    if (thermalZone){
+      idfObject.setString(BuildingSurface_DetailedFields::ZoneName, thermalZone->name().get());
+    }
+  }
+
+  idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryCondition, modelObject.outsideBoundaryCondition());
+
+  boost::optional<Surface> adjacentSurface = modelObject.adjacentSurface();
+  if (adjacentSurface){
+    idfObject.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, adjacentSurface->name().get());
+  }
+
+  if (!modelObject.isSunExposureDefaulted()){
+    idfObject.setString(BuildingSurface_DetailedFields::SunExposure, modelObject.sunExposure());
+  }
+
+  if (!modelObject.isWindExposureDefaulted()){
+    idfObject.setString(BuildingSurface_DetailedFields::WindExposure, modelObject.windExposure());
+  }
+
+  boost::optional<double> viewFactortoGround = modelObject.viewFactortoGround();
+  if (viewFactortoGround){
+    idfObject.setDouble(BuildingSurface_DetailedFields::ViewFactortoGround, *viewFactortoGround);
+  }
+
+  idfObject.clearExtensibleGroups();
+  BOOST_FOREACH(const Point3d& point, modelObject.vertices()){
+    IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+    BOOST_ASSERT(group.numFields() == 3);
+    group.setDouble(0, point.x());
+    group.setDouble(1, point.y());
+    group.setDouble(2, point.z());
+  }
+
+  // translate subsurfaces
+  SubSurfaceVector subSurfaces = modelObject.subSurfaces();
+  std::sort(subSurfaces.begin(), subSurfaces.end(), WorkspaceObjectNameLess());
+  BOOST_FOREACH(SubSurface& subSurface, subSurfaces){
+    translateAndMapModelObject(subSurface);
+  }
+
+  return idfObject;
+}
+
+} // energyplus
+
+} // openstudio
+

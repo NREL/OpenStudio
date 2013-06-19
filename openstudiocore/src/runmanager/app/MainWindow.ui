@@ -1,0 +1,743 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>706</width>
+    <height>494</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>RunManager</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QToolButton:!hover:checked {
+     border: none;
+     }
+   </string>
+  </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Job</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <layout class="QGridLayout" name="gridLayout">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
+          <item row="1" column="0">
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="2" column="0">
+             <widget class="QTreeView" name="treeFileSystem">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="contextMenuPolicy">
+               <enum>Qt::ActionsContextMenu</enum>
+              </property>
+              <property name="dragEnabled">
+               <bool>false</bool>
+              </property>
+              <property name="allColumnsShowFocus">
+               <bool>true</bool>
+              </property>
+              <property name="headerHidden">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="2">
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="QCheckBox" name="cbRecursive">
+                <property name="text">
+                 <string>Recursive</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="Line" name="line_2">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>Search Pattern</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="txtSearchPattern"/>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="cbRegex">
+                <property name="text">
+                 <string>Regex</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item row="0" column="0" colspan="2">
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <item>
+               <widget class="QRadioButton" name="rbIDF">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>IDF</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="rbOSM">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>OSM</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="rbXML">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>XML</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="Line" name="line">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Workflow</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="cbWorkflow"/>
+              </item>
+             </layout>
+            </item>
+            <item row="2" column="1">
+             <layout class="QVBoxLayout" name="verticalLayout_7">
+              <property name="spacing">
+               <number>2</number>
+              </property>
+              <item>
+               <widget class="QLineEdit" name="txtRootPath"/>
+              </item>
+              <item>
+               <widget class="QTreeView" name="listFiles">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="contextMenuPolicy">
+                 <enum>Qt::ActionsContextMenu</enum>
+                </property>
+                <property name="acceptDrops">
+                 <bool>false</bool>
+                </property>
+                <property name="alternatingRowColors">
+                 <bool>true</bool>
+                </property>
+                <property name="selectionMode">
+                 <enum>QAbstractItemView::ExtendedSelection</enum>
+                </property>
+                <property name="headerHidden">
+                 <bool>true</bool>
+                </property>
+                <addaction name="actionFilesSelectAll"/>
+                <addaction name="actionFilesSelectNone"/>
+                <addaction name="actionFilesCheckAll"/>
+                <addaction name="actionFilesCheckNone"/>
+                <addaction name="actionFilesCheckSelected"/>
+                <addaction name="actionFilesInvertChecked"/>
+                <addaction name="actionFilesAddToQueue"/>
+                <addaction name="actionFilesAddCheckedToQueue"/>
+                <addaction name="actionFilesOpenFolder"/>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="styleSheet">
+             <string notr="true">QLabel {
+
+
+color: black;
+
+font: bold;
+
+padding: 6px;
+
+border: 1px solid black;
+
+background-color: qlineargradient(spread:reflect, x1:0.463, y1:0, x2:0.468, y2:0.528409, stop:0 rgba(128, 128, 128, 255), stop:0.924171 rgba(200, 200, 200, 255));
+}  
+</string>
+            </property>
+            <property name="text">
+             <string>File</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="1" column="1">
+             <widget class="QPushButton" name="btnEPWBrowse">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Browse</string>
+              </property>
+              <property name="flat">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QComboBox" name="comboBoxEPWFiles">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_4">
+            <property name="styleSheet">
+             <string notr="true">QLabel {
+
+
+color: black;
+
+font: bold;
+
+padding: 6px;
+
+border: 1px solid black;
+
+background-color: qlineargradient(spread:reflect, x1:0.463, y1:0, x2:0.468, y2:0.528409, stop:0 rgba(128, 128, 128, 255), stop:0.924171 rgba(200, 200, 200, 255));
+}
+</string>
+            </property>
+            <property name="text">
+             <string>Weather</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnEnqueue">
+            <property name="text">
+             <string>Add to Queue</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>:/checkall</normaloff>:/checkall</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Job Queue</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_5"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="title">
+        <string>Job Output</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_6">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_3"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>706</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+    <addaction name="actionDocumentationOnline"/>
+   </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>S&amp;ettings</string>
+    </property>
+    <addaction name="actionConfig"/>
+   </widget>
+   <widget class="QMenu" name="menuProject">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionExit"/>
+    <addaction name="actionSettings_File"/>
+   </widget>
+   <widget class="QMenu" name="menuSimulation">
+    <property name="title">
+     <string>&amp;Simulation</string>
+    </property>
+    <addaction name="actionRestart_Out_Of_Date"/>
+    <addaction name="actionRMStatistics"/>
+   </widget>
+   <addaction name="menuProject"/>
+   <addaction name="menuSimulation"/>
+   <addaction name="menuSettings"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <action name="actionRunIDFJob">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/simulate</normaloff>:/simulate</iconset>
+   </property>
+   <property name="text">
+    <string>Simulate</string>
+   </property>
+   <property name="toolTip">
+    <string>Start simulation with selected files</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionIDFBrowse">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/idf</normaloff>:/idf</iconset>
+   </property>
+   <property name="text">
+    <string>IDF</string>
+   </property>
+   <property name="toolTip">
+    <string>Select IDF file to simulate</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actionEPWBrowse">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/weather</normaloff>:/weather</iconset>
+   </property>
+   <property name="text">
+    <string>Weather</string>
+   </property>
+   <property name="toolTip">
+    <string>Select weather data file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>&amp;About</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutRole</enum>
+   </property>
+  </action>
+  <action name="actionMultipleSelect">
+   <property name="text">
+    <string>Queue Input Files</string>
+   </property>
+  </action>
+  <action name="actionConfig">
+   <property name="text">
+    <string>&amp;Preferences...</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::PreferencesRole</enum>
+   </property>
+  </action>
+  <action name="actionHtmlResults">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/results</normaloff>:/results</iconset>
+   </property>
+   <property name="text">
+    <string>Results</string>
+   </property>
+   <property name="toolTip">
+    <string>display EnergyPlus HTML Results in default browser</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionFilesSelectAll">
+   <property name="icon">
+    <iconset resource="RunManagerUI.qrc">
+     <normaloff>:/app/selectall</normaloff>:/app/selectall</iconset>
+   </property>
+   <property name="text">
+    <string>Select All</string>
+   </property>
+   <property name="toolTip">
+    <string>Select all files</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionFilesAddToQueue">
+   <property name="icon">
+    <iconset resource="RunManagerUI.qrc">
+     <normaloff>:/app/addtoqueue</normaloff>:/app/addtoqueue</iconset>
+   </property>
+   <property name="text">
+    <string>Add To Queue</string>
+   </property>
+   <property name="toolTip">
+    <string>Add current file to queue</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionFilesAddCheckedToQueue">
+   <property name="icon">
+    <iconset resource="RunManagerUI.qrc">
+     <normaloff>:/app/addcheckedtoqueue</normaloff>:/app/addcheckedtoqueue</iconset>
+   </property>
+   <property name="text">
+    <string>Add Checked To Queue</string>
+   </property>
+   <property name="toolTip">
+    <string>Add checked files to queue</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionFilesOpenFolder">
+   <property name="icon">
+    <iconset resource="RunManagerUI.qrc">
+     <normaloff>:/app/open_folder</normaloff>:/app/open_folder</iconset>
+   </property>
+   <property name="text">
+    <string>Open Folder</string>
+   </property>
+   <property name="toolTip">
+    <string>Open containing folder</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionFilesSelectNone">
+   <property name="icon">
+    <iconset resource="RunManagerUI.qrc">
+     <normaloff>:/app/selectnone</normaloff>:/app/selectnone</iconset>
+   </property>
+   <property name="text">
+    <string>Select None</string>
+   </property>
+   <property name="toolTip">
+    <string>Unselect all files</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionFilesCheckNone">
+   <property name="icon">
+    <iconset resource="RunManagerUI.qrc">
+     <normaloff>:/app/checknone</normaloff>:/app/checknone</iconset>
+   </property>
+   <property name="text">
+    <string>Uncheck All</string>
+   </property>
+   <property name="toolTip">
+    <string>Uncheck all files</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionFilesInvertChecked">
+   <property name="icon">
+    <iconset resource="RunManagerUI.qrc">
+     <normaloff>:/app/invertchecked</normaloff>:/app/invertchecked</iconset>
+   </property>
+   <property name="text">
+    <string>Invert Checked</string>
+   </property>
+   <property name="toolTip">
+    <string>Toggle which files are checked</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionFilesCheckSelected">
+   <property name="icon">
+    <iconset resource="RunManagerUI.qrc">
+     <normaloff>:/app/checkselected</normaloff>:/app/checkselected</iconset>
+   </property>
+   <property name="text">
+    <string>Check Selected</string>
+   </property>
+   <property name="toolTip">
+    <string>Check selected files</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionDocumentationOnline">
+   <property name="text">
+    <string>&amp;RunManager Help</string>
+   </property>
+  </action>
+  <action name="actionRestart_Out_Of_Date">
+   <property name="text">
+    <string>&amp;Restart Out Of Date</string>
+   </property>
+   <property name="toolTip">
+    <string>Restart all non-canceled jobs that are out of date</string>
+   </property>
+  </action>
+  <action name="actionRMStatistics">
+   <property name="text">
+    <string>&amp;Statistics</string>
+   </property>
+   <property name="toolTip">
+    <string>Show RunManager related statistics</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>E&amp;xit</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
+   </property>
+  </action>
+  <action name="actionOpenFolder">
+   <property name="icon">
+    <iconset resource="RunManagerUI.qrc">
+     <normaloff>:/app/open_folder</normaloff>:/app/open_folder</iconset>
+   </property>
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Folder</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionSearchFolder">
+   <property name="text">
+    <string>Search Folder</string>
+   </property>
+   <property name="toolTip">
+    <string>Set folder as search folder</string>
+   </property>
+  </action>
+  <action name="actionSettings_File">
+   <property name="text">
+    <string>&amp;Settings File</string>
+   </property>
+  </action>
+  <action name="actionFilesCheckAll">
+   <property name="icon">
+    <iconset resource="RunManagerUI.qrc">
+     <normaloff>:/app/checkall</normaloff>:/app/checkall</iconset>
+   </property>
+   <property name="text">
+    <string>Check All</string>
+   </property>
+   <property name="toolTip">
+    <string>Check all files</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="RunManagerUI.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>btnEnqueue</sender>
+   <signal>clicked()</signal>
+   <receiver>actionRunIDFJob</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>486</x>
+     <y>424</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>activated()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>352</x>
+     <y>246</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnEPWBrowse</sender>
+   <signal>clicked()</signal>
+   <receiver>actionEPWBrowse</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>573</x>
+     <y>233</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

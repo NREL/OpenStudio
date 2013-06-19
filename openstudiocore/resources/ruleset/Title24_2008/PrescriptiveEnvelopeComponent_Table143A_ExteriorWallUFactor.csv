@@ -1,0 +1,87 @@
+Compliance Approach,Prescriptive Envelope Component,,,
+"Table 143-A, Exterior Wall U-Factor",,,,
+,,,,
+Building,Wall,Wall,,Wall
+Climate Zone,Partition Thermal Type,Wall Construction Type,,U Factor
+,,,,less than or equal to
+,,,,(Btu/h*ft^2*R)
+1,Exterior,Metal Building Wall,,0.113
+2,Exterior,Metal Building Wall,,0.061
+3,Exterior,Metal Building Wall,,0.113
+4,Exterior,Metal Building Wall,,0.061
+5,Exterior,Metal Building Wall,,0.061
+6,Exterior,Metal Building Wall,,0.113
+7,Exterior,Metal Building Wall,,0.113
+8,Exterior,Metal Building Wall,,0.061
+9,Exterior,Metal Building Wall,,0.061
+10,Exterior,Metal Building Wall,,0.061
+11,Exterior,Metal Building Wall,,0.061
+12,Exterior,Metal Building Wall,,0.061
+13,Exterior,Metal Building Wall,,0.061
+14,Exterior,Metal Building Wall,,0.061
+15,Exterior,Metal Building Wall,,0.057
+16,Exterior,Metal Building Wall,,0.061
+1,Exterior,Metal Framing Wall,,0.098
+2,Exterior,Metal Framing Wall,,0.062
+3,Exterior,Metal Framing Wall,,0.082
+4,Exterior,Metal Framing Wall,,0.062
+5,Exterior,Metal Framing Wall,,0.062
+6,Exterior,Metal Framing Wall,,0.098
+7,Exterior,Metal Framing Wall,,0.098
+8,Exterior,Metal Framing Wall,,0.062
+9,Exterior,Metal Framing Wall,,0.062
+10,Exterior,Metal Framing Wall,,0.062
+11,Exterior,Metal Framing Wall,,0.062
+12,Exterior,Metal Framing Wall,,0.062
+13,Exterior,Metal Framing Wall,,0.062
+14,Exterior,Metal Framing Wall,,0.062
+15,Exterior,Metal Framing Wall,,0.062
+16,Exterior,Metal Framing Wall,,0.062
+1,Exterior,Mass Medium Wall,,0.196
+2,Exterior,Mass Medium Wall,,0.17
+3,Exterior,Mass Medium Wall,,0.278
+4,Exterior,Mass Medium Wall,,0.227
+5,Exterior,Mass Medium Wall,,0.44
+6,Exterior,Mass Medium Wall,,0.44
+7,Exterior,Mass Medium Wall,,0.44
+8,Exterior,Mass Medium Wall,,0.44
+9,Exterior,Mass Medium Wall,,0.44
+10,Exterior,Mass Medium Wall,,0.17
+11,Exterior,Mass Medium Wall,,0.17
+12,Exterior,Mass Medium Wall,,0.17
+13,Exterior,Mass Medium Wall,,0.17
+14,Exterior,Mass Medium Wall,,0.17
+15,Exterior,Mass Medium Wall,,0.17
+16,Exterior,Mass Medium Wall,,0.17
+1,Exterior,Mass Heavy Wall,,0.253
+2,Exterior,Mass Heavy Wall,,0.65
+3,Exterior,Mass Heavy Wall,,0.65
+4,Exterior,Mass Heavy Wall,,0.65
+5,Exterior,Mass Heavy Wall,,0.65
+6,Exterior,Mass Heavy Wall,,0.69
+7,Exterior,Mass Heavy Wall,,0.69
+8,Exterior,Mass Heavy Wall,,0.69
+9,Exterior,Mass Heavy Wall,,0.69
+10,Exterior,Mass Heavy Wall,,0.65
+11,Exterior,Mass Heavy Wall,,0.184
+12,Exterior,Mass Heavy Wall,,0.253
+13,Exterior,Mass Heavy Wall,,0.211
+14,Exterior,Mass Heavy Wall,,0.184
+15,Exterior,Mass Heavy Wall,,0.184
+16,Exterior,Mass Heavy Wall,,0.16
+1,Exterior,Wood Framing and Other Wall,,0.102
+2,Exterior,Wood Framing and Other Wall,,0.059
+3,Exterior,Wood Framing and Other Wall,,0.11
+4,Exterior,Wood Framing and Other Wall,,0.059
+5,Exterior,Wood Framing and Other Wall,,0.102
+6,Exterior,Wood Framing and Other Wall,,0.11
+7,Exterior,Wood Framing and Other Wall,,0.11
+8,Exterior,Wood Framing and Other Wall,,0.102
+9,Exterior,Wood Framing and Other Wall,,0.059
+10,Exterior,Wood Framing and Other Wall,,0.059
+11,Exterior,Wood Framing and Other Wall,,0.059
+12,Exterior,Wood Framing and Other Wall,,0.059
+13,Exterior,Wood Framing and Other Wall,,0.059
+14,Exterior,Wood Framing and Other Wall,,0.059
+15,Exterior,Wood Framing and Other Wall,,0.042
+16,Exterior,Wood Framing and Other Wall,,0.059

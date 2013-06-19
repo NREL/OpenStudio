@@ -1,0 +1,53 @@
+! Type: IntWall:Standard
+! Description:
+! Effective R-Value (SI): 0
+! Layer 1: GP01 1/2 GYPSUM
+! Layer 2: GP01 1/2 GYPSUM
+ 
+!  Version,
+!    7.2.0.002;              !- Version Identifier
+ 
+  Material,
+    GP01 1/2 GYPSUM,         !- Name
+    Smooth,                  !- Roughness
+    0.01271,                 !- Thickness
+    0.16,                    !- Conductivity
+    800,                     !- Density
+    1090,                    !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0.7,                     !- Solar Absorptance
+    0.5;                     !- Visible Absorptance
+ 
+  Material,
+    GP01 1/2 GYPSUM,         !- Name
+    Smooth,                  !- Roughness
+    0.01271,                 !- Thickness
+    0.16,                    !- Conductivity
+    800,                     !- Density
+    1090,                    !- Specific Heat
+    0.9,                     !- Thermal Absorptance
+    0.7,                     !- Solar Absorptance
+    0.5;                     !- Visible Absorptance
+ 
+  Construction,
+    Standard_Int-Wall,       !- Name
+    GP01 1/2 GYPSUM,         !- Outside Layer
+    GP01 1/2 GYPSUM;         !- Layer 2
+ 
+! Cost Source:
+ 
+  ComponentCost:LineItem,
+    Standard_Int-Wall,       !- Name
+    ,                        !- Type
+    Construction,            !- Line Item Type
+    Standard_Int-Wall,       !- Item Name
+    ,                        !- Object End Use Key
+    ,                        !- Cost per Each
+    0.000,                   !- Cost per Area
+    ,                        !- Cost per Unit of Output Capacity
+    ,                        !- Cost per Unit of Output Capacity per COP
+    ,                        !- Cost per Volume
+    ,                        !- Cost per Volume Rate
+    ,                        !- Cost per Energy per Temperature Difference
+    ;                        !- Quantity
+ 

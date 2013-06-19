@@ -1,0 +1,74 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html" />
+<link href="Dialogs.css" rel="stylesheet" type="text/css" />
+<title>Preferences</title>
+<script language="javascript" src="Dialogs.js"></script>
+<script language="javascript">
+<!--
+function onLoad() {
+  window.location='skp:on_load';
+  document.getElementById('ok').focus();
+  if (is_mac()) {
+    // Automatic check for updates is not supported on the Mac yet.
+  document.getElementById('CHECK_FOR_UPDATE').checked = false;
+  disableElement('CHECK_FOR_UPDATE');
+  }
+}
+function onOK() { window.location='skp:on_ok'; }
+function onCancel() { window.location='skp:on_cancel'; }
+function onApply() { window.location='skp:on_apply'; }
+
+function onBrowseTXT() { window.location='skp:on_browse_text_editor'; }
+function onBrowseEXE() { window.location='skp:on_browse_exe'; }
+function onBrowseTemplate() { window.location='skp:on_browse_template'; }
+-->
+</script>
+</head>
+<body onload="onLoad()">
+
+<fieldset class="label" style="margin-top:0px;">
+<legend>Plugin Preferences</legend>
+
+<br>
+&nbsp;&nbsp;<input type="checkbox" id="CHECK_FOR_UPDATE" name="CHECK_FOR_UPDATE" onclick="onChangeElement(this)">&nbsp;<label for="CHECK_FOR_UPDATE">Automatically check for updates</label>
+<br>
+<br>
+&nbsp;&nbsp;<input type="checkbox" id="NEW_ZONE_FOR_SPACE" name="NEW_ZONE_FOR_SPACE" onclick="onChangeElement(this)">&nbsp;<label for="NEW_ZONE_FOR_SPACE">Create new ThermalZone for each Space</label>
+<br>
+<br>
+&nbsp;&nbsp;<input type="checkbox" id="DISABLE_USER_SCRIPTS" name="DISABLE_USER_SCRIPTS" onclick="onChangeElement(this)">&nbsp;<label for="DISABLE_USER_SCRIPTS">Disable OpenStudio User Scripts Menu <i>(restart required for this to take effect)</i></label>
+<br>
+<br>
+&nbsp;&nbsp;<label for="UNIT_SYSTEM">Unit System</label>&nbsp;<select name="UNIT_SYSTEM" class="text" onclick="onChangeElement(this)"><option value="IP">IP</option><option value="SI">SI</option></select>
+<br>
+<br>
+&nbsp;&nbsp;Text Editor:&nbsp;<input id="TEXT_EDITOR_PATH" name="TEXT_EDITOR_PATH" type="text" class="text" size="69" onchange="onChangeElement(this)">
+&nbsp;<input id="browse_txt" onclick="onBrowseTXT()" type="button" class="button" value="Browse"><br><br>
+
+<br>
+&nbsp;&nbsp;Template:&nbsp;<input id="DEFAULT_TEMPLATE_PATH" name="DEFAULT_TEMPLATE_PATH" type="text" class="text" size="69" onchange="onChangeElement(this)">
+&nbsp;<input id="browse_template" onclick="onBrowseTemplate()" type="button" class="button" value="Browse"><br><br>
+
+</fieldset>
+
+<fieldset class="label">
+<legend>EnergyPlus Engine</legend>
+
+<br>
+&nbsp;&nbsp;<input type="checkbox" id="SHOW_ERRORS_ON_IDF_TRANSLATION" name="SHOW_ERRORS_ON_IDF_TRANSLATION" onclick="onChangeElement(this)">&nbsp;<label for="SHOW_ERRORS_ON_IDF_TRANSLATION">Show Errors on Idf Translation</label>
+&nbsp;&nbsp;<input type="checkbox" id="SHOW_WARNINGS_ON_IDF_TRANSLATION" name="SHOW_WARNINGS_ON_IDF_TRANSLATION" onclick="onChangeElement(this)">&nbsp;<label for="SHOW_WARNINGS_ON_IDF_TRANSLATION">Show Warnings on Idf Translation</label>
+<br>
+
+<br><br>
+
+</fieldset>
+
+<p style="text-align:right; margin-top:6px;">
+<input id="ok" onclick="onOK()" type="button" class="button" value="OK" style="width:75px; margin-left:3px;">
+<input onclick="onCancel()" type="button" class="button" value="Cancel" style="width:75px; margin-left:3px;">
+<input onclick="onApply()" type="button" class="button" value="Apply" style="width:75px; margin-left:3px;">
+</p>
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=OpenStudio
+Comment=Supports whole building energy modeling using EnergyPlus
+Exec=${CMAKE_INSTALL_PREFIX}/bin/OpenStudio %f
+Terminal=false
+Type=Application
+Icon=OpenStudio
+Categories=Science;Engineering;
+MimeType=application/openstudio.osm;

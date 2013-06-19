@@ -1,0 +1,15 @@
+!IDD_Version 0.0.0.1
+
+DummyObject,
+      \memo Dummy object to make sure we are really parsing the idd on disk and not using the factory
+  A1, \field Name
+  A2; \field Type
+      \type choice
+      \key Dummy
+
+Building,
+     \memo redefinition of Building because 'keepObjectTypes' is hard coded
+  A1, \field Name
+  A2; \field Type
+      \type choice
+      \key Big

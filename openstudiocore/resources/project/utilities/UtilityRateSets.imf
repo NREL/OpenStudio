@@ -1,0 +1,2992 @@
+##def CEC_CZ01_CommRatesNetMeter[]
+!Rates included:  Assumed 8% tax rate for entire region
+!        CA_EIAMonthlyRateElec, $0.1282/kWh, source EIA DOE/EIA-0348, date of data: 2006
+!        CA_EIAMonthlyRateGas,  $10.43/MCF, source EIA 2006
+!        California electricity source and emission factors based on Deru and Torcellini 2007
+
+!  Version,
+!    3.0;                    !- Version Identifier 
+ 
+! ------ Electric utility ------
+
+ UtilityCost:Tariff,
+   CA_EIAMonthlyRateElec,   !- Name
+   ElectricityNet:Facility,    !- Output Meter Name
+   kWh,                     !- Conversion Factor Choice
+   ,                        !- Energy Conversion Factor
+   ,                        !- Demand Conversion Factor
+   ,                        !- Time of Use Period Schedule Name
+   ,                        !- Season Schedule Name
+   ,                        !- Month Schedule Name
+   QuarterHour,             !- Demand Window Length
+   0.0,                     !- Monthly Charge or Variable Name
+   ,                        !- Minimum Monthly Charge or Variable Name
+   ,                        !- Real Time Pricing Charge Schedule Name
+   ,                        !- Customer Baseline Load Schedule Name
+  Comm Elect;               !- Group Name
+  
+UtilityCost:Charge:Simple,
+  ElectricEnergyCharge,     !- Charge Variable Name
+  CA_EIAMonthlyRateElec,    !- Tariff Name
+  TotalEnergy,              !- Source Variable
+  Annual,                   !- Season
+  EnergyCharges,            !- Category Variable Name
+  0.1282;                    !- Cost per Unit Value or Variable Name
+ 
+
+UtilityCost:Charge:Simple,
+  ElectricEnergyTax,       !- Charge Variable Name
+  CA_EIAMonthlyRateElec,   !- Tariff Name
+  Subtotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+  
+! ------ Gas utility ------
+ 
+UtilityCost:Tariff,
+  CA_EIAMonthlyRateGas,    !- Name
+  Gas:Facility,            !- Output Meter Name
+  MCF,                     !- Conversion Factor Choice
+  ,                        !- Energy Conversion Factor
+  ,                        !- Demand Conversion Factor
+  ,                        !- Time of Use Period Schedule Name
+  ,                        !- Season Schedule Name
+  ,                        !- Month Schedule Name
+  ,                        !- Demand Window Length
+  0.0,                     !- Monthly Charge or Variable Name
+  ,                        !- Minimum Monthly Charge or Variable Name
+  ,                        !- Real Time Pricing Charge Schedule Name
+  ,                        !- Customer Baseline Load Schedule Name
+  Comm Gas;                !- Group Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyCharge,         !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  totalEnergy,             !- Source Variable
+  Annual,                  !- Season
+  EnergyCharges,           !- Category Variable Name
+  10.43;                   !- Cost per Unit Value or Variable Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyTax,            !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  SubTotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+ 
+! ------ Fuel factors, includes TDV ------
+
+Schedule:File,
+  ElectricTdvComm,         !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ01.csv, !- File Name
+  1,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+Schedule:File,
+  GasTdvComm,              !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ01.csv, !- File Name
+  3,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+EnvironmentalImpactFactors,
+  0.3,                     !- District Heating Efficiency
+  3.0,                     !- District Cooling COP
+  0.25,                    !- Steam Conversion Efficiency
+  80.7272,                 !- Total Carbon Equivalent Emission Factor From NOx {kg/kg}
+  6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
+  0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
+
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from  USA EPA AP-42  Chapter 1
+! External Combustion Sources
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from USA national average based on eGRID, EIA 1605, AirData
+
+FuelFactors,
+  Electricity,             !- Existing Fuel Resource Name
+  kg,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.293,                   !- Source Energy Factor {J/J} 
+  ElectricTdvComm,         !- Source Energy Schedule Name
+  168.33317,               !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  4.20616E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  1.398578E-03,            !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.10753E-01,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  2.41916E-03,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  8.65731E-01,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  2.95827E-02,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  1.80450E-02,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  1.15377E-02,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  1.10837E-03,             !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  3.72332E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  3.36414E-06,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  0,                       !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  2.10074,                 !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+FuelFactors,
+  NaturalGas,              !- Existing Fuel Resource Name
+  m3,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.01,                    !- Source Energy Factor {J/J}
+  GasTdvComm,              !- Source Energy Schedule Name
+  50.23439,                !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  3.51641E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  9.62826E-04,             !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.18620E-02,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  9.20964E-04,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  2.51172E-04,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  3.18151E-03,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  2.38613E-03,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  7.95378E-04,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  0,                       !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  2.30241E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  1.08841E-07,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  2.09310E-07,             !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  0,                       !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+
+##enddef
+
+##def CEC_CZ02_CommRatesNetMeter[]
+!Rates included:  Assumed 8% tax rate for entire region
+!        CA_EIAMonthlyRateElec, $0.1282/kWh, source EIA DOE/EIA-0348, date of data: 2006
+!        CA_EIAMonthlyRateGas,  $10.43/MCF, source EIA 2006
+!        California electricity source and emission factors based on Deru and Torcellini 2007
+
+!  Version,
+!    3.0;                    !- Version Identifier 
+ 
+! ------ Electric utility ------
+
+ UtilityCost:Tariff,
+   CA_EIAMonthlyRateElec,   !- Name
+   ElectricityNet:Facility,    !- Output Meter Name
+   kWh,                     !- Conversion Factor Choice
+   ,                        !- Energy Conversion Factor
+   ,                        !- Demand Conversion Factor
+   ,                        !- Time of Use Period Schedule Name
+   ,                        !- Season Schedule Name
+   ,                        !- Month Schedule Name
+   QuarterHour,             !- Demand Window Length
+   0.0,                     !- Monthly Charge or Variable Name
+   ,                        !- Minimum Monthly Charge or Variable Name
+   ,                        !- Real Time Pricing Charge Schedule Name
+   ,                        !- Customer Baseline Load Schedule Name
+  Comm Elect;               !- Group Name
+  
+UtilityCost:Charge:Simple,
+  ElectricEnergyCharge,     !- Charge Variable Name
+  CA_EIAMonthlyRateElec,    !- Tariff Name
+  TotalEnergy,              !- Source Variable
+  Annual,                   !- Season
+  EnergyCharges,            !- Category Variable Name
+  0.1282;                    !- Cost per Unit Value or Variable Name
+ 
+
+UtilityCost:Charge:Simple,
+  ElectricEnergyTax,       !- Charge Variable Name
+  CA_EIAMonthlyRateElec,   !- Tariff Name
+  Subtotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+  
+! ------ Gas utility ------
+ 
+UtilityCost:Tariff,
+  CA_EIAMonthlyRateGas,    !- Name
+  Gas:Facility,            !- Output Meter Name
+  MCF,                     !- Conversion Factor Choice
+  ,                        !- Energy Conversion Factor
+  ,                        !- Demand Conversion Factor
+  ,                        !- Time of Use Period Schedule Name
+  ,                        !- Season Schedule Name
+  ,                        !- Month Schedule Name
+  ,                        !- Demand Window Length
+  0.0,                     !- Monthly Charge or Variable Name
+  ,                        !- Minimum Monthly Charge or Variable Name
+  ,                        !- Real Time Pricing Charge Schedule Name
+  ,                        !- Customer Baseline Load Schedule Name
+  Comm Gas;                !- Group Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyCharge,         !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  totalEnergy,             !- Source Variable
+  Annual,                  !- Season
+  EnergyCharges,           !- Category Variable Name
+  10.43;                   !- Cost per Unit Value or Variable Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyTax,            !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  SubTotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+ 
+! ------ Fuel factors, includes TDV ------
+
+Schedule:File,
+  ElectricTdvComm,         !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ02.csv, !- File Name
+  1,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+Schedule:File,
+  GasTdvComm,              !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ02.csv, !- File Name
+  3,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+EnvironmentalImpactFactors,
+  0.3,                     !- District Heating Efficiency
+  3.0,                     !- District Cooling COP
+  0.25,                    !- Steam Conversion Efficiency
+  80.7272,                 !- Total Carbon Equivalent Emission Factor From NOx {kg/kg}
+  6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
+  0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
+
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from  USA EPA AP-42  Chapter 1
+! External Combustion Sources
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from USA national average based on eGRID, EIA 1605, AirData
+
+FuelFactors,
+  Electricity,             !- Existing Fuel Resource Name
+  kg,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.293,                   !- Source Energy Factor {J/J} 
+  ElectricTdvComm,         !- Source Energy Schedule Name
+  168.33317,               !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  4.20616E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  1.398578E-03,            !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.10753E-01,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  2.41916E-03,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  8.65731E-01,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  2.95827E-02,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  1.80450E-02,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  1.15377E-02,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  1.10837E-03,             !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  3.72332E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  3.36414E-06,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  0,                       !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  2.10074,                 !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+FuelFactors,
+  NaturalGas,              !- Existing Fuel Resource Name
+  m3,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.01,                    !- Source Energy Factor {J/J}
+  GasTdvComm,              !- Source Energy Schedule Name
+  50.23439,                !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  3.51641E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  9.62826E-04,             !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.18620E-02,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  9.20964E-04,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  2.51172E-04,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  3.18151E-03,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  2.38613E-03,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  7.95378E-04,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  0,                       !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  2.30241E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  1.08841E-07,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  2.09310E-07,             !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  0,                       !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+
+##enddef
+
+##def CEC_CZ03_CommRatesNetMeter[]
+!Rates included:  Assumed 8% tax rate for entire region
+!        CA_EIAMonthlyRateElec, $0.1282/kWh, source EIA DOE/EIA-0348, date of data: 2006
+!        CA_EIAMonthlyRateGas,  $10.43/MCF, source EIA 2006
+!        California electricity source and emission factors based on Deru and Torcellini 2007
+
+!  Version,
+!    3.0;                    !- Version Identifier 
+ 
+! ------ Electric utility ------
+
+ UtilityCost:Tariff,
+   CA_EIAMonthlyRateElec,   !- Name
+   ElectricityNet:Facility,    !- Output Meter Name
+   kWh,                     !- Conversion Factor Choice
+   ,                        !- Energy Conversion Factor
+   ,                        !- Demand Conversion Factor
+   ,                        !- Time of Use Period Schedule Name
+   ,                        !- Season Schedule Name
+   ,                        !- Month Schedule Name
+   QuarterHour,             !- Demand Window Length
+   0.0,                     !- Monthly Charge or Variable Name
+   ,                        !- Minimum Monthly Charge or Variable Name
+   ,                        !- Real Time Pricing Charge Schedule Name
+   ,                        !- Customer Baseline Load Schedule Name
+  Comm Elect;               !- Group Name
+  
+UtilityCost:Charge:Simple,
+  ElectricEnergyCharge,     !- Charge Variable Name
+  CA_EIAMonthlyRateElec,    !- Tariff Name
+  TotalEnergy,              !- Source Variable
+  Annual,                   !- Season
+  EnergyCharges,            !- Category Variable Name
+  0.1282;                    !- Cost per Unit Value or Variable Name
+ 
+
+UtilityCost:Charge:Simple,
+  ElectricEnergyTax,       !- Charge Variable Name
+  CA_EIAMonthlyRateElec,   !- Tariff Name
+  Subtotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+  
+! ------ Gas utility ------
+ 
+UtilityCost:Tariff,
+  CA_EIAMonthlyRateGas,    !- Name
+  Gas:Facility,            !- Output Meter Name
+  MCF,                     !- Conversion Factor Choice
+  ,                        !- Energy Conversion Factor
+  ,                        !- Demand Conversion Factor
+  ,                        !- Time of Use Period Schedule Name
+  ,                        !- Season Schedule Name
+  ,                        !- Month Schedule Name
+  ,                        !- Demand Window Length
+  0.0,                     !- Monthly Charge or Variable Name
+  ,                        !- Minimum Monthly Charge or Variable Name
+  ,                        !- Real Time Pricing Charge Schedule Name
+  ,                        !- Customer Baseline Load Schedule Name
+  Comm Gas;                !- Group Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyCharge,         !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  totalEnergy,             !- Source Variable
+  Annual,                  !- Season
+  EnergyCharges,           !- Category Variable Name
+  10.43;                   !- Cost per Unit Value or Variable Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyTax,            !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  SubTotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+ 
+! ------ Fuel factors, includes TDV ------
+
+Schedule:File,
+  ElectricTdvComm,         !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ03.csv, !- File Name
+  1,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+Schedule:File,
+  GasTdvComm,              !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ03.csv, !- File Name
+  3,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+EnvironmentalImpactFactors,
+  0.3,                     !- District Heating Efficiency
+  3.0,                     !- District Cooling COP
+  0.25,                    !- Steam Conversion Efficiency
+  80.7272,                 !- Total Carbon Equivalent Emission Factor From NOx {kg/kg}
+  6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
+  0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
+
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from  USA EPA AP-42  Chapter 1
+! External Combustion Sources
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from USA national average based on eGRID, EIA 1605, AirData
+
+FuelFactors,
+  Electricity,             !- Existing Fuel Resource Name
+  kg,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.293,                   !- Source Energy Factor {J/J} 
+  ElectricTdvComm,         !- Source Energy Schedule Name
+  168.33317,               !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  4.20616E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  1.398578E-03,            !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.10753E-01,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  2.41916E-03,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  8.65731E-01,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  2.95827E-02,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  1.80450E-02,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  1.15377E-02,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  1.10837E-03,             !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  3.72332E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  3.36414E-06,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  0,                       !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  2.10074,                 !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+FuelFactors,
+  NaturalGas,              !- Existing Fuel Resource Name
+  m3,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.01,                    !- Source Energy Factor {J/J}
+  GasTdvComm,              !- Source Energy Schedule Name
+  50.23439,                !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  3.51641E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  9.62826E-04,             !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.18620E-02,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  9.20964E-04,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  2.51172E-04,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  3.18151E-03,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  2.38613E-03,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  7.95378E-04,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  0,                       !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  2.30241E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  1.08841E-07,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  2.09310E-07,             !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  0,                       !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+
+##enddef
+
+##def CEC_CZ04_CommRatesNetMeter[]
+!Rates included:  Assumed 8% tax rate for entire region
+!        CA_EIAMonthlyRateElec, $0.1282/kWh, source EIA DOE/EIA-0348, date of data: 2006
+!        CA_EIAMonthlyRateGas,  $10.43/MCF, source EIA 2006
+!        California electricity source and emission factors based on Deru and Torcellini 2007
+
+!  Version,
+!    3.0;                    !- Version Identifier 
+ 
+! ------ Electric utility ------
+
+ UtilityCost:Tariff,
+   CA_EIAMonthlyRateElec,   !- Name
+   ElectricityNet:Facility,    !- Output Meter Name
+   kWh,                     !- Conversion Factor Choice
+   ,                        !- Energy Conversion Factor
+   ,                        !- Demand Conversion Factor
+   ,                        !- Time of Use Period Schedule Name
+   ,                        !- Season Schedule Name
+   ,                        !- Month Schedule Name
+   QuarterHour,             !- Demand Window Length
+   0.0,                     !- Monthly Charge or Variable Name
+   ,                        !- Minimum Monthly Charge or Variable Name
+   ,                        !- Real Time Pricing Charge Schedule Name
+   ,                        !- Customer Baseline Load Schedule Name
+  Comm Elect;               !- Group Name
+  
+UtilityCost:Charge:Simple,
+  ElectricEnergyCharge,     !- Charge Variable Name
+  CA_EIAMonthlyRateElec,    !- Tariff Name
+  TotalEnergy,              !- Source Variable
+  Annual,                   !- Season
+  EnergyCharges,            !- Category Variable Name
+  0.1282;                    !- Cost per Unit Value or Variable Name
+ 
+
+UtilityCost:Charge:Simple,
+  ElectricEnergyTax,       !- Charge Variable Name
+  CA_EIAMonthlyRateElec,   !- Tariff Name
+  Subtotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+  
+! ------ Gas utility ------
+ 
+UtilityCost:Tariff,
+  CA_EIAMonthlyRateGas,    !- Name
+  Gas:Facility,            !- Output Meter Name
+  MCF,                     !- Conversion Factor Choice
+  ,                        !- Energy Conversion Factor
+  ,                        !- Demand Conversion Factor
+  ,                        !- Time of Use Period Schedule Name
+  ,                        !- Season Schedule Name
+  ,                        !- Month Schedule Name
+  ,                        !- Demand Window Length
+  0.0,                     !- Monthly Charge or Variable Name
+  ,                        !- Minimum Monthly Charge or Variable Name
+  ,                        !- Real Time Pricing Charge Schedule Name
+  ,                        !- Customer Baseline Load Schedule Name
+  Comm Gas;                !- Group Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyCharge,         !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  totalEnergy,             !- Source Variable
+  Annual,                  !- Season
+  EnergyCharges,           !- Category Variable Name
+  10.43;                   !- Cost per Unit Value or Variable Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyTax,            !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  SubTotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+ 
+! ------ Fuel factors, includes TDV ------
+
+Schedule:File,
+  ElectricTdvComm,         !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ04.csv, !- File Name
+  1,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+Schedule:File,
+  GasTdvComm,              !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ04.csv, !- File Name
+  3,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+EnvironmentalImpactFactors,
+  0.3,                     !- District Heating Efficiency
+  3.0,                     !- District Cooling COP
+  0.25,                    !- Steam Conversion Efficiency
+  80.7272,                 !- Total Carbon Equivalent Emission Factor From NOx {kg/kg}
+  6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
+  0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
+
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from  USA EPA AP-42  Chapter 1
+! External Combustion Sources
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from USA national average based on eGRID, EIA 1605, AirData
+
+FuelFactors,
+  Electricity,             !- Existing Fuel Resource Name
+  kg,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.293,                   !- Source Energy Factor {J/J} 
+  ElectricTdvComm,         !- Source Energy Schedule Name
+  168.33317,               !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  4.20616E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  1.398578E-03,            !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.10753E-01,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  2.41916E-03,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  8.65731E-01,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  2.95827E-02,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  1.80450E-02,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  1.15377E-02,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  1.10837E-03,             !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  3.72332E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  3.36414E-06,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  0,                       !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  2.10074,                 !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+FuelFactors,
+  NaturalGas,              !- Existing Fuel Resource Name
+  m3,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.01,                    !- Source Energy Factor {J/J}
+  GasTdvComm,              !- Source Energy Schedule Name
+  50.23439,                !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  3.51641E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  9.62826E-04,             !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.18620E-02,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  9.20964E-04,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  2.51172E-04,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  3.18151E-03,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  2.38613E-03,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  7.95378E-04,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  0,                       !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  2.30241E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  1.08841E-07,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  2.09310E-07,             !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  0,                       !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+
+##enddef
+
+##def CEC_CZ05_CommRatesNetMeter[]
+!Rates included:  Assumed 8% tax rate for entire region
+!        CA_EIAMonthlyRateElec, $0.1282/kWh, source EIA DOE/EIA-0348, date of data: 2006
+!        CA_EIAMonthlyRateGas,  $10.43/MCF, source EIA 2006
+!        California electricity source and emission factors based on Deru and Torcellini 2007
+
+!  Version,
+!    3.0;                    !- Version Identifier 
+ 
+! ------ Electric utility ------
+
+ UtilityCost:Tariff,
+   CA_EIAMonthlyRateElec,   !- Name
+   ElectricityNet:Facility,    !- Output Meter Name
+   kWh,                     !- Conversion Factor Choice
+   ,                        !- Energy Conversion Factor
+   ,                        !- Demand Conversion Factor
+   ,                        !- Time of Use Period Schedule Name
+   ,                        !- Season Schedule Name
+   ,                        !- Month Schedule Name
+   QuarterHour,             !- Demand Window Length
+   0.0,                     !- Monthly Charge or Variable Name
+   ,                        !- Minimum Monthly Charge or Variable Name
+   ,                        !- Real Time Pricing Charge Schedule Name
+   ,                        !- Customer Baseline Load Schedule Name
+  Comm Elect;               !- Group Name
+  
+UtilityCost:Charge:Simple,
+  ElectricEnergyCharge,     !- Charge Variable Name
+  CA_EIAMonthlyRateElec,    !- Tariff Name
+  TotalEnergy,              !- Source Variable
+  Annual,                   !- Season
+  EnergyCharges,            !- Category Variable Name
+  0.1282;                    !- Cost per Unit Value or Variable Name
+ 
+
+UtilityCost:Charge:Simple,
+  ElectricEnergyTax,       !- Charge Variable Name
+  CA_EIAMonthlyRateElec,   !- Tariff Name
+  Subtotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+  
+! ------ Gas utility ------
+ 
+UtilityCost:Tariff,
+  CA_EIAMonthlyRateGas,    !- Name
+  Gas:Facility,            !- Output Meter Name
+  MCF,                     !- Conversion Factor Choice
+  ,                        !- Energy Conversion Factor
+  ,                        !- Demand Conversion Factor
+  ,                        !- Time of Use Period Schedule Name
+  ,                        !- Season Schedule Name
+  ,                        !- Month Schedule Name
+  ,                        !- Demand Window Length
+  0.0,                     !- Monthly Charge or Variable Name
+  ,                        !- Minimum Monthly Charge or Variable Name
+  ,                        !- Real Time Pricing Charge Schedule Name
+  ,                        !- Customer Baseline Load Schedule Name
+  Comm Gas;                !- Group Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyCharge,         !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  totalEnergy,             !- Source Variable
+  Annual,                  !- Season
+  EnergyCharges,           !- Category Variable Name
+  10.43;                   !- Cost per Unit Value or Variable Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyTax,            !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  SubTotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+ 
+! ------ Fuel factors, includes TDV ------
+
+Schedule:File,
+  ElectricTdvComm,         !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ05.csv, !- File Name
+  1,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+Schedule:File,
+  GasTdvComm,              !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ05.csv, !- File Name
+  3,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+EnvironmentalImpactFactors,
+  0.3,                     !- District Heating Efficiency
+  3.0,                     !- District Cooling COP
+  0.25,                    !- Steam Conversion Efficiency
+  80.7272,                 !- Total Carbon Equivalent Emission Factor From NOx {kg/kg}
+  6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
+  0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
+
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from  USA EPA AP-42  Chapter 1
+! External Combustion Sources
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from USA national average based on eGRID, EIA 1605, AirData
+
+FuelFactors,
+  Electricity,             !- Existing Fuel Resource Name
+  kg,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.293,                   !- Source Energy Factor {J/J} 
+  ElectricTdvComm,         !- Source Energy Schedule Name
+  168.33317,               !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  4.20616E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  1.398578E-03,            !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.10753E-01,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  2.41916E-03,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  8.65731E-01,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  2.95827E-02,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  1.80450E-02,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  1.15377E-02,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  1.10837E-03,             !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  3.72332E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  3.36414E-06,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  0,                       !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  2.10074,                 !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+FuelFactors,
+  NaturalGas,              !- Existing Fuel Resource Name
+  m3,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.01,                    !- Source Energy Factor {J/J}
+  GasTdvComm,              !- Source Energy Schedule Name
+  50.23439,                !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  3.51641E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  9.62826E-04,             !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.18620E-02,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  9.20964E-04,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  2.51172E-04,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  3.18151E-03,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  2.38613E-03,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  7.95378E-04,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  0,                       !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  2.30241E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  1.08841E-07,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  2.09310E-07,             !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  0,                       !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+
+##enddef
+
+##def CEC_CZ06_CommRatesNetMeter[]
+!Rates included:  Assumed 8% tax rate for entire region
+!        CA_EIAMonthlyRateElec, $0.1282/kWh, source EIA DOE/EIA-0348, date of data: 2006
+!        CA_EIAMonthlyRateGas,  $10.43/MCF, source EIA 2006
+!        California electricity source and emission factors based on Deru and Torcellini 2007
+
+!  Version,
+!    3.0;                    !- Version Identifier 
+ 
+! ------ Electric utility ------
+
+ UtilityCost:Tariff,
+   CA_EIAMonthlyRateElec,   !- Name
+   ElectricityNet:Facility,    !- Output Meter Name
+   kWh,                     !- Conversion Factor Choice
+   ,                        !- Energy Conversion Factor
+   ,                        !- Demand Conversion Factor
+   ,                        !- Time of Use Period Schedule Name
+   ,                        !- Season Schedule Name
+   ,                        !- Month Schedule Name
+   QuarterHour,             !- Demand Window Length
+   0.0,                     !- Monthly Charge or Variable Name
+   ,                        !- Minimum Monthly Charge or Variable Name
+   ,                        !- Real Time Pricing Charge Schedule Name
+   ,                        !- Customer Baseline Load Schedule Name
+  Comm Elect;               !- Group Name
+  
+UtilityCost:Charge:Simple,
+  ElectricEnergyCharge,     !- Charge Variable Name
+  CA_EIAMonthlyRateElec,    !- Tariff Name
+  TotalEnergy,              !- Source Variable
+  Annual,                   !- Season
+  EnergyCharges,            !- Category Variable Name
+  0.1282;                    !- Cost per Unit Value or Variable Name
+ 
+
+UtilityCost:Charge:Simple,
+  ElectricEnergyTax,       !- Charge Variable Name
+  CA_EIAMonthlyRateElec,   !- Tariff Name
+  Subtotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+  
+! ------ Gas utility ------
+ 
+UtilityCost:Tariff,
+  CA_EIAMonthlyRateGas,    !- Name
+  Gas:Facility,            !- Output Meter Name
+  MCF,                     !- Conversion Factor Choice
+  ,                        !- Energy Conversion Factor
+  ,                        !- Demand Conversion Factor
+  ,                        !- Time of Use Period Schedule Name
+  ,                        !- Season Schedule Name
+  ,                        !- Month Schedule Name
+  ,                        !- Demand Window Length
+  0.0,                     !- Monthly Charge or Variable Name
+  ,                        !- Minimum Monthly Charge or Variable Name
+  ,                        !- Real Time Pricing Charge Schedule Name
+  ,                        !- Customer Baseline Load Schedule Name
+  Comm Gas;                !- Group Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyCharge,         !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  totalEnergy,             !- Source Variable
+  Annual,                  !- Season
+  EnergyCharges,           !- Category Variable Name
+  10.43;                   !- Cost per Unit Value or Variable Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyTax,            !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  SubTotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+ 
+! ------ Fuel factors, includes TDV ------
+
+Schedule:File,
+  ElectricTdvComm,         !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ06.csv, !- File Name
+  1,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+Schedule:File,
+  GasTdvComm,              !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ06.csv, !- File Name
+  3,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+EnvironmentalImpactFactors,
+  0.3,                     !- District Heating Efficiency
+  3.0,                     !- District Cooling COP
+  0.25,                    !- Steam Conversion Efficiency
+  80.7272,                 !- Total Carbon Equivalent Emission Factor From NOx {kg/kg}
+  6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
+  0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
+
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from  USA EPA AP-42  Chapter 1
+! External Combustion Sources
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from USA national average based on eGRID, EIA 1605, AirData
+
+FuelFactors,
+  Electricity,             !- Existing Fuel Resource Name
+  kg,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.293,                   !- Source Energy Factor {J/J} 
+  ElectricTdvComm,         !- Source Energy Schedule Name
+  168.33317,               !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  4.20616E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  1.398578E-03,            !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.10753E-01,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  2.41916E-03,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  8.65731E-01,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  2.95827E-02,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  1.80450E-02,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  1.15377E-02,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  1.10837E-03,             !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  3.72332E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  3.36414E-06,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  0,                       !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  2.10074,                 !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+FuelFactors,
+  NaturalGas,              !- Existing Fuel Resource Name
+  m3,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.01,                    !- Source Energy Factor {J/J}
+  GasTdvComm,              !- Source Energy Schedule Name
+  50.23439,                !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  3.51641E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  9.62826E-04,             !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.18620E-02,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  9.20964E-04,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  2.51172E-04,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  3.18151E-03,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  2.38613E-03,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  7.95378E-04,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  0,                       !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  2.30241E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  1.08841E-07,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  2.09310E-07,             !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  0,                       !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+
+##enddef
+
+##def CEC_CZ07_CommRatesNetMeter[]
+!Rates included:  Assumed 8% tax rate for entire region
+!        CA_EIAMonthlyRateElec, $0.1282/kWh, source EIA DOE/EIA-0348, date of data: 2006
+!        CA_EIAMonthlyRateGas,  $10.43/MCF, source EIA 2006
+!        California electricity source and emission factors based on Deru and Torcellini 2007
+
+!  Version,
+!    3.0;                    !- Version Identifier 
+ 
+! ------ Electric utility ------
+
+ UtilityCost:Tariff,
+   CA_EIAMonthlyRateElec,   !- Name
+   ElectricityNet:Facility,    !- Output Meter Name
+   kWh,                     !- Conversion Factor Choice
+   ,                        !- Energy Conversion Factor
+   ,                        !- Demand Conversion Factor
+   ,                        !- Time of Use Period Schedule Name
+   ,                        !- Season Schedule Name
+   ,                        !- Month Schedule Name
+   QuarterHour,             !- Demand Window Length
+   0.0,                     !- Monthly Charge or Variable Name
+   ,                        !- Minimum Monthly Charge or Variable Name
+   ,                        !- Real Time Pricing Charge Schedule Name
+   ,                        !- Customer Baseline Load Schedule Name
+  Comm Elect;               !- Group Name
+  
+UtilityCost:Charge:Simple,
+  ElectricEnergyCharge,     !- Charge Variable Name
+  CA_EIAMonthlyRateElec,    !- Tariff Name
+  TotalEnergy,              !- Source Variable
+  Annual,                   !- Season
+  EnergyCharges,            !- Category Variable Name
+  0.1282;                    !- Cost per Unit Value or Variable Name
+ 
+
+UtilityCost:Charge:Simple,
+  ElectricEnergyTax,       !- Charge Variable Name
+  CA_EIAMonthlyRateElec,   !- Tariff Name
+  Subtotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+  
+! ------ Gas utility ------
+ 
+UtilityCost:Tariff,
+  CA_EIAMonthlyRateGas,    !- Name
+  Gas:Facility,            !- Output Meter Name
+  MCF,                     !- Conversion Factor Choice
+  ,                        !- Energy Conversion Factor
+  ,                        !- Demand Conversion Factor
+  ,                        !- Time of Use Period Schedule Name
+  ,                        !- Season Schedule Name
+  ,                        !- Month Schedule Name
+  ,                        !- Demand Window Length
+  0.0,                     !- Monthly Charge or Variable Name
+  ,                        !- Minimum Monthly Charge or Variable Name
+  ,                        !- Real Time Pricing Charge Schedule Name
+  ,                        !- Customer Baseline Load Schedule Name
+  Comm Gas;                !- Group Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyCharge,         !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  totalEnergy,             !- Source Variable
+  Annual,                  !- Season
+  EnergyCharges,           !- Category Variable Name
+  10.43;                   !- Cost per Unit Value or Variable Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyTax,            !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  SubTotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+ 
+! ------ Fuel factors, includes TDV ------
+
+Schedule:File,
+  ElectricTdvComm,         !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ07.csv, !- File Name
+  1,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+Schedule:File,
+  GasTdvComm,              !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ07.csv, !- File Name
+  3,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+EnvironmentalImpactFactors,
+  0.3,                     !- District Heating Efficiency
+  3.0,                     !- District Cooling COP
+  0.25,                    !- Steam Conversion Efficiency
+  80.7272,                 !- Total Carbon Equivalent Emission Factor From NOx {kg/kg}
+  6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
+  0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
+
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from  USA EPA AP-42  Chapter 1
+! External Combustion Sources
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from USA national average based on eGRID, EIA 1605, AirData
+
+FuelFactors,
+  Electricity,             !- Existing Fuel Resource Name
+  kg,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.293,                   !- Source Energy Factor {J/J} 
+  ElectricTdvComm,         !- Source Energy Schedule Name
+  168.33317,               !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  4.20616E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  1.398578E-03,            !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.10753E-01,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  2.41916E-03,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  8.65731E-01,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  2.95827E-02,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  1.80450E-02,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  1.15377E-02,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  1.10837E-03,             !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  3.72332E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  3.36414E-06,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  0,                       !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  2.10074,                 !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+FuelFactors,
+  NaturalGas,              !- Existing Fuel Resource Name
+  m3,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.01,                    !- Source Energy Factor {J/J}
+  GasTdvComm,              !- Source Energy Schedule Name
+  50.23439,                !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  3.51641E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  9.62826E-04,             !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.18620E-02,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  9.20964E-04,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  2.51172E-04,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  3.18151E-03,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  2.38613E-03,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  7.95378E-04,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  0,                       !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  2.30241E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  1.08841E-07,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  2.09310E-07,             !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  0,                       !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+
+##enddef
+
+##def CEC_CZ08_CommRatesNetMeter[]
+!Rates included:  Assumed 8% tax rate for entire region
+!        CA_EIAMonthlyRateElec, $0.1282/kWh, source EIA DOE/EIA-0348, date of data: 2006
+!        CA_EIAMonthlyRateGas,  $10.43/MCF, source EIA 2006
+!        California electricity source and emission factors based on Deru and Torcellini 2007
+
+!  Version,
+!    3.0;                    !- Version Identifier 
+ 
+! ------ Electric utility ------
+
+ UtilityCost:Tariff,
+   CA_EIAMonthlyRateElec,   !- Name
+   ElectricityNet:Facility,    !- Output Meter Name
+   kWh,                     !- Conversion Factor Choice
+   ,                        !- Energy Conversion Factor
+   ,                        !- Demand Conversion Factor
+   ,                        !- Time of Use Period Schedule Name
+   ,                        !- Season Schedule Name
+   ,                        !- Month Schedule Name
+   QuarterHour,             !- Demand Window Length
+   0.0,                     !- Monthly Charge or Variable Name
+   ,                        !- Minimum Monthly Charge or Variable Name
+   ,                        !- Real Time Pricing Charge Schedule Name
+   ,                        !- Customer Baseline Load Schedule Name
+  Comm Elect;               !- Group Name
+  
+UtilityCost:Charge:Simple,
+  ElectricEnergyCharge,     !- Charge Variable Name
+  CA_EIAMonthlyRateElec,    !- Tariff Name
+  TotalEnergy,              !- Source Variable
+  Annual,                   !- Season
+  EnergyCharges,            !- Category Variable Name
+  0.1282;                    !- Cost per Unit Value or Variable Name
+ 
+
+UtilityCost:Charge:Simple,
+  ElectricEnergyTax,       !- Charge Variable Name
+  CA_EIAMonthlyRateElec,   !- Tariff Name
+  Subtotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+  
+! ------ Gas utility ------
+ 
+UtilityCost:Tariff,
+  CA_EIAMonthlyRateGas,    !- Name
+  Gas:Facility,            !- Output Meter Name
+  MCF,                     !- Conversion Factor Choice
+  ,                        !- Energy Conversion Factor
+  ,                        !- Demand Conversion Factor
+  ,                        !- Time of Use Period Schedule Name
+  ,                        !- Season Schedule Name
+  ,                        !- Month Schedule Name
+  ,                        !- Demand Window Length
+  0.0,                     !- Monthly Charge or Variable Name
+  ,                        !- Minimum Monthly Charge or Variable Name
+  ,                        !- Real Time Pricing Charge Schedule Name
+  ,                        !- Customer Baseline Load Schedule Name
+  Comm Gas;                !- Group Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyCharge,         !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  totalEnergy,             !- Source Variable
+  Annual,                  !- Season
+  EnergyCharges,           !- Category Variable Name
+  10.43;                   !- Cost per Unit Value or Variable Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyTax,            !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  SubTotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+ 
+! ------ Fuel factors, includes TDV ------
+
+Schedule:File,
+  ElectricTdvComm,         !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ08.csv, !- File Name
+  1,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+Schedule:File,
+  GasTdvComm,              !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ08.csv, !- File Name
+  3,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+EnvironmentalImpactFactors,
+  0.3,                     !- District Heating Efficiency
+  3.0,                     !- District Cooling COP
+  0.25,                    !- Steam Conversion Efficiency
+  80.7272,                 !- Total Carbon Equivalent Emission Factor From NOx {kg/kg}
+  6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
+  0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
+
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from  USA EPA AP-42  Chapter 1
+! External Combustion Sources
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from USA national average based on eGRID, EIA 1605, AirData
+
+FuelFactors,
+  Electricity,             !- Existing Fuel Resource Name
+  kg,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.293,                   !- Source Energy Factor {J/J} 
+  ElectricTdvComm,         !- Source Energy Schedule Name
+  168.33317,               !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  4.20616E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  1.398578E-03,            !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.10753E-01,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  2.41916E-03,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  8.65731E-01,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  2.95827E-02,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  1.80450E-02,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  1.15377E-02,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  1.10837E-03,             !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  3.72332E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  3.36414E-06,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  0,                       !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  2.10074,                 !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+FuelFactors,
+  NaturalGas,              !- Existing Fuel Resource Name
+  m3,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.01,                    !- Source Energy Factor {J/J}
+  GasTdvComm,              !- Source Energy Schedule Name
+  50.23439,                !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  3.51641E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  9.62826E-04,             !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.18620E-02,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  9.20964E-04,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  2.51172E-04,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  3.18151E-03,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  2.38613E-03,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  7.95378E-04,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  0,                       !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  2.30241E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  1.08841E-07,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  2.09310E-07,             !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  0,                       !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+
+##enddef
+
+##def CEC_CZ09_CommRatesNetMeter[]
+!Rates included:  Assumed 8% tax rate for entire region
+!        CA_EIAMonthlyRateElec, $0.1282/kWh, source EIA DOE/EIA-0348, date of data: 2006
+!        CA_EIAMonthlyRateGas,  $10.43/MCF, source EIA 2006
+!        California electricity source and emission factors based on Deru and Torcellini 2007
+
+!  Version,
+!    3.0;                    !- Version Identifier 
+ 
+! ------ Electric utility ------
+
+ UtilityCost:Tariff,
+   CA_EIAMonthlyRateElec,   !- Name
+   ElectricityNet:Facility,    !- Output Meter Name
+   kWh,                     !- Conversion Factor Choice
+   ,                        !- Energy Conversion Factor
+   ,                        !- Demand Conversion Factor
+   ,                        !- Time of Use Period Schedule Name
+   ,                        !- Season Schedule Name
+   ,                        !- Month Schedule Name
+   QuarterHour,             !- Demand Window Length
+   0.0,                     !- Monthly Charge or Variable Name
+   ,                        !- Minimum Monthly Charge or Variable Name
+   ,                        !- Real Time Pricing Charge Schedule Name
+   ,                        !- Customer Baseline Load Schedule Name
+  Comm Elect;               !- Group Name
+  
+UtilityCost:Charge:Simple,
+  ElectricEnergyCharge,     !- Charge Variable Name
+  CA_EIAMonthlyRateElec,    !- Tariff Name
+  TotalEnergy,              !- Source Variable
+  Annual,                   !- Season
+  EnergyCharges,            !- Category Variable Name
+  0.1282;                    !- Cost per Unit Value or Variable Name
+ 
+
+UtilityCost:Charge:Simple,
+  ElectricEnergyTax,       !- Charge Variable Name
+  CA_EIAMonthlyRateElec,   !- Tariff Name
+  Subtotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+  
+! ------ Gas utility ------
+ 
+UtilityCost:Tariff,
+  CA_EIAMonthlyRateGas,    !- Name
+  Gas:Facility,            !- Output Meter Name
+  MCF,                     !- Conversion Factor Choice
+  ,                        !- Energy Conversion Factor
+  ,                        !- Demand Conversion Factor
+  ,                        !- Time of Use Period Schedule Name
+  ,                        !- Season Schedule Name
+  ,                        !- Month Schedule Name
+  ,                        !- Demand Window Length
+  0.0,                     !- Monthly Charge or Variable Name
+  ,                        !- Minimum Monthly Charge or Variable Name
+  ,                        !- Real Time Pricing Charge Schedule Name
+  ,                        !- Customer Baseline Load Schedule Name
+  Comm Gas;                !- Group Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyCharge,         !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  totalEnergy,             !- Source Variable
+  Annual,                  !- Season
+  EnergyCharges,           !- Category Variable Name
+  10.43;                   !- Cost per Unit Value or Variable Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyTax,            !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  SubTotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+ 
+! ------ Fuel factors, includes TDV ------
+
+Schedule:File,
+  ElectricTdvComm,         !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ09.csv, !- File Name
+  1,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+Schedule:File,
+  GasTdvComm,              !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ09.csv, !- File Name
+  3,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+EnvironmentalImpactFactors,
+  0.3,                     !- District Heating Efficiency
+  3.0,                     !- District Cooling COP
+  0.25,                    !- Steam Conversion Efficiency
+  80.7272,                 !- Total Carbon Equivalent Emission Factor From NOx {kg/kg}
+  6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
+  0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
+
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from  USA EPA AP-42  Chapter 1
+! External Combustion Sources
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from USA national average based on eGRID, EIA 1605, AirData
+
+FuelFactors,
+  Electricity,             !- Existing Fuel Resource Name
+  kg,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.293,                   !- Source Energy Factor {J/J} 
+  ElectricTdvComm,         !- Source Energy Schedule Name
+  168.33317,               !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  4.20616E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  1.398578E-03,            !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.10753E-01,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  2.41916E-03,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  8.65731E-01,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  2.95827E-02,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  1.80450E-02,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  1.15377E-02,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  1.10837E-03,             !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  3.72332E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  3.36414E-06,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  0,                       !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  2.10074,                 !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+FuelFactors,
+  NaturalGas,              !- Existing Fuel Resource Name
+  m3,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.01,                    !- Source Energy Factor {J/J}
+  GasTdvComm,              !- Source Energy Schedule Name
+  50.23439,                !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  3.51641E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  9.62826E-04,             !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.18620E-02,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  9.20964E-04,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  2.51172E-04,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  3.18151E-03,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  2.38613E-03,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  7.95378E-04,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  0,                       !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  2.30241E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  1.08841E-07,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  2.09310E-07,             !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  0,                       !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+
+##enddef
+
+##def CEC_CZ10_CommRatesNetMeter[]
+!Rates included:  Assumed 8% tax rate for entire region
+!        CA_EIAMonthlyRateElec, $0.1282/kWh, source EIA DOE/EIA-0348, date of data: 2006
+!        CA_EIAMonthlyRateGas,  $10.43/MCF, source EIA 2006
+!        California electricity source and emission factors based on Deru and Torcellini 2007
+
+!  Version,
+!    3.0;                    !- Version Identifier 
+ 
+! ------ Electric utility ------
+
+ UtilityCost:Tariff,
+   CA_EIAMonthlyRateElec,   !- Name
+   ElectricityNet:Facility,    !- Output Meter Name
+   kWh,                     !- Conversion Factor Choice
+   ,                        !- Energy Conversion Factor
+   ,                        !- Demand Conversion Factor
+   ,                        !- Time of Use Period Schedule Name
+   ,                        !- Season Schedule Name
+   ,                        !- Month Schedule Name
+   QuarterHour,             !- Demand Window Length
+   0.0,                     !- Monthly Charge or Variable Name
+   ,                        !- Minimum Monthly Charge or Variable Name
+   ,                        !- Real Time Pricing Charge Schedule Name
+   ,                        !- Customer Baseline Load Schedule Name
+  Comm Elect;               !- Group Name
+  
+UtilityCost:Charge:Simple,
+  ElectricEnergyCharge,     !- Charge Variable Name
+  CA_EIAMonthlyRateElec,    !- Tariff Name
+  TotalEnergy,              !- Source Variable
+  Annual,                   !- Season
+  EnergyCharges,            !- Category Variable Name
+  0.1282;                    !- Cost per Unit Value or Variable Name
+ 
+
+UtilityCost:Charge:Simple,
+  ElectricEnergyTax,       !- Charge Variable Name
+  CA_EIAMonthlyRateElec,   !- Tariff Name
+  Subtotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+  
+! ------ Gas utility ------
+ 
+UtilityCost:Tariff,
+  CA_EIAMonthlyRateGas,    !- Name
+  Gas:Facility,            !- Output Meter Name
+  MCF,                     !- Conversion Factor Choice
+  ,                        !- Energy Conversion Factor
+  ,                        !- Demand Conversion Factor
+  ,                        !- Time of Use Period Schedule Name
+  ,                        !- Season Schedule Name
+  ,                        !- Month Schedule Name
+  ,                        !- Demand Window Length
+  0.0,                     !- Monthly Charge or Variable Name
+  ,                        !- Minimum Monthly Charge or Variable Name
+  ,                        !- Real Time Pricing Charge Schedule Name
+  ,                        !- Customer Baseline Load Schedule Name
+  Comm Gas;                !- Group Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyCharge,         !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  totalEnergy,             !- Source Variable
+  Annual,                  !- Season
+  EnergyCharges,           !- Category Variable Name
+  10.43;                   !- Cost per Unit Value or Variable Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyTax,            !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  SubTotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+ 
+! ------ Fuel factors, includes TDV ------
+
+Schedule:File,
+  ElectricTdvComm,         !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ10.csv, !- File Name
+  1,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+Schedule:File,
+  GasTdvComm,              !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ10.csv, !- File Name
+  3,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+EnvironmentalImpactFactors,
+  0.3,                     !- District Heating Efficiency
+  3.0,                     !- District Cooling COP
+  0.25,                    !- Steam Conversion Efficiency
+  80.7272,                 !- Total Carbon Equivalent Emission Factor From NOx {kg/kg}
+  6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
+  0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
+
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from  USA EPA AP-42  Chapter 1
+! External Combustion Sources
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from USA national average based on eGRID, EIA 1605, AirData
+
+FuelFactors,
+  Electricity,             !- Existing Fuel Resource Name
+  kg,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.293,                   !- Source Energy Factor {J/J} 
+  ElectricTdvComm,         !- Source Energy Schedule Name
+  168.33317,               !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  4.20616E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  1.398578E-03,            !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.10753E-01,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  2.41916E-03,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  8.65731E-01,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  2.95827E-02,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  1.80450E-02,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  1.15377E-02,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  1.10837E-03,             !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  3.72332E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  3.36414E-06,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  0,                       !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  2.10074,                 !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+FuelFactors,
+  NaturalGas,              !- Existing Fuel Resource Name
+  m3,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.01,                    !- Source Energy Factor {J/J}
+  GasTdvComm,              !- Source Energy Schedule Name
+  50.23439,                !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  3.51641E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  9.62826E-04,             !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.18620E-02,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  9.20964E-04,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  2.51172E-04,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  3.18151E-03,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  2.38613E-03,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  7.95378E-04,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  0,                       !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  2.30241E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  1.08841E-07,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  2.09310E-07,             !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  0,                       !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+
+##enddef
+
+##def CEC_CZ11_CommRatesNetMeter[]
+!Rates included:  Assumed 8% tax rate for entire region
+!        CA_EIAMonthlyRateElec, $0.1282/kWh, source EIA DOE/EIA-0348, date of data: 2006
+!        CA_EIAMonthlyRateGas,  $10.43/MCF, source EIA 2006
+!        California electricity source and emission factors based on Deru and Torcellini 2007
+
+!  Version,
+!    3.0;                    !- Version Identifier 
+ 
+! ------ Electric utility ------
+
+ UtilityCost:Tariff,
+   CA_EIAMonthlyRateElec,   !- Name
+   ElectricityNet:Facility,    !- Output Meter Name
+   kWh,                     !- Conversion Factor Choice
+   ,                        !- Energy Conversion Factor
+   ,                        !- Demand Conversion Factor
+   ,                        !- Time of Use Period Schedule Name
+   ,                        !- Season Schedule Name
+   ,                        !- Month Schedule Name
+   QuarterHour,             !- Demand Window Length
+   0.0,                     !- Monthly Charge or Variable Name
+   ,                        !- Minimum Monthly Charge or Variable Name
+   ,                        !- Real Time Pricing Charge Schedule Name
+   ,                        !- Customer Baseline Load Schedule Name
+  Comm Elect;               !- Group Name
+  
+UtilityCost:Charge:Simple,
+  ElectricEnergyCharge,     !- Charge Variable Name
+  CA_EIAMonthlyRateElec,    !- Tariff Name
+  TotalEnergy,              !- Source Variable
+  Annual,                   !- Season
+  EnergyCharges,            !- Category Variable Name
+  0.1282;                    !- Cost per Unit Value or Variable Name
+ 
+
+UtilityCost:Charge:Simple,
+  ElectricEnergyTax,       !- Charge Variable Name
+  CA_EIAMonthlyRateElec,   !- Tariff Name
+  Subtotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+  
+! ------ Gas utility ------
+ 
+UtilityCost:Tariff,
+  CA_EIAMonthlyRateGas,    !- Name
+  Gas:Facility,            !- Output Meter Name
+  MCF,                     !- Conversion Factor Choice
+  ,                        !- Energy Conversion Factor
+  ,                        !- Demand Conversion Factor
+  ,                        !- Time of Use Period Schedule Name
+  ,                        !- Season Schedule Name
+  ,                        !- Month Schedule Name
+  ,                        !- Demand Window Length
+  0.0,                     !- Monthly Charge or Variable Name
+  ,                        !- Minimum Monthly Charge or Variable Name
+  ,                        !- Real Time Pricing Charge Schedule Name
+  ,                        !- Customer Baseline Load Schedule Name
+  Comm Gas;                !- Group Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyCharge,         !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  totalEnergy,             !- Source Variable
+  Annual,                  !- Season
+  EnergyCharges,           !- Category Variable Name
+  10.43;                   !- Cost per Unit Value or Variable Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyTax,            !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  SubTotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+ 
+! ------ Fuel factors, includes TDV ------
+
+Schedule:File,
+  ElectricTdvComm,         !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ11.csv, !- File Name
+  1,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+Schedule:File,
+  GasTdvComm,              !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ11.csv, !- File Name
+  3,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+EnvironmentalImpactFactors,
+  0.3,                     !- District Heating Efficiency
+  3.0,                     !- District Cooling COP
+  0.25,                    !- Steam Conversion Efficiency
+  80.7272,                 !- Total Carbon Equivalent Emission Factor From NOx {kg/kg}
+  6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
+  0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
+
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from  USA EPA AP-42  Chapter 1
+! External Combustion Sources
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from USA national average based on eGRID, EIA 1605, AirData
+
+FuelFactors,
+  Electricity,             !- Existing Fuel Resource Name
+  kg,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.293,                   !- Source Energy Factor {J/J} 
+  ElectricTdvComm,         !- Source Energy Schedule Name
+  168.33317,               !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  4.20616E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  1.398578E-03,            !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.10753E-01,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  2.41916E-03,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  8.65731E-01,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  2.95827E-02,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  1.80450E-02,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  1.15377E-02,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  1.10837E-03,             !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  3.72332E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  3.36414E-06,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  0,                       !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  2.10074,                 !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+FuelFactors,
+  NaturalGas,              !- Existing Fuel Resource Name
+  m3,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.01,                    !- Source Energy Factor {J/J}
+  GasTdvComm,              !- Source Energy Schedule Name
+  50.23439,                !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  3.51641E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  9.62826E-04,             !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.18620E-02,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  9.20964E-04,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  2.51172E-04,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  3.18151E-03,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  2.38613E-03,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  7.95378E-04,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  0,                       !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  2.30241E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  1.08841E-07,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  2.09310E-07,             !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  0,                       !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+
+##enddef
+
+##def CEC_CZ12_CommRatesNetMeter[]
+!Rates included:  Assumed 8% tax rate for entire region
+!        CA_EIAMonthlyRateElec, $0.1282/kWh, source EIA DOE/EIA-0348, date of data: 2006
+!        CA_EIAMonthlyRateGas,  $10.43/MCF, source EIA 2006
+!        California electricity source and emission factors based on Deru and Torcellini 2007
+
+!  Version,
+!    3.0;                    !- Version Identifier 
+ 
+! ------ Electric utility ------
+
+ UtilityCost:Tariff,
+   CA_EIAMonthlyRateElec,   !- Name
+   ElectricityNet:Facility,    !- Output Meter Name
+   kWh,                     !- Conversion Factor Choice
+   ,                        !- Energy Conversion Factor
+   ,                        !- Demand Conversion Factor
+   ,                        !- Time of Use Period Schedule Name
+   ,                        !- Season Schedule Name
+   ,                        !- Month Schedule Name
+   QuarterHour,             !- Demand Window Length
+   0.0,                     !- Monthly Charge or Variable Name
+   ,                        !- Minimum Monthly Charge or Variable Name
+   ,                        !- Real Time Pricing Charge Schedule Name
+   ,                        !- Customer Baseline Load Schedule Name
+  Comm Elect;               !- Group Name
+  
+UtilityCost:Charge:Simple,
+  ElectricEnergyCharge,     !- Charge Variable Name
+  CA_EIAMonthlyRateElec,    !- Tariff Name
+  TotalEnergy,              !- Source Variable
+  Annual,                   !- Season
+  EnergyCharges,            !- Category Variable Name
+  0.1282;                    !- Cost per Unit Value or Variable Name
+ 
+
+UtilityCost:Charge:Simple,
+  ElectricEnergyTax,       !- Charge Variable Name
+  CA_EIAMonthlyRateElec,   !- Tariff Name
+  Subtotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+  
+! ------ Gas utility ------
+ 
+UtilityCost:Tariff,
+  CA_EIAMonthlyRateGas,    !- Name
+  Gas:Facility,            !- Output Meter Name
+  MCF,                     !- Conversion Factor Choice
+  ,                        !- Energy Conversion Factor
+  ,                        !- Demand Conversion Factor
+  ,                        !- Time of Use Period Schedule Name
+  ,                        !- Season Schedule Name
+  ,                        !- Month Schedule Name
+  ,                        !- Demand Window Length
+  0.0,                     !- Monthly Charge or Variable Name
+  ,                        !- Minimum Monthly Charge or Variable Name
+  ,                        !- Real Time Pricing Charge Schedule Name
+  ,                        !- Customer Baseline Load Schedule Name
+  Comm Gas;                !- Group Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyCharge,         !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  totalEnergy,             !- Source Variable
+  Annual,                  !- Season
+  EnergyCharges,           !- Category Variable Name
+  10.43;                   !- Cost per Unit Value or Variable Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyTax,            !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  SubTotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+ 
+! ------ Fuel factors, includes TDV ------
+
+Schedule:File,
+  ElectricTdvComm,         !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ12.csv, !- File Name
+  1,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+Schedule:File,
+  GasTdvComm,              !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ12.csv, !- File Name
+  3,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+EnvironmentalImpactFactors,
+  0.3,                     !- District Heating Efficiency
+  3.0,                     !- District Cooling COP
+  0.25,                    !- Steam Conversion Efficiency
+  80.7272,                 !- Total Carbon Equivalent Emission Factor From NOx {kg/kg}
+  6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
+  0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
+
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from  USA EPA AP-42  Chapter 1
+! External Combustion Sources
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from USA national average based on eGRID, EIA 1605, AirData
+
+FuelFactors,
+  Electricity,             !- Existing Fuel Resource Name
+  kg,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.293,                   !- Source Energy Factor {J/J} 
+  ElectricTdvComm,         !- Source Energy Schedule Name
+  168.33317,               !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  4.20616E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  1.398578E-03,            !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.10753E-01,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  2.41916E-03,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  8.65731E-01,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  2.95827E-02,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  1.80450E-02,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  1.15377E-02,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  1.10837E-03,             !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  3.72332E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  3.36414E-06,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  0,                       !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  2.10074,                 !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+FuelFactors,
+  NaturalGas,              !- Existing Fuel Resource Name
+  m3,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.01,                    !- Source Energy Factor {J/J}
+  GasTdvComm,              !- Source Energy Schedule Name
+  50.23439,                !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  3.51641E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  9.62826E-04,             !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.18620E-02,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  9.20964E-04,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  2.51172E-04,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  3.18151E-03,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  2.38613E-03,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  7.95378E-04,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  0,                       !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  2.30241E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  1.08841E-07,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  2.09310E-07,             !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  0,                       !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+
+##enddef
+
+##def CEC_CZ13_CommRatesNetMeter[]
+!Rates included:  Assumed 8% tax rate for entire region
+!        CA_EIAMonthlyRateElec, $0.1282/kWh, source EIA DOE/EIA-0348, date of data: 2006
+!        CA_EIAMonthlyRateGas,  $10.43/MCF, source EIA 2006
+!        California electricity source and emission factors based on Deru and Torcellini 2007
+
+!  Version,
+!    3.0;                    !- Version Identifier 
+ 
+! ------ Electric utility ------
+
+ UtilityCost:Tariff,
+   CA_EIAMonthlyRateElec,   !- Name
+   ElectricityNet:Facility,    !- Output Meter Name
+   kWh,                     !- Conversion Factor Choice
+   ,                        !- Energy Conversion Factor
+   ,                        !- Demand Conversion Factor
+   ,                        !- Time of Use Period Schedule Name
+   ,                        !- Season Schedule Name
+   ,                        !- Month Schedule Name
+   QuarterHour,             !- Demand Window Length
+   0.0,                     !- Monthly Charge or Variable Name
+   ,                        !- Minimum Monthly Charge or Variable Name
+   ,                        !- Real Time Pricing Charge Schedule Name
+   ,                        !- Customer Baseline Load Schedule Name
+  Comm Elect;               !- Group Name
+  
+UtilityCost:Charge:Simple,
+  ElectricEnergyCharge,     !- Charge Variable Name
+  CA_EIAMonthlyRateElec,    !- Tariff Name
+  TotalEnergy,              !- Source Variable
+  Annual,                   !- Season
+  EnergyCharges,            !- Category Variable Name
+  0.1282;                    !- Cost per Unit Value or Variable Name
+ 
+
+UtilityCost:Charge:Simple,
+  ElectricEnergyTax,       !- Charge Variable Name
+  CA_EIAMonthlyRateElec,   !- Tariff Name
+  Subtotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+  
+! ------ Gas utility ------
+ 
+UtilityCost:Tariff,
+  CA_EIAMonthlyRateGas,    !- Name
+  Gas:Facility,            !- Output Meter Name
+  MCF,                     !- Conversion Factor Choice
+  ,                        !- Energy Conversion Factor
+  ,                        !- Demand Conversion Factor
+  ,                        !- Time of Use Period Schedule Name
+  ,                        !- Season Schedule Name
+  ,                        !- Month Schedule Name
+  ,                        !- Demand Window Length
+  0.0,                     !- Monthly Charge or Variable Name
+  ,                        !- Minimum Monthly Charge or Variable Name
+  ,                        !- Real Time Pricing Charge Schedule Name
+  ,                        !- Customer Baseline Load Schedule Name
+  Comm Gas;                !- Group Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyCharge,         !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  totalEnergy,             !- Source Variable
+  Annual,                  !- Season
+  EnergyCharges,           !- Category Variable Name
+  10.43;                   !- Cost per Unit Value or Variable Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyTax,            !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  SubTotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+ 
+! ------ Fuel factors, includes TDV ------
+
+Schedule:File,
+  ElectricTdvComm,         !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ13.csv, !- File Name
+  1,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+Schedule:File,
+  GasTdvComm,              !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ13.csv, !- File Name
+  3,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+EnvironmentalImpactFactors,
+  0.3,                     !- District Heating Efficiency
+  3.0,                     !- District Cooling COP
+  0.25,                    !- Steam Conversion Efficiency
+  80.7272,                 !- Total Carbon Equivalent Emission Factor From NOx {kg/kg}
+  6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
+  0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
+
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from  USA EPA AP-42  Chapter 1
+! External Combustion Sources
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from USA national average based on eGRID, EIA 1605, AirData
+
+FuelFactors,
+  Electricity,             !- Existing Fuel Resource Name
+  kg,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.293,                   !- Source Energy Factor {J/J} 
+  ElectricTdvComm,         !- Source Energy Schedule Name
+  168.33317,               !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  4.20616E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  1.398578E-03,            !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.10753E-01,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  2.41916E-03,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  8.65731E-01,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  2.95827E-02,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  1.80450E-02,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  1.15377E-02,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  1.10837E-03,             !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  3.72332E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  3.36414E-06,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  0,                       !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  2.10074,                 !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+FuelFactors,
+  NaturalGas,              !- Existing Fuel Resource Name
+  m3,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.01,                    !- Source Energy Factor {J/J}
+  GasTdvComm,              !- Source Energy Schedule Name
+  50.23439,                !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  3.51641E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  9.62826E-04,             !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.18620E-02,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  9.20964E-04,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  2.51172E-04,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  3.18151E-03,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  2.38613E-03,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  7.95378E-04,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  0,                       !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  2.30241E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  1.08841E-07,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  2.09310E-07,             !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  0,                       !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+
+##enddef
+
+##def CEC_CZ14_CommRatesNetMeter[]
+!Rates included:  Assumed 8% tax rate for entire region
+!        CA_EIAMonthlyRateElec, $0.1282/kWh, source EIA DOE/EIA-0348, date of data: 2006
+!        CA_EIAMonthlyRateGas,  $10.43/MCF, source EIA 2006
+!        California electricity source and emission factors based on Deru and Torcellini 2007
+
+!  Version,
+!    3.0;                    !- Version Identifier 
+ 
+! ------ Electric utility ------
+
+ UtilityCost:Tariff,
+   CA_EIAMonthlyRateElec,   !- Name
+   ElectricityNet:Facility,    !- Output Meter Name
+   kWh,                     !- Conversion Factor Choice
+   ,                        !- Energy Conversion Factor
+   ,                        !- Demand Conversion Factor
+   ,                        !- Time of Use Period Schedule Name
+   ,                        !- Season Schedule Name
+   ,                        !- Month Schedule Name
+   QuarterHour,             !- Demand Window Length
+   0.0,                     !- Monthly Charge or Variable Name
+   ,                        !- Minimum Monthly Charge or Variable Name
+   ,                        !- Real Time Pricing Charge Schedule Name
+   ,                        !- Customer Baseline Load Schedule Name
+  Comm Elect;               !- Group Name
+  
+UtilityCost:Charge:Simple,
+  ElectricEnergyCharge,     !- Charge Variable Name
+  CA_EIAMonthlyRateElec,    !- Tariff Name
+  TotalEnergy,              !- Source Variable
+  Annual,                   !- Season
+  EnergyCharges,            !- Category Variable Name
+  0.1282;                    !- Cost per Unit Value or Variable Name
+ 
+
+UtilityCost:Charge:Simple,
+  ElectricEnergyTax,       !- Charge Variable Name
+  CA_EIAMonthlyRateElec,   !- Tariff Name
+  Subtotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+  
+! ------ Gas utility ------
+ 
+UtilityCost:Tariff,
+  CA_EIAMonthlyRateGas,    !- Name
+  Gas:Facility,            !- Output Meter Name
+  MCF,                     !- Conversion Factor Choice
+  ,                        !- Energy Conversion Factor
+  ,                        !- Demand Conversion Factor
+  ,                        !- Time of Use Period Schedule Name
+  ,                        !- Season Schedule Name
+  ,                        !- Month Schedule Name
+  ,                        !- Demand Window Length
+  0.0,                     !- Monthly Charge or Variable Name
+  ,                        !- Minimum Monthly Charge or Variable Name
+  ,                        !- Real Time Pricing Charge Schedule Name
+  ,                        !- Customer Baseline Load Schedule Name
+  Comm Gas;                !- Group Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyCharge,         !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  totalEnergy,             !- Source Variable
+  Annual,                  !- Season
+  EnergyCharges,           !- Category Variable Name
+  10.43;                   !- Cost per Unit Value or Variable Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyTax,            !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  SubTotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+ 
+! ------ Fuel factors, includes TDV ------
+
+Schedule:File,
+  ElectricTdvComm,         !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ14.csv, !- File Name
+  1,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+Schedule:File,
+  GasTdvComm,              !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ14.csv, !- File Name
+  3,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+EnvironmentalImpactFactors,
+  0.3,                     !- District Heating Efficiency
+  3.0,                     !- District Cooling COP
+  0.25,                    !- Steam Conversion Efficiency
+  80.7272,                 !- Total Carbon Equivalent Emission Factor From NOx {kg/kg}
+  6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
+  0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
+
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from  USA EPA AP-42  Chapter 1
+! External Combustion Sources
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from USA national average based on eGRID, EIA 1605, AirData
+
+FuelFactors,
+  Electricity,             !- Existing Fuel Resource Name
+  kg,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.293,                   !- Source Energy Factor {J/J} 
+  ElectricTdvComm,         !- Source Energy Schedule Name
+  168.33317,               !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  4.20616E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  1.398578E-03,            !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.10753E-01,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  2.41916E-03,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  8.65731E-01,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  2.95827E-02,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  1.80450E-02,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  1.15377E-02,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  1.10837E-03,             !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  3.72332E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  3.36414E-06,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  0,                       !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  2.10074,                 !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+FuelFactors,
+  NaturalGas,              !- Existing Fuel Resource Name
+  m3,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.01,                    !- Source Energy Factor {J/J}
+  GasTdvComm,              !- Source Energy Schedule Name
+  50.23439,                !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  3.51641E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  9.62826E-04,             !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.18620E-02,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  9.20964E-04,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  2.51172E-04,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  3.18151E-03,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  2.38613E-03,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  7.95378E-04,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  0,                       !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  2.30241E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  1.08841E-07,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  2.09310E-07,             !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  0,                       !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+
+##enddef
+
+##def CEC_CZ15_CommRatesNetMeter[]
+!Rates included:  Assumed 8% tax rate for entire region
+!        CA_EIAMonthlyRateElec, $0.1282/kWh, source EIA DOE/EIA-0348, date of data: 2006
+!        CA_EIAMonthlyRateGas,  $10.43/MCF, source EIA 2006
+!        California electricity source and emission factors based on Deru and Torcellini 2007
+
+!  Version,
+!    3.0;                    !- Version Identifier 
+ 
+! ------ Electric utility ------
+
+ UtilityCost:Tariff,
+   CA_EIAMonthlyRateElec,   !- Name
+   ElectricityNet:Facility,    !- Output Meter Name
+   kWh,                     !- Conversion Factor Choice
+   ,                        !- Energy Conversion Factor
+   ,                        !- Demand Conversion Factor
+   ,                        !- Time of Use Period Schedule Name
+   ,                        !- Season Schedule Name
+   ,                        !- Month Schedule Name
+   QuarterHour,             !- Demand Window Length
+   0.0,                     !- Monthly Charge or Variable Name
+   ,                        !- Minimum Monthly Charge or Variable Name
+   ,                        !- Real Time Pricing Charge Schedule Name
+   ,                        !- Customer Baseline Load Schedule Name
+  Comm Elect;               !- Group Name
+  
+UtilityCost:Charge:Simple,
+  ElectricEnergyCharge,     !- Charge Variable Name
+  CA_EIAMonthlyRateElec,    !- Tariff Name
+  TotalEnergy,              !- Source Variable
+  Annual,                   !- Season
+  EnergyCharges,            !- Category Variable Name
+  0.1282;                    !- Cost per Unit Value or Variable Name
+ 
+
+UtilityCost:Charge:Simple,
+  ElectricEnergyTax,       !- Charge Variable Name
+  CA_EIAMonthlyRateElec,   !- Tariff Name
+  Subtotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+  
+! ------ Gas utility ------
+ 
+UtilityCost:Tariff,
+  CA_EIAMonthlyRateGas,    !- Name
+  Gas:Facility,            !- Output Meter Name
+  MCF,                     !- Conversion Factor Choice
+  ,                        !- Energy Conversion Factor
+  ,                        !- Demand Conversion Factor
+  ,                        !- Time of Use Period Schedule Name
+  ,                        !- Season Schedule Name
+  ,                        !- Month Schedule Name
+  ,                        !- Demand Window Length
+  0.0,                     !- Monthly Charge or Variable Name
+  ,                        !- Minimum Monthly Charge or Variable Name
+  ,                        !- Real Time Pricing Charge Schedule Name
+  ,                        !- Customer Baseline Load Schedule Name
+  Comm Gas;                !- Group Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyCharge,         !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  totalEnergy,             !- Source Variable
+  Annual,                  !- Season
+  EnergyCharges,           !- Category Variable Name
+  10.43;                   !- Cost per Unit Value or Variable Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyTax,            !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  SubTotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+ 
+! ------ Fuel factors, includes TDV ------
+
+Schedule:File,
+  ElectricTdvComm,         !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ15.csv, !- File Name
+  1,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+Schedule:File,
+  GasTdvComm,              !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ15.csv, !- File Name
+  3,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+EnvironmentalImpactFactors,
+  0.3,                     !- District Heating Efficiency
+  3.0,                     !- District Cooling COP
+  0.25,                    !- Steam Conversion Efficiency
+  80.7272,                 !- Total Carbon Equivalent Emission Factor From NOx {kg/kg}
+  6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
+  0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
+
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from  USA EPA AP-42  Chapter 1
+! External Combustion Sources
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from USA national average based on eGRID, EIA 1605, AirData
+
+FuelFactors,
+  Electricity,             !- Existing Fuel Resource Name
+  kg,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.293,                   !- Source Energy Factor {J/J} 
+  ElectricTdvComm,         !- Source Energy Schedule Name
+  168.33317,               !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  4.20616E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  1.398578E-03,            !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.10753E-01,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  2.41916E-03,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  8.65731E-01,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  2.95827E-02,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  1.80450E-02,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  1.15377E-02,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  1.10837E-03,             !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  3.72332E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  3.36414E-06,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  0,                       !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  2.10074,                 !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+FuelFactors,
+  NaturalGas,              !- Existing Fuel Resource Name
+  m3,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.01,                    !- Source Energy Factor {J/J}
+  GasTdvComm,              !- Source Energy Schedule Name
+  50.23439,                !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  3.51641E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  9.62826E-04,             !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.18620E-02,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  9.20964E-04,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  2.51172E-04,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  3.18151E-03,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  2.38613E-03,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  7.95378E-04,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  0,                       !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  2.30241E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  1.08841E-07,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  2.09310E-07,             !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  0,                       !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+
+##enddef
+
+##def CEC_CZ16_CommRatesNetMeter[]
+!Rates included:  Assumed 8% tax rate for entire region
+!        CA_EIAMonthlyRateElec, $0.1282/kWh, source EIA DOE/EIA-0348, date of data: 2006
+!        CA_EIAMonthlyRateGas,  $10.43/MCF, source EIA 2006
+!        California electricity source and emission factors based on Deru and Torcellini 2007
+
+!  Version,
+!    3.0;                    !- Version Identifier 
+ 
+! ------ Electric utility ------
+
+ UtilityCost:Tariff,
+   CA_EIAMonthlyRateElec,   !- Name
+   ElectricityNet:Facility,    !- Output Meter Name
+   kWh,                     !- Conversion Factor Choice
+   ,                        !- Energy Conversion Factor
+   ,                        !- Demand Conversion Factor
+   ,                        !- Time of Use Period Schedule Name
+   ,                        !- Season Schedule Name
+   ,                        !- Month Schedule Name
+   QuarterHour,             !- Demand Window Length
+   0.0,                     !- Monthly Charge or Variable Name
+   ,                        !- Minimum Monthly Charge or Variable Name
+   ,                        !- Real Time Pricing Charge Schedule Name
+   ,                        !- Customer Baseline Load Schedule Name
+  Comm Elect;               !- Group Name
+  
+UtilityCost:Charge:Simple,
+  ElectricEnergyCharge,     !- Charge Variable Name
+  CA_EIAMonthlyRateElec,    !- Tariff Name
+  TotalEnergy,              !- Source Variable
+  Annual,                   !- Season
+  EnergyCharges,            !- Category Variable Name
+  0.1282;                    !- Cost per Unit Value or Variable Name
+ 
+
+UtilityCost:Charge:Simple,
+  ElectricEnergyTax,       !- Charge Variable Name
+  CA_EIAMonthlyRateElec,   !- Tariff Name
+  Subtotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+  
+! ------ Gas utility ------
+ 
+UtilityCost:Tariff,
+  CA_EIAMonthlyRateGas,    !- Name
+  Gas:Facility,            !- Output Meter Name
+  MCF,                     !- Conversion Factor Choice
+  ,                        !- Energy Conversion Factor
+  ,                        !- Demand Conversion Factor
+  ,                        !- Time of Use Period Schedule Name
+  ,                        !- Season Schedule Name
+  ,                        !- Month Schedule Name
+  ,                        !- Demand Window Length
+  0.0,                     !- Monthly Charge or Variable Name
+  ,                        !- Minimum Monthly Charge or Variable Name
+  ,                        !- Real Time Pricing Charge Schedule Name
+  ,                        !- Customer Baseline Load Schedule Name
+  Comm Gas;                !- Group Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyCharge,         !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  totalEnergy,             !- Source Variable
+  Annual,                  !- Season
+  EnergyCharges,           !- Category Variable Name
+  10.43;                   !- Cost per Unit Value or Variable Name
+ 
+UtilityCost:Charge:Simple,
+  GasEnergyTax,            !- Charge Variable Name
+  CA_EIAMonthlyRateGas,    !- Tariff Name
+  SubTotal,                !- Source Variable
+  Annual,                  !- Season
+  Taxes,                   !- Category Variable Name
+  0.08;                    !- Cost per Unit Value or Variable Name
+ 
+! ------ Fuel factors, includes TDV ------
+
+Schedule:File,
+  ElectricTdvComm,         !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ16.csv, !- File Name
+  1,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+Schedule:File,
+  GasTdvComm,              !- Name
+  Any Number,              !- Schedule Type Limits Name
+  TDV_2008_kBtu_CTZ16.csv, !- File Name
+  3,                       !- Column Number
+  4;                       !- Rows to Skip at Top
+
+EnvironmentalImpactFactors,
+  0.3,                     !- District Heating Efficiency
+  3.0,                     !- District Cooling COP
+  0.25,                    !- Steam Conversion Efficiency
+  80.7272,                 !- Total Carbon Equivalent Emission Factor From NOx {kg/kg}
+  6.2727,                  !- Total Carbon Equivalent Emission Factor From CH4 {kg/kg}
+  0.2727;                  !- Total Carbon Equivalent Emission Factor From CO2 {kg/kg}
+
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from  USA EPA AP-42  Chapter 1
+! External Combustion Sources
+! The source energy is based on TDV factors from the DataSets\TDV files
+! the remaining numbers are from USA national average based on eGRID, EIA 1605, AirData
+
+FuelFactors,
+  Electricity,             !- Existing Fuel Resource Name
+  kg,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.293,                   !- Source Energy Factor {J/J} 
+  ElectricTdvComm,         !- Source Energy Schedule Name
+  168.33317,               !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  4.20616E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  1.398578E-03,            !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.10753E-01,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  2.41916E-03,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  8.65731E-01,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  2.95827E-02,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  1.80450E-02,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  1.15377E-02,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  1.10837E-03,             !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  3.72332E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  3.36414E-06,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  0,                       !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  2.10074,                 !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+FuelFactors,
+  NaturalGas,              !- Existing Fuel Resource Name
+  m3,                      !- Units of Measure
+  ,                        !- Energy per Unit Factor
+  0.01,                    !- Source Energy Factor {J/J}
+  GasTdvComm,              !- Source Energy Schedule Name
+  50.23439,                !- CO2 Emission Factor {g/MJ}
+  ,                        !- CO2 Emission Factor Schedule Name
+  3.51641E-02,             !- CO Emission Factor {g/MJ}
+  ,                        !- CO Emission Factor Schedule Name
+  9.62826E-04,             !- CH4 Emission Factor {g/MJ}
+  ,                        !- CH4 Emission Factor Schedule Name
+  4.18620E-02,             !- NOx Emission Factor {g/MJ}
+  ,                        !- NOx Emission Factor Schedule Name
+  9.20964E-04,             !- N2O Emission Factor {g/MJ}
+  ,                        !- N2O Emission Factor Schedule Name
+  2.51172E-04,             !- SO2 Emission Factor {g/MJ}
+  ,                        !- SO2 Emission Factor Schedule Name
+  3.18151E-03,             !- PM Emission Factor {g/MJ}
+  ,                        !- PM Emission Factor Schedule Name
+  2.38613E-03,             !- PM10 Emission Factor {g/MJ}
+  ,                        !- PM10 Emission Factor Schedule Name
+  7.95378E-04,             !- PM2.5 Emission Factor {g/MJ}
+  ,                        !- PM2.5 Emission Factor Schedule Name
+  0,                       !- NH3 Emission Factor {g/MJ}
+  ,                        !- NH3 Emission Factor Schedule Name
+  2.30241E-03,             !- NMVOC Emission Factor {g/MJ}
+  ,                        !- NMVOC Emission Factor Schedule Name
+  1.08841E-07,             !- Hg Emission Factor {g/MJ}
+  ,                        !- Hg Emission Factor Schedule Name
+  2.09310E-07,             !- Pb Emission Factor {g/MJ}
+  ,                        !- Pb Emission Factor Schedule Name
+  0,                       !- Water Emission Factor {L/MJ}
+  ,                        !- Water Emission Factor Schedule Name
+  0,                       !- Nuclear High Level Emission Factor {g/MJ}
+  ,                        !- Nuclear High Level Emission Factor Schedule Name
+  0;                       !- Nuclear Low Level Emission Factor {m3/MJ}
+
+
+##enddef
+

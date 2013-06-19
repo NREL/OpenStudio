@@ -1,0 +1,38 @@
+
+OS:Version,
+  {aac75dab-8aec-49f2-a171-5e3ad38cfbee},  ! Handle
+  0.8.3;                    ! Version Identifier
+
+OS:Construction,
+  {a197c6ac-d942-40e9-93cd-1aace9c019df},  ! Handle
+  Interior Window,          ! Name
+  ,                         ! Surface Rendering Name
+  {3bbfdcc4-b30b-4cef-9a01-eef60fe96ac1};  ! Layer 1
+
+OS:WindowMaterial:Glazing,
+  {3bbfdcc4-b30b-4cef-9a01-eef60fe96ac1},  ! Handle
+  Clear 3mm,                ! Name
+  SpectralAverage,          ! Optical Data Type
+  ,                         ! Window Glass Spectral Data Set Name
+  0.003,                    ! Thickness {m}
+  0.837,                    ! Solar Transmittance at Normal Incidence
+  0.075,                    ! Front Side Solar Reflectance at Normal Incidence
+  0.075,                    ! Back Side Solar Reflectance at Normal Incidence
+  0.898,                    ! Visible Transmittance at Normal Incidence
+  0.081,                    ! Front Side Visible Reflectance at Normal Incidence
+  0.081,                    ! Back Side Visible Reflectance at Normal Incidence
+  0,                        ! Infrared Transmittance at Normal Incidence
+  0.084,                    ! Front Side Infrared Hemispherical Emissivity
+  0.084,                    ! Back Side Infrared Hemispherical Emissivity
+  0.9;                      ! Conductivity {W/m-K}
+
+OS:ComponentData,
+  {350f6722-5daa-45b6-b1d4-8fd061b89453},  ! Handle
+  OS:ComponentData 1,       ! Name
+  {bc936371-cfc0-4435-b27f-945631044123},  ! UUID
+  {b0e361cb-8f53-438b-9019-1ea61bc840dc},  ! Version UUID
+  1345061779,               ! Creation Timestamp
+  1345061779,               ! Version Timestamp
+  {a197c6ac-d942-40e9-93cd-1aace9c019df},  ! Name of Object 1
+  {3bbfdcc4-b30b-4cef-9a01-eef60fe96ac1};  ! Name of Object 2
+

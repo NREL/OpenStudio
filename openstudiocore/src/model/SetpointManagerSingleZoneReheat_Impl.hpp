@@ -1,0 +1,99 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#ifndef MODEL_SETPOINTMANAGERSINGLEZONEREHEAT_IMPL_HPP
+#define MODEL_SETPOINTMANAGERSINGLEZONEREHEAT_IMPL_HPP
+
+#include <model/HVACComponent_Impl.hpp>
+
+namespace openstudio {
+
+namespace model {
+
+class ZoneHVACEquipmentConnections;
+
+namespace detail {
+
+  class MODEL_API SetpointManagerSingleZoneReheat_Impl : public HVACComponent_Impl {
+    Q_OBJECT;
+    Q_PROPERTY(double minimumSupplyAirTemperature READ minimumSupplyAirTemperature WRITE setMinimumSupplyAirTemperature);
+    Q_PROPERTY(double maximumSupplyAirTemperature READ maximumSupplyAirTemperature WRITE setMaximumSupplyAirTemperature);
+
+    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> controlZone READ controlZoneAsModelObject WRITE setControlZoneAsModelObject);
+   public:
+
+    SetpointManagerSingleZoneReheat_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+
+    SetpointManagerSingleZoneReheat_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
+                                         Model_Impl* model, 
+                                         bool keepHandle);
+
+    SetpointManagerSingleZoneReheat_Impl(const SetpointManagerSingleZoneReheat_Impl& other, 
+                                         Model_Impl* model,
+                                         bool keepHandles);
+
+    virtual ~SetpointManagerSingleZoneReheat_Impl();
+
+    virtual const std::vector<std::string>& outputVariableNames() const;
+
+    virtual IddObjectType iddObjectType() const;
+
+    boost::optional<ParentObject> parent() const;
+
+    std::vector<ModelObject> children() const;
+
+    bool addToNode(Node & node);
+
+    std::vector<openstudio::IdfObject> remove();
+
+    ModelObject clone(Model model);
+    
+    double minimumSupplyAirTemperature();
+    
+    void setMinimumSupplyAirTemperature( double value );
+    
+    double maximumSupplyAirTemperature();
+    
+    void setMaximumSupplyAirTemperature( double value );
+    
+    boost::optional<Node> setpointNode();
+    
+    void setSetpointNode( Node & node );
+
+    boost::optional<ThermalZone> controlZone();
+
+    void setControlZone(ThermalZone& thermalZone);
+
+    void resetControlZone();
+
+   private:
+
+    boost::optional<ModelObject> controlZoneAsModelObject();
+
+    bool setControlZoneAsModelObject(const boost::optional<ModelObject>& modelObject);
+  };
+
+} // detail
+
+} // model
+
+} // openstudio
+
+#endif // MODEL_SETPOINTMANAGERSINGLEZONEREHEAT_IMPL_HPP
+

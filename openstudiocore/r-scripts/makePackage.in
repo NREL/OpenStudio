@@ -1,0 +1,19 @@
+library(roxygen2)
+
+package.skeleton('OpenStudio',
+                 force=TRUE,
+                 code_files=c('${CMAKE_SOURCE_DIR}/r-scripts/OpenStudio-package.R',
+                              '${CMAKE_SOURCE_DIR}/r-scripts/OpenStudioAnalysis.R'))
+warnings()
+                              
+roxygenize('OpenStudio',
+           roxygen.dir='OpenStudio',
+           copy.package=FALSE,
+           overwrite=TRUE)
+warnings()
+
+# code to deal with something that may be roxygen bug
+# (may be able to remove when switch to roxygen2)
+file.copy('OpenStudio/man/OpenStudio-dash-package.Rd','OpenStudio/man/OpenStudio-package.Rd',overwrite=TRUE)
+unlink('OpenStudio/man/OpenStudio-dash-package.Rd')
+

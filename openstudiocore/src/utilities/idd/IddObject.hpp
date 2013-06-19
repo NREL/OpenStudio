@@ -1,0 +1,237 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#ifndef UTILITIES_IDD_IDDOBJECT_HPP
+#define UTILITIES_IDD_IDDOBJECT_HPP
+
+#include <utilities/UtilitiesAPI.hpp>
+#include <utilities/idd/IddObjectProperties.hpp>
+#include <utilities/idd/IddField.hpp>
+
+#include <utilities/core/Logger.hpp>
+
+#include <ostream>
+#include <vector>
+
+#include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
+
+namespace openstudio {
+
+// forward declarations
+class ExtensibleIndex;
+class IddObjectType;
+
+namespace detail {
+  class IddObject_Impl;
+} // detail
+
+/** IddObject represents an object in the Idd.  IddObject is a shared object. */
+class UTILITIES_API IddObject {
+ public:
+
+  /** @name Constructors */
+  //@{
+
+  /** Default constructor returns Catchall object. This object is provided to help users
+   *  correct typos in their object names. */
+  IddObject();
+
+  /** Copy constructor returns an IddObject that shares its data with other. */
+  IddObject(const IddObject& other);
+
+  //@}
+  /** @name Getters */
+  //@{
+
+  /** Get this IddObject's name. */
+  std::string name() const;
+
+  /** Get object type, as specified by the OPENSTUDIO_ENUM IddObjectType. Similar information to
+   *  name() for \link IddObject IddObjects \endlink stored by the \link IddFactorySingleton
+   *  IddFactory \endlink, that is type() == IddObjectType(name()) and
+   *  type().valueDescription() == name(). */
+  IddObjectType type() const;
+
+  /** Get the name of the IDD group to which this object belongs. */
+  std::string group() const;
+
+  /** Get the properties of this object. */
+  const IddObjectProperties& properties() const;
+
+  /** Get all non-extensible \link IddField IddFields\endlink. */
+  const std::vector<IddField>& nonextensibleFields() const;
+
+  /** Get this object's extensible group, that is, the vector of extensible \link IddField
+   *  IddFields \endlink that may be repeated indefinitely (except as capped by
+   *  properties().maxFields) at the end of an IdfObject following this schema. */
+  const std::vector<IddField>& extensibleGroup() const;
+
+  /** Get the IddField at index, if it exists. Returns fields in extensible groups using the
+   *  assumption that extensible groups repeat indefinitely. */
+  boost::optional<IddField> getField(unsigned index) const;
+
+  /** Get the IddField in this object named fieldName. Extensible fields are included, but they
+   *  are not named uniquely. */
+  boost::optional<IddField> getField(const std::string& fieldName) const;
+
+  /** Get the index of the IddField named fieldName. */
+  boost::optional<int> getFieldIndex(const std::string& fieldName) const;
+
+  //@}
+  /** @name Setters
+   *
+   *  Most users should not use any of the IDD setters. */
+  //@{
+
+  /** If not already present, inserts a field of type handle at the top of the object. Not for
+   *  general use. */
+  void insertHandleField();
+
+  //@}
+  /** @name Queries */
+  //@{
+
+  /** Returns the number of non-extensible fields in this object. */
+  unsigned numFields() const;
+
+  /** Returns the initial number of fields with which to populate an IdfObject constructed from
+   *  IddObject or IddObjectType. Accounts for properties().minFields,
+   *  properties().numExtensibleGroupsRequired, and IddField::properties().required. */
+  unsigned numFieldsInDefaultObject() const;
+
+  /** Returns true if name contains some form of "Version". */
+  bool isVersionObject() const;
+
+  /** Returns true if index, as used in an IdfObject following this schema, corresponds to a
+   *  non-extensible field. */
+  bool isNonextensibleField(unsigned index) const;
+
+  /** Returns true if index, as used in an IdfObject following this schema, corresponds to a
+   *  field in an extensible group. */
+  bool isExtensibleField(unsigned index) const;
+
+  /** Returns true if first IddField is of type handle. This should be true for every OpenStudio
+   *  IddObject and false for every EnergyPlus IddObject. */
+  bool hasHandleField()  const;
+
+  /** Returns true if the first IddField after the handle field, if present, is a name IddField. */
+  bool hasNameField() const;
+
+  /** Returns the index containing the name field, if hasNameField(). Otherwise, returns
+   *  boost::none. */
+  boost::optional<unsigned> nameFieldIndex() const;
+
+  /** Returns true if index, as used in an IdfObject following this schema, corresponds to a
+   *  required field. */
+  bool isRequiredField(unsigned index) const;
+
+  /** Returns true if this object has any url fields. */
+  bool hasURL() const;
+
+  /** Returns the indices of all fields of url type. */
+  std::vector<unsigned> urlFields() const;
+
+  /** Returns the ExtensibleIndex(groupIndex,fieldIndex) that corresponds to field index. Thows if
+   *  !isExtensibleField(index). */
+  ExtensibleIndex extensibleIndex(unsigned index) const;
+
+  /** Returns the overall IddObject index equivalent to extensibleIndex. Throws if IddObject
+   *  is not extensible or if extensibleIndex.field >= properties().numExtensible. */
+  unsigned index(ExtensibleIndex extensibleIndex) const;
+
+  /** Returns the reference lists to which this object belongs. This method only returns reference
+   *  lists explicitly attached the name field. (It does not include 'AllObjects', for instance.) */
+  std::vector<std::string> references() const;
+
+  /** Returns the union of all the object lists to which fields in this object can refer. */
+  std::set<std::string> objectLists() const;
+
+  /** Returns all the object lists to which IddField index refers. */
+  std::set<std::string> objectLists(unsigned index) const;
+
+  /** Returns the indices of the \link IddField IddFields \endlink in this object of object-list
+   *  type. Includes indices in the first extensible group. */
+  std::vector<unsigned> objectListFields() const;
+
+  /** Returns true if all underlying data is equal (either trivially or by exhaustive
+   *  comparison). */
+  bool operator==(const IddObject& other) const;
+
+  /** The negation of operator==. */
+  bool operator!=(const IddObject& other) const;
+
+  //@}
+  /** @name Serialization */
+  //@{
+
+  /** Load from name, group, type, and text. The first string in the IddObject text, appearing
+   *  immediately before the first comma, is the IddObject name. The group string comes from the
+   *  IddFile. If not constructed by the IddFactory, or the IddObject does not otherwise come from
+   *  the EnergyPlus or OpenStudio IDD files, type should be equal to UserCustom. The constructor
+   *  also needs the full text of the object for parsing. */
+  static boost::optional<IddObject> load(const std::string& name,
+                                         const std::string& group,
+                                         const std::string& text,
+                                         IddObjectType type);
+
+  /** \overload Sets type to IddObjectType::UserCustom. */
+  static boost::optional<IddObject> load(const std::string& name,
+                                         const std::string& group,
+                                         const std::string& text);
+
+  /** Print this object to os, in standard IDD format. */
+  std::ostream& print(std::ostream& os) const;
+
+  //@}
+ private:
+  ///@cond
+  // pointer to impl
+  boost::shared_ptr<detail::IddObject_Impl> m_impl;
+
+  // construct from impl
+  IddObject(const boost::shared_ptr<detail::IddObject_Impl>& impl);
+  ///@endcond
+
+  // configure logging
+  REGISTER_LOGGER("utilities.idd.IddObject");
+};
+
+/** \relates IddObject */
+typedef boost::optional<IddObject> OptionalIddObject;
+
+/** \relates IddObject */
+typedef std::vector<IddObject> IddObjectVector;
+
+/** \relates IddObject */
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const IddObject& iddObject);
+
+/** \relates IddObject */
+UTILITIES_API std::vector<IddObjectType> getIddObjectTypeVector(const std::vector<IddObject>& objects);
+
+/** \relates IddObject */
+UTILITIES_API std::set<IddObjectType> getIddObjectTypeSet(const std::vector<IddObject>& objects);
+
+/** Converts the vector of \link IddKey IddKeys\endlink associated with object.getField(index)
+ *  to a vector of std::string. \relates IddObject */
+UTILITIES_API std::vector<std::string> getIddKeyNames(const IddObject& object,unsigned index);
+
+} // openstudio
+
+#endif //UTILITIES_IDD_IDDOBJECT_HPP

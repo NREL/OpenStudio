@@ -1,0 +1,15 @@
+Conditioning,enumerated list,DirectlyConditioned  ;#1;#Unconditioned;#43;#IndirectlyConditioned ;#42,"T24: 
+ 
+Conditioning defines the type of space conditioning (heating/cooling) calculations required for the space that is bounded by the parent envelope.  Three values are possible: DirectlyConditioned; IndirectlyConditioned; EnclosedUnconditioned."
+Fuel Type,enumerated list,,"Title 24: TDV energy is calculated by multiplying the site energy use (electricity kWh, natural gas therms, or fuel oil or LPG gallons)
+New: Form of energy delivered to or used by a system (building, equipment, refrigeration system, HVAC system, etc.)."
+Hot Water Power per Person,decimal,,"Maximum power required for hot water, normalized by the maximum number of occupants."
+Latent Heat per Person,decimal,,"Title 24: People. Occupant density shall be based on the expected occupancy of the building and shall be the same as determined under Section 121(b)2B, if used. Sensible and latent heat gains shall be as listed in the 2001 ASHRAE Handbook- Fundamentals, Chapter 30, Table 1."
+Space Interior Mass,decimal,,"Space Interior Mass defines the heat capacity of the interior walls and furniture contained in the space bounded by the parent envelope.  Units:  lbm/ft^2 of conditioned floor area of the space bounded by the parent envelope.
+ 
+This definition is intended as a placeholder, as the interior lightweight mass will require more than one variable, and feedback from e+ perspective is requested in order to proceed with these details.
+ 
+this attribute needs to have a ""space"" component for a parent"
+Thermostat Setback,boolean,,"
+Indicates whether or not the thermostat implements a setback/setup schedule.
+Thermostats. All unitary heating and/or cooling systems including heat pumps that are not controlled by a central energy management control system (EMCS) shall have a setback thermostat.Setback Capabilities. All thermostats shall have a clock mechanism that allows the building occupant to program the temperature set points for at least four periods within 24 hours. Thermostats for heat pumps shall meet the requirements of Section 112(b)."

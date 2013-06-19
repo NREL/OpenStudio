@@ -1,0 +1,43 @@
+! File Header
+! Written by Elaine T. Hale, 15 September 2010
+
+! Version object should keep up with EnergyPlus version number.
+
+  Version,7.1;
+
+! Timestep should be > 1.
+  Timestep,6;
+
+  SimulationControl,
+    Yes,                     !- Do Zone Sizing Calculation
+    Yes,                     !- Do System Sizing Calculation
+    No,                      !- Do Plant Sizing Calculation
+    No,                      !- Run Simulation for Sizing Periods
+    Yes;                     !- Run Simulation for Weather File Run Periods
+
+! When to start, when to stop, when to trust the weather file.
+  RunPeriod,
+    ,                        !- Name
+    1,                       !- Begin Month
+    1,                       !- Begin Day of Month
+    12,                      !- End Month
+    31,                      !- End Day of Month
+    Sunday,                  !- Day of Week for Start Day
+    No,                      !- Use Weather File Holidays and Special Days
+    No,                      !- Use Weather File Daylight Saving Period
+    No,                      !- Apply Weekend Holiday Rule
+    Yes,                     !- Use Weather File Rain Indicators
+    Yes,                     !- Use Weather File Snow Indicators
+    1.0000;                  !- Number of Times Runperiod to be Repeated
+
+! This building has no surfaces, no volume, no nothing.
+  Building,
+    Abstract Building,       !- Name
+    0.0000,                  !- North Axis {deg}
+    City,                    !- Terrain
+    0.0400,                  !- Loads Convergence Tolerance Value
+    0.2000,                  !- Temperature Convergence Tolerance Value {deltaC}
+    FullInteriorAndExterior, !- Solar Distribution
+    25,                      !- Maximum Number of Warmup Days
+    6;                       !- Minimum Number of Warmup Days
+

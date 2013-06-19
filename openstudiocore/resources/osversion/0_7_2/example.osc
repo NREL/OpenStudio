@@ -1,0 +1,32 @@
+
+
+OS:Construction,
+  Interior Door,            !- Name
+  ,                         !- Surface Rendering Name
+  G05 25mm wood;            !- Outside Layer
+
+OS:Material,
+  G05 25mm wood,            !- Name
+  MediumSmooth,             !- Roughness
+  0.0254,                   !- Thickness {m}
+  0.15,                     !- Conductivity {W/m-K}
+  608,                      !- Density {kg/m3}
+  1630;                     !- Specific Heat {J/kg-K}
+
+OS:ComponentData,
+  OS:ComponentData 1,       ! Name
+  {24d7fa7b-93be-483e-8411-7ecb1fe0d5fd},  ! UUID
+  {57e834b1-94f0-4bca-b6df-87cc1304b408},  ! Version UUID
+  ,                         ! Description
+  ,                         ! Fidelity Level
+  OS_Construction,          ! Type of Object 1
+  Interior Door,            ! Name of Object 1
+  OS_Material,              ! Type of Object 2
+  G05 25mm wood;            ! Name of Object 2
+
+OS:ComponentData:Tags,
+  OS:ComponentData 1;       ! ComponentData Name
+
+OS:ComponentData:Attributes,
+  OS:ComponentData 1;       ! ComponentData Name
+

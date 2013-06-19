@@ -1,0 +1,24 @@
+#!/bin/sh
+#SBATCH --time=4:00:00 
+#SBATCH --nodes=5
+#SBATCH --account=BTP000
+
+cp DakotaInitializer.rb /dev/shm/DakotaInitializer.rb 
+cp DakotaInterface.rb /dev/shm/DakotaInterface.rb 
+cp find_dakota.rb /dev/shm/find_dakota.rb 
+cp OptimizationProblem.rb /dev/shm/OptimizationProblem.rb 
+cp RunDakotaOnTestProblem.rb /dev/shm/RunDakotaOnTestProblem.rb
+
+mkdir /dev/shm/problems
+mkdir /dev/shm/initializers
+cp ./problems/Rosenbrock.rb /dev/shm/problems/Rosenbrock.rb
+cp ./initializers/DaceLHS.rb /dev/shm/initializers/DaceLHS.rb
+  
+cd /dev/shm/
+
+ruby RunDakotaOnTestProblem.rb -o '/dev/shm/Rosenbrock_LHS_100000' -p '/dev/shm/problems/Rosenbrock.rb' -i '/dev/shm/initializers/DaceLHS.rb' -d -n $SLURM_JOB_NUM_NODES -c 8
+
+cd -
+rm -rf ~/scratch/Rosenbrock_LHS_100000/
+mkdir ~/scratch/Rosenbrock_LHS_100000/
+cp -r /dev/shm/* ~/scratch/Rosenbrock_LHS_100000

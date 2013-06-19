@@ -1,0 +1,2087 @@
+
+OS:Version,
+  {953ca1c0-7cef-4da7-a4f6-33deca4b57a1}, !- Handle
+  0.11.6;                                 !- Version Identifier
+  
+OS:Schedule:Constant,
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
+  Always On Discrete,                     !- Name
+  {0d28348a-6700-450f-9304-2196e445dc49}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {0d28348a-6700-450f-9304-2196e445dc49}, !- Handle
+  Schedule Type Limits 1,                 !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type    
+
+OS:ScheduleTypeLimits,
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Handle
+  Temperature,                            !- Name
+  ,                                       !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Continuous,                             !- Numeric Type
+  Temperature;                            !- Unit Type
+  
+OS:Schedule:Ruleset,
+  {7b9a6d38-fb98-4fb3-a65f-3acd22246ad5}, ! Handle
+  Deck Temperature,                       ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  {95b90024-04b9-42bd-bb61-cf49cd53075a}, ! Default Day Schedule Name
+  {82d14405-5ef1-4ba9-964e-5eeda4406377}, ! Summer Design Day Schedule Name
+  {95c78f52-da30-4a0d-89e9-0555bc997738}; ! Winter Design Day Schedule Name
+
+OS:Schedule:Day,
+  {95b90024-04b9-42bd-bb61-cf49cd53075a}, ! Handle
+  Deck Temperature Default,               ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  ,                                       ! Interpolate to Timestep
+  24,                                     ! Hour 1
+  0,                                      ! Minute 1
+  12.8;                                   ! Value Until Time 1
+
+OS:Schedule:Day,
+  {82d14405-5ef1-4ba9-964e-5eeda4406377}, ! Handle
+  Deck Temperature Summer Design Day,     ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  ,                                       ! Interpolate to Timestep
+  24,                                     ! Hour 1
+  0,                                      ! Minute 1
+  12.8;                                   ! Value Until Time 1
+
+OS:Schedule:Day,
+  {95c78f52-da30-4a0d-89e9-0555bc997738}, ! Handle
+  Deck Temperature Winter Design Day,     ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  ,                                       ! Interpolate to Timestep
+  24,                                     ! Hour 1
+  0,                                      ! Minute 1
+  12.8;                                   ! Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {79d1a727-7423-4a1b-a207-ba52d7b79585}, ! Handle
+  Hot Water Temperature,                  ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  {6c00760d-609c-47a8-8712-9d3bab3b8988}, ! Default Day Schedule Name
+  {b631e7a3-37a8-41e5-8135-9b04110f3595}, ! Summer Design Day Schedule Name
+  {f68485a1-707c-47b6-9d74-c28290a31dd0}; ! Winter Design Day Schedule Name
+
+OS:Schedule:Day,
+  {6c00760d-609c-47a8-8712-9d3bab3b8988}, ! Handle
+  Hot Water Temperature Default,          ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  ,                                       ! Interpolate to Timestep
+  24,                                     ! Hour 1
+  0,                                      ! Minute 1
+  67;                                     ! Value Until Time 1
+
+OS:Schedule:Day,
+  {b631e7a3-37a8-41e5-8135-9b04110f3595}, ! Handle
+  Hot Water Temperature Summer Design Day, ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  ,                                       ! Interpolate to Timestep
+  24,                                     ! Hour 1
+  0,                                      ! Minute 1
+  67;                                     ! Value Until Time 1
+
+OS:Schedule:Day,
+  {f68485a1-707c-47b6-9d74-c28290a31dd0}, ! Handle
+  Hot Water Temperature Winter Design Day, ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  ,                                       ! Interpolate to Timestep
+  24,                                     ! Hour 1
+  0,                                      ! Minute 1
+  67;                                     ! Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {65a1b0a1-d443-4036-bf41-434dd40cfc03}, ! Handle
+  Chilled Water Temperature,              ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  {5ed7a3e4-5e4a-4764-b5f5-4e86b859896a}, ! Default Day Schedule Name
+  {fb0171b5-e5d5-4644-a2f3-dace8526fb8d}, ! Summer Design Day Schedule Name
+  {60c11249-2bc8-40f9-ad01-f25308df3870}; ! Winter Design Day Schedule Name
+
+OS:Schedule:Day,
+  {5ed7a3e4-5e4a-4764-b5f5-4e86b859896a}, ! Handle
+  Chilled Water Temperature Default,      ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  ,                                       ! Interpolate to Timestep
+  24,                                     ! Hour 1
+  0,                                      ! Minute 1
+  6.7;                                    ! Value Until Time 1
+
+OS:Schedule:Day,
+  {fb0171b5-e5d5-4644-a2f3-dace8526fb8d}, ! Handle
+  Chilled Water Temperature Summer Design Day, ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  ,                                       ! Interpolate to Timestep
+  24,                                     ! Hour 1
+  0,                                      ! Minute 1
+  6.7;                                    ! Value Until Time 1
+
+OS:Schedule:Day,
+  {60c11249-2bc8-40f9-ad01-f25308df3870}, ! Handle
+  Chilled Water Temperature Winter Design Day, ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  ,                                       ! Interpolate to Timestep
+  24,                                     ! Hour 1
+  0,                                      ! Minute 1
+  6.7;                                    ! Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {cc53a423-3dc6-47ad-90d5-0154db8eccc8}, ! Handle
+  Water Heater Ambient Temperature, ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  {7eb2848e-01e0-426d-aafa-66f3edbc9660}; ! Default Day Schedule Name
+
+OS:Schedule:Day,
+  {7eb2848e-01e0-426d-aafa-66f3edbc9660}, ! Handle
+  Water Heater Ambient Temperature Default, ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  ,                                       ! Interpolate to Timestep
+  24,                                     ! Hour 1
+  0,                                      ! Minute 1
+  22;                                     ! Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {c13bffd8-644e-4f69-871f-7dcafa493644}, ! Handle
+  Water Heater Setpoint Temperature, ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  {97b084f4-4eda-4f4b-a7c9-ef8eb8825fdb}; ! Default Day Schedule Name
+
+OS:Schedule:Day,
+  {97b084f4-4eda-4f4b-a7c9-ef8eb8825fdb}, ! Handle
+  Water Heater Setpoint Temperature Default, ! Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
+  ,                                       ! Interpolate to Timestep
+  24,                                     ! Hour 1
+  0,                                      ! Minute 1
+  60;                                     ! Value Until Time 1  
+  
+OS:SetpointManager:FollowOutdoorAirTemperature,
+  {66411916-74d9-491e-8fdd-63249f651c0e}, ! Handle
+  Follow Outdoor Air Temperature,         ! Name
+  Temperature,                            ! Control Variable
+  OutdoorAirWetBulb,                      ! Reference Temperature Type
+  0,                                      ! Offset Temperature Difference {deltaC}
+  80,                                     ! Maximum Setpoint Temperature {C}
+  5,                                      ! Minimum Setpoint Temperature {C}
+  ;                                       ! Setpoint Node or NodeList Name
+
+OS:SetpointManager:OutdoorAirReset,
+  {6150d904-49c8-4db7-a235-001a6bfccac0}, !- Handle
+  Setpoint Manager Outdoor Air Reset,   !- Name
+  Temperature,                            !- Control Variable
+  22,                                     !- Setpoint at Outdoor Low Temperature {C}
+  10,                                     !- Outdoor Low Temperature {C}
+  10,                                     !- Setpoint at Outdoor High Temperature {C}
+  24,                                     !- Outdoor High Temperature {C}
+  ,                                       !- Setpoint Node or NodeList Name
+  ,                                       !- Schedule Name
+  ,                                       !- Setpoint at Outdoor Low Temperature 2 {C}
+  ,                                       !- Outdoor Low Temperature 2 {C}
+  ,                                       !- Setpoint at Outdoor High Temperature 2 {C}
+  ;                                       !- Outdoor High Temperature 2 {C}
+
+OS:SetpointManager:Scheduled,
+  {2820afd7-ae39-48d4-80e9-beed1a4d2e00}, ! Handle
+  Deck Temp SPM,                          ! Name
+  Temperature,                            ! Control Variable
+  {7b9a6d38-fb98-4fb3-a65f-3acd22246ad5}, ! Schedule Name
+  ;                                       ! Setpoint Node or NodeList Name
+
+OS:SetpointManager:Scheduled,
+  {2e8f0105-051f-4848-93fd-665d90864f10}, ! Handle
+  Hot Water SPM,                          ! Name
+  Temperature,                            ! Control Variable
+  {79d1a727-7423-4a1b-a207-ba52d7b79585}, ! Schedule Name
+  ;                                       ! Setpoint Node or NodeList Name
+
+OS:SetpointManager:Scheduled,
+  {258adc08-0f5c-4590-9dda-8e4997f4afcd}, ! Handle
+  Chilled Water SPM,                      ! Name
+  Temperature,                            ! Control Variable
+  {65a1b0a1-d443-4036-bf41-434dd40cfc03}, ! Schedule Name
+  ;                                       ! Setpoint Node or NodeList Name
+
+OS:SetpointManager:MixedAir,
+  {b27ac206-d7fc-4ada-aacc-4806c3f43a7b}, ! Handle
+  OS:SetpointManager:MixedAir 1,          ! Name
+  ,                                       ! Control Variable
+  ,                                       ! Reference Setpoint Node Name
+  ,                                       ! Fan Inlet Node Name
+  ,                                       ! Fan Outlet Node Name
+  ;                                       ! Setpoint Node or NodeList Name
+
+OS:SetpointManager:SingleZone:Reheat,
+  {52b29f2b-e01f-47bf-bbe4-620a2322df12}, ! Handle
+  OS:SetpointManager:SingleZone:Reheat 1, ! Name
+  -99,                                    ! Minimum Supply Air Temperature {C}
+  99,                                     ! Maximum Supply Air Temperature {C}
+  ,                                       ! Control Zone Name
+  ;                                       ! Setpoint Node or NodeList Name
+
+OS:Fan:ConstantVolume,
+  {c15ef75a-56db-4ec3-9720-d06294deabcc}, ! Handle
+  Constant Speed Fan,                     ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Fan Efficiency
+  ,                                       ! Pressure Rise {Pa}
+  AutoSize,                               ! Maximum Flow Rate {m3/s}
+  ,                                       ! Motor Efficiency
+  ,                                       ! Motor In Airstream Fraction
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  ;                                       ! End-Use Subcategory
+
+OS:Fan:VariableVolume,
+  {ade4771b-26f4-404b-9a94-07c5fee085ca}, ! Handle
+  Variable Speed Fan,                     ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  0.60450000000000004,                    ! Fan Efficiency
+  1017.592,                               ! Pressure Rise {Pa}
+  Autosize,                               ! Maximum Flow Rate {m3/s}
+  FixedFlowRate,                          ! Fan Power Minimum Flow Rate Input Method
+  0,                                      ! Fan Power Minimum Flow Fraction
+  0,                                      ! Fan Power Minimum Air Flow Rate {m3/s}
+  0.93000000000000005,                    ! Motor Efficiency
+  1,                                      ! Motor In Airstream Fraction
+  0.040759893999999998,                   ! Fan Power Coefficient 1
+  0.08804497,                             ! Fan Power Coefficient 2
+  -0.072926119999999997,                  ! Fan Power Coefficient 3
+  0.94373982300000003,                    ! Fan Power Coefficient 4
+  0,                                      ! Fan Power Coefficient 5
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  ;                                       ! End-Use Subcategory
+
+OS:Coil:Heating:Gas,
+  {e5360a5e-82a4-4772-96b8-a55c6d871995}, ! Handle
+  OS:Coil:Heating:Gas 1,                  ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  0.80000000000000004,                    ! Gas Burner Efficiency
+  AutoSize,                               ! Nominal Capacity {W}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  ,                                       ! Temperature Setpoint Node Name
+  0,                                      ! Parasitic Electric Load {W}
+  ,                                       ! Part Load Fraction Correlation Curve Name
+  0;                                      ! Parasitic Gas Load {W}
+
+OS:Coil:Heating:Electric,
+  {c5aca90c-39a5-4144-b4a5-4cbdc860c65e}, ! Handle
+  OS:Coil:Heating:Electric 1,             ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Efficiency
+  ,                                       ! Nominal Capacity {W}
+  ,                                       ! Air Inlet Node Name
+  ;                                       ! Air Outlet Node Name
+
+OS:Coil:Cooling:DX:SingleSpeed,
+  {2323aae7-f591-444f-9ed4-ff6eb640f190}, ! Handle
+  OS:Coil:Cooling:DX:SingleSpeed 1,       ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  Autosize,                               ! Rated Total Cooling Capacity {W}
+  Autosize,                               ! Rated Sensible Heat Ratio
+  3,                                      ! Rated COP {W/W}
+  Autosize,                               ! Rated Air Flow Rate {m3/s}
+  773.29999999999995,                     ! Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  {43241c62-f9aa-470c-877b-aed134698156}, ! Total Cooling Capacity Function of Temperature Curve Name
+  {94e3e298-d691-470d-ac68-e0271ae32bb2}, ! Total Cooling Capacity Function of Flow Fraction Curve Name
+  {8a71bbe5-637a-4261-8c9e-10d02300a49a}, ! Energy Input Ratio Function of Temperature Curve Name
+  {10a62043-5331-4374-a44c-8c540d3c6983}, ! Energy Input Ratio Function of Flow Fraction Curve Name
+  {01338ac0-de4d-4703-8c69-18d51edd0927}, ! Part Load Fraction Correlation Curve Name
+  ,                                       ! Nominal Time for Condensate Removal to Begin {s}
+  ,                                       ! Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  ,                                       ! Maximum Cycling Rate {cycles/hr}
+  ,                                       ! Latent Capacity Time Constant {s}
+  ,                                       ! Condenser Air Inlet Node Name
+  AirCooled,                              ! Condenser Type
+  0,                                      ! Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               ! Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               ! Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                                      ! Crankcase Heater Capacity {W}
+  0,                                      ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       ! Supply Water Storage Tank Name
+  ,                                       ! Condensate Collection Water Storage Tank Name
+  0,                                      ! Basin Heater Capacity {W/K}
+  10,                                     ! Basin Heater Setpoint Temperature {C}
+  ;                                       ! Basin Heater Operating Schedule Name
+
+OS:CoolingTower:SingleSpeed,
+  {c555c629-0c49-4248-9bd1-a04e0cf9e2d1}, ! Handle
+  OS:CoolingTower:SingleSpeed 1,          ! Name
+  ,                                       ! Water Inlet Node Name
+  ,                                       ! Water Outlet Node Name
+  Autosize,                               ! Design Water Flow Rate {m3/s}
+  Autosize,                               ! Design Air Flow Rate {m3/s}
+  Autosize,                               ! Fan Power at Design Air Flow Rate {W}
+  Autosize,                               ! U-Factor Times Area Value at Design Air Flow Rate {W/K}
+  Autosize,                               ! Air Flow Rate in Free Convection Regime {m3/s}
+  Autosize;                               ! U-Factor Times Area Value at Free Convection Air Flow Rate {W/K}
+
+OS:Curve:Biquadratic,
+  {43241c62-f9aa-470c-877b-aed134698156}, ! Handle
+  OS:Curve:Biquadratic 1,                 ! Name
+  0.42415000000000003,                    ! Coefficient1 Constant
+  0.044260000000000001,                   ! Coefficient2 x
+  -0.00042000000000000002,                ! Coefficient3 x**2
+  0.0033300000000000001,                  ! Coefficient4 y
+  -8.0000000000000007e-05,                ! Coefficient5 y**2
+  -0.00021000000000000001,                ! Coefficient6 x*y
+  17,                                     ! Minimum Value of x {BasedOnField A2}
+  22,                                     ! Maximum Value of x {BasedOnField A2}
+  13,                                     ! Minimum Value of y {BasedOnField A3}
+  46;                                     ! Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {94e3e298-d691-470d-ac68-e0271ae32bb2}, ! Handle
+  OS:Curve:Quadratic 1,                   ! Name
+  0.77136000000000005,                    ! Coefficient1 Constant
+  0.34053,                                ! Coefficient2 x
+  -0.11088000000000001,                   ! Coefficient3 x**2
+  0.75917999999999997,                    ! Minimum Value of x {BasedOnField A2}
+  1.1387700000000001;                     ! Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Biquadratic,
+  {8a71bbe5-637a-4261-8c9e-10d02300a49a}, ! Handle
+  OS:Curve:Biquadratic 2,                 ! Name
+  1.2364900000000001,                     ! Coefficient1 Constant
+  -0.024309999999999998,                  ! Coefficient2 x
+  0.00056999999999999998,                 ! Coefficient3 x**2
+  -0.01434,                               ! Coefficient4 y
+  0.00063000000000000003,                 ! Coefficient5 y**2
+  -0.00038000000000000002,                ! Coefficient6 x*y
+  17,                                     ! Minimum Value of x {BasedOnField A2}
+  22,                                     ! Maximum Value of x {BasedOnField A2}
+  13,                                     ! Minimum Value of y {BasedOnField A3}
+  46;                                     ! Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {10a62043-5331-4374-a44c-8c540d3c6983}, ! Handle
+  OS:Curve:Quadratic 2,                   ! Name
+  1.2055,                                 ! Coefficient1 Constant
+  -0.32952999999999999,                   ! Coefficient2 x
+  0.12307999999999999,                    ! Coefficient3 x**2
+  0.75917999999999997,                    ! Minimum Value of x {BasedOnField A2}
+  1.1387700000000001;                     ! Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Quadratic,
+  {01338ac0-de4d-4703-8c69-18d51edd0927}, ! Handle
+  OS:Curve:Quadratic 3,                   ! Name
+  0.77100000000000002,                    ! Coefficient1 Constant
+  0.22900000000000001,                    ! Coefficient2 x
+  0,                                      ! Coefficient3 x**2
+  0,                                      ! Minimum Value of x {BasedOnField A2}
+  1;                                      ! Maximum Value of x {BasedOnField A2}
+
+OS:EvaporativeCooler:Direct:ResearchSpecial,
+  {8d3b17e0-88c9-4d17-9de4-0b9dd0481b36}, ! Handle
+  OS:EvaporativeCooler:Direct:ResearchSpecial 1, ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  1,                                      ! Cooler Effectiveness
+  0,                                      ! Recirculating Water Pump Power Consumption {W}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  ,                                       ! Sensor Node Name
+  0,                                      ! Drift Loss Fraction
+  0;                                      ! Blowdown Concentration Ratio
+
+OS:AirTerminal:SingleDuct:Uncontrolled,
+  {b883cca7-f436-48ce-ad23-7e8310c7a85d}, ! Handle
+  OS:AirTerminal:SingleDuct:Uncontrolled 1, ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Inlet Air Node Name
+  ,                                       ! Zone Supply Air Node Name
+  AutoSize;                               ! Maximum Air Flow Rate {m3/s}
+
+OS:AirTerminal:SingleDuct:VAV:Reheat,
+  {293eff65-3e25-4c91-97bc-a0d600b4e09b}, ! Handle
+  AirTerminal With Gas Reheat,            ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Air Inlet Node Name
+  Autosize,                               ! Maximum Air Flow Rate {m3/s}
+  Constant,                               ! Zone Minimum Air Flow Input Method
+  0.29999999999999999,                    ! Constant Minimum Air Flow Fraction
+  0,                                      ! Fixed Minimum Air Flow Rate {m3/s}
+  ,                                       ! Minimum Air Flow Fraction Schedule Name
+  {da758cb3-2282-4b60-a6a5-a3f283ede607}, ! Reheat Coil Name
+  Autosize,                               ! Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      ! Minimum Hot Water or Steam Flow Rate {m3/s}
+  ,                                       ! Air Outlet Node Name
+  0.001,                                  ! Convergence Tolerance
+  Normal,                                 ! Damper Heating Action
+  Autocalculate,                          ! Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
+  Autocalculate,                          ! Maximum Flow Fraction During Reheat
+  35,                                     ! Maximum Reheat Air Temperature {C}
+  ;                                       ! Design Specification Outdoor Air Object Name
+
+OS:Coil:Heating:Gas,
+  {da758cb3-2282-4b60-a6a5-a3f283ede607}, ! Handle
+  OS:Coil:Heating:Gas 2,                  ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  0.80000000000000004,                    ! Gas Burner Efficiency
+  AutoSize,                               ! Nominal Capacity {W}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  ,                                       ! Temperature Setpoint Node Name
+  0,                                      ! Parasitic Electric Load {W}
+  ,                                       ! Part Load Fraction Correlation Curve Name
+  0;                                      ! Parasitic Gas Load {W}
+
+OS:AirTerminal:SingleDuct:VAV:Reheat,
+  {0ecb2b1e-1405-4f99-8a45-10ad352ed99d}, ! Handle
+  AirTerminal With Electric Reheat,       ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Air Inlet Node Name
+  Autosize,                               ! Maximum Air Flow Rate {m3/s}
+  Constant,                               ! Zone Minimum Air Flow Input Method
+  0.29999999999999999,                    ! Constant Minimum Air Flow Fraction
+  0,                                      ! Fixed Minimum Air Flow Rate {m3/s}
+  ,                                       ! Minimum Air Flow Fraction Schedule Name
+  {5fb0024b-7b12-40a7-8612-5f462dff4e2a}, ! Reheat Coil Name
+  Autosize,                               ! Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      ! Minimum Hot Water or Steam Flow Rate {m3/s}
+  ,                                       ! Air Outlet Node Name
+  0.001,                                  ! Convergence Tolerance
+  Normal,                                 ! Damper Heating Action
+  Autocalculate,                          ! Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
+  Autocalculate,                          ! Maximum Flow Fraction During Reheat
+  35;                                     ! Maximum Reheat Air Temperature {C}
+
+OS:Coil:Heating:Electric,
+  {5fb0024b-7b12-40a7-8612-5f462dff4e2a}, ! Handle
+  OS:Coil:Heating:Electric 2,             ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Efficiency
+  ,                                       ! Nominal Capacity {W}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  ;                                       ! Design Specification Outdoor Air Object Name
+
+OS:AirTerminal:SingleDuct:VAV:Reheat,
+  {cc2e44f3-2b98-4dc8-a19c-f457d3fec8db}, ! Handle
+  AirTerminal With Hot Water Reheat,      ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Air Inlet Node Name
+  Autosize,                               ! Maximum Air Flow Rate {m3/s}
+  Constant,                               ! Zone Minimum Air Flow Input Method
+  0.29999999999999999,                    ! Constant Minimum Air Flow Fraction
+  0,                                      ! Fixed Minimum Air Flow Rate {m3/s}
+  ,                                       ! Minimum Air Flow Fraction Schedule Name
+  {d39dcf38-ea17-465c-8bfa-6020a5f9e8c2}, ! Reheat Coil Name
+  Autosize,                               ! Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      ! Minimum Hot Water or Steam Flow Rate {m3/s}
+  ,                                       ! Air Outlet Node Name
+  0.001,                                  ! Convergence Tolerance
+  Normal,                                 ! Damper Heating Action
+  Autocalculate,                          ! Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
+  Autocalculate,                          ! Maximum Flow Fraction During Reheat
+  35;                                     ! Maximum Reheat Air Temperature {C}
+
+OS:Coil:Heating:Water,
+  {d39dcf38-ea17-465c-8bfa-6020a5f9e8c2}, ! Handle
+  OS:Coil:Heating:Water 1,                ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! U-Factor Times Area Value {W/K}
+  ,                                       ! Maximum Water Flow Rate {m3/s}
+  ,                                       ! Water Inlet Node Name
+  ,                                       ! Water Outlet Node Name
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  ,                                       ! Performance Input Method
+  ,                                       ! Rated Capacity {W}
+  ,                                       ! Rated Inlet Water Temperature {C}
+  ,                                       ! Rated Inlet Air Temperature {C}
+  ,                                       ! Rated Outlet Water Temperature {C}
+  ,                                       ! Rated Outlet Air Temperature {C}
+  ;                                       ! Rated Ratio for Air and Water Convection
+
+OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
+  {30e9aca9-a12e-4e4a-a264-c97ec8fd62a2}, ! Handle
+  OS:AirTerminal:SingleDuct:ParallelPIU:Reheat 1, ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  Autosize,                               ! Maximum Primary Air Flow Rate {m3/s}
+  Autosize,                               ! Maximum Secondary Air Flow Rate {m3/s}
+  Autosize,                               ! Minimum Primary Air Flow Fraction
+  Autosize,                               ! Fan On Flow Fraction
+  ,                                       ! Supply Air Inlet Node Name
+  ,                                       ! Secondary Air Inlet Node Name
+  ,                                       ! Outlet Node Name
+  ,                                       ! Reheat Coil Air Inlet Node Name
+  ,                                       ! Zone Mixer Name
+  {af9e86be-a4b3-47e7-80b3-39b3728ed07a}, ! Fan Name
+  {c58a15d8-78a8-4e27-b350-e7266fc9d676}, ! Reheat Coil Name
+  Autosize,                               ! Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      ! Minimum Hot Water or Steam Flow Rate {m3/s}
+  0.001;                                  ! Convergence Tolerance
+
+OS:Fan:ConstantVolume,
+  {af9e86be-a4b3-47e7-80b3-39b3728ed07a}, ! Handle
+  OS:Fan:ConstantVolume 1,                ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Fan Efficiency
+  ,                                       ! Pressure Rise {Pa}
+  AutoSize,                               ! Maximum Flow Rate {m3/s}
+  ,                                       ! Motor Efficiency
+  ,                                       ! Motor In Airstream Fraction
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  ;                                       ! End-Use Subcategory
+
+OS:Coil:Heating:Electric,
+  {c58a15d8-78a8-4e27-b350-e7266fc9d676}, ! Handle
+  OS:Coil:Heating:Electric 3,             ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Efficiency
+  ,                                       ! Nominal Capacity {W}
+  ,                                       ! Air Inlet Node Name
+  ;                                       ! Air Outlet Node Name
+
+OS:AirLoopHVAC:OutdoorAirSystem,
+  {4b8b842c-2628-4074-aaa1-e3636b179cce}, !- Handle
+  Air Loop HVAC Outdoor Air System 1,     !- Name
+  {41ecb3ff-c9f2-44b9-834f-09328c2649b6}, !- Controller Name
+  ,                                       !- Outdoor Air Equipment List Name
+  ,                                       !- Availability Manager List Name
+  ,                                       !- Mixed Air Node Name
+  {ca2ea505-d13e-4c3c-a2bc-c2c0348a41ec}, !- Outdoor Air Stream Node Name
+  {10382728-d838-45e0-a3a8-b5e23f9f9f23}, !- Relief Air Stream Node Name
+  ;                                       !- Return Air Stream Node Name
+
+OS:Controller:OutdoorAir,
+  {41ecb3ff-c9f2-44b9-834f-09328c2649b6}, !- Handle
+  Controller Outdoor Air 1,               !- Name
+  ,                                       !- Relief Air Outlet Node Name
+  ,                                       !- Return Air Node Name
+  ,                                       !- Mixed Air Node Name
+  ,                                       !- Actuator Node Name
+  Autosize,                               !- Minimum Outdoor Air Flow Rate {m3/s}
+  Autosize,                               !- Maximum Outdoor Air Flow Rate {m3/s}
+  NoEconomizer,                           !- Economizer Control Type
+  ModulateFlow,                           !- Economizer Control Action Type
+  28,                                     !- Economizer Maximum Limit Dry-Bulb Temperature {C}
+  64000,                                  !- Economizer Maximum Limit Enthalpy {J/kg}
+  ,                                       !- Economizer Maximum Limit Dewpoint Temperature {C}
+  ,                                       !- Electronic Enthalpy Limit Curve Name
+  -100,                                   !- Economizer Minimum Limit Dry-Bulb Temperature {C}
+  NoLockout,                              !- Lockout Type
+  FixedMinimum,                           !- Minimum Limit Type
+  ,                                       !- Minimum Outdoor Air Schedule Name
+  ,                                       !- Minimum Fraction of Outdoor Air Schedule Name
+  ,                                       !- Maximum Fraction of Outdoor Air Schedule Name
+  {c22b61ea-1b3d-4236-996d-acc40834a950}, !- Controller Mechanical Ventilation
+  ,                                       !- Time of Day Economizer Control Schedule Name
+  No,                                     !- High Humidity Control
+  ,                                       !- Humidistat Control Zone Name
+  ,                                       !- High Humidity Outdoor Air Flow Ratio
+  ,                                       !- Control High Indoor Humidity Based on Outdoor Humidity Ratio
+  BypassWhenOAFlowGreaterThanMinimum;     !- Heat Recovery Bypass Control Type
+
+OS:Controller:MechanicalVentilation,
+  {c22b61ea-1b3d-4236-996d-acc40834a950}, !- Handle
+  Controller Mechanical Ventilation 1,    !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule
+  ,                                       !- Demand Controlled Ventilation
+  ZoneSum;                                !- System Outdoor Air Method
+
+OS:Node,
+  {d4a53d23-ca16-4a01-9a97-bd302fcc08b2}, !- Handle
+  Node 1,                                 !- Name
+  ,                                       !- Inlet Port
+  {ca2ea505-d13e-4c3c-a2bc-c2c0348a41ec}; !- Outlet Port
+
+OS:Connection,
+  {ca2ea505-d13e-4c3c-a2bc-c2c0348a41ec}, !- Handle
+  Connection 1,                           !- Name
+  {d4a53d23-ca16-4a01-9a97-bd302fcc08b2}, !- Source Object
+  3,                                      !- Outlet Port
+  {4b8b842c-2628-4074-aaa1-e3636b179cce}, !- Target Object
+  6;                                      !- Inlet Port
+
+OS:Node,
+  {0d33d444-2aab-4502-b2e2-f0444bf8a529}, !- Handle
+  Node 2,                                 !- Name
+  {10382728-d838-45e0-a3a8-b5e23f9f9f23}, !- Inlet Port
+  ;                                       !- Outlet Port
+
+OS:Connection,
+  {10382728-d838-45e0-a3a8-b5e23f9f9f23}, !- Handle
+  Connection 2,                           !- Name
+  {4b8b842c-2628-4074-aaa1-e3636b179cce}, !- Source Object
+  7,                                      !- Outlet Port
+  {0d33d444-2aab-4502-b2e2-f0444bf8a529}, !- Target Object
+  2;                                      !- Inlet Port
+
+OS:Chiller:Electric:EIR,
+  {849d9618-ded0-4983-b57f-090fa2a756c0}, ! Handle
+  OS:Chiller:Electric:EIR 1,              ! Name
+  Autosize,                               ! Reference Capacity {W}
+  5.5,                                    ! Reference COP {W/W}
+  ,                                       ! Reference Leaving Chilled Water Temperature {C}
+  ,                                       ! Reference Entering Condenser Fluid Temperature {C}
+  ,                                       ! Reference Chilled Water Flow Rate {m3/s}
+  ,                                       ! Reference Condenser Fluid Flow Rate {m3/s}
+  {238cb0b4-afac-4115-8524-7778555d6cfb}, ! Cooling Capacity Function of Temperature Curve Name
+  {50d61daa-6f6c-414f-ac1a-30a0507bc220}, ! Electric Input to Cooling Output Ratio Function of Temperature Curve Name
+  {a8baa337-01eb-4156-a748-1c5028aa6282}, ! Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name
+  ,                                       ! Minimum Part Load Ratio
+  ,                                       ! Maximum Part Load Ratio
+  ,                                       ! Optimum Part Load Ratio
+  ,                                       ! Minimum Unloading Ratio
+  ,                                       ! Chilled Water Inlet Node Name
+  ,                                       ! Chilled Water Outlet Node Name
+  ,                                       ! Condenser Inlet Node Name
+  ,                                       ! Condenser Outlet Node Name
+  ,                                       ! Condenser Type
+  ,                                       ! Condenser Fan Power Ratio {W/W}
+  ,                                       ! Compressor Motor Efficiency
+  ,                                       ! Leaving Chilled Water Lower Temperature Limit {C}
+  ,                                       ! Chiller Flow Mode
+  0,                                      ! Design Heat Recovery Water Flow Rate {m3/s}
+  ,                                       ! Heat Recovery Inlet Node Name
+  ,                                       ! Heat Recovery Outlet Node Name
+  1,                                      ! Sizing Factor
+  0,                                      ! Basin Heater Capacity {W/K}
+  10,                                     ! Basin Heater Setpoint Temperature {C}
+  ;                                       ! Basin Heater Operating Schedule Name
+
+OS:Curve:Biquadratic,
+  {238cb0b4-afac-4115-8524-7778555d6cfb}, ! Handle
+  OS:Curve:Biquadratic 3,                 ! Name
+  1.0433811,                              ! Coefficient1 Constant
+  0.040707699999999999,                   ! Coefficient2 x
+  0.0004506,                              ! Coefficient3 x**2
+  -0.0041514000000000004,                 ! Coefficient4 y
+  -8.8599999999999999e-05,                ! Coefficient5 y**2
+  -0.00034670000000000002,                ! Coefficient6 x*y
+  0,                                      ! Minimum Value of x {BasedOnField A2}
+  20,                                     ! Maximum Value of x {BasedOnField A2}
+  0,                                      ! Minimum Value of y {BasedOnField A3}
+  50;                                     ! Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Biquadratic,
+  {50d61daa-6f6c-414f-ac1a-30a0507bc220}, ! Handle
+  OS:Curve:Biquadratic 4,                 ! Name
+  0.59619149999999999,                    ! Coefficient1 Constant
+  -0.0099495999999999994,                 ! Coefficient2 x
+  0.00078879999999999998,                 ! Coefficient3 x**2
+  0.0004506,                              ! Coefficient4 y
+  0.00048749999999999998,                 ! Coefficient5 y**2
+  -0.00076230000000000004,                ! Coefficient6 x*y
+  0,                                      ! Minimum Value of x {BasedOnField A2}
+  20,                                     ! Maximum Value of x {BasedOnField A2}
+  0,                                      ! Minimum Value of y {BasedOnField A3}
+  50;                                     ! Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {a8baa337-01eb-4156-a748-1c5028aa6282}, ! Handle
+  OS:Curve:Quadratic 4,                   ! Name
+  1.6853121,                              ! Coefficient1 Constant
+  -0.99934429999999996,                   ! Coefficient2 x
+  0.31403219999999998,                    ! Coefficient3 x**2
+  0,                                      ! Minimum Value of x {BasedOnField A2}
+  1.2;                                    ! Maximum Value of x {BasedOnField A2}
+
+OS:Boiler:HotWater,
+  {7741e24f-1bf9-4cb7-b035-737b8734095c}, ! Handle
+  OS:Boiler:HotWater 1,                   ! Name
+  ,                                       ! Fuel Type
+  ,                                       ! Nominal Capacity {W}
+  ,                                       ! Nominal Thermal Efficiency
+  LeavingBoiler,                                       ! Efficiency Curve Temperature Evaluation Variable
+  {7a46b48b-f003-42e6-9865-b04b98d124aa}, ! Normalized Boiler Efficiency Curve Name
+  ,                                       ! Design Water Outlet Temperature {C}
+  ,                                       ! Design Water Flow Rate {m3/s}
+  ,                                       ! Minimum Part Load Ratio
+  ,                                       ! Maximum Part Load Ratio
+  ,                                       ! Optimum Part Load Ratio
+  ,                                       ! Boiler Water Inlet Node Name
+  ,                                       ! Boiler Water Outlet Node Name
+  99,                                     ! Water Outlet Upper Temperature Limit {C}
+  VariableFlow,                           ! Boiler Flow Mode
+  0,                                      ! Parasitic Electric Load {W}
+  1;                                      ! Sizing Factor
+
+OS:Curve:Biquadratic,
+  {7a46b48b-f003-42e6-9865-b04b98d124aa}, !- Handle
+  Boiler Efficiency,                      !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 y
+  0,                                      !- Coefficient5 y**2
+  0,                                      !- Coefficient6 x*y
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1,                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of y {BasedOnField A3}
+  1,                                      !- Maximum Value of y {BasedOnField A3}
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
+  ,                                       !- Input Unit Type for X
+  ,                                       !- Input Unit Type for Y
+  ;                                       !- Output Unit Type
+
+OS:Coil:Cooling:Water,
+  {00641ad0-4d06-46e6-9dd9-9f9995c779a5}, ! Handle
+  OS:Coil:Cooling:Water 1,                ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Design Water Flow Rate {m3/s}
+  ,                                       ! Design Air Flow Rate {m3/s}
+  ,                                       ! Design Inlet Water Temperature {C}
+  ,                                       ! Design Inlet Air Temperature {C}
+  ,                                       ! Design Outlet Air Temperature {C}
+  ,                                       ! Design Inlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       ! Design Outlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       ! Water Inlet Node Name
+  ,                                       ! Water Outlet Node Name
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  ,                                       ! Type of Analysis
+  ;                                       ! Heat Exchanger Configuration
+
+OS:Coil:Heating:Water,
+  {32cc80f2-b098-4fa2-96c7-ac7159ed5366}, ! Handle
+  OS:Coil:Heating:Water 2,                ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! U-Factor Times Area Value {W/K}
+  ,                                       ! Maximum Water Flow Rate {m3/s}
+  ,                                       ! Water Inlet Node Name
+  ,                                       ! Water Outlet Node Name
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  ,                                       ! Performance Input Method
+  ,                                       ! Rated Capacity {W}
+  ,                                       ! Rated Inlet Water Temperature {C}
+  ,                                       ! Rated Inlet Air Temperature {C}
+  ,                                       ! Rated Outlet Water Temperature {C}
+  ,                                       ! Rated Outlet Air Temperature {C}
+  ;                                       ! Rated Ratio for Air and Water Convection
+
+OS:Pump:VariableSpeed,
+  {c04fc7dc-8d89-416a-95ef-55ad62300ac5}, ! Handle
+  OS:Pump:VariableSpeed 1,                ! Name
+  ,                                       ! Inlet Node Name
+  ,                                       ! Outlet Node Name
+  ,                                       ! Rated Flow Rate {m3/s}
+  ,                                       ! Rated Pump Head {Pa}
+  ,                                       ! Rated Power Consumption {W}
+  ,                                       ! Motor Efficiency
+  ,                                       ! Fraction of Motor Inefficiencies to Fluid Stream
+  ,                                       ! Coefficient 1 of the Part Load Performance Curve
+  ,                                       ! Coefficient 2 of the Part Load Performance Curve
+  ,                                       ! Coefficient 3 of the Part Load Performance Curve
+  ,                                       ! Coefficient 4 of the Part Load Performance Curve
+  ,                                       ! Minimum Flow Rate {m3/s}
+  ,                                       ! Pump Control Type
+  ;                                       ! Pump Flow Rate Schedule Name
+
+OS:Pump:ConstantSpeed,
+  {179abade-266d-45a5-a002-0bfe1caeeb23}, !- Handle
+  Pump Constant Speed,                  !- Name
+  ,                                       !- Inlet Node Name
+  ,                                       !- Outlet Node Name
+  autosize,                               !- Rated Flow Rate {m3/s}
+  179352,                                 !- Rated Pump Head {Pa}
+  autosize,                               !- Rated Power Consumption {W}
+  0.9,                                    !- Motor Efficiency
+  0,                                      !- Fraction of Motor Inefficiencies to Fluid Stream
+  Intermittent,                           !- Pump Control Type
+  ,                                       !- Pump Flow Rate Schedule
+  ,                                       !- Pump Curve
+  ,                                       !- Impeller Diameter
+  ,                                       !- Rotational Speed
+  ,                                       !- Zone
+  ;                                       !- Skin Loss Radiative Fraction
+
+OS:ZoneHVAC:PackagedTerminalHeatPump,
+  {b9232216-7c91-4457-9cda-1df2300bb3d4}, ! Handle
+  OS:ZoneHVAC:PackagedTerminalHeatPump 1, ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  OutdoorAir:Mixer,                       ! Outdoor Air Mixer Object Type
+  ,                                       ! Outdoor Air Mixer Name
+  Autosize,                               ! Supply Air Flow Rate During Cooling Operation {m3/s}
+  Autosize,                               ! Supply Air Flow Rate During Heating Operation {m3/s}
+  Autosize,                               ! Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  Autosize,                               ! Outdoor Air Flow Rate During Cooling Operation {m3/s}
+  Autosize,                               ! Outdoor Air Flow Rate During Heating Operation {m3/s}
+  Autosize,                               ! Outdoor Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  {4bbc8798-4a94-470b-a2da-51224a40ea4b}, ! Supply Air Fan Name
+  {cff8b2af-5e9b-4b82-9e96-35b6084412ca}, ! Heating Coil Name
+  ,                                       ! Heating Convergence Tolerance {dimensionless}
+  ,                                       ! Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  {5ad5d300-c7a5-4409-8b51-83efb1bf2a51}, ! Cooling Coil Name
+  ,                                       ! Cooling Convergence Tolerance {dimensionless}
+  {b5ca4420-c4b6-4421-a456-8db199fe27e0}, ! Supplemental Heating Coil Name
+  Autosize,                               ! Maximum Supply Air Temperature from Supplemental Heater {C}
+  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
+  ,                                       ! Fan Placement
+  ;                                       ! Supply Air Fan Operating Mode Schedule Name
+
+OS:Coil:Heating:DX:SingleSpeed,
+  {cff8b2af-5e9b-4b82-9e96-35b6084412ca}, ! Handle
+  OS:Coil:Heating:DX:SingleSpeed 2,       ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  Autosize,                               ! Rated Total Heating Capacity {W}
+  5,                                      ! Rated COP {W/W}
+  Autosize,                               ! Rated Air Flow Rate {m3/s}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  {b43603f6-17c3-480d-9004-483799d9253d}, ! Total Heating Capacity Function of Temperature Curve Name
+  {534fa949-4c11-4649-9964-f6841153ab04}, ! Total Heating Capacity Function of Flow Fraction Curve Name
+  {a00ed207-a7db-4f06-8c4a-0b86f3343171}, ! Energy Input Ratio Function of Temperature Curve Name
+  {f384abeb-7180-4325-8d40-23c55efced39}, ! Energy Input Ratio Function of Flow Fraction Curve Name
+  {59fe7184-de4f-4932-9be5-ee6d7b784bdf}, ! Part Load Fraction Correlation Curve Name
+  ,                                       ! Defrost Energy Input Ratio Function of Temperature Curve Name
+  ,                                       ! Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
+  ,                                       ! Crankcase Heater Capacity {W}
+  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  Resistive,                              ! Defrost Strategy
+  Timed,                                  ! Defrost Control
+  0.16666700000000001,                    ! Defrost Time Period Fraction
+  2000;                                   ! Resistive Defrost Heater Capacity {W}
+
+OS:Curve:Biquadratic,
+  {b43603f6-17c3-480d-9004-483799d9253d}, ! Handle
+  OS:Curve:Biquadratic 11,                ! Name
+  0.75874600000000003,                    ! Coefficient1 Constant
+  0,                                      ! Coefficient2 x
+  0,                                      ! Coefficient3 x**2
+  0.027626000000000001,                   ! Coefficient4 y
+  0.00014871599999999999,                 ! Coefficient5 y**2
+  0,                                      ! Coefficient6 x*y
+  0,                                      ! Minimum Value of x {BasedOnField A2}
+  1,                                      ! Maximum Value of x {BasedOnField A2}
+  0,                                      ! Minimum Value of y {BasedOnField A3}
+  1;                                      ! Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {534fa949-4c11-4649-9964-f6841153ab04}, ! Handle
+  OS:Curve:Quadratic 14,                  ! Name
+  0.83999999999999997,                    ! Coefficient1 Constant
+  0.16,                                   ! Coefficient2 x
+  0,                                      ! Coefficient3 x**2
+  0.5,                                    ! Minimum Value of x {BasedOnField A2}
+  1.5;                                    ! Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Biquadratic,
+  {a00ed207-a7db-4f06-8c4a-0b86f3343171}, ! Handle
+  OS:Curve:Biquadratic 12,                ! Name
+  1.19248,                                ! Coefficient1 Constant
+  -0.030043799999999999,                  ! Coefficient2 x
+  0.0010374500000000001,                  ! Coefficient3 x**2
+  0,                                      ! Coefficient4 y
+  0,                                      ! Coefficient5 y**2
+  0,                                      ! Coefficient6 x*y
+  -20,                                    ! Minimum Value of x {BasedOnField A2}
+  20,                                     ! Maximum Value of x {BasedOnField A2}
+  0,                                      ! Minimum Value of y {BasedOnField A3}
+  1;                                      ! Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {f384abeb-7180-4325-8d40-23c55efced39}, ! Handle
+  OS:Curve:Quadratic 15,                  ! Name
+  1.3824000000000001,                     ! Coefficient1 Constant
+  -0.43359999999999999,                   ! Coefficient2 x
+  0.051200000000000002,                   ! Coefficient3 x**2
+  0,                                      ! Minimum Value of x {BasedOnField A2}
+  1;                                      ! Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Quadratic,
+  {59fe7184-de4f-4932-9be5-ee6d7b784bdf}, ! Handle
+  OS:Curve:Quadratic 16,                  ! Name
+  0.84999999999999998,                    ! Coefficient1 Constant
+  0.14999999999999999,                    ! Coefficient2 x
+  0,                                      ! Coefficient3 x**2
+  0,                                      ! Minimum Value of x {BasedOnField A2}
+  1;                                      ! Maximum Value of x {BasedOnField A2}
+
+OS:Coil:Cooling:DX:SingleSpeed,
+  {5ad5d300-c7a5-4409-8b51-83efb1bf2a51}, ! Handle
+  OS:Coil:Cooling:DX:SingleSpeed 3,       ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  Autosize,                               ! Rated Total Cooling Capacity {W}
+  Autosize,                               ! Rated Sensible Heat Ratio
+  3,                                      ! Rated COP {W/W}
+  Autosize,                               ! Rated Air Flow Rate {m3/s}
+  773.29999999999995,                     ! Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  {5dc1abb4-803b-4d9e-bf8b-97899fd0a813}, ! Total Cooling Capacity Function of Temperature Curve Name
+  {204583b7-c33a-475a-a595-ad0d727f9042}, ! Total Cooling Capacity Function of Flow Fraction Curve Name
+  {791d47cb-c341-4f17-bbd7-246e6afd3eeb}, ! Energy Input Ratio Function of Temperature Curve Name
+  {80806e14-f8a5-49c7-9788-9e0d7c19ea0c}, ! Energy Input Ratio Function of Flow Fraction Curve Name
+  {7c68d192-6009-46af-877c-409d2821006f}, ! Part Load Fraction Correlation Curve Name
+  ,                                       ! Nominal Time for Condensate Removal to Begin {s}
+  ,                                       ! Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  ,                                       ! Maximum Cycling Rate {cycles/hr}
+  ,                                       ! Latent Capacity Time Constant {s}
+  ,                                       ! Condenser Air Inlet Node Name
+  AirCooled,                              ! Condenser Type
+  0,                                      ! Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               ! Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               ! Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                                      ! Crankcase Heater Capacity {W}
+  0,                                      ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       ! Supply Water Storage Tank Name
+  ,                                       ! Condensate Collection Water Storage Tank Name
+  0,                                      ! Basin Heater Capacity {W/K}
+  10,                                     ! Basin Heater Setpoint Temperature {C}
+  ;                                       ! Basin Heater Operating Schedule Name
+
+OS:Curve:Biquadratic,
+  {5dc1abb4-803b-4d9e-bf8b-97899fd0a813}, ! Handle
+  OS:Curve:Biquadratic 9,                 ! Name
+  0.42415000000000003,                    ! Coefficient1 Constant
+  0.044260000000000001,                   ! Coefficient2 x
+  -0.00042000000000000002,                ! Coefficient3 x**2
+  0.0033300000000000001,                  ! Coefficient4 y
+  -8.0000000000000007e-05,                ! Coefficient5 y**2
+  -0.00021000000000000001,                ! Coefficient6 x*y
+  17,                                     ! Minimum Value of x {BasedOnField A2}
+  22,                                     ! Maximum Value of x {BasedOnField A2}
+  13,                                     ! Minimum Value of y {BasedOnField A3}
+  46;                                     ! Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {204583b7-c33a-475a-a595-ad0d727f9042}, ! Handle
+  OS:Curve:Quadratic 11,                  ! Name
+  0.77136000000000005,                    ! Coefficient1 Constant
+  0.34053,                                ! Coefficient2 x
+  -0.11088000000000001,                   ! Coefficient3 x**2
+  0.75917999999999997,                    ! Minimum Value of x {BasedOnField A2}
+  1.1387700000000001;                     ! Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Biquadratic,
+  {791d47cb-c341-4f17-bbd7-246e6afd3eeb}, ! Handle
+  OS:Curve:Biquadratic 10,                ! Name
+  1.2364900000000001,                     ! Coefficient1 Constant
+  -0.024309999999999998,                  ! Coefficient2 x
+  0.00056999999999999998,                 ! Coefficient3 x**2
+  -0.01434,                               ! Coefficient4 y
+  0.00063000000000000003,                 ! Coefficient5 y**2
+  -0.00038000000000000002,                ! Coefficient6 x*y
+  17,                                     ! Minimum Value of x {BasedOnField A2}
+  22,                                     ! Maximum Value of x {BasedOnField A2}
+  13,                                     ! Minimum Value of y {BasedOnField A3}
+  46;                                     ! Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {80806e14-f8a5-49c7-9788-9e0d7c19ea0c}, ! Handle
+  OS:Curve:Quadratic 12,                  ! Name
+  1.2055,                                 ! Coefficient1 Constant
+  -0.32952999999999999,                   ! Coefficient2 x
+  0.12307999999999999,                    ! Coefficient3 x**2
+  0.75917999999999997,                    ! Minimum Value of x {BasedOnField A2}
+  1.1387700000000001;                     ! Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Quadratic,
+  {7c68d192-6009-46af-877c-409d2821006f}, ! Handle
+  OS:Curve:Quadratic 13,                  ! Name
+  0.77100000000000002,                    ! Coefficient1 Constant
+  0.22900000000000001,                    ! Coefficient2 x
+  0,                                      ! Coefficient3 x**2
+  0,                                      ! Minimum Value of x {BasedOnField A2}
+  1;                                      ! Maximum Value of x {BasedOnField A2}
+
+OS:Fan:ConstantVolume,
+  {4bbc8798-4a94-470b-a2da-51224a40ea4b}, ! Handle
+  OS:Fan:ConstantVolume 3,                ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Fan Efficiency
+  ,                                       ! Pressure Rise {Pa}
+  AutoSize,                               ! Maximum Flow Rate {m3/s}
+  ,                                       ! Motor Efficiency
+  ,                                       ! Motor In Airstream Fraction
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  ;                                       ! End-Use Subcategory
+
+OS:Coil:Heating:Electric,
+  {b5ca4420-c4b6-4421-a456-8db199fe27e0}, ! Handle
+  OS:Coil:Heating:Electric 5,             ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Efficiency
+  ,                                       ! Nominal Capacity {W}
+  ,                                       ! Air Inlet Node Name
+  ;                                       ! Air Outlet Node Name
+
+OS:ZoneHVAC:PackagedTerminalAirConditioner,
+  {1be22621-ed22-48ec-96e7-12724604833d}, ! Handle
+  OS:ZoneHVAC:PackagedTerminalAirConditioner 1, ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  OutdoorAir:Mixer,                       ! Outdoor Air Mixer Object Type
+  ,                                       ! Outdoor Air Mixer Name
+  Autosize,                               ! Supply Air Flow Rate During Cooling Operation {m3/s}
+  Autosize,                               ! Supply Air Flow Rate During Heating Operation {m3/s}
+  Autosize,                               ! Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  Autosize,                               ! Outdoor Air Flow Rate During Cooling Operation {m3/s}
+  Autosize,                               ! Outdoor Air Flow Rate During Heating Operation {m3/s}
+  Autosize,                               ! Outdoor Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  {ee8dd059-19cf-4a49-9057-a73c2da0df82}, ! Supply Air Fan Name
+  {088c33d6-4a37-474d-9b5f-6dccbb3a0094}, ! Heating Coil Name
+  {9c508114-016d-4f8e-a2d1-7742c37adb80}, ! Cooling Coil Name
+  DrawThrough,                            ! Fan Placement
+  ;                                       ! Supply Air Fan Operating Mode Schedule Name
+
+OS:Coil:Cooling:DX:SingleSpeed,
+  {9c508114-016d-4f8e-a2d1-7742c37adb80}, ! Handle
+  OS:Coil:Cooling:DX:SingleSpeed 4,       ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  Autosize,                               ! Rated Total Cooling Capacity {W}
+  Autosize,                               ! Rated Sensible Heat Ratio
+  3,                                      ! Rated COP {W/W}
+  Autosize,                               ! Rated Air Flow Rate {m3/s}
+  773.29999999999995,                     ! Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  {853e4690-4d49-4d38-9962-59d15b3d09b3}, ! Total Cooling Capacity Function of Temperature Curve Name
+  {e99b66b4-1ab9-437b-8ca0-5849dc849d9e}, ! Total Cooling Capacity Function of Flow Fraction Curve Name
+  {31697454-5729-4998-8102-80caa958a63d}, ! Energy Input Ratio Function of Temperature Curve Name
+  {2bbdacce-20de-4994-859a-86ca6bddb6ec}, ! Energy Input Ratio Function of Flow Fraction Curve Name
+  {2886c9fb-8864-4ab6-ab43-24ef99fa818c}, ! Part Load Fraction Correlation Curve Name
+  ,                                       ! Nominal Time for Condensate Removal to Begin {s}
+  ,                                       ! Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  ,                                       ! Maximum Cycling Rate {cycles/hr}
+  ,                                       ! Latent Capacity Time Constant {s}
+  ,                                       ! Condenser Air Inlet Node Name
+  AirCooled,                              ! Condenser Type
+  0,                                      ! Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               ! Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               ! Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                                      ! Crankcase Heater Capacity {W}
+  0,                                      ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       ! Supply Water Storage Tank Name
+  ,                                       ! Condensate Collection Water Storage Tank Name
+  0,                                      ! Basin Heater Capacity {W/K}
+  10,                                     ! Basin Heater Setpoint Temperature {C}
+  ;                                       ! Basin Heater Operating Schedule Name
+
+OS:Curve:Biquadratic,
+  {853e4690-4d49-4d38-9962-59d15b3d09b3}, ! Handle
+  OS:Curve:Biquadratic 13,                ! Name
+  0.42415000000000003,                    ! Coefficient1 Constant
+  0.044260000000000001,                   ! Coefficient2 x
+  -0.00042000000000000002,                ! Coefficient3 x**2
+  0.0033300000000000001,                  ! Coefficient4 y
+  -8.0000000000000007e-05,                ! Coefficient5 y**2
+  -0.00021000000000000001,                ! Coefficient6 x*y
+  17,                                     ! Minimum Value of x {BasedOnField A2}
+  22,                                     ! Maximum Value of x {BasedOnField A2}
+  13,                                     ! Minimum Value of y {BasedOnField A3}
+  46;                                     ! Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {e99b66b4-1ab9-437b-8ca0-5849dc849d9e}, ! Handle
+  OS:Curve:Quadratic 17,                  ! Name
+  0.77136000000000005,                    ! Coefficient1 Constant
+  0.34053,                                ! Coefficient2 x
+  -0.11088000000000001,                   ! Coefficient3 x**2
+  0.75917999999999997,                    ! Minimum Value of x {BasedOnField A2}
+  1.1387700000000001;                     ! Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Biquadratic,
+  {31697454-5729-4998-8102-80caa958a63d}, ! Handle
+  OS:Curve:Biquadratic 14,                ! Name
+  1.2364900000000001,                     ! Coefficient1 Constant
+  -0.024309999999999998,                  ! Coefficient2 x
+  0.00056999999999999998,                 ! Coefficient3 x**2
+  -0.01434,                               ! Coefficient4 y
+  0.00063000000000000003,                 ! Coefficient5 y**2
+  -0.00038000000000000002,                ! Coefficient6 x*y
+  17,                                     ! Minimum Value of x {BasedOnField A2}
+  22,                                     ! Maximum Value of x {BasedOnField A2}
+  13,                                     ! Minimum Value of y {BasedOnField A3}
+  46;                                     ! Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {2bbdacce-20de-4994-859a-86ca6bddb6ec}, ! Handle
+  OS:Curve:Quadratic 18,                  ! Name
+  1.2055,                                 ! Coefficient1 Constant
+  -0.32952999999999999,                   ! Coefficient2 x
+  0.12307999999999999,                    ! Coefficient3 x**2
+  0.75917999999999997,                    ! Minimum Value of x {BasedOnField A2}
+  1.1387700000000001;                     ! Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Quadratic,
+  {2886c9fb-8864-4ab6-ab43-24ef99fa818c}, ! Handle
+  OS:Curve:Quadratic 19,                  ! Name
+  0.77100000000000002,                    ! Coefficient1 Constant
+  0.22900000000000001,                    ! Coefficient2 x
+  0,                                      ! Coefficient3 x**2
+  0,                                      ! Minimum Value of x {BasedOnField A2}
+  1;                                      ! Maximum Value of x {BasedOnField A2}
+
+OS:Fan:ConstantVolume,
+  {ee8dd059-19cf-4a49-9057-a73c2da0df82}, ! Handle
+  OS:Fan:ConstantVolume 4,                ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Fan Efficiency
+  ,                                       ! Pressure Rise {Pa}
+  AutoSize,                               ! Maximum Flow Rate {m3/s}
+  ,                                       ! Motor Efficiency
+  ,                                       ! Motor In Airstream Fraction
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  ;                                       ! End-Use Subcategory
+
+OS:Coil:Heating:Water,
+  {088c33d6-4a37-474d-9b5f-6dccbb3a0094}, ! Handle
+  OS:Coil:Heating:Water 3,                ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! U-Factor Times Area Value {W/K}
+  ,                                       ! Maximum Water Flow Rate {m3/s}
+  ,                                       ! Water Inlet Node Name
+  ,                                       ! Water Outlet Node Name
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  ,                                       ! Performance Input Method
+  ,                                       ! Rated Capacity {W}
+  ,                                       ! Rated Inlet Water Temperature {C}
+  ,                                       ! Rated Inlet Air Temperature {C}
+  ,                                       ! Rated Outlet Water Temperature {C}
+  ,                                       ! Rated Outlet Air Temperature {C}
+  ;                                       ! Rated Ratio for Air and Water Convection
+
+OS:DistrictHeating,
+  {518f05fd-6a27-4cd2-a1f9-b8b6f1396f9c}, ! Handle
+  OS:DistrictHeating 1,                   ! Name
+  ,                                       ! Hot Water Inlet Node Name
+  ,                                       ! Hot Water Outlet Node Name
+  1000000;                                ! Nominal Capacity {W}
+
+OS:DistrictCooling,
+  {f2c9dc18-ae6c-46e5-adff-e89c4311ab60}, ! Handle
+  OS:DistrictCooling 1,                   ! Name
+  ,                                       ! Chilled Water Inlet Node Name
+  ,                                       ! Chilled Water Outlet Node Name
+  1000000;                                ! Nominal Capacity {W}
+
+OS:Pipe:Adiabatic,
+  {b28f49ea-8022-4948-ae82-57814a3a8440}, ! Handle
+  OS:Pipe:Adiabatic 1,                    ! Name
+  ,                                       ! Inlet Node Name
+  ;                                       ! Outlet Node Name
+
+OS:Coil:Cooling:DX:TwoSpeed,
+  {54e53f96-6e42-4a2a-ad2c-4cd7ff319949}, ! Handle
+  OS:Coil:Cooling:DX:TwoSpeed 1,          ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  Autosize,                               ! Rated High Speed Total Cooling Capacity {W}
+  Autosize,                               ! Rated High Speed Sensible Heat Ratio
+  3,                                      ! Rated High Speed COP {W/W}
+  Autosize,                               ! Rated High Speed Air Flow Rate {m3/s}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  {48e7ca48-b18e-4e05-a121-58d6bb2557e8}, ! Total Cooling Capacity Function of Temperature Curve Name
+  {ac5008c5-1561-4ff3-9b0c-f3266f339167}, ! Total Cooling Capacity Function of Flow Fraction Curve Name
+  {ea204968-f836-4edb-a943-90cd3d0b24e9}, ! Energy Input Ratio Function of Temperature Curve Name
+  {ef923f2e-264d-4134-885c-e56d5a84c2bc}, ! Energy Input Ratio Function of Flow Fraction Curve Name
+  {61367b7a-17c4-4320-939b-8dffe232f093}, ! Part Load Fraction Correlation Curve Name
+  Autosize,                               ! Rated Low Speed Total Cooling Capacity {W}
+  0.69,                                   ! Rated Low Speed Sensible Heat Ratio
+  3,                                      ! Rated Low Speed COP {W/W}
+  ,                                       ! Rated Low Speed Air Flow Rate {m3/s}
+  {938a4702-47e7-4432-9c0c-41fb0ac9d663}, ! Low Speed Total Cooling Capacity Function of Temperature Curve Name
+  {24b65f08-e434-462e-8421-3b7f7255d8e5}, ! Low Speed Energy Input Ratio Function of Temperature Curve Name
+  ,                                       ! Condenser Air Inlet Node Name
+  AirCooled,                              ! Condenser Type
+  0,                                      ! High Speed Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               ! High Speed Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               ! High Speed Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                                      ! Low Speed Evaporative Condenser Effectiveness {dimensionless}
+  Autosize,                               ! Low Speed Evaporative Condenser Air Flow Rate {m3/s}
+  Autosize,                               ! Low Speed Evaporative Condenser Pump Rated Power Consumption {W}
+  ,                                       ! Supply Water Storage Tank Name
+  ,                                       ! Condensate Collection Water Storage Tank Name
+  10,                                     ! Basin Heater Capacity {W/K}
+  2,                                      ! Basin Heater Setpoint Temperature {C}
+  ;                                       ! Basin Heater Operating Schedule Name
+
+OS:Curve:Quadratic,
+  {ac5008c5-1561-4ff3-9b0c-f3266f339167}, ! Handle
+  OS:Curve:Quadratic 20,                  ! Name
+  0.77136,                                ! Coefficient1 Constant
+  0.34053,                                ! Coefficient2 x
+  -0.11088,                               ! Coefficient3 x**2
+  0.75918,                                ! Minimum Value of x {BasedOnField A2}
+  1.13877;                                ! Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Biquadratic,
+  {ea204968-f836-4edb-a943-90cd3d0b24e9}, ! Handle
+  OS:Curve:Biquadratic 22,                ! Name
+  1.23649,                                ! Coefficient1 Constant
+  -0.02431,                               ! Coefficient2 x
+  0.00057,                                ! Coefficient3 x**2
+  -0.01434,                               ! Coefficient4 y
+  0.00063,                                ! Coefficient5 y**2
+  -0.00038,                               ! Coefficient6 x*y
+  17,                                     ! Minimum Value of x {BasedOnField A2}
+  22,                                     ! Maximum Value of x {BasedOnField A2}
+  13,                                     ! Minimum Value of y {BasedOnField A3}
+  46;                                     ! Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {ef923f2e-264d-4134-885c-e56d5a84c2bc}, ! Handle
+  OS:Curve:Quadratic 21,                  ! Name
+  1.2055,                                 ! Coefficient1 Constant
+  -0.32953,                               ! Coefficient2 x
+  0.12308,                                ! Coefficient3 x**2
+  0.75918,                                ! Minimum Value of x {BasedOnField A2}
+  1.13877;                                ! Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Quadratic,
+  {61367b7a-17c4-4320-939b-8dffe232f093}, ! Handle
+  OS:Curve:Quadratic 22,                  ! Name
+  0.771,                                  ! Coefficient1 Constant
+  0.229,                                  ! Coefficient2 x
+  0,                                      ! Coefficient3 x**2
+  0,                                      ! Minimum Value of x {BasedOnField A2}
+  1;                                      ! Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Biquadratic,
+  {938a4702-47e7-4432-9c0c-41fb0ac9d663}, ! Handle
+  OS:Curve:Biquadratic 23,                ! Name
+  0.42415,                                ! Coefficient1 Constant
+  0.04426,                                ! Coefficient2 x
+  -0.00042,                               ! Coefficient3 x**2
+  0.00333,                                ! Coefficient4 y
+  -0.00008,                               ! Coefficient5 y**2
+  -0.00021,                               ! Coefficient6 x*y
+  17.0,                                   ! Minimum Value of x {BasedOnField A2}
+  22.0,                                   ! Maximum Value of x {BasedOnField A2}
+  13.0,                                   ! Minimum Value of y {BasedOnField A3}
+  46.0;                                   ! Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Biquadratic,
+  {24b65f08-e434-462e-8421-3b7f7255d8e5}, ! Handle
+  OS:Curve:Biquadratic 24,                ! Name
+  1.23649,                                ! Coefficient1 Constant
+  -0.02431,                               ! Coefficient2 x
+  0.00057,                                ! Coefficient3 x**2
+  -0.01434,                               ! Coefficient4 y
+  0.00063,                                ! Coefficient5 y**2
+  -0.00038,                               ! Coefficient6 x*y
+  17.0,                                   ! Minimum Value of x {BasedOnField A2}
+  22.0,                                   ! Maximum Value of x {BasedOnField A2}
+  13.0,                                   ! Minimum Value of y {BasedOnField A3}
+  46.0;                                   ! Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Biquadratic,
+  {48e7ca48-b18e-4e05-a121-58d6bb2557e8}, ! Handle
+  OS:Curve:Biquadratic 25,                ! Name
+  0.42415,                                ! Coefficient1 Constant
+  0.04426,                                ! Coefficient2 x
+  -0.00042,                               ! Coefficient3 x**2
+  0.00333,                                ! Coefficient4 y
+  -8e-005,                                ! Coefficient5 y**2
+  -0.00021,                               ! Coefficient6 x*y
+  17,                                     ! Minimum Value of x {BasedOnField A2}
+  22,                                     ! Maximum Value of x {BasedOnField A2}
+  13,                                     ! Minimum Value of y {BasedOnField A3}
+  46;                                     ! Maximum Value of y {BasedOnField A3}
+
+OS:WaterHeater:Mixed,
+  {a5780efe-a3d2-4211-a0a1-66f758539f62}, ! Handle
+  OS:WaterHeater:Mixed,                   ! Name
+  0.3785,                                 ! Tank Volume {m3}
+  {c13bffd8-644e-4f69-871f-7dcafa493644}, ! Setpoint Temperature Schedule Name
+  2,                                      ! Deadband Temperature Difference {deltaC}
+  82.22,                                  ! Maximum Temperature Limit {C}
+  Cycle,                                  ! Heater Control Type
+  845000,                                 ! Heater Maximum Capacity {W}
+  ,                                       ! Heater Minimum Capacity {W}
+  ,                                       ! Heater Ignition Minimum Flow Rate {m3/s}
+  ,                                       ! Heater Ignition Delay {s}
+  NaturalGas,                             ! Heater Fuel Type
+  0.8,                                    ! Heater Thermal Efficiency
+  ,                                       ! Part Load Factor Curve Name
+  20,                                     ! Off Cycle Parasitic Fuel Consumption Rate {W}
+  NaturalGas,                             ! Off Cycle Parasitic Fuel Type
+  0.8,                                    ! Off Cycle Parasitic Heat Fraction to Tank
+  ,                                       ! On Cycle Parasitic Fuel Consumption Rate {W}
+  NaturalGas,                             ! On Cycle Parasitic Fuel Type
+  ,                                       ! On Cycle Parasitic Heat Fraction to Tank
+  Schedule,                               ! Ambient Temperature Indicator
+  {cc53a423-3dc6-47ad-90d5-0154db8eccc8}, ! Ambient Temperature Schedule Name
+  ,                                       ! Ambient Temperature Thermal Zone Name
+  ,                                       ! Ambient Temperature Outdoor Air Node Name
+  6,                                      ! Off Cycle Loss Coefficient to Ambient Temperature {W/K}
+  ,                                       ! Off Cycle Loss Fraction to Thermal Zone
+  6,                                      ! On Cycle Loss Coefficient to Ambient Temperature {W/K}
+  ,                                       ! On Cycle Loss Fraction to Thermal Zone
+  ,                                       ! Peak Use Flow Rate {m3/s}
+  ,                                       ! Use Flow Rate Fraction Schedule Name
+  ,                                       ! Cold Water Supply Temperature Schedule Name
+  ,                                       ! Use Side Inlet Node Name
+  ,                                       ! Use Side Outlet Node Name
+  1,                                      ! Use Side Effectiveness
+  ,                                       ! Source Side Inlet Node Name
+  ,                                       ! Source Side Outlet Node Name
+  1,                                      ! Source Side Effectiveness
+  autosize,                               ! Use Side Design Flow Rate {m3/s}
+  autosize,                               ! Source Side Design Flow Rate {m3/s}
+  1.5;                                    ! Indirect Water Heating Recovery Time {hr}
+
+OS:WaterUse:Connections,
+  {dd7dec71-07dd-4fc1-80a8-3794cd5a8083}, ! Handle
+  Water Use Connection,                   ! Name
+  ,                                       ! Inlet Node Name
+  ,                                       ! Outlet Node Name
+  ,                                       ! Supply Water Storage Tank Name
+  ,                                       ! Reclamation Water Storage Tank Name
+  ,                                       ! Hot Water Supply Temperature Schedule Name
+  ,                                       ! Cold Water Supply Temperature Schedule Name
+  ,                                       ! Drain Water Heat Exchanger Type
+  ,                                       ! Drain Water Heat Exchanger Destination
+  ;                                       ! Drain Water Heat Exchanger U-Factor Times Area {W/K}
+
+OS:WaterUse:Equipment:Definition,
+  {7ee129c6-8b88-4f52-b6ff-7ad101da81fd}, ! Handle
+  Bathroom Sink Definition,               ! Name
+  ,                                       ! End-Use Subcategory
+  0.0000631,                              ! Peak Flow Rate {m3/s}
+  ,                                       !- Target Temperature Schedule Name
+  ,                                       !- Sensible Fraction Schedule Name
+  ;                                       !- Latent Fraction Schedule Name
+
+OS:WaterUse:Equipment,
+  {bb539061-f901-499d-b11b-a96891973f45}, ! Handle
+  Bathroom Sink,                          ! Name
+  {7ee129c6-8b88-4f52-b6ff-7ad101da81fd}, ! Water Use Equipment Definition Name
+  ,                                       !- Space Name
+  ;                                       !- Flow Rate Fraction Schedule Name
+
+OS:Fan:ConstantVolume,
+  {0834260a-d5f1-4ef1-a261-97274039ae65}, ! Handle
+  Fan Constant Volume 1,                  ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Fan Efficiency
+  ,                                       ! Pressure Rise {Pa}
+  AutoSize,                               ! Maximum Flow Rate {m3/s}
+  ,                                       ! Motor Efficiency
+  ,                                       ! Motor In Airstream Fraction
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  ;                                       ! End-Use Subcategory
+
+OS:Coil:Cooling:Water,
+  {d5b3d5c8-7612-420f-a403-56ee7e9f11cd}, ! Handle
+  Coil Cooling Water 1,                   ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Design Water Flow Rate {m3/s}
+  ,                                       ! Design Air Flow Rate {m3/s}
+  ,                                       ! Design Inlet Water Temperature {C}
+  ,                                       ! Design Inlet Air Temperature {C}
+  ,                                       ! Design Outlet Air Temperature {C}
+  ,                                       ! Design Inlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       ! Design Outlet Air Humidity Ratio {kg-H2O/kg-air}
+  ,                                       ! Water Inlet Node Name
+  ,                                       ! Water Outlet Node Name
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  ,                                       ! Type of Analysis
+  ;                                       ! Heat Exchanger Configuration
+
+OS:Coil:Heating:Water,
+  {97e3f53d-b342-46bd-abf7-e7b03b221c40}, ! Handle
+  Coil Heating Water 1,                   ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! U-Factor Times Area Value {W/K}
+  ,                                       ! Maximum Water Flow Rate {m3/s}
+  ,                                       ! Water Inlet Node Name
+  ,                                       ! Water Outlet Node Name
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  ,                                       ! Performance Input Method
+  ,                                       ! Rated Capacity {W}
+  ,                                       ! Rated Inlet Water Temperature {C}
+  ,                                       ! Rated Inlet Air Temperature {C}
+  ,                                       ! Rated Outlet Water Temperature {C}
+  ,                                       ! Rated Outlet Air Temperature {C}
+  ;                                       ! Rated Ratio for Air and Water Convection
+
+OS:ZoneHVAC:FourPipeFanCoil,
+  {c03721b8-10cc-42a7-81ef-e45c8b4271c1}, ! Handle
+  Zone HVAC Four Pipe Fan Coil 1,         ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ConstantFanVariableFlow,                ! Capacity Control Method
+  autosize,                               ! Maximum Supply Air Flow Rate {m3/s}
+  ,                                       ! Low Speed Supply Air Flow Ratio
+  ,                                       ! Medium Speed Supply Air Flow Ratio
+  autosize,                               ! Maximum Outdoor Air Flow Rate {m3/s}
+  ,                                       ! Outdoor Air Schedule Name
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  OutdoorAir:Mixer,                       ! Outdoor Air Mixer Object Type
+  ,                                       ! Outdoor Air Mixer Name
+  {0834260a-d5f1-4ef1-a261-97274039ae65}, ! Supply Air Fan Name
+  {d5b3d5c8-7612-420f-a403-56ee7e9f11cd}, ! Cooling Coil Name
+  autosize,                               ! Maximum Cold Water Flow Rate {m3/s}
+  ,                                       ! Minimum Cold Water Flow Rate {m3/s}
+  ,                                       ! Cooling Convergence Tolerance
+  {97e3f53d-b342-46bd-abf7-e7b03b221c40}, ! Heating Coil Name
+  autosize,                               ! Maximum Hot Water Flow Rate {m3/s}
+  ,                                       ! Minimum Hot Water Flow Rate {m3/s}
+  ;                                       ! Heating Convergence Tolerance
+
+OS:ZoneHVAC:Baseboard:Convective:Electric,
+  {d3c9c6b9-aab2-4f08-9a97-683c0561bebc}, !- Handle
+  Zone HVAC Baseboard Convective Electric 1, !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule
+  autosize,                               !- Nominal Capacity {W}
+  1;                                      !- Efficiency
+
+OS:Coil:Heating:Water:Baseboard,
+  {4a34a74c-37f5-42da-b2e0-0526ce10d4c5}, !- Handle
+  Coil Heating Water Baseboard,           !- Name
+  autosize,                               !- U-Factor Times Area Value {W/K}
+  autosize,                               !- Maximum Water Flow Rate {m3/s}
+  0.001,                                  !- Convergence Tolerance
+  ,                                       !- Water Inlet Node Name
+  ;                                       !- Water Outlet Node Name
+
+OS:ZoneHVAC:Baseboard:Convective:Water,
+  {1df14922-1b9b-4c69-8d13-fe1a95b35eaa}, !- Handle
+  Convective Baseboard Water,             !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  {4a34a74c-37f5-42da-b2e0-0526ce10d4c5}; !- Heating Coil Name
+
+OS:Fan:ConstantVolume,
+  {d81187b2-ccea-4a08-a9ca-3aabbb4ee2fb}, !- Handle
+  Unit Heater CV Fan,                     !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Fan Efficiency
+  ,                                       !- Pressure Rise {Pa}
+  AutoSize,                               !- Maximum Flow Rate {m3/s}
+  ,                                       !- Motor Efficiency
+  ,                                       !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ;                                       !- End-Use Subcategory
+  
+OS:Fan:VariableVolume,
+  {14f0828b-9d6d-4e07-abbf-ba58c5265285}, !- Handle
+  Unit Heater VAV Fan,                    !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  0.6045,                                 !- Fan Efficiency
+  1017.592,                               !- Pressure Rise {Pa}
+  Autosize,                               !- Maximum Flow Rate {m3/s}
+  FixedFlowRate,                          !- Fan Power Minimum Flow Rate Input Method
+  0,                                      !- Fan Power Minimum Flow Fraction
+  0,                                      !- Fan Power Minimum Air Flow Rate {m3/s}
+  0.93,                                   !- Motor Efficiency
+  1,                                      !- Motor In Airstream Fraction
+  0.040759894,                            !- Fan Power Coefficient 1
+  0.08804497,                             !- Fan Power Coefficient 2
+  -0.07292612,                            !- Fan Power Coefficient 3
+  0.943739823,                            !- Fan Power Coefficient 4
+  0,                                      !- Fan Power Coefficient 5
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ;                                       !- End-Use Subcategory
+
+OS:Coil:Heating:Water,
+  {e27b9c21-ae7e-4d12-8582-087ea6f3ec72}, !- Handle
+  Unit Heater Hot Water Coil,             !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- U-Factor Times Area Value {W/K}
+  ,                                       !- Maximum Water Flow Rate {m3/s}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Performance Input Method
+  ,                                       !- Rated Capacity {W}
+  ,                                       !- Rated Inlet Water Temperature {C}
+  ,                                       !- Rated Inlet Air Temperature {C}
+  ,                                       !- Rated Outlet Water Temperature {C}
+  ,                                       !- Rated Outlet Air Temperature {C}
+  ;                                       !- Rated Ratio for Air and Water Convection
+
+OS:Coil:Heating:Electric,
+  {b2bbc7a7-dcb7-4595-9d0f-09593e71c198}, !- Handle
+  Unit Heater Electric Coil,              !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Efficiency
+  ,                                       !- Nominal Capacity {W}
+  ,                                       !- Air Inlet Node Name
+  ;                                       !- Air Outlet Node Name
+
+OS:Coil:Heating:Gas,
+  {4e44439f-de57-43b5-9822-a38e6c58e5ad}, !- Handle
+  Unit Heater Gas Coil,                   !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  0.8,                                    !- Gas Burner Efficiency
+  AutoSize,                               !- Nominal Capacity {W}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Temperature Setpoint Node Name
+  0,                                      !- Parasitic Electric Load {W}
+  ,                                       !- Part Load Fraction Correlation Curve Name
+  0;                                      !- Parasitic Gas Load {W}
+
+OS:ZoneHVAC:UnitHeater,
+  {d5102f53-b288-49a6-90bf-94f70658c748}, !- Handle
+  Unit Heater CV - Hot Water,             !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {d81187b2-ccea-4a08-a9ca-3aabbb4ee2fb}, !- Supply Air Fan Name
+  AutoSize,                               !- Maximum Supply Air Flow Rate {m3/s}
+  OnOff,                                  !- Fan Control Type
+  {e27b9c21-ae7e-4d12-8582-087ea6f3ec72}, !- Heating Coil Name
+  AutoSize,                               !- Maximum Hot Water Flow Rate {m3/s}
+  0.0,                                    !- Minimum Hot Water Flow Rate {m3/s}
+  0.001,                                  !- Heating Convergence Tolerance
+  ;                                       !- Availability Manager List Name
+
+OS:ZoneHVAC:UnitHeater,
+  {dac0a651-55d7-4ab3-a0d8-bbf55e250db4}, !- Handle
+  Unit Heater VAV - Hot Water,            !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {14f0828b-9d6d-4e07-abbf-ba58c5265285}, !- Supply Air Fan Name
+  AutoSize,                               !- Maximum Supply Air Flow Rate {m3/s}
+  OnOff,                                  !- Fan Control Type
+  {e27b9c21-ae7e-4d12-8582-087ea6f3ec72}, !- Heating Coil Name
+  AutoSize,                               !- Maximum Hot Water Flow Rate {m3/s}
+  0.0,                                    !- Minimum Hot Water Flow Rate {m3/s}
+  0.001,                                  !- Heating Convergence Tolerance
+  ;                                       !- Availability Manager List Name
+
+OS:ZoneHVAC:UnitHeater,
+  {2be16d68-176f-4f2d-ae42-7b3f7f00d968}, !- Handle
+  Unit Heater CV - Electric,              !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {d81187b2-ccea-4a08-a9ca-3aabbb4ee2fb}, !- Supply Air Fan Name
+  AutoSize,                               !- Maximum Supply Air Flow Rate {m3/s}
+  OnOff,                                  !- Fan Control Type
+  {b2bbc7a7-dcb7-4595-9d0f-09593e71c198}, !- Heating Coil Name
+  AutoSize,                               !- Maximum Hot Water Flow Rate {m3/s}
+  0.0,                                    !- Minimum Hot Water Flow Rate {m3/s}
+  0.001,                                  !- Heating Convergence Tolerance
+  ;                                       !- Availability Manager List Name
+
+OS:ZoneHVAC:UnitHeater,
+  {1685be85-4d6a-4714-a95e-e79bd3f8bef7}, !- Handle
+  Unit Heater VAV - Electric,             !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {14f0828b-9d6d-4e07-abbf-ba58c5265285}, !- Supply Air Fan Name
+  AutoSize,                               !- Maximum Supply Air Flow Rate {m3/s}
+  OnOff,                                  !- Fan Control Type
+  {b2bbc7a7-dcb7-4595-9d0f-09593e71c198}, !- Heating Coil Name
+  AutoSize,                               !- Maximum Hot Water Flow Rate {m3/s}
+  0.0,                                    !- Minimum Hot Water Flow Rate {m3/s}
+  0.001,                                  !- Heating Convergence Tolerance
+  ;                                       !- Availability Manager List Name
+
+OS:ZoneHVAC:UnitHeater,
+  {724737fe-3547-4ed3-b094-a6f74d1ecdca}, !- Handle
+  Unit Heater CV - Gas,                   !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {d81187b2-ccea-4a08-a9ca-3aabbb4ee2fb}, !- Supply Air Fan Name
+  AutoSize,                               !- Maximum Supply Air Flow Rate {m3/s}
+  OnOff,                                  !- Fan Control Type
+  {4e44439f-de57-43b5-9822-a38e6c58e5ad}, !- Heating Coil Name
+  AutoSize,                               !- Maximum Hot Water Flow Rate {m3/s}
+  0.0,                                    !- Minimum Hot Water Flow Rate {m3/s}
+  0.001,                                  !- Heating Convergence Tolerance
+  ;                                       !- Availability Manager List Name
+
+OS:ZoneHVAC:UnitHeater,
+  {46496230-9beb-4d22-8a2f-43ceeb141035}, !- Handle
+  Unit Heater VAV - Gas,                  !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {14f0828b-9d6d-4e07-abbf-ba58c5265285}, !- Supply Air Fan Name
+  AutoSize,                               !- Maximum Supply Air Flow Rate {m3/s}
+  OnOff,                                  !- Fan Control Type
+  {4e44439f-de57-43b5-9822-a38e6c58e5ad}, !- Heating Coil Name
+  AutoSize,                               !- Maximum Hot Water Flow Rate {m3/s}
+  0.0,                                    !- Minimum Hot Water Flow Rate {m3/s}
+  0.001,                                  !- Heating Convergence Tolerance
+  ;                                       !- Availability Manager List Name
+
+OS:Fan:OnOff,
+  {182c837c-0413-4a6e-8328-7adc0c5d00d6}, !- Handle
+  Fan On Off 1,                           !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  0.6045,                                 !- Fan Efficiency
+  250,                                    !- Pressure Rise {Pa}
+  autosize,                               !- Maximum Flow Rate {m3/s}
+  0.8,                                    !- Motor Efficiency
+  1,                                      !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {0de664b7-7cbe-4934-b179-6ea966d70341}, !- Fan Power Ratio Function of Speed Ratio Curve Name
+  {01de07cc-acc8-49fa-b77b-9ae4a8e35ed6}, !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
+  ;                                       !- End-Use Subcategory
+
+OS:ScheduleTypeLimits,
+  {28eb7ade-923f-4856-99f0-3770111df7d7}, !- Handle
+  OnOff,                                  !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:Curve:Exponent,
+  {0de664b7-7cbe-4934-b179-6ea966d70341}, !- Handle
+  Curve Exponent 1,                       !- Name
+  0,                                      !- Coefficient1 Constant
+  1,                                      !- Coefficient2 Constant
+  3,                                      !- Coefficient3 Constant
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1.5,                                    !- Maximum Value of x {BasedOnField A2}
+  0.01,                                   !- Minimum Curve Output {BasedOnField A3}
+  1.5;                                    !- Maximum Curve Output {BasedOnField A3}
+
+OS:Curve:Cubic,
+  {01de07cc-acc8-49fa-b77b-9ae4a8e35ed6}, !- Handle
+  Curve Cubic 1,                          !- Name
+  0.33856828,                             !- Coefficient1 Constant
+  1.72644131,                             !- Coefficient2 x
+  -1.49280132,                            !- Coefficient3 x**2
+  0.42776208,                             !- Coefficient4 x**3
+  0.5,                                    !- Minimum Value of x {BasedOnField A2}
+  1.5,                                    !- Maximum Value of x {BasedOnField A2}
+  0.3,                                    !- Minimum Curve Output {BasedOnField A3}
+  1;                                      !- Maximum Curve Output {BasedOnField A3}
+
+OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
+  {d683b8e6-1a67-4e2b-aa32-8a4aa6cedd5d}, !- Handle
+  Coil Heating Water To Air Heat Pump Equation Fit 1, !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Rated Air Flow Rate {m3/s}
+  ,                                       !- Rated Water Flow Rate {m3/s}
+  ,                                       !- Rated Heating Capacity {W}
+  ,                                       !- Rated Heating Coefficient of Performance {W/W}
+  -5.50102734,                            !- Heating Capacity Coefficient 1
+  -0.96688754,                            !- Heating Capacity Coefficient 2
+  7.70755007,                             !- Heating Capacity Coefficient 3
+  0.031928881,                            !- Heating Capacity Coefficient 4
+  0.028112522,                            !- Heating Capacity Coefficient 5
+  -7.47517858,                            !- Heating Power Consumption Coefficient 1
+  6.40876653,                             !- Heating Power Consumption Coefficient 2
+  1.99711665,                             !- Heating Power Consumption Coefficient 3
+  -0.050682973,                           !- Heating Power Consumption Coefficient 4
+  0.011385145;                            !- Heating Power Consumption Coefficient 5
+
+OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
+  {497dcb6a-5e26-44b9-ad01-3a2cee449abb}, !- Handle
+  Coil Cooling Water To Air Heat Pump Equation Fit 1, !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Rated Air Flow Rate {m3/s}
+  ,                                       !- Rated Water Flow Rate {m3/s}
+  ,                                       !- Rated Total Cooling Capacity {W}
+  ,                                       !- Rated Sensible Cooling Capacity {W}
+  3,                                      !- Rated Cooling Coefficient of Performance {W/W}
+  -0.68126221,                            !- Total Cooling Capacity Coefficient 1
+  1.99529297,                             !- Total Cooling Capacity Coefficient 2
+  -0.93611888,                            !- Total Cooling Capacity Coefficient 3
+  0.02081177,                             !- Total Cooling Capacity Coefficient 4
+  0.008438868,                            !- Total Cooling Capacity Coefficient 5
+  2.24209455,                             !- Sensible Cooling Capacity Coefficient 1
+  7.28913391,                             !- Sensible Cooling Capacity Coefficient 2
+  -9.06079896,                            !- Sensible Cooling Capacity Coefficient 3
+  -0.36729404,                            !- Sensible Cooling Capacity Coefficient 4
+  0.218826161,                            !- Sensible Cooling Capacity Coefficient 5
+  0.00901534,                             !- Sensible Cooling Capacity Coefficient 6
+  -3.20456384,                            !- Cooling Power Consumption Coefficient 1
+  0.47656454,                             !- Cooling Power Consumption Coefficient 2
+  3.16734236,                             !- Cooling Power Consumption Coefficient 3
+  0.10244637,                             !- Cooling Power Consumption Coefficient 4
+  -0.038132556,                           !- Cooling Power Consumption Coefficient 5
+  ,                                       !- Nominal Time for Condensate Removal to Begin {s}
+  ;                                       !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+
+OS:Fan:OnOff,
+  {686ec71a-e2b4-4e6c-bb5a-b8245ecd33e4}, !- Handle
+  Fan On Off 1,                           !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  0.6045,                                 !- Fan Efficiency
+  250,                                    !- Pressure Rise {Pa}
+  autosize,                               !- Maximum Flow Rate {m3/s}
+  0.8,                                    !- Motor Efficiency
+  1,                                      !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {0de664b7-7cbe-4934-b179-6ea966d70341}, !- Fan Power Ratio Function of Speed Ratio Curve Name
+  {01de07cc-acc8-49fa-b77b-9ae4a8e35ed6}, !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
+  ;                                       !- End-Use Subcategory
+
+OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
+  {3ad65a6c-58cf-4c1f-937d-359611c4d472}, !- Handle
+  Coil Heating Water To Air Heat Pump Equation Fit 1, !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Rated Air Flow Rate {m3/s}
+  ,                                       !- Rated Water Flow Rate {m3/s}
+  ,                                       !- Rated Heating Capacity {W}
+  ,                                       !- Rated Heating Coefficient of Performance {W/W}
+  -5.50102734,                            !- Heating Capacity Coefficient 1
+  -0.96688754,                            !- Heating Capacity Coefficient 2
+  7.70755007,                             !- Heating Capacity Coefficient 3
+  0.031928881,                            !- Heating Capacity Coefficient 4
+  0.028112522,                            !- Heating Capacity Coefficient 5
+  -7.47517858,                            !- Heating Power Consumption Coefficient 1
+  6.40876653,                             !- Heating Power Consumption Coefficient 2
+  1.99711665,                             !- Heating Power Consumption Coefficient 3
+  -0.050682973,                           !- Heating Power Consumption Coefficient 4
+  0.011385145;                            !- Heating Power Consumption Coefficient 5
+
+OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
+  {e6f679f1-9fe3-4189-af37-13d8cb88d7d8}, !- Handle
+  Coil Cooling Water To Air Heat Pump Equation Fit 1, !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Rated Air Flow Rate {m3/s}
+  ,                                       !- Rated Water Flow Rate {m3/s}
+  ,                                       !- Rated Total Cooling Capacity {W}
+  ,                                       !- Rated Sensible Cooling Capacity {W}
+  3,                                      !- Rated Cooling Coefficient of Performance {W/W}
+  -0.68126221,                            !- Total Cooling Capacity Coefficient 1
+  1.99529297,                             !- Total Cooling Capacity Coefficient 2
+  -0.93611888,                            !- Total Cooling Capacity Coefficient 3
+  0.02081177,                             !- Total Cooling Capacity Coefficient 4
+  0.008438868,                            !- Total Cooling Capacity Coefficient 5
+  2.24209455,                             !- Sensible Cooling Capacity Coefficient 1
+  7.28913391,                             !- Sensible Cooling Capacity Coefficient 2
+  -9.06079896,                            !- Sensible Cooling Capacity Coefficient 3
+  -0.36729404,                            !- Sensible Cooling Capacity Coefficient 4
+  0.218826161,                            !- Sensible Cooling Capacity Coefficient 5
+  0.00901534,                             !- Sensible Cooling Capacity Coefficient 6
+  -3.20456384,                            !- Cooling Power Consumption Coefficient 1
+  0.47656454,                             !- Cooling Power Consumption Coefficient 2
+  3.16734236,                             !- Cooling Power Consumption Coefficient 3
+  0.10244637,                             !- Cooling Power Consumption Coefficient 4
+  -0.038132556,                           !- Cooling Power Consumption Coefficient 5
+  ,                                       !- Nominal Time for Condensate Removal to Begin {s}
+  ;                                       !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+
+OS:Fan:OnOff,
+  {c947bbf7-a7f6-473b-af51-f5709ab08feb}, !- Handle
+  Fan On Off 1,                           !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  0.6045,                                 !- Fan Efficiency
+  250,                                    !- Pressure Rise {Pa}
+  autosize,                               !- Maximum Flow Rate {m3/s}
+  0.8,                                    !- Motor Efficiency
+  1,                                      !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {0de664b7-7cbe-4934-b179-6ea966d70341}, !- Fan Power Ratio Function of Speed Ratio Curve Name
+  {01de07cc-acc8-49fa-b77b-9ae4a8e35ed6}, !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
+  ;                                       !- End-Use Subcategory
+
+OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
+  {54669793-36af-4393-aafe-d99188dfc46f}, !- Handle
+  Coil Heating Water To Air Heat Pump Equation Fit 1, !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Rated Air Flow Rate {m3/s}
+  ,                                       !- Rated Water Flow Rate {m3/s}
+  ,                                       !- Rated Heating Capacity {W}
+  ,                                       !- Rated Heating Coefficient of Performance {W/W}
+  -5.50102734,                            !- Heating Capacity Coefficient 1
+  -0.96688754,                            !- Heating Capacity Coefficient 2
+  7.70755007,                             !- Heating Capacity Coefficient 3
+  0.031928881,                            !- Heating Capacity Coefficient 4
+  0.028112522,                            !- Heating Capacity Coefficient 5
+  -7.47517858,                            !- Heating Power Consumption Coefficient 1
+  6.40876653,                             !- Heating Power Consumption Coefficient 2
+  1.99711665,                             !- Heating Power Consumption Coefficient 3
+  -0.050682973,                           !- Heating Power Consumption Coefficient 4
+  0.011385145;                            !- Heating Power Consumption Coefficient 5
+
+OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
+  {7b550b0c-a709-4422-8f21-690b52ad8519}, !- Handle
+  Coil Cooling Water To Air Heat Pump Equation Fit 1, !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Rated Air Flow Rate {m3/s}
+  ,                                       !- Rated Water Flow Rate {m3/s}
+  ,                                       !- Rated Total Cooling Capacity {W}
+  ,                                       !- Rated Sensible Cooling Capacity {W}
+  3,                                      !- Rated Cooling Coefficient of Performance {W/W}
+  -0.68126221,                            !- Total Cooling Capacity Coefficient 1
+  1.99529297,                             !- Total Cooling Capacity Coefficient 2
+  -0.93611888,                            !- Total Cooling Capacity Coefficient 3
+  0.02081177,                             !- Total Cooling Capacity Coefficient 4
+  0.008438868,                            !- Total Cooling Capacity Coefficient 5
+  2.24209455,                             !- Sensible Cooling Capacity Coefficient 1
+  7.28913391,                             !- Sensible Cooling Capacity Coefficient 2
+  -9.06079896,                            !- Sensible Cooling Capacity Coefficient 3
+  -0.36729404,                            !- Sensible Cooling Capacity Coefficient 4
+  0.218826161,                            !- Sensible Cooling Capacity Coefficient 5
+  0.00901534,                             !- Sensible Cooling Capacity Coefficient 6
+  -3.20456384,                            !- Cooling Power Consumption Coefficient 1
+  0.47656454,                             !- Cooling Power Consumption Coefficient 2
+  3.16734236,                             !- Cooling Power Consumption Coefficient 3
+  0.10244637,                             !- Cooling Power Consumption Coefficient 4
+  -0.038132556,                           !- Cooling Power Consumption Coefficient 5
+  ,                                       !- Nominal Time for Condensate Removal to Begin {s}
+  ;                                       !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+
+OS:Coil:Heating:Electric,
+  {c29736fa-c1bc-4abc-89e5-9eff83d9426f}, !- Handle
+  Coil Heating Electric 1,                !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Efficiency
+  ,                                       !- Nominal Capacity {W}
+  ,                                       !- Air Inlet Node Name
+  ;                                       !- Air Outlet Node Name
+
+OS:Coil:Heating:Gas,
+  {0a0d302a-f61c-40b7-8482-912889aec901}, !- Handle
+  Coil Heating Gas 1,                     !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  0.8,                                    !- Gas Burner Efficiency
+  AutoSize,                               !- Nominal Capacity {W}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Temperature Setpoint Node Name
+  0,                                      !- Parasitic Electric Load {W}
+  ,                                       !- Part Load Fraction Correlation Curve Name
+  0;                                      !- Parasitic Gas Load {W}
+
+OS:Coil:Heating:Water,
+  {b746d8a5-fbfd-4d6a-a703-0ca20ab0ba53}, !- Handle
+  Coil Heating Water 1,                   !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- U-Factor Times Area Value {W/K}
+  ,                                       !- Maximum Water Flow Rate {m3/s}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Performance Input Method
+  ,                                       !- Rated Capacity {W}
+  ,                                       !- Rated Inlet Water Temperature {C}
+  ,                                       !- Rated Inlet Air Temperature {C}
+  ,                                       !- Rated Outlet Water Temperature {C}
+  ,                                       !- Rated Outlet Air Temperature {C}
+  ;                                       !- Rated Ratio for Air and Water Convection
+
+OS:ZoneHVAC:WaterToAirHeatPump,
+  {17796048-6e5f-471c-ab75-b4eb73568702}, !- Handle
+  Water To Air HP w Elec Supplemental Coil,     !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Outdoor Air Mixer Name
+  Autosize,                               !- Supply Air Flow Rate During Cooling Operation {m3/s}
+  Autosize,                               !- Supply Air Flow Rate During Heating Operation {m3/s}
+  autosize,                               !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate During Cooling Operation {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate During Heating Operation {m3/s}
+  Autosize,                               !- Outdoor Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  {182c837c-0413-4a6e-8328-7adc0c5d00d6}, !- Supply Air Fan Name
+  {d683b8e6-1a67-4e2b-aa32-8a4aa6cedd5d}, !- Heating Coil Name
+  {497dcb6a-5e26-44b9-ad01-3a2cee449abb}, !- Cooling Coil Name
+  ,                                       !- Maximum Cycling Rate {cycles/hr}
+  ,                                       !- Heat Pump Time Constant {s}
+  ,                                       !- Fraction of On-Cycle Power Use
+  ,                                       !- Heat Pump Fan Delay Time {s}
+  {c29736fa-c1bc-4abc-89e5-9eff83d9426f}, !- Supplemental Heating Coil Name
+  Autosize,                               !- Maximum Supply Air Temperature from Supplemental Heater {C}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
+  ,                                       !- Outdoor Dry-Bulb Temperature Sensor Node Name
+  ,                                       !- Fan Placement
+  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  ;                                       !- Availability Manager List Name
+
+OS:ZoneHVAC:WaterToAirHeatPump,
+  {d00ed249-7171-4de9-a582-91d948e1b81d}, !- Handle
+  Water To Air Heat Pump w Gas Supplemental Coil,     !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Outdoor Air Mixer Name
+  Autosize,                               !- Supply Air Flow Rate During Cooling Operation {m3/s}
+  Autosize,                               !- Supply Air Flow Rate During Heating Operation {m3/s}
+  autosize,                               !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate During Cooling Operation {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate During Heating Operation {m3/s}
+  Autosize,                               !- Outdoor Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  {686ec71a-e2b4-4e6c-bb5a-b8245ecd33e4}, !- Supply Air Fan Name
+  {3ad65a6c-58cf-4c1f-937d-359611c4d472}, !- Heating Coil Name
+  {e6f679f1-9fe3-4189-af37-13d8cb88d7d8}, !- Cooling Coil Name
+  ,                                       !- Maximum Cycling Rate {cycles/hr}
+  ,                                       !- Heat Pump Time Constant {s}
+  ,                                       !- Fraction of On-Cycle Power Use
+  ,                                       !- Heat Pump Fan Delay Time {s}
+  {0a0d302a-f61c-40b7-8482-912889aec901}, !- Supplemental Heating Coil Name
+  Autosize,                               !- Maximum Supply Air Temperature from Supplemental Heater {C}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
+  ,                                       !- Outdoor Dry-Bulb Temperature Sensor Node Name
+  ,                                       !- Fan Placement
+  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  ;                                       !- Availability Manager List Name
+
+OS:ZoneHVAC:WaterToAirHeatPump,
+  {394ba612-67a4-4f6e-9bac-759be77fd28d}, !- Handle
+  Water to Air Heat Pump w Hot Water Supplemental Coil,     !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Outdoor Air Mixer Name
+  Autosize,                               !- Supply Air Flow Rate During Cooling Operation {m3/s}
+  Autosize,                               !- Supply Air Flow Rate During Heating Operation {m3/s}
+  autosize,                               !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate During Cooling Operation {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate During Heating Operation {m3/s}
+  Autosize,                               !- Outdoor Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  {c947bbf7-a7f6-473b-af51-f5709ab08feb}, !- Supply Air Fan Name
+  {54669793-36af-4393-aafe-d99188dfc46f}, !- Heating Coil Name
+  {7b550b0c-a709-4422-8f21-690b52ad8519}, !- Cooling Coil Name
+  ,                                       !- Maximum Cycling Rate {cycles/hr}
+  ,                                       !- Heat Pump Time Constant {s}
+  ,                                       !- Fraction of On-Cycle Power Use
+  ,                                       !- Heat Pump Fan Delay Time {s}
+  {b746d8a5-fbfd-4d6a-a703-0ca20ab0ba53}, !- Supplemental Heating Coil Name
+  Autosize,                               !- Maximum Supply Air Temperature from Supplemental Heater {C}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
+  ,                                       !- Outdoor Dry-Bulb Temperature Sensor Node Name
+  ,                                       !- Fan Placement
+  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  ;                                       !- Availability Manager List Name
+
+OS:Coil:Heating:DX:SingleSpeed,
+  {36ce71b0-4d19-4604-8dc5-5103bd97703e}, ! Handle
+  OS:Coil:Heating:DX:SingleSpeed,         ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  Autosize,                               ! Rated Total Heating Capacity {W}
+  5,                                      ! Rated COP {W/W}
+  Autosize,                               ! Rated Air Flow Rate {m3/s}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  {af3d4a9f-eefe-47f5-917b-3db4f451b2d4}, ! Total Heating Capacity Function of Temperature Curve Name
+  {481ea8ba-8f15-4037-ba75-6d4fb768c4f2}, ! Total Heating Capacity Function of Flow Fraction Curve Name
+  {7d5a2908-ef68-46cf-9d40-396da0481d66}, ! Energy Input Ratio Function of Temperature Curve Name
+  {aa0bdf53-0496-4e7d-911f-d61296d29eda}, ! Energy Input Ratio Function of Flow Fraction Curve Name
+  {c7a272e9-f555-4940-b988-3903c9b3940c}, ! Part Load Fraction Correlation Curve Name
+  ,                                       ! Defrost Energy Input Ratio Function of Temperature Curve Name
+  ,                                       ! Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
+  ,                                       ! Crankcase Heater Capacity {W}
+  ,                                       ! Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  Resistive,                              ! Defrost Strategy
+  Timed,                                  ! Defrost Control
+  0.16666700000000001,                    ! Defrost Time Period Fraction
+  2000;                                   ! Resistive Defrost Heater Capacity {W}
+
+OS:Curve:Biquadratic,
+  {af3d4a9f-eefe-47f5-917b-3db4f451b2d4}, ! Handle
+  OS:Curve:Biquadratic 7,                 ! Name
+  0.75874600000000003,                    ! Coefficient1 Constant
+  0,                                      ! Coefficient2 x
+  0,                                      ! Coefficient3 x**2
+  0.027626000000000001,                   ! Coefficient4 y
+  0.00014871599999999999,                 ! Coefficient5 y**2
+  0,                                      ! Coefficient6 x*y
+  0,                                      ! Minimum Value of x {BasedOnField A2}
+  1,                                      ! Maximum Value of x {BasedOnField A2}
+  0,                                      ! Minimum Value of y {BasedOnField A3}
+  1;                                      ! Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {481ea8ba-8f15-4037-ba75-6d4fb768c4f2}, ! Handle
+  OS:Curve:Quadratic 8,                   ! Name
+  0.83999999999999997,                    ! Coefficient1 Constant
+  0.16,                                   ! Coefficient2 x
+  0,                                      ! Coefficient3 x**2
+  0.5,                                    ! Minimum Value of x {BasedOnField A2}
+  1.5;                                    ! Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Biquadratic,
+  {7d5a2908-ef68-46cf-9d40-396da0481d66}, ! Handle
+  OS:Curve:Biquadratic 8,                 ! Name
+  1.19248,                                ! Coefficient1 Constant
+  -0.030043799999999999,                  ! Coefficient2 x
+  0.0010374500000000001,                  ! Coefficient3 x**2
+  0,                                      ! Coefficient4 y
+  0,                                      ! Coefficient5 y**2
+  0,                                      ! Coefficient6 x*y
+  -20,                                    ! Minimum Value of x {BasedOnField A2}
+  20,                                     ! Maximum Value of x {BasedOnField A2}
+  0,                                      ! Minimum Value of y {BasedOnField A3}
+  1;                                      ! Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Quadratic,
+  {aa0bdf53-0496-4e7d-911f-d61296d29eda}, ! Handle
+  OS:Curve:Quadratic 9,                   ! Name
+  1.3824000000000001,                     ! Coefficient1 Constant
+  -0.43359999999999999,                   ! Coefficient2 x
+  0.051200000000000002,                   ! Coefficient3 x**2
+  0,                                      ! Minimum Value of x {BasedOnField A2}
+  1;                                      ! Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Quadratic,
+  {c7a272e9-f555-4940-b988-3903c9b3940c}, ! Handle
+  OS:Curve:Quadratic 10,                  ! Name
+  0.84999999999999998,                    ! Coefficient1 Constant
+  0.14999999999999999,                    ! Coefficient2 x
+  0,                                      ! Coefficient3 x**2
+  0,                                      ! Minimum Value of x {BasedOnField A2}
+  1;                                      ! Maximum Value of x {BasedOnField A2}
+
+OS:HeatExchanger:AirToAir:SensibleAndLatent,
+  {648d1052-42c2-4c83-82e9-af6299097461}, !- Handle
+  Heat Exchanger Air To Air Sensible And Latent, !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule
+  autosize,                               !- Nominal Supply Air Flow Rate {m3/s}
+  0.76,                                   !- Sensible Effectiveness at 100% Heating Air Flow {dimensionless}
+  0.68,                                   !- Latent Effectiveness at 100% Heating Air Flow {dimensionless}
+  0.81,                                   !- Sensible Effectiveness at 75% Heating Air Flow {dimensionless}
+  0.73,                                   !- Latent Effectiveness at 75% Heating Air Flow {dimensionless}
+  0.76,                                   !- Sensible Effectiveness at 100% Cooling Air Flow {dimensionless}
+  0.68,                                   !- Latent Effectiveness at 100% Cooling Air Flow {dimensionless}
+  0.81,                                   !- Sensible Effectiveness at 75% Cooling Air Flow {dimensionless}
+  0.73,                                   !- Latent Effectiveness at 75% Cooling Air Flow {dimensionless}
+  ,                                       !- Supply Air Inlet Node
+  ,                                       !- Supply Air Outlet Node
+  ,                                       !- Exhaust Air Inlet Node
+  ,                                       !- Exhaust Air Outlet Node
+  0,                                      !- Nominal Electric Power {W}
+  Yes,                                    !- Supply Air Outlet Temperature Control
+  Plate,                                  !- Heat Exchanger Type
+  None,                                   !- Frost Control Type
+  1.7,                                    !- Threshold Temperature {C}
+  ,                                       !- Initial Defrost Time Fraction {dimensionless}
+  ,                                       !- Rate of Defrost Time Fraction Increase {1/K}
+  Yes;                                    !- Economizer Lockout
+
+

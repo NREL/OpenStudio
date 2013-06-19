@@ -1,0 +1,167 @@
+Program Version,EnergyPlus, Windows, VERSION 5.0.0.027,IDD_Version 5.0.0.027
+   ** Severe  ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Fatal conditions:
+   **   ~~~   ** Attempting to reset outside object from "141111" to
+   **   ~~~   ** "AC3844" for surface "9E59FC"
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** B6CCD5_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 61094B_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 1BBDF3_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** DC8238_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** EA66CE_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 4A433B_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 6E75BF_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** B8ADEF_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 55A75E_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** CE345F_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** BD049A_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 43B238_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 95D5F7_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 3C6232_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 2F164F_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** C9B5DB_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** C42D6E_window_1.  Reducing sill height to fit.
+   ** Severe  ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Severe condition:
+   **   ~~~   ** Zone area was found to be zero in zone: DC 1 plenum
+   ** Severe  ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Severe condition:
+   **   ~~~   ** Zone area was found to be zero in zone: DC 2 plenum zone
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** D87E11_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** E45E97_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** E20F50_window_1.  Reducing sill height to fit.
+   ** Severe  ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Severe condition:
+   **   ~~~   ** Zone area was found to be zero in zone: Mech plenum zone
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 8D8DD6_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 169A1C_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** C0B57D_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** A424EC_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 305DC8_window_1.  Reducing sill height to fit.
+   ** Severe  ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Severe condition:
+   **   ~~~   ** Zone area was found to be zero in zone: Pop 1 plenum zone
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** BA0B16_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 91F2D8_window_1.  Reducing sill height to fit.
+   ** Severe  ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Severe condition:
+   **   ~~~   ** Zone area was found to be zero in zone: Pop 2 plenum zone
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** E930AA_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 662AD9_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Could not add window to surface "EA8FE7"
+   **   ~~~   ** number of
+   **   ~~~   ** vertices not equal 4.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 90F1FD_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 91E3EB_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 4943C8_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** C0842B_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** A00190_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 54E1C3_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 5EEA5B_window_1.  Reducing sill height to fit.
+   ** Severe  ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Severe condition:
+   **   ~~~   ** Zone area was found to be zero in zone: Air zone 3
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Could not add window to surface "FEF39C"
+   **   ~~~   ** number of
+   **   ~~~   ** vertices not equal 4.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 20E101_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 7C6166_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** C8ABEC_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 761F0C_window_1.  Reducing sill height to fit.
+   ** Severe  ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Severe condition:
+   **   ~~~   ** Zone area was found to be zero in zone: Corr 4 plenum zone
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 6DFDE7_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Sill height was adjusted to be below 0 for 6DFDE7_window_1.
+   **   ~~~   ** Setting the sill height to 0.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Requested glazing exceeds available area for
+   **   ~~~   ** 2F62C9_window_1.  Reducing sill height to fit.
+   ** Warning ** Output:PreprocessorMessage="EPXMLPreProc2" has the following Warning conditions:
+   **   ~~~   ** Sill height was adjusted to be below 0 for 2F62C9_window_1.
+   **   ~~~   ** Setting the sill height to 0.
+   **  Fatal  ** Preceding condition(s) cause termination.
+   ...Summary of Errors that led to program termination:
+   ..... Reference severe error count=8
+   ..... Last severe error=Output:PreprocessorMessage="EPXMLPreProc2" has the following Severe condition:
+   ************* Warning:  Node connection errors not checked - most system input has not been read (see previous warning).
+   ************* Fatal error -- final processing.  Program exited before simulations began.  See previous error messages.
+   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Sizing Error Summary. During Sizing: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Terminated--Fatal Error Detected. 46 Warning; 8 Severe Errors; Elapsed Time=00hr 00min  4.72sec

@@ -1,0 +1,14 @@
+Package: OpenStudio
+Type: Package
+Title: Imports OpenStudio data into R.
+Version: ${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}
+Date: 2012-07-02
+Author: The OpenStudio Development Team
+Maintainer: The OpenStudio Deveopment Team <openstudio@nrel.gov>
+Description: Loads analysis data stored in the OpenStudio ProjectDatabase (.osp) file format into R as a data.frame with one row per DataPoint, and accompanying meta-data.
+License: LGPL
+LazyLoad: yes
+Imports: methods
+Depends: RSQLite
+Collate: 'OpenStudio-package.R' 
+         'OpenStudioAnalysis.R'

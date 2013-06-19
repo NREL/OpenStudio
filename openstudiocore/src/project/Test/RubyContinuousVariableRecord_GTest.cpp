@@ -1,0 +1,83 @@
+/**********************************************************************
+*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  All rights reserved.
+*
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+*
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*  Lesser General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+**********************************************************************/
+
+#include <gtest/gtest.h>
+#include <project/Test/ProjectFixture.hpp>
+
+#include <project/ProjectDatabase.hpp>
+#include <project/ProblemRecord.hpp>
+#include <project/ProblemRecord_Impl.hpp>
+
+#include <analysis/Problem.hpp>
+#include <analysis/Problem_Impl.hpp>
+#include <analysis/RubyPerturbation.hpp>
+#include <analysis/RubyPerturbation_Impl.hpp>
+#include <analysis/RubyContinuousVariable.hpp>
+#include <analysis/RubyContinuousVariable_Impl.hpp>
+
+#include <ruleset/OSArgument.hpp>
+
+#include <runmanager/lib/RunManager.hpp>
+#include <runmanager/lib/Workflow.hpp>
+
+#include <resources.hxx>
+#include <OpenStudio.hxx>
+
+#include <boost/foreach.hpp>
+
+using namespace openstudio;
+using namespace openstudio::analysis;
+using namespace openstudio::project;
+
+TEST_F(ProjectFixture, RubyContinuousVariableRecord_SaveAndRetrieve)
+{
+  openstudio::path perturbScript = openstudio::toPath(rubyLibDir()) /
+                                   openstudio::toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
+  RubyPerturbation rubyPerturbation(perturbScript,FileReferenceType::OSM,FileReferenceType::OSM);
+  rubyPerturbation.addArgument("objectType","OS:Material");
+  rubyPerturbation.addArgument("nameRegex","Insulation");
+  rubyPerturbation.addArgument("field","2");
+  ruleset::OSArgument thickness = ruleset::OSArgument::makeDoubleArgument("Thickness");
+  RubyContinuousVariable insulationThickness("Insulation Thickness",thickness,rubyPerturbation);
+
+  Problem problem("Trivial Problem",VariableVector(1u,insulationThickness),runmanager::Workflow());
+
+
+  int id(0);
+  {
+    ProjectDatabase database = getCleanDatabase("RubyContinuousVariableRecord_SaveAndRetrieve");
+    ProblemRecord problemRecord = ProblemRecord::factoryFromProblem(problem,database);
+    id = problemRecord.id();
+    database.save();
+  }
+
+  {
+    ProjectDatabase database = getExistingDatabase("RubyContinuousVariableRecord_SaveAndRetrieve");
+    OptionalProblemRecord oProblemRecord = ProblemRecord::getProblemRecord(id,database);
+    ASSERT_TRUE(oProblemRecord);
+    problem = oProblemRecord->problem();
+  }
+
+  EXPECT_EQ(1,problem.numVariables());
+  ASSERT_TRUE(problem.variables()[0].optionalCast<RubyContinuousVariable>());
+  insulationThickness = problem.variables()[0].cast<RubyContinuousVariable>();
+
+  EXPECT_EQ("Thickness",insulationThickness.argument().name());
+  EXPECT_EQ(3u,insulationThickness.perturbation().arguments().size());
+}

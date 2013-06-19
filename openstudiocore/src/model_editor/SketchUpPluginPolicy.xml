@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by Daniel Macumber (NREL) -->
+<ROOT>
+	<POLICY IddObjectType="OS_InteriorPartitionSurface">
+		<rule IddField="Interior Partition Surface Group Name" Access="LOCKED"/>
+		<rule IddField="Number of Vertices" Access="HIDDEN"/>
+		<rule IddField="Vertex X-coordinate" Access="HIDDEN"/>
+		<rule IddField="Vertex Y-coordinate" Access="HIDDEN"/>
+		<rule IddField="Vertex Z-coordinate" Access="HIDDEN"/>
+	</POLICY>
+	<POLICY IddObjectType="OS_ShadingSurface">
+		<rule IddField="Shading Surface Group Name" Access="LOCKED"/>
+		<rule IddField="Number of Vertices" Access="HIDDEN"/>
+		<rule IddField="Vertex X-coordinate" Access="HIDDEN"/>
+		<rule IddField="Vertex Y-coordinate" Access="HIDDEN"/>
+		<rule IddField="Vertex Z-coordinate" Access="HIDDEN"/>
+	</POLICY>
+	<POLICY IddObjectType="OS_Surface">
+		<rule IddField="Space Name" Access="LOCKED"/>
+		<rule IddField="Number of Vertices" Access="HIDDEN"/>
+		<rule IddField="Vertex X-coordinate" Access="HIDDEN"/>
+		<rule IddField="Vertex Y-coordinate" Access="HIDDEN"/>
+		<rule IddField="Vertex Z-coordinate" Access="HIDDEN"/>
+	</POLICY>
+	<POLICY IddObjectType="OS_SubSurface">
+		<rule IddField="Surface Name" Access="LOCKED"/>
+		<rule IddField="Number of Vertices" Access="HIDDEN"/>
+		<rule IddField="Vertex X-coordinate" Access="HIDDEN"/>
+		<rule IddField="Vertex Y-coordinate" Access="HIDDEN"/>
+		<rule IddField="Vertex Z-coordinate" Access="HIDDEN"/>
+	</POLICY>
+	<POLICY IddObjectType="OS_ThermalZone">
+		<rule IddField="Zone Conditioning Equipment List Name" Access="HIDDEN"/>
+		<rule IddField="Zone Air Inlet Port List" Access="HIDDEN"/>
+		<rule IddField="Zone Air Exhaust Port List" Access="HIDDEN"/>
+		<rule IddField="Zone Air Node Name" Access="HIDDEN"/>
+		<rule IddField="Zone Return Air Node Name" Access="HIDDEN"/>
+		<rule IddField="Use Ideal Air Loads" Access="LOCKED"/>
+	</POLICY>
+</ROOT>

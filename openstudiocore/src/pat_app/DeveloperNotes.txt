@@ -1,0 +1,142 @@
+
+*** Random Comments ***
+
+What program code currently exists in Pat that will not be used?  Suggest we strip down the software to the bare minimum for this project, so that it is clear what needs to be supported.
+
+Does the application need to support "isPlugin".  There is currently code in Pat's OSDocument that attempts to handle this case.  Or at least it appears to.  Along those lines, does the app need to be split into a shared lib and an executable, including OSAppBase?
+
+  - (DLM) We don't need isPlugin, I am very supportive of the lib/app split though, certain GUI elements like editing measure parameters may be reused.  In fact this should get reused by OpenStudio application pretty soon, in which case I guess it would go in openstudio_lib.
+
+  - (KSB) I understand the benefit of a common library, but this is not that.  The pat_lib target we have now is basically all of the app except the main event loop.  Likewise openstudio_lib is almost everything for the OpenStudio app except the main loop.  A common library library of OS classes would be good though.  This is not that big of a deal either way though.
+  
+  - (DLM) We can put more stuff in the app, that is fine by me, I would just want reusable widgets (like the measure parameter editor) to be in a library somewhere
+  
+  - (ETH) Could the model_editor target be renamed and used as a common repository of widgets? It already contains InspectorGadget (although perhaps that should move to openstudio_lib). (On a related note, I thought Alex axed it, but the project_editor target is still around.)
+
+It appears that the units handling code will be unused.  ie. in OSDocument  bool isIP = m_mainWindow->displayIP();
+  
+  - (DLM) We may want this in the future but have no immediate plans to use it, ok to cut.
+
+Unlike OpenStudio app, I suggest that we build on a principle that only one tab view is held in memory at a time.  When a main tab is selected, instantiate the corresponding view at that time.  This will avoid background updating that will bog things down.  It is also more straightforward than disabling updates or something similar on the views.
+
+  - (DLM) Let's give it a shot.
+
+Use QSharedPointer.  Sweet, it looks like most of the code is already using it!  For anyone curious about the different smart pointers in Qt, checkout http://blog.qt.digia.com/blog/2009/08/25/count-with-me-how-many-smart-pointer-classes-does-qt-have/  I think that QSharedPointer is the right currency in most cases.  I think it can even replace what OSQObjectController does.  Consider depricating its use.
+
+  - (KSB) QWidget conglomerations should use raw pointers as the currency since that is how the Qt widget framework is built.  OpenStudio controllers should be held in QSharedPointer.  Controllers should be used to contain QWidgets that are added and removed to a view dynamically.  The controllers should hold onto the views with a QPointer and it is the developer's responsibility to delete the held widget when the controller is destroyed.
+
+Accessing App singleton from any controller is fair game.
+
+Model classes can be removed from Pat's OSDocument.
+
+  - (DLM) Yeah that class needs to be really trimmed down.  We need to really cut out stuff/patterns we don't need or they will confuse us.  One example is all the resource OSMs, PAT doesn't need those.  Anything that we don't know why we have it should get cut.
+
+View classes (QWidget subclasses) are conglomerations of other widgets.  The inner widgets can be publicly accessible to facilitate driving the class externally via a controller.  Controllers are thought to be specific to the Pat app and disposable.  QWidget derived views are potentially reusable and therefore they should avoid holding models or controllers.
+
+View classes should be valid even without any supporting data.  For example a view designed to show something from openstudio::Model should still work without connecting to a model.  Since controllers drive the views from the outside, this should fall out naturally.
+
+After some experience with QSharedPointer it seems problematic because it lacks "shared from this."  Consider sticking with boost shared pointer or the std library of newer compilers.  One example where this becomes a problem is in OSListController defined below.  Often OSListItem will be asking OSListController to remove itself from the list.
+
+*** Key Classes ***
+
+** Serves up an ordered list of a QObject derived class.  This could possibly be a subclass of QAbstractListModel.  One concern is that class uses QModelIndex instead of a simple integer because it is derived from a more generic structure.  The QAbstractModel classes also return a QVariant instead of a QObject with properties, which seems a little old school.
+
+* The QObject returned by itemAt() should be a derived classes that attaches itself to some part of the OpenStudio api and makes necessary data available via properties.  The QObject derived class is an adaptor that exposes select data from OpenStudio.  OSListController puts a group of those objects in list form.  This is similar to QAbstractItemModel except it returns a QVariant based on certain roles.  
+
+* You could probably have nested list controllers to define more complicated data structures.  That is the QObject could have a property that returns another OSListController.
+
+OSListController
+  - QObject itemAt(int index);
+  
+    - (DLM) I am really cool with the QVariant/casting approach relative to QProperties.  Each of our GUI elements will really be tied to one type of OpenStudio class.  Are you thinking we need to go through the analysis framework and add properties to every object/field we need to access?
+    
+    - (ETH) I agree with Dan. There are no QProperties in the analysis framework currently, and unlike in Model, where the abstract concepts of Attributes and Relationships are somewhat useful, I do not see an independent reason to add them to classes like Analysis and Problem.  
+
+** Vertically displays a list of objects.  An OSListController supplies the data.  OSItemDelegate subclass is the view factory for each item in the data source.
+
+OSListView
+  - void setDelegate(OSItemDelegate );
+  - void setListController(OSListController );
+
+** Provides an item in the OSListView.  Attaches to a QObject via properties to read and write data.  The Object is expected to be served up by a OSListController.  This class must be subclassed to serve up a view that is interesting.
+
+OSItemDelegate
+  - QWidget view(QObject )
+  
+    - (DLM) Hmm again do we really need to use properties?  What are the benefits to directly associating the view with a specific OS type?  Something like this:
+
+    OSMyItem : public OSItemDelegate{
+      OSMyItem(OSSomeAnalysisObject)
+
+    - (KSB) I think it comes down to subclassing the views or subclassing a controller class (QObject).  Conceptually I would prefer to stop subclassing the views.  The properties would allow the view to attach to any controller that impements a specific set of properties.  Seems more conventional in my opinion.  Subclassing a view every time the data source changes just seems wrong.  I'm pushing to make controllers custom and views generic based on the desired look.
+    
+    - (ETH) I do not pretend to understand the ins and outs of this, but I do want to make the point that the analysis framework structure is very different from model's. Where there are hundreds of ModelObjects that, overall, behave fairly similarly and are simple-data heavy, there are many fewer classes in the analysis framework (~10 right now), they are partitioned across a few differnt functionalities, and most of the getters and setters involve full objects, not simple data. As PAT expands, there are a couple types of objects that might benefit more from a properties approach, namely, algorithm options and uncertainty descriptions, but those are not yet being exposed.
+
+    - (KSB) There are some good comments being input here.  I would like to assure everyone that I fully expect Model and Project to be different.  That is in fact the point.  I'm trying to establish a layer of insulation between the domain logic and the views.  None of this conversation requires the domain specific code to change in any way with respect to properties, signals, or whatever.  I'm going to test this out on the right column that displays the measures and see where the complications are.
+
+** Provides a header and content area with the ability to collapse down to just the header.  Any widget can be placed in the main content area.  Expect that a OSListView will find its way inside on many occasions.
+
+OSCollapisbleView
+  - void setContent(QWidget)
+  - void setHeader(QWidget)
+  - void expand()
+  - void collapse()
+
+** Provides a place holder in a widget conglomeration to insert a new view or to switch views.  Collapses down to nothing when it is cleared or if the view is deleted externally.  Might be implemented by a constrained version of a QStackedWidget.  Would be used by PatMainWindow and others.  Views should be switched out by an external driving controller.
+
+OSViewSwitcher
+  - void setView(QWidget )
+  - void clear()
+
+** Contains project level views and controllers.  For starters we should expect one controller per tab and a PatDocumentWindow.
+
+PatDocument
+  - openstudio::Measure measure(PatMeasureId)
+  - openstudio::Project project() --> I think this exists and will be one of the main entry points to the backend.
+
+** The main currency of drag and drop.  Expect to create one of these with the enum and id constructor when a drag is started.  Output to xml to create mime data for the drag event.  Recreate on the drop using the xml constructor.
+
+PatMeasureId
+  - PatMeasureId(const QString & xmlData)
+  - PatMeasureId(SourceEnum sourceEnum, const UUID & id)
+  - SourceEnum source()
+  - UUID id()
+  - toXml()
+  
+  - (DLM) Alex will be making a class utilities/BCLMeasure to parse and work with the measure.xml file.  When measures are updated (including user changes to the ruby file) we will increment the measure's version UUID, this will need to be checked in the app as well.  I think we will want a hash of measure UUID to arguments as well so we don't have to run the ruby interpreter everytime, we can invalidate that hash whenever the versionUUID of a measure changes.
+
+  - (KSB) I was thinking of this as a small class that only existed to serialize and deserialize the drag events within and specific to the user interface.  I suspect there are "model" type classes needed to maintain the heavy duty data.
+  
+  - (DLM) Yeah I get that, I was just trying to convey that you are probably going to want data structures to map measure ids and version ids to arguments so you will know when you need to rerun the ruby interpreter, you don't need to do it unless you haven't gotten them for the measure before or the measure changed.
+
+** App singleton with access to the current document and whatever else should exist at the app level.  Ruby interpreter perhaps.
+
+PatApp
+  - PatDocument currentDocument();
+
+** The main view to show a project.  Has a center content area, a right column, and vertical tabs on the left.
+
+PatMainWindow
+  - void setMainView(QWidget )
+  - void setLeftColumnView(QWidget )
+  - void activateTab(TabEnum )
+
+** Orange window with gradient.  Has a black title and inner content area that is slightly offset.
+
+PatMainTab
+  - setTitle(const QString & text )
+  - setMainView(QWidget )
+
+** Light gray header with gradient and black text
+
+PatLightGradientHeader
+  - void setText( const QString & )
+
+** Dark gray header with gradient and white text
+
+PatDarkGradientHeader
+  - void setText( const QString & )
+
+
+
+

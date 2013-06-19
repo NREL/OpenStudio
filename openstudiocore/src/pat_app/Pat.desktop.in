@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=ParametricAnalysisTool
+Comment=Provides an easy-to-follow workflow for generating and comparing parametrically-related OpenStudio energy models
+Exec=${CMAKE_INSTALL_PREFIX}/bin/Pat %f
+Terminal=false
+Type=Application
+Icon=Pat
+Categories=Science;Engineering;
+MimeType=application/openstudio.osp;

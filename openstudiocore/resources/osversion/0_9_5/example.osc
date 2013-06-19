@@ -1,0 +1,44 @@
+
+OS:Version,
+  {82c8ddc5-4c34-4bf5-ba42-af3dcf324d30}, ! Handle
+  0.9.5;                                  ! Version Identifier
+
+OS:Construction,
+  {f391dabc-f030-4226-bdea-cd57e0c5b4d5}, ! Handle
+  Slab,                                   ! Name
+  ,                                       ! Surface Rendering Name
+  {5e3de977-0b65-450b-86f6-9970965f76c1}, ! Layer 1
+  {42ab638d-e8f3-4d58-832e-f9b3685516ba}; ! Layer 2
+
+OS:Material,
+  {5e3de977-0b65-450b-86f6-9970965f76c1}, ! Handle
+  MAT-CC05 8 HW CONCRETE,                 ! Name
+  Rough,                                  ! Roughness
+  0.2032,                                 ! Thickness {m}
+  1.311,                                  ! Conductivity {W/m-K}
+  2240,                                   ! Density {kg/m3}
+  836.8,                                  ! Specific Heat {J/kg-K}
+  0.9,                                    ! Thermal Absorptance
+  0.7,                                    ! Solar Absorptance
+  0.7;                                    ! Visible Absorptance
+
+OS:Material:NoMass,
+  {42ab638d-e8f3-4d58-832e-f9b3685516ba}, ! Handle
+  CP02 CARPET PAD,                        ! Name
+  VeryRough,                              ! Roughness
+  0.2165,                                 ! Thermal Resistance {m2-K/W}
+  0.9,                                    ! Thermal Absorptance
+  0.7,                                    ! Solar Absorptance
+  0.8;                                    ! Visible Absorptance
+
+OS:ComponentData,
+  {1ee21307-8203-4fae-a443-a26be6052a2a}, ! Handle
+  Component Data 1,                       ! Name
+  {b4f9038b-5f91-47d1-b692-840ffe0bfe27}, ! UUID
+  {4c19cd2a-d3e3-44d5-8a80-03c4925f1602}, ! Version UUID
+  1353091091,                             ! Creation Timestamp
+  1353091091,                             ! Version Timestamp
+  {f391dabc-f030-4226-bdea-cd57e0c5b4d5}, ! Name of Object 1
+  {5e3de977-0b65-450b-86f6-9970965f76c1}, ! Name of Object 2
+  {42ab638d-e8f3-4d58-832e-f9b3685516ba}; ! Name of Object 3
+

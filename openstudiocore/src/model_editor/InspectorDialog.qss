@@ -1,0 +1,127 @@
+QListView {
+    show-decoration-selected: 1; /* make the selection span the entire width of the view */
+}
+
+QListView::item:alternate, QTableView::item:alternate {
+    background: #EEEEEE;
+}
+
+QListView::item:selected, QTableView::item:selected {
+    border: 1px solid #6a6ea9;
+}
+
+QListView::item:selected:!active, QTableView::item:selected:!active {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #ABAFE5, stop: 1 #8588B2);
+}
+
+QListView::item:selected:active, QTableView::item:selected:active {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #6a6ea9, stop: 1 #888dd9);
+}
+
+QListView::item:hover, QTableView::item:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #FAFBFE, stop: 1 #DCDEF1);
+}
+
+QHeaderView::section {
+  background-color: qlineargradient(x1:0,y1:0,
+                                    x2:0,y2:1,
+                                    stop: 0 #6B747B, 
+                                    stop: 0.33 #D0D4D7,
+                                    stop: 0.66 #D0D4D7,
+                                    stop: 1 #6B747B);
+}
+
+QWidget#listLabel {
+  background-color: qlineargradient(x1:0,y1:0,
+                                    x2:0,y2:1,
+                                    stop: 0 #6B747B, 
+                                    stop: 0.33 #D0D4D7,
+                                    stop: 0.66 #D0D4D7,
+                                    stop: 1 #6B747B);
+}
+
+QWidget#tableLabel {
+  background-color: qlineargradient(x1:0,y1:0,
+                                    x2:0,y2:1,
+                                    stop: 0 #6B747B, 
+                                    stop: 0.33 #D0D4D7,
+                                    stop: 0.66 #D0D4D7,
+                                    stop: 1 #6B747B);
+}
+
+QWidget#selectionLabel {
+  background-color: qlineargradient(x1:0,y1:0,
+                                    x2:0,y2:1,
+                                    stop: 0 #6B747B, 
+                                    stop: 0.33 #D0D4D7,
+                                    stop: 0.66 #D0D4D7,
+                                    stop: 1 #6B747B);
+}
+
+QWidget#igLabel{
+  background-color: qlineargradient(x1:0,y1:0,
+                                    x2:0,y2:1,
+                                    stop: 0 #6B747B, 
+                                    stop: 0.33 #D0D4D7,
+                                    stop: 0.66 #D0D4D7,
+                                    stop: 1 #6B747B);
+}
+
+QSplitter::handle::horizontal {
+  width: 15px;
+  image: url(:images/h_devider_dots.png);
+  background-color: #2C3233;
+}
+
+QSplitter::handle::vertical {
+  height: 15px;
+  image: url(:images/v_devider_dots.png);
+  background-color: #2C3233;
+}
+
+QPushButton#pushButtonNew {
+  border: none;
+  image: url(:images/edit_add.png);
+  width: 40px;
+  height: 40px;
+}
+
+QPushButton#pushButtonNew:disabled {
+  image: url(:images/edit_add_off.png);
+}
+
+QPushButton#pushButtonCopy {
+  border: none;
+  image: url(:images/copy.png);
+  width: 40px;
+  height: 40px;
+}
+
+QPushButton#pushButtonCopy:disabled {
+  image: url(:images/copy_off.png);
+}
+
+QPushButton#pushButtonDelete {
+  border: none;
+  image: url(:images/edit_remove.png);
+  width: 40px;
+  height: 40px;
+}
+
+QPushButton#pushButtonDelete:disabled {
+  image: url(:images/edit_remove_off.png);
+}
+
+QPushButton#pushButtonPurge {
+  border: none;
+  image: url(:images/edit_purge.png);
+  width: 40px;
+  height: 40px;
+}
+
+QPushButton#pushButtonPurge:disabled {
+  image: url(:images/edit_purge_off.png);
+}

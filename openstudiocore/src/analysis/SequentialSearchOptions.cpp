@@ -1,0 +1,73 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#include <analysis/SequentialSearchOptions.hpp>
+#include <analysis/SequentialSearchOptions_Impl.hpp>
+
+namespace openstudio {
+namespace analysis {
+
+namespace detail {
+
+  SequentialSearchOptions_Impl::SequentialSearchOptions_Impl(int objectiveToMinimizeFirst)
+    : AlgorithmOptions_Impl()
+  {
+    saveOption(Attribute("objectiveToMinimizeFirst",objectiveToMinimizeFirst));
+  }
+
+  SequentialSearchOptions_Impl::SequentialSearchOptions_Impl(const std::vector<Attribute>& options)
+    : AlgorithmOptions_Impl(options)
+  {}
+
+  AlgorithmOptions SequentialSearchOptions_Impl::clone() const {
+    boost::shared_ptr<SequentialSearchOptions_Impl> impl(new SequentialSearchOptions_Impl(*this));
+    return SequentialSearchOptions(impl);
+  }
+
+  int SequentialSearchOptions_Impl::objectiveToMinimizeFirst() const {
+    OptionalAttribute option = getOption("objectiveToMinimizeFirst");
+    BOOST_ASSERT(option);
+    return option->valueAsInteger();
+  }
+
+} // detail
+
+SequentialSearchOptions::SequentialSearchOptions(int objectiveToMinimizeFirst)
+  : AlgorithmOptions(boost::shared_ptr<detail::SequentialSearchOptions_Impl>(
+        new detail::SequentialSearchOptions_Impl(objectiveToMinimizeFirst)))
+{}
+
+SequentialSearchOptions::SequentialSearchOptions(const std::vector<Attribute>& options)
+  : AlgorithmOptions(boost::shared_ptr<detail::SequentialSearchOptions_Impl>(
+        new detail::SequentialSearchOptions_Impl(options)))
+{}
+
+int SequentialSearchOptions::objectiveToMinimizeFirst() const {
+  return getImpl<detail::SequentialSearchOptions_Impl>()->objectiveToMinimizeFirst();
+}
+
+/// @cond
+SequentialSearchOptions::SequentialSearchOptions(boost::shared_ptr<detail::SequentialSearchOptions_Impl> impl)
+  : AlgorithmOptions(impl)
+{}
+/// @endcond
+
+} // analysis
+} // openstudio
+

@@ -1,0 +1,1259 @@
+##def USA_CA_CEC_CLIMATE_ZONE_1[]
+!  VERSION,
+!    3.1;                    !- Version Identifier
+
+Site:Location,
+USA CA-CEC Climate Zone 1,  !- Name
+40.78,       !- Latitude {deg}
+-124.18,       !- Longitude {deg}
+-8.00,       !- Time Zone {hr}
+13; !- Elevation {m}
+
+Site:GroundTemperature:BuildingSurface,
+19.991,  !- January Ground Temperature {C}
+19.982,  !- February Ground Temperature {C}
+19.996,  !- March Ground Temperature {C}
+20.003,  !- April Ground Temperature {C}
+20.034,  !- May Ground Temperature {C}
+20.071,  !- June Ground Temperature {C}
+20.089,  !- July Ground Temperature {C}
+20.108,  !- August Ground Temperature {C}
+20.095,  !- September Ground Temperature {C}
+20.078,  !- October Ground Temperature {C}
+20.017,  !- November Ground Temperature {C}
+20.004;  !- December Ground Temperature {C}
+
+Site:WaterMainsTemperature,
+CORRELATION,             !- Calculation Method
+,                        !- Temperature Schedule Name
+11.99,               !- Annual Average Outdoor Air Temperature {C}
+5.20;              !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
+
+ ! Climate Zone 1_CA_USA Annual Heating 99.6%, MaxDB=-1°C
+ SizingPeriod:DesignDay,
+Climate Zone 1 Ann Htg 99.6% Condns DB,     !- Name
+       -1,      !- Maximum Dry-Bulb Temperature {C}
+      0.0,      !- Daily Temp Range {C}
+       -1,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  101169.,      !- Barometric Pressure {Pa}
+        2,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+       80,      !- Wind Direction {Degrees; N=0, S=180}
+     0.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+       12,      !- Month
+WinterDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 1_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=21.3°C MWB=15.4°C
+ SizingPeriod:DesignDay,
+Climate Zone 1 Ann Clg .4% Condns DB=>MWB,     !- Name
+     21.3,      !- Maximum Dry-Bulb Temperature {C}
+      6.7,      !- Daily Temp Range {C}
+     15.4,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  101169.,      !- Barometric Pressure {Pa}
+      4.4,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      320,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 1_CA_USA Annual Cooling (WB=>MDB) .4%, MDB=19.4°C WB=16.9°C
+ SizingPeriod:DesignDay,
+Climate Zone 1 Ann Clg .4% Condns WB=>MDB,     !- Name
+     19.4,      !- Maximum Dry-Bulb Temperature {C}
+      6.7,      !- Daily Temp Range {C}
+     16.9,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  101169.,      !- Barometric Pressure {Pa}
+      4.4,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      320,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+##enddef
+
+##def USA_CA_CEC_CLIMATE_ZONE_3[]
+!  VERSION,
+!    3.1;                    !- Version Identifier
+
+Site:Location,
+USA CA-CEC Climate Zone 3,  !- Name
+37.70,       !- Latitude {deg}
+-122.18,       !- Longitude {deg}
+-8.00,       !- Time Zone {hr}
+2; !- Elevation {m}
+
+Site:GroundTemperature:BuildingSurface,
+19.996,  !- January Ground Temperature {C}
+20.005,  !- February Ground Temperature {C}
+20.005,  !- March Ground Temperature {C}
+20.018,  !- April Ground Temperature {C}
+20.043,  !- May Ground Temperature {C}
+20.188,  !- June Ground Temperature {C}
+20.220,  !- July Ground Temperature {C}
+20.235,  !- August Ground Temperature {C}
+20.984,  !- September Ground Temperature {C}
+20.394,  !- October Ground Temperature {C}
+20.105,  !- November Ground Temperature {C}
+20.026;  !- December Ground Temperature {C}
+
+Site:WaterMainsTemperature,
+CORRELATION,             !- Calculation Method
+,                        !- Temperature Schedule Name
+14.14,               !- Annual Average Outdoor Air Temperature {C}
+7.80;              !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
+
+ ! Climate Zone 3_CA_USA Annual Heating 99.6%, MaxDB=3.1°C
+ SizingPeriod:DesignDay,
+Climate Zone 3 Ann Htg 99.6% Condns DB,     !- Name
+      3.1,      !- Maximum Dry-Bulb Temperature {C}
+      0.0,      !- Daily Temp Range {C}
+      3.1,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  101301.,      !- Barometric Pressure {Pa}
+      2.3,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+       50,      !- Wind Direction {Degrees; N=0, S=180}
+     0.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        1,      !- Month
+WinterDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 3_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=27.7°C MWB=18.3°C
+ SizingPeriod:DesignDay,
+Climate Zone 3 Ann Clg .4% Condns DB=>MWB,     !- Name
+     27.7,      !- Maximum Dry-Bulb Temperature {C}
+      8.1,      !- Daily Temp Range {C}
+     18.3,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  101301.,      !- Barometric Pressure {Pa}
+      4.9,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      290,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        9,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 3_CA_USA Annual Cooling (WB=>MDB) .4%, MDB=25.6°C WB=19.8°C
+ SizingPeriod:DesignDay,
+Climate Zone 3 Ann Clg .4% Condns WB=>MDB,     !- Name
+     25.6,      !- Maximum Dry-Bulb Temperature {C}
+      8.1,      !- Daily Temp Range {C}
+     19.8,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  101301.,      !- Barometric Pressure {Pa}
+      4.9,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      290,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        9,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+##enddef
+
+##def USA_CA_CEC_CLIMATE_ZONE_4[]
+!  VERSION,
+!    3.1;                    !- Version Identifier
+
+Site:Location,
+USA CA-CEC Climate Zone 4,  !- Name
+37.40,       !- Latitude {deg}
+-122.40,       !- Longitude {deg}
+-8.00,       !- Time Zone {hr}
+30; !- Elevation {m}
+
+Site:GroundTemperature:BuildingSurface,
+20.029,  !- January Ground Temperature {C}
+20.031,  !- February Ground Temperature {C}
+20.011,  !- March Ground Temperature {C}
+20.024,  !- April Ground Temperature {C}
+20.164,  !- May Ground Temperature {C}
+21.851,  !- June Ground Temperature {C}
+22.522,  !- July Ground Temperature {C}
+22.688,  !- August Ground Temperature {C}
+22.723,  !- September Ground Temperature {C}
+20.921,  !- October Ground Temperature {C}
+20.243,  !- November Ground Temperature {C}
+20.082;  !- December Ground Temperature {C}
+
+Site:WaterMainsTemperature,
+CORRELATION,             !- Calculation Method
+,                        !- Temperature Schedule Name
+14.93,               !- Annual Average Outdoor Air Temperature {C}
+10.90;              !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
+
+ ! Climate Zone 4_CA_USA Annual Heating 99.6%, MaxDB=2°C
+ SizingPeriod:DesignDay,
+Climate Zone 4 Ann Htg 99.6% Condns DB,     !- Name
+        2,      !- Maximum Dry-Bulb Temperature {C}
+      0.0,      !- Daily Temp Range {C}
+        2,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  100965.,      !- Barometric Pressure {Pa}
+      0.6,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+      150,      !- Wind Direction {Degrees; N=0, S=180}
+     0.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+       12,      !- Month
+WinterDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 4_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.6°C MWB=19.5°C
+ SizingPeriod:DesignDay,
+Climate Zone 4 Ann Clg .4% Condns DB=>MWB,     !- Name
+     33.6,      !- Maximum Dry-Bulb Temperature {C}
+       12,      !- Daily Temp Range {C}
+     19.5,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  100965.,      !- Barometric Pressure {Pa}
+      4.5,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      320,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 4_CA_USA Annual Cooling (WB=>MDB) .4%, MDB=30.8°C WB=20.9°C
+ SizingPeriod:DesignDay,
+Climate Zone 4 Ann Clg .4% Condns WB=>MDB,     !- Name
+     30.8,      !- Maximum Dry-Bulb Temperature {C}
+       12,      !- Daily Temp Range {C}
+     20.9,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  100965.,      !- Barometric Pressure {Pa}
+      4.5,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      320,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+##enddef
+
+##def USA_CA_CEC_CLIMATE_ZONE_5[]
+!  VERSION,
+!    3.1;                    !- Version Identifier
+
+Site:Location,
+USA CA-CEC Climate Zone 5,  !- Name
+34.90,       !- Latitude {deg}
+-120.40,       !- Longitude {deg}
+-8.00,       !- Time Zone {hr}
+72; !- Elevation {m}
+
+Site:GroundTemperature:BuildingSurface,
+19.986,  !- January Ground Temperature {C}
+19.997,  !- February Ground Temperature {C}
+20.009,  !- March Ground Temperature {C}
+20.015,  !- April Ground Temperature {C}
+20.026,  !- May Ground Temperature {C}
+20.195,  !- June Ground Temperature {C}
+20.321,  !- July Ground Temperature {C}
+20.258,  !- August Ground Temperature {C}
+20.911,  !- September Ground Temperature {C}
+20.378,  !- October Ground Temperature {C}
+20.089,  !- November Ground Temperature {C}
+20.028;  !- December Ground Temperature {C}
+
+Site:WaterMainsTemperature,
+CORRELATION,             !- Calculation Method
+,                        !- Temperature Schedule Name
+14.26,               !- Annual Average Outdoor Air Temperature {C}
+6.70;              !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
+
+ ! Climate Zone 5_CA_USA Annual Heating 99.6%, MaxDB=0.1°C
+ SizingPeriod:DesignDay,
+Climate Zone 5 Ann Htg 99.6% Condns DB,     !- Name
+      0.1,      !- Maximum Dry-Bulb Temperature {C}
+      0.0,      !- Daily Temp Range {C}
+      0.1,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  100463.,      !- Barometric Pressure {Pa}
+      1.8,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+      120,      !- Wind Direction {Degrees; N=0, S=180}
+     0.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+       12,      !- Month
+WinterDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 5_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=29°C MWB=18°C
+ SizingPeriod:DesignDay,
+Climate Zone 5 Ann Clg .4% Condns DB=>MWB,     !- Name
+       29,      !- Maximum Dry-Bulb Temperature {C}
+     10.3,      !- Daily Temp Range {C}
+       18,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  100463.,      !- Barometric Pressure {Pa}
+      4.6,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      310,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 5_CA_USA Annual Cooling (WB=>MDB) .4%, MDB=25.3°C WB=20.5°C
+ SizingPeriod:DesignDay,
+Climate Zone 5 Ann Clg .4% Condns WB=>MDB,     !- Name
+     25.3,      !- Maximum Dry-Bulb Temperature {C}
+     10.3,      !- Daily Temp Range {C}
+     20.5,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  100463.,      !- Barometric Pressure {Pa}
+      4.6,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      310,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+##enddef
+
+##def USA_CA_CEC_CLIMATE_ZONE_6[]
+!  VERSION,
+!    3.1;                    !- Version Identifier
+
+Site:Location,
+USA CA-CEC Climate Zone 6,  !- Name
+33.90,       !- Latitude {deg}
+-118.50,       !- Longitude {deg}
+-8.00,       !- Time Zone {hr}
+30; !- Elevation {m}
+
+Site:GroundTemperature:BuildingSurface,
+20.109,  !- January Ground Temperature {C}
+20.120,  !- February Ground Temperature {C}
+20.105,  !- March Ground Temperature {C}
+20.147,  !- April Ground Temperature {C}
+20.290,  !- May Ground Temperature {C}
+21.224,  !- June Ground Temperature {C}
+22.365,  !- July Ground Temperature {C}
+22.741,  !- August Ground Temperature {C}
+22.705,  !- September Ground Temperature {C}
+21.702,  !- October Ground Temperature {C}
+20.460,  !- November Ground Temperature {C}
+20.179;  !- December Ground Temperature {C}
+
+Site:WaterMainsTemperature,
+CORRELATION,             !- Calculation Method
+,                        !- Temperature Schedule Name
+16.27,               !- Annual Average Outdoor Air Temperature {C}
+7.50;              !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
+
+ ! Climate Zone 6_CA_USA Annual Heating 99.6%, MaxDB=4.9°C
+ SizingPeriod:DesignDay,
+Climate Zone 6 Ann Htg 99.6% Condns DB,     !- Name
+      4.9,      !- Maximum Dry-Bulb Temperature {C}
+      0.0,      !- Daily Temp Range {C}
+      4.9,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  100965.,      !- Barometric Pressure {Pa}
+      1.3,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+      300,      !- Wind Direction {Degrees; N=0, S=180}
+     0.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+       12,      !- Month
+WinterDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 6_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.1°C MWB=20°C
+ SizingPeriod:DesignDay,
+Climate Zone 6 Ann Clg .4% Condns DB=>MWB,     !- Name
+     33.1,      !- Maximum Dry-Bulb Temperature {C}
+      9.3,      !- Daily Temp Range {C}
+       20,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  100965.,      !- Barometric Pressure {Pa}
+      4.2,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      280,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 6_CA_USA Annual Cooling (WB=>MDB) .4%, MDB=28.9°C WB=22.4°C
+ SizingPeriod:DesignDay,
+Climate Zone 6 Ann Clg .4% Condns WB=>MDB,     !- Name
+     28.9,      !- Maximum Dry-Bulb Temperature {C}
+      9.3,      !- Daily Temp Range {C}
+     22.4,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  100965.,      !- Barometric Pressure {Pa}
+      4.2,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      280,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+##enddef
+
+##def USA_CA_CEC_CLIMATE_ZONE_7[]
+!  VERSION,
+!    3.1;                    !- Version Identifier
+
+Site:Location,
+USA CA-CEC Climate Zone 7,  !- Name
+32.70,       !- Latitude {deg}
+-117.18,       !- Longitude {deg}
+-8.00,       !- Time Zone {hr}
+4; !- Elevation {m}
+
+Site:GroundTemperature:BuildingSurface,
+20.143,  !- January Ground Temperature {C}
+20.105,  !- February Ground Temperature {C}
+20.112,  !- March Ground Temperature {C}
+20.124,  !- April Ground Temperature {C}
+20.263,  !- May Ground Temperature {C}
+21.995,  !- June Ground Temperature {C}
+22.679,  !- July Ground Temperature {C}
+22.811,  !- August Ground Temperature {C}
+22.846,  !- September Ground Temperature {C}
+22.553,  !- October Ground Temperature {C}
+20.618,  !- November Ground Temperature {C}
+20.265;  !- December Ground Temperature {C}
+
+Site:WaterMainsTemperature,
+CORRELATION,             !- Calculation Method
+,                        !- Temperature Schedule Name
+16.83,               !- Annual Average Outdoor Air Temperature {C}
+7.60;              !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
+
+ ! Climate Zone 7_CA_USA Annual Heating 99.6%, MaxDB=7.1°C
+ SizingPeriod:DesignDay,
+Climate Zone 7 Ann Htg 99.6% Condns DB,     !- Name
+      7.1,      !- Maximum Dry-Bulb Temperature {C}
+      0.0,      !- Daily Temp Range {C}
+      7.1,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  101277.,      !- Barometric Pressure {Pa}
+      1.4,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+      340,      !- Wind Direction {Degrees; N=0, S=180}
+     0.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+       12,      !- Month
+WinterDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 7_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=29.3°C MWB=19.8°C
+ SizingPeriod:DesignDay,
+Climate Zone 7 Ann Clg .4% Condns DB=>MWB,     !- Name
+     29.3,      !- Maximum Dry-Bulb Temperature {C}
+      4.8,      !- Daily Temp Range {C}
+     19.8,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  101277.,      !- Barometric Pressure {Pa}
+      4.8,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      310,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 7_CA_USA Annual Cooling (WB=>MDB) .4%, MDB=26.3°C WB=22.7°C
+ SizingPeriod:DesignDay,
+Climate Zone 7 Ann Clg .4% Condns WB=>MDB,     !- Name
+     26.3,      !- Maximum Dry-Bulb Temperature {C}
+      4.8,      !- Daily Temp Range {C}
+     22.7,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  101277.,      !- Barometric Pressure {Pa}
+      4.8,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      310,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+##enddef
+
+##def USA_CA_CEC_CLIMATE_ZONE_8[]
+!  VERSION,
+!    3.1;                    !- Version Identifier
+
+Site:Location,
+USA CA-CEC Climate Zone 8,  !- Name
+33.58,       !- Latitude {deg}
+-117.68,       !- Longitude {deg}
+-8.00,       !- Time Zone {hr}
+117; !- Elevation {m}
+
+Site:GroundTemperature:BuildingSurface,
+20.100,  !- January Ground Temperature {C}
+20.097,  !- February Ground Temperature {C}
+20.109,  !- March Ground Temperature {C}
+20.312,  !- April Ground Temperature {C}
+21.002,  !- May Ground Temperature {C}
+22.304,  !- June Ground Temperature {C}
+22.678,  !- July Ground Temperature {C}
+22.765,  !- August Ground Temperature {C}
+22.760,  !- September Ground Temperature {C}
+22.069,  !- October Ground Temperature {C}
+20.626,  !- November Ground Temperature {C}
+20.194;  !- December Ground Temperature {C}
+
+Site:WaterMainsTemperature,
+CORRELATION,             !- Calculation Method
+,                        !- Temperature Schedule Name
+17.04,               !- Annual Average Outdoor Air Temperature {C}
+9.00;              !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
+
+ ! Climate Zone 8_CA_USA Annual Heating 99.6%, MaxDB=5.9°C
+ SizingPeriod:DesignDay,
+Climate Zone 8 Ann Htg 99.6% Condns DB,     !- Name
+      5.9,      !- Maximum Dry-Bulb Temperature {C}
+      0.0,      !- Daily Temp Range {C}
+      5.9,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+   99927.,      !- Barometric Pressure {Pa}
+      1.5,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+       90,      !- Wind Direction {Degrees; N=0, S=180}
+     0.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        1,      !- Month
+WinterDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 8_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.3°C MWB=19.8°C
+ SizingPeriod:DesignDay,
+Climate Zone 8 Ann Clg .4% Condns DB=>MWB,     !- Name
+     33.3,      !- Maximum Dry-Bulb Temperature {C}
+     10.8,      !- Daily Temp Range {C}
+     19.8,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+   99927.,      !- Barometric Pressure {Pa}
+      2.7,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      270,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 8_CA_USA Annual Cooling (WB=>MDB) .4%, MDB=29.9°C WB=22°C
+ SizingPeriod:DesignDay,
+Climate Zone 8 Ann Clg .4% Condns WB=>MDB,     !- Name
+     29.9,      !- Maximum Dry-Bulb Temperature {C}
+     10.8,      !- Daily Temp Range {C}
+       22,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+   99927.,      !- Barometric Pressure {Pa}
+      2.7,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      270,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+##enddef
+
+##def USA_CA_CEC_CLIMATE_ZONE_9[]
+!  VERSION,
+!    3.1;                    !- Version Identifier
+
+Site:Location,
+USA CA-CEC Climate Zone 9,  !- Name
+34.15,       !- Latitude {deg}
+-118.15,       !- Longitude {deg}
+-8.00,       !- Time Zone {hr}
+263; !- Elevation {m}
+
+Site:GroundTemperature:BuildingSurface,
+19.965,  !- January Ground Temperature {C}
+20.008,  !- February Ground Temperature {C}
+19.917,  !- March Ground Temperature {C}
+20.119,  !- April Ground Temperature {C}
+20.997,  !- May Ground Temperature {C}
+22.236,  !- June Ground Temperature {C}
+22.483,  !- July Ground Temperature {C}
+22.574,  !- August Ground Temperature {C}
+22.619,  !- September Ground Temperature {C}
+22.086,  !- October Ground Temperature {C}
+20.461,  !- November Ground Temperature {C}
+20.071;  !- December Ground Temperature {C}
+
+Site:WaterMainsTemperature,
+CORRELATION,             !- Calculation Method
+,                        !- Temperature Schedule Name
+17.49,               !- Annual Average Outdoor Air Temperature {C}
+9.90;              !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
+
+ ! Climate Zone 9_CA_USA Annual Heating 99.6%, MaxDB=3.9°C
+ SizingPeriod:DesignDay,
+Climate Zone 9 Ann Htg 99.6% Condns DB,     !- Name
+      3.9,      !- Maximum Dry-Bulb Temperature {C}
+      0.0,      !- Daily Temp Range {C}
+      3.9,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+   98202.,      !- Barometric Pressure {Pa}
+      0.9,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+      330,      !- Wind Direction {Degrees; N=0, S=180}
+     0.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+       12,      !- Month
+WinterDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 9_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=36.8°C MWB=20.6°C
+ SizingPeriod:DesignDay,
+Climate Zone 9 Ann Clg .4% Condns DB=>MWB,     !- Name
+     36.8,      !- Maximum Dry-Bulb Temperature {C}
+     13.2,      !- Daily Temp Range {C}
+     20.6,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+   98202.,      !- Barometric Pressure {Pa}
+      3.8,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      160,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 9_CA_USA Annual Cooling (WB=>MDB) .4%, MDB=32.3°C WB=23°C
+ SizingPeriod:DesignDay,
+Climate Zone 9 Ann Clg .4% Condns WB=>MDB,     !- Name
+     32.3,      !- Maximum Dry-Bulb Temperature {C}
+     13.2,      !- Daily Temp Range {C}
+       23,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+   98202.,      !- Barometric Pressure {Pa}
+      3.8,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      160,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+##enddef
+
+##def USA_CA_CEC_CLIMATE_ZONE_10[]
+!  VERSION,
+!    3.1;                    !- Version Identifier
+
+Site:Location,
+USA CA-CEC Climate Zone 10,  !- Name
+33.87,       !- Latitude {deg}
+-117.27,       !- Longitude {deg}
+-8.00,       !- Time Zone {hr}
+469; !- Elevation {m}
+
+Site:GroundTemperature:BuildingSurface,
+19.757,  !- January Ground Temperature {C}
+19.776,  !- February Ground Temperature {C}
+19.747,  !- March Ground Temperature {C}
+19.915,  !- April Ground Temperature {C}
+20.851,  !- May Ground Temperature {C}
+21.997,  !- June Ground Temperature {C}
+22.186,  !- July Ground Temperature {C}
+22.234,  !- August Ground Temperature {C}
+22.188,  !- September Ground Temperature {C}
+21.546,  !- October Ground Temperature {C}
+20.195,  !- November Ground Temperature {C}
+19.811;  !- December Ground Temperature {C}
+
+Site:WaterMainsTemperature,
+CORRELATION,             !- Calculation Method
+,                        !- Temperature Schedule Name
+17.51,               !- Annual Average Outdoor Air Temperature {C}
+13.10;              !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
+
+ ! Climate Zone 10_CA_USA Annual Heating 99.6%, MaxDB=1.2°C
+ SizingPeriod:DesignDay,
+Climate Zone 10 Ann Htg 99.6% Condns DB,     !- Name
+      1.2,      !- Maximum Dry-Bulb Temperature {C}
+      0.0,      !- Daily Temp Range {C}
+      1.2,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+   95816.,      !- Barometric Pressure {Pa}
+      0.9,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+       40,      !- Wind Direction {Degrees; N=0, S=180}
+     0.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+       12,      !- Month
+WinterDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 10_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=38.3°C MWB=19.9°C
+ SizingPeriod:DesignDay,
+Climate Zone 10 Ann Clg .4% Condns DB=>MWB,     !- Name
+     38.3,      !- Maximum Dry-Bulb Temperature {C}
+     16.6,      !- Daily Temp Range {C}
+     19.9,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+   95816.,      !- Barometric Pressure {Pa}
+      4.2,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      300,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 10_CA_USA Annual Cooling (WB=>MDB) .4%, MDB=33.8°C WB=22.4°C
+ SizingPeriod:DesignDay,
+Climate Zone 10 Ann Clg .4% Condns WB=>MDB,     !- Name
+     33.8,      !- Maximum Dry-Bulb Temperature {C}
+     16.6,      !- Daily Temp Range {C}
+     22.4,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+   95816.,      !- Barometric Pressure {Pa}
+      4.2,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      300,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+##enddef
+
+##def USA_CA_CEC_CLIMATE_ZONE_11[]
+!  VERSION,
+!    3.1;                    !- Version Identifier
+
+Site:Location,
+USA CA-CEC Climate Zone 11,  !- Name
+40.20,       !- Latitude {deg}
+-122.18,       !- Longitude {deg}
+-8.00,       !- Time Zone {hr}
+104; !- Elevation {m}
+
+Site:GroundTemperature:BuildingSurface,
+19.548,  !- January Ground Temperature {C}
+19.529,  !- February Ground Temperature {C}
+19.551,  !- March Ground Temperature {C}
+19.564,  !- April Ground Temperature {C}
+21.129,  !- May Ground Temperature {C}
+21.772,  !- June Ground Temperature {C}
+21.884,  !- July Ground Temperature {C}
+21.907,  !- August Ground Temperature {C}
+21.763,  !- September Ground Temperature {C}
+20.493,  !- October Ground Temperature {C}
+19.720,  !- November Ground Temperature {C}
+19.589;  !- December Ground Temperature {C}
+
+Site:WaterMainsTemperature,
+CORRELATION,             !- Calculation Method
+,                        !- Temperature Schedule Name
+15.98,               !- Annual Average Outdoor Air Temperature {C}
+18.40;              !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
+
+ ! Climate Zone 11_CA_USA Annual Heating 99.6%, MaxDB=-1.2°C
+ SizingPeriod:DesignDay,
+Climate Zone 11 Ann Htg 99.6% Condns DB,     !- Name
+     -1.2,      !- Maximum Dry-Bulb Temperature {C}
+      0.0,      !- Daily Temp Range {C}
+     -1.2,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  100082.,      !- Barometric Pressure {Pa}
+      2.3,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+      330,      !- Wind Direction {Degrees; N=0, S=180}
+     0.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+       12,      !- Month
+WinterDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 11_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=40.6°C MWB=20.9°C
+ SizingPeriod:DesignDay,
+Climate Zone 11 Ann Clg .4% Condns DB=>MWB,     !- Name
+     40.6,      !- Maximum Dry-Bulb Temperature {C}
+     16.7,      !- Daily Temp Range {C}
+     20.9,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  100082.,      !- Barometric Pressure {Pa}
+      3.9,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      160,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        7,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 11_CA_USA Annual Cooling (WB=>MDB) .4%, MDB=35.7°C WB=22.7°C
+ SizingPeriod:DesignDay,
+Climate Zone 11 Ann Clg .4% Condns WB=>MDB,     !- Name
+     35.7,      !- Maximum Dry-Bulb Temperature {C}
+     16.7,      !- Daily Temp Range {C}
+     22.7,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  100082.,      !- Barometric Pressure {Pa}
+      3.9,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      160,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        7,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+##enddef
+
+##def USA_CA_CEC_CLIMATE_ZONE_12[]
+!  VERSION,
+!    3.1;                    !- Version Identifier
+
+Site:Location,
+USA CA-CEC Climate Zone 12,  !- Name
+38.50,       !- Latitude {deg}
+-121.50,       !- Longitude {deg}
+-8.00,       !- Time Zone {hr}
+5; !- Elevation {m}
+
+Site:GroundTemperature:BuildingSurface,
+19.822,  !- January Ground Temperature {C}
+19.826,  !- February Ground Temperature {C}
+19.838,  !- March Ground Temperature {C}
+19.895,  !- April Ground Temperature {C}
+20.889,  !- May Ground Temperature {C}
+21.908,  !- June Ground Temperature {C}
+22.228,  !- July Ground Temperature {C}
+22.242,  !- August Ground Temperature {C}
+22.272,  !- September Ground Temperature {C}
+20.657,  !- October Ground Temperature {C}
+20.020,  !- November Ground Temperature {C}
+19.879;  !- December Ground Temperature {C}
+
+Site:WaterMainsTemperature,
+CORRELATION,             !- Calculation Method
+,                        !- Temperature Schedule Name
+15.23,               !- Annual Average Outdoor Air Temperature {C}
+15.40;              !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
+
+ ! Climate Zone 12_CA_USA Annual Heating 99.6%, MaxDB=-0.5°C
+ SizingPeriod:DesignDay,
+Climate Zone 12 Ann Htg 99.6% Condns DB,     !- Name
+     -0.5,      !- Maximum Dry-Bulb Temperature {C}
+      0.0,      !- Daily Temp Range {C}
+     -0.5,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  101265.,      !- Barometric Pressure {Pa}
+      1.1,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+      320,      !- Wind Direction {Degrees; N=0, S=180}
+     0.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+       12,      !- Month
+WinterDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 12_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=37.8°C MWB=21.1°C
+ SizingPeriod:DesignDay,
+Climate Zone 12 Ann Clg .4% Condns DB=>MWB,     !- Name
+     37.8,      !- Maximum Dry-Bulb Temperature {C}
+     18.1,      !- Daily Temp Range {C}
+     21.1,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  101265.,      !- Barometric Pressure {Pa}
+      3.5,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      200,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        7,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 12_CA_USA Annual Cooling (WB=>MDB) .4%, MDB=35.4°C WB=22.4°C
+ SizingPeriod:DesignDay,
+Climate Zone 12 Ann Clg .4% Condns WB=>MDB,     !- Name
+     35.4,      !- Maximum Dry-Bulb Temperature {C}
+     18.1,      !- Daily Temp Range {C}
+     22.4,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  101265.,      !- Barometric Pressure {Pa}
+      3.5,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      200,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        7,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+##enddef
+
+##def USA_CA_CEC_CLIMATE_ZONE_13[]
+!  VERSION,
+!    3.1;                    !- Version Identifier
+
+Site:Location,
+USA CA-CEC Climate Zone 13,  !- Name
+36.78,       !- Latitude {deg}
+-119.68,       !- Longitude {deg}
+-8.00,       !- Time Zone {hr}
+100; !- Elevation {m}
+
+Site:GroundTemperature:BuildingSurface,
+19.802,  !- January Ground Temperature {C}
+19.803,  !- February Ground Temperature {C}
+19.806,  !- March Ground Temperature {C}
+20.337,  !- April Ground Temperature {C}
+21.678,  !- May Ground Temperature {C}
+22.048,  !- June Ground Temperature {C}
+22.128,  !- July Ground Temperature {C}
+22.206,  !- August Ground Temperature {C}
+22.267,  !- September Ground Temperature {C}
+21.519,  !- October Ground Temperature {C}
+20.165,  !- November Ground Temperature {C}
+19.869;  !- December Ground Temperature {C}
+
+Site:WaterMainsTemperature,
+CORRELATION,             !- Calculation Method
+,                        !- Temperature Schedule Name
+17.65,               !- Annual Average Outdoor Air Temperature {C}
+19.70;              !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
+
+ ! Climate Zone 13_CA_USA Annual Heating 99.6%, MaxDB=-0.7°C
+ SizingPeriod:DesignDay,
+Climate Zone 13 Ann Htg 99.6% Condns DB,     !- Name
+     -0.7,      !- Maximum Dry-Bulb Temperature {C}
+      0.0,      !- Daily Temp Range {C}
+     -0.7,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  100129.,      !- Barometric Pressure {Pa}
+      1.3,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+       80,      !- Wind Direction {Degrees; N=0, S=180}
+     0.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+       12,      !- Month
+WinterDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 13_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=39.7°C MWB=21.7°C
+ SizingPeriod:DesignDay,
+Climate Zone 13 Ann Clg .4% Condns DB=>MWB,     !- Name
+     39.7,      !- Maximum Dry-Bulb Temperature {C}
+     16.7,      !- Daily Temp Range {C}
+     21.7,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  100129.,      !- Barometric Pressure {Pa}
+      3.7,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      300,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        7,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 13_CA_USA Annual Cooling (WB=>MDB) .4%, MDB=36.5°C WB=23.1°C
+ SizingPeriod:DesignDay,
+Climate Zone 13 Ann Clg .4% Condns WB=>MDB,     !- Name
+     36.5,      !- Maximum Dry-Bulb Temperature {C}
+     16.7,      !- Daily Temp Range {C}
+     23.1,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  100129.,      !- Barometric Pressure {Pa}
+      3.7,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      300,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        7,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+##enddef
+
+##def USA_CA_CEC_CLIMATE_ZONE_15[]
+!  VERSION,
+!    3.1;                    !- Version Identifier
+
+Site:Location,
+USA CA-CEC Climate Zone 15,  !- Name
+32.78,       !- Latitude {deg}
+-115.58,       !- Longitude {deg}
+-8.00,       !- Time Zone {hr}
+-9; !- Elevation {m}
+
+Site:GroundTemperature:BuildingSurface,
+19.009,  !- January Ground Temperature {C}
+19.084,  !- February Ground Temperature {C}
+20.038,  !- March Ground Temperature {C}
+21.128,  !- April Ground Temperature {C}
+21.311,  !- May Ground Temperature {C}
+21.073,  !- June Ground Temperature {C}
+20.862,  !- July Ground Temperature {C}
+20.978,  !- August Ground Temperature {C}
+21.169,  !- September Ground Temperature {C}
+21.317,  !- October Ground Temperature {C}
+19.804,  !- November Ground Temperature {C}
+19.122;  !- December Ground Temperature {C}
+
+Site:WaterMainsTemperature,
+CORRELATION,             !- Calculation Method
+,                        !- Temperature Schedule Name
+22.95,               !- Annual Average Outdoor Air Temperature {C}
+20.40;              !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
+
+ ! Climate Zone 15_CA_USA Annual Heating 99.6%, MaxDB=2°C
+ SizingPeriod:DesignDay,
+Climate Zone 15 Ann Htg 99.6% Condns DB,     !- Name
+        2,      !- Maximum Dry-Bulb Temperature {C}
+      0.0,      !- Daily Temp Range {C}
+        2,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  101433.,      !- Barometric Pressure {Pa}
+        2,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+      240,      !- Wind Direction {Degrees; N=0, S=180}
+     0.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+       12,      !- Month
+WinterDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 15_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=44°C MWB=23°C
+ SizingPeriod:DesignDay,
+Climate Zone 15 Ann Clg .4% Condns DB=>MWB,     !- Name
+       44,      !- Maximum Dry-Bulb Temperature {C}
+     14.7,      !- Daily Temp Range {C}
+       23,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  101433.,      !- Barometric Pressure {Pa}
+      3.6,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      110,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 15_CA_USA Annual Cooling (WB=>MDB) .4%, MDB=36°C WB=27.2°C
+ SizingPeriod:DesignDay,
+Climate Zone 15 Ann Clg .4% Condns WB=>MDB,     !- Name
+       36,      !- Maximum Dry-Bulb Temperature {C}
+     14.7,      !- Daily Temp Range {C}
+     27.2,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+  101433.,      !- Barometric Pressure {Pa}
+      3.6,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      110,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        8,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+##enddef
+
+##def USA_CA_CEC_CLIMATE_ZONE_16[]
+!  VERSION,
+!    3.1;                    !- Version Identifier
+
+Site:Location,
+USA CA-CEC Climate Zone 16,  !- Name
+41.28,       !- Latitude {deg}
+-122.30,       !- Longitude {deg}
+-8.00,       !- Time Zone {hr}
+1080; !- Elevation {m}
+
+Site:GroundTemperature:BuildingSurface,
+19.560,  !- January Ground Temperature {C}
+19.547,  !- February Ground Temperature {C}
+19.572,  !- March Ground Temperature {C}
+19.589,  !- April Ground Temperature {C}
+19.624,  !- May Ground Temperature {C}
+20.298,  !- June Ground Temperature {C}
+21.595,  !- July Ground Temperature {C}
+21.538,  !- August Ground Temperature {C}
+20.248,  !- September Ground Temperature {C}
+19.739,  !- October Ground Temperature {C}
+19.658,  !- November Ground Temperature {C}
+19.586;  !- December Ground Temperature {C}
+
+Site:WaterMainsTemperature,
+CORRELATION,             !- Calculation Method
+,                        !- Temperature Schedule Name
+10.16,               !- Annual Average Outdoor Air Temperature {C}
+18.60;              !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
+
+ ! Climate Zone 16_CA_USA Annual Heating 99.6%, MaxDB=-8.1°C
+ SizingPeriod:DesignDay,
+Climate Zone 16 Ann Htg 99.6% Condns DB,     !- Name
+     -8.1,      !- Maximum Dry-Bulb Temperature {C}
+      0.0,      !- Daily Temp Range {C}
+     -8.1,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+   89006.,      !- Barometric Pressure {Pa}
+      1.4,      !- Wind Speed {m/s} design conditions vs. traditional 6.71 m/s (15 mph)
+       50,      !- Wind Direction {Degrees; N=0, S=180}
+     0.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+       12,      !- Month
+WinterDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 16_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=32.5°C MWB=17.3°C
+ SizingPeriod:DesignDay,
+Climate Zone 16 Ann Clg .4% Condns DB=>MWB,     !- Name
+     32.5,      !- Maximum Dry-Bulb Temperature {C}
+     16.9,      !- Daily Temp Range {C}
+     17.3,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+   89006.,      !- Barometric Pressure {Pa}
+      1.8,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      180,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        7,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+ ! Climate Zone 16_CA_USA Annual Cooling (WB=>MDB) .4%, MDB=29.5°C WB=19.1°C
+ SizingPeriod:DesignDay,
+Climate Zone 16 Ann Clg .4% Condns WB=>MDB,     !- Name
+     29.5,      !- Maximum Dry-Bulb Temperature {C}
+     16.9,      !- Daily Temp Range {C}
+     19.1,      !- Humidity Indicating Conditions at Maximum Dry-Bulb
+   89006.,      !- Barometric Pressure {Pa}
+      1.8,      !- Wind Speed {m/s} design conditions vs. traditional 3.35 m/s (7mph)
+      180,      !- Wind Direction {Degrees; N=0, S=180}
+     1.00,      !- Clearness {0.0 to 1.1}
+        0,      !- Rain {0-no,1-yes}
+        0,      !- Snow on ground {0-no,1-yes}
+       21,      !- Day of Month
+        7,      !- Month
+SummerDesignDay,!- Day Type
+        0,      !- Daylight Savings Time Indicator
+ WetBulb;      !- Humidity Indicating Type
+
+
+##enddef

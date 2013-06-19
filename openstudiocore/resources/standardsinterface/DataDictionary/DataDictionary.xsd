@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by Elaine Hale (National Renewable Energy Laboratory) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="DataDictionary">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Universal" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="Term" type="Term"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="CEC" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="Term" type="Term"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="Term">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="definition" type="xs:string"/>
+			<xs:element name="type">
+				<xs:complexType>
+					<xs:choice>
+						<xs:element name="boolean">
+							<xs:complexType/>
+						</xs:element>
+						<xs:element name="integer">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="min" type="xs:int" minOccurs="0"/>
+									<xs:element name="max" type="xs:int" minOccurs="0"/>
+									<xs:element name="units" type="xs:string" minOccurs="0"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="double">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="min" type="xs:double" minOccurs="0"/>
+									<xs:element name="max" type="xs:double" minOccurs="0"/>
+									<xs:element name="units" type="xs:string" minOccurs="0"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="enumeration">
+							<xs:complexType>
+								<xs:sequence minOccurs="0" maxOccurs="unbounded">
+									<xs:element name="value" type="xs:string"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="noun">
+							<xs:complexType/>
+						</xs:element>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="relationships" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Relationships present in controlled vocabularies and thesauries.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="isa" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence maxOccurs="unbounded">
+									<xs:element name="name" type="xs:string"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="broaderThan" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence maxOccurs="unbounded">
+									<xs:element name="name" type="xs:string"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="narrowerThan" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence maxOccurs="unbounded">
+									<xs:element name="name" type="xs:string"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="synonyms" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence maxOccurs="unbounded">
+									<xs:element name="name" type="xs:string"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="antonyms" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence maxOccurs="unbounded">
+									<xs:element name="name" type="xs:string"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

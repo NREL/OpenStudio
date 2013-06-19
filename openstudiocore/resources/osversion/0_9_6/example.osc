@@ -1,0 +1,47 @@
+
+OS:Version,
+  {c386d7ab-c746-4aa3-b8c8-851210fb427f}, ! Handle
+  0.9.6;                                  ! Version Identifier
+
+OS:Construction,
+  {5a1ec992-26bf-48e3-8bc2-acbedfdec1ee}, ! Handle
+  Exterior Window,                        ! Name
+  ,                                       ! Surface Rendering Name
+  {5ca375c3-b693-4a0e-9970-160ee95172ae}, ! Layer 1
+  {6cdff197-00f6-40d0-9a9d-822e81e6637b}, ! Layer 2
+  {5ca375c3-b693-4a0e-9970-160ee95172ae}; ! Layer 3
+
+OS:WindowMaterial:Glazing,
+  {5ca375c3-b693-4a0e-9970-160ee95172ae}, ! Handle
+  Clear 3mm,                              ! Name
+  SpectralAverage,                        ! Optical Data Type
+  ,                                       ! Window Glass Spectral Data Set Name
+  0.003,                                  ! Thickness {m}
+  0.837,                                  ! Solar Transmittance at Normal Incidence
+  0.075,                                  ! Front Side Solar Reflectance at Normal Incidence
+  0.075,                                  ! Back Side Solar Reflectance at Normal Incidence
+  0.898,                                  ! Visible Transmittance at Normal Incidence
+  0.081,                                  ! Front Side Visible Reflectance at Normal Incidence
+  0.081,                                  ! Back Side Visible Reflectance at Normal Incidence
+  0,                                      ! Infrared Transmittance at Normal Incidence
+  0.084,                                  ! Front Side Infrared Hemispherical Emissivity
+  0.084,                                  ! Back Side Infrared Hemispherical Emissivity
+  0.9;                                    ! Conductivity {W/m-K}
+
+OS:WindowMaterial:Gas,
+  {6cdff197-00f6-40d0-9a9d-822e81e6637b}, ! Handle
+  Air 13mm,                               ! Name
+  Air,                                    ! Gas Type
+  0.0127;                                 ! Thickness {m}
+
+OS:ComponentData,
+  {153e576e-5c5c-4977-98e6-2625eb5cc154}, ! Handle
+  Component Data 1,                       ! Name
+  {3e85dd64-2ac5-47a6-8371-625618d0812d}, ! UUID
+  {a57c9713-453d-406a-aac5-c25f1d06e492}, ! Version UUID
+  1355181917,                             ! Creation Timestamp
+  1355181917,                             ! Version Timestamp
+  {5a1ec992-26bf-48e3-8bc2-acbedfdec1ee}, ! Name of Object 1
+  {5ca375c3-b693-4a0e-9970-160ee95172ae}, ! Name of Object 2
+  {6cdff197-00f6-40d0-9a9d-822e81e6637b}; ! Name of Object 3
+

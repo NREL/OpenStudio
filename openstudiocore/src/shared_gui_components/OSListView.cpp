@@ -1,0 +1,218 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  All rights reserved.
+ *  
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *  
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#include "OSListView.hpp"
+#include "OSListController.hpp"
+#include <QVBoxLayout>
+#include <QScrollArea>
+#include <QStyleOption>
+#include <QPainter>
+
+namespace openstudio {
+
+OSListView::OSListView(bool scrollable, QWidget * parent)
+  : QWidget(parent),
+  m_scrollable(scrollable),
+  m_scrollArea(NULL)
+{
+  m_delegate = QSharedPointer<OSItemDelegate>(new OSItemDelegate());
+  m_mainVLayout = new QVBoxLayout();
+  m_mainVLayout->setSizeConstraint(QLayout::SetMinimumSize);
+  m_mainVLayout->setAlignment(Qt::AlignTop);
+
+  if( scrollable )
+  {
+    QWidget * scrollWidget = new QWidget();
+    scrollWidget->setObjectName("ScrollWidget");
+    scrollWidget->setStyleSheet("QWidget#ScrollWidget { background: transparent; }");
+    scrollWidget->setLayout(m_mainVLayout);
+
+    m_scrollArea = new QScrollArea();
+    m_scrollArea->setFrameStyle(QFrame::NoFrame);
+    m_scrollArea->setWidget(scrollWidget);
+    m_scrollArea->setWidgetResizable(true);
+    m_scrollArea->setBackgroundRole(QPalette::NoRole);
+
+    QVBoxLayout * scrollLayout = new QVBoxLayout();
+    scrollLayout->setContentsMargins(0,0,0,0);
+    scrollLayout->addWidget(m_scrollArea);
+
+    setLayout(scrollLayout);
+  }
+  else
+  {
+    setLayout(m_mainVLayout);
+  }
+
+  setContentsMargins(5,5,5,5);
+  setSpacing(5);
+}
+
+void OSListView::setHorizontalScrollBarAlwaysOn(bool alwaysOn)
+{
+  if(!m_scrollable && !m_scrollArea) return;
+
+  if(alwaysOn){
+    m_scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  }
+  else{
+    m_scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  }
+}
+
+void OSListView::setVerticalScrollBarAlwaysOn(bool alwaysOn)
+{
+  if(!m_scrollable && !m_scrollArea) return;
+
+  if(alwaysOn){
+    m_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  }
+  else{
+    m_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  }
+}
+
+void OSListView::paintEvent(QPaintEvent *)
+{
+  QStyleOption opt;
+  opt.init(this);
+  QPainter p(this);
+  style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+void OSListView::setDelegate(QSharedPointer<OSItemDelegate> delegate)
+{
+  if( delegate )
+  { 
+    m_delegate = delegate;
+
+    refreshAllViews();
+  }
+}
+
+void OSListView::setListController(QSharedPointer<OSListController> listController)
+{
+  if( m_listController )
+  {
+    m_listController->disconnect(this);
+  }
+
+  m_listController = listController;
+
+  connect(m_listController.data(),SIGNAL(itemInserted(int)),this,SLOT(insertItemView(int)));
+  connect(m_listController.data(),SIGNAL(itemRemoved(int)),this,SLOT(removeItemView(int)));
+  connect(m_listController.data(),SIGNAL(itemChanged(int)),this,SLOT(refreshItemView(int)));
+  connect(m_listController.data(),SIGNAL(modelReset()),this,SLOT(refreshAllViews()));
+
+  refreshAllViews();
+}
+
+QSharedPointer<OSListController> OSListView::listController() const
+{
+  return m_listController;
+}
+
+void OSListView::setSpacing(int spacing)
+{
+  m_mainVLayout->setSpacing(spacing);
+}
+
+void OSListView::setContentsMargins(int left,int top,int right,int bottom)
+{
+  m_mainVLayout->setContentsMargins(left,top,right,bottom);
+}
+
+void OSListView::refreshAllViews()
+{
+  QLayoutItem *child;
+  while((child = m_mainVLayout->takeAt(0)) != 0)
+  {
+      QWidget * widget = child->widget();
+
+      Q_ASSERT(widget);
+
+      delete widget;
+
+      delete child;
+  }
+
+  if( m_listController )
+  {
+    for( int i = 0; i < m_listController->count(); i++ )
+    {
+      insertItemView(i);
+    }
+  }
+}
+
+void OSListView::insertItemView(int i)
+{
+  Q_ASSERT(m_listController);
+
+  QSharedPointer<OSListItem> itemData = m_listController->itemAt(i);
+
+  Q_ASSERT(itemData);
+
+  QWidget * itemView = m_delegate->view(itemData);
+
+  itemView->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Fixed);
+
+  m_mainVLayout->insertWidget(i,itemView);
+
+  m_widgetItemPairs.insert( std::make_pair<QObject *,QSharedPointer<OSListItem> >(itemView,itemData) );
+
+  bool bingo = connect(itemView,SIGNAL(destroyed(QObject *)),this,SLOT(removePair(QObject *)));
+
+  Q_ASSERT(bingo);
+}
+
+void OSListView::removeItemView(int i)
+{
+  QLayoutItem * item = m_mainVLayout->takeAt(i);
+
+  Q_ASSERT(item);
+
+  QWidget * widget = item->widget();
+
+  Q_ASSERT(widget);
+
+  delete widget;
+
+  delete item;
+}
+
+void OSListView::removePair(QObject * object)
+{
+  m_widgetItemPairs.erase(m_widgetItemPairs.find(object));
+}
+
+void OSListView::refreshItemView(int i)
+{
+  removeItemView(i);
+
+  insertItemView(i);
+}
+
+QWidget * OSItemDelegate::view(QSharedPointer<OSListItem> dataSource) 
+{ 
+  return new QWidget();
+}
+
+} // openstudio
+

@@ -1,0 +1,19 @@
+Program Version,EnergyPlus, Windows, VERSION 5.0.0.027,IDD_Version 5.0.0.027
+   ************* Beginning Zone Sizing Calculations
+   ** Warning ** Weather file location will be used rather than entered Location object.
+   **   ~~~   ** ..Location object=USA CO-BOULDER
+   **   ~~~   ** ..Weather File Location=Denver Centennial  Golden   Nr CO USA TMY3 WMO#=724666
+   **   ~~~   ** ..due to location differences, Latitude difference=[0.28] degrees, Longitude difference=[7.00E-002] degrees.
+   **   ~~~   ** ..Time Zone difference=[0.0] hour(s), Elevation difference=[11.93] percent, [195.00] meters.
+   ************* Beginning System Sizing Calculations
+   ************* Testing Individual Branch Integrity
+   ************* All Branches passed integrity testing
+   ************* Testing Individual Supply Air Path Integrity
+   ************* All Supply Air Paths passed integrity testing
+   ************* Testing Individual Return Air Path Integrity
+   ************* All Return Air Paths passed integrity testing
+   ************* No node connection errors were found.
+   ************* Beginning Simulation
+   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Sizing Error Summary. During Sizing: 1 Warning; 0 Severe Errors.
+   ************* EnergyPlus Completed Successfully-- 1 Warning; 0 Severe Errors; Elapsed Time=00hr 01min 14.31sec

@@ -1,0 +1,238 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html" />
+<link href="Dialogs.css" rel="stylesheet" type="text/css" />
+<title>Animation Settings</title>
+<script language="javascript" src="Dialogs.js"></script>
+<script language="javascript">
+<!--
+function onLoad() {
+  window.location='skp:on_load';
+  setTimeout("onClickMatchTimePeriod();", 10);
+  setTimeout("onClickMatchTimeStep();", 20);
+  document.getElementById('ok').focus();
+}
+function onOK() { window.location='skp:on_ok'; }
+function onCancel() { window.location='skp:on_cancel'; }
+function onApply() { window.location='skp:on_apply'; }
+
+function onClickMatchTimePeriod() {
+  if (document.getElementById('MATCH_TIME_PERIOD').checked) {
+    setTimeout("window.location='skp:on_match_time_period';", 10);
+    disableElement('START_MONTH');
+    disableElement('START_DATE');
+    disableElement('START_HOUR');
+    disableElement('END_MONTH');
+    disableElement('END_DATE');
+    disableElement('END_HOUR');
+  }
+  else {
+    enableElement('START_MONTH');
+    enableElement('START_DATE');
+    enableElement('START_HOUR');
+    enableElement('END_MONTH');
+    enableElement('END_DATE');
+    enableElement('END_HOUR');
+  }
+}
+
+function onClickMatchTimeStep() {
+  if (document.getElementById('MATCH_TIME_STEP').checked) {
+    setTimeout("window.location='skp:on_match_time_step';", 10);
+    disableElement('TIME_STEP');
+    //document.getElementById('TIME_STEP').style = "background:#d4d0c8";
+    //can I make the disable more obvious?
+  }
+  else {
+    enableElement('TIME_STEP');
+  }
+}
+
+function onChangeStartMonth(element) {
+  onChangeElement(element);
+  days_in_month = daysInMonth(element.value);
+  setSelectOptions('START_DATE', days_in_month, days_in_month);
+  onChangeElement(document.getElementById('START_DATE'));
+}
+
+function onChangeEndMonth(element) {
+  onChangeElement(element);
+  days_in_month = daysInMonth(element.value);
+  setSelectOptions('END_DATE', days_in_month, days_in_month);
+  onChangeElement(document.getElementById('END_DATE'));
+}
+
+function setDateOptions() {
+  onChangeStartMonth(document.getElementById('START_MONTH'));
+  onChangeEndMonth(document.getElementById('END_MONTH'));
+}
+
+-->
+</script>
+</head>
+<body onload="onLoad()">
+
+<fieldset class="label" style="margin-top:0px;">
+<legend>Markers</legend>
+
+<br>
+&nbsp;&nbsp;<input id="MATCH_TIME_PERIOD" name="MATCH_TIME_PERIOD" type="checkbox" onclick="onClickMatchTimePeriod()" onchange="onChangeElement(this)"><label for="MATCH_TIME_PERIOD">Match simulation run period</label>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input id="REPEAT" name="REPEAT" type="checkbox" onchange="onChangeElement(this)"><label for="REPEAT">Repeat when finished</label>
+
+<br><br>
+
+<table border="0">
+<tr>
+
+<td>&nbsp;&nbsp;Start Marker:</td>
+
+<td><select id="START_MONTH" name="START_MONTH" class="text" onchange="onChangeStartMonth(this)">
+<option value="1">January</option>
+<option value="2">February</option>
+<option value="3">March</option>
+<option value="4">April</option>
+<option value="5">May</option>
+<option value="6">June</option>
+<option value="7">July</option>
+<option value="8">August</option>
+<option value="9">September</option>
+<option value="10">October</option>
+<option value="11">November</option>
+<option value="12">December</option>
+</select></td>
+
+<td><select name="START_DATE" class="text" onchange="onChangeElement(this)"></select></td>
+
+<td>&nbsp;&nbsp;&nbsp;&nbsp;Start Hour:</td>
+
+<td><select name="START_HOUR" class="text" onchange="onChangeElement(this)">
+<option value="0">0:00</option>
+<option value="1">1:00</option>
+<option value="2">2:00</option>
+<option value="3">3:00</option>
+<option value="4">4:00</option>
+<option value="5">5:00</option>
+<option value="6">6:00</option>
+<option value="7">7:00</option>
+<option value="8">8:00</option>
+<option value="9">9:00</option>
+<option value="10">10:00</option>
+<option value="11">11:00</option>
+<option value="12">12:00</option>
+<option value="13">13:00</option>
+<option value="14">14:00</option>
+<option value="15">15:00</option>
+<option value="16">16:00</option>
+<option value="17">17:00</option>
+<option value="18">18:00</option>
+<option value="19">19:00</option>
+<option value="20">20:00</option>
+<option value="21">21:00</option>
+<option value="22">22:00</option>
+<option value="23">23:00</option>
+</select></td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;End Marker:</td>
+
+<td><select id="END_MONTH" name="END_MONTH" class="text" onchange="onChangeEndMonth(this)">
+<option value="1">January</option>
+<option value="2">February</option>
+<option value="3">March</option>
+<option value="4">April</option>
+<option value="5">May</option>
+<option value="6">June</option>
+<option value="7">July</option>
+<option value="8">August</option>
+<option value="9">September</option>
+<option value="10">October</option>
+<option value="11">November</option>
+<option value="12">December</option>
+</select></td>
+
+<td><select name="END_DATE" class="text" onchange="onChangeElement(this)"></select></td>
+
+<td>&nbsp;&nbsp;&nbsp;&nbsp;End Hour:</td>
+
+<td><select name="END_HOUR" class="text" onchange="onChangeElement(this)">
+<option value="0">0:00</option>
+<option value="1">1:00</option>
+<option value="2">2:00</option>
+<option value="3">3:00</option>
+<option value="4">4:00</option>
+<option value="5">5:00</option>
+<option value="6">6:00</option>
+<option value="7">7:00</option>
+<option value="8">8:00</option>
+<option value="9">9:00</option>
+<option value="10">10:00</option>
+<option value="11">11:00</option>
+<option value="12">12:00</option>
+<option value="13">13:00</option>
+<option value="14">14:00</option>
+<option value="15">15:00</option>
+<option value="16">16:00</option>
+<option value="17">17:00</option>
+<option value="18">18:00</option>
+<option value="19">19:00</option>
+<option value="20">20:00</option>
+<option value="21">21:00</option>
+<option value="22">22:00</option>
+<option value="23">23:00</option>
+</select></td>
+
+</tr>
+</table>
+
+<br>
+
+</fieldset>
+
+
+<fieldset class="label">
+<legend>Frames</legend>
+<br>
+
+&nbsp;&nbsp;<input id="MATCH_TIME_STEP" name="MATCH_TIME_STEP" type="checkbox" onclick="onClickMatchTimeStep()" onchange="onChangeElement(this)"><label for="MATCH_TIME_STEP">Match simulation timestep</label>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input id="DAY_ONLY" name="DAY_ONLY" type="checkbox" onchange="onChangeElement(this)"><label for="DAY_ONLY">Daytime only</label>
+
+<br><br>
+
+<table border="0">
+<tr>
+
+<td>&nbsp;&nbsp;Frame Duration During Normal Play:</td>
+<td>&nbsp;&nbsp;&nbsp;<input id="TIME_STEP" name="TIME_STEP" type="text" class="text" size="6" style="text-align:center;" value="4" onchange="onChangeElement(this)">
+&nbsp;&nbsp;(minutes/frame)</td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;Multiplier During Fast Play:</td>
+<td>x&nbsp;<input id="MULTIPLIER" name="MULTIPLIER" type="text" class="text" size="6" style="text-align:center;" value="4" onchange="onChangeElement(this)"></td>
+</tr>
+
+<tr>
+<td>&nbsp;&nbsp;Delay Between Frames:&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;&nbsp;<input id="DELAY" name="DELAY" type="text" class="text" size="6" style="text-align:center;" value="0.5" onchange="onChangeElement(this)">
+&nbsp;&nbsp;(seconds)</td>
+
+</tr>
+</table>
+
+<br>
+
+</fieldset>
+
+<p style="text-align:right; margin-top:6px;">
+<input id="ok" onclick="onOK()" type="button" class="button" value="OK" style="width:75px; margin-left:3px;">
+<input onclick="onCancel()" type="button" class="button" value="Cancel" style="width:75px; margin-left:3px;">
+<input onclick="onApply()" type="button" class="button" value="Apply" style="width:75px; margin-left:3px;">
+</p>
+
+</body>
+</html>

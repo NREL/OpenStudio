@@ -1,0 +1,59 @@
+Building Total Floor Area,decimal,,Title 24 Section 146 (c) Complete Building Method. The Complete Building Method involves the  entire building which is defined as including all conditioned and unconditioned space which a building permit is sought plus any conditioned and unconditioned space of the existing structure when applying lighting compliance to the complete building.  In the NR ACM this is applied when using Table N2-5
+Above Grade Story Count,integer,,T24/CBC/Nonres Compliance Manual:  The total number of stories in the building that have the finished floor surface entirely above the plane of grade or 50% of its volume above grade.
+State Building,boolean,,"New:  Any newly constructed building, including new addition, constructed or whose construction is managed by the State of California or existing building owned, operated and/or leased by the State of California undergoing an alteration or renovation subject to the requirements of the Standards."
+Relocatable Public School Building,boolean,,"RELOCATABLE PUBLIC SCHOOL BUILDING is a relocatable building as defined by Title 24, Part 1, Section 4-314, which is subject to Title 24, Part 1, Chapter 4, Group 1.
+ 
+Application of prescriptive envelope standards is dependent on whether the building is a Relocatable Public School Building and whether it can be located in any climate zone."
+Total Conditioned Floor Area,decimal,,"T24: Conditioned Floor Area(CFA) is the floor area (in square feet) of enclosed conditioned space on all floors of a building, as measured at the floor level of the exterior surfaces of exterior walls enclosing the conditioned space."
+Total Unconditioned Floor Area,decimal,,Nonres ACM:  The total floor area of enclosed unconditioned space in the building.
+Climate Zone,enumerated list,1;#97;#2;#98;#3;#99;#4;#100;#5;#101;#6;#102;#7;#103;#8;#104;#9;#105;#10;#106;#11;#107;#12;#108;#13;#109;#14;#110;#15;#111;#16;#112,"T24: CLIMATE ZONES are the 16 geographic areas of California for which the Commission has established typical weather data, prescriptive packages and energy budgets. Climate zone boundary descriptions are in the document ""California Climate Zone Descriptions"" (July 1995), incorporated herein by reference. FIGURE 101-A is an approximate map of the 16 climate zones.  "
+Whole Building Occupancy,enumerated list,,Title 24 part 6 Lighting table 146E and NR ACM Table N2-5 use whole building occupancy types  
+Top Level Occupancy,enumerated list,Nonresidential ;#322;#Residential;#323,T24 Section 100  Scope (a) Buildings Covered
+CBC Occupancy Group,enumerated list,Group A Assembly;#309;#Group B  Business ;#310;#Group E Educational ;#311;#Group F  Factory/Industrial ;#312;#Group M Mercantile ;#313;#Group R Residential:  R-1;#314;#Group R Residential:  R-2 ;#315;#Group R Residential:  R-3 one- and two-family dwellings;#318;#Group S Storage ;#316;#Group U Utility;#319,Title 24 Part 6 uses the CBC Occupancy Group infrequently.  It is evaluated to limit the use of display perimeter in calculating window wall ratio. 
+Space Conditioning Type,enumerated list,DirectlyConditioned  ;#1;#IndirectlyConditioned ;#42;#Process Environment Conditioning;#306;#Refrigerated Conditioning;#320;#Unconditioned;#43,"There are definitions for the following types of space conditioning in the Standards:
+Conditioned Space, Directly
+Conditioned Space, Indirectly
+Process Space
+Refrigerated Space
+Unconditioned Space
+
+ 
+Plenum in T24 is handled as conditioned space.  Ref: NR ACM 2.3.1.1 Directly Conditioned Space   Return Air Plenums
+"
+Project Name,text,,"The compliance form, CF-1R has a field called Project Title which is equivalent."
+Space Occupancy,enumerated list,,"Title 24 Part 6 has definitions for occupancy types listed in the definitions in Section 101 under Nonresidential Function Area Or Type Of Use.  Many of these types are used in lighting tables to assign values to rule targets such as lighting power adjustment factor.
+ 
+NR ACM has a number of tables that use occupancy types for loads and schedules.  "
+Zone Name,text,,"NR ACM states in several places that all zones will be identified, so a zone name of some form would be required."
+Load Schedule Occupancy,enumerated list,Hotel Function;#321;#Nonresidential ;#322;#Residential;#323;#Retail;#324,NR ACM tables N2-8 through N2-12 are defined by these Load Schedule Occupancy types
+Load Schedule Type,enumerated list,Cooling;#325;#Equipment;#326;#Fans;#327;#Heating;#328;#HotWater;#329;#Infiltration;#330;#Lights;#331;#People;#332,"NR ACM has schedules for Cooling, Equipment, Fans, Heating, HotWater, Infiltration, Lights, and People in tables N2-8 through N2-12.  Some are broken into finer levels such as lighting.
+"
+Floor Area,decimal,,"NR ACM states that Conditioned Floor Area as the floor area (in square feet) of enclosed conditioned space on all floors of a building, as measured at the floor level of the exterior surfaces of exterior walls enclosing conditioned space.
+ 
+Where areas are bounded or separated by interior partitions, the floor space occupied by those interior partitions shall not be included in any area."
+Thermal Block Name,text,,"There are examples of grouping of zones, but there is not term equivalent to Thermal Block"
+Thermal Block Type,enumerated list,Critical Process;#333;#Isolation Area;#334;#Perimeter System;#335,There are examples of grouping of zones that map to these types although there is no broader term equivalent to Thermal Block
+Space Occupancy Ancillary,enumerated list,,The space uses listed in Space Occupancy Ancillary are found in several tables and sections of text to apply regulations unique to support type areas like restrooms and corridors.  
+Sub Zone Space Name,text,,not found
+Load Percentage Hourly,decimal,,Load Percentage Hourly is the value used in the schedule tables N2-8 through N2-12
+Day Of Week,enumerated list,Saturday;#336;#Sunday;#337;#Weekday;#338,The load schedules in tables N2-8 throught N2-12 provide load percentages for each value in Day Of Week 
+Zone Floor Area,decimal,,"NR ACM section 2.3.1 Spaces states that area among other space characteristics shall by ""input as it occurs in the construction documents"",  "
+Building Classification Method,enumerated list,Space By Space;#339;#Whole Building;#340,"In lighting compliance there are two levels that are similar: the  complete buildng or area occupancy.  These are used in prescriptive (Title 24 Part 6) Tables 146E and 146F) and performance, (NR ACM Tables N2-5, N2-6 and N2-7)"
+Compliance Approach,enumerated list,Performance;#341;#Prescriptive Envelope Component;#342;#Prescriptive Overall Envelope;#343,The Standards use the same terms for compliance with the Standards which can be accomplished with the performance approach or a couple different prescriptive approaches 
+Rule Target Source,enumerated list,Building Description Manager;#344;#Compliance Engine;#345;#Rule Set Manager;#346;#User;#347,"In NR ACM there are a number of cases where there are different sources for a rule target value that need to be recorded.  For example, 2.3.2.3 Solar Reflectance and Thermal Emittance requires either the use of defaults or the values must come from CRCC rated products.  "
+Rule Target Authority,enumerated list,ACCA;#348;#ANSI;#349;#ARI;#350;#ASHRAE;#351;#ASTM;#352;#CRRC;#353;#CTI;#354;#HI;#355;#IAPMO;#363;#ICBO;#364;#IESNA;#356;#ISO;#357;#NFRC;#358;#NIST;#359;#No Authority;#365;#NSFI;#360;#SMACNA;#361;#UL;#362,There are many cases in the Standards where the user is referred to an outside authority for information on how to apply the Standards. In Title 24 Part 6 Appendix 1-A Standards And Documents Referenced In The Energy Efficiency lists all the authoriities referenced. 
+NR ACM Section,text,,
+Title 24 Part 6 Section,text,,This is Title 24 Part 6 format for its hierarchical arrangement of information in each section.
+Assembly Context ,enumerated list,Field Fabricated;#366;#Manufactured;#367;#Site Built;#368,"An example of how Assembly Context affects how rule targets are assigned:
+ 
+Title 24 Part 6 Section 116 – Mandatory Requirements For Fenestration Products And Exterior Doors are different for  fenestration that os site built, manufactured or field fabricated.  "
+Rule Bound Building,enumerated list,,"In performance compliance and also in prescriptive compliance if the overall envelope approach is used, a baseline building is generated based on the proposed building but with the prescriptive rule target assignments for comparing the performance of the proposed building."
+Rule Target Table Name,text,,NA
+Building Story Above Grade percentage,decimal,,"T24: Section 100 – Scope (c) Floors and Habitable Stories:
+Only habitable floors that have at least 50 percent of their volume above grade as defined in the CBC shall be
+counted in determining how many habitable stories a building has
+ 
+BELOW-GRADE WALL is the portion of a wall, enclosing conditioned space that is below the grade line.
+ 
+TABLE 151-B COMPONENT PACKAGE C has a category of wall defined as Below-grade walls"
+Building Story Location,enumerated list,Below Ground Story;#371;#Ground Story;#372;#Top Story;#374;#Upper Story;#373,"There are rules that depend on the building story level, whether the building story is below ground, at ground level, an interior story or the top story of the building.  "

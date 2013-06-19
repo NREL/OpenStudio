@@ -1,0 +1,41 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+  <file>images/add_loop.png</file>
+  <file>images/alert_image.png</file>
+  <file>images/check.png</file>
+  <file>images/class.png</file>
+  <file>images/class_off.png</file>
+  <file>images/combo_box_arrows.png</file>
+  <file>images/comment.png</file>
+  <file>images/comment_off.png</file>
+  <file>images/copy.png</file>
+  <file>images/copy_off.png</file>
+  <file>images/edit_add.png</file>
+  <file>images/edit_add_off.png</file>
+  <file>images/edit_purge.png</file>
+  <file>images/edit_purge_off.png</file>
+  <file>images/edit_remove.png</file>
+  <file>images/edit_remove_off.png</file>
+  <file>images/h_devider_dots.png</file>
+  <file>images/hvac.png</file>
+  <file>images/me_16.png</file>
+  <file>images/me-export.png</file>
+  <file>images/me-import.png</file>
+  <file>images/new.png</file>
+  <file>images/number_off.png</file>
+  <file>images/number_on.png</file>
+  <file>images/open.png</file>
+  <file>images/paste.png</file>
+  <file>images/precision.png</file>
+  <file>images/precision_off.png</file>
+  <file>images/save.png</file>
+  <file>images/search.png</file>
+  <file>images/switch.png</file>
+  <file>images/tree.png</file>
+  <file>images/tree_off.png</file>
+  <file>images/v_devider_dots.png</file>
+  <file>InspectorDialog.qss</file>
+  <file>SketchUpPluginPolicy.xml</file>
+  <file alias="openstudio.qss">../../resources/openstudio.qss</file>
+</qresource>
+</RCC>

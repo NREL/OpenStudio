@@ -1,0 +1,95 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  All rights reserved.
+ *  
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *  
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#ifndef OPENSTUDIO_CONSTRUCTIONINTERNALSOURCEINSPECTORVIEW_H
+#define OPENSTUDIO_CONSTRUCTIONINTERNALSOURCEINSPECTORVIEW_H
+
+#include <openstudio_lib/ModelObjectInspectorView.hpp>
+
+namespace openstudio {
+
+namespace model {
+
+  class ConstructionWithInternalSource;
+
+}
+
+class ConstructionObjectVectorController;
+
+class OSDropZone;
+
+class OSIntegerEdit;
+
+class OSLineEdit;
+
+class OSQuantityEdit;
+
+class ConstructionInternalSourceInspectorView : public ModelObjectInspectorView
+{
+  Q_OBJECT
+
+  public:
+
+    ConstructionInternalSourceInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent = 0);
+
+    virtual ~ConstructionInternalSourceInspectorView() {}
+
+  protected:
+
+    virtual void onClearSelection();
+
+    virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+
+    virtual void onUpdate();
+
+  private:
+
+    void createLayout();
+
+    void attach(openstudio::model::ConstructionWithInternalSource & constructionWithInternalSource);
+
+    void detach();
+
+    void refresh();
+
+    OSDropZone * m_constructionDZ;
+
+    ConstructionObjectVectorController * m_constructionVC;
+
+    OSLineEdit * m_nameEdit;
+
+    OSIntegerEdit * m_sourcePresentAfterLayerNumberEdit;
+
+    OSIntegerEdit * m_temperatureCalculationRequestedAfterLayerNumberEdit;
+
+    OSIntegerEdit * m_dimensionsForTheCTFCalculationEdit;
+
+    OSQuantityEdit * m_tubeSpacingEdit;
+
+    bool m_isIP;
+
+  public slots:
+
+    void toggleUnits(bool displayIP);
+};
+
+} // openstudio
+
+#endif // OPENSTUDIO_CONSTRUCTIONINTERNALSOURCEINSPECTORVIEW_H
+

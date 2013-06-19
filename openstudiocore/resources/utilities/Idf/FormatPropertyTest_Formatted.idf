@@ -1,0 +1,121 @@
+!-Generator IDFEditor 1.37c
+!-Option SortedOrder UseSpecialFormat
+!-NOTE: All comments with '!-' are ignored by the IDFEditor and are generated automatically.
+!-      Use '!' comments if they need to be retained when using the IDFEditor.
+!-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
+! \format singleLine
+
+  Version,7.1;
+
+!-   ===========  ALL OBJECTS IN CLASS: HEATBALANCEALGORITHM ===========
+! \format singleLine
+
+  HeatBalanceAlgorithm,ConductionTransferFunction,200;
+
+!-   ===========  ALL OBJECTS IN CLASS: SCHEDULETYPELIMITS ===========
+
+  ScheduleTypeLimits,
+    Fraction,                !- Name
+    0,                       !- Lower Limit Value
+    1,                       !- Upper Limit Value
+    Continuous,              !- Numeric Type
+    Dimensionless;           !- Unit Type
+
+!-   ===========  ALL OBJECTS IN CLASS: SCHEDULE:COMPACT ===========
+! \format compactSchedule
+
+  Schedule:Compact,
+    MyCompactSchedule,       !- Name
+    Fraction,                !- Schedule Type Limits Name
+    Through: 6/30,           !- Field 1
+    For: WeekDays SummerDesignDay, !- Field 2
+    Until: 8:00,0,           !- Field 3
+    Until: 24:00,1,          !- Field 5
+    For: AllOtherDays,       !- Field 7
+    Until: 24:00,0,          !- Field 8
+    Through: 12/31,          !- Field 10
+    For: Holidays,           !- Field 11
+    Until: 10:00,.5,         !- Field 12
+    Until: 15:00,.7,         !- Field 14
+    Until: 24:00,0,          !- Field 16
+    For: AllOtherDays,       !- Field 18
+    Until: 06:00,.9,         !- Field 19
+    Until: 24:00,.1;         !- Field 21
+
+!-   ===========  ALL OBJECTS IN CLASS: MATERIALPROPERTY:GLAZINGSPECTRALDATA ===========
+! \format Spectral
+
+  MaterialProperty:GlazingSpectralData,
+    MyGlazingSpectralData,   !- Name
+    0.3,0.5,0.01,0.8,
+    0.35,0.6,0.02,0.29,
+    0.4,0.6,0.01,0.31;
+
+!-   ===========  ALL OBJECTS IN CLASS: ZONE ===========
+! \format vertices
+
+  Zone,
+    MyZone,                  !- Name
+    0,                       !- Direction of Relative North {deg}
+    0,                       !- X Origin {m}
+    0,                       !- Y Origin {m}
+    0,                       !- Z Origin {m}
+    1,                       !- Type
+    1,                       !- Multiplier
+    autocalculate,           !- Ceiling Height {m}
+    autocalculate,           !- Volume {m3}
+    autocalculate,           !- Floor Area {m2}
+    TARP,                    !- Zone Inside Convection Algorithm
+    TARP,                    !- Zone Outside Convection Algorithm
+    Yes;                     !- Part of Total Floor Area
+
+!-   ===========  ALL OBJECTS IN CLASS: BUILDINGSURFACE:DETAILED ===========
+! \format vertices
+
+  BuildingSurface:Detailed,
+    A Surface,               !- Name
+    Floor,                   !- Surface Type
+    ,                        !- Construction Name
+    MyZone,                  !- Zone Name
+    Ground,                  !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    SunExposed,              !- Sun Exposure
+    WindExposed,             !- Wind Exposure
+    autocalculate,           !- View Factor to Ground
+    autocalculate,           !- Number of Vertices
+    0,0,0,  !- X,Y,Z ==> Vertex 1 {m}
+    20,0,0,  !- X,Y,Z ==> Vertex 2 {m}
+    20,10,0,  !- X,Y,Z ==> Vertex 3 {m}
+    0,10,0;  !- X,Y,Z ==> Vertex 4 {m}
+
+!-   ===========  ALL OBJECTS IN CLASS: ZONEPROPERTY:USERVIEWFACTORS ===========
+
+!  ZoneProperty:UserViewFactors,
+!    MyZone,                 !- Zone Name
+!    0,                      !- i 1
+!    0,                      !- j 1
+!    0.6,                    !- Fij 1
+!    0,                      !- i 2
+!    1,                      !- j 2
+!    0.5,                    !- Fij 2
+!    1,                      !- i 3
+!    0,                      !- j 3
+!    0.5,                    !- Fij 3
+!    1,                      !- i 4
+!    1,                      !- j 4
+!    0.75;                   !- Fij 4
+
+!-   ===========  ALL OBJECTS IN CLASS: FLUIDPROPERTIES:TEMPERATURES ===========
+! \format FluidProperty
+
+  FluidProperties:Temperatures,
+    Temperature List,        !- Name
+    -30,-20,-10,0,5,10,15,
+    20,21,22,23,24,25,25.1,
+    25.2,25.3,25.4,25.5,25.6,25.7,25.8,
+    25.9,26,26.1,26.2,26.3,26.4,26.5,
+    26.6,26.7,26.8,26.9,27,27.1,27.2,
+    27.3,27.4,27.5,28,28.5,29,29.5,
+    30,30.5,31,31.5,32,33,34,
+    35,36,37,38,39,40;
+

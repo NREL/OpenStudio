@@ -1,0 +1,39 @@
+#ifndef UTILITIES_CORE_UNZIPFILE_HPP
+#define UTILITIES_CORE_UNZIPFILE_HPP
+
+#include <utilities/UtilitiesAPI.hpp>
+#include "Path.hpp"
+
+#include <vector>
+
+namespace openstudio {
+
+
+  class UTILITIES_API UnzipFile 
+  {
+    public:
+      /// Constructs a UnzipFile object, opening the given file name. Throws if file could not be opened
+      /// \param[in] t_filename filename to open
+      UnzipFile(const openstudio::path &t_filename);
+
+      ~UnzipFile();
+
+      /// Returns a list of files contained in the current archive
+      std::vector<openstudio::path> listFiles() const;
+
+      /// Extracts the given file to the specified path. Relative paths are preserved
+      /// Example: extractFile("dir/filename", "outputpath") creates the file "outputpath/dir/filename"
+      openstudio::path extractFile(const openstudio::path &t_filename, const openstudio::path &t_outputPath) const;
+
+      /// Extracts all files in the archive to the given path, preserving relative paths.
+      std::vector<openstudio::path> extractAllFiles(const openstudio::path &t_outputPath) const;
+
+    private:
+      void *m_unzFile;
+
+  };
+
+}
+
+#endif
+

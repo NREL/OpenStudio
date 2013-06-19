@@ -1,0 +1,81 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#include <analysis/DesignOfExperimentsOptions.hpp>
+#include <analysis/DesignOfExperimentsOptions_Impl.hpp>
+
+namespace openstudio {
+namespace analysis {
+
+namespace detail {
+
+  DesignOfExperimentsOptions_Impl::DesignOfExperimentsOptions_Impl(
+      const DesignOfExperimentsType& designType)
+    : AlgorithmOptions_Impl(), m_designType(designType)
+  {}
+
+  DesignOfExperimentsOptions_Impl::DesignOfExperimentsOptions_Impl(
+      const DesignOfExperimentsType& designType,
+      const std::vector<Attribute>& options)
+    : AlgorithmOptions_Impl(options), m_designType(designType)
+  {}
+
+  AlgorithmOptions DesignOfExperimentsOptions_Impl::clone() const {
+    boost::shared_ptr<DesignOfExperimentsOptions_Impl> impl(new DesignOfExperimentsOptions_Impl(*this));
+    return DesignOfExperimentsOptions(impl);
+  }
+
+  DesignOfExperimentsType DesignOfExperimentsOptions_Impl::designType() const {
+    return m_designType;
+  }
+
+  void DesignOfExperimentsOptions_Impl::setDesignType(const DesignOfExperimentsType& designType) {
+    m_designType = designType;
+  }
+
+} // detail
+
+DesignOfExperimentsOptions::DesignOfExperimentsOptions(const DesignOfExperimentsType& designType)
+  : AlgorithmOptions(boost::shared_ptr<detail::DesignOfExperimentsOptions_Impl>(
+        new detail::DesignOfExperimentsOptions_Impl(designType)))
+{}
+
+DesignOfExperimentsOptions::DesignOfExperimentsOptions(const DesignOfExperimentsType& designType,
+                                                       const std::vector<Attribute>& options)
+  : AlgorithmOptions(boost::shared_ptr<detail::DesignOfExperimentsOptions_Impl>(
+        new detail::DesignOfExperimentsOptions_Impl(designType,options)))
+{}
+
+DesignOfExperimentsType DesignOfExperimentsOptions::designType() const {
+  return getImpl<detail::DesignOfExperimentsOptions_Impl>()->designType();
+}
+
+void DesignOfExperimentsOptions::setDesignType(const DesignOfExperimentsType& designType) {
+  getImpl<detail::DesignOfExperimentsOptions_Impl>()->setDesignType(designType);
+}
+
+/// @cond
+DesignOfExperimentsOptions::DesignOfExperimentsOptions(boost::shared_ptr<detail::DesignOfExperimentsOptions_Impl> impl)
+  : AlgorithmOptions(impl)
+{}
+/// @endcond
+
+} // analysis
+} // openstudio
+
