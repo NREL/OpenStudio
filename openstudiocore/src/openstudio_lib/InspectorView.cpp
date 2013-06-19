@@ -32,10 +32,14 @@
 #include <model/StraightComponent_Impl.hpp>
 #include <model/CoilCoolingWater.hpp>
 #include <model/CoilCoolingWater_Impl.hpp>
+#include <model/CoilCoolingLowTempRadiantConstFlow.hpp>
+#include <model/CoilCoolingLowTempRadiantConstFlow_Impl.hpp>
 #include <model/CoilHeatingWater.hpp>
 #include <model/CoilHeatingWater_Impl.hpp>
 #include <model/CoilHeatingWaterBaseboard.hpp>
 #include <model/CoilHeatingWaterBaseboard_Impl.hpp>
+#include <model/CoilHeatingLowTempRadiantConstFlow.hpp>
+#include <model/CoilHeatingLowTempRadiantConstFlow_Impl.hpp>
 #include <model/ControllerWaterCoil.hpp>
 #include <model/ControllerWaterCoil_Impl.hpp>
 #include <model/ConnectorSplitter.hpp>
