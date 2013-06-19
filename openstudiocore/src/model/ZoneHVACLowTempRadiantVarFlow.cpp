@@ -191,7 +191,7 @@ namespace detail {
 
   bool ZoneHVACLowTempRadiantVarFlow_Impl::setCoolingCoil(HVACComponent& coolingCoil) 
   {
-    bool result = setPointer(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::LowTempRadiantVariableFlowHeatingCoilName, coolingCoil.handle());
+    bool result = setPointer(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::LowTempRadiantVariableFlowCoolingCoilName, coolingCoil.handle());
     return result;
   }
 

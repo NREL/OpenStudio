@@ -220,6 +220,29 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       connect( m_currentView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
                this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
     }
+    else if( boost::optional<model::ZoneHVACLowTempRadiantConstFlow> component = 
+             modelObject->optionalCast<model::ZoneHVACLowTempRadiantConstFlow>()  )
+    {
+      if( m_currentView )
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new ZoneHVACLowTempRadiantConstFlowInspectorView();
+      isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                            m_currentView, SIGNAL(toggleUnitsClicked(bool)));
+      BOOST_ASSERT(isConnected);
+  
+      m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
+
+      m_vLayout->addWidget(m_currentView);
+
+      connect( m_currentView, SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)),
+               this,  SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+      
+      connect( m_currentView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+               this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+    }
     else if( boost::optional<model::ZoneHVACWaterToAirHeatPump> component = 
              modelObject->optionalCast<model::ZoneHVACWaterToAirHeatPump>()  )
     {
@@ -856,12 +879,12 @@ void ZoneHVACLowTempRadiantConstFlowInspectorView::layoutModelObject( model::Mod
   bool waterHeatingCoil = false;
   bool waterCoolingCoil = false;
 
-  if( boost::optional<model::ZoneHVACLowTempRadiantConstFlow> fourPipe = 
+  if( boost::optional<model::ZoneHVACLowTempRadiantConstFlow> lowTempRadiant = 
         modelObject.optionalCast<model::ZoneHVACLowTempRadiantConstFlow>() )
   {
-    if( boost::optional<model::HVACComponent> coil = fourPipe->heatingCoil() )
+    if( boost::optional<model::HVACComponent> coil = lowTempRadiant->heatingCoil() )
     {
-      if( boost::optional<model::WaterToAirComponent> waterToAirCoil = coil->optionalCast<model::WaterToAirComponent>() )
+      if( boost::optional<model::HVACComponent> waterToAirCoil = coil->optionalCast<model::HVACComponent>() )
       {
         boost::optional<model::ModelObject> moHeat = waterToAirCoil.get();
 
@@ -870,9 +893,9 @@ void ZoneHVACLowTempRadiantConstFlowInspectorView::layoutModelObject( model::Mod
         waterHeatingCoil = true;
       }
     }
-    if( boost::optional<model::HVACComponent> coil = fourPipe->coolingCoil() )
+    if( boost::optional<model::HVACComponent> coil = lowTempRadiant->coolingCoil() )
     {
-      if( boost::optional<model::WaterToAirComponent> waterToAirCoil = coil->optionalCast<model::WaterToAirComponent>() )
+      if( boost::optional<model::HVACComponent> waterToAirCoil = coil->optionalCast<model::HVACComponent>() )
       {
         boost::optional<model::ModelObject> moCool = waterToAirCoil.get();
 
