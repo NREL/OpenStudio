@@ -315,7 +315,7 @@ namespace openstudio {
               break; // we found a good one
             } catch (const std::exception &) {
               // not enough data to run approximation
-              error = diff.average();
+              error = baseline->second.average() - thisOne->second.average();
             }
           }
         }
