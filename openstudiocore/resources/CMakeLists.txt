@@ -332,79 +332,11 @@ ADD_CUSTOM_TARGET( openstudio_analysisdriver_resources
 CREATE_SRC_GROUPS( "${analysisdriver_resources_src}" )
 
 ########################################################
-# standardsinterface resources
-# clear runs, calls to RUN_ENERGYPLUS will populate this
-SET(ENERGYPLUS_OUTPUTS "")
-
-SET(standardsinterface_resources_src
-  standardsinterface/CEC_Buildings/SmallOffice.idf
-  standardsinterface/CEC_WeatherFiles/CZ01RV2.epw
-  standardsinterface/CEC_WeatherFiles/CZ02RV2.epw
-  standardsinterface/CEC_WeatherFiles/CZ03RV2.epw
-  standardsinterface/CEC_WeatherFiles/CZ04RV2.epw
-  standardsinterface/CEC_WeatherFiles/CZ05RV2.epw
-  standardsinterface/CEC_WeatherFiles/CZ06RV2.epw
-  standardsinterface/CEC_WeatherFiles/CZ07RV2.epw
-  standardsinterface/CEC_WeatherFiles/CZ08RV2.epw
-  standardsinterface/CEC_WeatherFiles/CZ09RV2.epw
-  standardsinterface/CEC_WeatherFiles/CZ10RV2.epw
-  standardsinterface/CEC_WeatherFiles/CZ11RV2.epw
-  standardsinterface/CEC_WeatherFiles/CZ12RV2.epw
-  standardsinterface/CEC_WeatherFiles/CZ13RV2.epw
-  standardsinterface/CEC_WeatherFiles/CZ14RV2.epw
-  standardsinterface/CEC_WeatherFiles/CZ15RV2.epw
-  standardsinterface/CEC_WeatherFiles/CZ16RV2.epw
-  standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ01.csv
-  standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ02.csv
-  standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ03.csv
-  standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ04.csv
-  standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ05.csv
-  standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ06.csv
-  standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ07.csv
-  standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ08.csv
-  standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ09.csv
-  standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ10.csv
-  standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ11.csv
-  standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ12.csv
-  standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ13.csv
-  standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ14.csv
-  standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ15.csv
-  standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ16.csv
-  standardsinterface/DataDictionary/DataDictionary.xml
-  standardsinterface/DataDictionary/Project_Objects.csv
-  standardsinterface/DataDictionary/Project_Attributes.csv
-  standardsinterface/DataDictionary/Project_Measurements.csv
-  standardsinterface/DataDictionary/Envelope_Objects.csv
-  standardsinterface/DataDictionary/Envelope_Attributes.csv
-  standardsinterface/DataDictionary/HVAC_Objects.csv
-  standardsinterface/DataDictionary/HVAC_Attributes.csv
-  standardsinterface/DataDictionary/Lighting_Objects.csv
-  standardsinterface/DataDictionary/Lighting_Attributes.csv
-)
-
-# update the resources
-UPDATE_RESOURCES("${standardsinterface_resources_src}")
-
-RUN_ENERGYPLUS_CUSTOMEPW("standardsinterface/CEC_Buildings/SmallOffice.idf" "standardsinterface/CEC_WeatherFiles/CZ01RV2.epw" "standardsinterface/CEC_Buildings/SmallOffice")
-
-# add target
-ADD_CUSTOM_TARGET( openstudio_standardsinterface_resources
-  DEPENDS ${standardsinterface_resources_src} ${ENERGYPLUS_OUTPUTS}
-  SOURCES ${standardsinterface_resources_src}
-)
-
-CREATE_SRC_GROUPS( "${standardsinterface_resources_src}" )
-
-########################################################
 # ruleset resources
 # clear runs, calls to RUN_ENERGYPLUS will populate this
 SET(ENERGYPLUS_OUTPUTS "")
 
 SET(ruleset_resources_src
-  ruleset/Title24_2008/PrescriptiveEnvelopeComponent_Table143A_ExteriorWallUFactor.csv
-  ruleset/Title24_2008/PrescriptiveEnvelopeComponent_Table143A_RoofAndExteriorCeilingUFactor_ExteriorCeiling.csv
-  ruleset/Title24_2008/PrescriptiveEnvelopeComponent_Table143A_RoofAndExteriorCeilingUFactor_Roof.csv
-  ruleset/Title24_2008/PrescriptiveEnvelopeComponent_Table143A_WindowUFactor.csv
 )
 
 # update the resources
@@ -417,31 +349,6 @@ ADD_CUSTOM_TARGET( openstudio_ruleset_resources
 )
 
 CREATE_SRC_GROUPS( "${ruleset_resources_src}" )
-
-########################################################
-# rulesengine resources
-# clear runs, calls to RUN_ENERGYPLUS will populate this
-SET(ENERGYPLUS_OUTPUTS "")
-
-SET(rulesengine_unconfigured_resources_src
-  rulesengine/ImfFiles/StandardsSchedules.imf
-  rulesengine/ImfFiles/Title24Schedules.imf
-)
-
-SET(rulesengine_resources_src
-  ${rulesengine_unconfigured_resources_src}
-)
-
-# update the resources
-UPDATE_RESOURCES("${rulesengine_unconfigured_resources_src}")
-
-# add target
-ADD_CUSTOM_TARGET( openstudio_rulesengine_resources
-  DEPENDS ${rulesengine_resources_src} ${ENERGYPLUS_OUTPUTS}
-  SOURCES ${rulesengine_resources_src}
-)
-
-CREATE_SRC_GROUPS( "${rulesengine_resources_src}" )
 
 ########################################################
 # energyplus resources

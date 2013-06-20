@@ -1,5 +1,0 @@
-IESNA Illuminance Category,enumerated list,,"T24, Related: ""IESNA LIGHTING HANDBOOK is the Illuminating Engineering Society National Association document entitled “The IESNA Lighting Handbook: Reference and Applications, Ninth Edition” (2000).""
-T24, Related: ""If a specific IESNA Illuminance Category is listed in Column 2 of TABLE 146-G, then such illuminance Category shall be used. Otherwise, determine the illuminance category for each lighting primary function type according to categories specified in the IESNA Lighting Handbook (IESNA HB), using the “Design Guide” for illuminance. Tasks that are performed less than 2 hours a day or poor quality tasks that can be improved shall not be employed to justify use of Illuminance Categories E, F, or G."""
-Lighting Power,decimal,,Maximum amount of power drawn by a lighting system.
-Lighting Power Density,decimal,,"Maximum amount of power drawn by a building or zone's lighting systems, divided by that building or zone's floor area."
-Lighting Type,enumerated list,,Enumeration of types of lighting found in a building.
