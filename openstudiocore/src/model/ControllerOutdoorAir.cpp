@@ -556,6 +556,99 @@ namespace detail {
     return oaControllerClone;
   }
 
+  boost::optional<Schedule> ControllerOutdoorAir_Impl::minimumOutdoorAirSchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Controller_OutdoorAirFields::MinimumOutdoorAirScheduleName);
+  }
+
+  bool ControllerOutdoorAir_Impl::setMinimumOutdoorAirSchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_Controller_OutdoorAirFields::MinimumOutdoorAirScheduleName,
+                              "ControllerOutdoorAir",
+                              "Minimum Outdoor Air",
+                              schedule);
+    return result;
+  }
+
+  void ControllerOutdoorAir_Impl::resetMinimumOutdoorAirSchedule() {
+    bool result = setString(OS_Controller_OutdoorAirFields::MinimumOutdoorAirScheduleName, "");
+    BOOST_ASSERT(result);
+  }
+
+  boost::optional<Schedule> ControllerOutdoorAir_Impl::minimumFractionofOutdoorAirSchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Controller_OutdoorAirFields::MinimumFractionofOutdoorAirScheduleName);
+  }
+
+  bool ControllerOutdoorAir_Impl::setMinimumFractionofOutdoorAirSchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_Controller_OutdoorAirFields::MinimumFractionofOutdoorAirScheduleName,
+                              "ControllerOutdoorAir",
+                              "Minimum Fraction of Outdoor Air",
+                              schedule);
+    return result;
+  }
+
+  void ControllerOutdoorAir_Impl::resetMinimumFractionofOutdoorAirSchedule() {
+    bool result = setString(OS_Controller_OutdoorAirFields::MinimumFractionofOutdoorAirScheduleName, "");
+    BOOST_ASSERT(result);
+  }
+
+  boost::optional<Schedule> ControllerOutdoorAir_Impl::maximumFractionofOutdoorAirSchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName);
+  }
+
+  bool ControllerOutdoorAir_Impl::setMaximumFractionofOutdoorAirSchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName,
+                              "ControllerOutdoorAir",
+                              "Maximum Fraction of Outdoor Air",
+                              schedule);
+    return result;
+  }
+
+  void ControllerOutdoorAir_Impl::resetMaximumFractionofOutdoorAirSchedule() {
+    bool result = setString(OS_Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName, "");
+    BOOST_ASSERT(result);
+  }
+
+  boost::optional<Schedule> ControllerOutdoorAir_Impl::timeofDayEconomizerControlSchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName);
+  }
+
+  bool ControllerOutdoorAir_Impl::setTimeofDayEconomizerControlSchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName,
+                              "ControllerOutdoorAir",
+                              "Time of Day Economizer Control",
+                              schedule);
+    return result;
+  }
+
+  void ControllerOutdoorAir_Impl::resetTimeofDayEconomizerControlSchedule() {
+    bool result = setString(OS_Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName, "");
+    BOOST_ASSERT(result);
+  }
+
+  std::vector<ScheduleTypeKey> ControllerOutdoorAir_Impl::getScheduleTypeKeys(const Schedule& schedule) const
+  {
+    // TODO: Check schedule display names.
+    std::vector<ScheduleTypeKey> result;
+    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+    if (std::find(b,e,OS_Controller_OutdoorAirFields::MinimumOutdoorAirScheduleName) != e)
+    {
+      result.push_back(ScheduleTypeKey("ControllerOutdoorAir","Minimum Outdoor Air"));
+    }
+    if (std::find(b,e,OS_Controller_OutdoorAirFields::MinimumFractionofOutdoorAirScheduleName) != e)
+    {
+      result.push_back(ScheduleTypeKey("ControllerOutdoorAir","Minimum Fraction of Outdoor Air"));
+    }
+    if (std::find(b,e,OS_Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName) != e)
+    {
+      result.push_back(ScheduleTypeKey("ControllerOutdoorAir","Maximum Fraction of Outdoor Air"));
+    }
+    if (std::find(b,e,OS_Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName) != e)
+    {
+      result.push_back(ScheduleTypeKey("ControllerOutdoorAir","Time of Day Economizer Control"));
+    }
+    return result;
+  }
+
 } // detail
 
 // create a new ControllerOutdoorAir object in the model's workspace
@@ -831,6 +924,66 @@ bool ControllerOutdoorAir::setControllerMechanicalVentilation(const ControllerMe
 std::vector<openstudio::IdfObject> ControllerOutdoorAir::remove()
 {
   return getImpl<detail::ControllerOutdoorAir_Impl>()->remove();
+}
+
+boost::optional<Schedule> ControllerOutdoorAir::minimumOutdoorAirSchedule() const
+{
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->minimumOutdoorAirSchedule();
+}
+
+bool ControllerOutdoorAir::setMinimumOutdoorAirSchedule(Schedule& schedule)
+{
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->setMinimumOutdoorAirSchedule(schedule);
+}
+
+void ControllerOutdoorAir::resetMinimumOutdoorAirSchedule()
+{
+  getImpl<detail::ControllerOutdoorAir_Impl>()->resetMinimumOutdoorAirSchedule();
+}
+
+boost::optional<Schedule> ControllerOutdoorAir::minimumFractionofOutdoorAirSchedule() const
+{
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->minimumFractionofOutdoorAirSchedule();
+}
+
+bool ControllerOutdoorAir::setMinimumFractionofOutdoorAirSchedule(Schedule& schedule)
+{
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->setMinimumFractionofOutdoorAirSchedule(schedule);
+}
+
+void ControllerOutdoorAir::resetMinimumFractionofOutdoorAirSchedule()
+{
+  getImpl<detail::ControllerOutdoorAir_Impl>()->resetMinimumFractionofOutdoorAirSchedule();
+}
+
+boost::optional<Schedule> ControllerOutdoorAir::maximumFractionofOutdoorAirSchedule() const
+{
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->maximumFractionofOutdoorAirSchedule();
+}
+
+bool ControllerOutdoorAir::setMaximumFractionofOutdoorAirSchedule(Schedule& schedule)
+{
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->setMaximumFractionofOutdoorAirSchedule(schedule);
+}
+
+void ControllerOutdoorAir::resetMaximumFractionofOutdoorAirSchedule()
+{
+  getImpl<detail::ControllerOutdoorAir_Impl>()->resetMaximumFractionofOutdoorAirSchedule();
+}
+
+boost::optional<Schedule> ControllerOutdoorAir::timeofDayEconomizerControlSchedule() const
+{
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->timeofDayEconomizerControlSchedule();
+}
+
+bool ControllerOutdoorAir::setTimeofDayEconomizerControlSchedule(Schedule& schedule)
+{
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->setTimeofDayEconomizerControlSchedule(schedule);
+}
+
+void ControllerOutdoorAir::resetTimeofDayEconomizerControlSchedule()
+{
+  getImpl<detail::ControllerOutdoorAir_Impl>()->resetTimeofDayEconomizerControlSchedule();
 }
 
 } // model

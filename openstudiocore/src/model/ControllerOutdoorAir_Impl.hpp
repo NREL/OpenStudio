@@ -153,6 +153,24 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
 
   bool setControllerMechanicalVentilation(const ControllerMechanicalVentilation& controllerMechanicalVentilation);
 
+  boost::optional<Schedule> minimumOutdoorAirSchedule() const;
+  bool setMinimumOutdoorAirSchedule(Schedule& schedule);
+  void resetMinimumOutdoorAirSchedule();
+
+  boost::optional<Schedule> minimumFractionofOutdoorAirSchedule() const;
+  bool setMinimumFractionofOutdoorAirSchedule(Schedule& schedule);
+  void resetMinimumFractionofOutdoorAirSchedule();
+  
+  boost::optional<Schedule> maximumFractionofOutdoorAirSchedule() const;
+  bool setMaximumFractionofOutdoorAirSchedule(Schedule& schedule);
+  void resetMaximumFractionofOutdoorAirSchedule();
+  
+  boost::optional<Schedule> timeofDayEconomizerControlSchedule() const;
+  bool setTimeofDayEconomizerControlSchedule(Schedule& schedule);
+  void resetTimeofDayEconomizerControlSchedule();
+
+  std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+
  private:
 
   boost::optional<ControllerMechanicalVentilation> optionalControllerMechanicalVentilation() const;

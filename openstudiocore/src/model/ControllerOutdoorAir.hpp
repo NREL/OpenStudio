@@ -40,19 +40,28 @@ class AirLoopHVACOutdoorAirSystem;
 
 class MODEL_API ControllerOutdoorAir : public ParentObject {
  public:
-  /** @name Constructors and Destructors */
-  //@{
 
   explicit ControllerOutdoorAir(const Model& model);
 
   virtual ~ControllerOutdoorAir() {}
 
-  //@}
-
   static IddObjectType iddObjectType();
 
-  /** @name Getters and Setters */
-  //@{
+  boost::optional<Schedule> minimumOutdoorAirSchedule() const;
+  bool setMinimumOutdoorAirSchedule(Schedule& schedule);
+  void resetMinimumOutdoorAirSchedule();
+
+  boost::optional<Schedule> minimumFractionofOutdoorAirSchedule() const;
+  bool setMinimumFractionofOutdoorAirSchedule(Schedule& schedule);
+  void resetMinimumFractionofOutdoorAirSchedule();
+  
+  boost::optional<Schedule> maximumFractionofOutdoorAirSchedule() const;
+  bool setMaximumFractionofOutdoorAirSchedule(Schedule& schedule);
+  void resetMaximumFractionofOutdoorAirSchedule();
+  
+  boost::optional<Schedule> timeofDayEconomizerControlSchedule() const;
+  bool setTimeofDayEconomizerControlSchedule(Schedule& schedule);
+  void resetTimeofDayEconomizerControlSchedule();
 
   boost::optional<double> minimumOutdoorAirFlowRate() const;
   OSOptionalQuantity getMinimumOutdoorAirFlowRate(bool returnIP=false) const;
