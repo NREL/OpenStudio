@@ -22,13 +22,10 @@
 #include <project/JoinRecord.hpp>
 #include <project/ProjectDatabase.hpp>
 #include <project/ModelObjectFilterClauseRecord.hpp>
-#include <project/StandardsFilterClauseRecord.hpp>
 
 #include <ruleset/FilterClause.hpp>
 #include <ruleset/ModelObjectFilterClause.hpp>
 #include <ruleset/ModelObjectFilterClause_Impl.hpp>
-#include <ruleset/StandardsFilterClause.hpp>
-#include <ruleset/StandardsFilterClause_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
 
@@ -100,7 +97,7 @@ namespace project {
     {
       ClauseRecord_Impl::saveLastValues();
 
-      m_lastFilterClauseRecordType = m_filterClauseRecordType; 
+      m_lastFilterClauseRecordType = m_filterClauseRecordType;
     }
 
     void FilterClauseRecord_Impl::revertToLastValues()
@@ -167,12 +164,9 @@ namespace project {
     switch (filterClauseRecordType){
       case FilterClauseRecordType::ModelFilterClauseRecord:
         //result = ModelFilterClauseRecord::factoryFromQuery(query, database);
-        break;      
+        break;
       case FilterClauseRecordType::ModelObjectFilterClauseRecord:
         result = ModelObjectFilterClauseRecord::factoryFromQuery(query, database);
-        break;
-      case FilterClauseRecordType::StandardsFilterClauseRecord:
-        result = StandardsFilterClauseRecord::factoryFromQuery(query, database);
         break;
       default:
         LOG(Error, "Unknown filterClauseRecordType " << filterClauseRecordType);
@@ -180,13 +174,11 @@ namespace project {
 
     return result;
   }
-  
+
   FilterClauseRecord FilterClauseRecord::factoryFromFilter(const openstudio::ruleset::FilterClause& filter, ProjectDatabase& projectDatabase)
   {
     if (filter.optionalCast<ruleset::ModelObjectFilterClause>()){
       return ModelObjectFilterClauseRecord::factoryFromFilter(filter.cast<ruleset::ModelObjectFilterClause>(), projectDatabase);
-    }else if(filter.optionalCast<ruleset::StandardsFilterClause>()){
-      return StandardsFilterClauseRecord::factoryFromFilter(filter.cast<ruleset::StandardsFilterClause>(), projectDatabase);
     }
 
     BOOST_ASSERT(false);

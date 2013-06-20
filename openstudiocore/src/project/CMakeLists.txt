@@ -98,69 +98,9 @@ SET( ${target_name}_src
   Ruleset_Rule_JoinRecord.hpp
   Ruleset_Rule_JoinRecord_Impl.hpp
   Ruleset_Rule_JoinRecord.cpp
-  RulesetOptionRecord.hpp
-  RulesetOptionRecord_Impl.hpp
-  RulesetOptionRecord.cpp
   RulesetRecord.hpp
   RulesetRecord_Impl.hpp
   RulesetRecord.cpp
-  StandardsActionClauseRecord.hpp
-  StandardsActionClauseRecord_Impl.hpp
-  StandardsActionClauseRecord.cpp
-  StandardsActionCloneModelRecord.hpp
-  StandardsActionCloneModelRecord_Impl.hpp
-  StandardsActionCloneModelRecord.cpp
-  StandardsActionRuleResultRecord.hpp
-  StandardsActionRuleResultRecord_Impl.hpp
-  StandardsActionRuleResultRecord.cpp
-  StandardsActionRuleSatisfiedRecord.hpp
-  StandardsActionRuleSatisfiedRecord_Impl.hpp
-  StandardsActionRuleSatisfiedRecord.cpp
-  StandardsActionRuleViolatedRecord.hpp
-  StandardsActionRuleViolatedRecord_Impl.hpp
-  StandardsActionRuleViolatedRecord.cpp
-  StandardsAttributeCheckRuleRecord.hpp
-  StandardsAttributeCheckRuleRecord_Impl.hpp
-  StandardsAttributeCheckRuleRecord.cpp
-  StandardsEnumRulesetOptionRecord.hpp
-  StandardsEnumRulesetOptionRecord_Impl.hpp
-  StandardsEnumRulesetOptionRecord.cpp
-  StandardsFilterAvailableModelRecord.hpp
-  StandardsFilterAvailableModelRecord_Impl.hpp
-  StandardsFilterAvailableModelRecord.cpp
-  StandardsFilterAvailableObjectRecord.hpp
-  StandardsFilterAvailableObjectRecord_Impl.hpp
-  StandardsFilterAvailableObjectRecord.cpp
-  StandardsFilterClauseRecord.hpp
-  StandardsFilterClauseRecord_Impl.hpp
-  StandardsFilterClauseRecord.cpp
-  StandardsFilterObjectAttributeRecord.hpp
-  StandardsFilterObjectAttributeRecord_Impl.hpp
-  StandardsFilterObjectAttributeRecord.cpp
-  StandardsFilterObjectBooleanAttributeRecord.hpp
-  StandardsFilterObjectBooleanAttributeRecord_Impl.hpp
-  StandardsFilterObjectBooleanAttributeRecord.cpp
-  StandardsFilterObjectDoubleAttributeRecord.hpp
-  StandardsFilterObjectDoubleAttributeRecord_Impl.hpp
-  StandardsFilterObjectDoubleAttributeRecord.cpp
-  StandardsFilterObjectEnumAttributeRecord.hpp
-  StandardsFilterObjectEnumAttributeRecord_Impl.hpp
-  StandardsFilterObjectEnumAttributeRecord.cpp
-  StandardsFilterObjectIntegerAttributeRecord.hpp
-  StandardsFilterObjectIntegerAttributeRecord_Impl.hpp
-  StandardsFilterObjectIntegerAttributeRecord.cpp
-  StandardsFilterRulesetOptionRecord.hpp
-  StandardsFilterRulesetOptionRecord_Impl.hpp
-  StandardsFilterRulesetOptionRecord.cpp
-  StandardsRuleRecord.hpp
-  StandardsRuleRecord_Impl.hpp
-  StandardsRuleRecord.cpp
-  StandardsRulesetOptionRecord.hpp
-  StandardsRulesetOptionRecord_Impl.hpp
-  StandardsRulesetOptionRecord.cpp
-  StandardsRulesetRecord.hpp
-  StandardsRulesetRecord_Impl.hpp
-  StandardsRulesetRecord.cpp
   OSArgumentRecord.hpp
   OSArgumentRecord_Impl.hpp
   OSArgumentRecord.cpp
@@ -300,27 +240,7 @@ SET( ${target_name}_moc
   Rule_Clause_JoinRecord_Impl.hpp
   RuleRecord_Impl.hpp
   Ruleset_Rule_JoinRecord_Impl.hpp
-  RulesetOptionRecord_Impl.hpp
   RulesetRecord_Impl.hpp
-  StandardsActionClauseRecord_Impl.hpp
-  StandardsActionCloneModelRecord_Impl.hpp
-  StandardsActionRuleResultRecord_Impl.hpp
-  StandardsActionRuleSatisfiedRecord_Impl.hpp
-  StandardsActionRuleViolatedRecord_Impl.hpp
-  StandardsAttributeCheckRuleRecord_Impl.hpp
-  StandardsEnumRulesetOptionRecord_Impl.hpp
-  StandardsFilterAvailableModelRecord_Impl.hpp
-  StandardsFilterAvailableObjectRecord_Impl.hpp
-  StandardsFilterClauseRecord_Impl.hpp
-  StandardsFilterObjectAttributeRecord_Impl.hpp
-  StandardsFilterObjectBooleanAttributeRecord_Impl.hpp
-  StandardsFilterObjectDoubleAttributeRecord_Impl.hpp
-  StandardsFilterObjectEnumAttributeRecord_Impl.hpp
-  StandardsFilterObjectIntegerAttributeRecord_Impl.hpp
-  StandardsFilterRulesetOptionRecord_Impl.hpp
-  StandardsRuleRecord_Impl.hpp
-  StandardsRulesetOptionRecord_Impl.hpp
-  StandardsRulesetRecord_Impl.hpp
   OSArgumentRecord_Impl.hpp
 
   # analysis
@@ -395,8 +315,6 @@ SET( ${target_name}_test_src
   Test/ProjectDatabaseRecord_GTest.cpp
   Test/RubyPerturbationRecord_GTest.cpp
   Test/RubyContinuousVariableRecord_GTest.cpp
-  Test/StandardsAttributeCheckRuleRecord_GTest.cpp
-  Test/StandardsRulesetRecord_GTest.cpp
   Test/TagRecord_GTest.cpp
   Test/URLSearchPathRecord_GTest.cpp
   Test/WorkflowRecord_GTest.cpp

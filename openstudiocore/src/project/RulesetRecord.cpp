@@ -22,7 +22,6 @@
 #include <project/JoinRecord.hpp>
 #include <project/ProjectDatabase.hpp>
 #include <project/ModelRulesetRecord.hpp>
-#include <project/StandardsRulesetRecord.hpp>
 
 #include <ruleset/Ruleset.hpp>
 
@@ -222,9 +221,6 @@ boost::optional<RulesetRecord> RulesetRecord::factoryFromQuery(const QSqlQuery& 
   switch (rulesetRecordType){
   case RulesetRecordType::ModelRulesetRecord:
     result = ModelRulesetRecord(query, database);
-    break;
-  case RulesetRecordType::StandardsRulesetRecord:
-    result = StandardsRulesetRecord(query, database);
     break;
   default:
     LOG(Error, "Unknown rulesetRecordType " << rulesetRecordType);
