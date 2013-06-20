@@ -90,6 +90,8 @@ class MODEL_API SetpointManagerMixedAir : public HVACComponent
 
   static IddObjectType iddObjectType();
 
+  static void updateFanInletOutletNodes(AirLoopHVAC & airLoopHVAC);
+
   protected:
 
   friend class Model;

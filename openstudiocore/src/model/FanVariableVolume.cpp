@@ -32,6 +32,7 @@
 #include <model/ZoneHVACFourPipeFanCoil_Impl.hpp>
 #include <model/ZoneHVACUnitHeater.hpp>
 #include <model/ZoneHVACUnitHeater_Impl.hpp>
+#include <model/SetpointManagerMixedAir.hpp>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Fan_VariableVolume_FieldEnums.hxx>
 #include <utilities/core/Assert.hpp>
@@ -653,6 +654,11 @@ namespace detail {
         }
       }
 
+      if( ! airLoopHVAC->supplyComponent(node.handle()) )
+      {
+        return false;
+      }
+
       std::vector<ModelObject> allFans;
 
       std::vector<ModelObject> constantFans = airLoopHVAC->supplyComponents(IddObjectType::OS_Fan_ConstantVolume);
@@ -666,9 +672,18 @@ namespace detail {
       {
         return false;
       }
+
+      bool result = StraightComponent_Impl::addToNode( node );
+
+      if( result )
+      {
+        SetpointManagerMixedAir::updateFanInletOutletNodes(airLoopHVAC.get());
+      }
+
+      return result;
     }
 
-    return StraightComponent_Impl::addToNode( node );
+    return false;
   }
 
   openstudio::Quantity FanVariableVolume_Impl::fanEfficiency_SI() const {

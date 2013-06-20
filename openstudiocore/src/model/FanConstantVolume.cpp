@@ -37,6 +37,7 @@
 #include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
+#include <model/SetpointManagerMixedAir.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/Schedule.hpp>
@@ -197,6 +198,11 @@ namespace detail {
         }
       }
 
+      if( ! airLoopHVAC->supplyComponent(node.handle()) )
+      {
+        return false;
+      }
+
       std::vector<ModelObject> allFans;
 
       std::vector<ModelObject> constantFans = airLoopHVAC->supplyComponents(IddObjectType::OS_Fan_ConstantVolume);
@@ -210,9 +216,18 @@ namespace detail {
       {
         return false;
       }
+
+      bool result = StraightComponent_Impl::addToNode( node );
+
+      if( result )
+      {
+        SetpointManagerMixedAir::updateFanInletOutletNodes(airLoopHVAC.get());
+      }
+
+      return result;
     }
 
-    return StraightComponent_Impl::addToNode( node );
+    return false;
   }
 
   std::vector<openstudio::IdfObject> FanConstantVolume_Impl::remove()

@@ -22,6 +22,12 @@
 #include <model/Model.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
+#include <model/FanConstantVolume.hpp>
+#include <model/FanConstantVolume_Impl.hpp>
+#include <model/FanVariableVolume.hpp>
+#include <model/FanVariableVolume_Impl.hpp>
+#include <model/FanOnOff.hpp>
+#include <model/FanOnOff_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
@@ -284,6 +290,58 @@ boost::optional<Node> SetpointManagerMixedAir::setpointNode()
 void SetpointManagerMixedAir::setSetpointNode( Node & node )
 {
   return getImpl<detail::SetpointManagerMixedAir_Impl>()->setSetpointNode(node);
+}
+
+void SetpointManagerMixedAir::updateFanInletOutletNodes(AirLoopHVAC & airLoopHVAC)
+{
+  boost::optional<Node> fanInletNode;
+  boost::optional<Node> fanOutletNode;
+
+  std::vector<StraightComponent> fans;
+
+  std::vector<ModelObject> supplyComponents = airLoopHVAC.supplyComponents();
+
+  std::vector<FanConstantVolume> constantFans = subsetCastVector<FanConstantVolume>(supplyComponents);
+  std::vector<FanVariableVolume> variableFans = subsetCastVector<FanVariableVolume>(supplyComponents);
+  std::vector<FanOnOff> onoffFans = subsetCastVector<FanOnOff>(supplyComponents);
+
+  fans.insert(fans.begin(),constantFans.begin(),constantFans.end());
+  fans.insert(fans.begin(),variableFans.begin(),variableFans.end());
+  fans.insert(fans.begin(),onoffFans.begin(),onoffFans.end());
+
+  if( fans.size() > 0 )
+  {
+    boost::optional<ModelObject> mo;
+
+    mo = fans.front().inletModelObject();
+    if( mo )
+    {
+      fanInletNode = mo->optionalCast<Node>();
+    }
+
+    mo = fans.front().outletModelObject();
+    if( mo )
+    {
+      fanOutletNode = mo->optionalCast<Node>();
+    }
+  }
+
+  if( fanInletNode && fanOutletNode )
+  {
+    std::vector<model::Node> nodes = subsetCastVector<model::Node>(airLoopHVAC.supplyComponents());
+
+    for( std::vector<model::Node>::iterator it = nodes.begin();
+         it != nodes.end();
+         it++ )
+    {
+      if( boost::optional<model::SetpointManagerMixedAir> spm = it->getSetpointManagerMixedAir() )
+      {
+        spm->setFanInletNode(fanInletNode.get());
+
+        spm->setFanOutletNode(fanOutletNode.get());
+      }
+    }
+  }
 }
 
 } // model
