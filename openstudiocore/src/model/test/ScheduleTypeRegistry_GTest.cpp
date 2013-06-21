@@ -74,9 +74,9 @@ TEST_F(ModelFixture, ScheduleTypeRegistry_UseInSetSchedule) {
   ok = schedule.setScheduleTypeLimits(availabilityLimits);
   EXPECT_TRUE(ok);
 
-  // try to set Lights schedule--should fail b/c lights schedule is Dimensionless, not Availability
+  // try to set Lights schedule--used to fail b/c lights schedule is Dimensionless, not Availability, now passes
   ok = light.setSchedule(schedule);
-  EXPECT_FALSE(ok);
+  EXPECT_TRUE(ok);
 
   // clear conflicting information
   availabilityLimits.resetNumericType();

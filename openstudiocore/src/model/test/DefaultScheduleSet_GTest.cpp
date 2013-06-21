@@ -158,10 +158,10 @@ TEST_F(ModelFixture, DefaultScheduleSet_ScheduleTypes) {
   EXPECT_EQ("Continuous",alwaysOn.scheduleTypeLimits()->numericType().get());
 
   // always on is now a continuous schedule
-  // it cannot be used as an Hours of Operation Schedule through the interface ...
-  EXPECT_FALSE(scheduleSet.setHoursofOperationSchedule(alwaysOn));
-  EXPECT_FALSE(scheduleSet.hoursofOperationSchedule());
+  // it can now be used as an Hours of Operation Schedule through the interface ...
+  EXPECT_TRUE(scheduleSet.setHoursofOperationSchedule(alwaysOn));
+  EXPECT_TRUE(scheduleSet.hoursofOperationSchedule());
   // ... or through the low-level data methods
-  EXPECT_FALSE(scheduleSet.setPointer(OS_DefaultScheduleSetFields::HoursofOperationScheduleName,alwaysOn.handle()));
-  EXPECT_FALSE(scheduleSet.hoursofOperationSchedule());
+  EXPECT_TRUE(scheduleSet.setPointer(OS_DefaultScheduleSetFields::HoursofOperationScheduleName,alwaysOn.handle()));
+  EXPECT_TRUE(scheduleSet.hoursofOperationSchedule());
 }
