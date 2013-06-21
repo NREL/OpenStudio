@@ -97,6 +97,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
  
 //field Surface Name or Radiant Surface Group Name
  boost::optional<std::string> surfGrpName = modelObject.radiantSurfaceGroupName();
+
  IdfObject _surfaceGroup(IddObjectType::ZoneHVAC_LowTemperatureRadiant_SurfaceGroup);
 
  boost::optional<ThermalZone> thermalZone = modelObject.thermalZone();
@@ -118,9 +119,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
   
         if(istringEqual("RoofCeiling", surfaceType) && istringEqual("Ceilings",surfGrpName.get())){
             
-            IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+            IdfExtensibleGroup group = _surfaceGroup.pushExtensibleGroup();
           
-            BOOST_ASSERT(group.numFields() == 1);
+            BOOST_ASSERT(group.numFields() == 2);
             
             group.setString(0, surface.name().get());
             
@@ -129,9 +130,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
         }
         else if(istringEqual("Floor", surfaceType) && istringEqual("Floors",surfGrpName.get())){
             
-            IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+            IdfExtensibleGroup group = _surfaceGroup.pushExtensibleGroup();
           
-            BOOST_ASSERT(group.numFields() == 1);
+            BOOST_ASSERT(group.numFields() == 2);
             
             group.setString(0, surface.name().get());
             
@@ -140,9 +141,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
         }
         else if(istringEqual("Floor", surfaceType) || istringEqual("Ceiling", surfaceType) && istringEqual("CeilingsandFloors",surfGrpName.get())){
             
-            IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+           IdfExtensibleGroup group = _surfaceGroup.pushExtensibleGroup();
           
-            BOOST_ASSERT(group.numFields() == 1);
+            BOOST_ASSERT(group.numFields() == 2);
             
             group.setString(0, surface.name().get());
             
@@ -151,9 +152,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
         }
         else if(istringEqual("AllSurfaces",surfGrpName.get())){
             
-            IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+            IdfExtensibleGroup group = _surfaceGroup.pushExtensibleGroup();
           
-            BOOST_ASSERT(group.numFields() == 1);
+            BOOST_ASSERT(group.numFields() == 2);
             
             group.setString(0, surface.name().get());
             

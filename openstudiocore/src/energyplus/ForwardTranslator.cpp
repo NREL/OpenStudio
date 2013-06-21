@@ -535,6 +535,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateConstruction(construction);
       break;
     }
+  case openstudio::IddObjectType::OS_Construction_InternalSource :
+    {
+      model::ConstructionWithInternalSource constructionIntSource = modelObject.cast<ConstructionWithInternalSource>();
+      retVal = translateConstructionWithInternalSource(constructionIntSource);
+      break;
+    }
   case openstudio::IddObjectType::OS_Construction_FfactorGroundFloor :
     {
       model::FFactorGroundFloorConstruction mo = modelObject.cast<FFactorGroundFloorConstruction>();
