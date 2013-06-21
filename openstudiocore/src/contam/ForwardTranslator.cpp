@@ -34,8 +34,10 @@
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/PortList.hpp>
 
-#include <utilities/core/Assert.hpp>
+#include <utilities/sql/SqlFile.hpp>
 #include <utilities/core/Logger.hpp>
 #include <utilities/geometry/Geometry.hpp>
 
@@ -458,31 +460,87 @@ namespace contam
       data.ahs[i].path_x = exhaust.nr;
     }
 
-    // Run E+ here to get flow rates. The supply and return flow paths are in the path
+    // Try to use E+ results to set flow rates. The supply and return flow paths are in the path
     // lookup table under the names thermalZone.name + supply|return (see above)
-    // For now, use the 1 scfm/ft^2 approximation with 90% return
-    BOOST_FOREACH(openstudio::model::ThermalZone thermalZone,
-      model.getConcreteModelObjects<openstudio::model::ThermalZone>())
+    boost::optional<openstudio::SqlFile> sqlFile = model.sqlFile();
+    if(sqlFile)
     {
-      double area=0.0;
-      BOOST_FOREACH(openstudio::model::Space space, thermalZone.spaces())
+      std::string envPeriod; 
+      BOOST_FOREACH(std::string t, sqlFile->availableEnvPeriods())
       {
-        area += space.floorArea();
+        envPeriod = t; // should only ever be one
+        break;
       }
-      if(area == 0.0)
+      // get sizing results, get flow rate schedules for each zone's inlet, return, and exhaust nodes
+      // This should be moved to inside the contam translator
+      BOOST_FOREACH(model::ThermalZone thermalZone, model.getModelObjects<model::ThermalZone>())
       {
-        LOG(Warn, "Failed to compute floor area for Zone '" << thermalZone.name().get() << "'");
+        LOG(Warn, "Zone equipment not yet accounted for.");
+        // todo: this does not include OA from zone equipment (PTAC, PTHP, etc) or exhaust fans
+        boost::optional<model::Node> returnAirNode;
+        boost::optional<model::ModelObject> returnAirModelObject = thermalZone.returnAirModelObject();
+        if (returnAirModelObject)
+        {
+          returnAirNode = returnAirModelObject->optionalCast<model::Node>();
+        }
+        if (returnAirNode)
+        {
+          std::string keyValue = returnAirNode->name().get();
+          keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
+          boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly", 
+            "System Node MassFlowRate", keyValue);
+          if (timeSeries)
+          {
+            openstudio::Vector values = timeSeries->values();
+          }
+        }
+
+        boost::optional<model::Node> supplyAirNode;
+        boost::optional<model::ModelObject> supplyAirModelObject = thermalZone.inletPortList().airLoopHVACModelObject();
+        if (supplyAirModelObject)
+        {
+          supplyAirNode = supplyAirModelObject->optionalCast<model::Node>();
+        }
+        if (supplyAirNode)
+        {
+          std::string keyValue = supplyAirNode->name().get();
+          keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
+          boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly",
+            "System Node MassFlowRate", keyValue);
+          if (timeSeries)
+          {
+            openstudio::Vector values = timeSeries->values();
+          }
+        }
       }
-      else
+    }
+    else
+    {
+      LOG(Warn, "Simulation results not available, using 1 scfm/ft^2 to set supply flows");
+      // Use the 1 scfm/ft^2 approximation with 90% return
+      BOOST_FOREACH(openstudio::model::ThermalZone thermalZone,
+        model.getConcreteModelObjects<openstudio::model::ThermalZone>())
       {
-        double flowRate = area*0.00508*1.2041;  // Assume 1 scfm/ft^2 as an approximation
-        std::string supplyName = thermalZone.name().get() + " supply";
-        std::string returnName = thermalZone.name().get() + " return";
-        int supplyNr,returnNr;
-        if(supplyNr = pathMap.value(supplyName,0))
-          data.paths[supplyNr-1].Fahs = QString().sprintf("%g",flowRate);
-        if(returnNr = pathMap.value(returnName,0))
-          data.paths[returnNr-1].Fahs = QString().sprintf("%g",0.9*flowRate);
+        double area=0.0;
+        BOOST_FOREACH(openstudio::model::Space space, thermalZone.spaces())
+        {
+          area += space.floorArea();
+        }
+        if(area == 0.0)
+        {
+          LOG(Warn, "Failed to compute floor area for Zone '" << thermalZone.name().get() << "'");
+        }
+        else
+        {
+          double flowRate = area*0.00508*1.2041;  // Assume 1 scfm/ft^2 as an approximation
+          std::string supplyName = thermalZone.name().get() + " supply";
+          std::string returnName = thermalZone.name().get() + " return";
+          int supplyNr,returnNr;
+          if(supplyNr = pathMap.value(supplyName,0))
+            data.paths[supplyNr-1].Fahs = QString().sprintf("%g",flowRate);
+          if(returnNr = pathMap.value(returnName,0))
+            data.paths[returnNr-1].Fahs = QString().sprintf("%g",0.9*flowRate);
+        }
       }
     }
 
