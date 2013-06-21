@@ -237,7 +237,10 @@ namespace detail {
       {
         if( ! it->optionalCast<ThermalZone>() )
         {
-          it->cast<HVACComponent>().remove();
+          if( ! it->handle().isNull() )
+          {
+            it->cast<HVACComponent>().remove();
+          }
         }
       }
     }

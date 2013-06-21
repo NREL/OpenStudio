@@ -96,8 +96,10 @@ std::vector<openstudio::IdfObject> AirToAirComponent_Impl::remove()
 
   boost::optional<Node> reliefOutletNode;
 
-  if( boost::optional<ModelObject> mo = primaryAirOutletModelObject() )
+  if( primaryAirOutletModelObject() && primaryAirInletModelObject() )
   {
+    boost::optional<ModelObject> mo = primaryAirOutletModelObject();
+
     boost::optional<Node> node = mo->optionalCast<Node>();
 
     BOOST_ASSERT(node);
@@ -125,8 +127,10 @@ std::vector<openstudio::IdfObject> AirToAirComponent_Impl::remove()
     oaInletNode = node;
   }
 
-  if( boost::optional<ModelObject> mo = secondaryAirInletModelObject() )
+  if( secondaryAirInletModelObject() && secondaryAirOutletModelObject() )
   {
+    boost::optional<ModelObject> mo = secondaryAirInletModelObject();
+
     boost::optional<Node> node = mo->optionalCast<Node>();
 
     BOOST_ASSERT(node);
@@ -224,7 +228,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
       {
         n++;
 
-        if( nextSupplyComponent = it->optionalCast<AirToAirComponent>() )
+        if( (nextSupplyComponent = it->optionalCast<AirToAirComponent>()) )
         {
           break;
         }
@@ -246,7 +250,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
            it != oaComponents.rend();
            it++ )
       {
-        if( prevSupplyComponent = it->optionalCast<AirToAirComponent>() )
+        if( (prevSupplyComponent = it->optionalCast<AirToAirComponent>()) )
         {
           break;
         }
@@ -282,7 +286,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
       {
         bigNPrime++;
 
-        if( nextReliefComponent = it->optionalCast<AirToAirComponent>() )
+        if( (nextReliefComponent = it->optionalCast<AirToAirComponent>()) )
         {
           if( *it != prevReliefComponent.get() )
           {
@@ -353,7 +357,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
       {
         n++;
 
-        if( nextReliefComponent = it->optionalCast<AirToAirComponent>() )
+        if( (nextReliefComponent = it->optionalCast<AirToAirComponent>()) )
         {
           break;
         }
@@ -375,7 +379,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
            it != reliefComponents.rend();
            it++ )
       {
-        if( prevReliefComponent = it->optionalCast<AirToAirComponent>() )
+        if( (prevReliefComponent = it->optionalCast<AirToAirComponent>()) )
         {
           break;
         }
@@ -411,7 +415,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
       {
         bigNPrime++;
 
-        if( nextSupplyComponent = it->optionalCast<AirToAirComponent>() )
+        if( (nextSupplyComponent = it->optionalCast<AirToAirComponent>()) )
         {
           break;
         }
