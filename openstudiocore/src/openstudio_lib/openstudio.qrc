@@ -216,9 +216,8 @@
     <file>images/mini_icons/electric_furnace_mini.png</file>
     <file>images/mini_icons/facility.png</file>
     <file>images/mini_icons/fan_constant.png</file>
-    <file>images/mini_icons/fan_variable.png</file>
     <file>images/mini_icons/fan_on_off_mini.png</file>   
-    <file>images/mini_icons/fan_on_off_mini.png</file>   
+    <file>images/mini_icons/fan_variable.png</file> 
     <file>images/mini_icons/folder.png</file>
     <file>images/mini_icons/four_pipe_fan_coil.png</file>    
     <file>images/mini_icons/furnace.png</file>
@@ -319,8 +318,6 @@
     <file alias="shared_gui_components/images/fast_reverse.png">../shared_gui_components/images/fast_reverse.png</file>
     <file alias="shared_gui_components/images/forward.png">../shared_gui_components/images/forward.png</file>
     <file alias="shared_gui_components/images/gray_add_icon.png">../shared_gui_components/images/gray_add_icon.png</file>
-    <file alias="shared_gui_components/images/header-backgnd-1px-wide.png">../shared_gui_components/images/header-backgnd-1px-wide.png</file>
-    <file alias="shared_gui_components/images/image_header.png">../shared_gui_components/images/image_header.png</file>
     <file alias="shared_gui_components/images/open_my_measures.png">../shared_gui_components/images/open_my_measures.png</file>
     <file alias="shared_gui_components/images/open_my_measures_press.png">../shared_gui_components/images/open_my_measures_press.png</file>
     <file alias="shared_gui_components/images/pause_regular.png">../shared_gui_components/images/pause_regular.png</file>

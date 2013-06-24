@@ -234,11 +234,13 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
 void BCLMeasureDialog::init()
 {
   QPushButton* cancelButton = this->cancelButton();
-  cancelButton->setText("Cancel\n");
+  cancelButton->setText("Cancel");
+  cancelButton->setMinimumHeight(34);
   cancelButton->setDefault(true);
 
   QPushButton* okButton = this->okButton();
   okButton->setText("Create Measure and \n Open for Editing");
+  okButton->setMinimumHeight(34);
 
   QVBoxLayout* vLayout = new QVBoxLayout;
   vLayout->setContentsMargins(QMargins(0,0,0,0));

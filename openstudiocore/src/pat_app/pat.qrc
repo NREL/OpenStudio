@@ -40,8 +40,8 @@
     <file alias="shared_gui_components/images/fast_reverse.png">../shared_gui_components/images/fast_reverse.png</file>
     <file alias="shared_gui_components/images/forward.png">../shared_gui_components/images/forward.png</file>
     <file alias="shared_gui_components/images/gray_add_icon.png">../shared_gui_components/images/gray_add_icon.png</file>
-    <file alias="shared_gui_components/images/header-backgnd-1px-wide.png">../shared_gui_components/images/header-backgnd-1px-wide.png</file>
-    <file alias="shared_gui_components/images/image_header.png">../shared_gui_components/images/image_header.png</file>
+    <file>images/header-backgnd-1px-wide.png</file>
+    <file>images/image_header.png</file>
     <file>images/measures_big.png</file>
     <file alias="shared_gui_components/images/open_my_measures.png">../shared_gui_components/images/open_my_measures.png</file>
     <file alias="shared_gui_components/images/open_my_measures_press.png">../shared_gui_components/images/open_my_measures_press.png</file>
