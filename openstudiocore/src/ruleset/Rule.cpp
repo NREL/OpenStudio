@@ -20,7 +20,6 @@
 #include <ruleset/Rule.hpp>
 #include <ruleset/Rule_Impl.hpp>
 #include <ruleset/ModelRule.hpp>
-#include <ruleset/StandardsRule.hpp>
 #include <ruleset/FilterClause.hpp>
 #include <ruleset/FilterClause_Impl.hpp>
 #include <ruleset/ActionClause.hpp>
@@ -313,9 +312,7 @@ boost::optional<Rule> Rule::factoryFromXml(const QDomElement& element)
   std::string xmlElementName = toString(element.tagName());
   if (xmlElementName == ModelRule::xmlElementName()){
     result = ModelRule(element);
-  }else if (xmlElementName == StandardsRule::xmlElementName()){
-    result = StandardsRule(element);
-  } 
+  }
 
   return result;
 }

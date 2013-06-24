@@ -1,17 +1,17 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
 *  All rights reserved.
-*  
+*
 *  This library is free software; you can redistribute it and/or
 *  modify it under the terms of the GNU Lesser General Public
 *  License as published by the Free Software Foundation; either
 *  version 2.1 of the License, or (at your option) any later version.
-*  
+*
 *  This library is distributed in the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 *  Lesser General Public License for more details.
-*  
+*
 *  You should have received a copy of the GNU Lesser General Public
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -38,20 +38,20 @@ void testCostOfEnergy(boost::optional<double> retrievedValue,double valueInDolla
   Quantity siQuantity = QuantityConverter::instance().convert(originalQuantity,
                                                               UnitSystem(UnitSystem::SI)).get();
   siQuantity.setScale(0);
-  EXPECT_DOUBLE_EQ(siQuantity.value(),*retrievedValue);
+  EXPECT_NEAR(siQuantity.value(),*retrievedValue,1.0E-6);
   EXPECT_EQ("s^2/kg*m^2",siQuantity.standardUnitsString());
   EXPECT_EQ("1/J",siQuantity.prettyUnitsString());
 }
 
 TEST(Filetypes, TimeDependentValuationFile) {
-  openstudio::path p = resourcesPath()/toPath("standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ11.csv");
+  openstudio::path p = resourcesPath()/toPath("utilities/Filetypes/TDV_2008_kBtu_CZ13.csv");
 
   OptionalTimeDependentValuationFile oTdvFile = TimeDependentValuationFile::load(p);
   ASSERT_TRUE(oTdvFile);
   TimeDependentValuationFile tdvFile = *oTdvFile;
 
   EXPECT_EQ(p,tdvFile.path());
-  EXPECT_EQ("Climate zone 11 with externalities",tdvFile.name());
+  EXPECT_EQ("Climate zone 13 with externalities",tdvFile.name());
   EXPECT_EQ(std::string("\"\"Created April 18, 2006\"\""),tdvFile.description());
   {
     SCOPED_TRACE("Commercial");
@@ -74,7 +74,7 @@ TEST(Filetypes, TimeDependentValuationFile) {
   oTdvFile = tdvFile.convertUnits();
   ASSERT_TRUE(oTdvFile);
   EXPECT_TRUE(oTdvFile->path().empty());
-  p = resourcesPath()/toPath("standardsinterface/CEC_TDVs/TDV_2008_SI_CZ11.csv");
+  p = resourcesPath()/toPath("utilities/Filetypes/TDV_2008_kBtu_CZ13_SI.csv");
   EXPECT_TRUE(oTdvFile->save(p,true));
   EXPECT_EQ(p,oTdvFile->path());
 }

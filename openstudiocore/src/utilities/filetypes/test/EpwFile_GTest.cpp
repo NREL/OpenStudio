@@ -1,17 +1,17 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
 *  All rights reserved.
-*  
+*
 *  This library is free software; you can redistribute it and/or
 *  modify it under the terms of the GNU Lesser General Public
 *  License as published by the Free Software Foundation; either
 *  version 2.1 of the License, or (at your option) any later version.
-*  
+*
 *  This library is distributed in the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 *  Lesser General Public License for more details.
-*  
+*
 *  You should have received a copy of the GNU Lesser General Public
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -37,19 +37,19 @@ TEST(Filetypes, EpwFile)
     // COMMENTS 1,California Climate Zone 01 Version 2;
     // COMMENTS 2, -- Ground temps produced with a standard soil diffusivity of 2.3225760E-03 {m**2/day}
     // DATA PERIODS,1,1,Data,Sunday, 1/ 1,12/31
-    path p = resourcesPath() / toPath("standardsinterface/CEC_WeatherFiles/CZ01RV2.epw");
+    path p = resourcesPath() / toPath("runmanager/USA_CO_Golden-NREL.724666_TMY3.epw");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
-    EXPECT_EQ("440DDA28", epwFile.checksum());
-    EXPECT_EQ("Climate Zone 1", epwFile.city());
-    EXPECT_EQ("CA", epwFile.stateProvinceRegion());
+    EXPECT_EQ("E2EFCD8E", epwFile.checksum());
+    EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
+    EXPECT_EQ("CO", epwFile.stateProvinceRegion());
     EXPECT_EQ("USA", epwFile.country());
-    EXPECT_EQ("CTZRV2", epwFile.dataSource());
-    EXPECT_EQ("725945", epwFile.wmoNumber());
-    EXPECT_EQ(40.80, epwFile.latitude());
-    EXPECT_EQ(-124.20, epwFile.longitude());
-    EXPECT_EQ(-8.0, epwFile.timeZone());
-    EXPECT_EQ(13.0, epwFile.elevation());
+    EXPECT_EQ("TMY3", epwFile.dataSource());
+    EXPECT_EQ("724666", epwFile.wmoNumber());
+    EXPECT_EQ(39.74, epwFile.latitude());
+    EXPECT_EQ(-105.18, epwFile.longitude());
+    EXPECT_EQ(-7, epwFile.timeZone());
+    EXPECT_EQ(1829, epwFile.elevation());
     EXPECT_EQ(Time(0,1,0,0), epwFile.timeStep());
     EXPECT_EQ(DayOfWeek(DayOfWeek::Sunday), epwFile.startDayOfWeek());
     EXPECT_EQ(Date(MonthOfYear::Jan, 1), epwFile.startDate());

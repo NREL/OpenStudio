@@ -712,7 +712,7 @@ namespace detail {
     }
 
     if (dbv < VersionString("1.0.0")) {
-      update_1_0_0_to_1_0_1(dbv);
+      update_0_11_6_to_1_0_0(dbv);
 	}
 
     if ((dbv != osv) || (!dbv.fidelityEqual(osv))) {
@@ -1795,7 +1795,7 @@ namespace detail {
     query.clear();
 
     save();
-	test = this->commitTransaction();
+  	bool test = this->commitTransaction();
     BOOST_ASSERT(test);
   }
 

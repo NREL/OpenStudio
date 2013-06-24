@@ -1315,7 +1315,7 @@ TEST_F(IdfFixture,Workspace_LocateURLs) {
   WorkspaceObject tdv = *owo;
 
   // set the url to be the absolute path on disk (to resources in build directory)
-  openstudio::path absoluteTdvFilePath = resourcesPath()/toPath("standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ01.csv");
+  openstudio::path absoluteTdvFilePath = resourcesPath()/toPath("utilities/Filetypes/TDV_2008_kBtu_CZ13.csv");
   EXPECT_TRUE(tdv.setString(OS_TimeDependentValuationFields::Url,toString(absoluteTdvFilePath)));
   // check that setter worked as expected, and demonstrate getting field back out
   ASSERT_TRUE(tdv.getString(OS_TimeDependentValuationFields::Url));
@@ -1348,7 +1348,7 @@ TEST_F(IdfFixture,Workspace_LocateURLs) {
 
   // test making path absolute again, this time, let's find it relative to a made-up location of the osm
   searchpaths.clear();
-  searchpaths.push_back(URLSearchPath(QUrl::fromLocalFile("standardsinterface/CEC_TDVs"), URLSearchPath::ToInputFile));
+  searchpaths.push_back(URLSearchPath(QUrl::fromLocalFile("utilities/Filetypes/"), URLSearchPath::ToInputFile));
   located = ws.locateUrls(searchpaths, false, resourcesPath() / toPath("madeuposm.osm")); // give the search algo a relative place to start from
 
   EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(),
@@ -1363,7 +1363,7 @@ TEST_F(IdfFixture,Workspace_LocateURLs) {
 
   // This time we want to fail, by providing it with a search that should work, but we give it the wrong object type
   searchpaths.clear();
-  searchpaths.push_back(URLSearchPath(QUrl::fromLocalFile("standardsinterface/CEC_TDVs"), URLSearchPath::ToInputFile,
+  searchpaths.push_back(URLSearchPath(QUrl::fromLocalFile("utilities/Filetypes"), URLSearchPath::ToInputFile,
         IddObjectType::OS_Version));
   located = ws.locateUrls(searchpaths, false, resourcesPath() / toPath("madeuposm.osm")); // give the search algo a relative place to start from
   EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(), "file:TDV_2008_kBtu_CZ01.csv");
@@ -1371,7 +1371,7 @@ TEST_F(IdfFixture,Workspace_LocateURLs) {
 
   // And finally, provide the correct field type for the search path, find it
   searchpaths.clear();
-  searchpaths.push_back(URLSearchPath(QUrl::fromLocalFile("standardsinterface/CEC_TDVs"), URLSearchPath::ToInputFile,
+  searchpaths.push_back(URLSearchPath(QUrl::fromLocalFile("utilities/Filetypes"), URLSearchPath::ToInputFile,
         IddObjectType::OS_TimeDependentValuation));
   located = ws.locateUrls(searchpaths, false, resourcesPath() / toPath("madeuposm.osm")); // give the search algo a relative place to start from
 
@@ -1869,7 +1869,7 @@ TEST_F(IdfFixture, Workspace_DaylightingControlsZoneName)
 
   ASSERT_TRUE(zone);
   ASSERT_TRUE(daylightingControl);
-  
+
   zone->setName("Zone 1");
   EXPECT_FALSE(daylightingControl->getString(0,false,true));
   EXPECT_TRUE(daylightingControl->setPointer(0, zone->handle()));
