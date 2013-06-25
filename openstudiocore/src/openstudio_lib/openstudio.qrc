@@ -263,10 +263,12 @@
     <file>images/mini_icons/pipe.png</file>
     <file>images/mini_icons/pump_constant.png</file>
     <file>images/mini_icons/pump_variable.png</file>
+    <file>images/mini_icons/setpoint_follow_outdoorair.png</file>
+    <file>images/mini_icons/setpoint_mixed.png</file>
+    <file>images/mini_icons/setpoint_outdoorair.png</file>
+    <file>images/mini_icons/setpoint_scheduled.png</file>
+    <file>images/mini_icons/setpoint_singlezone.png</file>
     <file>images/mini_icons/schedule.png</file>
-    <file>images/mini_icons/setpoint-mixed-right.png</file>
-    <file>images/mini_icons/setpoint-scheduled-right.png</file>
-    <file>images/mini_icons/setpoint-singlezone-right.png</file>
     <file>images/mini_icons/shading_surface.png</file>
     <file>images/mini_icons/shading_surface_group.png</file>
     <file>images/mini_icons/sinkmini_icon_definition.png</file>
