@@ -29,6 +29,8 @@
 #   ARGV[0] - Path to directory with EnergyPlus Idf files directory.
 #   ARGV[1] - Optional path and filename for output html. Default is 
 #             to place summary.html in IDF directory.
+#   ARGV[2] - Optional number of files to summarize. Default is to 
+#             summarize all of them.
 #
 # == Examples
 #
@@ -44,20 +46,20 @@ logFile = OpenStudio::FileLogSink.new(OpenStudio::Path.new("SummarizeIdfs.log"))
 logFile.setLogLevel(OpenStudio::Info)
 
 summaryTable = OpenStudio::Table.new
-row = []
-row.push("Filename")
-row.push("No. Objects")
-row.push("No. Model Objects")
-row.push("No. Objects After Roundtrip")
-row.push("Building Name")
-row.push("No. Thermal Zones")
-row.push("No. Surfaces")
-row.push("No. SubSurfaces")
-row.push("No. ShadingSurfaces")
-row.push("Idf Draft Valid")
-row.push("Idf Final Valid")
-row.push("Roundtrip Draft Valid")
-row.push("Roundtrip Final Valid")
+row = OpenStudio::TableRow.new
+row << OpenStudio::TableElement.new("Filename")
+row << OpenStudio::TableElement.new("No. Objects")
+row << OpenStudio::TableElement.new("No. Model Objects")
+row << OpenStudio::TableElement.new("No. Objects After Roundtrip")
+row << OpenStudio::TableElement.new("Building Name")
+row << OpenStudio::TableElement.new("No. Thermal Zones")
+row << OpenStudio::TableElement.new("No. Surfaces")
+row << OpenStudio::TableElement.new("No. SubSurfaces")
+row << OpenStudio::TableElement.new("No. ShadingSurfaces")
+row << OpenStudio::TableElement.new("Idf Draft Valid")
+row << OpenStudio::TableElement.new("Idf Final Valid")
+row << OpenStudio::TableElement.new("Roundtrip Draft Valid")
+row << OpenStudio::TableElement.new("Roundtrip Final Valid")
 summaryTable.appendRow(row)
 summaryTable.setNHead(1)
 
@@ -66,6 +68,11 @@ count = 0
 individualReportHeaders = []
 numIndividualReportsPerMainHeader = []
 individualReports = []
+
+n = nil
+if ARGV.size() > 2
+  n = ARGV[2].to_i
+end 
 
 Dir.glob("*.idf").each do |file|
 
@@ -96,15 +103,15 @@ Dir.glob("*.idf").each do |file|
   fwdTranslator = OpenStudio::EnergyPlus::ForwardTranslator.new()
   rtWorkspace = fwdTranslator.translateModel(model)
   row = []
-  row.push(file)
-  row.push(workspace.numObjects.to_s)
-  row.push(model.numObjects.to_s)
-  row.push(rtWorkspace.numObjects.to_s)
-  row.push(bldg.name().get())
-  row.push(zones.size.to_s)
-  row.push(surfaces.size.to_s)
-  row.push(subSurfaces.size.to_s)
-  row.push(shadingSurfaces.size.to_s)
+  row << OpenStudio::TableElement.new(file)
+  row << OpenStudio::TableElement.new(workspace.numObjects)
+  row << OpenStudio::TableElement.new(model.numObjects)
+  row << OpenStudio::TableElement.new(rtWorkspace.numObjects)
+  row << OpenStudio::TableElement.new(bldg.name().get())
+  row << OpenStudio::TableElement.new(zones.size)
+  row << OpenStudio::TableElement.new(surfaces.size)
+  row << OpenStudio::TableElement.new(subSurfaces.size)
+  row << OpenStudio::TableElement.new(shadingSurfaces.size)
   
   # check validity, including writing out draft level reports
   idfReport = workspace.validityReport("Draft".to_StrictnessLevel)
@@ -112,10 +119,10 @@ Dir.glob("*.idf").each do |file|
   rtReport = rtWorkspace.validityReport("Draft".to_StrictnessLevel)
   rtFinal = rtWorkspace.isValid("Final".to_StrictnessLevel)
   
-  row.push((idfReport.numErrors == 0).to_s)
-  row.push(idfFinal.to_s)
-  row.push((rtReport.numErrors == 0).to_s)
-  row.push(rtFinal.to_s)
+  row << OpenStudio::TableElement.new(idfReport.numErrors == 0)
+  row << OpenStudio::TableElement.new(idfFinal)
+  row << OpenStudio::TableElement.new(rtReport.numErrors == 0)
+  row << OpenStudio::TableElement.new(rtFinal)
   summaryTable.appendRow(row)
   
   if (idfReport.numErrors > 0) || (rtReport.numErrors > 0)
@@ -137,6 +144,8 @@ Dir.glob("*.idf").each do |file|
   
   end
   
+  break if n and count >= n
+  
 end
 
 # create document
@@ -152,7 +161,7 @@ doc.append(OpenStudio::Text.new("The following table summarizes the " + count.to
 
 # underscores in filenames should be treated as such (not subscripts)
 for i in summaryTable.nHead()..(summaryTable.nRows()-1)
-  summaryTable.setElement(i,0,OpenStudio::formatUnderscore(summaryTable[i,0].getString))
+  summaryTable.setElement(i,0,OpenStudio::formatUnderscore(summaryTable[i][0]))
 end
 
 doc.append(summaryTable)
