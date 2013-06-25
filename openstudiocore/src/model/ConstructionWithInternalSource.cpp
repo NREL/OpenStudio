@@ -140,15 +140,37 @@ namespace detail {
     }
     return setTubeSpacing(value.get());
   }
- ConstructionWithInternalSource ConstructionWithInternalSource_Impl::reverseConstructionWithInternalSource() const
+
+  ConstructionWithInternalSource ConstructionWithInternalSource_Impl::reverseConstructionWithInternalSource() const
   {
 
     MaterialVector reverseLayers(this->layers());
     std::reverse(reverseLayers.begin(), reverseLayers.end());
 
+    int reverseSourcePresentAfterLayerNumber = this->numLayers() - this->sourcePresentAfterLayerNumber();
+    int reverseTemperatureCalculationRequestedAfterLayerNumber = this->numLayers() - this->temperatureCalculationRequestedAfterLayerNumber();
+    int dimensionsForTheCTFCalculation = this->dimensionsForTheCTFCalculation();
+    double tubeSpacing = this->tubeSpacing();
+
     Model model = this->model();
     BOOST_FOREACH(const ConstructionWithInternalSource& other, model.getModelObjects<ConstructionWithInternalSource>()) {
       
+      if (other.sourcePresentAfterLayerNumber() != reverseSourcePresentAfterLayerNumber){
+        continue;
+      }
+
+      if (other.temperatureCalculationRequestedAfterLayerNumber() != reverseTemperatureCalculationRequestedAfterLayerNumber){
+        continue;
+      }
+
+      if (other.dimensionsForTheCTFCalculation() != dimensionsForTheCTFCalculation){
+        continue;
+      }
+
+      if (other.tubeSpacing() != tubeSpacing){
+        continue;
+      }
+
       MaterialVector layers = other.layers();
       if (layers.size() != reverseLayers.size()){
         continue;
@@ -172,13 +194,11 @@ namespace detail {
     // no match, make one
     ConstructionWithInternalSource result(model);
     result.setName(this->name().get() + " Reversed");
-    int reverseSourcePresentAfterLayerNumber = this->numLayers() - this->sourcePresentAfterLayerNumber();
     result.setSourcePresentAfterLayerNumber(reverseSourcePresentAfterLayerNumber);
-    result.setTemperatureCalculationRequestedAfterLayerNumber(reverseSourcePresentAfterLayerNumber);
-    result.setDimensionsForTheCTFCalculation(this->dimensionsForTheCTFCalculation());
-    result.setTubeSpacing(this->tubeSpacing());
+    result.setTemperatureCalculationRequestedAfterLayerNumber(reverseTemperatureCalculationRequestedAfterLayerNumber);
+    result.setDimensionsForTheCTFCalculation(dimensionsForTheCTFCalculation);
+    result.setTubeSpacing(tubeSpacing);
     result.setLayers(reverseLayers);
-    
 
     return result;
   }
@@ -249,6 +269,11 @@ bool ConstructionWithInternalSource::setTubeSpacing(double tubeSpacing) {
 
 bool ConstructionWithInternalSource::setTubeSpacing(const Quantity& tubeSpacing) {
   return getImpl<detail::ConstructionWithInternalSource_Impl>()->setTubeSpacing(tubeSpacing);
+}
+
+ConstructionWithInternalSource ConstructionWithInternalSource::reverseConstructionWithInternalSource() const
+{
+  return getImpl<detail::ConstructionWithInternalSource_Impl>()->reverseConstructionWithInternalSource();
 }
 
 /// @cond
