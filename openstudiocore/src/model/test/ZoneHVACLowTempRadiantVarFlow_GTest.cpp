@@ -70,7 +70,7 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantVarFlow_Check_Constructor)
   // Test clone
 		testRad.setHydronicTubingInsideDiameter(5);
 				
-				 Clone into the same model
+				 //Clone into the same model
 				 ZoneHVACLowTempRadiantVarFlow cloneRad = testRad.clone(model).cast<model::ZoneHVACLowTempRadiantVarFlow>();
 				
 				 HVACComponent cloneCC1 = cloneRad.coolingCoil();

@@ -242,13 +242,13 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
 		
 				//field Heating Control Temperature Schedule Name
 				if( boost::optional<Schedule> schedule = coilHeat.heatingControlTemperatureSchedule() )
-    {
-      if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
-      {
-        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingControlTemperatureScheduleName,_schedule->name().get());
-      }
-				}
-		}
+        {
+          if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
+          {
+            idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingControlTemperatureScheduleName,_schedule->name().get());
+          }
+				    }
+		    }
 		
   // Cooling Coil
   
@@ -291,9 +291,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
 				//field Cooling Control Throttling Range
     
     if( value = coilCool.coolingControlThrottlingRange() )
-				{
-						idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingControlThrottlingRange,value.get());
-				}
+		{
+				idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingControlThrottlingRange,value.get());
+		}
 
 				//field Cooling Control Temperature Schedule Name
     if( boost::optional<Schedule> schedule = coilCool.coolingControlTemperatureSchedule() )
@@ -306,14 +306,14 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
     
 				//field Condensation Control Type
 
-				idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlType,coilCool.condensationControlType());
+		idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlType,coilCool.condensationControlType());
 
-				//field Condensation Control Dewpoint Offset
-				if( value = coilCool.condensationControlDewpointOffset() )
-				{
-						idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlDewpointOffset,value.get());
-				}
+		//field Condensation Control Dewpoint Offset
+		if( value = coilCool.condensationControlDewpointOffset() )
+		{
+				idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlDewpointOffset,value.get());
 		}
+	}
   
   return idfObject;
 }

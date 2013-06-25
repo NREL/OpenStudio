@@ -53,6 +53,7 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_DX_SingleSpeed).value()] = new QPixmap(":images/dxcoolingcoil_singlespeed.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_DX_TwoSpeed).value()] = new QPixmap(":images/dxcoolingcoil_2speed.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlow).value()] = new QPixmap(":images/coilcoolinglowtemprad_constflow.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_VariableFlow).value()] = new QPixmap(":images/coilcoolinglowtemprad_varflow.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit).value()] = new QPixmap(":images/wahpDXCC.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_Water).value()] = new QPixmap(":images/cool_coil.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_DX_SingleSpeed).value()] = new QPixmap(":images/coil_ht_dx_singlespeed.png");
@@ -60,6 +61,7 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_Gas).value()] = new QPixmap(":images/furnace.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_Water).value()] = new QPixmap(":images/heat_coil.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_LowTemperatureRadiant_ConstantFlow).value()] = new QPixmap(":images/coilheatinglowtemprad_constflow.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_LowTemperatureRadiant_VariableFlow).value()] = new QPixmap(":images/coilheatinglowtemprad_varflow.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit).value()] = new QPixmap(":images/wahpDXHC.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_CoolingTower_SingleSpeed).value()] = new QPixmap(":images/cooling_tower.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Connector_Mixer).value()] = new QPixmap(":images/mixer.png");
@@ -85,6 +87,7 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner).value()] = new QPixmap(":images/system_type_1.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump).value()] = new QPixmap(":images/system_type_2.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow).value()] = new QPixmap(":images/lowtempradiant_constflow.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow).value()] = new QPixmap(":images/lowtempradiant_varflow.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump).value()] = new QPixmap(":images/watertoairHP.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_UnitHeater).value()] = new QPixmap(":images/heat_coil-uht.png");
 
@@ -172,12 +175,14 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_DX_SingleSpeed).value()] = new QPixmap(":images/mini_icons/mini_dxcoolingcoil_singlespeed.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_DX_TwoSpeed).value()] = new QPixmap(":images/mini_icons/mini-dxcoolingcoil_2speed.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlow).value()] = new QPixmap(":images/mini_icons/coilcoolinglowtemprad_constflow.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_VariableFlow).value()] = new QPixmap(":images/mini_icons/coilcoolinglowtemprad_varflow.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_Water).value()] = new QPixmap(":images/mini_icons/cool_coil.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit).value()] = new QPixmap(":images/mini_icons/wahpDXCC_mini.png");  
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_DX_SingleSpeed).value()] = new QPixmap(":images/mini_icons/coil_ht_dx_singlespeed_mini.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_Electric).value()] = new QPixmap(":images/mini_icons/electric_furnace_mini.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_Gas).value()] = new QPixmap(":images/mini_icons/furnace.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_LowTemperatureRadiant_ConstantFlow).value()] = new QPixmap(":images/mini_icons/coilheatinglowtemprad_constflow.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_LowTemperatureRadiant_VariableFlow).value()] = new QPixmap(":images/mini_icons/coilheatinglowtemprad_varflow.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_Water).value()] = new QPixmap(":images/mini_icons/heat_coil.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit).value()] = new QPixmap(":images/mini_icons/wahpDXHC_mini.png");  
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_CoolingTower_SingleSpeed).value()] = new QPixmap(":images/mini_icons/cooling_tower.png");
@@ -200,6 +205,7 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner).value()] = new QPixmap(":images/mini_icons/system_type_1.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump).value()] = new QPixmap(":images/mini_icons/system_type_2.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow).value()] = new QPixmap(":images/mini_icons/lowtempradiant_constflow.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow).value()] = new QPixmap(":images/mini_icons/lowtempradiant_varflow.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump).value()] = new QPixmap(":images/mini_icons/watertoairHP.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_UnitHeater).value()] = new QPixmap(":images/mini_icons/heat_coil-uht.png");}
 

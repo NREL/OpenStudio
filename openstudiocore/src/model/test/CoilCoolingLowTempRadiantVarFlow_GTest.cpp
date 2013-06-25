@@ -51,8 +51,7 @@ TEST_F(ModelFixture,CoilCoolingLowTempRadiantVarFlow_Getters_Setters)
   ScheduleConstant coolingControlTemperatureSchedule(model);
   coolingControlTemperatureSchedule.setValue(15.0);
   
-  CoilCoolingLowTempRadiantVarFlow testCoil(model,
-																																														coolingControlTemperatureSchedule);
+  CoilCoolingLowTempRadiantVarFlow testCoil(model,coolingControlTemperatureSchedule);
 
   // Field N1 Maximum Hot Water Flow
   

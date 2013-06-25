@@ -256,8 +256,7 @@ namespace detail {
 
 } // detail
 
-CoilHeatingLowTempRadiantVarFlow::CoilHeatingLowTempRadiantVarFlow(const Model& model,
-																																																																			Schedule& heatingControlTemperature)
+CoilHeatingLowTempRadiantVarFlow::CoilHeatingLowTempRadiantVarFlow(const Model& model,Schedule& heatingControlTemperature)
 																																																																			
   : StraightComponent(CoilHeatingLowTempRadiantVarFlow::iddObjectType(),model)
 {

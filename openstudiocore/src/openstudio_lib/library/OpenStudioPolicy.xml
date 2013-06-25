@@ -54,6 +54,10 @@
     <rule IddField="Low Temp Radiant Constant Flow Heating Coil Name" Access="LOCKED"/>
     <rule IddField="Low Temp Radiant Constant Flow Cooling Coil Name" Access="LOCKED"/>
   </POLICY>    
+  <POLICY IddObjectType="OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow">
+    <rule IddField="Low Temp Radiant Variable Flow Heating Coil Name" Access="LOCKED"/>
+    <rule IddField="Low Temp Radiant Variable Flow Cooling Coil Name" Access="LOCKED"/>
+  </POLICY>   
   <POLICY IddObjectType="OS_Connector_Splitter">
     <rule IddField="Inlet Branch Name" Access="HIDDEN"/>
     <rule IddField="Outlet Branch Name" Access="HIDDEN"/>
@@ -235,6 +239,10 @@
     <rule IddField="Cooling Water Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Cooling Water Outlet Node Name" Access="HIDDEN"/>
   </POLICY>  
+  <POLICY IddObjectType="OS_Coil_Cooling_LowTemperatureRadiant_VariableFlow">
+    <rule IddField="Cooling Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Cooling Water Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>     
   <POLICY IddObjectType="OS_Coil_Cooling_WaterToAirHeatPump_EquationFit">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
@@ -311,7 +319,11 @@
   <POLICY IddObjectType="OS_Coil_Heating_LowTemperatureRadiant_ConstantFlow">
     <rule IddField="Heating Water Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Heating Water Outlet Node Name" Access="HIDDEN"/>
-  </POLICY>  
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_Heating_LowTemperatureRadiant_VariableFlow">
+    <rule IddField="Heating Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heating Water Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_AirLoopHVAC_ZoneSplitter">
     <rule IddField="Name" Access="LOCKED"/>
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
