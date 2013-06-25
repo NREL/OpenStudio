@@ -1,14 +1,16 @@
-# Find Dakota. Searches in C:/ (Windows), /Applications/ (Mac), /user/local/ (Linux) for folders
-# named [dD][aA][kK][oO][tT][aA]?*. Also checks for environment variable DAKOTADIR.
+# Find Dakota. Searches in C:/ (Windows), /Applications/ (Mac), /user/local/ 
+# (Linux) for folders whose names start with [dD][aA][kK][oO][tT][aA]?*. Also 
+# checks the environment variable DAKOTADIR. In all cases, looks for 
+# bin/dakota.exe or bin/dakota (depending on platform).
 #
 # The module defines the following variables:
 #  DAKOTA_FOUND - indicator variable
 #  DAKOTA_EXE   - path to dakota.exe
 #
-# This module does not yet locate particular verions of DAKOTA.
+# If a version number is specified, only 
 #
 # Example usage:
-#  FIND_PACKAGE( Dakota )
+#  FIND_PACKAGE( Dakota 5.3.1)
 #===============================================================================
 
 SET(DAKOTA_FOUND FALSE)
@@ -26,7 +28,13 @@ LIST(APPEND DAKOTA_POSSIBLE_PATHS $ENV{DAKOTADIR})
 LIST(SORT DAKOTA_POSSIBLE_PATHS)
 LIST(REVERSE DAKOTA_POSSIBLE_PATHS)
 
+# try to find the first path that matches all of the version requirements
 FOREACH(PATH ${DAKOTA_POSSIBLE_PATHS})
+
+  # extract version from path
+  
+  
+  # check actual version against required version
 
   FIND_PROGRAM(DAKOTA_EXE "dakota" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
   
