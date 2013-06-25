@@ -1334,6 +1334,9 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
+    // DLM: do not translate aboveGradeStoryCount, Issue 243: 	Forward Translator - AboveGrdStryCount
+    /*
+    // aboveGradeStoryCount
     unsigned numAboveGroundStories = 0;
     BOOST_FOREACH(const model::BuildingStory& buildingStory, buildingStories){
       boost::optional<double> nominalZCoordinate = buildingStory.nominalZCoordinate();
@@ -1342,10 +1345,10 @@ namespace sdd {
       }
     }
 
-    // aboveGradeStoryCount
     QDomElement aboveGradeStoryCountElement = doc.createElement("AboveGrdStoryCnt");
     result.appendChild(aboveGradeStoryCountElement);
     aboveGradeStoryCountElement.appendChild(doc.createTextNode(QString::number(numAboveGroundStories)));
+    /*
 
     // translate building story
     BOOST_FOREACH(const model::BuildingStory& buildingStory, buildingStories){
