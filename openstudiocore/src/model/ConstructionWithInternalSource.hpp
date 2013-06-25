@@ -39,11 +39,9 @@ class MODEL_API ConstructionWithInternalSource : public LayeredConstruction {
   //@{
 
   /** TODO default values should be reviewed */
-  explicit ConstructionWithInternalSource(const Model& model,
-    int sourcePresentAfterLayerNumber = 1,
-    int temperatureCalculationRequestedAfterLayerNumber = 1,
-    int dimensionsForTheCTFCalculation = 1,
-    double tubeSpacing = 0.1);
+  explicit ConstructionWithInternalSource(const Model& model);
+
+  explicit ConstructionWithInternalSource(const std::vector<OpaqueMaterial>& opaqueMaterials);
 
   virtual ~ConstructionWithInternalSource() {}
 
@@ -64,12 +62,14 @@ class MODEL_API ConstructionWithInternalSource : public LayeredConstruction {
   Quantity getTubeSpacing(bool returnIP = false) const;
   bool setTubeSpacing(double tubeSpacing);
   bool setTubeSpacing(const Quantity& tubeSpacing);
-
+  
   //@}
   /** @name Static Methods */
   //@{
 
   static IddObjectType iddObjectType();
+  ConstructionWithInternalSource reverseConstructionWithInternalSource() const;
+
 
   //@}
  protected:

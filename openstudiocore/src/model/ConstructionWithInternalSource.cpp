@@ -19,9 +19,11 @@
 
 #include <model/ConstructionWithInternalSource.hpp>
 #include <model/ConstructionWithInternalSource_Impl.hpp>
+#include <model/Model.hpp>
 
 #include <model/Material.hpp>
 #include <model/Material_Impl.hpp>
+#include <model/OpaqueMaterial.hpp>
 #include <model/ModelExtensibleGroup.hpp>
 
 #include <utilities/idd/OS_Construction_InternalSource_FieldEnums.hxx>
@@ -138,22 +140,70 @@ namespace detail {
     }
     return setTubeSpacing(value.get());
   }
+ ConstructionWithInternalSource ConstructionWithInternalSource_Impl::reverseConstructionWithInternalSource() const
+  {
 
+    MaterialVector reverseLayers(this->layers());
+    std::reverse(reverseLayers.begin(), reverseLayers.end());
+
+    Model model = this->model();
+    BOOST_FOREACH(const ConstructionWithInternalSource& other, model.getModelObjects<ConstructionWithInternalSource>()) {
+      
+      MaterialVector layers = other.layers();
+      if (layers.size() != reverseLayers.size()){
+        continue;
+      }
+
+      bool test = true;
+      for (unsigned i = 0; i < layers.size(); ++i){
+        if (layers[i].handle() != reverseLayers[i].handle()){
+          test = false;
+          break; // break out of loop over layers
+        }
+      }
+
+      if (test){
+        return other;
+      }
+    }
+
+    // TODO: this should also copy (and modify) standards information object
+
+    // no match, make one
+    ConstructionWithInternalSource result(model);
+    result.setName(this->name().get() + " Reversed");
+    int reverseSourcePresentAfterLayerNumber = this->numLayers() - this->sourcePresentAfterLayerNumber();
+    result.setSourcePresentAfterLayerNumber(reverseSourcePresentAfterLayerNumber);
+    result.setTemperatureCalculationRequestedAfterLayerNumber(reverseSourcePresentAfterLayerNumber);
+    result.setDimensionsForTheCTFCalculation(this->dimensionsForTheCTFCalculation());
+    result.setTubeSpacing(this->tubeSpacing());
+    result.setLayers(reverseLayers);
+    
+
+    return result;
+  }
 } // detail
 
-ConstructionWithInternalSource::ConstructionWithInternalSource(const Model& model,
-                                                               int sourcePresentAfterLayerNumber,
-                                                               int temperatureCalculationRequestedAfterLayerNumber,
-                                                               int dimensionsForTheCTFCalculation,
-                                                               double tubeSpacing)
+ConstructionWithInternalSource::ConstructionWithInternalSource(const Model& model)
   : LayeredConstruction(ConstructionWithInternalSource::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::ConstructionWithInternalSource_Impl>());
+}
 
-  setSourcePresentAfterLayerNumber(sourcePresentAfterLayerNumber);
-  setTemperatureCalculationRequestedAfterLayerNumber(temperatureCalculationRequestedAfterLayerNumber);
-  setDimensionsForTheCTFCalculation(dimensionsForTheCTFCalculation);
-  setTubeSpacing(tubeSpacing);
+ConstructionWithInternalSource::ConstructionWithInternalSource(const std::vector<OpaqueMaterial>& opaqueMaterials)
+  : LayeredConstruction(ConstructionWithInternalSource::iddObjectType(),opaqueMaterials[0].model())
+{
+  //BOOST_ASSERT(getImpl<detail::ConstructionWithInternalSource_Impl>());
+  int ok = this->numLayers();
+  if(ok < 2){
+    LOG_AND_THROW("Cannot create a internal source construction with fewer than 2 layers");
+  }
+  else{
+    setSourcePresentAfterLayerNumber(this->numLayers());
+    setTemperatureCalculationRequestedAfterLayerNumber(this->numLayers());
+  }
+  setDimensionsForTheCTFCalculation(1);
+  setTubeSpacing(0.154);
 }
 
 IddObjectType ConstructionWithInternalSource::iddObjectType() {

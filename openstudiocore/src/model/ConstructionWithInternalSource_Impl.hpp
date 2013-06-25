@@ -87,6 +87,8 @@ namespace detail {
     bool setTubeSpacing(double tubeSpacing);
     bool setTubeSpacing(const Quantity& tubeSpacing);
 
+    ConstructionWithInternalSource reverseConstructionWithInternalSource() const;
+
   private:
 
     openstudio::Quantity tubeSpacing_SI() const;
