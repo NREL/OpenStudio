@@ -20,6 +20,7 @@
 #include <sdd/ForwardTranslator.hpp>
 
 #include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 #include <model/ModelObject.hpp>
 #include <model/ModelObject_Impl.hpp>
 #include <model/Material.hpp>
@@ -65,7 +66,12 @@ namespace sdd {
 
     m_logSink.resetStringStream();
 
-    boost::optional<QDomDocument> doc = this->translateModel(model);
+    model::Model modelCopy = model.clone().cast<model::Model>();
+
+    // remove unused resource objects
+    modelCopy.purgeUnusedResourceObjects();
+
+    boost::optional<QDomDocument> doc = this->translateModel(modelCopy);
     if (!doc){
       return false;
     }
