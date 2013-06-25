@@ -155,6 +155,8 @@ namespace sdd {
     projectClimateZoneElement.appendChild( doc.createTextNode( "unknown"));
 
     // set lat, lon, elev
+    // DLM: do not translate forward,  Issue 242: 	Forward Translator - Remove Proj:Lat/Lon/Elevation translation
+    /*
     boost::optional<model::Site> site = model.getOptionalUniqueModelObject<model::Site>();
     if (site){
       double latitude = site->latitude();
@@ -173,6 +175,7 @@ namespace sdd {
       projectElement.appendChild(elevationElement);
       elevationElement.appendChild( doc.createTextNode(QString::number(elevationIP)));
     }
+    */
 
     // todo: write out epw file path
     // todo: write out ddy file and set path
