@@ -1348,7 +1348,7 @@ namespace sdd {
     QDomElement aboveGradeStoryCountElement = doc.createElement("AboveGrdStoryCnt");
     result.appendChild(aboveGradeStoryCountElement);
     aboveGradeStoryCountElement.appendChild(doc.createTextNode(QString::number(numAboveGroundStories)));
-    /*
+    */
 
     // translate building story
     BOOST_FOREACH(const model::BuildingStory& buildingStory, buildingStories){
