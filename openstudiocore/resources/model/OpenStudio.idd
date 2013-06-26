@@ -3136,23 +3136,24 @@ OS:Construction:InternalSource,
   N1, \field Source Present After Layer Number
        \note refers to the list of materials which follows
        \type integer
-       \required-field
+       \default 1
        \minimum 1
   N2, \field Temperature Calculation Requested After Layer Number
        \note refers to the list of materials which follows
        \type integer
-       \required-field
+       \default 1
+       \minimum 1       
   N3, \field Dimensions for the CTF Calculation
        \note 1 = 1-dimensional calculation, 2 = 2-dimensional calculation
        \type integer
-       \required-field
+       \default 1
        \minimum 1
        \maximum 2
   N4, \field Tube Spacing
        \note uniform spacing between tubes or resistance wires in direction
        \note perpendicular to main intended direction of heat transfer
        \type real
-       \required-field
+       \default 0.154
        \units m
   A3, \field Surface Rendering Name
        \type object-list

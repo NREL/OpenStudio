@@ -1092,6 +1092,7 @@ SET( ${target_name}_test_src
   test/Component_GTest.cpp
   test/Connection_GTest.cpp
   test/Construction_GTest.cpp
+  test/ConstructionWithInternalSource_GTest.cpp
   test/ControllerOutdoorAir_GTest.cpp
   test/ControllerMechanicalVentilation_GTest.cpp
   test/ControllerWaterCoil_GTest.cpp
