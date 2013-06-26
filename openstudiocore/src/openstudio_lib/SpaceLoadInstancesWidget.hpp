@@ -22,26 +22,27 @@
 
 #include <openstudio_lib/ModelObjectVectorController.hpp>
 
-#include <model/Model.hpp>
-#include <model/Space.hpp>
-#include <model/SpaceType.hpp>
 #include <model/Building.hpp>
 #include <model/DefaultScheduleSet.hpp>
+#include <model/Model.hpp>
+#include <model/Space.hpp>
 #include <model/SpaceLoadInstance.hpp>
-
-#include <QWidget>
+#include <model/SpaceType.hpp>
 
 #include <boost/shared_ptr.hpp>
 
+#include <QWidget>
+
+class QGridLayout;
 class QPushButton;
 class QVBoxLayout;
 
 namespace openstudio {
 
-class OSLineEdit;
 class OSDoubleEdit;
-class OSIntegerEdit;
 class OSDropZone;
+class OSIntegerEdit;
+class OSLineEdit;
 
 class SpaceLoadInstanceDefinitionVectorController : public ModelObjectVectorController
 {
@@ -85,6 +86,21 @@ private:
   void attachOtherModelObjects(const model::DefaultScheduleSet& defaultScheduleSet);
 };
 
+class SpaceLoadInstanceActivityScheduleVectorController : public ModelObjectVectorController
+{
+  Q_OBJECT
+
+public:
+  virtual ~SpaceLoadInstanceActivityScheduleVectorController() {}
+
+protected:
+  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle);
+  virtual std::vector<OSItemId> makeVector();
+  virtual void onRemoveItem(OSItem* item);
+  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
+  virtual void onDrop(const OSItemId& itemId);
+};
+
 class SpaceLoadInstanceMiniView : public QWidget
 {
   Q_OBJECT
@@ -105,13 +121,21 @@ private:
   OSDoubleEdit* m_multiplierEdit;
   OSLineEdit* m_nameEdit;
   QPushButton* m_removeButton;
+
   SpaceLoadInstanceDefinitionVectorController* m_definitionVectorController;
   OSDropZone* m_definitionDropZone;
+
   SpaceLoadInstanceScheduleVectorController* m_scheduleVectorController;
   OSDropZone* m_scheduleDropZone;
 
+  SpaceLoadInstanceActivityScheduleVectorController* m_activityScheduleVectorController;
+  OSDropZone* m_activityScheduleDropZone;
+
   model::SpaceLoadInstance m_spaceLoadInstance;
   bool m_isDefault;
+
+private:
+  void createLayout(bool isDefault);
 };
 
 class NewSpaceLoadVectorController : public ModelObjectVectorController

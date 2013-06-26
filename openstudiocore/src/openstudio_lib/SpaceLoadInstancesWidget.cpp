@@ -18,13 +18,15 @@
 **********************************************************************/
 
 #include <openstudio_lib/SpaceLoadInstancesWidget.hpp>
-#include "../shared_gui_components/OSLineEdit.hpp"
-#include "../shared_gui_components/OSDoubleEdit.hpp"
-#include "../shared_gui_components/OSIntegerEdit.hpp"
+
 #include <openstudio_lib/OSVectorController.hpp>
 #include <openstudio_lib/OSDropZone.hpp>
 #include <openstudio_lib/ModelObjectItem.hpp>
 #include <openstudio_lib/IconLibrary.hpp>
+
+#include "../shared_gui_components/OSLineEdit.hpp"
+#include "../shared_gui_components/OSDoubleEdit.hpp"
+#include "../shared_gui_components/OSIntegerEdit.hpp"
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
@@ -83,6 +85,7 @@
 #include <model/InternalMassDefinition.hpp>
 #include <model/InternalMassDefinition_Impl.hpp>
 
+#include <utilities/idd/OS_People_FieldEnums.hxx>
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
 #include <utilities/idd/OS_SpaceType_FieldEnums.hxx>
 #include <utilities/idd/OS_Space_FieldEnums.hxx>
@@ -138,7 +141,9 @@ void SpaceLoadInstanceDefinitionVectorController::onReplaceItem(OSItem * current
   }
 }
 
-// SpaceLoadInstanceScheduleVectorController
+/****************************************************************************************************************************
+*                                        SpaceLoadInstanceScheduleVectorController                                          *
+****************************************************************************************************************************/
 
 void SpaceLoadInstanceScheduleVectorController::attach(const model::ModelObject& modelObject)
 {
@@ -378,7 +383,68 @@ void SpaceLoadInstanceScheduleVectorController::onDrop(const OSItemId& itemId)
   }
 }
 
-// SpaceLoadInstanceMiniView
+/****************************************************************************************************************************
+*                                    SpaceLoadInstanceActivityScheduleVectorController                                      *
+****************************************************************************************************************************/
+
+void SpaceLoadInstanceActivityScheduleVectorController::onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle)
+{
+  if(index == OS_PeopleFields::ActivityLevelScheduleName){
+    emit itemIds(makeVector());
+  }
+}
+
+std::vector<OSItemId> SpaceLoadInstanceActivityScheduleVectorController::makeVector()
+{
+  std::vector<OSItemId> result;
+  if(m_modelObject){
+    if(m_modelObject->optionalCast<model::People>()){
+      model::People people = m_modelObject->cast<model::People>();
+      boost::optional<model::Schedule> schedule = people.activityLevelSchedule();
+      if (schedule){
+        result.push_back(modelObjectToItemId(*schedule, false));
+      }
+    }
+  }
+  return result;
+}
+
+void SpaceLoadInstanceActivityScheduleVectorController::onRemoveItem(OSItem* item)
+{
+  if (m_modelObject){
+    if (m_modelObject->optionalCast<model::People>()){
+      m_modelObject->cast<model::People>().resetActivityLevelSchedule();
+    }
+  }
+}
+
+void SpaceLoadInstanceActivityScheduleVectorController::onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId)
+{
+  onDrop(replacementItemId);
+}
+
+void SpaceLoadInstanceActivityScheduleVectorController::onDrop(const OSItemId& itemId)
+{
+  if (m_modelObject){
+    if(m_modelObject->optionalCast<model::People>()){
+      model::People people = m_modelObject->cast<model::People>();
+      boost::optional<model::ModelObject> modelObject = this->getModelObject(itemId);
+      if (modelObject){
+        if (modelObject->optionalCast<model::Schedule>()){
+          if (this->fromComponentLibrary(itemId)){
+            modelObject = modelObject->clone(m_modelObject->model());
+          }
+          model::Schedule schedule = modelObject->cast<model::Schedule>();
+          people.setActivityLevelSchedule(schedule);
+        }
+      }
+    }
+  }
+}
+
+/****************************************************************************************************************************
+*                                                 SpaceLoadInstanceMiniView                                                 *
+****************************************************************************************************************************/
 
 SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInstance& spaceLoadInstance, bool isDefault)
   : m_definitionVectorController(NULL), m_scheduleVectorController(NULL), m_spaceLoadInstance(spaceLoadInstance)
@@ -533,6 +599,32 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
   }else{
     scheduleStack->setCurrentIndex(scheduleIndex);
   }
+
+  // activity schedule
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Activity Schedule: ");
+  label->setObjectName("H2");
+  vLayout->addWidget(label);
+
+  m_activityScheduleVectorController = new SpaceLoadInstanceActivityScheduleVectorController();
+  m_activityScheduleVectorController->attach(m_spaceLoadInstance);
+  m_activityScheduleDropZone = new OSDropZone(m_activityScheduleVectorController);
+  m_activityScheduleDropZone->setMinItems(1);
+  m_activityScheduleDropZone->setMaxItems(1);
+  if(isDefault){
+    m_activityScheduleDropZone->setItemsRemoveable(false);
+    m_activityScheduleDropZone->setItemsAcceptDrops(false);
+  }else{
+    m_activityScheduleDropZone->setItemsRemoveable(false);
+    m_activityScheduleDropZone->setItemsAcceptDrops(true);
+  }
+  vLayout->addWidget(m_activityScheduleDropZone);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout,1,3);
 
   mainGridLayout->setRowMinimumHeight(0, 30);
   mainGridLayout->setRowMinimumHeight(1, 30);
