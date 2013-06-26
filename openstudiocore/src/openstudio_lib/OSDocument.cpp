@@ -21,6 +21,7 @@
 #include "OSAppBase.hpp"
 #include "../shared_gui_components/BuildingComponentDialog.hpp"
 #include "../shared_gui_components/LocalLibraryController.hpp"
+#include "../shared_gui_components/MeasureManager.hpp"
 
 #include <openstudio_lib/BuildingStoriesTabController.hpp>
 #include <openstudio_lib/ConstructionsTabController.hpp>
@@ -1259,7 +1260,7 @@ void OSDocument::openMeasuresBclDlg()
 void OSDocument::on_closeMeasuresBclDlg()
 {
   if(m_onlineMeasuresBclDialog->showNewComponents()){
-    //OSAppBase::instance()->updateBCLMeasures();
+    OSAppBase::instance()->measureManager().updateMeasuresLists();
     m_onlineMeasuresBclDialog->setShowNewComponents(false);
   }
 }

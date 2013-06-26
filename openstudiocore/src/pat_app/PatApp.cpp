@@ -426,7 +426,7 @@ void PatApp::openBclDlg()
 void PatApp::on_closeBclDlg()
 {
   if(m_onlineBclDialog->showNewComponents()){
-    //updateBCLMeasures();
+    m_measureManager.updateMeasuresLists();
     m_onlineBclDialog->setShowNewComponents(false);
   }
 }
