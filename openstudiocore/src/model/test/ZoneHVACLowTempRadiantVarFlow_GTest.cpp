@@ -70,16 +70,15 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantVarFlow_Check_Constructor)
   // Test clone
 		testRad.setHydronicTubingInsideDiameter(5);
 				
-				 //Clone into the same model
+				 // Clone into the same model
 				 ZoneHVACLowTempRadiantVarFlow cloneRad = testRad.clone(model).cast<model::ZoneHVACLowTempRadiantVarFlow>();
 				
 				 HVACComponent cloneCC1 = cloneRad.coolingCoil();
 				 HVACComponent cloneHC1 = cloneRad.heatingCoil();
 				
 				 ASSERT_EQ(testRad.hydronicTubingInsideDiameter(), cloneRad.hydronicTubingInsideDiameter());
-				 ASSERT_EQ(testHC1,cloneHC1);
 				
-					//Clone into another model
+					// Clone into another model
 				 Model model2;
 				 ZoneHVACLowTempRadiantVarFlow cloneRad2 = 	cloneRad.clone(model2).cast<model::ZoneHVACLowTempRadiantVarFlow>();
 				 ASSERT_EQ(cloneRad.hydronicTubingInsideDiameter(), cloneRad2.hydronicTubingInsideDiameter());
@@ -90,9 +89,6 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantVarFlow_Check_Constructor)
   boost::optional<ThermalZone> testThermalZone = testRad.thermalZone();
   EXPECT_EQ(*(testThermalZone),testRad.thermalZone());
   
-  EXPECT_TRUE(testRad.inletNode());
-  EXPECT_TRUE(testRad.outletNode());
-
   testRad.removeFromThermalZone();
   EXPECT_FALSE(testRad.thermalZone());
   

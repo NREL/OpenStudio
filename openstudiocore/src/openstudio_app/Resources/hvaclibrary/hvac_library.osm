@@ -2269,3 +2269,113 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
   ,                                       !- Motor Efficiency
   ;                                       !- Fraction of Motor Inefficiencies to Fluid Stream
 
+OS:Schedule:Constant,
+  {f6a00aa7-a1d2-432c-b7bd-7426b1974a9f}, !- Handle
+  Availability Schedule,                  !- Name
+  {3572419b-646d-44eb-b7b9-f6e522aad076}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:Schedule:Constant,
+  {b544d9d9-3045-4d3e-906a-15ac4e5d519b}, !- Handle
+  Heating Control Temperature Schedule,   !- Name
+  {de647f12-f5bd-42c0-9194-2cf330fbc23c}, !- Schedule Type Limits Name
+  17;                                     !- Value
+
+OS:Schedule:Constant,
+  {fc438a8b-e357-40a3-a2eb-b39ff563bc75}, !- Handle
+  Cooling Control Temperature Schedule,   !- Name
+  {538ff53b-28c2-43a1-8b73-a875f4ee5afe}, !- Schedule Type Limits Name
+  24;                                     !- Value
+
+OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow,
+  {30a7b7a9-fafe-452e-8dec-8aaf5e97c94d}, !- Handle
+  Cooling Coil Low Temperature Radiant Variable Flow, !- Name
+  ,                                       !- Maximum Cold Water Flow {m3/s}
+  ,                                       !- Cooling Water Inlet Node Name
+  ,                                       !- Cooling Water Outlet Node Name
+  ,                                       !- Cooling Control Throttling Range {deltaC}
+  {fc438a8b-e357-40a3-a2eb-b39ff563bc75}, !- Cooling Control Temperature Schedule Name
+  ,                                       !- Condensation Control Type
+  ;                                       !- Condensation Control Dewpoint Offset {C}
+
+OS:ScheduleTypeLimits,
+  {538ff53b-28c2-43a1-8b73-a875f4ee5afe}, !- Handle
+  Temperature,                            !- Name
+  ,                                       !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Discrete,                               !- Numeric Type
+  Temperature;                            !- Unit Type
+
+OS:Coil:Heating:LowTemperatureRadiant:VariableFlow,
+  {45bfd5e9-6a33-4c7a-ba86-6a9e8210267f}, !- Handle
+  Heating Coil Low Temperature Radiant Variable Flow, !- Name
+  ,                                       !- Maximum Hot Water Flow {m3/s}
+  ,                                       !- Heating Water Inlet Node Name
+  ,                                       !- Heating Water Outlet Node Name
+  ,                                       !- Heating Control Throttling Range {deltaC}
+  {b544d9d9-3045-4d3e-906a-15ac4e5d519b}; !- Heating Control Temperature Schedule Name
+
+OS:ScheduleTypeLimits,
+  {de647f12-f5bd-42c0-9194-2cf330fbc23c}, !- Handle
+  Temperature 1,                          !- Name
+  ,                                       !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Continuous,                             !- Numeric Type
+  Temperature;                            !- Unit Type
+
+OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
+  {88fad33b-c05d-4913-b817-3474b2adf5eb}, !- Handle
+  Zone HVAC Low Temperature Radiant Variable Flow 1, !- Name
+  {f6a00aa7-a1d2-432c-b7bd-7426b1974a9f}, !- Availability Schedule Name
+  {45bfd5e9-6a33-4c7a-ba86-6a9e8210267f}, !- Low Temp Radiant Variable Flow Heating Coil Name
+  {30a7b7a9-fafe-452e-8dec-8aaf5e97c94d}, !- Low Temp Radiant Variable Flow Cooling Coil Name
+  ,                                       !- Radiant Surface Group Name
+  ,                                       !- Hydronic Tubing Inside Diameter {m}
+  ,                                       !- Hydronic Tubing Length {m}
+  ;                                       !- Temperature Control Type
+
+OS:ScheduleTypeLimits,
+  {3572419b-646d-44eb-b7b9-f6e522aad076}, !- Handle
+  OnOff,                                  !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:Schedule:Constant,
+  {06d5424c-7ece-4c7f-8f9c-14f3e368299f}, !- Handle
+  Availability Schedule,                  !- Name
+  {efe67cd3-6649-4cdd-add8-da69df8d2331}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:Schedule:Constant,
+  {7c3b6783-07be-4210-b53a-b11406e4e6b9}, !- Handle
+  Heating Temperature Schedule,           !- Name
+  {45cbfe59-def9-462a-9795-ce2cc369307b}, !- Schedule Type Limits Name
+  70;                                     !- Value
+
+OS:ZoneHVAC:LowTemperatureRadiant:Electric,
+  {d10fa186-bf02-4c64-a767-8a4bc4666c5e}, !- Handle
+  Zone HVAC Low Temperature Radiant Electric 1, !- Name
+  {06d5424c-7ece-4c7f-8f9c-14f3e368299f}, !- Availability Schedule Name
+  Floors,                                 !- Radiant Surface Group Name
+  autosize,                               !- Maximum Electrical Power to Panel {W}
+  MeanAirTemperature,                     !- Temperature Control Type
+  2,                                      !- Heating Throttling Range {deltaC}
+  {7c3b6783-07be-4210-b53a-b11406e4e6b9}; !- Heating Setpoint Temperature Schedule Name
+
+OS:ScheduleTypeLimits,
+  {efe67cd3-6649-4cdd-add8-da69df8d2331}, !- Handle
+  OnOff,                                  !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:ScheduleTypeLimits,
+  {45cbfe59-def9-462a-9795-ce2cc369307b}, !- Handle
+  Temperature,                            !- Name
+  ,                                       !- Lower Limit Value {BasedOnField A4}
+  ,                                       !- Upper Limit Value {BasedOnField A4}
+  Discrete,                               !- Numeric Type
+  Temperature;                            !- Unit Type

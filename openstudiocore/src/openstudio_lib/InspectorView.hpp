@@ -312,6 +312,32 @@ class ZoneHVACLowTempRadiantConstFlowInspectorView : public BaseInspectorView
   LoopChooserView * m_coolingLoopChooserView;
 };
 
+class ZoneHVACLowTempRadiantVarFlowInspectorView : public BaseInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  ZoneHVACLowTempRadiantVarFlowInspectorView(QWidget * parent = 0);
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP );
+
+  signals:
+
+  void addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  void removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  private:
+
+  boost::optional<model::ModelObject> m_modelObject;
+
+  InspectorGadget * m_inspectorGadget;
+
+  LoopChooserView * m_heatingLoopChooserView;
+
+  LoopChooserView * m_coolingLoopChooserView;
+};
 
 class ZoneHVACWaterToAirHeatPumpInspectorView : public BaseInspectorView
 {
