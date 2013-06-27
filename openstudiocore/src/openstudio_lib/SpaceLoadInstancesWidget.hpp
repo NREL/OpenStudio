@@ -34,6 +34,7 @@
 #include <QWidget>
 
 class QGridLayout;
+class QLabel;
 class QPushButton;
 class QVBoxLayout;
 
@@ -120,6 +121,7 @@ private slots:
 private:
   OSDoubleEdit* m_multiplierEdit;
   OSLineEdit* m_nameEdit;
+  QLabel* m_activityScheduleLabel;
   QPushButton* m_removeButton;
 
   SpaceLoadInstanceDefinitionVectorController* m_definitionVectorController;
