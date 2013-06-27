@@ -40,7 +40,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateConstructionWithInternalSource( model::ConstructionWithInternalSource & modelObject )
 {
-  boost::optional<double> value;
+  
   IdfObject idfObject( openstudio::IddObjectType::Construction_InternalSource );
 
   m_idfObjects.push_back(idfObject);
@@ -49,33 +49,26 @@ namespace energyplus {
   idfObject.setString(Construction_InternalSourceFields::Name, modelObject.name().get());
   
   //Source Present After Layer Number
-  if (value = modelObject.sourcePresentAfterLayerNumber()){
-      idfObject.setDouble(Construction_InternalSourceFields::SourcePresentAfterLayerNumber,value.get());
-  }
+  idfObject.setInt(Construction_InternalSourceFields::SourcePresentAfterLayerNumber, modelObject.sourcePresentAfterLayerNumber());
 
   //Temperature Calculation Requested After Layer Number
-  if (value = modelObject.temperatureCalculationRequestedAfterLayerNumber()){
-    idfObject.setDouble(Construction_InternalSourceFields::TemperatureCalculationRequestedAfterLayerNumber,value.get());
-  }
+  idfObject.setInt(Construction_InternalSourceFields::TemperatureCalculationRequestedAfterLayerNumber, modelObject.temperatureCalculationRequestedAfterLayerNumber());
 
   // Dimensions for the CTF Calculation
-  if (value = modelObject.dimensionsForTheCTFCalculation()){
-    idfObject.setDouble(Construction_InternalSourceFields::DimensionsfortheCTFCalculation,value.get());
-  }
+  idfObject.setInt(Construction_InternalSourceFields::DimensionsfortheCTFCalculation, modelObject.dimensionsForTheCTFCalculation());
+
   // Tube Spacing
-  if (value = modelObject.tubeSpacing()){
-  idfObject.setDouble(Construction_InternalSourceFields::TubeSpacing,modelObject.tubeSpacing());
-  }else{
-    LOG(Error, "Missing required tube Spacing for Construction:InternalSource named '"<<modelObject.name().get()<<"'")
-  }
+  idfObject.setDouble(Construction_InternalSourceFields::TubeSpacing, modelObject.tubeSpacing());
+  
   //Layers
   MaterialVector layers = modelObject.layers();
 
-  unsigned fieldIndex = 1;
+  unsigned fieldIndex = Construction_InternalSourceFields::TubeSpacing + 1;
   for(unsigned layerIndex = 0; layerIndex < layers.size(); ++layerIndex ) {
     Material material = layers[layerIndex];
     translateAndMapModelObject(material);
-    idfObject.setString(fieldIndex++, material.name().get());
+    idfObject.setString(fieldIndex, material.name().get());
+    fieldIndex++;
   }
 
   return boost::optional<IdfObject>(idfObject);

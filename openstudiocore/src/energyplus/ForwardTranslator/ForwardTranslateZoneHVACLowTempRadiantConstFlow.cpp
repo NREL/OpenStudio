@@ -97,11 +97,14 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
  
 //field Surface Name or Radiant Surface Group Name
  boost::optional<std::string> surfGrpName = modelObject.radiantSurfaceGroupName();
-
  IdfObject _surfaceGroup(IddObjectType::ZoneHVAC_LowTemperatureRadiant_SurfaceGroup);
+ std::string sname = baseName + "" + surfGrpName.get();
+ _surfaceGroup.setName(sname);
+ idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::SurfaceNameorRadiantSurfaceGroupName,sname);
 
  boost::optional<ThermalZone> thermalZone = modelObject.thermalZone();
  std::vector<Space> spaces = (*thermalZone).spaces();
+
  idfObject.clearExtensibleGroups();  //get rid of any existing surface (just to be safe)
  //loop through all the surfaces, adding them and their flow fractions (weighted per-area)
 
@@ -110,6 +113,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
     std::vector<Surface> surfaces = space.surfaces();
     BOOST_FOREACH(const Surface& surface, surfaces){
     std::string surfaceType = surface.surfaceType();
+    
     boost::optional<ConstructionBase> construction = surface.construction();
     boost::optional<ConstructionWithInternalSource> constructionOptional = construction->optionalCast<ConstructionWithInternalSource>();
 
@@ -164,9 +168,8 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
      }
     }
  }
-  m_idfObjects.push_back(_surfaceGroup);
+   m_idfObjects.push_back(_surfaceGroup);
 
-  idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::SurfaceNameorRadiantSurfaceGroupName,surfGrpName.get());
  
 //field Hydronic Tubing Inside Diameter
  if( value = modelObject.hydronicTubingInsideDiameter() )

@@ -99,6 +99,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
 		//field Surface Name or Radiant Surface Group Name
 		boost::optional<std::string> surfGrpName = modelObject.radiantSurfaceGroupName();
 		IdfObject _surfaceGroup(IddObjectType::ZoneHVAC_LowTemperatureRadiant_SurfaceGroup);
+    std::string sname = baseName + "" + surfGrpName.get();
+    _surfaceGroup.setName(sname);
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::SurfaceNameorRadiantSurfaceGroupName,sname);
 
 		boost::optional<ThermalZone> thermalZone = modelObject.thermalZone();
 		std::vector<Space> spaces = (*thermalZone).spaces();
@@ -132,9 +135,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
         }
         else if(istringEqual("Floor", surfaceType) && istringEqual("Floors",surfGrpName.get())){
             
-            IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+            IdfExtensibleGroup group = _surfaceGroup.pushExtensibleGroup();
           
-            BOOST_ASSERT(group.numFields() == 1);
+            BOOST_ASSERT(group.numFields() == 2);
             
             group.setString(0, surface.name().get());
             
@@ -143,9 +146,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
         }
         else if(istringEqual("Floor", surfaceType) || istringEqual("Ceiling", surfaceType) && istringEqual("CeilingsAndFloors",surfGrpName.get())){
             
-            IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+            IdfExtensibleGroup group = _surfaceGroup.pushExtensibleGroup();
           
-            BOOST_ASSERT(group.numFields() == 1);
+            BOOST_ASSERT(group.numFields() == 2);
             
             group.setString(0, surface.name().get());
             
@@ -154,9 +157,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
         }
         else if(istringEqual("AllSurfaces",surfGrpName.get())){
             
-            IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+            IdfExtensibleGroup group = _surfaceGroup.pushExtensibleGroup();
           
-            BOOST_ASSERT(group.numFields() == 1);
+            BOOST_ASSERT(group.numFields() == 2);
             
             group.setString(0, surface.name().get());
             
@@ -169,7 +172,6 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
   
   m_idfObjects.push_back(_surfaceGroup);
 
-  idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::SurfaceNameorRadiantSurfaceGroupName,surfGrpName.get());
  
 		//field Hydronic Tubing Inside Diameter
   
