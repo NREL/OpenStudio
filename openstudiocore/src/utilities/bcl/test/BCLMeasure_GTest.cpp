@@ -36,7 +36,6 @@ TEST_F(BCLFixture, BCLMeasure)
 
   EXPECT_EQ("Set Window to Wall Ratio by Facade", measure->name());
   EXPECT_EQ("f347ae80-48b4-4c40-bfd4-6c5139b38136", measure->uid());
-  EXPECT_EQ("c2e8fb11-9fef-48a6-9f4e-eb18b147ffb4", measure->versionId());
   EXPECT_EQ("Description should be asked for upon creation.", measure->description());
   EXPECT_EQ("Modeler description needs to be hand-edited.", measure->modelerDescription());
 
