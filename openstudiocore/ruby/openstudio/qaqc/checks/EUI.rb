@@ -9,6 +9,13 @@ def eui_check(model,sql)
   eui_check.category = "General"
   eui_check.description = "Check that the EUI of the building is reasonable."    
   building = model.getBuilding
+  
+  #make sure all required data are available
+  if sql.totalSiteEnergy.empty?
+    eui_check.add_flag(Flag.new($gen_mod,"Site energy data unavailable; check not run"))
+    return eui_check
+  end
+  
   total_site_energy_GJ = OpenStudio::Quantity.new(sql.totalSiteEnergy.get, $GJ_unit)
   total_site_energy_kBtu = OpenStudio::convert(total_site_energy_GJ, $kBtu_unit).get
   floor_area_m2 = OpenStudio::Quantity.new(building.floorArea, $m2_unit)

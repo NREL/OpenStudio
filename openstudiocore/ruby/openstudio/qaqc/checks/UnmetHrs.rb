@@ -13,10 +13,17 @@ def unmet_hrs_check(model,sql)
   heating_setpoint_unmet_query = "SELECT Value FROM TabularDataWithStrings WHERE (ReportName='SystemSummary') AND (ReportForString='Entire Facility') AND (TableName='Time Setpoint Not Met') AND (RowName = 'Facility') AND (ColumnName='During Heating')"
   cooling_setpoint_unmet_query = "SELECT Value FROM TabularDataWithStrings WHERE (ReportName='SystemSummary') AND (ReportForString='Entire Facility') AND (TableName='Time Setpoint Not Met') AND (RowName = 'Facility') AND (ColumnName='During Cooling')"
   #get the info
-  heating_setpoint_unmet = get_double(sql, heating_setpoint_unmet_query)
-  cooling_setpoint_unmet = get_double(sql, cooling_setpoint_unmet_query)
+  heating_setpoint_unmet = sql.execAndReturnFirstDouble(heating_setpoint_unmet_query)
+  cooling_setpoint_unmet = sql.execAndReturnFirstDouble(cooling_setpoint_unmet_query)
+  
+  #make sure all the data are availalbe
+  if heating_setpoint_unmet.empty? or cooling_setpoint_unmet.empty?
+    unmet_hrs_check.add_flag(Flag.new($eda,"Hours heating or cooling unmet data unavailable; check not run"))
+    return unmet_hrs_check
+  end
+  
   #aggregate heating and cooling hrs
-  heating_or_cooling_setpoint_unmet = heating_setpoint_unmet + cooling_setpoint_unmet    
+  heating_or_cooling_setpoint_unmet = heating_setpoint_unmet.get + cooling_setpoint_unmet.get    
   #flag if heating + cooling unmet hours > 300
   if heating_or_cooling_setpoint_unmet > 300
     unmet_hrs_check.add_flag(Flag.new($eda,"Hours heating or cooling unmet is #{heating_or_cooling_setpoint_unmet}; > the Xcel EDA limit of 300 hrs"))
