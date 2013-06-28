@@ -84,7 +84,8 @@ namespace detail {
       m_problem(other.problem()),
       m_variableValues(other.variableValues()),
       m_responseValues(other.responseValues()),
-      m_directory(other.directory())
+      m_directory(other.directory()),
+      m_topLevelJob(other.topLevelJob())
   {
     if (other.osmInputData()) {
       m_osmInputData = other.osmInputData().get().clone();
@@ -102,6 +103,9 @@ namespace detail {
       m_tags.push_back(tag.clone());
     }
     // DLM: TODO should we clone topLevelJob? for now do nothing.
+    // ETH: Need to clone topLevelJob for save as-ing SimpleProject.
+    //      Am trying just pulling the same runmanager::Job over. When it 
+    //      gets to osp, should just keep uuid.
     // DLM: TODO should we clone dakotaParametersFiles? for now do nothing.
   }
 
