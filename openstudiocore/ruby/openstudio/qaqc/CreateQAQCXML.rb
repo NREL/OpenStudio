@@ -87,14 +87,14 @@ proj.get.analysis.dataPoints.each do |dp|
     o_model = proj.get.seedModel
   else
     o_model = dp.model
-  end
+  end  
   
   #get the optional sql file
   o_sql = dp.sqlFile
 
   #perform the check if the model and sql file exist
   if not o_model.empty? and not o_sql.empty?
-    
+      
     #get the model
     model = o_model.get
     
@@ -103,7 +103,7 @@ proj.get.analysis.dataPoints.each do |dp|
     
     #make a new qaqc report for this model and add it to the overall report
     single_qaqc = SingleModelQAQCReport.new
-    single_qaqc.model_id = "#{dp.uuid.to_s.gsub('{','').gsub('}','')}"
+    single_qaqc.model_id = "#{dp.name.gsub(/\W/,' ')}"
     qaqc_report.add_single_model_qaqc_report(single_qaqc)  
     
     #TODO make the selection of env periods more intelligent
@@ -173,8 +173,8 @@ if not base_o_model.empty? and not base_o_sql.empty?
       qaqc_report.add_two_model_comparison_qaqc_report(comparison)
 
       #record uuids of models being compared
-      comparison.baseline_model_id = "#{base.uuid.to_s.gsub('{','').gsub('}','')}"
-      comparison.proposed_model_id = "#{dp.uuid.to_s.gsub('{','').gsub('}','')}"
+      comparison.baseline_model_id = "#{base.name.gsub(/\W/,' ')}"
+      comparison.proposed_model_id = "#{dp.name.gsub(/\W/,' ')}"
       
       #heating & cooling primary fuel swap
       comparison.add_check(heat_cool_fuel_swap_check(base_model,base_sql,dp_model,dp_sql))
