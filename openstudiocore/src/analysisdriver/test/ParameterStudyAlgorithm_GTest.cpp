@@ -85,25 +85,23 @@ TEST_F(AnalysisDriverFixture, VectorParameterStudy) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    ProjectDatabase database = getCleanDatabase("VectorParameterStudy");
-    AnalysisDriver analysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
+  ProjectDatabase database = getCleanDatabase("VectorParameterStudy");
+  AnalysisDriver analysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
 
-    // output csv summary of data points
-    Table summary = currentAnalysis.analysis().summaryTable();
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  // output csv summary of data points
+  Table summary = currentAnalysis.analysis().summaryTable();
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-      EXPECT_FALSE(dataPoint.responseValues().empty());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
+    EXPECT_FALSE(dataPoint.responseValues().empty());
   }
 }
 
@@ -133,27 +131,25 @@ TEST_F(AnalysisDriverFixture, VectorParameterStudy_MixedOsmIdf) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    analysis = Analysis("VectorParameterStudy Sampling - MixedOsmIdf",
-                        problem,
-                        ParameterStudyAlgorithm(algOptions),
-                        seedModel);
-    ProjectDatabase database = getCleanDatabase("VectorParameterStudy_MixedOsmIdf");
-    AnalysisDriver analysisDriver = AnalysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
-    EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
-    Table summary = currentAnalysis.analysis().summaryTable();
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  analysis = Analysis("VectorParameterStudy Sampling - MixedOsmIdf",
+                      problem,
+                      ParameterStudyAlgorithm(algOptions),
+                      seedModel);
+  ProjectDatabase database = getCleanDatabase("VectorParameterStudy_MixedOsmIdf");
+  AnalysisDriver analysisDriver = AnalysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
+  EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
+  Table summary = currentAnalysis.analysis().summaryTable();
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
   }
 
 }
@@ -186,25 +182,23 @@ TEST_F(AnalysisDriverFixture, ListParameterStudy) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    ProjectDatabase database = getCleanDatabase("ListParameterStudy");
-    AnalysisDriver analysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
+  ProjectDatabase database = getCleanDatabase("ListParameterStudy");
+  AnalysisDriver analysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
 
-    // output csv summary of data points
-    Table summary = currentAnalysis.analysis().summaryTable();
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  // output csv summary of data points
+  Table summary = currentAnalysis.analysis().summaryTable();
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-      EXPECT_FALSE(dataPoint.responseValues().empty());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
+    EXPECT_FALSE(dataPoint.responseValues().empty());
   }
 }
 
@@ -236,27 +230,25 @@ TEST_F(AnalysisDriverFixture, ListParameterStudy_MixedOsmIdf) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    analysis = Analysis("ListParameterStudy Sampling - MixedOsmIdf",
-                        problem,
-                        ParameterStudyAlgorithm(algOptions),
-                        seedModel);
-    ProjectDatabase database = getCleanDatabase("ListParameterStudy_MixedOsmIdf");
-    AnalysisDriver analysisDriver = AnalysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
-    EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
-    Table summary = currentAnalysis.analysis().summaryTable();
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  analysis = Analysis("ListParameterStudy Sampling - MixedOsmIdf",
+                      problem,
+                      ParameterStudyAlgorithm(algOptions),
+                      seedModel);
+  ProjectDatabase database = getCleanDatabase("ListParameterStudy_MixedOsmIdf");
+  AnalysisDriver analysisDriver = AnalysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
+  EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
+  Table summary = currentAnalysis.analysis().summaryTable();
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
   }
 
 }
@@ -292,26 +284,24 @@ TEST_F(AnalysisDriverFixture, CenteredParameterStudy) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    ProjectDatabase database = getCleanDatabase("CenteredParameterStudy");
-    AnalysisDriver analysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    runOptions.setQueueSize(4);
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
+  ProjectDatabase database = getCleanDatabase("CenteredParameterStudy");
+  AnalysisDriver analysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  runOptions.setQueueSize(4);
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
 
-    // output csv summary of data points
-    Table summary = currentAnalysis.analysis().summaryTable();
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  // output csv summary of data points
+  Table summary = currentAnalysis.analysis().summaryTable();
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-      EXPECT_FALSE(dataPoint.responseValues().empty());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
+    EXPECT_FALSE(dataPoint.responseValues().empty());
   }
 }
 
@@ -346,27 +336,25 @@ TEST_F(AnalysisDriverFixture, CenteredParameterStudy_MixedOsmIdf) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    analysis = Analysis("CenteredParameterStudy Sampling - MixedOsmIdf",
-                        problem,
-                        ParameterStudyAlgorithm(algOptions),
-                        seedModel);
-    ProjectDatabase database = getCleanDatabase("CenteredParameterStudy_MixedOsmIdf");
-    AnalysisDriver analysisDriver = AnalysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
-    EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
-    Table summary = currentAnalysis.analysis().summaryTable();
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  analysis = Analysis("CenteredParameterStudy Sampling - MixedOsmIdf",
+                      problem,
+                      ParameterStudyAlgorithm(algOptions),
+                      seedModel);
+  ProjectDatabase database = getCleanDatabase("CenteredParameterStudy_MixedOsmIdf");
+  AnalysisDriver analysisDriver = AnalysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
+  EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
+  Table summary = currentAnalysis.analysis().summaryTable();
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
   }
 
 }
@@ -397,25 +385,23 @@ TEST_F(AnalysisDriverFixture, MultidimParameterStudy) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    ProjectDatabase database = getCleanDatabase("MultidimParameterStudy");
-    AnalysisDriver analysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
+  ProjectDatabase database = getCleanDatabase("MultidimParameterStudy");
+  AnalysisDriver analysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
 
-    // output csv summary of data points
-    Table summary = currentAnalysis.analysis().summaryTable();
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  // output csv summary of data points
+  Table summary = currentAnalysis.analysis().summaryTable();
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-      EXPECT_FALSE(dataPoint.responseValues().empty());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
+    EXPECT_FALSE(dataPoint.responseValues().empty());
   }
 }
 
@@ -443,27 +429,25 @@ TEST_F(AnalysisDriverFixture, MultidimParameterStudy_MixedOsmIdf) {
                     problem,
                     ParameterStudyAlgorithm(algOptions),
                     seedModel);
-  if (!dakotaExePath().empty()) {
-    analysis = Analysis("MultidimParameterStudy Sampling - MixedOsmIdf",
-                        problem,
-                        ParameterStudyAlgorithm(algOptions),
-                        seedModel);
-    ProjectDatabase database = getCleanDatabase("MultidimParameterStudy_MixedOsmIdf");
-    AnalysisDriver analysisDriver = AnalysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
-    EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
-    Table summary = currentAnalysis.analysis().summaryTable();
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  analysis = Analysis("MultidimParameterStudy Sampling - MixedOsmIdf",
+                      problem,
+                      ParameterStudyAlgorithm(algOptions),
+                      seedModel);
+  ProjectDatabase database = getCleanDatabase("MultidimParameterStudy_MixedOsmIdf");
+  AnalysisDriver analysisDriver = AnalysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
+  EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
+  Table summary = currentAnalysis.analysis().summaryTable();
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
   }
 
 }

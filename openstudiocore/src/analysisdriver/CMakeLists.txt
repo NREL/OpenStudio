@@ -27,19 +27,26 @@ SET( ${target_name}_moc
 SET( ${target_name}_test_src
   test/AnalysisDriverFixture.hpp
   test/AnalysisDriverFixture.cpp
+  test/StopWatcher.hpp
+  test/StopWatcher.cpp
   test/AnalysisDriverWatcher_GTest.cpp
   test/AnalysisRunOptions_GTest.cpp
   test/RuntimeBehavior_GTest.cpp
   test/DataPersistence_GTest.cpp
   test/DesignOfExperiments_GTest.cpp
-  test/DDACEAlgorithm_GTest.cpp
-  test/FSUDaceAlgorithm_GTest.cpp
-  test/ParameterStudyAlgorithm_GTest.cpp
   test/PostProcessJobs_GTest.cpp
-  test/PSUADEDaceAlgorithm_GTest.cpp
   test/SimpleProject_GTest.cpp
-  test/SamplingAlgorithm_GTest.cpp
 )
+
+IF(DAKOTA_FOUND)
+  LIST(APPEND ${target_name}_test_src
+    test/DDACEAlgorithm_GTest.cpp
+    test/FSUDaceAlgorithm_GTest.cpp
+    test/ParameterStudyAlgorithm_GTest.cpp  
+    test/PSUADEDaceAlgorithm_GTest.cpp
+    test/SamplingAlgorithm_GTest.cpp
+  )
+ENDIF(DAKOTA_FOUND)
 
 SET( ${target_name}_swig_src
   AnalysisDriver.i

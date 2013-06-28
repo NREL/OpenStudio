@@ -363,84 +363,83 @@ TEST_F(AnalysisDriverFixture,SimpleProject_ClearAllResults) {
   algopts.setSamples(1);
   DDACEAlgorithm algorithm(algopts);
   analysis.setAlgorithm(algorithm);
-  if (!dakotaExePath().empty()) {
-    AnalysisDriver analysisDriver = project.analysisDriver();
-    AnalysisRunOptions runOptions = standardRunOptions(project.projectDir());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    analysisDriver.waitForFinished();
 
-    // Check DakotaAlgorithm, DataPoint, and records for expected state
-    EXPECT_TRUE(algorithm.isComplete());
-    EXPECT_FALSE(algorithm.failed());
-    ASSERT_TRUE(algorithm.restartFileReference());
-    EXPECT_TRUE(boost::filesystem::exists(algorithm.restartFileReference().get().path()));
-    ASSERT_TRUE(algorithm.outFileReference());
-    EXPECT_TRUE(boost::filesystem::exists(algorithm.outFileReference().get().path()));
-    EXPECT_TRUE(algorithm.job());
+  AnalysisDriver analysisDriver = project.analysisDriver();
+  AnalysisRunOptions runOptions = standardRunOptions(project.projectDir());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  analysisDriver.waitForFinished();
 
-    ASSERT_EQ(1u,analysis.dataPoints().size());
-    DataPoint dataPoint = analysis.dataPoints()[0];
-    EXPECT_TRUE(dataPoint.isComplete());
-    EXPECT_FALSE(dataPoint.failed());
-    EXPECT_FALSE(dataPoint.responseValues().empty());
-    EXPECT_FALSE(dataPoint.directory().empty());
-    EXPECT_TRUE(boost::filesystem::exists(dataPoint.directory()));
-    ASSERT_TRUE(dataPoint.osmInputData());
-    EXPECT_TRUE(boost::filesystem::exists(dataPoint.osmInputData().get().path()));
-    ASSERT_TRUE(dataPoint.idfInputData());
-    EXPECT_TRUE(boost::filesystem::exists(dataPoint.idfInputData().get().path()));
-    EXPECT_FALSE(dataPoint.sqlOutputData());
-    EXPECT_FALSE(dataPoint.xmlOutputData());
-    EXPECT_TRUE(dataPoint.model());
-    EXPECT_TRUE(dataPoint.workspace());
-    EXPECT_FALSE(dataPoint.sqlFile());
-    EXPECT_TRUE(dataPoint.outputAttributes().empty());
-    EXPECT_TRUE(dataPoint.topLevelJob());
+  // Check DakotaAlgorithm, DataPoint, and records for expected state
+  EXPECT_TRUE(algorithm.isComplete());
+  EXPECT_FALSE(algorithm.failed());
+  ASSERT_TRUE(algorithm.restartFileReference());
+  EXPECT_TRUE(boost::filesystem::exists(algorithm.restartFileReference().get().path()));
+  ASSERT_TRUE(algorithm.outFileReference());
+  EXPECT_TRUE(boost::filesystem::exists(algorithm.outFileReference().get().path()));
+  EXPECT_TRUE(algorithm.job());
 
-    openstudio::UUID dakotaJobUUID, dataPointJobUUID;
-    {
-      AnalysisRecord analysisRecord = project.analysisRecord();
-      RunManager runManager = project.runManager();
+  ASSERT_EQ(1u,analysis.dataPoints().size());
+  DataPoint dataPoint = analysis.dataPoints()[0];
+  EXPECT_TRUE(dataPoint.isComplete());
+  EXPECT_FALSE(dataPoint.failed());
+  EXPECT_FALSE(dataPoint.responseValues().empty());
+  EXPECT_FALSE(dataPoint.directory().empty());
+  EXPECT_TRUE(boost::filesystem::exists(dataPoint.directory()));
+  ASSERT_TRUE(dataPoint.osmInputData());
+  EXPECT_TRUE(boost::filesystem::exists(dataPoint.osmInputData().get().path()));
+  ASSERT_TRUE(dataPoint.idfInputData());
+  EXPECT_TRUE(boost::filesystem::exists(dataPoint.idfInputData().get().path()));
+  EXPECT_FALSE(dataPoint.sqlOutputData());
+  EXPECT_FALSE(dataPoint.xmlOutputData());
+  EXPECT_TRUE(dataPoint.model());
+  EXPECT_TRUE(dataPoint.workspace());
+  EXPECT_FALSE(dataPoint.sqlFile());
+  EXPECT_TRUE(dataPoint.outputAttributes().empty());
+  EXPECT_TRUE(dataPoint.topLevelJob());
 
-      OptionalAlgorithmRecord algorithmRecord = analysisRecord.algorithmRecord();
-      ASSERT_TRUE(algorithmRecord);
-      ASSERT_TRUE(algorithmRecord.get().optionalCast<DakotaAlgorithmRecord>());
-      DakotaAlgorithmRecord dakotaAlgorithmRecord = algorithmRecord->cast<DakotaAlgorithmRecord>();
+  openstudio::UUID dakotaJobUUID, dataPointJobUUID;
+  {
+    AnalysisRecord analysisRecord = project.analysisRecord();
+    RunManager runManager = project.runManager();
 
-      EXPECT_TRUE(dakotaAlgorithmRecord.isComplete());
-      OptionalFileReferenceRecord frr = dakotaAlgorithmRecord.restartFileReferenceRecord();
-      ASSERT_TRUE(frr);
-      EXPECT_TRUE(boost::filesystem::exists(frr->path()));
-      frr = dakotaAlgorithmRecord.outFileReferenceRecord();
-      ASSERT_TRUE(frr);
-      EXPECT_TRUE(boost::filesystem::exists(frr->path()));
-      ASSERT_TRUE(dakotaAlgorithmRecord.jobUUID());
-      dakotaJobUUID = dakotaAlgorithmRecord.jobUUID().get();
-      EXPECT_NO_THROW(runManager.getJob(dakotaJobUUID));
+    OptionalAlgorithmRecord algorithmRecord = analysisRecord.algorithmRecord();
+    ASSERT_TRUE(algorithmRecord);
+    ASSERT_TRUE(algorithmRecord.get().optionalCast<DakotaAlgorithmRecord>());
+    DakotaAlgorithmRecord dakotaAlgorithmRecord = algorithmRecord->cast<DakotaAlgorithmRecord>();
 
-      DataPointRecordVector dataPointRecords = analysisRecord.dataPointRecords();
-      ASSERT_EQ(1u,dataPointRecords.size());
-      DataPointRecord dataPointRecord = dataPointRecords[0];
+    EXPECT_TRUE(dakotaAlgorithmRecord.isComplete());
+    OptionalFileReferenceRecord frr = dakotaAlgorithmRecord.restartFileReferenceRecord();
+    ASSERT_TRUE(frr);
+    EXPECT_TRUE(boost::filesystem::exists(frr->path()));
+    frr = dakotaAlgorithmRecord.outFileReferenceRecord();
+    ASSERT_TRUE(frr);
+    EXPECT_TRUE(boost::filesystem::exists(frr->path()));
+    ASSERT_TRUE(dakotaAlgorithmRecord.jobUUID());
+    dakotaJobUUID = dakotaAlgorithmRecord.jobUUID().get();
+    EXPECT_NO_THROW(runManager.getJob(dakotaJobUUID));
 
-      EXPECT_TRUE(dataPointRecord.isComplete());
-      EXPECT_FALSE(dataPointRecord.failed());
-      EXPECT_FALSE(dataPointRecord.directory().empty());
-      EXPECT_TRUE(boost::filesystem::exists(dataPointRecord.directory()));
-      EXPECT_FALSE(dataPointRecord.responseValues().empty());
-      frr = dataPointRecord.osmInputDataRecord();
-      ASSERT_TRUE(frr);
-      EXPECT_TRUE(boost::filesystem::exists(frr->path()));
-      frr = dataPointRecord.idfInputDataRecord();
-      ASSERT_TRUE(frr);
-      EXPECT_TRUE(boost::filesystem::exists(frr->path()));
-      frr = dataPointRecord.sqlOutputDataRecord();
-      EXPECT_FALSE(frr);
-      frr = dataPointRecord.xmlOutputDataRecord();
-      EXPECT_FALSE(frr);
-      ASSERT_TRUE(dataPointRecord.topLevelJobUUID());
-      dataPointJobUUID = dataPointRecord.topLevelJobUUID().get();
-      EXPECT_NO_THROW(runManager.getJob(dataPointJobUUID));
-    }
+    DataPointRecordVector dataPointRecords = analysisRecord.dataPointRecords();
+    ASSERT_EQ(1u,dataPointRecords.size());
+    DataPointRecord dataPointRecord = dataPointRecords[0];
+
+    EXPECT_TRUE(dataPointRecord.isComplete());
+    EXPECT_FALSE(dataPointRecord.failed());
+    EXPECT_FALSE(dataPointRecord.directory().empty());
+    EXPECT_TRUE(boost::filesystem::exists(dataPointRecord.directory()));
+    EXPECT_FALSE(dataPointRecord.responseValues().empty());
+    frr = dataPointRecord.osmInputDataRecord();
+    ASSERT_TRUE(frr);
+    EXPECT_TRUE(boost::filesystem::exists(frr->path()));
+    frr = dataPointRecord.idfInputDataRecord();
+    ASSERT_TRUE(frr);
+    EXPECT_TRUE(boost::filesystem::exists(frr->path()));
+    frr = dataPointRecord.sqlOutputDataRecord();
+    EXPECT_FALSE(frr);
+    frr = dataPointRecord.xmlOutputDataRecord();
+    EXPECT_FALSE(frr);
+    ASSERT_TRUE(dataPointRecord.topLevelJobUUID());
+    dataPointJobUUID = dataPointRecord.topLevelJobUUID().get();
+    EXPECT_NO_THROW(runManager.getJob(dataPointJobUUID));
 
     // Clear all results
     project.clearAllResults();
