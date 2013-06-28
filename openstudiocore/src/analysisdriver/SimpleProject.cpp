@@ -1110,16 +1110,30 @@ bool SimpleProject::addAlternateModel(const openstudio::path& altModel) {
     else {
       int index = -1;
       DiscreteVariable dvar = ivar.cast<DiscreteVariable>();
-      for (int i = 0, n = dvar.numPerturbations(false); i < n; ++i) {
+      int n = dvar.numPerturbations(false);
+      for (int i = 0; i < n; ++i) {
         if (dvar.getPerturbation(i).optionalCast<NullPerturbation>()) {
           index = i;
           break;
         }
       }
+      // ETH: This used to always push a null perturbation if there wasn't one. That is 
+      // inconsistent with how fixed measures were implemented. May want to revive this by 
+      // adding a non-selected null perturbation to fixed measures, but then code for 
+      // recognizing fixed measures will have to change. (Right now fixed measures 
+      // == 1 non-null perturbation. May want it also to be okay to have 1 non-null followed
+      // but an un-selected null.)
       if (index == -1) {
-        // no null perturbation -- add it to bottom so doesn't invalidate anything
-        dvar.push(NullPerturbation());
-        index = dvar.numPerturbations(false) - 1;
+        if (n == 1) {
+          // fixed measure, use it (have to use something)
+          index = 0;
+        }
+        else {
+          LOG(Warn,"Unexpectedly encountered discrete variable with multiple non-null options.");
+          // no null perturbation -- add it to bottom so doesn't invalidate anything
+          dvar.push(NullPerturbation());
+          index = dvar.numPerturbations(false) - 1;
+        }
       }
       variableValues.push_back(QVariant(index));
     }
