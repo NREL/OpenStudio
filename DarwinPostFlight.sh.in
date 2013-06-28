@@ -36,16 +36,6 @@ cp "$ruby_install_dir/Plugins/OpenStudio/Startup.rb" "$SU8_support_dir/SketchUp/
 cp "$config_file" "$SU8_support_dir/SketchUp/Plugins/OpenStudio/OpenStudio-config.rb"
 
 
-#---------- Install plugin for SketchUp 7 ----------
-# Check for the SketchUp 7 Application Support directory
-SU7_support_dir="/Library/Application Support/Google SketchUp 7"
-mkdir -p "$SU7_support_dir/SketchUp/Plugins/OpenStudio"
-# copy the plugin into the directory
-cp "$ruby_install_dir/Plugins/OpenStudio.rb" "$SU7_support_dir/SketchUp/Plugins/OpenStudio.rb"
-cp "$ruby_install_dir/Plugins/OpenStudio/Startup.rb" "$SU7_support_dir/SketchUp/Plugins/OpenStudio/Startup.rb"
-cp "$config_file" "$SU7_support_dir/SketchUp/Plugins/OpenStudio/OpenStudio-config.rb"
-
-
 #---------- Installation Directory Icon ----------
 icon="$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/$(printf 'Icon\r')"
 touch "$icon"
