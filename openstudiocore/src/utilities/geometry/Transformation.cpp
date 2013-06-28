@@ -393,4 +393,25 @@ namespace openstudio{
     return os;
   }
 
+
+  Transformation createRotation(const Vector3d& axis, double radians)
+  {
+    return Transformation::rotation(axis, radians);
+  }
+
+  Transformation createRotation(const Point3d& origin, const Vector3d& axis, double radians)
+  {
+    return Transformation::rotation(origin, axis, radians);
+  }
+
+  Transformation createRotation(const EulerAngles& angles)
+  {
+    return Transformation::rotation(angles);
+  }
+
+  Transformation createTranslation(const Vector3d& translation)
+  {
+    return Transformation::translation(translation);
+  }
+
 } // openstudio

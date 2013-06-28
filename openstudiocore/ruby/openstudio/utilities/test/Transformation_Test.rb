@@ -111,6 +111,20 @@ class Transformation_Test < Test::Unit::TestCase
     
   end
   
+  def test_translation
+    # the static method translation was being hidden by the instance method, created free function createTranslation to get around this
+
+    vector = OpenStudio::Vector3d.new(1,2,3)
+    
+    transformation = OpenStudio::createTranslation(vector)
+    
+    translation = transformation.translation
+    
+    assert(translation.x == 1)
+    assert(translation.y == 2)
+    assert(translation.z == 3)
+  end
+  
 end
 
 
