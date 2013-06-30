@@ -1,5 +1,6 @@
 /**********************************************************************
  *  Copyright (c) 2008-2010, Alliance for Sustainable Energy.
+ *  Copyright (c) 2013, The Pennsylvania State University.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -382,6 +383,7 @@ namespace contam
       rz.setSystem(true);
       rz.setVariableContaminants(true);
       rz.name = QString("AHS_%1(Rec)").arg(nr);
+      zoneMap[rz.name.toStdString()] = rz.nr;
       openstudio::contam::prj::Zone sz;
       sz.nr = rz.nr+1;
       sz.pl = 1;
@@ -389,6 +391,7 @@ namespace contam
       sz.setSystem(true);
       sz.setVariableContaminants(true);
       sz.name = QString("AHS_%1(Sup)").arg(nr);
+      zoneMap[sz.name.toStdString()] = sz.nr;
       // Store the zone numbers in the ahs
       ahs.zone_r = rz.nr;
       ahs.zone_s = sz.nr;

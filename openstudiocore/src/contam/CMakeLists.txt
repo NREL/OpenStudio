@@ -78,14 +78,6 @@ TARGET_LINK_LIBRARIES( OsmToPrj
   openstudio_contam
 )
 
-#add_executable(OsmToWpb OsmToWpb.cpp)
-#
-#TARGET_LINK_LIBRARIES( OsmToWpb
-#  ${${target_name}_depends}
-#  openstudio_osversion
-#  openstudio_contam
-#)
-
 add_executable(PrjToOsm PrjToOsm.cpp)
 
 TARGET_LINK_LIBRARIES( PrjToOsm

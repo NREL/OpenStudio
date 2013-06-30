@@ -1,5 +1,6 @@
 /**********************************************************************
 *  Copyright (c) 2008-2010, Alliance for Sustainable Energy.
+*  Copyright (c) 2013, The Pennsylvania State University.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
