@@ -46,7 +46,6 @@ namespace detail {
 OPENSTUDIO_ENUM( FilterClauseRecordType,
   ((ModelFilterClauseRecord)(ModelFilterClauseRecord)(0))
   ((ModelObjectFilterClauseRecord)(ModelObjectFilterClauseRecord)(1))
-  ((StandardsFilterClauseRecord)(StandardsFilterClauseRecord)(2))
 );
 
 class PROJECT_API FilterClauseRecord : public ClauseRecord {

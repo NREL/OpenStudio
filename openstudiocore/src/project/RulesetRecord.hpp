@@ -42,7 +42,6 @@ namespace detail {
  *  \relates RulesetRecord */
 OPENSTUDIO_ENUM(RulesetRecordType,
                 ((ModelRulesetRecord)(ModelRulesetRecord)(0))
-                ((StandardsRulesetRecord)(StandardsRulesetRecord)(1))
                 );
 
 /** \class RulesetRecordColumns

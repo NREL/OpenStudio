@@ -49,8 +49,6 @@ class ActionClauseRecord;
  *  \relates RuleRecord */
 OPENSTUDIO_ENUM(RuleRecordType,
                 ((ModelRuleRecord)(ModelRuleRecord)(0))
-                ((StandardsRuleRecord)(StandardsRuleRecord)(1))
-                ((StandardsAttributeCheckRuleRecord)(StandardsAttributeCheckRuleRecord)(2))
                 );
 
 /** \class RuleRecordColumns

@@ -1797,6 +1797,64 @@ namespace detail {
     save();
   	bool test = this->commitTransaction();
     BOOST_ASSERT(test);
+
+    LOG(Info,"Removing all standards rule and ruleset information.");
+
+    didStartTransaction = startTransaction();
+    BOOST_ASSERT(didStartTransaction);
+
+    // remove RulesetRecord entries with rulesetRecordType == 1
+    query.prepare(QString::fromStdString("DELETE FROM RulesetRecords WHERE rulesetRecordType=1"));
+    assertExec(query);
+    query.clear();
+
+    save();
+  	test = this->commitTransaction();
+    BOOST_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    BOOST_ASSERT(didStartTransaction);
+
+    // remove RuleRecord entries with ruleRecordType > 0
+    query.prepare(QString::fromStdString("DELETE FROM RuleRecords WHERE ruleRecordType>0"));
+    assertExec(query);
+    query.clear();
+
+    save();
+  	test = this->commitTransaction();
+    BOOST_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    BOOST_ASSERT(didStartTransaction);
+
+    // remove ClauseRecord entries with (clauseRecordType == 0 AND filterClauseRecordType == 2) OR
+    // (clauseRecordType == 1 AND actionClauseRecordType == 2)
+    query.prepare(QString::fromStdString("DELETE FROM ClauseRecords WHERE (clauseRecordType=0 AND " +
+        "filterClauseRecordType=2) OR (clauseRecordType=1 AND actionClauseRecordType=2)"));
+    assertExec(query);
+    query.clear();
+
+    save();
+  	test = this->commitTransaction();
+    BOOST_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    BOOST_ASSERT(didStartTransaction);
+
+    // remove orphaned join records
+    query.prepare(QString::fromStdString("DELETE FROM Ruleset_Rule_JoinRecords j WHERE (SELECT COUNT(*) " + 
+      "FROM RulesetRecords r WHERE r.id=j.leftId)=0"));
+    assertExec(query);
+    query.clear();
+
+    query.prepare(QString::fromStdString("DELETE FROM Rule_Clause_JoinRecords j WHERE (SELECT COUNT(*) " + 
+      "FROM RuleRecords r WHERE r.id=j.leftId)=0"));
+    assertExec(query);
+    query.clear();
+
+    save();
+  	test = this->commitTransaction();
+    BOOST_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::setProjectDatabaseRecord(const ProjectDatabaseRecord& projectDatabaseRecord)
