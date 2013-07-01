@@ -235,7 +235,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ZoneHVACLowTemperatureRadiantElectric","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACLowTemperatureRadiantElectric","Heating Setpoint Temperature","heatingSetpointTemperature",false,"Temperature",OptionalDouble(),OptionalDouble()},
     {"ZoneHVACLowTempRadiantConstFlow","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
-    {"ZoneHVACLowTempRadiantConstFlow","Pump Flow Rate","pumpFlowRateSchedule",true,"",0.0,1.0},
+    {"ZoneHVACLowTempRadiantConstFlow","Pump Flow Rate","pumpFlowRateSchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACLowTempRadiantVarFlow","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACPackagedTerminalAirConditioner","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACPackagedTerminalAirConditioner","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},

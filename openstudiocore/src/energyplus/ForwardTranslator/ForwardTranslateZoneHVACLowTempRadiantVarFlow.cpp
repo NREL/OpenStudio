@@ -110,7 +110,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
 		//loop through all the surfaces, adding them and their flow fractions (weighted per-area)
 
 		BOOST_FOREACH(const Space& space, spaces){
-				double totalAreaOfSurfaces = 0;
+		double totalAreaOfSurfaces = 0;
     std::vector<Surface> surfaces = space.surfaces();
     BOOST_FOREACH(const Surface& surface, surfaces)
     {
@@ -126,7 +126,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
             
             IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
           
-            BOOST_ASSERT(group.numFields() == 1);
+            BOOST_ASSERT(group.numFields() == 2);
             
             group.setString(0, surface.name().get());
             
