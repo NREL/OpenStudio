@@ -246,13 +246,8 @@ TEST_F(AnalysisDriverFixture, FSUDace_CVT_Continuous) {
   // RUN ANALYSIS
   ProjectDatabase database = getCleanDatabase("FSUDaceCVT_Continuous");
   AnalysisDriver analysisDriver(database);
-  CurrentAnalysis currentAnalysis = analysisDriver.run(
-      analysis,
-      AnalysisRunOptions(analysisDriver.database().path().parent_path(),
-                         dakotaExePath(),
-                         4,
-                         QueuePausingBehavior::NoPause,
-                         toPath(rubyOpenStudioDir())));
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
   EXPECT_TRUE(analysisDriver.waitForFinished());
   boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
   ASSERT_TRUE(jobErrors);
@@ -295,13 +290,8 @@ TEST_F(AnalysisDriverFixture, FSUDace_CVT_MixedOsmIdf) {
                       seedModel);
   ProjectDatabase database = getCleanDatabase("FSUDaceCVT_MixedOsmIdf");
   AnalysisDriver analysisDriver = AnalysisDriver(database);
-  CurrentAnalysis currentAnalysis = analysisDriver.run(
-      analysis,
-      AnalysisRunOptions(analysisDriver.database().path().parent_path(),
-                         dakotaExePath(),
-                         4,
-                         QueuePausingBehavior::NoPause,
-                         toPath(rubyOpenStudioDir())));
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
   EXPECT_TRUE(analysisDriver.waitForFinished());
   boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
   ASSERT_TRUE(jobErrors);

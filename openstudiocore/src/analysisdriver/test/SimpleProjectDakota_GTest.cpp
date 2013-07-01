@@ -177,68 +177,69 @@ TEST_F(AnalysisDriverFixture,SimpleProject_DakotaClearAllResults) {
     dataPointJobUUID = dataPointRecord.topLevelJobUUID().get();
     EXPECT_NO_THROW(runManager.getJob(dataPointJobUUID));
 
-    // Clear all results
-    project.clearAllResults();
-    project.save();
+  }
 
-    // Check DakotaAlgorithm, DataPoint, and records for expected state
-    EXPECT_FALSE(algorithm.isComplete());
-    EXPECT_EQ(-1,algorithm.iter());
-    EXPECT_FALSE(algorithm.failed());
-    EXPECT_FALSE(algorithm.restartFileReference());
-    EXPECT_FALSE(algorithm.outFileReference());
-    EXPECT_FALSE(algorithm.job());
+  // Clear all results
+  project.clearAllResults();
+  project.save();
 
-    ASSERT_EQ(1u,analysis.dataPoints().size());
-    EXPECT_FALSE(dataPoint.isComplete());
-    EXPECT_FALSE(dataPoint.failed());
-    EXPECT_TRUE(dataPoint.responseValues().empty());
-    EXPECT_TRUE(dataPoint.directory().empty());
-    EXPECT_FALSE(dataPoint.osmInputData());
-    EXPECT_FALSE(dataPoint.idfInputData());
-    EXPECT_FALSE(dataPoint.sqlOutputData());
-    ASSERT_FALSE(dataPoint.xmlOutputData());
-    EXPECT_FALSE(dataPoint.model());
-    EXPECT_FALSE(dataPoint.workspace());
-    EXPECT_FALSE(dataPoint.sqlFile());
-    EXPECT_TRUE(dataPoint.outputAttributes().empty());
-    EXPECT_FALSE(dataPoint.topLevelJob());
+  // Check DakotaAlgorithm, DataPoint, and records for expected state
+  EXPECT_FALSE(algorithm.isComplete());
+  EXPECT_EQ(-1,algorithm.iter());
+  EXPECT_FALSE(algorithm.failed());
+  EXPECT_FALSE(algorithm.restartFileReference());
+  EXPECT_FALSE(algorithm.outFileReference());
+  EXPECT_FALSE(algorithm.job());
 
-    {
-      AnalysisRecord analysisRecord = project.analysisRecord();
-      RunManager runManager = project.runManager();
+  ASSERT_EQ(1u,analysis.dataPoints().size());
+  EXPECT_FALSE(dataPoint.isComplete());
+  EXPECT_FALSE(dataPoint.failed());
+  EXPECT_TRUE(dataPoint.responseValues().empty());
+  EXPECT_TRUE(dataPoint.directory().empty());
+  EXPECT_FALSE(dataPoint.osmInputData());
+  EXPECT_FALSE(dataPoint.idfInputData());
+  EXPECT_FALSE(dataPoint.sqlOutputData());
+  ASSERT_FALSE(dataPoint.xmlOutputData());
+  EXPECT_FALSE(dataPoint.model());
+  EXPECT_FALSE(dataPoint.workspace());
+  EXPECT_FALSE(dataPoint.sqlFile());
+  EXPECT_TRUE(dataPoint.outputAttributes().empty());
+  EXPECT_FALSE(dataPoint.topLevelJob());
 
-      OptionalAlgorithmRecord algorithmRecord = analysisRecord.algorithmRecord();
-      ASSERT_TRUE(algorithmRecord);
-      ASSERT_TRUE(algorithmRecord.get().optionalCast<DakotaAlgorithmRecord>());
-      DakotaAlgorithmRecord dakotaAlgorithmRecord = algorithmRecord->cast<DakotaAlgorithmRecord>();
+  {
+    AnalysisRecord analysisRecord = project.analysisRecord();
+    RunManager runManager = project.runManager();
 
-      EXPECT_FALSE(dakotaAlgorithmRecord.isComplete());
-      OptionalFileReferenceRecord frr = dakotaAlgorithmRecord.restartFileReferenceRecord();
-      EXPECT_FALSE(frr);
-      frr = dakotaAlgorithmRecord.outFileReferenceRecord();
-      EXPECT_FALSE(frr);
-      EXPECT_FALSE(dakotaAlgorithmRecord.jobUUID());
-      EXPECT_ANY_THROW(runManager.getJob(dakotaJobUUID));
+    OptionalAlgorithmRecord algorithmRecord = analysisRecord.algorithmRecord();
+    ASSERT_TRUE(algorithmRecord);
+    ASSERT_TRUE(algorithmRecord.get().optionalCast<DakotaAlgorithmRecord>());
+    DakotaAlgorithmRecord dakotaAlgorithmRecord = algorithmRecord->cast<DakotaAlgorithmRecord>();
 
-      DataPointRecordVector dataPointRecords = analysisRecord.dataPointRecords();
-      ASSERT_EQ(1u,dataPointRecords.size());
-      DataPointRecord dataPointRecord = dataPointRecords[0];
+    EXPECT_FALSE(dakotaAlgorithmRecord.isComplete());
+    OptionalFileReferenceRecord frr = dakotaAlgorithmRecord.restartFileReferenceRecord();
+    EXPECT_FALSE(frr);
+    frr = dakotaAlgorithmRecord.outFileReferenceRecord();
+    EXPECT_FALSE(frr);
+    EXPECT_FALSE(dakotaAlgorithmRecord.jobUUID());
+    EXPECT_ANY_THROW(runManager.getJob(dakotaJobUUID));
 
-      EXPECT_FALSE(dataPointRecord.isComplete());
-      EXPECT_FALSE(dataPointRecord.failed());
-      EXPECT_TRUE(dataPointRecord.directory().empty());
-      EXPECT_TRUE(dataPointRecord.responseValues().empty());
-      frr = dataPointRecord.osmInputDataRecord();
-      EXPECT_FALSE(frr);
-      frr = dataPointRecord.idfInputDataRecord();
-      EXPECT_FALSE(frr);
-      frr = dataPointRecord.sqlOutputDataRecord();
-      EXPECT_FALSE(frr);
-      frr = dataPointRecord.xmlOutputDataRecord();
-      EXPECT_FALSE(frr);
-      EXPECT_FALSE(dataPointRecord.topLevelJobUUID());
-      EXPECT_ANY_THROW(runManager.getJob(dataPointJobUUID));
-    }
+    DataPointRecordVector dataPointRecords = analysisRecord.dataPointRecords();
+    ASSERT_EQ(1u,dataPointRecords.size());
+    DataPointRecord dataPointRecord = dataPointRecords[0];
+
+    EXPECT_FALSE(dataPointRecord.isComplete());
+    EXPECT_FALSE(dataPointRecord.failed());
+    EXPECT_TRUE(dataPointRecord.directory().empty());
+    EXPECT_TRUE(dataPointRecord.responseValues().empty());
+    frr = dataPointRecord.osmInputDataRecord();
+    EXPECT_FALSE(frr);
+    frr = dataPointRecord.idfInputDataRecord();
+    EXPECT_FALSE(frr);
+    frr = dataPointRecord.sqlOutputDataRecord();
+    EXPECT_FALSE(frr);
+    frr = dataPointRecord.xmlOutputDataRecord();
+    EXPECT_FALSE(frr);
+    EXPECT_FALSE(dataPointRecord.topLevelJobUUID());
+    EXPECT_ANY_THROW(runManager.getJob(dataPointJobUUID));
   }
 }
