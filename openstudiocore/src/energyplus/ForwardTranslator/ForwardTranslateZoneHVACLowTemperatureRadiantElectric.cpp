@@ -171,8 +171,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTemperatureRad
 		m_idfObjects.push_back(_surfaceGroup);
   
   // Field Maximum Electrical Power to Panel
-  
-		if( value = modelObject.maximumElectricalPowertoPanel() )
+  if( modelObject.isMaximumElectricalPowertoPanelAutosized() )
+  {
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ElectricFields::MaximumElectricalPowertoPanel,"Autosize");
+  }
+	else if( value = modelObject.maximumElectricalPowertoPanel() )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ElectricFields::MaximumElectricalPowertoPanel,value.get());
   }

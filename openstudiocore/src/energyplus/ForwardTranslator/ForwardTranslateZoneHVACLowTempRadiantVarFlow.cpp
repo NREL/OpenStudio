@@ -181,8 +181,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
   }
 
 		//field Hydronic Tubing Length
-		
-		if( value = modelObject.hydronicTubingLength() )
+	if( modelObject.isHydronicTubingLengthAutosized() )
+  {
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingLength,"Autosize");
+  }		
+	else if( value = modelObject.hydronicTubingLength() )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingLength,value.get());
   }
@@ -205,8 +208,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
     CoilHeatingLowTempRadiantVarFlow coilHeat = *coilOptionalHeating;
 		
 				// field Maximum Hot Water Flow
-		  
-				if( value = coilHeat.maximumHotWaterFlow() )
+        if( coilHeat.isMaximumHotWaterFlowAutosized() )
+				{
+						idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumHotWaterFlow,"Autosize");
+				}				
+        else if( value = coilHeat.maximumHotWaterFlow() )
 				{
 						idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumHotWaterFlow,value.get());
 				}
@@ -262,8 +268,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
     CoilCoolingLowTempRadiantVarFlow coilCool = *coilOptionalCooling;
 
 				// Field Maximum Cold Water Flow
-				
-				if( value = coilCool.maximumColdWaterFlow() )
+        if( coilCool.isMaximumColdWaterFlowAutosized() )
+				{
+						idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumColdWaterFlow,"Autosize");
+				}
+        else if( value = coilCool.maximumColdWaterFlow() )
 				{
 						idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumColdWaterFlow,value.get());
 				}

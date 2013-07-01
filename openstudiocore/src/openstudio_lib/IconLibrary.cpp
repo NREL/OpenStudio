@@ -85,10 +85,10 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_Water_Baseboard).value()] = new QPixmap(":images/coilheatingwater_baseboard.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_FourPipeFanCoil).value()] = new QPixmap(":images/four_pipe_fan_coil.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric).value()] = new QPixmap(":images/zonehvac_low_temperature_radiant_electric.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow).value()] = new QPixmap(":images/lowtempradiant_varflow.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow).value()] = new QPixmap(":images/lowtempradiant_constflow.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner).value()] = new QPixmap(":images/system_type_1.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump).value()] = new QPixmap(":images/system_type_2.png");
-  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow).value()] = new QPixmap(":images/lowtempradiant_constflow.png");
-  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow).value()] = new QPixmap(":images/lowtempradiant_varflow.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump).value()] = new QPixmap(":images/watertoairHP.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_UnitHeater).value()] = new QPixmap(":images/heat_coil-uht.png");
 
@@ -204,11 +204,11 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_Water_Baseboard).value()] = new QPixmap(":images/mini_icons/coilheatingwater_baseboard.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_FourPipeFanCoil).value()] = new QPixmap(":images/mini_icons/four_pipe_fan_coil.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric).value()] = new QPixmap(":images/mini_icons/zonehvac_low_temperature_radiant_electric.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow).value()] = new QPixmap(":images/mini_icons/lowtempradiant_varflow.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow).value()] = new QPixmap(":images/mini_icons/lowtempradiant_constflow.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump).value()] = new QPixmap(":images/mini_icons/watertoairHP.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner).value()] = new QPixmap(":images/mini_icons/system_type_1.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump).value()] = new QPixmap(":images/mini_icons/system_type_2.png");
-  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow).value()] = new QPixmap(":images/mini_icons/lowtempradiant_constflow.png");
-  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow).value()] = new QPixmap(":images/mini_icons/lowtempradiant_varflow.png");
-  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump).value()] = new QPixmap(":images/mini_icons/watertoairHP.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_UnitHeater).value()] = new QPixmap(":images/mini_icons/heat_coil-uht.png");}
 
 }
