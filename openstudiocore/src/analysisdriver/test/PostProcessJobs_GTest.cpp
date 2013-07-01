@@ -211,9 +211,9 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_OpenStudioPostProcessAndResponses) 
 
   // CREATE A DATAPOINT TO RUN
   std::vector<QVariant> values;
-  values.push(QVariant(double(0.2))); // wwr
-  values.push(QVariant(double(1.0))); // offset of windows from floor
-  values.push(QVariant(double(1.0))); // overhang projection factor
+  values.push_back(QVariant(double(0.2))); // wwr
+  values.push_back(QVariant(double(1.0))); // offset of windows from floor
+  values.push_back(QVariant(double(1.0))); // overhang projection factor
   OptionalDataPoint oDataPoint = problem.createDataPoint(values);
   ASSERT_TRUE(oDataPoint);
   bool test = analysis.addDataPoint(*oDataPoint);
@@ -225,9 +225,6 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_OpenStudioPostProcessAndResponses) 
   AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
   CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
   EXPECT_TRUE(analysisDriver.waitForFinished());
-  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-  ASSERT_TRUE(jobErrors);
-  EXPECT_TRUE(jobErrors->errors().empty());
   EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
   Table summary = currentAnalysis.analysis().summaryTable();
   EXPECT_EQ(2u,summary.nRows());

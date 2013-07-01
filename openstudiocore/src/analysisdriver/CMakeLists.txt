@@ -45,6 +45,7 @@ IF(DAKOTA_FOUND)
     test/ParameterStudyAlgorithm_GTest.cpp  
     test/PSUADEDaceAlgorithm_GTest.cpp
     test/SamplingAlgorithm_GTest.cpp
+    test/SimpleProjectDakota_GTest.cpp
   )
 ENDIF(DAKOTA_FOUND)
 
