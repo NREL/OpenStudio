@@ -1829,8 +1829,9 @@ namespace detail {
 
     // remove ClauseRecord entries with (clauseRecordType == 0 AND filterClauseRecordType == 2) OR
     // (clauseRecordType == 1 AND actionClauseRecordType == 2)
-    query.prepare(QString::fromStdString("DELETE FROM ClauseRecords WHERE (clauseRecordType=0 AND " +
-        "filterClauseRecordType=2) OR (clauseRecordType=1 AND actionClauseRecordType=2)"));
+    query.prepare(QString::fromStdString(std::string("DELETE FROM ClauseRecords WHERE ") + 
+        std::string("(clauseRecordType=0 AND filterClauseRecordType=2) OR ") + 
+        std::string("(clauseRecordType=1 AND actionClauseRecordType=2)")));
     assertExec(query);
     query.clear();
 
@@ -1842,13 +1843,13 @@ namespace detail {
     BOOST_ASSERT(didStartTransaction);
 
     // remove orphaned join records
-    query.prepare(QString::fromStdString("DELETE FROM Ruleset_Rule_JoinRecords j WHERE (SELECT COUNT(*) " + 
-      "FROM RulesetRecords r WHERE r.id=j.leftId)=0"));
+    query.prepare(QString::fromStdString(std::string("DELETE FROM Ruleset_Rule_JoinRecords WHERE ") + 
+      std::string("NOT EXISTS (SELECT * FROM RulesetRecords r WHERE r.id=leftId)")));
     assertExec(query);
     query.clear();
 
-    query.prepare(QString::fromStdString("DELETE FROM Rule_Clause_JoinRecords j WHERE (SELECT COUNT(*) " + 
-      "FROM RuleRecords r WHERE r.id=j.leftId)=0"));
+    query.prepare(QString::fromStdString(std::string("DELETE FROM Rule_Clause_JoinRecords WHERE ") +
+      std::string("NOT EXISTS (SELECT * FROM RuleRecords r WHERE r.id=leftId)")));
     assertExec(query);
     query.clear();
 
