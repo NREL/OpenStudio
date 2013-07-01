@@ -32,78 +32,8 @@ SET( ${target_name}_src
   Ruleset_Impl.hpp
   Ruleset.cpp
   RulesetEnums.hpp
-  RulesetOption.hpp
-  RulesetOption_Impl.hpp
-  RulesetOption.cpp
 
   ConcreteRulesetObjects.hpp
-  StandardsRulesetEnums.hpp
-  StandardsRuleset.hpp
-  StandardsRuleset_Impl.hpp
-  StandardsRuleset.cpp
-  StandardsRulesetOption.hpp
-  StandardsRulesetOption_Impl.hpp
-  StandardsRulesetOption.cpp
-  StandardsEnumRulesetOption.hpp
-  StandardsEnumRulesetOption_Impl.hpp
-  StandardsEnumRulesetOption.cpp
-  StandardsRule.hpp
-  StandardsRule_Impl.hpp
-  StandardsRule.cpp
-  StandardsAttributeCheckRule.hpp
-  StandardsAttributeCheckRule_Impl.hpp
-  StandardsAttributeCheckRule.cpp
-  StandardsFilterClause.hpp
-  StandardsFilterClause_Impl.hpp
-  StandardsFilterClause.cpp
-  StandardsFilterAvailableModel.hpp
-  StandardsFilterAvailableModel_Impl.hpp
-  StandardsFilterAvailableModel.cpp
-  StandardsFilterAvailableObject.hpp
-  StandardsFilterAvailableObject_Impl.hpp
-  StandardsFilterAvailableObject.cpp
-  StandardsFilterObjectAttribute.hpp
-  StandardsFilterObjectAttribute_Impl.hpp
-  StandardsFilterObjectAttribute.cpp
-  StandardsFilterObjectBooleanAttribute.hpp
-  StandardsFilterObjectBooleanAttribute_Impl.hpp
-  StandardsFilterObjectBooleanAttribute.cpp
-  StandardsFilterObjectEnumAttribute.hpp
-  StandardsFilterObjectEnumAttribute_Impl.hpp
-  StandardsFilterObjectEnumAttribute.cpp
-  StandardsFilterObjectNumericalAttribute.hpp
-  StandardsFilterObjectNumericalAttribute_Impl.hpp
-  StandardsFilterObjectNumericalAttribute.cpp
-  StandardsFilterObjectDoubleAttribute.hpp
-  StandardsFilterObjectDoubleAttribute_Impl.hpp
-  StandardsFilterObjectDoubleAttribute.cpp
-  StandardsFilterObjectIntegerAttribute.hpp
-  StandardsFilterObjectIntegerAttribute_Impl.hpp
-  StandardsFilterObjectIntegerAttribute.cpp
-  StandardsFilterRulesetOption.hpp
-  StandardsFilterRulesetOption_Impl.hpp
-  StandardsFilterRulesetOption.cpp
-  StandardsActionClause.hpp
-  StandardsActionClause_Impl.hpp
-  StandardsActionClause.cpp
-  StandardsActionCloneModel.hpp
-  StandardsActionCloneModel_Impl.hpp
-  StandardsActionCloneModel.cpp
-  StandardsActionGetAttribute.hpp
-  StandardsActionGetAttribute_Impl.hpp
-  StandardsActionGetAttribute.cpp
-  StandardsActionGetObjects.hpp
-  StandardsActionGetObjects_Impl.hpp
-  StandardsActionGetObjects.cpp
-  StandardsActionRuleResult.hpp
-  StandardsActionRuleResult_Impl.hpp
-  StandardsActionRuleResult.cpp
-  StandardsActionRuleSatisfied.hpp
-  StandardsActionRuleSatisfied_Impl.hpp
-  StandardsActionRuleSatisfied.cpp
-  StandardsActionRuleViolated.hpp
-  StandardsActionRuleViolated_Impl.hpp
-  StandardsActionRuleViolated.cpp
 
   ModelRuleset.hpp
   ModelRuleset_Impl.hpp
@@ -164,30 +94,6 @@ SET( ${target_name}_moc
   FilterClause_Impl.hpp
   ActionClause_Impl.hpp
   Ruleset_Impl.hpp
-  RulesetOption_Impl.hpp
-
-  StandardsRuleset_Impl.hpp
-  StandardsRulesetOption_Impl.hpp
-  StandardsEnumRulesetOption_Impl.hpp
-  StandardsRule_Impl.hpp
-  StandardsAttributeCheckRule_Impl.hpp
-  StandardsFilterClause_Impl.hpp
-  StandardsFilterAvailableModel_Impl.hpp
-  StandardsFilterAvailableObject_Impl.hpp
-  StandardsFilterObjectAttribute_Impl.hpp
-  StandardsFilterObjectNumericalAttribute_Impl.hpp
-  StandardsFilterObjectBooleanAttribute_Impl.hpp
-  StandardsFilterObjectDoubleAttribute_Impl.hpp
-  StandardsFilterObjectEnumAttribute_Impl.hpp
-  StandardsFilterObjectIntegerAttribute_Impl.hpp
-  StandardsFilterRulesetOption_Impl.hpp
-  StandardsActionClause_Impl.hpp
-  StandardsActionCloneModel_Impl.hpp
-  StandardsActionGetAttribute_Impl.hpp
-  StandardsActionGetObjects_Impl.hpp
-  StandardsActionRuleResult_Impl.hpp
-  StandardsActionRuleSatisfied_Impl.hpp
-  StandardsActionRuleViolated_Impl.hpp
 
   ModelRuleset_Impl.hpp
   ModelRule_Impl.hpp
@@ -211,11 +117,6 @@ SET( ${target_name}_test_src
   test/ModelRule_GTest.cpp
   test/ModelRuleset_GTest.cpp
   test/ModelObjectFilterClause_GTest.cpp
-  test/StandardsRuleset_GTest.cpp
-  test/StandardsRulesetOption_GTest.cpp
-  test/StandardsRule_GTest.cpp
-  test/StandardsFilterClause_GTest.cpp
-  test/StandardsActionClause_GTest.cpp
   test/UserScript_GTest.cpp
   test/OSArgument_GTest.cpp
   test/EmbeddedRuby_GTest.cpp
@@ -227,7 +128,6 @@ SET( ${target_name}_swig_src
 
 SET( ${target_name}_depends
   openstudio_osversion
-  openstudio_standardsinterface
 )
 
 

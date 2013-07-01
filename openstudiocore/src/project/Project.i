@@ -212,7 +212,6 @@ OBJECTRECORD_WRAP(URLSearchPathRecord);
 
 OBJECTRECORD_WRAP(WorkflowRecord);
 
-OBJECTRECORD_WRAP(RulesetOptionRecord);
 OBJECTRECORD_WRAP(ClauseRecord);
 OBJECTRECORD_WRAP(FilterClauseRecord);
 OBJECTRECORD_WRAP(ActionClauseRecord);
@@ -231,25 +230,6 @@ OBJECTRECORD_WRAP(ModelObjectFilterStringAttributeRecord);
 OBJECTRECORD_WRAP(ModelObjectFilterTypeRecord);
 OBJECTRECORD_WRAP(ModelRuleRecord);
 OBJECTRECORD_WRAP(ModelRulesetRecord);
-  
-OBJECTRECORD_WRAP(StandardsRulesetOptionRecord);
-OBJECTRECORD_WRAP(StandardsFilterClauseRecord);
-OBJECTRECORD_WRAP(StandardsActionClauseRecord);
-OBJECTRECORD_WRAP(StandardsActionCloneModelRecord);
-OBJECTRECORD_WRAP(StandardsActionRuleResultRecord);
-OBJECTRECORD_WRAP(StandardsActionRuleSatisfiedRecord);
-OBJECTRECORD_WRAP(StandardsActionRuleViolatedRecord);
-OBJECTRECORD_WRAP(StandardsEnumRulesetOptionRecord);
-OBJECTRECORD_WRAP(StandardsFilterAvailableModelRecord);
-OBJECTRECORD_WRAP(StandardsFilterAvailableObjectRecord);
-OBJECTRECORD_WRAP(StandardsFilterObjectAttributeRecord);
-OBJECTRECORD_WRAP(StandardsFilterObjectBooleanAttributeRecord);
-OBJECTRECORD_WRAP(StandardsFilterObjectDoubleAttributeRecord);
-OBJECTRECORD_WRAP(StandardsFilterObjectEnumAttributeRecord);
-OBJECTRECORD_WRAP(StandardsFilterObjectIntegerAttributeRecord);
-OBJECTRECORD_WRAP(StandardsRuleRecord);
-OBJECTRECORD_WRAP(StandardsAttributeCheckRuleRecord);
-OBJECTRECORD_WRAP(StandardsRulesetRecord);
 OBJECTRECORD_WRAP(OSArgumentRecord);
 
 OBJECTRECORD_WRAP(DiscretePerturbationRecord);

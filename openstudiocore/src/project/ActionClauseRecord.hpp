@@ -46,7 +46,6 @@ namespace detail {
 OPENSTUDIO_ENUM( ActionClauseRecordType,
     ((ModelActionClauseRecord)(ModelActionClauseRecord)(0))
     ((ModelObjectActionClauseRecord)(ModelObjectActionClauseRecord)(1))
-    ((StandardsActionClauseRecord)(StandardsActionClauseRecord)(2))
 );
 
 /** ActionClauseRecord

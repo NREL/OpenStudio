@@ -28,8 +28,6 @@
 #include <project/Rule_Clause_JoinRecord.hpp>
 #include <project/Rule_Clause_JoinRecord_Impl.hpp>
 #include <project/ModelRuleRecord.hpp>
-#include <project/StandardsRuleRecord.hpp>
-#include <project/StandardsAttributeCheckRuleRecord.hpp>
 
 #include <ruleset/Rule.hpp>
 #include <ruleset/FilterClause.hpp>
@@ -325,12 +323,6 @@ namespace project {
     switch (ruleRecordType){
       case RuleRecordType::ModelRuleRecord:
         result = ModelRuleRecord(query, database);
-        break;
-      case RuleRecordType::StandardsRuleRecord:
-        result = StandardsRuleRecord(query, database);
-        break;
-      case RuleRecordType::StandardsAttributeCheckRuleRecord:
-        result = StandardsAttributeCheckRuleRecord(query, database);
         break;
       default:
         LOG(Error, "Unknown ruleRecordType " << ruleRecordType);

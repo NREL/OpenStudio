@@ -110,8 +110,7 @@
                 
                 <tr>
                 <td>Building Analyzer: Ruleset</td>
-                <td>Electronic representation of standards rulesets written with controlled vocabulary/data
-                dictionary terms</td>
+                <td>Electronic representation of measures for changing or analyzing buildng energy models</td>
                 <td><a href="./ruleset/html/index.html">ruleset</a></td>
                 <td><a href="../ruby/rdocify/OpenStudioRuleset/doc/index.html">OpenStudio::Ruleset</a></td>
                 </tr>                
@@ -160,22 +159,6 @@
                 <td><a href="./sdd/html/index.html">sdd</a></td>
                 <td><a href="../ruby/rdocify/OpenStudioSDD/doc/index.html">OpenStudio::SDD</a></td>
                 </tr>                
-                
-                <tr>
-                <td>Translator: Standards Interface</td>
-                <td>High-level interface for interacting with building models (including the OpenStudio
-                Building Model) using building energy standards controlled vocabulary.</td>
-                <td><a href="./standardsinterface/html/index.html">standardsinterface</a></td>
-                <td><a href="../ruby/rdocify/OpenStudioStandardsInterface/doc/index.html">OpenStudio::Standardsinterface</a></td>
-                </tr>                  
-                
-                <tr>
-                <td>Building Analyzer: Rules Engine</td>
-                <td>Automatic application of building energy standard rulesets to building models wrapped by a
-                standards interface.</td>
-                <td><a href="./rulesengine/html/index.html">rulesengine</a></td>
-                <td><a href="../ruby/rdocify/OpenStudioRulesEngine/doc/index.html">OpenStudio::Rulesengine</a></td>
-                </tr>        
                 
                 <tr>
                 <td>OpenStudio Application Components</td>
@@ -242,11 +225,6 @@
                 <tr>
                 <td><a href="./generateiddfactory/html/index.html">generateiddfactory</a></td>
                 <td>Internal application for generating the IddFactory</td>
-                </tr>
-                
-                <tr>
-                <td><a href="./generatedatadictionary/html/index.html">generatedatadictionary</a></td>
-                <td>Internal application for generating standardsinterface DataDictionary</td>
                 </tr>
                 
                 </table>

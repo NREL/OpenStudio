@@ -5,10 +5,8 @@
 %module openstudioanalysis
 #endif
 
-
 #define UTILITIES_API
 #define MODEL_API
-#define STANDARDSINTERFACE_API
 #define RULESET_API
 #define ANALYSIS_API
 
@@ -18,12 +16,10 @@
 %import <model/Model.i>
 %import <ruleset/Ruleset.i>
 %import <runmanager/lib/RunManager.i>
-%import <standardsinterface/StandardsInterface.i>
 
 %ignore openstudio::detail;
 %ignore openstudio::model::detail;
 %ignore openstudio::runmanager::detail;
-%ignore openstudio::standardsinterface::detail;
 %ignore openstudio::ruleset::detail;
 %ignore openstudio::analysis::detail;
 
@@ -48,7 +44,6 @@
   
   using namespace openstudio;
   using namespace openstudio::model;
-  using namespace openstudio::standardsinterface;
   using namespace openstudio::ruleset;
   using namespace openstudio::analysis;
   

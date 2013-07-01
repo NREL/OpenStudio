@@ -39,7 +39,7 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture, TimeDependentValuation_Construction) {
   // load file
-  openstudio::path p = resourcesPath()/toPath("standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ11.csv");
+  openstudio::path p = resourcesPath()/toPath("utilities/Filetypes/TDV_2008_kBtu_CZ13.csv");
   OptionalTimeDependentValuationFile oTdvFile = TimeDependentValuationFile::load(p);
   ASSERT_TRUE(oTdvFile);
   TimeDependentValuationFile tdvFile = *oTdvFile;
@@ -70,6 +70,6 @@ TEST_F(ModelFixture, TimeDependentValuation_Construction) {
 
   EXPECT_TRUE(tdv.makeUrlRelative());
   EXPECT_TRUE(tdv.file()); // file gets cached!
-  EXPECT_TRUE(tdv.makeUrlAbsolute(resourcesPath()/toPath("standardsinterface/CEC_TDVs")));
+  EXPECT_TRUE(tdv.makeUrlAbsolute(resourcesPath()/toPath("utilities/Filetypes/")));
   EXPECT_TRUE(tdv.file());
 }

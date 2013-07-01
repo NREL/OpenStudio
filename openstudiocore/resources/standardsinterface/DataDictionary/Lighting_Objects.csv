@@ -1,8 +1,0 @@
-Lighting Control Device,Section 146 Table 146-C
-Lighting System,
-Schedule,New: A schedule defines the value of an attribute as it varies over the course of the design year.
-Space,"T24:  none
- 
-New: (taken from BESM building model object definition for Space)
- 
-Space is a functional area (exterior) or volume (interior) that can be assigned a uniform set of properties such as heating and cooling conditioning setpoints and/or equipment, people, and lighting densities and schedules, and is geometrically defined by physical or virtual space boundary surfaces. An exterior area can be defined by a single space boundary surface. An interior volume must be fully enclosed by space boundaries.  A Space may consists of one or more Rooms."

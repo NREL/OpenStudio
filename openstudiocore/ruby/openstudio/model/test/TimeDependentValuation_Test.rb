@@ -27,7 +27,7 @@ class TimeDependentValuation_Test < Test::Unit::TestCase
   
   def test_TimeDependentValuation_Construction
   
-    tdvPath = OpenStudio::Path.new($OpenStudio_ResourcePath + "standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ09.csv")
+    tdvPath = OpenStudio::Path.new($OpenStudio_ResourcePath + "utilities/Filetypes/TDV_2008_kBtu_CZ13.csv")
     oTdvFile = OpenStudio::TimeDependentValuationFile::load(tdvPath)
     assert((not oTdvFile.empty?))
     tdvFile = oTdvFile.get
@@ -43,7 +43,7 @@ class TimeDependentValuation_Test < Test::Unit::TestCase
     assert((tdv.activeBuildingSector == "Commercial".to_BuildingSector))
     assert_equal(3,tdv.availableFuelTypes.size)
     tdv.makeUrlRelative
-    assert_equal("TDV_2008_kBtu_CZ09.csv",tdv.path.get.to_s)
+    assert_equal("TDV_2008_kBtu_CZ13.csv",tdv.path.get.to_s)
         
   end
   
@@ -93,7 +93,7 @@ class TimeDependentValuation_Test < Test::Unit::TestCase
     end
     
     # load TDV file
-    tdvPath = OpenStudio::Path.new($OpenStudio_ResourcePath + "standardsinterface/CEC_TDVs/TDV_2008_kBtu_CZ13.csv")
+    tdvPath = OpenStudio::Path.new($OpenStudio_ResourcePath + "utilities/Filetypes/TDV_2008_kBtu_CZ13.csv")
     oTdvFile = OpenStudio::TimeDependentValuationFile::load(tdvPath)
     assert((not oTdvFile.empty?))
     tdvFile = oTdvFile.get

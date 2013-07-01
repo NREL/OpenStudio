@@ -50,8 +50,6 @@
 #include <project/ProblemRecord_Impl.hpp>
 #include <project/RuleRecord.hpp>
 #include <project/RuleRecord_Impl.hpp>
-#include <project/RulesetOptionRecord.hpp>
-#include <project/RulesetOptionRecord_Impl.hpp>
 #include <project/RulesetRecord.hpp>
 #include <project/RulesetRecord_Impl.hpp>
 #include <project/TagRecord.hpp>
@@ -585,7 +583,6 @@ namespace detail {
     FunctionRecord::updatePathData(other,originalBase,newBase);
     ProblemRecord::updatePathData(other,originalBase,newBase);
     RuleRecord::updatePathData(other,originalBase,newBase);
-    RulesetOptionRecord::updatePathData(other,originalBase,newBase);
     RulesetRecord::updatePathData(other,originalBase,newBase);
     TagRecord::updatePathData(other,originalBase,newBase);
     URLSearchPathRecord::updatePathData(other,originalBase,newBase);
@@ -713,6 +710,10 @@ namespace detail {
     if (dbv < VersionString("0.11.6")) {
       update_0_11_5_to_0_11_6(dbv);
     }
+
+    if (dbv < VersionString("1.0.1")) {
+      update_1_0_0_to_1_0_1(dbv);
+	}
 
     if ((dbv != osv) || (!dbv.fidelityEqual(osv))) {
       LOG(Info,"Updating database version to " << osv << ".");
@@ -916,7 +917,6 @@ namespace detail {
     createTable<ProblemRecord>();
     createTable<ProjectDatabaseRecord>();
     createTable<RuleRecord>();
-    createTable<RulesetOptionRecord>();
     createTable<RulesetRecord>();
     createTable<TagRecord>();
     createTable<OSArgumentRecord>();
@@ -1778,6 +1778,83 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
+    BOOST_ASSERT(test);
+  }
+
+  void ProjectDatabase_Impl::update_1_0_0_to_1_0_1(const VersionString& startVersion) {
+    bool didStartTransaction = startTransaction();
+    BOOST_ASSERT(didStartTransaction);
+
+    LOG(Info,"Dropping deprecated table RulesetOptionRecords.");
+
+    ProjectDatabase database(this->shared_from_this());
+    QSqlQuery query(*(database.qSqlDatabase()));
+
+    query.prepare(QString("DROP TABLE RulesetOptionRecords"));
+    assertExec(query);
+    query.clear();
+
+    save();
+  	bool test = this->commitTransaction();
+    BOOST_ASSERT(test);
+
+    LOG(Info,"Removing all standards rule and ruleset information.");
+
+    didStartTransaction = startTransaction();
+    BOOST_ASSERT(didStartTransaction);
+
+    // remove RulesetRecord entries with rulesetRecordType == 1
+    query.prepare(QString::fromStdString("DELETE FROM RulesetRecords WHERE rulesetRecordType=1"));
+    assertExec(query);
+    query.clear();
+
+    save();
+  	test = this->commitTransaction();
+    BOOST_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    BOOST_ASSERT(didStartTransaction);
+
+    // remove RuleRecord entries with ruleRecordType > 0
+    query.prepare(QString::fromStdString("DELETE FROM RuleRecords WHERE ruleRecordType>0"));
+    assertExec(query);
+    query.clear();
+
+    save();
+  	test = this->commitTransaction();
+    BOOST_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    BOOST_ASSERT(didStartTransaction);
+
+    // remove ClauseRecord entries with (clauseRecordType == 0 AND filterClauseRecordType == 2) OR
+    // (clauseRecordType == 1 AND actionClauseRecordType == 2)
+    query.prepare(QString::fromStdString(std::string("DELETE FROM ClauseRecords WHERE ") + 
+        std::string("(clauseRecordType=0 AND filterClauseRecordType=2) OR ") + 
+        std::string("(clauseRecordType=1 AND actionClauseRecordType=2)")));
+    assertExec(query);
+    query.clear();
+
+    save();
+  	test = this->commitTransaction();
+    BOOST_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    BOOST_ASSERT(didStartTransaction);
+
+    // remove orphaned join records
+    query.prepare(QString::fromStdString(std::string("DELETE FROM Ruleset_Rule_JoinRecords WHERE ") + 
+      std::string("NOT EXISTS (SELECT * FROM RulesetRecords r WHERE r.id=leftId)")));
+    assertExec(query);
+    query.clear();
+
+    query.prepare(QString::fromStdString(std::string("DELETE FROM Rule_Clause_JoinRecords WHERE ") +
+      std::string("NOT EXISTS (SELECT * FROM RuleRecords r WHERE r.id=leftId)")));
+    assertExec(query);
+    query.clear();
+
+    save();
+  	test = this->commitTransaction();
     BOOST_ASSERT(test);
   }
 

@@ -22,13 +22,10 @@
 #include <project/JoinRecord.hpp>
 #include <project/ProjectDatabase.hpp>
 #include <project/ModelObjectActionClauseRecord.hpp>
-#include <project/StandardsActionClauseRecord.hpp>
 
 #include <ruleset/ActionClause.hpp>
 #include <ruleset/ModelObjectActionClause.hpp>
 #include <ruleset/ModelObjectActionClause_Impl.hpp>
-#include <ruleset/StandardsActionClause.hpp>
-#include <ruleset/StandardsActionClause_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
 
@@ -100,7 +97,7 @@ namespace project {
     {
       ClauseRecord_Impl::saveLastValues();
 
-      m_lastActionClauseRecordType = m_actionClauseRecordType;  
+      m_lastActionClauseRecordType = m_actionClauseRecordType;
     }
 
     void ActionClauseRecord_Impl::revertToLastValues()
@@ -123,7 +120,7 @@ namespace project {
   {
     BOOST_ASSERT(getImpl<detail::ActionClauseRecord_Impl>());
   }
-  
+
   std::vector<ActionClauseRecord> ActionClauseRecord::getActionClauseRecords(ProjectDatabase& database)
   {
     std::vector<ActionClauseRecord> result;
@@ -168,9 +165,6 @@ namespace project {
       case ActionClauseRecordType::ModelObjectActionClauseRecord:
         result = ModelObjectActionClauseRecord::factoryFromQuery(query, database);
         break;
-      case ActionClauseRecordType::StandardsActionClauseRecord:
-        result = StandardsActionClauseRecord::factoryFromQuery(query, database);
-        break;
       default:
         LOG(Error, "Unknown actionClauseRecordType " << actionClauseRecordType);
     }
@@ -182,14 +176,12 @@ namespace project {
   {
     if (action.optionalCast<ruleset::ModelObjectActionClause>()){
       return ModelObjectActionClauseRecord::factoryFromAction(action.cast<ruleset::ModelObjectActionClause>(), projectDatabase);
-    }else if (action.optionalCast<ruleset::StandardsActionClause>()){
-      return StandardsActionClauseRecord::factoryFromAction(action.cast<ruleset::StandardsActionClause>(), projectDatabase);
     }
 
     BOOST_ASSERT(false);
     return ActionClauseRecord(boost::shared_ptr<detail::ActionClauseRecord_Impl>());
   }
-      
+
   openstudio::ruleset::ActionClause ActionClauseRecord::actionClause() const
   {
     return this->getImpl<detail::ActionClauseRecord_Impl>()->actionClause();

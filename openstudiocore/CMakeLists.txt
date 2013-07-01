@@ -131,12 +131,9 @@ SET( project_directories
   ruleset
   runmanager/lib
   runmanager/app
-  generatedatadictionary
-  standardsinterface
   analysis
   project
   analysisdriver
-  rulesengine  
   resultsviewer
   model_editor
   openstudio_lib
@@ -776,10 +773,8 @@ export(TARGETS openstudio_runmanager
                openstudio_modeleditor
                openstudio_utilities
                openstudio_energyplus
-               openstudio_rulesengine
                openstudio_analysisdriver
                openstudio_ruleset
-               openstudio_standardsinterface
                openstudio_analysis
                openstudio_radiance
                openstudio_gbxml

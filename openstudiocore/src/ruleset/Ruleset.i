@@ -15,16 +15,13 @@
 %import <utilities/core/CommonImport.i>
 %import <utilities/Utilities.i>
 %import <model/Model.i>
-%import <standardsinterface/StandardsInterface.i>
 
 %ignore openstudio::detail;
 %ignore openstudio::model::detail;
-%ignore openstudio::standardsinterface::detail;
 %ignore openstudio::ruleset::detail;
 
 %{
   #include <ruleset/RulesetEnums.hpp>
-  #include <ruleset/StandardsRulesetEnums.hpp>
 
   #include <ruleset/ConcreteRulesetObjects.hpp>
 
@@ -38,8 +35,6 @@
   #include <ruleset/UtilityUserScript.hpp>
   #include <ruleset/RubyUserScriptArgumentGetter.hpp>
 
-  #include <standardsinterface/DataDictionary.hpp>
-
   #include <model/Component.hpp>
   #include <model/ConcreteModelObjects.hpp>
 
@@ -47,14 +42,10 @@
 
   using namespace openstudio;
   using namespace openstudio::model;
-  using namespace openstudio::standardsinterface;
   using namespace openstudio::ruleset;
 %}
 
 %include <ruleset/RulesetEnums.hpp>
-%include <ruleset/StandardsRulesetEnums.hpp>
-
-%template(OptionalStandardsRulesetModelType) boost::optional<openstudio::ruleset::StandardsRulesetModelType>;
 
 %define SWIG_RULESETOBJECT(_name)
   %ignore std::vector<openstudio::ruleset::_name>::vector(size_type);
@@ -86,11 +77,6 @@
 // uber-base class
 SWIG_RULESETOBJECT(RulesetObject);
 
-// options
-SWIG_RULESETOBJECT(RulesetOption);
-SWIG_RULESETOBJECT(StandardsRulesetOption);
-SWIG_RULESETOBJECT(StandardsEnumRulesetOption);
-
 // rule base class
 SWIG_RULESETOBJECT(Rule);
 
@@ -105,36 +91,18 @@ SWIG_FILTERCLAUSE(ModelObjectFilterNumericAttribute);
 SWIG_FILTERCLAUSE(ModelObjectFilterStringAttribute);
 SWIG_FILTERCLAUSE(ModelObjectFilterRelationship);
 SWIG_FILTERCLAUSE(ModelObjectFilterType);
-SWIG_FILTERCLAUSE(StandardsFilterClause);
-SWIG_FILTERCLAUSE(StandardsFilterAvailableModel);
-SWIG_FILTERCLAUSE(StandardsFilterAvailableObject);
-SWIG_FILTERCLAUSE(StandardsFilterObjectAttribute);
-SWIG_FILTERCLAUSE(StandardsFilterObjectNumericalAttribute);
-SWIG_FILTERCLAUSE(StandardsFilterObjectBooleanAttribute);
-SWIG_FILTERCLAUSE(StandardsFilterObjectDoubleAttribute);
-SWIG_FILTERCLAUSE(StandardsFilterObjectEnumAttribute);
-SWIG_FILTERCLAUSE(StandardsFilterObjectIntegerAttribute);
-SWIG_FILTERCLAUSE(StandardsFilterRulesetOption);
 
 SWIG_ACTIONCLAUSE(ActionClause);
 SWIG_ACTIONCLAUSE(ModelObjectActionClause);
 SWIG_ACTIONCLAUSE(ModelObjectActionSetAttribute);
 SWIG_ACTIONCLAUSE(ModelObjectActionSetRelationship);
-SWIG_ACTIONCLAUSE(StandardsActionClause);
-SWIG_ACTIONCLAUSE(StandardsActionCloneModel);
-SWIG_ACTIONCLAUSE(StandardsActionRuleResult);
-SWIG_ACTIONCLAUSE(StandardsActionRuleSatisfied);
-SWIG_ACTIONCLAUSE(StandardsActionRuleViolated);
 
 // rules
 SWIG_RULESETOBJECT(ModelRule);
-SWIG_RULESETOBJECT(StandardsRule);
-SWIG_RULESETOBJECT(StandardsAttributeCheckRule);
 
 // rulesets
 SWIG_RULESETOBJECT(Ruleset);
 SWIG_RULESETOBJECT(ModelRuleset);
-SWIG_RULESETOBJECT(StandardsRuleset);
 
 //user scripts
 %ignore std::vector<openstudio::ruleset::OSArgument>::vector(size_type);

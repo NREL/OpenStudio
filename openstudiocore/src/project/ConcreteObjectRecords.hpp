@@ -39,21 +39,6 @@
 #include <project/ModelObjectFilterTypeRecord.hpp>
 #include <project/ModelRuleRecord.hpp>
 #include <project/ModelRulesetRecord.hpp>
-#include <project/StandardsActionCloneModelRecord.hpp>
-#include <project/StandardsActionRuleSatisfiedRecord.hpp>
-#include <project/StandardsActionRuleViolatedRecord.hpp>
-#include <project/StandardsAttributeCheckRuleRecord.hpp>
-#include <project/StandardsEnumRulesetOptionRecord.hpp>
-#include <project/StandardsFilterAvailableModelRecord.hpp>
-#include <project/StandardsFilterAvailableObjectRecord.hpp>
-#include <project/StandardsFilterObjectBooleanAttributeRecord.hpp>
-#include <project/StandardsFilterObjectDoubleAttributeRecord.hpp>
-#include <project/StandardsFilterObjectEnumAttributeRecord.hpp>
-#include <project/StandardsFilterObjectIntegerAttributeRecord.hpp>
-#include <project/StandardsFilterRulesetOptionRecord.hpp>
-#include <project/StandardsRuleRecord.hpp>
-#include <project/StandardsRulesetOptionRecord.hpp>
-#include <project/StandardsRulesetRecord.hpp>
 #include <project/OSArgumentRecord.hpp>
 
 // analysis
@@ -98,21 +83,6 @@
 #include <project/ModelObjectFilterTypeRecord_Impl.hpp>
 #include <project/ModelRuleRecord_Impl.hpp>
 #include <project/ModelRulesetRecord_Impl.hpp>
-#include <project/StandardsActionCloneModelRecord_Impl.hpp>
-#include <project/StandardsActionRuleSatisfiedRecord_Impl.hpp>
-#include <project/StandardsActionRuleViolatedRecord_Impl.hpp>
-#include <project/StandardsAttributeCheckRuleRecord_Impl.hpp>
-#include <project/StandardsEnumRulesetOptionRecord_Impl.hpp>
-#include <project/StandardsFilterAvailableModelRecord_Impl.hpp>
-#include <project/StandardsFilterAvailableObjectRecord_Impl.hpp>
-#include <project/StandardsFilterObjectBooleanAttributeRecord_Impl.hpp>
-#include <project/StandardsFilterObjectDoubleAttributeRecord_Impl.hpp>
-#include <project/StandardsFilterObjectEnumAttributeRecord_Impl.hpp>
-#include <project/StandardsFilterObjectIntegerAttributeRecord_Impl.hpp>
-#include <project/StandardsFilterRulesetOptionRecord_Impl.hpp>
-#include <project/StandardsRuleRecord_Impl.hpp>
-#include <project/StandardsRulesetOptionRecord_Impl.hpp>
-#include <project/StandardsRulesetRecord_Impl.hpp>
 #include <project/OSArgumentRecord_Impl.hpp>
 
 // analysis

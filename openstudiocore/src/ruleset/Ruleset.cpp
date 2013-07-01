@@ -20,7 +20,6 @@
 #include <ruleset/Ruleset.hpp>
 #include <ruleset/Ruleset_Impl.hpp>
 #include <ruleset/ModelRuleset.hpp>
-#include <ruleset/StandardsRuleset.hpp>
 
 #include <utilities/core/Path.hpp>
 #include <utilities/core/PathHelpers.hpp>
@@ -120,8 +119,6 @@ boost::optional<Ruleset> Ruleset::factoryFromXml(const QDomElement& element)
   std::string xmlElementName = toString(element.tagName());
   if (xmlElementName == ModelRuleset::xmlElementName()){
     result = ModelRuleset(element);
-  }else if (xmlElementName == StandardsRuleset::xmlElementName()){
-    result = StandardsRuleset(element);
   }
 
   return result;
