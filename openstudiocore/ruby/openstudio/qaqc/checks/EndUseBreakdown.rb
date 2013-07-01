@@ -8,6 +8,13 @@ def enduse_pcts_check(model,sql)
   enduse_pcts_check.name = "Energy Enduses Check"
   enduse_pcts_check.category = "Xcel EDA"
   enduse_pcts_check.description = "Check that heating and cooling energy make up the expected percentage of total energy consumption." 
+  
+  #make sure all required data are available
+  if sql.electricityCooling.empty? or sql.naturalGasCooling.empty? or sql.otherFuelCooling.empty? or sql.totalSiteEnergy.empty? or sql.electricityHeating.empty? or sql.naturalGasHeating.empty? or sql.otherFuelHeating.empty?
+    enduse_pcts_check.add_flag(Flag.new($eda,"Enduse energy data unavailable; check not run"))
+    return enduse_pcts_check
+  end
+  
   pct_cooling = (sql.electricityCooling.get + sql.naturalGasCooling.get + sql.otherFuelCooling.get) / sql.totalSiteEnergy.get   
   pct_heating = (sql.electricityHeating.get + sql.naturalGasHeating.get + sql.otherFuelHeating.get) / sql.totalSiteEnergy.get
   #flag if 0% < pct_cooling < 20%

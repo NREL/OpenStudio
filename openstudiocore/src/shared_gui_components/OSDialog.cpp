@@ -129,10 +129,10 @@ void OSDialog::paintEvent(QPaintEvent *event)
 
   painter.setRenderHint(QPainter::Antialiasing);
 
-  QImage leftHeader = QImage(":/shared_gui_components/images/image_header.png");
+  QImage leftHeader = QImage(":/images/image_header.png");
   painter.drawImage(0,0,leftHeader);  
 
-  QImage centerHeader = QImage(":/shared_gui_components/images/header-backgnd-1px-wide.png");
+  QImage centerHeader = QImage(":/images/header-backgnd-1px-wide.png");
 
   for(int i = leftHeader.width();i < width();i++ ){
     painter.drawImage(i,0,centerHeader);  

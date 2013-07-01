@@ -49,7 +49,7 @@ class GetBCLSpaceType < OpenStudio::Ruleset::ModelUserScript
     # Check Auth Key in LocalBCL instance
     library = OpenStudio::LocalBCL::instance()
     if (library::prodAuthKey().empty?)
-      if not runner.checkRequiredArguments(arguments(model),user_arguments)
+      if not runner.validateUserArguments(arguments(model),user_arguments)
         return false
       end
       

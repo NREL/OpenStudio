@@ -711,8 +711,8 @@ namespace detail {
       update_0_11_5_to_0_11_6(dbv);
     }
 
-    if (dbv < VersionString("1.0.0")) {
-      update_0_11_6_to_1_0_0(dbv);
+    if (dbv < VersionString("1.0.1")) {
+      update_1_0_0_to_1_0_1(dbv);
 	}
 
     if ((dbv != osv) || (!dbv.fidelityEqual(osv))) {
@@ -1781,7 +1781,7 @@ namespace detail {
     BOOST_ASSERT(test);
   }
 
-  void ProjectDatabase_Impl::update_0_11_6_to_1_0_0(const VersionString& startVersion) {
+  void ProjectDatabase_Impl::update_1_0_0_to_1_0_1(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
     BOOST_ASSERT(didStartTransaction);
 

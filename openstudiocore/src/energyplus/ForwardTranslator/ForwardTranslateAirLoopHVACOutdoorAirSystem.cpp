@@ -24,6 +24,8 @@
 #include <model/ControllerOutdoorAir_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
+#include <model/Schedule.hpp>
+#include <model/Schedule_Impl.hpp>
 
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 
@@ -103,9 +105,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
   availabilityManagerScheduledIdf.createName();
   m_idfObjects.push_back(availabilityManagerScheduledIdf);
 
-  IdfObject scheduleCompactIdf = IdfObject(openstudio::IddObjectType::Schedule_Compact);
-  scheduleCompactIdf.createName();
-  m_idfObjects.push_back(scheduleCompactIdf);
+  Schedule alwaysOn = modelObject.model().alwaysOnDiscreteSchedule();
+  IdfObject alwaysOnIdf = translateAndMapModelObject(alwaysOn).get();
 
   s = availabilityManagerListIdf.getString(openstudio::AvailabilityManagerAssignmentListFields::Name);
   if(s)
@@ -117,12 +118,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
                                        availabilityManagerScheduledIdf.iddObject().name());
   availabilityManagerListIdf.setString(1 + openstudio::AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,
                                        availabilityManagerScheduledIdf.name().get());
-  availabilityManagerScheduledIdf.setString(openstudio::AvailabilityManager_ScheduledFields::ScheduleName,scheduleCompactIdf.name().get());
-
-  scheduleCompactIdf.setString(2,"Through: 12/31");
-  scheduleCompactIdf.setString(3,"For: AllDays");
-  scheduleCompactIdf.setString(4,"Until: 24:00");
-  scheduleCompactIdf.setString(5,"1.0");
+  availabilityManagerScheduledIdf.setString(openstudio::AvailabilityManager_ScheduledFields::ScheduleName,alwaysOnIdf.name().get());
 
   // OA Node List
   s = modelObject.outboardOANode()->name();

@@ -513,10 +513,18 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       IdfObject scheduleCompact(openstudio::IddObjectType::Schedule_Compact);
       scheduleCompact.setName(modelObject.name().get() + " Thermostat Schedule");
       m_idfObjects.push_back(scheduleCompact);
+      scheduleCompact.setString(1,modelObject.name().get() + " Thermostat Schedule Type Limits");
       scheduleCompact.setString(2,"Through: 12/31");
       scheduleCompact.setString(3,"For: AllDays");
       scheduleCompact.setString(4,"Until: 24:00");
       scheduleCompact.setString(5,"4");
+
+      IdfObject scheduleTypeLimits(openstudio::IddObjectType::ScheduleTypeLimits);
+      scheduleTypeLimits.setName(modelObject.name().get() + " Thermostat Schedule Type Limits");
+      m_idfObjects.push_back(scheduleTypeLimits);
+      scheduleTypeLimits.setString(1,"0");
+      scheduleTypeLimits.setString(2,"4");
+      scheduleTypeLimits.setString(3,"DISCRETE");
 
       zoneControlThermostat.setString(ZoneControl_ThermostatFields::ControlTypeScheduleName,scheduleCompact.name().get());
 

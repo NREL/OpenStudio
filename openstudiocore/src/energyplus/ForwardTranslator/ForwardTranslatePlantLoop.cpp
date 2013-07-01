@@ -32,6 +32,8 @@
 #include <model/Mixer_Impl.hpp>
 #include <model/PumpVariableSpeed.hpp>
 #include <model/PumpVariableSpeed.hpp>
+#include <model/Schedule.hpp>
+#include <model/Schedule_Impl.hpp>
 #include <model/WaterToAirComponent.hpp>
 #include <model/WaterToAirComponent_Impl.hpp>
 #include <model/WaterToWaterComponent.hpp>
@@ -311,25 +313,15 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
       }
     }
   }
-    
-  IdfObject scheduleCompact(openstudio::IddObjectType::Schedule_Compact);
-
-  if( heatingComponents.size() > 0 || coolingComponents.size() > 0 )
-  {
-    scheduleCompact.setName(plantLoop.name().get() + " On Schedule");
-    m_idfObjects.push_back(scheduleCompact);
-
-    scheduleCompact.setString(2,"Through: 12/31");
-    scheduleCompact.setString(3,"For: AllDays");
-    scheduleCompact.setString(4,"Until: 24:00");
-    scheduleCompact.setString(5,"1.0");
-  }
 
   boost::optional<IdfObject> _optionalHeatingPlantEquipmentList;
   boost::optional<IdfObject> _optionalCoolingPlantEquipmentList;
 
   if( heatingComponents.size() > 0 )
   {
+    Schedule alwaysOn = plantLoop.model().alwaysOnDiscreteSchedule();
+    IdfObject scheduleCompact = translateAndMapModelObject(alwaysOn).get();
+
     IdfObject _heatingOperation(IddObjectType::PlantEquipmentOperation_HeatingLoad);
     _heatingOperation.setName(plantLoop.name().get() + " Heating Operation Scheme");
     m_idfObjects.push_back(_heatingOperation);
@@ -354,6 +346,9 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
   if( coolingComponents.size() > 0 )
   {
+    Schedule alwaysOn2 = plantLoop.model().alwaysOnDiscreteSchedule();
+    IdfObject scheduleCompact2 = translateAndMapModelObject(alwaysOn2).get();
+    
     IdfObject _coolingOperation(IddObjectType::PlantEquipmentOperation_CoolingLoad);
     _coolingOperation.setName(plantLoop.name().get() + " Cooling Operation Scheme");
     m_idfObjects.push_back(_coolingOperation);
@@ -373,7 +368,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
     eg = _operationScheme.pushExtensibleGroup();
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType,_coolingOperation.iddObject().name());
     eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName,_coolingOperation.name().get());
-    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,scheduleCompact.name().get());
+    eg.setString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeScheduleName,scheduleCompact2.name().get());
   }
 
   SizingPlant sizingPlant = plantLoop.sizingPlant();

@@ -92,6 +92,50 @@ TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_addToNode) {
   EXPECT_EQ(1u,oaSystem.reliefComponents().size());
 }
 
+TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_remove) {
+  Model model;
+  HeatExchangerAirToAirSensibleAndLatent heatExchangerAirToAirSensibleAndLatent(model);
+
+  AirLoopHVAC loop = addSystemType3(model).cast<AirLoopHVAC>();
+
+  AirLoopHVACOutdoorAirSystem oaSystem = loop.airLoopHVACOutdoorAirSystem().get();
+  
+  Node oaNode = oaSystem.outboardOANode().get();
+  Node reliefNode = oaSystem.outboardReliefNode().get();
+
+  HeatExchangerAirToAirSensibleAndLatent hx1(model);
+  EXPECT_TRUE(hx1.addToNode(oaNode));
+
+  HeatExchangerAirToAirSensibleAndLatent hx2(model);
+  EXPECT_TRUE(hx2.addToNode(oaNode));
+
+  HeatExchangerAirToAirSensibleAndLatent hx3(model);
+  EXPECT_TRUE(hx3.addToNode(reliefNode));
+  
+  oaNode = oaSystem.outdoorAirModelObject()->cast<Node>();
+  reliefNode = oaSystem.reliefAirModelObject()->cast<Node>();
+
+  HeatExchangerAirToAirSensibleAndLatent hx4(model);
+  EXPECT_TRUE(hx4.addToNode(reliefNode));
+
+  HeatExchangerAirToAirSensibleAndLatent hx5(model);
+  EXPECT_TRUE(hx5.addToNode(oaNode));
+
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
+  EvaporativeCoolerDirectResearchSpecial evap(model,schedule);
+  EXPECT_TRUE(evap.addToNode(oaNode));
+  Node inletNode = evap.inletModelObject()->cast<Node>();
+  Node outletNode = evap.outletModelObject()->cast<Node>();
+
+  HeatExchangerAirToAirSensibleAndLatent hx6(model);
+  EXPECT_TRUE(hx6.addToNode(inletNode));
+
+  HeatExchangerAirToAirSensibleAndLatent hx7(model);
+  EXPECT_TRUE(hx7.addToNode(outletNode));
+
+  EXPECT_TRUE(loop.remove().size() > 0);
+}
+
 TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_NominalSupplyAirFlowRate_Quantity) {
   Model model;
   HeatExchangerAirToAirSensibleAndLatent heatExchangerAirToAirSensibleAndLatent(model);

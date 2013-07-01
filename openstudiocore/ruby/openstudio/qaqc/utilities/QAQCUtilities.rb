@@ -127,15 +127,3 @@ def ip_to_si(number, ip_unit_string, si_unit_string)
   #puts "#{ip_quantity} = #{si_quantity}" 
   return si_quantity.value
 end
-
-#get a double from the sql file
-def get_double(openstudio_sql_file,query) 
-  value = openstudio_sql_file.execAndReturnFirstDouble(query)
-  if value.empty?
-    value = "data not found"
-    puts "***Invalid Query:  #{query}"
-  else
-    value = value.get
-  end
-  return value
-end

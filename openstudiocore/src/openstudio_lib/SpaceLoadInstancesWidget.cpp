@@ -18,88 +18,88 @@
 **********************************************************************/
 
 #include <openstudio_lib/SpaceLoadInstancesWidget.hpp>
-#include "../shared_gui_components/OSLineEdit.hpp"
+
+#include <openstudio_lib/IconLibrary.hpp>
+#include <openstudio_lib/ModelObjectItem.hpp>
+#include <openstudio_lib/OSDropZone.hpp>
+#include <openstudio_lib/OSVectorController.hpp>
+
 #include "../shared_gui_components/OSDoubleEdit.hpp"
 #include "../shared_gui_components/OSIntegerEdit.hpp"
-#include <openstudio_lib/OSVectorController.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/IconLibrary.hpp>
+#include "../shared_gui_components/OSLineEdit.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/SpaceLoadInstance.hpp>
-#include <model/SpaceLoadInstance_Impl.hpp>
-#include <model/SpaceLoadDefinition.hpp>
-#include <model/SpaceLoadDefinition_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
 #include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
 #include <model/BuildingStory.hpp>
 #include <model/BuildingStory_Impl.hpp>
+#include <model/Building_Impl.hpp>
 #include <model/DefaultScheduleSet.hpp>
 #include <model/DefaultScheduleSet_Impl.hpp>
-
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/Luminaire.hpp>
-#include <model/Luminaire_Impl.hpp>
 #include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipment_Impl.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipment_Impl.hpp>
-#include <model/HotWaterEquipment.hpp>
-#include <model/HotWaterEquipment_Impl.hpp>
-#include <model/SteamEquipment.hpp>
-#include <model/SteamEquipment_Impl.hpp>
-#include <model/OtherEquipment.hpp>
-#include <model/OtherEquipment_Impl.hpp>
-#include <model/InternalMass.hpp>
-#include <model/InternalMass_Impl.hpp>
-
-#include <model/PeopleDefinition.hpp>
-#include <model/PeopleDefinition_Impl.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/LightsDefinition_Impl.hpp>
-#include <model/LuminaireDefinition.hpp>
-#include <model/LuminaireDefinition_Impl.hpp>
 #include <model/ElectricEquipmentDefinition.hpp>
 #include <model/ElectricEquipmentDefinition_Impl.hpp>
+#include <model/ElectricEquipment_Impl.hpp>
+#include <model/GasEquipment.hpp>
 #include <model/GasEquipmentDefinition.hpp>
 #include <model/GasEquipmentDefinition_Impl.hpp>
+#include <model/GasEquipment_Impl.hpp>
+#include <model/HotWaterEquipment.hpp>
 #include <model/HotWaterEquipmentDefinition.hpp>
 #include <model/HotWaterEquipmentDefinition_Impl.hpp>
-#include <model/SteamEquipmentDefinition.hpp>
-#include <model/SteamEquipmentDefinition_Impl.hpp>
-#include <model/OtherEquipmentDefinition.hpp>
-#include <model/OtherEquipmentDefinition_Impl.hpp>
+#include <model/HotWaterEquipment_Impl.hpp>
+#include <model/InternalMass.hpp>
 #include <model/InternalMassDefinition.hpp>
 #include <model/InternalMassDefinition_Impl.hpp>
-
-#include <utilities/idd/OS_Building_FieldEnums.hxx>
-#include <utilities/idd/OS_SpaceType_FieldEnums.hxx>
-#include <utilities/idd/OS_Space_FieldEnums.hxx>
+#include <model/InternalMass_Impl.hpp>
+#include <model/Lights.hpp>
+#include <model/LightsDefinition.hpp>
+#include <model/LightsDefinition_Impl.hpp>
+#include <model/Lights_Impl.hpp>
+#include <model/Luminaire.hpp>
+#include <model/LuminaireDefinition.hpp>
+#include <model/LuminaireDefinition_Impl.hpp>
+#include <model/Luminaire_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
+#include <model/OtherEquipment.hpp>
+#include <model/OtherEquipmentDefinition.hpp>
+#include <model/OtherEquipmentDefinition_Impl.hpp>
+#include <model/OtherEquipment_Impl.hpp>
+#include <model/People.hpp>
+#include <model/PeopleDefinition.hpp>
+#include <model/PeopleDefinition_Impl.hpp>
+#include <model/People_Impl.hpp>
+#include <model/Schedule.hpp>
+#include <model/Schedule_Impl.hpp>
+#include <model/Space.hpp>
+#include <model/SpaceLoadDefinition.hpp>
+#include <model/SpaceLoadDefinition_Impl.hpp>
+#include <model/SpaceLoadInstance.hpp>
+#include <model/SpaceLoadInstance_Impl.hpp>
+#include <model/SpaceType.hpp>
+#include <model/SpaceType_Impl.hpp>
+#include <model/Space_Impl.hpp>
+#include <model/SteamEquipment.hpp>
+#include <model/SteamEquipmentDefinition.hpp>
+#include <model/SteamEquipmentDefinition_Impl.hpp>
+#include <model/SteamEquipment_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
 
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QGridLayout>
-#include <QStackedWidget>
-#include <QLabel>
-#include <QPushButton>
-#include <QIcon>
-#include <QPixmap>
-#include <QGridLayout>
+#include <utilities/idd/OS_Building_FieldEnums.hxx>
+#include <utilities/idd/OS_People_FieldEnums.hxx>
+#include <utilities/idd/OS_SpaceType_FieldEnums.hxx>
+#include <utilities/idd/OS_Space_FieldEnums.hxx>
+
 #include <QFrame>
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QIcon>
+#include <QLabel>
+#include <QPixmap>
+#include <QPushButton>
+#include <QStackedWidget>
 #include <QTimer>
+#include <QVBoxLayout>
 
 namespace openstudio {
 
@@ -138,7 +138,9 @@ void SpaceLoadInstanceDefinitionVectorController::onReplaceItem(OSItem * current
   }
 }
 
-// SpaceLoadInstanceScheduleVectorController
+/****************************************************************************************************************************
+*                                        SpaceLoadInstanceScheduleVectorController                                          *
+****************************************************************************************************************************/
 
 void SpaceLoadInstanceScheduleVectorController::attach(const model::ModelObject& modelObject)
 {
@@ -378,7 +380,70 @@ void SpaceLoadInstanceScheduleVectorController::onDrop(const OSItemId& itemId)
   }
 }
 
-// SpaceLoadInstanceMiniView
+/****************************************************************************************************************************
+*                                    SpaceLoadInstanceActivityScheduleVectorController                                      *
+****************************************************************************************************************************/
+
+// openstudio::IddObjectType::OS_People
+
+void SpaceLoadInstanceActivityScheduleVectorController::onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle)
+{
+  if(index == OS_PeopleFields::ActivityLevelScheduleName){
+      emit itemIds(makeVector());
+  }
+}
+
+std::vector<OSItemId> SpaceLoadInstanceActivityScheduleVectorController::makeVector()
+{
+  std::vector<OSItemId> result;
+  if(m_modelObject){
+    if(m_modelObject->optionalCast<model::People>()){
+      model::People people = m_modelObject->cast<model::People>();
+      boost::optional<model::Schedule> schedule = people.activityLevelSchedule();
+      if (schedule){
+        result.push_back(modelObjectToItemId(*schedule, false));
+      }
+    }
+  }
+  return result;
+}
+
+void SpaceLoadInstanceActivityScheduleVectorController::onRemoveItem(OSItem* item)
+{
+  if (m_modelObject){
+    if (m_modelObject->optionalCast<model::People>()){
+      m_modelObject->cast<model::People>().resetActivityLevelSchedule();
+    }
+  }
+}
+
+void SpaceLoadInstanceActivityScheduleVectorController::onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId)
+{
+  onDrop(replacementItemId);
+}
+
+void SpaceLoadInstanceActivityScheduleVectorController::onDrop(const OSItemId& itemId)
+{
+  if (m_modelObject){
+    if(m_modelObject->optionalCast<model::People>()){
+      model::People people = m_modelObject->cast<model::People>();
+      boost::optional<model::ModelObject> modelObject = this->getModelObject(itemId);
+      if (modelObject){
+        if (modelObject->optionalCast<model::Schedule>()){
+          if (this->fromComponentLibrary(itemId)){
+            modelObject = modelObject->clone(m_modelObject->model());
+          }
+          model::Schedule schedule = modelObject->cast<model::Schedule>();
+          people.setActivityLevelSchedule(schedule);
+        }
+      }
+    }
+  }
+}
+
+/****************************************************************************************************************************
+*                                                 SpaceLoadInstanceMiniView                                                 *
+****************************************************************************************************************************/
 
 SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInstance& spaceLoadInstance, bool isDefault)
   : m_definitionVectorController(NULL), m_scheduleVectorController(NULL), m_spaceLoadInstance(spaceLoadInstance)
@@ -534,11 +599,46 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
     scheduleStack->setCurrentIndex(scheduleIndex);
   }
 
+  // activity schedule
+  vLayout = new QVBoxLayout();
+
+  m_activityScheduleLabel = new QLabel();
+  m_activityScheduleLabel->setText("Activity Schedule: ");
+  m_activityScheduleLabel->setObjectName("H2");
+  vLayout->addWidget(m_activityScheduleLabel);
+
+  m_activityScheduleVectorController = new SpaceLoadInstanceActivityScheduleVectorController();
+  m_activityScheduleVectorController->attach(m_spaceLoadInstance);
+  m_activityScheduleDropZone = new OSDropZone(m_activityScheduleVectorController);
+  m_activityScheduleDropZone->setMinItems(1);
+  m_activityScheduleDropZone->setMaxItems(1);
+  if(isDefault){
+    m_activityScheduleDropZone->setItemsRemoveable(false);
+    m_activityScheduleDropZone->setItemsAcceptDrops(false);
+  }else{
+    m_activityScheduleDropZone->setItemsRemoveable(false);
+    m_activityScheduleDropZone->setItemsAcceptDrops(true);
+  }
+  vLayout->addWidget(m_activityScheduleDropZone);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout,1,3);
+
   mainGridLayout->setRowMinimumHeight(0, 30);
   mainGridLayout->setRowMinimumHeight(1, 30);
 
   QTimer::singleShot(0, m_definitionVectorController, SLOT(reportItems()));
   QTimer::singleShot(0, m_scheduleVectorController, SLOT(reportItems()));
+
+  if (spaceLoadInstance.optionalCast<model::People>()){
+    QTimer::singleShot(0, m_activityScheduleVectorController, SLOT(reportItems()));
+  }
+  else{
+    m_activityScheduleDropZone->hide();
+    m_activityScheduleLabel->hide();
+  }
+
 }
 
 model::SpaceLoadInstance SpaceLoadInstanceMiniView::spaceLoadInstance() const

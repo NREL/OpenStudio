@@ -129,6 +129,18 @@ namespace openstudio{
   // vector of Transformation
   typedef std::vector<Transformation> TransformationVector;
 
+  /// create rotation about origin defined by axis and angle (radians)
+  UTILITIES_API Transformation createRotation(const Vector3d& axis, double radians);
+
+  /// create rotation about point defined by axis and angle (radians)
+  UTILITIES_API Transformation createRotation(const Point3d& origin, const Vector3d& axis, double radians);
+
+  /// create rotation specified by Euler angles
+  UTILITIES_API Transformation createRotation(const EulerAngles& angles);
+
+  /// create translation along vector
+  UTILITIES_API Transformation createTranslation(const Vector3d& translation);
+
 } // openstudio
 
 #endif //UTILITIES_GEOMETRY_TRANSFORMATION_HPP

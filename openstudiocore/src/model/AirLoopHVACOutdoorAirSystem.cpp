@@ -211,8 +211,11 @@ namespace detail {
     {
       if( OptionalHVACComponent comp = it->optionalCast<HVACComponent>() )
       {
-        comp->disconnect();
-        comp->remove();
+        if( ! it->handle().isNull() )
+        {
+          comp->disconnect();
+          comp->remove();
+        }
       }
     }
 

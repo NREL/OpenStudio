@@ -223,7 +223,7 @@ void LightingScheduleVC::onRemoveItem(OSItem* item)
 {
   if (m_modelObject){
     model::DefaultScheduleSet defaultScheduleSet = m_modelObject->cast<model::DefaultScheduleSet>();
-    defaultScheduleSet.lightingSchedule();
+    defaultScheduleSet.resetLightingSchedule();
   }
 }
 

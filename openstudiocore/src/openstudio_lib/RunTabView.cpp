@@ -175,7 +175,7 @@ RunView::RunView(const model::Model & model,
     m_energyPlusButton->setChecked(true);
   }
 
-  m_toolWarningLabel = new QLabel(openstudio::toQString("<b>Notice:</b> EnergyPlus " + getRequiredEnergyPlusVersion().toString() + " is required and not yet located."));
+  m_toolWarningLabel = new QLabel(openstudio::toQString("<b>Notice:</b> EnergyPlus " + getRequiredEnergyPlusVersion().toString() + " is required and not yet located.  Run File->Scan For Tools to locate."));
   m_toolWarningLabel->hide();
 
   mainLayout->addWidget(m_toolWarningLabel, 2, 1);
