@@ -72,7 +72,6 @@ namespace runmanager {
 
     LOG(Debug, "Parsing tool version number from string: " << pathstr);
 
-    // HERE - Not getting here for Dakota. Also only found Dakota 5.2
     boost::regex reg(".*?V?([0-9]+)[\\.-]([0-9]+)[\\.-]?([0-9]*)([\\.-][0-9]+)?.*");
 
     boost::smatch results;
