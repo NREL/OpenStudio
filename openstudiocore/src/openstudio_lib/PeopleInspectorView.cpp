@@ -340,7 +340,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, const op
 
   bool isConnected = false;
 
-  m_numberofPeopleEdit = new OSQuantityEdit(m_isIP);
+  m_numberofPeopleEdit = new OSQuantityEdit2(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_numberofPeopleEdit, SLOT(onUnitSystemChange(bool)));
   BOOST_ASSERT(isConnected);
   vLayout->addWidget(m_numberofPeopleEdit);
@@ -353,7 +353,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, const op
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_peopleperSpaceFloorAreaEdit = new OSQuantityEdit(m_isIP);
+  m_peopleperSpaceFloorAreaEdit = new OSQuantityEdit2(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_peopleperSpaceFloorAreaEdit, SLOT(onUnitSystemChange(bool)));
   BOOST_ASSERT(isConnected);
   vLayout->addWidget(m_peopleperSpaceFloorAreaEdit);
@@ -366,7 +366,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, const op
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_spaceFloorAreaperPersonEdit = new OSQuantityEdit(m_isIP);
+  m_spaceFloorAreaperPersonEdit = new OSQuantityEdit2(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_spaceFloorAreaperPersonEdit, SLOT(onUnitSystemChange(bool)));
   BOOST_ASSERT(isConnected);
   vLayout->addWidget(m_spaceFloorAreaperPersonEdit);
@@ -380,7 +380,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, const op
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_fractionRadiantEdit = new OSQuantityEdit(m_isIP);
+  m_fractionRadiantEdit = new OSQuantityEdit2(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_fractionRadiantEdit, SLOT(onUnitSystemChange(bool)));
   BOOST_ASSERT(isConnected);
   vLayout->addWidget(m_fractionRadiantEdit);
@@ -393,7 +393,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, const op
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_sensibleHeatFractionEdit = new OSQuantityEdit(m_isIP);
+  m_sensibleHeatFractionEdit = new OSQuantityEdit2(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_sensibleHeatFractionEdit, SLOT(onUnitSystemChange(bool)));
   BOOST_ASSERT(isConnected);
   vLayout->addWidget(m_sensibleHeatFractionEdit);
@@ -406,7 +406,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, const op
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_carbonDioxideGenerationRateEdit = new OSQuantityEdit(m_isIP);
+  m_carbonDioxideGenerationRateEdit = new OSQuantityEdit2(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_carbonDioxideGenerationRateEdit, SLOT(onUnitSystemChange(bool)));
   BOOST_ASSERT(isConnected);
   vLayout->addWidget(m_carbonDioxideGenerationRateEdit);
@@ -444,13 +444,43 @@ void PeopleDefinitionInspectorView::onUpdate()
 
 void PeopleDefinitionInspectorView::attach(openstudio::model::PeopleDefinition& peopleDefinition)
 {
+  m_peopleDefinition = peopleDefinition;
   m_nameEdit->bind(peopleDefinition,"name");
-  m_numberofPeopleEdit->bind(peopleDefinition,"numberofPeople",m_isIP);
-  m_peopleperSpaceFloorAreaEdit->bind(peopleDefinition,"peopleperSpaceFloorArea",m_isIP);
-  m_spaceFloorAreaperPersonEdit->bind(peopleDefinition,"spaceFloorAreaperPerson",m_isIP);
-  m_fractionRadiantEdit->bind(peopleDefinition,"fractionRadiant",m_isIP);
-  m_sensibleHeatFractionEdit->bind(peopleDefinition,"sensibleHeatFraction",m_isIP);
-  m_carbonDioxideGenerationRateEdit->bind(peopleDefinition,"carbonDioxideGenerationRate",m_isIP);
+  m_numberofPeopleEdit->bind(
+      m_isIP,m_peopleDefinition,
+      boost::bind(&model::PeopleDefinition::getNumberofPeople,m_peopleDefinition.get_ptr(),_1),
+      boost::bind(&model::PeopleDefinition::setNumberofPeople,m_peopleDefinition.get_ptr(),_1));
+  m_peopleperSpaceFloorAreaEdit->bind(
+      m_isIP,m_peopleDefinition,
+      boost::bind(&model::PeopleDefinition::getPeopleperSpaceFloorArea,m_peopleDefinition,_1),
+      boost::bind(&model::PeopleDefinition::setPeopleperSpaceFloorArea,m_peopleDefinition,_1));
+  m_spaceFloorAreaperPersonEdit->bind(
+      m_isIP,m_peopleDefinition,
+      boost::bind(&model::PeopleDefinition::getSpaceFloorAreaperPerson,m_peopleDefinition,_1),
+      boost::bind(&model::PeopleDefinition::setSpaceFloorAreaperPerson,m_peopleDefinition,_1));
+  // ETH: Note that this is overkill for this dimensionless value. Should switch to OSDoubleEdit(2).
+  m_fractionRadiantEdit->bind(
+      m_isIP,m_peopleDefinition,
+      boost::bind(&model::PeopleDefinition::getFractionRadiant,m_peopleDefinition,_1),
+      boost::bind(&model::PeopleDefinition::setFractionRadiant,m_peopleDefinition,_1));
+  m_sensibleHeatFractionEdit->bind(
+      m_isIP,m_peopleDefinition,
+      boost::bind(&model::PeopleDefinition::getSensibleHeatFraction,m_peopleDefinition,_1),
+      boost::bind(&model::PeopleDefinition::setSensibleHeatFraction,m_peopleDefinition,_1),
+      boost::bind(&model::PeopleDefinition::resetSensibleHeatFraction,m_peopleDefinition),
+      boost::none,
+      boost::bind(&model::PeopleDefinition::autocalculateSensibleHeatFraction,m_peopleDefinition),
+      boost::bind(&model::PeopleDefinition::isSensibleHeatFractionDefaulted,m_peopleDefinition),
+      boost::none,
+      boost::bind(&model::PeopleDefinition::isSensibleHeatFractionAutocalculated,m_peopleDefinition));
+  m_carbonDioxideGenerationRateEdit->bind(
+      m_isIP,m_peopleDefinition,
+      boost::bind(&model::PeopleDefinition::getCarbonDioxideGenerationRate,m_peopleDefinition,_1),
+      boost::bind(&model::PeopleDefinition::setCarbonDioxideGenerationRate,m_peopleDefinition,_1),
+      boost::bind(&model::PeopleDefinition::resetCarbonDioxideGenerationRate,m_peopleDefinition),
+      boost::none,
+      boost::none,
+      boost::bind(&model::PeopleDefinition::isCarbonDioxideGenerationRateDefaulted,m_peopleDefinition));
 
   this->stackedWidget()->setCurrentIndex(1);
 }
@@ -466,6 +496,7 @@ void PeopleDefinitionInspectorView::detach()
   m_fractionRadiantEdit->unbind();
   m_sensibleHeatFractionEdit->unbind();
   m_carbonDioxideGenerationRateEdit->unbind();
+  m_peopleDefinition.reset();
 }
 
 void PeopleDefinitionInspectorView::refresh()

@@ -23,8 +23,9 @@
 #include <model/ModelObject.hpp>
 
 #include <utilities/units/Unit.hpp>
-
 #include <utilities/core/Logger.hpp>
+
+#include <boost/function.hpp>
 
 #include <QLineEdit>
 #include <QLabel>
@@ -33,6 +34,71 @@ namespace openstudio {
 
 class Unit;
 
+typedef boost::function<OSOptionalQuantity (bool)> QuantityGetter;
+typedef boost::function<bool (const Quantity&)> QuantitySetter;
+typedef boost::function<void ()> NoFailAction;
+typedef boost::function<bool ()> BasicQuery;
+
+class OSQuantityEdit2: public QWidget {
+  Q_OBJECT
+ public:
+
+  OSQuantityEdit2(bool isIP, QWidget * parent = 0);
+
+  virtual ~OSQuantityEdit2() {}
+
+  // Ok to have one getter bind that returns OSOptionalQuantity? Check with field that returns Quantity.
+  // (Use PeopleDefinition--has both.)
+  void bind(bool isIP,
+            model::ModelObject& modelObject,
+            QuantityGetter get,
+            boost::optional<QuantitySetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<NoFailAction> autosize=boost::none,
+            boost::optional<NoFailAction> autocalculate=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none,
+            boost::optional<BasicQuery> isAutosized=boost::none,
+            boost::optional<BasicQuery> isAutocalculated=boost::none);
+
+  void unbind();
+
+ private slots:
+
+  void onEditingFinished();
+
+  void onModelObjectChange();
+
+  void onUnitSystemChange(bool isIP);
+
+  void onModelObjectRemove(Handle handle);
+
+ private:
+
+  QLineEdit* m_lineEdit;
+  QLabel* m_units;
+
+  bool m_isIP;
+  boost::optional<model::ModelObject> m_modelObject;
+  boost::optional<QuantityGetter> m_get;
+  boost::optional<QuantitySetter> m_set;
+  boost::optional<NoFailAction> m_reset;
+  boost::optional<NoFailAction> m_autosize;
+  boost::optional<NoFailAction> m_autocalculate;
+  boost::optional<BasicQuery> m_isDefaulted;
+  boost::optional<BasicQuery> m_isAutosized;
+  boost::optional<BasicQuery> m_isAutocalculated;
+
+  bool m_isScientific;
+  boost::optional<int> m_precision;
+
+  void refreshTextAndLabel();
+
+  void setPrecision(const std::string& str);
+
+  REGISTER_LOGGER("openstudio.OSQuantityEdit");
+};
+
+/** \deprecated Use OSQuantityEdit2. */
 class OSQuantityEdit: public QWidget {
   Q_OBJECT
 
