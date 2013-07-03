@@ -72,16 +72,21 @@ namespace runmanager {
 
     LOG(Debug, "Parsing tool version number from string: " << pathstr);
 
-    boost::regex reg(".*?V?([0-9]+)-([0-9]+)-([0-9]+)(-[0-9]+)?.*");
+    // HERE - Not getting here for Dakota. Also only found Dakota 5.2
+    boost::regex reg(".*?V?([0-9]+)[\\.-]([0-9]+)[\\.-]?([0-9]*)([\\.-][0-9]+)?.*");
 
     boost::smatch results;
     if (boost::regex_match(pathstr, results, reg))
     {
       int major = atoi(results[1].str().c_str());
       int minor = atoi(results[2].str().c_str());
-      int build = atoi(results[3].str().c_str());
+      std::string build_str = results[3].str();
+      if (!build_str.empty()) {
+        int build = atoi(build_str.c_str());
+        return ToolVersion(major,minor,build);
+      }
 
-      return ToolVersion(major,minor,build);
+      return ToolVersion(major,minor);      
     } else {
       openstudio::path iddpath = t_path.parent_path() / openstudio::toPath("Energy+.idd");
 
@@ -280,7 +285,7 @@ namespace runmanager {
                  && subPathMatch(*itr, boost::regex("preprocessor.*", boost::regex::perl|boost::regex::icase))) {
         mergeTool(tools, std::make_pair(ToolVersion(), ToolLocationInfo(ToolType::XMLPreprocessor, itr->parent_path(), openstudio::path())));
       } else if (boost::iequals(toString(itr->stem()), "dakota")) {
-        mergeTool(tools, std::make_pair(ToolVersion(), ToolLocationInfo(ToolType::Dakota, itr->parent_path(), openstudio::path())));
+        mergeTool(tools, std::make_pair(parseToolVersion(*itr), ToolLocationInfo(ToolType::Dakota, itr->parent_path(), openstudio::path())));
       }
     }
 

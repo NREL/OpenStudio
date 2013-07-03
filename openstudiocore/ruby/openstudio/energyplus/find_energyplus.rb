@@ -80,8 +80,8 @@ module OpenStudio
       elsif /darwin/.match(RUBY_PLATFORM)
         potential_paths = Dir.glob('/Applications/EnergyPlus*')
       else
-      potential_paths = Dir.glob('/usr/local/EnergyPlus*')
-      if ENV['ENERGYPLUSDIR']
+        potential_paths = Dir.glob('/usr/local/EnergyPlus*')
+        if ENV['ENERGYPLUSDIR']
           ENV['ENERGYPLUSDIR'].split(';').each { |path| potential_paths += Dir.glob(path) }
         end
       end
