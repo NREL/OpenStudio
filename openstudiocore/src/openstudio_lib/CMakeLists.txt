@@ -13,14 +13,16 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
 
 # source files
 SET( ${target_name}_SRC
+  # TODO Deprecate these files
+  #ScriptsController.cpp
+  #ScriptsController.hpp
+  #ScriptsView.cpp
+  #ScriptsView.hpp
+
   BCLComponentItem.cpp
   BCLComponentItem.hpp
   BuildingComponentController.cpp
   BuildingComponentController.hpp
-  ../shared_gui_components/BuildingComponentDialog.cpp
-  ../shared_gui_components/BuildingComponentDialog.hpp
-  ../shared_gui_components/BuildingComponentDialogCentralWidget.cpp
-  ../shared_gui_components/BuildingComponentDialogCentralWidget.hpp
   BuildingInspectorView.cpp
   BuildingInspectorView.hpp
   BuildingStoriesController.cpp
@@ -33,26 +35,14 @@ SET( ${target_name}_SRC
   BuildingStoriesView.hpp
   BuildingStoryInspectorView.cpp
   BuildingStoryInspectorView.hpp
-  ../shared_gui_components/BusyWidget.cpp
-  ../shared_gui_components/BusyWidget.hpp
-  ../shared_gui_components/CollapsibleComponent.cpp
-  ../shared_gui_components/CollapsibleComponent.hpp
-  ../shared_gui_components/CollapsibleComponentHeader.cpp
-  ../shared_gui_components/CollapsibleComponentHeader.hpp
-  ../shared_gui_components/CollapsibleComponentList.cpp
-  ../shared_gui_components/CollapsibleComponentList.hpp
   CollapsibleInspector.cpp
   CollapsibleInspector.hpp
-  ../shared_gui_components/Component.cpp
-  ../shared_gui_components/Component.hpp
-  ../shared_gui_components/ComponentList.cpp
-  ../shared_gui_components/ComponentList.hpp
-  ConstructionInspectorView.cpp
-  ConstructionInspectorView.hpp
   ConstructionCfactorUndergroundWallInspectorView.cpp
   ConstructionCfactorUndergroundWallInspectorView.hpp
   ConstructionFfactorGroundFloorInspectorView.cpp
   ConstructionFfactorGroundFloorInspectorView.hpp
+  ConstructionInspectorView.cpp
+  ConstructionInspectorView.hpp
   ConstructionInternalSourceInspectorView.cpp
   ConstructionInternalSourceInspectorView.hpp
   ConstructionObjectVectorController.cpp
@@ -125,6 +115,8 @@ SET( ${target_name}_SRC
   InternalMassInspectorView.hpp
   LibraryTabWidget.cpp
   LibraryTabWidget.hpp
+  LifeCycleCostsTabView.cpp
+  LifeCycleCostsTabView.hpp
   LightsInspectorView.cpp
   LightsInspectorView.hpp
   LoadsController.cpp
@@ -196,28 +188,18 @@ SET( ${target_name}_SRC
   OpenStudioAPI.hpp
   OSAppBase.cpp
   OSAppBase.hpp
-  ../shared_gui_components/OSCheckBox.cpp
-  ../shared_gui_components/OSCheckBox.hpp
   OSCollapsibleItem.cpp
   OSCollapsibleItem.hpp
   OSCollapsibleItemHeader.cpp
   OSCollapsibleItemHeader.hpp
   OSCollapsibleItemList.cpp
   OSCollapsibleItemList.hpp
-  ../shared_gui_components/OSComboBox.cpp
-  ../shared_gui_components/OSComboBox.hpp
-  ../shared_gui_components/OSDialog.cpp
-  ../shared_gui_components/OSDialog.hpp
   OSDocument.cpp
   OSDocument.hpp
-  ../shared_gui_components/OSDoubleEdit.cpp
-  ../shared_gui_components/OSDoubleEdit.hpp
   OSDropZone.cpp
   OSDropZone.hpp
   OSInspectorView.cpp
   OSInspectorView.hpp
-  ../shared_gui_components/OSIntegerEdit.cpp
-  ../shared_gui_components/OSIntegerEdit.hpp
   OSItem.cpp
   OSItem.hpp
   OSItemList.cpp
@@ -226,20 +208,10 @@ SET( ${target_name}_SRC
   OSItemSelector.hpp
   OSItemSelectorButtons.cpp
   OSItemSelectorButtons.hpp
-  ../shared_gui_components/OSLineEdit.cpp
-  ../shared_gui_components/OSLineEdit.hpp
-  ../shared_gui_components/OSQObjectController.cpp
-  ../shared_gui_components/OSQObjectController.hpp
-  ../shared_gui_components/OSQuantityEdit.cpp
-  ../shared_gui_components/OSQuantityEdit.hpp
-  ../shared_gui_components/OSSwitch.cpp
-  ../shared_gui_components/OSSwitch.hpp
   OSVectorController.cpp
   OSVectorController.hpp
   OtherEquipmentInspectorView.cpp
   OtherEquipmentInspectorView.hpp
-  ../shared_gui_components/PageNavigator.cpp
-  ../shared_gui_components/PageNavigator.hpp
   PeopleInspectorView.cpp
   PeopleInspectorView.hpp
   PlanarSurfaceWidget.cpp
@@ -274,16 +246,12 @@ SET( ${target_name}_SRC
   ScriptFolderListView.hpp
   ScriptItem.cpp
   ScriptItem.hpp
-  #ScriptsController.cpp
-  #ScriptsController.hpp
   ScriptsListView.cpp
   ScriptsListView.hpp
   ScriptsTabController.cpp
   ScriptsTabController.hpp
   ScriptsTabView.cpp
   ScriptsTabView.hpp
-  #ScriptsView.cpp
-  #ScriptsView.hpp
   ServiceWaterGridItems.cpp
   ServiceWaterGridItems.hpp
   ServiceWaterScene.cpp
@@ -336,8 +304,6 @@ SET( ${target_name}_SRC
   ThermalZonesTabView.hpp
   ThermalZonesView.cpp
   ThermalZonesView.hpp
-  ../shared_gui_components/TIDItemModel.cpp
-  ../shared_gui_components/TIDItemModel.hpp
   VariablesTabController.cpp
   VariablesTabController.hpp
   VariablesTabView.cpp
@@ -368,41 +334,81 @@ SET( ${target_name}_SRC
   YearSettingsWidget.hpp
   ZoneChooserView.cpp
   ZoneChooserView.hpp
-  ../shared_gui_components/OSViewSwitcher.hpp
-  ../shared_gui_components/OSViewSwitcher.cpp
-  ../shared_gui_components/Buttons.hpp
-  ../shared_gui_components/Buttons.cpp
-  ../shared_gui_components/MeasureManager.hpp
-  ../shared_gui_components/MeasureManager.cpp
-  ../shared_gui_components/ProcessEventsProgressBar.hpp
-  ../shared_gui_components/ProcessEventsProgressBar.cpp
-  ../shared_gui_components/LocalLibraryController.hpp
-  ../shared_gui_components/LocalLibraryController.cpp
-  ../shared_gui_components/BCLMeasureDialog.hpp
+
   ../shared_gui_components/BCLMeasureDialog.cpp
-  ../shared_gui_components/OSListView.hpp
-  ../shared_gui_components/OSListView.cpp
-  ../shared_gui_components/OSCollapsibleView.hpp
-  ../shared_gui_components/OSCollapsibleView.cpp
-  ../shared_gui_components/HeaderViews.hpp
-  ../shared_gui_components/HeaderViews.cpp
-  ../shared_gui_components/OSListController.hpp
-  ../shared_gui_components/OSListController.cpp
-  ../shared_gui_components/LocalLibrary.hpp
-  ../shared_gui_components/LocalLibraryView.hpp
-  ../shared_gui_components/LocalLibraryView.cpp
-  ../shared_gui_components/OSDragableView.hpp
-  ../shared_gui_components/OSDragableView.cpp
-  ../shared_gui_components/MeasureDragData.hpp
-  ../shared_gui_components/MeasureDragData.cpp
-  ../shared_gui_components/VariableList.hpp
-  ../shared_gui_components/VariableList.cpp
-  ../shared_gui_components/VariableView.hpp
-  ../shared_gui_components/VariableView.cpp
-  ../shared_gui_components/EditController.hpp
+  ../shared_gui_components/BCLMeasureDialog.hpp
+  ../shared_gui_components/BuildingComponentDialog.cpp
+  ../shared_gui_components/BuildingComponentDialog.hpp
+  ../shared_gui_components/BuildingComponentDialogCentralWidget.cpp
+  ../shared_gui_components/BuildingComponentDialogCentralWidget.hpp
+  ../shared_gui_components/BusyWidget.cpp
+  ../shared_gui_components/BusyWidget.hpp
+  ../shared_gui_components/Buttons.cpp
+  ../shared_gui_components/Buttons.hpp
+  ../shared_gui_components/CollapsibleComponent.cpp
+  ../shared_gui_components/CollapsibleComponent.hpp
+  ../shared_gui_components/CollapsibleComponentHeader.cpp
+  ../shared_gui_components/CollapsibleComponentHeader.hpp
+  ../shared_gui_components/CollapsibleComponentList.cpp
+  ../shared_gui_components/CollapsibleComponentList.hpp
+  ../shared_gui_components/Component.cpp
+  ../shared_gui_components/Component.hpp
+  ../shared_gui_components/ComponentList.cpp
+  ../shared_gui_components/ComponentList.hpp
   ../shared_gui_components/EditController.cpp
-  ../shared_gui_components/EditView.hpp
+  ../shared_gui_components/EditController.hpp
   ../shared_gui_components/EditView.cpp
+  ../shared_gui_components/EditView.hpp
+  ../shared_gui_components/HeaderViews.cpp
+  ../shared_gui_components/HeaderViews.hpp
+  ../shared_gui_components/LocalLibrary.hpp
+  ../shared_gui_components/LocalLibraryController.cpp
+  ../shared_gui_components/LocalLibraryController.hpp
+  ../shared_gui_components/LocalLibraryView.cpp
+  ../shared_gui_components/LocalLibraryView.hpp
+  ../shared_gui_components/MeasureDragData.cpp
+  ../shared_gui_components/MeasureDragData.hpp
+  ../shared_gui_components/MeasureManager.cpp
+  ../shared_gui_components/MeasureManager.hpp
+  ../shared_gui_components/OSCheckBox.cpp
+  ../shared_gui_components/OSCheckBox.hpp
+  ../shared_gui_components/OSCollapsibleView.cpp
+  ../shared_gui_components/OSCollapsibleView.hpp
+  ../shared_gui_components/OSComboBox.cpp
+  ../shared_gui_components/OSComboBox.hpp
+  ../shared_gui_components/OSDialog.cpp
+  ../shared_gui_components/OSDialog.hpp
+  ../shared_gui_components/OSDoubleEdit.cpp
+  ../shared_gui_components/OSDoubleEdit.hpp
+  ../shared_gui_components/OSDragableView.cpp
+  ../shared_gui_components/OSDragableView.hpp
+  ../shared_gui_components/OSIntegerEdit.cpp
+  ../shared_gui_components/OSIntegerEdit.hpp
+  ../shared_gui_components/OSLineEdit.cpp
+  ../shared_gui_components/OSLineEdit.hpp
+  ../shared_gui_components/OSListController.cpp
+  ../shared_gui_components/OSListController.hpp
+  ../shared_gui_components/OSListView.cpp
+  ../shared_gui_components/OSListView.hpp
+  ../shared_gui_components/OSQObjectController.cpp
+  ../shared_gui_components/OSQObjectController.hpp
+  ../shared_gui_components/OSQuantityEdit.cpp
+  ../shared_gui_components/OSQuantityEdit.hpp
+  ../shared_gui_components/OSSwitch.cpp
+  ../shared_gui_components/OSSwitch.hpp
+  ../shared_gui_components/OSViewSwitcher.cpp
+  ../shared_gui_components/OSViewSwitcher.hpp
+  ../shared_gui_components/PageNavigator.cpp
+  ../shared_gui_components/PageNavigator.hpp
+  ../shared_gui_components/ProcessEventsProgressBar.cpp
+  ../shared_gui_components/ProcessEventsProgressBar.hpp
+  ../shared_gui_components/TIDItemModel.cpp
+  ../shared_gui_components/TIDItemModel.hpp
+  ../shared_gui_components/VariableList.cpp
+  ../shared_gui_components/VariableList.hpp
+  ../shared_gui_components/VariableView.cpp
+  ../shared_gui_components/VariableView.hpp
+
   #"${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.h"
 )
 
@@ -413,26 +419,23 @@ SET( ${target_name}_SRC
 
 # moc files
 SET( ${target_name}_moc
+
+  # TODO Deprecate these files
+  #ScriptsController.hpp
+  #ScriptsView.hpp
+
   BCLComponentItem.hpp
   BuildingComponentController.hpp
-  ../shared_gui_components/BuildingComponentDialog.hpp
-  ../shared_gui_components/BuildingComponentDialogCentralWidget.hpp
   BuildingInspectorView.hpp
   BuildingStoriesController.hpp
   BuildingStoriesTabController.hpp
   BuildingStoriesTabView.hpp
   BuildingStoriesView.hpp
   BuildingStoryInspectorView.hpp
-  ../shared_gui_components/BusyWidget.hpp
-  ../shared_gui_components/CollapsibleComponent.hpp
-  ../shared_gui_components/CollapsibleComponentHeader.hpp
-  ../shared_gui_components/CollapsibleComponentList.hpp
   CollapsibleInspector.hpp
-  ../shared_gui_components/Component.hpp
-  ../shared_gui_components/ComponentList.hpp
-  ConstructionInspectorView.hpp
   ConstructionCfactorUndergroundWallInspectorView.hpp
   ConstructionFfactorGroundFloorInspectorView.hpp
+  ConstructionInspectorView.hpp
   ConstructionInternalSourceInspectorView.hpp
   ConstructionObjectVectorController.hpp
   ConstructionsController.hpp
@@ -451,8 +454,8 @@ SET( ${target_name}_moc
   FacilityTreeWidget.hpp
   FacilityView.hpp
   GasEquipmentInspectorView.hpp
-  GridItem.hpp
   GlareSensorInspectorView.hpp
+  GridItem.hpp
   GridScene.hpp
   HorizontalTabWidget.hpp
   HVACSystemsController.hpp
@@ -467,6 +470,7 @@ SET( ${target_name}_moc
   InteriorPartitionSurfaceInspectorView.hpp
   InternalMassInspectorView.hpp
   LibraryTabWidget.hpp
+  LifeCycleCostsTabView.hpp
   LightsInspectorView.hpp
   LoadsController.hpp
   LoadsTabController.hpp
@@ -502,28 +506,18 @@ SET( ${target_name}_moc
   ModelSubTabController.hpp
   ModelSubTabView.hpp
   OSAppBase.hpp
-  ../shared_gui_components/OSCheckBox.hpp
   OSCollapsibleItem.hpp
   OSCollapsibleItemHeader.hpp
   OSCollapsibleItemList.hpp
-  ../shared_gui_components/OSComboBox.hpp
-  ../shared_gui_components/OSDialog.hpp
   OSDocument.hpp
-  ../shared_gui_components/OSDoubleEdit.hpp
   OSDropZone.hpp
   OSInspectorView.hpp
-  ../shared_gui_components/OSIntegerEdit.hpp
   OSItem.hpp
   OSItemList.hpp
   OSItemSelector.hpp
   OSItemSelectorButtons.hpp
-  ../shared_gui_components/OSLineEdit.hpp
-  ../shared_gui_components/OSQObjectController.hpp
-  ../shared_gui_components/OSQuantityEdit.hpp
-  ../shared_gui_components/OSSwitch.hpp
   OSVectorController.hpp
   OtherEquipmentInspectorView.hpp
-  ../shared_gui_components/PageNavigator.hpp
   PeopleInspectorView.hpp
   PlanarSurfaceWidget.hpp
   RadianceDialog.hpp
@@ -541,11 +535,9 @@ SET( ${target_name}_moc
   SchedulesView.hpp
   ScriptFolderListView.hpp
   ScriptItem.hpp
-  #ScriptsController.hpp
   ScriptsListView.hpp
   ScriptsTabController.hpp
   ScriptsTabView.hpp
-  #ScriptsView.hpp
   ServiceWaterGridItems.hpp
   ServiceWaterScene.hpp
   ShadingSurfaceGroupInspectorView.hpp
@@ -572,7 +564,6 @@ SET( ${target_name}_moc
   ThermalZonesTabController.hpp
   ThermalZonesTabView.hpp
   ThermalZonesView.hpp
-  ../shared_gui_components/TIDItemModel.hpp
   VariablesTabController.hpp
   VariablesTabView.hpp
   VerticalTabWidget.hpp
@@ -588,22 +579,43 @@ SET( ${target_name}_moc
   WindowMaterialSimpleGlazingSystemInspectorView.hpp
   YearSettingsWidget.hpp
   ZoneChooserView.hpp
-  ../shared_gui_components/OSViewSwitcher.hpp
-  ../shared_gui_components/Buttons.hpp
-  ../shared_gui_components/MeasureManager.hpp
-  ../shared_gui_components/LocalLibraryController.hpp
+
   ../shared_gui_components/BCLMeasureDialog.hpp
-  ../shared_gui_components/OSListView.hpp
-  ../shared_gui_components/OSCollapsibleView.hpp
-  ../shared_gui_components/HeaderViews.hpp
-  ../shared_gui_components/OSListController.hpp
-  ../shared_gui_components/MeasureDragData.hpp
-  ../shared_gui_components/LocalLibraryView.hpp
-  ../shared_gui_components/OSDragableView.hpp
-  ../shared_gui_components/VariableList.hpp
-  ../shared_gui_components/VariableView.hpp
+  ../shared_gui_components/BuildingComponentDialog.hpp
+  ../shared_gui_components/BuildingComponentDialogCentralWidget.hpp
+  ../shared_gui_components/BusyWidget.hpp
+  ../shared_gui_components/Buttons.hpp
+  ../shared_gui_components/CollapsibleComponent.hpp
+  ../shared_gui_components/CollapsibleComponentHeader.hpp
+  ../shared_gui_components/CollapsibleComponentList.hpp
+  ../shared_gui_components/Component.hpp
+  ../shared_gui_components/ComponentList.hpp
   ../shared_gui_components/EditController.hpp
   ../shared_gui_components/EditView.hpp
+  ../shared_gui_components/HeaderViews.hpp
+  ../shared_gui_components/LocalLibraryController.hpp
+  ../shared_gui_components/LocalLibraryView.hpp
+  ../shared_gui_components/MeasureDragData.hpp
+  ../shared_gui_components/MeasureManager.hpp
+  ../shared_gui_components/OSCheckBox.hpp
+  ../shared_gui_components/OSCollapsibleView.hpp
+  ../shared_gui_components/OSComboBox.hpp
+  ../shared_gui_components/OSDialog.hpp
+  ../shared_gui_components/OSDoubleEdit.hpp
+  ../shared_gui_components/OSDragableView.hpp
+  ../shared_gui_components/OSIntegerEdit.hpp
+  ../shared_gui_components/OSLineEdit.hpp
+  ../shared_gui_components/OSListController.hpp
+  ../shared_gui_components/OSListView.hpp
+  ../shared_gui_components/OSQObjectController.hpp
+  ../shared_gui_components/OSQuantityEdit.hpp
+  ../shared_gui_components/OSSwitch.hpp
+  ../shared_gui_components/OSViewSwitcher.hpp
+  ../shared_gui_components/PageNavigator.hpp
+  ../shared_gui_components/TIDItemModel.hpp
+  ../shared_gui_components/VariableList.hpp
+  ../shared_gui_components/VariableView.hpp
+
 )
 
 # resource files

@@ -18,9 +18,13 @@
 **********************************************************************/
 
 #include <openstudio_lib/LocationTabController.hpp>
+
+#include <openstudio_lib/LifeCycleCostsTabView.hpp>
 #include <openstudio_lib/LocationTabView.hpp>
+
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
+
 #include <QLabel>
 
 namespace openstudio {
@@ -31,6 +35,9 @@ LocationTabController::LocationTabController(const model::Model & model,
 {
   LocationView * locationView = new LocationView(model, modelTempDir);
   mainContentWidget()->addSubTab("Weather File && Design Days",locationView,WEATHER_FILE);
+
+  LifeCycleCostsView * lifeCycleCostsView = new LifeCycleCostsView(model);
+  mainContentWidget()->addSubTab("Life Cycle Costs",lifeCycleCostsView,LIFE_CYCLE_COSTS);
 
   QLabel * underConstructionLabel;
     
@@ -51,6 +58,7 @@ LocationTabController::LocationTabController(const model::Model & model,
   //underConstructionLabel->setPixmap(QPixmap(":/images/coming_soon_water_mains_temperature.png"));
   //underConstructionLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   //mainContentWidget()->addSubTab("Water Mains Temperature",underConstructionLabel,WATER_MAINS_TEMPERATURE);
+
 }
 
 } // openstudio

@@ -18,18 +18,20 @@
 **********************************************************************/
 
 #include <openstudio_lib/LocationTabView.hpp>
+
 #include <openstudio_lib/OSDocument.hpp>
+
 #include <openstudio_app/OpenStudioApp.hpp>
+
 #include <model/DesignDay.hpp>
+#include <model/DesignDay_Impl.hpp>
 #include <model/Model_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
 #include <model/Site.hpp>
 #include <model/Site_Impl.hpp>
 #include <model/SizingPeriod.hpp>
 #include <model/SizingPeriod_Impl.hpp>
-#include <model/DesignDay.hpp>
-#include <model/DesignDay_Impl.hpp>
+#include <model/WeatherFile.hpp>
+#include <model/WeatherFile_Impl.hpp>
 #include <model/WeatherFileDays.hpp>
 #include <model/WeatherFileConditionType.hpp>
 
@@ -39,7 +41,9 @@
 
 #include <utilities/filetypes/EpwFile.hpp>
 #include <utilities/idf/IdfFile.hpp>
+
 #include <boost/smart_ptr.hpp>
+
 #include <QBoxLayout>
 #include <QDir>
 #include <QFileDialog>
