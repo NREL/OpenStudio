@@ -98,7 +98,7 @@ OptionalModelObject ReverseTranslator::translateSizingPeriodDesignDay( const Wor
 
   // Dry-Bulb Temperature Range Modifier Schedule Name
   if (istringEqual(dryBulbTemperatureRangeModifierType, "MultiplierSchedule") || istringEqual(dryBulbTemperatureRangeModifierType, "DifferenceSchedule")){
-    boost::optional<WorkspaceObject> wo = workspaceObject.getTarget(SizingPeriod_DesignDayFields::DryBulbTemperatureRangeModifierScheduleName);
+    boost::optional<WorkspaceObject> wo = workspaceObject.getTarget(SizingPeriod_DesignDayFields::DryBulbTemperatureRangeModifierDayScheduleName);
     if( wo ){
       boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(wo.get());
       if( mo ){

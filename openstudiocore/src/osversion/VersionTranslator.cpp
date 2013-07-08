@@ -86,7 +86,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("0.11.2")] = &VersionTranslator::update_0_11_1_to_0_11_2;
   m_updateMethods[VersionString("0.11.5")] = &VersionTranslator::update_0_11_4_to_0_11_5;
   m_updateMethods[VersionString("0.11.6")] = &VersionTranslator::update_0_11_5_to_0_11_6;
-  m_updateMethods[VersionString("1.0.1")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.0.1")] = &VersionTranslator::update_0_11_6_to_1_0_1;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -1976,6 +1976,65 @@ std::string VersionTranslator::update_0_11_5_to_0_11_6(const IdfFile& idf_0_11_5
     } else if ( object.iddObject().name() == "OS:PortList" ) {
 
       continue;
+
+    } else {
+
+      ss << object;
+
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_0_11_6_to_1_0_1(const IdfFile& idf_0_11_6, const IddFileAndFactoryWrapper& idd_1_0_1)
+{
+  std::stringstream ss;
+
+  ss << idf_0_11_6.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_0_1.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  BOOST_FOREACH(const IdfObject& object,idf_0_11_6.objects()) {
+
+    if( object.iddObject().name() == "OS:Boiler:HotWater" ) {
+
+      if(object.getString(15) && istringEqual(object.getString(15).get(),"VariableFlow")) {
+        // Update Boiler Flow Mode
+
+        IdfObject newBoiler = object.clone(true);
+
+        newBoiler.setString(15,"LeavingSetpointModulated");
+
+        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newBoiler) );
+
+        ss << newBoiler;
+
+      } else {
+
+        ss << object;
+
+      }
+    } else if( object.iddObject().name() == "OS:Boiler:HotWater" ) {
+
+      if(object.getString(15) && istringEqual(object.getString(15).get(),"VariableFlow")) {
+        // Update Chiller Flow Mode
+
+        IdfObject newChiller = object.clone(true);
+
+        newChiller.setString(15,"LeavingSetpointModulated");
+
+        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newChiller) );
+
+        ss << newChiller;
+
+      } else {
+
+        ss << object;
+
+      }
 
     } else {
 
