@@ -26,6 +26,7 @@
 #include <utilities/data/Attribute.hpp>
 #include <utilities/document/DocumentRegex.hpp>
 #include <utilities/units/Quantity.hpp>
+#include <utilities/units/OSOptionalQuantity.hpp>
 
 #include <boost/bind.hpp>
 
@@ -60,13 +61,13 @@ OSQuantityEdit2::OSQuantityEdit2(bool isIP, QWidget * parent)
 void OSQuantityEdit2::bind(bool isIP,
                            model::ModelObject& modelObject,
                            QuantityGetter get,
-                           boost::optional<QuantitySetter> set=boost::none,
-                           boost::optional<NoFailAction> reset=boost::none,
-                           boost::optional<NoFailAction> autosize=boost::none,
-                           boost::optional<NoFailAction> autocalculate=boost::none,
-                           boost::optional<BasicQuery> isDefaulted=boost::none,
-                           boost::optional<BasicQuery> isAutosized=boost::none,
-                           boost::optional<BasicQuery> isAutocalculated=boost::none);
+                           boost::optional<QuantitySetter> set,
+                           boost::optional<NoFailAction> reset,
+                           boost::optional<NoFailAction> autosize,
+                           boost::optional<NoFailAction> autocalculate,
+                           boost::optional<BasicQuery> isDefaulted,
+                           boost::optional<BasicQuery> isAutosized,
+                           boost::optional<BasicQuery> isAutocalculated)
 {
   // only let one of autosize/autocalculate
   if ((isAutosized && isAutocalculated) || 
@@ -155,7 +156,8 @@ void OSQuantityEdit2::onEditingFinished() {
       try {
         double value = boost::lexical_cast<double>(str);
         setPrecision(str);
-        OptionalUnit units = m_get(m_isIP).units();
+        OSOptionalQuantity oq = (*m_get)(m_isIP);
+        OptionalUnit units = oq.units();
         if (m_set) {
           (*m_set)(Quantity(value,*units));
         }
@@ -193,7 +195,8 @@ void OSQuantityEdit2::refreshTextAndLabel() {
       m_units->setStyleSheet("color:grey");
     }
 
-    OSOptionalQuantity oq = m_get(m_isIP);
+    OSOptionalQuantity oq = (*m_get)(m_isIP);
+    OptionalUnit units;
     if (oq.isSet()) {
       Quantity q = oq.get();
       if (m_isScientific) {

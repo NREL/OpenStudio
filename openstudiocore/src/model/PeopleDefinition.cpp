@@ -155,7 +155,7 @@ namespace detail {
     bool result = false;
     boost::optional<std::string> value = getString(OS_People_DefinitionFields::SensibleHeatFraction, true);
     if (value) {
-      result = openstudio::istringEqual(value.get(), "canAutocalculate");
+      result = openstudio::istringEqual(value.get(), "Autocalculate");
     }
     return result;
   }

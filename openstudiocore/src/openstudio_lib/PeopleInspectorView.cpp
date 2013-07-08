@@ -301,7 +301,9 @@ void PeopleInspectorView::refresh()
 {
 }
 
-PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
+PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, 
+                                                             const openstudio::model::Model& model,
+                                                             QWidget * parent)
   : ModelObjectInspectorView(model, true, parent)
 {
   m_isIP = isIP;
@@ -446,41 +448,63 @@ void PeopleDefinitionInspectorView::attach(openstudio::model::PeopleDefinition& 
 {
   m_peopleDefinition = peopleDefinition;
   m_nameEdit->bind(peopleDefinition,"name");
+  
+  // function pointer variables needed to clarify overloads
+  bool (model::PeopleDefinition::* set) (const Quantity&);
+  
+  // bind to PeopleDefinition methods
+  set = &model::PeopleDefinition::setNumberofPeople;
   m_numberofPeopleEdit->bind(
-      m_isIP,m_peopleDefinition,
+      m_isIP,
+      *m_peopleDefinition,
       boost::bind(&model::PeopleDefinition::getNumberofPeople,m_peopleDefinition.get_ptr(),_1),
-      boost::bind(&model::PeopleDefinition::setNumberofPeople,m_peopleDefinition.get_ptr(),_1));
+      boost::optional<QuantitySetter>(boost::bind(set,m_peopleDefinition.get_ptr(),_1)));
+  
+  set = &model::PeopleDefinition::setPeopleperSpaceFloorArea;
   m_peopleperSpaceFloorAreaEdit->bind(
-      m_isIP,m_peopleDefinition,
-      boost::bind(&model::PeopleDefinition::getPeopleperSpaceFloorArea,m_peopleDefinition,_1),
-      boost::bind(&model::PeopleDefinition::setPeopleperSpaceFloorArea,m_peopleDefinition,_1));
+      m_isIP,
+      *m_peopleDefinition,
+      boost::bind(&model::PeopleDefinition::getPeopleperSpaceFloorArea,m_peopleDefinition.get_ptr(),_1),
+      boost::optional<QuantitySetter>(boost::bind(set,m_peopleDefinition.get_ptr(),_1)));
+
+  set = &model::PeopleDefinition::setSpaceFloorAreaperPerson;
   m_spaceFloorAreaperPersonEdit->bind(
-      m_isIP,m_peopleDefinition,
-      boost::bind(&model::PeopleDefinition::getSpaceFloorAreaperPerson,m_peopleDefinition,_1),
-      boost::bind(&model::PeopleDefinition::setSpaceFloorAreaperPerson,m_peopleDefinition,_1));
+      m_isIP,
+      *m_peopleDefinition,
+      boost::bind(&model::PeopleDefinition::getSpaceFloorAreaperPerson,m_peopleDefinition.get_ptr(),_1),
+      boost::optional<QuantitySetter>(boost::bind(set,m_peopleDefinition.get_ptr(),_1)));
+
   // ETH: Note that this is overkill for this dimensionless value. Should switch to OSDoubleEdit(2).
+  set = &model::PeopleDefinition::setFractionRadiant;
   m_fractionRadiantEdit->bind(
-      m_isIP,m_peopleDefinition,
-      boost::bind(&model::PeopleDefinition::getFractionRadiant,m_peopleDefinition,_1),
-      boost::bind(&model::PeopleDefinition::setFractionRadiant,m_peopleDefinition,_1));
+      m_isIP,
+      *m_peopleDefinition,
+      boost::bind(&model::PeopleDefinition::getFractionRadiant,m_peopleDefinition.get_ptr(),_1),
+      boost::optional<QuantitySetter>(boost::bind(set,m_peopleDefinition.get_ptr(),_1)));
+
+  set = &model::PeopleDefinition::setSensibleHeatFraction;
   m_sensibleHeatFractionEdit->bind(
-      m_isIP,m_peopleDefinition,
-      boost::bind(&model::PeopleDefinition::getSensibleHeatFraction,m_peopleDefinition,_1),
-      boost::bind(&model::PeopleDefinition::setSensibleHeatFraction,m_peopleDefinition,_1),
-      boost::bind(&model::PeopleDefinition::resetSensibleHeatFraction,m_peopleDefinition),
+      m_isIP,
+      *m_peopleDefinition,
+      boost::bind(&model::PeopleDefinition::getSensibleHeatFraction,m_peopleDefinition.get_ptr(),_1),
+      boost::optional<QuantitySetter>(boost::bind(set,m_peopleDefinition.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::PeopleDefinition::resetSensibleHeatFraction,m_peopleDefinition.get_ptr())),
       boost::none,
-      boost::bind(&model::PeopleDefinition::autocalculateSensibleHeatFraction,m_peopleDefinition),
-      boost::bind(&model::PeopleDefinition::isSensibleHeatFractionDefaulted,m_peopleDefinition),
+      boost::optional<NoFailAction>(boost::bind(&model::PeopleDefinition::autocalculateSensibleHeatFraction,m_peopleDefinition.get_ptr())),
+      boost::optional<BasicQuery>(boost::bind(&model::PeopleDefinition::isSensibleHeatFractionDefaulted,m_peopleDefinition.get_ptr())),
       boost::none,
-      boost::bind(&model::PeopleDefinition::isSensibleHeatFractionAutocalculated,m_peopleDefinition));
+      boost::optional<BasicQuery>(boost::bind(&model::PeopleDefinition::isSensibleHeatFractionAutocalculated,m_peopleDefinition.get_ptr())));
+
+  set = &model::PeopleDefinition::setCarbonDioxideGenerationRate;
   m_carbonDioxideGenerationRateEdit->bind(
-      m_isIP,m_peopleDefinition,
-      boost::bind(&model::PeopleDefinition::getCarbonDioxideGenerationRate,m_peopleDefinition,_1),
-      boost::bind(&model::PeopleDefinition::setCarbonDioxideGenerationRate,m_peopleDefinition,_1),
-      boost::bind(&model::PeopleDefinition::resetCarbonDioxideGenerationRate,m_peopleDefinition),
+      m_isIP,
+      *m_peopleDefinition,
+      boost::bind(&model::PeopleDefinition::getCarbonDioxideGenerationRate,m_peopleDefinition.get_ptr(),_1),
+      boost::optional<QuantitySetter>(boost::bind(set,m_peopleDefinition.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::PeopleDefinition::resetCarbonDioxideGenerationRate,m_peopleDefinition.get_ptr())),
       boost::none,
       boost::none,
-      boost::bind(&model::PeopleDefinition::isCarbonDioxideGenerationRateDefaulted,m_peopleDefinition));
+      boost::optional<BasicQuery>(boost::bind(&model::PeopleDefinition::isCarbonDioxideGenerationRateDefaulted,m_peopleDefinition.get_ptr())));
 
   this->stackedWidget()->setCurrentIndex(1);
 }
