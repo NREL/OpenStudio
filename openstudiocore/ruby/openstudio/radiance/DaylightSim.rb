@@ -570,6 +570,8 @@ end
 
 def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_outPath, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
 
+  puts "runSimulation called"
+
   values = Hash.new
   dcVectors = Hash.new
 
@@ -645,7 +647,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
     end #dctimestep command(s)
 
-    exec_statement("dctimestep -n8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \"#{(t_outPath / OpenStudio::Path.new("in.smx")).to_s}\" > \"#{(t_outPath / OpenStudio::Path.new("data")).to_s}\"")
+    exec_statement("gendaymtx -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" > \"#{(t_outPath / OpenStudio::Path.new("merged_space.ill")).to_s}\"");
 
 
 
@@ -1279,9 +1281,7 @@ smxPath = nil
 if (!epwFile.empty?)
   epwFilePath = epwFile.get().path()
   weaPath = outPath / OpenStudio::Path.new("in.wea")
-  smxPath = outPath / OpenStudio::Path.new("in.smx")
   exec_statement("epw2wea \"#{epwFilePath.to_s}\" \"#{weaPath.to_s}\"")
-  exec_statement("gendaymtx \"#{weaPath.to_s}\" > \"#{smxPath.to_s}\"") 
 end
 
 
