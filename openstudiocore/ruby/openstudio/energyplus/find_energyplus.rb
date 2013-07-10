@@ -106,6 +106,8 @@ module OpenStudio
             result[:energyplus_exe] = path + "bin/EnergyPlus.exe"
           elsif File.exists?(path + "bin/energyplus")
             result[:energyplus_exe] = path + "bin/energyplus"
+          elsif File.exists?(path + "EnergyPlus")
+            result[:energyplus_exe] = path + "EnergyPlus"
           else
             #puts "E+ not found"
             next # not found
