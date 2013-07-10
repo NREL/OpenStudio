@@ -3012,10 +3012,6 @@
     Boiler:HotWater,         !- Equipment 1 Object Type
     Central Boiler;          !- Equipment 1 Name
 
- Output:PreprocessorMessage,Conversion 7.2 => 8.0,Warning,
-Boiler:HotWater="Central Boiler",
- defaults for this object have changed. Results may be different than previous. See ,
-InputOutputReference document for details.;
   Boiler:HotWater,
     Central Boiler,          !- Name
     NaturalGas,              !- Fuel Type
@@ -3030,7 +3026,7 @@ InputOutputReference document for details.;
     1.0,                     !- Optimum Part Load Ratio
     Central Boiler Inlet Node,  !- Boiler Water Inlet Node Name
     Central Boiler Outlet Node,  !- Boiler Water Outlet Node Name
-    100.,                    !- Water Outlet Upper Temperature Limit {C}
+    100.0,                    !- Water Outlet Upper Temperature Limit {C}
     LeavingSetpointModulated;!- Boiler Flow Mode
 
   SetpointManager:Scheduled,
@@ -3289,10 +3285,6 @@ InputOutputReference document for details.;
     Chiller:Electric,        !- Equipment 1 Object Type
     Central Chiller;         !- Equipment 1 Name
 
- Output:PreprocessorMessage,Conversion 7.2 => 8.0,Warning,
-Chiller:Electric="Central Chiller",
- defaults for this object have changed. Results may be different than previous. See ,
-InputOutputReference document for details.;
   Chiller:Electric,
     Central Chiller,         !- Name
     AirCooled,               !- Condenser Type
@@ -3349,93 +3341,93 @@ InputOutputReference document for details.;
     INTERMITTENT,            !- Pump Control Type
     CoolingPumpAvailSched;   !- Pump Flow Rate Schedule Name
 
-  Output:Variable,*,Outdoor Dry Bulb,hourly;
+  Output:Variable,*,Site Outdoor Air Drybulb Temperature,hourly;
 
-  Output:Variable,*,Outdoor Dry Bulb,detailed;
+  Output:Variable,*,Site Outdoor Air Drybulb Temperature,detailed;
 
-  Output:Variable,*,Zone/Sys Air Temperature,hourly;
+  Output:Variable,*,Zone Air Temperature,hourly;
 
-  Output:Variable,*,Zone/Sys Sensible Cooling Rate,hourly;
+  Output:Variable,*,Zone Air System Sensible Cooling Rate,hourly;
 
-  Output:Variable,*,Zone/Sys Sensible Heating Rate,hourly;
+  Output:Variable,*,Zone Air System Sensible Heating Rate,hourly;
 
   Output:Variable,*,Lights Electric Power,hourly;
 
   Output:Variable,*,Zone Lights Electric Power,hourly;
 
-  Output:Variable,SPACE1-1 Lights 1,Lights Radiant Heat Gain,hourly;
+  Output:Variable,SPACE1-1 Lights 1,Lights Radiant Heating Energy,hourly;
 
-  Output:Variable,SPACE1-1,Zone Lights Radiant Heat Gain,hourly;
+  Output:Variable,SPACE1-1,Zone Lights Radiant Heating Energy,hourly;
 
-  Output:Variable,OA Mixing Box 1 Inlet Node,System Node Temp,hourly;
+  Output:Variable,OA Mixing Box 1 Inlet Node,System Node Temperature,hourly;
 
-  Output:Variable,OA Mixing Box 1 Inlet Node,System Node MassFlowRate,hourly;
+  Output:Variable,OA Mixing Box 1 Inlet Node,System Node Mass Flow Rate,hourly;
 
-  Output:Variable,OA Mixing Box 1 Inlet Node,System Node Setpoint Temp,hourly;
+  Output:Variable,OA Mixing Box 1 Inlet Node,System Node Setpoint Temperature,hourly;
 
   Output:Variable,OA Mixing Box 1 Inlet Node,System Node Humidity Ratio,hourly;
 
-  Output:Variable,OA Heating Coil 1 Air Outlet Node,System Node Temp,hourly;
+  Output:Variable,OA Heating Coil 1 Air Outlet Node,System Node Temperature,hourly;
 
-  Output:Variable,OA Heating Coil 1 Air Outlet Node,System Node MassFlowRate,hourly;
+  Output:Variable,OA Heating Coil 1 Air Outlet Node,System Node Mass Flow Rate,hourly;
 
-  Output:Variable,OA Heating Coil 1 Air Outlet Node,System Node Setpoint Temp,hourly;
+  Output:Variable,OA Heating Coil 1 Air Outlet Node,System Node Setpoint Temperature,hourly;
 
   Output:Variable,OA Heating Coil 1 Air Outlet Node,System Node Humidity Ratio,hourly;
 
-  Output:Variable,Mixed Air Node 1,System Node Temp,hourly;
+  Output:Variable,Mixed Air Node 1,System Node Temperature,hourly;
 
   Output:Variable,Mixed Air Node 1,System Node Humidity Ratio,hourly;
 
-  Output:Variable,VAV Sys 1 Outlet Node,System Node Temp,hourly;
+  Output:Variable,VAV Sys 1 Outlet Node,System Node Temperature,hourly;
 
-  Output:Variable,VAV Sys 1 Outlet Node,System Node MassFlowRate,hourly;
+  Output:Variable,VAV Sys 1 Outlet Node,System Node Mass Flow Rate,hourly;
 
   Output:Variable,VAV Sys 1 Outlet Node,System Node Humidity Ratio,hourly;
 
-  Output:Variable,VAV Sys 1 Outlet Node,System Node Setpoint Temp,hourly;
+  Output:Variable,VAV Sys 1 Outlet Node,System Node Setpoint Temperature,hourly;
 
-  Output:Variable,OA Cooling Coil 1 Water Inlet Node,System Node Temp,hourly;
+  Output:Variable,OA Cooling Coil 1 Water Inlet Node,System Node Temperature,hourly;
 
-  Output:Variable,OA Cooling Coil 1 Water Inlet Node,System Node MassFlowRate,hourly;
+  Output:Variable,OA Cooling Coil 1 Water Inlet Node,System Node Mass Flow Rate,hourly;
 
-  Output:Variable,Main Cooling Coil 1 Water Inlet Node,System Node MassFlowRate,hourly;
+  Output:Variable,Main Cooling Coil 1 Water Inlet Node,System Node Mass Flow Rate,hourly;
 
-  Output:Variable,OA Heating Coil 1 Water Inlet Node,System Node Temp,hourly;
+  Output:Variable,OA Heating Coil 1 Water Inlet Node,System Node Temperature,hourly;
 
-  Output:Variable,OA Heating Coil 1 Water Inlet Node,System Node MassFlowRate,hourly;
+  Output:Variable,OA Heating Coil 1 Water Inlet Node,System Node Mass Flow Rate,hourly;
 
-  Output:Variable,Main Heating Coil 1 Water Inlet Node,System Node MassFlowRate,hourly;
+  Output:Variable,Main Heating Coil 1 Water Inlet Node,System Node Mass Flow Rate,hourly;
 
-  Output:Variable,*,Total Water Heating Coil Rate,hourly;
+  Output:Variable,*,Heating Coil Heating Rate,hourly;
 
-  Output:Variable,*,Total Water Cooling Coil Rate,hourly;
+  Output:Variable,*,Cooling Coil Total Cooling Rate,hourly;
 
-  Output:Variable,*,Sensible Water Cooling Coil Rate,hourly;
+  Output:Variable,*,Cooling Coil Sensible Cooling Rate,hourly;
 
-  Output:Variable,*,Plant Loop Cooling Demand,hourly;
+  Output:Variable,*,Plant Supply Side Cooling Demand Rate,hourly;
 
-  Output:Variable,*,Plant Loop Heating Demand,hourly;
+  Output:Variable,*,Plant Supply Side Heating Demand Rate,hourly;
 
-  Output:Variable,*,Boiler Gas Consumption Rate,hourly;
+  Output:Variable,*,Boiler Gas Rate,hourly;
 
-  Output:Variable,*,Boiler Heating Output Rate,hourly;
+  Output:Variable,*,Boiler Heating Rate,hourly;
 
   Output:Variable,*,Chiller Electric Power,hourly;
 
-  Output:Variable,*,Chiller Evap Heat Trans Rate,hourly;
+  Output:Variable,*,Chiller Evaporator Cooling Rate,hourly;
 
-  Output:Variable,*,Chiller Evap Water Inlet Temp,hourly;
+  Output:Variable,*,Chiller Evaporator Inlet Temperature,hourly;
 
-  Output:Variable,*,Chiller Evap Water Outlet Temp,hourly;
+  Output:Variable,*,Chiller Evaporator Outlet Temperature,hourly;
 
-  Output:Variable,*,Chiller Evap Water Mass Flow Rate,hourly;
+  Output:Variable,*,Chiller Evaporator Mass Flow Rate,hourly;
 
-  Output:Variable,*,Chiller Cond Heat Trans Rate,hourly;
+  Output:Variable,*,Chiller Condenser Heat Transfer Rate,hourly;
 
   Output:Variable,*,Pump Mass Flow Rate,hourly;
 
-  Output:Variable,*,Pump Outlet Temp,hourly;
+  Output:Variable,*,Pump Outlet Temperature,hourly;
 
   Output:VariableDictionary,Regular;
 
@@ -3456,8 +3448,6 @@ InputOutputReference document for details.;
   Output:Meter:MeterFileOnly,Gas:Facility,monthly;
 
   Output:Meter:MeterFileOnly,Gas:Plant,monthly;
-
-  Output:Meter,Propane:Facility,hourly;
 
   Output:Meter:MeterFileOnly,Electricity:Facility,runperiod;
 
@@ -3498,15 +3488,15 @@ InputOutputReference document for details.;
     MyGeneralLights,         !- Name
     Electricity,             !- Fuel Type
     SPACE1-1 Lights 1,       !- Key Name 1
-    Lights Electric Consumption,  !- Output Variable or Meter Name 1
+    Lights Electric Energy,  !- Output Variable or Meter Name 1
     SPACE2-1 Lights 1,       !- Key Name 2
-    Lights Electric Consumption,  !- Output Variable or Meter Name 2
+    Lights Electric Energy,  !- Output Variable or Meter Name 2
     SPACE3-1 Lights 1,       !- Key Name 3
-    Lights Electric Consumption,  !- Output Variable or Meter Name 3
+    Lights Electric Energy,  !- Output Variable or Meter Name 3
     SPACE4-1 Lights 1,       !- Key Name 4
-    Lights Electric Consumption,  !- Output Variable or Meter Name 4
+    Lights Electric Energy,  !- Output Variable or Meter Name 4
     SPACE5-1 Lights 1,       !- Key Name 5
-    Lights Electric Consumption;  !- Output Variable or Meter Name 5
+    Lights Electric Energy;  !- Output Variable or Meter Name 5
 
   Meter:Custom,
     MyBuildingElectric,      !- Name
