@@ -45261,7 +45261,7 @@ Parametric:Logic,
   A1,  \field Name
        \required-field
        \type  alpha
-  A2,  \field Parametric Logic Line 1
+  A2;  \field Parametric Logic Line 1
        \begin-extensible
        \type  alpha
 
@@ -45288,7 +45288,7 @@ Parametric:FileNameSuffix,
        \extensible:1
   A1,  \field Name
        \type  alpha
-  A2,  \field Suffix for File Name in Run 1
+  A2;  \field Suffix for File Name in Run 1
        \type  alpha
        \begin-extensible
 
