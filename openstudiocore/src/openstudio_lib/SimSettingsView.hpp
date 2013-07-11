@@ -24,6 +24,7 @@
 
 #include <model/Model.hpp>
 #include <model/ShadowCalculation.hpp>
+#include <model/SimulationControl.hpp>
 
 class QButtonGroup;
 class QCheckBox;
@@ -39,6 +40,7 @@ namespace openstudio {
   class OSComboBox;
   class OSComboBox2;
   class OSIntegerEdit;
+  class OSIntegerEdit2;
   class OSLineEdit;
   class OSQuantityEdit;
   class OSSwitch;
@@ -102,6 +104,26 @@ private:
   void addField(QGridLayout * gridLayout,
                 int row,
                 int column,
+                QLabel * & label,
+                QString text,
+                OSComboBox2 * & comboBox);
+
+  void addField(QGridLayout * gridLayout,
+                int row,
+                int column,
+                QString text,
+                OSIntegerEdit * & integerEdit);
+
+  void addField(QGridLayout * gridLayout,
+                int row,
+                int column,
+                QString text,
+                OSIntegerEdit2 * & integerEdit);
+
+  void addField(QGridLayout * gridLayout,
+                int row,
+                int column,
+                QLabel * & label,
                 QString text,
                 OSIntegerEdit * & integerEdit);
 
@@ -110,7 +132,7 @@ private:
                 int column,
                 QLabel * & label,
                 QString text,
-                OSIntegerEdit * & integerEdit);
+                OSIntegerEdit2 * & integerEdit);
 
   void addField(QGridLayout * gridLayout,
                 int row,
@@ -175,6 +197,7 @@ private:
 
   model::Model m_model;
   boost::optional<model::ShadowCalculation> m_shadowCalculation;
+  boost::optional<model::SimulationControl> m_simulationControl;
 
   QCheckBox * m_runSimWeatherFiles;
   QCheckBox * m_runSimDesignDays;
@@ -200,8 +223,8 @@ private:
   OSSwitch * m_doPlantSizingCalculation;
   OSSwitch * m_runSimulationforSizingPeriods;
   OSSwitch * m_runSimulationforWeatherFileRunPeriods;
-  OSIntegerEdit * m_maximumNumberofWarmupDays;
-  OSIntegerEdit * m_minimumNumberofWarmupDays;
+  OSIntegerEdit2 * m_maximumNumberofWarmupDays;
+  OSIntegerEdit2 * m_minimumNumberofWarmupDays;
   OSQuantityEdit * m_loadsConvergenceToleranceValue;
   OSQuantityEdit * m_temperatureConvergenceToleranceValue;
   OSComboBox * m_solarDistribution;

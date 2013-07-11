@@ -1053,6 +1053,23 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
 void SimSettingsView::addField(QGridLayout * gridLayout,
                                int row,
                                int column,
+                               QLabel * & label,
+                               QString text,
+                               OSComboBox2 * & comboBox)
+{
+  label = new QLabel(text,this);
+  label->setFixedWidth(TEXT_FIELD_WIDTH);
+  label->setObjectName("H2");
+  gridLayout->addWidget(label,row++,column);
+
+  comboBox = new OSComboBox2(this);
+  comboBox->setFixedWidth(OSCOMBOBOX_FIELD_WIDTH);
+  gridLayout->addWidget(comboBox,row,column);
+}
+
+void SimSettingsView::addField(QGridLayout * gridLayout,
+                               int row,
+                               int column,
                                QString text,
                                OSIntegerEdit * & integerEdit)
 {
@@ -1062,6 +1079,22 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
   gridLayout->addWidget(label,row++,column);
 
   integerEdit = new OSIntegerEdit(this);
+  integerEdit->setFixedWidth(OSINTEGEREDIT_FIELD_WIDTH);
+  gridLayout->addWidget(integerEdit,row,column);
+}
+
+void SimSettingsView::addField(QGridLayout * gridLayout,
+                               int row,
+                               int column,
+                               QString text,
+                               OSIntegerEdit2 * & integerEdit)
+{
+  QLabel * label = new QLabel(text,this);
+  label->setFixedWidth(TEXT_FIELD_WIDTH);
+  label->setObjectName("H2");
+  gridLayout->addWidget(label,row++,column);
+
+  integerEdit = new OSIntegerEdit2(this);
   integerEdit->setFixedWidth(OSINTEGEREDIT_FIELD_WIDTH);
   gridLayout->addWidget(integerEdit,row,column);
 }
@@ -1079,6 +1112,23 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
   gridLayout->addWidget(label,row++,column);
 
   integerEdit = new OSIntegerEdit(this);
+  integerEdit->setFixedWidth(OSINTEGEREDIT_FIELD_WIDTH);
+  gridLayout->addWidget(integerEdit,row,column);
+}
+
+void SimSettingsView::addField(QGridLayout * gridLayout,
+                               int row,
+                               int column,
+                               QLabel * & label,
+                               QString text,
+                               OSIntegerEdit2 * & integerEdit)
+{
+  label = new QLabel(text,this);
+  label->setFixedWidth(TEXT_FIELD_WIDTH);
+  label->setObjectName("H2");
+  gridLayout->addWidget(label,row++,column);
+
+  integerEdit = new OSIntegerEdit2(this);
   integerEdit->setFixedWidth(OSINTEGEREDIT_FIELD_WIDTH);
   gridLayout->addWidget(integerEdit,row,column);
 }
@@ -1202,18 +1252,32 @@ void SimSettingsView::attachRunPeriodControlDaylightSavingTime()
 
 void SimSettingsView::attachSimulationControl()
 {
-  model::SimulationControl mo = m_model.getUniqueModelObject<model::SimulationControl>();
+  m_simulationControl = m_model.getUniqueModelObject<model::SimulationControl>();
 
-  m_doZoneSizingCalculation->bind(mo,"doZoneSizingCalculation");
-  m_doSystemSizingCalculation->bind(mo,"doSystemSizingCalculation");
-  m_doPlantSizingCalculation->bind(mo,"doPlantSizingCalculation");
-  m_runSimulationforSizingPeriods->bind(mo,"runSimulationforSizingPeriods");
-  m_runSimulationforWeatherFileRunPeriods->bind(mo,"runSimulationforWeatherFileRunPeriods");
-  m_maximumNumberofWarmupDays->bind(mo,"maximumNumberofWarmupDays");
-  m_minimumNumberofWarmupDays->bind(mo,"minimumNumberofWarmupDays");
-  m_loadsConvergenceToleranceValue->bind(mo,"loadsConvergenceToleranceValue",m_isIP);
-  m_temperatureConvergenceToleranceValue->bind(mo,"temperatureConvergenceToleranceValue",m_isIP);
-  m_solarDistribution->bind(mo,"solarDistribution");
+  m_doZoneSizingCalculation->bind(*m_simulationControl,"doZoneSizingCalculation");
+  m_doSystemSizingCalculation->bind(*m_simulationControl,"doSystemSizingCalculation");
+  m_doPlantSizingCalculation->bind(*m_simulationControl,"doPlantSizingCalculation");
+  m_runSimulationforSizingPeriods->bind(*m_simulationControl,"runSimulationforSizingPeriods");
+  m_runSimulationforWeatherFileRunPeriods->bind(*m_simulationControl,"runSimulationforWeatherFileRunPeriods");
+  m_maximumNumberofWarmupDays->bind(
+      *m_simulationControl,
+      IntGetter(boost::bind(&model::SimulationControl::maximumNumberofWarmupDays,m_simulationControl.get_ptr())),
+      boost::optional<IntSetter>(boost::bind(&model::SimulationControl::setMaximumNumberofWarmupDays,m_simulationControl.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetMaximumNumberofWarmupDays,m_simulationControl.get_ptr())),
+      boost::none,
+      boost::none,
+      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isMaximumNumberofWarmupDaysDefaulted,m_simulationControl.get_ptr())));
+  m_minimumNumberofWarmupDays->bind(
+      *m_simulationControl,
+      IntGetter(boost::bind(&model::SimulationControl::minimumNumberofWarmupDays,m_simulationControl.get_ptr())),
+      boost::optional<IntSetter>(boost::bind(&model::SimulationControl::setMinimumNumberofWarmupDays,m_simulationControl.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetMinimumNumberofWarmupDays,m_simulationControl.get_ptr())),
+      boost::none,
+      boost::none,
+      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isMinimumNumberofWarmupDaysDefaulted,m_simulationControl.get_ptr())));
+  m_loadsConvergenceToleranceValue->bind(*m_simulationControl,"loadsConvergenceToleranceValue",m_isIP);
+  m_temperatureConvergenceToleranceValue->bind(*m_simulationControl,"temperatureConvergenceToleranceValue",m_isIP);
+  m_solarDistribution->bind(*m_simulationControl,"solarDistribution");
 }
 
 void SimSettingsView::attachSizingParameters()
