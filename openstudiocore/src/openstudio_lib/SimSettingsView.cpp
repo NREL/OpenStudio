@@ -692,6 +692,9 @@ QWidget * SimSettingsView::createShadowCalculationWidget()
   col = col + 2;
   addField(gridLayout,row,col,"Sky Diffuse Modeling Algorithm",m_skyDiffuseModelingAlgorithm);
 
+  gridLayout->setRowStretch(100,100);
+  gridLayout->setColumnStretch(100,100);
+
   QWidget * widget = new QWidget();
   widget->setLayout(gridLayout);
   widget->hide();
@@ -1017,6 +1020,22 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
 void SimSettingsView::addField(QGridLayout * gridLayout,
                                int row,
                                int column,
+                               QString text,
+                               OSComboBox2 * & comboBox)
+{
+  QLabel * label = new QLabel(text,this);
+  label->setFixedWidth(TEXT_FIELD_WIDTH);
+  label->setObjectName("H2");
+  gridLayout->addWidget(label,row++,column);
+
+  comboBox = new OSComboBox2(this);
+  comboBox->setFixedWidth(OSCOMBOBOX_FIELD_WIDTH);
+  gridLayout->addWidget(comboBox,row,column);
+}
+
+void SimSettingsView::addField(QGridLayout * gridLayout,
+                               int row,
+                               int column,
                                QLabel * & label,
                                QString text,
                                OSComboBox * & comboBox)
@@ -1240,12 +1259,23 @@ void SimSettingsView::attachConvergenceLimits()
 
 void SimSettingsView::attachShadowCalculation()
 {
-  model::ShadowCalculation mo = m_model.getUniqueModelObject<model::ShadowCalculation>();
+  m_shadowCalculation = m_model.getUniqueModelObject<model::ShadowCalculation>();
 
-  m_calculationFrequency->bind(mo,"calculationFrequency");
-  m_maximumFiguresInShadowOverlapCalculations->bind(mo,"maximumFiguresInShadowOverlapCalculations");
-  m_polygonClippingAlgorithm->bind(mo,"polygonClippingAlgorithm");
-  m_skyDiffuseModelingAlgorithm->bind(mo,"skyDiffuseModelingAlgorithm");
+  m_calculationFrequency->bind(*m_shadowCalculation,"calculationFrequency");
+  m_maximumFiguresInShadowOverlapCalculations->bind(*m_shadowCalculation,
+                                                    "maximumFiguresInShadowOverlapCalculations");
+  m_polygonClippingAlgorithm->bind(
+      *m_shadowCalculation,
+      boost::bind(model::ShadowCalculation::validPolygonClippingAlgorithmValues),
+      OptionalStringGetter(boost::bind(&model::ShadowCalculation::polygonClippingAlgorithm,m_shadowCalculation.get_ptr())),
+      boost::optional<StringSetter>(boost::bind(&model::ShadowCalculation::setPolygonClippingAlgorithm,m_shadowCalculation.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::ShadowCalculation::resetPolygonClippingAlgorithm,m_shadowCalculation.get_ptr())));
+  m_skyDiffuseModelingAlgorithm->bind(
+      *m_shadowCalculation,
+      boost::bind(model::ShadowCalculation::validSkyDiffuseModelingAlgorithmValues),
+      OptionalStringGetter(boost::bind(&model::ShadowCalculation::skyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr())),
+      boost::optional<StringSetter>(boost::bind(&model::ShadowCalculation::setSkyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::ShadowCalculation::resetSkyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr())));
 }
 
 void SimSettingsView::attachSurfaceConvectionAlgorithmInside()

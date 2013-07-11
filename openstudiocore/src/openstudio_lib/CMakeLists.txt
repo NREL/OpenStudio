@@ -87,6 +87,7 @@ SET( ${target_name}_SRC
   FacilityTreeWidget.hpp
   FacilityView.cpp
   FacilityView.hpp
+  ../shared_gui_components/FieldMethodTypedefs.hpp
   FileOperations.cpp
   FileOperations.hpp
   GasEquipmentInspectorView.cpp

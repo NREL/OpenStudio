@@ -20,12 +20,12 @@
 #ifndef OPENSTUDIO_OSQUANTITYEDIT_HPP
 #define OPENSTUDIO_OSQUANTITYEDIT_HPP
 
+#include <shared_gui_components/FieldMethodTypedefs.hpp>
+
 #include <model/ModelObject.hpp>
 
 #include <utilities/units/Unit.hpp>
 #include <utilities/core/Logger.hpp>
-
-#include <boost/function.hpp>
 
 #include <QLineEdit>
 #include <QLabel>
@@ -33,11 +33,6 @@
 namespace openstudio {
 
 class Unit;
-
-typedef boost::function<OSOptionalQuantity (bool)> QuantityGetter;
-typedef boost::function<bool (const Quantity&)> QuantitySetter;
-typedef boost::function<void ()> NoFailAction;
-typedef boost::function<bool ()> BasicQuery;
 
 class OSQuantityEdit2: public QWidget {
   Q_OBJECT

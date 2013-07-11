@@ -23,6 +23,7 @@
 #include <QWidget>
 
 #include <model/Model.hpp>
+#include <model/ShadowCalculation.hpp>
 
 class QButtonGroup;
 class QCheckBox;
@@ -36,6 +37,7 @@ class QPushButton;
 namespace openstudio {
 
   class OSComboBox;
+  class OSComboBox2;
   class OSIntegerEdit;
   class OSLineEdit;
   class OSQuantityEdit;
@@ -83,6 +85,12 @@ private:
                 int column,
                 QString text,
                 OSComboBox * & comboBox);
+
+  void addField(QGridLayout * gridLayout,
+                int row,
+                int column,
+                QString text,
+                OSComboBox2 * & comboBox);
 
   void addField(QGridLayout * gridLayout,
                 int row,
@@ -166,6 +174,7 @@ private:
   void detachRadianceParameters();
 
   model::Model m_model;
+  boost::optional<model::ShadowCalculation> m_shadowCalculation;
 
   QCheckBox * m_runSimWeatherFiles;
   QCheckBox * m_runSimDesignDays;
@@ -251,8 +260,8 @@ private:
   // ShadowCalculation
   OSIntegerEdit * m_calculationFrequency;
   OSIntegerEdit * m_maximumFiguresInShadowOverlapCalculations;
-  OSLineEdit * m_polygonClippingAlgorithm;
-  OSLineEdit * m_skyDiffuseModelingAlgorithm;
+  OSComboBox2 * m_polygonClippingAlgorithm;
+  OSComboBox2 * m_skyDiffuseModelingAlgorithm;
 
   // SurfaceConvectionAlgorithmInside
   OSLineEdit * m_algorithmSurfaceConvectionInside;
