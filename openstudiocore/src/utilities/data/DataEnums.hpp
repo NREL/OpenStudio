@@ -190,6 +190,7 @@ OPENSTUDIO_ENUM(EndUseType,
   ((HeatingCoils))
   ((CoolingCoils))
   ((Boilers))
+  ((WaterSystems))
   ((Baseboard))
   ((HeatRecoveryForCooling))
   ((HeatRecoveryForHeating)));
