@@ -46,13 +46,16 @@ namespace detail {
   {
     RunManager_Impl::registerMetaTypes();
 
-    try {
-      openstudio::path basepath = toPath(m_params.get("job_base_path").children.at(0).value);
-      m_basePath = basepath;
-      LOG(Debug, "loaded basepath " << openstudio::toString(basepath));
-      m_params.remove("job_base_path"); // house keeping, it will get persisted via the getBasePath method if necessary
-    } catch (...) {
-      // nothing to do
+    if (m_params.has("job_base_path"))
+    {
+      JobParam p = m_params.get("job_base_path");
+      if (p.children.size() == 1)
+      {
+        openstudio::path basepath = toPath(p.children[0].value);
+        m_basePath = basepath;
+        LOG(Debug, "loaded basepath " << openstudio::toString(basepath));
+        m_params.remove("job_base_path"); // house keeping, it will get persisted via the getBasePath method if necessary
+      }
     }
 
     m_history.push_back(std::make_pair(boost::posix_time::microsec_clock::universal_time(), AdvancedStatus(AdvancedStatusEnum::Idle)));
@@ -299,8 +302,10 @@ namespace detail {
         } else {
           LOG(Error, "Unknown cleanoutfiles setting: " << typestr);
         }
-      } catch(...) {
+      } catch(const std::runtime_error &) {
         // no cleanoutfiles specified
+      } catch(const std::out_of_range &) {
+        // not enough children specified
       }
 
       if (type == standard)
