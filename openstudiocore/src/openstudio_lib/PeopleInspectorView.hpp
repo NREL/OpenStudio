@@ -31,6 +31,7 @@ namespace openstudio {
 
 class OSDropZone;
 class OSLineEdit;
+class OSLineEdit2;
 class OSQuantityEdit;
 class OSQuantityEdit2;
 class OSCheckBox;
@@ -126,7 +127,7 @@ class PeopleDefinitionInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSLineEdit* m_nameEdit;
+    OSLineEdit2* m_nameEdit;
 
     OSQuantityEdit2* m_numberofPeopleEdit;
     OSQuantityEdit2* m_peopleperSpaceFloorAreaEdit;

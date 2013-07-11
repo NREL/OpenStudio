@@ -328,7 +328,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP,
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   vLayout->addWidget(m_nameEdit);
 
   mainGridLayout->addLayout(vLayout,0,0,1,3, Qt::AlignTop);
@@ -447,7 +447,9 @@ void PeopleDefinitionInspectorView::onUpdate()
 void PeopleDefinitionInspectorView::attach(openstudio::model::PeopleDefinition& peopleDefinition)
 {
   m_peopleDefinition = peopleDefinition;
-  m_nameEdit->bind(peopleDefinition,"name");
+  m_nameEdit->bind(*m_peopleDefinition,
+                   OptionalStringGetter(boost::bind(&model::PeopleDefinition::name,m_peopleDefinition.get_ptr(),true)),
+                   boost::optional<StringSetter>(boost::bind(&model::PeopleDefinition::setName,m_peopleDefinition.get_ptr(),_1)));
   
   // function pointer variables needed to clarify overloads
   bool (model::PeopleDefinition::* set) (const Quantity&);
