@@ -98,7 +98,7 @@ weatherData_path = Path.new(ep_hash[:energyplus_weatherdata].to_s)
 
 
 # Daktoa
-dakota_hash = OpenStudio::Analysis::find_dakota()
+dakota_hash = OpenStudio::Analysis::find_dakota(5,3,1)
 if dakota_hash.nil?
   puts "Cannot run this script without Dakota. Please install Dakota (in a standard location) and try again."
   return

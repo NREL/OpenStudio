@@ -102,7 +102,7 @@ class AnalysisDriverWatcher_Test < Test::Unit::TestCase
     watcher.watch(analysis.uuid)
     
     # find dakota
-    dakota_hash = OpenStudio::Analysis::find_dakota
+    dakota_hash = OpenStudio::Analysis::find_dakota(5,3,1)
     if dakota_hash.nil?
       raise "Cannot run this script without Dakota. Please install Dakota (in a standard location) and try again."
     end
