@@ -101,7 +101,7 @@ OPENSTUDIO_ENUM(EndUseFuelType,
 OPENSTUDIO_ENUM(EndUseFuelType,
   ((Electricity)(Electricity))
   ((Gas)(Natural Gas))
-  ((OtherFuel)(Other Fuel))
+  ((AdditionalFuel)(Additional Fuel))
   ((DistrictCooling)(District Cooling))
   ((DistrictHeating)(District Heating))
   ((Water)(Water)));
