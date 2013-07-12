@@ -1203,6 +1203,21 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
   gridLayout->addWidget(osSwitch,row,column);
 }
 
+void SimSettingsView::addField(QGridLayout * gridLayout,
+                               int row,
+                               int column,
+                               QString text,
+                               OSSwitch2 * & osSwitch)
+{
+  QLabel * label = new QLabel(text,this);
+  label->setFixedWidth(TEXT_FIELD_WIDTH);
+  label->setObjectName("H2");
+  gridLayout->addWidget(label,row++,column);
+
+  osSwitch = new OSSwitch2(this);
+  gridLayout->addWidget(osSwitch,row,column);
+}
+
 void SimSettingsView::attachAll()
 {
   attachRunPeriod();
@@ -1254,11 +1269,36 @@ void SimSettingsView::attachSimulationControl()
 {
   m_simulationControl = m_model.getUniqueModelObject<model::SimulationControl>();
 
-  m_doZoneSizingCalculation->bind(*m_simulationControl,"doZoneSizingCalculation");
-  m_doSystemSizingCalculation->bind(*m_simulationControl,"doSystemSizingCalculation");
-  m_doPlantSizingCalculation->bind(*m_simulationControl,"doPlantSizingCalculation");
-  m_runSimulationforSizingPeriods->bind(*m_simulationControl,"runSimulationforSizingPeriods");
-  m_runSimulationforWeatherFileRunPeriods->bind(*m_simulationControl,"runSimulationforWeatherFileRunPeriods");
+  m_doZoneSizingCalculation->bind(
+      *m_simulationControl,
+      boost::bind(&model::SimulationControl::doZoneSizingCalculation,m_simulationControl.get_ptr()),
+      boost::optional<BoolSetter>(boost::bind(&model::SimulationControl::setDoZoneSizingCalculation,m_simulationControl.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetDoZoneSizingCalculation,m_simulationControl.get_ptr())),
+      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isDoZoneSizingCalculationDefaulted,m_simulationControl.get_ptr())));
+  m_doSystemSizingCalculation->bind(
+      *m_simulationControl,
+      boost::bind(&model::SimulationControl::doSystemSizingCalculation,m_simulationControl.get_ptr()),
+      boost::optional<BoolSetter>(boost::bind(&model::SimulationControl::setDoSystemSizingCalculation,m_simulationControl.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetDoSystemSizingCalculation,m_simulationControl.get_ptr())),
+      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isDoSystemSizingCalculationDefaulted,m_simulationControl.get_ptr())));
+  m_doPlantSizingCalculation->bind(
+      *m_simulationControl,
+      boost::bind(&model::SimulationControl::doPlantSizingCalculation,m_simulationControl.get_ptr()),
+      boost::optional<BoolSetter>(boost::bind(&model::SimulationControl::setDoPlantSizingCalculation,m_simulationControl.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetDoPlantSizingCalculation,m_simulationControl.get_ptr())),
+      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isDoPlantSizingCalculationDefaulted,m_simulationControl.get_ptr())));
+  m_runSimulationforSizingPeriods->bind(
+      *m_simulationControl,
+      boost::bind(&model::SimulationControl::runSimulationforSizingPeriods,m_simulationControl.get_ptr()),
+      boost::optional<BoolSetter>(boost::bind(&model::SimulationControl::setRunSimulationforSizingPeriods,m_simulationControl.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetRunSimulationforSizingPeriods,m_simulationControl.get_ptr())),
+      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isRunSimulationforSizingPeriodsDefaulted,m_simulationControl.get_ptr())));
+  m_runSimulationforWeatherFileRunPeriods->bind(
+      *m_simulationControl,
+      boost::bind(&model::SimulationControl::runSimulationforWeatherFileRunPeriods,m_simulationControl.get_ptr()),
+      boost::optional<BoolSetter>(boost::bind(&model::SimulationControl::setRunSimulationforWeatherFileRunPeriods,m_simulationControl.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetRunSimulationforWeatherFileRunPeriods,m_simulationControl.get_ptr())),
+      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isRunSimulationforWeatherFileRunPeriodsDefaulted,m_simulationControl.get_ptr())));
   m_maximumNumberofWarmupDays->bind(
       *m_simulationControl,
       IntGetter(boost::bind(&model::SimulationControl::maximumNumberofWarmupDays,m_simulationControl.get_ptr())),

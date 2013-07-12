@@ -44,6 +44,7 @@ namespace openstudio {
   class OSLineEdit;
   class OSQuantityEdit;
   class OSSwitch;
+  class OSSwitch2;
   class ScheduleCalendarWidget;
 
 class SimSettingsView : public QWidget
@@ -159,6 +160,12 @@ private:
                 QString text,
                 OSSwitch * & osSwitch);
 
+  void addField(QGridLayout * gridLayout,
+                int row,
+                int column,
+                QString text,
+                OSSwitch2 * & osSwitch);
+
   void attachAll();
   void attachRunPeriod();
   void attachRunPeriodControlDaylightSavingTime();
@@ -218,11 +225,11 @@ private:
   bool m_isIP;
 
   // SimulationControl
-  OSSwitch * m_doZoneSizingCalculation;
-  OSSwitch * m_doSystemSizingCalculation;
-  OSSwitch * m_doPlantSizingCalculation;
-  OSSwitch * m_runSimulationforSizingPeriods;
-  OSSwitch * m_runSimulationforWeatherFileRunPeriods;
+  OSSwitch2 * m_doZoneSizingCalculation;
+  OSSwitch2 * m_doSystemSizingCalculation;
+  OSSwitch2 * m_doPlantSizingCalculation;
+  OSSwitch2 * m_runSimulationforSizingPeriods;
+  OSSwitch2 * m_runSimulationforWeatherFileRunPeriods;
   OSIntegerEdit2 * m_maximumNumberofWarmupDays;
   OSIntegerEdit2 * m_minimumNumberofWarmupDays;
   OSQuantityEdit * m_loadsConvergenceToleranceValue;
