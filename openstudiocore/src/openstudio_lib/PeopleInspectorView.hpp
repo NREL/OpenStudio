@@ -29,6 +29,7 @@ class QColor;
 
 namespace openstudio {
 
+class OSDoubleEdit2;
 class OSDropZone;
 class OSLineEdit;
 class OSLineEdit2;
@@ -129,11 +130,11 @@ class PeopleDefinitionInspectorView : public ModelObjectInspectorView
 
     OSLineEdit2* m_nameEdit;
 
-    OSQuantityEdit2* m_numberofPeopleEdit;
+    OSDoubleEdit2* m_numberofPeopleEdit;
     OSQuantityEdit2* m_peopleperSpaceFloorAreaEdit;
     OSQuantityEdit2* m_spaceFloorAreaperPersonEdit;
-    OSQuantityEdit2* m_fractionRadiantEdit;
-    OSQuantityEdit2* m_sensibleHeatFractionEdit;
+    OSDoubleEdit2* m_fractionRadiantEdit;
+    OSDoubleEdit2* m_sensibleHeatFractionEdit;
     OSQuantityEdit2* m_carbonDioxideGenerationRateEdit;
     bool m_isIP;
     boost::optional<model::PeopleDefinition> m_peopleDefinition;
