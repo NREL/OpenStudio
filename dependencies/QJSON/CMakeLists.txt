@@ -10,6 +10,16 @@ set(qjson_MOC_HDRS
   serializerrunnable.h
 )
 
+IF(UNIX)
+  # all warnings
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fno-strict-aliasing ")
+  SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -fno-strict-aliasing --std=c99")
+  # effective c++
+  #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++")
+  # treat warnings as errors
+  #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+ENDIF(UNIX)
+
 qt4_wrap_cpp(qjson_MOC_SRCS ${qjson_MOC_HDRS})
 
 set (qjson_SRCS parser.cpp qobjecthelper.cpp json_scanner.cpp json_parser.cc parserrunnable.cpp serializer.cpp serializerrunnable.cpp)
