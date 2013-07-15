@@ -488,8 +488,9 @@ namespace sdd {
             fuelType == FuelType::FuelOil_2 ||
             fuelType == FuelType::Propane ||
             fuelType == FuelType::Water ||
-            fuelType == FuelType::Steam){
-          // skip these to avoid E+ warning
+            fuelType == FuelType::Steam ||
+            fuelType == FuelType::EnergyTransfer){
+          // skip these to avoid E+ warning, EnergyTransfer is internal to the simulation
           continue;
         }
 
@@ -501,6 +502,17 @@ namespace sdd {
 
         std::set<int> endUseTypes = EndUseType::getValues();
         BOOST_FOREACH(int endUseType, endUseTypes){
+
+          if (endUseType == EndUseType::HeatingCoils ||
+              endUseType == EndUseType::CoolingCoils ||
+              endUseType == EndUseType::Boilers ||
+              endUseType == EndUseType::Baseboard ||
+              endUseType == EndUseType::HeatRecoveryForCooling ||
+              endUseType == EndUseType::HeatRecoveryForHeating){
+            // ignore energy transfer meters
+            continue;
+          }
+
           // meter for this fuel type and end use
           // DLM: many of these will not be applicable and will cause E+ warnings
           model::Meter meter(*result);
