@@ -522,6 +522,108 @@ namespace sdd {
           meter.setReportingFrequency("Hourly");
         }
       }
+
+      // request specific meters
+      // ElectricEquipment - Receptacle, Process, Refrig
+      model::Meter meter(*result);
+      meter.setFuelType(FuelType::Electricity);
+      meter.setEndUseType(EndUseType::InteriorEquipment);
+      meter.setSpecificEndUse("Receptacle");
+      meter.setInstallLocationType(InstallLocationType::Facility);
+      meter.setReportingFrequency("Hourly");
+
+      meter = model::Meter(*result);
+      meter.setFuelType(FuelType::Electricity);
+      meter.setEndUseType(EndUseType::InteriorEquipment);
+      meter.setSpecificEndUse("Process");
+      meter.setInstallLocationType(InstallLocationType::Facility);
+      meter.setReportingFrequency("Hourly");
+
+      meter = model::Meter(*result);
+      meter.setFuelType(FuelType::Electricity);
+      meter.setEndUseType(EndUseType::InteriorEquipment);
+      meter.setSpecificEndUse("Refrig");
+      meter.setInstallLocationType(InstallLocationType::Facility);
+      meter.setReportingFrequency("Hourly");
+
+      meter = model::Meter(*result);
+      meter.setFuelType(FuelType::Electricity);
+      meter.setEndUseType(EndUseType::ExteriorEquipment);
+      meter.setSpecificEndUse("Receptacle");
+      meter.setInstallLocationType(InstallLocationType::Facility);
+      meter.setReportingFrequency("Hourly");
+
+      meter = model::Meter(*result);
+      meter.setFuelType(FuelType::Electricity);
+      meter.setEndUseType(EndUseType::ExteriorEquipment);
+      meter.setSpecificEndUse("Process");
+      meter.setInstallLocationType(InstallLocationType::Facility);
+      meter.setReportingFrequency("Hourly");
+
+      meter = model::Meter(*result);
+      meter.setFuelType(FuelType::Electricity);
+      meter.setEndUseType(EndUseType::ExteriorEquipment);
+      meter.setSpecificEndUse("Refrig");
+      meter.setInstallLocationType(InstallLocationType::Facility);
+      meter.setReportingFrequency("Hourly");
+
+      // GasEquipment - Receptacle, Process
+      meter = model::Meter(*result);
+      meter.setFuelType(FuelType::Gas);
+      meter.setEndUseType(EndUseType::InteriorEquipment);
+      meter.setSpecificEndUse("Receptacle");
+      meter.setInstallLocationType(InstallLocationType::Facility);
+      meter.setReportingFrequency("Hourly");
+
+      meter = model::Meter(*result);
+      meter.setFuelType(FuelType::Gas);
+      meter.setEndUseType(EndUseType::InteriorEquipment);
+      meter.setSpecificEndUse("Process");
+      meter.setInstallLocationType(InstallLocationType::Facility);
+      meter.setReportingFrequency("Hourly");
+
+      meter = model::Meter(*result);
+      meter.setFuelType(FuelType::Gas);
+      meter.setEndUseType(EndUseType::ExteriorEquipment);
+      meter.setSpecificEndUse("Receptacle");
+      meter.setInstallLocationType(InstallLocationType::Facility);
+      meter.setReportingFrequency("Hourly");
+
+      meter = model::Meter(*result);
+      meter.setFuelType(FuelType::Gas);
+      meter.setEndUseType(EndUseType::ExteriorEquipment);
+      meter.setSpecificEndUse("Process");
+      meter.setInstallLocationType(InstallLocationType::Facility);
+      meter.setReportingFrequency("Hourly");
+
+      // Lights - Reg Ltg, NonReg Ltg
+      meter = model::Meter(*result);
+      meter.setFuelType(FuelType::Gas);
+      meter.setEndUseType(EndUseType::InteriorLights);
+      meter.setSpecificEndUse("Reg Ltg");
+      meter.setInstallLocationType(InstallLocationType::Facility);
+      meter.setReportingFrequency("Hourly");
+
+      meter = model::Meter(*result);
+      meter.setFuelType(FuelType::Gas);
+      meter.setEndUseType(EndUseType::InteriorLights);
+      meter.setSpecificEndUse("NonReg Ltg");
+      meter.setInstallLocationType(InstallLocationType::Facility);
+      meter.setReportingFrequency("Hourly");
+
+      meter = model::Meter(*result);
+      meter.setFuelType(FuelType::Gas);
+      meter.setEndUseType(EndUseType::ExteriorLights);
+      meter.setSpecificEndUse("Reg Ltg");
+      meter.setInstallLocationType(InstallLocationType::Facility);
+      meter.setReportingFrequency("Hourly");
+
+      meter = model::Meter(*result);
+      meter.setFuelType(FuelType::Gas);
+      meter.setEndUseType(EndUseType::ExteriorLights);
+      meter.setSpecificEndUse("NonReg Ltg");
+      meter.setInstallLocationType(InstallLocationType::Facility);
+      meter.setReportingFrequency("Hourly");
     }
 
     return result;
