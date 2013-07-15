@@ -107,7 +107,7 @@ OPENSTUDIO_ENUM(EndUseFuelType,
   ((Water)(Water)));
 
 /** \class EndUseCategoryType 
- *  \brief End use categories reported by OpenStudio.
+ *  \brief End use categories reported by OpenStudio.  These correspond to the "End Uses" table in the ABUPs report.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual 
  *  macro call is: 
  *  \code
@@ -141,12 +141,12 @@ OPENSTUDIO_ENUM(EndUseCategoryType,
   ((HeatRecovery)(Heat Recovery))
   ((WaterSystems)(Water Systems))
   ((Refrigeration)(Refrigeration))
-  ((Generators)(Generators)));
+  ((Generators)(Generators)));  // DLM: this references the Cogeneration meter
 
 /** \class EndUseType
- *  \brief End uses metered by EnergyPlus. 
- *  \details HeatingCoils and below are only used for FuelType::EnergyTransfer. See the 
- *  OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is: 
+ *  \brief End uses that can be metered by EnergyPlus.  Some EndUseTypes correspond to EndUseCategoryTypes, others
+ *  do not.  
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is: 
  *  \code
 OPENSTUDIO_ENUM(EndUseType,
   ((InteriorLights))
@@ -160,10 +160,9 @@ OPENSTUDIO_ENUM(EndUseType,
   ((HeatRejection))
   ((Humidifier))
   ((HeatRecovery))
-  ((DHW))
+  ((WaterSystems))
   ((Cogeneration))
   ((Refrigeration))
-  ((Miscellaneous))
   ((HeatingCoils))
   ((CoolingCoils))
   ((Boilers))
@@ -183,10 +182,9 @@ OPENSTUDIO_ENUM(EndUseType,
   ((HeatRejection))
   ((Humidifier))
   ((HeatRecovery))
-  ((DHW))
+  ((WaterSystems))
   ((Cogeneration))
   ((Refrigeration))
-  ((Miscellaneous))
   ((HeatingCoils))
   ((CoolingCoils))
   ((Boilers))
