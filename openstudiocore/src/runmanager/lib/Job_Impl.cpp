@@ -289,8 +289,10 @@ namespace detail {
     {
       CleanType type = standard;
 
-      try {
-        std::string typestr = allParams().get("cleanoutfiles").children.at(0).value;
+      JobParams params = allParams();
+      if (params.has("cleanoutfiles") && !params.get("cleanoutfiles").children.empty())
+      {
+        std::string typestr = params.get("cleanoutfiles").children.at(0).value;
 
         if (typestr == "none")
         {
@@ -302,11 +304,7 @@ namespace detail {
         } else {
           LOG(Error, "Unknown cleanoutfiles setting: " << typestr);
         }
-      } catch(const std::runtime_error &) {
-        // no cleanoutfiles specified
-      } catch(const std::out_of_range &) {
-        // not enough children specified
-      }
+      } 
 
       if (type == standard)
       {
@@ -511,13 +509,11 @@ namespace detail {
       }
     }
 
-    try {
-      allParams().get("flatoutdir");
+    if (allParams().has("flatoutdir"))
+    {
       flatoutdir = true;
       prefix = boost::lexical_cast<std::string>(index()) + "-";
-    } catch(...) {
-      // guess it's not a flat out dir
-    }
+    } 
 
     QReadLocker l(&m_mutex);
     boost::shared_ptr<Job_Impl> p = m_parent.lock();
