@@ -115,6 +115,8 @@
 #include <model/SizingSystem_Impl.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
+#include <model/PipeAdiabatic.hpp>
+#include <model/PipeAdiabatic_Impl.hpp>
 
 #include <utilities/units/QuantityConverter.hpp>
 #include <utilities/units/IPUnit.hpp>
@@ -1842,6 +1844,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       plantLoop.addSupplyBranchForComponent(mo->cast<model::HVACComponent>());
     }
   }
+
+  // Add a default bypass
+
+  model::PipeAdiabatic pipe(model);
+
+  plantLoop.addSupplyBranchForComponent(pipe);
+
+  // Add a default hot water heater for servicehotwater systems
 
   if( typeElement.text().toLower() == "servicehotwater" )
   {
