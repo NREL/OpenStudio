@@ -268,11 +268,11 @@ namespace runmanager {
     static const char exeext[] = "";
 #endif
 
-    std::string exename = "expandobjects";
+    std::string exename = "ExpandObjects";
 
-    if (eplus.first.getMajor() && eplus.first.getMajor() >= 8)
+    if (eplus.first.getMajor() && eplus.first.getMajor() < 8)
     {
-      exename = "ExpandObjects";
+      exename = "expandobjects";
     }
 
     return openstudio::runmanager::ToolInfo(
@@ -368,11 +368,11 @@ namespace runmanager {
     static const char exeext[] = "";
 #endif
 
-    std::string exename = "expandobjects";
+    std::string exename = "EnergyPlus";
 
-    if (eplus.first.getMajor() && eplus.first.getMajor() >= 8)
+    if (eplus.first.getMajor() && eplus.first.getMajor() < 8)
     {
-      exename = "EnergyPlus";
+      exename = "energyplus";
     }
 
 
