@@ -446,8 +446,8 @@ ENDIF()
 
 ExternalProject_Add(QJSON
   DEPENDS ${QJSON_DEPENDS}
-  GIT_REPOSITORY https://github.com/flavio/qjson.git
-  GIT_TAG 0.8.1
+  URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qjson-0.8.1.tar.gz
+  URL_MD5 4eef13da988edf8f91c260a3e1baeea9
   PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/QJSON/CMakeLists.txt  ${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON/src COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/QJSON/QJSONConfig.cmake.in ${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/QJSON/qjson_export.h ${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON/src
 
   CMAKE_CACHE_ARGS
