@@ -1,19 +1,20 @@
 #ifndef OPENSTUDIO_RUNMANAGER_JSON
 #define OPENSTUDIO_RUNMANAGER_JSON
 
+#include "RunManagerAPI.hpp"
+
 #include <string>
 #include <vector>
 #include <QVariant>
 #include <QUrl>
 #include <utilities/core/Path.hpp>
-
+#include "Job.hpp"
 
 namespace openstudio {
   class URLSearchPath;
 
   namespace runmanager {
 
-    class Job;
     class WorkItem;
     class JobType;
     class FileInfo;
@@ -22,7 +23,7 @@ namespace openstudio {
     class ErrorType;
     class JobErrors;
 
-    class JSON
+    class RUNMANAGER_API JSON
     {
       public:
         /// \returns a job tree created from the passed in json string

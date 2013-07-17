@@ -39,8 +39,10 @@ if(NOT android)
                               SOVERSION ${QJSON_LIB_MAJOR_VERSION}
 	                      )
 endif()
+
+# force no exports to make it a static lib (this only matters on windows)
 set_target_properties(qjson PROPERTIES
-                      DEFINE_SYMBOL QJSON_MAKEDLL
+                      DEFINE_SYMBOL QJSON_EXPORT
                       PUBLIC_HEADER "${qjson_HEADERS}"
                       FRAMEWORK ${OSX_FRAMEWORK}
                       )
