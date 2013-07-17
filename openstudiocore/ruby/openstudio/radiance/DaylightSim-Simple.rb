@@ -249,9 +249,9 @@ def exec_statement(s)
   if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
     s = s.gsub("/", "\\")
   end
-  puts "'#{s}'"
+  puts "start '#{s}'"
   result = system(s)
-  puts
+  puts "end '#{s}'"
   return result
 end
 
@@ -570,6 +570,8 @@ end
 
 def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_outPath, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
 
+  puts "runSimulation called"
+
   values = Hash.new
   dcVectors = Hash.new
 
@@ -645,8 +647,14 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
     end #dctimestep command(s)
 
+    exec_statement("gendaymtx -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" > \"#{(t_outPath / OpenStudio::Path.new("merged_space.ill")).to_s}\"");
+
+
+
+=begin
 
     threads = []
+
 
     simTimes.each_index do |i|
       puts "Radiance (rcontrib) calculating: #{simTimes[i]}"
@@ -658,6 +666,8 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
         end
         next 
       end
+
+
 
       # start a new thread for this simulation
       threads << Thread.new {
@@ -769,6 +779,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
       end
     end
     threads = []
+=end
 
   end
 
@@ -1262,6 +1273,17 @@ if (weatherFile.empty? || epwFile.empty? || !File.exists?(epwFile.get.to_s))
     epwFile = OpenStudio::OptionalEpwFile.new(OpenStudio::EpwFile.new(possibleEpw))
   end
 end
+
+weaPath = nil
+smxPath = nil
+
+# convert epw to other weather file type
+if (!epwFile.empty?)
+  epwFilePath = epwFile.get().path()
+  weaPath = outPath / OpenStudio::Path.new("in.wea")
+  exec_statement("epw2wea \"#{epwFilePath.to_s}\" \"#{weaPath.to_s}\"")
+end
+
 
 site_name = site.getString(1, true).get
 site_latitude = site.getString(2, true).get
