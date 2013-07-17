@@ -1,6 +1,7 @@
 #include "JSON.hpp"
 
 #include "Job.hpp"
+#include "JobFactory.hpp"
 #include "WorkItem.hpp"
 
 #include <qjson/parser.h>
@@ -8,50 +9,6 @@
 
 namespace openstudio {
 namespace runmanager {
-
-  Job JSON::toJob(const QVariant &t_variant)
-  {
-    /*
-    QVariantMap map = t_variant.toMap();
-
-    boost::optional<QUuid> uuid = map.contains("uuid")?map["uuid"].toUuid():boost::optional<QUuid>();
-
-    Tools tools = map["tools"];
-    Files files = map["files"];
-    Params params = map["params"];
-    JobErrors errors = maps["errors"];
-    QString 
-    */
-
-    /*
-    QVariantMap map = t_variant.toMap();
-    QVariantMap obj = map["Job"].toMap();
-
-    Tools tools = toTools(obj["tools"]);
-    Files files = toFiles(obj["files"]);
-    Params params = toParams(obj["params"]);
-
-    JobErrors errors = toErrors(obj["errors"]);
-    */
-  }
-
-  /// \returns a job tree created from the passed in json string
-  Job JSON::toJob(const std::string &t_jsonString)
-  {
-    /*
-    QJson::Parser parser;
-
-    bool ok = false;
-    QVariantMap result = parser.parse(openstudio::toQString(t_jsonString), &ok);
-
-    if (!ok)
-    {
-      throw std::runtime_error("Error parsing JSON string: " + openstudio::toString(parser.errorString()));
-    }
-
-    return toJob(result);
-    */
-  }
 
 
   /// \returns a JSON string representation of the given job tree
@@ -231,10 +188,10 @@ namespace runmanager {
   {
     QVariantMap map;
     map["type"] = toVariant(t_jobTree.jobType());
-    map["files"] = toVariant(t_jobTree.inputFiles());
+    map["files"] = toVariant(t_jobTree.rawInputFiles());
     map["params"] = toVariant(t_jobTree.params());
     map["tools"] = toVariant(t_jobTree.tools());
-    map["uuid"] = QVariant(t_jobTree.uuid());
+    map["uuid"] = QVariant(t_jobTree.uuid().toString());
 
     if (t_jobTree.lastRun())
     {
@@ -263,13 +220,294 @@ namespace runmanager {
   /// \returns a JSON string representation of the WorkItem
   std::string JSON::toJSON(const WorkItem &t_workItem)
   {
+    return toJSON(toVariant(t_workItem));    
+  }
+
+  QVariant JSON::toVariant(const WorkItem &t_workItem)
+  {
+    QVariantMap map;
+    map["type"] = toVariant(t_workItem.type);
+    map["tools"] = toVariant(t_workItem.tools.tools());
+    map["params"] = toVariant(t_workItem.params.params());
+    map["files"] = toVariant(t_workItem.files.files());
+    map["jobkeyname"] = toQString(t_workItem.jobkeyname);
     
+    QVariantMap parent;
+    parent["WorkItem"] = map;
+    return parent;
   }
 
   /// \returns a WorkItem from the given JSON string
-  WorkItem JSON::toWorkitem(const std::string &t_jsonString)
+  WorkItem JSON::toWorkItem(const std::string &t_json)
   {
+    QJson::Parser parser;
+    bool ok = false;
+    QVariant variant = parser.parse(toQString(t_json).toUtf8(), &ok);
+
+    if (ok)
+    {
+      return toWorkItem(variant);
+    } else {
+      throw std::runtime_error("Error parsing JSON: " + toString(parser.errorString()));
+    }
   }
+
+  WorkItem JSON::toWorkItem(const QVariant &t_variant)
+  {
+    QVariantMap map = t_variant.toMap()["WorkItem"].toMap();
+
+    if (map.empty())
+    {
+      throw std::runtime_error("Unable to find WorkItem object at expected location");
+    }
+
+    return WorkItem(
+        JobType(toString(map["type"].toString())),
+        Tools(toVectorOfToolInfo(map["tools"])),
+        JobParams(toVectorOfJobParam(map["params"])),
+        Files(toVectorOfFileInfo(map["files"])),
+        toString(map["jobkeyname"].toString())
+        );
+  }
+
+
+  /// \returns a JSON string representation of the given job tree
+  Job JSON::toJob(const std::string &t_json)
+  {
+    QJson::Parser parser;
+    bool ok = false;
+    QVariant variant = parser.parse(toQString(t_json).toUtf8(), &ok);
+
+    if (ok)
+    {
+      return toJob(variant);
+    } else {
+      throw std::runtime_error("Error parsing JSON: " + toString(parser.errorString()));
+    }
+  }
+
+
+  JobType JSON::toJobType(const QVariant &t_variant)
+  {
+    return JobType(toString(t_variant.toString()));
+  }
+
+  std::vector<std::pair<QUrl, openstudio::path> > JSON::toRequiredFiles(const QVariant &t_variant)
+  {
+    std::vector<std::pair<QUrl, openstudio::path> > retval;
+
+    QVariantList qvl = t_variant.toList();
+    
+    for (QVariantList::iterator itr = qvl.begin();
+         itr != qvl.end();
+         ++itr)
+    {
+      QVariantMap qvm = itr->toMap();
+
+      retval.push_back(std::make_pair(qvm["url"].toUrl(), openstudio::toPath(qvm["path"].toString())));
+    }
+
+    return retval;
+  }
+
+  FileInfo JSON::toFileInfo(const QVariant &t_variant)
+  {
+    QVariantMap map = t_variant.toMap()["FileInfo"].toMap();
+
+    if (map.empty())
+    {
+      throw std::runtime_error("Unable to find FileInfo object at expected location");
+    }
+
+    FileInfo fi(
+        toString(map["filename"].toString()),
+        openstudio::DateTime(toString(map["lastModified"].toString())),
+        toString(map["key"].toString()),
+        toPath(map["fullPath"].toString()),
+        map["exists"].toBool());
+        
+    fi.requiredFiles = toRequiredFiles(map["requiredFiles"]);
+
+    return fi;
+  }
+
+
+
+  std::vector<FileInfo> JSON::toVectorOfFileInfo(const QVariant &t_variant)
+  {
+    std::vector<FileInfo> retval;
+    QVariantList qvl = t_variant.toList();
+
+    for (QVariantList::const_iterator itr = qvl.begin();
+         itr != qvl.end();
+         ++itr)
+    {
+      retval.push_back(toFileInfo(*itr));
+    }
+
+    return retval;
+  }
+
+  JobParam JSON::toJobParam(const QVariant &t_variant)
+  {
+    QVariantMap qvm = t_variant.toMap()["JobParam"].toMap();
+
+    if (qvm.empty())
+    {
+      throw std::runtime_error("Unable to find JobParam object at expected location");
+    }
+
+    JobParam param(toString(qvm["value"].toString()));
+    param.children = toVectorOfJobParam(qvm["children"]);
+
+    return param;
+  }
+
+  std::vector<JobParam> JSON::toVectorOfJobParam(const QVariant &t_variant)
+  {
+    QVariantList qvl = t_variant.toList();
+
+    std::vector<JobParam> retval;
+
+    for (QVariantList::const_iterator itr = qvl.begin();
+         itr != qvl.end();
+         ++itr)
+    {
+      retval.push_back(toJobParam(*itr));
+    }
+
+    return retval;
+  }
+
+  ToolInfo JSON::toToolInfo(const QVariant &t_variant)
+  {
+    QVariantMap qvm = t_variant.toMap()["ToolInfo"].toMap();
+
+    if (qvm.empty())
+    {
+      throw std::runtime_error("Unable to find ToolInfo object at expected location");
+    }
+
+    return ToolInfo(
+        toString(qvm["name"].toString()),
+        ToolVersion::fromString(toString(qvm["version"].toString())),
+        toPath(qvm["localBinPath"].toString()),
+        toPath(qvm["remoteArchive"].toString()),
+        toPath(qvm["remoteExe"].toString()),
+        boost::regex(toString(qvm["outFileFilter"].toString()))
+      );
+  }
+
+  std::vector<ToolInfo> JSON::toVectorOfToolInfo(const QVariant &t_variant)
+  {
+    QVariantList qvl = t_variant.toList();
+    std::vector<ToolInfo> retval;
+
+    for (QVariantList::const_iterator itr = qvl.begin();
+         itr != qvl.end();
+         ++itr)
+    {
+      retval.push_back(toToolInfo(*itr));
+    }
+
+    return retval;
+  }
+
+  std::vector<Job> JSON::toVectorOfJob(const QVariant &t_variant)
+  {
+    QVariantList qvl = t_variant.toList();
+    std::vector<Job> retval;
+
+    for (QVariantList::const_iterator itr = qvl.begin();
+         itr != qvl.end();
+         ++itr)
+    {
+      retval.push_back(toJob(*itr));
+    }
+
+    return retval;
+  }
+
+  std::vector<std::pair<ErrorType, std::string> > JSON::toVectorOfError(const QVariant &t_variant)
+  {
+    QVariantList qvl = t_variant.toList();
+
+    std::vector<std::pair<ErrorType, std::string> > retval;
+
+    for (QVariantList::const_iterator itr = qvl.begin();
+         itr != qvl.end();
+         ++itr)
+    {
+      QVariantMap qvm = itr->toMap();
+      retval.push_back(
+          std::make_pair(
+            ErrorType(toString(qvm["errorType"].toString())),
+            toString(qvm["description"].toString())
+            )
+          );
+    }
+
+    return retval;
+  }
+
+  JobErrors JSON::toJobErrors(const QVariant &t_variant)
+  {
+    
+    QVariantMap map = t_variant.toMap()["JobErrors"].toMap();
+
+    if (map.empty())
+    {
+      throw std::runtime_error("Unable to find JobErrors object at expected location");
+    }
+
+    return JobErrors(
+          openstudio::ruleset::OSResultValue(toString(map["result"].toString())),
+          toVectorOfError(map["allErrors"])
+        );
+
+  }
+
+  Job JSON::toJob(const QVariant &t_variant)
+  {
+    QVariantMap map = t_variant.toMap()["Job"].toMap();
+
+    if (map.empty())
+    {
+      throw std::runtime_error("Unable to find Job object at expected location");
+    }
+
+    Job job = JobFactory::createJob(
+        JobType(toString(map["type"].toString())),
+        Tools(toVectorOfToolInfo(map["tools"])),
+        JobParams(toVectorOfJobParam(map["params"])),
+        Files(toVectorOfFileInfo(map["files"])),
+        std::vector<openstudio::URLSearchPath>(),
+        false,
+        map.contains("uuid")?openstudio::UUID(map["uuid"].toString()):boost::optional<openstudio::UUID>(),
+        map.contains("lastRun")?openstudio::DateTime(toString(map["lastRun"].toString())):boost::optional<openstudio::DateTime>(),
+        toJobErrors(map["errors"]),
+        Files(toVectorOfFileInfo(map["outputFiles"]))
+        );
+
+
+    std::vector<Job> children = toVectorOfJob(map["children"]);
+
+    for (std::vector<Job>::const_iterator itr = children.begin();
+         itr != children.end();
+         ++itr)
+    {
+      job.addChild(*itr);
+    }
+
+    if (map.contains("finishedJob"))
+    {
+      Job finishedJob = toJob(map["finishedJob"]);
+      job.setFinishedJob(finishedJob);
+    }
+
+    return job;
+  }
+
 
 }
 }

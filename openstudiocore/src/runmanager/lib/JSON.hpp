@@ -9,6 +9,8 @@
 
 
 namespace openstudio {
+  class URLSearchPath;
+
   namespace runmanager {
 
     class Job;
@@ -32,11 +34,6 @@ namespace openstudio {
         /// Updates the given job tree with the new values from the jsonString
 //        void updateFromJSON(Job &t_jobTree, const std::string &t_jsonString);
 
-/// \returns a JSON string representation of the WorkItem
-        static std::string toJSON(const WorkItem &t_workItem);
-
-        /// \returns a WorkItem from the given JSON string
-        static WorkItem toWorkitem(const std::string &t_jsonString);
 
         static Job toJob(const QVariant &t_variant);
 
@@ -54,6 +51,24 @@ namespace openstudio {
         static QVariant toVariant(const std::vector<std::pair<ErrorType, std::string> > &t_errors);
         static QVariant toVariant(const JobErrors &t_errors);
         static QVariant toVariant(const Job &t_jobTree);
+
+
+        static std::string toJSON(const WorkItem &t_workItem);
+        static QVariant toVariant(const WorkItem &t_workItem);
+        static WorkItem toWorkItem(const std::string &t_json);
+        static WorkItem toWorkItem(const QVariant &t_variant);
+        static JobType toJobType(const QVariant &t_variant);
+        static std::vector<std::pair<QUrl, openstudio::path> > toRequiredFiles(const QVariant &t_variant);
+        static FileInfo toFileInfo(const QVariant &t_variant);
+        static std::vector<FileInfo> toVectorOfFileInfo(const QVariant &t_variant);
+        static JobParam toJobParam(const QVariant &t_variant);
+        static std::vector<JobParam> toVectorOfJobParam(const QVariant &t_variant);
+        static ToolInfo toToolInfo(const QVariant &t_variant);
+        static std::vector<ToolInfo> toVectorOfToolInfo(const QVariant &t_variant);
+        static std::vector<Job> toVectorOfJob(const QVariant &t_variant);
+        static std::vector<std::pair<ErrorType, std::string> > toVectorOfError(const QVariant &t_variant);
+        static JobErrors toJobErrors(const QVariant &t_variant);
+
 
     };
   }
