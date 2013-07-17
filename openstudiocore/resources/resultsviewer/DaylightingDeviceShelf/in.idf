@@ -13,9 +13,9 @@
 ! Plant:    None.
 ! FCW, 6/17/04: changed height for daylighting illuminance maps from 0.0m to 0.8m to correspond
 !               to reference point height
- 
-  Version,7.2;
- 
+
+  Version,8.0;
+
   Building,
     Daylighting Shelf Example,  !- Name
     0.0,                     !- North Axis {deg}
@@ -25,32 +25,33 @@
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
     6;                       !- Minimum Number of Warmup Days
- 
+
   Timestep,6;
- 
+
   ShadowCalculation,
+    AverageOverDaysInFrequency,  !- Calculation Method
     20;                      !- Calculation Frequency
- 
+
   HeatBalanceAlgorithm,ConductionTransferFunction;
- 
+
   SurfaceConvectionAlgorithm:Inside,TARP;
- 
+
   SurfaceConvectionAlgorithm:Outside,DOE-2;
- 
+
   GlobalGeometryRules,
     UpperLeftCorner,         !- Starting Vertex Position
     CounterClockWise,        !- Vertex Entry Direction
     Relative;                !- Coordinate System
- 
+
   Site:Location,
     CHICAGO_IL_USA_WMO_725300,  !- Name
     42.00,                   !- Latitude {deg}
     -87.88,                  !- Longitude {deg}
     -6.00,                   !- Time Zone {hr}
     190.00;                  !- Elevation {m}
- 
+
  ! CHICAGO_IL_USA Annual Heating 99%, MaxDB=-17.3°C
- 
+
   SizingPeriod:DesignDay,
     CHICAGO Ann Htg 99% Condns DB,  !- Name
     1,                       !- Month
@@ -59,7 +60,7 @@
     -17.3,                   !- Maximum Dry-Bulb Temperature {C}
     0.0,                     !- Daily Dry-Bulb Temperature Range {deltaC}
     ,                        !- Dry-Bulb Temperature Range Modifier Type
-    ,                        !- Dry-Bulb Temperature Range Modifier Schedule Name
+    ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     -17.3,                   !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
     ,                        !- Humidity Condition Day Schedule Name
@@ -78,9 +79,9 @@
     ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
     ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.00;                    !- Sky Clearness
- 
+
  ! CHICAGO_IL_USA Annual Cooling (DB=>MWB) 1%, MaxDB=31.5°C MWB=23°C
- 
+
   SizingPeriod:DesignDay,
     CHICAGO Ann Clg 1% Condns DB=>MWB,  !- Name
     7,                       !- Month
@@ -89,7 +90,7 @@
     31.5,                    !- Maximum Dry-Bulb Temperature {C}
     10.7,                    !- Daily Dry-Bulb Temperature Range {deltaC}
     ,                        !- Dry-Bulb Temperature Range Modifier Type
-    ,                        !- Dry-Bulb Temperature Range Modifier Schedule Name
+    ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     23,                      !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
     ,                        !- Humidity Condition Day Schedule Name
@@ -108,7 +109,7 @@
     ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
     ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     1.00;                    !- Sky Clearness
- 
+
   RunPeriod,
     ,                        !- Name
     1,                       !- Begin Month
@@ -121,14 +122,14 @@
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
     Yes;                     !- Use Weather File Snow Indicators
- 
+
   SimulationControl,
     NO,                      !- Do Zone Sizing Calculation
     NO,                      !- Do System Sizing Calculation
     NO,                      !- Do Plant Sizing Calculation
     YES,                     !- Run Simulation for Sizing Periods
     NO;                      !- Run Simulation for Weather File Run Periods
- 
+
   Material,
     A1 - 1 IN STUCCO,        !- Name
     Smooth,                  !- Roughness
@@ -139,7 +140,7 @@
     0.90,                    !- Thermal Absorptance
     0.92,                    !- Solar Absorptance
     0.92;                    !- Visible Absorptance
- 
+
   Material,
     C4 - 4 IN COMMON BRICK,  !- Name
     Rough,                   !- Roughness
@@ -150,7 +151,7 @@
     0.90,                    !- Thermal Absorptance
     0.76,                    !- Solar Absorptance
     0.76;                    !- Visible Absorptance
- 
+
   Material,
     E1 - 3 / 4 IN PLASTER OR GYP BOARD,  !- Name
     Smooth,                  !- Roughness
@@ -161,7 +162,7 @@
     0.90,                    !- Thermal Absorptance
     0.30,                    !- Solar Absorptance
     0.30;                    !- Visible Absorptance
- 
+
   Material,
     C6 - 8 IN CLAY TILE,     !- Name
     Smooth,                  !- Roughness
@@ -172,7 +173,7 @@
     0.90,                    !- Thermal Absorptance
     0.82,                    !- Solar Absorptance
     0.82;                    !- Visible Absorptance
- 
+
   Material,
     C10 - 8 IN HW CONCRETE,  !- Name
     MediumRough,             !- Roughness
@@ -183,7 +184,7 @@
     0.90,                    !- Thermal Absorptance
     0.65,                    !- Solar Absorptance
     0.65;                    !- Visible Absorptance
- 
+
   Material,
     E2 - 1 / 2 IN SLAG OR STONE,  !- Name
     Rough,                   !- Roughness
@@ -194,7 +195,7 @@
     0.90,                    !- Thermal Absorptance
     0.55,                    !- Solar Absorptance
     0.55;                    !- Visible Absorptance
- 
+
   Material,
     E3 - 3 / 8 IN FELT AND MEMBRANE,  !- Name
     Rough,                   !- Roughness
@@ -205,7 +206,7 @@
     0.90,                    !- Thermal Absorptance
     0.75,                    !- Solar Absorptance
     0.75;                    !- Visible Absorptance
- 
+
   Material,
     B5 - 1 IN DENSE INSULATION,  !- Name
     VeryRough,               !- Roughness
@@ -216,7 +217,7 @@
     0.90,                    !- Thermal Absorptance
     0.50,                    !- Solar Absorptance
     0.50;                    !- Visible Absorptance
- 
+
   Material,
     ROOFING - ASPHALT SHINGLES,  !- Name
     VeryRough,               !- Roughness
@@ -227,7 +228,7 @@
     0.90,                    !- Thermal Absorptance
     0.70,                    !- Solar Absorptance
     0.70;                    !- Visible Absorptance
- 
+
   Material,
     BB46 - 5 / 8 IN PLYWOOD, !- Name
     Smooth,                  !- Roughness
@@ -238,7 +239,7 @@
     0.90,                    !- Thermal Absorptance
     0.30,                    !- Solar Absorptance
     0.30;                    !- Visible Absorptance
- 
+
   Material,
     INS - GLASS FIBER BONDED 3 IN,  !- Name
     VeryRough,               !- Roughness
@@ -249,7 +250,7 @@
     0.90,                    !- Thermal Absorptance
     0.50,                    !- Solar Absorptance
     0.50;                    !- Visible Absorptance
- 
+
   Material,
     C12 - 2 IN HW CONCRETE - PAINTED WHITE,  !- Name
     MediumRough,             !- Roughness
@@ -260,7 +261,7 @@
     0.90,                    !- Thermal Absorptance
     0.30,                    !- Solar Absorptance
     0.30;                    !- Visible Absorptance
- 
+
   WindowMaterial:Glazing,
     CLEAR GLASS,             !- Name
     SpectralAverage,         !- Optical Data Type
@@ -276,31 +277,31 @@
     0.84,                    !- Front Side Infrared Hemispherical Emissivity
     0.84,                    !- Back Side Infrared Hemispherical Emissivity
     0.90;                    !- Conductivity {W/m-K}
- 
+
   Construction,
     EXTWALL80,               !- Name
     A1 - 1 IN STUCCO,        !- Outside Layer
     C4 - 4 IN COMMON BRICK,  !- Layer 2
     E1 - 3 / 4 IN PLASTER OR GYP BOARD;  !- Layer 3
- 
+
   Construction,
     FLOOR SLAB 8 IN,         !- Name
     C10 - 8 IN HW CONCRETE;  !- Outside Layer
- 
+
   Construction,
     ROOF,                    !- Name
     ROOFING - ASPHALT SHINGLES,  !- Outside Layer
     E3 - 3 / 8 IN FELT AND MEMBRANE,  !- Layer 2
     BB46 - 5 / 8 IN PLYWOOD; !- Layer 3
- 
+
   Construction,
     STANDARD WINDOW,         !- Name
     CLEAR GLASS;             !- Outside Layer
- 
+
   Construction,
     SHELF,                   !- Name
     C12 - 2 IN HW CONCRETE - PAINTED WHITE;  !- Outside Layer
- 
+
   Zone,
     Standard Zone,           !- Name
     0.0,                     !- Direction of Relative North {deg}
@@ -311,7 +312,7 @@
     1,                       !- Multiplier
     autocalculate,           !- Ceiling Height {m}
     autocalculate;           !- Volume {m3}
- 
+
   BuildingSurface:Detailed,
     Standard South Wall,     !- Name
     Wall,                    !- Surface Type
@@ -327,7 +328,7 @@
     0.0,0.0,0.0,  !- X,Y,Z ==> Vertex 2 {m}
     5.0,0.0,0.0,  !- X,Y,Z ==> Vertex 3 {m}
     5.0,0.0,3.0;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Standard West Wall,      !- Name
     Wall,                    !- Surface Type
@@ -343,7 +344,7 @@
     0.0,20.0,0.0,  !- X,Y,Z ==> Vertex 2 {m}
     0.0,0.0,0.0,  !- X,Y,Z ==> Vertex 3 {m}
     0.0,0.0,3.0;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Standard North Wall,     !- Name
     Wall,                    !- Surface Type
@@ -359,7 +360,7 @@
     5.0,20.0,0.0,  !- X,Y,Z ==> Vertex 2 {m}
     0.0,20.0,0.0,  !- X,Y,Z ==> Vertex 3 {m}
     0.0,20.0,3.0;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Standard East Wall,      !- Name
     Wall,                    !- Surface Type
@@ -375,7 +376,7 @@
     5.0,0.0,0.0,  !- X,Y,Z ==> Vertex 2 {m}
     5.0,20.0,0.0,  !- X,Y,Z ==> Vertex 3 {m}
     5.0,20.0,3.0;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Standard Floor,          !- Name
     Floor,                   !- Surface Type
@@ -391,7 +392,7 @@
     0.0,20.0,0.0,  !- X,Y,Z ==> Vertex 2 {m}
     5.0,20.0,0.0,  !- X,Y,Z ==> Vertex 3 {m}
     5.0,0.0,0.0;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Standard Ceiling,        !- Name
     Roof,                    !- Surface Type
@@ -407,7 +408,7 @@
     0.0,0.0,3.0,  !- X,Y,Z ==> Vertex 2 {m}
     5.0,0.0,3.0,  !- X,Y,Z ==> Vertex 3 {m}
     5.0,20.0,3.0;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Standard Lower Window,   !- Name
     WINDOW,                  !- Surface Type
@@ -423,7 +424,7 @@
     1.0,0.0,1.0,  !- X,Y,Z ==> Vertex 2 {m}
     4.0,0.0,1.0,  !- X,Y,Z ==> Vertex 3 {m}
     4.0,0.0,2.0;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Standard Upper Window,   !- Name
     WINDOW,                  !- Surface Type
@@ -439,7 +440,7 @@
     1.0,0.0,2.0,  !- X,Y,Z ==> Vertex 2 {m}
     4.0,0.0,2.0,  !- X,Y,Z ==> Vertex 3 {m}
     4.0,0.0,2.8;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Zone,
     Daylit Zone,             !- Name
     0.0,                     !- Direction of Relative North {deg}
@@ -450,7 +451,7 @@
     1,                       !- Multiplier
     autocalculate,           !- Ceiling Height {m}
     autocalculate;           !- Volume {m3}
- 
+
   BuildingSurface:Detailed,
     Daylit South Wall,       !- Name
     Wall,                    !- Surface Type
@@ -466,7 +467,7 @@
     0.0,0.0,0.0,  !- X,Y,Z ==> Vertex 2 {m}
     5.0,0.0,0.0,  !- X,Y,Z ==> Vertex 3 {m}
     5.0,0.0,3.0;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Daylit West Wall,        !- Name
     Wall,                    !- Surface Type
@@ -482,7 +483,7 @@
     0.0,20.0,0.0,  !- X,Y,Z ==> Vertex 2 {m}
     0.0,0.0,0.0,  !- X,Y,Z ==> Vertex 3 {m}
     0.0,0.0,3.0;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Daylit North Wall,       !- Name
     Wall,                    !- Surface Type
@@ -498,7 +499,7 @@
     5.0,20.0,0.0,  !- X,Y,Z ==> Vertex 2 {m}
     0.0,20.0,0.0,  !- X,Y,Z ==> Vertex 3 {m}
     0.0,20.0,3.0;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Daylit East Wall,        !- Name
     Wall,                    !- Surface Type
@@ -514,7 +515,7 @@
     5.0,0.0,0.0,  !- X,Y,Z ==> Vertex 2 {m}
     5.0,20.0,0.0,  !- X,Y,Z ==> Vertex 3 {m}
     5.0,20.0,3.0;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Daylit Floor,            !- Name
     Floor,                   !- Surface Type
@@ -530,7 +531,7 @@
     0.0,20.0,0.0,  !- X,Y,Z ==> Vertex 2 {m}
     5.0,20.0,0.0,  !- X,Y,Z ==> Vertex 3 {m}
     5.0,0.0,0.0;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Daylit Ceiling,          !- Name
     Roof,                    !- Surface Type
@@ -546,7 +547,7 @@
     0.0,0.0,3.0,  !- X,Y,Z ==> Vertex 2 {m}
     5.0,0.0,3.0,  !- X,Y,Z ==> Vertex 3 {m}
     5.0,20.0,3.0;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Daylit Lower Window,     !- Name
     WINDOW,                  !- Surface Type
@@ -562,14 +563,14 @@
     1.0,0.0,1.0,  !- X,Y,Z ==> Vertex 2 {m}
     4.0,0.0,1.0,  !- X,Y,Z ==> Vertex 3 {m}
     4.0,0.0,2.0;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   DaylightingDevice:Shelf,
     Shelf,                   !- Name
     Daylit Upper Window,     !- Window Name
     Inside Shelf,            !- Inside Shelf Name
     Outside Shelf,           !- Outside Shelf Name
     Shelf;                   !- Outside Shelf Construction Name
- 
+
   FenestrationSurface:Detailed,
     Daylit Upper Window,     !- Name
     WINDOW,                  !- Surface Type
@@ -585,7 +586,7 @@
     1.0,0.0,2.0,  !- X,Y,Z ==> Vertex 2 {m}
     4.0,0.0,2.0,  !- X,Y,Z ==> Vertex 3 {m}
     4.0,0.0,2.8;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Inside Shelf,            !- Name
     WALL,                    !- Surface Type
@@ -601,7 +602,7 @@
     4.0,0.0,2.0,  !- X,Y,Z ==> Vertex 2 {m}
     4.0,1.0,2.0,  !- X,Y,Z ==> Vertex 3 {m}
     1.0,1.0,2.0;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Shading:Zone:Detailed,
     Outside Shelf,           !- Name
     Daylit South Wall,       !- Base Surface Name
@@ -611,7 +612,7 @@
     1.0,-1.0,2.0,  !- X,Y,Z ==> Vertex 2 {m}
     4.0,-1.0,2.0,  !- X,Y,Z ==> Vertex 3 {m}
     4.0,0.0,2.0;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Lights,
     Daylit Zone Lights 1,    !- Name
     Daylit Zone,             !- Zone or ZoneList Name
@@ -625,7 +626,7 @@
     0.20,                    !- Fraction Visible
     1.0,                     !- Fraction Replaceable
     GeneralLights;           !- End-Use Subcategory
- 
+
   Lights,
     Standard Zone Lights 1,  !- Name
     Standard Zone,           !- Zone or ZoneList Name
@@ -639,7 +640,7 @@
     0.20,                    !- Fraction Visible
     1.0,                     !- Fraction Replaceable
     GeneralLights;           !- End-Use Subcategory
- 
+
   Daylighting:Controls,
     Daylit Zone,             !- Zone Name
     2,                       !- Total Daylighting Reference Points
@@ -660,7 +661,7 @@
     0.2,                     !- Minimum Light Output Fraction for Continuous Dimming Control
     0,                       !- Number of Stepped Control Steps
     1.0;                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
- 
+
   Daylighting:Controls,
     Standard Zone,           !- Zone Name
     2,                       !- Total Daylighting Reference Points
@@ -681,7 +682,7 @@
     0.2,                     !- Minimum Light Output Fraction for Continuous Dimming Control
     0,                       !- Number of Stepped Control Steps
     1.0;                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
- 
+
   Output:IlluminanceMap,
     Daylit Map,              !- Name
     Daylit Zone,             !- Zone Name
@@ -692,7 +693,7 @@
     0.1,                     !- Y Minimum Coordinate {m}
     19.9,                    !- Y Maximum Coordinate {m}
     10;                      !- Number of Y Grid Points
- 
+
   Output:IlluminanceMap,
     Standard Map,            !- Name
     Standard Zone,           !- Zone Name
@@ -703,75 +704,75 @@
     0.1,                     !- Y Minimum Coordinate {m}
     19.9,                    !- Y Maximum Coordinate {m}
     10;                      !- Number of Y Grid Points
- 
+
   Schedule:Compact,
     AlwaysOnSchedule,        !- Name
     On/Off,                  !- Schedule Type Limits Name
     THROUGH: 12/31,          !- Field 1
     FOR: AllDays,            !- Field 2
     UNTIL: 24:00,1;          !- Field 3
- 
+
   ScheduleTypeLimits,
     On/Off,                  !- Name
     0,                       !- Lower Limit Value
     1,                       !- Upper Limit Value
     DISCRETE;                !- Numeric Type
- 
+
   Output:VariableDictionary,Regular;
- 
+
   Output:Surfaces:Drawing,DXF;
- 
+
   Output:Constructions,Constructions;
- 
+
   Output:Variable,*,Zone/Sys Air Temperature,hourly;
- 
+
   Output:Variable,*,Solar Altitude Angle,Hourly;
- 
+
   Output:Variable,*,Solar Azimuth Angle,Hourly;
- 
+
   Output:Variable,*,Direct Solar,Hourly;
- 
+
   Output:Variable,*,Diffuse Solar,Hourly;
- 
+
   Output:Variable,*,Daylight Illum at Ref Point 1,Hourly;
- 
+
   Output:Variable,*,Daylight Illum at Ref Point 2,Hourly;
- 
+
   Output:Variable,*,Glare Index at Ref Point 1,Hourly;
- 
+
   Output:Variable,*,Glare Index at Ref Point 2,Hourly;
- 
+
   Output:Variable,*,Surface Ext Sunlit Area,Hourly;
- 
+
   Output:Variable,*,Surface Ext Solar Incident,Hourly;
- 
+
   Output:Variable,*,Surface Ext Solar Beam Incident,Hourly;
- 
+
   Output:Variable,*,Surface Ext Solar Sky Diffuse Incident,Hourly;
- 
+
   Output:Variable,*,Surface Ext Solar Ground Diffuse Incident,Hourly;
- 
+
   Output:Variable,*,Window Transmitted Solar,Hourly;
- 
+
   Output:Variable,*,Window Solar Absorbed:All Glass Layers,Hourly;
- 
+
   Output:Surfaces:List,Details;
- 
+
   Output:Meter:MeterFileOnly,Electricity:Facility,monthly;
- 
+
   Output:Meter:MeterFileOnly,Electricity:Building,monthly;
- 
+
   Output:Meter:MeterFileOnly,InteriorLights:Electricity,monthly;
- 
+
   Output:Meter:MeterFileOnly,Electricity:Facility,runperiod;
- 
+
   Output:Meter:MeterFileOnly,Electricity:Building,runperiod;
- 
+
   Output:Meter:MeterFileOnly,InteriorLights:Electricity,runperiod;
- 
+
   OutputControl:Table:Style,
     HTML;                    !- Column Separator
- 
+
   Output:Table:SummaryReports,
     AllSummary;              !- Report 1 Name
- 
+
