@@ -5514,6 +5514,342 @@ OS:LightingSimulationZone,
 
 \group OpenStudio HVAC
 
+OS:AirConditioner:VariableRefrigerantFlow,
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \type alpha
+       \reference ConnectionObject
+  A3 , \field Availability Schedule
+       \type object-list
+       \object-list ScheduleNames
+       \required-field
+  N1 , \field Rated Total Cooling Capacity
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+       \required-field
+  N2 , \field Rated Cooling COP
+       \type real
+       \units W/W
+       \minimum> 0.0
+       \required-field
+  N3 , \field Minimum Outdoor Temperature in Cooling Mode
+       \type real
+       \units C
+       \required-field
+  N4 , \field Maximum Outdoor Temperature in Cooling Mode
+       \type real
+       \units C
+       \required-field
+  A4 , \field Cooling Capacity Ratio Modifier Function of Low Temperature Curve
+       \type object-list
+       \object-list BiQuadraticCurves
+  A5 , \field Cooling Capacity Ratio Boundary Curve
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+  A6 , \field Cooling Capacity Ratio Modifier Function of High Temperature Curve
+       \type object-list
+       \object-list BiQuadraticCurves
+  A7 , \field Cooling Energy Input Ratio Modifier Function of Low Temperature Curve
+       \type object-list
+       \object-list BiQuadraticCurves
+  A8 , \field Cooling Energy Input Ratio Boundary Curve
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+  A9 , \field Cooling Energy Input Ratio Modifier Function of High Temperature Curve
+       \type object-list
+       \object-list BiQuadraticCurves
+  A10 , \field Cooling Energy Input Ratio Modifier Function of Low Part-Load Ratio Curve
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+  A11, \field Cooling Energy Input Ratio Modifier Function of High Part-Load Ratio Curve
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+  A12, \field Cooling Combination Ratio Correction Factor Curve
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+  A13, \field Cooling Part-Load Fraction Correlation Curve
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+  N5 , \field Rated Total Heating Capacity
+       \type real
+       \units W
+       \autosizable
+       \required-field
+  N6 , \field Rated Total Heating Capacity Sizing Ratio
+       \type real
+       \units W/W
+       \minimum 1.0
+       \required-field
+  N7 , \field Rated Heating COP
+       \type real
+       \units W/W
+       \required-field
+  N8 , \field Minimum Outdoor Temperature in Heating Mode
+       \type real
+       \units C
+       \required-field
+  N9 , \field Maximum Outdoor Temperature in Heating Mode
+       \type real
+       \units C
+       \required-field
+  A14, \field Heating Capacity Ratio Modifier Function of Low Temperature Curve
+       \type object-list
+       \object-list BiQuadraticCurves
+  A15, \field Heating Capacity Ratio Boundary Curve
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+  A16, \field Heating Capacity Ratio Modifier Function of High Temperature Curve
+       \type object-list
+       \object-list BiQuadraticCurves
+  A17, \field Heating Energy Input Ratio Modifier Function of Low Temperature Curve
+       \type object-list
+       \object-list BiQuadraticCurves
+  A18, \field Heating Energy Input Ratio Boundary Curve
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+  A19, \field Heating Energy Input Ratio Modifier Function of High Temperature Curve
+       \type object-list
+       \object-list BiQuadraticCurves
+  A20, \field Heating Performance Curve Outdoor Temperature Type
+       \type choice
+       \key DryBulbTemperature
+       \key WetBulbTemperature
+       \required-field
+  A21, \field Heating Energy Input Ratio Modifier Function of Low Part-Load Ratio Curve
+       \type object-list
+       \object-list QuadraticCubicCurves
+  A22, \field Heating Energy Input Ratio Modifier Function of High Part-Load Ratio Curve
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+  A23, \field Heating Combination Ratio Correction Factor Curve
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+  A24, \field Heating Part-Load Fraction Correlation Curve
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+  N10, \field Minimum Heat Pump Part-Load Ratio
+       \type real
+       \required-field
+  A25, \field Zone Name for Master Thermostat Location
+       \type object-list
+       \object-list ZoneNames
+  A26, \field Master Thermostat Priority Control Type
+       \type choice
+       \key LoadPriority
+       \key ZonePriority
+       \key ThermostatOffsetPriority
+       \key MasterThermostatPriority
+       \key Scheduled
+       \required-field
+  A27, \field Thermostat Priority Schedule
+       \type alpha
+       \object-list ScheduleNames
+  A28, \field Zone Terminal Unit List
+       \required-field
+       \type object-list
+       \object-list HVACComponentList
+  A29, \field Heat Pump Waste Heat Recovery
+       \type choice
+       \key No
+       \key Yes
+       \required-field
+  N11, \field Equivalent Piping Length used for Piping Correction Factor in Cooling Mode
+       \type real
+       \units m
+       \required-field
+  N12, \field Vertical Height used for Piping Correction Factor
+       \type real
+       \units m
+       \required-field
+  A30, \field Piping Correction Factor for Length in Cooling Mode Curve
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+       \object-list BiQuadraticCurves
+  N13, \field Piping Correction Factor for Height in Cooling Mode Coefficient
+       \type real
+       \required-field
+  N14, \field Equivalent Piping Length used for Piping Correction Factor in Heating Mode
+       \type real
+       \units m
+       \required-field
+  A31, \field Piping Correction Factor for Length in Heating Mode Curve
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+       \object-list BiQuadraticCurves
+  N15, \field Piping Correction Factor for Height in Heating Mode Coefficient
+       \type real
+       \required-field
+  N16, \field Crankcase Heater Power per Compressor
+       \type real
+       \units W
+       \required-field
+  N17, \field Number of Compressors
+       \type integer
+       \required-field
+  N18, \field Ratio of Compressor Size to Total Compressor Capacity
+       \type real
+       \required-field
+  N19, \field Maximum Outdoor Dry-bulb Temperature for Crankcase Heater
+       \type real
+       \units C
+       \required-field
+  A32, \field Defrost Strategy
+       \type choice
+       \key ReverseCycle
+       \key Resistive
+       \required-field
+  A33, \field Defrost Control
+       \type choice
+       \key Timed
+       \key OnDemand
+       \required-field
+  A34, \field Defrost Energy Input Ratio Modifier Function of Temperature Curve
+       \type object-list
+       \object-list BiQuadraticCurves
+  N20, \field Defrost Time Period Fraction
+       \type real
+       \minimum 0.0
+       \required-field
+  N21, \field Resistive Defrost Heater Capacity
+       \type real
+       \minimum 0.0
+       \autosizable
+       \units W
+       \ip-units W
+       \required-field
+  N22, \field Maximum Outdoor Dry-bulb Temperature for Defrost Operation
+       \type real
+       \units C
+       \required-field
+  A35, \field Condenser Type
+       \type choice
+       \key AirCooled
+       \key EvaporativelyCooled
+       \key WaterCooled
+       \required-field
+  A36, \field Condenser Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A37, \field Condenser Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+  N23, \field Water Condenser Volume Flow Rate
+       \type real
+       \units m3/s
+       \autosizable
+       \required-field
+  N24, \field Evaporative Condenser Effectiveness
+       \type real
+       \units dimensionless
+       \minimum 0.0
+       \maximum 1.0
+       \required-field
+  N25, \field Evaporative Condenser Air Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+       \required-field
+  N26, \field Evaporative Condenser Pump Rated Power Consumption
+       \type real
+       \units W
+       \minimum 0.0
+       \autosizable
+       \required-field
+  A38, \field Supply Water Storage Tank
+       \type object-list
+       \object-list WaterStorageTankNames
+  N27, \field Basin Heater Capacity
+       \type real
+       \units W/K
+       \minimum 0.0
+       \required-field
+  N28, \field Basin Heater Setpoint Temperature
+       \type real
+       \units C
+       \minimum 2.0
+       \required-field
+  A39, \field Basin Heater Operating Schedule
+       \type object-list
+       \object-list ScheduleNames
+  A40, \field Fuel Type
+       \type choice
+       \key Electricity
+       \key NaturalGas
+       \key PropaneGas
+       \key Diesel
+       \key Gasoline
+       \key FuelOil#1
+       \key FuelOil#2
+       \key OtherFuel1
+       \key OtherFuel2
+       \required-field
+  N29, \field Minimum Outdoor Temperature in Heat Recovery Mode
+       \type real
+       \units C
+       \required-field
+  N30, \field Maximum Outdoor Temperature in Heat Recovery Mode
+       \type real
+       \units C
+       \required-field
+  A41, \field Heat Recovery Cooling Capacity Modifier Curve
+       \type object-list
+       \object-list BiQuadraticCurves
+  N31, \field Initial Heat Recovery Cooling Capacity Fraction
+       \type real
+       \required-field
+  N32, \field Heat Recovery Cooling Capacity Time Constant
+       \type real
+       \units hr
+       \required-field
+  A42, \field Heat Recovery Cooling Energy Modifier Curve
+       \type object-list
+       \object-list BiQuadraticCurves
+  N33, \field Initial Heat Recovery Cooling Energy Fraction
+       \type real
+       \required-field
+  N34, \field Heat Recovery Cooling Energy Time Constant
+       \type real
+       \units hr
+       \required-field
+  A43, \field Heat Recovery Heating Capacity Modifier Curve
+       \type object-list
+       \object-list BiQuadraticCurves
+  N35, \field Initial Heat Recovery Heating Capacity Fraction
+       \type real
+       \required-field
+  N36, \field Heat Recovery Heating Capacity Time Constant
+       \type real
+       \units hr
+       \required-field
+  A44, \field Heat Recovery Heating Energy Modifier Curve
+       \type object-list
+       \object-list BiQuadraticCurves
+  N37, \field Initial Heat Recovery Heating Energy Fraction
+       \type real
+       \required-field
+  N38; \field Heat Recovery Heating Energy Time Constant
+       \type real
+       \units hr
+       \required-field
+
 OS:AirLoopHVAC,
        \memo Defines a central forced air system
        \min-fields 11
@@ -7158,6 +7494,54 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \type object-list
        \object-list ScheduleNames
 
+OS:Coil:Cooling:DX:VariableRefrigerantFlow,
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \type alpha
+       \reference CoolingCoilsDXVarRefrigFlow
+       \reference ConnectionObject
+  A3 , \field Availability Schedule
+       \type object-list
+       \object-list ScheduleNames
+       \required-field
+  N1 , \field Rated Total Cooling Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+       \note Cooling capacity excluding supply air fan heat
+  N2 , \field Rated Sensible Heat Ratio
+       \required-field
+       \type real
+       \minimum> 0.0
+       \autosizable
+  N3 , \field Rated Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+  A4 , \field Cooling Capacity Ratio Modifier Function of Temperature Curve
+       \required-field
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+       \object-list BiquadraticCurves
+  A5 , \field Cooling Capacity Modifier Curve Function of Flow Fraction
+       \required-field
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+  A6 , \field Coil Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A7 ; \field Coil Air Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+
 OS:Coil:Cooling:Water,
        \min-fields 16
   A1, \field Handle
@@ -7388,6 +7772,53 @@ OS:Coil:Heating:DX:SingleSpeed,
        \ip-units W
        \minimum 0
        \default 0.0
+
+OS:Coil:Heating:DX:VariableRefrigerantFlow,
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \type alpha
+       \reference HeatingCoilsDX
+       \reference HeatingCoilsDXSingleSpeed
+       \reference HeatingCoilsDXVarRefrigFlow
+       \reference ConnectionObject
+  A3 , \field Availability Schedule
+       \type object-list
+       \object-list ScheduleNames
+       \required-field
+  N1 , \field Rated Total Heating Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+  N2 , \field Rated Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+  A4 , \field Coil Air Inlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A5 , \field Coil Air Outlet Node
+       \type object-list
+       \object-list ConnectionNames
+  A6 , \field Heating Capacity Ratio Modifier Function of Temperature Curve
+       \required-field
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+       \object-list BiquadraticCurves
+  A7 ; \field Heating Capacity Modifier Function of Flow Fraction Curve
+       \required-field
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+       \note quadratic curve = a + b*ff + c*ff**2
+       \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
+       \note ff = fraction of the full load flow
 
 OS:Coil:Heating:Electric,
        \min-fields 1
@@ -9629,6 +10060,20 @@ OS:HeatExchanger:AirToAir:SensibleAndLatent,
       \note Yes means that the heat exchanger will be locked out (off)
       \note when the economizer is operating or high humidity control is active
 
+OS:HVACComponentList,
+      \extensible:1 - repeat last field, remembering to remove ; from "inner" fields.
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+       \type alpha
+       \reference HVACComponentList
+  A2; \field HVACComponent 1
+      \required-field
+      \type object-list
+      \object-list AllObjects
+      \begin-extensible
+
 OS:Node,
   A1, \field Handle
        \type handle
@@ -11176,6 +11621,110 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \note than 0 denote constant fan operation (fan runs continually regardless of coil operation).
        \type object-list
        \object-list ScheduleNames
+
+OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 ,  \field Name
+        \type alpha
+        \reference ZoneTerminalUnitNames
+       \reference ConnectionObject
+  A3 ,  \field Terminal Unit Availability schedule
+        \required-field
+        \type object-list
+        \object-list ScheduleNames
+  A4 ,  \field Terminal Unit Air Inlet Node
+        \type object-list
+        \object-list ConnectionNames
+  A5 ,  \field Terminal Unit Air Outlet Node
+        \type object-list
+        \object-list ConnectionNames
+  N1 ,  \field Supply Air Flow Rate During Cooling Operation
+        \required-field
+        \type real
+        \units m3/s
+        \minimum> 0.0
+        \autosizable
+  N2 ,  \field Supply Air Flow Rate When No Cooling is Needed
+        \required-field
+        \type real
+        \units m3/s
+        \minimum 0.0
+        \autosizable
+  N3 ,  \field Supply Air Flow Rate During Heating Operation
+        \required-field
+        \type real
+        \units m3/s
+        \minimum> 0.0
+        \autosizable
+  N4 ,  \field Supply Air Flow Rate When No Heating is Needed
+        \required-field
+        \type real
+        \units m3/s
+        \minimum 0.0
+        \autosizable
+  N5 ,  \field Outdoor Air Flow Rate During Cooling Operation
+        \required-field
+        \type real
+        \units m3/s
+        \minimum 0.0
+        \autosizable
+  N6 ,  \field Outdoor Air Flow Rate During Heating Operation
+        \required-field
+        \type real
+        \units m3/s
+        \minimum 0.0
+        \autosizable
+  N7 ,  \field Outdoor Air Flow Rate When No Cooling or Heating is Needed
+        \required-field
+        \type real
+        \units m3/s
+        \minimum 0.0
+        \autosizable
+  A6 ,  \field Supply Air Fan Operating Mode Schedule
+        \required-field
+        \type object-list
+        \object-list ScheduleNames
+  A7 ,  \field Supply Air Fan placement
+        \required-field
+        \type choice
+        \key BlowThrough
+        \key DrawThrough
+        \note Select fan placement as either blow through or draw through.
+  A8 ,  \field Supply Air Fan
+        \required-field
+        \type object-list
+        \object-list FansCVandOnOff
+  A9,  \field Outside Air Mixer
+        \type object-list
+        \object-list OutdoorAirMixers
+        \note If this field is blank, and outside air mixer is not used.
+  A10,  \field Cooling Coil
+        \type object-list
+        \object-list CoolingCoilsDXVarRefrigFlow
+        \note Cooling Coil Type must be Coil:Cooling:DX:VariableRefrigerantFlow
+        \note This field may be left blank if heating-only mode is used
+  A11,  \field Heating Coil
+        \type object-list
+        \object-list HeatingCoilsDXVarRefrigFlow
+        \note Heating Coil Type must be Coil:Heating:DX:VariableRefrigerantFlow
+        \note This field may be left blank if cooling-only mode is used
+  N8 ,  \field Zone Terminal Unit On Parasitic Electric Energy Use
+        \required-field
+        \type real
+        \units W
+        \minimum 0
+  N9 ,  \field Zone Terminal Unit Off Parasitic Electric Energy Use
+        \required-field
+        \type real
+        \units W
+        \minimum 0
+  N10; \field Rated Total Heating Capacity Sizing Ratio
+        \required-field
+       \type real
+       \units W/W
+       \minimum 1.0
        
 OS:ZoneHVAC:WaterToAirHeatPump,
         \min-fields 25
