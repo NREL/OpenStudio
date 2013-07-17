@@ -25,8 +25,8 @@
 #include <utilities/core/StringHelpers.hpp>
 #include <utilities/data/Attribute.hpp>
 #include <utilities/document/DocumentRegex.hpp>
+#include <utilities/units/QuantityConverter.hpp>
 #include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
 
 #include <boost/bind.hpp>
 
@@ -37,12 +37,22 @@ using openstudio::model::ModelObject;
 
 namespace openstudio {
 
-OSQuantityEdit2::OSQuantityEdit2(bool isIP, QWidget * parent)
+OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::string& siUnits, 
+                                 const std::string& ipUnits, bool isIP, QWidget * parent)
   : m_lineEdit(new QLineEdit(parent)),
     m_units(new QLabel("",parent)),
     m_isIP(isIP),
+    m_modelUnits(modelUnits),
+    m_siUnits(siUnits),
+    m_ipUnits(ipUnits),
     m_isScientific(false)
 {
+  // do a test conversion to make sure units are ok
+  boost::optional<double> test = convert(1.0, modelUnits, ipUnits);
+  Q_ASSERT(test);
+  test = convert(1.0, modelUnits, siUnits);
+  Q_ASSERT(test);
+
   this->setAcceptDrops(false);
   m_lineEdit->setAcceptDrops(false);
   setEnabled(false);
@@ -60,14 +70,49 @@ OSQuantityEdit2::OSQuantityEdit2(bool isIP, QWidget * parent)
 
 void OSQuantityEdit2::bind(bool isIP,
                            model::ModelObject& modelObject,
-                           QuantityGetter get,
-                           boost::optional<QuantitySetter> set,
+                           DoubleGetter get,
+                           boost::optional<DoubleSetter> set,
                            boost::optional<NoFailAction> reset,
                            boost::optional<NoFailAction> autosize,
                            boost::optional<NoFailAction> autocalculate,
                            boost::optional<BasicQuery> isDefaulted,
                            boost::optional<BasicQuery> isAutosized,
                            boost::optional<BasicQuery> isAutocalculated)
+{
+  m_get = get;
+  m_optionalGet.reset();
+  
+  bindCommon(isIP, modelObject, set, reset, autosize,
+             autocalculate, isDefaulted, isAutosized, isAutocalculated);
+}
+
+void OSQuantityEdit2::bind(bool isIP,
+                           model::ModelObject& modelObject,
+                           OptionalDoubleGetter optionalGet,
+                           boost::optional<DoubleSetter> set,
+                           boost::optional<NoFailAction> reset,
+                           boost::optional<NoFailAction> autosize,
+                           boost::optional<NoFailAction> autocalculate,
+                           boost::optional<BasicQuery> isDefaulted,
+                           boost::optional<BasicQuery> isAutosized,
+                           boost::optional<BasicQuery> isAutocalculated)
+{
+  m_get.reset();
+  m_optionalGet = optionalGet;
+  
+  bindCommon(isIP, modelObject, set, reset, autosize,
+             autocalculate, isDefaulted, isAutosized, isAutocalculated);
+}
+
+void OSQuantityEdit2::bindCommon(bool isIP,
+          model::ModelObject& modelObject,
+          boost::optional<DoubleSetter> set,
+          boost::optional<NoFailAction> reset,
+          boost::optional<NoFailAction> autosize,
+          boost::optional<NoFailAction> autocalculate,
+          boost::optional<BasicQuery> isDefaulted,
+          boost::optional<BasicQuery> isAutosized,
+          boost::optional<BasicQuery> isAutocalculated)
 {
   // only let one of autosize/autocalculate
   if ((isAutosized && isAutocalculated) || 
@@ -79,7 +124,6 @@ void OSQuantityEdit2::bind(bool isIP,
   
   m_isIP = isIP;
   m_modelObject = modelObject;
-  m_get = get;
   m_set = set;
   m_reset = reset;
   m_autosize = autosize;
@@ -87,9 +131,7 @@ void OSQuantityEdit2::bind(bool isIP,
   m_isDefaulted = isDefaulted;
   m_isAutosized = isAutosized;
   m_isAutocalculated = isAutocalculated;
-  Q_ASSERT(m_modelObject); // there has to be a model object
-  Q_ASSERT(m_get);      // there has to be a real getter
-  
+
   setEnabled(true);
   
   bool isConnected = false;
@@ -107,11 +149,13 @@ void OSQuantityEdit2::bind(bool isIP,
   refreshTextAndLabel();
 }
 
+
 void OSQuantityEdit2::unbind() {
   if (m_modelObject){
     this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
     m_modelObject.reset();
     m_get.reset();
+    m_optionalGet.reset();
     m_set.reset();
     m_reset.reset();
     m_autosize.reset();
@@ -155,11 +199,20 @@ void OSQuantityEdit2::onEditingFinished() {
     else {
       try {
         double value = boost::lexical_cast<double>(str);
-        setPrecision(str);
-        OSOptionalQuantity oq = (*m_get)(m_isIP);
-        OptionalUnit units = oq.units();
+        setPrecision(str); 
+
+        std::string units;
+        if (m_isIP){
+          units = m_ipUnits;
+        }else{
+          units = m_siUnits;
+        }
+        
+        boost::optional<double> modelValue = convert(value, units, m_modelUnits);
+        Q_ASSERT(modelValue);
+
         if (m_set) {
-          (*m_set)(Quantity(value,*units));
+          (*m_set)(*modelValue);
         }
       }
       catch (...) {}
@@ -195,10 +248,25 @@ void OSQuantityEdit2::refreshTextAndLabel() {
       m_units->setStyleSheet("color:grey");
     }
 
-    OSOptionalQuantity oq = (*m_get)(m_isIP);
-    OptionalUnit units;
-    if (oq.isSet()) {
-      Quantity q = oq.get();
+    std::string units;
+    if (m_isIP){
+      units = m_ipUnits;
+    }else{
+      units = m_siUnits;
+    }
+
+    boost::optional<double> value;
+    
+    if (m_get){
+      value = (*m_get)();
+    }else if (m_optionalGet){
+      value = (*m_optionalGet)();
+    }
+
+    if (value) {
+      boost::optional<double> displayValue = convert(*value, m_modelUnits, units);
+      Q_ASSERT(displayValue);
+
       if (m_isScientific) {
         ss << std::scientific;
       }
@@ -208,19 +276,18 @@ void OSQuantityEdit2::refreshTextAndLabel() {
       if (m_precision) {
         ss << std::setprecision(*m_precision);
       }
-      ss << q.value();
+      ss << *displayValue;
       textValue = toQString(ss.str());
       ss.str("");
-      units = q.units();
+
       m_units->setStyleSheet("color:black");
     }
     else {
-      units = oq.units();
       m_units->setStyleSheet("color:grey");
     }
 
     m_lineEdit->setText(textValue);
-    ss << *units;
+    ss << units;
     m_units->setTextFormat(Qt::RichText);
     m_units->setText(toQString(formatUnitString(ss.str(),DocumentFormat::XHTML)));
 

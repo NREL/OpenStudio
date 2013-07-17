@@ -359,11 +359,14 @@ namespace sdd {
       if (!occDensElement.isNull() && (occDensElement.text().toDouble() > 0)){
         if (!occSensHtRtElement.isNull() && !occLatHtRtElement.isNull()){
 
-          openstudio::Quantity peopleDensity(occDensElement.text().toDouble() / 1000.0, openstudio::createUnit("people/ft^2",UnitSystem::BTU).get());
+          openstudio::Quantity peopleDensityIP(occDensElement.text().toDouble() / 1000.0, openstudio::createUnit("people/ft^2",UnitSystem::BTU).get());
+          OptionalQuantity peopleDensitySI = QuantityConverter::instance().convert(peopleDensityIP, whSys);
+          BOOST_ASSERT(peopleDensitySI);
+          BOOST_ASSERT(peopleDensitySI->units() == WhUnit(WhExpnt(0,0,-2,0,0,0,0,0,0,1)));
 
           openstudio::model::PeopleDefinition peopleDefinition(model);
           peopleDefinition.setName(name + " People Definition");
-          peopleDefinition.setPeopleperSpaceFloorArea(peopleDensity); // people/m2
+          peopleDefinition.setPeopleperSpaceFloorArea(peopleDensitySI->value()); // people/m2
 
           openstudio::Quantity sensibleHeatRateIP(occSensHtRtElement.text().toDouble(), openstudio::createUnit("Btu/h*person", UnitSystem::BTU).get());
           OptionalQuantity sensibleHeatRateSI = QuantityConverter::instance().convert(sensibleHeatRateIP, whSys);

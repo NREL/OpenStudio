@@ -164,7 +164,7 @@ class ModelObjectField
     }
     return result
   end
-  
+
   def scheduleDisplayName
     result = String.new
     if isSchedule?
@@ -197,12 +197,8 @@ class ModelObjectField
     return result
   end
   
-  def quantityGetterName
-    return "get" + OpenStudio::toUpperCamelCase(getterName)
-  end
-  
   def unitsGetterName
-    return quantityGetterName + "Units"
+    return getterName + "Units"
   end
   
   def optionalGetter?
@@ -245,17 +241,6 @@ class ModelObjectField
     
     raise "Unexpected field type " + @iddField.properties.type.valueName + "." if not result
     
-    return result
-  end
-  
-  def quantityGetterReturnType
-    result = nil
-    if isReal?
-      result = "Quantity"
-      if optionalGetter?
-        result = "OSOptional" + result
-      end
-    end
     return result
   end
   
@@ -428,12 +413,6 @@ class ModelClassGenerator < SubProjectClassGenerator
   
   def implHppIncludes()
     result = String.new
-    if @idfObject
-      if @hasRealFields
-        result << "#include <utilities/units/Quantity.hpp>\n"
-        result << "#include <utilities/units/OSOptionalQuantity.hpp>\n\n"
-      end
-    end
     return result
   end  
   
@@ -487,8 +466,6 @@ class ModelClassGenerator < SubProjectClassGenerator
     result = String.new
     if @hasRealFields
       result << "\n"
-      result << "class Quantity;\n"
-      result << "class OSOptionalQuantity;\n\n"
     end
     return result
   end
@@ -693,11 +670,6 @@ class ModelClassGenerator < SubProjectClassGenerator
         
         result << "  " << field.getterReturnType << " " << field.getterName << "() const;\n\n"
         
-        if field.isReal?
-          result << "  " << field.quantityGetterReturnType << " " << field.quantityGetterName 
-          result << "(bool returnIP=false) const;\n\n"
-        end
-        
         if field.hasDefault?
           result << "  bool " << field.isDefaultName << "() const;\n\n"
         end
@@ -740,10 +712,6 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << "  void " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
         end
         
-        if field.isReal?
-          result << "  bool " << field.setterName << "(const Quantity& " << field.setterArgumentName << ");\n\n"
-        end
-
         if field.hasReset?
           result << "  void " << field.resetName << "();\n\n"
         end
@@ -812,11 +780,6 @@ class ModelClassGenerator < SubProjectClassGenerator
           
         result << "    " << field.getterReturnType << " " << field.getterName << "() const;\n\n"
         
-        if field.isReal?
-          result << "    " << field.quantityGetterReturnType << " " << field.quantityGetterName 
-          result << "(bool returnIP=false) const;\n\n"
-        end        
-        
         if field.hasDefault?
           result << "    bool " << field.isDefaultName << "() const;\n\n"
         end
@@ -859,11 +822,7 @@ class ModelClassGenerator < SubProjectClassGenerator
         else
           result << "    void " << field.setterName << "(" << field.privateClassSetterType << " " << field.setterArgumentName << ");\n\n"
         end
-        
-        if field.isReal?
-          result << "    bool " << field.setterName << "(const " << field.quantityGetterReturnType << "& " << field.setterArgumentName << ");\n\n"
-        end        
-        
+
         if field.hasReset?
           result << "    void " << field.resetName << "();\n\n"
         end
@@ -987,22 +946,7 @@ class ModelClassGenerator < SubProjectClassGenerator
           
         end
 
-        result << "  }\n\n"
-        
-        if field.isReal?
-        
-          result << "  " << field.quantityGetterReturnType << " " << @className << "_Impl::" << field.quantityGetterName << "(bool returnIP) const {\n"
-          result << "    OptionalDouble value = " << field.getterName << "();\n"
-          if field.optionalGetter?
-            result << "    return getQuantityFromDouble(" << field.fieldEnum << ", value, returnIP);\n"
-          else
-            result << "    OSOptionalQuantity result = getQuantityFromDouble(" << field.fieldEnum << ", value, returnIP);\n"
-            result << "    BOOST_ASSERT(result.isSet());\n"
-            result << "    return result.get();\n"
-          end          
-          result << "  }\n\n"
-          
-        end          
+        result << "  }\n\n"   
         
         if field.hasDefault?
           result << "  bool " << @className << "_Impl::" << field.isDefaultName << "() const {\n"
@@ -1121,42 +1065,6 @@ class ModelClassGenerator < SubProjectClassGenerator
 
         result << "  }\n\n"
         
-        if field.isReal?
-          result << "  bool " << @className << "_Impl::" << field.setterName << "(const " << field.quantityGetterReturnType << "& " << field.setterArgumentName << ") {\n"
-          if /Optional/.match(field.quantityGetterReturnType)
-            result << "    bool result(false);\n"
-            result << "    OptionalDouble value;\n"
-            result << "    if (" << field.setterArgumentName << ".isSet()) {\n"
-            result << "      value = getDoubleFromQuantity(" << field.fieldEnum << "," << field.setterArgumentName << ".get());\n"
-            result << "      if (value) {\n"
-            result << "        result = " << field.setterName << "(value);\n"
-            result << "      }\n"
-            result << "    }\n"
-            result << "    else {\n"
-            if field.setCanFail?
-              result << "      result = " << field.setterName << "(value);\n"
-            else 
-              result << "      " << field.setterName << "(value);\n"
-              result << "      result = true;\n"
-            end
-            result << "    }\n"
-            result << "    return result;\n" 
-          else
-            result << "    OptionalDouble value = getDoubleFromQuantity(" << field.fieldEnum << "," << field.setterArgumentName << ");\n"
-            result << "    if (!value) {\n"
-            result << "      return false;\n"
-            result << "    }\n"
-            if field.setCanFail?
-              result << "    return " << field.setterName << "(value.get());\n"
-            else
-              result << "    " << field.setterName << "(value.get());\n"
-              result << "    return true;\n"
-            end
-          end
-          result << "  }\n\n"
-        end  
-
-     
         if field.hasReset?
           result << "  void " << @className << "_Impl::" << field.resetName << "() {\n"
           result << "    bool result = setString(" << field.fieldEnum << ", \"\");\n"
@@ -1217,12 +1125,6 @@ class ModelClassGenerator < SubProjectClassGenerator
         result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.getterName << "();\n"
         result << "}\n\n"
         
-        if field.isReal?
-          result << field.quantityGetterReturnType << " " << @className << "::" << field.quantityGetterName << "(bool returnIP) const {\n"
-          result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.quantityGetterName << "(returnIP);\n"
-          result << "}\n\n"
-        end          
-        
         if field.hasDefault?
           result << "bool " << @className << "::" << field.isDefaultName << "() const {\n"
           result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.isDefaultName << "();\n"
@@ -1259,13 +1161,7 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << "void " << @className << "::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
           result << "  getImpl<detail::" << @className << "_Impl>()->" << field.setterName << "(" << field.setterArgumentName << ");\n"
           result << "}\n\n"
-        end
-        
-        if field.isReal?
-          result << "bool " << @className << "::" << field.setterName << "(const Quantity& " << field.setterArgumentName << ") {\n"
-          result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.setterName << "(" << field.setterArgumentName << ");\n"
-          result << "}\n\n"
-        end          
+        end     
         
         if field.hasReset?
           result << "void " << @className << "::" << field.resetName << "() {\n"
@@ -1416,36 +1312,12 @@ class ModelClassGenerator < SubProjectClassGenerator
       result << "#include <model/test/ModelFixture.hpp>\n\n"
       result << "#include <model/" << @className << ".hpp>\n"
       result << "#include <model/" << @className << "_Impl.hpp>\n\n"
-      result << "#include <utilities/units/Quantity.hpp>\n"
-      result << "#include <utilities/units/Unit.hpp>\n\n"
       result << "using namespace openstudio;\n"
       result << "using namespace openstudio::model;\n\n"
       
       instanceName = OpenStudio::toLowerCamelCase(@className)
       
       @nonextensibleFields.each { |field| 
-      
-        next if not field.isReal?
-        
-        result << "TEST_F(ModelFixture," << @className << "_" << OpenStudio::toUpperCamelCase(field.getterName) << "_Quantity) {\n"
-        result << "  Model model;\n"
-        result << "  // TODO: Check constructor.\n"
-        result << "  " << @className << " " << instanceName << "(model);\n\n"
-        result << "  Unit units = " << instanceName << "." << field.quantityGetterName << "(true).units(); // Get IP units.\n"
-        result << "  // TODO: Check that value is appropriate (within bounds)\n"
-        result << "  double value(1.0);\n"
-        result << "  Quantity testQ(value,units);\n"
-        result << "  EXPECT_TRUE(" << instanceName << "." << field.setterName << "(testQ));\n"
-        result << "  " << field.quantityGetterReturnType << " q = " << instanceName << "." << field.quantityGetterName << "(true);\n"
-        if field.optionalGetter?
-          result << "  ASSERT_TRUE(q.isSet());\n"
-          result << "  EXPECT_NEAR(value,q.get().value(),1.0E-8);\n"
-          result << "  EXPECT_EQ(units.standardString(),q.units().standardString());\n"
-        else
-          result << "  EXPECT_NEAR(value,q.value(),1.0E-8);\n"
-          result << "  EXPECT_EQ(units.standardString(),q.units().standardString());\n"
-        end
-        result << "}\n\n"
               
       }
     end

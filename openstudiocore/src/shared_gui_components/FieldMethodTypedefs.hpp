@@ -27,16 +27,12 @@
 
 namespace openstudio {
 
-class OSOptionalQuantity;
-class Quantity;
-
 typedef boost::function<bool ()> BoolGetter;
 typedef boost::function<double ()> DoubleGetter;
 typedef boost::function<int ()> IntGetter;
 typedef boost::function<boost::optional<double> ()> OptionalDoubleGetter;
 typedef boost::function<boost::optional<int> ()> OptionalIntGetter;
 typedef boost::function<boost::optional<std::string> ()> OptionalStringGetter;
-typedef boost::function<OSOptionalQuantity (bool)> QuantityGetter;
 typedef boost::function<std::string ()> StringGetter;
 
 typedef boost::function<std::vector<std::string> ()> ChoicesGetter;
@@ -44,7 +40,6 @@ typedef boost::function<std::vector<std::string> ()> ChoicesGetter;
 typedef boost::function<void (bool)> BoolSetter;
 typedef boost::function<bool (double)> DoubleSetter;
 typedef boost::function<bool (int)> IntSetter;
-typedef boost::function<bool (const Quantity&)> QuantitySetter;
 typedef boost::function<bool (std::string)> StringSetter;
 
 typedef boost::function<void ()> NoFailAction;

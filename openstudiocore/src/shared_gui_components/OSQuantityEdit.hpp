@@ -38,16 +38,26 @@ class OSQuantityEdit2: public QWidget {
   Q_OBJECT
  public:
 
-  OSQuantityEdit2(bool isIP, QWidget * parent = 0);
+  OSQuantityEdit2(const std::string& modelUnits, const std::string& siUnits, 
+                  const std::string& ipUnits, bool isIP, QWidget * parent = 0);
 
   virtual ~OSQuantityEdit2() {}
 
-  // Ok to have one getter bind that returns OSOptionalQuantity? Check with field that returns Quantity.
-  // (Use PeopleDefinition--has both.)
   void bind(bool isIP,
             model::ModelObject& modelObject,
-            QuantityGetter get,
-            boost::optional<QuantitySetter> set=boost::none,
+            DoubleGetter get,
+            boost::optional<DoubleSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<NoFailAction> autosize=boost::none,
+            boost::optional<NoFailAction> autocalculate=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none,
+            boost::optional<BasicQuery> isAutosized=boost::none,
+            boost::optional<BasicQuery> isAutocalculated=boost::none);
+
+  void bind(bool isIP,
+            model::ModelObject& modelObject,
+            OptionalDoubleGetter optionalGet,
+            boost::optional<DoubleSetter> set=boost::none,
             boost::optional<NoFailAction> reset=boost::none,
             boost::optional<NoFailAction> autosize=boost::none,
             boost::optional<NoFailAction> autocalculate=boost::none,
@@ -73,9 +83,13 @@ class OSQuantityEdit2: public QWidget {
   QLabel* m_units;
 
   bool m_isIP;
+  std::string m_modelUnits;
+  std::string m_siUnits;
+  std::string m_ipUnits;
   boost::optional<model::ModelObject> m_modelObject;
-  boost::optional<QuantityGetter> m_get;
-  boost::optional<QuantitySetter> m_set;
+  boost::optional<DoubleGetter> m_get;
+  boost::optional<OptionalDoubleGetter> m_optionalGet;
+  boost::optional<DoubleSetter> m_set;
   boost::optional<NoFailAction> m_reset;
   boost::optional<NoFailAction> m_autosize;
   boost::optional<NoFailAction> m_autocalculate;
@@ -89,6 +103,16 @@ class OSQuantityEdit2: public QWidget {
   void refreshTextAndLabel();
 
   void setPrecision(const std::string& str);
+
+  void bindCommon(bool isIP,
+            model::ModelObject& modelObject,
+            boost::optional<DoubleSetter> set,
+            boost::optional<NoFailAction> reset,
+            boost::optional<NoFailAction> autosize,
+            boost::optional<NoFailAction> autocalculate,
+            boost::optional<BasicQuery> isDefaulted,
+            boost::optional<BasicQuery> isAutosized,
+            boost::optional<BasicQuery> isAutocalculated);
 
   REGISTER_LOGGER("openstudio.OSQuantityEdit");
 };

@@ -354,7 +354,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP,
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_peopleperSpaceFloorAreaEdit = new OSQuantityEdit2(m_isIP);
+  m_peopleperSpaceFloorAreaEdit = new OSQuantityEdit2("people/m^2", "people/m^2", "people/ft^2", m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_peopleperSpaceFloorAreaEdit, SLOT(onUnitSystemChange(bool)));
   BOOST_ASSERT(isConnected);
   vLayout->addWidget(m_peopleperSpaceFloorAreaEdit);
@@ -367,7 +367,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP,
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_spaceFloorAreaperPersonEdit = new OSQuantityEdit2(m_isIP);
+  m_spaceFloorAreaperPersonEdit = new OSQuantityEdit2("m^2/person", "m^2/person", "ft^2/person", m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_spaceFloorAreaperPersonEdit, SLOT(onUnitSystemChange(bool)));
   BOOST_ASSERT(isConnected);
   vLayout->addWidget(m_spaceFloorAreaperPersonEdit);
@@ -403,7 +403,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP,
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_carbonDioxideGenerationRateEdit = new OSQuantityEdit2(m_isIP);
+  m_carbonDioxideGenerationRateEdit = new OSQuantityEdit2("m^3/s*W", "L/s*W", "ft^3*hr/min*Btu", m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_carbonDioxideGenerationRateEdit, SLOT(onUnitSystemChange(bool)));
   BOOST_ASSERT(isConnected);
   vLayout->addWidget(m_carbonDioxideGenerationRateEdit);
@@ -446,43 +446,34 @@ void PeopleDefinitionInspectorView::attach(openstudio::model::PeopleDefinition& 
                    OptionalStringGetter(boost::bind(&model::PeopleDefinition::name,m_peopleDefinition.get_ptr(),true)),
                    boost::optional<StringSetter>(boost::bind(&model::PeopleDefinition::setName,m_peopleDefinition.get_ptr(),_1)));
   
-  // function pointer variables needed to clarify overloads
-  bool (model::PeopleDefinition::* set) (double);
-  bool (model::PeopleDefinition::* setQ) (const Quantity&);
-  
   // bind to PeopleDefinition methods
-  set = &model::PeopleDefinition::setNumberofPeople;
   m_numberofPeopleEdit->bind(
       *m_peopleDefinition,
       OptionalDoubleGetter(boost::bind(&model::PeopleDefinition::numberofPeople,m_peopleDefinition.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(set,m_peopleDefinition.get_ptr(),_1)));
+      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setNumberofPeople,m_peopleDefinition.get_ptr(),_1)));
   
-  setQ = &model::PeopleDefinition::setPeopleperSpaceFloorArea;
   m_peopleperSpaceFloorAreaEdit->bind(
       m_isIP,
       *m_peopleDefinition,
-      boost::bind(&model::PeopleDefinition::getPeopleperSpaceFloorArea,m_peopleDefinition.get_ptr(),_1),
-      boost::optional<QuantitySetter>(boost::bind(setQ,m_peopleDefinition.get_ptr(),_1)));
+      OptionalDoubleGetter(boost::bind(&model::PeopleDefinition::peopleperSpaceFloorArea,m_peopleDefinition.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setPeopleperSpaceFloorArea,m_peopleDefinition.get_ptr(),_1)));
 
-  setQ = &model::PeopleDefinition::setSpaceFloorAreaperPerson;
   m_spaceFloorAreaperPersonEdit->bind(
       m_isIP,
       *m_peopleDefinition,
-      boost::bind(&model::PeopleDefinition::getSpaceFloorAreaperPerson,m_peopleDefinition.get_ptr(),_1),
-      boost::optional<QuantitySetter>(boost::bind(setQ,m_peopleDefinition.get_ptr(),_1)));
+      OptionalDoubleGetter(boost::bind(&model::PeopleDefinition::spaceFloorAreaperPerson,m_peopleDefinition.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setSpaceFloorAreaperPerson,m_peopleDefinition.get_ptr(),_1)));
 
   // ETH: Note that this is overkill for this dimensionless value. Should switch to OSDoubleEdit(2).
-  set = &model::PeopleDefinition::setFractionRadiant;
   m_fractionRadiantEdit->bind(
       *m_peopleDefinition,
       DoubleGetter(boost::bind(&model::PeopleDefinition::fractionRadiant,m_peopleDefinition.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(set,m_peopleDefinition.get_ptr(),_1)));
+      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setFractionRadiant,m_peopleDefinition.get_ptr(),_1)));
 
-  set = &model::PeopleDefinition::setSensibleHeatFraction;
   m_sensibleHeatFractionEdit->bind(
       *m_peopleDefinition,
       OptionalDoubleGetter(boost::bind(&model::PeopleDefinition::sensibleHeatFraction,m_peopleDefinition.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(set,m_peopleDefinition.get_ptr(),_1)),
+      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setSensibleHeatFraction,m_peopleDefinition.get_ptr(),_1)),
       boost::optional<NoFailAction>(boost::bind(&model::PeopleDefinition::resetSensibleHeatFraction,m_peopleDefinition.get_ptr())),
       boost::none,
       boost::optional<NoFailAction>(boost::bind(&model::PeopleDefinition::autocalculateSensibleHeatFraction,m_peopleDefinition.get_ptr())),
@@ -490,12 +481,11 @@ void PeopleDefinitionInspectorView::attach(openstudio::model::PeopleDefinition& 
       boost::none,
       boost::optional<BasicQuery>(boost::bind(&model::PeopleDefinition::isSensibleHeatFractionAutocalculated,m_peopleDefinition.get_ptr())));
 
-  setQ = &model::PeopleDefinition::setCarbonDioxideGenerationRate;
   m_carbonDioxideGenerationRateEdit->bind(
       m_isIP,
       *m_peopleDefinition,
-      boost::bind(&model::PeopleDefinition::getCarbonDioxideGenerationRate,m_peopleDefinition.get_ptr(),_1),
-      boost::optional<QuantitySetter>(boost::bind(setQ,m_peopleDefinition.get_ptr(),_1)),
+      DoubleGetter(boost::bind(&model::PeopleDefinition::carbonDioxideGenerationRate,m_peopleDefinition.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setCarbonDioxideGenerationRate,m_peopleDefinition.get_ptr(),_1)),
       boost::optional<NoFailAction>(boost::bind(&model::PeopleDefinition::resetCarbonDioxideGenerationRate,m_peopleDefinition.get_ptr())),
       boost::none,
       boost::none,
