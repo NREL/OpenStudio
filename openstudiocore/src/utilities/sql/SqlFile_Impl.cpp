@@ -362,7 +362,7 @@ namespace openstudio{
       int code = -1;
       if (m_db) {
         sqlite3_stmt* sqlStmtPtr;
-        sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%7.0%' OR EnergyPlusVersion LIKE '%7.1%' OR EnergyPlusVersion LIKE '%8.0%'",-1,&sqlStmtPtr,NULL);
+        sqlite3_prepare_v2(m_db,"SELECT * FROM Simulations WHERE EnergyPlusVersion LIKE '%7.0%' OR EnergyPlusVersion LIKE '%7.1%' OR EnergyPlusVersion LIKE '%7.2%' OR EnergyPlusVersion LIKE '%8.0%'",-1,&sqlStmtPtr,NULL);
         code = sqlite3_step(sqlStmtPtr);
         sqlite3_finalize(sqlStmtPtr);
 
