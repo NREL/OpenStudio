@@ -38,6 +38,8 @@
 #include <model/LightsDefinition_Impl.hpp>
 #include <model/LifeCycleCost.hpp>
 #include <model/LifeCycleCost_Impl.hpp>
+#include <model/LifeCycleCostParameters.hpp>
+#include <model/LifeCycleCostParameters_Impl.hpp>
 
 #include <utilities/geometry/Point3d.hpp>
 #include <utilities/idd/Lights_FieldEnums.hxx>
@@ -51,7 +53,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using namespace openstudio::energyplus;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_ComponentCostLineItem_Construction)
+TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Construction)
 {
   Model model;
 
@@ -114,7 +116,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ComponentCostLineItem_Construction)
   EXPECT_FALSE(idfObjects[0].getDouble(LifeCycleCost_RecurringCostsFields::Annualescalationrate));
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_ComponentCostLineItem_Construction2)
+TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Construction2)
 {
   Model model;
 
@@ -176,8 +178,58 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ComponentCostLineItem_Construction2)
   EXPECT_FALSE(idfObjects[0].getDouble(LifeCycleCost_RecurringCostsFields::Annualescalationrate));
 }
 
+TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Construction3)
+{
+  Model model;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_ComponentCostLineItem_Lights)
+  Construction construction(model);
+
+  ThermalZone thermalZone(model);
+
+  Space space(model);
+  space.setThermalZone(thermalZone);
+
+  Point3dVector points;
+  points.clear();
+  points.push_back(Point3d(0, 2, 0));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(2, 0, 0));
+  points.push_back(Point3d(2, 2, 0));
+  Surface surface(points, model);
+  surface.setSpace(space);
+  surface.setConstruction(construction);
+
+  EXPECT_DOUBLE_EQ(4.0, construction.getNetArea());
+
+  boost::optional<LifeCycleCost> cost = LifeCycleCost::createLifeCycleCost("Demolition", construction, 10.0, "CostPerArea", "Salvage", 20, 20);
+  ASSERT_TRUE(cost);
+
+  LifeCycleCostParameters lcc = model.getUniqueModelObject<LifeCycleCostParameters>();
+  lcc.setLengthOfStudyPeriodInYears(25);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  WorkspaceObjectVector idfObjects = workspace.getObjectsByType(IddObjectType::LifeCycleCost_NonrecurringCost);
+  ASSERT_EQ(1u, idfObjects.size());
+  ASSERT_TRUE(idfObjects[0].getString(LifeCycleCost_NonrecurringCostFields::Name));
+  EXPECT_EQ("Demolition", idfObjects[0].getString(LifeCycleCost_NonrecurringCostFields::Name).get());
+  ASSERT_TRUE(idfObjects[0].getString(LifeCycleCost_NonrecurringCostFields::Category));
+  EXPECT_EQ("Salvage", idfObjects[0].getString(LifeCycleCost_NonrecurringCostFields::Category).get());
+  ASSERT_TRUE(idfObjects[0].getDouble(LifeCycleCost_NonrecurringCostFields::Cost));
+  EXPECT_EQ(40.0, idfObjects[0].getDouble(LifeCycleCost_NonrecurringCostFields::Cost).get());
+  ASSERT_TRUE(idfObjects[0].getString(LifeCycleCost_NonrecurringCostFields::StartofCosts));
+  EXPECT_EQ("ServicePeriod", idfObjects[0].getString(LifeCycleCost_NonrecurringCostFields::StartofCosts).get());
+  ASSERT_TRUE(idfObjects[0].getInt(LifeCycleCost_NonrecurringCostFields::YearsfromStart));
+  EXPECT_EQ(20, idfObjects[0].getInt(LifeCycleCost_NonrecurringCostFields::YearsfromStart).get());
+  EXPECT_FALSE(idfObjects[0].getInt(LifeCycleCost_NonrecurringCostFields::MonthsfromStart));
+
+  idfObjects = workspace.getObjectsByType(IddObjectType::LifeCycleCost_RecurringCosts);
+  EXPECT_EQ(0u, idfObjects.size());
+}
+
+
+TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Lights)
 {
   Model model;
 
@@ -240,7 +292,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ComponentCostLineItem_Lights)
   EXPECT_FALSE(idfObjects[0].getDouble(LifeCycleCost_RecurringCostsFields::Annualescalationrate));
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_ComponentCostLineItem_Lights_Multiplier)
+TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Lights_Multiplier)
 {
   Model model;
 
@@ -306,7 +358,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ComponentCostLineItem_Lights_Multipli
 }
 
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_ComponentCostLineItem_Building)
+TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Building)
 {
   Model model;
 
