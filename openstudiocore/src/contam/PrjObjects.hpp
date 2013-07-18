@@ -1048,11 +1048,11 @@ public:
     QString write();
     // Custom getters/setters
     void setVariablePressure(bool b);
-    bool variablePressure();
+    bool variablePressure() const;
     void setVariableContaminants(bool b);
-    bool variableContaminants();
+    bool variableContaminants() const;
     void setSystem(bool b);
-    bool system();
+    bool system() const;
 
     int nr;  // zone number (IX); in order from 1 to _nzone
     unsigned int flags;  // zone flags - bits defined in contam.h (U2)

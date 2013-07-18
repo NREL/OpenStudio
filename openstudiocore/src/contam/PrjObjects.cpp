@@ -2653,7 +2653,7 @@ void Zone::setVariablePressure(bool b)
         flags &= NVAR_P;
 }
 
-bool Zone::variablePressure()
+bool Zone::variablePressure() const
 {
     return flags & VAR_P;
 }
@@ -2666,7 +2666,7 @@ void Zone::setVariableContaminants(bool b)
         flags &= NVAR_C;
 }
 
-bool Zone::variableContaminants()
+bool Zone::variableContaminants() const
 {
     return flags & VAR_C;
 }
@@ -2679,7 +2679,7 @@ void Zone::setSystem(bool b)
         flags &= NSYS_N;
 }
 
-bool Zone::system()
+bool Zone::system() const
 {
     return flags & SYS_N;
 }

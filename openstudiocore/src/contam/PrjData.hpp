@@ -95,13 +95,13 @@ private:
 class CONTAM_API Data
 {
 public:
-    Data(QString filename, bool process=true);
-    //~PrjData();
-    QString summary();
-    bool write(QString filename);
+  Data(QString filename, bool process=true);
+  //~Data();
+  QString summary();
+  bool write(QString filename);
 	QString print();
 
-    bool valid;
+  bool valid;
     RunControl rc;
     QVector<int> contaminants;
     QVector<Species> species;
@@ -138,7 +138,7 @@ public:
 private:
     void readZoneIC(Reader &input);
     QString writeZoneIC(int start);
-	void error(QString mesg DECCFILELINE);
+  void error(QString mesg DECCFILELINE);
 	void warning(QString mesg DECCFILELINE);
 	int drawLine(int i, int j, int di, int dj, int value, int w, int h, int *skpd);
 	QList<QSharedPointer<Wall> > findWalls(int w, int h, int *skpd, QVector<Icon> &icons);
