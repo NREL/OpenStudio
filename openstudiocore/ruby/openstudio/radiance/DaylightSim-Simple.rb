@@ -400,75 +400,115 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
   if t_verbose == 'v'
     puts "simulation command: #{t_cmd}"
   end        
+  puts "Executing simulation"
   tempIO = IO.popen(t_cmd)
+
+
   temp = tempIO.readlines.to_s
   tempIO.close
 
+  linenum = 0
+
+  puts "Parsing result"
   values = []
-  temp.split(/\n|,/).each do |val|
-    values << [val.to_f, 0].max
+  temp.split(/\n/).each do |val|
+    ++linenum
+    line = []
+    val.strip!
+    hournum = 0
+    val.split(/\t/).each do |triplet|
+      ++hournum
+      # each triplet (hour) for this line
+      hour = []
+      triplet.split(/ /).each do |rgb|
+        # each value of the triplet
+        hour << [rgb.to_f, 0].max
+      end
+
+      if hour.size != 3
+        abort "Unable to parse hour, 3 color values not found (line: #{linenum} hour: #{hournum} triplet: #{triplet}) #{hour}"
+      end
+
+      # need to apply vLambda to calculations
+      illum = 179*((hour[0] * 0.265) + (hour[1] * 0.67) + (hour[2] * 0.065))
+      line << illum
+    end
+
+    if line.size != 8760
+      abort "Unable to parse line, not enough hours found (line: #{linenum}): #{line}"
+    end
+    values << line;
   end
 
   if values.empty?
     puts "ERROR: simulation command generated no results: #{t_cmd}"
   end
 
-  index = 0;
 
-  splitvalues = Hash.new
+  allhours = []
 
-  t_space_names_to_calculate.each do |space_name|
-    space_size = t_spaceWidths[space_name] * t_spaceHeights[space_name]
-    space = []
-    illum = []
-    glaresensors = nil
+  8760.times do |hour|
+    index = 0;
+    splitvalues = Hash.new
 
-    if values.size > 0
-      space = values.slice(index, space_size)
-      index = index + space_size
+    t_space_names_to_calculate.each do |space_name|
+      space_size = t_spaceWidths[space_name] * t_spaceHeights[space_name]
+      space = []
+      illum = []
+      glaresensors = nil
 
-      # need to apply vLambda to calculations
-      # illum = 179*((illumTempParts[0].to_f * 0.265) + (illumTempParts[1].to_f * 0.67) + (illumTempParts[2].to_f * 0.065))
+      if values.size > 0
+        subspace = values.slice(index, space_size)
+        index = index + space_size
 
-      if File.exists?("#{t_outPath}/numeric/#{space_name}.sns")        
-        illum = [values[index]]
-        index = index + 1
-      end
-
-
-      if File.exists?("#{t_outPath}/numeric/#{space_name}.glr") and t_radGlareSensorViews[space_name]
-        glareinput = values.slice(index, t_radGlareSensorViews[space_name].size)
-
-        glaresensors = []
-        glareinput.each do |val|
-
-          #Note, this replaced the call to rcalc with dgpSimplified, faster to do it 
-          #in here instead of calling out to rcalc for the number of vectors we are looking at per space
-          adjustedval = [(0.0000622*val.to_f)+0.184, 0].max
-#          puts "Orig val: #{val} adjusted #{adjustedval}"
-          glaresensors << adjustedval
+        space = []
+        subspace.each do |subspacevalue|
+          space << subspacevalue[hour];
         end
 
-        index = index + t_radGlareSensorViews[space_name].size
-      end
-    else
-      puts "INFO: simulation command generated no results, stuffing with 0's"
-      space = Array.new(space_size, 0)
+        if File.exists?("#{t_outPath}/numeric/#{space_name}.sns")        
+          illum = [values[index][hour]]
+          index = index + 1
+        end
 
-      if File.exists?("#{t_outPath}/numeric/#{space_name}.sns")        
-        illum = Array.new(1, 0)
+
+        if File.exists?("#{t_outPath}/numeric/#{space_name}.glr") and t_radGlareSensorViews[space_name]
+          glareinput = values.slice(index, t_radGlareSensorViews[space_name].size)
+
+          glaresensors = []
+          glareinput.each do |val|
+
+            #Note, this replaced the call to rcalc with dgpSimplified, faster to do it 
+            #in here instead of calling out to rcalc for the number of vectors we are looking at per space
+            adjustedval = [(0.0000622*val[hour].to_f)+0.184, 0].max
+            #          puts "Orig val: #{val} adjusted #{adjustedval}"
+            glaresensors << adjustedval
+          end
+
+          index = index + t_radGlareSensorViews[space_name].size
+        end
+      else
+        puts "INFO: simulation command generated no results, stuffing with 0's"
+        space = Array.new(space_size, 0)
+
+        if File.exists?("#{t_outPath}/numeric/#{space_name}.sns")        
+          illum = Array.new(1, 0)
+        end
+
+        if File.exists?("#{t_outPath}/numeric/#{space_name}.glr") and t_radGlareSensorViews[space_name]
+          glaresensors = Array.new(t_radGlareSensorViews[space_name].size, 0)
+        end
       end
 
-      if File.exists?("#{t_outPath}/numeric/#{space_name}.glr") and t_radGlareSensorViews[space_name]
-        glaresensors = Array.new(t_radGlareSensorViews[space_name].size, 0)
-      end
+
+      splitvalues[space_name] = [space, illum, glaresensors]
     end
 
-    
-    splitvalues[space_name] = [space, illum, glaresensors]
+    allhours[hour] = splitvalues;
   end
 
-  return splitvalues
+  puts "Returning annual results"
+  return allhours;
 end
 
 
@@ -503,6 +543,12 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
   vLambda = "#{osQuote}$1=179*($1*0.265+$2*0.67+$3*0.065)#{osQuote}".strip
 
+  # Run the simulation 
+  puts "Running annual simulation"
+  rawValues = execSimulation("gendaymtx -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" ", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
+
+  dcVectors = nil
+
   # for each environment period (design days, annual, or arbitrary) you will create a directory for results
   t_sqlFile.availableEnvPeriods.each do |envPeriod|
 
@@ -518,20 +564,12 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
     simDateTimes, simTimes, diffHorizIllum, dirNormIllum, diffEfficacy, dirNormEfficacy, solarAltitude, solarAzimuth, firstReportDateTime = buildSimulationTimes(t_sqlFile, envPeriod, t_options, diffHorizIllumAll, dirNormIllumAll, diffEfficacyAll, dirNormEfficacyAll, solarAltitudeAll, solarAzimuthAll)
 
-
-    if not t_options.simMonth.nil? and not t_options.simDay.nil?
-      puts "doing user-specified months/days using EPW data"
-    else
-      puts "Performing annual simulation"
+    simTimes.each_index do |i|
+      puts "Extracting values for: #{simTimes[i]}"
+      datetime = simDateTimes[i]
+      hours = ((datetime.date().dayOfYear() - 1) * 24) + datetime.time().hours()
+      values[i] = rawValues[hours]
     end
-
-    # build up dctimestep command(s) for annual 3-phase sim
-    windowAzimuths = nil
-    dcTimeStepCommands = nil
-    bsdfs = nil
-
-
-    exec_statement("gendaymtx -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" > \"#{(t_outPath / OpenStudio::Path.new("merged_space.ill")).to_s}\"");
 
   end
 
