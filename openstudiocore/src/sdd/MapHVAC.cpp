@@ -115,6 +115,8 @@
 #include <model/SizingSystem_Impl.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
+#include <model/PipeAdiabatic.hpp>
+#include <model/PipeAdiabatic_Impl.hpp>
 
 #include <utilities/units/QuantityConverter.hpp>
 #include <utilities/units/IPUnit.hpp>
@@ -1843,6 +1845,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
   }
 
+  // Add a default hot water heater for servicehotwater systems
+
   if( typeElement.text().toLower() == "servicehotwater" )
   {
     boost::optional<model::WaterHeaterMixed> waterHeater;
@@ -1906,6 +1910,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
           mo->cast<model::HVACComponent>().addToNode(demandInletNode);
 
           plantLoop.setCommonPipeSimulation("CommonPipe");
+
+          // Add a default bypass
+
+          model::PipeAdiabatic pipe(model);
+
+          plantLoop.addSupplyBranchForComponent(pipe);
         }
       }
     }
