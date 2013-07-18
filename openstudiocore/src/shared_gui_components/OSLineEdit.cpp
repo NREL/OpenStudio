@@ -25,6 +25,104 @@
 
 namespace openstudio {
 
+OSLineEdit2::OSLineEdit2( QWidget * parent )
+  : QLineEdit(parent)
+{
+  this->setAcceptDrops(false);
+  setEnabled(false);
+}
+
+void OSLineEdit2::bind(model::ModelObject& modelObject, 
+                       StringGetter get,
+                       boost::optional<StringSetter> set,
+                       boost::optional<NoFailAction> reset,
+                       boost::optional<BasicQuery> isDefaulted)
+{
+  m_modelObject = modelObject;
+  m_get = get;
+  m_set = set;
+  m_reset = reset;
+  m_isDefaulted = isDefaulted;
+
+  completeBind();
+}
+
+void OSLineEdit2::bind(model::ModelObject& modelObject, 
+                       OptionalStringGetter get,
+                       boost::optional<StringSetter> set,
+                       boost::optional<NoFailAction> reset,
+                       boost::optional<BasicQuery> isDefaulted)
+{
+  m_modelObject = modelObject;
+  m_getOptional = get;
+  m_set = set;
+  m_reset = reset;
+  m_isDefaulted = isDefaulted;
+
+  completeBind();
+}
+
+void OSLineEdit2::completeBind() {
+  setEnabled(true);
+
+  bool isConnected = false;
+  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
+                         this,SLOT(onModelObjectChange()) );
+  BOOST_ASSERT(isConnected);
+
+  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
+                         this,SLOT(onModelObjectRemove(Handle)) );
+  BOOST_ASSERT(isConnected);
+
+  isConnected = connect( this, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
+  BOOST_ASSERT(isConnected);
+
+  onModelObjectChange();
+}
+
+void OSLineEdit2::unbind()
+{
+  if (m_modelObject){
+    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+    m_modelObject.reset();
+    m_get.reset();
+    m_getOptional.reset();
+    m_set.reset();
+    m_reset.reset();
+    m_isDefaulted.reset();
+    setEnabled(false);
+  }
+}
+
+void OSLineEdit2::onEditingFinished() {
+  if(m_modelObject && m_set) {
+    (*m_set)(this->text().toStdString());   
+  }
+}
+
+void OSLineEdit2::onModelObjectChange() {
+  if( m_modelObject ) {
+    OptionalString value;
+    if (m_get) {
+      value = (*m_get)();
+    }
+    else {
+      Q_ASSERT(m_getOptional);
+      value = (*m_getOptional)();
+    }
+    std::string text;
+    if (value) {
+      text = *value;
+    }
+    setText(QString::fromStdString(text));
+  }
+}
+
+void OSLineEdit2::onModelObjectRemove(Handle handle)
+{
+  unbind();
+}
+
 OSLineEdit::OSLineEdit( QWidget * parent )
   : QLineEdit(parent)
 {
