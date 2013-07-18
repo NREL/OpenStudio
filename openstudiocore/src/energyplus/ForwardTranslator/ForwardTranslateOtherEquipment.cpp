@@ -86,12 +86,12 @@ boost::optional<IdfObject> ForwardTranslator::translateOtherEquipment(
 
   d = definition.wattsperSpaceFloorArea();
   if (d){
-    idfObject.setDouble(OtherEquipmentFields::WattsperZoneFloorArea, (*d)*multiplier);
+    idfObject.setDouble(OtherEquipmentFields::PowerperZoneFloorArea, (*d)*multiplier);
   }
 
   d = definition.wattsperPerson();
   if (d){
-    idfObject.setDouble(OtherEquipmentFields::WattsperPerson, (*d)*multiplier);
+    idfObject.setDouble(OtherEquipmentFields::PowerperPerson, (*d)*multiplier);
   }
 
   if (!definition.isFractionLatentDefaulted()){

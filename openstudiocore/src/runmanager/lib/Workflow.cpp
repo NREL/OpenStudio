@@ -896,12 +896,16 @@ namespace runmanager {
       JobParams p = wfi->params;
       std::string jobkeyname;
 
-      try {
-        jobkeyname = p.get("workflowjobkey").children.at(0).value;
+      if (p.has("workflowjobkey"))
+      {
+        // capture and erase the jobkey if it exists
+        if (!p.get("workflowjobkey").children.empty())
+        {
+          jobkeyname = p.get("workflowjobkey").children[0].value;
+        }
         p.remove("workflowjobkey");
-      } catch (const std::exception &) {
-        // seems there wasn't a jobkeyname set
       }
+      
 
       retval.push_back(WorkItem(wfi->type, wfi->tools, wfi->params, wfi->files, jobkeyname));
 

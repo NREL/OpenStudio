@@ -55,7 +55,7 @@ TEST_F(ModelFixture, OutputVariable_ThermalZone)
     // all possible variables
     std::vector<std::string> variableNames = zone.outputVariableNames();
     EXPECT_TRUE(std::find(variableNames.begin(), variableNames.end(), "Zone Lights Electric Power") != variableNames.end());
-    EXPECT_TRUE(std::find(variableNames.begin(), variableNames.end(), "Zone Lights Radiant Heat Gain") != variableNames.end());
+    EXPECT_TRUE(std::find(variableNames.begin(), variableNames.end(), "Zone Lights Radiant Heating Energy") != variableNames.end());
 
     // variables actually found
     OutputVariableVector variables = zone.outputVariables();
@@ -68,10 +68,10 @@ TEST_F(ModelFixture, OutputVariable_ThermalZone)
   EXPECT_EQ("Zone Lights Electric Power", lightsElectricPower.variableName());
 
   // add Zone Lights Radiant Heat Gain to only zone1
-  OutputVariable lightsRadiantHeatGain("Zone Lights Radiant Heat Gain", model);
+  OutputVariable lightsRadiantHeatGain("Zone Lights Radiant Heating Energy", model);
   EXPECT_TRUE(lightsRadiantHeatGain.setKeyValue(zone1.name().get()));
   EXPECT_EQ(zone1.name().get(), lightsRadiantHeatGain.keyValue());
-  EXPECT_EQ("Zone Lights Radiant Heat Gain", lightsRadiantHeatGain.variableName());
+  EXPECT_EQ("Zone Lights Radiant Heating Energy", lightsRadiantHeatGain.variableName());
 
   ASSERT_EQ(2u, zone1.outputVariables().size());
   if (lightsElectricPower.handle() == zone1.outputVariables()[0].handle()){

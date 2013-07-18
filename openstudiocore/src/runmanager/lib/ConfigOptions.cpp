@@ -268,12 +268,19 @@ namespace runmanager {
     static const char exeext[] = "";
 #endif
 
+    std::string exename = "ExpandObjects";
+
+    if (eplus.first.getMajor() && eplus.first.getMajor() < 8)
+    {
+      exename = "expandobjects";
+    }
+
     return openstudio::runmanager::ToolInfo(
         "expandobjects",
         eplus.first,
-        change_extension(eplus.second.binaryDir / toPath("expandobjects"), exeext),
+        change_extension(eplus.second.binaryDir / toPath(exename), exeext),
         eplus.second.linuxBinaryArchive,
-        toPath("expandobjects"),
+        toPath(exename),
         boost::regex("expanded\\.idf"));
   } 
 
@@ -285,11 +292,24 @@ namespace runmanager {
     static const char exeext[] = "";
 #endif
 
-    openstudio::path basementlocation = change_extension(eplus.second.binaryDir / toPath("basement"), exeext);
+    std::string basename = "Basement";
+    
+    if (eplus.first.getMajor() && eplus.first.getMajor() < 8)
+    {
+      basename = "basename";
+    }
+    
+
+    openstudio::path basementlocation = change_extension(eplus.second.binaryDir / toPath(basename), exeext);
 
     if (!boost::filesystem::exists(basementlocation))
     {
       basementlocation = change_extension(eplus.second.binaryDir / toPath("PreProcess/GrndTempCalc/basement"), exeext);
+    }
+
+    if (!boost::filesystem::exists(basementlocation))
+    {
+      basementlocation = change_extension(eplus.second.binaryDir / toPath("PreProcess/GrndTempCalc/Basement"), exeext);
     }
 
 
@@ -309,11 +329,24 @@ namespace runmanager {
 #else
     static const char exeext[] = "";
 #endif
-    openstudio::path slablocation = change_extension(eplus.second.binaryDir / toPath("slab"), exeext);
+
+    std::string basename = "Slab";
+    
+    if (eplus.first.getMajor() && eplus.first.getMajor() < 8)
+    {
+      basename = "slab";
+    }
+
+    openstudio::path slablocation = change_extension(eplus.second.binaryDir / toPath(basename), exeext);
 
     if (!boost::filesystem::exists(slablocation))
     {
       slablocation = change_extension(eplus.second.binaryDir / toPath("PreProcess/GrndTempCalc/slab"), exeext);
+    }
+
+    if (!boost::filesystem::exists(slablocation))
+    {
+      slablocation = change_extension(eplus.second.binaryDir / toPath("PreProcess/GrndTempCalc/Slab"), exeext);
     }
 
     return openstudio::runmanager::ToolInfo(
@@ -351,12 +384,20 @@ namespace runmanager {
     static const char exeext[] = "";
 #endif
 
+    std::string exename = "EnergyPlus";
+
+    if (eplus.first.getMajor() && eplus.first.getMajor() < 8)
+    {
+      exename = "energyplus";
+    }
+
+
     return openstudio::runmanager::ToolInfo(
         "energyplus",
         eplus.first,
-        change_extension(eplus.second.binaryDir / toPath("energyplus"), exeext),
+        change_extension(eplus.second.binaryDir / toPath(exename), exeext),
         eplus.second.linuxBinaryArchive,
-        toPath("energyplus"),
+        toPath(exename),
         boost::regex("eplus.*"));
   }
 

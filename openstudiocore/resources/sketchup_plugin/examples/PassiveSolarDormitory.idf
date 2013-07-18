@@ -1,7 +1,7 @@
-  Version,7.2;
- 
+  Version,8.0;
+
   Timestep,4;
- 
+
   Building,
     Sleeping Rainbow Ranch,  !- Name
     330.0,                   !- North Axis {deg}
@@ -11,14 +11,14 @@
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
     6;                       !- Minimum Number of Warmup Days
- 
+
   SimulationControl,
     NO,                      !- Do Zone Sizing Calculation
     NO,                      !- Do System Sizing Calculation
     NO,                      !- Do Plant Sizing Calculation
     Yes,                     !- Run Simulation for Sizing Periods
     Yes;                     !- Run Simulation for Weather File Run Periods
- 
+
   RunPeriod,
     ,                        !- Name
     1,                       !- Begin Month
@@ -31,16 +31,16 @@
     NO,                      !- Apply Weekend Holiday Rule
     YES,                     !- Use Weather File Rain Indicators
     YES;                     !- Use Weather File Snow Indicators
- 
+
 ! NOTE:  Values overridden by weather file, if used
- 
+
   Site:Location,
     Capitol Reef Natl Park UT,  !- Name
     38.185,                  !- Latitude {deg}
     -111.179,                !- Longitude {deg}
     -7.0,                    !- Time Zone {hr}
     1831.848;                !- Elevation {m}
- 
+
   SizingPeriod:DesignDay,
     Capitol Reef Natl Park UT Heating 99% Conditions,  !- Name
     1,                       !- Month
@@ -49,7 +49,7 @@
     -15,                     !- Maximum Dry-Bulb Temperature {C}
     0,                       !- Daily Dry-Bulb Temperature Range {deltaC}
     ,                        !- Dry-Bulb Temperature Range Modifier Type
-    ,                        !- Dry-Bulb Temperature Range Modifier Schedule Name
+    ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     -15,                     !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
     ,                        !- Humidity Condition Day Schedule Name
@@ -68,7 +68,7 @@
     ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
     ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0;                       !- Sky Clearness
- 
+
   SizingPeriod:DesignDay,
     Capitol Reef Natl Park UT Cooling 1% Conditions DB=>MWB,  !- Name
     7,                       !- Month
@@ -77,7 +77,7 @@
     35.8,                    !- Maximum Dry-Bulb Temperature {C}
     14.8,                    !- Daily Dry-Bulb Temperature Range {deltaC}
     ,                        !- Dry-Bulb Temperature Range Modifier Type
-    ,                        !- Dry-Bulb Temperature Range Modifier Schedule Name
+    ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     15.7,                    !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
     ,                        !- Humidity Condition Day Schedule Name
@@ -96,27 +96,28 @@
     ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
     ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     1;                       !- Sky Clearness
- 
+
   SurfaceConvectionAlgorithm:Inside,TARP;
- 
+
   SurfaceConvectionAlgorithm:Outside,TARP;
- 
+
   HeatBalanceAlgorithm,ConductionTransferFunction;
- 
+
   ShadowCalculation,
+    AverageOverDaysInFrequency,  !- Calculation Method
     31;                      !- Calculation Frequency
- 
+
   ScheduleTypeLimits,
     Any Number;              !- Name
- 
+
   Site:GroundReflectance,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2;
- 
+
 ! Deep ground temperatures for core, calibrated from slab.exe ground heat transfer program
- 
+
   Site:GroundTemperature:BuildingSurface,2.31,2.61,3.20,3.89,3.17,2.88,1.69,1.25,1.53,2.43,3.59,2.45;
- 
+
 ! Deep ground temperatures for perimeter, calibrated with slab.exe ground heat transfer program
- 
+
   SurfaceProperty:OtherSideCoefficients,
     Perimeter Ground Environment,  !- Name
     -1,                      !- Combined Convective/Radiative Film Coefficient {W/m2-K}
@@ -127,7 +128,7 @@
     0,                       !- Wind Speed Coefficient
     0,                       !- Zone Air Temperature Coefficient
     Deep Ground Temp Schedule;  !- Constant Temperature Schedule Name
- 
+
   Schedule:Compact,
     Deep Ground Temp Schedule,  !- Name
     Any Number,              !- Schedule Type Limits Name
@@ -167,10 +168,10 @@
     THROUGH: 12/31,          !- Field 45
     FOR: AllDays,            !- Field 46
     UNTIL: 24:00,-17.11;     !- Field 47
- 
+
 !*** Wall Materials ***
 ! for interior of North walls:  4" recycled CMU
- 
+
   Material,
     4 in Brick,              !- Name
     Rough,                   !- Roughness
@@ -181,7 +182,7 @@
     0.9,                     !- Thermal Absorptance
     0.7,                     !- Solar Absorptance
     0.7;                     !- Visible Absorptance
- 
+
   Material,
     1/2 in Gypsum Board,     !- Name
     Rough,                   !- Roughness
@@ -192,7 +193,7 @@
     0.9,                     !- Thermal Absorptance
     0.3,                     !- Solar Absorptance
     0.3;                     !- Visible Absorptance
- 
+
 ! R-19 Wall Insulation, 6" blown rigid cellulose
 ! Based on spec for ApplegateInsulation:  R-3.8/inch and 1.6 lb/ft3
 ! Specific heat from "IN14", Cellulose Fill 3.5 in R-20 in DOE-2Materials.idf
@@ -204,7 +205,7 @@
 !        The assumption here is that rigid cellulose is better than loose cellulose, but not as good as polyurathane.
 !        Interpolating between the two, the best estimate is to derate the rigid cellulose by 28%.
 !        Putting in more data about the house suggests this value could be derated even more!
- 
+
   Material,
     6 in Rigid Cellulose,    !- Name
     Rough,                   !- Roughness
@@ -215,7 +216,7 @@
     0.90,                    !- Thermal Absorptance
     0.75,                    !- Solar Absorptance
     0.75;                    !- Visible Absorptance
- 
+
   Material,
     1/2 in Ext Sheathing,    !- Name
     MediumSmooth,            !- Roughness
@@ -226,7 +227,7 @@
     0.9,                     !- Thermal Absorptance
     0.78,                    !- Solar Absorptance
     0.78;                    !- Visible Absorptance
- 
+
   Material,
     1/2 in Stucco,           !- Name
     Rough,                   !- Roughness
@@ -237,7 +238,7 @@
     0.9,                     !- Thermal Absorptance
     0.6,                     !- Solar Absorptance
     0.6;                     !- Visible Absorptance
- 
+
   Material,
     10 in Hollow Concrete Block,  !- Name
     MediumRough,             !- Roughness
@@ -248,7 +249,7 @@
     0.9000000,               !- Thermal Absorptance
     0.2000000,               !- Solar Absorptance
     0.2000000;               !- Visible Absorptance
- 
+
   Material,
     Selective Surface,       !- Name
     Smooth,                  !- Roughness
@@ -259,7 +260,7 @@
     0.1200000,               !- Thermal Absorptance
     0.9600000,               !- Solar Absorptance
     0.9600000;               !- Visible Absorptance
- 
+
   Material,
     WOOD - SOFTWOOD 3 1 / 2 IN,  !- Name
     MediumSmooth,            !- Roughness
@@ -270,9 +271,9 @@
     0.9000000,               !- Thermal Absorptance
     0.7800000,               !- Solar Absorptance
     0.7800000;               !- Visible Absorptance
- 
+
 !*** Trombe Wall Materials ***
- 
+
   Material,
     10 in Filled Concrete Block,  !- Name
     MediumRough,             !- Roughness
@@ -283,7 +284,7 @@
     0.9,                     !- Thermal Absorptance
     0.2,                     !- Solar Absorptance
     0.2;                     !- Visible Absorptance
- 
+
 ! Adobe MC
 ! MATERIAL:REGULAR,  ! from "Experimental Validation of the EnergyPlus Low-Temperature Radiant Simulation" by Chantrasrisalai et al.
 ! ! 10 in Adobe Block,  !- Material Name
@@ -314,7 +315,7 @@
 ! Specific heat from "IN14", Cellulose Fill 3.5 in R-20 in DOE-2Materials.idf
 ! NOTE:  Like the wall insulation, the roof insulation is also derated due to framing, but since there are no windows/doors and the joists are at 24" o.c.,
 !        then we'll only derate by 18%.
- 
+
   Material,
     12 in Rigid Cellulose,   !- Name
     Rough,                   !- Roughness
@@ -325,11 +326,11 @@
     0.90,                    !- Thermal Absorptance
     0.75,                    !- Solar Absorptance
     0.75;                    !- Visible Absorptance
- 
+
 ! According to FSEC report:
 ! for dark colored roof, e.g. asphalt shingle, absorptance should be ~0.80 (based on average reflectivity of 0.20)
 ! for light colored ("cool") roof, absorptance should be ~0.34 (based on average reflectivity of 0.66)
- 
+
   Material,
     Metal Roofing,           !- Name
     Rough,                   !- Roughness
@@ -340,9 +341,9 @@
     0.9,                     !- Thermal Absorptance
     0.3,                     !- Solar Absorptance
     0.3;                     !- Visible Absorptance
- 
+
 !*** Floor Materials ***
- 
+
   Material,
     Hardwood Floor,          !- Name
     MediumSmooth,            !- Roughness
@@ -353,9 +354,9 @@
     0.9000000,               !- Thermal Absorptance
     0.7800000,               !- Solar Absorptance
     0.7800000;               !- Visible Absorptance
- 
+
 ! 4 inch heavyweight concrete for floor slab
- 
+
   Material,
     4 in HW Concrete,        !- Name
     Rough,                   !- Roughness
@@ -366,7 +367,7 @@
     0.9,                     !- Thermal Absorptance
     0.3,                     !- Solar Absorptance
     0.3;                     !- Visible Absorptance
- 
+
   Material,
     2 in HW Concrete,        !- Name
     Rough,                   !- Roughness
@@ -377,7 +378,7 @@
     0.9,                     !- Thermal Absorptance
     0.3,                     !- Solar Absorptance
     0.3;                     !- Visible Absorptance
- 
+
   Material,
     4 in LW Concrete,        !- Name
     Rough,                   !- Roughness
@@ -388,10 +389,10 @@
     0.9,                     !- Thermal Absorptance
     0.3,                     !- Solar Absorptance
     0.3;                     !- Visible Absorptance
- 
+
 ! Set to match properties used in Slab.exe
 ! Mark has his own estimates of:  R-0.23/in? /ft? (=0.626 W/m K or 7.51 W/m K), Cp=0.22 IP =921.8 J/Kg K, density=120 lb/ft3=1920 kg/m3
- 
+
   Material,
     Dirt,                    !- Name
     Rough,                   !- Roughness
@@ -402,9 +403,9 @@
     0.9,                     !- Thermal Absorptance
     0.7,                     !- Solar Absorptance
     0.7;                     !- Visible Absorptance
- 
+
 ! 2 in Styrofoam
- 
+
   Material,
     Under Slab Insulation,   !- Name
     Rough,                   !- Roughness
@@ -415,9 +416,9 @@
     0.9,                     !- Thermal Absorptance
     0.5,                     !- Solar Absorptance
     0.5;                     !- Visible Absorptance
- 
+
 !*** Door Materials ***
- 
+
   Material,
     1/8 in Wood Panel,       !- Name
     MEDIUMSMOOTH,            !- Roughness
@@ -428,13 +429,13 @@
     0.9,                     !- Thermal Absorptance
     0.78,                    !- Solar Absorptance
     0.78;                    !- Visible Absorptance
- 
+
   Material:AirGap,
     Airspace - Vertical,     !- Name
     0.17;                    !- Thermal Resistance {m2-K/W}
- 
+
 ! Insulated Steel Door, R-7.14
- 
+
   Material:NoMass,
     Insulated Steel Door,    !- Name
     SMOOTH,                  !- Roughness
@@ -442,10 +443,10 @@
     0.9,                     !- Thermal Absorptance
     0.7,                     !- Solar Absorptance
     0.7;                     !- Visible Absorptance
- 
+
 !*** Glazing ***
 !                    Name                                         Th   Ts   Rfs  Rbs  Tv   Rfv  Rbv Tir Ef  Eb Con
- 
+
   WindowMaterial:Glazing,
     CLEAR 3MM,               !- Name
     SpectralAverage,         !- Optical Data Type
@@ -461,7 +462,7 @@
     .84,                     !- Front Side Infrared Hemispherical Emissivity
     .84,                     !- Back Side Infrared Hemispherical Emissivity
     .9;                      !- Conductivity {W/m-K}
- 
+
   WindowMaterial:Glazing,
     LoE CLEAR 3MM,           !- Name
     SpectralAverage,         !- Optical Data Type
@@ -477,7 +478,7 @@
     .84,                     !- Front Side Infrared Hemispherical Emissivity
     .10,                     !- Back Side Infrared Hemispherical Emissivity
     .9;                      !- Conductivity {W/m-K}
- 
+
   WindowMaterial:Glazing,
     Frosted CLEAR 3MM,       !- Name
     SpectralAverage,         !- Optical Data Type
@@ -495,9 +496,9 @@
     .9,                      !- Conductivity {W/m-K}
     1.0,                     !- Dirt Correction Factor for Solar and Visible Transmittance
     YES;                     !- Solar Diffusing
- 
+
 ! for Trombe glazing
- 
+
   WindowMaterial:Glazing,
     LOW IRON 3MM,            !- Name
     SpectralAverage,         !- Optical Data Type
@@ -513,7 +514,7 @@
     .84,                     !- Front Side Infrared Hemispherical Emissivity
     .84,                     !- Back Side Infrared Hemispherical Emissivity
     .9;                      !- Conductivity {W/m-K}
- 
+
   WindowMaterial:Glazing,
     PYR B CLEAR 3MM,         !- Name
     SpectralAverage,         !- Optical Data Type
@@ -529,7 +530,7 @@
     .84,                     !- Front Side Infrared Hemispherical Emissivity
     .20,                     !- Back Side Infrared Hemispherical Emissivity
     .9;                      !- Conductivity {W/m-K}
- 
+
   WindowMaterial:Glazing,
     PYR B CLEAR 3MM Rev,     !- Name
     SpectralAverage,         !- Optical Data Type
@@ -545,7 +546,7 @@
     .20,                     !- Front Side Infrared Hemispherical Emissivity
     .84,                     !- Back Side Infrared Hemispherical Emissivity
     .9;                      !- Conductivity {W/m-K}
- 
+
   WindowMaterial:Glazing,
     LoE CLEAR 3MM Rev,       !- Name
     SpectralAverage,         !- Optical Data Type
@@ -561,7 +562,7 @@
     .10,                     !- Front Side Infrared Hemispherical Emissivity
     .84,                     !- Back Side Infrared Hemispherical Emissivity
     .9;                      !- Conductivity {W/m-K}
- 
+
   WindowMaterial:Glazing,
     LoE SPEC SEL CLEAR 3MM,  !- Name
     SpectralAverage,         !- Optical Data Type
@@ -577,7 +578,7 @@
     .84,                     !- Front Side Infrared Hemispherical Emissivity
     .03,                     !- Back Side Infrared Hemispherical Emissivity
     .9;                      !- Conductivity {W/m-K}
- 
+
   WindowMaterial:Glazing,
     LoE SPEC SEL CLEAR 3MM Rev,  !- Name
     SpectralAverage,         !- Optical Data Type
@@ -593,12 +594,12 @@
     .03,                     !- Front Side Infrared Hemispherical Emissivity
     .84,                     !- Back Side Infrared Hemispherical Emissivity
     .9;                      !- Conductivity {W/m-K}
- 
+
   WindowMaterial:Gas,
     AIR 13MM,                !- Name
     AIR,                     !- Gas Type
     0.0127;                  !- Thickness {m}
- 
+
   WindowMaterial:Shade,
     Frosted Glass,           !- Name
     0.998,                   !- Solar Transmittance {dimensionless}
@@ -615,9 +616,9 @@
     0.0,                     !- Left-Side Opening Multiplier
     0.0,                     !- Right-Side Opening Multiplier
     0.0;                     !- Airflow Permeability {dimensionless}
- 
+
 ! Interior insulated shade material, 1 inch styrofoam with reflective exterior
- 
+
   WindowMaterial:Shade,
     Insulated Shade,         !- Name
     0.001,                   !- Solar Transmittance {dimensionless}
@@ -634,9 +635,9 @@
     0.0,                     !- Left-Side Opening Multiplier
     0.0,                     !- Right-Side Opening Multiplier
     0.0;                     !- Airflow Permeability {dimensionless}
- 
+
 ! Wind sail material for shading Trombe walls in summer
- 
+
   WindowMaterial:Shade,
     Trombe Shade,            !- Name
     0.1,                     !- Solar Transmittance {dimensionless}
@@ -653,127 +654,127 @@
     0.75,                    !- Left-Side Opening Multiplier
     0.75,                    !- Right-Side Opening Multiplier
     0.05;                    !- Airflow Permeability {dimensionless}
- 
+
   Construction,
     N Wall,                  !- Name
     1/2 in Stucco,           !- Outside Layer
     1/2 in Ext Sheathing,    !- Layer 2
     6 in Rigid Cellulose,    !- Layer 3
     4 in Brick;              !- Layer 4
- 
+
 ! actually a compound construction 2x6 frame and insulation, but not modeled here...
- 
+
   Construction,
     EW Wall,                 !- Name
     1/2 in Stucco,           !- Outside Layer
     1/2 in Ext Sheathing,    !- Layer 2
     6 in Rigid Cellulose,    !- Layer 3
     1/2 in Gypsum Board;     !- Layer 4
- 
+
   Construction,
     S Wall Light,            !- Name
     1/2 in Stucco,           !- Outside Layer
     1/2 in Ext Sheathing,    !- Layer 2
     6 in Rigid Cellulose,    !- Layer 3
     1/2 in Gypsum Board;     !- Layer 4
- 
+
   Construction,
     S Wall Heavy,            !- Name
     1/2 in Stucco,           !- Outside Layer
     1/2 in Ext Sheathing,    !- Layer 2
     6 in Rigid Cellulose,    !- Layer 3
     10 in Filled Concrete Block;  !- Layer 4
- 
+
 !  1/2 in Gypsum Board;     !- Layer #3
 ! not clear what interior finish will be, may be plaster
- 
+
   Construction,
     Trombe Wall IN,          !- Name
     Selective Surface,       !- Outside Layer
     10 in Filled Concrete Block;  !- Layer 2
- 
+
 !  1/2 in Gypsum Board;     !- Layer #3
 ! not clear what interior finish will be, may be plaster
 !  1/2 in Gypsum Board,           !- Outside Layer
 ! not clear what interior finish will be, may be plaster
- 
+
   Construction,
     Trombe Wall OUT,         !- Name
     10 in Filled Concrete Block,  !- Outside Layer
     Selective Surface;       !- Layer 2
- 
+
   Construction,
     I Wall,                  !- Name
     1/2 in Gypsum Board,     !- Outside Layer
     10 in Hollow Concrete Block,  !- Layer 2
     1/2 in Gypsum Board;     !- Layer 3
- 
+
   Construction,
     Interior Door,           !- Name
     1/8 in Wood Panel,       !- Outside Layer
     Airspace - Vertical,     !- Layer 2
     1/8 in Wood Panel;       !- Layer 3
- 
+
   Construction,
     Utility Door,            !- Name
     Insulated Steel Door;    !- Outside Layer
- 
+
   Construction,
     Roof,                    !- Name
     Metal Roofing,           !- Outside Layer
     12 in Rigid Cellulose,   !- Layer 2
     1/2 in Gypsum Board;     !- Layer 3
- 
+
   Construction,
     Utility Floor,           !- Name
     Dirt,                    !- Outside Layer
     Under Slab Insulation,   !- Layer 2
     4 in HW Concrete;        !- Layer 3
- 
+
   Construction,
     Radiant Floor,           !- Name
     Under Slab Insulation,   !- Outside Layer
     2 in HW Concrete,        !- Layer 2
     2 in HW Concrete,        !- Layer 3
     Hardwood Floor;          !- Layer 4
- 
+
   Construction,
     Light Internal Mass,     !- Name
     WOOD - SOFTWOOD 3 1 / 2 IN;  !- Outside Layer
- 
+
   Construction,
     Heavy Internal Mass,     !- Name
     1/2 in Gypsum Board,     !- Outside Layer
     10 in Hollow Concrete Block,  !- Layer 2
     1/2 in Gypsum Board;     !- Layer 3
- 
+
   Construction,
     South Glazing,           !- Name
     CLEAR 3MM,               !- Outside Layer
     AIR 13MM,                !- Layer 2
     CLEAR 3MM;               !- Layer 3
- 
+
   Construction,
     Frosted South Glazing,   !- Name
     CLEAR 3MM,               !- Outside Layer
     AIR 13MM,                !- Layer 2
     Frosted CLEAR 3MM;       !- Layer 3
- 
+
   Construction,
     Non-South Glazing,       !- Name
     CLEAR 3MM,               !- Outside Layer
     AIR 13MM,                !- Layer 2
     CLEAR 3MM;               !- Layer 3
- 
+
   Construction,
     Trombe Glazing,          !- Name
     CLEAR 3MM;               !- Outside Layer
- 
+
   GlobalGeometryRules,
     UpperLeftCorner,         !- Starting Vertex Position
     Counterclockwise,        !- Vertex Entry Direction
     Relative;                !- Coordinate System
- 
+
   Zone,
     Bedroom1,                !- Name
     0,                       !- Direction of Relative North {deg}
@@ -784,7 +785,7 @@
     1,                       !- Multiplier
     -1,                      !- Ceiling Height {m}
     52.10;                   !- Volume {m3}
- 
+
   BuildingSurface:Detailed,
     Bedroom1 N-1,            !- Name
     Wall,                    !- Surface Type
@@ -800,7 +801,7 @@
     3.048000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     0.000000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     0.000000,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bedroom1 NDoor-1,        !- Name
     Door,                    !- Surface Type
@@ -816,7 +817,7 @@
     1.778000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     0.965200,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     0.965200,4.673600,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom1 N-2,            !- Name
     Wall,                    !- Surface Type
@@ -832,7 +833,7 @@
     4.876800,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     3.048000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     3.048000,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom1 E-1,            !- Name
     Wall,                    !- Surface Type
@@ -848,7 +849,7 @@
     4.876800,0.469900,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     4.876800,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     4.876800,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bedroom1 EDoor-1,        !- Name
     Door,                    !- Surface Type
@@ -864,9 +865,9 @@
     4.876800,3.149600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     4.876800,4.064000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     4.876800,4.064000,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
 ! South surfaces are at the end
- 
+
   BuildingSurface:Detailed,
     Bedroom1 W-1,            !- Name
     Wall,                    !- Surface Type
@@ -882,7 +883,7 @@
     0.000000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     0.000000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     0.000000,0.000000,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bedroom1 WWin-1,         !- Name
     Window,                  !- Surface Type
@@ -898,7 +899,7 @@
     0.000000,3.784600,0.990600,  !- X,Y,Z ==> Vertex 2 {m}
     0.000000,3.124200,0.990600,  !- X,Y,Z ==> Vertex 3 {m}
     0.000000,3.124200,2.057400;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom1 F-1,            !- Name
     Floor,                   !- Surface Type
@@ -914,7 +915,7 @@
     1.500000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     0.000000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     0.000000,4.673600,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom1 F-2,            !- Name
     Floor,                   !- Surface Type
@@ -930,7 +931,7 @@
     4.876800,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.500000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.500000,1.500000,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom1 F-3,            !- Name
     Floor,                   !- Surface Type
@@ -946,7 +947,7 @@
     4.876800,1.500000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.500000,1.500000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.500000,4.673600,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom1 R-1,            !- Name
     Roof,                    !- Surface Type
@@ -962,9 +963,9 @@
     0.000000,0.000000,2.286000,  !- X,Y,Z ==> Vertex 2 {m}
     4.876800,0.000000,2.286000,  !- X,Y,Z ==> Vertex 3 {m}
     4.876800,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
 ! Need to put roofs in separate file too
- 
+
   Zone,
     Sunspace,                !- Name
     0,                       !- Direction of Relative North {deg}
@@ -975,7 +976,7 @@
     1,                       !- Multiplier
     -1,                      !- Ceiling Height {m}
     40.52;                   !- Volume {m3}
- 
+
   BuildingSurface:Detailed,
     Sunspace N-1,            !- Name
     Wall,                    !- Surface Type
@@ -991,7 +992,7 @@
     6.985000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     4.876800,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     4.876800,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Sunspace NDoor-1,        !- Name
     Door,                    !- Surface Type
@@ -1007,7 +1008,7 @@
     6.756400,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     5.842000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     5.842000,4.673600,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Sunspace N-2,            !- Name
     Wall,                    !- Surface Type
@@ -1023,7 +1024,7 @@
     9.093200,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     6.985000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     6.985000,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Sunspace NDoor-2,        !- Name
     Door,                    !- Surface Type
@@ -1039,7 +1040,7 @@
     8.128000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     7.213600,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     7.213600,4.673600,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Sunspace E-1,            !- Name
     Wall,                    !- Surface Type
@@ -1055,7 +1056,7 @@
     9.093200,0.469900,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     9.093200,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     9.093200,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Sunspace EDoor-1,        !- Name
     Door,                    !- Surface Type
@@ -1071,7 +1072,7 @@
     9.093200,3.149600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     9.093200,4.064000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     9.093200,4.064000,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Sunspace S-1,            !- Name
     Wall,                    !- Surface Type
@@ -1087,7 +1088,7 @@
     4.876800,0.469900,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     9.093200,0.469900,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     9.093200,0.469900,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Sunspace SWin-1,         !- Name
     Window,                  !- Surface Type
@@ -1103,7 +1104,7 @@
     8.026400,0.469900,0.076200,  !- X,Y,Z ==> Vertex 2 {m}
     8.915400,0.469900,0.076200,  !- X,Y,Z ==> Vertex 3 {m}
     8.915400,0.469900,2.006600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Sunspace SDoor-1,        !- Name
     Window,                  !- Surface Type
@@ -1119,7 +1120,7 @@
     6.172200,0.469900,0.152400,  !- X,Y,Z ==> Vertex 2 {m}
     7.797800,0.469900,0.152400,  !- X,Y,Z ==> Vertex 3 {m}
     7.797800,0.469900,1.955800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Sunspace SWin-2,         !- Name
     Window,                  !- Surface Type
@@ -1135,7 +1136,7 @@
     5.054600,0.469900,0.076200,  !- X,Y,Z ==> Vertex 2 {m}
     5.943600,0.469900,0.076200,  !- X,Y,Z ==> Vertex 3 {m}
     5.943600,0.469900,2.006600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Sunspace W-1,            !- Name
     Wall,                    !- Surface Type
@@ -1151,7 +1152,7 @@
     4.876800,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     4.876800,0.469900,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     4.876800,0.469900,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Sunspace WDoor-1,        !- Name
     Door,                    !- Surface Type
@@ -1167,7 +1168,7 @@
     4.876800,4.064000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     4.876800,3.149600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     4.876800,3.149600,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Sunspace F-1,            !- Name
     Floor,                   !- Surface Type
@@ -1183,7 +1184,7 @@
     9.093200,0.469900,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     4.876800,0.469900,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     4.876800,1.969900,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Sunspace F-2,            !- Name
     Floor,                   !- Surface Type
@@ -1199,7 +1200,7 @@
     9.093200,1.969900,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     4.876800,1.969900,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     4.876800,4.673600,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Sunspace R-1,            !- Name
     Roof,                    !- Surface Type
@@ -1215,7 +1216,7 @@
     4.876800,0.469900,2.286000,  !- X,Y,Z ==> Vertex 2 {m}
     9.093200,0.469900,2.286000,  !- X,Y,Z ==> Vertex 3 {m}
     9.093200,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Zone,
     Bedroom4,                !- Name
     0,                       !- Direction of Relative North {deg}
@@ -1226,7 +1227,7 @@
     1,                       !- Multiplier
     -1,                      !- Ceiling Height {m}
     52.10;                   !- Volume {m3}
- 
+
   BuildingSurface:Detailed,
     Bedroom4 N-1,            !- Name
     Wall,                    !- Surface Type
@@ -1242,7 +1243,7 @@
     10.922000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     9.093200,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     9.093200,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom4 N-2,            !- Name
     Wall,                    !- Surface Type
@@ -1258,7 +1259,7 @@
     13.970000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.922000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.922000,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bedroom4 NDoor-1,        !- Name
     Door,                    !- Surface Type
@@ -1274,7 +1275,7 @@
     13.004800,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     12.192000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     12.192000,4.673600,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom4 E-1,            !- Name
     Wall,                    !- Surface Type
@@ -1290,7 +1291,7 @@
     13.970000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     13.970000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     13.970000,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bedroom4 EWin-1,         !- Name
     Window,                  !- Surface Type
@@ -1306,9 +1307,9 @@
     13.970000,3.124200,0.990600,  !- X,Y,Z ==> Vertex 2 {m}
     13.970000,3.784600,0.990600,  !- X,Y,Z ==> Vertex 3 {m}
     13.970000,3.784600,2.057400;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
 ! South surfaces are at the end
- 
+
   BuildingSurface:Detailed,
     Bedroom4 W-1,            !- Name
     Wall,                    !- Surface Type
@@ -1324,7 +1325,7 @@
     9.093200,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     9.093200,0.469900,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     9.093200,0.469900,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bedroom4 WDoor-1,        !- Name
     Door,                    !- Surface Type
@@ -1340,7 +1341,7 @@
     9.093200,4.064000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     9.093200,3.149600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     9.093200,3.149600,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom4 F-1,            !- Name
     Floor,                   !- Surface Type
@@ -1356,7 +1357,7 @@
     12.470000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     9.093200,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     9.093200,1.500000,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom4 F-2,            !- Name
     Floor,                   !- Surface Type
@@ -1372,7 +1373,7 @@
     12.470000,1.500000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     9.093200,1.500000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     9.093200,4.673600,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom4 F-3,            !- Name
     Floor,                   !- Surface Type
@@ -1388,7 +1389,7 @@
     13.970000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     12.470000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     12.470000,4.673600,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom4 R-1,            !- Name
     Roof,                    !- Surface Type
@@ -1404,7 +1405,7 @@
     9.093200,0.000000,2.286000,  !- X,Y,Z ==> Vertex 2 {m}
     13.970000,0.000000,2.286000,  !- X,Y,Z ==> Vertex 3 {m}
     13.970000,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Zone,
     Bath1,                   !- Name
     0,                       !- Direction of Relative North {deg}
@@ -1415,7 +1416,7 @@
     1,                       !- Multiplier
     -1,                      !- Ceiling Height {m}
     21.23;                   !- Volume {m3}
- 
+
   BuildingSurface:Detailed,
     Bath1 N-1,               !- Name
     Wall,                    !- Surface Type
@@ -1431,7 +1432,7 @@
     1.143000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     0.000000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     0.000000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath1 N-2,               !- Name
     Wall,                    !- Surface Type
@@ -1447,7 +1448,7 @@
     3.048000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.143000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.143000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath1 E-1,               !- Name
     Wall,                    !- Surface Type
@@ -1463,7 +1464,7 @@
     3.048000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     3.048000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     3.048000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath1 S-1,               !- Name
     Wall,                    !- Surface Type
@@ -1479,7 +1480,7 @@
     0.000000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     3.048000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     3.048000,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bath1 SDoor-1,           !- Name
     Door,                    !- Surface Type
@@ -1495,7 +1496,7 @@
     0.965200,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.778000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.778000,4.673600,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath1 S-2,               !- Name
     Wall,                    !- Surface Type
@@ -1511,9 +1512,9 @@
     0.000000,4.673600,2.286000,  !- X,Y,Z ==> Vertex 2 {m}
     3.048000,4.673600,2.286000,  !- X,Y,Z ==> Vertex 3 {m}
     3.048000,4.673600,4.419600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
 ! Clerestory window
- 
+
   FenestrationSurface:Detailed,
     Bath1 SWin-1,            !- Name
     Window,                  !- Surface Type
@@ -1529,7 +1530,7 @@
     1.143000,4.673600,3.276600,  !- X,Y,Z ==> Vertex 2 {m}
     2.717800,4.673600,3.276600,  !- X,Y,Z ==> Vertex 3 {m}
     2.717800,4.673600,4.064000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath1 W-1,               !- Name
     Wall,                    !- Surface Type
@@ -1545,7 +1546,7 @@
     0.000000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     0.000000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     0.000000,4.673600,4.419600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bath1 WWin-1,            !- Name
     Window,                  !- Surface Type
@@ -1561,7 +1562,7 @@
     0.000000,5.816600,1.600200,  !- X,Y,Z ==> Vertex 2 {m}
     0.000000,5.359400,1.600200,  !- X,Y,Z ==> Vertex 3 {m}
     0.000000,5.359400,2.057400;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath1 F-1,               !- Name
     Floor,                   !- Surface Type
@@ -1577,7 +1578,7 @@
     1.500000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     0.000000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     0.000000,6.400800,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath1 F-2,               !- Name
     Floor,                   !- Surface Type
@@ -1593,7 +1594,7 @@
     3.048000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.500000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.500000,6.400800,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath1 R-1,               !- Name
     Roof,                    !- Surface Type
@@ -1609,7 +1610,7 @@
     3.048000,6.400800,3.643800,  !- X,Y,Z ==> Vertex 2 {m}
     0.000000,6.400800,3.643800,  !- X,Y,Z ==> Vertex 3 {m}
     0.000000,4.673600,4.419600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Zone,
     Utility1,                !- Name
     0,                       !- Direction of Relative North {deg}
@@ -1620,7 +1621,7 @@
     1,                       !- Multiplier
     -1,                      !- Ceiling Height {m}
     10.24;                   !- Volume {m3}
- 
+
   BuildingSurface:Detailed,
     Utility1 N-1,            !- Name
     Wall,                    !- Surface Type
@@ -1636,7 +1637,7 @@
     1.143000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     0.000000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     0.000000,9.423400,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Utility1 E-1,            !- Name
     Wall,                    !- Surface Type
@@ -1652,7 +1653,7 @@
     1.143000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.143000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.143000,9.423400,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Utility1 S-1,            !- Name
     Wall,                    !- Surface Type
@@ -1668,7 +1669,7 @@
     0.000000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.143000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.143000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Utility1 W-1,            !- Name
     Wall,                    !- Surface Type
@@ -1684,9 +1685,9 @@
     0.000000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     0.000000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     0.000000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
 ! Changed to 4 ft single door
- 
+
   FenestrationSurface:Detailed,
     Utility1 WDoor-1,        !- Name
     Door,                    !- Surface Type
@@ -1702,7 +1703,7 @@
     0.000000,8.356600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     0.000000,7.137400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     0.000000,7.137400,2.032000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Utility1 F-1,            !- Name
     Floor,                   !- Surface Type
@@ -1718,7 +1719,7 @@
     1.143000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     0.000000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     0.000000,9.423400,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Utility1 R-1,            !- Name
     Roof,                    !- Surface Type
@@ -1734,7 +1735,7 @@
     1.143000,9.423400,2.286000,  !- X,Y,Z ==> Vertex 2 {m}
     0.000000,9.423400,2.286000,  !- X,Y,Z ==> Vertex 3 {m}
     0.000000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Zone,
     Bath2,                   !- Name
     0,                       !- Direction of Relative North {deg}
@@ -1745,7 +1746,7 @@
     1,                       !- Multiplier
     -1,                      !- Ceiling Height {m}
     17.07;                   !- Volume {m3}
- 
+
   BuildingSurface:Detailed,
     Bath2 N-1,               !- Name
     Wall,                    !- Surface Type
@@ -1761,7 +1762,7 @@
     3.048000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.143000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.143000,9.423400,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bath2 NWin-1,            !- Name
     Window,                  !- Surface Type
@@ -1777,7 +1778,7 @@
     2.286000,9.423400,1.295400,  !- X,Y,Z ==> Vertex 2 {m}
     1.828800,9.423400,1.295400,  !- X,Y,Z ==> Vertex 3 {m}
     1.828800,9.423400,2.057400;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath2 E-1,               !- Name
     Wall,                    !- Surface Type
@@ -1793,7 +1794,7 @@
     3.048000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     3.048000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     3.048000,9.423400,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bath2 EDoor-1,           !- Name
     Door,                    !- Surface Type
@@ -1809,7 +1810,7 @@
     3.048000,7.543800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     3.048000,8.458200,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     3.048000,8.458200,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath2 S-1,               !- Name
     Wall,                    !- Surface Type
@@ -1825,7 +1826,7 @@
     1.143000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     3.048000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     3.048000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath2 W-1,               !- Name
     Wall,                    !- Surface Type
@@ -1841,7 +1842,7 @@
     1.143000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.143000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.143000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath2 F-1,               !- Name
     Floor,                   !- Surface Type
@@ -1857,7 +1858,7 @@
     1.500000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.143000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.143000,9.423400,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath2 F-2,               !- Name
     Floor,                   !- Surface Type
@@ -1873,7 +1874,7 @@
     3.048000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.500000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.500000,7.923400,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath2 F-3,               !- Name
     Floor,                   !- Surface Type
@@ -1889,7 +1890,7 @@
     3.048000,7.923400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.500000,7.923400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.500000,9.423400,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath2 R-1,               !- Name
     Roof,                    !- Surface Type
@@ -1905,7 +1906,7 @@
     3.048000,9.423400,2.286000,  !- X,Y,Z ==> Vertex 2 {m}
     1.143000,9.423400,2.286000,  !- X,Y,Z ==> Vertex 3 {m}
     1.143000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Zone,
     Bedroom2,                !- Name
     0,                       !- Direction of Relative North {deg}
@@ -1916,7 +1917,7 @@
     1,                       !- Multiplier
     3.3528,                  !- Ceiling Height {m}
     -1;                      !- Volume {m3}
- 
+
   BuildingSurface:Detailed,
     Bedroom2 N-1,            !- Name
     Wall,                    !- Surface Type
@@ -1932,7 +1933,7 @@
     6.985000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     3.048000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     3.048000,9.423400,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bedroom2 NWin-1,         !- Name
     Window,                  !- Surface Type
@@ -1948,7 +1949,7 @@
     5.384800,9.423400,1.092200,  !- X,Y,Z ==> Vertex 2 {m}
     4.622800,9.423400,1.092200,  !- X,Y,Z ==> Vertex 3 {m}
     4.622800,9.423400,2.057400;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom2 E-1,            !- Name
     Wall,                    !- Surface Type
@@ -1964,7 +1965,7 @@
     6.985000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     6.985000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     6.985000,9.423400,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom2 S-1,            !- Name
     Wall,                    !- Surface Type
@@ -1980,7 +1981,7 @@
     3.048000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     4.876800,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     4.876800,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom2 S-2,            !- Name
     Wall,                    !- Surface Type
@@ -1996,7 +1997,7 @@
     4.876800,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     6.985000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     6.985000,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bedroom2 SDoor-1,        !- Name
     Door,                    !- Surface Type
@@ -2012,7 +2013,7 @@
     5.842000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     6.756400,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     6.756400,4.673600,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom2 S-3,            !- Name
     Wall,                    !- Surface Type
@@ -2028,9 +2029,9 @@
     3.048000,4.673600,2.286000,  !- X,Y,Z ==> Vertex 2 {m}
     6.985000,4.673600,2.286000,  !- X,Y,Z ==> Vertex 3 {m}
     6.985000,4.673600,4.419600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
 ! Clerestory window
- 
+
   FenestrationSurface:Detailed,
     Bedroom2 SWin-1,         !- Name
     Window,                  !- Surface Type
@@ -2046,7 +2047,7 @@
     3.276600,4.673600,3.280600,  !- X,Y,Z ==> Vertex 2 {m}
     5.715000,4.673600,3.276600,  !- X,Y,Z ==> Vertex 3 {m}
     5.715000,4.673600,4.064000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom2 W-1,            !- Name
     Wall,                    !- Surface Type
@@ -2062,7 +2063,7 @@
     3.048000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     3.048000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     3.048000,4.673600,4.419600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom2 W-2,            !- Name
     Wall,                    !- Surface Type
@@ -2078,7 +2079,7 @@
     3.048000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     3.048000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     3.048000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bedroom2 WDoor-1,        !- Name
     Door,                    !- Surface Type
@@ -2094,7 +2095,7 @@
     3.048000,8.458200,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     3.048000,7.543800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     3.048000,7.543800,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom2 F-1,            !- Name
     Floor,                   !- Surface Type
@@ -2110,7 +2111,7 @@
     6.985000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     3.048000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     3.048000,7.923400,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom2 F-2,            !- Name
     Floor,                   !- Surface Type
@@ -2126,7 +2127,7 @@
     6.985000,7.923400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     3.048000,7.923400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     3.048000,9.423400,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom2 R-1,            !- Name
     Roof,                    !- Surface Type
@@ -2142,7 +2143,7 @@
     6.985000,9.423400,2.286000,  !- X,Y,Z ==> Vertex 2 {m}
     3.048000,9.423400,2.286000,  !- X,Y,Z ==> Vertex 3 {m}
     3.048000,4.673600,4.419600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Zone,
     Bedroom3,                !- Name
     0,                       !- Direction of Relative North {deg}
@@ -2153,7 +2154,7 @@
     1,                       !- Multiplier
     3.3528,                  !- Ceiling Height {m}
     -1;                      !- Volume {m3}
- 
+
   BuildingSurface:Detailed,
     Bedroom3 N-1,            !- Name
     Wall,                    !- Surface Type
@@ -2169,7 +2170,7 @@
     10.922000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     6.985000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     6.985000,9.423400,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bedroom3 NWin-1,         !- Name
     Window,                  !- Surface Type
@@ -2185,7 +2186,7 @@
     9.347200,9.423400,1.092200,  !- X,Y,Z ==> Vertex 2 {m}
     8.585200,9.423400,1.092200,  !- X,Y,Z ==> Vertex 3 {m}
     8.585200,9.423400,2.057400;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom3 E-1,            !- Name
     Wall,                    !- Surface Type
@@ -2201,7 +2202,7 @@
     10.922000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.922000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.922000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom3 E-2,            !- Name
     Wall,                    !- Surface Type
@@ -2217,7 +2218,7 @@
     10.922000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.922000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.922000,9.423400,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bedroom3 EDoor-1,        !- Name
     Door,                    !- Surface Type
@@ -2233,7 +2234,7 @@
     10.922000,7.543800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.922000,8.458200,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.922000,8.458200,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom3 S-1,            !- Name
     Wall,                    !- Surface Type
@@ -2249,7 +2250,7 @@
     6.985000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     9.093200,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     9.093200,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bedroom3 SDoor-1,        !- Name
     Door,                    !- Surface Type
@@ -2265,7 +2266,7 @@
     7.213600,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     8.128000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     8.128000,4.673600,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom3 S-2,            !- Name
     Wall,                    !- Surface Type
@@ -2281,7 +2282,7 @@
     9.093200,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.922000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.922000,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom3 S-3,            !- Name
     Wall,                    !- Surface Type
@@ -2297,9 +2298,9 @@
     6.985000,4.673600,2.286000,  !- X,Y,Z ==> Vertex 2 {m}
     10.922000,4.673600,2.286000,  !- X,Y,Z ==> Vertex 3 {m}
     10.922000,4.673600,4.419600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
 ! Clerestory window
- 
+
   FenestrationSurface:Detailed,
     Bedroom3 SWin-1,         !- Name
     Window,                  !- Surface Type
@@ -2315,7 +2316,7 @@
     8.255000,4.673600,3.276600,  !- X,Y,Z ==> Vertex 2 {m}
     10.769600,4.673600,3.276600,  !- X,Y,Z ==> Vertex 3 {m}
     10.769600,4.673600,4.064000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom3 W-1,            !- Name
     Wall,                    !- Surface Type
@@ -2331,7 +2332,7 @@
     6.985000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     6.985000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     6.985000,4.673600,4.419600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom3 F-1,            !- Name
     Floor,                   !- Surface Type
@@ -2347,7 +2348,7 @@
     10.922000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     6.985000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     6.985000,7.923400,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom3 F-2,            !- Name
     Floor,                   !- Surface Type
@@ -2363,7 +2364,7 @@
     10.922000,7.923400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     6.985000,7.923400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     6.985000,9.423400,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom3 R-1,            !- Name
     Roof,                    !- Surface Type
@@ -2379,7 +2380,7 @@
     10.922000,9.423400,2.286000,  !- X,Y,Z ==> Vertex 2 {m}
     6.985000,9.423400,2.286000,  !- X,Y,Z ==> Vertex 3 {m}
     6.985000,4.673600,4.419600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Zone,
     Bath4,                   !- Name
     0,                       !- Direction of Relative North {deg}
@@ -2390,7 +2391,7 @@
     1,                       !- Multiplier
     -1,                      !- Ceiling Height {m}
     21.23;                   !- Volume {m3}
- 
+
   BuildingSurface:Detailed,
     Bath4 N-1,               !- Name
     Wall,                    !- Surface Type
@@ -2406,7 +2407,7 @@
     12.827000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.922000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.922000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath4 N-2,               !- Name
     Wall,                    !- Surface Type
@@ -2422,7 +2423,7 @@
     13.970000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     12.827000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     12.827000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath4 E-1,               !- Name
     Wall,                    !- Surface Type
@@ -2438,7 +2439,7 @@
     13.970000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     13.970000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     13.970000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bath4 EWin-1,            !- Name
     Window,                  !- Surface Type
@@ -2454,7 +2455,7 @@
     13.970000,5.359400,1.600200,  !- X,Y,Z ==> Vertex 2 {m}
     13.970000,5.816600,1.600200,  !- X,Y,Z ==> Vertex 3 {m}
     13.970000,5.816600,2.057400;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath4 S-1,               !- Name
     Wall,                    !- Surface Type
@@ -2470,7 +2471,7 @@
     10.922000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     13.970000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     13.970000,4.673600,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bath4 SDoor-1,           !- Name
     Door,                    !- Surface Type
@@ -2486,7 +2487,7 @@
     12.192000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     13.004800,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     13.004800,4.673600,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath4 S-2,               !- Name
     Wall,                    !- Surface Type
@@ -2502,9 +2503,9 @@
     10.922000,4.673600,2.286000,  !- X,Y,Z ==> Vertex 2 {m}
     13.970000,4.673600,2.286000,  !- X,Y,Z ==> Vertex 3 {m}
     13.970000,4.673600,4.419600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
 ! Clerestory window
- 
+
   FenestrationSurface:Detailed,
     Bath4 SWin-1,            !- Name
     Window,                  !- Surface Type
@@ -2520,7 +2521,7 @@
     11.252200,4.673600,3.276600,  !- X,Y,Z ==> Vertex 2 {m}
     12.827001,4.673600,3.276600,  !- X,Y,Z ==> Vertex 3 {m}
     12.827001,4.673600,4.064000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath4 W-1,               !- Name
     Wall,                    !- Surface Type
@@ -2536,7 +2537,7 @@
     10.922000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.922000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.922000,4.673600,4.419600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath4 F-1,               !- Name
     Floor,                   !- Surface Type
@@ -2552,7 +2553,7 @@
     12.470000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.922000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.922000,6.400800,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath4 F-2,               !- Name
     Floor,                   !- Surface Type
@@ -2568,7 +2569,7 @@
     13.970000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     12.470000,4.673600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     12.470000,6.400800,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath4 R-1,               !- Name
     Roof,                    !- Surface Type
@@ -2584,7 +2585,7 @@
     13.970000,6.400800,3.643800,  !- X,Y,Z ==> Vertex 2 {m}
     10.922000,6.400800,3.643800,  !- X,Y,Z ==> Vertex 3 {m}
     10.922000,4.673600,4.419600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Zone,
     Bath3,                   !- Name
     0,                       !- Direction of Relative North {deg}
@@ -2595,7 +2596,7 @@
     1,                       !- Multiplier
     -1,                      !- Ceiling Height {m}
     17.07;                   !- Volume {m3}
- 
+
   BuildingSurface:Detailed,
     Bath3 N-1,               !- Name
     Wall,                    !- Surface Type
@@ -2611,7 +2612,7 @@
     12.827000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.922000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.922000,9.423400,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bath3 NWin-1,            !- Name
     Window,                  !- Surface Type
@@ -2627,7 +2628,7 @@
     12.141201,9.423400,1.295400,  !- X,Y,Z ==> Vertex 2 {m}
     11.684000,9.423400,1.295400,  !- X,Y,Z ==> Vertex 3 {m}
     11.684000,9.423400,2.057400;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath3 E-1,               !- Name
     Wall,                    !- Surface Type
@@ -2643,7 +2644,7 @@
     12.827000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     12.827000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     12.827000,9.423400,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath3 S-1,               !- Name
     Wall,                    !- Surface Type
@@ -2659,7 +2660,7 @@
     10.922000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     12.827000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     12.827000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath3 W-1,               !- Name
     Wall,                    !- Surface Type
@@ -2675,7 +2676,7 @@
     10.922000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.922000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.922000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bath3 WDoor-1,           !- Name
     Door,                    !- Surface Type
@@ -2691,7 +2692,7 @@
     10.922000,8.458200,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.922000,7.543800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.922000,7.543800,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath3 F-1,               !- Name
     Floor,                   !- Surface Type
@@ -2707,7 +2708,7 @@
     12.470000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.922000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.922000,7.923400,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath3 F-2,               !- Name
     Floor,                   !- Surface Type
@@ -2723,7 +2724,7 @@
     12.470000,7.923400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.922000,7.923400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.922000,9.423400,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath3 F-3,               !- Name
     Floor,                   !- Surface Type
@@ -2739,7 +2740,7 @@
     12.827000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     12.470000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     12.470000,9.423400,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bath3 R-1,               !- Name
     Roof,                    !- Surface Type
@@ -2755,7 +2756,7 @@
     12.827000,9.423400,2.286000,  !- X,Y,Z ==> Vertex 2 {m}
     10.922000,9.423400,2.286000,  !- X,Y,Z ==> Vertex 3 {m}
     10.922000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Zone,
     Utility2,                !- Name
     0,                       !- Direction of Relative North {deg}
@@ -2766,7 +2767,7 @@
     1,                       !- Multiplier
     -1,                      !- Ceiling Height {m}
     10.24;                   !- Volume {m3}
- 
+
   BuildingSurface:Detailed,
     Utility2 N-1,            !- Name
     Wall,                    !- Surface Type
@@ -2782,7 +2783,7 @@
     13.970000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     12.827000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     12.827000,9.423400,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Utility2 E-1,            !- Name
     Wall,                    !- Surface Type
@@ -2798,9 +2799,9 @@
     13.970000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     13.970000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     13.970000,9.423400,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
 ! Changed to 4 ft single door
- 
+
   FenestrationSurface:Detailed,
     Utility2 EDoor-1,        !- Name
     Door,                    !- Surface Type
@@ -2816,7 +2817,7 @@
     13.970000,7.137400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     13.970000,8.356600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     13.970000,8.356600,2.032000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Utility2 S-1,            !- Name
     Wall,                    !- Surface Type
@@ -2832,7 +2833,7 @@
     12.827000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     13.970000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     13.970000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Utility2 W-1,            !- Name
     Wall,                    !- Surface Type
@@ -2848,7 +2849,7 @@
     12.827000,9.423400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     12.827000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     12.827000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Utility2 F-1,            !- Name
     Floor,                   !- Surface Type
@@ -2864,7 +2865,7 @@
     13.970000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     12.827000,6.400800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     12.827000,9.423400,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Utility2 R-1,            !- Name
     Roof,                    !- Surface Type
@@ -2880,9 +2881,9 @@
     13.970000,9.423400,2.286000,  !- X,Y,Z ==> Vertex 2 {m}
     12.827000,9.423400,2.286000,  !- X,Y,Z ==> Vertex 3 {m}
     12.827000,6.400800,3.643800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
 ! This will be deleted once it is verified that "Solar Diffusing" in Material:WindowGlass works right.
- 
+
   WindowProperty:ShadingControl,
     Always Frosted Control,  !- Name
     INTERIORSHADE,           !- Shading Type
@@ -2895,10 +2896,10 @@
     Frosted Glass,           !- Shading Device Material Name
     ,                        !- Type of Slat Angle Control for Blinds
     ;                        !- Slat Angle Schedule Name
- 
+
 ! Currently all bedroom windows (incl. clerestories) and the bathroom clerestories have insulation.
 ! All sunspace windows and small bathroom windows have no insulation.
- 
+
   WindowProperty:ShadingControl,
     Insulated Shade Control, !- Name
     INTERIORSHADE,           !- Shading Type
@@ -2911,7 +2912,7 @@
     Insulated Shade,         !- Shading Device Material Name
     ,                        !- Type of Slat Angle Control for Blinds
     ;                        !- Slat Angle Schedule Name
- 
+
   Schedule:Compact,
     Insulated Shade Schedule,!- Name
     Any Number,              !- Schedule Type Limits Name
@@ -2928,80 +2929,80 @@
     UNTIL: 12:00,1,          !- Field 15
     UNTIL: 20:00,0,          !- Field 17
     UNTIL: 24:00,1;          !- Field 19
- 
+
   InternalMass,
     Bedroom1 I-1,            !- Name
     Light Internal Mass,     !- Construction Name
     Bedroom1,                !- Zone Name
     15.0;                    !- Surface Area {m2}
- 
+
   InternalMass,
     Sunspace I-1,            !- Name
     Light Internal Mass,     !- Construction Name
     Sunspace,                !- Zone Name
     2.0;                     !- Surface Area {m2}
- 
+
   InternalMass,
     Bedroom4 I-1,            !- Name
     Light Internal Mass,     !- Construction Name
     Bedroom4,                !- Zone Name
     15.0;                    !- Surface Area {m2}
- 
+
   InternalMass,
     Bath1 I-1,               !- Name
     Heavy Internal Mass,     !- Construction Name
     Bath1,                   !- Zone Name
     2.0;                     !- Surface Area {m2}
- 
+
   InternalMass,
     Utility1 I-1,            !- Name
     Light Internal Mass,     !- Construction Name
     Utility1,                !- Zone Name
     2.0;                     !- Surface Area {m2}
- 
+
   InternalMass,
     Bath2 I-1,               !- Name
     Heavy Internal Mass,     !- Construction Name
     Bath2,                   !- Zone Name
     2.0;                     !- Surface Area {m2}
- 
+
   InternalMass,
     Bedroom2 I-1,            !- Name
     Light Internal Mass,     !- Construction Name
     Bedroom2,                !- Zone Name
     15.0;                    !- Surface Area {m2}
- 
+
   InternalMass,
     Bedroom3 I-1,            !- Name
     Light Internal Mass,     !- Construction Name
     Bedroom3,                !- Zone Name
     15.0;                    !- Surface Area {m2}
- 
+
   InternalMass,
     Bath4 I-1,               !- Name
     Heavy Internal Mass,     !- Construction Name
     Bath4,                   !- Zone Name
     2.0;                     !- Surface Area {m2}
- 
+
   InternalMass,
     Bath3 I-1,               !- Name
     Heavy Internal Mass,     !- Construction Name
     Bath3,                   !- Zone Name
     2.0;                     !- Surface Area {m2}
- 
+
   InternalMass,
     Utility2 I-1,            !- Name
     Light Internal Mass,     !- Construction Name
     Utility2,                !- Zone Name
     2.0;                     !- Surface Area {m2}
- 
+
   Schedule:Compact,
     Shading Transmittance,   !- Name
     Any Number,              !- Schedule Type Limits Name
     THROUGH: 12/31,          !- Field 1
     FOR: AllDays,            !- Field 2
     UNTIL: 24:00,0.0;        !- Field 3
- 
+
   WindowProperty:FrameAndDivider,
     Single Casement,         !- Name
     0.0762,                  !- Frame Width {m}
@@ -3023,7 +3024,7 @@
     0.0,                     !- Divider Solar Absorptance
     0.0,                     !- Divider Visible Absorptance
     0.9;                     !- Divider Thermal Hemispherical Emissivity
- 
+
   WindowProperty:FrameAndDivider,
     Double Casement,         !- Name
     0.0760,                  !- Frame Width {m}
@@ -3045,7 +3046,7 @@
     0.8,                     !- Divider Solar Absorptance
     0.8,                     !- Divider Visible Absorptance
     0.9;                     !- Divider Thermal Hemispherical Emissivity
- 
+
   WindowProperty:FrameAndDivider,
     Sunspace,                !- Name
     0.0889,                  !- Frame Width {m}
@@ -3067,7 +3068,7 @@
     0.8,                     !- Divider Solar Absorptance
     0.8,                     !- Divider Visible Absorptance
     0.9;                     !- Divider Thermal Hemispherical Emissivity
- 
+
   WindowProperty:FrameAndDivider,
     Sunspace Door,           !- Name
     0.1524,                  !- Frame Width {m}
@@ -3089,10 +3090,10 @@
     0.8,                     !- Divider Solar Absorptance
     0.8,                     !- Divider Visible Absorptance
     0.9;                     !- Divider Thermal Hemispherical Emissivity
- 
+
 !***  There's a bug right now with frames on the Trombe walls.  The CalcScriptF is returning negative values which is creating a negative IR and crashing in WindowManager.
 !     Need to have Curt look at this.
- 
+
   WindowProperty:FrameAndDivider,
     Trombe,                  !- Name
     0.0760,                  !- Frame Width {m}
@@ -3114,7 +3115,7 @@
     0.0,                     !- Divider Solar Absorptance
     0.0,                     !- Divider Visible Absorptance
     0.9;                     !- Divider Thermal Hemispherical Emissivity
- 
+
   WindowProperty:FrameAndDivider,
     Bath Clerestory,         !- Name
     0.0762,                  !- Frame Width {m}
@@ -3136,7 +3137,7 @@
     0.8,                     !- Divider Solar Absorptance
     0.8,                     !- Divider Visible Absorptance
     0.9;                     !- Divider Thermal Hemispherical Emissivity
- 
+
   WindowProperty:FrameAndDivider,
     Bedroom Clerestory,      !- Name
     0.0762,                  !- Frame Width {m}
@@ -3158,9 +3159,9 @@
     0.8,                     !- Divider Solar Absorptance
     0.8,                     !- Divider Visible Absorptance
     0.9;                     !- Divider Thermal Hemispherical Emissivity
- 
+
 ! South walls (excluding Sunspace) and zones for Trombe walls
- 
+
   BuildingSurface:Detailed,
     Bedroom1 S-1,            !- Name
     Wall,                    !- Surface Type
@@ -3176,7 +3177,7 @@
     0.000000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     0.431800,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     0.431800,0.000000,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom1 S-2,            !- Name
     Wall,                    !- Surface Type
@@ -3192,7 +3193,7 @@
     0.431800,0.000000,2.082800,  !- X,Y,Z ==> Vertex 2 {m}
     4.445000,0.000000,2.082800,  !- X,Y,Z ==> Vertex 3 {m}
     4.445000,0.000000,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom1 S-3,            !- Name
     Wall,                    !- Surface Type
@@ -3208,7 +3209,7 @@
     0.431800,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.447800,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.447800,0.000000,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom1 S-4,            !- Name
     Wall,                    !- Surface Type
@@ -3224,7 +3225,7 @@
     1.447800,0.000000,1.016000,  !- X,Y,Z ==> Vertex 2 {m}
     3.429000,0.000000,1.016000,  !- X,Y,Z ==> Vertex 3 {m}
     3.429000,0.000000,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bedroom1 SWin-1,         !- Name
     Window,                  !- Surface Type
@@ -3240,7 +3241,7 @@
     1.524000,0.000000,1.092200,  !- X,Y,Z ==> Vertex 2 {m}
     3.352800,0.000000,1.092200,  !- X,Y,Z ==> Vertex 3 {m}
     3.352800,0.000000,2.006600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom1 S-5,            !- Name
     Wall,                    !- Surface Type
@@ -3256,7 +3257,7 @@
     1.447800,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     3.429000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     3.429000,0.000000,1.016000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom1 S-6,            !- Name
     Wall,                    !- Surface Type
@@ -3272,7 +3273,7 @@
     3.429000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     4.445000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     4.445000,0.000000,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom1 S-7,            !- Name
     Wall,                    !- Surface Type
@@ -3288,9 +3289,9 @@
     4.445000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     4.876800,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     4.876800,0.000000,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
 !*** Trombe walls 1-3 for Bedroom1 ***
- 
+
   Zone,
     Trombe1,                 !- Name
     0,                       !- Direction of Relative North {deg}
@@ -3303,7 +3304,7 @@
     -1,                      !- Volume {m3}
     autocalculate,           !- Floor Area {m2}
     TrombeWall;              !- Zone Inside Convection Algorithm
- 
+
   BuildingSurface:Detailed,
     Trombe1 N-1,             !- Name
     Wall,                    !- Surface Type
@@ -3319,7 +3320,7 @@
     1.447800,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     0.431800,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     0.431800,0.000000,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Trombe1 S-1,             !- Name
     Wall,                    !- Surface Type
@@ -3335,7 +3336,7 @@
     0.431800,-0.076200,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.447800,-0.076200,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.447800,-0.076200,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Trombe1 Win-1,           !- Name
     Window,                  !- Surface Type
@@ -3351,7 +3352,7 @@
     0.508000,-0.076200,0.076200,  !- X,Y,Z ==> Vertex 2 {m}
     1.371600,-0.076200,0.076200,  !- X,Y,Z ==> Vertex 3 {m}
     1.371600,-0.076200,2.006600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Zone,
     Trombe2,                 !- Name
     0,                       !- Direction of Relative North {deg}
@@ -3364,7 +3365,7 @@
     -1,                      !- Volume {m3}
     autocalculate,           !- Floor Area {m2}
     TrombeWall;              !- Zone Inside Convection Algorithm
- 
+
   BuildingSurface:Detailed,
     Trombe2 N-1,             !- Name
     Wall,                    !- Surface Type
@@ -3380,7 +3381,7 @@
     3.429000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.447800,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.447800,0.000000,1.016000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Trombe2 S-1,             !- Name
     Wall,                    !- Surface Type
@@ -3396,7 +3397,7 @@
     1.447800,-0.076200,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     3.429000,-0.076200,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     3.429000,-0.076200,1.016000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Trombe2 Win-1,           !- Name
     Window,                  !- Surface Type
@@ -3412,7 +3413,7 @@
     1.524000,-0.076200,0.076200,  !- X,Y,Z ==> Vertex 2 {m}
     3.352800,-0.076200,0.076200,  !- X,Y,Z ==> Vertex 3 {m}
     3.352800,-0.076200,0.939800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Zone,
     Trombe3,                 !- Name
     0,                       !- Direction of Relative North {deg}
@@ -3425,7 +3426,7 @@
     -1,                      !- Volume {m3}
     autocalculate,           !- Floor Area {m2}
     TrombeWall;              !- Zone Inside Convection Algorithm
- 
+
   BuildingSurface:Detailed,
     Trombe3 N-1,             !- Name
     Wall,                    !- Surface Type
@@ -3441,7 +3442,7 @@
     4.445000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     3.429000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     3.429000,0.000000,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Trombe3 S-1,             !- Name
     Wall,                    !- Surface Type
@@ -3457,7 +3458,7 @@
     3.429000,-0.076200,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     4.445000,-0.076200,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     4.445000,-0.076200,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Trombe3 Win-1,           !- Name
     Window,                  !- Surface Type
@@ -3473,7 +3474,7 @@
     3.505200,-0.076200,0.076200,  !- X,Y,Z ==> Vertex 2 {m}
     4.368800,-0.076200,0.076200,  !- X,Y,Z ==> Vertex 3 {m}
     4.368800,-0.076200,2.006600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom4 S-1,            !- Name
     Wall,                    !- Surface Type
@@ -3489,7 +3490,7 @@
     9.093200,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     9.525001,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     9.525001,0.000000,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom4 S-2,            !- Name
     Wall,                    !- Surface Type
@@ -3505,7 +3506,7 @@
     9.525001,0.000000,2.082800,  !- X,Y,Z ==> Vertex 2 {m}
     13.538200,0.000000,2.082800,  !- X,Y,Z ==> Vertex 3 {m}
     13.538200,0.000000,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom4 S-3,            !- Name
     Wall,                    !- Surface Type
@@ -3521,7 +3522,7 @@
     9.525001,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.541000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.541000,0.000000,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom4 S-4,            !- Name
     Wall,                    !- Surface Type
@@ -3537,7 +3538,7 @@
     10.541000,0.000000,1.016000,  !- X,Y,Z ==> Vertex 2 {m}
     12.522200,0.000000,1.016000,  !- X,Y,Z ==> Vertex 3 {m}
     12.522200,0.000000,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Bedroom4 SWin-1,         !- Name
     Window,                  !- Surface Type
@@ -3553,7 +3554,7 @@
     10.617200,0.000000,1.092200,  !- X,Y,Z ==> Vertex 2 {m}
     12.446000,0.000000,1.092200,  !- X,Y,Z ==> Vertex 3 {m}
     12.446000,0.000000,2.006600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom4 S-5,            !- Name
     Wall,                    !- Surface Type
@@ -3569,7 +3570,7 @@
     10.541000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     12.522200,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     12.522200,0.000000,1.016000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom4 S-6,            !- Name
     Wall,                    !- Surface Type
@@ -3585,7 +3586,7 @@
     12.522200,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     13.538200,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     13.538200,0.000000,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Bedroom4 S-7,            !- Name
     Wall,                    !- Surface Type
@@ -3601,9 +3602,9 @@
     13.538200,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     13.970000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     13.970000,0.000000,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
 !*** Trombe walls 4-6 for Bedroom4 ***
- 
+
   Zone,
     Trombe4,                 !- Name
     0,                       !- Direction of Relative North {deg}
@@ -3616,7 +3617,7 @@
     -1,                      !- Volume {m3}
     autocalculate,           !- Floor Area {m2}
     TrombeWall;              !- Zone Inside Convection Algorithm
- 
+
   BuildingSurface:Detailed,
     Trombe4 N-1,             !- Name
     Wall,                    !- Surface Type
@@ -3632,7 +3633,7 @@
     10.541000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     9.525001,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     9.525001,0.000000,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Trombe4 S-1,             !- Name
     Wall,                    !- Surface Type
@@ -3648,7 +3649,7 @@
     9.525001,-0.076200,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.541000,-0.076200,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.541000,-0.076200,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Trombe4 Win-1,           !- Name
     Window,                  !- Surface Type
@@ -3664,7 +3665,7 @@
     9.601201,-0.076200,0.076200,  !- X,Y,Z ==> Vertex 2 {m}
     10.464800,-0.076200,0.076200,  !- X,Y,Z ==> Vertex 3 {m}
     10.464800,-0.076200,2.006600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Zone,
     Trombe5,                 !- Name
     0,                       !- Direction of Relative North {deg}
@@ -3677,7 +3678,7 @@
     -1,                      !- Volume {m3}
     autocalculate,           !- Floor Area {m2}
     TrombeWall;              !- Zone Inside Convection Algorithm
- 
+
   BuildingSurface:Detailed,
     Trombe5 N-1,             !- Name
     Wall,                    !- Surface Type
@@ -3693,7 +3694,7 @@
     12.522200,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.541000,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.541000,0.000000,1.016000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Trombe5 S-1,             !- Name
     Wall,                    !- Surface Type
@@ -3709,7 +3710,7 @@
     10.541000,-0.076200,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     12.522200,-0.076200,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     12.522200,-0.076200,1.016000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Trombe5 Win-1,           !- Name
     Window,                  !- Surface Type
@@ -3725,7 +3726,7 @@
     10.617200,-0.076200,0.076200,  !- X,Y,Z ==> Vertex 2 {m}
     12.446000,-0.076200,0.076200,  !- X,Y,Z ==> Vertex 3 {m}
     12.446000,-0.076200,0.939800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Zone,
     Trombe6,                 !- Name
     0,                       !- Direction of Relative North {deg}
@@ -3738,7 +3739,7 @@
     -1,                      !- Volume {m3}
     autocalculate,           !- Floor Area {m2}
     TrombeWall;              !- Zone Inside Convection Algorithm
- 
+
   BuildingSurface:Detailed,
     Trombe6 N-1,             !- Name
     Wall,                    !- Surface Type
@@ -3754,7 +3755,7 @@
     13.538200,0.000000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     12.522200,0.000000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     12.522200,0.000000,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Trombe6 S-1,             !- Name
     Wall,                    !- Surface Type
@@ -3770,7 +3771,7 @@
     12.522200,-0.076200,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     13.538200,-0.076200,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     13.538200,-0.076200,2.082800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Trombe6 Win-1,           !- Name
     Window,                  !- Surface Type
@@ -3786,7 +3787,7 @@
     12.598400,-0.076200,0.076200,  !- X,Y,Z ==> Vertex 2 {m}
     13.462000,-0.076200,0.076200,  !- X,Y,Z ==> Vertex 3 {m}
     13.462000,-0.076200,2.006600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   WindowProperty:ShadingControl,
     Trombe Shade Control,    !- Name
     EXTERIORSHADE,           !- Shading Type
@@ -3799,7 +3800,7 @@
     Trombe Shade,            !- Shading Device Material Name
     ,                        !- Type of Slat Angle Control for Blinds
     ;                        !- Slat Angle Schedule Name
- 
+
   Schedule:Compact,
     Trombe Shade Schedule,   !- Name
     Any Number,              !- Schedule Type Limits Name
@@ -3812,9 +3813,9 @@
     THROUGH: 12/31,          !- Field 9
     FOR: AllDays,            !- Field 10
     UNTIL: 24:00,0;          !- Field 11
- 
+
 ! Make all overhangs relative to Bedroom1 S-1 for consistency
- 
+
   Shading:Building:Detailed,
     Bedroom1 O-1,            !- Name
     ,                        !- Transmittance Schedule Name
@@ -3823,9 +3824,9 @@
     0.457200,-0.431800,2.286000,  !- X,Y,Z ==> Vertex 2 {m}
     4.419600,-0.431800,2.286000,  !- X,Y,Z ==> Vertex 3 {m}
     4.419600,0.000000,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
 ! sunspace overhang depth was originally 0.4699, which was slightly different from bedroom overhangs
- 
+
   Shading:Building:Detailed,
     Sunspace O-1,            !- Name
     ,                        !- Transmittance Schedule Name
@@ -3834,9 +3835,9 @@
     4.876800,0.038100,2.286000,  !- X,Y,Z ==> Vertex 2 {m}
     9.093200,0.038100,2.286000,  !- X,Y,Z ==> Vertex 3 {m}
     9.093200,0.469900,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
 ! solar collector panel
- 
+
   Shading:Building:Detailed,
     Sunspace O-2,            !- Name
     ,                        !- Transmittance Schedule Name
@@ -3845,7 +3846,7 @@
     6.070600,3.200400,3.048000,  !- X,Y,Z ==> Vertex 2 {m}
     7.899400,3.200400,3.048000,  !- X,Y,Z ==> Vertex 3 {m}
     7.899400,5.029200,5.791200;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Shading:Building:Detailed,
     Bedroom4 O-1,            !- Name
     ,                        !- Transmittance Schedule Name
@@ -3854,7 +3855,7 @@
     9.550400,-0.431800,2.286000,  !- X,Y,Z ==> Vertex 2 {m}
     13.512800,-0.431800,2.286000,  !- X,Y,Z ==> Vertex 3 {m}
     13.512800,0.000000,2.286000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   Schedule:Compact,
     Occupancy Schedule,      !- Name
     Any Number,              !- Schedule Type Limits Name
@@ -3871,7 +3872,7 @@
     UNTIL: 24:00,1.0,        !- Field 18
     FOR: WinterDesignDay CustomDay1 CustomDay2, !- Field 20
     UNTIL: 24:00,0.0;        !- Field 21
- 
+
   Schedule:Compact,
     Activity Schedule,       !- Name
     Any Number,              !- Schedule Type Limits Name
@@ -3888,18 +3889,18 @@
     UNTIL: 24:00,108,        !- Field 18
     FOR: WinterDesignDay CustomDay1 CustomDay2, !- Field 20
     UNTIL: 24:00,0;          !- Field 21
- 
+
 ! not sure what this is...
- 
+
   Schedule:Compact,
     Work Efficiency Schedule,!- Name
     Any Number,              !- Schedule Type Limits Name
     THROUGH: 12/31,          !- Field 1
     FOR: AllDays,            !- Field 2
     UNTIL: 24:00,0.0;        !- Field 3
- 
+
 ! Clothing insulation levels change seasonally
- 
+
   Schedule:Compact,
     Clothing Schedule,       !- Name
     Any Number,              !- Schedule Type Limits Name
@@ -3918,9 +3919,9 @@
     THROUGH: 12/31,          !- Field 17
     FOR: AllDays,            !- Field 18
     UNTIL: 24:00,2.0;        !- Field 19
- 
+
 ! Air velocities change seasonally because natural ventilation is only used when it's warm out
- 
+
   Schedule:Compact,
     Air Velocity Schedule,   !- Name
     Any Number,              !- Schedule Type Limits Name
@@ -3939,7 +3940,7 @@
     THROUGH: 12/31,          !- Field 17
     FOR: AllDays,            !- Field 18
     UNTIL: 24:00,0.1;        !- Field 19
- 
+
 ! Interzone air mixing rules:
 !   1. Bedrooms and bathrooms always have maximum mixing.
 !      (Assume door is often open.)
@@ -3950,7 +3951,7 @@
 !   4. Bedrooms and sunspace have minimum mixing in summer months at all times.
 !      (Sunspace provides no cooling benefits.  Doors are kept closed to retain coldness.  If the outside temperature is
 !      cold enough to cool the sunspace, it is also cold enough for ventilation through the bedroom windows.)
- 
+
   Schedule:Compact,
     Sunspace Mixing Schedule,!- Name
     Any Number,              !- Schedule Type Limits Name
@@ -3963,21 +3964,21 @@
     THROUGH: 12/31,          !- Field 9
     FOR: AllDays,            !- Field 10
     UNTIL: 24:00,1.0;        !- Field 11
- 
+
   Schedule:Compact,
     Constant Mixing Schedule,!- Name
     Any Number,              !- Schedule Type Limits Name
     THROUGH: 12/31,          !- Field 1
     FOR: AllDays,            !- Field 2
     UNTIL: 24:00,1.0;        !- Field 3
- 
+
   Schedule:Compact,
     Infiltration Schedule,   !- Name
     Any Number,              !- Schedule Type Limits Name
     THROUGH: 12/31,          !- Field 1
     FOR: AllDays,            !- Field 2
     UNTIL: 24:00,1.0;        !- Field 3
- 
+
   ZoneInfiltration:DesignFlowRate,
     Bedroom1,                !- Name
     Bedroom1,                !- Zone or ZoneList Name
@@ -3991,7 +3992,7 @@
     0,                       !- Temperature Term Coefficient
     0,                       !- Velocity Term Coefficient
     0;                       !- Velocity Squared Term Coefficient
- 
+
   ZoneInfiltration:DesignFlowRate,
     Sunspace,                !- Name
     Sunspace,                !- Zone or ZoneList Name
@@ -4005,7 +4006,7 @@
     0,                       !- Temperature Term Coefficient
     0,                       !- Velocity Term Coefficient
     0;                       !- Velocity Squared Term Coefficient
- 
+
   ZoneInfiltration:DesignFlowRate,
     Bedroom4,                !- Name
     Bedroom4,                !- Zone or ZoneList Name
@@ -4019,7 +4020,7 @@
     0,                       !- Temperature Term Coefficient
     0,                       !- Velocity Term Coefficient
     0;                       !- Velocity Squared Term Coefficient
- 
+
   ZoneInfiltration:DesignFlowRate,
     Bath1,                   !- Name
     Bath1,                   !- Zone or ZoneList Name
@@ -4033,7 +4034,7 @@
     0,                       !- Temperature Term Coefficient
     0,                       !- Velocity Term Coefficient
     0;                       !- Velocity Squared Term Coefficient
- 
+
   ZoneInfiltration:DesignFlowRate,
     Utility1,                !- Name
     Utility1,                !- Zone or ZoneList Name
@@ -4047,7 +4048,7 @@
     0,                       !- Temperature Term Coefficient
     0,                       !- Velocity Term Coefficient
     0;                       !- Velocity Squared Term Coefficient
- 
+
   ZoneInfiltration:DesignFlowRate,
     Bath2,                   !- Name
     Bath2,                   !- Zone or ZoneList Name
@@ -4061,7 +4062,7 @@
     0,                       !- Temperature Term Coefficient
     0,                       !- Velocity Term Coefficient
     0;                       !- Velocity Squared Term Coefficient
- 
+
   ZoneInfiltration:DesignFlowRate,
     Bedroom2,                !- Name
     Bedroom2,                !- Zone or ZoneList Name
@@ -4075,7 +4076,7 @@
     0,                       !- Temperature Term Coefficient
     0,                       !- Velocity Term Coefficient
     0;                       !- Velocity Squared Term Coefficient
- 
+
   ZoneInfiltration:DesignFlowRate,
     Bedroom3,                !- Name
     Bedroom3,                !- Zone or ZoneList Name
@@ -4089,7 +4090,7 @@
     0,                       !- Temperature Term Coefficient
     0,                       !- Velocity Term Coefficient
     0;                       !- Velocity Squared Term Coefficient
- 
+
   ZoneInfiltration:DesignFlowRate,
     Bath4,                   !- Name
     Bath4,                   !- Zone or ZoneList Name
@@ -4103,7 +4104,7 @@
     0,                       !- Temperature Term Coefficient
     0,                       !- Velocity Term Coefficient
     0;                       !- Velocity Squared Term Coefficient
- 
+
   ZoneInfiltration:DesignFlowRate,
     Bath3,                   !- Name
     Bath3,                   !- Zone or ZoneList Name
@@ -4117,7 +4118,7 @@
     0,                       !- Temperature Term Coefficient
     0,                       !- Velocity Term Coefficient
     0;                       !- Velocity Squared Term Coefficient
- 
+
   ZoneInfiltration:DesignFlowRate,
     Utility2,                !- Name
     Utility2,                !- Zone or ZoneList Name
@@ -4131,14 +4132,14 @@
     0,                       !- Temperature Term Coefficient
     0,                       !- Velocity Term Coefficient
     0;                       !- Velocity Squared Term Coefficient
- 
+
   Schedule:Compact,
     ON,                      !- Name
     Any Number,              !- Schedule Type Limits Name
     THROUGH: 12/31,          !- Field 1
     FOR: AllDays,            !- Field 2
     UNTIL: 24:00,1;          !- Field 3
- 
+
   Schedule:Compact,
     ON Except WinterDesignDay,  !- Name
     Any Number,              !- Schedule Type Limits Name
@@ -4147,14 +4148,14 @@
     UNTIL: 24:00,0,          !- Field 3
     FOR: AllOtherDays,       !- Field 5
     UNTIL: 24:00,1;          !- Field 6
- 
+
   Schedule:Compact,
     OFF,                     !- Name
     Any Number,              !- Schedule Type Limits Name
     THROUGH: 12/31,          !- Field 1
     FOR: AllDays,            !- Field 2
     UNTIL: 24:00,0;          !- Field 3
- 
+
   Schedule:Compact,
     OFF Except WinterDesignDay,  !- Name
     Any Number,              !- Schedule Type Limits Name
@@ -4163,47 +4164,47 @@
     UNTIL: 24:00,1,          !- Field 3
     FOR: AllOtherDays,       !- Field 5
     UNTIL: 24:00,0;          !- Field 6
- 
+
   Schedule:Compact,
     Fan Schedule,            !- Name
     Any Number,              !- Schedule Type Limits Name
     THROUGH: 12/31,          !- Field 1
     FOR: AllDays,            !- Field 2
     UNTIL: 24:00,0;          !- Field 3
- 
+
   Schedule:Compact,
     Air Control Type Schedule,  !- Name
     Any Number,              !- Schedule Type Limits Name
     THROUGH: 12/31,          !- Field 1
     FOR: AllDays,            !- Field 2
     UNTIL: 24:00,4;          !- Field 3
- 
+
   Schedule:Compact,
     Air Temp Heating Schedule,  !- Name
     Any Number,              !- Schedule Type Limits Name
     THROUGH: 12/31,          !- Field 1
     FOR: AllDays,            !- Field 2
     UNTIL: 24:00,20.0;       !- Field 3
- 
+
   Schedule:Compact,
     Air Temp Cooling Schedule,  !- Name
     Any Number,              !- Schedule Type Limits Name
     THROUGH: 12/31,          !- Field 1
     FOR: AllDays,            !- Field 2
     UNTIL: 24:00,25.6;       !- Field 3
- 
+
   ThermostatSetpoint:DualSetpoint,
     Air Temp Set Point,      !- Name
     Air Temp Heating Schedule,  !- Heating Setpoint Temperature Schedule Name
     Air Temp Cooling Schedule;  !- Cooling Setpoint Temperature Schedule Name
- 
+
   ZoneControl:Thermostat,
     Bedroom1 Thermostat,     !- Name
     Bedroom1,                !- Zone or ZoneList Name
     Air Control Type Schedule,  !- Control Type Schedule Name
     ThermostatSetpoint:DualSetpoint,  !- Control 1 Object Type
     Air Temp Set Point;      !- Control 1 Name
- 
+
   ZoneHVAC:EquipmentConnections,
     Bedroom1,                !- Zone Name
     Bedroom1 Equipment,      !- Zone Conditioning Equipment List Name
@@ -4211,14 +4212,14 @@
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Bedroom1 Node,           !- Zone Air Node Name
     Bedroom1 Return Node;    !- Zone Return Air Node Name
- 
+
   ZoneHVAC:EquipmentList,
     Bedroom1 Equipment,      !- Name
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     Bedroom1 Air,            !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1;                       !- Zone Equipment 1 Heating or No-Load Sequence
- 
+
   ZoneHVAC:IdealLoadsAirSystem,
     Bedroom1 Air,            !- Name
     ,                        !- Availability Schedule Name
@@ -4246,14 +4247,14 @@
     ,                        !- Heat Recovery Type
     ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
     ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
- 
+
   ZoneControl:Thermostat,
     Bedroom2 Thermostat,     !- Name
     Bedroom2,                !- Zone or ZoneList Name
     Air Control Type Schedule,  !- Control Type Schedule Name
     ThermostatSetpoint:DualSetpoint,  !- Control 1 Object Type
     Air Temp Set Point;      !- Control 1 Name
- 
+
   ZoneHVAC:EquipmentConnections,
     Bedroom2,                !- Zone Name
     Bedroom2 Equipment,      !- Zone Conditioning Equipment List Name
@@ -4261,14 +4262,14 @@
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Bedroom2 Node,           !- Zone Air Node Name
     Bedroom2 Return Node;    !- Zone Return Air Node Name
- 
+
   ZoneHVAC:EquipmentList,
     Bedroom2 Equipment,      !- Name
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     Bedroom2 Air,            !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1;                       !- Zone Equipment 1 Heating or No-Load Sequence
- 
+
   ZoneHVAC:IdealLoadsAirSystem,
     Bedroom2 Air,            !- Name
     ,                        !- Availability Schedule Name
@@ -4296,14 +4297,14 @@
     ,                        !- Heat Recovery Type
     ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
     ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
- 
+
   ZoneControl:Thermostat,
     Bedroom3 Thermostat,     !- Name
     Bedroom3,                !- Zone or ZoneList Name
     Air Control Type Schedule,  !- Control Type Schedule Name
     ThermostatSetpoint:DualSetpoint,  !- Control 1 Object Type
     Air Temp Set Point;      !- Control 1 Name
- 
+
   ZoneHVAC:EquipmentConnections,
     Bedroom3,                !- Zone Name
     Bedroom3 Equipment,      !- Zone Conditioning Equipment List Name
@@ -4311,14 +4312,14 @@
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Bedroom3 Node,           !- Zone Air Node Name
     Bedroom3 Return Node;    !- Zone Return Air Node Name
- 
+
   ZoneHVAC:EquipmentList,
     Bedroom3 Equipment,      !- Name
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     Bedroom3 Air,            !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1;                       !- Zone Equipment 1 Heating or No-Load Sequence
- 
+
   ZoneHVAC:IdealLoadsAirSystem,
     Bedroom3 Air,            !- Name
     ,                        !- Availability Schedule Name
@@ -4346,14 +4347,14 @@
     ,                        !- Heat Recovery Type
     ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
     ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
- 
+
   ZoneControl:Thermostat,
     Bedroom4 Thermostat,     !- Name
     Bedroom4,                !- Zone or ZoneList Name
     Air Control Type Schedule,  !- Control Type Schedule Name
     ThermostatSetpoint:DualSetpoint,  !- Control 1 Object Type
     Air Temp Set Point;      !- Control 1 Name
- 
+
   ZoneHVAC:EquipmentConnections,
     Bedroom4,                !- Zone Name
     Bedroom4 Equipment,      !- Zone Conditioning Equipment List Name
@@ -4361,14 +4362,14 @@
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Bedroom4 Node,           !- Zone Air Node Name
     Bedroom4 Return Node;    !- Zone Return Air Node Name
- 
+
   ZoneHVAC:EquipmentList,
     Bedroom4 Equipment,      !- Name
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     Bedroom4 Air,            !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1;                       !- Zone Equipment 1 Heating or No-Load Sequence
- 
+
   ZoneHVAC:IdealLoadsAirSystem,
     Bedroom4 Air,            !- Name
     ,                        !- Availability Schedule Name
@@ -4396,20 +4397,20 @@
     ,                        !- Heat Recovery Type
     ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
     ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
- 
+
   Output:VariableDictionary,Regular;
- 
+
   Output:Constructions,Constructions;
- 
+
   Output:Surfaces:Drawing,DXF;
- 
+
   Output:Surfaces:List,Details;
- 
+
   OutputControl:Table:Style,
     HTML;                    !- Column Separator
- 
+
   Output:Table:SummaryReports,
     ABUPS;                   !- Report 1 Name
- 
+
   Output:Variable,*,Zone Mean Air Temperature,Hourly;
- 
+
