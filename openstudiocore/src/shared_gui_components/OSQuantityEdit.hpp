@@ -20,10 +20,11 @@
 #ifndef OPENSTUDIO_OSQUANTITYEDIT_HPP
 #define OPENSTUDIO_OSQUANTITYEDIT_HPP
 
+#include <shared_gui_components/FieldMethodTypedefs.hpp>
+
 #include <model/ModelObject.hpp>
 
 #include <utilities/units/Unit.hpp>
-
 #include <utilities/core/Logger.hpp>
 
 #include <QLineEdit>
@@ -33,6 +34,90 @@ namespace openstudio {
 
 class Unit;
 
+class OSQuantityEdit2: public QWidget {
+  Q_OBJECT
+ public:
+
+  OSQuantityEdit2(const std::string& modelUnits, const std::string& siUnits, 
+                  const std::string& ipUnits, bool isIP, QWidget * parent = 0);
+
+  virtual ~OSQuantityEdit2() {}
+
+  void bind(bool isIP,
+            model::ModelObject& modelObject,
+            DoubleGetter get,
+            boost::optional<DoubleSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<NoFailAction> autosize=boost::none,
+            boost::optional<NoFailAction> autocalculate=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none,
+            boost::optional<BasicQuery> isAutosized=boost::none,
+            boost::optional<BasicQuery> isAutocalculated=boost::none);
+
+  void bind(bool isIP,
+            model::ModelObject& modelObject,
+            OptionalDoubleGetter optionalGet,
+            boost::optional<DoubleSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<NoFailAction> autosize=boost::none,
+            boost::optional<NoFailAction> autocalculate=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none,
+            boost::optional<BasicQuery> isAutosized=boost::none,
+            boost::optional<BasicQuery> isAutocalculated=boost::none);
+
+  void unbind();
+
+ private slots:
+
+  void onEditingFinished();
+
+  void onModelObjectChange();
+
+  void onUnitSystemChange(bool isIP);
+
+  void onModelObjectRemove(Handle handle);
+
+ private:
+
+  QLineEdit* m_lineEdit;
+  QLabel* m_units;
+
+  bool m_isIP;
+  std::string m_modelUnits;
+  std::string m_siUnits;
+  std::string m_ipUnits;
+  boost::optional<model::ModelObject> m_modelObject;
+  boost::optional<DoubleGetter> m_get;
+  boost::optional<OptionalDoubleGetter> m_optionalGet;
+  boost::optional<DoubleSetter> m_set;
+  boost::optional<NoFailAction> m_reset;
+  boost::optional<NoFailAction> m_autosize;
+  boost::optional<NoFailAction> m_autocalculate;
+  boost::optional<BasicQuery> m_isDefaulted;
+  boost::optional<BasicQuery> m_isAutosized;
+  boost::optional<BasicQuery> m_isAutocalculated;
+
+  bool m_isScientific;
+  boost::optional<int> m_precision;
+
+  void refreshTextAndLabel();
+
+  void setPrecision(const std::string& str);
+
+  void bindCommon(bool isIP,
+            model::ModelObject& modelObject,
+            boost::optional<DoubleSetter> set,
+            boost::optional<NoFailAction> reset,
+            boost::optional<NoFailAction> autosize,
+            boost::optional<NoFailAction> autocalculate,
+            boost::optional<BasicQuery> isDefaulted,
+            boost::optional<BasicQuery> isAutosized,
+            boost::optional<BasicQuery> isAutocalculated);
+
+  REGISTER_LOGGER("openstudio.OSQuantityEdit");
+};
+
+/** \deprecated Use OSQuantityEdit2. */
 class OSQuantityEdit: public QWidget {
   Q_OBJECT
 

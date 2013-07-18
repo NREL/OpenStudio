@@ -20,10 +20,44 @@
 #ifndef OPENSTUDIO_OSSWITCH_H
 #define OPENSTUDIO_OSSWITCH_H
 
+#include <shared_gui_components/FieldMethodTypedefs.hpp>
+
 #include <model/Model.hpp>
 #include <QPushButton>
 
 namespace openstudio {
+
+class OSSwitch2 : public QPushButton {
+  Q_OBJECT
+ public:
+
+  OSSwitch2(QWidget * parent = 0);
+
+  virtual ~OSSwitch2() {}
+
+  void bind(model::ModelObject & modelObject,
+            BoolGetter get,
+            boost::optional<BoolSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none);
+
+  void unbind();
+
+ private slots:
+
+  void onClicked(bool checked);
+
+  void onModelObjectChange();
+
+  void onModelObjectRemove(Handle handle);
+
+ private:
+  boost::optional<model::ModelObject> m_modelObject;
+  boost::optional<BoolGetter> m_get;
+  boost::optional<BoolSetter> m_set;
+  boost::optional<NoFailAction> m_reset;
+  boost::optional<BasicQuery> m_isDefaulted;
+};
 
 class OSSwitch : public QPushButton
 {
