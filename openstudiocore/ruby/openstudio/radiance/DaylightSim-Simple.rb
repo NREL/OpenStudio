@@ -394,57 +394,6 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     end
   end
 
-  # 3-phase method
-  if t_options.z == true
-    puts "using three phase method (have you modified your 'mapping.txt' file?)..."
-    binPairs = Array.new
-    matrixGroups = Array.new
-    aziVectorX = ""
-    aziVectorY = ""
-    puts "Using 3-phase method"
-    #do three phase method (views not supported yet) RPG 2012.02.18
-    system("oconv #{t_outPath}/materials/materials.rad #{t_outPath}/materials/materials_vmx.rad model.rad #{t_outPath}/skies/dc.sky > #{t_outPath}/octrees/model_dc.oct")
-    #read DC materials file
-    windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
-    # get materials, compute vectors
-    # plan (2D) only for now
-      #t_space_names_to_calculate.each do |space_name|
-      windowMaps.each do |row|
-          #row[0..-1].each do |azi|
-          matchVmx = /glaz_(.*?)_azi-(.*?)_tn-(.*).vmx/.match(row)
-          space_name = matchVmx[1]
-          aziVector = matchVmx[2]
-          glazingTransmissivity = matchVmx[3]
-          aziAngle = aziVector.to_f * (180 / Math::PI)
-          # swap sin and cos so we get vectors that align with compass headings (which makes sense to this idiot -->(RPG).)
-          aziVectorX = Math::sin(aziVector)
-          aziVectorY = Math::cos(aziVector)
-          viewVectorX = -aziVectorX
-          viewVectorY = -aziVectorY
-          # sanity checks
-          puts "window azimuth: #{aziAngle}"
-          puts "daylight vector (window to sky): #{aziVectorX.round_to_str(2)},#{aziVectorY.round_to_str(2)},0.00"
-          puts "view vector (window to interior): #{viewVectorX.round_to_str(2)},#{viewVectorY.round_to_str(2)},0.00"
-          binPairs << " -b 'kbin(#{viewVectorX.round_to_str(2)},#{viewVectorY.round_to_str(2)},0,0,0,1)' -m glaz_#{space_name}_azi-#{aziVector}_tn-#{glazingTransmissivity}"
-          # compute daylight matri(ces)
-          system("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{t_outPath}/scene/glazing/#{space_name}_glaz_#{aziVector}.rad > #{t_outPath}/window_temp.rad")
-
-          exec_statement("#{perlPrefix}genklemsamp#{perlExtension} #{klemsDensity} -vd #{aziVectorX.round_to_str(2)} #{aziVectorY.round_to_str(2)} 0.00 #{t_outPath}/window_temp.rad \
-          | rcontrib #{klemsDensity} #{tregVars} -m skyglow -fa #{t_outPath}/octrees/model_dc.oct > \
-                         #{t_outPath}/output/dc/merged_space/maps/glaz_#{space_name}_azi-#{aziVector}_tn-#{glazingTransmissivity}.dmx")
-          #end
-      end
-      #end
-    # compute view matri(ces)
-    puts "computing view matri(ces) for merged_space.map..."
-    if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM) #Windows commands
-      exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | rcontrib #{rtrace_args} -I+ -fo #{klemsDensity} #{tregVars} \
-       -o #{t_outPath}/output/dc/merged_space/maps/%s.vmx -m skyglow model_dc.oct")
-    else #UNIX commands
-      exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | rcontrib #{rtrace_args} -n #{t_simCores} -I+ -fa #{klemsDensity} #{tregVars} \
-      -o #{t_outPath}/output/dc/merged_space/maps/%s.vmx #{binPairs} #{t_outPath}/octrees/model_dc.oct")
-    end
-  end
 end
 
 def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
@@ -478,10 +427,14 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
       space = values.slice(index, space_size)
       index = index + space_size
 
+      # need to apply vLambda to calculations
+      # illum = 179*((illumTempParts[0].to_f * 0.265) + (illumTempParts[1].to_f * 0.67) + (illumTempParts[2].to_f * 0.065))
+
       if File.exists?("#{t_outPath}/numeric/#{space_name}.sns")        
         illum = [values[index]]
         index = index + 1
       end
+
 
       if File.exists?("#{t_outPath}/numeric/#{space_name}.glr") and t_radGlareSensorViews[space_name]
         glareinput = values.slice(index, t_radGlareSensorViews[space_name].size)
@@ -517,54 +470,6 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
 
   return splitvalues
 end
-
-
-def execTimeSteps(t_cmd, t_dcTimeStepCommands, t_windowAzimuths, t_solarAzimuth, t_bsdfs, t_i)
-  system(t_cmd)
-
-  illum = 0
-
-  dcVector = []
-
-  t_dcTimeStepCommands.each_index do |dc_i|
-
-    windowAzi = t_windowAzimuths[dc_i].to_f * (180 / Math::PI) #gimme degrees, yo!
-    winVec = windowAzi + 180
-
-    bsdf_index = 1 # or 1 (shade control)
-    # shade calc
-    if t_solarAzimuth[t_i] > (winVec + 90) or t_solarAzimuth[t_i] < (winVec - 90)
-      bsdf_index = 0
-    end
-
-    bsdf = t_bsdfs[dc_i][bsdf_index]
-
-    puts "solar azimuth: #{t_solarAzimuth[t_i]}, window azimuth: #{winVec}; using BSDF: #{bsdf}"
-
-    dctimestep_command = t_dcTimeStepCommands[dc_i].gsub('_BSDF_FILENAME_',bsdf)
-    dctimestep_command
-    tempIO = IO.popen(dctimestep_command)
-    result = tempIO.readlines.to_s
-    tempIO.close
-
-    n = 0
-    result.split("\n").each do |line|
-      illumTempParts = line.split(' ')
-      illum = 179*((illumTempParts[0].to_f * 0.265) + (illumTempParts[1].to_f * 0.67) + (illumTempParts[2].to_f * 0.065))
-      #$1=179*($1*0.265+$2*0.67+$3*0.065)
-      if not dcVector[n]
-        dcVector[n] = 0
-      end
-      dcVector[n] = dcVector[n] + illum
-
-      n += 1
-    end
-
-  end
-
-  return dcVector
-end
-
 
 
 
@@ -624,162 +529,9 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
     windowAzimuths = nil
     dcTimeStepCommands = nil
     bsdfs = nil
-    if t_options.z == true
 
-      windowAzimuths = Array.new
-      dcTimeStepCommands = Array.new
-      bsdfs = Array.new
-
-      # store window group matrix pairs, bsdf options, in array(s)
-
-      File.open("#{t_outPath}/bsdf/mapping.rad", 'r') do |row|
-        while line = row.gets
-
-          mapAttrs = line.to_s.split(",")
-
-          windowAzimuths << mapAttrs[0].split('_')[1].to_f
-          dcTimeStepCommands << "dctimestep #{mapAttrs[0]} #{t_outPath}/bsdf/_BSDF_FILENAME_ #{mapAttrs[3]} #{t_outPath}/timestep.vec"
-          bsdfs << [mapAttrs[1], mapAttrs[2]]
-
-        end
-
-      end
-
-    end #dctimestep command(s)
 
     exec_statement("gendaymtx -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" > \"#{(t_outPath / OpenStudio::Path.new("merged_space.ill")).to_s}\"");
-
-
-
-=begin
-
-    threads = []
-
-
-    simTimes.each_index do |i|
-      puts "Radiance (rcontrib) calculating: #{simTimes[i]}"
-
-      # check if sun is up
-      if (solarAltitude[i] < 0)
-        if t_options.verbose == 'v'
-          puts "#{simTimes[i]}, solar altitude is below horizon, skipping simulation."
-        end
-        next 
-      end
-
-
-
-      # start a new thread for this simulation
-      threads << Thread.new {
-
-        # these must be declared in the thread otherwise will get overwritten on each loop
-        tsDateTime = simTimes[i]
-        tsSolarAlt = solarAltitude[i]
-        # gensky and gendaylit interpret azimuth in degrees WEST of SOUTH. Read it. Know it. Live it. (Whoa.) 
-        tsSolarAzi = (solarAzimuth[i] - 180.0)
-        tsDirectNormIllum = dirNormIllum[i]
-        tsDiffuseHorIllum = diffHorizIllum[i]
-
-        # trying to prevent gendaylit errors
-        if tsDirectNormIllum < 1.0
-          tsDirectNormIllum = 0.001
-        end
-        if tsDiffuseHorIllum < 1.0
-          tsDiffuseHorIllum = 0.001
-        end
-
-        # do a test run of gendaylit at this timestep
-
-        gendaylit_command = "gendaylit #{tsDateTime} -a #{t_site_latitude} -o #{t_site_longitude} -m #{t_site_stdmeridian} -L #{dirNormIllum[i]} #{diffHorizIllum[i]} 2>&1"
-        gendaylit_command = "gendaylit -ang #{tsSolarAlt} #{tsSolarAzi} -L #{tsDirectNormIllum} #{tsDiffuseHorIllum} 2>&1"
-        tempIO = IO.popen(gendaylit_command)
-        gendaylit_output = tempIO.readlines.to_s
-        tempIO.close
-
-        tempSky = true
-        if /[wW]arning/.match(gendaylit_output) or /[eE]rror/.match(gendaylit_output) or /valid/.match(gendaylit_output) or /[cC]heck/.match(gendaylit_output) or /skyclearness/.match(gendaylit_output)
-          tempSky = false
-        end
-
-        if tempSky == true
-
-          # gendaylit was ok
-
-          #changing glare options 20120816 rpg
-          if t_options.glare == true
-            puts "image based glare analysis temporarily disabled, sorry."
-            #  system("gendaylit -ang #{tsSolarAlt} #{tsSolarAzi} -L #{tsDirectNormIllum} #{tsDiffuseHorIllum} \
-            #  | #{perlPrefix}genskyvec#{perlExtension} -m 1 | dctimestep #{outPath}/output/dc/#{space_name}/views/#{space_name}treg%03d.hdr | pfilt -1 -x /2 -y /2 > \
-            #  #{outPath}/output/dc/#{space_name}/views/#{tsDateTime.gsub(/[: ]/,'_')}.hdr")
-          end
-
-          if t_options.x == true
-
-            values[i] = execSimulation("gendaylit -ang #{tsSolarAlt} #{tsSolarAzi} -L #{tsDirectNormIllum} #{tsDiffuseHorIllum} | #{perlPrefix}genskyvec#{perlExtension} -m #{t_options.skyvecDensity} | dctimestep ./output/dc/merged_space/maps/merged_space.dmx | rcalc -e #{vLambda}", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
-
-          end
-
-          if t_options.z == true
-            Dir.chdir("#{t_outPath}/output/dc/merged_space/maps/")
-            dcVectors[i] = execTimeSteps("gendaylit -ang #{tsSolarAlt} #{tsSolarAzi} -L #{tsDirectNormIllum} #{tsDiffuseHorIllum} | #{perlPrefix}genskyvec#{perlExtension} -m #{options.skyvecDensity} -c 1 1 1 > #{t_outPath}/timestep.vec", dcTimeStepCommands, windowAzimuths, solarAzimuth, bsdfs, i)
-
-          end
-
-          Dir.chdir("#{t_outPath}/")
-
-        else  #use gensky
-          tsHour = tsDateTime.to_s.split(":")[0]
-          tsMin = tsDateTime.to_s.split(":")[1]
-          tsSec = tsDateTime.to_s.split(":")[2]
-          illToIrradDirect = dirNormIllum[i] / diffEfficacy[i]
-          illToIrradDiffuse = diffHorizIllum[i] / dirNormEfficacy[i]
-
-          if t_options.x == true
-            # reformat time/irradiance vars for gensky input
-            if t_options.glare == true
-              puts "image based glare analysis temporarily disabled, sorry."
-              #  system("gensky #{tsHour}:#{tsMin} -a #{site_latitude} -o #{site_longitude} -m #{site_stdmeridian} -R #{illToIrradDirect} -B #{illToIrradDiffuse} \
-              #  | #{perlPrefix}genskyvec#{perlExtension} -m 1 | dctimestep #{outPath}/output/ts/#{space_name}/views/#{space_name}treg%03d.hdr | pfilt -1 -x /2 -y /2 > \
-              #  #{Dir.pwd}/output/dc/#{space_name}/views/#{tsDateTime.gsub(/[: ]/,'_')}.hdr")
-            end
-
-            values[i] = execSimulation("gensky #{tsHour}:#{tsMin} -a #{t_site_latitude} -o #{t_site_longitude} -m #{t_site_stdmeridian} -R #{illToIrradDirect} -B #{illToIrradDiffuse} | #{perlPrefix}genskyvec#{perlExtension} -m #{t_options.patches}  | dctimestep #{Dir.pwd}/output/dc/merged_space/maps/merged_space.dmx | rcalc -e #{vLambda} 2>&1", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
-
-          end
-
-          if t_options.z == true
-            # reformat time/irradiance vars for gensky input
-            Dir.chdir("#{t_outPath}/output/dc/merged_space/maps/")
-
-            dcVectors[i] = execTimeSteps("gensky #{tsHour}:#{tsMin} -a #{t_site_latitude} -o #{t_site_longitude} -m #{t_site_stdmeridian} -R #{illToIrradDirect} -B #{illToIrradDiffuse} | #{perlPrefix}genskyvec#{perlExtension} -m #{t_options.patches}  -c 1 1 1 > #{t_outPath}/timestep.vec", dcTimeStepCommands, windowAzimuths, solarAzimuth, bsdfs, i)
-
-
-            Dir.chdir("#{t_outPath}/")
-          end
-        end
-
-      }
-
-      # join threads when get to simCores
-      if threads.size == t_simCores
-        threads.each do |thread| 
-          if not thread.join(200) # give limit in seconds to join
-            puts "Error, thread did not complete successfully"
-          end
-        end
-        threads = []
-      end
-
-    end
-
-    # join any remaining threads
-    threads.each do |thread| 
-      if not thread.join(200) # give limit in seconds to join
-        puts "Error, thread did not complete successfully"
-      end
-    end
-    threads = []
-=end
 
   end
 
@@ -1028,35 +780,6 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
             end
           end
 
-          if t_options.z == true
-            dcVector = t_dcVectors[i]
-
-            m = OpenStudio::Matrix.new(spaceWidth, spaceHeight, 0);
-            sumIllumMap = 0
-            numIllumMap = 0
-            dcVector.length.times do |n| 
-              if (n == 0)
-                daylightSensorIlluminance[i] = dcVector[0].to_f
-              else
-                x = ((n-1)%spaceWidth).to_i
-                y = ((n-1)/spaceWidth).to_i
-
-                sumIllumMap += dcVector[n].to_f
-                numIllumMap += 1
-
-                #puts "Setting value (" + x.to_s + ", " + y.to_s + ") to " + dcVector[n].to_f.to_s
-                m[x,y] = dcVector[n].to_f
-              end
-            end
-            illuminanceMatrixMaps[i] = m;
-
-            if numIllumMap != 0
-              meanIlluminanceMap[i] = sumIllumMap / numIllumMap.to_f
-            end
-
-            timeSeriesIllum[i] = tsDateTime.to_s.gsub(" ",",") + "," + "#{dirNormIllum[i]},#{diffHorizIllum[i]}," + dcVector.join(',')
-
-          end
           Dir.chdir("#{t_outPath}/")
 
         }
@@ -1423,125 +1146,3 @@ if options.dcts == true
   annualSimulation(sqlFile, options, epwFile, space_names_to_calculate, radMaps, spaceWidths, spaceHeights, radMapPoints, radGlareSensorViews, simCores, site_latitude, site_longitude, site_stdmeridian, outPath, building, values, dcVectors)
 end
 
-# do "radiance classic" timestep simulation(s), if selected
-if options.ts == true
-  Dir.mkdir("#{Dir.pwd}/output/designday") unless File.exists?("#{Dir.pwd}/output/designday")
-  # make base octree
-  exec_statement("oconv -f ./materials/materials.rad ./model.rad > model.oct")
-  # generate timestep sky models
-  radEnvSphere = ""
-  radEnvSphere = "\nskyfunc glow skyglow\n0\n0\n4 1 1 1 0\nskyglow source sky\n0\n0\n4 0 0 1 180\nskyfunc glow groundglow\n0\n0\n4 1 1 1 0\ngroundglow source ground\n0\n0\n4 0 0 -1 180"
-  options.simMonth.each do |sim_month|
-    # loop over days
-    options.simDay.each do |sim_day|
-      #loop over hours
-      options.simHour.each do |sim_hour|
-        # loop over sky types
-        ['CIE12', 'CIE01'].each do |sky_type|
-          # NOTE: CIE01 = CIE standard overcast sky, CIE12 = CIE standard clear sky (with sun)
-          gensky_type = ""
-          if sky_type == "CIE01"
-            gensky_type = "-c"
-          elsif sky_type == "CIE12"
-            gensky_type = "+s"
-          end
-          File.open("./skies/#{sim_month}_#{sim_day}_#{sim_hour}_#{sky_type}.sky", "w") do |file|
-            file << "!gensky #{sim_month} #{sim_day} #{sim_hour} #{gensky_type} -a #{site_latitude} -o #{site_longitude} -m #{site_stdmeridian} \n#{radEnvSphere}"
-            puts "wrote sky: ./skies/#{sim_month}_#{sim_day}_#{sim_hour}_#{sky_type}.sky"
-          end
-        end
-      end
-    end
-  end
-  # loop over spaces
-  space_names_to_calculate.each do |space_name|
-    # loop over months
-    options.simMonth.each do |sim_month|
-      # loop over days
-      options.simDay.each do |sim_day|
-        #loop over hours
-        options.simHour.each do |sim_hour|
-          # loop over sky types
-          ['CIE12', 'CIE01'].each do |sky_type|
-            # if space has an illuminance map, do calcs
-            if not radMaps[space_name].nil?
-              exec_statement("oconv -w -i ./model.oct #{Dir.pwd}/skies/#{sim_month}_#{sim_day}_#{sim_hour}_#{sky_type}.sky > timestep.oct")
-              rtrace_args = "#{opts_map} -faa -w -h -ov -I -dv- timestep.oct"
-              rcalc_eq = "$1=($1*.265+$2*.67+$3*.065)*179"
-              if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-                exec_statement("type .\\numeric\\#{space_name}.map | rtrace #{rtrace_args} | rcalc -e \"#{rcalc_eq}\" > .\\output\\designday\\#{space_name}_#{sim_month}_#{sim_day}_#{sim_hour}_#{sky_type}.ill")
-              elsif
-                exec_statement("#{catCommand} ./numeric/#{space_name}.map | rtrace #{rtrace_args} | rcalc -e '#{rcalc_eq}' > ./output/designday/#{space_name}_#{sim_month}_#{sim_day}_#{sim_hour}_#{sky_type}.ill")
-              end
-              # create flood plots
-              # open the illuminance file
-              File.open("./output/designday/#{space_name}_#{sim_month}_#{sim_day}_#{sim_hour}_#{sky_type}.ill", 'r') do |file|
-                # get the output illuminance map
-                handle = radMapHandles[space_name]
-                map = model.getObject(handle)
-                if map.empty?
-                  puts "OutputIlluminanceMap not found"
-                  next
-                end
-                map = map.get
-
-                xmin = map.getDouble(4, true).get
-                xmax = map.getDouble(5, true).get
-                nx = map.getUnsigned(6, true).get
-                ymin = map.getDouble(7, true).get
-                ymax = map.getDouble(8, true).get
-                ny = map.getUnsigned(9, true).get
-
-                x = OpenStudio::linspace(xmin, xmax, nx)
-                y = OpenStudio::linspace(ymin, ymax, ny)
-                puts "xmin=#{xmin}, xmax=#{xmax}, nx=#{nx}, ymin=#{ymin}, ymax=#{ymax}, ny=#{ny}"
-
-                # each line has illuminance value in lux
-                fcs = []
-                while line=file.gets
-                  fcs << line.strip.to_f
-                end
-
-                data = OpenStudio::Matrix.new(nx,ny)
-                i = 0
-                j = 0
-                fcs.each_index do |index|
-                  data[i,j] = fcs[index]
-                  i += 1
-                  if i >= nx
-                    i = 0
-                    j += 1
-                  end
-                end
-
-                fp = OpenStudio::FloodPlot::create().get
-                fp.floodPlotData(OpenStudio::MatrixFloodPlotData::create(x, y, data))
-                fp.plotTitle("Illuminance [lux]")
-                fp.bottomAxisTitle("x [m]")
-                fp.leftAxisTitle("y [m]")
-                fp.generateImage(OpenStudio::Path.new("./output/designday/#{space_name}_#{sim_month}_#{sim_day}_#{sim_hour}_#{sky_type}.ill.png"))
-              end
-
-              # add rendering calls here
-              # TODO:
-              # will need to define X/Y image size
-              # place to store views (store with design day output, or separate?)
-              # read in views
-              # maybe just do each space/view for noon with some low parameters for now?
-              ['N', 'S'].each do |view_dir|
-                exec_statement("rpict #{rtrace_args} -vf #{Dir.pwd}/views/#{space_name}_#{view_dir}.vf timestep.oct >  #{Dir.pwd}/output/designday/#{space_name}_#{view_dir}.hdr")
-
-                # image conversion from .hdr
-                if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-                  exec_statement("ra_bmp #{Dir.pwd}/output/designday/#{space_name}_#{view_dir}.hdr #{Dir.pwd}/output/designday/#{space_name}_#{view_dir}.bmp")
-                else
-                  exec_statement("ra_tiff #{Dir.pwd}/output/designday/#{space_name}_#{view_dir}.hdr #{Dir.pwd}/output/designday/#{space_name}_#{view_dir}.tif")
-                end
-              end
-            end
-          end
-        end
-      end
-    end
-  end
-end
