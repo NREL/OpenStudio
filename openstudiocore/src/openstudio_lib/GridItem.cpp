@@ -847,14 +847,22 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
         branchComponents = loop.demandComponents(node1,node2);
       }
 
-      std::vector<model::ModelObject> rBranchComponents;
-      for( std::vector<model::ModelObject>::reverse_iterator rit = branchComponents.rbegin();
-           rit < branchComponents.rend(); rit++ )
+      if( isSupplySide )
       {
-        rBranchComponents.push_back( *rit );
+        m_branchItems.push_back(new HorizontalBranchItem(branchComponents,this));
+        it2++;
       }
-      m_branchItems.push_back(new HorizontalBranchItem(rBranchComponents,this));
-      it2++;
+      else
+      {
+        std::vector<model::ModelObject> rBranchComponents;
+        for( std::vector<model::ModelObject>::reverse_iterator rit = branchComponents.rbegin();
+             rit < branchComponents.rend(); rit++ )
+        {
+          rBranchComponents.push_back( *rit );
+        }
+        m_branchItems.push_back(new HorizontalBranchItem(rBranchComponents,this));
+        it2++;
+      }
     }
   }
 
