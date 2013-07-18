@@ -565,9 +565,9 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
     simDateTimes, simTimes, diffHorizIllum, dirNormIllum, diffEfficacy, dirNormEfficacy, solarAltitude, solarAzimuth, firstReportDateTime = buildSimulationTimes(t_sqlFile, envPeriod, t_options, diffHorizIllumAll, dirNormIllumAll, diffEfficacyAll, dirNormEfficacyAll, solarAltitudeAll, solarAzimuthAll)
 
     simTimes.each_index do |i|
-      puts "Extracting values for: #{simTimes[i]}"
       datetime = simDateTimes[i]
       hours = ((datetime.date().dayOfYear() - 1) * 24) + datetime.time().hours()
+      puts "Extracting values for: #{simTimes[i]} hour number: #{hours}"
       values[i] = rawValues[hours]
     end
 
