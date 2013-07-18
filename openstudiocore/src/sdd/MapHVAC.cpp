@@ -1845,12 +1845,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
   }
 
-  // Add a default bypass
-
-  model::PipeAdiabatic pipe(model);
-
-  plantLoop.addSupplyBranchForComponent(pipe);
-
   // Add a default hot water heater for servicehotwater systems
 
   if( typeElement.text().toLower() == "servicehotwater" )
@@ -1916,6 +1910,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
           mo->cast<model::HVACComponent>().addToNode(demandInletNode);
 
           plantLoop.setCommonPipeSimulation("CommonPipe");
+
+          // Add a default bypass
+
+          model::PipeAdiabatic pipe(model);
+
+          plantLoop.addSupplyBranchForComponent(pipe);
         }
       }
     }
