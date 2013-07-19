@@ -1008,7 +1008,9 @@ smxPath = nil
 if (!epwFile.empty?)
   epwFilePath = epwFile.get().path()
   weaPath = outPath / OpenStudio::Path.new("in.wea")
-  exec_statement("epw2wea \"#{epwFilePath.to_s}\" \"#{weaPath.to_s}\"")
+
+  epw2weapath = OpenStudio::getApplicationRunDirectory() / OpenStudio::Path.new("epw2wea")
+  exec_statement("\"#{epw2weapath.to_s}\" \"#{epwFilePath.to_s}\" \"#{weaPath.to_s}\"")
 end
 
 

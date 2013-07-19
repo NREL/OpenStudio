@@ -697,6 +697,9 @@ ADD_DEPENDENCIES( ResultsViewer ResultsViewer_resources )
 ADD_SUBDIRECTORY( src/ruby_cpp )
 ADD_SUBDIRECTORY( ruby )
 
+# build epw2wea for supporting gendaymtx
+ADD_SUBDIRECTORY( src/epw2wea )
+
 # csharp, after loading projects
 IF(BUILD_CSHARP_BINDINGS)
   ADD_SUBDIRECTORY( csharp )
