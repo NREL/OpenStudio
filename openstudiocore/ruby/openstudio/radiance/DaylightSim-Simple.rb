@@ -433,7 +433,6 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
       illum = 179*((hour[0] * 0.265) + (hour[1] * 0.67) + (hour[2] * 0.065))
       line << illum
 
-      puts "Triplet: #{hour.inspect} illumination #{illum}"
     end
 
     if line.size != 8760
@@ -545,7 +544,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
   # Run the simulation 
   puts "Running annual simulation"
-  rawValues = execSimulation("gendaymtx -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" | tee ~/output.gendaymtx ", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
+  rawValues = execSimulation("gendaymtx -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\"  ", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
 
   dcVectors = nil
 
