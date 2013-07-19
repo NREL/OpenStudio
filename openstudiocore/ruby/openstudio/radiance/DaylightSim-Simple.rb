@@ -432,6 +432,8 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
       # need to apply vLambda to calculations
       illum = 179*((hour[0] * 0.265) + (hour[1] * 0.67) + (hour[2] * 0.065))
       line << illum
+
+      puts "Triplet: #{hour.inspect} illumination #{illum}"
     end
 
     if line.size != 8760
@@ -541,11 +543,9 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
     osQuote = "\""
   end
 
-  vLambda = "#{osQuote}$1=179*($1*0.265+$2*0.67+$3*0.065)#{osQuote}".strip
-
   # Run the simulation 
   puts "Running annual simulation"
-  rawValues = execSimulation("gendaymtx -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" ", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
+  rawValues = execSimulation("gendaymtx -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" | tee ~/output.gendaymtx ", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
 
   dcVectors = nil
 
@@ -726,8 +726,6 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
       end
 
 
-      threads = []
-
 
       simTimes.each_index do |i|
         spaceWidth = t_spaceWidths[space_name]
@@ -742,105 +740,68 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
 
         puts "Processing: #{space_name} (#{simTimes[i]})"
 
-        # check if sun is up
-        if (solarAltitude[i] < 0)
-          if t_options.verbose == 'v'
-            puts "#{simTimes[i]}, solar altitude is below horizon, skipping simulation."
-          end
-          timeSeriesIllum[i] = simTimes[i].to_s.gsub(" ",",") + "," + "#{dirNormIllum[i]}" +  "," "#{diffHorizIllum[i]}" + "," + ("0.0," * (t_radMapPoints[space_name].size + 1))
+         
+        
+        
+        # these must be declared in the thread otherwise will get overwritten on each loop
+        tsDateTime = simTimes[i]
 
-          # if space also has a glare sensor
-          if t_radGlareSensorViews[space_name]
-            timeSeriesGlare[i] = simTimes[i].to_s.gsub(" ",",") + "," + ("0.0," * (t_radGlareSensorViews[space_name].size))
-          end
-
-          next
+        #changing glare options 20120816 rpg
+        if t_options.glare == true
+          puts "image based glare analysis temporarily disabled, sorry."
+          #  system("gendaylit -ang #{tsSolarAlt} #{tsSolarAzi} -L #{tsDirectNormIllum} #{tsDiffuseHorIllum} \
+          #  | #{perlPrefix}genskyvec#{perlExtension} -m 1 | dctimestep #{outPath}/output/dc/#{space_name}/views/#{space_name}treg%03d.hdr | pfilt -1 -x /2 -y /2 > \
+          #  #{outPath}/output/dc/#{space_name}/views/#{tsDateTime.gsub(/[: ]/,'_')}.hdr")
         end
+        if t_options.x == true
 
-        # start a new thread for this simulation
-        threads << Thread.new {
+          illumValues, illumSensorValues, glareSensorValues = t_values[i][space_name]
 
-          # these must be declared in the thread otherwise will get overwritten on each loop
-          tsDateTime = simTimes[i]
+          timeSeriesIllum[i] = tsDateTime.to_s.gsub(" ",",") + "," + "#{dirNormIllum[i]},#{diffHorizIllum[i]}," + illumSensorValues.join(',') + "," + illumValues.join(',')
 
-          #changing glare options 20120816 rpg
-          if t_options.glare == true
-            puts "image based glare analysis temporarily disabled, sorry."
-            #  system("gendaylit -ang #{tsSolarAlt} #{tsSolarAzi} -L #{tsDirectNormIllum} #{tsDiffuseHorIllum} \
-            #  | #{perlPrefix}genskyvec#{perlExtension} -m 1 | dctimestep #{outPath}/output/dc/#{space_name}/views/#{space_name}treg%03d.hdr | pfilt -1 -x /2 -y /2 > \
-            #  #{outPath}/output/dc/#{space_name}/views/#{tsDateTime.gsub(/[: ]/,'_')}.hdr")
-          end
-          if t_options.x == true
+          #glare
+          if t_radGlareSensorViews[space_name]
+            if not glareSensorValues.nil?
+              timeSeriesGlare[i] = tsDateTime.to_s.gsub(" ",",") + "," + glareSensorValues.join(',')
 
-            illumValues, illumSensorValues, glareSensorValues = t_values[i][space_name]
-
-            timeSeriesIllum[i] = tsDateTime.to_s.gsub(" ",",") + "," + "#{dirNormIllum[i]},#{diffHorizIllum[i]}," + illumSensorValues.join(',') + "," + illumValues.join(',')
-
-            #glare
-            if t_radGlareSensorViews[space_name]
-              if not glareSensorValues.nil?
-                timeSeriesGlare[i] = tsDateTime.to_s.gsub(" ",",") + "," + glareSensorValues.join(',')
-
-                if not glareSensorValues.empty?
-                  sumDGP = 0
-                  glareSensorValues.each do |val| 
-                    sumDGP += val
-                  end
-                  minDGP[i] = glareSensorValues.min
-                  meanDGP[i] = sumDGP / glareSensorValues.size.to_f
-                  maxDGP[i] = glareSensorValues.max
+              if not glareSensorValues.empty?
+                sumDGP = 0
+                glareSensorValues.each do |val| 
+                  sumDGP += val
                 end
+                minDGP[i] = glareSensorValues.min
+                meanDGP[i] = sumDGP / glareSensorValues.size.to_f
+                maxDGP[i] = glareSensorValues.max
               end
             end
-
-            m = OpenStudio::Matrix.new(spaceWidth, spaceHeight, 0)
-
-            if not illumSensorValues.empty?
-              daylightSensorIlluminance[i] = illumSensorValues[0]
-            end
-
-            #puts "Daylight sensor: #{daylightSensorIlluminance[i]} lux"
-            n = 0
-            sumIllumMap = 0
-            illumValues.each do |val|
-              x = (n%spaceWidth).to_i;
-              y = (n/spaceWidth).to_i;
-              #puts "Setting value (" + x.to_s + ", " + y.to_s + ") to " + val.to_f.to_s
-              sumIllumMap += val.to_f
-              m[x, y] = val.to_f
-              n = n + 1
-            end
-
-            illuminanceMatrixMaps[i] = m
-
-            if n != 0
-              meanIlluminanceMap[i] = sumIllumMap / n.to_f
-            end
           end
 
-          Dir.chdir("#{t_outPath}/")
+          m = OpenStudio::Matrix.new(spaceWidth, spaceHeight, 0)
 
-        }
-
-        # join threads when get to simCores
-        if threads.size == t_simCores
-          threads.each do |thread| 
-            if not thread.join(200) # give limit in seconds to join
-              puts "Error, thread did not complete successfully"
-            end
+          if not illumSensorValues.empty?
+            daylightSensorIlluminance[i] = illumSensorValues[0]
           end
-          threads = []
+
+          #puts "Daylight sensor: #{daylightSensorIlluminance[i]} lux"
+          n = 0
+          sumIllumMap = 0
+          illumValues.each do |val|
+            x = (n%spaceWidth).to_i;
+            y = (n/spaceWidth).to_i;
+            #puts "Setting value (" + x.to_s + ", " + y.to_s + ") to " + val.to_f.to_s
+            sumIllumMap += val.to_f
+            m[x, y] = val.to_f
+            n = n + 1
+          end
+
+          illuminanceMatrixMaps[i] = m
+
+          if n != 0
+            meanIlluminanceMap[i] = sumIllumMap / n.to_f
+          end
         end
 
       end
-
-      # join any remaining threads
-      threads.each do |thread| 
-        if not thread.join(200) # give limit in seconds to join
-          puts "Error, thread did not complete successfully"
-        end
-      end
-      threads = []
 
 
       #Print illuminance results to dat file
