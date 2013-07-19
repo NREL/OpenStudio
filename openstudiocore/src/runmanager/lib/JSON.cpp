@@ -9,7 +9,7 @@
 
 namespace openstudio {
 namespace runmanager {
-
+namespace detail {
 
   /// \returns a JSON string representation of the given job tree
   std::string JSON::toJSON(const Job &t_jobTree)
@@ -508,7 +508,7 @@ namespace runmanager {
     return job;
   }
 
-
+}
 }
 }
 

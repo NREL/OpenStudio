@@ -26,7 +26,6 @@
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/Workflow.hpp>
 #include <runmanager/lib/WorkItem.hpp>
-#include <runmanager/lib/JSON.hpp>
 #include <QDir>
 #include <utilities/core/Application.hpp>
 #include <utilities/core/System.hpp>
@@ -43,18 +42,18 @@ TEST_F(RunManagerTestFixture, JSON_jobTest)
   openstudio::runmanager::Workflow wf("ExpandObjects->EnergyPlus");
   openstudio::runmanager::Job j = wf.create(openstudio::toPath("outdir"), openstudio::toPath("my.idf"));
 
-  std::string json = JSON::toJSON(j);
+  std::string json = j.toJSON();
 
   EXPECT_FALSE(json.empty());
 
 
-  openstudio::runmanager::Job j2 = JSON::toJob(json);
+  openstudio::runmanager::Job j2 = Job::fromJSON(json);
 
   EXPECT_EQ(j2.jobType(), JobType::ExpandObjects);
   EXPECT_EQ(j2.inputFiles().size(), 1u);
 
 
-  std::string json2 = JSON::toJSON(j2);
+  std::string json2 = j2.toJSON();
 
   EXPECT_EQ(json, json2);
 }
@@ -89,11 +88,11 @@ TEST_F(RunManagerTestFixture, JSON_workItem)
       files,
       "keyname");
 
-  std::string json = JSON::toJSON(wi);
+  std::string json = wi.toJSON();
 
   EXPECT_FALSE(json.empty());
 
-  openstudio::runmanager::WorkItem wi2 = JSON::toWorkItem(json);
+  openstudio::runmanager::WorkItem wi2 = WorkItem::fromJSON(json);
 
   EXPECT_EQ(wi2.type, JobType::EnergyPlus);
   EXPECT_EQ(wi2.tools, tools);
@@ -102,7 +101,7 @@ TEST_F(RunManagerTestFixture, JSON_workItem)
   EXPECT_EQ(wi2.jobkeyname, "keyname");
 
 
-  std::string json2 = JSON::toJSON(wi2);
+  std::string json2 = wi2.toJSON();
 
   EXPECT_EQ(json, json2);
 

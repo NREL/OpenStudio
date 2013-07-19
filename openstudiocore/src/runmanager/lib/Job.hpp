@@ -313,6 +313,36 @@ namespace detail {
       /// Swap the internals of this job with rhs.
       void swap(Job &rhs);
 
+  
+      /// \returns a re-created Job tree from the given JSON string.
+      ///
+      /// \throws std::exception if any part of the parsing fails, with desription
+      ///         of where and why.
+      ///
+      /// \sa Job::toJSON for more information
+      static Job fromJSON(const std::string &t_json);
+
+      /// \returns a snapshot of the complete status of this job and all children
+      ///
+      /// All paths and tools are left as-is, as if the job were being persisted in
+      /// the runmanager database. 
+      /// 
+      /// Main uses for this function are transporting the status of a job tree
+      /// across a network and for display locally and for persisting of complex
+      /// workflows.
+      /// 
+      /// With care to use relative paths, or care to re-create the job file 
+      /// structure on two computers it could be used to begin a job tree
+      /// on one computer and continue it on another.
+      ///
+      /// \sa openstudio::runmanager::Workflow::create for information on creating
+      ///     a Job tree from a Workflow 
+      ///
+      /// \sa openstudio::runmanager::Workflow::Workflow for information on
+      ///     creating a Workflow from a Job tree
+      std::string toJSON() const;
+
+
       Job &operator=(Job rhs);
 
       void moveToThread(QThread* targetThread);

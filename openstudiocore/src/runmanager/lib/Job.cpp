@@ -21,6 +21,7 @@
 #include <utilities/core/System.hpp>
 #include "Job.hpp"
 #include "Job_Impl.hpp"
+#include "JSON.hpp"
 
 namespace openstudio {
 namespace runmanager {
@@ -464,6 +465,15 @@ namespace runmanager {
   }
 
 
+  Job Job::fromJSON(const std::string &t_json)
+  {
+    return detail::JSON::toJob(t_json);
+  }
+
+  std::string Job::toJSON() const
+  {
+    return detail::JSON::toJSON(*this);
+  }
 
 }
 }

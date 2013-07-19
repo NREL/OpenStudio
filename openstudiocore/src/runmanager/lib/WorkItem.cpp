@@ -18,9 +18,10 @@
 **********************************************************************/
 
 #include "WorkItem.hpp"
+#include "JSON.hpp"
 #include "ModelObjectPerturbationJob.hpp"
 
-#include <runmanager/lib/RubyJobUtils.hpp>
+#include "RubyJobUtils.hpp"
 
 #include <ruleset/ModelRuleset.hpp>
 
@@ -180,6 +181,18 @@ namespace runmanager {
     }
     return result;
   }
+
+
+  WorkItem WorkItem::fromJSON(const std::string &t_json)
+  {
+    return detail::JSON::toWorkItem(t_json);
+  }
+
+  std::string WorkItem::toJSON() const
+  {
+    return detail::JSON::toJSON(*this);
+  }
+
 
 }
 }
