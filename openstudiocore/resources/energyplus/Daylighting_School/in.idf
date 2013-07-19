@@ -32,18 +32,18 @@
 ! Start SimMetaData
 ! WeatherFileName=USA_CO_Boulder_TMY2.epw
 ! End SimMetaData
- 
-  Version,7.2;
- 
+
+  Version,8.0;
+
   Timestep,6;
- 
+
   SimulationControl,
     Yes,                     !- Do Zone Sizing Calculation
     Yes,                     !- Do System Sizing Calculation
     No,                      !- Do Plant Sizing Calculation
     No,                      !- Run Simulation for Sizing Periods
     Yes;                     !- Run Simulation for Weather File Run Periods
- 
+
   RunPeriod,
     ,                        !- Name
     1,                       !- Begin Month
@@ -57,32 +57,33 @@
     Yes,                     !- Use Weather File Rain Indicators
     Yes,                     !- Use Weather File Snow Indicators
     1.0000;                  !- Number of Times Runperiod to be Repeated
- 
+
   SurfaceConvectionAlgorithm:Inside,TARP;
- 
+
   SurfaceConvectionAlgorithm:Outside,DOE-2;
- 
+
   HeatBalanceAlgorithm,ConductionTransferFunction,200.0000;
- 
+
   Sizing:Parameters,
     1.2,                     !- Heating Sizing Factor
     1.2,                     !- Cooling Sizing Factor
     6;                       !- Timesteps in Averaging Window
- 
+
   ConvergenceLimits,
     5,                       !- Minimum System Timestep {minutes}
     25;                      !- Maximum HVAC Iterations
- 
+
   ShadowCalculation,
+    AverageOverDaysInFrequency,  !- Calculation Method
     7,                       !- Calculation Frequency
     15000;                   !- Maximum Figures in Shadow Overlap Calculations
- 
+
   GlobalGeometryRules,
     UpperLeftCorner,         !- Starting Vertex Position
     Counterclockwise,        !- Vertex Entry Direction
     Relative,                !- Coordinate System
     Relative;                !- Daylighting Reference Point Coordinate System
- 
+
   Building,
     50 K-12 TSD Classroom,   !- Name
     0.0000,                  !- North Axis {deg}
@@ -92,27 +93,27 @@
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
     6;                       !- Minimum Number of Warmup Days
- 
+
 !  VERSION,
 !    3.1;                    !- Version Identifier
- 
+
   Site:Location,
     USA CO-BOULDER,          !- Name
     40.02,                   !- Latitude {deg}
     -105.25,                 !- Longitude {deg}
     -7.00,                   !- Time Zone {hr}
     1634;                    !- Elevation {m}
- 
+
   Site:GroundTemperature:BuildingSurface,19.195,19.191,19.215,19.250,19.367,20.429,21.511,21.776,20.440,19.538,19.333,19.237;
- 
+
   Site:WaterMainsTemperature,
     CORRELATION,             !- Calculation Method
     ,                        !- Temperature Schedule Name
     9.84,                    !- Annual Average Outdoor Air Temperature {C}
     24.70;                   !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
- 
+
  ! BOULDER_CO_USA Annual Heating 99.6%, MaxDB=-18.6°C
- 
+
   SizingPeriod:DesignDay,
     BOULDER Ann Htg 99.6% Condns DB,  !- Name
     12,                      !- Month
@@ -121,7 +122,7 @@
     -18.6,                   !- Maximum Dry-Bulb Temperature {C}
     0.0,                     !- Daily Dry-Bulb Temperature Range {deltaC}
     ,                        !- Dry-Bulb Temperature Range Modifier Type
-    ,                        !- Dry-Bulb Temperature Range Modifier Schedule Name
+    ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     -18.6,                   !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
     ,                        !- Humidity Condition Day Schedule Name
@@ -140,9 +141,9 @@
     ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
     ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.00;                    !- Sky Clearness
- 
+
  ! BOULDER_CO_USA Annual Cooling (DB=>MWB) .4%, MaxDB=32.9°C MWB=15.9°C
- 
+
   SizingPeriod:DesignDay,
     BOULDER Ann Clg .4% Condns DB=>MWB,  !- Name
     7,                       !- Month
@@ -151,7 +152,7 @@
     32.9,                    !- Maximum Dry-Bulb Temperature {C}
     15.2,                    !- Daily Dry-Bulb Temperature Range {deltaC}
     ,                        !- Dry-Bulb Temperature Range Modifier Type
-    ,                        !- Dry-Bulb Temperature Range Modifier Schedule Name
+    ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     15.9,                    !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
     ,                        !- Humidity Condition Day Schedule Name
@@ -170,9 +171,9 @@
     ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
     ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     1.00;                    !- Sky Clearness
- 
+
  ! BOULDER_CO_USA Annual Cooling (WB=>MDB) .4%, MDB=27.4°C WB=18.6°C
- 
+
   SizingPeriod:DesignDay,
     BOULDER Ann Clg .4% Condns WB=>MDB,  !- Name
     7,                       !- Month
@@ -181,7 +182,7 @@
     27.4,                    !- Maximum Dry-Bulb Temperature {C}
     15.2,                    !- Daily Dry-Bulb Temperature Range {deltaC}
     ,                        !- Dry-Bulb Temperature Range Modifier Type
-    ,                        !- Dry-Bulb Temperature Range Modifier Schedule Name
+    ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     18.6,                    !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
     ,                        !- Humidity Condition Day Schedule Name
@@ -200,55 +201,55 @@
     ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
     ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     1.00;                    !- Sky Clearness
- 
+
   ScheduleTypeLimits,
     Any Number;              !- Name
- 
+
   ScheduleTypeLimits,
     Fraction,                !- Name
     0.0,                     !- Lower Limit Value
     1.0,                     !- Upper Limit Value
     CONTINUOUS;              !- Numeric Type
- 
+
   ScheduleTypeLimits,
     Temperature,             !- Name
     -60,                     !- Lower Limit Value
     200,                     !- Upper Limit Value
     CONTINUOUS;              !- Numeric Type
- 
+
   ScheduleTypeLimits,
     On/Off,                  !- Name
     0,                       !- Lower Limit Value
     1,                       !- Upper Limit Value
     DISCRETE;                !- Numeric Type
- 
+
   ScheduleTypeLimits,
     Control Type,            !- Name
     0,                       !- Lower Limit Value
     4,                       !- Upper Limit Value
     DISCRETE;                !- Numeric Type
- 
+
   ScheduleTypeLimits,
     Humidity,                !- Name
     10,                      !- Lower Limit Value
     90,                      !- Upper Limit Value
     CONTINUOUS;              !- Numeric Type
- 
+
   ScheduleTypeLimits,
     Number;                  !- Name
- 
+
   WindowMaterial:SimpleGlazingSystem,
     VISION GLASS,            !- Name
     3.2400,                  !- U-Factor {W/m2-K}
     0.3900,                  !- Solar Heat Gain Coefficient
     0.2500;                  !- Visible Transmittance
- 
+
   WindowMaterial:SimpleGlazingSystem,
     DAYLIGHT GLASS,          !- Name
     3.2400,                  !- U-Factor {W/m2-K}
     0.3900,                  !- Solar Heat Gain Coefficient
     0.7000;                  !- Visible Transmittance
- 
+
   Material,
     Roof Membrane,           !- Name
     VeryRough,               !- Roughness
@@ -259,7 +260,7 @@
     0.9000,                  !- Thermal Absorptance
     0.7000,                  !- Solar Absorptance
     0.7000;                  !- Visible Absorptance
- 
+
   Material:NoMass,
     Roof Insulation,         !- Name
     MediumRough,             !- Roughness
@@ -267,7 +268,7 @@
     0.9000,                  !- Thermal Absorptance
     0.7000,                  !- Solar Absorptance
     0.7000;                  !- Visible Absorptance
- 
+
   Material,
     Metal Decking,           !- Name
     MediumSmooth,            !- Roughness
@@ -278,7 +279,7 @@
     0.9000,                  !- Thermal Absorptance
     0.7000,                  !- Solar Absorptance
     0.3000;                  !- Visible Absorptance
- 
+
   Material,
     GP01 1/2 GYPSUM,         !- Name
     Smooth,                  !- Roughness
@@ -289,7 +290,7 @@
     0.9000,                  !- Thermal Absorptance
     0.7000,                  !- Solar Absorptance
     0.5000;                  !- Visible Absorptance
- 
+
   Material,
     1in Stucco,              !- Name
     Smooth,                  !- Roughness
@@ -300,7 +301,7 @@
     0.9000,                  !- Thermal Absorptance
     0.9200,                  !- Solar Absorptance
     0.9200;                  !- Visible Absorptance
- 
+
   Material,
     8in HW Concrete,         !- Name
     MediumRough,             !- Roughness
@@ -311,7 +312,7 @@
     0.9000,                  !- Thermal Absorptance
     0.6500,                  !- Solar Absorptance
     0.6500;                  !- Visible Absorptance
- 
+
   Material:NoMass,
     Wall Insulation,         !- Name
     MediumRough,             !- Roughness
@@ -319,7 +320,7 @@
     0.9000,                  !- Thermal Absorptance
     0.5000,                  !- Solar Absorptance
     0.5000;                  !- Visible Absorptance
- 
+
   Material,
     1/2in Gypsum,            !- Name
     Smooth,                  !- Roughness
@@ -330,7 +331,7 @@
     0.9000,                  !- Thermal Absorptance
     0.9200,                  !- Solar Absorptance
     0.9200;                  !- Visible Absorptance
- 
+
   Material,
     MAT-CC05 8in HW Concrete,!- Name
     Rough,                   !- Roughness
@@ -341,7 +342,7 @@
     0.9000,                  !- Thermal Absorptance
     0.7000,                  !- Solar Absorptance
     0.7000;                  !- Visible Absorptance
- 
+
   Material:NoMass,
     CP02 Carpet Pad,         !- Name
     VeryRough,               !- Roughness
@@ -349,7 +350,7 @@
     0.9000,                  !- Thermal Absorptance
     0.7000,                  !- Solar Absorptance
     0.8000;                  !- Visible Absorptance
- 
+
   Material,
     Std Wood 6inch,          !- Name
     MediumSmooth,            !- Roughness
@@ -360,7 +361,7 @@
     0.9000000,               !- Thermal Absorptance
     0.7000000,               !- Solar Absorptance
     0.7000000;               !- Visible Absorptance
- 
+
   Material,
     Std 1.5  MW CONCRETE,    !- Name
     Rough,                   !- Roughness
@@ -371,7 +372,7 @@
     0.9,                     !- Thermal Absorptance
     0.7,                     !- Solar Absorptance
     0.7;                     !- Visible Absorptance
- 
+
   Material,
     Std AC02,                !- Name
     MediumSmooth,            !- Roughness
@@ -382,7 +383,7 @@
     0.9000000,               !- Thermal Absorptance
     0.7000000,               !- Solar Absorptance
     0.2000000;               !- Visible Absorptance
- 
+
   Material:NoMass,
     Std CP02 CARPET PAD,     !- Name
     VeryRough,               !- Roughness
@@ -390,7 +391,7 @@
     0.9,                     !- Thermal Absorptance
     0.7,                     !- Solar Absorptance
     0.8;                     !- Visible Absorptance
- 
+
   Material,
     Std MAT-CC05 4  MW CONCRETE,  !- Name
     Rough,                   !- Roughness
@@ -401,7 +402,7 @@
     0.9,                     !- Thermal Absorptance
     0.7,                     !- Solar Absorptance
     0.2;                     !- Visible Absorptance
- 
+
   Material,
     Std Very High Reflectivity Surface,  !- Name
     Smooth,                  !- Roughness
@@ -412,7 +413,7 @@
     0.90,                    !- Thermal Absorptance
     0.05,                    !- Solar Absorptance
     0.05;                    !- Visible Absorptance
- 
+
   WindowMaterial:Glazing,
     Std Clear Acrylic Plastic,  !- Name
     SpectralAverage,         !- Optical Data Type
@@ -428,7 +429,7 @@
     0.90,                    !- Front Side Infrared Hemispherical Emissivity
     0.90,                    !- Back Side Infrared Hemispherical Emissivity
     0.90;                    !- Conductivity {W/m-K}
- 
+
   WindowMaterial:Glazing,
     Std Diffusing Acrylic Plastic,  !- Name
     SpectralAverage,         !- Optical Data Type
@@ -444,7 +445,7 @@
     0.90,                    !- Front Side Infrared Hemispherical Emissivity
     0.90,                    !- Back Side Infrared Hemispherical Emissivity
     0.90;                    !- Conductivity {W/m-K}
- 
+
   Material,
     Std PW05,                !- Name
     MediumSmooth,            !- Roughness
@@ -455,7 +456,7 @@
     0.9000000,               !- Thermal Absorptance
     0.7800000,               !- Solar Absorptance
     0.7800000;               !- Visible Absorptance
- 
+
   Material,
     Std Steel_Brown_Regular, !- Name
     Smooth,                  !- Roughness
@@ -466,7 +467,7 @@
     0.9000000,               !- Thermal Absorptance
     0.9200000,               !- Solar Absorptance
     0.92000000;              !- Visible Absorptance
- 
+
   Material,
     Std Steel_Brown_Cool,    !- Name
     Smooth,                  !- Roughness
@@ -477,7 +478,7 @@
     0.9000000,               !- Thermal Absorptance
     0.7300000,               !- Solar Absorptance
     0.73000000;              !- Visible Absorptance
- 
+
   Material,
     PW05_Plywood3/4_in,      !- Name
     MediumSmooth,            !- Roughness
@@ -488,14 +489,14 @@
     0.9000,                  !- Thermal Absorptance
     0.7000,                  !- Solar Absorptance
     0.7800;                  !- Visible Absorptance
- 
+
   Material:NoMass,
     MAT-AIR-WALL,            !- Name
     Rough,                   !- Roughness
     0.2079491,               !- Thermal Resistance {m2-K/W}
     0.9,                     !- Thermal Absorptance
     0.7;                     !- Solar Absorptance
- 
+
   Material:NoMass,
     Std Opaque Door panel_con,  !- Name
     MediumRough,             !- Roughness
@@ -503,7 +504,7 @@
     0.9,                     !- Thermal Absorptance
     0.7,                     !- Solar Absorptance
     0.7;                     !- Visible Absorptance
- 
+
   Material:NoMass,
     Std Opaque Door panel_semi,  !- Name
     MediumRough,             !- Roughness
@@ -511,7 +512,7 @@
     0.9,                     !- Thermal Absorptance
     0.7,                     !- Solar Absorptance
     0.7;                     !- Visible Absorptance
- 
+
   Material:NoMass,
     Std Overhead Door Panel, !- Name
     MediumRough,             !- Roughness
@@ -519,17 +520,17 @@
     0.9,                     !- Thermal Absorptance
     0.7,                     !- Solar Absorptance
     0.7;                     !- Visible Absorptance
- 
+
   Construction,
     InteriorFurnishings,     !- Name
     Std Wood 6inch;          !- Outside Layer
- 
+
   ComponentCost:LineItem,
     Interior Furnishings,    !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
     InteriorFurnishings,     !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     1,                       !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -537,23 +538,23 @@
     ,                        !- Cost per Volume {$/m3}
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
- 
+
   Construction,
     INT-FLOOR-TOPSIDE,       !- Name
     Std MAT-CC05 4  MW CONCRETE,  !- Outside Layer
     Std CP02 CARPET PAD;     !- Layer 2
- 
+
   Construction,
     INT-FLOOR-UNDERSIDE,     !- Name
     Std CP02 CARPET PAD,     !- Outside Layer
     Std MAT-CC05 4  MW CONCRETE;  !- Layer 2
- 
+
   ComponentCost:LineItem,
     Interior Floor,          !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
     INT-FLOOR-UNDERSIDE,     !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     15,                      !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -561,17 +562,17 @@
     ,                        !- Cost per Volume {$/m3}
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
- 
+
   Construction,
     INT-FLOOR-SLAB,          !- Name
     Std MAT-CC05 4  MW CONCRETE;  !- Outside Layer
- 
+
   ComponentCost:LineItem,
     Interior Floor Slab,     !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
     INT-FLOOR-SLAB,          !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     35,                      !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -579,17 +580,17 @@
     ,                        !- Cost per Volume {$/m3}
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
- 
+
   Construction,
     DropCeiling,             !- Name
     Std AC02;                !- Outside Layer
- 
+
   ComponentCost:LineItem,
     Drop Ceiling,            !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
     DropCeiling,             !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     10,                      !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -597,44 +598,44 @@
     ,                        !- Cost per Volume {$/m3}
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
- 
+
   Construction,
     INT-CEILING_SIMPLE,      !- Name
     PW05_Plywood3/4_in;      !- Outside Layer
- 
+
   Construction,
     Raised-Floor-TopSide,    !- Name
     Std 1.5  MW CONCRETE,    !- Outside Layer
     Std CP02 CARPET PAD;     !- Layer 2
- 
+
   Construction,
     Raised-Floor-UnderSide,  !- Name
     Std CP02 CARPET PAD,     !- Outside Layer
     Std 1.5  MW CONCRETE;    !- Layer 2
- 
+
   Construction,
     TDD_Pipe,                !- Name
     Std Very High Reflectivity Surface;  !- Outside Layer
- 
+
   Construction,
     TDD_Dome,                !- Name
     Std Clear Acrylic Plastic;  !- Outside Layer
- 
+
   Construction,
     TDD_Diffuser,            !- Name
     Std Diffusing Acrylic Plastic;  !- Outside Layer
- 
+
   Construction,
     Sloped_Metal_Roof,       !- Name
     Std Steel_Brown_Regular, !- Outside Layer
     Std PW05;                !- Layer 2
- 
+
   ComponentCost:LineItem,
     Sloped Metal Roof,       !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
     Sloped_Metal_Roof,       !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     1,                       !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -642,17 +643,17 @@
     ,                        !- Cost per Volume {$/m3}
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
- 
+
   Construction,
     Gable_Wall,              !- Name
     Std PW05;                !- Outside Layer
- 
+
   ComponentCost:LineItem,
     Gable Wall,              !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
     Gable_Wall,              !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     1,                       !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -660,17 +661,17 @@
     ,                        !- Cost per Volume {$/m3}
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
- 
+
   Construction,
     AIR-WALL,                !- Name
     MAT-AIR-WALL;            !- Outside Layer
- 
+
   ComponentCost:LineItem,
     Air Wall,                !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
     AIR-WALL,                !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     1,                       !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -678,17 +679,17 @@
     ,                        !- Cost per Volume {$/m3}
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
- 
+
   Construction,
     Std Swinging Door_con,   !- Name
     Std Opaque Door panel_con;  !- Outside Layer
- 
+
   ComponentCost:LineItem,
     Swinging Door Conditioned,  !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
     Std Swinging Door_con,   !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     1,                       !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -696,17 +697,17 @@
     ,                        !- Cost per Volume {$/m3}
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
- 
+
   Construction,
     Std Swinging Door_semi,  !- Name
     Std Opaque Door panel_semi;  !- Outside Layer
- 
+
   ComponentCost:LineItem,
     Swinging Door Semi-conditioned,  !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
     Std Swinging Door_semi,  !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     1,                       !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -714,17 +715,17 @@
     ,                        !- Cost per Volume {$/m3}
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
- 
+
   Construction,
     Std Overhead Door,       !- Name
     Std Overhead Door Panel; !- Outside Layer
- 
+
   ComponentCost:LineItem,
     Overhead Door,           !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
     Std Overhead Door,       !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     1,                       !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -732,17 +733,17 @@
     ,                        !- Cost per Volume {$/m3}
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
- 
+
   Construction,
     Vision Window,           !- Name
     VISION GLASS;            !- Outside Layer
- 
+
   ComponentCost:LineItem,
     other:Vision Window,     !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
     Vision Window,           !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     1.0000,                  !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -751,17 +752,17 @@
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
     ;                        !- Quantity {dimensionless}
- 
+
   Construction,
     Daylight Window,         !- Name
     DAYLIGHT GLASS;          !- Outside Layer
- 
+
   ComponentCost:LineItem,
     other:Daylight Window,   !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
     Daylight Window,         !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     1.0000,                  !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -770,19 +771,19 @@
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
     ;                        !- Quantity {dimensionless}
- 
+
   Construction,
     IEAD R-15 ci Roof,       !- Name
     Roof Membrane,           !- Outside Layer
     Roof Insulation,         !- Layer 2
     Metal Decking;           !- Layer 3
- 
+
   ComponentCost:LineItem,
     roofs:IEAD R-15 ci Roof, !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
     IEAD R-15 ci Roof,       !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     1.0000,                  !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -791,18 +792,18 @@
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
     ;                        !- Quantity {dimensionless}
- 
+
   Construction,
     Interior Wall,           !- Name
     GP01 1/2 GYPSUM,         !- Outside Layer
     GP01 1/2 GYPSUM;         !- Layer 2
- 
+
   ComponentCost:LineItem,
     int-walls:Interior Wall, !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
     Interior Wall,           !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     1.0000,                  !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -811,20 +812,20 @@
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
     ;                        !- Quantity {dimensionless}
- 
+
   Construction,
     Mass R-7.6 ci Exterior Wall,  !- Name
     1in Stucco,              !- Outside Layer
     8in HW Concrete,         !- Layer 2
     Wall Insulation,         !- Layer 3
     1/2in Gypsum;            !- Layer 4
- 
+
   ComponentCost:LineItem,
     ext-walls:Mass R-7.6 ci Exterior Wall,  !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
     Mass R-7.6 ci Exterior Wall,  !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     1.0000,                  !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -833,18 +834,18 @@
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
     ;                        !- Quantity {dimensionless}
- 
+
   Construction,
     Unheated 8in Exterior Slab w/ Carpet,  !- Name
     MAT-CC05 8in HW Concrete,!- Outside Layer
     CP02 Carpet Pad;         !- Layer 2
- 
+
   ComponentCost:LineItem,
     ext-slab:Unheated 8in Exterior Slab w/ Carpet,  !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
     Unheated 8in Exterior Slab w/ Carpet,  !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     1.0000,                  !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -853,7 +854,7 @@
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
     ;                        !- Quantity {dimensionless}
- 
+
   Zone,
     Classroom,               !- Name
     180.0000,                !- Direction of Relative North {deg}
@@ -868,7 +869,7 @@
     ,                        !- Zone Inside Convection Algorithm
     ,                        !- Zone Outside Convection Algorithm
     Yes;                     !- Part of Total Floor Area
- 
+
   BuildingSurface:Detailed,
     Classroom Floor,         !- Name
     Floor,                   !- Surface Type
@@ -884,7 +885,7 @@
     9.1440,0.0000,0.0000,  !- X,Y,Z ==> Vertex 2 {m}
     0.0000,0.0000,0.0000,  !- X,Y,Z ==> Vertex 3 {m}
     0.0000,9.1440,0.0000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Classroom Partition 1,   !- Name
     Wall,                    !- Surface Type
@@ -900,7 +901,7 @@
     9.1440,0.0000,0.0000,  !- X,Y,Z ==> Vertex 2 {m}
     9.1440,9.1440,0.0000,  !- X,Y,Z ==> Vertex 3 {m}
     9.1440,9.1440,3.3528;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Classroom Partition 2,   !- Name
     Wall,                    !- Surface Type
@@ -916,7 +917,7 @@
     0.0000,9.1440,0.0000,  !- X,Y,Z ==> Vertex 2 {m}
     0.0000,0.0000,0.0000,  !- X,Y,Z ==> Vertex 3 {m}
     0.0000,0.0000,4.5720;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Classroom Daylighting Wall,  !- Name
     Wall,                    !- Surface Type
@@ -932,7 +933,7 @@
     9.1440,9.1440,0.0000,  !- X,Y,Z ==> Vertex 2 {m}
     0.0000,9.1440,0.0000,  !- X,Y,Z ==> Vertex 3 {m}
     0.0000,9.1440,3.3528;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Punched Window 1,        !- Name
     Window,                  !- Surface Type
@@ -948,7 +949,7 @@
     8.9916,9.1440,0.7620,  !- X,Y,Z ==> Vertex 2 {m}
     8.0772,9.1440,0.7620,  !- X,Y,Z ==> Vertex 3 {m}
     8.0772,9.1440,2.2860;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Punched Window 2,        !- Name
     Window,                  !- Surface Type
@@ -964,7 +965,7 @@
     5.0292,9.1440,0.7620,  !- X,Y,Z ==> Vertex 2 {m}
     4.1148,9.1440,0.7620,  !- X,Y,Z ==> Vertex 3 {m}
     4.1148,9.1440,2.2860;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Punched Window 3,        !- Name
     Window,                  !- Surface Type
@@ -980,7 +981,7 @@
     1.0668,9.1440,0.7620,  !- X,Y,Z ==> Vertex 2 {m}
     0.1524,9.1440,0.7620,  !- X,Y,Z ==> Vertex 3 {m}
     0.1524,9.1440,2.2860;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Daylighting Window,      !- Name
     Window,                  !- Surface Type
@@ -996,7 +997,7 @@
     8.9916,9.1440,2.4384,  !- X,Y,Z ==> Vertex 2 {m}
     0.1524,9.1440,2.4384,  !- X,Y,Z ==> Vertex 3 {m}
     0.1524,9.1440,3.2004;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Classroom Hallway Wall,  !- Name
     Wall,                    !- Surface Type
@@ -1012,7 +1013,7 @@
     0.0000,0.0000,0.0000,  !- X,Y,Z ==> Vertex 2 {m}
     9.1440,0.0000,0.0000,  !- X,Y,Z ==> Vertex 3 {m}
     9.1440,0.0000,3.3528;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Classroom Roof,          !- Name
     Roof,                    !- Surface Type
@@ -1028,7 +1029,7 @@
     9.1440,9.1440,3.3528,  !- X,Y,Z ==> Vertex 2 {m}
     0.0000,9.1440,3.3528,  !- X,Y,Z ==> Vertex 3 {m}
     0.0000,0.0000,4.5720;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     Classroom Clerestory Wall,  !- Name
     Wall,                    !- Surface Type
@@ -1044,7 +1045,7 @@
     0.0000,0.0000,3.3528,  !- X,Y,Z ==> Vertex 2 {m}
     9.1440,0.0000,3.3528,  !- X,Y,Z ==> Vertex 3 {m}
     9.1440,0.0000,4.5720;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     Clerestory Window,       !- Name
     Window,                  !- Surface Type
@@ -1060,13 +1061,13 @@
     0.1524,0.0000,3.5052,  !- X,Y,Z ==> Vertex 2 {m}
     8.9916,0.0000,3.5052,  !- X,Y,Z ==> Vertex 3 {m}
     8.9916,0.0000,4.4196;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   InternalMass,
     Classroom Internal Mass, !- Name
     InteriorFurnishings,     !- Construction Name
     Classroom,               !- Zone Name
     167.2255;                !- Surface Area {m2}
- 
+
   ZoneInfiltration:DesignFlowRate,
     Classroom_Infiltration,  !- Name
     Classroom,               !- Zone or ZoneList Name
@@ -1080,13 +1081,13 @@
     0.0000,                  !- Temperature Term Coefficient
     0.0000,                  !- Velocity Term Coefficient
     0.0000;                  !- Velocity Squared Term Coefficient
- 
+
   ComponentCost:LineItem,
     Infiltration:Classroom,  !- Name
     ,                        !- Type
     General,                 !- Line Item Type
     Classroom,               !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     1.0000,                  !- Cost per Each {$}
     ,                        !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -1095,7 +1096,7 @@
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
     0.0276;                  !- Quantity {dimensionless}
- 
+
   People,
     Classroom People,        !- Name
     Classroom,               !- Zone or ZoneList Name
@@ -1115,13 +1116,13 @@
     CLOTHING_SCH,            !- Clothing Insulation Schedule Name
     AIR_VELO_SCH,            !- Air Velocity Schedule Name
     FANGER;                  !- Thermal Comfort Model 1 Type
- 
+
   ComponentCost:LineItem,
     People:Classroom,        !- Name
     ,                        !- Type
     General,                 !- Line Item Type
     Classroom,               !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     1.0000,                  !- Cost per Each {$}
     ,                        !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -1130,7 +1131,7 @@
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
     29.2645;                 !- Quantity {dimensionless}
- 
+
   Lights,
     Classroom_Lights,        !- Name
     Classroom,               !- Zone or ZoneList Name
@@ -1145,13 +1146,13 @@
     1.0000,                  !- Fraction Replaceable
     General,                 !- End-Use Subcategory
     No;                      !- Return Air Fraction Calculated from Plenum Temperature
- 
+
   ComponentCost:LineItem,
     LIGHTING EQUIP:Classroom,!- Name
     ,                        !- Type
     Lights,                  !- Line Item Type
     Classroom,               !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     ,                        !- Cost per Area {$/m2}
     1.0000,                  !- Cost per Unit of Output Capacity {$/kW}
@@ -1160,7 +1161,7 @@
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
     ;                        !- Quantity {dimensionless}
- 
+
   ElectricEquipment,
     Classroom_PlugMisc_Equip,!- Name
     Classroom,               !- Zone or ZoneList Name
@@ -1173,13 +1174,13 @@
     0.5000,                  !- Fraction Radiant
     0.0000,                  !- Fraction Lost
     General;                 !- End-Use Subcategory
- 
+
   ComponentCost:LineItem,
     ElectricEquipment:Classroom:PlugMisc,  !- Name
     ,                        !- Type
     General,                 !- Line Item Type
     Classroom,               !- Item Name
-    ,                        !- Object End Use Key
+    ,                        !- Object End-Use Key
     1.0000,                  !- Cost per Each {$}
     ,                        !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
@@ -1188,9 +1189,9 @@
     ,                        !- Cost per Volume Rate {$/(m3/s)}
     ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
     0.4498;                  !- Quantity {dimensionless}
- 
+
 !***** Space Conditioning For Zone: Classroom *****
- 
+
   Sizing:Zone,
     Classroom,               !- Zone or ZoneList Name
     SupplyAirTemperature,    !- Zone Cooling Design Supply Air Temperature Input Method
@@ -1214,26 +1215,26 @@
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
     ;                        !- Heating Maximum Air Flow Fraction
- 
+
   DesignSpecification:OutdoorAir,
     SZ DSOA Classroom,       !- Name
     Flow/Zone,               !- Outdoor Air Method
     0.0,                     !- Outdoor Air Flow per Person {m3/s-person}
     0.0,                     !- Outdoor Air Flow per Zone Floor Area {m3/s-m2}
     0.189132008832;          !- Outdoor Air Flow per Zone {m3/s}
- 
+
   ZoneControl:Thermostat,
     Classroom Thermostat,    !- Name
     Classroom,               !- Zone or ZoneList Name
     Dual Zone Control Type Sched,  !- Control Type Schedule Name
     ThermostatSetpoint:DualSetpoint,  !- Control 1 Object Type
     Classroom DualSPSched;   !- Control 1 Name
- 
+
   ThermostatSetpoint:DualSetpoint,
     Classroom DualSPSched,   !- Name
     HtgSetP_Sch,             !- Heating Setpoint Temperature Schedule Name
     ClgSetP_Sch;             !- Cooling Setpoint Temperature Schedule Name
- 
+
   ZoneHVAC:EquipmentConnections,
     Classroom,               !- Zone Name
     Classroom Equipment,     !- Zone Conditioning Equipment List Name
@@ -1241,24 +1242,24 @@
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Classroom Air Node,      !- Zone Air Node Name
     Classroom Return Air Node Name;  !- Zone Return Air Node Name
- 
+
   NodeList,
     Classroom Inlet Nodes,   !- Name
     Classroom Direct Air Inlet Node Name;  !- Node 1 Name
- 
+
   ZoneHVAC:EquipmentList,
     Classroom Equipment,     !- Name
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
     Classroom Direct Air,    !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1;                       !- Zone Equipment 1 Heating or No-Load Sequence
- 
+
   AirTerminal:SingleDuct:Uncontrolled,
     Classroom Direct Air,    !- Name
     ALWAYS_ON,               !- Availability Schedule Name
     Classroom Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
     AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
- 
+
   SetpointManager:SingleZone:Reheat,
     SupAirTemp MngrClassroom,!- Name
     Temperature,             !- Control Variable
@@ -1268,7 +1269,7 @@
     Classroom Air Node,      !- Zone Node Name
     Classroom Direct Air Inlet Node Name,  !- Zone Inlet Node Name
     PSZ-AC:1 Supply Equipment Outlet Node;  !- Setpoint Node or NodeList Name
- 
+
   Shading:Building:Detailed,
     Adjacent Classroom,      !- Name
     ,                        !- Transmittance Schedule Name
@@ -1277,9 +1278,9 @@
     0.0000,-4.5720,0.0000,  !- X,Y,Z ==> Vertex 2 {m}
     9.1440,-4.5720,0.0000,  !- X,Y,Z ==> Vertex 3 {m}
     9.1440,-4.5720,4.5720;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
 !***** Air Loop: PSZ-AC:1 *****
- 
+
   AirLoopHVAC,
     PSZ-AC:1,                !- Name
     ,                        !- Controller List Name
@@ -1291,7 +1292,7 @@
     PSZ-AC:1 Zone Equipment Outlet Node,  !- Demand Side Outlet Node Name
     PSZ-AC:1 Zone Equipment Inlet Node,  !- Demand Side Inlet Node Names
     PSZ-AC:1 Supply Equipment Outlet Node;  !- Supply Side Outlet Node Names
- 
+
   SetpointManager:MixedAir,
     PSZ-AC:1_CoolC SAT Manager,  !- Name
     Temperature,             !- Control Variable
@@ -1299,7 +1300,7 @@
     PSZ-AC:1_HeatC-PSZ-AC:1_FanNode,  !- Fan Inlet Node Name
     PSZ-AC:1 Supply Equipment Outlet Node,  !- Fan Outlet Node Name
     PSZ-AC:1_CoolC-PSZ-AC:1_HeatCNode;  !- Setpoint Node or NodeList Name
- 
+
   SetpointManager:MixedAir,
     PSZ-AC:1_HeatC MixedAir Manager,  !- Name
     Temperature,             !- Control Variable
@@ -1307,7 +1308,7 @@
     PSZ-AC:1_HeatC-PSZ-AC:1_FanNode,  !- Fan Inlet Node Name
     PSZ-AC:1 Supply Equipment Outlet Node,  !- Fan Outlet Node Name
     PSZ-AC:1_HeatC-PSZ-AC:1_FanNode;  !- Setpoint Node or NodeList Name
- 
+
   Sizing:System,
     PSZ-AC:1,                !- AirLoop Name
     Sensible,                !- Type of Load to Size On
@@ -1329,12 +1330,12 @@
     DesignDay,               !- Heating Design Air Flow Method
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ZoneSum;                 !- System Outdoor Air Method
- 
+
   AvailabilityManagerAssignmentList,
     PSZ-AC:1 Availability Manager List,  !- Name
     AvailabilityManager:NightCycle,  !- Availability Manager 1 Object Type
     PSZ-AC:1 Availability Manager;  !- Availability Manager 1 Name
- 
+
   AvailabilityManager:NightCycle,
     PSZ-AC:1 Availability Manager,  !- Name
     Always_On,               !- Applicability Schedule Name
@@ -1342,11 +1343,11 @@
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
     1800;                    !- Cycling Run Time {s}
- 
+
   BranchList,
     PSZ-AC:1 Air Loop Branches,  !- Name
     PSZ-AC:1 Air Loop Main Branch;  !- Branch 1 Name
- 
+
   Branch,
     PSZ-AC:1 Air Loop Main Branch,  !- Name
     AUTOSIZE,                !- Maximum Flow Rate {m3/s}
@@ -1371,37 +1372,37 @@
     PSZ-AC:1_HeatC-PSZ-AC:1_FanNode,  !- Component 4 Inlet Node Name
     PSZ-AC:1 Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
     Active;                  !- Component 4 Branch Control Type
- 
+
   AirLoopHVAC:ControllerList,
     PSZ-AC:1_OA_Controllers, !- Name
     Controller:OutdoorAir,   !- Controller 1 Object Type
     PSZ-AC:1_OA_Controller;  !- Controller 1 Name
- 
+
   AirLoopHVAC:OutdoorAirSystem:EquipmentList,
     PSZ-AC:1_OA_Equipment,   !- Name
     OutdoorAir:Mixer,        !- Component 1 Object Type
     PSZ-AC:1_OAMixing Box;   !- Component 1 Name
- 
+
   AirLoopHVAC:OutdoorAirSystem,
     PSZ-AC:1_OA,             !- Name
     PSZ-AC:1_OA_Controllers, !- Controller List Name
     PSZ-AC:1_OA_Equipment,   !- Outdoor Air Equipment List Name
     PSZ-AC:1 Availability Manager List;  !- Availability Manager List Name
- 
+
   OutdoorAir:NodeList,
     PSZ-AC:1_OANode List;    !- Node or NodeList Name 1
- 
+
   NodeList,
     PSZ-AC:1_OANode List,    !- Name
     PSZ-AC:1_OAInlet Node;   !- Node 1 Name
- 
+
   OutdoorAir:Mixer,
     PSZ-AC:1_OAMixing Box,   !- Name
     PSZ-AC:1_OA-PSZ-AC:1_CoolCNode,  !- Mixed Air Node Name
     PSZ-AC:1_OAInlet Node,   !- Outdoor Air Stream Node Name
     PSZ-AC:1_OARelief Node,  !- Relief Air Stream Node Name
     PSZ-AC:1 Supply Equipment Inlet Node;  !- Return Air Stream Node Name
- 
+
   SetpointManager:MixedAir,
     PSZ-AC:1_OAMixed Air Temp Manager,  !- Name
     Temperature,             !- Control Variable
@@ -1409,7 +1410,7 @@
     PSZ-AC:1_HeatC-PSZ-AC:1_FanNode,  !- Fan Inlet Node Name
     PSZ-AC:1 Supply Equipment Outlet Node,  !- Fan Outlet Node Name
     PSZ-AC:1_OA-PSZ-AC:1_CoolCNode;  !- Setpoint Node or NodeList Name
- 
+
   Controller:OutdoorAir,
     PSZ-AC:1_OA_Controller,  !- Name
     PSZ-AC:1_OARelief Node,  !- Relief Air Outlet Node Name
@@ -1430,7 +1431,7 @@
     MinOA_Sched,             !- Minimum Outdoor Air Schedule Name
     ,                        !- Minimum Fraction of Outdoor Air Schedule Name
     ;                        !- Maximum Fraction of Outdoor Air Schedule Name
- 
+
   CoilSystem:Cooling:DX,
     PSZ-AC:1_CoolC,          !- Name
     ALWAYS_ON,               !- Availability Schedule Name
@@ -1439,7 +1440,7 @@
     PSZ-AC:1_CoolC-PSZ-AC:1_HeatCNode,  !- DX Cooling Coil System Sensor Node Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     PSZ-AC:1_CoolC DXCoil;   !- Cooling Coil Name
- 
+
   Coil:Cooling:DX:SingleSpeed,
     PSZ-AC:1_CoolC DXCoil,   !- Name
     ALWAYS_ON,               !- Availability Schedule Name
@@ -1455,7 +1456,7 @@
     PSZ-AC:1_CoolCStandard10Ton_EIRFT,  !- Energy Input Ratio Function of Temperature Curve Name
     PSZ-AC:1_CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     PSZ-AC:1_CoolCStandard10Ton_PLR;  !- Part Load Fraction Correlation Curve Name
- 
+
   Curve:Biquadratic,
     PSZ-AC:1_CoolCStandard10Ton_CapFT,  !- Name
     0.42415,                 !- Coefficient1 Constant
@@ -1468,7 +1469,7 @@
     22.00000,                !- Maximum Value of x
     13.00000,                !- Minimum Value of y
     46.00000;                !- Maximum Value of y
- 
+
   Curve:Biquadratic,
     PSZ-AC:1_CoolCStandard10Ton_EIRFT,  !- Name
     1.23649,                 !- Coefficient1 Constant
@@ -1481,7 +1482,7 @@
     22.00000,                !- Maximum Value of x
     13.00000,                !- Minimum Value of y
     46.00000;                !- Maximum Value of y
- 
+
   Curve:Quadratic,
     PSZ-AC:1_CoolCStandard10Ton_CapFF,  !- Name
     0.77136,                 !- Coefficient1 Constant
@@ -1489,7 +1490,7 @@
     -0.11088,                !- Coefficient3 x**2
     0.75918,                 !- Minimum Value of x
     1.13877;                 !- Maximum Value of x
- 
+
   Curve:Quadratic,
     PSZ-AC:1_CoolCStandard10Ton_EIRFFF,  !- Name
     1.20550,                 !- Coefficient1 Constant
@@ -1497,7 +1498,7 @@
     0.12308,                 !- Coefficient3 x**2
     0.75918,                 !- Minimum Value of x
     1.13877;                 !- Maximum Value of x
- 
+
   Curve:Quadratic,
     PSZ-AC:1_CoolCStandard10Ton_PLR,  !- Name
     0.77100,                 !- Coefficient1 Constant
@@ -1505,10 +1506,10 @@
     0.0,                     !- Coefficient3 x**2
     0.0,                     !- Minimum Value of x
     1.0;                     !- Maximum Value of x
- 
+
   OutdoorAir:Node,
     PSZ-AC:1_CoolCOA Ref node;  !- Name
- 
+
   Coil:Heating:Gas,
     PSZ-AC:1_HeatC,          !- Name
     ALWAYS_ON,               !- Availability Schedule Name
@@ -1517,7 +1518,7 @@
     PSZ-AC:1_CoolC-PSZ-AC:1_HeatCNode,  !- Air Inlet Node Name
     PSZ-AC:1_HeatC-PSZ-AC:1_FanNode,  !- Air Outlet Node Name
     PSZ-AC:1_HeatC-PSZ-AC:1_FanNode;  !- Temperature Setpoint Node Name
- 
+
   Fan:ConstantVolume,
     PSZ-AC:1_Fan,            !- Name
     HVACOperationSchd,       !- Availability Schedule Name
@@ -1529,42 +1530,42 @@
     PSZ-AC:1_HeatC-PSZ-AC:1_FanNode,  !- Air Inlet Node Name
     PSZ-AC:1 Supply Equipment Outlet Node,  !- Air Outlet Node Name
     Fan Energy;              !- End-Use Subcategory
- 
+
   AirLoopHVAC:SupplyPath,
     PSZ-AC:1,                !- Name
     PSZ-AC:1 Zone Equipment Inlet Node,  !- Supply Air Path Inlet Node Name
     AirLoopHVAC:ZoneSplitter,!- Component 1 Object Type
     PSZ-AC:1 Supply Air Splitter;  !- Component 1 Name
- 
+
   AirLoopHVAC:ZoneSplitter,
     PSZ-AC:1 Supply Air Splitter,  !- Name
     PSZ-AC:1 Zone Equipment Inlet Node,  !- Inlet Node Name
     Classroom Direct Air Inlet Node Name;  !- Outlet 1 Node Name
- 
+
   AirLoopHVAC:ReturnPath,
     PSZ-AC:1 Return Air Path,!- Name
     PSZ-AC:1 Zone Equipment Outlet Node,  !- Return Air Path Outlet Node Name
     AirLoopHVAC:ZoneMixer,   !- Component 1 Object Type
     PSZ-AC:1 Return Air Mixer;  !- Component 1 Name
- 
+
   AirLoopHVAC:ZoneMixer,
     PSZ-AC:1 Return Air Mixer,  !- Name
     PSZ-AC:1 Zone Equipment Outlet Node,  !- Outlet Node Name
     Classroom Return Air Node Name;  !- Inlet 1 Node Name
- 
+
 !***** Direct Substitution Text *****
- 
+
   Output:Surfaces:Drawing,DXF;
- 
+
   Output:VariableDictionary,IDF,Unsorted;
- 
+
   Output:Constructions,Constructions;
- 
+
   Output:Surfaces:List,Details;
- 
+
   OutputControl:Table:Style,
     HTML;                    !- Column Separator
- 
+
   Output:Table:SummaryReports,
     AnnualBuildingUtilityPerformanceSummary,  !- Report 1 Name
     InputVerificationandResultsSummary,  !- Report 2 Name
@@ -1574,7 +1575,7 @@
     ComponentSizingSummary,  !- Report 6 Name
     HVACSizingSummary,       !- Report 7 Name
     SystemSummary;           !- Report 8 Name
- 
+
   Schedule:Compact,
     BLDG_LIGHT_SCH,          !- Name
     Fraction,                !- Schedule Type Limits Name
@@ -1599,7 +1600,7 @@
     Until: 24:00,0.0000,     !- Field 29
     For: Weekends WinterDesignDay Holidays AllOtherDays, !- Field 31
     Until: 24:00,0.0;        !- Field 32
- 
+
   Schedule:Compact,
     BLDG_EQUIP_SCH,          !- Name
     Fraction,                !- Schedule Type Limits Name
@@ -1624,7 +1625,7 @@
     Until: 24:00,0.35,       !- Field 29
     For: Weekends WinterDesignDay Holidays AllOtherDays, !- Field 31
     Until: 24:00,0.35;       !- Field 32
- 
+
   Schedule:Compact,
     KITCHEN_ELEC_EQUIP_SCH,  !- Name
     Fraction,                !- Schedule Type Limits Name
@@ -1655,7 +1656,7 @@
     Until: 24:00,0.10,       !- Field 41
     For: Weekends WinterDesignDay Holidays AllOtherDays, !- Field 43
     Until: 24:00,0.1;        !- Field 44
- 
+
   Schedule:Compact,
     KITCHEN_GAS_EQUIP_SCH,   !- Name
     Fraction,                !- Schedule Type Limits Name
@@ -1686,7 +1687,7 @@
     Until: 24:00,0.02,       !- Field 41
     For: Weekends WinterDesignDay Holidays AllOtherDays, !- Field 43
     Until: 24:00,0.02;       !- Field 44
- 
+
   Schedule:Compact,
     BLDG_ELEVATORS,          !- Name
     Fraction,                !- Schedule Type Limits Name
@@ -1700,7 +1701,7 @@
     Until: 24:00,0.00,       !- Field 12
     For: Sunday Holidays AllOtherDays, !- Field 14
     Until: 24:00,0.00;       !- Field 15
- 
+
   Schedule:Compact,
     BLDG_OCC_SCH,            !- Name
     Fraction,                !- Schedule Type Limits Name
@@ -1728,7 +1729,7 @@
     Until: 24:00,0.00,       !- Field 35
     For: Weekends WinterDesignDay Holidays AllOtherDays, !- Field 37
     Until: 24:00,0.00;       !- Field 38
- 
+
   Schedule:Compact,
     BLDG_OCC_SCH_Extend,     !- Name
     Fraction,                !- Schedule Type Limits Name
@@ -1756,7 +1757,7 @@
     Until: 24:00,0.00,       !- Field 35
     For: Weekends WinterDesignDay Holidays AllOtherDays, !- Field 37
     Until: 24:00,0.00;       !- Field 38
- 
+
   Schedule:Compact,
     BLDG_OCC_SCH_Offices,    !- Name
     Fraction,                !- Schedule Type Limits Name
@@ -1784,7 +1785,7 @@
     Until: 24:00,0.00,       !- Field 35
     For: Weekends WinterDesignDay Holidays AllOtherDays, !- Field 37
     Until: 24:00,0.00;       !- Field 38
- 
+
   Schedule:Compact,
     BLDG_OCC_SCH_Gym,        !- Name
     Fraction,                !- Schedule Type Limits Name
@@ -1812,7 +1813,7 @@
     Until: 24:00,0.00,       !- Field 35
     For: Weekends WinterDesignDay Holidays AllOtherDays, !- Field 37
     Until: 24:00,0.00;       !- Field 38
- 
+
   Schedule:Compact,
     BLDG_OCC_SCH_Auditorium, !- Name
     Fraction,                !- Schedule Type Limits Name
@@ -1840,7 +1841,7 @@
     Until: 24:00,0.00,       !- Field 35
     For: Weekends WinterDesignDay Holidays AllOtherDays, !- Field 37
     Until: 24:00,0.00;       !- Field 38
- 
+
   Schedule:Compact,
     BLDG_OCC_SCH_Cafeteria,  !- Name
     Fraction,                !- Schedule Type Limits Name
@@ -1868,7 +1869,7 @@
     Until: 24:00,0.00,       !- Field 35
     For: Weekends WinterDesignDay Holidays AllOtherDays, !- Field 37
     Until: 24:00,0.00;       !- Field 38
- 
+
   Schedule:Compact,
     INFIL_SCH,               !- Name
     Fraction,                !- Schedule Type Limits Name
@@ -1877,7 +1878,7 @@
     Until: 07:00,1.00,       !- Field 3
     Until: 21:00,0.50,       !- Field 5
     Until: 24:00,1.00;       !- Field 7
- 
+
   Schedule:Compact,
     BLDG_SWH_SCH,            !- Name
     Fraction,                !- Schedule Type Limits Name
@@ -1950,7 +1951,7 @@
     Until: 08:00,0.03,       !- Field 121
     Until: 14:00,0.05,       !- Field 123
     Until: 24:00,0.03;       !- Field 125
- 
+
   Schedule:Compact,
     Showers_SWH_SCH,         !- Name
     Fraction,                !- Schedule Type Limits Name
@@ -1994,35 +1995,35 @@
     Until: 24:00,0.00,       !- Field 65
     For: WinterDesignDay Holidays AllOtherDays, !- Field 67
     Until: 24:00,0.00;       !- Field 68
- 
+
   Schedule:Compact,
     ALWAYS_ON,               !- Name
     On/Off,                  !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,1.00;       !- Field 3
- 
+
   Schedule:Compact,
     ALWAYS_OFF,              !- Name
     On/Off,                  !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,0.00;       !- Field 3
- 
+
   Schedule:Compact,
     WORK_EFF_SCH,            !- Name
     Fraction,                !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,0.00;       !- Field 3
- 
+
   Schedule:Compact,
     AIR_VELO_SCH,            !- Name
     Any Number,              !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,0.20;       !- Field 3
- 
+
   Schedule:Compact,
     CLOTHING_SCH,            !- Name
     Any Number,              !- Schedule Type Limits Name
@@ -2035,70 +2036,70 @@
     Through: 12/31,          !- Field 9
     For: AllDays,            !- Field 10
     Until: 24:00,1.10;       !- Field 11
- 
+
   Schedule:Compact,
     SHADING_SCH,             !- Name
     Any Number,              !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,0.00;       !- Field 3
- 
+
   Schedule:Compact,
     PlantOnSched,            !- Name
     Any Number,              !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,1.00;       !- Field 3
- 
+
   Schedule:Compact,
     FAN_SCH,                 !- Name
     Any Number,              !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,1.00;       !- Field 3
- 
+
   Schedule:Compact,
     ReheatCoilAvailSched,    !- Name
     Any Number,              !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,1.00;       !- Field 3
- 
+
   Schedule:Compact,
     CoolingCoilAvailSched,   !- Name
     Any Number,              !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,1.00;       !- Field 3
- 
+
   Schedule:Compact,
     Humidity Setpoint Schedule,  !- Name
     Humidity,                !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,65;         !- Field 3
- 
+
   Schedule:Compact,
     MinRelHumSetSch,         !- Name
     Humidity,                !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,30;         !- Field 3
- 
+
   Schedule:Compact,
     MaxRelHumSetSch,         !- Name
     Humidity,                !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,60;         !- Field 3
- 
+
   Schedule:Compact,
     Dual Zone Control Type Sched,  !- Name
     Control Type,            !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,4;          !- Field 3
- 
+
   Schedule:Compact,
     Seasonal-Reset-Supply-Air-Temp-Sch,  !- Name
     Temperature,             !- Schedule Type Limits Name
@@ -2111,28 +2112,28 @@
     Through: 12/31,          !- Field 9
     For: AllDays,            !- Field 10
     Until: 24:00,13;         !- Field 11
- 
+
   Schedule:Compact,
     CW-Loop-Temp-Schedule,   !- Name
     Temperature,             !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,6.7;        !- Field 3
- 
+
   Schedule:Compact,
     HW-Loop-Temp-Schedule,   !- Name
     Temperature,             !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,67;         !- Field 3
- 
+
   Schedule:Compact,
     Heating-Supply-Air-Temp-Sch,  !- Name
     Temperature,             !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,16;         !- Field 3
- 
+
   Schedule:Compact,
     Kitchen_Exhaust_SCH,     !- Name
     Fraction,                !- Schedule Type Limits Name
@@ -2159,7 +2160,7 @@
     Until: 24:00,0.00,       !- Field 33
     For: Weekends Holidays AllOtherDays, !- Field 35
     Until: 24:00,0.00;       !- Field 36
- 
+
   Schedule:Compact,
     Hours_of_Operation,      !- Name
     On/Off,                  !- Schedule Type Limits Name
@@ -2170,7 +2171,7 @@
     Until: 24:00,0.00,       !- Field 7
     For: Weekends WinterDesignDay Holidays AllOtherDays, !- Field 9
     Until: 24:00,0.00;       !- Field 10
- 
+
   Schedule:Compact,
     HVACOperationSchd,       !- Name
     On/Off,                  !- Schedule Type Limits Name
@@ -2181,7 +2182,7 @@
     Until: 24:00,0.00,       !- Field 7
     For: Weekends WinterDesignDay Holidays AllOtherDays, !- Field 9
     Until: 24:00,0.00;       !- Field 10
- 
+
   Schedule:Compact,
     HTGSETP_SCH,             !- Name
     Temperature,             !- Schedule Type Limits Name
@@ -2196,7 +2197,7 @@
     Until: 24:00,16,         !- Field 13
     For: Weekends Holidays AllOtherDays, !- Field 15
     Until: 24:00,16;         !- Field 16
- 
+
   Schedule:Compact,
     HTGSETP_SCH_Setback,     !- Name
     Temperature,             !- Schedule Type Limits Name
@@ -2211,7 +2212,7 @@
     Until: 24:00,16,         !- Field 13
     For: Weekends Holidays AllOtherDays, !- Field 15
     Until: 24:00,16;         !- Field 16
- 
+
   Schedule:Compact,
     CLGSETP_SCH,             !- Name
     Temperature,             !- Schedule Type Limits Name
@@ -2226,7 +2227,7 @@
     Until: 07:00,31,         !- Field 12
     Until: 21:00,25,         !- Field 14
     Until: 24:00,31;         !- Field 16
- 
+
   Schedule:Compact,
     CLGSETP_SCH_Setup,       !- Name
     Temperature,             !- Schedule Type Limits Name
@@ -2241,7 +2242,7 @@
     Until: 09:00,31,         !- Field 12
     Until: 19:00,31,         !- Field 14
     Until: 24:00,31;         !- Field 16
- 
+
   Schedule:Compact,
     MinOA_Sched,             !- Name
     On/Off,                  !- Schedule Type Limits Name
@@ -2252,7 +2253,7 @@
     Until: 24:00,0.00,       !- Field 7
     For: Weekends WinterDesignDay Holidays AllOtherDays, !- Field 9
     Until: 24:00,1.00;       !- Field 10
- 
+
   Schedule:Compact,
     MinOA_MotorizedDamper_Sched,  !- Name
     On/Off,                  !- Schedule Type Limits Name
@@ -2263,7 +2264,7 @@
     Until: 24:00,0.00,       !- Field 7
     For: Weekends WinterDesignDay Holidays AllOtherDays, !- Field 9
     Until: 24:00,0.00;       !- Field 10
- 
+
   Schedule:Compact,
     MinOA_Kitchen_Sched,     !- Name
     On/Off,                  !- Schedule Type Limits Name
@@ -2274,14 +2275,14 @@
     Until: 24:00,0.00,       !- Field 7
     For: Weekends WinterDesignDay Holidays AllOtherDays, !- Field 9
     Until: 24:00,0.00;       !- Field 10
- 
+
   Schedule:Compact,
     ACTIVITY_SCH,            !- Name
     Any Number,              !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,120;        !- Field 3
- 
+
   DaylightingDevice:Shelf,
     Lightshelf_exterior,     !- Name
     Clerestory Window,       !- Window Name
@@ -2289,11 +2290,11 @@
     Shade_hall,              !- Outside Shelf Name
     OVERHANG_CONSTRUCTION,   !- Outside Shelf Construction Name
     0.5;                     !- View Factor to Outside Shelf
- 
+
   Construction,
     OVERHANG_CONSTRUCTION,   !- Name
     OVERHANG_MATERIAL;       !- Outside Layer
- 
+
   Material,
     OVERHANG_MATERIAL,       !- Name
     MediumRough,             !- Roughness
@@ -2304,7 +2305,7 @@
     0.9,                     !- Thermal Absorptance
     0.9,                     !- Solar Absorptance
     0.30;                    !- Visible Absorptance
- 
+
   Shading:Zone:Detailed,
     Shade_hall,              !- Name
     Classroom Roof,          !- Base Surface Name
@@ -2314,16 +2315,16 @@
     0.000000,0.000000,3.352800,  !- X,Y,Z ==> Vertex 2 {m}
     0.000000,-4.57200,3.352800,  !- X,Y,Z ==> Vertex 3 {m}
     9.144000,-4.57200,3.352800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   DaylightingDevice:Shelf,
     Lightshelf_interior,     !- Name
     Daylighting Window,      !- Window Name
     Lightshelf_interior-geom;!- Inside Shelf Name
- 
+
   Construction,
     LIGHT_SHELF_CONSTRUCTION,!- Name
     LIGHTSHELF_MATERIAL;     !- Outside Layer
- 
+
   Material,
     LIGHTSHELF_MATERIAL,     !- Name
     MediumRough,             !- Roughness
@@ -2334,7 +2335,7 @@
     0.9,                     !- Thermal Absorptance
     0.9,                     !- Solar Absorptance
     0.30;                    !- Visible Absorptance
- 
+
   BuildingSurface:Detailed,
     Lightshelf_interior-geom,!- Name
     Wall,                    !- Surface Type
@@ -2350,7 +2351,7 @@
     9.144000,7.924800,2.438400,  !- X,Y,Z ==> Vertex 2 {m}
     9.144000,9.144000,2.438400,  !- X,Y,Z ==> Vertex 3 {m}
     0.000000,9.144000,2.438400;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   WindowProperty:ShadingControl,
     Shade_control-view,      !- Name
     InteriorShade,           !- Shading Type
@@ -2363,7 +2364,7 @@
     MEDIUM REFLECT - MEDIUM TRANS SHADE,  !- Shading Device Material Name
     ,                        !- Type of Slat Angle Control for Blinds
     ;                        !- Slat Angle Schedule Name
- 
+
   WindowMaterial:Shade,
     MEDIUM REFLECT - MEDIUM TRANS SHADE,  !- Name
     0.4,                     !- Solar Transmittance {dimensionless}
@@ -2380,7 +2381,7 @@
     0.5,                     !- Left-Side Opening Multiplier
     0.5,                     !- Right-Side Opening Multiplier
     0.0;                     !- Airflow Permeability {dimensionless}
- 
+
   Daylighting:Controls,
     Classroom,               !- Zone Name
     2,                       !- Total Daylighting Reference Points
@@ -2401,7 +2402,7 @@
     0.01,                    !- Minimum Light Output Fraction for Continuous Dimming Control
     0,                       !- Number of Stepped Control Steps
     0;                       !- Probability Lighting will be Reset When Needed in Manual Stepped Control
- 
+
   Output:IlluminanceMap,
     Classroom Illuminance Map,  !- Name
     Classroom,               !- Zone Name
@@ -2412,53 +2413,53 @@
     0.9144,                  !- Y Minimum Coordinate {m}
     8.2296,                  !- Y Maximum Coordinate {m}
     9;                       !- Number of Y Grid Points
- 
+
 !OutputControl:IlluminanceMap:Style,
 !  Comma;
- 
+
   Output:Variable,*,Exterior Beam Normal Illuminance,hourly;
- 
+
   Output:Variable,*,Exterior Horizontal Beam Illuminance,hourly;
- 
+
   Output:Variable,*,Exterior Horizontal Illuminance From Sky,hourly;
- 
+
   Output:Variable,*,Luminous Efficacy of Beam Solar Radiation,hourly;
- 
+
   Output:Variable,*,Luminous Efficacy of Sky Diffuse Solar Radiation,hourly;
- 
+
   Output:Variable,*,Sky Clearness for Daylighting Calculation,hourly;
- 
+
   Output:Variable,*,Sky Brightness for Daylighting Calculation,hourly;
- 
+
   Output:Variable,*,Daylight Luminance of Window As Viewed From Ref Point 1,hourly;
- 
+
   Output:Variable,*,Daylight Illum at Ref Point 1 from Window,hourly;
- 
+
   Output:Variable,*,Daylight Illum at Ref Point 1,hourly;
- 
+
   Output:Variable,*,Glare Index at Ref Point 1,hourly;
- 
+
   Output:Variable,*,Time Exceeding Glare Index Setpoint at Ref Point 1,hourly;
- 
+
   Output:Variable,*,Time Exceeding Daylight Illuminance Setpoint at Ref Point 1,hourly;
- 
+
   Output:Variable,*,Daylight Luminance of Window As Viewed From Ref Point 2,hourly;
- 
+
   Output:Variable,*,Daylight Illum at Ref Point 2 from Window,hourly;
- 
+
   Output:Variable,*,Daylight Illum at Ref Point 2,hourly;
- 
+
   Output:Variable,*,Glare Index at Ref Point 2,hourly;
- 
+
   Output:Variable,*,Time Exceeding Glare Index Setpoint at Ref Point 2,hourly;
- 
+
   Output:Variable,*,Time Exceeding Daylight Illuminance Setpoint at Ref Point 2,hourly;
- 
+
   Output:Variable,*,Ltg Power Multiplier from Daylighting,hourly;
- 
+
   Output:SQLite,
     SimpleAndTabular;        !- Option Type
 
   ProgramControl,
-    1 ; !- Number of Threads Allowed 
- 
+    1;                       !- Number of Threads Allowed
+

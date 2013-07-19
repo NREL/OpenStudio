@@ -43,6 +43,8 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCost( LifeCycleC
     lifeCycleCostParameters = modelObject.model().getUniqueModelObject<LifeCycleCostParameters>();
   }
 
+  int lengthOfStudyPeriodInMonths = 12*lifeCycleCostParameters->lengthOfStudyPeriodInYears();
+
   boost::optional<IdfObject> result;
 
   ModelObject item = modelObject.item();
@@ -67,67 +69,78 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCost( LifeCycleC
       istringEqual("Salvage", category) || 
       istringEqual("OtherCapital", category)){
 
-    // convert to LifeCycleCost::NonrecurringCosts
-    IdfObject idfObject(openstudio::IddObjectType::LifeCycleCost_NonrecurringCost);
-    idfObject.setComment(comment);
-    m_idfObjects.push_back(idfObject);
+    if (lengthOfStudyPeriodInMonths >= 12*yearsFromStart + monthsFromStart){
 
-    idfObject.setString(LifeCycleCost_NonrecurringCostFields::Name, name);
-    idfObject.setString(LifeCycleCost_NonrecurringCostFields::Category, category);
-    idfObject.setDouble(LifeCycleCost_NonrecurringCostFields::Cost, totalCost);
-    idfObject.setString(LifeCycleCost_NonrecurringCostFields::StartofCosts, "ServicePeriod");
+      // convert to LifeCycleCost::NonrecurringCosts
+      IdfObject idfObject(openstudio::IddObjectType::LifeCycleCost_NonrecurringCost);
+      idfObject.setComment(comment);
+      m_idfObjects.push_back(idfObject);
 
-    if (yearsFromStart > 0){
-      idfObject.setInt(LifeCycleCost_NonrecurringCostFields::YearsfromStart, yearsFromStart);
+      idfObject.setString(LifeCycleCost_NonrecurringCostFields::Name, name);
+      idfObject.setString(LifeCycleCost_NonrecurringCostFields::Category, category);
+      idfObject.setDouble(LifeCycleCost_NonrecurringCostFields::Cost, totalCost);
+      idfObject.setString(LifeCycleCost_NonrecurringCostFields::StartofCosts, "ServicePeriod");
+
+      if (yearsFromStart > 0){
+        idfObject.setInt(LifeCycleCost_NonrecurringCostFields::YearsfromStart, yearsFromStart);
+      }
+
+      if (monthsFromStart > 0){
+        idfObject.setInt(LifeCycleCost_NonrecurringCostFields::MonthsfromStart, monthsFromStart);
+      }
+
+      result = idfObject;
+
+      // may create a recurring cost object to handle replacement costs, shift first replacement costs back one period
+      if (istringEqual("Construction", category)){
+        name += " Replacement";
+      }else {
+        name += " Recurring";
+      }
+      category = "Replacement";
+      yearsFromStart += repeatPeriodYears;
+      monthsFromStart += repeatPeriodMonths;
+    
+    }else{
+      LOG(Warn, "LifeCycleCost '" << name << "' occurs outside the study period, will not be translated");
     }
-
-    if (monthsFromStart > 0){
-      idfObject.setInt(LifeCycleCost_NonrecurringCostFields::MonthsfromStart, monthsFromStart);
-    }
-
-    result = idfObject;
-
-    // may create a recurring cost object to handle replacement costs, shift first replacement costs back one period
-    if (istringEqual("Construction", category)){
-      name += " Replacement";
-    }else {
-      name += " Recurring";
-    }
-    category = "Replacement";
-    yearsFromStart += repeatPeriodYears;
-    monthsFromStart += repeatPeriodMonths;
   }
 
   if (hasRepeatingCosts) {
 
-    // also create a LifeCycleCost::RecurringCosts to capture replacement costs
-    IdfObject idfObject(openstudio::IddObjectType::LifeCycleCost_RecurringCosts);
-    idfObject.setComment(comment);
-    m_idfObjects.push_back(idfObject);
+    if (lengthOfStudyPeriodInMonths >= 12*yearsFromStart + monthsFromStart){
 
-    idfObject.setString(LifeCycleCost_RecurringCostsFields::Name, name);
-    idfObject.setString(LifeCycleCost_RecurringCostsFields::Category, category);
-    idfObject.setDouble(LifeCycleCost_RecurringCostsFields::Cost, totalCost);
-    idfObject.setString(LifeCycleCost_RecurringCostsFields::StartofCosts, "ServicePeriod");
+      // also create a LifeCycleCost::RecurringCosts to capture replacement costs
+      IdfObject idfObject(openstudio::IddObjectType::LifeCycleCost_RecurringCosts);
+      idfObject.setComment(comment);
+      m_idfObjects.push_back(idfObject);
 
-    if (yearsFromStart > 0){
-      idfObject.setInt(LifeCycleCost_RecurringCostsFields::YearsfromStart, yearsFromStart);
-    }
+      idfObject.setString(LifeCycleCost_RecurringCostsFields::Name, name);
+      idfObject.setString(LifeCycleCost_RecurringCostsFields::Category, category);
+      idfObject.setDouble(LifeCycleCost_RecurringCostsFields::Cost, totalCost);
+      idfObject.setString(LifeCycleCost_RecurringCostsFields::StartofCosts, "ServicePeriod");
 
-    if (monthsFromStart > 0){
-      idfObject.setInt(LifeCycleCost_RecurringCostsFields::MonthsfromStart, monthsFromStart);
-    }
+      if (yearsFromStart > 0){
+        idfObject.setInt(LifeCycleCost_RecurringCostsFields::YearsfromStart, yearsFromStart);
+      }
 
-    if (repeatPeriodYears > 0){
-      idfObject.setInt(LifeCycleCost_RecurringCostsFields::RepeatPeriodYears, repeatPeriodYears);
-    }
+      if (monthsFromStart > 0){
+        idfObject.setInt(LifeCycleCost_RecurringCostsFields::MonthsfromStart, monthsFromStart);
+      }
 
-    if (repeatPeriodMonths > 0){
-      idfObject.setInt(LifeCycleCost_RecurringCostsFields::RepeatPeriodMonths, repeatPeriodMonths);
-    }
+      if (repeatPeriodYears > 0){
+        idfObject.setInt(LifeCycleCost_RecurringCostsFields::RepeatPeriodYears, repeatPeriodYears);
+      }
 
-    if (!result){
-      result = idfObject;
+      if (repeatPeriodMonths > 0){
+        idfObject.setInt(LifeCycleCost_RecurringCostsFields::RepeatPeriodMonths, repeatPeriodMonths);
+      }
+
+      if (!result){
+        result = idfObject;
+      }
+    }else{
+      LOG(Warn, "LifeCycleCost '" << name << "' occurs outside the study period, will not be translated");
     }
   }
 
