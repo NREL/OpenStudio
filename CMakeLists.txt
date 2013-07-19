@@ -57,6 +57,7 @@ OPTION( BUILD_WITH_DAKOTA "Build with Dakota algorithm library support" OFF )
 # Build Ruby gem
 OPTION( BUILD_RUBY_GEM "Build Ruby Gem" OFF )
 
+
 IF (BUILD_V8_BINDINGS)
   IF(WIN32)
     MESSAGE(SEND_ERROR "V8 is only tested and supported on Unix like systems")
@@ -362,6 +363,7 @@ IF(BUILD_BOOST)
   ENDIF()
 ENDIF()
 
+
 IF(BUILD_BOOST)
   list(APPEND BoostLog_DEPENDS Boost)
 ENDIF()
@@ -439,7 +441,24 @@ ENDIF()
 
 IF(BUILD_QT)
   list(APPEND VTK_DEPENDS Qt)
+  list(APPEND QJSON_DEPENDS Qt)
 ENDIF()
+
+ExternalProject_Add(QJSON
+  DEPENDS ${QJSON_DEPENDS}
+  URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qjson-0.8.1.tar.gz
+  URL_MD5 4eef13da988edf8f91c260a3e1baeea9
+  PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/QJSON/CMakeLists.txt  ${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON/src COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/QJSON/QJSONConfig.cmake.in ${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/QJSON/qjson_export.h ${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON/src
+
+  CMAKE_CACHE_ARGS
+  -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
+  -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
+  -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
+  -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+  -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
+  -DQT_QMAKE_EXECUTABLE:STRING=${QT_QMAKE_EXECUTABLE}
+  -DCMAKE_INSTALL_PREFIX:STRING=${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON-install
+)
 
 
 IF(UNIX)
@@ -497,6 +516,7 @@ ExternalProject_Add( vtkCharts
 set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build)
 
 set(BoostLog_DIR "${CMAKE_BINARY_DIR}/BoostLog-prefix/src/BoostLog-build")
+set(QJSON_DIR "${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON-build")
 
 set(VTK_CHARTS_LIB_DIR ${CMAKE_BINARY_DIR}/vtkCharts-prefix/src/vtkCharts-build)
 set(VTK_CHARTS_INCLUDE_DIR ${CMAKE_BINARY_DIR}/vtkCharts-prefix/src/)
@@ -505,6 +525,7 @@ set(VTK_CHARTS_INCLUDE_DIR ${CMAKE_BINARY_DIR}/vtkCharts-prefix/src/)
 SET(OpenStudioCore_DEPENDS vtkCharts)
 LIST(APPEND OpenStudioCore_DEPENDS BoostLog)
 LIST(APPEND OpenStudioCore_DEPENDS GoogleTest)
+LIST(APPEND OpenStudioCore_DEPENDS QJSON)
 
 IF(BUILD_QT)
   LIST(APPEND OpenStudioCore_DEPENDS Qt)
@@ -583,6 +604,7 @@ ExternalProject_Add( OpenStudioCore
     -DDOXYGEN_EXECUTABLE:STRING=${DOXYGEN_EXECUTABLE}
     -DDOXYGEN_DOT_EXECUTABLE:STRING=${DOXYGEN_DOT_EXECUTABLE}
     -DBoostLog_DIR:STRING=${BoostLog_DIR}
+    -DQJSON_DIR:STRING=${QJSON_DIR}
     INSTALL_COMMAND ""
 )
 
