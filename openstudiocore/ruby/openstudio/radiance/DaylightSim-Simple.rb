@@ -518,6 +518,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
   puts "runSimulation called"
 
+  rawValues = Hash.new
   values = Hash.new
   dcVectors = Hash.new
 
@@ -544,7 +545,15 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
   # Run the simulation 
   puts "Running annual simulation"
-  rawValues = execSimulation("gendaymtx -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\"  ", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
+
+
+  # Use ascii piping on Windows, binary on unixish OS's
+  if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+    rawValues = execSimulation("gendaymtx  \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep  -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\"  ", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
+  else
+    rawValues = execSimulation("gendaymtx -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\"  ", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
+  end
+
 
   dcVectors = nil
 
@@ -566,7 +575,6 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
     simTimes.each_index do |i|
       datetime = simDateTimes[i]
       hours = ((datetime.date().dayOfYear() - 1) * 24) + datetime.time().hours()
-      puts "Extracting values for: #{simTimes[i]} hour number: #{hours}"
       values[i] = rawValues[hours]
     end
 
@@ -739,8 +747,6 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
 
         puts "Processing: #{space_name} (#{simTimes[i]})"
 
-         
-        
         
         # these must be declared in the thread otherwise will get overwritten on each loop
         tsDateTime = simTimes[i]

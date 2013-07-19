@@ -130,31 +130,31 @@ namespace openstudio{
       try {
         execAndThrowOnError("CREATE INDEX rmdTI ON ReportMeterData (TimeIndex ASC);");
       } catch (const std::exception &e) {
-        LOG(Error, "Error adding index: " + std::string(e.what()));
+        LOG(Trace, "Error adding index: " + std::string(e.what()));
       }
 
       try {
         execAndThrowOnError("CREATE INDEX rmdDI ON ReportMeterData (ReportMeterDataDictionaryIndex ASC);");
       } catch (const std::exception &e) {
-        LOG(Error, "Error adding index: " + std::string(e.what()));
+        LOG(Trace, "Error adding index: " + std::string(e.what()));
       }
 
       try {
         execAndThrowOnError("CREATE INDEX rvdTI ON ReportVariableData (TimeIndex ASC);");
       } catch (const std::exception &e) {
-        LOG(Error, "Error adding index: " + std::string(e.what()));
+        LOG(Trace, "Error adding index: " + std::string(e.what()));
       }
 
       try {
         execAndThrowOnError("CREATE INDEX rvdDI ON ReportVariableData (ReportVariableDataDictionaryIndex ASC);");
       } catch (const std::exception &e) {
-        LOG(Error, "Error adding index: " + std::string(e.what()));
+        LOG(Trace, "Error adding index: " + std::string(e.what()));
       }
 
       try {
         execAndThrowOnError("CREATE INDEX dmhdHRI ON DaylightMapHourlyData (HourlyReportIndex ASC);");
       } catch (const std::exception &e) {
-        LOG(Error, "Error adding index: " + std::string(e.what()));
+        LOG(Trace, "Error adding index: " + std::string(e.what()));
       }
     }
 
