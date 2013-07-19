@@ -28,6 +28,9 @@ SET( ${target_name}_src
   ScheduleTypeRegistry.cpp
   
   ConcreteModelObjects.hpp
+  AirConditionerVariableRefrigerantFlow.hpp
+  AirConditionerVariableRefrigerantFlow_Impl.hpp
+  AirConditionerVariableRefrigerantFlow.cpp
   AirGap.hpp
   AirGap_Impl.hpp
   AirGap.cpp
@@ -769,6 +772,7 @@ SET( ${target_name}_moc
   ModelObject_Impl.hpp
   GenericModelObject_Impl.hpp
   
+  AirConditionerVariableRefrigerantFlow_Impl.hpp
   AirGap_Impl.hpp
   AirLoopHVAC_Impl.hpp
   AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp

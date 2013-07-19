@@ -5647,7 +5647,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \required-field
   A25, \field Zone Name for Master Thermostat Location
        \type object-list
-       \object-list ZoneNames
+       \object-list ThermalZoneNames
   A26, \field Master Thermostat Priority Control Type
        \type choice
        \key LoadPriority
@@ -5657,7 +5657,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \key Scheduled
        \required-field
   A27, \field Thermostat Priority Schedule
-       \type alpha
+       \type object-list
        \object-list ScheduleNames
   A28, \field Zone Terminal Unit List
        \required-field
@@ -5665,9 +5665,9 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \object-list HVACComponentList
   A29, \field Heat Pump Waste Heat Recovery
        \type choice
-       \key No
-       \key Yes
        \required-field
+       \key Yes
+       \key No
   N11, \field Equivalent Piping Length used for Piping Correction Factor in Cooling Mode
        \type real
        \units m
