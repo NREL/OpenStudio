@@ -20,6 +20,8 @@
 #ifndef OPENSTUDIO_OSINTEGEREDIT_HPP
 #define OPENSTUDIO_OSINTEGEREDIT_HPP
 
+#include <shared_gui_components/FieldMethodTypedefs.hpp>
+
 #include <model/ModelObject.hpp>
 
 #include <utilities/core/Logger.hpp>
@@ -27,6 +29,69 @@
 #include <QLineEdit>
 
 namespace openstudio {
+
+class OSIntegerEdit2: public QLineEdit {
+  Q_OBJECT
+
+ public:
+
+  OSIntegerEdit2(QWidget * parent = 0);
+
+  virtual ~OSIntegerEdit2() {}
+
+  void bind(model::ModelObject& modelObject,
+            IntGetter get,
+            boost::optional<IntSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<NoFailAction> autosize=boost::none,
+            boost::optional<NoFailAction> autocalculate=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none,
+            boost::optional<BasicQuery> isAutosized=boost::none,
+            boost::optional<BasicQuery> isAutocalculated=boost::none);
+
+  void bind(model::ModelObject& modelObject,
+            OptionalIntGetter get,
+            boost::optional<IntSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<NoFailAction> autosize=boost::none,
+            boost::optional<NoFailAction> autocalculate=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none,
+            boost::optional<BasicQuery> isAutosized=boost::none,
+            boost::optional<BasicQuery> isAutocalculated=boost::none);
+
+  void unbind();
+
+ private slots:
+
+  void onEditingFinished();
+
+  void onModelObjectChange();
+
+  void onModelObjectRemove(Handle handle);
+
+ private:
+  boost::optional<model::ModelObject> m_modelObject;
+  boost::optional<IntGetter> m_get;
+  boost::optional<OptionalIntGetter> m_getOptional;
+  boost::optional<IntSetter> m_set;
+  boost::optional<NoFailAction> m_reset;
+  boost::optional<NoFailAction> m_autosize;
+  boost::optional<NoFailAction> m_autocalculate;
+  boost::optional<BasicQuery> m_isDefaulted;
+  boost::optional<BasicQuery> m_isAutosized;
+  boost::optional<BasicQuery> m_isAutocalculated;
+
+  bool m_isScientific;
+  boost::optional<int> m_precision;
+
+  void refreshTextAndLabel();
+
+  void setPrecision(const std::string& str);
+
+  void completeBind();
+
+  REGISTER_LOGGER("openstudio.OSIntegerEdit");
+};
 
 class OSIntegerEdit: public QLineEdit {
   Q_OBJECT

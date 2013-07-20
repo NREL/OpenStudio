@@ -73,7 +73,7 @@ OptionalModelObject ReverseTranslator::translateOtherEquipment(
       LOG(Error, "EquipmentLevel value not found for workspace object " << workspaceObject);
     }
   }else if(istringEqual("Watts/Area", *s)){
-    d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::WattsperZoneFloorArea);
+    d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::PowerperZoneFloorArea);
     if (d){
       if (d.get() < 0.0) {
         LOG(Warn,"OtherEquipment has negative energy use. Advanced feature--use with caution.");
@@ -83,7 +83,7 @@ OptionalModelObject ReverseTranslator::translateOtherEquipment(
       LOG(Error, "Watts/Area value not found for workspace object " << workspaceObject);
     }
   }else if(istringEqual("Watts/Person", *s)){
-    d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::WattsperPerson);
+    d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::PowerperPerson);
     if (d){
       if (d.get() < 0.0) {
         LOG(Warn,"OtherEquipment has negative energy use. Advanced feature--use with caution.");

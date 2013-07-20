@@ -59,16 +59,16 @@ boost::optional<IdfObject> ForwardTranslator::translateDesignDay( DesignDay & mo
     idfObject.setDouble(SizingPeriod_DesignDayFields::DailyDryBulbTemperatureRange, modelObject.dailyDryBulbTemperatureRange());
   }
 
-  // Dry-Bulb Temperature Range Modifier Schedule Name
+  // Dry-Bulb Temperature Range Modifier Day Schedule Name
   if (istringEqual(dryBulbTemperatureRangeModifierType, "MultiplierSchedule") || istringEqual(dryBulbTemperatureRangeModifierType, "DifferenceSchedule")){
     boost::optional<IdfObject> idfSchedule;
     if( boost::optional<ScheduleDay> schedule = modelObject.dryBulbTemperatureRangeModifierSchedule() ){
       idfSchedule = translateAndMapModelObject(*schedule);
     }
     if (idfSchedule){
-      idfObject.setString(SizingPeriod_DesignDayFields::DryBulbTemperatureRangeModifierScheduleName, idfSchedule->name().get());
+      idfObject.setString(SizingPeriod_DesignDayFields::DryBulbTemperatureRangeModifierDayScheduleName, idfSchedule->name().get());
     }else{
-      LOG(Error, "Dry Bulb Temperature Range Modifier Schedule Name field is required but not found");
+      LOG(Error, "Dry Bulb Temperature Range Modifier Day Schedule Name field is required but not found");
     }
   }
 

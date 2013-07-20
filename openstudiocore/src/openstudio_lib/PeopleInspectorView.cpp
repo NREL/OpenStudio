@@ -26,6 +26,7 @@
 
 #include "../shared_gui_components/OSCheckBox.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"
+#include "../shared_gui_components/OSDoubleEdit.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 
@@ -301,7 +302,9 @@ void PeopleInspectorView::refresh()
 {
 }
 
-PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
+PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, 
+                                                             const openstudio::model::Model& model,
+                                                             QWidget * parent)
   : ModelObjectInspectorView(model, true, parent)
 {
   m_isIP = isIP;
@@ -326,7 +329,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, const op
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_nameEdit = new OSLineEdit();
+  m_nameEdit = new OSLineEdit2();
   vLayout->addWidget(m_nameEdit);
 
   mainGridLayout->addLayout(vLayout,0,0,1,3, Qt::AlignTop);
@@ -340,9 +343,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, const op
 
   bool isConnected = false;
 
-  m_numberofPeopleEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_numberofPeopleEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  m_numberofPeopleEdit = new OSDoubleEdit2();
   vLayout->addWidget(m_numberofPeopleEdit);
 
   mainGridLayout->addLayout(vLayout,1,0, Qt::AlignTop|Qt::AlignLeft);
@@ -353,7 +354,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, const op
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_peopleperSpaceFloorAreaEdit = new OSQuantityEdit(m_isIP);
+  m_peopleperSpaceFloorAreaEdit = new OSQuantityEdit2("people/m^2", "people/m^2", "people/ft^2", m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_peopleperSpaceFloorAreaEdit, SLOT(onUnitSystemChange(bool)));
   BOOST_ASSERT(isConnected);
   vLayout->addWidget(m_peopleperSpaceFloorAreaEdit);
@@ -366,7 +367,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, const op
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_spaceFloorAreaperPersonEdit = new OSQuantityEdit(m_isIP);
+  m_spaceFloorAreaperPersonEdit = new OSQuantityEdit2("m^2/person", "m^2/person", "ft^2/person", m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_spaceFloorAreaperPersonEdit, SLOT(onUnitSystemChange(bool)));
   BOOST_ASSERT(isConnected);
   vLayout->addWidget(m_spaceFloorAreaperPersonEdit);
@@ -380,9 +381,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, const op
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_fractionRadiantEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_fractionRadiantEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  m_fractionRadiantEdit = new OSDoubleEdit2();
   vLayout->addWidget(m_fractionRadiantEdit);
 
   mainGridLayout->addLayout(vLayout,2,0, Qt::AlignTop|Qt::AlignLeft);
@@ -393,9 +392,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, const op
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_sensibleHeatFractionEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_sensibleHeatFractionEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  m_sensibleHeatFractionEdit = new OSDoubleEdit2();
   vLayout->addWidget(m_sensibleHeatFractionEdit);
 
   mainGridLayout->addLayout(vLayout,2,1, Qt::AlignTop|Qt::AlignLeft);
@@ -406,7 +403,7 @@ PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, const op
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_carbonDioxideGenerationRateEdit = new OSQuantityEdit(m_isIP);
+  m_carbonDioxideGenerationRateEdit = new OSQuantityEdit2("m^3/s*W", "L/s*W", "ft^3*hr/min*Btu", m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_carbonDioxideGenerationRateEdit, SLOT(onUnitSystemChange(bool)));
   BOOST_ASSERT(isConnected);
   vLayout->addWidget(m_carbonDioxideGenerationRateEdit);
@@ -444,13 +441,55 @@ void PeopleDefinitionInspectorView::onUpdate()
 
 void PeopleDefinitionInspectorView::attach(openstudio::model::PeopleDefinition& peopleDefinition)
 {
-  m_nameEdit->bind(peopleDefinition,"name");
-  m_numberofPeopleEdit->bind(peopleDefinition,"numberofPeople",m_isIP);
-  m_peopleperSpaceFloorAreaEdit->bind(peopleDefinition,"peopleperSpaceFloorArea",m_isIP);
-  m_spaceFloorAreaperPersonEdit->bind(peopleDefinition,"spaceFloorAreaperPerson",m_isIP);
-  m_fractionRadiantEdit->bind(peopleDefinition,"fractionRadiant",m_isIP);
-  m_sensibleHeatFractionEdit->bind(peopleDefinition,"sensibleHeatFraction",m_isIP);
-  m_carbonDioxideGenerationRateEdit->bind(peopleDefinition,"carbonDioxideGenerationRate",m_isIP);
+  m_peopleDefinition = peopleDefinition;
+  m_nameEdit->bind(*m_peopleDefinition,
+                   OptionalStringGetter(boost::bind(&model::PeopleDefinition::name,m_peopleDefinition.get_ptr(),true)),
+                   boost::optional<StringSetter>(boost::bind(&model::PeopleDefinition::setName,m_peopleDefinition.get_ptr(),_1)));
+  
+  // bind to PeopleDefinition methods
+  m_numberofPeopleEdit->bind(
+      *m_peopleDefinition,
+      OptionalDoubleGetter(boost::bind(&model::PeopleDefinition::numberofPeople,m_peopleDefinition.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setNumberofPeople,m_peopleDefinition.get_ptr(),_1)));
+  
+  m_peopleperSpaceFloorAreaEdit->bind(
+      m_isIP,
+      *m_peopleDefinition,
+      OptionalDoubleGetter(boost::bind(&model::PeopleDefinition::peopleperSpaceFloorArea,m_peopleDefinition.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setPeopleperSpaceFloorArea,m_peopleDefinition.get_ptr(),_1)));
+
+  m_spaceFloorAreaperPersonEdit->bind(
+      m_isIP,
+      *m_peopleDefinition,
+      OptionalDoubleGetter(boost::bind(&model::PeopleDefinition::spaceFloorAreaperPerson,m_peopleDefinition.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setSpaceFloorAreaperPerson,m_peopleDefinition.get_ptr(),_1)));
+
+  // ETH: Note that this is overkill for this dimensionless value. Should switch to OSDoubleEdit(2).
+  m_fractionRadiantEdit->bind(
+      *m_peopleDefinition,
+      DoubleGetter(boost::bind(&model::PeopleDefinition::fractionRadiant,m_peopleDefinition.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setFractionRadiant,m_peopleDefinition.get_ptr(),_1)));
+
+  m_sensibleHeatFractionEdit->bind(
+      *m_peopleDefinition,
+      OptionalDoubleGetter(boost::bind(&model::PeopleDefinition::sensibleHeatFraction,m_peopleDefinition.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setSensibleHeatFraction,m_peopleDefinition.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::PeopleDefinition::resetSensibleHeatFraction,m_peopleDefinition.get_ptr())),
+      boost::none,
+      boost::optional<NoFailAction>(boost::bind(&model::PeopleDefinition::autocalculateSensibleHeatFraction,m_peopleDefinition.get_ptr())),
+      boost::optional<BasicQuery>(boost::bind(&model::PeopleDefinition::isSensibleHeatFractionDefaulted,m_peopleDefinition.get_ptr())),
+      boost::none,
+      boost::optional<BasicQuery>(boost::bind(&model::PeopleDefinition::isSensibleHeatFractionAutocalculated,m_peopleDefinition.get_ptr())));
+
+  m_carbonDioxideGenerationRateEdit->bind(
+      m_isIP,
+      *m_peopleDefinition,
+      DoubleGetter(boost::bind(&model::PeopleDefinition::carbonDioxideGenerationRate,m_peopleDefinition.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::PeopleDefinition::setCarbonDioxideGenerationRate,m_peopleDefinition.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::PeopleDefinition::resetCarbonDioxideGenerationRate,m_peopleDefinition.get_ptr())),
+      boost::none,
+      boost::none,
+      boost::optional<BasicQuery>(boost::bind(&model::PeopleDefinition::isCarbonDioxideGenerationRateDefaulted,m_peopleDefinition.get_ptr())));
 
   this->stackedWidget()->setCurrentIndex(1);
 }
@@ -466,6 +505,7 @@ void PeopleDefinitionInspectorView::detach()
   m_fractionRadiantEdit->unbind();
   m_sensibleHeatFractionEdit->unbind();
   m_carbonDioxideGenerationRateEdit->unbind();
+  m_peopleDefinition.reset();
 }
 
 void PeopleDefinitionInspectorView::refresh()

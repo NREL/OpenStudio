@@ -268,11 +268,11 @@ namespace runmanager {
     static const char exeext[] = "";
 #endif
 
-    std::string exename = "expandobjects";
+    std::string exename = "ExpandObjects";
 
-    if (eplus.first.getMajor() && eplus.first.getMajor() >= 8)
+    if (eplus.first.getMajor() && eplus.first.getMajor() < 8)
     {
-      exename = "ExpandObjects";
+      exename = "expandobjects";
     }
 
     return openstudio::runmanager::ToolInfo(
@@ -292,7 +292,15 @@ namespace runmanager {
     static const char exeext[] = "";
 #endif
 
-    openstudio::path basementlocation = change_extension(eplus.second.binaryDir / toPath("basement"), exeext);
+    std::string basename = "Basement";
+    
+    if (eplus.first.getMajor() && eplus.first.getMajor() < 8)
+    {
+      basename = "basename";
+    }
+    
+
+    openstudio::path basementlocation = change_extension(eplus.second.binaryDir / toPath(basename), exeext);
 
     if (!boost::filesystem::exists(basementlocation))
     {
@@ -321,7 +329,15 @@ namespace runmanager {
 #else
     static const char exeext[] = "";
 #endif
-    openstudio::path slablocation = change_extension(eplus.second.binaryDir / toPath("slab"), exeext);
+
+    std::string basename = "Slab";
+    
+    if (eplus.first.getMajor() && eplus.first.getMajor() < 8)
+    {
+      basename = "slab";
+    }
+
+    openstudio::path slablocation = change_extension(eplus.second.binaryDir / toPath(basename), exeext);
 
     if (!boost::filesystem::exists(slablocation))
     {
@@ -368,11 +384,11 @@ namespace runmanager {
     static const char exeext[] = "";
 #endif
 
-    std::string exename = "energyplus";
+    std::string exename = "EnergyPlus";
 
-    if (eplus.first.getMajor() && eplus.first.getMajor() >= 8)
+    if (eplus.first.getMajor() && eplus.first.getMajor() < 8)
     {
-      exename = "EnergyPlus";
+      exename = "energyplus";
     }
 
 

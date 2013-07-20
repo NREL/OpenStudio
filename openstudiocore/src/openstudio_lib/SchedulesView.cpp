@@ -757,51 +757,72 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
 
   weekHLayout->addStretch();
 
-  m_sundayButton = new OSCheckBox();
+  m_sundayButton = new OSCheckBox2();
   m_sundayButton->setText("S");
-  m_sundayButton->bind(m_scheduleRule,"applySunday");
+  m_sundayButton->bind(
+      m_scheduleRule,
+      boost::bind(&model::ScheduleRule::applySunday,&m_scheduleRule),
+      boost::optional<BoolSetter>(boost::bind(&model::ScheduleRule::setApplySunday,&m_scheduleRule,_1)));
   weekHLayout->addWidget(m_sundayButton);
 
   weekHLayout->addSpacing(10);
 
-  m_mondayButton = new OSCheckBox();
+  m_mondayButton = new OSCheckBox2();
   m_mondayButton->setText("M");
-  m_mondayButton->bind(m_scheduleRule,"applyMonday");
+  m_mondayButton->bind(
+      m_scheduleRule,
+      boost::bind(&model::ScheduleRule::applyMonday,&m_scheduleRule),
+      boost::optional<BoolSetter>(boost::bind(&model::ScheduleRule::setApplyMonday,&m_scheduleRule,_1)));
   weekHLayout->addWidget(m_mondayButton);
 
   weekHLayout->addSpacing(10);
 
-  m_tuesdayButton = new OSCheckBox();
+  m_tuesdayButton = new OSCheckBox2();
   m_tuesdayButton->setText("T");
-  m_tuesdayButton->bind(m_scheduleRule,"applyTuesday");
+  m_tuesdayButton->bind(
+      m_scheduleRule,
+      boost::bind(&model::ScheduleRule::applyTuesday,&m_scheduleRule),
+      boost::optional<BoolSetter>(boost::bind(&model::ScheduleRule::setApplyTuesday,&m_scheduleRule,_1)));
   weekHLayout->addWidget(m_tuesdayButton);
 
   weekHLayout->addSpacing(10);
 
-  m_wednesdayButton = new OSCheckBox();
+  m_wednesdayButton = new OSCheckBox2();
   m_wednesdayButton->setText("W");
-  m_wednesdayButton->bind(m_scheduleRule,"applyWednesday");
+  m_wednesdayButton->bind(
+      m_scheduleRule,
+      boost::bind(&model::ScheduleRule::applyWednesday,&m_scheduleRule),
+      boost::optional<BoolSetter>(boost::bind(&model::ScheduleRule::setApplyWednesday,&m_scheduleRule,_1)));
   weekHLayout->addWidget(m_wednesdayButton);
 
   weekHLayout->addSpacing(10);
 
-  m_thursdayButton = new OSCheckBox();
+  m_thursdayButton = new OSCheckBox2();
   m_thursdayButton->setText("T");
-  m_thursdayButton->bind(m_scheduleRule,"applyThursday");
+  m_thursdayButton->bind(
+      m_scheduleRule,
+      boost::bind(&model::ScheduleRule::applyThursday,&m_scheduleRule),
+      boost::optional<BoolSetter>(boost::bind(&model::ScheduleRule::setApplyThursday,&m_scheduleRule,_1)));
   weekHLayout->addWidget(m_thursdayButton);
 
   weekHLayout->addSpacing(10);
 
-  m_fridayButton = new OSCheckBox();
+  m_fridayButton = new OSCheckBox2();
   m_fridayButton->setText("F");
-  m_fridayButton->bind(m_scheduleRule,"applyFriday");
+  m_fridayButton->bind(
+      m_scheduleRule,
+      boost::bind(&model::ScheduleRule::applyFriday,&m_scheduleRule),
+      boost::optional<BoolSetter>(boost::bind(&model::ScheduleRule::setApplyFriday,&m_scheduleRule,_1)));
   weekHLayout->addWidget(m_fridayButton);
 
   weekHLayout->addSpacing(10);
 
-  m_saturdayButton = new OSCheckBox();
+  m_saturdayButton = new OSCheckBox2();
   m_saturdayButton->setText("S");
-  m_saturdayButton->bind(m_scheduleRule,"applySaturday");
+  m_saturdayButton->bind(
+      m_scheduleRule,
+      boost::bind(&model::ScheduleRule::applySaturday,&m_scheduleRule),
+      boost::optional<BoolSetter>(boost::bind(&model::ScheduleRule::setApplySaturday,&m_scheduleRule,_1)));
   weekHLayout->addWidget(m_saturdayButton);
 
   ruleVLayout->addLayout(weekHLayout);

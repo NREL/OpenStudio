@@ -1,4 +1,4 @@
-!IDD_Version 1.0.1
+!IDD_Version 1.0.2
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -6178,6 +6178,8 @@ OS:Boiler:HotWater,
        \key Coal
        \key Diesel
        \key Gasoline
+       \key OtherFuel1
+       \key OtherFuel2
   N1, \field Nominal Capacity
        \type real
        \autosizable
@@ -6246,9 +6248,10 @@ OS:Boiler:HotWater,
   A8, \field Boiler Flow Mode
        \note Sets this boiler to either a variable or constant flow simulation
        \type choice
-       \default VariableFlow
        \key ConstantFlow
-       \key VariableFlow
+       \key LeavingSetpointModulated
+       \key NotModulated
+       \default NotModulated
   N9, \field Parasitic Electric Load
        \type real
        \units W
@@ -6460,9 +6463,10 @@ OS:Chiller:Electric:EIR,
   A11, \field Chiller Flow Mode
        \note Sets chilled water flow rate to either constant or variable.
        \type choice
-       \default ConstantFlow
        \key ConstantFlow
-       \key VariableFlow
+       \key LeavingSetpointModulated
+       \key NotModulated
+       \default NotModulated
   N14, \field Design Heat Recovery Water Flow Rate
        \note If non-zero, then the heat recovery inlet and outlet node names must be entered.
        \type real
@@ -9818,6 +9822,7 @@ OS:Pump:ConstantSpeed,
         \units m3/s
         \autosizable
         \ip-units gal/min
+        \minimum> 0
   N2 , \field Rated Pump Head
         \units Pa
         \default 179352
@@ -9901,6 +9906,7 @@ OS:Pump:VariableSpeed,
        \units m3/s
        \ip-units gal/min
        \default autosize
+       \minimum> 0
   N2, \field Rated Pump Head
        \note default head is 60 feet
        \type real
@@ -11005,6 +11011,7 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
        \type object-list
        \required-field
        \object-list HeatingCoilsDXSingleSpeed
+       \object-list HeatingCoilsDXVariableSpeed
   N7, \field Heating Convergence Tolerance
        \note Defines Heating convergence tolerence as a fraction of Heating load to be met.
        \type real
@@ -11023,6 +11030,7 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
        \type object-list
        \required-field
        \object-list CoolingCoilsDXSingleSpeed
+       \object-list CoolingCoilsDXVariableSpeed
   N9, \field Cooling Convergence Tolerance
        \note Defines Cooling convergence tolerence as a fraction of the Cooling load to be met.
        \type real
@@ -11155,6 +11163,7 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \type object-list
        \required-field
        \object-list CoolingCoilsDXSingleSpeed
+       \object-list CoolingCoilsDXVariableSpeed
   A11, \field Fan Placement
        \note Select fan placement as either blow through or draw through.
        \type choice
@@ -11251,11 +11260,13 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \type object-list
         \required-field
         \object-list HeatingCoilsWaterToAirHP
+        \object-list HeatingCoilsWaterToAirVSHP
    A9, \field Cooling Coil Name
         \note Needs to match in the water-to-air heatpump cooling coil object  
         \type object-list
         \required-field
         \object-list CoolingCoilsWaterToAirHP
+        \object-list CoolingCoilsWaterToAirVSHP
    N7,  \field Maximum Cycling Rate
         \note The maximum on-off cycling rate for the compressor
         \note Suggested value is 2.5 for a typical heat pump
@@ -11454,6 +11465,8 @@ OS:WaterHeater:Mixed,
        \key Gasoline
        \key Steam
        \key DistrictHeating
+       \key OtherFuel1
+       \key OtherFuel2
   N8 , \field Heater Thermal Efficiency
        \type real
        \minimum> 0.0
@@ -11478,6 +11491,8 @@ OS:WaterHeater:Mixed,
        \key Gasoline
        \key Steam
        \key DistrictHeating
+       \key OtherFuel1
+       \key OtherFuel2
   N10, \field Off Cycle Parasitic Heat Fraction to Tank
        \type real
        \minimum 0.0
@@ -11500,6 +11515,8 @@ OS:WaterHeater:Mixed,
        \key Gasoline
        \key Steam
        \key DistrictHeating
+       \key OtherFuel1
+       \key OtherFuel2
   N12, \field On Cycle Parasitic Heat Fraction to Tank
        \type real
        \minimum 0.0
@@ -12186,6 +12203,8 @@ OS:LifeCycleCost:UsePriceEscalation,
        \key FuelOil#2
        \key Propane
        \key Water
+       \key OtherFuel1
+       \key OtherFuel2
   N1, \field Escalation Start Year
        \note This field and the Escalation Start Month define the time that corresponds to Year 1 Escalation
        \note such as 2010 when the escalation rates are applied. This field and the Escalation Start Month

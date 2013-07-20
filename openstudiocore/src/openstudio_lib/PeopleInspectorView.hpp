@@ -21,6 +21,7 @@
 #define OPENSTUDIO_PEOPLEINSPECTORVIEW_H
 
 #include <openstudio_lib/ModelObjectInspectorView.hpp>
+#include <model/PeopleDefinition.hpp>
 
 class QLabel;
 class QPushButton;
@@ -28,9 +29,12 @@ class QColor;
 
 namespace openstudio {
 
+class OSDoubleEdit2;
 class OSDropZone;
 class OSLineEdit;
+class OSLineEdit2;
 class OSQuantityEdit;
+class OSQuantityEdit2;
 class OSCheckBox;
 class OSComboBox;
 
@@ -43,7 +47,6 @@ class PeopleAirVelocityScheduleVectorController;
 
 namespace model {
   class People;
-  class PeopleDefinition;
 }
 
 class PeopleInspectorView : public ModelObjectInspectorView
@@ -125,15 +128,16 @@ class PeopleDefinitionInspectorView : public ModelObjectInspectorView
 
     void refresh();
 
-    OSLineEdit* m_nameEdit;
+    OSLineEdit2* m_nameEdit;
 
-    OSQuantityEdit* m_numberofPeopleEdit;
-    OSQuantityEdit* m_peopleperSpaceFloorAreaEdit;
-    OSQuantityEdit* m_spaceFloorAreaperPersonEdit;
-    OSQuantityEdit* m_fractionRadiantEdit;
-    OSQuantityEdit* m_sensibleHeatFractionEdit;
-    OSQuantityEdit* m_carbonDioxideGenerationRateEdit;
+    OSDoubleEdit2* m_numberofPeopleEdit;
+    OSQuantityEdit2* m_peopleperSpaceFloorAreaEdit;
+    OSQuantityEdit2* m_spaceFloorAreaperPersonEdit;
+    OSDoubleEdit2* m_fractionRadiantEdit;
+    OSDoubleEdit2* m_sensibleHeatFractionEdit;
+    OSQuantityEdit2* m_carbonDioxideGenerationRateEdit;
     bool m_isIP;
+    boost::optional<model::PeopleDefinition> m_peopleDefinition;
 
     // how to handle the extensible groups
     //OSCheckBox* m_enableASHRAE55ComfortWarningsCheckBox;
