@@ -23,18 +23,14 @@
 
 #include "ContamAPI.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Optional.hpp>
+//#include <model/Model.hpp>
+#include <utilities/idf/Handle.hpp>
+//#include <utilities/core/Path.hpp>
+//#include <utilities/core/Optional.hpp>
 #include <utilities/core/Logger.hpp>
-#include <utilities/core/StringStreamLogSink.hpp>
-
-#include <utilities/units/Unit.hpp>
+#include <QMap>
 
 #include "PrjData.hpp"
-
-//class QDomDocument;
-//class QDomElement;
-//class QDomNodeList;
 
 namespace openstudio {
 
@@ -59,7 +55,15 @@ namespace contam {
     boost::optional<openstudio::model::Model> translate(const prj::Data &data, ProgressBar* progressBar = NULL);
 
   private:
-    // ProgressBar* m_progressBar;
+    void translateLevels(openstudio::model::Model &model, const prj::Data &data);
+    bool translateZones(openstudio::model::Model &model, const prj::Data &data);
+    bool translateSimpleAHS(openstudio::model::Model &model, const prj::Data &data);
+
+    ProgressBar* m_progressBar;
+    QMap<int,Handle> m_levelMap;
+    QMap<int,Handle> m_zoneMap;
+    QMap<int,Handle> m_ahsMap;
+    QMap<int,int> m_connections;
 
     REGISTER_LOGGER("openstudio.contam.ReverseTranslator");
   };
