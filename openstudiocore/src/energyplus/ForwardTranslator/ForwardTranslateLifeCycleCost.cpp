@@ -102,7 +102,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCost( LifeCycleC
       monthsFromStart += repeatPeriodMonths;
     
     }else{
-      LOG(Warn, "LifeCycleCost '" << name << "' occurs outside the study period, will not be translated");
+      //LOG(Warn, "LifeCycleCost '" << name << "' occurs outside the study period, will not be translated");
     }
   }
 
@@ -140,7 +140,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCost( LifeCycleC
         result = idfObject;
       }
     }else{
-      LOG(Warn, "LifeCycleCost '" << name << "' occurs outside the study period, will not be translated");
+      //LOG(Warn, "LifeCycleCost '" << name << "' occurs outside the study period, will not be translated");
     }
   }
 
