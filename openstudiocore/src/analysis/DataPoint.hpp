@@ -189,6 +189,16 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   void clearResults();
 
   //@}
+  /** @name Serialization */
+  //@{
+
+  std::string toJSON() const;
+
+  bool saveJSON(const openstudio::path& p, bool overwrite=false) const;
+
+  static boost::optional<DataPoint> fromJSON(const std::string json);
+
+  //@}
  protected:
   /// @cond
   typedef detail::DataPoint_Impl ImplType;

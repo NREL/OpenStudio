@@ -52,6 +52,23 @@ namespace detail {
 
 } // detail
 
+/** \class AnalysisSerializationScope
+ *  \brief Enum to indicate how much of the analysis should be written out to JSON.
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+ *  macro call is:
+ *  \code
+OPENSTUDIO_ENUM(AnalysisSerializationScope,
+    ((ProblemFormulation))
+    ((Full))
+);
+ *  \endcode
+ *  ProblemFormulation indicates that DataPoints should not be included in the serialization;
+ *  Full indicates that they should. */
+OPENSTUDIO_ENUM(AnalysisSerializationScope,
+    ((ProblemFormulation))
+    ((Full))
+);
+
 /** Analysis is a AnalysisObject that contains an entire analysis. It is constructed from a
  *  Problem, an optional Algorithm, an optional seed FileReference (an OSM or IDF file), and
  *  an optional weather FileReference (needed for IDF seeds). Analysis::addDataPoint can be
@@ -249,6 +266,18 @@ class ANALYSIS_API Analysis : public AnalysisObject {
 
   /** Returns a csv summary of all the data points in this analysis. */
   Table summaryTable() const;
+
+  //@}
+  /** @name Serialization */
+  //@{
+
+  std::string toJSON(AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
+
+  bool saveJSON(const openstudio::path& p,
+                AnalysisSerializationScope scope=AnalysisSerializationScope::Full,
+                bool overwrite=false) const;
+
+  static boost::optional<Analysis> fromJSON(const std::string json);
 
   //@}
  protected:

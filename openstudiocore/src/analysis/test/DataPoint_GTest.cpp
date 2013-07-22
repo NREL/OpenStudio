@@ -23,5 +23,26 @@
 using namespace openstudio;
 using namespace openstudio::analysis;
 
-TEST_F(AnalysisFixture, DataPoint_Constructors) {
+TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PreRun) {
+  // Create problem and analysis
+
+  // Create data point and add to analysis
+
+  // Serialize data point
+
+  // Deserialize and check results
+
+}
+
+TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
+  // Create problem
+
+  // Create "simulated" data point
+
+  // Create analysis with this "simulated" data point
+
+  // Serialize data point
+
+  // Deserialize and check results
+
 }

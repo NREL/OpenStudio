@@ -321,3 +321,19 @@ TEST_F(AnalysisFixture, Analysis_ClearAllResults) {
   EXPECT_FALSE(analysis.algorithm()->cast<DakotaAlgorithm>().restartFileReference());
   EXPECT_FALSE(analysis.algorithm()->cast<DakotaAlgorithm>().outFileReference());
 }
+
+TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRunPAT) {
+  // Create example PAT analysis
+
+  // Add data points
+
+  // Serialize Analysis with no data points
+
+  // Deserialize and check results
+
+  // Serialize Analysis with data points
+
+  // Deserialize and check results
+
+}
+
