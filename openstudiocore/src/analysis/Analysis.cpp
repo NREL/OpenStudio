@@ -34,6 +34,8 @@
 
 #include <utilities/document/Table.hpp>
 
+#include <qjson/serializer.h>
+
 #include <boost/foreach.hpp>
 
 namespace openstudio {
@@ -678,6 +680,55 @@ namespace detail {
     }
 
     return table;
+  }
+
+  bool Analysis_Impl::saveJSON(const openstudio::path& p,
+                               AnalysisSerializationScope scope,
+                               bool overwrite) const
+  {
+    QVariant json = this->toVariant(scope);
+
+    // HERE - Enforce .json ending.
+
+    // Use QFile and QIODevice serialize
+    QFile file(toQString(p));
+    if (file.open(QFile::WriteOnly)){
+      QJson::Serializer serializer;
+      bool ok(false);
+      serializer.serialize(json,file,&ok);
+      file.close();
+      if (ok) {
+        return true;
+      }
+      LOG_AND_THROW("Could not serialize Analysis to JSON format, because "
+                    << toString(serializer.errorMessage()));
+    }
+
+    LOG(Error,"Could not open file " << toString(p) << " for writing.");
+    return false;
+  }
+
+  std::ostream& Analysis_Impl::toJSON(std::ostream& os,
+                                      AnalysisSerializationScope scope) const
+  {
+    os << toJSON(scope);
+    return os;
+  }
+
+  std::string Analysis_Impl::toJSON(AnalysisSerializationScope scope) const {
+    QVariant json = this->toVariant(scope);
+
+    QJson::Serializer serializer;
+    bool ok(false);
+    QByteArray qba = serializer.serialize(json,&ok);
+
+    if (ok) {
+      return toString(QString(qba));
+    }
+
+    LOG_AND_THROW("Could not serialize Analysis to JSON format, because "
+                  << toString(serializer.errorMessage()));
+    return std::string();
   }
 
   void Analysis_Impl::onChange(ChangeType changeType) {

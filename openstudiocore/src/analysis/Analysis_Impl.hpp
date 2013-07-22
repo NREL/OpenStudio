@@ -242,6 +242,26 @@ namespace detail {
     Table summaryTable() const;
 
     //@}
+    /** @name Serialization */
+    //@{
+
+    bool saveJSON(const openstudio::path& p,
+                  AnalysisSerializationScope scope=AnalysisSerializationScope::Full,
+                  bool overwrite=false) const;
+
+    std::ostream& toJSON(std::ostream& os,
+                         AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
+
+    std::string toJSON(AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
+
+    /** Not in public class. */
+    virtual QVariant toVariant() const;
+
+    /** Not in public class. Appends DataPoints to toVariant() results if scope ==
+     *  AnalysisSerializationScope::Full. */
+    QVariant toVariant(AnalysisSerializationScope scope) const;
+
+    //@}
    signals:
     void seedChanged();
    protected:

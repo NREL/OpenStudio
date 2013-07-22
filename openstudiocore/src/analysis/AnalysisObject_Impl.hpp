@@ -132,6 +132,12 @@ namespace detail {
     }
 
     //@}
+    /** @name Serialization */
+    //@{
+
+    virtual QVariant toVariant() const=0;
+
+    //@}
 
     enum ChangeType {
       Benign,
@@ -177,6 +183,7 @@ namespace detail {
     // Intended for overriding default construction behavior, as appropriate. Example:
     // deserializing an Analysis with resultsAreInvalid or dataPointsAreInvalid.
     void setDirtyFlag();
+
    private:
     REGISTER_LOGGER("openstudio.analysis.AnalysisObject");
 
