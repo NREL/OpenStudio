@@ -304,6 +304,8 @@ SET( ${target_name}_SRC
   ThermalZonesTabView.hpp
   ThermalZonesView.cpp
   ThermalZonesView.hpp
+  UtilityBillsTabView.cpp
+  UtilityBillsTabView.hpp
   VariablesTabController.cpp
   VariablesTabController.hpp
   VariablesTabView.cpp
@@ -564,6 +566,7 @@ SET( ${target_name}_moc
   ThermalZonesTabController.hpp
   ThermalZonesTabView.hpp
   ThermalZonesView.hpp
+  UtilityBillsTabView.hpp
   VariablesTabController.hpp
   VariablesTabView.hpp
   VerticalTabWidget.hpp

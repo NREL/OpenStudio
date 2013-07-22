@@ -21,6 +21,7 @@
 
 #include <openstudio_lib/LifeCycleCostsTabView.hpp>
 #include <openstudio_lib/LocationTabView.hpp>
+#include <openstudio_lib/UtilityBillsTabView.hpp>
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
@@ -38,6 +39,9 @@ LocationTabController::LocationTabController(const model::Model & model,
 
   LifeCycleCostsView * lifeCycleCostsView = new LifeCycleCostsView(model);
   mainContentWidget()->addSubTab("Life Cycle Costs",lifeCycleCostsView,LIFE_CYCLE_COSTS);
+
+  UtilityBillsView * utilityBillsView = new UtilityBillsView(model);
+  mainContentWidget()->addSubTab("Utility Calibration",utilityBillsView,UTILITY_BILLS);
 
   QLabel * underConstructionLabel;
     
