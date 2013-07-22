@@ -12216,6 +12216,120 @@ OS:LifeCycleCost:UsePriceEscalation,
        \type real
        \begin-extensible
 
+OS:UtilityBill,
+       \extensible:7
+       \min-fields 10
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field       
+  A3, \field Fuel Type
+       \type choice
+       \required-field
+       \key Electricity
+       \key NaturalGas
+       \key Gasoline
+       \key Diesel
+       \key Coal       
+       \key FuelOil#1
+       \key FuelOil#2
+       \key Propane
+       \key Water
+       \key Steam
+       \key DistrictCooling
+       \key DistrictHeating
+  A4, \field Meter Install Location
+       \note Location the meter associated with this utility bill object is installed.
+       \type choice
+       \key Facility
+       \key Building
+       \key HVAC
+       \key Zone
+       \key System
+       \key Plant
+       \default Facility
+  A5, \field Meter Specific Install Location
+       \note Specific location the meter associated with this utility bill object is installed.
+       \note Empty field indicates no specific location.
+  A6, \field Meter End Use
+       \note Type of end use that meter is associated with.  
+       \note Empty field indicates all end uses are included.
+       \key Heating
+       \key Cooling
+       \key InteriorLights
+       \key ExteriorLights
+       \key InteriorEquipment
+       \key ExteriorEquipment
+       \key Fans
+       \key Pumps
+       \key HeatRejection
+       \key Humidifier
+       \key HeatRecovery
+       \key WaterSystems
+       \key Refrigeration
+       \key Generators
+  A7, \field Meter Specific End Use
+       \note Specific type of end use that meter is associated with.  
+       \note Empty field indicates all end uses are included.
+  A8, \field Consumption Unit
+       \note Units that fuel consumption is measured in.  Valid choices depend on Fuel Type.
+       \type choice
+       \required-field
+       \key kBtu
+       \key MBtu
+       \key kWh
+       \key MWh
+       \key Therms
+       \key Ton Hours
+       \key Tons
+       \key Lbs
+       \key kLbs
+       \key MLbs
+       \key Gallons
+       \key Liters
+       \key Cubic Feet
+       \key Cubic Meters
+       \key CCF
+       \key kCF
+       \key MCF
+  N1, \field Consumption Unit Conversion Factor
+       \note Number of J per unit of fuel consumption 
+       \note or number of m^3 per unit of water consumption.
+       \type real
+       \required-field  
+  A9, \field Peak Demand Unit
+       \note Valid choices depend on Fuel Type.  
+       \note Currently Peak demand is only supported for Electricity.
+       \type choice
+       \key W
+       \key kW
+  N2, \field Billing Period Begin Month
+       \begin-extensible
+       \type integer
+       \required-field
+       \minimum 1
+       \maximum 12
+  N3, \field Billing Period Begin Day of Month
+       \type integer
+       \required-field
+       \minimum 1
+       \maximum 31
+  N4, \field Billing Period Begin Year
+       \type integer
+       \required-field
+  N5, \field Number of Days in Billing Period
+       \type integer
+       \required-field
+       \minimum 1
+  N6, \field Billing Period Consumption
+       \type real
+  N7, \field Billing Period Peak Demand
+       \type real
+  N8; \field Billing Period Total Cost
+       \type real
+
 \group OpenStudio Output Requests
 
 OS:OutputControl:ReportingTolerances,

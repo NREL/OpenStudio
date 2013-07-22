@@ -657,6 +657,9 @@ SET( ${target_name}_src
   Version.hpp
   Version_Impl.hpp
   Version.cpp
+  UtilityBill.hpp
+  UtilityBill_Impl.hpp
+  UtilityBill.cpp
   UtilityCost_Charge_Block.hpp
   UtilityCost_Charge_Block_Impl.hpp
   UtilityCost_Charge_Block.cpp
@@ -977,6 +980,7 @@ SET( ${target_name}_moc
   TimeDependentValuation_Impl.hpp
   Timestep_Impl.hpp
   Version_Impl.hpp
+  UtilityBill_Impl.hpp
   UtilityCost_Charge_Block_Impl.hpp
   UtilityCost_Charge_Simple_Impl.hpp
   UtilityCost_Computation_Impl.hpp
@@ -1156,6 +1160,7 @@ SET( ${target_name}_test_src
   test/Surface_GTest.cpp
   test/ThermalZone_GTest.cpp
   test/TimeDependentValuation_GTest.cpp
+  test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
   test/WaterUseConnections_GTest.cpp
   test/WaterUseEquipment_GTest.cpp

@@ -200,6 +200,7 @@
 #include <model/ThermochromicGlazing.hpp>
 #include <model/TimeDependentValuation.hpp>
 #include <model/Timestep.hpp>
+#include <model/UtilityBill.hpp>
 #include <model/UtilityCost_Charge_Block.hpp>
 #include <model/UtilityCost_Charge_Simple.hpp>
 #include <model/UtilityCost_Computation.hpp>
@@ -412,6 +413,7 @@
 #include <model/ThermostatSetpointDualSetpoint_Impl.hpp>
 #include <model/TimeDependentValuation_Impl.hpp>
 #include <model/Timestep_Impl.hpp>
+#include <model/UtilityBill_Impl.hpp>
 #include <model/UtilityCost_Charge_Block_Impl.hpp>
 #include <model/UtilityCost_Charge_Simple_Impl.hpp>
 #include <model/UtilityCost_Computation_Impl.hpp>

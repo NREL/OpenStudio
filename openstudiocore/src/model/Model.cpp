@@ -365,6 +365,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ThermalZone);
     REGISTER_CONSTRUCTOR(TimeDependentValuation);
     REGISTER_CONSTRUCTOR(Timestep);
+    REGISTER_CONSTRUCTOR(UtilityBill);
     REGISTER_CONSTRUCTOR(UtilityCost_Charge_Block);
     REGISTER_CONSTRUCTOR(UtilityCost_Charge_Simple);
     REGISTER_CONSTRUCTOR(UtilityCost_Computation);
@@ -608,6 +609,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ThermalZone);
     REGISTER_COPYCONSTRUCTORS(TimeDependentValuation);
     REGISTER_COPYCONSTRUCTORS(Timestep);
+    REGISTER_COPYCONSTRUCTORS(UtilityBill);
     REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Block);
     REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Simple);
     REGISTER_COPYCONSTRUCTORS(UtilityCost_Computation);
