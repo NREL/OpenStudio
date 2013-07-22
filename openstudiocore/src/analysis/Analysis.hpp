@@ -271,11 +271,18 @@ class ANALYSIS_API Analysis : public AnalysisObject {
   /** @name Serialization */
   //@{
 
-  std::string toJSON(AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
-
   bool saveJSON(const openstudio::path& p,
                 AnalysisSerializationScope scope=AnalysisSerializationScope::Full,
                 bool overwrite=false) const;
+
+  std::ostream& toJSON(std::ostream& os,
+                       AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
+
+  std::string toJSON(AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
+
+  static boost::optional<Analysis> fromJSON(const openstudio::path& p);
+
+  static boost::optional<Analysis> fromJSON(std::istream& json);
 
   static boost::optional<Analysis> fromJSON(const std::string json);
 

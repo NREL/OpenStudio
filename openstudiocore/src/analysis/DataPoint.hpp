@@ -192,9 +192,16 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   /** @name Serialization */
   //@{
 
+  bool saveJSON(const openstudio::path& p,
+                bool overwrite=false) const;
+
+  std::ostream& toJSON(std::ostream& os) const;
+
   std::string toJSON() const;
 
-  bool saveJSON(const openstudio::path& p, bool overwrite=false) const;
+  static boost::optional<DataPoint> fromJSON(const openstudio::path& p);
+
+  static boost::optional<DataPoint> fromJSON(std::istream& json);
 
   static boost::optional<DataPoint> fromJSON(const std::string json);
 
