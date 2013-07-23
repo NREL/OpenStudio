@@ -71,6 +71,10 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    std::vector<std::string> consumptionUnitValues() const;
+
+    std::vector<std::string> peakDemandUnitValues() const;
+
     FuelType fuelType() const;
 
     InstallLocationType meterInstallLocation() const;
@@ -87,15 +91,13 @@ namespace detail {
 
     double consumptionUnitConversionFactor() const;
 
-    Quantity getConsumptionUnitConversionFactor(bool returnIP=false) const;
+    bool isConsumptionUnitConversionFactorDefaulted() const;
 
     boost::optional<std::string> peakDemandUnit() const;
 
     //@}
     /** @name Setters */
     //@{
-
-    bool setFuelType(const FuelType& fuelType);
 
     bool setMeterInstallLocation(const InstallLocationType& meterInstallLocation);
 
@@ -117,9 +119,9 @@ namespace detail {
 
     bool setConsumptionUnitConversionFactor(double consumptionUnitConversionFactor);
 
-    bool setPeakDemandUnit(const std::string& peakDemandUnit);
+    void resetConsumptionUnitConversionFactor();
 
-    void resetPeakDemandUnit();
+    bool setPeakDemandUnit(const std::string& peakDemandUnit);
 
     //@}
     /** @name Other */
@@ -143,9 +145,6 @@ namespace detail {
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.UtilityBill");
-
-    std::vector<std::string> consumptionUnitValues() const;
-    std::vector<std::string> peakDemandUnitValues() const;
   };
 
 } // detail

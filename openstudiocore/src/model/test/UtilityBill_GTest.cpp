@@ -37,7 +37,7 @@ TEST_F(ModelFixture, UtilityBill_Electricity) {
   EXPECT_FALSE(utilityBill.meterEndUse());
   EXPECT_FALSE(utilityBill.meterSpecificEndUse());
   EXPECT_EQ("kWh", utilityBill.consumptionUnit());
-  EXPECT_EQ(888, utilityBill.consumptionUnitConversionFactor());
+  EXPECT_NEAR(3600000, utilityBill.consumptionUnitConversionFactor(), 1);
   ASSERT_TRUE(utilityBill.peakDemandUnit());
   EXPECT_EQ("kW", utilityBill.peakDemandUnit().get());
   EXPECT_EQ(0, utilityBill.billingPeriods().size());
@@ -58,5 +58,12 @@ TEST_F(ModelFixture, UtilityBill_Coverage) {
     EXPECT_NE("", utilityBill.consumptionUnit());
     EXPECT_NE(0, utilityBill.consumptionUnitConversionFactor());
     EXPECT_EQ(0, utilityBill.billingPeriods().size());
+  
+    EXPECT_FALSE(utilityBill.consumptionUnitValues().empty());
+    BOOST_FOREACH(const std::string& consumptionUnit, utilityBill.consumptionUnitValues()){
+      EXPECT_TRUE(utilityBill.setConsumptionUnit(consumptionUnit));
+      EXPECT_EQ(consumptionUnit, utilityBill.consumptionUnit());
+      EXPECT_NE(0, utilityBill.consumptionUnitConversionFactor());
+    }
   }
 }

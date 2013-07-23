@@ -140,9 +140,9 @@ class MODEL_API UtilityBill : public ModelObject {
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> consumptionUnitValues();
+  std::vector<std::string> consumptionUnitValues();
 
-  static std::vector<std::string> peakDemandUnitValues();
+  std::vector<std::string> peakDemandUnitValues();
 
   /** @name Getters */
   //@{
@@ -162,6 +162,8 @@ class MODEL_API UtilityBill : public ModelObject {
   std::string consumptionUnit() const;
 
   double consumptionUnitConversionFactor() const;
+
+  bool isConsumptionUnitConversionFactorDefaulted() const;
 
   boost::optional<std::string> peakDemandUnit() const;
 
@@ -189,9 +191,9 @@ class MODEL_API UtilityBill : public ModelObject {
 
   bool setConsumptionUnitConversionFactor(double consumptionUnitConversionFactor);
 
-  bool setPeakDemandUnit(const std::string& peakDemandUnit);
+  void resetConsumptionUnitConversionFactor();
 
-  void resetPeakDemandUnit();
+  bool setPeakDemandUnit(const std::string& peakDemandUnit);
 
   //@}
   /** @name Other */

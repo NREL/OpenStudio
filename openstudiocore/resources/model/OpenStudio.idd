@@ -12229,12 +12229,11 @@ OS:UtilityBill,
        \type choice
        \required-field
        \key Electricity
-       \key NaturalGas
+       \key Gas
        \key Gasoline
-       \key Diesel
-       \key Coal       
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Diesel      
+       \key FuelOil_1
+       \key FuelOil_2
        \key Propane
        \key Water
        \key Steam
