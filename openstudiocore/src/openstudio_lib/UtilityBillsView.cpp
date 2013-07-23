@@ -17,7 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/UtilityBillsTabView.hpp>
+#include <openstudio_lib/UtilityBillsView.hpp>
+
+#include <openstudio_lib/ModelObjectListView.hpp>
 
 #include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/OSDoubleEdit.hpp"
@@ -40,21 +42,30 @@
 
 namespace openstudio {
 
-UtilityBillsTabView::UtilityBillsTabView(const model::Model & model,
-  QWidget * parent)
-  : MainTabView("Utility Calibration",true,parent)
-{
-}
+// "Utility Calibration"
 
-UtilityBillsView::UtilityBillsView(const model::Model & model)
-  : QWidget(),
+//UtilityBillsView::UtilityBillsView(const model::Model & model, QWidget * parent)
+//  : ModelSubTabView(new ModelObjectListView(IddObjectType::OS_BuildingStory, model, true, parent),// TODO use OS_UtilityBill
+//               new UtilityBillsViewInspector(model),
+//               parent)
+//{
+//}
+
+
+//**********************************************************************************************************
+
+
+UtilityBillsViewInspector::UtilityBillsViewInspector(const model::Model & model, QWidget * parent)
+  : ModelObjectInspectorView(model,
+                             true,
+                             parent),
     m_model(model),
     m_billFormatDialog(NULL)
 {
   createWidgets();
 }
 
-void UtilityBillsView::createWidgets()
+void UtilityBillsViewInspector::createWidgets()
 {
   bool isConnected = false;
 
@@ -63,11 +74,13 @@ void UtilityBillsView::createWidgets()
   QVBoxLayout * vLayout = NULL;
 
   QVBoxLayout * mainLayout = new QVBoxLayout();
+  mainLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   mainLayout->setContentsMargins(10,10,10,10);
   mainLayout->setSpacing(20);
   setLayout(mainLayout);
 
   vLayout = new QVBoxLayout();
+  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   vLayout->setSpacing(10);
 
 
@@ -77,12 +90,13 @@ void UtilityBillsView::createWidgets()
     this, SLOT(deleteBill(int)));
   Q_ASSERT(isConnected);
 
-  //m_buttonGroup->addButton(radioButton,0); // TODO need button count
+  //m_buttonGroup->addButton(radioButton,0); // TODO need to add delete button to this
   
 
   // Name
 
   vLayout = new QVBoxLayout();
+  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   vLayout->setSpacing(10);
 
   label = new QLabel();
@@ -102,10 +116,12 @@ void UtilityBillsView::createWidgets()
   // Consumption Units and Energy Demand Units
 
   QGridLayout * gridLayout = new QGridLayout();
+  gridLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   gridLayout->setContentsMargins(0,0,0,0);
   gridLayout->setSpacing(10);
 
   vLayout = new QVBoxLayout();
+  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   vLayout->setSpacing(10);
 
   label = new QLabel();
@@ -122,6 +138,7 @@ void UtilityBillsView::createWidgets()
   gridLayout->addLayout(vLayout,0,0,Qt::AlignLeft | Qt::AlignTop);
 
   vLayout = new QVBoxLayout();
+  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   vLayout->setSpacing(10);
 
   label = new QLabel();
@@ -145,6 +162,7 @@ void UtilityBillsView::createWidgets()
   // Weather File
 
   vLayout = new QVBoxLayout();
+  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   vLayout->setSpacing(10);
 
   label = new QLabel();
@@ -164,6 +182,7 @@ void UtilityBillsView::createWidgets()
   // Billing Period
 
   vLayout = new QVBoxLayout();
+  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   vLayout->setSpacing(5);
 
   label = new QLabel();
@@ -177,11 +196,13 @@ void UtilityBillsView::createWidgets()
   // Bill Widget Grid Layouts
 
   m_beforeRangeGridLayout = new QGridLayout();
+  m_beforeRangeGridLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   m_beforeRangeGridLayout->setContentsMargins(0,0,0,0);
   m_beforeRangeGridLayout->setSpacing(10);
   mainLayout->addLayout(m_beforeRangeGridLayout);
 
   m_inRangeGridLayout = new QGridLayout();
+  m_inRangeGridLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   m_inRangeGridLayout->setContentsMargins(0,0,0,0);
   m_inRangeGridLayout->setSpacing(10);
 
@@ -192,16 +213,14 @@ void UtilityBillsView::createWidgets()
   showGroupBoxIfBills();
 
   m_afterRangeGridLayout = new QGridLayout();
+  m_afterRangeGridLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   m_afterRangeGridLayout->setContentsMargins(0,0,0,0);
   m_afterRangeGridLayout->setSpacing(10);
   mainLayout->addLayout(m_afterRangeGridLayout);
 
- 
-//  mainLayout->addStretch();
-
-
   // Add Bill Button
   QHBoxLayout * hLayout = new QHBoxLayout();
+  hLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
   m_addNewBill = new QPushButton();
   m_addNewBill->setFlat(true);
@@ -215,10 +234,10 @@ void UtilityBillsView::createWidgets()
   Q_ASSERT(isConnected);
 
   label = new QLabel();
+  label->setObjectName("H2");
   label->setText("Add New Billing Period");
-  hLayout->addWidget(label,0, Qt::AlignLeft | Qt::AlignTop);
+  hLayout->addWidget(label,0, Qt::AlignLeft | Qt::AlignVCenter); // TODO verfiy text placement
 
-  //hLayout->addStretch();
   mainLayout->addLayout(hLayout);
   
   // Make Format Dialog
@@ -231,13 +250,33 @@ void UtilityBillsView::createWidgets()
 }
 
 
-void UtilityBillsView::showBillFormatDialog()
+  //QScrollArea * centralScrollArea = new QScrollArea(this);
+  //centralScrollArea->setFrameStyle(QFrame::NoFrame);
+  //centralScrollArea->setObjectName("GrayWidget");
+  //centralScrollArea->setWidgetResizable(true);
+  //centralScrollArea->setWidget(m_centralWidget);
+
+  //// The right pane
+
+  //m_rightScrollArea = new QScrollArea(this);
+  //m_rightScrollArea->setFrameStyle(QFrame::NoFrame);
+  //m_rightScrollArea->setObjectName("GrayWidget");
+  //m_rightScrollArea->setWidgetResizable(true);
+
+  //QSplitter * splitter = new QSplitter(this);
+  //splitter->setOrientation(Qt::Horizontal);
+  //splitter->addWidget(leftPaneWidget);
+  //splitter->addWidget(centralScrollArea);
+  //splitter->addWidget(m_rightScrollArea);
+
+
+void UtilityBillsViewInspector::showBillFormatDialog()
 {
   m_billFormatDialog->show();
 }
 
 
-void UtilityBillsView::showGroupBoxIfBills()
+void UtilityBillsViewInspector::showGroupBoxIfBills()
 {
   if(m_inRangeGridLayout->rowCount() > 0){
     m_groupBox->show();
@@ -247,29 +286,29 @@ void UtilityBillsView::showGroupBoxIfBills()
   }
 }
 
-void UtilityBillsView::showAddButton()
+void UtilityBillsViewInspector::showAddButton()
 {
   m_addNewBill->show();
 }
 
-void UtilityBillsView::hideAddButton()
+void UtilityBillsViewInspector::hideAddButton()
 {
   m_addNewBill->hide();
 }
 
-void UtilityBillsView::enableAddButton()
+void UtilityBillsViewInspector::enableAddButton()
 {
   m_addNewBill->setEnabled(true);
 }
 
-void UtilityBillsView::disableAddButton()
+void UtilityBillsViewInspector::disableAddButton()
 {
   m_addNewBill->setEnabled(false);
 }
 
 ////// SLOTS ///////
 
-void UtilityBillsView::addBill(bool checked)
+void UtilityBillsViewInspector::addBill(bool checked)
 {
   if(m_sortedBills.size() == 0){
     showBillFormatDialog();
@@ -278,11 +317,11 @@ void UtilityBillsView::addBill(bool checked)
   UtilityBillWidget * utilityBillWidget = new UtilityBillWidget(m_inRangeGridLayout,m_billFormat,m_showPeak);
 }
 
-void UtilityBillsView::deleteBill(int index)
+void UtilityBillsViewInspector::deleteBill(int index)
 {
 }
 
-void UtilityBillsView::setBillFormat(BillFormat billFormat)
+void UtilityBillsViewInspector::setBillFormat(BillFormat billFormat)
 {
   m_billFormat = billFormat;
 }
@@ -329,6 +368,7 @@ void UtilityBillWidget::createWidgets(QGridLayout * gridLayout,
   QVBoxLayout * vLayout = NULL;
   
   vLayout = new QVBoxLayout();
+  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
   label = new QLabel();
   label->setText("Energy Use (kWh)");
@@ -340,10 +380,10 @@ void UtilityBillWidget::createWidgets(QGridLayout * gridLayout,
   //m_energyUseDoubleEdit->bind();
   vLayout->addWidget(m_energyUseDoubleEdit);
 
-//  vLayout->addStretch();
   gridLayout->addLayout(vLayout,rowIndex,++columnIndex,Qt::AlignLeft | Qt::AlignTop);
 
   vLayout = new QVBoxLayout();
+  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
   label = new QLabel();
   label->setText("Peak (kW)");
@@ -355,11 +395,11 @@ void UtilityBillWidget::createWidgets(QGridLayout * gridLayout,
   //m_peaklDoubleEdit->bind();
   vLayout->addWidget(m_peaklDoubleEdit);
 
-//  vLayout->addStretch();
   gridLayout->addLayout(vLayout,rowIndex,++columnIndex,Qt::AlignLeft | Qt::AlignTop);
 
 
   vLayout = new QVBoxLayout();
+  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
   label = new QLabel();
   label->setText("Cost");
@@ -371,11 +411,11 @@ void UtilityBillWidget::createWidgets(QGridLayout * gridLayout,
   //m_costDoubleEdit->bind();
   vLayout->addWidget(m_costDoubleEdit);
 
-//  vLayout->addStretch();
   gridLayout->addLayout(vLayout,rowIndex,++columnIndex,Qt::AlignLeft | Qt::AlignTop);
 
   
   vLayout = new QVBoxLayout();
+  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
   label = new QLabel();
   vLayout->addWidget(label);
@@ -383,7 +423,6 @@ void UtilityBillWidget::createWidgets(QGridLayout * gridLayout,
   m_deleteBillWidget = new SofterRemoveButton();
   vLayout->addWidget(m_deleteBillWidget);
   
-//  vLayout->addStretch();
   gridLayout->addLayout(vLayout,rowIndex,++columnIndex,Qt::AlignLeft | Qt::AlignTop);
 
 
@@ -393,7 +432,8 @@ void UtilityBillWidget::createWidgets(QGridLayout * gridLayout,
 void UtilityBillWidget::getStartDate(QGridLayout * gridLayout, int & rowIndex, int & columnIndex)
 {
   QVBoxLayout * vLayout = new QVBoxLayout();
-  
+  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+
   m_startDateLbl = new QLabel();
   m_startDateLbl->setText("Start Date");
   m_startDateLbl->setObjectName("H2");
@@ -404,9 +444,9 @@ void UtilityBillWidget::getStartDate(QGridLayout * gridLayout, int & rowIndex, i
   m_startDateEdit->setFixedWidth(OS_UTILITY_WIDTH);
   vLayout->addWidget(m_startDateEdit);
 
-bool isConnected = connect(m_startDateEdit,SIGNAL(dateChanged(const QDate &)),this,SIGNAL(dstStartDateChanged(const QDate &)));
+  bool isConnected = connect(m_startDateEdit,SIGNAL(dateChanged(const QDate &)),
+    this,SIGNAL(dstStartDateChanged(const QDate &)));
 
-//  vLayout->addStretch();
 
   gridLayout->addLayout(vLayout,rowIndex,++columnIndex,Qt::AlignLeft| Qt::AlignTop);
 }
@@ -415,6 +455,7 @@ void UtilityBillWidget::getEndDate(QGridLayout * gridLayout, int & rowIndex, int
 {
   
   QVBoxLayout * vLayout = new QVBoxLayout();
+  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
   m_endDateLbl = new QLabel();
   m_endDateLbl->setText("End Date");
@@ -427,9 +468,8 @@ void UtilityBillWidget::getEndDate(QGridLayout * gridLayout, int & rowIndex, int
   //m_endDateEdit->bind(); not available in an OS object
   vLayout->addWidget(m_endDateEdit);
 
-  connect(m_endDateEdit,SIGNAL(dateChanged(const QDate &)),this,SIGNAL(dstEndDateChanged(const QDate &)));
-
-//  vLayout->addStretch();
+  connect(m_endDateEdit,SIGNAL(dateChanged(const QDate &)),
+    this,SIGNAL(dstEndDateChanged(const QDate &)));
 
   gridLayout->addLayout(vLayout,rowIndex,++columnIndex,Qt::AlignLeft | Qt::AlignTop);
 }
@@ -437,6 +477,7 @@ void UtilityBillWidget::getEndDate(QGridLayout * gridLayout, int & rowIndex, int
 void UtilityBillWidget::getBillingPeriod(QGridLayout * gridLayout, int & rowIndex, int & columnIndex)
 {
   QVBoxLayout * vLayout = new QVBoxLayout();
+  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
   m_billingPeriodIntLbl = new QLabel();
   m_billingPeriodIntLbl->setText("Billing Period Days");
@@ -447,8 +488,6 @@ void UtilityBillWidget::getBillingPeriod(QGridLayout * gridLayout, int & rowInde
   m_billingPeriodIntEdit->setFixedWidth(OS_UTILITY_WIDTH);
   //m_billingPeriodIntEdit->bind();
   vLayout->addWidget(m_billingPeriodIntEdit);
-
-  //vLayout->addStretch();
 
   gridLayout->addLayout(vLayout,rowIndex,++columnIndex,Qt::AlignLeft | Qt::AlignTop);
 }
@@ -523,7 +562,7 @@ void BillFormatDialog::createLayout()
   buttonGroup->button(0)->click();
   Q_ASSERT(buttonGroup->checkedId() != -1);
   setBillFormat(buttonGroup->checkedId());
-//  upperLayout()->addStretch();
+
 }
 
 void BillFormatDialog::setBillFormat(int index)

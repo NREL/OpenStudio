@@ -20,7 +20,9 @@
 #ifndef OPENSTUDIO_UTILITYBILLSTABVIEW_H
 #define OPENSTUDIO_UTILITYBILLSTABVIEW_H
 
-#include <openstudio_lib/MainTabView.hpp>
+#include <openstudio_lib/ModelObjectInspectorView.hpp>
+
+#include <openstudio_lib/ModelSubTabView.hpp>
 
 #include "../shared_gui_components/OSDialog.hpp"
 
@@ -33,6 +35,7 @@ class QDate;
 class QDateEdit;
 class QGridLayout;
 class QGroupBox;
+class QLabel;
 class QPushButton;
 class QScrollArea;
 
@@ -54,15 +57,28 @@ enum BillFormat{
   ENDDATE_NUMDAYS
 };
 
-class UtilityBillsView : public QWidget
+//class UtilityBillsView : public ModelSubTabView
+//{
+//  Q_OBJECT
+//
+//public:
+//
+//  UtilityBillsView(const model::Model & model,
+//    QWidget * parent = 0);
+//  
+//  virtual ~UtilityBillsView() {}
+//
+//};
+
+class UtilityBillsViewInspector : public ModelObjectInspectorView
 {
   Q_OBJECT
 
 public:
 
-  UtilityBillsView(const model::Model & model);
+  UtilityBillsViewInspector(const model::Model & model, QWidget * parent = 0);
   
-  virtual ~UtilityBillsView() {}
+  virtual ~UtilityBillsViewInspector() {}
 
 private:
 
@@ -107,24 +123,6 @@ private slots:
   void addBill(bool checked);
   void deleteBill(int index);
   void setBillFormat(BillFormat billFormat);
-
-};
-
-class UtilityBillsTabView : public MainTabView
-{
-
-  Q_OBJECT
-
-public:
-
-  UtilityBillsTabView(const model::Model & model,
-                        QWidget * parent = 0);
-
-  virtual ~UtilityBillsTabView() {}
-
-private:
-
-  UtilityBillsView * m_utilityBillsView;
 
 };
 
