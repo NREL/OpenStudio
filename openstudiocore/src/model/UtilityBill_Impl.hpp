@@ -34,6 +34,8 @@ class EndUseCategoryType;
 
 namespace model {
 
+class BillingPeriod;
+
 namespace detail {
 
   class MODEL_API UtilityBill_Impl : public ModelObject_Impl {
@@ -89,8 +91,6 @@ namespace detail {
 
     boost::optional<std::string> peakDemandUnit() const;
 
-    // TODO: Handle this object's extensible fields.
-
     //@}
     /** @name Setters */
     //@{
@@ -121,11 +121,23 @@ namespace detail {
 
     void resetPeakDemandUnit();
 
-    // TODO: Handle this object's extensible fields.
-
     //@}
     /** @name Other */
     //@{
+
+    Meter meter() const;
+
+    std::vector<BillingPeriod> billingPeriods() const;
+
+    void clearBillingPeriods();
+
+    BillingPeriod addBillingPeriod();
+
+    void sortBillingPeriods();
+
+    boost::optional<double> CVRMSE() const;
+
+    boost::optional<double> NMBE() const;
 
     //@}
    protected:

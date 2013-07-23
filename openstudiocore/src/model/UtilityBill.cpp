@@ -19,11 +19,15 @@
 
 #include <model/UtilityBill.hpp>
 #include <model/UtilityBill_Impl.hpp>
+#include <model/Meter.hpp>
+#include <model/Meter_Impl.hpp>
+#include <model/Model.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_UtilityBill_FieldEnums.hxx>
 
 #include <utilities/Data/DataEnums.hpp>
+#include <utilities/time/Date.hpp>
 
 #include <utilities/core/Assert.hpp>
 
@@ -188,7 +192,154 @@ namespace detail {
     return UtilityBill::peakDemandUnitValues();
   }
 
+  Meter UtilityBill_Impl::meter() const{
+    BOOST_ASSERT(false);
+    return Meter(this->model());
+  }
+
+  std::vector<BillingPeriod> UtilityBill_Impl::billingPeriods() const
+  {
+    BOOST_ASSERT(false);
+    return std::vector<BillingPeriod>();
+  }
+
+  void UtilityBill_Impl::clearBillingPeriods()
+  {
+    BOOST_ASSERT(false);
+  }
+
+  BillingPeriod UtilityBill_Impl::addBillingPeriod()
+  {
+    BOOST_ASSERT(false);
+    boost::shared_ptr<openstudio::detail::IdfObject_Impl> p = shared_from_this();
+    return BillingPeriod(boost::dynamic_pointer_cast<detail::UtilityBill_Impl>(p), (unsigned)0);
+  }
+
+  void UtilityBill_Impl::sortBillingPeriods()
+  {
+    BOOST_ASSERT(false);
+  }
+
+  boost::optional<double> UtilityBill_Impl::CVRMSE() const
+  {
+    BOOST_ASSERT(false);
+    return boost::none;
+  }
+
+  boost::optional<double> UtilityBill_Impl::NMBE() const
+  {
+    BOOST_ASSERT(false);
+    return boost::none;
+  }
+
 } // detail
+
+
+Date BillingPeriod::startDate() const
+{
+  BOOST_ASSERT(false);
+  return Date(1,1);
+}
+
+Date BillingPeriod::endDate() const
+{
+  BOOST_ASSERT(false);
+  return Date(1,1);
+}
+
+unsigned BillingPeriod::numberOfDays() const
+{
+  BOOST_ASSERT(false);
+  return 0;
+}
+
+bool BillingPeriod::setStartDate(const Date& startDate)
+{
+  BOOST_ASSERT(false);
+  return false;
+}
+
+bool BillingPeriod::setEndDate(const Date& endDate)
+{
+  BOOST_ASSERT(false);
+  return false;
+}
+
+bool BillingPeriod::setNumberOfDays(unsigned numberOfDays)
+{
+  BOOST_ASSERT(false);
+  return false;
+}
+
+bool BillingPeriod::withinRunPeriod() const
+{
+  BOOST_ASSERT(false);
+  return boost::none;
+}
+
+bool BillingPeriod::withinPeriodicRunPeriod() const
+{
+  BOOST_ASSERT(false);
+  return boost::none;
+}
+
+bool BillingPeriod::overlapsRunPeriod() const
+{
+  BOOST_ASSERT(false);
+  return boost::none;
+}
+
+boost::optional<double> BillingPeriod::CVRMSE() const
+{
+  BOOST_ASSERT(false);
+  return boost::none;
+}
+
+boost::optional<double> BillingPeriod::NMBE() const
+{
+  BOOST_ASSERT(false);
+  return boost::none;
+}
+
+boost::optional<double> BillingPeriod::consumption() const
+{
+  BOOST_ASSERT(false);
+  return boost::none;
+}
+
+boost::optional<double> BillingPeriod::demand() const
+{
+  BOOST_ASSERT(false);
+  return boost::none;
+}
+
+boost::optional<double> BillingPeriod::totalCost() const
+{
+  BOOST_ASSERT(false);
+  return boost::none;
+}
+
+boost::optional<double> BillingPeriod::modelConsumption() const
+{
+  BOOST_ASSERT(false);
+  return boost::none;
+}
+
+boost::optional<double> BillingPeriod::modelDemand() const
+{
+  BOOST_ASSERT(false);
+  return boost::none;
+}
+
+boost::optional<double> BillingPeriod::modelTotalCost() const
+{
+  BOOST_ASSERT(false);
+  return boost::none;
+}
+
+BillingPeriod::BillingPeriod(boost::shared_ptr<detail::UtilityBill_Impl> impl,unsigned index)
+  : ModelExtensibleGroup(impl, index)
+{}
 
 UtilityBill::UtilityBill(const FuelType& fuelType, const Model& model)
   : ModelObject(UtilityBill::iddObjectType(),model)
@@ -302,6 +453,34 @@ bool UtilityBill::setPeakDemandUnit(const std::string& peakDemandUnit) {
 
 void UtilityBill::resetPeakDemandUnit() {
   getImpl<detail::UtilityBill_Impl>()->resetPeakDemandUnit();
+}
+
+Meter UtilityBill::meter() const{
+  return getImpl<detail::UtilityBill_Impl>()->meter();
+}
+
+std::vector<BillingPeriod> UtilityBill::billingPeriods() const{
+  return getImpl<detail::UtilityBill_Impl>()->billingPeriods();
+}
+
+void UtilityBill::clearBillingPeriods(){
+  getImpl<detail::UtilityBill_Impl>()->clearBillingPeriods();
+}
+
+BillingPeriod UtilityBill::addBillingPeriod(){
+  return getImpl<detail::UtilityBill_Impl>()->addBillingPeriod();
+}
+
+void UtilityBill::sortBillingPeriods(){
+  getImpl<detail::UtilityBill_Impl>()->sortBillingPeriods();
+}
+
+boost::optional<double> UtilityBill::CVRMSE() const{
+  return getImpl<detail::UtilityBill_Impl>()->CVRMSE();
+}
+
+boost::optional<double> UtilityBill::NMBE() const{
+  return getImpl<detail::UtilityBill_Impl>()->NMBE();
 }
 
 /// @cond
