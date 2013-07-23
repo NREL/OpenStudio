@@ -20,7 +20,9 @@ namespace detail {
 
   std::string JSON::toJSON(const QVariant &t_variant)
   {
-    QJson::Serializer& serializer = jsonSerializer();
+    QJson::Serializer serializer;
+    configureJsonSerializer(serializer);
+
     bool ok = false;
     QByteArray qba = serializer.serialize(t_variant, &ok);
 

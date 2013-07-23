@@ -21,13 +21,11 @@
 
 namespace openstudio {
 
-QJson::Serializer& jsonSerializer() {
-  static QJson::Serializer serializer;
+void configureJsonSerializer(QJson::Serializer& serializer) {
 
   // pretty print json so it is easier to debug
   serializer.setIndentMode(QJson::IndentFull);
 
-  return serializer;
 }
 
 } // openstudio

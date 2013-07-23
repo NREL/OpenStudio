@@ -25,7 +25,7 @@
 namespace openstudio {
 
 /** Helper method to standardize JSON serialization settings. */
-QJson::Serializer& jsonSerializer();
+void configureJsonSerializer(QJson::Serializer& serializer);
 
 }
 

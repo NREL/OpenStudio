@@ -695,10 +695,13 @@ namespace detail {
     // Use QFile and QIODevice serialize
     QFile file(toQString(p));
     if (file.open(QFile::WriteOnly)){
-      QJson::Serializer& serializer = jsonSerializer();
+      QJson::Serializer serializer;
+      configureJsonSerializer(serializer);
+
       bool ok(false);
       serializer.serialize(json,&file,&ok);
       file.close();
+
       if (ok) {
         return true;
       }
@@ -720,7 +723,9 @@ namespace detail {
   std::string Analysis_Impl::toJSON(AnalysisSerializationScope scope) const {
     QVariant json = this->toVariant(scope);
 
-    QJson::Serializer& serializer = jsonSerializer();
+    QJson::Serializer serializer;
+    configureJsonSerializer(serializer);
+
     bool ok(false);
     QByteArray qba = serializer.serialize(json,&ok);
 
@@ -731,6 +736,21 @@ namespace detail {
     LOG_AND_THROW("Could not serialize Analysis to JSON format, because "
                   << toString(serializer.errorMessage()));
     return std::string();
+  }
+
+  QVariant Analysis_Impl::toVariant() const {
+    // HERE
+  }
+
+  QVariant Analysis_Impl::toVariant(AnalysisSerializationScope scope) const {
+    QVariant result = toVariant();
+
+    if (scope == AnalysisSerializationScope::Full) {
+      // add data points to result
+      // HERE
+    }
+
+    return result;
   }
 
   void Analysis_Impl::onChange(ChangeType changeType) {
