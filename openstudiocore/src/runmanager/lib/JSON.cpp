@@ -4,8 +4,9 @@
 #include "JobFactory.hpp"
 #include "WorkItem.hpp"
 
+#include <utilities/core/Json.hpp>
+
 #include <qjson/parser.h>
-#include <qjson/serializer.h>
 
 namespace openstudio {
 namespace runmanager {
@@ -19,7 +20,7 @@ namespace detail {
 
   std::string JSON::toJSON(const QVariant &t_variant)
   {
-    QJson::Serializer serializer;
+    QJson::Serializer& serializer = jsonSerializer();
     bool ok = false;
     QByteArray qba = serializer.serialize(t_variant, &ok);
 

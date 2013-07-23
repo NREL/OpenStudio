@@ -34,7 +34,8 @@
 
 #include <utilities/document/Table.hpp>
 
-#include <qjson/serializer.h>
+#include <utilities/core/Json.hpp>
+#include <utilities/core/PathHelpers.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -682,20 +683,21 @@ namespace detail {
     return table;
   }
 
-  bool Analysis_Impl::saveJSON(const openstudio::path& p,
+  bool Analysis_Impl::saveJSON(openstudio::path p,
                                AnalysisSerializationScope scope,
                                bool overwrite) const
   {
     QVariant json = this->toVariant(scope);
 
-    // HERE - Enforce .json ending.
+    // Ensures file extension is .json. Warns if there is a mismatch.
+    p = setFileExtension(p,"json",true);
 
     // Use QFile and QIODevice serialize
     QFile file(toQString(p));
     if (file.open(QFile::WriteOnly)){
-      QJson::Serializer serializer;
+      QJson::Serializer& serializer = jsonSerializer();
       bool ok(false);
-      serializer.serialize(json,file,&ok);
+      serializer.serialize(json,&file,&ok);
       file.close();
       if (ok) {
         return true;
@@ -718,7 +720,7 @@ namespace detail {
   std::string Analysis_Impl::toJSON(AnalysisSerializationScope scope) const {
     QVariant json = this->toVariant(scope);
 
-    QJson::Serializer serializer;
+    QJson::Serializer& serializer = jsonSerializer();
     bool ok(false);
     QByteArray qba = serializer.serialize(json,&ok);
 
@@ -979,6 +981,23 @@ void Analysis::updateDakotaAlgorithm(const runmanager::Job& completedDakotaJob) 
 
 Table Analysis::summaryTable() const {
   return getImpl<detail::Analysis_Impl>()->summaryTable();
+}
+
+bool Analysis::saveJSON(const openstudio::path& p,
+                        AnalysisSerializationScope scope,
+                        bool overwrite) const
+{
+  return getImpl<detail::Analysis_Impl>()->saveJSON(p,scope,overwrite);
+}
+
+std::ostream& Analysis::toJSON(std::ostream& os,
+                               AnalysisSerializationScope scope) const
+{
+  return getImpl<detail::Analysis_Impl>()->toJSON(os,scope);
+}
+
+std::string Analysis::toJSON(AnalysisSerializationScope scope) const {
+  return getImpl<detail::Analysis_Impl>()->toJSON(scope);
 }
 
 /// @cond

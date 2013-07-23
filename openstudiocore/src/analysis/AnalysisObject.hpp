@@ -24,6 +24,7 @@
 
 #include <utilities/core/UUID.hpp>
 #include <utilities/core/Logger.hpp>
+#include <utilities/core/Path.hpp>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>

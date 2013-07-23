@@ -23,6 +23,7 @@
 #include <analysis/AnalysisAPI.hpp>
 #include <analysis/AnalysisObject.hpp>
 
+#include <utilities/core/Enum.hpp>
 #include <utilities/core/Path.hpp>
 
 #include <QVariant>

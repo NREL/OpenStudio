@@ -245,7 +245,7 @@ namespace detail {
     /** @name Serialization */
     //@{
 
-    bool saveJSON(const openstudio::path& p,
+    bool saveJSON(openstudio::path p,
                   AnalysisSerializationScope scope=AnalysisSerializationScope::Full,
                   bool overwrite=false) const;
 
