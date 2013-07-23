@@ -44,28 +44,29 @@ namespace openstudio {
 
 // "Utility Calibration"
 
-//UtilityBillsView::UtilityBillsView(const model::Model & model, QWidget * parent)
-//  : ModelSubTabView(new ModelObjectListView(IddObjectType::OS_BuildingStory, model, true, parent),// TODO use OS_UtilityBill
-//               new UtilityBillsViewInspector(model),
-//               parent)
-//{
-//}
+UtilityBillsView::UtilityBillsView(const model::Model & model, QWidget * parent)
+  : ModelSubTabView(new ModelObjectListView(IddObjectType::OS_BuildingStory, model, true, parent),// TODO use OS_UtilityBill
+               new UtilityBillsInspectorView(model,true),
+               parent)
+{
+}
 
 
 //**********************************************************************************************************
 
 
-UtilityBillsViewInspector::UtilityBillsViewInspector(const model::Model & model, QWidget * parent)
+UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
+                                                     bool addScrollArea,
+                                                     QWidget * parent)
   : ModelObjectInspectorView(model,
                              true,
                              parent),
-    m_model(model),
     m_billFormatDialog(NULL)
 {
   createWidgets();
 }
 
-void UtilityBillsViewInspector::createWidgets()
+void UtilityBillsInspectorView::createWidgets()
 {
   bool isConnected = false;
 
@@ -249,7 +250,7 @@ void UtilityBillsViewInspector::createWidgets()
   Q_ASSERT(isConnected);
 }
 
-
+  // TODO
   //QScrollArea * centralScrollArea = new QScrollArea(this);
   //centralScrollArea->setFrameStyle(QFrame::NoFrame);
   //centralScrollArea->setObjectName("GrayWidget");
@@ -270,13 +271,32 @@ void UtilityBillsViewInspector::createWidgets()
   //splitter->addWidget(m_rightScrollArea);
 
 
-void UtilityBillsViewInspector::showBillFormatDialog()
+
+//void UtilityBillsInspectorView::onSelectItem(OSItem *item)
+//{
+//}
+
+//void UtilityBillsInspectorView::onClearSelection()
+//{
+//}
+
+void UtilityBillsInspectorView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
+{
+  // TODO implement
+}
+
+void UtilityBillsInspectorView::onUpdate()
+{
+  // TODO implement
+}
+
+void UtilityBillsInspectorView::showBillFormatDialog()
 {
   m_billFormatDialog->show();
 }
 
 
-void UtilityBillsViewInspector::showGroupBoxIfBills()
+void UtilityBillsInspectorView::showGroupBoxIfBills()
 {
   if(m_inRangeGridLayout->rowCount() > 0){
     m_groupBox->show();
@@ -286,29 +306,29 @@ void UtilityBillsViewInspector::showGroupBoxIfBills()
   }
 }
 
-void UtilityBillsViewInspector::showAddButton()
+void UtilityBillsInspectorView::showAddButton()
 {
   m_addNewBill->show();
 }
 
-void UtilityBillsViewInspector::hideAddButton()
+void UtilityBillsInspectorView::hideAddButton()
 {
   m_addNewBill->hide();
 }
 
-void UtilityBillsViewInspector::enableAddButton()
+void UtilityBillsInspectorView::enableAddButton()
 {
   m_addNewBill->setEnabled(true);
 }
 
-void UtilityBillsViewInspector::disableAddButton()
+void UtilityBillsInspectorView::disableAddButton()
 {
   m_addNewBill->setEnabled(false);
 }
 
 ////// SLOTS ///////
 
-void UtilityBillsViewInspector::addBill(bool checked)
+void UtilityBillsInspectorView::addBill(bool checked)
 {
   if(m_sortedBills.size() == 0){
     showBillFormatDialog();
@@ -317,11 +337,11 @@ void UtilityBillsViewInspector::addBill(bool checked)
   UtilityBillWidget * utilityBillWidget = new UtilityBillWidget(m_inRangeGridLayout,m_billFormat,m_showPeak);
 }
 
-void UtilityBillsViewInspector::deleteBill(int index)
+void UtilityBillsInspectorView::deleteBill(int index)
 {
 }
 
-void UtilityBillsViewInspector::setBillFormat(BillFormat billFormat)
+void UtilityBillsInspectorView::setBillFormat(BillFormat billFormat)
 {
   m_billFormat = billFormat;
 }

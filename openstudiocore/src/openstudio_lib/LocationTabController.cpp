@@ -21,7 +21,7 @@
 
 #include <openstudio_lib/LifeCycleCostsTabView.hpp>
 #include <openstudio_lib/LocationTabView.hpp>
-#include <openstudio_lib/UtilityBillsTabView.hpp>
+#include <openstudio_lib/UtilityBillsView.hpp>
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>

@@ -57,28 +57,42 @@ enum BillFormat{
   ENDDATE_NUMDAYS
 };
 
-//class UtilityBillsView : public ModelSubTabView
-//{
-//  Q_OBJECT
-//
-//public:
-//
-//  UtilityBillsView(const model::Model & model,
-//    QWidget * parent = 0);
-//  
-//  virtual ~UtilityBillsView() {}
-//
-//};
-
-class UtilityBillsViewInspector : public ModelObjectInspectorView
+class UtilityBillsView : public ModelSubTabView
 {
   Q_OBJECT
 
 public:
 
-  UtilityBillsViewInspector(const model::Model & model, QWidget * parent = 0);
+  UtilityBillsView(const model::Model & model,
+    QWidget * parent = 0);
   
-  virtual ~UtilityBillsViewInspector() {}
+  virtual ~UtilityBillsView() {}
+
+};
+
+class UtilityBillsInspectorView : public ModelObjectInspectorView
+{
+  Q_OBJECT
+
+public:
+
+  UtilityBillsInspectorView(const openstudio::model::Model& model,
+    bool addScrollArea,
+    QWidget * parent = 0);
+
+  virtual ~UtilityBillsInspectorView() {}
+
+  
+protected:
+
+  //virtual void onSelectItem(OSItem *item);
+  //virtual void onClearSelection();
+  virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
+  virtual void onUpdate();
+
+protected slots:
+
+  //virtual void toggleUnits(bool displayIP);
 
 private:
 
@@ -90,8 +104,6 @@ private:
   void hideAddButton();
   void enableAddButton();
   void disableAddButton();
-
-  model::Model m_model;
 
   BillFormatDialog * m_billFormatDialog;
 
@@ -196,7 +208,6 @@ signals:
 private slots:
 
   void on_okButton(bool checked);
-
   void setBillFormat(int index);
 
 };

@@ -211,7 +211,7 @@ std::vector<analysis::DiscreteVariable> VariableListController::variables() cons
     if (measureType() == MeasureType::ModelMeasure) {
       analysis::OptionalDiscreteVariable modelSwapVariable = project->getAlternativeModelVariable();
       OptionalInt stopIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
-      BOOST_ASSERT(stopIndex);
+      Q_ASSERT(stopIndex);
       for (int i = 0; i < *stopIndex; ++i) {
         if (workflow[i].isInputVariable()) {
           analysis::InputVariable var = workflow[i].inputVariable();
@@ -233,10 +233,10 @@ std::vector<analysis::DiscreteVariable> VariableListController::variables() cons
       }
     }
     else {
-      BOOST_ASSERT(measureType() == MeasureType::EnergyPlusMeasure);
+      Q_ASSERT(measureType() == MeasureType::EnergyPlusMeasure);
       OptionalInt startIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ExpandObjects);
       OptionalInt stopIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlusPreProcess);
-      BOOST_ASSERT(startIndex && stopIndex);
+      Q_ASSERT(startIndex && stopIndex);
       for (int i = (*startIndex + 1); i < *stopIndex; ++i) {
         if (workflow[i].isInputVariable()) {
           analysis::InputVariable var = workflow[i].inputVariable();
@@ -376,15 +376,15 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
       OptionalInt index;
       FileReferenceType inType = projectMeasure.inputFileType();
       if (inType == FileReferenceType::OSM) {
-        BOOST_ASSERT(measureType() == MeasureType::ModelMeasure);
+        Q_ASSERT(measureType() == MeasureType::ModelMeasure);
         index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
       }
       else {
-        BOOST_ASSERT(inType == FileReferenceType::IDF);
-        BOOST_ASSERT(measureType() == MeasureType::EnergyPlusMeasure);
+        Q_ASSERT(inType == FileReferenceType::IDF);
+        Q_ASSERT(measureType() == MeasureType::EnergyPlusMeasure);
         index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlusPreProcess);
       }
-      BOOST_ASSERT(index);
+      Q_ASSERT(index);
       bool ok = problem.insert(*index,dv);
       if (ok) {
         emit itemInserted(variables().size() - 1);

@@ -77,31 +77,31 @@ void OSQuantityEdit::bind(model::ModelObject& modelObject,
   // check for attribute existence
   StringVector attributeNames = modelObject.attributeNames();
   StringVector::const_iterator anb(attributeNames.begin()),ane(attributeNames.end());
-  BOOST_ASSERT(std::find(anb,ane,m_property + "_SI") != ane);
-  BOOST_ASSERT(std::find(anb,ane,m_property + "_IP") != ane);
+  Q_ASSERT(std::find(anb,ane,m_property + "_SI") != ane);
+  Q_ASSERT(std::find(anb,ane,m_property + "_IP") != ane);
   if (m_isDefaultedProperty) {
-    BOOST_ASSERT(std::find(anb,ane,*m_isDefaultedProperty) != ane);
+    Q_ASSERT(std::find(anb,ane,*m_isDefaultedProperty) != ane);
   }
   if (m_isAutosizedProperty) {
-    BOOST_ASSERT(std::find(anb,ane,*m_isAutosizedProperty) != ane);
+    Q_ASSERT(std::find(anb,ane,*m_isAutosizedProperty) != ane);
   }
   if (m_isAutocalculatedProperty) {
-    BOOST_ASSERT(std::find(anb,ane,*m_isAutocalculatedProperty) != ane);
+    Q_ASSERT(std::find(anb,ane,*m_isAutocalculatedProperty) != ane);
   }
   
   setEnabled(true);
   
   bool isConnected = false;
   isConnected = connect( m_lineEdit, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
                          this,SLOT(onModelObjectChange()) );
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
                          this,SLOT(onModelObjectRemove(Handle)) );
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   refreshTextAndLabel();
 }
@@ -152,7 +152,7 @@ void OSQuantityEdit::onEditingFinished() {
           units = attr.valueAsQuantity().units();
         }
         else {
-          BOOST_ASSERT(attr.valueType() == AttributeValueType::Unit);
+          Q_ASSERT(attr.valueType() == AttributeValueType::Unit);
           units = attr.valueAsUnit();
         }
         modelObject.setAttribute(propertyWithSystem(),Quantity(value,*units));
@@ -230,7 +230,7 @@ void OSQuantityEdit::refreshTextAndLabel() {
       m_units->setStyleSheet("color:black");
     }
     else {
-      BOOST_ASSERT(attribute.valueType() == AttributeValueType::Unit);
+      Q_ASSERT(attribute.valueType() == AttributeValueType::Unit);
       units = attribute.valueAsUnit();
       m_units->setStyleSheet("color:grey");
     }

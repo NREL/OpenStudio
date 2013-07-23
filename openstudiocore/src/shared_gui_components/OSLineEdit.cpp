@@ -43,14 +43,14 @@ void OSLineEdit::bind(model::ModelObject & modelObject, const char * property)
   bool isConnected = false;
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
                          this,SLOT(onModelObjectChange()) );
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
                          this,SLOT(onModelObjectRemove(Handle)) );
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   isConnected = connect( this, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   onModelObjectChange();
 }

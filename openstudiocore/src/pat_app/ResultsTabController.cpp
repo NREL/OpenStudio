@@ -325,7 +325,7 @@ std::vector<openstudio::analysis::DataPoint> DataPointResultsListController::dat
   }
 
   analysis::DataPoint baselineDataPoint = project.get().baselineDataPoint();
-  BOOST_FOREACH(const analysis::DataPoint& dataPoint, m_analysis.dataPoints()){
+  Q_FOREACH(const analysis::DataPoint& dataPoint, m_analysis.dataPoints()){
     if (dataPoint.uuid() != baselineDataPoint.uuid()){
       result.push_back(dataPoint);
     }
