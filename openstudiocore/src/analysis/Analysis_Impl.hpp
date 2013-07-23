@@ -23,6 +23,8 @@
 #include <analysis/AnalysisAPI.hpp>
 #include <analysis/AnalysisObject_Impl.hpp>
 
+#include <analysis/Analysis.hpp>
+
 #include <analysis/Problem.hpp>
 #include <analysis/Algorithm.hpp>
 #include <analysis/DataPoint.hpp>
@@ -40,8 +42,6 @@ namespace runmanager {
 }
 
 namespace analysis {
-
-class Analysis;
 
 namespace detail {
 
@@ -254,11 +254,15 @@ namespace detail {
 
     std::string toJSON(AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
 
-    /** Not in public class. */
+    //@}
+    /** @name Protected in Public Class */
+    //@{
+
     virtual QVariant toVariant() const;
 
-    /** Not in public class. Appends DataPoints to toVariant() results if scope ==
-     *  AnalysisSerializationScope::Full. */
+    /** Finalizes Analysis JSON by a) appending DataPoints to toVariant() if scope ==
+     *  AnalysisSerializationScope::Full, and b) wrapping those contents in a map with version
+     *  meta-data and the "analysis" indicator. */
     QVariant toVariant(AnalysisSerializationScope scope) const;
 
     //@}

@@ -20,12 +20,27 @@
 #ifndef UTILITIES_CORE_JSON_HPP
 #define UTILITIES_CORE_JSON_HPP
 
+#include <utilities/core/Path.hpp>
+
 #include <qjson/serializer.h>
+
+#include <QVariant>
+
+#include <string>
 
 namespace openstudio {
 
-/** Helper method to standardize JSON serialization settings. */
+/** Helper function to standardize JSON serialization settings. */
 void configureJsonSerializer(QJson::Serializer& serializer);
+
+/** Helper function to construct version meta-data object for JSON files. */
+QVariant jsonMetadata();
+
+/** Helper function to save top-level json files. */
+bool saveJSON(const QVariant& json, openstudio::path p, bool overwrite);
+
+/** Helper function to print top-level json files to string. */
+std::string toJSON(const QVariant& json);
 
 }
 

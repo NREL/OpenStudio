@@ -132,13 +132,6 @@ namespace detail {
     }
 
     //@}
-    /** @name Serialization */
-    //@{
-
-    virtual QVariant toVariant() const=0;
-
-    //@}
-
     enum ChangeType {
       Benign,
       InvalidatesResults,
@@ -156,6 +149,8 @@ namespace detail {
     void setParent(const AnalysisObject& parent) const;
 
     void clearParent() const;
+
+    virtual QVariant toVariant() const;
 
     //@}
    public slots:

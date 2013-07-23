@@ -154,5 +154,36 @@ bool FileReference::update(const openstudio::path& searchDirectory) {
   return ok;
 }
 
+namespace detail {
+
+  QVariant toVariant(const FileReference& fileReference) {
+    QVariantMap fileReferenceData;
+
+    fileReferenceData["uuid"] = fileReference.uuid().toString();
+    fileReferenceData["version_uuid"] = fileReference.versionUUID().toString();
+    std::string str = fileReference.name();
+    if (!str.empty()) {
+      fileReferenceData["name"] = toQString(str);
+    }
+    str = fileReference.displayName();
+    if (!str.empty()) {
+      fileReferenceData["display_name"] = toQString(str);
+    }
+    str = fileReference.description();
+    if (!str.empty()) {
+      fileReferenceData["description"] = toQString(str);
+    }
+    fileReferenceData["path"] = toQString(fileReference.path());
+    fileReferenceData["file_type"] = toQString(fileReference.fileType().valueName());
+    fileReferenceData["timestamp_create"] = toQString(fileReference.timestampCreate().toString());
+    fileReferenceData["timestamp_last"] = toQString(fileReference.timestampLast().toString());
+    fileReferenceData["checksum_create"] = toQString(fileReference.checksumCreate());
+    fileReferenceData["checksum_last"] = toQString(fileReference.checksumLast());
+
+    return QVariant(fileReferenceData);
+  }
+
+} // detail
+
 } // openstudio
 

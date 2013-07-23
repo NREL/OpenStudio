@@ -171,6 +171,9 @@ class ANALYSIS_API AnalysisObject {
   // children can mark children as dirty for the ProjectDatabase.
   virtual void onChange();
 
+  // Returns this object's data as a QVariant that can be serialized to JSON.
+  QVariant toVariant() const;
+
   /// @endcond
  private:
 

@@ -163,6 +163,17 @@ namespace detail {
     virtual void clearResults();
 
     //@}
+    /** @name Serialization */
+    //@{
+
+    bool saveJSON(const openstudio::path& p,
+                  bool overwrite=false) const;
+
+    std::ostream& toJSON(std::ostream& os) const;
+
+    std::string toJSON() const;
+
+    //@}
     /** @name Protected in Public Class */
     //@{
 
@@ -181,6 +192,12 @@ namespace detail {
     void setResponseValues(const std::vector<double> values);
 
     void setProblem(const Problem& problem);
+
+    virtual QVariant toVariant() const;
+
+    /** Contents of toVariant finalized for direct serialization (adds jsonMetadata and
+     *  data_point moniker. */
+    QVariant toTopLevelVariant() const;
 
     //@}
    protected:
@@ -208,7 +225,7 @@ namespace detail {
     mutable boost::optional<SqlFile> m_sqlFile;
     mutable std::vector<Attribute> m_outputAttributes; // serialized to database
    private:
-    REGISTER_LOGGER("openstudio.analysis.DataPoint");
+    REGISTER_LOGGER("openstudio.analysis.DataPoint");   
   };
 
 } // detail

@@ -123,18 +123,51 @@ namespace detail {
     return QObject::disconnect(this,signal,receiver,slot);
   }
 
+  void AnalysisObject_Impl::onChange(ChangeType changeType) {
+    m_versionUUID = createUUID();
+    m_dirty = true;
+    emit changed(changeType);
+  }
+
+  boost::optional<AnalysisObject> AnalysisObject_Impl::parent() const {
+    return m_parent;
+  }
+
+  void AnalysisObject_Impl::setParent(const AnalysisObject& parent) const {
+    m_parent = parent;
+  }
+
+  void AnalysisObject_Impl::clearParent() const {
+    m_parent.reset();
+  }
+
+  QVariant AnalysisObject_Impl::toVariant() const {
+    QVariantMap analysisObjectData;
+
+    analysisObjectData["uuid"] = uuid().toString();
+    analysisObjectData["version_uuid"] = versionUUID().toString();
+    std::string str = name();
+    if (!str.empty()) {
+      analysisObjectData["name"] = toQString(str);
+    }
+    str = displayName();
+    if (!str.empty()) {
+      analysisObjectData["display_name"] = toQString(str);
+    }
+    str = description();
+    if (!str.empty()) {
+      analysisObjectData["description"] = toQString(str);
+    }
+
+    return QVariant(analysisObjectData);
+  }
+
   void AnalysisObject_Impl::onChildChanged(ChangeType changeType) {
     onChange(changeType);
   }
 
   void AnalysisObject_Impl::onParentClean() {
     clearDirtyFlag();
-  }
-
-  void AnalysisObject_Impl::onChange(ChangeType changeType) {
-    m_versionUUID = createUUID();
-    m_dirty = true;
-    emit changed(changeType);
   }
 
   void AnalysisObject_Impl::connectChild(AnalysisObject& child, bool setParent) const {
@@ -168,18 +201,6 @@ namespace detail {
 
   void AnalysisObject_Impl::setDirtyFlag() {
     m_dirty = true;
-  }
-
-  boost::optional<AnalysisObject> AnalysisObject_Impl::parent() const {
-    return m_parent;
-  }
-
-  void AnalysisObject_Impl::setParent(const AnalysisObject& parent) const {
-    m_parent = parent;
-  }
-
-  void AnalysisObject_Impl::clearParent() const {
-    m_parent.reset();
   }
 
 } // detail
@@ -281,6 +302,10 @@ void AnalysisObject::onChange() {
   // Generally used by a parent that will make their own call to onChange with
   // the proper ChangeType.
   getImpl<detail::AnalysisObject_Impl>()->onChange(detail::AnalysisObject_Impl::Benign);
+}
+
+QVariant AnalysisObject::toVariant() const {
+  return getImpl<detail::AnalysisObject_Impl>()->toVariant();
 }
 
 /// @endcond

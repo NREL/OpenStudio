@@ -19,6 +19,8 @@
 
 #include <utilities/data/Tag.hpp>
 
+#include <utilities/core/String.hpp>
+
 namespace openstudio {
 
 Tag::Tag(const std::string& name)
@@ -42,5 +44,18 @@ UUID Tag::uuid() const {
 std::string Tag::name() const {
   return m_name;
 }
+
+namespace detail {
+
+  QVariant toVariant(const Tag& tag) {
+    QVariantMap tagData;
+
+    tagData["uuid"] = tag.uuid().toString();
+    tagData["name"] = toQString(tag.name());
+
+    return QVariant(tagData);
+  }
+
+} // detail
 
 } // openstudio

@@ -1388,5 +1388,17 @@ bool prepareForDisplay(Attribute& attribute, const AttributeDescription& descrip
   return false;
 }
 
+namespace detail {
+
+  QVariant toVariant(const Attribute& attribute) {
+    QVariantMap attributeData;
+
+    // HERE
+
+    return QVariant(attributeData);
+  }
+
+} // detail
+
 } // openstudio
 

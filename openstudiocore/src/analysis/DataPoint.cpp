@@ -20,7 +20,11 @@
 #include <analysis/DataPoint.hpp>
 #include <analysis/DataPoint_Impl.hpp>
 
+#include <analysis/Analysis.hpp>
+#include <analysis/Analysis_Impl.hpp>
+
 #include <runmanager/lib/Job.hpp>
+#include <runmanager/lib/JSON.hpp>
 
 #include <utilities/data/Attribute.hpp>
 
@@ -29,6 +33,7 @@
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Finder.hpp>
+#include <utilities/core/Json.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -340,6 +345,23 @@ namespace detail {
     onChange(AnalysisObject_Impl::Benign);
   }
 
+  bool DataPoint_Impl::saveJSON(const openstudio::path& p,
+                                bool overwrite) const
+  {
+    QVariant json = toTopLevelVariant();
+    return openstudio::saveJSON(json,p,overwrite);
+  }
+
+  std::ostream& DataPoint_Impl::toJSON(std::ostream& os) const {
+    os << toJSON();
+    return os;
+  }
+
+  std::string DataPoint_Impl::toJSON() const {
+    QVariant json = toTopLevelVariant();
+    return openstudio::toJSON(json);
+  }
+
   void DataPoint_Impl::setOsmInputData(const FileReference& file) {
     BOOST_ASSERT(file.fileType() == FileReferenceType::OSM);
     m_osmInputData = file;
@@ -386,6 +408,100 @@ namespace detail {
 
   void DataPoint_Impl::setProblem(const Problem& problem) {
     m_problem = problem;
+  }
+
+  QVariant DataPoint_Impl::toVariant() const {
+    QVariantMap dataPointData = AnalysisObject_Impl::toVariant().toMap();
+
+    dataPointData["data_point_type"] = "DataPoint";
+    dataPointData["problem_uuid"] = problem().uuid().toString();
+    if (parent()) {
+      Q_ASSERT(parent()->optionalCast<Analysis>());
+      dataPointData["analysis_uuid"] = parent()->uuid().toString();
+    }
+
+    QVariantList variableValuesList;
+    int index(0);
+    Q_FOREACH(const QVariant& value, variableValues()) {
+      QVariantMap valueMap;
+      valueMap["variable_value_index"] = QVariant(index);
+      valueMap["value_type"] = value.typeName();
+      valueMap["value"] = value;
+      variableValuesList.push_back(QVariant(valueMap));
+      ++index;
+    }
+    dataPointData["variable_values"] = variableValuesList;
+
+    if (!responseValues().empty()) {
+      QVariantList responseValuesList;
+      index = 0;
+      Q_FOREACH(double value,responseValues()) {
+        QVariantMap responseMap;
+        responseMap["response_value_index"] = QVariant(index);
+        responseMap["value"] = QVariant(value);
+        responseValuesList.push_back(responseMap);
+        ++index;
+      }
+      dataPointData["response_values"] = responseValuesList;
+    }
+
+    if (!directory().empty()) {
+      dataPointData["directory"] = toQString(directory());
+    }
+
+    if (osmInputData()) {
+      dataPointData["osm_input_data"] = openstudio::detail::toVariant(osmInputData().get());
+    }
+    if (idfInputData()) {
+      dataPointData["idf_input_data"] = openstudio::detail::toVariant(idfInputData().get());
+    }
+    if (sqlOutputData()) {
+      dataPointData["sql_output_data"] = openstudio::detail::toVariant(sqlOutputData().get());
+    }
+    if (xmlOutputData()) {
+      dataPointData["xml_output_data"] = openstudio::detail::toVariant(xmlOutputData().get());
+    }
+
+    if (topLevelJob()) {
+      dataPointData["top_level_job"] = runmanager::detail::JSON::toVariant(*topLevelJob());
+    }
+
+    if (!dakotaParametersFiles().empty()) {
+      QVariantList dakotaParametersFilesList;
+      Q_FOREACH(const openstudio::path& p,dakotaParametersFiles()) {
+        dakotaParametersFilesList.push_back(toQString(p));
+      }
+      dataPointData["dakota_parameters_files"] = QVariant(dakotaParametersFilesList);
+    }
+
+    if (!tags().empty()) {
+      QVariantList tagsList;
+      Q_FOREACH(const Tag& tag,tags()) {
+        tagsList.push_back(openstudio::detail::toVariant(tag));
+      }
+      dataPointData["tags"] = QVariant(tagsList);
+    }
+
+    if (!outputAttributes().empty()) {
+      QVariantList outputAttributesList;
+      Q_FOREACH(const Attribute& attribute,outputAttributes()) {
+        outputAttributesList.push_back(openstudio::detail::toVariant(attribute));
+      }
+      dataPointData["attributes"] = QVariant(outputAttributesList);
+    }
+
+    return QVariant(dataPointData);
+  }
+
+  QVariant DataPoint_Impl::toTopLevelVariant() const {
+    QVariantMap dataPointData = this->toVariant().toMap();
+
+    // create top-level of final file
+    QVariantMap result;
+    result["metadata"] = jsonMetadata();
+    result["data_point"] = QVariant(dataPointData);
+
+    return result;
   }
 
 } // detail

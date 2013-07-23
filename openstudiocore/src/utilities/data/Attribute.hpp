@@ -396,6 +396,11 @@ UTILITIES_API bool isConsistent(const Attribute& candidate,const AttributeDescri
 // DLM: can this be a member of Attribute?
 UTILITIES_API bool prepareForDisplay(Attribute& attribute, const AttributeDescription& description);
 
+namespace detail {
+  /** Places attribute's data in a QVariant for JSON serialization. */
+  QVariant toVariant(const Attribute& attribute);
+}
+
 } // openstudio
 
 // declare these types so we can use them as properties

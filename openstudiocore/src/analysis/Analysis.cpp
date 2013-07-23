@@ -35,7 +35,6 @@
 #include <utilities/document/Table.hpp>
 
 #include <utilities/core/Json.hpp>
-#include <utilities/core/PathHelpers.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -687,30 +686,8 @@ namespace detail {
                                AnalysisSerializationScope scope,
                                bool overwrite) const
   {
-    QVariant json = this->toVariant(scope);
-
-    // Ensures file extension is .json. Warns if there is a mismatch.
-    p = setFileExtension(p,"json",true);
-
-    // Use QFile and QIODevice serialize
-    QFile file(toQString(p));
-    if (file.open(QFile::WriteOnly)){
-      QJson::Serializer serializer;
-      configureJsonSerializer(serializer);
-
-      bool ok(false);
-      serializer.serialize(json,&file,&ok);
-      file.close();
-
-      if (ok) {
-        return true;
-      }
-      LOG_AND_THROW("Could not serialize Analysis to JSON format, because "
-                    << toString(serializer.errorMessage()));
-    }
-
-    LOG(Error,"Could not open file " << toString(p) << " for writing.");
-    return false;
+    QVariant json = toVariant(scope);
+    return openstudio::saveJSON(json,p,overwrite);
   }
 
   std::ostream& Analysis_Impl::toJSON(std::ostream& os,
@@ -722,33 +699,43 @@ namespace detail {
 
   std::string Analysis_Impl::toJSON(AnalysisSerializationScope scope) const {
     QVariant json = this->toVariant(scope);
-
-    QJson::Serializer serializer;
-    configureJsonSerializer(serializer);
-
-    bool ok(false);
-    QByteArray qba = serializer.serialize(json,&ok);
-
-    if (ok) {
-      return toString(QString(qba));
-    }
-
-    LOG_AND_THROW("Could not serialize Analysis to JSON format, because "
-                  << toString(serializer.errorMessage()));
-    return std::string();
+    return openstudio::toJSON(json);
   }
 
   QVariant Analysis_Impl::toVariant() const {
-    // HERE
+    QVariantMap analysisData = AnalysisObject_Impl::toVariant().toMap();
+
+    analysisData["problem"] = problem().toVariant();
+    if (algorithm()) {
+      analysisData["algorithm"] = algorithm()->toVariant();
+    }
+    analysisData["seed"] = openstudio::detail::toVariant(seed());
+    if (weatherFile()) {
+      analysisData["weather_file"] = openstudio::detail::toVariant(weatherFile().get());
+    }
+    analysisData["results_are_invalid"] = QVariant(resultsAreInvalid());
+    analysisData["data_points_are_invalid"] = QVariant(dataPointsAreInvalid());
+
+    return QVariant(analysisData);
   }
 
   QVariant Analysis_Impl::toVariant(AnalysisSerializationScope scope) const {
-    QVariant result = toVariant();
+    QVariantMap analysisData = toVariant().toMap();
 
     if (scope == AnalysisSerializationScope::Full) {
-      // add data points to result
-      // HERE
+      // add data point information
+      QVariantList dataPointList;
+      Q_FOREACH(const DataPoint& dataPoint, dataPoints()) {
+        dataPointList.push_back(dataPoint.toVariant());
+      }
+
+      analysisData["data_points"] = QVariant(dataPointList);
     }
+
+    // create top-level of final file
+    QVariantMap result;
+    result["metadata"] = jsonMetadata();
+    result["analysis"] = QVariant(analysisData);
 
     return result;
   }

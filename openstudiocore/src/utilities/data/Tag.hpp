@@ -55,6 +55,13 @@ typedef boost::optional<Tag> OptionalTag;
 /** \relates Tag */
 typedef std::vector<Tag> TagVector;
 
+namespace detail {
+
+  /** Places tag's data in a QVariant for JSON serialization. */
+  QVariant toVariant(const Tag& tag);
+
+}
+
 } // openstudio
 
 #endif // UTILITIES_DATA_TAG_HPP
