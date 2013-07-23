@@ -311,6 +311,8 @@ void PatApp::open()
                                                    tr("Open Project"),
                                                    QDir::homePath(),
                                                    tr("(project.osp)") );
+  if (!fileName.length()) return;
+
   userInteractiveOpenProject(fileName);
 }
 
