@@ -530,8 +530,14 @@ namespace detail {
 
   std::vector<BillingPeriod> UtilityBill_Impl::billingPeriods() const
   {
-    BOOST_ASSERT(false);
-    return std::vector<BillingPeriod>();
+    boost::shared_ptr<openstudio::detail::IdfObject_Impl> p = const_cast<UtilityBill_Impl*>(this)->shared_from_this();
+
+    std::vector<BillingPeriod> result;
+    unsigned numExtensibleGroups = this->numExtensibleGroups();
+    for (unsigned i = 0; i < numExtensibleGroups; ++i){
+      result.push_back(BillingPeriod(boost::dynamic_pointer_cast<detail::UtilityBill_Impl>(p), i));
+    }
+    return result;
   }
 
   void UtilityBill_Impl::clearBillingPeriods()
@@ -543,7 +549,7 @@ namespace detail {
   {
     BOOST_ASSERT(false);
     boost::shared_ptr<openstudio::detail::IdfObject_Impl> p = shared_from_this();
-    return BillingPeriod(boost::dynamic_pointer_cast<detail::UtilityBill_Impl>(p), (unsigned)0);
+    return BillingPeriod(boost::dynamic_pointer_cast<detail::UtilityBill_Impl>(p), this->numExtensibleGroups());
   }
 
   void UtilityBill_Impl::sortBillingPeriods()
