@@ -20,17 +20,39 @@
 #include <gtest/gtest.h>
 #include <analysis/test/AnalysisFixture.hpp>
 
+#include <analysis/Analysis.hpp>
+#include <analysis/DataPoint.hpp>
+#include <analysis/Problem.hpp>
+
+#include <resources.hxx>
+
 using namespace openstudio;
 using namespace openstudio::analysis;
 
 TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PreRun) {
-  // Create problem and analysis
+  Analysis analysis = analysis1();
+  Problem problem = analysis.problem();
 
   // Create data point and add to analysis
+  std::vector<QVariant> values;
+  values.push_back(1);
+  values.push_back(0.3);
+  values.push_back(0.9);
+  OptionalDataPoint dataPoint = problem.createDataPoint(values);
+  ASSERT_TRUE(dataPoint);
+  EXPECT_TRUE(analysis.addDataPoint(*dataPoint));
 
   // Serialize data point
+  std::string json = dataPoint->toJSON();
+  EXPECT_FALSE(json.empty());
 
   // Deserialize and check results
+
+  // Save data point
+  openstudio::path p = toPath("AnalysisFixtureData/data_point_pre_run.json");
+  EXPECT_TRUE(dataPoint->saveJSON(p,true));
+
+  // Load and check results
 
 }
 
@@ -44,5 +66,11 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
   // Serialize data point
 
   // Deserialize and check results
+
+  // Save data point
+  openstudio::path p = toPath("AnalysisFixtureData/data_point_post_run.json");
+  // EXPECT_TRUE(dataPoint->saveJSON(p,true));
+
+  // Load and check results
 
 }

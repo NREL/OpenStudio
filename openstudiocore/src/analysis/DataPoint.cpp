@@ -657,6 +657,18 @@ void DataPoint::clearResults() {
   getImpl<detail::DataPoint_Impl>()->clearResults();
 }
 
+bool DataPoint::saveJSON(const openstudio::path& p,bool overwrite) const {
+  return getImpl<detail::DataPoint_Impl>()->saveJSON(p,overwrite);
+}
+
+std::ostream& DataPoint::toJSON(std::ostream& os) const {
+  return getImpl<detail::DataPoint_Impl>()->toJSON(os);
+}
+
+std::string DataPoint::toJSON() const {
+  return getImpl<detail::DataPoint_Impl>()->toJSON();
+}
+
 /// @cond
 DataPoint::DataPoint(boost::shared_ptr<detail::DataPoint_Impl> impl)
   : AnalysisObject(impl)

@@ -327,18 +327,52 @@ TEST_F(AnalysisFixture, Analysis_ClearAllResults) {
   EXPECT_FALSE(analysis.algorithm()->cast<DakotaAlgorithm>().outFileReference());
 }
 
-TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRunPAT) {
-  // Create example PAT analysis
+TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun) {
+  // Create example analysis
+  Analysis analysis = analysis1();
+  Problem problem = analysis.problem();
 
   // Add data points
+  std::vector<QVariant> values;
+  values.push_back(0);
+  values.push_back(0.2);
+  values.push_back(0.9);
+  OptionalDataPoint dataPoint = problem.createDataPoint(values);
+  ASSERT_TRUE(dataPoint);
+  EXPECT_TRUE(analysis.addDataPoint(*dataPoint));
+  values[0] = 1; values[1] = 0.21851789; values[2] = 1.1681938;
+  dataPoint = problem.createDataPoint(values);
+  ASSERT_TRUE(dataPoint);
+  EXPECT_TRUE(analysis.addDataPoint(*dataPoint));
+  values[0] = 2; values[1] = 0.0; values[2] = 0.581563892;
+  dataPoint = problem.createDataPoint(values);
+  ASSERT_TRUE(dataPoint);
+  EXPECT_TRUE(analysis.addDataPoint(*dataPoint));
 
   // Serialize Analysis with no data points
+  std::string json = analysis.toJSON(AnalysisSerializationScope::ProblemFormulation);
+  EXPECT_FALSE(json.empty());
 
   // Deserialize and check results
+
+  // Save analysis with no data points
+  openstudio::path p = toPath("AnalysisFixtureData/formulation_pre_run.json");
+  EXPECT_TRUE(analysis.saveJSON(p,AnalysisSerializationScope::ProblemFormulation,true));
+
+  // Load and check results
+
 
   // Serialize Analysis with data points
+  json = analysis.toJSON(AnalysisSerializationScope::Full);
+  EXPECT_FALSE(json.empty());
 
   // Deserialize and check results
+
+  // Save analysis with data points
+  p = toPath("AnalysisFixtureData/analysis_pre_run.json");
+  EXPECT_TRUE(analysis.saveJSON(p,AnalysisSerializationScope::Full,true));
+
+  // Load and check results
 
 }
 
