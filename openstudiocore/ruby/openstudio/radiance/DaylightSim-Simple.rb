@@ -397,9 +397,9 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
 end
 
 def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
-  if t_verbose == 'v'
+  #if t_verbose == 'v'
     puts "simulation command: #{t_cmd}"
-  end        
+  #end        
   puts "Executing simulation"
   tempIO = IO.popen(t_cmd)
 
@@ -549,9 +549,9 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
   # Use ascii piping on Windows, binary on unixish OS's
   if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-    rawValues = execSimulation("gendaymtx  \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep  -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\"  ", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
+    rawValues = execSimulation("gendaymtx  -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep  -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\"  ", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
   else
-    rawValues = execSimulation("gendaymtx -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\"  ", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
+    rawValues = execSimulation("gendaymtx  -m #{t_options.skyvecDensity} -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\"  ", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
   end
 
 
@@ -560,7 +560,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
   # for each environment period (design days, annual, or arbitrary) you will create a directory for results
   t_sqlFile.availableEnvPeriods.each do |envPeriod|
 
-    puts "envPeriod = " + envPeriod.to_s
+    puts "envPeriod = '" + envPeriod.to_s + "'"
     diffHorizIllumAll, dirNormIllumAll, diffEfficacyAll, dirNormEfficacyAll, solarAltitudeAll, solarAzimuthAll, diffHorizUnits, dirNormUnits = getTimeSeries(t_sqlFile, envPeriod)
 
 
@@ -696,7 +696,7 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
   # for each environment period (design days, annual, or arbitrary) you will create a directory for results
   t_sqlFile.availableEnvPeriods.each do |envPeriod|
 
-    puts "envPeriod = " + envPeriod.to_s
+    puts "envPeriod = '" + envPeriod.to_s + "'"
 
     diffHorizIllumAll, dirNormIllumAll, diffEfficacyAll, dirNormEfficacyAll, solarAltitudeAll, solarAzimuthAll, diffHorizUnits, dirNormUnits = getTimeSeries(t_sqlFile, envPeriod)
 
