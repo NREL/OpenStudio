@@ -20,21 +20,26 @@
 #ifndef OPENSTUDIO_RESULTSTABVIEW_H
 #define OPENSTUDIO_RESULTSTABVIEW_H
 
-#include <model/Model.hpp>
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
-#include <boost/smart_ptr.hpp>
 #include <openstudio_lib/MainTabView.hpp>
-#include <QComboBox>
-#include <QWidget>
-#include <QPushButton>
+
+#include <model/Model.hpp>
+
+#include <utilities/idf/WorkspaceObject_Impl.hpp>
 #include <utilities/sql/SqlFile.hpp>
 #include <utilities/units/Unit.hpp>
+
+#include <boost/smart_ptr.hpp>
+
 #include <vtkCharts/BarChart.h>
 
-class QPushButton;
-class QTableWidget;
-class QStackedWidget;
+#include <QComboBox>
+#include <QPushButton>
+#include <QWidget>
+
 class QGridLayout;
+class QPushButton;
+class QStackedWidget;
+class QTableWidget;
 
 namespace vtkCharts {
   class BarChart;
@@ -42,11 +47,11 @@ namespace vtkCharts {
 
 namespace openstudio {
 
-  class ConsumptionData
+  class ComparisonData
   {
     public:
-      ConsumptionData();
-      ConsumptionData(const std::vector<openstudio::EndUseFuelType> &t_fuelTypes, const SqlFile &t_sqlFile);
+      ComparisonData();
+      ComparisonData(const std::vector<openstudio::EndUseFuelType> &t_fuelTypes, const SqlFile &t_sqlFile);
       
       boost::optional<double> getValue(const openstudio::EndUseFuelType &t_fuelType,
           const openstudio::EndUseCategoryType &t_categoryType,
@@ -57,62 +62,62 @@ namespace openstudio {
           const openstudio::MonthOfYear &t_monthOfYear,
           const boost::optional<double> &t_value);
 
-      static ConsumptionData random();
+      static ComparisonData random();
     private:
-      REGISTER_LOGGER("openstudio::ConsumptionData");
+      REGISTER_LOGGER("openstudio::ComparisonData");
       std::map<openstudio::EndUseFuelType, std::map<openstudio::EndUseCategoryType, std::map<openstudio::MonthOfYear, boost::optional<double> > > > m_data;
   };
 
-  class ResultsConsumptionChart : public QWidget
+  class ResultsComparisonData : public QWidget
   {
     Q_OBJECT;
 
     public:
-      ResultsConsumptionChart(const openstudio::EndUseFuelType &t_fuelType, 
+      ResultsComparisonData(const openstudio::EndUseFuelType &t_fuelType, 
         const openstudio::Unit &t_unit, QWidget *t_parent=0);
-      virtual ~ResultsConsumptionChart() {}
-      void setData(const ConsumptionData &t_data, const openstudio::Unit &t_unit);
+      virtual ~ResultsComparisonData() {}
+      void setData(const ComparisonData &t_data, const openstudio::Unit &t_unit);
       openstudio::EndUseFuelType getFuelType() const;
 
     private:
-      REGISTER_LOGGER("openstudio::ResultsConsumptionChart");
+      REGISTER_LOGGER("openstudio::ResultsComparisonData");
       boost::shared_ptr<vtkCharts::BarChart> m_chart;
       openstudio::EndUseFuelType m_fuelType;
       openstudio::Unit m_unit;
       QLabel* m_label;
   };
 
-  class ResultsConsumptionLegend : public QWidget
+  class ResultsComparisonLegend : public QWidget
   {
     Q_OBJECT;
 
     public:
-      ResultsConsumptionLegend(QWidget *t_parent = 0);
-      virtual ~ResultsConsumptionLegend() {}
+      ResultsComparisonLegend(QWidget *t_parent = 0);
+      virtual ~ResultsComparisonLegend() {}
       static std::vector<vtkCharts::Color3ub> getColors();
 
     private:
-      REGISTER_LOGGER("openstudio::ResultsConsumptionLegend");
+      REGISTER_LOGGER("openstudio::ResultsComparisonLegend");
 
    };
 
-  class ResultsConsumptionTable : public QWidget
+  class ResultsComparisonTable : public QWidget
   {
     Q_OBJECT;
 
     public:
-      ResultsConsumptionTable(const openstudio::EndUseFuelType &t_fuelType, 
+      ResultsComparisonTable(const openstudio::EndUseFuelType &t_fuelType, 
           const openstudio::Unit &t_unit, QWidget *t_parent = 0);
-      virtual ~ResultsConsumptionTable() {}
-      void setData(const ConsumptionData &t_data, const openstudio::Unit &t_unit);
+      virtual ~ResultsComparisonTable() {}
+      void setData(const ComparisonData &t_data, const openstudio::Unit &t_unit);
       openstudio::EndUseFuelType getFuelType() const;
 
     private:
-      REGISTER_LOGGER("openstudio::ResultsConsumptionTable");
+      REGISTER_LOGGER("openstudio::ResultsComparisonTable");
       void buildDataGrid();
-      void setDataMonthTotals(const ConsumptionData &t_data);
-      void setDataCategoryTotals(const ConsumptionData &t_data);
-      void setDataValues(const ConsumptionData &t_data);
+      void setDataMonthTotals(const ComparisonData &t_data);
+      void setDataCategoryTotals(const ComparisonData &t_data);
+      void setDataValues(const ComparisonData &t_data);
       QLabel *createDataLabel(bool t_bold);
       void setDataValue(QLabel *t_label, const boost::optional<double> &t_data);
       void setRowHighlights();
@@ -150,13 +155,13 @@ namespace openstudio {
 
       openstudio::model::Model m_model;
       bool m_isIP;
-      ResultsConsumptionChart *m_electricConsumptionChart;
-      ResultsConsumptionChart *m_gasConsumptionChart;
-      ResultsConsumptionLegend *m_consumptionLegend;
-      ResultsConsumptionTable *m_electricConsumptionTable;
-      ResultsConsumptionTable *m_gasConsumptionTable;
-      ResultsConsumptionTable *m_districtHeatingConsumptionTable;
-      ResultsConsumptionTable *m_districtCoolingConsumptionTable;
+      ResultsComparisonData *m_electricConsumptionChart;
+      ResultsComparisonData *m_gasConsumptionChart;
+      ResultsComparisonLegend *m_consumptionLegend;
+      ResultsComparisonTable *m_electricConsumptionTable;
+      ResultsComparisonTable *m_gasConsumptionTable;
+      ResultsComparisonTable *m_districtHeatingConsumptionTable;
+      ResultsComparisonTable *m_districtCoolingConsumptionTable;
       QPushButton *m_openResultsViewerBtn;
 
       openstudio::path m_sqlFilePath;
