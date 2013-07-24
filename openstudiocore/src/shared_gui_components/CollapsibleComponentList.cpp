@@ -23,10 +23,6 @@
 #include <shared_gui_components/Component.hpp>
 #include <shared_gui_components/ComponentList.hpp>
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
-
 #include <QBoxLayout>
 #include <QButtonGroup>
 #include <QPainter>
@@ -106,7 +102,7 @@ std::vector<CollapsibleComponent *> CollapsibleComponentList::collapsibleCompone
 {
   std::vector<CollapsibleComponent *> result;
 
-  BOOST_FOREACH(QAbstractButton * button, m_collapsibleComponentGroup->buttons().toVector().toStdVector()){
+  Q_FOREACH(QAbstractButton * button, m_collapsibleComponentGroup->buttons().toVector().toStdVector()){
     result.push_back(qobject_cast<CollapsibleComponent *>(button));
   }
 
@@ -118,9 +114,9 @@ std::vector<Component *> CollapsibleComponentList::components()
   std::vector<Component *> result;
   std::vector<Component *> components;
 
-  BOOST_FOREACH(QAbstractButton * button, m_collapsibleComponentGroup->buttons().toVector().toStdVector()){
+  Q_FOREACH(QAbstractButton * button, m_collapsibleComponentGroup->buttons().toVector().toStdVector()){
     components = qobject_cast<CollapsibleComponent *>(button)->componentList()->components();
-    BOOST_FOREACH(Component * component, components){
+    Q_FOREACH(Component * component, components){
       result.push_back(component);
     }
     components.clear();
@@ -131,7 +127,7 @@ std::vector<Component *> CollapsibleComponentList::components()
 
 void CollapsibleComponentList::addCollapsibleComponent(CollapsibleComponent * collapsibleComponent)
 {
-  BOOST_ASSERT(collapsibleComponent);
+  Q_ASSERT(collapsibleComponent);
 
   m_mainLayout->addWidget(collapsibleComponent);
   m_collapsibleComponentGroup->addButton(collapsibleComponent,m_collapsibleComponentGroup->buttons().size());
@@ -140,35 +136,35 @@ void CollapsibleComponentList::addCollapsibleComponent(CollapsibleComponent * co
 
   isConnected = connect(collapsibleComponent, SIGNAL(headerClicked(bool)),
                         this, SIGNAL(headerClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponent, SIGNAL(headerClicked(bool)),
                         this, SLOT(on_headerClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponent, SIGNAL(componentClicked(bool)),
                         this, SIGNAL(componentClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponent, SIGNAL(componentClicked(bool)),
                         this, SLOT(on_componentClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponent, SIGNAL(clicked(bool)),
                         this, SIGNAL(collapsibleComponentClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponent, SIGNAL(clicked(bool)),
                         this, SLOT(on_collapsibleComponentClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponent, SIGNAL(getComponentsByPage(int)), 
                         this, SIGNAL(getComponentsByPage(int)));
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponent, SIGNAL(getComponentsByPage(int)),
                         this, SLOT(on_getComponentsByPage(int)));
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   collapsibleComponent->setChecked(true);
 
@@ -192,7 +188,7 @@ void CollapsibleComponentList::paintEvent(QPaintEvent * event)
 
 void CollapsibleComponentList::setCollapsibleComponents(const std::vector<CollapsibleComponent *> & collapsibleComponents)
 {
-  BOOST_FOREACH(CollapsibleComponent * collapsibleComponent, collapsibleComponents)
+  Q_FOREACH(CollapsibleComponent * collapsibleComponent, collapsibleComponents)
   {
     addCollapsibleComponent(collapsibleComponent);
   }

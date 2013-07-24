@@ -62,14 +62,14 @@ void OSComboBox::bind(model::ModelObject & modelObject, const char * property)
   bool isConnected = false;
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
                          this,SLOT(onModelObjectChanged()) );
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
                          this,SLOT(onModelObjectRemoved(Handle)) );
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   isConnected = connect( this, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onCurrentIndexChanged(const QString&)) );
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   // Populate choices
 
@@ -78,7 +78,7 @@ void OSComboBox::bind(model::ModelObject & modelObject, const char * property)
 
   QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(valuesPropertyName.c_str());
 
-  BOOST_ASSERT( variant.canConvert<std::vector<std::string> >() );
+  Q_ASSERT( variant.canConvert<std::vector<std::string> >() );
 
   m_values = variant.value<std::vector<std::string> >();
 
@@ -102,11 +102,11 @@ void OSComboBox::bind(model::ModelObject & modelObject, const char * property)
 
 void OSComboBox::onModelObjectChanged()
 {
-  BOOST_ASSERT(m_modelObject);
+  Q_ASSERT(m_modelObject);
 
   QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
 
-  BOOST_ASSERT( variant.canConvert<std::string>() );
+  Q_ASSERT( variant.canConvert<std::string>() );
 
   std::string value = variant.value<std::string>();
 
@@ -134,7 +134,7 @@ void OSComboBox::onModelObjectRemoved(Handle handle)
 
 void OSComboBox::onCurrentIndexChanged(const QString & text)
 {
-  BOOST_ASSERT(m_modelObject);
+  Q_ASSERT(m_modelObject);
 
   // does this version ever work?
   bool test = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(),text);
@@ -147,7 +147,7 @@ void OSComboBox::onCurrentIndexChanged(const QString & text)
 
   // test if property changed
   QVariant variant = m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->property(m_property.c_str());
-  BOOST_ASSERT( variant.canConvert<std::string>() );
+  Q_ASSERT( variant.canConvert<std::string>() );
   std::string value = variant.value<std::string>();
 
   if (!istringEqual(value, toString(text))){

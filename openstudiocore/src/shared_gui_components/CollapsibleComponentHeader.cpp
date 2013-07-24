@@ -21,8 +21,6 @@
 #include <shared_gui_components/Component.hpp>
 #include <shared_gui_components/PageNavigator.hpp>
 
-#include <utilities/core/Assert.hpp>
-
 #include <QBoxLayout>
 #include <QLabel>
 #include <QPainter>
@@ -77,11 +75,11 @@ void CollapsibleComponentHeader::createLayout(const std::string& text, int numRe
 
   isConnected = connect(m_pageNavigator, SIGNAL(getComponentsByPage(int)),
                         this, SIGNAL(getComponentsByPage(int)));
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   isConnected = connect(m_pageNavigator, SIGNAL(getComponentsByPage(int)),
                         this, SLOT(on_getComponentsByPage(int)));
-  BOOST_ASSERT(isConnected);
+  Q_ASSERT(isConnected);
 
   // Stretch
   mainHLayout->addStretch();
