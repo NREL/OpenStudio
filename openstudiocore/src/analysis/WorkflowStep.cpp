@@ -24,6 +24,8 @@
 #include <analysis/Problem.hpp>
 #include <analysis/Problem_Impl.hpp>
 
+#include <runmanager/lib/JSON.hpp>
+
 #include <utilities/core/FileReference.hpp>
 
 namespace openstudio {
@@ -188,6 +190,21 @@ namespace detail {
       onChange(AnalysisObject_Impl::InvalidatesResults);
     }
     return true;
+  }
+
+  QVariant WorkflowStep_Impl::toVariant() const {
+    QVariant result;
+
+    if (isInputVariable()) {
+      result = inputVariable().toVariant();
+    }
+    else {
+      QVariantMap workItemData = runmanager::detail::JSON::toVariant(workItem()).toMap();
+      workItemData["workflow_step_type"] = "WorkItem";
+      result = QVariant(workItemData);
+    }
+
+    return result;
   }
 
 } // detail

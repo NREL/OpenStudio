@@ -127,6 +127,8 @@ namespace detail {
                                 const FileReferenceType& proposedInputFileType,
                                 const FileReferenceType& proposedOutputFileType) const;
 
+    virtual QVariant toVariant() const;
+
     //@}
    protected:
     std::vector<Measure> m_measures;

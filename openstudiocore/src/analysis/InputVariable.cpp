@@ -84,6 +84,17 @@ namespace detail {
     onChange(AnalysisObject_Impl::Benign);
   }
 
+  QVariant InputVariable_Impl::toVariant() const {
+    QVariantMap inputVariableData = AnalysisObject_Impl::toVariant().toMap();
+
+    if (uncertaintyDescription()) {
+      // HERE -- Serialize UncertaintyDescription
+      inputVariableData["uncertainty_descrption"] = QVariant();
+    }
+
+    return QVariant(inputVariableData);
+  }
+
 } // detail
 
 boost::optional<FileReferenceType> InputVariable::inputFileType() const {

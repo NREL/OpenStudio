@@ -99,6 +99,12 @@ namespace detail {
                                                 const openstudio::path& rubyIncludeDirectory) const = 0;
 
     //@}
+    /** @name Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    //@}
    private:
     REGISTER_LOGGER("openstudio.analysis.InputVariable");
 

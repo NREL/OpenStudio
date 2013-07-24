@@ -99,6 +99,12 @@ namespace detail {
     bool set(const runmanager::WorkItem& workItem);
 
     //@}
+    /** @name Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    //@}
    private:
     REGISTER_LOGGER("openstudio.analysis.WorkflowStep")
 

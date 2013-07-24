@@ -437,6 +437,24 @@ namespace detail {
     return true;
   }
 
+  QVariant MeasureGroup_Impl::toVariant() const {
+    QVariantMap measureGroupData = InputVariable_Impl::toVariant().toMap();
+
+    measureGroupData["workflow_step_type"] = "MeasureGroup";
+
+    int index(0);
+    QVariantList measuresList;
+    Q_FOREACH(const Measure& measure, measures(false)) {
+      QVariantMap measureData = measure.toVariant().toMap();
+      measureData["measure_group_index"] = index;
+      measuresList.push_back(measureData);
+      ++index;
+    }
+    measureGroupData["measures"] = measuresList;
+
+    return QVariant(measureGroupData);
+  }
+
   std::pair<bool,boost::optional<FileReferenceType> > inputFileType(
       const std::vector<Measure>& measures)
   {
