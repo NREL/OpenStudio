@@ -12239,6 +12239,7 @@ OS:UtilityBill,
        \key Steam
        \key DistrictCooling
        \key DistrictHeating
+       \key EnergyTransfer
   A4, \field Meter Install Location
        \note Location the meter associated with this utility bill object is installed.
        \type choice
@@ -12255,6 +12256,7 @@ OS:UtilityBill,
   A6, \field Meter End Use
        \note Type of end use that meter is associated with.  
        \note Empty field indicates all end uses are included.
+       \type choice
        \key Heating
        \key Cooling
        \key InteriorLights

@@ -119,6 +119,9 @@ namespace detail {
 
       // DLM: Energy conversion factors come from https://www.energystar.gov/ia/business/tools_resources/target_finder/help/Energy_Units_Conversion_Table.htm
       // Portfolio Manager uses these to convert to kBtu
+      //
+      // Original source: 
+      // TABLE C–1 TO SUBPART C OF PART 98—DEFAULT CO2 EMISSION FACTORS AND HIGH HEAT VALUES FOR VARIOUS TYPES OF FUEL
       boost::optional<double> unitToKBtu;
       boost::optional<double> unitToM3;
 
@@ -160,6 +163,9 @@ namespace detail {
           //  //unitToKBtu = 12.545; // anthracite
           //  unitToKBtu = 12.465; // bituminous
           //  break;
+          case FuelType::Steam:
+            unitToKBtu = 1.194;
+            break;
           default:
             ;
         }
@@ -172,6 +178,9 @@ namespace detail {
           //  //unitToKBtu = 12545; // anthracite
           //  unitToKBtu = 12465; // bituminous
           //  break;
+          case FuelType::Steam:
+            unitToKBtu = 1194;
+            break;
           default:
             ;
         }
@@ -184,11 +193,20 @@ namespace detail {
           //  //unitToKBtu = 12545000; // anthracite
           //  unitToKBtu = 12465000; // bituminous
           //  break;
+          case FuelType::Steam:
+            unitToKBtu = 1194000;
+            break;
           default:
             ;
         }
       }else if (consumptionUnit == "Gallons"){
         switch (fuelType.value()){
+          case FuelType::Gasoline:
+            unitToKBtu = 125;
+            break;
+          case FuelType::Diesel:
+            unitToKBtu = 138;
+            break;
           case FuelType::FuelOil_1:
             unitToKBtu = 138.6905;
             break;
@@ -206,6 +224,12 @@ namespace detail {
         }
       }else if (consumptionUnit == "Liters"){
         switch (fuelType.value()){
+          case FuelType::Gasoline:
+            unitToKBtu = 33.0215;
+            break;
+          case FuelType::Diesel:
+            unitToKBtu = 36.456;
+            break;
           case FuelType::FuelOil_1:
             unitToKBtu = 36.060;
             break;
@@ -239,6 +263,9 @@ namespace detail {
         switch (fuelType.value()){
           case FuelType::Gas:
             unitToKBtu = 36.339;
+            break;
+          case FuelType::Propane:
+            unitToKBtu = 2.5185;
             break;
           case FuelType::Water:
             unitToM3 = 1;
@@ -279,14 +306,15 @@ namespace detail {
           case FuelType::Gas:
             unitToKBtu = 1029000;
             break;
+          case FuelType::Propane:
+            unitToKBtu = 2518500;
+            break;
           case FuelType::Water:
             unitToM3 = 28316.8;
             break;
           default:
             ;
         }
-      }else{
-        LOG(Error, "Unknown consumption unit '" << consumptionUnit << "' for fuel type '" << fuelType.valueName() << "'");
       }
 
       if (isEnergy){
@@ -296,7 +324,12 @@ namespace detail {
       }else{
         value = unitToM3;
       }
+
+      if (!value){
+        LOG(Error, "Unknown consumption unit '" << consumptionUnit << "' for fuel type '" << fuelType.valueName() << "'");
+      }
     }
+
 
     BOOST_ASSERT(value);
     return value.get();
@@ -685,6 +718,9 @@ UtilityBill::UtilityBill(const FuelType& fuelType, const Model& model)
 
   bool test;
   test = setString(OS_UtilityBillFields::FuelType, fuelType.valueName());
+  if (!test){
+    LOG(Error, fuelType.valueName());
+  }
   BOOST_ASSERT(test);
 
   std::vector<std::string> consumptionUnitValues = this->consumptionUnitValues();
