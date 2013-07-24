@@ -91,6 +91,9 @@ SET( ${target_name}_src
   Measure.hpp
   Measure_Impl.hpp
   Measure.cpp
+  MeasureGroup.hpp
+  MeasureGroup_Impl.hpp
+  MeasureGroup.cpp
   NegativeBinomialDistribution.hpp${${target_name}_moc_src}
   NegativeBinomialDistribution.cpp
   NormalDistribution.hpp
@@ -180,6 +183,7 @@ SET( ${target_name}_moc
   InputVariable_Impl.hpp
   LinearFunction_Impl.hpp
   Measure_Impl.hpp
+  MeasureGroup_Impl.hpp
   NullMeasure_Impl.hpp
   OpenStudioAlgorithm_Impl.hpp
   OptimizationDataPoint_Impl.hpp
