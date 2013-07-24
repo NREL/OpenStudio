@@ -21,12 +21,19 @@
 #include <model/UtilityBill_Impl.hpp>
 #include <model/Meter.hpp>
 #include <model/Meter_Impl.hpp>
+#include <model/RunPeriod.hpp>
+#include <model/RunPeriod_Impl.hpp>
+#include <model/YearDescription.hpp>
+#include <model/YearDescription_Impl.hpp>
+
 #include <model/Model.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_UtilityBill_FieldEnums.hxx>
 
 #include <utilities/Data/DataEnums.hpp>
+#include <utilities/Data/Timeseries.hpp>
+
 #include <utilities/time/Date.hpp>
 
 #include <utilities/core/Assert.hpp>
@@ -90,9 +97,9 @@ namespace detail {
     return getString(OS_UtilityBillFields::MeterSpecificInstallLocation,true,true);
   }
 
-  boost::optional<EndUseCategoryType> UtilityBill_Impl::meterEndUse() const {
+  boost::optional<EndUseCategoryType> UtilityBill_Impl::meterEndUseCategory() const {
     boost::optional<EndUseCategoryType> result;
-    boost::optional<std::string> tmp = getString(OS_UtilityBillFields::MeterEndUse,true,true);
+    boost::optional<std::string> tmp = getString(OS_UtilityBillFields::MeterEndUseCategory,true,true);
     if (tmp){
       result = EndUseCategoryType(tmp.get());
     }
@@ -363,13 +370,13 @@ namespace detail {
     BOOST_ASSERT(result);
   }
 
-  bool UtilityBill_Impl::setMeterEndUse(const EndUseCategoryType& meterEndUse) {
-    bool result = setString(OS_UtilityBillFields::MeterEndUse, meterEndUse.valueName());
+  bool UtilityBill_Impl::setMeterEndUseCategory(const EndUseCategoryType& meterEndUseCategory) {
+    bool result = setString(OS_UtilityBillFields::MeterEndUseCategory, meterEndUseCategory.valueName());
     return result;
   }
 
-  void UtilityBill_Impl::resetMeterEndUse() {
-    bool result = setString(OS_UtilityBillFields::MeterEndUse, "");
+  void UtilityBill_Impl::resetMeterEndUseCategory() {
+    bool result = setString(OS_UtilityBillFields::MeterEndUseCategory, "");
     BOOST_ASSERT(result);
   }
 
@@ -556,50 +563,157 @@ namespace detail {
     return result;
   }
 
-  Meter UtilityBill_Impl::meter() const{
+  Meter UtilityBill_Impl::consumptionMeter() const{
+    FuelType fuelType = this->fuelType();
+    InstallLocationType meterInstallLocation = this->meterInstallLocation();
+    boost::optional<std::string> meterSpecificInstallLocation = this->meterSpecificInstallLocation();
+    boost::optional<EndUseCategoryType> meterEndUseCategory = this->meterEndUseCategory();
+    boost::optional<EndUseType> meterEndUse;
+    if (meterEndUseCategory){
+      meterEndUse = EndUseType(meterEndUseCategory->valueName());
+    }
+    boost::optional<std::string> meterSpecificEndUse = this->meterSpecificEndUse();
+
+    std::string meterName = Meter::getName(meterSpecificEndUse,
+                                           meterEndUse,
+                                           fuelType,
+                                           meterInstallLocation,
+                                           meterSpecificInstallLocation);
+
+    boost::optional<Meter> result;
+    BOOST_FOREACH(const Meter& meter, this->model().getModelObjects<Meter>()){
+      if ((istringEqual(meter.name(), meterName)) &&
+          (istringEqual("Daily", meter.reportingFrequency()))){
+        return meter;
+      }
+    }
+
+    result = Meter(this->model());
+    result->setReportingFrequency("Daily");
+    result->setFuelType(fuelType);
+    result->setInstallLocationType(meterInstallLocation);
+    if (meterSpecificInstallLocation){
+      result->setSpecificInstallLocation(*meterSpecificInstallLocation);
+    }
+    if (meterEndUse){
+      result->setEndUseType(*meterEndUse);
+    }
+    if (meterSpecificEndUse){
+      result->setSpecificEndUse(*meterSpecificEndUse);
+    }
+
+    return result.get();
+  }
+
+  Meter UtilityBill_Impl::peakDemandMeter() const{
     BOOST_ASSERT(false);
     return Meter(this->model());
   }
 
   std::vector<BillingPeriod> UtilityBill_Impl::billingPeriods() const
   {
-    boost::shared_ptr<openstudio::detail::IdfObject_Impl> p = const_cast<UtilityBill_Impl*>(this)->shared_from_this();
-
+    IdfExtensibleGroupVector egs = extensibleGroups();
     std::vector<BillingPeriod> result;
-    unsigned numExtensibleGroups = this->numExtensibleGroups();
-    for (unsigned i = 0; i < numExtensibleGroups; ++i){
-      result.push_back(BillingPeriod(boost::dynamic_pointer_cast<detail::UtilityBill_Impl>(p), i));
+    BOOST_FOREACH(const IdfExtensibleGroup& eg,egs) {
+      result.push_back(eg.cast<BillingPeriod>());
     }
     return result;
   }
 
   void UtilityBill_Impl::clearBillingPeriods()
   {
-    BOOST_ASSERT(false);
+    clearExtensibleGroups();
+    BOOST_ASSERT(numExtensibleGroups() == 0u);
   }
 
   BillingPeriod UtilityBill_Impl::addBillingPeriod()
   {
-    BOOST_ASSERT(false);
-    boost::shared_ptr<openstudio::detail::IdfObject_Impl> p = shared_from_this();
-    return BillingPeriod(boost::dynamic_pointer_cast<detail::UtilityBill_Impl>(p), this->numExtensibleGroups());
-  }
+    std::vector<BillingPeriod> billingPeriods = this->billingPeriods();
 
-  void UtilityBill_Impl::sortBillingPeriods()
-  {
-    BOOST_ASSERT(false);
+    IdfExtensibleGroup eg = pushExtensibleGroup(StringVector(), false);
+    BillingPeriod result = eg.cast<BillingPeriod>();
+    
+    if (billingPeriods.empty()){
+      boost::optional<model::YearDescription> yd = this->model().yearDescription();
+      //DLM: we could assert yd and also yd->calendarYear here
+      if (!yd){
+        yd = this->model().getUniqueModelObject<model::YearDescription>();
+      }
+
+      bool test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginMonth, 1);
+      BOOST_ASSERT(test);
+      test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginDayofMonth, 1);
+      BOOST_ASSERT(test);
+      test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginYear, yd->assumedYear());
+      BOOST_ASSERT(test);
+      test = result.setUnsigned(OS_UtilityBillExtensibleFields::NumberofDaysinBillingPeriod, 30);
+      BOOST_ASSERT(test);
+    }else{
+      Date startDate = billingPeriods.back().endDate() + Time(1);
+
+      bool test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginMonth, startDate.monthOfYear().value());
+      BOOST_ASSERT(test);
+      test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginDayofMonth, startDate.dayOfMonth());
+      BOOST_ASSERT(test);
+      test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginYear, startDate.year());
+      BOOST_ASSERT(test);
+      test = result.setUnsigned(OS_UtilityBillExtensibleFields::NumberofDaysinBillingPeriod, billingPeriods.back().numberOfDays());
+      BOOST_ASSERT(test);
+    }
+      
+    return result;
   }
 
   boost::optional<double> UtilityBill_Impl::CVRMSE() const
   {
-    BOOST_ASSERT(false);
-    return boost::none;
+    boost::optional<double> result;
+    double ysum = 0;
+    double squaredError = 0;
+    unsigned n = 0;
+    BOOST_FOREACH(const BillingPeriod& p, this->billingPeriods()){
+      boost::optional<double> consumption = p.consumption();
+      if (consumption){
+        boost::optional<double> modelConsumption = p.modelConsumption();
+        if (modelConsumption){
+          ysum += *consumption;
+          squaredError += std::pow(*consumption - *modelConsumption, 2);
+          n += 1;
+        }
+      }
+    }
+
+    if (n > 1){
+      double ybar = ysum/n;
+      result = 100.0 * std::pow(squaredError/(n-1), 0.5) / ybar;
+    }
+
+    return result;
   }
 
   boost::optional<double> UtilityBill_Impl::NMBE() const
   {
-    BOOST_ASSERT(false);
-    return boost::none;
+    boost::optional<double> result;
+    double ysum = 0;
+    double sumError = 0;
+    unsigned n = 0;
+    BOOST_FOREACH(const BillingPeriod& p, this->billingPeriods()){
+      boost::optional<double> consumption = p.consumption();
+      if (consumption){
+        boost::optional<double> modelConsumption = p.modelConsumption();
+        if (modelConsumption){
+          ysum += *consumption;
+          sumError += (*consumption - *modelConsumption);
+          n += 1;
+        }
+      }
+    }
+
+    if (n > 1){
+      double ybar = ysum/n;
+      result = 100.0 * (sumError/(n-1)) / ybar;
+    }
+
+    return result;
   }
 
 } // detail
@@ -607,104 +721,337 @@ namespace detail {
 
 Date BillingPeriod::startDate() const
 {
-  BOOST_ASSERT(false);
-  return Date(1,1);
+  boost::optional<unsigned> beginMonth = getUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginMonth);
+  BOOST_ASSERT(beginMonth);
+  boost::optional<unsigned> beginDay = getUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginDayofMonth);
+  BOOST_ASSERT(beginDay);
+  boost::optional<unsigned> beginYear = getUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginYear);
+  BOOST_ASSERT(beginYear);
+
+  return Date(beginMonth.get(), beginDay.get(), beginYear.get());
 }
 
 Date BillingPeriod::endDate() const
 {
-  BOOST_ASSERT(false);
-  return Date(1,1);
+  Date result = this->startDate() + Time(this->numberOfDays() - 1);
+  return result;
 }
 
 unsigned BillingPeriod::numberOfDays() const
 {
-  BOOST_ASSERT(false);
-  return 0;
-}
-
-bool BillingPeriod::setStartDate(const Date& startDate)
-{
-  BOOST_ASSERT(false);
-  return false;
-}
-
-bool BillingPeriod::setEndDate(const Date& endDate)
-{
-  BOOST_ASSERT(false);
-  return false;
-}
-
-bool BillingPeriod::setNumberOfDays(unsigned numberOfDays)
-{
-  BOOST_ASSERT(false);
-  return false;
-}
-
-bool BillingPeriod::withinRunPeriod() const
-{
-  BOOST_ASSERT(false);
-  return boost::none;
-}
-
-bool BillingPeriod::withinPeriodicRunPeriod() const
-{
-  BOOST_ASSERT(false);
-  return boost::none;
-}
-
-bool BillingPeriod::overlapsRunPeriod() const
-{
-  BOOST_ASSERT(false);
-  return boost::none;
-}
-
-boost::optional<double> BillingPeriod::CVRMSE() const
-{
-  BOOST_ASSERT(false);
-  return boost::none;
-}
-
-boost::optional<double> BillingPeriod::NMBE() const
-{
-  BOOST_ASSERT(false);
-  return boost::none;
+  boost::optional<unsigned> numberOfDays = getUnsigned(OS_UtilityBillExtensibleFields::NumberofDaysinBillingPeriod);
+  BOOST_ASSERT(numberOfDays);
+  return numberOfDays.get();
 }
 
 boost::optional<double> BillingPeriod::consumption() const
 {
-  BOOST_ASSERT(false);
-  return boost::none;
+  return getDouble(OS_UtilityBillExtensibleFields::BillingPeriodConsumption);
 }
 
-boost::optional<double> BillingPeriod::demand() const
+boost::optional<double> BillingPeriod::peakDemand() const
 {
-  BOOST_ASSERT(false);
-  return boost::none;
+  return getDouble(OS_UtilityBillExtensibleFields::BillingPeriodPeakDemand);
 }
 
 boost::optional<double> BillingPeriod::totalCost() const
 {
-  BOOST_ASSERT(false);
-  return boost::none;
+  return getDouble(OS_UtilityBillExtensibleFields::BillingPeriodTotalCost);
+}
+
+bool BillingPeriod::setStartDate(const Date& startDate)
+{
+  Date currentStartDate = this->startDate();
+  unsigned currentNumberOfDays = this->numberOfDays();
+  Date currentEndDate = this->endDate();
+
+  /* If startDate is before endDate then endDate is retained.
+     If startDate is after endDate then numberOfDays is retained. */
+
+  bool test = setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginMonth, startDate.monthOfYear().value());
+  BOOST_ASSERT(test);
+  test = setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginDayofMonth, startDate.dayOfMonth());
+  BOOST_ASSERT(test);
+  test = setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginYear, startDate.assumedBaseYear());
+  BOOST_ASSERT(test);
+
+  if (startDate < currentEndDate){
+    Time newNumberOfDays = currentEndDate - startDate;
+    test = this->setNumberOfDays(newNumberOfDays.days() + 1);
+    BOOST_ASSERT(test);
+  }
+
+  return test;
+}
+
+bool BillingPeriod::setEndDate(const Date& endDate)
+{
+  Date currentStartDate = this->startDate();
+  unsigned currentNumberOfDays = this->numberOfDays();
+  Date currentEndDate = this->endDate();
+
+  /* If endDate is after startDate then startDate is retained.
+     If endDate is before startDate then numberOfDays is retained. */
+
+  bool test = false;
+
+  if (endDate > currentStartDate){
+    Time newNumberOfDays = endDate - currentStartDate;
+    test = this->setNumberOfDays(newNumberOfDays.days() + 1);
+    BOOST_ASSERT(test);
+  }else{
+    Date newStartDate = endDate - Time(currentNumberOfDays - 1);
+    test = this->setStartDate(newStartDate);
+    BOOST_ASSERT(test);
+    test = this->setNumberOfDays(currentNumberOfDays);
+    BOOST_ASSERT(test);
+  }
+
+  return test;
+}
+
+bool BillingPeriod::setNumberOfDays(unsigned numberOfDays)
+{
+  bool test = setUnsigned(OS_UtilityBillExtensibleFields::NumberofDaysinBillingPeriod, numberOfDays);
+  return test;
+}
+
+bool BillingPeriod::setConsumption(double consumption)
+{
+  return setDouble(OS_UtilityBillExtensibleFields::BillingPeriodConsumption, consumption);
+}
+
+void BillingPeriod::resetConsumption()
+{
+  bool test = setString(OS_UtilityBillExtensibleFields::BillingPeriodConsumption, "");
+  BOOST_ASSERT(test);
+}
+
+bool BillingPeriod::setPeakDemand(double peakDemand)
+{
+  return setDouble(OS_UtilityBillExtensibleFields::BillingPeriodPeakDemand, peakDemand);
+}
+
+void BillingPeriod::resetPeakDemand()
+{
+  bool test = setString(OS_UtilityBillExtensibleFields::BillingPeriodPeakDemand, "");
+  BOOST_ASSERT(test);
+}
+
+bool BillingPeriod::setTotalCost(double totalCost)
+{
+  return setDouble(OS_UtilityBillExtensibleFields::BillingPeriodTotalCost, totalCost);
+}
+
+void BillingPeriod::resetTotalCost()
+{
+  bool test = setString(OS_UtilityBillExtensibleFields::BillingPeriodTotalCost, "");
+  BOOST_ASSERT(test);
+}
+
+bool BillingPeriod::withinRunPeriod() const
+{
+  model::Model model = getImpl<detail::UtilityBill_Impl>()->model();
+
+  boost::optional<RunPeriod> runPeriod = model.runPeriod();
+  if (!runPeriod){
+    return false;
+  }
+
+  boost::optional<model::YearDescription> yd = model.yearDescription();
+  if (!yd){
+    return false;
+  }
+
+  boost::optional<int> calendarYear = yd->calendarYear();
+  if (!calendarYear){
+    return false;
+  }
+
+  Date runPeriodStartDate = Date(runPeriod->getBeginMonth(), runPeriod->getBeginDayOfMonth(), *calendarYear);
+  Date runPeriodEndDate = Date(runPeriod->getEndMonth(), runPeriod->getEndDayOfMonth(), *calendarYear);
+
+  Date startDate = this->startDate();
+  Date endDate = this->endDate();
+
+  bool startDateInRunPeriod = (startDate >= runPeriodStartDate) && (startDate <= runPeriodEndDate);
+  bool endDateInRunPeriod = (endDate >= runPeriodStartDate) && (endDate <= runPeriodEndDate);
+
+  bool result = (startDateInRunPeriod && endDateInRunPeriod);
+
+  return result;
+}
+
+bool BillingPeriod::withinPeriodicRunPeriod() const
+{
+  model::Model model = getImpl<detail::UtilityBill_Impl>()->model();
+
+  bool withinRunPeriod = this->withinRunPeriod();
+  if (withinRunPeriod){
+    return true;
+  }
+
+  bool overlapsRunPeriod = this->overlapsRunPeriod();
+  if (!withinRunPeriod){
+    return false;
+  }
+
+  boost::optional<RunPeriod> runPeriod = model.runPeriod();
+  if (!runPeriod){
+    return false;
+  }
+
+  boost::optional<model::YearDescription> yd = model.yearDescription();
+  if (!yd){
+    return false;
+  }
+
+  boost::optional<int> calendarYear = yd->calendarYear();
+  if (!calendarYear){
+    return false;
+  }
+
+  Date runPeriodStartDatePeriodic = Date(runPeriod->getBeginMonth(), runPeriod->getBeginDayOfMonth(), *calendarYear + 1);
+  Date runPeriodEndDate = Date(runPeriod->getEndMonth(), runPeriod->getEndDayOfMonth(), *calendarYear);
+  Time time = runPeriodStartDatePeriodic - runPeriodEndDate;
+
+  bool result = (time.days() == 1);
+
+  return result;
+}
+
+bool BillingPeriod::overlapsRunPeriod() const
+{
+  model::Model model = getImpl<detail::UtilityBill_Impl>()->model();
+
+  boost::optional<RunPeriod> runPeriod = model.runPeriod();
+  if (!runPeriod){
+    return false;
+  }
+
+  boost::optional<model::YearDescription> yd = model.yearDescription();
+  if (!yd){
+    return false;
+  }
+
+  boost::optional<int> calendarYear = yd->calendarYear();
+  if (!calendarYear){
+    return false;
+  }
+
+  Date runPeriodStartDate = Date(runPeriod->getBeginMonth(), runPeriod->getBeginDayOfMonth(), *calendarYear);
+  Date runPeriodEndDate = Date(runPeriod->getEndMonth(), runPeriod->getEndDayOfMonth(), *calendarYear);
+
+  Date startDate = this->startDate();
+  Date endDate = this->endDate();
+
+  bool startDateInRunPeriod = (startDate >= runPeriodStartDate) && (startDate <= runPeriodEndDate);
+  bool endDateInRunPeriod = (endDate >= runPeriodStartDate) && (endDate <= runPeriodEndDate);
+
+  bool result = (startDateInRunPeriod || endDateInRunPeriod);
+
+  return result;
+}
+
+Vector BillingPeriod::modelConsumptionValues() const
+{
+  model::Model model = getImpl<detail::UtilityBill_Impl>()->model();
+
+  boost::optional<RunPeriod> runPeriod = model.runPeriod();
+  if (!runPeriod){
+    return Vector();
+  }
+
+  boost::optional<model::YearDescription> yd = model.yearDescription();
+  if (!yd){
+    return Vector();
+  }
+
+  boost::optional<int> calendarYear = yd->calendarYear();
+  if (!calendarYear){
+    return Vector();
+  }
+
+  Vector result;
+
+  Meter meter = getImpl<detail::UtilityBill_Impl>()->consumptionMeter();
+
+  Date runPeriodStartDate = Date(runPeriod->getBeginMonth(), runPeriod->getBeginDayOfMonth(), *calendarYear);
+  Date runPeriodEndDate = Date(runPeriod->getEndMonth(), runPeriod->getEndDayOfMonth(), *calendarYear);
+
+  boost::optional<openstudio::TimeSeries> timeseries = meter.getData(runPeriod->name().get());
+  if (timeseries){
+    result = Vector(this->numberOfDays());
+
+    double outOfRangeValue = std::numeric_limits<double>::min();
+    timeseries->setOutOfRangeValue(outOfRangeValue);
+
+    unsigned i = 0;
+    Date date = this->startDate();
+    Date endDate = this->endDate();
+    while (date <= endDate){
+
+      Date tmp = date;
+      if (date < runPeriodStartDate){
+        tmp = Date(date.monthOfYear(), date.dayOfMonth(), date.year() + 1);
+      }else if (date > runPeriodEndDate){
+        tmp = Date(date.monthOfYear(), date.dayOfMonth(), date.year() - 1);
+      }
+      DateTime dateTime(tmp, Time(0));
+
+      double value = timeseries->value(dateTime);
+      if (value == outOfRangeValue){
+        return Vector();
+      }else{
+        result[i] = value;
+      }
+
+      ++i;
+      date += Time(1);
+    }
+  }
+
+  return result;
+}
+
+Vector BillingPeriod::modelPeakDemandValues() const
+{
+  return Vector();
+}
+
+Vector BillingPeriod::modelTotalCostValues() const
+{
+  return Vector();
 }
 
 boost::optional<double> BillingPeriod::modelConsumption() const
 {
-  BOOST_ASSERT(false);
-  return boost::none;
+  boost::optional<double> result;
+  Vector modelConsumptionValues = this->modelConsumptionValues();
+  if (!modelConsumptionValues.empty()){
+    result = sum(modelConsumptionValues);
+  }
+  return result;
 }
 
-boost::optional<double> BillingPeriod::modelDemand() const
+boost::optional<double> BillingPeriod::modelPeakDemand() const
 {
-  BOOST_ASSERT(false);
-  return boost::none;
+  boost::optional<double> result;
+  Vector modelPeakDemandValues = this->modelPeakDemandValues();
+  if (!modelPeakDemandValues.empty()){
+    result = sum(modelPeakDemandValues);
+  }
+  return result;
 }
 
 boost::optional<double> BillingPeriod::modelTotalCost() const
 {
-  BOOST_ASSERT(false);
-  return boost::none;
+  boost::optional<double> result;
+  Vector modelTotalCostValues = this->modelTotalCostValues();
+  if (!modelTotalCostValues.empty()){
+    result = sum(modelTotalCostValues);
+  }
+  return result;
 }
 
 BillingPeriod::BillingPeriod(boost::shared_ptr<detail::UtilityBill_Impl> impl,unsigned index)
@@ -764,8 +1111,8 @@ boost::optional<std::string> UtilityBill::meterSpecificInstallLocation() const {
   return getImpl<detail::UtilityBill_Impl>()->meterSpecificInstallLocation();
 }
 
-boost::optional<EndUseCategoryType> UtilityBill::meterEndUse() const {
-  return getImpl<detail::UtilityBill_Impl>()->meterEndUse();
+boost::optional<EndUseCategoryType> UtilityBill::meterEndUseCategory() const {
+  return getImpl<detail::UtilityBill_Impl>()->meterEndUseCategory();
 }
 
 boost::optional<std::string> UtilityBill::meterSpecificEndUse() const {
@@ -804,12 +1151,12 @@ void UtilityBill::resetMeterSpecificInstallLocation() {
   getImpl<detail::UtilityBill_Impl>()->resetMeterSpecificInstallLocation();
 }
 
-bool UtilityBill::setMeterEndUse(const EndUseCategoryType& meterEndUse) {
-  return getImpl<detail::UtilityBill_Impl>()->setMeterEndUse(meterEndUse);
+bool UtilityBill::setMeterEndUseCategory(const EndUseCategoryType& meterEndUseCategory) {
+  return getImpl<detail::UtilityBill_Impl>()->setMeterEndUseCategory(meterEndUseCategory);
 }
 
-void UtilityBill::resetMeterEndUse() {
-  getImpl<detail::UtilityBill_Impl>()->resetMeterEndUse();
+void UtilityBill::resetMeterEndUseCategory() {
+  getImpl<detail::UtilityBill_Impl>()->resetMeterEndUseCategory();
 }
 
 bool UtilityBill::setMeterSpecificEndUse(const std::string& meterSpecificEndUse) {
@@ -836,8 +1183,12 @@ bool UtilityBill::setPeakDemandUnit(const std::string& peakDemandUnit) {
   return getImpl<detail::UtilityBill_Impl>()->setPeakDemandUnit(peakDemandUnit);
 }
 
-Meter UtilityBill::meter() const{
-  return getImpl<detail::UtilityBill_Impl>()->meter();
+Meter UtilityBill::consumptionMeter() const{
+  return getImpl<detail::UtilityBill_Impl>()->consumptionMeter();
+}
+
+Meter UtilityBill::peakDemandMeter() const{
+  return getImpl<detail::UtilityBill_Impl>()->peakDemandMeter();
 }
 
 std::vector<BillingPeriod> UtilityBill::billingPeriods() const{
@@ -850,10 +1201,6 @@ void UtilityBill::clearBillingPeriods(){
 
 BillingPeriod UtilityBill::addBillingPeriod(){
   return getImpl<detail::UtilityBill_Impl>()->addBillingPeriod();
-}
-
-void UtilityBill::sortBillingPeriods(){
-  getImpl<detail::UtilityBill_Impl>()->sortBillingPeriods();
 }
 
 boost::optional<double> UtilityBill::CVRMSE() const{

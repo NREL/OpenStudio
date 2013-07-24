@@ -24,6 +24,8 @@
 #include <model/ModelObject.hpp>
 #include <model/ModelExtensibleGroup.hpp>
 
+#include <utilities/Data/Vector.hpp>
+
 namespace openstudio {
 
 class FuelType;
@@ -58,6 +60,12 @@ class MODEL_API BillingPeriod : public ModelExtensibleGroup {
   /** The duration of the billing period in days. */
   unsigned numberOfDays() const;
 
+  boost::optional<double> consumption() const;
+
+  boost::optional<double> peakDemand() const;
+
+  boost::optional<double> totalCost() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -73,6 +81,18 @@ class MODEL_API BillingPeriod : public ModelExtensibleGroup {
   /** Sets the number of days in billing period, startDate is always retained. */
   bool setNumberOfDays(unsigned numberOfDays);
 
+  bool setConsumption(double consumption);
+
+  void resetConsumption();
+
+  bool setPeakDemand(double peakDemand);
+
+  void resetPeakDemand();
+
+  bool setTotalCost(double totalCost);
+
+  void resetTotalCost();
+
   //@}
   /** @name Other */
   //@{
@@ -86,22 +106,19 @@ class MODEL_API BillingPeriod : public ModelExtensibleGroup {
   /** Returns true if this billing period is partially within the model's run period.*/
   bool overlapsRunPeriod() const;
 
-  /** Coefficient of variation of the root mean square error, see ASHRAE 14-2002 5.2.11.3.*/
-  boost::optional<double> CVRMSE() const;
+  Vector modelConsumptionValues() const;
 
-  /** Normalized mean bias error, see ASHRAE 14-2002 5.2.11.3.*/
-  boost::optional<double> NMBE() const;
+  Vector modelPeakDemandValues() const;
 
-  boost::optional<double> consumption() const;
+  Vector modelTotalCostValues() const;
 
-  boost::optional<double> demand() const;
-
-  boost::optional<double> totalCost() const;
-
+  /** Returns the sum of modelConsumptionValues if it is not empty. */
   boost::optional<double> modelConsumption() const;
 
-  boost::optional<double> modelDemand() const;
+  /** Returns the sum of modelPeakDemandValues if it is not empty. */
+  boost::optional<double> modelPeakDemand() const;
 
+  /** Returns the sum of modelTotalCostValues if it is not empty. */
   boost::optional<double> modelTotalCost() const;
 
   //@}
@@ -155,7 +172,7 @@ class MODEL_API UtilityBill : public ModelObject {
 
   boost::optional<std::string> meterSpecificInstallLocation() const;
 
-  boost::optional<EndUseCategoryType> meterEndUse() const;
+  boost::optional<EndUseCategoryType> meterEndUseCategory() const;
 
   boost::optional<std::string> meterSpecificEndUse() const;
 
@@ -166,6 +183,8 @@ class MODEL_API UtilityBill : public ModelObject {
   bool isConsumptionUnitConversionFactorDefaulted() const;
 
   boost::optional<std::string> peakDemandUnit() const;
+
+  std::vector<BillingPeriod> billingPeriods() const;
 
   //@}
   /** @name Setters */
@@ -179,9 +198,9 @@ class MODEL_API UtilityBill : public ModelObject {
 
   void resetMeterSpecificInstallLocation();
 
-  bool setMeterEndUse(const EndUseCategoryType& meterEndUse);
+  bool setMeterEndUseCategory(const EndUseCategoryType& meterEndUseCategory);
 
-  void resetMeterEndUse();
+  void resetMeterEndUseCategory();
 
   bool setMeterSpecificEndUse(const std::string& meterSpecificEndUse);
 
@@ -195,20 +214,19 @@ class MODEL_API UtilityBill : public ModelObject {
 
   bool setPeakDemandUnit(const std::string& peakDemandUnit);
 
-  //@}
-  /** @name Other */
-  //@{
-
-  /** Gets the meter associated with this UtilityBill, creates it if it does not exist.*/
-  Meter meter() const;
-
-  std::vector<BillingPeriod> billingPeriods() const;
-
   void clearBillingPeriods();
 
   BillingPeriod addBillingPeriod();
 
-  void sortBillingPeriods();
+  //@}
+  /** @name Other */
+  //@{
+
+  /** Gets the meter associated with consumption for this UtilityBill, creates it if it does not exist.*/
+  Meter consumptionMeter() const;
+
+  /** Gets the meter associated with peak demand for this UtilityBill, creates it if it does not exist.*/
+  Meter peakDemandMeter() const;
 
   /** Coefficient of variation of the root mean square error, see ASHRAE 14-2002 5.2.11.3.*/
   boost::optional<double> CVRMSE() const;
