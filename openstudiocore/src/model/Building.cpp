@@ -324,7 +324,8 @@ namespace detail {
     SurfaceVector candidates = model().getModelObjects<Surface>();
     BOOST_FOREACH(const Surface& candidate,candidates) {
       std::string surfaceType = candidate.surfaceType();
-      if (openstudio::istringEqual(surfaceType, "Roof")) {
+      std::string outsideBoundaryCondition = candidate.outsideBoundaryCondition();
+      if (openstudio::istringEqual(surfaceType, "RoofCeiling") && openstudio::istringEqual(outsideBoundaryCondition, "Outdoors")) {
         result.push_back(candidate);
       }
     }
