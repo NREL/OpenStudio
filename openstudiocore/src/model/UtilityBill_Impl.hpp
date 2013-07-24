@@ -34,6 +34,8 @@ class EndUseCategoryType;
 
 namespace model {
 
+class BillingPeriod;
+
 namespace detail {
 
   class MODEL_API UtilityBill_Impl : public ModelObject_Impl {
@@ -69,6 +71,10 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    std::vector<std::string> consumptionUnitValues() const;
+
+    std::vector<std::string> peakDemandUnitValues() const;
+
     FuelType fuelType() const;
 
     InstallLocationType meterInstallLocation() const;
@@ -85,17 +91,13 @@ namespace detail {
 
     double consumptionUnitConversionFactor() const;
 
-    Quantity getConsumptionUnitConversionFactor(bool returnIP=false) const;
+    bool isConsumptionUnitConversionFactorDefaulted() const;
 
     boost::optional<std::string> peakDemandUnit() const;
-
-    // TODO: Handle this object's extensible fields.
 
     //@}
     /** @name Setters */
     //@{
-
-    bool setFuelType(const FuelType& fuelType);
 
     bool setMeterInstallLocation(const InstallLocationType& meterInstallLocation);
 
@@ -117,23 +119,32 @@ namespace detail {
 
     bool setConsumptionUnitConversionFactor(double consumptionUnitConversionFactor);
 
+    void resetConsumptionUnitConversionFactor();
+
     bool setPeakDemandUnit(const std::string& peakDemandUnit);
-
-    void resetPeakDemandUnit();
-
-    // TODO: Handle this object's extensible fields.
 
     //@}
     /** @name Other */
     //@{
 
+    Meter meter() const;
+
+    std::vector<BillingPeriod> billingPeriods() const;
+
+    void clearBillingPeriods();
+
+    BillingPeriod addBillingPeriod();
+
+    void sortBillingPeriods();
+
+    boost::optional<double> CVRMSE() const;
+
+    boost::optional<double> NMBE() const;
+
     //@}
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.UtilityBill");
-
-    std::vector<std::string> consumptionUnitValues() const;
-    std::vector<std::string> peakDemandUnitValues() const;
   };
 
 } // detail

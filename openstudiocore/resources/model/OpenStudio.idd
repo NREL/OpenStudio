@@ -12229,17 +12229,17 @@ OS:UtilityBill,
        \type choice
        \required-field
        \key Electricity
-       \key NaturalGas
+       \key Gas
        \key Gasoline
-       \key Diesel
-       \key Coal       
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Diesel      
+       \key FuelOil_1
+       \key FuelOil_2
        \key Propane
        \key Water
        \key Steam
        \key DistrictCooling
        \key DistrictHeating
+       \key EnergyTransfer
   A4, \field Meter Install Location
        \note Location the meter associated with this utility bill object is installed.
        \type choice
@@ -12256,6 +12256,7 @@ OS:UtilityBill,
   A6, \field Meter End Use
        \note Type of end use that meter is associated with.  
        \note Empty field indicates all end uses are included.
+       \type choice
        \key Heating
        \key Cooling
        \key InteriorLights

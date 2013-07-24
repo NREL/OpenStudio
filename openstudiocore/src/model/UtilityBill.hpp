@@ -22,20 +22,107 @@
 
 #include <model/ModelAPI.hpp>
 #include <model/ModelObject.hpp>
+#include <model/ModelExtensibleGroup.hpp>
 
 namespace openstudio {
 
 class FuelType;
 class InstallLocationType;
 class EndUseCategoryType;
+class Date;
 
 namespace model {
+
+class Meter;
 
 namespace detail {
 
   class UtilityBill_Impl;
 
 } // detail
+
+
+/** BillingPeriod is a ModelExtensibleGroup that represents a single billing period in the
+    UtilityBill ModelObject. */
+class MODEL_API BillingPeriod : public ModelExtensibleGroup {
+ public:
+  /** @name Getters */
+  //@{
+
+  /** The date that the billing period starts. */
+  Date startDate() const;
+
+  /** The date that the billing period ends. */
+  Date endDate() const;
+
+  /** The duration of the billing period in days. */
+  unsigned numberOfDays() const;
+
+  //@}
+  /** @name Setters */
+  //@{
+
+  /** Sets the start date.  If startDate is before endDate then endDate is retained.
+      If startDate is after endDate then numberOfDays is retained. */
+  bool setStartDate(const Date& startDate);
+
+  /** Sets the end date.  If endDate is after startDate then startDate is retained.
+      If endDate is before startDate then numberOfDays is retained. */
+  bool setEndDate(const Date& endDate);
+
+  /** Sets the number of days in billing period, startDate is always retained. */
+  bool setNumberOfDays(unsigned numberOfDays);
+
+  //@}
+  /** @name Other */
+  //@{
+
+  /** Returns true if this billing period is strictly within the model's run period.*/
+  bool withinRunPeriod() const;
+
+  /** Returns true if this billing period is within the model's run period assuming periodic boundary conditions.*/
+  bool withinPeriodicRunPeriod() const;
+
+  /** Returns true if this billing period is partially within the model's run period.*/
+  bool overlapsRunPeriod() const;
+
+  /** Coefficient of variation of the root mean square error, see ASHRAE 14-2002 5.2.11.3.*/
+  boost::optional<double> CVRMSE() const;
+
+  /** Normalized mean bias error, see ASHRAE 14-2002 5.2.11.3.*/
+  boost::optional<double> NMBE() const;
+
+  boost::optional<double> consumption() const;
+
+  boost::optional<double> demand() const;
+
+  boost::optional<double> totalCost() const;
+
+  boost::optional<double> modelConsumption() const;
+
+  boost::optional<double> modelDemand() const;
+
+  boost::optional<double> modelTotalCost() const;
+
+  //@}
+ protected:
+  /// @cond
+  typedef detail::UtilityBill_Impl ImplType;
+
+  friend class IdfExtensibleGroup;
+  friend class detail::UtilityBill_Impl;
+
+  BillingPeriod(boost::shared_ptr<detail::UtilityBill_Impl> impl,unsigned index);
+
+  /// @endcond
+ private:
+
+  REGISTER_LOGGER("openstudio.model.BillingPeriod");
+};
+
+/** \relates BillingPeriod */
+typedef std::vector<BillingPeriod> BillingPeriodVector;
+
 
 /** UtilityBill is a ModelObject that wraps the OpenStudio IDD object 'OS:UtilityBill'. 
     This object allows the user to enter in actual fuel usage for model calibration.
@@ -53,9 +140,9 @@ class MODEL_API UtilityBill : public ModelObject {
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> consumptionUnitValues();
+  std::vector<std::string> consumptionUnitValues();
 
-  static std::vector<std::string> peakDemandUnitValues();
+  std::vector<std::string> peakDemandUnitValues();
 
   /** @name Getters */
   //@{
@@ -76,9 +163,9 @@ class MODEL_API UtilityBill : public ModelObject {
 
   double consumptionUnitConversionFactor() const;
 
-  boost::optional<std::string> peakDemandUnit() const;
+  bool isConsumptionUnitConversionFactorDefaulted() const;
 
-  // TODO: Handle this object's extensible fields.
+  boost::optional<std::string> peakDemandUnit() const;
 
   //@}
   /** @name Setters */
@@ -104,15 +191,30 @@ class MODEL_API UtilityBill : public ModelObject {
 
   bool setConsumptionUnitConversionFactor(double consumptionUnitConversionFactor);
 
+  void resetConsumptionUnitConversionFactor();
+
   bool setPeakDemandUnit(const std::string& peakDemandUnit);
-
-  void resetPeakDemandUnit();
-
-  // TODO: Handle this object's extensible fields.
 
   //@}
   /** @name Other */
   //@{
+
+  /** Gets the meter associated with this UtilityBill, creates it if it does not exist.*/
+  Meter meter() const;
+
+  std::vector<BillingPeriod> billingPeriods() const;
+
+  void clearBillingPeriods();
+
+  BillingPeriod addBillingPeriod();
+
+  void sortBillingPeriods();
+
+  /** Coefficient of variation of the root mean square error, see ASHRAE 14-2002 5.2.11.3.*/
+  boost::optional<double> CVRMSE() const;
+
+  /** Normalized mean bias error, see ASHRAE 14-2002 5.2.11.3.*/
+  boost::optional<double> NMBE() const;
 
   //@}
  protected:
