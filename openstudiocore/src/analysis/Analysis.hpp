@@ -44,7 +44,7 @@ class Problem;
 class Algorithm;
 class DakotaAlgorithm;
 class DataPoint;
-class DiscretePerturbation;
+class Measure;
 class OpenStudioAlgorithm;
 
 namespace detail {
@@ -166,18 +166,17 @@ class ANALYSIS_API Analysis : public AnalysisObject {
    *  the correct type, which means that any value at that position should be returned. */
   std::vector<DataPoint> getDataPoints(const std::vector<QVariant>& variableValues) const;
 
-  /** Get the DataPoints defined by perturbations. Perturbations must be translatable into a valid set
+  /** Get the DataPoints defined by measures. Perturbations must be translatable into a valid set
    *  of variableValues for the problem(). */
   std::vector<DataPoint> getDataPoints(
-      const std::vector< boost::optional<DiscretePerturbation> >& perturbations) const;
+      const std::vector< boost::optional<Measure> >& measures) const;
 
   std::vector<DataPoint> getDataPoints(const std::string& tag) const;
 
-  /** Get the DataPoint defined by perturbations, if it exists. Similar to getDataPoints, but
+  /** Get the DataPoint defined by measures, if it exists. Similar to getDataPoints, but
    *  without accepting boost::optionals on input (and therefore SWIG-friendlier, but more limited
    *  in use). */
-  boost::optional<DataPoint> getDataPoint(
-      const std::vector<DiscretePerturbation>& perturbations) const;
+  boost::optional<DataPoint> getDataPoint(const std::vector<Measure>& measures) const;
 
   boost::optional<DataPoint> getDataPointByUUID(const UUID& uuid) const;
 
@@ -220,9 +219,9 @@ class ANALYSIS_API Analysis : public AnalysisObject {
    *  directly by a user to run custom analyses. */
   bool addDataPoint(const DataPoint& dataPoint);
 
-  /** Adds a DataPoint to this analysis and returns true if perturbations are valid for problem(),
+  /** Adds a DataPoint to this analysis and returns true if measures are valid for problem(),
    *  the resulting DataPoint is not yet in this Analysis, and if not dataPointsAreInvalid. */
-  bool addDataPoint(const std::vector<DiscretePerturbation>& perturbations);
+  bool addDataPoint(const std::vector<Measure>& measures);
 
   /** Removes dataPoint from this analysis. Returns false if dataPoint is not in this analysis by
    *  UUID. */

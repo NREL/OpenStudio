@@ -23,9 +23,9 @@
 #include <analysis/OptimizationProblem.hpp>
 #include <analysis/Variable.hpp>
 #include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/RubyPerturbation.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/RubyMeasure.hpp>
 #include <analysis/LinearFunction.hpp>
 #include <analysis/OutputAttributeVariable.hpp>
 #include <analysis/SequentialSearch.hpp>
@@ -92,11 +92,11 @@ TEST_F(AnalysisFixture, SequentialSearch) {
   VariableVector variables;
   std::stringstream ss;
   for (int i = 0; i < 5; ++i) {
-    DiscretePerturbationVector perturbations;
-    perturbations.push_back(NullPerturbation());
-    perturbations.push_back(RubyPerturbation(toPath("in.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
+    MeasureVector measures;
+    measures.push_back(NullMeasure());
+    measures.push_back(RubyMeasure(toPath("in.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
     ss << "var " << i + 1;
-    variables.push_back(DiscreteVariable(ss.str(),perturbations));
+    variables.push_back(DiscreteVariable(ss.str(),measures));
     ss.str("");
   }
   FunctionVector functions;

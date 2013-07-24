@@ -24,7 +24,7 @@
 #include <analysis/DakotaAlgorithm.hpp>
 #include <analysis/DakotaAlgorithm_Impl.hpp>
 #include <analysis/DataPoint_Impl.hpp>
-#include <analysis/DiscretePerturbation.hpp>
+#include <analysis/Measure.hpp>
 #include <analysis/InputVariable.hpp>
 #include <analysis/OpenStudioAlgorithm.hpp>
 #include <analysis/OpenStudioAlgorithm_Impl.hpp>
@@ -303,12 +303,12 @@ namespace detail {
   }
 
   std::vector<DataPoint> Analysis_Impl::getDataPoints(
-      const std::vector< boost::optional<DiscretePerturbation> >& perturbations) const
+      const std::vector< boost::optional<Measure> >& measures) const
   {
     DataPointVector result;
-    std::vector<QVariant> variableValues = problem().getVariableValues(perturbations);
-    if (variableValues.size() == perturbations.size()) {
-      // problem was able to match all perturbations
+    std::vector<QVariant> variableValues = problem().getVariableValues(measures);
+    if (variableValues.size() == measures.size()) {
+      // problem was able to match all measures
       result = getDataPoints(variableValues);
     }
     return result;
@@ -325,12 +325,12 @@ namespace detail {
   }
 
   boost::optional<DataPoint> Analysis_Impl::getDataPoint(
-      const std::vector<DiscretePerturbation>& perturbations) const
+      const std::vector<Measure>& measures) const
   {
     OptionalDataPoint result;
-    std::vector<QVariant> variableValues = problem().getVariableValues(perturbations);
-    if (variableValues.size() == perturbations.size()) {
-      // problem was able to match all perturbations
+    std::vector<QVariant> variableValues = problem().getVariableValues(measures);
+    if (variableValues.size() == measures.size()) {
+      // problem was able to match all measures
       DataPointVector intermediate = getDataPoints(variableValues);
       BOOST_ASSERT(intermediate.size() < 2u);
       if (intermediate.size() == 1u) {
@@ -484,13 +484,13 @@ namespace detail {
     return true;
   }
 
-  bool Analysis_Impl::addDataPoint(const std::vector<DiscretePerturbation>& perturbations) {
-    OptionalDataPoint dataPoint = problem().createDataPoint(perturbations);
+  bool Analysis_Impl::addDataPoint(const std::vector<Measure>& measures) {
+    OptionalDataPoint dataPoint = problem().createDataPoint(measures);
     if (dataPoint) {
       return addDataPoint(*dataPoint);
     }
     LOG(Error,"Cannot add DataPoint to Analysis '" << name() << "', because the provided "
-        "perturbations were invalid for Problem '" << problem().name() << "'.");
+        "measures were invalid for Problem '" << problem().name() << "'.");
     return false;
   }
 
@@ -882,9 +882,9 @@ std::vector<DataPoint> Analysis::getDataPoints(const std::vector<QVariant>& vari
 }
 
 std::vector<DataPoint> Analysis::getDataPoints(
-    const std::vector< boost::optional<DiscretePerturbation> >& perturbations) const
+    const std::vector< boost::optional<Measure> >& measures) const
 {
-  return getImpl<detail::Analysis_Impl>()->getDataPoints(perturbations);
+  return getImpl<detail::Analysis_Impl>()->getDataPoints(measures);
 }
 
 std::vector<DataPoint> Analysis::getDataPoints(const std::string& tag) const {
@@ -892,9 +892,9 @@ std::vector<DataPoint> Analysis::getDataPoints(const std::string& tag) const {
 }
 
 boost::optional<DataPoint> Analysis::getDataPoint(
-    const std::vector<DiscretePerturbation>& perturbations) const
+    const std::vector<Measure>& measures) const
 {
-  return getImpl<detail::Analysis_Impl>()->getDataPoint(perturbations);
+  return getImpl<detail::Analysis_Impl>()->getDataPoint(measures);
 }
 
 boost::optional<DataPoint> Analysis::getDataPointByUUID(const UUID& uuid) const {
@@ -945,8 +945,8 @@ bool Analysis::addDataPoint(const DataPoint& dataPoint) {
   return getImpl<detail::Analysis_Impl>()->addDataPoint(dataPoint);
 }
 
-bool Analysis::addDataPoint(const std::vector<DiscretePerturbation>& perturbations) {
-  return getImpl<detail::Analysis_Impl>()->addDataPoint(perturbations);
+bool Analysis::addDataPoint(const std::vector<Measure>& measures) {
+  return getImpl<detail::Analysis_Impl>()->addDataPoint(measures);
 }
 
 bool Analysis::setDataPointRunInformation(DataPoint& dataPoint, const runmanager::Job& topLevelJob, const std::vector<openstudio::path>& dakotaParametersFiles)

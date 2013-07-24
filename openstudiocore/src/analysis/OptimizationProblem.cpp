@@ -290,12 +290,12 @@ namespace detail {
     problemData["problem_type"] = QString("OptimizationProblem");
 
     if (!objectives().empty()) {
-      QVariantList objectiveList;
+      QVariantList objectivesList;
       int index(0);
       Q_FOREACH(const Function& objective,objectives()) {
-        QVariantMap objectiveMap = objective.toVariant();
+        QVariantMap objectiveMap = objective.toVariant().toMap();
         objectiveMap["objective_index"] = QVariant(index);
-        objectiveList.push_back(objectiveMap);
+        objectivesList.push_back(objectiveMap);
         ++index;
       }
       problemData["objectives"] = QVariant(objectivesList);

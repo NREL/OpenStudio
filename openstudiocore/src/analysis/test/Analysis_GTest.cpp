@@ -24,13 +24,13 @@
 #include <analysis/Problem.hpp>
 #include <analysis/Variable.hpp>
 #include <analysis/DataPoint.hpp>
-#include <analysis/ModelRulesetContinuousVariable.hpp>
 #include <analysis/DiscreteVariable.hpp>
 #include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/RubyPerturbation_Impl.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
+#include <analysis/RubyContinuousVariable.hpp>
 #include <analysis/ParameterStudyAlgorithm.hpp>
 #include <analysis/ParameterStudyAlgorithm_Impl.hpp>
 #include <analysis/ParameterStudyAlgorithmOptions.hpp>
@@ -38,10 +38,13 @@
 
 #include <runmanager/lib/Workflow.hpp>
 
-#include <ruleset/ModelObjectFilterType.hpp>
+#include <ruleset/OSArgument.hpp>
 
 #include <utilities/core/Containers.hpp>
+#include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/data/Tag.hpp>
+
+#include <resources.hxx>
 
 using namespace openstudio;
 using namespace openstudio::analysis;
@@ -157,10 +160,10 @@ TEST_F(AnalysisFixture, Analysis_DataPointsAreInvalid) {
   // ETH@20130206 - Alternate code for this test.
   // Problem problem = analysis.problem();
   // DiscreteVariable dv("South Facade WWR",
-  //                     DiscretePerturbationVector(1u,NullPerturbation()));
+  //                     MeasureVector(1u,NullMeasure()));
   bool test = analysis.problem().push(
         DiscreteVariable("South Facade WWR",
-                         DiscretePerturbationVector(1u,NullPerturbation())));
+                         MeasureVector(1u,NullMeasure())));
   // ETH@20130206
   // bool test = problem.push(dv);
   EXPECT_TRUE(test);
@@ -173,15 +176,15 @@ TEST_F(AnalysisFixture, Analysis_DataPointsAreInvalid) {
   test = analysis.addDataPoint(*dataPoint);
   EXPECT_TRUE(test);
 
-  // pushing perturbations does not invalidate data point
-  RubyPerturbation measure1(toPath("myMeasure.rb"),
-                           FileReferenceType::OSM,
-                           FileReferenceType::OSM,
-                           true);
+  // pushing measures does not invalidate data point
+  RubyMeasure measure1(toPath("myMeasure.rb"),
+                       FileReferenceType::OSM,
+                       FileReferenceType::OSM,
+                       true);
   // ETH@20130206
   // test = dv.push(measure1);
-  // EXPECT_EQ(1u,dv.numPerturbations(false));
-  // EXPECT_EQ(2u,analysis.problem().variables()[0].cast<DiscreteVariable>().numPerturbations(false));
+  // EXPECT_EQ(1u,dv.numMeasures(false));
+  // EXPECT_EQ(2u,analysis.problem().variables()[0].cast<DiscreteVariable>().numMeasures(false));
   test = analysis.problem().variables()[0].cast<DiscreteVariable>().push(measure1);
   EXPECT_TRUE(test);
   EXPECT_FALSE(analysis.dataPointsAreInvalid());
@@ -191,12 +194,12 @@ TEST_F(AnalysisFixture, Analysis_DataPointsAreInvalid) {
   test = analysis.addDataPoint(*dataPoint);
   EXPECT_TRUE(test);
 
-  RubyPerturbation measure2 = measure1.clone().cast<RubyPerturbation>();
+  RubyMeasure measure2 = measure1.clone().cast<RubyMeasure>();
   test = analysis.problem().variables()[0].cast<DiscreteVariable>().push(measure2);
   EXPECT_TRUE(test);
   EXPECT_FALSE(analysis.dataPointsAreInvalid());
 
-  // swapping perturbations invalidates data points
+  // swapping measures invalidates data points
   test = analysis.problem().variables()[0].cast<DiscreteVariable>().swap(measure1,measure2);
   EXPECT_TRUE(test);
   EXPECT_TRUE(analysis.dataPointsAreInvalid());
@@ -216,7 +219,7 @@ TEST_F(AnalysisFixture, Analysis_DataPointsAreInvalid) {
   EXPECT_TRUE(test);
 
   // adding a new variable re-invalidates them
-  test = analysis.problem().push(DiscreteVariable("West Facade WWR",DiscretePerturbationVector(1u,NullPerturbation())));
+  test = analysis.problem().push(DiscreteVariable("West Facade WWR",MeasureVector(1u,NullMeasure())));
   EXPECT_TRUE(test);
   EXPECT_TRUE(analysis.dataPointsAreInvalid());
   std::vector<QVariant> values;
@@ -242,18 +245,20 @@ TEST_F(AnalysisFixture, Analysis_DataPointsAreInvalid) {
 
 TEST_F(AnalysisFixture, Analysis_ClearAllResults) {
   // create dummy problem
-  ModelObjectFilterType buildingType(IddObjectType::OS_Building);
-  ModelRulesetContinuousVariable var("Building Rotation",
-                                     ModelObjectFilterClauseVector(1u,buildingType),
-                                     "northAxis");
+  BCLMeasure bclMeasure(resourcesPath() / toPath("utilities/BCL/Measures/SetWindowToWallRatioByFacade"));
+  RubyMeasure measure(bclMeasure);
+  OSArgument arg = OSArgument::makeDoubleArgument("wwr");
+  RubyContinuousVariable var("Window to Wall Ratio",
+                             arg,
+                             measure);
   var.setMinimum(0.0);
-  var.setMaximum(360.0);
+  var.setMaximum(0.6);
   Problem problem("Problem",VariableVector(1u,var),runmanager::Workflow());
 
   // create dummy algorithm (already initialized to be complete)
   ParameterStudyAlgorithmOptions options(ParameterStudyAlgorithmType::list_parameter_study);
   DoubleVector points;
-  for (double val = 0.0; val < 360.0; val += 15.0) {
+  for (double val = 0.0; val < 0.6; val += 0.1) {
     points.push_back(val);
   }
   options.setListOfPoints(points);

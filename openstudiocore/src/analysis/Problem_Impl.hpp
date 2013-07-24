@@ -45,7 +45,7 @@ namespace runmanager {
 
 namespace analysis {
 
-class RubyPerturbation;
+class RubyMeasure;
 class RubyContinuousVariable;
 
 namespace detail {
@@ -137,12 +137,12 @@ namespace detail {
      *  DiscreteVariable */
     int numDiscreteVariables() const;
 
-    /** Number of discrete variables with 0-1 perturbations selected. */
+    /** Number of discrete variables with 0-1 measures selected. */
     int numStaticTransformations() const;
 
     bool allVariablesAreContinuous() const;
 
-    /** Returns true if all DiscreteVariables only consist of one perturbation. Such discrete
+    /** Returns true if all DiscreteVariables only consist of one measure. Such discrete
      *  discrete variables can be thought of as model transformations, rather than variables,
      *  and can be hidden from \link DakotaAlgorithm DakotaAlgorithms \endlink. */
     bool allVariablesAreContinuousOrStaticTransformations() const;
@@ -177,28 +177,28 @@ namespace detail {
     /** @name Getters and Queries for Discrete Problems */
     //@{
 
-    /** Converts perturbations to a vector of variable values stored in QVariant format. (In this
+    /** Converts measures to a vector of variable values stored in QVariant format. (In this
      *  case, all of the QVariants will be of type int.) */
     std::vector<QVariant> getVariableValues(
-        const std::vector<DiscretePerturbation>& perturbations) const;
+        const std::vector<Measure>& measures) const;
 
-    /** Converts perturbations to a vector of variable values stored in QVariant format, including
+    /** Converts measures to a vector of variable values stored in QVariant format, including
      *  null QVariant values (of the correct type, int or double) as necessary. */
     std::vector<QVariant> getVariableValues(
-      const std::vector< boost::optional<DiscretePerturbation> >& perturbations) const;
+      const std::vector< boost::optional<Measure> >& measures) const;
 
-    /** Converts variableValues to a vector of \link DiscretePerturbation DiscretePerturbations
-     *  \endlink, leaving gaps for continuous variables by inserting boost::nones in the appropriate
-     *  locations. */
-    std::vector<boost::optional<DiscretePerturbation> > getDiscretePerturbations(
+    /** Converts variableValues to a vector of \link Measure
+     *  Measures\endlink, leaving gaps for continuous variables by inserting
+     *  boost::nones in the appropriate locations. */
+    std::vector<boost::optional<Measure> > getMeasures(
         const std::vector<QVariant>& variableValues) const;
 
     /** If allVariablesAreDiscrete(), returns the number of \link DataPoint DataPoints\endlink that
-     *  would have to be simulated to populate the full mesh for this problem. If
-     *  selectedPerturbationsOnly, the returned value represents the computational effort necessary
-     *  to run DesignOfExperiments. If not selectedPerturbationsOnly, the returned value represents
-     *  the maximum size of the problem the problem, if all perturbations were to be turned on. */
-    boost::optional<int> combinatorialSize(bool selectedPerturbationsOnly) const;
+     *  would have to be simulated to populate the full mesh for this problem. If selectedMeasuresOnly,
+     *  the returned value represents the computational effort necessary to run DesignOfExperiments.
+     *  If not selectedMeasuresOnly, the returned value represents the maximum size of the problem the
+     *  problem, if all measures were to be turned on. */
+    boost::optional<int> combinatorialSize(bool selectedMeasuresOnly) const;
 
     //@}
     /** @name Setters */
@@ -247,10 +247,10 @@ namespace detail {
     virtual boost::optional<DataPoint> createDataPoint(
         const std::vector<QVariant>& variableValues) const;
 
-    /** Returns a DataPoint if perturbations can be transformed into a valid set of variableValues.
+    /** Returns a DataPoint if measures can be transformed into a valid set of variableValues.
      *  Only works if allVariablesAreDiscrete(). */
     virtual boost::optional<DataPoint> createDataPoint(
-        const std::vector<DiscretePerturbation>& perturbations) const;
+        const std::vector<Measure>& measures) const;
 
     /** Attemps create a new DataPoint from params. Returns that DataPoint if possible; returns
      *  boost::none otherwise. */
@@ -310,10 +310,10 @@ namespace detail {
     bool areInCompoundMeasure(const WorkflowStep& step,
                               const boost::optional<WorkflowStep>& nextStep) const;
 
-    bool updateMeasureForCompoundRubyPerturbation(const BCLMeasure& newVersion,
+    bool updateMeasureForCompoundRubyMeasure(const BCLMeasure& newVersion,
                                                   const std::vector<ruleset::OSArgument>& newArguments,
                                                   bool keepOldArgumentsIfNewEmpty,
-                                                  RubyPerturbation& perturbation,
+                                                  RubyMeasure& measure,
                                                   std::vector<RubyContinuousVariable>& variables);
 
     REGISTER_LOGGER("openstudio.analysis.Problem");

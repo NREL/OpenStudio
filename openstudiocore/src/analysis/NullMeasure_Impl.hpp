@@ -17,39 +17,39 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef ANALYSIS_NULLPERTURBATION_IMPL_HPP
-#define ANALYSIS_NULLPERTURBATION_IMPL_HPP
+#ifndef ANALYSIS_NULLMEASURE_IMPL_HPP
+#define ANALYSIS_NULLMEASURE_IMPL_HPP
 
 #include <analysis/AnalysisAPI.hpp>
-#include <analysis/DiscretePerturbation_Impl.hpp>
+#include <analysis/Measure_Impl.hpp>
 
 namespace openstudio {
 namespace analysis {
 
-class NullPerturbation;
+class NullMeasure;
 
 namespace detail {
 
-  /** NullPerturbation_Impl is a DiscretePerturbation_Impl that is the implementation class for NullPerturbation.*/
-  class ANALYSIS_API NullPerturbation_Impl : public DiscretePerturbation_Impl {
+  /** NullMeasure_Impl is a Measure_Impl that is the implementation class for NullMeasure.*/
+  class ANALYSIS_API NullMeasure_Impl : public Measure_Impl {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    NullPerturbation_Impl(bool isSelected);
+    NullMeasure_Impl(bool isSelected);
 
     /** Constructor provided for deserialization; not for general use. */
-    NullPerturbation_Impl(const UUID& uuid,
+    NullMeasure_Impl(const UUID& uuid,
                           const UUID& versionUUID,
                           const std::string& name,
                           const std::string& displayName,
                           const std::string& description,
                           bool isSelected);
 
-    NullPerturbation_Impl(const NullPerturbation_Impl& other);
+    NullMeasure_Impl(const NullMeasure_Impl& other);
 
-    virtual ~NullPerturbation_Impl() {}
+    virtual ~NullMeasure_Impl() {}
 
     virtual AnalysisObject clone() const;
 
@@ -63,7 +63,7 @@ namespace detail {
 
    protected:
    private:
-    REGISTER_LOGGER("openstudio.analysis.NullPerturbation");
+    REGISTER_LOGGER("openstudio.analysis.NullMeasure");
   };
 
 } // detail
@@ -71,5 +71,5 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // ANALYSIS_NULLPERTURBATION_IMPL_HPP
+#endif // ANALYSIS_NULLMEASURE_IMPL_HPP
 

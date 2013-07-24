@@ -29,15 +29,15 @@
 #include <analysis/DataPoint.hpp>
 #include <analysis/DiscreteVariable.hpp>
 #include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/DiscretePerturbation.hpp>
+#include <analysis/Measure.hpp>
 #include <analysis/Function_Impl.hpp>
 #include <analysis/GenericUncertaintyDescription.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/NullPerturbation_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/NullMeasure_Impl.hpp>
 #include <analysis/RubyContinuousVariable.hpp>
 #include <analysis/RubyContinuousVariable_Impl.hpp>
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/RubyPerturbation_Impl.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
 #include <analysis/UncertaintyDescription.hpp>
 #include <analysis/UncertaintyDescription_Impl.hpp>
 #include <analysis/WorkflowStep_Impl.hpp>
@@ -301,7 +301,7 @@ namespace detail {
 
     int result(0);
     BOOST_FOREACH(const DiscreteVariable& dvar,dvars) {
-      if (dvar.numPerturbations(true) < 2) {
+      if (dvar.numMeasures(true) < 2) {
         ++result;
       }
     }
@@ -316,7 +316,7 @@ namespace detail {
   bool Problem_Impl::allVariablesAreContinuousOrStaticTransformations() const {
     BOOST_FOREACH(const InputVariable& variable,variables()) {
       if (OptionalDiscreteVariable oDiscrete = variable.optionalCast<DiscreteVariable>()) {
-        if (oDiscrete->numPerturbations(true) > 1) {
+        if (oDiscrete->numMeasures(true) > 1) {
           return false;
         }
       }
@@ -521,22 +521,22 @@ namespace detail {
   }
 
   std::vector<QVariant> Problem_Impl::getVariableValues(
-      const std::vector<DiscretePerturbation>& perturbations) const
+      const std::vector<Measure>& measures) const
   {
-    return getVariableValues(std::vector<OptionalDiscretePerturbation>(
-        perturbations.begin(),perturbations.end()));
+    return getVariableValues(std::vector<OptionalMeasure>(
+        measures.begin(),measures.end()));
   }
 
   std::vector<QVariant> Problem_Impl::getVariableValues(
-    const std::vector< boost::optional<DiscretePerturbation> >& perturbations) const
+    const std::vector< boost::optional<Measure> >& measures) const
   {
     std::vector<QVariant> result, intermediate;
 
     int n = numVariables();
-    int m = perturbations.size();
+    int m = measures.size();
     if (m > n) {
       LOG(Warn,"Cannot determine variable values for Problem '" << name() <<
-          "' from perturbation vector of length " << perturbations.size() <<
+          "' from measure vector of length " << measures.size() <<
           ", because this problem has " << n << " variables.");
       return result;
     }
@@ -545,18 +545,18 @@ namespace detail {
     for (int i = 0; i < n && i < m; ++i) {
       OptionalDiscreteVariable discreteVariable = variables[i].optionalCast<DiscreteVariable>();
       if (discreteVariable) {
-        if (!perturbations[i]) {
+        if (!measures[i]) {
           intermediate.push_back(QVariant(QVariant::Int));
           continue;
         }
-        OptionalInt perturbationIndex = discreteVariable->getIndexByUUID(perturbations[i].get());
-        if (!perturbationIndex) {
+        OptionalInt measureIndex = discreteVariable->getIndexByUUID(measures[i].get());
+        if (!measureIndex) {
           LOG(Warn,"Cannot determine variable values for Problem '" << name()
-              << "' from the provided perturbation vector, because the perturbation at index " <<
-              i << " is not in the variable at index " << i << " (getPerturbationByUUID).");
+              << "' from the provided measure vector, because the measure at index " <<
+              i << " is not in the variable at index " << i << " (getMeasureByUUID).");
           return result;
         }
-        intermediate.push_back(QVariant(*perturbationIndex));
+        intermediate.push_back(QVariant(*measureIndex));
         continue;
       }
       // OptionalContinuousVariable continuousVariable = variables[i].optionalCast<ContinuousVariable>();
@@ -567,15 +567,15 @@ namespace detail {
     return result;
   }
 
-  std::vector<boost::optional<DiscretePerturbation> > Problem_Impl::getDiscretePerturbations(
+  std::vector<boost::optional<Measure> > Problem_Impl::getMeasures(
       const std::vector<QVariant>& variableValues) const
   {
-    std::vector<OptionalDiscretePerturbation> result, intermediate;
+    std::vector<OptionalMeasure> result, intermediate;
 
     int n = numVariables();
     int m = variableValues.size();
     if (m > n) {
-      LOG(Warn,"Cannot determine discrete perturbations for Problem '" << name() <<
+      LOG(Warn,"Cannot determine discrete measures for Problem '" << name() <<
           "' from variable values vector of length " << m <<
           ", because this problem has " << n << " variables.");
       return result;
@@ -591,12 +591,12 @@ namespace detail {
           continue;
         }
         if (!discreteVariable->isValid(value)) {
-          LOG(Warn,"Cannot determine discrete perturbations for Problem '" << name() <<
+          LOG(Warn,"Cannot determine discrete measures for Problem '" << name() <<
           "', because the value given for variable " << i << ", '" << discreteVariable->name()
           << "', is non-null and invalid.");
           return result;
         }
-        intermediate.push_back(discreteVariable->getPerturbation(value.toInt()));
+        intermediate.push_back(discreteVariable->getMeasure(value.toInt()));
         continue;
       }
       intermediate.push_back(boost::none);
@@ -606,7 +606,7 @@ namespace detail {
     return result;
   }
 
-  boost::optional<int> Problem_Impl::combinatorialSize(bool selectedPerturbationsOnly) const {
+  boost::optional<int> Problem_Impl::combinatorialSize(bool selectedMeasuresOnly) const {
     OptionalInt result;
     int intermediate(0);
     InputVariableVector variables = this->variables();
@@ -615,10 +615,10 @@ namespace detail {
       if (!discreteVariable) {
         return result;
       }
-      int thisVariableSize = discreteVariable->numPerturbations(selectedPerturbationsOnly);
+      int thisVariableSize = discreteVariable->numMeasures(selectedMeasuresOnly);
       if (thisVariableSize == 0) {
         LOG(Warn,"Problem '" << name() << "' contains a DiscreteVariable '" << variable.name() <<
-            "' with either no perturbations, or no selected perturbations. In either case, " <<
+            "' with either no measures, or no selected measures. In either case, " <<
             "completely null DiscreteVariables (those with no valid integer value) are not " <<
             "supported at this time.");
         return result;
@@ -882,14 +882,14 @@ namespace detail {
     bool result = true;
     UUID measureUUID = newVersion.uuid();
     InputVariableVector variables = this->variables();
-    OptionalRubyPerturbation compoundRubyPerturbation;
+    OptionalRubyMeasure compoundRubyMeasure;
     std::vector<RubyContinuousVariable> compoundVariables;
     BOOST_FOREACH(const InputVariable& variable, variables) {
-      if (compoundRubyPerturbation) {
+      if (compoundRubyMeasure) {
         // see if should clear
         bool clearCompound = false;
         if (OptionalRubyContinuousVariable rcv = variable.optionalCast<RubyContinuousVariable>()) {
-          if (rcv->perturbation() == compoundRubyPerturbation.get()) {
+          if (rcv->measure() == compoundRubyMeasure.get()) {
             clearCompound = true;
           }
         }
@@ -897,24 +897,24 @@ namespace detail {
           clearCompound = true;
         }
         if (clearCompound) {
-          result = result && updateMeasureForCompoundRubyPerturbation(
+          result = result && updateMeasureForCompoundRubyMeasure(
                 newVersion,
                 newArguments,
                 keepOldArgumentsIfNewEmpty,
-                *compoundRubyPerturbation,
+                *compoundRubyMeasure,
                 compoundVariables);
-          compoundRubyPerturbation.reset();
+          compoundRubyMeasure.reset();
           compoundVariables.clear();
         }
       }
 
-      if (compoundRubyPerturbation) {
+      if (compoundRubyMeasure) {
         compoundVariables.push_back(variable.cast<RubyContinuousVariable>());
       }
       else if (OptionalDiscreteVariable dv = variable.optionalCast<DiscreteVariable>()) {
-        DiscretePerturbationVector dps = dv->perturbations(false);
-        BOOST_FOREACH(DiscretePerturbation& dp,dps) {
-          if (OptionalRubyPerturbation rp = dp.optionalCast<RubyPerturbation>()) {
+        MeasureVector dps = dv->measures(false);
+        BOOST_FOREACH(Measure& dp,dps) {
+          if (OptionalRubyMeasure rp = dp.optionalCast<RubyMeasure>()) {
             if (rp->usesBCLMeasure() && (rp->measureUUID() == measureUUID)) {
               bool ok(true);
               if (newArguments.empty() && keepOldArgumentsIfNewEmpty) {
@@ -939,10 +939,10 @@ namespace detail {
         }
       }
       else if (OptionalRubyContinuousVariable rcv = variable.optionalCast<RubyContinuousVariable>()) {
-        if (rcv->perturbation().usesBCLMeasure() &&
-            (rcv->perturbation().measureUUID() == measureUUID))
+        if (rcv->measure().usesBCLMeasure() &&
+            (rcv->measure().measureUUID() == measureUUID))
         {
-          compoundRubyPerturbation = rcv->perturbation();
+          compoundRubyMeasure = rcv->measure();
           compoundVariables.push_back(*rcv);
         }
       }
@@ -958,7 +958,7 @@ namespace detail {
     // screen discrete variables with only one option (treat as static transformations, not variables)
     DiscreteVariableVector::iterator it = discreteVariables.begin();
     while (it != discreteVariables.end()) {
-      if (it->numPerturbations(true) < 2u) {
+      if (it->numMeasures(true) < 2u) {
         it = discreteVariables.erase(it);
         continue;
       }
@@ -1004,7 +1004,7 @@ namespace detail {
         }
         else {
           DiscreteVariable dvar = vars[cdvs[i]].cast<DiscreteVariable>();
-          ss << " " << double(dvar.numPerturbations(true)) - 0.5;
+          ss << " " << double(dvar.numMeasures(true)) - 0.5;
         }
       }
       ss << std::endl;
@@ -1017,14 +1017,14 @@ namespace detail {
       ss << "          num_set_values" << std::endl << "           ";
       for (int i = 0; i < n_ddvs; ++i) {
         DiscreteVariable dvar = vars[ddvs[i]].cast<DiscreteVariable>();
-        ss << " " << dvar.numPerturbations(true);
+        ss << " " << dvar.numMeasures(true);
       }
       ss << std::endl << "          set_values" << std::endl;
       for (int i = 0; i < n_ddvs; ++i) {
         DiscreteVariable dvar = vars[ddvs[i]].cast<DiscreteVariable>();
         ss << "           ";
         int j(0);
-        BOOST_FOREACH(const DiscretePerturbation& dpert, dvar.perturbations(false)) {
+        BOOST_FOREACH(const Measure& dpert, dvar.measures(false)) {
           if (dpert.isSelected()) {
             ss << " " << j;
           }
@@ -1236,10 +1236,10 @@ namespace detail {
   }
 
   boost::optional<DataPoint> Problem_Impl::createDataPoint(
-      const std::vector<DiscretePerturbation>& perturbations) const
+      const std::vector<Measure>& measures) const
   {
     OptionalDataPoint result;
-    DataPoint candidate(getPublicObject<Problem>(),getVariableValues(perturbations));
+    DataPoint candidate(getPublicObject<Problem>(),getVariableValues(measures));
     if (isValid(candidate)) {
       result = candidate;
     }
@@ -1273,13 +1273,13 @@ namespace detail {
           if (cvValues[i] > 0.0) {
             index = std::floor(cvValues[i] + 0.5);
           }
-          int np = dvar->numPerturbations(true);
+          int np = dvar->numMeasures(true);
           if (index >= np) {
             LOG(Warn,"Discrete variable represented as " << cvValues[i]
                 << " rounded to invalid index " << index << " of " << np - 1 << ".");
             index = np - 1;
           }
-          index = dvar->getIndexByUUID(dvar->perturbations(true)[index]).get();
+          index = dvar->getIndexByUUID(dvar->measures(true)[index]).get();
           variableValues[cdvs[i]] = QVariant(index);
           continue;
         }
@@ -1321,16 +1321,16 @@ namespace detail {
       }
     }
 
-    // put in values for skipped (0-1 selected perturbations) discrete variables
+    // put in values for skipped (0-1 selected measures) discrete variables
     for (int i = 0; i < n; ++i) {
       if (variableValues[i].isNull()) {
         // should be skipped discrete variable
         if (OptionalDiscreteVariable dvar = vars[i].optionalCast<DiscreteVariable>()) {
-          int np = dvar->numPerturbations(true);
+          int np = dvar->numMeasures(true);
           if (np < 2) {
-            // 0-1 perturbation discrete variables are screened from DAKOTA
+            // 0-1 measure discrete variables are screened from DAKOTA
             if (np == 1) {
-              int index = dvar->getIndexByUUID(dvar->perturbations(true)[0]).get();
+              int index = dvar->getIndexByUUID(dvar->measures(true)[0]).get();
               variableValues[i] = QVariant(index);
             }
             continue;
@@ -1360,30 +1360,30 @@ namespace detail {
       LOG_AND_THROW("DataPoint is invalid. Has wrong number of variable values. Was expecting "
                     << numVariables() << ", got " << values.size() << ".");
     }
-    OptionalRubyPerturbation compoundRubyPerturbation;
-    OptionalRubyPerturbation originalCompoundRubyPerturbation;
+    OptionalRubyMeasure compoundRubyMeasure;
+    OptionalRubyMeasure originalCompoundRubyMeasure;
     unsigned i = 0;
     BOOST_FOREACH(const WorkflowStep& step, workflow()) {
 
-      if (compoundRubyPerturbation) {
+      if (compoundRubyMeasure) {
 
         if (step.isInputVariable()) {
           if (OptionalRubyContinuousVariable rcv = step.inputVariable().optionalCast<RubyContinuousVariable>()) {
-            if (rcv->perturbation() == *originalCompoundRubyPerturbation) {
+            if (rcv->measure() == *originalCompoundRubyMeasure) {
               // add argument to existing pertubation
               OSArgument arg = rcv->argument();
               arg.setValue(values[i].toDouble());
-              compoundRubyPerturbation->addArgument(arg);
+              compoundRubyMeasure->addArgument(arg);
               ++i;
               continue;
             }
           }
         }
 
-        // instantiate the compoundRubyPerturbation and then deal with the next item
-        result.push_back(compoundRubyPerturbation->createWorkItem(rubyIncludeDirectory));
-        compoundRubyPerturbation.reset();
-        originalCompoundRubyPerturbation.reset();
+        // instantiate the compoundRubyMeasure and then deal with the next item
+        result.push_back(compoundRubyMeasure->createWorkItem(rubyIncludeDirectory));
+        compoundRubyMeasure.reset();
+        originalCompoundRubyMeasure.reset();
       }
 
       if (step.isWorkItem()) {
@@ -1393,11 +1393,11 @@ namespace detail {
         InputVariable variable = step.inputVariable();
         if (OptionalRubyContinuousVariable rcv = variable.optionalCast<RubyContinuousVariable>()) {
           // start a compound measure
-          originalCompoundRubyPerturbation = rcv->perturbation();
-          compoundRubyPerturbation = originalCompoundRubyPerturbation->clone().cast<RubyPerturbation>();
+          originalCompoundRubyMeasure = rcv->measure();
+          compoundRubyMeasure = originalCompoundRubyMeasure->clone().cast<RubyMeasure>();
           OSArgument arg = rcv->argument();
           arg.setValue(values[i].toDouble());
-          compoundRubyPerturbation->addArgument(arg);
+          compoundRubyMeasure->addArgument(arg);
         }
         else {
           result.push_back(variable.createWorkItem(values[i],rubyIncludeDirectory));
@@ -1406,8 +1406,8 @@ namespace detail {
       }
     }
 
-    if (compoundRubyPerturbation) {
-      result.push_back(compoundRubyPerturbation->createWorkItem(rubyIncludeDirectory));
+    if (compoundRubyMeasure) {
+      result.push_back(compoundRubyMeasure->createWorkItem(rubyIncludeDirectory));
     }
 
     // put a bow on it
@@ -1520,11 +1520,11 @@ namespace detail {
             // maybe, doesn't matter
             // is currentJob null?
             if ((!currentJob) || (currentJob->jobType() == runmanager::JobType::Null)) {
-              // must be null perturbation
+              // must be null measure
               BOOST_ASSERT(var.optionalCast<DiscreteVariable>());
               DiscreteVariable dvar = var.cast<DiscreteVariable>();
-              DiscretePerturbation dpert = dvar.getPerturbation(dataPoint);
-              BOOST_ASSERT(dpert.optionalCast<NullPerturbation>());
+              Measure dpert = dvar.getMeasure(dataPoint);
+              BOOST_ASSERT(dpert.optionalCast<NullMeasure>());
               if (!optimize) {
                 // include in results
                 if (currentJob) {
@@ -1550,9 +1550,9 @@ namespace detail {
               // non-null job
               bool getNextJob(true);
               if (OptionalDiscreteVariable dvar = var.optionalCast<DiscreteVariable>()) {
-                DiscretePerturbation dpert = dvar->getPerturbation(dataPoint);
-                if (OptionalNullPerturbation npert = dpert.optionalCast<NullPerturbation>()) {
-                  // null perturbation, non-null job, do not correspond
+                Measure dpert = dvar->getMeasure(dataPoint);
+                if (OptionalNullMeasure npert = dpert.optionalCast<NullMeasure>()) {
+                  // null measure, non-null job, do not correspond
                   // only include if !optimize
                   if (!optimize) {
                     result.push_back(WorkflowStepJob(currentStep,dpert));
@@ -1660,9 +1660,9 @@ namespace detail {
       else {
         // discrete variable
         OptionalDiscreteVariable dv = vars[i].optionalCast<DiscreteVariable>();
-        int np = dv->numPerturbations(true);
+        int np = dv->numMeasures(true);
         if (np > 1 && dakotaAlgorithm.requiresContinuousVariables()) {
-          // 0-1 perturbation discrete variables are screened from DAKOTA
+          // 0-1 measure discrete variables are screened from DAKOTA
           result.push_back(i);
         }
       }
@@ -1722,7 +1722,7 @@ namespace detail {
     QVariantList workflowList;
     int index(0);
     Q_FOREACH(const WorkflowStep& step, workflow()) {
-      QVariantMap stepMap = step.toVariant();
+      QVariantMap stepMap = step.toVariant().toMap();
       stepMap["workflow_index"] = QVariant(index);
       workflowList.push_back(stepMap);
     }
@@ -1732,7 +1732,7 @@ namespace detail {
       QVariantList responsesList;
       index = 0;
       Q_FOREACH(const Function& response,responses()) {
-        QVariantMap responseMap = response.toVariant();
+        QVariantMap responseMap = response.toVariant().toMap();
         responseMap["response_index"] = QVariant(index);
         responsesList.push_back(responseMap);
         ++index;
@@ -1769,23 +1769,23 @@ namespace detail {
       allTypes.insert(*currentType);
     }
 
-    OptionalRubyPerturbation compoundRubyPerturbation;
+    OptionalRubyMeasure compoundRubyMeasure;
     BOOST_FOREACH(const WorkflowStep& step, workflow) {
 
-      if (compoundRubyPerturbation) {
+      if (compoundRubyMeasure) {
         // see if chain is still going
         if (step.isInputVariable()) {
           if (OptionalRubyContinuousVariable rcv = step.inputVariable().optionalCast<RubyContinuousVariable>()) {
-            if (rcv->perturbation() == compoundRubyPerturbation.get()) {
+            if (rcv->measure() == compoundRubyMeasure.get()) {
               continue;
             }
           }
         }
 
         // otherwise, evaluate compound and evaluate current step on its own
-        currentType = compoundRubyPerturbation->outputFileType();
+        currentType = compoundRubyMeasure->outputFileType();
         allTypes.insert(*currentType);
-        compoundRubyPerturbation.reset();
+        compoundRubyMeasure.reset();
       }
 
       OptionalFileReferenceType inputFileType = step.inputFileType();
@@ -1853,14 +1853,14 @@ namespace detail {
                                           const boost::optional<WorkflowStep>& nextStep) const
   {
     // right now, only kind is chain of RubyContinuousVariables with same underlying
-    // RubyPerturbation
+    // RubyMeasure
     if (nextStep) {
       if (step.isInputVariable() && nextStep->isInputVariable()) {
         OptionalRubyContinuousVariable rcv, nrcv;
         rcv = step.inputVariable().optionalCast<RubyContinuousVariable>();
         nrcv = nextStep->inputVariable().optionalCast<RubyContinuousVariable>();
         if (rcv && nrcv) {
-          if (rcv->perturbation() == nrcv->perturbation()) {
+          if (rcv->measure() == nrcv->measure()) {
             return true;
           }
         }
@@ -1869,34 +1869,34 @@ namespace detail {
     return false;
   }
 
-  bool Problem_Impl::updateMeasureForCompoundRubyPerturbation(
+  bool Problem_Impl::updateMeasureForCompoundRubyMeasure(
       const BCLMeasure& newVersion,
       const std::vector<ruleset::OSArgument>& newArguments,
       bool keepOldArgumentsIfNewEmpty,
-      RubyPerturbation& perturbation,
+      RubyMeasure& measure,
       std::vector<RubyContinuousVariable>& variables)
   {
     bool ok(true);
     BoolVector keep(variables.size(),true);
     if (newArguments.empty() && keepOldArgumentsIfNewEmpty) {
       // no argument changes needed
-      OSArgumentVector currentArguments = perturbation.arguments();
-      ok = perturbation.setMeasure(newVersion);
+      OSArgumentVector currentArguments = measure.arguments();
+      ok = measure.setMeasure(newVersion);
       if (ok) {
-        perturbation.setArguments(currentArguments);
+        measure.setArguments(currentArguments);
       }
     }
     else {
       // trim newArguments down to those not called out by variables
-      OSArgumentVector argsSubsetForPerturbation = newArguments;
+      OSArgumentVector argsSubsetForMeasure = newArguments;
       int index(0);
       BOOST_FOREACH(const RubyContinuousVariable& var,variables) {
         NameFinder<OSArgument> finder(var.argument().name(),true);
-        OSArgumentVector::iterator it = std::find_if(argsSubsetForPerturbation.begin(),
-                                                     argsSubsetForPerturbation.end(),
+        OSArgumentVector::iterator it = std::find_if(argsSubsetForMeasure.begin(),
+                                                     argsSubsetForMeasure.end(),
                                                      finder);
-        if (it != argsSubsetForPerturbation.end()) {
-          argsSubsetForPerturbation.erase(it);
+        if (it != argsSubsetForMeasure.end()) {
+          argsSubsetForMeasure.erase(it);
         }
         else {
           keep[index] = false;
@@ -1904,8 +1904,8 @@ namespace detail {
         ++index;
       }
 
-      // try to update perturbation
-      ok = perturbation.updateMeasure(newVersion,argsSubsetForPerturbation);
+      // try to update measure
+      ok = measure.updateMeasure(newVersion,argsSubsetForMeasure);
       // ETH@20130212 - updateMeasure may not quite do correct check of file
       // types for compound Ruby variables, but getting this exactly right is low
       // priority right now.
@@ -1938,16 +1938,16 @@ WorkflowStepJob::WorkflowStepJob(const WorkflowStep& t_step)
 
 WorkflowStepJob::WorkflowStepJob(const runmanager::Job& t_job,
                                  const WorkflowStep& t_step,
-                                 const DiscretePerturbation& t_discretePerturbation)
+                                 const Measure& t_measure)
   : job(t_job),
     step(t_step),
-    discretePerturbation(t_discretePerturbation)
+    measure(t_measure)
 {}
 
 WorkflowStepJob::WorkflowStepJob(const WorkflowStep& t_step,
-                                 const DiscretePerturbation& t_discretePerturbation)
+                                 const Measure& t_measure)
   : step(t_step),
-    discretePerturbation(t_discretePerturbation)
+    measure(t_measure)
 {}
 
 WorkflowStepJob::WorkflowStepJob(const runmanager::Job& t_job,
@@ -2142,25 +2142,31 @@ bool Problem::fileTypesAreCompatible(
 }
 
 std::vector<QVariant> Problem::getVariableValues(
-    const std::vector<DiscretePerturbation>& perturbations) const
+    const std::vector<Measure>& measures) const
 {
-  return getImpl<detail::Problem_Impl>()->getVariableValues(perturbations);
+  return getImpl<detail::Problem_Impl>()->getVariableValues(measures);
 }
 
 std::vector<QVariant> Problem::getVariableValues(
-    const std::vector< boost::optional<DiscretePerturbation> >& perturbations) const
+    const std::vector< boost::optional<Measure> >& measures) const
 {
-  return getImpl<detail::Problem_Impl>()->getVariableValues(perturbations);
+  return getImpl<detail::Problem_Impl>()->getVariableValues(measures);
 }
 
-std::vector<boost::optional<DiscretePerturbation> > Problem::getDiscretePerturbations(
+std::vector<boost::optional<Measure> > Problem::getMeasures(
     const std::vector<QVariant>& variableValues) const
 {
-  return getImpl<detail::Problem_Impl>()->getDiscretePerturbations(variableValues);
+  return getImpl<detail::Problem_Impl>()->getMeasures(variableValues);
 }
 
-boost::optional<int> Problem::combinatorialSize(bool selectedPerturbationsOnly) const {
-  return getImpl<detail::Problem_Impl>()->combinatorialSize(selectedPerturbationsOnly);
+std::vector<boost::optional<Measure> > Problem::getDiscretePerturbations(
+    const std::vector<QVariant>& variableValues) const
+{
+  return getImpl<detail::Problem_Impl>()->getMeasures(variableValues);
+}
+
+boost::optional<int> Problem::combinatorialSize(bool selectedMeasuresOnly) const {
+  return getImpl<detail::Problem_Impl>()->combinatorialSize(selectedMeasuresOnly);
 }
 
 bool Problem::push(const WorkflowStep& step) {
@@ -2231,9 +2237,9 @@ boost::optional<DataPoint> Problem::createDataPoint(
 }
 
 boost::optional<DataPoint> Problem::createDataPoint(
-    const std::vector<DiscretePerturbation>& perturbations) const
+    const std::vector<Measure>& measures) const
 {
-  return getImpl<detail::Problem_Impl>()->createDataPoint(perturbations);
+  return getImpl<detail::Problem_Impl>()->createDataPoint(measures);
 }
 
 boost::optional<DataPoint> Problem::createDataPoint(const DakotaParametersFile& params,

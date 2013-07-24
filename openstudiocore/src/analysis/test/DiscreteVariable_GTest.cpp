@@ -21,16 +21,10 @@
 #include <analysis/test/AnalysisFixture.hpp>
 
 #include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/ModelRulesetPerturbation.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/RubyMeasure.hpp>
 #include <analysis/UncertaintyDescription.hpp>
-
-#include <ruleset/ModelRuleset.hpp>
-#include <ruleset/ModelRule.hpp>
-#include <ruleset/ModelObjectFilterType.hpp>
-#include <ruleset/ModelObjectActionSetAttribute.hpp>
 
 #include <utilities/core/FileReference.hpp>
 
@@ -40,97 +34,75 @@ using namespace openstudio;
 using namespace openstudio::analysis;
 
 TEST_F(AnalysisFixture, DiscreteVariable_Constructors) {
-  DiscretePerturbationVector perturbations;
+  MeasureVector measures;
 
-  // At most one null perturbation is allowed.
-  perturbations.push_back(NullPerturbation());
-  perturbations.push_back(NullPerturbation());
-  perturbations.push_back(NullPerturbation());
-  perturbations.push_back(NullPerturbation());
-  DiscreteVariable variable("Variable",perturbations);
-  EXPECT_EQ(1u,variable.numPerturbations(false));
+  // At most one null measure is allowed.
+  measures.push_back(NullMeasure());
+  measures.push_back(NullMeasure());
+  measures.push_back(NullMeasure());
+  measures.push_back(NullMeasure());
+  DiscreteVariable variable("Variable",measures);
+  EXPECT_EQ(1u,variable.numMeasures(false));
 
   // deserialization constructor
   UUID uuid = createUUID();
   UUID versionUUID = createUUID();
-  perturbations = variable.perturbations(false);
-  variable = DiscreteVariable(uuid,versionUUID,"Variable","","",boost::none,perturbations);
+  measures = variable.measures(false);
+  variable = DiscreteVariable(uuid,versionUUID,"Variable","","",boost::none,measures);
   EXPECT_EQ("Variable",variable.name());
   EXPECT_TRUE(variable.uuid() == uuid);
   EXPECT_TRUE(variable.versionUUID() == versionUUID);
-  EXPECT_TRUE(variable.perturbations(false) == perturbations);
+  EXPECT_TRUE(variable.measures(false) == measures);
 
-  // Inconsistent file types in perturbations (should throw)
-  perturbations.clear();
+  // Inconsistent file types in measures (should throw)
+  measures.clear();
   openstudio::path rubyScriptPath = toPath(rubyLibDir()) / 
                                     toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
-  perturbations.push_back(NullPerturbation());
-  perturbations.push_back(RubyPerturbation(rubyScriptPath,
+  measures.push_back(NullMeasure());
+  measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::OSM,
                                            FileReferenceType::IDF));
-  EXPECT_THROW(DiscreteVariable("Variable 2",perturbations),std::exception);
+  EXPECT_THROW(DiscreteVariable("Variable 2",measures),std::exception);
 
-  // Inconsistent file types in perturbations (should throw)
-  perturbations.clear();
-  perturbations.push_back(NullPerturbation());
-  perturbations.push_back(RubyPerturbation(rubyScriptPath,
+  // Inconsistent file types in measures (should throw)
+  measures.clear();
+  measures.push_back(NullMeasure());
+  measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::IDF,
                                            FileReferenceType::IDF));
-  perturbations.push_back(RubyPerturbation(rubyScriptPath,
+  measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::OSM,
                                            FileReferenceType::OSM));
-  EXPECT_THROW(DiscreteVariable("Variable",perturbations),std::exception);
+  EXPECT_THROW(DiscreteVariable("Variable",measures),std::exception);
 
-  // Inconsistent file types in perturbations (should throw)
-  ruleset::ModelRule rule("Rule");
-  rule.add(ruleset::ModelObjectFilterType(IddObjectType(IddObjectType::OS_Lights_Definition)));
-  rule.add(ruleset::ModelObjectActionSetAttribute("wattsperSpaceFloorArea",8.0));
-  ruleset::ModelRuleset ruleset("Ruleset");
-  ruleset.add(rule);
-  perturbations[2] = ModelRulesetPerturbation(ruleset);
-  EXPECT_THROW(DiscreteVariable("Variable",perturbations),std::exception);
 }
 
-TEST_F(AnalysisFixture, DiscreteVariable_DeselectPerturbations) {
-  DiscretePerturbationVector perturbations;
+TEST_F(AnalysisFixture, DiscreteVariable_DeselectMeasures) {
+  MeasureVector measures;
 
-  // null, ruby, ruby, model ruleset
-  perturbations.push_back(NullPerturbation());
+  // null, ruby, ruby
+  measures.push_back(NullMeasure());
   openstudio::path rubyScriptPath = toPath(rubyLibDir()) / 
                                     toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
-  perturbations.push_back(RubyPerturbation(rubyScriptPath,
-                                           FileReferenceType::OSM,
-                                           FileReferenceType::OSM));
-  perturbations.push_back(RubyPerturbation(rubyScriptPath,
-                                           FileReferenceType::OSM,
-                                           FileReferenceType::OSM));
-  ruleset::ModelRule rule("Rule");
-  rule.add(ruleset::ModelObjectFilterType(IddObjectType(IddObjectType::OS_Lights_Definition)));
-  rule.add(ruleset::ModelObjectActionSetAttribute("wattsperSpaceFloorArea",8.0));
-  ruleset::ModelRuleset ruleset("Ruleset");
-  ruleset.add(rule);
-  perturbations.push_back(ModelRulesetPerturbation(ruleset));
+  measures.push_back(RubyMeasure(rubyScriptPath,
+                                 FileReferenceType::OSM,
+                                 FileReferenceType::OSM));
+  measures.push_back(RubyMeasure(rubyScriptPath,
+                                 FileReferenceType::OSM,
+                                 FileReferenceType::OSM));
 
-  DiscreteVariable variable("Variable",perturbations);
-  EXPECT_EQ(4u,variable.numPerturbations(true));
-  EXPECT_EQ(4u,variable.numPerturbations(false));
+  DiscreteVariable variable("Variable",measures);
+  EXPECT_EQ(3u,variable.numMeasures(true));
+  EXPECT_EQ(3u,variable.numMeasures(false));
 
-  perturbations[1].setIsSelected(false);
-  EXPECT_EQ(3u,variable.numPerturbations(true));
-  ASSERT_EQ(3u,variable.perturbations(true).size());
-  EXPECT_TRUE(variable.perturbations(true)[1] == perturbations[2]);
-  EXPECT_TRUE(variable.perturbations(true)[2] == perturbations[3]);
-  EXPECT_EQ(4u,variable.numPerturbations(false));
+  measures[1].setIsSelected(false);
+  EXPECT_EQ(2u,variable.numMeasures(true));
+  ASSERT_EQ(2u,variable.measures(true).size());
+  EXPECT_TRUE(variable.measures(true)[1] == measures[2]);
+  EXPECT_EQ(3u,variable.numMeasures(false));
 
-  perturbations[0].setIsSelected(false);
-  perturbations[2].setIsSelected(false);
-  perturbations[3].setIsSelected(false);
-  EXPECT_EQ(0u,variable.numPerturbations(true));
-  EXPECT_EQ(4u,variable.numPerturbations(false));
-
-  perturbations[3].setIsSelected(true);
-  EXPECT_EQ(1u,variable.numPerturbations(true));
-  ASSERT_EQ(1u,variable.perturbations(true).size());
-  EXPECT_TRUE(variable.perturbations(true)[0] == perturbations[3]);
-  EXPECT_EQ(4u,variable.numPerturbations(false));
+  measures[0].setIsSelected(false);
+  measures[2].setIsSelected(false);
+  EXPECT_EQ(0u,variable.numMeasures(true));
+  EXPECT_EQ(3u,variable.numMeasures(false));
 }

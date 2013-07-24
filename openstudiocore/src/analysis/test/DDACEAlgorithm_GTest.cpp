@@ -25,28 +25,33 @@
 #include <analysis/DDACEAlgorithmOptions.hpp>
 #include <analysis/DDACEAlgorithmOptions_Impl.hpp>
 #include <analysis/Problem.hpp>
-#include <analysis/ModelRulesetContinuousVariable.hpp>
 #include <analysis/DiscreteVariable.hpp>
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/RubyPerturbation_Impl.hpp>
-#include <analysis/NullPerturbation.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/RubyContinuousVariable.hpp>
 
-#include <ruleset/ModelObjectFilterClause.hpp>
+#include <ruleset/OSArgument.hpp>
 
 #include <runmanager/lib/Workflow.hpp>
 
 #include <utilities/data/Attribute.hpp>
 
+#include <resources.hxx>
+
 using namespace openstudio;
 using namespace openstudio::analysis;
+using namespace openstudio::ruleset;
 
 TEST_F(AnalysisFixture, DDACEAlgorithmOptions) {
 
   // problem with three variables
   VariableVector variables;
-  variables.push_back(ModelRulesetContinuousVariable("Var 1",ruleset::ModelObjectFilterClauseVector(),"attr 1"));
-  variables.push_back(ModelRulesetContinuousVariable("Var 2",ruleset::ModelObjectFilterClauseVector(),"attr 2"));
-  variables.push_back(ModelRulesetContinuousVariable("Var 3",ruleset::ModelObjectFilterClauseVector(),"attr 3"));
+  BCLMeasure bclMeasure(resourcesPath() / toPath("utilities/BCL/Measures/SetWindowToWallRatioByFacade"));
+  RubyMeasure measure(bclMeasure);
+  variables.push_back(RubyContinuousVariable("Var 1",OSArgument::makeDoubleArgument("wwr1"),measure));
+  variables.push_back(RubyContinuousVariable("Var 2",OSArgument::makeDoubleArgument("wwr2"),measure));
+  variables.push_back(RubyContinuousVariable("Var 3",OSArgument::makeDoubleArgument("wwr3"),measure));
   Problem problem("Null Problem",variables,runmanager::Workflow());
 
   DDACEAlgorithmOptions options(DDACEAlgorithmType::grid);
@@ -119,23 +124,25 @@ TEST_F(AnalysisFixture, DDACEAlgorithmOptions) {
 TEST_F(AnalysisFixture,DDACEAlgorithm_CompatibleProblemType) {
   // continuous problem with five variables
   VariableVector variables;
-  variables.push_back(ModelRulesetContinuousVariable("Var 1",ruleset::ModelObjectFilterClauseVector(),"attr 1"));
-  variables.push_back(ModelRulesetContinuousVariable("Var 2",ruleset::ModelObjectFilterClauseVector(),"attr 2"));
-  variables.push_back(ModelRulesetContinuousVariable("Var 3",ruleset::ModelObjectFilterClauseVector(),"attr 3"));
-  variables.push_back(ModelRulesetContinuousVariable("Var 4",ruleset::ModelObjectFilterClauseVector(),"attr 3"));
-  variables.push_back(ModelRulesetContinuousVariable("Var 5",ruleset::ModelObjectFilterClauseVector(),"attr 3"));
+  BCLMeasure bclMeasure(resourcesPath() / toPath("utilities/BCL/Measures/SetWindowToWallRatioByFacade"));
+  RubyMeasure measure(bclMeasure);
+  variables.push_back(RubyContinuousVariable("Var 1",OSArgument::makeDoubleArgument("wwr1"),measure));
+  variables.push_back(RubyContinuousVariable("Var 2",OSArgument::makeDoubleArgument("wwr2"),measure));
+  variables.push_back(RubyContinuousVariable("Var 3",OSArgument::makeDoubleArgument("wwr3"),measure));
+  variables.push_back(RubyContinuousVariable("Var 4",OSArgument::makeDoubleArgument("wwr4"),measure));
+  variables.push_back(RubyContinuousVariable("Var 5",OSArgument::makeDoubleArgument("wwr5"),measure));
   Problem cProblem("Continuous Problem",variables,runmanager::Workflow());
   EXPECT_EQ(5,cProblem.numVariables());
   EXPECT_EQ(5,cProblem.numContinuousVariables());
   variables.clear();
 
   // mixed problem with three variables, ignorable discrete variable
-  DiscretePerturbationVector perturbations;
-  variables.push_back(ModelRulesetContinuousVariable("Var 1",ruleset::ModelObjectFilterClauseVector(),"attr 1"));
-  perturbations.push_back(RubyPerturbation(toPath("script.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
-  variables.push_back(DiscreteVariable("Var 2",perturbations));
-  perturbations.clear();
-  variables.push_back(ModelRulesetContinuousVariable("Var 3",ruleset::ModelObjectFilterClauseVector(),"attr 3"));
+  MeasureVector measures;
+  variables.push_back(RubyContinuousVariable("Var 1",OSArgument::makeDoubleArgument("wwr1"),measure));
+  measures.push_back(RubyMeasure(toPath("script.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
+  variables.push_back(DiscreteVariable("Var 2",measures));
+  measures.clear();
+  variables.push_back(RubyContinuousVariable("Var 3",OSArgument::makeDoubleArgument("wwr3"),measure));
   Problem mProblem("Mixed Problem",variables,runmanager::Workflow());
   EXPECT_EQ(3,mProblem.numVariables());
   EXPECT_EQ(2,mProblem.numContinuousVariables());
@@ -144,28 +151,28 @@ TEST_F(AnalysisFixture,DDACEAlgorithm_CompatibleProblemType) {
   variables.clear();
 
   // discrete problem
-  perturbations.push_back(NullPerturbation());
-  perturbations.push_back(RubyPerturbation(toPath("script1.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
-  perturbations.back().cast<RubyPerturbation>().addArgument("wwr","0.2");
-  perturbations.push_back(RubyPerturbation(toPath("script1.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
-  perturbations.back().cast<RubyPerturbation>().addArgument("wwr","0.4");
-  variables.push_back(DiscreteVariable("Var 1",perturbations));
-  perturbations.clear();
-  perturbations.push_back(NullPerturbation());
-  perturbations.push_back(RubyPerturbation(toPath("script2.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
-  perturbations.back().cast<RubyPerturbation>().addArgument("cop","3.0");
-  perturbations.back().cast<RubyPerturbation>().addArgument("fan_eff","0.3");
-  perturbations.push_back(RubyPerturbation(toPath("script2.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
-  perturbations.back().cast<RubyPerturbation>().addArgument("cop","3.5");
-  perturbations.back().cast<RubyPerturbation>().addArgument("fan_eff","0.3");
-  perturbations.push_back(RubyPerturbation(toPath("script2.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
-  perturbations.back().cast<RubyPerturbation>().addArgument("cop","3.0");
-  perturbations.back().cast<RubyPerturbation>().addArgument("fan_eff","0.5");
-  perturbations.push_back(RubyPerturbation(toPath("script2.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
-  perturbations.back().cast<RubyPerturbation>().addArgument("cop","3.5");
-  perturbations.back().cast<RubyPerturbation>().addArgument("fan_eff","0.5");
-  variables.push_back(DiscreteVariable("Var 2",perturbations));
-  perturbations.clear();
+  measures.push_back(NullMeasure());
+  measures.push_back(RubyMeasure(toPath("script1.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
+  measures.back().cast<RubyMeasure>().addArgument("wwr","0.2");
+  measures.push_back(RubyMeasure(toPath("script1.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
+  measures.back().cast<RubyMeasure>().addArgument("wwr","0.4");
+  variables.push_back(DiscreteVariable("Var 1",measures));
+  measures.clear();
+  measures.push_back(NullMeasure());
+  measures.push_back(RubyMeasure(toPath("script2.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
+  measures.back().cast<RubyMeasure>().addArgument("cop","3.0");
+  measures.back().cast<RubyMeasure>().addArgument("fan_eff","0.3");
+  measures.push_back(RubyMeasure(toPath("script2.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
+  measures.back().cast<RubyMeasure>().addArgument("cop","3.5");
+  measures.back().cast<RubyMeasure>().addArgument("fan_eff","0.3");
+  measures.push_back(RubyMeasure(toPath("script2.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
+  measures.back().cast<RubyMeasure>().addArgument("cop","3.0");
+  measures.back().cast<RubyMeasure>().addArgument("fan_eff","0.5");
+  measures.push_back(RubyMeasure(toPath("script2.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
+  measures.back().cast<RubyMeasure>().addArgument("cop","3.5");
+  measures.back().cast<RubyMeasure>().addArgument("fan_eff","0.5");
+  variables.push_back(DiscreteVariable("Var 2",measures));
+  measures.clear();
   Problem dProblem("Discrete Problem",variables,runmanager::Workflow());
   EXPECT_EQ(2,dProblem.numVariables());
   EXPECT_EQ(2,dProblem.numDiscreteVariables());

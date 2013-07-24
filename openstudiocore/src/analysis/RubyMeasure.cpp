@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/RubyPerturbation_Impl.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
 
 #include <analysis/DiscreteVariable.hpp>
 #include <analysis/DiscreteVariable_Impl.hpp>
@@ -49,26 +49,26 @@ namespace analysis {
 
 namespace detail {
 
-  RubyPerturbation_Impl::RubyPerturbation_Impl(const BCLMeasure& measure, bool isSelected)
-    : DiscretePerturbation_Impl(isSelected),
-      m_measure(measure),
-      m_measureDirectory(measure.directory()),
-      m_measureUUID(measure.uuid()),
-      m_measureVersionUUID(measure.versionUUID()),
-      m_inputFileType(measure.inputFileType()),
-      m_outputFileType(measure.outputFileType()),
+  RubyMeasure_Impl::RubyMeasure_Impl(const BCLMeasure& bclMeasure, bool isSelected)
+    : Measure_Impl(isSelected),
+      m_bclMeasure(bclMeasure),
+      m_bclMeasureDirectory(bclMeasure.directory()),
+      m_bclMeasureUUID(bclMeasure.uuid()),
+      m_bclMeasureVersionUUID(bclMeasure.versionUUID()),
+      m_inputFileType(bclMeasure.inputFileType()),
+      m_outputFileType(bclMeasure.outputFileType()),
       m_isUserScript(false)
   {
     BOOST_ASSERT((m_inputFileType == FileReferenceType::OSM) || (m_inputFileType == FileReferenceType::IDF));
     BOOST_ASSERT((m_outputFileType == FileReferenceType::OSM) || (m_outputFileType == FileReferenceType::IDF));
   }
 
-  RubyPerturbation_Impl::RubyPerturbation_Impl(const openstudio::path& perturbationScript,
+  RubyMeasure_Impl::RubyMeasure_Impl(const openstudio::path& perturbationScript,
                                                const FileReferenceType& inputFileType,
                                                const FileReferenceType& outputFileType,
                                                bool isUserScript,
                                                bool isSelected)
-    : DiscretePerturbation_Impl(isSelected),
+    : Measure_Impl(isSelected),
       m_perturbationScript(FileReference(perturbationScript)),
       m_inputFileType(inputFileType),
       m_outputFileType(outputFileType),
@@ -79,7 +79,7 @@ namespace detail {
     BOOST_ASSERT((outputFileType == FileReferenceType::OSM) || (outputFileType == FileReferenceType::IDF));
   }
 
-  RubyPerturbation_Impl::RubyPerturbation_Impl(
+  RubyMeasure_Impl::RubyMeasure_Impl(
       const UUID& uuid,
       const UUID& versionUUID,
       const std::string& name,
@@ -92,7 +92,7 @@ namespace detail {
       bool isUserScript,
       const std::vector<ruleset::OSArgument>& arguments,
       bool usesBCLMeasure)
-    : DiscretePerturbation_Impl(uuid,versionUUID,name,displayName,description,isSelected),
+    : Measure_Impl(uuid,versionUUID,name,displayName,description,isSelected),
       m_perturbationScript(perturbationScriptOrBCLMeasureDir),
       m_inputFileType(inputFileType),
       m_outputFileType(outputFileType),
@@ -101,19 +101,19 @@ namespace detail {
   {
     if (usesBCLMeasure) {
       BOOST_ASSERT(m_perturbationScript->fileType() == FileReferenceType::Unknown);
-      m_measureDirectory = m_perturbationScript->path();
-      m_measureUUID = m_perturbationScript->uuid();
-      m_measureVersionUUID = m_perturbationScript->versionUUID();
+      m_bclMeasureDirectory = m_perturbationScript->path();
+      m_bclMeasureUUID = m_perturbationScript->uuid();
+      m_bclMeasureVersionUUID = m_perturbationScript->versionUUID();
       m_perturbationScript.reset();
     }
   }
 
-  RubyPerturbation_Impl::RubyPerturbation_Impl(const RubyPerturbation_Impl &other)
-    : DiscretePerturbation_Impl(other),
-      m_measure(other.m_measure),
-      m_measureDirectory(other.m_measureDirectory),
-      m_measureUUID(other.m_measureUUID),
-      m_measureVersionUUID(other.m_measureVersionUUID),
+  RubyMeasure_Impl::RubyMeasure_Impl(const RubyMeasure_Impl &other)
+    : Measure_Impl(other),
+      m_bclMeasure(other.m_bclMeasure),
+      m_bclMeasureDirectory(other.m_bclMeasureDirectory),
+      m_bclMeasureUUID(other.m_bclMeasureUUID),
+      m_bclMeasureVersionUUID(other.m_bclMeasureVersionUUID),
       m_inputFileType(other.m_inputFileType),
       m_outputFileType(other.m_outputFileType),
       m_isUserScript(other.isUserScript())
@@ -126,28 +126,28 @@ namespace detail {
     }
   }
 
-  AnalysisObject RubyPerturbation_Impl::clone() const {
-    boost::shared_ptr<RubyPerturbation_Impl> impl(new RubyPerturbation_Impl(*this));
-    return RubyPerturbation(impl);
+  AnalysisObject RubyMeasure_Impl::clone() const {
+    boost::shared_ptr<RubyMeasure_Impl> impl(new RubyMeasure_Impl(*this));
+    return RubyMeasure(impl);
   }
 
-  boost::optional<FileReferenceType> RubyPerturbation_Impl::inputFileType() const {
+  boost::optional<FileReferenceType> RubyMeasure_Impl::inputFileType() const {
     return m_inputFileType;
   }
 
-  boost::optional<FileReferenceType> RubyPerturbation_Impl::outputFileType() const {
+  boost::optional<FileReferenceType> RubyMeasure_Impl::outputFileType() const {
     return m_outputFileType;
   }
 
-  runmanager::WorkItem RubyPerturbation_Impl::createWorkItem(
+  runmanager::WorkItem RubyMeasure_Impl::createWorkItem(
       const openstudio::path& rubyIncludeDirectory) const
   {
     runmanager::RubyJobBuilder rubyJobBuilder;
 
     bool done(false);
     if (usesBCLMeasure()) {
-      if (OptionalBCLMeasure measure = this->measure()) {
-        rubyJobBuilder = runmanager::RubyJobBuilder(*measure,arguments());
+      if (OptionalBCLMeasure bclMeasure = this->bclMeasure()) {
+        rubyJobBuilder = runmanager::RubyJobBuilder(*bclMeasure,arguments());
         done = true;
       }
     }
@@ -162,9 +162,9 @@ namespace detail {
         // this is what happens if can't actually load the measure
         // basically delays failure
         // perhaps should just throw
-        BOOST_ASSERT(m_measureDirectory);
+        BOOST_ASSERT(m_bclMeasureDirectory);
         rubyJobBuilder = runmanager::RubyJobBuilder::createUserScriptRubyJob(
-              *m_measureDirectory / toPath("measure.rb"),
+              *m_bclMeasureDirectory / toPath("measure.rb"),
               arguments());
       }
       else {
@@ -206,71 +206,71 @@ namespace detail {
     return rubyJobBuilder.toWorkItem();
   }
 
-  bool RubyPerturbation_Impl::usesBCLMeasure() const {
-    return m_measureDirectory;
+  bool RubyMeasure_Impl::usesBCLMeasure() const {
+    return m_bclMeasureDirectory;
   }
 
-  boost::optional<BCLMeasure> RubyPerturbation_Impl::measure() const {
+  boost::optional<BCLMeasure> RubyMeasure_Impl::bclMeasure() const {
     if (!usesBCLMeasure()) {
       // DLM: this was a bit harsh
       // ETH: no it isn't. usesBCLMeasure() determines whether this should be called or not.
       // then, if it can't be returned, you know the measure can't be loaded for some reason.
-      // eventually, all other forms of RubyPerturbation will be eliminated and the bool check
+      // eventually, all other forms of RubyMeasure will be eliminated and the bool check
       // can go away.
-      LOG_AND_THROW("This RubyPerturbation is defined by script path, not by BCLMeasure.");
+      LOG_AND_THROW("This RubyMeasure is defined by script path, not by BCLMeasure.");
       return boost::none;
     }
-    if (!m_measure) {
-      m_measure = BCLMeasure::load(*m_measureDirectory);
-      if (!m_measure) {
-        LOG(Error, "Unable to load measure " << toString(*m_measureUUID) << " from "
-            << toString(*m_measureDirectory) << ".");
+    if (!m_bclMeasure) {
+      m_bclMeasure = BCLMeasure::load(*m_bclMeasureDirectory);
+      if (!m_bclMeasure) {
+        LOG(Error, "Unable to load measure " << toString(*m_bclMeasureUUID) << " from "
+            << toString(*m_bclMeasureDirectory) << ".");
       }
     }
-    return m_measure;
+    return m_bclMeasure;
   }
 
-  openstudio::path RubyPerturbation_Impl::measureDirectory() const {
+  openstudio::path RubyMeasure_Impl::bclMeasureDirectory() const {
     if (!usesBCLMeasure()) {
-      LOG_AND_THROW("This RubyPerturbation is defined by script path, not by BCLMeasure.");
+      LOG_AND_THROW("This RubyMeasure is defined by script path, not by BCLMeasure.");
     }
-    return *m_measureDirectory;
+    return *m_bclMeasureDirectory;
   }
 
-  UUID RubyPerturbation_Impl::measureUUID() const {
+  UUID RubyMeasure_Impl::bclMeasureUUID() const {
     if (!usesBCLMeasure()) {
-      LOG_AND_THROW("This RubyPerturbation is defined by script path, not by BCLMeasure.");
+      LOG_AND_THROW("This RubyMeasure is defined by script path, not by BCLMeasure.");
     }
-    return *m_measureUUID;
+    return *m_bclMeasureUUID;
   }
 
-  UUID RubyPerturbation_Impl::measureVersionUUID() const {
+  UUID RubyMeasure_Impl::bclMeasureVersionUUID() const {
     if (!usesBCLMeasure()) {
-      LOG_AND_THROW("This RubyPerturbation is defined by script path, not by BCLMeasure.");
+      LOG_AND_THROW("This RubyMeasure is defined by script path, not by BCLMeasure.");
     }
-    return *m_measureVersionUUID;
+    return *m_bclMeasureVersionUUID;
   }
 
-  FileReference RubyPerturbation_Impl::perturbationScript() const {
+  FileReference RubyMeasure_Impl::perturbationScript() const {
     if (usesBCLMeasure()) {
-      LOG_AND_THROW("This RubyPerturbation is defined by BCLMeasure, not by script path.");
+      LOG_AND_THROW("This RubyMeasure is defined by BCLMeasure, not by script path.");
     }
     return m_perturbationScript.get();
   }
 
-  std::vector<ruleset::OSArgument> RubyPerturbation_Impl::arguments() const {
+  std::vector<ruleset::OSArgument> RubyMeasure_Impl::arguments() const {
     return m_arguments;
   }
 
-  bool RubyPerturbation_Impl::isUserScript() const {
+  bool RubyMeasure_Impl::isUserScript() const {
     return m_isUserScript;
   }
 
-  bool RubyPerturbation_Impl::hasIncompleteArguments() const {
+  bool RubyMeasure_Impl::hasIncompleteArguments() const {
     return !incompleteArguments().empty();
   }
 
-  std::vector<ruleset::OSArgument> RubyPerturbation_Impl::incompleteArguments() const {
+  std::vector<ruleset::OSArgument> RubyMeasure_Impl::incompleteArguments() const {
     OSArgumentVector result;
     BOOST_FOREACH(const OSArgument& arg,arguments()) {
       if (arg.required() && !(arg.hasValue() || arg.hasDefaultValue())) {
@@ -280,16 +280,16 @@ namespace detail {
     return result;
   }
 
-  bool RubyPerturbation_Impl::setMeasure(const BCLMeasure& measure) {
-    FileReferenceType inputFileType = measure.inputFileType();
-    FileReferenceType outputFileType = measure.outputFileType();
+  bool RubyMeasure_Impl::setMeasure(const BCLMeasure& bclMeasure) {
+    FileReferenceType inputFileType = bclMeasure.inputFileType();
+    FileReferenceType outputFileType = bclMeasure.outputFileType();
     if (!fileTypesAreCompatible(inputFileType,outputFileType)) {
       return false;
     }
-    m_measure = measure;
-    m_measureDirectory = measure.directory();
-    m_measureUUID = measure.uuid();
-    m_measureVersionUUID = measure.versionUUID();
+    m_bclMeasure = bclMeasure;
+    m_bclMeasureDirectory = bclMeasure.directory();
+    m_bclMeasureUUID = bclMeasure.uuid();
+    m_bclMeasureVersionUUID = bclMeasure.versionUUID();
     m_perturbationScript.reset();
     m_inputFileType = inputFileType;
     m_outputFileType = outputFileType;
@@ -298,10 +298,10 @@ namespace detail {
     return true;
   }
 
-  bool RubyPerturbation_Impl::updateMeasure(const BCLMeasure& newVersion,
+  bool RubyMeasure_Impl::updateMeasure(const BCLMeasure& newVersion,
                                             std::vector<ruleset::OSArgument> newArguments)
   {
-    if (!usesBCLMeasure() || (newVersion.uuid() != m_measureUUID.get())) {
+    if (!usesBCLMeasure() || (newVersion.uuid() != m_bclMeasureUUID.get())) {
       return false;
     }
     FileReferenceType inputFileType = newVersion.inputFileType();
@@ -310,10 +310,10 @@ namespace detail {
       return false;
     }
 
-    m_measure = newVersion;
-    m_measureDirectory = newVersion.directory();
-    BOOST_ASSERT(m_measureUUID.get() == newVersion.uuid());
-    m_measureVersionUUID = newVersion.versionUUID();
+    m_bclMeasure = newVersion;
+    m_bclMeasureDirectory = newVersion.directory();
+    BOOST_ASSERT(m_bclMeasureUUID.get() == newVersion.uuid());
+    m_bclMeasureVersionUUID = newVersion.versionUUID();
     m_inputFileType = inputFileType;
     m_outputFileType = outputFileType;
     m_isUserScript = false;
@@ -354,7 +354,7 @@ namespace detail {
             setResult = newArgClone.setValue(it->valueAsString());
             if (!setResult) {
               LOG(Info,"Unable to preserve argument value for " << *it
-                  << " during updateMeasure operation on RubyPerturbation named " << name()
+                  << " during updateMeasure operation on RubyMeasure named " << name()
                   << " with measure " << newVersion.name() << " and new argument " << newArgClone);
             }
           }
@@ -366,18 +366,18 @@ namespace detail {
     return true;
   }
 
-  bool RubyPerturbation_Impl::setPerturbationScript(const openstudio::path& script,
-                                                    const FileReferenceType& inputFileType,
-                                                    const FileReferenceType& outputFileType,
-                                                    bool isUserScript)
+  bool RubyMeasure_Impl::setMeasureScript(const openstudio::path& script,
+                                          const FileReferenceType& inputFileType,
+                                          const FileReferenceType& outputFileType,
+                                          bool isUserScript)
   {
     if (!fileTypesAreCompatible(inputFileType,outputFileType)) {
       return false;
     }
-    m_measure.reset();
-    m_measureDirectory.reset();
-    m_measureUUID.reset();
-    m_measureVersionUUID.reset();
+    m_bclMeasure.reset();
+    m_bclMeasureDirectory.reset();
+    m_bclMeasureUUID.reset();
+    m_bclMeasureVersionUUID.reset();
     m_perturbationScript = FileReference(script);
     m_inputFileType = inputFileType;
     m_outputFileType = outputFileType;
@@ -386,34 +386,34 @@ namespace detail {
     return true;
   }
 
-  void RubyPerturbation_Impl::setIsUserScript(bool isUserScript) {
+  void RubyMeasure_Impl::setIsUserScript(bool isUserScript) {
     m_isUserScript = isUserScript;
     onChange(AnalysisObject_Impl::InvalidatesResults);
   }
 
-  void RubyPerturbation_Impl::addArgument(const std::string& name) {
+  void RubyMeasure_Impl::addArgument(const std::string& name) {
     m_arguments.push_back(ruleset::OSArgument::makeBoolArgument(name));
     onChange(AnalysisObject_Impl::InvalidatesResults);
   }
 
-  void RubyPerturbation_Impl::addArgument(const std::string& name, const std::string& value) {
+  void RubyMeasure_Impl::addArgument(const std::string& name, const std::string& value) {
     m_arguments.push_back(ruleset::OSArgument::makeStringArgument(name));
     m_arguments.back().setValue(value);
     onChange(AnalysisObject_Impl::InvalidatesResults);
   }
 
-  bool RubyPerturbation_Impl::addArgument(const ruleset::OSArgument &argument) {
+  bool RubyMeasure_Impl::addArgument(const ruleset::OSArgument &argument) {
     m_arguments.push_back(argument);
     onChange(AnalysisObject_Impl::InvalidatesResults);
     if (argument.hasValue() || argument.hasDefaultValue()) {
       return true;
     }
-    LOG(Warn,"Saving argument " << argument.name() << " with RubyPerturbation, but it "
+    LOG(Warn,"Saving argument " << argument.name() << " with RubyMeasure, but it "
         << "currently does not have a value.");
     return false;
   }
 
-  void RubyPerturbation_Impl::setArgument(const ruleset::OSArgument& argument) {
+  void RubyMeasure_Impl::setArgument(const ruleset::OSArgument& argument) {
     NameFinder<ruleset::OSArgument> finder(argument.name(),true);
     ruleset::OSArgumentVector::iterator it = std::find_if(m_arguments.begin(),
                                                           m_arguments.end(),
@@ -427,12 +427,12 @@ namespace detail {
     onChange(AnalysisObject_Impl::InvalidatesResults);
   }
 
-  void RubyPerturbation_Impl::setArguments(const std::vector<ruleset::OSArgument>& arguments) {
+  void RubyMeasure_Impl::setArguments(const std::vector<ruleset::OSArgument>& arguments) {
     m_arguments = arguments;
     onChange(AnalysisObject_Impl::InvalidatesResults);
   }
 
-  bool RubyPerturbation_Impl::removeArgument(const std::string& argumentName) {
+  bool RubyMeasure_Impl::removeArgument(const std::string& argumentName) {
     NameFinder<ruleset::OSArgument> finder(argumentName,true);
     ruleset::OSArgumentVector::iterator it = std::find_if(m_arguments.begin(),
                                                           m_arguments.end(),
@@ -445,25 +445,25 @@ namespace detail {
     return false;
   }
 
-  void RubyPerturbation_Impl::clearArguments() {
+  void RubyMeasure_Impl::clearArguments() {
     m_arguments.clear();
     onChange(AnalysisObject_Impl::InvalidatesResults);
   }
 
-  bool RubyPerturbation_Impl::fileTypesAreCompatible(
+  bool RubyMeasure_Impl::fileTypesAreCompatible(
       const FileReferenceType& proposedInputFileType,
       const FileReferenceType& proposedOutputFileType) const
   {
     if (OptionalAnalysisObject parent = this->parent()) {
       // Make sure inputFileType and outputFileType are okay
       if (OptionalDiscreteVariable dvar = parent->optionalCast<DiscreteVariable>()) {
-        DiscretePerturbation copyOfThis = getPublicObject<DiscretePerturbation>();
+        Measure copyOfThis = getPublicObject<Measure>();
         if (!dvar->fileTypesAreCompatible(copyOfThis,proposedInputFileType,proposedOutputFileType)) {
           return false;
         }
       }
       if (OptionalRubyContinuousVariable cvar = parent->optionalCast<RubyContinuousVariable>()) {
-        RubyPerturbation copyOfThis = getPublicObject<RubyPerturbation>();
+        RubyMeasure copyOfThis = getPublicObject<RubyMeasure>();
         if (!cvar->fileTypesAreCompatible(copyOfThis,proposedInputFileType,proposedOutputFileType)) {
           return false;
         }
@@ -474,25 +474,25 @@ namespace detail {
 
 } // detail
 
-RubyPerturbation::RubyPerturbation(const BCLMeasure& measure, bool isSelected)
-  : DiscretePerturbation(boost::shared_ptr<detail::RubyPerturbation_Impl>(
-                           new detail::RubyPerturbation_Impl(measure,isSelected)))
+RubyMeasure::RubyMeasure(const BCLMeasure& bclMeasure, bool isSelected)
+  : Measure(boost::shared_ptr<detail::RubyMeasure_Impl>(
+                           new detail::RubyMeasure_Impl(bclMeasure,isSelected)))
 {}
 
-RubyPerturbation::RubyPerturbation(const openstudio::path& perturbationScript,
+RubyMeasure::RubyMeasure(const openstudio::path& perturbationScript,
                                    const FileReferenceType& inputFileType,
                                    const FileReferenceType& outputFileType,
                                    bool isUserScript,
                                    bool isSelected)
-  : DiscretePerturbation(boost::shared_ptr<detail::RubyPerturbation_Impl>(
-        new detail::RubyPerturbation_Impl(perturbationScript,
-                                          inputFileType,
-                                          outputFileType,
-                                          isUserScript,
-                                          isSelected)))
+  : Measure(boost::shared_ptr<detail::RubyMeasure_Impl>(
+        new detail::RubyMeasure_Impl(perturbationScript,
+                                     inputFileType,
+                                     outputFileType,
+                                     isUserScript,
+                                     isSelected)))
 {}
 
-RubyPerturbation::RubyPerturbation(const UUID& uuid,
+RubyMeasure::RubyMeasure(const UUID& uuid,
                                    const UUID& versionUUID,
                                    const std::string& name,
                                    const std::string& displayName,
@@ -504,118 +504,134 @@ RubyPerturbation::RubyPerturbation(const UUID& uuid,
                                    bool isUserScript,
                                    const std::vector<ruleset::OSArgument>& arguments,
                                    bool usesBCLMeasure)
-  : DiscretePerturbation(boost::shared_ptr<detail::RubyPerturbation_Impl>(
-        new detail::RubyPerturbation_Impl(uuid,
-                                          versionUUID,
-                                          name,
-                                          displayName,
-                                          description,
-                                          isSelected,
-                                          perturbationScript,
-                                          inputFileType,
-                                          outputFileType,
-                                          isUserScript,
-                                          arguments,
-                                          usesBCLMeasure)))
+  : Measure(boost::shared_ptr<detail::RubyMeasure_Impl>(
+        new detail::RubyMeasure_Impl(uuid,
+                                     versionUUID,
+                                     name,
+                                     displayName,
+                                     description,
+                                     isSelected,
+                                     perturbationScript,
+                                     inputFileType,
+                                     outputFileType,
+                                     isUserScript,
+                                     arguments,
+                                     usesBCLMeasure)))
 {}
 
-bool RubyPerturbation::usesBCLMeasure() const {
-  return getImpl<detail::RubyPerturbation_Impl>()->usesBCLMeasure();
+bool RubyMeasure::usesBCLMeasure() const {
+  return getImpl<detail::RubyMeasure_Impl>()->usesBCLMeasure();
 }
 
-boost::optional<BCLMeasure> RubyPerturbation::measure() const {
-  return getImpl<detail::RubyPerturbation_Impl>()->measure();
+boost::optional<BCLMeasure> RubyMeasure::bclMeasure() const {
+  return getImpl<detail::RubyMeasure_Impl>()->bclMeasure();
 }
 
-openstudio::path RubyPerturbation::measureDirectory() const {
-  return getImpl<detail::RubyPerturbation_Impl>()->measureDirectory();
+boost::optional<BCLMeasure> RubyMeasure::measure() const {
+  return getImpl<detail::RubyMeasure_Impl>()->bclMeasure();
 }
 
-UUID RubyPerturbation::measureUUID() const {
-  return getImpl<detail::RubyPerturbation_Impl>()->measureUUID();
+openstudio::path RubyMeasure::bclMeasureDirectory() const {
+  return getImpl<detail::RubyMeasure_Impl>()->bclMeasureDirectory();
 }
 
-UUID RubyPerturbation::measureVersionUUID() const {
-  return getImpl<detail::RubyPerturbation_Impl>()->measureVersionUUID();
+openstudio::path RubyMeasure::measureDirectory() const {
+  return getImpl<detail::RubyMeasure_Impl>()->bclMeasureDirectory();
 }
 
-FileReference RubyPerturbation::perturbationScript() const {
-  return getImpl<detail::RubyPerturbation_Impl>()->perturbationScript();
+UUID RubyMeasure::bclMeasureUUID() const {
+  return getImpl<detail::RubyMeasure_Impl>()->bclMeasureUUID();
 }
 
-std::vector<ruleset::OSArgument> RubyPerturbation::arguments() const {
-  return getImpl<detail::RubyPerturbation_Impl>()->arguments();
+UUID RubyMeasure::measureUUID() const {
+  return getImpl<detail::RubyMeasure_Impl>()->bclMeasureUUID();
 }
 
-bool RubyPerturbation::isUserScript() const {
-  return getImpl<detail::RubyPerturbation_Impl>()->isUserScript();
+UUID RubyMeasure::bclMeasureVersionUUID() const {
+  return getImpl<detail::RubyMeasure_Impl>()->bclMeasureVersionUUID();
 }
 
-bool RubyPerturbation::hasIncompleteArguments() const {
-  return getImpl<detail::RubyPerturbation_Impl>()->hasIncompleteArguments();
+UUID RubyMeasure::measureVersionUUID() const {
+  return getImpl<detail::RubyMeasure_Impl>()->bclMeasureVersionUUID();
 }
 
-std::vector<ruleset::OSArgument> RubyPerturbation::incompleteArguments() const {
-  return getImpl<detail::RubyPerturbation_Impl>()->incompleteArguments();
+FileReference RubyMeasure::perturbationScript() const {
+  return getImpl<detail::RubyMeasure_Impl>()->perturbationScript();
 }
 
-bool RubyPerturbation::setMeasure(const BCLMeasure& measure) {
-  return getImpl<detail::RubyPerturbation_Impl>()->setMeasure(measure);
+std::vector<ruleset::OSArgument> RubyMeasure::arguments() const {
+  return getImpl<detail::RubyMeasure_Impl>()->arguments();
 }
 
-bool RubyPerturbation::updateMeasure(const BCLMeasure& newVersion,
+bool RubyMeasure::isUserScript() const {
+  return getImpl<detail::RubyMeasure_Impl>()->isUserScript();
+}
+
+bool RubyMeasure::hasIncompleteArguments() const {
+  return getImpl<detail::RubyMeasure_Impl>()->hasIncompleteArguments();
+}
+
+std::vector<ruleset::OSArgument> RubyMeasure::incompleteArguments() const {
+  return getImpl<detail::RubyMeasure_Impl>()->incompleteArguments();
+}
+
+bool RubyMeasure::setMeasure(const BCLMeasure& measure) {
+  return getImpl<detail::RubyMeasure_Impl>()->setMeasure(measure);
+}
+
+bool RubyMeasure::updateMeasure(const BCLMeasure& newVersion,
                                      std::vector<ruleset::OSArgument> newArguments)
 {
-  return getImpl<detail::RubyPerturbation_Impl>()->updateMeasure(newVersion,
+  return getImpl<detail::RubyMeasure_Impl>()->updateMeasure(newVersion,
                                                                  newArguments);
 }
 
-bool RubyPerturbation::setPerturbationScript(const openstudio::path& script,
+bool RubyMeasure::setMeasureScript(const openstudio::path& script,
                                              const FileReferenceType& inputFileType,
                                              const FileReferenceType& outputFileType,
                                              bool isUserScript)
 {
-  return getImpl<detail::RubyPerturbation_Impl>()->setPerturbationScript(script,
+  return getImpl<detail::RubyMeasure_Impl>()->setMeasureScript(script,
                                                                          inputFileType,
                                                                          outputFileType,
                                                                          isUserScript);
 }
 
-void RubyPerturbation::setIsUserScript(bool isUserScript) {
-  getImpl<detail::RubyPerturbation_Impl>()->setIsUserScript(isUserScript);
+void RubyMeasure::setIsUserScript(bool isUserScript) {
+  getImpl<detail::RubyMeasure_Impl>()->setIsUserScript(isUserScript);
 }
 
-void RubyPerturbation::addArgument(const std::string& name) {
-  return getImpl<detail::RubyPerturbation_Impl>()->addArgument(name);
+void RubyMeasure::addArgument(const std::string& name) {
+  return getImpl<detail::RubyMeasure_Impl>()->addArgument(name);
 }
 
-void RubyPerturbation::addArgument(const std::string& name, const std::string& value) {
-  return getImpl<detail::RubyPerturbation_Impl>()->addArgument(name,value);
+void RubyMeasure::addArgument(const std::string& name, const std::string& value) {
+  return getImpl<detail::RubyMeasure_Impl>()->addArgument(name,value);
 }
 
-bool RubyPerturbation::addArgument(const ruleset::OSArgument &argument) {
-  return getImpl<detail::RubyPerturbation_Impl>()->addArgument(argument);
+bool RubyMeasure::addArgument(const ruleset::OSArgument &argument) {
+  return getImpl<detail::RubyMeasure_Impl>()->addArgument(argument);
 }
 
-void RubyPerturbation::setArgument(const ruleset::OSArgument& argument) {
-  getImpl<detail::RubyPerturbation_Impl>()->setArgument(argument);
+void RubyMeasure::setArgument(const ruleset::OSArgument& argument) {
+  getImpl<detail::RubyMeasure_Impl>()->setArgument(argument);
 }
 
-void RubyPerturbation::setArguments(const std::vector<ruleset::OSArgument>& arguments) {
-  getImpl<detail::RubyPerturbation_Impl>()->setArguments(arguments);
+void RubyMeasure::setArguments(const std::vector<ruleset::OSArgument>& arguments) {
+  getImpl<detail::RubyMeasure_Impl>()->setArguments(arguments);
 }
 
-bool RubyPerturbation::removeArgument(const std::string& argumentName) {
-  return getImpl<detail::RubyPerturbation_Impl>()->removeArgument(argumentName);
+bool RubyMeasure::removeArgument(const std::string& argumentName) {
+  return getImpl<detail::RubyMeasure_Impl>()->removeArgument(argumentName);
 }
 
-void RubyPerturbation::clearArguments() {
-  getImpl<detail::RubyPerturbation_Impl>()->clearArguments();
+void RubyMeasure::clearArguments() {
+  getImpl<detail::RubyMeasure_Impl>()->clearArguments();
 }
 
 /// @cond
-RubyPerturbation::RubyPerturbation(boost::shared_ptr<detail::RubyPerturbation_Impl> impl)
-  : DiscretePerturbation(impl)
+RubyMeasure::RubyMeasure(boost::shared_ptr<detail::RubyMeasure_Impl> impl)
+  : Measure(impl)
 {}
 /// @endcond
 

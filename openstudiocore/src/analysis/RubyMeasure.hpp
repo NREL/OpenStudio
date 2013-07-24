@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef ANALYSIS_RUBYPERTURBATION_HPP
-#define ANALYSIS_RUBYPERTURBATION_HPP
+#ifndef ANALYSIS_RUBYMEASURE_HPP
+#define ANALYSIS_RUBYMEASURE_HPP
 
 #include <analysis/AnalysisAPI.hpp>
-#include <analysis/DiscretePerturbation.hpp>
+#include <analysis/Measure.hpp>
 
 namespace openstudio {
 
@@ -39,13 +39,13 @@ class RubyContinuousVariable;
 
 namespace detail {
 
-  class RubyPerturbation_Impl;
+  class RubyMeasure_Impl;
   class RubyContinuousVariable_Impl;
 
 } // detail
 
-/** RubyPerturbation is a DiscretePerturbation that modifies a model (OSM or IDF file) using a Ruby
- *  script. The preferred way to create a RubyPerturbation is with a BCLMeasure, see 
+/** RubyMeasure is a Measure that modifies a model (OSM or IDF file) using a Ruby
+ *  script. The preferred way to create a RubyMeasure is with a BCLMeasure, see
  *  openstudio/bcl/BCLMeasure, ruleset::ModelUserScript, and ruleset::WorkspaceUserScript. In brief,
  *  a BCLMeasure is a specially structured folder, the contents of which includes a measure.rb file,
  *  which in turn contains the definition of a class that derives from ruleset::UserScript. Such 
@@ -53,45 +53,45 @@ namespace detail {
  *  in OpenStudio, including from this class within the analysis framework (with the help of the 
  *  runmanager and analysisdriver sub-projects).
  *
- *  For now, \link RubyPerturbation RubyPerturbations\endlink can also be defined by referencing a
+ *  For now, \link RubyMeasure RubyMeasures\endlink can also be defined by referencing a
  *  Ruby script directly (free-form or following the interface specified by the ruleset::UserScript 
  *  classes). However, these features will be deprecated in time. */
-class ANALYSIS_API RubyPerturbation : public DiscretePerturbation {
+class ANALYSIS_API RubyMeasure : public Measure {
  public:
   /** @name Constructors and Destructors */
   //@{
 
   /** Constructor from BCLMeasure. */
-  RubyPerturbation(const BCLMeasure& measure, bool isSelected = true);
+  RubyMeasure(const BCLMeasure& bclMeasure, bool isSelected = true);
 
-  /** Constructor. Perturbation script can be self-contained script that handles its own arguments
+  /** Constructor. Measure script can be self-contained script that handles its own arguments
    *  or a file that contains a class derived from ruleset::UserScript. \deprecated
    *
    *  If perturbationScript contains a rulset::UserScript, its type should match inputFileType and
    *  outputFileType. That is, if the UserScript is a ModelUserScript, inputFileType ==
    *  outputFileType == FileReferenceType::OSM. The isUserScript boolean should also be set to
    *  true in this case. */
-  RubyPerturbation(const openstudio::path& perturbationScript,
-                   const FileReferenceType& inputFileType,
-                   const FileReferenceType& outputFileType,
-                   bool isUserScript = false,
-                   bool isSelected = true);
+  RubyMeasure(const openstudio::path& perturbationScript,
+              const FileReferenceType& inputFileType,
+              const FileReferenceType& outputFileType,
+              bool isUserScript = false,
+              bool isSelected = true);
 
   /** Constructor provided for deserialization; not for general use. */
-  RubyPerturbation(const UUID& uuid,
-                   const UUID& versionUUID,
-                   const std::string& name,
-                   const std::string& displayName,
-                   const std::string& description,
-                   bool isSelected,
-                   const FileReference& perturbationScriptOrBCLMeasureDir,
-                   const FileReferenceType& inputFileType,
-                   const FileReferenceType& outputFileType,
-                   bool isUserScript,
-                   const std::vector<ruleset::OSArgument>& arguments,
-                   bool usesBCLMeasure);
+  RubyMeasure(const UUID& uuid,
+              const UUID& versionUUID,
+              const std::string& name,
+              const std::string& displayName,
+              const std::string& description,
+              bool isSelected,
+              const FileReference& perturbationScriptOrBCLMeasureDir,
+              const FileReferenceType& inputFileType,
+              const FileReferenceType& outputFileType,
+              bool isUserScript,
+              const std::vector<ruleset::OSArgument>& arguments,
+              bool usesBCLMeasure);
 
-  virtual ~RubyPerturbation() {}
+  virtual ~RubyMeasure() {}
 
   //@}
   /** @name Getters and Queries */
@@ -101,24 +101,36 @@ class ANALYSIS_API RubyPerturbation : public DiscretePerturbation {
    *  or a FileReferenece. */
   bool usesBCLMeasure() const;
 
-  /** Returns the measure. Throws if not usesBCLMeasure(). Returns boost::none if measure
+  /** Returns the BCLMeasure. Throws if not usesBCLMeasure(). Returns boost::none if measure
    *  cannot be located on file system. */
+  boost::optional<BCLMeasure> bclMeasure() const;
+
+  /** \deprecated */
   boost::optional<BCLMeasure> measure() const;
 
-  /** Returns the measure's directory. Throws if not usesBCLMeasure(). */
+  /** Returns the BCLMeasure's directory. Throws if not usesBCLMeasure(). */
+  openstudio::path bclMeasureDirectory() const;
+
+  /** \deprecated */
   openstudio::path measureDirectory() const;
 
-  /** Returns the measure's UUID. Throws if not usesBCLMeasure(). */
+  /** Returns the BCLMeasure's UUID. Throws if not usesBCLMeasure(). */
+  UUID bclMeasureUUID() const;
+
+  /** \deprecated */
   UUID measureUUID() const;
 
-  /** Returns the measure's version UUID. Throws if not usesBCLMeasure(). */
+  /** Returns the BCLMeasure's version UUID. Throws if not usesBCLMeasure(). */
+  UUID bclMeasureVersionUUID() const;
+
+  /** \deprecated */
   UUID measureVersionUUID() const;
 
   /** Returns the file reference. Throws if usesBCLMeasure(). \deprecated */
   FileReference perturbationScript() const;
 
   /** Return the arguments to be passed to the perturbation ruby script as a vector of
-   *  ruleset::OSArguments. If this RubyPerturbation is used by one or more \link 
+   *  ruleset::OSArguments. If this RubyMeasure is used by one or more \link
    *  RubyContinuousVariable RubyContinuousVariables\endlink, this may be an incomplete listing 
    *  from the script's perspective. */
   std::vector<ruleset::OSArgument> arguments() const;
@@ -138,21 +150,21 @@ class ANALYSIS_API RubyPerturbation : public DiscretePerturbation {
   //@{
 
   /** Sets measure to measure, calls clearArguments, and returns true if measure's file types
-   *  are okay with the current use of this RubyPerturbation. Does nothing and returns false
+   *  are okay with the current use of this RubyMeasure. Does nothing and returns false
    *  otherwise. */
   bool setMeasure(const BCLMeasure& measure);
 
   /** Updates measure to newVersion and merges current argument values with newArguments if
    *  newVersion has the same UUID as measure() and has compatible file types for the current
-   *  use of this RubyPerturbation. Does nothing and returns false otherwise. Upon successful 
+   *  use of this RubyMeasure. Does nothing and returns false otherwise. Upon successful
    *  completion, the return value of arguments() is in the same order as newArguments. */
   bool updateMeasure(const BCLMeasure& newVersion, std::vector<ruleset::OSArgument> newArguments);
 
   /** Sets the perturbationScript to script and clears all arguments. \deprecated */
-  bool setPerturbationScript(const openstudio::path& script,
-                             const FileReferenceType& inputFileType,
-                             const FileReferenceType& outputFileType,
-                             bool isUserScript);
+  bool setMeasureScript(const openstudio::path& script,
+                        const FileReferenceType& inputFileType,
+                        const FileReferenceType& outputFileType,
+                        bool isUserScript);
 
   /** \deprecated */
   void setIsUserScript(bool isUserScript);
@@ -184,30 +196,42 @@ class ANALYSIS_API RubyPerturbation : public DiscretePerturbation {
   //@}
  protected:
   /// @cond
-  typedef detail::RubyPerturbation_Impl ImplType;
+  typedef detail::RubyMeasure_Impl ImplType;
 
   friend class AnalysisObject;
   friend class detail::AnalysisObject_Impl;
-  friend class detail::RubyPerturbation_Impl;
+  friend class detail::RubyMeasure_Impl;
 
-  explicit RubyPerturbation(boost::shared_ptr<detail::RubyPerturbation_Impl> impl);
+  explicit RubyMeasure(boost::shared_ptr<detail::RubyMeasure_Impl> impl);
 
   friend class RubyContinuousVariable; // to call setParent
   friend class detail::RubyContinuousVariable_Impl; // to call setParent
   /// @endcond
  private:
 
-  REGISTER_LOGGER("openstudio.analysis.RubyPerturbation");
+  REGISTER_LOGGER("openstudio.analysis.RubyMeasure");
 };
 
-/** \relates RubyPerturbation*/
-typedef boost::optional<RubyPerturbation> OptionalRubyPerturbation;
+/** \relates RubyMeasure*/
+typedef boost::optional<RubyMeasure> OptionalRubyMeasure;
 
-/** \relates RubyPerturbation*/
-typedef std::vector<RubyPerturbation> RubyPerturbationVector;
+/** \relates RubyMeasure*/
+typedef std::vector<RubyMeasure> RubyMeasureVector;
+
+// ETH@20130723 - These typedefs are just to preserve the old names for the near to
+// medium-term future (to avoid breaking existing scripts).
+
+/** \relates RubyMeasure*/
+typedef RubyMeasure RubyPerturbation;
+
+/** \relates RubyMeasure*/
+typedef boost::optional<RubyMeasure> OptionalRubyPerturbation;
+
+/** \relates RubyMeasure*/
+typedef std::vector<RubyMeasure> RubyPerturbationVector;
 
 } // analysis
 } // openstudio
 
-#endif // ANALYSIS_RUBYPERTURBATION_HPP
+#endif // ANALYSIS_RUBYMEASURE_HPP
 

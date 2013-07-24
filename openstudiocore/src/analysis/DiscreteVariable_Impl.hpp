@@ -23,7 +23,7 @@
 #include <analysis/AnalysisAPI.hpp>
 #include <analysis/InputVariable_Impl.hpp>
 
-#include <analysis/DiscretePerturbation.hpp>
+#include <analysis/Measure.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -40,18 +40,17 @@ namespace detail {
     /** @name Constructors and Destructors */
     //@{
 
-    /** Construct from a vector of perturbations (concrete values of the variable). Performs the
+    /** Construct from a vector of measures (concrete values of the variable). Performs the
      *  following error checking and clean-up operations:
      *
-     *  \li Allows at most one NullPerturbation (keeping the first and deleting all others).
+     *  \li Allows at most one NullMeasure (keeping the first and deleting all others).
      *  \li Ensures that the variable always acts on the same type of model, for instance, idf or osm.
-     *      (\link ModelRulesetPerturbation ModelRulesetPerturbations \endlink always act on osm.)
      *
-     *  createJob is implemented assuming QVariant value is an integer index into the perturbation
+     *  createJob is implemented assuming QVariant value is an integer index into the measure
      *  vector.
      */
     DiscreteVariable_Impl(const std::string& name,
-                          const std::vector<DiscretePerturbation>& perturbations);
+                          const std::vector<Measure>& measures);
 
     /** Constructor provided for deserialization; not for general use. */
     DiscreteVariable_Impl(const UUID& uuid,
@@ -60,7 +59,7 @@ namespace detail {
                           const std::string& displayName,
                           const std::string& description,
                           const boost::optional<UncertaintyDescription>& udesc,
-                          const std::vector<DiscretePerturbation>& perturbations);
+                          const std::vector<Measure>& measures);
 
     DiscreteVariable_Impl(const DiscreteVariable_Impl& other);
 
@@ -94,60 +93,60 @@ namespace detail {
     /** @name Getters and Queries */
     //@{
 
-    std::vector<DiscretePerturbation> perturbations(bool selectedPerturbationsOnly) const;
+    std::vector<Measure> measures(bool selectedMeasuresOnly) const;
 
-    DiscretePerturbation getPerturbation(int index) const;
+    Measure getMeasure(int index) const;
 
-    boost::optional<DiscretePerturbation> getPerturbationByUUID(const UUID& uuid) const;
+    boost::optional<Measure> getMeasureByUUID(const UUID& uuid) const;
 
-    unsigned numPerturbations(bool selectedPerturbationsOnly) const;
+    unsigned numMeasures(bool selectedMeasuresOnly) const;
 
-    boost::optional<int> getIndexByUUID(const DiscretePerturbation& perturbation) const;
+    boost::optional<int> getIndexByUUID(const Measure& measure) const;
 
-    DiscretePerturbation getPerturbation(const DataPoint& dataPoint) const;
+    Measure getMeasure(const DataPoint& dataPoint) const;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool push(const DiscretePerturbation& perturbation);
+    bool push(const Measure& measure);
 
-    bool insert(int index, const DiscretePerturbation& perturbation);
+    bool insert(int index, const Measure& measure);
 
-    bool erase(const DiscretePerturbation& perturbation);
+    bool erase(const Measure& measure);
 
-    bool swap(const DiscretePerturbation& perturbation1, const DiscretePerturbation& perturbation2);
+    bool swap(const Measure& measure1, const Measure& measure2);
 
-    bool setPerturbations(const std::vector<DiscretePerturbation>& perturbations);
+    bool setMeasures(const std::vector<Measure>& measures);
 
-    void clearPerturbations();
+    void clearMeasures();
 
     //@}
     /** @name Protected in Public Class */
     //@{
 
-    bool fileTypesAreCompatible(const DiscretePerturbation& childPerturbation,
+    bool fileTypesAreCompatible(const Measure& childMeasure,
                                 const FileReferenceType& proposedInputFileType,
                                 const FileReferenceType& proposedOutputFileType) const;
 
     //@}
    protected:
-    std::vector<DiscretePerturbation> m_perturbations;
+    std::vector<Measure> m_measures;
    private:
     REGISTER_LOGGER("openstudio.analysis.DiscreteVariable");
 
-    bool perturbationsAreCompatible(const std::vector<DiscretePerturbation>& perturbations) const;
+    bool measuresAreCompatible(const std::vector<Measure>& measures) const;
   };
 
-  /** Returns true and the result if perturbations are consistent. Otherwise, returns
+  /** Returns true and the result if measures are consistent. Otherwise, returns
    *  false and a value to ignore. */
   std::pair<bool,boost::optional<FileReferenceType> > inputFileType(
-      const std::vector<DiscretePerturbation>& perturbations);
+      const std::vector<Measure>& measures);
 
-  /** Returns true and the result if perturbations are consistent. Otherwise, returns
+  /** Returns true and the result if measures are consistent. Otherwise, returns
    *  false and a value to ignore. */
   std::pair<bool,boost::optional<FileReferenceType> > outputFileType(
-      const std::vector<DiscretePerturbation>& perturbations);
+      const std::vector<Measure>& measures);
 
 } // detail
 

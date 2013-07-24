@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef ANALYSIS_RUBYPERTURBATION_IMPL_HPP
-#define ANALYSIS_RUBYPERTURBATION_IMPL_HPP
+#ifndef ANALYSIS_RUBYMEASURE_IMPL_HPP
+#define ANALYSIS_RUBYMEASURE_IMPL_HPP
 
 #include <analysis/AnalysisAPI.hpp>
-#include <analysis/DiscretePerturbation_Impl.hpp>
+#include <analysis/Measure_Impl.hpp>
 
 #include <ruleset/OSArgument.hpp>
 
@@ -32,50 +32,50 @@
 namespace openstudio {
 namespace analysis {
 
-class RubyPerturbation;
+class RubyMeasure;
 
 namespace detail {
 
-  /** RubyPerturbation_Impl is a DiscretePerturbation_Impl that is the implementation class for RubyPerturbation.*/
-  class ANALYSIS_API RubyPerturbation_Impl : public DiscretePerturbation_Impl {
+  /** RubyMeasure_Impl is a Measure_Impl that is the implementation class for RubyMeasure.*/
+  class ANALYSIS_API RubyMeasure_Impl : public Measure_Impl {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
 
     /** Constructor from BCLMeasure. */
-    RubyPerturbation_Impl(const BCLMeasure& measure, bool isSelected);
+    RubyMeasure_Impl(const BCLMeasure& bclMeasure, bool isSelected);
 
-    /** Constructor. Perturbation script can be self-contained script that handles its own arguments
+    /** Constructor. Measure script can be self-contained script that handles its own arguments
      *  or a file that contains a class derived from ruleset::UserScript. \deprecated
      *
      *  If perturbationScript contains a rulset::UserScript, its type should match inputFileType and
      *  outputFileType. That is, if the UserScript is a ModelUserScript, inputFileType ==
      *  outputFileType == FileReferenceType::OSM. The isUserScript boolean should also be set to
      *  true in this case. */
-    RubyPerturbation_Impl(const openstudio::path& perturbationScript,
-                          const FileReferenceType& inputFileType,
-                          const FileReferenceType& outputFileType,
-                          bool isUserScript,
-                          bool isSelected);
+    RubyMeasure_Impl(const openstudio::path& perturbationScript,
+                     const FileReferenceType& inputFileType,
+                     const FileReferenceType& outputFileType,
+                     bool isUserScript,
+                     bool isSelected);
 
     /** Constructor provided for deserialization; not for general use. */
-    RubyPerturbation_Impl(const UUID& uuid,
-                          const UUID& versionUUID,
-                          const std::string& name,
-                          const std::string& displayName,
-                          const std::string& description,
-                          bool isSelected,
-                          const FileReference& perturbationScriptOrBCLMeasureDir,
-                          const FileReferenceType& inputFileType,
-                          const FileReferenceType& outputFileType,
-                          bool isUserScript,
-                          const std::vector<ruleset::OSArgument>& arguments,
-                          bool usesBCLMeasure);
+    RubyMeasure_Impl(const UUID& uuid,
+                     const UUID& versionUUID,
+                     const std::string& name,
+                     const std::string& displayName,
+                     const std::string& description,
+                     bool isSelected,
+                     const FileReference& perturbationScriptOrBCLMeasureDir,
+                     const FileReferenceType& inputFileType,
+                     const FileReferenceType& outputFileType,
+                     bool isUserScript,
+                     const std::vector<ruleset::OSArgument>& arguments,
+                     bool usesBCLMeasure);
 
-    RubyPerturbation_Impl(const RubyPerturbation_Impl& other);
+    RubyMeasure_Impl(const RubyMeasure_Impl& other);
 
-    virtual ~RubyPerturbation_Impl() {}
+    virtual ~RubyMeasure_Impl() {}
 
     virtual AnalysisObject clone() const;
 
@@ -97,18 +97,18 @@ namespace detail {
      *  or a FileReferenece. */
     bool usesBCLMeasure() const;
 
-    /** Returns the measure. Throws if not usesBCLMeasure(). Returns boost::none if measure
+    /** Returns the BCLMeasure. Throws if not usesBCLMeasure(). Returns boost::none if measure
      *  cannot be located on file system. */
-    boost::optional<BCLMeasure> measure() const;
+    boost::optional<BCLMeasure> bclMeasure() const;
 
     /** Returns the measure's directory. Throws if not usesBCLMeasure(). */
-    openstudio::path measureDirectory() const;
+    openstudio::path bclMeasureDirectory() const;
 
     /** Returns the measure's UUID. Throws if not usesBCLMeasure(). */
-    UUID measureUUID() const;
+    UUID bclMeasureUUID() const;
 
     /** Returns the measure's version UUID. Throws if not usesBCLMeasure(). */
-    UUID measureVersionUUID() const;
+    UUID bclMeasureVersionUUID() const;
 
     /** Returns the file reference. Throws if usesBCLMeasure(). \deprecated */
     FileReference perturbationScript() const;
@@ -130,20 +130,20 @@ namespace detail {
     //@{
 
     /** Sets measure to measure, calls clearArguments, and returns true if measure's file types
-     *  are okay with the current use of this RubyPerturbation. Does nothing and returns false
+     *  are okay with the current use of this RubyMeasure. Does nothing and returns false
      *  otherwise. */
     bool setMeasure(const BCLMeasure& measure);
 
     /** Updates measure to newVersion and merges current argument values with newArguments if
      *  newVersion has the same UUID as measure() and has compatible file types for the current
-     *  use of this RubyPerturbation. Does nothing and returns false otherwise. */
+     *  use of this RubyMeasure. Does nothing and returns false otherwise. */
     bool updateMeasure(const BCLMeasure& newVersion, std::vector<ruleset::OSArgument> newArguments);
 
     /** Sets the perturbationScript to script and clears all arguments. \deprecated */
-    bool setPerturbationScript(const openstudio::path& script,
-                               const FileReferenceType& inputFileType,
-                               const FileReferenceType& outputFileType,
-                               bool isUserScript);
+    bool setMeasureScript(const openstudio::path& script,
+                          const FileReferenceType& inputFileType,
+                          const FileReferenceType& outputFileType,
+                          bool isUserScript);
 
     /** \deprecated */
     void setIsUserScript(bool isUserScript);
@@ -175,10 +175,10 @@ namespace detail {
 
     //@}
    protected:
-    mutable boost::optional<BCLMeasure> m_measure; // cache for BCLMeasure.
+    mutable boost::optional<BCLMeasure> m_bclMeasure; // cache for BCLMeasure.
                                                    // measure actually defined by data below.
-    boost::optional<openstudio::path> m_measureDirectory;
-    boost::optional<UUID> m_measureUUID, m_measureVersionUUID;
+    boost::optional<openstudio::path> m_bclMeasureDirectory;
+    boost::optional<UUID> m_bclMeasureUUID, m_bclMeasureVersionUUID;
     boost::optional<FileReference> m_perturbationScript;
     FileReferenceType m_inputFileType;
     FileReferenceType m_outputFileType;
@@ -186,7 +186,7 @@ namespace detail {
     std::vector<ruleset::OSArgument> m_arguments;
 
    private:
-    REGISTER_LOGGER("openstudio.analysis.RubyPerturbation");
+    REGISTER_LOGGER("openstudio.analysis.RubyMeasure");
 
     bool fileTypesAreCompatible(const FileReferenceType& proposedInputFileType,
                                 const FileReferenceType& proposedOutputFileType) const;
@@ -197,5 +197,5 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // ANALYSIS_RUBYPERTURBATION_IMPL_HPP
+#endif // ANALYSIS_RUBYMEASURE_IMPL_HPP
 

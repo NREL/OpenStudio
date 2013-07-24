@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef ANALYSIS_DISCRETEPERTURBATION_HPP
-#define ANALYSIS_DISCRETEPERTURBATION_HPP
+#ifndef ANALYSIS_MEASURE_HPP
+#define ANALYSIS_MEASURE_HPP
 
 #include <analysis/AnalysisAPI.hpp>
 #include <analysis/AnalysisObject.hpp>
@@ -39,21 +39,21 @@ class DiscreteVariable;
 
 namespace detail {
 
-  class DiscretePerturbation_Impl;
+  class Measure_Impl;
   class DiscreteVariable_Impl;
 
 } // detail
 
-/** DiscretePerturbation is an AnalysisObject that defines one particular value of a
- *  DiscreteVariable. DiscretePerturbation is abstract, implementing generic select/deselect
+/** Measure is an AnalysisObject that defines one particular value of a
+ *  DiscreteVariable. Measure is abstract, implementing generic select/deselect
  *  functionality, and requiring derived types to specify inputFileType, outputFileType, and
- *  to construct the runmanager::Job that will apply the DiscretePerturbation to an input file. */
-class ANALYSIS_API DiscretePerturbation : public AnalysisObject {
+ *  to construct the runmanager::Job that will apply the Measure to an input file. */
+class ANALYSIS_API Measure : public AnalysisObject {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  virtual ~DiscretePerturbation() {}
+  virtual ~Measure() {}
 
   //@}
   /** @name Getters and Quereis */
@@ -80,12 +80,12 @@ class ANALYSIS_API DiscretePerturbation : public AnalysisObject {
   //@}
  protected:
   /// @cond
-  typedef detail::DiscretePerturbation_Impl ImplType;
+  typedef detail::Measure_Impl ImplType;
 
   friend class AnalysisObject;
   friend class detail::AnalysisObject_Impl;
 
-  explicit DiscretePerturbation(boost::shared_ptr<detail::DiscretePerturbation_Impl> impl);
+  explicit Measure(boost::shared_ptr<detail::Measure_Impl> impl);
 
   friend class DiscreteVariable; // to call setParent
   friend class detail::DiscreteVariable_Impl; // to call setParent
@@ -93,17 +93,29 @@ class ANALYSIS_API DiscretePerturbation : public AnalysisObject {
   /// @endcond
  private:
 
-  REGISTER_LOGGER("openstudio.analysis.DiscretePerturbation");
+  REGISTER_LOGGER("openstudio.analysis.Measure");
 };
 
-/** \relates DiscretePerturbation*/
-typedef boost::optional<DiscretePerturbation> OptionalDiscretePerturbation;
+/** \relates Measure */
+typedef boost::optional<Measure> OptionalMeasure;
 
-/** \relates DiscretePerturbation*/
-typedef std::vector<DiscretePerturbation> DiscretePerturbationVector;
+/** \relates Measure */
+typedef std::vector<Measure> MeasureVector;
+
+// ETH@20130723 - These typedefs are just to preserve the old names for the near to
+// medium-term future (to avoid breaking existing scripts).
+
+/** \relates Measure */
+typedef Measure DiscretePerturbation;
+
+/** \relates Measure */
+typedef boost::optional<Measure> OptionalDiscretePerturbation;
+
+/** \relates Measure */
+typedef std::vector<Measure> DiscretePerturbationVector;
 
 } // analysis
 } // openstudio
 
-#endif // ANALYSIS_DISCRETEPERTURBATION_HPP
+#endif // ANALYSIS_MEASURE_HPP
 

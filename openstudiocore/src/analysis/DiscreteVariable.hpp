@@ -26,19 +26,19 @@
 namespace openstudio {
 namespace analysis {
 
-class DiscretePerturbation;
+class Measure;
 
 namespace detail {
 
   class DiscreteVariable_Impl;
-  class DiscretePerturbation_Impl;
-  class RubyPerturbation_Impl;
+  class Measure_Impl;
+  class RubyMeasure_Impl;
 
 } // detail
 
 /** DiscreteVariable is an InputVariable that takes on discrete values, each of which is described by
- *  a DiscretePerturbation. Essentially, DiscreteVariable is a mapping from 0, 1, ... ,
- *  (numPerturbations(false) - 1) to a DiscretePerturbation that defines what setting the variable
+ *  a Measure. Essentially, DiscreteVariable is a mapping from 0, 1, ... ,
+ *  (numMeasures(false) - 1) to a Measure that defines what setting the variable
  *  value to the given integer means. DiscreteVariable forwards any createWorkItem requests along to
  *  the appropriate DiscretePertubation using this mapping. */
 class ANALYSIS_API DiscreteVariable : public InputVariable {
@@ -46,18 +46,17 @@ class ANALYSIS_API DiscreteVariable : public InputVariable {
   /** @name Constructors and Destructors */
   //@{
 
-  /** Construct from a vector of perturbations (concrete values of the variable). Performs the
+  /** Construct from a vector of measures (concrete values of the variable). Performs the
    *  following error checking and clean-up operations:
    *
-   *  \li Allows at most one NullPerturbation (keeping the first and deleting all others).
+   *  \li Allows at most one NullMeasure (keeping the first and deleting all others).
    *  \li Ensures that the variable always acts on the same type of model, for instance, idf or osm.
-   *      (\link ModelRulesetPerturbation ModelRulesetPerturbations \endlink always act on osm.)
    *
-   *  createJob is implemented assuming QVariant value is an integer index into the perturbation
+   *  createJob is implemented assuming QVariant value is an integer index into the measure
    *  vector.
    */
   DiscreteVariable(const std::string& name,
-                   const std::vector<DiscretePerturbation>& perturbations);
+                   const std::vector<Measure>& measures);
 
   /** Constructor provided for deserialization; not for general use. */
   DiscreteVariable(const UUID& uuid,
@@ -66,7 +65,7 @@ class ANALYSIS_API DiscreteVariable : public InputVariable {
                    const std::string& displayName,
                    const std::string& description,
                    const boost::optional<UncertaintyDescription>& udesc,
-                   const std::vector<DiscretePerturbation>& perturbations);
+                   const std::vector<Measure>& measures);
 
   virtual ~DiscreteVariable() {}
 
@@ -74,32 +73,53 @@ class ANALYSIS_API DiscreteVariable : public InputVariable {
   /** @name Getters and Queries */
   //@{
 
-  std::vector<DiscretePerturbation> perturbations(bool selectedPerturbationsOnly) const;
+  std::vector<Measure> measures(bool selectedMeasuresOnly) const;
 
-  DiscretePerturbation getPerturbation(int index) const;
+  /** \deprecated */
+  std::vector<Measure> perturbations(bool selectedMeasuresOnly) const;
 
-  boost::optional<DiscretePerturbation> getPerturbationByUUID(const UUID& uuid) const;
+  Measure getMeasure(int index) const;
 
+  /** \deprecated */
+  Measure getPerturbation(int index) const;
+
+  boost::optional<Measure> getMeasureByUUID(const UUID& uuid) const;
+
+  /** \deprecated */
+  boost::optional<Measure> getPerturbationByUUID(const UUID& uuid) const;
+
+  unsigned numMeasures(bool selectedMeasuresOnly) const;
+
+  /** \deprecated */
   unsigned numPerturbations(bool selectedPerturbationsOnly) const;
 
-  boost::optional<int> getIndexByUUID(const DiscretePerturbation& perturbation) const;
+  boost::optional<int> getIndexByUUID(const Measure& measure) const;
 
-  DiscretePerturbation getPerturbation(const DataPoint& dataPoint) const;
+  Measure getMeasure(const DataPoint& dataPoint) const;
+
+  /** \deprecated */
+  Measure getPerturbation(const DataPoint& dataPoint) const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool push(const DiscretePerturbation& perturbation);
+  bool push(const Measure& measure);
 
-  bool insert(int index, const DiscretePerturbation& perturbation);
+  bool insert(int index, const Measure& measure);
 
-  bool erase(const DiscretePerturbation& perturbation);
+  bool erase(const Measure& measure);
 
-  bool swap(const DiscretePerturbation& perturbation1, const DiscretePerturbation& perturbation2);
+  bool swap(const Measure& measure1, const Measure& measure2);
 
-  bool setPerturbations(const std::vector<DiscretePerturbation>& perturbations);
+  bool setMeasures(const std::vector<Measure>& measures);
 
+  /** \deprecated */
+  bool setPerturbations(const std::vector<Measure>& measures);
+
+  void clearMeasures();
+
+  /** \deprecated */
   void clearPerturbations();
 
   //@}
@@ -113,10 +133,10 @@ class ANALYSIS_API DiscreteVariable : public InputVariable {
 
   explicit DiscreteVariable(boost::shared_ptr<detail::DiscreteVariable_Impl> impl);
 
-  friend class detail::DiscretePerturbation_Impl;
-  friend class detail::RubyPerturbation_Impl;
+  friend class detail::Measure_Impl;
+  friend class detail::RubyMeasure_Impl;
 
-  bool fileTypesAreCompatible(const DiscretePerturbation& childPerturbation,
+  bool fileTypesAreCompatible(const Measure& childMeasure,
                               const FileReferenceType& proposedInputFileType,
                               const FileReferenceType& proposedOutputFileType) const;
 
