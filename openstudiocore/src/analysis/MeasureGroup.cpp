@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
 
 #include <analysis/DataPoint.hpp>
 #include <analysis/NullMeasure.hpp>
@@ -43,9 +43,9 @@ namespace analysis {
 
 namespace detail {
 
-  DiscreteVariable_Impl::DiscreteVariable_Impl(const std::string& name,
-                                               const std::vector<Measure>& measures)
-    : InputVariable_Impl(name),
+  MeasureGroup_Impl::MeasureGroup_Impl(const std::string& name,
+                                       const std::vector<Measure>& measures)
+    : DiscreteVariable_Impl(name),
       m_measures(measures)
   {
     // get null measures straightened out
@@ -70,16 +70,16 @@ namespace detail {
     std::pair<bool,OptionalFileReferenceType> outType = detail::outputFileType(measures);
     if (!inType.first) {
       LOG_AND_THROW("Input file types of measures used to attempt to construct "
-                    << "DiscreteVariable '" << name << "' are inconsistent.");
+                    << "MeasureGroup '" << name << "' are inconsistent.");
     }
     if (!outType.first) {
       LOG_AND_THROW("Output file types of measures used to attempt to construct "
-                    << "DiscreteVariable '" << name << "' are inconsistent.");
+                    << "MeasureGroup '" << name << "' are inconsistent.");
     }
     if (hasNull && inType.second && outType.second &&
         (inType.second.get() != outType.second.get()))
     {
-      LOG_AND_THROW("Unable to construct DiscreteVariable '" << name <<
+      LOG_AND_THROW("Unable to construct MeasureGroup '" << name <<
                     "', because at least one measure changes the file type between input and " <<
                     "output, and there is also a NullMeasure (which cannot change the file type).");
     }
@@ -89,7 +89,7 @@ namespace detail {
     }
   }
 
-  DiscreteVariable_Impl::DiscreteVariable_Impl(
+  MeasureGroup_Impl::MeasureGroup_Impl(
       const UUID& uuid,
       const UUID& versionUUID,
       const std::string& name,
@@ -97,7 +97,7 @@ namespace detail {
       const std::string& description,
       const boost::optional<UncertaintyDescription>& udesc,
       const std::vector<Measure>& measures)
-    : InputVariable_Impl(uuid,versionUUID,name,displayName,description,udesc),
+    : DiscreteVariable_Impl(uuid,versionUUID,name,displayName,description,udesc),
       m_measures(measures)
   {
     BOOST_FOREACH(Measure& measure,m_measures) {
@@ -105,8 +105,8 @@ namespace detail {
     }
   }
 
-  DiscreteVariable_Impl::DiscreteVariable_Impl(const DiscreteVariable_Impl &other)
-    : InputVariable_Impl(other)
+  MeasureGroup_Impl::MeasureGroup_Impl(const MeasureGroup_Impl &other)
+    : DiscreteVariable_Impl(other)
   {
     BOOST_FOREACH(const Measure& pert,other.measures(false)) {
       m_measures.push_back(pert.clone().cast<Measure>());
@@ -114,9 +114,9 @@ namespace detail {
     }
   }
 
-  AnalysisObject DiscreteVariable_Impl::clone() const {
-    boost::shared_ptr<DiscreteVariable_Impl> impl(new DiscreteVariable_Impl(*this));
-    DiscreteVariable result(impl);
+  AnalysisObject MeasureGroup_Impl::clone() const {
+    boost::shared_ptr<MeasureGroup_Impl> impl(new MeasureGroup_Impl(*this));
+    MeasureGroup result(impl);
     MeasureVector measures = result.measures(false);
     BOOST_FOREACH(Measure& measure,measures) {
       measure.setParent(result);
@@ -124,33 +124,27 @@ namespace detail {
     return result;
   }
 
-  double DiscreteVariable_Impl::getValue(const DataPoint& dataPoint) const {
-    OptionalInt index = dataPoint.problem().getVariableIndexByUUID(uuid());
-    BOOST_ASSERT(index);
-    return dataPoint.variableValues()[*index].toDouble();
-  }
-
-  boost::optional<FileReferenceType> DiscreteVariable_Impl::inputFileType() const {
+  boost::optional<FileReferenceType> MeasureGroup_Impl::inputFileType() const {
     std::pair<bool,OptionalFileReferenceType> intermediate = detail::inputFileType(measures(false));
     BOOST_ASSERT(intermediate.first);
     return intermediate.second;
   }
 
-  boost::optional<FileReferenceType> DiscreteVariable_Impl::outputFileType() const {
+  boost::optional<FileReferenceType> MeasureGroup_Impl::outputFileType() const {
     std::pair<bool,OptionalFileReferenceType> intermediate = detail::outputFileType(measures(false));
     BOOST_ASSERT(intermediate.first);
     return intermediate.second;
   }
 
-  bool DiscreteVariable_Impl::isValid(const QVariant& value) const {
+  bool MeasureGroup_Impl::isValid(const QVariant& value) const {
     if (!((value.type() == QVariant::Int) || (value.type() == QVariant::UInt))) {
-      LOG(Warn,"Unexpected QVariant value type sent into isValid method of DiscreteVariable '"
+      LOG(Warn,"Unexpected QVariant value type sent into isValid method of MeasureGroup '"
           << name() << "'. Expected an integer, but was passed a " << value.typeName() << ".");
       return false;
     }
     int index = value.toInt();
     if ((index < 0) || (index >= int(numMeasures(false)))) {
-      LOG(Warn,"Unexpected QVariant value type sent into isValid method of DiscreteVariable '"
+      LOG(Warn,"Unexpected QVariant value type sent into isValid method of MeasureGroup '"
           << name() << "'. Expected an index into this variable's measure vector, but index = " << index
           << ", even though expected an integer in the range [0," << numMeasures(false) << ").");
       return false;
@@ -160,17 +154,12 @@ namespace detail {
     return true;
   }
 
-  bool DiscreteVariable_Impl::isValid(const UncertaintyDescription& udesc) const {
-    UncertaintyDescriptionTypeVector validTypes = UncertaintyDescription::validTypes(VariableValueType::Discrete);
-    return (std::find(validTypes.begin(),validTypes.end(),udesc.type()) != validTypes.end());
-  }
-
-  runmanager::WorkItem DiscreteVariable_Impl::createWorkItem(
+  runmanager::WorkItem MeasureGroup_Impl::createWorkItem(
       const QVariant& value,
       const openstudio::path& rubyIncludeDirectory) const
   {
     if (!isValid(value)) {
-      LOG_AND_THROW("Invalid value sent into the createJob method of DiscreteVariable '"
+      LOG_AND_THROW("Invalid value sent into the createJob method of MeasureGroup '"
           << name() << "'.");
     }
 
@@ -179,7 +168,28 @@ namespace detail {
     return m_measures[index].createWorkItem(rubyIncludeDirectory);
   }
 
-  std::vector<Measure> DiscreteVariable_Impl::measures(
+  std::vector<int> MeasureGroup_Impl::validValues(bool selectedOnly) const {
+    IntVector result;
+
+    if (selectedOnly) {
+      int index(0);
+      Q_FOREACH(const Measure& measure, measures(false)) {
+        if (measure.isSelected()) {
+          result.push_back(index);
+        }
+        ++index;
+      }
+    }
+    else {
+      for (int i = 0, n = numMeasures(false); i < n; ++i) {
+        result.push_back(i);
+      }
+    }
+
+    return result;
+  }
+
+  std::vector<Measure> MeasureGroup_Impl::measures(
       bool selectedMeasuresOnly) const
   {
     if (selectedMeasuresOnly) {
@@ -195,16 +205,16 @@ namespace detail {
     return m_measures;
   }
 
-  Measure DiscreteVariable_Impl::getMeasure(int index) const {
+  Measure MeasureGroup_Impl::getMeasure(int index) const {
     if (index >= int(m_measures.size())) {
-      LOG_AND_THROW("DiscreteVariable '" << name() << "' only has " << m_measures.size()
+      LOG_AND_THROW("MeasureGroup '" << name() << "' only has " << m_measures.size()
           << " measures; measure " << index << " does not exist.");
     }
     Measure result = m_measures[index];
     return result;
   }
 
-  boost::optional<Measure> DiscreteVariable_Impl::getMeasureByUUID(
+  boost::optional<Measure> MeasureGroup_Impl::getMeasureByUUID(
       const UUID& uuid) const
   {
     OptionalMeasure result;
@@ -218,11 +228,11 @@ namespace detail {
     return result;
   }
 
-  unsigned DiscreteVariable_Impl::numMeasures(bool selectedMeasuresOnly) const {
+  unsigned MeasureGroup_Impl::numMeasures(bool selectedMeasuresOnly) const {
     return measures(selectedMeasuresOnly).size();
   }
 
-  boost::optional<int> DiscreteVariable_Impl::getIndexByUUID(
+  boost::optional<int> MeasureGroup_Impl::getIndexByUUID(
       const Measure& measure) const
   {
     OptionalInt result;
@@ -236,13 +246,13 @@ namespace detail {
     return result;
   }
 
-  Measure DiscreteVariable_Impl::getMeasure(const DataPoint& dataPoint) const {
+  Measure MeasureGroup_Impl::getMeasure(const DataPoint& dataPoint) const {
     OptionalInt index = dataPoint.problem().getVariableIndexByUUID(uuid());
     BOOST_ASSERT(index);
     return getMeasure(dataPoint.variableValues()[*index].toInt());
   }
 
-  bool DiscreteVariable_Impl::push(const Measure& measure) {
+  bool MeasureGroup_Impl::push(const Measure& measure) {
     MeasureVector candidates = measures(false);
     candidates.push_back(measure);
     if (!measuresAreCompatible(candidates)) {
@@ -256,7 +266,7 @@ namespace detail {
     return true;
   }
 
-  bool DiscreteVariable_Impl::insert(int index, const Measure& measure) {
+  bool MeasureGroup_Impl::insert(int index, const Measure& measure) {
     if ((index < 0) || (index >= int(numMeasures(false)))) {
       return false;
     }
@@ -278,7 +288,7 @@ namespace detail {
     return true;
   }
 
-  bool DiscreteVariable_Impl::erase(const Measure& measure) {
+  bool MeasureGroup_Impl::erase(const Measure& measure) {
     MeasureVector::iterator it = std::find_if(
         m_measures.begin(),
         m_measures.end(),
@@ -296,7 +306,7 @@ namespace detail {
     return true;
   }
 
-  bool DiscreteVariable_Impl::swap(const Measure& measure1,
+  bool MeasureGroup_Impl::swap(const Measure& measure1,
                                    const Measure& measure2)
   {
     MeasureVector::iterator it1 = std::find_if(
@@ -321,7 +331,7 @@ namespace detail {
     return true;
   }
 
-  bool DiscreteVariable_Impl::setMeasures(const std::vector<Measure>& measures) {
+  bool MeasureGroup_Impl::setMeasures(const std::vector<Measure>& measures) {
     if (!measuresAreCompatible(measures)) {
       return false;
     }
@@ -338,7 +348,7 @@ namespace detail {
     return true;
   }
 
-  void DiscreteVariable_Impl::clearMeasures() {
+  void MeasureGroup_Impl::clearMeasures() {
     BOOST_FOREACH(Measure& measure,m_measures) {
       disconnectChild(measure);
     }
@@ -346,7 +356,7 @@ namespace detail {
     onChange(AnalysisObject_Impl::InvalidatesDataPoints);
   }
 
-  bool DiscreteVariable_Impl::fileTypesAreCompatible(
+  bool MeasureGroup_Impl::fileTypesAreCompatible(
       const Measure& childMeasure,
       const FileReferenceType& proposedInputFileType,
       const FileReferenceType& proposedOutputFileType) const
@@ -392,7 +402,7 @@ namespace detail {
     return true;
   }
 
-  bool DiscreteVariable_Impl::measuresAreCompatible(
+  bool MeasureGroup_Impl::measuresAreCompatible(
       const std::vector<Measure>& measures) const
   {
     // measures must be internally consistent
@@ -463,128 +473,128 @@ namespace detail {
 
 } // detail
 
-DiscreteVariable::DiscreteVariable(const std::string& name,
+MeasureGroup::MeasureGroup(const std::string& name,
                                    const std::vector<Measure>& measures)
-  : InputVariable(boost::shared_ptr<detail::DiscreteVariable_Impl>(
-        new detail::DiscreteVariable_Impl(name,measures)))
+  : DiscreteVariable(boost::shared_ptr<detail::MeasureGroup_Impl>(
+        new detail::MeasureGroup_Impl(name,measures)))
 {
-  DiscreteVariable copyOfThis(getImpl<detail::DiscreteVariable_Impl>());
+  MeasureGroup copyOfThis(getImpl<detail::MeasureGroup_Impl>());
   BOOST_FOREACH(const Measure& measure,measures) {
     measure.setParent(copyOfThis);
   }
 }
 
-DiscreteVariable::DiscreteVariable(const UUID& uuid,
+MeasureGroup::MeasureGroup(const UUID& uuid,
                                    const UUID& versionUUID,
                                    const std::string& name,
                                    const std::string& displayName,
                                    const std::string& description,
                                    const boost::optional<UncertaintyDescription>& udesc,
                                    const std::vector<Measure>& measures)
-  : InputVariable(boost::shared_ptr<detail::DiscreteVariable_Impl>(
-        new detail::DiscreteVariable_Impl(uuid,
-                                          versionUUID,
-                                          name,
-                                          displayName,
-                                          description,
-                                          udesc,
-                                          measures)))
+  : DiscreteVariable(boost::shared_ptr<detail::MeasureGroup_Impl>(
+        new detail::MeasureGroup_Impl(uuid,
+                                      versionUUID,
+                                      name,
+                                      displayName,
+                                      description,
+                                      udesc,
+                                      measures)))
 {
-  DiscreteVariable copyOfThis(getImpl<detail::DiscreteVariable_Impl>());
+  MeasureGroup copyOfThis(getImpl<detail::MeasureGroup_Impl>());
   BOOST_FOREACH(const Measure& measure,measures) {
     measure.setParent(copyOfThis);
   }
 }
 
-std::vector<Measure> DiscreteVariable::measures(bool selectedMeasuresOnly) const
+std::vector<Measure> MeasureGroup::measures(bool selectedMeasuresOnly) const
 {
-  return getImpl<detail::DiscreteVariable_Impl>()->measures(selectedMeasuresOnly);
+  return getImpl<detail::MeasureGroup_Impl>()->measures(selectedMeasuresOnly);
 }
 
-std::vector<Measure> DiscreteVariable::perturbations(bool selectedMeasuresOnly) const {
-  return getImpl<detail::DiscreteVariable_Impl>()->measures(selectedMeasuresOnly);
+std::vector<Measure> MeasureGroup::perturbations(bool selectedMeasuresOnly) const {
+  return getImpl<detail::MeasureGroup_Impl>()->measures(selectedMeasuresOnly);
 }
 
-Measure DiscreteVariable::getMeasure(int index) const {
-  return getImpl<detail::DiscreteVariable_Impl>()->getMeasure(index);
+Measure MeasureGroup::getMeasure(int index) const {
+  return getImpl<detail::MeasureGroup_Impl>()->getMeasure(index);
 }
 
-Measure DiscreteVariable::getPerturbation(int index) const {
-  return getImpl<detail::DiscreteVariable_Impl>()->getMeasure(index);
+Measure MeasureGroup::getPerturbation(int index) const {
+  return getImpl<detail::MeasureGroup_Impl>()->getMeasure(index);
 }
 
-boost::optional<Measure> DiscreteVariable::getMeasureByUUID(const UUID& uuid) const {
-  return getImpl<detail::DiscreteVariable_Impl>()->getMeasureByUUID(uuid);
+boost::optional<Measure> MeasureGroup::getMeasureByUUID(const UUID& uuid) const {
+  return getImpl<detail::MeasureGroup_Impl>()->getMeasureByUUID(uuid);
 }
 
-boost::optional<Measure> DiscreteVariable::getPerturbationByUUID(const UUID& uuid) const {
-  return getImpl<detail::DiscreteVariable_Impl>()->getMeasureByUUID(uuid);
+boost::optional<Measure> MeasureGroup::getPerturbationByUUID(const UUID& uuid) const {
+  return getImpl<detail::MeasureGroup_Impl>()->getMeasureByUUID(uuid);
 }
 
-unsigned DiscreteVariable::numMeasures(bool selectedMeasuresOnly) const {
-  return getImpl<detail::DiscreteVariable_Impl>()->numMeasures(selectedMeasuresOnly);
+unsigned MeasureGroup::numMeasures(bool selectedMeasuresOnly) const {
+  return getImpl<detail::MeasureGroup_Impl>()->numMeasures(selectedMeasuresOnly);
 }
 
-unsigned DiscreteVariable::numPerturbations(bool selectedMeasuresOnly) const {
-  return getImpl<detail::DiscreteVariable_Impl>()->numMeasures(selectedMeasuresOnly);
+unsigned MeasureGroup::numPerturbations(bool selectedMeasuresOnly) const {
+  return getImpl<detail::MeasureGroup_Impl>()->numMeasures(selectedMeasuresOnly);
 }
 
-boost::optional<int> DiscreteVariable::getIndexByUUID(const Measure& measure) const {
-  return getImpl<detail::DiscreteVariable_Impl>()->getIndexByUUID(measure);
+boost::optional<int> MeasureGroup::getIndexByUUID(const Measure& measure) const {
+  return getImpl<detail::MeasureGroup_Impl>()->getIndexByUUID(measure);
 }
 
-Measure DiscreteVariable::getMeasure(const DataPoint& dataPoint) const {
-  return getImpl<detail::DiscreteVariable_Impl>()->getMeasure(dataPoint);
+Measure MeasureGroup::getMeasure(const DataPoint& dataPoint) const {
+  return getImpl<detail::MeasureGroup_Impl>()->getMeasure(dataPoint);
 }
 
-Measure DiscreteVariable::getPerturbation(const DataPoint& dataPoint) const {
-  return getImpl<detail::DiscreteVariable_Impl>()->getMeasure(dataPoint);
+Measure MeasureGroup::getPerturbation(const DataPoint& dataPoint) const {
+  return getImpl<detail::MeasureGroup_Impl>()->getMeasure(dataPoint);
 }
 
-bool DiscreteVariable::push(const Measure& measure) {
-  return getImpl<detail::DiscreteVariable_Impl>()->push(measure);
+bool MeasureGroup::push(const Measure& measure) {
+  return getImpl<detail::MeasureGroup_Impl>()->push(measure);
 }
 
-bool DiscreteVariable::insert(int index, const Measure& measure) {
-  return getImpl<detail::DiscreteVariable_Impl>()->insert(index,measure);
+bool MeasureGroup::insert(int index, const Measure& measure) {
+  return getImpl<detail::MeasureGroup_Impl>()->insert(index,measure);
 }
 
-bool DiscreteVariable::erase(const Measure& measure) {
-  return getImpl<detail::DiscreteVariable_Impl>()->erase(measure);
+bool MeasureGroup::erase(const Measure& measure) {
+  return getImpl<detail::MeasureGroup_Impl>()->erase(measure);
 }
 
-bool DiscreteVariable::swap(const Measure& measure1,
+bool MeasureGroup::swap(const Measure& measure1,
                             const Measure& measure2)
 {
-  return getImpl<detail::DiscreteVariable_Impl>()->swap(measure1,measure2);
+  return getImpl<detail::MeasureGroup_Impl>()->swap(measure1,measure2);
 }
 
-bool DiscreteVariable::setMeasures(const std::vector<Measure>& measures) {
-  return getImpl<detail::DiscreteVariable_Impl>()->setMeasures(measures);
+bool MeasureGroup::setMeasures(const std::vector<Measure>& measures) {
+  return getImpl<detail::MeasureGroup_Impl>()->setMeasures(measures);
 }
 
-bool DiscreteVariable::setPerturbations(const std::vector<Measure>& measures) {
-  return getImpl<detail::DiscreteVariable_Impl>()->setMeasures(measures);
+bool MeasureGroup::setPerturbations(const std::vector<Measure>& measures) {
+  return getImpl<detail::MeasureGroup_Impl>()->setMeasures(measures);
 }
 
-void DiscreteVariable::clearMeasures() {
-  return getImpl<detail::DiscreteVariable_Impl>()->clearMeasures();
+void MeasureGroup::clearMeasures() {
+  return getImpl<detail::MeasureGroup_Impl>()->clearMeasures();
 }
 
-void DiscreteVariable::clearPerturbations() {
-  return getImpl<detail::DiscreteVariable_Impl>()->clearMeasures();
+void MeasureGroup::clearPerturbations() {
+  return getImpl<detail::MeasureGroup_Impl>()->clearMeasures();
 }
 
 /// @cond
-DiscreteVariable::DiscreteVariable(boost::shared_ptr<detail::DiscreteVariable_Impl> impl)
-  : InputVariable(impl)
+MeasureGroup::MeasureGroup(boost::shared_ptr<detail::MeasureGroup_Impl> impl)
+  : DiscreteVariable(impl)
 {}
 
-bool DiscreteVariable::fileTypesAreCompatible(const Measure& childMeasure,
+bool MeasureGroup::fileTypesAreCompatible(const Measure& childMeasure,
                                               const FileReferenceType& proposedInputFileType,
                                               const FileReferenceType& proposedOutputFileType) const
 {
-  return getImpl<detail::DiscreteVariable_Impl>()->fileTypesAreCompatible(childMeasure,
+  return getImpl<detail::MeasureGroup_Impl>()->fileTypesAreCompatible(childMeasure,
                                                                           proposedInputFileType,
                                                                           proposedOutputFileType);
 }

@@ -25,7 +25,7 @@
 #include <analysis/DDACEAlgorithmOptions.hpp>
 #include <analysis/DDACEAlgorithmOptions_Impl.hpp>
 #include <analysis/Problem.hpp>
-#include <analysis/DiscreteVariable.hpp>
+#include <analysis/MeasureGroup.hpp>
 #include <analysis/RubyMeasure.hpp>
 #include <analysis/RubyMeasure_Impl.hpp>
 #include <analysis/NullMeasure.hpp>
@@ -140,7 +140,7 @@ TEST_F(AnalysisFixture,DDACEAlgorithm_CompatibleProblemType) {
   MeasureVector measures;
   variables.push_back(RubyContinuousVariable("Var 1",OSArgument::makeDoubleArgument("wwr1"),measure));
   measures.push_back(RubyMeasure(toPath("script.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
-  variables.push_back(DiscreteVariable("Var 2",measures));
+  variables.push_back(MeasureGroup("Var 2",measures));
   measures.clear();
   variables.push_back(RubyContinuousVariable("Var 3",OSArgument::makeDoubleArgument("wwr3"),measure));
   Problem mProblem("Mixed Problem",variables,runmanager::Workflow());
@@ -156,7 +156,7 @@ TEST_F(AnalysisFixture,DDACEAlgorithm_CompatibleProblemType) {
   measures.back().cast<RubyMeasure>().addArgument("wwr","0.2");
   measures.push_back(RubyMeasure(toPath("script1.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
   measures.back().cast<RubyMeasure>().addArgument("wwr","0.4");
-  variables.push_back(DiscreteVariable("Var 1",measures));
+  variables.push_back(MeasureGroup("Var 1",measures));
   measures.clear();
   measures.push_back(NullMeasure());
   measures.push_back(RubyMeasure(toPath("script2.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
@@ -171,7 +171,7 @@ TEST_F(AnalysisFixture,DDACEAlgorithm_CompatibleProblemType) {
   measures.push_back(RubyMeasure(toPath("script2.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
   measures.back().cast<RubyMeasure>().addArgument("cop","3.5");
   measures.back().cast<RubyMeasure>().addArgument("fan_eff","0.5");
-  variables.push_back(DiscreteVariable("Var 2",measures));
+  variables.push_back(MeasureGroup("Var 2",measures));
   measures.clear();
   Problem dProblem("Discrete Problem",variables,runmanager::Workflow());
   EXPECT_EQ(2,dProblem.numVariables());

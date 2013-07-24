@@ -30,6 +30,8 @@
 #include <analysis/DiscreteVariable.hpp>
 #include <analysis/DiscreteVariable_Impl.hpp>
 #include <analysis/Measure.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
 #include <analysis/Function_Impl.hpp>
 #include <analysis/GenericUncertaintyDescription.hpp>
 #include <analysis/NullMeasure.hpp>
@@ -301,7 +303,7 @@ namespace detail {
 
     int result(0);
     BOOST_FOREACH(const DiscreteVariable& dvar,dvars) {
-      if (dvar.numMeasures(true) < 2) {
+      if (dvar.numValidValues(true) < 2) {
         ++result;
       }
     }
@@ -316,7 +318,7 @@ namespace detail {
   bool Problem_Impl::allVariablesAreContinuousOrStaticTransformations() const {
     BOOST_FOREACH(const InputVariable& variable,variables()) {
       if (OptionalDiscreteVariable oDiscrete = variable.optionalCast<DiscreteVariable>()) {
-        if (oDiscrete->numMeasures(true) > 1) {
+        if (oDiscrete->numValidValues(true) > 1) {
           return false;
         }
       }
@@ -543,13 +545,13 @@ namespace detail {
 
     InputVariableVector variables = this->variables();
     for (int i = 0; i < n && i < m; ++i) {
-      OptionalDiscreteVariable discreteVariable = variables[i].optionalCast<DiscreteVariable>();
-      if (discreteVariable) {
+      OptionalMeasureGroup measureGroup = variables[i].optionalCast<MeasureGroup>();
+      if (measureGroup) {
         if (!measures[i]) {
           intermediate.push_back(QVariant(QVariant::Int));
           continue;
         }
-        OptionalInt measureIndex = discreteVariable->getIndexByUUID(measures[i].get());
+        OptionalInt measureIndex = measureGroup->getIndexByUUID(measures[i].get());
         if (!measureIndex) {
           LOG(Warn,"Cannot determine variable values for Problem '" << name()
               << "' from the provided measure vector, because the measure at index " <<
@@ -583,20 +585,20 @@ namespace detail {
 
     InputVariableVector variables = this->variables();
     for (int i = 0; i < n && i < m; ++i) {
-      OptionalDiscreteVariable discreteVariable = variables[i].optionalCast<DiscreteVariable>();
-      if (discreteVariable) {
+      OptionalMeasureGroup measureGroup = variables[i].optionalCast<MeasureGroup>();
+      if (measureGroup) {
         QVariant value = variableValues[i];
         if (value.isNull()) {
           intermediate.push_back(boost::none);
           continue;
         }
-        if (!discreteVariable->isValid(value)) {
+        if (!measureGroup->isValid(value)) {
           LOG(Warn,"Cannot determine discrete measures for Problem '" << name() <<
-          "', because the value given for variable " << i << ", '" << discreteVariable->name()
+          "', because the value given for variable " << i << ", '" << measureGroup->name()
           << "', is non-null and invalid.");
           return result;
         }
-        intermediate.push_back(discreteVariable->getMeasure(value.toInt()));
+        intermediate.push_back(measureGroup->getMeasure(value.toInt()));
         continue;
       }
       intermediate.push_back(boost::none);
@@ -606,7 +608,7 @@ namespace detail {
     return result;
   }
 
-  boost::optional<int> Problem_Impl::combinatorialSize(bool selectedMeasuresOnly) const {
+  boost::optional<int> Problem_Impl::combinatorialSize(bool selectedOnly) const {
     OptionalInt result;
     int intermediate(0);
     InputVariableVector variables = this->variables();
@@ -615,7 +617,7 @@ namespace detail {
       if (!discreteVariable) {
         return result;
       }
-      int thisVariableSize = discreteVariable->numMeasures(selectedMeasuresOnly);
+      int thisVariableSize = discreteVariable->numValidValues(selectedOnly);
       if (thisVariableSize == 0) {
         LOG(Warn,"Problem '" << name() << "' contains a DiscreteVariable '" << variable.name() <<
             "' with either no measures, or no selected measures. In either case, " <<
@@ -911,25 +913,25 @@ namespace detail {
       if (compoundRubyMeasure) {
         compoundVariables.push_back(variable.cast<RubyContinuousVariable>());
       }
-      else if (OptionalDiscreteVariable dv = variable.optionalCast<DiscreteVariable>()) {
-        MeasureVector dps = dv->measures(false);
+      else if (OptionalMeasureGroup mg = variable.optionalCast<MeasureGroup>()) {
+        MeasureVector dps = mg->measures(false);
         BOOST_FOREACH(Measure& dp,dps) {
-          if (OptionalRubyMeasure rp = dp.optionalCast<RubyMeasure>()) {
-            if (rp->usesBCLMeasure() && (rp->measureUUID() == measureUUID)) {
+          if (OptionalRubyMeasure rm = dp.optionalCast<RubyMeasure>()) {
+            if (rm->usesBCLMeasure() && (rm->measureUUID() == measureUUID)) {
               bool ok(true);
               if (newArguments.empty() && keepOldArgumentsIfNewEmpty) {
-                OSArgumentVector currentArguments = rp->arguments();
-                ok = rp->setMeasure(newVersion);
+                OSArgumentVector currentArguments = rm->arguments();
+                ok = rm->setMeasure(newVersion);
                 if (ok) {
-                  rp->setArguments(currentArguments);
+                  rm->setArguments(currentArguments);
                 }
               }
               else {
-                ok = rp->updateMeasure(newVersion,newArguments);
+                ok = rm->updateMeasure(newVersion,newArguments);
               }
               if (!ok) {
                 // bad match between file types
-                ok = dv->erase(*rp);
+                ok = mg->erase(*rm);
                 if (!ok) {
                   result = false;
                 }
@@ -958,7 +960,7 @@ namespace detail {
     // screen discrete variables with only one option (treat as static transformations, not variables)
     DiscreteVariableVector::iterator it = discreteVariables.begin();
     while (it != discreteVariables.end()) {
-      if (it->numMeasures(true) < 2u) {
+      if (it->numValidValues(true) < 2) {
         it = discreteVariables.erase(it);
         continue;
       }
@@ -1004,7 +1006,7 @@ namespace detail {
         }
         else {
           DiscreteVariable dvar = vars[cdvs[i]].cast<DiscreteVariable>();
-          ss << " " << double(dvar.numMeasures(true)) - 0.5;
+          ss << " " << double(dvar.numValidValues(true)) - 0.5;
         }
       }
       ss << std::endl;
@@ -1017,18 +1019,14 @@ namespace detail {
       ss << "          num_set_values" << std::endl << "           ";
       for (int i = 0; i < n_ddvs; ++i) {
         DiscreteVariable dvar = vars[ddvs[i]].cast<DiscreteVariable>();
-        ss << " " << dvar.numMeasures(true);
+        ss << " " << dvar.numValidValues(true);
       }
       ss << std::endl << "          set_values" << std::endl;
       for (int i = 0; i < n_ddvs; ++i) {
         DiscreteVariable dvar = vars[ddvs[i]].cast<DiscreteVariable>();
         ss << "           ";
-        int j(0);
-        BOOST_FOREACH(const Measure& dpert, dvar.measures(false)) {
-          if (dpert.isSelected()) {
-            ss << " " << j;
-          }
-          ++j;
+        BOOST_FOREACH(int j, dvar.validValues(true)) {
+          ss << " " << j;
         }
         ss << std::endl;
       }
@@ -1269,18 +1267,16 @@ namespace detail {
       if (algorithm.requiresContinuousVariables()) {
         if (OptionalDiscreteVariable dvar = vars[cdvs[i]].optionalCast<DiscreteVariable>()) {
           // round value and set as integer
-          int index(0);
+          int value(0);
           if (cvValues[i] > 0.0) {
-            index = std::floor(cvValues[i] + 0.5);
+            value = std::floor(cvValues[i] + 0.5);
           }
-          int np = dvar->numMeasures(true);
-          if (index >= np) {
-            LOG(Warn,"Discrete variable represented as " << cvValues[i]
-                << " rounded to invalid index " << index << " of " << np - 1 << ".");
-            index = np - 1;
+          if (!dvar->isValid(QVariant(value))) {
+            LOG(Error,"Discrete variable represented as " << cvValues[i]
+                << " rounded to invalid value " << value << ".");
+            return result;
           }
-          index = dvar->getIndexByUUID(dvar->measures(true)[index]).get();
-          variableValues[cdvs[i]] = QVariant(index);
+          variableValues[cdvs[i]] = QVariant(value);
           continue;
         }
       }
@@ -1326,12 +1322,11 @@ namespace detail {
       if (variableValues[i].isNull()) {
         // should be skipped discrete variable
         if (OptionalDiscreteVariable dvar = vars[i].optionalCast<DiscreteVariable>()) {
-          int np = dvar->numMeasures(true);
+          int np = dvar->numValidValues(true);
           if (np < 2) {
             // 0-1 measure discrete variables are screened from DAKOTA
             if (np == 1) {
-              int index = dvar->getIndexByUUID(dvar->measures(true)[0]).get();
-              variableValues[i] = QVariant(index);
+              variableValues[i] = QVariant(dvar->validValues(true)[0]);
             }
             continue;
           }
@@ -1521,17 +1516,17 @@ namespace detail {
             // is currentJob null?
             if ((!currentJob) || (currentJob->jobType() == runmanager::JobType::Null)) {
               // must be null measure
-              BOOST_ASSERT(var.optionalCast<DiscreteVariable>());
-              DiscreteVariable dvar = var.cast<DiscreteVariable>();
-              Measure dpert = dvar.getMeasure(dataPoint);
-              BOOST_ASSERT(dpert.optionalCast<NullMeasure>());
+              BOOST_ASSERT(var.optionalCast<MeasureGroup>());
+              MeasureGroup mg = var.cast<MeasureGroup>();
+              Measure measure = mg.getMeasure(dataPoint);
+              BOOST_ASSERT(measure.optionalCast<NullMeasure>());
               if (!optimize) {
                 // include in results
                 if (currentJob) {
-                  result.push_back(WorkflowStepJob(*currentJob,currentStep,dpert));
+                  result.push_back(WorkflowStepJob(*currentJob,currentStep,measure));
                 }
                 else {
-                  result.push_back(WorkflowStepJob(currentStep,dpert));
+                  result.push_back(WorkflowStepJob(currentStep,measure));
                 }
               }
               // get next job
@@ -1549,18 +1544,18 @@ namespace detail {
             else {
               // non-null job
               bool getNextJob(true);
-              if (OptionalDiscreteVariable dvar = var.optionalCast<DiscreteVariable>()) {
-                Measure dpert = dvar->getMeasure(dataPoint);
-                if (OptionalNullMeasure npert = dpert.optionalCast<NullMeasure>()) {
+              if (OptionalMeasureGroup dvar = var.optionalCast<MeasureGroup>()) {
+                Measure measure = dvar->getMeasure(dataPoint);
+                if (OptionalNullMeasure nmeasure = measure.optionalCast<NullMeasure>()) {
                   // null measure, non-null job, do not correspond
                   // only include if !optimize
                   if (!optimize) {
-                    result.push_back(WorkflowStepJob(currentStep,dpert));
+                    result.push_back(WorkflowStepJob(currentStep,measure));
                   }
                   getNextJob = false;
                 }
                 else {
-                  result.push_back(WorkflowStepJob(*currentJob,currentStep,dpert));
+                  result.push_back(WorkflowStepJob(*currentJob,currentStep,measure));
                 }
               }
               else {
@@ -1660,7 +1655,7 @@ namespace detail {
       else {
         // discrete variable
         OptionalDiscreteVariable dv = vars[i].optionalCast<DiscreteVariable>();
-        int np = dv->numMeasures(true);
+        int np = dv->numValidValues(true);
         if (np > 1 && dakotaAlgorithm.requiresContinuousVariables()) {
           // 0-1 measure discrete variables are screened from DAKOTA
           result.push_back(i);
@@ -2165,8 +2160,8 @@ std::vector<boost::optional<Measure> > Problem::getDiscretePerturbations(
   return getImpl<detail::Problem_Impl>()->getMeasures(variableValues);
 }
 
-boost::optional<int> Problem::combinatorialSize(bool selectedMeasuresOnly) const {
-  return getImpl<detail::Problem_Impl>()->combinatorialSize(selectedMeasuresOnly);
+boost::optional<int> Problem::combinatorialSize(bool selectedOnly) const {
+  return getImpl<detail::Problem_Impl>()->combinatorialSize(selectedOnly);
 }
 
 bool Problem::push(const WorkflowStep& step) {

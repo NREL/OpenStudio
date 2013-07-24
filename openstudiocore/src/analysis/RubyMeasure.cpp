@@ -20,8 +20,8 @@
 #include <analysis/RubyMeasure.hpp>
 #include <analysis/RubyMeasure_Impl.hpp>
 
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
 #include <analysis/RubyContinuousVariable.hpp>
 #include <analysis/RubyContinuousVariable_Impl.hpp>
 
@@ -456,9 +456,9 @@ namespace detail {
   {
     if (OptionalAnalysisObject parent = this->parent()) {
       // Make sure inputFileType and outputFileType are okay
-      if (OptionalDiscreteVariable dvar = parent->optionalCast<DiscreteVariable>()) {
+      if (OptionalMeasureGroup mg = parent->optionalCast<MeasureGroup>()) {
         Measure copyOfThis = getPublicObject<Measure>();
-        if (!dvar->fileTypesAreCompatible(copyOfThis,proposedInputFileType,proposedOutputFileType)) {
+        if (!mg->fileTypesAreCompatible(copyOfThis,proposedInputFileType,proposedOutputFileType)) {
           return false;
         }
       }

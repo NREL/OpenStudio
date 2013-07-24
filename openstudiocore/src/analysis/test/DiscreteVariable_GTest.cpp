@@ -20,7 +20,7 @@
 #include <gtest/gtest.h>
 #include <analysis/test/AnalysisFixture.hpp>
 
-#include <analysis/DiscreteVariable.hpp>
+#include <analysis/MeasureGroup.hpp>
 #include <analysis/Measure.hpp>
 #include <analysis/NullMeasure.hpp>
 #include <analysis/RubyMeasure.hpp>
@@ -33,7 +33,7 @@
 using namespace openstudio;
 using namespace openstudio::analysis;
 
-TEST_F(AnalysisFixture, DiscreteVariable_Constructors) {
+TEST_F(AnalysisFixture, MeasureGroup_Constructors) {
   MeasureVector measures;
 
   // At most one null measure is allowed.
@@ -41,14 +41,14 @@ TEST_F(AnalysisFixture, DiscreteVariable_Constructors) {
   measures.push_back(NullMeasure());
   measures.push_back(NullMeasure());
   measures.push_back(NullMeasure());
-  DiscreteVariable variable("Variable",measures);
+  MeasureGroup variable("Variable",measures);
   EXPECT_EQ(1u,variable.numMeasures(false));
 
   // deserialization constructor
   UUID uuid = createUUID();
   UUID versionUUID = createUUID();
   measures = variable.measures(false);
-  variable = DiscreteVariable(uuid,versionUUID,"Variable","","",boost::none,measures);
+  variable = MeasureGroup(uuid,versionUUID,"Variable","","",boost::none,measures);
   EXPECT_EQ("Variable",variable.name());
   EXPECT_TRUE(variable.uuid() == uuid);
   EXPECT_TRUE(variable.versionUUID() == versionUUID);
@@ -62,7 +62,7 @@ TEST_F(AnalysisFixture, DiscreteVariable_Constructors) {
   measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::OSM,
                                            FileReferenceType::IDF));
-  EXPECT_THROW(DiscreteVariable("Variable 2",measures),std::exception);
+  EXPECT_THROW(MeasureGroup("Variable 2",measures),std::exception);
 
   // Inconsistent file types in measures (should throw)
   measures.clear();
@@ -73,11 +73,11 @@ TEST_F(AnalysisFixture, DiscreteVariable_Constructors) {
   measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::OSM,
                                            FileReferenceType::OSM));
-  EXPECT_THROW(DiscreteVariable("Variable",measures),std::exception);
+  EXPECT_THROW(MeasureGroup("Variable",measures),std::exception);
 
 }
 
-TEST_F(AnalysisFixture, DiscreteVariable_DeselectMeasures) {
+TEST_F(AnalysisFixture, MeasureGroup_DeselectMeasures) {
   MeasureVector measures;
 
   // null, ruby, ruby
@@ -91,7 +91,7 @@ TEST_F(AnalysisFixture, DiscreteVariable_DeselectMeasures) {
                                  FileReferenceType::OSM,
                                  FileReferenceType::OSM));
 
-  DiscreteVariable variable("Variable",measures);
+  MeasureGroup variable("Variable",measures);
   EXPECT_EQ(3u,variable.numMeasures(true));
   EXPECT_EQ(3u,variable.numMeasures(false));
 

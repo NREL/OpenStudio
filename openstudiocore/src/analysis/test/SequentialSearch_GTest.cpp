@@ -22,7 +22,7 @@
 
 #include <analysis/OptimizationProblem.hpp>
 #include <analysis/Variable.hpp>
-#include <analysis/DiscreteVariable.hpp>
+#include <analysis/MeasureGroup.hpp>
 #include <analysis/Measure.hpp>
 #include <analysis/NullMeasure.hpp>
 #include <analysis/RubyMeasure.hpp>
@@ -96,7 +96,7 @@ TEST_F(AnalysisFixture, SequentialSearch) {
     measures.push_back(NullMeasure());
     measures.push_back(RubyMeasure(toPath("in.rb"),FileReferenceType::OSM,FileReferenceType::OSM));
     ss << "var " << i + 1;
-    variables.push_back(DiscreteVariable(ss.str(),measures));
+    variables.push_back(MeasureGroup(ss.str(),measures));
     ss.str("");
   }
   FunctionVector functions;

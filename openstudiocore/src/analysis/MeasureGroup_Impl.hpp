@@ -17,24 +17,24 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef ANALYSIS_DISCRETEVARIABLE_IMPL_HPP
-#define ANALYSIS_DISCRETEVARIABLE_IMPL_HPP
+#ifndef ANALYSIS_MEASUREGROUP_IMPL_HPP
+#define ANALYSIS_MEASUREGROUP_IMPL_HPP
 
 #include <analysis/AnalysisAPI.hpp>
-#include <analysis/InputVariable_Impl.hpp>
+#include <analysis/DiscreteVariable_Impl.hpp>
 
 #include <analysis/Measure.hpp>
 
 namespace openstudio {
 namespace analysis {
 
-class DiscreteVariable;
+class MeasureGroup;
 
 namespace detail {
 
-  /** DiscreteVariable_Impl is an InputVariable_Impl that is the implementation class
-   *  for DiscreteVariable.*/
-  class ANALYSIS_API DiscreteVariable_Impl : public InputVariable_Impl {
+  /** MeasureGroup_Impl is an DiscreteVariable_Impl that is the implementation class
+   *  for MeasureGroup.*/
+  class ANALYSIS_API MeasureGroup_Impl : public DiscreteVariable_Impl {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
@@ -49,30 +49,27 @@ namespace detail {
      *  createJob is implemented assuming QVariant value is an integer index into the measure
      *  vector.
      */
-    DiscreteVariable_Impl(const std::string& name,
-                          const std::vector<Measure>& measures);
+    MeasureGroup_Impl(const std::string& name,
+                      const std::vector<Measure>& measures);
 
     /** Constructor provided for deserialization; not for general use. */
-    DiscreteVariable_Impl(const UUID& uuid,
-                          const UUID& versionUUID,
-                          const std::string& name,
-                          const std::string& displayName,
-                          const std::string& description,
-                          const boost::optional<UncertaintyDescription>& udesc,
-                          const std::vector<Measure>& measures);
+    MeasureGroup_Impl(const UUID& uuid,
+                      const UUID& versionUUID,
+                      const std::string& name,
+                      const std::string& displayName,
+                      const std::string& description,
+                      const boost::optional<UncertaintyDescription>& udesc,
+                      const std::vector<Measure>& measures);
 
-    DiscreteVariable_Impl(const DiscreteVariable_Impl& other);
+    MeasureGroup_Impl(const MeasureGroup_Impl& other);
 
-    virtual ~DiscreteVariable_Impl() {}
+    virtual ~MeasureGroup_Impl() {}
 
     //@}
     /** @name Virtual Methods */
     //@{
 
     virtual AnalysisObject clone() const;
-
-    /** Get the variable value from a dataPoint. */
-    virtual double getValue(const DataPoint& dataPoint) const;
 
     virtual boost::optional<FileReferenceType> inputFileType() const;
 
@@ -82,12 +79,13 @@ namespace detail {
      *  throw. */
     virtual bool isValid(const QVariant& value) const;
 
-    /** Returns true if udesc is valid for this Variable. If returns false,
-     *  setUncertaintyDescription will fail. */
-    virtual bool isValid(const UncertaintyDescription& udesc) const;
-
     virtual runmanager::WorkItem createWorkItem(const QVariant& value,
                                                 const openstudio::path& rubyIncludeDirectory) const;
+
+    /** Returns the valid integer values for this variable. (All discrete variables
+     *  are mappable to integers. Some discrete variables allow users to downselect from
+     *  their overall range.) */
+    virtual std::vector<int> validValues(bool selectedOnly) const;
 
     //@}
     /** @name Getters and Queries */
@@ -133,7 +131,7 @@ namespace detail {
    protected:
     std::vector<Measure> m_measures;
    private:
-    REGISTER_LOGGER("openstudio.analysis.DiscreteVariable");
+    REGISTER_LOGGER("openstudio.analysis.MeasureGroup");
 
     bool measuresAreCompatible(const std::vector<Measure>& measures) const;
   };
@@ -153,5 +151,5 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // ANALYSIS_DISCRETEVARIABLE_IMPL_HPP
+#endif // ANALYSIS_MEASUREGROUP_IMPL_HPP
 

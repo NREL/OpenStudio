@@ -553,11 +553,9 @@ namespace detail {
     std::vector< std::vector<QVariant> > result;
     for (int i = 0, n = problem.numVariables(); i < n; ++i) {
       DiscreteVariable variable = problem.getVariable(i).cast<DiscreteVariable>();
-      // only use selected perturbations
-      DiscretePerturbationVector perturbations = variable.perturbations(true);
+      // only use selected items
       int currentValue = currentValues[i].toInt();
-      BOOST_FOREACH(const DiscretePerturbation& perturbation,perturbations) {
-        int j = variable.getIndexByUUID(perturbation).get();
+      BOOST_FOREACH(int j, variable.validValues(true)) {
         if (currentValue != j) {
           std::vector<QVariant> newValues = currentValues;
           newValues[i] = j;

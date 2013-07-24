@@ -30,6 +30,7 @@
 #include <analysis/DiscreteVariable_Impl.hpp>
 
 #include <utilities/core/Optional.hpp>
+#include <utilities/core/Containers.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -118,24 +119,24 @@ namespace detail {
     BOOST_FOREACH(const Variable variable, analysis.problem().variables()) {
       // variable must be DiscreteVariable, otherwise !isCompatibleProblemType(analysis.problem())
       DiscreteVariable discreteVariable = variable.cast<DiscreteVariable>();
-      DiscretePerturbationVector discretePerturbations = discreteVariable.perturbations(false);
+      IntVector dvValues = discreteVariable.validValues(true);
       std::vector< std::vector<QVariant> > currentValues = variableValues;
-      for (unsigned i = 0, n = discreteVariable.numPerturbations(false); i < n; ++i) {
-        if (discretePerturbations[i].isSelected()) {
-          std::vector< std::vector<QVariant> > nextSet = currentValues;
-          if (currentValues.empty()) {
-            variableValues.push_back(std::vector<QVariant>(1u,QVariant(i)));
+      for (IntVector::const_iterator it = dvValues.begin(), itEnd = dvValues.end();
+           it != itEnd; ++it)
+      {
+        std::vector< std::vector<QVariant> > nextSet = currentValues;
+        if (currentValues.empty()) {
+          variableValues.push_back(std::vector<QVariant>(1u,QVariant(*it)));
+        }
+        else {
+          BOOST_FOREACH(std::vector<QVariant>& point,nextSet) {
+            point.push_back(QVariant(*it));
+          }
+          if (it == dvValues.begin()) {
+            variableValues = nextSet;
           }
           else {
-            BOOST_FOREACH(std::vector<QVariant>& point,nextSet) {
-              point.push_back(i);
-            }
-            if (i == 0) {
-              variableValues = nextSet;
-            }
-            else {
-              variableValues.insert(variableValues.end(),nextSet.begin(),nextSet.end());
-            }
+            variableValues.insert(variableValues.end(),nextSet.begin(),nextSet.end());
           }
         }
       }

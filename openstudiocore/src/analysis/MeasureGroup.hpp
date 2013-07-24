@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef ANALYSIS_DISCRETEVARIABLE_HPP
-#define ANALYSIS_DISCRETEVARIABLE_HPP
+#ifndef ANALYSIS_MEASUREGROUP_HPP
+#define ANALYSIS_MEASUREGROUP_HPP
 
 #include <analysis/AnalysisAPI.hpp>
-#include <analysis/InputVariable.hpp>
+#include <analysis/DiscreteVariable.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -30,18 +30,18 @@ class Measure;
 
 namespace detail {
 
-  class DiscreteVariable_Impl;
+  class MeasureGroup_Impl;
   class Measure_Impl;
   class RubyMeasure_Impl;
 
 } // detail
 
-/** DiscreteVariable is an InputVariable that takes on discrete values, each of which is described by
- *  a Measure. Essentially, DiscreteVariable is a mapping from 0, 1, ... ,
+/** MeasureGroup is an DiscreteVariable that takes on discrete values, each of which is described by
+ *  a Measure. Essentially, MeasureGroup is a mapping from 0, 1, ... ,
  *  (numMeasures(false) - 1) to a Measure that defines what setting the variable
- *  value to the given integer means. DiscreteVariable forwards any createWorkItem requests along to
+ *  value to the given integer means. MeasureGroup forwards any createWorkItem requests along to
  *  the appropriate DiscretePertubation using this mapping. */
-class ANALYSIS_API DiscreteVariable : public InputVariable {
+class ANALYSIS_API MeasureGroup : public DiscreteVariable {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -55,19 +55,19 @@ class ANALYSIS_API DiscreteVariable : public InputVariable {
    *  createJob is implemented assuming QVariant value is an integer index into the measure
    *  vector.
    */
-  DiscreteVariable(const std::string& name,
-                   const std::vector<Measure>& measures);
+  MeasureGroup(const std::string& name,
+               const std::vector<Measure>& measures);
 
   /** Constructor provided for deserialization; not for general use. */
-  DiscreteVariable(const UUID& uuid,
-                   const UUID& versionUUID,
-                   const std::string& name,
-                   const std::string& displayName,
-                   const std::string& description,
-                   const boost::optional<UncertaintyDescription>& udesc,
-                   const std::vector<Measure>& measures);
+  MeasureGroup(const UUID& uuid,
+               const UUID& versionUUID,
+               const std::string& name,
+               const std::string& displayName,
+               const std::string& description,
+               const boost::optional<UncertaintyDescription>& udesc,
+               const std::vector<Measure>& measures);
 
-  virtual ~DiscreteVariable() {}
+  virtual ~MeasureGroup() {}
 
   //@}
   /** @name Getters and Queries */
@@ -125,13 +125,13 @@ class ANALYSIS_API DiscreteVariable : public InputVariable {
   //@}
  protected:
   /// @cond
-  typedef detail::DiscreteVariable_Impl ImplType;
+  typedef detail::MeasureGroup_Impl ImplType;
 
   friend class AnalysisObject;
   friend class detail::AnalysisObject_Impl;
-  friend class detail::DiscreteVariable_Impl;
+  friend class detail::MeasureGroup_Impl;
 
-  explicit DiscreteVariable(boost::shared_ptr<detail::DiscreteVariable_Impl> impl);
+  explicit MeasureGroup(boost::shared_ptr<detail::MeasureGroup_Impl> impl);
 
   friend class detail::Measure_Impl;
   friend class detail::RubyMeasure_Impl;
@@ -143,17 +143,17 @@ class ANALYSIS_API DiscreteVariable : public InputVariable {
   /// @endcond
  private:
 
-  REGISTER_LOGGER("openstudio.analysis.DiscreteVariable");
+  REGISTER_LOGGER("openstudio.analysis.MeasureGroup");
 };
 
-/** \relates DiscreteVariable*/
-typedef boost::optional<DiscreteVariable> OptionalDiscreteVariable;
+/** \relates MeasureGroup*/
+typedef boost::optional<MeasureGroup> OptionalMeasureGroup;
 
-/** \relates DiscreteVariable*/
-typedef std::vector<DiscreteVariable> DiscreteVariableVector;
+/** \relates MeasureGroup*/
+typedef std::vector<MeasureGroup> MeasureGroupVector;
 
 } // analysis
 } // openstudio
 
-#endif // ANALYSIS_DISCRETEVARIABLE_HPP
+#endif // ANALYSIS_MEASUREGROUP_HPP
 

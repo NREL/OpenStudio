@@ -24,9 +24,9 @@
 #include <analysis/Problem.hpp>
 #include <analysis/Variable.hpp>
 #include <analysis/DataPoint.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
 #include <analysis/Measure.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
 #include <analysis/NullMeasure.hpp>
 #include <analysis/RubyMeasure.hpp>
 #include <analysis/RubyMeasure_Impl.hpp>
@@ -159,11 +159,10 @@ TEST_F(AnalysisFixture, Analysis_DataPointsAreInvalid) {
   // add a single, null-only variable
   // ETH@20130206 - Alternate code for this test.
   // Problem problem = analysis.problem();
-  // DiscreteVariable dv("South Facade WWR",
+  // MeasureGroup dv("South Facade WWR",
   //                     MeasureVector(1u,NullMeasure()));
-  bool test = analysis.problem().push(
-        DiscreteVariable("South Facade WWR",
-                         MeasureVector(1u,NullMeasure())));
+  bool test = analysis.problem().push(MeasureGroup("South Facade WWR",
+                                                   MeasureVector(1u,NullMeasure())));
   // ETH@20130206
   // bool test = problem.push(dv);
   EXPECT_TRUE(test);
@@ -184,8 +183,8 @@ TEST_F(AnalysisFixture, Analysis_DataPointsAreInvalid) {
   // ETH@20130206
   // test = dv.push(measure1);
   // EXPECT_EQ(1u,dv.numMeasures(false));
-  // EXPECT_EQ(2u,analysis.problem().variables()[0].cast<DiscreteVariable>().numMeasures(false));
-  test = analysis.problem().variables()[0].cast<DiscreteVariable>().push(measure1);
+  // EXPECT_EQ(2u,analysis.problem().variables()[0].cast<MeasureGroup>().numMeasures(false));
+  test = analysis.problem().variables()[0].cast<MeasureGroup>().push(measure1);
   EXPECT_TRUE(test);
   EXPECT_FALSE(analysis.dataPointsAreInvalid());
   // should be able to add another data point
@@ -195,12 +194,12 @@ TEST_F(AnalysisFixture, Analysis_DataPointsAreInvalid) {
   EXPECT_TRUE(test);
 
   RubyMeasure measure2 = measure1.clone().cast<RubyMeasure>();
-  test = analysis.problem().variables()[0].cast<DiscreteVariable>().push(measure2);
+  test = analysis.problem().variables()[0].cast<MeasureGroup>().push(measure2);
   EXPECT_TRUE(test);
   EXPECT_FALSE(analysis.dataPointsAreInvalid());
 
   // swapping measures invalidates data points
-  test = analysis.problem().variables()[0].cast<DiscreteVariable>().swap(measure1,measure2);
+  test = analysis.problem().variables()[0].cast<MeasureGroup>().swap(measure1,measure2);
   EXPECT_TRUE(test);
   EXPECT_TRUE(analysis.dataPointsAreInvalid());
   // and should not be able to add data points now
@@ -219,7 +218,8 @@ TEST_F(AnalysisFixture, Analysis_DataPointsAreInvalid) {
   EXPECT_TRUE(test);
 
   // adding a new variable re-invalidates them
-  test = analysis.problem().push(DiscreteVariable("West Facade WWR",MeasureVector(1u,NullMeasure())));
+  test = analysis.problem().push(MeasureGroup("West Facade WWR",
+                                              MeasureVector(1u,NullMeasure())));
   EXPECT_TRUE(test);
   EXPECT_TRUE(analysis.dataPointsAreInvalid());
   std::vector<QVariant> values;

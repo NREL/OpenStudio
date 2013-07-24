@@ -23,9 +23,9 @@
 #include <analysis/Problem.hpp>
 #include <analysis/Variable.hpp>
 #include <analysis/Function.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
 #include <analysis/Measure.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
 #include <analysis/NullMeasure.hpp>
 #include <analysis/RubyMeasure.hpp>
 #include <analysis/RubyMeasure_Impl.hpp>
@@ -70,18 +70,18 @@ TEST_F(AnalysisFixture, Problem_Constructors) {
   measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::OSM,
                                            FileReferenceType::OSM));
-  variables.push_back(DiscreteVariable("Variable 1",measures));
+  variables.push_back(MeasureGroup("Variable 1",measures));
   measures.clear();
   measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::OSM,
                                            FileReferenceType::IDF));
-  variables.push_back(DiscreteVariable("Variable 2",measures));
+  variables.push_back(MeasureGroup("Variable 2",measures));
   measures.clear();
   measures.push_back(NullMeasure());
   measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::IDF,
                                            FileReferenceType::IDF));
-  variables.push_back(DiscreteVariable("Variable 3",measures));
+  variables.push_back(MeasureGroup("Variable 3",measures));
   problem = Problem("Problem",variables,workflow);
   EXPECT_EQ(3,problem.numVariables());
   EXPECT_EQ(6,problem.combinatorialSize(true).get());
@@ -96,13 +96,13 @@ TEST_F(AnalysisFixture, Problem_Constructors) {
   measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::OSM,
                                            FileReferenceType::OSM));
-  variables.push_back(DiscreteVariable("Variable 1",measures));
+  variables.push_back(MeasureGroup("Variable 1",measures));
   measures.clear();
   measures.push_back(NullMeasure());
   measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::IDF,
                                            FileReferenceType::IDF));
-  variables.push_back(DiscreteVariable("Variable 2",measures));
+  variables.push_back(MeasureGroup("Variable 2",measures));
   EXPECT_THROW(Problem("Problem",variables,workflow),std::exception);
 
   // variables and non-null workflow with consistent file types
@@ -112,7 +112,7 @@ TEST_F(AnalysisFixture, Problem_Constructors) {
   measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::IDF,
                                            FileReferenceType::IDF));
-  variables.push_back(DiscreteVariable("Variable 1",measures));
+  variables.push_back(MeasureGroup("Variable 1",measures));
   workflow = runmanager::Workflow();
   workflow.addJob(openstudio::runmanager::JobType::EnergyPlus);
   problem = Problem("Problem",variables,workflow);
@@ -146,7 +146,7 @@ TEST_F(AnalysisFixture, Problem_Constructors) {
 
 TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_VariableNotInProblem) {
   // fileTypesAreCompatible only works with variables that are in the problem
-  DiscreteVariable notInProblem("Not in Problem",MeasureVector());
+  MeasureGroup notInProblem("Not in Problem",MeasureVector());
 
   Problem problem("My Problem, Not Yours",VariableVector(),runmanager::Workflow());
   EXPECT_FALSE(problem.fileTypesAreCompatible(notInProblem,
@@ -159,9 +159,9 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_VariableNotInProblem) {
                                               FileReferenceType(FileReferenceType::OSM),
                                               boost::none));
 
-  problem.push(DiscreteVariable("Variable 1",MeasureVector(1u,NullMeasure())));
-  problem.push(DiscreteVariable("Variable 2",MeasureVector(1u,NullMeasure())));
-  problem.push(DiscreteVariable("Variable 3",MeasureVector(1u,NullMeasure())));
+  problem.push(MeasureGroup("Variable 1",MeasureVector(1u,NullMeasure())));
+  problem.push(MeasureGroup("Variable 2",MeasureVector(1u,NullMeasure())));
+  problem.push(MeasureGroup("Variable 3",MeasureVector(1u,NullMeasure())));
   problem.push(runmanager::WorkItem(runmanager::JobType::ModelToIdf));
   problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlus));
   EXPECT_EQ(3u,problem.variables().size());
@@ -177,31 +177,31 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_VariableNotInProblem) {
                                               boost::none));
 }
 
-TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_NewDiscreteVariable) {
+TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_NewMeasureGroup) {
   // ok to insert null-only discrete variable anywhere in the chain
   // (between null-model, model-model, idf-idf, idf-workflow)
   VariableVector variables;
   // 0
   variables.push_back(
-        DiscreteVariable("Null Variable 1",
-                         MeasureVector(1u,NullMeasure())));
+        MeasureGroup("Null Variable 1",
+                     MeasureVector(1u,NullMeasure())));
   // 1
   variables.push_back(
-        DiscreteVariable("Model Variable 1",
+        MeasureGroup("Model Variable 1",
                          MeasureVector(1u,RubyMeasure(toPath("modelUserScript.rb"),
                                                                         FileReferenceType::OSM,
                                                                         FileReferenceType::OSM,
                                                                         true))));
   // 2
   variables.push_back(
-        DiscreteVariable("Translation Variable 1",
+        MeasureGroup("Translation Variable 1",
                          MeasureVector(1u,RubyMeasure(toPath("translationUserScript.rb"),
                                                                         FileReferenceType::OSM,
                                                                         FileReferenceType::IDF,
                                                                         true))));
   // 3
   variables.push_back(
-        DiscreteVariable("Workspace Variable 1",
+        MeasureGroup("Workspace Variable 1",
                          MeasureVector(1u,RubyMeasure(toPath("workspaceUserScript.rb"),
                                                                         FileReferenceType::IDF,
                                                                         FileReferenceType::IDF,
@@ -209,7 +209,7 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_NewDiscreteVariable) {
   runmanager::Workflow workflow;
   workflow.addJob(runmanager::JobType::EnergyPlus);
   Problem problem("Problem 1",variables,workflow);
-  DiscreteVariable newVar("New Discrete Variable",
+  MeasureGroup newVar("New Discrete Variable",
                           MeasureVector(1u,NullMeasure()));
   EXPECT_TRUE(problem.insert(4,newVar.clone().cast<InputVariable>()));
   ASSERT_EQ(5,problem.numVariables());
@@ -238,18 +238,18 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_NewDiscreteVariable) {
   variables.clear();
   // 0
   variables.push_back(
-        DiscreteVariable("Null Variable 1",
+        MeasureGroup("Null Variable 1",
                          MeasureVector(1u,NullMeasure())));
   // 1
   variables.push_back(
-        DiscreteVariable("Workspace Variable 1",
+        MeasureGroup("Workspace Variable 1",
                          MeasureVector(1u,RubyMeasure(toPath("workspaceUserScript.rb"),
                                                                         FileReferenceType::IDF,
                                                                         FileReferenceType::IDF,
                                                                         true))));
   // 2
   variables.push_back(
-        DiscreteVariable("Workspace Variable 2",
+        MeasureGroup("Workspace Variable 2",
                          MeasureVector(1u,RubyMeasure(toPath("workspaceUserScript.rb"),
                                                                         FileReferenceType::IDF,
                                                                         FileReferenceType::IDF,
@@ -280,7 +280,7 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_NewDiscreteVariable) {
 
   // have idf-only problem with two null variables at the top
   // try to add measures to first variable
-  DiscreteVariable firstVariable = problem.variables()[0].cast<DiscreteVariable>();
+  MeasureGroup firstVariable = problem.variables()[0].cast<MeasureGroup>();
   ASSERT_TRUE(firstVariable.parent());
   WorkflowStep step0 = problem.workflow()[0];
   EXPECT_TRUE(firstVariable.parent().get() == step0);
@@ -295,7 +295,7 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_NewDiscreteVariable) {
   EXPECT_EQ(1u,firstVariable.numMeasures(false));
 
   // make second variable a translation variable
-  DiscreteVariable secondVariable = problem.variables()[1].cast<DiscreteVariable>();
+  MeasureGroup secondVariable = problem.variables()[1].cast<MeasureGroup>();
   EXPECT_FALSE(secondVariable.push(RubyMeasure(toPath("myTranslationScript.rb"),
                                                     FileReferenceType::OSM,
                                                     FileReferenceType::IDF)));
@@ -312,34 +312,34 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_NewDiscreteVariable) {
   EXPECT_EQ(2u,firstVariable.numMeasures(false));
 }
 
-TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_ExistingDiscreteVariable) {
+TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_ExistingMeasureGroup) {
   // expected behavior when discrete variable already contains measures
   // test with BCLMeasure first. verify with RubyMeasure.
 
   // create problem
   VariableVector variables;
   variables.push_back(
-        DiscreteVariable("Model Variable 1",
+        MeasureGroup("Model Variable 1",
                          MeasureVector(1u,RubyMeasure(toPath("modelUserScript.rb"),
                                                                         FileReferenceType::OSM,
                                                                         FileReferenceType::OSM,
                                                                         true))));
-  variables.back().cast<DiscreteVariable>().insert(0,NullMeasure());
+  variables.back().cast<MeasureGroup>().insert(0,NullMeasure());
   // 2
   variables.push_back(
-        DiscreteVariable("Translation Variable 1",
+        MeasureGroup("Translation Variable 1",
                          MeasureVector(1u,RubyMeasure(toPath("translationUserScript.rb"),
                                                                         FileReferenceType::OSM,
                                                                         FileReferenceType::IDF,
                                                                         true))));
   // 3
   variables.push_back(
-        DiscreteVariable("Workspace Variable 1",
+        MeasureGroup("Workspace Variable 1",
                          MeasureVector(1u,RubyMeasure(toPath("workspaceUserScript.rb"),
                                                                         FileReferenceType::IDF,
                                                                         FileReferenceType::IDF,
                                                                         true))));
-  variables.back().cast<DiscreteVariable>().insert(0,NullMeasure());
+  variables.back().cast<MeasureGroup>().insert(0,NullMeasure());
   runmanager::Workflow workflow;
   workflow.addJob(runmanager::JobType::EnergyPlus);
   Problem problem("Problem",variables,workflow);
@@ -356,35 +356,35 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_ExistingDiscreteVariable)
   // can be added to variable 0 (OSM)
   WorkflowStep step = problem.workflow()[0];
   InputVariable var = step.inputVariable();
-  EXPECT_EQ(2u,var.cast<DiscreteVariable>().numMeasures(false));
+  EXPECT_EQ(2u,var.cast<MeasureGroup>().numMeasures(false));
   EXPECT_TRUE(problem.fileTypesAreCompatible(step,
                                              measure.inputFileType(),
                                              measure.outputFileType()));
-  EXPECT_TRUE(var.cast<DiscreteVariable>().push(measure));
-  EXPECT_EQ(3u,var.cast<DiscreteVariable>().numMeasures(false));
+  EXPECT_TRUE(var.cast<MeasureGroup>().push(measure));
+  EXPECT_EQ(3u,var.cast<MeasureGroup>().numMeasures(false));
 
   // cannot be added to variable 1 (translation)
   step = problem.workflow()[1];
   var = step.inputVariable();
-  EXPECT_EQ(1u,var.cast<DiscreteVariable>().numMeasures(false));
+  EXPECT_EQ(1u,var.cast<MeasureGroup>().numMeasures(false));
   EXPECT_FALSE(problem.fileTypesAreCompatible(step,
                                               measure.inputFileType(),
                                               measure.outputFileType()));
-  EXPECT_FALSE(var.cast<DiscreteVariable>().push(measure));
-  EXPECT_EQ(1u,var.cast<DiscreteVariable>().numMeasures(false));
+  EXPECT_FALSE(var.cast<MeasureGroup>().push(measure));
+  EXPECT_EQ(1u,var.cast<MeasureGroup>().numMeasures(false));
 
   // cannot be added to variable 2 (IDF)
   step = problem.variables()[2];
   var = step.inputVariable();
-  EXPECT_EQ(2u,var.cast<DiscreteVariable>().numMeasures(false));
+  EXPECT_EQ(2u,var.cast<MeasureGroup>().numMeasures(false));
   EXPECT_FALSE(problem.fileTypesAreCompatible(step,
                                               measure.inputFileType(),
                                               measure.outputFileType()));
-  EXPECT_FALSE(var.cast<DiscreteVariable>().push(measure));
-  EXPECT_EQ(2u,var.cast<DiscreteVariable>().numMeasures(false));
+  EXPECT_FALSE(var.cast<MeasureGroup>().push(measure));
+  EXPECT_EQ(2u,var.cast<MeasureGroup>().numMeasures(false));
 }
 
-TEST_F(AnalysisFixture, Problem_UpdateMeasure_DiscreteVariables) {
+TEST_F(AnalysisFixture, Problem_UpdateMeasure_MeasureGroups) {
   // open up example measure
   openstudio::path measuresPath = resourcesPath() / toPath("/utilities/BCL/Measures");
   openstudio::path dir = measuresPath / toPath("SetWindowToWallRatioByFacade");
@@ -416,7 +416,7 @@ TEST_F(AnalysisFixture, Problem_UpdateMeasure_DiscreteVariables) {
 
     // create a problem that uses multiple BCLMeasures
     Problem problem("Problem",VariableVector(),runmanager::Workflow());
-    DiscreteVariable dv("South WWR",MeasureVector(1u,NullMeasure()));
+    MeasureGroup dv("South WWR",MeasureVector(1u,NullMeasure()));
     problem.push(dv);
     RubyMeasure rp(measure1);
     rp.setArguments(args1);
@@ -426,7 +426,7 @@ TEST_F(AnalysisFixture, Problem_UpdateMeasure_DiscreteVariables) {
     rp = dv.measures(false)[2].cast<RubyMeasure>();
     EXPECT_EQ(2u,rp.arguments().size());
     EXPECT_TRUE(rp.hasIncompleteArguments());
-    dv = DiscreteVariable("Occupancy",MeasureVector(1u,NullMeasure()));
+    dv = MeasureGroup("Occupancy",MeasureVector(1u,NullMeasure()));
     problem.push(dv);
     rp = RubyMeasure(measure2);
     rp.setArguments(args2);
@@ -436,7 +436,7 @@ TEST_F(AnalysisFixture, Problem_UpdateMeasure_DiscreteVariables) {
     rp.setArgument(arg);
     EXPECT_EQ(1u,rp.arguments().size());
     EXPECT_FALSE(rp.hasIncompleteArguments());
-    dv = DiscreteVariable("North WWR",MeasureVector(1u,NullMeasure()));
+    dv = MeasureGroup("North WWR",MeasureVector(1u,NullMeasure()));
     problem.push(dv);
     rp = RubyMeasure(measure1);
     rp.setArguments(args1);
@@ -462,7 +462,7 @@ TEST_F(AnalysisFixture, Problem_UpdateMeasure_DiscreteVariables) {
     EXPECT_FALSE(vars[1].isDirty());
     EXPECT_TRUE(vars[2].isDirty());
 
-    dv = vars[0].cast<DiscreteVariable>();
+    dv = vars[0].cast<MeasureGroup>();
     ASSERT_EQ(3u,dv.numMeasures(false));
     MeasureVector ps = dv.measures(false);
     EXPECT_FALSE(ps[0].isDirty());
@@ -475,7 +475,7 @@ TEST_F(AnalysisFixture, Problem_UpdateMeasure_DiscreteVariables) {
     EXPECT_EQ(3u,rp.arguments().size());
     EXPECT_EQ(3u,rp.incompleteArguments().size());
 
-    dv = vars[2].cast<DiscreteVariable>();
+    dv = vars[2].cast<MeasureGroup>();
     ASSERT_EQ(2u,dv.numMeasures(false));
     ps = dv.measures(false);
     EXPECT_FALSE(ps[0].isDirty());

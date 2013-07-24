@@ -35,12 +35,12 @@ namespace runmanager {
 
 namespace analysis {
 
-class DiscreteVariable;
+class MeasureGroup;
 
 namespace detail {
 
   class Measure_Impl;
-  class DiscreteVariable_Impl;
+  class MeasureGroup_Impl;
 
 } // detail
 
@@ -87,8 +87,8 @@ class ANALYSIS_API Measure : public AnalysisObject {
 
   explicit Measure(boost::shared_ptr<detail::Measure_Impl> impl);
 
-  friend class DiscreteVariable; // to call setParent
-  friend class detail::DiscreteVariable_Impl; // to call setParent
+  friend class MeasureGroup; // to call setParent
+  friend class detail::MeasureGroup_Impl; // to call setParent
 
   /// @endcond
  private:

@@ -286,10 +286,10 @@ class ANALYSIS_API Problem : public AnalysisObject {
 
   /** If allVariablesAreDiscrete(), returns the number of \link DataPoint DataPoints\endlink that
    *  would have to be simulated to populate the full mesh for this problem. If
-   *  selectedPerturbationsOnly, the returned value represents the computational effort necessary
-   *  to run DesignOfExperiments. If not selectedPerturbationsOnly, the returned value represents
-   *  the maximum size of the problem the problem, if all measures were to be turned on. */
-  boost::optional<int> combinatorialSize(bool selectedPerturbationsOnly) const;
+   *  selectedOnly, the returned value represents the computational effort necessary
+   *  to run DesignOfExperiments. If not selectedOnly, the returned value represents
+   *  the maximum size of the problem, if all discrete possibilities were to be turned on. */
+  boost::optional<int> combinatorialSize(bool selectedOnly) const;
 
   //@}
   /** @name Setters */

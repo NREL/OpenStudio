@@ -194,11 +194,11 @@ namespace detail {
         const std::vector<QVariant>& variableValues) const;
 
     /** If allVariablesAreDiscrete(), returns the number of \link DataPoint DataPoints\endlink that
-     *  would have to be simulated to populate the full mesh for this problem. If selectedMeasuresOnly,
-     *  the returned value represents the computational effort necessary to run DesignOfExperiments.
-     *  If not selectedMeasuresOnly, the returned value represents the maximum size of the problem the
-     *  problem, if all measures were to be turned on. */
-    boost::optional<int> combinatorialSize(bool selectedMeasuresOnly) const;
+     *  would have to be simulated to populate the full mesh for this problem. If
+     *  selectedOnly, the returned value represents the computational effort necessary
+     *  to run DesignOfExperiments. If not selectedOnly, the returned value represents
+     *  the maximum size of the problem, if all discrete possibilities were to be turned on. */
+    boost::optional<int> combinatorialSize(bool selectedOnly) const;
 
     //@}
     /** @name Setters */
