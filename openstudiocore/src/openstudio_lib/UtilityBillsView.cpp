@@ -36,6 +36,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QRadioButton>
+#include <QStackedWidget>
 
 #define OS_UTILITY_WIDTH 150
 #define OS_EDIT_WIDTH 300
@@ -68,6 +69,9 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
 
 void UtilityBillsInspectorView::createWidgets()
 {
+  QWidget* visibleWidget = new QWidget();
+  this->stackedWidget()->addWidget(visibleWidget);
+
   bool isConnected = false;
 
   QLabel * label = NULL;
@@ -78,7 +82,7 @@ void UtilityBillsInspectorView::createWidgets()
   mainLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   mainLayout->setContentsMargins(10,10,10,10);
   mainLayout->setSpacing(20);
-  setLayout(mainLayout);
+  visibleWidget->setLayout(mainLayout);
 
   vLayout = new QVBoxLayout();
   vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
