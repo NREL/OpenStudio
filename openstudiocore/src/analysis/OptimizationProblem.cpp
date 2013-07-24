@@ -284,6 +284,26 @@ namespace detail {
     onChange(AnalysisObject_Impl::InvalidatesResults);
   }
 
+  QVariant OptimizationProblem_Impl::toVariant() const {
+    QVariantMap problemData = Problem_Impl::toVariant().toMap();
+
+    problemData["problem_type"] = QString("OptimizationProblem");
+
+    if (!objectives().empty()) {
+      QVariantList objectiveList;
+      int index(0);
+      Q_FOREACH(const Function& objective,objectives()) {
+        QVariantMap objectiveMap = objective.toVariant();
+        objectiveMap["objective_index"] = QVariant(index);
+        objectiveList.push_back(objectiveMap);
+        ++index;
+      }
+      problemData["objectives"] = QVariant(objectivesList);
+    }
+
+    return QVariant(problemData);
+  }
+
 } // detail
 
 OptimizationProblem::OptimizationProblem(const std::string& name,

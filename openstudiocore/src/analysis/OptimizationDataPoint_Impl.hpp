@@ -91,6 +91,8 @@ namespace detail {
 
     void setObjectiveValues(const std::vector<double> values);
 
+    virtual QVariant toVariant() const;
+
     //@}
    protected:
     std::vector<double> m_objectiveValues;

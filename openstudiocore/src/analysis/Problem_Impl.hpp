@@ -287,6 +287,12 @@ namespace detail {
     std::map<UncertaintyDescriptionType,std::vector<int> > getUncertainVariableIndices(const DakotaAlgorithm& dakotaAlgorithm) const;
 
     //@}
+    /** @name Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    //@}
    protected:
     std::vector<WorkflowStep> m_workflow; // InputVariables and runmanager WorkItems applied in order
     std::vector<Function> m_responses; // response functions.

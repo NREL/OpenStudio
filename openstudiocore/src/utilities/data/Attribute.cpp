@@ -1393,7 +1393,36 @@ namespace detail {
   QVariant toVariant(const Attribute& attribute) {
     QVariantMap attributeData;
 
-    // HERE
+    attributeData["uuid"] = attribute.uuid().toString();
+    attributeData["version_uuid"] = attribute.versionUUID().toString();
+    attributeData["name"] = toQString(attribute.name());
+    if (attribute.displayName()) {
+      attributeData["display_name"] = toQString(attribute.displayName().get());
+    }
+    AttributeValueType valueType = attribute.valueType();
+    attributeData["value_type"] = toQString(valueType.valueName());
+    if (valueType == AttributeValueType::Quantity) {
+      Quantity value = attribute.valueAsQuantity();
+      attributeData["value"] = QVariant(value.value());
+      attributeData["units"] = toQString(value.units().standardString());
+    }
+    else if (valueType == AttributeValueType::Unit) {
+      attributeData["units"] = toQString(attribute.valueAsUnit().standardString());
+    }
+    else if (valueType == AttributeValueType::AttributeVector) {
+      QVariantList childAttributesList;
+      Q_FOREACH(const Attribute& child,attribute.valueAsAttributeVector()) {
+        childAttributesList.push_back(toVariant(child));
+      }
+      attributeData["value"] = QVariant(childAttributesList);
+    }
+    else {
+      // use QVariant directly
+      attributeData["value"] = attribute.valueAsQVariant();
+    }
+    if (attribute.units()) {
+      attributeData["units"] = toQString(attribute.units().get());
+    }
 
     return QVariant(attributeData);
   }

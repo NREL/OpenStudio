@@ -105,6 +105,27 @@ namespace detail {
     onChange(AnalysisObject_Impl::Benign);
   }
 
+  QVariant OptimizationDataPoint_Impl::toVariant() const {
+    QVariantMap dataPointData = DataPoint_Impl::toVariant().toMap();
+
+    dataPointData["data_point_type"] = QString("OptimizationDataPoint");
+
+    if (!objectiveValues().empty()) {
+      QVariantList objectiveValuesList;
+      int index(0);
+      Q_FOREACH(double value,objectiveValues()) {
+        QVariantMap objectiveMap;
+        objectiveMap["response_value_index"] = QVariant(index);
+        objectiveMap["value"] = QVariant(value);
+        objectiveValuesList.push_back(objectiveMap);
+        ++index;
+      }
+      dataPointData["objective_values"] = objectiveValuesList;
+    }
+
+    return QVariant(dataPointData);
+  }
+
 } // detail
 
 OptimizationDataPoint::OptimizationDataPoint(const OptimizationProblem& optimizationProblem,

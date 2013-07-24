@@ -1714,6 +1714,35 @@ namespace detail {
     return result;
   }
 
+  QVariant Problem_Impl::toVariant() const {
+    QVariantMap problemData = AnalysisObject_Impl::toVariant().toMap();
+
+    problemData["problem_type"] = QString("Problem");
+
+    QVariantList workflowList;
+    int index(0);
+    Q_FOREACH(const WorkflowStep& step, workflow()) {
+      QVariantMap stepMap = step.toVariant();
+      stepMap["workflow_index"] = QVariant(index);
+      workflowList.push_back(stepMap);
+    }
+    problemData["workflow"] = QVariant(workflowList);
+
+    if (!responses().empty()) {
+      QVariantList responsesList;
+      index = 0;
+      Q_FOREACH(const Function& response,responses()) {
+        QVariantMap responseMap = response.toVariant();
+        responseMap["response_index"] = QVariant(index);
+        responsesList.push_back(responseMap);
+        ++index;
+      }
+      problemData["responses"] = QVariant(responsesList);
+    }
+
+    return QVariant(problemData);
+  }
+
   std::vector<WorkflowStep> Problem_Impl::convertVariablesAndWorkflowToWorkflowSteps(
       const std::vector<Variable>& variables,
       const runmanager::Workflow& simulationWorkflow) const

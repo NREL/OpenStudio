@@ -413,7 +413,7 @@ namespace detail {
   QVariant DataPoint_Impl::toVariant() const {
     QVariantMap dataPointData = AnalysisObject_Impl::toVariant().toMap();
 
-    dataPointData["data_point_type"] = "DataPoint";
+    dataPointData["data_point_type"] = QString("DataPoint");
     dataPointData["problem_uuid"] = problem().uuid().toString();
     if (parent()) {
       Q_ASSERT(parent()->optionalCast<Analysis>());
@@ -487,19 +487,19 @@ namespace detail {
       Q_FOREACH(const Attribute& attribute,outputAttributes()) {
         outputAttributesList.push_back(openstudio::detail::toVariant(attribute));
       }
-      dataPointData["attributes"] = QVariant(outputAttributesList);
+      dataPointData["output_attributes"] = QVariant(outputAttributesList);
     }
 
     return QVariant(dataPointData);
   }
 
   QVariant DataPoint_Impl::toTopLevelVariant() const {
-    QVariantMap dataPointData = this->toVariant().toMap();
+    QVariant dataPointData = this->toVariant();
 
     // create top-level of final file
     QVariantMap result;
     result["metadata"] = jsonMetadata();
-    result["data_point"] = QVariant(dataPointData);
+    result["data_point"] = dataPointData;
 
     return result;
   }

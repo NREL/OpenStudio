@@ -134,6 +134,12 @@ namespace detail {
     void clearObjectiveFunctions();
 
     //@}
+    /** @name Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    //@}
    protected:
     std::vector<Function> m_objectives;
    private:
