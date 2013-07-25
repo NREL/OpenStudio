@@ -354,6 +354,17 @@ namespace detail {
     return getString(OS_UtilityBillFields::PeakDemandUnit,true,true);
   }
 
+  boost::optional<unsigned> UtilityBill_Impl::timestepsInPeakDemandWindow() const {
+    if (this->fuelType() == FuelType::Electricity){
+      return getUnsigned(OS_UtilityBillFields::TimestepsinPeakDemandWindow,true);
+    }
+    return boost::none;
+  }
+
+  bool UtilityBill_Impl::isTimestepsInPeakDemandWindowDefaulted() const {
+    return isEmpty(OS_UtilityBillFields::TimestepsinPeakDemandWindow);
+  }
+
   bool UtilityBill_Impl::setMeterInstallLocation(const InstallLocationType& meterInstallLocation) {
     bool result = setString(OS_UtilityBillFields::MeterInstallLocation, meterInstallLocation.valueName());
     return result;
@@ -430,6 +441,18 @@ namespace detail {
       }
     }
     return result;
+  }
+
+  bool UtilityBill_Impl::setTimestepsInPeakDemandWindow(unsigned timestepsInPeakDemandWindow){
+    if (this->fuelType() == FuelType::Electricity){
+      return setUnsigned(OS_UtilityBillFields::TimestepsinPeakDemandWindow, timestepsInPeakDemandWindow);
+    }
+    return false;
+  }
+
+  void UtilityBill_Impl::resetTimestepsInPeakDemandWindow(){
+    bool test = setString(OS_UtilityBillFields::TimestepsinPeakDemandWindow, "");
+    BOOST_ASSERT(test);
   }
 
   std::vector<std::string> UtilityBill_Impl::consumptionUnitValues() const {
@@ -1233,6 +1256,14 @@ boost::optional<std::string> UtilityBill::peakDemandUnit() const {
   return getImpl<detail::UtilityBill_Impl>()->peakDemandUnit();
 }
 
+boost::optional<unsigned> UtilityBill::timestepsInPeakDemandWindow() const {
+  return getImpl<detail::UtilityBill_Impl>()->timestepsInPeakDemandWindow();
+}
+
+bool UtilityBill::isTimestepsInPeakDemandWindowDefaulted() const {
+  return getImpl<detail::UtilityBill_Impl>()->isTimestepsInPeakDemandWindowDefaulted();
+}
+
 bool UtilityBill::setMeterInstallLocation(const InstallLocationType& meterInstallLocation) {
   return getImpl<detail::UtilityBill_Impl>()->setMeterInstallLocation(meterInstallLocation);
 }
@@ -1279,6 +1310,14 @@ void UtilityBill::resetConsumptionUnitConversionFactor() {
 
 bool UtilityBill::setPeakDemandUnit(const std::string& peakDemandUnit) {
   return getImpl<detail::UtilityBill_Impl>()->setPeakDemandUnit(peakDemandUnit);
+}
+
+bool UtilityBill::setTimestepsInPeakDemandWindow(unsigned timestepsInPeakDemandWindow){
+  return getImpl<detail::UtilityBill_Impl>()->setTimestepsInPeakDemandWindow(timestepsInPeakDemandWindow);
+}
+
+void UtilityBill::resetTimestepsInPeakDemandWindow(){
+  getImpl<detail::UtilityBill_Impl>()->resetTimestepsInPeakDemandWindow();
 }
 
 Meter UtilityBill::consumptionMeter() const{

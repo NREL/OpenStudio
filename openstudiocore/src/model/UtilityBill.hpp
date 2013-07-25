@@ -187,6 +187,10 @@ class MODEL_API UtilityBill : public ModelObject {
 
   boost::optional<std::string> peakDemandUnit() const;
 
+  boost::optional<unsigned> timestepsInPeakDemandWindow() const;
+
+  bool isTimestepsInPeakDemandWindowDefaulted() const;
+
   std::vector<BillingPeriod> billingPeriods() const;
 
   //@}
@@ -216,6 +220,10 @@ class MODEL_API UtilityBill : public ModelObject {
   void resetConsumptionUnitConversionFactor();
 
   bool setPeakDemandUnit(const std::string& peakDemandUnit);
+
+  bool setTimestepsInPeakDemandWindow(unsigned timestepsInPeakDemandWindow);
+
+  void resetTimestepsInPeakDemandWindow();
 
   void clearBillingPeriods();
 

@@ -95,6 +95,10 @@ namespace detail {
 
     boost::optional<std::string> peakDemandUnit() const;
 
+    boost::optional<unsigned> timestepsInPeakDemandWindow() const;
+
+    bool isTimestepsInPeakDemandWindowDefaulted() const;
+
     std::vector<BillingPeriod> billingPeriods() const;
 
     //@}
@@ -124,6 +128,10 @@ namespace detail {
     void resetConsumptionUnitConversionFactor();
 
     bool setPeakDemandUnit(const std::string& peakDemandUnit);
+
+    bool setTimestepsInPeakDemandWindow(unsigned timestepsInPeakDemandWindow);
+
+    void resetTimestepsInPeakDemandWindow();
 
     void clearBillingPeriods();
 
