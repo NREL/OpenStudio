@@ -311,6 +311,12 @@
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_SingleDuct_ConstantVolume_Reheat">
+    <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
+    <rule IddField="Reheat Coil Name" Access="HIDDEN"/>
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_AirTerminal_SingleDuct_Uncontrolled">
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
     <rule IddField="Inlet Air Node Name" Access="HIDDEN"/>
