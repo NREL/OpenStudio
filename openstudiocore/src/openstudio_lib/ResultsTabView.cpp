@@ -21,6 +21,7 @@
 
 #include <model/Model_Impl.hpp>
 
+#include <QButtonGroup>
 #include <QDir>
 #include <QHeaderView>
 #include <QLabel>
@@ -46,6 +47,13 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/random.hpp>
+
+#define ASHRAE_NMBE "5"
+#define ASHRAE_RSME "15"
+#define FEMP_NMBE "15"
+#define FEMP_RSME "10"
+#define IPMVP_NMBE "20"
+#define IPMVP_RSME "5"
 
 namespace openstudio {
 
@@ -163,8 +171,6 @@ namespace openstudio {
     m_data[t_fuelType][t_categoryType][t_monthOfYear] = t_value;
   }
 
-
-
   ResultsComparisonData::ResultsComparisonData(const openstudio::EndUseFuelType &t_fuelType, 
       const openstudio::Unit &t_unit, QWidget *t_parent)
     : QWidget(t_parent), m_fuelType(t_fuelType), m_unit(t_unit)
@@ -175,7 +181,6 @@ namespace openstudio {
     m_label = new QLabel();
     m_label->setObjectName("H2");
     vboxlayout->addWidget(m_label);
-
 
     setLayout(vboxlayout);
 
@@ -207,7 +212,6 @@ namespace openstudio {
 
     boost::shared_ptr<vtkCharts::BarChart> chart(new vtkCharts::BarChart("Consumption"));
     std::set<int> enduses = openstudio::EndUseCategoryType::getValues();
-
 
     std::vector<std::string> labels;
     std::map<int, std::string> monthnames = openstudio::MonthOfYear::getNames();
@@ -241,7 +245,6 @@ namespace openstudio {
     //chart->axis(vtkCharts::Axis::LEFT).setTitle("(" + scalestring + ")");
     chart->axis(vtkCharts::Axis::LEFT).setTitle("");
     chart->axis(vtkCharts::Axis::BOTTOM).setTitle("");
-
 
     Unit u = *openstudio::createUnit("J");
 
@@ -282,7 +285,6 @@ namespace openstudio {
 
     std::map<int, std::string> s = openstudio::EndUseCategoryType::getDescriptions();
     std::vector<vtkCharts::Color3ub> c = getColors();
-
 
     for (size_t i = 0; i < s.size(); ++i)
     {
@@ -370,7 +372,6 @@ namespace openstudio {
     return m_fuelType;
   }
 
-
   void ResultsComparisonTable::buildDataGrid()
   {
     std::map<int, std::string> types = openstudio::EndUseCategoryType::getDescriptions();
@@ -391,7 +392,6 @@ namespace openstudio {
     }
     m_grid->addWidget(new QLabel("<b>Total</b>"), row, 0);
 
-
     // Column labels
     int column = 1;
     for (std::map<int, std::string>::const_iterator monthitr = months.begin();
@@ -410,7 +410,6 @@ namespace openstudio {
     m_grid->addWidget(vline, 1, column, types.size() + 1, 1);
     ++column;
     m_grid->addWidget(new QLabel("<b>Total</b>"), 1, column);
-
 
     // Row labels
     row = 2;
@@ -493,10 +492,7 @@ namespace openstudio {
     vboxlayout->addLayout(m_grid);
 
     setLayout(vboxlayout);
-
-
   }
-
 
   void ResultsComparisonTable::updateUnitsLabel()
   {
@@ -535,7 +531,6 @@ namespace openstudio {
 
   void ResultsComparisonTable::setDataMonthTotals(const ComparisonData &t_data)
   {
-
     boost::optional<double> total;
 
     int monthcount = 0;
@@ -611,7 +606,6 @@ void ResultsComparisonTable::setDataCategoryTotals(const ComparisonData &t_data)
     setDataValue(m_categoryTotals[*itr], categorytotal);
   }
 
-
 }
 
 void ResultsComparisonTable::setDataValues(const ComparisonData &t_data)
@@ -643,8 +637,6 @@ void ResultsComparisonTable::setData(const ComparisonData &t_data, const openstu
   setDataCategoryTotals(t_data);
 }
 
-
-
 ResultsTabView::ResultsTabView(const model::Model & model,
                                const QString & tabLabel,
                                bool hasSubTab,
@@ -666,13 +658,13 @@ void ResultsTabView::searchForExistingResults(const openstudio::path &t_runDir)
   m_resultsView->searchForExistingResults(t_runDir);
 }
 
-
 void ResultsTabView::onUnitSystemChange(bool t_isIP) 
 {
   LOG(Debug, "onUnitSystemChange " << t_isIP << " reloading results");
   m_resultsView->onUnitSystemChange(t_isIP);
 
 }
+
 void ResultsTabView::resultsGenerated(const openstudio::path &t_sqlFilePath, const openstudio::path &t_radianceResultsPath)
 {
   LOG(Debug, "resultsGenerated " << openstudio::toString(t_sqlFilePath) << " " << openstudio::toString(t_radianceResultsPath));
@@ -710,45 +702,160 @@ openstudio::Unit ResultsView::getUnit(openstudio::EndUseFuelType t_type, bool t_
   throw std::runtime_error("Unknown unit type");
 }
 
-
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   : QWidget(t_parent),
     m_model(model),
     m_isIP(true),
+
     m_electricConsumptionChart(new ResultsComparisonData(openstudio::EndUseFuelType::Electricity, 
-          getUnit(openstudio::EndUseFuelType::Electricity, m_isIP))),
+          getUnit(openstudio::EndUseFuelType::Electricity, m_isIP))),      
+    //m_demandConsumptionChart(new ResultsComparisonData(openstudio::EndUseFuelType::Demand, 
+    //      getUnit(openstudio::EndUseFuelType::Demand, m_isIP))), TODO
+    m_electricLegend(new ResultsComparisonLegend()),
+
     m_gasConsumptionChart(new ResultsComparisonData(openstudio::EndUseFuelType::Gas, 
           getUnit(openstudio::EndUseFuelType::Gas, m_isIP))),
-    m_consumptionLegend(new ResultsComparisonLegend()),
-    m_electricConsumptionTable(new ResultsComparisonTable(openstudio::EndUseFuelType::Electricity, 
-          getUnit(openstudio::EndUseFuelType::Electricity, m_isIP))),
-    m_gasConsumptionTable(new ResultsComparisonTable(openstudio::EndUseFuelType::Gas, 
-          getUnit(openstudio::EndUseFuelType::Gas, m_isIP))),
-    m_districtHeatingConsumptionTable(new ResultsComparisonTable(openstudio::EndUseFuelType::DistrictHeating, 
+    m_gasLegend(new ResultsComparisonLegend()),
+
+    m_districtHeatingConsumptionChart(new ResultsComparisonData(openstudio::EndUseFuelType::DistrictHeating, 
           getUnit(openstudio::EndUseFuelType::DistrictHeating, m_isIP))),
-    m_districtCoolingConsumptionTable(new ResultsComparisonTable(openstudio::EndUseFuelType::DistrictCooling, 
+    m_districtHeatingLegend(new ResultsComparisonLegend()),
+
+    m_districtCoolingConsumptionChart(new ResultsComparisonData(openstudio::EndUseFuelType::DistrictCooling, 
           getUnit(openstudio::EndUseFuelType::DistrictCooling, m_isIP))),
+    m_districtCoolingLegend(new ResultsComparisonLegend()),
+
     m_openResultsViewerBtn(new QPushButton("Open ResultsViewer\nfor Detailed Reports"))
 {
-  QGridLayout *mainLayout = new QGridLayout();
-  mainLayout->setContentsMargins(10,10,10,10);
-  mainLayout->setSpacing(10);
-  setLayout(mainLayout);
-
-
-
-  mainLayout->addWidget(m_electricConsumptionChart, 0, 0, 2, 1);
-  mainLayout->addWidget(m_gasConsumptionChart, 0, 1, 2, 1);
-  mainLayout->addWidget(m_openResultsViewerBtn, 0, 2, 1, 1);
-  mainLayout->addWidget(m_consumptionLegend, 1, 2, 1, 1);
-  mainLayout->addWidget(m_electricConsumptionTable, 2, 0, 1, 2);
-  mainLayout->addWidget(m_gasConsumptionTable, 3, 0, 1, 2);
-  mainLayout->addWidget(m_districtHeatingConsumptionTable, 4, 0, 1, 2);
-  mainLayout->addWidget(m_districtCoolingConsumptionTable, 5, 0, 1, 2);
-
   connect(m_openResultsViewerBtn, SIGNAL(clicked()),
       this, SLOT(openResultsViewerClicked()));
+
+  // Make Selection Button Widget
+
+  QHBoxLayout * hLayout = new QHBoxLayout();
+
+  QWidget * buttonWidget = new QWidget();
+  buttonWidget->setLayout(hLayout);
+
+  QLabel * label = 0;
+  
+  label = new QLabel("View: ");
+  label->setObjectName("H2");
+  hLayout->addWidget(label,0,Qt::AlignLeft | Qt::AlignTop);
+
+  QButtonGroup * buttonGroup = new QButtonGroup();
+
+  bool isConnected = false;
+
+  isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
+    this, SLOT(selectView(int)));
+  Q_ASSERT(isConnected);
+
+  QPushButton * button = 0;
+
+  button = new QPushButton("Standard");
+  button->setCheckable(true);
+  hLayout->addWidget(button,0,Qt::AlignLeft | Qt::AlignTop);
+  buttonGroup->addButton(button,0);
+
+  button = new QPushButton("Calibration");
+  button->setCheckable(true);
+  hLayout->addWidget(button,0,Qt::AlignLeft | Qt::AlignTop);
+  buttonGroup->addButton(button,1);
+
+  hLayout->addStretch();
+
+  // Make Stacked Widget
+  m_stackedWidget = new QStackedWidget(this);
+
+  QGridLayout * gridLayout = 0;
+  QWidget * widget = 0;
+
+  // Make Comparision Data View
+
+  //gridLayout = new QGridLayout();
+  //gridLayout->setContentsMargins(10,10,10,10);
+  //gridLayout->setSpacing(10);
+  //
+  //gridLayout->addWidget(m_electricConsumptionChart, 0, 0, 2, 1);
+  //gridLayout->addWidget(m_gasConsumptionChart, 0, 1, 2, 1);
+  //gridLayout->addWidget(m_openResultsViewerBtn, 0, 2, 1, 1);
+  //gridLayout->addWidget(m_consumptionLegend, 1, 2, 1, 1);
+  //gridLayout->addWidget(m_electricConsumptionTable, 2, 0, 1, 2);
+  //gridLayout->addWidget(m_gasConsumptionTable, 3, 0, 1, 2);
+  //gridLayout->addWidget(m_districtHeatingConsumptionTable, 4, 0, 1, 2);
+  //gridLayout->addWidget(m_districtCoolingConsumptionTable, 5, 0, 1, 2);
+
+  //widget = new QWidget();
+  //widget->setLayout(gridLayout);
+  //m_stackedWidget->addWidget(widget);
+
+
+
+
+  // Make Consumption Data View
+  gridLayout = new QGridLayout();
+  gridLayout->setContentsMargins(10,10,10,10);
+  gridLayout->setSpacing(10);
+
+  label = new QLabel("Calibration Method");
+  label->setObjectName("H2");
+  gridLayout->addWidget(label,0,0,0,0,Qt::AlignLeft | Qt::AlignTop);
+
+  QComboBox * comboBox = new QComboBox();
+  comboBox->addItem("ASHRAE 14 (5%)");
+  comboBox->addItem("FEMP (15%)");
+  comboBox->addItem("some other tbd(20%)");
+  comboBox->setCurrentIndex(0);
+  gridLayout->addWidget(label,0,1,0,0,Qt::AlignLeft | Qt::AlignTop);
+
+  m_CalibrationMethodLabel = new QLabel();
+  selectCalibrationMethodText(0);
+  gridLayout->addWidget(label,0,2,0,0,Qt::AlignLeft | Qt::AlignTop);
+
+  isConnected = connect(comboBox, SIGNAL(currentIndexChanged(int)),
+    this, SLOT(selectCalibrationMethodText(int)));
+  Q_ASSERT(isConnected);
+
+  gridLayout->addWidget(m_openResultsViewerBtn,0,3,0,0,Qt::AlignLeft | Qt::AlignTop);
+
+  widget = new QWidget();
+  widget->setLayout(gridLayout);
+  m_stackedWidget->addWidget(widget);
+
+  // Make Charts
+
+  gridLayout = new QGridLayout();
+  gridLayout->setContentsMargins(10,10,10,10);
+  gridLayout->setSpacing(10);
+  
+  gridLayout->addWidget(m_electricConsumptionChart, 0, 0, 2, 1);
+  //gridLayout->addWidget(m_demandConsumptionChart, 0, 1, 2, 1);
+  gridLayout->addWidget(m_electricLegend, 0, 2, 1, 1);
+
+  gridLayout->addWidget(m_gasConsumptionChart, 1, 0, 2, 1);
+  gridLayout->addWidget(m_gasLegend, 1, 1, 1, 1);
+
+  gridLayout->addWidget(m_districtHeatingConsumptionChart, 2, 0, 2, 1);
+  gridLayout->addWidget(m_districtHeatingLegend, 2, 1, 1, 1);
+  
+  gridLayout->addWidget(m_districtCoolingConsumptionChart, 3, 0, 2, 1);
+  gridLayout->addWidget(m_districtCoolingLegend, 3, 1, 1, 1);
+
+  widget = new QWidget();
+  widget->setLayout(gridLayout);
+  m_stackedWidget->addWidget(widget);
+  
+  // Add to main layout
+  
+  QVBoxLayout * mainLayout = new QVBoxLayout();
+  mainLayout->addWidget(buttonWidget);
+  mainLayout->addWidget(m_stackedWidget);
+  setLayout(mainLayout);
+
+  buttonGroup->button(0)->click();
 }
 
 void ResultsView::openResultsViewerClicked()
@@ -779,11 +886,45 @@ void ResultsView::openResultsViewerClicked()
     args.push_back(openstudio::toQString(m_radianceResultsPath));
   }
 
-
   if (!QProcess::startDetached(openstudio::toQString(resultsviewer), args))
   {
     QMessageBox::critical(this, "Unable to launch ResultsViewer", "ResultsViewer was not found in the expected location:\n" + openstudio::toQString(resultsviewer));
   }
+}
+
+void ResultsView::selectView(int index)
+{
+  m_stackedWidget->setCurrentIndex(index);
+}
+
+void ResultsView::selectCalibrationMethodText(int index)
+{
+  QString nmbeValue;
+  QString rsmeValue;
+
+  if(index == 0){
+    nmbeValue = ASHRAE_NMBE;
+    rsmeValue = ASHRAE_RSME;
+  }
+  else if(index == 1){
+    nmbeValue = FEMP_NMBE;
+    rsmeValue = FEMP_RSME;
+  }
+  else if(index == 2){
+    nmbeValue = IPMVP_NMBE;
+    rsmeValue = IPMVP_RSME;
+  }
+  else{
+    Q_ASSERT(false);
+  }
+  
+  QString text("NBME of ");
+  text += nmbeValue;
+  text += " or less and CV(RSME) of ";
+  text += rsmeValue;
+  text += " relative to monthly data.\nMust contain all utility data for one year and real weather data. Check the guideline for\nadditional requirements.";
+  m_CalibrationMethodLabel->setText(text);
+
 }
 
 void ResultsView::onUnitSystemChange(bool t_isIP) 
@@ -830,24 +971,15 @@ void ResultsView::resultsGenerated(const openstudio::path &t_path, const openstu
   fueltypes.push_back(openstudio::EndUseFuelType::DistrictHeating);
   fueltypes.push_back(openstudio::EndUseFuelType::DistrictCooling);
 
-
   m_sqlFilePath = t_path;
   m_radianceResultsPath = t_radianceResultsPath;
 
   ComparisonData data(fueltypes,
       SqlFile(t_path));
 
-
   m_electricConsumptionChart->setData(data, getUnit(m_electricConsumptionChart->getFuelType(), m_isIP));
   m_gasConsumptionChart->setData(data, getUnit(m_gasConsumptionChart->getFuelType(), m_isIP));
-  m_electricConsumptionTable->setData(data, getUnit(m_electricConsumptionTable->getFuelType(), m_isIP)); 
-  m_gasConsumptionTable->setData(data, getUnit(m_gasConsumptionTable->getFuelType(), m_isIP)); 
-
-  m_districtHeatingConsumptionTable->setData(data, getUnit(m_districtHeatingConsumptionTable->getFuelType(), m_isIP));
-  m_districtCoolingConsumptionTable->setData(data, getUnit(m_districtCoolingConsumptionTable->getFuelType(), m_isIP));
 
 }
 
-
 } // openstudio
-

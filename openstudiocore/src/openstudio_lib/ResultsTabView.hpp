@@ -34,6 +34,7 @@
 
 #include <QComboBox>
 #include <QPushButton>
+#include <QStackedWidget>
 #include <QWidget>
 
 class QGridLayout;
@@ -148,6 +149,8 @@ namespace openstudio {
 
     private slots:
       void openResultsViewerClicked();
+      void selectView(int index);
+      void selectCalibrationMethodText(int);
 
     private:
       REGISTER_LOGGER("openstudio::ResultsView");
@@ -155,14 +158,29 @@ namespace openstudio {
 
       openstudio::model::Model m_model;
       bool m_isIP;
-      ResultsComparisonData *m_electricConsumptionChart;
-      ResultsComparisonData *m_gasConsumptionChart;
-      ResultsComparisonLegend *m_consumptionLegend;
-      ResultsComparisonTable *m_electricConsumptionTable;
-      ResultsComparisonTable *m_gasConsumptionTable;
-      ResultsComparisonTable *m_districtHeatingConsumptionTable;
-      ResultsComparisonTable *m_districtCoolingConsumptionTable;
-      QPushButton *m_openResultsViewerBtn;
+      //ResultsComparisonData *m_electricConsumptionChart;
+      //ResultsComparisonData *m_gasConsumptionChart;
+      //ResultsComparisonLegend *m_consumptionLegend;
+      //ResultsComparisonTable *m_electricConsumptionTable;
+      //ResultsComparisonTable *m_gasConsumptionTable;
+      //ResultsComparisonTable *m_districtHeatingConsumptionTable;
+      //ResultsComparisonTable *m_districtCoolingConsumptionTable;
+      ResultsComparisonData * m_electricConsumptionChart;
+      ResultsComparisonData * m_demandConsumptionChart;
+      ResultsComparisonLegend * m_electricLegend;
+
+      ResultsComparisonData * m_gasConsumptionChart;
+      ResultsComparisonLegend  * m_gasLegend;
+
+      ResultsComparisonData * m_districtHeatingConsumptionChart;
+      ResultsComparisonLegend  * m_districtHeatingLegend;
+
+      ResultsComparisonData * m_districtCoolingConsumptionChart;
+      ResultsComparisonLegend  * m_districtCoolingLegend;
+
+      QStackedWidget * m_stackedWidget;
+      QPushButton * m_openResultsViewerBtn;
+      QLabel * m_CalibrationMethodLabel;
 
       openstudio::path m_sqlFilePath;
       openstudio::path m_radianceResultsPath;
