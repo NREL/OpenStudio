@@ -123,44 +123,47 @@ namespace openstudio{
       addSimulation(t_epwFile, t_simulationTime, t_calendar);
 
       reopen();
+      createIndexes();
     }
 
     void SqlFile_Impl::createIndexes()
     {
-      try {
-        execAndThrowOnError("CREATE INDEX rmdTI ON ReportMeterData (TimeIndex ASC);");
-      } catch (const std::exception &e) {
-        LOG(Trace, "Error adding index: " + std::string(e.what()));
-      }
+      if (m_connectionOpen)
+      {
+        try {
+          execAndThrowOnError("CREATE INDEX rmdTI ON ReportMeterData (TimeIndex ASC);");
+        } catch (const std::exception &e) {
+          LOG(Trace, "Error adding index: " + std::string(e.what()));
+        }
 
-      try {
-        execAndThrowOnError("CREATE INDEX rmdDI ON ReportMeterData (ReportMeterDataDictionaryIndex ASC);");
-      } catch (const std::exception &e) {
-        LOG(Trace, "Error adding index: " + std::string(e.what()));
-      }
+        try {
+          execAndThrowOnError("CREATE INDEX rmdDI ON ReportMeterData (ReportMeterDataDictionaryIndex ASC);");
+        } catch (const std::exception &e) {
+          LOG(Trace, "Error adding index: " + std::string(e.what()));
+        }
 
-      try {
-        execAndThrowOnError("CREATE INDEX rvdTI ON ReportVariableData (TimeIndex ASC);");
-      } catch (const std::exception &e) {
-        LOG(Trace, "Error adding index: " + std::string(e.what()));
-      }
+        try {
+          execAndThrowOnError("CREATE INDEX rvdTI ON ReportVariableData (TimeIndex ASC);");
+        } catch (const std::exception &e) {
+          LOG(Trace, "Error adding index: " + std::string(e.what()));
+        }
 
-      try {
-        execAndThrowOnError("CREATE INDEX rvdDI ON ReportVariableData (ReportVariableDataDictionaryIndex ASC);");
-      } catch (const std::exception &e) {
-        LOG(Trace, "Error adding index: " + std::string(e.what()));
-      }
+        try {
+          execAndThrowOnError("CREATE INDEX rvdDI ON ReportVariableData (ReportVariableDataDictionaryIndex ASC);");
+        } catch (const std::exception &e) {
+          LOG(Trace, "Error adding index: " + std::string(e.what()));
+        }
 
-      try {
-        execAndThrowOnError("CREATE INDEX dmhdHRI ON DaylightMapHourlyData (HourlyReportIndex ASC);");
-      } catch (const std::exception &e) {
-        LOG(Trace, "Error adding index: " + std::string(e.what()));
+        try {
+          execAndThrowOnError("CREATE INDEX dmhdHRI ON DaylightMapHourlyData (HourlyReportIndex ASC);");
+        } catch (const std::exception &e) {
+          LOG(Trace, "Error adding index: " + std::string(e.what()));
+        }
       }
     }
 
     SqlFile_Impl::~SqlFile_Impl ()
     {
-      createIndexes(); // make sure they are created
       close();
     }
 
