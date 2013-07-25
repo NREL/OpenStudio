@@ -107,6 +107,11 @@
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_EvaporativeFluidCooler_SingleSpeed">
+    <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Inlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_SetpointManager_SingleZone_Reheat">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>
@@ -445,10 +450,17 @@
     <rule IddField="Exhaust Air Inlet Node" Access="HIDDEN"/>
     <rule IddField="Exhaust Air Outlet Node" Access="HIDDEN"/>
   </POLICY>
+<<<<<<< HEAD
   <POLICY IddObjectType="OS_AirTerminalSingleDuctVAVNoReheat">
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="Design Specification Outdoor Air Object Name" Access="HIDDEN"/>
   </POLICY>	
+=======
+  <POLICY IddObjectType="OS_EvaporativeFluidCooler_SingleSpeed">
+    <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
+>>>>>>> 51094457_EvapFluidCoolerSglSpd
 </ROOT>

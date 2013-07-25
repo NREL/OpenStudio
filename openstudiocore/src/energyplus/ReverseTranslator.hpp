@@ -139,6 +139,8 @@ class ENERGYPLUS_API ReverseTranslator {
   
   boost::optional<model::ModelObject> translateEvaporativeCoolerDirectResearchSpecial(const WorkspaceObject & workspaceObject);
 
+  boost::optional<model::ModelObject> translateEvaporativeFluidCoolerSingleSpeed(const WorkspaceObject & workspaceObject);
+
   boost::optional<model::ModelObject> translateExteriorLights(const WorkspaceObject& workspaceObject);
 
   boost::optional<model::ModelObject> translateFanConstantVolume(const WorkspaceObject & workspaceObject);

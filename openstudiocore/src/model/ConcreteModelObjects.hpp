@@ -20,6 +20,9 @@
 #ifndef MODEL_CONCRETEMODELOBJECTS_HPP
 #define MODEL_CONCRETEMODELOBJECTS_HPP
 
+ #include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
+ #include <model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp>
+
 #include <model/AirGap.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>

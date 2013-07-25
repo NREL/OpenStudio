@@ -476,6 +476,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       //modelObject = translateEvaporativeCoolerDirectResearchSpecial(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::EvaporativeFluidCooler_SingleSpeed :
+    {
+      modelObject = translateEvaporativeFluidCoolerSingleSpeed(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::Fan_ConstantVolume :
     {
       //modelObject = translateFanConstantVolume(workspaceObject );

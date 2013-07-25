@@ -679,7 +679,7 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   myLibraryList->setItemsRemoveable(false);
   myLibraryList->setItemsType(OSItem::LIBRARY_ITEM);
   myLibraryList->setShowFilterLayout(true);
-
+  
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil,"Four Pipe Fan Coil");
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump,"PTHP");
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner,"PTAC");
@@ -747,7 +747,7 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
   libraryWidget->setItemsRemoveable(false);
   libraryWidget->setItemsType(OSItem::LIBRARY_ITEM);
   libraryWidget->setShowFilterLayout(true);
-    
+ 
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric,"Baseboard Convective Electric");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water,"Baseboard Convective Water");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil,"Four Pipe Fan Coil");
@@ -780,7 +780,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   myModelList->setItemsRemoveable(false);
   myModelList->setItemsType(OSItem::LIBRARY_ITEM);
   myModelList->setShowFilterLayout(true);
-
+  
   myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Equipment_Definition,"Water Use Equipment Definition");  
   myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Connections,"Water Use Connections");  
   myModelList->addModelObjectType(IddObjectType::OS_ThermalZone,"Thermal Zone");  
@@ -818,6 +818,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_Fan_OnOff,"Fan On Off");  
   libraryWidget->addModelObjectType(IddObjectType::OS_Fan_ConstantVolume,"Fan Constant Volume");
   libraryWidget->addModelObjectType(IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial,"Evaporative Cooler Direct Research Special");
+  libraryWidget->addModelObjectType(IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed,"Evaporative Fluid Cooler SingleSpeed");
   libraryWidget->addModelObjectType(IddObjectType::OS_DistrictCooling,"District Cooling");
   libraryWidget->addModelObjectType(IddObjectType::OS_DistrictHeating,"District Heating");
   libraryWidget->addModelObjectType(IddObjectType::OS_CoolingTower_SingleSpeed, "Cooling Tower Single Speed");

@@ -391,6 +391,32 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
   0,                                      ! Drift Loss Fraction
   0;                                      ! Blowdown Concentration Ratio
 
+OS:EvaporativeFluidCooler:SingleSpeed,
+  {39cff03a-8e34-4110-920a-2a36414f7291}, !- Handle
+  Evaporative Fluid Cooler SingleSpeed,   !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  autosize,                               !- Design Air Flow Rate {m3/s}
+  autosize,                               !- Fan Power at Design Air Flow Rate {W}
+  0.03,                                   !- Design Spray Water Flow Rate {m3/s}
+  UFactorTimesAreaAndDesignWaterFlowRate, !- Performance Input Method
+  ,                                       !- Outdoor Air Inlet Node Name
+  ,                                       !- Standard Design Capacity {W}
+  autosize,                               !- U-factor Times Area Value at Design Air Flow Rate {W/K}
+  autosize,                               !- Design Water Flow Rate {m3/s}
+  ,                                       !- User Specified Design Capacity {W}
+  ,                                       !- Design Entering Water Temperature {C}
+  ,                                       !- Design Entering Air Temperature {C}
+  ,                                       !- Design Entering Air Wet-bulb Temperature {C}
+  FanCycling,                             !- Capacity Control
+  1,                                      !- Sizing Factor
+  SaturatedExit,                          !- Evaporation Loss Mode
+  ,                                       !- Evaporation Loss Factor {percent/K}
+  0.008,                                  !- Drift Loss Percent {percent}
+  ConcentrationRatio,                     !- Blowdown Calculation Mode
+  3,                                      !- Blowdown Concentration Ratio
+  ;                                       !- Blowdown Makeup Water Usage Schedule Name
+
 OS:AirTerminal:SingleDuct:Uncontrolled,
   {b883cca7-f436-48ce-ad23-7e8310c7a85d}, ! Handle
   OS:AirTerminal:SingleDuct:Uncontrolled 1, ! Name
