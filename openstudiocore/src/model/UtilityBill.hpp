@@ -24,6 +24,8 @@
 #include <model/ModelObject.hpp>
 #include <model/ModelExtensibleGroup.hpp>
 
+#include <utilities/Data/Vector.hpp>
+
 namespace openstudio {
 
 class FuelType;
@@ -58,6 +60,15 @@ class MODEL_API BillingPeriod : public ModelExtensibleGroup {
   /** The duration of the billing period in days. */
   unsigned numberOfDays() const;
 
+  /** Returns the consumption in billing units. */
+  boost::optional<double> consumption() const;
+
+  /** Returns the peak demand in billing units. */
+  boost::optional<double> peakDemand() const;
+
+  /** Returns the total cost of the bill in dollars. */
+  boost::optional<double> totalCost() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -73,6 +84,21 @@ class MODEL_API BillingPeriod : public ModelExtensibleGroup {
   /** Sets the number of days in billing period, startDate is always retained. */
   bool setNumberOfDays(unsigned numberOfDays);
 
+  /** Sets the consumption in billing units. */
+  bool setConsumption(double consumption);
+
+  void resetConsumption();
+
+  /** Sets the peak demand in billing units. */
+  bool setPeakDemand(double peakDemand);
+
+  void resetPeakDemand();
+
+  /** Sets the total cost of the bill in dollars. */
+  bool setTotalCost(double totalCost);
+
+  void resetTotalCost();
+
   //@}
   /** @name Other */
   //@{
@@ -86,22 +112,22 @@ class MODEL_API BillingPeriod : public ModelExtensibleGroup {
   /** Returns true if this billing period is partially within the model's run period.*/
   bool overlapsRunPeriod() const;
 
-  /** Coefficient of variation of the root mean square error, see ASHRAE 14-2002 5.2.11.3.*/
-  boost::optional<double> CVRMSE() const;
+  /** Returns the consumption for each day in billing period from simulation in model units. */
+  Vector modelConsumptionValues() const;
 
-  /** Normalized mean bias error, see ASHRAE 14-2002 5.2.11.3.*/
-  boost::optional<double> NMBE() const;
+  /** Returns the consumption for each day in billing period from simulation in model units. */
+  Vector modelPeakDemandValues() const;
 
-  boost::optional<double> consumption() const;
+  /** Returns the consumption for each day in billing period from simulation in model units. */
+  Vector modelTotalCostValues() const;
 
-  boost::optional<double> demand() const;
-
-  boost::optional<double> totalCost() const;
-
+  /** Returns the sum of modelConsumptionValues if it is not empty. */
   boost::optional<double> modelConsumption() const;
 
-  boost::optional<double> modelDemand() const;
+  /** Returns the sum of modelPeakDemandValues if it is not empty. */
+  boost::optional<double> modelPeakDemand() const;
 
+  /** Returns the sum of modelTotalCostValues if it is not empty. */
   boost::optional<double> modelTotalCost() const;
 
   //@}
@@ -155,7 +181,7 @@ class MODEL_API UtilityBill : public ModelObject {
 
   boost::optional<std::string> meterSpecificInstallLocation() const;
 
-  boost::optional<EndUseCategoryType> meterEndUse() const;
+  boost::optional<EndUseCategoryType> meterEndUseCategory() const;
 
   boost::optional<std::string> meterSpecificEndUse() const;
 
@@ -166,6 +192,8 @@ class MODEL_API UtilityBill : public ModelObject {
   bool isConsumptionUnitConversionFactorDefaulted() const;
 
   boost::optional<std::string> peakDemandUnit() const;
+
+  std::vector<BillingPeriod> billingPeriods() const;
 
   //@}
   /** @name Setters */
@@ -179,9 +207,9 @@ class MODEL_API UtilityBill : public ModelObject {
 
   void resetMeterSpecificInstallLocation();
 
-  bool setMeterEndUse(const EndUseCategoryType& meterEndUse);
+  bool setMeterEndUseCategory(const EndUseCategoryType& meterEndUseCategory);
 
-  void resetMeterEndUse();
+  void resetMeterEndUseCategory();
 
   bool setMeterSpecificEndUse(const std::string& meterSpecificEndUse);
 
@@ -195,20 +223,22 @@ class MODEL_API UtilityBill : public ModelObject {
 
   bool setPeakDemandUnit(const std::string& peakDemandUnit);
 
-  //@}
-  /** @name Other */
-  //@{
-
-  /** Gets the meter associated with this UtilityBill, creates it if it does not exist.*/
-  Meter meter() const;
-
-  std::vector<BillingPeriod> billingPeriods() const;
-
   void clearBillingPeriods();
 
   BillingPeriod addBillingPeriod();
 
-  void sortBillingPeriods();
+  //@}
+  /** @name Other */
+  //@{
+
+  /** Gets the meter associated with consumption for this UtilityBill, creates it if it does not exist.*/
+  Meter consumptionMeter() const;
+
+  /** Gets the variable associated with peak demand for this UtilityBill, creates it if it does not exist.*/
+  boost::optional<OutputVariable> peakDemandVariable() const;
+
+  /** Number of billing periods used to compute CVRMSE or NMBE.*/
+  unsigned numberBillingPeriodsInCalculations() const;
 
   /** Coefficient of variation of the root mean square error, see ASHRAE 14-2002 5.2.11.3.*/
   boost::optional<double> CVRMSE() const;

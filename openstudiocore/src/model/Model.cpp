@@ -713,6 +713,63 @@ if (_className::iddObjectType() == typeToCreate) { \
     return m_cachedLifeCycleCostParameters;
   }
 
+  boost::optional<RunPeriod> Model_Impl::runPeriod() const
+  {
+    if (m_cachedRunPeriod){
+      return m_cachedRunPeriod;
+    }
+
+    boost::optional<RunPeriod> result = this->model().getOptionalUniqueModelObject<RunPeriod>();
+    if (result){
+      m_cachedRunPeriod = result;
+      bool connected = QObject::connect(result->getImpl<RunPeriod_Impl>().get(),
+                                        SIGNAL(onRemoveFromWorkspace(Handle)),
+                                        this,
+                                        SLOT(clearCachedRunPeriod()));
+      BOOST_ASSERT(connected);
+    }
+
+    return m_cachedRunPeriod;
+  }
+
+  boost::optional<YearDescription> Model_Impl::yearDescription() const
+  {
+    if (m_cachedYearDescription){
+      return m_cachedYearDescription;
+    }
+
+    boost::optional<YearDescription> result = this->model().getOptionalUniqueModelObject<YearDescription>();
+    if (result){
+      m_cachedYearDescription = result;
+      bool connected = QObject::connect(result->getImpl<YearDescription_Impl>().get(),
+                                        SIGNAL(onRemoveFromWorkspace(Handle)),
+                                        this,
+                                        SLOT(clearCachedYearDescription()));
+      BOOST_ASSERT(connected);
+    }
+
+    return m_cachedYearDescription;
+  }
+
+  boost::optional<WeatherFile> Model_Impl::weatherFile() const
+  {
+    if (m_cachedWeatherFile){
+      return m_cachedWeatherFile;
+    }
+
+    boost::optional<WeatherFile> result = this->model().getOptionalUniqueModelObject<WeatherFile>();
+    if (result){
+      m_cachedWeatherFile = result;
+      bool connected = QObject::connect(result->getImpl<WeatherFile_Impl>().get(),
+                                        SIGNAL(onRemoveFromWorkspace(Handle)),
+                                        this,
+                                        SLOT(clearCachedWeatherFile()));
+      BOOST_ASSERT(connected);
+    }
+
+    return m_cachedWeatherFile;
+  }
+
   Schedule Model_Impl::alwaysOnDiscreteSchedule() const
   {
     std::string alwaysOnName("Always On Discrete");
@@ -1007,6 +1064,20 @@ if (_className::iddObjectType() == typeToCreate) { \
     m_cachedLifeCycleCostParameters.reset();
   }
 
+  void Model_Impl::clearCachedRunPeriod()
+  {
+    m_cachedRunPeriod.reset();
+  }
+
+  void Model_Impl::clearCachedYearDescription()
+  {
+    m_cachedYearDescription.reset();
+  }
+
+  void Model_Impl::clearCachedWeatherFile()
+  {
+    m_cachedWeatherFile.reset();
+  }
 } // detail
 
 Model::Model()
@@ -1081,6 +1152,21 @@ boost::optional<Building> Model::building() const
 boost::optional<LifeCycleCostParameters> Model::lifeCycleCostParameters() const
 {
   return getImpl<detail::Model_Impl>()->lifeCycleCostParameters();
+}
+
+boost::optional<RunPeriod> Model::runPeriod() const
+{
+  return getImpl<detail::Model_Impl>()->runPeriod();
+}
+
+boost::optional<YearDescription> Model::yearDescription() const
+{
+  return getImpl<detail::Model_Impl>()->yearDescription();
+}
+
+boost::optional<WeatherFile> Model::weatherFile() const
+{
+  return getImpl<detail::Model_Impl>()->weatherFile();
 }
 
 Schedule Model::alwaysOnDiscreteSchedule() const

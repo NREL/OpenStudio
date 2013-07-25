@@ -2251,17 +2251,19 @@ namespace openstudio{
 
     openstudio::OptionalTimeSeries SqlFile_Impl::timeSeries(const std::string& envPeriod, const std::string& reportingFrequency, const std::string& timeSeriesName, const std::string& keyValue)
     {
-      LOG(Debug, "Making time series for envPeriod = '" << envPeriod <<
+      std::string upperEnvPeriod = boost::to_upper_copy(envPeriod);
+
+      LOG(Debug, "Making time series for envPeriod = '" << upperEnvPeriod <<
           "', reportingFrequency = '" << reportingFrequency <<
           "', timeSeriesName = '" << timeSeriesName <<
           "', keyValue = '" << keyValue << "'");
 
       openstudio::OptionalTimeSeries ts;
-      DataDictionaryTable::index<envPeriodReportingFrequencyNameKeyValue>::type::iterator iEpRfNKv = m_dataDictionary.get<envPeriodReportingFrequencyNameKeyValue>().find(boost::make_tuple(envPeriod, reportingFrequency, timeSeriesName, keyValue));
+      DataDictionaryTable::index<envPeriodReportingFrequencyNameKeyValue>::type::iterator iEpRfNKv = m_dataDictionary.get<envPeriodReportingFrequencyNameKeyValue>().find(boost::make_tuple(upperEnvPeriod, reportingFrequency, timeSeriesName, keyValue));
 
       if (iEpRfNKv == m_dataDictionary.get<envPeriodReportingFrequencyNameKeyValue>().end()) {
         // not found
-        LOG(Debug,"Tuple: " << envPeriod << ", " << reportingFrequency << ", " << timeSeriesName << ", " << keyValue << " not found in data dictionary.");
+        LOG(Debug,"Tuple: " << upperEnvPeriod << ", " << reportingFrequency << ", " << timeSeriesName << ", " << keyValue << " not found in data dictionary.");
       } else if (!iEpRfNKv->timeSeries.values().empty()) {
         ts = iEpRfNKv->timeSeries;
       } else {// lazy caching

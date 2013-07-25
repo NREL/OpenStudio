@@ -83,7 +83,7 @@ namespace detail {
 
     boost::optional<std::string> meterSpecificInstallLocation() const;
 
-    boost::optional<EndUseCategoryType> meterEndUse() const;
+    boost::optional<EndUseCategoryType> meterEndUseCategory() const;
 
     boost::optional<std::string> meterSpecificEndUse() const;
 
@@ -94,6 +94,8 @@ namespace detail {
     bool isConsumptionUnitConversionFactorDefaulted() const;
 
     boost::optional<std::string> peakDemandUnit() const;
+
+    std::vector<BillingPeriod> billingPeriods() const;
 
     //@}
     /** @name Setters */
@@ -107,9 +109,9 @@ namespace detail {
 
     void resetMeterSpecificInstallLocation();
 
-    bool setMeterEndUse(const EndUseCategoryType& meterEndUse);
+    bool setMeterEndUseCategory(const EndUseCategoryType& meterEndUseCategory);
 
-    void resetMeterEndUse();
+    void resetMeterEndUseCategory();
 
     bool setMeterSpecificEndUse(const std::string& meterSpecificEndUse);
 
@@ -123,19 +125,19 @@ namespace detail {
 
     bool setPeakDemandUnit(const std::string& peakDemandUnit);
 
-    //@}
-    /** @name Other */
-    //@{
-
-    Meter meter() const;
-
-    std::vector<BillingPeriod> billingPeriods() const;
-
     void clearBillingPeriods();
 
     BillingPeriod addBillingPeriod();
 
-    void sortBillingPeriods();
+    //@}
+    /** @name Other */
+    //@{
+
+    Meter consumptionMeter() const;
+
+    boost::optional<OutputVariable> peakDemandVariable() const;
+
+    unsigned numberBillingPeriodsInCalculations() const;
 
     boost::optional<double> CVRMSE() const;
 

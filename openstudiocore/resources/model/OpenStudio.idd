@@ -12253,7 +12253,7 @@ OS:UtilityBill,
   A5, \field Meter Specific Install Location
        \note Specific location the meter associated with this utility bill object is installed.
        \note Empty field indicates no specific location.
-  A6, \field Meter End Use
+  A6, \field Meter End Use Category
        \note Type of end use that meter is associated with.  
        \note Empty field indicates all end uses are included.
        \type choice
