@@ -65,6 +65,14 @@ namespace detail {
     return runmanager::WorkItem(runmanager::JobType::Null);
   }
 
+  QVariant NullMeasure_Impl::toVariant() const {
+    QVariantMap nullMeasureData = Measure_Impl::toVariant().toMap();
+
+    nullMeasureData["measure_type"] = QString("NullMeasure");
+
+    return QVariant(nullMeasureData);
+  }
+
 } // detail
 
 NullMeasure::NullMeasure(bool isSelected)

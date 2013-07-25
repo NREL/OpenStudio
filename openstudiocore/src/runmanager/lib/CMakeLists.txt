@@ -298,12 +298,12 @@ IF(BUILD_TESTING)
     ${runmanager_test_moc_src}
   )
   SET(runmanager_test_depends
-    ${runamanger_depends}
+    ${runmanager_depends}
     openstudio_runmanager_lib_test
     )
 ELSE()
   SET(runmanager_test_depends
-    ${runamanger_depends}
+    ${runmanager_depends}
     )
 ENDIF()
 

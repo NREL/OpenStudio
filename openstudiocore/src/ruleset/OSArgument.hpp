@@ -480,6 +480,13 @@ RULESET_API OSArgument makeChoiceArgumentOfWorkspaceObjects(
 /** Converts a vector of OSArgument to a map of OSArgument using name as the key. \relates OSArgument */
 RULESET_API std::map<std::string,OSArgument> convertOSArgumentVectorToMap(const std::vector<OSArgument>& arguments);
 
+namespace detail {
+
+  /** Non-member function to convert argument into a QJSON-ready QVariant. */
+  QVariant toVariant(const OSArgument& argument);
+
+}
+
 } // ruleset
 } // openstudio
 

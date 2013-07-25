@@ -174,6 +174,12 @@ namespace detail {
     void clearArguments();
 
     //@}
+    /** @name Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    //@}
    protected:
     mutable boost::optional<BCLMeasure> m_bclMeasure; // cache for BCLMeasure.
                                                    // measure actually defined by data below.

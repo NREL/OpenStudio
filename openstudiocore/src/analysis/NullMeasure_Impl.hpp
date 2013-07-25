@@ -54,6 +54,8 @@ namespace detail {
     virtual AnalysisObject clone() const;
 
     //@}
+    /** @name Virtual Methods */
+    //@{
 
     virtual boost::optional<FileReferenceType> inputFileType() const;
 
@@ -61,6 +63,13 @@ namespace detail {
 
     virtual runmanager::WorkItem createWorkItem(const openstudio::path& rubyIncludeDirectory) const;
 
+    //@}
+    /** @name Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    //@}
    protected:
    private:
     REGISTER_LOGGER("openstudio.analysis.NullMeasure");

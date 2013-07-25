@@ -983,5 +983,96 @@ std::map<std::string,OSArgument> convertOSArgumentVectorToMap(const std::vector<
   return argMap;
 }
 
+namespace detail {
+
+  QVariant toVariant(const OSArgument& argument) {
+    QVariantMap argumentData;
+
+    argumentData["uuid"] = argument.uuid().toString();
+    argumentData["version_uuid"] = argument.versionUUID().toString();
+    argumentData["name"] = toQString(argument.name());
+    if (!argument.displayName().empty()) {
+      argumentData["display_name"] = toQString(argument.displayName());
+    }
+    OSArgumentType type = argument.type();
+    argumentData["type"] = toQString(type.valueName());
+    argumentData["required"] = argument.required();
+    if (argument.hasValue()) {
+      if (type == OSArgumentType::Quantity) {
+        Quantity value = argument.valueAsQuantity();
+        argumentData["value"] = value.value();
+        argumentData["value_units"] = toQString(value.units().standardString());
+      }
+      else {
+        // use QVariant directly
+        argumentData["value"] = argument.valueAsQVariant();
+      }
+    }
+    if (argument.hasDefaultValue()) {
+      if (type == OSArgumentType::Quantity) {
+        Quantity defaultValue = argument.defaultValueAsQuantity();
+        argumentData["default_value"] = defaultValue.value();
+        argumentData["default_value_units"] = toQString(defaultValue.units().standardString());
+      }
+      else {
+        // use QVariant directly
+        argumentData["default_value"] = argument.defaultValueAsQVariant();
+      }
+    }
+    if (argument.hasDomain()) {
+      argumentData["domain_type"] = toQString(argument.domainType().valueName());
+      QVariantList domainList;
+      int index(0);
+      Q_FOREACH(const QVariant& dval,argument.domainAsQVariant()) {
+        QVariantMap domainValueMap;
+        domainValueMap["domain_value_index"] = index;
+        if (type == OSArgumentType::Quantity) {
+          Quantity q = dval.value<openstudio::Quantity>();
+          domainValueMap["value"] = q.value();
+          domainValueMap["units"] = toQString(q.units().standardString());
+        }
+        else {
+          domainValueMap["value"] = dval;
+        }
+        domainList.push_back(domainValueMap);
+        ++index;
+      }
+      argumentData["domain"] = domainList;
+    }
+    if (type == OSArgumentType::Choice) {
+      QVariantList choicesList;
+      int index(0);
+      Q_FOREACH(const std::string& choice,argument.choiceValues()) {
+        QVariantMap choiceMap;
+        choiceMap["choice_index"] = index;
+        choiceMap["value"] = toQString(choice);
+        choicesList.push_back(choiceMap);
+        ++index;
+      }
+      argumentData["choices"] = QVariant(choicesList);
+
+      if (!argument.choiceValueDisplayNames().empty()) {
+        QVariantList choiceDisplayNamesList;
+        index = 0;
+        Q_FOREACH(const std::string& choiceDisplayName,argument.choiceValueDisplayNames()) {
+          QVariantMap choiceDisplayNameMap;
+          choiceDisplayNameMap["choice_index"] = index;
+          choiceDisplayNameMap["display_name"] = toQString(choiceDisplayName);
+          choiceDisplayNamesList.push_back(choiceDisplayNameMap);
+          ++index;
+        }
+        argumentData["choice_display_names"] = QVariant(choiceDisplayNamesList);
+      }
+    }
+    if (type == OSArgumentType::Path) {
+      argumentData["is_read"] = argument.isRead();
+      argumentData["extension"] = toQString(argument.extension());
+    }
+
+    return QVariant(argumentData);
+  }
+
+} // detail
+
 } // ruleset
 } // openstudio

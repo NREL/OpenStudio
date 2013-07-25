@@ -21,10 +21,12 @@
 
 #include <analysis/Analysis.hpp>
 #include <analysis/DataPoint.hpp>
-#include <analysis/Problem.hpp>
+#include <analysis/LinearFunction.hpp>
 #include <analysis/MeasureGroup.hpp>
 #include <analysis/NormalDistribution.hpp>
 #include <analysis/NullMeasure.hpp>
+#include <analysis/OutputAttributeVariable.hpp>
+#include <analysis/Problem.hpp>
 #include <analysis/RubyMeasure.hpp>
 #include <analysis/RubyMeasure_Impl.hpp>
 #include <analysis/RubyContinuousVariable.hpp>
@@ -124,6 +126,11 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1() {
   problem.push(WorkItem(JobType::EnergyPlusPreProcess));
   problem.push(WorkItem(JobType::EnergyPlus));
   problem.push(WorkItem(JobType::OpenStudioPostProcess));
+
+  // Response
+  LinearFunction response("Energy Use Intensity",
+                          VariableVector(1u,OutputAttributeVariable("EUI","site.eui")));
+  problem.pushResponse(response);
 
   Analysis analysis("My Analysis",problem,FileReferenceType::OSM);
 

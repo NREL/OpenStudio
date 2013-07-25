@@ -114,23 +114,20 @@
 // base class
 SWIG_ANALYSISOBJECT(AnalysisObject);
 
-// discrete perturbations
-SWIG_ANALYSISOBJECT(DiscretePerturbation);
-
+// measures
+SWIG_ANALYSISOBJECT(Measure);
 #ifdef SWIGCSHARP
-%template(OptionalDiscretePerturbationVector) std::vector<boost::optional<openstudio::analysis::DiscretePerturbation> >;
+%template(OptionalMeasureVector) std::vector<boost::optional<openstudio::analysis::Measure> >;
 #endif
-
-SWIG_ANALYSISOBJECT(NullPerturbation);
-SWIG_ANALYSISOBJECT(RubyPerturbation);
-SWIG_ANALYSISOBJECT(ModelRulesetPerturbation);
+SWIG_ANALYSISOBJECT(NullMeasure);
+SWIG_ANALYSISOBJECT(RubyMeasure);
 
 // variables
 SWIG_ANALYSISOBJECT(Variable);
 SWIG_ANALYSISOBJECT(InputVariable);
 SWIG_ANALYSISOBJECT(DiscreteVariable);
+SWIG_ANALYSISOBJECT(MeasureGroup);
 SWIG_ANALYSISOBJECT(ContinuousVariable);
-SWIG_ANALYSISOBJECT(ModelRulesetContinuousVariable);
 SWIG_ANALYSISOBJECT(RubyContinuousVariable);
 
 %rename(AnalysisOutputVariable) openstudio::analysis::OutputVariable;

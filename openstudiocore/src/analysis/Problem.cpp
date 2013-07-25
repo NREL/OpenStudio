@@ -1720,6 +1720,7 @@ namespace detail {
       QVariantMap stepMap = step.toVariant().toMap();
       stepMap["workflow_index"] = QVariant(index);
       workflowList.push_back(stepMap);
+      ++index;
     }
     problemData["workflow"] = QVariant(workflowList);
 

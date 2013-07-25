@@ -57,6 +57,14 @@ namespace detail {
     onChange(AnalysisObject_Impl::Benign);
   }
 
+  QVariant Measure_Impl::toVariant() const {
+    QVariantMap measureData = AnalysisObject_Impl::toVariant().toMap();
+
+    measureData["is_selected"] = isSelected();
+
+    return QVariant(measureData);
+  }
+
 } // detail
 
 bool Measure::isSelected() const {

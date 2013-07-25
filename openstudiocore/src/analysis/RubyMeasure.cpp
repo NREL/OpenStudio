@@ -450,6 +450,37 @@ namespace detail {
     onChange(AnalysisObject_Impl::InvalidatesResults);
   }
 
+  QVariant RubyMeasure_Impl::toVariant() const {
+    QVariantMap rubyMeasureData = Measure_Impl::toVariant().toMap();
+
+    rubyMeasureData["measure_type"] = QString("RubyMeasure");
+    if (m_bclMeasureDirectory) {
+      rubyMeasureData["bcl_measure_directory"] = toQString(m_bclMeasureDirectory.get());
+      rubyMeasureData["bcl_measure_uuid"] = m_bclMeasureUUID.get().toString();
+      rubyMeasureData["bcl_measure_version_uuid"] = m_bclMeasureVersionUUID.get().toString();
+    }
+    else {
+      Q_ASSERT(m_perturbationScript);
+      rubyMeasureData["perturbation_script"] = openstudio::detail::toVariant(m_perturbationScript.get());
+    }
+    rubyMeasureData["input_file_type"] = toQString(m_inputFileType.valueName());
+    rubyMeasureData["output_file_type"] = toQString(m_outputFileType.valueName());
+    rubyMeasureData["is_user_script"] = m_isUserScript;
+    if (!arguments().empty()) {
+      QVariantList argumentsList;
+      int index(0);
+      Q_FOREACH(const OSArgument& arg,arguments()) {
+        QVariantMap argMap = ruleset::detail::toVariant(arg).toMap();
+        argMap["argument_index"] = index;
+        argumentsList.push_back(QVariant(argMap));
+        ++index;
+      }
+      rubyMeasureData["arguments"] = QVariant(argumentsList);
+    }
+
+    return QVariant(rubyMeasureData);
+  }
+
   bool RubyMeasure_Impl::fileTypesAreCompatible(
       const FileReferenceType& proposedInputFileType,
       const FileReferenceType& proposedOutputFileType) const

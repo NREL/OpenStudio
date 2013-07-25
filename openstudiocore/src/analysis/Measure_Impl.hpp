@@ -85,6 +85,12 @@ namespace detail {
         const openstudio::path& rubyIncludeDirectory) const = 0;
 
     //@}
+    /** @name Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    //@}
    protected:
     bool m_isSelected;
    private:
