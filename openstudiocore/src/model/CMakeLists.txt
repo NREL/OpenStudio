@@ -1055,6 +1055,7 @@ SET( ${target_name}_test_src
   test/AirLoopHVAC_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeReheat_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
+  test/AirTerminalSingleDuctVAVNoReheat_Gtest.cpp
   test/Alpha1_GTest.cpp
   test/AvailabilityManagerAssignmentList_GTest.cpp
   test/AvailabilityManagerNightCycle_GTest.cpp
@@ -1093,6 +1094,7 @@ SET( ${target_name}_test_src
   test/DistrictCooling_GTest.cpp
   test/DistrictHeating_GTest.cpp
   test/ElectricEquipment_GTest.cpp
+  test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
   test/Facility_GTest.cpp
   test/FanVariableVolume_GTest.cpp
   test/FanOnOff_GTest.cpp
@@ -1184,11 +1186,6 @@ SET( ${target_name}_test_src
   test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp    
   test/ZoneHVACUnitHeater_GTest.cpp
-<<<<<<< HEAD
-  test/AirTerminalSingleDuctVAVNoReheat_Gtest.cpp
-=======
-  test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
->>>>>>> 51094457_EvapFluidCoolerSglSpd
 )
 
 SET (${target_name}_test_depends

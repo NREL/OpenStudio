@@ -45,18 +45,12 @@
     <file>images/duplicate_off.png</file>
     <file>images/duplicate_over.png</file>
     <file>images/duplicate_press.png</file>
-<<<<<<< HEAD
     <file>images/dxcoolingcoil_singlespeed.png</file>
     <file>images/dxcoolingcoil_2speed.png</file>
     <file>images/electric_furnace.png</file>
+    <file>images/evap_fluid_cooler.png</file>
     <file>images/fan_constant.png</file>
     <file>images/fan_on_off.png</file>   
-=======
-    <file>images/DXCoolingCoil.png</file>
-    <file>images/evap_fluid_cooler.png</file>
-    <file>images/fan.png</file>
-    <file>images/fan_onoff.png</file>   
->>>>>>> [#51094457] Updated to functional compile of build
     <file>images/fast_forward.png</file>
     <file>images/fast_reverse.png</file>
     <file>images/fire.png</file>
@@ -195,19 +189,8 @@
     <file>openstudiolib.qss</file>
     <file>images/heat_coil-uht.png</file>
     <file>images/coil_ht_dx_singlespeed.png</file>
-<<<<<<< HEAD
     <file>images/mini_icons/baseboard_electric.png</file>
     <file>images/mini_icons/baseboard_water.png</file>
-    <file>images/AirTerminalSingleDuctVAVNoReheat.png</file>
-=======
-
-<<<<<<< HEAD
-    <file>images/mini_icons/baseboard_electric.png</file>
-    <file>images/mini_icons/baseboard_water.png</file>
-    <file>images/mini_icons/Evap_Fluid_Cooler.png</file>
-=======
->>>>>>> [#51094457] Updated to functional compile of build
->>>>>>> 51094457_EvapFluidCoolerSglSpd
     <file>images/mini_icons/boiler.png</file>
     <file>images/mini_icons/boiler_steam.png</file>
     <file>images/mini_icons/building.png</file>
@@ -233,11 +216,8 @@
     <file>images/mini_icons/districtheating.png</file>    
     <file>images/mini_icons/electric_equipment.png</file>
     <file>images/mini_icons/electric_equipment_definition.png</file>
-<<<<<<< HEAD
     <file>images/mini_icons/electric_furnace_mini.png</file>
-=======
     <file>images/mini_icons/evap_fluid_cooler.png</file>
->>>>>>> [#51094457] Updated to functional compile of build
     <file>images/mini_icons/facility.png</file>
     <file>images/mini_icons/fan_constant.png</file>
     <file>images/mini_icons/fan_on_off_mini.png</file>   

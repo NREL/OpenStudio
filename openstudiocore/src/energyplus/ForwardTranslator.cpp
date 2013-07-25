@@ -1554,7 +1554,6 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_DistrictCooling);
   result.push_back(IddObjectType::OS_DistrictHeating); 
   result.push_back(IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial);
-  result.push_back(IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed);
   result.push_back(IddObjectType::OS_Fan_ConstantVolume);
   result.push_back(IddObjectType::OS_Fan_OnOff);
   result.push_back(IddObjectType::OS_Node);
@@ -1563,10 +1562,6 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ThermostatSetpoint_DualSetpoint);
   result.push_back(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water);
   result.push_back(IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem);
-<<<<<<< HEAD
-  result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_VAV_NoReheat);
-=======
->>>>>>> 51094457_EvapFluidCoolerSglSpd
   
   
   // put these down here so they have a chance to be translated with their "parent"
