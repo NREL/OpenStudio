@@ -38,7 +38,7 @@ namespace openstudio{
     /// constructor from start date, interval length, and values
     /// first reporting interval ends at Date + Time(0) + intervalLength
     TimeSeries_Impl::TimeSeries_Impl(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units)
-      : m_daysFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0)
+      : m_daysFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       // length of interval in days
       const double daysPerInterval = intervalLength.totalDays();
@@ -50,12 +50,23 @@ namespace openstudio{
       for (unsigned i = 0; i < values.size(); ++i){
         m_daysFromFirstReport(i) = i*daysPerInterval;
       }
+
+      // check for wrap around
+      boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
+      if (!calendarYear){
+        double duration = maximum(m_daysFromFirstReport);
+        DateTime lastDateTime = m_firstReportDateTime.date() + duration;
+        Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
+        if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
+          m_wrapAround = true;
+        }
+      }
     }
 
     /// constructor from start date and time, interval length, and values
     /// first reporting interval ends at startDateTime
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& startDateTime, const Time& intervalLength, const Vector& values, const std::string& units)
-      : m_daysFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0)
+      : m_daysFromFirstReport(values.size()), m_values(values), m_units(units), m_intervalLength(intervalLength), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       // length of interval in days
       const double daysPerInterval = intervalLength.totalDays();
@@ -64,32 +75,89 @@ namespace openstudio{
       for (unsigned i = 0; i < values.size(); ++i){
         m_daysFromFirstReport(i) = i*daysPerInterval;
       }
+
+      // check for wrap around
+      boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
+      if (!calendarYear){
+        double duration = maximum(m_daysFromFirstReport);
+        DateTime lastDateTime = m_firstReportDateTime.date() + duration;
+        Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
+        if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
+          m_wrapAround = true;
+        }
+      }
     }
 
 
     /// constructor from first report date and time, days from first report vector, values, and units
     TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const Vector& daysFromFirstReport, const Vector& values, const std::string& units)
-      : m_firstReportDateTime(firstReportDateTime), m_daysFromFirstReport(daysFromFirstReport), m_values(values), m_units(units), m_outOfRangeValue(0.0)
+      : m_firstReportDateTime(firstReportDateTime), m_daysFromFirstReport(daysFromFirstReport), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
+      // check for wrap around
+      boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
+      if (!calendarYear){
+        double duration = maximum(m_daysFromFirstReport);
+        DateTime lastDateTime = m_firstReportDateTime.date() + duration;
+        Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
+        if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
+          m_wrapAround = true;
+        }
+      }
     }
 
-    TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& daysFromFirstReport, const std::vector<double>& values, const std::string& units) :m_firstReportDateTime(firstReportDateTime), m_daysFromFirstReport(daysFromFirstReport.size()), m_values(values.size()), m_units(units), m_outOfRangeValue(0.0)
+    TimeSeries_Impl::TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& daysFromFirstReport, const std::vector<double>& values, const std::string& units) 
+      : m_firstReportDateTime(firstReportDateTime), m_daysFromFirstReport(daysFromFirstReport.size()), m_values(values.size()), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       //        for (unsigned i = 0; i < values.size(); i++) m_values(i) = values[i];
       //        for (unsigned i = 0; i < daysFromFirstReport.size(); i++) m_daysFromFirstReport(i) = daysFromFirstReport[i];
       std::copy(values.begin(), values.end(), m_values.begin());
       std::copy(daysFromFirstReport.begin(), daysFromFirstReport.end(), m_daysFromFirstReport.begin());
+    
+      // check for wrap around
+      boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
+      if (!calendarYear){
+        double duration = maximum(m_daysFromFirstReport);
+        DateTime lastDateTime = m_firstReportDateTime.date() + duration;
+        Date lastDate(lastDateTime.date().monthOfYear(), lastDateTime.date().dayOfMonth());
+        if ((duration > 366) || (lastDate < m_firstReportDateTime.date())){
+          m_wrapAround = true;
+        }
+      }
     }
-
-
 
     /// constructor from date times, values, and units
     TimeSeries_Impl::TimeSeries_Impl(const DateTimeVector& dateTimes, const Vector& values, const std::string& units)
-      : m_daysFromFirstReport(dateTimes.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0)
+      : m_daysFromFirstReport(dateTimes.size()), m_values(values), m_units(units), m_outOfRangeValue(0.0), m_wrapAround(false)
     {
       m_firstReportDateTime = dateTimes.front();
-      for (unsigned i = 0; i < dateTimes.size(); ++i){
-        m_daysFromFirstReport(i) = (dateTimes[i]-m_firstReportDateTime).totalDays();
+      unsigned numDateTimes = dateTimes.size();
+      boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
+      
+      for (unsigned i = 0; i < numDateTimes; ++i){
+      
+        DateTime dateTime = dateTimes[i];
+        if (!calendarYear){
+          dateTime = DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth()), dateTime.time());
+        }
+
+        // check for wrap around
+        if (!calendarYear && (dateTime < m_firstReportDateTime)){
+          
+          Date date = dateTime.date();
+          Time time = dateTime.time();
+          DateTime wrappedDateTime = DateTime(Date(date.monthOfYear(), date.dayOfMonth(), date.year() + 1), time);
+
+          if (wrappedDateTime < m_firstReportDateTime){
+            // wrapped by more than one year, use original value
+            m_daysFromFirstReport(i) = (dateTime-m_firstReportDateTime).totalDays();
+          }else{
+            // wrapped by less than one year, use wrapped value
+            m_wrapAround = true;
+            m_daysFromFirstReport(i) = (wrappedDateTime-m_firstReportDateTime).totalDays();
+          }
+        }else{
+          m_daysFromFirstReport(i) = (dateTime-m_firstReportDateTime).totalDays();
+        }
       }
     }
 
@@ -206,6 +274,24 @@ namespace openstudio{
     /// get value at date and time
     double TimeSeries_Impl::value(const DateTime& dateTime) const
     {
+      // check for wrap around
+      if (m_wrapAround){
+        if (dateTime < m_firstReportDateTime){
+          
+          Date date = dateTime.date();
+          Time time = dateTime.time();
+          DateTime wrappedDateTime = DateTime(Date(date.monthOfYear(), date.dayOfMonth(), date.year() + 1), time);
+
+          if (wrappedDateTime < m_firstReportDateTime){
+            // wrapped by more than one year, use original value
+            return value(dateTime-m_firstReportDateTime);
+          }else{
+            // wrapped by less than one year, use wrapped value
+            return value(wrappedDateTime-m_firstReportDateTime);
+          }
+        }
+      }
+
       //      return value(dateTime-m_dateTimes.front());
       return value(dateTime-m_firstReportDateTime);
     }

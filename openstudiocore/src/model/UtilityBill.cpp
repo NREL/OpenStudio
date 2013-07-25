@@ -21,8 +21,6 @@
 #include <model/UtilityBill_Impl.hpp>
 #include <model/Meter.hpp>
 #include <model/Meter_Impl.hpp>
-#include <model/OutputVariable.hpp>
-#include <model/OutputVariable_Impl.hpp>
 #include <model/RunPeriod.hpp>
 #include <model/RunPeriod_Impl.hpp>
 #include <model/YearDescription.hpp>
@@ -611,37 +609,51 @@ namespace detail {
     return result.get();
   }
 
-  boost::optional<OutputVariable> UtilityBill_Impl::peakDemandVariable() const{
+  boost::optional<Meter> UtilityBill_Impl::peakDemandMeter() const{
     FuelType fuelType = this->fuelType();
     InstallLocationType meterInstallLocation = this->meterInstallLocation();
     boost::optional<std::string> meterSpecificInstallLocation = this->meterSpecificInstallLocation();
     boost::optional<EndUseCategoryType> meterEndUseCategory = this->meterEndUseCategory();
     boost::optional<EndUseType> meterEndUse;
+    if (meterEndUseCategory){
+      meterEndUse = EndUseType(meterEndUseCategory->valueName());
+    }
+    boost::optional<std::string> meterSpecificEndUse = this->meterSpecificEndUse();
 
     std::string variableName;
-    if (fuelType == FuelType::Electricity){
-      if (meterInstallLocation == InstallLocationType::Facility){
-        variableName = "Facility Total Electric Demand Power";
-      }else if (meterInstallLocation == InstallLocationType::Building){
-        variableName = "Facility Total Building Electric Demand Power";
-      }
-    }
-
-    if (variableName.empty()){
+    if (fuelType != FuelType::Electricity){
       return boost::none;
     }
 
-    BOOST_FOREACH(const OutputVariable& variable, this->model().getModelObjects<OutputVariable>()){
-      if (istringEqual(variableName, variable.name().get()) &&
-          istringEqual("Daily", variable.reportingFrequency())){
-        return variable;
+    std::string meterName = Meter::getName(meterSpecificEndUse,
+                                           meterEndUse,
+                                           fuelType,
+                                           meterInstallLocation,
+                                           meterSpecificInstallLocation);
+
+    boost::optional<Meter> result;
+    BOOST_FOREACH(const Meter& meter, this->model().getModelObjects<Meter>()){
+      if ((istringEqual(meter.name(), meterName)) &&
+          (istringEqual("Zone", meter.reportingFrequency()))){
+        return meter;
       }
     }
 
-    OutputVariable variable(variableName, this->model());
-    variable.setReportingFrequency("Daily");
+    result = Meter(this->model());
+    result->setReportingFrequency("Zone");
+    result->setFuelType(fuelType);
+    result->setInstallLocationType(meterInstallLocation);
+    if (meterSpecificInstallLocation){
+      result->setSpecificInstallLocation(*meterSpecificInstallLocation);
+    }
+    if (meterEndUse){
+      result->setEndUseType(*meterEndUse);
+    }
+    if (meterSpecificEndUse){
+      result->setSpecificEndUse(*meterSpecificEndUse);
+    }
 
-    return variable;
+    return result;
   }
 
   std::vector<BillingPeriod> UtilityBill_Impl::billingPeriods() const
@@ -1051,6 +1063,7 @@ Vector BillingPeriod::modelConsumptionValues() const
 
       double value = timeseries->value(dateTime);
       if (value == outOfRangeValue){
+        LOG(Debug, "Could not find value of timeseries at dateTime " << dateTime);
         return Vector();
       }else{
         result[i] = value;
@@ -1064,50 +1077,48 @@ Vector BillingPeriod::modelConsumptionValues() const
   return result;
 }
 
-Vector BillingPeriod::modelPeakDemandValues() const
+boost::optional<double> BillingPeriod::modelConsumption() const
+{
+  boost::optional<double> result;
+  Vector modelConsumptionValues = this->modelConsumptionValues();
+  if (!modelConsumptionValues.empty()){
+    result = sum(modelConsumptionValues);
+  }
+  return result;
+}
+
+boost::optional<double> BillingPeriod::modelPeakDemand() const
 {
   model::Model model = getImpl<detail::UtilityBill_Impl>()->model();
 
   boost::optional<RunPeriod> runPeriod = model.runPeriod();
   if (!runPeriod){
-    return Vector();
+    return boost::none;
   }
 
   boost::optional<model::YearDescription> yd = model.yearDescription();
   if (!yd){
-    return Vector();
+    return boost::none;
   }
 
   boost::optional<int> calendarYear = yd->calendarYear();
   if (!calendarYear){
-    return Vector();
+    return boost::none;
   }
 
-  boost::optional<OutputVariable> variable = getImpl<detail::UtilityBill_Impl>()->peakDemandVariable();
-  if (!variable){
-    return Vector();
+  boost::optional<Meter> meter = getImpl<detail::UtilityBill_Impl>()->peakDemandMeter();
+  if (!meter){
+    return boost::none;
   }
 
-  boost::optional<ModelObject> modelObject;
-  InstallLocationType meterInstallLocation = getImpl<detail::UtilityBill_Impl>()->meterInstallLocation();
-  if (meterInstallLocation == InstallLocationType::Facility){
-    modelObject = model.getOptionalUniqueModelObject<Facility>();
-  }else if(meterInstallLocation == InstallLocationType::Building){
-    modelObject = model.building();
-  }
-
-  if (!modelObject){
-    return Vector();
-  }
-
-  Vector result;
+  boost::optional<double> result;
 
   Date runPeriodStartDate = Date(runPeriod->getBeginMonth(), runPeriod->getBeginDayOfMonth(), *calendarYear);
   Date runPeriodEndDate = Date(runPeriod->getEndMonth(), runPeriod->getEndDayOfMonth(), *calendarYear);
 
-  boost::optional<openstudio::TimeSeries> timeseries = modelObject->getData(*variable, runPeriod->name().get());
+  boost::optional<openstudio::TimeSeries> timeseries = meter->getData(runPeriod->name().get());
   if (timeseries){
-    result = Vector(this->numberOfDays());
+    result = std::numeric_limits<double>::min();
 
     double outOfRangeValue = std::numeric_limits<double>::min();
     timeseries->setOutOfRangeValue(outOfRangeValue);
@@ -1123,9 +1134,9 @@ Vector BillingPeriod::modelPeakDemandValues() const
 
       double value = timeseries->value(dateTime);
       if (value == outOfRangeValue){
-        return Vector();
+        LOG(Debug, "Could not find value of timeseries at dateTime " << dateTime);
       }else{
-        result[i] = value;
+        result = std::min(value, *result);
       }
 
       ++i;
@@ -1136,39 +1147,9 @@ Vector BillingPeriod::modelPeakDemandValues() const
   return result;
 }
 
-Vector BillingPeriod::modelTotalCostValues() const
-{
-  return Vector();
-}
-
-boost::optional<double> BillingPeriod::modelConsumption() const
-{
-  boost::optional<double> result;
-  Vector modelConsumptionValues = this->modelConsumptionValues();
-  if (!modelConsumptionValues.empty()){
-    result = sum(modelConsumptionValues);
-  }
-  return result;
-}
-
-boost::optional<double> BillingPeriod::modelPeakDemand() const
-{
-  boost::optional<double> result;
-  Vector modelPeakDemandValues = this->modelPeakDemandValues();
-  if (!modelPeakDemandValues.empty()){
-    result = sum(modelPeakDemandValues);
-  }
-  return result;
-}
-
 boost::optional<double> BillingPeriod::modelTotalCost() const
 {
-  boost::optional<double> result;
-  Vector modelTotalCostValues = this->modelTotalCostValues();
-  if (!modelTotalCostValues.empty()){
-    result = sum(modelTotalCostValues);
-  }
-  return result;
+  return boost::none;
 }
 
 BillingPeriod::BillingPeriod(boost::shared_ptr<detail::UtilityBill_Impl> impl,unsigned index)
@@ -1304,8 +1285,8 @@ Meter UtilityBill::consumptionMeter() const{
   return getImpl<detail::UtilityBill_Impl>()->consumptionMeter();
 }
 
-boost::optional<OutputVariable> UtilityBill::peakDemandVariable() const{
-  return getImpl<detail::UtilityBill_Impl>()->peakDemandVariable();
+boost::optional<Meter> UtilityBill::peakDemandMeter() const{
+  return getImpl<detail::UtilityBill_Impl>()->peakDemandMeter();
 }
 
 std::vector<BillingPeriod> UtilityBill::billingPeriods() const{

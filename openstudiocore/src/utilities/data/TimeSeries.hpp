@@ -129,6 +129,9 @@ namespace openstudio{
 
         // value used for out of range data
         double m_outOfRangeValue; 
+
+        // true if the time series should support wrap around dates, e.g. 4/11-4/10 without specific year
+        bool m_wrapAround;
     };
   } // detail
 

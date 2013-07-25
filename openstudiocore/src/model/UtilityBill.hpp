@@ -115,19 +115,13 @@ class MODEL_API BillingPeriod : public ModelExtensibleGroup {
   /** Returns the consumption for each day in billing period from simulation in model units. */
   Vector modelConsumptionValues() const;
 
-  /** Returns the consumption for each day in billing period from simulation in model units. */
-  Vector modelPeakDemandValues() const;
-
-  /** Returns the consumption for each day in billing period from simulation in model units. */
-  Vector modelTotalCostValues() const;
-
   /** Returns the sum of modelConsumptionValues if it is not empty. */
   boost::optional<double> modelConsumption() const;
 
-  /** Returns the sum of modelPeakDemandValues if it is not empty. */
+  /** Returns the maximum peak over the billing period if available. */
   boost::optional<double> modelPeakDemand() const;
 
-  /** Returns the sum of modelTotalCostValues if it is not empty. */
+  /** Returns total energy cost over the billing period if available. */
   boost::optional<double> modelTotalCost() const;
 
   //@}
@@ -234,8 +228,8 @@ class MODEL_API UtilityBill : public ModelObject {
   /** Gets the meter associated with consumption for this UtilityBill, creates it if it does not exist.*/
   Meter consumptionMeter() const;
 
-  /** Gets the variable associated with peak demand for this UtilityBill, creates it if it does not exist.*/
-  boost::optional<OutputVariable> peakDemandVariable() const;
+  /** Gets the meter associated with peak demand for this UtilityBill, creates it if it does not exist.*/
+  boost::optional<Meter> peakDemandMeter() const;
 
   /** Number of billing periods used to compute CVRMSE or NMBE.*/
   unsigned numberBillingPeriodsInCalculations() const;

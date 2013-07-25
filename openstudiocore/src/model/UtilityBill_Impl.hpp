@@ -135,7 +135,7 @@ namespace detail {
 
     Meter consumptionMeter() const;
 
-    boost::optional<OutputVariable> peakDemandVariable() const;
+    boost::optional<Meter> peakDemandMeter() const;
 
     unsigned numberBillingPeriodsInCalculations() const;
 

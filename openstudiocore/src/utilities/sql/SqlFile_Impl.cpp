@@ -2192,6 +2192,10 @@ namespace openstudio{
         }
         // must finalize to prevent memory leaks
         sqlite3_finalize(sqlStmtPtr);
+
+        // remove year before passing to TimeSeries
+        startDate = DateTime(Date(startDate.date().monthOfYear(), startDate.date().dayOfMonth()), startDate.time());
+        
         ts = openstudio::TimeSeries(startDate, stdDaysFromFirstReport, stdValues, units);
       }
       return ts;
