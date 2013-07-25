@@ -1355,6 +1355,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneHVACUnitHeater(mo);
       break;
     }
+	
+  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_VAV_NoReheat :
+    {
+      model::AirTerminalSingleDuctVAVNoReheat mo = modelObject.cast<AirTerminalSingleDuctVAVNoReheat>();
+      retVal = translateAirTerminalSingleDuctVAVNoReheat(mo);
+      break;
+    }
   //If no case statement log a warning
   default:
     {
@@ -1548,7 +1555,9 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ThermostatSetpoint_DualSetpoint);
   result.push_back(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water);
   result.push_back(IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem);
-
+  result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_VAV_NoReheat);
+  
+  
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);
 

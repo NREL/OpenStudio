@@ -61,6 +61,9 @@ SET( ${target_name}_src
   AirToAirComponent.hpp
   AirToAirComponent_Impl.hpp
   AirToAirComponent.cpp
+  AirTerminalSingleDuctVAVNoReheat.hpp
+  AirTerminalSingleDuctVAVNoReheat_Impl.hpp
+  AirTerminalSingleDuctVAVNoReheat.cpp
   AirWallMaterial.hpp
   AirWallMaterial_Impl.hpp
   AirWallMaterial.cpp
@@ -783,6 +786,7 @@ SET( ${target_name}_moc
   AirTerminalSingleDuctUncontrolled_Impl.hpp
   AirTerminalSingleDuctVAVReheat_Impl.hpp
   AirToAirComponent_Impl.hpp
+  AirTerminalSingleDuctVAVNoReheat_Impl.hpp
   AirWallMaterial_Impl.hpp
   AvailabilityManagerAssignmentList_Impl.hpp
   AvailabilityManagerNightCycle_Impl.hpp
@@ -1174,6 +1178,7 @@ SET( ${target_name}_test_src
   test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp    
   test/ZoneHVACUnitHeater_GTest.cpp
+  test/AirTerminalSingleDuctVAVNoReheat_Gtest.cpp
 )
 
 SET (${target_name}_test_depends

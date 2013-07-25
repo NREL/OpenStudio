@@ -339,6 +339,12 @@
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="Design Specification Outdoor Air Object Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_SingleDuct_VAV_NoReheat">
+    <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Design Specification Outdoor Air Object Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_AirLoopHVAC">
     <rule IddField="Controller List Name" Access="HIDDEN"/>
     <rule IddField="Availability Manager List Name" Access="HIDDEN"/>
@@ -439,4 +445,10 @@
     <rule IddField="Exhaust Air Inlet Node" Access="HIDDEN"/>
     <rule IddField="Exhaust Air Outlet Node" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_AirTerminalSingleDuctVAVNoReheat">
+    <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Design Specification Outdoor Air Object Name" Access="HIDDEN"/>
+  </POLICY>	
 </ROOT>

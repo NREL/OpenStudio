@@ -30,6 +30,7 @@
 #include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
 #include <model/AirTerminalSingleDuctUncontrolled.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat.hpp>
+#include <model/AirTerminalSingleDuctVAVNoReheat.hpp>
 #include <model/AirWallMaterial.hpp>
 #include <model/AvailabilityManagerAssignmentList.hpp>
 #include <model/AvailabilityManagerNightCycle.hpp>
@@ -242,6 +243,7 @@
 #include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
 #include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
+#include <model/AirTerminalSingleDuctVAVNoReheat_Impl.hpp>
 #include <model/AirWallMaterial_Impl.hpp>
 #include <model/AvailabilityManagerAssignmentList_Impl.hpp>
 #include <model/AvailabilityManagerNightCycle_Impl.hpp>

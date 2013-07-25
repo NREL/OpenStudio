@@ -399,13 +399,20 @@ OS:AirTerminal:SingleDuct:Uncontrolled,
   ,                                       ! Zone Supply Air Node Name
   AutoSize;                               ! Maximum Air Flow Rate {m3/s}
 
+<<<<<<< HEAD
 OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
   {36193791-ae10-4f59-90dc-2bc06cf598d2}, !- Handle
   AirTerminal CAV With Electric Reheat,   !- Name
+=======
+OS:AirTerminal:SingleDuct:VAV:NoReheat,
+  {bede16a8-c558-4028-9110-70994233f6f9}, !- Handle
+  Air Terminal VAV with No Reheat,        !- Name
+>>>>>>> 51094417_SnglZnVAVNoReheat
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Outlet Node Name
   ,                                       !- Air Inlet Node Name
   autosize,                               !- Maximum Air Flow Rate {m3/s}
+<<<<<<< HEAD
   {49bb683c-774e-43f1-b346-cecc2a17abcf}, !- Reheat Coil Name
   autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
   0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
@@ -477,6 +484,13 @@ OS:Coil:Heating:Water,
   ,                                       !- Rated Outlet Water Temperature {C}
   ,                                       !- Rated Outlet Air Temperature {C}
   ;                                       !- Rated Ratio for Air and Water Convection
+=======
+  Constant,                               !- Zone Minimum Air Flow Input Method
+  0.3,                                    !- Constant Minimum Air Flow Fraction
+  ,                                       !- Fixed Minimum Air Flow Rate {m3/s}
+  ,                                       !- Minimum Air Flow Fraction Schedule Name
+  ;                                       !- Design Specification Outdoor Air Object Name
+>>>>>>> 51094417_SnglZnVAVNoReheat
 
 OS:AirTerminal:SingleDuct:VAV:Reheat,
   {293eff65-3e25-4c91-97bc-a0d600b4e09b}, ! Handle

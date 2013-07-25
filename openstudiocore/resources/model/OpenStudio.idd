@@ -5958,6 +5958,7 @@ OS:AirTerminal:SingleDuct:Uncontrolled,
        \autosizable
        \units m3/s
        \minimum 0
+<<<<<<< HEAD
 
 OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
        \min-fields 5
@@ -5981,10 +5982,36 @@ OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
        \type object-list
        \object-list ConnectionNames
   N1, \field Maximum Air Flow Rate
+=======
+	   
+OS:AirTerminal:SingleDuct:VAV:NoReheat,
+       \min-fields 1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \type alpha
+       \required-field
+       \reference ConnectionObject
+  A3,  \field Availability Schedule Name
+       \type object-list
+       \required-field
+       \object-list ScheduleNames
+  A4,  \field Air Outlet Node Name
+       \note the inlet node to the terminal unit and the damper
+       \type object-list
+       \object-list ConnectionNames
+  A5,  \field Air Inlet Node Name
+       \note the inlet node to the terminal unit and the damper
+       \type object-list
+       \object-list ConnectionNames
+  N1,  \field Maximum Air Flow Rate
+>>>>>>> 51094417_SnglZnVAVNoReheat
        \type real
        \autosizable
        \units m3/s
        \minimum 0
+<<<<<<< HEAD
   A6, \field Reheat Coil Name
        \type object-list
        \object-list HeatingCoilName
@@ -6014,6 +6041,48 @@ OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
        \minimum> 0
        \default 35.0
 
+=======
+  A6 , \field Zone Minimum Air Flow Input Method
+       \note Constant = Constant Minimum Air Flow Fraction (a fraction of Maximum Air Flow Rate)
+       \note FixedFlowRate = Fixed Minimum Air Flow Rate (a fixed minimum air volume flow rate)
+       \note Scheduled = Scheduled Minimum Air Flow Fraction (a fraction of Maximum Air Flow
+       \type choice
+       \key Constant
+       \key FixedFlowRate
+       \key Scheduled
+  N2 , \field Constant Minimum Air Flow Fraction
+       \note This field is used if the field Zone Minimum Air Flow Input Method is Constant
+       \note If the field Zone Minimum Air Flow Input Method is Scheduled, then this field
+       \note is optional; if a value is entered, then it is used for sizing normal-action reheat coils.
+       \note If both this field and the following field are entered, the larger result is used.
+       \type real
+       \default 0.3
+  N3 , \field Fixed Minimum Air Flow Rate
+       \note This field is used if the field Zone Minimum Air Flow Input Method is FixedFlowRate.
+       \note If the field Zone Minimum Air Flow Input Method is Scheduled, then this field
+       \note is optional; if a value is entered, then it is used for sizing normal-action reheat coils.
+       \note If both this field and the previous field are entered, the larger result is used.
+       \type real
+       \units m3/s
+       \default 0.0
+  A7 , \field Minimum Air Flow Fraction Schedule Name
+       \note This field is used if the field Zone Minimum Air Flow Input Method is Scheduled
+       \note Schedule values are fractions, 0.0 to 1.0.
+       \note If the field Constant Minimum Air Flow Fraction is blank, then the average of the
+       \note minimum and maximum schedule values is used for sizing normal-action reheat coils.
+       \type object-list
+       \object-list ScheduleNames
+  A8 ; \field Design Specification Outdoor Air Object Name
+       \type object-list
+       \object-list DesignSpecificationOutdoorAirNames
+       \note When the name of a DesignSpecification:OutdoorAir object is entered, the terminal
+       \note unit will increase flow as needed to meet this outdoor air requirement.
+       \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will
+       \note be computed based on the current number of occupants in the zone.
+       \note At no time will the supply air flow rate exceed the value for Maximum Air Flow Rate.
+       \note If this field is blank, then the terminal unit will not be controlled for outdoor air flow.
+	   
+>>>>>>> 51094417_SnglZnVAVNoReheat
 OS:AirTerminal:SingleDuct:VAV:Reheat,
        \min-fields 1
   A1, \field Handle

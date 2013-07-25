@@ -163,6 +163,7 @@
     <file>images/toggle_on.png</file>
     <file>images/toggle_on_over.png</file>
     <file>images/fan_variable.png</file>
+    <file>images/vav_noreheat.png</file>
     <file>images/vav-reheat.png</file>
     <file>images/v_divider_dots.png</file>
     <file>images/wahpDXCC.png</file>    
@@ -187,9 +188,9 @@
     <file>openstudiolib.qss</file>
     <file>images/heat_coil-uht.png</file>
     <file>images/coil_ht_dx_singlespeed.png</file>
-
     <file>images/mini_icons/baseboard_electric.png</file>
     <file>images/mini_icons/baseboard_water.png</file>
+    <file>images/AirTerminalSingleDuctVAVNoReheat.png</file>
     <file>images/mini_icons/boiler.png</file>
     <file>images/mini_icons/boiler_steam.png</file>
     <file>images/mini_icons/building.png</file>
@@ -284,7 +285,7 @@
     <file>images/mini_icons/system_type_1.png</file>
     <file>images/mini_icons/system_type_2.png</file>
     <file>images/mini_icons/thermal_zone.png</file>
-    <file>images/mini_icons/variable_fan.png</file>
+    <file>images/mini_icons/vav_noreheat.png</file>
     <file>images/mini_icons/vav-reheat.png</file>
     <file>images/mini_icons/wahpDXCC_mini.png</file>        
     <file>images/mini_icons/wahpDXHC_mini.png</file>    
