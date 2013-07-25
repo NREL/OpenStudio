@@ -21,11 +21,11 @@ def heat_cool_hrs_check(model,sql)
   all_zones_floating_hours = Array.new
   zones.each do |zone|
     debug_puts(zone.name)
-    hourly_zone_heating_energy = get_timeseries_array(sql, $env_period, $hourly_time_step, "Zone/Sys Sensible Heating Energy", zone.name.get)
+    hourly_zone_heating_energy = get_timeseries_array(sql, $env_period, $hourly_time_step, "Zone Air System Sensible Heating Energy", zone.name.get)
     zone_heating_hours = hourly_zone_heating_energy.select { |i| i != 0 }.length
     debug_puts("zone_heating_hours = #{zone_heating_hours}")
     all_zones_heating_hours << "#{zone_heating_hours} - #{zone.name}"
-    hourly_zone_cooling_energy = get_timeseries_array(sql, $env_period, $hourly_time_step, "Zone/Sys Sensible Cooling Energy", zone.name.get)
+    hourly_zone_cooling_energy = get_timeseries_array(sql, $env_period, $hourly_time_step, "Zone Air System Sensible Cooling Energy", zone.name.get)
     zone_cooling_hours = hourly_zone_cooling_energy.select { |i| i != 0 }.length
     debug_puts("zone_cooling_hours = #{zone_cooling_hours}")
     all_zones_cooling_hours << "#{zone_cooling_hours} - #{zone.name}"

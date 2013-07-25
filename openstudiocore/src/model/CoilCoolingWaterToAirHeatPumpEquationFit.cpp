@@ -78,7 +78,7 @@ namespace detail {
 						result.push_back("Cooling Coil Total Cooling Rate");
 						result.push_back("Cooling Coil Sensible Cooling Rate");
 						result.push_back("Cooling Coil Source Side Heat Transfer Rate");
-						result.push_back("Cooling Coil Part Load Ratio");
+						result.push_back("Cooling Coil Fan Coil Part Load Ratio");
 						result.push_back("Cooling Coil Air Mass Flow Rate");
 						result.push_back("Cooling Coil Air Inlet Temperature");
 						result.push_back("Cooling Coil Air Inlet Humidity Ratio");

@@ -98,11 +98,11 @@ namespace detail {
 
     if (result.empty())
     {
-      result.push_back("Zone Unit Heater Heating Rate");
-      result.push_back("Zone Unit Heater Heating Energy");
-      result.push_back("Zone Unit Heater Fan Electric Power");
+      result.push_back("Zone Zone Unit Heater Heating Rate");
+      result.push_back("Zone Zone Unit Heater Heating Energy");
+      result.push_back("Zone Zone Unit Heater Fan Electric Power");
       result.push_back("Zone Unit Heater Fan Electric Energy");
-      result.push_back("Zone Unit Heater Fan Availability Status");
+      result.push_back("Zone Zone Unit Heater Fan Availability Status");
     }
     return result;
   }

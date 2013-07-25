@@ -283,25 +283,25 @@ namespace detail {
         itr->remove();
       }
 
-      openstudio::model::OutputVariable outputVariable("Exterior Horizontal Illuminance From Sky", outmodel);
+      openstudio::model::OutputVariable outputVariable("Site Exterior Horizontal Sky Illuminance", outmodel);
       outputVariable.setReportingFrequency("Hourly");
 
-      outputVariable = openstudio::model::OutputVariable("Exterior Beam Normal Illuminance", outmodel);
+      outputVariable = openstudio::model::OutputVariable("Site Exterior Beam Normal Illuminance", outmodel);
       outputVariable.setReportingFrequency("Hourly");
 
-      outputVariable = openstudio::model::OutputVariable("Solar Altitude Angle", outmodel);
+      outputVariable = openstudio::model::OutputVariable("Site Solar Altitude Angle", outmodel);
       outputVariable.setReportingFrequency("Hourly");
 
-      outputVariable = openstudio::model::OutputVariable("Solar Azimuth Angle", outmodel);
+      outputVariable = openstudio::model::OutputVariable("Site Solar Azimuth Angle", outmodel);
       outputVariable.setReportingFrequency("Hourly");
 
-      outputVariable = openstudio::model::OutputVariable("Luminous Efficacy of Sky Diffuse Solar Radiation", outmodel);
+      outputVariable = openstudio::model::OutputVariable("Luminous Efficacy of Sky Site Diffuse Solar Radiation Rate per Area Radiation", outmodel);
       outputVariable.setReportingFrequency("Hourly");
 
-      outputVariable = openstudio::model::OutputVariable("Luminous Efficacy of Beam Solar Radiation", outmodel);
+      outputVariable = openstudio::model::OutputVariable("Site Beam Solar Radiation Luminous Efficacy", outmodel);
       outputVariable.setReportingFrequency("Hourly");
 
-      outputVariable = openstudio::model::OutputVariable("Zone People Number Of Occupants", outmodel);
+      outputVariable = openstudio::model::OutputVariable("Zone People Occupant Count", outmodel);
       outputVariable.setReportingFrequency("Hourly");
 
       outputVariable = openstudio::model::OutputVariable("Zone Lights Electric Power", outmodel);

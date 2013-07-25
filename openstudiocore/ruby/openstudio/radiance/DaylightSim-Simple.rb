@@ -592,27 +592,27 @@ def getTimeSeries(t_sqlFile, t_envPeriod)
   diffHorizUnits = nil; dirNormUnits = nil
 
   # get the solar data
-  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Exterior Horizontal Illuminance From Sky").each do |timeseries|
+  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Site Exterior Horizontal Sky Illuminance").each do |timeseries|
     diffHorizIllumAll = timeseries.values
     diffHorizUnits = timeseries.units if not diffHorizUnits
   end
-  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Exterior Beam Normal Illuminance").each do |timeseries|
+  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Site Exterior Beam Normal Illuminance").each do |timeseries|
     dirNormIllumAll = timeseries.values
     dirNormUnits = timeseries.units if not dirNormUnits
   end
-  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Luminous Efficacy of Sky Diffuse Solar Radiation").each do |timeseries|
+  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Luminous Efficacy of Sky Site Diffuse Solar Radiation Rate per Area Radiation").each do |timeseries|
     diffEfficacyAll = timeseries.values
     diffEfficacyUnits = timeseries.units if not diffEfficacyUnits
   end
-  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Luminous Efficacy of Beam Solar Radiation").each do |timeseries|
+  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Site Beam Solar Radiation Luminous Efficacy").each do |timeseries|
     dirNormEfficacyAll = timeseries.values
     dirNormEfficacyUnits = timeseries.units if not dirNormEfficacyUnits
   end
-  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Solar Altitude Angle").each do |timeseries|
+  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Site Solar Altitude Angle").each do |timeseries|
     solarAltitudeAll = timeseries.values
     solarAltitudeUnits = timeseries.units if not solarAltitudeUnits
   end
-  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Solar Azimuth Angle").each do |timeseries|
+  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Site Solar Azimuth Angle").each do |timeseries|
     solarAzimuthAll = timeseries.values
     solarAzimuthUnits = timeseries.units if not solarAzimuthUnits
   end
@@ -635,7 +635,7 @@ def buildSimulationTimes(t_sqlFile, t_envPeriod, t_options, t_diffHorizIllumAll,
   solarAzimuth = []
   firstReportDateTime = nil
 
-  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Exterior Horizontal Illuminance From Sky").each do |timeseries|
+  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Site Exterior Horizontal Sky Illuminance").each do |timeseries|
     firstReportDateTime = timeseries.firstReportDateTime
     daysFromFirstReport = timeseries.daysFromFirstReport
     (0...daysFromFirstReport.size).each do |i|

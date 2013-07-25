@@ -316,9 +316,9 @@ void ParallelEnergyPlus::writePartition(int t_partition, const openstudio::path 
   //	building.add("Output:Meter, Electricity:Building,  hourly;");
   //	building.add("Output:Meter, Electricity:HVAC,  hourly;");
   //	building.add("Output:Variable,*,Zone Mean Air Temperature,hourly;");
-  //	building.add("Output:Variable,*,DX Cooling Coil Electric Power,hourly;");
-  //	building.add("Output:Variable,*,Outdoor Dry Bulb,HOURLY;");
-  //building.add("Output:Variable,*,Outdoor Relative Humidity,HOURLY;");
+  //	building.add("Output:Variable,*,Cooling Coil Electric Power,hourly;");
+  //	building.add("Output:Variable,*,Site Outdoor Air Drybulb Temperature,HOURLY;");
+  //building.add("Output:Variable,*,Site Outdoor Air Relative Humidity,HOURLY;");
   //building.add("OutputControl:Table:Style,HTML;");
   //	building.add("Output:Table:SummaryReports,AllSummary;");
 */
@@ -332,19 +332,19 @@ Output:Meter,Electricity:HVAC,HOURLY;
 
 Output:Meter,Gas:Facility,HOURLY;
 
-Output:Variable,*,Outdoor Dry Bulb,HOURLY;
+Output:Variable,*,Site Outdoor Air Drybulb Temperature,HOURLY;
 
-Output:Variable,*,Outdoor Humidity Ratio,HOURLY;
+Output:Variable,*,Site Outdoor Air Humidity Ratio,HOURLY;
 
-Output:Variable,*,Outdoor Relative Humidity,HOURLY;
+Output:Variable,*,Site Outdoor Air Relative Humidity,HOURLY;
 
 Output:Variable,*,Zone Mean Air Temperature,hourly;
 
-Output:Variable,*,AirLoopHVAC Actual Outdoor Air Fraction,HOURLY;
+Output:Variable,*,Air System Outdoor Air Flow Fraction,HOURLY;
 
-Output:Variable,*,DX Cooling Coil Electric Power,hourly;
+Output:Variable,*,Cooling Coil Electric Power,hourly;
 
-Output:Variable,*,Heating Coil Gas Consumption Rate,hourly;
+Output:Variable,*,Heating Coil Gas Energy Rate,hourly;
 */
 
 
