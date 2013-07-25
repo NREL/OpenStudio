@@ -79,25 +79,23 @@ TEST_F(AnalysisDriverFixture, PSUADEDace_Continuous) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    ProjectDatabase database = getCleanDatabase("PSUADEDaceContinuous");
-    AnalysisDriver analysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
+  ProjectDatabase database = getCleanDatabase("PSUADEDaceContinuous");
+  AnalysisDriver analysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
 
-    // output csv summary of data points
-    Table summary = currentAnalysis.analysis().summaryTable();
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  // output csv summary of data points
+  Table summary = currentAnalysis.analysis().summaryTable();
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-      EXPECT_FALSE(dataPoint.responseValues().empty());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
+    EXPECT_FALSE(dataPoint.responseValues().empty());
   }
 }
 
@@ -121,27 +119,25 @@ TEST_F(AnalysisDriverFixture, PSUADEDace_MixedOsmIdf) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    analysis = Analysis("PSUADEDace Sampling - MixedOsmIdf",
-                        problem,
-                        PSUADEDaceAlgorithm(algOptions),
-                        seedModel);
-    ProjectDatabase database = getCleanDatabase("PSUADEDace_MixedOsmIdf");
-    AnalysisDriver analysisDriver = AnalysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
-    EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
-    Table summary = currentAnalysis.analysis().summaryTable();
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  analysis = Analysis("PSUADEDace Sampling - MixedOsmIdf",
+                      problem,
+                      PSUADEDaceAlgorithm(algOptions),
+                      seedModel);
+  ProjectDatabase database = getCleanDatabase("PSUADEDace_MixedOsmIdf");
+  AnalysisDriver analysisDriver = AnalysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
+  EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
+  Table summary = currentAnalysis.analysis().summaryTable();
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
   }
 
 }
