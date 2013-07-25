@@ -237,6 +237,9 @@ class MODEL_API UtilityBill : public ModelObject {
   /** Gets the variable associated with peak demand for this UtilityBill, creates it if it does not exist.*/
   boost::optional<OutputVariable> peakDemandVariable() const;
 
+  /** Number of billing periods used to compute CVRMSE or NMBE.*/
+  unsigned numberBillingPeriodsInCalculations() const;
+
   /** Coefficient of variation of the root mean square error, see ASHRAE 14-2002 5.2.11.3.*/
   boost::optional<double> CVRMSE() const;
 

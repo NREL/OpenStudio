@@ -137,6 +137,8 @@ namespace detail {
 
     boost::optional<OutputVariable> peakDemandVariable() const;
 
+    unsigned numberBillingPeriodsInCalculations() const;
+
     boost::optional<double> CVRMSE() const;
 
     boost::optional<double> NMBE() const;

@@ -698,6 +698,22 @@ namespace detail {
     return result;
   }
 
+  unsigned UtilityBill_Impl::numberBillingPeriodsInCalculations() const
+  {
+    unsigned n = 0;
+    BOOST_FOREACH(const BillingPeriod& p, this->billingPeriods()){
+      boost::optional<double> consumption = p.consumption();
+      if (consumption){
+        boost::optional<double> modelConsumption = p.modelConsumption();
+        if (modelConsumption){
+          n += 1;
+        }
+      }
+    }
+
+    return n;
+  }
+
   boost::optional<double> UtilityBill_Impl::CVRMSE() const
   {
     boost::optional<double> result;
@@ -1302,6 +1318,11 @@ void UtilityBill::clearBillingPeriods(){
 
 BillingPeriod UtilityBill::addBillingPeriod(){
   return getImpl<detail::UtilityBill_Impl>()->addBillingPeriod();
+}
+
+unsigned UtilityBill::numberBillingPeriodsInCalculations() const
+{
+  return getImpl<detail::UtilityBill_Impl>()->numberBillingPeriodsInCalculations();
 }
 
 boost::optional<double> UtilityBill::CVRMSE() const{
