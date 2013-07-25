@@ -1,4 +1,4 @@
-# Find Dakota. Searches in C:/ (Windows), /Applications/ (Mac), /user/local/ 
+# Find Dakota. Searches in C:/ (Windows), /Applications/ (Mac), /usr/local/ 
 # (Linux) for folders whose names start with [dD][aA][kK][oO][tT][aA]?*. Also 
 # checks the environment variable DAKOTADIR. In all cases, looks for 
 # bin/dakota.exe or bin/dakota (depending on platform).
