@@ -1325,10 +1325,10 @@ TEST_F(IdfFixture,Workspace_LocateURLs) {
   //
   std::vector<std::pair<QUrl, openstudio::path> > located = ws.locateUrls(std::vector<URLSearchPath>(), true, openstudio::path());
 
-  EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(), "file:TDV_2008_kBtu_CZ01.csv");
+  EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(), "file:TDV_2008_kBtu_CZ13.csv");
   ASSERT_EQ(located.size(), 1u);
   EXPECT_TRUE(located[0].first == QUrl::fromLocalFile(openstudio::toQString(absoluteTdvFilePath)));
-  EXPECT_EQ(located[0].second, openstudio::toPath("TDV_2008_kBtu_CZ01.csv"));
+  EXPECT_EQ(located[0].second, openstudio::toPath("TDV_2008_kBtu_CZ13.csv"));
 
 
   // test making path absolute again, by searching with an absolute search path
@@ -1344,7 +1344,7 @@ TEST_F(IdfFixture,Workspace_LocateURLs) {
 
   // Make the path relative again
   ws.locateUrls(std::vector<URLSearchPath>(), true, openstudio::path());
-  EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(), "file:TDV_2008_kBtu_CZ01.csv");
+  EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(), "file:TDV_2008_kBtu_CZ13.csv");
 
   // test making path absolute again, this time, let's find it relative to a made-up location of the osm
   searchpaths.clear();
@@ -1359,14 +1359,14 @@ TEST_F(IdfFixture,Workspace_LocateURLs) {
 
   // Make the path relative again
   ws.locateUrls(std::vector<URLSearchPath>(), true, openstudio::path());
-  EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(), "file:TDV_2008_kBtu_CZ01.csv");
+  EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(), "file:TDV_2008_kBtu_CZ13.csv");
 
   // This time we want to fail, by providing it with a search that should work, but we give it the wrong object type
   searchpaths.clear();
   searchpaths.push_back(URLSearchPath(QUrl::fromLocalFile("utilities/Filetypes"), URLSearchPath::ToInputFile,
         IddObjectType::OS_Version));
   located = ws.locateUrls(searchpaths, false, resourcesPath() / toPath("madeuposm.osm")); // give the search algo a relative place to start from
-  EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(), "file:TDV_2008_kBtu_CZ01.csv");
+  EXPECT_EQ(tdv.getString(OS_TimeDependentValuationFields::Url).get(), "file:TDV_2008_kBtu_CZ13.csv");
   ASSERT_EQ(located.size(), 0u);
 
   // And finally, provide the correct field type for the search path, find it

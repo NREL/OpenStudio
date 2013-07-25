@@ -25,6 +25,75 @@
 
 namespace openstudio {
 
+OSSwitch2::OSSwitch2( QWidget * parent )
+  : QPushButton(parent)
+{
+  this->setAcceptDrops(false);
+  setFlat(true);
+  setFixedSize(63,21);
+
+  setObjectName("OnOffSliderButton");
+
+  this->setCheckable(true);
+}
+
+void OSSwitch2::bind(model::ModelObject & modelObject,
+                     BoolGetter get,
+                     boost::optional<BoolSetter> set,
+                     boost::optional<NoFailAction> reset,
+                     boost::optional<BasicQuery> isDefaulted)
+{
+  m_modelObject = modelObject;
+  m_get = get;
+  m_set = set;
+  m_reset = reset;
+  m_isDefaulted = isDefaulted;
+
+  bool isConnected = false;
+  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
+                         this,SLOT(onModelObjectChange()) );
+  BOOST_ASSERT(isConnected);
+
+  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
+                         this,SLOT(onModelObjectRemove(Handle)) );
+  BOOST_ASSERT(isConnected);
+
+  isConnected = connect( this, SIGNAL(clicked(bool)), this, SLOT(onClicked(bool)) );
+  BOOST_ASSERT(isConnected);
+
+  onModelObjectChange();
+}
+
+void OSSwitch2::unbind()
+{
+  if (m_modelObject){
+    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+    m_modelObject.reset();
+    m_get.reset();
+    m_set.reset();
+    m_reset.reset();
+    m_isDefaulted.reset();
+  }
+}
+
+void OSSwitch2::onClicked(bool checked)
+{
+  if(m_modelObject && m_set) {
+    (*m_set)(checked);
+  }
+}
+
+void OSSwitch2::onModelObjectChange()
+{
+  if( m_modelObject ) {
+    this->setChecked((*m_get)());
+  }
+}
+
+void OSSwitch2::onModelObjectRemove(Handle handle) {
+  unbind();
+}
+
 OSSwitch::OSSwitch( QWidget * parent )
   : QPushButton(parent)
 {

@@ -529,7 +529,7 @@ boost::optional<QDomElement> ExportXML::exportAnnual(QDomDocument& doc,
   std::map<EndUseFuelType,FuelType> fuelMap;  
   fuelMap.insert(std::make_pair(EndUseFuelType::Electricity,FuelType::Electricity));
   fuelMap.insert(std::make_pair(EndUseFuelType::Gas,FuelType::Gas));
-  fuelMap.insert(std::make_pair(EndUseFuelType::OtherFuel,FuelType::Diesel)); //TODO add other fuel types
+  fuelMap.insert(std::make_pair(EndUseFuelType::AdditionalFuel,FuelType::Diesel)); //TODO add other fuel types
   fuelMap.insert(std::make_pair(EndUseFuelType::DistrictCooling,FuelType::DistrictCooling));
   fuelMap.insert(std::make_pair(EndUseFuelType::DistrictHeating,FuelType::DistrictHeating));
   fuelMap.insert(std::make_pair(EndUseFuelType::Water,FuelType::Water));
@@ -823,7 +823,7 @@ boost::optional<QDomElement> ExportXML::exportMonthly(QDomDocument& doc,
   std::map<EndUseFuelType,QString> xmlFuelTypes;
   xmlFuelTypes.insert(std::make_pair(EndUseFuelType::Electricity,"electricity"));
   xmlFuelTypes.insert(std::make_pair(EndUseFuelType::Gas,"gas"));
-  xmlFuelTypes.insert(std::make_pair(EndUseFuelType::OtherFuel,"other_fuel"));
+  xmlFuelTypes.insert(std::make_pair(EndUseFuelType::AdditionalFuel,"other_fuel"));
   xmlFuelTypes.insert(std::make_pair(EndUseFuelType::DistrictCooling,"district_cooling"));
   xmlFuelTypes.insert(std::make_pair(EndUseFuelType::DistrictHeating,"district_heating"));
   xmlFuelTypes.insert(std::make_pair(EndUseFuelType::Water,"water"));

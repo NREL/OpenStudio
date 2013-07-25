@@ -219,6 +219,7 @@ SET( ${target_name}_depends
   litesql
   litesql-util
   miniziplib
+  qjson
   ${Boost_LIBRARIES}
   ${CMAKE_THREAD_LIBS}
   ${QT_LIBS}

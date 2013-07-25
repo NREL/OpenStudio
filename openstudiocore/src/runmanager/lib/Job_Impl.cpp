@@ -46,13 +46,16 @@ namespace detail {
   {
     RunManager_Impl::registerMetaTypes();
 
-    try {
-      openstudio::path basepath = toPath(m_params.get("job_base_path").children.at(0).value);
-      m_basePath = basepath;
-      LOG(Debug, "loaded basepath " << openstudio::toString(basepath));
-      m_params.remove("job_base_path"); // house keeping, it will get persisted via the getBasePath method if necessary
-    } catch (...) {
-      // nothing to do
+    if (m_params.has("job_base_path"))
+    {
+      JobParam p = m_params.get("job_base_path");
+      if (p.children.size() == 1)
+      {
+        openstudio::path basepath = toPath(p.children[0].value);
+        m_basePath = basepath;
+        LOG(Debug, "loaded basepath " << openstudio::toString(basepath));
+        m_params.remove("job_base_path"); // house keeping, it will get persisted via the getBasePath method if necessary
+      }
     }
 
     m_history.push_back(std::make_pair(boost::posix_time::microsec_clock::universal_time(), AdvancedStatus(AdvancedStatusEnum::Idle)));
@@ -286,8 +289,10 @@ namespace detail {
     {
       CleanType type = standard;
 
-      try {
-        std::string typestr = allParams().get("cleanoutfiles").children.at(0).value;
+      JobParams params = allParams();
+      if (params.has("cleanoutfiles") && !params.get("cleanoutfiles").children.empty())
+      {
+        std::string typestr = params.get("cleanoutfiles").children.at(0).value;
 
         if (typestr == "none")
         {
@@ -299,9 +304,7 @@ namespace detail {
         } else {
           LOG(Error, "Unknown cleanoutfiles setting: " << typestr);
         }
-      } catch(...) {
-        // no cleanoutfiles specified
-      }
+      } 
 
       if (type == standard)
       {
@@ -506,13 +509,11 @@ namespace detail {
       }
     }
 
-    try {
-      allParams().get("flatoutdir");
+    if (allParams().has("flatoutdir"))
+    {
       flatoutdir = true;
       prefix = boost::lexical_cast<std::string>(index()) + "-";
-    } catch(...) {
-      // guess it's not a flat out dir
-    }
+    } 
 
     QReadLocker l(&m_mutex);
     boost::shared_ptr<Job_Impl> p = m_parent.lock();

@@ -25,7 +25,10 @@
 #include <utilities/core/StringHelpers.hpp>
 #include <utilities/data/Attribute.hpp>
 #include <utilities/document/DocumentRegex.hpp>
+#include <utilities/units/QuantityConverter.hpp>
 #include <utilities/units/Quantity.hpp>
+
+#include <boost/bind.hpp>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -33,6 +36,305 @@
 using openstudio::model::ModelObject;
 
 namespace openstudio {
+
+OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::string& siUnits, 
+                                 const std::string& ipUnits, bool isIP, QWidget * parent)
+  : m_lineEdit(new QLineEdit(parent)),
+    m_units(new QLabel("",parent)),
+    m_isIP(isIP),
+    m_modelUnits(modelUnits),
+    m_siUnits(siUnits),
+    m_ipUnits(ipUnits),
+    m_isScientific(false)
+{
+  // do a test conversion to make sure units are ok
+  boost::optional<double> test = convert(1.0, modelUnits, ipUnits);
+  Q_ASSERT(test);
+  test = convert(1.0, modelUnits, siUnits);
+  Q_ASSERT(test);
+
+  this->setAcceptDrops(false);
+  m_lineEdit->setAcceptDrops(false);
+  setEnabled(false);
+
+  QHBoxLayout * hLayout = new QHBoxLayout();
+  setLayout(hLayout);
+  hLayout->setContentsMargins(0,0,0,0);
+  hLayout->addWidget(m_lineEdit);
+  hLayout->addWidget(m_units);
+
+  m_lineEdit->setFixedWidth(90);
+
+  setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Preferred);
+}
+
+void OSQuantityEdit2::bind(bool isIP,
+                           model::ModelObject& modelObject,
+                           DoubleGetter get,
+                           boost::optional<DoubleSetter> set,
+                           boost::optional<NoFailAction> reset,
+                           boost::optional<NoFailAction> autosize,
+                           boost::optional<NoFailAction> autocalculate,
+                           boost::optional<BasicQuery> isDefaulted,
+                           boost::optional<BasicQuery> isAutosized,
+                           boost::optional<BasicQuery> isAutocalculated)
+{
+  m_get = get;
+  m_optionalGet.reset();
+  
+  bindCommon(isIP, modelObject, set, reset, autosize,
+             autocalculate, isDefaulted, isAutosized, isAutocalculated);
+}
+
+void OSQuantityEdit2::bind(bool isIP,
+                           model::ModelObject& modelObject,
+                           OptionalDoubleGetter optionalGet,
+                           boost::optional<DoubleSetter> set,
+                           boost::optional<NoFailAction> reset,
+                           boost::optional<NoFailAction> autosize,
+                           boost::optional<NoFailAction> autocalculate,
+                           boost::optional<BasicQuery> isDefaulted,
+                           boost::optional<BasicQuery> isAutosized,
+                           boost::optional<BasicQuery> isAutocalculated)
+{
+  m_get.reset();
+  m_optionalGet = optionalGet;
+  
+  bindCommon(isIP, modelObject, set, reset, autosize,
+             autocalculate, isDefaulted, isAutosized, isAutocalculated);
+}
+
+void OSQuantityEdit2::bindCommon(bool isIP,
+          model::ModelObject& modelObject,
+          boost::optional<DoubleSetter> set,
+          boost::optional<NoFailAction> reset,
+          boost::optional<NoFailAction> autosize,
+          boost::optional<NoFailAction> autocalculate,
+          boost::optional<BasicQuery> isDefaulted,
+          boost::optional<BasicQuery> isAutosized,
+          boost::optional<BasicQuery> isAutocalculated)
+{
+  // only let one of autosize/autocalculate
+  if ((isAutosized && isAutocalculated) || 
+      (isAutosized && autocalculate) || 
+      (isAutocalculated && autosize)) 
+  {
+    LOG_AND_THROW("A field can only be autosized or autocalculated, it cannot be both.");
+  }
+  
+  m_isIP = isIP;
+  m_modelObject = modelObject;
+  m_set = set;
+  m_reset = reset;
+  m_autosize = autosize;
+  m_autocalculate = autocalculate;
+  m_isDefaulted = isDefaulted;
+  m_isAutosized = isAutosized;
+  m_isAutocalculated = isAutocalculated;
+
+  setEnabled(true);
+  
+  bool isConnected = false;
+  isConnected = connect( m_lineEdit, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
+  BOOST_ASSERT(isConnected);
+
+  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
+                         this,SLOT(onModelObjectChange()) );
+  BOOST_ASSERT(isConnected);
+
+  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
+                         this,SLOT(onModelObjectRemove(Handle)) );
+  BOOST_ASSERT(isConnected);
+
+  refreshTextAndLabel();
+}
+
+
+void OSQuantityEdit2::unbind() {
+  if (m_modelObject){
+    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
+    m_modelObject.reset();
+    m_get.reset();
+    m_optionalGet.reset();
+    m_set.reset();
+    m_reset.reset();
+    m_autosize.reset();
+    m_autocalculate.reset();
+    m_isDefaulted.reset();
+    m_isAutosized.reset();
+    m_isAutocalculated.reset();
+    setEnabled(false);
+  }
+}
+
+void OSQuantityEdit2::onEditingFinished() {
+  if (m_modelObject) {
+    std::string str = m_lineEdit->text().toStdString();
+    boost::regex autore("[aA][uU][tT][oO]");
+    ModelObject modelObject = m_modelObject.get();
+
+    if (str.empty()) {
+      if (m_reset) {
+        (*m_reset)();
+      }
+    }
+    else if (boost::regex_search(str,autore)) {
+      if (m_isAutosized) {
+        if (m_autosize) {
+          (*m_autosize)();
+        }
+        else if (m_reset) {
+          (*m_reset)();
+        }
+      }
+      if (m_isAutocalculated) {
+        if (m_autocalculate) {
+          (*m_autocalculate)();
+        }
+        else if (m_reset) {
+          (*m_reset)();
+        }
+      }
+    }
+    else {
+      try {
+        double value = boost::lexical_cast<double>(str);
+        setPrecision(str); 
+
+        std::string units;
+        if (m_isIP){
+          units = m_ipUnits;
+        }else{
+          units = m_siUnits;
+        }
+        
+        boost::optional<double> modelValue = convert(value, units, m_modelUnits);
+        Q_ASSERT(modelValue);
+
+        if (m_set) {
+          (*m_set)(*modelValue);
+        }
+      }
+      catch (...) {}
+    }
+  }
+}
+  
+void OSQuantityEdit2::onModelObjectChange() {
+  refreshTextAndLabel();
+}
+  
+void OSQuantityEdit2::onUnitSystemChange(bool isIP) {
+  m_isIP = isIP;
+  refreshTextAndLabel();
+}
+  
+void OSQuantityEdit2::onModelObjectRemove(Handle handle) {
+  unbind();
+}
+
+void OSQuantityEdit2::refreshTextAndLabel() {
+  if (m_modelObject) {
+    QString textValue;
+    std::stringstream ss;
+
+    if (m_isAutosized && (*m_isAutosized)()) {
+      textValue = QString("autosize");
+      m_units->setStyleSheet("color:grey");
+    }
+
+    if (m_isAutocalculated && (*m_isAutocalculated)()) {
+      textValue = QString("autocalculate");
+      m_units->setStyleSheet("color:grey");
+    }
+
+    std::string units;
+    if (m_isIP){
+      units = m_ipUnits;
+    }else{
+      units = m_siUnits;
+    }
+
+    boost::optional<double> value;
+    
+    if (m_get){
+      value = (*m_get)();
+    }else if (m_optionalGet){
+      value = (*m_optionalGet)();
+    }
+
+    if (value) {
+      boost::optional<double> displayValue = convert(*value, m_modelUnits, units);
+      Q_ASSERT(displayValue);
+
+      if (m_isScientific) {
+        ss << std::scientific;
+      }
+      else {
+        ss << std::fixed;
+      }
+      if (m_precision) {
+        ss << std::setprecision(*m_precision);
+      }
+      ss << *displayValue;
+      textValue = toQString(ss.str());
+      ss.str("");
+
+      m_units->setStyleSheet("color:black");
+    }
+    else {
+      m_units->setStyleSheet("color:grey");
+    }
+
+    m_lineEdit->setText(textValue);
+    ss << units;
+    m_units->setTextFormat(Qt::RichText);
+    m_units->setText(toQString(formatUnitString(ss.str(),DocumentFormat::XHTML)));
+
+    if (m_isDefaulted) {
+      if ((*m_isDefaulted)()) {
+        m_lineEdit->setStyleSheet("color:green");
+      }
+      else {
+        m_lineEdit->setStyleSheet("color:black");
+      }
+    }
+  }
+}
+
+void OSQuantityEdit2::setPrecision(const std::string& str) {
+  boost::regex rgx("-?([[:digit:]]*)(\\.)?([[:digit:]]+)([EDed][-\\+]?[[:digit:]]+)?");
+  boost::smatch m;
+  if (boost::regex_match(str,m,rgx)) {
+    std::string sci, prefix, postfix;
+    if (m[1].matched) {
+      prefix = std::string(m[1].first,m[1].second);
+    }
+    if (m[3].matched) {
+      postfix = std::string(m[3].first,m[3].second);
+    }
+    if (m[4].matched) {
+      sci = std::string(m[4].first,m[4].second);
+    }
+    m_isScientific = !sci.empty();
+
+    if (m_isScientific) {
+      m_precision = prefix.size() + postfix.size() - 1;
+    }
+    else {
+      if (m[2].matched) {
+        m_precision = postfix.size();
+      }
+      else {
+        m_precision = 0;
+      }
+    }
+  }
+  else {
+    m_isScientific = false;
+    m_precision.reset();
+  }
+}
 
 OSQuantityEdit::OSQuantityEdit(bool isIP, QWidget * parent)
   : m_lineEdit(new QLineEdit(parent)),

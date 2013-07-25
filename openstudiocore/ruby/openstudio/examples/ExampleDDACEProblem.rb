@@ -92,13 +92,13 @@ projectDir = ospPath.parent_path / Path.new(ospPath.stem)
 
 
 # EnergyPlus
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(7,2)
+ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
 ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
 weatherData_path = Path.new(ep_hash[:energyplus_weatherdata].to_s)
 
 
 # Daktoa
-dakota_hash = OpenStudio::Analysis::find_dakota()
+dakota_hash = OpenStudio::Analysis::find_dakota(5,3,1)
 if dakota_hash.nil?
   puts "Cannot run this script without Dakota. Please install Dakota (in a standard location) and try again."
   return

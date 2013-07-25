@@ -201,10 +201,11 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
   }
 
   // CompressorMotorEfficiency
-  
+  // Changed to Fraction of Compressor Electric Consumption Rejected by Condenser in E+ version 8.0
+
   if( value = modelObject.compressorMotorEfficiency() )
   {
-    idfObject.setDouble(Chiller_Electric_EIRFields::CompressorMotorEfficiency,value.get());
+    idfObject.setDouble(Chiller_Electric_EIRFields::FractionofCompressorElectricConsumptionRejectedbyCondenser,value.get());
   }
 
   // LeavingChilledWaterLowerTemperatureLimit
