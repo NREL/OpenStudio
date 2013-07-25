@@ -441,7 +441,6 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_MinimumAirFlowFractionSche
   alwaysOnSchedule.setString(6,"1");
 
   EXPECT_FALSE(testObject.minimumAirFlowFractionSchedule());
-  EXPECT_FALSE(testObject.setMinimumAirFlowFractionSchedule(s));
   EXPECT_TRUE(testObject.setMinimumAirFlowFractionSchedule(alwaysOnSchedule));
   EXPECT_TRUE(testObject.minimumAirFlowFractionSchedule());
   EXPECT_EQ(alwaysOnSchedule, testObject.minimumAirFlowFractionSchedule().get());
