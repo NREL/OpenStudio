@@ -5958,7 +5958,6 @@ OS:AirTerminal:SingleDuct:Uncontrolled,
        \autosizable
        \units m3/s
        \minimum 0
-<<<<<<< HEAD
 
 OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
        \min-fields 5
@@ -5982,36 +5981,10 @@ OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
        \type object-list
        \object-list ConnectionNames
   N1, \field Maximum Air Flow Rate
-=======
-	   
-OS:AirTerminal:SingleDuct:VAV:NoReheat,
-       \min-fields 1
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2,  \field Name
-       \type alpha
-       \required-field
-       \reference ConnectionObject
-  A3,  \field Availability Schedule Name
-       \type object-list
-       \required-field
-       \object-list ScheduleNames
-  A4,  \field Air Outlet Node Name
-       \note the inlet node to the terminal unit and the damper
-       \type object-list
-       \object-list ConnectionNames
-  A5,  \field Air Inlet Node Name
-       \note the inlet node to the terminal unit and the damper
-       \type object-list
-       \object-list ConnectionNames
-  N1,  \field Maximum Air Flow Rate
->>>>>>> 51094417_SnglZnVAVNoReheat
        \type real
        \autosizable
        \units m3/s
        \minimum 0
-<<<<<<< HEAD
   A6, \field Reheat Coil Name
        \type object-list
        \object-list HeatingCoilName
@@ -6041,7 +6014,32 @@ OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \minimum> 0
        \default 35.0
 
-=======
+OS:AirTerminal:SingleDuct:VAV:NoReheat,
+       \min-fields 1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \type alpha
+       \required-field
+       \reference ConnectionObject
+  A3,  \field Availability Schedule Name
+       \type object-list
+       \required-field
+       \object-list ScheduleNames
+  A4,  \field Air Outlet Node Name
+       \note the inlet node to the terminal unit and the damper
+       \type object-list
+       \object-list ConnectionNames
+  A5,  \field Air Inlet Node Name
+       \note the inlet node to the terminal unit and the damper
+       \type object-list
+       \object-list ConnectionNames
+  N1,  \field Maximum Air Flow Rate
+       \type real
+       \autosizable
+       \units m3/s
+       \minimum 0
   A6 , \field Zone Minimum Air Flow Input Method
        \note Constant = Constant Minimum Air Flow Fraction (a fraction of Maximum Air Flow Rate)
        \note FixedFlowRate = Fixed Minimum Air Flow Rate (a fixed minimum air volume flow rate)
@@ -6082,7 +6080,6 @@ OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \note At no time will the supply air flow rate exceed the value for Maximum Air Flow Rate.
        \note If this field is blank, then the terminal unit will not be controlled for outdoor air flow.
 	   
->>>>>>> 51094417_SnglZnVAVNoReheat
 OS:AirTerminal:SingleDuct:VAV:Reheat,
        \min-fields 1
   A1, \field Handle
