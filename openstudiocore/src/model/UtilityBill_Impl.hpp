@@ -135,7 +135,7 @@ namespace detail {
 
     Meter consumptionMeter() const;
 
-    Meter peakDemandMeter() const;
+    boost::optional<OutputVariable> peakDemandVariable() const;
 
     boost::optional<double> CVRMSE() const;
 

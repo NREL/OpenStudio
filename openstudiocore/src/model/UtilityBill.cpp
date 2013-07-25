@@ -21,10 +21,16 @@
 #include <model/UtilityBill_Impl.hpp>
 #include <model/Meter.hpp>
 #include <model/Meter_Impl.hpp>
+#include <model/OutputVariable.hpp>
+#include <model/OutputVariable_Impl.hpp>
 #include <model/RunPeriod.hpp>
 #include <model/RunPeriod_Impl.hpp>
 #include <model/YearDescription.hpp>
 #include <model/YearDescription_Impl.hpp>
+#include <model/Building.hpp>
+#include <model/Building_Impl.hpp>
+#include <model/Facility.hpp>
+#include <model/Facility_Impl.hpp>
 
 #include <model/Model.hpp>
 
@@ -605,9 +611,37 @@ namespace detail {
     return result.get();
   }
 
-  Meter UtilityBill_Impl::peakDemandMeter() const{
-    BOOST_ASSERT(false);
-    return Meter(this->model());
+  boost::optional<OutputVariable> UtilityBill_Impl::peakDemandVariable() const{
+    FuelType fuelType = this->fuelType();
+    InstallLocationType meterInstallLocation = this->meterInstallLocation();
+    boost::optional<std::string> meterSpecificInstallLocation = this->meterSpecificInstallLocation();
+    boost::optional<EndUseCategoryType> meterEndUseCategory = this->meterEndUseCategory();
+    boost::optional<EndUseType> meterEndUse;
+
+    std::string variableName;
+    if (fuelType == FuelType::Electricity){
+      if (meterInstallLocation == InstallLocationType::Facility){
+        variableName = "Facility Total Electric Demand Power";
+      }else if (meterInstallLocation == InstallLocationType::Building){
+        variableName = "Facility Total Building Electric Demand Power";
+      }
+    }
+
+    if (variableName.empty()){
+      return boost::none;
+    }
+
+    BOOST_FOREACH(const OutputVariable& variable, this->model().getModelObjects<OutputVariable>()){
+      if (istringEqual(variableName, variable.name().get()) &&
+          istringEqual("Daily", variable.reportingFrequency())){
+        return variable;
+      }
+    }
+
+    OutputVariable variable(variableName, this->model());
+    variable.setReportingFrequency("Daily");
+
+    return variable;
   }
 
   std::vector<BillingPeriod> UtilityBill_Impl::billingPeriods() const
@@ -670,13 +704,15 @@ namespace detail {
     double ysum = 0;
     double squaredError = 0;
     unsigned n = 0;
+    double conv = this->consumptionUnitConversionFactor();
     BOOST_FOREACH(const BillingPeriod& p, this->billingPeriods()){
       boost::optional<double> consumption = p.consumption();
       if (consumption){
+        double convertedConsumption = conv * consumption.get();
         boost::optional<double> modelConsumption = p.modelConsumption();
         if (modelConsumption){
-          ysum += *consumption;
-          squaredError += std::pow(*consumption - *modelConsumption, 2);
+          ysum += convertedConsumption;
+          squaredError += std::pow(convertedConsumption - *modelConsumption, 2);
           n += 1;
         }
       }
@@ -696,13 +732,15 @@ namespace detail {
     double ysum = 0;
     double sumError = 0;
     unsigned n = 0;
+    double conv = this->consumptionUnitConversionFactor();
     BOOST_FOREACH(const BillingPeriod& p, this->billingPeriods()){
       boost::optional<double> consumption = p.consumption();
       if (consumption){
+        double convertedConsumption = conv * consumption.get();
         boost::optional<double> modelConsumption = p.modelConsumption();
         if (modelConsumption){
-          ysum += *consumption;
-          sumError += (*consumption - *modelConsumption);
+          ysum += convertedConsumption;
+          sumError += (convertedConsumption - *modelConsumption);
           n += 1;
         }
       }
@@ -991,13 +1029,9 @@ Vector BillingPeriod::modelConsumptionValues() const
     Date endDate = this->endDate();
     while (date <= endDate){
 
-      Date tmp = date;
-      if (date < runPeriodStartDate){
-        tmp = Date(date.monthOfYear(), date.dayOfMonth(), date.year() + 1);
-      }else if (date > runPeriodEndDate){
-        tmp = Date(date.monthOfYear(), date.dayOfMonth(), date.year() - 1);
-      }
-      DateTime dateTime(tmp, Time(0));
+      // Do not include year in date for query
+      Date tmp(date.monthOfYear(), date.dayOfMonth());
+      DateTime dateTime(tmp, Time(1));
 
       double value = timeseries->value(dateTime);
       if (value == outOfRangeValue){
@@ -1016,7 +1050,74 @@ Vector BillingPeriod::modelConsumptionValues() const
 
 Vector BillingPeriod::modelPeakDemandValues() const
 {
-  return Vector();
+  model::Model model = getImpl<detail::UtilityBill_Impl>()->model();
+
+  boost::optional<RunPeriod> runPeriod = model.runPeriod();
+  if (!runPeriod){
+    return Vector();
+  }
+
+  boost::optional<model::YearDescription> yd = model.yearDescription();
+  if (!yd){
+    return Vector();
+  }
+
+  boost::optional<int> calendarYear = yd->calendarYear();
+  if (!calendarYear){
+    return Vector();
+  }
+
+  boost::optional<OutputVariable> variable = getImpl<detail::UtilityBill_Impl>()->peakDemandVariable();
+  if (!variable){
+    return Vector();
+  }
+
+  boost::optional<ModelObject> modelObject;
+  InstallLocationType meterInstallLocation = getImpl<detail::UtilityBill_Impl>()->meterInstallLocation();
+  if (meterInstallLocation == InstallLocationType::Facility){
+    modelObject = model.getOptionalUniqueModelObject<Facility>();
+  }else if(meterInstallLocation == InstallLocationType::Building){
+    modelObject = model.building();
+  }
+
+  if (!modelObject){
+    return Vector();
+  }
+
+  Vector result;
+
+  Date runPeriodStartDate = Date(runPeriod->getBeginMonth(), runPeriod->getBeginDayOfMonth(), *calendarYear);
+  Date runPeriodEndDate = Date(runPeriod->getEndMonth(), runPeriod->getEndDayOfMonth(), *calendarYear);
+
+  boost::optional<openstudio::TimeSeries> timeseries = modelObject->getData(*variable, runPeriod->name().get());
+  if (timeseries){
+    result = Vector(this->numberOfDays());
+
+    double outOfRangeValue = std::numeric_limits<double>::min();
+    timeseries->setOutOfRangeValue(outOfRangeValue);
+
+    unsigned i = 0;
+    Date date = this->startDate();
+    Date endDate = this->endDate();
+    while (date <= endDate){
+
+      // Do not include year in date for query
+      Date tmp(date.monthOfYear(), date.dayOfMonth());
+      DateTime dateTime(tmp, Time(1));
+
+      double value = timeseries->value(dateTime);
+      if (value == outOfRangeValue){
+        return Vector();
+      }else{
+        result[i] = value;
+      }
+
+      ++i;
+      date += Time(1);
+    }
+  }
+
+  return result;
 }
 
 Vector BillingPeriod::modelTotalCostValues() const
@@ -1187,8 +1288,8 @@ Meter UtilityBill::consumptionMeter() const{
   return getImpl<detail::UtilityBill_Impl>()->consumptionMeter();
 }
 
-Meter UtilityBill::peakDemandMeter() const{
-  return getImpl<detail::UtilityBill_Impl>()->peakDemandMeter();
+boost::optional<OutputVariable> UtilityBill::peakDemandVariable() const{
+  return getImpl<detail::UtilityBill_Impl>()->peakDemandVariable();
 }
 
 std::vector<BillingPeriod> UtilityBill::billingPeriods() const{

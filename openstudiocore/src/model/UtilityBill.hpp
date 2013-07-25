@@ -60,10 +60,13 @@ class MODEL_API BillingPeriod : public ModelExtensibleGroup {
   /** The duration of the billing period in days. */
   unsigned numberOfDays() const;
 
+  /** Returns the consumption in billing units. */
   boost::optional<double> consumption() const;
 
+  /** Returns the peak demand in billing units. */
   boost::optional<double> peakDemand() const;
 
+  /** Returns the total cost of the bill in dollars. */
   boost::optional<double> totalCost() const;
 
   //@}
@@ -81,14 +84,17 @@ class MODEL_API BillingPeriod : public ModelExtensibleGroup {
   /** Sets the number of days in billing period, startDate is always retained. */
   bool setNumberOfDays(unsigned numberOfDays);
 
+  /** Sets the consumption in billing units. */
   bool setConsumption(double consumption);
 
   void resetConsumption();
 
+  /** Sets the peak demand in billing units. */
   bool setPeakDemand(double peakDemand);
 
   void resetPeakDemand();
 
+  /** Sets the total cost of the bill in dollars. */
   bool setTotalCost(double totalCost);
 
   void resetTotalCost();
@@ -106,10 +112,13 @@ class MODEL_API BillingPeriod : public ModelExtensibleGroup {
   /** Returns true if this billing period is partially within the model's run period.*/
   bool overlapsRunPeriod() const;
 
+  /** Returns the consumption for each day in billing period from simulation in model units. */
   Vector modelConsumptionValues() const;
 
+  /** Returns the consumption for each day in billing period from simulation in model units. */
   Vector modelPeakDemandValues() const;
 
+  /** Returns the consumption for each day in billing period from simulation in model units. */
   Vector modelTotalCostValues() const;
 
   /** Returns the sum of modelConsumptionValues if it is not empty. */
@@ -225,8 +234,8 @@ class MODEL_API UtilityBill : public ModelObject {
   /** Gets the meter associated with consumption for this UtilityBill, creates it if it does not exist.*/
   Meter consumptionMeter() const;
 
-  /** Gets the meter associated with peak demand for this UtilityBill, creates it if it does not exist.*/
-  Meter peakDemandMeter() const;
+  /** Gets the variable associated with peak demand for this UtilityBill, creates it if it does not exist.*/
+  boost::optional<OutputVariable> peakDemandVariable() const;
 
   /** Coefficient of variation of the root mean square error, see ASHRAE 14-2002 5.2.11.3.*/
   boost::optional<double> CVRMSE() const;

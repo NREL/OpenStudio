@@ -254,9 +254,9 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     // create meters for utility bill objects
     std::vector<UtilityBill> utilityBills = model.getModelObjects<UtilityBill>();
     BOOST_FOREACH(UtilityBill utilityBill, utilityBills){
-      // these meters will be translated later
+      // these meters and variables will be translated later
       Meter consumptionMeter = utilityBill.consumptionMeter();
-      // TODO: Meter peakDemandMeter = utilityBill.peakDemandMeter();
+      boost::optional<OutputVariable> peakDemandVariable = utilityBill.peakDemandVariable();
     }
   }
 
