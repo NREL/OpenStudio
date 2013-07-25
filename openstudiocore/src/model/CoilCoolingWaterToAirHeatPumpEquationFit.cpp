@@ -74,25 +74,24 @@ namespace detail {
     static std::vector<std::string> result;
     if (result.empty())
 				{
-						result.push_back("WatertoAirHP Power");
-						result.push_back("WatertoAirHP Load Side Total Heat Transfer Rate");
-						result.push_back("WatertoAirHP Load Side Sensible Heat Transfer Rate");
-						result.push_back("WatertoAirHP Source Side Total Heat Transfer Rate");
-						result.push_back("WatertoAirHP Part-Load Ratio");
-						result.push_back("WatertoAirHP Duty Factor");
-						result.push_back("WatertoAirHP Load Side Mass Flow Rate");
-						result.push_back("WatertoAirHP Load Side Inlet Dry Bulb Temperature");
-						result.push_back("WatertoAirHP Load Side Inlet Humidity Ratio");
-						result.push_back("WatertoAirHP Load Side Outlet Dry Bulb Temperature");
-						result.push_back("WatertoAirHP Load Side Outlet Humidity Ratio");
-						result.push_back("WatertoAirHP Source Side Mass Flow Rate");
-						result.push_back("WatertoAirHP Source Side Inlet Temperature");
-						result.push_back("WatertoAirHP Source Side Outlet Temperature");
-						result.push_back("WatertoAirHP Cooling Electric Consumption");
-						result.push_back("WatertoAirHP Load Side Total Cooling Energy");
-						result.push_back("WatertoAirHP Load Side Sensible Cooling Energy");
-						result.push_back("WatertoAirHP Load Side Latent Cooling Energy");
-						result.push_back("WatertoAirHP Source Side Cooling Energy");		
+						result.push_back("Cooling Coil Electric Power");
+						result.push_back("Cooling Coil Total Cooling Rate");
+						result.push_back("Cooling Coil Sensible Cooling Rate");
+						result.push_back("Cooling Coil Source Side Heat Transfer Rate");
+						result.push_back("Cooling Coil Part Load Ratio");
+						result.push_back("Cooling Coil Air Mass Flow Rate");
+						result.push_back("Cooling Coil Air Inlet Temperature");
+						result.push_back("Cooling Coil Air Inlet Humidity Ratio");
+						result.push_back("Cooling Coil Air Outlet Temperature");
+						result.push_back("Cooling Coil Air Outlet Humidity Ratio");
+						result.push_back("Cooling Coil Source Side Mass Flow Rate");
+						result.push_back("Cooling Coil Source Side Inlet Temperature");
+						result.push_back("Cooling Coil Source Side Outlet Temperature");
+						result.push_back("Cooling Coil Electric Energy");
+						result.push_back("Cooling Coil Total Cooling Energy");
+						result.push_back("Cooling Coil Sensible Cooling Energy");
+						result.push_back("Cooling Coil Latent Cooling Energy");
+						result.push_back("Cooling Coil Source Side Heat Transfer Energy");		
 				}
     return result;
   }

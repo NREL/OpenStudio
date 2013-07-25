@@ -85,12 +85,12 @@ boost::optional<IdfObject> ForwardTranslator::translateGasEquipment( GasEquipmen
 
   d = definition.wattsperSpaceFloorArea();
   if (d){
-    idfObject.setDouble(GasEquipmentFields::WattsperZoneFloorArea, (*d)*multiplier);
+    idfObject.setDouble(GasEquipmentFields::PowerperZoneFloorArea, (*d)*multiplier);
   }
 
   d = definition.wattsperPerson();
   if (d){
-    idfObject.setDouble(GasEquipmentFields::WattsperPerson, (*d)*multiplier);
+    idfObject.setDouble(GasEquipmentFields::PowerperPerson, (*d)*multiplier);
   }
 
   if (!definition.isFractionLatentDefaulted()){

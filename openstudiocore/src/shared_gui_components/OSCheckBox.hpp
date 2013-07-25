@@ -20,16 +20,51 @@
 #ifndef OPENSTUDIO_OSCHECKBOX_H
 #define OPENSTUDIO_OSCHECKBOX_H
 
+#include <shared_gui_components/FieldMethodTypedefs.hpp>
+
 #include <model/Model.hpp>
+
 #include <QPushButton>
 
 namespace openstudio {
 
-class OSCheckBox : public QPushButton
-{
+class OSCheckBox2 : public QPushButton {
   Q_OBJECT
 
-  public:
+ public:
+
+  OSCheckBox2(QWidget * parent = 0);
+
+  virtual ~OSCheckBox2() {}
+
+  void bind(model::ModelObject & modelObject,
+            BoolGetter get,
+            boost::optional<BoolSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none);
+
+  void unbind();
+
+ private slots:
+
+  void onToggled(bool checked);
+
+  void onModelObjectChange();
+
+  void onModelObjectRemove(Handle handle);
+
+ private:
+  boost::optional<model::ModelObject> m_modelObject;
+  boost::optional<BoolGetter> m_get;
+  boost::optional<BoolSetter> m_set;
+  boost::optional<NoFailAction> m_reset;
+  boost::optional<BasicQuery> m_isDefaulted;
+};
+
+class OSCheckBox : public QPushButton {
+  Q_OBJECT
+
+ public:
 
   OSCheckBox(QWidget * parent = 0);
 
@@ -39,7 +74,7 @@ class OSCheckBox : public QPushButton
 
   void unbind();
 
-  private slots:
+ private slots:
 
   void onToggled(bool checked);
 
@@ -47,7 +82,7 @@ class OSCheckBox : public QPushButton
 
   void onModelObjectRemove(Handle handle);
 
-  private:
+ private:
 
   boost::optional<model::ModelObject> m_modelObject;
 

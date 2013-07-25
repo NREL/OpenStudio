@@ -310,6 +310,8 @@ void PatApp::open()
                                                    tr("Open Project"),
                                                    QDir::homePath(),
                                                    tr("(project.osp)") );
+  if (!fileName.length()) return;
+
   userInteractiveOpenProject(fileName);
 }
 
@@ -713,6 +715,9 @@ void PatApp::showVerticalTab(int verticalId)
   mainWindow->verticalTabWidget->blockSignals(true);
   mainWindow->verticalTabWidget->selectTab(m_mainTabId);
   mainWindow->verticalTabWidget->blockSignals(false);
+
+  mainWindow->setEnabled(true);
+  mainWindow->setFocus();
 }
 
 void PatApp::showStartupView()

@@ -18,38 +18,42 @@
 **********************************************************************/
 
 #include <openstudio_lib/ResultsTabView.hpp>
+
 #include <model/Model_Impl.hpp>
-#include <QStyleOption>
-#include <QPainter>
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QPushButton>
-#include <QStackedWidget>
-#include <QScrollArea>
-#include <QTableWidget>
-#include <QProcess>
-#include <QMessageBox>
-#include <QHeaderView>
+
 #include <QDir>
+#include <QHeaderView>
+#include <QLabel>
+#include <QMessageBox>
+#include <QPainter>
+#include <QProcess>
+#include <QPushButton>
+#include <QScrollArea>
+#include <QStackedWidget>
+#include <QStyleOption>
+#include <QTableWidget>
+#include <QVBoxLayout>
+
 #include <iostream>
+
 #include <vtkCharts/Color.h>
 
+#include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/units/Quantity.hpp>
+#include <utilities/units/QuantityConverter.hpp>
 #include <utilities/units/Scale.hpp>
 #include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
 
-#include <boost/random.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/random.hpp>
 
 namespace openstudio {
 
-  ConsumptionData::ConsumptionData()
+  ComparisonData::ComparisonData()
   {
   }
 
-  ConsumptionData::ConsumptionData(
+  ComparisonData::ComparisonData(
       const std::vector<openstudio::EndUseFuelType> &t_fuelTypes,
       const SqlFile &t_sql)
   {
@@ -75,9 +79,9 @@ namespace openstudio {
     }
   }
 
-  ConsumptionData ConsumptionData::random()
+  ComparisonData ComparisonData::random()
   {
-    ConsumptionData data;
+    ComparisonData data;
     boost::mt19937 rng;
     boost::uniform_int<> boolean(0,1); 
     boost::uniform_real<> value(0,6); 
@@ -128,7 +132,7 @@ namespace openstudio {
       }
     }
 
-  boost::optional<double> ConsumptionData::getValue(const openstudio::EndUseFuelType &t_fuelType,
+  boost::optional<double> ComparisonData::getValue(const openstudio::EndUseFuelType &t_fuelType,
       const openstudio::EndUseCategoryType &t_categoryType,
       const openstudio::MonthOfYear &t_monthOfYear) const
   {
@@ -151,7 +155,7 @@ namespace openstudio {
     return boost::optional<double>();
   }
 
-  void ConsumptionData::setValue(const openstudio::EndUseFuelType &t_fuelType,
+  void ComparisonData::setValue(const openstudio::EndUseFuelType &t_fuelType,
       const openstudio::EndUseCategoryType &t_categoryType,
       const openstudio::MonthOfYear &t_monthOfYear,
       const boost::optional<double> &t_value)
@@ -161,7 +165,7 @@ namespace openstudio {
 
 
 
-  ResultsConsumptionChart::ResultsConsumptionChart(const openstudio::EndUseFuelType &t_fuelType, 
+  ResultsComparisonData::ResultsComparisonData(const openstudio::EndUseFuelType &t_fuelType, 
       const openstudio::Unit &t_unit, QWidget *t_parent)
     : QWidget(t_parent), m_fuelType(t_fuelType), m_unit(t_unit)
   {
@@ -175,15 +179,15 @@ namespace openstudio {
 
     setLayout(vboxlayout);
 
-    setData(ConsumptionData(), m_unit);
+    setData(ComparisonData(), m_unit);
   }
 
-  openstudio::EndUseFuelType ResultsConsumptionChart::getFuelType() const
+  openstudio::EndUseFuelType ResultsComparisonData::getFuelType() const
   {
     return m_fuelType;
   }
 
-  void ResultsConsumptionChart::setData(const ConsumptionData &t_data, const openstudio::Unit &t_unit)
+  void ResultsComparisonData::setData(const ComparisonData &t_data, const openstudio::Unit &t_unit)
   {
     m_unit = t_unit;
     std::string unitstring = t_unit.prettyString().empty()?t_unit.standardString():t_unit.prettyString();
@@ -233,7 +237,7 @@ namespace openstudio {
 
     scalestring.insert(0, "x");
 
-    chart->setColors(ResultsConsumptionLegend::getColors());
+    chart->setColors(ResultsComparisonLegend::getColors());
     //chart->axis(vtkCharts::Axis::LEFT).setTitle("(" + scalestring + ")");
     chart->axis(vtkCharts::Axis::LEFT).setTitle("");
     chart->axis(vtkCharts::Axis::BOTTOM).setTitle("");
@@ -271,7 +275,7 @@ namespace openstudio {
     setUpdatesEnabled(true);
   }
 
-  ResultsConsumptionLegend::ResultsConsumptionLegend(QWidget *t_parent)
+  ResultsComparisonLegend::ResultsComparisonLegend(QWidget *t_parent)
     : QWidget(t_parent)
   {
     QVBoxLayout *vboxlayout = new QVBoxLayout();
@@ -299,7 +303,7 @@ namespace openstudio {
     setLayout(vboxlayout);
   }
 
-  std::vector<vtkCharts::Color3ub> ResultsConsumptionLegend::getColors()
+  std::vector<vtkCharts::Color3ub> ResultsComparisonLegend::getColors()
   {
     // Heating: 237, 28, 36
     // Cooling: 0, 113, 188
@@ -334,7 +338,7 @@ namespace openstudio {
     return colors;
   }
 
-  void ResultsConsumptionTable::setRowHighlights()
+  void ResultsComparisonTable::setRowHighlights()
   {
     const int numrows = openstudio::EndUseCategoryType::getValues().size();
     const int startingrow = 2;
@@ -361,13 +365,13 @@ namespace openstudio {
     }
   }
 
-  openstudio::EndUseFuelType ResultsConsumptionTable::getFuelType() const
+  openstudio::EndUseFuelType ResultsComparisonTable::getFuelType() const
   {
     return m_fuelType;
   }
 
 
-  void ResultsConsumptionTable::buildDataGrid()
+  void ResultsComparisonTable::buildDataGrid()
   {
     std::map<int, std::string> types = openstudio::EndUseCategoryType::getDescriptions();
     std::map<int, std::string> months = openstudio::MonthOfYear::getNames();
@@ -457,7 +461,7 @@ namespace openstudio {
     setRowHighlights();
   }
 
-  QLabel *ResultsConsumptionTable::createDataLabel(bool t_bold)
+  QLabel *ResultsComparisonTable::createDataLabel(bool t_bold)
   {
     QLabel *lbl = new QLabel();
     lbl->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -473,7 +477,7 @@ namespace openstudio {
     return lbl;
   }
 
-  ResultsConsumptionTable::ResultsConsumptionTable(const openstudio::EndUseFuelType &t_fuelType, 
+  ResultsComparisonTable::ResultsComparisonTable(const openstudio::EndUseFuelType &t_fuelType, 
       const openstudio::Unit &t_unit, QWidget *t_parent)
     : QWidget(t_parent), m_fuelType(t_fuelType), m_unit(t_unit), m_grid(new QGridLayout())
   {
@@ -494,7 +498,7 @@ namespace openstudio {
   }
 
 
-  void ResultsConsumptionTable::updateUnitsLabel()
+  void ResultsComparisonTable::updateUnitsLabel()
   {
     int numzeros = m_unit.scale().exponent;
 
@@ -518,7 +522,7 @@ namespace openstudio {
     m_label->setText(openstudio::toQString(m_fuelType.valueDescription() + " Consumption (" + unitstring + ")"));
   }
 
-  void ResultsConsumptionTable::setDataValue(QLabel *t_label, const boost::optional<double> &t_val)
+  void ResultsComparisonTable::setDataValue(QLabel *t_label, const boost::optional<double> &t_val)
   {
     if (t_val)
     {
@@ -529,7 +533,7 @@ namespace openstudio {
     }
   }
 
-  void ResultsConsumptionTable::setDataMonthTotals(const ConsumptionData &t_data)
+  void ResultsComparisonTable::setDataMonthTotals(const ComparisonData &t_data)
   {
 
     boost::optional<double> total;
@@ -576,7 +580,7 @@ namespace openstudio {
     setDataValue(m_total, total);
   }
 
-void ResultsConsumptionTable::setDataCategoryTotals(const ConsumptionData &t_data)
+void ResultsComparisonTable::setDataCategoryTotals(const ComparisonData &t_data)
 {
   std::set<int> enduses = openstudio::EndUseCategoryType::getValues();
   for (std::set<int>::const_iterator itr = enduses.begin();
@@ -610,7 +614,7 @@ void ResultsConsumptionTable::setDataCategoryTotals(const ConsumptionData &t_dat
 
 }
 
-void ResultsConsumptionTable::setDataValues(const ConsumptionData &t_data)
+void ResultsComparisonTable::setDataValues(const ComparisonData &t_data)
 {
   std::set<int> enduses = openstudio::EndUseCategoryType::getValues();
 
@@ -630,7 +634,7 @@ void ResultsConsumptionTable::setDataValues(const ConsumptionData &t_data)
   }
 }
 
-void ResultsConsumptionTable::setData(const ConsumptionData &t_data, const openstudio::Unit &t_unit)
+void ResultsComparisonTable::setData(const ComparisonData &t_data, const openstudio::Unit &t_unit)
 {
   m_unit = t_unit;
   updateUnitsLabel();
@@ -712,18 +716,18 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   : QWidget(t_parent),
     m_model(model),
     m_isIP(true),
-    m_electricConsumptionChart(new ResultsConsumptionChart(openstudio::EndUseFuelType::Electricity, 
+    m_electricConsumptionChart(new ResultsComparisonData(openstudio::EndUseFuelType::Electricity, 
           getUnit(openstudio::EndUseFuelType::Electricity, m_isIP))),
-    m_gasConsumptionChart(new ResultsConsumptionChart(openstudio::EndUseFuelType::Gas, 
+    m_gasConsumptionChart(new ResultsComparisonData(openstudio::EndUseFuelType::Gas, 
           getUnit(openstudio::EndUseFuelType::Gas, m_isIP))),
-    m_consumptionLegend(new ResultsConsumptionLegend()),
-    m_electricConsumptionTable(new ResultsConsumptionTable(openstudio::EndUseFuelType::Electricity, 
+    m_consumptionLegend(new ResultsComparisonLegend()),
+    m_electricConsumptionTable(new ResultsComparisonTable(openstudio::EndUseFuelType::Electricity, 
           getUnit(openstudio::EndUseFuelType::Electricity, m_isIP))),
-    m_gasConsumptionTable(new ResultsConsumptionTable(openstudio::EndUseFuelType::Gas, 
+    m_gasConsumptionTable(new ResultsComparisonTable(openstudio::EndUseFuelType::Gas, 
           getUnit(openstudio::EndUseFuelType::Gas, m_isIP))),
-    m_districtHeatingConsumptionTable(new ResultsConsumptionTable(openstudio::EndUseFuelType::DistrictHeating, 
+    m_districtHeatingConsumptionTable(new ResultsComparisonTable(openstudio::EndUseFuelType::DistrictHeating, 
           getUnit(openstudio::EndUseFuelType::DistrictHeating, m_isIP))),
-    m_districtCoolingConsumptionTable(new ResultsConsumptionTable(openstudio::EndUseFuelType::DistrictCooling, 
+    m_districtCoolingConsumptionTable(new ResultsComparisonTable(openstudio::EndUseFuelType::DistrictCooling, 
           getUnit(openstudio::EndUseFuelType::DistrictCooling, m_isIP))),
     m_openResultsViewerBtn(new QPushButton("Open ResultsViewer\nfor Detailed Reports"))
 {
@@ -830,7 +834,7 @@ void ResultsView::resultsGenerated(const openstudio::path &t_path, const openstu
   m_sqlFilePath = t_path;
   m_radianceResultsPath = t_radianceResultsPath;
 
-  ConsumptionData data(fueltypes,
+  ComparisonData data(fueltypes,
       SqlFile(t_path));
 
 

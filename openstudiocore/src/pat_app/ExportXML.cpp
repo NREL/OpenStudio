@@ -89,11 +89,11 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
   std::vector<std::string> measDefUids;
 
   //loop through all measures in the project
-  Q_FOREACH( InputVariable & variable, variables) {
+  Q_FOREACH( const InputVariable & variable, variables) {
     if ( boost::optional<DiscreteVariable> discVar = variable.optionalCast<DiscreteVariable>() ) {
       //get the perturbations from the variable
       std::vector<DiscretePerturbation> perts = discVar->perturbations(false);
-      Q_FOREACH( DiscretePerturbation & pert, perts) {
+      Q_FOREACH( const DiscretePerturbation & pert, perts) {
         if ( boost::optional<RubyPerturbation> rubyPert = pert.optionalCast<RubyPerturbation>() ) {
           if ( boost::optional<BCLMeasure> bclMeasure = rubyPert->measure() ) {
             //skip if measure def has already been added to file
@@ -366,7 +366,7 @@ boost::optional<QDomElement> ExportXML::exportDesignAlternative(QDomDocument& do
             omTypes.push_back("MinorOverhaul");
             omTypes.push_back("MajorOverhaul");
             omTypes.push_back("OtherOperational");    
-            Q_FOREACH( std::string& omType, omTypes) {
+            Q_FOREACH( const std::string& omType, omTypes) {
               std::string omCashQuery = "SELECT Value FROM tabulardatawithstrings WHERE \
                               ReportName='Life-Cycle Cost Report' AND \
                               ReportForString='Entire Facility' AND \
@@ -465,7 +465,7 @@ boost::optional<QDomElement> ExportXML::exportDesignAlternative(QDomDocument& do
   if (!isBaseline){
     QDomElement alternativeMeasuresElem = doc.createElement("measures");
     alternative.appendChild(alternativeMeasuresElem);
-    Q_FOREACH(WorkflowStepJob& job, jobs) { 
+    BOOST_FOREACH(WorkflowStepJob& job, jobs) {
       WorkflowStep step = job.step;
       if ( step.isInputVariable() ){
         if (boost::optional<analysis::DiscretePerturbation> discPert = job.discretePerturbation) {
@@ -529,7 +529,7 @@ boost::optional<QDomElement> ExportXML::exportAnnual(QDomDocument& doc,
   std::map<EndUseFuelType,FuelType> fuelMap;  
   fuelMap.insert(std::make_pair(EndUseFuelType::Electricity,FuelType::Electricity));
   fuelMap.insert(std::make_pair(EndUseFuelType::Gas,FuelType::Gas));
-  fuelMap.insert(std::make_pair(EndUseFuelType::OtherFuel,FuelType::Diesel)); //TODO add other fuel types
+  fuelMap.insert(std::make_pair(EndUseFuelType::AdditionalFuel,FuelType::Diesel)); //TODO add other fuel types
   fuelMap.insert(std::make_pair(EndUseFuelType::DistrictCooling,FuelType::DistrictCooling));
   fuelMap.insert(std::make_pair(EndUseFuelType::DistrictHeating,FuelType::DistrictHeating));
   fuelMap.insert(std::make_pair(EndUseFuelType::Water,FuelType::Water));
@@ -596,7 +596,7 @@ boost::optional<QDomElement> ExportXML::exportAnnual(QDomDocument& doc,
     //get the weather file (as opposed to design day) run period
     boost::optional<std::string> annEnvPd = boost::none;
     std::vector<std::string> envPds = sql.availableEnvPeriods();
-    Q_FOREACH( std::string& envPd, envPds) {
+    Q_FOREACH( const std::string& envPd, envPds) {
       if ( boost::optional<openstudio::EnvironmentType> envType = sql.environmentType(envPd) ) {
         if ( (*envType) == openstudio::EnvironmentType::WeatherRunPeriod ) {
           annEnvPd = envPd;
@@ -823,7 +823,7 @@ boost::optional<QDomElement> ExportXML::exportMonthly(QDomDocument& doc,
   std::map<EndUseFuelType,QString> xmlFuelTypes;
   xmlFuelTypes.insert(std::make_pair(EndUseFuelType::Electricity,"electricity"));
   xmlFuelTypes.insert(std::make_pair(EndUseFuelType::Gas,"gas"));
-  xmlFuelTypes.insert(std::make_pair(EndUseFuelType::OtherFuel,"other_fuel"));
+  xmlFuelTypes.insert(std::make_pair(EndUseFuelType::AdditionalFuel,"other_fuel"));
   xmlFuelTypes.insert(std::make_pair(EndUseFuelType::DistrictCooling,"district_cooling"));
   xmlFuelTypes.insert(std::make_pair(EndUseFuelType::DistrictHeating,"district_heating"));
   xmlFuelTypes.insert(std::make_pair(EndUseFuelType::Water,"water"));
@@ -965,7 +965,7 @@ boost::optional<QDomElement> ExportXML::exportAlternativeMeasure(QDomDocument& d
         //initial_condition
         std::string initCondMsg = "";
         std::vector<std::string> initConds =  jobErrs.initialConditions();
-        Q_FOREACH(std::string& initCond, initConds) { 
+        Q_FOREACH(std::string initCond, initConds) {
           boost::regex re("^\\[.*\\]");
           initCond = boost::regex_replace(initCond,re,"");
           initCondMsg += initCond;
@@ -977,7 +977,7 @@ boost::optional<QDomElement> ExportXML::exportAlternativeMeasure(QDomDocument& d
         //final_condition
         std::string finCondMsg = "";
         std::vector<std::string> finConds =  jobErrs.finalConditions();
-        Q_FOREACH(std::string& finCond, finConds) { 
+        Q_FOREACH(std::string finCond, finConds) {
           boost::regex re("^\\[.*\\]");
           finCond = boost::regex_replace(finCond,re,"");
           finCondMsg += finCond;

@@ -28,6 +28,253 @@
 
 namespace openstudio {
 
+OSComboBox2::OSComboBox2( QWidget * parent )
+  : QComboBox(parent)
+{
+  this->setAcceptDrops(false);
+  setEnabled(false);
+}
+
+bool OSComboBox2::event( QEvent * e )
+{
+  if( e->type() == QEvent::Wheel )
+  {
+    return false;
+  }
+  else
+  {
+    return QComboBox::event(e);
+  }
+}
+
+void OSComboBox2::bind(model::ModelObject& modelObject,
+                       ChoicesGetter choices, 
+                       StringGetter get,
+                       boost::optional<StringSetter> set,
+                       boost::optional<NoFailAction> reset,
+                       boost::optional<BasicQuery> isDefaulted)
+{
+  m_modelObject = modelObject;
+  m_choices = choices;
+  m_get = get;
+  m_set = set;
+  m_reset = reset;
+  m_isDefaulted = isDefaulted;
+
+  m_dataSource.reset();
+  clear();
+  completeBind();
+}
+
+void OSComboBox2::bind(model::ModelObject& modelObject,
+                       ChoicesGetter choices, 
+                       OptionalStringGetter get,
+                       boost::optional<StringSetter> set,
+                       boost::optional<NoFailAction> reset,
+                       boost::optional<BasicQuery> isDefaulted)
+{
+  m_modelObject = modelObject;
+  m_choices = choices;
+  m_getOptional = get;
+  m_set = set;
+  m_reset = reset;
+  m_isDefaulted = isDefaulted;
+
+  m_dataSource.reset();
+  clear();
+  completeBind();
+}
+
+void OSComboBox2::unbind() {
+  if (m_modelObject){
+    disconnect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get() );
+  }
+  m_modelObject.reset();
+  m_choices.reset();
+  m_get.reset();
+  m_getOptional.reset();
+  m_set.reset();
+  m_reset.reset();
+  m_isDefaulted.reset();
+  m_dataSource.reset();
+
+  this->blockSignals(true);
+
+  clear();
+
+  this->blockSignals(false);
+
+  setEnabled(false);
+}
+
+void OSComboBox2::onModelObjectChanged() {
+  Q_ASSERT(m_modelObject);
+
+  OptionalString oValue;
+  if (m_get) {
+    oValue = (*m_get)();
+  }
+  else {
+    Q_ASSERT(m_getOptional);
+    oValue = (*m_getOptional)();
+  }
+
+  std::string value;
+  if (oValue) {
+    value = *oValue;
+  }
+
+  int i = 0;
+  for( std::vector<std::string>::iterator it = m_values.begin();
+       it < m_values.end();
+       it++ )
+  {
+    if( istringEqual(*it,value) )
+    {
+      this->blockSignals(true);
+      setCurrentIndex(i);
+      this->blockSignals(false);
+      break;
+    }
+
+    i++;
+  }
+}
+
+void OSComboBox2::onModelObjectRemoved(Handle handle)
+{
+  unbind();
+}
+
+void OSComboBox2::onCurrentIndexChanged(const QString & text)
+{
+  Q_ASSERT(m_modelObject);
+  Q_ASSERT(m_set); // should only be enabled if there is a setter
+
+  std::string value = text.toStdString();
+  (*m_set)(value);
+
+  // test if property changed
+  OptionalString oValue;
+  if (m_get) {
+    oValue = (*m_get)();
+  }
+  else {
+    Q_ASSERT(m_getOptional);
+    oValue = (*m_getOptional)();
+  }
+  std::string actualValue;
+  if (oValue) {
+    actualValue = *oValue;
+  }
+
+  if (!istringEqual(actualValue, value)) {
+    // failed, reset combo box
+    onModelObjectChanged();
+  }
+}
+
+void OSComboBox2::setDataSource(boost::shared_ptr<OSComboBoxDataSource> dataSource)
+{
+  unbind();
+
+  if( m_dataSource )
+  {
+    disconnect(m_dataSource.get(),SIGNAL(itemChanged(int)),this,SLOT(onDataSourceChange(int)));
+    disconnect(m_dataSource.get(),SIGNAL(itemAdded(int)),this,SLOT(onDataSourceAdd(int)));
+    disconnect(m_dataSource.get(),SIGNAL(itemRemoved(int)),this,SLOT(onDataSourceRemove(int)));
+  }
+
+  m_dataSource = dataSource;
+
+  connect(m_dataSource.get(),SIGNAL(itemChanged(int)),this,SLOT(onDataSourceChange(int)));
+  connect(m_dataSource.get(),SIGNAL(itemAdded(int)),this,SLOT(onDataSourceAdd(int)));
+  connect(m_dataSource.get(),SIGNAL(itemRemoved(int)),this,SLOT(onDataSourceRemove(int)));
+
+  this->clear();
+
+  for( int i = 0;
+       i < m_dataSource->numberOfItems();
+       i++ )
+  {
+    this->addItem(m_dataSource->valueAt(i));
+  }
+
+  setCurrentIndex(-1);
+
+  setEnabled(true);
+}
+
+void OSComboBox2::onDataSourceChange(int i)
+{
+  this->setItemText(i,m_dataSource->valueAt(i));
+}
+
+void OSComboBox2::onDataSourceAdd(int i)
+{
+  int oldIndex = this->currentIndex();
+
+  this->insertItem(i,m_dataSource->valueAt(i));
+
+  if( oldIndex == -1 )
+  {
+    setCurrentIndex(oldIndex);
+  }
+}
+
+void OSComboBox2::onDataSourceRemove(int i)
+{
+  if( currentIndex() == i )
+  {
+    this->setCurrentIndex(-1);
+  }
+
+  this->removeItem(i);
+}
+
+void OSComboBox2::completeBind() {
+  Q_ASSERT(m_modelObject);
+  Q_ASSERT(m_choices);
+
+  // Connections
+
+  bool isConnected = false;
+  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
+                         this,SLOT(onModelObjectChanged()) );
+  BOOST_ASSERT(isConnected);
+
+  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
+                         this,SLOT(onModelObjectRemoved(Handle)) );
+  BOOST_ASSERT(isConnected);
+
+  isConnected = connect( this, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onCurrentIndexChanged(const QString&)) );
+  BOOST_ASSERT(isConnected);
+
+  // Populate choices
+  m_values = (*m_choices)();
+  if (m_getOptional) {
+    // can be blank
+    m_values.insert(m_values.begin(),std::string());
+  }
+
+  this->blockSignals(true);
+
+  for( std::vector<std::string>::iterator it = m_values.begin();
+       it < m_values.end();
+       it++ )
+  {
+    addItem(QString::fromStdString(*it));
+  }
+
+  // Initialize
+
+  onModelObjectChanged();
+
+  this->blockSignals(false);
+
+  setEnabled(true);
+}
+
 OSComboBox::OSComboBox( QWidget * parent )
   : QComboBox(parent)
 {

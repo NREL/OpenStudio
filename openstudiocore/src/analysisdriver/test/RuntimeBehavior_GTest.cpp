@@ -19,11 +19,11 @@
 
 #include <gtest/gtest.h>
 #include <analysisdriver/test/AnalysisDriverFixture.hpp>
+#include <analysisdriver/test/StopWatcher.hpp>
 
 #include <analysisdriver/AnalysisDriver.hpp>
 #include <analysisdriver/CurrentAnalysis.hpp>
 #include <analysisdriver/AnalysisRunOptions.hpp>
-#include <analysisdriver/AnalysisDriverWatcher.hpp>
 
 #include <project/ProjectDatabase.hpp>
 #include <project/AnalysisRecord.hpp>
@@ -65,49 +65,6 @@ using namespace openstudio::runmanager;
 using namespace openstudio::project;
 using namespace openstudio::analysis;
 using namespace openstudio::analysisdriver;
-
-class StopWatcher : public AnalysisDriverWatcher {
- public:
-  StopWatcher(const AnalysisDriver& analysisDriver, int stopNum=2)
-    : AnalysisDriverWatcher(analysisDriver),
-      m_stopNum(stopNum),
-      m_nComplete(0),
-      m_stoppingTime(0,0,0,0)
-  {}
-
-  virtual ~StopWatcher() {}
-
-  virtual void onDataPointComplete(const UUID &dataPoint) {
-    ++m_nComplete;
-    if (m_nComplete == m_stopNum) {
-      AnalysisDriver driver = analysisDriver();
-      CurrentAnalysisVector currentAnalyses = driver.currentAnalyses();
-      ASSERT_FALSE(currentAnalyses.empty());
-      EXPECT_EQ(1u,currentAnalyses.size());
-      CurrentAnalysis currentAnalysis = currentAnalyses[0];
-      openstudio::Time start = openstudio::Time::currentTime();
-      driver.stop(currentAnalysis);
-      m_stoppingTime = openstudio::Time::currentTime() - start;
-    }
-  }
-
-  int stopNum() const {
-    return m_stopNum;
-  }
-
-  int nComplete() const {
-    return m_nComplete;
-  }
-
-  openstudio::Time stoppingTime() const {
-    return m_stoppingTime;
-  }
-
- private:
-  int m_stopNum;
-  int m_nComplete;
-  openstudio::Time m_stoppingTime;
-};
 
 TEST_F(AnalysisDriverFixture,RuntimeBehavior_StopCustomAnalysis) {
   // Tests for stopping time < 20s.
@@ -221,122 +178,14 @@ TEST_F(AnalysisDriverFixture,RuntimeBehavior_StopOpenStudioAnalysis) {
   EXPECT_EQ(0u,analysisDriver.currentAnalyses().size());
 }
 
-TEST_F(AnalysisDriverFixture,RuntimeBehavior_StopDakotaAnalysis) {
-  // Tests for stopping time < 20s.
-
-  // RETRIEVE PROBLEM
-  Problem problem = retrieveProblem("SimpleHistogramBinUQ",true,false);
-
-  // DEFINE SEED
-  Model model = model::exampleModel();
-  openstudio::path p = toPath("./example.osm");
-  model.save(p,true);
-  FileReference seedModel(p);
-
-  // CREATE ANALYSIS
-  SamplingAlgorithmOptions algOptions;
-  algOptions.setSamples(100);
-  Analysis analysis("Stop Dakota Analysis",
-                    problem,
-                    SamplingAlgorithm(algOptions),
-                    seedModel);
-
-  // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    ProjectDatabase database = getCleanDatabase("StopDakotaAnalysis");
-    AnalysisDriver analysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    StopWatcher watcher(analysisDriver);
-    watcher.watch(analysis.uuid());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    analysisDriver.waitForFinished();
-    EXPECT_FALSE(analysisDriver.isRunning());
-    EXPECT_GE(watcher.nComplete(),watcher.stopNum());
-    EXPECT_LE(watcher.stoppingTime(),openstudio::Time(0,0,0,20));
-
-    // check conditions afterward
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_FALSE(jobErrors->errors().empty());
-    EXPECT_FALSE(currentAnalysis.analysis().dataPoints().empty());
-    EXPECT_FALSE(currentAnalysis.analysis().algorithm()->isComplete());
-    EXPECT_FALSE(currentAnalysis.analysis().algorithm()->failed());
-    EXPECT_EQ(0u,analysisDriver.currentAnalyses().size());
-  }
-}
-
 TEST_F(AnalysisDriverFixture,RuntimeBehavior_StopAndRestartCustomAnalysis) {
 }
 
 TEST_F(AnalysisDriverFixture,RuntimeBehavior_StopAndRestartOpenStudioAnalysis) {
 }
 
-TEST_F(AnalysisDriverFixture,RuntimeBehavior_StopAndRestartDakotaAnalysis) {
-
-  // RETRIEVE PROBLEM
-  Problem problem = retrieveProblem("SimpleHistogramBinUQ",true,false);
-
-  // DEFINE SEED
-  Model model = model::exampleModel();
-  openstudio::path p = toPath("./example.osm");
-  model.save(p,true);
-  FileReference seedModel(p);
-
-  // CREATE ANALYSIS
-  SamplingAlgorithmOptions algOptions;
-  algOptions.setSamples(10);
-  Analysis analysis("Stop and Restart Dakota Analysis",
-                    problem,
-                    SamplingAlgorithm(algOptions),
-                    seedModel);
-
-  // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    ProjectDatabase database = getCleanDatabase("StopAndRestartDakotaAnalysis");
-    AnalysisDriver analysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    StopWatcher watcher(analysisDriver);
-    watcher.watch(analysis.uuid());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    analysisDriver.waitForFinished();
-    EXPECT_FALSE(analysisDriver.isRunning());
-
-    // check conditions afterward
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_FALSE(jobErrors->errors().empty());
-    EXPECT_FALSE(currentAnalysis.analysis().dataPoints().empty());
-    EXPECT_FALSE(currentAnalysis.analysis().dataPointsToQueue().empty());
-    EXPECT_FALSE(currentAnalysis.analysis().completeDataPoints().empty());
-    EXPECT_FALSE(currentAnalysis.analysis().successfulDataPoints().empty());
-    EXPECT_TRUE(currentAnalysis.analysis().failedDataPoints().empty());
-    EXPECT_FALSE(currentAnalysis.analysis().algorithm()->isComplete());
-    EXPECT_FALSE(currentAnalysis.analysis().algorithm()->failed());
-    EXPECT_EQ(0u,analysisDriver.currentAnalyses().size());
-    LOG(Debug,"After initial stop, there are " << currentAnalysis.analysis().dataPoints().size()
-        << " data points, of which " << currentAnalysis.analysis().completeDataPoints().size()
-        << " are complete.");
-
-    // try to restart from database contents
-    Analysis analysis = AnalysisRecord::getAnalysisRecords(database)[0].analysis();
-    ASSERT_TRUE(analysis.algorithm());
-    EXPECT_FALSE(analysis.algorithm()->isComplete());
-    EXPECT_FALSE(analysis.algorithm()->failed());
-    currentAnalysis = analysisDriver.run(analysis,runOptions);
-    analysisDriver.waitForFinished();
-    EXPECT_EQ(10u,analysis.dataPoints().size());
-    EXPECT_EQ(0u,analysis.dataPointsToQueue().size());
-    EXPECT_EQ(10u,analysis.completeDataPoints().size());
-    EXPECT_EQ(10u,analysis.successfulDataPoints().size());
-    EXPECT_EQ(0u,analysis.failedDataPoints().size());
-  }
-}
-
 TEST_F(AnalysisDriverFixture,RuntimeBehavior_ClearAndRerunCustomAnalysis) {
 }
 
 TEST_F(AnalysisDriverFixture,RuntimeBehavior_ClearAndRerunOpenStudioAnalysis) {
-}
-
-TEST_F(AnalysisDriverFixture,RuntimeBehavior_ClearAndRerunDakotaAnalysis) {
 }

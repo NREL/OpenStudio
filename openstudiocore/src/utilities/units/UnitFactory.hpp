@@ -88,6 +88,10 @@ class UTILITIES_API UnitFactorySingleton {
   REGISTER_LOGGER("openstudio.units.UnitFactory");
   UnitFactorySingleton();
 
+  typedef std::map<std::string,boost::optional<Unit> > ResultCacheMap;
+
+  mutable ResultCacheMap m_resultCacheMap;
+
   typedef std::map<std::string,CreateUnitCallback> StandardStringCallbackMap;
   typedef std::map<UnitSystem,StandardStringCallbackMap> CallbackMapMap;
 

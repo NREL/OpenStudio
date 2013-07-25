@@ -97,14 +97,14 @@ namespace detail {
     static std::vector<std::string> result;
 
     if (result.empty())
-  {
-    result.push_back("Unit Heater Heating Rate");
-    result.push_back("Unit Heater Heating Energy");
-    result.push_back("Unit Heater Fan Electric Power");
-    result.push_back("Unit Heater Fan Electric Consumption");
-    result.push_back("Unit Heater Fan Availability Status");
-  }
-  return result;
+    {
+      result.push_back("Zone Unit Heater Heating Rate");
+      result.push_back("Zone Unit Heater Heating Energy");
+      result.push_back("Zone Unit Heater Fan Electric Power");
+      result.push_back("Zone Unit Heater Fan Electric Energy");
+      result.push_back("Zone Unit Heater Fan Availability Status");
+    }
+    return result;
   }
 
   IddObjectType ZoneHVACUnitHeater_Impl::iddObjectType() const {

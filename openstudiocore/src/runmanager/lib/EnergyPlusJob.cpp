@@ -72,22 +72,23 @@ namespace detail {
     // because it's used to cache looked up variables
     if (!m_idf)
     {
-      try {
+      if (t_params.has("filename") && !t_params.get("filename").children.empty())
+      {
         // first, see if we can get a filename that was specifically requested by the job creation
-        std::string filename = t_params.get("filename").children.at(0).value;
+        
+        std::string filename = t_params.get("filename").children[0].value;
        
         LOG(Info, "Looking for filename: " << filename); 
         try {
           m_idf = t_files.getLastByFilename(filename);
-        } catch (const std::exception &) {
+        } catch (const std::runtime_error &) {
           // a filename param was provided, but the file hasn't been generated ... yet
         }
-
-      } catch (const std::exception &) {
+      } else {
         // if not, try to get any old IDF that was passed in
         try {
           m_idf = t_files.getLastByExtension("idf");
-        } catch (const std::exception &) {
+        } catch (const std::runtime_error &) {
         }
       }
     }
@@ -108,8 +109,8 @@ namespace detail {
     JobParams p = params();
     getFiles(f, p);
 
-    // start at default EnergyPlus version of 7.2
-    ToolVersion tv(7,2); 
+    // start at default EnergyPlus version of 8.0
+    ToolVersion tv(8,0); 
     if (m_idf){
       if (boost::filesystem::exists(m_idf->fullPath))
       {
