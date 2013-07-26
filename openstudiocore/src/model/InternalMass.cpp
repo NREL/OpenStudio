@@ -76,8 +76,6 @@ namespace detail {
 
     this->makeUnique();
 
-    double floorArea = space->floorArea();
-
     InternalMassDefinition internalMassDefinition = this->internalMassDefinition();
     BOOST_FOREACH(LifeCycleCost cost, internalMassDefinition.lifeCycleCosts()){
       cost.convertToCostPerEach();

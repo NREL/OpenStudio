@@ -112,8 +112,6 @@ namespace detail {
 
     boost::optional<double> airChangesperHour = this->airChangesperHour();
     if (airChangesperHour){
-      double floorArea = space->floorArea();
-
       return this->setDesignFlowRate(*airChangesperHour * space->volume() / 3600.0);
     }
 

@@ -119,8 +119,6 @@ namespace detail {
 
     this->makeUnique();
 
-    double floorArea = space->floorArea();
-
     PeopleDefinition peopleDefinition = this->peopleDefinition();
     BOOST_FOREACH(LifeCycleCost cost, peopleDefinition.lifeCycleCosts()){
       cost.convertToCostPerEach();
