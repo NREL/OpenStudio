@@ -48,6 +48,92 @@ namespace vtkCharts {
 
 namespace openstudio {
 
+  class ConsumptionData
+  {
+    public:
+      ConsumptionData();
+      ConsumptionData(const std::vector<openstudio::EndUseFuelType> &t_fuelTypes, const SqlFile &t_sqlFile);
+      
+      boost::optional<double> getValue(const openstudio::EndUseFuelType &t_fuelType,
+          const openstudio::EndUseCategoryType &t_categoryType,
+          const openstudio::MonthOfYear &t_monthOfYear) const;
+
+      void setValue(const openstudio::EndUseFuelType &t_fuelType,
+          const openstudio::EndUseCategoryType &t_categoryType,
+          const openstudio::MonthOfYear &t_monthOfYear,
+          const boost::optional<double> &t_value);
+
+      static ConsumptionData random();
+    private:
+      REGISTER_LOGGER("openstudio::ConsumptionData");
+      std::map<openstudio::EndUseFuelType, std::map<openstudio::EndUseCategoryType, std::map<openstudio::MonthOfYear, boost::optional<double> > > > m_data;
+  };
+
+  class ResultsConsumptionChart : public QWidget
+  {
+    Q_OBJECT;
+
+    public:
+      ResultsConsumptionChart(const openstudio::EndUseFuelType &t_fuelType, 
+        const openstudio::Unit &t_unit, QWidget *t_parent=0);
+      virtual ~ResultsConsumptionChart() {}
+      void setData(const ConsumptionData &t_data, const openstudio::Unit &t_unit);
+      openstudio::EndUseFuelType getFuelType() const;
+
+    private:
+      REGISTER_LOGGER("openstudio::ResultsConsumptionChart");
+      boost::shared_ptr<vtkCharts::BarChart> m_chart;
+      openstudio::EndUseFuelType m_fuelType;
+      openstudio::Unit m_unit;
+      QLabel* m_label;
+  };
+
+  class ResultsConsumptionLegend : public QWidget
+  {
+    Q_OBJECT;
+
+    public:
+      ResultsConsumptionLegend(QWidget *t_parent = 0);
+      virtual ~ResultsConsumptionLegend() {}
+      static std::vector<vtkCharts::Color3ub> getColors();
+
+    private:
+      REGISTER_LOGGER("openstudio::ResultsConsumptionLegend");
+
+   };
+
+  class ResultsConsumptionTable : public QWidget
+  {
+    Q_OBJECT;
+
+    public:
+      ResultsConsumptionTable(const openstudio::EndUseFuelType &t_fuelType, 
+          const openstudio::Unit &t_unit, QWidget *t_parent = 0);
+      virtual ~ResultsConsumptionTable() {}
+      void setData(const ConsumptionData &t_data, const openstudio::Unit &t_unit);
+      openstudio::EndUseFuelType getFuelType() const;
+
+    private:
+      REGISTER_LOGGER("openstudio::ResultsConsumptionTable");
+      void buildDataGrid();
+      void setDataMonthTotals(const ConsumptionData &t_data);
+      void setDataCategoryTotals(const ConsumptionData &t_data);
+      void setDataValues(const ConsumptionData &t_data);
+      QLabel *createDataLabel(bool t_bold);
+      void setDataValue(QLabel *t_label, const boost::optional<double> &t_data);
+      void setRowHighlights();
+      void updateUnitsLabel();
+
+      openstudio::EndUseFuelType m_fuelType;
+      openstudio::Unit m_unit;
+      QGridLayout *m_grid;
+      std::map<openstudio::EndUseCategoryType, std::map<openstudio::MonthOfYear, QLabel*> > m_labels;
+      std::map<openstudio::EndUseCategoryType, QLabel*> m_categoryTotals;
+      std::map<openstudio::MonthOfYear, QLabel*> m_monthTotals;
+      QLabel* m_total;
+      QLabel* m_label;
+  };
+
   class ComparisonData
   {
     public:
@@ -158,24 +244,25 @@ namespace openstudio {
 
       openstudio::model::Model m_model;
       bool m_isIP;
-      //ResultsComparisonData *m_electricConsumptionChart;
-      //ResultsComparisonData *m_gasConsumptionChart;
-      //ResultsComparisonLegend *m_consumptionLegend;
-      //ResultsComparisonTable *m_electricConsumptionTable;
-      //ResultsComparisonTable *m_gasConsumptionTable;
-      //ResultsComparisonTable *m_districtHeatingConsumptionTable;
-      //ResultsComparisonTable *m_districtCoolingConsumptionTable;
-      ResultsComparisonData * m_electricConsumptionChart;
-      ResultsComparisonData * m_demandConsumptionChart;
+      ResultsConsumptionChart *m_electricConsumptionChart;
+      ResultsConsumptionChart *m_gasConsumptionChart;
+      ResultsConsumptionLegend *m_consumptionLegend;
+      ResultsConsumptionTable *m_electricConsumptionTable;
+      ResultsConsumptionTable *m_gasConsumptionTable;
+      ResultsConsumptionTable *m_districtHeatingConsumptionTable;
+      ResultsConsumptionTable *m_districtCoolingConsumptionTable;
+
+      ResultsComparisonData * m_electricComparisonChart;
+      ResultsComparisonData * m_demandComparisonChart;
       ResultsComparisonLegend * m_electricLegend;
 
-      ResultsComparisonData * m_gasConsumptionChart;
+      ResultsComparisonData * m_gasComparisonChart;
       ResultsComparisonLegend  * m_gasLegend;
 
-      ResultsComparisonData * m_districtHeatingConsumptionChart;
+      ResultsComparisonData * m_districtHeatingComparisonChart;
       ResultsComparisonLegend  * m_districtHeatingLegend;
 
-      ResultsComparisonData * m_districtCoolingConsumptionChart;
+      ResultsComparisonData * m_districtCoolingComparisonChart;
       ResultsComparisonLegend  * m_districtCoolingLegend;
 
       QStackedWidget * m_stackedWidget;

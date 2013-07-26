@@ -48,490 +48,542 @@
 #include <boost/filesystem.hpp>
 #include <boost/random.hpp>
 
-#define ASHRAE_NMBE "5"
-#define ASHRAE_RSME "15"
-#define FEMP_NMBE "15"
-#define FEMP_RSME "10"
-#define IPMVP_NMBE "20"
-#define IPMVP_RSME "5"
+#define ASHRAE_NMBE "5%"
+#define ASHRAE_RSME "15%"
+#define FEMP_NMBE "15%"
+#define FEMP_RSME "10%"
+#define IPMVP_NMBE "20%"
+#define IPMVP_RSME "5%"
 
 namespace openstudio {
 
-  ComparisonData::ComparisonData()
+ConsumptionData::ConsumptionData()
+{
+}
+
+ConsumptionData::ConsumptionData(
+    const std::vector<openstudio::EndUseFuelType> &t_fuelTypes,
+    const SqlFile &t_sql)
+{
+  for (std::vector<openstudio::EndUseFuelType>::const_iterator fuelType = t_fuelTypes.begin();
+      fuelType != t_fuelTypes.end();
+      ++fuelType)
   {
-  }
-
-  ComparisonData::ComparisonData(
-      const std::vector<openstudio::EndUseFuelType> &t_fuelTypes,
-      const SqlFile &t_sql)
-  {
-    for (std::vector<openstudio::EndUseFuelType>::const_iterator fuelType = t_fuelTypes.begin();
-        fuelType != t_fuelTypes.end();
-        ++fuelType)
-    {
-      std::set<int> enduses = openstudio::EndUseCategoryType::getValues();
-      for (std::set<int>::const_iterator itr = enduses.begin();
-          itr != enduses.end();
-          ++itr)
-      {
-        std::vector<float> uses;
-        std::set<int> months = openstudio::MonthOfYear::getValues();
-        int monthcount = 0;
-        for (std::set<int>::const_iterator monthitr = months.begin();
-            monthitr != months.end() && monthcount < 12;
-            ++monthitr, ++monthcount)
-        {
-          setValue(*fuelType, *itr, *monthitr, t_sql.energyConsumptionByMonth(*fuelType, *itr, *monthitr));
-        }
-      }
-    }
-  }
-
-  ComparisonData ComparisonData::random()
-  {
-    ComparisonData data;
-    boost::mt19937 rng;
-    boost::uniform_int<> boolean(0,1); 
-    boost::uniform_real<> value(0,6); 
-    boost::variate_generator<boost::mt19937&, boost::uniform_int<> > isempty(rng, boolean);
-    boost::variate_generator<boost::mt19937&, boost::uniform_real<> > makevalue(rng, value);
-
-    std::set<int> endusefueltypes = openstudio::EndUseFuelType::getValues();
-    for (std::set<int>::const_iterator fuelType = endusefueltypes.begin();
-        fuelType != endusefueltypes.end();
-        ++fuelType)
-    {
-      std::set<int> enduses = openstudio::EndUseCategoryType::getValues();
-      for (std::set<int>::const_iterator itr = enduses.begin();
-          itr != enduses.end();
-          ++itr)
-      {
-        std::vector<float> uses;
-        std::set<int> months = openstudio::MonthOfYear::getValues();
-        int monthcount = 0;
-        for (std::set<int>::const_iterator monthitr = months.begin();
-            monthitr != months.end() && monthcount < 12;
-            ++monthitr, ++monthcount)
-        {
-          boost::optional<double> val;
-
-          if (!isempty())
-          {
-            val = makevalue();
-          } 
-
-          data.setValue(*fuelType, *itr, *monthitr, val);
-        }
-      }
-    }
-
-    return data;
-  }
-
-  template <typename T, typename Arg>
-    typename T::const_iterator find_map_value(const T &t, const Arg &arg)
-    {
-      typename T::const_iterator itr = t.find(arg);
-      if (itr != t.end())
-      {
-        return itr;
-      } else {
-        throw std::out_of_range("");
-      }
-    }
-
-  boost::optional<double> ComparisonData::getValue(const openstudio::EndUseFuelType &t_fuelType,
-      const openstudio::EndUseCategoryType &t_categoryType,
-      const openstudio::MonthOfYear &t_monthOfYear) const
-  {
-    std::map<openstudio::EndUseFuelType, std::map<openstudio::EndUseCategoryType, std::map<openstudio::MonthOfYear, boost::optional<double> > > >::const_iterator itr1 = m_data.find(t_fuelType);
-
-    if (itr1 != m_data.end())
-    {
-      std::map<openstudio::EndUseCategoryType, std::map<openstudio::MonthOfYear, boost::optional<double> > >::const_iterator itr2 = itr1->second.find(t_categoryType);
-
-      if (itr2 != itr1->second.end())
-      {
-        std::map<openstudio::MonthOfYear, boost::optional<double> >::const_iterator itr3 = itr2->second.find(t_monthOfYear);
-        if (itr3 != itr2->second.end())
-        {
-          return itr3->second;
-        }
-      }
-    }
-
-    return boost::optional<double>();
-  }
-
-  void ComparisonData::setValue(const openstudio::EndUseFuelType &t_fuelType,
-      const openstudio::EndUseCategoryType &t_categoryType,
-      const openstudio::MonthOfYear &t_monthOfYear,
-      const boost::optional<double> &t_value)
-  {
-    m_data[t_fuelType][t_categoryType][t_monthOfYear] = t_value;
-  }
-
-  ResultsComparisonData::ResultsComparisonData(const openstudio::EndUseFuelType &t_fuelType, 
-      const openstudio::Unit &t_unit, QWidget *t_parent)
-    : QWidget(t_parent), m_fuelType(t_fuelType), m_unit(t_unit)
-  {
-    QVBoxLayout *vboxlayout = new QVBoxLayout();
-    vboxlayout->setContentsMargins(0,0,0,0);
-    vboxlayout->setSpacing(10);
-    m_label = new QLabel();
-    m_label->setObjectName("H2");
-    vboxlayout->addWidget(m_label);
-
-    setLayout(vboxlayout);
-
-    setData(ComparisonData(), m_unit);
-  }
-
-  openstudio::EndUseFuelType ResultsComparisonData::getFuelType() const
-  {
-    return m_fuelType;
-  }
-
-  void ResultsComparisonData::setData(const ComparisonData &t_data, const openstudio::Unit &t_unit)
-  {
-    m_unit = t_unit;
-    std::string unitstring = t_unit.prettyString().empty()?t_unit.standardString():t_unit.prettyString();
-    if(unitstring == "MBtu"){
-      unitstring = "Million Btu";
-    }
-    m_label->setText(openstudio::toQString(m_fuelType.valueDescription() + " Consumption (" + unitstring + ")"));
-    setUpdatesEnabled(false);
-    QLayout *l = layout();
-
-    if (l->count() > 1)
-    {
-      l->removeItem(l->itemAt(l->count() - 1));
-    }
-
-    m_chart.reset();
-
-    boost::shared_ptr<vtkCharts::BarChart> chart(new vtkCharts::BarChart("Consumption"));
     std::set<int> enduses = openstudio::EndUseCategoryType::getValues();
-
-    std::vector<std::string> labels;
-    std::map<int, std::string> monthnames = openstudio::MonthOfYear::getNames();
-
-    int monthnum = 0;
-    for (std::map<int, std::string>::const_iterator itr = monthnames.begin();
-         itr != monthnames.end() && monthnum < 12;
-         ++itr, ++monthnum)
-    {
-      labels.push_back(itr->second);
-    }
-
-    chart->setXTickLabels(labels);
-
-    int numzeros = m_unit.scale().exponent;
-
-    std::string scalestring;
-    for (int i = 0; i < numzeros; ++i)
-    {
-      if (i % 3 == 0 && i != 0)
-      {
-        scalestring.insert(0, ",");
-      }
-
-      scalestring.insert(0, "0");
-    }
-
-    scalestring.insert(0, "x");
-
-    chart->setColors(ResultsComparisonLegend::getColors());
-    //chart->axis(vtkCharts::Axis::LEFT).setTitle("(" + scalestring + ")");
-    chart->axis(vtkCharts::Axis::LEFT).setTitle("");
-    chart->axis(vtkCharts::Axis::BOTTOM).setTitle("");
-
-    Unit u = *openstudio::createUnit("J");
-
     for (std::set<int>::const_iterator itr = enduses.begin();
-         itr != enduses.end();
-         ++itr)
+        itr != enduses.end();
+        ++itr)
     {
       std::vector<float> uses;
       std::set<int> months = openstudio::MonthOfYear::getValues();
       int monthcount = 0;
       for (std::set<int>::const_iterator monthitr = months.begin();
-           monthitr != months.end() && monthcount < 12;
-           ++monthitr, ++monthcount)
+          monthitr != months.end() && monthcount < 12;
+          ++monthitr, ++monthcount)
       {
-        boost::optional<double> val = t_data.getValue(m_fuelType, *itr, *monthitr);
-        if (val)
-        {
-          Quantity q(*val, u);
-          uses.push_back(openstudio::convert(q, m_unit)->value());
-        } else {
-          uses.push_back(0);
-        }
+        setValue(*fuelType, *itr, *monthitr, t_sql.energyConsumptionByMonth(*fuelType, *itr, *monthitr));
       }
-
-      chart->stackSeries(uses, "Consumption", openstudio::EndUseCategoryType::valueDescription(*itr));
     }
-
-    layout()->addWidget(chart->widget());
-    chart->rescale();
-    m_chart = chart;
-    setUpdatesEnabled(true);
   }
+}
 
-  ResultsComparisonLegend::ResultsComparisonLegend(QWidget *t_parent)
-    : QWidget(t_parent)
+ConsumptionData ConsumptionData::random()
+{
+  ConsumptionData data;
+  boost::mt19937 rng;
+  boost::uniform_int<> boolean(0,1); 
+  boost::uniform_real<> value(0,6); 
+  boost::variate_generator<boost::mt19937&, boost::uniform_int<> > isempty(rng, boolean);
+  boost::variate_generator<boost::mt19937&, boost::uniform_real<> > makevalue(rng, value);
+
+  std::set<int> endusefueltypes = openstudio::EndUseFuelType::getValues();
+  for (std::set<int>::const_iterator fuelType = endusefueltypes.begin();
+      fuelType != endusefueltypes.end();
+      ++fuelType)
   {
-    QVBoxLayout *vboxlayout = new QVBoxLayout();
-
-    std::map<int, std::string> s = openstudio::EndUseCategoryType::getDescriptions();
-    std::vector<vtkCharts::Color3ub> c = getColors();
-
-    for (size_t i = 0; i < s.size(); ++i)
+    std::set<int> enduses = openstudio::EndUseCategoryType::getValues();
+    for (std::set<int>::const_iterator itr = enduses.begin();
+        itr != enduses.end();
+        ++itr)
     {
-      QPixmap pm(10, 10);
-      const vtkCharts::Color3ub color = c.at(i);
-      pm.fill(QColor(color.Red(), color.Green(), color.Blue()));
-      QHBoxLayout *hboxlayout = new QHBoxLayout();
-      QLabel *l = new QLabel();
-      l->setPixmap(pm);
-      l->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-
-      hboxlayout->addWidget(l);
-      hboxlayout->addWidget(new QLabel(openstudio::toQString(s[i])));
-
-      vboxlayout->addLayout(hboxlayout);
-    }
-
-    setLayout(vboxlayout);
-  }
-
-  std::vector<vtkCharts::Color3ub> ResultsComparisonLegend::getColors()
-  {
-    // Heating: 237, 28, 36
-    // Cooling: 0, 113, 188
-    // Interior Lighting: 244, 222, 17
-    // Exterior Lighting: 216, 192, 18
-    // Interior Equipment: 77, 77, 77
-    // Exterior Equipment: 179, 179, 179
-    // Fans: 255, 123,172
-    // Pumps: 102, 45, 145
-    // Heat Rejection: 241, 90, 36
-    // Humidification: 46,49, 146
-    // Water Systems: 251, 176, 59
-    // Refrigeration: 41, 171, 226
-    // Generators: 140, 198, 63
-    std::vector<vtkCharts::Color3ub> colors;
-
-    colors.push_back(vtkCharts::Color3ub(237, 28, 36));
-    colors.push_back(vtkCharts::Color3ub(0, 113, 188));
-    colors.push_back(vtkCharts::Color3ub(244, 222, 17));
-    colors.push_back(vtkCharts::Color3ub(216, 192, 18));
-    colors.push_back(vtkCharts::Color3ub(77, 77, 77));
-    colors.push_back(vtkCharts::Color3ub(179, 179, 179));
-    colors.push_back(vtkCharts::Color3ub(255, 123, 172));
-    colors.push_back(vtkCharts::Color3ub(102, 45, 145));
-    colors.push_back(vtkCharts::Color3ub(241, 90, 36));
-    colors.push_back(vtkCharts::Color3ub(46, 49, 146));
-    colors.push_back(vtkCharts::Color3ub(200, 90, 36));
-    colors.push_back(vtkCharts::Color3ub(251, 176, 59));
-    colors.push_back(vtkCharts::Color3ub(41, 171, 226));
-    colors.push_back(vtkCharts::Color3ub(140, 198, 63));
-
-    return colors;
-  }
-
-  void ResultsComparisonTable::setRowHighlights()
-  {
-    const int numrows = openstudio::EndUseCategoryType::getValues().size();
-    const int startingrow = 2;
-    const int numcolumns = m_grid->columnCount();
-
-    for (int row = 0; row < numrows; row += 2) 
-    {
-
-      for (int column = 0; column < numcolumns; ++column)
+      std::vector<float> uses;
+      std::set<int> months = openstudio::MonthOfYear::getValues();
+      int monthcount = 0;
+      for (std::set<int>::const_iterator monthitr = months.begin();
+          monthitr != months.end() && monthcount < 12;
+          ++monthitr, ++monthcount)
       {
-        QLayoutItem *item = m_grid->itemAtPosition(row + startingrow, column);
-        if (item)
+        boost::optional<double> val;
+
+        if (!isempty())
         {
-          QWidget *widget = item->widget();
-          QLabel *label = dynamic_cast<QLabel *>(widget);
-          if (label)
-          {
-            label->setBackgroundRole(QPalette::Dark);
-            label->setForegroundRole(QPalette::Text);
-            label->setAutoFillBackground(true);
-          }
-        }
+          val = makevalue();
+        } 
+
+        data.setValue(*fuelType, *itr, *monthitr, val);
       }
     }
   }
 
-  openstudio::EndUseFuelType ResultsComparisonTable::getFuelType() const
+  return data;
+}
+
+template <typename T, typename Arg>
+  typename T::const_iterator find_map_value(const T &t, const Arg &arg)
   {
-    return m_fuelType;
+    typename T::const_iterator itr = t.find(arg);
+    if (itr != t.end())
+    {
+      return itr;
+    } else {
+      throw std::out_of_range("");
+    }
   }
 
-  void ResultsComparisonTable::buildDataGrid()
+boost::optional<double> ConsumptionData::getValue(const openstudio::EndUseFuelType &t_fuelType,
+    const openstudio::EndUseCategoryType &t_categoryType,
+    const openstudio::MonthOfYear &t_monthOfYear) const
+{
+  std::map<openstudio::EndUseFuelType, std::map<openstudio::EndUseCategoryType, std::map<openstudio::MonthOfYear, boost::optional<double> > > >::const_iterator itr1 = m_data.find(t_fuelType);
+
+  if (itr1 != m_data.end())
   {
-    std::map<int, std::string> types = openstudio::EndUseCategoryType::getDescriptions();
-    std::map<int, std::string> months = openstudio::MonthOfYear::getNames();
+    std::map<openstudio::EndUseCategoryType, std::map<openstudio::MonthOfYear, boost::optional<double> > >::const_iterator itr2 = itr1->second.find(t_categoryType);
 
-    QFrame *tophline = new QFrame();
-    tophline->setFrameStyle(QFrame::HLine | QFrame::Plain);
-    m_grid->setHorizontalSpacing(0);
-    m_grid->setVerticalSpacing(0);
-    m_grid->addWidget(tophline, 0, 0, 1, 27);
-
-    int row = 2;
-    for (std::map<int, std::string>::const_iterator itr = types.begin();
-        itr != types.end();
-        ++itr, ++row)
+    if (itr2 != itr1->second.end())
     {
-      m_grid->addWidget(new QLabel(openstudio::toQString(itr->second)), row, 0);
+      std::map<openstudio::MonthOfYear, boost::optional<double> >::const_iterator itr3 = itr2->second.find(t_monthOfYear);
+      if (itr3 != itr2->second.end())
+      {
+        return itr3->second;
+      }
     }
-    m_grid->addWidget(new QLabel("<b>Total</b>"), row, 0);
+  }
 
-    // Column labels
-    int column = 1;
-    for (std::map<int, std::string>::const_iterator monthitr = months.begin();
-        monthitr->first <= openstudio::MonthOfYear::Dec;
-        ++monthitr, column += 2)
+  return boost::optional<double>();
+}
+
+void ConsumptionData::setValue(const openstudio::EndUseFuelType &t_fuelType,
+    const openstudio::EndUseCategoryType &t_categoryType,
+    const openstudio::MonthOfYear &t_monthOfYear,
+    const boost::optional<double> &t_value)
+{
+  m_data[t_fuelType][t_categoryType][t_monthOfYear] = t_value;
+}
+
+ResultsConsumptionChart::ResultsConsumptionChart(const openstudio::EndUseFuelType &t_fuelType, 
+    const openstudio::Unit &t_unit, QWidget *t_parent)
+  : QWidget(t_parent), m_fuelType(t_fuelType), m_unit(t_unit)
+{
+  QVBoxLayout *vboxlayout = new QVBoxLayout();
+  vboxlayout->setContentsMargins(0,0,0,0);
+  vboxlayout->setSpacing(10);
+  m_label = new QLabel();
+  m_label->setObjectName("H2");
+  vboxlayout->addWidget(m_label);
+
+  setLayout(vboxlayout);
+
+  setData(ConsumptionData(), m_unit);
+}
+
+openstudio::EndUseFuelType ResultsConsumptionChart::getFuelType() const
+{
+  return m_fuelType;
+}
+
+void ResultsConsumptionChart::setData(const ConsumptionData &t_data, const openstudio::Unit &t_unit)
+{
+  m_unit = t_unit;
+  std::string unitstring = t_unit.prettyString().empty()?t_unit.standardString():t_unit.prettyString();
+  if(unitstring == "MBtu"){
+    unitstring = "Million Btu";
+  }
+  m_label->setText(openstudio::toQString(m_fuelType.valueDescription() + " Consumption (" + unitstring + ")"));
+  setUpdatesEnabled(false);
+  QLayout *l = layout();
+
+  if (l->count() > 1)
+  {
+    l->removeItem(l->itemAt(l->count() - 1));
+  }
+
+  m_chart.reset();
+
+  boost::shared_ptr<vtkCharts::BarChart> chart(new vtkCharts::BarChart("Consumption"));
+  std::set<int> enduses = openstudio::EndUseCategoryType::getValues();
+
+  std::vector<std::string> labels;
+  std::map<int, std::string> monthnames = openstudio::MonthOfYear::getNames();
+
+  int monthnum = 0;
+  for (std::map<int, std::string>::const_iterator itr = monthnames.begin();
+        itr != monthnames.end() && monthnum < 12;
+        ++itr, ++monthnum)
+  {
+    labels.push_back(itr->second);
+  }
+
+  chart->setXTickLabels(labels);
+
+  int numzeros = m_unit.scale().exponent;
+
+  std::string scalestring;
+  for (int i = 0; i < numzeros; ++i)
+  {
+    if (i % 3 == 0 && i != 0)
     {
-      QFrame *vline = new QFrame();
-      vline->setFrameStyle(QFrame::VLine | QFrame::Plain);
-      m_grid->addWidget(vline, 1, column, types.size() + 1, 1);
-      QLabel *monthname = new QLabel(openstudio::toQString("<b>" + monthitr->second + "</b>"));
-      monthname->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-      m_grid->addWidget(monthname, 1, column+1);
+      scalestring.insert(0, ",");
     }
+
+    scalestring.insert(0, "0");
+  }
+
+  scalestring.insert(0, "x");
+
+  chart->setColors(ResultsConsumptionLegend::getColors());
+  //chart->axis(vtkCharts::Axis::LEFT).setTitle("(" + scalestring + ")");
+  chart->axis(vtkCharts::Axis::LEFT).setTitle("");
+  chart->axis(vtkCharts::Axis::BOTTOM).setTitle("");
+
+  Unit u = *openstudio::createUnit("J");
+
+  for (std::set<int>::const_iterator itr = enduses.begin();
+        itr != enduses.end();
+        ++itr)
+  {
+    std::vector<float> uses;
+    std::set<int> months = openstudio::MonthOfYear::getValues();
+    int monthcount = 0;
+    for (std::set<int>::const_iterator monthitr = months.begin();
+          monthitr != months.end() && monthcount < 12;
+          ++monthitr, ++monthcount)
+    {
+      boost::optional<double> val = t_data.getValue(m_fuelType, *itr, *monthitr);
+      if (val)
+      {
+        Quantity q(*val, u);
+        uses.push_back(openstudio::convert(q, m_unit)->value());
+      } else {
+        uses.push_back(0);
+      }
+    }
+
+    chart->stackSeries(uses, "Consumption", openstudio::EndUseCategoryType::valueDescription(*itr));
+  }
+
+  layout()->addWidget(chart->widget());
+  chart->rescale();
+  m_chart = chart;
+  setUpdatesEnabled(true);
+}
+
+ResultsConsumptionLegend::ResultsConsumptionLegend(QWidget *t_parent)
+  : QWidget(t_parent)
+{
+  QVBoxLayout *vboxlayout = new QVBoxLayout();
+
+  std::map<int, std::string> s = openstudio::EndUseCategoryType::getDescriptions();
+  std::vector<vtkCharts::Color3ub> c = getColors();
+
+  for (size_t i = 0; i < s.size(); ++i)
+  {
+    QPixmap pm(10, 10);
+    const vtkCharts::Color3ub color = c.at(i);
+    pm.fill(QColor(color.Red(), color.Green(), color.Blue()));
+    QHBoxLayout *hboxlayout = new QHBoxLayout();
+    QLabel *l = new QLabel();
+    l->setPixmap(pm);
+    l->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    hboxlayout->addWidget(l);
+    hboxlayout->addWidget(new QLabel(openstudio::toQString(s[i])));
+
+    vboxlayout->addLayout(hboxlayout);
+  }
+
+  setLayout(vboxlayout);
+}
+
+std::vector<vtkCharts::Color3ub> ResultsConsumptionLegend::getColors()
+{
+  // Heating: 237, 28, 36
+  // Cooling: 0, 113, 188
+  // Interior Lighting: 244, 222, 17
+  // Exterior Lighting: 216, 192, 18
+  // Interior Equipment: 77, 77, 77
+  // Exterior Equipment: 179, 179, 179
+  // Fans: 255, 123,172
+  // Pumps: 102, 45, 145
+  // Heat Rejection: 241, 90, 36
+  // Humidification: 46,49, 146
+  // Water Systems: 251, 176, 59
+  // Refrigeration: 41, 171, 226
+  // Generators: 140, 198, 63
+  std::vector<vtkCharts::Color3ub> colors;
+
+  colors.push_back(vtkCharts::Color3ub(237, 28, 36));
+  colors.push_back(vtkCharts::Color3ub(0, 113, 188));
+  colors.push_back(vtkCharts::Color3ub(244, 222, 17));
+  colors.push_back(vtkCharts::Color3ub(216, 192, 18));
+  colors.push_back(vtkCharts::Color3ub(77, 77, 77));
+  colors.push_back(vtkCharts::Color3ub(179, 179, 179));
+  colors.push_back(vtkCharts::Color3ub(255, 123, 172));
+  colors.push_back(vtkCharts::Color3ub(102, 45, 145));
+  colors.push_back(vtkCharts::Color3ub(241, 90, 36));
+  colors.push_back(vtkCharts::Color3ub(46, 49, 146));
+  colors.push_back(vtkCharts::Color3ub(200, 90, 36));
+  colors.push_back(vtkCharts::Color3ub(251, 176, 59));
+  colors.push_back(vtkCharts::Color3ub(41, 171, 226));
+  colors.push_back(vtkCharts::Color3ub(140, 198, 63));
+
+  return colors;
+}
+
+void ResultsConsumptionTable::setRowHighlights()
+{
+  const int numrows = openstudio::EndUseCategoryType::getValues().size();
+  const int startingrow = 2;
+  const int numcolumns = m_grid->columnCount();
+
+  for (int row = 0; row < numrows; row += 2) 
+  {
+
+    for (int column = 0; column < numcolumns; ++column)
+    {
+      QLayoutItem *item = m_grid->itemAtPosition(row + startingrow, column);
+      if (item)
+      {
+        QWidget *widget = item->widget();
+        QLabel *label = dynamic_cast<QLabel *>(widget);
+        if (label)
+        {
+          label->setBackgroundRole(QPalette::Dark);
+          label->setForegroundRole(QPalette::Text);
+          label->setAutoFillBackground(true);
+        }
+      }
+    }
+  }
+}
+
+openstudio::EndUseFuelType ResultsConsumptionTable::getFuelType() const
+{
+  return m_fuelType;
+}
+
+void ResultsConsumptionTable::buildDataGrid()
+{
+  std::map<int, std::string> types = openstudio::EndUseCategoryType::getDescriptions();
+  std::map<int, std::string> months = openstudio::MonthOfYear::getNames();
+
+  QFrame *tophline = new QFrame();
+  tophline->setFrameStyle(QFrame::HLine | QFrame::Plain);
+  m_grid->setHorizontalSpacing(0);
+  m_grid->setVerticalSpacing(0);
+  m_grid->addWidget(tophline, 0, 0, 1, 27);
+
+  int row = 2;
+  for (std::map<int, std::string>::const_iterator itr = types.begin();
+      itr != types.end();
+      ++itr, ++row)
+  {
+    m_grid->addWidget(new QLabel(openstudio::toQString(itr->second)), row, 0);
+  }
+  m_grid->addWidget(new QLabel("<b>Total</b>"), row, 0);
+
+
+  // Column labels
+  int column = 1;
+  for (std::map<int, std::string>::const_iterator monthitr = months.begin();
+      monthitr->first <= openstudio::MonthOfYear::Dec;
+      ++monthitr, column += 2)
+  {
     QFrame *vline = new QFrame();
     vline->setFrameStyle(QFrame::VLine | QFrame::Plain);
     m_grid->addWidget(vline, 1, column, types.size() + 1, 1);
-    ++column;
-    m_grid->addWidget(new QLabel("<b>Total</b>"), 1, column);
+    QLabel *monthname = new QLabel(openstudio::toQString("<b>" + monthitr->second + "</b>"));
+    monthname->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    m_grid->addWidget(monthname, 1, column+1);
+  }
+  QFrame *vline = new QFrame();
+  vline->setFrameStyle(QFrame::VLine | QFrame::Plain);
+  m_grid->addWidget(vline, 1, column, types.size() + 1, 1);
+  ++column;
+  m_grid->addWidget(new QLabel("<b>Total</b>"), 1, column);
 
-    // Row labels
-    row = 2;
-    for (std::map<int, std::string>::const_iterator itr = types.begin();
-        itr != types.end();
-        ++itr, ++row)
-    {
-      column = 2;
-      for (std::map<int, std::string>::const_iterator monthitr = months.begin();
-          monthitr->first <= openstudio::MonthOfYear::Dec;
-          ++monthitr, column += 2)
-      {
-        QLabel *datalabel = createDataLabel(false);
-        m_grid->addWidget(datalabel, row, column);
-        m_labels[itr->first][monthitr->first] = datalabel;
-      }
-    }
-
-    // Row totals labels
-    row = 2;
-    column = m_grid->columnCount() - 1;
-    for (std::map<int, std::string>::const_iterator itr = types.begin();
-        itr != types.end();
-        ++itr, ++row)
-    {
-      QLabel *datalabel = createDataLabel(false);
-      m_grid->addWidget(datalabel, row, column);
-      m_categoryTotals[itr->first] = datalabel;
-    }
-
-    // Column totals labels
-    row = m_grid->rowCount() - 1;
+  // Row labels
+  row = 2;
+  for (std::map<int, std::string>::const_iterator itr = types.begin();
+      itr != types.end();
+      ++itr, ++row)
+  {
     column = 2;
     for (std::map<int, std::string>::const_iterator monthitr = months.begin();
         monthitr->first <= openstudio::MonthOfYear::Dec;
         ++monthitr, column += 2)
     {
-      QLabel *datalabel = createDataLabel(true);
+      QLabel *datalabel = createDataLabel(false);
       m_grid->addWidget(datalabel, row, column);
-      m_monthTotals[monthitr->first] = datalabel;
+      m_labels[itr->first][monthitr->first] = datalabel;
+    }
+  }
+
+  // Row totals labels
+  row = 2;
+  column = m_grid->columnCount() - 1;
+  for (std::map<int, std::string>::const_iterator itr = types.begin();
+      itr != types.end();
+      ++itr, ++row)
+  {
+    QLabel *datalabel = createDataLabel(false);
+    m_grid->addWidget(datalabel, row, column);
+    m_categoryTotals[itr->first] = datalabel;
+  }
+
+  // Column totals labels
+  row = m_grid->rowCount() - 1;
+  column = 2;
+  for (std::map<int, std::string>::const_iterator monthitr = months.begin();
+      monthitr->first <= openstudio::MonthOfYear::Dec;
+      ++monthitr, column += 2)
+  {
+    QLabel *datalabel = createDataLabel(true);
+    m_grid->addWidget(datalabel, row, column);
+    m_monthTotals[monthitr->first] = datalabel;
+  }
+
+  // total toal
+  QLabel *totallabel = createDataLabel(true);
+  m_grid->addWidget(totallabel, row, column);
+  m_total = totallabel;
+
+  setRowHighlights();
+}
+
+QLabel *ResultsConsumptionTable::createDataLabel(bool t_bold)
+{
+  QLabel *lbl = new QLabel();
+  lbl->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
+  if (t_bold)
+  {
+    QFont f;
+    f.setWeight(QFont::Bold);
+    lbl->setFont(f);
+  }
+
+  setDataValue(lbl, boost::optional<double>());
+  return lbl;
+}
+
+ResultsConsumptionTable::ResultsConsumptionTable(const openstudio::EndUseFuelType &t_fuelType, 
+    const openstudio::Unit &t_unit, QWidget *t_parent)
+  : QWidget(t_parent), m_fuelType(t_fuelType), m_unit(t_unit), m_grid(new QGridLayout())
+{
+  QVBoxLayout *vboxlayout = new QVBoxLayout();
+  m_label = new QLabel();
+  m_label->setObjectName("H2");
+  vboxlayout->addWidget(m_label);
+
+  updateUnitsLabel();
+
+  buildDataGrid();
+
+  vboxlayout->addLayout(m_grid);
+
+  setLayout(vboxlayout);
+}
+
+void ResultsConsumptionTable::updateUnitsLabel()
+{
+  int numzeros = m_unit.scale().exponent;
+
+  std::string scalestring;
+  for (int i = 0; i < numzeros; ++i)
+  {
+    if (i % 3 == 0 && i != 0)
+    {
+      scalestring.insert(0, ",");
     }
 
-    // total toal
-    QLabel *totallabel = createDataLabel(true);
-    m_grid->addWidget(totallabel, row, column);
-    m_total = totallabel;
-
-    setRowHighlights();
+    scalestring.insert(0, "0");
   }
 
-  QLabel *ResultsComparisonTable::createDataLabel(bool t_bold)
-  {
-    QLabel *lbl = new QLabel();
-    lbl->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+  scalestring.insert(0, "x");
+  std::string unitstring = m_unit.prettyString().empty()?m_unit.standardString():m_unit.prettyString();
+  if(unitstring == "MBtu"){
+    unitstring = "Million Btu";
+  }
+  //m_label->setText(openstudio::toQString(m_fuelType.valueDescription() + " Consumption (" + unitstring + " " + scalestring + ")"));
+  m_label->setText(openstudio::toQString(m_fuelType.valueDescription() + " Consumption (" + unitstring + ")"));
+}
 
-    if (t_bold)
+void ResultsConsumptionTable::setDataValue(QLabel *t_label, const boost::optional<double> &t_val)
+{
+  if (t_val)
+  {
+    Quantity q(*t_val, *openstudio::UnitFactory::instance().createUnit("J"));
+    t_label->setText(QString::number(QuantityConverter::instance().convert(q, m_unit)->value(), 'g', 4));
+  } else {
+    t_label->setText("<html>&#x2014;</html>");
+  }
+}
+
+void ResultsConsumptionTable::setDataMonthTotals(const ConsumptionData &t_data)
+{
+  boost::optional<double> total;
+
+  int monthcount = 0;
+  std::set<int> months = openstudio::MonthOfYear::getValues();
+  for (std::set<int>::const_iterator monthitr = months.begin();
+      monthitr != months.end() && monthcount < 12;
+      ++monthitr, ++monthcount)
+  {
+    boost::optional<double> monthtotal;
+
+    std::set<int> enduses = openstudio::EndUseCategoryType::getValues();
+
+    for (std::set<int>::const_iterator itr = enduses.begin();
+        itr != enduses.end();
+        ++itr)
     {
-      QFont f;
-      f.setWeight(QFont::Bold);
-      lbl->setFont(f);
-    }
-
-    setDataValue(lbl, boost::optional<double>());
-    return lbl;
-  }
-
-  ResultsComparisonTable::ResultsComparisonTable(const openstudio::EndUseFuelType &t_fuelType, 
-      const openstudio::Unit &t_unit, QWidget *t_parent)
-    : QWidget(t_parent), m_fuelType(t_fuelType), m_unit(t_unit), m_grid(new QGridLayout())
-  {
-    QVBoxLayout *vboxlayout = new QVBoxLayout();
-    m_label = new QLabel();
-    m_label->setObjectName("H2");
-    vboxlayout->addWidget(m_label);
-
-    updateUnitsLabel();
-
-    buildDataGrid();
-
-    vboxlayout->addLayout(m_grid);
-
-    setLayout(vboxlayout);
-  }
-
-  void ResultsComparisonTable::updateUnitsLabel()
-  {
-    int numzeros = m_unit.scale().exponent;
-
-    std::string scalestring;
-    for (int i = 0; i < numzeros; ++i)
-    {
-      if (i % 3 == 0 && i != 0)
+      boost::optional<double> val = t_data.getValue(m_fuelType, *itr, *monthitr);
+      if (val)
       {
-        scalestring.insert(0, ",");
+        if (monthtotal)
+        {
+          *monthtotal += *val;
+        } else {
+          monthtotal = val;
+        }
       }
-
-      scalestring.insert(0, "0");
     }
 
-    scalestring.insert(0, "x");
-    std::string unitstring = m_unit.prettyString().empty()?m_unit.standardString():m_unit.prettyString();
-    if(unitstring == "MBtu"){
-      unitstring = "Million Btu";
-    }
-    //m_label->setText(openstudio::toQString(m_fuelType.valueDescription() + " Consumption (" + unitstring + " " + scalestring + ")"));
-    m_label->setText(openstudio::toQString(m_fuelType.valueDescription() + " Consumption (" + unitstring + ")"));
-  }
+    setDataValue(m_monthTotals[*monthitr], monthtotal);
 
-  void ResultsComparisonTable::setDataValue(QLabel *t_label, const boost::optional<double> &t_val)
-  {
-    if (t_val)
+    if (monthtotal)
     {
-      Quantity q(*t_val, *openstudio::UnitFactory::instance().createUnit("J"));
-      t_label->setText(QString::number(QuantityConverter::instance().convert(q, m_unit)->value(), 'g', 4));
-    } else {
-      t_label->setText("<html>&#x2014;</html>");
+      if (total)
+      {
+        *total+= *monthtotal;
+      } else {
+        total = monthtotal;
+      }
     }
   }
 
-  void ResultsComparisonTable::setDataMonthTotals(const ComparisonData &t_data)
+  setDataValue(m_total, total);
+}
+
+void ResultsConsumptionTable::setDataCategoryTotals(const ConsumptionData &t_data)
+{
+  std::set<int> enduses = openstudio::EndUseCategoryType::getValues();
+  for (std::set<int>::const_iterator itr = enduses.begin();
+      itr != enduses.end();
+      ++itr)
   {
-    boost::optional<double> total;
+    boost::optional<double> categorytotal;
 
     int monthcount = 0;
     std::set<int> months = openstudio::MonthOfYear::getValues();
@@ -539,41 +591,558 @@ namespace openstudio {
         monthitr != months.end() && monthcount < 12;
         ++monthitr, ++monthcount)
     {
-      boost::optional<double> monthtotal;
 
-      std::set<int> enduses = openstudio::EndUseCategoryType::getValues();
-
-      for (std::set<int>::const_iterator itr = enduses.begin();
-          itr != enduses.end();
-          ++itr)
+      boost::optional<double> val = t_data.getValue(m_fuelType, *itr, *monthitr);
+      if (val)
       {
-        boost::optional<double> val = t_data.getValue(m_fuelType, *itr, *monthitr);
-        if (val)
+        if (categorytotal)
         {
-          if (monthtotal)
-          {
-            *monthtotal += *val;
-          } else {
-            monthtotal = val;
-          }
-        }
-      }
-
-      setDataValue(m_monthTotals[*monthitr], monthtotal);
-
-      if (monthtotal)
-      {
-        if (total)
-        {
-          *total+= *monthtotal;
+          *categorytotal+= *val;
         } else {
-          total = monthtotal;
+          categorytotal = val;
         }
       }
     }
 
-    setDataValue(m_total, total);
+    setDataValue(m_categoryTotals[*itr], categorytotal);
   }
+
+}
+
+void ResultsConsumptionTable::setDataValues(const ConsumptionData &t_data)
+{
+  std::set<int> enduses = openstudio::EndUseCategoryType::getValues();
+
+  for (std::set<int>::const_iterator itr = enduses.begin();
+       itr != enduses.end();
+       ++itr)
+  {
+    std::set<int> months = openstudio::MonthOfYear::getValues();
+    int monthcount = 0;
+    for (std::set<int>::const_iterator monthitr = months.begin();
+         monthitr != months.end() && monthcount < 12;
+         ++monthitr, ++monthcount)
+    {
+      boost::optional<double> val = t_data.getValue(m_fuelType, *itr, *monthitr);
+      setDataValue(m_labels[*itr][*monthitr], val);
+    }
+  }
+}
+
+void ResultsConsumptionTable::setData(const ConsumptionData &t_data, const openstudio::Unit &t_unit)
+{
+  m_unit = t_unit;
+  updateUnitsLabel();
+  setDataValues(t_data);
+  setDataMonthTotals(t_data);
+  setDataCategoryTotals(t_data);
+}
+
+ComparisonData::ComparisonData()
+{
+}
+
+ComparisonData::ComparisonData(
+    const std::vector<openstudio::EndUseFuelType> &t_fuelTypes,
+    const SqlFile &t_sql)
+{
+  for (std::vector<openstudio::EndUseFuelType>::const_iterator fuelType = t_fuelTypes.begin();
+      fuelType != t_fuelTypes.end();
+      ++fuelType)
+  {
+    std::set<int> enduses = openstudio::EndUseCategoryType::getValues();
+    for (std::set<int>::const_iterator itr = enduses.begin();
+        itr != enduses.end();
+        ++itr)
+    {
+      std::vector<float> uses;
+      std::set<int> months = openstudio::MonthOfYear::getValues();
+      int monthcount = 0;
+      for (std::set<int>::const_iterator monthitr = months.begin();
+          monthitr != months.end() && monthcount < 12;
+          ++monthitr, ++monthcount)
+      {
+        setValue(*fuelType, *itr, *monthitr, t_sql.energyConsumptionByMonth(*fuelType, *itr, *monthitr));
+      }
+    }
+  }
+}
+
+ComparisonData ComparisonData::random()
+{
+  ComparisonData data;
+  boost::mt19937 rng;
+  boost::uniform_int<> boolean(0,1); 
+  boost::uniform_real<> value(0,6); 
+  boost::variate_generator<boost::mt19937&, boost::uniform_int<> > isempty(rng, boolean);
+  boost::variate_generator<boost::mt19937&, boost::uniform_real<> > makevalue(rng, value);
+
+  std::set<int> endusefueltypes = openstudio::EndUseFuelType::getValues();
+  for (std::set<int>::const_iterator fuelType = endusefueltypes.begin();
+      fuelType != endusefueltypes.end();
+      ++fuelType)
+  {
+    std::set<int> enduses = openstudio::EndUseCategoryType::getValues();
+    for (std::set<int>::const_iterator itr = enduses.begin();
+        itr != enduses.end();
+        ++itr)
+    {
+      std::vector<float> uses;
+      std::set<int> months = openstudio::MonthOfYear::getValues();
+      int monthcount = 0;
+      for (std::set<int>::const_iterator monthitr = months.begin();
+          monthitr != months.end() && monthcount < 12;
+          ++monthitr, ++monthcount)
+      {
+        boost::optional<double> val;
+
+        if (!isempty())
+        {
+          val = makevalue();
+        } 
+
+        data.setValue(*fuelType, *itr, *monthitr, val);
+      }
+    }
+  }
+
+  return data;
+}
+
+boost::optional<double> ComparisonData::getValue(const openstudio::EndUseFuelType &t_fuelType,
+    const openstudio::EndUseCategoryType &t_categoryType,
+    const openstudio::MonthOfYear &t_monthOfYear) const
+{
+  std::map<openstudio::EndUseFuelType, std::map<openstudio::EndUseCategoryType, std::map<openstudio::MonthOfYear, boost::optional<double> > > >::const_iterator itr1 = m_data.find(t_fuelType);
+
+  if (itr1 != m_data.end())
+  {
+    std::map<openstudio::EndUseCategoryType, std::map<openstudio::MonthOfYear, boost::optional<double> > >::const_iterator itr2 = itr1->second.find(t_categoryType);
+
+    if (itr2 != itr1->second.end())
+    {
+      std::map<openstudio::MonthOfYear, boost::optional<double> >::const_iterator itr3 = itr2->second.find(t_monthOfYear);
+      if (itr3 != itr2->second.end())
+      {
+        return itr3->second;
+      }
+    }
+  }
+
+  return boost::optional<double>();
+}
+
+void ComparisonData::setValue(const openstudio::EndUseFuelType &t_fuelType,
+    const openstudio::EndUseCategoryType &t_categoryType,
+    const openstudio::MonthOfYear &t_monthOfYear,
+    const boost::optional<double> &t_value)
+{
+  m_data[t_fuelType][t_categoryType][t_monthOfYear] = t_value;
+}
+
+ResultsComparisonData::ResultsComparisonData(const openstudio::EndUseFuelType &t_fuelType, 
+    const openstudio::Unit &t_unit, QWidget *t_parent)
+  : QWidget(t_parent), m_fuelType(t_fuelType), m_unit(t_unit)
+{
+  QVBoxLayout *vboxlayout = new QVBoxLayout();
+  vboxlayout->setContentsMargins(0,0,0,0);
+  vboxlayout->setSpacing(10);
+  m_label = new QLabel();
+  m_label->setObjectName("H2");
+  vboxlayout->addWidget(m_label);
+
+  setLayout(vboxlayout);
+
+  setData(ComparisonData(), m_unit);
+}
+
+openstudio::EndUseFuelType ResultsComparisonData::getFuelType() const
+{
+  return m_fuelType;
+}
+
+void ResultsComparisonData::setData(const ComparisonData &t_data, const openstudio::Unit &t_unit)
+{
+  m_unit = t_unit;
+  std::string unitstring = t_unit.prettyString().empty()?t_unit.standardString():t_unit.prettyString();
+  if(unitstring == "MBtu"){
+    unitstring = "Million Btu";
+  }
+  m_label->setText(openstudio::toQString(m_fuelType.valueDescription() + " Consumption (" + unitstring + ")"));
+  setUpdatesEnabled(false);
+  QLayout *l = layout();
+
+  if (l->count() > 1)
+  {
+    l->removeItem(l->itemAt(l->count() - 1));
+  }
+
+  m_chart.reset();
+
+  boost::shared_ptr<vtkCharts::BarChart> chart(new vtkCharts::BarChart("Consumption"));
+  std::set<int> enduses = openstudio::EndUseCategoryType::getValues();
+
+  std::vector<std::string> labels;
+  std::map<int, std::string> monthnames = openstudio::MonthOfYear::getNames();
+
+  int monthnum = 0;
+  for (std::map<int, std::string>::const_iterator itr = monthnames.begin();
+        itr != monthnames.end() && monthnum < 12;
+        ++itr, ++monthnum)
+  {
+    labels.push_back(itr->second);
+  }
+
+  chart->setXTickLabels(labels);
+
+  int numzeros = m_unit.scale().exponent;
+
+  std::string scalestring;
+  for (int i = 0; i < numzeros; ++i)
+  {
+    if (i % 3 == 0 && i != 0)
+    {
+      scalestring.insert(0, ",");
+    }
+
+    scalestring.insert(0, "0");
+  }
+
+  scalestring.insert(0, "x");
+
+  chart->setColors(ResultsComparisonLegend::getColors());
+  //chart->axis(vtkCharts::Axis::LEFT).setTitle("(" + scalestring + ")");
+  chart->axis(vtkCharts::Axis::LEFT).setTitle("");
+  chart->axis(vtkCharts::Axis::BOTTOM).setTitle("");
+
+  Unit u = *openstudio::createUnit("J");
+
+  for (std::set<int>::const_iterator itr = enduses.begin();
+        itr != enduses.end();
+        ++itr)
+  {
+    std::vector<float> uses;
+    std::set<int> months = openstudio::MonthOfYear::getValues();
+    int monthcount = 0;
+    for (std::set<int>::const_iterator monthitr = months.begin();
+          monthitr != months.end() && monthcount < 12;
+          ++monthitr, ++monthcount)
+    {
+      boost::optional<double> val = t_data.getValue(m_fuelType, *itr, *monthitr);
+      if (val)
+      {
+        Quantity q(*val, u);
+        uses.push_back(openstudio::convert(q, m_unit)->value());
+      } else {
+        uses.push_back(0);
+      }
+    }
+
+    chart->stackSeries(uses, "Consumption", openstudio::EndUseCategoryType::valueDescription(*itr));
+  }
+
+  layout()->addWidget(chart->widget());
+  chart->rescale();
+  m_chart = chart;
+  setUpdatesEnabled(true);
+}
+
+ResultsComparisonLegend::ResultsComparisonLegend(QWidget *t_parent)
+  : QWidget(t_parent)
+{
+  QVBoxLayout *vboxlayout = new QVBoxLayout();
+
+  std::map<int, std::string> s = openstudio::EndUseCategoryType::getDescriptions();
+  std::vector<vtkCharts::Color3ub> c = getColors();
+
+  for (size_t i = 0; i < s.size(); ++i)
+  {
+    QPixmap pm(10, 10);
+    const vtkCharts::Color3ub color = c.at(i);
+    pm.fill(QColor(color.Red(), color.Green(), color.Blue()));
+    QHBoxLayout *hboxlayout = new QHBoxLayout();
+    QLabel *l = new QLabel();
+    l->setPixmap(pm);
+    l->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    hboxlayout->addWidget(l);
+    hboxlayout->addWidget(new QLabel(openstudio::toQString(s[i])));
+
+    vboxlayout->addLayout(hboxlayout);
+  }
+
+  setLayout(vboxlayout);
+}
+
+std::vector<vtkCharts::Color3ub> ResultsComparisonLegend::getColors()
+{
+  // Heating: 237, 28, 36
+  // Cooling: 0, 113, 188
+  // Interior Lighting: 244, 222, 17
+  // Exterior Lighting: 216, 192, 18
+  // Interior Equipment: 77, 77, 77
+  // Exterior Equipment: 179, 179, 179
+  // Fans: 255, 123,172
+  // Pumps: 102, 45, 145
+  // Heat Rejection: 241, 90, 36
+  // Humidification: 46,49, 146
+  // Water Systems: 251, 176, 59
+  // Refrigeration: 41, 171, 226
+  // Generators: 140, 198, 63
+  std::vector<vtkCharts::Color3ub> colors;
+
+  colors.push_back(vtkCharts::Color3ub(237, 28, 36));
+  colors.push_back(vtkCharts::Color3ub(0, 113, 188));
+  colors.push_back(vtkCharts::Color3ub(244, 222, 17));
+  colors.push_back(vtkCharts::Color3ub(216, 192, 18));
+  colors.push_back(vtkCharts::Color3ub(77, 77, 77));
+  colors.push_back(vtkCharts::Color3ub(179, 179, 179));
+  colors.push_back(vtkCharts::Color3ub(255, 123, 172));
+  colors.push_back(vtkCharts::Color3ub(102, 45, 145));
+  colors.push_back(vtkCharts::Color3ub(241, 90, 36));
+  colors.push_back(vtkCharts::Color3ub(46, 49, 146));
+  colors.push_back(vtkCharts::Color3ub(200, 90, 36));
+  colors.push_back(vtkCharts::Color3ub(251, 176, 59));
+  colors.push_back(vtkCharts::Color3ub(41, 171, 226));
+  colors.push_back(vtkCharts::Color3ub(140, 198, 63));
+
+  return colors;
+}
+
+void ResultsComparisonTable::setRowHighlights()
+{
+  const int numrows = openstudio::EndUseCategoryType::getValues().size();
+  const int startingrow = 2;
+  const int numcolumns = m_grid->columnCount();
+
+  for (int row = 0; row < numrows; row += 2) 
+  {
+
+    for (int column = 0; column < numcolumns; ++column)
+    {
+      QLayoutItem *item = m_grid->itemAtPosition(row + startingrow, column);
+      if (item)
+      {
+        QWidget *widget = item->widget();
+        QLabel *label = dynamic_cast<QLabel *>(widget);
+        if (label)
+        {
+          label->setBackgroundRole(QPalette::Dark);
+          label->setForegroundRole(QPalette::Text);
+          label->setAutoFillBackground(true);
+        }
+      }
+    }
+  }
+}
+
+openstudio::EndUseFuelType ResultsComparisonTable::getFuelType() const
+{
+  return m_fuelType;
+}
+
+void ResultsComparisonTable::buildDataGrid()
+{
+  std::map<int, std::string> types = openstudio::EndUseCategoryType::getDescriptions();
+  std::map<int, std::string> months = openstudio::MonthOfYear::getNames();
+
+  QFrame *tophline = new QFrame();
+  tophline->setFrameStyle(QFrame::HLine | QFrame::Plain);
+  m_grid->setHorizontalSpacing(0);
+  m_grid->setVerticalSpacing(0);
+  m_grid->addWidget(tophline, 0, 0, 1, 27);
+
+  int row = 2;
+  for (std::map<int, std::string>::const_iterator itr = types.begin();
+      itr != types.end();
+      ++itr, ++row)
+  {
+    m_grid->addWidget(new QLabel(openstudio::toQString(itr->second)), row, 0);
+  }
+  m_grid->addWidget(new QLabel("<b>Total</b>"), row, 0);
+
+  // Column labels
+  int column = 1;
+  for (std::map<int, std::string>::const_iterator monthitr = months.begin();
+      monthitr->first <= openstudio::MonthOfYear::Dec;
+      ++monthitr, column += 2)
+  {
+    QFrame *vline = new QFrame();
+    vline->setFrameStyle(QFrame::VLine | QFrame::Plain);
+    m_grid->addWidget(vline, 1, column, types.size() + 1, 1);
+    QLabel *monthname = new QLabel(openstudio::toQString("<b>" + monthitr->second + "</b>"));
+    monthname->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    m_grid->addWidget(monthname, 1, column+1);
+  }
+  QFrame *vline = new QFrame();
+  vline->setFrameStyle(QFrame::VLine | QFrame::Plain);
+  m_grid->addWidget(vline, 1, column, types.size() + 1, 1);
+  ++column;
+  m_grid->addWidget(new QLabel("<b>Total</b>"), 1, column);
+
+  // Row labels
+  row = 2;
+  for (std::map<int, std::string>::const_iterator itr = types.begin();
+      itr != types.end();
+      ++itr, ++row)
+  {
+    column = 2;
+    for (std::map<int, std::string>::const_iterator monthitr = months.begin();
+        monthitr->first <= openstudio::MonthOfYear::Dec;
+        ++monthitr, column += 2)
+    {
+      QLabel *datalabel = createDataLabel(false);
+      m_grid->addWidget(datalabel, row, column);
+      m_labels[itr->first][monthitr->first] = datalabel;
+    }
+  }
+
+  // Row totals labels
+  row = 2;
+  column = m_grid->columnCount() - 1;
+  for (std::map<int, std::string>::const_iterator itr = types.begin();
+      itr != types.end();
+      ++itr, ++row)
+  {
+    QLabel *datalabel = createDataLabel(false);
+    m_grid->addWidget(datalabel, row, column);
+    m_categoryTotals[itr->first] = datalabel;
+  }
+
+  // Column totals labels
+  row = m_grid->rowCount() - 1;
+  column = 2;
+  for (std::map<int, std::string>::const_iterator monthitr = months.begin();
+      monthitr->first <= openstudio::MonthOfYear::Dec;
+      ++monthitr, column += 2)
+  {
+    QLabel *datalabel = createDataLabel(true);
+    m_grid->addWidget(datalabel, row, column);
+    m_monthTotals[monthitr->first] = datalabel;
+  }
+
+  // total toal
+  QLabel *totallabel = createDataLabel(true);
+  m_grid->addWidget(totallabel, row, column);
+  m_total = totallabel;
+
+  setRowHighlights();
+}
+
+QLabel *ResultsComparisonTable::createDataLabel(bool t_bold)
+{
+  QLabel *lbl = new QLabel();
+  lbl->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
+  if (t_bold)
+  {
+    QFont f;
+    f.setWeight(QFont::Bold);
+    lbl->setFont(f);
+  }
+
+  setDataValue(lbl, boost::optional<double>());
+  return lbl;
+}
+
+ResultsComparisonTable::ResultsComparisonTable(const openstudio::EndUseFuelType &t_fuelType, 
+    const openstudio::Unit &t_unit, QWidget *t_parent)
+  : QWidget(t_parent), m_fuelType(t_fuelType), m_unit(t_unit), m_grid(new QGridLayout())
+{
+  QVBoxLayout *vboxlayout = new QVBoxLayout();
+  m_label = new QLabel();
+  m_label->setObjectName("H2");
+  vboxlayout->addWidget(m_label);
+
+  updateUnitsLabel();
+
+  buildDataGrid();
+
+  vboxlayout->addLayout(m_grid);
+
+  setLayout(vboxlayout);
+}
+
+void ResultsComparisonTable::updateUnitsLabel()
+{
+  int numzeros = m_unit.scale().exponent;
+
+  std::string scalestring;
+  for (int i = 0; i < numzeros; ++i)
+  {
+    if (i % 3 == 0 && i != 0)
+    {
+      scalestring.insert(0, ",");
+    }
+
+    scalestring.insert(0, "0");
+  }
+
+  scalestring.insert(0, "x");
+  std::string unitstring = m_unit.prettyString().empty()?m_unit.standardString():m_unit.prettyString();
+  if(unitstring == "MBtu"){
+    unitstring = "Million Btu";
+  }
+  //m_label->setText(openstudio::toQString(m_fuelType.valueDescription() + " Consumption (" + unitstring + " " + scalestring + ")"));
+  m_label->setText(openstudio::toQString(m_fuelType.valueDescription() + " Consumption (" + unitstring + ")"));
+}
+
+void ResultsComparisonTable::setDataValue(QLabel *t_label, const boost::optional<double> &t_val)
+{
+  if (t_val)
+  {
+    Quantity q(*t_val, *openstudio::UnitFactory::instance().createUnit("J"));
+    t_label->setText(QString::number(QuantityConverter::instance().convert(q, m_unit)->value(), 'g', 4));
+  } else {
+    t_label->setText("<html>&#x2014;</html>");
+  }
+}
+
+void ResultsComparisonTable::setDataMonthTotals(const ComparisonData &t_data)
+{
+  boost::optional<double> total;
+
+  int monthcount = 0;
+  std::set<int> months = openstudio::MonthOfYear::getValues();
+  for (std::set<int>::const_iterator monthitr = months.begin();
+      monthitr != months.end() && monthcount < 12;
+      ++monthitr, ++monthcount)
+  {
+    boost::optional<double> monthtotal;
+
+    std::set<int> enduses = openstudio::EndUseCategoryType::getValues();
+
+    for (std::set<int>::const_iterator itr = enduses.begin();
+        itr != enduses.end();
+        ++itr)
+    {
+      boost::optional<double> val = t_data.getValue(m_fuelType, *itr, *monthitr);
+      if (val)
+      {
+        if (monthtotal)
+        {
+          *monthtotal += *val;
+        } else {
+          monthtotal = val;
+        }
+      }
+    }
+
+    setDataValue(m_monthTotals[*monthitr], monthtotal);
+
+    if (monthtotal)
+    {
+      if (total)
+      {
+        *total+= *monthtotal;
+      } else {
+        total = monthtotal;
+      }
+    }
+  }
+
+  setDataValue(m_total, total);
+}
 
 void ResultsComparisonTable::setDataCategoryTotals(const ComparisonData &t_data)
 {
@@ -708,153 +1277,193 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   : QWidget(t_parent),
     m_model(model),
     m_isIP(true),
+    m_electricConsumptionChart(new ResultsConsumptionChart(openstudio::EndUseFuelType::Electricity, 
+          getUnit(openstudio::EndUseFuelType::Electricity, m_isIP))),
+    m_gasConsumptionChart(new ResultsConsumptionChart(openstudio::EndUseFuelType::Gas, 
+          getUnit(openstudio::EndUseFuelType::Gas, m_isIP))),
+    m_consumptionLegend(new ResultsConsumptionLegend()),
+    m_electricConsumptionTable(new ResultsConsumptionTable(openstudio::EndUseFuelType::Electricity, 
+          getUnit(openstudio::EndUseFuelType::Electricity, m_isIP))),
+    m_gasConsumptionTable(new ResultsConsumptionTable(openstudio::EndUseFuelType::Gas, 
+          getUnit(openstudio::EndUseFuelType::Gas, m_isIP))),
+    m_districtHeatingConsumptionTable(new ResultsConsumptionTable(openstudio::EndUseFuelType::DistrictHeating, 
+          getUnit(openstudio::EndUseFuelType::DistrictHeating, m_isIP))),
+    m_districtCoolingConsumptionTable(new ResultsConsumptionTable(openstudio::EndUseFuelType::DistrictCooling,
+          getUnit(openstudio::EndUseFuelType::DistrictCooling, m_isIP))),
 
-    m_electricConsumptionChart(new ResultsComparisonData(openstudio::EndUseFuelType::Electricity, 
+    m_electricComparisonChart(new ResultsComparisonData(openstudio::EndUseFuelType::Electricity, 
           getUnit(openstudio::EndUseFuelType::Electricity, m_isIP))),      
-    //m_demandConsumptionChart(new ResultsComparisonData(openstudio::EndUseFuelType::Demand, 
+    //m_demandComparisonChart(new ResultsComparisonData(openstudio::EndUseFuelType::Demand, 
     //      getUnit(openstudio::EndUseFuelType::Demand, m_isIP))), TODO
     m_electricLegend(new ResultsComparisonLegend()),
 
-    m_gasConsumptionChart(new ResultsComparisonData(openstudio::EndUseFuelType::Gas, 
+    m_gasComparisonChart(new ResultsComparisonData(openstudio::EndUseFuelType::Gas, 
           getUnit(openstudio::EndUseFuelType::Gas, m_isIP))),
     m_gasLegend(new ResultsComparisonLegend()),
 
-    m_districtHeatingConsumptionChart(new ResultsComparisonData(openstudio::EndUseFuelType::DistrictHeating, 
+    m_districtHeatingComparisonChart(new ResultsComparisonData(openstudio::EndUseFuelType::DistrictHeating, 
           getUnit(openstudio::EndUseFuelType::DistrictHeating, m_isIP))),
     m_districtHeatingLegend(new ResultsComparisonLegend()),
 
-    m_districtCoolingConsumptionChart(new ResultsComparisonData(openstudio::EndUseFuelType::DistrictCooling, 
+    m_districtCoolingComparisonChart(new ResultsComparisonData(openstudio::EndUseFuelType::DistrictCooling, 
           getUnit(openstudio::EndUseFuelType::DistrictCooling, m_isIP))),
     m_districtCoolingLegend(new ResultsComparisonLegend()),
 
     m_openResultsViewerBtn(new QPushButton("Open ResultsViewer\nfor Detailed Reports"))
 {
-  connect(m_openResultsViewerBtn, SIGNAL(clicked()),
+  bool isConnected = false;
+
+  QGridLayout * gridLayout = 0;
+
+  QVBoxLayout * mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+
+  QVBoxLayout * vLayout = 0;
+
+  QHBoxLayout * hLayout = 0;
+
+  QWidget * widget = 0;
+
+  QButtonGroup * buttonGroup = 0;
+
+  QPushButton * button = 0;
+
+  QComboBox * comboBox = 0;
+   
+  QLabel * label = 0;
+
+  isConnected = connect(m_openResultsViewerBtn, SIGNAL(clicked()),
       this, SLOT(openResultsViewerClicked()));
+  Q_ASSERT(isConnected);
+  
+  //********************************************* BUTTON WIDGET ATOP PAGE 1 AND PAGE 2 *********************************************
 
   // Make Selection Button Widget
 
-  QHBoxLayout * hLayout = new QHBoxLayout();
+  hLayout = new QHBoxLayout(this);
 
-  QWidget * buttonWidget = new QWidget();
-  buttonWidget->setLayout(hLayout);
-
-  QLabel * label = 0;
-  
-  label = new QLabel("View: ");
+  label = new QLabel("View: ",this);
   label->setObjectName("H2");
   hLayout->addWidget(label,0,Qt::AlignLeft | Qt::AlignTop);
 
-  QButtonGroup * buttonGroup = new QButtonGroup();
-
-  bool isConnected = false;
+  buttonGroup = new QButtonGroup(this);
 
   isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(selectView(int)));
   Q_ASSERT(isConnected);
 
-  QPushButton * button = 0;
-
-  button = new QPushButton("Standard");
+  button = new QPushButton("Standard",this);
   button->setCheckable(true);
   hLayout->addWidget(button,0,Qt::AlignLeft | Qt::AlignTop);
   buttonGroup->addButton(button,0);
 
-  button = new QPushButton("Calibration");
+  button = new QPushButton("Calibration",this);
   button->setCheckable(true);
   hLayout->addWidget(button,0,Qt::AlignLeft | Qt::AlignTop);
   buttonGroup->addButton(button,1);
 
   hLayout->addStretch();
 
-  // Make Stacked Widget
+  hLayout->addWidget(m_openResultsViewerBtn);
+
+  widget = new QWidget(this);
+  widget->setLayout(hLayout);
+
+  mainLayout->addWidget(widget);
+
+  //********************************************* STACKED WIDGET FOR PAGE 1 AND PAGE 2 *********************************************
+
   m_stackedWidget = new QStackedWidget(this);
-
-  QGridLayout * gridLayout = 0;
-  QWidget * widget = 0;
-
-  // Make Comparision Data View
-
-  //gridLayout = new QGridLayout();
-  //gridLayout->setContentsMargins(10,10,10,10);
-  //gridLayout->setSpacing(10);
-  //
-  //gridLayout->addWidget(m_electricConsumptionChart, 0, 0, 2, 1);
-  //gridLayout->addWidget(m_gasConsumptionChart, 0, 1, 2, 1);
-  //gridLayout->addWidget(m_openResultsViewerBtn, 0, 2, 1, 1);
-  //gridLayout->addWidget(m_consumptionLegend, 1, 2, 1, 1);
-  //gridLayout->addWidget(m_electricConsumptionTable, 2, 0, 1, 2);
-  //gridLayout->addWidget(m_gasConsumptionTable, 3, 0, 1, 2);
-  //gridLayout->addWidget(m_districtHeatingConsumptionTable, 4, 0, 1, 2);
-  //gridLayout->addWidget(m_districtCoolingConsumptionTable, 5, 0, 1, 2);
-
-  //widget = new QWidget();
-  //widget->setLayout(gridLayout);
-  //m_stackedWidget->addWidget(widget);
-
-
-
+  mainLayout->addWidget(m_stackedWidget);
+  
+  //********************************************* PAGE 1 *********************************************
 
   // Make Consumption Data View
-  gridLayout = new QGridLayout();
-  gridLayout->setContentsMargins(10,10,10,10);
-  gridLayout->setSpacing(10);
 
-  label = new QLabel("Calibration Method");
-  label->setObjectName("H2");
-  gridLayout->addWidget(label,0,0,0,0,Qt::AlignLeft | Qt::AlignTop);
-
-  QComboBox * comboBox = new QComboBox();
-  comboBox->addItem("ASHRAE 14 (5%)");
-  comboBox->addItem("FEMP (15%)");
-  comboBox->addItem("some other tbd(20%)");
-  comboBox->setCurrentIndex(0);
-  gridLayout->addWidget(label,0,1,0,0,Qt::AlignLeft | Qt::AlignTop);
-
-  m_CalibrationMethodLabel = new QLabel();
-  selectCalibrationMethodText(0);
-  gridLayout->addWidget(label,0,2,0,0,Qt::AlignLeft | Qt::AlignTop);
-
-  isConnected = connect(comboBox, SIGNAL(currentIndexChanged(int)),
-    this, SLOT(selectCalibrationMethodText(int)));
-  Q_ASSERT(isConnected);
-
-  gridLayout->addWidget(m_openResultsViewerBtn,0,3,0,0,Qt::AlignLeft | Qt::AlignTop);
-
-  widget = new QWidget();
-  widget->setLayout(gridLayout);
-  m_stackedWidget->addWidget(widget);
-
-  // Make Charts
-
-  gridLayout = new QGridLayout();
+  gridLayout = new QGridLayout(this);
   gridLayout->setContentsMargins(10,10,10,10);
   gridLayout->setSpacing(10);
   
   gridLayout->addWidget(m_electricConsumptionChart, 0, 0, 2, 1);
-  //gridLayout->addWidget(m_demandConsumptionChart, 0, 1, 2, 1);
-  gridLayout->addWidget(m_electricLegend, 0, 2, 1, 1);
+  gridLayout->addWidget(m_gasConsumptionChart, 0, 1, 2, 1);
 
-  gridLayout->addWidget(m_gasConsumptionChart, 1, 0, 2, 1);
-  gridLayout->addWidget(m_gasLegend, 1, 1, 1, 1);
+  gridLayout->addWidget(m_consumptionLegend, 1, 2, 1, 1);
 
-  gridLayout->addWidget(m_districtHeatingConsumptionChart, 2, 0, 2, 1);
-  gridLayout->addWidget(m_districtHeatingLegend, 2, 1, 1, 1);
+  gridLayout->addWidget(m_electricConsumptionTable, 2, 0, 1, 2);
+
+  gridLayout->addWidget(m_gasConsumptionTable, 3, 0, 1, 2);
+
+  gridLayout->addWidget(m_districtHeatingConsumptionTable, 4, 0, 1, 2);
+
+  gridLayout->addWidget(m_districtCoolingConsumptionTable, 5, 0, 1, 2);
   
-  gridLayout->addWidget(m_districtCoolingConsumptionChart, 3, 0, 2, 1);
-  gridLayout->addWidget(m_districtCoolingLegend, 3, 1, 1, 1);
-
-  widget = new QWidget();
+  widget = new QWidget(this);
   widget->setLayout(gridLayout);
+
+  m_stackedWidget->addWidget(widget);
+
+  //********************************************* PAGE 2 *********************************************
+
+  vLayout = new QVBoxLayout(this);
+  vLayout->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+
+  // Make Comparision Method Layout
+  
+  hLayout = new QHBoxLayout(this);
+  hLayout->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+
+  label = new QLabel("Calibration Method",this);
+  label->setObjectName("H2");
+  hLayout->addWidget(label);
+
+  comboBox = new QComboBox(this);
+  comboBox->addItem("ASHRAE 14 (5%)");
+  comboBox->addItem("FEMP (15%)");
+  comboBox->addItem("some other tbd(20%)");
+  comboBox->setCurrentIndex(0);
+  hLayout->addWidget(comboBox);
+
+  m_CalibrationMethodLabel = new QLabel(this);
+  selectCalibrationMethodText(0);
+  hLayout->addWidget(m_CalibrationMethodLabel);
+
+  isConnected = connect(comboBox, SIGNAL(currentIndexChanged(int)),
+    this, SLOT(selectCalibrationMethodText(int)));
+  Q_ASSERT(isConnected);
+  
+  hLayout->addStretch();
+
+  vLayout->addLayout(hLayout);
+
+  // Make Comparision Data View
+
+  gridLayout = new QGridLayout(this);
+  gridLayout->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
+  gridLayout->setContentsMargins(10,10,10,10);
+  gridLayout->setSpacing(10);
+  
+  gridLayout->addWidget(m_electricComparisonChart, 0, 0, 2, 2);
+  //gridLayout->addWidget(m_demandComparisonChart, 0, 1, 2, 2);
+  gridLayout->addWidget(m_electricLegend, 0, 2, 1, 2);
+
+  gridLayout->addWidget(m_gasComparisonChart, 1, 0, 2, 2);
+  gridLayout->addWidget(m_gasLegend, 1, 2, 1, 2);
+
+  gridLayout->addWidget(m_districtHeatingComparisonChart, 2, 0, 2, 2);
+  gridLayout->addWidget(m_districtHeatingLegend, 2, 2, 1, 2);
+  
+  gridLayout->addWidget(m_districtCoolingComparisonChart, 3, 0, 2, 2);
+  gridLayout->addWidget(m_districtCoolingLegend, 3, 2, 1, 2);
+
+  //gridLayout->setColumnStretch(100,100);
+  //gridLayout->setRowStretch(100,100);
+
+  vLayout->addLayout(gridLayout);
+
+  widget = new QWidget(this);
+  widget->setLayout(vLayout);
   m_stackedWidget->addWidget(widget);
   
-  // Add to main layout
-  
-  QVBoxLayout * mainLayout = new QVBoxLayout();
-  mainLayout->addWidget(buttonWidget);
-  mainLayout->addWidget(m_stackedWidget);
-  setLayout(mainLayout);
-
   buttonGroup->button(0)->click();
 }
 
@@ -922,7 +1531,7 @@ void ResultsView::selectCalibrationMethodText(int index)
   text += nmbeValue;
   text += " or less and CV(RSME) of ";
   text += rsmeValue;
-  text += " relative to monthly data.\nMust contain all utility data for one year and real weather data. Check the guideline for\nadditional requirements.";
+  text += " relative to monthly data.\nMust contain all utility data for one year and real weather data.\nCheck the guideline for additional requirements.";
   m_CalibrationMethodLabel->setText(text);
 
 }
@@ -974,11 +1583,24 @@ void ResultsView::resultsGenerated(const openstudio::path &t_path, const openstu
   m_sqlFilePath = t_path;
   m_radianceResultsPath = t_radianceResultsPath;
 
-  ComparisonData data(fueltypes,
+  ConsumptionData consumptionData(fueltypes,
       SqlFile(t_path));
 
-  m_electricConsumptionChart->setData(data, getUnit(m_electricConsumptionChart->getFuelType(), m_isIP));
-  m_gasConsumptionChart->setData(data, getUnit(m_gasConsumptionChart->getFuelType(), m_isIP));
+
+  m_electricConsumptionChart->setData(consumptionData, getUnit(m_electricConsumptionChart->getFuelType(), m_isIP));
+  m_gasConsumptionChart->setData(consumptionData, getUnit(m_gasConsumptionChart->getFuelType(), m_isIP));
+  m_electricConsumptionTable->setData(consumptionData, getUnit(m_electricConsumptionTable->getFuelType(), m_isIP)); 
+  m_gasConsumptionTable->setData(consumptionData, getUnit(m_gasConsumptionTable->getFuelType(), m_isIP)); 
+
+  m_districtHeatingConsumptionTable->setData(consumptionData, getUnit(m_districtHeatingConsumptionTable->getFuelType(), m_isIP));
+  m_districtCoolingConsumptionTable->setData(consumptionData, getUnit(m_districtCoolingConsumptionTable->getFuelType(), m_isIP));
+
+
+  ComparisonData comparisonData(fueltypes,
+      SqlFile(t_path));
+
+  m_electricComparisonChart->setData(comparisonData, getUnit(m_electricComparisonChart->getFuelType(), m_isIP));
+  m_gasComparisonChart->setData(comparisonData, getUnit(m_gasComparisonChart->getFuelType(), m_isIP));
 
 }
 
