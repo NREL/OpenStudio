@@ -151,6 +151,7 @@ namespace detail {
       errors.addError(ErrorType::Error, e.what());
     }
 
+    LOG(Info, "ModelToRadPreProcess starting, loading model file: " << toString(m_osm->fullPath));
     openstudio::model::OptionalModel model = openstudio::model::Model::load(m_osm->fullPath);
 
     if (!model)
