@@ -2003,6 +2003,21 @@ OS:SpaceType,
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
 
+OS:ModelObjectList,
+       \min-fields 1
+       \extensible:1 Just duplicate last field and comments (changing numbering, please)
+  A1, \field Handle
+       \type Handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference ModelObjectLists
+  A3; \field Model Object 1
+       \begin-extensible
+       \type object-list
+       \object-list AllObjects
+
 \group OpenStudio Materials
 
 OS:Material,
@@ -9665,21 +9680,6 @@ OS:PortList,
        \begin-extensible
        \type object-list
        \object-list ConnectionNames
-
-OS:ModelObjectList,
-       \min-fields 1
-       \extensible:1 Just duplicate last field and comments (changing numbering, please)
-  A1, \field Handle
-       \type Handle
-       \required-field
-  A2, \field Name
-       \type alpha
-       \required-field
-       \reference ModelObjectLists
-  A3; \field Model Object 1
-       \begin-extensible
-       \type object-list
-       \object-list AllObjects
        
 OS:Pipe:Adiabatic,
       \memo Passes Inlet Node state variables to Outlet Node state variables
