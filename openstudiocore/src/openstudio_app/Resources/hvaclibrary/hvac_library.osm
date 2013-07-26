@@ -579,7 +579,7 @@ OS:Controller:OutdoorAir,
   No,                                     !- High Humidity Control
   ,                                       !- Humidistat Control Zone Name
   ,                                       !- High Humidity Outdoor Air Flow Ratio
-  ,                                       !- Control High Indoor Humidity Based on Site Outdoor Air Humidity Ratio
+  ,                                       !- Control High Indoor Humidity Based on Outdoor Humidity Ratio
   BypassWhenOAFlowGreaterThanMinimum;     !- Heat Recovery Bypass Control Type
 
 OS:Controller:MechanicalVentilation,

@@ -65,18 +65,18 @@ OS:Site,
 
 OS:Site:GroundTemperature:BuildingSurface,
   {c7eb26c0-e2a9-42df-b3cf-e3d69a67f5b3}, ! Handle
-  19.527,                                 ! January Site Ground Temperature {C}
-  19.502,                                 ! February Site Ground Temperature {C}
-  19.536,                                 ! March Site Ground Temperature {C}
-  19.598,                                 ! April Site Ground Temperature {C}
-  20.002,                                 ! May Site Ground Temperature {C}
-  21.64,                                  ! June Site Ground Temperature {C}
-  22.225,                                 ! July Site Ground Temperature {C}
-  22.375,                                 ! August Site Ground Temperature {C}
-  21.449,                                 ! September Site Ground Temperature {C}
-  20.121,                                 ! October Site Ground Temperature {C}
-  19.802,                                 ! November Site Ground Temperature {C}
-  19.633;                                 ! December Site Ground Temperature {C}
+  19.527,                                 ! January Ground Temperature {C}
+  19.502,                                 ! February Ground Temperature {C}
+  19.536,                                 ! March Ground Temperature {C}
+  19.598,                                 ! April Ground Temperature {C}
+  20.002,                                 ! May Ground Temperature {C}
+  21.64,                                  ! June Ground Temperature {C}
+  22.225,                                 ! July Ground Temperature {C}
+  22.375,                                 ! August Ground Temperature {C}
+  21.449,                                 ! September Ground Temperature {C}
+  20.121,                                 ! October Ground Temperature {C}
+  19.802,                                 ! November Ground Temperature {C}
+  19.633;                                 ! December Ground Temperature {C}
 
 OS:Site:WaterMainsTemperature,
   {a20603c3-0b64-4cfe-ba9c-6e16c3a8b737}, ! Handle
@@ -2445,7 +2445,7 @@ OS:IlluminanceMap,
   1.1,                                    ! Origin Z-Coordinate {m}
   ,                                       ! Psi Rotation Around X-Axis {deg}
   ,                                       ! Theta Rotation Around Y-Axis {deg}
-  ,                                       ! Room Air Zone Temperature Stratification Fraction Rotation Around Z-Axis {deg}
+  ,                                       ! Phi Rotation Around Z-Axis {deg}
   8,                                      ! X Length {m}
   ,                                       ! Number of X Grid Points
   8;                                      ! Y Length {m}
@@ -2713,7 +2713,7 @@ OS:Controller:OutdoorAir,
   No,                                     ! High Humidity Control
   ,                                       ! Humidistat Control Zone Name
   ,                                       ! High Humidity Outdoor Air Flow Ratio
-  ,                                       ! Control High Indoor Humidity Based on Site Outdoor Air Humidity Ratio
+  ,                                       ! Control High Indoor Humidity Based on Outdoor Humidity Ratio
   BypassWhenOAFlowGreaterThanMinimum;     ! Heat Recovery Bypass Control Type
 
 OS:AirLoopHVAC:OutdoorAirSystem,
@@ -3079,13 +3079,13 @@ OS:Output:Variable,
   {e306582a-8c6c-4fc0-b937-845c420e91a1}, ! Handle
   Output Variable 1,                      ! Name
   ,                                       ! Key Value
-  Zone Site Outdoor Air Drybulb Temperature;                  ! Variable Name
+  Zone Outdoor Air Drybulb Temperature;                  ! Variable Name
 
 OS:Output:Variable,
   {47247a05-ccfa-4c5f-a471-6faf28daaf98}, ! Handle
   Output Variable 2,                      ! Name
   ,                                       ! Key Value
-  Zone Site Outdoor Air Wetbulb Temperature;                  ! Variable Name
+  Zone Outdoor Air Wetbulb Temperature;                  ! Variable Name
 
 OS:Output:Variable,
   {bb2b5f93-0b5c-44f6-b016-2cd7cee5ef04}, ! Handle

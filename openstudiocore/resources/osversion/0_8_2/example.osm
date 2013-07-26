@@ -65,18 +65,18 @@ OS:Site,
 
 OS:Site:GroundTemperature:BuildingSurface,
   {ef5c0bce-f924-42ec-a750-47f9a09016e5},  ! Handle
-  19.527,                   ! January Site Ground Temperature {C}
-  19.502,                   ! February Site Ground Temperature {C}
-  19.536,                   ! March Site Ground Temperature {C}
-  19.598,                   ! April Site Ground Temperature {C}
-  20.002,                   ! May Site Ground Temperature {C}
-  21.64,                    ! June Site Ground Temperature {C}
-  22.225,                   ! July Site Ground Temperature {C}
-  22.375,                   ! August Site Ground Temperature {C}
-  21.449,                   ! September Site Ground Temperature {C}
-  20.121,                   ! October Site Ground Temperature {C}
-  19.802,                   ! November Site Ground Temperature {C}
-  19.633;                   ! December Site Ground Temperature {C}
+  19.527,                   ! January Ground Temperature {C}
+  19.502,                   ! February Ground Temperature {C}
+  19.536,                   ! March Ground Temperature {C}
+  19.598,                   ! April Ground Temperature {C}
+  20.002,                   ! May Ground Temperature {C}
+  21.64,                    ! June Ground Temperature {C}
+  22.225,                   ! July Ground Temperature {C}
+  22.375,                   ! August Ground Temperature {C}
+  21.449,                   ! September Ground Temperature {C}
+  20.121,                   ! October Ground Temperature {C}
+  19.802,                   ! November Ground Temperature {C}
+  19.633;                   ! December Ground Temperature {C}
 
 OS:Site:WaterMainsTemperature,
   {6cff5a18-ab87-41d2-a47e-76f1211a0235},  ! Handle
@@ -2395,7 +2395,7 @@ OS:IlluminanceMap,
   1.1,                      ! Origin Z-Coordinate {m}
   ,                         ! Psi Rotation Around X-Axis {deg}
   ,                         ! Theta Rotation Around Y-Axis {deg}
-  ,                         ! Room Air Zone Temperature Stratification Fraction Rotation Around Z-Axis {deg}
+  ,                         ! Phi Rotation Around Z-Axis {deg}
   8,                        ! X Length {m}
   ,                         ! Number of X Grid Points
   8;                        ! Y Length {m}
@@ -2647,7 +2647,7 @@ OS:Controller:OutdoorAir,
   No,                       ! High Humidity Control
   ,                         ! Humidistat Control Zone Name
   ,                         ! High Humidity Outdoor Air Flow Ratio
-  ,                         ! Control High Indoor Humidity Based on Site Outdoor Air Humidity Ratio
+  ,                         ! Control High Indoor Humidity Based on Outdoor Humidity Ratio
   BypassWhenOAFlowGreaterThanMinimum;  ! Heat Recovery Bypass Control Type
 
 OS:AirLoopHVAC:OutdoorAirSystem,
@@ -3013,13 +3013,13 @@ OS:Output:Variable,
   {f8eb0861-fd41-49de-8a02-b417ad7a7f7a},  ! Handle
   OS:Output:Variable 1,     ! Name
   ,                         ! Key Value
-  Zone Site Outdoor Air Drybulb Temperature;    ! Variable Name
+  Zone Outdoor Air Drybulb Temperature;    ! Variable Name
 
 OS:Output:Variable,
   {b822dd32-0df0-4474-ada9-4ca4882552c6},  ! Handle
   OS:Output:Variable 2,     ! Name
   ,                         ! Key Value
-  Zone Site Outdoor Air Wetbulb Temperature;    ! Variable Name
+  Zone Outdoor Air Wetbulb Temperature;    ! Variable Name
 
 OS:Output:Variable,
   {2b41df7f-1a02-48cf-8f8e-526c002921a5},  ! Handle
