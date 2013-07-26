@@ -95,9 +95,13 @@ namespace detail {
 
     boost::optional<std::string> peakDemandUnit() const;
 
+    boost::optional<double> peakDemandUnitConversionFactor() const;
+
     boost::optional<unsigned> timestepsInPeakDemandWindow() const;
 
     bool isTimestepsInPeakDemandWindowDefaulted() const;
+
+    boost::optional<double> minutesInPeakDemandWindow() const;
 
     std::vector<BillingPeriod> billingPeriods() const;
 

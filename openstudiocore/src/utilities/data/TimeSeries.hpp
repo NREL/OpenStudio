@@ -94,6 +94,9 @@ namespace openstudio{
         /// get value at date and time
         double value(const DateTime& dateTime) const;
 
+        /// get values between start and end date times
+        Vector values(const DateTime& startDateTime, const DateTime& endDateTime) const;
+
         /// get the value used for out of range data
         double outOfRangeValue() const;
 
@@ -205,6 +208,9 @@ namespace openstudio{
 
       /// get value at date and time
       double value(const DateTime& dateTime) const;
+
+      /// get values between start and end date times
+      Vector values(const DateTime& startDateTime, const DateTime& endDateTime) const;
 
       /// get the value used for out of range data
       double outOfRangeValue() const;

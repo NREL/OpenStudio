@@ -179,6 +179,96 @@ TEST_F(DataFixture,TimeSeries_DetailedConstructor)
   }
 }
 
+
+TEST_F(DataFixture,TimeSeries_IntervalConstructor_WrapAroundDates)
+{
+  std::string units = "W";
+
+    // start date and time
+  Date startDate(MonthOfYear(MonthOfYear::Jan),1);
+  DateTime startDateTime(startDate, Time(1,0,0,0)); 
+
+  // interval
+  Time interval = Time(1,0,0,0);
+
+  // fill vector with 365 days of data
+  Vector values(365);
+  DateTimeVector dateTimes;
+  for (unsigned i = 0; i < 365; ++i){
+    values(i) = i;
+    dateTimes.push_back(startDate + Time(i+1,0,0,0));
+  }
+  unsigned numValues = values.size();
+
+  ASSERT_EQ(365u, numValues);
+
+  // create timeSeries
+  TimeSeries timeSeries(startDate, interval, values, units);
+  ASSERT_EQ(365u, timeSeries.values().size());
+
+  // check interval
+  ASSERT_TRUE(timeSeries.intervalLength());
+  EXPECT_EQ(interval, timeSeries.intervalLength().get());
+
+  // check start date and time
+  DateTime firstDateTime = timeSeries.firstReportDateTime();
+  EXPECT_EQ(DateTime(Date(MonthOfYear(MonthOfYear::Jan), 1), Time(1,0,0,0)), firstDateTime);
+
+  // check values
+  for (unsigned i = 0; i < numValues; ++i){
+    DateTime dateTime = dateTimes[i];
+    EXPECT_EQ(i, timeSeries.value(dateTime)) << dateTime;
+  }
+
+  Vector test = timeSeries.values(DateTime(Date(MonthOfYear(MonthOfYear::Apr), 1), Time(1,0,0,0)), DateTime(Date(MonthOfYear(MonthOfYear::Apr), 30), Time(1,0,0,0)));
+  ASSERT_EQ(30, test.size());
+  for (unsigned i = 0; i < 30; ++i){
+    EXPECT_EQ(i + 90, test[i]);
+  }
+
+  // now change start date time to make a wrap around year
+  startDate = Date(MonthOfYear(MonthOfYear::Apr),11);
+  startDateTime = DateTime(startDate, Time(1,0,0,0)); 
+
+  Vector wrappedValues(365);
+  unsigned j = 0;
+  for (unsigned i = 100; i < 365; ++i, ++j){
+    wrappedValues[j] = values[i];
+  }
+  for (unsigned i = 0; i < 100; ++i, ++j){
+    wrappedValues[j] = values[i];
+  }
+  ASSERT_EQ(365u, wrappedValues.size());
+  EXPECT_EQ(100, wrappedValues[0]);
+  EXPECT_EQ(99, wrappedValues[364]);
+  EXPECT_EQ(DateTime(Date(MonthOfYear(MonthOfYear::Apr), 11), Time(1,0,0,0)), startDateTime.date());
+
+  // create detailed timeSeries
+  TimeSeries wrappedTimeSeries(startDateTime, interval, wrappedValues, units);
+  ASSERT_EQ(365u, wrappedTimeSeries.values().size());
+
+  // check interval
+  ASSERT_TRUE(timeSeries.intervalLength());
+  EXPECT_EQ(interval, timeSeries.intervalLength().get());
+
+  // check start date and time
+  firstDateTime = wrappedTimeSeries.firstReportDateTime();
+  EXPECT_EQ(DateTime(Date(MonthOfYear(MonthOfYear::Apr), 11), Time(1,0,0,0)), firstDateTime);
+
+  // check values
+  for (unsigned i = 0; i < numValues; ++i){
+    DateTime dateTime = dateTimes[i];
+    EXPECT_EQ(i, wrappedTimeSeries.value(dateTime)) << dateTime;
+  }
+
+  test = timeSeries.values(DateTime(Date(MonthOfYear(MonthOfYear::Apr), 1), Time(1,0,0,0)), DateTime(Date(MonthOfYear(MonthOfYear::Apr), 30), Time(1,0,0,0)));
+  ASSERT_EQ(30, test.size());
+  for (unsigned i = 0; i < 30; ++i){
+    EXPECT_EQ(i + 90, test[i]);
+  }
+
+}
+
 TEST_F(DataFixture,TimeSeries_DetailedConstructor_WrapAroundDates)
 {
   std::string units = "W";
@@ -216,6 +306,12 @@ TEST_F(DataFixture,TimeSeries_DetailedConstructor_WrapAroundDates)
     EXPECT_EQ(i, timeSeries.value(dateTime)) << dateTime;
   }
 
+  Vector test = timeSeries.values(DateTime(Date(MonthOfYear(MonthOfYear::Apr), 1), Time(1,0,0,0)), DateTime(Date(MonthOfYear(MonthOfYear::Apr), 30), Time(1,0,0,0)));
+  ASSERT_EQ(30, test.size());
+  for (unsigned i = 0; i < 30; ++i){
+    EXPECT_EQ(i + 90, test[i]);
+  }
+
   // now rearrange date times to make a wrap around year
   Vector wrappedValues(365);
   DateTimeVector wrappedDateTimes;
@@ -228,8 +324,10 @@ TEST_F(DataFixture,TimeSeries_DetailedConstructor_WrapAroundDates)
     wrappedValues[j] = values[i];
     wrappedDateTimes.push_back(dateTimes[i]);
   }
-
+  ASSERT_EQ(365u, wrappedValues.size());
   ASSERT_EQ(365u, wrappedDateTimes.size());
+  EXPECT_EQ(100, wrappedValues[0]);
+  EXPECT_EQ(99, wrappedValues[364]);
   EXPECT_EQ(DateTime(Date(MonthOfYear(MonthOfYear::Apr), 11), Time(1,0,0,0)), wrappedDateTimes[0].date());
   EXPECT_EQ(DateTime(Date(MonthOfYear(MonthOfYear::Apr), 10), Time(1,0,0,0)), wrappedDateTimes[364].date());
 
@@ -248,6 +346,12 @@ TEST_F(DataFixture,TimeSeries_DetailedConstructor_WrapAroundDates)
   for (unsigned i = 0; i < numValues; ++i){
     DateTime dateTime = dateTimes[i];
     EXPECT_EQ(i, wrappedTimeSeries.value(dateTime)) << dateTime;
+  }
+
+  test = timeSeries.values(DateTime(Date(MonthOfYear(MonthOfYear::Apr), 1), Time(1,0,0,0)), DateTime(Date(MonthOfYear(MonthOfYear::Apr), 30), Time(1,0,0,0)));
+  ASSERT_EQ(30, test.size());
+  for (unsigned i = 0; i < 30; ++i){
+    EXPECT_EQ(i + 90, test[i]);
   }
 
 }

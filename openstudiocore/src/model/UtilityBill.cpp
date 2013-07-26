@@ -29,6 +29,9 @@
 #include <model/Building_Impl.hpp>
 #include <model/Facility.hpp>
 #include <model/Facility_Impl.hpp>
+#include <model/Timestep.hpp>
+#include <model/Timestep_Impl.hpp>
+
 
 #include <model/Model.hpp>
 
@@ -351,7 +354,28 @@ namespace detail {
   }
 
   boost::optional<std::string> UtilityBill_Impl::peakDemandUnit() const {
-    return getString(OS_UtilityBillFields::PeakDemandUnit,true,true);
+    if (this->fuelType() == FuelType::Electricity){
+      return getString(OS_UtilityBillFields::PeakDemandUnit,true,true);
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> UtilityBill_Impl::peakDemandUnitConversionFactor() const
+  {
+    boost::optional<double> result;
+    boost::optional<std::string> peakDemandUnit = this->peakDemandUnit();
+    if (peakDemandUnit){
+      FuelType fuelType = this->fuelType();
+
+      if (peakDemandUnit.get() == "kW"){
+        result = 1000;
+      }else if (peakDemandUnit.get() == "W"){
+        result = 1;
+      }else{
+        LOG(Error, "Unknown peak demand unit '" << peakDemandUnit.get() << "' for fuel type '" << fuelType.valueName() << "'");
+      }
+    }
+    return result;
   }
 
   boost::optional<unsigned> UtilityBill_Impl::timestepsInPeakDemandWindow() const {
@@ -363,6 +387,17 @@ namespace detail {
 
   bool UtilityBill_Impl::isTimestepsInPeakDemandWindowDefaulted() const {
     return isEmpty(OS_UtilityBillFields::TimestepsinPeakDemandWindow);
+  }
+
+  boost::optional<double> UtilityBill_Impl::minutesInPeakDemandWindow() const {
+    boost::optional<double> result;
+    boost::optional<unsigned> timestepsInPeakDemandWindow = this->timestepsInPeakDemandWindow();
+    if (timestepsInPeakDemandWindow){
+      Timestep timestep = this->model().getUniqueModelObject<Timestep>();
+      result = (60.0 * timestepsInPeakDemandWindow.get()) / timestep.numberOfTimestepsPerHour();
+
+    }
+    return result;
   }
 
   bool UtilityBill_Impl::setMeterInstallLocation(const InstallLocationType& meterInstallLocation) {
@@ -1134,10 +1169,18 @@ boost::optional<double> BillingPeriod::modelPeakDemand() const
     return boost::none;
   }
 
-  boost::optional<double> result;
+  boost::optional<unsigned> timestepsInPeakDemandWindow = getImpl<detail::UtilityBill_Impl>()->timestepsInPeakDemandWindow();
+  if (!timestepsInPeakDemandWindow){
+    return boost::none;
+  }
 
-  Date runPeriodStartDate = Date(runPeriod->getBeginMonth(), runPeriod->getBeginDayOfMonth(), *calendarYear);
-  Date runPeriodEndDate = Date(runPeriod->getEndMonth(), runPeriod->getEndDayOfMonth(), *calendarYear);
+  boost::optional<double> minutesInPeakDemandWindow = getImpl<detail::UtilityBill_Impl>()->minutesInPeakDemandWindow();
+  if (!minutesInPeakDemandWindow){
+    return boost::none;
+  }
+
+  boost::optional<double> result;
+  Vector window(*timestepsInPeakDemandWindow, 0);
 
   boost::optional<openstudio::TimeSeries> timeseries = meter->getData(runPeriod->name().get());
   if (timeseries){
@@ -1146,25 +1189,32 @@ boost::optional<double> BillingPeriod::modelPeakDemand() const
     double outOfRangeValue = std::numeric_limits<double>::min();
     timeseries->setOutOfRangeValue(outOfRangeValue);
 
-    unsigned i = 0;
-    Date date = this->startDate();
-    Date endDate = this->endDate();
-    while (date <= endDate){
+    // intentionally leave out calendar year
+    Date runPeriodStartDate = Date(runPeriod->getBeginMonth(), runPeriod->getBeginDayOfMonth(), *calendarYear);
+    Date runPeriodEndDate = Date(runPeriod->getEndMonth(), runPeriod->getEndDayOfMonth(), *calendarYear);
 
-      // Do not include year in date for query
-      Date tmp(date.monthOfYear(), date.dayOfMonth());
-      DateTime dateTime(tmp, Time(1));
+    DateTime runPeriodStartDateTime = DateTime(runPeriodStartDate, Time(0,1,0,0));
+    DateTime runPeriodEndDateTime = DateTime(runPeriodEndDate, Time(0,24,0,0));
 
-      double value = timeseries->value(dateTime);
-      if (value == outOfRangeValue){
-        LOG(Debug, "Could not find value of timeseries at dateTime " << dateTime);
-      }else{
-        result = std::min(value, *result);
+    Vector values = timeseries->values(runPeriodStartDateTime, runPeriodEndDateTime);
+    unsigned numValues = values.size();
+    for (unsigned i = 0; i < numValues; ++i){
+      //  shift window
+      for (unsigned j = *timestepsInPeakDemandWindow - 1; j > 0; --j){
+        window[j] = window[j-1];
       }
+      window[0] = values[i];
 
-      ++i;
-      date += Time(1);
+      // compute energy over window in J
+      double energy = sum(window);
+
+      // compute average power in W
+      double power = energy / (60.0*minutesInPeakDemandWindow.get());
+
+      result = std::max(power, *result);
     }
+
+    
   }
 
   return result;
@@ -1256,12 +1306,20 @@ boost::optional<std::string> UtilityBill::peakDemandUnit() const {
   return getImpl<detail::UtilityBill_Impl>()->peakDemandUnit();
 }
 
+boost::optional<double> UtilityBill::peakDemandUnitConversionFactor() const {
+  return getImpl<detail::UtilityBill_Impl>()->peakDemandUnitConversionFactor();
+}
+
 boost::optional<unsigned> UtilityBill::timestepsInPeakDemandWindow() const {
   return getImpl<detail::UtilityBill_Impl>()->timestepsInPeakDemandWindow();
 }
 
 bool UtilityBill::isTimestepsInPeakDemandWindowDefaulted() const {
   return getImpl<detail::UtilityBill_Impl>()->isTimestepsInPeakDemandWindowDefaulted();
+}
+
+boost::optional<double> UtilityBill::minutesInPeakDemandWindow() const {
+  return getImpl<detail::UtilityBill_Impl>()->minutesInPeakDemandWindow();
 }
 
 bool UtilityBill::setMeterInstallLocation(const InstallLocationType& meterInstallLocation) {
