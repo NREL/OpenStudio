@@ -75,12 +75,12 @@ namespace detail {
       try {
         // first, see if we can get a filename that was specifically requested by the job creation
         m_inFile = t_files.getLastByFilename(t_params.get("filename").value);
-      } catch (const std::exception &) {
+      } catch (const std::runtime_error &) {
         // if not, try to get any old .in that was passed in
         try {
           m_inFile = t_files.getLastByExtension("in");
         } 
-        catch (const std::exception &) {}
+        catch (const std::runtime_error &) {}
       }
     }
   }

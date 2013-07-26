@@ -121,7 +121,7 @@ namespace detail {
           m_idf->addRequiredFile( toPath("Energy+.idd"), toPath("Energy+.idd"));
         }
 
-      } catch (const std::exception &) {
+      } catch (const std::runtime_error &) {
       }
     }
   }
