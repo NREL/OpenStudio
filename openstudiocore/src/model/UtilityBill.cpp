@@ -1190,14 +1190,19 @@ boost::optional<double> BillingPeriod::modelPeakDemand() const
     timeseries->setOutOfRangeValue(outOfRangeValue);
 
     // intentionally leave out calendar year
-    Date runPeriodStartDate = Date(runPeriod->getBeginMonth(), runPeriod->getBeginDayOfMonth(), *calendarYear);
-    Date runPeriodEndDate = Date(runPeriod->getEndMonth(), runPeriod->getEndDayOfMonth(), *calendarYear);
+    Date runPeriodStartDate = Date(runPeriod->getBeginMonth(), runPeriod->getBeginDayOfMonth());
+    Date runPeriodEndDate = Date(runPeriod->getEndMonth(), runPeriod->getEndDayOfMonth());
 
     DateTime runPeriodStartDateTime = DateTime(runPeriodStartDate, Time(0,1,0,0));
     DateTime runPeriodEndDateTime = DateTime(runPeriodEndDate, Time(0,24,0,0));
 
     Vector values = timeseries->values(runPeriodStartDateTime, runPeriodEndDateTime);
     unsigned numValues = values.size();
+
+    if (numValues < *timestepsInPeakDemandWindow){
+      return boost::none;
+    }
+
     for (unsigned i = 0; i < numValues; ++i){
       //  shift window
       for (unsigned j = *timestepsInPeakDemandWindow - 1; j > 0; --j){
