@@ -22,7 +22,7 @@
 
 namespace openstudio {
   
-QUrl completeURL(const QUrl &t_source, const std::vector<QUrl> &t_searchPaths)
+QUrl completeURL(const QUrl &t_source, const std::vector<QUrl> &t_searchPaths, bool throwOnFailure)
 {
   if (t_source.scheme() == "file" || t_source.scheme().isEmpty())
   {
@@ -56,7 +56,12 @@ QUrl completeURL(const QUrl &t_source, const std::vector<QUrl> &t_searchPaths)
     return t_source;
   }
 
-  throw std::runtime_error("Unable to locate file in search paths");
+  if (throwOnFailure)
+  {
+    throw std::runtime_error("Unable to locate file in search paths");
+  } else {
+    return QUrl();
+  }
 }
 
 QUrl toURL(const openstudio::path& p) {

@@ -29,7 +29,7 @@ namespace openstudio {
 
 /// Locates the given url (if relative) in one of the provided search paths and returns
 /// the completed url  
-UTILITIES_API QUrl completeURL(const QUrl &t_source, const std::vector<QUrl> &t_searchPaths);
+UTILITIES_API QUrl completeURL(const QUrl &t_source, const std::vector<QUrl> &t_searchPaths, bool throwOnFailure = true);
 
 UTILITIES_API QUrl toURL(const openstudio::path& p);
 
