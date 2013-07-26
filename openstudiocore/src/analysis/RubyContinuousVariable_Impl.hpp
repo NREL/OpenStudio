@@ -110,6 +110,12 @@ namespace detail {
                                 const boost::optional<FileReferenceType>& proposedOutputFileType) const;
 
     //@}
+    /** @name Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    //@}
    private:
     REGISTER_LOGGER("openstudio.analysis.RubyContinuousVariable");
 

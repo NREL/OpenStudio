@@ -66,7 +66,9 @@ namespace detail {
     LinearFunction result(impl);
     VariableVector variables = result.variables();
     BOOST_FOREACH(Variable& variable,variables) {
-      variable.setParent(result);
+      if (!doNotParent(variable)) {
+        variable.setParent(result);
+      }
     }
     return result;
   }
@@ -102,6 +104,28 @@ namespace detail {
     return false;
   }
 
+  QVariant LinearFunction_Impl::toVariant() const {
+    QVariantMap linearFunctionData = AnalysisObject_Impl::toVariant().toMap();
+
+    linearFunctionData["function_type"] = QString("LinearFunction");
+
+    QVariantList variablesList;
+    DoubleVector coeffs = coefficients();
+    int index(0), coeffsN(coeffs.size());
+    Q_FOREACH(const Variable& var,variables()) {
+      QVariantMap varMap = var.toVariant().toMap();
+      varMap["variable_index"] = index;
+      if (index < coeffsN) {
+        varMap["coefficient"] = coeffs[index];
+      }
+      variablesList.push_back(QVariant(varMap));
+      ++index;
+    }
+    linearFunctionData["variables"] = QVariant(variablesList);
+
+    return QVariant(linearFunctionData);
+  }
+
 } // detail
 
 LinearFunction::LinearFunction(const std::string& name,
@@ -112,7 +136,9 @@ LinearFunction::LinearFunction(const std::string& name,
 {
   LinearFunction copyOfThis(getImpl<detail::LinearFunction_Impl>());
   BOOST_FOREACH(const Variable& variable,variables) {
-    variable.setParent(copyOfThis);
+    if (!getImpl<detail::Function_Impl>()->doNotParent(variable)) {
+      variable.setParent(copyOfThis);
+    }
   }
 }
 
@@ -134,7 +160,9 @@ LinearFunction::LinearFunction(const UUID& uuid,
 {
   LinearFunction copyOfThis(getImpl<detail::LinearFunction_Impl>());
   BOOST_FOREACH(const Variable& variable,variables) {
-    variable.setParent(copyOfThis);
+    if (!getImpl<detail::Function_Impl>()->doNotParent(variable)) {
+      variable.setParent(copyOfThis);
+    }
   }
 }
 

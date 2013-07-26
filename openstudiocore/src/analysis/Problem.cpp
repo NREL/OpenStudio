@@ -1714,12 +1714,61 @@ namespace detail {
 
     problemData["problem_type"] = QString("Problem");
 
+    // basic variables for creating workflow list
     QVariantList workflowList;
-    int index(0);
+    int index(0), variableIndex(0);
+
+    // additional variables for inverting storage of compound ruby variables
+    QVariantMap stepMap;
+    OptionalRubyMeasure compoundRubyMeasure;
+    QVariantList variablesList;
+
+    // create workflow list
     Q_FOREACH(const WorkflowStep& step, workflow()) {
-      QVariantMap stepMap = step.toVariant().toMap();
-      stepMap["workflow_index"] = QVariant(index);
-      workflowList.push_back(stepMap);
+
+      if (compoundRubyMeasure) {
+        // see if chain is still going
+        if (step.isInputVariable()) {
+          if (OptionalRubyContinuousVariable rcv = step.inputVariable().optionalCast<RubyContinuousVariable>()) {
+            if (rcv->measure() == compoundRubyMeasure.get()) {
+              // still going -- add this variable to list
+              QVariantMap variableMap = step.toVariant().toMap();
+              variableMap["variable_index"] = variableIndex;
+              variablesList.push_back(variableMap);
+              ++variableIndex;
+              ++index;
+              continue;
+            }
+          }
+        }
+
+        // otherwise, complete this step and move on
+        stepMap["variables"] = QVariant(variablesList);
+        workflowList.push_back(stepMap);
+        variablesList.clear();
+        variableIndex = 0;
+        compoundRubyMeasure.reset();
+      }
+
+      if (step.isInputVariable() &&
+          step.inputVariable().optionalCast<RubyContinuousVariable>())
+      {
+        RubyContinuousVariable rcv = step.inputVariable().cast<RubyContinuousVariable>();
+        compoundRubyMeasure = rcv.measure();
+        stepMap = compoundRubyMeasure->toVariant().toMap();
+        stepMap["workflow_index"] = QVariant(index);
+        stepMap["workflow_step_type"] = QString("Measure");
+        QVariantMap variableMap = step.toVariant().toMap();
+        variableMap["variable_index"] = variableIndex;
+        variablesList.push_back(variableMap);
+        ++variableIndex;
+      }
+      else {
+        stepMap = step.toVariant().toMap();
+        stepMap["workflow_index"] = QVariant(index);
+        workflowList.push_back(stepMap);
+      }
+
       ++index;
     }
     problemData["workflow"] = QVariant(workflowList);

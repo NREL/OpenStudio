@@ -20,7 +20,10 @@
 #include <analysis/Function.hpp>
 #include <analysis/Function_Impl.hpp>
 
-#include <analysis/Variable_Impl.hpp>
+#include <analysis/InputVariable.hpp>
+#include <analysis/InputVariable_Impl.hpp>
+#include <analysis/WorkflowStep.hpp>
+#include <analysis/WorkflowStep_Impl.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -64,6 +67,20 @@ namespace detail {
 
   std::vector<Variable> Function_Impl::variables() const {
     return m_variables;
+  }
+
+  bool Function_Impl::doNotParent(const Variable& variable) const {
+    // if input variable parented by workflow step, leave parentage as-is.
+    // do go ahead and connect signals so dirty signal travels up and down.
+    // note that this is an 80% solution--may need to provide better fix later.
+    if (OptionalInputVariable inputVariable = variable.optionalCast<InputVariable>()) {
+      if (OptionalAnalysisObject inputVariableParent = inputVariable->parent()) {
+        if (OptionalWorkflowStep inputVariableParentAsWorkflowStep = inputVariableParent->optionalCast<WorkflowStep>()) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
 } // detail

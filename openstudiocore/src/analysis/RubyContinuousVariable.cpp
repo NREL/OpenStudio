@@ -180,6 +180,15 @@ namespace detail {
     return true;
   }
 
+  QVariant RubyContinuousVariable_Impl::toVariant() const {
+    QVariantMap variableData = ContinuousVariable_Impl::toVariant().toMap();
+
+    variableData["variable_type"] = QString("RubyContinuousVariable");
+    variableData["argument"] = ruleset::detail::toVariant(argument());
+
+    return QVariant(variableData);
+  }
+
 } // detail
 
 RubyContinuousVariable::RubyContinuousVariable(const std::string& name,

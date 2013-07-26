@@ -39,6 +39,7 @@ class RubyContinuousVariable;
 
 namespace detail {
 
+  class Problem_Impl;
   class RubyMeasure_Impl;
   class RubyContinuousVariable_Impl;
 
@@ -206,6 +207,7 @@ class ANALYSIS_API RubyMeasure : public Measure {
 
   friend class RubyContinuousVariable; // to call setParent
   friend class detail::RubyContinuousVariable_Impl; // to call setParent
+  friend class detail::Problem_Impl; // to call toVariant
   /// @endcond
  private:
 

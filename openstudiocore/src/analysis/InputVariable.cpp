@@ -87,9 +87,8 @@ namespace detail {
   QVariant InputVariable_Impl::toVariant() const {
     QVariantMap inputVariableData = AnalysisObject_Impl::toVariant().toMap();
 
-    if (uncertaintyDescription()) {
-      // HERE -- Serialize UncertaintyDescription
-      inputVariableData["uncertainty_descrption"] = QVariant();
+    if (OptionalUncertaintyDescription udesc = uncertaintyDescription()) {
+      inputVariableData["uncertainty_description"] = analysis::detail::toVariant(udesc.get());
     }
 
     return QVariant(inputVariableData);

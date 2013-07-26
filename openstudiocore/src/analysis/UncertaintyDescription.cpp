@@ -612,5 +612,25 @@ boost::shared_ptr<detail::UncertaintyDescription_Impl> UncertaintyDescription::i
   return m_impl;
 }
 
+namespace detail {
+
+  QVariant toVariant(const UncertaintyDescription& udesc) {
+    GenericUncertaintyDescription generic = udesc.cast<GenericUncertaintyDescription>();
+
+    QVariantMap udescMap;
+    udescMap["type"] = toQString(generic.actualType().valueName());
+    if (!generic.attributes().empty()) {
+      QVariantList attributesList;
+      Q_FOREACH(const Attribute& attribute,generic.attributes()) {
+        attributesList.push_back(openstudio::detail::toVariant(attribute));
+      }
+      udescMap["attributes"] = QVariant(attributesList);
+    }
+
+    return QVariant(udescMap);
+  }
+
+} // detail
+
 } // analysis
 } // openstudio

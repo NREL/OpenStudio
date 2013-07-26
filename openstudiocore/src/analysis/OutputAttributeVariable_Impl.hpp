@@ -74,6 +74,12 @@ namespace detail {
     void setAttributeName(const std::string& attributeName);
 
     //@}
+    /** @name Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    //@}
    private:
     REGISTER_LOGGER("openstudio.analysis.OutputAttributeVariable");
 

@@ -311,10 +311,10 @@ namespace detail {
                               const boost::optional<WorkflowStep>& nextStep) const;
 
     bool updateMeasureForCompoundRubyMeasure(const BCLMeasure& newVersion,
-                                                  const std::vector<ruleset::OSArgument>& newArguments,
-                                                  bool keepOldArgumentsIfNewEmpty,
-                                                  RubyMeasure& measure,
-                                                  std::vector<RubyContinuousVariable>& variables);
+                                             const std::vector<ruleset::OSArgument>& newArguments,
+                                             bool keepOldArgumentsIfNewEmpty,
+                                             RubyMeasure& measure,
+                                             std::vector<RubyContinuousVariable>& variables);
 
     REGISTER_LOGGER("openstudio.analysis.Problem");
   };

@@ -186,8 +186,10 @@ namespace detail {
     BOOST_ASSERT(connected);
   }
 
-  void AnalysisObject_Impl::disconnectChild(AnalysisObject& child) const {
-    child.clearParent();
+  void AnalysisObject_Impl::disconnectChild(AnalysisObject& child,bool clearParent) const {
+    if (clearParent) {
+      child.clearParent();
+    }
 
     bool disconnected = disconnect(SIGNAL(clean()),
                                    child.getImpl<detail::AnalysisObject_Impl>().get(),

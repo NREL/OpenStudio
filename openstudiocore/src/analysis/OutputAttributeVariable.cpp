@@ -97,6 +97,15 @@ namespace detail {
     onChange(AnalysisObject_Impl::InvalidatesResults);
   }
 
+  QVariant OutputAttributeVariable_Impl::toVariant() const {
+    QVariantMap variableData = AnalysisObject_Impl::toVariant().toMap();
+
+    variableData["variable_type"] = QString("OutputAttributeVariable");
+    variableData["attribute_name"] = toQString(attributeName());
+
+    return QVariant(variableData);
+  }
+
 } // detail
 
 OutputAttributeVariable::OutputAttributeVariable(

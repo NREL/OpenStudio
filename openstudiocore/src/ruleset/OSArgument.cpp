@@ -1041,28 +1041,19 @@ namespace detail {
     }
     if (type == OSArgumentType::Choice) {
       QVariantList choicesList;
-      int index(0);
+      StringVector displayNames = argument.choiceValueDisplayNames();
+      int index(0), displayNamesN(displayNames.size());
       Q_FOREACH(const std::string& choice,argument.choiceValues()) {
         QVariantMap choiceMap;
         choiceMap["choice_index"] = index;
         choiceMap["value"] = toQString(choice);
+        if (index < displayNamesN) {
+          choiceMap["display_name"] = toQString(displayNames[index]);
+        }
         choicesList.push_back(choiceMap);
         ++index;
       }
       argumentData["choices"] = QVariant(choicesList);
-
-      if (!argument.choiceValueDisplayNames().empty()) {
-        QVariantList choiceDisplayNamesList;
-        index = 0;
-        Q_FOREACH(const std::string& choiceDisplayName,argument.choiceValueDisplayNames()) {
-          QVariantMap choiceDisplayNameMap;
-          choiceDisplayNameMap["choice_index"] = index;
-          choiceDisplayNameMap["display_name"] = toQString(choiceDisplayName);
-          choiceDisplayNamesList.push_back(choiceDisplayNameMap);
-          ++index;
-        }
-        argumentData["choice_display_names"] = QVariant(choiceDisplayNamesList);
-      }
     }
     if (type == OSArgumentType::Path) {
       argumentData["is_read"] = argument.isRead();

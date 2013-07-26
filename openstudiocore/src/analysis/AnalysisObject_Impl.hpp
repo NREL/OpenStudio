@@ -173,7 +173,7 @@ namespace detail {
 
     void connectChild(AnalysisObject& child, bool setParent) const;
 
-    void disconnectChild(AnalysisObject& child) const;
+    void disconnectChild(AnalysisObject& child, bool clearParent=true) const;
 
     // Intended for overriding default construction behavior, as appropriate. Example:
     // deserializing an Analysis with resultsAreInvalid or dataPointsAreInvalid.

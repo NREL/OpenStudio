@@ -74,6 +74,12 @@ namespace detail {
     bool setCoefficients(const std::vector<double>& coefficients);
 
     //@}
+    /** @name Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    //@}
    protected:
     std::vector<double> m_coefficients;
    private:

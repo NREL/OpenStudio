@@ -107,19 +107,19 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1() {
   arg.setValue("North");
   measure.setArgument(arg);
   arg = wwr.clone();
-  RubyContinuousVariable cv("Window to Wall Ratio",arg,measure);
-  cv.setMinimum(0.0);
-  cv.setMaximum(1.0);
+  RubyContinuousVariable wwrCV("Window to Wall Ratio",arg,measure);
+  wwrCV.setMinimum(0.0);
+  wwrCV.setMaximum(1.0);
   TriangularDistribution td(0.2,0.0,0.5);
-  cv.setUncertaintyDescription(td);
-  problem.push(cv);
+  wwrCV.setUncertaintyDescription(td);
+  problem.push(wwrCV);
   OSArgument offset = OSArgument::makeDoubleArgument("offset");
-  cv = RubyContinuousVariable("Offset",offset,measure);
-  cv.setMinimum(0.0);
-  cv.setMaximum(1.5);
+  RubyContinuousVariable offsetCV("Offset",offset,measure);
+  offsetCV.setMinimum(0.0);
+  offsetCV.setMaximum(1.5);
   NormalDistribution nd(0.9,0.05);
-  cv.setUncertaintyDescription(nd);
-  problem.push(cv);
+  offsetCV.setUncertaintyDescription(nd);
+  problem.push(offsetCV);
 
   // Simulation
   problem.push(WorkItem(JobType::ModelToIdf));
@@ -127,10 +127,20 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1() {
   problem.push(WorkItem(JobType::EnergyPlus));
   problem.push(WorkItem(JobType::OpenStudioPostProcess));
 
-  // Response
-  LinearFunction response("Energy Use Intensity",
-                          VariableVector(1u,OutputAttributeVariable("EUI","site.eui")));
-  problem.pushResponse(response);
+  // Responses
+  LinearFunction response1("Energy Use Intensity",
+                           VariableVector(1u,OutputAttributeVariable("EUI","site.eui")));
+  problem.pushResponse(response1);
+  VariableVector vars;
+  vars.push_back(OutputAttributeVariable("Heating Energy","heating.energy.gas"));
+  vars.push_back(OutputAttributeVariable("Cooling Energy","cooling.energy.elec"));
+  DoubleVector coeffs;
+  coeffs.push_back(1.0); // approx. source factor
+  coeffs.push_back(2.5); // approx. source factor
+  LinearFunction response2("Approximate Source Energy",vars,coeffs);
+  problem.pushResponse(response2);
+  LinearFunction response3("North WWR",VariableVector(1u,wwrCV)); // input variable as output
+  problem.pushResponse(response3);
 
   Analysis analysis("My Analysis",problem,FileReferenceType::OSM);
 
