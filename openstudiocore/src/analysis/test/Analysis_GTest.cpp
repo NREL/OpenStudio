@@ -21,6 +21,7 @@
 #include <analysis/test/AnalysisFixture.hpp>
 
 #include <analysis/Analysis.hpp>
+#include <analysis/Analysis_Impl.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/Variable.hpp>
 #include <analysis/DataPoint.hpp>
@@ -354,25 +355,48 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun) {
   EXPECT_FALSE(json.empty());
 
   // Deserialize and check results
+  OptionalAnalysisObject formulationCopyAsAnalysisObject = loadJSON(json);
+  ASSERT_TRUE(formulationCopyAsAnalysisObject);
+  ASSERT_TRUE(formulationCopyAsAnalysisObject->optionalCast<Analysis>());
+  Analysis formulationCopy = formulationCopyAsAnalysisObject->cast<Analysis>();
+  EXPECT_EQ(json,formulationCopy.toJSON(AnalysisSerializationScope::ProblemFormulation));
+  EXPECT_EQ(0u,formulationCopy.dataPoints().size());
 
   // Save analysis with no data points
   openstudio::path p = toPath("AnalysisFixtureData/formulation_pre_run.json");
   EXPECT_TRUE(analysis.saveJSON(p,AnalysisSerializationScope::ProblemFormulation,true));
 
   // Load and check results
-
+  formulationCopyAsAnalysisObject = loadJSON(p);
+  ASSERT_TRUE(formulationCopyAsAnalysisObject);
+  ASSERT_TRUE(formulationCopyAsAnalysisObject->optionalCast<Analysis>());
+  formulationCopy = formulationCopyAsAnalysisObject->cast<Analysis>();
+  EXPECT_EQ(json,formulationCopy.toJSON(AnalysisSerializationScope::ProblemFormulation));
+  EXPECT_EQ(0u,formulationCopy.dataPoints().size());
 
   // Serialize Analysis with data points
   json = analysis.toJSON(AnalysisSerializationScope::Full);
   EXPECT_FALSE(json.empty());
 
   // Deserialize and check results
+  OptionalAnalysisObject copyAsAnalysisObject = loadJSON(json);
+  ASSERT_TRUE(copyAsAnalysisObject);
+  ASSERT_TRUE(copyAsAnalysisObject->optionalCast<Analysis>());
+  Analysis copy = copyAsAnalysisObject->cast<Analysis>();
+  EXPECT_EQ(json,copy.toJSON(AnalysisSerializationScope::Full));
+  EXPECT_FALSE(copy.dataPoints().empty());
 
   // Save analysis with data points
   p = toPath("AnalysisFixtureData/analysis_pre_run.json");
   EXPECT_TRUE(analysis.saveJSON(p,AnalysisSerializationScope::Full,true));
 
   // Load and check results
+  copyAsAnalysisObject = loadJSON(p);
+  ASSERT_TRUE(copyAsAnalysisObject);
+  ASSERT_TRUE(copyAsAnalysisObject->optionalCast<Analysis>());
+  copy = copyAsAnalysisObject->cast<Analysis>();
+  EXPECT_EQ(json,copy.toJSON(AnalysisSerializationScope::Full));
+  EXPECT_FALSE(copy.dataPoints().empty());
 
 }
 

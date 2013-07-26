@@ -20,6 +20,14 @@
 #include <analysis/AnalysisObject.hpp>
 #include <analysis/AnalysisObject_Impl.hpp>
 
+// for deserializing top-level json files
+#include <analysis/Analysis.hpp>
+#include <analysis/Analysis_Impl.hpp>
+#include <analysis/DataPoint.hpp>
+#include <analysis/DataPoint_Impl.hpp>
+
+#include <utilities/core/Json.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -311,6 +319,78 @@ QVariant AnalysisObject::toVariant() const {
 }
 
 /// @endcond
+
+boost::optional<AnalysisObject> loadJSON(const openstudio::path& p) {
+  OptionalAnalysisObject result;
+  try {
+    std::pair<QVariant,VersionString> parseResult = openstudio::loadJSON(p);
+    QVariantMap variant = parseResult.first.toMap();
+    if (variant.contains("data_point")) {
+      result = detail::DataPoint_Impl::factoryFromVariant(variant,parseResult.second);
+    }
+    else if (variant.contains("analysis")) {
+      result = detail::Analysis_Impl::fromVariant(variant,parseResult.second);
+    }
+    else {
+      LOG_FREE_AND_THROW("openstudio.analysis.AnalysisObject",
+                         "The file at " << toString(p) << " does not contain a data_point or "
+                         << "an analysis.");
+    }
+  }
+  catch (std::exception& e) {
+    LOG_FREE(Error,"openstudio.analysis.AnalysisObject",
+             "The file at " << toString(p) << " cannot be parsed as an OpenStudio "
+             << "analysis framework json file, because " << e.what());
+  }
+  catch (...) {
+    LOG_FREE(Error,"openstudio.analysis.AnalysisObject",
+             "The file at " << toString(p) << " cannot be parsed as an OpenStudio "
+             << "analysis framework json file.");
+  }
+
+  return result;
+}
+
+boost::optional<AnalysisObject> loadJSON(std::istream& json) {
+  // istream -> string code from
+  // http://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
+  std::string contents;
+  json.seekg(0, std::ios::end);
+  contents.resize(json.tellg());
+  json.seekg(0, std::ios::beg);
+  json.read(&contents[0], contents.size());
+  return loadJSON(contents);
+}
+
+boost::optional<AnalysisObject> loadJSON(const std::string& json) {
+  OptionalAnalysisObject result;
+  try {
+    std::pair<QVariant,VersionString> parseResult = openstudio::loadJSON(json);
+    QVariantMap variant = parseResult.first.toMap();
+    if (variant.contains("data_point")) {
+      result = detail::DataPoint_Impl::factoryFromVariant(variant,parseResult.second);
+    }
+    else if (variant.contains("analysis")) {
+      result = detail::Analysis_Impl::fromVariant(variant,parseResult.second);
+    }
+    else {
+      LOG_FREE_AND_THROW("openstudio.analysis.AnalysisObject",
+                         "The parsed json string does not contain a data_point or an analysis.");
+    }
+  }
+  catch (std::exception& e) {
+    LOG_FREE(Error,"openstudio.analysis.AnalysisObject",
+             "The following string cannot be parsed as an OpenStudio analysis framework "
+             << "json file, because " << e.what() << std::endl << std::endl << json);
+  }
+  catch (...) {
+    LOG_FREE(Error,"openstudio.analysis.AnalysisObject",
+             "The following string cannot be parsed as an OpenStudio analysis framework "
+             << "json file." << std::endl << std::endl << json);
+  }
+
+  return result;
+}
 
 } // analysis
 } // openstudio

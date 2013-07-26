@@ -280,12 +280,6 @@ class ANALYSIS_API Analysis : public AnalysisObject {
 
   std::string toJSON(AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
 
-  static boost::optional<Analysis> fromJSON(const openstudio::path& p);
-
-  static boost::optional<Analysis> fromJSON(std::istream& json);
-
-  static boost::optional<Analysis> fromJSON(const std::string json);
-
   //@}
  protected:
   /// @cond

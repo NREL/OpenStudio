@@ -22,6 +22,7 @@
 
 #include <analysis/Analysis.hpp>
 #include <analysis/DataPoint.hpp>
+#include <analysis/DataPoint_Impl.hpp>
 #include <analysis/Problem.hpp>
 
 #include <resources.hxx>
@@ -47,12 +48,22 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PreRun) {
   EXPECT_FALSE(json.empty());
 
   // Deserialize and check results
+  OptionalAnalysisObject copyAsAnalysisObject = loadJSON(json);
+  ASSERT_TRUE(copyAsAnalysisObject);
+  ASSERT_TRUE(copyAsAnalysisObject->optionalCast<DataPoint>());
+  DataPoint copy = copyAsAnalysisObject->cast<DataPoint>();
+  EXPECT_EQ(json,copy.toJSON());
 
   // Save data point
   openstudio::path p = toPath("AnalysisFixtureData/data_point_pre_run.json");
   EXPECT_TRUE(dataPoint->saveJSON(p,true));
 
   // Load and check results
+  copyAsAnalysisObject = loadJSON(p);
+  ASSERT_TRUE(copyAsAnalysisObject);
+  ASSERT_TRUE(copyAsAnalysisObject->optionalCast<DataPoint>());
+  copy = copyAsAnalysisObject->cast<DataPoint>();
+  EXPECT_EQ(json,copy.toJSON());
 
 }
 

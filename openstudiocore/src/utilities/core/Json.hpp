@@ -22,16 +22,27 @@
 
 #include <utilities/core/Path.hpp>
 
-#include <qjson/serializer.h>
+#include <boost/function.hpp>
 
 #include <QVariant>
 
 #include <string>
+#include <vector>
+
+namespace QJson {
+  class Serializer;
+}
 
 namespace openstudio {
 
-/** Helper function to standardize JSON serialization settings. */
-void configureJsonSerializer(QJson::Serializer& serializer);
+class VersionString;
+
+namespace detail {
+
+  /** Helper function to standardize JSON serialization settings. */
+  void configureJsonSerializer(QJson::Serializer& serializer);
+
+}
 
 /** Helper function to construct version meta-data object for JSON files. */
 QVariant jsonMetadata();
@@ -41,6 +52,72 @@ bool saveJSON(const QVariant& json, openstudio::path p, bool overwrite);
 
 /** Helper function to print top-level json files to string. */
 std::string toJSON(const QVariant& json);
+
+/** Helper function to load top-level json files. Retrieved data is in .first,
+ *  OpenStudio version of file is in .second. */
+std::pair<QVariant,VersionString> loadJSON(const openstudio::path& p);
+
+/** Helper function to load top-level json data. Retrieved data is in .first,
+ *  OpenStudio version of serialization is in .second. */
+std::pair<QVariant,VersionString> loadJSON(const std::string& json);
+
+template<typename T>
+std::vector<T> deserializeOrderedVector(const QVariantList& list,
+                                        const std::string& valueKey,
+                                        const std::string& indexKey,
+                                        boost::function<T (QVariant*)> typeConverter)
+{
+  unsigned n = list.size();
+  std::vector<T> result(n,T());
+  Q_FOREACH(const QVariant& listItem,list) {
+    QVariantMap listItemMap = listItem.toMap();
+    int index = listItemMap[toQString(indexKey)].toInt();
+    T value = typeConverter(&listItemMap[toQString(valueKey)]);
+    result[index] = value;
+  }
+  return result;
+}
+
+template<typename T>
+std::vector<T> deserializeOrderedVector(const QVariantList& list,
+                                        const std::string& valueKey,
+                                        const std::string& indexKey,
+                                        boost::function<T (const QVariant&)> typeConverter)
+{
+  unsigned n = list.size();
+  std::vector<T> result(n,T());
+  Q_FOREACH(const QVariant& listItem,list) {
+    QVariantMap listItemMap = listItem.toMap();
+    int index = listItemMap[toQString(indexKey)].toInt();
+    T value = typeConverter(listItemMap[toQString(valueKey)]);
+    result[index] = value;
+  }
+  return result;
+}
+
+template<typename T>
+std::vector<T> deserializeUnorderedVector(const QVariantList& list,
+                                          boost::function<T (QVariant*)> typeConverter)
+{
+  std::vector<T> result;
+  Q_FOREACH(const QVariant& listItem,list) {
+    T value = typeConverter(&listItem);
+    result.push_back(value);
+  }
+  return result;
+}
+
+template<typename T>
+std::vector<T> deserializeUnorderedVector(const QVariantList& list,
+                                          boost::function<T (const QVariant&)> typeConverter)
+{
+  std::vector<T> result;
+  Q_FOREACH(const QVariant& listItem,list) {
+    T value = typeConverter(listItem);
+    result.push_back(value);
+  }
+  return result;
+}
 
 }
 

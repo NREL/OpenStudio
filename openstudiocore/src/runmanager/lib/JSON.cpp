@@ -5,6 +5,7 @@
 #include "WorkItem.hpp"
 
 #include <utilities/core/Json.hpp>
+#include <utilities/core/Compare.hpp>
 
 #include <qjson/parser.h>
 
@@ -100,20 +101,13 @@ namespace detail {
   }
 
   /// \returns a JSON string representation of the given job tree
-  Job JSON::toJob(const std::string &t_json)
-  {
-    QJson::Parser parser;
-    bool ok = false;
-    QVariant variant = parser.parse(toQString(t_json).toUtf8(), &ok);
+  Job JSON::toJob(const std::string &t_json) {
+    std::pair<QVariant,VersionString> parseResult = loadJSON(t_json);
 
-    if (ok)
-    {
-      QVariant metadata = variant.toMap()["metadata"];
-      QVariant jobData = variant.toMap()["job"];
-      return toJob(jobData);
-    } else {
-      throw std::runtime_error("Error parsing JSON: " + toString(parser.errorString()));
-    }
+    QVariant jobData = parseResult.first.toMap()["job"];
+    // when need to do work to preserve backwards compatibility, pass parseResult.second
+    // to toJob
+    return toJob(jobData);
   }
 
   QVariant JSON::toVariant(const WorkItem &t_workItem)
@@ -164,18 +158,12 @@ namespace detail {
   /// \returns a WorkItem from the given JSON string
   WorkItem JSON::toWorkItem(const std::string &t_json)
   {
-    QJson::Parser parser;
-    bool ok = false;
-    QVariant variant = parser.parse(toQString(t_json).toUtf8(), &ok);
+    std::pair<QVariant,VersionString> parseResult = loadJSON(t_json);
 
-    if (ok)
-    {
-      QVariant metadata = variant.toMap()["metadata"];
-      QVariant workItemData = variant.toMap()["work_item"];
-      return toWorkItem(workItemData);
-    } else {
-      throw std::runtime_error("Error parsing JSON: " + toString(parser.errorString()));
-    }
+    QVariant workItemData = parseResult.first.toMap()["work_item"];
+    // when need to do work to preserve backwards compatibility, pass parseResult.second
+    // to toWorkItem
+    return toWorkItem(workItemData);
   }
 
   // JobType

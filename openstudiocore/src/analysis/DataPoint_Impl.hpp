@@ -66,11 +66,11 @@ namespace detail {
     DataPoint_Impl(const UUID& uuid,
                    const UUID& versionUUID,
                    const std::string& name,
-                   const std::string& dispayName,
+                   const std::string& displayName,
                    const std::string& description,
+                   const Problem& problem,
                    bool complete,
                    bool failed,
-                   const Problem& problem,
                    const std::vector<QVariant>& variableValues,
                    const std::vector<double>& responseValues,
                    const openstudio::path& directory,
@@ -78,9 +78,32 @@ namespace detail {
                    const boost::optional<FileReference>& idfInputData,
                    const boost::optional<FileReference>& sqlOutputData,
                    const boost::optional<FileReference>& xmlOutputData,
-                   const std::vector<Tag>& tags,
                    const boost::optional<runmanager::Job>& topLevelJob,
-                   const std::vector<openstudio::path>& dakotaParametersFiles);
+                   const std::vector<openstudio::path>& dakotaParametersFiles,
+                   const std::vector<Tag>& tags,
+                   const std::vector<Attribute>& outputAttributes);
+
+    /** Constructor provided for deserialization; not for general use. */
+    DataPoint_Impl(const UUID& uuid,
+                   const UUID& versionUUID,
+                   const std::string& name,
+                   const std::string& displayName,
+                   const std::string& description,
+                   const UUID& problemUUID,
+                   const boost::optional<UUID>& analysisUUID,
+                   bool complete,
+                   bool failed,
+                   const std::vector<QVariant>& variableValues,
+                   const std::vector<double>& responseValues,
+                   const openstudio::path& directory,
+                   const boost::optional<FileReference>& osmInputData,
+                   const boost::optional<FileReference>& idfInputData,
+                   const boost::optional<FileReference>& sqlOutputData,
+                   const boost::optional<FileReference>& xmlOutputData,
+                   const boost::optional<runmanager::Job>& topLevelJob,
+                   const std::vector<openstudio::path>& dakotaParametersFiles,
+                   const std::vector<Tag>& tags,
+                   const std::vector<Attribute>& outputAttributes);
 
     DataPoint_Impl(const DataPoint_Impl& other);
 
@@ -92,11 +115,23 @@ namespace detail {
     /** @name Getters and Queries */
     //@{
 
+    /** Returns true if DataPoint has access to the Problem that created it. Should be true
+     *  unless DataPoint was deserialized from JSON and has not yet been assimilated back
+     *  into its parent Analysis. */
+    bool hasProblem() const;
+
+    /** Returns the Problem used to create/associated with this DataPoint. */
+    Problem problem() const;
+
+    /** Returns the UUID of the Problem that created this DataPoint. */
+    UUID problemUUID() const;
+
+    /** Returns the UUID of the Analysis that parents this DataPoint. */
+    boost::optional<UUID> analysisUUID() const;
+
     bool isComplete() const;
 
     bool failed() const;
-
-    Problem problem() const;
 
     std::vector<QVariant> variableValues() const;
 
@@ -174,7 +209,7 @@ namespace detail {
     std::string toJSON() const;
 
     //@}
-    /** @name Protected in Public Class */
+    /** @name Protected in or Absent from Public Class */
     //@{
 
     void setOsmInputData(const FileReference& file);
@@ -199,13 +234,24 @@ namespace detail {
      *  data_point moniker. */
     QVariant toTopLevelVariant() const;
 
+    static DataPoint factoryFromVariant(const QVariant& variant,const VersionString& version);
+
+    static DataPoint fromVariant(const QVariant& variant, const VersionString& version);
+
     //@}
    protected:
+    // relationship state
+    // most of the time, m_problem should exist and m_parent should point to an Analysis
+    boost::optional<Problem> m_problem;     // Problem to which this DataPoint refers
+    // immediately after deserialization from json, may just have problem and analysis uuids
+    UUID m_problemUUID;
+    mutable boost::optional<UUID> m_analysisUUID;
+
+    // pure data
     bool m_complete;                        // false after construction
                                             // set to true by Problem update
     bool m_failed;                          // false after construction
                                             // set to true by Problem update if point is unusable
-    Problem m_problem;                      // Problem to which this DataPoint refers
     std::vector<QVariant> m_variableValues; // variable values for this run
     std::vector<double> m_responseValues;   // response function values for this run
     openstudio::path m_directory;           // directory containing results
@@ -215,15 +261,13 @@ namespace detail {
     boost::optional<FileReference> m_xmlOutputData; // attribute xml
     boost::optional<runmanager::Job> m_topLevelJob;
     std::vector<openstudio::path> m_dakotaParametersFiles;
-
-    // meta-data for query and display
-    std::vector<Tag> m_tags;
+    std::vector<Tag> m_tags;                // meta-data for query and display
 
     // cache variables
+    mutable std::vector<Attribute> m_outputAttributes; // serialized and deserialized
     mutable boost::optional<model::Model> m_model;
     mutable boost::optional<Workspace> m_workspace;
-    mutable boost::optional<SqlFile> m_sqlFile;
-    mutable std::vector<Attribute> m_outputAttributes; // serialized to database
+    mutable boost::optional<SqlFile> m_sqlFile;    
    private:
     REGISTER_LOGGER("openstudio.analysis.DataPoint");   
   };

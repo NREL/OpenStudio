@@ -21,17 +21,25 @@
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/String.hpp>
+#include <utilities/core/Compare.hpp>
 
 #include <OpenStudio.hxx>
+
+#include <qjson/serializer.h>
+#include <qjson/parser.h>
 
 #include <QFile>
 
 namespace openstudio {
 
-void configureJsonSerializer(QJson::Serializer& serializer) {
+namespace detail {
 
-  // pretty print json so it is easier to debug
-  serializer.setIndentMode(QJson::IndentFull);
+  void configureJsonSerializer(QJson::Serializer& serializer) {
+
+    // pretty print json so it is easier to debug
+    serializer.setIndentMode(QJson::IndentFull);
+
+  }
 
 }
 
@@ -47,9 +55,9 @@ bool saveJSON(const QVariant& json, openstudio::path p, bool overwrite) {
 
   // Use QFile and QIODevice serialize
   QFile file(toQString(p));
-  if (file.open(QFile::WriteOnly)){
+  if (file.open(QFile::WriteOnly)) {
     QJson::Serializer serializer;
-    configureJsonSerializer(serializer);
+    detail::configureJsonSerializer(serializer);
 
     bool ok(false);
     serializer.serialize(json,&file,&ok);
@@ -68,7 +76,7 @@ bool saveJSON(const QVariant& json, openstudio::path p, bool overwrite) {
 
 std::string toJSON(const QVariant& json) {
   QJson::Serializer serializer;
-  configureJsonSerializer(serializer);
+  detail::configureJsonSerializer(serializer);
 
   bool ok(false);
   QByteArray qba = serializer.serialize(json,&ok);
@@ -80,6 +88,53 @@ std::string toJSON(const QVariant& json) {
   LOG_FREE_AND_THROW("openstudio.Json","Could not serialize to JSON format, because "
                      << toString(serializer.errorMessage()));
   return std::string();
+}
+
+std::pair<QVariant,VersionString> loadJSON(const openstudio::path& p) {
+  QFile file(toQString(p));
+  if (file.open(QFile::ReadOnly)) {
+    QJson::Parser parser;
+    bool ok(false);
+    QVariant variant = parser.parse(&file,&ok);
+    file.close();
+    if (ok) {
+      QVariantMap metadata = variant.toMap()["metadata"].toMap();
+      VersionString version(metadata["version"].toString().toStdString());
+      if (version > VersionString(openStudioVersion())) {
+        LOG_FREE(Warn,"openstudio.Json","Loading json file from version " << version
+                 << " with OpenStudio version " << VersionString(openStudioVersion())
+                 << ". OpenStudio json files are not designed to be forwards-compatible. "
+                 << "Unexpected behavior may result.")
+      }
+      return std::make_pair<QVariant,VersionString>(variant,version);
+    }
+    LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parser.errorString()));
+  }
+
+  LOG_FREE_AND_THROW("openstudio.Json","Could not open file " << toString(p) << " for reading.");
+  return std::make_pair<QVariant,VersionString>(QVariant(),VersionString(""));
+}
+
+std::pair<QVariant,VersionString> loadJSON(const std::string& json) {
+  QJson::Parser parser;
+  bool ok = false;
+  QVariant variant = parser.parse(toQString(json).toUtf8(), &ok);
+
+  if (ok)
+  {
+    QVariantMap metadata = variant.toMap()["metadata"].toMap();
+    VersionString version(metadata["version"].toString().toStdString());
+    if (version > VersionString(openStudioVersion())) {
+      LOG_FREE(Warn,"openstudio.Json","Loading json file from version " << version
+               << " with OpenStudio version " << VersionString(openStudioVersion())
+               << ". OpenStudio json files are not designed to be forwards-compatible. "
+               << "Unexpected behavior may result.")
+    }
+    return std::make_pair<QVariant,VersionString>(variant,version);
+  }
+
+  LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parser.errorString()));
+  return std::make_pair<QVariant,VersionString>(QVariant(),VersionString(""));
 }
 
 } // openstudio

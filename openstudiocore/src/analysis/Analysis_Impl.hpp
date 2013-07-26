@@ -255,7 +255,7 @@ namespace detail {
     std::string toJSON(AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
 
     //@}
-    /** @name Protected in Public Class */
+    /** @name Protected in or Absent from Public Class */
     //@{
 
     virtual QVariant toVariant() const;
@@ -264,6 +264,8 @@ namespace detail {
      *  AnalysisSerializationScope::Full, and b) wrapping those contents in a map with version
      *  meta-data and the "analysis" indicator. */
     QVariant toVariant(AnalysisSerializationScope scope) const;
+
+    static Analysis fromVariant(const QVariant& variant,const VersionString& version);
 
     //@}
    signals:

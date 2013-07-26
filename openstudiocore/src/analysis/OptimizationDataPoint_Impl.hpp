@@ -86,12 +86,14 @@ namespace detail {
     virtual void clearResults();
 
     //@}
-    /** @name Protected in Public Class */
+    /** @name Protected in or Absent from Public Class */
     //@{
 
     void setObjectiveValues(const std::vector<double> values);
 
     virtual QVariant toVariant() const;
+
+    static OptimizationDataPoint fromVariant(const QVariant& variant, const VersionString& version);
 
     //@}
    protected:
