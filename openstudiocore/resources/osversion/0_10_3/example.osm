@@ -65,18 +65,18 @@ OS:Site,
 
 OS:Site:GroundTemperature:BuildingSurface,
   {0c7db36f-26ae-432b-ba65-885e6bf3d9a8}, !- Handle
-  19.527,                                 !- January Ground Temperature {C}
-  19.502,                                 !- February Ground Temperature {C}
-  19.536,                                 !- March Ground Temperature {C}
-  19.598,                                 !- April Ground Temperature {C}
-  20.002,                                 !- May Ground Temperature {C}
-  21.64,                                  !- June Ground Temperature {C}
-  22.225,                                 !- July Ground Temperature {C}
-  22.375,                                 !- August Ground Temperature {C}
-  21.449,                                 !- September Ground Temperature {C}
-  20.121,                                 !- October Ground Temperature {C}
-  19.802,                                 !- November Ground Temperature {C}
-  19.633;                                 !- December Ground Temperature {C}
+  19.527,                                 !- January Site Ground Temperature {C}
+  19.502,                                 !- February Site Ground Temperature {C}
+  19.536,                                 !- March Site Ground Temperature {C}
+  19.598,                                 !- April Site Ground Temperature {C}
+  20.002,                                 !- May Site Ground Temperature {C}
+  21.64,                                  !- June Site Ground Temperature {C}
+  22.225,                                 !- July Site Ground Temperature {C}
+  22.375,                                 !- August Site Ground Temperature {C}
+  21.449,                                 !- September Site Ground Temperature {C}
+  20.121,                                 !- October Site Ground Temperature {C}
+  19.802,                                 !- November Site Ground Temperature {C}
+  19.633;                                 !- December Site Ground Temperature {C}
 
 OS:Site:WaterMainsTemperature,
   {ecfe000b-791f-4944-898f-54349193dda7}, !- Handle
@@ -92,15 +92,15 @@ OS:SizingPeriod:DesignDay,
   0,                                      !- Daily Dry-Bulb Temperature Range {deltaC}
   -20.6,                                  !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
   99063,                                  !- Barometric Pressure {Pa}
-  4.9,                                    !- Wind Speed {m/s}
-  270,                                    !- Wind Direction {deg}
+  4.9,                                    !- Site Wind Speed {m/s}
+  270,                                    !- Site Wind Direction {deg}
   0,                                      !- Sky Clearness
   0,                                      !- Rain Indicator
   0,                                      !- Snow Indicator
   21,                                     !- Day of Month
   1,                                      !- Month
   WinterDesignDay,                        !- Day Type
-  0,                                      !- Daylight Saving Time Indicator
+  0,                                      !- Site Daylight Saving Time Status
   WetBulb,                                !- Humidity Indicating Type
   ,                                       !- Humidity Indicating Day Schedule Name
   DefaultMultipliers,                     !- Dry-Bulb Temperature Range Modifier Type
@@ -114,15 +114,15 @@ OS:SizingPeriod:DesignDay,
   10.7,                                   !- Daily Dry-Bulb Temperature Range {deltaC}
   23.8,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
   99063,                                  !- Barometric Pressure {Pa}
-  5.3,                                    !- Wind Speed {m/s}
-  230,                                    !- Wind Direction {deg}
+  5.3,                                    !- Site Wind Speed {m/s}
+  230,                                    !- Site Wind Direction {deg}
   1,                                      !- Sky Clearness
   0,                                      !- Rain Indicator
   0,                                      !- Snow Indicator
   21,                                     !- Day of Month
   7,                                      !- Month
   SummerDesignDay,                        !- Day Type
-  0,                                      !- Daylight Saving Time Indicator
+  0,                                      !- Site Daylight Saving Time Status
   WetBulb,                                !- Humidity Indicating Type
   ,                                       !- Humidity Indicating Day Schedule Name
   DefaultMultipliers,                     !- Dry-Bulb Temperature Range Modifier Type
@@ -2453,7 +2453,7 @@ OS:IlluminanceMap,
   1.1,                                    !- Origin Z-Coordinate {m}
   ,                                       !- Psi Rotation Around X-Axis {deg}
   ,                                       !- Theta Rotation Around Y-Axis {deg}
-  ,                                       !- Phi Rotation Around Z-Axis {deg}
+  ,                                       !- Room Air Zone Temperature Stratification Fraction Rotation Around Z-Axis {deg}
   8,                                      !- X Length {m}
   ,                                       !- Number of X Grid Points
   8;                                      !- Y Length {m}
@@ -2721,7 +2721,7 @@ OS:Controller:OutdoorAir,
   No,                                     !- High Humidity Control
   ,                                       !- Humidistat Control Zone Name
   ,                                       !- High Humidity Outdoor Air Flow Ratio
-  ,                                       !- Control High Indoor Humidity Based on Outdoor Humidity Ratio
+  ,                                       !- Control High Indoor Humidity Based on Site Outdoor Air Humidity Ratio
   BypassWhenOAFlowGreaterThanMinimum;     !- Heat Recovery Bypass Control Type
 
 OS:AirLoopHVAC:OutdoorAirSystem,
@@ -3087,13 +3087,13 @@ OS:Output:Variable,
   {23171f14-a675-4808-82d8-0da8e6768974}, !- Handle
   Output Variable 1,                      !- Name
   ,                                       !- Key Value
-  Zone Outdoor Dry Bulb;                  !- Variable Name
+  Zone Site Outdoor Air Drybulb Temperature;                  !- Variable Name
 
 OS:Output:Variable,
   {505d47a3-7cb4-41ed-9f0c-739a7600924a}, !- Handle
   Output Variable 2,                      !- Name
   ,                                       !- Key Value
-  Zone Outdoor Wet Bulb;                  !- Variable Name
+  Zone Site Outdoor Air Wetbulb Temperature;                  !- Variable Name
 
 OS:Output:Variable,
   {4ebbb664-9530-4908-bb71-5bafceab9bea}, !- Handle
