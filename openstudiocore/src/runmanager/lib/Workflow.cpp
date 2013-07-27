@@ -657,15 +657,9 @@ namespace runmanager {
       throw std::runtime_error("Unable to create workflow: no child jobs");
     }
 
-    try {
-      m_job->params.remove("workflowkey");
-    } catch (const std::exception &) {
-    }
+    m_job->params.remove("workflowkey");
 
-    try {
-      m_job->params.remove("workflowname");
-    } catch (const std::exception &) {
-    }
+    m_job->params.remove("workflowname");
 
     openstudio::runmanager::JobParams params;
     std::string k = key();

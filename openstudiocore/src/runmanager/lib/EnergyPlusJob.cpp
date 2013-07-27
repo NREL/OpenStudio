@@ -72,22 +72,28 @@ namespace detail {
     // because it's used to cache looked up variables
     if (!m_idf)
     {
-      try {
+      if (t_params.has("filename") && !t_params.get("filename").children.empty())
+      {
         // first, see if we can get a filename that was specifically requested by the job creation
-        std::string filename = t_params.get("filename").children.at(0).value;
-       
+        std::string filename = t_params.get("filename").children[0].value;
+
         LOG(Info, "Looking for filename: " << filename); 
-        try {
-          m_idf = t_files.getLastByFilename(filename);
-        } catch (const std::runtime_error &) {
+
+        std::vector<FileInfo> files = t_files.getAllByFilename(filename).files();
+        if (!files.empty())
+        {
+          m_idf = files.back();
+        } else {
           // a filename param was provided, but the file hasn't been generated ... yet
         }
-
-      } catch (const std::exception &) {
+      } else {
         // if not, try to get any old IDF that was passed in
-        try {
-          m_idf = t_files.getLastByExtension("idf");
-        } catch (const std::runtime_error &) {
+        std::vector<FileInfo> files = t_files.getAllByExtension("idf").files();
+        if (!files.empty())
+        {
+          m_idf = files.back();
+        } else {
+          // there are not any idf files at all
         }
       }
     }
