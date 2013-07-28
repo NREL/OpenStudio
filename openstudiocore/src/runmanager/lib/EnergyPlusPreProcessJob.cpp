@@ -119,7 +119,7 @@ namespace detail {
     try {
       m_idf = idfFile();
       resetFiles(m_files, m_idf); 
-    } catch (const std::exception &e) {
+    } catch (const std::runtime_error &e) {
       errors.result = ruleset::OSResultValue::Fail;
       errors.addError(ErrorType::Error, e.what());
     }

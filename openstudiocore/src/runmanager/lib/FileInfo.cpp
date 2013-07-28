@@ -125,6 +125,21 @@ void FileInfo::addRequiredFile(const openstudio::path &t_location)
   addRequiredFile(QUrl::fromLocalFile(toQString(t_location.native_file_string())));
 }
 
+bool FileInfo::hasRequiredFile(const openstudio::path &filename)
+{
+  for (std::vector<std::pair<QUrl, openstudio::path> >::const_iterator itr = requiredFiles.begin();
+       itr != requiredFiles.end();
+       ++itr)
+  {
+    if (toPath(itr->second.filename()) == filename)
+    {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 std::pair<QUrl, openstudio::path> FileInfo::getRequiredFile(const openstudio::path &filename)
 {
   for (std::vector<std::pair<QUrl, openstudio::path> >::const_iterator itr = requiredFiles.begin();

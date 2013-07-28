@@ -232,11 +232,11 @@ namespace detail {
         FileInfo modelFile = this->modelFile();
 
 
-        try {
+        if (modelFile.hasRequiredFile(toPath("in.epw")))
+        {
           std::pair<QUrl, openstudio::path> f = modelFile.getRequiredFile(toPath("in.epw"));
           LOG(Debug, "Setting user defined epw: " << toString(f.first.toString()));
           weatherFilePath = f.first;
-        } catch (const std::exception &) {
         }
 
 
@@ -269,7 +269,7 @@ namespace detail {
                     if (epwDirParam.children.size() == 1) {
                       wp = toPath(epwDirParam.children[0].value) / *p;
                     }
-                  } catch (const std::exception &) {
+                  } catch (const std::runtime_error &) {
                   }
                 }
 
@@ -388,6 +388,9 @@ namespace detail {
 
         outfiles.append(idf);
         m_outputfiles = outfiles;
+      } catch (const std::runtime_error &) {
+        LOG(Warn, "OSM file not yet available, outputfiles not known");
+        return Files();
       } catch (const std::exception &) {
         LOG(Warn, "OSM file not yet available, outputfiles not known");
         return Files();

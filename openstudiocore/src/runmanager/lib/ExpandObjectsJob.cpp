@@ -114,14 +114,14 @@ namespace detail {
       try {
         m_idf = t_files.getLastByExtension("idf");
 
-        try {
-          m_idf->getRequiredFile(toPath("Energy+.idd"));
-        } catch (const std::runtime_error &) {
-          // We did not have an idd set, so we should find one
+
+        if (!m_idf->hasRequiredFile(toPath("Energy+.idd")))
+        {
           m_idf->addRequiredFile( toPath("Energy+.idd"), toPath("Energy+.idd"));
         }
 
       } catch (const std::runtime_error &) {
+        // no idf set
       }
     }
   }

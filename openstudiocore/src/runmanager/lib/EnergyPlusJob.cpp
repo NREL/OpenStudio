@@ -137,10 +137,10 @@ namespace detail {
   {
     if (m_idf)
     {
-      try {
+      if (m_idf->hasRequiredFile(toPath("in.epw")))
+      {
         return toString(m_idf->getRequiredFile(toPath("in.epw")).first.toString());
-      } catch (const std::runtime_error &) {
-      }
+      } 
     }
 
     // Fall through case
@@ -157,16 +157,14 @@ namespace detail {
       throw std::runtime_error("No IDF file found in input files");
     } 
 
-    try {
-      m_idf->getRequiredFile(toPath("Energy+.idd"));
-    } catch (const std::runtime_error &) {
+    if (!m_idf->hasRequiredFile(toPath("Energy+.idd")))
+    {
       // We did not have an idd set, so we should find one
       m_idf->addRequiredFile( toPath("Energy+.idd"), toPath("Energy+.idd"));
     }
 
-    try {
-      m_idf->getRequiredFile(toPath("in.epw")); 
-    } catch (const std::runtime_error &) {
+    if (!m_idf->hasRequiredFile(toPath("in.epw")))
+    {
       openstudio::path epw = WeatherFileFinder::find(allParams(), m_filelocationname, m_weatherfilename);
 
       if (!epw.empty())
