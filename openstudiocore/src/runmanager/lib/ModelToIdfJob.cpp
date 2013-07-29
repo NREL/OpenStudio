@@ -263,13 +263,13 @@ namespace detail {
                 LOG(Debug, "Completed weatherfile location: " << openstudio::toString(wp));
 
                 if (!boost::filesystem::exists(wp)) {
-                  try{
+                  if (allParams().has("epwdir"))
+                  {
                     // try prepending params "epwdir"
                     JobParam epwDirParam = allParams().get("epwdir");
                     if (epwDirParam.children.size() == 1) {
                       wp = toPath(epwDirParam.children[0].value) / *p;
                     }
-                  } catch (const std::runtime_error &) {
                   }
                 }
 
