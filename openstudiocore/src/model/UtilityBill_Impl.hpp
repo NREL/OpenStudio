@@ -95,6 +95,14 @@ namespace detail {
 
     boost::optional<std::string> peakDemandUnit() const;
 
+    boost::optional<double> peakDemandUnitConversionFactor() const;
+
+    boost::optional<unsigned> timestepsInPeakDemandWindow() const;
+
+    bool isTimestepsInPeakDemandWindowDefaulted() const;
+
+    boost::optional<double> minutesInPeakDemandWindow() const;
+
     std::vector<BillingPeriod> billingPeriods() const;
 
     //@}
@@ -125,6 +133,10 @@ namespace detail {
 
     bool setPeakDemandUnit(const std::string& peakDemandUnit);
 
+    bool setTimestepsInPeakDemandWindow(unsigned timestepsInPeakDemandWindow);
+
+    void resetTimestepsInPeakDemandWindow();
+
     void clearBillingPeriods();
 
     BillingPeriod addBillingPeriod();
@@ -135,7 +147,7 @@ namespace detail {
 
     Meter consumptionMeter() const;
 
-    boost::optional<OutputVariable> peakDemandVariable() const;
+    boost::optional<Meter> peakDemandMeter() const;
 
     unsigned numberBillingPeriodsInCalculations() const;
 

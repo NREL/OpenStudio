@@ -256,7 +256,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     BOOST_FOREACH(UtilityBill utilityBill, utilityBills){
       // these meters and variables will be translated later
       Meter consumptionMeter = utilityBill.consumptionMeter();
-      boost::optional<OutputVariable> peakDemandVariable = utilityBill.peakDemandVariable();
+      boost::optional<Meter> peakDemandMeter = utilityBill.peakDemandMeter();
     }
   }
 

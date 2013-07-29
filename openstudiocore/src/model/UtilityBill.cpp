@@ -21,8 +21,6 @@
 #include <model/UtilityBill_Impl.hpp>
 #include <model/Meter.hpp>
 #include <model/Meter_Impl.hpp>
-#include <model/OutputVariable.hpp>
-#include <model/OutputVariable_Impl.hpp>
 #include <model/RunPeriod.hpp>
 #include <model/RunPeriod_Impl.hpp>
 #include <model/YearDescription.hpp>
@@ -31,6 +29,9 @@
 #include <model/Building_Impl.hpp>
 #include <model/Facility.hpp>
 #include <model/Facility_Impl.hpp>
+#include <model/Timestep.hpp>
+#include <model/Timestep_Impl.hpp>
+
 
 #include <model/Model.hpp>
 
@@ -353,7 +354,50 @@ namespace detail {
   }
 
   boost::optional<std::string> UtilityBill_Impl::peakDemandUnit() const {
-    return getString(OS_UtilityBillFields::PeakDemandUnit,true,true);
+    if (this->fuelType() == FuelType::Electricity){
+      return getString(OS_UtilityBillFields::PeakDemandUnit,true,true);
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> UtilityBill_Impl::peakDemandUnitConversionFactor() const
+  {
+    boost::optional<double> result;
+    boost::optional<std::string> peakDemandUnit = this->peakDemandUnit();
+    if (peakDemandUnit){
+      FuelType fuelType = this->fuelType();
+
+      if (peakDemandUnit.get() == "kW"){
+        result = 1000;
+      }else if (peakDemandUnit.get() == "W"){
+        result = 1;
+      }else{
+        LOG(Error, "Unknown peak demand unit '" << peakDemandUnit.get() << "' for fuel type '" << fuelType.valueName() << "'");
+      }
+    }
+    return result;
+  }
+
+  boost::optional<unsigned> UtilityBill_Impl::timestepsInPeakDemandWindow() const {
+    if (this->fuelType() == FuelType::Electricity){
+      return getUnsigned(OS_UtilityBillFields::TimestepsinPeakDemandWindow,true);
+    }
+    return boost::none;
+  }
+
+  bool UtilityBill_Impl::isTimestepsInPeakDemandWindowDefaulted() const {
+    return isEmpty(OS_UtilityBillFields::TimestepsinPeakDemandWindow);
+  }
+
+  boost::optional<double> UtilityBill_Impl::minutesInPeakDemandWindow() const {
+    boost::optional<double> result;
+    boost::optional<unsigned> timestepsInPeakDemandWindow = this->timestepsInPeakDemandWindow();
+    if (timestepsInPeakDemandWindow){
+      Timestep timestep = this->model().getUniqueModelObject<Timestep>();
+      result = (60.0 * timestepsInPeakDemandWindow.get()) / timestep.numberOfTimestepsPerHour();
+
+    }
+    return result;
   }
 
   bool UtilityBill_Impl::setMeterInstallLocation(const InstallLocationType& meterInstallLocation) {
@@ -432,6 +476,18 @@ namespace detail {
       }
     }
     return result;
+  }
+
+  bool UtilityBill_Impl::setTimestepsInPeakDemandWindow(unsigned timestepsInPeakDemandWindow){
+    if (this->fuelType() == FuelType::Electricity){
+      return setUnsigned(OS_UtilityBillFields::TimestepsinPeakDemandWindow, timestepsInPeakDemandWindow);
+    }
+    return false;
+  }
+
+  void UtilityBill_Impl::resetTimestepsInPeakDemandWindow(){
+    bool test = setString(OS_UtilityBillFields::TimestepsinPeakDemandWindow, "");
+    BOOST_ASSERT(test);
   }
 
   std::vector<std::string> UtilityBill_Impl::consumptionUnitValues() const {
@@ -611,37 +667,51 @@ namespace detail {
     return result.get();
   }
 
-  boost::optional<OutputVariable> UtilityBill_Impl::peakDemandVariable() const{
+  boost::optional<Meter> UtilityBill_Impl::peakDemandMeter() const{
     FuelType fuelType = this->fuelType();
     InstallLocationType meterInstallLocation = this->meterInstallLocation();
     boost::optional<std::string> meterSpecificInstallLocation = this->meterSpecificInstallLocation();
     boost::optional<EndUseCategoryType> meterEndUseCategory = this->meterEndUseCategory();
     boost::optional<EndUseType> meterEndUse;
+    if (meterEndUseCategory){
+      meterEndUse = EndUseType(meterEndUseCategory->valueName());
+    }
+    boost::optional<std::string> meterSpecificEndUse = this->meterSpecificEndUse();
 
     std::string variableName;
-    if (fuelType == FuelType::Electricity){
-      if (meterInstallLocation == InstallLocationType::Facility){
-        variableName = "Facility Total Electric Demand Power";
-      }else if (meterInstallLocation == InstallLocationType::Building){
-        variableName = "Facility Total Building Electric Demand Power";
-      }
-    }
-
-    if (variableName.empty()){
+    if (fuelType != FuelType::Electricity){
       return boost::none;
     }
 
-    BOOST_FOREACH(const OutputVariable& variable, this->model().getModelObjects<OutputVariable>()){
-      if (istringEqual(variableName, variable.name().get()) &&
-          istringEqual("Daily", variable.reportingFrequency())){
-        return variable;
+    std::string meterName = Meter::getName(meterSpecificEndUse,
+                                           meterEndUse,
+                                           fuelType,
+                                           meterInstallLocation,
+                                           meterSpecificInstallLocation);
+
+    boost::optional<Meter> result;
+    BOOST_FOREACH(const Meter& meter, this->model().getModelObjects<Meter>()){
+      if ((istringEqual(meter.name(), meterName)) &&
+          (istringEqual("Zone", meter.reportingFrequency()))){
+        return meter;
       }
     }
 
-    OutputVariable variable(variableName, this->model());
-    variable.setReportingFrequency("Daily");
+    result = Meter(this->model());
+    result->setReportingFrequency("Zone");
+    result->setFuelType(fuelType);
+    result->setInstallLocationType(meterInstallLocation);
+    if (meterSpecificInstallLocation){
+      result->setSpecificInstallLocation(*meterSpecificInstallLocation);
+    }
+    if (meterEndUse){
+      result->setEndUseType(*meterEndUse);
+    }
+    if (meterSpecificEndUse){
+      result->setSpecificEndUse(*meterSpecificEndUse);
+    }
 
-    return variable;
+    return result;
   }
 
   std::vector<BillingPeriod> UtilityBill_Impl::billingPeriods() const
@@ -1051,6 +1121,7 @@ Vector BillingPeriod::modelConsumptionValues() const
 
       double value = timeseries->value(dateTime);
       if (value == outOfRangeValue){
+        LOG(Debug, "Could not find value of timeseries at dateTime " << dateTime);
         return Vector();
       }else{
         result[i] = value;
@@ -1062,83 +1133,6 @@ Vector BillingPeriod::modelConsumptionValues() const
   }
 
   return result;
-}
-
-Vector BillingPeriod::modelPeakDemandValues() const
-{
-  model::Model model = getImpl<detail::UtilityBill_Impl>()->model();
-
-  boost::optional<RunPeriod> runPeriod = model.runPeriod();
-  if (!runPeriod){
-    return Vector();
-  }
-
-  boost::optional<model::YearDescription> yd = model.yearDescription();
-  if (!yd){
-    return Vector();
-  }
-
-  boost::optional<int> calendarYear = yd->calendarYear();
-  if (!calendarYear){
-    return Vector();
-  }
-
-  boost::optional<OutputVariable> variable = getImpl<detail::UtilityBill_Impl>()->peakDemandVariable();
-  if (!variable){
-    return Vector();
-  }
-
-  boost::optional<ModelObject> modelObject;
-  InstallLocationType meterInstallLocation = getImpl<detail::UtilityBill_Impl>()->meterInstallLocation();
-  if (meterInstallLocation == InstallLocationType::Facility){
-    modelObject = model.getOptionalUniqueModelObject<Facility>();
-  }else if(meterInstallLocation == InstallLocationType::Building){
-    modelObject = model.building();
-  }
-
-  if (!modelObject){
-    return Vector();
-  }
-
-  Vector result;
-
-  Date runPeriodStartDate = Date(runPeriod->getBeginMonth(), runPeriod->getBeginDayOfMonth(), *calendarYear);
-  Date runPeriodEndDate = Date(runPeriod->getEndMonth(), runPeriod->getEndDayOfMonth(), *calendarYear);
-
-  boost::optional<openstudio::TimeSeries> timeseries = modelObject->getData(*variable, runPeriod->name().get());
-  if (timeseries){
-    result = Vector(this->numberOfDays());
-
-    double outOfRangeValue = std::numeric_limits<double>::min();
-    timeseries->setOutOfRangeValue(outOfRangeValue);
-
-    unsigned i = 0;
-    Date date = this->startDate();
-    Date endDate = this->endDate();
-    while (date <= endDate){
-
-      // Do not include year in date for query
-      Date tmp(date.monthOfYear(), date.dayOfMonth());
-      DateTime dateTime(tmp, Time(1));
-
-      double value = timeseries->value(dateTime);
-      if (value == outOfRangeValue){
-        return Vector();
-      }else{
-        result[i] = value;
-      }
-
-      ++i;
-      date += Time(1);
-    }
-  }
-
-  return result;
-}
-
-Vector BillingPeriod::modelTotalCostValues() const
-{
-  return Vector();
 }
 
 boost::optional<double> BillingPeriod::modelConsumption() const
@@ -1153,22 +1147,87 @@ boost::optional<double> BillingPeriod::modelConsumption() const
 
 boost::optional<double> BillingPeriod::modelPeakDemand() const
 {
-  boost::optional<double> result;
-  Vector modelPeakDemandValues = this->modelPeakDemandValues();
-  if (!modelPeakDemandValues.empty()){
-    result = sum(modelPeakDemandValues);
+  model::Model model = getImpl<detail::UtilityBill_Impl>()->model();
+
+  boost::optional<RunPeriod> runPeriod = model.runPeriod();
+  if (!runPeriod){
+    return boost::none;
   }
+
+  boost::optional<model::YearDescription> yd = model.yearDescription();
+  if (!yd){
+    return boost::none;
+  }
+
+  boost::optional<int> calendarYear = yd->calendarYear();
+  if (!calendarYear){
+    return boost::none;
+  }
+
+  boost::optional<Meter> meter = getImpl<detail::UtilityBill_Impl>()->peakDemandMeter();
+  if (!meter){
+    return boost::none;
+  }
+
+  boost::optional<unsigned> timestepsInPeakDemandWindow = getImpl<detail::UtilityBill_Impl>()->timestepsInPeakDemandWindow();
+  if (!timestepsInPeakDemandWindow){
+    return boost::none;
+  }
+
+  boost::optional<double> minutesInPeakDemandWindow = getImpl<detail::UtilityBill_Impl>()->minutesInPeakDemandWindow();
+  if (!minutesInPeakDemandWindow){
+    return boost::none;
+  }
+
+  boost::optional<double> result;
+  Vector window(*timestepsInPeakDemandWindow, 0);
+
+  boost::optional<openstudio::TimeSeries> timeseries = meter->getData(runPeriod->name().get());
+  if (timeseries){
+    result = std::numeric_limits<double>::min();
+
+    double outOfRangeValue = std::numeric_limits<double>::min();
+    timeseries->setOutOfRangeValue(outOfRangeValue);
+
+    // intentionally leave out calendar year
+    Date runPeriodStartDate = Date(runPeriod->getBeginMonth(), runPeriod->getBeginDayOfMonth());
+    Date runPeriodEndDate = Date(runPeriod->getEndMonth(), runPeriod->getEndDayOfMonth());
+
+    DateTime runPeriodStartDateTime = DateTime(runPeriodStartDate, Time(0,1,0,0));
+    DateTime runPeriodEndDateTime = DateTime(runPeriodEndDate, Time(0,24,0,0));
+
+    Vector values = timeseries->values(runPeriodStartDateTime, runPeriodEndDateTime);
+    unsigned numValues = values.size();
+
+    if (numValues < *timestepsInPeakDemandWindow){
+      return boost::none;
+    }
+
+    for (unsigned i = 0; i < numValues; ++i){
+      //  shift window
+      for (unsigned j = *timestepsInPeakDemandWindow - 1; j > 0; --j){
+        window[j] = window[j-1];
+      }
+      window[0] = values[i];
+
+      // compute energy over window in J
+      double energy = sum(window);
+
+      // compute average power in W
+      double power = energy / (60.0*minutesInPeakDemandWindow.get());
+
+      result = std::max(power, *result);
+    }
+
+    
+  }
+
   return result;
 }
 
 boost::optional<double> BillingPeriod::modelTotalCost() const
 {
-  boost::optional<double> result;
-  Vector modelTotalCostValues = this->modelTotalCostValues();
-  if (!modelTotalCostValues.empty()){
-    result = sum(modelTotalCostValues);
-  }
-  return result;
+  return boost::none;
 }
 
 BillingPeriod::BillingPeriod(boost::shared_ptr<detail::UtilityBill_Impl> impl,unsigned index)
@@ -1252,6 +1311,22 @@ boost::optional<std::string> UtilityBill::peakDemandUnit() const {
   return getImpl<detail::UtilityBill_Impl>()->peakDemandUnit();
 }
 
+boost::optional<double> UtilityBill::peakDemandUnitConversionFactor() const {
+  return getImpl<detail::UtilityBill_Impl>()->peakDemandUnitConversionFactor();
+}
+
+boost::optional<unsigned> UtilityBill::timestepsInPeakDemandWindow() const {
+  return getImpl<detail::UtilityBill_Impl>()->timestepsInPeakDemandWindow();
+}
+
+bool UtilityBill::isTimestepsInPeakDemandWindowDefaulted() const {
+  return getImpl<detail::UtilityBill_Impl>()->isTimestepsInPeakDemandWindowDefaulted();
+}
+
+boost::optional<double> UtilityBill::minutesInPeakDemandWindow() const {
+  return getImpl<detail::UtilityBill_Impl>()->minutesInPeakDemandWindow();
+}
+
 bool UtilityBill::setMeterInstallLocation(const InstallLocationType& meterInstallLocation) {
   return getImpl<detail::UtilityBill_Impl>()->setMeterInstallLocation(meterInstallLocation);
 }
@@ -1300,12 +1375,20 @@ bool UtilityBill::setPeakDemandUnit(const std::string& peakDemandUnit) {
   return getImpl<detail::UtilityBill_Impl>()->setPeakDemandUnit(peakDemandUnit);
 }
 
+bool UtilityBill::setTimestepsInPeakDemandWindow(unsigned timestepsInPeakDemandWindow){
+  return getImpl<detail::UtilityBill_Impl>()->setTimestepsInPeakDemandWindow(timestepsInPeakDemandWindow);
+}
+
+void UtilityBill::resetTimestepsInPeakDemandWindow(){
+  getImpl<detail::UtilityBill_Impl>()->resetTimestepsInPeakDemandWindow();
+}
+
 Meter UtilityBill::consumptionMeter() const{
   return getImpl<detail::UtilityBill_Impl>()->consumptionMeter();
 }
 
-boost::optional<OutputVariable> UtilityBill::peakDemandVariable() const{
-  return getImpl<detail::UtilityBill_Impl>()->peakDemandVariable();
+boost::optional<Meter> UtilityBill::peakDemandMeter() const{
+  return getImpl<detail::UtilityBill_Impl>()->peakDemandMeter();
 }
 
 std::vector<BillingPeriod> UtilityBill::billingPeriods() const{

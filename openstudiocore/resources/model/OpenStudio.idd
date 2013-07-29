@@ -12325,29 +12325,33 @@ OS:UtilityBill,
        \type choice
        \key W
        \key kW
-  N2, \field Billing Period Begin Month
+  N2, \field Timesteps in Peak Demand Window
+       \type integer
+       \minimum 1
+       \default 1
+  N3, \field Billing Period Begin Month
        \begin-extensible
        \type integer
        \required-field
        \minimum 1
        \maximum 12
-  N3, \field Billing Period Begin Day of Month
+  N4, \field Billing Period Begin Day of Month
        \type integer
        \required-field
        \minimum 1
        \maximum 31
-  N4, \field Billing Period Begin Year
+  N5, \field Billing Period Begin Year
        \type integer
        \required-field
-  N5, \field Number of Days in Billing Period
+  N6, \field Number of Days in Billing Period
        \type integer
        \required-field
        \minimum 1
-  N6, \field Billing Period Consumption
+  N7, \field Billing Period Consumption
        \type real
-  N7, \field Billing Period Peak Demand
+  N8, \field Billing Period Peak Demand
        \type real
-  N8; \field Billing Period Total Cost
+  N9; \field Billing Period Total Cost
        \type real
 
 \group OpenStudio Output Requests
