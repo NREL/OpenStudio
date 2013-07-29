@@ -40,6 +40,8 @@
 #include <model/Site_Impl.hpp>
 #include <model/TimeDependentValuation.hpp>
 #include <model/TimeDependentValuation_Impl.hpp>
+#include <model/UtilityBill.hpp>
+#include <model/UtilityBill_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Optional.hpp>
@@ -58,6 +60,7 @@ using openstudio::OptionalWorkspaceObject;
 using openstudio::WorkspaceObjectVector;
 using openstudio::Workspace;
 using openstudio::EndUses;
+using openstudio::CalibrationResult;
 
 namespace openstudio {
 namespace model {
@@ -1542,6 +1545,46 @@ namespace detail {
     return result;
   }
 
+  boost::optional<CalibrationResult> Facility_Impl::calibrationResult() const
+  {
+    boost::optional<CalibrationResult> result; 
+
+    OptionalSqlFile mySqlFile = model().sqlFile();
+    if (mySqlFile && mySqlFile->connectionOpen())
+    {
+      result = CalibrationResult();
+      BOOST_FOREACH(const model::UtilityBill& utilityBill, this->model().getModelObjects<model::UtilityBill>()){
+        CalibrationUtilityBill calibrationUtilityBill(utilityBill.name().get(), utilityBill.fuelType(),
+          utilityBill.meterInstallLocation(), utilityBill.meterSpecificInstallLocation(), 
+          utilityBill.meterEndUseCategory(), utilityBill.meterSpecificEndUse(), utilityBill.consumptionUnit(),
+          utilityBill.consumptionUnitConversionFactor(), utilityBill.peakDemandUnit(), utilityBill.peakDemandUnitConversionFactor(),
+          utilityBill.timestepsInPeakDemandWindow(), utilityBill.minutesInPeakDemandWindow(), utilityBill.numberBillingPeriodsInCalculations(),
+          utilityBill.CVRMSE(), utilityBill.NMBE());
+
+        BOOST_FOREACH(const model::BillingPeriod& billingPeriod, utilityBill.billingPeriods()){
+          CalibrationBillingPeriod calibrationBillingPeriod(billingPeriod.startDate(), billingPeriod.numberOfDays(),
+             utilityBill.consumptionUnit(), utilityBill.peakDemandUnit(),
+             billingPeriod.consumption(), billingPeriod.peakDemand(), billingPeriod.totalCost(),
+             billingPeriod.modelConsumption(), billingPeriod.modelPeakDemand(), billingPeriod.modelTotalCost());
+
+          calibrationUtilityBill.addBillingPeriod(calibrationBillingPeriod);
+        }
+        result->addUtilityBill(calibrationUtilityBill);
+      }
+    }
+    return result;
+  }
+
+  boost::optional<Attribute> Facility_Impl::calibrationResultAttribute() const
+  {
+    boost::optional<Attribute> result;
+    boost::optional<CalibrationResult> calibrationResult = this->calibrationResult();
+    if (calibrationResult){
+      result = calibrationResult->attribute();
+    }
+    return result;
+  }
+
   boost::optional<ModelObject> Facility_Impl::buildingAsModelObject() const {
     OptionalModelObject result;
     OptionalBuilding intermediate = building();
@@ -2162,6 +2205,17 @@ boost::optional<Attribute> Facility::endUsesAttribute() const
 {
   return getImpl<detail::Facility_Impl>()->endUsesAttribute();
 }
+
+boost::optional<CalibrationResult> Facility::calibrationResult() const
+{
+  return getImpl<detail::Facility_Impl>()->calibrationResult();
+}
+
+boost::optional<Attribute> Facility::calibrationResultAttribute() const
+{
+  return getImpl<detail::Facility_Impl>()->calibrationResultAttribute();
+}
+
 
 // get the building
 boost::optional<Building> Facility::building() const

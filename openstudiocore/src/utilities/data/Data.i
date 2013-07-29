@@ -42,6 +42,7 @@
 
 %include <utilities/data/DataEnums.hpp>
 %include <utilities/data/Attribute.i>
+%include <utilities/data/CalibrationResult.i>
 %include <utilities/data/EndUses.i>
 %include <utilities/data/Vector.i>
 %include <utilities/data/Matrix.i>
