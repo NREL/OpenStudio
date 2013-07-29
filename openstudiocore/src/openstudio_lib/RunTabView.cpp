@@ -299,8 +299,16 @@ void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warn
 void RunView::locateEnergyPlus()
 {
   openstudio::runmanager::ConfigOptions co(true);
-  bool energyplus_7_2_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(7,2)).tools().size() == 0;
-  if (energyplus_7_2_not_installed){
+  boost::optional<int> major = getRequiredEnergyPlusVersion().getMajor();
+  boost::optional<int> minor = getRequiredEnergyPlusVersion().getMinor();
+  bool energyplus_not_installed;
+  if (major && minor){
+    energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(*major,*minor)).tools().size() == 0;
+  } else {
+    energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(8,0)).tools().size() == 0;
+  }
+  
+  if (energyplus_not_installed){
     m_toolWarningLabel->show();
   } else {
     m_toolWarningLabel->hide();
