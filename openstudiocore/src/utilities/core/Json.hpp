@@ -21,6 +21,7 @@
 #define UTILITIES_CORE_JSON_HPP
 
 #include <utilities/core/Path.hpp>
+#include <utilities/core/Compare.hpp>
 
 #include <boost/function.hpp>
 
@@ -82,16 +83,21 @@ template<typename T>
 std::vector<T> deserializeOrderedVector(const QVariantList& list,
                                         const std::string& valueKey,
                                         const std::string& indexKey,
-                                        boost::function<T (const QVariant&)> typeConverter)
+                                        boost::function<T (const QVariant&, const VersionString&)> typeConverter,
+                                        const VersionString& version)
 {
-  unsigned n = list.size();
-  std::vector<T> result(n,T());
+  std::vector<std::pair<int,T> > data;
   Q_FOREACH(const QVariant& listItem,list) {
     QVariantMap listItemMap = listItem.toMap();
     int index = listItemMap[toQString(indexKey)].toInt();
-    T value = typeConverter(listItemMap[toQString(valueKey)]);
-    result[index] = value;
+    T value = typeConverter(listItemMap[toQString(valueKey)],version);
+    data.push_back(std::make_pair(index,value));
   }
+
+  std::sort(data.begin(),data.end(),FirstOfPairLess<std::pair<int,T> >());
+  std::vector<T> result;
+  std::transform(data.begin(), data.end(), std::back_inserter(result), GetSecondOfPair<int,T>());
+
   return result;
 }
 
@@ -101,7 +107,8 @@ std::vector<T> deserializeUnorderedVector(const QVariantList& list,
 {
   std::vector<T> result;
   Q_FOREACH(const QVariant& listItem,list) {
-    T value = typeConverter(&listItem);
+    QVariant listItemCopy(listItem);
+    T value = typeConverter(&listItemCopy);
     result.push_back(value);
   }
   return result;
@@ -109,11 +116,12 @@ std::vector<T> deserializeUnorderedVector(const QVariantList& list,
 
 template<typename T>
 std::vector<T> deserializeUnorderedVector(const QVariantList& list,
-                                          boost::function<T (const QVariant&)> typeConverter)
+                                          boost::function<T (const QVariant&, const VersionString&)> typeConverter,
+                                          const VersionString& version)
 {
   std::vector<T> result;
   Q_FOREACH(const QVariant& listItem,list) {
-    T value = typeConverter(listItem);
+    T value = typeConverter(listItem,version);
     result.push_back(value);
   }
   return result;

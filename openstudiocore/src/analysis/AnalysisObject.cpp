@@ -326,10 +326,10 @@ boost::optional<AnalysisObject> loadJSON(const openstudio::path& p) {
     std::pair<QVariant,VersionString> parseResult = openstudio::loadJSON(p);
     QVariantMap variant = parseResult.first.toMap();
     if (variant.contains("data_point")) {
-      result = detail::DataPoint_Impl::factoryFromVariant(variant,parseResult.second);
+      result = detail::DataPoint_Impl::factoryFromVariant(variant["data_point"],parseResult.second);
     }
     else if (variant.contains("analysis")) {
-      result = detail::Analysis_Impl::fromVariant(variant,parseResult.second);
+      result = detail::Analysis_Impl::fromVariant(variant["analysis"],parseResult.second);
     }
     else {
       LOG_FREE_AND_THROW("openstudio.analysis.AnalysisObject",
@@ -368,10 +368,10 @@ boost::optional<AnalysisObject> loadJSON(const std::string& json) {
     std::pair<QVariant,VersionString> parseResult = openstudio::loadJSON(json);
     QVariantMap variant = parseResult.first.toMap();
     if (variant.contains("data_point")) {
-      result = detail::DataPoint_Impl::factoryFromVariant(variant,parseResult.second);
+      result = detail::DataPoint_Impl::factoryFromVariant(variant["data_point"],parseResult.second);
     }
     else if (variant.contains("analysis")) {
-      result = detail::Analysis_Impl::fromVariant(variant,parseResult.second);
+      result = detail::Analysis_Impl::fromVariant(variant["analysis"],parseResult.second);
     }
     else {
       LOG_FREE_AND_THROW("openstudio.analysis.AnalysisObject",

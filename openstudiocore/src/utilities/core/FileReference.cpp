@@ -183,6 +183,21 @@ namespace detail {
     return QVariant(fileReferenceData);
   }
 
+  FileReference toFileReference(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+    return FileReference(openstudio::UUID(map["uuid"].toString()),
+                         openstudio::UUID(map["version_uuid"].toString()),
+                         map.contains("name") ? map["name"].toString().toStdString() : std::string(),
+                         map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                         map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                         toPath(map["path"].toString()),
+                         FileReferenceType(map["file_type"].toString().toStdString()),
+                         DateTime(map["timestamp_create"].toString().toStdString()),
+                         DateTime(map["timestamp_last"].toString().toStdString()),
+                         map["checksum_create"].toString().toStdString(),
+                         map["checksum_last"].toString().toStdString());
+  }
+
 } // detail
 
 } // openstudio

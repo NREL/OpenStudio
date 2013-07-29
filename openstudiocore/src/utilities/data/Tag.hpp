@@ -31,6 +31,8 @@
 
 namespace openstudio {
 
+class VersionString;
+
 class UTILITIES_API Tag {
  public:
   explicit Tag(const std::string& name);
@@ -59,6 +61,9 @@ namespace detail {
 
   /** Places tag's data in a QVariant for JSON serialization. */
   QVariant toVariant(const Tag& tag);
+
+  /** Deserializes json variant to Tag. */
+  Tag toTag(const QVariant& variant, const VersionString& version);
 
 }
 

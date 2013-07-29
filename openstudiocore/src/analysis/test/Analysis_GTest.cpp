@@ -117,9 +117,9 @@ TEST_F(AnalysisFixture, Analysis_SetSeed) {
                         "Fake Data Point",
                         "",
                         "",
+                        analysis.problem(),
                         true,
                         false,
-                        analysis.problem(),
                         std::vector<QVariant>(),
                         DoubleVector(),
                         toPath("dataPoint1"),
@@ -127,9 +127,10 @@ TEST_F(AnalysisFixture, Analysis_SetSeed) {
                         FileReference(toPath("in.idf")),
                         OptionalFileReference(),
                         OptionalFileReference(),
-                        TagVector(),
                         boost::none,
-                        std::vector<openstudio::path>()); //DLM: Elaine is this ok?
+                        std::vector<openstudio::path>(),
+                        TagVector(),
+                        AttributeVector()); //DLM: Elaine is this ok?
   ok = analysis.addDataPoint(*dataPoint);
   EXPECT_TRUE(ok);
   analysis.clearDirtyFlag();
@@ -288,9 +289,9 @@ TEST_F(AnalysisFixture, Analysis_ClearAllResults) {
                         "",
                         "",
                         "",
+                        problem,
                         true,
                         false,
-                        problem,
                         std::vector<QVariant>(1u,point),
                         DoubleVector(),
                         toPath(ss.str()),
@@ -298,9 +299,10 @@ TEST_F(AnalysisFixture, Analysis_ClearAllResults) {
                         FileReference(toPath(ss.str() + "/in.idf")),
                         OptionalFileReference(),
                         OptionalFileReference(),
-                        TagVector(),
                         boost::none,
-                        std::vector<openstudio::path>()); //DLM: Elaine is this ok?
+                        std::vector<openstudio::path>(),
+                        TagVector(),
+                        AttributeVector()); //DLM: Elaine is this ok?
     ss.str("");
     bool test = analysis.addDataPoint(dataPoint);
     EXPECT_TRUE(test);

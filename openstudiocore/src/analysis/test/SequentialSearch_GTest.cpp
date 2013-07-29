@@ -209,20 +209,21 @@ TEST_F(AnalysisFixture, SequentialSearch) {
       completeDataPoints.push_back(OptimizationDataPoint(point.uuid(),
                                                          createUUID(),
                                                          "","","",
+                                                         problem,
                                                          true,
                                                          false,
-                                                         problem,
-                                                         objectiveValues,
                                                          values,
                                                          DoubleVector(),
+                                                         objectiveValues,
                                                          openstudio::path(),
                                                          boost::none,
                                                          boost::none,
                                                          boost::none,
                                                          boost::none,
-                                                         point.tags(),
                                                          boost::none,
-                                                         std::vector<openstudio::path>())); // DLM: Elaine is this ok?
+                                                         std::vector<openstudio::path>(),
+                                                         point.tags(),
+                                                         point.outputAttributes())); // DLM: Elaine is this ok?
     }
     EXPECT_EQ(static_cast<size_t>(n),completeDataPoints.size());
     analysis = Analysis(analysis.uuid(),

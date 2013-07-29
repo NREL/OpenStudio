@@ -28,16 +28,17 @@
 #include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/JSON.hpp>
 
-#include <utilities/data/Attribute.hpp>
-
 #include <utilities/math/FloatCompare.hpp>
 
-#include <utilities/core/FileReference.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Containers.hpp>
+#include <utilities/core/FileReference.hpp>
 #include <utilities/core/Finder.hpp>
 #include <utilities/core/Json.hpp>
 
 #include <boost/foreach.hpp>
+#include <boost/function.hpp>
+#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -624,8 +625,8 @@ namespace detail {
         LOG_AND_THROW("Unexpected value_type " << toString(vvMap["value_type"].toString())
                       << " in data_point's variable_values.");
       }
-      int index = vvMap["variable_value_index"];
-      if (index >= n) {
+      int index = vvMap["variable_value_index"].toInt();
+      if (index >= int(n)) {
         LOG_AND_THROW("Unexpected variable_value_index " << index << " in variable_values "
                       << "list of length " << n << ".");
       }
@@ -635,50 +636,56 @@ namespace detail {
     // response values
     DoubleVector responseValues;
     if (map.contains("response_values")) {
-      responseValues = deserializeOrderedVector<double>(map["response_values"].toList(),
-                                                        "value",
-                                                        "response_value_index",
-                                                        boost::bind(&QVariant::toDouble,_1));
+      bool ok(false);
+      responseValues = deserializeOrderedVector<double>(
+            map["response_values"].toList(),
+            "value",
+            "response_value_index",
+            boost::function<double (QVariant*)>(boost::bind(&QVariant::toDouble,_1,&ok)));
     }
 
     // tags
     TagVector tags;
     if (map.contains("tags")) {
-      tags = deserializeUnorderedVector<Tag>(map["tags"].toList(),
-                                             boost::bind(openstudio::detail::toTag,_1));
+      tags = deserializeUnorderedVector<Tag>(
+            map["tags"].toList(),
+            boost::function<Tag (const QVariant&)>(boost::bind(openstudio::detail::toTag,_1,version)));
     }
 
     // output attributes
     AttributeVector outputAttributes;
     if (map.contains("output_attributes")) {
-      outputAttributes = deserializeUnorderedVector(map["output_attributes"].toList(),
-                                                    boost::bind(openstudio::detail::toAttribute,_1));
+      outputAttributes = deserializeUnorderedVector<Attribute>(
+            map["output_attributes"].toList(),
+            boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
     }
 
     // dakota parameters files
     std::vector<openstudio::path> dakotaParametersFiles;
     if (map.contains("dakota_parameters_files")) {
-      dakotaParametersFiles = deserializeUnorderedVector(map["dakota_parameters_files"].toList(),
-                                                         boost::bind(openstudio::toPath,boost::bind(&QString::toString,_1)));
+      openstudio::path (*fToPath)(const QString&) = openstudio::toPath;
+      dakotaParametersFiles = deserializeUnorderedVector<openstudio::path>(
+            map["dakota_parameters_files"].toList(),
+            boost::function<openstudio::path (QVariant*)>(boost::bind(fToPath,boost::bind(&QVariant::toString,_1))));
     }
 
-    return DataPoint(map["uuid"].toUUID(),
-                     map["version_uuid"].toUUID(),
+    return DataPoint(openstudio::UUID(map["uuid"].toString()),
+                     openstudio::UUID(map["version_uuid"].toString()),
                      map.contains("name") ? map["name"].toString().toStdString() : std::string(),
                      map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                      map.contains("description") ? map["description"].toString().toStdString() : std::string(),
-                     map["problem_uuid"].toUUID(),
-                     map.contains("analysis_uuid") ? map["analysis_uuid"].toUUID() : boost::none,
+                     openstudio::UUID(map["problem_uuid"].toString()),
+                     map.contains("analysis_uuid") ? openstudio::UUID(map["analysis_uuid"].toString()) : boost::optional<openstudio::UUID>(),
                      map["complete"].toBool(),
                      map["failed"].toBool(),
                      variableValues,
                      responseValues,
-                     map.contains["directory"] ? toPath(map["directory"].toString()) : openstudio::path(),
-                     map.contains["osm_input_data"] ? openstudio::detail::toFileReference(map["osm_input_data"],version) : OptionalFileReference(),
-                     map.contains["idf_input_data"] ? openstudio::detail::toFileReference(map["idf_input_data"],version) : OptionalFileReference(),
-                     map.contains["sql_output_data"] ? openstudio::detail::toFileReference(map["sql_output_data"],version) : OptionalFileReference(),
-                     map.contains["xml_output_data"] ? openstudio::detail::toFileReference(map["xml_output_data"],version) : OptionalFileReference(),
-                     map.contains["top_level_job"] ? runmanager::JSON::toJob(map["top_level_job"]) : boost::optional<runmanager::Job>(),
+                     map.contains("directory") ? toPath(map["directory"].toString()) : openstudio::path(),
+                     map.contains("osm_input_data") ? openstudio::detail::toFileReference(map["osm_input_data"],version) : OptionalFileReference(),
+                     map.contains("idf_input_data") ? openstudio::detail::toFileReference(map["idf_input_data"],version) : OptionalFileReference(),
+                     map.contains("sql_output_data") ? openstudio::detail::toFileReference(map["sql_output_data"],version) : OptionalFileReference(),
+                     map.contains("xml_output_data") ? openstudio::detail::toFileReference(map["xml_output_data"],version) : OptionalFileReference(),
+                     map.contains("top_level_job") ? runmanager::detail::JSON::toJob(map["top_level_job"]) : boost::optional<runmanager::Job>(),
                      dakotaParametersFiles,
                      tags,
                      outputAttributes);

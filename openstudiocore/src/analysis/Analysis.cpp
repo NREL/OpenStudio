@@ -740,6 +740,36 @@ namespace detail {
     return result;
   }
 
+  Analysis Analysis_Impl::fromVariant(const QVariant& variant,const VersionString& version) {
+    // HERE
+    OptionalAnalysis result;
+    return result.get();
+
+    QVariantMap map = variant.toMap();
+    Problem problem = Problem_Impl::factoryFromVariant(map["problem"],version);
+    OptionalAlgorithm algorithm;
+    if (map.contains("algorithm")) {
+      algorithm =  Algorithm_Impl::factoryFromVariant(map["algorithm"],version);
+    }
+    DataPointVector dataPoints;
+    if (map.contains("data_points")) {
+      dataPoints = deserializeUnorderedVector<DataPoint>(
+            map["data_points"].toList(),
+            boost::function<DataPoint (const QVariant&, const VersionString&)>(openstudio::analysis::detail::DataPoint_Impl::factoryFromVariant),
+            version);
+    }
+    return Analysis(openstudio::UUID(map["uuid"].toString()),
+                    openstudio::UUID(map["version_uuid"].toString()),
+                    map.contains("name") ? map["name"].toString().toStdString() : std::string(),
+                    map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                    map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                    problem,
+                    algorithm,
+                    openstudio::detail::toFileReference(map["seed"],version),
+                    map.contains("weather_file") ? openstudio::detail::toFileReference(map["weather_file"],version) : OptionalFileReference(),
+                    );
+  }
+
   void Analysis_Impl::onChange(ChangeType changeType) {
     AnalysisObject_Impl::onChange(changeType);
     if ((changeType == AnalysisObject_Impl::InvalidatesResults) &&

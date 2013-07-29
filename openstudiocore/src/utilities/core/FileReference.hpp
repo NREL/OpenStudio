@@ -162,6 +162,9 @@ namespace detail {
   /** Places attribute's data in a QVariant for JSON serialization. */
   QVariant toVariant(const FileReference& fileReference);
 
+  /** Deserializes json variant to FileReference. */
+  FileReference toFileReference(const QVariant& variant, const VersionString& version);
+
 }
 
 } // openstudio
