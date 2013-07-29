@@ -249,15 +249,16 @@ def exec_statement(s)
   if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
     s = s.gsub("/", "\\")
   end
-  puts "start '#{s}'"
+  #puts "start '#{s}'"
   result = system(s)
-  puts "end '#{s}'"
+  #puts "end '#{s}'"
   return result
 end
 
 def writeTimeSeriesToSql(sqlfile, simDateTimes, illum, space_name, ts_name, ts_units)
-  puts DateTime.now.to_s + " Beginning timeseries write to sql"
-  puts DateTime.now.to_s + " Creating data vector"
+  #puts "writing Radiance glare results database..."
+  #puts DateTime.now.to_s + " Beginning timeseries write to sql"
+  #puts DateTime.now.to_s + " Creating data vector"
   data = OpenStudio::Vector.new(illum.length)
   illum.length.times do |n|
     begin
@@ -267,14 +268,14 @@ def writeTimeSeriesToSql(sqlfile, simDateTimes, illum, space_name, ts_name, ts_u
       data[n] = 0;
     end
   end
-  puts DateTime.now.to_s + " Creating TimeSeries Object"
+  #puts DateTime.now.to_s + " Creating TimeSeries Object"
   illumTS = OpenStudio::TimeSeries.new(simDateTimes, data, ts_units);
-  puts DateTime.now.to_s + " Inserting into SQLFile"
+  #puts DateTime.now.to_s + " Inserting into SQLFile"
   sqlfile.insertTimeSeriesData(
     "Average", "Zone", "Zone", space_name, ts_name, OpenStudio::ReportingFrequency.new("Hourly"),
     OpenStudio::OptionalString.new(),
     ts_units, illumTS);
-  puts DateTime.now.to_s + " Ending timeseries write to sql"
+  #puts DateTime.now.to_s + " Ending timeseries write to sql"
 end
 
 def mergeSpaces(t_space_names_to_calculate, t_outPath)
@@ -723,7 +724,8 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
       meanDGP = []
       maxDGP = []
 
-      puts "Space: #{space_name}"
+      puts "Processing Space: #{space_name}"
+
       timeSeriesIllum =[]
       timeSeriesGlare =[]
       if not t_options.simMonth.nil? and not t_options.simDay.nil?
@@ -745,7 +747,9 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
         meanDGP << 0
         maxDGP << 0
 
-        puts "Processing: #{space_name} (#{simTimes[i]})"
+        if t_options.verbose == 'v'
+          puts "Processing: #{space_name} (#{simTimes[i]})"
+        end
 
         
         # these must be declared in the thread otherwise will get overwritten on each loop
@@ -865,16 +869,19 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
           f.close
         end
 
-        puts "writing Radiance results database..."
+        puts "writing Radiance illuminance results database..."
         writeTimeSeriesToSql(sqlOutFile, simDateTimes, dirNormIllum, space_name, "Direct Normal Illuminance", "lux")
         writeTimeSeriesToSql(sqlOutFile, simDateTimes, diffHorizIllum, space_name, "Global Horizontal Illuminance", "lux")
         writeTimeSeriesToSql(sqlOutFile, simDateTimes, daylightSensorIlluminance, space_name, "Daylight Sensor Illuminance", "lux")
         writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanIlluminanceMap, space_name, "Mean Illuminance Map", "lux")
+        puts "done writing Radiance illuminance results database..."
 
         if t_radGlareSensorViews[space_name]
+          puts "writing Radiance glare results database..."
           writeTimeSeriesToSql(sqlOutFile, simDateTimes, minDGP, space_name, "Minimum Simplified Daylight Glare Probability", "")
           writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanDGP, space_name, "Mean Simplified Daylight Glare Probability", "")
           writeTimeSeriesToSql(sqlOutFile, simDateTimes, maxDGP, space_name, "Maximum Simplified Daylight Glare Probability", "")
+          puts "done writing Radiance glare results database..."
         end
 
         # I really have no idea how to populate these fields
