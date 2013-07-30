@@ -294,6 +294,11 @@ void LocationView::onWeatherFileBtnClicked()
       // this can throw
       EpwFile epwFile(newPath);
 
+      double totalDays = (epwFile.endDate() - epwFile.startDate()).totalDays() + 1;
+      if (totalDays > 366){
+        throw openstudio::Exception("Cannot accept weather file with more than 366 days of data");
+      }
+
       weatherFile = openstudio::model::WeatherFile::setWeatherFile(m_model, epwFile);
       BOOST_ASSERT(weatherFile);
       weatherFile->makeUrlRelative(toPath(m_modelTempDir) / toPath("resources"));

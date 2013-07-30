@@ -177,6 +177,7 @@ bool EpwFile::parse()
   boost::optional<Date> lastDate;
   boost::optional<Date> endDate;
   bool realYear = true;
+  bool timeReversal = false;
   while(std::getline(ifs, line)){
     boost::regex dateRegex("^(.*?),(.*?),(.*?),.*");
     boost::smatch matches;
@@ -199,6 +200,9 @@ bool EpwFile::parse()
             double totalDays = delta.totalDays();
             realYear = false;
             break;
+          }else if (delta.totalDays() < 0){
+            timeReversal = false;
+            break;
           }
         }
         lastDate = date;
@@ -211,6 +215,14 @@ bool EpwFile::parse()
     }
   }
 
+  // close file
+  ifs.close();
+
+  if (timeReversal){
+    LOG(Error, "Date reversal detected, wrap around years not supported for TMY data.");
+    return false;
+  }
+
   if (realYear && startDate && endDate){
     m_startDayOfWeek = startDate->dayOfWeek();
     m_startDate = startDate.get();
@@ -219,9 +231,6 @@ bool EpwFile::parse()
     m_endDate = endDate.get();
     m_endDateActualYear = endDate->year();
   }
-
-  // close file
-  ifs.close();
 
   return result;
 }
