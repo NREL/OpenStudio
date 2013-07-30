@@ -26,6 +26,8 @@
 #include <model/DesignDay.hpp>
 #include <model/DesignDay_Impl.hpp>
 #include <model/Model_Impl.hpp>
+#include <model/RunPeriod.hpp>
+#include <model/RunPeriod_Impl.hpp>
 #include <model/Site.hpp>
 #include <model/Site_Impl.hpp>
 #include <model/SizingPeriod.hpp>
@@ -296,22 +298,30 @@ void LocationView::onWeatherFileBtnClicked()
       BOOST_ASSERT(weatherFile);
       weatherFile->makeUrlRelative(toPath(m_modelTempDir) / toPath("resources"));
 
-      // set the calendar year or start day of week
-      openstudio::model::YearDescription yearDescription = m_model.getUniqueModelObject<openstudio::model::YearDescription>();
-      if (epwFile.startDateActualYear()){
-        yearDescription.resetDayofWeekforStartDay();
-        yearDescription.setCalendarYear(epwFile.startDateActualYear().get());
-      }else{
-        yearDescription.resetCalendarYear();
-        yearDescription.setDayofWeekforStartDay(epwFile.startDayOfWeek().valueName());
-      }
-
       if (!previousEPWPath.empty()){
         if (previousEPWPath.filename() != newPath.filename()){
           if (boost::filesystem::exists(previousEPWPath)){
             boost::filesystem::remove_all(previousEPWPath);
           }
         }
+      }
+
+      // set run period based on weather file
+      openstudio::model::RunPeriod runPeriod = m_model.getUniqueModelObject<openstudio::model::RunPeriod>();
+      runPeriod.setBeginMonth(epwFile.startDate().monthOfYear().value());
+      runPeriod.setBeginDayOfMonth(epwFile.startDate().dayOfMonth());
+      runPeriod.setEndMonth(epwFile.endDate().monthOfYear().value());
+      runPeriod.setEndDayOfMonth(epwFile.endDate().dayOfMonth());
+
+      // set the calendar year or start day of week
+      openstudio::model::YearDescription yearDescription = m_model.getUniqueModelObject<openstudio::model::YearDescription>();
+      boost::optional<int> startDateActualYear = epwFile.startDateActualYear();
+      if (startDateActualYear){
+        yearDescription.resetDayofWeekforStartDay();
+        yearDescription.setCalendarYear(*startDateActualYear);
+      }else{
+        yearDescription.resetCalendarYear();
+        yearDescription.setDayofWeekforStartDay(epwFile.startDayOfWeek().valueName());
       }
 
       m_lastEpwPathOpened = QFileInfo(fileName).absoluteFilePath();
