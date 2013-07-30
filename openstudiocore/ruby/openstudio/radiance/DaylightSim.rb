@@ -789,7 +789,7 @@ def getTimeSeries(t_sqlFile, t_envPeriod)
     dirNormIllumAll = timeseries.values
     dirNormUnits = timeseries.units if not dirNormUnits
   end
-  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Luminous Efficacy of Sky Site Diffuse Solar Radiation Rate per Area Radiation").each do |timeseries|
+  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Site Sky Diffuse Solar Radiation Luminous Efficacy").each do |timeseries|
     diffEfficacyAll = timeseries.values
     diffEfficacyUnits = timeseries.units if not diffEfficacyUnits
   end
