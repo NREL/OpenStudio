@@ -20,7 +20,10 @@
 #include <analysis/FSUDaceAlgorithmOptions.hpp>
 #include <analysis/FSUDaceAlgorithmOptions_Impl.hpp>
 
+#include <utilities/core/Json.hpp>
 #include <utilities/core/Optional.hpp>
+
+#include <boost/bind.hpp>
 
 #include <stdlib.h>
 
@@ -44,8 +47,11 @@ namespace detail {
 
   FSUDaceAlgorithmOptions_Impl::FSUDaceAlgorithmOptions_Impl(
       const FSUDaceAlgorithmType& algorithmType,
+      const boost::optional<FSUDaceCvtTrialType>& trialType,
       const std::vector<Attribute>& options)
-    : DakotaAlgorithmOptions_Impl(options), m_algorithmType(algorithmType)
+    : DakotaAlgorithmOptions_Impl(options),
+      m_algorithmType(algorithmType),
+      m_trialType(trialType)
   {}
 
   AlgorithmOptions FSUDaceAlgorithmOptions_Impl::clone() const {
@@ -270,6 +276,30 @@ namespace detail {
     m_trialType.reset();
   }
 
+  QVariant FSUDaceAlgorithmOptions_Impl::toVariant() const {
+    QVariantMap map = AlgorithmOptions_Impl::toVariant().toMap();
+
+    map["fsu_dace_algorithm_type"] = toQString(algorithmType().valueName());
+    if (OptionalFSUDaceCvtTrialType tt = trialType()) {
+      map["trial_type"] = toQString(tt->valueName());
+    }
+
+    return QVariant(map);
+  }
+
+  FSUDaceAlgorithmOptions FSUDaceAlgorithmOptions_Impl::fromVariant(const QVariant& variant,
+                                                                    const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+    AttributeVector attributes = deserializeUnorderedVector(
+          map["attributes"].toList(),
+          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+    return FSUDaceAlgorithmOptions(
+          map["fsu_dace_algorithm_type"].toString().toStdString(),
+          map.contains("trial_type") ? FSUDaceCvtTrialType(map["trial_type"].toString().toStdString()) : OptionalFSUDaceCvtTrialType(),
+          attributes);
+  }
+
 } // detail
 
 FSUDaceAlgorithmOptions::FSUDaceAlgorithmOptions(const FSUDaceAlgorithmType& algorithmType)
@@ -278,9 +308,10 @@ FSUDaceAlgorithmOptions::FSUDaceAlgorithmOptions(const FSUDaceAlgorithmType& alg
 {}
 
 FSUDaceAlgorithmOptions::FSUDaceAlgorithmOptions(const FSUDaceAlgorithmType& algorithmType,
+                                                 const boost::optional<FSUDaceCvtTrialType>& trialType,
                                                  const std::vector<Attribute>& options)
   : DakotaAlgorithmOptions(boost::shared_ptr<detail::FSUDaceAlgorithmOptions_Impl>(
-        new detail::FSUDaceAlgorithmOptions_Impl(algorithmType, options)))
+        new detail::FSUDaceAlgorithmOptions_Impl(algorithmType, trialType, options)))
 {}
 
 FSUDaceAlgorithmType FSUDaceAlgorithmOptions::algorithmType() const {

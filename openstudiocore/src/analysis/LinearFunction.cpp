@@ -21,13 +21,17 @@
 #include <analysis/LinearFunction_Impl.hpp>
 
 #include <analysis/Variable.hpp>
+#include <analysis/Variable_Impl.hpp>
 
 #include <utilities/data/Vector.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Optional.hpp>
+
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Containers.hpp>
+#include <utilities/core/Json.hpp>
+#include <utilities/core/Optional.hpp>
 
 #include <boost/foreach.hpp>
+#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -124,6 +128,29 @@ namespace detail {
     linearFunctionData["variables"] = QVariant(variablesList);
 
     return QVariant(linearFunctionData);
+  }
+
+  LinearFunction LinearFunction_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+
+    VariableVector variables = deserializeOrderedVector(
+          map["variables"].toList(),
+          "variable_index",
+          boost::function<Variable (const QVariant&)>(boost::bind(analysis::detail::Variable_Impl::factoryFromVariant,_1,version)));
+    DoubleVector coefficients = deserializeOrderedVector(
+          map["variables"].toList(),
+          "coefficient",
+          "variable_index",
+          boost::function<double (QVariant*)>(boost::bind(&QVariant::toDouble,_1)));
+
+    return LinearFunction(openstudio::UUID(map["uuid"].toString()),
+                          openstudio::UUID(map["version_uuid"].toString()),
+                          map.contains("name") ? map["name"].toString().toStdString() : std::string(),
+                          map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                          map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                          variables,
+                          coefficients);
+
   }
 
 } // detail

@@ -62,6 +62,12 @@ namespace detail {
     virtual double getValue(const DataPoint& dataPoint) const = 0;
 
     //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
+
+    static Variable factoryFromVariant(const QVariant& variant, const VersionString& version);
+
+    //@}
    private:
     REGISTER_LOGGER("openstudio.analysis.Variable");
   };

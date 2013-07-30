@@ -741,7 +741,6 @@ namespace detail {
   }
 
   Analysis Analysis_Impl::fromVariant(const QVariant& variant,const VersionString& version) {
-    // HERE
     OptionalAnalysis result;
     return result.get();
 
@@ -755,8 +754,7 @@ namespace detail {
     if (map.contains("data_points")) {
       dataPoints = deserializeUnorderedVector<DataPoint>(
             map["data_points"].toList(),
-            boost::function<DataPoint (const QVariant&, const VersionString&)>(openstudio::analysis::detail::DataPoint_Impl::factoryFromVariant),
-            version);
+            boost::function<DataPoint (const QVariant&)>(boost::bind(openstudio::analysis::detail::DataPoint_Impl::factoryFromVariant,_1,version)));
     }
     return Analysis(openstudio::UUID(map["uuid"].toString()),
                     openstudio::UUID(map["version_uuid"].toString()),
@@ -767,7 +765,9 @@ namespace detail {
                     algorithm,
                     openstudio::detail::toFileReference(map["seed"],version),
                     map.contains("weather_file") ? openstudio::detail::toFileReference(map["weather_file"],version) : OptionalFileReference(),
-                    );
+                    dataPoints,
+                    map["results_are_invalid"].toBool(),
+                    map["data_points_are_invalid"].toBool());
   }
 
   void Analysis_Impl::onChange(ChangeType changeType) {

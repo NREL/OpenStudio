@@ -98,6 +98,14 @@ namespace detail {
     std::vector< std::vector<QVariant> > getCandidateCombinations(const DataPoint& dataPoint) const;
 
     //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    static SequentialSearch fromVariant(const QVariant& variant, const VersionString& version);
+
+    //@}
    private:
     REGISTER_LOGGER("openstudio.analysis.SequentialSearch");
   };

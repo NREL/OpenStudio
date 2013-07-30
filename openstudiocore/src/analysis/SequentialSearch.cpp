@@ -566,6 +566,28 @@ namespace detail {
     return result;
   }
 
+  QVariant SequentialSearch_Impl::toVariant() const {
+    QVariantMap map = DakotaAlgorithm_Impl::toVariant().toMap();
+
+    map["algorithm_type"] = QString("SequentialSearch");
+
+    return QVariant(map);
+  }
+
+  SequentialSearch SequentialSearch_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+    SequentialSearchOptions options = SequentialSearchOptions_Impl::fromVariant(map["options"],version);
+    return SequentialSearch(openstudio::UUID(map["uuid"].toString()),
+                            openstudio::UUID(map["version_uuid"].toString()),
+                            map.contains("name") ? map["name"].toString().toStdString() : std::string(),
+                            map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                            map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                            map["complete"].toBool(),
+                            map["failed"].toBool(),
+                            map["iter"].toInt(),
+                            options);
+  }
+
 } // detail
 
 SequentialSearch::SequentialSearch(const SequentialSearchOptions& options)

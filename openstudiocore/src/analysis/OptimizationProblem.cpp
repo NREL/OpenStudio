@@ -26,9 +26,10 @@
 #include <analysis/OptimizationDataPoint_Impl.hpp>
 #include <analysis/WorkflowStep.hpp>
 
-#include <utilities/core/Containers.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Containers.hpp>
 #include <utilities/core/Finder.hpp>
+#include <utilities/core/Json.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -302,6 +303,28 @@ namespace detail {
     }
 
     return QVariant(problemData);
+  }
+
+  OptimizationProblem OptimizationProblem_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
+    Problem slice = Problem_Impl::fromVariant(variant,version);
+
+    QVariantMap map = variant.toMap();
+    FunctionVector objectives;
+    if (map.contains("objectives")) {
+      objectives = deserializeOrderedVector(
+            map["objectives"].toList(),
+            "objective_index",
+            boost::function<Function (const QVariant&)>(boost::bind(analysis::detail::Function_Impl::factoryFromVariant,_1,version)));
+    }
+
+    return OptimizationProblem(slice.uuid(),
+                               slice.versionUUID(),
+                               slice.name(),
+                               slice.displayName(),
+                               slice.description(),
+                               objectives,
+                               slice.workflow(),
+                               slice.responses());
   }
 
 } // detail

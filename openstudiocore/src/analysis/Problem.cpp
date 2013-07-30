@@ -55,12 +55,13 @@
 
 #include <utilities/bcl/BCLMeasure.hpp>
 
+#include <utilities/core/Compare.hpp>
+#include <utilities/core/Containers.hpp>
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/Finder.hpp>
-#include <utilities/core/URLHelpers.hpp>
-#include <utilities/core/Containers.hpp>
+#include <utilities/core/Json.hpp>
 #include <utilities/core/Optional.hpp>
-#include <utilities/core/Compare.hpp>
+#include <utilities/core/URLHelpers.hpp>
 
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
@@ -1786,6 +1787,81 @@ namespace detail {
     }
 
     return QVariant(problemData);
+  }
+
+  Problem Problem_Impl::factoryFromVariant(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+
+    if (!map.contains("problem_type")) {
+      LOG_AND_THROW("Unable to find Problem in expected location.");
+    }
+
+    std::string problemType = map["problem_type"].toString().toStdString();
+    if (problemType == "Problem") {
+      return Problem_Impl::fromVariant(variant,version);
+    }
+    if (problemType == "OptimizationProblem") {
+      return OptimizationProblem_Impl::fromVariant(variant,version);
+    }
+
+    LOG_AND_THROW("Unexpected problem_type " << problemType << ".");
+    return OptionalProblem().get();
+  }
+
+  Problem Problem_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+
+    std::vector<std::pair<int,WorkflowStep> > workflowIntermediate;
+    Q_FOREACH(const QVariant& workflowListItem, map["workflow"].toList()) {
+      QVariantMap stepMap = workflowListItem.toMap();
+      std::string workflowStepType = stepMap["workflow_step_type"].toString().toStdString();
+
+      if (workflowStepType == "Measure") {
+        // do the inversion for compound Ruby measures here
+        Measure measure = detail::Measure_Impl::factoryFromVariant(workflowListItem,version);
+        int index = stepMap["workflow_index"].toInt();
+        InputVariableVector vars = deserializeOrderedVector(
+              stepMap["variables"].toList(),
+              "variable_index",
+              boost::function<InputVariable (const QVariant&)>(boost::bind(detail::InputVariable_Impl::factoryFromVariant,_1,measure,version)));
+        Q_FOREACH(const InputVariable var,vars) {
+          workflowIntermediate.push_back(std::make_pair<int,WorkflowStep>(index,WorkflowStep(var)));
+          ++index;
+        }
+      }
+      else {
+        compoundRubyMeasure.reset();
+        int index = stepMap["workflow_index"].toInt();
+        WorkflowStep step = WorkflowStep_Impl::factoryFromVariant(workflowListItem,version);
+        workflowIntermediate.push_back(std::make_pair<int,WorkflowStep>(index,step));
+      }
+
+    }
+
+    std::sort(workflowIntermediate.begin(),
+              workflowIntermediate.end(),
+              FirstOfPairLess<std::pair<int,WorkflowStep> >());
+    WorkflowStepVector workflow;
+    std::transform(workflowIntermediate.begin(),
+                   workflowIntermediate.end(),
+                   std::back_inserter(workflow),
+                   GetSecondOfPair<int,WorkflowStep>());
+
+    FunctionVector responses;
+    if (map.contains("responses")) {
+      responses = deserializeOrderedVector(
+            map["responses"].toList(),
+            "response_index",
+            boost::function<Function (const QVariant&)>(boost::bind(analysis::detail::Function_Impl::factoryFromVariant,_1,version)));
+    }
+
+    return Problem(openstudio::UUID(map["uuid"].toString()),
+                   openstudio::UUID(map["version_uuid"].toString()),
+                   map.contains("name") ? map["name"].toString().toStdString() : std::string(),
+                   map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                   map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                   workflow,
+                   responses);
   }
 
   std::vector<WorkflowStep> Problem_Impl::convertVariablesAndWorkflowToWorkflowSteps(

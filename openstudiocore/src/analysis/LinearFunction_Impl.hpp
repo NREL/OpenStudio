@@ -79,6 +79,8 @@ namespace detail {
 
     virtual QVariant toVariant() const;
 
+    static LinearFunction fromVariant(const QVariant& variant, const VersionString& version);
+
     //@}
    protected:
     std::vector<double> m_coefficients;

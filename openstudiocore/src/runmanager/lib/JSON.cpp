@@ -93,7 +93,7 @@ namespace detail {
 
     if (map.contains("finished_job"))
     {
-      Job finishedJob = toJob(map["finished_job"]);
+      Job finishedJob = toJob(map["finished_job"],version);
       job.setFinishedJob(finishedJob);
     }
 
@@ -168,7 +168,7 @@ namespace detail {
     return QVariant(toQString(t_jobType.valueName()));
   }
 
-  JobType JSON::toJobType(const QVariant &t_variant) {
+  JobType JSON::toJobType(const QVariant &t_variant, const VersionString& version) {
     return JobType(toString(t_variant.toString()));
   }
 
@@ -189,7 +189,7 @@ namespace detail {
     return QVariant(qvl);
   }
 
-  std::vector<Job> JSON::toVectorOfJob(const QVariant &t_variant)
+  std::vector<Job> JSON::toVectorOfJob(const QVariant &t_variant, const VersionString& version)
   {
     QVariantList qvl = t_variant.toList();
     std::vector<Job> retval;
@@ -198,7 +198,7 @@ namespace detail {
          itr != qvl.end();
          ++itr)
     {
-      retval.push_back(toJob(*itr));
+      retval.push_back(toJob(*itr, version));
     }
 
     return retval;
@@ -222,7 +222,7 @@ namespace detail {
     return QVariant(map);
   }
 
-  FileInfo JSON::toFileInfo(const QVariant &t_variant)
+  FileInfo JSON::toFileInfo(const QVariant &t_variant, const VersionString& version)
   {
     QVariantMap map = t_variant.toMap();
 
@@ -238,7 +238,7 @@ namespace detail {
         map["exists"].toBool());
 
     if (map.contains("required_files")) {
-      fi.requiredFiles = toRequiredFiles(map["required_files"]);
+      fi.requiredFiles = toRequiredFiles(map["required_files"],version);
     }
 
     return fi;
@@ -263,7 +263,7 @@ namespace detail {
     return qvl;
   }
 
-  std::vector<std::pair<QUrl, openstudio::path> > JSON::toRequiredFiles(const QVariant &t_variant)
+  std::vector<std::pair<QUrl, openstudio::path> > JSON::toRequiredFiles(const QVariant &t_variant, const VersionString& version)
   {
     std::vector<std::pair<QUrl, openstudio::path> > retval;
 
@@ -297,7 +297,7 @@ namespace detail {
     return QVariant(qvl);
   }
 
-  std::vector<FileInfo> JSON::toVectorOfFileInfo(const QVariant &t_variant)
+  std::vector<FileInfo> JSON::toVectorOfFileInfo(const QVariant &t_variant, const VersionString& version)
   {
     std::vector<FileInfo> retval;
     QVariantList qvl = t_variant.toList();
@@ -306,7 +306,7 @@ namespace detail {
          itr != qvl.end();
          ++itr)
     {
-      retval.push_back(toFileInfo(*itr));
+      retval.push_back(toFileInfo(*itr,version));
     }
 
     return retval;
@@ -326,7 +326,7 @@ namespace detail {
     return qvm;
   }
 
-  JobParam JSON::toJobParam(const QVariant &t_variant)
+  JobParam JSON::toJobParam(const QVariant &t_variant, const VersionString& version)
   {
     QVariantMap qvm = t_variant.toMap();
 
@@ -337,7 +337,7 @@ namespace detail {
 
     JobParam param(toString(qvm["value"].toString()));
     if (qvm.contains("children")) {
-      param.children = toVectorOfJobParam(qvm["children"]);
+      param.children = toVectorOfJobParam(qvm["children"],version);
     }
 
     return param;
@@ -364,13 +364,13 @@ namespace detail {
     return QVariant(qvl);
   }
 
-  std::vector<JobParam> JSON::toVectorOfJobParam(const QVariant &t_variant)
+  std::vector<JobParam> JSON::toVectorOfJobParam(const QVariant &t_variant, const VersionString& version)
   {
     return deserializeOrderedVector<JobParam>(
           t_variant.toList(),
           "param",
           "param_index",
-          boost::function<JobParam (const QVariant&)>(runmanager::detail::JSON::toJobParam));
+          boost::function<JobParam (const QVariant&)>(boost::bind(runmanager::detail::JSON::toJobParam,_1,version)));
   }
 
   // ToolInfo
@@ -389,7 +389,7 @@ namespace detail {
     return QVariant(qvm);
   }
 
-  ToolInfo JSON::toToolInfo(const QVariant &t_variant) {
+  ToolInfo JSON::toToolInfo(const QVariant &t_variant, const VersionString& version) {
     QVariantMap qvm = t_variant.toMap();
 
     if (qvm.empty() || !qvm.contains("name") || !qvm.contains("version"))
@@ -423,7 +423,7 @@ namespace detail {
     return QVariant(qvl);
   }
 
-  std::vector<ToolInfo> JSON::toVectorOfToolInfo(const QVariant &t_variant)
+  std::vector<ToolInfo> JSON::toVectorOfToolInfo(const QVariant &t_variant, const VersionString& version)
   {
     QVariantList qvl = t_variant.toList();
     std::vector<ToolInfo> retval;
@@ -432,7 +432,7 @@ namespace detail {
          itr != qvl.end();
          ++itr)
     {
-      retval.push_back(toToolInfo(*itr));
+      retval.push_back(toToolInfo(*itr,version));
     }
 
     return retval;
@@ -449,7 +449,7 @@ namespace detail {
     return map;
   }
 
-  JobErrors JSON::toJobErrors(const QVariant &t_variant)
+  JobErrors JSON::toJobErrors(const QVariant &t_variant, const VersionString& version)
   {
     QVariantMap map = t_variant.toMap();
 
@@ -460,7 +460,7 @@ namespace detail {
 
     return JobErrors(
           openstudio::ruleset::OSResultValue(toString(map["result"].toString())),
-          toVectorOfError(map["all_errors"])
+          toVectorOfError(map["all_errors"],version)
         );
   }
 
@@ -483,7 +483,7 @@ namespace detail {
     return qvl;
   }
 
-  std::vector<std::pair<ErrorType, std::string> > JSON::toVectorOfError(const QVariant &t_variant)
+  std::vector<std::pair<ErrorType, std::string> > JSON::toVectorOfError(const QVariant &t_variant, const VersionString& version)
   {
     QVariantList qvl = t_variant.toList();
 

@@ -199,6 +199,25 @@ namespace detail {
     clearOption("partitions");
   }
 
+  QVariant ParameterStudyAlgorithmOptions_Impl::toVariant() const {
+    QVariantMap map = AlgorithmOptions_Impl::toVariant().toMap();
+
+    map["parameter_study_algorithm_type"] = toQString(algorithmType().valueName());
+
+    return QVariant(map);
+  }
+
+  ParameterStudyAlgorithmOptions ParameterStudyAlgorithmOptions_Impl::fromVariant(const QVariant& variant,
+                                                                                  const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+    AttributeVector attributes = deserializeUnorderedVector(
+          map["attributes"].toList(),
+          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+    return ParameterStudyAlgorithmOptions(map["parameter_study_algorithm_type"].toString().toStdString(),
+                                          attributes);
+  }
+
 } // detail
 
 

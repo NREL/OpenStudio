@@ -120,6 +120,31 @@ namespace detail {
     return options().cast<SamplingAlgorithmOptions>();
   }
 
+  QVariant SamplingAlgorithm_Impl::toVariant() const {
+    QVariantMap map = DakotaAlgorithm_Impl::toVariant().toMap();
+
+    map["algorithm_type"] = QString("SamplingAlgorithm");
+
+    return QVariant(map);
+  }
+
+  SamplingAlgorithm SamplingAlgorithm_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+    SamplingAlgorithmOptions options = SamplingAlgorithm_Impl::fromVariant(map["options"],version);
+    return SamplingAlgorithm(openstudio::UUID(map["uuid"].toString()),
+                             openstudio::UUID(map["version_uuid"].toString()),
+                             map.contains("name") ? map["name"].toString().toStdString() : std::string(),
+                             map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                             map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                             map["complete"].toBool(),
+                             map["failed"].toBool(),
+                             map["iter"].toInt(),
+                             options,
+                             map.contains("restart_file_reference") ? openstudio::detail::toFileReference(map["restart_file_reference"],version) : OptionalFileReference(),
+                             map.contains("out_file_reference") ? openstudio::detail::toFileReference(map["out_file_reference"],version) : OptionalFileReference(),
+                             map.contains("job") ? runmanager::detail::JSON::toJob(variant,version) : boost::optional<runmanager::Job>());
+  }
+
 } // detail
 
 SamplingAlgorithm::SamplingAlgorithm(const SamplingAlgorithmOptions& options)

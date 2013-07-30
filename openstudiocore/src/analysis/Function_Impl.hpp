@@ -69,6 +69,8 @@ namespace detail {
 
     bool doNotParent(const Variable& variable) const;
 
+    static Function factoryFromVariant(const QVariant& variant, const VersionString& version);
+
     //@}
    protected:
     std::vector<Variable> m_variables;

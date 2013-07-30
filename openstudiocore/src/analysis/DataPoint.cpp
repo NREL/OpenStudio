@@ -685,7 +685,7 @@ namespace detail {
                      map.contains("idf_input_data") ? openstudio::detail::toFileReference(map["idf_input_data"],version) : OptionalFileReference(),
                      map.contains("sql_output_data") ? openstudio::detail::toFileReference(map["sql_output_data"],version) : OptionalFileReference(),
                      map.contains("xml_output_data") ? openstudio::detail::toFileReference(map["xml_output_data"],version) : OptionalFileReference(),
-                     map.contains("top_level_job") ? runmanager::detail::JSON::toJob(map["top_level_job"]) : boost::optional<runmanager::Job>(),
+                     map.contains("top_level_job") ? runmanager::detail::JSON::toJob(map["top_level_job"],version) : boost::optional<runmanager::Job>(),
                      dakotaParametersFiles,
                      tags,
                      outputAttributes);

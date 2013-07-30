@@ -38,8 +38,12 @@ namespace detail {
   }
 
   SamplingAlgorithmOptions_Impl::SamplingAlgorithmOptions_Impl(
+      const boost::optional<SamplingAlgorithmSampleType>& sampleType,
+      const boost::optional<SamplingAlgorithmRNGType>& rngType,
       const std::vector<Attribute>& options)
-    : DakotaAlgorithmOptions_Impl(options)
+    : DakotaAlgorithmOptions_Impl(options),
+      m_sampleType(sampleType),
+      m_rngType(rngType)
   {}
 
   AlgorithmOptions SamplingAlgorithmOptions_Impl::clone() const {
@@ -172,6 +176,32 @@ namespace detail {
 
   void SamplingAlgorithmOptions_Impl::clearRNGType() {
     m_rngType.reset();
+  }
+
+  QVariant SamplingAlgorithmOptions_Impl::toVariant() const {
+    QVariantMap map = AlgorithmOptions_Impl::toVariant().toMap();
+
+    if (OptionalSamplingAlgorithmSampleType st = sampleType()) {
+      map["sample_type"] = toQString(st->valueName());
+    }
+    if (OptionalSamplingAlgorithmRNGType rt = rngType()) {
+      map["rng_type"] = toQString(rt->valueName());
+    }
+
+    return QVariant(map);
+  }
+
+  SamplingAlgorithmOptions SamplingAlgorithmOptions_Impl::fromVariant(const QVariant& variant,
+                                                                      const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+    AttributeVector attributes = deserializeUnorderedVector(
+          map["attributes"].toList(),
+          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+    return SamplingAlgorithmOptions(
+          map.contains("sample_type") ? SamplingAlgorithmSampleType(map["sample_type"].toString().toStdString()) : OptionalSamplingAlgorithmSampleType(),
+          map.contains("rng_type") ? SamplingAlgorithmRNGType(map["rng_type"].toString().toStdString()) : OptionalSamplingAlgorithmRNGType(),
+          attributes);
   }
 
 } // detail

@@ -168,6 +168,27 @@ namespace detail {
     return m_options.cast<DesignOfExperimentsOptions>();
   }
 
+  QVariant DesignOfExperiments_Impl::toVariant() const {
+    QVariantMap map = Algorithm_Impl::toVariant().toMap();
+
+    map["algorithm_type"] = QString("DesignOfExperiments");
+
+    return QVariant(map);
+  }
+
+  DesignOfExperiments DesignOfExperiments_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+    DesignOfExperimentsOptions options = DesignOfExperimentsOptions_Impl::fromVariant(map["options"],version);
+    return DesignOfExperiments(openstudio::UUID(map["uuid"].toString()),
+                               openstudio::UUID(map["version_uuid"].toString()),
+                               map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                               map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                               map["complete"].toBool(),
+                               map["failed"].toBool(),
+                               map["iter"].toInt(),
+                               options);
+  }
+
 } // detail
 
 DesignOfExperiments::DesignOfExperiments(const DesignOfExperimentsOptions& options)

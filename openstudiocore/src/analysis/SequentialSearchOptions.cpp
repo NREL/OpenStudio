@@ -46,6 +46,16 @@ namespace detail {
     return option->valueAsInteger();
   }
 
+  SequentialSearchOptions SequentialSearchOptions_Impl::fromVariant(const QVariant& variant,
+                                                                const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+    AttributeVector attributes = deserializeUnorderedVector(
+          map["attributes"].toList(),
+          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+    return SequentialSearchOptions(attributes);
+  }
+
 } // detail
 
 SequentialSearchOptions::SequentialSearchOptions(int objectiveToMinimizeFirst)

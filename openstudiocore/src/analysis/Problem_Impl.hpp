@@ -292,6 +292,10 @@ namespace detail {
 
     virtual QVariant toVariant() const;
 
+    static Problem factoryFromVariant(const QVariant& variant, const VersionString& version);
+
+    static Problem fromVariant(const QVariant& variant, const VersionString& version);
+
     //@}
    protected:
     std::vector<WorkflowStep> m_workflow; // InputVariables and runmanager WorkItems applied in order

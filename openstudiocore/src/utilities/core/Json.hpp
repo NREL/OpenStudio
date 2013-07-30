@@ -79,18 +79,41 @@ std::vector<T> deserializeOrderedVector(const QVariantList& list,
   return result;
 }
 
+/** Deserializes vectors where a QVariantList holds maps containing an index entry and a
+ *  value entry. */
 template<typename T>
 std::vector<T> deserializeOrderedVector(const QVariantList& list,
                                         const std::string& valueKey,
                                         const std::string& indexKey,
-                                        boost::function<T (const QVariant&, const VersionString&)> typeConverter,
-                                        const VersionString& version)
+                                        boost::function<T (const QVariant&)> typeConverter)
 {
   std::vector<std::pair<int,T> > data;
   Q_FOREACH(const QVariant& listItem,list) {
     QVariantMap listItemMap = listItem.toMap();
     int index = listItemMap[toQString(indexKey)].toInt();
-    T value = typeConverter(listItemMap[toQString(valueKey)],version);
+    T value = typeConverter(listItemMap[toQString(valueKey)]);
+    data.push_back(std::make_pair(index,value));
+  }
+
+  std::sort(data.begin(),data.end(),FirstOfPairLess<std::pair<int,T> >());
+  std::vector<T> result;
+  std::transform(data.begin(), data.end(), std::back_inserter(result), GetSecondOfPair<int,T>());
+
+  return result;
+}
+
+/** Deserializes vectors where a QVariantList holds serialized objects to which an
+ *  index entry has been added. */
+template<typename T>
+std::vector<T> deserializeOrderedVector(const QVariantList& list,
+                                        const std::string& indexKey,
+                                        boost::function<T (const QVariant&)> typeConverter)
+{
+  std::vector<std::pair<int,T> > data;
+  Q_FOREACH(const QVariant& listItem,list) {
+    QVariantMap listItemMap = listItem.toMap();
+    int index = listItemMap[toQString(indexKey)].toInt();
+    T value = typeConverter(listItemMap);
     data.push_back(std::make_pair(index,value));
   }
 
@@ -116,12 +139,11 @@ std::vector<T> deserializeUnorderedVector(const QVariantList& list,
 
 template<typename T>
 std::vector<T> deserializeUnorderedVector(const QVariantList& list,
-                                          boost::function<T (const QVariant&, const VersionString&)> typeConverter,
-                                          const VersionString& version)
+                                          boost::function<T (const QVariant&)> typeConverter)
 {
   std::vector<T> result;
   Q_FOREACH(const QVariant& listItem,list) {
-    T value = typeConverter(listItem,version);
+    T value = typeConverter(listItem);
     result.push_back(value);
   }
   return result;

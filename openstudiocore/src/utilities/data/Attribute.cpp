@@ -1637,8 +1637,7 @@ namespace detail {
       case AttributeValueType::AttributeVector :
         children = deserializeUnorderedVector<Attribute>(
               map["value"].toList(),
-              boost::function<Attribute (const QVariant&)>(
-                boost::bind(openstudio::detail::toAttribute,_1,version)));
+              boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
         return Attribute(uuid,
                          versionUUID,
                          name,

@@ -22,6 +22,8 @@
 
 #include <analysis/InputVariable.hpp>
 #include <analysis/InputVariable_Impl.hpp>
+#include <analysis/LinearFunction.hpp>
+#include <analysis/LinearFunction_Impl.hpp>
 #include <analysis/WorkflowStep.hpp>
 #include <analysis/WorkflowStep_Impl.hpp>
 
@@ -81,6 +83,21 @@ namespace detail {
       }
     }
     return false;
+  }
+
+  Function Function_Impl::factoryFromVariant(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+
+    if (!map.contains("function_type")) {
+      LOG_AND_THROW("Unable to find Function in expected location.");
+    }
+
+    std::string functionType = map["function_type"].toString().toStdString();
+    if (functionType == "LinearFunction") {
+      return LinearFunction_Impl::fromVariant(variant,version);
+    }
+
+    LOG_AND_THROW("Unexpected function_type " << functionType << ".");
   }
 
 } // detail

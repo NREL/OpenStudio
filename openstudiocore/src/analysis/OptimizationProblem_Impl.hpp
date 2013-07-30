@@ -139,6 +139,8 @@ namespace detail {
 
     virtual QVariant toVariant() const;
 
+    static OptimizationProblem fromVariant(const QVariant& variant, const VersionString& version);
+
     //@}
    protected:
     std::vector<Function> m_objectives;

@@ -81,12 +81,20 @@ namespace detail {
     virtual std::string dakotaInFileDescription() const;
 
     //@}
+    /** @name Getters and Queries */
     //@{
 
     SamplingAlgorithmOptions samplingAlgorithmOptions() const;
 
     //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
 
+    virtual QVariant toVariant() const;
+
+    static SamplingAlgorithm fromVariant(const QVariant& variant, const VersionString& version);
+
+    //@}
    private:
     REGISTER_LOGGER("openstudio.analysis.SamplingAlgorithm");
   };
