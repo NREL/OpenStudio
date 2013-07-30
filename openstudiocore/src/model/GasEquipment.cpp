@@ -94,8 +94,6 @@ namespace detail {
 
     this->makeUnique();
 
-    double floorArea = space->floorArea();
-
     GasEquipmentDefinition gasEquipmentDefinition = this->gasEquipmentDefinition();
     BOOST_FOREACH(LifeCycleCost cost, gasEquipmentDefinition.lifeCycleCosts()){
       cost.convertToCostPerEach();
