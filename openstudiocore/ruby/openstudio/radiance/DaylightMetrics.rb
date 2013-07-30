@@ -165,7 +165,7 @@ building.spaces.each do |space|
     # extract timestep and index
     hourly_report_index = hourly_report_index_date.first
     hourly_report_date = hourly_report_index_date.second
-    puts "Calculating Daylight Metrics for Space #{space_name} at #{hourly_report_date}"
+    # puts "Calculating Daylight Metrics for Space #{space_name} at #{hourly_report_date}"
     
     # see if this is a daylit hour
     daylit_hour = false
