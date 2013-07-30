@@ -145,6 +145,7 @@ bool EpwFile::parse()
 
     if(!std::getline(ifs, line)){
       LOG(Error, "Could not read line " << i+1 << " of EPW file '" << m_path << "'");
+      ifs.close();
       return false;
     }
 
@@ -177,7 +178,7 @@ bool EpwFile::parse()
   boost::optional<Date> lastDate;
   boost::optional<Date> endDate;
   bool realYear = true;
-  bool timeReversal = false;
+  bool wrapAround = false;
   while(std::getline(ifs, line)){
     boost::regex dateRegex("^(.*?),(.*?),(.*?),.*");
     boost::smatch matches;
@@ -199,37 +200,62 @@ bool EpwFile::parse()
           if (std::abs(delta.totalDays()) > 1){
             double totalDays = delta.totalDays();
             realYear = false;
-            break;
-          }else if (delta.totalDays() < 0){
-            timeReversal = false;
-            break;
+          }
+
+          if (endDate->monthOfYear().value() < lastDate->monthOfYear().value()){
+            wrapAround = true;
           }
         }
         lastDate = date;
       }catch(...){
-        realYear = false;
-        startDate.reset();
-        endDate.reset();
-        break;
+        LOG(Error, "Could not read line " << line << ", EPW file '" << m_path << "'");
+        ifs.close();
+        return false;
       }
+    }else{
+      LOG(Error, "Could not read line " << line << ", EPW file '" << m_path << "'");
+      ifs.close();
+      return false;
     }
   }
 
   // close file
   ifs.close();
 
-  if (timeReversal){
-    LOG(Error, "Date reversal detected, wrap around years not supported for TMY data.");
+  if (!startDate){
+    LOG(Error, "Could not find start date in data section, EPW file '" << m_path << "'");
+    return false;
+  }
+  if (!endDate){
+    LOG(Error, "Could not find end date in data section, EPW file '" << m_path << "'");
     return false;
   }
 
-  if (realYear && startDate && endDate){
-    m_startDayOfWeek = startDate->dayOfWeek();
+  if ((m_startDate.monthOfYear() != startDate->monthOfYear()) ||
+      (m_startDate.dayOfMonth() != startDate->dayOfMonth()) ||
+      (m_endDate.monthOfYear() != endDate->monthOfYear()) ||
+      (m_endDate.dayOfMonth() != endDate->dayOfMonth())){
+    LOG(Error, "Header start and end dates do not match data, EPW file '" << m_path << "'");
+    return false;
+  }
+
+  if (realYear){
+    if (m_startDayOfWeek != startDate->dayOfWeek()){
+      LOG(Error, "Header start and end dates do not match data, EPW file '" << m_path << "'");
+      return false;
+    }
+
+    // set dates with years
     m_startDate = startDate.get();
     m_startDateActualYear = startDate->year();
 
     m_endDate = endDate.get();
     m_endDateActualYear = endDate->year();
+  }else{
+    if (wrapAround){
+      LOG(Error, "Wrap around years not supported for TMY data, EPW file '" << m_path << "'");
+      return false;
+    }
   }
 
   return result;

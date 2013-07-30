@@ -87,6 +87,17 @@ TEST(Filetypes, EpwFile_TMY)
   }
 }
 
+TEST(Filetypes, EpwFile_Wrap_TMY)
+{
+  try{
+    path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.wrap.epw");
+    EpwFile epwFile(p);
+    EXPECT_TRUE(false);
+  }catch(...){
+    EXPECT_TRUE(true);
+  }
+}
+
 TEST(Filetypes, EpwFile_AMY)
 {
   try{
@@ -123,7 +134,7 @@ TEST(Filetypes, EpwFile_Wrap_AMY)
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.wrap.amy");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
-    EXPECT_EQ("6DD0C36E", epwFile.checksum());
+    EXPECT_EQ("7E3B5B40", epwFile.checksum());
     EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
     EXPECT_EQ("CO", epwFile.stateProvinceRegion());
     EXPECT_EQ("USA", epwFile.country());
