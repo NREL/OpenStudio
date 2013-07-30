@@ -34,6 +34,8 @@
 #include <model/WeatherFile_Impl.hpp>
 #include <model/WeatherFileDays.hpp>
 #include <model/WeatherFileConditionType.hpp>
+#include <model/YearDescription.hpp>
+#include <model/YearDescription_Impl.hpp>
 
 #include <energyplus/ReverseTranslator.hpp>
 
@@ -293,6 +295,16 @@ void LocationView::onWeatherFileBtnClicked()
       weatherFile = openstudio::model::WeatherFile::setWeatherFile(m_model, epwFile);
       BOOST_ASSERT(weatherFile);
       weatherFile->makeUrlRelative(toPath(m_modelTempDir) / toPath("resources"));
+
+      // set the calendar year or start day of week
+      openstudio::model::YearDescription yearDescription = m_model.getUniqueModelObject<openstudio::model::YearDescription>();
+      if (epwFile.startDateActualYear()){
+        yearDescription.resetDayofWeekforStartDay();
+        yearDescription.setCalendarYear(epwFile.startDateActualYear().get());
+      }else{
+        yearDescription.resetCalendarYear();
+        yearDescription.setDayofWeekforStartDay(epwFile.startDayOfWeek().valueName());
+      }
 
       if (!previousEPWPath.empty()){
         if (previousEPWPath.filename() != newPath.filename()){

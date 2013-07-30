@@ -112,6 +112,16 @@ Date EpwFile::endDate() const
   return m_endDate;
 }
 
+boost::optional<int> EpwFile::startDateActualYear() const
+{
+  return m_startDateActualYear;
+}
+
+boost::optional<int> EpwFile::endDateActualYear() const
+{
+  return m_endDateActualYear;
+}
+
 bool EpwFile::parse()
 {
   if (!boost::filesystem::exists(m_path) || !boost::filesystem::is_regular_file(m_path)){
@@ -160,6 +170,54 @@ bool EpwFile::parse()
       default:
         ;
     }
+  }
+
+  // read rest of file
+  boost::optional<Date> startDate;
+  boost::optional<Date> lastDate;
+  boost::optional<Date> endDate;
+  bool realYear = true;
+  while(std::getline(ifs, line)){
+    boost::regex dateRegex("^(.*?),(.*?),(.*?),.*");
+    boost::smatch matches;
+    if (boost::regex_search(line, matches, dateRegex)){
+      std::string year = std::string(matches[1].first, matches[1].second); boost::trim(year);
+      std::string month = std::string(matches[2].first, matches[2].second); boost::trim(month);
+      std::string day = std::string(matches[3].first, matches[3].second); boost::trim(day);
+
+      try{
+        Date date(boost::lexical_cast<int>(month), boost::lexical_cast<int>(day), boost::lexical_cast<int>(year));
+        
+        if (!startDate){
+          startDate = date;
+        }
+        endDate = date;
+
+        if (endDate && lastDate){
+          Time delta = endDate.get() - lastDate.get();
+          if (std::abs(delta.totalDays()) > 1){
+            double totalDays = delta.totalDays();
+            realYear = false;
+            break;
+          }
+        }
+        lastDate = date;
+      }catch(...){
+        realYear = false;
+        startDate.reset();
+        endDate.reset();
+        break;
+      }
+    }
+  }
+
+  if (realYear && startDate && endDate){
+    m_startDayOfWeek = startDate->dayOfWeek();
+    m_startDate = startDate.get();
+    m_startDateActualYear = startDate->year();
+
+    m_endDate = endDate.get();
+    m_endDateActualYear = endDate->year();
   }
 
   // close file
