@@ -328,6 +328,13 @@ void YearSettingsWidget::refresh()
     {
       m_calendarYearButton->setChecked(true);
 
+      int index = m_calendarYearEdit->findText(QString::number(m_yearDescription->calendarYear().get()));
+      if (index != -1){
+        m_calendarYearEdit->blockSignals(true);
+        m_calendarYearEdit->setCurrentIndex(index);
+        m_calendarYearEdit->blockSignals(false);
+      }
+
       m_calendarYearEdit->setEnabled(true);
 
       m_firstDayOfYearEdit->setEnabled(false);
@@ -352,7 +359,9 @@ void YearSettingsWidget::refresh()
         }
       }
 
+      m_firstDayOfYearEdit->blockSignals(true);
       m_firstDayOfYearEdit->setCurrentIndex(dayOfWeekIndex);
+      m_firstDayOfYearEdit->blockSignals(false);
 
       m_firstDayOfYearEdit->setEnabled(true);
     }
