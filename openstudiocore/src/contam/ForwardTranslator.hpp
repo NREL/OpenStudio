@@ -23,6 +23,7 @@
 
 #include "ContamAPI.hpp"
 
+#include <utilities/idf/Handle.hpp>
 #include <utilities/core/Path.hpp>
 #include <utilities/core/Optional.hpp>
 #include <utilities/core/Logger.hpp>
@@ -43,19 +44,24 @@ namespace contam
     bool writeMaps(const openstudio::path& path);
     static bool modelToContam(const openstudio::model::Model& model, const openstudio::path& path,
       const openstudio::path& mapPath);
+    static bool modelToContam(const openstudio::model::Model& model, const openstudio::path& path);
 
   private:
     int tableLookup(QMap<std::string,int> map, std::string str, const char *name);
+    int tableLookup(QMap<Handle,int> map, Handle handle, const char *name);
     std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
+    Handle ForwardTranslator::reverseLookup(QMap<Handle,int> map, int nr, const char *name);
     // Maps - will be populated after a call of translateToPrj
     // I'm not clear on how this information will be propagated for
     // postprocessing purposes - write a file?
     // These map element names to the CONTAM index (1,2,...,nElement)
     QMap<QString,int> afeMap;
-    QMap <std::string, int> levelMap;
-    QMap <std::string, int> zoneMap;
-    QMap <std::string, int> pathMap;
-    QMap <std::string, int> ahsMap;
+    QMap <Handle, int> levelMap;      // Building story to level map by handle
+    QMap <Handle, int> zoneMap;       // Thermal zone to airflow zone map by handle
+    //QMap <std::string, int> volumeMap; // Map of AHS volumes - may not be needed
+    QMap <std::string, int> pathMap;  // AHS paths stored by name
+    QMap <Handle, int> surfaceMap;    // Surface paths stored by handle
+    QMap <Handle, int> ahsMap;        // Airloop to AHS map by handle
 
     REGISTER_LOGGER("openstudio.contam.ForwardTranslator");
   };

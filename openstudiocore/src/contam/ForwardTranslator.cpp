@@ -65,6 +65,16 @@ namespace contam
     return nr;
   }
 
+  int ForwardTranslator::tableLookup(QMap<Handle,int> map, Handle handle, const char *name)
+  {
+    int nr = map.value(handle,0);
+    if(!nr)
+    {
+      LOG(Warn, "Unable to look up '" << handle << "' in " << name);
+    }
+    return nr;
+  }
+
   std::string ForwardTranslator::reverseLookup(QMap<std::string,int> map, int nr, const char *name)
   {
     if(nr > 0)
@@ -81,6 +91,24 @@ namespace contam
     }
     LOG(Warn, "Unable to revers look up " << nr << " in " << name);
     return std::string();
+  }
+
+  Handle ForwardTranslator::reverseLookup(QMap<Handle,int> map, int nr, const char *name)
+  {
+    if(nr > 0)
+    {
+      QList<Handle> keys = map.keys(nr);
+      if(keys.size()>0)
+      {
+        if(keys.size()>1)
+        {
+          LOG(Warn, "Lookup table " << name << " contains multiple " << nr << " values");
+        }
+        return keys[0];
+      }
+    }
+    LOG(Warn, "Unable to revers look up " << nr << " in " << name);
+    return Handle();
   }
 
   void findAFEs(QMap<QString,int> &afeMap, QMap<QString,int> &extWallAFE, QMap<QString,int> &intWallAFE, 
@@ -127,6 +155,28 @@ namespace contam
     return false;
   }
 
+  bool ForwardTranslator::modelToContam(const openstudio::model::Model& model, const openstudio::path& path)
+  {
+    ForwardTranslator translator;
+
+    boost::optional<QString> output;
+    output = translator.translateToPrj(model);
+    if (!output)
+      return false;
+
+    QFile file(toQString(path));
+    if(file.open(QFile::WriteOnly))
+    {
+      QTextStream textStream(&file);
+      textStream << *output;
+      file.close();
+    }
+    else
+      return false;
+
+    return false;
+  }
+
   ForwardTranslator::ForwardTranslator()
   {
   }
@@ -160,15 +210,15 @@ namespace contam
         modelDescr = QString("Automatically generated from \"%1\" OpenStudio model").arg(openstudio::toQString(name.get()));
     }
     data.rc.prjdesc = modelDescr;
-    // Translate each building story into a level and generate a lookup table by name.
-    // Probably need to add something here to gripe about lack of info or maybe build it
+    // Translate each building story into a level and generate a lookup table by handle.
+    // Probably need to add something here to complain about lack of stories
     nr=1;
     double totalHeight = 0;
     BOOST_FOREACH(const openstudio::model::BuildingStory& buildingStory, model.getModelObjects<openstudio::model::BuildingStory>())
     {
       openstudio::contam::prj::Level level;
       level.name = QString("<%1>").arg(nr);
-      levelMap[buildingStory.name().get()] = nr;
+      levelMap[buildingStory.handle()] = nr;
       double ht = buildingStory.nominalFloortoFloorHeight();
       totalHeight += ht;
       boost::optional<double> elevation = buildingStory.nominalZCoordinate();
@@ -194,7 +244,8 @@ namespace contam
     {
       nr++;
       openstudio::contam::prj::Zone zone;
-      zoneMap[thermalZone.name().get()] = nr;
+      zoneMap[thermalZone.handle()] = nr;
+      //volumeMap[thermalZone.name().get()] = nr;
       zone.nr = nr;
       zone.name = QString("Zone_%1").arg(nr);
       boost::optional<double> volume = thermalZone.volume();
@@ -231,7 +282,7 @@ namespace contam
         boost::optional<openstudio::model::BuildingStory> story = space.buildingStory();
         if(story)
         {
-          levelNr = tableLookup(levelMap,(*story).name().get(),"levelMap");
+          levelNr = tableLookup(levelMap,(*story).handle(),"levelMap");
           break;
         }
       }
@@ -274,7 +325,7 @@ namespace contam
         }
         // Use the lookup table to get the zone info
         int zoneNr;
-        if(!(zoneNr=tableLookup(zoneMap,thermalZone->name().get(),"zoneMap")))
+        if(!(zoneNr=tableLookup(zoneMap,thermalZone->handle(),"zoneMap")))
           continue;
         openstudio::contam::prj::Zone *zone = &(data.zones[zoneNr-1]);
         // Get the surface area - will need to do more work here later if large openings are present
@@ -309,7 +360,7 @@ namespace contam
             path.pe = extWallAFE["Average"];
           }
           path.nr = ++nr;
-          pathMap[surface.name().get()] = path.nr;
+          surfaceMap[surface.handle()] = path.nr;
           data.paths << path;
         }
         else if (bc == "Surface")
@@ -327,7 +378,7 @@ namespace contam
                 {
                   // Make an interior flow path
                   path.pzn = zone->nr;
-                  path.pzm = zoneMap[adjacentZone->name().get()];
+                  path.pzm = zoneMap[adjacentZone->handle()];
                   // Set flow element
                   if(type == "Floor" || type == "RoofCeiling")
                   {
@@ -338,7 +389,7 @@ namespace contam
                     path.pe = intWallAFE["Average"];
                   }
                   path.nr = ++nr;
-                  pathMap[surface.name().get()] = path.nr;
+                  surfaceMap[surface.handle()] = path.nr;
                   data.paths << path;
                   used << adjacentSurface->handle();
                 }
@@ -373,7 +424,7 @@ namespace contam
         continue;
       openstudio::contam::prj::Ahs ahs;
       ahs.nr = ++nr;
-      ahsMap[airloop.name().get()] = nr;
+      ahsMap[airloop.handle()] = nr;
       ahs.name = QString("AHS_%1").arg(nr);
       // Create supply and return zones
       openstudio::contam::prj::Zone rz;
@@ -383,7 +434,7 @@ namespace contam
       rz.setSystem(true);
       rz.setVariableContaminants(true);
       rz.name = QString("AHS_%1(Rec)").arg(nr);
-      zoneMap[rz.name.toStdString()] = rz.nr;
+      //volumeMap[rz.name.toStdString()] = rz.nr;
       openstudio::contam::prj::Zone sz;
       sz.nr = rz.nr+1;
       sz.pl = 1;
@@ -391,7 +442,7 @@ namespace contam
       sz.setSystem(true);
       sz.setVariableContaminants(true);
       sz.name = QString("AHS_%1(Sup)").arg(nr);
-      zoneMap[sz.name.toStdString()] = sz.nr;
+      //volumeMap[sz.name.toStdString()] = sz.nr;
       // Store the zone numbers in the ahs
       ahs.zone_r = rz.nr;
       ahs.zone_s = sz.nr;
@@ -400,7 +451,7 @@ namespace contam
       // Now hook the served zones up to the supply and return zones
       BOOST_FOREACH(openstudio::model::ThermalZone thermalZone, airloop.thermalZones())
       {
-        int zoneNr = tableLookup(zoneMap,thermalZone.name().get(),"zoneMap");
+        int zoneNr = tableLookup(zoneMap,thermalZone.handle(),"zoneMap");
         // Supply path
         openstudio::contam::prj::Path sp;
         sp.nr = data.paths.size()+1;
@@ -428,7 +479,7 @@ namespace contam
     // Now loop back through the AHS list and connect the supply and return zones together
     for(int i=0;i<data.ahs.size();i++)
     {
-      std::string loopName = reverseLookup(ahsMap,data.ahs[i].nr,"ahsMap");
+      std::string loopName = QString("AHS_%1").arg(i+1).toStdString();
       // Recirculation path
       openstudio::contam::prj::Path recirc;
       recirc.nr = data.paths.size()+1;
@@ -563,18 +614,18 @@ namespace contam
 
   bool ForwardTranslator::writeMaps(const openstudio::path& path)
   {
-    QFile file(QString(toQString(path)));
-    if(file.open(QFile::WriteOnly))
-    {
-      QTextStream textStream(&file);
-      QList<std::string> keys = zoneMap.keys();
-      BOOST_FOREACH(std::string name,keys)
-      {
-        textStream << QString::fromStdString(name) + QString(",%1\n").arg(zoneMap[name]);
-      }
-      file.close();
-      return true;
-    }
+    //  QFile file(QString(toQString(path)));
+    //  if(file.open(QFile::WriteOnly))
+    //  {
+    //  QTextStream textStream(&file);
+    //  QList<std::string> keys = zoneMap.keys();
+    //  BOOST_FOREACH(std::string name,keys)
+    //  {
+    //    textStream << QString::fromStdString(name) + QString(",%1\n").arg(zoneMap[name]);
+    //  }
+    //  file.close();
+    //  return true;
+    //}
     return false;
   }
 } // contam
