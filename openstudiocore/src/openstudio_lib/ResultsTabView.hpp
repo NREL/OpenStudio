@@ -23,6 +23,7 @@
 #include <openstudio_lib/MainTabView.hpp>
 
 #include <model/Model.hpp>
+#include <model/UtilityBill.hpp>
 
 #include <utilities/idf/WorkspaceObject_Impl.hpp>
 #include <utilities/sql/SqlFile.hpp>
@@ -41,6 +42,7 @@ class QGridLayout;
 class QPushButton;
 class QStackedWidget;
 class QTableWidget;
+class QVBoxLayout;
 
 namespace vtkCharts {
   class BarChart;
@@ -48,6 +50,7 @@ namespace vtkCharts {
 
 namespace openstudio {
 
+  // standard results
   class ConsumptionData
   {
     public:
@@ -134,91 +137,88 @@ namespace openstudio {
       QLabel* m_label;
   };
 
-  class ComparisonData
-  {
-    public:
-      ComparisonData();
-      ComparisonData(const std::vector<openstudio::EndUseFuelType> &t_fuelTypes, const SqlFile &t_sqlFile);
-      
-      boost::optional<double> getValue(const openstudio::EndUseFuelType &t_fuelType,
-          const openstudio::EndUseCategoryType &t_categoryType,
-          const openstudio::MonthOfYear &t_monthOfYear) const;
+  // utility bill results
 
-      void setValue(const openstudio::EndUseFuelType &t_fuelType,
-          const openstudio::EndUseCategoryType &t_categoryType,
-          const openstudio::MonthOfYear &t_monthOfYear,
-          const boost::optional<double> &t_value);
-
-      static ComparisonData random();
-    private:
-      REGISTER_LOGGER("openstudio::ComparisonData");
-      std::map<openstudio::EndUseFuelType, std::map<openstudio::EndUseCategoryType, std::map<openstudio::MonthOfYear, boost::optional<double> > > > m_data;
-  };
-
-  class ResultsComparisonData : public QWidget
+  class UtilityBillComparisonView : public QWidget
   {
     Q_OBJECT;
 
     public:
-      ResultsComparisonData(const openstudio::EndUseFuelType &t_fuelType, 
-        const openstudio::Unit &t_unit, QWidget *t_parent=0);
-      virtual ~ResultsComparisonData() {}
-      void setData(const ComparisonData &t_data, const openstudio::Unit &t_unit);
-      openstudio::EndUseFuelType getFuelType() const;
+      UtilityBillComparisonView(const openstudio::model::Model& model, QWidget *t_parent=0);
+      virtual ~UtilityBillComparisonView() {}
+      void buildGridLayout();
+
+    private slots:
+    
+      void selectCalibrationMethod(int);
+      void onObjectAdded(const WorkspaceObject& workspaceObject);
+      void onObjectRemoved(const WorkspaceObject& workspaceObject);
+          
+    private:
+      REGISTER_LOGGER("openstudio::UtilityBillComparisonChart");
+
+      openstudio::model::Model m_model;
+      QLabel* m_calibrationMethodLabel;
+      QGridLayout* m_gridLayout;
+  };
+
+  class UtilityBillComparisonChart : public QWidget
+  {
+    Q_OBJECT;
+
+    public:
+      UtilityBillComparisonChart(const openstudio::model::UtilityBill& utilityBill, QWidget *t_parent=0);
+      virtual ~UtilityBillComparisonChart() {}
+      openstudio::model::UtilityBill utilityBill() const;
+
+    private slots:
+    
+      void onUtilityBillChanged();
 
     private:
-      REGISTER_LOGGER("openstudio::ResultsComparisonData");
+      REGISTER_LOGGER("openstudio::UtilityBillComparisonChart");
+      
       boost::shared_ptr<vtkCharts::BarChart> m_chart;
-      openstudio::EndUseFuelType m_fuelType;
-      openstudio::Unit m_unit;
+      openstudio::model::UtilityBill m_utilityBill;
       QLabel* m_label;
   };
 
-  class ResultsComparisonLegend : public QWidget
+  class UtilityBillComparisonLegend : public QWidget
   {
     Q_OBJECT;
 
     public:
-      ResultsComparisonLegend(QWidget *t_parent = 0);
-      virtual ~ResultsComparisonLegend() {}
+      UtilityBillComparisonLegend(const openstudio::EndUseFuelType& fuelType, QWidget *t_parent = 0);
+      virtual ~UtilityBillComparisonLegend() {}
       static std::vector<vtkCharts::Color3ub> getColors();
 
     private:
-      REGISTER_LOGGER("openstudio::ResultsComparisonLegend");
+      REGISTER_LOGGER("openstudio::UtilityBillComparisonLegend");
 
+      openstudio::EndUseFuelType m_fuelType;
    };
 
-  class ResultsComparisonTable : public QWidget
+  class UtilityBillComparisonTable : public QWidget
   {
     Q_OBJECT;
 
     public:
-      ResultsComparisonTable(const openstudio::EndUseFuelType &t_fuelType, 
-          const openstudio::Unit &t_unit, QWidget *t_parent = 0);
-      virtual ~ResultsComparisonTable() {}
-      void setData(const ComparisonData &t_data, const openstudio::Unit &t_unit);
-      openstudio::EndUseFuelType getFuelType() const;
+      UtilityBillComparisonTable(const openstudio::model::UtilityBill& utilityBill, QWidget *t_parent = 0);
+      virtual ~UtilityBillComparisonTable() {}
+      openstudio::model::UtilityBill utilityBill() const;
 
     private:
-      REGISTER_LOGGER("openstudio::ResultsComparisonTable");
-      void buildDataGrid();
-      void setDataMonthTotals(const ComparisonData &t_data);
-      void setDataCategoryTotals(const ComparisonData &t_data);
-      void setDataValues(const ComparisonData &t_data);
-      QLabel *createDataLabel(bool t_bold);
-      void setDataValue(QLabel *t_label, const boost::optional<double> &t_data);
-      void setRowHighlights();
-      void updateUnitsLabel();
+      REGISTER_LOGGER("openstudio::UtilityBillComparisonTable");
+      openstudio::model::UtilityBill m_utilityBill;
 
-      openstudio::EndUseFuelType m_fuelType;
-      openstudio::Unit m_unit;
+      void buildDataGrid();
+
       QGridLayout *m_grid;
-      std::map<openstudio::EndUseCategoryType, std::map<openstudio::MonthOfYear, QLabel*> > m_labels;
-      std::map<openstudio::EndUseCategoryType, QLabel*> m_categoryTotals;
-      std::map<openstudio::MonthOfYear, QLabel*> m_monthTotals;
       QLabel* m_total;
       QLabel* m_label;
   };
+
+  // main widget
 
   class ResultsView : public QWidget
   {
@@ -236,7 +236,6 @@ namespace openstudio {
     private slots:
       void openResultsViewerClicked();
       void selectView(int index);
-      void selectCalibrationMethodText(int);
 
     private:
       REGISTER_LOGGER("openstudio::ResultsView");
@@ -244,6 +243,8 @@ namespace openstudio {
 
       openstudio::model::Model m_model;
       bool m_isIP;
+
+      // standard results
       ResultsConsumptionChart *m_electricConsumptionChart;
       ResultsConsumptionChart *m_gasConsumptionChart;
       ResultsConsumptionLegend *m_consumptionLegend;
@@ -252,22 +253,11 @@ namespace openstudio {
       ResultsConsumptionTable *m_districtHeatingConsumptionTable;
       ResultsConsumptionTable *m_districtCoolingConsumptionTable;
 
-      ResultsComparisonData * m_electricComparisonChart;
-      ResultsComparisonData * m_demandComparisonChart;
-      ResultsComparisonLegend * m_electricLegend;
-
-      ResultsComparisonData * m_gasComparisonChart;
-      ResultsComparisonLegend  * m_gasLegend;
-
-      ResultsComparisonData * m_districtHeatingComparisonChart;
-      ResultsComparisonLegend  * m_districtHeatingLegend;
-
-      ResultsComparisonData * m_districtCoolingComparisonChart;
-      ResultsComparisonLegend  * m_districtCoolingLegend;
+      // utility bill results
+      UtilityBillComparisonView* m_utilityBillComparisonView;
 
       QStackedWidget * m_stackedWidget;
       QPushButton * m_openResultsViewerBtn;
-      QLabel * m_CalibrationMethodLabel;
 
       openstudio::path m_sqlFilePath;
       openstudio::path m_radianceResultsPath;

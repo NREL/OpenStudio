@@ -20,6 +20,8 @@
 #include <openstudio_lib/ResultsTabView.hpp>
 
 #include <model/Model_Impl.hpp>
+#include <model/UtilityBill.hpp>
+#include <model/UtilityBill_Impl.hpp>
 
 #include <QButtonGroup>
 #include <QDir>
@@ -33,6 +35,7 @@
 #include <QStackedWidget>
 #include <QStyleOption>
 #include <QTableWidget>
+#include <QHBoxLayout>
 #include <QVBoxLayout>
 
 #include <iostream>
@@ -637,7 +640,7 @@ void ResultsConsumptionTable::setData(const ConsumptionData &t_data, const opens
   setDataMonthTotals(t_data);
   setDataCategoryTotals(t_data);
 }
-
+/*
 ComparisonData::ComparisonData()
 {
 }
@@ -1205,6 +1208,170 @@ void ResultsComparisonTable::setData(const ComparisonData &t_data, const openstu
   setDataMonthTotals(t_data);
   setDataCategoryTotals(t_data);
 }
+*/
+
+UtilityBillComparisonView::UtilityBillComparisonView(const openstudio::model::Model& model, QWidget *t_parent)
+  : QWidget(t_parent), m_model(model)
+{
+  QVBoxLayout* vLayout = new QVBoxLayout();
+  vLayout->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+  
+  QHBoxLayout* hLayout = new QHBoxLayout();
+  hLayout->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+
+  QLabel* label = new QLabel("Calibration Method",this);
+  label->setObjectName("H2");
+  hLayout->addWidget(label);
+
+  QComboBox* comboBox = new QComboBox();
+  comboBox->addItem("ASHRAE 14 (5%)");
+  comboBox->addItem("FEMP (15%)");
+  comboBox->setCurrentIndex(0);
+  hLayout->addWidget(comboBox);
+
+  m_calibrationMethodLabel = new QLabel();
+  hLayout->addWidget(m_calibrationMethodLabel);
+
+  bool isConnected = connect(comboBox, SIGNAL(currentIndexChanged(int)),
+    this, SLOT(selectCalibrationMethod(int)));
+  Q_ASSERT(isConnected);
+  
+  hLayout->addStretch();
+
+  vLayout->addLayout(hLayout);
+
+  m_gridLayout = new QGridLayout();
+  m_gridLayout->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
+  m_gridLayout->setContentsMargins(10,10,10,10);
+  m_gridLayout->setSpacing(10);
+
+  vLayout->addLayout(m_gridLayout);
+ 
+  this->setLayout(vLayout);
+
+  isConnected = connect( m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
+                   SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                   this,
+                   SLOT(onObjectAdded(const WorkspaceObject&)) );
+  Q_ASSERT(isConnected);
+
+  isConnected = connect( m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
+                   SIGNAL(removeWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                   this,
+                   SLOT(onObjectRemoved(const WorkspaceObject&)) );
+  Q_ASSERT(isConnected);
+
+  selectCalibrationMethod(0);
+  buildGridLayout();
+  buildGridLayout();
+  buildGridLayout();
+}
+
+struct UtilityBillSorter 
+{
+  UtilityBillSorter() {}
+
+  bool UtilityBillSorter::operator()(const model::UtilityBill& left, const model::UtilityBill& right) const {
+    return (left.fuelType() < right.fuelType());
+  }
+};
+
+void UtilityBillComparisonView::buildGridLayout()
+{
+  // clear grid view  
+  QLayoutItem* child;
+  while ((child = m_gridLayout->takeAt(0)) != 0) {
+    delete child;
+  }
+
+  // loop over utility bill objects
+  std::vector<model::UtilityBill> utilityBills = m_model.getModelObjects<model::UtilityBill>();
+  std::sort(utilityBills.begin(), utilityBills.end(), UtilityBillSorter());
+  int row = 0;
+  Q_FOREACH(const model::UtilityBill& utilityBill, utilityBills){
+    QVBoxLayout* vLayout = new QVBoxLayout();
+
+    UtilityBillComparisonChart* chart = new UtilityBillComparisonChart(utilityBill);
+    vLayout->addWidget(chart);
+
+    m_gridLayout->addLayout(vLayout, row, 0);
+    ++row;
+  }
+}
+
+void UtilityBillComparisonView::selectCalibrationMethod(int index)
+{
+  QString nmbeValue;
+  QString rsmeValue;
+
+  if(index == 0){
+    nmbeValue = ASHRAE_NMBE;
+    rsmeValue = ASHRAE_RSME;
+  }
+  else if(index == 1){
+    nmbeValue = FEMP_NMBE;
+    rsmeValue = FEMP_RSME;
+  }
+  else{
+    Q_ASSERT(false);
+  }
+  
+  QString text("NBME of ");
+  text += nmbeValue;
+  text += " or less and CV(RSME) of ";
+  text += rsmeValue;
+  text += " relative to monthly data.\nMust contain all utility data for one year and real weather data.\nCheck the guideline for additional requirements.";
+  m_calibrationMethodLabel->setText(text);
+}
+
+void UtilityBillComparisonView::onObjectAdded(const openstudio::WorkspaceObject& workspaceObject)
+{
+  if (workspaceObject.iddObject().type() == IddObjectType::OS_UtilityBill){
+    buildGridLayout();
+  }
+}
+
+void UtilityBillComparisonView::onObjectRemoved(const openstudio::WorkspaceObject& workspaceObject)
+{
+  if (workspaceObject.iddObject().type() == IddObjectType::OS_UtilityBill){
+    buildGridLayout();
+  }
+}
+
+UtilityBillComparisonChart::UtilityBillComparisonChart(const openstudio::model::UtilityBill& utilityBill, QWidget *t_parent)
+  : QWidget(t_parent), m_utilityBill(utilityBill)
+{
+  QVBoxLayout* vLayout = new QVBoxLayout();
+
+  m_label = new QLabel();
+  vLayout->addWidget(m_label);
+
+  m_chart = boost::shared_ptr<vtkCharts::BarChart>(new vtkCharts::BarChart("Comparison"));
+  vLayout->addWidget(m_chart->widget());
+
+  bool isConnected = connect( m_utilityBill.getImpl<openstudio::model::detail::UtilityBill_Impl>().get(),
+                   SIGNAL(onChange()), this, SLOT(onUtilityBillChanged()) );
+  Q_ASSERT(isConnected);
+
+  this->setLayout(vLayout);
+
+  onUtilityBillChanged();
+}
+
+openstudio::model::UtilityBill UtilityBillComparisonChart::utilityBill() const
+{
+  return m_utilityBill;
+}
+
+void UtilityBillComparisonChart::onUtilityBillChanged()
+{
+  m_label->setText(toQString(m_utilityBill.name().get() + " " + m_utilityBill.fuelType().valueDescription()));
+}
+
+
+
+
+
 
 ResultsTabView::ResultsTabView(const model::Model & model,
                                const QString & tabLabel,
@@ -1290,25 +1457,7 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
           getUnit(openstudio::EndUseFuelType::DistrictHeating, m_isIP))),
     m_districtCoolingConsumptionTable(new ResultsConsumptionTable(openstudio::EndUseFuelType::DistrictCooling,
           getUnit(openstudio::EndUseFuelType::DistrictCooling, m_isIP))),
-
-    m_electricComparisonChart(new ResultsComparisonData(openstudio::EndUseFuelType::Electricity, 
-          getUnit(openstudio::EndUseFuelType::Electricity, m_isIP))),      
-    //m_demandComparisonChart(new ResultsComparisonData(openstudio::EndUseFuelType::Demand, 
-    //      getUnit(openstudio::EndUseFuelType::Demand, m_isIP))), TODO
-    m_electricLegend(new ResultsComparisonLegend()),
-
-    m_gasComparisonChart(new ResultsComparisonData(openstudio::EndUseFuelType::Gas, 
-          getUnit(openstudio::EndUseFuelType::Gas, m_isIP))),
-    m_gasLegend(new ResultsComparisonLegend()),
-
-    m_districtHeatingComparisonChart(new ResultsComparisonData(openstudio::EndUseFuelType::DistrictHeating, 
-          getUnit(openstudio::EndUseFuelType::DistrictHeating, m_isIP))),
-    m_districtHeatingLegend(new ResultsComparisonLegend()),
-
-    m_districtCoolingComparisonChart(new ResultsComparisonData(openstudio::EndUseFuelType::DistrictCooling, 
-          getUnit(openstudio::EndUseFuelType::DistrictCooling, m_isIP))),
-    m_districtCoolingLegend(new ResultsComparisonLegend()),
-
+    m_utilityBillComparisonView(new UtilityBillComparisonView(m_model)),
     m_openResultsViewerBtn(new QPushButton("Open ResultsViewer\nfor Detailed Reports"))
 {
   bool isConnected = false;
@@ -1339,12 +1488,17 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   //********************************************* BUTTON WIDGET ATOP PAGE 1 AND PAGE 2 *********************************************
 
   // Make Selection Button Widget
-
+  
+  unsigned numUtilityBills = model.getModelObjects<model::UtilityBill>().size();
+  
   hLayout = new QHBoxLayout(this);
 
   label = new QLabel("View: ",this);
   label->setObjectName("H2");
   hLayout->addWidget(label,0,Qt::AlignLeft | Qt::AlignTop);
+  if (numUtilityBills == 0){
+    label->setVisible(false);
+  }
 
   buttonGroup = new QButtonGroup(this);
 
@@ -1356,11 +1510,17 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   button->setCheckable(true);
   hLayout->addWidget(button,0,Qt::AlignLeft | Qt::AlignTop);
   buttonGroup->addButton(button,0);
+  if (numUtilityBills == 0){
+    button->setVisible(false);
+  }
 
   button = new QPushButton("Calibration",this);
   button->setCheckable(true);
   hLayout->addWidget(button,0,Qt::AlignLeft | Qt::AlignTop);
   buttonGroup->addButton(button,1);
+  if (numUtilityBills == 0){
+    button->setVisible(false);
+  }
 
   hLayout->addStretch();
 
@@ -1404,66 +1564,11 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
 
   //********************************************* PAGE 2 *********************************************
 
-  vLayout = new QVBoxLayout(this);
-  vLayout->setAlignment(Qt::AlignTop|Qt::AlignLeft);
-
   // Make Comparision Method Layout
+  m_stackedWidget->addWidget(m_utilityBillComparisonView);
   
-  hLayout = new QHBoxLayout(this);
-  hLayout->setAlignment(Qt::AlignTop|Qt::AlignLeft);
 
-  label = new QLabel("Calibration Method",this);
-  label->setObjectName("H2");
-  hLayout->addWidget(label);
-
-  comboBox = new QComboBox(this);
-  comboBox->addItem("ASHRAE 14 (5%)");
-  comboBox->addItem("FEMP (15%)");
-  comboBox->addItem("some other tbd(20%)");
-  comboBox->setCurrentIndex(0);
-  hLayout->addWidget(comboBox);
-
-  m_CalibrationMethodLabel = new QLabel(this);
-  selectCalibrationMethodText(0);
-  hLayout->addWidget(m_CalibrationMethodLabel);
-
-  isConnected = connect(comboBox, SIGNAL(currentIndexChanged(int)),
-    this, SLOT(selectCalibrationMethodText(int)));
-  Q_ASSERT(isConnected);
-  
-  hLayout->addStretch();
-
-  vLayout->addLayout(hLayout);
-
-  // Make Comparision Data View
-
-  gridLayout = new QGridLayout(this);
-  gridLayout->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
-  gridLayout->setContentsMargins(10,10,10,10);
-  gridLayout->setSpacing(10);
-  
-  gridLayout->addWidget(m_electricComparisonChart, 0, 0, 2, 2);
-  //gridLayout->addWidget(m_demandComparisonChart, 0, 1, 2, 2);
-  gridLayout->addWidget(m_electricLegend, 0, 2, 1, 2);
-
-  gridLayout->addWidget(m_gasComparisonChart, 1, 0, 2, 2);
-  gridLayout->addWidget(m_gasLegend, 1, 2, 1, 2);
-
-  gridLayout->addWidget(m_districtHeatingComparisonChart, 2, 0, 2, 2);
-  gridLayout->addWidget(m_districtHeatingLegend, 2, 2, 1, 2);
-  
-  gridLayout->addWidget(m_districtCoolingComparisonChart, 3, 0, 2, 2);
-  gridLayout->addWidget(m_districtCoolingLegend, 3, 2, 1, 2);
-
-  //gridLayout->setColumnStretch(100,100);
-  //gridLayout->setRowStretch(100,100);
-
-  vLayout->addLayout(gridLayout);
-
-  widget = new QWidget(this);
-  widget->setLayout(vLayout);
-  m_stackedWidget->addWidget(widget);
-  
+  // select the standard view
   buttonGroup->button(0)->click();
 }
 
@@ -1504,36 +1609,6 @@ void ResultsView::openResultsViewerClicked()
 void ResultsView::selectView(int index)
 {
   m_stackedWidget->setCurrentIndex(index);
-}
-
-void ResultsView::selectCalibrationMethodText(int index)
-{
-  QString nmbeValue;
-  QString rsmeValue;
-
-  if(index == 0){
-    nmbeValue = ASHRAE_NMBE;
-    rsmeValue = ASHRAE_RSME;
-  }
-  else if(index == 1){
-    nmbeValue = FEMP_NMBE;
-    rsmeValue = FEMP_RSME;
-  }
-  else if(index == 2){
-    nmbeValue = IPMVP_NMBE;
-    rsmeValue = IPMVP_RSME;
-  }
-  else{
-    Q_ASSERT(false);
-  }
-  
-  QString text("NBME of ");
-  text += nmbeValue;
-  text += " or less and CV(RSME) of ";
-  text += rsmeValue;
-  text += " relative to monthly data.\nMust contain all utility data for one year and real weather data.\nCheck the guideline for additional requirements.";
-  m_CalibrationMethodLabel->setText(text);
-
 }
 
 void ResultsView::onUnitSystemChange(bool t_isIP) 
@@ -1595,13 +1670,7 @@ void ResultsView::resultsGenerated(const openstudio::path &t_path, const openstu
   m_districtHeatingConsumptionTable->setData(consumptionData, getUnit(m_districtHeatingConsumptionTable->getFuelType(), m_isIP));
   m_districtCoolingConsumptionTable->setData(consumptionData, getUnit(m_districtCoolingConsumptionTable->getFuelType(), m_isIP));
 
-
-  ComparisonData comparisonData(fueltypes,
-      SqlFile(t_path));
-
-  m_electricComparisonChart->setData(comparisonData, getUnit(m_electricComparisonChart->getFuelType(), m_isIP));
-  m_gasComparisonChart->setData(comparisonData, getUnit(m_gasComparisonChart->getFuelType(), m_isIP));
-
+  m_utilityBillComparisonView->buildGridLayout();
 }
 
 } // openstudio
