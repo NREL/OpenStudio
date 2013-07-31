@@ -307,6 +307,11 @@ QString ZoneGeometry::summary()
 
 Data::Data(QString filename, bool process)
 {
+  read(filename,process);
+}
+
+bool Data::read(QString filename, bool process)
+{
     QFile fp(filename);
 
     valid = false;
@@ -434,6 +439,7 @@ Data::Data(QString filename, bool process)
         }
         valid = true;
     }
+    return valid;
 }
 
 void Data::readZoneIC(Reader &input)

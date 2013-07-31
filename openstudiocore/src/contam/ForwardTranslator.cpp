@@ -115,11 +115,11 @@ namespace contam
     QMap<QString,int> &floorAFE, QMap<QString,int> &roofAFE)
   {
     QStringList grade, wallExt, wallInt, floor, roof;
-    grade << "Average" << "Leaky" << "Tight";
-    wallExt << "ExtWallAvg" << "ExtWallLeaky" << "ExtWallTight";
-    wallInt << "IntWallAvg" << "IntWallLeaky" << "IntWallTight";
-    floor << "FloorAvg" << "FloorLeaky" << "FloorTight";
-    roof << "RoofAvg" << "RoofLeaky" << "RoofTight";
+    grade << "Leaky" << "Average" << "Tight";
+    wallExt << "ExtWallLeaky" << "ExtWallAvg" << "ExtWallTight";
+    wallInt << "IntWallLeaky" << "IntWallAvg" << "IntWallTight";
+    floor << "FloorLeaky" << "FloorAvg" << "FloorTight";
+    roof << "RoofLeaky" << "RoofAvg" << "RoofTight";
     for(int i=0;i<grade.size();i++)
     {
       extWallAFE[grade[i]] = afeMap[wallExt[i]];
@@ -181,12 +181,14 @@ namespace contam
   {
   }
 
-  boost::optional<QString> ForwardTranslator::translateToPrj(const openstudio::model::Model& model)
+  boost::optional<QString> ForwardTranslator::translateToPrj(const openstudio::model::Model& model,
+    bool translateHVAC)
   {
     QString output;
     int nr;
     // Load the template
-    openstudio::contam::prj::Data data(":/templates/template.prj",false);
+    //openstudio::contam::prj::Data data(":/templates/template.prj",false);
+    data.read(":/templates/template.prj",false);
     if(!data.valid)
       return false;
     // The template is a legal PRJ file, so it has one level. Not for long.
@@ -415,185 +417,189 @@ namespace contam
       }
     }
 
-    // Generate air handling systems
-    nr = 0;
-    BOOST_FOREACH(openstudio::model::AirLoopHVAC airloop, model.getConcreteModelObjects<openstudio::model::AirLoopHVAC>())
+    if(translateHVAC)
     {
-      // Skip loops with no zones attached
-      if(!airloop.thermalZones().size())
-        continue;
-      openstudio::contam::prj::Ahs ahs;
-      ahs.nr = ++nr;
-      ahsMap[airloop.handle()] = nr;
-      ahs.name = QString("AHS_%1").arg(nr);
-      // Create supply and return zones
-      openstudio::contam::prj::Zone rz;
-      rz.nr = data.zones.size()+1;
-      rz.pl = 1;
-      rz.T0 = QString("293.15");
-      rz.setSystem(true);
-      rz.setVariableContaminants(true);
-      rz.name = QString("AHS_%1(Rec)").arg(nr);
-      //volumeMap[rz.name.toStdString()] = rz.nr;
-      openstudio::contam::prj::Zone sz;
-      sz.nr = rz.nr+1;
-      sz.pl = 1;
-      sz.T0 = QString("293.15");
-      sz.setSystem(true);
-      sz.setVariableContaminants(true);
-      sz.name = QString("AHS_%1(Sup)").arg(nr);
-      //volumeMap[sz.name.toStdString()] = sz.nr;
-      // Store the zone numbers in the ahs
-      ahs.zone_r = rz.nr;
-      ahs.zone_s = sz.nr;
-      // Add them to the zone list
-      data.zones << rz << sz;
-      // Now hook the served zones up to the supply and return zones
-      BOOST_FOREACH(openstudio::model::ThermalZone thermalZone, airloop.thermalZones())
+      // Generate air handling systems
+      nr = 0;
+      BOOST_FOREACH(openstudio::model::AirLoopHVAC airloop,
+        model.getConcreteModelObjects<openstudio::model::AirLoopHVAC>())
       {
-        int zoneNr = tableLookup(zoneMap,thermalZone.handle(),"zoneMap");
-        // Supply path
-        openstudio::contam::prj::Path sp;
-        sp.nr = data.paths.size()+1;
-        sp.pld = 1;
-        sp.pzn = ahs.zone_s;
-        sp.pzm = zoneNr;
-        sp.pa = ahs.nr;
-        sp.setSystem(true);
-        pathMap[(thermalZone.name().get()+" supply")] = sp.nr;
-        // Return path
-        openstudio::contam::prj::Path rp;
-        rp.nr = sp.nr+1;
-        rp.pld = 1;
-        rp.pzn = zoneNr;
-        rp.pzm = ahs.zone_r;
-        rp.pa = ahs.nr;
-        rp.setSystem(true);
-        pathMap[(thermalZone.name().get()+" return")] = rp.nr;
+        // Skip loops with no zones attached
+        if(!airloop.thermalZones().size())
+          continue;
+        openstudio::contam::prj::Ahs ahs;
+        ahs.nr = ++nr;
+        ahsMap[airloop.handle()] = nr;
+        ahs.name = QString("AHS_%1").arg(nr);
+        // Create supply and return zones
+        openstudio::contam::prj::Zone rz;
+        rz.nr = data.zones.size()+1;
+        rz.pl = 1;
+        rz.T0 = QString("293.15");
+        rz.setSystem(true);
+        rz.setVariableContaminants(true);
+        rz.name = QString("AHS_%1(Rec)").arg(nr);
+        //volumeMap[rz.name.toStdString()] = rz.nr;
+        openstudio::contam::prj::Zone sz;
+        sz.nr = rz.nr+1;
+        sz.pl = 1;
+        sz.T0 = QString("293.15");
+        sz.setSystem(true);
+        sz.setVariableContaminants(true);
+        sz.name = QString("AHS_%1(Sup)").arg(nr);
+        //volumeMap[sz.name.toStdString()] = sz.nr;
+        // Store the zone numbers in the ahs
+        ahs.zone_r = rz.nr;
+        ahs.zone_s = sz.nr;
+        // Add them to the zone list
+        data.zones << rz << sz;
+        // Now hook the served zones up to the supply and return zones
+        BOOST_FOREACH(openstudio::model::ThermalZone thermalZone, airloop.thermalZones())
+        {
+          int zoneNr = tableLookup(zoneMap,thermalZone.handle(),"zoneMap");
+          // Supply path
+          openstudio::contam::prj::Path sp;
+          sp.nr = data.paths.size()+1;
+          sp.pld = 1;
+          sp.pzn = ahs.zone_s;
+          sp.pzm = zoneNr;
+          sp.pa = ahs.nr;
+          sp.setSystem(true);
+          pathMap[(thermalZone.name().get()+" supply")] = sp.nr;
+          // Return path
+          openstudio::contam::prj::Path rp;
+          rp.nr = sp.nr+1;
+          rp.pld = 1;
+          rp.pzn = zoneNr;
+          rp.pzm = ahs.zone_r;
+          rp.pa = ahs.nr;
+          rp.setSystem(true);
+          pathMap[(thermalZone.name().get()+" return")] = rp.nr;
+          // Add the paths to the path list
+          data.paths << sp << rp;
+        }
+        data.ahs << ahs;
+      }
+
+      // Now loop back through the AHS list and connect the supply and return zones together
+      for(int i=0;i<data.ahs.size();i++)
+      {
+        std::string loopName = QString("AHS_%1").arg(i+1).toStdString();
+        // Recirculation path
+        openstudio::contam::prj::Path recirc;
+        recirc.nr = data.paths.size()+1;
+        recirc.pld = 1;
+        // Set the OA fraction schedule here
+        //recirc.ps = ?
+        recirc.pzn = data.ahs[i].zone_r;
+        recirc.pzm = data.ahs[i].zone_s;
+        recirc.setRecirculation(true);
+        pathMap[loopName + " recirculation"] = recirc.nr;
+        // Outside air path
+        openstudio::contam::prj::Path oa;
+        oa.nr = recirc.nr+1;
+        oa.pld = 1;
+        oa.pzn = -1;
+        oa.pzm = data.ahs[i].zone_s;
+        oa.setOutsideAir(true);
+        pathMap[loopName + " oa"] = oa.nr;
+        // Exhaust path;
+        openstudio::contam::prj::Path exhaust;
+        exhaust.nr = oa.nr+1;
+        exhaust.pld = 1;
+        exhaust.pzn = data.ahs[i].zone_r;
+        exhaust.pzm = -1;
+        exhaust.setExhaust(true);
+        pathMap[loopName + " exhaust"] = exhaust.nr;
         // Add the paths to the path list
-        data.paths << sp << rp;
+        data.paths << recirc << oa << exhaust;
+        // Store the nrs in the ahs
+        data.ahs[i].path_r = recirc.nr;
+        data.ahs[i].path_s = oa.nr;
+        data.ahs[i].path_x = exhaust.nr;
       }
-      data.ahs << ahs;
-    }
 
-    // Now loop back through the AHS list and connect the supply and return zones together
-    for(int i=0;i<data.ahs.size();i++)
-    {
-      std::string loopName = QString("AHS_%1").arg(i+1).toStdString();
-      // Recirculation path
-      openstudio::contam::prj::Path recirc;
-      recirc.nr = data.paths.size()+1;
-      recirc.pld = 1;
-      // Set the OA fraction schedule here
-      //recirc.ps = ?
-      recirc.pzn = data.ahs[i].zone_r;
-      recirc.pzm = data.ahs[i].zone_s;
-      recirc.setRecirculation(true);
-      pathMap[loopName + " recirculation"] = recirc.nr;
-      // Outside air path
-      openstudio::contam::prj::Path oa;
-      oa.nr = recirc.nr+1;
-      oa.pld = 1;
-      oa.pzn = -1;
-      oa.pzm = data.ahs[i].zone_s;
-      oa.setOutsideAir(true);
-      pathMap[loopName + " oa"] = oa.nr;
-      // Exhaust path;
-      openstudio::contam::prj::Path exhaust;
-      exhaust.nr = oa.nr+1;
-      exhaust.pld = 1;
-      exhaust.pzn = data.ahs[i].zone_r;
-      exhaust.pzm = -1;
-      exhaust.setExhaust(true);
-      pathMap[loopName + " exhaust"] = exhaust.nr;
-      // Add the paths to the path list
-      data.paths << recirc << oa << exhaust;
-      // Store the nrs in the ahs
-      data.ahs[i].path_r = recirc.nr;
-      data.ahs[i].path_s = oa.nr;
-      data.ahs[i].path_x = exhaust.nr;
-    }
-
-    // Try to use E+ results to set flow rates. The supply and return flow paths are in the path
-    // lookup table under the names thermalZone.name + supply|return (see above)
-    boost::optional<openstudio::SqlFile> sqlFile = model.sqlFile();
-    if(sqlFile)
-    {
-      std::string envPeriod; 
-      BOOST_FOREACH(std::string t, sqlFile->availableEnvPeriods())
+      // Try to use E+ results to set flow rates. The supply and return flow paths are in the path
+      // lookup table under the names thermalZone.name + supply|return (see above)
+      boost::optional<openstudio::SqlFile> sqlFile = model.sqlFile();
+      if(sqlFile)
       {
-        envPeriod = t; // should only ever be one
-        break;
-      }
-      // get sizing results, get flow rate schedules for each zone's inlet, return, and exhaust nodes
-      // This should be moved to inside the contam translator
-      BOOST_FOREACH(model::ThermalZone thermalZone, model.getModelObjects<model::ThermalZone>())
-      {
-        LOG(Warn, "Zone equipment not yet accounted for.");
-        // todo: this does not include OA from zone equipment (PTAC, PTHP, etc) or exhaust fans
-        boost::optional<model::Node> returnAirNode;
-        boost::optional<model::ModelObject> returnAirModelObject = thermalZone.returnAirModelObject();
-        if (returnAirModelObject)
+        std::string envPeriod; 
+        BOOST_FOREACH(std::string t, sqlFile->availableEnvPeriods())
         {
-          returnAirNode = returnAirModelObject->optionalCast<model::Node>();
+          envPeriod = t; // should only ever be one
+          break;
         }
-        if (returnAirNode)
+        // get sizing results, get flow rate schedules for each zone's inlet, return, and exhaust nodes
+        // This should be moved to inside the contam translator
+        BOOST_FOREACH(model::ThermalZone thermalZone, model.getModelObjects<model::ThermalZone>())
         {
-          std::string keyValue = returnAirNode->name().get();
-          keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
-          boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly", 
-            "System Node MassFlowRate", keyValue);
-          if (timeSeries)
+          LOG(Warn, "Zone equipment not yet accounted for.");
+          // todo: this does not include OA from zone equipment (PTAC, PTHP, etc) or exhaust fans
+          boost::optional<model::Node> returnAirNode;
+          boost::optional<model::ModelObject> returnAirModelObject = thermalZone.returnAirModelObject();
+          if (returnAirModelObject)
           {
-            openstudio::Vector values = timeSeries->values();
+            returnAirNode = returnAirModelObject->optionalCast<model::Node>();
           }
-        }
-
-        boost::optional<model::Node> supplyAirNode;
-        boost::optional<model::ModelObject> supplyAirModelObject = thermalZone.inletPortList().airLoopHVACModelObject();
-        if (supplyAirModelObject)
-        {
-          supplyAirNode = supplyAirModelObject->optionalCast<model::Node>();
-        }
-        if (supplyAirNode)
-        {
-          std::string keyValue = supplyAirNode->name().get();
-          keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
-          boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly",
-            "System Node MassFlowRate", keyValue);
-          if (timeSeries)
+          if (returnAirNode)
           {
-            openstudio::Vector values = timeSeries->values();
+            std::string keyValue = returnAirNode->name().get();
+            keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
+            boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly", 
+              "System Node MassFlowRate", keyValue);
+            if (timeSeries)
+            {
+              openstudio::Vector values = timeSeries->values();
+            }
+          }
+
+          boost::optional<model::Node> supplyAirNode;
+          boost::optional<model::ModelObject> supplyAirModelObject = thermalZone.inletPortList().airLoopHVACModelObject();
+          if (supplyAirModelObject)
+          {
+            supplyAirNode = supplyAirModelObject->optionalCast<model::Node>();
+          }
+          if (supplyAirNode)
+          {
+            std::string keyValue = supplyAirNode->name().get();
+            keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"),"\\u$1");
+            boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly",
+              "System Node MassFlowRate", keyValue);
+            if (timeSeries)
+            {
+              openstudio::Vector values = timeSeries->values();
+            }
           }
         }
       }
-    }
-    else
-    {
-      LOG(Warn, "Simulation results not available, using 1 scfm/ft^2 to set supply flows");
-      // Use the 1 scfm/ft^2 approximation with 90% return
-      BOOST_FOREACH(openstudio::model::ThermalZone thermalZone,
-        model.getConcreteModelObjects<openstudio::model::ThermalZone>())
+      else
       {
-        double area=0.0;
-        BOOST_FOREACH(openstudio::model::Space space, thermalZone.spaces())
+        LOG(Warn, "Simulation results not available, using 1 scfm/ft^2 to set supply flows");
+        // Use the 1 scfm/ft^2 approximation with 90% return
+        BOOST_FOREACH(openstudio::model::ThermalZone thermalZone,
+          model.getConcreteModelObjects<openstudio::model::ThermalZone>())
         {
-          area += space.floorArea();
-        }
-        if(area == 0.0)
-        {
-          LOG(Warn, "Failed to compute floor area for Zone '" << thermalZone.name().get() << "'");
-        }
-        else
-        {
-          double flowRate = area*0.00508*1.2041;  // Assume 1 scfm/ft^2 as an approximation
-          std::string supplyName = thermalZone.name().get() + " supply";
-          std::string returnName = thermalZone.name().get() + " return";
-          int supplyNr,returnNr;
-          if(supplyNr = pathMap.value(supplyName,0))
-            data.paths[supplyNr-1].Fahs = QString().sprintf("%g",flowRate);
-          if(returnNr = pathMap.value(returnName,0))
-            data.paths[returnNr-1].Fahs = QString().sprintf("%g",0.9*flowRate);
+          double area=0.0;
+          BOOST_FOREACH(openstudio::model::Space space, thermalZone.spaces())
+          {
+            area += space.floorArea();
+          }
+          if(area == 0.0)
+          {
+            LOG(Warn, "Failed to compute floor area for Zone '" << thermalZone.name().get() << "'");
+          }
+          else
+          {
+            double flowRate = area*0.00508*1.2041;  // Assume 1 scfm/ft^2 as an approximation
+            std::string supplyName = thermalZone.name().get() + " supply";
+            std::string returnName = thermalZone.name().get() + " return";
+            int supplyNr,returnNr;
+            if(supplyNr = pathMap.value(supplyName,0))
+              data.paths[supplyNr-1].Fahs = QString().sprintf("%g",flowRate);
+            if(returnNr = pathMap.value(returnName,0))
+              data.paths[returnNr-1].Fahs = QString().sprintf("%g",0.9*flowRate);
+          }
         }
       }
     }

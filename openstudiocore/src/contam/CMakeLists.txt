@@ -15,6 +15,8 @@ SET( ${target_name}_src
   PrjDefs.hpp
   PrjData.hpp
   PrjData.cpp
+  SimTxt.hpp
+  SimTxt.cpp
 )
 
 # resource files

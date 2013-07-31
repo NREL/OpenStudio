@@ -95,8 +95,10 @@ private:
 class CONTAM_API Data
 {
 public:
+  Data(){};
   Data(QString filename, bool process=true);
   //~Data();
+  bool read(QString filename, bool process=true);
   QString summary();
   bool write(QString filename);
 	QString print();

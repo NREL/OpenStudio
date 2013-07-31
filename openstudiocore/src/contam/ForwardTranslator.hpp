@@ -23,6 +23,8 @@
 
 #include "ContamAPI.hpp"
 
+#include <contam/PrjData.hpp>
+
 #include <utilities/idf/Handle.hpp>
 #include <utilities/core/Path.hpp>
 #include <utilities/core/Optional.hpp>
@@ -40,11 +42,14 @@ namespace contam
   {
   public:
     ForwardTranslator();
-    boost::optional<QString> translateToPrj(const openstudio::model::Model& model);
+    boost::optional<QString> translateToPrj(const openstudio::model::Model& model,
+      bool translateHVAC=true);
     bool writeMaps(const openstudio::path& path);
     static bool modelToContam(const openstudio::model::Model& model, const openstudio::path& path,
       const openstudio::path& mapPath);
     static bool modelToContam(const openstudio::model::Model& model, const openstudio::path& path);
+
+    prj::Data data; // This has to be public for now
 
   private:
     int tableLookup(QMap<std::string,int> map, std::string str, const char *name);
