@@ -188,14 +188,14 @@ namespace openstudio {
     Q_OBJECT;
 
     public:
-      UtilityBillComparisonLegend(const openstudio::EndUseFuelType& fuelType, QWidget *t_parent = 0);
+      UtilityBillComparisonLegend(const openstudio::FuelType& fuelType, QWidget *t_parent = 0);
       virtual ~UtilityBillComparisonLegend() {}
-      static std::vector<vtkCharts::Color3ub> getColors();
+      static std::vector<vtkCharts::Color3ub> getColors(const openstudio::FuelType& fuelType);
 
     private:
       REGISTER_LOGGER("openstudio::UtilityBillComparisonLegend");
 
-      openstudio::EndUseFuelType m_fuelType;
+      openstudio::FuelType m_fuelType;
    };
 
   class UtilityBillComparisonTable : public QWidget

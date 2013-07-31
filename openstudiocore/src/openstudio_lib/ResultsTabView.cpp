@@ -1263,8 +1263,6 @@ UtilityBillComparisonView::UtilityBillComparisonView(const openstudio::model::Mo
 
   selectCalibrationMethod(0);
   buildGridLayout();
-  buildGridLayout();
-  buildGridLayout();
 }
 
 struct UtilityBillSorter 
@@ -1289,12 +1287,22 @@ void UtilityBillComparisonView::buildGridLayout()
   std::sort(utilityBills.begin(), utilityBills.end(), UtilityBillSorter());
   int row = 0;
   Q_FOREACH(const model::UtilityBill& utilityBill, utilityBills){
+    FuelType fuelType = utilityBill.fuelType();
+
     QVBoxLayout* vLayout = new QVBoxLayout();
 
     UtilityBillComparisonChart* chart = new UtilityBillComparisonChart(utilityBill);
     vLayout->addWidget(chart);
 
-    m_gridLayout->addLayout(vLayout, row, 0);
+    UtilityBillComparisonLegend* legend = new UtilityBillComparisonLegend(utilityBill.fuelType());
+
+    m_gridLayout->addLayout(vLayout, row, 0, 1, 1);
+    if (fuelType == FuelType::Electricity){
+      m_gridLayout->addLayout(vLayout, row, 1, 1, 1);
+      m_gridLayout->addWidget(legend, row, 2, 1, 1);
+    }else{
+      m_gridLayout->addWidget(legend, row, 1, 1, 1);
+    }
     ++row;
   }
 }
@@ -1366,6 +1374,110 @@ openstudio::model::UtilityBill UtilityBillComparisonChart::utilityBill() const
 void UtilityBillComparisonChart::onUtilityBillChanged()
 {
   m_label->setText(toQString(m_utilityBill.name().get() + " " + m_utilityBill.fuelType().valueDescription()));
+
+  std::vector<std::string> labels;
+  std::vector<float> consumptionValues;
+  std::vector<float> modelConsumptionValues;
+
+  // goes from billing units to J
+  double consumptionUnitConversionFactor = m_utilityBill.consumptionUnitConversionFactor();
+
+  std::vector<model::BillingPeriod> billingPeriods = m_utilityBill.billingPeriods();
+  Q_FOREACH(const model::BillingPeriod& billingPeriod, billingPeriods){
+
+    boost::optional<double> consumption = billingPeriod.consumption();
+    if (consumption){
+      consumptionValues.push_back(*consumption);
+    }else{
+      consumptionValues.push_back(0);
+    }
+
+    boost::optional<double> modelConsumption = billingPeriod.modelConsumption();
+    if (modelConsumption){
+      modelConsumptionValues.push_back(*modelConsumption / consumptionUnitConversionFactor);
+    }else{
+      modelConsumptionValues.push_back(0);
+    }
+
+    std::stringstream ss;
+    ss << billingPeriod.startDate() << std::endl;;
+    ss << "-" << std::endl;
+    ss << billingPeriod.endDate() << std::endl;
+    if (consumption && modelConsumption){
+      double percentDiff = 100.0*(consumption.get()-modelConsumption.get())/(consumption.get());
+      ss << percentDiff << "%";
+    }else{
+      ss << "NA";
+    }
+
+    labels.push_back(ss.str());
+  }
+  m_chart->setXTickLabels(labels);
+
+  m_chart->setColors(UtilityBillComparisonLegend::getColors(m_utilityBill.fuelType()));
+
+  m_chart->axis(vtkCharts::Axis::LEFT).setTitle("");
+  m_chart->axis(vtkCharts::Axis::BOTTOM).setTitle("");
+
+  m_chart->addSeries(consumptionValues, "Actual");
+  m_chart->addSeries(modelConsumptionValues, "Model");
+
+  m_chart->rescale();
+
+  setUpdatesEnabled(true);
+}
+
+
+UtilityBillComparisonLegend::UtilityBillComparisonLegend(const openstudio::FuelType& fuelType, QWidget *t_parent)
+  : QWidget(t_parent), m_fuelType(fuelType)
+{
+  QVBoxLayout* vboxlayout = new QVBoxLayout();
+
+  std::vector<std::string> s;
+  s.push_back("Actual " + m_fuelType.valueDescription());
+  s.push_back("Modeled " + m_fuelType.valueDescription());
+
+  std::vector<vtkCharts::Color3ub> c = getColors(m_fuelType);
+  Q_ASSERT(c.size() == 2);
+
+  for (size_t i = 0; i < 2; ++i)
+  {
+    QPixmap pm(10, 10);
+    const vtkCharts::Color3ub color = c.at(i);
+    pm.fill(QColor(color.Red(), color.Green(), color.Blue()));
+    QHBoxLayout *hboxlayout = new QHBoxLayout();
+    QLabel *l = new QLabel();
+    l->setPixmap(pm);
+    l->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    hboxlayout->addWidget(l);
+    hboxlayout->addWidget(new QLabel(openstudio::toQString(s[i])));
+
+    vboxlayout->addLayout(hboxlayout);
+  }
+
+  setLayout(vboxlayout);
+}
+
+std::vector<vtkCharts::Color3ub> UtilityBillComparisonLegend::getColors(const openstudio::FuelType& fuelType)
+{
+  std::vector<vtkCharts::Color3ub> colors;
+
+  colors.push_back(vtkCharts::Color3ub(237, 28, 36));
+  colors.push_back(vtkCharts::Color3ub(0, 113, 188));
+  //colors.push_back(vtkCharts::Color3ub(244, 222, 17));
+  //colors.push_back(vtkCharts::Color3ub(216, 192, 18));
+  //colors.push_back(vtkCharts::Color3ub(77, 77, 77));
+  //colors.push_back(vtkCharts::Color3ub(179, 179, 179));
+  //colors.push_back(vtkCharts::Color3ub(255, 123, 172));
+  //colors.push_back(vtkCharts::Color3ub(102, 45, 145));
+  //colors.push_back(vtkCharts::Color3ub(241, 90, 36));
+  //colors.push_back(vtkCharts::Color3ub(46, 49, 146));
+  //colors.push_back(vtkCharts::Color3ub(200, 90, 36));
+  //colors.push_back(vtkCharts::Color3ub(251, 176, 59));
+  //colors.push_back(vtkCharts::Color3ub(41, 171, 226));
+  //colors.push_back(vtkCharts::Color3ub(140, 198, 63));
+  return colors;
 }
 
 
