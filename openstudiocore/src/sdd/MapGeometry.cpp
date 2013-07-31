@@ -1457,7 +1457,7 @@ namespace sdd {
 
     // translate floorPrint
     Transformation transformation = space.siteTransformation();
-    /*
+   
     Point3dVector vertices = transformation*space.floorPrint();
     QDomElement polyLoopElement = doc.createElement("PolyLp");
     result.appendChild(polyLoopElement);
@@ -1477,7 +1477,6 @@ namespace sdd {
       cartesianPointElement.appendChild(coordinateZElement);
       coordinateZElement.appendChild(doc.createTextNode(QString::number(meterToFoot*vertex.z())));
     }
-    */
 
     // thermal zone
     boost::optional<model::ThermalZone> thermalZone = space.thermalZone();
