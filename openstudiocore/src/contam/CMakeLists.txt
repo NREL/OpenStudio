@@ -86,6 +86,14 @@ TARGET_LINK_LIBRARIES( PrjToOsm
   openstudio_contam
 )
 
+add_executable(FitInfiltration FitInfiltration.cpp)
+
+TARGET_LINK_LIBRARIES( FitInfiltration
+  ${${target_name}_depends}
+  openstudio_osversion
+  openstudio_contam
+)
+
 #INSTALL(TARGETS gbXMLToIdf
 #    BUNDLE DESTINATION . 
 #    RUNTIME DESTINATION bin 
