@@ -29,6 +29,7 @@ namespace openstudio {
 namespace analysis {
 
 class DataPoint;
+class Variable;
 
 namespace detail {
 

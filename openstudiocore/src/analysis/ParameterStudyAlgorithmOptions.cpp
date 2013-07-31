@@ -22,6 +22,8 @@
 
 #include <analysis/Problem.hpp>
 
+#include <utilities/core/Json.hpp>
+
 namespace openstudio {
 namespace analysis {
 

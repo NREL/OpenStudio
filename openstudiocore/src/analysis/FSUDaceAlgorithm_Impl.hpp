@@ -26,6 +26,7 @@
 namespace openstudio {
 namespace analysis {
 
+class FSUDaceAlgorithm;
 class FSUDaceAlgorithmOptions;
 
 namespace detail {

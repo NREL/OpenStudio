@@ -20,6 +20,11 @@
 #include <analysis/Measure.hpp>
 #include <analysis/Measure_Impl.hpp>
 
+#include <analysis/NullMeasure.hpp>
+#include <analysis/NullMeasure_Impl.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
+
 #include <utilities/core/FileReference.hpp>
 
 #include <runmanager/lib/WorkItem.hpp>
@@ -63,6 +68,26 @@ namespace detail {
     measureData["is_selected"] = isSelected();
 
     return QVariant(measureData);
+  }
+
+  Measure Measure_Impl::factoryFromVariant(const QVariant &variant, const VersionString &version)
+  {
+    QVariantMap map = variant.toMap();
+
+    if (!map.contains("measure_type")) {
+      LOG_AND_THROW("Unable to find Measure in expected location.");
+    }
+
+    std::string measureType = map["measure_type"].toString().toStdString();
+    if (measureType == "NullMeasure") {
+      return NullMeasure_Impl::fromVariant(variant,version);
+    }
+    if (measureType == "RubyMeasure") {
+      return RubyMeasure_Impl::fromVariant(variant,version);
+    }
+
+    LOG_AND_THROW("Unexpected measure_type " << measureType << ".");
+    return OptionalMeasure().get();
   }
 
 } // detail

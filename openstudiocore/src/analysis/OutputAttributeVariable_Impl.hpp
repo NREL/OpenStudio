@@ -26,6 +26,8 @@
 namespace openstudio {
 namespace analysis {
 
+class OutputAttributeVariable;
+
 namespace detail {
 
   /** OutputAttributeVariable_Impl is an OutputVariable_Impl that is the implementation
@@ -78,6 +80,8 @@ namespace detail {
     //@{
 
     virtual QVariant toVariant() const;
+
+    static OutputAttributeVariable fromVariant(const QVariant& variant, const VersionString& version);
 
     //@}
    private:

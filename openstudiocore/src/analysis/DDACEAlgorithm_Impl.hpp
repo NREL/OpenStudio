@@ -26,6 +26,7 @@
 namespace openstudio {
 namespace analysis {
 
+class DDACEAlgorithm;
 class DDACEAlgorithmOptions;
 
 namespace detail {

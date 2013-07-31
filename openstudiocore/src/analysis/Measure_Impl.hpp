@@ -90,6 +90,8 @@ namespace detail {
 
     virtual QVariant toVariant() const;
 
+    static Measure factoryFromVariant(const QVariant& variant, const VersionString& version);
+
     //@}
    protected:
     bool m_isSelected;

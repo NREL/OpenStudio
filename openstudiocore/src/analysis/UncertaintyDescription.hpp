@@ -127,6 +127,9 @@ namespace detail {
 
   QVariant toVariant(const UncertaintyDescription& udesc);
 
+  UncertaintyDescription toUncertaintyDescription(const QVariant& variant,
+                                                  const VersionString& version);
+
 }
 
 } // analysis

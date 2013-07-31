@@ -33,6 +33,7 @@
 #include <utilities/core/Compare.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/FileReference.hpp>
+#include <utilities/core/Json.hpp>
 #include <utilities/core/Optional.hpp>
 
 #include <boost/foreach.hpp>
@@ -453,6 +454,23 @@ namespace detail {
     measureGroupData["measures"] = measuresList;
 
     return QVariant(measureGroupData);
+  }
+
+  MeasureGroup MeasureGroup_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+
+    MeasureVector measures = deserializeOrderedVector(
+          map["measures"].toList(),
+          "measure_group_index",
+          boost::function<Measure (const QVariant&)>(boost::bind(Measure_Impl::factoryFromVariant,_1,version)));
+
+    return MeasureGroup(openstudio::UUID(map["uuid"].toString()),
+                        openstudio::UUID(map["version_uuid"].toString()),
+                        map.contains("name") ? map["name"].toString().toStdString() : std::string(),
+                        map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                        map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                        map.contains("uncertainty_description") ? analysis::detail::toUncertaintyDescription(map["uncertainty_description"],version) : OptionalUncertaintyDescription(),
+                        measures);
   }
 
   std::pair<bool,boost::optional<FileReferenceType> > inputFileType(

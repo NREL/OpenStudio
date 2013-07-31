@@ -36,6 +36,8 @@
 #include <analysis/GenericUncertaintyDescription.hpp>
 #include <analysis/NullMeasure.hpp>
 #include <analysis/NullMeasure_Impl.hpp>
+#include <analysis/OptimizationProblem.hpp>
+#include <analysis/OptimizationProblem_Impl.hpp>
 #include <analysis/RubyContinuousVariable.hpp>
 #include <analysis/RubyContinuousVariable_Impl.hpp>
 #include <analysis/RubyMeasure.hpp>
@@ -1830,7 +1832,6 @@ namespace detail {
         }
       }
       else {
-        compoundRubyMeasure.reset();
         int index = stepMap["workflow_index"].toInt();
         WorkflowStep step = WorkflowStep_Impl::factoryFromVariant(workflowListItem,version);
         workflowIntermediate.push_back(std::make_pair<int,WorkflowStep>(index,step));

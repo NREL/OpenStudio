@@ -35,6 +35,8 @@ namespace runmanager {
 
 namespace analysis {
 
+class InputVariable;
+class Measure;
 class WorkflowStep;
 
 namespace detail {
@@ -103,6 +105,10 @@ namespace detail {
     //@{
 
     virtual QVariant toVariant() const;
+
+    static InputVariable factoryFromVariant(const QVariant &variant, const VersionString &version);
+
+    static InputVariable factoryFromVariant(const QVariant& variant, const Measure& measure, const VersionString& version);
 
     //@}
    private:

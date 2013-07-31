@@ -741,9 +741,6 @@ namespace detail {
   }
 
   Analysis Analysis_Impl::fromVariant(const QVariant& variant,const VersionString& version) {
-    OptionalAnalysis result;
-    return result.get();
-
     QVariantMap map = variant.toMap();
     Problem problem = Problem_Impl::factoryFromVariant(map["problem"],version);
     OptionalAlgorithm algorithm;

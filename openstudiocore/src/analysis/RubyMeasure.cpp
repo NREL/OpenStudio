@@ -34,9 +34,10 @@
 
 #include <utilities/data/Attribute.hpp>
 
-#include <utilities/core/FileReference.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/FileReference.hpp>
 #include <utilities/core/Finder.hpp>
+#include <utilities/core/Json.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -479,6 +480,50 @@ namespace detail {
     }
 
     return QVariant(rubyMeasureData);
+  }
+
+  RubyMeasure RubyMeasure_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+
+    OptionalFileReference perturbationScriptOrBCLMeasureDir;
+    if (map.contains("bcl_measure_directory")) {
+      perturbationScriptOrBCLMeasureDir = FileReference(
+            openstudio::UUID(map["bcl_measure_uuid"].toString()),
+            openstudio::UUID(map["bcl_measure_version_uuid"].toString()),
+            "",
+            "",
+            "",
+            toPath(map["bcl_measure_directory"].toString()),
+            FileReferenceType::Unknown,
+            DateTime::now(),
+            DateTime::now(),
+            "",
+            "");
+    }
+    else {
+      perturbationScriptOrBCLMeasureDir = openstudio::detail::toFileReference(map["perturbation_script"],version);
+    }
+
+    OSArgumentVector arguments;
+    if (map.contains("arguments")) {
+      arguments = deserializeOrderedVector(
+            map["arguments"].toList(),
+            "argument_index",
+            boost::function<OSArgument (const QVariant&)>(boost::bind(ruleset::detail::toOSArgument,_1,version)));
+    }
+
+    return RubyMeasure(openstudio::UUID(map["uuid"].toString()),
+                       openstudio::UUID(map["version_uuid"].toString()),
+                       map.contains("name") ? map["name"].toString().toStdString() : std::string(),
+                       map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                       map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                       map["is_selected"].toBool(),
+                       perturbationScriptOrBCLMeasureDir.get(),
+                       FileReferenceType(map["input_file_type"].toString().toStdString()),
+                       FileReferenceType(map["output_file_type"].toString().toStdString()),
+                       map["is_user_script"].toBool(),
+                       arguments,
+                       map.contains("bcl_measure_directory"));
   }
 
   bool RubyMeasure_Impl::fileTypesAreCompatible(

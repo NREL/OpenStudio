@@ -137,11 +137,12 @@ namespace detail {
           map["variables"].toList(),
           "variable_index",
           boost::function<Variable (const QVariant&)>(boost::bind(analysis::detail::Variable_Impl::factoryFromVariant,_1,version)));
+    bool ok(false);
     DoubleVector coefficients = deserializeOrderedVector(
           map["variables"].toList(),
           "coefficient",
           "variable_index",
-          boost::function<double (QVariant*)>(boost::bind(&QVariant::toDouble,_1)));
+          boost::function<double (QVariant*)>(boost::bind(&QVariant::toDouble,_1,&ok)));
 
     return LinearFunction(openstudio::UUID(map["uuid"].toString()),
                           openstudio::UUID(map["version_uuid"].toString()),

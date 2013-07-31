@@ -73,6 +73,17 @@ namespace detail {
     return QVariant(nullMeasureData);
   }
 
+  NullMeasure NullMeasure_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+
+    return NullMeasure(openstudio::UUID(map["uuid"].toString()),
+                       openstudio::UUID(map["version_uuid"].toString()),
+                       map.contains("name") ? map["name"].toString().toStdString() : std::string(),
+                       map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                       map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                       map["is_selected"].toBool());
+  }
+
 } // detail
 
 NullMeasure::NullMeasure(bool isSelected)

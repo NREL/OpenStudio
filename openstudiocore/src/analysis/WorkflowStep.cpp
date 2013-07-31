@@ -21,6 +21,8 @@
 #include <analysis/WorkflowStep_Impl.hpp>
 
 #include <analysis/InputVariable_Impl.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/Problem_Impl.hpp>
 
@@ -205,6 +207,27 @@ namespace detail {
     }
 
     return result;
+  }
+
+  WorkflowStep WorkflowStep_Impl::factoryFromVariant(const QVariant& variant, const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+
+    if (!map.contains("workflow_step_type")) {
+      LOG_AND_THROW("Unable to find WorkflowStep in expected location.");
+    }
+
+    std::string workflowStepType = map["workflow_step_type"].toString().toStdString();
+    if (workflowStepType == "WorkItem") {
+      return WorkflowStep(runmanager::detail::JSON::toWorkItem(variant,version));
+    }
+    if (workflowStepType == "MeasureGroup") {
+      return WorkflowStep(MeasureGroup_Impl::fromVariant(variant,version));
+    }
+
+    // workflowStepType == "Measure" is handled by Problem_Impl
+    LOG_AND_THROW("Unexpected workflow_step_type " << workflowStepType << ".");
+    return OptionalWorkflowStep().get();
   }
 
 } // detail

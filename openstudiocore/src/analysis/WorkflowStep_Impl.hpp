@@ -104,6 +104,8 @@ namespace detail {
 
     virtual QVariant toVariant() const;
 
+    static WorkflowStep factoryFromVariant(const QVariant& variant, const VersionString& version);
+
     //@}
    private:
     REGISTER_LOGGER("openstudio.analysis.WorkflowStep")

@@ -28,9 +28,12 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/Compare.hpp>
+#include <utilities/core/Json.hpp>
 
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/bind.hpp>
+#include <boost/functional/value_factory.hpp>
 
 #include <sstream>
 
@@ -77,6 +80,36 @@ OSArgument::OSArgument(const UUID& uuid,
   }
   m_versionUUID = versionUUID;
 }
+
+OSArgument::OSArgument(const UUID& uuid,
+                       const UUID& versionUUID,
+                       const std::string& name,
+                       const std::string& displayName,
+                       const OSArgumentType& type,
+                       bool required,
+                       const boost::optional<QVariant>& value,
+                       const boost::optional<QVariant>& defaultValue,
+                       const OSDomainType& domainType,
+                       std::vector<QVariant>& domain,
+                       const std::vector<std::string>& choices,
+                       const std::vector<std::string>& choiceDisplayNames,
+                       bool isRead,
+                       const std::string& extension)
+  : m_uuid(uuid),
+    m_versionUUID(versionUUID),
+    m_name(name),
+    m_displayName(displayName),
+    m_type(type),
+    m_required(required),
+    m_value(value),
+    m_defaultValue(value),
+    m_domainType(domainType),
+    m_domain(domain),
+    m_choices(choices),
+    m_choiceDisplayNames(choiceDisplayNames),
+    m_isRead(isRead),
+    m_extension(extension)
+{}
 
 OSArgument OSArgument::clone() const {
   OSArgument result(*this);
@@ -1019,8 +1052,8 @@ namespace detail {
         argumentData["default_value"] = argument.defaultValueAsQVariant();
       }
     }
+    argumentData["domain_type"] = toQString(argument.domainType().valueName());
     if (argument.hasDomain()) {
-      argumentData["domain_type"] = toQString(argument.domainType().valueName());
       QVariantList domainList;
       int index(0);
       Q_FOREACH(const QVariant& dval,argument.domainAsQVariant()) {
@@ -1061,6 +1094,98 @@ namespace detail {
     }
 
     return QVariant(argumentData);
+  }
+
+  OSArgument toOSArgument(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+
+    OSArgumentType type(map["type"].toString().toStdString());
+
+    boost::optional<QVariant> value, defaultValue;
+    if (map.contains("value")) {
+      if (type == OSArgumentType::Quantity) {
+        value = toQuantityQVariant(map,"value","value_units");
+      }
+      else {
+        value = map["value"];
+      }
+    }
+    if (map.contains("default_value")) {
+      if (type == OSArgumentType::Quantity) {
+        value = toQuantityQVariant(map,"default_value","default_value_units");
+      }
+      else {
+        value = map["default_value"];
+      }
+    }
+
+    std::vector<QVariant> domain;
+    if (map.contains("domain")) {
+      if (type == OSArgumentType::Quantity) {
+        domain = deserializeOrderedVector(
+              map["domain"].toList(),
+              "domain_value_index",
+              boost::function<QVariant (QVariant*)>(boost::bind(
+                                                            toQuantityQVariant,
+                                                            boost::bind(&QVariant::toMap,_1),
+                                                            "value",
+                                                            "units")));
+      }
+      else {
+        domain = deserializeOrderedVector(
+              map["domain"].toList(),
+              "value",
+              "domain_value_index",
+              boost::function<QVariant (const QVariant&)>(boost::bind(boost::value_factory<QVariant>(),_1)));
+      }
+    }
+
+    StringVector choices, choiceDisplayNames;
+    if (map.contains("choices")) {
+      QVariantList choicesList = map["choices"].toList();
+      choices = deserializeOrderedVector(
+            choicesList,
+            "value",
+            "choice_index",
+            boost::function<std::string (QVariant*)>(boost::bind(&QString::toStdString,
+                                                                 boost::bind(&QVariant::toString,_1))));
+      if (!choicesList.empty() && choicesList[0].toMap().contains("display_name")) {
+        try {
+          choiceDisplayNames = deserializeOrderedVector(
+                choicesList,
+                "display_name",
+                "choice_index",
+                boost::function<std::string (QVariant*)>(boost::bind(&QString::toStdString,
+                                                                     boost::bind(&QVariant::toString,_1))));
+        }
+        catch (...) {
+          LOG_FREE(Warn,"openstudio.ruleset.OSArgument","Unable to deserialize partial list of choice display names.");
+        }
+      }
+    }
+
+    return OSArgument(openstudio::UUID(map["uuid"].toString()),
+                      openstudio::UUID(map["version_uuid"].toString()),
+                      map["name"].toString().toStdString(),
+                      map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                      type,
+                      map["required"].toBool(),
+                      value,
+                      defaultValue,
+                      OSDomainType(map["domain_type"].toString().toStdString()),
+                      domain,
+                      choices,
+                      choiceDisplayNames,
+                      map.contains("is_read") ? map["is_read"].toBool() : false,
+                      map.contains("extension") ? map["extension"].toString().toStdString() : std::string());
+  }
+
+  QVariant toQuantityQVariant(const QVariantMap& map,
+                              const std::string& valueKey,
+                              const std::string& unitsKey)
+  {
+    Quantity q = createQuantity(map[toQString(valueKey)].toDouble(),map[toQString(unitsKey)].toString().toStdString()).get();
+    return QVariant::fromValue<openstudio::Quantity>(q);
   }
 
 } // detail

@@ -29,6 +29,7 @@ class Table;
 
 namespace analysis {
 
+class SequentialSearch;
 class SequentialSearchOptions;
 class DataPoint;
 class OptimizationDataPoint;

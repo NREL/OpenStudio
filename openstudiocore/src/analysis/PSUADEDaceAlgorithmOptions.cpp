@@ -20,7 +20,12 @@
 #include <analysis/PSUADEDaceAlgorithmOptions.hpp>
 #include <analysis/PSUADEDaceAlgorithmOptions_Impl.hpp>
 
+#include <runmanager/lib/JSON.hpp>
+
+#include <utilities/core/Json.hpp>
 #include <utilities/core/Optional.hpp>
+
+#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace analysis {

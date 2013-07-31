@@ -567,7 +567,7 @@ namespace detail {
   }
 
   QVariant SequentialSearch_Impl::toVariant() const {
-    QVariantMap map = DakotaAlgorithm_Impl::toVariant().toMap();
+    QVariantMap map = Algorithm_Impl::toVariant().toMap();
 
     map["algorithm_type"] = QString("SequentialSearch");
 
@@ -579,7 +579,6 @@ namespace detail {
     SequentialSearchOptions options = SequentialSearchOptions_Impl::fromVariant(map["options"],version);
     return SequentialSearch(openstudio::UUID(map["uuid"].toString()),
                             openstudio::UUID(map["version_uuid"].toString()),
-                            map.contains("name") ? map["name"].toString().toStdString() : std::string(),
                             map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                             map.contains("description") ? map["description"].toString().toStdString() : std::string(),
                             map["complete"].toBool(),

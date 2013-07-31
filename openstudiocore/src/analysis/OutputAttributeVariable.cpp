@@ -106,6 +106,19 @@ namespace detail {
     return QVariant(variableData);
   }
 
+  OutputAttributeVariable OutputAttributeVariable_Impl::fromVariant(const QVariant& variant,
+                                                                    const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+
+    return OutputAttributeVariable(openstudio::UUID(map["uuid"].toString()),
+                                   openstudio::UUID(map["version_uuid"].toString()),
+                                   map.contains("name") ? map["name"].toString().toStdString() : std::string(),
+                                   map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                                   map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                                   map["attribute_name"].toString().toStdString());
+  }
+
 } // detail
 
 OutputAttributeVariable::OutputAttributeVariable(

@@ -129,6 +129,8 @@ namespace detail {
 
     virtual QVariant toVariant() const;
 
+    static MeasureGroup fromVariant(const QVariant& variant, const VersionString& version);
+
     //@}
    protected:
     std::vector<Measure> m_measures;

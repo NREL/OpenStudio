@@ -179,6 +179,8 @@ namespace detail {
 
     virtual QVariant toVariant() const;
 
+    static RubyMeasure fromVariant(const QVariant& variant, const VersionString& version);
+
     //@}
    protected:
     mutable boost::optional<BCLMeasure> m_bclMeasure; // cache for BCLMeasure.

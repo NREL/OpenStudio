@@ -109,6 +109,22 @@ class RULESET_API OSArgument {
              bool isRead,
              const std::string& extension);
 
+  /** Constructor provided for deserialization; not for general use. */
+  OSArgument(const UUID& uuid,
+             const UUID& versionUUID,
+             const std::string& name,
+             const std::string& displayName,
+             const OSArgumentType& type,
+             bool required,
+             const boost::optional<QVariant>& value,
+             const boost::optional<QVariant>& defaultValue,
+             const OSDomainType& domainType,
+             std::vector<QVariant>& domain,
+             const std::vector<std::string>& choices,
+             const std::vector<std::string>& choiceDisplayNames,
+             bool isRead,
+             const std::string& extension);
+
   /** Creates a copy with new UUIDs. */
   OSArgument clone() const;
 
@@ -484,6 +500,12 @@ namespace detail {
 
   /** Non-member function to convert argument into a QJSON-ready QVariant. */
   QVariant toVariant(const OSArgument& argument);
+
+  OSArgument toOSArgument(const QVariant& variant, const VersionString& version);
+
+  QVariant toQuantityQVariant(const QVariantMap& map,
+                              const std::string& valueKey,
+                              const std::string& unitsKey);
 
 }
 

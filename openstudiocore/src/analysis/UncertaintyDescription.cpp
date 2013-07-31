@@ -22,10 +22,12 @@
 
 #include <analysis/GenericUncertaintyDescription.hpp>
 
-#include <utilities/core/Finder.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Finder.hpp>
+#include <utilities/core/Json.hpp>
 
 #include <boost/foreach.hpp>
+#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -628,6 +630,19 @@ namespace detail {
     }
 
     return QVariant(udescMap);
+  }
+
+  UncertaintyDescription toUncertaintyDescription(const QVariant& variant,
+                                                  const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+
+    AttributeVector attributes = deserializeUnorderedVector(
+          map["attributes"].toList(),
+          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+
+    GenericUncertaintyDescription result(UncertaintyDescriptionType(map["type"].toString().toStdString()),
+                                         attributes);
   }
 
 } // detail

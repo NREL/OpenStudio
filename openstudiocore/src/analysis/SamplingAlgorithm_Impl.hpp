@@ -26,6 +26,7 @@
 namespace openstudio {
 namespace analysis {
 
+class SamplingAlgorithm;
 class SamplingAlgorithmOptions;
 class UncertaintyDescriptionType;
 

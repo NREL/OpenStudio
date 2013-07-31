@@ -115,6 +115,10 @@ namespace detail {
 
     virtual QVariant toVariant() const;
 
+    static RubyContinuousVariable fromVariant(const QVariant& variant, const VersionString& version);
+
+    static RubyContinuousVariable fromVariant(const QVariant& variant, const Measure& measure, const VersionString& version);
+
     //@}
    private:
     REGISTER_LOGGER("openstudio.analysis.RubyContinuousVariable");

@@ -26,6 +26,7 @@
 namespace openstudio {
 namespace analysis {
 
+class ParameterStudyAlgorithm;
 class ParameterStudyAlgorithmOptions;
 
 namespace detail {

@@ -69,6 +69,8 @@ namespace detail {
 
     virtual QVariant toVariant() const;
 
+    static NullMeasure fromVariant(const QVariant& variant, const VersionString& version);
+
     //@}
    protected:
    private:

@@ -20,7 +20,10 @@
 #include <analysis/SamplingAlgorithmOptions.hpp>
 #include <analysis/SamplingAlgorithmOptions_Impl.hpp>
 
+#include <utilities/core/Json.hpp>
 #include <utilities/core/Optional.hpp>
+
+#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -211,9 +214,11 @@ SamplingAlgorithmOptions::SamplingAlgorithmOptions()
         new detail::SamplingAlgorithmOptions_Impl()))
 {}
 
-SamplingAlgorithmOptions::SamplingAlgorithmOptions(const std::vector<Attribute>& options)
+SamplingAlgorithmOptions::SamplingAlgorithmOptions(const boost::optional<SamplingAlgorithmSampleType>& sampleType,
+                                                   const boost::optional<SamplingAlgorithmRNGType>& rngType,
+                                                   const std::vector<Attribute>& options)
   : DakotaAlgorithmOptions(boost::shared_ptr<detail::SamplingAlgorithmOptions_Impl>(
-        new detail::SamplingAlgorithmOptions_Impl(options)))
+        new detail::SamplingAlgorithmOptions_Impl(sampleType,rngType,options)))
 {}
 
 boost::optional<SamplingAlgorithmSampleType> SamplingAlgorithmOptions::sampleType() const {

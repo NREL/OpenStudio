@@ -26,6 +26,7 @@
 namespace openstudio {
 namespace analysis {
 
+class PSUADEDaceAlgorithm;
 class PSUADEDaceAlgorithmOptions;
 
 namespace detail {

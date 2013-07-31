@@ -25,6 +25,8 @@
 
 #include <analysis/Problem.hpp>
 
+#include <runmanager/lib/JSON.hpp>
+
 #include <utilities/core/Optional.hpp>
 #include <utilities/core/String.hpp>
 
@@ -175,10 +177,9 @@ namespace detail {
 
   ParameterStudyAlgorithm ParameterStudyAlgorithm_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
     QVariantMap map = variant.toMap();
-    ParameterStudyAlgorithmOptions options = ParameterStudyAlgorithm_Impl::fromVariant(map["options"],version);
+    ParameterStudyAlgorithmOptions options = ParameterStudyAlgorithmOptions_Impl::fromVariant(map["options"],version);
     return ParameterStudyAlgorithm(openstudio::UUID(map["uuid"].toString()),
                                    openstudio::UUID(map["version_uuid"].toString()),
-                                   map.contains("name") ? map["name"].toString().toStdString() : std::string(),
                                    map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                                    map.contains("description") ? map["description"].toString().toStdString() : std::string(),
                                    map["complete"].toBool(),

@@ -20,6 +20,10 @@
 #include <analysis/SequentialSearchOptions.hpp>
 #include <analysis/SequentialSearchOptions_Impl.hpp>
 
+#include <utilities/core/Json.hpp>
+
+#include <boost/bind.hpp>
+
 namespace openstudio {
 namespace analysis {
 

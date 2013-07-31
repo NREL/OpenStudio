@@ -79,6 +79,23 @@ std::vector<T> deserializeOrderedVector(const QVariantList& list,
   return result;
 }
 
+template<typename T>
+std::vector<T> deserializeOrderedVector(const QVariantList& list,
+                                        const std::string& indexKey,
+                                        boost::function<T (QVariant*)> typeConverter)
+{
+  unsigned n = list.size();
+  std::vector<T> result(n,T());
+  Q_FOREACH(const QVariant& listItem,list) {
+    QVariantMap listItemMap = listItem.toMap();
+    int index = listItemMap[toQString(indexKey)].toInt();
+    QVariant listItemVariant(listItemMap);
+    T value = typeConverter(&listItemVariant);
+    result[index] = value;
+  }
+  return result;
+}
+
 /** Deserializes vectors where a QVariantList holds maps containing an index entry and a
  *  value entry. */
 template<typename T>

@@ -189,6 +189,55 @@ namespace detail {
     return QVariant(variableData);
   }
 
+  RubyContinuousVariable RubyContinuousVariable_Impl::fromVariant(const QVariant& variant,
+                                                                  const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+
+    // dummy measure. need to do something better sometime (like make sure overload version of
+    // this method is always called)
+    RubyMeasure dummyMeasure(openstudio::path(),
+                             FileReferenceType::Unknown,
+                             FileReferenceType::Unknown);
+
+    return RubyContinuousVariable(
+          openstudio::UUID(map["uuid"].toString()),
+          openstudio::UUID(map["version_uuid"].toString()),
+          map.contains("name") ? map["name"].toString().toStdString() : std::string(),
+          map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+          map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+          map.contains("uncertainty_description") ? analysis::detail::toUncertaintyDescription(map["uncertainty_description"],version) : OptionalUncertaintyDescription(),
+          map.contains("minimum") ? map["minimum"].toDouble() : OptionalDouble(),
+          map.contains("maximum") ? map["maximum"].toDouble() : OptionalDouble(),
+          map.contains("increment") ? map["increment"].toDouble() : OptionalDouble(),
+          map.contains("n_steps") ? map["n_steps"].toInt() : OptionalInt(),
+          ruleset::detail::toOSArgument(map["argument"],version),
+          dummyMeasure);
+  }
+
+  RubyContinuousVariable RubyContinuousVariable_Impl::fromVariant(const QVariant& variant,
+                                                                  const Measure& measure,
+                                                                  const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+
+    Q_ASSERT(measure.optionalCast<RubyMeasure>());
+
+    return RubyContinuousVariable(
+          openstudio::UUID(map["uuid"].toString()),
+          openstudio::UUID(map["version_uuid"].toString()),
+          map.contains("name") ? map["name"].toString().toStdString() : std::string(),
+          map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+          map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+          map.contains("uncertainty_description") ? analysis::detail::toUncertaintyDescription(map["uncertainty_description"],version) : OptionalUncertaintyDescription(),
+          map.contains("minimum") ? map["minimum"].toDouble() : OptionalDouble(),
+          map.contains("maximum") ? map["maximum"].toDouble() : OptionalDouble(),
+          map.contains("increment") ? map["increment"].toDouble() : OptionalDouble(),
+          map.contains("n_steps") ? map["n_steps"].toInt() : OptionalInt(),
+          ruleset::detail::toOSArgument(map["argument"],version),
+          measure.cast<RubyMeasure>());
+  }
+
 } // detail
 
 RubyContinuousVariable::RubyContinuousVariable(const std::string& name,
