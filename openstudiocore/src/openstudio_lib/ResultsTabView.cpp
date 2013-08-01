@@ -1280,11 +1280,16 @@ void UtilityBillComparisonView::buildGridLayout()
   // clear grid view  
   QLayoutItem* child;
   while ((child = m_gridLayout->takeAt(0)) != 0) {
+    // this code is not included in the Qt documentation but is needed
+    // to actually delete the widget and layouts
+    if (child->widget()){
+      delete child->widget();
+    }else if (child->layout()){
+      delete child->layout();
+    }
+
     delete child;
   }
-
-  this->repaint();
-  //this->update();
 
   // loop over utility bill objects
   std::vector<model::UtilityBill> utilityBills = m_model.getModelObjects<model::UtilityBill>();
@@ -1312,8 +1317,10 @@ void UtilityBillComparisonView::buildGridLayout()
       m_gridLayout->addWidget(demandChart, row, 1, 1, 1);
       m_gridLayout->addWidget(legend, row, 2, 1, 1);
     }else{
+      QWidget* placeHolder = new QWidget();
+      placeHolder->setFixedWidth(300);
       m_gridLayout->addWidget(legend, row, 1, 1, 1);
-      m_gridLayout->addWidget(new QWidget(), row, 2, 1, 1);
+      m_gridLayout->addWidget(placeHolder, row, 2, 1, 1);
     }
     ++row;
   }
