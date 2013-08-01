@@ -713,7 +713,11 @@ namespace detail {
 
     if (dbv < VersionString("1.0.1")) {
       update_1_0_0_to_1_0_1(dbv);
-	}
+    }
+
+    if (dvb < VersionString("1.0.3")) {
+      update_1_0_3_to_1_0_4(dbv);
+    }
 
     if ((dbv != osv) || (!dbv.fidelityEqual(osv))) {
       LOG(Info,"Updating database version to " << osv << ".");
@@ -908,7 +912,6 @@ namespace detail {
     createTable<AlgorithmRecord>();
     createTable<AnalysisRecord>();
     createTable<AttributeRecord>();
-    createTable<ClauseRecord>();
     createTable<DataPointRecord>();
     createTable<DataPointValueRecord>();
     createTable<DiscretePerturbationRecord>();
@@ -916,8 +919,6 @@ namespace detail {
     createTable<FunctionRecord>();
     createTable<ProblemRecord>();
     createTable<ProjectDatabaseRecord>();
-    createTable<RuleRecord>();
-    createTable<RulesetRecord>();
     createTable<TagRecord>();
     createTable<OSArgumentRecord>();
     createTable<URLSearchPathRecord>();
@@ -926,8 +927,6 @@ namespace detail {
 
     // create join tables
     createTable<DataPoint_DiscretePerturbation_JoinRecord>();
-    createTable<Rule_Clause_JoinRecord>();
-    createTable<Ruleset_Rule_JoinRecord>();
 
     bool test = this->commitTransaction();
     BOOST_ASSERT(test);
@@ -1855,6 +1854,41 @@ namespace detail {
 
     save();
   	test = this->commitTransaction();
+    BOOST_ASSERT(test);
+  }
+
+  void ProjectDatabase_Impl::update_1_0_3_to_1_0_4(const VersionString& startVersion) {
+    bool didStartTransaction = startTransaction();
+    BOOST_ASSERT(didStartTransaction);
+
+    LOG(Info,"Dropping deprecated tables ClauseRecords, RuleRecords, RulesetRecords, "
+        << "Rule_Clause_JoinRecords, Ruleset_Rule_JoinRecords.");
+
+    ProjectDatabase database(this->shared_from_this());
+    QSqlQuery query(*(database.qSqlDatabase()));
+
+    query.prepare(QString("DROP TABLE ClauseRecords"));
+    assertExec(query);
+    query.clear();
+
+    query.prepare(QString("DROP TABLE RuleRecords"));
+    assertExec(query);
+    query.clear();
+
+    query.prepare(QString("DROP TABLE RulesetRecords"));
+    assertExec(query);
+    query.clear();
+
+    query.prepare(QString("DROP TABLE Rule_Clause_JoinRecords"));
+    assertExec(query);
+    query.clear();
+
+    query.prepare(QString("DROP TABLE Ruleset_Rule_JoinRecords"));
+    assertExec(query);
+    query.clear();
+
+    save();
+    bool test = this->commitTransaction();
     BOOST_ASSERT(test);
   }
 

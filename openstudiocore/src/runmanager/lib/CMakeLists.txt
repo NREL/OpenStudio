@@ -96,8 +96,6 @@ SET( runmanager_src
   ToolFinder.cpp
   ModelInModelOutJob.hpp
   ModelInModelOutJob.cpp
-  ModelObjectPerturbationJob.hpp
-  ModelObjectPerturbationJob.cpp
   EnergyPlusPostProcessJob.hpp
   EnergyPlusPostProcessJob.cpp
   EnergyPlusPreProcessJob.hpp
@@ -192,7 +190,6 @@ SET( runmanager_moc
   UserScriptJob.hpp
   NullJob.hpp
   ModelInModelOutJob.hpp
-  ModelObjectPerturbationJob.hpp
   EnergyPlusPostProcessJob.hpp
   OpenStudioPostProcessJob.hpp
   EnergyPlusPreProcessJob.hpp

@@ -19,11 +19,8 @@
 
 #include "WorkItem.hpp"
 #include "JSON.hpp"
-#include "ModelObjectPerturbationJob.hpp"
 
 #include "RubyJobUtils.hpp"
-
-#include <ruleset/ModelRuleset.hpp>
 
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/PathHelpers.hpp>
@@ -46,11 +43,6 @@ namespace runmanager {
     : type(t_type), tools(t_tools), params(t_params), files(t_files), jobkeyname(t_jobkeyname)
   {
   }
-
-  WorkItem::WorkItem(const openstudio::ruleset::ModelRuleset& modelRuleset)
-    : type(JobType::ModelObjectPerturbation),
-      params(detail::ModelObjectPerturbationJob::formatRuleData(modelRuleset))
-  {}
 
   bool WorkItem::operator==(const WorkItem &t_rhs) const
   {
@@ -84,7 +76,6 @@ namespace runmanager {
         break;
       // job types that take OSM
       case JobType::ModelToIdf :
-      case JobType::ModelObjectPerturbation :
       case JobType::ModelToRad :
       case JobType::ModelToRadPreProcess :
         result = FileReferenceType(FileReferenceType::OSM);
@@ -144,7 +135,6 @@ namespace runmanager {
         result = FileReferenceType(FileReferenceType::IDF);
         break;
       // job types that return OSM
-      case JobType::ModelObjectPerturbation :
       case JobType::IdfToModel :
       case JobType::ModelToRadPreProcess :
         result = FileReferenceType(FileReferenceType::OSM);

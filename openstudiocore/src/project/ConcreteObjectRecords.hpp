@@ -30,15 +30,6 @@
 #include <project/WorkflowRecord.hpp>
 
 // ruleset
-#include <project/ModelObjectActionSetAttributeRecord.hpp>
-#include <project/ModelObjectActionSetRelationshipRecord.hpp>
-#include <project/ModelObjectFilterBooleanAttributeRecord.hpp>
-#include <project/ModelObjectFilterNumericAttributeRecord.hpp>
-#include <project/ModelObjectFilterRelationshipRecord.hpp>
-#include <project/ModelObjectFilterStringAttributeRecord.hpp>
-#include <project/ModelObjectFilterTypeRecord.hpp>
-#include <project/ModelRuleRecord.hpp>
-#include <project/ModelRulesetRecord.hpp>
 #include <project/OSArgumentRecord.hpp>
 
 // analysis
@@ -74,15 +65,6 @@
 #include <project/WorkflowRecord_Impl.hpp>
 
 // ruleset
-#include <project/ModelObjectActionSetAttributeRecord_Impl.hpp>
-#include <project/ModelObjectActionSetRelationshipRecord_Impl.hpp>
-#include <project/ModelObjectFilterBooleanAttributeRecord_Impl.hpp>
-#include <project/ModelObjectFilterNumericAttributeRecord_Impl.hpp>
-#include <project/ModelObjectFilterRelationshipRecord_Impl.hpp>
-#include <project/ModelObjectFilterStringAttributeRecord_Impl.hpp>
-#include <project/ModelObjectFilterTypeRecord_Impl.hpp>
-#include <project/ModelRuleRecord_Impl.hpp>
-#include <project/ModelRulesetRecord_Impl.hpp>
 #include <project/OSArgumentRecord_Impl.hpp>
 
 // analysis

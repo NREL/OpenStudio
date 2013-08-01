@@ -216,7 +216,12 @@ bool OSArgument::hasValue() const {
 
 bool OSArgument::valueAsBool() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasValue()) {
+    LOG_AND_THROW("This argument does not have a value set.")
+  }
+  if (type() != OSArgumentType::Boolean) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Bool.");
+  }
   if ("true" == m_value.toString()){
     return true;
   }
@@ -225,19 +230,34 @@ bool OSArgument::valueAsBool() const
 
 double OSArgument::valueAsDouble() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasValue()) {
+    LOG_AND_THROW("This argument does not have a value set.")
+  }
+  if (type() != OSArgumentType::Double) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Double.");
+  }
   return m_value.toDouble();
 }
 
 Quantity OSArgument::valueAsQuantity() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasValue()) {
+    LOG_AND_THROW("This argument does not have a value set.")
+  }
+  if (type() != OSArgumentType::Quantity) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Quantity.");
+  }
   return m_value.value<openstudio::Quantity>();
 }
 
 int OSArgument::valueAsInteger() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasValue()) {
+    LOG_AND_THROW("This argument does not have a value set.")
+  }
+  if (type() != OSArgumentType::Integer) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Integer.");
+  }
   return m_value.toInt();
 }
 
@@ -251,7 +271,12 @@ std::string OSArgument::valueAsString() const
 
 openstudio::path OSArgument::valueAsPath() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasValue()) {
+    LOG_AND_THROW("This argument does not have a value set.")
+  }
+  if (type() != OSArgumentType::Path) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Path.");
+  }
   return toPath(m_value.toString());
 }
 
@@ -265,7 +290,12 @@ bool OSArgument::hasDefaultValue() const {
 
 bool OSArgument::defaultValueAsBool() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasDefaultValue()) {
+    LOG_AND_THROW("This argument does not have a default value set.")
+  }
+  if (type() != OSArgumentType::Boolean) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Bool.");
+  }
   if ("true" == m_defaultValue.toString()){
     return true;
   }
@@ -274,19 +304,34 @@ bool OSArgument::defaultValueAsBool() const
 
 double OSArgument::defaultValueAsDouble() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasDefaultValue()) {
+    LOG_AND_THROW("This argument does not have a default value set.")
+  }
+  if (type() != OSArgumentType::Double) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Double.");
+  }
   return m_defaultValue.toDouble();
 }
 
 Quantity OSArgument::defaultValueAsQuantity() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasDefaultValue()) {
+    LOG_AND_THROW("This argument does not have a default value set.")
+  }
+  if (type() != OSArgumentType::Quantity) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Quantity.");
+  }
   return m_defaultValue.value<openstudio::Quantity>();
 }
 
 int OSArgument::defaultValueAsInteger() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasDefaultValue()) {
+    LOG_AND_THROW("This argument does not have a default value set.")
+  }
+  if (type() != OSArgumentType::Integer) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Integer.");
+  }
   return m_defaultValue.toInt();
 }
 
@@ -300,7 +345,12 @@ std::string OSArgument::defaultValueAsString() const
 
 openstudio::path OSArgument::defaultValueAsPath() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasDefaultValue()) {
+    LOG_AND_THROW("This argument does not have a default value set.")
+  }
+  if (type() != OSArgumentType::Path) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Path.");
+  }
   return toPath(m_defaultValue.toString());
 }
 

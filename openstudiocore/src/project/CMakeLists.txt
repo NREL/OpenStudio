@@ -44,63 +44,6 @@ SET( ${target_name}_src
 
   # ruleset
 
-  ActionClauseRecord.hpp
-  ActionClauseRecord_Impl.hpp
-  ActionClauseRecord.cpp
-  ClauseRecord.hpp
-  ClauseRecord_Impl.hpp
-  ClauseRecord.cpp
-  FilterClauseRecord.hpp
-  FilterClauseRecord_Impl.hpp
-  FilterClauseRecord.cpp
-  ModelObjectActionClauseRecord.hpp
-  ModelObjectActionClauseRecord_Impl.hpp
-  ModelObjectActionClauseRecord.cpp
-  ModelObjectActionSetAttributeRecord.hpp
-  ModelObjectActionSetAttributeRecord_Impl.hpp
-  ModelObjectActionSetAttributeRecord.cpp
-  ModelObjectActionSetRelationshipRecord.hpp
-  ModelObjectActionSetRelationshipRecord_Impl.hpp
-  ModelObjectActionSetRelationshipRecord.cpp
-  ModelObjectFilterAttributeRecord.hpp
-  ModelObjectFilterAttributeRecord_Impl.hpp
-  ModelObjectFilterAttributeRecord.cpp
-  ModelObjectFilterBooleanAttributeRecord.hpp
-  ModelObjectFilterBooleanAttributeRecord_Impl.hpp
-  ModelObjectFilterBooleanAttributeRecord.cpp
-  ModelObjectFilterClauseRecord.hpp
-  ModelObjectFilterClauseRecord_Impl.hpp
-  ModelObjectFilterClauseRecord.cpp
-  ModelObjectFilterNumericAttributeRecord.hpp
-  ModelObjectFilterNumericAttributeRecord_Impl.hpp
-  ModelObjectFilterNumericAttributeRecord.cpp
-  ModelObjectFilterRelationshipRecord.hpp
-  ModelObjectFilterRelationshipRecord_Impl.hpp
-  ModelObjectFilterRelationshipRecord.cpp
-  ModelObjectFilterStringAttributeRecord.hpp
-  ModelObjectFilterStringAttributeRecord_Impl.hpp
-  ModelObjectFilterStringAttributeRecord.cpp
-  ModelObjectFilterTypeRecord.hpp
-  ModelObjectFilterTypeRecord_Impl.hpp
-  ModelObjectFilterTypeRecord.cpp
-  ModelRuleRecord.hpp
-  ModelRuleRecord_Impl.hpp
-  ModelRuleRecord.cpp
-  ModelRulesetRecord.hpp
-  ModelRulesetRecord_Impl.hpp
-  ModelRulesetRecord.cpp
-  Rule_Clause_JoinRecord.hpp
-  Rule_Clause_JoinRecord_Impl.hpp
-  Rule_Clause_JoinRecord.cpp
-  RuleRecord.hpp
-  RuleRecord_Impl.hpp
-  RuleRecord.cpp
-  Ruleset_Rule_JoinRecord.hpp
-  Ruleset_Rule_JoinRecord_Impl.hpp
-  Ruleset_Rule_JoinRecord.cpp
-  RulesetRecord.hpp
-  RulesetRecord_Impl.hpp
-  RulesetRecord.cpp
   OSArgumentRecord.hpp
   OSArgumentRecord_Impl.hpp
   OSArgumentRecord.cpp
@@ -152,12 +95,6 @@ SET( ${target_name}_src
   LinearFunctionRecord.hpp
   LinearFunctionRecord_Impl.hpp
   LinearFunctionRecord.cpp
-  ModelRulesetContinuousVariableRecord.hpp
-  ModelRulesetContinuousVariableRecord_Impl.hpp
-  ModelRulesetContinuousVariableRecord.cpp
-  ModelRulesetPerturbationRecord.hpp
-  ModelRulesetPerturbationRecord_Impl.hpp
-  ModelRulesetPerturbationRecord.cpp
   NullPerturbationRecord.hpp
   NullPerturbationRecord_Impl.hpp
   NullPerturbationRecord.cpp
@@ -222,25 +159,6 @@ SET( ${target_name}_moc
 
   # ruleset
 
-  ActionClauseRecord_Impl.hpp
-  ClauseRecord_Impl.hpp
-  FilterClauseRecord_Impl.hpp
-  ModelObjectActionClauseRecord_Impl.hpp
-  ModelObjectActionSetAttributeRecord_Impl.hpp
-  ModelObjectActionSetRelationshipRecord_Impl.hpp
-  ModelObjectFilterAttributeRecord_Impl.hpp
-  ModelObjectFilterBooleanAttributeRecord_Impl.hpp
-  ModelObjectFilterClauseRecord_Impl.hpp
-  ModelObjectFilterNumericAttributeRecord_Impl.hpp
-  ModelObjectFilterRelationshipRecord_Impl.hpp
-  ModelObjectFilterStringAttributeRecord_Impl.hpp
-  ModelObjectFilterTypeRecord_Impl.hpp
-  ModelRuleRecord_Impl.hpp
-  ModelRulesetRecord_Impl.hpp
-  Rule_Clause_JoinRecord_Impl.hpp
-  RuleRecord_Impl.hpp
-  Ruleset_Rule_JoinRecord_Impl.hpp
-  RulesetRecord_Impl.hpp
   OSArgumentRecord_Impl.hpp
 
   # analysis
@@ -308,9 +226,6 @@ SET( ${target_name}_test_src
   Test/DataPointRecord_GTest.cpp
   Test/DiscreteVariableRecord_GTest.cpp
   Test/FileReferenceRecord_GTest.cpp
-  Test/ModelObjectFilterTypeRecord_GTest.cpp
-  Test/ModelRuleRecord_GTest.cpp
-  Test/ModelRulesetRecord_GTest.cpp
   Test/ProblemRecord_GTest.cpp
   Test/ProjectDatabaseRecord_GTest.cpp
   Test/RubyPerturbationRecord_GTest.cpp

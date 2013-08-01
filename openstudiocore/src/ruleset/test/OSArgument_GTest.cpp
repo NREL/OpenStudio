@@ -148,11 +148,9 @@ TEST_F(RulesetFixture, OSArgument_ClearValue) {
   EXPECT_FALSE(stringArgument.hasValue());
   EXPECT_FALSE(choiceArgument.hasValue());  
 
-  // ETH@20130313 - See TODO's in OSArgument.cpp. All of these should be throwing but right now 
-  // is not the time to make them do it. Good practice is to use .hasValue() anyway.
-  EXPECT_ANY_THROW(boolArgument.valueAsBool());       // currently fails
-  EXPECT_ANY_THROW(doubleArgument.valueAsDouble());   // currently fails
-  EXPECT_ANY_THROW(integerArgument.valueAsInteger()); // currently fails
+  EXPECT_ANY_THROW(boolArgument.valueAsBool());
+  EXPECT_ANY_THROW(doubleArgument.valueAsDouble());
+  EXPECT_ANY_THROW(integerArgument.valueAsInteger());
   EXPECT_ANY_THROW(stringArgument.valueAsString());
   EXPECT_ANY_THROW(choiceArgument.valueAsString());
 }

@@ -212,24 +212,6 @@ OBJECTRECORD_WRAP(URLSearchPathRecord);
 
 OBJECTRECORD_WRAP(WorkflowRecord);
 
-OBJECTRECORD_WRAP(ClauseRecord);
-OBJECTRECORD_WRAP(FilterClauseRecord);
-OBJECTRECORD_WRAP(ActionClauseRecord);
-OBJECTRECORD_WRAP(RuleRecord);
-OBJECTRECORD_WRAP(RulesetRecord);
-
-OBJECTRECORD_WRAP(ModelObjectActionClauseRecord);
-OBJECTRECORD_WRAP(ModelObjectFilterClauseRecord);
-OBJECTRECORD_WRAP(ModelObjectActionSetAttributeRecord);
-OBJECTRECORD_WRAP(ModelObjectActionSetRelationshipRecord);
-OBJECTRECORD_WRAP(ModelObjectFilterRelationshipRecord);
-OBJECTRECORD_WRAP(ModelObjectFilterAttributeRecord);
-OBJECTRECORD_WRAP(ModelObjectFilterBooleanAttributeRecord);
-OBJECTRECORD_WRAP(ModelObjectFilterNumericAttributeRecord);
-OBJECTRECORD_WRAP(ModelObjectFilterStringAttributeRecord);
-OBJECTRECORD_WRAP(ModelObjectFilterTypeRecord);
-OBJECTRECORD_WRAP(ModelRuleRecord);
-OBJECTRECORD_WRAP(ModelRulesetRecord);
 OBJECTRECORD_WRAP(OSArgumentRecord);
 
 OBJECTRECORD_WRAP(DiscretePerturbationRecord);
