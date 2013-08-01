@@ -23,7 +23,13 @@
 #include <project/ProjectAPI.hpp>
 #include <project/InputVariableRecord_Impl.hpp>
 
+// TODO: Delete this include if no derived classes (and no DiscreteVariableRecordType enum).
+#include <project/DiscreteVariableRecord.hpp>
+
 namespace openstudio {
+namespace NAMESPACE {
+  class DiscreteVariable;
+}
 namespace project {
 
 namespace detail {

@@ -74,18 +74,50 @@ class ProjectClassGenerator < SubProjectClassGenerator
     
   end
   
+  def implHppIncludes()
+    result = String.new
+    if @objectRecord
+      result << "// TODO: Delete this include if no derived classes (and no " << @className << "Type enum).\n"
+      result << "#include <project/" << @className << ".hpp>\n\n"
+    end
+    return result
+  end
+
   def cppIncludes()
     result = String.new
     if @joinRecord
       result << "#include <project/" << @leftJoinClass << "Record.hpp>\n"
       result << "#include <project/" << @rightJoinClass << "Record.hpp>\n"
     else 
-      result << "#include <project/JoinRecord.hpp>\n\n"
+      result << "#include <project/JoinRecord.hpp>\n"
+      result << "// TODO: Add derived class includes for factory methods if this is a base class.\n\n"
+      result << "// TODO: Replace with derived class includes if this is a base class.\n"
+      result << "#include <NAMESPACE/" << @serializedClass << ".hpp>\n\n"
     end
     result << "#include <utilities/core/Assert.hpp>\n\n"
     return result
   end
   
+  def hppOSForwardDeclarations
+    result = String.new
+    if @objectRecord
+      result << "namespace NAMESPACE {\n"
+      result << "  class " << @serializedClass << ";\n"
+      result << "}\n"
+    end
+    return result
+  end
+
+  def implHppOSForwardDeclarations
+    result = String.new
+    if @objectRecord
+      result << "namespace NAMESPACE {\n"
+      result << "  class " << @serializedClass << ";\n"
+      result << "}\n"
+    end
+    return result
+  end 
+
   def hppSubProjectForwardDeclarations
     result = String.new
     if @joinRecord

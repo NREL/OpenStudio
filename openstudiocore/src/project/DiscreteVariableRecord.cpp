@@ -21,6 +21,10 @@
 #include <project/DiscreteVariableRecord_Impl.hpp>
 
 #include <project/JoinRecord.hpp>
+// TODO: Add derived class includes for factory methods if this is a base class.
+
+// TODO: Replace with derived class includes if this is a base class.
+#include <NAMESPACE/DiscreteVariable.hpp>
 
 #include <utilities/core/Assert.hpp>
 

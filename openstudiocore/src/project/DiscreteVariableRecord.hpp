@@ -24,6 +24,9 @@
 #include <project/InputVariableRecord.hpp>
 
 namespace openstudio {
+namespace NAMESPACE {
+  class DiscreteVariable;
+}
 namespace project {
 
 namespace detail {
