@@ -1115,11 +1115,19 @@ Vector BillingPeriod::modelConsumptionValues() const
     Date endDate = this->endDate();
     while (date <= endDate){
 
-      // Do not include year in date for query
-      Date tmp(date.monthOfYear(), date.dayOfMonth());
-      DateTime dateTime(tmp, Time(1));
+      boost::optional<DateTime> dateTime;
 
-      double value = timeseries->value(dateTime);
+      // Do not include year in date for query, trap for case of leap year
+      if ((date.monthOfYear() == MonthOfYear::Feb) && (date.dayOfMonth()==29)){
+        Date tmp(MonthOfYear::Feb, 28);
+        dateTime = DateTime(tmp, Time(1));
+      }else{
+        Date tmp(date.monthOfYear(), date.dayOfMonth());
+        dateTime = DateTime(tmp, Time(1));
+      }
+      BOOST_ASSERT(dateTime);
+
+      double value = timeseries->value(*dateTime);
       if (value == outOfRangeValue){
         LOG(Debug, "Could not find value of timeseries at dateTime " << dateTime);
         return Vector();

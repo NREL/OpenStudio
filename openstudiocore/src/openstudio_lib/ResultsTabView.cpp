@@ -18,6 +18,8 @@
 **********************************************************************/
 
 #include <openstudio_lib/ResultsTabView.hpp>
+#include <openstudio_lib/OSDocument.hpp>
+#include "OSAppBase.hpp"
 
 #include <model/Model_Impl.hpp>
 #include <model/UtilityBill.hpp>
@@ -1770,9 +1772,16 @@ void ResultsView::resultsGenerated(const openstudio::path &t_path, const openstu
   m_sqlFilePath = t_path;
   m_radianceResultsPath = t_radianceResultsPath;
 
-  ConsumptionData consumptionData(fueltypes,
-      SqlFile(t_path));
+  SqlFile sqlFile(t_path);
 
+  // attach sql file to model
+  if (sqlFile.connectionOpen()){
+    m_model.setSqlFile(sqlFile);
+  }else{
+    m_model.resetSqlFile();
+  }
+
+  ConsumptionData consumptionData(fueltypes, sqlFile);
 
   m_electricConsumptionChart->setData(consumptionData, getUnit(m_electricConsumptionChart->getFuelType(), m_isIP));
   m_gasConsumptionChart->setData(consumptionData, getUnit(m_gasConsumptionChart->getFuelType(), m_isIP));
