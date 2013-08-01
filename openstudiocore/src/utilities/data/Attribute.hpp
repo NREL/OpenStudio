@@ -407,10 +407,10 @@ UTILITIES_API bool prepareForDisplay(Attribute& attribute, const AttributeDescri
 
 namespace detail {
   /** Places attribute's data in a QVariant for JSON serialization. */
-  QVariant toVariant(const Attribute& attribute);
+  UTILITIES_API QVariant toVariant(const Attribute& attribute);
 
   /** Deserializes json variant to Attribute. */
-  Attribute toAttribute(const QVariant& variant, const VersionString& version);
+  UTILITIES_API Attribute toAttribute(const QVariant& variant, const VersionString& version);
 }
 
 } // openstudio

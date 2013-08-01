@@ -116,8 +116,8 @@ class RULESET_API OSArgument {
              const std::string& displayName,
              const OSArgumentType& type,
              bool required,
-             const boost::optional<QVariant>& value,
-             const boost::optional<QVariant>& defaultValue,
+             const QVariant& value,
+             const QVariant& defaultValue,
              const OSDomainType& domainType,
              std::vector<QVariant>& domain,
              const std::vector<std::string>& choices,
@@ -499,9 +499,9 @@ RULESET_API std::map<std::string,OSArgument> convertOSArgumentVectorToMap(const 
 namespace detail {
 
   /** Non-member function to convert argument into a QJSON-ready QVariant. */
-  QVariant toVariant(const OSArgument& argument);
+  RULESET_API QVariant toVariant(const OSArgument& argument);
 
-  OSArgument toOSArgument(const QVariant& variant, const VersionString& version);
+  RULESET_API OSArgument toOSArgument(const QVariant& variant, const VersionString& version);
 
   QVariant toQuantityQVariant(const QVariantMap& map,
                               const std::string& valueKey,

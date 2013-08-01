@@ -49,7 +49,7 @@ namespace detail {
   {}
 
   Variable Variable_Impl::factoryFromVariant(const QVariant& variant, const VersionString& version) {
-    QVariantMap map;
+    QVariantMap map = variant.toMap();
 
     std::string variableType;
     if (map.contains("variable_type")) {

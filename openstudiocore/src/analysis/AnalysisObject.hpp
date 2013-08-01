@@ -190,15 +190,15 @@ typedef std::vector<AnalysisObject> AnalysisObjectVector;
 
 /** Factory method for loading JSON containing an AnalysisObject. Returned object will be of the
  *  correct type. \relates AnalysisObject */
-boost::optional<AnalysisObject> loadJSON(const openstudio::path& p);
+ANALYSIS_API boost::optional<AnalysisObject> loadJSON(const openstudio::path& p);
 
 /** Factory method for loading JSON containing an AnalysisObject. Returned object will be of the
  *  correct type. \relates AnalysisObject */
-boost::optional<AnalysisObject> loadJSON(std::istream& json);
+ANALYSIS_API boost::optional<AnalysisObject> loadJSON(std::istream& json);
 
 /** Factory method for loading JSON containing an AnalysisObject. Returned object will be of the
  *  correct type. \relates AnalysisObject */
-boost::optional<AnalysisObject> loadJSON(const std::string& json);
+ANALYSIS_API boost::optional<AnalysisObject> loadJSON(const std::string& json);
 
 } // analysis
 } // openstudio

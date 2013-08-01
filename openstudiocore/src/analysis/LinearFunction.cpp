@@ -133,16 +133,20 @@ namespace detail {
   LinearFunction LinearFunction_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
     QVariantMap map = variant.toMap();
 
+    QVariantList variablesList = map["variables"].toList();
     VariableVector variables = deserializeOrderedVector(
-          map["variables"].toList(),
+          variablesList,
           "variable_index",
           boost::function<Variable (const QVariant&)>(boost::bind(analysis::detail::Variable_Impl::factoryFromVariant,_1,version)));
     bool ok(false);
-    DoubleVector coefficients = deserializeOrderedVector(
-          map["variables"].toList(),
+    DoubleVector coefficients;
+    if (!variablesList.empty() && variablesList[0].toMap().contains("coefficient")) {
+      coefficients = deserializeOrderedVector(
+          variablesList,
           "coefficient",
           "variable_index",
           boost::function<double (QVariant*)>(boost::bind(&QVariant::toDouble,_1,&ok)));
+    }
 
     return LinearFunction(openstudio::UUID(map["uuid"].toString()),
                           openstudio::UUID(map["version_uuid"].toString()),

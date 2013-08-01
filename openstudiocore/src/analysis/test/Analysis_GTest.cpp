@@ -361,7 +361,13 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun) {
   ASSERT_TRUE(formulationCopyAsAnalysisObject);
   ASSERT_TRUE(formulationCopyAsAnalysisObject->optionalCast<Analysis>());
   Analysis formulationCopy = formulationCopyAsAnalysisObject->cast<Analysis>();
-  EXPECT_EQ(json,formulationCopy.toJSON(AnalysisSerializationScope::ProblemFormulation));
+  std::string jsonCopy = formulationCopy.toJSON(AnalysisSerializationScope::ProblemFormulation);
+  bool test = (jsonCopy == json);
+  EXPECT_TRUE(test);
+  if (!test) {
+    LOG(Debug,"Original JSON: " << std::endl << json);
+    LOG(Debug,"Copy JSON: " << std::endl << jsonCopy);
+  }
   EXPECT_EQ(0u,formulationCopy.dataPoints().size());
 
   // Save analysis with no data points
@@ -373,7 +379,13 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun) {
   ASSERT_TRUE(formulationCopyAsAnalysisObject);
   ASSERT_TRUE(formulationCopyAsAnalysisObject->optionalCast<Analysis>());
   formulationCopy = formulationCopyAsAnalysisObject->cast<Analysis>();
-  EXPECT_EQ(json,formulationCopy.toJSON(AnalysisSerializationScope::ProblemFormulation));
+  jsonCopy = formulationCopy.toJSON(AnalysisSerializationScope::ProblemFormulation);
+  test = (jsonCopy == json);
+  EXPECT_TRUE(test);
+  if (!test) {
+    LOG(Debug,"Original JSON: " << std::endl << json);
+    LOG(Debug,"Copy JSON: " << std::endl << jsonCopy);
+  }
   EXPECT_EQ(0u,formulationCopy.dataPoints().size());
 
   // Serialize Analysis with data points
@@ -385,7 +397,13 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun) {
   ASSERT_TRUE(copyAsAnalysisObject);
   ASSERT_TRUE(copyAsAnalysisObject->optionalCast<Analysis>());
   Analysis copy = copyAsAnalysisObject->cast<Analysis>();
-  EXPECT_EQ(json,copy.toJSON(AnalysisSerializationScope::Full));
+  jsonCopy = copy.toJSON(AnalysisSerializationScope::Full);
+  test = (jsonCopy == json);
+  EXPECT_TRUE(test);
+  if (!test) {
+    LOG(Debug,"Original JSON: " << std::endl << json);
+    LOG(Debug,"Copy JSON: " << std::endl << jsonCopy);
+  }
   EXPECT_FALSE(copy.dataPoints().empty());
 
   // Save analysis with data points
@@ -397,7 +415,13 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun) {
   ASSERT_TRUE(copyAsAnalysisObject);
   ASSERT_TRUE(copyAsAnalysisObject->optionalCast<Analysis>());
   copy = copyAsAnalysisObject->cast<Analysis>();
-  EXPECT_EQ(json,copy.toJSON(AnalysisSerializationScope::Full));
+  jsonCopy = copy.toJSON(AnalysisSerializationScope::Full);
+  test = (jsonCopy == json);
+  EXPECT_TRUE(test);
+  if (!test) {
+    LOG(Debug,"Original JSON: " << std::endl << json);
+    LOG(Debug,"Copy JSON: " << std::endl << jsonCopy);
+  }
   EXPECT_FALSE(copy.dataPoints().empty());
 
 }
