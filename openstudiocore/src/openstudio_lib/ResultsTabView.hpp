@@ -159,6 +159,8 @@ namespace openstudio {
 
       openstudio::model::Model m_model;
       QLabel* m_calibrationMethodLabel;
+      double m_calibrationMaxCVRMSE;
+      double m_calibrationMaxNMBE;
       QGridLayout* m_gridLayout;
   };
 
@@ -167,7 +169,8 @@ namespace openstudio {
     Q_OBJECT;
 
     public:
-      UtilityBillComparisonChart(const openstudio::model::UtilityBill& utilityBill, bool isDemandChart, QWidget *t_parent=0);
+      UtilityBillComparisonChart(const openstudio::model::UtilityBill& utilityBill, bool isDemandChart, 
+                                 double calibrationMaxCVRMSE, double calibrationMaxNMBE, QWidget *t_parent=0);
       virtual ~UtilityBillComparisonChart() {}
       openstudio::model::UtilityBill utilityBill() const;
 
@@ -181,7 +184,9 @@ namespace openstudio {
       REGISTER_LOGGER("openstudio::UtilityBillComparisonChart");
       openstudio::model::UtilityBill m_utilityBill;
       bool m_isDemandChart;
-      
+      double m_calibrationMaxCVRMSE;
+      double m_calibrationMaxNMBE;
+
       boost::shared_ptr<vtkCharts::BarChart> m_chart;
       QLabel* m_label;
   };
@@ -206,18 +211,22 @@ namespace openstudio {
     Q_OBJECT;
 
     public:
-      UtilityBillComparisonTable(const openstudio::model::UtilityBill& utilityBill, bool isDemandChart, QWidget *t_parent = 0);
+      UtilityBillComparisonTable(const openstudio::model::UtilityBill& utilityBill, bool isDemandChart, 
+                                 double calibrationMaxCVRMSE, double calibrationMaxNMBE, QWidget *t_parent = 0);
       virtual ~UtilityBillComparisonTable() {}
       openstudio::model::UtilityBill utilityBill() const;
 
     private slots:
     
       void onUtilityBillChanged();
+      void setRowHighlights();
 
     private:
       REGISTER_LOGGER("openstudio::UtilityBillComparisonTable");
       openstudio::model::UtilityBill m_utilityBill;
       bool m_isDemandChart;
+      double m_calibrationMaxCVRMSE;
+      double m_calibrationMaxNMBE;
 
       QGridLayout *m_grid;
       QLabel* m_total;
