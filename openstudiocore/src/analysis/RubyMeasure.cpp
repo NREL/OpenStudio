@@ -65,10 +65,10 @@ namespace detail {
   }
 
   RubyMeasure_Impl::RubyMeasure_Impl(const openstudio::path& perturbationScript,
-                                               const FileReferenceType& inputFileType,
-                                               const FileReferenceType& outputFileType,
-                                               bool isUserScript,
-                                               bool isSelected)
+                                     const FileReferenceType& inputFileType,
+                                     const FileReferenceType& outputFileType,
+                                     bool isUserScript,
+                                     bool isSelected)
     : Measure_Impl(isSelected),
       m_perturbationScript(FileReference(perturbationScript)),
       m_inputFileType(inputFileType),
@@ -76,8 +76,13 @@ namespace detail {
       m_isUserScript(isUserScript)
   {
     BOOST_ASSERT(m_perturbationScript->fileType() == FileReferenceType::RB);
-    BOOST_ASSERT((inputFileType == FileReferenceType::OSM) || (inputFileType == FileReferenceType::IDF));
-    BOOST_ASSERT((outputFileType == FileReferenceType::OSM) || (outputFileType == FileReferenceType::IDF));
+    BOOST_ASSERT((inputFileType == FileReferenceType::OSM) || 
+                 (inputFileType == FileReferenceType::IDF) ||
+                 (inputFileType == FileReferenceType::Unknown)); // Unknown is for (hopefully temporary) dummy measures
+                                                                 // constructed in RubyContinuousVariable_Impl::fromVariant.
+    BOOST_ASSERT((outputFileType == FileReferenceType::OSM) || 
+                 (outputFileType == FileReferenceType::IDF) ||
+                 (outputFileType == FileReferenceType::Unknown));
   }
 
   RubyMeasure_Impl::RubyMeasure_Impl(

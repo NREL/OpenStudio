@@ -196,7 +196,7 @@ namespace detail {
 
     // dummy measure. need to do something better sometime (like make sure overload version of
     // this method is always called)
-    RubyMeasure dummyMeasure(openstudio::path(),
+    RubyMeasure dummyMeasure(toPath("*.rb"),
                              FileReferenceType::Unknown,
                              FileReferenceType::Unknown);
 

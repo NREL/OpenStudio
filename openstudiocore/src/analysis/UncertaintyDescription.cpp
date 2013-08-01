@@ -643,6 +643,8 @@ namespace detail {
 
     GenericUncertaintyDescription result(UncertaintyDescriptionType(map["type"].toString().toStdString()),
                                          attributes);
+
+    return result.cast<UncertaintyDescription>();
   }
 
 } // detail

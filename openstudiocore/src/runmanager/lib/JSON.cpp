@@ -68,7 +68,7 @@ namespace detail {
     }
 
     Job job = JobFactory::createJob(
-        toJobType(map["type"],version),
+        toJobType(map["job_type"],version),
         map.contains("tools") ? Tools(toVectorOfToolInfo(map["tools"],version)) : Tools(),
         map.contains("params") ? JobParams(toVectorOfJobParam(map["params"],version)) : JobParams(),
         map.contains("files") ? Files(toVectorOfFileInfo(map["files"],version)) : Files(),

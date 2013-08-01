@@ -59,7 +59,7 @@ namespace detail {
     BOOST_ASSERT(!(inputVariable && workItem));
     if (isInputVariable()) {
       setName(inputVariable->name() + " Workflow Step");
-      m_inputVariable->onChange();
+      // deserialization constructor, so do not call m_inputVariable->onChange()
       connectChild(m_inputVariable.get(),false);
     }
     else {
@@ -219,10 +219,12 @@ namespace detail {
 
     std::string workflowStepType = map["workflow_step_type"].toString().toStdString();
     if (workflowStepType == "WorkItem") {
-      return WorkflowStep(runmanager::detail::JSON::toWorkItem(variant,version));
+      return WorkflowStep(OptionalInputVariable(),
+                          runmanager::detail::JSON::toWorkItem(variant,version));
     }
     if (workflowStepType == "MeasureGroup") {
-      return WorkflowStep(MeasureGroup_Impl::fromVariant(variant,version));
+      return WorkflowStep(MeasureGroup_Impl::fromVariant(variant,version),
+                          boost::optional<runmanager::WorkItem>());
     }
 
     // workflowStepType == "Measure" is handled by Problem_Impl

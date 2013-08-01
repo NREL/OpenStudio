@@ -380,8 +380,8 @@ boost::optional<AnalysisObject> loadJSON(const std::string& json) {
   }
   catch (std::exception& e) {
     LOG_FREE(Error,"openstudio.analysis.AnalysisObject",
-             "The following string cannot be parsed as an OpenStudio analysis framework "
-             << "json file, because " << e.what() << std::endl << std::endl << json);
+             "The json string cannot be parsed as an OpenStudio analysis framework "
+             << "json file, because " << e.what() << ".");
   }
   catch (...) {
     LOG_FREE(Error,"openstudio.analysis.AnalysisObject",

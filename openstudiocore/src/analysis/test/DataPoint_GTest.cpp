@@ -137,6 +137,12 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
   workItems.push_back(WorkItem(JobType::OpenStudioPostProcess));
   // 2. step through work items and create jobs with results
   WorkItem wi = workItems[5];
+  std::vector<FileInfo> inFiles = wi.files.files();
+  inFiles.push_back(FileInfo("eplusout.sql",
+                             DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,33,32)),
+                             "",
+                             toPath("myProject/fakeDataPoint/75-OpenStudioPostProcess-0/eplusout.sql")));                             
+  Files inFilesObject(inFiles);
   std::vector<std::pair<ErrorType, std::string> > errors;
   errors.push_back(std::make_pair(ErrorType::Info,"Post-process completed successfully."));
   JobErrors errorsObject(OSResultValue::Success,errors);
@@ -150,7 +156,7 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
         wi.type,
         wi.tools,
         wi.params,
-        wi.files,
+        inFilesObject,
         std::vector<openstudio::URLSearchPath>(),
         false,
         createUUID(),
@@ -160,6 +166,12 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
 
   Job jobLast = job;
   wi = workItems[4];
+  inFiles = wi.files.files();
+  inFiles.push_back(FileInfo("in.idf",
+                              DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,23,05)),
+                              "",
+                              toPath("myProject/fakeDataPoint/74-EnergyPlus-0/in.idf")));
+  inFilesObject = Files(inFiles);
   errors.clear();
   errors.push_back(std::make_pair(ErrorType::Warning,"ENERGYPLUS WARNING: ..."));
   errors.push_back(std::make_pair(ErrorType::Warning,"ENERGYPLUS WARNING: ..."));
@@ -179,7 +191,7 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
         wi.type,
         wi.tools,
         wi.params,
-        wi.files,
+        inFilesObject,
         std::vector<openstudio::URLSearchPath>(),
         false,
         createUUID(),
@@ -190,6 +202,12 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
 
   jobLast = job;
   wi = workItems[3];
+  inFiles = wi.files.files();
+  inFiles.push_back(FileInfo("in.idf",
+                              DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,22,30)),
+                              "",
+                              toPath("myProject/fakeDataPoint/73-EnergyPlusPreProcess-0/in.idf")));
+  inFilesObject = Files(inFiles);
   errors.clear();
   errorsObject = JobErrors(OSResultValue::Success,errors);
   outFiles.clear();
@@ -202,7 +220,7 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
         wi.type,
         wi.tools,
         wi.params,
-        wi.files,
+        inFilesObject,
         std::vector<openstudio::URLSearchPath>(),
         false,
         createUUID(),
@@ -213,6 +231,12 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
 
   jobLast = job;
   wi = workItems[2];
+  inFiles = wi.files.files();
+  inFiles.push_back(FileInfo("in.osm",
+                              DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,22,01)),
+                              "",
+                              toPath("myProject/fakeDataPoint/72-ModelToIdf-0/in.osm")));
+  inFilesObject = Files(inFiles);
   errors.clear();
   errors.push_back(std::make_pair(ErrorType::Info,"Did not find ScheduleTypeLimits for Schedule ..."));
   errors.push_back(std::make_pair(ErrorType::Warning,"Unexpectedly did not find a child object of a certain type, replaced with a default one."));
@@ -227,7 +251,7 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
         wi.type,
         wi.tools,
         wi.params,
-        wi.files,
+        inFilesObject,
         std::vector<openstudio::URLSearchPath>(),
         false,
         createUUID(),
@@ -266,10 +290,13 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
   errorsObject = JobErrors(OSResultValue::Success,errors);
   outFiles.clear();
   outFilesObject = Files(outFiles);
+  // add outdir job param
+  JobParams params = wi.params;
+  params.append("outdir","myProject/fakeDataPoint");
   job = JobFactory::createJob(
         wi.type,
         wi.tools,
-        wi.params,
+        params,
         wi.files,
         std::vector<openstudio::URLSearchPath>(),
         false,

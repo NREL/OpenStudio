@@ -87,8 +87,8 @@ OSArgument::OSArgument(const UUID& uuid,
                        const std::string& displayName,
                        const OSArgumentType& type,
                        bool required,
-                       const boost::optional<QVariant>& value,
-                       const boost::optional<QVariant>& defaultValue,
+                       const QVariant& value,
+                       const QVariant& defaultValue,
                        const OSDomainType& domainType,
                        std::vector<QVariant>& domain,
                        const std::vector<std::string>& choices,
@@ -102,7 +102,7 @@ OSArgument::OSArgument(const UUID& uuid,
     m_type(type),
     m_required(required),
     m_value(value),
-    m_defaultValue(value),
+    m_defaultValue(defaultValue),
     m_domainType(domainType),
     m_domain(domain),
     m_choices(choices),
@@ -1101,7 +1101,8 @@ namespace detail {
 
     OSArgumentType type(map["type"].toString().toStdString());
 
-    boost::optional<QVariant> value, defaultValue;
+    QVariant value, defaultValue;
+    Q_ASSERT(value.isNull() && defaultValue.isNull());
     if (map.contains("value")) {
       if (type == OSArgumentType::Quantity) {
         value = toQuantityQVariant(map,"value","value_units");
@@ -1112,10 +1113,10 @@ namespace detail {
     }
     if (map.contains("default_value")) {
       if (type == OSArgumentType::Quantity) {
-        value = toQuantityQVariant(map,"default_value","default_value_units");
+        defaultValue = toQuantityQVariant(map,"default_value","default_value_units");
       }
       else {
-        value = map["default_value"];
+        defaultValue = map["default_value"];
       }
     }
 

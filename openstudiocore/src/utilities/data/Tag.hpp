@@ -60,10 +60,10 @@ typedef std::vector<Tag> TagVector;
 namespace detail {
 
   /** Places tag's data in a QVariant for JSON serialization. */
-  QVariant toVariant(const Tag& tag);
+  UTILITIES_API QVariant toVariant(const Tag& tag);
 
   /** Deserializes json variant to Tag. */
-  Tag toTag(const QVariant& variant, const VersionString& version);
+  UTILITIES_API Tag toTag(const QVariant& variant, const VersionString& version);
 
 }
 

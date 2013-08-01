@@ -1827,7 +1827,8 @@ namespace detail {
               "variable_index",
               boost::function<InputVariable (const QVariant&)>(boost::bind(detail::InputVariable_Impl::factoryFromVariant,_1,measure,version)));
         Q_FOREACH(const InputVariable var,vars) {
-          workflowIntermediate.push_back(std::make_pair<int,WorkflowStep>(index,WorkflowStep(var)));
+          workflowIntermediate.push_back(std::make_pair<int,WorkflowStep>(
+              index,WorkflowStep(var,boost::optional<runmanager::WorkItem>())));
           ++index;
         }
       }

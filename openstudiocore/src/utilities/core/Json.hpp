@@ -20,6 +20,8 @@
 #ifndef UTILITIES_CORE_JSON_HPP
 #define UTILITIES_CORE_JSON_HPP
 
+#include <utilities/UtilitiesAPI.hpp>
+
 #include <utilities/core/Path.hpp>
 #include <utilities/core/Compare.hpp>
 
@@ -46,21 +48,21 @@ namespace detail {
 }
 
 /** Helper function to construct version meta-data object for JSON files. */
-QVariant jsonMetadata();
+UTILITIES_API QVariant jsonMetadata();
 
 /** Helper function to save top-level json files. */
-bool saveJSON(const QVariant& json, openstudio::path p, bool overwrite);
+UTILITIES_API bool saveJSON(const QVariant& json, openstudio::path p, bool overwrite);
 
 /** Helper function to print top-level json files to string. */
-std::string toJSON(const QVariant& json);
+UTILITIES_API std::string toJSON(const QVariant& json);
 
 /** Helper function to load top-level json files. Retrieved data is in .first,
  *  OpenStudio version of file is in .second. */
-std::pair<QVariant,VersionString> loadJSON(const openstudio::path& p);
+UTILITIES_API std::pair<QVariant,VersionString> loadJSON(const openstudio::path& p);
 
 /** Helper function to load top-level json data. Retrieved data is in .first,
  *  OpenStudio version of serialization is in .second. */
-std::pair<QVariant,VersionString> loadJSON(const std::string& json);
+UTILITIES_API std::pair<QVariant,VersionString> loadJSON(const std::string& json);
 
 template<typename T>
 std::vector<T> deserializeOrderedVector(const QVariantList& list,

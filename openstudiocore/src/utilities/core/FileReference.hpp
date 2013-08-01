@@ -160,10 +160,10 @@ typedef std::vector<FileReference> FileReferenceVector;
 namespace detail {
 
   /** Places attribute's data in a QVariant for JSON serialization. */
-  QVariant toVariant(const FileReference& fileReference);
+  UTILITIES_API QVariant toVariant(const FileReference& fileReference);
 
   /** Deserializes json variant to FileReference. */
-  FileReference toFileReference(const QVariant& variant, const VersionString& version);
+  UTILITIES_API FileReference toFileReference(const QVariant& variant, const VersionString& version);
 
 }
 
