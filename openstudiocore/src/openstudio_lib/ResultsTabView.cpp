@@ -1243,7 +1243,6 @@ UtilityBillComparisonView::UtilityBillComparisonView(const openstudio::model::Mo
   vLayout->addLayout(hLayout);
 
   m_gridLayout = new QGridLayout();
-  m_gridLayout->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
   m_gridLayout->setContentsMargins(10,10,10,10);
   m_gridLayout->setSpacing(10);
 
@@ -1284,6 +1283,9 @@ void UtilityBillComparisonView::buildGridLayout()
     delete child;
   }
 
+  this->repaint();
+  //this->update();
+
   // loop over utility bill objects
   std::vector<model::UtilityBill> utilityBills = m_model.getModelObjects<model::UtilityBill>();
   std::sort(utilityBills.begin(), utilityBills.end(), UtilityBillSorter());
@@ -1291,19 +1293,27 @@ void UtilityBillComparisonView::buildGridLayout()
   Q_FOREACH(const model::UtilityBill& utilityBill, utilityBills){
     FuelType fuelType = utilityBill.fuelType();
 
-    QVBoxLayout* vLayout = new QVBoxLayout();
+    UtilityBillComparisonChart* chart = new UtilityBillComparisonChart(utilityBill, false);
+    m_gridLayout->addWidget(chart, row, 0, 1, 1);
 
-    UtilityBillComparisonChart* chart = new UtilityBillComparisonChart(utilityBill);
-    vLayout->addWidget(chart);
+    bool hasDemand = false;
+    if (utilityBill.peakDemandUnitConversionFactor()){
+      Q_FOREACH(const model::BillingPeriod& billingPeriod, utilityBill.billingPeriods()){
+        if (billingPeriod.peakDemand()){
+          hasDemand = true;
+          break;
+        }
+      }
+    }
 
     UtilityBillComparisonLegend* legend = new UtilityBillComparisonLegend(utilityBill.fuelType());
-
-    m_gridLayout->addLayout(vLayout, row, 0, 1, 1);
-    if (fuelType == FuelType::Electricity){
-      m_gridLayout->addLayout(vLayout, row, 1, 1, 1);
+    if (hasDemand){
+      UtilityBillComparisonChart* demandChart = new UtilityBillComparisonChart(utilityBill, true);
+      m_gridLayout->addWidget(demandChart, row, 1, 1, 1);
       m_gridLayout->addWidget(legend, row, 2, 1, 1);
     }else{
       m_gridLayout->addWidget(legend, row, 1, 1, 1);
+      m_gridLayout->addWidget(new QWidget(), row, 2, 1, 1);
     }
     ++row;
   }
@@ -1348,16 +1358,18 @@ void UtilityBillComparisonView::onObjectRemoved(const openstudio::WorkspaceObjec
   }
 }
 
-UtilityBillComparisonChart::UtilityBillComparisonChart(const openstudio::model::UtilityBill& utilityBill, QWidget *t_parent)
-  : QWidget(t_parent), m_utilityBill(utilityBill)
+UtilityBillComparisonChart::UtilityBillComparisonChart(const openstudio::model::UtilityBill& utilityBill, bool isDemandChart, QWidget *t_parent)
+  : QWidget(t_parent), m_utilityBill(utilityBill), m_isDemandChart(isDemandChart)
 {
   QVBoxLayout* vLayout = new QVBoxLayout();
 
   m_label = new QLabel();
   vLayout->addWidget(m_label);
 
-  m_chart = boost::shared_ptr<vtkCharts::BarChart>(new vtkCharts::BarChart("Comparison"));
+  m_chart = boost::shared_ptr<vtkCharts::BarChart>(new vtkCharts::BarChart("Actual"));
   vLayout->addWidget(m_chart->widget());
+
+  vLayout->addWidget(new UtilityBillComparisonTable(utilityBill, isDemandChart));
 
   bool isConnected = connect( m_utilityBill.getImpl<openstudio::model::detail::UtilityBill_Impl>().get(),
                    SIGNAL(onChange()), this, SLOT(onUtilityBillChanged()) );
@@ -1375,6 +1387,15 @@ openstudio::model::UtilityBill UtilityBillComparisonChart::utilityBill() const
 
 void UtilityBillComparisonChart::onUtilityBillChanged()
 {
+  if (m_isDemandChart){
+    plotDemand();
+  }else{
+    plotConsumption();
+  }
+}
+
+void UtilityBillComparisonChart::plotConsumption()
+{
   m_label->setText(toQString(m_utilityBill.name().get() + " " + m_utilityBill.fuelType().valueDescription()));
 
   std::vector<std::string> labels;
@@ -1385,6 +1406,7 @@ void UtilityBillComparisonChart::onUtilityBillChanged()
   double consumptionUnitConversionFactor = m_utilityBill.consumptionUnitConversionFactor();
 
   std::vector<model::BillingPeriod> billingPeriods = m_utilityBill.billingPeriods();
+  int i = 1;
   Q_FOREACH(const model::BillingPeriod& billingPeriod, billingPeriods){
 
     boost::optional<double> consumption = billingPeriod.consumption();
@@ -1402,17 +1424,10 @@ void UtilityBillComparisonChart::onUtilityBillChanged()
     }
 
     std::stringstream ss;
-    ss << billingPeriod.startDate() << std::endl;;
-    ss << "-" << std::endl;
-    ss << billingPeriod.endDate() << std::endl;
-    if (consumption && modelConsumption){
-      double percentDiff = 100.0*(consumption.get()-modelConsumption.get())/(consumption.get());
-      ss << percentDiff << "%";
-    }else{
-      ss << "NA";
-    }
-
+    ss << i; 
     labels.push_back(ss.str());
+
+    ++i;
   }
   m_chart->setXTickLabels(labels);
 
@@ -1429,6 +1444,57 @@ void UtilityBillComparisonChart::onUtilityBillChanged()
   setUpdatesEnabled(true);
 }
 
+void UtilityBillComparisonChart::plotDemand()
+{
+  m_label->setText(toQString(m_utilityBill.name().get() + " " + m_utilityBill.fuelType().valueDescription()));
+
+  std::vector<std::string> labels;
+  std::vector<float> peakDemandValues;
+  std::vector<float> modelPeakDemandValues;
+
+  // goes from billing units to J/s
+  boost::optional<double> peakDemandUnitConversionFactor = m_utilityBill.peakDemandUnitConversionFactor();
+  int i = 1;
+  if (peakDemandUnitConversionFactor){
+
+    std::vector<model::BillingPeriod> billingPeriods = m_utilityBill.billingPeriods();
+    Q_FOREACH(const model::BillingPeriod& billingPeriod, billingPeriods){
+
+      boost::optional<double> peakDemand = billingPeriod.peakDemand();
+      if (peakDemand){
+        peakDemandValues.push_back(*peakDemand);
+      }else{
+        modelPeakDemandValues.push_back(0);
+      }
+
+      boost::optional<double> modelPeakDemand = billingPeriod.modelPeakDemand();
+      if (modelPeakDemand){
+        modelPeakDemandValues.push_back(*modelPeakDemand / *peakDemandUnitConversionFactor);
+      }else{
+        modelPeakDemandValues.push_back(0);
+      }
+
+      std::stringstream ss;
+      ss << i;
+      labels.push_back(ss.str());
+
+      ++i;
+    }
+  }
+  m_chart->setXTickLabels(labels);
+
+  m_chart->setColors(UtilityBillComparisonLegend::getColors(m_utilityBill.fuelType()));
+
+  m_chart->axis(vtkCharts::Axis::LEFT).setTitle("");
+  m_chart->axis(vtkCharts::Axis::BOTTOM).setTitle("");
+
+  m_chart->addSeries(peakDemandValues, "Actual");
+  m_chart->addSeries(modelPeakDemandValues, "Model");
+
+  m_chart->rescale();
+
+  setUpdatesEnabled(true);
+}
 
 UtilityBillComparisonLegend::UtilityBillComparisonLegend(const openstudio::FuelType& fuelType, QWidget *t_parent)
   : QWidget(t_parent), m_fuelType(fuelType)
@@ -1436,8 +1502,8 @@ UtilityBillComparisonLegend::UtilityBillComparisonLegend(const openstudio::FuelT
   QVBoxLayout* vboxlayout = new QVBoxLayout();
 
   std::vector<std::string> s;
-  s.push_back("Actual " + m_fuelType.valueDescription());
-  s.push_back("Modeled " + m_fuelType.valueDescription());
+  s.push_back("Actual");
+  s.push_back("Model");
 
   std::vector<vtkCharts::Color3ub> c = getColors(m_fuelType);
   Q_ASSERT(c.size() == 2);
@@ -1457,6 +1523,8 @@ UtilityBillComparisonLegend::UtilityBillComparisonLegend(const openstudio::FuelT
 
     vboxlayout->addLayout(hboxlayout);
   }
+
+  vboxlayout->addStretch();
 
   setLayout(vboxlayout);
 }
@@ -1482,9 +1550,85 @@ std::vector<vtkCharts::Color3ub> UtilityBillComparisonLegend::getColors(const op
   return colors;
 }
 
+UtilityBillComparisonTable::UtilityBillComparisonTable(const openstudio::model::UtilityBill& utilityBill, bool isDemandChart, QWidget *t_parent)
+  : QWidget(t_parent), m_utilityBill(utilityBill), m_isDemandChart(isDemandChart)
+{
+  m_grid = new QGridLayout();
 
+  bool isConnected = connect( m_utilityBill.getImpl<openstudio::model::detail::UtilityBill_Impl>().get(),
+                   SIGNAL(onChange()), this, SLOT(onUtilityBillChanged()) );
+  Q_ASSERT(isConnected);
 
+  this->setLayout(m_grid);
 
+  onUtilityBillChanged();
+}
+ 
+openstudio::model::UtilityBill UtilityBillComparisonTable::utilityBill() const
+{
+  return m_utilityBill;
+}
+
+void UtilityBillComparisonTable::onUtilityBillChanged()
+{
+  std::vector<model::BillingPeriod> billingPeriods = m_utilityBill.billingPeriods();
+  int numBillingPeriods = billingPeriods.size();
+
+  QFrame *tophline = new QFrame();
+  tophline->setFrameStyle(QFrame::HLine | QFrame::Plain);
+  m_grid->setHorizontalSpacing(0);
+  m_grid->setVerticalSpacing(0);
+  m_grid->addWidget(tophline, 0, 0, 1, billingPeriods.size());
+
+  m_grid->addWidget(new QLabel("Start Date"), 1, 0);
+  m_grid->addWidget(new QLabel("End Date"), 2, 0);
+  m_grid->addWidget(new QLabel("Percent Error"), 3, 0);
+
+  for (int i = 0; i < numBillingPeriods; ++i)
+  {
+    int col = i + 1;
+
+    std::stringstream ss;
+    ss << "<b>" << col << "</b>";
+    m_grid->addWidget(new QLabel(toQString(ss.str())), 0, col);
+
+    ss.str("");
+    ss << billingPeriods[i].startDate();
+    m_grid->addWidget(new QLabel(toQString(ss.str())), 1, col);
+
+    ss.str("");
+    ss << billingPeriods[i].endDate();
+    m_grid->addWidget(new QLabel(toQString(ss.str())), 2, col);
+
+    
+    boost::optional<double> actual;
+    boost::optional<double> model;
+    if (m_isDemandChart){
+      boost::optional<double> peakDemandUnitConversionFactor = m_utilityBill.peakDemandUnitConversionFactor();
+      actual = billingPeriods[i].peakDemand();
+      model = billingPeriods[i].modelPeakDemand();
+      if (model && peakDemandUnitConversionFactor){
+        model = model.get() / peakDemandUnitConversionFactor.get();
+      }
+    }else{
+      double consumptionUnitConversionFactor = m_utilityBill.consumptionUnitConversionFactor();
+      actual = billingPeriods[i].consumption();
+      model = billingPeriods[i].modelConsumption();
+      if (model){
+        model = model.get() / consumptionUnitConversionFactor; 
+      }
+    }
+
+    ss.str("");
+    if (actual && model){
+      double percent = 100.0 * (*model - *actual)/(*actual);
+      ss << std::setprecision(2) << percent << "%";
+    }else{
+      ss << "NA";
+    }
+    m_grid->addWidget(new QLabel(toQString(ss.str())), 3, col);
+  }
+}
 
 
 ResultsTabView::ResultsTabView(const model::Model & model,
@@ -1603,38 +1747,25 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
 
   // Make Selection Button Widget
   
-  unsigned numUtilityBills = model.getModelObjects<model::UtilityBill>().size();
-  
   hLayout = new QHBoxLayout(this);
-
-  label = new QLabel("View: ",this);
-  label->setObjectName("H2");
-  hLayout->addWidget(label,0,Qt::AlignLeft | Qt::AlignTop);
-  if (numUtilityBills == 0){
-    label->setVisible(false);
-  }
+  m_reportLabel = new QLabel("View: ",this);
+  m_reportLabel->setObjectName("H2");
+  hLayout->addWidget(m_reportLabel, 0, Qt::AlignLeft | Qt::AlignTop);
 
   buttonGroup = new QButtonGroup(this);
-
   isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(selectView(int)));
   Q_ASSERT(isConnected);
 
-  button = new QPushButton("Standard",this);
-  button->setCheckable(true);
-  hLayout->addWidget(button,0,Qt::AlignLeft | Qt::AlignTop);
-  buttonGroup->addButton(button,0);
-  if (numUtilityBills == 0){
-    button->setVisible(false);
-  }
+  m_standardResultsBtn = new QPushButton("Standard",this);
+  m_standardResultsBtn->setCheckable(true);
+  hLayout->addWidget(m_standardResultsBtn, 0, Qt::AlignLeft | Qt::AlignTop);
+  buttonGroup->addButton(m_standardResultsBtn,0);
 
-  button = new QPushButton("Calibration",this);
-  button->setCheckable(true);
-  hLayout->addWidget(button,0,Qt::AlignLeft | Qt::AlignTop);
-  buttonGroup->addButton(button,1);
-  if (numUtilityBills == 0){
-    button->setVisible(false);
-  }
+  m_calibrationResultsBtn = new QPushButton("Calibration",this);
+  m_calibrationResultsBtn->setCheckable(true);
+  hLayout->addWidget(m_calibrationResultsBtn, 0, Qt::AlignLeft | Qt::AlignTop);
+  buttonGroup->addButton(m_calibrationResultsBtn,1);
 
   hLayout->addStretch();
 
@@ -1681,9 +1812,23 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   // Make Comparision Method Layout
   m_stackedWidget->addWidget(m_utilityBillComparisonView);
   
+  isConnected = connect( m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
+                   SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                   this,
+                   SLOT(onObjectAdded(const WorkspaceObject&)) );
+  Q_ASSERT(isConnected);
+
+  isConnected = connect( m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
+                   SIGNAL(removeWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                   this,
+                   SLOT(onObjectRemoved(const WorkspaceObject&)) );
+  Q_ASSERT(isConnected);
+
+  // enable or disable report buttons
+  updateReportButtons();
 
   // select the standard view
-  buttonGroup->button(0)->click();
+  m_standardResultsBtn->click();
 }
 
 void ResultsView::openResultsViewerClicked()
@@ -1724,6 +1869,38 @@ void ResultsView::selectView(int index)
 {
   m_stackedWidget->setCurrentIndex(index);
 }
+
+void ResultsView::onObjectAdded(const WorkspaceObject& workspaceObject)
+{
+  if (workspaceObject.iddObject().type() == IddObjectType::OS_UtilityBill){
+    updateReportButtons();
+  }
+}
+
+void ResultsView::onObjectRemoved(const WorkspaceObject& workspaceObject)
+{
+  if (workspaceObject.iddObject().type() == IddObjectType::OS_UtilityBill){
+    updateReportButtons();
+  }
+}
+
+void ResultsView::updateReportButtons() 
+{
+  unsigned numUtilityBills = m_model.getModelObjects<model::UtilityBill>().size();
+
+  if (numUtilityBills == 0){
+    m_reportLabel->setVisible(false);
+    m_standardResultsBtn->setVisible(false);
+    m_calibrationResultsBtn->setVisible(false);
+    m_standardResultsBtn->click();
+  }else{
+    m_reportLabel->setVisible(true);
+    m_standardResultsBtn->setVisible(true);
+    m_calibrationResultsBtn->setVisible(true);
+  }
+}
+
+
 
 void ResultsView::onUnitSystemChange(bool t_isIP) 
 {

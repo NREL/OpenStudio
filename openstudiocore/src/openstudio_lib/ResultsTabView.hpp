@@ -167,19 +167,22 @@ namespace openstudio {
     Q_OBJECT;
 
     public:
-      UtilityBillComparisonChart(const openstudio::model::UtilityBill& utilityBill, QWidget *t_parent=0);
+      UtilityBillComparisonChart(const openstudio::model::UtilityBill& utilityBill, bool isDemandChart, QWidget *t_parent=0);
       virtual ~UtilityBillComparisonChart() {}
       openstudio::model::UtilityBill utilityBill() const;
 
     private slots:
     
       void onUtilityBillChanged();
+      void plotConsumption();
+      void plotDemand();
 
     private:
       REGISTER_LOGGER("openstudio::UtilityBillComparisonChart");
+      openstudio::model::UtilityBill m_utilityBill;
+      bool m_isDemandChart;
       
       boost::shared_ptr<vtkCharts::BarChart> m_chart;
-      openstudio::model::UtilityBill m_utilityBill;
       QLabel* m_label;
   };
 
@@ -203,15 +206,18 @@ namespace openstudio {
     Q_OBJECT;
 
     public:
-      UtilityBillComparisonTable(const openstudio::model::UtilityBill& utilityBill, QWidget *t_parent = 0);
+      UtilityBillComparisonTable(const openstudio::model::UtilityBill& utilityBill, bool isDemandChart, QWidget *t_parent = 0);
       virtual ~UtilityBillComparisonTable() {}
       openstudio::model::UtilityBill utilityBill() const;
+
+    private slots:
+    
+      void onUtilityBillChanged();
 
     private:
       REGISTER_LOGGER("openstudio::UtilityBillComparisonTable");
       openstudio::model::UtilityBill m_utilityBill;
-
-      void buildDataGrid();
+      bool m_isDemandChart;
 
       QGridLayout *m_grid;
       QLabel* m_total;
@@ -236,6 +242,9 @@ namespace openstudio {
     private slots:
       void openResultsViewerClicked();
       void selectView(int index);
+      void onObjectAdded(const WorkspaceObject& workspaceObject);
+      void onObjectRemoved(const WorkspaceObject& workspaceObject);
+      void updateReportButtons();
 
     private:
       REGISTER_LOGGER("openstudio::ResultsView");
@@ -257,8 +266,11 @@ namespace openstudio {
       UtilityBillComparisonView* m_utilityBillComparisonView;
 
       QStackedWidget * m_stackedWidget;
+      QLabel * m_reportLabel;
+      QPushButton * m_standardResultsBtn;
+      QPushButton * m_calibrationResultsBtn;
       QPushButton * m_openResultsViewerBtn;
-
+      
       openstudio::path m_sqlFilePath;
       openstudio::path m_radianceResultsPath;
   };
