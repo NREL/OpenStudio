@@ -35,12 +35,13 @@ namespace detail {
     /** @name Constructors and Destructors */
     //@{
 
-    // TODO: May need to add type enum to accept from derived record class if
-    // DiscreteVariable is abstract.
+    // TODO: May need to remove type enum if DiscreteVariable is a leaf of the inheritance tree.
     // TODO: Replace ProjectDatabase& database with parent Record and/or add more 
     // construtors to match public class.
     // TODO: Find-replace on 'NAMESPACE'.
-    DiscreteVariableRecord_Impl(const NAMESPACE::DiscreteVariable& discreteVariable, ProjectDatabase& database);
+    DiscreteVariableRecord_Impl(const NAMESPACE::DiscreteVariable& discreteVariable,
+                                const DiscreteVariableRecordType& discreteVariableRecordType,
+                                ProjectDatabase& database);
 
     /** Constructor from query. Throws if bad query. */
     DiscreteVariableRecord_Impl(const QSqlQuery& query, ProjectDatabase& database);
@@ -97,6 +98,11 @@ namespace detail {
 
    private:
     REGISTER_LOGGER("openstudio.project.DiscreteVariableRecord");
+
+    // TODO: Delete enums if no derived classes.
+    DiscreteVariableRecordType m_discreteVariableRecordType;
+
+    DiscreteVariableRecordType m_lastDiscreteVariableRecordType;
   };
 
 } // detail

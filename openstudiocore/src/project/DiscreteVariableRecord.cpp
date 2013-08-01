@@ -29,27 +29,36 @@ namespace project {
 
 namespace detail {
 
-  DiscreteVariableRecord_Impl::DiscreteVariableRecord_Impl(const NAMESPACE::DiscreteVariable& discreteVariable, ProjectDatabase& database)
-    : InputVariableRecord_Impl(discreteVariable, database)
+  DiscreteVariableRecord_Impl::DiscreteVariableRecord_Impl(const NAMESPACE::DiscreteVariable& discreteVariable,
+                                                           const DiscreteVariableRecordType& discreteVariableRecordType,
+                                                           ProjectDatabase& database)
+    : InputVariableRecord_Impl(discreteVariable, database),
+  // TODO: Delete member enum initialization if deleted from _Impl.hpp
+      m_discreteVariableRecordType(discreteVariableRecordType)
   {
-    BOOST_ASSERT(false);
+    Q_ASSERT(false);
     // TODO: Initialize data members, check constructor call for base class.
   }
 
   DiscreteVariableRecord_Impl::DiscreteVariableRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : InputVariableRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    Q_ASSERT(query.isValid());
+    Q_ASSERT(query.isActive());
+    Q_ASSERT(query.isSelect());
 
     QVariant value;
+
+    // TODO: Delete deserialization of enum if deleted from _Impl.hpp
+    value = query.value(DiscreteVariableRecord::ColumnsType::discreteVariableRecordType);
+    Q_ASSERT(value.isValid() && !value.isNull());
+    m_discreteVariableRecordType = DiscreteVariableRecordType(value.toInt());
 
     // TODO: Extract data members from query. Templates follow.
 
     // Required data member
     // value = query.value(DiscreteVariableRecord::ColumnsType::DATAMEMBERNAME);
-    // BOOST_ASSERT(value.isValid() && !value.isNull());
+    // Q_ASSERT(value.isValid() && !value.isNull());
     // m_DATAMEMBERNAME = value.toTYPE();
 
     // Optional data member
@@ -63,13 +72,13 @@ namespace detail {
   boost::optional<ObjectRecord> DiscreteVariableRecord_Impl::parent() const {
     // Return this object's parent, if it has one. See ComponentAttributeRecord_Impl
     // for an example.
-    BOOST_ASSERT(false);
+    Q_ASSERT(false);
     return boost::none;
   }
 
   std::vector<ObjectRecord> DiscreteVariableRecord_Impl::children() const {
     // Return this object's children. See ComponentReferenceRecord_Impl for an example.
-    BOOST_ASSERT(false);
+    Q_ASSERT(false);
     ObjectRecordVector result;
     return result;
   }
@@ -77,7 +86,7 @@ namespace detail {
   std::vector<ObjectRecord> DiscreteVariableRecord_Impl::resources() const {
     // Return this object's resources. See ModelObjectActionSetRelationshipRecord_Impl
     // for an example.
-    BOOST_ASSERT(false);
+    Q_ASSERT(false);
     ObjectRecordVector result;
     return result;
   }
@@ -85,7 +94,7 @@ namespace detail {
   std::vector<JoinRecord> DiscreteVariableRecord_Impl::joinRecords() const {
     // Return the join relationships between this object and others. See
     // ModelObjectActionSetRelationshipRecord_Impl for an example.
-    BOOST_ASSERT(false);
+    Q_ASSERT(false);
     JoinRecordVector result;
     return result;
   }
@@ -99,12 +108,14 @@ namespace detail {
 
   NAMESPACE::DiscreteVariable DiscreteVariableRecord::discreteVariable() const {
     // TODO: De-serialize the object here.
-    BOOST_ASSERT(false);
+    Q_ASSERT(false);
   }
 
   void DiscreteVariableRecord_Impl::bindValues(QSqlQuery& query) const {
     InputVariableRecord_Impl::bindValues(query);
 
+    // TODO: Delete bind for enum if no derived classes.
+    query.bindValue(DiscreteVariableRecord::ColumnsType::discreteVariableRecordType,m_discreteVariableRecordType.value());
     // Template for required data.
     // query.bindValue(DiscreteVariableRecord::ColumnsType::DATAMEMBERNAME,m_DATAMEMBERNAME);
     // Template for optional data.
@@ -117,17 +128,22 @@ namespace detail {
   }
 
   void DiscreteVariableRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    Q_ASSERT(query.isValid());
+    Q_ASSERT(query.isActive());
+    Q_ASSERT(query.isSelect());
 
     InputVariableRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
+    // TODO: Delete if no derived classes.
+    value = query.value(DiscreteVariableRecord::ColumnsType::discreteVariableRecordType);
+    Q_ASSERT(value.isValid() && !value.isNull());
+    m_lastDiscreteVariableRecordType = DiscreteVariableRecordType(value.toInt());
+
     // Template for required data.
     // value = query.value(DiscreteVariableRecord::ColumnsType::DATAMEMBERNAME);
-    // BOOST_ASSERT(value.isValid() && !value.isNull());
+    // Q_ASSERT(value.isValid() && !value.isNull());
     // m_lastDATAMEMBERNAME = value.toTYPE();
 
     // Template for optional data.
@@ -141,17 +157,22 @@ namespace detail {
   }
 
   bool DiscreteVariableRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    Q_ASSERT(query.isValid());
+    Q_ASSERT(query.isActive());
+    Q_ASSERT(query.isSelect());
 
     bool result = InputVariableRecord_Impl::compareValues(query);
 
     QVariant value;
 
+    // TODO: Delete if no derived classes.
+    value = query.value(DiscreteVariableRecord::ColumnsType::discreteVariableRecordType);
+    Q_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_discreteVariableRecordType == DiscreteVariableRecordType(value.toInt()));
+
     // Template for required data.
     // value = query.value(DiscreteVariableRecord::ColumnsType::DATAMEMBERNAME);
-    // BOOST_ASSERT(value.isValid() && !value.isNull());
+    // Q_ASSERT(value.isValid() && !value.isNull());
     // result = result && (m_DATAMEMBERNAME == value.toTYPE());
 
     // Template for optional data.
@@ -169,12 +190,16 @@ namespace detail {
   void DiscreteVariableRecord_Impl::saveLastValues() {
     InputVariableRecord_Impl::saveLastValues();
 
+    // TODO: Delete if no derived types.
+    m_lastDiscreteVariableRecordType = m_discreteVariableRecordType;
     // m_lastDATAMEMBERNAME = m_DATAMEMBERNAME;
   }
 
   void DiscreteVariableRecord_Impl::revertToLastValues() {
     InputVariableRecord_Impl::revertToLastValues();
 
+    // TODO: Delete if no derived types.
+    m_discreteVariableRecordType = m_lastDiscreteVariableRecordType;
     // m_DATAMEMBERNAME = m_lastDATAMEMBERNAME;
   }
 
@@ -185,9 +210,9 @@ DiscreteVariableRecord::DiscreteVariableRecord(const NAMESPACE::DiscreteVariable
         new detail::DiscreteVariableRecord_Impl(discreteVariable, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
+  Q_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
 
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
   // TODO: Align with final public constructors.
   // TODO: Handle relationships (setting id fields) as needed.
 }
@@ -197,14 +222,14 @@ DiscreteVariableRecord::DiscreteVariableRecord(const QSqlQuery& query, ProjectDa
         new detail::DiscreteVariableRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
+  Q_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
 }
 
 boost::optional<DiscreteVariableRecord> DiscreteVariableRecord::factoryFromQuery(const QSqlQuery& query, ProjectDatabase& database)
 {
   OptionalDiscreteVariableRecord result;
 
-  // Template for base classes. See, for instance, DiscretePerturbationRecord::factoryFromQuery.
+  // Template for base classes. See, for instance, MeasureRecord::factoryFromQuery.
   // int discreteVariableRecordType = query.value(DiscreteVariableRecordColumns::discreteVariableRecordType).toInt();
 
   // switch (discreteVariableRecordType) {
@@ -231,7 +256,7 @@ boost::optional<DiscreteVariableRecord> DiscreteVariableRecord::factoryFromQuery
 DiscreteVariableRecord DiscreteVariableRecord::factoryFromDiscreteVariable(const NAMESPACE::DiscreteVariable& discreteVariable, ProjectDatabase& database)
 {
   // TODO: Delete if no derived classes.
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 
   // Template. See, for instance, StandardsFilterObjectAttributeRecord::factoryFromFilter.
 
@@ -241,7 +266,7 @@ DiscreteVariableRecord DiscreteVariableRecord::factoryFromDiscreteVariable(const
   //   ...
   // }
 
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
   return DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl>());
 }
 
@@ -302,7 +327,7 @@ DiscreteVariableRecord::DiscreteVariableRecord(boost::shared_ptr<detail::Discret
                                                ProjectDatabase database)
   : InputVariableRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
+  Q_ASSERTgetImpl<detail::DiscreteVariableRecord_Impl>());
 }
 /// @endcond
 

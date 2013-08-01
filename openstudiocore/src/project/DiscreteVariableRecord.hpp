@@ -32,9 +32,24 @@ namespace detail {
 
 } // detail
 
+// TODO: Populate or delete this enumeration if there are/are not any derived types, respectively.
+/** \class DiscreteVariableRecordType
+ *  \brief ObjectRecord types that derive from DiscreteVariableRecord.
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+ *  macro call is:
+ *  \code
+OPENSTUDIO_ENUM(DiscreteVariableRecordType,
+    ((DiscreteVariableRecordDerivedRecord1))
+);
+ *  \endcode */
+OPENSTUDIO_ENUM(DiscreteVariableRecordType,
+    ((DiscreteVariableRecordDerivedRecord1))
+);
+
 /** DiscreteVariableRecord is a InputVariableRecord. */
 class PROJECT_API DiscreteVariableRecord : public InputVariableRecord {
  public:
+
   typedef detail::DiscreteVariableRecord_Impl ImplType;
   // TODO: Check this typedef. The generator script assumes that the hierarchy is only two deep   // from ObjectRecord.
   typedef InputVariableRecordColumns ColumnsType;
