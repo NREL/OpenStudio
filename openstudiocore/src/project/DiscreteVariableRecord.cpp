@@ -1,441 +1,310 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
 
 #include <project/DiscreteVariableRecord.hpp>
 #include <project/DiscreteVariableRecord_Impl.hpp>
-#include <project/DiscretePerturbationRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/FunctionRecord.hpp>
+
 #include <project/JoinRecord.hpp>
-#include <project/ProjectDatabase.hpp>
 
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/UncertaintyDescription.hpp>
-
-#include <utilities/core/Checksum.hpp>
 #include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
-
-#include <sstream>
-
-#include <QSqlQuery>
-#include <QSqlError>
-
-using namespace openstudio::analysis;
 
 namespace openstudio {
 namespace project {
 
-namespace detail{
+namespace detail {
 
-  DiscreteVariableRecord_Impl::DiscreteVariableRecord_Impl(
-      const analysis::DiscreteVariable& discreteVariable,
-      ProblemRecord& problemRecord,
-      int workflowIndex)
-    : InputVariableRecord_Impl(discreteVariable,
-                               InputVariableRecordType::DiscreteVariableRecord,
-                               problemRecord,
-                               workflowIndex)
-  {}
-
-  DiscreteVariableRecord_Impl::DiscreteVariableRecord_Impl(
-      const analysis::DiscreteVariable& discreteVariable,
-      FunctionRecord& functionRecord,
-      int variableVectorIndex,
-      boost::optional<double> functionCoefficient)
-    : InputVariableRecord_Impl(discreteVariable,
-                               InputVariableRecordType::DiscreteVariableRecord,
-                               functionRecord,
-                               variableVectorIndex,
-                               functionCoefficient)
-  {}
+  DiscreteVariableRecord_Impl::DiscreteVariableRecord_Impl(const NAMESPACE::DiscreteVariable& discreteVariable, ProjectDatabase& database)
+    : InputVariableRecord_Impl(discreteVariable, database)
+  {
+    BOOST_ASSERT(false);
+    // TODO: Initialize data members, check constructor call for base class.
+  }
 
   DiscreteVariableRecord_Impl::DiscreteVariableRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : InputVariableRecord_Impl(query, database)
-  {}
-
-  std::vector<ObjectRecord> DiscreteVariableRecord_Impl::children() const
   {
-    ObjectRecordVector result = InputVariableRecord_Impl::children();
-    std::vector<DiscretePerturbationRecord> discretePerturbationRecords = this->discretePerturbationRecords(false);
-    result.insert(result.end(),discretePerturbationRecords.begin(),discretePerturbationRecords.end());
+    BOOST_ASSERT(query.isValid());
+    BOOST_ASSERT(query.isActive());
+    BOOST_ASSERT(query.isSelect());
+
+    QVariant value;
+
+    // TODO: Extract data members from query. Templates follow.
+
+    // Required data member
+    // value = query.value(DiscreteVariableRecord::ColumnsType::DATAMEMBERNAME);
+    // BOOST_ASSERT(value.isValid() && !value.isNull());
+    // m_DATAMEMBERNAME = value.toTYPE();
+
+    // Optional data member
+    // value = query.value(DiscreteVariableRecord::ColumnsType::DATAMEMBERNAME);
+    // if (value.isValid() && !value.isNull()) {
+    //   m_DATAMEMBERNAME = value.toTYPE();
+    // }
+
+  }
+
+  boost::optional<ObjectRecord> DiscreteVariableRecord_Impl::parent() const {
+    // Return this object's parent, if it has one. See ComponentAttributeRecord_Impl
+    // for an example.
+    BOOST_ASSERT(false);
+    return boost::none;
+  }
+
+  std::vector<ObjectRecord> DiscreteVariableRecord_Impl::children() const {
+    // Return this object's children. See ComponentReferenceRecord_Impl for an example.
+    BOOST_ASSERT(false);
+    ObjectRecordVector result;
     return result;
   }
 
-  std::vector<ObjectRecord> DiscreteVariableRecord_Impl::resources() const
-  {
-    return std::vector<ObjectRecord>();
+  std::vector<ObjectRecord> DiscreteVariableRecord_Impl::resources() const {
+    // Return this object's resources. See ModelObjectActionSetRelationshipRecord_Impl
+    // for an example.
+    BOOST_ASSERT(false);
+    ObjectRecordVector result;
+    return result;
   }
 
-  void DiscreteVariableRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
-  {
-    QSqlQuery query(*database);
+  std::vector<JoinRecord> DiscreteVariableRecord_Impl::joinRecords() const {
+    // Return the join relationships between this object and others. See
+    // ModelObjectActionSetRelationshipRecord_Impl for an example.
+    BOOST_ASSERT(false);
+    JoinRecordVector result;
+    return result;
+  }
+
+  void DiscreteVariableRecord_Impl::saveRow(ProjectDatabase& projectDatabase) {
+    QSqlQuery query(*(projectDatabase.qSqlDatabase()));
     this->makeUpdateByIdQuery<DiscreteVariableRecord>(query);
     this->bindValues(query);
     assertExec(query);
   }
 
-  analysis::Variable DiscreteVariableRecord_Impl::variable() const {
-    return discreteVariable().cast<analysis::Variable>();
+  NAMESPACE::DiscreteVariable DiscreteVariableRecord::discreteVariable() const {
+    // TODO: De-serialize the object here.
+    BOOST_ASSERT(false);
   }
 
-  analysis::InputVariable DiscreteVariableRecord_Impl::inputVariable() const {
-    return discreteVariable().cast<analysis::InputVariable>();
-  }
-
-  analysis::DiscreteVariable DiscreteVariableRecord_Impl::discreteVariable() const {
-    analysis::DiscretePerturbationVector perturbations;
-    BOOST_FOREACH(const DiscretePerturbationRecord& discretePerturbationRecord,discretePerturbationRecords(false)) {
-      perturbations.push_back(discretePerturbationRecord.discretePerturbation());
-    }
-    return analysis::DiscreteVariable(handle(),
-                                      uuidLast(),
-                                      name(),
-                                      displayName(),
-                                      description(),
-                                      uncertaintyDescription(),
-                                      perturbations);
-  }
-
-  unsigned DiscreteVariableRecord_Impl::numPerturbations(bool selectedPerturbationsOnly) const
-  {
-    unsigned result = 0;
-
-    ProjectDatabase database = this->projectDatabase();
-
-    QSqlQuery query(*(database.qSqlDatabase()));
-
-    if (selectedPerturbationsOnly){
-      query.prepare(toQString("SELECT COUNT(*) FROM " + DiscretePerturbationRecord::databaseTableName() +
-          " WHERE variableRecordId=:id AND isSelected=:isSelected"));
-      query.bindValue(":id", this->id());
-      query.bindValue(":isSelected", true);
-    }else{
-      query.prepare(toQString("SELECT COUNT(*) FROM " + DiscretePerturbationRecord::databaseTableName() +
-          " WHERE variableRecordId=:id"));
-      query.bindValue(":id", this->id());
-    }
-
-    assertExec(query);
-    if (query.first()){
-      result = query.value(0).toUInt();
-    }
-
-    return result;
-  }
-
-  std::vector<int> DiscreteVariableRecord_Impl::discretePerturbationRecordIds(bool selectedPerturbationsOnly) const
-  {
-    std::vector<int> result;
-
-    DiscretePerturbationRecordVector dprs = discretePerturbationRecords(selectedPerturbationsOnly);
-    BOOST_FOREACH(const DiscretePerturbationRecord& dpr,dprs) {
-      result.push_back(dpr.id());
-    }
-
-    return result;
-  }
-
-  std::vector<DiscretePerturbationRecord> DiscreteVariableRecord_Impl::discretePerturbationRecords(
-      bool selectedPerturbationsOnly) const
-  {
-    std::vector<DiscretePerturbationRecord> result;
-
-    ProjectDatabase database = this->projectDatabase();
-
-    QSqlQuery query(*(database.qSqlDatabase()));
-
-    if (selectedPerturbationsOnly){
-      query.prepare(toQString("SELECT * FROM " + DiscretePerturbationRecord::databaseTableName() +
-          " WHERE variableRecordId=:id AND isSelected=:isSelected ORDER BY perturbationVectorIndex"));
-      query.bindValue(":id", this->id());
-      query.bindValue(":isSelected", true);
-    }else{
-      query.prepare(toQString("SELECT * FROM " + DiscretePerturbationRecord::databaseTableName() +
-          " WHERE variableRecordId=:id ORDER BY perturbationVectorIndex"));
-      query.bindValue(":id", this->id());
-    }
-
-    assertExec(query);
-    OptionalInt previousIndex;
-    bool resort(false);
-    while (query.next()){
-      boost::optional<DiscretePerturbationRecord> perturbation = DiscretePerturbationRecord::factoryFromQuery(query, database);
-      BOOST_ASSERT(perturbation);
-      result.push_back(*perturbation);
-      OptionalInt index = result.back().perturbationVectorIndex();
-      if (previousIndex && index) {
-        if (index.get() <= previousIndex.get()) {
-          resort = true;
-        }
-      }
-      if (index) {
-        previousIndex = index;
-      }
-    }
-
-    if (resort) {
-      DiscretePerturbationRecordPerturbationVectorIndexLess comparator;
-      std::sort(result.begin(),result.end(),comparator);
-    }
-
-    return result;
-  }
-
-  DiscretePerturbationRecord DiscreteVariableRecord_Impl::getDiscretePerturbationRecord(
-      int perturbationVectorIndex) const
-  {
-    ProjectDatabase database = this->projectDatabase();
-    OptionalDiscretePerturbationRecord candidate;
-
-    QSqlQuery query(*(database.qSqlDatabase()));
-    query.prepare(toQString("SELECT * FROM " + DiscretePerturbationRecord::databaseTableName() +
-        " WHERE variableRecordId=:variableRecordId AND perturbationVectorIndex=:perturbationVectorIndex"));
-    query.bindValue(":variableRecordId", this->id());
-    query.bindValue(":perturbationVectorIndex", perturbationVectorIndex);
-    assertExec(query);
-    if (query.first()) {
-      candidate = DiscretePerturbationRecord::factoryFromQuery(query,database).get();
-    }
-
-    // check actual vector index. can get out of date during construction.
-    if ((!candidate) ||
-        (!candidate->perturbationVectorIndex()) ||
-        (candidate->perturbationVectorIndex().get() != perturbationVectorIndex))
-    {
-      // get all and look for index by hand
-      BOOST_FOREACH(const DiscretePerturbationRecord& dpr,discretePerturbationRecords(false)) {
-        if (dpr.perturbationVectorIndex() && (dpr.perturbationVectorIndex().get() == perturbationVectorIndex)) {
-          return dpr;
-        }
-      }
-    }
-    else {
-      return *candidate;
-    }
-    LOG_AND_THROW("Invalid DiscretPerturbation perturbationVectorIndex "
-        << perturbationVectorIndex << " for DiscreteVariable '" << name() << "'.");
-    return DiscretePerturbationRecord(boost::shared_ptr<detail::DiscretePerturbationRecord_Impl>(),database);
-  }
-
-  void DiscreteVariableRecord_Impl::bindValues(QSqlQuery& query) const
-  {
+  void DiscreteVariableRecord_Impl::bindValues(QSqlQuery& query) const {
     InputVariableRecord_Impl::bindValues(query);
+
+    // Template for required data.
+    // query.bindValue(DiscreteVariableRecord::ColumnsType::DATAMEMBERNAME,m_DATAMEMBERNAME);
+    // Template for optional data.
+    // if (m_DATAMEMBERNAME) {
+    //   query.bindValue(DiscreteVariableRecord::ColumnsType::DATAMEMBERNAME,*m_DATAMEMBERNAME);
+    // }
+    // else {
+    //   query.bindValue(DiscreteVariableRecord::ColumnsType::DATAMEMBERNAME,QVariant(QVariant::TYPE));
+    // }
   }
 
-  void DiscreteVariableRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
-  {
-    InputVariableRecord_Impl::setLastValues(query, projectDatabase);
+  void DiscreteVariableRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
+    BOOST_ASSERT(query.isValid());
+    BOOST_ASSERT(query.isActive());
+    BOOST_ASSERT(query.isSelect());
+
+    InputVariableRecord_Impl::setLastValues(query,projectDatabase);
+
+    QVariant value;
+
+    // Template for required data.
+    // value = query.value(DiscreteVariableRecord::ColumnsType::DATAMEMBERNAME);
+    // BOOST_ASSERT(value.isValid() && !value.isNull());
+    // m_lastDATAMEMBERNAME = value.toTYPE();
+
+    // Template for optional data.
+    // value = query.value(DiscreteVariableRecord::ColumnsType::DATAMEMBERNAME);
+    // if (value.isValid() && !value.isNull()) {
+    //   m_lastDATAMEMBERNAME = value.toTYPE();
+    // }
+    // else {
+    //   m_lastDATAMEMBERNAME.reset();
+    // }
   }
 
-  bool DiscreteVariableRecord_Impl::compareValues(const QSqlQuery& query) const
-  {
-    return InputVariableRecord_Impl::compareValues(query);
+  bool DiscreteVariableRecord_Impl::compareValues(const QSqlQuery& query) const {
+    BOOST_ASSERT(query.isValid());
+    BOOST_ASSERT(query.isActive());
+    BOOST_ASSERT(query.isSelect());
+
+    bool result = InputVariableRecord_Impl::compareValues(query);
+
+    QVariant value;
+
+    // Template for required data.
+    // value = query.value(DiscreteVariableRecord::ColumnsType::DATAMEMBERNAME);
+    // BOOST_ASSERT(value.isValid() && !value.isNull());
+    // result = result && (m_DATAMEMBERNAME == value.toTYPE());
+
+    // Template for optional data.
+    // value = query.value(DiscreteVariableRecord::ColumnsType::DATAMEMBERNAME);
+    // if (value.isValid() && !value.isNull()) {
+    //   result = result && m_DATAMEMBERNAME && (*m_DATAMEMBERNAME == value.toTYPE());
+    // }
+    // else {
+    //   result = result && !m_DATAMEMBERNAME;
+    // }
+
+    return result;
   }
 
-  void DiscreteVariableRecord_Impl::saveLastValues()
-  {
+  void DiscreteVariableRecord_Impl::saveLastValues() {
     InputVariableRecord_Impl::saveLastValues();
+
+    // m_lastDATAMEMBERNAME = m_DATAMEMBERNAME;
   }
 
-  void DiscreteVariableRecord_Impl::revertToLastValues()
-  {
+  void DiscreteVariableRecord_Impl::revertToLastValues() {
     InputVariableRecord_Impl::revertToLastValues();
+
+    // m_DATAMEMBERNAME = m_lastDATAMEMBERNAME;
   }
 
 } // detail
 
-DiscreteVariableRecord::DiscreteVariableRecord(const analysis::DiscreteVariable& discreteVariable,
-                                               ProblemRecord& problemRecord,
-                                               int variableVectorIndex)
+DiscreteVariableRecord::DiscreteVariableRecord(const NAMESPACE::DiscreteVariable& discreteVariable, ProjectDatabase& database)
   : InputVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl>(
-        new detail::DiscreteVariableRecord_Impl(discreteVariable,
-                                                problemRecord,
-                                                variableVectorIndex)),
-        problemRecord.projectDatabase(),
-        discreteVariable)
+        new detail::DiscreteVariableRecord_Impl(discreteVariable, database)),
+        database)
 {
   BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
 
-  constructDiscretePerturbationRecords(discreteVariable);
-}
-
-DiscreteVariableRecord::DiscreteVariableRecord(const analysis::DiscreteVariable& discreteVariable,
-                                               FunctionRecord& functionRecord,
-                                               int variableVectorIndex,
-                                               boost::optional<double> functionCoefficient)
-  : InputVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl>(
-        new detail::DiscreteVariableRecord_Impl(discreteVariable,
-                                                functionRecord,
-                                                variableVectorIndex,
-                                                functionCoefficient)),
-        functionRecord.projectDatabase(),
-        discreteVariable)
-{
-  BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
-
-  constructDiscretePerturbationRecords(discreteVariable);
+  BOOST_ASSERT(false);
+  // TODO: Align with final public constructors.
+  // TODO: Handle relationships (setting id fields) as needed.
 }
 
 DiscreteVariableRecord::DiscreteVariableRecord(const QSqlQuery& query, ProjectDatabase& database)
   : InputVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl>(
         new detail::DiscreteVariableRecord_Impl(query, database)),
-        database,
-        analysis::OptionalInputVariable())
+        database)
 {
   BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
 }
 
-DiscreteVariableRecord::DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl,
-                                               ProjectDatabase database)
-  : InputVariableRecord(impl, database, analysis::OptionalInputVariable())
+boost::optional<DiscreteVariableRecord> DiscreteVariableRecord::factoryFromQuery(const QSqlQuery& query, ProjectDatabase& database)
 {
-  BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
+  OptionalDiscreteVariableRecord result;
+
+  // Template for base classes. See, for instance, DiscretePerturbationRecord::factoryFromQuery.
+  // int discreteVariableRecordType = query.value(DiscreteVariableRecordColumns::discreteVariableRecordType).toInt();
+
+  // switch (discreteVariableRecordType) {
+  //   case DiscreteVariableRecordType::FIRSTDERIVEDTYPE : 
+  //     result = FIRSTDERIVEDTYPE(query, database).cast<DiscreteVariableRecord>();
+  //    break;
+  //   default :
+  //     LOG(Error,"Unknown DiscreteVariableRecordType " << discreteVariableRecordType);
+  //     return boost::none;
+  // }
+
+  // Template for classes with no derived classes.
+  // try {
+  //   result = DiscreteVariableRecord(query,database);
+  // }
+  // catch (const std::exception& e) {
+  //   LOG(Error,"Unable to construct DiscreteVariableRecord from query, because '"
+  //       << e.what() << "'.");
+  // }
+
+  return result;
+}
+
+DiscreteVariableRecord DiscreteVariableRecord::factoryFromDiscreteVariable(const NAMESPACE::DiscreteVariable& discreteVariable, ProjectDatabase& database)
+{
+  // TODO: Delete if no derived classes.
+  BOOST_ASSERT(false);
+
+  // Template. See, for instance, StandardsFilterObjectAttributeRecord::factoryFromFilter.
+
+  // if (discreteVariable.optionalCast<NAMESPACE::FIRST_DERIVED_CLASS>()) {
+  //   return FIRST_DERIVED_CLASSRecord(discreteVariable.cast<NAMESPACE::FIRST_DERIVED_CLASS>(), database);
+  // else if {
+  //   ...
+  // }
+
+  BOOST_ASSERT(false);
+  return DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl>());
+}
+
+std::vector<DiscreteVariableRecord> DiscreteVariableRecord::getDiscreteVariableRecords(ProjectDatabase& database) {
+  std::vector<DiscreteVariableRecord> result;
+
+  QSqlQuery query(*(database.qSqlDatabase()));
+  // TODO: Check class used to determine databaseTableName().
+  // TODO: Check (or add) the WHERE portion of the query. See getAttributeRecords for a non-type WHERE statement.
+  query.prepare(toQString("SELECT * FROM " + InputVariableRecord::databaseTableName() + " WHERE inputVariableRecordType=:inputVariableRecordType"));
+  query.bindValue(":inputVariableRecordType", InputVariableRecordType::DiscreteVariableRecord);
+  assertExec(query);
+  while (query.next()) {
+    // TODO: Choose appropriate implementation.
+
+    // OptionalDiscreteVariableRecord discreteVariableRecord = DiscreteVariableRecord::factoryFromQuery(query, database);
+    // if (discreteVariableRecord) {
+    //   result.push_back(*discreteVariableRecord);
+    // }
+
+    // result.push_back(DiscreteVariableRecord(query, database));
+  }
+
+  return result;
+}
+
+boost::optional<DiscreteVariableRecord> DiscreteVariableRecord::getDiscreteVariableRecord(int id, ProjectDatabase& database) {
+  boost::optional<DiscreteVariableRecord> result;
+
+  QSqlQuery query(*(database.qSqlDatabase()));
+  // TODO: Check class used to determine databaseTableName().
+  // TODO: Check the WHERE portion of the query.
+  query.prepare(toQString("SELECT * FROM " + InputVariableRecord::databaseTableName() + " WHERE inputVariableRecordType=:inputVariableRecordType AND id=:id"));
+  query.bindValue(":inputVariableRecordType", InputVariableRecordType::DiscreteVariableRecord);
+  query.bindValue(":id",id);
+  assertExec(query);
+  if (query.first()) {
+    // TODO: Choose appropriate implementation.
+
+    // result = DiscreteVariableRecord::factoryFromQuery(query, database);
+
+    // result = DiscreteVariableRecord(query, database);
+  }
+
+  return result;
+}
+
+NAMESPACE::DiscreteVariable DiscreteVariableRecord::discreteVariable() const {
+  return getImpl<detail::DiscreteVariableRecord_Impl>()->discreteVariable();
 }
 
 /// @cond
 DiscreteVariableRecord::DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl)
   : InputVariableRecord(impl)
+{}
+
+DiscreteVariableRecord::DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl,
+                                               ProjectDatabase database)
+  : InputVariableRecord(impl, database)
 {
   BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
 }
 /// @endcond
-
-boost::optional<DiscreteVariableRecord> DiscreteVariableRecord::factoryFromQuery(
-    const QSqlQuery& query, ProjectDatabase& database)
-{
-  OptionalDiscreteVariableRecord result;
-  try {
-    result = DiscreteVariableRecord(query,database);
-  }
-  catch (const std::exception& e) {
-    LOG(Error,"Unable to construct DiscreteVariableRecord from query, because '"
-        << e.what() << "'.");
-  }
-  return result;
-}
-
-std::vector<DiscreteVariableRecord> DiscreteVariableRecord::getDiscreteVariableRecords(ProjectDatabase& database)
-{
-  std::vector<DiscreteVariableRecord> result;
-
-  QSqlQuery query(*(database.qSqlDatabase()));
-  query.prepare(toQString("SELECT * FROM " + VariableRecord::databaseTableName() +
-                          " WHERE variableRecordType=:variableRecordType AND " +
-                          "inputVariableRecordType=:inputVariableRecordType"));
-  query.bindValue(":variableRecordType", VariableRecordType::InputVariableRecord);
-  query.bindValue(":inputVariableRecordType", InputVariableRecordType::DiscreteVariableRecord);
-  assertExec(query);
-  while (query.next()) {
-    result.push_back(DiscreteVariableRecord(query, database));
-  }
-
-  return result;
-}
-
-boost::optional<DiscreteVariableRecord> DiscreteVariableRecord::getDiscreteVariableRecord(int DiscreteVariableRecordId, ProjectDatabase& database)
-{
-  QSqlQuery query(*(database.qSqlDatabase()));
-  query.prepare(toQString("SELECT * FROM " + VariableRecord::databaseTableName() + " WHERE id=:id AND " +
-                          "variableRecordType=:variableRecordType AND " +
-                          "inputVariableRecordType=:inputVariableRecordType"));
-  query.bindValue(":id", DiscreteVariableRecordId);
-  query.bindValue(":variableRecordType", VariableRecordType::InputVariableRecord);
-  query.bindValue(":inputVariableRecordType", InputVariableRecordType::DiscreteVariableRecord);
-  assertExec(query);
-  if (query.first()) {
-    return DiscreteVariableRecord(query, database);
-  }
-
-  return boost::none;
-}
-
-analysis::DiscreteVariable DiscreteVariableRecord::discreteVariable() const {
-  return getImpl<detail::DiscreteVariableRecord_Impl>()->discreteVariable();
-}
-
-unsigned DiscreteVariableRecord::numPerturbations(bool selectedPerturbationsOnly) const {
-  return getImpl<detail::DiscreteVariableRecord_Impl>()->numPerturbations(selectedPerturbationsOnly);
-}
-
-std::vector<int> DiscreteVariableRecord::discretePerturbationRecordIds(bool selectedPerturbationsOnly) const {
-  return getImpl<detail::DiscreteVariableRecord_Impl>()->discretePerturbationRecordIds(selectedPerturbationsOnly);
-}
-
-std::vector<DiscretePerturbationRecord> DiscreteVariableRecord::discretePerturbationRecords(
-    bool selectedPerturbationsOnly) const
-{
-  return getImpl<detail::DiscreteVariableRecord_Impl>()->discretePerturbationRecords(selectedPerturbationsOnly);
-}
-
-DiscretePerturbationRecord DiscreteVariableRecord::getDiscretePerturbationRecord(
-    int perturbationVectorIndex) const
-{
-  return getImpl<detail::DiscreteVariableRecord_Impl>()->getDiscretePerturbationRecord(perturbationVectorIndex);
-}
-
-void DiscreteVariableRecord::constructDiscretePerturbationRecords(const analysis::DiscreteVariable& discreteVariable) {
-  DiscreteVariableRecord copyOfThis(getImpl<detail::DiscreteVariableRecord_Impl>());
-  ProjectDatabase database = copyOfThis.projectDatabase();
-  bool isNew = database.isNewRecord(copyOfThis);
-
-  int i = 0;
-  std::vector<UUID> perturbationUUIDs;
-  BOOST_FOREACH(const DiscretePerturbation& perturbation,discreteVariable.perturbations(false)) {
-    perturbationUUIDs.push_back(perturbation.uuid());
-    if (perturbation.isDirty() || isNew) {
-      DiscretePerturbationRecord newDiscretePerturbationRecord =
-          DiscretePerturbationRecord::factoryFromDiscretePerturbation(perturbation,copyOfThis,i);
-    }
-    ++i;
-  }
-  if (!isNew) {
-    removeDiscretePerturbationRecords(perturbationUUIDs,database);
-  }
-}
-
-void DiscreteVariableRecord::removeDiscretePerturbationRecords(const std::vector<UUID>& uuidsToKeep,
-                                                               ProjectDatabase& database)
-{
-  QSqlQuery query(*(database.qSqlDatabase()));
-  std::stringstream ss;
-  ss << "SELECT * FROM " + DiscretePerturbationRecord::databaseTableName() +
-        " WHERE (variableRecordId=:variableRecordId) AND (handle NOT IN (";
-  std::string sep("");
-  BOOST_FOREACH(const UUID& handle,uuidsToKeep) {
-    ss << sep << "'" << toString(handle) << "'";
-    sep = std::string(", ");
-  }
-  ss << "))";
-  query.prepare(toQString(ss.str()));
-  query.bindValue(":variableRecordId",id());
-  assertExec(query);
-  while (query.next()) {
-    OptionalDiscretePerturbationRecord perturbationRecord = DiscretePerturbationRecord::factoryFromQuery(query, database);
-    if (perturbationRecord) {
-      database.removeRecord(*perturbationRecord);
-    }
-  }
-}
 
 } // project
 } // openstudio
