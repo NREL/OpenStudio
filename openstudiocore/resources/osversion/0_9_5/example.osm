@@ -92,8 +92,8 @@ OS:SizingPeriod:DesignDay,
   0,                                      ! Daily Dry-Bulb Temperature Range {deltaC}
   -20.6,                                  ! Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
   99063,                                  ! Barometric Pressure {Pa}
-  4.9,                                    ! Site Wind Speed {m/s}
-  270,                                    ! Site Wind Direction {deg}
+  4.9,                                    ! Wind Speed {m/s}
+  270,                                    ! Wind Direction {deg}
   0,                                      ! Sky Clearness
   0,                                      ! Rain Indicator
   0,                                      ! Snow Indicator
@@ -114,8 +114,8 @@ OS:SizingPeriod:DesignDay,
   10.7,                                   ! Daily Dry-Bulb Temperature Range {deltaC}
   23.8,                                   ! Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
   99063,                                  ! Barometric Pressure {Pa}
-  5.3,                                    ! Site Wind Speed {m/s}
-  230,                                    ! Site Wind Direction {deg}
+  5.3,                                    ! Wind Speed {m/s}
+  230,                                    ! Wind Direction {deg}
   1,                                      ! Sky Clearness
   0,                                      ! Rain Indicator
   0,                                      ! Snow Indicator
