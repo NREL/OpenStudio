@@ -68,18 +68,15 @@ SET( ${target_name}_src
   DataPointValueRecord.hpp
   DataPointValueRecord_Impl.hpp
   DataPointValueRecord.cpp
-  DataPoint_DiscretePerturbation_JoinRecord.hpp
-  DataPoint_DiscretePerturbation_JoinRecord_Impl.hpp
-  DataPoint_DiscretePerturbation_JoinRecord.cpp
+  DataPoint_Measure_JoinRecord.hpp
+  DataPoint_Measure_JoinRecord_Impl.hpp
+  DataPoint_Measure_JoinRecord.cpp
   DDACEAlgorithmRecord.hpp
   DDACEAlgorithmRecord_Impl.hpp
   DDACEAlgorithmRecord.cpp
   DesignOfExperimentsRecord.hpp
   DesignOfExperimentsRecord_Impl.hpp
   DesignOfExperimentsRecord.cpp
-  DiscretePerturbationRecord.hpp
-  DiscretePerturbationRecord_Impl.hpp
-  DiscretePerturbationRecord.cpp
   DiscreteVariableRecord.hpp
   DiscreteVariableRecord_Impl.hpp
   DiscreteVariableRecord.cpp
@@ -95,9 +92,15 @@ SET( ${target_name}_src
   LinearFunctionRecord.hpp
   LinearFunctionRecord_Impl.hpp
   LinearFunctionRecord.cpp
-  NullPerturbationRecord.hpp
-  NullPerturbationRecord_Impl.hpp
-  NullPerturbationRecord.cpp
+  MeasureGroupRecord.hpp
+  MeasureGroupRecord_Impl.hpp
+  MeasureGroupRecord.cpp
+  MeasureRecord.hpp
+  MeasureRecord_Impl.hpp
+  MeasureRecord.cpp
+  NullMeasureRecord.hpp
+  NullMeasureRecord_Impl.hpp
+  NullMeasureRecord.cpp
   OpenStudioAlgorithmRecord.hpp
   OpenStudioAlgorithmRecord_Impl.hpp
   OpenStudioAlgorithmRecord.cpp
@@ -125,9 +128,9 @@ SET( ${target_name}_src
   RubyContinuousVariableRecord.hpp
   RubyContinuousVariableRecord_Impl.hpp
   RubyContinuousVariableRecord.cpp
-  RubyPerturbationRecord.hpp
-  RubyPerturbationRecord_Impl.hpp
-  RubyPerturbationRecord.cpp
+  RubyMeasureRecord.hpp
+  RubyMeasureRecord_Impl.hpp
+  RubyMeasureRecord.cpp
   SamplingAlgorithmRecord.hpp
   SamplingAlgorithmRecord_Impl.hpp
   SamplingAlgorithmRecord.cpp
@@ -169,18 +172,17 @@ SET( ${target_name}_moc
   DakotaAlgorithmRecord_Impl.hpp
   DataPointRecord_Impl.hpp
   DataPointValueRecord_Impl.hpp
-  DataPoint_DiscretePerturbation_JoinRecord_Impl.hpp
+  DataPoint_Measure_JoinRecord_Impl.hpp
   DDACEAlgorithmRecord_Impl.hpp
   DesignOfExperimentsRecord_Impl.hpp
-  DiscretePerturbationRecord_Impl.hpp
   DiscreteVariableRecord_Impl.hpp
   FSUDaceAlgorithmRecord_Impl.hpp
   FunctionRecord_Impl.hpp
   InputVariableRecord_Impl.hpp
   LinearFunctionRecord_Impl.hpp
-  ModelRulesetContinuousVariableRecord_Impl.hpp
-  ModelRulesetPerturbationRecord_Impl.hpp
-  NullPerturbationRecord_Impl.hpp
+  MeasureGroupRecord_Impl.hpp
+  MeasureRecord_Impl.hpp
+  NullMeasureRecord_Impl.hpp
   OpenStudioAlgorithmRecord_Impl.hpp
   OptimizationDataPointRecord_Impl.hpp
   OptimizationProblemRecord_Impl.hpp
@@ -190,7 +192,7 @@ SET( ${target_name}_moc
   ProblemRecord_Impl.hpp
   PSUADEDaceAlgorithmRecord_Impl.hpp
   RubyContinuousVariableRecord_Impl.hpp
-  RubyPerturbationRecord_Impl.hpp
+  RubyMeasureRecord_Impl.hpp
   SamplingAlgorithmRecord_Impl.hpp
   SequentialSearchRecord_Impl.hpp
   VariableRecord_Impl.hpp
@@ -224,11 +226,11 @@ SET( ${target_name}_test_src
   Test/AnalysisRecord_GTest.cpp
   Test/AttributeRecord_GTest.cpp
   Test/DataPointRecord_GTest.cpp
-  Test/DiscreteVariableRecord_GTest.cpp
+  Test/MeasureGroupRecord_GTest.cpp
   Test/FileReferenceRecord_GTest.cpp
   Test/ProblemRecord_GTest.cpp
   Test/ProjectDatabaseRecord_GTest.cpp
-  Test/RubyPerturbationRecord_GTest.cpp
+  Test/RubyMeasureRecord_GTest.cpp
   Test/RubyContinuousVariableRecord_GTest.cpp
   Test/TagRecord_GTest.cpp
   Test/URLSearchPathRecord_GTest.cpp
