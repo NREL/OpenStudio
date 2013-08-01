@@ -21,6 +21,15 @@
 #define UTILITIES_CORE_ASSERT_HPP
 
 /****************************************************************************
+!!! THIS FILE MUST BE INCLUDED BY ANY SOURCE FILE THAT USES Q_ASSERT!!!
+*****************************************************************************/
+
+// enable Q_ASSERTs in Release mode
+#ifdef QT_NO_DEBUG
+  #undef QT_NO_DEBUG
+#endif
+
+/****************************************************************************
 !!! THIS FILE MUST BE INCLUDED BY ANY SOURCE FILE THAT USES BOOST_ASSERT!!!
 *****************************************************************************/
 
