@@ -35,3 +35,13 @@ TEST(System, IdleTime)
 
   #endif
 }
+
+TEST(System, ExceptionHandling)
+{
+  System::testExceptions1();
+  System::testExceptions2();
+  System::testExceptions3();
+  System::testExceptions4();
+
+
+}
