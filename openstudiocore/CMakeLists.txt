@@ -20,6 +20,9 @@ SET(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VE
 # EnergyPlus Idd version 
 SET(ENERGYPLUS_VERSION "8.0")
 
+# Dakota version
+SET(DAKOTA_VERSION "5.3.1")
+
 # configure file with version information
 CONFIGURE_FILE( ${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStudio.hxx )
 
@@ -77,9 +80,6 @@ OPTION( BUILD_SIMXML "Build with SimXml support" OFF )
 # Build SDD
 OPTION( BUILD_SDD "Build with SDD support" ON )
 
-# Build with Dakota support
-OPTION( BUILD_WITH_DAKOTA "Build with Dakota algorithm library support" OFF )
-
 # Build R package
 OPTION( BUILD_R "Build R package" OFF )
 
@@ -100,6 +100,15 @@ IF (BUILD_V8_BINDINGS)
   OPTION( BUILD_NODE_MODULES "Build V8 Bindings as Node Modules" ON )
 ENDIF()
 
+# Require that DAKOTA_FOUND
+#
+# Some code (certain analysisdriver tests) are conditionally compiled depending on 
+# the value of this variable.
+#
+# Dakota is an optional third party algorithm library that we use through its command line
+# interface.
+OPTION( REQUIRE_DAKOTA "Ensure Dakota (third party analysis tool) is found" OFF )
+MARK_AS_ADVANCED( REQUIRE_DAKOTA )
 
 # Use PCH
 OPTION( USE_PCH "Use precompiled headers" OFF )
@@ -350,11 +359,25 @@ IF( BUILD_PYTHON_BINDINGS )
   SET( ALL_PYTHON_BINDING_TARGETS "" ) # global list
 ENDIF()
 
-# Dakota
-IF (BUILD_WITH_DAKOTA) 
-  FIND_PACKAGE(Dakota REQUIRED)
+IF (REQUIRE_DAKOTA) 
+  FIND_PACKAGE(Dakota "${DAKOTA_VERSION}" REQUIRED)
   MARK_AS_ADVANCED(DAKOTA_EXE)
-ENDIF(BUILD_WITH_DAKOTA)
+ELSE (REQUIRE_DAKOTA)
+  # If DAKOTA_FOUND not yet set, and DAKOTA_FOUND comes back false, emit a message
+  SET(EMIT_DAKOTA_WARNING false)
+  IF (NOT DEFINED DAKOTA_FOUND)
+    SET(EMIT_DAKOTA_WARNING true)
+  ENDIF(NOT DEFINED DAKOTA_FOUND)
+  FIND_PACKAGE(Dakota "${DAKOTA_VERSION}")
+  IF (DAKOTA_FOUND)
+    MARK_AS_ADVANCED(DAKOTA_EXE)
+  ELSE (DAKOTA_FOUND)
+    IF (EMIT_DAKOTA_WARNING)
+      MESSAGE(STATUS "DAKOTA was not found on your system. openstudio_analysisdriver_tests that depend on Dakota will not be built.")
+    ENDIF(EMIT_DAKOTA_WARNING)
+  ENDIF(DAKOTA_FOUND)
+ENDIF(REQUIRE_DAKOTA)
+SET(DAKOTA_FOUND ${DAKOTA_FOUND} CACHE INTERNAL "Boolean indicating whether Dakota was found.")
 
 # Doxygen
 IF( BUILD_DOCUMENTATION )

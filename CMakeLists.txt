@@ -4,7 +4,7 @@ PROJECT(OpenStudio)
 
 SET(CMAKE_VERSION_MAJOR 1)
 SET(CMAKE_VERSION_MINOR 0)
-SET(CMAKE_VERSION_PATCH 2)
+SET(CMAKE_VERSION_PATCH 3)
 
 SET(SUBVERSION_REVISION "Unknown")
 SET(CMAKE_VERSION_BUILD "${SUBVERSION_REVISION}" CACHE STRING "Build number") # svn revision
@@ -51,9 +51,6 @@ OPTION( BUILD_WITH_OPENSSL "Build With OpenSSL Support For SSH Connections" ON )
 # Build SimXML
 OPTION( BUILD_SIMXML "Build with SimXml support" OFF )
 
-# Build with Dakota support
-OPTION( BUILD_WITH_DAKOTA "Build with Dakota algorithm library support" OFF )
-
 # Build Ruby gem
 OPTION( BUILD_RUBY_GEM "Build Ruby Gem" OFF )
 
@@ -94,6 +91,16 @@ IF (BUILD_RUBY_GEM)
 
   MESSAGE("Enabling Ruby Gem overrides all of your packaging options. To build the Ruby Gem please type 'make package'")
 ENDIF()
+
+# Require that DAKOTA_FOUND
+#
+# Some code (certain analysisdriver tests) are conditionally compiled depending on 
+# the value of this variable.
+#
+# Dakota is an optional third party algorithm library that we use through its command line
+# interface.
+OPTION( REQUIRE_DAKOTA "Ensure Dakota (third party analysis tool) is found" OFF )
+MARK_AS_ADVANCED( REQUIRE_DAKOTA )
 
 IF(MSVC)
   # need to know if using the Express edition of Visual Studio, devenv is split into multiple programs
@@ -574,9 +581,9 @@ ExternalProject_Add( OpenStudioCore
     -DBUILD_PACKAGE:BOOL=${BUILD_PACKAGE}
     -DENABLE_TEST_RUNNER_TARGETS:BOOL=${ENABLE_TEST_RUNNER_TARGETS}
     -DBUILD_WITH_OPENSSL:BOOL=${BUILD_WITH_OPENSSL}
-    -DBUILD_WITH_DAKOTA:BOOL=${BUILD_WITH_DAKOTA}
     -DBUILD_RUBY_GEM:BOOL=${BUILD_RUBY_GEM}
     -DBUILD_RUBY_GEM_WITH_LIBS:BOOL=${BUILD_RUBY_GEM_WITH_LIBS}
+    -DREQUIRE_DAKOTA:BOOL=${REQUIRE_DAKOTA}
     -DMSVC_IS_EXPRESS:BOOL=${MSVC_IS_EXPRESS}
     -DUSE_PCH:BOOL=${USE_PCH}
     -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
