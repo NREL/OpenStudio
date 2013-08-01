@@ -66,6 +66,11 @@ namespace openstudio{
         m_F1.clear();
       }
 
+      bool LinkFlow::read(openstudio::path path)
+      {
+        return read(openstudio::toQString(path));
+      }
+
       bool LinkFlow::read(QString fileName)
       {
         clear();

@@ -24,6 +24,9 @@
 #include <QFile>
 
 #include <utilities/data/TimeSeries.hpp>
+#include <utilities/core/Path.hpp>
+
+#include "ContamAPI.hpp"
 
 namespace openstudio {
   //class TimeSeries;
@@ -39,7 +42,7 @@ namespace openstudio{
       public:
 
         // we would normally use openstudio::path for file path's
-        virtual bool read(QString fileName)=0;
+        virtual bool read(openstudio::path path)=0;
         virtual void clear();
 
         std::vector<int> nr(){return m_nr;}
@@ -52,10 +55,11 @@ namespace openstudio{
         std::vector<DateTime> m_dateTimes;
       };
 
-      class LinkFlow : public Results
+      class CONTAM_API LinkFlow : public Results
       {
       public:
         bool read(QString fileName);
+        bool read(openstudio::path path);
         void clear();
 
         // i'm not sure what the vector of vectors is for?  we would prefer to use openstudio::TimeSeries if possible, 

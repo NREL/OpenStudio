@@ -351,7 +351,7 @@ namespace contam
           path.pzm = -1;
           // Set the wind-related stuff here
           path.wazm = QString().sprintf("%g",openstudio::radToDeg(surface.azimuth()));
-          //path.setWindPressure(true);
+          path.setWindPressure(true);
           // Set flow element
           if(type == "RoofCeiling")
           {
