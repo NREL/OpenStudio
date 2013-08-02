@@ -118,6 +118,7 @@ int main(int argc, char *argv[])
 
   // This is a little clunky, but the prj::Data structure is too simple to do anything else right now
   translator.data.rc.ssWeather.windspd = QString("4.4704");
+  std::cout << translator.data.rc.wind_H.toStdString() << std::endl;
   output = translator.data.print();
   textStream << *output;
   file.close();
@@ -153,6 +154,7 @@ int main(int argc, char *argv[])
     std::cout << "Failed to complete SimRead process." << std::endl;
     return EXIT_FAILURE;
   }
+
   // Collect results
   if(verbose)
     std::cout << "Reading results..." << std::endl;
@@ -163,6 +165,7 @@ int main(int argc, char *argv[])
     std::cout << "Failed to read link flow results." << std::endl;
     return EXIT_FAILURE;
   }
+
   // Process results
   for(unsigned i=0;i<lfr.nr().size();i++)
   {

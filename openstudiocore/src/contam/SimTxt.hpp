@@ -62,20 +62,18 @@ namespace openstudio{
         bool read(openstudio::path path);
         void clear();
 
-        // i'm not sure what the vector of vectors is for?  we would prefer to use openstudio::TimeSeries if possible, 
-        // we also have a class openstudio::Vector for doing linear algebra.  finally if this is what you really want i'd
-        // use std::vector since it swig's well and also does implicit copying
-        QVector<QVector<double> > dP(){return m_dP;}
-        QVector<QVector<double> > F0(){return m_F0;}
-        QVector<QVector<double> > F1(){return m_F1;}
+        std::vector<std::vector<double> > dP(){return m_dP;}
+        std::vector<std::vector<double> > F0(){return m_F0;}
+        std::vector<std::vector<double> > F1(){return m_F1;}
 
         openstudio::TimeSeries deltaP(int nr);
+        openstudio::TimeSeries flow0(int nr);
+        openstudio::TimeSeries flow1(int nr);
 
       protected:
-        QVector<QVector<double> > m_dP;
-        std::vector<openstudio::Vector > m_deltaP;
-        QVector<QVector<double> > m_F0;
-        QVector<QVector<double> > m_F1;
+        std::vector<std::vector<double> > m_dP;
+        std::vector<std::vector<double> > m_F0;
+        std::vector<std::vector<double> > m_F1;
       };
 
       /*

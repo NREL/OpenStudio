@@ -20,6 +20,7 @@
 
 #include <contam/ForwardTranslator.hpp>
 #include <contam/PrjData.hpp>
+#include <contam/WindPressure.hpp>
 
 #include <model/Model.hpp>
 #include <model/Building.hpp>
@@ -233,6 +234,7 @@ namespace contam
       data.levels << level;
       nr++;
     }
+    data.rc.wind_H = QString().sprintf("%g",totalHeight);
     // Check for levels - translation can't proceed without levels
     if(data.levels.size() == 0)
     {
@@ -306,6 +308,7 @@ namespace contam
     nr = 0;
     // Loop over surfaces and generate paths
     QList <openstudio::Handle>used;
+    double wind_H = data.rc.wind_H.toDouble();
     BOOST_FOREACH(openstudio::model::Surface surface, model.getConcreteModelObjects<openstudio::model::Surface>())
     {
       openstudio::contam::prj::Path path;
@@ -352,10 +355,13 @@ namespace contam
           // Set the wind-related stuff here
           path.wazm = QString().sprintf("%g",openstudio::radToDeg(surface.azimuth()));
           path.setWindPressure(true);
+          path.wPmod = QString().sprintf("%g",openstudio::wind::pressureModifier(openstudio::wind::Default,wind_H));
+          path.pw = 4; // Assume standard template
           // Set flow element
           if(type == "RoofCeiling")
           {
             path.pe = roofAFE["Average"];
+            path.pw = 5; // Assume standard template
           }
           else
           {

@@ -17,6 +17,8 @@ SET( ${target_name}_src
   PrjData.cpp
   SimTxt.hpp
   SimTxt.cpp
+  WindPressure.hpp
+  WindPressure.cpp
 )
 
 # resource files

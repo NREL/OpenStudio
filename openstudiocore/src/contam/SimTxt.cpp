@@ -31,6 +31,15 @@ namespace openstudio{
   namespace contam {
     namespace sim {
 
+      // Generate time series-able representation of the data
+      Vector convertToVector(std::vector<double> in)
+      {
+        Vector out(in.size());
+        for(unsigned i=0;i<in.size();i++)
+          out[i] = in[i];
+        return out;
+      }
+
       void Results::clear()
       {
         m_nr.clear();
@@ -145,9 +154,9 @@ namespace openstudio{
             clear();
             return false;
           }
-          m_dP[nrMap[nr]] << dP;
-          m_F0[nrMap[nr]] << F0;
-          m_F1[nrMap[nr]] << F1;
+          m_dP[nrMap[nr]].push_back(dP);
+          m_F0[nrMap[nr]].push_back(F0);
+          m_F1[nrMap[nr]].push_back(F1);
 
         }
         // Unwind the zone number map;
@@ -162,22 +171,23 @@ namespace openstudio{
           clear();
           return false;
         }
-        // Generate time series-able representation of the data
-        m_deltaP.resize(m_nr.size());
-        for(unsigned i=0;i<m_nr.size();i++)
-        {
-          m_deltaP[i].resize(m_dP[i].size());
-          for(int j=0;j<m_dP[i].size();j++)
-            m_deltaP[i][j] = m_dP[i][j];
-        }
         return true;
       }
 
       openstudio::TimeSeries LinkFlow::deltaP(int nr)
       {
-        return openstudio::TimeSeries(m_dateTimes,m_deltaP[nr],"Pa");
+        return openstudio::TimeSeries(m_dateTimes,convertToVector(m_dP[nr]),"Pa");
       }
 
+      openstudio::TimeSeries LinkFlow::flow0(int nr)
+      {
+        return openstudio::TimeSeries(m_dateTimes,convertToVector(m_F0[nr]),"kg/s");
+      }
+
+      openstudio::TimeSeries LinkFlow::flow1(int nr)
+      {
+        return openstudio::TimeSeries(m_dateTimes,convertToVector(m_F1[nr]),"kg/s");
+      }
       /* Do these later
       void Contaminants::clear()
       {
