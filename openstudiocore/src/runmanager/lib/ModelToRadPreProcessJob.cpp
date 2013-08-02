@@ -296,7 +296,7 @@ namespace detail {
       outputVariable = openstudio::model::OutputVariable("Site Solar Azimuth Angle", outmodel);
       outputVariable.setReportingFrequency("Hourly");
 
-      outputVariable = openstudio::model::OutputVariable("Luminous Efficacy of Sky Site Diffuse Solar Radiation Rate per Area Radiation", outmodel);
+      outputVariable = openstudio::model::OutputVariable("Site Sky Diffuse Solar Radiation Luminous Efficacy", outmodel);
       outputVariable.setReportingFrequency("Hourly");
 
       outputVariable = openstudio::model::OutputVariable("Site Beam Solar Radiation Luminous Efficacy", outmodel);
