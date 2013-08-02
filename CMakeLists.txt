@@ -166,6 +166,8 @@ ELSE()
 ENDIF()
 
 FIND_PROGRAM( RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH )
+FIND_PACKAGE( Ruby REQUIRED )
+
 
 IF(WIN32 AND MSVC AND CMAKE_CL_64)
   MESSAGE(WARNING "64bit Support on Windows is EXPERIMENTAL. Ruby 2.0.0 will be built. The Sketchup plugin will not work. Expect problems with ruby support in general. Unless you've already built Boost and Qt you probably want to let this super build do it. There are lots of warnings, so we are disabling warnings as errors.") 
