@@ -17,25 +17,21 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/DiscretePerturbationRecord.hpp>
-#include <project/DiscretePerturbationRecord_Impl.hpp>
-#include <project/DiscreteVariableRecord.hpp>
-#include <project/RubyPerturbationRecord.hpp>
-#include <project/RubyPerturbationRecord_Impl.hpp>
-#include <project/NullPerturbationRecord.hpp>
-#include <project/NullPerturbationRecord_Impl.hpp>
-#include <project/ModelRulesetPerturbationRecord.hpp>
-#include <project/ModelRulesetPerturbationRecord_Impl.hpp>
+#include <project/MeasureRecord.hpp>
+#include <project/MeasureRecord_Impl.hpp>
+#include <project/MeasureGroupRecord.hpp>
+#include <project/RubyMeasureRecord.hpp>
+#include <project/RubyMeasureRecord_Impl.hpp>
+#include <project/NullMeasureRecord.hpp>
+#include <project/NullMeasureRecord_Impl.hpp>
 #include <project/ProjectDatabase.hpp>
 #include <project/JoinRecord.hpp>
 
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/NullPerturbation_Impl.hpp>
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/RubyPerturbation_Impl.hpp>
-#include <analysis/ModelRulesetPerturbation.hpp>
-#include <analysis/ModelRulesetPerturbation_Impl.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/NullMeasure_Impl.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
 
@@ -51,36 +47,36 @@ namespace project {
 
 namespace detail{
 
-  DiscretePerturbationRecord_Impl::DiscretePerturbationRecord_Impl(const analysis::DiscretePerturbation& discretePerturbation,
-                                                                   const DiscretePerturbationRecordType& discretePerturbationRecordType,
-                                                                   const DiscreteVariableRecord& discreteVariableRecord,
-                                                                   int perturbationVectorIndex)
-    : ObjectRecord_Impl(discreteVariableRecord.projectDatabase(),
-                        discretePerturbation.uuid(),
-                        discretePerturbation.name(),
-                        discretePerturbation.displayName(),
-                        discretePerturbation.description(),
-                        discretePerturbation.versionUUID()),
-      m_discretePerturbationRecordType(discretePerturbationRecordType),
-      m_variableRecordId(discreteVariableRecord.id()),
-      m_isSelected(discretePerturbation.isSelected()),
-      m_perturbationVectorIndex(perturbationVectorIndex)
+  MeasureRecord_Impl::MeasureRecord_Impl(const analysis::Measure& measure,
+                                         const MeasureRecordType& measureRecordType,
+                                         const MeasureGroupRecord& measureGroupRecord,
+                                         int measureVectorIndex)
+    : ObjectRecord_Impl(measureGroupRecord.projectDatabase(),
+                        measure.uuid(),
+                        measure.name(),
+                        measure.displayName(),
+                        measure.description(),
+                        measure.versionUUID()),
+      m_measureRecordType(measureRecordType),
+      m_variableRecordId(measureGroupRecord.id()),
+      m_isSelected(measure.isSelected()),
+      m_measureVectorIndex(measureVectorIndex)
   {}
 
-  DiscretePerturbationRecord_Impl::DiscretePerturbationRecord_Impl(const analysis::DiscretePerturbation& discretePerturbation,
-                                                                   const DiscretePerturbationRecordType& discretePerturbationRecordType,
-                                                                   ProjectDatabase& database)
+  MeasureRecord_Impl::MeasureRecord_Impl(const analysis::Measure& measure,
+                                         const MeasureRecordType& measureRecordType,
+                                         ProjectDatabase& database)
     : ObjectRecord_Impl(database,
-                        discretePerturbation.uuid(),
-                        discretePerturbation.name(),
-                        discretePerturbation.displayName(),
-                        discretePerturbation.description(),
-                        discretePerturbation.versionUUID()),
-      m_discretePerturbationRecordType(discretePerturbationRecordType),
-      m_isSelected(discretePerturbation.isSelected())
+                        measure.uuid(),
+                        measure.name(),
+                        measure.displayName(),
+                        measure.description(),
+                        measure.versionUUID()),
+      m_measureRecordType(measureRecordType),
+      m_isSelected(measure.isSelected())
   {}
 
-  DiscretePerturbationRecord_Impl::DiscretePerturbationRecord_Impl(const QSqlQuery& query, const ProjectDatabase& database)
+  MeasureRecord_Impl::MeasureRecord_Impl(const QSqlQuery& query, const ProjectDatabase& database)
     : ObjectRecord_Impl(database, query)
   {
     BOOST_ASSERT(query.isValid());
@@ -88,71 +84,71 @@ namespace detail{
     BOOST_ASSERT(query.isSelect());
 
     QVariant value;
-    value = query.value(DiscretePerturbationRecordColumns::discretePerturbationRecordType);
+    value = query.value(MeasureRecordColumns::measureRecordType);
     BOOST_ASSERT(value.isValid() && !value.isNull());
-    m_discretePerturbationRecordType = DiscretePerturbationRecordType(value.toInt());
+    m_measureRecordType = MeasureRecordType(value.toInt());
 
-    value = query.value(DiscretePerturbationRecordColumns::variableRecordId);
+    value = query.value(MeasureRecordColumns::variableRecordId);
     if (value.isValid() && !value.isNull()) {
       m_variableRecordId = value.toInt();
     }
 
-    value = query.value(DiscretePerturbationRecordColumns::isSelected);
+    value = query.value(MeasureRecordColumns::isSelected);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     m_isSelected = value.toBool();
 
-    value = query.value(DiscretePerturbationRecordColumns::perturbationVectorIndex);
+    value = query.value(MeasureRecordColumns::measureVectorIndex);
     if (value.isValid() && !value.isNull()) {
-      m_perturbationVectorIndex = value.toInt();
+      m_measureVectorIndex = value.toInt();
     }
   }
 
-  std::string DiscretePerturbationRecord_Impl::databaseTableName() const
+  std::string MeasureRecord_Impl::databaseTableName() const
   {
-    return DiscretePerturbationRecord::databaseTableName();
+    return MeasureRecord::databaseTableName();
   }
 
-  boost::optional<ObjectRecord> DiscretePerturbationRecord_Impl::parent() const
+  boost::optional<ObjectRecord> MeasureRecord_Impl::parent() const
   {
     OptionalObjectRecord result;
-    if (OptionalDiscreteVariableRecord dvr = this->discreteVariableRecord()) {
+    if (OptionalMeasureGroupRecord dvr = this->measureGroupRecord()) {
       result = *dvr;
     }
     return result;
   }
 
-  std::vector<ObjectRecord> DiscretePerturbationRecord_Impl::children() const {
+  std::vector<ObjectRecord> MeasureRecord_Impl::children() const {
     return ObjectRecordVector();
   }
 
-  std::vector<ObjectRecord> DiscretePerturbationRecord_Impl::resources() const {
+  std::vector<ObjectRecord> MeasureRecord_Impl::resources() const {
     return ObjectRecordVector();
   }
 
-  std::vector<JoinRecord> DiscretePerturbationRecord_Impl::joinRecords() const
+  std::vector<JoinRecord> MeasureRecord_Impl::joinRecords() const
   {
     return std::vector<JoinRecord>();
   }
 
-  boost::optional<DiscreteVariableRecord> DiscretePerturbationRecord_Impl::discreteVariableRecord() const
+  boost::optional<MeasureGroupRecord> MeasureRecord_Impl::measureGroupRecord() const
   {
-    OptionalDiscreteVariableRecord result;
+    OptionalMeasureGroupRecord result;
 
     if (m_variableRecordId) {
       ProjectDatabase database = this->projectDatabase();
-      result = DiscreteVariableRecord::getDiscreteVariableRecord(*m_variableRecordId, database);
+      result = MeasureGroupRecord::getMeasureGroupRecord(*m_variableRecordId, database);
       BOOST_ASSERT(result);
     }
 
     return result;
   }
 
-  bool DiscretePerturbationRecord_Impl::isSelected() const
+  bool MeasureRecord_Impl::isSelected() const
   {
     return m_isSelected;
   }
 
-  bool DiscretePerturbationRecord_Impl::setIsSelected(bool isSelected)
+  bool MeasureRecord_Impl::setIsSelected(bool isSelected)
   {
     if (m_isSelected != isSelected){
       m_isSelected = isSelected;
@@ -161,40 +157,40 @@ namespace detail{
     return true;
   }
 
-  boost::optional<int> DiscretePerturbationRecord_Impl::perturbationVectorIndex() const {
-    return m_perturbationVectorIndex;
+  boost::optional<int> MeasureRecord_Impl::measureVectorIndex() const {
+    return m_measureVectorIndex;
   }
 
-  void DiscretePerturbationRecord_Impl::bindValues(QSqlQuery& query) const
+  void MeasureRecord_Impl::bindValues(QSqlQuery& query) const
   {
     ObjectRecord_Impl::bindValues(query);
 
-    query.bindValue(DiscretePerturbationRecordColumns::discretePerturbationRecordType, m_discretePerturbationRecordType.value());
+    query.bindValue(MeasureRecordColumns::measureRecordType, m_measureRecordType.value());
     if (m_variableRecordId) {
-      query.bindValue(DiscretePerturbationRecordColumns::variableRecordId, *m_variableRecordId);
+      query.bindValue(MeasureRecordColumns::variableRecordId, *m_variableRecordId);
     }
     else {
-      query.bindValue(DiscretePerturbationRecordColumns::variableRecordId, QVariant(QVariant::Int));
+      query.bindValue(MeasureRecordColumns::variableRecordId, QVariant(QVariant::Int));
     }
-    query.bindValue(DiscretePerturbationRecordColumns::isSelected, m_isSelected);
-    if (m_perturbationVectorIndex) {
-      query.bindValue(DiscretePerturbationRecordColumns::perturbationVectorIndex, *m_perturbationVectorIndex);
+    query.bindValue(MeasureRecordColumns::isSelected, m_isSelected);
+    if (m_measureVectorIndex) {
+      query.bindValue(MeasureRecordColumns::measureVectorIndex, *m_measureVectorIndex);
     }
     else {
-      query.bindValue(DiscretePerturbationRecordColumns::perturbationVectorIndex, QVariant(QVariant::Int));
+      query.bindValue(MeasureRecordColumns::measureVectorIndex, QVariant(QVariant::Int));
     }
   }
 
-  void DiscretePerturbationRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
+  void MeasureRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
   {
     ObjectRecord_Impl::setLastValues(query, projectDatabase);
 
     QVariant value;
-    value = query.value(DiscretePerturbationRecordColumns::discretePerturbationRecordType);
+    value = query.value(MeasureRecordColumns::measureRecordType);
     BOOST_ASSERT(value.isValid() && !value.isNull());
-    m_lastDiscretePerturbationRecordType = DiscretePerturbationRecordType(value.toInt());
+    m_lastMeasureRecordType = MeasureRecordType(value.toInt());
 
-    value = query.value(DiscretePerturbationRecordColumns::variableRecordId);
+    value = query.value(MeasureRecordColumns::variableRecordId);
     if (value.isValid() && !value.isNull()) {
       m_lastVariableRecordId = value.toInt();
     }
@@ -202,31 +198,31 @@ namespace detail{
       m_lastVariableRecordId.reset();
     }
 
-    value = query.value(DiscretePerturbationRecordColumns::isSelected);
+    value = query.value(MeasureRecordColumns::isSelected);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     m_lastIsSelected = value.toBool();
 
-    value = query.value(DiscretePerturbationRecordColumns::perturbationVectorIndex);
+    value = query.value(MeasureRecordColumns::measureVectorIndex);
     if (value.isValid() && !value.isNull()) {
-      m_lastPerturbationVectorIndex = value.toInt();
+      m_lastMeasureVectorIndex = value.toInt();
     }
     else {
-      m_lastPerturbationVectorIndex.reset();
+      m_lastMeasureVectorIndex.reset();
     }
   }
 
-  bool DiscretePerturbationRecord_Impl::compareValues(const QSqlQuery& query) const
+  bool MeasureRecord_Impl::compareValues(const QSqlQuery& query) const
   {
     bool result = true;
 
     result = result && ObjectRecord_Impl::compareValues(query);
 
     QVariant value;
-    value = query.value(DiscretePerturbationRecordColumns::discretePerturbationRecordType);
+    value = query.value(MeasureRecordColumns::measureRecordType);
     BOOST_ASSERT(value.isValid() && !value.isNull());
-    result = result && (m_discretePerturbationRecordType == DiscretePerturbationRecordType(value.toInt()));
+    result = result && (m_measureRecordType == MeasureRecordType(value.toInt()));
 
-    value = query.value(DiscretePerturbationRecordColumns::variableRecordId);
+    value = query.value(MeasureRecordColumns::variableRecordId);
     if (value.isValid() && !value.isNull()) {
       result = result && m_variableRecordId && (*m_variableRecordId == value.toInt());
     }
@@ -234,49 +230,49 @@ namespace detail{
       result = result && !m_variableRecordId;
     }
 
-    value = query.value(DiscretePerturbationRecordColumns::isSelected);
+    value = query.value(MeasureRecordColumns::isSelected);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_isSelected == value.toBool());
 
-    value = query.value(DiscretePerturbationRecordColumns::perturbationVectorIndex);
+    value = query.value(MeasureRecordColumns::measureVectorIndex);
     if (value.isValid() && !value.isNull()) {
-      result = result && m_perturbationVectorIndex && (*m_perturbationVectorIndex == value.toInt());
+      result = result && m_measureVectorIndex && (*m_measureVectorIndex == value.toInt());
     }
     else {
-      result = result && !m_perturbationVectorIndex;
+      result = result && !m_measureVectorIndex;
     }
 
     return result;
   }
 
-  void DiscretePerturbationRecord_Impl::saveLastValues()
+  void MeasureRecord_Impl::saveLastValues()
   {
     ObjectRecord_Impl::saveLastValues();
 
-    m_lastDiscretePerturbationRecordType = m_discretePerturbationRecordType;
+    m_lastMeasureRecordType = m_measureRecordType;
     m_lastVariableRecordId = m_variableRecordId;
     m_lastIsSelected = m_isSelected;
-    m_lastPerturbationVectorIndex = m_perturbationVectorIndex;
+    m_lastMeasureVectorIndex = m_measureVectorIndex;
   }
 
-  void DiscretePerturbationRecord_Impl::revertToLastValues()
+  void MeasureRecord_Impl::revertToLastValues()
   {
     ObjectRecord_Impl::revertToLastValues();
 
-    m_discretePerturbationRecordType = m_lastDiscretePerturbationRecordType;
+    m_measureRecordType = m_lastMeasureRecordType;
     m_variableRecordId = m_lastVariableRecordId;
     m_isSelected = m_lastIsSelected;
-    m_perturbationVectorIndex = m_lastPerturbationVectorIndex;
+    m_measureVectorIndex = m_lastMeasureVectorIndex;
   }
 
 } // detail
 
-std::string DiscretePerturbationRecord::databaseTableName()
+std::string MeasureRecord::databaseTableName()
 {
-  return "DiscretePerturbationRecords";
+  return "MeasureRecords";
 }
 
-UpdateByIdQueryData DiscretePerturbationRecord::updateByIdQueryData() {
+UpdateByIdQueryData MeasureRecord::updateByIdQueryData() {
   static UpdateByIdQueryData result;
   if (result.queryString.empty()) {
     // numeric column identifiers
@@ -323,136 +319,127 @@ UpdateByIdQueryData DiscretePerturbationRecord::updateByIdQueryData() {
   return result;
 }
 
-void DiscretePerturbationRecord::updatePathData(ProjectDatabase database,
+void MeasureRecord::updatePathData(ProjectDatabase database,
                                                 const openstudio::path& originalBase,
                                                 const openstudio::path& newBase)
 {}
 
-DiscretePerturbationRecord::DiscretePerturbationRecord(boost::shared_ptr<detail::DiscretePerturbationRecord_Impl> impl, ProjectDatabase database)
+MeasureRecord::MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl> impl, ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::DiscretePerturbationRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::MeasureRecord_Impl>());
 }
 
-DiscretePerturbationRecord::DiscretePerturbationRecord(boost::shared_ptr<detail::DiscretePerturbationRecord_Impl> impl)
+MeasureRecord::MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl> impl)
   : ObjectRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::DiscretePerturbationRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::MeasureRecord_Impl>());
 }
 
-std::vector<DiscretePerturbationRecord> DiscretePerturbationRecord::getDiscretePerturbationRecords(ProjectDatabase& database)
+std::vector<MeasureRecord> MeasureRecord::getMeasureRecords(ProjectDatabase& database)
 {
-  std::vector<DiscretePerturbationRecord> result;
+  std::vector<MeasureRecord> result;
 
   QSqlQuery query(*(database.qSqlDatabase()));
-  query.prepare(toQString("SELECT * FROM " + DiscretePerturbationRecord::databaseTableName()));
+  query.prepare(toQString("SELECT * FROM " + MeasureRecord::databaseTableName()));
   assertExec(query);
   while (query.next()) {
-    boost::optional<DiscretePerturbationRecord> perturbation = factoryFromQuery(query, database);
-    BOOST_ASSERT(perturbation);
-    result.push_back(*perturbation);
+    boost::optional<MeasureRecord> measure = factoryFromQuery(query, database);
+    BOOST_ASSERT(measure);
+    result.push_back(*measure);
   }
 
   return result;
 }
 
-boost::optional<DiscretePerturbationRecord> DiscretePerturbationRecord::getDiscretePerturbationRecord(int id, ProjectDatabase& database)
+boost::optional<MeasureRecord> MeasureRecord::getMeasureRecord(int id, ProjectDatabase& database)
 {
-  boost::optional<DiscretePerturbationRecord> result;
+  boost::optional<MeasureRecord> result;
 
   QSqlQuery query(*(database.qSqlDatabase()));
-  query.prepare(toQString("SELECT * FROM " + DiscretePerturbationRecord::databaseTableName() + " WHERE id=:id"));
+  query.prepare(toQString("SELECT * FROM " + MeasureRecord::databaseTableName() + " WHERE id=:id"));
   query.bindValue(":id", id);
   assertExec(query);
   if(query.first()) {
-    boost::optional<DiscretePerturbationRecord> perturbation = factoryFromQuery(query, database);
-    BOOST_ASSERT(perturbation);
-    result = perturbation;
+    boost::optional<MeasureRecord> measure = factoryFromQuery(query, database);
+    BOOST_ASSERT(measure);
+    result = measure;
   }
 
   return result;
 }
 
-boost::optional<DiscretePerturbationRecord> DiscretePerturbationRecord::factoryFromQuery(const QSqlQuery& query, ProjectDatabase& database)
+boost::optional<MeasureRecord> MeasureRecord::factoryFromQuery(const QSqlQuery& query, ProjectDatabase& database)
 {
-  boost::shared_ptr<detail::DiscretePerturbationRecord_Impl> impl;
+  boost::shared_ptr<detail::MeasureRecord_Impl> impl;
 
-  int discretePerturbationRecordType = query.value(DiscretePerturbationRecordColumns::discretePerturbationRecordType).toInt();
+  int measureRecordType = query.value(MeasureRecordColumns::measureRecordType).toInt();
 
-  switch (discretePerturbationRecordType){
-    case DiscretePerturbationRecordType::RubyPerturbationRecord:
-      impl = boost::shared_ptr<detail::RubyPerturbationRecord_Impl>(new detail::RubyPerturbationRecord_Impl(query, database));
+  switch (measureRecordType){
+    case MeasureRecordType::RubyMeasureRecord:
+      impl = boost::shared_ptr<detail::RubyMeasureRecord_Impl>(new detail::RubyMeasureRecord_Impl(query, database));
       break;
-    case DiscretePerturbationRecordType::NullPerturbationRecord:
-      impl = boost::shared_ptr<detail::NullPerturbationRecord_Impl>(new detail::NullPerturbationRecord_Impl(query, database));
-      break;
-    case DiscretePerturbationRecordType::ModelRulesetPerturbationRecord:
-      impl = boost::shared_ptr<detail::ModelRulesetPerturbationRecord_Impl>(new detail::ModelRulesetPerturbationRecord_Impl(query, database));
+    case MeasureRecordType::NullMeasureRecord:
+      impl = boost::shared_ptr<detail::NullMeasureRecord_Impl>(new detail::NullMeasureRecord_Impl(query, database));
       break;
     default:
-      LOG(Error, "Unknown discretePerturbationRecordType " << discretePerturbationRecordType);
+      LOG(Error, "Unknown measureRecordType " << measureRecordType);
       return boost::none;
   }
 
-  return DiscretePerturbationRecord(impl, database);
+  return MeasureRecord(impl, database);
 }
 
-DiscretePerturbationRecord DiscretePerturbationRecord::factoryFromDiscretePerturbation(
-    const analysis::DiscretePerturbation& discretePerturbation,
-    DiscreteVariableRecord& discreteVariableRecord,
-    int perturbationVectorIndex)
+MeasureRecord MeasureRecord::factoryFromMeasure(
+    const analysis::Measure& measure,
+    MeasureGroupRecord& measureGroupRecord,
+    int measureVectorIndex)
 {
-  if (discretePerturbation.optionalCast<analysis::NullPerturbation>()) {
-    return NullPerturbationRecord(discretePerturbation.cast<analysis::NullPerturbation>(),
-                                  discreteVariableRecord,
-                                  perturbationVectorIndex);
+  if (measure.optionalCast<analysis::NullMeasure>()) {
+    return NullMeasureRecord(measure.cast<analysis::NullMeasure>(),
+                                  measureGroupRecord,
+                                  measureVectorIndex);
   }
-  else if (discretePerturbation.optionalCast<analysis::RubyPerturbation>()) {
-    return RubyPerturbationRecord(discretePerturbation.cast<analysis::RubyPerturbation>(),
-                                  discreteVariableRecord,
-                                  perturbationVectorIndex);
-  }
-  else if (discretePerturbation.optionalCast<analysis::ModelRulesetPerturbation>()) {
-    return ModelRulesetPerturbationRecord(
-        discretePerturbation.cast<analysis::ModelRulesetPerturbation>(),
-        discreteVariableRecord,
-        perturbationVectorIndex);
+  else if (measure.optionalCast<analysis::RubyMeasure>()) {
+    return RubyMeasureRecord(measure.cast<analysis::RubyMeasure>(),
+                                  measureGroupRecord,
+                                  measureVectorIndex);
   }
 
   BOOST_ASSERT(false);
-  return DiscretePerturbationRecord(boost::shared_ptr<detail::DiscretePerturbationRecord_Impl>());
+  return MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl>());
 }
 
 
-boost::optional<DiscreteVariableRecord> DiscretePerturbationRecord::discreteVariableRecord() const
+boost::optional<MeasureGroupRecord> MeasureRecord::measureGroupRecord() const
 {
-  return this->getImpl<detail::DiscretePerturbationRecord_Impl>()->discreteVariableRecord();
+  return this->getImpl<detail::MeasureRecord_Impl>()->measureGroupRecord();
 }
 
-bool DiscretePerturbationRecord::isSelected() const
+bool MeasureRecord::isSelected() const
 {
-  return this->getImpl<detail::DiscretePerturbationRecord_Impl>()->isSelected();
+  return this->getImpl<detail::MeasureRecord_Impl>()->isSelected();
 }
 
-bool DiscretePerturbationRecord::setIsSelected(bool isSelected)
+bool MeasureRecord::setIsSelected(bool isSelected)
 {
-  return this->getImpl<detail::DiscretePerturbationRecord_Impl>()->setIsSelected(isSelected);
+  return this->getImpl<detail::MeasureRecord_Impl>()->setIsSelected(isSelected);
 }
 
-boost::optional<int> DiscretePerturbationRecord::perturbationVectorIndex() const {
-  return getImpl<detail::DiscretePerturbationRecord_Impl>()->perturbationVectorIndex();
+boost::optional<int> MeasureRecord::measureVectorIndex() const {
+  return getImpl<detail::MeasureRecord_Impl>()->measureVectorIndex();
 }
 
-analysis::DiscretePerturbation DiscretePerturbationRecord::discretePerturbation() const {
-  return getImpl<detail::DiscretePerturbationRecord_Impl>()->discretePerturbation();
+analysis::Measure MeasureRecord::measure() const {
+  return getImpl<detail::MeasureRecord_Impl>()->measure();
 }
 
-bool DiscretePerturbationRecordPerturbationVectorIndexLess::operator()(
-    const DiscretePerturbationRecord& left,
-    const DiscretePerturbationRecord& right) const
+bool MeasureRecordMeasureVectorIndexLess::operator()(
+    const MeasureRecord& left,
+    const MeasureRecord& right) const
 {
-  OptionalInt leftIndex = left.perturbationVectorIndex();
-  OptionalInt rightIndex = right.perturbationVectorIndex();
+  OptionalInt leftIndex = left.measureVectorIndex();
+  OptionalInt rightIndex = right.measureVectorIndex();
   if (leftIndex && rightIndex) {
     return (leftIndex.get() < rightIndex.get());
   }

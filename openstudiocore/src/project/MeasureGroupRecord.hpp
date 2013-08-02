@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef PROJECT_DISCRETEVARIABLERECORD_HPP
-#define PROJECT_DISCRETEVARIABLERECORD_HPP
+#ifndef PROJECT_MEASUREGROUPRECORD_HPP
+#define PROJECT_MEASUREGROUPRECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/InputVariableRecord.hpp>
+#include <project/DiscreteVariableRecord.hpp>
 
 #include <utilities/core/Path.hpp>
 #include <utilities/core/Logger.hpp>
@@ -31,97 +31,96 @@
 namespace openstudio {
 
 namespace analysis{
-  class DiscreteVariable;
+  class MeasureGroup;
 }
 
 namespace project {
 
 namespace detail{
-  class DiscreteVariableRecord_Impl;
+  class MeasureGroupRecord_Impl;
 }
 
-class PROJECT_API DiscreteVariableRecord : public InputVariableRecord {
+class PROJECT_API MeasureGroupRecord : public DiscreteVariableRecord {
  public:
 
-  typedef detail::DiscreteVariableRecord_Impl ImplType;
+  typedef detail::MeasureGroupRecord_Impl ImplType;
   typedef VariableRecordColumns ColumnsType;
   typedef VariableRecord ObjectRecordType;
 
   /** @name Constructors and Destructors */
   //@{
 
-  DiscreteVariableRecord(const analysis::DiscreteVariable& discreteVariable,
-                         ProblemRecord& problemRecord,
-                         int variableVectorIndex);
+  MeasureGroupRecord(const analysis::MeasureGroup& measureGroup,
+                     ProblemRecord& problemRecord,
+                     int workflowIndex);
 
-  DiscreteVariableRecord(const analysis::DiscreteVariable& discreteVariable,
-                         FunctionRecord& functionRecord,
-                         int variableVectorIndex,
-                         boost::optional<double> functionCoefficient);
+  MeasureGroupRecord(const analysis::MeasureGroup& measureGroup,
+                     FunctionRecord& functionRecord,
+                     int variableVectorIndex,
+                     boost::optional<double> functionCoefficient);
 
-  DiscreteVariableRecord(const QSqlQuery& query, ProjectDatabase& database);
+  MeasureGroupRecord(const QSqlQuery& query, ProjectDatabase& database);
 
-  virtual ~DiscreteVariableRecord() {}
+  virtual ~MeasureGroupRecord() {}
 
   //@}
   /** @name Static Methods */
   //@{
 
-  static boost::optional<DiscreteVariableRecord> factoryFromQuery(const QSqlQuery& query,
-                                                                  ProjectDatabase& database);
+  static boost::optional<MeasureGroupRecord> factoryFromQuery(const QSqlQuery& query,
+                                                              ProjectDatabase& database);
 
-  static std::vector<DiscreteVariableRecord> getDiscreteVariableRecords(ProjectDatabase& database);
+  static std::vector<MeasureGroupRecord> getMeasureGroupRecords(ProjectDatabase& database);
 
-  static boost::optional<DiscreteVariableRecord> getDiscreteVariableRecord(
-      int id, ProjectDatabase& database);
+  static boost::optional<MeasureGroupRecord> getMeasureGroupRecord(int id,
+                                                                   ProjectDatabase& database);
 
   //@}
 
-  analysis::DiscreteVariable discreteVariable() const;
+  analysis::MeasureGroup measureGroup() const;
 
-  /// number of discrete perturbations
-  unsigned numPerturbations(bool selectedPerturbationsOnly) const;
+  /// number of measures
+  unsigned numMeasures(bool selectedMeasuresOnly) const;
 
-  /// all discrete perturbation ids
-  std::vector<int> discretePerturbationRecordIds(bool selectedPerturbationsOnly) const;
+  /// all measure ids
+  std::vector<int> measureRecordIds(bool selectedMeasuresOnly) const;
 
-  /// all discrete perturbations
-  std::vector<DiscretePerturbationRecord> discretePerturbationRecords(
-      bool selectedPerturbationsOnly) const;
+  /// all measures
+  std::vector<MeasureRecord> measureRecords(bool selectedMeasuresOnly) const;
 
-  /** Get the DiscretePerturbationRecord at index. Throws if index >= numPerturbations(false). */
-  DiscretePerturbationRecord getDiscretePerturbationRecord(int perturbationVectorIndex) const;
+  /** Get the MeasureRecord at index. Throws if index >= numMeasures(false). */
+  MeasureRecord getMeasureRecord(int vectorIndex) const;
 
  protected:
   /// @cond
   friend class Record;
   friend class ProjectDatabase;
-  friend class detail::DiscreteVariableRecord_Impl;
+  friend class detail::MeasureGroupRecord_Impl;
 
   /** Construct from impl. */
-  DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl,
+  MeasureGroupRecord(boost::shared_ptr<detail::MeasureGroupRecord_Impl> impl,
                          ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl);
+  explicit MeasureGroupRecord(boost::shared_ptr<detail::MeasureGroupRecord_Impl> impl);
 
   /// @endcond
  private:
-  REGISTER_LOGGER("openstudio.project.DiscreteVariableRecord");
+  REGISTER_LOGGER("openstudio.project.MeasureGroupRecord");
 
-  void constructDiscretePerturbationRecords(const analysis::DiscreteVariable& discreteVariable);
+  void constructMeasureRecords(const analysis::MeasureGroup& measureGroup);
 
-  void removeDiscretePerturbationRecords(const std::vector<UUID>& uuidsToKeep,
-                                         ProjectDatabase& database);
+  void removeMeasureRecords(const std::vector<UUID>& uuidsToKeep,
+                            ProjectDatabase& database);
 };
 
-/** \relates DiscreteVariableRecord*/
-typedef boost::optional<DiscreteVariableRecord> OptionalDiscreteVariableRecord;
+/** \relates MeasureGroupRecord*/
+typedef boost::optional<MeasureGroupRecord> OptionalMeasureGroupRecord;
 
-/** \relates DiscreteVariableRecord*/
-typedef std::vector<DiscreteVariableRecord> DiscreteVariableRecordVector;
+/** \relates MeasureGroupRecord*/
+typedef std::vector<MeasureGroupRecord> MeasureGroupRecordVector;
 
 } // project
 } // openstudio
 
-#endif // PROJECT_DISCRETEVARIABLERECORD_HPP
+#endif // PROJECT_MEASUREGROUPRECORD_HPP

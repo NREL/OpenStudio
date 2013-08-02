@@ -23,11 +23,10 @@
 #include <project/ProjectAPI.hpp>
 #include <project/InputVariableRecord_Impl.hpp>
 
-// TODO: Delete this include if no derived classes (and no DiscreteVariableRecordType enum).
 #include <project/DiscreteVariableRecord.hpp>
 
 namespace openstudio {
-namespace NAMESPACE {
+namespace analysis {
   class DiscreteVariable;
 }
 namespace project {
@@ -41,13 +40,16 @@ namespace detail {
     /** @name Constructors and Destructors */
     //@{
 
-    // TODO: May need to remove type enum if DiscreteVariable is a leaf of the inheritance tree.
-    // TODO: Replace ProjectDatabase& database with parent Record and/or add more 
-    // construtors to match public class.
-    // TODO: Find-replace on 'NAMESPACE'.
-    DiscreteVariableRecord_Impl(const NAMESPACE::DiscreteVariable& discreteVariable,
+    DiscreteVariableRecord_Impl(const analysis::DiscreteVariable& discreteVariable,
                                 const DiscreteVariableRecordType& discreteVariableRecordType,
-                                ProjectDatabase& database);
+                                ProblemRecord& problemRecord,
+                                int workflowIndex);
+
+    DiscreteVariableRecord_Impl(const analysis::DiscreteVariable& discreteVariable,
+                                const DiscreteVariableRecordType& discreteVariableRecordType,
+                                FunctionRecord& functionRecord,
+                                int variableVectorIndex,
+                                boost::optional<double> functionCoefficient);
 
     /** Constructor from query. Throws if bad query. */
     DiscreteVariableRecord_Impl(const QSqlQuery& query, ProjectDatabase& database);
@@ -58,20 +60,6 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    /** Returns the direct parent of this object, if it exists. */
-    virtual boost::optional<ObjectRecord> parent() const;
-
-    /** Returns objects directly owned by this Record. Children are removed when this Record 
-     *  is removed. */
-    virtual std::vector<ObjectRecord> children() const;
-
-    /** Returns objects referenced, but not owned, by this Record. */
-    virtual std::vector<ObjectRecord> resources() const;
-
-    /** Returns join relationships between this object and others. Such relationships will be 
-     *  removed when either record in the relationship is removed. */
-    virtual std::vector<JoinRecord> joinRecords() const;
-
     /** Save the row that corresponds to this record in projectDatabase. */
     virtual void saveRow(ProjectDatabase& projectDatabase);
 
@@ -79,11 +67,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // ADD METHODS FOR RETRIEVING PARENT, CHILD, AND RESOURCE RECORDS AS DESIRED
-
-    // ADD METHODS FOR GETTING/SETTING SPECIFIC DATA FIELDS AS DESIRED
-
-    NAMESPACE::DiscreteVariable discreteVariable() const;
+    virtual analysis::DiscreteVariable discreteVariable() const = 0;
 
     //@}
    protected:

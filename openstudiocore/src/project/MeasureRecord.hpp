@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef PROJECT_DISCRETEPERTURBATIONRECORD_HPP
-#define PROJECT_DISCRETEPERTURBATIONRECORD_HPP
+#ifndef PROJECT_MEASURERECORD_HPP
+#define PROJECT_MEASURERECORD_HPP
 
 #include "ProjectAPI.hpp"
 #include <project/ObjectRecord.hpp>
@@ -29,33 +29,31 @@
 
 namespace openstudio {
 namespace analysis {
-  class DiscretePerturbation;
+  class Measure;
 }
 namespace project {
 
-class DiscreteVariableRecord;
-class VariableRecord;
+class MeasureGroupRecord;
 
 namespace detail {
-  class DiscretePerturbationRecord_Impl;
-  class DiscreteVariableRecord_Impl;
+  class MeasureRecord_Impl;
+  class MeasureGroupRecord_Impl;
 } // detail
 
 
-/** \class DiscretePerturbationRecordType
+/** \class MeasureRecordType
  *
- *  \relates DiscretePerturbationRecord */
-OPENSTUDIO_ENUM( DiscretePerturbationRecordType,
-  ((NullPerturbationRecord)(NullPerturbationRecord)(0))
-  ((RubyPerturbationRecord)(RubyPerturbationRecord)(1))
-  ((ModelRulesetPerturbationRecord)(ModelRulesetPerturbationRecord)(2))
+ *  \relates MeasureRecord */
+OPENSTUDIO_ENUM( MeasureRecordType,
+  ((NullMeasureRecord)(NullMeasureRecord)(0))
+  ((RubyMeasureRecord)(RubyMeasureRecord)(1))
  );
 
-/** \class DiscretePerturbationRecordColumns
- *  \brief Column definitions for the DiscretePerturbationRecords table.
+/** \class MeasureRecordColumns
+ *  \brief Column definitions for the MeasureRecords table.
  *
- *  \relates DiscretePerturbationRecord */
-OPENSTUDIO_ENUM(DiscretePerturbationRecordColumns,
+ *  \relates MeasureRecord */
+OPENSTUDIO_ENUM(MeasureRecordColumns,
   ((id)(INTEGER PRIMARY KEY)(0))
   ((handle)(TEXT)(1))
   ((name)(TEXT)(2))
@@ -64,31 +62,30 @@ OPENSTUDIO_ENUM(DiscretePerturbationRecordColumns,
   ((timestampCreate)(TEXT)(5))
   ((timestampLast)(TEXT)(6))
   ((uuidLast)(TEXT)(7))
-  ((discretePerturbationRecordType)(INTEGER)(8))
+  ((measureRecordType)(INTEGER)(8))
   ((variableRecordId)(INTEGER)(9))
-  ((isSelected)(BOOLEAN)(10))
-  ((perturbationVectorIndex)(INTEGER)(11))
-  ((rubyScriptRecordId)(INTEGER)(12))
-  ((inputFileType)(INTEGER)(13))
-  ((outputFileType)(INTEGER)(14))
+  ((measureVectorIndex)(INTEGER)(10))
+  ((isSelected)(BOOLEAN)(11))
+  ((inputFileType)(INTEGER)(12))
+  ((outputFileType)(INTEGER)(13))
+  ((fileReferenceRecordId)(INTEGER)(14))
   ((isUserScript)(BOOLEAN)(15))
-  ((modelRulesetRecordId)(INTEGER)(16))
-  ((usesBCLMeasure)(BOOLEAN)(17))
+  ((usesBCLMeasure)(BOOLEAN)(16))
 );
 
-/** A DiscretePerturbation is an ObjectRecord that serializes a specific value of a
- *  DiscreteVariable. */
-class PROJECT_API DiscretePerturbationRecord : public ObjectRecord {
+/** A Measure is an ObjectRecord that serializes a specific value of a
+ *  MeasureGroup. */
+class PROJECT_API MeasureRecord : public ObjectRecord {
  public:
 
-  typedef detail::DiscretePerturbationRecord_Impl ImplType;
-  typedef DiscretePerturbationRecordColumns ColumnsType;
-  typedef DiscretePerturbationRecord ObjectRecordType;
+  typedef detail::MeasureRecord_Impl ImplType;
+  typedef MeasureRecordColumns ColumnsType;
+  typedef MeasureRecord ObjectRecordType;
 
   /** @name Constructors and Destructors */
   //@{
 
-  virtual ~DiscretePerturbationRecord() {}
+  virtual ~MeasureRecord() {}
 
   //@}
 
@@ -101,78 +98,72 @@ class PROJECT_API DiscretePerturbationRecord : public ObjectRecord {
                              const openstudio::path& originalBase,
                              const openstudio::path& newBase);
 
-   /// get perturbation from query
-  static boost::optional<DiscretePerturbationRecord> factoryFromQuery(
-      const QSqlQuery& query,
-      ProjectDatabase& database);
+   /// get measure from query
+  static boost::optional<MeasureRecord> factoryFromQuery(const QSqlQuery& query,
+                                                         ProjectDatabase& database);
 
-  /** Create a DiscretePerturbationRecord from discretePerturbation that belongs to the discrete
-   *  variable serialized to discreteVariableRecord. The index is the vector index of
-   *  discretePerturbation in the variable. */
-  static DiscretePerturbationRecord factoryFromDiscretePerturbation(
-      const analysis::DiscretePerturbation& discretePerturbation,
-      DiscreteVariableRecord& discreteVariableRecord,
-      int perturbationVectorIndex);
+  /** Create a MeasureRecord from measure that belongs to the discrete
+   *  variable serialized to measureGroupRecord. The index is the vector index of
+   *  measure in the variable. */
+  static MeasureRecord factoryFromMeasure(const analysis::Measure& measure,
+                                          MeasureGroupRecord& measureGroupRecord,
+                                          int measureVectorIndex);
 
-  /// get all perturbations
-  static std::vector<DiscretePerturbationRecord> getDiscretePerturbationRecords(
-      ProjectDatabase& database);
+  /// get all measures
+  static std::vector<MeasureRecord> getMeasureRecords(ProjectDatabase& database);
 
-  /// get perturbation by id
-  static boost::optional<DiscretePerturbationRecord> getDiscretePerturbationRecord(
-      int id, ProjectDatabase& database);
+  /// get measure by id
+  static boost::optional<MeasureRecord> getMeasureRecord(int id, ProjectDatabase& database);
 
   /** @name Getters */
   //@{
 
-  /** Get the parent DiscreteVariableRecord. */
-  boost::optional<DiscreteVariableRecord> discreteVariableRecord() const;
+  /** Get the parent MeasureGroupRecord. */
+  boost::optional<MeasureGroupRecord> measureGroupRecord() const;
 
-  /// is this perturbation selected
+  /// is this measure selected
   bool isSelected() const;
 
-  /// set if this perturbation is selected
+  /// set if this measure is selected
   bool setIsSelected(bool isSelected);
 
-  /** Index of this DiscretePerturbation in its (parent) DiscreteVariable's vector of
-   *  perturbations. */
-  boost::optional<int> perturbationVectorIndex() const;
+  /** Index of this Measure in its (parent) MeasureGroup's vector of measures. */
+  boost::optional<int> measureVectorIndex() const;
 
-  analysis::DiscretePerturbation discretePerturbation() const;
+  analysis::Measure measure() const;
 
   //@}
  protected:
   /// @cond
   friend class Record;
   friend class ProjectDatabase;
-  friend class detail::DiscretePerturbationRecord_Impl;
-  friend class detail::DiscreteVariableRecord_Impl;
+  friend class detail::MeasureRecord_Impl;
+  friend class detail::MeasureGroupRecord_Impl;
 
   /// from impl
-  DiscretePerturbationRecord(boost::shared_ptr<detail::DiscretePerturbationRecord_Impl> impl,
-                             ProjectDatabase database);
+  MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl> impl,ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit DiscretePerturbationRecord(boost::shared_ptr<detail::DiscretePerturbationRecord_Impl> impl);
+  explicit MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl> impl);
 
   /// @endcond
  private:
 
-  REGISTER_LOGGER("openstudio.project.DiscretePerturbationRecord");
+  REGISTER_LOGGER("openstudio.project.MeasureRecord");
 };
 
-/** \relates DiscretePerturbationRecord*/
-typedef boost::optional<DiscretePerturbationRecord> OptionalDiscretePerturbationRecord;
+/** \relates MeasureRecord*/
+typedef boost::optional<MeasureRecord> OptionalMeasureRecord;
 
-/** \relates DiscretePerturbationRecord*/
-typedef std::vector<DiscretePerturbationRecord> DiscretePerturbationRecordVector;
+/** \relates MeasureRecord*/
+typedef std::vector<MeasureRecord> MeasureRecordVector;
 
-/** Sorts DiscretePerturbationRecords by perturbationVectorIndex. */
-struct PROJECT_API DiscretePerturbationRecordPerturbationVectorIndexLess {
-  bool operator()(const DiscretePerturbationRecord& left, const DiscretePerturbationRecord& right) const;
+/** Sorts MeasureRecords by measureVectorIndex. */
+struct PROJECT_API MeasureRecordMeasureVectorIndexLess {
+  bool operator()(const MeasureRecord& left, const MeasureRecord& right) const;
 };
 
 } // project
 } // openstudio
 
-#endif // PROJECT_DISCRETEPERTURBATIONRECORD_HPP
+#endif // PROJECT_MEASURERECORD_HPP

@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef PROJECT_DISCRETEVARIABLERECORD_IMPL_HPP
-#define PROJECT_DISCRETEVARIABLERECORD_IMPL_HPP
+#ifndef PROJECT_MEASUREGROUPRECORD_IMPL_HPP
+#define PROJECT_MEASUREGROUPRECORD_IMPL_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/InputVariableRecord_Impl.hpp>
+#include <project/DiscreteVariableRecord_Impl.hpp>
 
 #include <utilities/core/Path.hpp>
 #include <utilities/core/Logger.hpp>
@@ -30,37 +30,37 @@
 
 namespace openstudio {
 namespace analysis {
-  class DiscreteVariable;
+  class MeasureGroup;
 }
 
 namespace project {
 
-class DiscretePerturbationRecord;
+class MeasureRecord;
 
 namespace detail{
 
-  /** DiscreteVariableRecord_Impl is an InputVariableRecord_Impl that is the
-   *  implementation class for DiscreteVariableRecord.*/
-  class PROJECT_API DiscreteVariableRecord_Impl : public InputVariableRecord_Impl {
+  /** MeasureGroupRecord_Impl is an DiscreteVariableRecord_Impl that is the
+   *  implementation class for MeasureGroupRecord.*/
+  class PROJECT_API MeasureGroupRecord_Impl : public DiscreteVariableRecord_Impl {
     Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */
     //@{
 
-    DiscreteVariableRecord_Impl(const analysis::DiscreteVariable& discreteVariable,
-                                ProblemRecord& problemRecord,
-                                int workflowIndex);
+    MeasureGroupRecord_Impl(const analysis::MeasureGroup& measureGroup,
+                            ProblemRecord& problemRecord,
+                            int workflowIndex);
 
-    DiscreteVariableRecord_Impl(const analysis::DiscreteVariable& discreteVariable,
-                                FunctionRecord& functionRecord,
-                                int variableVectorIndex,
-                                boost::optional<double> functionCoefficient);
+    MeasureGroupRecord_Impl(const analysis::MeasureGroup& measureGroup,
+                            FunctionRecord& functionRecord,
+                            int variableVectorIndex,
+                            boost::optional<double> functionCoefficient);
 
     /** Constructor from query. Throws if bad query. */
-    DiscreteVariableRecord_Impl(const QSqlQuery& query, ProjectDatabase& database);
+    MeasureGroupRecord_Impl(const QSqlQuery& query, ProjectDatabase& database);
 
-    virtual ~DiscreteVariableRecord_Impl() {}
+    virtual ~MeasureGroupRecord_Impl() {}
 
     //@}
     /** @name Virtual Methods */
@@ -80,24 +80,25 @@ namespace detail{
 
     virtual analysis::InputVariable inputVariable() const;
 
+    virtual analysis::DiscreteVariable discreteVariable() const;
+
     //@}
     /** @name Getters and Queries */
     //@{
 
-    analysis::DiscreteVariable discreteVariable() const;
+    analysis::MeasureGroup measureGroup() const;
 
-    /// number of discrete perturbations
-    unsigned numPerturbations(bool selectedPerturbationsOnly) const;
+    /// number of measures
+    unsigned numMeasures(bool selectedMeasuresOnly) const;
 
-    /// all discrete perturbation ids
-    std::vector<int> discretePerturbationRecordIds(bool selectedPerturbationsOnly) const;
+    /// all measure ids
+    std::vector<int> measureRecordIds(bool selectedMeasuresOnly) const;
 
-    /// all discrete perturbations
-    std::vector<DiscretePerturbationRecord> discretePerturbationRecords(
-        bool selectedPerturbationsOnly) const;
+    /// all measures
+    std::vector<MeasureRecord> measureRecords(bool selectedMeasuresOnly) const;
 
-    /** Get the DiscretePerturbationRecord at index. Throws if index >= numPerturbations(false). */
-    DiscretePerturbationRecord getDiscretePerturbationRecord(int perturbationVectorIndex) const;
+    /** Get the MeasureRecord at index. Throws if index >= numMeasures(false). */
+    MeasureRecord getMeasureRecord(int vectorIndex) const;
 
     //@}
    protected:
@@ -117,7 +118,7 @@ namespace detail{
     virtual void revertToLastValues();
 
    private:
-    REGISTER_LOGGER("openstudio.project.DiscreteVariableRecord");
+    REGISTER_LOGGER("openstudio.project.MeasureGroupRecord");
   };
 
 } // detail
@@ -125,5 +126,5 @@ namespace detail{
 } // project
 } // openstudio
 
-#endif // PROJECT_DISCRETEVARIABLERECORD_IMPL_HPP
+#endif // PROJECT_MEASUREGROUPRECORD_IMPL_HPP
 

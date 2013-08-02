@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef PROJECT_PERTURBATIONRECORD_IMPL_HPP
-#define PROJECT_PERTURBATIONRECORD_IMPL_HPP
+#ifndef PROJECT_MEASURERECORD_IMPL_HPP
+#define PROJECT_MEASURERECORD_IMPL_HPP
 
 #include "ProjectAPI.hpp"
 #include <project/ObjectRecord_Impl.hpp>
-#include <project/DiscretePerturbationRecord.hpp>
+#include <project/MeasureRecord.hpp>
 
 #include <utilities/core/Logger.hpp>
 
@@ -35,34 +35,34 @@ class QSqlQuery;
 namespace openstudio {
 namespace project {
 
-class DiscretePerturbationRecord;
-class DiscreteVariableRecord;
+class MeasureRecord;
+class MeasureGroupRecord;
 
 namespace detail {
 
-  /** DiscretePerturbationRecord_Impl is a ObjectRecord_Impl that is the implementation class for 
-   *  DiscretePerturbationRecord.*/
-  class PROJECT_API DiscretePerturbationRecord_Impl : public ObjectRecord_Impl {
+  /** MeasureRecord_Impl is a ObjectRecord_Impl that is the implementation class for
+   *  MeasureRecord.*/
+  class PROJECT_API MeasureRecord_Impl : public ObjectRecord_Impl {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
 
     /// constructors
-    DiscretePerturbationRecord_Impl(const analysis::DiscretePerturbation& discretePerturbation, 
-                                    const DiscretePerturbationRecordType& discretePerturbationRecordType, 
-                                    const DiscreteVariableRecord& discreteVariableRecord, 
-                                    int perturbationVectorIndex);
+    MeasureRecord_Impl(const analysis::Measure& measure,
+                       const MeasureRecordType& measureRecordType,
+                       const MeasureGroupRecord& measureGroupRecord,
+                       int measureVectorIndex);
 
-    /// constructor for RubyPerturbationRecords that are resources of RubyContinuousVariableRecords
-    DiscretePerturbationRecord_Impl(const analysis::DiscretePerturbation& discretePerturbation,
-                                    const DiscretePerturbationRecordType& discretePerturbationRecordType,
-                                    ProjectDatabase& database);
+    /// constructor for RubyMeasureRecords that are resources of RubyContinuousVariableRecords
+    MeasureRecord_Impl(const analysis::Measure& measure,
+                       const MeasureRecordType& measureRecordType,
+                       ProjectDatabase& database);
 
     /// create from a query, throws if bad query
-    DiscretePerturbationRecord_Impl(const QSqlQuery& query, const ProjectDatabase& database);
+    MeasureRecord_Impl(const QSqlQuery& query, const ProjectDatabase& database);
 
-    virtual ~DiscretePerturbationRecord_Impl() {}
+    virtual ~MeasureRecord_Impl() {}
 
     //@}
     /** @name Virtual Methods */
@@ -90,22 +90,22 @@ namespace detail {
     //@{
 
     /// get the variable record
-    boost::optional<DiscreteVariableRecord> discreteVariableRecord() const;
+    boost::optional<MeasureGroupRecord> measureGroupRecord() const;
 
-    /// is this perturbation selected
+    /// is this measure selected
     bool isSelected() const;
 
-    /// set if this perturbation is selected
+    /// set if this measure is selected
     bool setIsSelected(bool isSelected);
 
-    /** Index of this DiscretePerturbation in its (parent) DiscreteVariable's vector of 
-     *  perturbations. */
-    boost::optional<int> perturbationVectorIndex() const;
+    /** Index of this Measure in its (parent) MeasureGroup's vector of
+     *  measures. */
+    boost::optional<int> measureVectorIndex() const;
 
-    /** Deserialize derived class, then cast to analysis::DiscretePerturbation. Structurally 
+    /** Deserialize derived class, then cast to analysis::Measure. Structurally
      *  similar to the virtual clone function of RulesetObjects (especially as implemented by 
      *  the Standards ruleset objects). */
-    virtual analysis::DiscretePerturbation discretePerturbation() const = 0;
+    virtual analysis::Measure measure() const = 0;
 
     //@}
    protected:
@@ -132,21 +132,21 @@ namespace detail {
 
    private:
 
-    REGISTER_LOGGER("openstudio.project.DiscretePerturbationRecord");
+    REGISTER_LOGGER("openstudio.project.MeasureRecord");
 
-    DiscretePerturbationRecordType m_discretePerturbationRecordType;
+    MeasureRecordType m_measureRecordType;
     boost::optional<int> m_variableRecordId;
     bool m_isSelected;
-    boost::optional<int> m_perturbationVectorIndex;
+    boost::optional<int> m_measureVectorIndex;
 
-    DiscretePerturbationRecordType m_lastDiscretePerturbationRecordType;
+    MeasureRecordType m_lastMeasureRecordType;
     boost::optional<int> m_lastVariableRecordId;
     bool m_lastIsSelected;
-    boost::optional<int> m_lastPerturbationVectorIndex;
+    boost::optional<int> m_lastMeasureVectorIndex;
   };
 
 } // detail
 } // project
 } // openstudio
 
-#endif // PROJECT_PERTURBATIONRECORD_IMPL_HPP
+#endif // PROJECT_MEASURERECORD_IMPL_HPP

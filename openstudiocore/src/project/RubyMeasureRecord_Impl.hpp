@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef PROJECT_RUBYPERTURBATIONRECORD_IMPL_HPP
-#define PROJECT_RUBYPERTURBATIONRECORD_IMPL_HPP
+#ifndef PROJECT_RUBYMEASURERECORD_IMPL_HPP
+#define PROJECT_RUBYMEASURERECORD_IMPL_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/DiscretePerturbationRecord_Impl.hpp>
+#include <project/MeasureRecord_Impl.hpp>
 
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/Logger.hpp>
@@ -32,7 +32,7 @@
 namespace openstudio {
 
 namespace analysis {
-  class RubyPerturbation;
+  class RubyMeasure;
 }
 
 namespace project {
@@ -42,26 +42,26 @@ class OSArgumentRecord;
 
 namespace detail {
 
-  /** RubyPerturbationRecord_Impl is a DiscretePerturbationRecord_Impl that is the implementation class for RubyPerturbationRecord.*/
-  class PROJECT_API RubyPerturbationRecord_Impl : public DiscretePerturbationRecord_Impl {
+  /** RubyMeasureRecord_Impl is a MeasureRecord_Impl that is the implementation class for RubyMeasureRecord.*/
+  class PROJECT_API RubyMeasureRecord_Impl : public MeasureRecord_Impl {
     Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */
     //@{
 
-    RubyPerturbationRecord_Impl(const analysis::RubyPerturbation& rubyPerturbation,
-                                DiscreteVariableRecord& discreteVariableRecord,
-                                int perturbationVectorIndex);
+    RubyMeasureRecord_Impl(const analysis::RubyMeasure& rubyMeasure,
+                           MeasureGroupRecord& measureGroupRecord,
+                           int measureVectorIndex);
 
-    /** Constructor for RubyPerturbationRecords that are resources of RubyContinuousVariables. */
-    RubyPerturbationRecord_Impl(const analysis::RubyPerturbation& rubyPerturbation,
-                                ProjectDatabase& database);
+    /** Constructor for RubyMeasureRecords that are resources of RubyContinuousVariables. */
+    RubyMeasureRecord_Impl(const analysis::RubyMeasure& rubyMeasure,
+                           ProjectDatabase& database);
 
     /** Constructor from query. Throws if bad query. */
-    RubyPerturbationRecord_Impl(const QSqlQuery& query, ProjectDatabase& database);
+    RubyMeasureRecord_Impl(const QSqlQuery& query, ProjectDatabase& database);
 
-    virtual ~RubyPerturbationRecord_Impl() {}
+    virtual ~RubyMeasureRecord_Impl() {}
 
     //@}
     /** @name Virtual Methods */
@@ -83,7 +83,7 @@ namespace detail {
 
     bool usesBCLMeasure() const;
 
-    /** Returns the FileReferenceRecord pointing to this perturbation's Ruby script
+    /** Returns the FileReferenceRecord pointing to this measure's Ruby script
      *  (if !usesBCLMeasure()), or to a re-purposed FileReferenceRecord that stores a
      *  BCLMeasure's directory path and UUIDs (if usesBCLMeasure()). */
     FileReferenceRecord scriptOrBCLMeasureRecord() const;
@@ -94,15 +94,15 @@ namespace detail {
 
     std::vector<OSArgumentRecord> osArgumentRecords() const;
 
-    virtual analysis::DiscretePerturbation discretePerturbation() const;
+    virtual analysis::Measure measure() const;
 
-    analysis::RubyPerturbation rubyPerturbation() const;
+    analysis::RubyMeasure rubyMeasure() const;
 
     //@}
     /** @name Construction Helpers */
     //@{
 
-    /** Reverts record id values back to last state. For use in RubyPerturbationRecord constructor
+    /** Reverts record id values back to last state. For use in RubyMeasureRecord constructor
      *  so can access old related records for comparison and possible removal. */
     void revertToLastRecordIds();
 
@@ -127,7 +127,7 @@ namespace detail {
     virtual void revertToLastValues();
 
    private:
-    REGISTER_LOGGER("openstudio.project.RubyPerturbationRecord");
+    REGISTER_LOGGER("openstudio.project.RubyMeasureRecord");
 
     int m_scriptOrBCLMeasureRecordId;
     FileReferenceType m_inputFileType;
@@ -146,4 +146,4 @@ namespace detail {
 } // project
 } // openstudio
 
-#endif // PROJECT_RUBYPERTURBATIONRECORD_IMPL_HPP
+#endif // PROJECT_RUBYMEASURERECORD_IMPL_HPP

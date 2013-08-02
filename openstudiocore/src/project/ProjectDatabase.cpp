@@ -1858,14 +1858,22 @@ namespace detail {
   }
 
   void ProjectDatabase_Impl::update_1_0_3_to_1_0_4(const VersionString& startVersion) {
-    bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    ProjectDatabase database(this->shared_from_this());
+    QSqlQuery query(*(database.qSqlDatabase()));
+
+    // This is a big change to the database. All PAT-created OSPs should be preserved just
+    // fine, but any OSPs with rulesets ARE NOT GUARANTEED TO BEHAVE WELL AFTER THIS UPGRADE.
+    // Model ruleset perturbations and continuous variables are unceremoniously dropped; we
+    // do not attempt to fix various vector indices and DataPoints back up after this is done.
+    // We do issue warnings when we make such changes.
+
+    bool usedRulesets(false);
 
     LOG(Info,"Dropping deprecated tables ClauseRecords, RuleRecords, RulesetRecords, "
         << "Rule_Clause_JoinRecords, Ruleset_Rule_JoinRecords.");
 
-    ProjectDatabase database(this->shared_from_this());
-    QSqlQuery query(*(database.qSqlDatabase()));
+    bool didStartTransaction = startTransaction();
+    BOOST_ASSERT(didStartTransaction);
 
     query.prepare(QString("DROP TABLE ClauseRecords"));
     assertExec(query);
@@ -1890,6 +1898,174 @@ namespace detail {
     save();
     bool test = this->commitTransaction();
     BOOST_ASSERT(test);
+
+    LOG(Info,"Adding column discreteVariableRecordType to table VariableRecords.");
+
+    didStartTransaction = startTransaction();
+    BOOST_ASSERT(didStartTransaction);
+
+    VariableRecordColumns discreteVariableRecordTypeColumn("discreteVariableRecordType");
+    query.prepare(QString::fromStdString(
+        "ALTER TABLE " + VariableRecord::databaseTableName() + " ADD COLUMN " +
+        discreteVariableRecordTypeColumn.valueName() + " " +
+        discreteVariableRecordTypeColumn.valueDescription()));
+    assertExec(query);
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    BOOST_ASSERT(test);
+    LOG(Info,"Erase old model ruleset perturbations from " << MeasureRecord::databaseTableName()
+        << " table and issue warnings.");
+
+    didStartTransaction = startTransaction();
+    BOOST_ASSERT(didStartTransaction);
+
+    // HERE
+
+    save();
+    test = this->commitTransaction();
+    BOOST_ASSERT(test);
+    LOG(Info,"Processing current DiscreteVariableRecords to turn them into MeasureGroupRecords.");
+
+    didStartTransaction = startTransaction();
+    BOOST_ASSERT(didStartTransaction);
+
+    // get VariableRecords with inputVariableRecordType == 0 (DiscreteVariableRecord) and
+    // set their discreteVariableRecordType to 0 (MeasureGroupRecord)
+    query.prepare(QString::fromStdString("UPDATE " + VariableRecord::databaseTableName() +
+        " SET discreteVariableRecordType=:discreteVariableRecordType " +
+        "WHERE inputVariableRecordType=:inputVariableRecordType"));
+    query.bindValue(":discreteVariableRecordType",DiscreteVariableRecordType::MeasureGroupRecord);
+    query.bindValue(":inputVariableRecordType",InputVariableRecordType::DiscreteVariableRecord);
+    assertExec(query);
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    BOOST_ASSERT(test);
+
+    LOG(Info,"Creating " << MeasureRecord::databaseTableName() << " table and populating it with "
+        << "data from DiscretePerturbationRecords table, which will then be dropped.");
+
+    didStartTransaction = startTransaction();
+    BOOST_ASSERT(didStartTransaction);
+
+    createTable<MeasureRecord>();
+
+    save();
+    test = this->commitTransaction();
+    BOOST_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    BOOST_ASSERT(didStartTransaction);
+
+    // extract previous data
+    query.prepare(QString("SELECT * FROM DiscretePerturbationRecords"));
+    assertExec(query);
+    QSqlQuery measureAddQuery(*(database.qSqlDatabase()));
+    measureAddQuery.prepare(QString::fromStdString(
+        "INSERT INTO " + MeasureRecord::databaseTableName() +
+        " (id, handle, name, displayName, description, timestampCreate, timestampLast, " +
+        "uuidLast, measureRecordType, variableRecordId, measureVectorIndex, isSelected, " +
+        "inputFileType, outputFileType, fileReferenceRecordId, isUserScript, usesBCLMeasure) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"));
+
+    // loop through and move data to new format
+    QVariantList ids, handles, names, displayNames, descriptions, timestampCreates;
+    QVariantList timestampLasts, uuidLasts, measureRecordTypes, variableRecordIds;
+    QVariantList measureVectorIndices, isSelecteds, inputFileTypes, outputFileTypes;
+    QVariantList fileReferenceRecordIds, isUserScripts, usesBCLMeasures;
+    // note ids that are being dropped because they were associated with ModelRulesetPerturbations
+    QVariantList modelRulesetPerturbationIds;
+    while (query.next()) {
+      QVariant value = query.value(0);
+      BOOST_ASSERT(value.isValid() && !value.isNull());
+
+      int id = value.toInt();
+
+      // drop model ruleset perturbations
+      int recordType = query.value(8).toInt();
+      if (recordType == 2) {
+        usedRulesets = true;
+        LOG(Info,"Dropping ModelRulesetPerturbation '" << query.value(2).toString().toStdString()()
+            << "' associated with VariableRecord " << query.value(9).toInt() << ".");
+        modelRulesetPerturbationIds << id;
+        continue;
+      }
+      Q_ASSERT(recordType == 0 || recordType == 1);
+
+      ids << value;
+
+      handles << query.value(1);
+      names << query.value(2);
+      displayNames << query.value(3);
+      descriptions << query.value(4);
+      timestampCreates << query.value(5);
+      timestampLasts << query.value(6);
+      uuidLasts << query.value(7);
+
+      measureRecordTypes << query.value(8);
+      variableRecordIds << query.value(9);
+      measureVectorIndices << query.value(11);
+      isSelecteds << query.value(10);
+      inputFileTypes << query.value(13);
+      outputFileTypes << query.value(14);
+      fileReferenceRecordIds << query.value(12);
+      isUserScripts << query.value(15);
+      usesBCLMeasures << query.value(17);
+    }
+    measureAddQuery.addBindValue(ids);
+    measureAddQuery.addBindValue(handles);
+    measureAddQuery.addBindValue(names);
+    measureAddQuery.addBindValue(displayNames);
+    measureAddQuery.addBindValue(descriptions);
+    measureAddQuery.addBindValue(timestampCreates);
+    measureAddQuery.addBindValue(timestampLasts);
+    measureAddQuery.addBindValue(uuidLasts);
+
+    measureAddQuery.addBindValue(measureRecordTypes);
+    measureAddQuery.addBindValue(variableRecordIds);
+    measureAddQuery.addBindValue(measureVectorIndices);
+    measureAddQuery.addBindValue(isSelecteds);
+    measureAddQuery.addBindValue(inputFileTypes);
+    measureAddQuery.addBindValue(outputFileTypes);
+    measureAddQuery.addBindValue(fileReferenceRecordIds);
+    measureAddQuery.addBindValue(isUserScripts);
+    measureAddQuery.addBindValue(usesBCLMeasures);
+
+    test = measureAddQuery.execBatch();
+    BOOST_ASSERT(test);
+    measureAddQuery.clear();
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    BOOST_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    BOOST_ASSERT(didStartTransaction);
+
+    query.prepare(QString("DROP TABLE DiscretePerturbationRecords"));
+    assertExec(query);
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    BOOST_ASSERT(test);
+
+    if (usedRulesets) {
+      LOG(Warn,"This OSP contained ruleset::ModelRuleset information that was being used by a "
+          << "ModelRulesetPerturbation or a ModelRulesetContinuousVariable. Those classes are "
+          << "no longer available in or supported by OpenStudio. Since those classes were not "
+          << "being widely used, the upgrade code did not attempt to fix up indices and other "
+          << "values that are now corrupt because this data was dropped. If you would like to "
+          << "keep using this file, you may need to hand-edit some data (using a basic SQLite "
+          << "interface). In particular, take a look at MeasureRecords::measureVectorIndex, "
+          << "VariableRecords::variableVectorIndex, and WorkflowRecords::workflowIndex. Any "
+          << "DataPoint simulation results will also be invalid/out of date.");
+    }
+
   }
 
   void ProjectDatabase_Impl::setProjectDatabaseRecord(const ProjectDatabaseRecord& projectDatabaseRecord)

@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef PROJECT_RUBYPERTURBATIONRECORD_HPP
-#define PROJECT_RUBYPERTURBATIONRECORD_HPP
+#ifndef PROJECT_RUBYMEASURERECORD_HPP
+#define PROJECT_RUBYMEASURERECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/DiscretePerturbationRecord.hpp>
+#include <project/MeasureRecord.hpp>
 
 #include <utilities/core/Logger.hpp>
 
@@ -33,7 +33,7 @@ namespace openstudio {
 class FileReferenceType;
 
 namespace analysis {
-  class RubyPerturbation;
+  class RubyMeasure;
 }
 
 namespace project {
@@ -42,49 +42,49 @@ class FileReferenceRecord;
 class OSArgumentRecord;
 
 namespace detail {
-  class RubyPerturbationRecord_Impl;
+  class RubyMeasureRecord_Impl;
 } // detail
 
-/** RubyPerturbationRecord is a DiscretePerturbationRecord*/
-class PROJECT_API RubyPerturbationRecord : public DiscretePerturbationRecord {
+/** RubyMeasureRecord is a MeasureRecord*/
+class PROJECT_API RubyMeasureRecord : public MeasureRecord {
  public:
 
-  typedef detail::RubyPerturbationRecord_Impl ImplType;
-  typedef DiscretePerturbationRecordColumns ColumnsType;
-  typedef DiscretePerturbationRecord ObjectRecordType;
+  typedef detail::RubyMeasureRecord_Impl ImplType;
+  typedef MeasureRecordColumns ColumnsType;
+  typedef MeasureRecord ObjectRecordType;
 
   /** @name Constructors and Destructors */
   //@{
 
-  RubyPerturbationRecord(const analysis::RubyPerturbation& rubyPerturbation,
-                         DiscreteVariableRecord& discreteVariableRecord,
-                         int perturbationVectorIndex);
+  RubyMeasureRecord(const analysis::RubyMeasure& rubyMeasure,
+                    MeasureGroupRecord& measureGroupRecord,
+                    int measureVectorIndex);
 
-  /** Constructor for RubyPerturbationRecords that are resources of RubyContinuousVariables. */
-  RubyPerturbationRecord(const analysis::RubyPerturbation& rubyPerturbation,
-                         ProjectDatabase& database);
+  /** Constructor for RubyMeasureRecords that are resources of RubyContinuousVariables. */
+  RubyMeasureRecord(const analysis::RubyMeasure& rubyMeasure,
+                    ProjectDatabase& database);
 
-  RubyPerturbationRecord(const QSqlQuery& query, ProjectDatabase& database);
+  RubyMeasureRecord(const QSqlQuery& query, ProjectDatabase& database);
 
-  virtual ~RubyPerturbationRecord() {}
+  virtual ~RubyMeasureRecord() {}
 
   //@}
 
-  static boost::optional<RubyPerturbationRecord> factoryFromQuery(const QSqlQuery& query,
-                                                                  ProjectDatabase& database);
+  static boost::optional<RubyMeasureRecord> factoryFromQuery(const QSqlQuery& query,
+                                                             ProjectDatabase& database);
 
-  static std::vector<RubyPerturbationRecord> getRubyPerturbationRecords(ProjectDatabase& database);
+  static std::vector<RubyMeasureRecord> getRubyMeasureRecords(ProjectDatabase& database);
 
-  static boost::optional<RubyPerturbationRecord> getRubyPerturbationRecord(int id, ProjectDatabase& database);
+  static boost::optional<RubyMeasureRecord> getRubyMeasureRecord(int id, ProjectDatabase& database);
 
   /** @name Getters */
   //@{
 
-  /** Returns true if this RubyPerturbationRecord references a BCLMeasure. Otherwise, a bare Ruby
+  /** Returns true if this RubyMeasureRecord references a BCLMeasure. Otherwise, a bare Ruby
    *  script is referenced. */
   bool usesBCLMeasure() const;
 
-  /** Returns the FileReferenceRecord pointing to this perturbation's Ruby script
+  /** Returns the FileReferenceRecord pointing to this measure's Ruby script
    *  (if !usesBCLMeasure()), or to a re-purposed FileReferenceRecord that stores a
    *  BCLMeasure's directory path and UUIDs (if usesBCLMeasure()). */
   FileReferenceRecord scriptOrBCLMeasureRecord() const;
@@ -94,43 +94,43 @@ class PROJECT_API RubyPerturbationRecord : public DiscretePerturbationRecord {
   FileReferenceType outputFileType() const;
 
   /** Returns the child \link OSArgumentRecord OSArgumentRecords\endlink associated with this 
-   *  RubyPerturbationRecord. */
+   *  RubyMeasureRecord. */
   std::vector<OSArgumentRecord> osArgumentRecords() const;
 
-  /** Deserializes this record to an analysis::RubyPerturbation. */
-  analysis::RubyPerturbation rubyPerturbation() const;
+  /** Deserializes this record to an analysis::RubyMeasure. */
+  analysis::RubyMeasure rubyMeasure() const;
 
   //@}
  protected:
   /// @cond
   friend class Record;
   friend class ProjectDatabase;
-  friend class detail::RubyPerturbationRecord_Impl;
+  friend class detail::RubyMeasureRecord_Impl;
 
   /** Construct from impl. */
-  RubyPerturbationRecord(boost::shared_ptr<detail::RubyPerturbationRecord_Impl> impl,
-                         ProjectDatabase database);
+  RubyMeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl> impl,
+                    ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit RubyPerturbationRecord(boost::shared_ptr<detail::RubyPerturbationRecord_Impl> impl);
+  explicit RubyMeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl> impl);
 
   /// @endcond
  private:
-  REGISTER_LOGGER("openstudio.project.RubyPerturbationRecord");
+  REGISTER_LOGGER("openstudio.project.RubyMeasureRecord");
 
-  void constructRelatedRecords(const analysis::RubyPerturbation& rubyPerturbation);
+  void constructRelatedRecords(const analysis::RubyMeasure& rubyMeasure);
 
   void removeOSArgumentRecords(const std::vector<UUID>& uuidsToKeep,
                                ProjectDatabase& database);
 };
 
-/** \relates RubyPerturbationRecord*/
-typedef boost::optional<RubyPerturbationRecord> OptionalRubyPerturbationRecord;
+/** \relates RubyMeasureRecord*/
+typedef boost::optional<RubyMeasureRecord> OptionalRubyMeasureRecord;
 
-/** \relates RubyPerturbationRecord*/
-typedef std::vector<RubyPerturbationRecord> RubyPerturbationRecordVector;
+/** \relates RubyMeasureRecord*/
+typedef std::vector<RubyMeasureRecord> RubyMeasureRecordVector;
 
 } // project
 } // openstudio
 
-#endif // PROJECT_RUBYPERTURBATIONRECORD_HPP
+#endif // PROJECT_RUBYMEASURERECORD_HPP

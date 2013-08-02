@@ -17,17 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/RubyPerturbationRecord.hpp>
-#include <project/RubyPerturbationRecord_Impl.hpp>
-#include <project/DiscreteVariableRecord.hpp>
+#include <project/RubyMeasureRecord.hpp>
+#include <project/RubyMeasureRecord_Impl.hpp>
+#include <project/MeasureGroupRecord.hpp>
 #include <project/JoinRecord.hpp>
 #include <project/ProjectDatabase.hpp>
 #include <project/FileReferenceRecord.hpp>
 #include <project/OSArgumentRecord.hpp>
 
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/DiscretePerturbation_Impl.hpp>
-#include <analysis/RubyPerturbation.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/Measure_Impl.hpp>
+#include <analysis/RubyMeasure.hpp>
 
 #include <ruleset/OSArgument.hpp>
 
@@ -51,73 +51,73 @@ namespace project {
 
 namespace detail {
 
-  RubyPerturbationRecord_Impl::RubyPerturbationRecord_Impl(const analysis::RubyPerturbation& rubyPerturbation,
-                                                           DiscreteVariableRecord& discreteVariableRecord,
-                                                           int perturbationVectorIndex)
-    : DiscretePerturbationRecord_Impl(rubyPerturbation,
-                                      DiscretePerturbationRecordType::RubyPerturbationRecord,
-                                      discreteVariableRecord,
-                                      perturbationVectorIndex),
-      m_isUserScript(rubyPerturbation.isUserScript()),
-      m_usesBCLMeasure(rubyPerturbation.usesBCLMeasure())
+  RubyMeasureRecord_Impl::RubyMeasureRecord_Impl(const analysis::RubyMeasure& rubyMeasure,
+                                                 MeasureGroupRecord& measureGroupRecord,
+                                                 int measureVectorIndex)
+    : MeasureRecord_Impl(rubyMeasure,
+                         MeasureRecordType::RubyMeasureRecord,
+                         measureGroupRecord,
+                         measureVectorIndex),
+      m_isUserScript(rubyMeasure.isUserScript()),
+      m_usesBCLMeasure(rubyMeasure.usesBCLMeasure())
   {
-    boost::optional<FileReferenceType> inputFileType = rubyPerturbation.inputFileType();
+    boost::optional<FileReferenceType> inputFileType = rubyMeasure.inputFileType();
     BOOST_ASSERT(inputFileType);
     m_inputFileType = *inputFileType;
 
-    boost::optional<FileReferenceType> outputFileType = rubyPerturbation.outputFileType();
+    boost::optional<FileReferenceType> outputFileType = rubyMeasure.outputFileType();
     BOOST_ASSERT(outputFileType);
     m_outputFileType = *outputFileType;
   }
 
-  RubyPerturbationRecord_Impl::RubyPerturbationRecord_Impl(
-      const analysis::RubyPerturbation& rubyPerturbation,
+  RubyMeasureRecord_Impl::RubyMeasureRecord_Impl(
+      const analysis::RubyMeasure& rubyMeasure,
       ProjectDatabase& database)
-    : DiscretePerturbationRecord_Impl(rubyPerturbation,
-                                      DiscretePerturbationRecordType::RubyPerturbationRecord,
-                                      database),
-      m_isUserScript(rubyPerturbation.isUserScript()),
-      m_usesBCLMeasure(rubyPerturbation.usesBCLMeasure())
+    : MeasureRecord_Impl(rubyMeasure,
+                         MeasureRecordType::RubyMeasureRecord,
+                         database),
+      m_isUserScript(rubyMeasure.isUserScript()),
+      m_usesBCLMeasure(rubyMeasure.usesBCLMeasure())
   {
-    boost::optional<FileReferenceType> inputFileType = rubyPerturbation.inputFileType();
+    boost::optional<FileReferenceType> inputFileType = rubyMeasure.inputFileType();
     BOOST_ASSERT(inputFileType);
     m_inputFileType = *inputFileType;
 
-    boost::optional<FileReferenceType> outputFileType = rubyPerturbation.outputFileType();
+    boost::optional<FileReferenceType> outputFileType = rubyMeasure.outputFileType();
     BOOST_ASSERT(outputFileType);
     m_outputFileType = *outputFileType;
   }
 
-  RubyPerturbationRecord_Impl::RubyPerturbationRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
-    : DiscretePerturbationRecord_Impl(query, database)
+  RubyMeasureRecord_Impl::RubyMeasureRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
+    : MeasureRecord_Impl(query, database)
   {
     BOOST_ASSERT(query.isValid());
     BOOST_ASSERT(query.isActive());
     BOOST_ASSERT(query.isSelect());
 
     QVariant value;
-    value = query.value(DiscretePerturbationRecordColumns::rubyScriptRecordId);
+    value = query.value(MeasureRecordColumns::rubyScriptRecordId);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     m_scriptOrBCLMeasureRecordId = value.toInt();
 
-    value = query.value(DiscretePerturbationRecordColumns::inputFileType);
+    value = query.value(MeasureRecordColumns::inputFileType);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     m_inputFileType = FileReferenceType(value.toInt());
 
-    value = query.value(DiscretePerturbationRecordColumns::outputFileType);
+    value = query.value(MeasureRecordColumns::outputFileType);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     m_outputFileType = FileReferenceType(value.toInt());
 
-    value = query.value(DiscretePerturbationRecordColumns::isUserScript);
+    value = query.value(MeasureRecordColumns::isUserScript);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     m_isUserScript = value.toBool();
 
-    value = query.value(DiscretePerturbationRecordColumns::usesBCLMeasure);
+    value = query.value(MeasureRecordColumns::usesBCLMeasure);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     m_usesBCLMeasure = value.toBool();
   }
 
-  std::vector<ObjectRecord> RubyPerturbationRecord_Impl::children() const
+  std::vector<ObjectRecord> RubyMeasureRecord_Impl::children() const
   {
     std::vector<ObjectRecord> result;
     OSArgumentRecordVector arguments = osArgumentRecords();
@@ -125,46 +125,46 @@ namespace detail {
     return result;
   }
 
-  std::vector<ObjectRecord> RubyPerturbationRecord_Impl::resources() const {
+  std::vector<ObjectRecord> RubyMeasureRecord_Impl::resources() const {
     std::vector<ObjectRecord> result;
     result.push_back(this->scriptOrBCLMeasureRecord());
     return result;
   }
 
-  void RubyPerturbationRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void RubyMeasureRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
-    this->makeUpdateByIdQuery<RubyPerturbationRecord>(query);
+    this->makeUpdateByIdQuery<RubyMeasureRecord>(query);
     this->bindValues(query);
     assertExec(query);
   }
 
-  bool RubyPerturbationRecord_Impl::usesBCLMeasure() const {
+  bool RubyMeasureRecord_Impl::usesBCLMeasure() const {
     return m_usesBCLMeasure;
   }
 
-  FileReferenceRecord RubyPerturbationRecord_Impl::scriptOrBCLMeasureRecord() const {
+  FileReferenceRecord RubyMeasureRecord_Impl::scriptOrBCLMeasureRecord() const {
     ProjectDatabase database = projectDatabase();
     return FileReferenceRecord::getFileReferenceRecord(m_scriptOrBCLMeasureRecordId,database).get();
   }
 
-  FileReferenceType RubyPerturbationRecord_Impl::inputFileType() const {
+  FileReferenceType RubyMeasureRecord_Impl::inputFileType() const {
     return m_inputFileType;
   }
 
-  FileReferenceType RubyPerturbationRecord_Impl::outputFileType() const {
+  FileReferenceType RubyMeasureRecord_Impl::outputFileType() const {
     return m_outputFileType;
   }
 
-  std::vector<OSArgumentRecord> RubyPerturbationRecord_Impl::osArgumentRecords() const
+  std::vector<OSArgumentRecord> RubyMeasureRecord_Impl::osArgumentRecords() const
   {
     OSArgumentRecordVector result;
 
     ProjectDatabase database = projectDatabase();
     QSqlQuery query(*(database.qSqlDatabase()));
     query.prepare(toQString("SELECT * FROM " + OSArgumentRecord::databaseTableName() +
-                            " WHERE rubyPerturbationRecordId=:rubyPerturbationId"));
-    query.bindValue(":rubyPerturbationRecordId",id());
+                            " WHERE rubyMeasureRecordId=:rubyMeasureId"));
+    query.bindValue(":rubyMeasureRecordId",id());
     assertExec(query);
     while (query.next()) {
       result.push_back(OSArgumentRecord(query,database));
@@ -173,11 +173,11 @@ namespace detail {
     return result;
   }
 
-  analysis::DiscretePerturbation RubyPerturbationRecord_Impl::discretePerturbation() const {
-    return rubyPerturbation().cast<analysis::DiscretePerturbation>();
+  analysis::Measure RubyMeasureRecord_Impl::measure() const {
+    return rubyMeasure().cast<analysis::Measure>();
   }
 
-  analysis::RubyPerturbation RubyPerturbationRecord_Impl::rubyPerturbation() const {
+  analysis::RubyMeasure RubyMeasureRecord_Impl::rubyMeasure() const {
     FileReferenceRecord scriptOrBCLMeasureRecord = this->scriptOrBCLMeasureRecord();
     OSArgumentRecordVector argumentRecords = this->osArgumentRecords();
     ruleset::OSArgumentVector arguments;
@@ -185,99 +185,99 @@ namespace detail {
       arguments.push_back(argumentRecord.osArgument());
     }
 
-    return analysis::RubyPerturbation(handle(),
-                                      uuidLast(),
-                                      name(),
-                                      displayName(),
-                                      description(),
-                                      isSelected(),
-                                      scriptOrBCLMeasureRecord.fileReference(),
-                                      inputFileType(),
-                                      outputFileType(),
-                                      m_isUserScript,
-                                      arguments,
-                                      m_usesBCLMeasure);
+    return analysis::RubyMeasure(handle(),
+                                 uuidLast(),
+                                 name(),
+                                 displayName(),
+                                 description(),
+                                 isSelected(),
+                                 scriptOrBCLMeasureRecord.fileReference(),
+                                 inputFileType(),
+                                 outputFileType(),
+                                 m_isUserScript,
+                                 arguments,
+                                 m_usesBCLMeasure);
   }
 
-  void RubyPerturbationRecord_Impl::revertToLastRecordIds() {
+  void RubyMeasureRecord_Impl::revertToLastRecordIds() {
     m_scriptOrBCLMeasureRecordId = m_lastScriptOrBCLMeasureRecordId;
   }
 
-  void RubyPerturbationRecord_Impl::setScriptOrBCLMeasureRecordId(int id) {
+  void RubyMeasureRecord_Impl::setScriptOrBCLMeasureRecordId(int id) {
     m_scriptOrBCLMeasureRecordId = id;
     this->onChange(false);
   }
 
-  void RubyPerturbationRecord_Impl::bindValues(QSqlQuery& query) const
+  void RubyMeasureRecord_Impl::bindValues(QSqlQuery& query) const
   {
-    DiscretePerturbationRecord_Impl::bindValues(query);
+    MeasureRecord_Impl::bindValues(query);
 
-    query.bindValue(DiscretePerturbationRecordColumns::rubyScriptRecordId, m_scriptOrBCLMeasureRecordId);
-    query.bindValue(DiscretePerturbationRecordColumns::inputFileType, m_inputFileType.value());
-    query.bindValue(DiscretePerturbationRecordColumns::outputFileType, m_outputFileType.value());
-    query.bindValue(DiscretePerturbationRecordColumns::isUserScript, m_isUserScript);
-    query.bindValue(DiscretePerturbationRecordColumns::usesBCLMeasure, m_usesBCLMeasure);
+    query.bindValue(MeasureRecordColumns::rubyScriptRecordId, m_scriptOrBCLMeasureRecordId);
+    query.bindValue(MeasureRecordColumns::inputFileType, m_inputFileType.value());
+    query.bindValue(MeasureRecordColumns::outputFileType, m_outputFileType.value());
+    query.bindValue(MeasureRecordColumns::isUserScript, m_isUserScript);
+    query.bindValue(MeasureRecordColumns::usesBCLMeasure, m_usesBCLMeasure);
   }
 
-  void RubyPerturbationRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
+  void RubyMeasureRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
   {
-    DiscretePerturbationRecord_Impl::setLastValues(query, projectDatabase);
+    MeasureRecord_Impl::setLastValues(query, projectDatabase);
 
     QVariant value;
-    value = query.value(DiscretePerturbationRecordColumns::rubyScriptRecordId);
+    value = query.value(MeasureRecordColumns::rubyScriptRecordId);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     m_lastScriptOrBCLMeasureRecordId = value.toInt();
 
-    value = query.value(DiscretePerturbationRecordColumns::inputFileType);
+    value = query.value(MeasureRecordColumns::inputFileType);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     m_lastInputFileType = FileReferenceType(value.toInt());
 
-    value = query.value(DiscretePerturbationRecordColumns::outputFileType);
+    value = query.value(MeasureRecordColumns::outputFileType);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     m_lastOutputFileType = FileReferenceType(value.toInt());
 
-    value = query.value(DiscretePerturbationRecordColumns::isUserScript);
+    value = query.value(MeasureRecordColumns::isUserScript);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     m_lastIsUserScript = value.toBool();
 
-    value = query.value(DiscretePerturbationRecordColumns::usesBCLMeasure);
+    value = query.value(MeasureRecordColumns::usesBCLMeasure);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     m_lastUsesBCLMeasure = value.toBool();
   }
 
-  bool RubyPerturbationRecord_Impl::compareValues(const QSqlQuery& query) const
+  bool RubyMeasureRecord_Impl::compareValues(const QSqlQuery& query) const
   {
     bool result = true;
 
-    result = result && DiscretePerturbationRecord_Impl::compareValues(query);
+    result = result && MeasureRecord_Impl::compareValues(query);
 
     QVariant value;
-    value = query.value(DiscretePerturbationRecordColumns::rubyScriptRecordId);
+    value = query.value(MeasureRecordColumns::rubyScriptRecordId);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_scriptOrBCLMeasureRecordId == value.toInt());
 
-    value = query.value(DiscretePerturbationRecordColumns::inputFileType);
+    value = query.value(MeasureRecordColumns::inputFileType);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_inputFileType == FileReferenceType(value.toInt()));
 
-    value = query.value(DiscretePerturbationRecordColumns::outputFileType);
+    value = query.value(MeasureRecordColumns::outputFileType);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_outputFileType == FileReferenceType(value.toInt()));
 
-    value = query.value(DiscretePerturbationRecordColumns::isUserScript);
+    value = query.value(MeasureRecordColumns::isUserScript);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_isUserScript == value.toBool());
 
-    value = query.value(DiscretePerturbationRecordColumns::usesBCLMeasure);
+    value = query.value(MeasureRecordColumns::usesBCLMeasure);
     BOOST_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_usesBCLMeasure == value.toBool());
 
     return result;
   }
 
-  void RubyPerturbationRecord_Impl::saveLastValues()
+  void RubyMeasureRecord_Impl::saveLastValues()
   {
-    DiscretePerturbationRecord_Impl::saveLastValues();
+    MeasureRecord_Impl::saveLastValues();
 
     m_lastScriptOrBCLMeasureRecordId = m_scriptOrBCLMeasureRecordId;
     m_lastInputFileType = m_inputFileType;
@@ -286,9 +286,9 @@ namespace detail {
     m_lastUsesBCLMeasure = m_usesBCLMeasure;
   }
 
-  void RubyPerturbationRecord_Impl::revertToLastValues()
+  void RubyMeasureRecord_Impl::revertToLastValues()
   {
-    DiscretePerturbationRecord_Impl::revertToLastValues();
+    MeasureRecord_Impl::revertToLastValues();
 
     m_scriptOrBCLMeasureRecordId = m_lastScriptOrBCLMeasureRecordId;
     m_inputFileType = m_lastInputFileType;
@@ -299,137 +299,137 @@ namespace detail {
 
 } // detail
 
-RubyPerturbationRecord::RubyPerturbationRecord(const analysis::RubyPerturbation& rubyPerturbation,
-                                               DiscreteVariableRecord& discreteVariableRecord,
-                                               int perturbationVectorIndex)
-  : DiscretePerturbationRecord(boost::shared_ptr<detail::RubyPerturbationRecord_Impl>(
-        new detail::RubyPerturbationRecord_Impl(rubyPerturbation,
-                                                discreteVariableRecord,
-                                                perturbationVectorIndex)),
-        discreteVariableRecord.projectDatabase())
+RubyMeasureRecord::RubyMeasureRecord(const analysis::RubyMeasure& rubyMeasure,
+                                               MeasureGroupRecord& measureGroupRecord,
+                                               int measureVectorIndex)
+  : MeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl>(
+        new detail::RubyMeasureRecord_Impl(rubyMeasure,
+                                                measureGroupRecord,
+                                                measureVectorIndex)),
+        measureGroupRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::RubyPerturbationRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
 
-  constructRelatedRecords(rubyPerturbation);
+  constructRelatedRecords(rubyMeasure);
 }
 
-RubyPerturbationRecord::RubyPerturbationRecord(const analysis::RubyPerturbation& rubyPerturbation,
+RubyMeasureRecord::RubyMeasureRecord(const analysis::RubyMeasure& rubyMeasure,
                                                ProjectDatabase& database)
-  : DiscretePerturbationRecord(boost::shared_ptr<detail::RubyPerturbationRecord_Impl>(
-        new detail::RubyPerturbationRecord_Impl(rubyPerturbation,
+  : MeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl>(
+        new detail::RubyMeasureRecord_Impl(rubyMeasure,
                                                 database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::RubyPerturbationRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
 
-  constructRelatedRecords(rubyPerturbation);
+  constructRelatedRecords(rubyMeasure);
 }
 
-RubyPerturbationRecord::RubyPerturbationRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : DiscretePerturbationRecord(boost::shared_ptr<detail::RubyPerturbationRecord_Impl>(
-        new detail::RubyPerturbationRecord_Impl(query, database)),
+RubyMeasureRecord::RubyMeasureRecord(const QSqlQuery& query, ProjectDatabase& database)
+  : MeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl>(
+        new detail::RubyMeasureRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::RubyPerturbationRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
 }
 
-RubyPerturbationRecord::RubyPerturbationRecord(boost::shared_ptr<detail::RubyPerturbationRecord_Impl> impl, ProjectDatabase database)
-  : DiscretePerturbationRecord(impl, database)
+RubyMeasureRecord::RubyMeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl> impl, ProjectDatabase database)
+  : MeasureRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::RubyPerturbationRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
 }
 
-RubyPerturbationRecord::RubyPerturbationRecord(boost::shared_ptr<detail::RubyPerturbationRecord_Impl> impl)
-  : DiscretePerturbationRecord(impl)
+RubyMeasureRecord::RubyMeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl> impl)
+  : MeasureRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::RubyPerturbationRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
 }
 
-boost::optional<RubyPerturbationRecord> RubyPerturbationRecord::factoryFromQuery(
+boost::optional<RubyMeasureRecord> RubyMeasureRecord::factoryFromQuery(
     const QSqlQuery& query, ProjectDatabase& database)
 {
-  OptionalRubyPerturbationRecord result;
+  OptionalRubyMeasureRecord result;
   try {
-    result = RubyPerturbationRecord(query,database);
+    result = RubyMeasureRecord(query,database);
   }
   catch (const std::exception& e) {
-    LOG(Error,"Unable to construct RubyPerturbationRecord from query, because '"
+    LOG(Error,"Unable to construct RubyMeasureRecord from query, because '"
         << e.what() << "'.");
   }
   return result;
 }
 
-std::vector<RubyPerturbationRecord> RubyPerturbationRecord::getRubyPerturbationRecords(ProjectDatabase& database)
+std::vector<RubyMeasureRecord> RubyMeasureRecord::getRubyMeasureRecords(ProjectDatabase& database)
 {
-  std::vector<RubyPerturbationRecord> result;
+  std::vector<RubyMeasureRecord> result;
 
   QSqlQuery query(*(database.qSqlDatabase()));
-  query.prepare(toQString("SELECT * FROM " + DiscretePerturbationRecord::databaseTableName() + " WHERE discretePerturbationRecordType=:discretePerturbationRecordType"));
-  query.bindValue(":discretePerturbationRecordType", DiscretePerturbationRecordType::RubyPerturbationRecord);
+  query.prepare(toQString("SELECT * FROM " + MeasureRecord::databaseTableName() + " WHERE measureRecordType=:measureRecordType"));
+  query.bindValue(":measureRecordType", MeasureRecordType::RubyMeasureRecord);
   assertExec(query);
   while (query.next()) {
-    result.push_back(RubyPerturbationRecord(query,database));
+    result.push_back(RubyMeasureRecord(query,database));
   }
 
   return result;
 }
 
-boost::optional<RubyPerturbationRecord> RubyPerturbationRecord::getRubyPerturbationRecord(int id, ProjectDatabase& database)
+boost::optional<RubyMeasureRecord> RubyMeasureRecord::getRubyMeasureRecord(int id, ProjectDatabase& database)
 {
   QSqlQuery query(*(database.qSqlDatabase()));
-  query.prepare(toQString("SELECT * FROM " + RubyPerturbationRecord::databaseTableName() + " WHERE discretePerturbationRecordType=:discretePerturbationRecordType AND id=:id"));
-  query.bindValue(":discretePerturbationRecordType", DiscretePerturbationRecordType::RubyPerturbationRecord);
+  query.prepare(toQString("SELECT * FROM " + RubyMeasureRecord::databaseTableName() + " WHERE measureRecordType=:measureRecordType AND id=:id"));
+  query.bindValue(":measureRecordType", MeasureRecordType::RubyMeasureRecord);
   query.bindValue(":id", id);
   assertExec(query);
   if (query.first()) {
-    return RubyPerturbationRecord(query,database);
+    return RubyMeasureRecord(query,database);
   }
 
   return boost::none;
 }
 
-bool RubyPerturbationRecord::usesBCLMeasure() const {
-  return getImpl<detail::RubyPerturbationRecord_Impl>()->usesBCLMeasure();
+bool RubyMeasureRecord::usesBCLMeasure() const {
+  return getImpl<detail::RubyMeasureRecord_Impl>()->usesBCLMeasure();
 }
 
-FileReferenceRecord RubyPerturbationRecord::scriptOrBCLMeasureRecord() const {
-  return getImpl<detail::RubyPerturbationRecord_Impl>()->scriptOrBCLMeasureRecord();
+FileReferenceRecord RubyMeasureRecord::scriptOrBCLMeasureRecord() const {
+  return getImpl<detail::RubyMeasureRecord_Impl>()->scriptOrBCLMeasureRecord();
 }
 
-FileReferenceType RubyPerturbationRecord::inputFileType() const {
-  return getImpl<detail::RubyPerturbationRecord_Impl>()->inputFileType();
+FileReferenceType RubyMeasureRecord::inputFileType() const {
+  return getImpl<detail::RubyMeasureRecord_Impl>()->inputFileType();
 }
 
-FileReferenceType RubyPerturbationRecord::outputFileType() const {
-  return getImpl<detail::RubyPerturbationRecord_Impl>()->outputFileType();
+FileReferenceType RubyMeasureRecord::outputFileType() const {
+  return getImpl<detail::RubyMeasureRecord_Impl>()->outputFileType();
 }
 
-std::vector<OSArgumentRecord> RubyPerturbationRecord::osArgumentRecords() const {
-  return getImpl<detail::RubyPerturbationRecord_Impl>()->osArgumentRecords();
+std::vector<OSArgumentRecord> RubyMeasureRecord::osArgumentRecords() const {
+  return getImpl<detail::RubyMeasureRecord_Impl>()->osArgumentRecords();
 }
 
-analysis::RubyPerturbation RubyPerturbationRecord::rubyPerturbation() const {
-  return getImpl<detail::RubyPerturbationRecord_Impl>()->rubyPerturbation();
+analysis::RubyMeasure RubyMeasureRecord::rubyMeasure() const {
+  return getImpl<detail::RubyMeasureRecord_Impl>()->rubyMeasure();
 }
 
-void RubyPerturbationRecord::constructRelatedRecords(const analysis::RubyPerturbation& rubyPerturbation) {
-  RubyPerturbationRecord copyOfThis(getImpl<detail::RubyPerturbationRecord_Impl>());
+void RubyMeasureRecord::constructRelatedRecords(const analysis::RubyMeasure& rubyMeasure) {
+  RubyMeasureRecord copyOfThis(getImpl<detail::RubyMeasureRecord_Impl>());
   ProjectDatabase database = copyOfThis.projectDatabase();
   bool isNew = database.isNewRecord(copyOfThis);
   if (!isNew) {
-    getImpl<detail::RubyPerturbationRecord_Impl>()->revertToLastRecordIds();
+    getImpl<detail::RubyMeasureRecord_Impl>()->revertToLastRecordIds();
   }
 
   // Save child FileReference
   OptionalFileReference oChildFileReference;
-  if (rubyPerturbation.usesBCLMeasure()) {
+  if (rubyMeasure.usesBCLMeasure()) {
     // co-opt FileReference to store necessary data
-    oChildFileReference = FileReference(rubyPerturbation.measureUUID(),
-                                        rubyPerturbation.measureVersionUUID(),
+    oChildFileReference = FileReference(rubyMeasure.measureUUID(),
+                                        rubyMeasure.measureVersionUUID(),
                                         "",
                                         "",
                                         "",
-                                        rubyPerturbation.measureDirectory(),
+                                        rubyMeasure.measureDirectory(),
                                         FileReferenceType::Unknown,
                                         DateTime::now(),
                                         DateTime::now(),
@@ -437,7 +437,7 @@ void RubyPerturbationRecord::constructRelatedRecords(const analysis::RubyPerturb
                                         "");
   }
   else {
-    oChildFileReference = rubyPerturbation.perturbationScript();
+    oChildFileReference = rubyMeasure.measureScript();
   }
   FileReference scriptOrBCLMeasureReference = *oChildFileReference;
   bool saveReference = false;
@@ -457,11 +457,11 @@ void RubyPerturbationRecord::constructRelatedRecords(const analysis::RubyPerturb
   }
   if (saveReference || isNew) {
     FileReferenceRecord scriptOrBCLMeasureRecord(scriptOrBCLMeasureReference, copyOfThis);
-    getImpl<detail::RubyPerturbationRecord_Impl>()->setScriptOrBCLMeasureRecordId(scriptOrBCLMeasureRecord.id());
+    getImpl<detail::RubyMeasureRecord_Impl>()->setScriptOrBCLMeasureRecordId(scriptOrBCLMeasureRecord.id());
   }
 
   // Save child OSArguments
-  OSArgumentVector arguments = rubyPerturbation.arguments();
+  OSArgumentVector arguments = rubyMeasure.arguments();
   std::vector<UUID> argumentUUIDs;
   BOOST_FOREACH(const OSArgument& argument,arguments) {
     // no dirty flag, so construct them all
@@ -475,13 +475,13 @@ void RubyPerturbationRecord::constructRelatedRecords(const analysis::RubyPerturb
   }
 }
 
-void RubyPerturbationRecord::removeOSArgumentRecords(const std::vector<UUID>& uuidsToKeep,
+void RubyMeasureRecord::removeOSArgumentRecords(const std::vector<UUID>& uuidsToKeep,
                                                      ProjectDatabase& database)
 {
   QSqlQuery query(*(database.qSqlDatabase()));
   std::stringstream ss;
   ss << "SELECT * FROM " + OSArgumentRecord::databaseTableName() +
-        " WHERE (rubyPerturbationRecordId=:rubyPerturbationRecordId) AND (handle NOT IN (";
+        " WHERE (rubyMeasureRecordId=:rubyMeasureRecordId) AND (handle NOT IN (";
   std::string sep("");
   BOOST_FOREACH(const UUID& handle,uuidsToKeep) {
     ss << sep << "'" << toString(handle) << "'";
@@ -489,7 +489,7 @@ void RubyPerturbationRecord::removeOSArgumentRecords(const std::vector<UUID>& uu
   }
   ss << "))";
   query.prepare(toQString(ss.str()));
-  query.bindValue(":rubyPerturbationRecordId",id());
+  query.bindValue(":rubyMeasureRecordId",id());
   assertExec(query);
   while (query.next()) {
     OptionalOSArgumentRecord argumentRecord = OSArgumentRecord::factoryFromQuery(query, database);

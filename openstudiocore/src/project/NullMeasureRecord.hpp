@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef PROJECT_NULLPERTURBATIONRECORD_HPP
-#define PROJECT_NULLPERTURBATIONRECORD_HPP
+#ifndef PROJECT_NULLMEASURERECORD_HPP
+#define PROJECT_NULLMEASURERECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/DiscretePerturbationRecord.hpp>
+#include <project/MeasureRecord.hpp>
 
 #include <utilities/core/Logger.hpp>
 
@@ -31,78 +31,81 @@
 namespace openstudio {
 
 namespace analysis {
-  class NullPerturbation;
+  class NullMeasure;
 }
 
 namespace project {
 
 namespace detail {
 
-  class NullPerturbationRecord_Impl;
+  class NullMeasureRecord_Impl;
 
 } // detail
 
-/** NullPerturbationRecord is a DiscretePerturbationRecord*/
-class PROJECT_API NullPerturbationRecord : public DiscretePerturbationRecord {
+/** NullMeasureRecord is a MeasureRecord*/
+class PROJECT_API NullMeasureRecord : public MeasureRecord {
  public:
 
-  typedef detail::NullPerturbationRecord_Impl ImplType;
-  typedef DiscretePerturbationRecordColumns ColumnsType;
-  typedef DiscretePerturbationRecord ObjectRecordType;
+  typedef detail::NullMeasureRecord_Impl ImplType;
+  typedef MeasureRecordColumns ColumnsType;
+  typedef MeasureRecord ObjectRecordType;
 
   /** @name Constructors and Destructors */
   //@{
 
-  NullPerturbationRecord(const analysis::NullPerturbation& nullPerturbation, 
-                         DiscreteVariableRecord& discreteVariableRecord,
-                         int perturbationVectorIndex);
+  NullMeasureRecord(const analysis::NullMeasure& nullMeasure,
+                    MeasureGroupRecord& measureGroupRecord,
+                    int measureVectorIndex);
 
-  NullPerturbationRecord(const QSqlQuery& query, ProjectDatabase& database);
+  NullMeasureRecord(const QSqlQuery& query, ProjectDatabase& database);
 
-  virtual ~NullPerturbationRecord() {}
+  virtual ~NullMeasureRecord() {}
 
   //@}
   /** @name Static Methods */
   //@{
 
-  static boost::optional<NullPerturbationRecord> factoryFromQuery(const QSqlQuery& query, 
-                                                                  ProjectDatabase& database);
+  static boost::optional<NullMeasureRecord> factoryFromQuery(const QSqlQuery& query,
+                                                             ProjectDatabase& database);
 
-  static std::vector<NullPerturbationRecord> getNullPerturbationRecords(ProjectDatabase& database);
+  static std::vector<NullMeasureRecord> getNullMeasureRecords(ProjectDatabase& database);
 
-  static boost::optional<NullPerturbationRecord> getNullPerturbationRecord(
-      int id, ProjectDatabase& database);
+  static boost::optional<NullMeasureRecord> getNullMeasureRecord(int id,
+                                                                 ProjectDatabase& database);
 
   //@}
+  /** @name Getters */
+  //@{
 
-  analysis::NullPerturbation nullPerturbation() const;
+  analysis::NullMeasure nullMeasure() const;
 
+  //@}
  protected:
   /// @cond
   friend class Record;
   friend class ProjectDatabase;
-  friend class detail::NullPerturbationRecord_Impl;
+  friend class detail::NullMeasureRecord_Impl;
 
   /** Construct from impl. */
-  NullPerturbationRecord(boost::shared_ptr<detail::NullPerturbationRecord_Impl> impl,
-                         ProjectDatabase database);
+  NullMeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl> impl,
+                    ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit NullPerturbationRecord(boost::shared_ptr<detail::NullPerturbationRecord_Impl> impl);
+  explicit NullMeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl> impl);
 
   /// @endcond
  private:
 
-  REGISTER_LOGGER("openstudio.project.NullPerturbationRecord");
+  REGISTER_LOGGER("openstudio.project.NullMeasureRecord");
 };
 
-/** \relates NullPerturbationRecord*/
-typedef boost::optional<NullPerturbationRecord> OptionalNullPerturbationRecord;
+/** \relates NullMeasureRecord*/
+typedef boost::optional<NullMeasureRecord> OptionalNullMeasureRecord;
 
-/** \relates NullPerturbationRecord*/
-typedef std::vector<NullPerturbationRecord> NullPerturbationRecordVector;
+/** \relates NullMeasureRecord*/
+typedef std::vector<NullMeasureRecord> NullMeasureRecordVector;
 
 } // project
 } // openstudio
 
-#endif // PROJECT_NULLPERTURBATIONRECORD_HPP
+#endif // PROJECT_NULLMEASURERECORD_HPP

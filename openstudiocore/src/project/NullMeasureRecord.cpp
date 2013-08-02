@@ -17,16 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/NullPerturbationRecord.hpp>
-#include <project/NullPerturbationRecord_Impl.hpp>
-#include <project/DiscreteVariableRecord.hpp>
-#include <project/DiscreteVariableRecord_Impl.hpp>
+#include <project/NullMeasureRecord.hpp>
+#include <project/NullMeasureRecord_Impl.hpp>
+#include <project/MeasureGroupRecord.hpp>
+#include <project/MeasureGroupRecord_Impl.hpp>
 #include <project/JoinRecord.hpp>
 #include <project/ProjectDatabase.hpp>
 
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/DiscretePerturbation_Impl.hpp>
-#include <analysis/NullPerturbation.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/Measure_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
 
 #include <utilities/core/Assert.hpp>
 
@@ -42,147 +42,147 @@ namespace project {
 
 namespace detail{
 
-  NullPerturbationRecord_Impl::NullPerturbationRecord_Impl(const analysis::NullPerturbation& nullPerturbation,
-                                                           DiscreteVariableRecord& discreteVariableRecord,
-                                                           int perturbationVectorIndex)
-    : DiscretePerturbationRecord_Impl(nullPerturbation,
-                                      DiscretePerturbationRecordType::NullPerturbationRecord,
-                                      discreteVariableRecord,
-                                      perturbationVectorIndex)
+  NullMeasureRecord_Impl::NullMeasureRecord_Impl(const analysis::NullMeasure& nullMeasure,
+                                                 MeasureGroupRecord& measureGroupRecord,
+                                                 int measureVectorIndex)
+    : MeasureRecord_Impl(nullMeasure,
+                         MeasureRecordType::NullMeasureRecord,
+                         measureGroupRecord,
+                         measureVectorIndex)
   {}
 
-  NullPerturbationRecord_Impl::NullPerturbationRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
-    : DiscretePerturbationRecord_Impl(query, database)
+  NullMeasureRecord_Impl::NullMeasureRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
+    : MeasureRecord_Impl(query, database)
   {}
 
-  void NullPerturbationRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void NullMeasureRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
-    this->makeUpdateByIdQuery<NullPerturbationRecord>(query);
+    this->makeUpdateByIdQuery<NullMeasureRecord>(query);
     this->bindValues(query);
     assertExec(query);
   }
 
-  analysis::DiscretePerturbation NullPerturbationRecord_Impl::discretePerturbation() const {
-    return nullPerturbation().cast<analysis::DiscretePerturbation>();
+  analysis::Measure NullMeasureRecord_Impl::measure() const {
+    return nullMeasure().cast<analysis::Measure>();
   }
 
-  analysis::NullPerturbation NullPerturbationRecord_Impl::nullPerturbation() const {
-    return analysis::NullPerturbation(handle(),
-                                      uuidLast(),
-                                      name(),
-                                      displayName(),
-                                      description(),
-                                      isSelected());
+  analysis::NullMeasure NullMeasureRecord_Impl::nullMeasure() const {
+    return analysis::NullMeasure(handle(),
+                                 uuidLast(),
+                                 name(),
+                                 displayName(),
+                                 description(),
+                                 isSelected());
   }
 
-  void NullPerturbationRecord_Impl::bindValues(QSqlQuery& query) const
+  void NullMeasureRecord_Impl::bindValues(QSqlQuery& query) const
   {
-    DiscretePerturbationRecord_Impl::bindValues(query);
+    MeasureRecord_Impl::bindValues(query);
   }
 
-  void NullPerturbationRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
+  void NullMeasureRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
   {
-    DiscretePerturbationRecord_Impl::setLastValues(query, projectDatabase);
+    MeasureRecord_Impl::setLastValues(query, projectDatabase);
   }
 
-  bool NullPerturbationRecord_Impl::compareValues(const QSqlQuery& query) const
+  bool NullMeasureRecord_Impl::compareValues(const QSqlQuery& query) const
   {
-    return DiscretePerturbationRecord_Impl::compareValues(query);
+    return MeasureRecord_Impl::compareValues(query);
   }
 
-  void NullPerturbationRecord_Impl::saveLastValues()
+  void NullMeasureRecord_Impl::saveLastValues()
   {
-    DiscretePerturbationRecord_Impl::saveLastValues();
+    MeasureRecord_Impl::saveLastValues();
   }
 
-  void NullPerturbationRecord_Impl::revertToLastValues()
+  void NullMeasureRecord_Impl::revertToLastValues()
   {
-    DiscretePerturbationRecord_Impl::revertToLastValues();
+    MeasureRecord_Impl::revertToLastValues();
   }
 
 } // detail
 
-NullPerturbationRecord::NullPerturbationRecord(const analysis::NullPerturbation& nullPerturbation,
-                       DiscreteVariableRecord& discreteVariableRecord,
-                       int perturbationVectorIndex)
-  : DiscretePerturbationRecord(boost::shared_ptr<detail::NullPerturbationRecord_Impl>(
-        new detail::NullPerturbationRecord_Impl(nullPerturbation,
-                                                discreteVariableRecord,
-                                                perturbationVectorIndex)),
-        discreteVariableRecord.projectDatabase())
+NullMeasureRecord::NullMeasureRecord(const analysis::NullMeasure& nullMeasure,
+                                     MeasureGroupRecord& measureGroupRecord,
+                                     int measureVectorIndex)
+  : MeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl>(
+        new detail::NullMeasureRecord_Impl(nullMeasure,
+                                           measureGroupRecord,
+                                           measureVectorIndex)),
+        measureGroupRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::NullPerturbationRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());
 }
 
-NullPerturbationRecord::NullPerturbationRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : DiscretePerturbationRecord(boost::shared_ptr<detail::NullPerturbationRecord_Impl>(
-        new detail::NullPerturbationRecord_Impl(query, database)),
+NullMeasureRecord::NullMeasureRecord(const QSqlQuery& query, ProjectDatabase& database)
+  : MeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl>(
+        new detail::NullMeasureRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::NullPerturbationRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());
 }
 
-NullPerturbationRecord::NullPerturbationRecord(boost::shared_ptr<detail::NullPerturbationRecord_Impl> impl, ProjectDatabase projectDatabase)
-  : DiscretePerturbationRecord(impl, projectDatabase)
+NullMeasureRecord::NullMeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl> impl, ProjectDatabase projectDatabase)
+  : MeasureRecord(impl, projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::NullPerturbationRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());
 }
 
-boost::optional<NullPerturbationRecord> NullPerturbationRecord::factoryFromQuery(
+boost::optional<NullMeasureRecord> NullMeasureRecord::factoryFromQuery(
     const QSqlQuery& query, ProjectDatabase& database)
 {
-  OptionalNullPerturbationRecord result;
+  OptionalNullMeasureRecord result;
   try {
-    result = NullPerturbationRecord(query,database);
+    result = NullMeasureRecord(query,database);
   }
   catch (const std::exception& e) {
-    LOG(Error,"Unable to construct NullPerturbationRecord from query, because '"
+    LOG(Error,"Unable to construct NullMeasureRecord from query, because '"
         << e.what() << "'.");
   }
   return result;
 }
 
-std::vector<NullPerturbationRecord> NullPerturbationRecord::getNullPerturbationRecords(ProjectDatabase& database) {
-  std::vector<NullPerturbationRecord> result;
+std::vector<NullMeasureRecord> NullMeasureRecord::getNullMeasureRecords(ProjectDatabase& database) {
+  std::vector<NullMeasureRecord> result;
 
   QSqlQuery query(*(database.qSqlDatabase()));
-  query.prepare(toQString("SELECT * FROM " + DiscretePerturbationRecord::databaseTableName() +
-      " WHERE discretePerturbationRecordType=:discretePerturbationRecordType"));
-  query.bindValue(":discretePerturbationRecordType", DiscretePerturbationRecordType::NullPerturbationRecord);
+  query.prepare(toQString("SELECT * FROM " + MeasureRecord::databaseTableName() +
+      " WHERE measureRecordType=:measureRecordType"));
+  query.bindValue(":measureRecordType", MeasureRecordType::NullMeasureRecord);
   assertExec(query);
   while (query.next()) {
-    result.push_back(NullPerturbationRecord(query, database));
+    result.push_back(NullMeasureRecord(query, database));
   }
 
   return result;
 }
 
-boost::optional<NullPerturbationRecord> NullPerturbationRecord::getNullPerturbationRecord(int id, ProjectDatabase& database) {
-  boost::optional<NullPerturbationRecord> result;
+boost::optional<NullMeasureRecord> NullMeasureRecord::getNullMeasureRecord(int id, ProjectDatabase& database) {
+  boost::optional<NullMeasureRecord> result;
 
   QSqlQuery query(*(database.qSqlDatabase()));
-  query.prepare(toQString("SELECT * FROM " + DiscretePerturbationRecord::databaseTableName() +
-      " WHERE discretePerturbationRecordType=:discretePerturbationRecordType AND id=:id"));
-  query.bindValue(":discretePerturbationRecordType", DiscretePerturbationRecordType::NullPerturbationRecord);
+  query.prepare(toQString("SELECT * FROM " + MeasureRecord::databaseTableName() +
+      " WHERE measureRecordType=:measureRecordType AND id=:id"));
+  query.bindValue(":measureRecordType", MeasureRecordType::NullMeasureRecord);
   query.bindValue(":id",id);
   assertExec(query);
   if (query.first()) {
-    result = NullPerturbationRecord(query, database);
+    result = NullMeasureRecord(query, database);
   }
 
   return result;
 }
 
-analysis::NullPerturbation NullPerturbationRecord::nullPerturbation() const {
-  return getImpl<detail::NullPerturbationRecord_Impl>()->nullPerturbation();
+analysis::NullMeasure NullMeasureRecord::nullMeasure() const {
+  return getImpl<detail::NullMeasureRecord_Impl>()->nullMeasure();
 }
 
 /// @cond
-NullPerturbationRecord::NullPerturbationRecord(boost::shared_ptr<detail::NullPerturbationRecord_Impl> impl)
-  : DiscretePerturbationRecord(impl)
+NullMeasureRecord::NullMeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl> impl)
+  : MeasureRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::NullPerturbationRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());
 }
 /// @endcond
 

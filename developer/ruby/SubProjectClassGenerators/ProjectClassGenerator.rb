@@ -222,7 +222,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
 
       # construct from serializedClass
       result << "  // TODO: Delete if " << @serializedClass << " is abstract, make private if " 
-      result << @serializedClass << " has derived classes.\n"
+      result << @serializedClass << " is concrete and has derived classes.\n"
       result << "  // TODO: Replace ProjectDatabase& database (or add another object if it is ok for " 
       result << @className << " to be and orphan) with const& to parent Record if the Table contains a parent id.\n"
       result << "  // TODO: Find-replace on 'NAMESPACE'.\n"
@@ -231,7 +231,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
       
       # construct from query
       result << "  // TODO: Delete if " << @serializedClass << " is abstract, make private if " 
-      result << @serializedClass << " has derived classes.\n"
+      result << @serializedClass << " is concrete and has derived classes.\n"
       result << "  " << @className << "(const QSqlQuery& query, ProjectDatabase& database);\n\n"
       
     end

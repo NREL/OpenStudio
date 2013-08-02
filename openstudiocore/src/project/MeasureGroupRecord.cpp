@@ -17,17 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/DiscreteVariableRecord.hpp>
-#include <project/DiscreteVariableRecord_Impl.hpp>
-#include <project/DiscretePerturbationRecord.hpp>
+#include <project/MeasureGroupRecord.hpp>
+#include <project/MeasureGroupRecord_Impl.hpp>
+#include <project/MeasureRecord.hpp>
 #include <project/ProblemRecord.hpp>
 #include <project/FunctionRecord.hpp>
 #include <project/JoinRecord.hpp>
 #include <project/ProjectDatabase.hpp>
 
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/DiscretePerturbation.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+#include <analysis/Measure.hpp>
 #include <analysis/UncertaintyDescription.hpp>
 
 #include <utilities/core/Checksum.hpp>
@@ -47,76 +47,75 @@ namespace project {
 
 namespace detail{
 
-  DiscreteVariableRecord_Impl::DiscreteVariableRecord_Impl(
-      const analysis::DiscreteVariable& discreteVariable,
-      ProblemRecord& problemRecord,
-      int workflowIndex)
-    : InputVariableRecord_Impl(discreteVariable,
-                               InputVariableRecordType::DiscreteVariableRecord,
-                               problemRecord,
-                               workflowIndex)
+  MeasureGroupRecord_Impl::MeasureGroupRecord_Impl(const analysis::MeasureGroup& measureGroup,
+                                                   ProblemRecord& problemRecord,
+                                                   int workflowIndex)
+    : DiscreteVariableRecord_Impl(measureGroup,
+                                  DiscreteVariableRecordType::MeasureGroupRecord,
+                                  problemRecord,
+                                  workflowIndex)
   {}
 
-  DiscreteVariableRecord_Impl::DiscreteVariableRecord_Impl(
-      const analysis::DiscreteVariable& discreteVariable,
-      FunctionRecord& functionRecord,
-      int variableVectorIndex,
-      boost::optional<double> functionCoefficient)
-    : InputVariableRecord_Impl(discreteVariable,
-                               InputVariableRecordType::DiscreteVariableRecord,
-                               functionRecord,
-                               variableVectorIndex,
-                               functionCoefficient)
+  MeasureGroupRecord_Impl::MeasureGroupRecord_Impl(const analysis::MeasureGroup& measureGroup,
+                                                   FunctionRecord& functionRecord,
+                                                   int variableVectorIndex,
+                                                   boost::optional<double> functionCoefficient)
+    : DiscreteVariableRecord_Impl(measureGroup,
+                                  DiscreteVariableRecordType::MeasureGroupRecord,
+                                  functionRecord,
+                                  variableVectorIndex,
+                                  functionCoefficient)
   {}
 
-  DiscreteVariableRecord_Impl::DiscreteVariableRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
-    : InputVariableRecord_Impl(query, database)
+  MeasureGroupRecord_Impl::MeasureGroupRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
+    : DiscreteVariableRecord_Impl(query, database)
   {}
 
-  std::vector<ObjectRecord> DiscreteVariableRecord_Impl::children() const
-  {
+  std::vector<ObjectRecord> MeasureGroupRecord_Impl::children() const {
     ObjectRecordVector result = InputVariableRecord_Impl::children();
-    std::vector<DiscretePerturbationRecord> discretePerturbationRecords = this->discretePerturbationRecords(false);
-    result.insert(result.end(),discretePerturbationRecords.begin(),discretePerturbationRecords.end());
+    std::vector<MeasureRecord> measureRecords = this->measureRecords(false);
+    result.insert(result.end(),measureRecords.begin(),measureRecords.end());
     return result;
   }
 
-  std::vector<ObjectRecord> DiscreteVariableRecord_Impl::resources() const
-  {
+  std::vector<ObjectRecord> MeasureGroupRecord_Impl::resources() const {
     return std::vector<ObjectRecord>();
   }
 
-  void DiscreteVariableRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
-  {
+  void MeasureGroupRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) {
     QSqlQuery query(*database);
-    this->makeUpdateByIdQuery<DiscreteVariableRecord>(query);
+    this->makeUpdateByIdQuery<MeasureGroupRecord>(query);
     this->bindValues(query);
     assertExec(query);
   }
 
-  analysis::Variable DiscreteVariableRecord_Impl::variable() const {
-    return discreteVariable().cast<analysis::Variable>();
+  analysis::Variable MeasureGroupRecord_Impl::variable() const {
+    return measureGroup().cast<analysis::Variable>();
   }
 
-  analysis::InputVariable DiscreteVariableRecord_Impl::inputVariable() const {
-    return discreteVariable().cast<analysis::InputVariable>();
+  analysis::InputVariable MeasureGroupRecord_Impl::inputVariable() const {
+    return measureGroup().cast<analysis::InputVariable>();
   }
 
-  analysis::DiscreteVariable DiscreteVariableRecord_Impl::discreteVariable() const {
-    analysis::DiscretePerturbationVector perturbations;
-    BOOST_FOREACH(const DiscretePerturbationRecord& discretePerturbationRecord,discretePerturbationRecords(false)) {
-      perturbations.push_back(discretePerturbationRecord.discretePerturbation());
+  analysis::DiscreteVariable MeasureGroupRecord_Impl::discreteVariable() const {
+    return measureGroup().cast<analysis::DiscreteVariable>();
+  }
+
+  analysis::MeasureGroup MeasureGroupRecord_Impl::measureGroup() const {
+    analysis::MeasureVector measures;
+    BOOST_FOREACH(const MeasureRecord& measureRecord,measureRecords(false)) {
+      measures.push_back(measureRecord.measure());
     }
-    return analysis::DiscreteVariable(handle(),
-                                      uuidLast(),
-                                      name(),
-                                      displayName(),
-                                      description(),
-                                      uncertaintyDescription(),
-                                      perturbations);
+    return analysis::MeasureGroup(handle(),
+                                  uuidLast(),
+                                  name(),
+                                  displayName(),
+                                  description(),
+                                  uncertaintyDescription(),
+                                  measures);
   }
 
-  unsigned DiscreteVariableRecord_Impl::numPerturbations(bool selectedPerturbationsOnly) const
+  unsigned MeasureGroupRecord_Impl::numMeasures(bool selectedMeasuresOnly) const
   {
     unsigned result = 0;
 
@@ -124,13 +123,13 @@ namespace detail{
 
     QSqlQuery query(*(database.qSqlDatabase()));
 
-    if (selectedPerturbationsOnly){
-      query.prepare(toQString("SELECT COUNT(*) FROM " + DiscretePerturbationRecord::databaseTableName() +
+    if (selectedMeasuresOnly){
+      query.prepare(toQString("SELECT COUNT(*) FROM " + MeasureRecord::databaseTableName() +
           " WHERE variableRecordId=:id AND isSelected=:isSelected"));
       query.bindValue(":id", this->id());
       query.bindValue(":isSelected", true);
     }else{
-      query.prepare(toQString("SELECT COUNT(*) FROM " + DiscretePerturbationRecord::databaseTableName() +
+      query.prepare(toQString("SELECT COUNT(*) FROM " + MeasureRecord::databaseTableName() +
           " WHERE variableRecordId=:id"));
       query.bindValue(":id", this->id());
     }
@@ -143,35 +142,34 @@ namespace detail{
     return result;
   }
 
-  std::vector<int> DiscreteVariableRecord_Impl::discretePerturbationRecordIds(bool selectedPerturbationsOnly) const
+  std::vector<int> MeasureGroupRecord_Impl::measureRecordIds(bool selectedMeasuresOnly) const
   {
     std::vector<int> result;
 
-    DiscretePerturbationRecordVector dprs = discretePerturbationRecords(selectedPerturbationsOnly);
-    BOOST_FOREACH(const DiscretePerturbationRecord& dpr,dprs) {
+    MeasureRecordVector dprs = measureRecords(selectedMeasuresOnly);
+    BOOST_FOREACH(const MeasureRecord& dpr,dprs) {
       result.push_back(dpr.id());
     }
 
     return result;
   }
 
-  std::vector<DiscretePerturbationRecord> DiscreteVariableRecord_Impl::discretePerturbationRecords(
-      bool selectedPerturbationsOnly) const
+  std::vector<MeasureRecord> MeasureGroupRecord_Impl::measureRecords(bool selectedMeasuresOnly) const
   {
-    std::vector<DiscretePerturbationRecord> result;
+    std::vector<MeasureRecord> result;
 
     ProjectDatabase database = this->projectDatabase();
 
     QSqlQuery query(*(database.qSqlDatabase()));
 
-    if (selectedPerturbationsOnly){
-      query.prepare(toQString("SELECT * FROM " + DiscretePerturbationRecord::databaseTableName() +
-          " WHERE variableRecordId=:id AND isSelected=:isSelected ORDER BY perturbationVectorIndex"));
+    if (selectedMeasuresOnly){
+      query.prepare(toQString("SELECT * FROM " + MeasureRecord::databaseTableName() +
+          " WHERE variableRecordId=:id AND isSelected=:isSelected ORDER BY measureVectorIndex"));
       query.bindValue(":id", this->id());
       query.bindValue(":isSelected", true);
     }else{
-      query.prepare(toQString("SELECT * FROM " + DiscretePerturbationRecord::databaseTableName() +
-          " WHERE variableRecordId=:id ORDER BY perturbationVectorIndex"));
+      query.prepare(toQString("SELECT * FROM " + MeasureRecord::databaseTableName() +
+          " WHERE variableRecordId=:id ORDER BY measureVectorIndex"));
       query.bindValue(":id", this->id());
     }
 
@@ -179,10 +177,10 @@ namespace detail{
     OptionalInt previousIndex;
     bool resort(false);
     while (query.next()){
-      boost::optional<DiscretePerturbationRecord> perturbation = DiscretePerturbationRecord::factoryFromQuery(query, database);
-      BOOST_ASSERT(perturbation);
-      result.push_back(*perturbation);
-      OptionalInt index = result.back().perturbationVectorIndex();
+      boost::optional<MeasureRecord> measure = MeasureRecord::factoryFromQuery(query, database);
+      BOOST_ASSERT(measure);
+      result.push_back(*measure);
+      OptionalInt index = result.back().measureVectorIndex();
       if (previousIndex && index) {
         if (index.get() <= previousIndex.get()) {
           resort = true;
@@ -194,37 +192,36 @@ namespace detail{
     }
 
     if (resort) {
-      DiscretePerturbationRecordPerturbationVectorIndexLess comparator;
+      MeasureRecordMeasureVectorIndexLess comparator;
       std::sort(result.begin(),result.end(),comparator);
     }
 
     return result;
   }
 
-  DiscretePerturbationRecord DiscreteVariableRecord_Impl::getDiscretePerturbationRecord(
-      int perturbationVectorIndex) const
+  MeasureRecord MeasureGroupRecord_Impl::getMeasureRecord(int measureVectorIndex) const
   {
     ProjectDatabase database = this->projectDatabase();
-    OptionalDiscretePerturbationRecord candidate;
+    OptionalMeasureRecord candidate;
 
     QSqlQuery query(*(database.qSqlDatabase()));
-    query.prepare(toQString("SELECT * FROM " + DiscretePerturbationRecord::databaseTableName() +
-        " WHERE variableRecordId=:variableRecordId AND perturbationVectorIndex=:perturbationVectorIndex"));
+    query.prepare(toQString("SELECT * FROM " + MeasureRecord::databaseTableName() +
+        " WHERE variableRecordId=:variableRecordId AND measureVectorIndex=:measureVectorIndex"));
     query.bindValue(":variableRecordId", this->id());
-    query.bindValue(":perturbationVectorIndex", perturbationVectorIndex);
+    query.bindValue(":measureVectorIndex", measureVectorIndex);
     assertExec(query);
     if (query.first()) {
-      candidate = DiscretePerturbationRecord::factoryFromQuery(query,database).get();
+      candidate = MeasureRecord::factoryFromQuery(query,database).get();
     }
 
     // check actual vector index. can get out of date during construction.
     if ((!candidate) ||
-        (!candidate->perturbationVectorIndex()) ||
-        (candidate->perturbationVectorIndex().get() != perturbationVectorIndex))
+        (!candidate->measureVectorIndex()) ||
+        (candidate->measureVectorIndex().get() != measureVectorIndex))
     {
       // get all and look for index by hand
-      BOOST_FOREACH(const DiscretePerturbationRecord& dpr,discretePerturbationRecords(false)) {
-        if (dpr.perturbationVectorIndex() && (dpr.perturbationVectorIndex().get() == perturbationVectorIndex)) {
+      BOOST_FOREACH(const MeasureRecord& dpr,measureRecords(false)) {
+        if (dpr.measureVectorIndex() && (dpr.measureVectorIndex().get() == measureVectorIndex)) {
           return dpr;
         }
       }
@@ -232,193 +229,194 @@ namespace detail{
     else {
       return *candidate;
     }
-    LOG_AND_THROW("Invalid DiscretPerturbation perturbationVectorIndex "
-        << perturbationVectorIndex << " for DiscreteVariable '" << name() << "'.");
-    return DiscretePerturbationRecord(boost::shared_ptr<detail::DiscretePerturbationRecord_Impl>(),database);
+    LOG_AND_THROW("Invalid DiscretMeasure measureVectorIndex "
+        << measureVectorIndex << " for MeasureGroup '" << name() << "'.");
+    return MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl>(),database);
   }
 
-  void DiscreteVariableRecord_Impl::bindValues(QSqlQuery& query) const
+  void MeasureGroupRecord_Impl::bindValues(QSqlQuery& query) const
   {
-    InputVariableRecord_Impl::bindValues(query);
+    DiscreteVariableRecord_Impl::bindValues(query);
   }
 
-  void DiscreteVariableRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
+  void MeasureGroupRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
   {
-    InputVariableRecord_Impl::setLastValues(query, projectDatabase);
+    DiscreteVariableRecord_Impl::setLastValues(query, projectDatabase);
   }
 
-  bool DiscreteVariableRecord_Impl::compareValues(const QSqlQuery& query) const
+  bool MeasureGroupRecord_Impl::compareValues(const QSqlQuery& query) const
   {
-    return InputVariableRecord_Impl::compareValues(query);
+    return DiscreteVariableRecord_Impl::compareValues(query);
   }
 
-  void DiscreteVariableRecord_Impl::saveLastValues()
+  void MeasureGroupRecord_Impl::saveLastValues()
   {
-    InputVariableRecord_Impl::saveLastValues();
+    DiscreteVariableRecord_Impl::saveLastValues();
   }
 
-  void DiscreteVariableRecord_Impl::revertToLastValues()
+  void MeasureGroupRecord_Impl::revertToLastValues()
   {
-    InputVariableRecord_Impl::revertToLastValues();
+    DiscreteVariableRecord_Impl::revertToLastValues();
   }
 
 } // detail
 
-DiscreteVariableRecord::DiscreteVariableRecord(const analysis::DiscreteVariable& discreteVariable,
-                                               ProblemRecord& problemRecord,
-                                               int variableVectorIndex)
-  : InputVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl>(
-        new detail::DiscreteVariableRecord_Impl(discreteVariable,
-                                                problemRecord,
-                                                variableVectorIndex)),
+MeasureGroupRecord::MeasureGroupRecord(const analysis::MeasureGroup& measureGroup,
+                                       ProblemRecord& problemRecord,
+                                       int variableVectorIndex)
+  : DiscreteVariableRecord(boost::shared_ptr<detail::MeasureGroupRecord_Impl>(
+        new detail::MeasureGroupRecord_Impl(measureGroup,
+                                            problemRecord,
+                                            variableVectorIndex)),
         problemRecord.projectDatabase(),
-        discreteVariable)
+        measureGroup)
 {
-  BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::MeasureGroupRecord_Impl>());
 
-  constructDiscretePerturbationRecords(discreteVariable);
+  constructMeasureRecords(measureGroup);
 }
 
-DiscreteVariableRecord::DiscreteVariableRecord(const analysis::DiscreteVariable& discreteVariable,
-                                               FunctionRecord& functionRecord,
-                                               int variableVectorIndex,
-                                               boost::optional<double> functionCoefficient)
-  : InputVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl>(
-        new detail::DiscreteVariableRecord_Impl(discreteVariable,
-                                                functionRecord,
-                                                variableVectorIndex,
-                                                functionCoefficient)),
+MeasureGroupRecord::MeasureGroupRecord(const analysis::MeasureGroup& measureGroup,
+                                       FunctionRecord& functionRecord,
+                                       int variableVectorIndex,
+                                       boost::optional<double> functionCoefficient)
+  : DiscreteVariableRecord(boost::shared_ptr<detail::MeasureGroupRecord_Impl>(
+        new detail::MeasureGroupRecord_Impl(measureGroup,
+                                            functionRecord,
+                                            variableVectorIndex,
+                                            functionCoefficient)),
         functionRecord.projectDatabase(),
-        discreteVariable)
+        measureGroup)
 {
-  BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::MeasureGroupRecord_Impl>());
 
-  constructDiscretePerturbationRecords(discreteVariable);
+  constructMeasureRecords(measureGroup);
 }
 
-DiscreteVariableRecord::DiscreteVariableRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : InputVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl>(
-        new detail::DiscreteVariableRecord_Impl(query, database)),
+MeasureGroupRecord::MeasureGroupRecord(const QSqlQuery& query, ProjectDatabase& database)
+  : DiscreteVariableRecord(boost::shared_ptr<detail::MeasureGroupRecord_Impl>(
+        new detail::MeasureGroupRecord_Impl(query, database)),
         database,
-        analysis::OptionalInputVariable())
+        analysis::OptionalDiscreteVariable())
 {
-  BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::MeasureGroupRecord_Impl>());
 }
 
-DiscreteVariableRecord::DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl,
-                                               ProjectDatabase database)
-  : InputVariableRecord(impl, database, analysis::OptionalInputVariable())
+MeasureGroupRecord::MeasureGroupRecord(boost::shared_ptr<detail::MeasureGroupRecord_Impl> impl,
+                                       ProjectDatabase database)
+  : DiscreteVariableRecord(impl, database, analysis::OptionalDiscreteVariable())
 {
-  BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::MeasureGroupRecord_Impl>());
 }
 
 /// @cond
-DiscreteVariableRecord::DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl)
-  : InputVariableRecord(impl)
+MeasureGroupRecord::MeasureGroupRecord(boost::shared_ptr<detail::MeasureGroupRecord_Impl> impl)
+  : DiscreteVariableRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::MeasureGroupRecord_Impl>());
 }
 /// @endcond
 
-boost::optional<DiscreteVariableRecord> DiscreteVariableRecord::factoryFromQuery(
-    const QSqlQuery& query, ProjectDatabase& database)
+boost::optional<MeasureGroupRecord> MeasureGroupRecord::factoryFromQuery(const QSqlQuery& query,
+                                                                         ProjectDatabase& database)
 {
-  OptionalDiscreteVariableRecord result;
+  OptionalMeasureGroupRecord result;
   try {
-    result = DiscreteVariableRecord(query,database);
+    result = MeasureGroupRecord(query,database);
   }
   catch (const std::exception& e) {
-    LOG(Error,"Unable to construct DiscreteVariableRecord from query, because '"
+    LOG(Error,"Unable to construct MeasureGroupRecord from query, because '"
         << e.what() << "'.");
   }
   return result;
 }
 
-std::vector<DiscreteVariableRecord> DiscreteVariableRecord::getDiscreteVariableRecords(ProjectDatabase& database)
+std::vector<MeasureGroupRecord> MeasureGroupRecord::getMeasureGroupRecords(ProjectDatabase& database)
 {
-  std::vector<DiscreteVariableRecord> result;
+  std::vector<MeasureGroupRecord> result;
 
   QSqlQuery query(*(database.qSqlDatabase()));
   query.prepare(toQString("SELECT * FROM " + VariableRecord::databaseTableName() +
                           " WHERE variableRecordType=:variableRecordType AND " +
                           "inputVariableRecordType=:inputVariableRecordType"));
-  query.bindValue(":variableRecordType", VariableRecordType::InputVariableRecord);
-  query.bindValue(":inputVariableRecordType", InputVariableRecordType::DiscreteVariableRecord);
+  query.bindValue(":variableRecordType", VariableRecordType::DiscreteVariableRecord);
+  query.bindValue(":inputVariableRecordType", DiscreteVariableRecordType::MeasureGroupRecord);
   assertExec(query);
   while (query.next()) {
-    result.push_back(DiscreteVariableRecord(query, database));
+    result.push_back(MeasureGroupRecord(query, database));
   }
 
   return result;
 }
 
-boost::optional<DiscreteVariableRecord> DiscreteVariableRecord::getDiscreteVariableRecord(int DiscreteVariableRecordId, ProjectDatabase& database)
+boost::optional<MeasureGroupRecord> MeasureGroupRecord::getMeasureGroupRecord(int MeasureGroupRecordId,
+                                                                              ProjectDatabase& database)
 {
   QSqlQuery query(*(database.qSqlDatabase()));
   query.prepare(toQString("SELECT * FROM " + VariableRecord::databaseTableName() + " WHERE id=:id AND " +
                           "variableRecordType=:variableRecordType AND " +
                           "inputVariableRecordType=:inputVariableRecordType"));
-  query.bindValue(":id", DiscreteVariableRecordId);
-  query.bindValue(":variableRecordType", VariableRecordType::InputVariableRecord);
-  query.bindValue(":inputVariableRecordType", InputVariableRecordType::DiscreteVariableRecord);
+  query.bindValue(":id", MeasureGroupRecordId);
+  query.bindValue(":variableRecordType", VariableRecordType::DiscreteVariableRecord);
+  query.bindValue(":inputVariableRecordType", DiscreteVariableRecordType::MeasureGroupRecord);
   assertExec(query);
   if (query.first()) {
-    return DiscreteVariableRecord(query, database);
+    return MeasureGroupRecord(query, database);
   }
 
   return boost::none;
 }
 
-analysis::DiscreteVariable DiscreteVariableRecord::discreteVariable() const {
-  return getImpl<detail::DiscreteVariableRecord_Impl>()->discreteVariable();
+analysis::MeasureGroup MeasureGroupRecord::measureGroup() const {
+  return getImpl<detail::MeasureGroupRecord_Impl>()->measureGroup();
 }
 
-unsigned DiscreteVariableRecord::numPerturbations(bool selectedPerturbationsOnly) const {
-  return getImpl<detail::DiscreteVariableRecord_Impl>()->numPerturbations(selectedPerturbationsOnly);
+unsigned MeasureGroupRecord::numMeasures(bool selectedMeasuresOnly) const {
+  return getImpl<detail::MeasureGroupRecord_Impl>()->numMeasures(selectedMeasuresOnly);
 }
 
-std::vector<int> DiscreteVariableRecord::discretePerturbationRecordIds(bool selectedPerturbationsOnly) const {
-  return getImpl<detail::DiscreteVariableRecord_Impl>()->discretePerturbationRecordIds(selectedPerturbationsOnly);
+std::vector<int> MeasureGroupRecord::measureRecordIds(bool selectedMeasuresOnly) const {
+  return getImpl<detail::MeasureGroupRecord_Impl>()->measureRecordIds(selectedMeasuresOnly);
 }
 
-std::vector<DiscretePerturbationRecord> DiscreteVariableRecord::discretePerturbationRecords(
-    bool selectedPerturbationsOnly) const
+std::vector<MeasureRecord> MeasureGroupRecord::measureRecords(
+    bool selectedMeasuresOnly) const
 {
-  return getImpl<detail::DiscreteVariableRecord_Impl>()->discretePerturbationRecords(selectedPerturbationsOnly);
+  return getImpl<detail::MeasureGroupRecord_Impl>()->measureRecords(selectedMeasuresOnly);
 }
 
-DiscretePerturbationRecord DiscreteVariableRecord::getDiscretePerturbationRecord(
-    int perturbationVectorIndex) const
+MeasureRecord MeasureGroupRecord::getMeasureRecord(
+    int measureVectorIndex) const
 {
-  return getImpl<detail::DiscreteVariableRecord_Impl>()->getDiscretePerturbationRecord(perturbationVectorIndex);
+  return getImpl<detail::MeasureGroupRecord_Impl>()->getMeasureRecord(measureVectorIndex);
 }
 
-void DiscreteVariableRecord::constructDiscretePerturbationRecords(const analysis::DiscreteVariable& discreteVariable) {
-  DiscreteVariableRecord copyOfThis(getImpl<detail::DiscreteVariableRecord_Impl>());
+void MeasureGroupRecord::constructMeasureRecords(const analysis::MeasureGroup& measureGroup) {
+  MeasureGroupRecord copyOfThis(getImpl<detail::MeasureGroupRecord_Impl>());
   ProjectDatabase database = copyOfThis.projectDatabase();
   bool isNew = database.isNewRecord(copyOfThis);
 
   int i = 0;
-  std::vector<UUID> perturbationUUIDs;
-  BOOST_FOREACH(const DiscretePerturbation& perturbation,discreteVariable.perturbations(false)) {
-    perturbationUUIDs.push_back(perturbation.uuid());
-    if (perturbation.isDirty() || isNew) {
-      DiscretePerturbationRecord newDiscretePerturbationRecord =
-          DiscretePerturbationRecord::factoryFromDiscretePerturbation(perturbation,copyOfThis,i);
+  std::vector<UUID> measureUUIDs;
+  BOOST_FOREACH(const Measure& measure,measureGroup.measures(false)) {
+    measureUUIDs.push_back(measure.uuid());
+    if (measure.isDirty() || isNew) {
+      MeasureRecord newMeasureRecord =
+          MeasureRecord::factoryFromMeasure(measure,copyOfThis,i);
     }
     ++i;
   }
   if (!isNew) {
-    removeDiscretePerturbationRecords(perturbationUUIDs,database);
+    removeMeasureRecords(measureUUIDs,database);
   }
 }
 
-void DiscreteVariableRecord::removeDiscretePerturbationRecords(const std::vector<UUID>& uuidsToKeep,
-                                                               ProjectDatabase& database)
+void MeasureGroupRecord::removeMeasureRecords(const std::vector<UUID>& uuidsToKeep,
+                                              ProjectDatabase& database)
 {
   QSqlQuery query(*(database.qSqlDatabase()));
   std::stringstream ss;
-  ss << "SELECT * FROM " + DiscretePerturbationRecord::databaseTableName() +
+  ss << "SELECT * FROM " + MeasureRecord::databaseTableName() +
         " WHERE (variableRecordId=:variableRecordId) AND (handle NOT IN (";
   std::string sep("");
   BOOST_FOREACH(const UUID& handle,uuidsToKeep) {
@@ -430,9 +428,9 @@ void DiscreteVariableRecord::removeDiscretePerturbationRecords(const std::vector
   query.bindValue(":variableRecordId",id());
   assertExec(query);
   while (query.next()) {
-    OptionalDiscretePerturbationRecord perturbationRecord = DiscretePerturbationRecord::factoryFromQuery(query, database);
-    if (perturbationRecord) {
-      database.removeRecord(*perturbationRecord);
+    OptionalMeasureRecord measureRecord = MeasureRecord::factoryFromQuery(query, database);
+    if (measureRecord) {
+      database.removeRecord(*measureRecord);
     }
   }
 }

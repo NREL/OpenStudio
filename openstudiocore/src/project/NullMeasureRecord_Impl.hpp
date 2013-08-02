@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef PROJECT_NULLPERTURBATIONRECORD_IMPL_HPP
-#define PROJECT_NULLPERTURBATIONRECORD_IMPL_HPP
+#ifndef PROJECT_NULLMEASURERECORD_IMPL_HPP
+#define PROJECT_NULLMEASURERECORD_IMPL_HPP
 
 #include <project/ProjectAPI.hpp>
-#include <project/DiscretePerturbationRecord_Impl.hpp>
+#include <project/MeasureRecord_Impl.hpp>
 
 #include <utilities/core/Enum.hpp>
 #include <utilities/core/Logger.hpp>
@@ -32,41 +32,41 @@
 namespace openstudio {
 
 namespace analysis {
-  class NullPerturbation;
+  class NullMeasure;
 }
 
 namespace project {
 
 class VariableRecord;
-class NullPerturbationRecord;
+class NullMeasureRecord;
 
 namespace detail {
 
-  /** NullPerturbationRecord_Impl is a DiscretePerturbationRecord_Impl that is the implementation class for NullPerturbationRecord.*/
-  class PROJECT_API NullPerturbationRecord_Impl : public DiscretePerturbationRecord_Impl {
+  /** NullMeasureRecord_Impl is a MeasureRecord_Impl that is the implementation class for NullMeasureRecord.*/
+  class PROJECT_API NullMeasureRecord_Impl : public MeasureRecord_Impl {
     Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */
     //@{
 
-    NullPerturbationRecord_Impl(const analysis::NullPerturbation& nullPerturbation, 
-                                DiscreteVariableRecord& discreteVariableRecord,
-                                int perturbationVectorIndex);
+    NullMeasureRecord_Impl(const analysis::NullMeasure& nullMeasure,
+                           MeasureGroupRecord& measureGroupRecord,
+                           int measureVectorIndex);
 
     /** Constructor from query. Throws if bad query. */
-    NullPerturbationRecord_Impl(const QSqlQuery& query, ProjectDatabase& database);
+    NullMeasureRecord_Impl(const QSqlQuery& query, ProjectDatabase& database);
 
-    virtual ~NullPerturbationRecord_Impl() {}
+    virtual ~NullMeasureRecord_Impl() {}
 
     //@}
 
     /** Save the row that corresponds to this record in projectDatabase. */
     virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
 
-    virtual analysis::DiscretePerturbation discretePerturbation() const;
+    virtual analysis::Measure measure() const;
 
-    analysis::NullPerturbation nullPerturbation() const;
+    analysis::NullMeasure nullMeasure() const;
 
    protected:
     /** Bind data member values to a query for saving. */
@@ -85,7 +85,7 @@ namespace detail {
     virtual void revertToLastValues();
 
    private:
-    REGISTER_LOGGER("openstudio.project.NullPerturbationRecord");
+    REGISTER_LOGGER("openstudio.project.NullMeasureRecord");
   };
 
 } // detail
@@ -93,4 +93,4 @@ namespace detail {
 } // project
 } // openstudio
 
-#endif // PROJECT_NULLPERTURBATIONRECORD_IMPL_HPP
+#endif // PROJECT_NULLMEASURERECORD_IMPL_HPP

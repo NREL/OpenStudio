@@ -24,7 +24,7 @@
 #include <project/InputVariableRecord.hpp>
 
 namespace openstudio {
-namespace NAMESPACE {
+namespace analysis {
   class DiscreteVariable;
 }
 namespace project {
@@ -35,18 +35,17 @@ namespace detail {
 
 } // detail
 
-// TODO: Populate or delete this enumeration if there are/are not any derived types, respectively.
 /** \class DiscreteVariableRecordType
  *  \brief ObjectRecord types that derive from DiscreteVariableRecord.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
  *  macro call is:
  *  \code
 OPENSTUDIO_ENUM(DiscreteVariableRecordType,
-    ((DiscreteVariableRecordDerivedRecord1))
+    ((MeasureGroupRecord))
 );
  *  \endcode */
 OPENSTUDIO_ENUM(DiscreteVariableRecordType,
-    ((DiscreteVariableRecordDerivedRecord1))
+    ((MeasureGroupRecord))
 );
 
 /** DiscreteVariableRecord is a InputVariableRecord. */
@@ -54,21 +53,11 @@ class PROJECT_API DiscreteVariableRecord : public InputVariableRecord {
  public:
 
   typedef detail::DiscreteVariableRecord_Impl ImplType;
-  // TODO: Check this typedef. The generator script assumes that the hierarchy is only two deep   // from ObjectRecord.
-  typedef InputVariableRecordColumns ColumnsType;
-  // TODO: Check this typedef too.
-  typedef InputVariableRecord ObjectRecordType;
+  typedef VariableRecordColumns ColumnsType;
+  typedef VariableRecord ObjectRecordType;
 
   /** @name Constructors and Destructors */
   //@{
-
-  // TODO: Delete if DiscreteVariable is abstract, make private if DiscreteVariable has derived classes.
-  // TODO: Replace ProjectDatabase& database (or add another object if it is ok for DiscreteVariableRecord to be and orphan) with const& to parent Record if the Table contains a parent id.
-  // TODO: Find-replace on 'NAMESPACE'.
-  DiscreteVariableRecord(const NAMESPACE::DiscreteVariable& discreteVariable, ProjectDatabase& database);
-
-  // TODO: Delete if DiscreteVariable is abstract, make private if DiscreteVariable has derived classes.
-  DiscreteVariableRecord(const QSqlQuery& query, ProjectDatabase& database);
 
   virtual ~DiscreteVariableRecord() {}
 
@@ -76,10 +65,21 @@ class PROJECT_API DiscreteVariableRecord : public InputVariableRecord {
 
   /** Get DiscreteVariableRecord from query. Returned object will be of the correct
    *  derived type. */
-  static boost::optional<DiscreteVariableRecord> factoryFromQuery(const QSqlQuery& query, ProjectDatabase& database);
+  static boost::optional<DiscreteVariableRecord> factoryFromQuery(const QSqlQuery& query,
+                                                                  ProjectDatabase& database);
 
-  // TODO: Delete if no derived classes.
-  static DiscreteVariableRecord factoryFromDiscreteVariable(const NAMESPACE::DiscreteVariable& discreteVariable, ProjectDatabase& database);
+  /** Create a DiscreteVariableRecord from discreteVariable that belongs to the problem serialized to
+   *  ProblemRecord. The index is the vector index of discreteVariable's WorkflowStep in problem. */
+  static DiscreteVariableRecord factoryFromDiscreteVariable(const analysis::DiscreteVariable& discreteVariable,
+                                                            ProblemRecord& problemRecord,
+                                                            int workflowIndex);
+
+  /** Create a DiscreteVariableRecord from discreteVariable that belongs to the function serialized to
+   *  functionRecord. The index is the vector index of discreteVariable in function. */
+  static DiscreteVariableRecord factoryFromDiscreteVariable(const analysis::DiscreteVariable& discreteVariable,
+                                                            FunctionRecord& functionRecord,
+                                                            int variableVectorIndex,
+                                                            boost::optional<double> functionCoefficient);
 
   static std::vector<DiscreteVariableRecord> getDiscreteVariableRecords(ProjectDatabase& database);
 
@@ -88,11 +88,7 @@ class PROJECT_API DiscreteVariableRecord : public InputVariableRecord {
   /** @name Getters */
   //@{
 
-  // ADD METHODS FOR RETRIEVING PARENT, CHILD, AND RESOURCE RECORDS AS DESIRED
-
-  // ADD METHODS FOR GETTING/SETTING SPECIFIC DATA FIELDS AS DESIRED
-
-  NAMESPACE::DiscreteVariable discreteVariable() const;
+  analysis::DiscreteVariable discreteVariable() const;
 
   //@}
  protected:
@@ -107,7 +103,8 @@ class PROJECT_API DiscreteVariableRecord : public InputVariableRecord {
 
   /** Construct from impl. */
   DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl,
-                         ProjectDatabase database);
+                         ProjectDatabase database,
+                         const boost::optional<analysis::DiscreteVariable>& discreteVariable);
 
   /// @endcond
  private:
