@@ -770,20 +770,16 @@ namespace detail {
 
 } // detail
 
-RefrigerationCase::RefrigerationCase(const Model& model)
+RefrigerationCase::RefrigerationCase(const Model& model, const ThermalZone& zone, const CubicCurves& cubicCurve)
   : ModelObject(RefrigerationCase::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::RefrigerationCase_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_Refrigeration_CaseFields::ZoneName
-  //     OS_Refrigeration_CaseFields::LatentCaseCreditCurveName
   bool ok = true;
-  // ok = setHandle();
   BOOST_ASSERT(ok);
-  // ok = setZone();
+  ok = setZone(zone);
   BOOST_ASSERT(ok);
-  // ok = setLatentCaseCreditCurve();
+  ok = setLatentCaseCreditCurve(cubicCurve);
   BOOST_ASSERT(ok);
 }
 

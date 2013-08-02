@@ -281,9 +281,7 @@ RefrigerationCondenserAirCooled::RefrigerationCondenserAirCooled(const Model& mo
 {
   BOOST_ASSERT(getImpl<detail::RefrigerationCondenserAirCooled_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
-  // ok = setHandle();
   BOOST_ASSERT(ok);
 }
 
