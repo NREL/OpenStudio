@@ -54,8 +54,6 @@ class MODEL_API ModelObjectList : public ModelObject {
 
   std::vector< ModelObject > modelObjects();
 
-  ModelObject clone(Model model) const;
-
  protected:
   /// @cond
   typedef detail::ModelObjectList_Impl ImplType;
