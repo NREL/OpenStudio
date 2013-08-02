@@ -23,6 +23,7 @@
 #include <utilities/idd/OS_ModelObjectList_FieldEnums.hxx>
 
 #include <utilities/core/Assert.hpp>
+#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
 
 namespace openstudio {
 namespace model {
@@ -63,21 +64,100 @@ namespace detail {
     return ModelObjectList::iddObjectType();
   }
 
+  std::vector<ModelObject> ModelObjectList_Impl::modelObjects() {
+    std::vector<ModelObject> result;
+
+    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+
+    for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
+         it != groups.end();
+         it++ )
+    {
+      boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ModelObjectListExtensibleFields::ModelObject);
+
+      if( wo )
+      {
+        result.push_back(wo->cast<ModelObject>());
+      }
+    }
+
+    return result;
+  }
+
+  bool ModelObjectList_Impl::addModelObject(const ModelObject& modelObject ) {
+    WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+
+    bool ok = eg.setPointer(OS_ModelObjectListExtensibleFields::ModelObject,modelObject.handle());
+
+    if( !ok ) {
+      getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+    }
+    return ok;
+  }
+
+  void ModelObjectList_Impl::removeModelObject(const ModelObject& modelObject ) {
+    WorkspaceExtensibleGroup eg = getGroupForModelObject(*modelObject);
+    getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+  }
+
+  void ModelObjectList_Impl::removeAllModelObjects() {
+    getObject<ModelObject>().clearExtensibleGroups();
+  }
+
+  WorkspaceExtensibleGroup ModelObjectList_Impl::getGroupForModelObject(const ModelObject& modelObject)
+  {
+    boost::optional<WorkspaceExtensibleGroup> result;
+
+    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+
+    for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
+         it != groups.end();
+         it++ )
+    {
+      boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ModelObjectListExtensibleFields::ModelObject);
+
+      BOOST_ASSERT(wo);
+
+      if( wo->handle() == modelObject.handle() )
+      {
+        result = it->cast<WorkspaceExtensibleGroup>();
+
+        break;
+      }
+    }
+
+    BOOST_ASSERT(result);
+
+    return result.get();
+  }
+
 } // detail
 
 ModelObjectList::ModelObjectList(const Model& model)
   : ModelObject(ModelObjectList::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::ModelObjectList_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  bool ok = true;
-  // ok = setHandle();
-  BOOST_ASSERT(ok);
 }
 
 IddObjectType ModelObjectList::iddObjectType() {
   return IddObjectType(IddObjectType::OS_ModelObjectList);
+}
+
+std::vector<ModelObject> ModelObjectList::modelObjects()
+{
+  return getImpl<detail::ModelObjectList_Impl>()->modelObjects();
+}
+
+bool ModelObjectList::addModelObject(const ModelObject& modelObject ) {
+  return getImpl<detail::ModelObjectList_Impl>()->addModelObject();
+}
+
+void ModelObjectList::removeModelObject(const ModelObject& modelObject ) {
+  getImpl<detail::ModelObjectList_Impl>()->removeModelObject();
+}
+
+void ModelObjectList::removeAllModelObjects() {
+  getImpl<detail::ModelObjectList_Impl>()->removeAllModelObjects();
 }
 
 /// @cond

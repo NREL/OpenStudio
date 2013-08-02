@@ -22,6 +22,7 @@
 
 #include <model/ModelAPI.hpp>
 #include <model/ModelObject_Impl.hpp>
+#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
 
 namespace openstudio {
 namespace model {
@@ -65,7 +66,7 @@ namespace detail {
 
     std::vector< ModelObject > modelObjects();
 
-    ModelObject clone(Model model) const;
+    WorkspaceExtensibleGroup getGroupForModelObject(const ModelObject& modelObject);
 
    protected:
    private:
