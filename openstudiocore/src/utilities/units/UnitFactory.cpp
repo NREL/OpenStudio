@@ -151,13 +151,21 @@ boost::optional<Unit> UnitFactorySingleton::createUnit(const std::string& unitSt
     LOG(Warn,"UnitFactorySingleton::createUnit called, but the maps appear to be empty.");
   }
 
+  std::string resultCacheKey = unitString + " in unit system " + system.valueName();
+  ResultCacheMap::const_iterator findIt = m_resultCacheMap.find(resultCacheKey);
+  if (findIt != m_resultCacheMap.end()){
+    return findIt->second;
+  }
+
   if (!unitString.empty() && !isUnit(unitString)) {
     LOG(Error,unitString << " is not properly formatted.");
+    m_resultCacheMap[resultCacheKey] = boost::none;
     return boost::none;
   }
 
   OptionalUnit result = createUnitSimple(unitString,system);
   if (result) {
+    m_resultCacheMap[resultCacheKey] = result;
     return *result;
   }
 
@@ -171,6 +179,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnit(const std::string& unitSt
     if (scale().value == 0.0) {
       LOG(Error,"Scaled unit string " << wUnitString << " uses invalid scale abbreviation "
           << scaleAndUnit.first << ".");
+      m_resultCacheMap[resultCacheKey] = boost::none;
       return boost::none;
     }
     wUnitString = scaleAndUnit.second;
@@ -257,6 +266,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnit(const std::string& unitSt
     result->setScale(resultScale.first().exponent);
   }
 
+  m_resultCacheMap[resultCacheKey] = result;
   return result;
 }
 

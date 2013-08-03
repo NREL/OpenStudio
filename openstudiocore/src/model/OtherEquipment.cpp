@@ -93,8 +93,6 @@ namespace detail {
 
     makeUnique();
 
-    double floorArea = space->floorArea();
-
     OtherEquipmentDefinition definition = otherEquipmentDefinition();
     BOOST_FOREACH(LifeCycleCost cost, definition.lifeCycleCosts()){
       cost.convertToCostPerEach();

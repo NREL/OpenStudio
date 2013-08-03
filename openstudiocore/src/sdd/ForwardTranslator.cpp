@@ -20,6 +20,7 @@
 #include <sdd/ForwardTranslator.hpp>
 
 #include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 #include <model/ModelObject.hpp>
 #include <model/ModelObject_Impl.hpp>
 #include <model/Material.hpp>
@@ -65,7 +66,12 @@ namespace sdd {
 
     m_logSink.resetStringStream();
 
-    boost::optional<QDomDocument> doc = this->translateModel(model);
+    model::Model modelCopy = model.clone().cast<model::Model>();
+
+    // remove unused resource objects
+    modelCopy.purgeUnusedResourceObjects();
+
+    boost::optional<QDomDocument> doc = this->translateModel(modelCopy);
     if (!doc){
       return false;
     }
@@ -149,6 +155,8 @@ namespace sdd {
     projectClimateZoneElement.appendChild( doc.createTextNode( "unknown"));
 
     // set lat, lon, elev
+    // DLM: do not translate forward,  Issue 242: 	Forward Translator - Remove Proj:Lat/Lon/Elevation translation
+    /*
     boost::optional<model::Site> site = model.getOptionalUniqueModelObject<model::Site>();
     if (site){
       double latitude = site->latitude();
@@ -167,6 +175,7 @@ namespace sdd {
       projectElement.appendChild(elevationElement);
       elevationElement.appendChild( doc.createTextNode(QString::number(elevationIP)));
     }
+    */
 
     // todo: write out epw file path
     // todo: write out ddy file and set path

@@ -671,7 +671,7 @@ namespace detail {
     // strategy
     inFile << "strategy," << std::endl;
     inFile << "        single" << std::endl;
-    inFile << "        graphics tabular_graphics_data" << std::endl << std::endl;
+    inFile << "        tabular_graphics_data" << std::endl << std::endl;
 
     // method
     DakotaAlgorithm algorithm = currentAnalysis.analysis().algorithm()->cast<DakotaAlgorithm>();

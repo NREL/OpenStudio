@@ -1,9 +1,9 @@
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
- 
-  Version,7.2;
- 
+
+  Version,8.0;
+
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
- 
+
   Building,
     Untitled,                !- Name
     0.0,                     !- North Axis {deg}
@@ -13,36 +13,36 @@
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
     6;                       !- Minimum Number of Warmup Days
- 
+
 !-   ===========  ALL OBJECTS IN CLASS: TIMESTEP ===========
- 
+
   Timestep,4;
- 
+
 !-   ===========  ALL OBJECTS IN CLASS: SIMULATIONCONTROL ===========
- 
+
   SimulationControl,
     No,                      !- Do Zone Sizing Calculation
     No,                      !- Do System Sizing Calculation
     No,                      !- Do Plant Sizing Calculation
     Yes,                     !- Run Simulation for Sizing Periods
     Yes;                     !- Run Simulation for Weather File Run Periods
- 
+
 !-   ===========  ALL OBJECTS IN CLASS: LOCATION ===========
- 
+
   Site:Location,
     CHICAGO_IL_USA TMY2-94846,  !- Name
     41.78,                   !- Latitude {deg}
     -87.75,                  !- Longitude {deg}
     -6.0,                    !- Time Zone {hr}
     190.00;                  !- Elevation {m}
- 
+
   GlobalGeometryRules,
     UpperLeftCorner,         !- Starting Vertex Position
     Counterclockwise,        !- Vertex Entry Direction
     Absolute;                !- Coordinate System
- 
+
 !-   ===========  ALL OBJECTS IN CLASS: MATERIAL ===========
- 
+
   Material,
     F08 Metal surface,       !- Name
     Smooth,                  !- Roughness
@@ -50,7 +50,7 @@
     45.28,                   !- Conductivity {W/m-K}
     7824,                    !- Density {kg/m3}
     500;                     !- Specific Heat {J/kg-K}
- 
+
   Material,
     I01 25mm insulation board,  !- Name
     MediumRough,             !- Roughness
@@ -58,7 +58,7 @@
     0.03,                    !- Conductivity {W/m-K}
     43,                      !- Density {kg/m3}
     1210;                    !- Specific Heat {J/kg-K}
- 
+
   Material,
     I02 50mm insulation board,  !- Name
     MediumRough,             !- Roughness
@@ -66,7 +66,7 @@
     0.03,                    !- Conductivity {W/m-K}
     43,                      !- Density {kg/m3}
     1210;                    !- Specific Heat {J/kg-K}
- 
+
   Material,
     G01a 19mm gypsum board,  !- Name
     MediumSmooth,            !- Roughness
@@ -74,7 +74,7 @@
     0.16,                    !- Conductivity {W/m-K}
     800,                     !- Density {kg/m3}
     1090;                    !- Specific Heat {J/kg-K}
- 
+
   Material,
     M11 100mm lightweight concrete,  !- Name
     MediumRough,             !- Roughness
@@ -82,7 +82,7 @@
     0.53,                    !- Conductivity {W/m-K}
     1280,                    !- Density {kg/m3}
     840;                     !- Specific Heat {J/kg-K}
- 
+
   Material,
     F16 Acoustic tile,       !- Name
     MediumSmooth,            !- Roughness
@@ -90,7 +90,7 @@
     0.06,                    !- Conductivity {W/m-K}
     368,                     !- Density {kg/m3}
     590;                     !- Specific Heat {J/kg-K}
- 
+
   Material,
     M01 100mm brick,         !- Name
     MediumRough,             !- Roughness
@@ -98,7 +98,7 @@
     0.89,                    !- Conductivity {W/m-K}
     1920,                    !- Density {kg/m3}
     790;                     !- Specific Heat {J/kg-K}
- 
+
   Material,
     M15 200mm heavyweight concrete,  !- Name
     MediumRough,             !- Roughness
@@ -106,7 +106,7 @@
     1.95,                    !- Conductivity {W/m-K}
     2240,                    !- Density {kg/m3}
     900;                     !- Specific Heat {J/kg-K}
- 
+
   Material,
     M05 200mm concrete block,!- Name
     MediumRough,             !- Roughness
@@ -114,7 +114,7 @@
     1.11,                    !- Conductivity {W/m-K}
     800,                     !- Density {kg/m3}
     920;                     !- Specific Heat {J/kg-K}
- 
+
   Material,
     G05 25mm wood,           !- Name
     MediumSmooth,            !- Roughness
@@ -122,19 +122,19 @@
     0.15,                    !- Conductivity {W/m-K}
     608,                     !- Density {kg/m3}
     1630;                    !- Specific Heat {J/kg-K}
- 
+
 !-   ===========  ALL OBJECTS IN CLASS: MATERIAL:AIRGAP ===========
- 
+
   Material:AirGap,
     F04 Wall air space resistance,  !- Name
     0.15;                    !- Thermal Resistance {m2-K/W}
- 
+
   Material:AirGap,
     F05 Ceiling air space resistance,  !- Name
     0.18;                    !- Thermal Resistance {m2-K/W}
- 
+
 !-   ===========  ALL OBJECTS IN CLASS: WINDOWMATERIAL:GLAZING ===========
- 
+
   WindowMaterial:Glazing,
     Clear 3mm,               !- Name
     SpectralAverage,         !- Optical Data Type
@@ -150,27 +150,27 @@
     0.84,                    !- Front Side Infrared Hemispherical Emissivity
     0.84,                    !- Back Side Infrared Hemispherical Emissivity
     0.9;                     !- Conductivity {W/m-K}
- 
+
 !-   ===========  ALL OBJECTS IN CLASS: WINDOWMATERIAL:GAS ===========
- 
+
   WindowMaterial:Gas,
     Air 13mm,                !- Name
     Air,                     !- Gas Type
     0.0127;                  !- Thickness {m}
- 
+
 !-   ===========  ALL OBJECTS IN CLASS: CONSTRUCTION ===========
- 
+
   Construction,
     Exterior Floor,          !- Name
     I02 50mm insulation board,  !- Outside Layer
     M15 200mm heavyweight concrete;  !- Layer 2
- 
+
   Construction,
     Interior Floor,          !- Name
     F16 Acoustic tile,       !- Outside Layer
     F05 Ceiling air space resistance,  !- Layer 2
     M11 100mm lightweight concrete;  !- Layer 3
- 
+
   Construction,
     Exterior Wall,           !- Name
     M01 100mm brick,         !- Outside Layer
@@ -178,46 +178,46 @@
     I02 50mm insulation board,  !- Layer 3
     F04 Wall air space resistance,  !- Layer 4
     G01a 19mm gypsum board;  !- Layer 5
- 
+
   Construction,
     Interior Wall,           !- Name
     G01a 19mm gypsum board,  !- Outside Layer
     F04 Wall air space resistance,  !- Layer 2
     G01a 19mm gypsum board;  !- Layer 3
- 
+
   Construction,
     Exterior Roof,           !- Name
     M11 100mm lightweight concrete,  !- Outside Layer
     F05 Ceiling air space resistance,  !- Layer 2
     F16 Acoustic tile;       !- Layer 3
- 
+
   Construction,
     Interior Ceiling,        !- Name
     M11 100mm lightweight concrete,  !- Outside Layer
     F05 Ceiling air space resistance,  !- Layer 2
     F16 Acoustic tile;       !- Layer 3
- 
+
   Construction,
     Exterior Window,         !- Name
     Clear 3mm,               !- Outside Layer
     Air 13mm,                !- Layer 2
     Clear 3mm;               !- Layer 3
- 
+
   Construction,
     Interior Window,         !- Name
     Clear 3mm;               !- Outside Layer
- 
+
   Construction,
     Exterior Door,           !- Name
     F08 Metal surface,       !- Outside Layer
     I01 25mm insulation board;  !- Layer 2
- 
+
   Construction,
     Interior Door,           !- Name
     G05 25mm wood;           !- Outside Layer
- 
+
   Output:VariableDictionary,Regular;
- 
+
   Zone,
     zone 1,                  !- Name
     0.0,                     !- Direction of Relative North {deg}
@@ -226,7 +226,7 @@
     0.0,                     !- Z Origin {m}
     ,                        !- Type
     1;                       !- Multiplier
- 
+
   BuildingSurface:Detailed,
     floor-01,                !- Name
     Floor,                   !- Surface Type
@@ -242,7 +242,7 @@
     10.668000,1.524000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.524000,1.524000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.524000,10.668000,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     wall-04,                 !- Name
     Wall,                    !- Surface Type
@@ -258,7 +258,7 @@
     1.524000,10.668000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.524000,1.524000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.524000,1.524000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     wall-03,                 !- Name
     Wall,                    !- Surface Type
@@ -274,7 +274,7 @@
     10.668000,10.668000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     1.524000,10.668000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     1.524000,10.668000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     wall-02,                 !- Name
     Wall,                    !- Surface Type
@@ -300,7 +300,7 @@
     10.668000,9.753600,0.000000,  !- X,Y,Z ==> Vertex 12 {m}
     10.668000,10.668000,0.000000,  !- X,Y,Z ==> Vertex 13 {m}
     10.668000,10.668000,4.572000;  !- X,Y,Z ==> Vertex 14 {m}
- 
+
   BuildingSurface:Detailed,
     roof-01,                 !- Name
     Roof,                    !- Surface Type
@@ -316,7 +316,7 @@
     1.524000,1.524000,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
     10.668000,1.524000,4.572000,  !- X,Y,Z ==> Vertex 3 {m}
     10.668000,10.668000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   BuildingSurface:Detailed,
     wall-01,                 !- Name
     Wall,                    !- Surface Type
@@ -332,7 +332,7 @@
     1.524000,1.524000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.668000,1.524000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.668000,1.524000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     76512A,                  !- Name
     Window,                  !- Surface Type
@@ -348,7 +348,7 @@
     9.144000,1.524000,0.609600,  !- X,Y,Z ==> Vertex 2 {m}
     9.753600,1.524000,0.609600,  !- X,Y,Z ==> Vertex 3 {m}
     9.753600,1.524000,1.828800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     1DA59C,                  !- Name
     Window,                  !- Surface Type
@@ -364,7 +364,7 @@
     4.992688,1.524000,0.609600,  !- X,Y,Z ==> Vertex 2 {m}
     5.602288,1.524000,0.609600,  !- X,Y,Z ==> Vertex 3 {m}
     5.602288,1.524000,1.828800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     85F888,                  !- Name
     Window,                  !- Surface Type
@@ -380,7 +380,7 @@
     8.534400,1.524000,0.609600,  !- X,Y,Z ==> Vertex 2 {m}
     9.144000,1.524000,0.609600,  !- X,Y,Z ==> Vertex 3 {m}
     9.144000,1.524000,1.828800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     7293BD,                  !- Name
     Window,                  !- Surface Type
@@ -396,7 +396,7 @@
     9.144000,1.524000,1.828800,  !- X,Y,Z ==> Vertex 2 {m}
     9.753600,1.524000,1.828800,  !- X,Y,Z ==> Vertex 3 {m}
     9.753600,1.524000,3.048000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     DBBA60,                  !- Name
     Window,                  !- Surface Type
@@ -412,7 +412,7 @@
     8.534400,1.524000,1.828800,  !- X,Y,Z ==> Vertex 2 {m}
     9.144000,1.524000,1.828800,  !- X,Y,Z ==> Vertex 3 {m}
     9.144000,1.524000,3.048000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     A93494,                  !- Name
     Window,                  !- Surface Type
@@ -428,7 +428,7 @@
     2.438400,1.524000,0.609600,  !- X,Y,Z ==> Vertex 2 {m}
     3.048000,1.524000,0.609600,  !- X,Y,Z ==> Vertex 3 {m}
     3.048000,1.524000,1.828800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     2960EA,                  !- Name
     Window,                  !- Surface Type
@@ -444,7 +444,7 @@
     5.602288,1.524000,0.609600,  !- X,Y,Z ==> Vertex 2 {m}
     6.211888,1.524000,0.609600,  !- X,Y,Z ==> Vertex 3 {m}
     6.211888,1.524000,1.828800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     9D1977,                  !- Name
     Window,                  !- Surface Type
@@ -460,7 +460,7 @@
     6.211888,1.524000,0.609600,  !- X,Y,Z ==> Vertex 2 {m}
     6.821488,1.524000,0.609600,  !- X,Y,Z ==> Vertex 3 {m}
     6.821488,1.524000,1.828800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     9AE237,                  !- Name
     Window,                  !- Surface Type
@@ -476,7 +476,7 @@
     5.791200,2.438400,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
     6.400800,2.438400,4.572000,  !- X,Y,Z ==> Vertex 3 {m}
     6.400800,3.048000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     5A980D,                  !- Name
     Window,                  !- Surface Type
@@ -492,7 +492,7 @@
     2.438400,2.438400,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
     3.048000,2.438400,4.572000,  !- X,Y,Z ==> Vertex 3 {m}
     3.048000,3.048000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     BD7696,                  !- Name
     Window,                  !- Surface Type
@@ -508,7 +508,7 @@
     9.144000,2.438400,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
     9.753600,2.438400,4.572000,  !- X,Y,Z ==> Vertex 3 {m}
     9.753600,3.048000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     719787,                  !- Name
     Window,                  !- Surface Type
@@ -524,7 +524,7 @@
     8.534400,2.438400,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
     9.144000,2.438400,4.572000,  !- X,Y,Z ==> Vertex 3 {m}
     9.144000,3.048000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     54BD87,                  !- Name
     Window,                  !- Surface Type
@@ -540,7 +540,7 @@
     9.144000,3.048000,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
     9.753600,3.048000,4.572000,  !- X,Y,Z ==> Vertex 3 {m}
     9.753600,3.657600,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     839098,                  !- Name
     Window,                  !- Surface Type
@@ -556,7 +556,7 @@
     8.534400,3.048000,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
     9.144000,3.048000,4.572000,  !- X,Y,Z ==> Vertex 3 {m}
     9.144000,3.657600,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     E7E6AD,                  !- Name
     Window,                  !- Surface Type
@@ -572,7 +572,7 @@
     5.181600,2.438400,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
     5.791200,2.438400,4.572000,  !- X,Y,Z ==> Vertex 3 {m}
     5.791200,3.048000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     E1B4D0,                  !- Name
     Window,                  !- Surface Type
@@ -588,7 +588,7 @@
     6.400800,2.438400,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
     7.010400,2.438400,4.572000,  !- X,Y,Z ==> Vertex 3 {m}
     7.010400,3.048000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     DD599F,                  !- Name
     Window,                  !- Surface Type
@@ -604,7 +604,7 @@
     7.924800,2.438400,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
     8.534400,2.438400,4.572000,  !- X,Y,Z ==> Vertex 3 {m}
     8.534400,3.048000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     87555A,                  !- Name
     Window,                  !- Surface Type
@@ -620,7 +620,7 @@
     7.924800,3.048000,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
     8.534400,3.048000,4.572000,  !- X,Y,Z ==> Vertex 3 {m}
     8.534400,3.657600,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     632287,                  !- Name
     Window,                  !- Surface Type
@@ -636,7 +636,7 @@
     8.534400,3.657600,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
     9.144000,3.657600,4.572000,  !- X,Y,Z ==> Vertex 3 {m}
     9.144000,4.267200,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     179FAF,                  !- Name
     Window,                  !- Surface Type
@@ -652,7 +652,7 @@
     9.144000,3.657600,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
     9.753600,3.657600,4.572000,  !- X,Y,Z ==> Vertex 3 {m}
     9.753600,4.267200,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     20AA1C,                  !- Name
     Window,                  !- Surface Type
@@ -668,7 +668,7 @@
     7.924800,3.657600,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
     8.534400,3.657600,4.572000,  !- X,Y,Z ==> Vertex 3 {m}
     8.534400,4.267200,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     E20210,                  !- Name
     Window,                  !- Surface Type
@@ -684,7 +684,7 @@
     6.211888,1.524000,2.133600,  !- X,Y,Z ==> Vertex 2 {m}
     6.821488,1.524000,2.133600,  !- X,Y,Z ==> Vertex 3 {m}
     6.821488,1.524000,3.352800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     B6722C,                  !- Name
     Window,                  !- Surface Type
@@ -700,7 +700,7 @@
     4.992688,1.524000,2.133600,  !- X,Y,Z ==> Vertex 2 {m}
     5.602288,1.524000,2.133600,  !- X,Y,Z ==> Vertex 3 {m}
     5.602288,1.524000,3.352800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     137ABA,                  !- Name
     Window,                  !- Surface Type
@@ -716,7 +716,7 @@
     5.602288,1.524000,2.133600,  !- X,Y,Z ==> Vertex 2 {m}
     6.211888,1.524000,2.133600,  !- X,Y,Z ==> Vertex 3 {m}
     6.211888,1.524000,3.352800;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     96B5AA,                  !- Name
     Door,                    !- Surface Type
@@ -732,7 +732,7 @@
     10.668000,8.839200,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.668000,9.753600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.668000,9.753600,2.133600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     1642CB,                  !- Name
     Door,                    !- Surface Type
@@ -748,7 +748,7 @@
     10.668000,3.352800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.668000,4.267200,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.668000,4.267200,2.133600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     D37A0C,                  !- Name
     Door,                    !- Surface Type
@@ -764,7 +764,7 @@
     10.668000,7.924800,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.668000,8.839200,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.668000,8.839200,2.133600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     B31811,                  !- Name
     Door,                    !- Surface Type
@@ -780,7 +780,7 @@
     10.668000,7.010400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.668000,7.924800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.668000,7.924800,2.133600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     522E8A,                  !- Name
     Door,                    !- Surface Type
@@ -796,7 +796,7 @@
     10.668000,4.267200,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.668000,5.181600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.668000,5.181600,2.133600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+
   FenestrationSurface:Detailed,
     AB1659,                  !- Name
     Door,                    !- Surface Type
@@ -812,4 +812,4 @@
     10.668000,1.524000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
     10.668000,2.438400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
     10.668000,2.438400,2.133600;  !- X,Y,Z ==> Vertex 4 {m}
- 
+

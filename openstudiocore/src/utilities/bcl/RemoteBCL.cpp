@@ -217,7 +217,7 @@ namespace openstudio{
       }
 
       // disconnect all signals from m_networkManager to this
-      bool test = disconnect(m_networkManager, 0, this, 0);
+      disconnect(m_networkManager, 0, this, 0); // returns a bool, but was not checking, so removed
 
       const_cast<RemoteBCL*>(this)->m_lastSearch.clear();
 
@@ -227,7 +227,7 @@ namespace openstudio{
       //LOG(Warn, toString(url));
 
       // when the reply is finished call onSearchResponseComplete
-      test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
+      bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
       Q_ASSERT(test);
       test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
         this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
@@ -257,7 +257,7 @@ namespace openstudio{
       }
 
       // disconnect all signals from m_networkManager to this
-      bool test = disconnect(m_networkManager, 0, this, 0);
+      disconnect(m_networkManager, 0, this, 0); // returns bool, but no check, so removed
 
       const_cast<RemoteBCL*>(this)->m_lastSearch.clear();
 
@@ -267,7 +267,7 @@ namespace openstudio{
       //LOG(Warn, toString(url));
 
       // when the reply is finished call onSearchResponseComplete
-      test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
+      bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
       Q_ASSERT(test);
       test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
         this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
@@ -485,10 +485,10 @@ namespace openstudio{
       //LOG(Warn, toString(url));
 
       // disconnect all signals from m_networkManager to this
-      bool test = disconnect(m_networkManager, 0, this, 0);
+      disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
 
       // when the reply is finished call onSearchResponseComplete
-      test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
+      bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
       Q_ASSERT(test);
       test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
         this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
@@ -589,11 +589,11 @@ namespace openstudio{
     LOG(Info, testString);
 
     // disconnect all signals from m_networkManager to this
-    bool test = disconnect(m_networkManager, 0, this, 0);
+    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
     //Q_ASSERT(test);
 
     // when the reply is finished call onDownloadComplete
-    test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onDownloadComplete(QNetworkReply*)));
+    bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onDownloadComplete(QNetworkReply*)));
     Q_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
@@ -625,11 +625,11 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    bool test = disconnect(m_networkManager, 0, this, 0);
+    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
     //Q_ASSERT(test);
 
     // when the reply is finished call onOnDemandGeneratorResponseComplete
-    test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onOnDemandGeneratorResponseComplete(QNetworkReply*)));
+    bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onOnDemandGeneratorResponseComplete(QNetworkReply*)));
     Q_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
@@ -701,11 +701,11 @@ namespace openstudio{
     //LOG(Warn, url.toString().toStdString());
 
     // disconnect all signals from m_networkManager to this
-    bool test = disconnect(m_networkManager, 0, this, 0);
+    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
     //Q_ASSERT(test);
 
     // when the reply is finished call onDownloadComplete
-    test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onDownloadComplete(QNetworkReply*)));
+    bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onDownloadComplete(QNetworkReply*)));
     Q_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
@@ -743,11 +743,11 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    bool test = disconnect(m_networkManager, 0, this, 0);
+    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
     //Q_ASSERT(test);
 
     // when the reply is finished call onMetaSearchResponseComplete
-    test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onMetaSearchResponseComplete(QNetworkReply*)));
+    bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onMetaSearchResponseComplete(QNetworkReply*)));
     Q_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
@@ -785,11 +785,11 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    bool test = disconnect(m_networkManager, 0, this, 0);
+    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
     //Q_ASSERT(test);
 
     // when the reply is finished call onMetaSearchResponseComplete
-    test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onMetaSearchResponseComplete(QNetworkReply*)));
+    bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onMetaSearchResponseComplete(QNetworkReply*)));
     Q_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
@@ -828,11 +828,11 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    bool test = disconnect(m_networkManager, 0, this, 0);
+    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
     //Q_ASSERT(test);
 
     // when the reply is finished call onSearchResponseComplete
-    test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
+    bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
     Q_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
@@ -871,11 +871,11 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    bool test = disconnect(m_networkManager, 0, this, 0);
+    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
     //Q_ASSERT(test);
 
     // when the reply is finished call onSearchResponseComplete
-    test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
+    bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
     Q_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));

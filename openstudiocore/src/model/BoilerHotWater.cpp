@@ -345,7 +345,15 @@ namespace detail {
 
   bool BoilerHotWater_Impl::setBoilerFlowMode(std::string boilerFlowMode) {
     bool result = false;
-    result = setString(OS_Boiler_HotWaterFields::BoilerFlowMode, boilerFlowMode);
+    if(istringEqual(boilerFlowMode,"VariableFlow"))
+    {
+      // Support legacy key
+      result = setString(OS_Boiler_HotWaterFields::BoilerFlowMode,"LeavingSetpointModulated");
+    }
+    else
+    {
+      result = setString(OS_Boiler_HotWaterFields::BoilerFlowMode, boilerFlowMode);
+    }
     return result;
   }
 

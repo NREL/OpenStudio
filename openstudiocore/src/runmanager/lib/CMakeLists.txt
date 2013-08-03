@@ -131,6 +131,9 @@ SET( runmanager_src
 
   ErrorEstimation.hpp
   ErrorEstimation.cpp
+
+  JSON.cpp
+  JSON.hpp
 )
 
 IF( BUILD_TESTING OR BUILD_PACKAGE )
@@ -255,6 +258,7 @@ SET( runmanager_test_src
   Test/OSResultLoading_GTest.cpp
   Test/ParallelEnergyPlusJob_GTest.cpp
   Test/ErrorEstimation_GTest.cpp
+  Test/JSON_GTest.cpp
   "${CMAKE_BINARY_DIR}/src/runmanager/Test/ToolBin.hxx"
 )
 

@@ -94,8 +94,6 @@ namespace detail {
 
     this->makeUnique();
 
-    double floorArea = space->floorArea();
-
     LightsDefinition lightsDefinition = this->lightsDefinition();
     BOOST_FOREACH(LifeCycleCost cost, lightsDefinition.lifeCycleCosts()){
       cost.convertToCostPerEach();

@@ -32,6 +32,7 @@
 #include <model/ScheduleTypeRegistry.hpp>
 
 #include <utilities/units/QuantityConverter.hpp>
+#include <utilities/units/Quantity.hpp>
 #include <utilities/units/OSQuantityVector.hpp>
 #include <utilities/units/SIUnit.hpp>
 #include <utilities/units/BTUUnit.hpp>
@@ -190,99 +191,11 @@ TEST_F(ModelFixture, People_RemoveDefinition2)
   EXPECT_EQ(0u, model.numObjects());
 }
 
-TEST_F(ModelFixture,PeopleDefinition_NumberofPeople_Quantity) {
-  Model model;
-  PeopleDefinition peopleDefinition(model);
-
-  Unit units = peopleDefinition.getNumberofPeople(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(peopleDefinition.setNumberofPeople(testQ));
-  OSOptionalQuantity q = peopleDefinition.getNumberofPeople(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,PeopleDefinition_PeopleperSpaceFloorArea_Quantity) {
-  Model model;
-  PeopleDefinition peopleDefinition(model);
-
-  Unit units = peopleDefinition.getPeopleperSpaceFloorArea(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(peopleDefinition.setPeopleperSpaceFloorArea(testQ));
-  OSOptionalQuantity q = peopleDefinition.getPeopleperSpaceFloorArea(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),5.0E-15);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-
-  // repeated round trips
-  for (int i = 0, n = 100; i < n; ++i) {
-    peopleDefinition.setPeopleperSpaceFloorArea(q.get());
-    q = peopleDefinition.getPeopleperSpaceFloorArea(true);
-    EXPECT_NEAR(value,q.get().value(),5.0E-15);
-  }
-}
-
-TEST_F(ModelFixture,PeopleDefinition_SpaceFloorAreaperPerson_Quantity) {
-  Model model;
-  PeopleDefinition peopleDefinition(model);
-
-  Unit units = peopleDefinition.getSpaceFloorAreaperPerson(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(peopleDefinition.setSpaceFloorAreaperPerson(testQ));
-  OSOptionalQuantity q = peopleDefinition.getSpaceFloorAreaperPerson(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,PeopleDefinition_FractionRadiant_Quantity) {
-  Model model;
-  PeopleDefinition peopleDefinition(model);
-
-  Unit units = peopleDefinition.getFractionRadiant(true).units(); // Get IP units.
-  double value(0.5);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(peopleDefinition.setFractionRadiant(testQ));
-  Quantity q = peopleDefinition.getFractionRadiant(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,PeopleDefinition_SensibleHeatFraction_Quantity) {
-  Model model;
-  PeopleDefinition peopleDefinition(model);
-
-  Unit units = peopleDefinition.getSensibleHeatFraction(true).units(); // Get IP units.
-  double value(0.5);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(peopleDefinition.setSensibleHeatFraction(testQ));
-  OSOptionalQuantity q = peopleDefinition.getSensibleHeatFraction(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,PeopleDefinition_CarbonDioxideGenerationRate_Quantity) {
-  Model model;
-  PeopleDefinition peopleDefinition(model);
-
-  Unit units = peopleDefinition.getCarbonDioxideGenerationRate(true).units(); // Get IP units.
-  double value(1.0E-7);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(peopleDefinition.setCarbonDioxideGenerationRate(testQ));
-  Quantity q = peopleDefinition.getCarbonDioxideGenerationRate(true);
-  EXPECT_NEAR(value,q.value(),1.0E-15);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
 
 TEST_F(ModelFixture,People_Schedule_Quantities) {
   Model model;
   PeopleDefinition definition(model);
-  definition.setNumberofPeople(Quantity(100.0,createSIPeople()));
+  definition.setNumberofPeople(100.0);
 
   People people(definition);
   ScheduleRuleset activityLevelSchedule(model);

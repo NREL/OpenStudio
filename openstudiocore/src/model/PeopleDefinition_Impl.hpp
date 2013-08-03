@@ -23,9 +23,6 @@
 #include <model/ModelAPI.hpp>
 #include <model/SpaceLoadDefinition_Impl.hpp>
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
-
 namespace openstudio {
 namespace model {
 
@@ -36,45 +33,7 @@ namespace detail {
   /** PeopleDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for PeopleDefinition.*/
   class MODEL_API PeopleDefinition_Impl : public SpaceLoadDefinition_Impl {
     Q_OBJECT;
-    
-    Q_PROPERTY(std::string numberofPeopleCalculationMethod READ numberofPeopleCalculationMethod);
-    Q_PROPERTY(std::vector<std::string> numberofPeopleCalculationMethodValues READ numberofPeopleCalculationMethodValues);
-    
-    Q_PROPERTY(boost::optional<double> numberofPeople READ numberofPeople WRITE setNumberofPeople);
-    Q_PROPERTY(openstudio::OSOptionalQuantity numberofPeople_SI READ numberofPeople_SI WRITE setNumberofPeople);
-    Q_PROPERTY(openstudio::OSOptionalQuantity numberofPeople_IP READ numberofPeople_IP WRITE setNumberofPeople);
-    
-    Q_PROPERTY(boost::optional<double> peopleperSpaceFloorArea READ peopleperSpaceFloorArea WRITE setPeopleperSpaceFloorArea);
-    Q_PROPERTY(openstudio::OSOptionalQuantity peopleperSpaceFloorArea_SI READ peopleperSpaceFloorArea_SI WRITE setPeopleperSpaceFloorArea);
-    Q_PROPERTY(openstudio::OSOptionalQuantity peopleperSpaceFloorArea_IP READ peopleperSpaceFloorArea_IP WRITE setPeopleperSpaceFloorArea);    
-    
-    Q_PROPERTY(boost::optional<double> spaceFloorAreaperPerson READ spaceFloorAreaperPerson WRITE setSpaceFloorAreaperPerson);
-    Q_PROPERTY(openstudio::OSOptionalQuantity spaceFloorAreaperPerson_SI READ spaceFloorAreaperPerson_SI WRITE setSpaceFloorAreaperPerson);
-    Q_PROPERTY(openstudio::OSOptionalQuantity spaceFloorAreaperPerson_IP READ spaceFloorAreaperPerson_IP WRITE setSpaceFloorAreaperPerson);    
-    
-    Q_PROPERTY(double fractionRadiant READ fractionRadiant WRITE setFractionRadiant);
-    Q_PROPERTY(openstudio::Quantity fractionRadiant_SI READ fractionRadiant_SI WRITE setFractionRadiant);
-    Q_PROPERTY(openstudio::Quantity fractionRadiant_IP READ fractionRadiant_IP WRITE setFractionRadiant);    
-    
-    Q_PROPERTY(boost::optional<double> sensibleHeatFraction READ sensibleHeatFraction WRITE setSensibleHeatFraction RESET resetSensibleHeatFraction);
-    Q_PROPERTY(openstudio::OSOptionalQuantity sensibleHeatFraction_SI READ sensibleHeatFraction_SI WRITE setSensibleHeatFraction RESET resetSensibleHeatFraction);
-    Q_PROPERTY(openstudio::OSOptionalQuantity sensibleHeatFraction_IP READ sensibleHeatFraction_IP WRITE setSensibleHeatFraction RESET resetSensibleHeatFraction);    
-    Q_PROPERTY(bool isSensibleHeatFractionDefaulted READ isSensibleHeatFractionDefaulted);
-    Q_PROPERTY(bool isSensibleHeatFractionAutocalculated READ isSensibleHeatFractionAutocalculated);
-    
-    Q_PROPERTY(double carbonDioxideGenerationRate READ carbonDioxideGenerationRate WRITE setCarbonDioxideGenerationRate RESET resetCarbonDioxideGenerationRate);
-    Q_PROPERTY(openstudio::Quantity carbonDioxideGenerationRate_SI READ carbonDioxideGenerationRate_SI WRITE setCarbonDioxideGenerationRate RESET resetCarbonDioxideGenerationRate);
-    Q_PROPERTY(openstudio::Quantity carbonDioxideGenerationRate_IP READ carbonDioxideGenerationRate_IP WRITE setCarbonDioxideGenerationRate RESET resetCarbonDioxideGenerationRate);    
-    Q_PROPERTY(bool isCarbonDioxideGenerationRateDefaulted READ isCarbonDioxideGenerationRateDefaulted);
-    
-    Q_PROPERTY(bool enableASHRAE55ComfortWarnings READ enableASHRAE55ComfortWarnings WRITE setEnableASHRAE55ComfortWarnings RESET resetEnableASHRAE55ComfortWarnings);
-    Q_PROPERTY(bool isEnableASHRAE55ComfortWarningsDefaulted READ isEnableASHRAE55ComfortWarningsDefaulted);
-    
-    Q_PROPERTY(std::string meanRadiantTemperatureCalculationType READ meanRadiantTemperatureCalculationType WRITE setMeanRadiantTemperatureCalculationType RESET resetMeanRadiantTemperatureCalculationType);
-    Q_PROPERTY(bool isMeanRadiantTemperatureCalculationTypeDefaulted READ isMeanRadiantTemperatureCalculationTypeDefaulted);
-    Q_PROPERTY(std::vector<std::string> meanRadiantTemperatureCalculationTypeValues READ meanRadiantTemperatureCalculationTypeValues);
-    
-    Q_PROPERTY(std::vector<std::string> thermalComfortModelTypeValues READ thermalComfortModelTypeValues);
+  
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -106,32 +65,20 @@ namespace detail {
     std::string numberofPeopleCalculationMethod() const;
 
     boost::optional<double> numberofPeople() const;
-    
-    OSOptionalQuantity getNumberofPeople(bool returnIP=false) const;
 
-    boost::optional<double> peopleperSpaceFloorArea() const;
-    
-    OSOptionalQuantity getPeopleperSpaceFloorArea(bool returnIP=false) const;    
+    boost::optional<double> peopleperSpaceFloorArea() const; 
 
     boost::optional<double> spaceFloorAreaperPerson() const;
-    
-    OSOptionalQuantity getSpaceFloorAreaperPerson(bool returnIP=false) const;    
 
-    double fractionRadiant() const;
-    
-    Quantity getFractionRadiant(bool returnIP=false) const;    
+    double fractionRadiant() const;    
 
     boost::optional<double> sensibleHeatFraction() const;
-    
-    OSOptionalQuantity getSensibleHeatFraction(bool returnIP=false) const;    
 
     bool isSensibleHeatFractionDefaulted() const;
 
     bool isSensibleHeatFractionAutocalculated() const;
 
     double carbonDioxideGenerationRate() const;
-    
-    Quantity getCarbonDioxideGenerationRate(bool returnIP=false) const;    
 
     bool isCarbonDioxideGenerationRateDefaulted() const;
 
@@ -155,26 +102,14 @@ namespace detail {
     //@{
 
     bool setNumberofPeople(boost::optional<double> numberofPeople);
-    
-    bool setNumberofPeople(const OSOptionalQuantity& numberofPeople);    
 
     bool setPeopleperSpaceFloorArea(boost::optional<double> peopleperSpaceFloorArea);
     
-    bool setPeopleperSpaceFloorArea(const OSOptionalQuantity& peopleperSpaceFloorArea);    
-
     bool setSpaceFloorAreaperPerson(boost::optional<double> spaceFloorAreaperPerson);
-
-    bool setSpaceFloorAreaperPerson(const OSOptionalQuantity& spaceFloorAreaperPerson);
 
     bool setFractionRadiant(double fractionRadiant);
 
-    bool setFractionRadiant(const Quantity& fractionRadiant);    
-
-    bool setSensibleHeatFraction(boost::optional<double> sensibleHeatFraction);
-
-    bool setSensibleHeatFraction(double sensibleHeatFraction);
-    
-    bool setSensibleHeatFraction(const OSOptionalQuantity& sensibleHeatFraction);    
+    bool setSensibleHeatFraction(double sensibleHeatFraction);  
 
     void resetSensibleHeatFraction();
 
@@ -182,8 +117,6 @@ namespace detail {
 
     bool setCarbonDioxideGenerationRate(double carbonDioxideGenerationRate);
     
-    bool setCarbonDioxideGenerationRate(const Quantity& carbonDioxideGenerationRate);    
-
     void resetCarbonDioxideGenerationRate();
 
     void setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings);
@@ -223,18 +156,6 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.PeopleDefinition");
     
     std::vector<std::string> numberofPeopleCalculationMethodValues() const;
-    openstudio::OSOptionalQuantity numberofPeople_SI() const;
-    openstudio::OSOptionalQuantity numberofPeople_IP() const;
-    openstudio::OSOptionalQuantity peopleperSpaceFloorArea_SI() const;
-    openstudio::OSOptionalQuantity peopleperSpaceFloorArea_IP() const;
-    openstudio::OSOptionalQuantity spaceFloorAreaperPerson_SI() const;
-    openstudio::OSOptionalQuantity spaceFloorAreaperPerson_IP() const;
-    openstudio::Quantity fractionRadiant_SI() const;
-    openstudio::Quantity fractionRadiant_IP() const;
-    openstudio::OSOptionalQuantity sensibleHeatFraction_SI() const;
-    openstudio::OSOptionalQuantity sensibleHeatFraction_IP() const;
-    openstudio::Quantity carbonDioxideGenerationRate_SI() const;
-    openstudio::Quantity carbonDioxideGenerationRate_IP() const;
     std::vector<std::string> meanRadiantTemperatureCalculationTypeValues() const;
     std::vector<std::string> thermalComfortModelTypeValues() const;
   };
