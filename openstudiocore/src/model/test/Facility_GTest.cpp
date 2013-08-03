@@ -536,7 +536,7 @@ TEST_F(ModelFixture, Facility_EconomicsTest_EmptyModel) {
     openstudio::Vector values = timeSeries->values();
     unsigned numValues = values.size();
     for (unsigned i = 0; i < numValues; ++i){
-      double value = values(i);
+      EXPECT_NO_THROW(values(i));
     }
   }
 
