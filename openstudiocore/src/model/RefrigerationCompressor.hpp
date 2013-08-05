@@ -28,7 +28,7 @@ namespace openstudio {
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class BicubicCurves;
+class CurveBicubic;
 
 namespace detail {
 
@@ -42,7 +42,7 @@ class MODEL_API RefrigerationCompressor : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit RefrigerationCompressor(const Model& model);
+  explicit RefrigerationCompressor(const Model& model, const CurveBicubic& powerCurve, const CurveBicubic& capacityCurve);
 
   virtual ~RefrigerationCompressor() {}
 
@@ -55,11 +55,11 @@ class MODEL_API RefrigerationCompressor : public ModelObject {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: BicubicCurves.
-  BicubicCurves refrigerationCompressorPowerCurve() const;
+  // TODO: Check return type. From object lists, some candidates are: CurveBicubic.
+  CurveBicubic refrigerationCompressorPowerCurve() const;
 
-  // TODO: Check return type. From object lists, some candidates are: BicubicCurves.
-  BicubicCurves refrigerationCompressorCapacityCurve() const;
+  // TODO: Check return type. From object lists, some candidates are: CurveBicubic.
+  CurveBicubic refrigerationCompressorCapacityCurve() const;
 
   boost::optional<double> ratedSuperheat() const;
 
@@ -77,21 +77,21 @@ class MODEL_API RefrigerationCompressor : public ModelObject {
 
   bool isModeofOperationDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: BicubicCurves.
-  boost::optional<BicubicCurves> transcriticalCompressorPowerCurve() const;
+  // TODO: Check return type. From object lists, some candidates are: CurveBicubic.
+  boost::optional<CurveBicubic> transcriticalCompressorPowerCurve() const;
 
-  // TODO: Check return type. From object lists, some candidates are: BicubicCurves.
-  boost::optional<BicubicCurves> transcriticalCompressorCapacityCurve() const;
+  // TODO: Check return type. From object lists, some candidates are: CurveBicubic.
+  boost::optional<CurveBicubic> transcriticalCompressorCapacityCurve() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: BicubicCurves.
-  bool setRefrigerationCompressorPowerCurve(const BicubicCurves& bicubicCurves);
+  // TODO: Check argument type. From object lists, some candidates are: CurveBicubic.
+  bool setRefrigerationCompressorPowerCurve(const CurveBicubic& curveBicubic);
 
-  // TODO: Check argument type. From object lists, some candidates are: BicubicCurves.
-  bool setRefrigerationCompressorCapacityCurve(const BicubicCurves& bicubicCurves);
+  // TODO: Check argument type. From object lists, some candidates are: CurveBicubic.
+  bool setRefrigerationCompressorCapacityCurve(const CurveBicubic& curveBicubic);
 
   void setRatedSuperheat(double ratedSuperheat);
 
@@ -117,13 +117,13 @@ class MODEL_API RefrigerationCompressor : public ModelObject {
 
   void resetModeofOperation();
 
-  // TODO: Check argument type. From object lists, some candidates are: BicubicCurves.
-  bool setTranscriticalCompressorPowerCurve(const BicubicCurves& bicubicCurves);
+  // TODO: Check argument type. From object lists, some candidates are: CurveBicubic.
+  bool setTranscriticalCompressorPowerCurve(const CurveBicubic& curveBicubic);
 
   void resetTranscriticalCompressorPowerCurve();
 
-  // TODO: Check argument type. From object lists, some candidates are: BicubicCurves.
-  bool setTranscriticalCompressorCapacityCurve(const BicubicCurves& bicubicCurves);
+  // TODO: Check argument type. From object lists, some candidates are: CurveBicubic.
+  bool setTranscriticalCompressorCapacityCurve(const CurveBicubic& curveBicubic);
 
   void resetTranscriticalCompressorCapacityCurve();
 

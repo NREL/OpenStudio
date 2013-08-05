@@ -30,7 +30,7 @@ namespace model {
 // TODO: Check the following class names against object getters and setters.
 class Schedule;
 class ThermalZone;
-class CubicCurves;
+class CurveCubic;
 
 namespace detail {
 
@@ -44,7 +44,7 @@ class MODEL_API RefrigerationCase : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit RefrigerationCase(const Model& model);
+  explicit RefrigerationCase(const Model& model, const ThermalZone& zone, const CurveCubic& curveCubic);
 
   virtual ~RefrigerationCase() {}
 
@@ -101,8 +101,8 @@ class MODEL_API RefrigerationCase : public ModelObject {
 
   bool isLatentCaseCreditCurveTypeDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: CubicCurves.
-  CubicCurves latentCaseCreditCurve() const;
+  // TODO: Check return type. From object lists, some candidates are: CurveCubic.
+  CurveCubic latentCaseCreditCurve() const;
 
   double standardCaseFanPowerperUnitLength() const;
 
@@ -167,8 +167,8 @@ class MODEL_API RefrigerationCase : public ModelObject {
 
   bool isDefrostEnergyCorrectionCurveTypeDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: CubicCurves.
-  boost::optional<CubicCurves> defrostEnergyCorrectionCurve() const;
+  // TODO: Check return type. From object lists, some candidates are: CurveCubic.
+  boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const;
 
   double underCaseHVACReturnAirFraction() const;
 
@@ -230,8 +230,8 @@ class MODEL_API RefrigerationCase : public ModelObject {
 
   void resetLatentCaseCreditCurveType();
 
-  // TODO: Check argument type. From object lists, some candidates are: CubicCurves.
-  bool setLatentCaseCreditCurve(const CubicCurves& cubicCurves);
+  // TODO: Check argument type. From object lists, some candidates are: CurveCubic.
+  bool setLatentCaseCreditCurve(const CurveCubic& curveCubic);
 
   bool setStandardCaseFanPowerperUnitLength(double standardCaseFanPowerperUnitLength);
 
@@ -304,8 +304,8 @@ class MODEL_API RefrigerationCase : public ModelObject {
 
   void resetDefrostEnergyCorrectionCurveType();
 
-  // TODO: Check argument type. From object lists, some candidates are: CubicCurves.
-  bool setDefrostEnergyCorrectionCurve(const CubicCurves& cubicCurves);
+  // TODO: Check argument type. From object lists, some candidates are: CurveCubic.
+  bool setDefrostEnergyCorrectionCurve(const CurveCubic& curveCubic);
 
   void resetDefrostEnergyCorrectionCurve();
 

@@ -31,12 +31,14 @@
 #include <model/RefrigerationCompressor_Impl.hpp>
 //#include <model/RefrigerationWalkin.hpp>
 //#include <model/RefrigerationWalkin_Impl.hpp>
-#include <model/Fluid.hpp>
-#include <model/Fluid_Impl.hpp>
+//#include <model/Fluid.hpp>
+//#include <model/Fluid_Impl.hpp>
 //#include <model/RefrigerationSubcooler.hpp>
 //#include <model/RefrigerationSubcooler_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_System_FieldEnums.hxx>
@@ -89,10 +91,10 @@ namespace detail {
     std::vector<T> result;
 
     if( boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList() ) {
-      std::vector<ModelObject> modelObjects = modelObjectList.modelObjects();
+      std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
 
       for(std::vector<ModelObject>::iterator it = modelObjects.begin(); it != modelObjects.end(); ++it) {
-          boost::optional<T> caseOrWalkin = it->optionalCast<T>()
+          boost::optional<T> caseOrWalkin = it->optionalCast<T>();
           if (caseOrWalkin) {
             result.push_back(caseOrWalkin.get());
           }
@@ -115,8 +117,10 @@ namespace detail {
 
       std::vector<ModelObject> modelObjects = compressorList().modelObjects();
 
-      for(std::vector<ModelObject>::iterator it = modelObjects.begin(); it != modelObjects.end(); ++it) {
-          result.push_back(it->cast<RefrigerationCompressor>());
+      if(modelObjects.empty()) {
+        for(std::vector<ModelObject>::iterator it = modelObjects.begin(); it != modelObjects.end(); ++it) {
+            result.push_back(it->cast<RefrigerationCompressor>());
+        }
       }
 
     return result;
@@ -152,13 +156,13 @@ namespace detail {
     return value.get();
   }
 
-  Fluid RefrigerationSystem_Impl::refrigerationSystemWorkingFluidType() const {
+  /*Fluid RefrigerationSystem_Impl::refrigerationSystemWorkingFluidType() const {
     boost::optional<Fluid> value = optionalRefrigerationSystemWorkingFluidType();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Refrigeration System Working Fluid Type attached.");
     }
     return value.get();
-  }
+  }*/
 
   std::string RefrigerationSystem_Impl::suctionTemperatureControlType() const {
     boost::optional<std::string> value = getString(OS_Refrigeration_SystemFields::SuctionTemperatureControlType,true);
@@ -236,8 +240,9 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_Refrigeration_SystemFields::HighStageCompressorListName);
   }
 
-  void RefrigerationSystem_Impl::removeAllCasesOrWalkins(const std::vector<ModelObject>& modelObjects) {
-    boost::optional<ModelObjectList> list = refrigeratedCaseAndWalkInList();
+  template <class T>
+  void RefrigerationSystem_Impl::removeAllCasesOrWalkins() {
+    /*boost::optional<ModelObjectList> list = refrigeratedCaseAndWalkInList();
     if (list) {
       ModelObjectList caseOrWalkinList = list.get();
 
@@ -247,14 +252,29 @@ namespace detail {
       {
         caseOrWalkinList.removeModelObject(*it);
       }
-    }
+    }*/
+
+
+
+
+    if( boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList() ) {
+      std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
+
+      for(std::vector<ModelObject>::iterator it = modelObjects.end(); it != modelObjects.begin(); --it) {
+          boost::optional<T> caseOrWalkin = it->optionalCast<T>();
+          if (caseOrWalkin) {
+            modelObjectList->removeModelObject(*it);
+          }
+      }
+    }  
   }
 
   bool RefrigerationSystem_Impl::addCase( const RefrigerationCase& refrigerationCase) {
     boost::optional<ModelObjectList> list = refrigeratedCaseAndWalkInList();
 
     if(!list){
-      setRefrigeratedCaseAndWalkInList( ModelObjectList() );
+      Model _model = this->model();
+      setRefrigeratedCaseAndWalkInList( ModelObjectList(_model) );
       list = refrigeratedCaseAndWalkInList();
     }
 
@@ -269,14 +289,14 @@ namespace detail {
   }
 
   void RefrigerationSystem_Impl::removeAllCases() {
-    removeAllCasesOrWalkins(cases());
+    removeAllCasesOrWalkins<RefrigerationCase>();
   }
 
   /*bool RefrigerationSystem_Impl::addWalkin( const RefrigerationWalkin& refrigerationWalkin) {
     boost::optional<ModelObjectList> list = refrigeratedCaseAndWalkInList();
 
     if(!list){
-      setRefrigeratedCaseAndWalkInList( ModelObjectList() );
+      setRefrigeratedCaseAndWalkInList( ModelObjectList(this->model()) );
       list = refrigeratedCaseAndWalkInList();
     }
 
@@ -355,10 +375,10 @@ namespace detail {
     BOOST_ASSERT(result);
   }
 
-  bool RefrigerationSystem_Impl::setRefrigerationSystemWorkingFluidType(const Fluid& fluid) {
+  /*bool RefrigerationSystem_Impl::setRefrigerationSystemWorkingFluidType(const Fluid& fluid) {
     bool result = setPointer(OS_Refrigeration_SystemFields::RefrigerationSystemWorkingFluidType, fluid.handle());
     return result;
-  }
+  }*/
 
   bool RefrigerationSystem_Impl::setSuctionTemperatureControlType(std::string suctionTemperatureControlType) {
     bool result = setString(OS_Refrigeration_SystemFields::SuctionTemperatureControlType, suctionTemperatureControlType);
@@ -496,13 +516,13 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_Refrigeration_SystemFields::CompressorListName);
   }
 
-  boost::optional<Fluid> RefrigerationSystem_Impl::optionalRefrigerationSystemWorkingFluidType() const {
+  /*boost::optional<Fluid> RefrigerationSystem_Impl::optionalRefrigerationSystemWorkingFluidType() const {
     return getObject<ModelObject>().getModelObjectTarget<Fluid>(OS_Refrigeration_SystemFields::RefrigerationSystemWorkingFluidType);
-  }
+  }*/
 
 } // detail
 
-RefrigerationSystem::RefrigerationSystem(const Model& model, const ModelObject& condenser, const RefrigerationCompressor& compressor, double minCondensingTemp, const Fluid& workingFluid)
+RefrigerationSystem::RefrigerationSystem(const Model& model, const ModelObject& condenser, const RefrigerationCompressor& compressor, double minCondensingTemp) //, const Fluid& workingFluid)
   : ModelObject(RefrigerationSystem::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::RefrigerationSystem_Impl>());
@@ -511,14 +531,14 @@ RefrigerationSystem::RefrigerationSystem(const Model& model, const ModelObject& 
   BOOST_ASSERT(ok);
   ok = setRefrigerationCondenser(condenser);
   BOOST_ASSERT(ok);
-  ModelObjectList compressorlist = ModelObjectList();
+  ModelObjectList compressorlist = ModelObjectList(model);
   ok = setCompressorList(compressorlist);
   BOOST_ASSERT(ok);
   ok = addCompressor(compressor);
   BOOST_ASSERT(ok);
   setMinimumCondensingTemperature(minCondensingTemp);
-  ok = setRefrigerationSystemWorkingFluidType(workingFluid);
-  BOOST_ASSERT(ok);
+  //ok = setRefrigerationSystemWorkingFluidType(workingFluid);
+  //BOOST_ASSERT(ok);
 }
 
 IddObjectType RefrigerationSystem::iddObjectType() {
@@ -572,9 +592,9 @@ double RefrigerationSystem::minimumCondensingTemperature() const {
   return getImpl<detail::RefrigerationSystem_Impl>()->minimumCondensingTemperature();
 }
 
-Fluid RefrigerationSystem::refrigerationSystemWorkingFluidType() const {
+/*Fluid RefrigerationSystem::refrigerationSystemWorkingFluidType() const {
   return getImpl<detail::RefrigerationSystem_Impl>()->refrigerationSystemWorkingFluidType();
-}
+}*/
 
 std::string RefrigerationSystem::suctionTemperatureControlType() const {
   return getImpl<detail::RefrigerationSystem_Impl>()->suctionTemperatureControlType();
@@ -704,9 +724,9 @@ void RefrigerationSystem::setMinimumCondensingTemperature(double minimumCondensi
   getImpl<detail::RefrigerationSystem_Impl>()->setMinimumCondensingTemperature(minimumCondensingTemperature);
 }
 
-bool RefrigerationSystem::setRefrigerationSystemWorkingFluidType(const Fluid& fluid) {
+/*bool RefrigerationSystem::setRefrigerationSystemWorkingFluidType(const Fluid& fluid) {
   return getImpl<detail::RefrigerationSystem_Impl>()->setRefrigerationSystemWorkingFluidType(fluid);
-}
+}*/
 
 bool RefrigerationSystem::setSuctionTemperatureControlType(std::string suctionTemperatureControlType) {
   return getImpl<detail::RefrigerationSystem_Impl>()->setSuctionTemperatureControlType(suctionTemperatureControlType);

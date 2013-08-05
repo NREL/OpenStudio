@@ -25,8 +25,8 @@
 #include <model/Schedule_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
-#include <model/CubicCurves.hpp>
-#include <model/CubicCurves_Impl.hpp>
+#include <model/CurveCubic.hpp>
+#include <model/CurveCubic_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
 
@@ -201,8 +201,8 @@ namespace detail {
     return isEmpty(OS_Refrigeration_CaseFields::LatentCaseCreditCurveType);
   }
 
-  CubicCurves RefrigerationCase_Impl::latentCaseCreditCurve() const {
-    boost::optional<CubicCurves> value = optionalLatentCaseCreditCurve();
+  CurveCubic RefrigerationCase_Impl::latentCaseCreditCurve() const {
+    boost::optional<CurveCubic> value = optionalLatentCaseCreditCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Latent Case Credit Curve attached.");
     }
@@ -355,8 +355,8 @@ namespace detail {
     return isEmpty(OS_Refrigeration_CaseFields::DefrostEnergyCorrectionCurveType);
   }
 
-  boost::optional<CubicCurves> RefrigerationCase_Impl::defrostEnergyCorrectionCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CubicCurves>(OS_Refrigeration_CaseFields::DefrostEnergyCorrectionCurveName);
+  boost::optional<CurveCubic> RefrigerationCase_Impl::defrostEnergyCorrectionCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<CurveCubic>(OS_Refrigeration_CaseFields::DefrostEnergyCorrectionCurveName);
   }
 
   double RefrigerationCase_Impl::underCaseHVACReturnAirFraction() const {
@@ -489,8 +489,8 @@ namespace detail {
     BOOST_ASSERT(result);
   }
 
-  bool RefrigerationCase_Impl::setLatentCaseCreditCurve(const CubicCurves& cubicCurves) {
-    bool result = setPointer(OS_Refrigeration_CaseFields::LatentCaseCreditCurveName, cubicCurves.handle());
+  bool RefrigerationCase_Impl::setLatentCaseCreditCurve(const CurveCubic& curveCubic) {
+    bool result = setPointer(OS_Refrigeration_CaseFields::LatentCaseCreditCurveName, curveCubic.handle());
     return result;
   }
 
@@ -680,10 +680,10 @@ namespace detail {
     BOOST_ASSERT(result);
   }
 
-  bool RefrigerationCase_Impl::setDefrostEnergyCorrectionCurve(const boost::optional<CubicCurves>& cubicCurves) {
+  bool RefrigerationCase_Impl::setDefrostEnergyCorrectionCurve(const boost::optional<CurveCubic>& curveCubic) {
     bool result(false);
-    if (cubicCurves) {
-      result = setPointer(OS_Refrigeration_CaseFields::DefrostEnergyCorrectionCurveName, cubicCurves.get().handle());
+    if (curveCubic) {
+      result = setPointer(OS_Refrigeration_CaseFields::DefrostEnergyCorrectionCurveName, curveCubic.get().handle());
     }
     else {
       resetDefrostEnergyCorrectionCurve();
@@ -764,13 +764,13 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Refrigeration_CaseFields::ZoneName);
   }
 
-  boost::optional<CubicCurves> RefrigerationCase_Impl::optionalLatentCaseCreditCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CubicCurves>(OS_Refrigeration_CaseFields::LatentCaseCreditCurveName);
+  boost::optional<CurveCubic> RefrigerationCase_Impl::optionalLatentCaseCreditCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<CurveCubic>(OS_Refrigeration_CaseFields::LatentCaseCreditCurveName);
   }
 
 } // detail
 
-RefrigerationCase::RefrigerationCase(const Model& model, const ThermalZone& zone, const CubicCurves& cubicCurve)
+RefrigerationCase::RefrigerationCase(const Model& model, const ThermalZone& zone, const CurveCubic& curveCubic)
   : ModelObject(RefrigerationCase::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::RefrigerationCase_Impl>());
@@ -779,7 +779,7 @@ RefrigerationCase::RefrigerationCase(const Model& model, const ThermalZone& zone
   BOOST_ASSERT(ok);
   ok = setZone(zone);
   BOOST_ASSERT(ok);
-  ok = setLatentCaseCreditCurve(cubicCurve);
+  ok = setLatentCaseCreditCurve(curveCubic);
   BOOST_ASSERT(ok);
 }
 
@@ -879,7 +879,7 @@ bool RefrigerationCase::isLatentCaseCreditCurveTypeDefaulted() const {
   return getImpl<detail::RefrigerationCase_Impl>()->isLatentCaseCreditCurveTypeDefaulted();
 }
 
-CubicCurves RefrigerationCase::latentCaseCreditCurve() const {
+CurveCubic RefrigerationCase::latentCaseCreditCurve() const {
   return getImpl<detail::RefrigerationCase_Impl>()->latentCaseCreditCurve();
 }
 
@@ -1003,7 +1003,7 @@ bool RefrigerationCase::isDefrostEnergyCorrectionCurveTypeDefaulted() const {
   return getImpl<detail::RefrigerationCase_Impl>()->isDefrostEnergyCorrectionCurveTypeDefaulted();
 }
 
-boost::optional<CubicCurves> RefrigerationCase::defrostEnergyCorrectionCurve() const {
+boost::optional<CurveCubic> RefrigerationCase::defrostEnergyCorrectionCurve() const {
   return getImpl<detail::RefrigerationCase_Impl>()->defrostEnergyCorrectionCurve();
 }
 
@@ -1111,8 +1111,8 @@ void RefrigerationCase::resetLatentCaseCreditCurveType() {
   getImpl<detail::RefrigerationCase_Impl>()->resetLatentCaseCreditCurveType();
 }
 
-bool RefrigerationCase::setLatentCaseCreditCurve(const CubicCurves& cubicCurves) {
-  return getImpl<detail::RefrigerationCase_Impl>()->setLatentCaseCreditCurve(cubicCurves);
+bool RefrigerationCase::setLatentCaseCreditCurve(const CurveCubic& curveCubic) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setLatentCaseCreditCurve(curveCubic);
 }
 
 bool RefrigerationCase::setStandardCaseFanPowerperUnitLength(double standardCaseFanPowerperUnitLength) {
@@ -1251,8 +1251,8 @@ void RefrigerationCase::resetDefrostEnergyCorrectionCurveType() {
   getImpl<detail::RefrigerationCase_Impl>()->resetDefrostEnergyCorrectionCurveType();
 }
 
-bool RefrigerationCase::setDefrostEnergyCorrectionCurve(const CubicCurves& cubicCurves) {
-  return getImpl<detail::RefrigerationCase_Impl>()->setDefrostEnergyCorrectionCurve(cubicCurves);
+bool RefrigerationCase::setDefrostEnergyCorrectionCurve(const CurveCubic& curveCubic) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setDefrostEnergyCorrectionCurve(curveCubic);
 }
 
 void RefrigerationCase::resetDefrostEnergyCorrectionCurve() {

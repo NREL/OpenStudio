@@ -29,7 +29,7 @@ namespace model {
 // TODO: Check the following class names against object getters and setters.
 class Schedule;
 class ThermalZone;
-class CubicCurves;
+class CurveCubic;
 
 namespace detail {
 
@@ -106,8 +106,8 @@ namespace detail {
 
     bool isLatentCaseCreditCurveTypeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: CubicCurves.
-    CubicCurves latentCaseCreditCurve() const;
+    // TODO: Check return type. From object lists, some candidates are: CurveCubic.
+    CurveCubic latentCaseCreditCurve() const;
 
     double standardCaseFanPowerperUnitLength() const;
 
@@ -172,8 +172,8 @@ namespace detail {
 
     bool isDefrostEnergyCorrectionCurveTypeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: CubicCurves.
-    boost::optional<CubicCurves> defrostEnergyCorrectionCurve() const;
+    // TODO: Check return type. From object lists, some candidates are: CurveCubic.
+    boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const;
 
     double underCaseHVACReturnAirFraction() const;
 
@@ -235,8 +235,8 @@ namespace detail {
 
     void resetLatentCaseCreditCurveType();
 
-    // TODO: Check argument type. From object lists, some candidates are: CubicCurves.
-    bool setLatentCaseCreditCurve(const CubicCurves& cubicCurves);
+    // TODO: Check argument type. From object lists, some candidates are: CurveCubic.
+    bool setLatentCaseCreditCurve(const CurveCubic& curveCubic);
 
     bool setStandardCaseFanPowerperUnitLength(double standardCaseFanPowerperUnitLength);
 
@@ -309,8 +309,8 @@ namespace detail {
 
     void resetDefrostEnergyCorrectionCurveType();
 
-    // TODO: Check argument type. From object lists, some candidates are: CubicCurves.
-    bool setDefrostEnergyCorrectionCurve(const boost::optional<CubicCurves>& cubicCurves);
+    // TODO: Check argument type. From object lists, some candidates are: CurveCubic.
+    bool setDefrostEnergyCorrectionCurve(const boost::optional<CurveCubic>& curveCubic);
 
     void resetDefrostEnergyCorrectionCurve();
 
@@ -350,7 +350,7 @@ namespace detail {
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
     boost::optional<ThermalZone> optionalZone() const;
-    boost::optional<CubicCurves> optionalLatentCaseCreditCurve() const;
+    boost::optional<CurveCubic> optionalLatentCaseCreditCurve() const;
   };
 
 } // detail

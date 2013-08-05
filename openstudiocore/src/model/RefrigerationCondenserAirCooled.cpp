@@ -21,8 +21,8 @@
 #include <model/RefrigerationCondenserAirCooled_Impl.hpp>
 
 // TODO: Check the following class names against object getters and setters.
-#include <model/LinearCurves.hpp>
-#include <model/LinearCurves_Impl.hpp>
+#include <model/CurveLinear.hpp>
+#include <model/CurveLinear_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
 
@@ -72,8 +72,8 @@ namespace detail {
     return RefrigerationCondenserAirCooled::iddObjectType();
   }
 
-  boost::optional<LinearCurves> RefrigerationCondenserAirCooled_Impl::ratedEffectiveTotalHeatRejectionRateCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<LinearCurves>(OS_Refrigeration_Condenser_AirCooledFields::RatedEffectiveTotalHeatRejectionRateCurveName);
+  boost::optional<CurveLinear> RefrigerationCondenserAirCooled_Impl::ratedEffectiveTotalHeatRejectionRateCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<CurveLinear>(OS_Refrigeration_Condenser_AirCooledFields::RatedEffectiveTotalHeatRejectionRateCurveName);
   }
 
   double RefrigerationCondenserAirCooled_Impl::ratedSubcoolingTemperatureDifference() const {
@@ -160,10 +160,10 @@ namespace detail {
     return isEmpty(OS_Refrigeration_Condenser_AirCooledFields::CondensatePipingRefrigerantInventory);
   }
 
-  bool RefrigerationCondenserAirCooled_Impl::setRatedEffectiveTotalHeatRejectionRateCurve(const boost::optional<LinearCurves>& linearCurves) {
+  bool RefrigerationCondenserAirCooled_Impl::setRatedEffectiveTotalHeatRejectionRateCurve(const boost::optional<CurveLinear>& curveLinear) {
     bool result(false);
-    if (linearCurves) {
-      result = setPointer(OS_Refrigeration_Condenser_AirCooledFields::RatedEffectiveTotalHeatRejectionRateCurveName, linearCurves.get().handle());
+    if (curveLinear) {
+      result = setPointer(OS_Refrigeration_Condenser_AirCooledFields::RatedEffectiveTotalHeatRejectionRateCurveName, curveLinear.get().handle());
     }
     else {
       resetRatedEffectiveTotalHeatRejectionRateCurve();
@@ -294,7 +294,7 @@ std::vector<std::string> RefrigerationCondenserAirCooled::condenserFanSpeedContr
                         OS_Refrigeration_Condenser_AirCooledFields::CondenserFanSpeedControlType);
 }
 
-boost::optional<LinearCurves> RefrigerationCondenserAirCooled::ratedEffectiveTotalHeatRejectionRateCurve() const {
+boost::optional<CurveLinear> RefrigerationCondenserAirCooled::ratedEffectiveTotalHeatRejectionRateCurve() const {
   return getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->ratedEffectiveTotalHeatRejectionRateCurve();
 }
 
@@ -366,8 +366,8 @@ bool RefrigerationCondenserAirCooled::isCondensatePipingRefrigerantInventoryDefa
   return getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->isCondensatePipingRefrigerantInventoryDefaulted();
 }
 
-bool RefrigerationCondenserAirCooled::setRatedEffectiveTotalHeatRejectionRateCurve(const LinearCurves& linearCurves) {
-  return getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setRatedEffectiveTotalHeatRejectionRateCurve(linearCurves);
+bool RefrigerationCondenserAirCooled::setRatedEffectiveTotalHeatRejectionRateCurve(const CurveLinear& curveLinear) {
+  return getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setRatedEffectiveTotalHeatRejectionRateCurve(curveLinear);
 }
 
 void RefrigerationCondenserAirCooled::resetRatedEffectiveTotalHeatRejectionRateCurve() {

@@ -33,7 +33,7 @@ class ModelObjectList;
 class RefrigerationCase;
 class RefrigerationCompressor;
 //class RefrigerationWalkin;
-class Fluid;
+//class Fluid;
 //class RefrigerationSubcooler;
 class ThermalZone;
 
@@ -49,7 +49,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit RefrigerationSystem(const Model& model);
+  explicit RefrigerationSystem(const Model& model, const ModelObject& condenser, const RefrigerationCompressor& compressor, double minCondensingTemp); //, const Fluid& workingFluid);
 
   virtual ~RefrigerationSystem() {}
 
@@ -67,11 +67,15 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   void removeCase( const RefrigerationCase & refrigerationCase);
 
-  std::vector<RefrigerationCase> cases();
+  void removeAllCases();
+
+  std::vector<RefrigerationCase> cases() const;
 
   //bool addWalkin( const RefrigerationWalkin & refrigerationWalkin);
 
   //void removeWalkin( const RefrigerationWalkin & refrigerationWalkin);
+
+  //void removeAllWalkins();
 
   //std::vector<RefrigerationWalkin> walkins();
 
@@ -79,7 +83,9 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   void removeCompressor( const RefrigerationCompressor & compressor);
 
-  std::vector<RefrigerationCompressor> compressors();
+  void removeAllCompressors();
+
+  std::vector<RefrigerationCompressor> compressors() const;
 
   /** @name Getters */
   //@{
@@ -99,7 +105,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   double minimumCondensingTemperature() const;
 
   // TODO: Check return type. From object lists, some candidates are: Fluid.
-  Fluid refrigerationSystemWorkingFluidType() const;
+  //Fluid refrigerationSystemWorkingFluidType() const;
 
   std::string suctionTemperatureControlType() const;
 
@@ -155,12 +161,12 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   bool setRefrigerationCondenser(const ModelObject& refrigerationCondenser);
 
   // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
-  //bool setCompressorList(const ModelObjectList& modelObjectLists);
+  bool setCompressorList(const ModelObjectList& modelObjectLists);
 
   void setMinimumCondensingTemperature(double minimumCondensingTemperature);
 
   // TODO: Check argument type. From object lists, some candidates are: Fluid.
-  bool setRefrigerationSystemWorkingFluidType(const Fluid& fluid);
+  //bool setRefrigerationSystemWorkingFluidType(const Fluid& fluid);
 
   bool setSuctionTemperatureControlType(std::string suctionTemperatureControlType);
 

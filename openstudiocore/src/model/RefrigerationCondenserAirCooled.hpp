@@ -28,7 +28,7 @@ namespace openstudio {
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
-class LinearCurves;
+class CurveLinear;
 class ThermalZone;
 
 namespace detail {
@@ -56,8 +56,8 @@ class MODEL_API RefrigerationCondenserAirCooled : public ModelObject {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: LinearCurves.
-  boost::optional<LinearCurves> ratedEffectiveTotalHeatRejectionRateCurve() const;
+  // TODO: Check return type. From object lists, some candidates are: CurveLinear.
+  boost::optional<CurveLinear> ratedEffectiveTotalHeatRejectionRateCurve() const;
 
   double ratedSubcoolingTemperatureDifference() const;
 
@@ -98,8 +98,8 @@ class MODEL_API RefrigerationCondenserAirCooled : public ModelObject {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: LinearCurves.
-  bool setRatedEffectiveTotalHeatRejectionRateCurve(const LinearCurves& linearCurves);
+  // TODO: Check argument type. From object lists, some candidates are: CurveLinear.
+  bool setRatedEffectiveTotalHeatRejectionRateCurve(const CurveLinear& curveLinear);
 
   void resetRatedEffectiveTotalHeatRejectionRateCurve();
 
