@@ -187,9 +187,9 @@
     <file>openstudiolib.qss</file>
     <file>images/heat_coil-uht.png</file>
     <file>images/coil_ht_dx_singlespeed.png</file>
+
     <file>images/mini_icons/baseboard_electric.png</file>
     <file>images/mini_icons/baseboard_water.png</file>
-    <file>images/AirTerminalSingleDuctVAVNoReheat.png</file>
     <file>images/mini_icons/boiler.png</file>
     <file>images/mini_icons/boiler_steam.png</file>
     <file>images/mini_icons/building.png</file>
