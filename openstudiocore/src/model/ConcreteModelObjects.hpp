@@ -133,6 +133,7 @@
 #include <model/LuminaireDefinition.hpp>
 #include <model/MasslessOpaqueMaterial.hpp>
 #include <model/Meter.hpp>
+#include <model/ModelObjectList.hpp>
 #include <model/Node.hpp>
 #include <model/PortList.hpp>
 #include <model/OtherEquipment.hpp>
@@ -348,6 +349,7 @@
 #include <model/LuminaireDefinition_Impl.hpp>
 #include <model/MasslessOpaqueMaterial_Impl.hpp>
 #include <model/Meter_Impl.hpp>
+#include <model/ModelObjectList_Impl.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/PortList_Impl.hpp>
 #include <model/OtherEquipment_Impl.hpp>

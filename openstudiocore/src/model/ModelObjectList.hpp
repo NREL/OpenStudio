@@ -52,7 +52,7 @@ class MODEL_API ModelObjectList : public ModelObject {
 
   void removeAllModelObjects();
 
-  std::vector< ModelObject > modelObjects();
+  std::vector< ModelObject > modelObjects() const;
 
  protected:
   /// @cond

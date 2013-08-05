@@ -64,7 +64,7 @@ namespace detail {
     return ModelObjectList::iddObjectType();
   }
 
-  std::vector<ModelObject> ModelObjectList_Impl::modelObjects() {
+  std::vector<ModelObject> ModelObjectList_Impl::modelObjects() const {
     std::vector<ModelObject> result;
 
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
@@ -96,7 +96,7 @@ namespace detail {
   }
 
   void ModelObjectList_Impl::removeModelObject(const ModelObject& modelObject ) {
-    WorkspaceExtensibleGroup eg = getGroupForModelObject(*modelObject);
+    WorkspaceExtensibleGroup eg = getGroupForModelObject(modelObject);
     getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
   }
 
@@ -143,17 +143,17 @@ IddObjectType ModelObjectList::iddObjectType() {
   return IddObjectType(IddObjectType::OS_ModelObjectList);
 }
 
-std::vector<ModelObject> ModelObjectList::modelObjects()
+std::vector<ModelObject> ModelObjectList::modelObjects() const
 {
   return getImpl<detail::ModelObjectList_Impl>()->modelObjects();
 }
 
 bool ModelObjectList::addModelObject(const ModelObject& modelObject ) {
-  return getImpl<detail::ModelObjectList_Impl>()->addModelObject();
+  return getImpl<detail::ModelObjectList_Impl>()->addModelObject(modelObject);
 }
 
 void ModelObjectList::removeModelObject(const ModelObject& modelObject ) {
-  getImpl<detail::ModelObjectList_Impl>()->removeModelObject();
+  getImpl<detail::ModelObjectList_Impl>()->removeModelObject(modelObject);
 }
 
 void ModelObjectList::removeAllModelObjects() {

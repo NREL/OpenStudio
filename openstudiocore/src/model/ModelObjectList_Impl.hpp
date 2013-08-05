@@ -64,7 +64,7 @@ namespace detail {
 
     void removeAllModelObjects();
 
-    std::vector< ModelObject > modelObjects();
+    std::vector< ModelObject > modelObjects() const;
 
     WorkspaceExtensibleGroup getGroupForModelObject(const ModelObject& modelObject);
 
