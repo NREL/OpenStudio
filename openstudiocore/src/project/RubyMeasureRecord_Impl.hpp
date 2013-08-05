@@ -86,7 +86,7 @@ namespace detail {
     /** Returns the FileReferenceRecord pointing to this measure's Ruby script
      *  (if !usesBCLMeasure()), or to a re-purposed FileReferenceRecord that stores a
      *  BCLMeasure's directory path and UUIDs (if usesBCLMeasure()). */
-    FileReferenceRecord scriptOrBCLMeasureRecord() const;
+    FileReferenceRecord fileReferenceRecord() const;
 
     FileReferenceType inputFileType() const;
 
@@ -107,7 +107,7 @@ namespace detail {
     void revertToLastRecordIds();
 
     /** Private method in public class. Used to make two-way connection with FileReferences. */
-    void setScriptOrBCLMeasureRecordId(int id);
+    void setFileReferenceRecordId(int id);
 
     //@}
    protected:
@@ -129,13 +129,13 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.project.RubyMeasureRecord");
 
-    int m_scriptOrBCLMeasureRecordId;
+    int m_fileReferenceRecordId;
     FileReferenceType m_inputFileType;
     FileReferenceType m_outputFileType;
     bool m_isUserScript;
     bool m_usesBCLMeasure;
 
-    int m_lastScriptOrBCLMeasureRecordId;
+    int m_lastFileReferenceRecordId;
     FileReferenceType m_lastInputFileType;
     FileReferenceType m_lastOutputFileType;
     bool m_lastIsUserScript;

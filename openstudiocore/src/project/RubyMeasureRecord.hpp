@@ -87,7 +87,7 @@ class PROJECT_API RubyMeasureRecord : public MeasureRecord {
   /** Returns the FileReferenceRecord pointing to this measure's Ruby script
    *  (if !usesBCLMeasure()), or to a re-purposed FileReferenceRecord that stores a
    *  BCLMeasure's directory path and UUIDs (if usesBCLMeasure()). */
-  FileReferenceRecord scriptOrBCLMeasureRecord() const;
+  FileReferenceRecord fileReferenceRecord() const;
 
   FileReferenceType inputFileType() const;
 

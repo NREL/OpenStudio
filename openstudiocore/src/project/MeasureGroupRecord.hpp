@@ -36,6 +36,8 @@ namespace analysis{
 
 namespace project {
 
+class MeasureRecord;
+
 namespace detail{
   class MeasureGroupRecord_Impl;
 }

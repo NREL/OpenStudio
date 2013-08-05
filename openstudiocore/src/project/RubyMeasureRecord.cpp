@@ -96,9 +96,9 @@ namespace detail {
     BOOST_ASSERT(query.isSelect());
 
     QVariant value;
-    value = query.value(MeasureRecordColumns::rubyScriptRecordId);
+    value = query.value(MeasureRecordColumns::fileReferenceRecordId);
     BOOST_ASSERT(value.isValid() && !value.isNull());
-    m_scriptOrBCLMeasureRecordId = value.toInt();
+    m_fileReferenceRecordId = value.toInt();
 
     value = query.value(MeasureRecordColumns::inputFileType);
     BOOST_ASSERT(value.isValid() && !value.isNull());
@@ -127,7 +127,7 @@ namespace detail {
 
   std::vector<ObjectRecord> RubyMeasureRecord_Impl::resources() const {
     std::vector<ObjectRecord> result;
-    result.push_back(this->scriptOrBCLMeasureRecord());
+    result.push_back(this->fileReferenceRecord());
     return result;
   }
 
@@ -143,9 +143,9 @@ namespace detail {
     return m_usesBCLMeasure;
   }
 
-  FileReferenceRecord RubyMeasureRecord_Impl::scriptOrBCLMeasureRecord() const {
+  FileReferenceRecord RubyMeasureRecord_Impl::fileReferenceRecord() const {
     ProjectDatabase database = projectDatabase();
-    return FileReferenceRecord::getFileReferenceRecord(m_scriptOrBCLMeasureRecordId,database).get();
+    return FileReferenceRecord::getFileReferenceRecord(m_fileReferenceRecordId,database).get();
   }
 
   FileReferenceType RubyMeasureRecord_Impl::inputFileType() const {
@@ -163,8 +163,8 @@ namespace detail {
     ProjectDatabase database = projectDatabase();
     QSqlQuery query(*(database.qSqlDatabase()));
     query.prepare(toQString("SELECT * FROM " + OSArgumentRecord::databaseTableName() +
-                            " WHERE rubyMeasureRecordId=:rubyMeasureId"));
-    query.bindValue(":rubyMeasureRecordId",id());
+                            " WHERE rubyPerturbationRecordId=:rubyPerturbationId"));
+    query.bindValue(":rubyPerturbationRecordId",id());
     assertExec(query);
     while (query.next()) {
       result.push_back(OSArgumentRecord(query,database));
@@ -178,7 +178,7 @@ namespace detail {
   }
 
   analysis::RubyMeasure RubyMeasureRecord_Impl::rubyMeasure() const {
-    FileReferenceRecord scriptOrBCLMeasureRecord = this->scriptOrBCLMeasureRecord();
+    FileReferenceRecord fileReferenceRecord = this->fileReferenceRecord();
     OSArgumentRecordVector argumentRecords = this->osArgumentRecords();
     ruleset::OSArgumentVector arguments;
     BOOST_FOREACH(const OSArgumentRecord& argumentRecord,argumentRecords) {
@@ -191,7 +191,7 @@ namespace detail {
                                  displayName(),
                                  description(),
                                  isSelected(),
-                                 scriptOrBCLMeasureRecord.fileReference(),
+                                 fileReferenceRecord.fileReference(),
                                  inputFileType(),
                                  outputFileType(),
                                  m_isUserScript,
@@ -200,11 +200,11 @@ namespace detail {
   }
 
   void RubyMeasureRecord_Impl::revertToLastRecordIds() {
-    m_scriptOrBCLMeasureRecordId = m_lastScriptOrBCLMeasureRecordId;
+    m_fileReferenceRecordId = m_lastFileReferenceRecordId;
   }
 
-  void RubyMeasureRecord_Impl::setScriptOrBCLMeasureRecordId(int id) {
-    m_scriptOrBCLMeasureRecordId = id;
+  void RubyMeasureRecord_Impl::setFileReferenceRecordId(int id) {
+    m_fileReferenceRecordId = id;
     this->onChange(false);
   }
 
@@ -212,7 +212,7 @@ namespace detail {
   {
     MeasureRecord_Impl::bindValues(query);
 
-    query.bindValue(MeasureRecordColumns::rubyScriptRecordId, m_scriptOrBCLMeasureRecordId);
+    query.bindValue(MeasureRecordColumns::fileReferenceRecordId, m_fileReferenceRecordId);
     query.bindValue(MeasureRecordColumns::inputFileType, m_inputFileType.value());
     query.bindValue(MeasureRecordColumns::outputFileType, m_outputFileType.value());
     query.bindValue(MeasureRecordColumns::isUserScript, m_isUserScript);
@@ -224,9 +224,9 @@ namespace detail {
     MeasureRecord_Impl::setLastValues(query, projectDatabase);
 
     QVariant value;
-    value = query.value(MeasureRecordColumns::rubyScriptRecordId);
+    value = query.value(MeasureRecordColumns::fileReferenceRecordId);
     BOOST_ASSERT(value.isValid() && !value.isNull());
-    m_lastScriptOrBCLMeasureRecordId = value.toInt();
+    m_lastFileReferenceRecordId = value.toInt();
 
     value = query.value(MeasureRecordColumns::inputFileType);
     BOOST_ASSERT(value.isValid() && !value.isNull());
@@ -252,9 +252,9 @@ namespace detail {
     result = result && MeasureRecord_Impl::compareValues(query);
 
     QVariant value;
-    value = query.value(MeasureRecordColumns::rubyScriptRecordId);
+    value = query.value(MeasureRecordColumns::fileReferenceRecordId);
     BOOST_ASSERT(value.isValid() && !value.isNull());
-    result = result && (m_scriptOrBCLMeasureRecordId == value.toInt());
+    result = result && (m_fileReferenceRecordId == value.toInt());
 
     value = query.value(MeasureRecordColumns::inputFileType);
     BOOST_ASSERT(value.isValid() && !value.isNull());
@@ -279,7 +279,7 @@ namespace detail {
   {
     MeasureRecord_Impl::saveLastValues();
 
-    m_lastScriptOrBCLMeasureRecordId = m_scriptOrBCLMeasureRecordId;
+    m_lastFileReferenceRecordId = m_fileReferenceRecordId;
     m_lastInputFileType = m_inputFileType;
     m_lastOutputFileType = m_outputFileType;
     m_lastIsUserScript = m_isUserScript;
@@ -290,7 +290,7 @@ namespace detail {
   {
     MeasureRecord_Impl::revertToLastValues();
 
-    m_scriptOrBCLMeasureRecordId = m_lastScriptOrBCLMeasureRecordId;
+    m_fileReferenceRecordId = m_lastFileReferenceRecordId;
     m_inputFileType = m_lastInputFileType;
     m_outputFileType = m_lastOutputFileType;
     m_isUserScript = m_lastIsUserScript;
@@ -392,8 +392,8 @@ bool RubyMeasureRecord::usesBCLMeasure() const {
   return getImpl<detail::RubyMeasureRecord_Impl>()->usesBCLMeasure();
 }
 
-FileReferenceRecord RubyMeasureRecord::scriptOrBCLMeasureRecord() const {
-  return getImpl<detail::RubyMeasureRecord_Impl>()->scriptOrBCLMeasureRecord();
+FileReferenceRecord RubyMeasureRecord::fileReferenceRecord() const {
+  return getImpl<detail::RubyMeasureRecord_Impl>()->fileReferenceRecord();
 }
 
 FileReferenceType RubyMeasureRecord::inputFileType() const {
@@ -437,14 +437,14 @@ void RubyMeasureRecord::constructRelatedRecords(const analysis::RubyMeasure& rub
                                         "");
   }
   else {
-    oChildFileReference = rubyMeasure.measureScript();
+    oChildFileReference = rubyMeasure.perturbationScript();
   }
   FileReference scriptOrBCLMeasureReference = *oChildFileReference;
   bool saveReference = false;
   if (!isNew) {
     {
       // see if old script reference record should be removed
-      FileReferenceRecord oldReferenceRecord = scriptOrBCLMeasureRecord();
+      FileReferenceRecord oldReferenceRecord = fileReferenceRecord();
       if (oldReferenceRecord.handle() != scriptOrBCLMeasureReference.uuid()) {
         database.removeRecord(oldReferenceRecord);
         saveReference = true;
@@ -456,8 +456,8 @@ void RubyMeasureRecord::constructRelatedRecords(const analysis::RubyMeasure& rub
     database.unloadUnusedCleanRecords();
   }
   if (saveReference || isNew) {
-    FileReferenceRecord scriptOrBCLMeasureRecord(scriptOrBCLMeasureReference, copyOfThis);
-    getImpl<detail::RubyMeasureRecord_Impl>()->setScriptOrBCLMeasureRecordId(scriptOrBCLMeasureRecord.id());
+    FileReferenceRecord fileReferenceRecord(scriptOrBCLMeasureReference, copyOfThis);
+    getImpl<detail::RubyMeasureRecord_Impl>()->setFileReferenceRecordId(fileReferenceRecord.id());
   }
 
   // Save child OSArguments
@@ -481,7 +481,7 @@ void RubyMeasureRecord::removeOSArgumentRecords(const std::vector<UUID>& uuidsTo
   QSqlQuery query(*(database.qSqlDatabase()));
   std::stringstream ss;
   ss << "SELECT * FROM " + OSArgumentRecord::databaseTableName() +
-        " WHERE (rubyMeasureRecordId=:rubyMeasureRecordId) AND (handle NOT IN (";
+        " WHERE (rubyPerturbationRecordId=:rubyPerturbationRecordId) AND (handle NOT IN (";
   std::string sep("");
   BOOST_FOREACH(const UUID& handle,uuidsToKeep) {
     ss << sep << "'" << toString(handle) << "'";
@@ -489,7 +489,7 @@ void RubyMeasureRecord::removeOSArgumentRecords(const std::vector<UUID>& uuidsTo
   }
   ss << "))";
   query.prepare(toQString(ss.str()));
-  query.bindValue(":rubyMeasureRecordId",id());
+  query.bindValue(":rubyPerturbationRecordId",id());
   assertExec(query);
   while (query.next()) {
     OptionalOSArgumentRecord argumentRecord = OSArgumentRecord::factoryFromQuery(query, database);

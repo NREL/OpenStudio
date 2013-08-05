@@ -27,8 +27,8 @@
 #include <project/DataPointRecord_Impl.hpp>
 #include <project/FileReferenceRecord.hpp>
 #include <project/VariableRecord.hpp>
-#include <project/DiscretePerturbationRecord.hpp>
-#include <project/DataPoint_DiscretePerturbation_JoinRecord.hpp>
+#include <project/MeasureRecord.hpp>
+#include <project/DataPoint_Measure_JoinRecord.hpp>
 #include <project/TagRecord.hpp>
 
 #include <analysis/Analysis.hpp>
@@ -276,7 +276,7 @@ namespace detail {
       if (!value.isNull()) {
         QSqlQuery query(*(database.qSqlDatabase()));
         query.prepare(toQString("SELECT p.id FROM " +
-            DiscretePerturbationRecord::databaseTableName() + " p, " +
+            MeasureRecord::databaseTableName() + " p, " +
             VariableRecord::databaseTableName() + " v WHERE " +
             "p.perturbationVectorIndex=:perturbationVectorIndex AND " +
             "p.variableRecordId=v.id AND " +
@@ -311,7 +311,7 @@ namespace detail {
     for (int i = 0, n = discretePerturbationRecordIds.size(); i < n; ++i) {
       ss << " INTERSECT SELECT d.id FROM "
          << DataPointRecord::databaseTableName() << " d, "
-         << DataPoint_DiscretePerturbation_JoinRecord::databaseTableName() << " j "
+         << DataPoint_Measure_JoinRecord::databaseTableName() << " j "
          << "WHERE ";
       ss << "d.id=j.leftId AND j.rightId=:rightId" << i;
     }

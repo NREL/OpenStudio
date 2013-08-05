@@ -19,20 +19,20 @@
 
 #include <gtest/gtest.h>
 
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/NullPerturbation.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/Problem_Impl.hpp>
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/RubyPerturbation_Impl.hpp>
-#include <project/DiscreteVariableRecord.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
+#include <project/MeasureGroupRecord.hpp>
 #include <project/FileReferenceRecord.hpp>
-#include <project/NullPerturbationRecord.hpp>
+#include <project/NullMeasureRecord.hpp>
 #include <project/ProblemRecord.hpp>
 #include <project/ProblemRecord_Impl.hpp>
 #include <project/ProjectDatabase.hpp>
-#include <project/RubyPerturbationRecord.hpp>
+#include <project/RubyMeasureRecord.hpp>
 #include <project/Test/ProjectFixture.hpp>
 
 #include <runmanager/lib/RunManager.hpp>
@@ -46,88 +46,88 @@ using namespace openstudio;
 using namespace openstudio::analysis;
 using namespace openstudio::project;
 
-TEST_F(ProjectFixture, DiscreteVariableRecord)
+TEST_F(ProjectFixture, MeasureGroupRecord)
 {
   return;
 
-  ProjectDatabase database = getCleanDatabase("DiscreteVariableRecord");
+  ProjectDatabase database = getCleanDatabase("MeasureGroupRecord");
 
   openstudio::path rubyPath = resourcesPath() / openstudio::toPath("project/rubyscripts/*.rb");
 
   openstudio::path perturbScript = rubyPath/openstudio::toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
-  RubyPerturbation rubyPerturbation(perturbScript,FileReferenceType::OSM,FileReferenceType::OSM);
+  RubyMeasure rubyMeasure(perturbScript,FileReferenceType::OSM,FileReferenceType::OSM);
   std::vector<Variable> variables;
   std::string name("name");
   Problem problem(name,variables,database.runManager().loadWorkflows().at(0));
   ProblemRecord problemRecord = ProblemRecord::factoryFromProblem(problem,database);
-  DiscretePerturbationVector perturbations;
-  DiscreteVariable discreteVariable("Wall Construction",perturbations);
-  DiscreteVariableRecord discreteVariableRecord(discreteVariable, problemRecord,0);
+  MeasureVector measures;
+  MeasureGroup measureGroup("Wall Construction",measures);
+  MeasureGroupRecord measureGroupRecord(measureGroup, problemRecord,0);
 
-  EXPECT_EQ(static_cast<unsigned>(0), discreteVariableRecord.numPerturbations(true));
-  EXPECT_EQ(static_cast<unsigned>(0), discreteVariableRecord.discretePerturbationRecordIds(true).size());
-  EXPECT_EQ(static_cast<unsigned>(0), discreteVariableRecord.discretePerturbationRecords(true).size());
+  EXPECT_EQ(static_cast<unsigned>(0), measureGroupRecord.numMeasures(true));
+  EXPECT_EQ(static_cast<unsigned>(0), measureGroupRecord.measureRecordIds(true).size());
+  EXPECT_EQ(static_cast<unsigned>(0), measureGroupRecord.measureRecords(true).size());
   // can't do this yet, would like to on construction eventually
-  //EXPECT_EQ(static_cast<unsigned>(0), discreteVariableRecord.discoverArguments().size());
-  //EXPECT_EQ(static_cast<unsigned>(0), discreteVariableRecord.arguments().size());
+  //EXPECT_EQ(static_cast<unsigned>(0), measureGroupRecord.discoverArguments().size());
+  //EXPECT_EQ(static_cast<unsigned>(0), measureGroupRecord.arguments().size());
 
-  // create a real perturbation
-  //RubyPerturbationRecord rubyPerturbationRecord1("Test Perturbation 1", rubyPath, discreteVariableRecord);
-  RubyPerturbationRecord rubyPerturbationRecord1(rubyPerturbation,discreteVariableRecord,0);
-// TODO  EXPECT_EQ(discreteVariableRecord.id(), rubyPerturbationRecord1.variableRecord().id());
-// TODO  EXPECT_EQ(discreteVariableRecord.handle(), rubyPerturbationRecord1.variableRecord().handle());
-  EXPECT_EQ(static_cast<unsigned>(1), discreteVariableRecord.numPerturbations(true));
-  ASSERT_EQ(static_cast<unsigned>(1), discreteVariableRecord.discretePerturbationRecordIds(true).size());
-  EXPECT_EQ(rubyPerturbationRecord1.id(), discreteVariableRecord.discretePerturbationRecordIds(true)[0]);
-  ASSERT_EQ(static_cast<unsigned>(1), discreteVariableRecord.discretePerturbationRecords(true).size());
-  EXPECT_EQ(rubyPerturbationRecord1.handle(), discreteVariableRecord.discretePerturbationRecords(true)[0].handle());
+  // create a real measure
+  //RubyMeasureRecord rubyMeasureRecord1("Test Measure 1", rubyPath, measureGroupRecord);
+  RubyMeasureRecord rubyMeasureRecord1(rubyMeasure,measureGroupRecord,0);
+// TODO  EXPECT_EQ(measureGroupRecord.id(), rubyMeasureRecord1.variableRecord().id());
+// TODO  EXPECT_EQ(measureGroupRecord.handle(), rubyMeasureRecord1.variableRecord().handle());
+  EXPECT_EQ(static_cast<unsigned>(1), measureGroupRecord.numMeasures(true));
+  ASSERT_EQ(static_cast<unsigned>(1), measureGroupRecord.measureRecordIds(true).size());
+  EXPECT_EQ(rubyMeasureRecord1.id(), measureGroupRecord.measureRecordIds(true)[0]);
+  ASSERT_EQ(static_cast<unsigned>(1), measureGroupRecord.measureRecords(true).size());
+  EXPECT_EQ(rubyMeasureRecord1.handle(), measureGroupRecord.measureRecords(true)[0].handle());
 
-  // create another real perturbation
-  //RubyPerturbationRecord rubyPerturbationRecord2("Test Perturbation 2", rubyPath, discreteVariableRecord);
-  RubyPerturbationRecord rubyPerturbationRecord2(rubyPerturbation,discreteVariableRecord,0);
-// TODO  EXPECT_EQ(discreteVariableRecord.id(), rubyPerturbationRecord2.variableRecord().id());
-// TODO  EXPECT_EQ(discreteVariableRecord.handle(), rubyPerturbationRecord2.variableRecord().handle());
-  EXPECT_EQ(static_cast<unsigned>(2), discreteVariableRecord.numPerturbations(true));
-  ASSERT_EQ(static_cast<unsigned>(2), discreteVariableRecord.discretePerturbationRecordIds(true).size());
-  EXPECT_EQ(rubyPerturbationRecord1.id(), discreteVariableRecord.discretePerturbationRecordIds(true)[0]);
-  EXPECT_EQ(rubyPerturbationRecord2.id(), discreteVariableRecord.discretePerturbationRecordIds(true)[1]);
-  ASSERT_EQ(static_cast<unsigned>(2), discreteVariableRecord.discretePerturbationRecords(true).size());
-  EXPECT_EQ(rubyPerturbationRecord1.handle(), discreteVariableRecord.discretePerturbationRecords(true)[0].handle());
-  EXPECT_EQ(rubyPerturbationRecord2.handle(), discreteVariableRecord.discretePerturbationRecords(true)[1].handle());
+  // create another real measure
+  //RubyMeasureRecord rubyMeasureRecord2("Test Measure 2", rubyPath, measureGroupRecord);
+  RubyMeasureRecord rubyMeasureRecord2(rubyMeasure,measureGroupRecord,0);
+// TODO  EXPECT_EQ(measureGroupRecord.id(), rubyMeasureRecord2.variableRecord().id());
+// TODO  EXPECT_EQ(measureGroupRecord.handle(), rubyMeasureRecord2.variableRecord().handle());
+  EXPECT_EQ(static_cast<unsigned>(2), measureGroupRecord.numMeasures(true));
+  ASSERT_EQ(static_cast<unsigned>(2), measureGroupRecord.measureRecordIds(true).size());
+  EXPECT_EQ(rubyMeasureRecord1.id(), measureGroupRecord.measureRecordIds(true)[0]);
+  EXPECT_EQ(rubyMeasureRecord2.id(), measureGroupRecord.measureRecordIds(true)[1]);
+  ASSERT_EQ(static_cast<unsigned>(2), measureGroupRecord.measureRecords(true).size());
+  EXPECT_EQ(rubyMeasureRecord1.handle(), measureGroupRecord.measureRecords(true)[0].handle());
+  EXPECT_EQ(rubyMeasureRecord2.handle(), measureGroupRecord.measureRecords(true)[1].handle());
 
-  // create a null perturbation
+  // create a null measure
   UUID uuid;
   UUID versionUUID;
-  NullPerturbation nullPerturbation(uuid,versionUUID,"","","",true);
-  NullPerturbationRecord nullPerturbationRecord(nullPerturbation,discreteVariableRecord,0);
-// TODO  EXPECT_EQ(discreteVariableRecord.id(), nullPerturbationRecord.variableRecord().id());
-// TODO  EXPECT_EQ(discreteVariableRecord.handle(), nullPerturbationRecord.variableRecord().handle());
-  EXPECT_EQ(static_cast<unsigned>(3), discreteVariableRecord.numPerturbations(true));
-  ASSERT_EQ(static_cast<unsigned>(3), discreteVariableRecord.discretePerturbationRecordIds(true).size());
-  EXPECT_EQ(rubyPerturbationRecord1.id(), discreteVariableRecord.discretePerturbationRecordIds(true)[0]);
-  EXPECT_EQ(rubyPerturbationRecord2.id(), discreteVariableRecord.discretePerturbationRecordIds(true)[1]);
-  EXPECT_EQ(nullPerturbationRecord.id(), discreteVariableRecord.discretePerturbationRecordIds(true)[2]);
-  ASSERT_EQ(static_cast<unsigned>(3), discreteVariableRecord.discretePerturbationRecords(true).size());
-  EXPECT_EQ(rubyPerturbationRecord1.handle(), discreteVariableRecord.discretePerturbationRecords(true)[0].handle());
-  EXPECT_EQ(rubyPerturbationRecord2.handle(), discreteVariableRecord.discretePerturbationRecords(true)[1].handle());
-  EXPECT_EQ(nullPerturbationRecord.handle(), discreteVariableRecord.discretePerturbationRecords(true)[2].handle());
+  NullMeasure nullMeasure(uuid,versionUUID,"","","",true);
+  NullMeasureRecord nullMeasureRecord(nullMeasure,measureGroupRecord,0);
+// TODO  EXPECT_EQ(measureGroupRecord.id(), nullMeasureRecord.variableRecord().id());
+// TODO  EXPECT_EQ(measureGroupRecord.handle(), nullMeasureRecord.variableRecord().handle());
+  EXPECT_EQ(static_cast<unsigned>(3), measureGroupRecord.numMeasures(true));
+  ASSERT_EQ(static_cast<unsigned>(3), measureGroupRecord.measureRecordIds(true).size());
+  EXPECT_EQ(rubyMeasureRecord1.id(), measureGroupRecord.measureRecordIds(true)[0]);
+  EXPECT_EQ(rubyMeasureRecord2.id(), measureGroupRecord.measureRecordIds(true)[1]);
+  EXPECT_EQ(nullMeasureRecord.id(), measureGroupRecord.measureRecordIds(true)[2]);
+  ASSERT_EQ(static_cast<unsigned>(3), measureGroupRecord.measureRecords(true).size());
+  EXPECT_EQ(rubyMeasureRecord1.handle(), measureGroupRecord.measureRecords(true)[0].handle());
+  EXPECT_EQ(rubyMeasureRecord2.handle(), measureGroupRecord.measureRecords(true)[1].handle());
+  EXPECT_EQ(nullMeasureRecord.handle(), measureGroupRecord.measureRecords(true)[2].handle());
 
-  EXPECT_TRUE(rubyPerturbationRecord2.setIsSelected(false));
+  EXPECT_TRUE(rubyMeasureRecord2.setIsSelected(false));
 
-  EXPECT_EQ(static_cast<unsigned>(2), discreteVariableRecord.numPerturbations(true));
-  ASSERT_EQ(static_cast<unsigned>(2), discreteVariableRecord.discretePerturbationRecordIds(true).size());
-  EXPECT_EQ(static_cast<unsigned>(3), discreteVariableRecord.numPerturbations(false));
-  ASSERT_EQ(static_cast<unsigned>(3), discreteVariableRecord.discretePerturbationRecordIds(false).size());
-  EXPECT_EQ(rubyPerturbationRecord1.id(), discreteVariableRecord.discretePerturbationRecordIds(true)[0]);
-  EXPECT_EQ(nullPerturbationRecord.id(), discreteVariableRecord.discretePerturbationRecordIds(true)[1]);
-  EXPECT_EQ(rubyPerturbationRecord1.id(), discreteVariableRecord.discretePerturbationRecordIds(false)[0]);
-  EXPECT_EQ(rubyPerturbationRecord2.id(), discreteVariableRecord.discretePerturbationRecordIds(false)[1]);
-  EXPECT_EQ(nullPerturbationRecord.id(), discreteVariableRecord.discretePerturbationRecordIds(false)[2]);
-  ASSERT_EQ(static_cast<unsigned>(2), discreteVariableRecord.discretePerturbationRecords(true).size());
-  EXPECT_EQ(rubyPerturbationRecord1.handle(), discreteVariableRecord.discretePerturbationRecords(true)[0].handle());
-  EXPECT_EQ(nullPerturbationRecord.handle(), discreteVariableRecord.discretePerturbationRecords(true)[1].handle());
-  ASSERT_EQ(static_cast<unsigned>(3), discreteVariableRecord.discretePerturbationRecords(false).size());
-  EXPECT_EQ(rubyPerturbationRecord1.handle(), discreteVariableRecord.discretePerturbationRecords(false)[0].handle());
-  EXPECT_EQ(rubyPerturbationRecord2.handle(), discreteVariableRecord.discretePerturbationRecords(false)[1].handle());
-  EXPECT_EQ(nullPerturbationRecord.handle(), discreteVariableRecord.discretePerturbationRecords(false)[2].handle());
+  EXPECT_EQ(static_cast<unsigned>(2), measureGroupRecord.numMeasures(true));
+  ASSERT_EQ(static_cast<unsigned>(2), measureGroupRecord.measureRecordIds(true).size());
+  EXPECT_EQ(static_cast<unsigned>(3), measureGroupRecord.numMeasures(false));
+  ASSERT_EQ(static_cast<unsigned>(3), measureGroupRecord.measureRecordIds(false).size());
+  EXPECT_EQ(rubyMeasureRecord1.id(), measureGroupRecord.measureRecordIds(true)[0]);
+  EXPECT_EQ(nullMeasureRecord.id(), measureGroupRecord.measureRecordIds(true)[1]);
+  EXPECT_EQ(rubyMeasureRecord1.id(), measureGroupRecord.measureRecordIds(false)[0]);
+  EXPECT_EQ(rubyMeasureRecord2.id(), measureGroupRecord.measureRecordIds(false)[1]);
+  EXPECT_EQ(nullMeasureRecord.id(), measureGroupRecord.measureRecordIds(false)[2]);
+  ASSERT_EQ(static_cast<unsigned>(2), measureGroupRecord.measureRecords(true).size());
+  EXPECT_EQ(rubyMeasureRecord1.handle(), measureGroupRecord.measureRecords(true)[0].handle());
+  EXPECT_EQ(nullMeasureRecord.handle(), measureGroupRecord.measureRecords(true)[1].handle());
+  ASSERT_EQ(static_cast<unsigned>(3), measureGroupRecord.measureRecords(false).size());
+  EXPECT_EQ(rubyMeasureRecord1.handle(), measureGroupRecord.measureRecords(false)[0].handle());
+  EXPECT_EQ(rubyMeasureRecord2.handle(), measureGroupRecord.measureRecords(false)[1].handle());
+  EXPECT_EQ(nullMeasureRecord.handle(), measureGroupRecord.measureRecords(false)[2].handle());
 }

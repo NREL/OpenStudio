@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/DataPoint_DiscretePerturbation_JoinRecord.hpp>
-#include <project/DataPoint_DiscretePerturbation_JoinRecord_Impl.hpp>
+#include <project/DataPoint_Measure_JoinRecord.hpp>
+#include <project/DataPoint_Measure_JoinRecord_Impl.hpp>
 #include <project/DataPointRecord.hpp>
-#include <project/DiscretePerturbationRecord.hpp>
+#include <project/MeasureRecord.hpp>
 
 #include <utilities/core/Assert.hpp>
 
@@ -29,82 +29,82 @@ namespace project {
 
 namespace detail {
 
-  DataPoint_DiscretePerturbation_JoinRecord_Impl::DataPoint_DiscretePerturbation_JoinRecord_Impl(
+  DataPoint_Measure_JoinRecord_Impl::DataPoint_Measure_JoinRecord_Impl(
       const DataPointRecord& dataPointRecord,
-      const DiscretePerturbationRecord& discretePerturbationRecord)
+      const MeasureRecord& measureRecord)
     : JoinRecord_Impl(dataPointRecord.id(), 
                       dataPointRecord.handle(), 
-                      discretePerturbationRecord.id(), 
-                      discretePerturbationRecord.handle(), 
+                      measureRecord.id(),
+                      measureRecord.handle(),
                       dataPointRecord.projectDatabase())
   {
-    BOOST_ASSERT(dataPointRecord.projectDatabase().handle() == discretePerturbationRecord.projectDatabase().handle());
+    BOOST_ASSERT(dataPointRecord.projectDatabase().handle() == measureRecord.projectDatabase().handle());
   }
 
-  DataPoint_DiscretePerturbation_JoinRecord_Impl::DataPoint_DiscretePerturbation_JoinRecord_Impl(
+  DataPoint_Measure_JoinRecord_Impl::DataPoint_Measure_JoinRecord_Impl(
       const QSqlQuery& query, ProjectDatabase& database)
     : JoinRecord_Impl(query, database)
   {}
 
-  std::string DataPoint_DiscretePerturbation_JoinRecord_Impl::databaseTableName() const {
-    return DataPoint_DiscretePerturbation_JoinRecord::databaseTableName();
+  std::string DataPoint_Measure_JoinRecord_Impl::databaseTableName() const {
+    return DataPoint_Measure_JoinRecord::databaseTableName();
   }
 
-  void DataPoint_DiscretePerturbation_JoinRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void DataPoint_Measure_JoinRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
-    this->makeUpdateByIdQuery<DataPoint_DiscretePerturbation_JoinRecord>(query);
+    this->makeUpdateByIdQuery<DataPoint_Measure_JoinRecord>(query);
     this->bindValues(query);
     assertExec(query);
   }
 
-  ObjectRecord DataPoint_DiscretePerturbation_JoinRecord_Impl::leftObject() const {
+  ObjectRecord DataPoint_Measure_JoinRecord_Impl::leftObject() const {
     return this->dataPointRecord();
   }
 
-  ObjectRecord DataPoint_DiscretePerturbation_JoinRecord_Impl::rightObject() const {
-    return this->discretePerturbationRecord();
+  ObjectRecord DataPoint_Measure_JoinRecord_Impl::rightObject() const {
+    return this->measureRecord();
   }
 
-  DataPointRecord DataPoint_DiscretePerturbation_JoinRecord_Impl::dataPointRecord() const {
+  DataPointRecord DataPoint_Measure_JoinRecord_Impl::dataPointRecord() const {
     ProjectDatabase database = this->projectDatabase();
     boost::optional<DataPointRecord> dataPointRecord = DataPointRecord::getDataPointRecord(this->leftId(),database);
     BOOST_ASSERT(dataPointRecord);
     return *dataPointRecord;
   }
 
-  DiscretePerturbationRecord DataPoint_DiscretePerturbation_JoinRecord_Impl::discretePerturbationRecord() const {
+  MeasureRecord DataPoint_Measure_JoinRecord_Impl::measureRecord() const {
     ProjectDatabase database = this->projectDatabase();
-    boost::optional<DiscretePerturbationRecord> discretePerturbationRecord = DiscretePerturbationRecord::getDiscretePerturbationRecord(this->rightId(),database);
-    BOOST_ASSERT(discretePerturbationRecord);
-    return *discretePerturbationRecord;
+    boost::optional<MeasureRecord> measureRecord = MeasureRecord::getMeasureRecord(this->rightId(),database);
+    BOOST_ASSERT(measureRecord);
+    return *measureRecord;
   }
 
 } // detail
 
-DataPoint_DiscretePerturbation_JoinRecord::DataPoint_DiscretePerturbation_JoinRecord(
+DataPoint_Measure_JoinRecord::DataPoint_Measure_JoinRecord(
     const DataPointRecord& dataPointRecord,
-    const DiscretePerturbationRecord& discretePerturbationRecord)
-  : JoinRecord(boost::shared_ptr<detail::DataPoint_DiscretePerturbation_JoinRecord_Impl>(
-        new detail::DataPoint_DiscretePerturbation_JoinRecord_Impl(dataPointRecord, discretePerturbationRecord)), 
+    const MeasureRecord& measureRecord)
+  : JoinRecord(boost::shared_ptr<detail::DataPoint_Measure_JoinRecord_Impl>(
+        new detail::DataPoint_Measure_JoinRecord_Impl(dataPointRecord, measureRecord)),
         dataPointRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::DataPoint_DiscretePerturbation_JoinRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::DataPoint_Measure_JoinRecord_Impl>());
 }
 
-DataPoint_DiscretePerturbation_JoinRecord::DataPoint_DiscretePerturbation_JoinRecord(
-    boost::shared_ptr<detail::DataPoint_DiscretePerturbation_JoinRecord_Impl> impl,
+DataPoint_Measure_JoinRecord::DataPoint_Measure_JoinRecord(
+    boost::shared_ptr<detail::DataPoint_Measure_JoinRecord_Impl> impl,
     ProjectDatabase database)
   : JoinRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::DataPoint_DiscretePerturbation_JoinRecord_Impl>());
+  BOOST_ASSERT(getImpl<detail::DataPoint_Measure_JoinRecord_Impl>());
 }
 
-std::string DataPoint_DiscretePerturbation_JoinRecord::databaseTableName() {
-  return "DataPoint_DiscretePerturbation_JoinRecords";
+std::string DataPoint_Measure_JoinRecord::databaseTableName() {
+  return "DataPoint_Measure_JoinRecords";
 }
 
-UpdateByIdQueryData DataPoint_DiscretePerturbation_JoinRecord::updateByIdQueryData() {
+UpdateByIdQueryData DataPoint_Measure_JoinRecord::updateByIdQueryData() {
   static UpdateByIdQueryData result;
   if (result.queryString.empty()) {
     // numeric column identifiers
@@ -151,18 +151,18 @@ UpdateByIdQueryData DataPoint_DiscretePerturbation_JoinRecord::updateByIdQueryDa
   return result;
 }
 
-std::vector<DiscretePerturbationRecord> 
-DataPoint_DiscretePerturbation_JoinRecord::getDiscretePerturbationRecords(
+std::vector<MeasureRecord>
+DataPoint_Measure_JoinRecord::getMeasureRecords(
     const DataPointRecord& dataPointRecord) 
 {
   ProjectDatabase database = dataPointRecord.projectDatabase();
 
-  std::vector<DiscretePerturbationRecord> result;
-  std::vector<int> discretePerturbationRecordIds;
+  std::vector<MeasureRecord> result;
+  std::vector<int> measureRecordIds;
 
   QSqlQuery query(*database.qSqlDatabase());
   query.prepare(toQString("SELECT * FROM " + 
-      DataPoint_DiscretePerturbation_JoinRecord::databaseTableName() + 
+      DataPoint_Measure_JoinRecord::databaseTableName() +
       " WHERE leftId=:leftId"));
   query.bindValue(":leftId", dataPointRecord.id());
   assertExec(query);
@@ -170,31 +170,31 @@ DataPoint_DiscretePerturbation_JoinRecord::getDiscretePerturbationRecords(
     QVariant value;
     value = query.value(JoinRecordColumns::rightId);
     BOOST_ASSERT(value.isValid() && !value.isNull());
-    discretePerturbationRecordIds.push_back(value.toInt());
+    measureRecordIds.push_back(value.toInt());
   }
 
-  BOOST_FOREACH(int id, discretePerturbationRecordIds) {
-    boost::optional<DiscretePerturbationRecord> discretePerturbationRecord = 
-        DiscretePerturbationRecord::getDiscretePerturbationRecord(id,database);
-    BOOST_ASSERT(discretePerturbationRecord);
-    result.push_back(*discretePerturbationRecord);
+  BOOST_FOREACH(int id, measureRecordIds) {
+    boost::optional<MeasureRecord> measureRecord =
+        MeasureRecord::getMeasureRecord(id,database);
+    BOOST_ASSERT(measureRecord);
+    result.push_back(*measureRecord);
   }
 
   return result;
 }
 
-std::vector<DataPointRecord> DataPoint_DiscretePerturbation_JoinRecord::getDataPointRecords(
-    const DiscretePerturbationRecord& discretePerturbationRecord) 
+std::vector<DataPointRecord> DataPoint_Measure_JoinRecord::getDataPointRecords(
+    const MeasureRecord& measureRecord)
 {
-  ProjectDatabase database = discretePerturbationRecord.projectDatabase();
+  ProjectDatabase database = measureRecord.projectDatabase();
 
   std::vector<DataPointRecord> result;
   std::vector<int> dataPointRecordIds;
 
   QSqlQuery query(*database.qSqlDatabase());
   query.prepare(toQString("SELECT * FROM " + 
-      DataPoint_DiscretePerturbation_JoinRecord::databaseTableName() + " WHERE rightId=:rightId"));
-  query.bindValue(":rightId", discretePerturbationRecord.id());
+      DataPoint_Measure_JoinRecord::databaseTableName() + " WHERE rightId=:rightId"));
+  query.bindValue(":rightId", measureRecord.id());
   assertExec(query);
   while (query.next()) {
     QVariant value;
@@ -213,17 +213,17 @@ std::vector<DataPointRecord> DataPoint_DiscretePerturbation_JoinRecord::getDataP
   return result;
 }
 
-DataPointRecord DataPoint_DiscretePerturbation_JoinRecord::dataPointRecord() const {
-  return getImpl<detail::DataPoint_DiscretePerturbation_JoinRecord_Impl>()->dataPointRecord();
+DataPointRecord DataPoint_Measure_JoinRecord::dataPointRecord() const {
+  return getImpl<detail::DataPoint_Measure_JoinRecord_Impl>()->dataPointRecord();
 }
 
-DiscretePerturbationRecord DataPoint_DiscretePerturbation_JoinRecord::discretePerturbationRecord() const {
-  return getImpl<detail::DataPoint_DiscretePerturbation_JoinRecord_Impl>()->discretePerturbationRecord();
+MeasureRecord DataPoint_Measure_JoinRecord::measureRecord() const {
+  return getImpl<detail::DataPoint_Measure_JoinRecord_Impl>()->measureRecord();
 }
 
 /// @cond
-DataPoint_DiscretePerturbation_JoinRecord::DataPoint_DiscretePerturbation_JoinRecord(
-    boost::shared_ptr<detail::DataPoint_DiscretePerturbation_JoinRecord_Impl> impl)
+DataPoint_Measure_JoinRecord::DataPoint_Measure_JoinRecord(
+    boost::shared_ptr<detail::DataPoint_Measure_JoinRecord_Impl> impl)
   : JoinRecord(impl)
 {}
 /// @endcond

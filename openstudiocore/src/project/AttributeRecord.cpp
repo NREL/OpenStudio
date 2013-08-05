@@ -53,7 +53,7 @@ namespace detail{
     : ObjectRecord_Impl(fileReferenceRecord.projectDatabase(),
                         attribute.uuid(),
                         attribute.name(),
-                        attribute.displayName() ? attribute.displayName().get() : attribute.name(),
+                        attribute.displayName() ? attribute.displayName().get() : std::string(),
                         "",
                         attribute.versionUUID()),
       m_fileReferenceRecordId(fileReferenceRecord.id()),
@@ -70,7 +70,7 @@ namespace detail{
     : ObjectRecord_Impl(parentAttributeRecord.projectDatabase(),
                         attribute.uuid(),
                         attribute.name(),
-                        attribute.displayName() ? attribute.displayName().get() : attribute.name(),
+                        attribute.displayName() ? attribute.displayName().get() : std::string(),
                         "",
                         attribute.versionUUID()),
       m_parentAttributeRecordId(parentAttributeRecord.id()),
@@ -87,7 +87,7 @@ namespace detail{
     : ObjectRecord_Impl(algorithmRecord.projectDatabase(),
                         attribute.uuid(),
                         attribute.name(),
-                        attribute.displayName() ? attribute.displayName().get() : attribute.name(),
+                        attribute.displayName() ? attribute.displayName().get() : std::string(),
                         "",
                         attribute.versionUUID()),
       m_attributeValueType(attribute.valueType()),
@@ -103,7 +103,7 @@ namespace detail{
     : ObjectRecord_Impl(variableRecord.projectDatabase(),
                         attribute.uuid(),
                         attribute.name(),
-                        attribute.displayName() ? attribute.displayName().get() : attribute.name(),
+                        attribute.displayName() ? attribute.displayName().get() : std::string(),
                         "",
                         attribute.versionUUID()),
       m_attributeValueType(attribute.valueType()),
@@ -403,28 +403,28 @@ namespace detail{
   openstudio::Attribute AttributeRecord_Impl::attribute() const {
     switch(m_attributeValueType.value()){
       case AttributeValueType::Boolean:
-        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->attributeValueAsBoolean(), m_attributeUnits);
+        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsBoolean(), m_attributeUnits);
         break;
       case AttributeValueType::Integer:
-        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->attributeValueAsInteger(), m_attributeUnits);
+        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsInteger(), m_attributeUnits);
         break;
       case AttributeValueType::Unsigned:
-        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->attributeValueAsUnsigned(), m_attributeUnits);
+        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsUnsigned(), m_attributeUnits);
         break;
       case AttributeValueType::Double:
-        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->attributeValueAsDouble(), m_attributeUnits);
+        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsDouble(), m_attributeUnits);
         break;
       case AttributeValueType::Quantity:
-        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->attributeValueAsQuantity());
+        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsQuantity());
         break;
       case AttributeValueType::Unit:
-        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->attributeValueAsUnit());
+        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsUnit());
         break;
       case AttributeValueType::String:
-        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->attributeValueAsString(), m_attributeUnits);
+        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsString(), m_attributeUnits);
         break;
       case AttributeValueType::AttributeVector:
-        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->attributeValueAsAttributeVector(), m_attributeUnits);
+        return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsAttributeVector(), m_attributeUnits);
         break;
       default:
         BOOST_ASSERT(false);

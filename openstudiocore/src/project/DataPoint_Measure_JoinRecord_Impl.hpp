@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef PROJECT_DATAPOINT_DISCRETEPERTURBATION_JOINRECORD_IMPL_HPP
-#define PROJECT_DATAPOINT_DISCRETEPERTURBATION_JOINRECORD_IMPL_HPP
+#ifndef PROJECT_DATAPOINT_MEASURE_JOINRECORD_IMPL_HPP
+#define PROJECT_DATAPOINT_MEASURE_JOINRECORD_IMPL_HPP
 
 #include <project/ProjectAPI.hpp>
 #include <project/JoinRecord_Impl.hpp>
@@ -27,27 +27,26 @@ namespace openstudio {
 namespace project {
 
 class DataPointRecord;
-class DiscretePerturbationRecord;
+class MeasureRecord;
 
 namespace detail {
 
-  /** DataPoint_DiscretePerturbation_JoinRecord_Impl is a JoinRecord_Impl that is the 
-   *  implementation class for DataPoint_DiscretePerturbation_JoinRecord. */
-  class PROJECT_API DataPoint_DiscretePerturbation_JoinRecord_Impl : public JoinRecord_Impl {
+  /** DataPoint_Measure_JoinRecord_Impl is a JoinRecord_Impl that is the
+   *  implementation class for DataPoint_Measure_JoinRecord. */
+  class PROJECT_API DataPoint_Measure_JoinRecord_Impl : public JoinRecord_Impl {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    DataPoint_DiscretePerturbation_JoinRecord_Impl(
+    DataPoint_Measure_JoinRecord_Impl(
         const DataPointRecord& dataPointRecord, 
-        const DiscretePerturbationRecord& discretePerturbationRecord);
+        const MeasureRecord& measureRecord);
 
     /** Constructor from query. Throws if bad query. */
-    DataPoint_DiscretePerturbation_JoinRecord_Impl(const QSqlQuery& query, 
-                                                   ProjectDatabase& database);
+    DataPoint_Measure_JoinRecord_Impl(const QSqlQuery& query,ProjectDatabase& database);
 
-    virtual ~DataPoint_DiscretePerturbation_JoinRecord_Impl() {}
+    virtual ~DataPoint_Measure_JoinRecord_Impl() {}
 
     //@}
 
@@ -64,11 +63,11 @@ namespace detail {
 
     DataPointRecord dataPointRecord() const;
 
-    DiscretePerturbationRecord discretePerturbationRecord() const;
+    MeasureRecord measureRecord() const;
 
    protected:
    private:
-    REGISTER_LOGGER("openstudio.project.DataPoint_DiscretePerturbation_JoinRecord");
+    REGISTER_LOGGER("openstudio.project.DataPoint_Measure_JoinRecord");
   };
 
 } // detail
@@ -76,5 +75,5 @@ namespace detail {
 } // project
 } // openstudio
 
-#endif // PROJECT_DATAPOINT_DISCRETEPERTURBATION_JOINRECORD_IMPL_HPP
+#endif // PROJECT_DATAPOINT_MEASURE_JOINRECORD_IMPL_HPP
 

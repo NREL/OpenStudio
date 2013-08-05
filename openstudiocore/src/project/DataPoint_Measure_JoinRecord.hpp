@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef PROJECT_DATAPOINT_DISCRETEPERTURBATION_JOINRECORD_HPP
-#define PROJECT_DATAPOINT_DISCRETEPERTURBATION_JOINRECORD_HPP
+#ifndef PROJECT_DATAPOINT_MEASURE_JOINRECORD_HPP
+#define PROJECT_DATAPOINT_MEASURE_JOINRECORD_HPP
 
 #include <project/ProjectAPI.hpp>
 #include <project/JoinRecord.hpp>
@@ -27,30 +27,29 @@ namespace openstudio {
 namespace project {
 
 class DataPointRecord;
-class DiscretePerturbationRecord;
+class MeasureRecord;
 
 namespace detail {
 
-  class DataPoint_DiscretePerturbation_JoinRecord_Impl;
+  class DataPoint_Measure_JoinRecord_Impl;
 
 } // detail
 
-/** DataPoint_DiscretePerturbation_JoinRecord is a JoinRecord*/
-class PROJECT_API DataPoint_DiscretePerturbation_JoinRecord : public JoinRecord {
+/** DataPoint_Measure_JoinRecord is a JoinRecord*/
+class PROJECT_API DataPoint_Measure_JoinRecord : public JoinRecord {
  public:
 
-  typedef detail::DataPoint_DiscretePerturbation_JoinRecord_Impl ImplType;
+  typedef detail::DataPoint_Measure_JoinRecord_Impl ImplType;
   typedef JoinRecordColumns ColumnsType;
 
   /** @name Constructors and Destructors */
   //@{
 
-  DataPoint_DiscretePerturbation_JoinRecord(
-      const DataPointRecord& dataPointRecord, 
-      const DiscretePerturbationRecord& discretePerturbationRecord);
+  DataPoint_Measure_JoinRecord(const DataPointRecord& dataPointRecord,
+                               const MeasureRecord& measureRecord);
 
 
-  virtual ~DataPoint_DiscretePerturbation_JoinRecord() {}
+  virtual ~DataPoint_Measure_JoinRecord() {}
 
   //@}
   /** @name Static Methods */
@@ -60,50 +59,48 @@ class PROJECT_API DataPoint_DiscretePerturbation_JoinRecord : public JoinRecord 
 
   static UpdateByIdQueryData updateByIdQueryData();
 
-  static std::vector<DiscretePerturbationRecord> getDiscretePerturbationRecords(
-      const DataPointRecord& dataPointRecord);
+  static std::vector<MeasureRecord> getMeasureRecords(const DataPointRecord& dataPointRecord);
 
-  static std::vector<DataPointRecord> getDataPointRecords(
-      const DiscretePerturbationRecord& discretePerturbationRecord);
+  static std::vector<DataPointRecord> getDataPointRecords(const MeasureRecord& measureRecord);
 
   //@}
 
   DataPointRecord dataPointRecord() const;
 
-  DiscretePerturbationRecord discretePerturbationRecord() const;
+  MeasureRecord measureRecord() const;
 
  protected:
   /// @cond
   friend class Record;
   friend class JoinRecord;
   friend class ProjectDatabase;
-  friend class detail::DataPoint_DiscretePerturbation_JoinRecord_Impl;
+  friend class detail::DataPoint_Measure_JoinRecord_Impl;
 
   /** Construct from impl. */
-  DataPoint_DiscretePerturbation_JoinRecord(
-      boost::shared_ptr<detail::DataPoint_DiscretePerturbation_JoinRecord_Impl> impl,
+  DataPoint_Measure_JoinRecord(
+      boost::shared_ptr<detail::DataPoint_Measure_JoinRecord_Impl> impl,
       ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit DataPoint_DiscretePerturbation_JoinRecord(
-      boost::shared_ptr<detail::DataPoint_DiscretePerturbation_JoinRecord_Impl> impl);
+  explicit DataPoint_Measure_JoinRecord(
+      boost::shared_ptr<detail::DataPoint_Measure_JoinRecord_Impl> impl);
 
   /// @endcond
  private:
 
-  REGISTER_LOGGER("openstudio.project.DataPoint_DiscretePerturbation_JoinRecord");
+  REGISTER_LOGGER("openstudio.project.DataPoint_Measure_JoinRecord");
 };
 
-/** \relates DataPoint_DiscretePerturbation_JoinRecord*/
-typedef boost::optional<DataPoint_DiscretePerturbation_JoinRecord> 
-    OptionalDataPoint_DiscretePerturbation_JoinRecord;
+/** \relates DataPoint_Measure_JoinRecord*/
+typedef boost::optional<DataPoint_Measure_JoinRecord>
+    OptionalDataPoint_Measure_JoinRecord;
 
-/** \relates DataPoint_DiscretePerturbation_JoinRecord*/
-typedef std::vector<DataPoint_DiscretePerturbation_JoinRecord> 
-    DataPoint_DiscretePerturbation_JoinRecordVector;
+/** \relates DataPoint_Measure_JoinRecord*/
+typedef std::vector<DataPoint_Measure_JoinRecord>
+    DataPoint_Measure_JoinRecordVector;
 
 } // project
 } // openstudio
 
-#endif // PROJECT_DATAPOINT_DISCRETEPERTURBATION_JOINRECORD_HPP
+#endif // PROJECT_DATAPOINT_MEASURE_JOINRECORD_HPP
 

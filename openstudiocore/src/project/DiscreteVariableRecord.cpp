@@ -21,10 +21,11 @@
 #include <project/DiscreteVariableRecord_Impl.hpp>
 
 #include <project/JoinRecord.hpp>
-// TODO: Add derived class includes for factory methods if this is a base class.
+#include <project/MeasureGroupRecord.hpp>
+#include <project/MeasureGroupRecord_Impl.hpp>
 
-// TODO: Replace with derived class includes if this is a base class.
-#include <analysis/DiscreteVariable.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
 
@@ -136,7 +137,7 @@ boost::optional<DiscreteVariableRecord> DiscreteVariableRecord::factoryFromQuery
 {
   OptionalDiscreteVariableRecord result;
 
-  int discreteVariableRecordType = query.value(DiscreteVariableRecordColumns::discreteVariableRecordType).toInt();
+  int discreteVariableRecordType = query.value(VariableRecordColumns::discreteVariableRecordType).toInt();
 
   switch (discreteVariableRecordType) {
     case DiscreteVariableRecordType::MeasureGroupRecord :
@@ -235,7 +236,7 @@ DiscreteVariableRecord::DiscreteVariableRecord(boost::shared_ptr<detail::Discret
 DiscreteVariableRecord::DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl,
                                                ProjectDatabase database,
                                                const boost::optional<analysis::DiscreteVariable>& discreteVariable)
-  : InputVariableRecord(impl, database, discreteVariable ? discreteVariable->cast<InputVariable>() : OptionalInputVariable())
+  : InputVariableRecord(impl, database, discreteVariable ? discreteVariable->cast<analysis::InputVariable>() : analysis::OptionalInputVariable())
 {
   Q_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
 }

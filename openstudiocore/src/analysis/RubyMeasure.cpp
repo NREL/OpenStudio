@@ -372,7 +372,7 @@ namespace detail {
     return true;
   }
 
-  bool RubyMeasure_Impl::setMeasureScript(const openstudio::path& script,
+  bool RubyMeasure_Impl::setPerturbationScript(const openstudio::path& script,
                                           const FileReferenceType& inputFileType,
                                           const FileReferenceType& outputFileType,
                                           bool isUserScript)
@@ -667,15 +667,15 @@ bool RubyMeasure::updateMeasure(const BCLMeasure& newVersion,
                                                                  newArguments);
 }
 
-bool RubyMeasure::setMeasureScript(const openstudio::path& script,
-                                             const FileReferenceType& inputFileType,
-                                             const FileReferenceType& outputFileType,
-                                             bool isUserScript)
+bool RubyMeasure::setPerturbationScript(const openstudio::path& script,
+                                        const FileReferenceType& inputFileType,
+                                        const FileReferenceType& outputFileType,
+                                        bool isUserScript)
 {
-  return getImpl<detail::RubyMeasure_Impl>()->setMeasureScript(script,
-                                                                         inputFileType,
-                                                                         outputFileType,
-                                                                         isUserScript);
+  return getImpl<detail::RubyMeasure_Impl>()->setPerturbationScript(script,
+                                                                    inputFileType,
+                                                                    outputFileType,
+                                                                    isUserScript);
 }
 
 void RubyMeasure::setIsUserScript(bool isUserScript) {

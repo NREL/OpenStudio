@@ -338,9 +338,11 @@ std::vector<MeasureGroupRecord> MeasureGroupRecord::getMeasureGroupRecords(Proje
   QSqlQuery query(*(database.qSqlDatabase()));
   query.prepare(toQString("SELECT * FROM " + VariableRecord::databaseTableName() +
                           " WHERE variableRecordType=:variableRecordType AND " +
-                          "inputVariableRecordType=:inputVariableRecordType"));
-  query.bindValue(":variableRecordType", VariableRecordType::DiscreteVariableRecord);
-  query.bindValue(":inputVariableRecordType", DiscreteVariableRecordType::MeasureGroupRecord);
+                          "inputVariableRecordType=:inputVariableRecordType AND " +
+                          "discreteVariableRecordType=:discreteVariableRecordType"));
+  query.bindValue(":variableRecordType", VariableRecordType::InputVariableRecord);
+  query.bindValue(":inputVariableRecordType", InputVariableRecordType::DiscreteVariableRecord);
+  query.bindValue(":discreteVariableRecordType", DiscreteVariableRecordType::MeasureGroupRecord);
   assertExec(query);
   while (query.next()) {
     result.push_back(MeasureGroupRecord(query, database));
@@ -354,11 +356,12 @@ boost::optional<MeasureGroupRecord> MeasureGroupRecord::getMeasureGroupRecord(in
 {
   QSqlQuery query(*(database.qSqlDatabase()));
   query.prepare(toQString("SELECT * FROM " + VariableRecord::databaseTableName() + " WHERE id=:id AND " +
-                          "variableRecordType=:variableRecordType AND " +
-                          "inputVariableRecordType=:inputVariableRecordType"));
+                          "inputVariableRecordType=:inputVariableRecordType AND " +
+                          "discreteVariableRecordType=:discreteVariableRecordType"));
   query.bindValue(":id", MeasureGroupRecordId);
-  query.bindValue(":variableRecordType", VariableRecordType::DiscreteVariableRecord);
-  query.bindValue(":inputVariableRecordType", DiscreteVariableRecordType::MeasureGroupRecord);
+  query.bindValue(":variableRecordType", VariableRecordType::InputVariableRecord);
+  query.bindValue(":inputVariableRecordType", InputVariableRecordType::DiscreteVariableRecord);
+  query.bindValue(":discreteVariableRecordType", DiscreteVariableRecordType::MeasureGroupRecord);
   assertExec(query);
   if (query.first()) {
     return MeasureGroupRecord(query, database);

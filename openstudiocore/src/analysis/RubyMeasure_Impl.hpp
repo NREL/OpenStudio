@@ -140,10 +140,10 @@ namespace detail {
     bool updateMeasure(const BCLMeasure& newVersion, std::vector<ruleset::OSArgument> newArguments);
 
     /** Sets the perturbationScript to script and clears all arguments. \deprecated */
-    bool setMeasureScript(const openstudio::path& script,
-                          const FileReferenceType& inputFileType,
-                          const FileReferenceType& outputFileType,
-                          bool isUserScript);
+    bool setPerturbationScript(const openstudio::path& script,
+                               const FileReferenceType& inputFileType,
+                               const FileReferenceType& outputFileType,
+                               bool isUserScript);
 
     /** \deprecated */
     void setIsUserScript(bool isUserScript);

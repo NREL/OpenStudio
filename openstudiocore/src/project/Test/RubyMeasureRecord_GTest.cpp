@@ -20,23 +20,23 @@
 #include <gtest/gtest.h>
 #include <project/Test/ProjectFixture.hpp>
 
-#include <project/DiscreteVariableRecord.hpp>
-#include <project/DiscreteVariableRecord_Impl.hpp>
-#include <project/DiscretePerturbationRecord.hpp>
+#include <project/MeasureGroupRecord.hpp>
+#include <project/MeasureGroupRecord_Impl.hpp>
+#include <project/MeasureRecord.hpp>
 #include <project/FileReferenceRecord.hpp>
 #include <project/OSArgumentRecord.hpp>
 #include <project/ProblemRecord.hpp>
 #include <project/ProjectDatabase.hpp>
-#include <project/RubyPerturbationRecord.hpp>
-#include <project/RubyPerturbationRecord_Impl.hpp>
+#include <project/RubyMeasureRecord.hpp>
+#include <project/RubyMeasureRecord_Impl.hpp>
 
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/NullPerturbation.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
 #include <analysis/Problem.hpp>
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/RubyPerturbation_Impl.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
 #include <analysis/WorkflowStep.hpp>
 
 #include <runmanager/lib/Workflow.hpp>
@@ -54,32 +54,32 @@ using namespace openstudio::ruleset;
 using namespace openstudio::analysis;
 using namespace openstudio::project;
 
-TEST_F(ProjectFixture, RubyPerturbationRecord_RubyScript) {
-  // Perturbations
-  DiscretePerturbationVector perturbations;
+TEST_F(ProjectFixture, RubyMeasureRecord_RubyScript) {
+  // Measures
+  MeasureVector measures;
 
-  // Null Perturbation
-  perturbations.push_back(NullPerturbation());
+  // Null Measure
+  measures.push_back(NullMeasure());
 
   openstudio::path rubyLibDirPath = openstudio::toPath(rubyLibDir());
   openstudio::path perturbScript = rubyLibDirPath/openstudio::toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
-  RubyPerturbation rubyPerturbation(perturbScript,
+  RubyMeasure rubyMeasure(perturbScript,
                                     FileReferenceType::OSM,
                                     FileReferenceType::OSM);
-  rubyPerturbation.addArgument("inputPath", "in.osm");
-  rubyPerturbation.addArgument("outputPath", "out.osm");
-  rubyPerturbation.addArgument("objectType", "OS:Material");
-  rubyPerturbation.addArgument("nameRegex", "I02 50mm insulation board");
-  rubyPerturbation.addArgument("field", "3");
-  rubyPerturbation.addArgument("value", "0.10");
+  rubyMeasure.addArgument("inputPath", "in.osm");
+  rubyMeasure.addArgument("outputPath", "out.osm");
+  rubyMeasure.addArgument("objectType", "OS:Material");
+  rubyMeasure.addArgument("nameRegex", "I02 50mm insulation board");
+  rubyMeasure.addArgument("field", "3");
+  rubyMeasure.addArgument("value", "0.10");
 
-  // RubyPerturbation
-  perturbations.push_back(rubyPerturbation);
+  // RubyMeasure
+  measures.push_back(rubyMeasure);
 
   // Variables
   VariableVector variables;
 
-  variables.push_back(DiscreteVariable("Wall Construction",perturbations));
+  variables.push_back(MeasureGroup("Wall Construction",measures));
 
   // Workflow
   openstudio::runmanager::Workflow workflow;
@@ -89,7 +89,7 @@ TEST_F(ProjectFixture, RubyPerturbationRecord_RubyScript) {
 
   // Save to database
   {
-    ProjectDatabase database = getCleanDatabase("RubyPerturbationRecord_RubyScript");
+    ProjectDatabase database = getCleanDatabase("RubyMeasureRecord_RubyScript");
 
     bool didStartTransaction = database.startTransaction();
     EXPECT_TRUE(didStartTransaction);
@@ -103,38 +103,38 @@ TEST_F(ProjectFixture, RubyPerturbationRecord_RubyScript) {
     }
 
     // Variable Records
-    InputVariableRecordVector discreteVariableRecords = problemRecord.inputVariableRecords();
-    EXPECT_EQ(1u,discreteVariableRecords.size());
+    InputVariableRecordVector measureGroupRecords = problemRecord.inputVariableRecords();
+    EXPECT_EQ(1u,measureGroupRecords.size());
 
     // Discrete Variable Record
-    DiscreteVariableRecord discreteVariableRecord = discreteVariableRecords.at(0).cast<DiscreteVariableRecord>();
-    EXPECT_EQ(2u,discreteVariableRecord.discretePerturbationRecordIds(true).size());
-    EXPECT_EQ(2u,discreteVariableRecord.discretePerturbationRecords(true).size());
-    RubyPerturbationRecord rubyPerturbationRecord(rubyPerturbation,discreteVariableRecord,0);
-    EXPECT_EQ("DiscretePerturbationRecords",rubyPerturbationRecord.databaseTableName());
-    ObjectRecordVector objectRecordVector = rubyPerturbationRecord.children();
+    MeasureGroupRecord measureGroupRecord = measureGroupRecords.at(0).cast<MeasureGroupRecord>();
+    EXPECT_EQ(2u,measureGroupRecord.measureRecordIds(true).size());
+    EXPECT_EQ(2u,measureGroupRecord.measureRecords(true).size());
+    RubyMeasureRecord rubyMeasureRecord(rubyMeasure,measureGroupRecord,0);
+    EXPECT_EQ("MeasureRecords",rubyMeasureRecord.databaseTableName());
+    ObjectRecordVector objectRecordVector = rubyMeasureRecord.children();
     EXPECT_EQ(6u,objectRecordVector.size()); // arguments
-    objectRecordVector = rubyPerturbationRecord.resources();
+    objectRecordVector = rubyMeasureRecord.resources();
     EXPECT_EQ(1u,objectRecordVector.size()); // script
-    FileReferenceRecord scriptRecord = rubyPerturbationRecord.scriptOrBCLMeasureRecord();
+    FileReferenceRecord scriptRecord = rubyMeasureRecord.fileReferenceRecord();
     EXPECT_EQ("FileReferenceRecords",scriptRecord.databaseTableName());
 
-    DiscretePerturbation discretePerturbation = rubyPerturbationRecord.discretePerturbation();
-    EXPECT_EQ(true,discretePerturbation.isSelected());
-    ASSERT_TRUE(discretePerturbation.optionalCast<RubyPerturbation>());
-    RubyPerturbation rubyPerturbationCopy = discretePerturbation.cast<RubyPerturbation>();
-    EXPECT_FALSE(rubyPerturbationCopy.usesBCLMeasure());
-    EXPECT_FALSE(rubyPerturbationCopy.isUserScript());
-    EXPECT_EQ(6u,rubyPerturbationCopy.arguments().size());
+    Measure measure = rubyMeasureRecord.measure();
+    EXPECT_EQ(true,measure.isSelected());
+    ASSERT_TRUE(measure.optionalCast<RubyMeasure>());
+    RubyMeasure rubyMeasureCopy = measure.cast<RubyMeasure>();
+    EXPECT_FALSE(rubyMeasureCopy.usesBCLMeasure());
+    EXPECT_FALSE(rubyMeasureCopy.isUserScript());
+    EXPECT_EQ(6u,rubyMeasureCopy.arguments().size());
 
-    DiscreteVariableRecord discreteVariableRecordFromRuby = rubyPerturbationRecord.discreteVariableRecord().get();
-    EXPECT_EQ(discreteVariableRecord.databaseTableName(),discreteVariableRecordFromRuby.databaseTableName());
-    EXPECT_EQ(discreteVariableRecord.id(),discreteVariableRecordFromRuby.id());
+    MeasureGroupRecord measureGroupRecordFromRuby = rubyMeasureRecord.measureGroupRecord().get();
+    EXPECT_EQ(measureGroupRecord.databaseTableName(),measureGroupRecordFromRuby.databaseTableName());
+    EXPECT_EQ(measureGroupRecord.id(),measureGroupRecordFromRuby.id());
   }
 
   // Reopen database
   {
-    ProjectDatabase database = getExistingDatabase("RubyPerturbationRecord_RubyScript");
+    ProjectDatabase database = getExistingDatabase("RubyMeasureRecord_RubyScript");
 
     ProblemRecordVector problemRecords = ProblemRecord::getProblemRecords(database);
     ASSERT_FALSE(problemRecords.empty());
@@ -144,45 +144,45 @@ TEST_F(ProjectFixture, RubyPerturbationRecord_RubyScript) {
     // COPY-PASTED FROM ABOVE
 
     // Variable Records
-    InputVariableRecordVector discreteVariableRecords = problemRecord.inputVariableRecords();
-    EXPECT_EQ(1u,discreteVariableRecords.size());
+    InputVariableRecordVector measureGroupRecords = problemRecord.inputVariableRecords();
+    EXPECT_EQ(1u,measureGroupRecords.size());
 
     // Discrete Variable Record
-    DiscreteVariableRecord discreteVariableRecord = discreteVariableRecords.at(0).cast<DiscreteVariableRecord>();
-    EXPECT_EQ(2u,discreteVariableRecord.discretePerturbationRecordIds(true).size());
-    EXPECT_EQ(2u,discreteVariableRecord.discretePerturbationRecords(true).size());
-    RubyPerturbationRecord rubyPerturbationRecord(rubyPerturbation,discreteVariableRecord,0);
-    EXPECT_EQ("DiscretePerturbationRecords",rubyPerturbationRecord.databaseTableName());
-    ObjectRecordVector objectRecordVector = rubyPerturbationRecord.children();
+    MeasureGroupRecord measureGroupRecord = measureGroupRecords.at(0).cast<MeasureGroupRecord>();
+    EXPECT_EQ(2u,measureGroupRecord.measureRecordIds(true).size());
+    EXPECT_EQ(2u,measureGroupRecord.measureRecords(true).size());
+    RubyMeasureRecord rubyMeasureRecord(rubyMeasure,measureGroupRecord,0);
+    EXPECT_EQ("MeasureRecords",rubyMeasureRecord.databaseTableName());
+    ObjectRecordVector objectRecordVector = rubyMeasureRecord.children();
     EXPECT_EQ(6u,objectRecordVector.size()); // arguments
-    objectRecordVector = rubyPerturbationRecord.resources();
+    objectRecordVector = rubyMeasureRecord.resources();
     EXPECT_EQ(1u,objectRecordVector.size()); // script
-    FileReferenceRecord scriptRecord = rubyPerturbationRecord.scriptOrBCLMeasureRecord();
+    FileReferenceRecord scriptRecord = rubyMeasureRecord.fileReferenceRecord();
     EXPECT_EQ("FileReferenceRecords",scriptRecord.databaseTableName());
 
-    DiscretePerturbation discretePerturbation = rubyPerturbationRecord.discretePerturbation();
-    EXPECT_EQ(true,discretePerturbation.isSelected());
-    ASSERT_TRUE(discretePerturbation.optionalCast<RubyPerturbation>());
-    RubyPerturbation rubyPerturbationCopy = discretePerturbation.cast<RubyPerturbation>();
-    EXPECT_FALSE(rubyPerturbationCopy.usesBCLMeasure());
-    EXPECT_FALSE(rubyPerturbationCopy.isUserScript());
-    EXPECT_EQ(6u,rubyPerturbationCopy.arguments().size());
+    Measure measure = rubyMeasureRecord.measure();
+    EXPECT_EQ(true,measure.isSelected());
+    ASSERT_TRUE(measure.optionalCast<RubyMeasure>());
+    RubyMeasure rubyMeasureCopy = measure.cast<RubyMeasure>();
+    EXPECT_FALSE(rubyMeasureCopy.usesBCLMeasure());
+    EXPECT_FALSE(rubyMeasureCopy.isUserScript());
+    EXPECT_EQ(6u,rubyMeasureCopy.arguments().size());
 
-    DiscreteVariableRecord discreteVariableRecordFromRuby = rubyPerturbationRecord.discreteVariableRecord().get();
-    EXPECT_EQ(discreteVariableRecord.databaseTableName(),discreteVariableRecordFromRuby.databaseTableName());
-    EXPECT_EQ(discreteVariableRecord.id(),discreteVariableRecordFromRuby.id());
+    MeasureGroupRecord measureGroupRecordFromRuby = rubyMeasureRecord.measureGroupRecord().get();
+    EXPECT_EQ(measureGroupRecord.databaseTableName(),measureGroupRecordFromRuby.databaseTableName());
+    EXPECT_EQ(measureGroupRecord.id(),measureGroupRecordFromRuby.id());
   }
 }
 
-TEST_F(ProjectFixture, RubyPerturbationRecord_BCLMeasure) {
-  // Construct problem with RubyPerturbation that points to BCLMeasure
+TEST_F(ProjectFixture, RubyMeasureRecord_BCLMeasure) {
+  // Construct problem with RubyMeasure that points to BCLMeasure
   Problem problem("Problem",VariableVector(),runmanager::Workflow());
-  DiscreteVariable dvar("Variable",DiscretePerturbationVector());
+  MeasureGroup dvar("Variable",MeasureVector());
   problem.push(dvar);
   openstudio::path measuresPath = resourcesPath() / toPath("/utilities/BCL/Measures");
   openstudio::path dir = measuresPath / toPath("SetWindowToWallRatioByFacade");
   BCLMeasure measure = BCLMeasure::load(dir).get();
-  RubyPerturbation rpert(measure);
+  RubyMeasure rpert(measure);
   dvar.push(rpert);
   OSArgument arg = OSArgument::makeDoubleArgument("wwr");
   arg.setValue(0.4);
@@ -193,7 +193,7 @@ TEST_F(ProjectFixture, RubyPerturbationRecord_BCLMeasure) {
 
   // Serialize to database
   {
-    ProjectDatabase database = getCleanDatabase("RubyPerturbationRecord_BCLMeasure");
+    ProjectDatabase database = getCleanDatabase("RubyMeasureRecord_BCLMeasure");
 
     bool didStartTransaction = database.startTransaction();
     EXPECT_TRUE(didStartTransaction);
@@ -207,19 +207,19 @@ TEST_F(ProjectFixture, RubyPerturbationRecord_BCLMeasure) {
     }
   }
 
-  // Re-open database, de-serialize, verify that RubyPerturbation is intact.
+  // Re-open database, de-serialize, verify that RubyMeasure is intact.
   openstudio::path tempDir1 = measuresPath / toPath(toString(createUUID()));
   {
-    ProjectDatabase database = getExistingDatabase("RubyPerturbationRecord_BCLMeasure");
+    ProjectDatabase database = getExistingDatabase("RubyMeasureRecord_BCLMeasure");
     ASSERT_EQ(1u,ProblemRecord::getProblemRecords(database).size());
-    ASSERT_EQ(1u,DiscreteVariableRecord::getDiscreteVariableRecords(database).size());
-    EXPECT_EQ(1u,RubyPerturbationRecord::getRubyPerturbationRecords(database).size());
+    ASSERT_EQ(1u,MeasureGroupRecord::getMeasureGroupRecords(database).size());
+    EXPECT_EQ(1u,RubyMeasureRecord::getRubyMeasureRecords(database).size());
 
-    DiscretePerturbationRecordVector dprs = DiscreteVariableRecord::getDiscreteVariableRecords(database)[0].discretePerturbationRecords(false);
+    MeasureRecordVector dprs = MeasureGroupRecord::getMeasureGroupRecords(database)[0].measureRecords(false);
     ASSERT_EQ(1u,dprs.size());
-    ASSERT_TRUE(dprs[0].optionalCast<RubyPerturbationRecord>());
-    RubyPerturbationRecord rpr = dprs[0].cast<RubyPerturbationRecord>();
-    RubyPerturbation rp = rpr.rubyPerturbation();
+    ASSERT_TRUE(dprs[0].optionalCast<RubyMeasureRecord>());
+    RubyMeasureRecord rpr = dprs[0].cast<RubyMeasureRecord>();
+    RubyMeasure rp = rpr.rubyMeasure();
     EXPECT_TRUE(rp.usesBCLMeasure());
     EXPECT_TRUE(rp.measure());
     EXPECT_EQ(dir,rp.measureDirectory());
@@ -256,21 +256,21 @@ TEST_F(ProjectFixture, RubyPerturbationRecord_BCLMeasure) {
   // Re-open database, check that old argument records are gone, check that de-serialized object ok
   openstudio::path tempDir2 = measuresPath / toPath(toString(createUUID()));
   {
-    ProjectDatabase database = getExistingDatabase("RubyPerturbationRecord_BCLMeasure");
+    ProjectDatabase database = getExistingDatabase("RubyMeasureRecord_BCLMeasure");
     ASSERT_EQ(1u,ProblemRecord::getProblemRecords(database).size());
-    EXPECT_EQ(1u,DiscreteVariableRecord::getDiscreteVariableRecords(database).size());
-    EXPECT_EQ(1u,RubyPerturbationRecord::getRubyPerturbationRecords(database).size());
+    EXPECT_EQ(1u,MeasureGroupRecord::getMeasureGroupRecords(database).size());
+    EXPECT_EQ(1u,RubyMeasureRecord::getRubyMeasureRecords(database).size());
     EXPECT_EQ(1u,FileReferenceRecord::getFileReferenceRecords(database).size());
     EXPECT_EQ(2u,OSArgumentRecord::getOSArgumentRecords(database).size());
 
     Problem problemCopy = ProblemRecord::getProblemRecords(database)[0].problem();
     InputVariableVector vars = problemCopy.variables();
     ASSERT_FALSE(vars.empty());
-    ASSERT_TRUE(vars[0].optionalCast<DiscreteVariable>());
-    DiscretePerturbationVector dps = vars[0].cast<DiscreteVariable>().perturbations(false);
+    ASSERT_TRUE(vars[0].optionalCast<MeasureGroup>());
+    MeasureVector dps = vars[0].cast<MeasureGroup>().measures(false);
     ASSERT_FALSE(dps.empty());
-    ASSERT_TRUE(dps[0].optionalCast<RubyPerturbation>());
-    RubyPerturbation rp = dps[0].cast<RubyPerturbation>();
+    ASSERT_TRUE(dps[0].optionalCast<RubyMeasure>());
+    RubyMeasure rp = dps[0].cast<RubyMeasure>();
     EXPECT_TRUE(rp.usesBCLMeasure());
     EXPECT_TRUE(rp.measure());
     EXPECT_EQ(tempDir1,rp.measureDirectory());
@@ -309,21 +309,21 @@ TEST_F(ProjectFixture, RubyPerturbationRecord_BCLMeasure) {
 
   // Re-open database, check that old measure and all argument records are gone
   {
-    ProjectDatabase database = getExistingDatabase("RubyPerturbationRecord_BCLMeasure");
+    ProjectDatabase database = getExistingDatabase("RubyMeasureRecord_BCLMeasure");
     ASSERT_EQ(1u,ProblemRecord::getProblemRecords(database).size());
-    EXPECT_EQ(1u,DiscreteVariableRecord::getDiscreteVariableRecords(database).size());
-    EXPECT_EQ(1u,RubyPerturbationRecord::getRubyPerturbationRecords(database).size());
+    EXPECT_EQ(1u,MeasureGroupRecord::getMeasureGroupRecords(database).size());
+    EXPECT_EQ(1u,RubyMeasureRecord::getRubyMeasureRecords(database).size());
     EXPECT_EQ(1u,FileReferenceRecord::getFileReferenceRecords(database).size());
     EXPECT_EQ(0u,OSArgumentRecord::getOSArgumentRecords(database).size());
 
     Problem problemCopy = ProblemRecord::getProblemRecords(database)[0].problem();
     InputVariableVector vars = problemCopy.variables();
     ASSERT_FALSE(vars.empty());
-    ASSERT_TRUE(vars[0].optionalCast<DiscreteVariable>());
-    DiscretePerturbationVector dps = vars[0].cast<DiscreteVariable>().perturbations(false);
+    ASSERT_TRUE(vars[0].optionalCast<MeasureGroup>());
+    MeasureVector dps = vars[0].cast<MeasureGroup>().measures(false);
     ASSERT_FALSE(dps.empty());
-    ASSERT_TRUE(dps[0].optionalCast<RubyPerturbation>());
-    RubyPerturbation rp = dps[0].cast<RubyPerturbation>();
+    ASSERT_TRUE(dps[0].optionalCast<RubyMeasure>());
+    RubyMeasure rp = dps[0].cast<RubyMeasure>();
     EXPECT_TRUE(rp.usesBCLMeasure());
     EXPECT_TRUE(rp.measure());
     EXPECT_EQ(tempDir2,rp.measureDirectory());

@@ -26,7 +26,7 @@
 #include <project/TagRecord.hpp>
 #include <project/AnalysisRecord.hpp>
 #include <project/DataPointRecord.hpp>
-#include <project/DiscretePerturbationRecord.hpp>
+#include <project/MeasureRecord.hpp>
 #include <project/AlgorithmRecord.hpp>
 
 #include <utilities/data/Attribute.hpp>
@@ -124,8 +124,8 @@ namespace detail {
       else if (parentDatabaseTableName == AnalysisRecord::databaseTableName()) {
         result = AnalysisRecord::getAnalysisRecord(*m_parentRecordId,database);
       }
-      else if (parentDatabaseTableName == DiscretePerturbationRecord::databaseTableName()) {
-        result = DiscretePerturbationRecord::getDiscretePerturbationRecord(*m_parentRecordId,database);
+      else if (parentDatabaseTableName == MeasureRecord::databaseTableName()) {
+        result = MeasureRecord::getMeasureRecord(*m_parentRecordId,database);
       }
       else if (parentDatabaseTableName == AlgorithmRecord::databaseTableName()) {
         result = AlgorithmRecord::getAlgorithmRecord(*m_parentRecordId,database);

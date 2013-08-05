@@ -93,8 +93,6 @@ class PROJECT_API DiscreteVariableRecord : public InputVariableRecord {
   //@}
  protected:
   /// @cond
-  typedef detail::DiscreteVariableRecord_Impl ImplType;
-
   explicit DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl);
 
   friend class detail::DiscreteVariableRecord_Impl;

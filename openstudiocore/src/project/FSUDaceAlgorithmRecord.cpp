@@ -93,10 +93,7 @@ namespace detail {
   }
 
   analysis::FSUDaceAlgorithm FSUDaceAlgorithmRecord_Impl::fsudaceAlgorithm() const {
-    analysis::FSUDaceAlgorithmOptions opts(m_algorithmType, options());
-    if (m_trialType) {
-      opts.setTrialType(*m_trialType);
-    }
+    analysis::FSUDaceAlgorithmOptions opts(m_algorithmType, m_trialType, options());
     OptionalFileReference restartFile, outFile;
     OptionalFileReferenceRecord ofr = restartFileReferenceRecord();
     if (ofr) {
