@@ -160,6 +160,7 @@ MODELOBJECT_TEMPLATES(ScheduleRule);
 MODELOBJECT_TEMPLATES(ScheduleRuleset);
 MODELOBJECT_TEMPLATES(OutputVariable);
 MODELOBJECT_TEMPLATES(GenericModelObject);
+MODELOBJECT_TEMPLATES(ModelObjectList);
 
 SWIG_MODELOBJECT(ParentObject);
 SWIG_MODELOBJECT(ResourceObject);
@@ -178,5 +179,6 @@ SWIG_MODELOBJECT(ScheduleRule);
 SWIG_MODELOBJECT(ScheduleRuleset);
 SWIG_MODELOBJECT(OutputVariable);
 SWIG_MODELOBJECT(GenericModelObject); 
+SWIG_MODELOBJECT(ModelObjectList);
 
 #endif //MODEL_CORE_I 

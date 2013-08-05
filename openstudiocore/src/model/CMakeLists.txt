@@ -26,6 +26,9 @@ SET( ${target_name}_src
   Relationship.cpp
   ScheduleTypeRegistry.hpp
   ScheduleTypeRegistry.cpp
+  ModelObjectList.hpp
+  ModelObjectList_Impl.hpp
+  ModelObjectList.cpp
   
   ConcreteModelObjects.hpp
   AirGap.hpp
@@ -768,6 +771,7 @@ SET( ${target_name}_moc
   ComponentWatcher_Impl.hpp
   ModelObject_Impl.hpp
   GenericModelObject_Impl.hpp
+  ModelObjectList_Impl.hpp
   
   AirGap_Impl.hpp
   AirLoopHVAC_Impl.hpp
