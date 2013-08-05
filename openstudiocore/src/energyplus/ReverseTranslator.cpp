@@ -289,6 +289,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     {
       break; // no-op
     }
+  case openstudio::IddObjectType::AirTerminal_SingleDuct_ConstantVolume_Reheat :
+    {
+      modelObject = translateAirTerminalSingleDuctConstantVolumeReheat(workspaceObject );
+      break;
+    }
   case openstudio::IddObjectType::AirTerminal_SingleDuct_Uncontrolled :
     {
       //modelObject = translateAirTerminalSingleDuctUncontrolled(workspaceObject );
