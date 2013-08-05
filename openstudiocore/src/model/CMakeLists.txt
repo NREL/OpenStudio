@@ -1,10 +1,6 @@
 SET( target_name openstudio_model )
 
 SET( ${target_name}_src 
-  
- EvaporativeFluidCoolerSingleSpeed.hpp
- EvaporativeFluidCoolerSingleSpeed_Impl.hpp
- EvaporativeFluidCoolerSingleSpeed.cpp
  
   mainpage.hpp 
   ModelAPI.hpp
@@ -273,6 +269,9 @@ SET( ${target_name}_src
   EvaporativeCoolerDirectResearchSpecial.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial.cpp
+  EvaporativeFluidCoolerSingleSpeed.hpp
+  EvaporativeFluidCoolerSingleSpeed_Impl.hpp
+  EvaporativeFluidCoolerSingleSpeed.cpp
   ExteriorLights.hpp
   ExteriorLights_Impl.hpp
   ExteriorLights.cpp
@@ -773,7 +772,6 @@ SET( ${target_name}_moc
   ComponentWatcher_Impl.hpp
   ModelObject_Impl.hpp
   GenericModelObject_Impl.hpp
-   EvaporativeFluidCoolerSingleSpeed_Impl.hpp
   
   AirGap_Impl.hpp
   AirLoopHVAC_Impl.hpp
@@ -854,6 +852,7 @@ SET( ${target_name}_moc
   ElectricEquipment_Impl.hpp
   ElectricEquipmentDefinition_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
+  EvaporativeFluidCoolerSingleSpeed_Impl.hpp
   ExteriorLights_Impl.hpp
   ExteriorLightsDefinition_Impl.hpp
   Facility_Impl.hpp
@@ -1084,6 +1083,7 @@ SET( ${target_name}_test_src
   test/DistrictCooling_GTest.cpp
   test/DistrictHeating_GTest.cpp
   test/ElectricEquipment_GTest.cpp
+  test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
   test/Facility_GTest.cpp
   test/FanVariableVolume_GTest.cpp
   test/FanOnOff_GTest.cpp
@@ -1175,7 +1175,6 @@ SET( ${target_name}_test_src
   test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp    
   test/ZoneHVACUnitHeater_GTest.cpp
-  test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
 )
 
 SET (${target_name}_test_depends

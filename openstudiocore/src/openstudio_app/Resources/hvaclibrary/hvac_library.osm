@@ -1,7 +1,7 @@
 
 OS:Version,
   {953ca1c0-7cef-4da7-a4f6-33deca4b57a1}, !- Handle
-  0.11.6;                                 !- Version Identifier
+  1.0.2;                                  !- Version Identifier
   
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -379,18 +379,6 @@ OS:Curve:Quadratic,
   0,                                      ! Minimum Value of x {BasedOnField A2}
   1;                                      ! Maximum Value of x {BasedOnField A2}
 
-OS:EvaporativeCooler:Direct:ResearchSpecial,
-  {8d3b17e0-88c9-4d17-9de4-0b9dd0481b36}, ! Handle
-  OS:EvaporativeCooler:Direct:ResearchSpecial 1, ! Name
-  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
-  1,                                      ! Cooler Effectiveness
-  0,                                      ! Recirculating Water Pump Power Consumption {W}
-  ,                                       ! Air Inlet Node Name
-  ,                                       ! Air Outlet Node Name
-  ,                                       ! Sensor Node Name
-  0,                                      ! Drift Loss Fraction
-  0;                                      ! Blowdown Concentration Ratio
-
 OS:EvaporativeFluidCooler:SingleSpeed,
   {39cff03a-8e34-4110-920a-2a36414f7291}, !- Handle
   Evaporative Fluid Cooler SingleSpeed,   !- Name
@@ -416,6 +404,18 @@ OS:EvaporativeFluidCooler:SingleSpeed,
   ConcentrationRatio,                     !- Blowdown Calculation Mode
   3,                                      !- Blowdown Concentration Ratio
   ;                                       !- Blowdown Makeup Water Usage Schedule Name
+
+OS:EvaporativeCooler:Direct:ResearchSpecial,
+  {8d3b17e0-88c9-4d17-9de4-0b9dd0481b36}, ! Handle
+  OS:EvaporativeCooler:Direct:ResearchSpecial 1, ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  1,                                      ! Cooler Effectiveness
+  0,                                      ! Recirculating Water Pump Power Consumption {W}
+  ,                                       ! Air Inlet Node Name
+  ,                                       ! Air Outlet Node Name
+  ,                                       ! Sensor Node Name
+  0,                                      ! Drift Loss Fraction
+  0;                                      ! Blowdown Concentration Ratio
 
 OS:AirTerminal:SingleDuct:Uncontrolled,
   {b883cca7-f436-48ce-ad23-7e8310c7a85d}, ! Handle
@@ -729,7 +729,7 @@ OS:Boiler:HotWater,
   ,                                       ! Boiler Water Inlet Node Name
   ,                                       ! Boiler Water Outlet Node Name
   99,                                     ! Water Outlet Upper Temperature Limit {C}
-  VariableFlow,                           ! Boiler Flow Mode
+  LeavingSetpointModulated,               ! Boiler Flow Mode
   0,                                      ! Parasitic Electric Load {W}
   1;                                      ! Sizing Factor
 

@@ -438,8 +438,4 @@
     <rule IddField="Exhaust Air Inlet Node" Access="HIDDEN"/>
     <rule IddField="Exhaust Air Outlet Node" Access="HIDDEN"/>
   </POLICY>
-  <POLICY IddObjectType="OS_EvaporativeFluidCooler_SingleSpeed">
-    <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
-    <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
-  </POLICY>
 </ROOT>
