@@ -75,6 +75,10 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateAirTerminalSingleDuctUncontrolled(const WorkspaceObject& workspaceObject);
 
+  boost::optional<model::ModelObject> translateAirTerminalSingleDuctConstantVolumeReheat(const WorkspaceObject& workspaceObject);
+
+  boost::optional<model::ModelObject> translateAirTerminalSingleDuctVAVNoReheat(const WorkspaceObject& workspaceObject);
+
   boost::optional<model::ModelObject> translateAirTerminalSingleDuctVAVReheat(const WorkspaceObject& workspaceObject);
 
   boost::optional<model::ModelObject> translateBuilding(const WorkspaceObject & workspaceObject);
@@ -134,6 +138,8 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateElectricEquipment(const WorkspaceObject & workspaceObject);
   
   boost::optional<model::ModelObject> translateEvaporativeCoolerDirectResearchSpecial(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateEvaporativeFluidCoolerSingleSpeed(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateExteriorLights(const WorkspaceObject& workspaceObject);
 

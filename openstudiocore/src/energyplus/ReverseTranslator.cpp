@@ -294,6 +294,16 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       //modelObject = translateAirTerminalSingleDuctUncontrolled(workspaceObject );
       break;
     }
+  case openstudio::IddObjectType::AirTerminal_SingleDuct_ConstantVolume_Reheat :
+    {
+      modelObject = translateAirTerminalSingleDuctConstantVolumeReheat(workspaceObject );
+      break;
+    }
+  case openstudio::IddObjectType::AirTerminal_SingleDuct_VAV_NoReheat :
+    {
+      modelObject = translateAirTerminalSingleDuctVAVNoReheat(workspaceObject );
+      break;
+    }
   case openstudio::IddObjectType::AirTerminal_SingleDuct_VAV_Reheat :
     {
       //modelObject = translateAirTerminalSingleDuctVAVReheat(workspaceObject );
@@ -464,6 +474,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
   case openstudio::IddObjectType::EvaporativeCooler_Direct_ResearchSpecial :
     {
       //modelObject = translateEvaporativeCoolerDirectResearchSpecial(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::EvaporativeFluidCooler_SingleSpeed :
+    {
+      modelObject = translateEvaporativeFluidCoolerSingleSpeed(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::Fan_ConstantVolume :

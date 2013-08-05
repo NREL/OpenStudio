@@ -347,6 +347,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirLoopHVAC(airLoopHVAC);
       break;
     }
+  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_Reheat :
+    {
+      model::AirTerminalSingleDuctConstantVolumeReheat airTerminal = modelObject.cast<AirTerminalSingleDuctConstantVolumeReheat>();
+      retVal = translateAirTerminalSingleDuctConstantVolumeReheat(airTerminal);
+      break;
+    }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ParallelPIU_Reheat :
     {
       model::AirTerminalSingleDuctParallelPIUReheat airTerminal = modelObject.cast<AirTerminalSingleDuctParallelPIUReheat>();
@@ -754,6 +760,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateElectricEquipment(equipment);
       break;
     }
+  case openstudio::IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed :
+    {
+      model::EvaporativeFluidCoolerSingleSpeed evap = modelObject.cast<EvaporativeFluidCoolerSingleSpeed>();
+      retVal = translateEvaporativeFluidCoolerSingleSpeed(evap);
+      break;
+    }
+     
   case openstudio::IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial :
     {
       model::EvaporativeCoolerDirectResearchSpecial evap = modelObject.cast<EvaporativeCoolerDirectResearchSpecial>();
@@ -1349,6 +1362,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneHVACUnitHeater(mo);
       break;
     }
+	
+  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_VAV_NoReheat :
+    {
+      model::AirTerminalSingleDuctVAVNoReheat mo = modelObject.cast<AirTerminalSingleDuctVAVNoReheat>();
+      retVal = translateAirTerminalSingleDuctVAVNoReheat(mo);
+      break;
+    }
   //If no case statement log a warning
   default:
     {
@@ -1542,7 +1562,8 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ThermostatSetpoint_DualSetpoint);
   result.push_back(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water);
   result.push_back(IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem);
-
+  
+  
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);
 

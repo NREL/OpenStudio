@@ -107,6 +107,11 @@
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_EvaporativeFluidCooler_SingleSpeed">
+    <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Inlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_SetpointManager_SingleZone_Reheat">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>
@@ -311,6 +316,12 @@
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_SingleDuct_ConstantVolume_Reheat">
+    <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
+    <rule IddField="Reheat Coil Name" Access="HIDDEN"/>
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_AirTerminal_SingleDuct_Uncontrolled">
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
     <rule IddField="Inlet Air Node Name" Access="HIDDEN"/>
@@ -330,6 +341,12 @@
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Reheat Coil Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Design Specification Outdoor Air Object Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_SingleDuct_VAV_NoReheat">
+    <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="Design Specification Outdoor Air Object Name" Access="HIDDEN"/>
   </POLICY>

@@ -1,6 +1,11 @@
 SET( target_name openstudio_model )
 
 SET( ${target_name}_src 
+  
+ EvaporativeFluidCoolerSingleSpeed.hpp
+ EvaporativeFluidCoolerSingleSpeed_Impl.hpp
+ EvaporativeFluidCoolerSingleSpeed.cpp
+ 
   mainpage.hpp 
   ModelAPI.hpp
   Model.hpp
@@ -46,6 +51,9 @@ SET( ${target_name}_src
   AirLoopHVACZoneSplitter.hpp
   AirLoopHVACZoneSplitter_Impl.hpp
   AirLoopHVACZoneSplitter.cpp
+  AirTerminalSingleDuctConstantVolumeReheat.hpp
+  AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeReheat.cpp
   AirTerminalSingleDuctParallelPIUReheat.hpp
   AirTerminalSingleDuctParallelPIUReheat_Impl.hpp
   AirTerminalSingleDuctParallelPIUReheat.cpp
@@ -58,6 +66,9 @@ SET( ${target_name}_src
   AirToAirComponent.hpp
   AirToAirComponent_Impl.hpp
   AirToAirComponent.cpp
+  AirTerminalSingleDuctVAVNoReheat.hpp
+  AirTerminalSingleDuctVAVNoReheat_Impl.hpp
+  AirTerminalSingleDuctVAVNoReheat.cpp
   AirWallMaterial.hpp
   AirWallMaterial_Impl.hpp
   AirWallMaterial.cpp
@@ -768,6 +779,7 @@ SET( ${target_name}_moc
   ComponentWatcher_Impl.hpp
   ModelObject_Impl.hpp
   GenericModelObject_Impl.hpp
+   EvaporativeFluidCoolerSingleSpeed_Impl.hpp
   
   AirGap_Impl.hpp
   AirLoopHVAC_Impl.hpp
@@ -775,10 +787,12 @@ SET( ${target_name}_moc
   AirLoopHVACOutdoorAirSystem_Impl.hpp
   AirLoopHVACZoneMixer_Impl.hpp
   AirLoopHVACZoneSplitter_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp
   AirTerminalSingleDuctParallelPIUReheat_Impl.hpp
   AirTerminalSingleDuctUncontrolled_Impl.hpp
   AirTerminalSingleDuctVAVReheat_Impl.hpp
   AirToAirComponent_Impl.hpp
+  AirTerminalSingleDuctVAVNoReheat_Impl.hpp
   AirWallMaterial_Impl.hpp
   AvailabilityManagerAssignmentList_Impl.hpp
   AvailabilityManagerNightCycle_Impl.hpp
@@ -1039,7 +1053,9 @@ SET( ${target_name}_test_src
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp
   test/AirLoopHVAC_GTest.cpp
+  test/AirTerminalSingleDuctConstantVolumeReheat_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
+  test/AirTerminalSingleDuctVAVNoReheat_Gtest.cpp
   test/Alpha1_GTest.cpp
   test/AvailabilityManagerAssignmentList_GTest.cpp
   test/AvailabilityManagerNightCycle_GTest.cpp
@@ -1078,6 +1094,7 @@ SET( ${target_name}_test_src
   test/DistrictCooling_GTest.cpp
   test/DistrictHeating_GTest.cpp
   test/ElectricEquipment_GTest.cpp
+  test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
   test/Facility_GTest.cpp
   test/FanVariableVolume_GTest.cpp
   test/FanOnOff_GTest.cpp

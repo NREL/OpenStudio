@@ -185,16 +185,18 @@ namespace detail {
 if (_className::iddObjectType() == typeToCreate) { \
   result = boost::shared_ptr<_className##_Impl>(new _className##_Impl(object,this,keepHandle)); \
 }
-
+	REGISTER_CONSTRUCTOR(EvaporativeFluidCoolerSingleSpeed);
     REGISTER_CONSTRUCTOR(AirGap);
     REGISTER_CONSTRUCTOR(AirLoopHVAC);
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatPumpAirToAir);
     REGISTER_CONSTRUCTOR(AirLoopHVACOutdoorAirSystem);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneMixer);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneSplitter);
+    REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctParallelPIUReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctUncontrolled);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVReheat);
+	REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVNoReheat);
     REGISTER_CONSTRUCTOR(AirWallMaterial);
     REGISTER_CONSTRUCTOR(AvailabilityManagerAssignmentList);
     REGISTER_CONSTRUCTOR(AvailabilityManagerNightCycle);
@@ -428,16 +430,18 @@ if (_className::iddObjectType() == typeToCreate) { \
         *originalObjectImplPtr,this,keepHandle)); \
   } \
 }
-
+    REGISTER_COPYCONSTRUCTORS(EvaporativeFluidCoolerSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(AirGap);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVAC);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatPumpAirToAir);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACOutdoorAirSystem);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneMixer);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneSplitter);
+    REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctParallelPIUReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctUncontrolled);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVReheat);
+	REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVNoReheat);
     REGISTER_COPYCONSTRUCTORS(AirWallMaterial);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerAssignmentList);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerNightCycle);

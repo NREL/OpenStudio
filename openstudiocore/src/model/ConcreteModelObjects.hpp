@@ -20,15 +20,20 @@
 #ifndef MODEL_CONCRETEMODELOBJECTS_HPP
 #define MODEL_CONCRETEMODELOBJECTS_HPP
 
+ #include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
+ #include <model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp>
+
 #include <model/AirGap.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirLoopHVACZoneMixer.hpp>
 #include <model/AirLoopHVACZoneSplitter.hpp>
+#include <model/AirTerminalSingleDuctConstantVolumeReheat.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
 #include <model/AirTerminalSingleDuctUncontrolled.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat.hpp>
+#include <model/AirTerminalSingleDuctVAVNoReheat.hpp>
 #include <model/AirWallMaterial.hpp>
 #include <model/AvailabilityManagerAssignmentList.hpp>
 #include <model/AvailabilityManagerNightCycle.hpp>
@@ -237,9 +242,11 @@
 #include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
 #include <model/AirLoopHVACZoneMixer_Impl.hpp>
 #include <model/AirLoopHVACZoneSplitter_Impl.hpp>
+#include <model/AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
 #include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
+#include <model/AirTerminalSingleDuctVAVNoReheat_Impl.hpp>
 #include <model/AirWallMaterial_Impl.hpp>
 #include <model/AvailabilityManagerAssignmentList_Impl.hpp>
 #include <model/AvailabilityManagerNightCycle_Impl.hpp>
