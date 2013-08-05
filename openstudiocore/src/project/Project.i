@@ -31,8 +31,6 @@
   #include <project/ProjectDatabaseRecord_Impl.hpp>
   #include <project/ConcreteObjectRecords.hpp>
     
-  #include <ruleset/ConcreteRulesetObjects.hpp>
-  
   #include <analysis/ConcreteAnalysisObjects.hpp>
   
   #include <model/ModelObject.hpp>
@@ -214,17 +212,16 @@ OBJECTRECORD_WRAP(WorkflowRecord);
 
 OBJECTRECORD_WRAP(OSArgumentRecord);
 
-OBJECTRECORD_WRAP(DiscretePerturbationRecord);
-OBJECTRECORD_WRAP(NullPerturbationRecord);
-OBJECTRECORD_WRAP(ModelRulesetPerturbationRecord);
-OBJECTRECORD_WRAP(RubyPerturbationRecord);
+OBJECTRECORD_WRAP(MeasureRecord);
+OBJECTRECORD_WRAP(NullMeasureRecord);
+OBJECTRECORD_WRAP(RubyMeasureRecord);
 OBJECTRECORD_WRAP(FunctionRecord);
 OBJECTRECORD_WRAP(LinearFunctionRecord);
 OBJECTRECORD_WRAP(VariableRecord);
 OBJECTRECORD_WRAP(InputVariableRecord);
 OBJECTRECORD_WRAP(DiscreteVariableRecord);
+OBJECTRECORD_WRAP(MeasureGroupRecord);
 OBJECTRECORD_WRAP(ContinuousVariableRecord);
-OBJECTRECORD_WRAP(ModelRulesetContinuousVariableRecord);
 OBJECTRECORD_WRAP(RubyContinuousVariableRecord);
 OBJECTRECORD_WRAP(OutputVariableRecord);
 OBJECTRECORD_WRAP(OutputAttributeVariableRecord);

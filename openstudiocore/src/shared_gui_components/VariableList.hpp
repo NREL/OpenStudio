@@ -24,8 +24,8 @@
 #include "OSListView.hpp"
 #include "BaseApp.hpp"
 #include <analysis/DiscreteVariable.hpp>
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/RubyPerturbation.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure.hpp>
 #include <utilities/bcl/BCLMeasure.hpp>
 #include <QObject>
 #include <QPointer>
@@ -208,7 +208,7 @@ class MeasureListController : public OSListController
 
   int count();
 
-  void removeItemForPerturbation(const analysis::DiscretePerturbation & pert);
+  void removeItemForMeasure(const analysis::Measure & measure);
 
   public slots:
 
@@ -219,7 +219,7 @@ class MeasureListController : public OSListController
 
   BaseApp *m_app;
 
-  std::vector<analysis::RubyPerturbation> perturbations() const;
+  std::vector<analysis::RubyMeasure> measures() const;
 
   QPointer<VariableItem> m_variableItem;
 };
@@ -230,7 +230,7 @@ class MeasureItem : public OSListItem
 
   public:
 
-  MeasureItem(const analysis::RubyPerturbation & pert, BaseApp *t_app);
+  MeasureItem(const analysis::RubyMeasure & measure, BaseApp *t_app);
 
   QString name() const;
 
@@ -246,7 +246,7 @@ class MeasureItem : public OSListItem
 
   void setArgument(const ruleset::OSArgument& argument);
 
-  analysis::RubyPerturbation perturbation() const;
+  analysis::RubyMeasure measure() const;
 
   bool isFixedMeasure() const;
 
@@ -270,7 +270,7 @@ class MeasureItem : public OSListItem
 
   private:
   BaseApp *m_app;
-  analysis::RubyPerturbation m_pert;
+  analysis::RubyMeasure m_measure;
 };
 
 class MeasureItemDelegate : public OSItemDelegate

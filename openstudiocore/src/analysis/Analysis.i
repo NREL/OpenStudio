@@ -31,7 +31,6 @@
   #include <runmanager/lib/Workflow.hpp>
   #include <runmanager/lib/WorkItem.hpp>
 
-  #include <ruleset/ConcreteRulesetObjects.hpp>
   #include <ruleset/OSArgument.hpp>
   
   #include <utilities/core/PathWatcher.hpp>

@@ -38,7 +38,7 @@ EditController::EditController()
 {
   editView = new OSViewSwitcher();
   m_editNullView = new EditNullView();
-  editRubyPerturbationView = new EditRubyPerturbationView();
+  editRubyMeasureView = new EditRubyMeasureView();
 
   reset();
 }
@@ -47,36 +47,36 @@ EditController::~EditController()
 {
   if( editView ) { delete editView; }
   if( m_editNullView ) { delete m_editNullView; }
-  if( editRubyPerturbationView ) { delete editRubyPerturbationView; }
+  if( editRubyMeasureView ) { delete editRubyMeasureView; }
 }
 
 void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseApp *t_app)
 {
   m_measureItem = measureItem;
 
-  editRubyPerturbationView->clear();
+  editRubyMeasureView->clear();
 
-  editView->setView(editRubyPerturbationView);
+  editView->setView(editRubyMeasureView);
 
-  // Ruby Perturbation Name
+  // Ruby Measure Name
 
-  editRubyPerturbationView->nameLineEdit->setText(m_measureItem->name());
+  editRubyMeasureView->nameLineEdit->setText(m_measureItem->name());
 
-  bool bingo = connect(editRubyPerturbationView->nameLineEdit,SIGNAL(textEdited(const QString &)),m_measureItem.data(),SLOT(setName(const QString &)));
+  bool bingo = connect(editRubyMeasureView->nameLineEdit,SIGNAL(textEdited(const QString &)),m_measureItem.data(),SLOT(setName(const QString &)));
 
   Q_ASSERT(bingo);
 
   // Measure Description
 
-  editRubyPerturbationView->descriptionTextEdit->setText(m_measureItem->description());
+  editRubyMeasureView->descriptionTextEdit->setText(m_measureItem->description());
 
-  bingo = connect(editRubyPerturbationView->descriptionTextEdit,SIGNAL(textChanged()),this,SLOT(updateDescription()));
+  bingo = connect(editRubyMeasureView->descriptionTextEdit,SIGNAL(textChanged()),this,SLOT(updateDescription()));
 
   Q_ASSERT(bingo);
 
   // Measure Modeler Description
 
-  editRubyPerturbationView->modelerDescriptionLabel->setText(m_measureItem->modelerDescription());
+  editRubyMeasureView->modelerDescriptionLabel->setText(m_measureItem->modelerDescription());
 
   // Inputs
 
@@ -90,7 +90,7 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
 
     m_inputControllers.push_back(inputController);
 
-    editRubyPerturbationView->addInputView(inputController->inputView);
+    editRubyMeasureView->addInputView(inputController->inputView);
   }
 }
 
@@ -101,7 +101,7 @@ measuretab::MeasureItem * EditController::measureItem() const
 
 void EditController::updateDescription()
 {
-  m_measureItem->setDescription(editRubyPerturbationView->descriptionTextEdit->toPlainText());
+  m_measureItem->setDescription(editRubyMeasureView->descriptionTextEdit->toPlainText());
 }
 
 void EditController::reset()
@@ -112,9 +112,9 @@ void EditController::reset()
 
   m_measureItem = NULL;
 
-  editRubyPerturbationView->nameLineEdit->disconnect();
+  editRubyMeasureView->nameLineEdit->disconnect();
 
-  editRubyPerturbationView->descriptionTextEdit->disconnect();
+  editRubyMeasureView->descriptionTextEdit->disconnect();
 }
 
 class EditMeasureMessageBox : public QMessageBox

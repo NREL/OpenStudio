@@ -112,10 +112,10 @@ TEST_F(AnalysisFixture, RubyMeasure_FreeStandingUserScript) {
 
   // set to different script and verify that arguments cleared
   scriptPath = toPath("myOtherUserScript.rb");
-  measure.setMeasureScript(scriptPath,
-                                     FileReferenceType::OSM,
-                                     FileReferenceType::OSM,
-                                     true);
+  measure.setPerturbationScript(scriptPath,
+                                FileReferenceType::OSM,
+                                FileReferenceType::OSM,
+                                true);
   EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),measure.inputFileType());
   EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),measure.outputFileType());
   scriptReference = measure.perturbationScript();

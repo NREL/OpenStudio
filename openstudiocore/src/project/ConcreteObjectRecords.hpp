@@ -38,12 +38,10 @@
 #include <project/DataPointValueRecord.hpp>
 #include <project/DDACEAlgorithmRecord.hpp>
 #include <project/DesignOfExperimentsRecord.hpp>
-#include <project/DiscreteVariableRecord.hpp>
 #include <project/FSUDaceAlgorithmRecord.hpp>
 #include <project/LinearFunctionRecord.hpp>
-#include <project/ModelRulesetContinuousVariableRecord.hpp>
-#include <project/ModelRulesetPerturbationRecord.hpp>
-#include <project/NullPerturbationRecord.hpp>
+#include <project/MeasureGroupRecord.hpp>
+#include <project/NullMeasureRecord.hpp>
 #include <project/OptimizationDataPointRecord.hpp>
 #include <project/OptimizationProblemRecord.hpp>
 #include <project/OutputAttributeVariableRecord.hpp>
@@ -51,7 +49,7 @@
 #include <project/ProblemRecord.hpp>
 #include <project/PSUADEDaceAlgorithmRecord.hpp>
 #include <project/RubyContinuousVariableRecord.hpp>
-#include <project/RubyPerturbationRecord.hpp>
+#include <project/RubyMeasureRecord.hpp>
 #include <project/SamplingAlgorithmRecord.hpp>
 #include <project/SequentialSearchRecord.hpp>
 
@@ -73,12 +71,10 @@
 #include <project/DataPointValueRecord_Impl.hpp>
 #include <project/DDACEAlgorithmRecord_Impl.hpp>
 #include <project/DesignOfExperimentsRecord_Impl.hpp>
-#include <project/DiscreteVariableRecord_Impl.hpp>
 #include <project/FSUDaceAlgorithmRecord_Impl.hpp>
 #include <project/LinearFunctionRecord_Impl.hpp>
-#include <project/ModelRulesetContinuousVariableRecord_Impl.hpp>
-#include <project/ModelRulesetPerturbationRecord_Impl.hpp>
-#include <project/NullPerturbationRecord_Impl.hpp>
+#include <project/MeasureGroupRecord_Impl.hpp>
+#include <project/NullMeasureRecord_Impl.hpp>
 #include <project/OptimizationDataPointRecord_Impl.hpp>
 #include <project/OptimizationProblemRecord_Impl.hpp>
 #include <project/OutputAttributeVariableRecord_Impl.hpp>
@@ -86,7 +82,7 @@
 #include <project/ProblemRecord_Impl.hpp>
 #include <project/PSUADEDaceAlgorithmRecord_Impl.hpp>
 #include <project/RubyContinuousVariableRecord_Impl.hpp>
-#include <project/RubyPerturbationRecord_Impl.hpp>
+#include <project/RubyMeasureRecord_Impl.hpp>
 #include <project/SamplingAlgorithmRecord_Impl.hpp>
 #include <project/SequentialSearchRecord_Impl.hpp>
 
