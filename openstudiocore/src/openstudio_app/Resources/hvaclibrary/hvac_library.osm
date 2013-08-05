@@ -1,8 +1,8 @@
 
 OS:Version,
-  {953ca1c0-7cef-4da7-a4f6-33deca4b57a1}, !- Handle
-  0.11.7;                                 !- Version Identifier
-  
+  {b964c059-0cee-400d-929e-c5d27ab423aa}, !- Handle
+  1.0.3;                                  !- Version Identifier
+
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
   Always On Discrete,                     !- Name
@@ -172,7 +172,7 @@ OS:SetpointManager:FollowOutdoorAirTemperature,
 
 OS:SetpointManager:OutdoorAirReset,
   {6150d904-49c8-4db7-a235-001a6bfccac0}, !- Handle
-  Setpoint Manager Outdoor Air Reset,   !- Name
+  Setpoint Manager Outdoor Air Reset,     !- Name
   Temperature,                            !- Control Variable
   22,                                     !- Setpoint at Outdoor Low Temperature {C}
   10,                                     !- Outdoor Low Temperature {C}
@@ -693,7 +693,7 @@ OS:Boiler:HotWater,
   ,                                       ! Fuel Type
   ,                                       ! Nominal Capacity {W}
   ,                                       ! Nominal Thermal Efficiency
-  LeavingBoiler,                                       ! Efficiency Curve Temperature Evaluation Variable
+  LeavingBoiler,                          ! Efficiency Curve Temperature Evaluation Variable
   {7a46b48b-f003-42e6-9865-b04b98d124aa}, ! Normalized Boiler Efficiency Curve Name
   ,                                       ! Design Water Outlet Temperature {C}
   ,                                       ! Design Water Flow Rate {m3/s}
@@ -703,7 +703,7 @@ OS:Boiler:HotWater,
   ,                                       ! Boiler Water Inlet Node Name
   ,                                       ! Boiler Water Outlet Node Name
   99,                                     ! Water Outlet Upper Temperature Limit {C}
-  VariableFlow,                           ! Boiler Flow Mode
+  LeavingSetpointModulated,               ! Boiler Flow Mode
   0,                                      ! Parasitic Electric Load {W}
   1;                                      ! Sizing Factor
 
@@ -720,8 +720,8 @@ OS:Curve:Biquadratic,
   1,                                      !- Maximum Value of x {BasedOnField A2}
   0,                                      !- Minimum Value of y {BasedOnField A3}
   1,                                      !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output
-  ,                                       !- Maximum Curve Output
+  ,                                       !- Minimum Curve Output {BasedOnField A4}
+  ,                                       !- Maximum Curve Output {BasedOnField A4}
   ,                                       !- Input Unit Type for X
   ,                                       !- Input Unit Type for Y
   ;                                       !- Output Unit Type
@@ -782,7 +782,7 @@ OS:Pump:VariableSpeed,
 
 OS:Pump:ConstantSpeed,
   {179abade-266d-45a5-a002-0bfe1caeeb23}, !- Handle
-  Pump Constant Speed,                  !- Name
+  Pump Constant Speed,                    !- Name
   ,                                       !- Inlet Node Name
   ,                                       !- Outlet Node Name
   autosize,                               !- Rated Flow Rate {m3/s}
@@ -793,8 +793,8 @@ OS:Pump:ConstantSpeed,
   Intermittent,                           !- Pump Control Type
   ,                                       !- Pump Flow Rate Schedule
   ,                                       !- Pump Curve
-  ,                                       !- Impeller Diameter
-  ,                                       !- Rotational Speed
+  ,                                       !- Impeller Diameter {m}
+  ,                                       !- Rotational Speed {rev/min}
   ,                                       !- Zone
   ;                                       !- Skin Loss Radiative Fraction
 
@@ -2084,105 +2084,6 @@ OS:HeatExchanger:AirToAir:SensibleAndLatent,
   ,                                       !- Rate of Defrost Time Fraction Increase {1/K}
   Yes;                                    !- Economizer Lockout
 
-OS:YearDescription,
-  {95802231-d019-442b-a12d-6897114084e1}, !- Handle
-  ,                                       !- Calendar Year
-  UseWeatherFile;                         !- Day of Week for Start Day
-
-OS:RadianceParameters,
-  {9d798bc1-385b-450b-b9c1-b459e12d847f}, !- Handle
-  1,                                      !- Accumulated Rays per Record
-  0,                                      !- Direct Threshold
-  1,                                      !- Direct Certainty
-  1,                                      !- Direct Jitter
-  1,                                      !- Direct Pretest
-  6,                                      !- Ambient Bounces VMX
-  2,                                      !- Ambient Bounces DMX
-  4050,                                   !- Ambient Divisions VMX
-  512,                                    !- Ambient Divisions DMX
-  256,                                    !- Ambient Supersamples
-  0.001,                                  !- Limit Weight VMX
-  0.001,                                  !- Limit Weight DMX
-  500,                                    !- Klems Sampling Density
-  146;                                    !- Sky Discretization Resolution
-
-OS:SimulationControl,
-  {165485be-bd56-4fda-b435-0df9fbff75ff}; !- Handle
-
-OS:Sizing:Parameters,
-  {e5fe6a70-fb6f-4a6e-945d-dbb0a8e0200e}, !- Handle
-  1.25,                                   !- Heating Sizing Factor
-  1.15;                                   !- Cooling Sizing Factor
-
-OS:ProgramControl,
-  {cf5992d7-956d-4172-96ae-c42ae2edf48c}; !- Handle
-
-OS:Timestep,
-  {1a3bc4a5-8432-493b-a77f-dbdc3f208181}, !- Handle
-  6;                                      !- Number of Timesteps per Hour
-
-OS:OutputControl:ReportingTolerances,
-  {c68e6d1d-bd1f-41f6-86be-96bd75724f60}; !- Handle
-
-OS:ConvergenceLimits,
-  {074223f3-1603-4025-868f-baf455e2ef03}; !- Handle
-
-OS:ShadowCalculation,
-  {7c793b9b-5c18-4926-bc08-d230a9aa1c55}, !- Handle
-  7,                                      !- Calculation Frequency
-  15000;                                  !- Maximum Figures in Shadow Overlap Calculations
-
-OS:SurfaceConvectionAlgorithm:Inside,
-  {0a71c0af-3aa7-4ddc-b63e-3488153a779f}, !- Handle
-  TARP;                                   !- Algorithm
-
-OS:SurfaceConvectionAlgorithm:Outside,
-  {204441d7-fbd3-40c2-94d4-dee660be8e43}, !- Handle
-  DOE-2;                                  !- Algorithm
-
-OS:HeatBalanceAlgorithm,
-  {a6c27ef6-27d4-4e4c-9561-db317fa2d68e}, !- Handle
-  ConductionTransferFunction,             !- Algorithm
-  200;                                    !- Surface Temperature Upper Limit {F}
-
-OS:ZoneAirHeatBalanceAlgorithm,
-  {90a8ea29-43b6-4802-94e2-3afd0b9890f2}, !- Handle
-  AnalyticalSolution;                     !- Algorithm
-
-OS:ZoneAirContaminantBalance,
-  {78883b52-003a-48be-b22c-b14b45a87531}; !- Handle
-
-OS:ZoneCapacitanceMultiplier:ResearchSpecial,
-  {1cf1e3fc-dd48-4197-a5bf-ce960e3327a5}, !- Handle
-  ,                                       !- Temperature Capacity Multiplier
-  ,                                       !- Humidity Capacity Multiplier
-  ;                                       !- Carbon Dioxide Capacity Multiplier
-
-OS:RunPeriod,
-  {76b583bb-48e6-47e8-9a07-4d94523b1e16}, !- Handle
-  Run Period 1,                           !- Name
-  1,                                      !- Begin Month
-  1,                                      !- Begin Day of Month
-  12,                                     !- End Month
-  31,                                     !- End Day of Month
-  ,                                       !- Use Weather File Holidays and Special Days
-  ,                                       !- Use Weather File Daylight Saving Period
-  ,                                       !- Apply Weekend Holiday Rule
-  ,                                       !- Use Weather File Rain Indicators
-  ,                                       !- Use Weather File Snow Indicators
-  ;                                       !- Number of Times Runperiod to be Repeated
-
-OS:Building,
-  {7aec24f8-893b-485d-b5ba-69df92c8f674}, !- Handle
-  Building 1,                             !- Name
-  ,                                       !- Building Type
-  ,                                       !- North Axis {deg}
-  ,                                       !- Nominal Floor to Floor Height {m}
-  ,                                       !- Space Type Name
-  ,                                       !- Default Construction Set Name
-  ;                                       !- Default Schedule Set Name
-
-
 OS:Schedule:Ruleset,
   {6b99f6a1-f472-4bda-a5d9-f1d472590fe3}, !- Handle
   Radiant Cooling Low Water Temperature,          !- Name
@@ -2614,5 +2515,4 @@ OS:ZoneHVAC:LowTemperatureRadiant:Electric,
   MeanAirTemperature,                     !- Temperature Control Type
   2,                                      !- Heating Throttling Range {deltaC}
   {8c6afe4d-6a13-46a6-b02b-a0cc37d9f8c0}; !- Heating Setpoint Temperature Schedule Name
-
 
