@@ -171,8 +171,8 @@ SET( ${target_name}_src
   ReverseTranslator.cpp
   ReverseTranslator/ReverseTranslateAirLoopHVAC.cpp
   ReverseTranslator/ReverseTranslateAirLoopHVACOutdoorAirSystem.cpp
-  ReverseTranslator/ReverseTranslateAirTerminalSingleDuctUncontrolled.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctConstantVolumeReheat.cpp
+  ReverseTranslator/ReverseTranslateAirTerminalSingleDuctUncontrolled.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctVAVReheat.cpp
   ReverseTranslator/ReverseTranslateBuilding.cpp
   ReverseTranslator/ReverseTranslateBuildingSurfaceDetailed.cpp

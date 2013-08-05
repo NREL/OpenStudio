@@ -1,7 +1,7 @@
 
 OS:Version,
   {953ca1c0-7cef-4da7-a4f6-33deca4b57a1}, !- Handle
-  0.11.6;                                 !- Version Identifier
+  1.0.2;                                  !- Version Identifier
   
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -391,14 +391,6 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
   0,                                      ! Drift Loss Fraction
   0;                                      ! Blowdown Concentration Ratio
 
-OS:AirTerminal:SingleDuct:Uncontrolled,
-  {b883cca7-f436-48ce-ad23-7e8310c7a85d}, ! Handle
-  OS:AirTerminal:SingleDuct:Uncontrolled 1, ! Name
-  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
-  ,                                       ! Inlet Air Node Name
-  ,                                       ! Zone Supply Air Node Name
-  AutoSize;                               ! Maximum Air Flow Rate {m3/s}
-
 OS:AirTerminal:SingleDuct:ConstantVolume:Reheat,
   {36193791-ae10-4f59-90dc-2bc06cf598d2}, !- Handle
   AirTerminal CAV With Electric Reheat,   !- Name
@@ -477,6 +469,14 @@ OS:Coil:Heating:Water,
   ,                                       !- Rated Outlet Water Temperature {C}
   ,                                       !- Rated Outlet Air Temperature {C}
   ;                                       !- Rated Ratio for Air and Water Convection
+
+OS:AirTerminal:SingleDuct:Uncontrolled,
+  {b883cca7-f436-48ce-ad23-7e8310c7a85d}, ! Handle
+  OS:AirTerminal:SingleDuct:Uncontrolled 1, ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  ,                                       ! Inlet Air Node Name
+  ,                                       ! Zone Supply Air Node Name
+  AutoSize;                               ! Maximum Air Flow Rate {m3/s}
 
 OS:AirTerminal:SingleDuct:VAV:Reheat,
   {293eff65-3e25-4c91-97bc-a0d600b4e09b}, ! Handle
@@ -782,7 +782,7 @@ OS:Boiler:HotWater,
   ,                                       ! Boiler Water Inlet Node Name
   ,                                       ! Boiler Water Outlet Node Name
   99,                                     ! Water Outlet Upper Temperature Limit {C}
-  VariableFlow,                           ! Boiler Flow Mode
+  LeavingSetpointModulated,               ! Boiler Flow Mode
   0,                                      ! Parasitic Electric Load {W}
   1;                                      ! Sizing Factor
 
