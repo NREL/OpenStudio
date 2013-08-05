@@ -27,7 +27,7 @@ for (var i = 0; i < angles.size(); ++i)
 {
   b.setNorthAxis(angles.get(i));
   variables.set(0, angles.get(i));
-  var uses = engine.fuelUses(model, variables, new openstudio.path("/usr/local/EnergyPlus-7-2-0/WeatherData/USA_CO_Golden-NREL.724666_TMY3.epw"));
+  var uses = engine.fuelUses(model, variables, new openstudio.path("/usr/local/EnergyPlus-8-0-0/WeatherData/USA_CO_Golden-NREL.724666_TMY3.epw"));
   console.log("confidence: " + uses.confidence() + " for: " + variables.get(0) + " Electricity: " + uses.fuelUse(new openstudio.FuelType("Electricity")) + " Gas: " + uses.fuelUse(new openstudio.FuelType("Gas")));
 }
 
@@ -42,6 +42,7 @@ while(true)
   {
     variables.set(0, angles.get(i));
     uses = engine.fuelUses(variables);
-  console.log("confidence: " + uses.confidence() + " for: " + variables.get(0) + " Electricity: " + uses.fuelUse(new openstudio.FuelType("Electricity")) + " Gas: " + uses.fuelUse(new openstudio.FuelType("Gas")));  }
+  console.log("confidence: " + uses.confidence() + " for: " + variables.get(0) + " Electricity: " + uses.fuelUse(new openstudio.FuelType("Electricity")) + " Gas: " + uses.fuelUse(new openstudio.FuelType("Gas")));  
+  }
 }
 

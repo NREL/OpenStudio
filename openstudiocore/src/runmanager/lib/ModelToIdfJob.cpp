@@ -85,11 +85,22 @@ namespace detail {
       return true;
     } else {
       QReadLocker l(&m_mutex);
-      if (m_model)
+
+      boost::optional<FileInfo> model = m_model;
+      if (!model)
       {
+        try { 
+          model = modelFile();
+        } catch (const std::runtime_error &) {
+        }
+      }
+
+      if (model)
+      {
+        bool change = filesChanged(m_files, *t_lastrun);
         return filesChanged(m_files, *t_lastrun);
       } else {
-        // if the model file we are using has not been establised yet,
+        // if the model file we are using has not been established yet,
         // return outofdate
         return true;
       }

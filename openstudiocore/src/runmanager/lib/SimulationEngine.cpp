@@ -12,8 +12,9 @@ namespace openstudio {
     SimulationEngine::SimulationEngine(const openstudio::path &t_cacheFolder, size_t t_numVariables)
       : m_numVariables(t_numVariables), m_folder(validateFolder(t_cacheFolder)), 
         m_errorEstimations(t_numVariables),
-        m_runManager(m_folder / openstudio::toPath("run.db"), false, false)
+        m_runManager(m_folder / openstudio::toPath("run.db"), false, true)
     {
+      LOG(Info, "Starting SimulationEngine: " << openstudio::toString(t_cacheFolder));
       openstudio::runmanager::ConfigOptions co = m_runManager.getConfigOptions();
       co.findTools(true, true, true, true);
 
@@ -25,26 +26,33 @@ namespace openstudio {
       m_errorEstimations.setConfidence(fullJobString(), .90);
       m_errorEstimations.setConfidence(radianceJobString(), 1.0);
 
+      LOG(Info, "Scanning jobs from RunManager: " << jobs.size());
       for (std::vector<openstudio::runmanager::Job>::iterator itr = jobs.begin();
           itr != jobs.end();
           ++itr)
       {
         if (!itr->parent())
         {
+          LOG(Info, "Connecting top level job: " << itr->description());
           connectSignals(*itr);
 
           if (itr->treeStatus() == TreeStatusEnum::Finished)
           {
             LOG(Info, "Loading results from job tree: " << openstudio::toString(itr->uuid()));
             loadResults(*itr);
+          } else {
+            LOG(Info, "Tree status was not finished, was: " << itr->treeStatus().valueName());
           }
 
           // register that we are keeping track of this simulation
-          m_simulations.insert(getVariables(*itr));
+          std::vector<double> variables = getVariables(*itr);
+          LOG(Info, "Registering loaded simulation " << toString(variables));
+          m_simulations.insert(variables);
         }
       }
    
 
+      LOG(Info, "Unpausing runmanager");
       m_runManager.setPaused(false);
     }
 
@@ -76,7 +84,11 @@ namespace openstudio {
 
       if (m_simulations.count(t_variables) == 0)
       {
+        LOG(Info, "Simulation did not exist, adding " << toString(t_variables));
         enqueueSimulations(t_model, t_variables, t_weatherFile);
+        m_simulations.insert(t_variables);
+      } else {
+        LOG(Info, "Simulation already existed " << toString(t_variables));
       }
 
       return fuelUses(t_variables);

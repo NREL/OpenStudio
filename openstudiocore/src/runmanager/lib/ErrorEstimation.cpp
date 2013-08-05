@@ -375,7 +375,7 @@ namespace openstudio {
               // scale it by the distances.
               try {
                 std::pair<double, double> distance = baseline->second.nearestFurthestNeighborDistances(t_values);
-                LOG(Trace, "confidence Confitr->first " << confitr->first << " distnace.first " << distance.first << " distnace.second " << distance.second);
+                LOG(Trace, "confidence Confitr->first " << confitr->first << " distance.first " << distance.first << " distance.second " << distance.second);
                 if (distance.first == 0)
                 {
                   // we have an exact match, no scaling necessary
