@@ -29,6 +29,8 @@
 #include <model/SetpointManagerScheduled_Impl.hpp>
 #include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
 #include <model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp>
+#include <model/SetpointManagerWarmest.hpp>
+#include <model/SetpointManagerWarmest_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/FanConstantVolume.hpp>
@@ -114,6 +116,8 @@ namespace detail{
 
       removeSetpointManagerOutdoorAirReset();
 
+      removeSetpointManagerWarmest();
+
       return ModelObject_Impl::remove();
     }
     else
@@ -133,6 +137,8 @@ namespace detail{
     removeSetpointManagerFollowOutdoorAirTemperature();
 
     removeSetpointManagerOutdoorAirReset();
+
+    removeSetpointManagerWarmest();
 
     std::string s;
 
@@ -213,6 +219,8 @@ namespace detail{
     removeSetpointManagerFollowOutdoorAirTemperature();
 
     removeSetpointManagerOutdoorAirReset();
+
+    removeSetpointManagerWarmest();
 
     std::string s;
 
@@ -409,6 +417,43 @@ namespace detail{
     }
   }
 
+  void Node_Impl::addSetpointManagerWarmest( SetpointManagerWarmest & setPointManager )
+  {
+    Node node = this->getObject<Node>();
+
+    setPointManager.addToNode(node);
+  }
+
+  boost::optional<SetpointManagerWarmest> Node_Impl::setpointManagerWarmest() const
+  {
+    std::vector<SetpointManagerWarmest> modelObjects = 
+      getObject<Node>().getModelObjectSources<SetpointManagerWarmest>();
+    for( std::vector<SetpointManagerWarmest>::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
+         it !=itEnd;
+         ++it )
+    {
+
+      if( boost::optional<Node> setpointNode = it->setpointNode() )
+      {
+        if( setpointNode->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
+    return boost::none;
+  }
+
+  void Node_Impl::removeSetpointManagerWarmest()
+  {
+    boost::optional<SetpointManagerWarmest> opt(setpointManagerWarmest());
+    if( opt )
+    {
+      openstudio::Handle h = opt->handle();
+      this->model().removeObject(h);
+    }
+  }
+
   std::vector<ModelObject> Node_Impl::children() const
   {
     std::vector<ModelObject> result;
@@ -433,6 +478,11 @@ namespace detail{
         this->setpointManagerOutdoorAirReset() )
     {
       result.push_back(setpointManagerOutdoorAirReset.get());
+    }
+    if( boost::optional<SetpointManagerWarmest> setpointManagerWarmest = 
+        this->setpointManagerWarmest() )
+    {
+      result.push_back(setpointManagerWarmest.get());
     }
     return result;
   }
@@ -545,6 +595,21 @@ void Node::removeSetpointManagerOutdoorAirReset()
 void Node::addSetpointManager(SetpointManagerOutdoorAirReset & setpointManager)
 {
   getImpl<detail::Node_Impl>()->addSetpointManager(setpointManager);
+}
+
+boost::optional<SetpointManagerWarmest> Node::setpointManagerWarmest() const
+{
+  return getImpl<detail::Node_Impl>()->setpointManagerWarmest();
+}
+
+void Node::removeSetpointManagerWarmest()
+{
+  getImpl<detail::Node_Impl>()->removeSetpointManagerWarmest();
+}
+
+void Node::addSetpointManagerWarmest(SetpointManagerWarmest & setpointManager)
+{
+  getImpl<detail::Node_Impl>()->addSetpointManagerWarmest(setpointManager);
 }
 
 bool Node::addToNode(Node & node)

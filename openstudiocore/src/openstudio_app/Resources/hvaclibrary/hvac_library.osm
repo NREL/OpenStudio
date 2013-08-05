@@ -1,8 +1,8 @@
 
 OS:Version,
-  {953ca1c0-7cef-4da7-a4f6-33deca4b57a1}, !- Handle
-  0.11.6;                                 !- Version Identifier
-  
+  {1ce1aa37-0a17-44e1-863b-48cb5ca5c8ed}, !- Handle
+  1.0.3;                                  !- Version Identifier
+
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
   Always On Discrete,                     !- Name
@@ -15,7 +15,7 @@ OS:ScheduleTypeLimits,
   0,                                      !- Lower Limit Value {BasedOnField A4}
   1,                                      !- Upper Limit Value {BasedOnField A4}
   Discrete,                               !- Numeric Type
-  Availability;                           !- Unit Type    
+  Availability;                           !- Unit Type
 
 OS:ScheduleTypeLimits,
   {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Handle
@@ -24,7 +24,7 @@ OS:ScheduleTypeLimits,
   ,                                       !- Upper Limit Value {BasedOnField A4}
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
-  
+
 OS:Schedule:Ruleset,
   {7b9a6d38-fb98-4fb3-a65f-3acd22246ad5}, ! Handle
   Deck Temperature,                       ! Name
@@ -132,7 +132,7 @@ OS:Schedule:Day,
 
 OS:Schedule:Ruleset,
   {cc53a423-3dc6-47ad-90d5-0154db8eccc8}, ! Handle
-  Water Heater Ambient Temperature, ! Name
+  Water Heater Ambient Temperature,       ! Name
   {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
   {7eb2848e-01e0-426d-aafa-66f3edbc9660}; ! Default Day Schedule Name
 
@@ -147,7 +147,7 @@ OS:Schedule:Day,
 
 OS:Schedule:Ruleset,
   {c13bffd8-644e-4f69-871f-7dcafa493644}, ! Handle
-  Water Heater Setpoint Temperature, ! Name
+  Water Heater Setpoint Temperature,      ! Name
   {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, ! Schedule Type Limits Name
   {97b084f4-4eda-4f4b-a7c9-ef8eb8825fdb}; ! Default Day Schedule Name
 
@@ -158,8 +158,8 @@ OS:Schedule:Day,
   ,                                       ! Interpolate to Timestep
   24,                                     ! Hour 1
   0,                                      ! Minute 1
-  60;                                     ! Value Until Time 1  
-  
+  60;                                     ! Value Until Time 1
+
 OS:SetpointManager:FollowOutdoorAirTemperature,
   {66411916-74d9-491e-8fdd-63249f651c0e}, ! Handle
   Follow Outdoor Air Temperature,         ! Name
@@ -172,7 +172,7 @@ OS:SetpointManager:FollowOutdoorAirTemperature,
 
 OS:SetpointManager:OutdoorAirReset,
   {6150d904-49c8-4db7-a235-001a6bfccac0}, !- Handle
-  Setpoint Manager Outdoor Air Reset,   !- Name
+  Setpoint Manager Outdoor Air Reset,     !- Name
   Temperature,                            !- Control Variable
   22,                                     !- Setpoint at Outdoor Low Temperature {C}
   10,                                     !- Outdoor Low Temperature {C}
@@ -222,6 +222,15 @@ OS:SetpointManager:SingleZone:Reheat,
   99,                                     ! Maximum Supply Air Temperature {C}
   ,                                       ! Control Zone Name
   ;                                       ! Setpoint Node or NodeList Name
+
+OS:SetpointManager:Warmest,
+  {4f12e925-01e9-4ce2-9f56-daa5d024ac5d}, !- Handle
+  Setpoint Manager Warmest,               !- Name
+  Temperature,                            !- Control Variable
+  12.2,                                   !- Minimum Setpoint Temperature {C}
+  15.6,                                   !- Maximum Setpoint Temperature {C}
+  MaximumTemperature,                     !- Strategy
+  ;                                       !- Setpoint Node or NodeList Name
 
 OS:Fan:ConstantVolume,
   {c15ef75a-56db-4ec3-9720-d06294deabcc}, ! Handle
@@ -693,7 +702,7 @@ OS:Boiler:HotWater,
   ,                                       ! Fuel Type
   ,                                       ! Nominal Capacity {W}
   ,                                       ! Nominal Thermal Efficiency
-  LeavingBoiler,                                       ! Efficiency Curve Temperature Evaluation Variable
+  LeavingBoiler,                          ! Efficiency Curve Temperature Evaluation Variable
   {7a46b48b-f003-42e6-9865-b04b98d124aa}, ! Normalized Boiler Efficiency Curve Name
   ,                                       ! Design Water Outlet Temperature {C}
   ,                                       ! Design Water Flow Rate {m3/s}
@@ -703,7 +712,7 @@ OS:Boiler:HotWater,
   ,                                       ! Boiler Water Inlet Node Name
   ,                                       ! Boiler Water Outlet Node Name
   99,                                     ! Water Outlet Upper Temperature Limit {C}
-  VariableFlow,                           ! Boiler Flow Mode
+  LeavingSetpointModulated,               ! Boiler Flow Mode
   0,                                      ! Parasitic Electric Load {W}
   1;                                      ! Sizing Factor
 
@@ -720,8 +729,8 @@ OS:Curve:Biquadratic,
   1,                                      !- Maximum Value of x {BasedOnField A2}
   0,                                      !- Minimum Value of y {BasedOnField A3}
   1,                                      !- Maximum Value of y {BasedOnField A3}
-  ,                                       !- Minimum Curve Output
-  ,                                       !- Maximum Curve Output
+  ,                                       !- Minimum Curve Output {BasedOnField A4}
+  ,                                       !- Maximum Curve Output {BasedOnField A4}
   ,                                       !- Input Unit Type for X
   ,                                       !- Input Unit Type for Y
   ;                                       !- Output Unit Type
@@ -782,7 +791,7 @@ OS:Pump:VariableSpeed,
 
 OS:Pump:ConstantSpeed,
   {179abade-266d-45a5-a002-0bfe1caeeb23}, !- Handle
-  Pump Constant Speed,                  !- Name
+  Pump Constant Speed,                    !- Name
   ,                                       !- Inlet Node Name
   ,                                       !- Outlet Node Name
   autosize,                               !- Rated Flow Rate {m3/s}
@@ -793,8 +802,8 @@ OS:Pump:ConstantSpeed,
   Intermittent,                           !- Pump Control Type
   ,                                       !- Pump Flow Rate Schedule
   ,                                       !- Pump Curve
-  ,                                       !- Impeller Diameter
-  ,                                       !- Rotational Speed
+  ,                                       !- Impeller Diameter {m}
+  ,                                       !- Rotational Speed {rev/min}
   ,                                       !- Zone
   ;                                       !- Skin Loss Radiative Fraction
 
@@ -1468,7 +1477,7 @@ OS:Fan:ConstantVolume,
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   ;                                       !- End-Use Subcategory
-  
+
 OS:Fan:VariableVolume,
   {14f0828b-9d6d-4e07-abbf-ba58c5265285}, !- Handle
   Unit Heater VAV Fan,                    !- Name
@@ -1668,7 +1677,7 @@ OS:Curve:Cubic,
 
 OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
   {d683b8e6-1a67-4e2b-aa32-8a4aa6cedd5d}, !- Handle
-  Coil Heating Water To Air Heat Pump Equation Fit 1, !- Name
+  Coil Heating Water To Air Heat Pump Equation Fit 3, !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
   ,                                       !- Air Inlet Node Name
@@ -1721,7 +1730,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
 
 OS:Fan:OnOff,
   {686ec71a-e2b4-4e6c-bb5a-b8245ecd33e4}, !- Handle
-  Fan On Off 1,                           !- Name
+  Fan On Off 2,                           !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6045,                                 !- Fan Efficiency
   250,                                    !- Pressure Rise {Pa}
@@ -1758,7 +1767,7 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
 
 OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
   {e6f679f1-9fe3-4189-af37-13d8cb88d7d8}, !- Handle
-  Coil Cooling Water To Air Heat Pump Equation Fit 1, !- Name
+  Coil Cooling Water To Air Heat Pump Equation Fit 3, !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
   ,                                       !- Air Inlet Node Name
@@ -1789,7 +1798,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
 
 OS:Fan:OnOff,
   {c947bbf7-a7f6-473b-af51-f5709ab08feb}, !- Handle
-  Fan On Off 1,                           !- Name
+  Fan On Off 3,                           !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6045,                                 !- Fan Efficiency
   250,                                    !- Pressure Rise {Pa}
@@ -1804,7 +1813,7 @@ OS:Fan:OnOff,
 
 OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
   {54669793-36af-4393-aafe-d99188dfc46f}, !- Handle
-  Coil Heating Water To Air Heat Pump Equation Fit 1, !- Name
+  Coil Heating Water To Air Heat Pump Equation Fit 2, !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
   ,                                       !- Air Inlet Node Name
@@ -1826,7 +1835,7 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
 
 OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
   {7b550b0c-a709-4422-8f21-690b52ad8519}, !- Handle
-  Coil Cooling Water To Air Heat Pump Equation Fit 1, !- Name
+  Coil Cooling Water To Air Heat Pump Equation Fit 2, !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
   ,                                       !- Air Inlet Node Name
@@ -1879,7 +1888,7 @@ OS:Coil:Heating:Gas,
 
 OS:Coil:Heating:Water,
   {b746d8a5-fbfd-4d6a-a703-0ca20ab0ba53}, !- Handle
-  Coil Heating Water 1,                   !- Name
+  Coil Heating Water 2,                   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- U-Factor Times Area Value {W/K}
   ,                                       !- Maximum Water Flow Rate {m3/s}
@@ -1897,7 +1906,7 @@ OS:Coil:Heating:Water,
 
 OS:ZoneHVAC:WaterToAirHeatPump,
   {17796048-6e5f-471c-ab75-b4eb73568702}, !- Handle
-  Water To Air HP w Elec Supplemental Coil,     !- Name
+  Water To Air HP w Elec Supplemental Coil, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
@@ -1925,7 +1934,7 @@ OS:ZoneHVAC:WaterToAirHeatPump,
 
 OS:ZoneHVAC:WaterToAirHeatPump,
   {d00ed249-7171-4de9-a582-91d948e1b81d}, !- Handle
-  Water To Air Heat Pump w Gas Supplemental Coil,     !- Name
+  Water To Air Heat Pump w Gas Supplemental Coil, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
@@ -1953,7 +1962,7 @@ OS:ZoneHVAC:WaterToAirHeatPump,
 
 OS:ZoneHVAC:WaterToAirHeatPump,
   {394ba612-67a4-4f6e-9bac-759be77fd28d}, !- Handle
-  Water to Air Heat Pump w Hot Water Supplemental Coil,     !- Name
+  Water to Air Heat Pump w Hot Water Supplemental Coil, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
@@ -2083,5 +2092,4 @@ OS:HeatExchanger:AirToAir:SensibleAndLatent,
   ,                                       !- Initial Defrost Time Fraction {dimensionless}
   ,                                       !- Rate of Defrost Time Fraction Increase {1/K}
   Yes;                                    !- Economizer Lockout
-
 

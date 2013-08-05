@@ -56,6 +56,8 @@
 #include <model/SetpointManagerScheduled_Impl.hpp>
 #include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
 #include <model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp>
+#include <model/SetpointManagerWarmest.hpp>
+#include <model/SetpointManagerWarmest_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/Splitter.hpp>
@@ -75,6 +77,7 @@ bool hasSPM(model::Node & node)
       || node.getSetpointManagerMixedAir()
       || node.setpointManagerOutdoorAirReset()
       || node.setpointManagerScheduled()
+      || node.setpointManagerWarmest()
       || node.setpointManagerFollowOutdoorAirTemperature() )
   {
     return true;
@@ -1806,6 +1809,10 @@ void OneThreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
       {
         painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_outdoorair.png"));
       }  
+      else if( node->setpointManagerWarmest() )
+      {
+        painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_warmest.png"));
+      }  
     }  
   }
 }
@@ -1939,6 +1946,10 @@ void TwoFourNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
       {
         painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_outdoorair_right.png"));
       }  
+      else if( node->setpointManagerWarmest() )
+      {
+        painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest_right.png"));
+      }  
     }  
   }
 }
@@ -2020,6 +2031,10 @@ void OAStraightNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
       else if( node->setpointManagerOutdoorAirReset() )
       {
         painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_outdoorair.png"));
+      }  
+      else if( node->setpointManagerWarmest() )
+      {
+        painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest.png"));
       }  
     }  
   }
@@ -2958,6 +2973,10 @@ void NodeContextButtonItem::onRemoveSPMActionTriggered()
         emit removeModelObjectClicked( spm.get() );
       }
       else if(boost::optional<SetpointManagerScheduled> spm = node.setpointManagerScheduled())
+      {
+        emit removeModelObjectClicked( spm.get() );
+      }
+      else if(boost::optional<SetpointManagerWarmest> spm = node.setpointManagerWarmest())
       {
         emit removeModelObjectClicked( spm.get() );
       }
