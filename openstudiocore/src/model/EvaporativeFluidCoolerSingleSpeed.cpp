@@ -19,14 +19,8 @@
 
 #include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
 #include <model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp>
-
-// TODO: Check the following class names against object getters and setters.
-//#include <model/Connection.hpp>
-//#include <model/Connection_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
-//#include <model/WaterStorageTank.hpp>
-//#include <model/WaterStorageTank_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
 #include <model/PlantLoop.hpp>
@@ -43,14 +37,9 @@
 #include <model/Node_Impl.hpp>
 #include <model/PortList.hpp>
 #include <model/PortList_Impl.hpp>
-
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_EvaporativeFluidCooler_SingleSpeed_FieldEnums.hxx>
-
-//#include <utilities/units/Unit.hpp>
-//#include <utilities/core/Compare.hpp>
 #include <utilities/core/Assert.hpp>
-//#include <boost/foreach.hpp>
 
 namespace openstudio {
 namespace model {
@@ -93,7 +82,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> EvaporativeFluidCoolerSingleSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -113,22 +101,6 @@ namespace detail {
   {
     return OS_EvaporativeFluidCooler_SingleSpeedFields::WaterOutletNodeName;
   }
-
-  //Connection EvaporativeFluidCoolerSingleSpeed_Impl::waterInletNode() const {
-  //  boost::optional<Connection> value = optionalWaterInletNode();
-  //  if (!value) {
-  //    LOG_AND_THROW(briefDescription() << " does not have an Water Inlet Node attached.");
-  //  }
-  //  return value.get();
-  //}
-
-  //Connection EvaporativeFluidCoolerSingleSpeed_Impl::waterOutletNode() const {
-  //  boost::optional<Connection> value = optionalWaterOutletNode();
-  //  if (!value) {
-  //    LOG_AND_THROW(briefDescription() << " does not have an Water Outlet Node attached.");
-  //  }
-  //  return value.get();
- // }
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::addToNode(Node& node)
   {
@@ -214,10 +186,6 @@ namespace detail {
   boost::optional<std::string> EvaporativeFluidCoolerSingleSpeed_Impl::performanceInputMethod() const {
     return getString(OS_EvaporativeFluidCooler_SingleSpeedFields::PerformanceInputMethod,true);
   }
-
-  //boost::optional<Connection> EvaporativeFluidCoolerSingleSpeed_Impl::outdoorAirInletNode() const {
-  //  return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_EvaporativeFluidCooler_SingleSpeedFields::OutdoorAirInletNodeName);
-  //}
 
   boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::standardDesignCapacity() const {
     return getDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::StandardDesignCapacity,true);
@@ -333,20 +301,6 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_EvaporativeFluidCooler_SingleSpeedFields::BlowdownMakeupWaterUsageScheduleName);
   }
 
-//  boost::optional<WaterStorageTank> EvaporativeFluidCoolerSingleSpeed_Impl::supplyWaterStorageTank() const {
-//    return getObject<ModelObject>().getModelObjectTarget<WaterStorageTank>(OS_EvaporativeFluidCooler_SingleSpeedFields::SupplyWaterStorageTankName);
-//  }
-
-  //bool EvaporativeFluidCoolerSingleSpeed_Impl::setWaterInletNode(const Connection& connection) {
-  //  bool result = setPointer(OS_EvaporativeFluidCooler_SingleSpeedFields::WaterInletNodeName, connection.handle());
-  //  return result;
-  //}
-
-  //bool EvaporativeFluidCoolerSingleSpeed_Impl::setWaterOutletNode(const Connection& connection) {
-  //  bool result = setPointer(OS_EvaporativeFluidCooler_SingleSpeedFields::WaterOutletNodeName, connection.handle());
-  //  return result;
-  //}
-
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setDesignAirFlowRate(boost::optional<double> designAirFlowRate) {
     bool result(false);
     if (designAirFlowRate) {
@@ -394,23 +348,6 @@ namespace detail {
     bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::PerformanceInputMethod, "");
     BOOST_ASSERT(result);
   }
-
-  //bool EvaporativeFluidCoolerSingleSpeed_Impl::setOutdoorAirInletNode(const boost::optional<Connection>& connection) {
-  //  bool result(false);
-  //  if (connection) {
-  //    result = setPointer(OS_EvaporativeFluidCooler_SingleSpeedFields::OutdoorAirInletNodeName, connection.get().handle());
-  //  }
-  //  else {
-  //    resetOutdoorAirInletNode();
-  //   result = true;
-  //  }
-  //  return result;
-  //}
-
-  /*void EvaporativeFluidCoolerSingleSpeed_Impl::resetOutdoorAirInletNode() {
-    bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::OutdoorAirInletNodeName, "");
-    BOOST_ASSERT(result);
-  }*/
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setStandardDesignCapacity(boost::optional<double> standardDesignCapacity) {
     bool result(false);
@@ -631,31 +568,6 @@ namespace detail {
     BOOST_ASSERT(result);
   }
 
- /* bool EvaporativeFluidCoolerSingleSpeed_Impl::setSupplyWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank) {
-    bool result(false);
-    if (waterStorageTank) {
-      result = setPointer(OS_EvaporativeFluidCooler_SingleSpeedFields::SupplyWaterStorageTankName, waterStorageTank.get().handle());
-    }
-    else {
-      resetSupplyWaterStorageTank();
-      result = true;
-    }
-    return result;
-  }*/
-
-  //void EvaporativeFluidCoolerSingleSpeed_Impl::resetSupplyWaterStorageTank() {
-  //  bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::SupplyWaterStorageTankName, "");
-  //  BOOST_ASSERT(result);
-  //}
-
- // boost::optional<Connection> EvaporativeFluidCoolerSingleSpeed_Impl::optionalWaterInletNode() const {
- //   return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_EvaporativeFluidCooler_SingleSpeedFields::WaterInletNodeName);
- // }
-
- // boost::optional<Connection> EvaporativeFluidCoolerSingleSpeed_Impl::optionalWaterOutletNode() const {
- //   return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_EvaporativeFluidCooler_SingleSpeedFields::WaterOutletNodeName);
- // }
-
   std::vector<std::string> EvaporativeFluidCoolerSingleSpeed_Impl::performanceInputMethodValues() const {
     return EvaporativeFluidCoolerSingleSpeed::performanceInputMethodValues();
   }
@@ -672,25 +584,6 @@ namespace detail {
     return EvaporativeFluidCoolerSingleSpeed::blowdownCalculationModeValues();
   }
 
-  ///*boost::optional<ModelObject> EvaporativeFluidCoolerSingleSpeed_Impl::waterInletNodeAsModelObject() const {
-  //  OptionalModelObject result = waterInletNode();
-  //  return result;
-  //}
-
-  //boost::optional<ModelObject> EvaporativeFluidCoolerSingleSpeed_Impl::waterOutletNodeAsModelObject() const {
-  //  OptionalModelObject result = waterOutletNode();
-  //  return result;
-  //}
-
-  //boost::optional<ModelObject> EvaporativeFluidCoolerSingleSpeed_Impl::outdoorAirInletNodeAsModelObject() const {
-  //  OptionalModelObject result;
-  //  OptionalConnection intermediate = outdoorAirInletNode();
-  //  if (intermediate) {
-  //    result = *intermediate;
-  //  }
-  //  return result;
-  //}*/
-
   boost::optional<ModelObject> EvaporativeFluidCoolerSingleSpeed_Impl::blowdownMakeupWaterUsageScheduleAsModelObject() const {
     OptionalModelObject result;
     OptionalSchedule intermediate = blowdownMakeupWaterUsageSchedule();
@@ -699,54 +592,6 @@ namespace detail {
     }
     return result;
   }
-
-  //boost::optional<ModelObject> EvaporativeFluidCoolerSingleSpeed_Impl::supplyWaterStorageTankAsModelObject() const {
-  //  OptionalModelObject result;
-  //  OptionalWaterStorageTank intermediate = supplyWaterStorageTank();
-  //  if (intermediate) {
-  //    result = *intermediate;
-  //  }
-  //  return result;
-  //}
-
-  //bool EvaporativeFluidCoolerSingleSpeed_Impl::setWaterInletNodeAsModelObject(const boost::optional<ModelObject>& modelObject) {
-  //  if (modelObject) {
-  //    OptionalConnection intermediate = modelObject->optionalCast<Connection>();
-  //    if (intermediate) {
-  //      Connection connection(*intermediate);
-  //      return setWaterInletNode(connection);
-  //    }
-  //  }
-  //  return false;
-  //}
-
-  //bool EvaporativeFluidCoolerSingleSpeed_Impl::setWaterOutletNodeAsModelObject(const boost::optional<ModelObject>& modelObject) {
-  //  if (modelObject) {
-  //    OptionalConnection intermediate = modelObject->optionalCast<Connection>();
-  //    if (intermediate) {
-  //      Connection connection(*intermediate);
-  //      return setWaterOutletNode(connection);
-  //    }
-  //  }
-  //  return false;
-  //}
-
-  //bool EvaporativeFluidCoolerSingleSpeed_Impl::setOutdoorAirInletNodeAsModelObject(const boost::optional<ModelObject>& modelObject) {
-  //  if (modelObject) {
-  //    OptionalConnection intermediate = modelObject->optionalCast<Connection>();
-  //    if (intermediate) {
-  //      Connection connection(*intermediate);
-  //      return setOutdoorAirInletNode(connection);
-  //    }
-  //    else {
-  //      return false;
-  //    }
-  //  }
-  //  else {
-  //    resetOutdoorAirInletNode();
-  //  }
-  //  return true;
-  //}
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::setBlowdownMakeupWaterUsageScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
     if (modelObject) {
@@ -765,23 +610,6 @@ namespace detail {
     return true;
   }
 
-  //bool EvaporativeFluidCoolerSingleSpeed_Impl::setSupplyWaterStorageTankAsModelObject(const boost::optional<ModelObject>& modelObject) {
-  //  if (modelObject) {
-  //    OptionalWaterStorageTank intermediate = modelObject->optionalCast<WaterStorageTank>();
-  //    if (intermediate) {
-  //      WaterStorageTank waterStorageTank(*intermediate);
-  //      return setSupplyWaterStorageTank(waterStorageTank);
-  //    }
-  //    else {
-  //      return false;
-  //    }
-  //  }
-  //  else {
-  //    resetSupplyWaterStorageTank();
-  //  }
-  //  return true;
-  //}
-
 } // detail
 
 EvaporativeFluidCoolerSingleSpeed::EvaporativeFluidCoolerSingleSpeed(const Model& model)
@@ -789,26 +617,25 @@ EvaporativeFluidCoolerSingleSpeed::EvaporativeFluidCoolerSingleSpeed(const Model
 {
   BOOST_ASSERT(getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>());
  
-   autosizeDesignAirFlowRate();
-   autosizeFanPoweratDesignAirFlowRate();
-   setDesignSprayWaterFlowRate(0.03);
-   setPerformanceInputMethod("UFactorTimesAreaAndDesignWaterFlowRate");
-   resetStandardDesignCapacity();
-   autosizeUfactorTimesAreaValueatDesignAirFlowRate();
-   autosizeDesignWaterFlowRate();
-   resetUserSpecifiedDesignCapacity();
-   resetDesignEnteringWaterTemperature();
-   resetDesignEnteringAirTemperature();
-   resetDesignEnteringAirWetbulbTemperature();
-   setCapacityControl("FanCycling");
-   setSizingFactor(1.0);
-   setEvaporationLossMode("SaturatedExit");
-   setDriftLossPercent(0.008);
-   setBlowdownCalculationMode("ConcentrationRatio");
-   setBlowdownConcentrationRatio(3.0);
-   //Schedule blowdownMakeupWaterUsageSchedule = model.alwaysOnDiscreteSchedule();
-   //setBlowdownMakeupWaterUsageSchedule(blowdownMakeupWaterUsageSchedule);
-   resetBlowdownMakeupWaterUsageSchedule();
+  autosizeDesignAirFlowRate();
+  autosizeFanPoweratDesignAirFlowRate();
+  setDesignSprayWaterFlowRate(0.03);
+  setPerformanceInputMethod("UFactorTimesAreaAndDesignWaterFlowRate");
+  resetStandardDesignCapacity();
+  autosizeUfactorTimesAreaValueatDesignAirFlowRate();
+  autosizeDesignWaterFlowRate();
+  resetUserSpecifiedDesignCapacity();
+  resetDesignEnteringWaterTemperature();
+  resetDesignEnteringAirTemperature();
+  resetDesignEnteringAirWetbulbTemperature();
+  setCapacityControl("FanCycling");
+  setSizingFactor(1.0);
+  setEvaporationLossMode("SaturatedExit");
+  setDriftLossPercent(0.008);
+  setBlowdownCalculationMode("ConcentrationRatio");
+  setBlowdownConcentrationRatio(3.0);
+  resetBlowdownMakeupWaterUsageSchedule();
+  setString(OS_EvaporativeFluidCooler_SingleSpeedFields::SupplyWaterStorageTankName,"");
 }
 
 IddObjectType EvaporativeFluidCoolerSingleSpeed::iddObjectType() {
@@ -835,14 +662,6 @@ std::vector<std::string> EvaporativeFluidCoolerSingleSpeed::blowdownCalculationM
                         OS_EvaporativeFluidCooler_SingleSpeedFields::BlowdownCalculationMode);
 }
 
-//Connection EvaporativeFluidCoolerSingleSpeed::waterInletNode() const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->waterInletNode();
-//}
-
-//Connection EvaporativeFluidCoolerSingleSpeed::waterOutletNode() const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->waterOutletNode();
-//}
-
 boost::optional<double> EvaporativeFluidCoolerSingleSpeed::designAirFlowRate() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->designAirFlowRate();
 }
@@ -866,10 +685,6 @@ double EvaporativeFluidCoolerSingleSpeed::designSprayWaterFlowRate() const {
 boost::optional<std::string> EvaporativeFluidCoolerSingleSpeed::performanceInputMethod() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->performanceInputMethod();
 }
-
-//boost::optional<Connection> EvaporativeFluidCoolerSingleSpeed::outdoorAirInletNode() const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->outdoorAirInletNode();
-//}
 
 boost::optional<double> EvaporativeFluidCoolerSingleSpeed::standardDesignCapacity() const {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->standardDesignCapacity();
@@ -963,18 +778,6 @@ boost::optional<Schedule> EvaporativeFluidCoolerSingleSpeed::blowdownMakeupWater
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->blowdownMakeupWaterUsageSchedule();
 }
 
-//boost::optional<WaterStorageTank> EvaporativeFluidCoolerSingleSpeed::supplyWaterStorageTank() const {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->supplyWaterStorageTank();
-//}
-
-//bool EvaporativeFluidCoolerSingleSpeed::setWaterInletNode(const Connection& connection) {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setWaterInletNode(connection);
-//}
-
-//bool EvaporativeFluidCoolerSingleSpeed::setWaterOutletNode(const Connection& connection) {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setWaterOutletNode(connection);
-//}
-
 bool EvaporativeFluidCoolerSingleSpeed::setDesignAirFlowRate(double designAirFlowRate) {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDesignAirFlowRate(designAirFlowRate);
 }
@@ -1002,14 +805,6 @@ bool EvaporativeFluidCoolerSingleSpeed::setPerformanceInputMethod(std::string pe
 void EvaporativeFluidCoolerSingleSpeed::resetPerformanceInputMethod() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetPerformanceInputMethod();
 }
-
-//bool EvaporativeFluidCoolerSingleSpeed::setOutdoorAirInletNode(const Connection& connection) {
- // return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setOutdoorAirInletNode(connection);
-//}
-
-/*void EvaporativeFluidCoolerSingleSpeed::resetOutdoorAirInletNode() {
-  getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetOutdoorAirInletNode();
-}*/
 
 bool EvaporativeFluidCoolerSingleSpeed::setStandardDesignCapacity(double standardDesignCapacity) {
   return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setStandardDesignCapacity(standardDesignCapacity);
@@ -1138,14 +933,6 @@ bool EvaporativeFluidCoolerSingleSpeed::setBlowdownMakeupWaterUsageSchedule(Sche
 void EvaporativeFluidCoolerSingleSpeed::resetBlowdownMakeupWaterUsageSchedule() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetBlowdownMakeupWaterUsageSchedule();
 }
-
-//bool EvaporativeFluidCoolerSingleSpeed::setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank) {
-//  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setSupplyWaterStorageTank(waterStorageTank);
-//}
-
-//void EvaporativeFluidCoolerSingleSpeed::resetSupplyWaterStorageTank() {
-//  getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetSupplyWaterStorageTank();
-//}
 
 /// @cond
 EvaporativeFluidCoolerSingleSpeed::EvaporativeFluidCoolerSingleSpeed(boost::shared_ptr<detail::EvaporativeFluidCoolerSingleSpeed_Impl> impl)

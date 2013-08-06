@@ -116,11 +116,7 @@ class MODEL_API EvaporativeFluidCoolerSingleSpeed : public StraightComponent {
 
   bool isBlowdownConcentrationRatioDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> blowdownMakeupWaterUsageSchedule() const;
-
-  // TODO: Check return type. From object lists, some candidates are: WaterStorageTank.
-  //boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
 
   //@}
   /** @name Setters */
@@ -202,15 +198,9 @@ class MODEL_API EvaporativeFluidCoolerSingleSpeed : public StraightComponent {
 
   void resetBlowdownConcentrationRatio();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setBlowdownMakeupWaterUsageSchedule(Schedule& schedule);
 
   void resetBlowdownMakeupWaterUsageSchedule();
-
-  // TODO: Check argument type. From object lists, some candidates are: WaterStorageTank.
-  //bool setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank);
-
- // void resetSupplyWaterStorageTank();
 
   //@}
   /** @name Other */
