@@ -393,7 +393,7 @@ namespace openstudio {
                 LOG(Trace, "confidence Confitr->first " << confitr->first);
                 approximations.insert(std::make_pair(std::make_pair(confitr->first * 0.5, confitr->first), use));
               }
-            } catch (const std::exception &e) {
+            } catch (const std::exception &) {
               // approximation failed, on to next
             }
           }

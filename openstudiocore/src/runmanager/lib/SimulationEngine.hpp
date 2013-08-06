@@ -7,11 +7,12 @@
 #include <model/Model.hpp>
 #include <utilities/core/Logger.hpp>
 #include <runmanager/lib/RunManager.hpp>
+#include "RunManagerAPI.hpp"
 #include "ErrorEstimation.hpp"
 
 namespace openstudio {
   namespace runmanager {
-    struct SimulationDetails
+    struct RUNMANAGER_API SimulationDetails
     {
       SimulationDetails(double t_confidence=0, const openstudio::path &t_sqlFilePath=openstudio::path())
         : confidence(t_confidence), sqlFilePath(t_sqlFilePath)
@@ -25,7 +26,7 @@ namespace openstudio {
 
 
 
-    class SimulationEngine : public QObject
+    class RUNMANAGER_API SimulationEngine : public QObject
     {
       Q_OBJECT;
 

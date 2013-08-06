@@ -12,8 +12,9 @@
 #include <cmath>
 #include <cassert>
 #include <map>
+#include "RunManagerAPI.hpp"
 
-class LinearApproximation
+class RUNMANAGER_API LinearApproximation
 {
   public:
     explicit LinearApproximation(const size_t t_numVars);
