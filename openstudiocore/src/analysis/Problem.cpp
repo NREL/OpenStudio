@@ -1272,7 +1272,7 @@ namespace detail {
           // round value and set as integer
           int value(0);
           if (cvValues[i] > 0.0) {
-            value = std::floor(cvValues[i] + 0.5);
+            value = std::floor(cvValues[i] + 0.5 - std::numeric_limits<double>::epsilon());
           }
           if (!dvar->isValid(QVariant(value))) {
             LOG(Error,"Discrete variable represented as " << cvValues[i]

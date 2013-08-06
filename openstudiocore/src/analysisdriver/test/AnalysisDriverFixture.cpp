@@ -56,6 +56,7 @@
 #include <utilities/core/StringHelpers.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/Assert.hpp>
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>
@@ -338,12 +339,11 @@ openstudio::analysis::Problem AnalysisDriverFixture::createMixedOsmIdfProblem()
 {
   openstudio::path rubyLibDirPath = openstudio::toPath(rubyLibDir());
 
-  // Variables
-  analysis::VariableVector variables;
+  analysis::Problem problem("MixedOsmIdf");
 
   // Variable 1: Wall Construction
-  analysis::MeasureVector perturbations1;
-  perturbations1.push_back(analysis::NullMeasure());
+  analysis::MeasureVector measures1;
+  measures1.push_back(analysis::NullMeasure());
   // perturb the wall construction object
   openstudio::path perturbScript = rubyLibDirPath/openstudio::toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
   analysis::RubyMeasure rubyMeasure1(perturbScript,
@@ -355,23 +355,17 @@ openstudio::analysis::Problem AnalysisDriverFixture::createMixedOsmIdfProblem()
   rubyMeasure1.addArgument("nameRegex", "I02 50mm insulation board");
   rubyMeasure1.addArgument("field", "3");
   rubyMeasure1.addArgument("value", "0.10");
-  perturbations1.push_back(rubyMeasure1);
-  variables.push_back(analysis::MeasureGroup("Wall Construction",perturbations1));
+  measures1.push_back(rubyMeasure1);
+  bool ok = problem.push(analysis::MeasureGroup("Wall Construction",measures1));
+  BOOST_ASSERT(ok);
 
-  // Variable X: ModelToIdf
-  openstudio::path modelToIdfScript = rubyLibDirPath/openstudio::toPath("openstudio/runmanager/rubyscripts/ModelToIdf.rb");
-  analysis::RubyMeasure rubyMeasureX(modelToIdfScript,
-                                     FileReferenceType::OSM,
-                                     FileReferenceType::IDF);
-  rubyMeasureX.addArgument("inputPath", "in.osm");
-  rubyMeasureX.addArgument("outputPath", "out.idf");
-  variables.push_back(analysis::MeasureGroup(
-      "ModelToIdf",
-      analysis::MeasureVector(1u,rubyMeasureX)));
+  // WorkflowStep: ModelToIdf
+  ok = problem.push(WorkflowStep(runmanager::WorkItem(runmanager::JobType::ModelToIdf)));
+  BOOST_ASSERT(ok);
 
   // Variable 2: Roof Construction
-  analysis::MeasureVector perturbations2;
-  perturbations2.push_back(analysis::NullMeasure());
+  analysis::MeasureVector measures2;
+  measures2.push_back(analysis::NullMeasure());
   // perturb the roof construction object
   analysis::RubyMeasure rubyMeasure2(perturbScript,FileReferenceType::IDF,FileReferenceType::IDF);
   rubyMeasure2.addArgument("inputPath", "in.idf");
@@ -380,10 +374,12 @@ openstudio::analysis::Problem AnalysisDriverFixture::createMixedOsmIdfProblem()
   rubyMeasure2.addArgument("nameRegex", "M11 100mm lightweight concrete");
   rubyMeasure2.addArgument("field", "2");
   rubyMeasure2.addArgument("value", "0.2");
-  perturbations2.push_back(rubyMeasure2);
-  variables.push_back(analysis::MeasureGroup("Roof Construction",perturbations2));
+  measures2.push_back(rubyMeasure2);
+  ok = problem.push(analysis::MeasureGroup("Roof Construction",measures2));
+  BOOST_ASSERT(ok);
 
-  analysis::Problem problem("MixedOsmIdf",variables,runmanager::Workflow());
+  BOOST_ASSERT(problem.numVariables() == 2);
+
   return problem;
 }
 
@@ -592,16 +588,11 @@ openstudio::analysis::Problem AnalysisDriverFixture::createContinuousProblem()
   rubyMeasure.addArgument("value", "0.10");
   variables.push_back(analysis::MeasureGroup("Wall Construction",analysis::MeasureVector(1u,rubyMeasure)));
 
-  // Responses
-  analysis::FunctionVector responses;
+  // ETH@20130806: Removing response for now because we usually only run post-processes
+  // following a simulation. (We were using a ModelRuleset to calculate an input value as
+  // the response.)
 
-  // Response 1: Total Site Energy
-  // Was Exterior Wall U-Factor, but more involved to calculate this now that rulesets are gone.
-  analysis::OutputAttributeVariable response1Variable("Total Site Energy","Total Site Energy");
-  responses.push_back(analysis::LinearFunction(response1Variable.name(),
-                                               analysis::VariableVector(1u,response1Variable.cast<analysis::Variable>())));
-
-  analysis::Problem problem("Continuous",variables,responses,runmanager::Workflow());
+  analysis::Problem problem("Continuous",variables,analysis::FunctionVector(),runmanager::Workflow());
   return problem;
 }
 
