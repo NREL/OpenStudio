@@ -225,7 +225,7 @@ class PerturbationItem : public OSListItem
   bool isFixedMeasureItem() const;
 
   private:
-  boost::optional<analysis::DiscreteVariable> discreteVariableParent() const;
+  boost::optional<analysis::MeasureGroup> measureGroupParent() const;
 
   analysis::Measure m_measure;
 };

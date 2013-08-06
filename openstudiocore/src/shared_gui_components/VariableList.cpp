@@ -27,8 +27,8 @@
 #include "LocalLibraryController.hpp"
 
 #include <analysis/DataPoint.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
 #include <analysis/NullMeasure.hpp>
 #include <analysis/NullMeasure_Impl.hpp>
 #include <analysis/Problem.hpp>
@@ -173,11 +173,11 @@ MeasureType VariableListController::measureType() const
 
 QSharedPointer<OSListItem> VariableListController::itemAt(int i)
 {
-  std::vector<analysis::DiscreteVariable> vars = variables();
+  std::vector<analysis::MeasureGroup> vars = variables();
 
   if( i >= 0 && i < (int)vars.size() )
   {
-    analysis::DiscreteVariable var = vars[i];
+    analysis::MeasureGroup var = vars[i];
 
     QSharedPointer<VariableItem> item = QSharedPointer<VariableItem>(new VariableItem(var,m_type, m_app));
 
@@ -196,9 +196,9 @@ int VariableListController::count()
   return variables().size();
 }
 
-std::vector<analysis::DiscreteVariable> VariableListController::variables() const
+std::vector<analysis::MeasureGroup> VariableListController::variables() const
 {
-  std::vector<analysis::DiscreteVariable> result;
+  std::vector<analysis::MeasureGroup> result;
 
   boost::optional<analysisdriver::SimpleProject> project = m_app->project();
 
@@ -208,13 +208,13 @@ std::vector<analysis::DiscreteVariable> VariableListController::variables() cons
     analysis::WorkflowStepVector workflow = problem.workflow();
 
     if (measureType() == MeasureType::ModelMeasure) {
-      analysis::OptionalDiscreteVariable modelSwapVariable = project->getAlternativeModelVariable();
+      analysis::OptionalMeasureGroup modelSwapVariable = project->getAlternativeModelVariable();
       OptionalInt stopIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
       BOOST_ASSERT(stopIndex);
       for (int i = 0; i < *stopIndex; ++i) {
         if (workflow[i].isInputVariable()) {
           analysis::InputVariable var = workflow[i].inputVariable();
-          if (analysis::OptionalDiscreteVariable dvar = var.optionalCast<analysis::DiscreteVariable>()) {
+          if (analysis::OptionalMeasureGroup dvar = var.optionalCast<analysis::MeasureGroup>()) {
             if (modelSwapVariable && (*dvar == *modelSwapVariable)) {
               continue;
             }
@@ -258,16 +258,16 @@ std::vector<analysis::DiscreteVariable> VariableListController::variables() cons
   return result;
 }
 
-void VariableListController::removeItemForVariable(analysis::DiscreteVariable variable)
+void VariableListController::removeItemForVariable(analysis::MeasureGroup variable)
 {
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() )
   {
-    std::vector<analysis::DiscreteVariable> vars = variables();
+    std::vector<analysis::MeasureGroup> vars = variables();
 
     int i = 0;
     bool bingo = false;
 
-    for( std::vector<analysis::DiscreteVariable>::const_iterator it = vars.begin();
+    for( std::vector<analysis::MeasureGroup>::const_iterator it = vars.begin();
          it != vars.end();
          it++ )
     {
@@ -341,7 +341,7 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
 
       // prep discrete variable
       std::string name = m_app->measureManager().suggestMeasureGroupName(projectMeasure);
-      analysis::DiscreteVariable dv(name, analysis::MeasureVector());
+      analysis::MeasureGroup dv(name, analysis::MeasureVector());
       dv.setDisplayName(name);
    
       // measure
@@ -400,17 +400,17 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
   }
 }
 
-void VariableListController::moveUp(analysis::DiscreteVariable variable)
+void VariableListController::moveUp(analysis::MeasureGroup variable)
 {
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() )
   {
     // HERE - Logic seems questionable. Also check dirty flags.
-    std::vector<analysis::DiscreteVariable> vars = variables();
+    std::vector<analysis::MeasureGroup> vars = variables();
 
     int i = 0;
     bool bingo = false;
 
-    for( std::vector<analysis::DiscreteVariable>::const_iterator it = vars.begin();
+    for( std::vector<analysis::MeasureGroup>::const_iterator it = vars.begin();
          it != vars.end();
          it++ )
     {
@@ -437,16 +437,16 @@ void VariableListController::moveUp(analysis::DiscreteVariable variable)
   }
 }
 
-void VariableListController::moveDown(analysis::DiscreteVariable variable)
+void VariableListController::moveDown(analysis::MeasureGroup variable)
 {
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() )
   {
-    std::vector<analysis::DiscreteVariable> vars = variables();
+    std::vector<analysis::MeasureGroup> vars = variables();
 
     int i = 0;
     bool bingo = false;
 
-    for( std::vector<analysis::DiscreteVariable>::const_iterator it = vars.begin();
+    for( std::vector<analysis::MeasureGroup>::const_iterator it = vars.begin();
          it != vars.end();
          it++ )
     {
@@ -473,7 +473,7 @@ void VariableListController::moveDown(analysis::DiscreteVariable variable)
   }
 }
 
-VariableItem::VariableItem(const analysis::DiscreteVariable & variable, MeasureType type, openstudio::BaseApp *t_app)
+VariableItem::VariableItem(const analysis::MeasureGroup & variable, MeasureType type, openstudio::BaseApp *t_app)
   : OSListItem(),
     m_app(t_app),
     m_variable(variable),
@@ -588,7 +588,7 @@ MeasureListController::MeasureListController(VariableItem * variableItem, openst
 
 QSharedPointer<OSListItem> MeasureListController::itemAt(int i)
 {
-  std::vector<analysis::RubyMeasure> measures = measures();
+  std::vector<analysis::RubyMeasure> measures = this->measures();
 
   if( i >= 0 && i < static_cast<int>(measures.size()) )
   {
@@ -611,7 +611,7 @@ int MeasureListController::count()
 
 void MeasureListController::removeItemForMeasure(const analysis::Measure & measure)
 {
-  std::vector<analysis::RubyMeasure> measures = measures();
+  std::vector<analysis::RubyMeasure> measures = this->measures();
 
   int i = 0;
   bool bingo = false;

@@ -28,8 +28,8 @@
 #include <analysis/Problem.hpp>
 #include <analysis/NullMeasure.hpp>
 #include <analysis/NullMeasure_Impl.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
 #include <utilities/core/Containers.hpp>
 #include <QLineEdit>
 #include <QTextEdit>
@@ -133,7 +133,7 @@ void DesignAlternativesTabController::updateButtonStatusBasedOnSelectionNow()
         {
           if( measuretab::MeasureItem * measureItem = qobject_cast<measuretab::MeasureItem *>(*it) )
           {
-            selectedperts.push_back(measureItem->perturbation());
+            selectedperts.push_back(measureItem->measure());
           }
         }
 
@@ -406,7 +406,7 @@ void DesignAltListController::addOneItemForEachSelectedMeasure()
     {
       if( measuretab::MeasureItem * measureItem = qobject_cast<measuretab::MeasureItem *>(*it) )
       {
-        selectedperts.push_back(measureItem->perturbation());
+        selectedperts.push_back(measureItem->measure());
       }
     }
 
@@ -421,7 +421,7 @@ void DesignAltListController::addOneItemForEachSelectedMeasure()
     {
       std::vector<analysis::Measure> newPointPerts;
 
-      for( std::vector<analysis::DiscreteVariable>::const_iterator varIter = measureGroups.begin();
+      for( std::vector<analysis::MeasureGroup>::const_iterator varIter = measureGroups.begin();
            varIter != measureGroups.end();
            varIter++ )
       {
@@ -510,7 +510,7 @@ void DesignAltListController::addOneItemWithAllSelectedMeasures()
     {
       if( measuretab::MeasureItem * measureItem = qobject_cast<measuretab::MeasureItem *>(*it) )
       {
-        selectedperts.push_back(measureItem->perturbation());
+        selectedperts.push_back(measureItem->measure());
       }
     }
 
@@ -520,7 +520,7 @@ void DesignAltListController::addOneItemWithAllSelectedMeasures()
     std::vector<analysis::InputVariable> vars = problem.variables();
     std::vector<analysis::MeasureGroup> measureGroups = subsetCastVector<analysis::MeasureGroup>(vars);
 
-    for( std::vector<analysis::DiscreteVariable>::const_iterator it = measureGroups.begin();
+    for( std::vector<analysis::MeasureGroup>::const_iterator it = measureGroups.begin();
         it != measureGroups.end();
         it++ )
     {
@@ -740,20 +740,20 @@ bool PerturbationItem::isFixedMeasureItem() const
   return false;
 }
 
-boost::optional<analysis::DiscreteVariable> PerturbationItem::discreteVariableParent() const
+boost::optional<analysis::MeasureGroup> PerturbationItem::measureGroupParent() const
 {
   boost::optional<analysis::AnalysisObject> parent = m_measure.parent();
 
   if (parent)
   {
-    boost::optional<analysis::DiscreteVariable> var = parent->cast<analysis::DiscreteVariable>();
+    boost::optional<analysis::MeasureGroup> var = parent->cast<analysis::MeasureGroup>();
     if (var)
     {
       return var;
     }
   }
 
-  return boost::optional<analysis::DiscreteVariable>();
+  return boost::optional<analysis::MeasureGroup>();
 }
 
 QWidget * PerturbationItemDelegate::view(QSharedPointer<OSListItem> dataSource)

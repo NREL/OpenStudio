@@ -23,12 +23,10 @@
 #include <analysisdriver/AnalysisRunOptions.hpp>
 
 #include <analysis/Problem.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/ModelRulesetPerturbation.hpp>
-#include <analysis/ModelRulesetContinuousVariable.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/RubyMeasure.hpp>
 #include <analysis/RubyContinuousVariable.hpp>
 #include <analysis/OutputAttributeVariable.hpp>
 #include <analysis/LinearFunction.hpp>
@@ -53,13 +51,6 @@
 
 #include <runmanager/Test/ToolBin.hxx>
 
-#include <ruleset/ModelObjectFilterClause.hpp>
-#include <ruleset/ModelObjectFilterType.hpp>
-#include <ruleset/ModelObjectFilterStringAttribute.hpp>
-#include <ruleset/ModelRuleset.hpp>
-#include <ruleset/ModelRule.hpp>
-#include <ruleset/ModelObjectActionSetAttribute.hpp>
-#include <ruleset/RulesetEnums.hpp>
 #include <ruleset/OSArgument.hpp>
 
 #include <utilities/core/StringHelpers.hpp>
@@ -351,46 +342,46 @@ openstudio::analysis::Problem AnalysisDriverFixture::createMixedOsmIdfProblem()
   analysis::VariableVector variables;
 
   // Variable 1: Wall Construction
-  analysis::DiscretePerturbationVector perturbations1;
-  perturbations1.push_back(analysis::NullPerturbation());
+  analysis::MeasureVector perturbations1;
+  perturbations1.push_back(analysis::NullMeasure());
   // perturb the wall construction object
   openstudio::path perturbScript = rubyLibDirPath/openstudio::toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
-  analysis::RubyPerturbation rubyPerturbation1(perturbScript,
-                                               FileReferenceType::OSM,
-                                               FileReferenceType::OSM);
-  rubyPerturbation1.addArgument("inputPath", "in.osm");
-  rubyPerturbation1.addArgument("outputPath", "out.osm");
-  rubyPerturbation1.addArgument("objectType", "OS:Material");
-  rubyPerturbation1.addArgument("nameRegex", "I02 50mm insulation board");
-  rubyPerturbation1.addArgument("field", "3");
-  rubyPerturbation1.addArgument("value", "0.10");
-  perturbations1.push_back(rubyPerturbation1);
-  variables.push_back(analysis::DiscreteVariable("Wall Construction",perturbations1));
+  analysis::RubyMeasure rubyMeasure1(perturbScript,
+                                     FileReferenceType::OSM,
+                                     FileReferenceType::OSM);
+  rubyMeasure1.addArgument("inputPath", "in.osm");
+  rubyMeasure1.addArgument("outputPath", "out.osm");
+  rubyMeasure1.addArgument("objectType", "OS:Material");
+  rubyMeasure1.addArgument("nameRegex", "I02 50mm insulation board");
+  rubyMeasure1.addArgument("field", "3");
+  rubyMeasure1.addArgument("value", "0.10");
+  perturbations1.push_back(rubyMeasure1);
+  variables.push_back(analysis::MeasureGroup("Wall Construction",perturbations1));
 
   // Variable X: ModelToIdf
   openstudio::path modelToIdfScript = rubyLibDirPath/openstudio::toPath("openstudio/runmanager/rubyscripts/ModelToIdf.rb");
-  analysis::RubyPerturbation rubyPerturbationX(modelToIdfScript,
-                                               FileReferenceType::OSM,
-                                               FileReferenceType::IDF);
-  rubyPerturbationX.addArgument("inputPath", "in.osm");
-  rubyPerturbationX.addArgument("outputPath", "out.idf");
-  variables.push_back(analysis::DiscreteVariable(
+  analysis::RubyMeasure rubyMeasureX(modelToIdfScript,
+                                     FileReferenceType::OSM,
+                                     FileReferenceType::IDF);
+  rubyMeasureX.addArgument("inputPath", "in.osm");
+  rubyMeasureX.addArgument("outputPath", "out.idf");
+  variables.push_back(analysis::MeasureGroup(
       "ModelToIdf",
-      analysis::DiscretePerturbationVector(1u,rubyPerturbationX)));
+      analysis::MeasureVector(1u,rubyMeasureX)));
 
   // Variable 2: Roof Construction
-  analysis::DiscretePerturbationVector perturbations2;
-  perturbations2.push_back(analysis::NullPerturbation());
+  analysis::MeasureVector perturbations2;
+  perturbations2.push_back(analysis::NullMeasure());
   // perturb the roof construction object
-  analysis::RubyPerturbation rubyPerturbation2(perturbScript,FileReferenceType::IDF,FileReferenceType::IDF);
-  rubyPerturbation2.addArgument("inputPath", "in.idf");
-  rubyPerturbation2.addArgument("outputPath", "out.idf");
-  rubyPerturbation2.addArgument("objectType", "Material");
-  rubyPerturbation2.addArgument("nameRegex", "M11 100mm lightweight concrete");
-  rubyPerturbation2.addArgument("field", "2");
-  rubyPerturbation2.addArgument("value", "0.2");
-  perturbations2.push_back(rubyPerturbation2);
-  variables.push_back(analysis::DiscreteVariable("Roof Construction",perturbations2));
+  analysis::RubyMeasure rubyMeasure2(perturbScript,FileReferenceType::IDF,FileReferenceType::IDF);
+  rubyMeasure2.addArgument("inputPath", "in.idf");
+  rubyMeasure2.addArgument("outputPath", "out.idf");
+  rubyMeasure2.addArgument("objectType", "Material");
+  rubyMeasure2.addArgument("nameRegex", "M11 100mm lightweight concrete");
+  rubyMeasure2.addArgument("field", "2");
+  rubyMeasure2.addArgument("value", "0.2");
+  perturbations2.push_back(rubyMeasure2);
+  variables.push_back(analysis::MeasureGroup("Roof Construction",perturbations2));
 
   analysis::Problem problem("MixedOsmIdf",variables,runmanager::Workflow());
   return problem;
@@ -401,143 +392,143 @@ openstudio::analysis::Problem AnalysisDriverFixture::createIdfOnlyProblem()
   // Variables
   analysis::VariableVector variables;
   std::string name;
-  analysis::DiscretePerturbationVector perturbations;
+  analysis::MeasureVector perturbations;
   openstudio::path perturbScript =
       openstudio::toPath(rubyLibDir()) /
       openstudio::toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
-  analysis::RubyPerturbation rubyPerturbation(perturbScript,
-                                              FileReferenceType::IDF,
-                                              FileReferenceType::IDF);
+  analysis::RubyMeasure rubyMeasure(perturbScript,
+                                    FileReferenceType::IDF,
+                                    FileReferenceType::IDF);
 
   // Variable 1
   name = "Lighting Power Density";
   perturbations.clear();
-  perturbations.push_back(analysis::NullPerturbation());
+  perturbations.push_back(analysis::NullMeasure());
   // 10 W/m^2
-  rubyPerturbation = analysis::RubyPerturbation(perturbScript,
-                                                FileReferenceType::IDF,
-                                                FileReferenceType::IDF);
-  rubyPerturbation.addArgument("inputPath", "in.idf");
-  rubyPerturbation.addArgument("outputPath", "out.idf");
-  rubyPerturbation.addArgument("objectType", "Lights");
-  rubyPerturbation.addArgument("nameRegex", ".*");
-  rubyPerturbation.addArgument("field", "4");
-  rubyPerturbation.addArgument("value", " ");
-  rubyPerturbation.addArgument("field", "5");
-  rubyPerturbation.addArgument("value", "10.0");
-  perturbations.push_back(rubyPerturbation);
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::IDF,
+                                      FileReferenceType::IDF);
+  rubyMeasure.addArgument("inputPath", "in.idf");
+  rubyMeasure.addArgument("outputPath", "out.idf");
+  rubyMeasure.addArgument("objectType", "Lights");
+  rubyMeasure.addArgument("nameRegex", ".*");
+  rubyMeasure.addArgument("field", "4");
+  rubyMeasure.addArgument("value", " ");
+  rubyMeasure.addArgument("field", "5");
+  rubyMeasure.addArgument("value", "10.0");
+  perturbations.push_back(rubyMeasure);
 
-  variables.push_back(analysis::DiscreteVariable(name,perturbations));
+  variables.push_back(analysis::MeasureGroup(name,perturbations));
 
   // Variable 2
   name = "Plug Load Density";
   perturbations.clear();
-  perturbations.push_back(analysis::NullPerturbation());
+  perturbations.push_back(analysis::NullMeasure());
   // 6 W/m^2
-  rubyPerturbation = analysis::RubyPerturbation(perturbScript,
-                                                FileReferenceType::IDF,
-                                                FileReferenceType::IDF);
-  rubyPerturbation.addArgument("inputPath", "in.idf");
-  rubyPerturbation.addArgument("outputPath", "out.idf");
-  rubyPerturbation.addArgument("objectType", "ElectricEquipment");
-  rubyPerturbation.addArgument("nameRegex", ".*");
-  rubyPerturbation.addArgument("field", "4");
-  rubyPerturbation.addArgument("value", " ");
-  rubyPerturbation.addArgument("field", "5");
-  rubyPerturbation.addArgument("value", "6.0");
-  perturbations.push_back(rubyPerturbation);
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::IDF,
+                                      FileReferenceType::IDF);
+  rubyMeasure.addArgument("inputPath", "in.idf");
+  rubyMeasure.addArgument("outputPath", "out.idf");
+  rubyMeasure.addArgument("objectType", "ElectricEquipment");
+  rubyMeasure.addArgument("nameRegex", ".*");
+  rubyMeasure.addArgument("field", "4");
+  rubyMeasure.addArgument("value", " ");
+  rubyMeasure.addArgument("field", "5");
+  rubyMeasure.addArgument("value", "6.0");
+  perturbations.push_back(rubyMeasure);
 
-  variables.push_back(analysis::DiscreteVariable(name,perturbations));
+  variables.push_back(analysis::MeasureGroup(name,perturbations));
 
   // Variable 3
   name = "Window Construction";
   perturbations.clear();
-  perturbations.push_back(analysis::NullPerturbation());
+  perturbations.push_back(analysis::NullMeasure());
   // Dbl LoE (e2=.1) Clr 6mm/6mm Air
-  rubyPerturbation = analysis::RubyPerturbation(perturbScript,
-                                                FileReferenceType::IDF,
-                                                FileReferenceType::IDF);
-  rubyPerturbation.addArgument("inputPath", "in.idf");
-  rubyPerturbation.addArgument("outputPath", "out.idf");
-  rubyPerturbation.addArgument("objectType", "FenestrationSurface:Detailed");
-  rubyPerturbation.addArgument("nameRegex", "W.*");
-  rubyPerturbation.addArgument("field", "2");
-  rubyPerturbation.addArgument("value", "Dbl LoE (e2=.1) Clr 6mm/6mm Air");
-  perturbations.push_back(rubyPerturbation);
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::IDF,
+                                      FileReferenceType::IDF);
+  rubyMeasure.addArgument("inputPath", "in.idf");
+  rubyMeasure.addArgument("outputPath", "out.idf");
+  rubyMeasure.addArgument("objectType", "FenestrationSurface:Detailed");
+  rubyMeasure.addArgument("nameRegex", "W.*");
+  rubyMeasure.addArgument("field", "2");
+  rubyMeasure.addArgument("value", "Dbl LoE (e2=.1) Clr 6mm/6mm Air");
+  perturbations.push_back(rubyMeasure);
 
-  variables.push_back(analysis::DiscreteVariable(name,perturbations));
+  variables.push_back(analysis::MeasureGroup(name,perturbations));
 
   // Variable 4
   name = "Fan Efficiency";
   perturbations.clear();
-  perturbations.push_back(analysis::NullPerturbation());
+  perturbations.push_back(analysis::NullMeasure());
   // 0.9
-  rubyPerturbation = analysis::RubyPerturbation(perturbScript,
-                                                FileReferenceType::IDF,
-                                                FileReferenceType::IDF);
-  rubyPerturbation.addArgument("inputPath", "in.idf");
-  rubyPerturbation.addArgument("outputPath", "out.idf");
-  rubyPerturbation.addArgument("objectType", "Fan:VariableVolume");
-  rubyPerturbation.addArgument("nameRegex", ".*");
-  rubyPerturbation.addArgument("field", "2");
-  rubyPerturbation.addArgument("value", "0.9");
-  perturbations.push_back(rubyPerturbation);
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::IDF,
+                                      FileReferenceType::IDF);
+  rubyMeasure.addArgument("inputPath", "in.idf");
+  rubyMeasure.addArgument("outputPath", "out.idf");
+  rubyMeasure.addArgument("objectType", "Fan:VariableVolume");
+  rubyMeasure.addArgument("nameRegex", ".*");
+  rubyMeasure.addArgument("field", "2");
+  rubyMeasure.addArgument("value", "0.9");
+  perturbations.push_back(rubyMeasure);
 
-  variables.push_back(analysis::DiscreteVariable(name,perturbations));
+  variables.push_back(analysis::MeasureGroup(name,perturbations));
 
   // Variable 5
   name = "Fan Motor Efficiency";
   perturbations.clear();
-  perturbations.push_back(analysis::NullPerturbation());
+  perturbations.push_back(analysis::NullMeasure());
   // 0.95
-  rubyPerturbation = analysis::RubyPerturbation(perturbScript,
-                                                FileReferenceType::IDF,
-                                                FileReferenceType::IDF);
-  rubyPerturbation.addArgument("inputPath", "in.idf");
-  rubyPerturbation.addArgument("outputPath", "out.idf");
-  rubyPerturbation.addArgument("objectType", "Fan:VariableVolume");
-  rubyPerturbation.addArgument("nameRegex", ".*");
-  rubyPerturbation.addArgument("field", "8");
-  rubyPerturbation.addArgument("value", "0.95");
-  perturbations.push_back(rubyPerturbation);
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::IDF,
+                                      FileReferenceType::IDF);
+  rubyMeasure.addArgument("inputPath", "in.idf");
+  rubyMeasure.addArgument("outputPath", "out.idf");
+  rubyMeasure.addArgument("objectType", "Fan:VariableVolume");
+  rubyMeasure.addArgument("nameRegex", ".*");
+  rubyMeasure.addArgument("field", "8");
+  rubyMeasure.addArgument("value", "0.95");
+  perturbations.push_back(rubyMeasure);
 
-  variables.push_back(analysis::DiscreteVariable(name,perturbations));
+  variables.push_back(analysis::MeasureGroup(name,perturbations));
 
   // Variable 6
   name = "Boiler Efficiency";
   perturbations.clear();
-  perturbations.push_back(analysis::NullPerturbation());
+  perturbations.push_back(analysis::NullMeasure());
   // 0.95
-  rubyPerturbation = analysis::RubyPerturbation(perturbScript,
-                                                FileReferenceType::IDF,
-                                                FileReferenceType::IDF);
-  rubyPerturbation.addArgument("inputPath", "in.idf");
-  rubyPerturbation.addArgument("outputPath", "out.idf");
-  rubyPerturbation.addArgument("objectType", "Boiler:HotWater");
-  rubyPerturbation.addArgument("nameRegex", ".*");
-  rubyPerturbation.addArgument("field", "3");
-  rubyPerturbation.addArgument("value", "0.95");
-  perturbations.push_back(rubyPerturbation);
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::IDF,
+                                      FileReferenceType::IDF);
+  rubyMeasure.addArgument("inputPath", "in.idf");
+  rubyMeasure.addArgument("outputPath", "out.idf");
+  rubyMeasure.addArgument("objectType", "Boiler:HotWater");
+  rubyMeasure.addArgument("nameRegex", ".*");
+  rubyMeasure.addArgument("field", "3");
+  rubyMeasure.addArgument("value", "0.95");
+  perturbations.push_back(rubyMeasure);
 
-  variables.push_back(analysis::DiscreteVariable(name,perturbations));
+  variables.push_back(analysis::MeasureGroup(name,perturbations));
 
   // Variable 7
   name = "Chiller COP";
   perturbations.clear();
-  perturbations.push_back(analysis::NullPerturbation());
+  perturbations.push_back(analysis::NullMeasure());
   // 5.0
-  rubyPerturbation = analysis::RubyPerturbation(perturbScript,
-                                                FileReferenceType::IDF,
-                                                FileReferenceType::IDF);
-  rubyPerturbation.addArgument("inputPath", "in.idf");
-  rubyPerturbation.addArgument("outputPath", "out.idf");
-  rubyPerturbation.addArgument("objectType", "Chiller:Electric");
-  rubyPerturbation.addArgument("nameRegex", ".*");
-  rubyPerturbation.addArgument("field", "3");
-  rubyPerturbation.addArgument("value", "5.0");
-  perturbations.push_back(rubyPerturbation);
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::IDF,
+                                      FileReferenceType::IDF);
+  rubyMeasure.addArgument("inputPath", "in.idf");
+  rubyMeasure.addArgument("outputPath", "out.idf");
+  rubyMeasure.addArgument("objectType", "Chiller:Electric");
+  rubyMeasure.addArgument("nameRegex", ".*");
+  rubyMeasure.addArgument("field", "3");
+  rubyMeasure.addArgument("value", "5.0");
+  perturbations.push_back(rubyMeasure);
 
-  variables.push_back(analysis::DiscreteVariable(name,perturbations));
+  variables.push_back(analysis::MeasureGroup(name,perturbations));
 
   analysis::Problem problem("IdfOnly",variables,runmanager::Workflow());
   return problem;
@@ -550,53 +541,63 @@ openstudio::analysis::Problem AnalysisDriverFixture::createContinuousProblem()
   // Variables
   analysis::VariableVector variables;
 
+  openstudio::path perturbScript =
+      openstudio::toPath(rubyLibDir()) /
+      openstudio::toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
+
   // Variable 1: Building Rotation
-  ruleset::ModelObjectFilterClauseVector filters;
-  filters.push_back(ruleset::ModelObjectFilterType(IddObjectType::OS_Building));
-  analysis::ModelRulesetContinuousVariable continuousVariable("Building Rotation",
-                                                              filters,
-                                                              "northAxis");
+  analysis::RubyMeasure rubyMeasure(perturbScript,
+                                    FileReferenceType::OSM,
+                                    FileReferenceType::OSM);
+  rubyMeasure.addArgument("inputPath","in.osm");
+  rubyMeasure.addArgument("outputPath","out.osm");
+  rubyMeasure.addArgument("objectType","OS:Building");
+  rubyMeasure.addArgument("nameRegex", ".*");
+  rubyMeasure.addArgument("field", "3");
+  analysis::RubyContinuousVariable continuousVariable(
+        "Building Rotation",
+        ruleset::OSArgument::makeDoubleArgument("value"),
+        rubyMeasure);
   continuousVariable.setMinimum(0.0);
   continuousVariable.setMaximum(270.0);
   variables.push_back(continuousVariable);
 
   // Variable 2: Fan Efficiency
-  filters.clear();
-  filters.push_back(ruleset::ModelObjectFilterType(IddObjectType::OS_Fan_ConstantVolume));
-  continuousVariable = analysis::ModelRulesetContinuousVariable("Fan Efficiency",
-                                                                filters,
-                                                                "fanEfficiency");
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::OSM,
+                                      FileReferenceType::OSM);
+  rubyMeasure.addArgument("inputPath","in.osm");
+  rubyMeasure.addArgument("outputPath","out.osm");
+  rubyMeasure.addArgument("objectType","OS:Fan:ConstantVolume");
+  rubyMeasure.addArgument("nameRegex", ".*");
+  rubyMeasure.addArgument("field", "3");
+  continuousVariable = analysis::RubyContinuousVariable(
+        "Fan Efficiency",
+        ruleset::OSArgument::makeDoubleArgument("value"),
+        rubyMeasure);
   continuousVariable.setMinimum(0.7);
   continuousVariable.setMaximum(0.9);
   variables.push_back(continuousVariable);
 
   // Variable 3: Wall Construction set as Static Transformation
   // Not counted as variable in communications between analysis and DAKOTA.
-  openstudio::path perturbScript = rubyLibDirPath/openstudio::toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
-  analysis::RubyPerturbation rubyPerturbation(perturbScript,
-                                              FileReferenceType::OSM,
-                                              FileReferenceType::OSM);
-  rubyPerturbation.addArgument("inputPath", "in.osm");
-  rubyPerturbation.addArgument("outputPath", "out.osm");
-  rubyPerturbation.addArgument("objectType", "OS:Material");
-  rubyPerturbation.addArgument("nameRegex", "I02 50mm insulation board");
-  rubyPerturbation.addArgument("field", "3");
-  rubyPerturbation.addArgument("value", "0.10");
-  variables.push_back(analysis::DiscreteVariable("Wall Construction",analysis::DiscretePerturbationVector(1u,rubyPerturbation)));
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::OSM,
+                                      FileReferenceType::OSM);
+  rubyMeasure.addArgument("inputPath", "in.osm");
+  rubyMeasure.addArgument("outputPath", "out.osm");
+  rubyMeasure.addArgument("objectType", "OS:Material");
+  rubyMeasure.addArgument("nameRegex", "I02 50mm insulation board");
+  rubyMeasure.addArgument("field", "3");
+  rubyMeasure.addArgument("value", "0.10");
+  variables.push_back(analysis::MeasureGroup("Wall Construction",analysis::MeasureVector(1u,rubyMeasure)));
 
   // Responses
   analysis::FunctionVector responses;
 
-  // Response 1: Exterior Wall U-Factor
-  filters.clear();
-  filters.push_back(ruleset::ModelObjectFilterType(IddObjectType(IddObjectType::OS_Surface)));
-  filters.push_back(ruleset::ModelObjectFilterStringAttribute("surfaceType",
-                                                              ruleset::RulesetStringPredicate::IEquals,
-                                                              "wall"));
-  filters.push_back(ruleset::ModelObjectFilterStringAttribute("outsideBoundaryCondition",
-                                                              ruleset::RulesetStringPredicate::IEquals,
-                                                              "outdoors"));
-  analysis::ModelRulesetContinuousVariable response1Variable("Exterior Wall U-Factor",filters,"uFactor");
+  // Response 1: Total Site Energy
+  // Was Exterior Wall U-Factor, but more involved to calculate this now that rulesets are gone.
+  analysis::OutputAttributeVariable response1Variable("Total Site Energy","Total Site Energy");
   responses.push_back(analysis::LinearFunction(response1Variable.name(),
                                                analysis::VariableVector(1u,response1Variable.cast<analysis::Variable>())));
 
@@ -612,10 +613,10 @@ openstudio::analysis::Problem AnalysisDriverFixture::createUserScriptContinuousP
   analysis::VariableVector variables;
 
   // Pertubation 1, Governed by Variables 1 & 2: Set Window to Wall Ratio
-  analysis::RubyPerturbation wwrScript(rubyLibDirPath/openstudio::toPath("openstudio/sketchup_plugin/user_scripts/Alter or Add Model Elements/Set_Window_to_Wall_Ratio.rb"),
-                                       FileReferenceType::OSM,
-                                       FileReferenceType::OSM,
-                                       true);
+  analysis::RubyMeasure wwrScript(rubyLibDirPath/openstudio::toPath("openstudio/sketchup_plugin/user_scripts/Alter or Add Model Elements/Set_Window_to_Wall_Ratio.rb"),
+                                  FileReferenceType::OSM,
+                                  FileReferenceType::OSM,
+                                  true);
   // Choice Argument "application_type" will be defaulted to "Above Floor".
 
   // Variable 1: Window to Wall Ratio
@@ -632,11 +633,11 @@ openstudio::analysis::Problem AnalysisDriverFixture::createUserScriptContinuousP
   offset.setMaximum(2.0);
   variables.push_back(offset);
 
-  // Perturbation 2, Governed by Variable 3: Add Overhangs by Projection Factor (Offset Fixed at 0.0)
-  analysis::RubyPerturbation overhangScript(rubyLibDirPath/openstudio::toPath("openstudio/sketchup_plugin/user_scripts/Alter or Add Model Elements/Add_Overhangs_by_Projection_Factor.rb"),
-                                            FileReferenceType::OSM,
-                                            FileReferenceType::OSM,
-                                            true);
+  // Measure 2, Governed by Variable 3: Add Overhangs by Projection Factor (Offset Fixed at 0.0)
+  analysis::RubyMeasure overhangScript(rubyLibDirPath/openstudio::toPath("openstudio/sketchup_plugin/user_scripts/Alter or Add Model Elements/Add_Overhangs_by_Projection_Factor.rb"),
+                                       FileReferenceType::OSM,
+                                       FileReferenceType::OSM,
+                                       true);
   // Double Argument "offset" will be defaulted to 0.0
   // Change Bool Argument "remove_existing_shading" to false
   arg = ruleset::OSArgument::makeBoolArgument("remove_existing_shading");
@@ -661,6 +662,9 @@ openstudio::analysis::Problem AnalysisDriverFixture::createSimpleUQProblem()
   // Variables
   analysis::VariableVector variables;
 
+  openstudio::path rubyLibDirPath = openstudio::toPath(rubyLibDir());
+  openstudio::path perturbScript = rubyLibDirPath/openstudio::toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
+
   // These variables are based on Corrado and Mechri's description and data on
   // uncertainties in thermophysical properties in the 2009 article "Uncertainty
   // and Sensitivity Analysis for Building Energy Rating".
@@ -670,15 +674,18 @@ openstudio::analysis::Problem AnalysisDriverFixture::createSimpleUQProblem()
   // distribution as +/- 1 standard deviation.
 
   // Variable 1: Slab concrete thermal conductivity
-  ruleset::ModelObjectFilterClauseVector filters;
-  filters.push_back(ruleset::ModelObjectFilterType(IddObjectType::OS_Material));
-  filters.push_back(ruleset::ModelObjectFilterStringAttribute(
-      "name",
-      ruleset::RulesetStringPredicate(ruleset::RulesetStringPredicate::Equals),
-      "MAT-CC05 8 HW CONCRETE"));
-  analysis::ModelRulesetContinuousVariable variable("Slab Concrete Thermal Conductivity",
-                                                    filters,
-                                                    "thermalConductivity");
+  analysis::RubyMeasure rubyMeasure(perturbScript,
+                                    FileReferenceType::OSM,
+                                    FileReferenceType::OSM);
+  rubyMeasure.addArgument("inputPath","in.osm");
+  rubyMeasure.addArgument("outputPath","out.osm");
+  rubyMeasure.addArgument("objectType","OS:Material");
+  rubyMeasure.addArgument("nameRegex", "MAT-CC05 8 HW CONCRETE");
+  rubyMeasure.addArgument("field", "4"); // Conductivity
+  analysis::RubyContinuousVariable variable(
+        "Slab Concrete Thermal Conductivity",
+        ruleset::OSArgument::makeDoubleArgument("value"),
+        rubyMeasure);
   analysis::NormalDistribution boundedNormal(1.311,0.3);
   boundedNormal.setLowerBound(boundedNormal.mean() - boundedNormal.standardDeviation());
   boundedNormal.setUpperBound(boundedNormal.mean() + boundedNormal.standardDeviation());
@@ -686,15 +693,18 @@ openstudio::analysis::Problem AnalysisDriverFixture::createSimpleUQProblem()
   variables.push_back(variable);
 
   // Variable 2: Exterior wall concrete thermal conductivity
-  filters.clear();
-  filters.push_back(ruleset::ModelObjectFilterType(IddObjectType::OS_Material));
-  filters.push_back(ruleset::ModelObjectFilterStringAttribute(
-      "name",
-      ruleset::RulesetStringPredicate(ruleset::RulesetStringPredicate::Equals),
-      "M15 200mm heavyweight concrete"));
-  variable = analysis::ModelRulesetContinuousVariable("Exterior Wall Concrete Thermal Conductivity",
-                                                      filters,
-                                                      "thermalConductivity");
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::OSM,
+                                      FileReferenceType::OSM);
+  rubyMeasure.addArgument("inputPath","in.osm");
+  rubyMeasure.addArgument("outputPath","out.osm");
+  rubyMeasure.addArgument("objectType","OS:Material");
+  rubyMeasure.addArgument("nameRegex", "M15 200mm heavyweight concrete");
+  rubyMeasure.addArgument("field", "4"); // Conductivity
+  variable = analysis::RubyContinuousVariable(
+        "Exterior Wall Concrete Thermal Conductivity",
+        ruleset::OSArgument::makeDoubleArgument("value"),
+        rubyMeasure);
   boundedNormal = analysis::NormalDistribution(1.95,0.3);
   boundedNormal.setLowerBound(boundedNormal.mean() - boundedNormal.standardDeviation());
   boundedNormal.setUpperBound(boundedNormal.mean() + boundedNormal.standardDeviation());
@@ -702,15 +712,18 @@ openstudio::analysis::Problem AnalysisDriverFixture::createSimpleUQProblem()
   variables.push_back(variable);
 
   // Variable 3: Roof concrete thermal conductivity
-  filters.clear();
-  filters.push_back(ruleset::ModelObjectFilterType(IddObjectType::OS_Material));
-  filters.push_back(ruleset::ModelObjectFilterStringAttribute(
-      "name",
-      ruleset::RulesetStringPredicate(ruleset::RulesetStringPredicate::Equals),
-      "M11 100mm lightweight concrete"));
-  variable = analysis::ModelRulesetContinuousVariable("Roof Concrete Thermal Conductivity",
-                                                      filters,
-                                                      "thermalConductivity");
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::OSM,
+                                      FileReferenceType::OSM);
+  rubyMeasure.addArgument("inputPath","in.osm");
+  rubyMeasure.addArgument("outputPath","out.osm");
+  rubyMeasure.addArgument("objectType","OS:Material");
+  rubyMeasure.addArgument("nameRegex", "M11 100mm lightweight concrete");
+  rubyMeasure.addArgument("field", "4"); // Conductivity
+  variable = analysis::RubyContinuousVariable(
+        "Roof Concrete Thermal Conductivity",
+        ruleset::OSArgument::makeDoubleArgument("value"),
+        rubyMeasure);
   boundedNormal = analysis::NormalDistribution(0.53,0.3);
   boundedNormal.setLowerBound(boundedNormal.mean() - boundedNormal.standardDeviation());
   boundedNormal.setUpperBound(boundedNormal.mean() + boundedNormal.standardDeviation());
@@ -726,40 +739,47 @@ openstudio::analysis::Problem AnalysisDriverFixture::createMixedContinuousAndDis
   // Variables
   analysis::VariableVector variables;
 
+  openstudio::path rubyLibDirPath = openstudio::toPath(rubyLibDir());
+  openstudio::path perturbScript = rubyLibDirPath/openstudio::toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
+
+  analysis::MeasureVector measures;
+
   // Variable 1: Number of printers
   // 50% likely to have 1 printer, 30% likely to have 2, 20% likely to have 3
-  analysis::DiscretePerturbationVector perturbations;
-  ruleset::ModelRuleset ruleset("1 Printer");
-  ruleset::ModelRule rule("1 Printer");
-  rule.add(ruleset::ModelObjectFilterType(IddObjectType(IddObjectType::OS_ElectricEquipment)));
-  rule.add(ruleset::ModelObjectFilterStringAttribute(
-      "name",
-      ruleset::RulesetStringPredicate(ruleset::RulesetStringPredicate::Equals),
-      "Printer"));
-  rule.add(ruleset::ModelObjectActionSetAttribute("multiplier",int(1)));
-  ruleset.add(rule);
-  perturbations.push_back(analysis::ModelRulesetPerturbation(ruleset));
-  ruleset = ruleset::ModelRuleset("2 Printers");
-  rule = ruleset::ModelRule("2 Printers");
-  rule.add(ruleset::ModelObjectFilterType(IddObjectType(IddObjectType::OS_ElectricEquipment)));
-  rule.add(ruleset::ModelObjectFilterStringAttribute(
-      "name",
-      ruleset::RulesetStringPredicate(ruleset::RulesetStringPredicate::Equals),
-      "Printer"));
-  rule.add(ruleset::ModelObjectActionSetAttribute("multiplier",int(2)));
-  ruleset.add(rule);
-  perturbations.push_back(analysis::ModelRulesetPerturbation(ruleset));
-  ruleset = ruleset::ModelRuleset("3 Printers");
-  rule = ruleset::ModelRule("3 Printers");
-  rule.add(ruleset::ModelObjectFilterType(IddObjectType(IddObjectType::OS_ElectricEquipment)));
-  rule.add(ruleset::ModelObjectFilterStringAttribute(
-      "name",
-      ruleset::RulesetStringPredicate(ruleset::RulesetStringPredicate::Equals),
-      "Printer"));
-  rule.add(ruleset::ModelObjectActionSetAttribute("multiplier",int(3)));
-  ruleset.add(rule);
-  perturbations.push_back(analysis::ModelRulesetPerturbation(ruleset));
-  analysis::DiscreteVariable dv("Number of Printers",perturbations);
+  analysis::RubyMeasure rubyMeasure(perturbScript,
+                                    FileReferenceType::OSM,
+                                    FileReferenceType::OSM);
+  rubyMeasure.addArgument("inputPath","in.osm");
+  rubyMeasure.addArgument("outputPath","out.osm");
+  rubyMeasure.addArgument("objectType","OS:ElectricEquipment");
+  rubyMeasure.addArgument("nameRegex", "Printer");
+  rubyMeasure.addArgument("field", "5"); // Multiplier
+  rubyMeasure.addArgument("value","1"); // 1 Printer
+  rubyMeasure.setName("1 Printer");
+  measures.push_back(rubyMeasure);
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::OSM,
+                                      FileReferenceType::OSM);
+  rubyMeasure.addArgument("inputPath","in.osm");
+  rubyMeasure.addArgument("outputPath","out.osm");
+  rubyMeasure.addArgument("objectType","OS:ElectricEquipment");
+  rubyMeasure.addArgument("nameRegex", "Printer");
+  rubyMeasure.addArgument("field", "5"); // Multiplier
+  rubyMeasure.addArgument("value","2"); // 2 Printers
+  rubyMeasure.setName("2 Printers");
+  measures.push_back(rubyMeasure);
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::OSM,
+                                      FileReferenceType::OSM);
+  rubyMeasure.addArgument("inputPath","in.osm");
+  rubyMeasure.addArgument("outputPath","out.osm");
+  rubyMeasure.addArgument("objectType","OS:ElectricEquipment");
+  rubyMeasure.addArgument("nameRegex", "Printer");
+  rubyMeasure.addArgument("field", "5"); // Multiplier
+  rubyMeasure.addArgument("value","3"); // 3 Printers
+  rubyMeasure.setName("3 Printers");
+  measures.push_back(rubyMeasure);
+  analysis::MeasureGroup dv("Number of Printers",measures);
   DoubleVector abscissas, counts;
   abscissas.push_back(0);
   counts.push_back(0.5);
@@ -772,11 +792,18 @@ openstudio::analysis::Problem AnalysisDriverFixture::createMixedContinuousAndDis
   variables.push_back(dv);
 
   // Variable 2: Number of people
-  ruleset::ModelObjectFilterClauseVector filters;
-  filters.push_back(ruleset::ModelObjectFilterType(IddObjectType::OS_People_Definition));
-  analysis::ModelRulesetContinuousVariable cv("People Density",
-                                              filters,
-                                              "peopleperSpaceFloorArea");
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::OSM,
+                                      FileReferenceType::OSM);
+  rubyMeasure.addArgument("inputPath","in.osm");
+  rubyMeasure.addArgument("outputPath","out.osm");
+  rubyMeasure.addArgument("objectType","OS:People:Definition");
+  rubyMeasure.addArgument("nameRegex", ".*");
+  rubyMeasure.addArgument("field", "4"); // People per Space Floor Area
+  analysis::RubyContinuousVariable cv(
+        "People Density",
+        ruleset::OSArgument::makeDoubleArgument("value"),
+        rubyMeasure);
   analysis::TriangularDistribution triangularDist(0.05,0.01,0.2);
   cv.setUncertaintyDescription(triangularDist);
   variables.push_back(cv);
@@ -790,19 +817,25 @@ openstudio::analysis::Problem AnalysisDriverFixture::createSimpleLognormalUQProb
   // Variables
   analysis::VariableVector variables;
 
+  openstudio::path rubyLibDirPath = openstudio::toPath(rubyLibDir());
+  openstudio::path perturbScript = rubyLibDirPath/openstudio::toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
+
   // This tests the lognormal distribution, since it requires 2 of 5 optional variables to be
   // specified.
 
   // Variable 1: Slab concrete thermal conductivity
-  ruleset::ModelObjectFilterClauseVector filters;
-  filters.push_back(ruleset::ModelObjectFilterType(IddObjectType::OS_Material));
-  filters.push_back(ruleset::ModelObjectFilterStringAttribute(
-      "name",
-      ruleset::RulesetStringPredicate(ruleset::RulesetStringPredicate::Equals),
-      "MAT-CC05 8 HW CONCRETE"));
-  analysis::ModelRulesetContinuousVariable variable("Slab Concrete Thermal Conductivity",
-                                                    filters,
-                                                    "thermalConductivity");
+  analysis::RubyMeasure rubyMeasure(perturbScript,
+                                    FileReferenceType::OSM,
+                                    FileReferenceType::OSM);
+  rubyMeasure.addArgument("inputPath","in.osm");
+  rubyMeasure.addArgument("outputPath","out.osm");
+  rubyMeasure.addArgument("objectType","OS:Material");
+  rubyMeasure.addArgument("nameRegex", "MAT-CC05 8 HW CONCRETE");
+  rubyMeasure.addArgument("field", "4"); // Conductivity
+  analysis::RubyContinuousVariable variable(
+        "Slab Concrete Thermal Conductivity",
+        ruleset::OSArgument::makeDoubleArgument("value"),
+        rubyMeasure);
   analysis::LognormalDistribution lognormal;
   lognormal.setLambda(2.5);
   lognormal.setZeta(1.2);
@@ -812,15 +845,18 @@ openstudio::analysis::Problem AnalysisDriverFixture::createSimpleLognormalUQProb
   variables.push_back(variable);
 
   // Variable 2: Exterior wall concrete thermal conductivity
-  filters.clear();
-  filters.push_back(ruleset::ModelObjectFilterType(IddObjectType::OS_Material));
-  filters.push_back(ruleset::ModelObjectFilterStringAttribute(
-      "name",
-      ruleset::RulesetStringPredicate(ruleset::RulesetStringPredicate::Equals),
-      "M15 200mm heavyweight concrete"));
-  variable = analysis::ModelRulesetContinuousVariable("Exterior Wall Concrete Thermal Conductivity",
-                                                      filters,
-                                                      "thermalConductivity");
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::OSM,
+                                      FileReferenceType::OSM);
+  rubyMeasure.addArgument("inputPath","in.osm");
+  rubyMeasure.addArgument("outputPath","out.osm");
+  rubyMeasure.addArgument("objectType","OS:Material");
+  rubyMeasure.addArgument("nameRegex", "M15 200mm heavyweight concrete");
+  rubyMeasure.addArgument("field", "4"); // Conductivity
+  variable = analysis::RubyContinuousVariable(
+        "Exterior Wall Concrete Thermal Conductivity",
+        ruleset::OSArgument::makeDoubleArgument("value"),
+        rubyMeasure);
   lognormal = analysis::LognormalDistribution();
   lognormal.setLambda(3.5);
   lognormal.setZeta(2.2);
@@ -830,15 +866,18 @@ openstudio::analysis::Problem AnalysisDriverFixture::createSimpleLognormalUQProb
   variables.push_back(variable);
 
   // Variable 3: Roof concrete thermal conductivity
-  filters.clear();
-  filters.push_back(ruleset::ModelObjectFilterType(IddObjectType::OS_Material));
-  filters.push_back(ruleset::ModelObjectFilterStringAttribute(
-      "name",
-      ruleset::RulesetStringPredicate(ruleset::RulesetStringPredicate::Equals),
-      "M11 100mm lightweight concrete"));
-  variable = analysis::ModelRulesetContinuousVariable("Roof Concrete Thermal Conductivity",
-                                                      filters,
-                                                      "thermalConductivity");
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::OSM,
+                                      FileReferenceType::OSM);
+  rubyMeasure.addArgument("inputPath","in.osm");
+  rubyMeasure.addArgument("outputPath","out.osm");
+  rubyMeasure.addArgument("objectType","OS:Material");
+  rubyMeasure.addArgument("nameRegex", "M11 100mm lightweight concrete");
+  rubyMeasure.addArgument("field", "4"); // Conductivity
+  variable = analysis::RubyContinuousVariable(
+        "Roof Concrete Thermal Conductivity",
+        ruleset::OSArgument::makeDoubleArgument("value"),
+        rubyMeasure);
   lognormal = analysis::LognormalDistribution();
   lognormal.setLambda(4.5);
   lognormal.setZeta(1.5);
@@ -856,19 +895,25 @@ openstudio::analysis::Problem AnalysisDriverFixture::createSimpleHistogramBinUQP
   // Variables
   analysis::VariableVector variables;
 
+  openstudio::path rubyLibDirPath = openstudio::toPath(rubyLibDir());
+  openstudio::path perturbScript = rubyLibDirPath/openstudio::toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
+
   // This tests the histogram bin distribution, since it requires 1 of 2 optional variables to be
   // specified.
 
   // Variable 1: Slab concrete thermal conductivity
-  ruleset::ModelObjectFilterClauseVector filters;
-  filters.push_back(ruleset::ModelObjectFilterType(IddObjectType::OS_Material));
-  filters.push_back(ruleset::ModelObjectFilterStringAttribute(
-      "name",
-      ruleset::RulesetStringPredicate(ruleset::RulesetStringPredicate::Equals),
-      "MAT-CC05 8 HW CONCRETE"));
-  analysis::ModelRulesetContinuousVariable variable("Slab Concrete Thermal Conductivity",
-                                                    filters,
-                                                    "thermalConductivity");
+  analysis::RubyMeasure rubyMeasure(perturbScript,
+                                    FileReferenceType::OSM,
+                                    FileReferenceType::OSM);
+  rubyMeasure.addArgument("inputPath","in.osm");
+  rubyMeasure.addArgument("outputPath","out.osm");
+  rubyMeasure.addArgument("objectType","OS:Material");
+  rubyMeasure.addArgument("nameRegex", "MAT-CC05 8 HW CONCRETE");
+  rubyMeasure.addArgument("field", "4"); // Conductivity
+  analysis::RubyContinuousVariable variable(
+        "Slab Concrete Thermal Conductivity",
+        ruleset::OSArgument::makeDoubleArgument("value"),
+        rubyMeasure);
   DoubleVector abscissas, counts;
   abscissas.push_back(1.1);
   counts.push_back(0.3);
@@ -885,15 +930,18 @@ openstudio::analysis::Problem AnalysisDriverFixture::createSimpleHistogramBinUQP
   variables.push_back(variable);
 
   // Variable 2: Exterior wall concrete thermal conductivity
-  filters.clear();
-  filters.push_back(ruleset::ModelObjectFilterType(IddObjectType::OS_Material));
-  filters.push_back(ruleset::ModelObjectFilterStringAttribute(
-      "name",
-      ruleset::RulesetStringPredicate(ruleset::RulesetStringPredicate::Equals),
-      "M15 200mm heavyweight concrete"));
-  variable = analysis::ModelRulesetContinuousVariable("Exterior Wall Concrete Thermal Conductivity",
-                                                      filters,
-                                                      "thermalConductivity");
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::OSM,
+                                      FileReferenceType::OSM);
+  rubyMeasure.addArgument("inputPath","in.osm");
+  rubyMeasure.addArgument("outputPath","out.osm");
+  rubyMeasure.addArgument("objectType","OS:Material");
+  rubyMeasure.addArgument("nameRegex", "M15 200mm heavyweight concrete");
+  rubyMeasure.addArgument("field", "4"); // Conductivity
+  variable = analysis::RubyContinuousVariable(
+        "Exterior Wall Concrete Thermal Conductivity",
+        ruleset::OSArgument::makeDoubleArgument("value"),
+        rubyMeasure);
   analysis::LoguniformDistribution loguniform;
   loguniform.setLowerBound(1);
   loguniform.setUpperBound(1.6);
@@ -901,15 +949,18 @@ openstudio::analysis::Problem AnalysisDriverFixture::createSimpleHistogramBinUQP
   variables.push_back(variable);
 
   // Variable 3: Roof concrete thermal conductivity
-  filters.clear();
-  filters.push_back(ruleset::ModelObjectFilterType(IddObjectType::OS_Material));
-  filters.push_back(ruleset::ModelObjectFilterStringAttribute(
-      "name",
-      ruleset::RulesetStringPredicate(ruleset::RulesetStringPredicate::Equals),
-      "M11 100mm lightweight concrete"));
-  variable = analysis::ModelRulesetContinuousVariable("Roof Concrete Thermal Conductivity",
-                                                      filters,
-                                                      "thermalConductivity");
+  rubyMeasure = analysis::RubyMeasure(perturbScript,
+                                      FileReferenceType::OSM,
+                                      FileReferenceType::OSM);
+  rubyMeasure.addArgument("inputPath","in.osm");
+  rubyMeasure.addArgument("outputPath","out.osm");
+  rubyMeasure.addArgument("objectType","OS:Material");
+  rubyMeasure.addArgument("nameRegex", "M11 100mm lightweight concrete");
+  rubyMeasure.addArgument("field", "4"); // Conductivity
+  variable = analysis::RubyContinuousVariable(
+        "Roof Concrete Thermal Conductivity",
+        ruleset::OSArgument::makeDoubleArgument("value"),
+        rubyMeasure);
   analysis::GammaDistribution gamma(1.5,0.5);
   variable.setUncertaintyDescription(gamma);
   variables.push_back(variable);
@@ -922,11 +973,11 @@ openstudio::analysis::Problem AnalysisDriverFixture::createBuggyBCLMeasureProble
   Problem problem("Buggy BCLMeasure Problem");
 
   BCLMeasure measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/TestFlagAsNotApplicable")).get();
-  RubyPerturbation rpert(measure);
+  RubyMeasure rpert(measure);
   ruleset::OSArgument arg = ruleset::OSArgument::makeBoolArgument("applicable", true);
   arg.setValue(false);
   rpert.setArgument(arg);
-  problem.push(DiscreteVariable("NA Transformation",DiscretePerturbationVector(1u,rpert)));
+  problem.push(MeasureGroup("NA Transformation",MeasureVector(1u,rpert)));
 
   measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/TestCreateWarningMsgs")).get();
   runmanager::RubyJobBuilder rjb(measure);
@@ -935,8 +986,8 @@ openstudio::analysis::Problem AnalysisDriverFixture::createBuggyBCLMeasureProble
   problem.push(workItem);
 
   measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/TestMissingARequiredArgWithNoDefault")).get();
-  rpert = RubyPerturbation(measure);
-  problem.push(DiscreteVariable("Missing Argument",DiscretePerturbationVector(1u,rpert)));
+  rpert = RubyMeasure(measure);
+  problem.push(MeasureGroup("Missing Argument",MeasureVector(1u,rpert)));
 
   // should never get to here b/c previous variable should fail
   measure = BCLMeasure::load(resourcesPath() / toPath("utilities/BCL/Measures/TestFlagAsNotApplicable")).get();

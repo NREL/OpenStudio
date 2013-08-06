@@ -77,8 +77,8 @@
 
 #include <analysis/DataPoint.hpp>
 #include <analysis/Problem.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/NullPerturbation.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/NullMeasure.hpp>
 
 #include <runmanager/lib/WorkItem.hpp>
 
@@ -228,7 +228,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
     openstudio::analysis::Problem problem = m_simpleProject->analysis().problem();
 
     // add swap variable
-    openstudio::analysis::DiscreteVariable dvar("Alternative Model",openstudio::analysis::DiscretePerturbationVector(1u,openstudio::analysis::NullPerturbation()));
+    openstudio::analysis::MeasureGroup dvar("Alternative Model",openstudio::analysis::MeasureVector(1u,openstudio::analysis::NullMeasure()));
     problem.push(dvar);
 
     // set up simulation workflow

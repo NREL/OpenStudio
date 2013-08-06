@@ -361,7 +361,7 @@ bool InputController::isArgumentIncomplete() const
 {
   // Get the argument from the ruby perturbation by the same name as m_argument
 
-  std::vector<ruleset::OSArgument> argumentVector = m_editController->measureItem()->perturbation().arguments();
+  std::vector<ruleset::OSArgument> argumentVector = m_editController->measureItem()->measure().arguments();
 
   std::map<std::string,ruleset::OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
 

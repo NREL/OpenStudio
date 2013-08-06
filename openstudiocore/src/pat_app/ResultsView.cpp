@@ -28,10 +28,10 @@
 #include <analysis/Analysis_Impl.hpp>
 #include <analysis/DataPoint.hpp>
 #include <analysis/DataPoint_Impl.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/DiscretePerturbation_Impl.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/NullPerturbation_Impl.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/Measure_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/NullMeasure_Impl.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/Problem_Impl.hpp>
 #include <analysis/Variable.hpp>
@@ -519,7 +519,7 @@ DataPointResultsView::DataPointResultsView(const openstudio::analysis::DataPoint
 void DataPointResultsView::update()
 {
   QString name;
-  QString measures;
+  QString listOfMeasures;
 
   boost::optional<double> netSiteEnergyIntensity;
   boost::optional<double> peakElectricDemand;
@@ -548,7 +548,7 @@ void DataPointResultsView::update()
   if (m_dataPoint.uuid() == m_baselineDataPoint.uuid()){
 
     name = "Baseline";
-    measures = "";
+    listOfMeasures = "";
     
     netSiteEnergyIntensity = getBaselineValue("Net Site Energy Use Intentsity");
     peakElectricDemand = getBaselineValue("Instantaneous Peak Electricity Demand");
@@ -573,18 +573,18 @@ void DataPointResultsView::update()
     if(project){
       openstudio::analysis::Problem problem = project->analysis().problem();
       std::vector<QVariant> variableValues = m_dataPoint.variableValues();
-      std::vector<boost::optional<analysis::DiscretePerturbation> > discretePerturbations = problem.getDiscretePerturbations(variableValues);
-      Q_FOREACH(boost::optional<analysis::DiscretePerturbation> discretePerturbation, discretePerturbations){
-        if (discretePerturbation){
-          if (!discretePerturbation->optionalCast<analysis::NullPerturbation>()){
-            measures += discretePerturbation->name().c_str();
-            measures += '\n';
+      std::vector<boost::optional<analysis::Measure> > measures = problem.getMeasures(variableValues);
+      Q_FOREACH(boost::optional<analysis::Measure> measure, measures){
+        if (measure){
+          if (!measure->optionalCast<analysis::NullMeasure>()){
+            listOfMeasures += measure->name().c_str();
+            listOfMeasures += '\n';
           }
         }
       }
     }
 
-    measures = measures.trimmed();
+    listOfMeasures = listOfMeasures.trimmed();
 
     netSiteEnergyIntensity = getDifference("Net Site Energy Use Intentsity");
     peakElectricDemand = getDifference("Instantaneous Peak Electricity Demand");
@@ -640,7 +640,7 @@ void DataPointResultsView::update()
   }else{
 
     m_nameLabel->setText(name);
-    m_nameLabel->setToolTip(measures);
+    m_nameLabel->setToolTip(listOfMeasures);
     m_nameLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
     m_nameLabel->setMinimumWidth(NAME_LABEL_WIDTH);
     //m_nameLabel->setFixedWidth(NAME_LABEL_WIDTH);

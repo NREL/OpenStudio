@@ -511,8 +511,8 @@ void DataPointJobItemView::paintEvent(QPaintEvent * e)
 
 void DataPointJobItemView::update()
 {
-  if (m_workflowStepJob.discretePerturbation) {
-    dataPointJobHeaderView->setName(m_workflowStepJob.discretePerturbation->name());
+  if (m_workflowStepJob.measure) {
+    dataPointJobHeaderView->setName(m_workflowStepJob.measure->name());
   }
   else {
     Q_ASSERT(m_workflowStepJob.step.isWorkItem());
