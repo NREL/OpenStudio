@@ -184,6 +184,14 @@ namespace detail {
     return parent;
   }
 
+  QVariant JSON::toVariant(const AdvancedStatus &t_status)
+  {
+    QVariantMap map;
+    map["status"] = QVariant(openstudio::toQString(t_status.value().valueDescription()));
+    map["description"] = QVariant(openstudio::toQString(t_status.description()));
+    return map;
+  }
+
   QVariant JSON::toVariant(const Job &t_jobTree)
   {
     QVariantMap map;
@@ -207,6 +215,8 @@ namespace detail {
     {
       map["finishedJob"] = toVariant(*t_jobTree.finishedJob());
     }
+
+    map["status"] = toVariant(t_jobTree.status());
 
     QVariantMap parentMap;
     parentMap["Job"] = map;
@@ -237,19 +247,15 @@ namespace detail {
     return parent;
   }
 
+  std::vector<Job> JSON::toVectorOfJob(const std::string &t_json, bool t_externallyManaged)
+  {
+    return toVectorOfJob(parseJSON(t_json), t_externallyManaged);
+  }
+
   /// \returns a WorkItem from the given JSON string
   WorkItem JSON::toWorkItem(const std::string &t_json)
   {
-    QJson::Parser parser;
-    bool ok = false;
-    QVariant variant = parser.parse(toQString(t_json).toUtf8(), &ok);
-
-    if (ok)
-    {
-      return toWorkItem(variant);
-    } else {
-      throw std::runtime_error("Error parsing JSON: " + toString(parser.errorString()));
-    }
+    return toWorkItem(parseJSON(t_json));
   }
 
   WorkItem JSON::toWorkItem(const QVariant &t_variant)
@@ -270,9 +276,7 @@ namespace detail {
         );
   }
 
-
-  /// \returns a JSON string representation of the given job tree
-  Job JSON::toJob(const std::string &t_json)
+  QVariant JSON::parseJSON(const std::string &t_json)
   {
     QJson::Parser parser;
     bool ok = false;
@@ -280,10 +284,15 @@ namespace detail {
 
     if (ok)
     {
-      return toJob(variant);
+      return variant;
     } else {
       throw std::runtime_error("Error parsing JSON: " + toString(parser.errorString()));
     }
+  }
+
+  Job JSON::toJob(const std::string &t_json, bool t_externallyManaged)
+  {
+    return toJob(parseJSON(t_json), t_externallyManaged);
   }
 
 
@@ -413,7 +422,7 @@ namespace detail {
     return retval;
   }
 
-  std::vector<Job> JSON::toVectorOfJob(const QVariant &t_variant)
+  std::vector<Job> JSON::toVectorOfJob(const QVariant &t_variant, bool t_externallyManaged)
   {
     QVariantList qvl = t_variant.toList();
     std::vector<Job> retval;
@@ -422,7 +431,7 @@ namespace detail {
          itr != qvl.end();
          ++itr)
     {
-      retval.push_back(toJob(*itr));
+      retval.push_back(toJob(*itr, t_externallyManaged));
     }
 
     return retval;
@@ -467,7 +476,18 @@ namespace detail {
 
   }
 
-  Job JSON::toJob(const QVariant &t_variant)
+  AdvancedStatus JSON::toAdvancedStatus(const QVariant &t_variant)
+  {
+    QVariantMap map = t_variant.toMap();
+
+    return AdvancedStatus(
+        AdvancedStatusEnum(openstudio::toString(map["status"].toString())),
+        openstudio::toString(map["description"].toString())
+        );
+  }
+
+
+  Job JSON::toJob(const QVariant &t_variant, bool t_externallyManaged)
   {
     QVariantMap map = t_variant.toMap()["Job"].toMap();
 
@@ -476,21 +496,38 @@ namespace detail {
       throw std::runtime_error("Unable to find Job object at expected location");
     }
 
+    JobParams params(toVectorOfJobParam(map["params"]));
+
+    if (params.has("jobExternallyManaged"))
+    {
+      params.remove("jobExternallyManaged");
+    }
+
+    if (t_externallyManaged)
+    {
+      params.append("jobExternallyManaged", "true");
+    }
+
     Job job = JobFactory::createJob(
         JobType(toString(map["type"].toString())),
         Tools(toVectorOfToolInfo(map["tools"])),
-        JobParams(toVectorOfJobParam(map["params"])),
+        params,
         Files(toVectorOfFileInfo(map["files"])),
         std::vector<openstudio::URLSearchPath>(),
         false,
         map.contains("uuid")?openstudio::UUID(map["uuid"].toString()):boost::optional<openstudio::UUID>(),
-        map.contains("lastRun")?openstudio::DateTime(toString(map["lastRun"].toString())):boost::optional<openstudio::DateTime>(),
-        toJobErrors(map["errors"]),
-        Files(toVectorOfFileInfo(map["outputFiles"]))
+
+        JobState(
+          map.contains("lastRun")?openstudio::DateTime(toString(map["lastRun"].toString())):boost::optional<openstudio::DateTime>(),
+          toJobErrors(map["errors"]),
+          Files(toVectorOfFileInfo(map["outputFiles"])),
+          toAdvancedStatus(map["status"])
+          )
+
         );
 
 
-    std::vector<Job> children = toVectorOfJob(map["children"]);
+    std::vector<Job> children = toVectorOfJob(map["children"], t_externallyManaged);
 
     for (std::vector<Job>::const_iterator itr = children.begin();
          itr != children.end();
@@ -501,7 +538,7 @@ namespace detail {
 
     if (map.contains("finishedJob"))
     {
-      Job finishedJob = toJob(map["finishedJob"]);
+      Job finishedJob = toJob(map["finishedJob"], t_externallyManaged);
       job.setFinishedJob(finishedJob);
     }
 

@@ -467,12 +467,17 @@ namespace runmanager {
 
   Job Job::fromJSON(const std::string &t_json)
   {
-    return detail::JSON::toJob(t_json);
+    return detail::JSON::toJob(t_json, false);
   }
 
   std::string Job::toJSON() const
   {
     return detail::JSON::toJSON(*this);
+  }
+
+  void Job::updateJob(const Job &t_other)
+  {
+    m_impl->updateJob(t_other.m_impl);
   }
 
 }

@@ -746,9 +746,7 @@ namespace detail {
                   std::vector<URLSearchPath>(),
                   true,
                   uuid,
-                  dt,
-                  e,
-                  f
+                  JobState(dt, e, f, AdvancedStatus(AdvancedStatusEnum::Idle))
                   );
 
               loadedjobs.push_back(std::make_pair(*itr, j));
@@ -2352,6 +2350,22 @@ namespace detail {
       if (!itr->parent())
       {
         enqueue(*itr, true, t_path.parent_path());
+      }
+    }
+  }
+
+  void RunManager_Impl::updateJobs(const std::vector<Job> &t_jobTrees)
+  {
+    for (std::vector<Job>::const_iterator itr = t_jobTrees.begin();
+         itr != t_jobTrees.end();
+         ++itr)
+    {
+      try {
+        Job j = getJob(itr->uuid());
+        j.updateJob(*itr);
+      } catch (const std::runtime_error &) {
+        // job didn't exist
+        enqueue(*itr, true, m_dbfile.parent_path());
       }
     }
   }

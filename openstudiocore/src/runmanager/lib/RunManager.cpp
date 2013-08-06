@@ -19,6 +19,7 @@
 
 #include "RunManager.hpp"
 #include "RunManagerStatus.hpp"
+#include "JSON.hpp"
 
 #include "Workflow.hpp"
 #include "RunManager_Impl.hpp"
@@ -295,10 +296,56 @@ namespace runmanager {
     return m_impl->getJobs(t_indexes);
   }
 
-  void RunManager::loadJobs(const openstudio::path &t_db)
+  /// Load all of the jobs from the given JSON string, merging job trees
+  void RunManager::updateJobs(const std::string &t_json, bool t_externallyManaged)
   {
-    m_impl->loadJobs(t_db);
+    updateJobs(detail::JSON::toVectorOfJob(t_json, t_externallyManaged)); 
   }
+
+  /// Load all of the jobs from the given JSON structure represented by a QVariant,
+  /// merging job trees
+  void RunManager::updateJobs(const QVariant &t_variant, bool t_externallyManaged)
+  {
+    updateJobs(detail::JSON::toVectorOfJob(t_variant, t_externallyManaged));
+  }
+
+  void RunManager::loadJobs(const openstudio::path &t_path)
+  {
+    m_impl->loadJobs(t_path);
+  }
+
+
+  /// merge job trees
+  void RunManager::updateJobs(const std::vector<Job> &t_jobs)
+  {
+    m_impl->updateJobs(t_jobs);
+  }
+
+  std::string RunManager::jobsToJson() const
+  {
+    return detail::JSON::toJSON(jobsToVariant());
+  }
+
+  QVariant RunManager::jobsToVariant() const
+  {
+    std::vector<Job> retval;
+
+    std::vector<Job> currentJobs = getJobs();
+
+    for (std::vector<Job>::const_iterator itr = currentJobs.begin();
+         itr != currentJobs.end();
+         ++itr)
+    {
+      // only parent jobs get saved
+      if (!itr->parent())
+      {
+        retval.push_back(*itr);
+      }
+    }
+
+    return detail::JSON::toVariant(retval);
+  }
+
 
   openstudio::runmanager::ConfigOptions RunManager::getConfigOptions() const
   {

@@ -342,6 +342,12 @@ namespace detail {
       ///     creating a Workflow from a Job tree
       std::string toJSON() const;
 
+      /// Update this job tree with the details from the other job tree. Throws an error
+      /// if the UUID's do not match
+      ///
+      /// Specifically, the static content: input files, params and tools remain static
+      /// but the state, output files, last runtime are updated.
+      void updateJob(const Job &t_other);
 
       Job &operator=(Job rhs);
 

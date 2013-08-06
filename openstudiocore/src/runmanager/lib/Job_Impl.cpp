@@ -42,7 +42,8 @@ namespace detail {
       m_canceled(false), m_runnable(true), m_force(false),
       m_basePath(boost::filesystem::initial_path<openstudio::path>()),
       m_jobState(t_jobState),
-      m_hasRunSinceLoading(false)
+      m_hasRunSinceLoading(false),
+      m_externallyManaged(t_params.has("jobExternallyManaged"))
   {
     RunManager_Impl::registerMetaTypes();
 
@@ -882,7 +883,13 @@ namespace detail {
   AdvancedStatus Job_Impl::status() const
   {
     QReadLocker l(&m_mutex);
-    return m_status;
+
+    if (m_hasRunSinceLoading)
+    {
+      return m_status;
+    } else {
+      return m_jobState.status;
+    }
   }
 
 
@@ -1034,13 +1041,20 @@ namespace detail {
   void Job_Impl::emitStatusChanged(const AdvancedStatus &t_stat)
   {
     QWriteLocker l(&m_mutex);
-    if (t_stat != m_status)
+    if (!m_hasRunSinceLoading)
     {
-      m_status = t_stat;
-      m_history.push_back(std::make_pair(boost::posix_time::microsec_clock::universal_time(), t_stat));
       l.unlock();
       emit statusChanged(t_stat);
       emit treeChanged(m_id);
+    } else {
+      if (t_stat != m_status)
+      {
+        m_status = t_stat;
+        m_history.push_back(std::make_pair(boost::posix_time::microsec_clock::universal_time(), t_stat));
+        l.unlock();
+        emit statusChanged(t_stat);
+        emit treeChanged(m_id);
+      }
     }
   }
 
@@ -1098,6 +1112,7 @@ namespace detail {
     QReadLocker l(&m_mutex);
 
     // Let's take care of the short circuiting cases
+    if (m_externallyManaged) return false;
     if (m_force) return true;
     if (!m_runnable || m_canceled || isRunning()) return false;
 
@@ -1618,6 +1633,145 @@ namespace detail {
   }
 
 
+  void Job_Impl::updateJob(const boost::shared_ptr<Job_Impl> &t_other)
+  {
+    LOG(Info, "Updating job: " << toString(uuid().toString()));
+    QWriteLocker l(&m_mutex);
+
+    if (!m_externallyManaged
+        || !t_other->m_externallyManaged)
+    {
+      throw std::runtime_error("Job updating is only valid for externallyManaged jobs");
+    }
+
+    if (m_id != t_other->uuid())
+    {
+      throw std::runtime_error("Jobs do not match, unable to updateJob");
+    }
+
+    std::vector<boost::shared_ptr<Job_Impl> > myChildren = m_children;
+    std::set<openstudio::UUID> myChildrenIds;
+
+    for (std::vector<boost::shared_ptr<Job_Impl> >::const_iterator itr = myChildren.begin();
+         itr != myChildren.end();
+         ++itr)
+    {
+      myChildrenIds.insert((*itr)->uuid());
+    }
+
+    std::vector<boost::shared_ptr<Job_Impl> > otherChildren = t_other->children();
+    std::set<openstudio::UUID> otherChildrenIds;
+
+    for (std::vector<boost::shared_ptr<Job_Impl> >::const_iterator itr = otherChildren.begin();
+         itr != otherChildren.end();
+         ++itr)
+    {
+      otherChildrenIds.insert((*itr)->uuid());
+    }
+
+    if (myChildrenIds != otherChildrenIds)
+    {
+      throw std::runtime_error("Job children do not match, unable to updateJob");
+    }
+
+    boost::shared_ptr<Job_Impl> myFinishedJob = m_finishedJob;
+    bool myHasFinishedJob = myFinishedJob;
+    boost::shared_ptr<Job_Impl> otherFinishedJob = t_other->finishedJob();
+    bool otherHasFinishedJob = otherFinishedJob;
+
+    if (myHasFinishedJob != otherHasFinishedJob)
+    {
+      throw std::runtime_error("Finished jobs mismatch, unable to updateJob");
+    }
+
+    if (myHasFinishedJob)
+    {
+      if (myFinishedJob->uuid() != otherFinishedJob->uuid())
+      {
+        throw std::runtime_error("Finished jobs do not match, unable to updateJob");
+      }
+    }
+
+
+
+    JobState oldState = m_jobState;
+    JobState newState = t_other->m_jobState;
+
+    m_jobState = newState;
+
+    bool sendStatus = false;
+    if (oldState.status != newState.status)
+    {
+      sendStatus = true;
+    }
+
+    bool sendFinished = false;
+    bool sendStarted = false;
+
+    if (!oldState.lastRun && newState.lastRun)
+    {
+      sendFinished = true;
+      sendStarted = true;
+    }
+
+    if (oldState.status.value() == AdvancedStatusEnum::Idle 
+        && newState.status.value() != AdvancedStatusEnum::Idle)
+    {
+      sendStarted = true;
+    }
+
+    std::vector<FileInfo> diffFiles;
+    std::set<FileInfo> oldFiles(oldState.outputFiles.files().begin(), oldState.outputFiles.files().end());
+    std::set<FileInfo> newFiles(newState.outputFiles.files().begin(), newState.outputFiles.files().end());
+    
+    std::set_symmetric_difference(oldFiles.begin(), oldFiles.end(),
+                        newFiles.begin(), newFiles.end(),
+                        std::back_inserter(diffFiles));
+
+    l.unlock();
+
+    if (sendStarted)
+    {
+      LOG(Debug, "updateJob: emitStarted()");
+      emitStarted();
+    }
+
+    if (sendStatus)
+    {
+      LOG(Debug, "updateJob: emitStatusChanged()");
+      emitStatusChanged(newState.status);
+    }
+
+    LOG(Debug, "updateJob: emitOutputFileChanged()");
+    std::for_each(diffFiles.begin(), diffFiles.end(), boost::bind(&Job_Impl::emitOutputFileChanged, this, _1));
+
+    if (sendFinished)
+    {
+      LOG(Debug, "updateJob: emitFinished()");
+      emitFinished(newState.errors, newState.lastRun, Files(std::vector<FileInfo>(newFiles.begin(), newFiles.end())));
+    }
+
+    for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr = myChildren.begin();
+         itr != myChildren.end();
+         ++itr)
+    {
+      for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr2 = otherChildren.begin();
+           itr2 != otherChildren.end();
+           ++itr2)
+      {
+        if ((*itr)->uuid() == (*itr2)->uuid())
+        {
+          (*itr)->updateJob(*itr2);
+          break;
+        }
+      }
+    }
+
+    if (myHasFinishedJob)
+    {
+      myFinishedJob->updateJob(otherFinishedJob);
+    }
+  }
 
 }
 }

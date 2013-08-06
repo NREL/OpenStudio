@@ -29,7 +29,7 @@ namespace openstudio {
       {
         public:
           /// \returns a job tree created from the passed in json string
-          static Job toJob(const std::string &t_jsonString);
+          static Job toJob(const std::string &t_jsonString, bool t_externallyManaged);
 
           /// \returns a JSON string representation of the given job tree
           static std::string toJSON(const Job &t_jobTree);
@@ -38,7 +38,7 @@ namespace openstudio {
           //        void updateFromJSON(Job &t_jobTree, const std::string &t_jsonString);
 
 
-          static Job toJob(const QVariant &t_variant);
+          static Job toJob(const QVariant &t_variant, bool t_externallyManaged);
 
 
           static std::string toJSON(const QVariant &t_variant);
@@ -54,8 +54,9 @@ namespace openstudio {
           static QVariant toVariant(const std::vector<std::pair<ErrorType, std::string> > &t_errors);
           static QVariant toVariant(const JobErrors &t_errors);
           static QVariant toVariant(const Job &t_jobTree);
+          static QVariant toVariant(const AdvancedStatus &t_status);
 
-
+          static AdvancedStatus toAdvancedStatus(const QVariant &t_variant);
           static std::string toJSON(const WorkItem &t_workItem);
           static QVariant toVariant(const WorkItem &t_workItem);
           static WorkItem toWorkItem(const std::string &t_json);
@@ -68,7 +69,9 @@ namespace openstudio {
           static std::vector<JobParam> toVectorOfJobParam(const QVariant &t_variant);
           static ToolInfo toToolInfo(const QVariant &t_variant);
           static std::vector<ToolInfo> toVectorOfToolInfo(const QVariant &t_variant);
-          static std::vector<Job> toVectorOfJob(const QVariant &t_variant);
+          static QVariant parseJSON(const std::string &t_json);
+          static std::vector<Job> toVectorOfJob(const QVariant &t_variant, bool t_externallyManaged);
+          static std::vector<Job> toVectorOfJob(const std::string &t_json, bool t_externallyManaged);
           static std::vector<std::pair<ErrorType, std::string> > toVectorOfError(const QVariant &t_variant);
           static JobErrors toJobErrors(const QVariant &t_variant);
 

@@ -23,6 +23,7 @@
 #include "JobParam.hpp"
 #include "RunManagerAPI.hpp"
 #include "ToolInfo.hpp"
+#include "JobState.hpp"
 #include <utilities/idf/URLSearchPath.hpp>
 
 #include <utilities/core/Path.hpp>
@@ -65,9 +66,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create an EnergyPlusJob, generic version
@@ -87,9 +86,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create an EnergyPlusJob
@@ -145,9 +142,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create an XMLPreprocessorJob, generic version
@@ -167,9 +162,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create a ReadVarsJob, generic version
@@ -189,9 +182,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create a ModelToIdfJob, generic version
@@ -211,9 +202,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create a ModelToIdfJob
@@ -245,9 +234,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create a ModelToIdfJob
@@ -281,9 +268,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create a IdfToModelJob
@@ -314,9 +299,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Creates a PreviewIESJob
@@ -348,9 +331,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create a RubyJob. this version assumes that a parent job has already provided the ToolInfo for the ruby executable
@@ -384,9 +365,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       static Job createRubyJob(
@@ -412,9 +391,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create a UserScriptJob, generic version
@@ -446,9 +423,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create a ModelObjectPerturbationJob, generic version
@@ -468,9 +443,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create a ModelObjectPerturbationJob
@@ -513,9 +486,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create a OpenStudioPostProcessJob, generic version
@@ -535,9 +506,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create a EnergyPlusPreProcessJob, generic version
@@ -557,9 +526,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create a ModelToRadPreProcessJob, generic version
@@ -579,9 +546,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
 
@@ -602,9 +567,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create a ParallelEnergyPlusJoinJob, generic version
@@ -624,9 +587,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create a BasementJob, generic version
@@ -646,9 +607,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create a SlabJob, generic version
@@ -668,9 +627,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create a DakotaJob, generic version
@@ -690,9 +647,7 @@ namespace runmanager {
           const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
           bool t_loading = false,
           const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const boost::optional<openstudio::DateTime> &t_lastRun = boost::optional<openstudio::DateTime>(),
-          const JobErrors &t_jobErrors = JobErrors(),
-          const Files &t_outputFiles = Files()
+          const openstudio::runmanager::JobState &t_state = JobState()
           );
 
       /// Create a ParallelEnergyPlusJoinJob, with the expected number of jobs to join
