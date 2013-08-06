@@ -243,7 +243,6 @@ SET( runmanager_test_src
   Test/MergeJobs_GTest.cpp
   Test/EnergyPlusPostProcessJob_GTest.cpp
   Test/OpenStudioPostProcessJob_GTest.cpp
-  Test/ModelObjectPerturbationJob_GTest.cpp
   Test/FlatOutDir_GTest.cpp
   Test/ModelToRadJob_GTest.cpp
   Test/UserScript_GTest.cpp
