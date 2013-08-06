@@ -188,7 +188,10 @@ namespace sdd {
 
       // do site after design days and weather file
       boost::optional<model::ModelObject> site = translateSite(projectElement, doc, *result);
-      BOOST_ASSERT(site); // what type of error handling do we want?
+      //BOOST_ASSERT(site); // what type of error handling do we want?
+      if (!site){
+        LOG(Error, "Could not find site information in SDD");
+      }
 
       // HVACAutoSizing
       QDomElement hvacAutoSizingElement = projectElement.firstChildElement("HVACAutoSizing");
