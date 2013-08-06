@@ -268,26 +268,26 @@ namespace detail {
     // actual value of continous variables.
 
     ProjectDatabase database = projectDatabase();
-    IntVector discretePerturbationRecordIds;
+    IntVector measureRecordIds;
     for (int variableVectorIndex = 0, n = variableValues.size(); variableVectorIndex < n;
          ++variableVectorIndex)
     {
       QVariant value = variableValues[variableVectorIndex];
       if (!value.isNull()) {
         QSqlQuery query(*(database.qSqlDatabase()));
-        query.prepare(toQString("SELECT p.id FROM " +
-            MeasureRecord::databaseTableName() + " p, " +
+        query.prepare(toQString("SELECT m.id FROM " +
+            MeasureRecord::databaseTableName() + " m, " +
             VariableRecord::databaseTableName() + " v WHERE " +
-            "p.perturbationVectorIndex=:perturbationVectorIndex AND " +
-            "p.variableRecordId=v.id AND " +
+            "m.measureVectorIndex=:measureVectorIndex AND " +
+            "m.variableRecordId=v.id AND " +
             "v.problemRecordId=:problemRecordId AND " +
             "v.variableVectorIndex=:variableVectorIndex"));
-        query.bindValue(":perturbationVectorIndex",value.toInt());
+        query.bindValue(":measureVectorIndex",value.toInt());
         query.bindValue(":problemRecordId",m_problemRecordId);
         query.bindValue(":variableVectorIndex",variableVectorIndex);
         assertExec(query);
         if (query.first()) {
-          discretePerturbationRecordIds.push_back(query.value(0).toInt());
+          measureRecordIds.push_back(query.value(0).toInt());
         }
         else {
           return result;
@@ -295,7 +295,7 @@ namespace detail {
       }
     }
 
-    return getDataPointRecords(discretePerturbationRecordIds);
+    return getDataPointRecords(measureRecordIds);
   }
 
   std::vector<DataPointRecord> AnalysisRecord_Impl::getDataPointRecords(

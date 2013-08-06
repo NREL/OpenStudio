@@ -102,28 +102,5 @@ TEST_F(RunManagerTestFixture, MergeFinishedNullJobsSuccessTest)
   EXPECT_FALSE(j.finishedJob());
 }
 
-TEST_F(RunManagerTestFixture, MergeMixedJobsTest)
-{
-  // Expect finishedJob to merge, since there are no children
-  // 
-  openstudio::runmanager::Job j = openstudio::runmanager::Workflow("Null->ModelObjectPerturbation->Null->ModelObjectPerturbation->Null->ModelObjectPerturbation->Null->ModelObjectPerturbation").create();
-
-
-  EXPECT_EQ(j.children().size(), static_cast<size_t>(1));
-  EXPECT_EQ(j.children().at(0).children().size(), static_cast<size_t>(1));
-  EXPECT_EQ(j.children().at(0).children().at(0).children().size(), static_cast<size_t>(1));
-  EXPECT_EQ(j.children().at(0).children().at(0).children().at(0).children().size(), static_cast<size_t>(1));
-  EXPECT_EQ(j.jobType(), openstudio::runmanager::JobType::Null);
-  EXPECT_EQ(j.children().at(0).jobType(), openstudio::runmanager::JobType::ModelObjectPerturbation);
-  EXPECT_EQ(j.children().at(0).children().at(0).jobType(), openstudio::runmanager::JobType::Null);
-
-  openstudio::runmanager::JobFactory::optimizeJobTree(j);
-
-  EXPECT_EQ(j.children().size(), static_cast<size_t>(1));
-  EXPECT_EQ(j.children().at(0).children().size(), static_cast<size_t>(0));
-  EXPECT_EQ(j.jobType(), openstudio::runmanager::JobType::Null);
-  EXPECT_EQ(j.children().at(0).jobType(), openstudio::runmanager::JobType::ModelObjectPerturbation);
-
-
-}
-
+// ETH@20130806: Removing MergeMixedJobsTest because ModelRulesets have been deprecated.
+// Something like it should be reinstantiated when the feature to merge RubyJobs is added.
