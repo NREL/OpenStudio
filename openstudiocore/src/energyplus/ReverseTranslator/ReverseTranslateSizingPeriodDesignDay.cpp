@@ -199,20 +199,20 @@ OptionalModelObject ReverseTranslator::translateSizingPeriodDesignDay( const Wor
     designDay.setBarometricPressure(value.get());
   }
 
-  // Wind Speed
+  // Site Wind Speed
   value = workspaceObject.getDouble(SizingPeriod_DesignDayFields::WindSpeed);
   if( value ){
     designDay.setWindSpeed(value.get());
   }else{
-    LOG(Error, "SizingPeriod:DesignDay " << designDay.name().get() << " missing required field Wind Speed");
+    LOG(Error, "SizingPeriod:DesignDay " << designDay.name().get() << " missing required field Site Wind Speed");
   }
 
-  // Wind Direction
+  // Site Wind Direction
   value = workspaceObject.getDouble(SizingPeriod_DesignDayFields::WindDirection);
   if( value ){
     designDay.setWindDirection(value.get());
   }else{
-    LOG(Error, "SizingPeriod:DesignDay " << designDay.name().get() << " missing required field Wind Direction");
+    LOG(Error, "SizingPeriod:DesignDay " << designDay.name().get() << " missing required field Site Wind Direction");
   }
 
   // Rain Indicator
@@ -235,7 +235,7 @@ OptionalModelObject ReverseTranslator::translateSizingPeriodDesignDay( const Wor
     }
   }
 
-  // Daylight Saving Time Indicator
+  // Site Daylight Saving Time Status
   s = workspaceObject.getString(SizingPeriod_DesignDayFields::DaylightSavingTimeIndicator);
   if( s ){
     if( istringEqual(*s, "Yes") ){
@@ -252,7 +252,7 @@ OptionalModelObject ReverseTranslator::translateSizingPeriodDesignDay( const Wor
   }
   std::string solarModelIndicator = designDay.solarModelIndicator();
 
-  // Beam Solar Day Schedule Name and Diffuse Solar Day Schedule Name
+  // Beam Solar Day Schedule Name and Site Diffuse Solar Radiation Rate per Area Radiation Rate per Area Day Schedule Name
   if (istringEqual(solarModelIndicator, "Schedule")){
 
     // Beam Solar Day Schedule Name
@@ -270,7 +270,7 @@ OptionalModelObject ReverseTranslator::translateSizingPeriodDesignDay( const Wor
       LOG(Error, "SizingPeriod:DesignDay " << designDay.name().get() << " missing required field Beam Solar Day Schedule Name");
     }
 
-    // Diffuse Solar Day Schedule Name
+    // Site Diffuse Solar Radiation Rate per Area Radiation Rate per Area Day Schedule Name
     wo = workspaceObject.getTarget(SizingPeriod_DesignDayFields::DiffuseSolarDayScheduleName);
     if( wo ){
       boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(wo.get());
@@ -282,7 +282,7 @@ OptionalModelObject ReverseTranslator::translateSizingPeriodDesignDay( const Wor
       }
     }
     if (!designDay.diffuseSolarDaySchedule()){
-      LOG(Error, "SizingPeriod:DesignDay " << designDay.name().get() << " missing required field Diffuse Solar Day Schedule Name");
+      LOG(Error, "SizingPeriod:DesignDay " << designDay.name().get() << " missing required field Diffuse Solar Schedule Name");
     }
   }
 

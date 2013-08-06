@@ -53,6 +53,7 @@ require 'ostruct'
 require 'fileutils'
 require 'csv'
 require 'tempfile'
+require 'date'
 
 class ParseOptions
 
@@ -255,7 +256,6 @@ def exec_statement(s)
 end
 
 def writeTimeSeriesToSql(sqlfile, simDateTimes, illum, space_name, ts_name, ts_units)
-
   data = OpenStudio::Vector.new(illum.length)
   illum.length.times do |n|
     begin
@@ -265,11 +265,13 @@ def writeTimeSeriesToSql(sqlfile, simDateTimes, illum, space_name, ts_name, ts_u
       data[n] = 0;
     end
   end
+
   illumTS = OpenStudio::TimeSeries.new(simDateTimes, data, ts_units);
   sqlfile.insertTimeSeriesData(
     "Average", "Zone", "Zone", space_name, ts_name, OpenStudio::ReportingFrequency.new("Hourly"),
     OpenStudio::OptionalString.new(),
     ts_units, illumTS);
+  puts DateTime.now.to_s + " Ending timeseries write to sql"
 end
 
 def mergeSpaces(t_space_names_to_calculate, t_outPath)
@@ -779,27 +781,27 @@ def getTimeSeries(t_sqlFile, t_envPeriod)
   diffHorizUnits = nil; dirNormUnits = nil
 
   # get the solar data
-  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Exterior Horizontal Illuminance From Sky").each do |timeseries|
+  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Site Exterior Horizontal Sky Illuminance").each do |timeseries|
     diffHorizIllumAll = timeseries.values
     diffHorizUnits = timeseries.units if not diffHorizUnits
   end
-  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Exterior Beam Normal Illuminance").each do |timeseries|
+  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Site Exterior Beam Normal Illuminance").each do |timeseries|
     dirNormIllumAll = timeseries.values
     dirNormUnits = timeseries.units if not dirNormUnits
   end
-  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Luminous Efficacy of Sky Diffuse Solar Radiation").each do |timeseries|
+  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Site Sky Diffuse Solar Radiation Luminous Efficacy").each do |timeseries|
     diffEfficacyAll = timeseries.values
     diffEfficacyUnits = timeseries.units if not diffEfficacyUnits
   end
-  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Luminous Efficacy of Beam Solar Radiation").each do |timeseries|
+  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Site Beam Solar Radiation Luminous Efficacy").each do |timeseries|
     dirNormEfficacyAll = timeseries.values
     dirNormEfficacyUnits = timeseries.units if not dirNormEfficacyUnits
   end
-  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Solar Altitude Angle").each do |timeseries|
+  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Site Solar Altitude Angle").each do |timeseries|
     solarAltitudeAll = timeseries.values
     solarAltitudeUnits = timeseries.units if not solarAltitudeUnits
   end
-  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Solar Azimuth Angle").each do |timeseries|
+  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Site Solar Azimuth Angle").each do |timeseries|
     solarAzimuthAll = timeseries.values
     solarAzimuthUnits = timeseries.units if not solarAzimuthUnits
   end
@@ -822,7 +824,7 @@ def buildSimulationTimes(t_sqlFile, t_envPeriod, t_options, t_diffHorizIllumAll,
   solarAzimuth = []
   firstReportDateTime = nil
 
-  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Exterior Horizontal Illuminance From Sky").each do |timeseries|
+  t_sqlFile.timeSeries(t_envPeriod, "Hourly", "Site Exterior Horizontal Sky Illuminance").each do |timeseries|
     firstReportDateTime = timeseries.firstReportDateTime
     daysFromFirstReport = timeseries.daysFromFirstReport
     (0...daysFromFirstReport.size).each do |i|
@@ -910,7 +912,7 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
       meanDGP = []
       maxDGP = []
 
-      puts "Space: #{space_name}"
+      puts "Processing Space: #{space_name}"
       timeSeriesIllum =[]
       timeSeriesGlare =[]
       if not t_options.simMonth.nil? and not t_options.simDay.nil?
@@ -934,7 +936,9 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
         meanDGP << 0
         maxDGP << 0
 
-        puts "Processing: #{space_name} (#{simTimes[i]})"
+        if t_options.verbose == 'v'
+          puts "Processing: #{space_name} (#{simTimes[i]})"
+        end
 
         # check if sun is up
         if (solarAltitude[i] < 0)
@@ -1127,12 +1131,14 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
         writeTimeSeriesToSql(sqlOutFile, simDateTimes, diffHorizIllum, space_name, "Global Horizontal Illuminance", "lux")
         writeTimeSeriesToSql(sqlOutFile, simDateTimes, daylightSensorIlluminance, space_name, "Daylight Sensor Illuminance", "lux")
         writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanIlluminanceMap, space_name, "Mean Illuminance Map", "lux")
+        puts "Done writing illuminance results to database..."
 
         if t_radGlareSensorViews[space_name]
           writeTimeSeriesToSql(sqlOutFile, simDateTimes, minDGP, space_name, "Minimum Simplified Daylight Glare Probability", "")
           writeTimeSeriesToSql(sqlOutFile, simDateTimes, meanDGP, space_name, "Mean Simplified Daylight Glare Probability", "")
           writeTimeSeriesToSql(sqlOutFile, simDateTimes, maxDGP, space_name, "Maximum Simplified Daylight Glare Probability", "")
         end
+        puts "Done writing glare results to database..."
 
         # I really have no idea how to populate these fields
         sqlOutFile.insertZone(space_name,
@@ -1170,10 +1176,12 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
         sqlOutFile.insertIlluminanceMap(space_name, space_name + " DAYLIGHT MAP", t_epwFile.get().wmoNumber(),
                                         simDateTimes, xs, ys, map.originZCoordinate, 
                                         illuminanceMatrixMaps)
+
       end
-
-
     end
+
+    sqlOutFile.createIndexes
+
   end
 end
 
@@ -1244,6 +1252,16 @@ if (!weatherFile.empty?)
   end
 else
   puts "weather file object is empty"
+end
+
+if (weatherFile.empty? || epwFile.empty? || !File.exists?(epwFile.get.to_s))
+  puts "EPW From model not found"
+  possibleEpw = modelPath.parent_path() / OpenStudio::Path.new("in.epw");
+
+  if (File.exists?(possibleEpw.to_s))
+    puts "EPW not found, but found one here: " + possibleEpw.to_s
+    epwFile = OpenStudio::OptionalEpwFile.new(OpenStudio::EpwFile.new(possibleEpw))
+  end
 end
 
 site_name = site.getString(1, true).get

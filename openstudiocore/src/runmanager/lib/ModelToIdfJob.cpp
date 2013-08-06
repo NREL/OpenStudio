@@ -60,7 +60,7 @@ namespace detail {
     try {
       m_model = files.getLastByExtension("osm");
       resetFiles(m_files, m_model);
-    } catch (const std::exception &) {
+    } catch (const std::runtime_error &) {
     }
 
     m_description = buildDescription("osm");
@@ -85,11 +85,22 @@ namespace detail {
       return true;
     } else {
       QReadLocker l(&m_mutex);
-      if (m_model)
+
+      boost::optional<FileInfo> model = m_model;
+      if (!model)
       {
+        try { 
+          model = modelFile();
+        } catch (const std::runtime_error &) {
+        }
+      }
+
+      if (model)
+      {
+        bool change = filesChanged(m_files, *t_lastrun);
         return filesChanged(m_files, *t_lastrun);
       } else {
-        // if the model file we are using has not been establised yet,
+        // if the model file we are using has not been established yet,
         // return outofdate
         return true;
       }
@@ -232,11 +243,11 @@ namespace detail {
         FileInfo modelFile = this->modelFile();
 
 
-        try {
+        if (modelFile.hasRequiredFile(toPath("in.epw")))
+        {
           std::pair<QUrl, openstudio::path> f = modelFile.getRequiredFile(toPath("in.epw"));
           LOG(Debug, "Setting user defined epw: " << toString(f.first.toString()));
           weatherFilePath = f.first;
-        } catch (const std::exception &) {
         }
 
 
@@ -263,13 +274,13 @@ namespace detail {
                 LOG(Debug, "Completed weatherfile location: " << openstudio::toString(wp));
 
                 if (!boost::filesystem::exists(wp)) {
-                  try{
+                  if (allParams().has("epwdir"))
+                  {
                     // try prepending params "epwdir"
                     JobParam epwDirParam = allParams().get("epwdir");
                     if (epwDirParam.children.size() == 1) {
                       wp = toPath(epwDirParam.children[0].value) / *p;
                     }
-                  } catch (const std::exception &) {
                   }
                 }
 
@@ -327,6 +338,15 @@ namespace detail {
                   }
                 }
 
+                if (!boost::filesystem::exists(wp))
+                {
+                  if (openstudio::toString(modelFile.fullPath.extension()) == ".osm")
+                  {
+                    openstudio::path osmdir = modelFile.fullPath.parent_path();
+                    LOG(Debug, "Attempting to find weather file that already exists as in.epw");
+                    wp /= openstudio::toPath("in.epw");
+                  }
+                }
 
                 if (boost::filesystem::exists(wp)){
                   if (weatherFilePath && (checksum(*weatherFilePath) != checksum(wp))){
@@ -379,6 +399,9 @@ namespace detail {
 
         outfiles.append(idf);
         m_outputfiles = outfiles;
+      } catch (const std::runtime_error &) {
+        LOG(Warn, "OSM file not yet available, outputfiles not known");
+        return Files();
       } catch (const std::exception &) {
         LOG(Warn, "OSM file not yet available, outputfiles not known");
         return Files();
