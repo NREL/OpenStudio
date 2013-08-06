@@ -58,3 +58,102 @@ TEST(Filetypes, EpwFile)
     ASSERT_TRUE(false);
   }
 }
+
+TEST(Filetypes, EpwFile_TMY)
+{
+  try{
+    path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
+    EpwFile epwFile(p);
+    EXPECT_EQ(p, epwFile.path());
+    EXPECT_EQ("3CF64E88", epwFile.checksum());
+    EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
+    EXPECT_EQ("CO", epwFile.stateProvinceRegion());
+    EXPECT_EQ("USA", epwFile.country());
+    EXPECT_EQ("TMY3", epwFile.dataSource());
+    EXPECT_EQ("724666", epwFile.wmoNumber());
+    EXPECT_EQ(39.74, epwFile.latitude());
+    EXPECT_EQ(-105.18, epwFile.longitude());
+    EXPECT_EQ(-7, epwFile.timeZone());
+    EXPECT_EQ(1829, epwFile.elevation());
+    EXPECT_EQ(Time(0,1,0,0), epwFile.timeStep());
+    EXPECT_EQ(DayOfWeek(DayOfWeek::Sunday), epwFile.startDayOfWeek());
+    EXPECT_FALSE(epwFile.startDateActualYear());
+    EXPECT_FALSE(epwFile.endDateActualYear());
+    EXPECT_EQ(Date(MonthOfYear::Jan, 1), epwFile.startDate());
+    EXPECT_EQ(Date(MonthOfYear::Dec, 31), epwFile.endDate());
+    EXPECT_EQ(365, (epwFile.endDate() - epwFile.startDate()).totalDays() + 1);
+  }catch(...){
+    ASSERT_TRUE(false);
+  }
+}
+
+TEST(Filetypes, EpwFile_Wrap_TMY)
+{
+  try{
+    path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.wrap.epw");
+    EpwFile epwFile(p);
+    EXPECT_TRUE(false);
+  }catch(...){
+    EXPECT_TRUE(true);
+  }
+}
+
+TEST(Filetypes, EpwFile_AMY)
+{
+  try{
+    path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.amy");
+    EpwFile epwFile(p);
+    EXPECT_EQ(p, epwFile.path());
+    EXPECT_EQ("1B0D9577", epwFile.checksum());
+    EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
+    EXPECT_EQ("CO", epwFile.stateProvinceRegion());
+    EXPECT_EQ("USA", epwFile.country());
+    EXPECT_EQ("TMY3", epwFile.dataSource());
+    EXPECT_EQ("724666", epwFile.wmoNumber());
+    EXPECT_EQ(39.74, epwFile.latitude());
+    EXPECT_EQ(-105.18, epwFile.longitude());
+    EXPECT_EQ(-7, epwFile.timeZone());
+    EXPECT_EQ(1829, epwFile.elevation());
+    EXPECT_EQ(Time(0,1,0,0), epwFile.timeStep());
+    EXPECT_EQ(DayOfWeek(DayOfWeek::Friday), epwFile.startDayOfWeek());
+    ASSERT_TRUE(epwFile.startDateActualYear());
+    EXPECT_EQ(1999, epwFile.startDateActualYear().get());
+    ASSERT_TRUE(epwFile.endDateActualYear());
+    EXPECT_EQ(1999, epwFile.endDateActualYear().get());
+    EXPECT_EQ(Date(MonthOfYear::Jan, 1, 1999), epwFile.startDate());
+    EXPECT_EQ(Date(MonthOfYear::Dec, 31, 1999), epwFile.endDate());
+    EXPECT_EQ(365, (epwFile.endDate() - epwFile.startDate()).totalDays() + 1);
+  }catch(...){
+    ASSERT_TRUE(false);
+  }
+}
+
+TEST(Filetypes, EpwFile_Wrap_AMY)
+{
+  try{
+    path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.wrap.amy");
+    EpwFile epwFile(p);
+    EXPECT_EQ(p, epwFile.path());
+    EXPECT_EQ("7E3B5B40", epwFile.checksum());
+    EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
+    EXPECT_EQ("CO", epwFile.stateProvinceRegion());
+    EXPECT_EQ("USA", epwFile.country());
+    EXPECT_EQ("TMY3", epwFile.dataSource());
+    EXPECT_EQ("724666", epwFile.wmoNumber());
+    EXPECT_EQ(39.74, epwFile.latitude());
+    EXPECT_EQ(-105.18, epwFile.longitude());
+    EXPECT_EQ(-7, epwFile.timeZone());
+    EXPECT_EQ(1829, epwFile.elevation());
+    EXPECT_EQ(Time(0,1,0,0), epwFile.timeStep());
+    EXPECT_EQ(DayOfWeek(DayOfWeek::Saturday), epwFile.startDayOfWeek());
+    ASSERT_TRUE(epwFile.startDateActualYear());
+    EXPECT_EQ(1999, epwFile.startDateActualYear().get());
+    ASSERT_TRUE(epwFile.endDateActualYear());
+    EXPECT_EQ(2000, epwFile.endDateActualYear().get());
+    EXPECT_EQ(Date(MonthOfYear::Apr, 10, 1999), epwFile.startDate());
+    EXPECT_EQ(Date(MonthOfYear::Apr, 8, 2000), epwFile.endDate()); // 2000 is a leap year
+    EXPECT_EQ(365, (epwFile.endDate() - epwFile.startDate()).totalDays() + 1);
+  }catch(...){
+    ASSERT_TRUE(false);
+  }
+}

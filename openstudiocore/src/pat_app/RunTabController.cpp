@@ -178,6 +178,7 @@ void RunTabController::onPlayButtonClicked(bool clicked)
                
           // enable the app
           PatApp::instance()->mainWindow->setEnabled(true);
+          PatApp::instance()->mainWindow->setFocus();
         
           // important to call, this controls tab 1 and 2 access
           onIterationProgress();
@@ -203,6 +204,7 @@ void RunTabController::onPlayButtonClicked(bool clicked)
 
           // enable the app
           PatApp::instance()->mainWindow->setEnabled(true);
+          PatApp::instance()->mainWindow->setFocus();
 
           // important to call, this controls tab 1 and 2 access
           onIterationProgress();
@@ -231,6 +233,7 @@ void RunTabController::onPlayButtonClicked(bool clicked)
 
       // enable the app
       PatApp::instance()->mainWindow->setEnabled(true);
+      PatApp::instance()->mainWindow->setFocus();
 
     }else{
 
@@ -252,6 +255,7 @@ void RunTabController::onPlayButtonClicked(bool clicked)
 
     // enable the app
     PatApp::instance()->mainWindow->setEnabled(true);
+    PatApp::instance()->mainWindow->setFocus();
   }
 
   // important to call, this controls tab 1 and 2 access

@@ -53,6 +53,13 @@ SqlFile::SqlFile(const openstudio::path &t_path, const openstudio::EpwFile &t_ep
 SqlFile::~SqlFile ()
 {}
 
+void SqlFile::createIndexes()
+{
+  if (m_impl){
+    m_impl->createIndexes();
+  }
+}
+
 bool SqlFile::connectionOpen() const
 {
   bool result = false;

@@ -87,6 +87,12 @@ public:
   /// get the end date
   Date endDate() const;
 
+  /// get the actual year of the start date if there is one
+  boost::optional<int> startDateActualYear() const;
+
+  /// get the actual year of the end date if there is one
+  boost::optional<int> endDateActualYear() const;
+
 private:
 
   bool parse();
@@ -111,7 +117,8 @@ private:
   DayOfWeek m_startDayOfWeek;
   Date m_startDate;
   Date m_endDate;
-  
+  boost::optional<int> m_startDateActualYear;
+  boost::optional<int> m_endDateActualYear;
 };
 
 UTILITIES_API IdfObject toIdfObject(const EpwFile& epwFile);

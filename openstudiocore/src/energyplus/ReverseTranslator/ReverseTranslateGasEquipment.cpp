@@ -66,14 +66,14 @@ OptionalModelObject ReverseTranslator::translateGasEquipment( const WorkspaceObj
       LOG(Error, "EquipmentLevel value not found for workspace object " << workspaceObject);
     }
   }else if(istringEqual("Watts/Area", *s)){
-    d = workspaceObject.getDouble(openstudio::GasEquipmentFields::WattsperZoneFloorArea);
+    d = workspaceObject.getDouble(openstudio::GasEquipmentFields::PowerperZoneFloorArea);
     if (d){
       definition.setWattsperSpaceFloorArea(*d);
     }else{
       LOG(Error, "Watts/Area value not found for workspace object " << workspaceObject);
     }
   }else if(istringEqual("Watts/Person", *s)){
-    d = workspaceObject.getDouble(openstudio::GasEquipmentFields::WattsperPerson);
+    d = workspaceObject.getDouble(openstudio::GasEquipmentFields::PowerperPerson);
     if (d){
       definition.setWattsperPerson(*d);
     }else{

@@ -115,6 +115,8 @@
 #include <model/SizingSystem_Impl.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
+#include <model/PipeAdiabatic.hpp>
+#include <model/PipeAdiabatic_Impl.hpp>
 
 #include <utilities/units/QuantityConverter.hpp>
 #include <utilities/units/IPUnit.hpp>
@@ -1216,15 +1218,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
       coilCooling.setDesignWaterFlowRate(fluidFlowRtDsgnElement.text().toDouble() * 0.00006309);
 
-      coilCooling.setDesignInletWaterTemperature(15.6);
+      coilCooling.setDesignInletWaterTemperature(7.22); // From Sizing Plant
 
-      coilCooling.setDesignInletAirTemperature(25.0);
+      coilCooling.setDesignInletAirTemperature(25.0); // Assumption
 
-      coilCooling.setDesignOutletAirTemperature(10.0);
+      coilCooling.setDesignOutletAirTemperature(12.8); // From Sizing System
 
-      coilCooling.setDesignInletAirHumidityRatio(0.012);
+      coilCooling.setDesignInletAirHumidityRatio(0.012); // Assumption
 
-      coilCooling.setDesignOutletAirHumidityRatio(0.008);
+      coilCooling.setDesignOutletAirHumidityRatio(0.0085); // From Sizing System
 
       // FlowCap
 
@@ -1842,6 +1844,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       plantLoop.addSupplyBranchForComponent(mo->cast<model::HVACComponent>());
     }
   }
+
+  // Add a default bypass
+
+  model::PipeAdiabatic pipe(model);
+
+  plantLoop.addSupplyBranchForComponent(pipe);
+
+  // Add a default hot water heater for servicehotwater systems
 
   if( typeElement.text().toLower() == "servicehotwater" )
   {

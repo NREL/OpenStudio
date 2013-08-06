@@ -359,6 +359,7 @@ SET( ${target_name}_SRC
   ../shared_gui_components/EditController.hpp
   ../shared_gui_components/EditView.cpp
   ../shared_gui_components/EditView.hpp
+  ../shared_gui_components/FieldMethodTypedefs.hpp
   ../shared_gui_components/HeaderViews.cpp
   ../shared_gui_components/HeaderViews.hpp
   ../shared_gui_components/LocalLibrary.hpp

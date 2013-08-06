@@ -99,8 +99,6 @@ namespace detail {
 
     this->makeUnique();
 
-    double floorArea = space->floorArea();
-
     LuminaireDefinition definition = this->luminaireDefinition();
     BOOST_FOREACH(LifeCycleCost cost, definition.lifeCycleCosts()){
       // DLM: is this appropriate for a luminaire?

@@ -108,6 +108,9 @@ class UTILITIES_API QuantityConverterSingleton {
 typedef openstudio::Singleton<QuantityConverterSingleton> QuantityConverter;
 
 /** Non-member function to simplify interface for users. \relates QuantityConverterSingleton */
+UTILITIES_API boost::optional<double> convert(double original, const std::string& originalUnits, const std::string& finalUnits);
+
+/** Non-member function to simplify interface for users. \relates QuantityConverterSingleton */
 UTILITIES_API boost::optional<Quantity> convert(const Quantity& original, UnitSystem sys);
 
 /** Non-member function that uses just two calls to QuantityConverter to convert an entire 

@@ -572,7 +572,18 @@ void ChillerElectricEIR_Impl::resetCompressorMotorEfficiency() {
   }
 
   bool ChillerElectricEIR_Impl::setChillerFlowMode(std::string chillerFlowMode) {
-    return setString(OS_Chiller_Electric_EIRFields::ChillerFlowMode, chillerFlowMode);
+    bool result = false;
+    if(istringEqual(chillerFlowMode,"VariableFlow"))
+    {
+      // Support legacy key
+      result = setString(OS_Chiller_Electric_EIRFields::ChillerFlowMode, "LeavingSetpointModulated");
+    }
+    else
+    {
+      result = setString(OS_Chiller_Electric_EIRFields::ChillerFlowMode, chillerFlowMode);
+    }
+
+    return result;
   }
 
   void ChillerElectricEIR_Impl::resetChillerFlowMode() {
