@@ -112,7 +112,7 @@ NullPerturbationRecord::NullPerturbationRecord(const analysis::NullPerturbation&
                                                 perturbationVectorIndex)),
         discreteVariableRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::NullPerturbationRecord_Impl>());
+  OS_ASSERT(getImpl<detail::NullPerturbationRecord_Impl>());
 }
 
 NullPerturbationRecord::NullPerturbationRecord(const QSqlQuery& query, ProjectDatabase& database)
@@ -120,13 +120,13 @@ NullPerturbationRecord::NullPerturbationRecord(const QSqlQuery& query, ProjectDa
         new detail::NullPerturbationRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::NullPerturbationRecord_Impl>());
+  OS_ASSERT(getImpl<detail::NullPerturbationRecord_Impl>());
 }
 
 NullPerturbationRecord::NullPerturbationRecord(boost::shared_ptr<detail::NullPerturbationRecord_Impl> impl, ProjectDatabase projectDatabase)
   : DiscretePerturbationRecord(impl, projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::NullPerturbationRecord_Impl>());
+  OS_ASSERT(getImpl<detail::NullPerturbationRecord_Impl>());
 }
 
 boost::optional<NullPerturbationRecord> NullPerturbationRecord::factoryFromQuery(
@@ -182,7 +182,7 @@ analysis::NullPerturbation NullPerturbationRecord::nullPerturbation() const {
 NullPerturbationRecord::NullPerturbationRecord(boost::shared_ptr<detail::NullPerturbationRecord_Impl> impl)
   : DiscretePerturbationRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::NullPerturbationRecord_Impl>());
+  OS_ASSERT(getImpl<detail::NullPerturbationRecord_Impl>());
 }
 /// @endcond
 

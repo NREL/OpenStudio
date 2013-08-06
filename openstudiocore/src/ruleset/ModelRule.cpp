@@ -118,27 +118,27 @@ std::string ModelRule::xmlElementName()
 ModelRule::ModelRule(const std::string& name)
   : Rule(boost::shared_ptr<detail::ModelRule_Impl>(new detail::ModelRule_Impl(name)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelRule_Impl>());
+  OS_ASSERT(getImpl<detail::ModelRule_Impl>());
 }
 
 ModelRule::ModelRule(const std::string& name, bool active, const UUID& uuid, const UUID& versionUUID,
                      const std::vector<FilterClause>& filters, const std::vector<ActionClause>& actions)
   : Rule(boost::shared_ptr<detail::ModelRule_Impl>(new detail::ModelRule_Impl(name,active,uuid,versionUUID,filters,actions)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelRule_Impl>());
+  OS_ASSERT(getImpl<detail::ModelRule_Impl>());
 }
 
 ModelRule::ModelRule(const QDomElement& element)
   : Rule(boost::shared_ptr<detail::ModelRule_Impl>(new detail::ModelRule_Impl(element)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelRule_Impl>());
+  OS_ASSERT(getImpl<detail::ModelRule_Impl>());
 }
 
 /// @cond
 ModelRule::ModelRule(boost::shared_ptr<detail::ModelRule_Impl> impl)
   : Rule(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ModelRule_Impl>());
+  OS_ASSERT(getImpl<detail::ModelRule_Impl>());
 }
 /// @endcond
 

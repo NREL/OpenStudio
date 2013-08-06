@@ -44,7 +44,7 @@ namespace detail {
   HotWaterEquipment_Impl::HotWaterEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceLoadInstance_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == HotWaterEquipment::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == HotWaterEquipment::iddObjectType());
   }
 
   HotWaterEquipment_Impl::HotWaterEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -52,7 +52,7 @@ namespace detail {
                                                  bool keepHandle)
     : SpaceLoadInstance_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == HotWaterEquipment::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == HotWaterEquipment::iddObjectType());
   }
 
   HotWaterEquipment_Impl::HotWaterEquipment_Impl(const HotWaterEquipment_Impl& other,
@@ -129,7 +129,7 @@ namespace detail {
 
   double HotWaterEquipment_Impl::multiplier() const {
     boost::optional<double> value = getDouble(OS_HotWaterEquipmentFields::Multiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -139,7 +139,7 @@ namespace detail {
 
   std::string HotWaterEquipment_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_HotWaterEquipmentFields::EndUseSubcategory,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -155,18 +155,18 @@ namespace detail {
 
   void HotWaterEquipment_Impl::resetMultiplier() {
     bool result = setString(OS_HotWaterEquipmentFields::Multiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void HotWaterEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = false;
     result = setString(OS_HotWaterEquipmentFields::EndUseSubcategory, endUseSubcategory);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void HotWaterEquipment_Impl::resetEndUseSubcategory() {
     bool result = setString(OS_HotWaterEquipmentFields::EndUseSubcategory, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   int HotWaterEquipment_Impl::spaceIndex() const {
@@ -209,7 +209,7 @@ namespace detail {
 
   void HotWaterEquipment_Impl::resetSchedule() {
     bool result = setString(OS_HotWaterEquipmentFields::ScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   HotWaterEquipmentDefinition HotWaterEquipment_Impl::hotWaterEquipmentDefinition() const
@@ -291,7 +291,7 @@ namespace detail {
 HotWaterEquipment::HotWaterEquipment(const HotWaterEquipmentDefinition& hotWaterEquipmentDefinition)
   : SpaceLoadInstance(HotWaterEquipment::iddObjectType(),hotWaterEquipmentDefinition)
 {
-  BOOST_ASSERT(getImpl<detail::HotWaterEquipment_Impl>());
+  OS_ASSERT(getImpl<detail::HotWaterEquipment_Impl>());
 }
 
 IddObjectType HotWaterEquipment::iddObjectType() {

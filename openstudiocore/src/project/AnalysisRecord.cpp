@@ -64,14 +64,14 @@ namespace detail {
   AnalysisRecord_Impl::AnalysisRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : ObjectRecord_Impl(database, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(AnalysisRecordColumns::problemRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_problemRecordId = value.toInt();
 
     value = query.value(AnalysisRecordColumns::algorithmRecordId);
@@ -80,7 +80,7 @@ namespace detail {
     }
 
     value = query.value(AnalysisRecordColumns::seedFileReferenceRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_seedFileReferenceRecordId = value.toInt();
 
     value = query.value(AnalysisRecordColumns::weatherFileReferenceRecordId);
@@ -89,11 +89,11 @@ namespace detail {
     }
 
     value = query.value(AnalysisRecordColumns::resultsAreInvalid);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_resultsAreInvalid = value.toBool();
 
     value = query.value(AnalysisRecordColumns::dataPointsAreInvalid);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_dataPointsAreInvalid = value.toBool();
   }
 
@@ -326,7 +326,7 @@ namespace detail {
     while (query.next()) {
       OptionalDataPointRecord dataPointRecord =
           DataPointRecord::getDataPointRecord(query.value(0).toInt(),database);
-      BOOST_ASSERT(dataPointRecord);
+      OS_ASSERT(dataPointRecord);
       result.push_back(*dataPointRecord);
     }
     return result;
@@ -348,7 +348,7 @@ namespace detail {
     while (query.next()) {
       OptionalDataPointRecord dataPointRecord =
           DataPointRecord::getDataPointRecord(query.value(0).toInt(),database);
-      BOOST_ASSERT(dataPointRecord);
+      OS_ASSERT(dataPointRecord);
       result.push_back(*dataPointRecord);
     }
 
@@ -428,16 +428,16 @@ namespace detail {
   }
 
   void AnalysisRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     ObjectRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(AnalysisRecordColumns::problemRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastProblemRecordId = value.toInt();
 
     value = query.value(AnalysisRecordColumns::algorithmRecordId);
@@ -449,7 +449,7 @@ namespace detail {
     }
 
     value = query.value(AnalysisRecordColumns::seedFileReferenceRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastSeedFileReferenceRecordId = value.toInt();
 
     value = query.value(AnalysisRecordColumns::weatherFileReferenceRecordId);
@@ -461,25 +461,25 @@ namespace detail {
     }
 
     value = query.value(AnalysisRecordColumns::resultsAreInvalid);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastResultsAreInvalid = value.toBool();
 
     value = query.value(AnalysisRecordColumns::dataPointsAreInvalid);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastDataPointsAreInvalid = value.toBool();
   }
 
   bool AnalysisRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = ObjectRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(AnalysisRecordColumns::problemRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_problemRecordId == value.toInt());
 
     value = query.value(AnalysisRecordColumns::algorithmRecordId);
@@ -490,7 +490,7 @@ namespace detail {
     }
 
     value = query.value(AnalysisRecordColumns::seedFileReferenceRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_seedFileReferenceRecordId == value.toInt());
 
     value = query.value(AnalysisRecordColumns::weatherFileReferenceRecordId);
@@ -501,11 +501,11 @@ namespace detail {
     }
 
     value = query.value(AnalysisRecordColumns::resultsAreInvalid);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_resultsAreInvalid == value.toBool());
 
     value = query.value(AnalysisRecordColumns::dataPointsAreInvalid);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_dataPointsAreInvalid == value.toBool());
 
     return result;
@@ -567,7 +567,7 @@ AnalysisRecord::AnalysisRecord(const analysis::Analysis& analysis, ProjectDataba
         new detail::AnalysisRecord_Impl(analysis, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::AnalysisRecord_Impl>());
+  OS_ASSERT(getImpl<detail::AnalysisRecord_Impl>());
 
   AnalysisRecord copyOfThis(getImpl<detail::AnalysisRecord_Impl>());
   bool isNew = database.isNewRecord(copyOfThis);
@@ -701,14 +701,14 @@ AnalysisRecord::AnalysisRecord(const QSqlQuery& query, ProjectDatabase& database
         new detail::AnalysisRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::AnalysisRecord_Impl>());
+  OS_ASSERT(getImpl<detail::AnalysisRecord_Impl>());
 }
 
 AnalysisRecord::AnalysisRecord(boost::shared_ptr<detail::AnalysisRecord_Impl> impl,
                                ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::AnalysisRecord_Impl>());
+  OS_ASSERT(getImpl<detail::AnalysisRecord_Impl>());
 }
 
 std::string AnalysisRecord::databaseTableName() {
@@ -729,7 +729,7 @@ UpdateByIdQueryData AnalysisRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?

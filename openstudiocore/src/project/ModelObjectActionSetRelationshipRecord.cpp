@@ -62,17 +62,17 @@ namespace detail {
       const ProjectDatabase& projectDatabase)
     : ModelObjectActionClauseRecord_Impl(query, projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
     value = query.value(ClauseRecordColumns::relationshipName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_relationshipName = value.toString().toStdString();
 
     value = query.value(ClauseRecordColumns::componentRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_componentRecordId = value.toInt();
   }
 
@@ -81,7 +81,7 @@ namespace detail {
     ProjectDatabase database = this->projectDatabase();
     boost::optional<FileReferenceRecord> result = 
         FileReferenceRecord::getFileReferenceRecord(m_componentRecordId, database);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return *result;
   }
 
@@ -144,11 +144,11 @@ namespace detail {
 
     QVariant value;
     value = query.value(ClauseRecordColumns::relationshipName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastRelationshipName = value.toString().toStdString();
 
     value = query.value(ClauseRecordColumns::componentRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastComponentRecordId = value.toInt();
   }
 
@@ -160,11 +160,11 @@ namespace detail {
 
     QVariant value;
     value = query.value(ClauseRecordColumns::relationshipName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_relationshipName == value.toString().toStdString());
 
     value = query.value(ClauseRecordColumns::componentRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result &&(m_componentRecordId == value.toInt());
 
     return result;
@@ -193,25 +193,25 @@ ModelObjectActionSetRelationshipRecord::ModelObjectActionSetRelationshipRecord(
     ProjectDatabase& projectDatabase)
   : ModelObjectActionClauseRecord(boost::shared_ptr<detail::ModelObjectActionSetRelationshipRecord_Impl>(new detail::ModelObjectActionSetRelationshipRecord_Impl(modelObjectActionSetRelationship, projectDatabase)), projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectActionSetRelationshipRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectActionSetRelationshipRecord_Impl>());
 }
 
 ModelObjectActionSetRelationshipRecord::ModelObjectActionSetRelationshipRecord(const QSqlQuery& query, ProjectDatabase& projectDatabase)
   : ModelObjectActionClauseRecord(boost::shared_ptr<detail::ModelObjectActionSetRelationshipRecord_Impl>(new detail::ModelObjectActionSetRelationshipRecord_Impl(query, projectDatabase)), projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectActionSetRelationshipRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectActionSetRelationshipRecord_Impl>());
 }
 
 ModelObjectActionSetRelationshipRecord::ModelObjectActionSetRelationshipRecord(boost::shared_ptr<detail::ModelObjectActionSetRelationshipRecord_Impl> impl, ProjectDatabase projectDatabase)
   : ModelObjectActionClauseRecord(impl, projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectActionSetRelationshipRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectActionSetRelationshipRecord_Impl>());
 }
 
 ModelObjectActionSetRelationshipRecord::ModelObjectActionSetRelationshipRecord(boost::shared_ptr<detail::ModelObjectActionSetRelationshipRecord_Impl> impl)
   : ModelObjectActionClauseRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectActionSetRelationshipRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectActionSetRelationshipRecord_Impl>());
 }
 
 boost::optional<ModelObjectActionSetRelationshipRecord> ModelObjectActionSetRelationshipRecord::factoryFromQuery(

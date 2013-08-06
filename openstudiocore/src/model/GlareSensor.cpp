@@ -40,7 +40,7 @@ namespace detail {
   GlareSensor_Impl::GlareSensor_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceItem_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == GlareSensor::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == GlareSensor::iddObjectType());
   }
 
   GlareSensor_Impl::GlareSensor_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -48,7 +48,7 @@ namespace detail {
                                                    bool keepHandle)
     : SpaceItem_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == GlareSensor::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == GlareSensor::iddObjectType());
   }
 
   GlareSensor_Impl::GlareSensor_Impl(const GlareSensor_Impl& other,
@@ -71,25 +71,25 @@ namespace detail {
 
   double GlareSensor_Impl::positionXCoordinate() const {
     boost::optional<double> value = getDouble(OS_Glare_SensorFields::PositionXCoordinate,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double GlareSensor_Impl::positionYCoordinate() const {
     boost::optional<double> value = getDouble(OS_Glare_SensorFields::PositionYCoordinate,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double GlareSensor_Impl::positionZCoordinate() const {
     boost::optional<double> value = getDouble(OS_Glare_SensorFields::PositionZCoordinate,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double GlareSensor_Impl::psiRotationAroundXAxis() const {
     boost::optional<double> value = getDouble(OS_Glare_SensorFields::PsiRotationAroundXAxis,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -99,7 +99,7 @@ namespace detail {
 
   double GlareSensor_Impl::thetaRotationAroundYAxis() const {
     boost::optional<double> value = getDouble(OS_Glare_SensorFields::ThetaRotationAroundYAxis,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -109,7 +109,7 @@ namespace detail {
 
   double GlareSensor_Impl::phiRotationAroundZAxis() const {
     boost::optional<double> value = getDouble(OS_Glare_SensorFields::PhiRotationAroundZAxis,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -119,7 +119,7 @@ namespace detail {
 
   int GlareSensor_Impl::numberofGlareViewVectors() const {
     boost::optional<int> value = getInt(OS_Glare_SensorFields::NumberofGlareViewVectors,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -130,52 +130,52 @@ namespace detail {
   void GlareSensor_Impl::setPositionXCoordinate(double positionXCoordinate) {
     bool result = false;
     result = setDouble(OS_Glare_SensorFields::PositionXCoordinate, positionXCoordinate);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void GlareSensor_Impl::setPositionYCoordinate(double positionYCoordinate) {
     bool result = false;
     result = setDouble(OS_Glare_SensorFields::PositionYCoordinate, positionYCoordinate);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void GlareSensor_Impl::setPositionZCoordinate(double positionZCoordinate) {
     bool result = false;
     result = setDouble(OS_Glare_SensorFields::PositionZCoordinate, positionZCoordinate);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void GlareSensor_Impl::setPsiRotationAroundXAxis(double psiRotationAroundXAxis) {
     bool result = false;
     result = setDouble(OS_Glare_SensorFields::PsiRotationAroundXAxis, psiRotationAroundXAxis);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void GlareSensor_Impl::resetPsiRotationAroundXAxis() {
     bool result = setString(OS_Glare_SensorFields::PsiRotationAroundXAxis, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void GlareSensor_Impl::setThetaRotationAroundYAxis(double thetaRotationAroundYAxis) {
     bool result = false;
     result = setDouble(OS_Glare_SensorFields::ThetaRotationAroundYAxis, thetaRotationAroundYAxis);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void GlareSensor_Impl::resetThetaRotationAroundYAxis() {
     bool result = setString(OS_Glare_SensorFields::ThetaRotationAroundYAxis, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void GlareSensor_Impl::setPhiRotationAroundZAxis(double phiRotationAroundZAxis) {
     bool result = false;
     result = setDouble(OS_Glare_SensorFields::PhiRotationAroundZAxis, phiRotationAroundZAxis);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void GlareSensor_Impl::resetPhiRotationAroundZAxis() {
     bool result = setString(OS_Glare_SensorFields::PhiRotationAroundZAxis, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GlareSensor_Impl::setNumberofGlareViewVectors(int numberofGlareViewVectors) {
@@ -186,7 +186,7 @@ namespace detail {
 
   void GlareSensor_Impl::resetNumberofGlareViewVectors() {
     bool result = setString(OS_Glare_SensorFields::NumberofGlareViewVectors, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GlareSensor_Impl::setMaximumAllowableDaylightGlareProbability(boost::optional<double> maximumAllowableDaylightGlareProbability) {
@@ -201,7 +201,7 @@ namespace detail {
 
   void GlareSensor_Impl::resetMaximumAllowableDaylightGlareProbability() {
     bool result = setString(OS_Glare_SensorFields::MaximumAllowableDaylightGlareProbability, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   Point3d GlareSensor_Impl::position() const
@@ -255,7 +255,7 @@ namespace detail {
   //  bool result = false;
   //  std::vector<WorkspaceObject> workspaceObjects = this->getSources(IddObjectType::OS_ThermalZone);
   //  if (!workspaceObjects.empty()){
-  //    BOOST_ASSERT(workspaceObjects.size() == 1);
+  //    OS_ASSERT(workspaceObjects.size() == 1);
   //    boost::optional<GlareSensor> control = workspaceObjects[0].cast<ThermalZone>().primaryGlareSensor();
   //    if (control){
   //      result = (this->handle() == control->handle());
@@ -269,7 +269,7 @@ namespace detail {
   //  bool result = false;
   //  std::vector<WorkspaceObject> workspaceObjects = this->getSources(IddObjectType::OS_ThermalZone);
   //  if (!workspaceObjects.empty()){
-  //    BOOST_ASSERT(workspaceObjects.size() == 1);
+  //    OS_ASSERT(workspaceObjects.size() == 1);
   //    boost::optional<GlareSensor> control = workspaceObjects[0].cast<ThermalZone>().secondaryGlareSensor();
   //    if (control){
   //      result = (this->handle() == control->handle());
@@ -287,7 +287,7 @@ namespace detail {
 GlareSensor::GlareSensor(const Model& model)
   : SpaceItem(GlareSensor::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::GlareSensor_Impl>());
+  OS_ASSERT(getImpl<detail::GlareSensor_Impl>());
 }
 
 const IddObjectType& GlareSensor::iddObjectType() {

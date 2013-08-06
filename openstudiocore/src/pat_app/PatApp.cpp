@@ -92,7 +92,7 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
     m_measureManager(t_argumentGetter, this)
 {
   bool isConnected = connect(this,SIGNAL(userMeasuresDirChanged()),&m_measureManager,SLOT(updateMeasuresLists()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   setOrganizationName("NREL");
   setOrganizationDomain("nrel.gov");
@@ -177,46 +177,46 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
                                          false );
 
   isConnected = connect(mainWindow->verticalTabWidget,SIGNAL(tabSelected(int)),this,SLOT(showVerticalTab(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(loadFileClicked()), this, SLOT(open()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(newClicked()), this, SLOT(create()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(exitClicked()),this,SLOT(quit()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(openBclDlgClicked()),this,SLOT(openBclDlg()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(helpClicked()),this,SLOT(showHelp()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(aboutClicked()),this,SLOT(showAbout()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(saveAsFileClicked()), this, SLOT(saveAs()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(saveFileClicked()), this, SLOT(save()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(clearAllResultsClicked()), this, SLOT(clearAllResults()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(exportXmlClicked()), this, SLOT(exportXml()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(scanForToolsClicked()), this, SLOT(scanForTools()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(showToolsClicked()), this, SLOT(showTools()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(changeMeasuresClicked()), this, SLOT(changeUserMeasuresDir()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   mainWindow->show();
 
@@ -360,7 +360,7 @@ void PatApp::create()
     options.setLogLevel(Debug);
     boost::optional<openstudio::analysisdriver::SimpleProject> project = analysisdriver::createPATProject(projectDir, options);
     if(project.is_initialized()){
-      Q_ASSERT(project->isPATProject());
+      OS_ASSERT(project->isPATProject());
 
       attachProject(project);
 
@@ -405,7 +405,7 @@ void PatApp::openBclDlg()
       }
       else{
         // should never get here
-        Q_ASSERT(false);
+        OS_ASSERT(false);
       }
     }
   }
@@ -416,7 +416,7 @@ void PatApp::openBclDlg()
 
     bool isConnected = connect(m_onlineBclDialog, SIGNAL(rejected()),
                           this, SLOT(on_closeBclDlg()));
-    Q_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
   }
   if(m_onlineBclDialog && !m_onlineBclDialog->isVisible()){
     m_onlineBclDialog->setGeometry(mainWindow->geometry());
@@ -1007,7 +1007,7 @@ bool PatApp::openFile(const QString& fileName)
     options.setLogLevel(Debug);
     boost::optional<openstudio::analysisdriver::SimpleProject> project = analysisdriver::openPATProject(projectDir, options);
     if(project.is_initialized()){
-      Q_ASSERT(project->isPATProject());
+      OS_ASSERT(project->isPATProject());
       attachProject(project);
       mainWindow->setWindowTitle("");
       mainWindow->setWindowFilePath(dir.absolutePath());
@@ -1069,17 +1069,17 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
 
     // connect signals from the the analysis to this
     bool isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(markAsModified()));
-    Q_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
 
     isConnected = analysis.connect(SIGNAL(clean()), this, SLOT(markAsUnmodified()));
-    Q_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
 
     // DLM: would like to make this a queued connection but ChangeType is not a QObject, burying ChangeType in impl class is kind of annoying too
     isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(queueAnalysisChanged()));
-    Q_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
 
     isConnected = analysis.connect(SIGNAL(seedChanged()), this, SLOT(analysisSeedChanged()));
-    Q_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
 
     // DLM: where should this logic live?
     // DLM: tabs 3 and 4 were not getting enabled once we did have data points, if we want to do this
@@ -1242,7 +1242,7 @@ NewProjectDialog::NewProjectDialog(QWidget * parent)
   m_projectNameLineEdit = new QLineEdit();
   m_okButton->setEnabled(false);
   bool bingo = connect(m_projectNameLineEdit,SIGNAL(textChanged(const QString &)),this,SLOT(enableOkButton()));
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   QRegExp regExp("^([a-zA-Z0-9 ]+[-]?[_]?)*$");
   m_projectNameLineEdit->setValidator( new QRegExpValidator(regExp, this) );

@@ -20,6 +20,8 @@
 #include <analysis/HypergeometricDistribution.hpp>
 #include <analysis/UncertaintyDescription_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -90,7 +92,7 @@ bool HypergeometricDistribution::setNumDrawn(int value) {
 HypergeometricDistribution::HypergeometricDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
-  BOOST_ASSERT(type() == HypergeometricDistribution::type());
+  OS_ASSERT(type() == HypergeometricDistribution::type());
 }
 
 } // analysis

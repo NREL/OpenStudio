@@ -39,7 +39,7 @@ namespace detail {
   LightingDesignDay_Impl::LightingDesignDay_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == LightingDesignDay::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == LightingDesignDay::iddObjectType());
   }
 
   LightingDesignDay_Impl::LightingDesignDay_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -47,7 +47,7 @@ namespace detail {
                                                  bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == LightingDesignDay::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == LightingDesignDay::iddObjectType());
   }
 
   LightingDesignDay_Impl::LightingDesignDay_Impl(const LightingDesignDay_Impl& other,
@@ -75,13 +75,13 @@ namespace detail {
 
   std::string LightingDesignDay_Impl::cieSkyModel() const {
     boost::optional<std::string> value = getString(OS_LightingDesignDayFields::CIESkyModel,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   int LightingDesignDay_Impl::snowIndicator() const {
     boost::optional<int> value = getInt(OS_LightingDesignDayFields::SnowIndicator,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -103,24 +103,24 @@ namespace detail {
 
   void LightingDesignDay_Impl::resetSnowIndicator() {
     bool result = setString(OS_LightingDesignDayFields::SnowIndicator, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   openstudio::Date LightingDesignDay_Impl::date() const
   {
     OptionalInt month = getInt(OS_LightingDesignDayFields::Month, true);
     OptionalInt dayofMonth = getInt(OS_LightingDesignDayFields::DayofMonth, true);
-    BOOST_ASSERT(month);
-    BOOST_ASSERT(dayofMonth);
+    OS_ASSERT(month);
+    OS_ASSERT(dayofMonth);
     return Date(MonthOfYear(*month), *dayofMonth);
   }
 
   bool LightingDesignDay_Impl::setDate(const openstudio::Date& date)
   {
     bool test = setInt(OS_LightingDesignDayFields::Month, date.monthOfYear().value(), false);
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     test = setInt(OS_LightingDesignDayFields::DayofMonth, date.dayOfMonth());
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     return true;
   }
 
@@ -132,8 +132,8 @@ namespace detail {
     {
       OptionalInt hour = group.getInt(0, true);
       OptionalInt minute = group.getInt(1, true);
-      BOOST_ASSERT(hour);
-      BOOST_ASSERT(minute);
+      OS_ASSERT(hour);
+      OS_ASSERT(minute);
       result.push_back(Time(0, *hour, *minute));
     }
 
@@ -149,8 +149,8 @@ namespace detail {
     {
       OptionalInt hour = group.getInt(0, true);
       OptionalInt minute = group.getInt(1, true);
-      BOOST_ASSERT(hour);
-      BOOST_ASSERT(minute);
+      OS_ASSERT(hour);
+      OS_ASSERT(minute);
       result.push_back(DateTime(date, Time(0, *hour, *minute)));
     }
 
@@ -189,7 +189,7 @@ namespace detail {
 LightingDesignDay::LightingDesignDay(const std::string& cieSkyModel, const openstudio::Date& date, const Model& model)
   : ModelObject(LightingDesignDay::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::LightingDesignDay_Impl>());
+  OS_ASSERT(getImpl<detail::LightingDesignDay_Impl>());
   setCIESkyModel(cieSkyModel);
   setDate(date);
 }

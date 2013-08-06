@@ -77,11 +77,11 @@ void CollapsibleComponentHeader::createLayout(const std::string& text, int numRe
 
   isConnected = connect(m_pageNavigator, SIGNAL(getComponentsByPage(int)),
                         this, SIGNAL(getComponentsByPage(int)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_pageNavigator, SIGNAL(getComponentsByPage(int)),
                         this, SLOT(on_getComponentsByPage(int)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // Stretch
   mainHLayout->addStretch();

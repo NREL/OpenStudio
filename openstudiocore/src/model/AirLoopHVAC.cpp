@@ -81,7 +81,7 @@ namespace detail {
   AirLoopHVAC_Impl::AirLoopHVAC_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : Loop_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == AirLoopHVAC::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == AirLoopHVAC::iddObjectType());
   }
 
   AirLoopHVAC_Impl::AirLoopHVAC_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -89,7 +89,7 @@ namespace detail {
                                      bool keepHandle)
     : Loop_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == AirLoopHVAC::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == AirLoopHVAC::iddObjectType());
   }
 
   AirLoopHVAC_Impl::AirLoopHVAC_Impl(const AirLoopHVAC_Impl& other,
@@ -371,7 +371,7 @@ namespace detail {
       }
     }
 
-    BOOST_ASSERT(node);
+    OS_ASSERT(node);
 
     if( optAirTerminal )
     {
@@ -471,11 +471,11 @@ namespace detail {
       {
         boost::optional<Node> zoneInletNode = zone->inletPortList().airLoopHVACModelObject()->optionalCast<Node>();
 
-        BOOST_ASSERT( zoneInletNode );
+        OS_ASSERT( zoneInletNode );
 
         boost::optional<ModelObject> mo = zoneInletNode->inletModelObject();
 
-        BOOST_ASSERT( mo );
+        OS_ASSERT( mo );
 
         if( ! mo->optionalCast<AirLoopHVACZoneSplitter>() )
         {
@@ -489,7 +489,7 @@ namespace detail {
       {
         boost::optional<ModelObject> mo = node->inletModelObject();
 
-        BOOST_ASSERT( mo );
+        OS_ASSERT( mo );
 
         if( ! mo->optionalCast<AirLoopHVACZoneSplitter>() )
         {
@@ -603,7 +603,7 @@ namespace detail {
     {
       Model _model = model();
       std::vector<Node> inletVec = demandInletNodes();
-      BOOST_ASSERT(inletVec.size()==1);
+      OS_ASSERT(inletVec.size()==1);
       AirLoopHVACZoneSplitter airLoopHVACZoneSplitter(_model);
       _model.connect(inletVec[0],
                     openstudio::OS_NodeFields::OutletPort,
@@ -858,7 +858,7 @@ namespace detail {
       resetDesignSupplyAirFlowRate();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool AirLoopHVAC_Impl::setDesignSupplyAirFlowRate(const OSOptionalQuantity& designSupplyAirFlowRate) {
@@ -880,12 +880,12 @@ namespace detail {
 
   void AirLoopHVAC_Impl::resetDesignSupplyAirFlowRate() {
     bool result = setString(OS_AirLoopHVACFields::DesignSupplyAirFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void AirLoopHVAC_Impl::autosizeDesignSupplyAirFlowRate() {
     bool result = setString(OS_AirLoopHVACFields::DesignSupplyAirFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   Schedule AirLoopHVAC_Impl::availabilitySchedule() const
@@ -912,7 +912,7 @@ namespace detail {
   {
     boost::optional<WorkspaceObject> wo = getTarget(OS_AirLoopHVACFields::AvailabilityManagerListName);
 
-    Q_ASSERT(wo);
+    OS_ASSERT(wo);
 
     return wo->cast<AvailabilityManagerAssignmentList>();
   }
@@ -922,7 +922,7 @@ namespace detail {
 AirLoopHVAC::AirLoopHVAC(Model& model)
   : Loop(iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::AirLoopHVAC_Impl>());
+  OS_ASSERT(getImpl<detail::AirLoopHVAC_Impl>());
 
   setString(openstudio::OS_AirLoopHVACFields::DesignSupplyAirFlowRate,"AutoSize");
 

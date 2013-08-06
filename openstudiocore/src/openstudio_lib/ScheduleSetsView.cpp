@@ -23,6 +23,9 @@
 #include <openstudio_lib/ScheduleSetInspectorView.hpp>
 
 #include <model/Model_Impl.hpp>
+
+#include <utilities/core/Assert.hpp>
+
 #include <QStyleOption>
 #include <QPainter>
 #include <QVBoxLayout>
@@ -57,12 +60,12 @@ ScheduleSetsInspectorView::ScheduleSetsInspectorView(const model::Model& model,
   // index of hidden widget is 0
   QWidget* hiddenWidget = new QWidget();
   int index = this->stackedWidget()->addWidget(hiddenWidget);
-  BOOST_ASSERT(index == 0);
+  OS_ASSERT(index == 0);
 
   // index of the default is 1
   DefaultInspectorView* defaultInspectorView = new DefaultInspectorView(model, parent);
   index = this->stackedWidget()->addWidget(defaultInspectorView);
-  BOOST_ASSERT(index == 1);
+  OS_ASSERT(index == 1);
 
   //ScheduleSetsInspectorView* scheduleSetsInspectorView = new ScheduleSetsInspectorView(model, parent);
   //index = this->stackedWidget()->addWidget(scheduleSetsInspectorView);
@@ -74,7 +77,7 @@ void ScheduleSetsInspectorView::onClearSelection()
   ModelObjectInspectorView::onClearSelection(); // call parent implementation
   QWidget* widget = this->stackedWidget()->currentWidget();
   ModelObjectInspectorView* modelObjectInspectorView = qobject_cast<ModelObjectInspectorView*>(widget);
-  BOOST_ASSERT(modelObjectInspectorView);
+  OS_ASSERT(modelObjectInspectorView);
   modelObjectInspectorView->clearSelection();
 
   this->stackedWidget()->setCurrentIndex(0);
@@ -90,7 +93,7 @@ void ScheduleSetsInspectorView::onSelectModelObject(const openstudio::model::Mod
 
   QWidget* widget = this->stackedWidget()->widget(index);
   ModelObjectInspectorView* modelObjectInspectorView = qobject_cast<ModelObjectInspectorView*>(widget);
-  BOOST_ASSERT(modelObjectInspectorView);
+  OS_ASSERT(modelObjectInspectorView);
   modelObjectInspectorView->selectModelObject(modelObject);
   this->stackedWidget()->setCurrentIndex(index);
 }

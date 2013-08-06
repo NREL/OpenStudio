@@ -32,7 +32,7 @@ namespace detail {
   ExteriorLightsDefinition_Impl::ExteriorLightsDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ResourceObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ExteriorLightsDefinition::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ExteriorLightsDefinition::iddObjectType());
   }
 
   ExteriorLightsDefinition_Impl::ExteriorLightsDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -40,7 +40,7 @@ namespace detail {
                                                                bool keepHandle)
     : ResourceObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ExteriorLightsDefinition::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ExteriorLightsDefinition::iddObjectType());
   }
 
   ExteriorLightsDefinition_Impl::ExteriorLightsDefinition_Impl(const ExteriorLightsDefinition_Impl& other,
@@ -63,7 +63,7 @@ namespace detail {
 
   double ExteriorLightsDefinition_Impl::designLevel() const {
     boost::optional<double> value = getDouble(OS_Exterior_Lights_DefinitionFields::DesignLevel,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -78,11 +78,11 @@ namespace detail {
 ExteriorLightsDefinition::ExteriorLightsDefinition(const Model& model)
   : ResourceObject(ExteriorLightsDefinition::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ExteriorLightsDefinition_Impl>());
+  OS_ASSERT(getImpl<detail::ExteriorLightsDefinition_Impl>());
 
   bool ok = true;
   ok = setDesignLevel(0.0);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType ExteriorLightsDefinition::iddObjectType() {

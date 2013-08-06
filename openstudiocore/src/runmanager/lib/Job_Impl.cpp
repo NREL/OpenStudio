@@ -25,6 +25,7 @@
 #include <QWriteLocker>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <utilities/core/Application.hpp>
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/PathHelpers.hpp>
 #include <QDir>
 
@@ -272,7 +273,7 @@ namespace detail {
     emitStatusChanged(AdvancedStatus(AdvancedStatusEnum::Idle));
     exit();
 
-    BOOST_ASSERT(this != QThread::currentThread());
+    OS_ASSERT(this != QThread::currentThread());
 
 
     while (!wait(1))
@@ -280,8 +281,8 @@ namespace detail {
       openstudio::Application::instance().processEvents();
     }
 
-    BOOST_ASSERT(!isRunning());
-    BOOST_ASSERT(isFinished());
+    OS_ASSERT(!isRunning());
+    OS_ASSERT(isFinished());
 
     JobErrors errors = this->errors();
 

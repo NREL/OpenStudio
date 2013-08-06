@@ -99,11 +99,11 @@ OSPlugin::OSPlugin( int & argc, char ** argv )
 
   bool test;
   test = connect( m_startupView.get(), SIGNAL( newFromTemplate( NewFromTemplateEnum ) ), this, SLOT( newForLastKey( NewFromTemplateEnum ) ) ) ;
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = connect( m_startupView.get(), SIGNAL( openClicked() ), this, SLOT( openForLastKey() ) ) ;
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = connect( m_startupView.get(), SIGNAL( importClicked() ), this, SLOT( importIdfForLastKey() ) ) ;
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 
 }
 
@@ -354,12 +354,12 @@ void OSPlugin::hideSender()
 
   QObject* sender = this->sender();
   OSDocument* osDocument = qobject_cast<OSDocument*>(sender);
-  BOOST_ASSERT(osDocument);
+  OS_ASSERT(osDocument);
 
   osDocument->mainWindow()->hide();
 
   boost::optional<std::string> key = getKeyForDocument(osDocument);
-  BOOST_ASSERT(key);
+  OS_ASSERT(key);
 
   emit documentHidden(*key);
 }
@@ -370,10 +370,10 @@ void OSPlugin::importIdfForSender()
 
   QObject* sender = this->sender();
   OSDocument* osDocument = qobject_cast<OSDocument*>(sender);
-  BOOST_ASSERT(osDocument);
+  OS_ASSERT(osDocument);
 
   boost::optional<std::string> key = getKeyForDocument(osDocument);
-  BOOST_ASSERT(key);
+  OS_ASSERT(key);
   
   QString fileName = QFileDialog::getOpenFileName( m_sketchUpWidget,
                                                    tr("Import Idf"),
@@ -456,10 +456,10 @@ void OSPlugin::openForSender()
 
   QObject* sender = this->sender();
   OSDocument* osDocument = qobject_cast<OSDocument*>(sender);
-  BOOST_ASSERT(osDocument);
+  OS_ASSERT(osDocument);
 
   boost::optional<std::string> key = getKeyForDocument(osDocument);
-  BOOST_ASSERT(key);
+  OS_ASSERT(key);
 
   QString fileName = QFileDialog::getOpenFileName( m_sketchUpWidget,
                                                    tr("Open"),
@@ -506,10 +506,10 @@ void OSPlugin::newForSender()
 
   QObject* sender = this->sender();
   OSDocument* osDocument = qobject_cast<OSDocument*>(sender);
-  BOOST_ASSERT(osDocument);
+  OS_ASSERT(osDocument);
 
   boost::optional<std::string> key = getKeyForDocument(osDocument);
-  BOOST_ASSERT(key);
+  OS_ASSERT(key);
 
   if( !closeDocument(*key) ) { 
     return; 
@@ -649,17 +649,17 @@ void OSPlugin::connectDocumentSignals(OSDocument* osDocument)
 {
   bool test;
   test = connect( osDocument, SIGNAL(closeClicked()), this, SLOT(hideSender()) );
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   //test = connect( osDocument, SIGNAL(exitClicked()), this, SLOT(quit()) );
-  //BOOST_ASSERT(test);
+  //OS_ASSERT(test);
   test = connect( osDocument, SIGNAL(importClicked()), this, SLOT(importIdfForSender()) );
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = connect( osDocument, SIGNAL(loadFileClicked()), this, SLOT(openForSender()) );
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = connect( osDocument, SIGNAL(newClicked()), this, SLOT(newForSender()) );
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = connect( osDocument, SIGNAL(helpClicked()), this, SLOT(showHelp()) );
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 }
 
 boost::optional<std::string> OSPlugin::getKeyForDocument(OSDocument* osDocument) const

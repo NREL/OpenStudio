@@ -48,13 +48,13 @@ namespace detail {
   ModelObjectFilterBooleanAttributeRecord_Impl::ModelObjectFilterBooleanAttributeRecord_Impl(const QSqlQuery& query, const ProjectDatabase& projectDatabase)
     : ModelObjectFilterAttributeRecord_Impl(query, projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
     value = query.value(ClauseRecordColumns::attributeValue);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_attributeValue = value.toBool();
   }
 
@@ -111,7 +111,7 @@ namespace detail {
 
     QVariant value;
     value = query.value(ClauseRecordColumns::attributeValue);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastAttributeValue = value.toBool();
   }
 
@@ -123,7 +123,7 @@ namespace detail {
 
     QVariant value;
     value = query.value(ClauseRecordColumns::attributeValue);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_attributeValue == value.toBool());
     
     return result;
@@ -148,25 +148,25 @@ namespace detail {
 ModelObjectFilterBooleanAttributeRecord::ModelObjectFilterBooleanAttributeRecord(const openstudio::ruleset::ModelObjectFilterBooleanAttribute& modelObjectFilterBooleanAttribute, ProjectDatabase& projectDatabase)
   : ModelObjectFilterAttributeRecord(boost::shared_ptr<detail::ModelObjectFilterBooleanAttributeRecord_Impl>(new detail::ModelObjectFilterBooleanAttributeRecord_Impl(modelObjectFilterBooleanAttribute, projectDatabase)), projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttributeRecord_Impl>());
 }
 
 ModelObjectFilterBooleanAttributeRecord::ModelObjectFilterBooleanAttributeRecord(const QSqlQuery& query, ProjectDatabase& projectDatabase)
   : ModelObjectFilterAttributeRecord(boost::shared_ptr<detail::ModelObjectFilterBooleanAttributeRecord_Impl>(new detail::ModelObjectFilterBooleanAttributeRecord_Impl(query, projectDatabase)), projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttributeRecord_Impl>());
 }
 
 ModelObjectFilterBooleanAttributeRecord::ModelObjectFilterBooleanAttributeRecord(boost::shared_ptr<detail::ModelObjectFilterBooleanAttributeRecord_Impl> impl, ProjectDatabase projectDatabase)
   : ModelObjectFilterAttributeRecord(impl, projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttributeRecord_Impl>());
 }
 
 ModelObjectFilterBooleanAttributeRecord::ModelObjectFilterBooleanAttributeRecord(boost::shared_ptr<detail::ModelObjectFilterBooleanAttributeRecord_Impl> impl)
   : ModelObjectFilterAttributeRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttributeRecord_Impl>());
 }
 
 boost::optional<ModelObjectFilterBooleanAttributeRecord> ModelObjectFilterBooleanAttributeRecord::factoryFromQuery(

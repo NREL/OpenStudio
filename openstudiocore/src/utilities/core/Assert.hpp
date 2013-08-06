@@ -21,15 +21,7 @@
 #define UTILITIES_CORE_ASSERT_HPP
 
 /****************************************************************************
-!!! THIS FILE MUST BE INCLUDED BY ANY SOURCE FILE THAT USES Q_ASSERT!!!
-*****************************************************************************/
-
-// enable Q_ASSERTs in Release mode
-#ifdef QT_NO_DEBUG
-  #undef QT_NO_DEBUG
-#endif
-
-/****************************************************************************
+!!! THIS FILE MUST BE INCLUDED BY ANY SOURCE FILE THAT USES OPENSTUDIO_ASSERT!!!
 !!! THIS FILE MUST BE INCLUDED BY ANY SOURCE FILE THAT USES BOOST_ASSERT!!!
 *****************************************************************************/
 
@@ -37,6 +29,8 @@
 #include <utilities/core/Logger.hpp>
 
 #include <sstream>
+
+#define OS_ASSERT(expr) BOOST_ASSERT(expr)
 
 #ifdef NDEBUG
   //#define BOOST_DISABLE_ASSERTS

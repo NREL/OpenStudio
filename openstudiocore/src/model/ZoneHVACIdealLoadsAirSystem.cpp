@@ -42,7 +42,7 @@ namespace detail {
                                                                      bool keepHandle)
     : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ZoneHVACIdealLoadsAirSystem::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ZoneHVACIdealLoadsAirSystem::iddObjectType());
   }
 
   ZoneHVACIdealLoadsAirSystem_Impl::ZoneHVACIdealLoadsAirSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -50,7 +50,7 @@ namespace detail {
                                                                      bool keepHandle)
     : ZoneHVACComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ZoneHVACIdealLoadsAirSystem::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ZoneHVACIdealLoadsAirSystem::iddObjectType());
   }
 
   ZoneHVACIdealLoadsAirSystem_Impl::ZoneHVACIdealLoadsAirSystem_Impl(const ZoneHVACIdealLoadsAirSystem_Impl& other,
@@ -107,14 +107,14 @@ namespace detail {
 
   double ZoneHVACIdealLoadsAirSystem_Impl::maximumHeatingSupplyAirTemperature() const {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity ZoneHVACIdealLoadsAirSystem_Impl::getMaximumHeatingSupplyAirTemperature(bool returnIP) const {
     OptionalDouble value = maximumHeatingSupplyAirTemperature();
     OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirTemperature, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -124,14 +124,14 @@ namespace detail {
 
   double ZoneHVACIdealLoadsAirSystem_Impl::minimumCoolingSupplyAirTemperature() const {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity ZoneHVACIdealLoadsAirSystem_Impl::getMinimumCoolingSupplyAirTemperature(bool returnIP) const {
     OptionalDouble value = minimumCoolingSupplyAirTemperature();
     OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirTemperature, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -141,14 +141,14 @@ namespace detail {
 
   double ZoneHVACIdealLoadsAirSystem_Impl::maximumHeatingSupplyAirHumidityRatio() const {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirHumidityRatio,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity ZoneHVACIdealLoadsAirSystem_Impl::getMaximumHeatingSupplyAirHumidityRatio(bool returnIP) const {
     OptionalDouble value = maximumHeatingSupplyAirHumidityRatio();
     OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirHumidityRatio, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -158,14 +158,14 @@ namespace detail {
 
   double ZoneHVACIdealLoadsAirSystem_Impl::minimumCoolingSupplyAirHumidityRatio() const {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirHumidityRatio,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity ZoneHVACIdealLoadsAirSystem_Impl::getMinimumCoolingSupplyAirHumidityRatio(bool returnIP) const {
     OptionalDouble value = minimumCoolingSupplyAirHumidityRatio();
     OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirHumidityRatio, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -175,7 +175,7 @@ namespace detail {
 
   std::string ZoneHVACIdealLoadsAirSystem_Impl::heatingLimit() const {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_IdealLoadsAirSystemFields::HeatingLimit,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -221,7 +221,7 @@ namespace detail {
 
   std::string ZoneHVACIdealLoadsAirSystem_Impl::coolingLimit() const {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_IdealLoadsAirSystemFields::CoolingLimit,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -275,7 +275,7 @@ namespace detail {
 
   std::string ZoneHVACIdealLoadsAirSystem_Impl::dehumidificationControlType() const {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_IdealLoadsAirSystemFields::DehumidificationControlType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -285,14 +285,14 @@ namespace detail {
 
   double ZoneHVACIdealLoadsAirSystem_Impl::coolingSensibleHeatRatio() const {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::CoolingSensibleHeatRatio,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity ZoneHVACIdealLoadsAirSystem_Impl::getCoolingSensibleHeatRatio(bool returnIP) const {
     OptionalDouble value = coolingSensibleHeatRatio();
     OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::CoolingSensibleHeatRatio, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -302,7 +302,7 @@ namespace detail {
 
   std::string ZoneHVACIdealLoadsAirSystem_Impl::humidificationControlType() const {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_IdealLoadsAirSystemFields::HumidificationControlType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -316,7 +316,7 @@ namespace detail {
 
   std::string ZoneHVACIdealLoadsAirSystem_Impl::demandControlledVentilationType() const {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_IdealLoadsAirSystemFields::DemandControlledVentilationType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -326,7 +326,7 @@ namespace detail {
 
   std::string ZoneHVACIdealLoadsAirSystem_Impl::outdoorAirEconomizerType() const {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_IdealLoadsAirSystemFields::OutdoorAirEconomizerType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -336,7 +336,7 @@ namespace detail {
 
   std::string ZoneHVACIdealLoadsAirSystem_Impl::heatRecoveryType() const {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_IdealLoadsAirSystemFields::HeatRecoveryType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -346,14 +346,14 @@ namespace detail {
 
   double ZoneHVACIdealLoadsAirSystem_Impl::sensibleHeatRecoveryEffectiveness() const {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::SensibleHeatRecoveryEffectiveness,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity ZoneHVACIdealLoadsAirSystem_Impl::getSensibleHeatRecoveryEffectiveness(bool returnIP) const {
     OptionalDouble value = sensibleHeatRecoveryEffectiveness();
     OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::SensibleHeatRecoveryEffectiveness, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -363,14 +363,14 @@ namespace detail {
 
   double ZoneHVACIdealLoadsAirSystem_Impl::latentHeatRecoveryEffectiveness() const {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::LatentHeatRecoveryEffectiveness,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity ZoneHVACIdealLoadsAirSystem_Impl::getLatentHeatRecoveryEffectiveness(bool returnIP) const {
     OptionalDouble value = latentHeatRecoveryEffectiveness();
     OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::LatentHeatRecoveryEffectiveness, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -388,7 +388,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetAvailabilitySchedule() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::AvailabilityScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setMaximumHeatingSupplyAirTemperature(double maximumHeatingSupplyAirTemperature) {
@@ -407,7 +407,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetMaximumHeatingSupplyAirTemperature() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setMinimumCoolingSupplyAirTemperature(double minimumCoolingSupplyAirTemperature) {
@@ -426,7 +426,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetMinimumCoolingSupplyAirTemperature() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setMaximumHeatingSupplyAirHumidityRatio(double maximumHeatingSupplyAirHumidityRatio) {
@@ -445,7 +445,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetMaximumHeatingSupplyAirHumidityRatio() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirHumidityRatio, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setMinimumCoolingSupplyAirHumidityRatio(double minimumCoolingSupplyAirHumidityRatio) {
@@ -464,7 +464,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetMinimumCoolingSupplyAirHumidityRatio() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirHumidityRatio, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setHeatingLimit(std::string heatingLimit) {
@@ -475,7 +475,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetHeatingLimit() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::HeatingLimit, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setMaximumHeatingAirFlowRate(boost::optional<double> maximumHeatingAirFlowRate) {
@@ -505,12 +505,12 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetMaximumHeatingAirFlowRate() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingAirFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ZoneHVACIdealLoadsAirSystem_Impl::autosizeMaximumHeatingAirFlowRate() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingAirFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setMaximumSensibleHeatingCapacity(boost::optional<double> maximumSensibleHeatingCapacity) {
@@ -540,12 +540,12 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetMaximumSensibleHeatingCapacity() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumSensibleHeatingCapacity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ZoneHVACIdealLoadsAirSystem_Impl::autosizeMaximumSensibleHeatingCapacity() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumSensibleHeatingCapacity, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setCoolingLimit(std::string coolingLimit) {
@@ -556,7 +556,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetCoolingLimit() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::CoolingLimit, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setMaximumCoolingAirFlowRate(boost::optional<double> maximumCoolingAirFlowRate) {
@@ -586,12 +586,12 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetMaximumCoolingAirFlowRate() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumCoolingAirFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ZoneHVACIdealLoadsAirSystem_Impl::autosizeMaximumCoolingAirFlowRate() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumCoolingAirFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setMaximumTotalCoolingCapacity(boost::optional<double> maximumTotalCoolingCapacity) {
@@ -621,12 +621,12 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetMaximumTotalCoolingCapacity() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumTotalCoolingCapacity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ZoneHVACIdealLoadsAirSystem_Impl::autosizeMaximumTotalCoolingCapacity() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumTotalCoolingCapacity, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setHeatingAvailabilitySchedule(Schedule& schedule) {
@@ -640,7 +640,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetHeatingAvailabilitySchedule() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::HeatingAvailabilityScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setCoolingAvailabilitySchedule(Schedule& schedule) {
@@ -653,7 +653,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetCoolingAvailabilitySchedule() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::CoolingAvailabilityScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setDehumidificationControlType(std::string dehumidificationControlType) {
@@ -664,7 +664,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetDehumidificationControlType() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::DehumidificationControlType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setCoolingSensibleHeatRatio(double coolingSensibleHeatRatio) {
@@ -683,7 +683,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetCoolingSensibleHeatRatio() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::CoolingSensibleHeatRatio, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setHumidificationControlType(std::string humidificationControlType) {
@@ -694,7 +694,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetHumidificationControlType() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::HumidificationControlType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setDesignSpecificationOutdoorAirObject(const boost::optional<DesignSpecificationOutdoorAir>& designSpecificationOutdoorAirObject) {
@@ -709,7 +709,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetDesignSpecificationOutdoorAirObject() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::DesignSpecificationOutdoorAirObjectName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setDemandControlledVentilationType(std::string demandControlledVentilationType) {
@@ -720,7 +720,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetDemandControlledVentilationType() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::DemandControlledVentilationType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setOutdoorAirEconomizerType(std::string outdoorAirEconomizerType) {
@@ -731,7 +731,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetOutdoorAirEconomizerType() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::OutdoorAirEconomizerType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setHeatRecoveryType(std::string heatRecoveryType) {
@@ -742,7 +742,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetHeatRecoveryType() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::HeatRecoveryType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setSensibleHeatRecoveryEffectiveness(double sensibleHeatRecoveryEffectiveness) {
@@ -761,7 +761,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetSensibleHeatRecoveryEffectiveness() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::SensibleHeatRecoveryEffectiveness, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::setLatentHeatRecoveryEffectiveness(double latentHeatRecoveryEffectiveness) {
@@ -780,7 +780,7 @@ namespace detail {
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetLatentHeatRecoveryEffectiveness() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::LatentHeatRecoveryEffectiveness, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   openstudio::Quantity ZoneHVACIdealLoadsAirSystem_Impl::maximumHeatingSupplyAirTemperature_SI() const {
@@ -1007,7 +1007,7 @@ namespace detail {
 ZoneHVACIdealLoadsAirSystem::ZoneHVACIdealLoadsAirSystem(const Model& model)
   : ZoneHVACComponent(ZoneHVACIdealLoadsAirSystem::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>());
+  OS_ASSERT(getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>());
 }
 
 IddObjectType ZoneHVACIdealLoadsAirSystem::iddObjectType() {

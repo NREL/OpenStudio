@@ -1409,7 +1409,7 @@ DefaultConstructionSetInspectorView::DefaultConstructionSetInspectorView(const m
   gridLayout->addWidget(label,row,leftCol);
   gridLayout->addWidget(m_interiorPartitionsDZ,row+1,leftCol);
 
-  BOOST_ASSERT(m_vectorControllers.size() == 24);
+  OS_ASSERT(m_vectorControllers.size() == 24);
 
   configDropZones();
 

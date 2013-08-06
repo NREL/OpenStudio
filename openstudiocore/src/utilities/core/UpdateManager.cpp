@@ -46,18 +46,18 @@ namespace openstudio{
     Application::instance().processEvents(); // a kludge to make sure that updatemanager works correctly in a non-application environment on unix
 
     bool result = connect(m_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
 
     result = connect(this, SIGNAL(processed()), this, SLOT(replyProcessed()));
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
 
     QUrl url(QString::fromStdString(updateUrl()));
     
     m_request = new QNetworkRequest(url);
-    BOOST_ASSERT(m_request);
+    OS_ASSERT(m_request);
 
     m_reply = m_manager->get(*m_request);
-    BOOST_ASSERT(m_reply);
+    OS_ASSERT(m_reply);
   }
 
   UpdateManager::UpdateManager(const std::string& appName, const std::string& url)
@@ -70,10 +70,10 @@ namespace openstudio{
 
 
     bool result = connect(m_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     
     result = connect(this, SIGNAL(processed()), this, SLOT(replyProcessed()));
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   
     m_request = new QNetworkRequest(QUrl(QString::fromStdString(url)));
     

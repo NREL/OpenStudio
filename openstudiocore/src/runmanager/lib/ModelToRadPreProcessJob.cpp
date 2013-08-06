@@ -71,6 +71,8 @@
 #include <utilities/idf/Workspace.hpp>
 #include <utilities/sql/SqlFile.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <QDir>
 #include <QDateTime>
 
@@ -244,7 +246,7 @@ namespace detail {
           }
 
           std::map<std::string, openstudio::model::ThermalZone>::iterator itr = thermalZones.find(*thermalZone->name());
-          BOOST_ASSERT(itr != thermalZones.end()); // We just added it above if we needed it
+          OS_ASSERT(itr != thermalZones.end()); // We just added it above if we needed it
           new_space.setThermalZone(itr->second);
         } else if (thermalZone && !thermalZone->name()) {
           errors.addError(ErrorType::Warning, "Space discovered in un-named thermalZone, not translating");

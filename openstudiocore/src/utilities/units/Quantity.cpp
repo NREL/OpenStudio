@@ -118,7 +118,7 @@ bool Quantity::setScale(int scaleExponent) {
   }
   m_value = m_value * (scale().value / candidateValue);
   bool ok = m_units.setScale(scaleExponent);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   return true;
 }
 
@@ -130,7 +130,7 @@ bool Quantity::setScale(const std::string& scaleAbbreviation) {
   }
   m_value = m_value * (scale().value / candidateValue);
   bool ok = m_units.setScale(scaleAbbreviation);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   return true;
 }
 
@@ -180,7 +180,7 @@ void Quantity::lbmToLbf()
     iu->lbmToLbf();
     m_value /= std::pow(IPUnit::gc(),x);
   }
-  BOOST_ASSERT(baseUnitExponent("lb_m") == 0);
+  OS_ASSERT(baseUnitExponent("lb_m") == 0);
 }
 
 void Quantity::lbfToLbm() 
@@ -198,7 +198,7 @@ void Quantity::lbfToLbm()
     iu->lbfToLbm();
     m_value *= std::pow(IPUnit::gc(),x);
   }
-  BOOST_ASSERT(baseUnitExponent("lb_f") == 0);
+  OS_ASSERT(baseUnitExponent("lb_f") == 0);
 }
 
 Quantity& Quantity::operator+=(const Quantity& rQuantity) {

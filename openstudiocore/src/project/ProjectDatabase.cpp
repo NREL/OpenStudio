@@ -118,9 +118,9 @@ namespace detail {
     }
 
     QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE", toQString(path));
-    BOOST_ASSERT(database.isValid());
+    OS_ASSERT(database.isValid());
     database.setDatabaseName(toQString(path));
-    BOOST_ASSERT(database.open());
+    OS_ASSERT(database.open());
     m_qSqlDatabase = boost::shared_ptr<QSqlDatabase>(new QSqlDatabase(database));
 
     QSqlQuery query(*m_qSqlDatabase);
@@ -176,13 +176,13 @@ namespace detail {
 
     if (didStartTransaction){
       bool didCommitTransaction = this->commitTransaction();
-      BOOST_ASSERT(didCommitTransaction);
+      OS_ASSERT(didCommitTransaction);
     }else{
       // any uncommitted transactions will now be lost
     }
 
     // make sure we are the last one using database connection
-    BOOST_ASSERT(m_qSqlDatabase.use_count() == 1);
+    OS_ASSERT(m_qSqlDatabase.use_count() == 1);
 
     m_qSqlDatabase->close();
     m_qSqlDatabase.reset(); // actually delete the database before removeDatabase
@@ -213,67 +213,67 @@ namespace detail {
 
   UUID ProjectDatabase_Impl::handle() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->handle();
   }
 
   std::string ProjectDatabase_Impl::name() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->name();
   }
 
   bool ProjectDatabase_Impl::setName(const std::string& name)
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->setName(name);
   }
 
   std::string ProjectDatabase_Impl::displayName() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->displayName();
   }
 
   bool ProjectDatabase_Impl::setDisplayName(const std::string& displayName)
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->setDisplayName(displayName);
   }
 
   std::string ProjectDatabase_Impl::description() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->description();
   }
 
   bool ProjectDatabase_Impl::setDescription(const std::string& description)
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->setDescription(description);
   }
 
   DateTime ProjectDatabase_Impl::timestampCreate() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->timestampCreate();
   }
 
   DateTime ProjectDatabase_Impl::timestampLast() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->timestampLast();
   }
 
   UUID ProjectDatabase_Impl::uuidLast() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->uuidLast();
   }
 
   std::string ProjectDatabase_Impl::version() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->version();
   }
 
@@ -299,7 +299,7 @@ namespace detail {
 
   openstudio::path ProjectDatabase_Impl::runManagerDBPath() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->runManagerDBPath();
   }
 
@@ -369,14 +369,14 @@ namespace detail {
 
     // update the project database record
     if (didChange){
-      BOOST_ASSERT(m_projectDatabaseRecord);
+      OS_ASSERT(m_projectDatabaseRecord);
       m_projectDatabaseRecord->onChange();
       m_projectDatabaseRecord->saveRow(other);
     }
 
     if (didStartTransaction){
       bool didCommitTransaction = this->commitTransaction();
-      BOOST_ASSERT(didCommitTransaction);
+      OS_ASSERT(didCommitTransaction);
     }
 
     m_ignoreSignals = false;
@@ -443,7 +443,7 @@ namespace detail {
     if (topLevelObject){
       if (didStartTransaction){
         bool didCommitTransaction = this->commitTransaction();
-        BOOST_ASSERT(didCommitTransaction);
+        OS_ASSERT(didCommitTransaction);
       }
       m_ignoreSignals = false;
     }
@@ -453,7 +453,7 @@ namespace detail {
 
   boost::optional<RemoveUndo> ProjectDatabase_Impl::removeRecord(Record& record, bool saveResult)
   {
-    BOOST_ASSERT(this->handle() == record.projectDatabase().handle());
+    OS_ASSERT(this->handle() == record.projectDatabase().handle());
 
     ProjectDatabase other(this->shared_from_this());
 
@@ -548,7 +548,7 @@ namespace detail {
         m_handleCleanRecordMap.erase(it);
         break;
       default:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
       }
 
       // delete row
@@ -556,7 +556,7 @@ namespace detail {
 
       if (didStartTransaction){
         bool didCommitTransaction = this->commitTransaction();
-        BOOST_ASSERT(didCommitTransaction);
+        OS_ASSERT(didCommitTransaction);
       }
 
     }
@@ -594,20 +594,20 @@ namespace detail {
 
     if (didStartTransaction) {
       bool test = this->commitTransaction();
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
   }
 
   void ProjectDatabase_Impl::addNewRecord(Record& record)
   {
-    BOOST_ASSERT(this->handle() == record.projectDatabase().handle());
+    OS_ASSERT(this->handle() == record.projectDatabase().handle());
 
     ProjectDatabase other(this->shared_from_this());
 
     UUID handle = record.handle();
 
     // make sure object isn't already loaded
-    BOOST_ASSERT(!findLoadedRecord(handle));
+    OS_ASSERT(!findLoadedRecord(handle));
 
     // insert object, will get id
     record.insertRow(other);
@@ -625,14 +625,14 @@ namespace detail {
 
   void ProjectDatabase_Impl::addDirtyRecord(const Record& record)
   {
-    BOOST_ASSERT(this->handle() == record.projectDatabase().handle());
+    OS_ASSERT(this->handle() == record.projectDatabase().handle());
 
     ProjectDatabase other(this->shared_from_this());
 
     UUID handle = record.handle();
 
     // make sure object isn't already loaded
-    BOOST_ASSERT(!findLoadedRecord(handle));
+    OS_ASSERT(!findLoadedRecord(handle));
 
     // connect signals
     connectSignals(record);
@@ -644,14 +644,14 @@ namespace detail {
 
   void ProjectDatabase_Impl::addCleanRecord(const Record& record)
   {
-    BOOST_ASSERT(this->handle() == record.projectDatabase().handle());
+    OS_ASSERT(this->handle() == record.projectDatabase().handle());
 
     ProjectDatabase other(this->shared_from_this());
 
     UUID handle = record.handle();
 
     // make sure object isn't already loaded
-    BOOST_ASSERT(!findLoadedRecord(handle));
+    OS_ASSERT(!findLoadedRecord(handle));
 
     // connect signals
     connectSignals(record);
@@ -718,11 +718,11 @@ namespace detail {
     if ((dbv != osv) || (!dbv.fidelityEqual(osv))) {
       LOG(Info,"Updating database version to " << osv << ".");
       bool didStartTransaction = startTransaction();
-      BOOST_ASSERT(didStartTransaction);
+      OS_ASSERT(didStartTransaction);
       m_projectDatabaseRecord->setVersion(osv.str());
       save();
       bool test = this->commitTransaction();
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
   }
 
@@ -832,34 +832,34 @@ namespace detail {
 
     std::map<UUID, Record>::const_iterator it = m_handleNewRecordMap.find(handle);
     if (it != m_handleNewRecordMap.end()){
-      BOOST_ASSERT(!result);
+      OS_ASSERT(!result);
       result = it->second;
     }
 
     it = m_handleDirtyRecordMap.find(handle);
     if (it != m_handleDirtyRecordMap.end()){
-      BOOST_ASSERT(!result);
+      OS_ASSERT(!result);
       result = it->second;
     }
 
     it = m_handleCleanRecordMap.find(handle);
     if (it != m_handleCleanRecordMap.end()){
-      BOOST_ASSERT(!result);
+      OS_ASSERT(!result);
       result = it->second;
     }
 
     it = m_handleRemovedRecordMap.find(handle);
     if (it != m_handleRemovedRecordMap.end()){
-      BOOST_ASSERT(!result);
+      OS_ASSERT(!result);
       result = it->second;
     }
 
     if (result) {
       Record record = *result;
-      BOOST_ASSERT(handle == record.handle());
+      OS_ASSERT(handle == record.handle());
       std::string passedInHandleString = toString(handle);
       std::string loadedHandleString = toString(record.handle());
-      BOOST_ASSERT(passedInHandleString == loadedHandleString);
+      OS_ASSERT(passedInHandleString == loadedHandleString);
     }
     return result;
   }
@@ -897,12 +897,12 @@ namespace detail {
   void ProjectDatabase_Impl::connectSignals(const Record& record) const
   {
     bool test = record.connect(SIGNAL(onChange(const UUID&)), this, SLOT(recordChanged(const UUID&)));
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::initialize() {
     bool didStartTransaction = this->startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // create object tables
     createTable<AlgorithmRecord>();
@@ -930,12 +930,12 @@ namespace detail {
     createTable<Ruleset_Rule_JoinRecord>();
 
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_0_6_6_to_0_7_0(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // add functionType column to FunctionRecords and set any entries to FunctionType::Objective
     LOG(Info,"Adding functionType column to " << FunctionRecord::databaseTableName() << ".");
@@ -958,12 +958,12 @@ namespace detail {
 
     save();
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_0_8_0_to_0_8_1(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     ProjectDatabase database(this->shared_from_this());
     QSqlQuery query(*(database.qSqlDatabase()));
@@ -1006,10 +1006,10 @@ namespace detail {
 
     save();
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // pre-0.8.1 AlgorithmRecordColumns
     /*OPENSTUDIO_ENUM(AlgorithmRecordColumns,
@@ -1047,20 +1047,20 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // warning this will create the table in current format not in 0.8.1 format
     createTable<AlgorithmRecord>();
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // extract previous data
     query.prepare(QString("SELECT * FROM AlgorithmRecordsOldFormat"));
@@ -1085,7 +1085,7 @@ namespace detail {
       AttributeVector attributes;
 
       QVariant value = query.value(0);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       int id = value.toInt();
       ids << value;
 
@@ -1159,7 +1159,7 @@ namespace detail {
     algAddQuery.addBindValue(complete);
     algAddQuery.addBindValue(failed);
     test = algAddQuery.execBatch();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     algAddQuery.clear();
     query.clear();
 
@@ -1183,10 +1183,10 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // delete old format table
     query.prepare(QString("DROP TABLE AlgorithmRecordsOldFormat"));
@@ -1195,12 +1195,12 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_0_8_3_to_0_8_4(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     ProjectDatabase database(this->shared_from_this());
     QSqlQuery query(*(database.qSqlDatabase()));
@@ -1226,14 +1226,14 @@ namespace detail {
 
     save();
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_0_9_0_to_0_9_1(const VersionString &startVersion) {
     if (startVersion > VersionString("0.8.0")) {
       // If goes through 0.8.0 to 0.8.1 translator, automatically gets up-to-date columns.
       bool didStartTransaction = startTransaction();
-      BOOST_ASSERT(didStartTransaction);
+      OS_ASSERT(didStartTransaction);
 
       ProjectDatabase database(this->shared_from_this());
       QSqlQuery query(*(database.qSqlDatabase()));
@@ -1270,13 +1270,13 @@ namespace detail {
 
       save();
       bool test = this->commitTransaction();
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
   }
 
   void ProjectDatabase_Impl::update_0_10_0_to_0_10_1(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     ProjectDatabase database(this->shared_from_this());
     QSqlQuery query(*(database.qSqlDatabase()));
@@ -1310,10 +1310,10 @@ namespace detail {
 
     save();
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // extract previous data
     query.prepare(QString("SELECT * FROM UserScriptArgumentRecords"));
@@ -1340,7 +1340,7 @@ namespace detail {
 
       // do not keep record if userScriptArgumentType is 7 (WorkspaceObject)
       value = query.value(10);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       int argTypeCode = value.toInt();
       if (argTypeCode == 7) {
         LOG(Warn,"The WorkspaceObject argument type has been deprecated. The ProjectDatabase "
@@ -1409,16 +1409,16 @@ namespace detail {
     argAddQuery.addBindValue(extensions);
 
     test = argAddQuery.execBatch();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     argAddQuery.clear();
     query.clear();
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // delete old table
     query.prepare(QString("DROP TABLE UserScriptArgumentRecords"));
@@ -1427,12 +1427,12 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_0_10_2_to_0_10_3(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     LOG(Info,"Adding resultsAreInvalid and dataPointsAreInvalid columns to "
         << AnalysisRecord::databaseTableName() << ".");
@@ -1468,12 +1468,12 @@ namespace detail {
 
     save();
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_0_10_3_to_0_10_4(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     ProjectDatabase database(this->shared_from_this());
     QSqlQuery query(*(database.qSqlDatabase()));
@@ -1546,12 +1546,12 @@ namespace detail {
 
     save();
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_0_10_4_to_0_10_5(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     LOG(Info,"Changing inheritance hierarchy of " << VariableRecord::databaseTableName() << ".");
 
@@ -1603,9 +1603,9 @@ namespace detail {
 
     save();
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // Update each row in VariableRecords to follow the new hierarchy
 
@@ -1674,9 +1674,9 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     LOG(Info,"Changing how Problems refer to their runmanager::Workflows.");
 
@@ -1698,9 +1698,9 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // Populate new WorkflowRecords columns with data from ProblemRecords and VariableRecords
     query.prepare(QString::fromStdString("SELECT id, workflowRecordId FROM " +
@@ -1739,12 +1739,12 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_0_11_5_to_0_11_6(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     LOG(Info,"Adding column for IDF input data to " << DataPointRecord::databaseTableName() << ".");
 
@@ -1761,9 +1761,9 @@ namespace detail {
 
     save();
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // If there is already an inputDataRecordId, move it to idfInputDataRecordId if
     // it points to an IDF file.
@@ -1778,12 +1778,12 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_1_0_0_to_1_0_1(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     LOG(Info,"Dropping deprecated table RulesetOptionRecords.");
 
@@ -1796,12 +1796,12 @@ namespace detail {
 
     save();
   	bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     LOG(Info,"Removing all standards rule and ruleset information.");
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // remove RulesetRecord entries with rulesetRecordType == 1
     query.prepare(QString::fromStdString("DELETE FROM RulesetRecords WHERE rulesetRecordType=1"));
@@ -1810,10 +1810,10 @@ namespace detail {
 
     save();
   	test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // remove RuleRecord entries with ruleRecordType > 0
     query.prepare(QString::fromStdString("DELETE FROM RuleRecords WHERE ruleRecordType>0"));
@@ -1822,10 +1822,10 @@ namespace detail {
 
     save();
   	test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // remove ClauseRecord entries with (clauseRecordType == 0 AND filterClauseRecordType == 2) OR
     // (clauseRecordType == 1 AND actionClauseRecordType == 2)
@@ -1837,10 +1837,10 @@ namespace detail {
 
     save();
   	test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // remove orphaned join records
     query.prepare(QString::fromStdString(std::string("DELETE FROM Ruleset_Rule_JoinRecords WHERE ") + 
@@ -1855,7 +1855,7 @@ namespace detail {
 
     save();
   	test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::setProjectDatabaseRecord(const ProjectDatabaseRecord& projectDatabaseRecord)
@@ -1914,7 +1914,7 @@ ProjectDatabase::ProjectDatabase(const openstudio::path& path,
 }
 
 void ProjectDatabase::initialize(const openstudio::path& path) {
-  BOOST_ASSERT(m_impl);
+  OS_ASSERT(m_impl);
 
   ProjectDatabase other(m_impl);
 
@@ -1969,17 +1969,17 @@ void ProjectDatabase::initialize(const openstudio::path& path) {
 ProjectDatabase::ProjectDatabase(const ProjectDatabase& other)
   : m_impl(other.m_impl)
 {
-  BOOST_ASSERT(m_impl);
-  BOOST_ASSERT(m_impl->qSqlDatabase());
-  BOOST_ASSERT(m_impl->qSqlDatabase()->isOpen());
+  OS_ASSERT(m_impl);
+  OS_ASSERT(m_impl->qSqlDatabase());
+  OS_ASSERT(m_impl->qSqlDatabase()->isOpen());
 }
 
 ProjectDatabase::ProjectDatabase(boost::shared_ptr<detail::ProjectDatabase_Impl> impl)
   : m_impl(impl)
 {
-  BOOST_ASSERT(m_impl);
-  BOOST_ASSERT(m_impl->qSqlDatabase());
-  BOOST_ASSERT(m_impl->qSqlDatabase()->isOpen());
+  OS_ASSERT(m_impl);
+  OS_ASSERT(m_impl->qSqlDatabase());
+  OS_ASSERT(m_impl->qSqlDatabase()->isOpen());
 }
 
 boost::optional<ProjectDatabase> ProjectDatabase::open(const openstudio::path& path,

@@ -41,7 +41,7 @@ namespace project {
     Ruleset_Rule_JoinRecord_Impl::Ruleset_Rule_JoinRecord_Impl(const RulesetRecord& rulesetRecord, const RuleRecord& ruleRecord)
       : JoinRecord_Impl(rulesetRecord.id(), rulesetRecord.handle(), ruleRecord.id(), ruleRecord.handle(), rulesetRecord.projectDatabase())
     {
-      BOOST_ASSERT(rulesetRecord.projectDatabase().handle() == ruleRecord.projectDatabase().handle());
+      OS_ASSERT(rulesetRecord.projectDatabase().handle() == ruleRecord.projectDatabase().handle());
     }
 
     Ruleset_Rule_JoinRecord_Impl::Ruleset_Rule_JoinRecord_Impl(const QSqlQuery& query, const ProjectDatabase& database)
@@ -63,7 +63,7 @@ namespace project {
     {
       ProjectDatabase projectDatabase = this->projectDatabase();
       boost::optional<RulesetRecord> rulesetRecord = RulesetRecord::getRulesetRecord(this->leftId(), projectDatabase);
-      BOOST_ASSERT(rulesetRecord);
+      OS_ASSERT(rulesetRecord);
       return *rulesetRecord;
     }
 
@@ -71,7 +71,7 @@ namespace project {
     {
       ProjectDatabase projectDatabase = this->projectDatabase();
       boost::optional<RuleRecord> ruleRecord = RuleRecord::getRuleRecord(this->rightId(), projectDatabase);
-      BOOST_ASSERT(ruleRecord);
+      OS_ASSERT(ruleRecord);
       return *ruleRecord;
     }
     
@@ -109,7 +109,7 @@ namespace project {
            itend = result.columnValues.end(); it != itend; ++it)
       {
         // require 0 based columns, don't skip any
-        BOOST_ASSERT(*it == expectedValue);
+        OS_ASSERT(*it == expectedValue);
         // column name is name, type is description
         ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
         // is this the last column?
@@ -145,19 +145,19 @@ namespace project {
   Ruleset_Rule_JoinRecord::Ruleset_Rule_JoinRecord(const RulesetRecord& rulesetRecord, const RuleRecord& ruleRecord)
     : JoinRecord(boost::shared_ptr<detail::Ruleset_Rule_JoinRecord_Impl>(new detail::Ruleset_Rule_JoinRecord_Impl(rulesetRecord, ruleRecord)), rulesetRecord.projectDatabase()) 
   {
-    BOOST_ASSERT(getImpl<detail::Ruleset_Rule_JoinRecord_Impl>());
+    OS_ASSERT(getImpl<detail::Ruleset_Rule_JoinRecord_Impl>());
   }
 
   Ruleset_Rule_JoinRecord::Ruleset_Rule_JoinRecord(boost::shared_ptr<detail::Ruleset_Rule_JoinRecord_Impl> impl, ProjectDatabase projectDatabase)
     : JoinRecord(impl, projectDatabase)
   {
-    BOOST_ASSERT(getImpl<detail::Ruleset_Rule_JoinRecord_Impl>());
+    OS_ASSERT(getImpl<detail::Ruleset_Rule_JoinRecord_Impl>());
   }  
   
   Ruleset_Rule_JoinRecord::Ruleset_Rule_JoinRecord(boost::shared_ptr<detail::Ruleset_Rule_JoinRecord_Impl> impl)
     : JoinRecord(impl)
   {
-    BOOST_ASSERT(getImpl<detail::Ruleset_Rule_JoinRecord_Impl>());
+    OS_ASSERT(getImpl<detail::Ruleset_Rule_JoinRecord_Impl>());
   }
 
   std::vector<RulesetRecord> Ruleset_Rule_JoinRecord::getRulesetRecords(const RuleRecord& ruleRecord)
@@ -176,14 +176,14 @@ namespace project {
     while (query.next()) {
       QVariant value;
       value = query.value(JoinRecordColumns::leftId);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       rulesetRecordIds.push_back(value.toInt());
     }
 
     // now get RulesetRecords
     BOOST_FOREACH(int id, rulesetRecordIds){
       boost::optional<RulesetRecord> rulesetRecord = RulesetRecord::getRulesetRecord(id, database);
-      BOOST_ASSERT(rulesetRecord);
+      OS_ASSERT(rulesetRecord);
       result.push_back(*rulesetRecord);
     }
 
@@ -206,14 +206,14 @@ namespace project {
     while (query.next()) {
       QVariant value;
       value = query.value(JoinRecordColumns::rightId);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       ruleRecordIds.push_back(value.toInt());
     }
 
     // now get RuleRecords
     BOOST_FOREACH(int id, ruleRecordIds){
       boost::optional<RuleRecord> ruleRecord = RuleRecord::getRuleRecord(id, database);
-      BOOST_ASSERT(ruleRecord);
+      OS_ASSERT(ruleRecord);
       result.push_back(*ruleRecord);
     }
 

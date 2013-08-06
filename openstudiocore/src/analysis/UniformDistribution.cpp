@@ -20,6 +20,8 @@
 #include <analysis/UniformDistribution.hpp>
 #include <analysis/UncertaintyDescription_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -59,7 +61,7 @@ void UniformDistribution::setUpperBound(double value) {
 UniformDistribution::UniformDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
-  BOOST_ASSERT(type() == UniformDistribution::type());
+  OS_ASSERT(type() == UniformDistribution::type());
 }
 
 } // analysis

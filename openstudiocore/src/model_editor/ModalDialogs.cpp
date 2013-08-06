@@ -50,6 +50,7 @@
 
 #include <utilities/core/Application.hpp>
 #include <utilities/core/System.hpp>
+#include <utilities/core/Assert.hpp>
 
 #include <utilities/idd/OS_ElectricEquipment_FieldEnums.hxx>
 #include <utilities/idd/OS_GasEquipment_FieldEnums.hxx>
@@ -107,7 +108,7 @@ boost::optional<openstudio::model::ModelObject> ModelObjectSelectorDialog::selec
   int currentIndex = m_comboBox->currentIndex();
   if (currentIndex >= 0){
     QVariant itemData = m_comboBox->itemData(currentIndex);
-    BOOST_ASSERT(itemData.isValid());
+    OS_ASSERT(itemData.isValid());
     Handle handle(itemData.toString());
     result = m_model.getModelObject<ModelObject>(handle);
   }
@@ -231,25 +232,25 @@ void ModelObjectSelectorDialog::connectSignalsAndSlots()
                       SIGNAL(clicked(bool)),
                       this,
                       SLOT(onPushButtonOK(bool)));
-  BOOST_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(m_cancelButton,
                       SIGNAL(clicked(bool)),
                       this,
                       SLOT(onPushButtonCancel(bool)));
-  BOOST_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
                      SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                      this,
                      SLOT(onAddWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
-  BOOST_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
                      SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                      this,
                      SLOT(onRemoveWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
-  BOOST_ASSERT(connected);
+  OS_ASSERT(connected);
 }
 
 void ModelObjectSelectorDialog::loadStyleSheet()
@@ -268,8 +269,8 @@ void ModelObjectSelectorDialog::loadStyleSheet()
 // sort by name
 struct NameSorter {
   bool operator()(const WorkspaceObject& left, const WorkspaceObject& right) const {
-    BOOST_ASSERT(left.name());
-    BOOST_ASSERT(right.name());
+    OS_ASSERT(left.name());
+    OS_ASSERT(right.name());
     return (istringLess(left.name().get(), right.name().get()));
   }
 };
@@ -291,7 +292,7 @@ void ModelObjectSelectorDialog::loadComboBoxData()
 
   // add to combo box
   BOOST_FOREACH(WorkspaceObject workspaceObject, workspaceObjects){
-    BOOST_ASSERT(workspaceObject.name());
+    OS_ASSERT(workspaceObject.name());
     std::string objectName = workspaceObject.name().get();
     m_comboBox->addItem(toQString(objectName), workspaceObject.handle().toString());
   }
@@ -305,14 +306,14 @@ void ModelObjectSelectorDialog::loadComboBoxData()
 ModelObjectSelectorDialogWatcher::ModelObjectSelectorDialogWatcher(boost::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog)
   : m_modelObjectSelectorDialog(modelObjectSelectorDialog)
 {
-  BOOST_ASSERT(modelObjectSelectorDialog);
+  OS_ASSERT(modelObjectSelectorDialog);
 
   bool connected;
   connected = connect(modelObjectSelectorDialog.get(),
                       SIGNAL(closed(const boost::optional<openstudio::model::ModelObject>&)),
                       this,
                       SLOT(onClose(const boost::optional<openstudio::model::ModelObject>&)));
-  BOOST_ASSERT(connected);
+  OS_ASSERT(connected);
 }
 
 boost::optional<openstudio::model::ModelObject> ModelObjectSelectorDialogWatcher::selectedModelObject() const
@@ -372,17 +373,17 @@ void ensureThermalZone(openstudio::model::Space& space)
   if (selectedModelObject){
     // user chose an existing thermal zone
     thermalZone = selectedModelObject->optionalCast<ThermalZone>();
-    BOOST_ASSERT(thermalZone);
+    OS_ASSERT(thermalZone);
     bool test = space.setThermalZone(*thermalZone);
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     return;
   }
 
   // make a new thermal zone
   thermalZone = ThermalZone(model);
-  BOOST_ASSERT(thermalZone);
+  OS_ASSERT(thermalZone);
   bool test = space.setThermalZone(*thermalZone);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 
 }
 
@@ -457,9 +458,9 @@ void ensureSpaceLoadDefinition(openstudio::model::SpaceLoadInstance& instance)
     if (selectedModelObject){
       // user chose an existing definition
       definition = selectedModelObject->optionalCast<SpaceLoadDefinition>();
-      BOOST_ASSERT(definition);
+      OS_ASSERT(definition);
       bool test = instance.setDefinition(*definition);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       return;
     }
   }
@@ -491,8 +492,8 @@ void ensureSpaceLoadDefinition(openstudio::model::SpaceLoadInstance& instance)
       LOG_FREE_AND_THROW("openstudio.ensureSpaceLoadDefinition", "Unknown IddObjectType " << instance.iddObjectType().valueName());
   }
 
-  BOOST_ASSERT(definition);
+  OS_ASSERT(definition);
   bool test = instance.setDefinition(*definition);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 
 }

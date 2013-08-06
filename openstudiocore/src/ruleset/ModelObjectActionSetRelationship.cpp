@@ -67,18 +67,18 @@ namespace ruleset {
       : ModelObjectActionClause_Impl(element),
         m_componentReference(openstudio::path())
     {
-      BOOST_ASSERT(!element.isNull());
-      BOOST_ASSERT(element.tagName() == toQString(this->xmlElementName()));
+      OS_ASSERT(!element.isNull());
+      OS_ASSERT(element.tagName() == toQString(this->xmlElementName()));
 
       QDomElement relationshipNameElement = element.firstChildElement(QString::fromStdString("RelationshipName"));
       QDomElement componentPathElement = element.firstChildElement(QString::fromStdString("ComponentPath"));
       QDomElement componentUUIDElement = element.firstChildElement(QString::fromStdString("ComponentUUID"));
       QDomElement componentVersionUUIDElement = element.firstChildElement(QString::fromStdString("ComponentVersionUUID"));
 
-      BOOST_ASSERT(!relationshipNameElement.isNull());
-      BOOST_ASSERT(!componentPathElement.isNull());
-      BOOST_ASSERT(!componentUUIDElement.isNull());
-      BOOST_ASSERT(!componentVersionUUIDElement.isNull());
+      OS_ASSERT(!relationshipNameElement.isNull());
+      OS_ASSERT(!componentPathElement.isNull());
+      OS_ASSERT(!componentUUIDElement.isNull());
+      OS_ASSERT(!componentVersionUUIDElement.isNull());
 
       m_relationshipName = relationshipNameElement.firstChild().nodeValue().toStdString();
       // ETH@20111003 Not pretty because FileReference not serialized to XML. 
@@ -201,7 +201,7 @@ namespace ruleset {
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(
           new detail::ModelObjectActionSetRelationship_Impl(relationshipName, componentPath)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());
   }
 
   ModelObjectActionSetRelationship::ModelObjectActionSetRelationship(
@@ -209,7 +209,7 @@ namespace ruleset {
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(
           new detail::ModelObjectActionSetRelationship_Impl(relationshipName, componentReference)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());
   }
 
   ModelObjectActionSetRelationship::ModelObjectActionSetRelationship(
@@ -223,20 +223,20 @@ namespace ruleset {
                                                             uuid, 
                                                             versionUUID)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());
   }
 
   ModelObjectActionSetRelationship::ModelObjectActionSetRelationship(const QDomElement& element)
     : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(new detail::ModelObjectActionSetRelationship_Impl(element)))
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());
   }
 
   /// @cond
   ModelObjectActionSetRelationship::ModelObjectActionSetRelationship(boost::shared_ptr<detail::ModelObjectActionSetRelationship_Impl> impl)
     : ModelObjectActionClause(impl)
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());
   }
   /// @endcond
 

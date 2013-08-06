@@ -51,13 +51,13 @@ namespace project {
     ModelObjectActionClauseRecord_Impl::ModelObjectActionClauseRecord_Impl(const QSqlQuery& query, const ProjectDatabase& projectDatabase)
       : ActionClauseRecord_Impl(query, projectDatabase)
     {
-      BOOST_ASSERT(query.isValid());
-      BOOST_ASSERT(query.isActive());
-      BOOST_ASSERT(query.isSelect());
+      OS_ASSERT(query.isValid());
+      OS_ASSERT(query.isActive());
+      OS_ASSERT(query.isSelect());
 
       QVariant value;
       value = query.value(ClauseRecordColumns::modelObjectActionClauseRecordType);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       m_modelObjectActionClauseRecordType = ModelObjectActionClauseRecordType(value.toInt());
     }
 
@@ -70,15 +70,15 @@ namespace project {
 
     void ModelObjectActionClauseRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
     {
-      BOOST_ASSERT(query.isValid());
-      BOOST_ASSERT(query.isActive());
-      BOOST_ASSERT(query.isSelect());
+      OS_ASSERT(query.isValid());
+      OS_ASSERT(query.isActive());
+      OS_ASSERT(query.isSelect());
 
       ActionClauseRecord_Impl::setLastValues(query, projectDatabase);
 
       QVariant value;
       value = query.value(ClauseRecordColumns::modelObjectActionClauseRecordType);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       m_lastModelObjectActionClauseRecordType = ModelObjectActionClauseRecordType(value.toInt());
     }
 
@@ -90,7 +90,7 @@ namespace project {
 
       QVariant value;
       value = query.value(ClauseRecordColumns::modelObjectActionClauseRecordType);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       result = result && (m_modelObjectActionClauseRecordType == ModelObjectActionClauseRecordType(value.toInt()));
 
       return result;
@@ -115,13 +115,13 @@ namespace project {
   ModelObjectActionClauseRecord::ModelObjectActionClauseRecord(boost::shared_ptr<detail::ModelObjectActionClauseRecord_Impl> impl, ProjectDatabase projectDatabase)
     : ActionClauseRecord(impl, projectDatabase)
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionClauseRecord_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionClauseRecord_Impl>());
   }
 
   ModelObjectActionClauseRecord::ModelObjectActionClauseRecord(boost::shared_ptr<detail::ModelObjectActionClauseRecord_Impl> impl)
     : ActionClauseRecord(impl)
   {
-    BOOST_ASSERT(getImpl<detail::ModelObjectActionClauseRecord_Impl>());
+    OS_ASSERT(getImpl<detail::ModelObjectActionClauseRecord_Impl>());
   }
 
   boost::optional<ModelObjectActionClauseRecord> ModelObjectActionClauseRecord::factoryFromQuery(const QSqlQuery& query, ProjectDatabase& database)
@@ -152,7 +152,7 @@ namespace project {
       return ModelObjectActionSetRelationshipRecord(action.cast<ruleset::ModelObjectActionSetRelationship>(), projectDatabase);
     }
 
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
     return ModelObjectActionClauseRecord(boost::shared_ptr<detail::ModelObjectActionClauseRecord_Impl>());
   }
       

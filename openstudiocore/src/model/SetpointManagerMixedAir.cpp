@@ -58,14 +58,14 @@ SetpointManagerMixedAir_Impl::SetpointManagerMixedAir_Impl(const IdfObject& idfO
                                                            bool keepHandle)
   : HVACComponent_Impl(idfObject, model, keepHandle)
 {
-  BOOST_ASSERT(idfObject.iddObject().type() == SetpointManagerMixedAir::iddObjectType());
+  OS_ASSERT(idfObject.iddObject().type() == SetpointManagerMixedAir::iddObjectType());
 }
 
 SetpointManagerMixedAir_Impl::SetpointManagerMixedAir_Impl(
     const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : HVACComponent_Impl(other,model,keepHandle)
 {
-  BOOST_ASSERT(other.iddObject().type() == SetpointManagerMixedAir::iddObjectType());
+  OS_ASSERT(other.iddObject().type() == SetpointManagerMixedAir::iddObjectType());
 }
 
 SetpointManagerMixedAir_Impl::SetpointManagerMixedAir_Impl(
@@ -214,7 +214,7 @@ void SetpointManagerMixedAir_Impl::setSetpointNode( Node & node )
 SetpointManagerMixedAir::SetpointManagerMixedAir(const Model& model)
   : HVACComponent(SetpointManagerMixedAir::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::SetpointManagerMixedAir_Impl>());
+  OS_ASSERT(getImpl<detail::SetpointManagerMixedAir_Impl>());
 }
 
 SetpointManagerMixedAir::SetpointManagerMixedAir(

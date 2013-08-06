@@ -46,14 +46,14 @@ namespace detail {
   ModelObjectFilterRelationshipRecord_Impl::ModelObjectFilterRelationshipRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : ModelObjectFilterClauseRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(ModelObjectFilterRelationshipRecord::ColumnsType::relationshipName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_relationshipName = value.toString().toStdString();
   }
 
@@ -104,30 +104,30 @@ namespace detail {
   }
 
   void ModelObjectFilterRelationshipRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     ModelObjectFilterClauseRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(ModelObjectFilterRelationshipRecord::ColumnsType::relationshipName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastRelationshipName = value.toString().toStdString();
   }
 
   bool ModelObjectFilterRelationshipRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = ModelObjectFilterClauseRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(ModelObjectFilterRelationshipRecord::ColumnsType::relationshipName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_relationshipName == value.toString().toStdString());
 
     return result;
@@ -154,7 +154,7 @@ ModelObjectFilterRelationshipRecord::ModelObjectFilterRelationshipRecord(
         new detail::ModelObjectFilterRelationshipRecord_Impl(modelObjectFilterRelationship, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterRelationshipRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterRelationshipRecord_Impl>());
   LOG(Trace,"ModelObjectFilterRelationshipRecord_Impl has been constructed.");
 }
 
@@ -163,14 +163,14 @@ ModelObjectFilterRelationshipRecord::ModelObjectFilterRelationshipRecord(const Q
         new detail::ModelObjectFilterRelationshipRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterRelationshipRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterRelationshipRecord_Impl>());
 }
 
 ModelObjectFilterRelationshipRecord::ModelObjectFilterRelationshipRecord(boost::shared_ptr<detail::ModelObjectFilterRelationshipRecord_Impl> impl,
                                                                          ProjectDatabase database)
   : ModelObjectFilterClauseRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterRelationshipRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterRelationshipRecord_Impl>());
 }
 
 boost::optional<ModelObjectFilterRelationshipRecord> ModelObjectFilterRelationshipRecord::factoryFromQuery(const QSqlQuery& query, ProjectDatabase& database)

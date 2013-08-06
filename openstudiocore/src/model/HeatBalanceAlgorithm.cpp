@@ -43,7 +43,7 @@ namespace detail {
                                                        bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == HeatBalanceAlgorithm::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == HeatBalanceAlgorithm::iddObjectType());
   }
 
   HeatBalanceAlgorithm_Impl::HeatBalanceAlgorithm_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -51,7 +51,7 @@ namespace detail {
                                                        bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == HeatBalanceAlgorithm::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == HeatBalanceAlgorithm::iddObjectType());
   }
 
   HeatBalanceAlgorithm_Impl::HeatBalanceAlgorithm_Impl(const HeatBalanceAlgorithm_Impl& other,
@@ -92,7 +92,7 @@ namespace detail {
 
   std::string HeatBalanceAlgorithm_Impl::algorithm() const {
     boost::optional<std::string> value = getString(OS_HeatBalanceAlgorithmFields::Algorithm,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -102,14 +102,14 @@ namespace detail {
 
   double HeatBalanceAlgorithm_Impl::surfaceTemperatureUpperLimit() const {
     boost::optional<double> value = getDouble(OS_HeatBalanceAlgorithmFields::SurfaceTemperatureUpperLimit,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity HeatBalanceAlgorithm_Impl::getSurfaceTemperatureUpperLimit(bool returnIP) const {
     OptionalDouble value = surfaceTemperatureUpperLimit();
     OSOptionalQuantity result = getQuantityFromDouble(OS_HeatBalanceAlgorithmFields::SurfaceTemperatureUpperLimit, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -119,14 +119,14 @@ namespace detail {
 
   double HeatBalanceAlgorithm_Impl::minimumSurfaceConvectionHeatTransferCoefficientValue() const {
     boost::optional<double> value = getDouble(OS_HeatBalanceAlgorithmFields::MinimumSurfaceConvectionHeatTransferCoefficientValue,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity HeatBalanceAlgorithm_Impl::getMinimumSurfaceConvectionHeatTransferCoefficientValue(bool returnIP) const {
     OptionalDouble value = minimumSurfaceConvectionHeatTransferCoefficientValue();
     OSOptionalQuantity result = getQuantityFromDouble(OS_HeatBalanceAlgorithmFields::MinimumSurfaceConvectionHeatTransferCoefficientValue, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -136,14 +136,14 @@ namespace detail {
 
   double HeatBalanceAlgorithm_Impl::maximumSurfaceConvectionHeatTransferCoefficientValue() const {
     boost::optional<double> value = getDouble(OS_HeatBalanceAlgorithmFields::MaximumSurfaceConvectionHeatTransferCoefficientValue,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity HeatBalanceAlgorithm_Impl::getMaximumSurfaceConvectionHeatTransferCoefficientValue(bool returnIP) const {
     OptionalDouble value = maximumSurfaceConvectionHeatTransferCoefficientValue();
     OSOptionalQuantity result = getQuantityFromDouble(OS_HeatBalanceAlgorithmFields::MaximumSurfaceConvectionHeatTransferCoefficientValue, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -158,7 +158,7 @@ namespace detail {
 
   void HeatBalanceAlgorithm_Impl::resetAlgorithm() {
     bool result = setString(OS_HeatBalanceAlgorithmFields::Algorithm, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool HeatBalanceAlgorithm_Impl::setSurfaceTemperatureUpperLimit(double surfaceTemperatureUpperLimit) {
@@ -176,7 +176,7 @@ namespace detail {
 
   void HeatBalanceAlgorithm_Impl::resetSurfaceTemperatureUpperLimit() {
     bool result = setString(OS_HeatBalanceAlgorithmFields::SurfaceTemperatureUpperLimit, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool HeatBalanceAlgorithm_Impl::setMinimumSurfaceConvectionHeatTransferCoefficientValue(double minimumSurfaceConvectionHeatTransferCoefficientValue) {
@@ -194,7 +194,7 @@ namespace detail {
 
   void HeatBalanceAlgorithm_Impl::resetMinimumSurfaceConvectionHeatTransferCoefficientValue() {
     bool result = setString(OS_HeatBalanceAlgorithmFields::MinimumSurfaceConvectionHeatTransferCoefficientValue, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool HeatBalanceAlgorithm_Impl::setMaximumSurfaceConvectionHeatTransferCoefficientValue(double maximumSurfaceConvectionHeatTransferCoefficientValue) {
@@ -212,7 +212,7 @@ namespace detail {
 
   void HeatBalanceAlgorithm_Impl::resetMaximumSurfaceConvectionHeatTransferCoefficientValue() {
     bool result = setString(OS_HeatBalanceAlgorithmFields::MaximumSurfaceConvectionHeatTransferCoefficientValue, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   std::vector<std::string> HeatBalanceAlgorithm_Impl::algorithmValues() const {
@@ -353,7 +353,7 @@ HeatBalanceAlgorithm::HeatBalanceAlgorithm(boost::shared_ptr<detail::HeatBalance
 HeatBalanceAlgorithm::HeatBalanceAlgorithm(Model& model)
   : ModelObject(HeatBalanceAlgorithm::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::HeatBalanceAlgorithm_Impl>());
+  OS_ASSERT(getImpl<detail::HeatBalanceAlgorithm_Impl>());
 
   this->setAlgorithm("ConductionTransferFunction");
 

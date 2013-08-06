@@ -32,6 +32,8 @@
 #include <model/Model_Impl.hpp>
 #include <model/Component.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 ModelSubTabController::ModelSubTabController(ModelSubTabView* subTabView, const model::Model & model)
@@ -43,7 +45,7 @@ ModelSubTabController::ModelSubTabController(ModelSubTabView* subTabView, const 
                         SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
                         this,
                         SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 openstudio::model::Model ModelSubTabController::model() const
@@ -74,7 +76,7 @@ boost::optional<model::Component> ModelSubTabController::getComponent(const OSIt
 void ModelSubTabController::onRemoveItem(OSItem* item)
 {
   ModelObjectItem* modelObjectItem = qobject_cast<ModelObjectItem*>(item);
-  BOOST_ASSERT(modelObjectItem);
+  OS_ASSERT(modelObjectItem);
   model::ModelObject modelObject = modelObjectItem->modelObject();
   if (!modelObject.handle().isNull()){
     onRemoveObject(modelObject);
@@ -84,7 +86,7 @@ void ModelSubTabController::onRemoveItem(OSItem* item)
 void ModelSubTabController::onReplaceItem(OSItem* item, const OSItemId& replacementItemId)
 {
   ModelObjectItem* modelObjectItem = qobject_cast<ModelObjectItem*>(item);
-  BOOST_ASSERT(modelObjectItem);
+  OS_ASSERT(modelObjectItem);
   model::ModelObject modelObject = modelObjectItem->modelObject();
   if (!modelObject.handle().isNull()){
     onReplaceObject(modelObject, replacementItemId);

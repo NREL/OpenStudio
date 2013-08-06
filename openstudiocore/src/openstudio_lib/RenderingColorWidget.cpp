@@ -61,7 +61,7 @@ RenderingColorWidget::RenderingColorWidget(QWidget * parent )
 
   bool isConnected = false;
   isConnected = connect(m_renderColorButton, SIGNAL(clicked()), this, SLOT(renderColorButtonClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 void RenderingColorWidget::attach(const openstudio::model::RenderingColor& renderingColor)
@@ -75,7 +75,7 @@ void RenderingColorWidget::attach(const openstudio::model::RenderingColor& rende
                         SIGNAL(onChange()),
                         this, 
                         SLOT(refresh()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   refresh();
 }

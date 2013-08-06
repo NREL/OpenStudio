@@ -127,19 +127,19 @@ namespace detail {
 
   double DiscreteVariable_Impl::getValue(const DataPoint& dataPoint) const {
     OptionalInt index = dataPoint.problem().getVariableIndexByUUID(uuid());
-    BOOST_ASSERT(index);
+    OS_ASSERT(index);
     return dataPoint.variableValues()[*index].toDouble();
   }
 
   boost::optional<FileReferenceType> DiscreteVariable_Impl::inputFileType() const {
     std::pair<bool,OptionalFileReferenceType> intermediate = detail::inputFileType(perturbations(false));
-    BOOST_ASSERT(intermediate.first);
+    OS_ASSERT(intermediate.first);
     return intermediate.second;
   }
 
   boost::optional<FileReferenceType> DiscreteVariable_Impl::outputFileType() const {
     std::pair<bool,OptionalFileReferenceType> intermediate = detail::outputFileType(perturbations(false));
-    BOOST_ASSERT(intermediate.first);
+    OS_ASSERT(intermediate.first);
     return intermediate.second;
   }
 
@@ -239,7 +239,7 @@ namespace detail {
 
   DiscretePerturbation DiscreteVariable_Impl::getPerturbation(const DataPoint& dataPoint) const {
     OptionalInt index = dataPoint.problem().getVariableIndexByUUID(uuid());
-    BOOST_ASSERT(index);
+    OS_ASSERT(index);
     return getPerturbation(dataPoint.variableValues()[*index].toInt());
   }
 
@@ -363,11 +363,11 @@ namespace detail {
     // check proposals against file types of other perturbations
     DiscretePerturbationVector pv = perturbations(false);
     DiscretePerturbationVector::iterator it = std::find(pv.begin(),pv.end(),childPerturbation);
-    BOOST_ASSERT(it != pv.end());
+    OS_ASSERT(it != pv.end());
     pv.erase(it);
 
     std::pair<bool,OptionalFileReferenceType> inputFileTypeResult = detail::inputFileType(pv);
-    BOOST_ASSERT(inputFileTypeResult.first);
+    OS_ASSERT(inputFileTypeResult.first);
     if (inputFileTypeResult.second && (proposedInputFileType != *(inputFileTypeResult.second))) {
       return false;
     }

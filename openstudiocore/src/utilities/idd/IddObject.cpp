@@ -63,7 +63,7 @@ namespace detail {
     oField = IddField::load("Generic Data Field",
                             "A2; \\field Generic Data Field \n \\type alpha \n \\begin-extensible",
                             m_name);
-    BOOST_ASSERT(oField);
+    OS_ASSERT(oField);
     m_extensibleFields.push_back(*oField);
   }
 
@@ -256,7 +256,7 @@ namespace detail {
     if (!m_nameFieldCache) {
       hasNameField();
     }
-    BOOST_ASSERT(m_nameFieldCache);
+    OS_ASSERT(m_nameFieldCache);
 
     OptionalUnsigned result;
     if (m_nameFieldCache->first) {

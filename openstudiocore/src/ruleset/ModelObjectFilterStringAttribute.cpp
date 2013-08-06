@@ -47,14 +47,14 @@ namespace detail {
   ModelObjectFilterStringAttribute_Impl::ModelObjectFilterStringAttribute_Impl(const QDomElement& element)
       : ModelObjectFilterAttribute_Impl(element)
     {
-      BOOST_ASSERT(!element.isNull());
-      BOOST_ASSERT(element.tagName() == toQString(this->xmlElementName()));
+      OS_ASSERT(!element.isNull());
+      OS_ASSERT(element.tagName() == toQString(this->xmlElementName()));
 
       QDomElement predicateElement = element.firstChildElement(QString::fromStdString("Predicate"));
       QDomElement testValueElement = element.firstChildElement(QString::fromStdString("TestValue"));
 
-      BOOST_ASSERT(!predicateElement.isNull());
-      BOOST_ASSERT(!testValueElement.isNull());
+      OS_ASSERT(!predicateElement.isNull());
+      OS_ASSERT(!testValueElement.isNull());
 
       m_predicate = RulesetStringPredicate(predicateElement.firstChild().nodeValue().toStdString());
       m_testValue = testValueElement.firstChild().nodeValue().toStdString();
@@ -137,7 +137,7 @@ namespace detail {
           result = (!boost::regex_match(attribute->valueAsString(), testRegex));
           break;
         default:
-          BOOST_ASSERT(false);
+          OS_ASSERT(false);
       }
     }
 
@@ -154,27 +154,27 @@ std::string ModelObjectFilterStringAttribute::xmlElementName()
 ModelObjectFilterStringAttribute::ModelObjectFilterStringAttribute(const std::string& attributeName,const RulesetStringPredicate& predicate, const std::string& testValue)
   : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterStringAttribute_Impl>(new detail::ModelObjectFilterStringAttribute_Impl(attributeName, predicate, testValue)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterStringAttribute_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterStringAttribute_Impl>());
 }
 
 ModelObjectFilterStringAttribute::ModelObjectFilterStringAttribute(const std::string& attributeName,const RulesetStringPredicate& predicate, const std::string& testValue,
                                                                    const UUID& uuid, const UUID& versionUUID)
   : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterStringAttribute_Impl>(new detail::ModelObjectFilterStringAttribute_Impl(attributeName, predicate, testValue, uuid, versionUUID)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterStringAttribute_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterStringAttribute_Impl>());
 }
 
 ModelObjectFilterStringAttribute::ModelObjectFilterStringAttribute(const QDomElement& element)
   : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterStringAttribute_Impl>(new detail::ModelObjectFilterStringAttribute_Impl(element)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterStringAttribute_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterStringAttribute_Impl>());
 }
 
 /// @cond
 ModelObjectFilterStringAttribute::ModelObjectFilterStringAttribute(const boost::shared_ptr<detail::ModelObjectFilterStringAttribute_Impl>& impl)
   : ModelObjectFilterAttribute(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterStringAttribute_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterStringAttribute_Impl>());
 }
 /// @endcond
 

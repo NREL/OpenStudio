@@ -35,6 +35,7 @@
 #include <energyplus/ForwardTranslator.hpp>
 #include <utilities/idf/IdfFile.hpp>
 #include <utilities/idf/Workspace.hpp>
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/URLHelpers.hpp>
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
 #include <osversion/VersionTranslator.hpp>
@@ -150,7 +151,7 @@ namespace detail {
           workspace.toIdfFile().print(ofs);
           ofs.flush();
           ofs.close();
-          Q_ASSERT(boost::filesystem::exists(outpath / openstudio::toPath("in.idf")));
+          OS_ASSERT(boost::filesystem::exists(outpath / openstudio::toPath("in.idf")));
         } else {
           errors.addError(ErrorType::Error, "Converted OSM didn't create any objects, output idf not created");
         }

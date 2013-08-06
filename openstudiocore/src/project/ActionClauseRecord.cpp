@@ -48,13 +48,13 @@ namespace project {
     ActionClauseRecord_Impl::ActionClauseRecord_Impl(const QSqlQuery& query, const ProjectDatabase& projectDatabase)
       : ClauseRecord_Impl(query, projectDatabase)
     {
-      BOOST_ASSERT(query.isValid());
-      BOOST_ASSERT(query.isActive());
-      BOOST_ASSERT(query.isSelect());
+      OS_ASSERT(query.isValid());
+      OS_ASSERT(query.isActive());
+      OS_ASSERT(query.isSelect());
 
       QVariant value;
       value = query.value(ClauseRecordColumns::actionClauseRecordType);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       m_actionClauseRecordType = ActionClauseRecordType(value.toInt());
     }
 
@@ -67,15 +67,15 @@ namespace project {
 
     void ActionClauseRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
     {
-      BOOST_ASSERT(query.isValid());
-      BOOST_ASSERT(query.isActive());
-      BOOST_ASSERT(query.isSelect());
+      OS_ASSERT(query.isValid());
+      OS_ASSERT(query.isActive());
+      OS_ASSERT(query.isSelect());
 
       ClauseRecord_Impl::setLastValues(query, projectDatabase);
 
       QVariant value;
       value = query.value(ClauseRecordColumns::actionClauseRecordType);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       m_lastActionClauseRecordType = ActionClauseRecordType(value.toInt());
     }
 
@@ -87,7 +87,7 @@ namespace project {
 
       QVariant value;
       value = query.value(ClauseRecordColumns::actionClauseRecordType);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       result = result && (m_actionClauseRecordType == ActionClauseRecordType(value.toInt()));
 
       return result;
@@ -112,13 +112,13 @@ namespace project {
   ActionClauseRecord::ActionClauseRecord(boost::shared_ptr<detail::ActionClauseRecord_Impl> impl, ProjectDatabase projectDatabase)
     : ClauseRecord(impl, projectDatabase)
   {
-    BOOST_ASSERT(getImpl<detail::ActionClauseRecord_Impl>());
+    OS_ASSERT(getImpl<detail::ActionClauseRecord_Impl>());
   }
 
   ActionClauseRecord::ActionClauseRecord(boost::shared_ptr<detail::ActionClauseRecord_Impl> impl)
     : ClauseRecord(impl)
   {
-    BOOST_ASSERT(getImpl<detail::ActionClauseRecord_Impl>());
+    OS_ASSERT(getImpl<detail::ActionClauseRecord_Impl>());
   }
 
   std::vector<ActionClauseRecord> ActionClauseRecord::getActionClauseRecords(ProjectDatabase& database)
@@ -131,7 +131,7 @@ namespace project {
     assertExec(query);
     while (query.next()) {
       boost::optional<ActionClauseRecord> actionClauseRecord = factoryFromQuery(query, database);
-      BOOST_ASSERT(actionClauseRecord);
+      OS_ASSERT(actionClauseRecord);
       result.push_back(*actionClauseRecord);
     }
 
@@ -178,7 +178,7 @@ namespace project {
       return ModelObjectActionClauseRecord::factoryFromAction(action.cast<ruleset::ModelObjectActionClause>(), projectDatabase);
     }
 
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
     return ActionClauseRecord(boost::shared_ptr<detail::ActionClauseRecord_Impl>());
   }
 

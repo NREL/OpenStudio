@@ -24,6 +24,8 @@
 #include <openstudio_lib/MainMenu.hpp>
 #include <openstudio_lib/VerticalTabWidget.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <QAction>
 #include <QApplication>
 #include <QCloseEvent>
@@ -87,11 +89,11 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
 
   MainMenu * mainMenu = new MainMenu(m_displayIP, m_isPlugin);
   bool isConnected = connect(mainMenu, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(toggleUnits(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(mainMenu, SIGNAL(openBclDlgClicked()), this, SIGNAL(openBclDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(mainMenu, SIGNAL(openLibDlgClicked()), this, SIGNAL(openLibDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   this->setMenuBar(mainMenu);
 

@@ -43,7 +43,7 @@ namespace detail {
   WeatherFile_Impl::WeatherFile_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == WeatherFile::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == WeatherFile::iddObjectType());
   }
 
   WeatherFile_Impl::WeatherFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -51,7 +51,7 @@ namespace detail {
                                      bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == WeatherFile::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == WeatherFile::iddObjectType());
   }
 
   WeatherFile_Impl::WeatherFile_Impl(const WeatherFile_Impl& other,
@@ -88,55 +88,55 @@ namespace detail {
 
   std::string WeatherFile_Impl::city() const {
     boost::optional<std::string> value = getString(OS_WeatherFileFields::City,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   std::string WeatherFile_Impl::stateProvinceRegion() const {
     boost::optional<std::string> value = getString(OS_WeatherFileFields::StateProvinceRegion,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   std::string WeatherFile_Impl::country() const {
     boost::optional<std::string> value = getString(OS_WeatherFileFields::Country,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   std::string WeatherFile_Impl::dataSource() const {
     boost::optional<std::string> value = getString(OS_WeatherFileFields::DataSource,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   std::string WeatherFile_Impl::wMONumber() const {
     boost::optional<std::string> value = getString(OS_WeatherFileFields::WMONumber,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double WeatherFile_Impl::latitude() const {
     boost::optional<double> value = getDouble(OS_WeatherFileFields::Latitude,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double WeatherFile_Impl::longitude() const {
     boost::optional<double> value = getDouble(OS_WeatherFileFields::Longitude,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double WeatherFile_Impl::timeZone() const {
     boost::optional<double> value = getDouble(OS_WeatherFileFields::TimeZone,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double WeatherFile_Impl::elevation() const {
     boost::optional<double> value = getDouble(OS_WeatherFileFields::Elevation,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -164,31 +164,31 @@ namespace detail {
   void WeatherFile_Impl::setCity(std::string city) {
     bool result = false;
     result = setString(OS_WeatherFileFields::City, city);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void WeatherFile_Impl::setStateProvinceRegion(std::string stateProvinceRegion) {
     bool result = false;
     result = setString(OS_WeatherFileFields::StateProvinceRegion, stateProvinceRegion);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void WeatherFile_Impl::setCountry(std::string country) {
     bool result = false;
     result = setString(OS_WeatherFileFields::Country, country);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void WeatherFile_Impl::setDataSource(std::string dataSource) {
     bool result = false;
     result = setString(OS_WeatherFileFields::DataSource, dataSource);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void WeatherFile_Impl::setWMONumber(std::string wMONumber) {
     bool result = false;
     result = setString(OS_WeatherFileFields::WMONumber, wMONumber);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool WeatherFile_Impl::setLatitude(double latitude) {
@@ -217,7 +217,7 @@ namespace detail {
 
   void WeatherFile_Impl::resetElevation() {
     bool result = setString(OS_WeatherFileFields::Elevation, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 /*
   void WeatherFile_Impl::setUrl(boost::optional<std::string> url) {
@@ -227,18 +227,18 @@ namespace detail {
     } else {
       result = setString(OS_WeatherFileFields::Url, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void WeatherFile_Impl::setUrl(std::string url) {
     bool result = false;
     result = setString(OS_WeatherFileFields::Url, url);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void WeatherFile_Impl::resetUrl() {
     bool result = setString(OS_WeatherFileFields::Url, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void WeatherFile_Impl::setChecksum(boost::optional<std::string> checksum) {
@@ -248,18 +248,18 @@ namespace detail {
     } else {
       result = setString(OS_WeatherFileFields::Checksum, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void WeatherFile_Impl::setChecksum(std::string checksum) {
     bool result = false;
     result = setString(OS_WeatherFileFields::Checksum, checksum);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void WeatherFile_Impl::resetChecksum() {
     bool result = setString(OS_WeatherFileFields::Checksum, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 */
   boost::optional<Site> WeatherFile_Impl::site() const

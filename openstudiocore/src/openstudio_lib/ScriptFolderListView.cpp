@@ -166,7 +166,7 @@ std::string ScriptFolderListView::folderName(const openstudio::path& folder) con
   if (it == m_displayNames.end()) {
     it = m_displayNames.find(m_rootPath / folder);
   }
-  BOOST_ASSERT(it != m_displayNames.end());
+  OS_ASSERT(it != m_displayNames.end());
   return it->second;
 }
 
@@ -193,7 +193,7 @@ std::vector<ruleset::UserScriptInfo> ScriptFolderListView::folderUserScripts(
   if (it == m_scriptsListViews.end()) {
     it = m_scriptsListViews.find(m_rootPath / folder);
   }
-  BOOST_ASSERT(it != m_scriptsListViews.end());
+  OS_ASSERT(it != m_scriptsListViews.end());
   return it->second->userScripts();
 }
 

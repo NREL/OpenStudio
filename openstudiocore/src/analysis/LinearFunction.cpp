@@ -89,7 +89,7 @@ namespace detail {
     else {
       result = dot(createVector(coefficients),createVector(variableValues));
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return *result;
   }
 
