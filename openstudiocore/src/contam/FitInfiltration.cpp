@@ -37,6 +37,88 @@ void usage(boost::program_options::options_description desc)
   std::cout << desc << std::endl;
 }
 
+QVector<double> runCase(openstudio::contam::prj::Data *data, double windSpeed,
+                        double windDirection, openstudio::path contamExePath, 
+                        openstudio::path simreadExePath, bool verbose=false)
+{
+  QVector<double> results(data->zones.size(),0.0);
+  // This is a little clunky, but the prj::Data structure is too simple to do anything else right now
+  data->rc.ssWeather.windspd = QString().sprintf("%g",windSpeed);
+  data->rc.ssWeather.winddir = QString().sprintf("%g",windDirection);
+  openstudio::path inputPath = openstudio::toPath("temporary.prj");
+  QString fileName = openstudio::toQString(inputPath);
+  
+  QFile file(fileName);
+  QTextStream textStream(&file);
+  boost::optional<QString> output = data->print();
+  textStream << *output;
+  file.close();
+
+  // Run simulation
+  if(verbose)
+    std::cout << "Running CONTAM simulation..." << std::endl;
+  QProcess contamProcess;
+  contamProcess.start(openstudio::toQString(contamExePath), QStringList() << fileName);
+  if(!contamProcess.waitForStarted(-1))
+  {
+    std::cout << "Failed to start CONTAM process." << std::endl;
+    return QVector<double>();
+  }
+  if(!contamProcess.waitForFinished(-1))
+  {
+    std::cout << "Failed to complete CONTAM process." << std::endl;
+    return QVector<double>();
+  }
+  // Run simread
+  if(verbose)
+    std::cout << "Running SimRead on SIM file..." << std::endl;
+  QProcess simreadProcess;
+  simreadProcess.start(openstudio::toQString(simreadExePath), QStringList() << fileName);
+  if(!simreadProcess.waitForStarted(-1))
+  {
+    std::cout << "Failed to start SimRead process." << std::endl;
+    return QVector<double>();
+  }
+  simreadProcess.write("y\n\ny\n\n");
+  if(!simreadProcess.waitForFinished(-1))
+  {
+    std::cout << "Failed to complete SimRead process." << std::endl;
+    return QVector<double>();
+  }
+
+  // Collect results
+  if(verbose)
+    std::cout << "Reading results..." << std::endl;
+  openstudio::contam::sim::LinkFlow lfr;
+  openstudio::path lfrPath = inputPath.replace_extension(openstudio::toPath("lfr").string());
+  if(!lfr.read(lfrPath))
+  {
+    std::cout << "Failed to read link flow results." << std::endl;
+    return QVector<double>();
+  }
+
+  // Process results
+  for(unsigned i=0;i<lfr.nr().size();i++)
+  {
+    std::cout << lfr.nr()[i] << std::endl;
+  }
+
+  openstudio::TimeSeries dpts = lfr.deltaP(1);
+  openstudio::Vector dp = dpts.values();
+  std::cout<< dp.size() <<std::endl;
+
+  for(unsigned i=0;i<lfr.nr().size();i++)
+  {
+    openstudio::TimeSeries dpts = lfr.deltaP(i);
+    openstudio::Vector dp = dpts.values();
+    std::cout<< lfr.nr()[i] << " " << dp.size();
+    if(dp.size())
+      std::cout << " " << dp[0];
+    std::cout << std::endl;
+  }
+  return results;
+}
+
 int main(int argc, char *argv[])
 {
   openstudio::path contamExePath = openstudio::toPath("C:\\Program Files (x86)\\NIST\\CONTAM 3.1\\ContamX3.exe");
@@ -116,8 +198,12 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
 
+  QVector<double> Q10(translator.data.zones.size(),0.0);
+  QVector<double> Q20(translator.data.zones.size(),0.0);
+
   // This is a little clunky, but the prj::Data structure is too simple to do anything else right now
   translator.data.rc.ssWeather.windspd = QString("4.4704");
+  translator.data.rc.ssWeather.winddir = QString("0.0");
   std::cout << translator.data.rc.wind_H.toStdString() << std::endl;
   output = translator.data.print();
   textStream << *output;
