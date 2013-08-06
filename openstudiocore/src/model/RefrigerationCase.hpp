@@ -67,7 +67,7 @@ class MODEL_API RefrigerationCase : public ModelObject {
   boost::optional<Schedule> availabilitySchedule() const;
 
   // TODO: Check return type. From object lists, some candidates are: ThermalZone.
-  ThermalZone zone() const;
+  boost::optional<ThermalZone> thermalZone() const;
 
   double ratedAmbientTemperature() const;
 
@@ -196,7 +196,9 @@ class MODEL_API RefrigerationCase : public ModelObject {
   void resetAvailabilitySchedule();
 
   // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
-  bool setZone(const ThermalZone& thermalZone);
+  bool setThermalZone(const ThermalZone& thermalZone);
+
+  void resetThermalZone();
 
   bool setRatedAmbientTemperature(double ratedAmbientTemperature);
 

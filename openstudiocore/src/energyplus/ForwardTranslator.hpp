@@ -125,6 +125,10 @@ class PortList;
 class PumpConstantSpeed;
 class PumpVariableSpeed;
 class RefractionExtinctionGlazing;
+class RefrigerationCase;
+class RefrigerationCompressor;
+class RefrigerationCondenserAirCooled;
+class RefrigerationSystem;
 class RoofVegetation;
 class RunPeriod;
 class RunPeriodControlDaylightSavingTime;
@@ -429,6 +433,14 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translatePumpVariableSpeed( model::PumpVariableSpeed & modelObject );
 
   boost::optional<IdfObject> translateRefractionExtinctionGlazing( model::RefractionExtinctionGlazing & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationCase( model::RefrigerationCase & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationCompressor( model::RefrigerationCompressor & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationCondenserAirCooled( model::RefrigerationCondenserAirCooled & modelObject );
+
+  boost::optional<IdfObject> translateRefrigerationSystem( model::RefrigerationSystem & modelObject );
 
   boost::optional<IdfObject> translateRoofVegetation( model::RoofVegetation & modelObject );
 

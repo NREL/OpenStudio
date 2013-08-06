@@ -987,6 +987,30 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translatePortList(portList);
       break;
     }
+  case openstudio::IddObjectType::OS_Refrigeration_Case :
+    {
+      model::RefrigerationCase refrigerationCase = modelObject.cast<RefrigerationCase>();
+      retVal = translateRefrigerationCase(refrigerationCase);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Refrigeration_Compressor :
+    {
+      model::RefrigerationCompressor refrigerationCompressor = modelObject.cast<RefrigerationCompressor>();
+      retVal = translateRefrigerationCompressor(refrigerationCompressor);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Refrigeration_Condenser_AirCooled :
+    {
+      model::RefrigerationCondenserAirCooled refrigerationCondenserAirCooled = modelObject.cast<RefrigerationCondenserAirCooled>();
+      retVal = translateRefrigerationCondenserAirCooled(refrigerationCondenserAirCooled);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Refrigeration_System :
+    {
+      model::RefrigerationSystem refrigerationSystem = modelObject.cast<RefrigerationSystem>();
+      retVal = translateRefrigerationSystem(refrigerationSystem);
+      break;
+    }
   case openstudio::IddObjectType::OS_Rendering_Color :
     {
       // no-op
@@ -1542,6 +1566,11 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ThermostatSetpoint_DualSetpoint);
   result.push_back(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water);
   result.push_back(IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem);
+
+  result.push_back(IddObjectType::OS_Refrigeration_Case);
+  result.push_back(IddObjectType::OS_Refrigeration_Compressor);
+  result.push_back(IddObjectType::OS_Refrigeration_Condenser_AirCooled);
+  result.push_back(IddObjectType::OS_Refrigeration_System);
 
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);

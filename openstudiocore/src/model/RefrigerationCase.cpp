@@ -113,12 +113,8 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_CaseFields::AvailabilityScheduleName);
   }
 
-  ThermalZone RefrigerationCase_Impl::zone() const {
-    boost::optional<ThermalZone> value = optionalZone();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Zone attached.");
-    }
-    return value.get();
+  boost::optional<ThermalZone> RefrigerationCase_Impl::thermalZone() const {
+    return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Refrigeration_CaseFields::ZoneName);
   }
 
   double RefrigerationCase_Impl::ratedAmbientTemperature() const {
@@ -404,9 +400,14 @@ namespace detail {
     BOOST_ASSERT(result);
   }
 
-  bool RefrigerationCase_Impl::setZone(const ThermalZone& thermalZone) {
+  bool RefrigerationCase_Impl::setThermalZone(const ThermalZone& thermalZone) {
     bool result = setPointer(OS_Refrigeration_CaseFields::ZoneName, thermalZone.handle());
     return result;
+  }
+
+  void RefrigerationCase_Impl::resetThermalZone() {
+    bool result = setString(OS_Refrigeration_CaseFields::ZoneName, "");
+    BOOST_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setRatedAmbientTemperature(double ratedAmbientTemperature) {
@@ -760,10 +761,6 @@ namespace detail {
     BOOST_ASSERT(result);
   }
 
-  boost::optional<ThermalZone> RefrigerationCase_Impl::optionalZone() const {
-    return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Refrigeration_CaseFields::ZoneName);
-  }
-
   boost::optional<CurveCubic> RefrigerationCase_Impl::optionalLatentCaseCreditCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<CurveCubic>(OS_Refrigeration_CaseFields::LatentCaseCreditCurveName);
   }
@@ -777,7 +774,7 @@ RefrigerationCase::RefrigerationCase(const Model& model, const ThermalZone& zone
 
   bool ok = true;
   BOOST_ASSERT(ok);
-  ok = setZone(zone);
+  ok = setThermalZone(zone);
   BOOST_ASSERT(ok);
   ok = setLatentCaseCreditCurve(curveCubic);
   BOOST_ASSERT(ok);
@@ -811,8 +808,8 @@ boost::optional<Schedule> RefrigerationCase::availabilitySchedule() const {
   return getImpl<detail::RefrigerationCase_Impl>()->availabilitySchedule();
 }
 
-ThermalZone RefrigerationCase::zone() const {
-  return getImpl<detail::RefrigerationCase_Impl>()->zone();
+boost::optional<ThermalZone> RefrigerationCase::thermalZone() const {
+  return getImpl<detail::RefrigerationCase_Impl>()->thermalZone();
 }
 
 double RefrigerationCase::ratedAmbientTemperature() const {
@@ -1043,8 +1040,12 @@ void RefrigerationCase::resetAvailabilitySchedule() {
   getImpl<detail::RefrigerationCase_Impl>()->resetAvailabilitySchedule();
 }
 
-bool RefrigerationCase::setZone(const ThermalZone& thermalZone) {
-  return getImpl<detail::RefrigerationCase_Impl>()->setZone(thermalZone);
+bool RefrigerationCase::setThermalZone(const ThermalZone& thermalZone) {
+  return getImpl<detail::RefrigerationCase_Impl>()->setThermalZone(thermalZone);
+}
+
+void RefrigerationCase::resetThermalZone() {
+  getImpl<detail::RefrigerationCase_Impl>()->resetThermalZone();
 }
 
 bool RefrigerationCase::setRatedAmbientTemperature(double ratedAmbientTemperature) {

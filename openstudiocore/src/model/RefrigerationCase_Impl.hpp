@@ -72,7 +72,7 @@ namespace detail {
     boost::optional<Schedule> availabilitySchedule() const;
 
     // TODO: Check return type. From object lists, some candidates are: ThermalZone.
-    ThermalZone zone() const;
+    boost::optional<ThermalZone> thermalZone() const;
 
     double ratedAmbientTemperature() const;
 
@@ -201,7 +201,9 @@ namespace detail {
     void resetAvailabilitySchedule();
 
     // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
-    bool setZone(const ThermalZone& thermalZone);
+    bool setThermalZone(const ThermalZone& thermalZone);
+
+    void resetThermalZone();
 
     bool setRatedAmbientTemperature(double ratedAmbientTemperature);
 
@@ -349,7 +351,6 @@ namespace detail {
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<ThermalZone> optionalZone() const;
     boost::optional<CurveCubic> optionalLatentCaseCreditCurve() const;
   };
 
