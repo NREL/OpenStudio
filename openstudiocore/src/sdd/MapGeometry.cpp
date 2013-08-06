@@ -1330,6 +1330,8 @@ namespace sdd {
 
     // translate storys
     std::vector<model::BuildingStory> buildingStories = building.model().getModelObjects<model::BuildingStory>();
+    std::sort(buildingStories.begin(), buildingStories.end(), WorkspaceObjectNameLess());
+
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Building Stories"));
       m_progressBar->setMinimum(0);
@@ -1368,6 +1370,8 @@ namespace sdd {
 
     // issue warning if any spaces not assigned to building story
     std::vector<model::Space> spaces = building.model().getModelObjects<model::Space>();
+    std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
+
     BOOST_FOREACH(const model::Space& space, spaces){
       if (!space.buildingStory()){
         LOG(Warn, "Model contains spaces which are not assigned to a building story, these have not been translated.");
@@ -1377,6 +1381,8 @@ namespace sdd {
 
     // translate thermal zones
     std::vector<model::ThermalZone> thermalZones = building.model().getModelObjects<model::ThermalZone>();
+    std::sort(thermalZones.begin(), thermalZones.end(), WorkspaceObjectNameLess());
+
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Thermal Zones"));
       m_progressBar->setMinimum(0);
@@ -1411,7 +1417,10 @@ namespace sdd {
     nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
     // translate spaces
-    BOOST_FOREACH(const model::Space& space, buildingStory.spaces()){
+    std::vector<model::Space> spaces = buildingStory.spaces();
+    std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
+
+    BOOST_FOREACH(const model::Space& space, spaces){
       boost::optional<QDomElement> spaceElement = translateSpace(space, doc);
       if (spaceElement){
         result.appendChild(*spaceElement);
@@ -1488,7 +1497,10 @@ namespace sdd {
     }
 
     // translate surfaces
-    BOOST_FOREACH(const model::Surface& surface, space.surfaces()){
+    std::vector<model::Surface> surfaces = space.surfaces();
+    std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
+
+    BOOST_FOREACH(const model::Surface& surface, surfaces){
       boost::optional<QDomElement> surfaceElement = translateSurface(surface, transformation, doc);
       if (surfaceElement){
         result.appendChild(*surfaceElement);
@@ -1690,7 +1702,10 @@ namespace sdd {
     }
 
     // translate sub surfaces
-    BOOST_FOREACH(const model::SubSurface& subSurface, surface.subSurfaces()){
+    std::vector<model::SubSurface> subSurfaces = surface.subSurfaces();
+    std::sort(subSurfaces.begin(), subSurfaces.end(), WorkspaceObjectNameLess());
+
+    BOOST_FOREACH(const model::SubSurface& subSurface, subSurfaces){
       boost::optional<QDomElement> subSurfaceElement = translateSubSurface(subSurface, transformation, doc);
       if (subSurfaceElement){
         result->appendChild(*subSurfaceElement);
