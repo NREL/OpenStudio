@@ -124,6 +124,7 @@ TEST_F(ModelFixture, UtilityBill_Coverage) {
   Model model;
 
   BOOST_FOREACH(FuelType fuelType, FuelType::getValues()){
+
     UtilityBill utilityBill(fuelType, model);
     EXPECT_EQ(fuelType, utilityBill.fuelType().value());
     EXPECT_EQ(InstallLocationType::Facility, utilityBill.meterInstallLocation().value());
@@ -135,13 +136,27 @@ TEST_F(ModelFixture, UtilityBill_Coverage) {
     EXPECT_NE(0, utilityBill.consumptionUnitConversionFactor());
     EXPECT_EQ(0, utilityBill.billingPeriods().size());
 
-    Meter meter = utilityBill.consumptionMeter();
-  
     EXPECT_FALSE(utilityBill.consumptionUnitValues().empty());
     BOOST_FOREACH(const std::string& consumptionUnit, utilityBill.consumptionUnitValues()){
-      EXPECT_TRUE(utilityBill.setConsumptionUnit(consumptionUnit));
+
+      Meter meter = utilityBill.consumptionMeter();
+
+      EXPECT_TRUE(utilityBill.setConsumptionUnit(consumptionUnit)) << fuelType.valueName() << ", " << consumptionUnit;
       EXPECT_EQ(consumptionUnit, utilityBill.consumptionUnit());
       EXPECT_NE(0, utilityBill.consumptionUnitConversionFactor());
+      EXPECT_TRUE(utilityBill.consumptionUnitDescription());
+
+      BOOST_FOREACH(const std::string& peakDemandUnit, utilityBill.peakDemandUnitValues()){
+
+        boost::optional<Meter> peakDemandMeter = utilityBill.peakDemandMeter();
+
+        EXPECT_TRUE(utilityBill.setPeakDemandUnit(peakDemandUnit)) << fuelType.valueName() << ", " << peakDemandUnit;
+        ASSERT_TRUE(utilityBill.peakDemandUnit());
+        EXPECT_EQ(peakDemandUnit, utilityBill.peakDemandUnit().get());
+        ASSERT_TRUE(utilityBill.peakDemandUnitConversionFactor());
+        EXPECT_NE(0, utilityBill.peakDemandUnitConversionFactor().get());
+        EXPECT_TRUE(utilityBill.peakDemandUnitDescription());
+      }
     }
   }
 }

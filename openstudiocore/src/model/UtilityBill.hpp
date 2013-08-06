@@ -181,11 +181,15 @@ class MODEL_API UtilityBill : public ModelObject {
 
   std::string consumptionUnit() const;
 
+  boost::optional<std::string> consumptionUnitDescription() const;
+
   double consumptionUnitConversionFactor() const;
 
   bool isConsumptionUnitConversionFactorDefaulted() const;
 
   boost::optional<std::string> peakDemandUnit() const;
+
+  boost::optional<std::string> peakDemandUnitDescription() const;
 
   boost::optional<double> peakDemandUnitConversionFactor() const;
 

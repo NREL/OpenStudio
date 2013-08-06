@@ -12301,19 +12301,19 @@ OS:UtilityBill,
        \key MBtu
        \key kWh
        \key MWh
-       \key Therms
-       \key Ton Hours
-       \key Tons
-       \key Lbs
+       \key therms
+       \key RTh
+       \key tons
+       \key lbs
        \key kLbs
        \key MLbs
-       \key Gallons
-       \key Liters
-       \key Cubic Feet
-       \key Cubic Meters
-       \key CCF
-       \key kCF
-       \key MCF
+       \key gal
+       \key L
+       \key cf
+       \key m3
+       \key Ccf
+       \key Mcf
+       \key MMcf
   N1, \field Consumption Unit Conversion Factor
        \note Number of J per unit of fuel consumption 
        \note or number of m^3 per unit of water consumption.
@@ -12323,8 +12323,9 @@ OS:UtilityBill,
        \note Valid choices depend on Fuel Type.  
        \note Currently Peak demand is only supported for Electricity.
        \type choice
-       \key W
        \key kW
+       \key MW
+       \key W
   N2, \field Timesteps in Peak Demand Window
        \type integer
        \minimum 1

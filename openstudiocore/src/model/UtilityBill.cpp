@@ -123,6 +123,57 @@ namespace detail {
     return value.get();
   }
 
+  boost::optional<std::string> UtilityBill_Impl::consumptionUnitDescription() const
+  {
+    boost::optional<std::string> result;
+
+    FuelType fuelType = this->fuelType();
+
+    std::string consumptionUnit = this->consumptionUnit();
+
+    if (consumptionUnit == "kBtu"){
+      result = "thousand Btu";
+    }else if (consumptionUnit == "MBtu"){
+      result = "million Btu";
+    }else if (consumptionUnit == "kWh"){
+      result = "thousand Watt hours";
+    }else if (consumptionUnit == "MWh"){
+      result = "million Watt hours";
+    }else if (consumptionUnit == "therms"){
+      result = "hundred thousand Btu";
+    }else if (consumptionUnit == "RTh"){
+      result = "refrigeration ton hours";
+    }else if (consumptionUnit == "tons"){
+      result = "two thousand pounds";
+    }else if (consumptionUnit == "lbs"){
+      result = "pounds";
+    }else if (consumptionUnit == "kLbs"){
+      result = "thousand pounds";
+    }else if (consumptionUnit == "MLbs"){
+      result = "million pounds";
+    }else if (consumptionUnit == "gal"){
+      result = "gallons";
+    }else if (consumptionUnit == "L"){
+      result = "liters";
+    }else if (consumptionUnit == "cf"){
+      result = "cubic feet";
+    }else if (consumptionUnit == "m3"){
+      result = "cubic meters";
+    }else if (consumptionUnit == "Ccf"){
+      result = "hundred cubic feet";
+    }else if (consumptionUnit == "Mcf"){
+      result = "thousand cubic feet";
+    }else if (consumptionUnit == "MMcf"){
+      result = "million cubic feet";
+    }
+
+    if (!result){
+      LOG(Error, "Unknown consumption unit '" << consumptionUnit << "' for fuel type '" << fuelType.valueName() << "'");
+    }
+
+    return result;
+  }
+
   double UtilityBill_Impl::consumptionUnitConversionFactor() const {
     boost::optional<double> value = getDouble(OS_UtilityBillFields::ConsumptionUnitConversionFactor,true);
     
@@ -132,6 +183,7 @@ namespace detail {
       bool isEnergy = (fuelType != FuelType::Water);
 
       // DLM: Energy conversion factors come from https://www.energystar.gov/ia/business/tools_resources/target_finder/help/Energy_Units_Conversion_Table.htm
+      // Thermal Energy Conversions, Technical Reference, July 2013
       // Portfolio Manager uses these to convert to kBtu
       //
       // Original source: 
@@ -146,12 +198,12 @@ namespace detail {
       }else if (consumptionUnit == "MBtu"){
         unitToKBtu = 1000;
       }else if (consumptionUnit == "kWh"){
-        unitToKBtu = 3.41214163;
+        unitToKBtu = 3.4121416331;
       }else if (consumptionUnit == "MWh"){
-        unitToKBtu = 341214163;
-      }else if (consumptionUnit == "Therms"){
+        unitToKBtu = 3412.1416331;
+      }else if (consumptionUnit == "therms"){
         unitToKBtu = 100;
-      }else if (consumptionUnit == "Ton Hours"){
+      }else if (consumptionUnit == "RTh"){
         switch (fuelType.value()){
           case FuelType::DistrictCooling:
             unitToKBtu = 12;
@@ -159,7 +211,7 @@ namespace detail {
           default:
             ;
         }
-      }else if (consumptionUnit == "Tons"){
+      }else if (consumptionUnit == "tons"){
         //switch (fuelType.value()){
           //case FuelType::Coal: 
           //  //unitToKBtu = 25090.0; // anthracite
@@ -168,11 +220,8 @@ namespace detail {
           //default:
           //  ;
         //}
-      }else if (consumptionUnit == "Lbs"){
+      }else if (consumptionUnit == "lbs"){
         switch (fuelType.value()){
-          case FuelType::Gas:
-            unitToKBtu = 1.194;
-            break;
           //case FuelType::Coal: 
           //  //unitToKBtu = 12.545; // anthracite
           //  unitToKBtu = 12.465; // bituminous
@@ -185,9 +234,6 @@ namespace detail {
         }
       }else if (consumptionUnit == "kLbs"){
         switch (fuelType.value()){
-          case FuelType::Gas:
-            unitToKBtu = 1194;
-            break;
           //case FuelType::Coal: 
           //  //unitToKBtu = 12545; // anthracite
           //  unitToKBtu = 12465; // bituminous
@@ -200,9 +246,6 @@ namespace detail {
         }
       }else if (consumptionUnit == "MLbs"){
         switch (fuelType.value()){
-          case FuelType::Gas:
-            unitToKBtu = 1194000;
-            break;
           //case FuelType::Coal: 
           //  //unitToKBtu = 12545000; // anthracite
           //  unitToKBtu = 12465000; // bituminous
@@ -213,7 +256,7 @@ namespace detail {
           default:
             ;
         }
-      }else if (consumptionUnit == "Gallons"){
+      }else if (consumptionUnit == "gal"){
         switch (fuelType.value()){
           case FuelType::Gasoline:
             unitToKBtu = 125;
@@ -222,13 +265,13 @@ namespace detail {
             unitToKBtu = 138;
             break;
           case FuelType::FuelOil_1:
-            unitToKBtu = 138.6905;
+            unitToKBtu = 139;
             break;
           case FuelType::FuelOil_2:
-            unitToKBtu = 138.6905;
+            unitToKBtu = 138;
             break;
           case FuelType::Propane:
-            unitToKBtu = 91.6476;
+            unitToKBtu = 91;
             break;
           case FuelType::Water:
             unitToM3 = 0.00378541;
@@ -236,22 +279,22 @@ namespace detail {
           default:
             ;
         }
-      }else if (consumptionUnit == "Liters"){
+      }else if (consumptionUnit == "L"){
         switch (fuelType.value()){
           case FuelType::Gasoline:
-            unitToKBtu = 33.0215;
+            unitToKBtu = 33.0217;
             break;
           case FuelType::Diesel:
             unitToKBtu = 36.456;
             break;
           case FuelType::FuelOil_1:
-            unitToKBtu = 36.060;
+            unitToKBtu = 36.720;
             break;
           case FuelType::FuelOil_2:
-            unitToKBtu = 36.060;
+            unitToKBtu = 36.456;
             break;
           case FuelType::Propane:
-            unitToKBtu = 23.828;
+            unitToKBtu = 24.040;
             break;
           case FuelType::Water:
             unitToM3 = 0.001;
@@ -259,13 +302,13 @@ namespace detail {
           default:
             ;
         }
-      }else if (consumptionUnit == "Cubic Feet"){
+      }else if (consumptionUnit == "cf"){
         switch (fuelType.value()){
           case FuelType::Gas:
-            unitToKBtu = 1.029;
+            unitToKBtu = 1.028;
             break;
           case FuelType::Propane:
-            unitToKBtu = 2.5185;
+            unitToKBtu = 0.680;
             break;
           case FuelType::Water:
             unitToM3 = 0.0283168;
@@ -273,13 +316,13 @@ namespace detail {
           default:
             ;
         }
-      }else if (consumptionUnit == "Cubic Meters"){
+      }else if (consumptionUnit == "m3"){
         switch (fuelType.value()){
           case FuelType::Gas:
-            unitToKBtu = 36.339;
+            unitToKBtu = 36.303;
             break;
           case FuelType::Propane:
-            unitToKBtu = 2.5185;
+            unitToKBtu = 24.0137;
             break;
           case FuelType::Water:
             unitToM3 = 1;
@@ -287,13 +330,13 @@ namespace detail {
           default:
             ;
         }
-      }else if (consumptionUnit == "CCF"){
+      }else if (consumptionUnit == "Ccf"){
         switch (fuelType.value()){
           case FuelType::Gas:
-            unitToKBtu = 102.9;
+            unitToKBtu = 102.8;
             break;
           case FuelType::Propane:
-            unitToKBtu = 251.85;
+            unitToKBtu = 68;
             break;
           case FuelType::Water:
             unitToM3 = 2.83168;
@@ -301,13 +344,13 @@ namespace detail {
           default:
             ;
         }
-      }else if (consumptionUnit == "kCF"){
+      }else if (consumptionUnit == "Mcf"){
         switch (fuelType.value()){
           case FuelType::Gas:
-            unitToKBtu = 1029;
+            unitToKBtu = 1028;
             break;
           case FuelType::Propane:
-            unitToKBtu = 2518.5;
+            unitToKBtu = 680;
             break;
           case FuelType::Water:
             unitToM3 = 28.3168;
@@ -315,13 +358,13 @@ namespace detail {
           default:
             ;
         }
-      }else if (consumptionUnit == "MCF"){
+      }else if (consumptionUnit == "MMcf"){
         switch (fuelType.value()){
           case FuelType::Gas:
-            unitToKBtu = 1029000;
+            unitToKBtu = 1028000;
             break;
           case FuelType::Propane:
-            unitToKBtu = 2518500;
+            unitToKBtu = 680000;
             break;
           case FuelType::Water:
             unitToM3 = 28316.8;
@@ -360,6 +403,24 @@ namespace detail {
     return boost::none;
   }
 
+  boost::optional<std::string> UtilityBill_Impl::peakDemandUnitDescription() const
+  {
+    boost::optional<std::string> result;
+    boost::optional<std::string> peakDemandUnit = this->peakDemandUnit();
+    if (peakDemandUnit){
+      if (peakDemandUnit.get() == "kW"){
+        result = "thousand Watts";
+      }else if (peakDemandUnit.get() == "MW"){
+        result = "million Watts";
+      }else if (peakDemandUnit.get() == "W"){
+        result = "Watts";
+      }else{
+        LOG(Error, "Unknown peak demand unit '" << peakDemandUnit.get() << "' for fuel type '" << this->fuelType().valueName() << "'");
+      }
+    }
+    return result;
+  }
+
   boost::optional<double> UtilityBill_Impl::peakDemandUnitConversionFactor() const
   {
     boost::optional<double> result;
@@ -369,6 +430,8 @@ namespace detail {
 
       if (peakDemandUnit.get() == "kW"){
         result = 1000;
+      }else if (peakDemandUnit.get() == "MW"){
+        result = 1000000;
       }else if (peakDemandUnit.get() == "W"){
         result = 1;
       }else{
@@ -501,77 +564,77 @@ namespace detail {
         result.push_back("MBtu");
         break;
       case FuelType::Gas:
-        result.push_back("Therms");
-        result.push_back("Cubic Feet");
-        result.push_back("CCF");
-        result.push_back("kCF");
-        result.push_back("MCF");
-        result.push_back("Cubic Meters");
+        result.push_back("therms");
+        result.push_back("cf");
+        result.push_back("Ccf");
+        result.push_back("Mcf");
+        result.push_back("MMcf");
+        result.push_back("m3");
         result.push_back("kBtu");
         result.push_back("MBtu");
         break;
       case FuelType::Gasoline:
-        result.push_back("Gallons");
-        result.push_back("Liters");
+        result.push_back("gal");
+        result.push_back("L");
         result.push_back("kBtu");
         result.push_back("MBtu");
         break;
       case FuelType::Diesel:
-        result.push_back("Gallons");
-        result.push_back("Liters");
+        result.push_back("gal");
+        result.push_back("L");
         result.push_back("kBtu");
         result.push_back("MBtu");
         break;
       //case FuelType::Coal:
-      //  result.push_back("Tons");
-      //  result.push_back("Lbs");
+      //  result.push_back("tons");
+      //  result.push_back("lbs");
       //  result.push_back("kLbs");
       //  result.push_back("MLbs");
       //  result.push_back("kBtu");
       //  result.push_back("MBtu");
       //  break;
       case FuelType::FuelOil_1:
-        result.push_back("Gallons");
-        result.push_back("Liters");
+        result.push_back("gal");
+        result.push_back("L");
         result.push_back("kBtu");
         result.push_back("MBtu");
         break;
       case FuelType::FuelOil_2:
-        result.push_back("Gallons");
-        result.push_back("Liters");
+        result.push_back("gal");
+        result.push_back("L");
         result.push_back("kBtu");
         result.push_back("MBtu");
         break;
       case FuelType::Propane:
-        result.push_back("Cubic Feet");
-        result.push_back("CCF");
-        result.push_back("kCF");
-        result.push_back("MCF");
-        result.push_back("Cubic Meters");
-        result.push_back("Gallons");
-        result.push_back("Liters");
+        result.push_back("cf");
+        result.push_back("Ccf");
+        result.push_back("Mcf");
+        result.push_back("MMcf");
+        result.push_back("m3");
+        result.push_back("gal");
+        result.push_back("L");
         result.push_back("kBtu");
         result.push_back("MBtu");
         break;
       case FuelType::Water:
-        result.push_back("Gallons");
-        result.push_back("Liters");
+        result.push_back("gal");
+        result.push_back("L");
         break;
       case FuelType::Steam:
-        result.push_back("Lbs");
+        result.push_back("lbs");
         result.push_back("kLbs");
         result.push_back("MLbs");
-        result.push_back("Therms");
+        result.push_back("therms");
         result.push_back("kBtu");
         result.push_back("MBtu");
         break;
       case FuelType::DistrictCooling:
-        result.push_back("Ton Hours");
+        result.push_back("RTh");
         result.push_back("kBtu");
         result.push_back("MBtu");
         break;
       case FuelType::DistrictHeating:
-        result.push_back("Therms");
+        result.push_back("therms");
         result.push_back("kBtu");
         result.push_back("MBtu");
         break;
@@ -593,6 +656,7 @@ namespace detail {
       case FuelType::Electricity:
         result.push_back("kW");
         result.push_back("MW");
+        result.push_back("W");
         break;
       case FuelType::Gas:
         break;
@@ -1307,6 +1371,11 @@ std::string UtilityBill::consumptionUnit() const {
   return getImpl<detail::UtilityBill_Impl>()->consumptionUnit();
 }
 
+boost::optional<std::string> UtilityBill::consumptionUnitDescription() const
+{
+  return getImpl<detail::UtilityBill_Impl>()->consumptionUnitDescription();
+}
+
 double UtilityBill::consumptionUnitConversionFactor() const {
   return getImpl<detail::UtilityBill_Impl>()->consumptionUnitConversionFactor();
 }
@@ -1317,6 +1386,11 @@ bool UtilityBill::isConsumptionUnitConversionFactorDefaulted() const {
 
 boost::optional<std::string> UtilityBill::peakDemandUnit() const {
   return getImpl<detail::UtilityBill_Impl>()->peakDemandUnit();
+}
+
+boost::optional<std::string> UtilityBill::peakDemandUnitDescription() const
+{
+  return getImpl<detail::UtilityBill_Impl>()->peakDemandUnitDescription();
 }
 
 boost::optional<double> UtilityBill::peakDemandUnitConversionFactor() const {
