@@ -20,10 +20,56 @@
 #ifndef OPENSTUDIO_OSLINEEDIT_H
 #define OPENSTUDIO_OSLINEEDIT_H
 
+#include <shared_gui_components/FieldMethodTypedefs.hpp>
+
 #include <model/Model.hpp>
+
 #include <QLineEdit>
 
 namespace openstudio {
+
+class OSLineEdit2 : public QLineEdit {
+  Q_OBJECT
+
+ public:
+
+  OSLineEdit2(QWidget * parent = 0);
+
+  virtual ~OSLineEdit2() {}
+
+  void bind(model::ModelObject& modelObject, 
+            StringGetter get,
+            boost::optional<StringSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none);
+
+  void bind(model::ModelObject& modelObject, 
+            OptionalStringGetter get,
+            boost::optional<StringSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none);
+
+  void unbind();
+
+ private slots:
+
+  void onEditingFinished();
+
+  void onModelObjectChange();
+
+  void onModelObjectRemove(Handle handle);
+
+ private:
+
+  boost::optional<model::ModelObject> m_modelObject;
+  boost::optional<StringGetter> m_get;
+  boost::optional<OptionalStringGetter> m_getOptional;
+  boost::optional<StringSetter> m_set;
+  boost::optional<NoFailAction> m_reset;
+  boost::optional<BasicQuery> m_isDefaulted;
+
+  void completeBind();
+};
 
 class OSLineEdit : public QLineEdit
 {

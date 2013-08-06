@@ -118,24 +118,35 @@ module OpenStudio
           swapped_face = nil
 
           # Check for swapping of face entities if the erased face was a Surface.
-          # (Swapping never happens when @drawing_interface is a SubSurface.)
+          # (Swapping never seems to happen when @drawing_interface is a SubSurface.)
           if (@drawing_interface.class == Surface)
             
             #Plugin.log(OpenStudio::Trace, "#{current_method_name}, @drawing_interface = #{@drawing_interface.class} check for swapping")
             
+            # get the vertices of the surface from the model object and transformed into SketchUp coordinates
             drawing_interface_points = @drawing_interface.surface_polygon.points
 
+            # search all entities in containing_entity for surface that matches these vertices
+            # containing_entity.entities will not return entity because it has been deleted
             containing_entity.entities.each { |this_entity|
               if ((this_entity.class == Sketchup::Face))
                 face_points = this_entity.outer_polygon.reduce.points
 
                 # Check to see if all drawing_object points are a subset of the face points.
                 if (drawing_interface_points.is_subset_of?(face_points))
-                  #puts "Found swapped face = " + this_entity.to_s
-                  swapped_face = this_entity
-                  
-                  #Plugin.log(OpenStudio::Trace, "#{current_method_name}, swap detected with swapped_face = #{swapped_face}")
-                  break
+                
+                  # @drawing_interface's model object is really associated with this_entity
+                
+                  if @drawing_interface == this_entity.drawing_interface
+                    # maybe this happens when one entity is copied to another entity?  should we really be cloning drawing interface here?
+                    #Plugin.log(OpenStudio::Trace, "#{entity} and #{this_entity} both refer to #{@drawing_interface}, how did this happen?")
+                  else
+                    #puts "Found swapped face = " + this_entity.to_s
+                    swapped_face = this_entity
+                    
+                    #Plugin.log(OpenStudio::Trace, "#{current_method_name}, swap detected with swapped_face = #{swapped_face}")
+                    break
+                  end
                 end
               end
             }
@@ -147,7 +158,7 @@ module OpenStudio
             
             # 'swapped_face' is the entity that is left.  'entity' is already erased.
             
-            #Plugin.log(OpenStudio::Trace, "#{current_method_name}, remove current swapped_face.drawing_interface.entity = #{swapped_face.drawing_interface.entity}")
+            #Plugin.log(OpenStudio::Trace, "#{current_method_name}, remove current swapped_face.drawing_interface.entity = #{swapped_face.drawing_interface.entity}, swapped_face = #{swapped_face}")
 
             # Detach the drawing interface from the swapped surface.
             removed_interface = swapped_face.drawing_interface

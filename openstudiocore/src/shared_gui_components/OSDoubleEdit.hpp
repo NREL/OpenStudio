@@ -20,6 +20,8 @@
 #ifndef OPENSTUDIO_OSDOUBLEEDIT_HPP
 #define OPENSTUDIO_OSDOUBLEEDIT_HPP
 
+#include <shared_gui_components/FieldMethodTypedefs.hpp>
+
 #include <model/ModelObject.hpp>
 
 #include <utilities/core/Logger.hpp>
@@ -27,6 +29,70 @@
 #include <QLineEdit>
 
 namespace openstudio {
+
+/** Should only be used for dimensionless real fields. Real fields with units should use
+ *  OSQuantityEdit. */
+class OSDoubleEdit2: public QLineEdit {
+  Q_OBJECT
+ public:
+
+  OSDoubleEdit2(QWidget * parent = 0);
+
+  virtual ~OSDoubleEdit2() {}
+
+  void bind(model::ModelObject& modelObject,
+            DoubleGetter get,
+            boost::optional<DoubleSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<NoFailAction> autosize=boost::none,
+            boost::optional<NoFailAction> autocalculate=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none,
+            boost::optional<BasicQuery> isAutosized=boost::none,
+            boost::optional<BasicQuery> isAutocalculated=boost::none);
+
+  void bind(model::ModelObject& modelObject,
+            OptionalDoubleGetter get,
+            boost::optional<DoubleSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<NoFailAction> autosize=boost::none,
+            boost::optional<NoFailAction> autocalculate=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none,
+            boost::optional<BasicQuery> isAutosized=boost::none,
+            boost::optional<BasicQuery> isAutocalculated=boost::none);
+
+  void unbind();
+
+ private slots:
+
+  void onEditingFinished();
+
+  void onModelObjectChange();
+
+  void onModelObjectRemove(Handle handle);
+
+ private:
+  boost::optional<model::ModelObject> m_modelObject;
+  boost::optional<DoubleGetter> m_get;
+  boost::optional<OptionalDoubleGetter> m_getOptional;
+  boost::optional<DoubleSetter> m_set;
+  boost::optional<NoFailAction> m_reset;
+  boost::optional<NoFailAction> m_autosize;
+  boost::optional<NoFailAction> m_autocalculate;
+  boost::optional<BasicQuery> m_isDefaulted;
+  boost::optional<BasicQuery> m_isAutosized;
+  boost::optional<BasicQuery> m_isAutocalculated;
+
+  bool m_isScientific;
+  boost::optional<int> m_precision;
+
+  void refreshTextAndLabel();
+
+  void setPrecision(const std::string& str);
+
+  void completeBind();
+
+  REGISTER_LOGGER("openstudio.OSDoubleEdit");
+};
 
 /** Should only be used for dimensionless real fields. Real fields with units should use
  *  OSQuantityEdit. */

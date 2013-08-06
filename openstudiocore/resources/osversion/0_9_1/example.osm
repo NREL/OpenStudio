@@ -3079,13 +3079,13 @@ OS:Output:Variable,
   {e306582a-8c6c-4fc0-b937-845c420e91a1}, ! Handle
   Output Variable 1,                      ! Name
   ,                                       ! Key Value
-  Zone Outdoor Dry Bulb;                  ! Variable Name
+  Zone Outdoor Air Drybulb Temperature;                  ! Variable Name
 
 OS:Output:Variable,
   {47247a05-ccfa-4c5f-a471-6faf28daaf98}, ! Handle
   Output Variable 2,                      ! Name
   ,                                       ! Key Value
-  Zone Outdoor Wet Bulb;                  ! Variable Name
+  Zone Outdoor Air Wetbulb Temperature;                  ! Variable Name
 
 OS:Output:Variable,
   {bb2b5f93-0b5c-44f6-b016-2cd7cee5ef04}, ! Handle

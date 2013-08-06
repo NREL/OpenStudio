@@ -20,11 +20,16 @@
 #ifndef OPENSTUDIO_OSCOMBOBOX_H
 #define OPENSTUDIO_OSCOMBOBOX_H
 
-#include <utilities/idf/WorkspaceObject.hpp>
+#include <shared_gui_components/FieldMethodTypedefs.hpp>
+
 #include <model/Model.hpp>
 #include <model/ModelObject.hpp>
+
+#include <utilities/idf/WorkspaceObject.hpp>
+
 #include <QComboBox>
 #include <QList>
+
 #include <vector>
 
 namespace openstudio {
@@ -89,33 +94,39 @@ class OSObjectListCBDS : public OSComboBoxDataSource
   QList<WorkspaceObject> m_workspaceObjects;
 };
 
-/**
- * OSComboBox is a derived class of QComboBox that is made to easily bind to an OpenStudio
- * model choice field.
- *
- * Alternatively, a OSComboBoxDataSource can be set to provide data to OSComoboBox.
- **/
-class OSComboBox : public QComboBox
-{
+class OSComboBox2 : public QComboBox {
   Q_OBJECT
+ public:
+  
+  OSComboBox2( QWidget * parent = 0 );
 
-  public:
+  virtual ~OSComboBox2() {}
 
-  OSComboBox( QWidget * parent = 0 );
+  // Bind for required or defaulted fields.
+  void bind(model::ModelObject& modelObject,
+            ChoicesGetter choices,
+            StringGetter get,
+            boost::optional<StringSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none);
 
-  virtual ~OSComboBox() {}
-
-  void bind(model::ModelObject & modelObject, const char * property);
+  // Bind for optional fields without defaults.
+  void bind(model::ModelObject& modelObject,
+            ChoicesGetter choices,
+            OptionalStringGetter get,
+            boost::optional<StringSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none);
 
   void unbind();
 
   void setDataSource(boost::shared_ptr<OSComboBoxDataSource> dataSource);
 
-  protected:
+ protected:
 
   bool event( QEvent * e );
 
-  private slots:
+ private slots:
 
   void onDataSourceChange(int);
 
@@ -129,7 +140,63 @@ class OSComboBox : public QComboBox
 
   void onCurrentIndexChanged(const QString & text);
 
-  private:
+ private:
+
+  boost::shared_ptr<OSComboBoxDataSource> m_dataSource;
+
+  boost::optional<model::ModelObject> m_modelObject;
+  boost::optional<ChoicesGetter> m_choices; 
+  boost::optional<StringGetter> m_get;
+  boost::optional<OptionalStringGetter> m_getOptional;
+  boost::optional<StringSetter> m_set;
+  boost::optional<NoFailAction> m_reset;
+  boost::optional<BasicQuery> m_isDefaulted;
+
+  std::vector<std::string> m_values;
+
+  void completeBind();
+};
+
+/**
+ * OSComboBox is a derived class of QComboBox that is made to easily bind to an OpenStudio
+ * model choice field.
+ *
+ * Alternatively, a OSComboBoxDataSource can be set to provide data to OSComoboBox.
+ **/
+class OSComboBox : public QComboBox {
+  Q_OBJECT
+
+ public:
+
+  OSComboBox( QWidget * parent = 0 );
+
+  virtual ~OSComboBox() {}
+
+  void bind(model::ModelObject & modelObject, const char * property);
+
+  void unbind();
+
+  void setDataSource(boost::shared_ptr<OSComboBoxDataSource> dataSource);
+
+ protected:
+
+  bool event( QEvent * e );
+
+ private slots:
+
+  void onDataSourceChange(int);
+
+  void onDataSourceAdd(int);
+  
+  void onDataSourceRemove(int);
+
+  void onModelObjectChanged();
+
+  void onModelObjectRemoved(Handle handle);
+
+  void onCurrentIndexChanged(const QString & text);
+
+ private:
 
   boost::shared_ptr<OSComboBoxDataSource> m_dataSource;
 

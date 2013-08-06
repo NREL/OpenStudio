@@ -68,14 +68,13 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
-      result.push_back("People Number Of Occupants");
-      result.push_back("People Radiant Heat Gain");
-      result.push_back("People Convective Heat Gain");
-      result.push_back("People Sensible Heat Gain");
-      result.push_back("People Latent Heat Gain");
-      result.push_back("People Total Heat Gain");
-      result.push_back("People Air Temperatures");
-      result.push_back("People Air Relative Humidity");
+      result.push_back("People Occupant Count");
+      result.push_back("People Radiant Heating Energy");
+      result.push_back("People Convective Heating Energy");
+      result.push_back("People Sensible Heating Energy");
+      result.push_back("People Latent Gain Energy");
+      result.push_back("People Total Heating Energy");
+      result.push_back("People Air Temperature");
     }
     return result;
   }
@@ -119,8 +118,6 @@ namespace detail {
     }
 
     this->makeUnique();
-
-    double floorArea = space->floorArea();
 
     PeopleDefinition peopleDefinition = this->peopleDefinition();
     BOOST_FOREACH(LifeCycleCost cost, peopleDefinition.lifeCycleCosts()){

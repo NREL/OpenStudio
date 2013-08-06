@@ -31,19 +31,21 @@ module OpenStudio
       elsif match_data = /(\d+-\d+-\d+)/.match(f)
         # register each release version
         case match_data[1].to_s
-		when "7-2-0"
-		  version = 6
-        when "7-1-0"
-          version = 12
-        when "7-0-0"
-          version = 24
-        when "6-0-0"
-          version = 23
-        when "5-0-0"
-          version = 31
-        when "4-0-0"
-          version = 24
-        end        
+          when "8-0-0"
+            version = 8
+          when "7-2-0"
+            version = 6
+          when "7-1-0"
+            version = 12
+          when "7-0-0"
+            version = 24
+          when "6-0-0"
+            version = 23
+          when "5-0-0"
+            version = 31
+          when "4-0-0"
+            version = 24
+          end        
       end
       return version
     end
@@ -80,8 +82,8 @@ module OpenStudio
       elsif /darwin/.match(RUBY_PLATFORM)
         potential_paths = Dir.glob('/Applications/EnergyPlus*')
       else
-      potential_paths = Dir.glob('/usr/local/EnergyPlus*')
-      if ENV['ENERGYPLUSDIR']
+        potential_paths = Dir.glob('/usr/local/EnergyPlus*')
+        if ENV['ENERGYPLUSDIR']
           ENV['ENERGYPLUSDIR'].split(';').each { |path| potential_paths += Dir.glob(path) }
         end
       end
@@ -104,6 +106,8 @@ module OpenStudio
             result[:energyplus_exe] = path + "bin/EnergyPlus.exe"
           elsif File.exists?(path + "bin/energyplus")
             result[:energyplus_exe] = path + "bin/energyplus"
+          elsif File.exists?(path + "EnergyPlus")
+            result[:energyplus_exe] = path + "EnergyPlus"
           else
             #puts "E+ not found"
             next # not found

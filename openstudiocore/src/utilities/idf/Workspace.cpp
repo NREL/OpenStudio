@@ -2423,10 +2423,10 @@ namespace detail {
 
             if (!origpath.is_complete())
             {
-              try {
-                sourceurl = completeURL(QUrl::fromLocalFile(toQString(origpath)), thisobjectssearchpaths);
-              } catch (const std::exception &e) {
-                LOG(Info, "Error completing URL: " << toString(origpath) << ": " << e.what());
+              QUrl tempUrl = completeURL(QUrl::fromLocalFile(toQString(origpath)), thisobjectssearchpaths, false);
+              if (!tempUrl.isEmpty())
+              {
+                sourceurl = tempUrl;
               }
             } else {
               // the url is a complete path, no reason to apply searches to it

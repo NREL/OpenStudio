@@ -80,24 +80,22 @@ TEST_F(AnalysisDriverFixture, Sampling_SimpleUQ) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    ProjectDatabase database = getCleanDatabase("SamplingAlgorithm_SimpleUQ");
-    AnalysisDriver analysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
+  ProjectDatabase database = getCleanDatabase("SamplingAlgorithm_SimpleUQ");
+  AnalysisDriver analysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
 
-    // output csv summary of data points
-    Table summary = currentAnalysis.analysis().summaryTable();
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  // output csv summary of data points
+  Table summary = currentAnalysis.analysis().summaryTable();
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
   }
 }
 
@@ -121,24 +119,22 @@ TEST_F(AnalysisDriverFixture, Sampling_MixedContinuousAndDiscreteUQ) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    ProjectDatabase database = getCleanDatabase("SamplingAlgorithm_MixedContinuousAndDiscreteUQ");
-    AnalysisDriver analysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
+  ProjectDatabase database = getCleanDatabase("SamplingAlgorithm_MixedContinuousAndDiscreteUQ");
+  AnalysisDriver analysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
 
-    // output csv summary of data points
-    Table summary = currentAnalysis.analysis().summaryTable();
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  // output csv summary of data points
+  Table summary = currentAnalysis.analysis().summaryTable();
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
   }
 }
 
@@ -162,24 +158,22 @@ TEST_F(AnalysisDriverFixture, Sampling_SimpleLognormalUQ) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    ProjectDatabase database = getCleanDatabase("SamplingAlgorithm_SimpleLognormalUQ");
-    AnalysisDriver analysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
+  ProjectDatabase database = getCleanDatabase("SamplingAlgorithm_SimpleLognormalUQ");
+  AnalysisDriver analysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
 
-    // output csv summary of data points
-    Table summary = currentAnalysis.analysis().summaryTable();
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  // output csv summary of data points
+  Table summary = currentAnalysis.analysis().summaryTable();
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
   }
 }
 
@@ -203,23 +197,21 @@ TEST_F(AnalysisDriverFixture, Sampling_SimpleHistogramBinUQ) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    ProjectDatabase database = getCleanDatabase("SamplingAlgorithm_SimpleHistogramBinUQ");
-    AnalysisDriver analysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
+  ProjectDatabase database = getCleanDatabase("SamplingAlgorithm_SimpleHistogramBinUQ");
+  AnalysisDriver analysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
 
-    // output csv summary of data points
-    Table summary = currentAnalysis.analysis().summaryTable();
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  // output csv summary of data points
+  Table summary = currentAnalysis.analysis().summaryTable();
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
   }
 }

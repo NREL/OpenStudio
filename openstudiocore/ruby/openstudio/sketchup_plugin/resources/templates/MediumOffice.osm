@@ -6229,16 +6229,16 @@ OS:Material:NoMass,
 
 OS:Output:Variable,
   {3945c9c9-83e8-4372-9eb1-6216154c624d}, ! Handle
-  hourly* - Zone/Sys Sensible Heating Rate, ! Name
+  hourly* - Zone Air System Sensible Heating Rate, ! Name
   *,                                      ! Key Value
   Zone Mean Radiant Temperature,          ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {d4d13bb3-bd16-48be-ad69-93ca1cea856a}, ! Handle
-  hourly* - Zone/Sys Sensible Cooling Rate, ! Name
+  hourly* - Zone Air System Sensible Cooling Rate, ! Name
   *,                                      ! Key Value
-  Glare Index at Ref Point 1,             ! Variable Name
+  Daylighting Reference Point 1 Glare Index,             ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
@@ -6252,40 +6252,40 @@ OS:Output:Variable,
   {c209a4da-0e91-49ee-99e7-3d2118f37e7e}, ! Handle
   hourly* - Surface Outside Temperature,  ! Name
   *,                                      ! Key Value
-  Glare Index at Ref Point 2,             ! Variable Name
+  Daylighting Reference Point 2 Glare Index,             ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {25908354-89c6-4828-9d7f-6c1dbf674975}, ! Handle
-  hourly* - Glare Index at Ref Point 2,   ! Name
+  hourly* - Daylighting Reference Point 2 Glare Index,   ! Name
   *,                                      ! Key Value
-  Daylight Illum at Ref Point 1,          ! Variable Name
+  Daylighting Reference Point 1 Illuminance,          ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {8dd357d5-7600-4246-9b9e-baacc633560d}, ! Handle
-  hourly* - Surface Ext Solar Incident,   ! Name
+  hourly* - Surface Outside Face Incident Solar Radiation Rate per Area,   ! Name
   *,                                      ! Key Value
-  Surface Ext Solar Incident,             ! Variable Name
+  Surface Outside Face Incident Solar Radiation Rate per Area,             ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {ccd0b1b5-ff67-4423-a320-d3cd9dc8456e}, ! Handle
-  hourly* - Glare Index at Ref Point 1,   ! Name
+  hourly* - Daylighting Reference Point 1 Glare Index,   ! Name
   *,                                      ! Key Value
-  Zone/Sys Sensible Heating Rate,         ! Variable Name
+  Zone Air System Sensible Heating Rate,         ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {1f3e47aa-77e4-4ce9-9754-1a987d7f40b3}, ! Handle
-  hourly* - Daylight Illum at Ref Point 2, ! Name
+  hourly* - Daylighting Reference Point 2 Illuminance, ! Name
   *,                                      ! Key Value
   Surface Inside Temperature,             ! Variable Name
   Hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {a32f3b77-4d7e-48b6-8bca-2979118b09f8}, ! Handle
-  hourly* - Daylight Illum at Ref Point 1, ! Name
+  hourly* - Daylighting Reference Point 1 Illuminance, ! Name
   *,                                      ! Key Value
   Surface Outside Temperature,            ! Variable Name
   Hourly;                                 ! Reporting Frequency
@@ -6294,14 +6294,14 @@ OS:Output:Variable,
   {1a518894-6325-4f2c-ab9b-ad70409dae61}, ! Handle
   hourly* - Zone Mean Air Temperature,    ! Name
   *,                                      ! Key Value
-  Daylight Illum at Ref Point 2,          ! Variable Name
+  Daylighting Reference Point 2 Illuminance,          ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:Output:Variable,
   {0c35e97a-f768-4d71-a17b-b5f877aabc7a}, ! Handle
   hourly* - Zone Mean Radiant Temperature, ! Name
   *,                                      ! Key Value
-  Zone/Sys Sensible Cooling Rate,         ! Variable Name
+  Zone Air System Sensible Cooling Rate,         ! Variable Name
   hourly;                                 ! Reporting Frequency
 
 OS:People,

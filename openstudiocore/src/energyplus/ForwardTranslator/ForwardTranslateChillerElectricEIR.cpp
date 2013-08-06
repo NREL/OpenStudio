@@ -201,10 +201,11 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
   }
 
   // CompressorMotorEfficiency
-  
+  // Changed to Fraction of Compressor Electric Consumption Rejected by Condenser in E+ version 8.0
+
   if( value = modelObject.compressorMotorEfficiency() )
   {
-    idfObject.setDouble(Chiller_Electric_EIRFields::CompressorMotorEfficiency,value.get());
+    idfObject.setDouble(Chiller_Electric_EIRFields::FractionofCompressorElectricConsumptionRejectedbyCondenser,value.get());
   }
 
   // LeavingChilledWaterLowerTemperatureLimit
@@ -261,7 +262,7 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
 //  ((Name)(Name))
 //  ((CoolingCapacityFunctionofTemperatureCurveName)(Cooling Capacity Function of Temperature Curve Name))
 //  ((ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName)(Electric Input to Cooling Output Ratio Function of Temperature Curve Name))
-//  ((ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName)(Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name))
+//  ((ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName)(Electric Input to Cooling Output Ratio Function of Fan Coil Part Load Ratio Curve Name))
 //  ((CondenserInletNodeName)(Condenser Inlet Node Name))
 //  ((CondenserOutletNodeName)(Condenser Outlet Node Name))
 //  ((DesignHeatRecoveryWaterFlowRate)(Design Heat Recovery Water Flow Rate))

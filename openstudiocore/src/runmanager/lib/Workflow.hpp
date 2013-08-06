@@ -87,7 +87,7 @@ namespace runmanager {
           if (t_rhs.children.size() == children.size())
           {
             for (ChildIter itr1 = children.begin(), itr2 = t_rhs.children.begin();
-                itr1 != children.end(), itr2 != t_rhs.children.end();
+                itr1 != children.end() &&  itr2 != t_rhs.children.end();
                 ++itr1, ++itr2)
             {
               assert(*itr1);

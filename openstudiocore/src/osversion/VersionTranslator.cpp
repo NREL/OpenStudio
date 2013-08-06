@@ -86,7 +86,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("0.11.2")] = &VersionTranslator::update_0_11_1_to_0_11_2;
   m_updateMethods[VersionString("0.11.5")] = &VersionTranslator::update_0_11_4_to_0_11_5;
   m_updateMethods[VersionString("0.11.6")] = &VersionTranslator::update_0_11_5_to_0_11_6;
-  m_updateMethods[VersionString("1.0.1")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.0.2")] = &VersionTranslator::update_1_0_1_to_1_0_2;
+  m_updateMethods[VersionString("1.0.3")] = &VersionTranslator::update_1_0_2_to_1_0_3;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -125,6 +126,8 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("0.11.5"));
   m_startVersions.push_back(VersionString("0.11.6"));
   m_startVersions.push_back(VersionString("1.0.0"));
+  m_startVersions.push_back(VersionString("1.0.1"));
+  m_startVersions.push_back(VersionString("1.0.2"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -1984,6 +1987,106 @@ std::string VersionTranslator::update_0_11_5_to_0_11_6(const IdfFile& idf_0_11_5
     }
   }
 
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_0_1_to_1_0_2(const IdfFile& idf_1_0_1, const IddFileAndFactoryWrapper& idd_1_0_2)
+{
+  std::stringstream ss;
+
+  ss << idf_1_0_1.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_0_2.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  BOOST_FOREACH(const IdfObject& object,idf_1_0_1.objects()) {
+
+    if( object.iddObject().name() == "OS:Boiler:HotWater" ) {
+
+      if(object.getString(15) && istringEqual(object.getString(15).get(),"VariableFlow")) {
+        // Update Boiler Flow Mode
+
+        IdfObject newBoiler = object.clone(true);
+
+        newBoiler.setString(15,"LeavingSetpointModulated");
+
+        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newBoiler) );
+
+        ss << newBoiler;
+
+      } else {
+
+        ss << object;
+
+      }
+    } else if( object.iddObject().name() == "OS:Boiler:HotWater" ) {
+
+      if(object.getString(15) && istringEqual(object.getString(15).get(),"VariableFlow")) {
+        // Update Chiller Flow Mode
+
+        IdfObject newChiller = object.clone(true);
+
+        newChiller.setString(15,"LeavingSetpointModulated");
+
+        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newChiller) );
+
+        ss << newChiller;
+
+      } else {
+
+        ss << object;
+
+      }
+
+    } else {
+
+      ss << object;
+
+    }
+  }
+
+  return ss.str();
+}
+
+
+std::string VersionTranslator::update_1_0_2_to_1_0_3(const IdfFile& idf_1_0_2, const IddFileAndFactoryWrapper& idd_1_0_3)
+{
+  std::stringstream ss;
+
+  ss << idf_1_0_2.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_0_3.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  BOOST_FOREACH(const IdfObject& object,idf_1_0_2.objects()) {
+
+    if( object.iddObject().name() == "OS:RadianceParameters" ) {
+      boost::optional<std::string> value = object.getString(14);
+
+      if (value && (*value == "581" || *value == "2321"))
+      {
+        IdfObject newParameters = object.clone(true);
+
+        if (*value == "581")
+        {
+          newParameters.setString(14, "578");
+        } else {
+          newParameters.setString(14, "2306");
+        }
+
+        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newParameters) );
+
+        ss << newParameters;
+      } else {
+        ss << object;
+      }
+    } else {
+      ss << object;
+    }
+  }
+    
   return ss.str();
 }
 
