@@ -173,7 +173,7 @@ namespace detail {
       try {
         m_idf = t_files.getLastByFilename("BasementGHTIn.idf");
         m_expandedidf = t_files.getLastByExtension("idf");
-      } catch (const std::exception &) {
+      } catch (const std::runtime_error&) {
       }
     }
   }

@@ -87,7 +87,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("0.11.5")] = &VersionTranslator::update_0_11_4_to_0_11_5;
   m_updateMethods[VersionString("0.11.6")] = &VersionTranslator::update_0_11_5_to_0_11_6;
   m_updateMethods[VersionString("1.0.2")] = &VersionTranslator::update_1_0_1_to_1_0_2;
-  m_updateMethods[VersionString("1.0.3")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.0.3")] = &VersionTranslator::update_1_0_2_to_1_0_3;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -2046,6 +2046,47 @@ std::string VersionTranslator::update_1_0_1_to_1_0_2(const IdfFile& idf_1_0_1, c
     }
   }
 
+  return ss.str();
+}
+
+
+std::string VersionTranslator::update_1_0_2_to_1_0_3(const IdfFile& idf_1_0_2, const IddFileAndFactoryWrapper& idd_1_0_3)
+{
+  std::stringstream ss;
+
+  ss << idf_1_0_2.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_0_3.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  BOOST_FOREACH(const IdfObject& object,idf_1_0_2.objects()) {
+
+    if( object.iddObject().name() == "OS:RadianceParameters" ) {
+      boost::optional<std::string> value = object.getString(14);
+
+      if (value && (*value == "581" || *value == "2321"))
+      {
+        IdfObject newParameters = object.clone(true);
+
+        if (*value == "581")
+        {
+          newParameters.setString(14, "578");
+        } else {
+          newParameters.setString(14, "2306");
+        }
+
+        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newParameters) );
+
+        ss << newParameters;
+      } else {
+        ss << object;
+      }
+    } else {
+      ss << object;
+    }
+  }
+    
   return ss.str();
 }
 

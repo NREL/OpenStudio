@@ -711,8 +711,8 @@ OS:RadianceParameters,
        \type choice
        \default 146
        \key 146
-       \key 581
-       \key 2321
+       \key 578
+       \key 2306
 
 \group OpenStudio Site
 

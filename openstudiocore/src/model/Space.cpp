@@ -111,11 +111,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <QPolygonF>
-
-// DLM: does this introduce graphics dependencies to model?
-//#include <QPainterPath>
-
 #undef BOOST_UBLAS_TYPE_CHECK
 #include <boost/geometry/geometry.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
@@ -2501,43 +2496,6 @@ namespace detail {
 
       BOOST_ASSERT(z);
 
-      /**Qt based**/
-      /* 
-      QPolygonF maxRectangle;
-      maxRectangle << QPointF(xmax+1, ymax+1);
-      maxRectangle << QPointF(xmax+1, ymin-1);
-      maxRectangle << QPointF(xmin-1, ymin-1);
-      maxRectangle << QPointF(xmin-1, ymax+1);
-      QPolygonF tempRectangle(maxRectangle);
-
-      QPolygonF floorPrintPolygon;
-      QPainterPath painterPath;
-      BOOST_FOREACH(const Surface& floor, floors){
-        QPolygonF floorPolygon;
-        std::vector<Point3d> vertices = floor.vertices();
-        BOOST_FOREACH(const Point3d& point, vertices){
-          floorPolygon << QPointF(point.x(), point.y());
-        }
-        //floorPolygon << QPointF(vertices[0].x(), vertices[0].y());
-
-        floorPrintPolygon = floorPrintPolygon.united(floorPolygon);
-
-        tempRectangle = tempRectangle.subtracted(floorPolygon);
-        
-        painterPath.addPolygon(floorPolygon);
-      }
-
-      floorPrintPolygon = maxRectangle.subtracted(tempRectangle);
-
-      floorPrintPolygon = painterPath.toFillPolygon();
-
-      BOOST_FOREACH(const QPointF& point, floorPrintPolygon.toStdVector()){
-        Point3d p(point.x(), point.y(), *z);
-        result.push_back(p);
-      }
-      */
-
-      /**boost based**/
       typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
       typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
       typedef boost::geometry::model::ring<BoostPoint> BoostRing;
@@ -2616,13 +2574,13 @@ namespace detail {
     }
 
     // remove colinear points
-    //result = removeColinear(result);
+    result = removeColinear(result);
 
     // reorder the points 
-    //result = reorderULC(result);
+    result = reorderULC(result);
     
     // remove additional colinear points that occur after reordering
-    //result = removeColinear(result);
+    result = removeColinear(result);
 
     return result;
   }

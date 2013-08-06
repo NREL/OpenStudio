@@ -11,7 +11,7 @@
     #boilers
     boilers = model.getObjectsByType("OS:Boiler:HotWater".to_IddObjectType)
     boilers.each do |boiler|
-      hourly_boiler_plr = get_timeseries_array(sql, env_period, hourly_time_step, "Boiler Part-Load Ratio", boiler.name.get)
+      hourly_boiler_plr = get_timeseries_array(sql, env_period, hourly_time_step, "Boiler Fan Coil Part Load Ratio", boiler.name.get)
       #puts hourly_boiler_plr
       avg_hourly_boiler_plr = non_zero_array_average(hourly_boiler_plr)
       puts "#{boiler.name} part-load ratio = #{avg_hourly_boiler_plr}"
@@ -22,7 +22,7 @@
     chillers = model.getObjectsByType("OS:Chiller:Electric:EIR".to_IddObjectType)
     chillers.each do |chiller|
       #puts chiller.name
-      hourly_chiller_plr = get_timeseries_array(sql, env_period, hourly_time_step, "Chiller Part-Load Ratio", chiller.name)
+      hourly_chiller_plr = get_timeseries_array(sql, env_period, hourly_time_step, "Chiller Fan Coil Part Load Ratio", chiller.name)
       avg_hourly_chiller_plr = non_zero_array_average(hourly_chiller_plr)
       qaqc[model_name][chiller.name]["avg_hourly_chiller_plr"] = avg_hourly_chiller_plr
     end
