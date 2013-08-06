@@ -72,8 +72,8 @@ namespace detail {
     Files f = allInputFiles();
     getFiles(f);
 
-    // start at default EnergyPlus version of 7.2
-    ToolVersion tv(7,2); 
+    // start at default EnergyPlus version of 8.0
+    ToolVersion tv(8,0); 
 
     if (m_expandedidf){
       if (boost::filesystem::exists(m_expandedidf->fullPath))
@@ -173,7 +173,7 @@ namespace detail {
       try {
         m_idf = t_files.getLastByFilename("BasementGHTIn.idf");
         m_expandedidf = t_files.getLastByExtension("idf");
-      } catch (const std::exception &) {
+      } catch (const std::runtime_error&) {
       }
     }
   }

@@ -111,26 +111,34 @@ TEST_F(AnalysisDriverFixture,AnalysisDriverWatcher_OneAnalysis) {
   FileReference seedModel(p);
   analysis.setSeed(seedModel);
 
-  // SET ALGORITHM
-  DDACEAlgorithmOptions algOptions(DDACEAlgorithmType::lhs);
-  algOptions.setSamples(2);
-  DDACEAlgorithm algorithm(algOptions);
-  analysis.setAlgorithm(algorithm);
+  // CREATE DATA POINTS
+  std::vector<QVariant> values;
+  values.push_back(QVariant(double(34.21689)));
+  values.push_back(QVariant(double(0.7234532)));
+  values.push_back(QVariant(int(0)));
+  OptionalDataPoint dataPoint = problem.createDataPoint(values);
+  ASSERT_TRUE(dataPoint);
+  bool test = analysis.addDataPoint(*dataPoint);
+  EXPECT_TRUE(test);
+  values[0] = QVariant(double(183.28938));
+  values[1] = QVariant(double(0.82975899));
+  dataPoint = problem.createDataPoint(values);
+  ASSERT_TRUE(dataPoint);
+  test = analysis.addDataPoint(*dataPoint);
+  EXPECT_TRUE(test);
 
-  if (!dakotaExePath().empty()) {
-    // CREATE WATCHER
-    AnalysisDriver driver = project.analysisDriver();
-    TestWatcher watcher(driver);
-    watcher.watch(analysis.uuid());
+  // CREATE WATCHER
+  AnalysisDriver driver = project.analysisDriver();
+  TestWatcher watcher(driver);
+  watcher.watch(analysis.uuid());
 
-    // RUN AND WATCH ANALYSIS
-    AnalysisRunOptions runOptions = standardRunOptions(project.projectDir());
-    driver.run(analysis,runOptions);
-    driver.waitForFinished();
+  // RUN AND WATCH ANALYSIS
+  AnalysisRunOptions runOptions = standardRunOptions(project.projectDir());
+  driver.run(analysis,runOptions);
+  driver.waitForFinished();
 
-    // CHECK WATCHING RESULTS
-    EXPECT_EQ(2,watcher.numDataPointQueued());
-    EXPECT_EQ(2,watcher.numDataPointComplete());
-    EXPECT_EQ(1,watcher.numAnalysisComplete());
-  }
+  // CHECK WATCHING RESULTS
+  EXPECT_EQ(2,watcher.numDataPointQueued());
+  EXPECT_EQ(2,watcher.numDataPointComplete());
+  EXPECT_EQ(1,watcher.numAnalysisComplete());
 }

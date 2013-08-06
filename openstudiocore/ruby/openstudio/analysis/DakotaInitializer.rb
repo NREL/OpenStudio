@@ -62,7 +62,7 @@ class DakotaInitializer
     @prob_file = prob_file.to_s
     @restart_file = restart_file.to_s
     @problem = instantiate_problem(prob_file.to_s,x0,verbose)
-    dakota_hash = OpenStudio::Analysis::find_dakota()
+    dakota_hash = OpenStudio::Analysis::find_dakota(5,3,1)
     @dakota_exe = dakota_hash[:dakota_exe]
     @driver = driver
     @nodes = nodes

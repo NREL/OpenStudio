@@ -487,6 +487,34 @@ boost::optional<Quantity> QuantityConverterSingleton::m_convertToTargetFromSI(
   return converted;
 }
 
+boost::optional<double> convert(double original, const std::string& originalUnits, const std::string& finalUnits)
+{
+  if (originalUnits == finalUnits){
+    return original;
+  }
+
+  //create the units from the strings
+  boost::optional<Unit> originalUnit = UnitFactory::instance().createUnit(originalUnits);
+  boost::optional<Unit> finalUnit = UnitFactory::instance().createUnit(finalUnits);
+
+  //make sure both unit strings were valid
+  if (originalUnit && finalUnit) {
+
+    //make the original quantity
+    Quantity originalQuant = Quantity(original, *originalUnit);
+
+    //convert to final units
+    boost::optional<Quantity> finalQuant = QuantityConverter::instance().convert(originalQuant, *finalUnit);
+  
+    //if the conversion 
+    if (finalQuant) {
+      return finalQuant->value();
+    }
+  }
+
+  return boost::none;
+}
+
 boost::optional<Quantity> convert(const Quantity &q, UnitSystem sys) {
   return QuantityConverter::instance().convert(q,sys);
 }

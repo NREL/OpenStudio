@@ -94,8 +94,6 @@ namespace detail {
 
     this->makeUnique();
 
-    double floorArea = space->floorArea();
-
     HotWaterEquipmentDefinition hotWaterEquipmentDefinition = this->hotWaterEquipmentDefinition();
     BOOST_FOREACH(LifeCycleCost cost, hotWaterEquipmentDefinition.lifeCycleCosts()){
       cost.convertToCostPerEach();

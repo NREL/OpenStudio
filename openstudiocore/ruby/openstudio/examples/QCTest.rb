@@ -106,7 +106,7 @@ class QCTestCase < Test::Unit::TestCase
     assert(building.spaces.size > 0)
     building.spaces.each do |space|
       space_name = space.name.get.upcase
-      timeseries = @@model.sqlFile.get.timeSeries(environmentName, "Hourly", "Glare Index at Ref Point 1", space_name)
+      timeseries = @@model.sqlFile.get.timeSeries(environmentName, "Hourly", "Daylighting Reference Point 1 Glare Index", space_name)
       assert((not timeseries.empty?))
       assert(check_timeseries(timeseries.get, nil, 30))
     end

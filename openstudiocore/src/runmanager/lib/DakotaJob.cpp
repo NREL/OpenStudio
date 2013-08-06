@@ -75,12 +75,12 @@ namespace detail {
       try {
         // first, see if we can get a filename that was specifically requested by the job creation
         m_inFile = t_files.getLastByFilename(t_params.get("filename").value);
-      } catch (const std::exception &) {
+      } catch (const std::runtime_error &) {
         // if not, try to get any old .in that was passed in
         try {
           m_inFile = t_files.getLastByExtension("in");
         } 
-        catch (const std::exception &) {}
+        catch (const std::runtime_error &) {}
       }
     }
   }
@@ -100,15 +100,8 @@ namespace detail {
     JobParams p = params();
     getFiles(f, p);
 
-    // start at default Dakota version of 5.1
-    ToolVersion tv(5,1); 
-    if (m_inFile) {
-      if (boost::filesystem::exists(m_inFile->fullPath)) {
-        LOG(Info,"Currently not checking Dakota version in any real way.");
-      } else {
-        throw std::runtime_error("Unable to load IDF " + toString(m_inFile->fullPath) + " file does not exist");
-      }
-    }
+    // minimum required version
+    ToolVersion tv(5,3,1);
 
     return tv;
   }

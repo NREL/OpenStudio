@@ -30,6 +30,8 @@
   
   #include <runmanager/lib/Workflow.hpp>
   #include <runmanager/lib/WorkItem.hpp>
+  #include <runmanager/lib/SimulationEngine.hpp>
+  #include <runmanager/lib/ErrorEstimation.hpp>
 
   #include <ruleset/ConcreteRulesetObjects.hpp>
   #include <ruleset/OSArgument.hpp>

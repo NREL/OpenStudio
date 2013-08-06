@@ -25,6 +25,10 @@ SET(utilities_resources_src
   utilities/BCL/Measures/TestMissingARequiredArgWithNoDefault/measure.rb
   utilities/BCL/Measures/TestMissingARequiredArgWithNoDefault/measure.xml
   utilities/Checksum/Checksum.txt
+  utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw
+  utilities/Filetypes/USA_CO_Golden-NREL.wrap.epw
+  utilities/Filetypes/USA_CO_Golden-NREL.amy
+  utilities/Filetypes/USA_CO_Golden-NREL.wrap.amy
   utilities/Filetypes/TDV_2008_kBtu_CZ13.csv
   utilities/Table/HeightWeight.csv
   utilities/Table/EUI.csv
@@ -211,6 +215,12 @@ SET(osversion_resources_src
   osversion/1_0_0/OpenStudio.idd
   osversion/1_0_0/example.osm
   osversion/1_0_0/example.osc
+  osversion/1_0_1/OpenStudio.idd
+  osversion/1_0_1/example.osm
+  osversion/1_0_1/example.osc
+  osversion/1_0_2/OpenStudio.idd
+  osversion/1_0_2/example.osm
+  osversion/1_0_2/example.osc
   osversion/unknown.osc
 )
 

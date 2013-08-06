@@ -24,7 +24,7 @@
 #
 # == Usage
 #
-#   ruby GenerateClass.rb -s "model" -c "Construction" -b "ConstructionBase" -o "." -p -q -i "Construction"
+#   ruby GenerateClass.rb -s "model" -c "Construction" -b "ConstructionBase" -o "." -p -q -i "OS:Construction"
 #
 ######################################################################
 

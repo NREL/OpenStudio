@@ -307,6 +307,11 @@ QString ZoneGeometry::summary()
 
 Data::Data(QString filename, bool process)
 {
+  read(filename,process);
+}
+
+bool Data::read(QString filename, bool process)
+{
     QFile fp(filename);
 
     valid = false;
@@ -423,15 +428,18 @@ Data::Data(QString filename, bool process)
                 // Finally, we can use this to build the loops that geometrically represent the zones
                 for(int i=1;i<zones.size();i++)
                 {
+                    if(zones[i].pl!=k+1 || zones[i].system()) // Skip system zones and zones not on this level
+                      continue;
                     ZoneGeometry geom(&(zones[i]),walls);
-					if(!geom.valid)
-						error("Creation of zone geometry has failed due to invalid geometry");
+                    if(!geom.valid)
+                        error("Creation of zone geometry has failed due to invalid geometry");
                     geometry << geom;
                 }
             }
         }
         valid = true;
     }
+    return valid;
 }
 
 void Data::readZoneIC(Reader &input)

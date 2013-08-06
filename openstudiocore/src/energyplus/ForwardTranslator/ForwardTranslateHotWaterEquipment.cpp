@@ -86,12 +86,12 @@ boost::optional<IdfObject> ForwardTranslator::translateHotWaterEquipment(
 
   d = definition.wattsperSpaceFloorArea();
   if (d){
-    idfObject.setDouble(HotWaterEquipmentFields::WattsperZoneFloorArea, (*d)*multiplier);
+    idfObject.setDouble(HotWaterEquipmentFields::PowerperZoneFloorArea, (*d)*multiplier);
   }
 
   d = definition.wattsperPerson();
   if (d){
-    idfObject.setDouble(HotWaterEquipmentFields::WattsperPerson, (*d)*multiplier);
+    idfObject.setDouble(HotWaterEquipmentFields::PowerperPerson, (*d)*multiplier);
   }
 
   if (!definition.isFractionLatentDefaulted()){
