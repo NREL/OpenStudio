@@ -116,11 +116,6 @@ namespace openstudio{
             "CREATE TABLE Zones (ZoneIndex INTEGER PRIMARY KEY, ZoneName TEXT, RelNorth REAL, OriginX REAL, OriginY REAL, OriginZ REAL, CentroidX REAL, CentroidY REAL, CentroidZ REAL, OfType INTEGER, Multiplier REAL, ListMultiplier REAL, MinimumX REAL, MaximumX REAL, MinimumY REAL, MaximumY REAL, MinimumZ REAL, MaximumZ REAL, CeilingHeight REAL, Volume REAL, InsideConvectionAlgo INTEGER, OutsideConvectionAlgo INTEGER, FloorArea REAL, ExtGrossWallArea REAL, ExtNetWallArea REAL, ExtWindowArea REAL, IsPartOfTotalArea INTEGER);"
             "CREATE VIEW ReportVariableWithTime AS SELECT ReportVariableData.*, Time.*, ReportVariableDataDictionary.*, ReportVariableExtendedData.* FROM ReportVariableData LEFT OUTER JOIN ReportVariableExtendedData INNER JOIN Time INNER JOIN ReportVariableDataDictionary ON (ReportVariableData.ReportVariableExtendedDataIndex = ReportVariableExtendedData.ReportVariableExtendedDataIndex) AND (ReportVariableData.TimeIndex = Time.TimeIndex) AND (ReportVariableDataDictionary.ReportVariableDataDictionaryIndex = ReportVariableData.ReportVariableDataDictionaryIndex);"
             "CREATE VIEW TabularDataWithStrings AS SELECT td.Value Value, reportn.Value ReportName, fs.Value ReportForString, tn.Value TableName, rn.Value RowName, cn.Value ColumnName, u.Value Units, RowId FROM TabularData td INNER JOIN Strings reportn ON reportn.StringIndex=td.ReportNameIndex INNER JOIN Strings fs ON fs.StringIndex=td.ReportForStringIndex INNER JOIN Strings tn ON tn.StringIndex=td.TableNameIndex INNER JOIN Strings rn ON rn.StringIndex=td.RowNameIndex INNER JOIN Strings cn ON cn.StringIndex=td.ColumnNameIndex INNER JOIN Strings u ON u.StringIndex=td.UnitsIndex WHERE reportn.StringTypeIndex=1 AND fs.StringTypeIndex=2 AND tn.StringTypeIndex=3 AND rn.StringTypeIndex=4 AND cn.StringTypeIndex=5 AND u.StringTypeIndex=6;"
-            "CREATE INDEX rmdTI ON ReportMeterData (TimeIndex ASC);"
-            "CREATE INDEX rmdDI ON ReportMeterData (ReportMeterDataDictionaryIndex ASC);"
-            "CREATE INDEX rvdTI ON ReportVariableData (TimeIndex ASC);"
-            "CREATE INDEX rvdDI ON ReportVariableData (ReportVariableDataDictionaryIndex ASC);"
-            "CREATE INDEX dmhdHRI ON DaylightMapHourlyData (HourlyReportIndex ASC);"
           );
 
       }
@@ -128,6 +123,43 @@ namespace openstudio{
       addSimulation(t_epwFile, t_simulationTime, t_calendar);
 
       reopen();
+      createIndexes();
+    }
+
+    void SqlFile_Impl::createIndexes()
+    {
+      if (m_connectionOpen)
+      {
+        try {
+          execAndThrowOnError("CREATE INDEX rmdTI ON ReportMeterData (TimeIndex ASC);");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error adding index: " + std::string(e.what()));
+        }
+
+        try {
+          execAndThrowOnError("CREATE INDEX rmdDI ON ReportMeterData (ReportMeterDataDictionaryIndex ASC);");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error adding index: " + std::string(e.what()));
+        }
+
+        try {
+          execAndThrowOnError("CREATE INDEX rvdTI ON ReportVariableData (TimeIndex ASC);");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error adding index: " + std::string(e.what()));
+        }
+
+        try {
+          execAndThrowOnError("CREATE INDEX rvdDI ON ReportVariableData (ReportVariableDataDictionaryIndex ASC);");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error adding index: " + std::string(e.what()));
+        }
+
+        try {
+          execAndThrowOnError("CREATE INDEX dmhdHRI ON DaylightMapHourlyData (HourlyReportIndex ASC);");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error adding index: " + std::string(e.what()));
+        }
+      }
     }
 
     SqlFile_Impl::~SqlFile_Impl ()
@@ -834,7 +866,7 @@ namespace openstudio{
         LOG(Warn, "Tabular results were not found, trying to calculate it ourselves");
         std::string s = " \
           select sum(VariableValue)/1000000000 from ReportMeterData, ReportMeterDataDictionary \
-          where (ReportMeterData.ReportMeterDataDictionaryIndex = ReportMeterDataDictionary.ReportMeterDataDictionaryIndex)\
+          where (ReportMeterData.ReportMeterDataDictionaryIndex = ReportMeterDataDictionary.ReportMeterDataDictionaryIndex and variablename not like '%EnergyTransfer%')\
           group by ReportingFrequency;\
           ";
         d = execAndReturnFirstDouble(s);

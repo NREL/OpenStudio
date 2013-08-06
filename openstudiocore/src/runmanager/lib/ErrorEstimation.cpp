@@ -5,9 +5,46 @@
 
 namespace openstudio {
   namespace runmanager {
-    FuelUses::FuelUses()
-      : m_units(*openstudio::createUnit("J"))
+    FuelUses::FuelUses(double t_confidence)
+      : m_units(*openstudio::createUnit("J")),
+        m_confidence(t_confidence)
     {
+    }
+
+    void FuelUses::setConfidence(double t_newConfidence)
+    {
+      m_confidence = t_newConfidence;
+    }
+
+    double FuelUses::confidence() const
+    {
+      return m_confidence;
+    }
+
+    double FuelUses::average() const
+    {
+      double sum = 0;
+      for (std::map<openstudio::FuelType, double>::const_iterator itr = m_uses.begin();
+          itr != m_uses.end();
+          ++itr)
+      {
+        sum += itr->second;
+      }
+
+      return sum / m_uses.size();
+    }
+
+    double FuelUses::absoluteAverage() const
+    {
+      double sum = 0;
+      for (std::map<openstudio::FuelType, double>::const_iterator itr = m_uses.begin();
+          itr != m_uses.end();
+          ++itr)
+      {
+        sum += fabs(itr->second);
+      }
+
+      return sum / m_uses.size();
     }
 
     FuelUses FuelUses::operator/(const double scalar) const
@@ -126,6 +163,11 @@ namespace openstudio {
       }
     }
 
+    std::map<openstudio::FuelType, double> FuelUses::data() const
+    {
+      return m_uses;
+    }
+
     openstudio::Unit FuelUses::units() const
     {
       return m_units;
@@ -133,12 +175,21 @@ namespace openstudio {
 
 
 
-    ErrorEstimation::ErrorEstimation(const std::string &t_baselineSourceName)
-      : m_baselineSourceName(t_baselineSourceName)
+    ErrorEstimation::ErrorEstimation(const size_t t_numVariables)
+      : m_numVariables(t_numVariables)
     {
 
     }
 
+    void ErrorEstimation::setConfidence(const std::string &t_sourceName, double t_confidence)
+    {
+      if (t_confidence < 0 || t_confidence > 1.0)
+      {
+        throw std::range_error("confidence level must be between 0 and 1");
+      }
+
+      m_confidences[t_sourceName] = t_confidence;
+    }
 
     /// adds the data of an SqlFile simulation result into the ErrorEstimation and returns the error corrected values
     /// 
@@ -148,67 +199,255 @@ namespace openstudio {
     /// \param[in] t_value The value of t_variable for this datapoint
     /// \param[in] t_singleVariableChange Did only one variable change for this data?
     ///
-    /// \returns The error corrected values, or the input values if error correction was possible
-    FuelUses ErrorEstimation::add(const SqlFile &t_sql, const std::string &t_sourceName, const std::string &t_variable, 
-        const double t_value, const bool t_singleVariableChange)
+    /// \returns The error corrected values, or the input values if error correction was not possible
+    FuelUses ErrorEstimation::add(const SqlFile &t_sql, const std::string &t_sourceName, const std::vector<double> &t_variables)
     {
-      FuelUses origUses = getUses(t_sql);
+      FuelUses origUses = getUses(t_sourceName, t_sql);
 
-      m_data[t_variable][t_value][t_sourceName] = origUses;
+      std::map<openstudio::FuelType, double> data = origUses.data();
 
-      FuelUses error = getError(t_sourceName, t_variable, t_value);
+      for (std::map<openstudio::FuelType, double>::const_iterator itr = data.begin();
+           itr != data.end();
+           ++itr)
+      {
+        m_data.insert(std::make_pair(std::make_pair(t_sourceName, itr->first), LinearApproximation(m_numVariables)))
+          .first->second.addVals(t_variables, itr->second);
+      }
+      
+
+      FuelUses error = getError(t_sourceName, t_variables);
+
+      double avgerror = error.absoluteAverage();
+      double avgorig = origUses.average();
+
+      double newConfidence = avgorig>0?std::min(1.0, std::max(1.0  - (avgerror / avgorig), 0.0)):origUses.confidence();
+
+
+      // new confidence reflect how much error is being applied. 1 means no error, 0 means 100% error (that's bad);
+      // now we need to scale that to take into account the confidence level of the error we are applying.
+      newConfidence *= error.confidence();
+
+      // we're going to apply this confidence back into the list of confidences
+      if (newConfidence != 0)
+      {
+        // don't let it sink to 0, that really hurts our averages
+        LOG(Debug, "Updating source confidence " << t_sourceName << " from: " << m_confidences[t_sourceName] << " to " << newConfidence);
+        LOG(Trace, "Updating source confidence " << t_sourceName << " avgorig " << avgorig << " avgerror " << avgerror << " origUses.confidence " << origUses.confidence());
+        m_confidences[t_sourceName] = newConfidence;
+      }
 
       origUses += error;
+
+      // Now that the error has been applied, we're going to average the confidence we've calculated with the 
+      // confidence from the error
+      origUses.setConfidence((newConfidence + error.confidence()) / 2);
+
       return origUses;
     }
 
-    FuelUses ErrorEstimation::getError(const std::string &t_sourceName, const std::string &/*t_variable*/, const double /*t_value*/) const
+    std::set<std::pair<double, std::string> > ErrorEstimation::getConfidences() const 
     {
-      // The baseline is the good value, no error
-      if (t_sourceName == m_baselineSourceName) return FuelUses();
+      std::set<std::pair<double, std::string> > retval;
 
-      FuelUses error;
-      int numfound = 0;
-
-      // For now, let's just average the error across all variables
-      for (std::map<std::string, std::map<double, std::map<std::string, FuelUses> > >::const_iterator itr = m_data.begin();
-           itr != m_data.end();
+      for (std::map<std::string, double>::const_iterator itr = m_confidences.begin();
+           itr != m_confidences.end();
            ++itr)
       {
-        for (std::map<double, std::map<std::string, FuelUses> >::const_iterator itr2 = itr->second.begin();
-             itr2 != itr->second.end();
-             ++itr2)
+        retval.insert(std::make_pair(itr->second, itr->first));
+      }
+
+      return retval;
+    }
+
+
+    FuelUses ErrorEstimation::getError(const std::string &t_sourceName, const std::vector<double> &t_variables) const
+    {
+      if (m_confidences.empty())
+      {
+        throw std::runtime_error("no registered confidence levels");
+      }
+
+      std::set<std::pair<double, std::string> > confidences = getConfidences();
+
+      std::set<std::pair<double, std::string> >::const_reverse_iterator mostConfident = confidences.rbegin();
+      
+      
+      // The baseline is the good value, no error
+      if (mostConfident != confidences.rend() && t_sourceName == mostConfident->second) return FuelUses(mostConfident->first);
+
+      std::set<int> allFuelUses = openstudio::FuelType::getValues();
+
+
+      FuelUses retval(0);
+
+      double sumConfidence = 0;
+      int numFound = 0;
+
+      for (std::set<int>::const_iterator itr = allFuelUses.begin();
+           itr != allFuelUses.end();
+           ++itr)
+      {
+
+        std::map<std::pair<std::string, openstudio::FuelType>, LinearApproximation>::const_iterator thisOne = 
+          m_data.find(std::make_pair(t_sourceName, openstudio::FuelType(*itr)));
+
+        double error = 0;
+        double confidence = 0;
+        bool somethingFound = false;
+
+        for (std::set<std::pair<double, std::string> >::const_reverse_iterator confitr = confidences.rbegin();
+             confitr != confidences.rend();
+             ++confitr)
         {
-          std::map<std::string, FuelUses>::const_iterator baseline = itr2->second.find(m_baselineSourceName);
-          std::map<std::string, FuelUses>::const_iterator thisone = itr2->second.find(t_sourceName);
+          std::map<std::pair<std::string, openstudio::FuelType>, LinearApproximation>::const_iterator baseline = 
+            m_data.find(std::make_pair(confitr->second, openstudio::FuelType(*itr)));
 
-          if (baseline != itr2->second.end() 
-              && thisone != itr2->second.end())
+          confidence = confitr->first;
+
+          if (baseline != m_data.end() && thisOne != m_data.end())
           {
-            error += baseline->second - thisone->second;
-            ++numfound;
-          }
+            somethingFound = true;
 
+            try {
+              double baselineval = baseline->second.approximate(t_variables);
+              double thisoneval = thisOne->second.approximate(t_variables); 
+              error = baselineval - thisoneval;
+              break; // we found a good one
+            } catch (const std::exception &) {
+              // not enough data to run approximation
+              error = baseline->second.average() - thisOne->second.average();
+            }
+          }
+        }
+
+        if (somethingFound)
+        {
+          LOG(Trace, "Adding error for: " << openstudio::FuelType(*itr).valueName() << " of " << error);
+          retval += FuelUse(openstudio::FuelType(*itr), error, *openstudio::createUnit("J"));
+          ++numFound;
+          sumConfidence += confidence;
         }
       }
 
-      return error / numfound;
+      if (numFound > 0)
+      {
+        retval.setConfidence(sumConfidence / numFound); // reset the confidence level to that of average of the inputs
+      } else {
+        retval.setConfidence(0);
+      }
+
+      return retval;
     }
 
     /// Returns an estimated FuelUsage for the given variable at the given value
     /// 
-    /// \param[in] t_variable The variable to 
-    FuelUses ErrorEstimation::estimate(const std::string &t_variable, const double t_value) const
+    FuelUses ErrorEstimation::approximate(const std::vector<double> &t_values) const
     {
-      assert("Not yet Implemented");
-      throw std::runtime_error("ErrorEstimation::estimate is not yet implemented");
+      std::set<int> allFuelUses = openstudio::FuelType::getValues();
+
+      FuelUses retval(0);
+      std::set<std::pair<double, std::string> > confidences = getConfidences();
+
+      double confidenceSum = 0;
+      int numApproximations = 0;
+
+
+      for (std::set<int>::const_iterator itr = allFuelUses.begin();
+           itr != allFuelUses.end();
+           ++itr)
+      {
+        std::map<std::pair<double, double>, FuelUse> approximations;
+
+        for (std::set<std::pair<double, std::string> >::const_reverse_iterator confitr = confidences.rbegin();
+            confitr != confidences.rend();
+            ++confitr)
+        {
+          std::map<std::pair<std::string, openstudio::FuelType>, LinearApproximation>::const_iterator baseline = 
+            m_data.find(std::make_pair(confitr->second, openstudio::FuelType(*itr)));
+
+
+          if (baseline != m_data.end())
+          {
+            try {
+              double value = baseline->second.approximate(t_values);
+              FuelUse use(openstudio::FuelType(*itr), value, *openstudio::createUnit("J"));
+              // If this is a known value, use the confidence straight up. If it's an approximation
+              // scale it by the distances.
+              try {
+                std::pair<double, double> distance = baseline->second.nearestFurthestNeighborDistances(t_values);
+                LOG(Trace, "confidence Confitr->first " << confitr->first << " distance.first " << distance.first << " distance.second " << distance.second);
+                if (distance.first == 0)
+                {
+                  // we have an exact match, no scaling necessary
+                  approximations.insert(std::make_pair(std::make_pair(confitr->first, confitr->first), use));
+                } else {
+                  // it's illogical, there has to be a point that's greater than 0 from where we are
+                  assert(distance.second != 0);
+
+                  // scale the confidence based on distances to neighbors
+                  approximations.insert(std::make_pair(std::make_pair(confitr->first*(1-(distance.first/(distance.second + distance.first))), 
+                          confitr->first), use));
+                }
+              } catch (const std::exception &) {
+                // we don't have enough info to know, so let's say 50% of confidence for this estimation
+                LOG(Trace, "confidence Confitr->first " << confitr->first);
+                approximations.insert(std::make_pair(std::make_pair(confitr->first * 0.5, confitr->first), use));
+              }
+            } catch (const std::exception &) {
+              // approximation failed, on to next
+            }
+          }
+
+        }
+
+        LOG(Trace, "confidence " << approximations.size() << " approximations generated for " << openstudio::FuelType(*itr).valueName());
+
+        if (approximations.size() > 0)
+        {
+          std::map<std::pair<double, double>, FuelUse>::const_reverse_iterator itr = approximations.rbegin();
+
+          LOG(Trace, "confidence choosing item with confidence of " << itr->first.first << " which was generated from item with confidence of " << itr->first.second);
+          retval += itr->second;
+          ++numApproximations;
+          confidenceSum += itr->first.first;
+        }
+      }
+
+      // and set the confidence finally to the average of the confidences that made this up
+      if (numApproximations == 0)
+      {
+        retval.setConfidence(0);
+      } else {
+        retval.setConfidence(confidenceSum / numApproximations);
+      }
+
+      return retval;
     }
 
-    FuelUses ErrorEstimation::getUses(const SqlFile &t_sql)
+    double ErrorEstimation::getConfidence(const std::string &t_sourceName) const
     {
+      std::map<std::string, double>::const_iterator itr = m_confidences.find(t_sourceName);
+
+      if (itr == m_confidences.end())
+      {
+        throw std::runtime_error("Unknown source name, no registered confidence level");
+      }
+
+      return itr->second;
+    }
+
+    FuelUses ErrorEstimation::getUses(const std::string &t_sourceName, const SqlFile &t_sql) const
+    {
+      std::map<std::string, double>::const_iterator itr = m_confidences.find(t_sourceName);
+
+      if (itr == m_confidences.end())
+      {
+        throw std::runtime_error("Unknown source name, no registered confidence level");
+      }
+
       std::vector<SummaryData> sd = t_sql.getSummaryData();
 
-      FuelUses retval;
+      FuelUses retval(itr->second);
 
       for (std::vector<SummaryData>::const_iterator itr = sd.begin();
           itr != sd.end();
@@ -225,3 +464,4 @@ namespace openstudio {
     }
   }
 }
+

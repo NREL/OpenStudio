@@ -194,20 +194,18 @@ ENDIF()
 IF(BUILD_NODE)
   # OSX can work with a static ruby library
   ExternalProject_Add(Node
-    URL http://nodejs.org/dist/v0.10.6/node-v0.10.6.tar.gz
+    URL http://nodejs.org/dist/v0.10.15/node-v0.10.15.tar.gz
     CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && sh -c "./configure --prefix=${CMAKE_BINARY_DIR}/Node-prefix/src/Node-install"
     BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && $(MAKE)
     INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && $(MAKE) install && $(MAKE) install-includes && ../Node-install/bin/npm install jasmine-node node-gyp -g && ../Node-install/bin/node ../Node-install/bin/node-gyp install
     )
   SET(NODE_BIN_DIR ${CMAKE_BINARY_DIR}/Node-prefix/src/Node-install/bin/)
-  SET(NODE_INCLUDE_DIR "$ENV{HOME}/.node-gyp/0.10.6")
+  SET(NODE_INCLUDE_DIR "$ENV{HOME}/.node-gyp/0.10.15")
 ENDIF()
 
 IF(BUILD_V8)
   ExternalProject_Add(V8
-    SVN_REPOSITORY http://v8.googlecode.com/svn/trunk/
-    # revision on 3/16/2013
-    SVN_REVISION -r13960
+    SVN_REPOSITORY http://v8.googlecode.com/svn/branches/3.19
     CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/V8-prefix/src/V8 && $(MAKE) dependencies
     BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/V8-prefix/src/V8 && $(MAKE) x64
     INSTALL_COMMAND ""
