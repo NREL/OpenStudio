@@ -26,7 +26,7 @@
 #include <project/DataPointRecord.hpp>
 #include <project/DataPointRecord_Impl.hpp>
 #include <project/FileReferenceRecord.hpp>
-#include <project/VariableRecord.hpp>
+#include <project/InputVariableRecord.hpp>
 #include <project/MeasureRecord.hpp>
 #include <project/DataPoint_Measure_JoinRecord.hpp>
 #include <project/TagRecord.hpp>
@@ -267,12 +267,20 @@ namespace detail {
     // TODO: Have this work for Problems with ContinuousVariables. Perhaps need eps bound on
     // actual value of continous variables.
 
+    InputVariableRecordVector ivrs = problemRecord().inputVariableRecords();
+    IntVector variableVectorIndices;
+    Q_FOREACH(const InputVariableRecord& ivr, ivrs) {
+      variableVectorIndices.push_back(ivr.variableVectorIndex());
+    }
+    if (variableValues.size() > variableVectorIndices.size()) {
+      return result;
+    }
+
     ProjectDatabase database = projectDatabase();
     IntVector measureRecordIds;
-    for (int variableVectorIndex = 0, n = variableValues.size(); variableVectorIndex < n;
-         ++variableVectorIndex)
+    for (int index = 0, n = variableValues.size(); index < n; ++index)
     {
-      QVariant value = variableValues[variableVectorIndex];
+      QVariant value = variableValues[index];
       if (!value.isNull()) {
         QSqlQuery query(*(database.qSqlDatabase()));
         query.prepare(toQString("SELECT m.id FROM " +
@@ -284,12 +292,16 @@ namespace detail {
             "v.variableVectorIndex=:variableVectorIndex"));
         query.bindValue(":measureVectorIndex",value.toInt());
         query.bindValue(":problemRecordId",m_problemRecordId);
-        query.bindValue(":variableVectorIndex",variableVectorIndex);
+        query.bindValue(":variableVectorIndex",variableVectorIndices[index]);
         assertExec(query);
         if (query.first()) {
           measureRecordIds.push_back(query.value(0).toInt());
         }
         else {
+          LOG(Debug,"Query: " << query.lastQuery().toStdString() << std::endl
+              << value.toInt() << std::endl
+              << m_problemRecordId << std::endl
+              << variableVectorIndices[index]);
           return result;
         }
       }

@@ -118,29 +118,25 @@ TEST_F(AnalysisDriverFixture, DesignOfExperiments_MeshAnalysis) {
   // find the baseline
   testVariableValues.clear();
   testVariableValues.push_back(0);
-  testVariableValues.push_back(QVariant(QVariant::Int)); // only one measure, null works too
   testVariableValues.push_back(0);
-  ASSERT_TRUE(testVariableValues[1].isNull());
+  EXPECT_EQ(2u, problem.variables().size());
   testDataPoints = analysisRecord.getDataPointRecords(testVariableValues);
   ASSERT_EQ(1u, testDataPoints.size());
 
   // find model with improved wall and roof
   testVariableValues.clear();
   testVariableValues.push_back(1);
-  testVariableValues.push_back(0);
   testVariableValues.push_back(1);
   testDataPoints = analysisRecord.getDataPointRecords(testVariableValues);
   ASSERT_EQ(1u, testDataPoints.size());
   DataPoint testDataPoint = testDataPoints[0].dataPoint();
   std::vector<OptionalMeasure> measures = analysis.problem().getMeasures(testVariableValues);
-  ASSERT_EQ(3u,measures.size());
-  ASSERT_TRUE(measures[0] && measures[1] && measures[2]);
+  ASSERT_EQ(2u,measures.size());
+  ASSERT_TRUE(measures[0] && measures[1]);
   EXPECT_TRUE(measures[0]->uuid() == problem.variables()[0].cast<MeasureGroup>().measures(false)[1].uuid());
-  EXPECT_TRUE(measures[1]->uuid() == problem.variables()[1].cast<MeasureGroup>().measures(false)[0].uuid());
-  EXPECT_TRUE(measures[2]->uuid() == problem.variables()[2].cast<MeasureGroup>().measures(false)[1].uuid());
+  EXPECT_TRUE(measures[1]->uuid() == problem.variables()[1].cast<MeasureGroup>().measures(false)[1].uuid());
   EXPECT_TRUE(measures[0]->optionalCast<RubyPerturbation>());
   EXPECT_TRUE(measures[1]->optionalCast<RubyPerturbation>());
-  EXPECT_TRUE(measures[2]->optionalCast<RubyPerturbation>());
 
   // find models with improved wall
   testVariableValues.clear();
@@ -150,7 +146,6 @@ TEST_F(AnalysisDriverFixture, DesignOfExperiments_MeshAnalysis) {
 
   // infeasible
   testVariableValues.clear();
-  testVariableValues.push_back(0);
   testVariableValues.push_back(0);
   testVariableValues.push_back(0);
   testVariableValues.push_back(0);
