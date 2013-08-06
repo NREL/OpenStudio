@@ -47,6 +47,7 @@
     <file>images/dxcoolingcoil_singlespeed.png</file>
     <file>images/dxcoolingcoil_2speed.png</file>
     <file>images/electric_furnace.png</file>
+    <file>images/evap_fluid_cooler.png</file>
     <file>images/fan_constant.png</file>
     <file>images/fan_on_off.png</file>   
     <file>images/fast_forward.png</file>
@@ -214,6 +215,7 @@
     <file>images/mini_icons/electric_equipment.png</file>
     <file>images/mini_icons/electric_equipment_definition.png</file>
     <file>images/mini_icons/electric_furnace_mini.png</file>
+    <file>images/mini_icons/evap_fluid_cooler.png</file>
     <file>images/mini_icons/facility.png</file>
     <file>images/mini_icons/fan_constant.png</file>
     <file>images/mini_icons/fan_on_off_mini.png</file>   

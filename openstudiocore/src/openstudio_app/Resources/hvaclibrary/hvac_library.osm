@@ -1,7 +1,7 @@
 
 OS:Version,
   {953ca1c0-7cef-4da7-a4f6-33deca4b57a1}, !- Handle
-  0.11.6;                                 !- Version Identifier
+  1.0.2;                                  !- Version Identifier
   
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -379,6 +379,32 @@ OS:Curve:Quadratic,
   0,                                      ! Minimum Value of x {BasedOnField A2}
   1;                                      ! Maximum Value of x {BasedOnField A2}
 
+OS:EvaporativeFluidCooler:SingleSpeed,
+  {39cff03a-8e34-4110-920a-2a36414f7291}, !- Handle
+  Evaporative Fluid Cooler SingleSpeed,   !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  autosize,                               !- Design Air Flow Rate {m3/s}
+  autosize,                               !- Fan Power at Design Air Flow Rate {W}
+  0.03,                                   !- Design Spray Water Flow Rate {m3/s}
+  UFactorTimesAreaAndDesignWaterFlowRate, !- Performance Input Method
+  ,                                       !- Outdoor Air Inlet Node Name
+  ,                                       !- Standard Design Capacity {W}
+  autosize,                               !- U-factor Times Area Value at Design Air Flow Rate {W/K}
+  autosize,                               !- Design Water Flow Rate {m3/s}
+  ,                                       !- User Specified Design Capacity {W}
+  ,                                       !- Design Entering Water Temperature {C}
+  ,                                       !- Design Entering Air Temperature {C}
+  ,                                       !- Design Entering Air Wet-bulb Temperature {C}
+  FanCycling,                             !- Capacity Control
+  1,                                      !- Sizing Factor
+  SaturatedExit,                          !- Evaporation Loss Mode
+  ,                                       !- Evaporation Loss Factor {percent/K}
+  0.008,                                  !- Drift Loss Percent {percent}
+  ConcentrationRatio,                     !- Blowdown Calculation Mode
+  3,                                      !- Blowdown Concentration Ratio
+  ;                                       !- Blowdown Makeup Water Usage Schedule Name
+
 OS:EvaporativeCooler:Direct:ResearchSpecial,
   {8d3b17e0-88c9-4d17-9de4-0b9dd0481b36}, ! Handle
   OS:EvaporativeCooler:Direct:ResearchSpecial 1, ! Name
@@ -703,7 +729,7 @@ OS:Boiler:HotWater,
   ,                                       ! Boiler Water Inlet Node Name
   ,                                       ! Boiler Water Outlet Node Name
   99,                                     ! Water Outlet Upper Temperature Limit {C}
-  VariableFlow,                           ! Boiler Flow Mode
+  LeavingSetpointModulated,               ! Boiler Flow Mode
   0,                                      ! Parasitic Electric Load {W}
   1;                                      ! Sizing Factor
 

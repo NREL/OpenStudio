@@ -69,6 +69,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateDistrictHeating.cpp
   ForwardTranslator/ForwardTranslateElectricEquipment.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerDirectResearchSpecial.cpp
+  ForwardTranslator/ForwardTranslateEvaporativeFluidCoolerSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateExteriorLights.cpp
   ForwardTranslator/ForwardTranslateFanConstantVolume.cpp
   ForwardTranslator/ForwardTranslateFanOnOff.cpp
@@ -201,6 +202,7 @@ SET( ${target_name}_src
   ReverseTranslator/ReverseTranslateDesignSpecificationOutdoorAir.cpp
   ReverseTranslator/ReverseTranslateElectricEquipment.cpp
   ReverseTranslator/ReverseTranslateEvaporativeCoolerDirectResearchSpecial.cpp
+  ReverseTranslator/ReverseTranslateEvaporativeFluidCoolerSingleSpeed.cpp
   ReverseTranslator/ReverseTranslateExteriorLights.cpp
   ReverseTranslator/ReverseTranslateFanConstantVolume.cpp
   ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp 
