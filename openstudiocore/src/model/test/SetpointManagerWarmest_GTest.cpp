@@ -18,12 +18,32 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
 #include <model/test/ModelFixture.hpp>
-
 #include <model/SetpointManagerWarmest.hpp>
 #include <model/SetpointManagerWarmest_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/AirLoopHVAC_Impl.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
+
+TEST_F(ModelFixture,SetpointManagerOutdoorAirReset) {
+  Model model;
+
+  SetpointManagerWarmest setpointManagerWarmest(model);
+
+  AirLoopHVAC airLoopHVAC(model);
+
+  Node node = airLoopHVAC.supplyOutletNode();
+
+  ASSERT_TRUE(setpointManagerWarmest.addToNode(node));
+
+  ASSERT_TRUE(node.setpointManagerWarmest());
+
+  ASSERT_EQ(setpointManagerWarmest,node.setpointManagerWarmest().get());
+}
+
+
 
