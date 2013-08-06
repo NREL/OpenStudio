@@ -121,11 +121,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
  
 // OutdoorAirInletNodeName
 
-  temp = modelObject.outletModelObject();
-  if(temp)
-  {
-    idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::OutdoorAirInletNodeName,temp->name().get());
-  }
+  idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::OutdoorAirInletNodeName,"");
 
 
 // StandardDesignCapacity
