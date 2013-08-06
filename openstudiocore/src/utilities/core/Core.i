@@ -41,7 +41,7 @@
 %include <utilities/core/ZipFile.i>
 
 // DLM@20110107: this is causing issues for C#
-#ifdef SWIGRUBY
+#if defined(SWIGRUBY) || defined(SWIGJAVASCRIPT)
 %include <utilities/core/System.i>
 #endif
 

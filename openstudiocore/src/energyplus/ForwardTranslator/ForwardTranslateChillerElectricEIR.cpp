@@ -262,7 +262,7 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
 //  ((Name)(Name))
 //  ((CoolingCapacityFunctionofTemperatureCurveName)(Cooling Capacity Function of Temperature Curve Name))
 //  ((ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName)(Electric Input to Cooling Output Ratio Function of Temperature Curve Name))
-//  ((ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName)(Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name))
+//  ((ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName)(Electric Input to Cooling Output Ratio Function of Fan Coil Part Load Ratio Curve Name))
 //  ((CondenserInletNodeName)(Condenser Inlet Node Name))
 //  ((CondenserOutletNodeName)(Condenser Outlet Node Name))
 //  ((DesignHeatRecoveryWaterFlowRate)(Design Heat Recovery Water Flow Rate))

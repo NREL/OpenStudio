@@ -196,6 +196,7 @@ namespace sdd {
 
     // do materials before constructions 
     std::vector<model::Material> materials = model.getModelObjects<model::Material>();
+    std::sort(materials.begin(), materials.end(), WorkspaceObjectNameLess());
 
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Materials"));
@@ -219,6 +220,7 @@ namespace sdd {
     // do constructions before geometry
 
     std::vector<model::ConstructionBase> constructions = model.getModelObjects<model::ConstructionBase>();
+    std::sort(constructions.begin(), constructions.end(), WorkspaceObjectNameLess());
 
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Constructions"));
