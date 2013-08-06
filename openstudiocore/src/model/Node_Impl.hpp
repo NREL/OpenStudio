@@ -32,6 +32,7 @@ class SetpointManagerMixedAir;
 class SetpointManagerScheduled;
 class SetpointManagerFollowOutdoorAirTemperature;
 class SetpointManagerOutdoorAirReset;
+class SetpointManagerWarmest;
 
 namespace detail {
 
@@ -91,6 +92,12 @@ namespace detail {
     void removeSetpointManagerOutdoorAirReset();
 
     boost::optional<SetpointManagerOutdoorAirReset> setpointManagerOutdoorAirReset() const;
+
+    void addSetpointManagerWarmest( SetpointManagerWarmest & setPointManager );
+
+    void removeSetpointManagerWarmest();
+
+    boost::optional<SetpointManagerWarmest> setpointManagerWarmest() const;
 
     std::vector<ModelObject> children() const;
 
