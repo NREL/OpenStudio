@@ -2574,13 +2574,13 @@ namespace detail {
     }
 
     // remove colinear points
-    //result = removeColinear(result);
+    result = removeColinear(result);
 
     // reorder the points 
-    //result = reorderULC(result);
+    result = reorderULC(result);
     
     // remove additional colinear points that occur after reordering
-    //result = removeColinear(result);
+    result = removeColinear(result);
 
     return result;
   }

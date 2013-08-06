@@ -107,14 +107,13 @@ OptionalModelObject ReverseTranslator::translateBuildingSurfaceDetailed( const W
         Space adjacentSpace = modelObject->cast<Space>();
 
         if (surface.space()){
-          Transformation transformation = adjacentSpace.transformation().inverse()*surface.space()->transformation();
+          // need to translate all sub surfaces here so they will be in adjacent space
+          BOOST_FOREACH(const WorkspaceObject& workspaceSubSurface, workspaceObject.getSources(IddObjectType::FenestrationSurface_Detailed)){
+            translateAndMapWorkspaceObject(workspaceSubSurface);
+          }
 
-          // duplicate surface in other space
-          Surface adjacentSurface = surface.clone(m_model).cast<Surface>();
-          std::reverse(vertices.begin(), vertices.end());
-          adjacentSurface.setVertices(transformation*vertices);
-          adjacentSurface.setSpace(adjacentSpace);
-          surface.setAdjacentSurface(adjacentSurface);
+          // create adjacent surface in other space
+          surface.createAdjacentSurface(adjacentSpace);
           return surface;
         }
       }
@@ -126,6 +125,7 @@ OptionalModelObject ReverseTranslator::translateBuildingSurfaceDetailed( const W
       if (target->handle() == workspaceObject.handle() ){
         // these objects are the same, set boundary condition to adiabatic
         surface.setOutsideBoundaryCondition("Adiabatic");
+        return surface;
       }else{
         std::map<Handle,ModelObject>::iterator it = m_workspaceToModelMap.find(target->handle());
         if( it !=  m_workspaceToModelMap.end()){
