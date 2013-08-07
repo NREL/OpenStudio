@@ -63,14 +63,14 @@ namespace detail {
   DiscreteVariableRecord_Impl::DiscreteVariableRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : InputVariableRecord_Impl(query, database)
   {
-    Q_ASSERT(query.isValid());
-    Q_ASSERT(query.isActive());
-    Q_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(DiscreteVariableRecord::ColumnsType::discreteVariableRecordType);
-    Q_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_discreteVariableRecordType = DiscreteVariableRecordType(value.toInt());
   }
 
@@ -88,30 +88,30 @@ namespace detail {
   }
 
   void DiscreteVariableRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    Q_ASSERT(query.isValid());
-    Q_ASSERT(query.isActive());
-    Q_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     InputVariableRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(DiscreteVariableRecord::ColumnsType::discreteVariableRecordType);
-    Q_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastDiscreteVariableRecordType = DiscreteVariableRecordType(value.toInt());
   }
 
   bool DiscreteVariableRecord_Impl::compareValues(const QSqlQuery& query) const {
-    Q_ASSERT(query.isValid());
-    Q_ASSERT(query.isActive());
-    Q_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = InputVariableRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(DiscreteVariableRecord::ColumnsType::discreteVariableRecordType);
-    Q_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_discreteVariableRecordType == DiscreteVariableRecordType(value.toInt()));
 
     return result;
@@ -162,7 +162,7 @@ DiscreteVariableRecord DiscreteVariableRecord::factoryFromDiscreteVariable(
                               workflowIndex);
   }
 
-  Q_ASSERT(false);
+  OS_ASSERT(false);
   return DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl>());
 }
 
@@ -179,7 +179,7 @@ DiscreteVariableRecord DiscreteVariableRecord::factoryFromDiscreteVariable(
                               functionCoefficient);
   }
 
-  Q_ASSERT(false);
+  OS_ASSERT(false);
   return DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl>());
 }
 
@@ -238,10 +238,11 @@ DiscreteVariableRecord::DiscreteVariableRecord(boost::shared_ptr<detail::Discret
                                                const boost::optional<analysis::DiscreteVariable>& discreteVariable)
   : InputVariableRecord(impl, database, discreteVariable ? discreteVariable->cast<analysis::InputVariable>() : analysis::OptionalInputVariable())
 {
-  Q_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
 }
 /// @endcond
 
 } // project
 } // openstudio
+
 

@@ -29,6 +29,7 @@
 #include <analysis/DiscreteVariable.hpp>
 #include <analysis/DiscreteVariable_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Optional.hpp>
 #include <utilities/core/Containers.hpp>
 
@@ -83,10 +84,10 @@ namespace detail {
     int result(0);
 
     // to make sure problem type check has already occured. this is stated usage in header.
-    BOOST_ASSERT(analysis.algorithm().get() == getPublicObject<DesignOfExperiments>());
+    OS_ASSERT(analysis.algorithm().get() == getPublicObject<DesignOfExperiments>());
     // nothing else is supported yet
     DesignOfExperimentsOptions options = designOfExperimentsOptions();
-    BOOST_ASSERT(options.designType() == DesignOfExperimentsType::FullFactorial);
+    OS_ASSERT(options.designType() == DesignOfExperimentsType::FullFactorial);
 
     if (isComplete()) {
       LOG(Info,"Algorithm is already marked as complete. Returning without creating new points.");

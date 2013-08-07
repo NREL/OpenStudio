@@ -27,6 +27,7 @@
 #include "MeasureManager.hpp"
 
 #include <utilities/bcl/LocalBCL.hpp>
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Compare.hpp>
 
 #include <OpenStudio.hxx>
@@ -86,35 +87,35 @@ LocalLibraryController::LocalLibraryController(BaseApp *t_app)
 
   bool bingo = connect(localLibraryView->bclMeasuresButton,SIGNAL(toggled(bool)),this,SLOT(showBCLMeasures(bool)));
 
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   bingo = connect(localLibraryView->myMeasuresButton,SIGNAL(toggled(bool)),this,SLOT(showMyMeasures(bool)));
 
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   bingo = connect(localLibraryView->addMeasureButton,SIGNAL(clicked()), this,SLOT(addMeasure()));
 
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   bingo = connect(localLibraryView->duplicateMeasureButton,SIGNAL(clicked()),this,SLOT(duplicateSelectedMeasure()));
 
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   bingo = connect(localLibraryView->myMeasuresFolderButton,SIGNAL(clicked()),this,SLOT(showMyMeasuresFolder()));
 
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   bingo = connect(localLibraryView->updateMyMeasuresButton,SIGNAL(clicked()), this,SLOT(updateMyMeasures()));
 
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   bingo = connect(localLibraryView->updateBCLMeasuresButton,SIGNAL(clicked()), this,SLOT(updateBCLMeasures()));
 
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   bingo = connect(localLibraryView->addBCLMeasureButton,SIGNAL(clicked()), this,SLOT(openBclDlg()));
 
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 }
 
 void LocalLibraryController::addMeasure()
@@ -397,7 +398,7 @@ QWidget * LibraryGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     header->label->setText(item->name());
 
     bool bingo = connect(item->librarySubGroupListController().data(),SIGNAL(libraryItemCountChanged(int)),header,SLOT(setCount(int)));
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     groupCollapsibleView->setHeader(header);
 
@@ -478,7 +479,7 @@ QWidget * LibrarySubGroupItemDelegate::view(QSharedPointer<OSListItem> dataSourc
     header->label->setText(item->name());
 
     bool bingo = connect(item->libraryListController().data(),SIGNAL(countChanged(int)),header,SLOT(setCount(int)));
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     subGroupCollapsibleView->setHeader(header);
 
@@ -606,7 +607,7 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     
     bool bingo = connect(widget,SIGNAL(dragRequested(const OSDragPixmapData &)),libraryItem.data(),SLOT(dragItem(const OSDragPixmapData &)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     // Selection
 
@@ -614,15 +615,15 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     bingo = connect(widget,SIGNAL(clicked()),libraryItem.data(),SLOT(toggleSelected()));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     bingo = connect(libraryItem.data(),SIGNAL(selectedChanged(bool)),widget,SLOT(setHasEmphasis(bool)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     bingo = connect(libraryItem.data(),SIGNAL(selectedChanged(bool)),this,SLOT(selectedChanged()));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     return widget;
   }

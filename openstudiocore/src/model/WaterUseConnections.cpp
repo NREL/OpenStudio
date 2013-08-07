@@ -43,7 +43,7 @@ namespace detail {
                                                      bool keepHandle)
     : StraightComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == WaterUseConnections::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == WaterUseConnections::iddObjectType());
   }
 
   WaterUseConnections_Impl::WaterUseConnections_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -51,7 +51,7 @@ namespace detail {
                                                      bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == WaterUseConnections::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == WaterUseConnections::iddObjectType());
   }
 
   WaterUseConnections_Impl::WaterUseConnections_Impl(const WaterUseConnections_Impl& other,
@@ -106,7 +106,7 @@ namespace detail {
 
   void WaterUseConnections_Impl::resetHotWaterSupplyTemperatureSchedule() {
     bool result = setString(OS_WaterUse_ConnectionsFields::HotWaterSupplyTemperatureScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool WaterUseConnections_Impl::setColdWaterSupplyTemperatureSchedule(Schedule & schedule) {
@@ -119,7 +119,7 @@ namespace detail {
 
   void WaterUseConnections_Impl::resetColdWaterSupplyTemperatureSchedule() {
     bool result = setString(OS_WaterUse_ConnectionsFields::ColdWaterSupplyTemperatureScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<ModelObject> WaterUseConnections_Impl::hotWaterSupplyTemperatureScheduleAsModelObject() const {
@@ -251,7 +251,7 @@ namespace detail {
 WaterUseConnections::WaterUseConnections(const Model& model)
   : StraightComponent(WaterUseConnections::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::WaterUseConnections_Impl>());
+  OS_ASSERT(getImpl<detail::WaterUseConnections_Impl>());
 }
 
 IddObjectType WaterUseConnections::iddObjectType() {

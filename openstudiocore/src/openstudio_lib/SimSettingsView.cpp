@@ -69,6 +69,8 @@
 #include <utilities/time/Date.hpp>
 #include <utilities/time/Time.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <boost/foreach.hpp>
 
 #include <QBoxLayout>
@@ -192,7 +194,7 @@ SimSettingsView::SimSettingsView(bool isIP,
 {
   bool isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                              this,SLOT(toggleUnits(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // when the year settings object changes need to update the year in all child widgets
   model::YearDescription yearDescription = m_model.getUniqueModelObject<model::YearDescription>();
@@ -336,7 +338,7 @@ QWidget * SimSettingsView::createRunPeriodWidget()
   //
   //isConnected = connect(m_runPeriodGroup, SIGNAL(buttonClicked(int)),
   //  this, SLOT(on_runPeriodGroupClicked(int)));
-  //Q_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //
   //QRadioButton * radioButton = NULL;
   //
@@ -380,7 +382,7 @@ QWidget * SimSettingsView::createRunPeriodWidget()
 
   bool isConnected = connect(m_startDateEdit,SIGNAL(dateChanged(const QDate &)),
     this,SLOT(on_startDateChanged(const QDate &)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_endDateEdit = new QDateEdit();
   m_endDateEdit->setDisplayFormat("MMMM d");
@@ -390,7 +392,7 @@ QWidget * SimSettingsView::createRunPeriodWidget()
 
   isConnected = connect(m_endDateEdit,SIGNAL(dateChanged(const QDate &)),
     this,SLOT(on_endDateChanged(const QDate &)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QWidget * widget = new QWidget();
   widget->setLayout(mainVLayout);
@@ -422,35 +424,35 @@ QWidget * SimSettingsView::createRunControlWidget()
 
   isConnected = connect(m_runSimWeatherFiles, SIGNAL(stateChanged(int)),
     this, SLOT(on_runSimWeatherFiles(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_runSimDesignDays = new QCheckBox("Run Simulation for Design Days");
   layout->addWidget(m_runSimDesignDays);
 
   isConnected = connect(m_runSimDesignDays, SIGNAL(stateChanged(int)),
     this, SLOT(on_runSimDesignDays(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_performZoneSizing = new QCheckBox("Perform Zone Sizing");
   layout->addWidget(m_performZoneSizing);
 
   isConnected = connect(m_performZoneSizing, SIGNAL(stateChanged(int)),
     this, SLOT(on_performZoneSizing(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_performSystemSizing = new QCheckBox("Perform System Sizing");
   layout->addWidget(m_performSystemSizing);
 
   isConnected = connect(m_performSystemSizing, SIGNAL(stateChanged(int)),
     this, SLOT(on_performSystemSizing(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_performPlantSizing = new QCheckBox("Perform Plant Sizing");
   layout->addWidget(m_performPlantSizing);
 
   isConnected = connect(m_performPlantSizing, SIGNAL(stateChanged(int)),
     this, SLOT(on_performPlantSizing(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QWidget * widget = new QWidget();
   widget->setLayout(mainLayout);
@@ -861,7 +863,7 @@ QWidget * SimSettingsView::createRadianceParametersWidget()
 
   isConnected = connect(m_radianceGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(on_radianceGroupClicked(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   int buttonCount = 0;
 
@@ -1163,7 +1165,7 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
   quantityEdit = new OSQuantityEdit(m_isIP,this);
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              quantityEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   gridLayout->addWidget(quantityEdit,row,column);
 }
@@ -1183,7 +1185,7 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
   quantityEdit = new OSQuantityEdit(m_isIP,this);
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              quantityEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   gridLayout->addWidget(quantityEdit,row,column);
 }
@@ -1620,7 +1622,7 @@ void SimSettingsView::on_runPeriodGroupClicked(int idx)
   }
   else{
     // Should never get here
-    Q_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -1639,7 +1641,7 @@ void SimSettingsView::on_radianceGroupClicked(int idx)
   }
   else{
     // Should never get here
-    Q_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 

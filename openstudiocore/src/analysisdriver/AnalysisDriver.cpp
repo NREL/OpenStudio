@@ -71,11 +71,11 @@ namespace detail {
     bool connected = connect(SIGNAL(analysisComplete(const openstudio::UUID&)),
                              this,
                              SLOT(catchAnalysisCompleteOrStopped(const openstudio::UUID&)));
-    BOOST_ASSERT(connected);
+    OS_ASSERT(connected);
     connected = connect(SIGNAL(analysisStopped(const openstudio::UUID&)),
                         this,
                         SLOT(catchAnalysisCompleteOrStopped(const openstudio::UUID&)));
-    BOOST_ASSERT(connected);
+    OS_ASSERT(connected);
   }
 
   AnalysisDriver_Impl::~AnalysisDriver_Impl() {}
@@ -360,12 +360,12 @@ namespace detail {
           duplicate = currentAnalysis.getImpl()->removeCompletedDakotaDataPoint(job->uuid());
         }
       }
-      BOOST_ASSERT(dataPoint);
+      OS_ASSERT(dataPoint);
       LOG(Info,"Processing " << job->treeStatus().valueDescription() << " job tree for "
           << toString(dataPoint->directory().stem()) << " from Analysis '" << analysis.name()
           << "'. Parent job uuid is '" << toString(job->uuid()) << "'.");
       analysis.problem().updateDataPoint(*dataPoint,*job);
-      BOOST_ASSERT(dataPoint->isComplete());
+      OS_ASSERT(dataPoint->isComplete());
 
       // create new data points as appropriate
       int n(0);
@@ -391,9 +391,9 @@ namespace detail {
       AnalysisDriver copyOfThis = getAnalysisDriver();
       saveAnalysis(analysis,copyOfThis);
       OptionalDataPointRecord odpr = m_database.getObjectRecordByHandle<DataPointRecord>(dataPoint->uuid());
-      BOOST_ASSERT(odpr);
-      BOOST_ASSERT(odpr->isComplete());
-      BOOST_ASSERT(odpr->uuidLast() == dataPoint->versionUUID());
+      OS_ASSERT(odpr);
+      OS_ASSERT(odpr->isComplete());
+      OS_ASSERT(odpr->uuidLast() == dataPoint->versionUUID());
       odpr.reset();
 
       // write out results file(s)
@@ -433,32 +433,32 @@ namespace detail {
     if ((currentAnalysis != m_currentAnalyses.end()) &&
         (m_stopping.empty() || (!isAnalysisBeingStopped(currentAnalysis->analysis().uuid()))))
     {
-      BOOST_ASSERT(currentAnalysis != m_currentAnalyses.end());
+      OS_ASSERT(currentAnalysis != m_currentAnalyses.end());
 
       // unhook signals and slots (needed for reuse of AnalysisDriver)
       runmanager::Job dakotaJob = database().runManager().getJob(uuid);
       bool test = dakotaJob.disconnect(SIGNAL(outputFileChanged(const openstudio::UUID &, const openstudio::runmanager::FileInfo&)),
                                        this,
                                        SLOT(dakotaJobOutputFileChanged(const openstudio::UUID&, const openstudio::runmanager::FileInfo&)));
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       test = dakotaJob.disconnect(SIGNAL(finished(const openstudio::UUID &, const openstudio::runmanager::JobErrors&)),
                                   this,
                                   SLOT(dakotaJobComplete(const openstudio::UUID&,const openstudio::runmanager::JobErrors&)));
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
 
       // register completion with analysis
       Analysis analysis = currentAnalysis->analysis();
       analysis.updateDakotaAlgorithm(dakotaJob);
-      BOOST_ASSERT(analysis.algorithm());
-      BOOST_ASSERT(analysis.algorithm()->isComplete());
+      OS_ASSERT(analysis.algorithm());
+      OS_ASSERT(analysis.algorithm()->isComplete());
 
       // save analysis to the database
       {
         AnalysisDriver copyOfThis = getAnalysisDriver();
         AnalysisRecord analysisRecord = saveAnalysis(analysis,copyOfThis);
         OptionalAlgorithmRecord algorithmRecord = analysisRecord.algorithmRecord();
-        BOOST_ASSERT(algorithmRecord);
-        BOOST_ASSERT(algorithmRecord->isComplete());
+        OS_ASSERT(algorithmRecord);
+        OS_ASSERT(algorithmRecord->isComplete());
       }
 
       // shut down the analysis if appropriate
@@ -623,7 +623,7 @@ namespace detail {
 
         bool test = job.connect(SIGNAL(treeChanged(const openstudio::UUID &)),this,
                                 SLOT(jobTreeStateChanged(const openstudio::UUID &)));
-        BOOST_ASSERT(test);
+        OS_ASSERT(test);
 
         database().runManager().enqueue(job,force);
         if ((queuePausingBehavior == QueuePausingBehavior::PauseForFirstN) &&
@@ -659,7 +659,7 @@ namespace detail {
       database().runManager().setConfigOptions(rmConfig);
       numLocalJobs = database().runManager().getConfigOptions().getMaxLocalJobs();
     }
-    BOOST_ASSERT(numLocalJobs > 1);
+    OS_ASSERT(numLocalJobs > 1);
 
     // WRITE dakota.in
     openstudio::path inFilePath = currentAnalysis.runOptions().workingDirectory() / toPath("dakota.in");
@@ -752,11 +752,11 @@ namespace detail {
     bool test = dakotaJob.connect(SIGNAL(outputFileChanged(const openstudio::UUID &, const openstudio::runmanager::FileInfo&)),
                                   this,
                                   SLOT(dakotaJobOutputFileChanged(const openstudio::UUID&, const openstudio::runmanager::FileInfo&)));
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     test = dakotaJob.connect(SIGNAL(finished(const openstudio::UUID &, const openstudio::runmanager::JobErrors&)),
                              this,
                              SLOT(dakotaJobComplete(const openstudio::UUID&,const openstudio::runmanager::JobErrors&)));
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     // finally, queue
     database().runManager().enqueue(dakotaJob,true);
@@ -783,7 +783,7 @@ namespace detail {
       return;
     }
 
-    BOOST_ASSERT(database().runManager().getConfigOptions().getMaxLocalJobs() > 1);
+    OS_ASSERT(database().runManager().getConfigOptions().getMaxLocalJobs() > 1);
 
     Analysis analysis = currentAnalysis.analysis();
     Problem problem = analysis.problem();
@@ -845,7 +845,7 @@ namespace detail {
 
       bool test = job.connect(SIGNAL(treeChanged(const openstudio::UUID &)),this,
                               SLOT(jobTreeStateChanged(const openstudio::UUID &)));
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
 
       database().runManager().enqueue(job,runOptions.force());
     }
@@ -1076,7 +1076,7 @@ bool removeDataPoint(analysis::Analysis& analysis,
     }
   }
   bool ok = analysis.removeDataPoint(*dp);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   return true;
 }
 

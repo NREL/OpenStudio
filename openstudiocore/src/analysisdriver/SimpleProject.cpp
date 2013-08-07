@@ -288,10 +288,10 @@ runmanager::RunManager SimpleProject::runManager() const {
 project::AnalysisRecord SimpleProject::analysisRecord() const {
   ProjectDatabase database = projectDatabase();
   AnalysisRecordVector analysisRecords = AnalysisRecord::getAnalysisRecords(database);
-  BOOST_ASSERT(analysisRecords.size() == 1u);
+  OS_ASSERT(analysisRecords.size() == 1u);
   AnalysisRecord result = analysisRecords[0];
   if (analysisIsLoaded()) {
-    BOOST_ASSERT(result.handle() == analysis().uuid());
+    OS_ASSERT(result.handle() == analysis().uuid());
   }
   return result;
 }
@@ -358,7 +358,7 @@ std::vector<BCLMeasure> SimpleProject::measures() const {
   }
   BOOST_FOREACH(BCLMeasure& gone,toRemove) {
     std::map<UUID,BCLMeasure>::iterator it1 = m_measures.find(gone.uuid());
-    BOOST_ASSERT(it1 != m_measures.end());
+    OS_ASSERT(it1 != m_measures.end());
     m_measures.erase(it1);
     std::map<UUID,std::vector<ruleset::OSArgument> >::iterator it2 = m_measureArguments.find(gone.uuid());
     if (it2 != m_measureArguments.end()) {
@@ -396,7 +396,7 @@ std::vector<BCLMeasure> SimpleProject::measures() const {
         }
         std::pair<std::map<UUID,BCLMeasure>::const_iterator,bool> insertResult =
             m_measures.insert(std::map<UUID,BCLMeasure>::value_type(newUUID,*newMeasure));
-        BOOST_ASSERT(insertResult.second);
+        OS_ASSERT(insertResult.second);
         result.push_back(*newMeasure);
       }
     }
@@ -438,7 +438,7 @@ boost::optional<BCLMeasure> SimpleProject::getMeasureByUUID(const UUID& uuid) co
           }
           std::pair<std::map<UUID,BCLMeasure>::const_iterator,bool> insertResult =
               m_measures.insert(std::map<UUID,BCLMeasure>::value_type(candidateUUID,*candidate));
-          BOOST_ASSERT(insertResult.second);
+          OS_ASSERT(insertResult.second);
           if (candidateUUID == uuid) {
             result = *candidate;
             return result;
@@ -569,8 +569,8 @@ bool SimpleProject::isPATProject() const {
       if ((!nextWorkItemType) || (step.workItemType() != nextWorkItemType.get())) {
         return false;
       }
-      BOOST_ASSERT(nextWorkItemType);
-      BOOST_ASSERT(step.workItemType() == nextWorkItemType.get());
+      OS_ASSERT(nextWorkItemType);
+      OS_ASSERT(step.workItemType() == nextWorkItemType.get());
       switch (nextWorkItemType->value()) {
         case JobType::ModelToIdf :
           nextWorkItemType = JobType(JobType::ExpandObjects);
@@ -591,7 +591,7 @@ bool SimpleProject::isPATProject() const {
           nextWorkItemType.reset();
           break;
         default :
-          BOOST_ASSERT(false);
+          OS_ASSERT(false);
       }
     }
   }
@@ -703,9 +703,9 @@ std::pair<bool,std::vector<BCLMeasure> > SimpleProject::setSeed(const FileRefere
   openstudio::path newPath = seedDir / toPath(currentSeedLocation.path().filename());
   boost::filesystem::copy_file(currentSeedLocation.path(),newPath);
   FileReference newSeed(newPath);
-  BOOST_ASSERT(newSeed.fileType() == fileType);
+  OS_ASSERT(newSeed.fileType() == fileType);
   ok = analysis().setSeed(newSeed);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
   if (fileType == FileReferenceType::OSM) {
     // do further fix-up
@@ -763,7 +763,7 @@ bool SimpleProject::updateMeasure(const BCLMeasure& measure,
     existing = overwriteMeasure(measure);
     // have arguments, so cache them
     bool ok = registerArguments(*existing,arguments);
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
 
     ok = analysis().problem().updateMeasure(*existing,arguments,false);
     if (!ok) {
@@ -852,7 +852,7 @@ bool SimpleProject::makeSelfContained() {
         continue;
       }
     }
-    BOOST_ASSERT(projectMeasure);
+    OS_ASSERT(projectMeasure);
     if (hasStoredArguments(*projectMeasure)) {
       result = result && analysis().problem().updateMeasure(
             *projectMeasure,
@@ -938,7 +938,7 @@ bool SimpleProject::clearAllResults() {
     database.save();
     if (didStartTransaction) {
       bool ok = database.commitTransaction();
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
     }
   }
   // ok to clean up anything left over because only one analysis per SimpleProject
@@ -1006,7 +1006,7 @@ bool SimpleProject::removeAllDataPoints() {
     database.save();
     if (didStartTransaction) {
       bool ok = database.commitTransaction();
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
     }
   }
   // ok to clean up anything left over because only one analysis per SimpleProject
@@ -1035,18 +1035,18 @@ analysis::DataPoint SimpleProject::baselineDataPoint() const {
       if (!found) {
         // we don't want to add a null, we want to add the one that's there if the null wasn't found,
         // it must be the fixed measure
-        BOOST_ASSERT(measures.size() == 1);
+        OS_ASSERT(measures.size() == 1);
         baselineMeasures.push_back(measures[0]);
       }
     }
   }
 
-  BOOST_ASSERT(int(baselineMeasures.size()) == problem.numVariables());
+  OS_ASSERT(int(baselineMeasures.size()) == problem.numVariables());
 
   boost::optional<DataPoint> result = analysis.getDataPoint(baselineMeasures);
   if (!result){
     result = problem.createDataPoint(baselineMeasures);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     analysis.addDataPoint(*result);
     result->setName("Baseline");
     result->setDisplayName("Baseline");
@@ -1077,7 +1077,7 @@ bool SimpleProject::addAlternateModel(const openstudio::path& altModel) {
   // add file to project
   copyModel(altModel,alternateModelsDir());
   openstudio::path newPath = alternateModelsDir() / toPath(altModel.filename());
-  BOOST_ASSERT(boost::filesystem::exists(newPath));
+  OS_ASSERT(boost::filesystem::exists(newPath));
   upgradeModel(newPath);
 
   // create swap measure for altModel
@@ -1087,7 +1087,7 @@ bool SimpleProject::addAlternateModel(const openstudio::path& altModel) {
         patMeasures.begin(),
         patMeasures.end(),
         boost::bind(uuidEquals<BCLMeasure,openstudio::UUID>,_1,alternativeModelMeasureUUID()));
-  BOOST_ASSERT(it != patMeasures.end());
+  OS_ASSERT(it != patMeasures.end());
   BCLMeasure replaceModelMeasure = insertMeasure(*it);
   RubyMeasure swapModel(replaceModelMeasure,false); // false so not used in algorithms
   swapModel.setName("Alternate Model: " + toString(newPath.filename()));
@@ -1139,9 +1139,9 @@ bool SimpleProject::addAlternateModel(const openstudio::path& altModel) {
     }
   }
   OptionalDataPoint dataPoint = problem.createDataPoint(variableValues);
-  BOOST_ASSERT(dataPoint);
+  OS_ASSERT(dataPoint);
   bool ok = analysis.addDataPoint(dataPoint.get());
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   dataPoint->setName(swapModel.name());
   dataPoint->setDescription("Replace baseline model with '" + toString(newPath) + "'.");
 
@@ -1197,7 +1197,7 @@ bool SimpleProject::insertAlternativeModelVariable() {
                                            optTempPoint.tags(),
                                            optTempPoint.outputAttributes());
         optDataPoint.setName(optTempPoint.name());
-        BOOST_ASSERT(optDataPoint.isDirty());
+        OS_ASSERT(optDataPoint.isDirty());
         dataPoints.push_back(optDataPoint);
       }
       else {
@@ -1221,11 +1221,11 @@ bool SimpleProject::insertAlternativeModelVariable() {
                             tempPoint.tags(),
                             tempPoint.outputAttributes());
         dataPoint.setName(tempPoint.name());
-        BOOST_ASSERT(dataPoint.isDirty());
+        OS_ASSERT(dataPoint.isDirty());
         dataPoints.push_back(dataPoint);
       }
     }
-    BOOST_ASSERT(temp.problem().isDirty());
+    OS_ASSERT(temp.problem().isDirty());
     m_analysis = Analysis(temp.uuid(),
                           temp.versionUUID(),
                           "fake name so can use name to make dirty",
@@ -1240,7 +1240,7 @@ bool SimpleProject::insertAlternativeModelVariable() {
                           false);
     m_analysis->setName(temp.name());
   }
-  BOOST_ASSERT(m_analysis->isDirty());
+  OS_ASSERT(m_analysis->isDirty());
 
   return true;
 }
@@ -1302,7 +1302,7 @@ SimpleProject::SimpleProject(const openstudio::path& projectDir,
     m_analysis->connect(SIGNAL(seedChanged()),this,SLOT(onSeedChanged()));
   }
   m_logFile.setLogLevel(options.logLevel());
-  BOOST_ASSERT(runManager().paused());
+  OS_ASSERT(runManager().paused());
   if (!options.pauseRunManagerQueue()) {
     runManager().setPaused(false);
   }
@@ -1353,8 +1353,8 @@ bool SimpleProject::copyModel(const openstudio::path& modelPath,
     }
   }
 
-  BOOST_ASSERT(boost::filesystem::exists(modelPath));
-  BOOST_ASSERT(boost::filesystem::exists(destinationDirectory));
+  OS_ASSERT(boost::filesystem::exists(modelPath));
+  OS_ASSERT(boost::filesystem::exists(destinationDirectory));
 
   // copy primary file
   openstudio::path newPath = destinationDirectory / toPath(modelPath.filename());
@@ -1466,7 +1466,7 @@ bool SimpleProject::setAnalysisWeatherFile(ProgressBar* progressBar) {
 
   // if one of the above methods successful, compose relative path in model,
   // compose absolute path and set on analysis
-  BOOST_ASSERT(weatherFileLocated);
+  OS_ASSERT(weatherFileLocated);
 
   // copy weather file into standard location if necessary
   if (!(p.parent_path() == destinationFolder)) {
@@ -1479,13 +1479,13 @@ bool SimpleProject::setAnalysisWeatherFile(ProgressBar* progressBar) {
 
   // set weather file path in OSM in uniform way
   bool ok = weatherFile->makeUrlRelative(); // totally relative
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = weatherFile->makeUrlAbsolute(destinationFolder); // totally absolute
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   wfp = weatherFile->path();
-  BOOST_ASSERT(wfp);
+  OS_ASSERT(wfp);
   ok = weatherFile->makeUrlRelative(companionFolder); // relative to companionFolder
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   model->save(modelPath,true);
 
   analysis().setWeatherFile(FileReference(*wfp));
@@ -1558,7 +1558,7 @@ std::vector<BCLMeasure> SimpleProject::importSeedModelMeasures(ProgressBar* prog
             if (!projectMeasure) {
               projectMeasure = insertMeasure(*seedMeasure);
             }
-            BOOST_ASSERT(projectMeasure);
+            OS_ASSERT(projectMeasure);
             // add new variable with that measure, same arguments as seed model
             RubyMeasure newMeasure(*projectMeasure);
             newMeasure.setName(fixedMeasure.name());
@@ -1654,7 +1654,7 @@ BCLMeasure SimpleProject::addMeasure(const BCLMeasure& measure) {
   }
   std::pair<std::map<UUID,BCLMeasure>::const_iterator,bool> insertResult =
       m_measures.insert(std::map<UUID,BCLMeasure>::value_type(result.uuid(),result));
-  BOOST_ASSERT(insertResult.second);
+  OS_ASSERT(insertResult.second);
   std::map<UUID,std::vector<ruleset::OSArgument> >::iterator it2 = m_measureArguments.find(result.uuid());
   if (it2 != m_measureArguments.end()) {
     m_measureArguments.erase(it2);
@@ -1663,9 +1663,9 @@ BCLMeasure SimpleProject::addMeasure(const BCLMeasure& measure) {
 }
 
 void SimpleProject::removeMeasure(const BCLMeasure& measure) {
-  BOOST_ASSERT(completeAndNormalize(measure.directory().parent_path()) == completeAndNormalize(scriptsDir()));
+  OS_ASSERT(completeAndNormalize(measure.directory().parent_path()) == completeAndNormalize(scriptsDir()));
   std::map<UUID,BCLMeasure>::iterator it1 = m_measures.find(measure.uuid());
-  BOOST_ASSERT(it1 != m_measures.end());
+  OS_ASSERT(it1 != m_measures.end());
   try {
     boost::filesystem::remove_all(measure.directory());
   }
@@ -1775,7 +1775,7 @@ boost::optional<SimpleProject> saveAs(const SimpleProject& project,
   if (ok) {
     // opens the new project. this will fix up whatever paths are already there.
     result = SimpleProject::open(newProjectDir);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     // save paths used for fixing up paths stored in database
     openstudio::path originalLocation, newLocation;
     { 
@@ -1817,4 +1817,5 @@ boost::optional<SimpleProject> saveAs(const SimpleProject& project,
 
 } // analysisdriver
 } // openstudio
+
 

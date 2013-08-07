@@ -118,7 +118,7 @@ std::vector<IdfObject> IdfFile::objects() const {
   {
     IdfObjectVector::iterator oit = result.begin();
     for (unsigned i = 0; i < *it; ++i, ++oit);
-    BOOST_ASSERT(oit->iddObject().isVersionObject() ||
+    OS_ASSERT(oit->iddObject().isVersionObject() ||
                  ((oit->iddObject().type() == IddObjectType::Catchall) &&
                   (oit->numFields() > 0u) &&
                   (boost::regex_match(oit->getString(0).get(),iddRegex::versionObjectName()))));
@@ -197,7 +197,7 @@ void IdfFile::insertObjectByIddObjectType(const IdfObject& object) {
       {
         unsigned index = unsigned(it - m_objects.begin());
         m_versionObjectIndices.insert(index);
-        BOOST_ASSERT(m_objects[index] == object);
+        OS_ASSERT(m_objects[index] == object);
       }
       return;
     }
@@ -422,7 +422,7 @@ boost::optional<VersionString> IdfFile::loadVersionOnly(std::istream& is) {
   boost::optional<VersionString> result;
   IddFile catchallIdd = IddFile::catchallIddFile();
   IdfFile idf(catchallIdd);
-  BOOST_ASSERT(!idf.versionObject());
+  OS_ASSERT(!idf.versionObject());
   idf.m_load(is,NULL,true);
   if (OptionalIdfObject oVersionObject = idf.versionObject()) {
     unsigned n = oVersionObject->numFields();
@@ -599,7 +599,7 @@ bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnl
             OptionalIdfObject commentOnlyObject;
             commentOnlyObject = IdfObject::load(commentOnlyIddObject->name() + ";" + comment,
                                                 *commentOnlyIddObject);
-            BOOST_ASSERT(commentOnlyObject);
+            OS_ASSERT(commentOnlyObject);
             
             // put it in the object list
             addObject(*commentOnlyObject);
@@ -646,7 +646,7 @@ bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnl
         iddObject = IddObject();
         objectType = "Catchall";
       }
-      else { BOOST_ASSERT(iddObject->type() != IddObjectType::Catchall); }
+      else { OS_ASSERT(iddObject->type() != IddObjectType::Catchall); }
 
       // put the text for this object in a new string with a newline
       std::string text(comment + idfRegex::newLinestring() + line + idfRegex::newLinestring());

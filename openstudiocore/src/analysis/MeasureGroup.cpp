@@ -127,13 +127,13 @@ namespace detail {
 
   boost::optional<FileReferenceType> MeasureGroup_Impl::inputFileType() const {
     std::pair<bool,OptionalFileReferenceType> intermediate = detail::inputFileType(measures(false));
-    BOOST_ASSERT(intermediate.first);
+    OS_ASSERT(intermediate.first);
     return intermediate.second;
   }
 
   boost::optional<FileReferenceType> MeasureGroup_Impl::outputFileType() const {
     std::pair<bool,OptionalFileReferenceType> intermediate = detail::outputFileType(measures(false));
-    BOOST_ASSERT(intermediate.first);
+    OS_ASSERT(intermediate.first);
     return intermediate.second;
   }
 
@@ -249,7 +249,7 @@ namespace detail {
 
   Measure MeasureGroup_Impl::getMeasure(const DataPoint& dataPoint) const {
     OptionalInt index = dataPoint.problem().getVariableIndexByUUID(uuid());
-    BOOST_ASSERT(index);
+    OS_ASSERT(index);
     return getMeasure(dataPoint.variableValues()[*index].toInt());
   }
 
@@ -373,11 +373,11 @@ namespace detail {
     // check proposals against file types of other measures
     MeasureVector pv = measures(false);
     MeasureVector::iterator it = std::find(pv.begin(),pv.end(),childMeasure);
-    BOOST_ASSERT(it != pv.end());
+    OS_ASSERT(it != pv.end());
     pv.erase(it);
 
     std::pair<bool,OptionalFileReferenceType> inputFileTypeResult = detail::inputFileType(pv);
-    BOOST_ASSERT(inputFileTypeResult.first);
+    OS_ASSERT(inputFileTypeResult.first);
     if (inputFileTypeResult.second && (proposedInputFileType != *(inputFileTypeResult.second))) {
       return false;
     }

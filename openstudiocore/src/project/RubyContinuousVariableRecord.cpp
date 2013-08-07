@@ -62,14 +62,14 @@ namespace detail {
   RubyContinuousVariableRecord_Impl::RubyContinuousVariableRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : ContinuousVariableRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(RubyContinuousVariableRecord::ColumnsType::rubyPerturbationRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_rubyMeasureRecordId = value.toInt();
   }
 
@@ -105,7 +105,7 @@ namespace detail {
     if (query.first()) {
       result = OSArgumentRecord::factoryFromQuery(query, database);
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
 
     return *result;
   }
@@ -114,7 +114,7 @@ namespace detail {
     OptionalRubyMeasureRecord result;
     ProjectDatabase database = projectDatabase();
     result = RubyMeasureRecord::getRubyMeasureRecord(m_rubyMeasureRecordId,database);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return *result;
   }
 
@@ -163,30 +163,30 @@ namespace detail {
   }
 
   void RubyContinuousVariableRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     ContinuousVariableRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(RubyContinuousVariableRecord::ColumnsType::rubyPerturbationRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastRubyMeasureRecordId = value.toInt();
   }
 
   bool RubyContinuousVariableRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = ContinuousVariableRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(RubyContinuousVariableRecord::ColumnsType::rubyPerturbationRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_rubyMeasureRecordId == value.toInt());
 
     return result;
@@ -217,7 +217,7 @@ RubyContinuousVariableRecord::RubyContinuousVariableRecord(
         problemRecord.projectDatabase(),
         rubyContinuousVariable)
 {
-  BOOST_ASSERT(getImpl<detail::RubyContinuousVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::RubyContinuousVariableRecord_Impl>());
 
   constructRelatedRecords(rubyContinuousVariable);
 }
@@ -235,7 +235,7 @@ RubyContinuousVariableRecord::RubyContinuousVariableRecord(
         functionRecord.projectDatabase(),
         rubyContinuousVariable)
 {
-  BOOST_ASSERT(getImpl<detail::RubyContinuousVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::RubyContinuousVariableRecord_Impl>());
 
   constructRelatedRecords(rubyContinuousVariable);
 }
@@ -246,14 +246,14 @@ RubyContinuousVariableRecord::RubyContinuousVariableRecord(const QSqlQuery& quer
         database,
         analysis::OptionalContinuousVariable())
 {
-  BOOST_ASSERT(getImpl<detail::RubyContinuousVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::RubyContinuousVariableRecord_Impl>());
 }
 
 RubyContinuousVariableRecord::RubyContinuousVariableRecord(boost::shared_ptr<detail::RubyContinuousVariableRecord_Impl> impl,
                                                            ProjectDatabase database)
   : ContinuousVariableRecord(impl, database, analysis::OptionalContinuousVariable())
 {
-  BOOST_ASSERT(getImpl<detail::RubyContinuousVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::RubyContinuousVariableRecord_Impl>());
 }
 
 boost::optional<RubyContinuousVariableRecord> RubyContinuousVariableRecord::factoryFromQuery(const QSqlQuery& query, ProjectDatabase& database)
@@ -369,4 +369,5 @@ void RubyContinuousVariableRecord::constructRelatedRecords(const analysis::Varia
 
 } // project
 } // openstudio
+
 

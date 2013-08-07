@@ -35,7 +35,7 @@ namespace detail {
 ComponentCostAdjustments_Impl::ComponentCostAdjustments_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : ParentObject_Impl(idfObject, model, keepHandle)
 {
-  BOOST_ASSERT(idfObject.iddObject().type() == ComponentCostAdjustments::iddObjectType());
+  OS_ASSERT(idfObject.iddObject().type() == ComponentCostAdjustments::iddObjectType());
 }
 
 ComponentCostAdjustments_Impl::ComponentCostAdjustments_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -43,7 +43,7 @@ ComponentCostAdjustments_Impl::ComponentCostAdjustments_Impl(const openstudio::d
                                            bool keepHandle)
   : ParentObject_Impl(other,model,keepHandle)
 {
-  BOOST_ASSERT(other.iddObject().type() == ComponentCostAdjustments::iddObjectType());
+  OS_ASSERT(other.iddObject().type() == ComponentCostAdjustments::iddObjectType());
 }
 
 ComponentCostAdjustments_Impl::ComponentCostAdjustments_Impl(const ComponentCostAdjustments_Impl& other,Model_Impl* model,bool keepHandle)
@@ -163,7 +163,7 @@ const std::vector<std::string>& ComponentCostAdjustments_Impl::outputVariableNam
 ComponentCostAdjustments::ComponentCostAdjustments(const Model& model)
   : ParentObject(ComponentCostAdjustments::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ComponentCostAdjustments_Impl>());
+  OS_ASSERT(getImpl<detail::ComponentCostAdjustments_Impl>());
 }
 
 // constructor

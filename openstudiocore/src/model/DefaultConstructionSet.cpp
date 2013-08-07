@@ -57,7 +57,7 @@ namespace detail {
   DefaultConstructionSet_Impl::DefaultConstructionSet_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ResourceObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == DefaultConstructionSet::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == DefaultConstructionSet::iddObjectType());
   }
 
   DefaultConstructionSet_Impl::DefaultConstructionSet_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -65,7 +65,7 @@ namespace detail {
                                                            bool keepHandle)
     : ResourceObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == DefaultConstructionSet::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == DefaultConstructionSet::iddObjectType());
   }
 
   DefaultConstructionSet_Impl::DefaultConstructionSet_Impl(const DefaultConstructionSet_Impl& other,
@@ -668,7 +668,7 @@ namespace detail {
 DefaultConstructionSet::DefaultConstructionSet(const Model& model)
   : ResourceObject(DefaultConstructionSet::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::DefaultConstructionSet_Impl>());
+  OS_ASSERT(getImpl<detail::DefaultConstructionSet_Impl>());
 }
 
 IddObjectType DefaultConstructionSet::iddObjectType() {

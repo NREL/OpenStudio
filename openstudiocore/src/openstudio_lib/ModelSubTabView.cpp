@@ -62,11 +62,11 @@ ModelSubTabView::ModelSubTabView(OSItemSelector* itemSelector,
                   SIGNAL(dropZoneItemClicked(OSItem*)),
                   this, 
                   SLOT(dropZoneItemClicked(OSItem*)));
-  BOOST_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   bingo = connect(itemSelector,SIGNAL(itemSelected(OSItem*)),
                   this,SLOT(onItemSelected()));
-  BOOST_ASSERT(bingo);
+  OS_ASSERT(bingo);
 }
 
 void ModelSubTabView::onItemSelected()

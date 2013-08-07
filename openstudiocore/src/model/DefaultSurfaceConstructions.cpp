@@ -37,7 +37,7 @@ namespace detail {
   DefaultSurfaceConstructions_Impl::DefaultSurfaceConstructions_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ResourceObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == DefaultSurfaceConstructions::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == DefaultSurfaceConstructions::iddObjectType());
   }
 
   DefaultSurfaceConstructions_Impl::DefaultSurfaceConstructions_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                                                                      bool keepHandle)
     : ResourceObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == DefaultSurfaceConstructions::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == DefaultSurfaceConstructions::iddObjectType());
   }
 
   DefaultSurfaceConstructions_Impl::DefaultSurfaceConstructions_Impl(const DefaultSurfaceConstructions_Impl& other,
@@ -217,7 +217,7 @@ namespace detail {
 DefaultSurfaceConstructions::DefaultSurfaceConstructions(const Model& model)
   : ResourceObject(DefaultSurfaceConstructions::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::DefaultSurfaceConstructions_Impl>());
+  OS_ASSERT(getImpl<detail::DefaultSurfaceConstructions_Impl>());
 }
 
 IddObjectType DefaultSurfaceConstructions::iddObjectType() {

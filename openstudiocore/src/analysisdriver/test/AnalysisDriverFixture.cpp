@@ -163,9 +163,9 @@ openstudio::analysis::Problem AnalysisDriverFixture::retrieveProblem(
       original = createBuggyBCLMeasureProblem();
       break;
     default :
-      BOOST_ASSERT(false);
+      OS_ASSERT(false);
   }
-  BOOST_ASSERT(original);
+  OS_ASSERT(original);
 
   analysis::Problem result = original.get();
   appendDefaultSimulationWorkflow(result,modelToIdf,energyPlus);
@@ -357,11 +357,11 @@ openstudio::analysis::Problem AnalysisDriverFixture::createMixedOsmIdfProblem()
   rubyMeasure1.addArgument("value", "0.10");
   measures1.push_back(rubyMeasure1);
   bool ok = problem.push(analysis::MeasureGroup("Wall Construction",measures1));
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
   // WorkflowStep: ModelToIdf
   ok = problem.push(WorkflowStep(runmanager::WorkItem(runmanager::JobType::ModelToIdf)));
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
   // Variable 2: Roof Construction
   analysis::MeasureVector measures2;
@@ -376,9 +376,9 @@ openstudio::analysis::Problem AnalysisDriverFixture::createMixedOsmIdfProblem()
   rubyMeasure2.addArgument("value", "0.2");
   measures2.push_back(rubyMeasure2);
   ok = problem.push(analysis::MeasureGroup("Roof Construction",measures2));
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
-  BOOST_ASSERT(problem.numVariables() == 2);
+  OS_ASSERT(problem.numVariables() == 2);
 
   return problem;
 }

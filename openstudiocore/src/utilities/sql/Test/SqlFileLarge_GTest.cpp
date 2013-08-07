@@ -63,7 +63,7 @@ TEST_F(SqlFileLargeFixture, EnvPeriods)
 
 TEST_F(SqlFileLargeFixture, TimeSeries8760)
 {
-  openstudio::OptionalTimeSeries ts = sqlFile.timeSeries("Albuquerque Intl Arpt  Isis NM USA TMY3 WMO#=723650", "Hourly", "Heating Coil Rate",  "MOB FLOOR 2-4 PERIMETER 2 HEAT PUMP SUP HEAT COIL");
+  openstudio::OptionalTimeSeries ts = sqlFile.timeSeries("Albuquerque Intl Arpt  Isis NM USA TMY3 WMO#=723650", "Hourly", "Heating Coil Air Heating Rate",  "MOB FLOOR 2-4 PERIMETER 2 HEAT PUMP SUP HEAT COIL");
   ASSERT_TRUE(ts);
   EXPECT_EQ(8760, ts->values().size());
 }
@@ -71,7 +71,7 @@ TEST_F(SqlFileLargeFixture, TimeSeries8760)
 
 TEST_F(SqlFileLargeFixture, FloodPlot8760)
 {
-  openstudio::OptionalTimeSeries ts = sqlFile.timeSeries("Albuquerque Intl Arpt  Isis NM USA TMY3 WMO#=723650", "Hourly", "Heating Coil Rate",  "MOB FLOOR 2-4 PERIMETER 2 HEAT PUMP SUP HEAT COIL");
+  openstudio::OptionalTimeSeries ts = sqlFile.timeSeries("Albuquerque Intl Arpt  Isis NM USA TMY3 WMO#=723650", "Hourly", "Heating Coil Air Heating Rate",  "MOB FLOOR 2-4 PERIMETER 2 HEAT PUMP SUP HEAT COIL");
   ASSERT_TRUE(ts);
 
   // plot it
@@ -83,7 +83,7 @@ TEST_F(SqlFileLargeFixture, FloodPlot8760)
 TEST_F(SqlFileLargeFixture, LinePlot8760)
 {
   // make a timeseries
-  openstudio::OptionalTimeSeries ts = sqlFile.timeSeries("Albuquerque Intl Arpt  Isis NM USA TMY3 WMO#=723650", "Hourly", "Heating Coil Rate",  "MOB FLOOR 2-4 PERIMETER 2 HEAT PUMP SUP HEAT COIL");
+  openstudio::OptionalTimeSeries ts = sqlFile.timeSeries("Albuquerque Intl Arpt  Isis NM USA TMY3 WMO#=723650", "Hourly", "Heating Coil Air Heating Rate",  "MOB FLOOR 2-4 PERIMETER 2 HEAT PUMP SUP HEAT COIL");
   ASSERT_TRUE(ts);
 
   // plot it
@@ -124,14 +124,14 @@ TEST_F(SqlFileLargeFixture, LinePlot52560)
 
 TEST_F(SqlFileLargeFixture, TimeSeries84868)
 {
-  openstudio::OptionalTimeSeries ts = sqlFile.timeSeries("Albuquerque Intl Arpt  Isis NM USA TMY3 WMO#=723650", "HVAC System Timestep", "Chiller Part Load Ratio",  "COOLSYS1 CHILLER");
+  openstudio::OptionalTimeSeries ts = sqlFile.timeSeries("Albuquerque Intl Arpt  Isis NM USA TMY3 WMO#=723650", "HVAC System Timestep", "Chiller Fan Coil Part Load Ratio",  "COOLSYS1 CHILLER");
   ASSERT_TRUE(ts);
   EXPECT_EQ(84868, ts->values().size());
 }
 
 TEST_F(SqlFileLargeFixture, FloodPlot84868)
 {
-  openstudio::OptionalTimeSeries ts = sqlFile.timeSeries("Albuquerque Intl Arpt  Isis NM USA TMY3 WMO#=723650", "HVAC System Timestep", "Chiller Part Load Ratio",  "COOLSYS1 CHILLER");
+  openstudio::OptionalTimeSeries ts = sqlFile.timeSeries("Albuquerque Intl Arpt  Isis NM USA TMY3 WMO#=723650", "HVAC System Timestep", "Chiller Fan Coil Part Load Ratio",  "COOLSYS1 CHILLER");
   ASSERT_TRUE(ts);
 
   // plot it
@@ -143,7 +143,7 @@ TEST_F(SqlFileLargeFixture, FloodPlot84868)
 TEST_F(SqlFileLargeFixture, LinePlot84868)
 {
   // make a timeseries
-  openstudio::OptionalTimeSeries ts = sqlFile.timeSeries("Albuquerque Intl Arpt  Isis NM USA TMY3 WMO#=723650", "HVAC System Timestep", "Chiller Part Load Ratio",  "COOLSYS1 CHILLER");
+  openstudio::OptionalTimeSeries ts = sqlFile.timeSeries("Albuquerque Intl Arpt  Isis NM USA TMY3 WMO#=723650", "HVAC System Timestep", "Chiller Fan Coil Part Load Ratio",  "COOLSYS1 CHILLER");
   ASSERT_TRUE(ts);
 
   // plot it

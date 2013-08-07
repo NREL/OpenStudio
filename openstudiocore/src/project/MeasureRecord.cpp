@@ -79,13 +79,13 @@ namespace detail{
   MeasureRecord_Impl::MeasureRecord_Impl(const QSqlQuery& query, const ProjectDatabase& database)
     : ObjectRecord_Impl(database, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
     value = query.value(MeasureRecordColumns::measureRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_measureRecordType = MeasureRecordType(value.toInt());
 
     value = query.value(MeasureRecordColumns::variableRecordId);
@@ -94,7 +94,7 @@ namespace detail{
     }
 
     value = query.value(MeasureRecordColumns::isSelected);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_isSelected = value.toBool();
 
     value = query.value(MeasureRecordColumns::measureVectorIndex);
@@ -137,7 +137,7 @@ namespace detail{
     if (m_variableRecordId) {
       ProjectDatabase database = this->projectDatabase();
       result = MeasureGroupRecord::getMeasureGroupRecord(*m_variableRecordId, database);
-      BOOST_ASSERT(result);
+      OS_ASSERT(result);
     }
 
     return result;
@@ -187,7 +187,7 @@ namespace detail{
 
     QVariant value;
     value = query.value(MeasureRecordColumns::measureRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastMeasureRecordType = MeasureRecordType(value.toInt());
 
     value = query.value(MeasureRecordColumns::variableRecordId);
@@ -199,7 +199,7 @@ namespace detail{
     }
 
     value = query.value(MeasureRecordColumns::isSelected);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastIsSelected = value.toBool();
 
     value = query.value(MeasureRecordColumns::measureVectorIndex);
@@ -219,7 +219,7 @@ namespace detail{
 
     QVariant value;
     value = query.value(MeasureRecordColumns::measureRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_measureRecordType == MeasureRecordType(value.toInt()));
 
     value = query.value(MeasureRecordColumns::variableRecordId);
@@ -231,7 +231,7 @@ namespace detail{
     }
 
     value = query.value(MeasureRecordColumns::isSelected);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_isSelected == value.toBool());
 
     value = query.value(MeasureRecordColumns::measureVectorIndex);
@@ -286,7 +286,7 @@ UpdateByIdQueryData MeasureRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -327,13 +327,13 @@ void MeasureRecord::updatePathData(ProjectDatabase database,
 MeasureRecord::MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl> impl, ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::MeasureRecord_Impl>());
+  OS_ASSERT(getImpl<detail::MeasureRecord_Impl>());
 }
 
 MeasureRecord::MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl> impl)
   : ObjectRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::MeasureRecord_Impl>());
+  OS_ASSERT(getImpl<detail::MeasureRecord_Impl>());
 }
 
 std::vector<MeasureRecord> MeasureRecord::getMeasureRecords(ProjectDatabase& database)
@@ -345,7 +345,7 @@ std::vector<MeasureRecord> MeasureRecord::getMeasureRecords(ProjectDatabase& dat
   assertExec(query);
   while (query.next()) {
     boost::optional<MeasureRecord> measure = factoryFromQuery(query, database);
-    BOOST_ASSERT(measure);
+    OS_ASSERT(measure);
     result.push_back(*measure);
   }
 
@@ -362,7 +362,7 @@ boost::optional<MeasureRecord> MeasureRecord::getMeasureRecord(int id, ProjectDa
   assertExec(query);
   if(query.first()) {
     boost::optional<MeasureRecord> measure = factoryFromQuery(query, database);
-    BOOST_ASSERT(measure);
+    OS_ASSERT(measure);
     result = measure;
   }
 
@@ -406,7 +406,7 @@ MeasureRecord MeasureRecord::factoryFromMeasure(
                                   measureVectorIndex);
   }
 
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl>());
 }
 

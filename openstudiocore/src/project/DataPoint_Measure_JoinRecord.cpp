@@ -38,7 +38,7 @@ namespace detail {
                       measureRecord.handle(),
                       dataPointRecord.projectDatabase())
   {
-    BOOST_ASSERT(dataPointRecord.projectDatabase().handle() == measureRecord.projectDatabase().handle());
+    OS_ASSERT(dataPointRecord.projectDatabase().handle() == measureRecord.projectDatabase().handle());
   }
 
   DataPoint_Measure_JoinRecord_Impl::DataPoint_Measure_JoinRecord_Impl(
@@ -69,14 +69,14 @@ namespace detail {
   DataPointRecord DataPoint_Measure_JoinRecord_Impl::dataPointRecord() const {
     ProjectDatabase database = this->projectDatabase();
     boost::optional<DataPointRecord> dataPointRecord = DataPointRecord::getDataPointRecord(this->leftId(),database);
-    BOOST_ASSERT(dataPointRecord);
+    OS_ASSERT(dataPointRecord);
     return *dataPointRecord;
   }
 
   MeasureRecord DataPoint_Measure_JoinRecord_Impl::measureRecord() const {
     ProjectDatabase database = this->projectDatabase();
     boost::optional<MeasureRecord> measureRecord = MeasureRecord::getMeasureRecord(this->rightId(),database);
-    BOOST_ASSERT(measureRecord);
+    OS_ASSERT(measureRecord);
     return *measureRecord;
   }
 
@@ -89,7 +89,7 @@ DataPoint_Measure_JoinRecord::DataPoint_Measure_JoinRecord(
         new detail::DataPoint_Measure_JoinRecord_Impl(dataPointRecord, measureRecord)),
         dataPointRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::DataPoint_Measure_JoinRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DataPoint_Measure_JoinRecord_Impl>());
 }
 
 DataPoint_Measure_JoinRecord::DataPoint_Measure_JoinRecord(
@@ -97,7 +97,7 @@ DataPoint_Measure_JoinRecord::DataPoint_Measure_JoinRecord(
     ProjectDatabase database)
   : JoinRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::DataPoint_Measure_JoinRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DataPoint_Measure_JoinRecord_Impl>());
 }
 
 std::string DataPoint_Measure_JoinRecord::databaseTableName() {
@@ -118,7 +118,7 @@ UpdateByIdQueryData DataPoint_Measure_JoinRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -169,14 +169,14 @@ DataPoint_Measure_JoinRecord::getMeasureRecords(
   while (query.next()) {
     QVariant value;
     value = query.value(JoinRecordColumns::rightId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     measureRecordIds.push_back(value.toInt());
   }
 
   BOOST_FOREACH(int id, measureRecordIds) {
     boost::optional<MeasureRecord> measureRecord =
         MeasureRecord::getMeasureRecord(id,database);
-    BOOST_ASSERT(measureRecord);
+    OS_ASSERT(measureRecord);
     result.push_back(*measureRecord);
   }
 
@@ -199,14 +199,14 @@ std::vector<DataPointRecord> DataPoint_Measure_JoinRecord::getDataPointRecords(
   while (query.next()) {
     QVariant value;
     value = query.value(JoinRecordColumns::leftId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     dataPointRecordIds.push_back(value.toInt());
   }
 
   BOOST_FOREACH(int id, dataPointRecordIds) {
     boost::optional<DataPointRecord> dataPointRecord = 
         DataPointRecord::getDataPointRecord(id,database);
-    BOOST_ASSERT(dataPointRecord);
+    OS_ASSERT(dataPointRecord);
     result.push_back(*dataPointRecord);
   }
 
@@ -231,4 +231,5 @@ DataPoint_Measure_JoinRecord::DataPoint_Measure_JoinRecord(
 
 } // project
 } // openstudio
+
 

@@ -34,6 +34,8 @@
 
 #include <utilities/time/DateTime.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <QVBoxLayout>
 #include <QTextEdit>
 #include <QLabel>
@@ -114,7 +116,7 @@ RunStatusView::RunStatusView()
   m_playButton->setChecked(false);
   mainHLayout->addWidget(m_playButton);
   bool isConnected = connect(m_playButton, SIGNAL(clicked(bool)), this, SIGNAL(playButtonClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // Progress bar area
   m_progressBar = new PatProgressBar();
@@ -515,11 +517,11 @@ void DataPointJobItemView::update()
     dataPointJobHeaderView->setName(m_workflowStepJob.measure->name());
   }
   else {
-    Q_ASSERT(m_workflowStepJob.step.isWorkItem());
+    OS_ASSERT(m_workflowStepJob.step.isWorkItem());
     dataPointJobHeaderView->setName(m_workflowStepJob.step.workItemType().valueName());
   }
 
-  Q_ASSERT(m_workflowStepJob.job);
+  OS_ASSERT(m_workflowStepJob.job);
 
   dataPointJobHeaderView->setLastRunTime(m_workflowStepJob.job->lastRun());
   dataPointJobHeaderView->setStatus(m_workflowStepJob.job->status());

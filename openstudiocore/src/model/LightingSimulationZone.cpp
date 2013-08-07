@@ -41,7 +41,7 @@ namespace detail {
   LightingSimulationZone_Impl::LightingSimulationZone_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == LightingSimulationZone::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == LightingSimulationZone::iddObjectType());
   }
 
   LightingSimulationZone_Impl::LightingSimulationZone_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -49,7 +49,7 @@ namespace detail {
                                                            bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == LightingSimulationZone::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == LightingSimulationZone::iddObjectType());
   }
 
   LightingSimulationZone_Impl::LightingSimulationZone_Impl(const LightingSimulationZone_Impl& other,
@@ -92,7 +92,7 @@ namespace detail {
     BOOST_FOREACH(const ModelExtensibleGroup& group,castVector<ModelExtensibleGroup>(extensibleGroups())) 
     {        
       boost::optional<Space> space = group.getModelObjectTarget<Space>(0);
-      BOOST_ASSERT(space);
+      OS_ASSERT(space);
       result.push_back(*space);
     }
 
@@ -115,7 +115,7 @@ namespace detail {
   void LightingSimulationZone_Impl::resetSpaces()
   {
     clearExtensibleGroups();
-    BOOST_ASSERT(numExtensibleGroups() == 0);
+    OS_ASSERT(numExtensibleGroups() == 0);
   }
 
 } // detail
@@ -123,7 +123,7 @@ namespace detail {
 LightingSimulationZone::LightingSimulationZone(const Model& model)
   : ModelObject(LightingSimulationZone::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::LightingSimulationZone_Impl>());
+  OS_ASSERT(getImpl<detail::LightingSimulationZone_Impl>());
 }
 
 IddObjectType LightingSimulationZone::iddObjectType() {

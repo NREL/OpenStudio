@@ -40,6 +40,7 @@
 #include <model_editor/ObjectExplorer.hpp>
 #include <model_editor/TreeViewWidget.hpp>
 #include <model_editor/ViewWidget.hpp>
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/idf/IdfFile.hpp>
 #include <utilities/idf/Workspace.hpp>
@@ -179,53 +180,53 @@ namespace modeleditor
   {
     bool connected;
     connected = connect(mClassAction, SIGNAL(triggered()), this, SLOT(classAction()));
-    Q_ASSERT(connected);
+    OS_ASSERT(connected);
 
     connected = connect(mSystemOutlinerAction, SIGNAL(triggered()), this, SLOT(systemOutlinerAction()));
-    Q_ASSERT(connected);
+    OS_ASSERT(connected);
 
     connected = connect(mTreeAction, SIGNAL(triggered()), this, SLOT(treeAction()));
-    Q_ASSERT(connected);
+    OS_ASSERT(connected);
 
     connected = connect(mClassViewWidget,SIGNAL(eventEnter()),
                         this,SLOT(on_ClassViewEventEnter()));
-    Q_ASSERT(connected);
+    OS_ASSERT(connected);
 
     connected = connect(mClassViewWidget,SIGNAL(eventLeave()),
                         this,SLOT(on_ClassViewEventLeave()));
-    Q_ASSERT(connected);
+    OS_ASSERT(connected);
 
     connected = connect(mTreeViewWidget,SIGNAL(eventEnter()),
                         this,SLOT(on_TreeViewEventEnter()));
-    Q_ASSERT(connected);
+    OS_ASSERT(connected);
 
     connected = connect(mTreeViewWidget,SIGNAL(eventLeave()),
                         this,SLOT(on_TreeViewEventLeave()));
-    Q_ASSERT(connected);
+    OS_ASSERT(connected);
 
     connected = connect(mTreeViewWidget,SIGNAL(modelDirty()),
                         mClassViewWidget,SLOT(on_modelDirty()));
-    Q_ASSERT(connected);
+    OS_ASSERT(connected);
 
     connected = connect(mClassViewWidget,SIGNAL(modelDirty()),
                         mTreeViewWidget,SLOT(on_modelDirty()));
-    Q_ASSERT(connected);
+    OS_ASSERT(connected);
 
     connected = connect(mTreeViewWidget,SIGNAL(modelDirty()),
                         this,SIGNAL(modelDirty()));
-    Q_ASSERT(connected);
+    OS_ASSERT(connected);
 
     connected = connect(mClassViewWidget,SIGNAL(modelDirty()),
                         this,SIGNAL(modelDirty()));
-    Q_ASSERT(connected);
+    OS_ASSERT(connected);
 
     connected = connect(mTreeViewWidget,SIGNAL(precisionDlgFinished()),
                         this,SIGNAL(precisionDlgFinished()));
-    Q_ASSERT(connected);
+    OS_ASSERT(connected);
 
     connected = connect(mClassViewWidget,SIGNAL(precisionDlgFinished()),
                         this,SIGNAL(precisionDlgFinished()));
-    Q_ASSERT(connected);
+    OS_ASSERT(connected);
   }
 
   void ModelExplorer::showComments(const bool showComments)
@@ -315,7 +316,7 @@ namespace modeleditor
         openstudio::WorkspaceObjectVector wsObjects = workspace.objects();
         openstudio::WorkspaceObjectOrder order = workspace.order();
         BOOST_FOREACH(const openstudio::WorkspaceObject wso,wsObjects){
-          Q_ASSERT(order.inOrder(wso.handle()));
+          OS_ASSERT(order.inOrder(wso.handle()));
         }
         // END DEBUG CODE
         openstudio::energyplus::ReverseTranslator2 reverseTranslator(workspace);
@@ -326,7 +327,7 @@ namespace modeleditor
           order = optionalModel->order();
           wsObjects = optionalModel->objects();
           BOOST_FOREACH(const openstudio::WorkspaceObject wso,wsObjects){
-            Q_ASSERT(order.inOrder(wso.handle()));
+            OS_ASSERT(order.inOrder(wso.handle()));
           }
         }
         // END DEBUG CODE

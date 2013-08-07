@@ -112,7 +112,7 @@ NullMeasureRecord::NullMeasureRecord(const analysis::NullMeasure& nullMeasure,
                                            measureVectorIndex)),
         measureGroupRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());
+  OS_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());
 }
 
 NullMeasureRecord::NullMeasureRecord(const QSqlQuery& query, ProjectDatabase& database)
@@ -120,13 +120,13 @@ NullMeasureRecord::NullMeasureRecord(const QSqlQuery& query, ProjectDatabase& da
         new detail::NullMeasureRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());
+  OS_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());
 }
 
 NullMeasureRecord::NullMeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl> impl, ProjectDatabase projectDatabase)
   : MeasureRecord(impl, projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());
+  OS_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());
 }
 
 boost::optional<NullMeasureRecord> NullMeasureRecord::factoryFromQuery(
@@ -182,7 +182,7 @@ analysis::NullMeasure NullMeasureRecord::nullMeasure() const {
 NullMeasureRecord::NullMeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl> impl)
   : MeasureRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());
+  OS_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());
 }
 /// @endcond
 

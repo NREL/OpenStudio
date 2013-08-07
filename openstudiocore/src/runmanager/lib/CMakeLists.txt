@@ -130,6 +130,11 @@ SET( runmanager_src
   ErrorEstimation.hpp
   ErrorEstimation.cpp
 
+  LinearApproximation.hpp
+  LinearApproximation.cpp
+
+  SimulationEngine.hpp
+  SimulationEngine.cpp
   JSON.cpp
   JSON.hpp
 )
@@ -200,6 +205,7 @@ SET( runmanager_moc
   ModelToRadJob.hpp
   ModelToRadPreProcessJob.hpp
   DakotaJob.hpp
+  SimulationEngine.hpp
 )
 
 SET( runmanager_test_moc

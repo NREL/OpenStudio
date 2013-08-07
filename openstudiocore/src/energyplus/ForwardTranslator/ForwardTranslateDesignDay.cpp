@@ -126,10 +126,10 @@ boost::optional<IdfObject> ForwardTranslator::translateDesignDay( DesignDay & mo
   // Barometric Pressure
   idfObject.setDouble(SizingPeriod_DesignDayFields::BarometricPressure, modelObject.barometricPressure());
 
-  // Wind Speed
+  // Site Wind Speed
   idfObject.setDouble(SizingPeriod_DesignDayFields::WindSpeed, modelObject.windSpeed());
 
-  // Wind Direction
+  // Site Wind Direction
   idfObject.setDouble(SizingPeriod_DesignDayFields::WindDirection,modelObject.windDirection());
 
   // Rain Indicator
@@ -146,7 +146,7 @@ boost::optional<IdfObject> ForwardTranslator::translateDesignDay( DesignDay & mo
     idfObject.setString(SizingPeriod_DesignDayFields::SnowIndicator, "No");
   }
 
-  // Daylight Saving Time Indicator
+  // Site Daylight Saving Time Status
   if( modelObject.daylightSavingTimeIndicator() ){
     idfObject.setString(SizingPeriod_DesignDayFields::DaylightSavingTimeIndicator, "Yes");
   }else{
@@ -157,7 +157,7 @@ boost::optional<IdfObject> ForwardTranslator::translateDesignDay( DesignDay & mo
   std::string solarModelIndicator = modelObject.solarModelIndicator();
   idfObject.setString(SizingPeriod_DesignDayFields::SolarModelIndicator, solarModelIndicator);
 
-  // Beam Solar Day Schedule Name and Diffuse Solar Day Schedule Name
+  // Beam Solar Day Schedule Name and Site Diffuse Solar Radiation Rate per Area Day Schedule Name
   if (istringEqual(solarModelIndicator, "Schedule")){
 
     boost::optional<IdfObject> idfSchedule;
@@ -174,14 +174,14 @@ boost::optional<IdfObject> ForwardTranslator::translateDesignDay( DesignDay & mo
 
     idfSchedule.reset();
 
-    // Diffuse Solar Day Schedule Name
+    // Site Diffuse Solar Radiation Rate per Area Day Schedule Name
     if( boost::optional<ScheduleDay> schedule = modelObject.diffuseSolarDaySchedule() ){
       idfSchedule = translateAndMapModelObject(*schedule);
     }
     if (idfSchedule) {
       idfObject.setString(SizingPeriod_DesignDayFields::DiffuseSolarDayScheduleName, idfSchedule->name().get());
     }else{
-      LOG(Error, "Diffuse Solar Day Schedule Name field is required but not found");
+      LOG(Error, "Site Diffuse Solar Radiation Rate per Area Day Schedule Name field is required but not found");
     }
   }
 

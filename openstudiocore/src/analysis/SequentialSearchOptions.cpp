@@ -20,6 +20,7 @@
 #include <analysis/SequentialSearchOptions.hpp>
 #include <analysis/SequentialSearchOptions_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Json.hpp>
 
 #include <boost/bind.hpp>
@@ -46,7 +47,7 @@ namespace detail {
 
   int SequentialSearchOptions_Impl::objectiveToMinimizeFirst() const {
     OptionalAttribute option = getOption("objectiveToMinimizeFirst");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     return option->valueAsInteger();
   }
 

@@ -20,6 +20,8 @@
 #include <utilities/units/CelciusUnit.hpp>
 #include <utilities/units/CelciusUnit_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace detail {
 
@@ -38,7 +40,7 @@ namespace detail {
   }
 
   Unit CelciusUnit_Impl::clone() const {
-    BOOST_ASSERT(system() == UnitSystem::Celcius);
+    OS_ASSERT(system() == UnitSystem::Celcius);
     boost::shared_ptr<CelciusUnit_Impl> impl(new CelciusUnit_Impl(*this));
     return CelciusUnit(impl).cast<Unit>();
   }

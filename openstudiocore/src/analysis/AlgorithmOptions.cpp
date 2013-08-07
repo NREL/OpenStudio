@@ -20,6 +20,7 @@
 #include <analysis/AlgorithmOptions.hpp>
 #include <analysis/AlgorithmOptions_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Compare.hpp>
 #include <utilities/core/Finder.hpp>
 #include <utilities/core/Optional.hpp>
@@ -110,7 +111,7 @@ namespace detail {
   }
 
   void AlgorithmOptions_Impl::saveOption(const Attribute& attribute) {
-    BOOST_ASSERT(!getOption(attribute.name()));
+    OS_ASSERT(!getOption(attribute.name()));
     m_options.push_back(attribute);
   }
 

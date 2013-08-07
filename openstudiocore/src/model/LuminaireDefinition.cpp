@@ -46,7 +46,7 @@ namespace detail {
   LuminaireDefinition_Impl::LuminaireDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceLoadDefinition_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == LuminaireDefinition::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == LuminaireDefinition::iddObjectType());
   }
 
   LuminaireDefinition_Impl::LuminaireDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -54,7 +54,7 @@ namespace detail {
                                                      bool keepHandle)
     : SpaceLoadDefinition_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == LuminaireDefinition::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == LuminaireDefinition::iddObjectType());
   }
 
   LuminaireDefinition_Impl::LuminaireDefinition_Impl(const LuminaireDefinition_Impl& other,
@@ -77,7 +77,7 @@ namespace detail {
 
   double LuminaireDefinition_Impl::lightingPower() const {
     boost::optional<double> value = getDouble(OS_Luminaire_DefinitionFields::LightingPower,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -87,7 +87,7 @@ namespace detail {
 
   double LuminaireDefinition_Impl::fractionRadiant() const {
     boost::optional<double> value = getDouble(OS_Luminaire_DefinitionFields::FractionRadiant,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -97,7 +97,7 @@ namespace detail {
 
   double LuminaireDefinition_Impl::fractionVisible() const {
     boost::optional<double> value = getDouble(OS_Luminaire_DefinitionFields::FractionVisible,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -107,7 +107,7 @@ namespace detail {
 
   double LuminaireDefinition_Impl::returnAirFraction() const {
     boost::optional<double> value = getDouble(OS_Luminaire_DefinitionFields::ReturnAirFraction,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -117,7 +117,7 @@ namespace detail {
 
   bool LuminaireDefinition_Impl::returnAirFractionCalculatedfromPlenumTemperature() const {
     boost::optional<std::string> value = getString(OS_Luminaire_DefinitionFields::ReturnAirFractionCalculatedfromPlenumTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -127,7 +127,7 @@ namespace detail {
 
   double LuminaireDefinition_Impl::returnAirFractionFunctionofPlenumTemperatureCoefficient1() const {
     boost::optional<double> value = getDouble(OS_Luminaire_DefinitionFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient1,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -137,7 +137,7 @@ namespace detail {
 
   double LuminaireDefinition_Impl::returnAirFractionFunctionofPlenumTemperatureCoefficient2() const {
     boost::optional<double> value = getDouble(OS_Luminaire_DefinitionFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient2,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -153,7 +153,7 @@ namespace detail {
 
   //void LuminaireDefinition_Impl::resetLightingPower() {
   //  bool result = setString(OS_Luminaire_DefinitionFields::LightingPower, "");
-  //  BOOST_ASSERT(result);
+  //  OS_ASSERT(result);
   //}
 
   bool LuminaireDefinition_Impl::setFractionRadiant(double fractionRadiant) {
@@ -164,7 +164,7 @@ namespace detail {
 
   //void LuminaireDefinition_Impl::resetFractionRadiant() {
   //  bool result = setString(OS_Luminaire_DefinitionFields::FractionRadiant, "");
-  //  BOOST_ASSERT(result);
+  //  OS_ASSERT(result);
   //}
 
   bool LuminaireDefinition_Impl::setFractionVisible(double fractionVisible) {
@@ -175,7 +175,7 @@ namespace detail {
 
   //void LuminaireDefinition_Impl::resetFractionVisible() {
   //  bool result = setString(OS_Luminaire_DefinitionFields::FractionVisible, "");
-  //  BOOST_ASSERT(result);
+  //  OS_ASSERT(result);
   //}
 
   bool LuminaireDefinition_Impl::setReturnAirFraction(double returnAirFraction) {
@@ -186,7 +186,7 @@ namespace detail {
 
   //void LuminaireDefinition_Impl::resetReturnAirFraction() {
   //  bool result = setString(OS_Luminaire_DefinitionFields::ReturnAirFraction, "");
-  //  BOOST_ASSERT(result);
+  //  OS_ASSERT(result);
   //}
 
   void LuminaireDefinition_Impl::setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature) {
@@ -196,12 +196,12 @@ namespace detail {
     } else {
       result = setString(OS_Luminaire_DefinitionFields::ReturnAirFractionCalculatedfromPlenumTemperature, "No");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void LuminaireDefinition_Impl::resetReturnAirFractionCalculatedfromPlenumTemperature() {
     bool result = setString(OS_Luminaire_DefinitionFields::ReturnAirFractionCalculatedfromPlenumTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool LuminaireDefinition_Impl::setReturnAirFractionFunctionofPlenumTemperatureCoefficient1(double returnAirFractionFunctionofPlenumTemperatureCoefficient1) {
@@ -212,7 +212,7 @@ namespace detail {
 
   void LuminaireDefinition_Impl::resetReturnAirFractionFunctionofPlenumTemperatureCoefficient1() {
     bool result = setString(OS_Luminaire_DefinitionFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient1, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool LuminaireDefinition_Impl::setReturnAirFractionFunctionofPlenumTemperatureCoefficient2(double returnAirFractionFunctionofPlenumTemperatureCoefficient2) {
@@ -223,7 +223,7 @@ namespace detail {
 
   void LuminaireDefinition_Impl::resetReturnAirFractionFunctionofPlenumTemperatureCoefficient2() {
     bool result = setString(OS_Luminaire_DefinitionFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient2, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -231,7 +231,7 @@ namespace detail {
 LuminaireDefinition::LuminaireDefinition(const Model& model)
   : SpaceLoadDefinition(LuminaireDefinition::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::LuminaireDefinition_Impl>());
+  OS_ASSERT(getImpl<detail::LuminaireDefinition_Impl>());
 }
 
 IddObjectType LuminaireDefinition::iddObjectType() {

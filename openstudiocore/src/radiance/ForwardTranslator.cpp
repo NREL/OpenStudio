@@ -325,9 +325,9 @@ namespace radiance {
     
     if (radianceParameters.skyDiscretizationResolution() == "146"){
       tregopt << "-e MF:1 -f tregenza.cal -b tbin -bn Ntbins";
-    } else if (radianceParameters.skyDiscretizationResolution() == "581"){
+    } else if (radianceParameters.skyDiscretizationResolution() == "578"){
       tregopt << "-e MF:2 -f reinhart.cal -b rbin -bn Nrbins";
-    } else if (radianceParameters.skyDiscretizationResolution() == "2321"){
+    } else if (radianceParameters.skyDiscretizationResolution() == "2306"){
       tregopt << "-e MF:4 -f reinhart.cal -b rbin -bn Nrbins";	
 	}
 	// TODO: make these values into a pulldown choice, add support for out of bounds

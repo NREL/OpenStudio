@@ -47,7 +47,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScreen( Screen & modelObj
   if (d){
     idfObject.setDouble(WindowMaterial_ScreenFields::DiffuseSolarReflectance, *d);
   }else{
-    LOG(Error, "Missing required input 'Diffuse Solar Reflectance' for WindowMaterial:Screen named '" << modelObject.name().get() << "'");
+    LOG(Error, "Missing required input 'Site Diffuse Solar Radiation Rate per Area Reflectance' for WindowMaterial:Screen named '" << modelObject.name().get() << "'");
   }
 
   d = modelObject.getDouble(OS_WindowMaterial_ScreenFields::DiffuseVisibleReflectance, false);

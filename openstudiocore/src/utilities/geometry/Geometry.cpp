@@ -140,7 +140,7 @@ namespace openstudio{
     double minX = std::numeric_limits<double>::max();
     unsigned ulcIndex = 0;
     for(unsigned i = 0; i < N; ++i){
-      BOOST_ASSERT(std::abs(facePoints[i].z()) < 0.001);
+      OS_ASSERT(std::abs(facePoints[i].z()) < 0.001);
       if ((maxY < facePoints[i].y()) || ((maxY < facePoints[i].y() + 0.00001) && (minX > facePoints[i].x()))){
         ulcIndex = i;
         maxY = facePoints[i].y();
@@ -157,7 +157,7 @@ namespace openstudio{
     Point3dVector result;
     std::copy (points.begin() + ulcIndex, points.end(), std::back_inserter(result));
     std::copy (points.begin(), points.begin() + ulcIndex, std::back_inserter(result));
-    BOOST_ASSERT(result.size() == N);
+    OS_ASSERT(result.size() == N);
     return result;
   }
 

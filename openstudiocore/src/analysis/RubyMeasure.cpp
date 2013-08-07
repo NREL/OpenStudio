@@ -60,8 +60,8 @@ namespace detail {
       m_outputFileType(bclMeasure.outputFileType()),
       m_isUserScript(false)
   {
-    BOOST_ASSERT((m_inputFileType == FileReferenceType::OSM) || (m_inputFileType == FileReferenceType::IDF));
-    BOOST_ASSERT((m_outputFileType == FileReferenceType::OSM) || (m_outputFileType == FileReferenceType::IDF));
+    OS_ASSERT((m_inputFileType == FileReferenceType::OSM) || (m_inputFileType == FileReferenceType::IDF));
+    OS_ASSERT((m_outputFileType == FileReferenceType::OSM) || (m_outputFileType == FileReferenceType::IDF));
   }
 
   RubyMeasure_Impl::RubyMeasure_Impl(const openstudio::path& perturbationScript,
@@ -75,12 +75,12 @@ namespace detail {
       m_outputFileType(outputFileType),
       m_isUserScript(isUserScript)
   {
-    BOOST_ASSERT(m_perturbationScript->fileType() == FileReferenceType::RB);
-    BOOST_ASSERT((inputFileType == FileReferenceType::OSM) || 
+    OS_ASSERT(m_perturbationScript->fileType() == FileReferenceType::RB);
+    OS_ASSERT((inputFileType == FileReferenceType::OSM) || 
                  (inputFileType == FileReferenceType::IDF) ||
                  (inputFileType == FileReferenceType::Unknown)); // Unknown is for (hopefully temporary) dummy measures
                                                                  // constructed in RubyContinuousVariable_Impl::fromVariant.
-    BOOST_ASSERT((outputFileType == FileReferenceType::OSM) || 
+    OS_ASSERT((outputFileType == FileReferenceType::OSM) || 
                  (outputFileType == FileReferenceType::IDF) ||
                  (outputFileType == FileReferenceType::Unknown));
   }
@@ -106,7 +106,7 @@ namespace detail {
       m_arguments(arguments)
   {
     if (usesBCLMeasure) {
-      BOOST_ASSERT(m_perturbationScript->fileType() == FileReferenceType::Unknown);
+      OS_ASSERT(m_perturbationScript->fileType() == FileReferenceType::Unknown);
       m_bclMeasureDirectory = m_perturbationScript->path();
       m_bclMeasureUUID = m_perturbationScript->uuid();
       m_bclMeasureVersionUUID = m_perturbationScript->versionUUID();
@@ -168,7 +168,7 @@ namespace detail {
         // this is what happens if can't actually load the measure
         // basically delays failure
         // perhaps should just throw
-        BOOST_ASSERT(m_bclMeasureDirectory);
+        OS_ASSERT(m_bclMeasureDirectory);
         rubyJobBuilder = runmanager::RubyJobBuilder::createUserScriptRubyJob(
               *m_bclMeasureDirectory / toPath("measure.rb"),
               arguments());
@@ -318,7 +318,7 @@ namespace detail {
 
     m_bclMeasure = newVersion;
     m_bclMeasureDirectory = newVersion.directory();
-    BOOST_ASSERT(m_bclMeasureUUID.get() == newVersion.uuid());
+    OS_ASSERT(m_bclMeasureUUID.get() == newVersion.uuid());
     m_bclMeasureVersionUUID = newVersion.versionUUID();
     m_inputFileType = inputFileType;
     m_outputFileType = outputFileType;
@@ -466,7 +466,7 @@ namespace detail {
       rubyMeasureData["bcl_measure_version_uuid"] = m_bclMeasureVersionUUID.get().toString();
     }
     else {
-      Q_ASSERT(m_perturbationScript);
+      OS_ASSERT(m_perturbationScript);
       rubyMeasureData["perturbation_script"] = openstudio::detail::toVariant(m_perturbationScript.get());
     }
     rubyMeasureData["input_file_type"] = toQString(m_inputFileType.valueName());

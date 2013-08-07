@@ -30,6 +30,8 @@
 #include <runmanager/lib/RubyJobUtils.hpp>
 #include <runmanager/lib/WorkItem.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -100,7 +102,7 @@ namespace detail {
 
   double RubyContinuousVariable_Impl::getValue(const DataPoint& dataPoint) const {
     OptionalInt index = dataPoint.problem().getVariableIndexByUUID(uuid());
-    BOOST_ASSERT(index);
+    OS_ASSERT(index);
     return dataPoint.variableValues()[*index].toDouble();
   }
 
@@ -221,7 +223,7 @@ namespace detail {
   {
     QVariantMap map = variant.toMap();
 
-    Q_ASSERT(measure.optionalCast<RubyMeasure>());
+    OS_ASSERT(measure.optionalCast<RubyMeasure>());
 
     return RubyContinuousVariable(
           openstudio::UUID(map["uuid"].toString()),

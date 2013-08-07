@@ -38,6 +38,8 @@
   #include <model/Component.hpp>
   
   #include <runmanager/lib/Workflow.hpp>
+  #include <runmanager/lib/SimulationEngine.hpp>
+  #include <runmanager/lib/ErrorEstimation.hpp>
   
   #include <utilities/data/Attribute.hpp>
   #include <utilities/units/Quantity.hpp>

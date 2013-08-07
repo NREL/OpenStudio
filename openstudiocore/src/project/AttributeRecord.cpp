@@ -137,9 +137,9 @@ namespace detail{
                                              const ProjectDatabase& database)
     : ObjectRecord_Impl(database, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
@@ -160,36 +160,36 @@ namespace detail{
     }
 
     value = query.value(AttributeRecordColumns::attributeValueType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_attributeValueType = AttributeValueType(value.toInt());
 
     value = query.value(AttributeRecordColumns::attributeValue);
     switch(m_attributeValueType.value()) {
       case AttributeValueType::Boolean:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_attributeValue = value.toBool();
         break;
       case AttributeValueType::Integer:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_attributeValue = value.toInt();
         break;
       case AttributeValueType::Unsigned:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_attributeValue = value.toUInt();
         break;
       case AttributeValueType::Double:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_attributeValue = value.toDouble();
         break;
       case AttributeValueType::Quantity:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_attributeValue = value.toDouble();
         break;
       case AttributeValueType::Unit:
         m_attributeValue.clear();
         break;
       case AttributeValueType::String:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_attributeValue.setValue(value.toString().toStdString());
         break;
       case AttributeValueType::AttributeVector:
@@ -197,7 +197,7 @@ namespace detail{
         m_attributeValue.clear();
         break;
       default:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
         break;
     }
 
@@ -235,18 +235,18 @@ namespace detail{
   boost::optional<ObjectRecord> AttributeRecord_Impl::parent() const {
     OptionalObjectRecord result;
     if (m_fileReferenceRecordId) {
-      BOOST_ASSERT(!m_parentAttributeRecordId);
-      BOOST_ASSERT(!m_algorithmRecordId);
-      BOOST_ASSERT(!m_variableRecordId);
+      OS_ASSERT(!m_parentAttributeRecordId);
+      OS_ASSERT(!m_algorithmRecordId);
+      OS_ASSERT(!m_variableRecordId);
       result = fileReferenceRecord().get().cast<ObjectRecord>();
     }
     if (m_parentAttributeRecordId) {
-      BOOST_ASSERT(!m_algorithmRecordId);
-      BOOST_ASSERT(!m_variableRecordId);
+      OS_ASSERT(!m_algorithmRecordId);
+      OS_ASSERT(!m_variableRecordId);
       result = parentAttributeRecord().get().cast<ObjectRecord>();
     }
     if (m_algorithmRecordId) {
-      BOOST_ASSERT(!m_variableRecordId);
+      OS_ASSERT(!m_variableRecordId);
       result = algorithmRecord().get().cast<ObjectRecord>();
     }
     if (m_variableRecordId) {
@@ -342,48 +342,48 @@ namespace detail{
   }
 
   bool AttributeRecord_Impl::attributeValueAsBoolean() const {
-    BOOST_ASSERT(m_attributeValue.isValid() && !m_attributeValue.isNull() && m_attributeValueType == AttributeValueType::Boolean);
+    OS_ASSERT(m_attributeValue.isValid() && !m_attributeValue.isNull() && m_attributeValueType == AttributeValueType::Boolean);
     return m_attributeValue.value<bool>();
   }
 
   int AttributeRecord_Impl::attributeValueAsInteger() const {
-    BOOST_ASSERT(m_attributeValue.isValid() && !m_attributeValue.isNull() && m_attributeValueType == AttributeValueType::Integer);
+    OS_ASSERT(m_attributeValue.isValid() && !m_attributeValue.isNull() && m_attributeValueType == AttributeValueType::Integer);
     return m_attributeValue.value<int>();
   }
 
   unsigned AttributeRecord_Impl::attributeValueAsUnsigned() const {
-    BOOST_ASSERT(m_attributeValue.isValid() && !m_attributeValue.isNull() && m_attributeValueType == AttributeValueType::Unsigned);
+    OS_ASSERT(m_attributeValue.isValid() && !m_attributeValue.isNull() && m_attributeValueType == AttributeValueType::Unsigned);
     return m_attributeValue.value<unsigned>();
   }
 
   double AttributeRecord_Impl::attributeValueAsDouble() const {
-    BOOST_ASSERT(m_attributeValue.isValid() && !m_attributeValue.isNull() && m_attributeValueType == AttributeValueType::Double);
+    OS_ASSERT(m_attributeValue.isValid() && !m_attributeValue.isNull() && m_attributeValueType == AttributeValueType::Double);
     return m_attributeValue.value<double>();
   }
 
   Quantity AttributeRecord_Impl::attributeValueAsQuantity() const {
-    BOOST_ASSERT(m_attributeValue.isValid() && !m_attributeValue.isNull() && m_attributeValueType == AttributeValueType::Quantity);
-    BOOST_ASSERT(m_attributeUnits);
-    BOOST_ASSERT(m_attributeUnitSystem);
+    OS_ASSERT(m_attributeValue.isValid() && !m_attributeValue.isNull() && m_attributeValueType == AttributeValueType::Quantity);
+    OS_ASSERT(m_attributeUnits);
+    OS_ASSERT(m_attributeUnitSystem);
     double value = m_attributeValue.value<double>();
     Unit unit = createUnit(*m_attributeUnits,UnitSystem(*m_attributeUnitSystem)).get();
     return Quantity(value,unit);
   }
 
   Unit AttributeRecord_Impl::attributeValueAsUnit() const {
-    BOOST_ASSERT(m_attributeValue.isNull() && m_attributeValueType == AttributeValueType::Unit);
-    BOOST_ASSERT(m_attributeUnits);
-    BOOST_ASSERT(m_attributeUnitSystem);
+    OS_ASSERT(m_attributeValue.isNull() && m_attributeValueType == AttributeValueType::Unit);
+    OS_ASSERT(m_attributeUnits);
+    OS_ASSERT(m_attributeUnitSystem);
     return createUnit(*m_attributeUnits,UnitSystem(*m_attributeUnitSystem)).get();
   }
 
   std::string AttributeRecord_Impl::attributeValueAsString() const {
-    BOOST_ASSERT(m_attributeValue.isValid() && !m_attributeValue.isNull() && m_attributeValueType == AttributeValueType::String);
+    OS_ASSERT(m_attributeValue.isValid() && !m_attributeValue.isNull() && m_attributeValueType == AttributeValueType::String);
     return m_attributeValue.value<std::string>();
   }
 
   std::vector<Attribute> AttributeRecord_Impl::attributeValueAsAttributeVector() const {
-    BOOST_ASSERT(m_attributeValueType == AttributeValueType::AttributeVector);
+    OS_ASSERT(m_attributeValueType == AttributeValueType::AttributeVector);
 
     std::vector<Attribute> result;
     BOOST_FOREACH(const Record& child, this->children()){
@@ -427,7 +427,7 @@ namespace detail{
         return openstudio::Attribute(handle(), uuidLast(), this->name(), this->displayName(), this->attributeValueAsAttributeVector(), m_attributeUnits);
         break;
       default:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
     }
 
     return openstudio::Attribute("","");
@@ -482,7 +482,7 @@ namespace detail{
         query.bindValue(AttributeRecordColumns::attributeValue, QVariant());
         break;
       default:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
         break;
     }
 
@@ -522,9 +522,9 @@ namespace detail{
 
   void AttributeRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     ObjectRecord_Impl::setLastValues(query, projectDatabase);
 
@@ -547,44 +547,44 @@ namespace detail{
     }
 
     value = query.value(AttributeRecordColumns::attributeValueType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastAttributeValueType = AttributeValueType(value.toInt());
 
     value = query.value(AttributeRecordColumns::attributeValue);
 
     switch(m_attributeValueType.value()) {
       case AttributeValueType::Boolean:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_lastAttributeValue = value.toBool();
         break;
       case AttributeValueType::Integer:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_lastAttributeValue = value.toInt();
         break;
       case AttributeValueType::Unsigned:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_lastAttributeValue = value.toUInt();
         break;
       case AttributeValueType::Double:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_lastAttributeValue = value.toDouble();
         break;
       case AttributeValueType::Quantity:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_lastAttributeValue = value.toDouble();
         break;
       case AttributeValueType::Unit:
         m_lastAttributeValue.clear();
         break;
       case AttributeValueType::String:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_lastAttributeValue.setValue(value.toString().toStdString());
         break;
       case AttributeValueType::AttributeVector:
         m_lastAttributeValue.clear();
         break;
       default:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
         break;
     }
 
@@ -633,9 +633,9 @@ namespace detail{
 
   bool AttributeRecord_Impl::compareValues(const QSqlQuery& query) const
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = true;
     result = result && ObjectRecord_Impl::compareValues(query);
@@ -657,41 +657,41 @@ namespace detail{
     }
 
     value = query.value(AttributeRecordColumns::attributeValueType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_attributeValueType == AttributeValueType(value.toInt()));
 
     value = query.value(AttributeRecordColumns::attributeValue);
     switch(m_attributeValueType.value()){
       case AttributeValueType::Boolean:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         result = result && (m_attributeValue.toBool() == value.toBool());
         break;
       case AttributeValueType::Integer:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         result = result && (m_attributeValue.toInt() == value.toInt());
         break;
       case AttributeValueType::Unsigned:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         result = result && (m_attributeValue.toUInt() == value.toUInt());
         break;
       case AttributeValueType::Double:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         result = result && (m_attributeValue.toDouble() == value.toDouble());
         break;
       case AttributeValueType::Quantity:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         result = result && (m_attributeValue.toDouble() == value.toDouble());
         break;
       case AttributeValueType::Unit:
         break;
       case AttributeValueType::String:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         result = result && (m_attributeValue.toString().toStdString() == value.toString().toStdString());
         break;
       case AttributeValueType::AttributeVector:
         break;
       default:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
         break;
     }
 
@@ -774,7 +774,7 @@ AttributeRecord::AttributeRecord(const openstudio::Attribute& attribute,
         new detail::AttributeRecord_Impl(attribute, fileReferenceRecord)),
         fileReferenceRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::AttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::AttributeRecord_Impl>());
   constructRelatedRecords(attribute);
 }
 
@@ -785,7 +785,7 @@ AttributeRecord::AttributeRecord(const Attribute& attribute,
         new detail::AttributeRecord_Impl(attribute, parentAttributeRecord, attributeVectorIndex)),
         parentAttributeRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::AttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::AttributeRecord_Impl>());
   constructRelatedRecords(attribute);
 }
 
@@ -795,7 +795,7 @@ AttributeRecord::AttributeRecord(const openstudio::Attribute& attribute,
         new detail::AttributeRecord_Impl(attribute, algorithmRecord)),
         algorithmRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::AttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::AttributeRecord_Impl>());
   constructRelatedRecords(attribute);
 }
 
@@ -805,7 +805,7 @@ AttributeRecord::AttributeRecord(const Attribute& attribute,
         new detail::AttributeRecord_Impl(attribute,variableRecord)),
         variableRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::AttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::AttributeRecord_Impl>());
   constructRelatedRecords(attribute);
 }
 
@@ -826,19 +826,19 @@ AttributeRecord::AttributeRecord(const QSqlQuery& query, ProjectDatabase& databa
         new detail::AttributeRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::AttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::AttributeRecord_Impl>());
 }
 
 AttributeRecord::AttributeRecord(boost::shared_ptr<detail::AttributeRecord_Impl> impl, ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
-  BOOST_ASSERT(this->getImpl<detail::AttributeRecord_Impl>());
+  OS_ASSERT(this->getImpl<detail::AttributeRecord_Impl>());
 }
 
 AttributeRecord::AttributeRecord(boost::shared_ptr<detail::AttributeRecord_Impl> impl)
   : ObjectRecord(impl)
 {
-  BOOST_ASSERT(this->getImpl<detail::AttributeRecord_Impl>());
+  OS_ASSERT(this->getImpl<detail::AttributeRecord_Impl>());
 }
 
 std::string AttributeRecord::databaseTableName()
@@ -860,7 +860,7 @@ UpdateByIdQueryData AttributeRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?

@@ -111,7 +111,7 @@ namespace detail {
       variableType = map["workflow_step_type"].toString().toStdString();
     }
     else {
-      Q_ASSERT(map.contains("variable_type"));
+      OS_ASSERT(map.contains("variable_type"));
       variableType = map["variable_type"].toString().toStdString();
     }
 
@@ -141,7 +141,7 @@ namespace detail {
       variableType = map["workflow_step_type"].toString().toStdString();
     }
     else {
-      Q_ASSERT(map.contains("variable_type"));
+      OS_ASSERT(map.contains("variable_type"));
       variableType = map["variable_type"].toString().toStdString();
     }
 

@@ -100,7 +100,7 @@ double Curve::evaluate(double x, double y, double z) const {
 Curve::Curve(IddObjectType type, const Model& model)
   : ModelObject(type,model) 
 {
-  BOOST_ASSERT(getImpl<detail::Curve_Impl>());
+  OS_ASSERT(getImpl<detail::Curve_Impl>());
 }
 
 Curve::Curve(boost::shared_ptr<detail::Curve_Impl> impl)

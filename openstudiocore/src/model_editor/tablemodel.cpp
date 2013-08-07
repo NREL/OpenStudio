@@ -52,6 +52,8 @@
 #include <utilities/idf/IdfFile.hpp>
 #include <utilities/idf/WorkspaceObjectOrder.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <model_editor/tablemodel.h>
 
 #define guidOpenCurlyBrace '{'
@@ -196,12 +198,12 @@ bool TableModel::cmpAscendIndex(const openstudio::WorkspaceObject& object1, cons
   openstudio::WorkspaceObjectOrder order = mModel.order();
   openstudio::Handle handle1 = object1.handle();
   openstudio::Handle handle2 = object2.handle();
-  Q_ASSERT(order.inOrder(handle1));
-  Q_ASSERT(order.inOrder(handle2));
+  OS_ASSERT(order.inOrder(handle1));
+  OS_ASSERT(order.inOrder(handle2));
   openstudio::OptionalUnsigned indexInOrder1 = order.indexInOrder(handle1);
   openstudio::OptionalUnsigned indexInOrder2 = order.indexInOrder(handle2);
-  Q_ASSERT(indexInOrder1);
-  Q_ASSERT(indexInOrder2);
+  OS_ASSERT(indexInOrder1);
+  OS_ASSERT(indexInOrder2);
 
   return (indexInOrder1.get() > indexInOrder2.get());
 }
@@ -211,12 +213,12 @@ bool TableModel::cmpDescendIndex(const openstudio::WorkspaceObject& object1, con
   openstudio::WorkspaceObjectOrder order = mModel.order();
   openstudio::Handle handle1 = object1.handle();
   openstudio::Handle handle2 = object2.handle();
-  Q_ASSERT(order.inOrder(handle1));
-  Q_ASSERT(order.inOrder(handle2));
+  OS_ASSERT(order.inOrder(handle1));
+  OS_ASSERT(order.inOrder(handle2));
   openstudio::OptionalUnsigned indexInOrder1 = order.indexInOrder(handle1);
   openstudio::OptionalUnsigned indexInOrder2 = order.indexInOrder(handle2);
-  Q_ASSERT(indexInOrder1);
-  Q_ASSERT(indexInOrder2);
+  OS_ASSERT(indexInOrder1);
+  OS_ASSERT(indexInOrder2);
 
   return (indexInOrder1.get() < indexInOrder2.get());
 }
@@ -273,9 +275,9 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
     else if (index.column() == 2){
       openstudio::Handle handle = object.handle();
       openstudio::WorkspaceObjectOrder order = mClassViewWidget->getModel().order();
-      Q_ASSERT(order.inOrder(handle));
+      OS_ASSERT(order.inOrder(handle));
       openstudio::OptionalUnsigned indexInOrder = order.indexInOrder(handle);
-      Q_ASSERT(indexInOrder);
+      OS_ASSERT(indexInOrder);
       if(indexInOrder){
         return indexInOrder.get();
       }
@@ -291,8 +293,8 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
 
 openstudio::OptionalWorkspaceObject TableModel::objectAtIndex(const QModelIndex &index) const
 {
-  Q_ASSERT(index.isValid());
-  Q_ASSERT(index.row() >= 0 && index.row() < static_cast<int>(mObjects.size()));
+  OS_ASSERT(index.isValid());
+  OS_ASSERT(index.row() >= 0 && index.row() < static_cast<int>(mObjects.size()));
 
   return mObjects.at(index.row());
 }
@@ -493,7 +495,7 @@ bool TableModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int 
     mClassViewWidget->loadModel();
   }
   else{
-    Q_ASSERT(mClassViewWidget && mClassViewWidget->getTableView());
+    OS_ASSERT(mClassViewWidget && mClassViewWidget->getTableView());
     QModelIndexList rowList;
     if(!mClassViewWidget->getTableView()->getSelectedRows(rowList)){
       return success;

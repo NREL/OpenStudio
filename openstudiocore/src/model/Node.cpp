@@ -29,6 +29,8 @@
 #include <model/SetpointManagerScheduled_Impl.hpp>
 #include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
 #include <model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp>
+#include <model/SetpointManagerWarmest.hpp>
+#include <model/SetpointManagerWarmest_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/FanConstantVolume.hpp>
@@ -59,7 +61,7 @@ namespace detail{
   Node_Impl::Node_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : StraightComponent_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == Node::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == Node::iddObjectType());
   }
 
   Node_Impl::Node_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
@@ -67,7 +69,7 @@ namespace detail{
                        bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == Node::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == Node::iddObjectType());
   }
 
   Node_Impl::Node_Impl(const Node_Impl& other, Model_Impl* model, bool keepHandle)
@@ -114,6 +116,8 @@ namespace detail{
 
       removeSetpointManagerOutdoorAirReset();
 
+      removeSetpointManagerWarmest();
+
       return ModelObject_Impl::remove();
     }
     else
@@ -133,6 +137,8 @@ namespace detail{
     removeSetpointManagerFollowOutdoorAirTemperature();
 
     removeSetpointManagerOutdoorAirReset();
+
+    removeSetpointManagerWarmest();
 
     std::string s;
 
@@ -213,6 +219,8 @@ namespace detail{
     removeSetpointManagerFollowOutdoorAirTemperature();
 
     removeSetpointManagerOutdoorAirReset();
+
+    removeSetpointManagerWarmest();
 
     std::string s;
 
@@ -409,6 +417,43 @@ namespace detail{
     }
   }
 
+  void Node_Impl::addSetpointManagerWarmest( SetpointManagerWarmest & setPointManager )
+  {
+    Node node = this->getObject<Node>();
+
+    setPointManager.addToNode(node);
+  }
+
+  boost::optional<SetpointManagerWarmest> Node_Impl::setpointManagerWarmest() const
+  {
+    std::vector<SetpointManagerWarmest> modelObjects = 
+      getObject<Node>().getModelObjectSources<SetpointManagerWarmest>();
+    for( std::vector<SetpointManagerWarmest>::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
+         it !=itEnd;
+         ++it )
+    {
+
+      if( boost::optional<Node> setpointNode = it->setpointNode() )
+      {
+        if( setpointNode->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
+    return boost::none;
+  }
+
+  void Node_Impl::removeSetpointManagerWarmest()
+  {
+    boost::optional<SetpointManagerWarmest> opt(setpointManagerWarmest());
+    if( opt )
+    {
+      openstudio::Handle h = opt->handle();
+      this->model().removeObject(h);
+    }
+  }
+
   std::vector<ModelObject> Node_Impl::children() const
   {
     std::vector<ModelObject> result;
@@ -433,6 +478,11 @@ namespace detail{
         this->setpointManagerOutdoorAirReset() )
     {
       result.push_back(setpointManagerOutdoorAirReset.get());
+    }
+    if( boost::optional<SetpointManagerWarmest> setpointManagerWarmest = 
+        this->setpointManagerWarmest() )
+    {
+      result.push_back(setpointManagerWarmest.get());
     }
     return result;
   }
@@ -465,7 +515,7 @@ namespace detail{
 Node::Node(const Model& model)
   : StraightComponent(Node::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::Node_Impl>());
+  OS_ASSERT(getImpl<detail::Node_Impl>());
 }
 
 Node::Node(boost::shared_ptr<detail::Node_Impl> p)
@@ -545,6 +595,21 @@ void Node::removeSetpointManagerOutdoorAirReset()
 void Node::addSetpointManager(SetpointManagerOutdoorAirReset & setpointManager)
 {
   getImpl<detail::Node_Impl>()->addSetpointManager(setpointManager);
+}
+
+boost::optional<SetpointManagerWarmest> Node::setpointManagerWarmest() const
+{
+  return getImpl<detail::Node_Impl>()->setpointManagerWarmest();
+}
+
+void Node::removeSetpointManagerWarmest()
+{
+  getImpl<detail::Node_Impl>()->removeSetpointManagerWarmest();
+}
+
+void Node::addSetpointManagerWarmest(SetpointManagerWarmest & setpointManager)
+{
+  getImpl<detail::Node_Impl>()->addSetpointManagerWarmest(setpointManager);
 }
 
 bool Node::addToNode(Node & node)

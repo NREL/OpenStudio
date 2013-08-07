@@ -92,7 +92,7 @@ namespace detail {
   }
 
   int SequentialSearch_Impl::createNextIteration(Analysis& analysis) {
-    BOOST_ASSERT(analysis.algorithm().get() == getPublicObject<SequentialSearch>());
+    OS_ASSERT(analysis.algorithm().get() == getPublicObject<SequentialSearch>());
 
     int numAdded(0);
     if (isComplete()) {
@@ -137,10 +137,10 @@ namespace detail {
       // see if already in analysis
       DataPointVector baselines = analysis.getDataPoints(baselineValues);
       if (!baselines.empty()) {
-        BOOST_ASSERT(baselines.size() == 1u);
+        OS_ASSERT(baselines.size() == 1u);
         DataPoint baseline = baselines[0];
-        BOOST_ASSERT(baseline.optionalCast<OptimizationDataPoint>());
-        BOOST_ASSERT(baseline.problem() == problem);
+        OS_ASSERT(baseline.optionalCast<OptimizationDataPoint>());
+        OS_ASSERT(baseline.problem() == problem);
         if (!baseline.isTag("ss")) {
           baseline.addTag("ss");
         }
@@ -166,8 +166,8 @@ namespace detail {
     else {
       OptimizationDataPointVector minimumCurve =
           getMinimumCurve(options.objectiveToMinimizeFirst(),analysis);
-      BOOST_ASSERT(!minimumCurve.empty());
-      BOOST_ASSERT(minimumCurve.back().isTag("current"));
+      OS_ASSERT(!minimumCurve.empty());
+      OS_ASSERT(minimumCurve.back().isTag("current"));
       if (!minimumCurve.back().isTag("explored")) {
         std::vector< std::vector<QVariant> > candidateVariableValues = getCandidateCombinations(minimumCurve.back());
         std::stringstream ss;
@@ -175,7 +175,7 @@ namespace detail {
         std::string iterTag(ss.str()); ss.str("");
         BOOST_FOREACH(const std::vector<QVariant>& candidate, candidateVariableValues) {
           DataPoint newDataPoint = analysis.problem().createDataPoint(candidate).get();
-          BOOST_ASSERT(newDataPoint.optionalCast<OptimizationDataPoint>());
+          OS_ASSERT(newDataPoint.optionalCast<OptimizationDataPoint>());
           newDataPoint.addTag("ss");
           newDataPoint.addTag(iterTag);
           bool added = analysis.addDataPoint(newDataPoint);
@@ -215,7 +215,7 @@ namespace detail {
         analysis.getDataPoints("current"));
     OptimizationDataPointVector result = castVector<OptimizationDataPoint>(
         analysis.getDataPoints("iter0")); // baseline point
-    BOOST_ASSERT(result.size() < 2);
+    OS_ASSERT(result.size() < 2);
     OptimizationDataPointVector successfulPoints = castVector<OptimizationDataPoint>(
         analysis.successfulDataPoints());
 
@@ -236,7 +236,7 @@ namespace detail {
       otherIndex = 1;
     }
     else {
-      BOOST_ASSERT(i == 1);
+      OS_ASSERT(i == 1);
     }
     while (current) {
       OptionalOptimizationDataPoint candidate;
@@ -305,7 +305,7 @@ namespace detail {
       }
     }
     if (!lastCurrent.empty()) {
-      BOOST_ASSERT(lastCurrent.size() == 1u);
+      OS_ASSERT(lastCurrent.size() == 1u);
       if (lastCurrent[0] != result.back()) {
         lastCurrent[0].deleteTag("current");
       }
@@ -335,7 +335,7 @@ namespace detail {
       otherIndex = 1;
     }
     else {
-      BOOST_ASSERT(i == 1);
+      OS_ASSERT(i == 1);
     }
     OptimizationDataPointObjectiveFunctionLess predicate(i);
     std::sort(successfulPoints.begin(),successfulPoints.end(),predicate);
@@ -347,7 +347,7 @@ namespace detail {
       // it has next-worst objective i
       DoubleVector candidateValues = it->objectiveValues();
       if (!currentValues.empty()) {
-        BOOST_ASSERT(greaterThanOrEqual(candidateValues[i],currentValues[i]));
+        OS_ASSERT(greaterThanOrEqual(candidateValues[i],currentValues[i]));
       }
       // is Pareto if improves objective otherIndex, and
       if (!currentValues.empty() &&
@@ -429,7 +429,7 @@ namespace detail {
       otherIndex = 1;
     }
     else {
-      BOOST_ASSERT(i == 1);
+      OS_ASSERT(i == 1);
     }
 
     getMinimumCurve(otherIndex,analysis);
@@ -538,7 +538,7 @@ namespace detail {
       else {
         row.push_back(TableElement(std::string("")));
       }
-      BOOST_ASSERT(row.size() == static_cast<size_t>(nCols));
+      OS_ASSERT(row.size() == static_cast<size_t>(nCols));
       result.appendRow(row); row.clear();
     }
 

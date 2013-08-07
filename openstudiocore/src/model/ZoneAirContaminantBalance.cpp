@@ -45,7 +45,7 @@ namespace detail {
                                                                  bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ZoneAirContaminantBalance::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ZoneAirContaminantBalance::iddObjectType());
   }
 
   ZoneAirContaminantBalance_Impl::ZoneAirContaminantBalance_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -53,7 +53,7 @@ namespace detail {
                                                                  bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ZoneAirContaminantBalance::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ZoneAirContaminantBalance::iddObjectType());
   }
 
   ZoneAirContaminantBalance_Impl::ZoneAirContaminantBalance_Impl(const ZoneAirContaminantBalance_Impl& other,
@@ -107,7 +107,7 @@ namespace detail {
 
   bool ZoneAirContaminantBalance_Impl::carbonDioxideConcentration() const {
     boost::optional<std::string> value = getString(OS_ZoneAirContaminantBalanceFields::CarbonDioxideConcentration,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -134,12 +134,12 @@ namespace detail {
   //  } else {
   //    result = setBooleanFieldValue(OS_ZoneAirContaminantBalanceFields::CarbonDioxideConcentration, "No");
   //  }
-  //  BOOST_ASSERT(result);
+  //  OS_ASSERT(result);
   //}
 
   void ZoneAirContaminantBalance_Impl::resetCarbonDioxideConcentration() {
     bool result = setString(OS_ZoneAirContaminantBalanceFields::CarbonDioxideConcentration, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneAirContaminantBalance_Impl::setOutdoorCarbonDioxideSchedule(Schedule& schedule) {
@@ -152,7 +152,7 @@ namespace detail {
 
   void ZoneAirContaminantBalance_Impl::resetOutdoorCarbonDioxideSchedule() {
     bool result = setString(OS_ZoneAirContaminantBalanceFields::OutdoorCarbonDioxideScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<ModelObject> ZoneAirContaminantBalance_Impl::outdoorCarbonDioxideScheduleAsModelObject() const {
@@ -223,7 +223,7 @@ ZoneAirContaminantBalance::ZoneAirContaminantBalance(boost::shared_ptr<detail::Z
 ZoneAirContaminantBalance::ZoneAirContaminantBalance(Model& model)
   : ModelObject(ZoneAirContaminantBalance::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ZoneAirContaminantBalance_Impl>());
+  OS_ASSERT(getImpl<detail::ZoneAirContaminantBalance_Impl>());
 }
 
 /// @endcond

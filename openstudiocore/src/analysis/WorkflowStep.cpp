@@ -26,6 +26,7 @@
 #include <analysis/Problem.hpp>
 #include <analysis/Problem_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <runmanager/lib/JSON.hpp>
 
 #include <utilities/core/FileReference.hpp>
@@ -39,7 +40,7 @@ namespace detail {
     : AnalysisObject_Impl(inputVariable.name() + " Workflow Step"),
       m_inputVariable(inputVariable)
   {
-    BOOST_ASSERT(!inputVariable.parent());
+    OS_ASSERT(!inputVariable.parent());
     m_inputVariable->onChange();
     connectChild(m_inputVariable.get(),false);
   }
@@ -55,8 +56,8 @@ namespace detail {
       m_inputVariable(inputVariable),
       m_workItem(workItem)
   {
-    BOOST_ASSERT(inputVariable || workItem);
-    BOOST_ASSERT(!(inputVariable && workItem));
+    OS_ASSERT(inputVariable || workItem);
+    OS_ASSERT(!(inputVariable && workItem));
     if (isInputVariable()) {
       setName(inputVariable->name() + " Workflow Step");
       // deserialization constructor, so do not call m_inputVariable->onChange()
@@ -72,12 +73,12 @@ namespace detail {
       m_workItem(other.m_workItem)
   {
     if (other.isInputVariable()) {
-      BOOST_ASSERT(!m_workItem);
+      OS_ASSERT(!m_workItem);
       m_inputVariable = other.inputVariable().clone().cast<InputVariable>();
       connectChild(m_inputVariable.get(),false);
     }
     else {
-      BOOST_ASSERT(m_workItem);
+      OS_ASSERT(m_workItem);
     }
   }
 

@@ -20,6 +20,7 @@
 #include <analysis/FSUDaceAlgorithmOptions.hpp>
 #include <analysis/FSUDaceAlgorithmOptions_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Json.hpp>
 #include <utilities/core/Optional.hpp>
 
@@ -66,7 +67,7 @@ namespace detail {
   int FSUDaceAlgorithmOptions_Impl::samples() const {
     int result;
     OptionalAttribute option = getOption("samples");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     result = option->valueAsInteger();
     return result;
   }
@@ -90,7 +91,7 @@ namespace detail {
   bool FSUDaceAlgorithmOptions_Impl::fixedSequence() const {
     bool result;
     OptionalAttribute option = getOption("fixedSequence");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     result = option->valueAsBoolean();
     return result;
   }
@@ -98,7 +99,7 @@ namespace detail {
   bool FSUDaceAlgorithmOptions_Impl::latinize() const {
     bool result;
     OptionalAttribute option = getOption("latinize");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     result = option->valueAsBoolean();
     return result;
   }
@@ -106,7 +107,7 @@ namespace detail {
   bool FSUDaceAlgorithmOptions_Impl::varianceBasedDecomp() const {
     bool result;
     OptionalAttribute option = getOption("varianceBasedDecomp");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     result = option->valueAsBoolean();
     return result;
   }
@@ -114,7 +115,7 @@ namespace detail {
   bool FSUDaceAlgorithmOptions_Impl::qualityMetrics() const {
     bool result;
     OptionalAttribute option = getOption("qualityMetrics");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     result = option->valueAsBoolean();
     return result;
   }
@@ -138,7 +139,7 @@ namespace detail {
   bool FSUDaceAlgorithmOptions_Impl::fixedSeed() const {
     bool result;
     OptionalAttribute option = getOption("fixedSeed");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     result = option->valueAsBoolean();
     return result;
   }
@@ -153,7 +154,7 @@ namespace detail {
       return false;
 	  }
     OptionalAttribute option = getOption("samples");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     option->setValue(value);
     return true;
   }
@@ -192,25 +193,25 @@ namespace detail {
 
   void FSUDaceAlgorithmOptions_Impl::setFixedSequence(bool value) {
     OptionalAttribute option = getOption("fixedSequence");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     option->setValue(value);
   }
 
   void FSUDaceAlgorithmOptions_Impl::setLatinize(bool value) {
     OptionalAttribute option = getOption("latinize");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     option->setValue(value);
   }
 
   void FSUDaceAlgorithmOptions_Impl::setVarianceBasedDecomp(bool value) {
     OptionalAttribute option = getOption("varianceBasedDecomp");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     option->setValue(value);
   }
 
   void FSUDaceAlgorithmOptions_Impl::setQualityMetrics(bool value) {
     OptionalAttribute option = getOption("qualityMetrics");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     option->setValue(value);
   }
 
@@ -248,7 +249,7 @@ namespace detail {
 
   void FSUDaceAlgorithmOptions_Impl::setFixedSeed(bool value) {
     OptionalAttribute option = getOption("fixedSeed");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     option->setValue(value);
   }
 

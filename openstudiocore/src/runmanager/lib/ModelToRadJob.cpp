@@ -60,7 +60,7 @@ namespace detail {
     try {
       m_model = files.getLastByExtension("osm");
       resetFiles(m_files, m_model);
-    } catch (const std::exception &) {
+    } catch (const std::runtime_error &) {
     }
 
     m_description = buildDescription("osm");
@@ -126,7 +126,7 @@ namespace detail {
       }
 
       resetFiles(m_files, m_model);
-    } catch (const std::exception &e) {
+    } catch (const std::runtime_error &e) {
       errors.result = ruleset::OSResultValue::Fail;
       errors.addError(ErrorType::Error, e.what());
     }
@@ -213,7 +213,11 @@ namespace detail {
       m_outputfiles = outfileinfos;
 
       /// Do work here - and be sure to set output files too
-    } catch (const std::exception &e) {
+    } catch (const std::runtime_error &e) {
+      errors.addError(ErrorType::Error, "Error with conversion (runtime_error): " + std::string(e.what()));
+      errors.result = ruleset::OSResultValue::Fail;
+    }
+    catch (const std::exception &e) {
       errors.addError(ErrorType::Error, "Error with conversion: " + std::string(e.what()));
       errors.result = ruleset::OSResultValue::Fail;
     }

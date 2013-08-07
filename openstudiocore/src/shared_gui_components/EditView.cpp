@@ -33,6 +33,8 @@
 #include <QWheelEvent>
 #include <QApplication>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio{
   
 EditRubyMeasureView::EditRubyMeasureView()
@@ -124,7 +126,7 @@ void EditRubyMeasureView::clear()
  {
    QWidget * widget = child->widget();
 
-   Q_ASSERT(widget);
+   OS_ASSERT(widget);
 
    delete widget;
 

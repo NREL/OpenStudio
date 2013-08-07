@@ -37,7 +37,7 @@ namespace detail {
   CurveSigmoid_Impl::CurveSigmoid_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : Curve_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CurveSigmoid::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CurveSigmoid::iddObjectType());
   }
 
   CurveSigmoid_Impl::CurveSigmoid_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                                        bool keepHandle)
     : Curve_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CurveSigmoid::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CurveSigmoid::iddObjectType());
   }
 
   CurveSigmoid_Impl::CurveSigmoid_Impl(const CurveSigmoid_Impl& other,
@@ -71,7 +71,7 @@ namespace detail {
   }
 
   double CurveSigmoid_Impl::evaluate(const std::vector<double>& x) const {
-    BOOST_ASSERT(x.size() == 1u);
+    OS_ASSERT(x.size() == 1u);
     double result = coefficient2C2();
     double temp = coefficient3C3() - x[0];
     temp /= coefficient4C4();
@@ -84,43 +84,43 @@ namespace detail {
 
   double CurveSigmoid_Impl::coefficient1C1() const {
     boost::optional<double> value = getDouble(OS_Curve_SigmoidFields::Coefficient1C1,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveSigmoid_Impl::coefficient2C2() const {
     boost::optional<double> value = getDouble(OS_Curve_SigmoidFields::Coefficient2C2,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveSigmoid_Impl::coefficient3C3() const {
     boost::optional<double> value = getDouble(OS_Curve_SigmoidFields::Coefficient3C3,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveSigmoid_Impl::coefficient4C4() const {
     boost::optional<double> value = getDouble(OS_Curve_SigmoidFields::Coefficient4C4,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveSigmoid_Impl::coefficient5C5() const {
     boost::optional<double> value = getDouble(OS_Curve_SigmoidFields::Coefficient5C5,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveSigmoid_Impl::minimumValueofx() const {
     boost::optional<double> value = getDouble(OS_Curve_SigmoidFields::MinimumValueofx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveSigmoid_Impl::maximumValueofx() const {
     boost::optional<double> value = getDouble(OS_Curve_SigmoidFields::MaximumValueofx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -134,7 +134,7 @@ namespace detail {
 
   std::string CurveSigmoid_Impl::inputUnitTypeforx() const {
     boost::optional<std::string> value = getString(OS_Curve_SigmoidFields::InputUnitTypeforx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -144,7 +144,7 @@ namespace detail {
 
   std::string CurveSigmoid_Impl::outputUnitType() const {
     boost::optional<std::string> value = getString(OS_Curve_SigmoidFields::OutputUnitType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -155,43 +155,43 @@ namespace detail {
   void CurveSigmoid_Impl::setCoefficient1C1(double coefficient1C1) {
     bool result = false;
     result = setDouble(OS_Curve_SigmoidFields::Coefficient1C1, coefficient1C1);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveSigmoid_Impl::setCoefficient2C2(double coefficient2C2) {
     bool result = false;
     result = setDouble(OS_Curve_SigmoidFields::Coefficient2C2, coefficient2C2);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveSigmoid_Impl::setCoefficient3C3(double coefficient3C3) {
     bool result = false;
     result = setDouble(OS_Curve_SigmoidFields::Coefficient3C3, coefficient3C3);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveSigmoid_Impl::setCoefficient4C4(double coefficient4C4) {
     bool result = false;
     result = setDouble(OS_Curve_SigmoidFields::Coefficient4C4, coefficient4C4);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveSigmoid_Impl::setCoefficient5C5(double coefficient5C5) {
     bool result = false;
     result = setDouble(OS_Curve_SigmoidFields::Coefficient5C5, coefficient5C5);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveSigmoid_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = false;
     result = setDouble(OS_Curve_SigmoidFields::MinimumValueofx, minimumValueofx);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveSigmoid_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = false;
     result = setDouble(OS_Curve_SigmoidFields::MaximumValueofx, maximumValueofx);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveSigmoid_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
@@ -201,12 +201,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_SigmoidFields::MinimumCurveOutput, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveSigmoid_Impl::resetMinimumCurveOutput() {
     bool result = setString(OS_Curve_SigmoidFields::MinimumCurveOutput, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveSigmoid_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
@@ -216,12 +216,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_SigmoidFields::MaximumCurveOutput, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveSigmoid_Impl::resetMaximumCurveOutput() {
     bool result = setString(OS_Curve_SigmoidFields::MaximumCurveOutput, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CurveSigmoid_Impl::setInputUnitTypeforx(std::string inputUnitTypeforx) {
@@ -233,7 +233,7 @@ namespace detail {
   void CurveSigmoid_Impl::resetInputUnitTypeforx() {
 
     bool result = setString(OS_Curve_SigmoidFields::InputUnitTypeforx, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CurveSigmoid_Impl::setOutputUnitType(std::string outputUnitType) {
@@ -244,7 +244,7 @@ namespace detail {
 
   void CurveSigmoid_Impl::resetOutputUnitType() {
     bool result = setString(OS_Curve_SigmoidFields::OutputUnitType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -252,7 +252,7 @@ namespace detail {
 CurveSigmoid::CurveSigmoid(const Model& model)
   : Curve(CurveSigmoid::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CurveSigmoid_Impl>());
+  OS_ASSERT(getImpl<detail::CurveSigmoid_Impl>());
   setDouble(OS_Curve_SigmoidFields::Coefficient1C1,0.0);
   setDouble(OS_Curve_SigmoidFields::Coefficient2C2,1.0);
   setDouble(OS_Curve_SigmoidFields::Coefficient3C3,1.0);

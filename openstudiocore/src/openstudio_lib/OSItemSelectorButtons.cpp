@@ -75,7 +75,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
 
   bool isConnected = false;
   isConnected = connect(m_dropZone,SIGNAL(itemDropped(const OSItemId&)),this,SIGNAL(itemDropped(const OSItemId&)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
     
   // buttons
   QWidget * buttonBox = new QWidget();
@@ -96,7 +96,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   buttonLayout->addWidget(m_addButton);
   
   isConnected = connect(m_addButton,SIGNAL(clicked()),this,SIGNAL(addClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_copyButton = new QPushButton();
   m_copyButton->setEnabled(false);
@@ -107,7 +107,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   buttonLayout->addWidget(m_copyButton);
   
   isConnected = connect(m_copyButton,SIGNAL(clicked()),this,SIGNAL(copyClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_removeButton = new QPushButton();
   m_removeButton->setEnabled(false);
@@ -118,7 +118,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   buttonLayout->addWidget(m_removeButton);
   
   isConnected = connect(m_removeButton,SIGNAL(clicked()),this,SIGNAL(removeClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   buttonLayout->addStretch();
 
@@ -130,7 +130,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   buttonLayout->addWidget(m_purgeButton);
   
   isConnected = connect(m_purgeButton,SIGNAL(clicked()),this,SIGNAL(purgeClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   //m_openBclDlgButton = new QPushButton(this);
   //m_openBclDlgButton->setObjectName("OpenBclDlgButton");
@@ -139,7 +139,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   //m_vLayout->addWidget(m_openBclDlgButton);
   //
   //isConnected = connect(m_openBclDlgButton,SIGNAL(clicked()),this,SIGNAL(openBclDlgClicked()));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
 }
 
 void OSItemSelectorButtons::showDropZone()

@@ -23,6 +23,8 @@
 #include <analysis/DataPoint.hpp>
 #include <analysis/Problem.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -47,7 +49,7 @@ namespace detail {
 
   double DiscreteVariable_Impl::getValue(const DataPoint& dataPoint) const {
     OptionalInt index = dataPoint.problem().getVariableIndexByUUID(uuid());
-    BOOST_ASSERT(index);
+    OS_ASSERT(index);
     return dataPoint.variableValues()[*index].toDouble();
   }
 
@@ -78,3 +80,4 @@ DiscreteVariable::DiscreteVariable(boost::shared_ptr<detail::DiscreteVariable_Im
 
 } // analysis
 } // openstudio
+

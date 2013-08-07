@@ -151,7 +151,7 @@ ResultsView::ResultsView()
   hLayout->addWidget(m_viewFileButton);
   
   isConnected = connect(m_viewFileButton, SIGNAL(clicked(bool)), this, SIGNAL(openButtonClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_openDirButton = new OpenDirectoryButton(this);
   m_openDirButton->setToolTip("Open the directory for the selected file.");
@@ -159,7 +159,7 @@ ResultsView::ResultsView()
   hLayout->addWidget(m_openDirButton);
 
   isConnected = connect(m_openDirButton, SIGNAL(clicked(bool)), this, SIGNAL(openDirButtonClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   
   hLayout->addStretch();
   mainContentVLayout->addWidget(footer);
@@ -508,10 +508,10 @@ DataPointResultsView::DataPointResultsView(const openstudio::analysis::DataPoint
   hLayout->addWidget(m_scrollSpacer);
 
   bool test = dataPoint.connect(SIGNAL(changed(ChangeType)), this, SLOT(update()));
-  Q_ASSERT(test);
+  OS_ASSERT(test);
 
   test = baselineDataPoint.connect(SIGNAL(changed(ChangeType)), this, SLOT(update()));
-  Q_ASSERT(test);
+  OS_ASSERT(test);
 
   update();
 }
@@ -831,7 +831,7 @@ boost::optional<double> DataPointResultsView::getValue(const std::string& attrib
       }
       else{
         // should never get here
-        Q_ASSERT(false);
+        OS_ASSERT(false);
       }
 
       Quantity currentQuantity(*currentResult,currentUnit);

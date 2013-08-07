@@ -27,6 +27,7 @@
 #include <analysis/DataPoint_Impl.hpp>
 
 #include <utilities/core/Json.hpp>
+#include <utilities/core/Assert.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -187,11 +188,11 @@ namespace detail {
     bool connected = connect(SIGNAL(clean()),
                              child.getImpl<detail::AnalysisObject_Impl>().get(),
                              SLOT(onParentClean()));
-    BOOST_ASSERT(connected);
+    OS_ASSERT(connected);
     connected = child.connect(SIGNAL(changed(ChangeType)),
                               this,
                               SLOT(onChildChanged(ChangeType)));
-    BOOST_ASSERT(connected);
+    OS_ASSERT(connected);
   }
 
   void AnalysisObject_Impl::disconnectChild(AnalysisObject& child,bool clearParent) const {
@@ -202,11 +203,11 @@ namespace detail {
     bool disconnected = disconnect(SIGNAL(clean()),
                                    child.getImpl<detail::AnalysisObject_Impl>().get(),
                                    SLOT(onParentClean()));
-    BOOST_ASSERT(disconnected);
+    OS_ASSERT(disconnected);
     disconnected = child.disconnect(SIGNAL(changed(ChangeType)),
                                     this,
                                     SLOT(onChildChanged(ChangeType)));
-    BOOST_ASSERT(disconnected);
+    OS_ASSERT(disconnected);
   }
 
   void AnalysisObject_Impl::setDirtyFlag() {

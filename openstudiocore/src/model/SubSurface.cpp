@@ -56,7 +56,7 @@ namespace detail {
                                    bool keepHandle)
     : PlanarSurface_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == SubSurface::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == SubSurface::iddObjectType());
   }
 
   SubSurface_Impl::SubSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -64,7 +64,7 @@ namespace detail {
                                    bool keepHandle)
     : PlanarSurface_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == SubSurface::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == SubSurface::iddObjectType());
   }
 
   SubSurface_Impl::SubSurface_Impl(const SubSurface_Impl& other,
@@ -383,7 +383,7 @@ namespace detail {
 
   std::string SubSurface_Impl::subSurfaceType() const {
     boost::optional<std::string> value = getString(OS_SubSurfaceFields::SubSurfaceType,true,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -410,7 +410,7 @@ namespace detail {
 
   double SubSurface_Impl::multiplier() const {
     boost::optional<double> value = getDouble(OS_SubSurfaceFields::Multiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -463,12 +463,12 @@ namespace detail {
 
   void SubSurface_Impl::resetViewFactortoGround() {
     bool result = setString(OS_SubSurfaceFields::ViewFactortoGround, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SubSurface_Impl::autocalculateViewFactortoGround() {
     bool result = setString(OS_SubSurfaceFields::ViewFactortoGround, "Autocalculate");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SubSurface_Impl::setMultiplier(double multiplier) {
@@ -479,7 +479,7 @@ namespace detail {
       boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface();
       if (adjacentSubSurface){
         result = adjacentSubSurface->setDouble(OS_SubSurfaceFields::Multiplier, multiplier);
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
       }
     }
 
@@ -488,12 +488,12 @@ namespace detail {
 
   void SubSurface_Impl::resetMultiplier() {
     bool result = setString(OS_SubSurfaceFields::Multiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
 
     boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface();
     if (adjacentSubSurface){
       result = adjacentSubSurface->setString(OS_SubSurfaceFields::Multiplier, "");
-      BOOST_ASSERT(result);
+      OS_ASSERT(result);
     }
   }
 
@@ -515,12 +515,12 @@ namespace detail {
 
   void SubSurface_Impl::resetNumberofVertices() {
     bool result = setString(OS_SubSurfaceFields::NumberofVertices, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SubSurface_Impl::autocalculateNumberofVertices() {
     bool result = setString(OS_SubSurfaceFields::NumberofVertices, "Autocalculate");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<Surface> SubSurface_Impl::surface() const
@@ -594,11 +594,11 @@ namespace detail {
         }
 
         result = setPointer(OS_SubSurfaceFields::OutsideBoundaryConditionObject, subSurface.handle());
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
 
         if (!isSameSubSurface){
           result = subSurface.setPointer(OS_SubSurfaceFields::OutsideBoundaryConditionObject, this->handle());
-          BOOST_ASSERT(result);
+          OS_ASSERT(result);
         }
       }
     }
@@ -608,11 +608,11 @@ namespace detail {
   void SubSurface_Impl::resetAdjacentSubSurface()
   {
     bool test = setString(OS_SubSurfaceFields::OutsideBoundaryConditionObject, "");
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     BOOST_FOREACH(WorkspaceObject wo, this->getSources(IddObjectType::OS_SubSurface)){
       test = wo.setString(OS_SubSurfaceFields::OutsideBoundaryConditionObject, "");
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
   }
 
@@ -660,7 +660,7 @@ namespace detail {
   {
     std::string defaultSubSurfaceType = this->defaultSubSurfaceType();
     bool test = setSubSurfaceType(defaultSubSurfaceType);
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   std::string SubSurface_Impl::outsideBoundaryCondition() const {
@@ -838,7 +838,7 @@ namespace detail {
 SubSurface::SubSurface(const std::vector<Point3d>& vertices, const Model& model)
   : PlanarSurface(SubSurface::iddObjectType(),vertices,model)
 {
-  BOOST_ASSERT(getImpl<detail::SubSurface_Impl>());
+  OS_ASSERT(getImpl<detail::SubSurface_Impl>());
   assignDefaultSubSurfaceType();
 }
 

@@ -34,6 +34,7 @@
 
 #include <utilities/document/Table.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Json.hpp>
 
 #include <boost/foreach.hpp>
@@ -332,7 +333,7 @@ namespace detail {
     if (variableValues.size() == measures.size()) {
       // problem was able to match all measures
       DataPointVector intermediate = getDataPoints(variableValues);
-      BOOST_ASSERT(intermediate.size() < 2u);
+      OS_ASSERT(intermediate.size() < 2u);
       if (intermediate.size() == 1u) {
         result = intermediate[0];
       }
@@ -474,7 +475,7 @@ namespace detail {
     }
     DataPointVector existingDataPoints = getDataPoints(dataPoint.variableValues());
     if (existingDataPoints.size() > 0) {
-      BOOST_ASSERT(existingDataPoints.size() == 1); // dataPoint must be fully specified to be valid
+      OS_ASSERT(existingDataPoints.size() == 1); // dataPoint must be fully specified to be valid
       LOG(Info,"DataPoint not added to Analysis '" << name() << "', because it already exists.");
       return false;
     }
@@ -509,7 +510,7 @@ namespace detail {
     OptionalDataPoint exactDataPoint = getDataPointByUUID(dataPoint);
     if (exactDataPoint) {
       DataPointVector::iterator it = std::find(m_dataPoints.begin(),m_dataPoints.end(),*exactDataPoint);
-      BOOST_ASSERT(it != m_dataPoints.end());
+      OS_ASSERT(it != m_dataPoints.end());
       disconnectChild(*it);
       m_dataPoints.erase(it);
       // TODO: It may be that the algorithm should be reset, or at least marked not-complete.

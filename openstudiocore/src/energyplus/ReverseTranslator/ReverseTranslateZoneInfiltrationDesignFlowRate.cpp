@@ -31,6 +31,8 @@
 #include <utilities/idd/ZoneInfiltration_DesignFlowRate_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -75,7 +77,7 @@ OptionalModelObject ReverseTranslator::translateZoneInfiltrationDesignFlowRate( 
   }
 
   s = workspaceObject.getString(openstudio::ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod, true);
-  BOOST_ASSERT(s);
+  OS_ASSERT(s);
 
   OptionalDouble d;
   if (istringEqual("Flow/Zone", *s)){

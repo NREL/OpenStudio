@@ -36,7 +36,7 @@ namespace detail {
                                                        bool keepHandle)
     : Glazing_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ThermochromicGlazing::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ThermochromicGlazing::iddObjectType());
   }
 
   ThermochromicGlazing_Impl::ThermochromicGlazing_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -44,7 +44,7 @@ namespace detail {
                                                        bool keepHandle)
     : Glazing_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ThermochromicGlazing::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ThermochromicGlazing::iddObjectType());
   }
 
   ThermochromicGlazing_Impl::ThermochromicGlazing_Impl(const ThermochromicGlazing_Impl& other,
@@ -217,7 +217,7 @@ namespace detail {
       OptionalWorkspaceObject owo = group.getTarget(OS_WindowMaterial_GlazingGroup_ThermochromicExtensibleFields::WindowMaterialGlazingName);
       if (owo) {
         OptionalGlazing og = owo->optionalCast<Glazing>();
-        BOOST_ASSERT(og);
+        OS_ASSERT(og);
         result.push_back(*og);
       }
     }
@@ -229,12 +229,12 @@ namespace detail {
 ThermochromicGlazing::ThermochromicGlazing(const Model& model)
   : Glazing(ThermochromicGlazing::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ThermochromicGlazing_Impl>());
+  OS_ASSERT(getImpl<detail::ThermochromicGlazing_Impl>());
 
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType ThermochromicGlazing::iddObjectType() {

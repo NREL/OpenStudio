@@ -90,34 +90,34 @@ namespace detail {
   DataPointRecord_Impl::DataPointRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : ObjectRecord_Impl(database, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(DataPointRecordColumns::analysisRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_analysisRecordId = value.toInt();
 
     value = query.value(DataPointRecordColumns::problemRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_problemRecordId = value.toInt();
 
     value = query.value(DataPointRecordColumns::dataPointRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_dataPointRecordType = DataPointRecordType(value.toInt());
 
     value = query.value(DataPointRecordColumns::complete);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_complete = value.toBool();
 
     value = query.value(DataPointRecordColumns::failed);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_failed = value.toBool();
 
     value = query.value(DataPointRecordColumns::directory);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_directory = toPath(value.toString());
 
     value = query.value(DataPointRecordColumns::inputDataRecordId);
@@ -259,7 +259,7 @@ namespace detail {
       // double-check ordering
       int vectorIndex = cvr.variableVectorIndex();
       if (lastVectorIndex) {
-        BOOST_ASSERT(lastVectorIndex.get() < vectorIndex);
+        OS_ASSERT(lastVectorIndex.get() < vectorIndex);
       }
       lastVectorIndex = vectorIndex;
       query.prepare(toQString("SELECT * FROM " + DataPointValueRecord::databaseTableName() +
@@ -388,7 +388,7 @@ namespace detail {
         }
       }
       else {
-        BOOST_ASSERT(inputVariableRecord.optionalCast<ContinuousVariableRecord>());
+        OS_ASSERT(inputVariableRecord.optionalCast<ContinuousVariableRecord>());
         QSqlQuery query(*(database.qSqlDatabase()));
         query.prepare(toQString("SELECT dataPointValue FROM " + DataPointValueRecord::databaseTableName() +
             " WHERE dataPointRecordId=:dataPointRecordId AND continuousVariableRecordId=:continuousVariableRecordId"));
@@ -397,12 +397,12 @@ namespace detail {
         assertExec(query);
         if (query.first()) {
           QVariant value = query.value(0);
-          BOOST_ASSERT(value.isValid() && !value.isNull());
+          OS_ASSERT(value.isValid() && !value.isNull());
           variableValues.push_back(value.toDouble());
         }
       }
     }
-    BOOST_ASSERT(variableValues.size() == inputVariableRecords.size());
+    OS_ASSERT(variableValues.size() == inputVariableRecords.size());
 
     OptionalFileReferenceRecord ofrr;
     OptionalFileReference oOsmInputData;
@@ -610,36 +610,36 @@ namespace detail {
   }
 
   void DataPointRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     ObjectRecord_Impl::setLastValues(query, projectDatabase);
 
     QVariant value;
 
     value = query.value(DataPointRecordColumns::analysisRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastAnalysisRecordId = value.toInt();
 
     value = query.value(DataPointRecordColumns::problemRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastProblemRecordId = value.toInt();
 
     value = query.value(DataPointRecordColumns::dataPointRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastDataPointRecordType = DataPointRecordType(value.toInt());
 
     value = query.value(DataPointRecordColumns::complete);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastComplete = value.toBool();
 
     value = query.value(DataPointRecordColumns::failed);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastFailed = value.toBool();
 
     value = query.value(DataPointRecordColumns::directory);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastDirectory = toPath(value.toString());
 
     value = query.value(DataPointRecordColumns::inputDataRecordId);
@@ -692,36 +692,36 @@ namespace detail {
   }
 
   bool DataPointRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = ObjectRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(DataPointRecordColumns::analysisRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_analysisRecordId == value.toInt());
 
     value = query.value(DataPointRecordColumns::problemRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_problemRecordId == value.toInt());
 
     value = query.value(DataPointRecordColumns::dataPointRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_dataPointRecordType == DataPointRecordType(value.toInt()));
 
     value = query.value(DataPointRecordColumns::complete);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_complete == value.toBool());
 
     value = query.value(DataPointRecordColumns::failed);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_failed == value.toBool());
 
     value = query.value(DataPointRecordColumns::directory);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_directory == toPath(value.toString()));
 
     value = query.value(DataPointRecordColumns::inputDataRecordId);
@@ -820,7 +820,7 @@ DataPointRecord::DataPointRecord(const analysis::DataPoint& dataPoint,
                                          problemRecord)),
         analysisRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::DataPointRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DataPointRecord_Impl>());
 
   constructRelatedRecords(dataPoint,analysisRecord,problemRecord);
 }
@@ -830,14 +830,14 @@ DataPointRecord::DataPointRecord(const QSqlQuery& query, ProjectDatabase& databa
         new detail::DataPointRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::DataPointRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DataPointRecord_Impl>());
 }
 
 DataPointRecord::DataPointRecord(boost::shared_ptr<detail::DataPointRecord_Impl> impl,
                                  ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::DataPointRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DataPointRecord_Impl>());
 }
 
 std::string DataPointRecord::databaseTableName() {
@@ -858,7 +858,7 @@ UpdateByIdQueryData DataPointRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -916,7 +916,7 @@ void DataPointRecord::updatePathData(ProjectDatabase database,
 
   if (didStartTransaction) {
     bool test = database.commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 }
 
@@ -946,7 +946,7 @@ DataPointRecord DataPointRecord::factoryFromDataPoint(const analysis::DataPoint&
                                                       const ProblemRecord& problemRecord)
 {
   if (dataPoint.optionalCast<analysis::OptimizationDataPoint>()) {
-    BOOST_ASSERT(problemRecord.optionalCast<OptimizationProblemRecord>());
+    OS_ASSERT(problemRecord.optionalCast<OptimizationProblemRecord>());
     return OptimizationDataPointRecord(dataPoint.cast<analysis::OptimizationDataPoint>(),
                                        analysisRecord,
                                        problemRecord.cast<OptimizationProblemRecord>());
@@ -955,7 +955,7 @@ DataPointRecord DataPointRecord::factoryFromDataPoint(const analysis::DataPoint&
     return DataPointRecord(dataPoint,analysisRecord,problemRecord);
   }
 
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return DataPointRecord(boost::shared_ptr<detail::DataPointRecord_Impl>());
 }
 
@@ -1082,7 +1082,7 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
   if (isNew) {
     std::vector<QVariant> variableValues = dataPoint.variableValues();
     InputVariableRecordVector inputVariableRecords = problemRecord.inputVariableRecords();
-    BOOST_ASSERT(inputVariableRecords.size() == variableValues.size());
+    OS_ASSERT(inputVariableRecords.size() == variableValues.size());
     for (int i = 0, n = variableValues.size(); i < n; ++i) {
       if (OptionalMeasureGroupRecord omgr = inputVariableRecords[i].optionalCast<MeasureGroupRecord>())
       {
@@ -1091,7 +1091,7 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
       }
       else {
         OptionalContinuousVariableRecord ocvr = inputVariableRecords[i].optionalCast<ContinuousVariableRecord>();
-        BOOST_ASSERT(ocvr);
+        OS_ASSERT(ocvr);
         DataPointValueRecord continuousVariableValueRecord(variableValues[i].toDouble(),
                                                            copyOfThis,
                                                            *ocvr);
@@ -1116,7 +1116,7 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
       }
       // add new records
       InputVariableRecordVector inputVariableRecords = problemRecord.inputVariableRecords();
-      BOOST_ASSERT(inputVariableRecords.size() == variableValues.size());
+      OS_ASSERT(inputVariableRecords.size() == variableValues.size());
       for (int i = 0, n = variableValues.size(); i < n; ++i) {
         if (OptionalMeasureGroupRecord omgr = inputVariableRecords[i].optionalCast<MeasureGroupRecord>())
         {
@@ -1126,7 +1126,7 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
         }
         else {
           OptionalContinuousVariableRecord ocvr = inputVariableRecords[i].optionalCast<ContinuousVariableRecord>();
-          BOOST_ASSERT(ocvr);
+          OS_ASSERT(ocvr);
           DataPointValueRecord continuousVariableValueRecord(variableValues[i].toDouble(),
                                                              copyOfThis,
                                                              *ocvr);
@@ -1147,7 +1147,7 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
     getImpl<detail::DataPointRecord_Impl>()->setOsmInputDataRecordId(newOsmInputDataRecord->id());
   }
   if (!osmInputData) {
-    BOOST_ASSERT(!newOsmInputDataRecord);
+    OS_ASSERT(!newOsmInputDataRecord);
     getImpl<detail::DataPointRecord_Impl>()->clearOsmInputDataRecordId();
   }
   OptionalFileReference idfInputData = dataPoint.idfInputData();
@@ -1161,7 +1161,7 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
     getImpl<detail::DataPointRecord_Impl>()->setIdfInputDataRecordId(newIdfInputDataRecord->id());
   }
   if (!idfInputData) {
-    BOOST_ASSERT(!newIdfInputDataRecord);
+    OS_ASSERT(!newIdfInputDataRecord);
     getImpl<detail::DataPointRecord_Impl>()->clearIdfInputDataRecordId();
   }
   OptionalFileReference sqlOutputData = dataPoint.sqlOutputData();
@@ -1175,7 +1175,7 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
     getImpl<detail::DataPointRecord_Impl>()->setSqlOutputDataRecordId(newSqlOutputDataRecord->id());
   }
   if (!sqlOutputData) {
-    BOOST_ASSERT(!newSqlOutputDataRecord);
+    OS_ASSERT(!newSqlOutputDataRecord);
     getImpl<detail::DataPointRecord_Impl>()->clearSqlOutputDataRecordId();
   }
   OptionalFileReference xmlOutputData = dataPoint.xmlOutputData();
@@ -1195,7 +1195,7 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
     }
   }
   if (!xmlOutputData) {
-    BOOST_ASSERT(!newXmlOutputDataRecord);
+    OS_ASSERT(!newXmlOutputDataRecord);
     getImpl<detail::DataPointRecord_Impl>()->clearXmlOutputDataRecordId();
   }
 
@@ -1212,7 +1212,7 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
   DoubleVector values = dataPoint.responseValues();
   if (!values.empty()) {
     int n = responses.size();
-    BOOST_ASSERT(values.size() == static_cast<size_t>(n));
+    OS_ASSERT(values.size() == static_cast<size_t>(n));
     for (int i = 0; i < n; ++i) {
       DataPointValueRecord newValue(values[i],copyOfThis,responses[i]);
     }

@@ -20,6 +20,7 @@
 #include <analysis/SamplingAlgorithmOptions.hpp>
 #include <analysis/SamplingAlgorithmOptions_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Json.hpp>
 #include <utilities/core/Optional.hpp>
 
@@ -61,7 +62,7 @@ namespace detail {
   int SamplingAlgorithmOptions_Impl::samples() const {
     int result;
     OptionalAttribute option = getOption("samples");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     result = option->valueAsInteger();
     return result;
   }
@@ -69,7 +70,7 @@ namespace detail {
   bool SamplingAlgorithmOptions_Impl::allVariables() const {
     bool result;
     OptionalAttribute option = getOption("allVariables");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     result = option->valueAsBoolean();
     return result;
   }
@@ -77,7 +78,7 @@ namespace detail {
   bool SamplingAlgorithmOptions_Impl::varianceBasedDecomp() const {
     bool result;
     OptionalAttribute option = getOption("varianceBasedDecomp");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     result = option->valueAsBoolean();
     return result;
   }
@@ -85,7 +86,7 @@ namespace detail {
   bool SamplingAlgorithmOptions_Impl::dropTolerance() const {
     bool result;
     OptionalAttribute option = getOption("dropTolerance");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     result = option->valueAsBoolean();
     return result;
   }
@@ -101,7 +102,7 @@ namespace detail {
   bool SamplingAlgorithmOptions_Impl::fixedSeed() const {
     bool result;
     OptionalAttribute option = getOption("fixedSeed");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     result = option->valueAsBoolean();
     return result;
   }
@@ -116,26 +117,26 @@ namespace detail {
       return false;
 	  }
     OptionalAttribute option = getOption("samples");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     option->setValue(value);
     return true;
   }
 
   void SamplingAlgorithmOptions_Impl::setAllVariables(bool value) {
     OptionalAttribute option = getOption("allVariables");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     option->setValue(value);
   }
 
   void SamplingAlgorithmOptions_Impl::setVarianceBasedDecomp(bool value) {
     OptionalAttribute option = getOption("varianceBasedDecomp");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     option->setValue(value);
   }
 
   void SamplingAlgorithmOptions_Impl::setDropTolerance(bool value) {
     OptionalAttribute option = getOption("dropTolerance");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     option->setValue(value);
   }
 
@@ -157,7 +158,7 @@ namespace detail {
 
   void SamplingAlgorithmOptions_Impl::setFixedSeed(bool value) {
     OptionalAttribute option = getOption("fixedSeed");
-    BOOST_ASSERT(option);
+    OS_ASSERT(option);
     option->setValue(value);
   }
 

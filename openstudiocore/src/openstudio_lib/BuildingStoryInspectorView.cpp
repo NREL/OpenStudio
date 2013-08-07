@@ -312,7 +312,7 @@ BuildingStoryInspectorView::BuildingStoryInspectorView(const openstudio::model::
 
   //m_floorHeightEdit = new OSQuantityEdit(m_isIP);
   //isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), , SLOT(onUnitSystemChange(bool)));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //vLayout->addWidget(m_floorHeightEdit);
 
   //mainGridLayout->addLayout(vLayout,1,0, Qt::AlignTop|Qt::AlignLeft);
@@ -326,7 +326,7 @@ BuildingStoryInspectorView::BuildingStoryInspectorView(const openstudio::model::
 
   //m_floorToFloorHeightEdit = new OSQuantityEdit(m_isIP);
   //isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), , SLOT(onUnitSystemChange(bool)));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //vLayout->addWidget(m_floorToFloorHeightEdit);
 
   //mainGridLayout->addLayout(vLayout,1,1, Qt::AlignTop|Qt::AlignLeft);

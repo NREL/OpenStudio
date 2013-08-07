@@ -62,11 +62,11 @@ namespace detail {
       m_usesBCLMeasure(rubyMeasure.usesBCLMeasure())
   {
     boost::optional<FileReferenceType> inputFileType = rubyMeasure.inputFileType();
-    BOOST_ASSERT(inputFileType);
+    OS_ASSERT(inputFileType);
     m_inputFileType = *inputFileType;
 
     boost::optional<FileReferenceType> outputFileType = rubyMeasure.outputFileType();
-    BOOST_ASSERT(outputFileType);
+    OS_ASSERT(outputFileType);
     m_outputFileType = *outputFileType;
   }
 
@@ -80,40 +80,40 @@ namespace detail {
       m_usesBCLMeasure(rubyMeasure.usesBCLMeasure())
   {
     boost::optional<FileReferenceType> inputFileType = rubyMeasure.inputFileType();
-    BOOST_ASSERT(inputFileType);
+    OS_ASSERT(inputFileType);
     m_inputFileType = *inputFileType;
 
     boost::optional<FileReferenceType> outputFileType = rubyMeasure.outputFileType();
-    BOOST_ASSERT(outputFileType);
+    OS_ASSERT(outputFileType);
     m_outputFileType = *outputFileType;
   }
 
   RubyMeasureRecord_Impl::RubyMeasureRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : MeasureRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
     value = query.value(MeasureRecordColumns::fileReferenceRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_fileReferenceRecordId = value.toInt();
 
     value = query.value(MeasureRecordColumns::inputFileType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_inputFileType = FileReferenceType(value.toInt());
 
     value = query.value(MeasureRecordColumns::outputFileType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_outputFileType = FileReferenceType(value.toInt());
 
     value = query.value(MeasureRecordColumns::isUserScript);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_isUserScript = value.toBool();
 
     value = query.value(MeasureRecordColumns::usesBCLMeasure);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_usesBCLMeasure = value.toBool();
   }
 
@@ -225,23 +225,23 @@ namespace detail {
 
     QVariant value;
     value = query.value(MeasureRecordColumns::fileReferenceRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastFileReferenceRecordId = value.toInt();
 
     value = query.value(MeasureRecordColumns::inputFileType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastInputFileType = FileReferenceType(value.toInt());
 
     value = query.value(MeasureRecordColumns::outputFileType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastOutputFileType = FileReferenceType(value.toInt());
 
     value = query.value(MeasureRecordColumns::isUserScript);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastIsUserScript = value.toBool();
 
     value = query.value(MeasureRecordColumns::usesBCLMeasure);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastUsesBCLMeasure = value.toBool();
   }
 
@@ -253,23 +253,23 @@ namespace detail {
 
     QVariant value;
     value = query.value(MeasureRecordColumns::fileReferenceRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_fileReferenceRecordId == value.toInt());
 
     value = query.value(MeasureRecordColumns::inputFileType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_inputFileType == FileReferenceType(value.toInt()));
 
     value = query.value(MeasureRecordColumns::outputFileType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_outputFileType == FileReferenceType(value.toInt()));
 
     value = query.value(MeasureRecordColumns::isUserScript);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_isUserScript == value.toBool());
 
     value = query.value(MeasureRecordColumns::usesBCLMeasure);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_usesBCLMeasure == value.toBool());
 
     return result;
@@ -308,7 +308,7 @@ RubyMeasureRecord::RubyMeasureRecord(const analysis::RubyMeasure& rubyMeasure,
                                                 measureVectorIndex)),
         measureGroupRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
+  OS_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
 
   constructRelatedRecords(rubyMeasure);
 }
@@ -320,7 +320,7 @@ RubyMeasureRecord::RubyMeasureRecord(const analysis::RubyMeasure& rubyMeasure,
                                                 database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
+  OS_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
 
   constructRelatedRecords(rubyMeasure);
 }
@@ -330,19 +330,19 @@ RubyMeasureRecord::RubyMeasureRecord(const QSqlQuery& query, ProjectDatabase& da
         new detail::RubyMeasureRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
+  OS_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
 }
 
 RubyMeasureRecord::RubyMeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl> impl, ProjectDatabase database)
   : MeasureRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
+  OS_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
 }
 
 RubyMeasureRecord::RubyMeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl> impl)
   : MeasureRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
+  OS_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
 }
 
 boost::optional<RubyMeasureRecord> RubyMeasureRecord::factoryFromQuery(

@@ -178,7 +178,7 @@ namespace detail{
     bool resort(false);
     while (query.next()){
       boost::optional<MeasureRecord> measure = MeasureRecord::factoryFromQuery(query, database);
-      BOOST_ASSERT(measure);
+      OS_ASSERT(measure);
       result.push_back(*measure);
       OptionalInt index = result.back().measureVectorIndex();
       if (previousIndex && index) {
@@ -271,7 +271,7 @@ MeasureGroupRecord::MeasureGroupRecord(const analysis::MeasureGroup& measureGrou
         problemRecord.projectDatabase(),
         measureGroup)
 {
-  BOOST_ASSERT(getImpl<detail::MeasureGroupRecord_Impl>());
+  OS_ASSERT(getImpl<detail::MeasureGroupRecord_Impl>());
 
   constructMeasureRecords(measureGroup);
 }
@@ -288,7 +288,7 @@ MeasureGroupRecord::MeasureGroupRecord(const analysis::MeasureGroup& measureGrou
         functionRecord.projectDatabase(),
         measureGroup)
 {
-  BOOST_ASSERT(getImpl<detail::MeasureGroupRecord_Impl>());
+  OS_ASSERT(getImpl<detail::MeasureGroupRecord_Impl>());
 
   constructMeasureRecords(measureGroup);
 }
@@ -299,21 +299,21 @@ MeasureGroupRecord::MeasureGroupRecord(const QSqlQuery& query, ProjectDatabase& 
         database,
         analysis::OptionalDiscreteVariable())
 {
-  BOOST_ASSERT(getImpl<detail::MeasureGroupRecord_Impl>());
+  OS_ASSERT(getImpl<detail::MeasureGroupRecord_Impl>());
 }
 
 MeasureGroupRecord::MeasureGroupRecord(boost::shared_ptr<detail::MeasureGroupRecord_Impl> impl,
                                        ProjectDatabase database)
   : DiscreteVariableRecord(impl, database, analysis::OptionalDiscreteVariable())
 {
-  BOOST_ASSERT(getImpl<detail::MeasureGroupRecord_Impl>());
+  OS_ASSERT(getImpl<detail::MeasureGroupRecord_Impl>());
 }
 
 /// @cond
 MeasureGroupRecord::MeasureGroupRecord(boost::shared_ptr<detail::MeasureGroupRecord_Impl> impl)
   : DiscreteVariableRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::MeasureGroupRecord_Impl>());
+  OS_ASSERT(getImpl<detail::MeasureGroupRecord_Impl>());
 }
 /// @endcond
 

@@ -57,7 +57,7 @@ namespace detail {
     try {
       m_idf = files.getLastByExtension("idf");
       resetFiles(m_files, m_idf);
-    } catch (const std::exception &) {
+    } catch (const std::runtime_error &) {
     }
 
     m_description = buildDescription("idf");
@@ -139,7 +139,7 @@ namespace detail {
         model = rt.translateWorkspace(*workspace);
       }
 
-      BOOST_ASSERT(model);
+      OS_ASSERT(model);
 
       openstudio::path outfile = outpath / openstudio::toPath("out.osm");
 
