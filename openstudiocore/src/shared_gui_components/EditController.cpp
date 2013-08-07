@@ -23,6 +23,7 @@
 #include <analysisdriver/SimpleProject.hpp>
 #include <analysis/DataPoint.hpp>
 #include <utilities/bcl/BCLMeasure.hpp>
+#include <utilities/core/Assert.hpp>
 #include <QWidget>
 #include <QLineEdit>
 #include <QLabel>
@@ -64,7 +65,7 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
 
   bool bingo = connect(editRubyPerturbationView->nameLineEdit,SIGNAL(textEdited(const QString &)),m_measureItem.data(),SLOT(setName(const QString &)));
 
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   // Measure Description
 
@@ -72,7 +73,7 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
 
   bingo = connect(editRubyPerturbationView->descriptionTextEdit,SIGNAL(textChanged()),this,SLOT(updateDescription()));
 
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   // Measure Modeler Description
 
@@ -160,7 +161,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     bool bingo = connect(doubleInputView->lineEdit,SIGNAL(textEdited(const QString &)),this,SLOT(setValue(const QString &)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     inputView = doubleInputView;
   }
@@ -223,7 +224,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     bool bingo = connect(choiceInputView->comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(setValueForIndex(int)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     inputView = choiceInputView;
   }
@@ -246,7 +247,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     bool bingo = connect(boolInputView->checkBox,SIGNAL(clicked(bool)),this,SLOT(setValue(bool)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     inputView = boolInputView;
   }
@@ -267,7 +268,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     bool bingo = connect(integerInputView->lineEdit,SIGNAL(textEdited(const QString &)),this,SLOT(setValue(const QString &)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     inputView = integerInputView;
   }
@@ -288,7 +289,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     bool bingo = connect(stringInputView->lineEdit,SIGNAL(textEdited(const QString &)),this,SLOT(setValue(const QString &)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     inputView = stringInputView;
   }

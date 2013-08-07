@@ -66,10 +66,10 @@ namespace detail {
     Schedule copyOfThis = getObject<Schedule>();
     BOOST_FOREACH(const ModelObject& user,users) {
       std::vector<ScheduleTypeKey> keys = user.getScheduleTypeKeys(copyOfThis);
-      // ETH@20120806 - Ideally would make the following BOOST_ASSERT, but is too
+      // ETH@20120806 - Ideally would make the following OS_ASSERT, but is too
       // strict for now. (Too easy for a user to trigger this first, before a unit
       // test or app tester catches it.)
-      // BOOST_ASSERT(!keys.empty());
+      // OS_ASSERT(!keys.empty());
       BOOST_FOREACH(const ScheduleTypeKey& key,keys) {
         if (!isCompatible(key.first,key.second,candidate)) {
           return false;
@@ -95,14 +95,14 @@ namespace detail {
 Schedule::Schedule(IddObjectType type,const Model& model)
   : ScheduleBase(type,model)
 {
-  BOOST_ASSERT(getImpl<detail::Schedule_Impl>());
+  OS_ASSERT(getImpl<detail::Schedule_Impl>());
 }
 
 // constructor from impl
 Schedule::Schedule(boost::shared_ptr<detail::Schedule_Impl> impl)
   : ScheduleBase(impl)
 {
-  BOOST_ASSERT(getImpl<detail::Schedule_Impl>());
+  OS_ASSERT(getImpl<detail::Schedule_Impl>());
 }
 
 } // model

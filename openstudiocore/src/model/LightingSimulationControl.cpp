@@ -32,7 +32,7 @@ namespace detail {
   LightingSimulationControl_Impl::LightingSimulationControl_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == LightingSimulationControl::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == LightingSimulationControl::iddObjectType());
   }
 
   LightingSimulationControl_Impl::LightingSimulationControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -40,7 +40,7 @@ namespace detail {
                                                                  bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == LightingSimulationControl::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == LightingSimulationControl::iddObjectType());
   }
 
   LightingSimulationControl_Impl::LightingSimulationControl_Impl(const LightingSimulationControl_Impl& other,
@@ -63,7 +63,7 @@ namespace detail {
 
   bool LightingSimulationControl_Impl::runSimulationforDesignDays() const {
     boost::optional<std::string> value = getString(OS_LightingSimulationControlFields::RunSimulationforDesignDays,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -73,7 +73,7 @@ namespace detail {
 
   bool LightingSimulationControl_Impl::runSimulationforWeatherFileRunPeriods() const {
     boost::optional<std::string> value = getString(OS_LightingSimulationControlFields::RunSimulationforWeatherFileRunPeriods,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -88,12 +88,12 @@ namespace detail {
     } else {
       result = setString(OS_LightingSimulationControlFields::RunSimulationforDesignDays, "No");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void LightingSimulationControl_Impl::resetRunSimulationforDesignDays() {
     bool result = setString(OS_LightingSimulationControlFields::RunSimulationforDesignDays, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void LightingSimulationControl_Impl::setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods) {
@@ -103,12 +103,12 @@ namespace detail {
     } else {
       result = setString(OS_LightingSimulationControlFields::RunSimulationforWeatherFileRunPeriods, "No");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void LightingSimulationControl_Impl::resetRunSimulationforWeatherFileRunPeriods() {
     bool result = setString(OS_LightingSimulationControlFields::RunSimulationforWeatherFileRunPeriods, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail

@@ -33,7 +33,7 @@ namespace detail {
   SteamEquipmentDefinition_Impl::SteamEquipmentDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceLoadDefinition_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == SteamEquipmentDefinition::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == SteamEquipmentDefinition::iddObjectType());
   }
 
   SteamEquipmentDefinition_Impl::SteamEquipmentDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -41,7 +41,7 @@ namespace detail {
                                                                bool keepHandle)
     : SpaceLoadDefinition_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == SteamEquipmentDefinition::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == SteamEquipmentDefinition::iddObjectType());
   }
 
   SteamEquipmentDefinition_Impl::SteamEquipmentDefinition_Impl(const SteamEquipmentDefinition_Impl& other,
@@ -82,7 +82,7 @@ namespace detail {
 
   std::string SteamEquipmentDefinition_Impl::designLevelCalculationMethod() const {
     boost::optional<std::string> value = getString(OS_SteamEquipment_DefinitionFields::DesignLevelCalculationMethod,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -100,7 +100,7 @@ namespace detail {
 
   double SteamEquipmentDefinition_Impl::fractionLatent() const {
     boost::optional<double> value = getDouble(OS_SteamEquipment_DefinitionFields::FractionLatent,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -110,7 +110,7 @@ namespace detail {
 
   double SteamEquipmentDefinition_Impl::fractionRadiant() const {
     boost::optional<double> value = getDouble(OS_SteamEquipment_DefinitionFields::FractionRadiant,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -120,7 +120,7 @@ namespace detail {
 
   double SteamEquipmentDefinition_Impl::fractionLost() const {
     boost::optional<double> value = getDouble(OS_SteamEquipment_DefinitionFields::FractionLost,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -134,11 +134,11 @@ namespace detail {
       result = setDouble(OS_SteamEquipment_DefinitionFields::DesignLevel, designLevel.get());
       if (result) {
         result = setString(OS_SteamEquipment_DefinitionFields::DesignLevelCalculationMethod,"EquipmentLevel");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setWattsperSpaceFloorArea(boost::none);
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setWattsperPerson(boost::none);
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
       }      
     } else {
       result = setString(OS_SteamEquipment_DefinitionFields::DesignLevel, "");
@@ -152,11 +152,11 @@ namespace detail {
       result = setDouble(OS_SteamEquipment_DefinitionFields::WattsperSpaceFloorArea, wattsperSpaceFloorArea.get());
       if (result) {
         result = setString(OS_SteamEquipment_DefinitionFields::DesignLevelCalculationMethod,"Watts/Area");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setDesignLevel(boost::none);
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setWattsperPerson(boost::none);
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
       }    
     } else {
       result = setString(OS_SteamEquipment_DefinitionFields::WattsperSpaceFloorArea, "");
@@ -170,11 +170,11 @@ namespace detail {
       result = setDouble(OS_SteamEquipment_DefinitionFields::WattsperPerson, wattsperPerson.get());
       if (result) {
         result = setString(OS_SteamEquipment_DefinitionFields::DesignLevelCalculationMethod,"Watts/Person");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setDesignLevel(boost::none);
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setWattsperSpaceFloorArea(boost::none);
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
       }    
     } else {
       result = setString(OS_SteamEquipment_DefinitionFields::WattsperPerson, "");
@@ -190,7 +190,7 @@ namespace detail {
 
   //void SteamEquipmentDefinition_Impl::resetFractionLatent() {
   //  bool result = setString(OS_SteamEquipment_DefinitionFields::FractionLatent, "");
-  //  BOOST_ASSERT(result);
+  //  OS_ASSERT(result);
   //}
 
   bool SteamEquipmentDefinition_Impl::setFractionRadiant(double fractionRadiant) {
@@ -201,7 +201,7 @@ namespace detail {
 
   //void SteamEquipmentDefinition_Impl::resetFractionRadiant() {
   //  bool result = setString(OS_SteamEquipment_DefinitionFields::FractionRadiant, "");
-  //  BOOST_ASSERT(result);
+  //  OS_ASSERT(result);
   //}
 
   bool SteamEquipmentDefinition_Impl::setFractionLost(double fractionLost) {
@@ -212,7 +212,7 @@ namespace detail {
 
   //void SteamEquipmentDefinition_Impl::resetFractionLost() {
   //  bool result = setString(OS_SteamEquipment_DefinitionFields::FractionLost, "");
-  //  BOOST_ASSERT(result);
+  //  OS_ASSERT(result);
   //}
 
   double SteamEquipmentDefinition_Impl::getDesignLevel(double floorArea, double numPeople) const
@@ -229,7 +229,7 @@ namespace detail {
       return wattsperPerson().get() * numPeople;
     }
 
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
     return 0.0;
   }
 
@@ -248,7 +248,7 @@ namespace detail {
       return wattsperPerson().get() * numPeople / floorArea;
     }
 
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
     return 0.0;
   }
 
@@ -267,7 +267,7 @@ namespace detail {
       return wattsperPerson().get();
     }
 
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
     return 0.0;
   }
  
@@ -296,7 +296,7 @@ namespace detail {
 SteamEquipmentDefinition::SteamEquipmentDefinition(const Model& model)
   : SpaceLoadDefinition(SteamEquipmentDefinition::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::SteamEquipmentDefinition_Impl>());
+  OS_ASSERT(getImpl<detail::SteamEquipmentDefinition_Impl>());
   setDesignLevel(0.0);
 }
 

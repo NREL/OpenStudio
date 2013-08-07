@@ -20,6 +20,8 @@
 #include <analysis/BinomialDistribution.hpp>
 #include <analysis/UncertaintyDescription_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -73,7 +75,7 @@ bool BinomialDistribution::setNumTrials(int value) {
 BinomialDistribution::BinomialDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
-  BOOST_ASSERT(type() == BinomialDistribution::type());
+  OS_ASSERT(type() == BinomialDistribution::type());
 }
 
 } // analysis

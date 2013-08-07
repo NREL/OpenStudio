@@ -60,6 +60,8 @@
 #include <utilities/idd/PlantEquipmentList_FieldEnums.hxx>
 #include <utilities/idd/Sizing_Plant_FieldEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 using namespace std;
@@ -457,7 +459,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   std::vector<ModelObject> supplyInletBranchModelObjects;
   supplyInletModelObjects = plantLoop.supplyComponents(supplyInletNode,supplySplitter);
 
-  BOOST_ASSERT( supplyInletModelObjects.size() >= 2 );
+  OS_ASSERT( supplyInletModelObjects.size() >= 2 );
 
   supplyInletModelObjects.erase(supplyInletModelObjects.begin());
   supplyInletModelObjects.erase(supplyInletModelObjects.end() - 1);
@@ -604,7 +606,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   std::vector<ModelObject> supplyOutletBranchModelObjects;
   supplyOutletModelObjects = plantLoop.supplyComponents(supplyMixer,supplyOutletNode);  
 
-  BOOST_ASSERT( supplyOutletModelObjects.size() >= 2 );
+  OS_ASSERT( supplyOutletModelObjects.size() >= 2 );
 
   supplyOutletModelObjects.erase(supplyOutletModelObjects.begin());
   supplyOutletModelObjects.erase(supplyOutletModelObjects.end() - 1);
@@ -712,7 +714,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   std::vector<ModelObject> demandInletBranchModelObjects;
   demandInletModelObjects = plantLoop.demandComponents(demandInletNode,demandSplitter);
 
-  BOOST_ASSERT( demandInletModelObjects.size() >= 2 );  
+  OS_ASSERT( demandInletModelObjects.size() >= 2 );  
 
   demandInletModelObjects.erase(demandInletModelObjects.begin());
   demandInletModelObjects.erase(demandInletModelObjects.end() - 1);
@@ -895,7 +897,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   std::vector<ModelObject> demandOutletBranchModelObjects;
   demandOutletModelObjects = plantLoop.demandComponents(demandMixer,demandOutletNode);  
 
-  BOOST_ASSERT( demandOutletModelObjects.size() >= 2 );
+  OS_ASSERT( demandOutletModelObjects.size() >= 2 );
 
   demandOutletModelObjects.erase(demandOutletModelObjects.begin());
   demandOutletModelObjects.erase(demandOutletModelObjects.end() - 1);

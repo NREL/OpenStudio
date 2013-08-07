@@ -59,9 +59,9 @@ namespace detail {
                                                                      ProjectDatabase& database)
     : DataPointRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
   }
 
   std::vector<ObjectRecord> OptimizationDataPointRecord_Impl::children() const {
@@ -152,17 +152,17 @@ namespace detail {
   }
 
   void OptimizationDataPointRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     DataPointRecord_Impl::setLastValues(query,projectDatabase);
   }
 
   bool OptimizationDataPointRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = DataPointRecord_Impl::compareValues(query);
 
@@ -189,7 +189,7 @@ OptimizationDataPointRecord::OptimizationDataPointRecord(
                                                      problemRecord)),
         analysisRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::OptimizationDataPointRecord_Impl>());
+  OS_ASSERT(getImpl<detail::OptimizationDataPointRecord_Impl>());
 
   // base class related records
   constructRelatedRecords(optimizationDataPoint,analysisRecord,problemRecord);
@@ -206,7 +206,7 @@ OptimizationDataPointRecord::OptimizationDataPointRecord(
   DoubleVector values = optimizationDataPoint.objectiveValues();
   if (!values.empty()) {
     int n = objectives.size();
-    BOOST_ASSERT(values.size() == static_cast<size_t>(n));
+    OS_ASSERT(values.size() == static_cast<size_t>(n));
     for (int i = 0; i < n; ++i) {
       DataPointValueRecord newValue(values[i],copyOfThis,objectives[i]);
     }
@@ -219,7 +219,7 @@ OptimizationDataPointRecord::OptimizationDataPointRecord(const QSqlQuery& query,
         new detail::OptimizationDataPointRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::OptimizationDataPointRecord_Impl>());
+  OS_ASSERT(getImpl<detail::OptimizationDataPointRecord_Impl>());
 }
 
 OptimizationDataPointRecord::OptimizationDataPointRecord(
@@ -227,7 +227,7 @@ OptimizationDataPointRecord::OptimizationDataPointRecord(
     ProjectDatabase database)
   : DataPointRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::OptimizationDataPointRecord_Impl>());
+  OS_ASSERT(getImpl<detail::OptimizationDataPointRecord_Impl>());
 }
 
 boost::optional<OptimizationDataPointRecord> OptimizationDataPointRecord::factoryFromQuery(

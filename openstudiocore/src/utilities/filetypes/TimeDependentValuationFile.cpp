@@ -167,7 +167,7 @@ std::vector<double> TimeDependentValuationFile::values(unsigned columnIndex) con
     }
     result.push_back(e.toDouble());
   }
-  BOOST_ASSERT(result.size() == 8760u);
+  OS_ASSERT(result.size() == 8760u);
   return result;
 }
 
@@ -184,7 +184,7 @@ std::vector<Quantity> TimeDependentValuationFile::quantities(unsigned columnInde
     q.setValue(val);
     result.push_back(q);
   }
-  BOOST_ASSERT(result.size() == 8760u);
+  OS_ASSERT(result.size() == 8760u);
   return result;
 }
 
@@ -229,7 +229,7 @@ boost::optional<TimeDependentValuationFile> TimeDependentValuationFile::convertU
   // try to convert columns
   for (unsigned i = 0, n = result.nCols(); i < n; ++i) {
     std::string unitString = units(i);
-    BOOST_ASSERT(!unitString.empty());
+    OS_ASSERT(!unitString.empty());
     bool ok = result.convertUnits(i,Table::HEAD,3u,targetSystem,OptionalInt(0));
     if (!ok) {
       LOG(Info,"Unable to convert units of column " << i << " in time dependent valuation file "

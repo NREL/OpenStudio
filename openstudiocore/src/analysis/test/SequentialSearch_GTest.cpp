@@ -49,7 +49,7 @@ using namespace openstudio::analysis;
 
 // linear problem hand-solved in excel to provide test expectations
 std::vector<double> getObjectiveValues(const std::vector<QVariant>& variableValues) {
-  BOOST_ASSERT(variableValues.size() == 5u);
+  OS_ASSERT(variableValues.size() == 5u);
   DoubleVector result(2u,20.0);
   int val(0);
 

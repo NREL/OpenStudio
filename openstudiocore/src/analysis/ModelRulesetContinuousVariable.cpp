@@ -135,7 +135,7 @@ namespace detail {
     }
     else {
       OptionalInt index = dataPoint.problem().getVariableIndexByUUID(uuid());
-      BOOST_ASSERT(index);
+      OS_ASSERT(index);
       return dataPoint.variableValues()[*index].toDouble();
     }
     return result.get();
@@ -165,7 +165,7 @@ namespace detail {
       const QVariant& value,
       const openstudio::path& rubyIncludeDirectory) const
   {
-    BOOST_ASSERT(value.type() == QVariant::Double);
+    OS_ASSERT(value.type() == QVariant::Double);
     ruleset::ModelRuleset ruleset = getModelRuleset(value.toDouble());
     return runmanager::WorkItem(ruleset);
   }

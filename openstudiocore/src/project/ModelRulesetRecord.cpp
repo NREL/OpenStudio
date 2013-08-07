@@ -73,7 +73,7 @@ namespace project {
       std::vector<ModelRuleRecord> result;
       std::vector<RuleRecord> ruleRecords = Ruleset_Rule_JoinRecord::getRuleRecords(this->getObject<RulesetRecord>());
       BOOST_FOREACH(const RuleRecord& ruleRecord, ruleRecords){
-        BOOST_ASSERT(ruleRecord.optionalCast<ModelRuleRecord>());
+        OS_ASSERT(ruleRecord.optionalCast<ModelRuleRecord>());
         result.push_back(ruleRecord.cast<ModelRuleRecord>());
       }
 
@@ -144,7 +144,7 @@ namespace project {
   ModelRulesetRecord::ModelRulesetRecord(const openstudio::ruleset::ModelRuleset& modelRuleset, ProjectDatabase& projectDatabase)
     : RulesetRecord(boost::shared_ptr<detail::ModelRulesetRecord_Impl>(new detail::ModelRulesetRecord_Impl(modelRuleset, projectDatabase)), projectDatabase)
   {
-    BOOST_ASSERT(getImpl<detail::ModelRulesetRecord_Impl>());
+    OS_ASSERT(getImpl<detail::ModelRulesetRecord_Impl>());
 
     // need to do in wrapper so we can create join records and with non-const database
     ModelRulesetRecord other(getImpl<detail::ModelRulesetRecord_Impl>());
@@ -163,19 +163,19 @@ namespace project {
   ModelRulesetRecord::ModelRulesetRecord(const QSqlQuery& query, ProjectDatabase& projectDatabase)
     : RulesetRecord(boost::shared_ptr<detail::ModelRulesetRecord_Impl>(new detail::ModelRulesetRecord_Impl(query, projectDatabase)), projectDatabase)
   {
-    BOOST_ASSERT(getImpl<detail::ModelRulesetRecord_Impl>());
+    OS_ASSERT(getImpl<detail::ModelRulesetRecord_Impl>());
   }
 
   ModelRulesetRecord::ModelRulesetRecord(boost::shared_ptr<detail::ModelRulesetRecord_Impl> impl, ProjectDatabase projectDatabase)
     : RulesetRecord(impl, projectDatabase)
   {
-    BOOST_ASSERT(getImpl<detail::ModelRulesetRecord_Impl>());
+    OS_ASSERT(getImpl<detail::ModelRulesetRecord_Impl>());
   }
 
   ModelRulesetRecord::ModelRulesetRecord(boost::shared_ptr<detail::ModelRulesetRecord_Impl> impl)
     : RulesetRecord(impl)
   {
-    BOOST_ASSERT(getImpl<detail::ModelRulesetRecord_Impl>());
+    OS_ASSERT(getImpl<detail::ModelRulesetRecord_Impl>());
   }
 
   boost::optional<ModelRulesetRecord> ModelRulesetRecord::factoryFromQuery(

@@ -187,7 +187,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
           saturdaySchedule = daySchedule;
           break;
         default:
-          BOOST_ASSERT(false);
+          OS_ASSERT(false);
       }
 
       // update week schedules each saturday
@@ -225,13 +225,13 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
           }else{
             // day after last end date
             boost::optional<int> startMonth = extensibleGroups.back().getInt(3,true);
-            BOOST_ASSERT(startMonth);
+            OS_ASSERT(startMonth);
             boost::optional<int> startDay = extensibleGroups.back().getInt(4,true);
-            BOOST_ASSERT(startDay);
+            OS_ASSERT(startDay);
             startDate = yd.makeDate(*startMonth, *startDay) + Time(1);
           }
 
-          BOOST_ASSERT(startDate <= lastDate);
+          OS_ASSERT(startDate <= lastDate);
 
           // add the values
           std::vector<std::string> values;
@@ -241,7 +241,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
           values.push_back(boost::lexical_cast<std::string>(lastDate.monthOfYear().value()));
           values.push_back(boost::lexical_cast<std::string>(lastDate.dayOfMonth()));
           IdfExtensibleGroup test = scheduleYear.pushExtensibleGroup(values);
-          BOOST_ASSERT(!test.empty());
+          OS_ASSERT(!test.empty());
         }
       }
 
@@ -285,13 +285,13 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
           }else{
             // day after last end date
             boost::optional<int> startMonth = extensibleGroups.back().getInt(3,true);
-            BOOST_ASSERT(startMonth);
+            OS_ASSERT(startMonth);
             boost::optional<int> startDay = extensibleGroups.back().getInt(4,true);
-            BOOST_ASSERT(startDay);
+            OS_ASSERT(startDay);
             startDate = yd.makeDate(*startMonth, *startDay) + Time(1);
           }
 
-          BOOST_ASSERT(startDate <= lastDate);
+          OS_ASSERT(startDate <= lastDate);
 
           // add the values
           std::vector<std::string> values;
@@ -301,7 +301,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
           values.push_back(boost::lexical_cast<std::string>(lastDate.monthOfYear().value()));
           values.push_back(boost::lexical_cast<std::string>(lastDate.dayOfMonth()));
           IdfExtensibleGroup test = scheduleYear.pushExtensibleGroup(values);
-          BOOST_ASSERT(!test.empty());
+          OS_ASSERT(!test.empty());
         }
 
         // write out the last week schedule
@@ -315,13 +315,13 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
         }else{
           // day after last end date
           boost::optional<int> startMonth = extensibleGroups.back().getInt(3,true);
-          BOOST_ASSERT(startMonth);
+          OS_ASSERT(startMonth);
           boost::optional<int> startDay = extensibleGroups.back().getInt(4,true);
-          BOOST_ASSERT(startDay);
+          OS_ASSERT(startDay);
           startDate = yd.makeDate(*startMonth, *startDay) + Time(1);
         }
 
-        BOOST_ASSERT(startDate <= date);
+        OS_ASSERT(startDate <= date);
 
         // add the values
         std::vector<std::string> values;
@@ -331,7 +331,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
         values.push_back(boost::lexical_cast<std::string>(date.monthOfYear().value()));
         values.push_back(boost::lexical_cast<std::string>(date.dayOfMonth()));
         IdfExtensibleGroup test = scheduleYear.pushExtensibleGroup(values);
-        BOOST_ASSERT(!test.empty());
+        OS_ASSERT(!test.empty());
       }
 
       // increment date

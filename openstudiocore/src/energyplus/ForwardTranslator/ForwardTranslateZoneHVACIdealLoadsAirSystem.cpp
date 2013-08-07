@@ -37,6 +37,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -177,7 +179,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACIdealLoadsAirSyst
         boost::optional<IdfObject> designSpecificationOutdoorAirIdf;
         designSpecificationOutdoorAirIdf = translateAndMapModelObject(*designSpecificationOutdoorAir);
         // the translation should complete successfully
-        BOOST_ASSERT(designSpecificationOutdoorAirIdf);      
+        OS_ASSERT(designSpecificationOutdoorAirIdf);      
         // set the field to reference the design specification outdoor air
         zoneHVACIdealLoadsAirSystem.setString(ZoneHVAC_IdealLoadsAirSystemFields::DesignSpecificationOutdoorAirObjectName,designSpecificationOutdoorAirIdf->name().get()); 
       }

@@ -50,7 +50,7 @@ namespace detail {
   ScheduleDay_Impl::ScheduleDay_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ScheduleBase_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ScheduleDay::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ScheduleDay::iddObjectType());
   }
 
   ScheduleDay_Impl::ScheduleDay_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -58,7 +58,7 @@ namespace detail {
                                      bool keepHandle)
     : ScheduleBase_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ScheduleDay::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ScheduleDay::iddObjectType());
   }
 
   ScheduleDay_Impl::ScheduleDay_Impl(const ScheduleDay_Impl& other,
@@ -95,7 +95,7 @@ namespace detail {
     if (OptionalScheduleRule scheduleRule = newParent.optionalCast<ScheduleRule>()) {
       if (getObject<ScheduleDay>().getModelObjectSources<ModelObject>().empty()) {
         bool result = newParent.setPointer(OS_Schedule_RuleFields::DayScheduleName, handle());
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         return true;
       }
     }
@@ -190,7 +190,7 @@ namespace detail {
     std::vector<openstudio::Time> times = this->times(); // these are already sorted
 
     unsigned N = times.size();
-    BOOST_ASSERT(values.size() == N);
+    OS_ASSERT(values.size() == N);
 
     if (N == 0){
       return 0.0;
@@ -251,7 +251,7 @@ namespace detail {
   void ScheduleDay_Impl::resetInterpolatetoTimestep() 
   {
     bool result = setString(OS_Schedule_DayFields::InterpolatetoTimestep, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ScheduleDay_Impl::addValue(const openstudio::Time& untilTime, double value) {
@@ -272,13 +272,13 @@ namespace detail {
     std::pair<std::set<openstudio::Time>::const_iterator,bool> insertResult;
     BOOST_FOREACH(const openstudio::Time& time,this->times()) {
       insertResult = times.insert(time);
-      BOOST_ASSERT(insertResult.second);
+      OS_ASSERT(insertResult.second);
     }
 
     insertResult = times.insert(untilTime);
     unsigned index = std::distance<std::set<openstudio::Time>::const_iterator>(times.begin(),insertResult.first);
-    BOOST_ASSERT(index >= 0);
-    BOOST_ASSERT(index <= numExtensibleGroups());
+    OS_ASSERT(index >= 0);
+    OS_ASSERT(index <= numExtensibleGroups());
     bool result(true);
     if (insertResult.second) {
       // new time--insert an extensible group
@@ -288,7 +288,7 @@ namespace detail {
       groupValues.push_back(toString(value));
 
       IdfExtensibleGroup group = insertExtensibleGroup(index, groupValues);
-      BOOST_ASSERT(!group.empty());
+      OS_ASSERT(!group.empty());
     }
     else {
       // time already exists, overwrite value
@@ -352,7 +352,7 @@ namespace detail {
 ScheduleDay::ScheduleDay(const Model& model)
   : ScheduleBase(ScheduleDay::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ScheduleDay_Impl>());
+  OS_ASSERT(getImpl<detail::ScheduleDay_Impl>());
 
   addValue(Time(1,0),0.0);
 }

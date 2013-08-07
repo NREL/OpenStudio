@@ -26,6 +26,8 @@
 #include <analysis/DataPoint.hpp>
 #include <analysis/DakotaParametersFile.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <sstream>
 
 namespace openstudio {
@@ -88,7 +90,7 @@ namespace detail {
   boost::optional<DataPoint> DakotaAlgorithm_Impl::createNextDataPoint(
       Analysis& analysis,const DakotaParametersFile& params)
   {
-    BOOST_ASSERT(analysis.algorithm().get() == getPublicObject<DakotaAlgorithm>());
+    OS_ASSERT(analysis.algorithm().get() == getPublicObject<DakotaAlgorithm>());
 
     // TODO: Update iteration counter.
     OptionalDataPoint result = analysis.problem().createDataPoint(params,
@@ -98,7 +100,7 @@ namespace detail {
       if (!added) {
         // get equivalent point already in analysis
         DataPointVector candidates = analysis.getDataPoints(result->variableValues());
-        BOOST_ASSERT(candidates.size() == 1u);
+        OS_ASSERT(candidates.size() == 1u);
         result = candidates[0];
       }
       std::stringstream ss;

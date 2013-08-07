@@ -36,7 +36,7 @@ namespace detail {
 LifeCycleCostUsePriceEscalation_Impl::LifeCycleCostUsePriceEscalation_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : ParentObject_Impl(idfObject, model, keepHandle)
 {
-  BOOST_ASSERT(idfObject.iddObject().type() == LifeCycleCostUsePriceEscalation::iddObjectType());
+  OS_ASSERT(idfObject.iddObject().type() == LifeCycleCostUsePriceEscalation::iddObjectType());
 }
 
 LifeCycleCostUsePriceEscalation_Impl::LifeCycleCostUsePriceEscalation_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -44,7 +44,7 @@ LifeCycleCostUsePriceEscalation_Impl::LifeCycleCostUsePriceEscalation_Impl(const
                                            bool keepHandle)
   : ParentObject_Impl(other,model,keepHandle)
 {
-  BOOST_ASSERT(other.iddObject().type() == LifeCycleCostUsePriceEscalation::iddObjectType());
+  OS_ASSERT(other.iddObject().type() == LifeCycleCostUsePriceEscalation::iddObjectType());
 }
 
 LifeCycleCostUsePriceEscalation_Impl::LifeCycleCostUsePriceEscalation_Impl(const LifeCycleCostUsePriceEscalation_Impl& other,Model_Impl* model,bool keepHandle)
@@ -152,7 +152,7 @@ const std::vector<std::string>& LifeCycleCostUsePriceEscalation_Impl::outputVari
 LifeCycleCostUsePriceEscalation::LifeCycleCostUsePriceEscalation(const Model& model)
   : ParentObject(LifeCycleCostUsePriceEscalation::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>());
+  OS_ASSERT(getImpl<detail::LifeCycleCostUsePriceEscalation_Impl>());
 }
 
 // constructor

@@ -36,7 +36,7 @@ namespace detail {
                                          bool keepHandle)
     : Glazing_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == SimpleGlazing::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == SimpleGlazing::iddObjectType());
   }
 
   SimpleGlazing_Impl::SimpleGlazing_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -44,7 +44,7 @@ namespace detail {
                                          bool keepHandle)
     : Glazing_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == SimpleGlazing::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == SimpleGlazing::iddObjectType());
   }
 
   SimpleGlazing_Impl::SimpleGlazing_Impl(const SimpleGlazing_Impl& other,
@@ -71,27 +71,27 @@ namespace detail {
 
   double SimpleGlazing_Impl::uFactor() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_SimpleGlazingSystemFields::UFactor,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SimpleGlazing_Impl::getUFactor(bool returnIP) const {
     OptionalDouble value = uFactor();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_SimpleGlazingSystemFields::UFactor, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double SimpleGlazing_Impl::solarHeatGainCoefficient() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_SimpleGlazingSystemFields::SolarHeatGainCoefficient,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SimpleGlazing_Impl::getSolarHeatGainCoefficient(bool returnIP) const {
     OptionalDouble value = solarHeatGainCoefficient();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_SimpleGlazingSystemFields::SolarHeatGainCoefficient, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -159,7 +159,7 @@ namespace detail {
 
   void SimpleGlazing_Impl::resetVisibleTransmittance() {
     bool result = setString(OS_WindowMaterial_SimpleGlazingSystemFields::VisibleTransmittance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   openstudio::Quantity SimpleGlazing_Impl::uFactor_SI() const {
@@ -193,16 +193,16 @@ SimpleGlazing::SimpleGlazing(const Model& model,
                              double solarHeatGainCoefficient)
   : Glazing(SimpleGlazing::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::SimpleGlazing_Impl>());
+  OS_ASSERT(getImpl<detail::SimpleGlazing_Impl>());
 
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setUFactor(uFactor);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setSolarHeatGainCoefficient(solarHeatGainCoefficient);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType SimpleGlazing::iddObjectType() {

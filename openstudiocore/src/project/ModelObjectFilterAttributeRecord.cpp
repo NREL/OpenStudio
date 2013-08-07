@@ -58,17 +58,17 @@ namespace detail {
   ModelObjectFilterAttributeRecord_Impl::ModelObjectFilterAttributeRecord_Impl(const QSqlQuery& query, const ProjectDatabase& projectDatabase)
     : ModelObjectFilterClauseRecord_Impl(query, projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
     value = query.value(ClauseRecordColumns::modelObjectFilterAttributeRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_modelObjectFilterAttributeRecordType = ModelObjectFilterAttributeRecordType(value.toInt());
     
     value = query.value(ClauseRecordColumns::attributeName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_attributeName = value.toString().toStdString();
   }
 
@@ -87,19 +87,19 @@ namespace detail {
 
   void ModelObjectFilterAttributeRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     ModelObjectFilterClauseRecord_Impl::setLastValues(query, projectDatabase);
 
     QVariant value;
     value = query.value(ClauseRecordColumns::modelObjectFilterAttributeRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastModelObjectFilterAttributeRecordType = ModelObjectFilterAttributeRecordType(value.toInt());
 
     value = query.value(ClauseRecordColumns::attributeName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastAttributeName = value.toString().toStdString();
   }
 
@@ -111,11 +111,11 @@ namespace detail {
 
     QVariant value;
     value = query.value(ClauseRecordColumns::modelObjectFilterAttributeRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_modelObjectFilterAttributeRecordType == ModelObjectFilterAttributeRecordType(value.toInt()));
     
     value = query.value(ClauseRecordColumns::attributeName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_attributeName == value.toString().toStdString());
 
     return result;
@@ -142,13 +142,13 @@ namespace detail {
 ModelObjectFilterAttributeRecord::ModelObjectFilterAttributeRecord(boost::shared_ptr<detail::ModelObjectFilterAttributeRecord_Impl> impl, ProjectDatabase projectDatabase)
   : ModelObjectFilterClauseRecord(impl, projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterAttributeRecord_Impl>());
 }
 
 ModelObjectFilterAttributeRecord::ModelObjectFilterAttributeRecord(boost::shared_ptr<detail::ModelObjectFilterAttributeRecord_Impl> impl)
   : ModelObjectFilterClauseRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterAttributeRecord_Impl>());
 }
 
 std::vector<ModelObjectFilterAttributeRecord> ModelObjectFilterAttributeRecord::getModelObjectFilterAttributeRecords(ProjectDatabase& database) {
@@ -228,7 +228,7 @@ ModelObjectFilterAttributeRecord ModelObjectFilterAttributeRecord::factoryFromFi
     return ModelObjectFilterStringAttributeRecord(filter.cast<ruleset::ModelObjectFilterStringAttribute>(), projectDatabase);
   }
 
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return ModelObjectFilterAttributeRecord(boost::shared_ptr<detail::ModelObjectFilterAttributeRecord_Impl>());
 }
 

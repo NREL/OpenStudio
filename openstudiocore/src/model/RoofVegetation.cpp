@@ -37,7 +37,7 @@ namespace detail {
                                            bool keepHandle)
     : OpaqueMaterial_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == RoofVegetation::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == RoofVegetation::iddObjectType());
   }
 
   RoofVegetation_Impl::RoofVegetation_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                                            bool keepHandle)
     : OpaqueMaterial_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == RoofVegetation::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == RoofVegetation::iddObjectType());
   }
 
   RoofVegetation_Impl::RoofVegetation_Impl(const RoofVegetation_Impl& other,
@@ -96,7 +96,7 @@ namespace detail {
 
   std::string RoofVegetation_Impl::roughness() const {
     boost::optional<std::string> value = getString(OS_Material_RoofVegetationFields::Roughness,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -123,7 +123,7 @@ namespace detail {
   }
 
   double RoofVegetation_Impl::thermalResistance() const {
-    BOOST_ASSERT(thermalConductance());
+    OS_ASSERT(thermalConductance());
     return 1.0/thermalConductance();
   }
 
@@ -149,7 +149,7 @@ namespace detail {
 
   double RoofVegetation_Impl::thermalAbsorptance() const {
     boost::optional<double> value = getDouble(OS_Material_RoofVegetationFields::ThermalAbsorptance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -178,7 +178,7 @@ namespace detail {
 
   double RoofVegetation_Impl::visibleAbsorptance() const {
     boost::optional<double> value = getDouble(OS_Material_RoofVegetationFields::VisibleAbsorptance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -234,7 +234,7 @@ namespace detail {
 
   double RoofVegetation_Impl::heightofPlants() const {
     boost::optional<double> value = getDouble(OS_Material_RoofVegetationFields::HeightofPlants,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -372,7 +372,7 @@ namespace detail {
   Quantity RoofVegetation_Impl::getHeightofPlants(bool returnIP) const {
     OptionalDouble value = heightofPlants();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_RoofVegetationFields::HeightofPlants, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -383,7 +383,7 @@ namespace detail {
   Quantity RoofVegetation_Impl::getLeafAreaIndex(bool returnIP) const {
     OptionalDouble value = leafAreaIndex();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_RoofVegetationFields::LeafAreaIndex, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -394,7 +394,7 @@ namespace detail {
   Quantity RoofVegetation_Impl::getLeafReflectivity(bool returnIP) const {
     OptionalDouble value = leafReflectivity();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_RoofVegetationFields::LeafReflectivity, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -405,7 +405,7 @@ namespace detail {
   Quantity RoofVegetation_Impl::getLeafEmissivity(bool returnIP) const {
     OptionalDouble value = leafEmissivity();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_RoofVegetationFields::LeafEmissivity, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -416,7 +416,7 @@ namespace detail {
   Quantity RoofVegetation_Impl::getMinimumStomatalResistance(bool returnIP) const {
     OptionalDouble value = minimumStomatalResistance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_RoofVegetationFields::MinimumStomatalResistance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -435,7 +435,7 @@ namespace detail {
   Quantity RoofVegetation_Impl::getThickness(bool returnIP) const {
     OptionalDouble value = thickness();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_RoofVegetationFields::Thickness, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -445,14 +445,14 @@ namespace detail {
 
   double RoofVegetation_Impl::conductivityofDrySoil() const {
     boost::optional<double> value = getDouble(OS_Material_RoofVegetationFields::ConductivityofDrySoil,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RoofVegetation_Impl::getConductivityofDrySoil(bool returnIP) const {
     OptionalDouble value = conductivityofDrySoil();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_RoofVegetationFields::ConductivityofDrySoil, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -462,14 +462,14 @@ namespace detail {
 
   double RoofVegetation_Impl::densityofDrySoil() const {
     boost::optional<double> value = getDouble(OS_Material_RoofVegetationFields::DensityofDrySoil,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RoofVegetation_Impl::getDensityofDrySoil(bool returnIP) const {
     OptionalDouble value = densityofDrySoil();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_RoofVegetationFields::DensityofDrySoil, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -479,14 +479,14 @@ namespace detail {
 
   double RoofVegetation_Impl::specificHeatofDrySoil() const {
     boost::optional<double> value = getDouble(OS_Material_RoofVegetationFields::SpecificHeatofDrySoil,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RoofVegetation_Impl::getSpecificHeatofDrySoil(bool returnIP) const {
     OptionalDouble value = specificHeatofDrySoil();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_RoofVegetationFields::SpecificHeatofDrySoil, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -497,7 +497,7 @@ namespace detail {
   Quantity RoofVegetation_Impl::getThermalAbsorptance(bool returnIP) const {
     OptionalDouble value(thermalAbsorptance());
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_RoofVegetationFields::ThermalAbsorptance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -507,14 +507,14 @@ namespace detail {
 
   double RoofVegetation_Impl::solarAbsorptance() const {
     boost::optional<double> value = getDouble(OS_Material_RoofVegetationFields::SolarAbsorptance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RoofVegetation_Impl::getSolarAbsorptance(bool returnIP) const {
     OptionalDouble value = solarAbsorptance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_RoofVegetationFields::SolarAbsorptance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -525,7 +525,7 @@ namespace detail {
   Quantity RoofVegetation_Impl::getVisibleAbsorptance(bool returnIP) const {
     OptionalDouble value = visibleAbsorptance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_RoofVegetationFields::VisibleAbsorptance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -535,14 +535,14 @@ namespace detail {
 
   double RoofVegetation_Impl::saturationVolumetricMoistureContentoftheSoilLayer() const {
     boost::optional<double> value = getDouble(OS_Material_RoofVegetationFields::SaturationVolumetricMoistureContentoftheSoilLayer,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RoofVegetation_Impl::getSaturationVolumetricMoistureContentoftheSoilLayer(bool returnIP) const {
     OptionalDouble value = saturationVolumetricMoistureContentoftheSoilLayer();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_RoofVegetationFields::SaturationVolumetricMoistureContentoftheSoilLayer, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -552,14 +552,14 @@ namespace detail {
 
   double RoofVegetation_Impl::residualVolumetricMoistureContentoftheSoilLayer() const {
     boost::optional<double> value = getDouble(OS_Material_RoofVegetationFields::ResidualVolumetricMoistureContentoftheSoilLayer,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RoofVegetation_Impl::getResidualVolumetricMoistureContentoftheSoilLayer(bool returnIP) const {
     OptionalDouble value = residualVolumetricMoistureContentoftheSoilLayer();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_RoofVegetationFields::ResidualVolumetricMoistureContentoftheSoilLayer, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -569,14 +569,14 @@ namespace detail {
 
   double RoofVegetation_Impl::initialVolumetricMoistureContentoftheSoilLayer() const {
     boost::optional<double> value = getDouble(OS_Material_RoofVegetationFields::InitialVolumetricMoistureContentoftheSoilLayer,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RoofVegetation_Impl::getInitialVolumetricMoistureContentoftheSoilLayer(bool returnIP) const {
     OptionalDouble value = initialVolumetricMoistureContentoftheSoilLayer();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_RoofVegetationFields::InitialVolumetricMoistureContentoftheSoilLayer, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -603,7 +603,7 @@ namespace detail {
 
   void RoofVegetation_Impl::resetHeightofPlants() {
     bool result = setString(OS_Material_RoofVegetationFields::HeightofPlants, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RoofVegetation_Impl::setLeafAreaIndex(const Quantity& leafAreaIndex) {
@@ -616,7 +616,7 @@ namespace detail {
 
   void RoofVegetation_Impl::resetLeafAreaIndex() {
     bool result = setString(OS_Material_RoofVegetationFields::LeafAreaIndex, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RoofVegetation_Impl::setLeafReflectivity(const Quantity& leafReflectivity) {
@@ -629,7 +629,7 @@ namespace detail {
 
   void RoofVegetation_Impl::resetLeafReflectivity() {
     bool result = setString(OS_Material_RoofVegetationFields::LeafReflectivity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RoofVegetation_Impl::setLeafEmissivity(const Quantity& leafEmissivity) {
@@ -642,7 +642,7 @@ namespace detail {
 
   void RoofVegetation_Impl::resetLeafEmissivity() {
     bool result = setString(OS_Material_RoofVegetationFields::LeafEmissivity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RoofVegetation_Impl::setMinimumStomatalResistance(const Quantity& minimumStomatalResistance) {
@@ -655,17 +655,17 @@ namespace detail {
 
   void RoofVegetation_Impl::resetMinimumStomatalResistance() {
     bool result = setString(OS_Material_RoofVegetationFields::MinimumStomatalResistance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RoofVegetation_Impl::resetSoilLayerName() {
     bool result = setString(OS_Material_RoofVegetationFields::SoilLayerName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RoofVegetation_Impl::resetRoughness() {
     bool result = setString(OS_Material_RoofVegetationFields::Roughness, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RoofVegetation_Impl::setThickness(const Quantity& thickness) {
@@ -678,7 +678,7 @@ namespace detail {
 
   void RoofVegetation_Impl::resetThickness() {
     bool result = setString(OS_Material_RoofVegetationFields::Thickness, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RoofVegetation_Impl::setConductivityofDrySoil(double conductivityofDrySoil) {
@@ -696,7 +696,7 @@ namespace detail {
 
   void RoofVegetation_Impl::resetConductivityofDrySoil() {
     bool result = setString(OS_Material_RoofVegetationFields::ConductivityofDrySoil, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RoofVegetation_Impl::setDensityofDrySoil(double densityofDrySoil) {
@@ -714,7 +714,7 @@ namespace detail {
 
   void RoofVegetation_Impl::resetDensityofDrySoil() {
     bool result = setString(OS_Material_RoofVegetationFields::DensityofDrySoil, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RoofVegetation_Impl::setSpecificHeatofDrySoil(double specificHeatofDrySoil) {
@@ -732,7 +732,7 @@ namespace detail {
 
   void RoofVegetation_Impl::resetSpecificHeatofDrySoil() {
     bool result = setString(OS_Material_RoofVegetationFields::SpecificHeatofDrySoil, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RoofVegetation_Impl::setThermalAbsorptance(double thermalAbsorptance) {
@@ -750,7 +750,7 @@ namespace detail {
 
   void RoofVegetation_Impl::resetThermalAbsorptance() {
     bool result = setString(OS_Material_RoofVegetationFields::ThermalAbsorptance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RoofVegetation_Impl::setSolarAbsorptance(double solarAbsorptance) {
@@ -768,7 +768,7 @@ namespace detail {
 
   void RoofVegetation_Impl::resetSolarAbsorptance() {
     bool result = setString(OS_Material_RoofVegetationFields::SolarAbsorptance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RoofVegetation_Impl::setVisibleAbsorptance(double visibleAbsorptance) {
@@ -786,7 +786,7 @@ namespace detail {
 
   void RoofVegetation_Impl::resetVisibleAbsorptance() {
     bool result = setString(OS_Material_RoofVegetationFields::VisibleAbsorptance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RoofVegetation_Impl::setSaturationVolumetricMoistureContentoftheSoilLayer(double saturationVolumetricMoistureContentoftheSoilLayer) {
@@ -804,7 +804,7 @@ namespace detail {
 
   void RoofVegetation_Impl::resetSaturationVolumetricMoistureContentoftheSoilLayer() {
     bool result = setString(OS_Material_RoofVegetationFields::SaturationVolumetricMoistureContentoftheSoilLayer, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RoofVegetation_Impl::setResidualVolumetricMoistureContentoftheSoilLayer(double residualVolumetricMoistureContentoftheSoilLayer) {
@@ -822,7 +822,7 @@ namespace detail {
 
   void RoofVegetation_Impl::resetResidualVolumetricMoistureContentoftheSoilLayer() {
     bool result = setString(OS_Material_RoofVegetationFields::ResidualVolumetricMoistureContentoftheSoilLayer, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RoofVegetation_Impl::setInitialVolumetricMoistureContentoftheSoilLayer(double initialVolumetricMoistureContentoftheSoilLayer) {
@@ -840,12 +840,12 @@ namespace detail {
 
   void RoofVegetation_Impl::resetInitialVolumetricMoistureContentoftheSoilLayer() {
     bool result = setString(OS_Material_RoofVegetationFields::InitialVolumetricMoistureContentoftheSoilLayer, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RoofVegetation_Impl::resetMoistureDiffusionCalculationMethod() {
     bool result = setString(OS_Material_RoofVegetationFields::MoistureDiffusionCalculationMethod, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   openstudio::Quantity RoofVegetation_Impl::heightofPlants_SI() const {
@@ -982,14 +982,14 @@ RoofVegetation::RoofVegetation(const Model& model,
                                std::string roughness)
   : OpaqueMaterial(RoofVegetation::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::RoofVegetation_Impl>());
+  OS_ASSERT(getImpl<detail::RoofVegetation_Impl>());
 
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setRoughness(roughness);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType RoofVegetation::iddObjectType() {

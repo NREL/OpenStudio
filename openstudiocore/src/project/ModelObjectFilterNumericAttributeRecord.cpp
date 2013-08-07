@@ -51,17 +51,17 @@ namespace detail {
   ModelObjectFilterNumericAttributeRecord_Impl::ModelObjectFilterNumericAttributeRecord_Impl(const QSqlQuery& query, const ProjectDatabase& projectDatabase)
     : ModelObjectFilterAttributeRecord_Impl(query, projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
     value = query.value(ClauseRecordColumns::attributeValueType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_attributeValueType = AttributeValueType(value.toInt());
 
     value = query.value(ClauseRecordColumns::attributeValue);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     switch(m_attributeValueType.value()){
       case AttributeValueType::Unsigned:
         m_attributeValue = value.toUInt();
@@ -73,11 +73,11 @@ namespace detail {
         m_attributeValue = value.toDouble();
         break;
       default:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
     }
 
     value = query.value(ClauseRecordColumns::predicate);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_predicate = ruleset::RulesetNumericalPredicate(value.toInt());
   }
 
@@ -142,7 +142,7 @@ namespace detail {
         query.bindValue(ClauseRecordColumns::attributeValue, m_attributeValue.toDouble());
         break;
       default:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
         break;
     }
 
@@ -155,11 +155,11 @@ namespace detail {
 
     QVariant value;
     value = query.value(ClauseRecordColumns::attributeValueType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastAttributeValueType = AttributeValueType(value.toInt());
 
     value = query.value(ClauseRecordColumns::attributeValue);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     switch(m_lastAttributeValueType.value()){
       case AttributeValueType::Unsigned:
         m_lastAttributeValue = value.toUInt();
@@ -171,11 +171,11 @@ namespace detail {
         m_lastAttributeValue = value.toDouble();
         break;
       default:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
     }
 
     value = query.value(ClauseRecordColumns::predicate);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastPredicate = ruleset::RulesetNumericalPredicate(value.toInt());
   }
 
@@ -188,11 +188,11 @@ namespace detail {
     QVariant value;
 
     value = query.value(ClauseRecordColumns::attributeValueType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_attributeValueType == AttributeValueType(value.toInt()));
 
     value = query.value(ClauseRecordColumns::attributeValue);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     switch(m_attributeValueType.value()){
       case AttributeValueType::Unsigned:
         result = result && (m_attributeValue.toUInt() == value.toUInt());
@@ -204,11 +204,11 @@ namespace detail {
         result = result && (m_attributeValue.toDouble() == value.toDouble());
         break;
       default:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
     }
 
     value = query.value(ClauseRecordColumns::predicate);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_predicate == ruleset::RulesetNumericalPredicate(value.toInt()));
 
     return result;
@@ -237,25 +237,25 @@ namespace detail {
 ModelObjectFilterNumericAttributeRecord::ModelObjectFilterNumericAttributeRecord(const openstudio::ruleset::ModelObjectFilterNumericAttribute& modelObjectFilterNumericAttribute, ProjectDatabase& projectDatabase)
   : ModelObjectFilterAttributeRecord(boost::shared_ptr<detail::ModelObjectFilterNumericAttributeRecord_Impl>(new detail::ModelObjectFilterNumericAttributeRecord_Impl(modelObjectFilterNumericAttribute, projectDatabase)), projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterNumericAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttributeRecord_Impl>());
 }
 
 ModelObjectFilterNumericAttributeRecord::ModelObjectFilterNumericAttributeRecord(const QSqlQuery& query, ProjectDatabase& projectDatabase)
   : ModelObjectFilterAttributeRecord(boost::shared_ptr<detail::ModelObjectFilterNumericAttributeRecord_Impl>(new detail::ModelObjectFilterNumericAttributeRecord_Impl(query, projectDatabase)), projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterNumericAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttributeRecord_Impl>());
 }
 
 ModelObjectFilterNumericAttributeRecord::ModelObjectFilterNumericAttributeRecord(boost::shared_ptr<detail::ModelObjectFilterNumericAttributeRecord_Impl> impl, ProjectDatabase projectDatabase)
   : ModelObjectFilterAttributeRecord(impl, projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterNumericAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttributeRecord_Impl>());
 }
 
 ModelObjectFilterNumericAttributeRecord::ModelObjectFilterNumericAttributeRecord(boost::shared_ptr<detail::ModelObjectFilterNumericAttributeRecord_Impl> impl)
   : ModelObjectFilterAttributeRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterNumericAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttributeRecord_Impl>());
 }
 
 boost::optional<ModelObjectFilterNumericAttributeRecord> ModelObjectFilterNumericAttributeRecord::factoryFromQuery(

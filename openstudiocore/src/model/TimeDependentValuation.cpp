@@ -47,14 +47,14 @@ namespace detail {
                                                            bool keepHandle)
     : ModelObject_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == TimeDependentValuation::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == TimeDependentValuation::iddObjectType());
   }
 
   TimeDependentValuation_Impl::TimeDependentValuation_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == TimeDependentValuation::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == TimeDependentValuation::iddObjectType());
   }
 
   TimeDependentValuation_Impl::TimeDependentValuation_Impl(
@@ -139,7 +139,7 @@ namespace detail {
 
   BuildingSector TimeDependentValuation_Impl::activeBuildingSector() const {
     OptionalString os = getString(OS_TimeDependentValuationFields::ActiveBuildingSector,true);
-    BOOST_ASSERT(os);
+    OS_ASSERT(os);
     BuildingSector result(*os); // can throw if keys and enum get out of sync.
     return result;
   }
@@ -149,7 +149,7 @@ namespace detail {
     IdfExtensibleGroupVector egs = extensibleGroups();
     BOOST_FOREACH(const IdfExtensibleGroup& eg,egs) {
       OptionalString os = eg.getString(OS_TimeDependentValuationExtensibleFields::AvailableFuelType,true);
-      BOOST_ASSERT(os);
+      OS_ASSERT(os);
       FuelType candidate(*os); // can throw if keys and enum get out of sync.
       result.push_back(candidate);
     }
@@ -199,7 +199,7 @@ namespace detail {
 
   void TimeDependentValuation_Impl::setActiveBuildingSector(const BuildingSector& sector) {
     bool ok = setString(OS_TimeDependentValuationFields::ActiveBuildingSector,sector.valueName());
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
   }
 
   void TimeDependentValuation_Impl::clearCache() {
@@ -288,7 +288,7 @@ namespace detail {
       // get TDV column
       DoubleVector temp = mf_tdvValues(tdvFile,fts[i]);
       Vector tdvValues = createVector(temp);
-      BOOST_ASSERT(tdvValues.size() == 8760u);
+      OS_ASSERT(tdvValues.size() == 8760u);
 
       // dot product 
       double thisTdvContribution = dot(timeSeriesValues,tdvValues);
@@ -331,7 +331,7 @@ namespace detail {
     else if (bs == BuildingSector::Residential) {
       oCostPerJ = tdvFile.nominalResidentialCostOfEnergy();
     }
-    else { BOOST_ASSERT(false); }
+    else { OS_ASSERT(false); }
     if (!oCostPerJ) {
       std::string urlString;
       OptionalString oUrlString = this->url();
@@ -437,7 +437,7 @@ namespace detail {
     // get TDV column
     DoubleVector temp = mf_tdvValues(tdvFile,fuelType);
     Vector tdvValues = createVector(temp);
-    BOOST_ASSERT(tdvValues.size() == 8760u);
+    OS_ASSERT(tdvValues.size() == 8760u);
 
     // dot product 
     result = dot(timeSeriesValues,tdvValues);
@@ -477,7 +477,7 @@ namespace detail {
     else if (bs == BuildingSector::Residential) {
       oCostPerJ = tdvFile.nominalResidentialCostOfEnergy();
     }
-    else { BOOST_ASSERT(false); }
+    else { OS_ASSERT(false); }
     if (!oCostPerJ) {
       std::string urlString;
       OptionalString oUrlString = this->url();
@@ -504,26 +504,26 @@ namespace detail {
       const TimeDependentValuationFile& tdvFile,const FuelType& ft) const
   {
     DoubleVector result;
-    BOOST_ASSERT(tdvFile.system() == UnitSystem::SI);
+    OS_ASSERT(tdvFile.system() == UnitSystem::SI);
     IdfExtensibleGroupVector egs = extensibleGroups();
     BOOST_FOREACH(const IdfExtensibleGroup& eg,egs) {
       OptionalString os = eg.getString(OS_TimeDependentValuationExtensibleFields::AvailableFuelType,true);
-      BOOST_ASSERT(os);
+      OS_ASSERT(os);
       FuelType candidate(*os); // can throw if keys and enum get out of sync.
       if (candidate == ft) {
         BuildingSector bs = activeBuildingSector();
         if (bs == BuildingSector::Commercial) {
           OptionalUnsigned ou = eg.getUnsigned(OS_TimeDependentValuationExtensibleFields::CommercialColumnIndexForFuelType);
-          BOOST_ASSERT(ou);
+          OS_ASSERT(ou);
           result = tdvFile.values(*ou);
         }
         else if (bs == BuildingSector::Residential) {
           OptionalUnsigned ou = eg.getUnsigned(OS_TimeDependentValuationExtensibleFields::ResidentialColumnIndexForFuelType);
-          BOOST_ASSERT(ou);
+          OS_ASSERT(ou);
           result = tdvFile.values(*ou);
         }
         else {
-          BOOST_ASSERT(false);
+          OS_ASSERT(false);
         }
       }
     }
@@ -568,8 +568,8 @@ TimeDependentValuation TimeDependentValuation::setTimeDependentValuation(
     else {
       oeg = result.getExtensibleGroup(int(it - fuelTypes.begin()));
     }
-    BOOST_ASSERT(oeg);
-    BOOST_ASSERT(!oeg->empty());
+    OS_ASSERT(oeg);
+    OS_ASSERT(!oeg->empty());
     BuildingSector thisBuildingSector = tdvFile.buildingSector(i);
     unsigned bsi(0);
     if (thisBuildingSector == BuildingSector::Commercial) {
@@ -578,7 +578,7 @@ TimeDependentValuation TimeDependentValuation::setTimeDependentValuation(
     else if (thisBuildingSector == BuildingSector::Residential) {
       bsi = OS_TimeDependentValuationExtensibleFields::ResidentialColumnIndexForFuelType;
     }
-    else { BOOST_ASSERT(false); }
+    else { OS_ASSERT(false); }
     OptionalUnsigned oVal = oeg->getUnsigned(bsi,true);
     if (oVal) {
       LOG(Warn,"Time dependent valuation file at '" << toString(tdvFile.path()) << "' has two "
@@ -588,7 +588,7 @@ TimeDependentValuation TimeDependentValuation::setTimeDependentValuation(
     }
     oeg->setUnsigned(bsi,i);
   }
-  BOOST_ASSERT(result.numExtensibleGroups() == fuelTypes.size());
+  OS_ASSERT(result.numExtensibleGroups() == fuelTypes.size());
   return result;
 }
 
@@ -665,7 +665,7 @@ IddObjectType TimeDependentValuation::iddObjectType() {
 TimeDependentValuation::TimeDependentValuation(const Model& model)
   : ModelObject(TimeDependentValuation::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::TimeDependentValuation_Impl>());
+  OS_ASSERT(getImpl<detail::TimeDependentValuation_Impl>());
 }
 
 TimeDependentValuation::TimeDependentValuation(

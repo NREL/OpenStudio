@@ -43,14 +43,14 @@ namespace detail {
   CoilCoolingWater_Impl::CoilCoolingWater_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : WaterToAirComponent_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CoilCoolingWater::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CoilCoolingWater::iddObjectType());
   }
 
   CoilCoolingWater_Impl::CoilCoolingWater_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
         : WaterToAirComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CoilCoolingWater::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CoilCoolingWater::iddObjectType());
   }
 
   CoilCoolingWater_Impl::CoilCoolingWater_Impl(const CoilCoolingWater_Impl& other,
@@ -84,11 +84,11 @@ namespace detail {
       // so we hook up to global always on schedule
       LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
       value = this->model().alwaysOnDiscreteSchedule();
-      BOOST_ASSERT(value);
+      OS_ASSERT(value);
       const_cast<CoilCoolingWater_Impl*>(this)->setAvailabilitySchedule(*value);
       value = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Cooling_WaterFields::AvailabilityScheduleName);
     }
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -320,7 +320,7 @@ namespace detail {
 
         boost::optional<Node> coilWaterInletNode = _waterInletModelObject->optionalCast<Node>();
 
-        BOOST_ASSERT(coilWaterInletNode);
+        OS_ASSERT(coilWaterInletNode);
 
         controller.setActuatorNode(coilWaterInletNode.get());
 
@@ -448,7 +448,7 @@ namespace detail {
 CoilCoolingWater::CoilCoolingWater(const Model& model, Schedule & availableSchedule)
   : WaterToAirComponent(CoilCoolingWater::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CoilCoolingWater_Impl>());
+  OS_ASSERT(getImpl<detail::CoilCoolingWater_Impl>());
 
   setAvailableSchedule( availableSchedule );
 }

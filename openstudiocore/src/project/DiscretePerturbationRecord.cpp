@@ -83,13 +83,13 @@ namespace detail{
   DiscretePerturbationRecord_Impl::DiscretePerturbationRecord_Impl(const QSqlQuery& query, const ProjectDatabase& database)
     : ObjectRecord_Impl(database, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
     value = query.value(DiscretePerturbationRecordColumns::discretePerturbationRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_discretePerturbationRecordType = DiscretePerturbationRecordType(value.toInt());
 
     value = query.value(DiscretePerturbationRecordColumns::variableRecordId);
@@ -98,7 +98,7 @@ namespace detail{
     }
 
     value = query.value(DiscretePerturbationRecordColumns::isSelected);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_isSelected = value.toBool();
 
     value = query.value(DiscretePerturbationRecordColumns::perturbationVectorIndex);
@@ -141,7 +141,7 @@ namespace detail{
     if (m_variableRecordId) {
       ProjectDatabase database = this->projectDatabase();
       result = DiscreteVariableRecord::getDiscreteVariableRecord(*m_variableRecordId, database);
-      BOOST_ASSERT(result);
+      OS_ASSERT(result);
     }
 
     return result;
@@ -191,7 +191,7 @@ namespace detail{
 
     QVariant value;
     value = query.value(DiscretePerturbationRecordColumns::discretePerturbationRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastDiscretePerturbationRecordType = DiscretePerturbationRecordType(value.toInt());
 
     value = query.value(DiscretePerturbationRecordColumns::variableRecordId);
@@ -203,7 +203,7 @@ namespace detail{
     }
 
     value = query.value(DiscretePerturbationRecordColumns::isSelected);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastIsSelected = value.toBool();
 
     value = query.value(DiscretePerturbationRecordColumns::perturbationVectorIndex);
@@ -223,7 +223,7 @@ namespace detail{
 
     QVariant value;
     value = query.value(DiscretePerturbationRecordColumns::discretePerturbationRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_discretePerturbationRecordType == DiscretePerturbationRecordType(value.toInt()));
 
     value = query.value(DiscretePerturbationRecordColumns::variableRecordId);
@@ -235,7 +235,7 @@ namespace detail{
     }
 
     value = query.value(DiscretePerturbationRecordColumns::isSelected);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_isSelected == value.toBool());
 
     value = query.value(DiscretePerturbationRecordColumns::perturbationVectorIndex);
@@ -290,7 +290,7 @@ UpdateByIdQueryData DiscretePerturbationRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -331,13 +331,13 @@ void DiscretePerturbationRecord::updatePathData(ProjectDatabase database,
 DiscretePerturbationRecord::DiscretePerturbationRecord(boost::shared_ptr<detail::DiscretePerturbationRecord_Impl> impl, ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::DiscretePerturbationRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DiscretePerturbationRecord_Impl>());
 }
 
 DiscretePerturbationRecord::DiscretePerturbationRecord(boost::shared_ptr<detail::DiscretePerturbationRecord_Impl> impl)
   : ObjectRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::DiscretePerturbationRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DiscretePerturbationRecord_Impl>());
 }
 
 std::vector<DiscretePerturbationRecord> DiscretePerturbationRecord::getDiscretePerturbationRecords(ProjectDatabase& database)
@@ -349,7 +349,7 @@ std::vector<DiscretePerturbationRecord> DiscretePerturbationRecord::getDiscreteP
   assertExec(query);
   while (query.next()) {
     boost::optional<DiscretePerturbationRecord> perturbation = factoryFromQuery(query, database);
-    BOOST_ASSERT(perturbation);
+    OS_ASSERT(perturbation);
     result.push_back(*perturbation);
   }
 
@@ -366,7 +366,7 @@ boost::optional<DiscretePerturbationRecord> DiscretePerturbationRecord::getDiscr
   assertExec(query);
   if(query.first()) {
     boost::optional<DiscretePerturbationRecord> perturbation = factoryFromQuery(query, database);
-    BOOST_ASSERT(perturbation);
+    OS_ASSERT(perturbation);
     result = perturbation;
   }
 
@@ -419,7 +419,7 @@ DiscretePerturbationRecord DiscretePerturbationRecord::factoryFromDiscretePertur
         perturbationVectorIndex);
   }
 
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return DiscretePerturbationRecord(boost::shared_ptr<detail::DiscretePerturbationRecord_Impl>());
 }
 

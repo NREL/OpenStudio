@@ -38,6 +38,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 using namespace std;
@@ -97,7 +99,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface &
   idfObject.clearExtensibleGroups();
   BOOST_FOREACH(const Point3d& point, modelObject.vertices()){
     IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
-    BOOST_ASSERT(group.numFields() == 3);
+    OS_ASSERT(group.numFields() == 3);
     group.setDouble(0, point.x());
     group.setDouble(1, point.y());
     group.setDouble(2, point.z());

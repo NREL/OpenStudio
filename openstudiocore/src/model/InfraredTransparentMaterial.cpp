@@ -34,7 +34,7 @@ namespace detail {
                                                                      bool keepHandle)
     : ModelPartitionMaterial_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == InfraredTransparentMaterial::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == InfraredTransparentMaterial::iddObjectType());
   }
 
   InfraredTransparentMaterial_Impl::InfraredTransparentMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -42,7 +42,7 @@ namespace detail {
                                                                      bool keepHandle)
     : ModelPartitionMaterial_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == InfraredTransparentMaterial::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == InfraredTransparentMaterial::iddObjectType());
   }
 
   InfraredTransparentMaterial_Impl::InfraredTransparentMaterial_Impl(const InfraredTransparentMaterial_Impl& other,
@@ -68,12 +68,12 @@ namespace detail {
 InfraredTransparentMaterial::InfraredTransparentMaterial(const Model& model)
   : ModelPartitionMaterial(InfraredTransparentMaterial::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::InfraredTransparentMaterial_Impl>());
+  OS_ASSERT(getImpl<detail::InfraredTransparentMaterial_Impl>());
 
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType InfraredTransparentMaterial::iddObjectType() {

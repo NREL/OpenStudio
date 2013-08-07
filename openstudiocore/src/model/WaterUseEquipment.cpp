@@ -43,7 +43,7 @@ namespace detail {
   WaterUseEquipment_Impl::WaterUseEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceLoadInstance_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == WaterUseEquipment::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == WaterUseEquipment::iddObjectType());
   }
 
   WaterUseEquipment_Impl::WaterUseEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -51,7 +51,7 @@ namespace detail {
                            bool keepHandle)
     : SpaceLoadInstance_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == WaterUseEquipment::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == WaterUseEquipment::iddObjectType());
   }
 
   WaterUseEquipment_Impl::WaterUseEquipment_Impl(const WaterUseEquipment_Impl& other,
@@ -98,7 +98,7 @@ namespace detail {
 
   void WaterUseEquipment_Impl::resetFlowRateFractionSchedule() {
     bool result = setString(OS_WaterUse_EquipmentFields::FlowRateFractionScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<ModelObject> WaterUseEquipment_Impl::flowRateFractionScheduleAsModelObject() const {
@@ -215,7 +215,7 @@ namespace detail {
 WaterUseEquipment::WaterUseEquipment(const WaterUseEquipmentDefinition& waterUseEquipmentDefinition)
   : SpaceLoadInstance(WaterUseEquipment::iddObjectType(),waterUseEquipmentDefinition)
 {
-  BOOST_ASSERT(getImpl<detail::WaterUseEquipment_Impl>());
+  OS_ASSERT(getImpl<detail::WaterUseEquipment_Impl>());
 }
 
 const IddObjectType& WaterUseEquipment::iddObjectType() {

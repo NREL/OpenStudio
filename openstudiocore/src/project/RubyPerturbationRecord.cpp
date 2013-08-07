@@ -62,11 +62,11 @@ namespace detail {
       m_usesBCLMeasure(rubyPerturbation.usesBCLMeasure())
   {
     boost::optional<FileReferenceType> inputFileType = rubyPerturbation.inputFileType();
-    BOOST_ASSERT(inputFileType);
+    OS_ASSERT(inputFileType);
     m_inputFileType = *inputFileType;
 
     boost::optional<FileReferenceType> outputFileType = rubyPerturbation.outputFileType();
-    BOOST_ASSERT(outputFileType);
+    OS_ASSERT(outputFileType);
     m_outputFileType = *outputFileType;
   }
 
@@ -80,40 +80,40 @@ namespace detail {
       m_usesBCLMeasure(rubyPerturbation.usesBCLMeasure())
   {
     boost::optional<FileReferenceType> inputFileType = rubyPerturbation.inputFileType();
-    BOOST_ASSERT(inputFileType);
+    OS_ASSERT(inputFileType);
     m_inputFileType = *inputFileType;
 
     boost::optional<FileReferenceType> outputFileType = rubyPerturbation.outputFileType();
-    BOOST_ASSERT(outputFileType);
+    OS_ASSERT(outputFileType);
     m_outputFileType = *outputFileType;
   }
 
   RubyPerturbationRecord_Impl::RubyPerturbationRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : DiscretePerturbationRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
     value = query.value(DiscretePerturbationRecordColumns::rubyScriptRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_scriptOrBCLMeasureRecordId = value.toInt();
 
     value = query.value(DiscretePerturbationRecordColumns::inputFileType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_inputFileType = FileReferenceType(value.toInt());
 
     value = query.value(DiscretePerturbationRecordColumns::outputFileType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_outputFileType = FileReferenceType(value.toInt());
 
     value = query.value(DiscretePerturbationRecordColumns::isUserScript);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_isUserScript = value.toBool();
 
     value = query.value(DiscretePerturbationRecordColumns::usesBCLMeasure);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_usesBCLMeasure = value.toBool();
   }
 
@@ -225,23 +225,23 @@ namespace detail {
 
     QVariant value;
     value = query.value(DiscretePerturbationRecordColumns::rubyScriptRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastScriptOrBCLMeasureRecordId = value.toInt();
 
     value = query.value(DiscretePerturbationRecordColumns::inputFileType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastInputFileType = FileReferenceType(value.toInt());
 
     value = query.value(DiscretePerturbationRecordColumns::outputFileType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastOutputFileType = FileReferenceType(value.toInt());
 
     value = query.value(DiscretePerturbationRecordColumns::isUserScript);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastIsUserScript = value.toBool();
 
     value = query.value(DiscretePerturbationRecordColumns::usesBCLMeasure);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastUsesBCLMeasure = value.toBool();
   }
 
@@ -253,23 +253,23 @@ namespace detail {
 
     QVariant value;
     value = query.value(DiscretePerturbationRecordColumns::rubyScriptRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_scriptOrBCLMeasureRecordId == value.toInt());
 
     value = query.value(DiscretePerturbationRecordColumns::inputFileType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_inputFileType == FileReferenceType(value.toInt()));
 
     value = query.value(DiscretePerturbationRecordColumns::outputFileType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_outputFileType == FileReferenceType(value.toInt()));
 
     value = query.value(DiscretePerturbationRecordColumns::isUserScript);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_isUserScript == value.toBool());
 
     value = query.value(DiscretePerturbationRecordColumns::usesBCLMeasure);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_usesBCLMeasure == value.toBool());
 
     return result;
@@ -308,7 +308,7 @@ RubyPerturbationRecord::RubyPerturbationRecord(const analysis::RubyPerturbation&
                                                 perturbationVectorIndex)),
         discreteVariableRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::RubyPerturbationRecord_Impl>());
+  OS_ASSERT(getImpl<detail::RubyPerturbationRecord_Impl>());
 
   constructRelatedRecords(rubyPerturbation);
 }
@@ -320,7 +320,7 @@ RubyPerturbationRecord::RubyPerturbationRecord(const analysis::RubyPerturbation&
                                                 database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::RubyPerturbationRecord_Impl>());
+  OS_ASSERT(getImpl<detail::RubyPerturbationRecord_Impl>());
 
   constructRelatedRecords(rubyPerturbation);
 }
@@ -330,19 +330,19 @@ RubyPerturbationRecord::RubyPerturbationRecord(const QSqlQuery& query, ProjectDa
         new detail::RubyPerturbationRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::RubyPerturbationRecord_Impl>());
+  OS_ASSERT(getImpl<detail::RubyPerturbationRecord_Impl>());
 }
 
 RubyPerturbationRecord::RubyPerturbationRecord(boost::shared_ptr<detail::RubyPerturbationRecord_Impl> impl, ProjectDatabase database)
   : DiscretePerturbationRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::RubyPerturbationRecord_Impl>());
+  OS_ASSERT(getImpl<detail::RubyPerturbationRecord_Impl>());
 }
 
 RubyPerturbationRecord::RubyPerturbationRecord(boost::shared_ptr<detail::RubyPerturbationRecord_Impl> impl)
   : DiscretePerturbationRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::RubyPerturbationRecord_Impl>());
+  OS_ASSERT(getImpl<detail::RubyPerturbationRecord_Impl>());
 }
 
 boost::optional<RubyPerturbationRecord> RubyPerturbationRecord::factoryFromQuery(

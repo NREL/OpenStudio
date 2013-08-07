@@ -35,7 +35,7 @@ namespace detail {
   ScheduleWeek_Impl::ScheduleWeek_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ResourceObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ScheduleWeek::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ScheduleWeek::iddObjectType());
   }
 
   ScheduleWeek_Impl::ScheduleWeek_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -43,7 +43,7 @@ namespace detail {
                                        bool keepHandle)
     : ResourceObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ScheduleWeek::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ScheduleWeek::iddObjectType());
   }
 
   ScheduleWeek_Impl::ScheduleWeek_Impl(const ScheduleWeek_Impl& other,
@@ -292,7 +292,7 @@ namespace detail {
 ScheduleWeek::ScheduleWeek(const Model& model)
   : ResourceObject(ScheduleWeek::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ScheduleWeek_Impl>());
+  OS_ASSERT(getImpl<detail::ScheduleWeek_Impl>());
 }
 
 IddObjectType ScheduleWeek::iddObjectType() {

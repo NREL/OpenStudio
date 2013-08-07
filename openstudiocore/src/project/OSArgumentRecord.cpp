@@ -110,9 +110,9 @@ namespace detail {
                                                ProjectDatabase& database)
     : ObjectRecord_Impl(database, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
@@ -127,11 +127,11 @@ namespace detail {
     }
 
     value = query.value(OSArgumentRecord::ColumnsType::argumentType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_argumentType = ruleset::OSArgumentType(value.toInt());
 
     value = query.value(OSArgumentRecord::ColumnsType::required);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_required = value.toBool();
 
     value = query.value(OSArgumentRecord::ColumnsType::argumentValue);
@@ -145,7 +145,7 @@ namespace detail {
     }
 
     value = query.value(OSArgumentRecord::ColumnsType::domainType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_domainType = ruleset::OSDomainType(value.toInt());
 
     value = query.value(OSArgumentRecord::ColumnsType::domainValues);
@@ -154,19 +154,19 @@ namespace detail {
     }
 
     value = query.value(OSArgumentRecord::ColumnsType::choices);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_choices = value.toString().toStdString();
 
     value = query.value(OSArgumentRecord::ColumnsType::choiceDisplayNames);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_choiceDisplayNames = value.toString().toStdString();
 
     value = query.value(OSArgumentRecord::ColumnsType::isRead);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_isRead = value.toBool();
 
     value = query.value(OSArgumentRecord::ColumnsType::extension);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_extension = value.toString().toStdString();
   }
 
@@ -180,7 +180,7 @@ namespace detail {
       result = rubyPerturbationRecord().get();
     }
     else {
-      BOOST_ASSERT(m_rubyContinuousVariableRecordId);
+      OS_ASSERT(m_rubyContinuousVariableRecordId);
       result = rubyContinuousVariableRecord().get();
     }
     return result;
@@ -234,7 +234,7 @@ namespace detail {
     if (m_rubyPerturbationRecordId) {
       ProjectDatabase database = projectDatabase();
       result = RubyPerturbationRecord::getRubyPerturbationRecord(*m_rubyPerturbationRecordId,database);
-      BOOST_ASSERT(result);
+      OS_ASSERT(result);
     }
     return result;
   }
@@ -245,7 +245,7 @@ namespace detail {
     if (m_rubyContinuousVariableRecordId) {
       ProjectDatabase database = projectDatabase();
       result = RubyContinuousVariableRecord::getRubyContinuousVariableRecord(*m_rubyContinuousVariableRecordId,database);
-      BOOST_ASSERT(result);
+      OS_ASSERT(result);
     }
     return result;
   }
@@ -363,9 +363,9 @@ namespace detail {
   void OSArgumentRecord_Impl::setLastValues(const QSqlQuery& query,
                                             ProjectDatabase& projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     ObjectRecord_Impl::setLastValues(query,projectDatabase);
 
@@ -388,11 +388,11 @@ namespace detail {
     }
 
     value = query.value(OSArgumentRecord::ColumnsType::argumentType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastArgumentType = ruleset::OSArgumentType(value.toInt());
 
     value = query.value(OSArgumentRecord::ColumnsType::required);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastRequired = value.toBool();
 
     value = query.value(OSArgumentRecord::ColumnsType::argumentValue);
@@ -412,7 +412,7 @@ namespace detail {
     }
 
     value = query.value(OSArgumentRecord::ColumnsType::domainType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastDomainType = ruleset::OSDomainType(value.toInt());
 
     value = query.value(OSArgumentRecord::ColumnsType::domainValues);
@@ -424,26 +424,26 @@ namespace detail {
     }
 
     value = query.value(OSArgumentRecord::ColumnsType::choices);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastChoices = value.toString().toStdString();
 
     value = query.value(OSArgumentRecord::ColumnsType::choiceDisplayNames);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastChoiceDisplayNames = value.toString().toStdString();
 
     value = query.value(OSArgumentRecord::ColumnsType::isRead);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastIsRead = value.toBool();
 
     value = query.value(OSArgumentRecord::ColumnsType::extension);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastExtension = value.toString().toStdString();
   }
 
   bool OSArgumentRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = ObjectRecord_Impl::compareValues(query);
 
@@ -466,11 +466,11 @@ namespace detail {
     }
 
     value = query.value(OSArgumentRecordColumns::argumentType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_argumentType == ruleset::OSArgumentType(value.toInt()));
 
     value = query.value(OSArgumentRecordColumns::required);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_required == value.toBool());
 
     value = query.value(OSArgumentRecordColumns::argumentValue);
@@ -490,7 +490,7 @@ namespace detail {
     }
 
     value = query.value(OSArgumentRecordColumns::domainType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_domainType == ruleset::OSDomainType(value.toInt()));
 
     value = query.value(OSArgumentRecordColumns::domainValues);
@@ -502,19 +502,19 @@ namespace detail {
     }
 
     value = query.value(OSArgumentRecordColumns::choices);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_choices == value.toString().toStdString());
 
     value = query.value(OSArgumentRecordColumns::choiceDisplayNames);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_choiceDisplayNames == value.toString().toStdString());
 
     value = query.value(OSArgumentRecordColumns::isRead);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_isRead == value.toBool());
 
     value = query.value(OSArgumentRecordColumns::extension);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_extension == value.toString().toStdString());
 
     return result;
@@ -567,7 +567,7 @@ namespace detail {
     StringVector result;
     TableLoadOptions loadOptions(false,false,false); // choices are all strings
     Table table = Table::load(str,loadOptions);
-    BOOST_ASSERT(table.nRows() < 2);
+    OS_ASSERT(table.nRows() < 2);
     if (table.nRows() == 1) {
       TableRow row = table[0];
       BOOST_FOREACH(const TableElement& e,row) {
@@ -586,7 +586,7 @@ OSArgumentRecord::OSArgumentRecord(
         new detail::OSArgumentRecord_Impl(osArgument, rubyPerturbationRecord)),
         rubyPerturbationRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::OSArgumentRecord_Impl>());
+  OS_ASSERT(getImpl<detail::OSArgumentRecord_Impl>());
 }
 
 OSArgumentRecord::OSArgumentRecord(
@@ -596,7 +596,7 @@ OSArgumentRecord::OSArgumentRecord(
         new detail::OSArgumentRecord_Impl(osArgument, rubyContinuousVariableRecord)),
         rubyContinuousVariableRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::OSArgumentRecord_Impl>());
+  OS_ASSERT(getImpl<detail::OSArgumentRecord_Impl>());
 }
 
 OSArgumentRecord::OSArgumentRecord(const QSqlQuery& query, ProjectDatabase& database)
@@ -604,14 +604,14 @@ OSArgumentRecord::OSArgumentRecord(const QSqlQuery& query, ProjectDatabase& data
         new detail::OSArgumentRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::OSArgumentRecord_Impl>());
+  OS_ASSERT(getImpl<detail::OSArgumentRecord_Impl>());
 }
 
 OSArgumentRecord::OSArgumentRecord(boost::shared_ptr<detail::OSArgumentRecord_Impl> impl,
                                                    ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::OSArgumentRecord_Impl>());
+  OS_ASSERT(getImpl<detail::OSArgumentRecord_Impl>());
 }
 
 std::string OSArgumentRecord::databaseTableName() {
@@ -632,7 +632,7 @@ UpdateByIdQueryData OSArgumentRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -690,7 +690,7 @@ void OSArgumentRecord::updatePathData(ProjectDatabase database,
 
   if (didStartTransaction) {
     bool test = database.commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 }
 

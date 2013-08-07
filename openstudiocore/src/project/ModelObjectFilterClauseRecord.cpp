@@ -58,13 +58,13 @@ namespace detail {
   ModelObjectFilterClauseRecord_Impl::ModelObjectFilterClauseRecord_Impl(const QSqlQuery& query, const ProjectDatabase& projectDatabase)
     : FilterClauseRecord_Impl(query, projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
     value = query.value(ClauseRecordColumns::modelObjectFilterClauseRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_modelObjectFilterClauseRecordType = ModelObjectFilterClauseRecordType(value.toInt());
   }
 
@@ -77,15 +77,15 @@ namespace detail {
 
   void ModelObjectFilterClauseRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     FilterClauseRecord_Impl::setLastValues(query, projectDatabase);
 
     QVariant value;
     value = query.value(ClauseRecordColumns::modelObjectFilterClauseRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastModelObjectFilterClauseRecordType = ModelObjectFilterClauseRecordType(value.toInt());
   }
 
@@ -97,7 +97,7 @@ namespace detail {
 
     QVariant value;
     value = query.value(ClauseRecordColumns::modelObjectFilterClauseRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_modelObjectFilterClauseRecordType == ModelObjectFilterClauseRecordType(value.toInt()));
 
     return result;
@@ -122,13 +122,13 @@ namespace detail {
 ModelObjectFilterClauseRecord::ModelObjectFilterClauseRecord(boost::shared_ptr<detail::ModelObjectFilterClauseRecord_Impl> impl, ProjectDatabase projectDatabase)
   : FilterClauseRecord(impl, projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterClauseRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterClauseRecord_Impl>());
 }
 
 ModelObjectFilterClauseRecord::ModelObjectFilterClauseRecord(boost::shared_ptr<detail::ModelObjectFilterClauseRecord_Impl> impl)
   : FilterClauseRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterClauseRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterClauseRecord_Impl>());
 }
 
 std::vector<ModelObjectFilterClauseRecord> 
@@ -183,7 +183,7 @@ ModelObjectFilterClauseRecord ModelObjectFilterClauseRecord::factoryFromFilter(c
   }
 
   LOG(Trace,"ModelObjectFilterClauseRecord::factoryFromFilter fell through.");
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return ModelObjectFilterClauseRecord(boost::shared_ptr<detail::ModelObjectFilterClauseRecord_Impl>());
 }
 

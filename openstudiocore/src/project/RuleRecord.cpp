@@ -56,18 +56,18 @@ namespace project {
     RuleRecord_Impl::RuleRecord_Impl(const QSqlQuery& query, const ProjectDatabase& projectDatabase)
       : ObjectRecord_Impl(projectDatabase, query)
     {
-      BOOST_ASSERT(query.isValid());
-      BOOST_ASSERT(query.isActive());
-      BOOST_ASSERT(query.isSelect());
+      OS_ASSERT(query.isValid());
+      OS_ASSERT(query.isActive());
+      OS_ASSERT(query.isSelect());
 
       QVariant value;
 
       value = query.value(RuleRecordColumns::active);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       m_active = value.toBool();
 
       value = query.value(RuleRecordColumns::ruleRecordType);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       m_ruleRecordType = RuleRecordType(value.toInt());
     }
 
@@ -122,19 +122,19 @@ namespace project {
 
     void RuleRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
     {
-      BOOST_ASSERT(query.isValid());
-      BOOST_ASSERT(query.isActive());
-      BOOST_ASSERT(query.isSelect());
+      OS_ASSERT(query.isValid());
+      OS_ASSERT(query.isActive());
+      OS_ASSERT(query.isSelect());
 
       ObjectRecord_Impl::setLastValues(query, projectDatabase);
 
       QVariant value;
       value = query.value(RuleRecordColumns::active);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       m_lastActive = value.toBool();
 
       value = query.value(RuleRecordColumns::ruleRecordType);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       m_lastRuleRecordType = RuleRecordType(value.toInt());
     }
 
@@ -146,11 +146,11 @@ namespace project {
 
       QVariant value;
       value = query.value(RuleRecordColumns::active);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       result = result && (m_active == value.toBool());
 
       value = query.value(RuleRecordColumns::ruleRecordType);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       result = result && (m_ruleRecordType == RuleRecordType(value.toInt()));
 
       return result;
@@ -200,7 +200,7 @@ namespace project {
            itend = result.columnValues.end(); it != itend; ++it)
       {
         // require 0 based columns, don't skip any
-        BOOST_ASSERT(*it == expectedValue);
+        OS_ASSERT(*it == expectedValue);
         // column name is name, type is description
         ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
         // is this the last column?
@@ -243,7 +243,7 @@ namespace project {
                          ProjectDatabase projectDatabase)
     : ObjectRecord(impl, projectDatabase)
   {
-    BOOST_ASSERT(getImpl<detail::RuleRecord_Impl>());
+    OS_ASSERT(getImpl<detail::RuleRecord_Impl>());
 
     LOG(Trace,"Constructing RuleRecord for " << rule.name() << ".");
 
@@ -274,13 +274,13 @@ namespace project {
   RuleRecord::RuleRecord(boost::shared_ptr<detail::RuleRecord_Impl> impl, ProjectDatabase projectDatabase)
     : ObjectRecord(impl, projectDatabase)
   {
-    BOOST_ASSERT(getImpl<detail::RuleRecord_Impl>());
+    OS_ASSERT(getImpl<detail::RuleRecord_Impl>());
   }
 
   RuleRecord::RuleRecord(boost::shared_ptr<detail::RuleRecord_Impl> impl)
     : ObjectRecord(impl)
   {
-    BOOST_ASSERT(getImpl<detail::RuleRecord_Impl>());
+    OS_ASSERT(getImpl<detail::RuleRecord_Impl>());
   }
 
   std::vector<RuleRecord> RuleRecord::getRuleRecords(ProjectDatabase& database)
@@ -292,7 +292,7 @@ namespace project {
     assertExec(query);
     while (query.next()) {
       boost::optional<RuleRecord> ruleRecord = factoryFromQuery(query, database);
-      BOOST_ASSERT(ruleRecord);
+      OS_ASSERT(ruleRecord);
       result.push_back(*ruleRecord);
     }
 

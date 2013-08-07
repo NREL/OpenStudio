@@ -47,7 +47,7 @@ namespace detail {
                                                                            bool keepHandle)
     : HVACComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == SetpointManagerOutdoorAirReset::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == SetpointManagerOutdoorAirReset::iddObjectType());
   }
 
   SetpointManagerOutdoorAirReset_Impl::SetpointManagerOutdoorAirReset_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -55,7 +55,7 @@ namespace detail {
                                                                            bool keepHandle)
     : HVACComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == SetpointManagerOutdoorAirReset::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == SetpointManagerOutdoorAirReset::iddObjectType());
   }
 
   SetpointManagerOutdoorAirReset_Impl::SetpointManagerOutdoorAirReset_Impl(const SetpointManagerOutdoorAirReset_Impl& other,
@@ -91,7 +91,7 @@ namespace detail {
 
   std::string SetpointManagerOutdoorAirReset_Impl::controlVariable() const {
     boost::optional<std::string> value = getString(OS_SetpointManager_OutdoorAirResetFields::ControlVariable,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -101,53 +101,53 @@ namespace detail {
 
   double SetpointManagerOutdoorAirReset_Impl::setpointatOutdoorLowTemperature() const {
     boost::optional<double> value = getDouble(OS_SetpointManager_OutdoorAirResetFields::SetpointatOutdoorLowTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SetpointManagerOutdoorAirReset_Impl::getSetpointatOutdoorLowTemperature(bool returnIP) const {
     OptionalDouble value = setpointatOutdoorLowTemperature();
     OSOptionalQuantity result = getQuantityFromDouble(OS_SetpointManager_OutdoorAirResetFields::SetpointatOutdoorLowTemperature, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double SetpointManagerOutdoorAirReset_Impl::outdoorLowTemperature() const {
     boost::optional<double> value = getDouble(OS_SetpointManager_OutdoorAirResetFields::OutdoorLowTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SetpointManagerOutdoorAirReset_Impl::getOutdoorLowTemperature(bool returnIP) const {
     OptionalDouble value = outdoorLowTemperature();
     OSOptionalQuantity result = getQuantityFromDouble(OS_SetpointManager_OutdoorAirResetFields::OutdoorLowTemperature, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double SetpointManagerOutdoorAirReset_Impl::setpointatOutdoorHighTemperature() const {
     boost::optional<double> value = getDouble(OS_SetpointManager_OutdoorAirResetFields::SetpointatOutdoorHighTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SetpointManagerOutdoorAirReset_Impl::getSetpointatOutdoorHighTemperature(bool returnIP) const {
     OptionalDouble value = setpointatOutdoorHighTemperature();
     OSOptionalQuantity result = getQuantityFromDouble(OS_SetpointManager_OutdoorAirResetFields::SetpointatOutdoorHighTemperature, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double SetpointManagerOutdoorAirReset_Impl::outdoorHighTemperature() const {
     boost::optional<double> value = getDouble(OS_SetpointManager_OutdoorAirResetFields::OutdoorHighTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SetpointManagerOutdoorAirReset_Impl::getOutdoorHighTemperature(bool returnIP) const {
     OptionalDouble value = outdoorHighTemperature();
     OSOptionalQuantity result = getQuantityFromDouble(OS_SetpointManager_OutdoorAirResetFields::OutdoorHighTemperature, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -202,12 +202,12 @@ namespace detail {
 
   void SetpointManagerOutdoorAirReset_Impl::resetControlVariable() {
     bool result = setString(OS_SetpointManager_OutdoorAirResetFields::ControlVariable, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorLowTemperature(double setpointatOutdoorLowTemperature) {
     bool result = setDouble(OS_SetpointManager_OutdoorAirResetFields::SetpointatOutdoorLowTemperature, setpointatOutdoorLowTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorLowTemperature(const Quantity& setpointatOutdoorLowTemperature) {
@@ -221,7 +221,7 @@ namespace detail {
 
   void SetpointManagerOutdoorAirReset_Impl::setOutdoorLowTemperature(double outdoorLowTemperature) {
     bool result = setDouble(OS_SetpointManager_OutdoorAirResetFields::OutdoorLowTemperature, outdoorLowTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::setOutdoorLowTemperature(const Quantity& outdoorLowTemperature) {
@@ -235,7 +235,7 @@ namespace detail {
 
   void SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorHighTemperature(double setpointatOutdoorHighTemperature) {
     bool result = setDouble(OS_SetpointManager_OutdoorAirResetFields::SetpointatOutdoorHighTemperature, setpointatOutdoorHighTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorHighTemperature(const Quantity& setpointatOutdoorHighTemperature) {
@@ -249,7 +249,7 @@ namespace detail {
 
   void SetpointManagerOutdoorAirReset_Impl::setOutdoorHighTemperature(double outdoorHighTemperature) {
     bool result = setDouble(OS_SetpointManager_OutdoorAirResetFields::OutdoorHighTemperature, outdoorHighTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::setOutdoorHighTemperature(const Quantity& outdoorHighTemperature) {
@@ -275,7 +275,7 @@ namespace detail {
 
   void SetpointManagerOutdoorAirReset_Impl::resetSetpointNode() {
     bool result = setString(OS_SetpointManager_OutdoorAirResetFields::SetpointNodeorNodeListName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::setSchedule(Schedule& schedule) {
@@ -288,7 +288,7 @@ namespace detail {
 
   void SetpointManagerOutdoorAirReset_Impl::resetSchedule() {
     bool result = setString(OS_SetpointManager_OutdoorAirResetFields::ScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorLowTemperature2(boost::optional<double> setpointatOutdoorLowTemperature2) {
@@ -300,7 +300,7 @@ namespace detail {
       resetSetpointatOutdoorLowTemperature2();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorLowTemperature2(const OSOptionalQuantity& setpointatOutdoorLowTemperature2) {
@@ -322,7 +322,7 @@ namespace detail {
 
   void SetpointManagerOutdoorAirReset_Impl::resetSetpointatOutdoorLowTemperature2() {
     bool result = setString(OS_SetpointManager_OutdoorAirResetFields::SetpointatOutdoorLowTemperature2, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SetpointManagerOutdoorAirReset_Impl::setOutdoorLowTemperature2(boost::optional<double> outdoorLowTemperature2) {
@@ -334,7 +334,7 @@ namespace detail {
       resetOutdoorLowTemperature2();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::setOutdoorLowTemperature2(const OSOptionalQuantity& outdoorLowTemperature2) {
@@ -357,7 +357,7 @@ namespace detail {
 
   void SetpointManagerOutdoorAirReset_Impl::resetOutdoorLowTemperature2() {
     bool result = setString(OS_SetpointManager_OutdoorAirResetFields::OutdoorLowTemperature2, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorHighTemperature2(boost::optional<double> setpointatOutdoorHighTemperature2) {
@@ -369,7 +369,7 @@ namespace detail {
       resetSetpointatOutdoorHighTemperature2();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::setSetpointatOutdoorHighTemperature2(const OSOptionalQuantity& setpointatOutdoorHighTemperature2) {
@@ -392,7 +392,7 @@ namespace detail {
 
   void SetpointManagerOutdoorAirReset_Impl::resetSetpointatOutdoorHighTemperature2() {
     bool result = setString(OS_SetpointManager_OutdoorAirResetFields::SetpointatOutdoorHighTemperature2, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SetpointManagerOutdoorAirReset_Impl::setOutdoorHighTemperature2(boost::optional<double> outdoorHighTemperature2) {
@@ -404,7 +404,7 @@ namespace detail {
       resetOutdoorHighTemperature2();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::setOutdoorHighTemperature2(const OSOptionalQuantity& outdoorHighTemperature2) {
@@ -427,7 +427,7 @@ namespace detail {
 
   void SetpointManagerOutdoorAirReset_Impl::resetOutdoorHighTemperature2() {
     bool result = setString(OS_SetpointManager_OutdoorAirResetFields::OutdoorHighTemperature2, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   std::vector<std::string> SetpointManagerOutdoorAirReset_Impl::controlVariableValues() const {
@@ -610,7 +610,7 @@ namespace detail {
 SetpointManagerOutdoorAirReset::SetpointManagerOutdoorAirReset(const Model& model)
   : HVACComponent(SetpointManagerOutdoorAirReset::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::SetpointManagerOutdoorAirReset_Impl>());
+  OS_ASSERT(getImpl<detail::SetpointManagerOutdoorAirReset_Impl>());
 
   setControlVariable("Temperature");
   setSetpointatOutdoorLowTemperature(22.0);

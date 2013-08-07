@@ -47,13 +47,13 @@ namespace detail {
   RulesetRecord_Impl::RulesetRecord_Impl(const QSqlQuery& query, const ProjectDatabase& projectDatabase)
     : ObjectRecord_Impl(projectDatabase, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
     value = query.value(RulesetRecordColumns::rulesetRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_rulesetRecordType = RulesetRecordType(value.toInt());
   }
 
@@ -71,15 +71,15 @@ namespace detail {
 
   void RulesetRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     ObjectRecord_Impl::setLastValues(query, projectDatabase);
 
     QVariant value;
     value = query.value(RulesetRecordColumns::rulesetRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastRulesetRecordType = RulesetRecordType(value.toInt());
   }
 
@@ -91,7 +91,7 @@ namespace detail {
 
     QVariant value;
     value = query.value(RulesetRecordColumns::rulesetRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_rulesetRecordType == RulesetRecordType(value.toInt()));
 
     return result;
@@ -131,7 +131,7 @@ UpdateByIdQueryData RulesetRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -172,13 +172,13 @@ void RulesetRecord::updatePathData(ProjectDatabase database,
 RulesetRecord::RulesetRecord(boost::shared_ptr<detail::RulesetRecord_Impl> impl, ProjectDatabase projectDatabase)
   : ObjectRecord(impl, projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::RulesetRecord_Impl>());
+  OS_ASSERT(getImpl<detail::RulesetRecord_Impl>());
 }
 
 RulesetRecord::RulesetRecord(boost::shared_ptr<detail::RulesetRecord_Impl> impl)
   : ObjectRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::RulesetRecord_Impl>());
+  OS_ASSERT(getImpl<detail::RulesetRecord_Impl>());
 }
 
 std::vector<RulesetRecord> RulesetRecord::getRulesetRecords(ProjectDatabase& database)
@@ -190,7 +190,7 @@ std::vector<RulesetRecord> RulesetRecord::getRulesetRecords(ProjectDatabase& dat
   assertExec(query);
   while (query.next()) {
     boost::optional<RulesetRecord> rulesetRecord = factoryFromQuery(query, database);
-    BOOST_ASSERT(rulesetRecord);
+    OS_ASSERT(rulesetRecord);
     result.push_back(*rulesetRecord);
   }
 

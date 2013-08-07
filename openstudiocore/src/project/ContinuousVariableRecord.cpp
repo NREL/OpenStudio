@@ -76,14 +76,14 @@ namespace detail {
   ContinuousVariableRecord_Impl::ContinuousVariableRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : InputVariableRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(ContinuousVariableRecord::ColumnsType::continuousVariableRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_continuousVariableRecordType = ContinuousVariableRecordType(value.toInt());
 
     value = query.value(ContinuousVariableRecord::ColumnsType::minimum);
@@ -166,16 +166,16 @@ namespace detail {
   void ContinuousVariableRecord_Impl::setLastValues(const QSqlQuery& query,
                                                     ProjectDatabase& projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     InputVariableRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(ContinuousVariableRecord::ColumnsType::continuousVariableRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastContinuousVariableRecordType = ContinuousVariableRecordType(value.toInt());
 
     value = query.value(ContinuousVariableRecord::ColumnsType::minimum);
@@ -212,16 +212,16 @@ namespace detail {
   }
 
   bool ContinuousVariableRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = InputVariableRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(ContinuousVariableRecord::ColumnsType::continuousVariableRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_continuousVariableRecordType == ContinuousVariableRecordType(value.toInt()));
 
     value = query.value(ContinuousVariableRecord::ColumnsType::minimum);
@@ -286,7 +286,7 @@ ContinuousVariableRecord::ContinuousVariableRecord(boost::shared_ptr<detail::Con
                                                    const boost::optional<analysis::ContinuousVariable>& variable)
   : InputVariableRecord(impl, database, (variable) ? *variable : analysis::OptionalInputVariable())
 {
-  BOOST_ASSERT(getImpl<detail::ContinuousVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ContinuousVariableRecord_Impl>());
 }
 
 boost::optional<ContinuousVariableRecord> ContinuousVariableRecord::factoryFromQuery(
@@ -330,7 +330,7 @@ ContinuousVariableRecord ContinuousVariableRecord::factoryFromContinuousVariable
         variableVectorIndex);
   }
 
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return ContinuousVariableRecord(boost::shared_ptr<detail::ContinuousVariableRecord_Impl>());
 }
 
@@ -355,7 +355,7 @@ ContinuousVariableRecord ContinuousVariableRecord::factoryFromContinuousVariable
         functionCoefficient);
   }
 
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return ContinuousVariableRecord(boost::shared_ptr<detail::ContinuousVariableRecord_Impl>());
 }
 

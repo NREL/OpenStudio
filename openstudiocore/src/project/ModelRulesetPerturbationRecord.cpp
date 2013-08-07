@@ -61,13 +61,13 @@ namespace detail {
   ModelRulesetPerturbationRecord_Impl::ModelRulesetPerturbationRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : DiscretePerturbationRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
     value = query.value(DiscretePerturbationRecordColumns::modelRulesetRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_modelRulesetRecordId = value.toInt();
   }
 
@@ -95,7 +95,7 @@ namespace detail {
   {
     ProjectDatabase projectDatabase = this->projectDatabase();
     boost::optional<ModelRulesetRecord> result = ModelRulesetRecord::getModelRulesetRecord(m_modelRulesetRecordId, projectDatabase);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return *result;
   }
 
@@ -127,7 +127,7 @@ namespace detail {
 
     QVariant value;
     value = query.value(DiscretePerturbationRecordColumns::modelRulesetRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastModelRulesetRecordId = value.toInt();
   }
 
@@ -139,7 +139,7 @@ namespace detail {
 
     QVariant value;
     value = query.value(DiscretePerturbationRecordColumns::modelRulesetRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_modelRulesetRecordId ==value.toInt());
 
     return result;
@@ -170,7 +170,7 @@ ModelRulesetPerturbationRecord::ModelRulesetPerturbationRecord(const analysis::M
                                                         perturbationVectorIndex)),
         discreteVariableRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::ModelRulesetPerturbationRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelRulesetPerturbationRecord_Impl>());
 }
 
 ModelRulesetPerturbationRecord::ModelRulesetPerturbationRecord(const QSqlQuery& query, ProjectDatabase& database)
@@ -178,19 +178,19 @@ ModelRulesetPerturbationRecord::ModelRulesetPerturbationRecord(const QSqlQuery& 
         new detail::ModelRulesetPerturbationRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::ModelRulesetPerturbationRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelRulesetPerturbationRecord_Impl>());
 }
 
 ModelRulesetPerturbationRecord::ModelRulesetPerturbationRecord(boost::shared_ptr<detail::ModelRulesetPerturbationRecord_Impl> impl, ProjectDatabase database)
   : DiscretePerturbationRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::ModelRulesetPerturbationRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelRulesetPerturbationRecord_Impl>());
 }
 
 ModelRulesetPerturbationRecord::ModelRulesetPerturbationRecord(boost::shared_ptr<detail::ModelRulesetPerturbationRecord_Impl> impl)
   : DiscretePerturbationRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ModelRulesetPerturbationRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelRulesetPerturbationRecord_Impl>());
 }
 
 boost::optional<ModelRulesetPerturbationRecord> ModelRulesetPerturbationRecord::factoryFromQuery(

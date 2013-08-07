@@ -42,7 +42,7 @@ namespace detail {
   ScheduleYear_Impl::ScheduleYear_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : Schedule_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ScheduleYear::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ScheduleYear::iddObjectType());
   }
 
   ScheduleYear_Impl::ScheduleYear_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -50,7 +50,7 @@ namespace detail {
                                        bool keepHandle)
     : Schedule_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ScheduleYear::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ScheduleYear::iddObjectType());
   }
 
   ScheduleYear_Impl::ScheduleYear_Impl(const ScheduleYear_Impl& other,
@@ -151,7 +151,7 @@ namespace detail {
     std::vector<openstudio::Date> dates = this->dates(); // these are already sorted
     
     unsigned N = dates.size();
-    BOOST_ASSERT(scheduleWeeks.size() == N);
+    OS_ASSERT(scheduleWeeks.size() == N);
 
     if (N == 0){
       return boost::none;
@@ -185,7 +185,7 @@ namespace detail {
     bool inserted = false;
     
     unsigned N = dates.size();
-    BOOST_ASSERT(scheduleWeeks.size() == N);
+    OS_ASSERT(scheduleWeeks.size() == N);
 
     this->clearExtensibleGroups();
 
@@ -202,7 +202,7 @@ namespace detail {
         groupValues.push_back(scheduleWeek.name().get());
 
         ModelExtensibleGroup group = pushExtensibleGroup(groupValues, doEmit).cast<ModelExtensibleGroup>();
-        BOOST_ASSERT(!group.empty());
+        OS_ASSERT(!group.empty());
 
         inserted = true;
 
@@ -218,7 +218,7 @@ namespace detail {
           groupValues.push_back(scheduleWeek.name().get());
 
           ModelExtensibleGroup group = pushExtensibleGroup(groupValues, false).cast<ModelExtensibleGroup>();
-          BOOST_ASSERT(!group.empty());
+          OS_ASSERT(!group.empty());
 
           inserted = true;
         }
@@ -232,7 +232,7 @@ namespace detail {
         groupValues.push_back(scheduleWeeks[i].name().get());
 
         ModelExtensibleGroup group = pushExtensibleGroup(groupValues, doEmit).cast<ModelExtensibleGroup>();
-        BOOST_ASSERT(!group.empty());
+        OS_ASSERT(!group.empty());
       }
     }
 
@@ -244,7 +244,7 @@ namespace detail {
       groupValues.push_back(scheduleWeek.name().get());
 
       ModelExtensibleGroup group = pushExtensibleGroup(groupValues, true).cast<ModelExtensibleGroup>();
-      BOOST_ASSERT(!group.empty());
+      OS_ASSERT(!group.empty());
     }
 
     return true;
@@ -260,7 +260,7 @@ namespace detail {
 ScheduleYear::ScheduleYear(const Model& model)
   : Schedule(ScheduleYear::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ScheduleYear_Impl>());
+  OS_ASSERT(getImpl<detail::ScheduleYear_Impl>());
 }
 
 IddObjectType ScheduleYear::iddObjectType() {

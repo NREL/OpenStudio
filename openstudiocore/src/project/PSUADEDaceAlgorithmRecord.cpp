@@ -48,9 +48,9 @@ namespace detail {
                                                            ProjectDatabase& database)
     : DakotaAlgorithmRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
   }
 
   std::vector<ObjectRecord> PSUADEDaceAlgorithmRecord_Impl::resources() const {
@@ -120,17 +120,17 @@ namespace detail {
   }
 
   void PSUADEDaceAlgorithmRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     DakotaAlgorithmRecord_Impl::setLastValues(query,projectDatabase);
   }
 
   bool PSUADEDaceAlgorithmRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = DakotaAlgorithmRecord_Impl::compareValues(query);
 
@@ -155,7 +155,7 @@ PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(
         analysisRecord.projectDatabase(),
         psuadedaceAlgorithm)
 {
-  BOOST_ASSERT(getImpl<detail::PSUADEDaceAlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::PSUADEDaceAlgorithmRecord_Impl>());
 
   constructRelatedRecords(psuadedaceAlgorithm);
 }
@@ -166,7 +166,7 @@ PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(const QSqlQuery& query, Pro
         database,
         boost::optional<analysis::DakotaAlgorithm>())
 {
-  BOOST_ASSERT(getImpl<detail::PSUADEDaceAlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::PSUADEDaceAlgorithmRecord_Impl>());
 }
 
 PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(
@@ -174,7 +174,7 @@ PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(
     ProjectDatabase database)
   : DakotaAlgorithmRecord(impl, database, boost::optional<analysis::DakotaAlgorithm>())
 {
-  BOOST_ASSERT(getImpl<detail::PSUADEDaceAlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::PSUADEDaceAlgorithmRecord_Impl>());
 }
 
 boost::optional<PSUADEDaceAlgorithmRecord> PSUADEDaceAlgorithmRecord::factoryFromQuery(

@@ -37,6 +37,7 @@
 #include <analysis/RubyPerturbation_Impl.hpp>
 #include <analysis/WorkflowStep.hpp>
 #include <analysisdriver/SimpleProject.hpp>
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/RubyException.hpp>
 
@@ -137,14 +138,14 @@ QWidget * VariableGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource)
       bool bingo = connect(variableGroupItemView->variableGroupContentView->newGroupView->dropZone,SIGNAL(dataDropped(QDropEvent * )),
           variableListController.data(),SLOT(addItemForDroppedMeasure(QDropEvent *)));
 
-      Q_ASSERT(bingo);
+      OS_ASSERT(bingo);
     }
 
     variableGroupItemView->variableGroupContentView->newFixedGroupView->dropZone->setAcceptedMimeType(MeasureDragData::mimeType(variableListController->measureType()));
 
     bool bingo = connect(variableGroupItemView->variableGroupContentView->newFixedGroupView->dropZone,SIGNAL(dataDropped(QDropEvent * )),
                          variableListController.data(),SLOT(addFixedItemForDroppedMeasure(QDropEvent *)));
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     variableGroupItemView->variableGroupContentView->variableListView->setListController(variableListController);
     variableGroupItemView->variableGroupContentView->variableListView->setDelegate(variableItemDelegate);
@@ -211,7 +212,7 @@ std::vector<analysis::DiscreteVariable> VariableListController::variables() cons
     if (measureType() == MeasureType::ModelMeasure) {
       analysis::OptionalDiscreteVariable modelSwapVariable = project->getAlternativeModelVariable();
       OptionalInt stopIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
-      BOOST_ASSERT(stopIndex);
+      OS_ASSERT(stopIndex);
       for (int i = 0; i < *stopIndex; ++i) {
         if (workflow[i].isInputVariable()) {
           analysis::InputVariable var = workflow[i].inputVariable();
@@ -233,10 +234,10 @@ std::vector<analysis::DiscreteVariable> VariableListController::variables() cons
       }
     }
     else {
-      BOOST_ASSERT(measureType() == MeasureType::EnergyPlusMeasure);
+      OS_ASSERT(measureType() == MeasureType::EnergyPlusMeasure);
       OptionalInt startIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ExpandObjects);
       OptionalInt stopIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlusPreProcess);
-      BOOST_ASSERT(startIndex && stopIndex);
+      OS_ASSERT(startIndex && stopIndex);
       for (int i = (*startIndex + 1); i < *stopIndex; ++i) {
         if (workflow[i].isInputVariable()) {
           analysis::InputVariable var = workflow[i].inputVariable();
@@ -376,15 +377,15 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
       OptionalInt index;
       FileReferenceType inType = projectMeasure.inputFileType();
       if (inType == FileReferenceType::OSM) {
-        BOOST_ASSERT(measureType() == MeasureType::ModelMeasure);
+        OS_ASSERT(measureType() == MeasureType::ModelMeasure);
         index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
       }
       else {
-        BOOST_ASSERT(inType == FileReferenceType::IDF);
-        BOOST_ASSERT(measureType() == MeasureType::EnergyPlusMeasure);
+        OS_ASSERT(inType == FileReferenceType::IDF);
+        OS_ASSERT(measureType() == MeasureType::EnergyPlusMeasure);
         index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlusPreProcess);
       }
-      BOOST_ASSERT(index);
+      OS_ASSERT(index);
       bool ok = problem.insert(*index,dv);
       if (ok) {
         emit itemInserted(variables().size() - 1);
@@ -540,7 +541,7 @@ QWidget * VariableItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     bool bingo = connect(variableItemView->variableHeaderView->variableNameEdit,SIGNAL(textEdited(const QString &)),
                          variableItem.data(),SLOT(setName(const QString &)));
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     QSharedPointer<MeasureListController> measureListController = variableItem->measureListController();
     variableItemView->variableContentView->measureListView->setListController(measureListController);
@@ -550,20 +551,20 @@ QWidget * VariableItemDelegate::view(QSharedPointer<OSListItem> dataSource)
       variableItemView->variableContentView->dropZone->setAcceptedMimeType(MeasureDragData::mimeType(variableItem->measureType()));
       bingo = connect(variableItemView->variableContentView->dropZone,SIGNAL(dataDropped(QDropEvent *)),
           variableItem->measureListController().data(),SLOT(addItemForDroppedMeasure(QDropEvent *)));
-      Q_ASSERT(bingo);
+      OS_ASSERT(bingo);
     }
 
     bingo = connect(variableItemView->variableHeaderView->removeButton,SIGNAL(clicked()),
                     variableItem.data(),SLOT(remove()));
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     bingo = connect(variableItemView->variableHeaderView->upButton,SIGNAL(clicked()),
                     variableItem.data(),SLOT(moveUp()));
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     bingo = connect(variableItemView->variableHeaderView->downButton,SIGNAL(clicked()),
                     variableItem.data(),SLOT(moveDown()));
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     QSharedPointer<MeasureItemDelegate> measureItemDelegate = QSharedPointer<MeasureItemDelegate>(new MeasureItemDelegate(variableItem->isFixedMeasure()));
     variableItemView->variableContentView->measureListView->setDelegate(measureItemDelegate);
@@ -756,14 +757,14 @@ QString MeasureItem::description() const
 
 QString MeasureItem::modelerDescription() const
 {
-  Q_ASSERT(m_pert.usesBCLMeasure());
+  OS_ASSERT(m_pert.usesBCLMeasure());
 
   return QString::fromStdString(m_pert.measure()->modelerDescription());
 }
 
 QString MeasureItem::scriptFileName() const
 {
-  Q_ASSERT(m_pert.usesBCLMeasure());
+  OS_ASSERT(m_pert.usesBCLMeasure());
 
   QString scriptName;
 
@@ -777,7 +778,7 @@ QString MeasureItem::scriptFileName() const
 
 void MeasureItem::setDescription(const QString & description)
 {
-  Q_ASSERT(m_pert.usesBCLMeasure());
+  OS_ASSERT(m_pert.usesBCLMeasure());
 
   // ETH: Was setting description on the measure itself (m_pert.measure()), however, this 
   // description should be attached to the instantiated perturbation, not the global measure.
@@ -862,13 +863,13 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     bool bingo = connect(measureItem.data(),SIGNAL(nameChanged(const QString &)),measureItemView->measureItemButton->nameLabel,SLOT(setText(const QString &)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     // Remove
 
     bingo = connect(measureItemView->removeButton,SIGNAL(clicked()),measureItem.data(),SLOT(remove()));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     // Selection
 
@@ -876,11 +877,11 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     bingo = connect(measureItemView->measureItemButton,SIGNAL(clicked()),measureItem.data(),SLOT(toggleSelected()));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     bingo = connect(measureItem.data(),SIGNAL(selectedChanged(bool)),measureItemView->measureItemButton,SLOT(setHasEmphasis(bool)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     // Warning Icon
 
@@ -888,7 +889,7 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     bingo = connect(measureItem.data(),SIGNAL(argumentsChanged(bool)),measureItemView->measureItemButton->cautionLabel,SLOT(setVisible(bool)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     return measureItemView;
   }

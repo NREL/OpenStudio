@@ -271,7 +271,7 @@ namespace detail {
       }
       else {
         // continuous variable
-        BOOST_ASSERT(mine.type() == QVariant::Double);
+        OS_ASSERT(mine.type() == QVariant::Double);
         if (theirs.type() != QVariant::Double) {
           return false;
         }
@@ -341,21 +341,21 @@ namespace detail {
   }
 
   void DataPoint_Impl::setOsmInputData(const FileReference& file) {
-    BOOST_ASSERT(file.fileType() == FileReferenceType::OSM);
+    OS_ASSERT(file.fileType() == FileReferenceType::OSM);
     m_osmInputData = file;
     m_model = boost::none;
     onChange(AnalysisObject_Impl::Benign);
   }
 
   void DataPoint_Impl::setIdfInputData(const FileReference& file) {
-    BOOST_ASSERT(file.fileType() == FileReferenceType::IDF);
+    OS_ASSERT(file.fileType() == FileReferenceType::IDF);
     m_idfInputData = file;
     m_workspace = boost::none;
     onChange(AnalysisObject_Impl::Benign);
   }
 
   void DataPoint_Impl::setSqlOutputData(const FileReference& file) {
-    BOOST_ASSERT(file.fileType() == FileReferenceType::SQL);
+    OS_ASSERT(file.fileType() == FileReferenceType::SQL);
     m_sqlOutputData = file;
     m_model = boost::none;
     m_sqlFile = boost::none;
@@ -363,7 +363,7 @@ namespace detail {
   }
 
   void DataPoint_Impl::setXmlOutputData(const FileReference& file) {
-    BOOST_ASSERT(file.fileType() == FileReferenceType::XML);
+    OS_ASSERT(file.fileType() == FileReferenceType::XML);
     m_xmlOutputData = file;
     m_outputAttributes.clear();
     onChange(AnalysisObject_Impl::Benign);

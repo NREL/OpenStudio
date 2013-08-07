@@ -59,7 +59,7 @@ namespace detail {
 ModelObjectFilterClause::ModelObjectFilterClause(boost::shared_ptr<detail::ModelObjectFilterClause_Impl> impl)
   : FilterClause(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterClause_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterClause_Impl>());
 }
 /// @endcond
 
