@@ -56,6 +56,8 @@
 #include <model/SetpointManagerScheduled_Impl.hpp>
 #include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
 #include <model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp>
+#include <model/SetpointManagerWarmest.hpp>
+#include <model/SetpointManagerWarmest_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/Splitter.hpp>
@@ -75,6 +77,7 @@ bool hasSPM(model::Node & node)
       || node.getSetpointManagerMixedAir()
       || node.setpointManagerOutdoorAirReset()
       || node.setpointManagerScheduled()
+      || node.setpointManagerWarmest()
       || node.setpointManagerFollowOutdoorAirTemperature() )
   {
     return true;
@@ -847,14 +850,22 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
         branchComponents = loop.demandComponents(node1,node2);
       }
 
-      std::vector<model::ModelObject> rBranchComponents;
-      for( std::vector<model::ModelObject>::reverse_iterator rit = branchComponents.rbegin();
-           rit < branchComponents.rend(); rit++ )
+      if( isSupplySide )
       {
-        rBranchComponents.push_back( *rit );
+        m_branchItems.push_back(new HorizontalBranchItem(branchComponents,this));
+        it2++;
       }
-      m_branchItems.push_back(new HorizontalBranchItem(rBranchComponents,this));
-      it2++;
+      else
+      {
+        std::vector<model::ModelObject> rBranchComponents;
+        for( std::vector<model::ModelObject>::reverse_iterator rit = branchComponents.rbegin();
+             rit < branchComponents.rend(); rit++ )
+        {
+          rBranchComponents.push_back( *rit );
+        }
+        m_branchItems.push_back(new HorizontalBranchItem(rBranchComponents,this));
+        it2++;
+      }
     }
   }
 
@@ -1798,6 +1809,10 @@ void OneThreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
       {
         painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_outdoorair.png"));
       }  
+      else if( node->setpointManagerWarmest() )
+      {
+        painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_warmest.png"));
+      }  
     }  
   }
 }
@@ -1931,6 +1946,10 @@ void TwoFourNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
       {
         painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_outdoorair_right.png"));
       }  
+      else if( node->setpointManagerWarmest() )
+      {
+        painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest_right.png"));
+      }  
     }  
   }
 }
@@ -2012,6 +2031,10 @@ void OAStraightNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
       else if( node->setpointManagerOutdoorAirReset() )
       {
         painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_outdoorair.png"));
+      }  
+      else if( node->setpointManagerWarmest() )
+      {
+        painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest.png"));
       }  
     }  
   }
@@ -2950,6 +2973,10 @@ void NodeContextButtonItem::onRemoveSPMActionTriggered()
         emit removeModelObjectClicked( spm.get() );
       }
       else if(boost::optional<SetpointManagerScheduled> spm = node.setpointManagerScheduled())
+      {
+        emit removeModelObjectClicked( spm.get() );
+      }
+      else if(boost::optional<SetpointManagerWarmest> spm = node.setpointManagerWarmest())
       {
         emit removeModelObjectClicked( spm.get() );
       }

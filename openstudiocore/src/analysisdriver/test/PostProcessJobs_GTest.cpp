@@ -205,32 +205,34 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_OpenStudioPostProcessAndResponses) 
   FileReference seedModel(p);
 
   // CREATE ANALYSIS
-  DDACEAlgorithmOptions algOptions(DDACEAlgorithmType::lhs);
-  algOptions.setSamples(1);
+  Analysis analysis("DDACE Latin Hypercube Sampling - UserScriptContinuousWithResponses",
+                    problem,
+                    seedModel);
+
+  // CREATE A DATAPOINT TO RUN
+  std::vector<QVariant> values;
+  values.push_back(QVariant(double(0.2))); // wwr
+  values.push_back(QVariant(double(1.0))); // offset of windows from floor
+  values.push_back(QVariant(double(1.0))); // overhang projection factor
+  OptionalDataPoint oDataPoint = problem.createDataPoint(values);
+  ASSERT_TRUE(oDataPoint);
+  bool test = analysis.addDataPoint(*oDataPoint);
+  EXPECT_TRUE(test);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    Analysis analysis("DDACE Latin Hypercube Sampling - UserScriptContinuousWithResponses",
-                      problem,
-                      DDACEAlgorithm(algOptions),
-                      seedModel);
-    ProjectDatabase database = getCleanDatabase("PostProcessJobs_OpenStudioPostProcessAndResponses");
-    AnalysisDriver analysisDriver = AnalysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
-    EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
-    Table summary = currentAnalysis.analysis().summaryTable();
-    EXPECT_EQ(2u,summary.nRows());
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  ProjectDatabase database = getCleanDatabase("PostProcessJobs_OpenStudioPostProcessAndResponses");
+  AnalysisDriver analysisDriver = AnalysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
+  Table summary = currentAnalysis.analysis().summaryTable();
+  EXPECT_EQ(2u,summary.nRows());
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-      EXPECT_EQ(problem.responses().size(),dataPoint.responseValues().size());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
+    EXPECT_EQ(problem.responses().size(),dataPoint.responseValues().size());
   }
 }

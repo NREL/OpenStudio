@@ -595,7 +595,7 @@ namespace detail {
       throw std::runtime_error("No more tool names");
     }
 
-    std::string name = m_toolNames.at(m_currentToolIndex);
+    std::string name = m_toolNames[m_currentToolIndex];
     ++m_currentToolIndex;
 
     return name;
@@ -608,7 +608,7 @@ namespace detail {
     try {
 //      LOG(Debug, "Getting next tool name: " << toString(uuid()));
       nextToolName = getNextToolName();
-    } catch (const std::exception &) {
+    } catch (const std::runtime_error &) {
       LOG(Debug, "Last Tool Completed: " << toString(uuid()));
       updateOutOfDateStatus(outOfDate());
       quit();

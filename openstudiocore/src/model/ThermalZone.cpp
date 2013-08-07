@@ -152,7 +152,6 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
-      result.push_back("Zone Outdoor Dry Bulb");
       result.push_back("Zone Outdoor Air Drybulb Temperature");
       result.push_back("Zone Outdoor Air Wetbulb Temperature");
       result.push_back("Zone Outdoor Air Wind Speed");
@@ -196,8 +195,8 @@ namespace detail {
       result.push_back("Zone Windows Total Transmitted Solar Radiation Energy");
       result.push_back("Zone Exterior Windows Total Transmitted Beam Solar Radiation Energy");
       result.push_back("Zone Interior Windows Total Transmitted Beam Solar Radiation Energy");
-      result.push_back("Zone Exterior Windows Total Transmitted Diffuse Solar Radiation Energy");
-      result.push_back("Zone Interior Windows Total Transmitted Diffuse Solar Radiation Energy");
+      result.push_back("Zone Exterior Windows Total Transmitted Diffuse Solar Radiation Rate");
+      result.push_back("Zone Interior Windows Total Transmitted Diffuse Solar Radiation Rate");
       result.push_back("Zone Windows Total Heat Gain Energy");
       result.push_back("Zone Windows Total Heat Loss Energy");
       result.push_back("Zone Mean Radiant Temperature");
@@ -240,16 +239,16 @@ namespace detail {
       result.push_back("Zone Thermostat Cooling Setpoint Temperature");
       result.push_back("Zone Mechanical Ventilation No Load Heat Removal Energy");
       result.push_back("Zone Mechanical Ventilation Cooling Load Increase Energy");
-      result.push_back("Zone Mechanical Ventilation Cooling Load Increase Due to Overheating Energy");
+      result.push_back("Zone Mechanical Ventilation Cooling Load Increase Energy Due to Overheating Energy");
       result.push_back("Zone Mechanical Ventilation Cooling Load Decrease Energy");
       result.push_back("Zone Mechanical Ventilation No Load Heat Addition Energy");
       result.push_back("Zone Mechanical Ventilation No Load Heat Removal Energy");
       result.push_back("Zone Mechanical Ventilation Cooling Load Increase Energy");
-      result.push_back("Zone Mechanical Ventilation Cooling Load Increase Due to Overheating Energy");
+      result.push_back("Zone Mechanical Ventilation Cooling Load Increase Energy Due to Overheating Energy");
       result.push_back("Zone Mechanical Ventilation Cooling Load Decrease Energy");
       result.push_back("Zone Mechanical Ventilation No Load Heat Addition Energy");
       result.push_back("Zone Mechanical Ventilation Heating Load Increase Energy");
-      result.push_back("Zone Mechanical Ventilation Heating Load Increase Due to Overcooling Energy");
+      result.push_back("Zone Mechanical Ventilation Heating Load Increase Energy Due to Overcooling Energy");
       result.push_back("Zone Mechanical Ventilation Heating Load Decrease Energy");
       result.push_back("Zone Mechanical Ventilation Mass Flow Rate");
       result.push_back("Zone Mechanical Ventilation Mass");

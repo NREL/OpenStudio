@@ -66,6 +66,9 @@ namespace openstudio{
       // virtual destructor
       virtual ~SqlFile_Impl();
 
+      /// Create useful indexes
+      void createIndexes();
+
       /// returns whether or not connection is open
       bool connectionOpen() const;
 

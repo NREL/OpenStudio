@@ -1156,7 +1156,7 @@ namespace detail {
 
     bool outofdateinternal = outOfDateInternal(p, lastrun);
 
-//    LOG(Debug, description() << " " << outofdateinternal << " " << parentOutOfDate << " " << parentRunning << " " << parentChildrenRunning << " " << parentRunning << " " << parentFailed << " " << parentChildrenFailed)
+    // LOG(Debug, description() << " " << outofdateinternal << " " << parentOutOfDate << " " << parentRunning << " " << parentChildrenRunning << " " << parentRunning << " " << parentFailed << " " << parentChildrenFailed << " " << (lastrun?openstudio::toString(lastrun->toString()):"not previously run") )
     return outofdateinternal && !parentOutOfDate
                && !parentRunning && !parentChildrenRunning
                && !parentFailed && !parentChildrenFailed;
@@ -1462,6 +1462,8 @@ namespace detail {
 
   TreeStatusEnum Job_Impl::treeStatus() const
   {
+    JobErrors err = errors();
+
     QReadLocker l(&m_mutex);
     TreeStatusEnum res;
 
@@ -1469,7 +1471,7 @@ namespace detail {
     {
       res = TreeStatusEnum::Running;
     } else if (lastRunInternal()) {
-      if (m_errors.succeeded())
+      if (err.succeeded())
       {
         res = TreeStatusEnum::Finished;
       } else {
