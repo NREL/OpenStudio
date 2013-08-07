@@ -1107,6 +1107,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateSetpointManagerOutdoorAirReset(spm);
       break;
     }
+  case  openstudio::IddObjectType::OS_SetpointManager_Warmest :
+    {
+      model::SetpointManagerWarmest spm = modelObject.cast<SetpointManagerWarmest>();
+      retVal = translateSetpointManagerWarmest(spm);
+      break;
+    }
   case  openstudio::IddObjectType::OS_ShadingSurface :
     {
       model::ShadingSurface shadingSurface = modelObject.cast<ShadingSurface>();

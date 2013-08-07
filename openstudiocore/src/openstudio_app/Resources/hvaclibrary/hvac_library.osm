@@ -1,6 +1,5 @@
-
 OS:Version,
-  {3ea11cd8-674f-4537-8372-feea3c0592bf}, !- Handle
+  {1ce1aa37-0a17-44e1-863b-48cb5ca5c8ed}, !- Handle
   1.0.3;                                  !- Version Identifier
 
 OS:Schedule:Constant,
@@ -223,6 +222,15 @@ OS:SetpointManager:SingleZone:Reheat,
   ,                                       ! Control Zone Name
   ;                                       ! Setpoint Node or NodeList Name
 
+OS:SetpointManager:Warmest,
+  {4f12e925-01e9-4ce2-9f56-daa5d024ac5d}, !- Handle
+  Setpoint Manager Warmest,               !- Name
+  Temperature,                            !- Control Variable
+  12.2,                                   !- Minimum Setpoint Temperature {C}
+  15.6,                                   !- Maximum Setpoint Temperature {C}
+  MaximumTemperature,                     !- Strategy
+  ;                                       !- Setpoint Node or NodeList Name
+
 OS:Fan:ConstantVolume,
   {c15ef75a-56db-4ec3-9720-d06294deabcc}, ! Handle
   Constant Speed Fan,                     ! Name
@@ -378,6 +386,18 @@ OS:Curve:Quadratic,
   0,                                      ! Coefficient3 x**2
   0,                                      ! Minimum Value of x {BasedOnField A2}
   1;                                      ! Maximum Value of x {BasedOnField A2}
+
+OS:EvaporativeCooler:Direct:ResearchSpecial,
+  {8d3b17e0-88c9-4d17-9de4-0b9dd0481b36}, ! Handle
+  OS:EvaporativeCooler:Direct:ResearchSpecial, ! Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
+  1,                                      !- Cooler Effectiveness
+  0,                                      !- Recirculating Water Pump Power Consumption {W}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Sensor Node Name
+  0,                                      !- Drift Loss Fraction
+  0;                                      !- Blowdown Concentration Ratio
 
 OS:EvaporativeFluidCooler:SingleSpeed,
   {b04f495c-cbc1-4d89-acec-e5f7711f00de}, !- Handle
@@ -643,10 +663,10 @@ OS:Chiller:Electric:EIR,
   ,                                       ! Reference Condenser Fluid Flow Rate {m3/s}
   {238cb0b4-afac-4115-8524-7778555d6cfb}, ! Cooling Capacity Function of Temperature Curve Name
   {50d61daa-6f6c-414f-ac1a-30a0507bc220}, ! Electric Input to Cooling Output Ratio Function of Temperature Curve Name
-  {a8baa337-01eb-4156-a748-1c5028aa6282}, ! Electric Input to Cooling Output Ratio Function of Fan Coil Part Load Ratio Curve Name
-  ,                                       ! Minimum Fan Coil Part Load Ratio
-  ,                                       ! Maximum Fan Coil Part Load Ratio
-  ,                                       ! Optimum Fan Coil Part Load Ratio
+  {a8baa337-01eb-4156-a748-1c5028aa6282}, ! Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name
+  ,                                       ! Minimum Part Load Ratio
+  ,                                       ! Maximum Part Load Ratio
+  ,                                       ! Optimum Part Load Ratio
   ,                                       ! Minimum Unloading Ratio
   ,                                       ! Chilled Water Inlet Node Name
   ,                                       ! Chilled Water Outlet Node Name
@@ -712,9 +732,9 @@ OS:Boiler:HotWater,
   {7a46b48b-f003-42e6-9865-b04b98d124aa}, ! Normalized Boiler Efficiency Curve Name
   ,                                       ! Design Water Outlet Temperature {C}
   ,                                       ! Design Water Flow Rate {m3/s}
-  ,                                       ! Minimum Fan Coil Part Load Ratio
-  ,                                       ! Maximum Fan Coil Part Load Ratio
-  ,                                       ! Optimum Fan Coil Part Load Ratio
+  ,                                       ! Minimum Part Load Ratio
+  ,                                       ! Maximum Part Load Ratio
+  ,                                       ! Optimum Part Load Ratio
   ,                                       ! Boiler Water Inlet Node Name
   ,                                       ! Boiler Water Outlet Node Name
   99,                                     ! Water Outlet Upper Temperature Limit {C}

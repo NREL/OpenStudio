@@ -567,6 +567,8 @@ namespace detail {
 
     node.removeSetpointManagerOutdoorAirReset();
 
+    node.removeSetpointManagerWarmest();
+
     if( OptionalAirLoopHVAC airLoop = node.airLoopHVAC() )
     {
       if( airLoop->supplyComponent(node.handle()) )
