@@ -45,6 +45,7 @@ namespace openstudio {
 
 class BillFormatDialog;
 
+class BillingPeriod;
 class Date;
 class FuelType;
 
@@ -124,7 +125,11 @@ private:
   bool setTotalCost(double totalCost);
   boost::optional<double> totalCost() const;
 
-  std::vector<model::UtilityBill> m_utilityBills; // TODO ???
+  void addBillingPeriod();
+  void addBillingPeriod(model::BillingPeriod & billingPeriod);
+  void addBillingPeriods();
+
+  //std::vector<model::UtilityBill> m_utilityBills; // TODO ???
 
   boost::optional<model::UtilityBill> m_utilityBill;
 
@@ -157,23 +162,25 @@ private slots:
 
 };
 
-class UtilityBillWidget : public QWidget
+class BillingPeriodWidget : public QWidget
 {
 
   Q_OBJECT
 
 public:
 
-  UtilityBillWidget(QGridLayout * gridLayout,
-    model::UtilityBill & utilityBill,
+  BillingPeriodWidget(QGridLayout * gridLayout,
+    FuelType fuelType,
     BillFormat billFormat,
+    unsigned index,
     QWidget * parent = 0);
 
-  virtual ~UtilityBillWidget() {}
+  virtual ~BillingPeriodWidget() {}
 
 private:
 
   void createWidgets(QGridLayout * gridLayout,
+    FuelType fuelType,
     BillFormat billFormat);
 
   void getLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex, const QString& text);
@@ -197,7 +204,9 @@ private:
 
   QPushButton * m_deleteBillWidget;
 
-  model::UtilityBill m_utilityBill;
+  //model::UtilityBill m_utilityBill;
+
+  unsigned m_index;
 
 private slots:
 

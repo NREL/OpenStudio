@@ -161,7 +161,8 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
 
           if(fuelType ==  FuelType::Electricity){
             m_utilityBill = utilityBill.get();
-            //electricBill =  utilityBill.get();
+            break;
+            // TODO electricBill =  utilityBill.get();
           } else if(fuelType ==  FuelType::Gas){
             gasBill =  utilityBill.get();            
           } else if(fuelType ==  FuelType::Gasoline){
@@ -191,6 +192,8 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
         }
       }
     }
+
+// TODO BillingPeriodWidget * billingPeriodWidget = new BillingPeriodWidget(m_billGridLayout,m_utilityBill.fuelType,m_billFormat,index);
   }
 
   createWidgets();
@@ -482,11 +485,34 @@ void UtilityBillsInspectorView::disableAddButton()
   m_addBillingPeriod->setEnabled(false);
 }
 
+void UtilityBillsInspectorView::addBillingPeriods()
+{
+  if(m_utilityBill.is_initialized()){
+    std::vector<model::BillingPeriod> billingPeriods = m_utilityBill.get().billingPeriods();
+    for(unsigned i = 0; i < billingPeriods.size(); i++)
+    addBillingPeriod(billingPeriods.at(i));
+  }
+}
+
+void UtilityBillsInspectorView::addBillingPeriod(model::BillingPeriod & billingPeriod)
+{
+  if(m_utilityBill.is_initialized()){
+    new BillingPeriodWidget(m_billGridLayout,m_utilityBill.get().fuelType(),m_billFormat,m_utilityBill.get().billingPeriods().size());
+  }
+}
+
+void UtilityBillsInspectorView::addBillingPeriod()
+{
+  if(m_utilityBill.is_initialized()){
+    new BillingPeriodWidget(m_billGridLayout,m_utilityBill.get().fuelType(),m_billFormat,m_utilityBill.get().billingPeriods().size());
+  }
+}
+
 ////// SLOTS ///////
 
 void UtilityBillsInspectorView::addBillingPeriod(bool checked)
 {
-  // TODO UtilityBillWidget * utilityBillWidget = new UtilityBillWidget(m_billGridLayout,m_utilityBill,m_billFormat);
+  // TODO BillingPeriodWidget * billingPeriodWidget = new BillingPeriodWidget(m_billGridLayout,m_utilityBill,m_billFormat,index);
 }
 
 void UtilityBillsInspectorView::deleteBillingPeriod(int index)
@@ -505,27 +531,26 @@ void UtilityBillsInspectorView::setBillFormat(BillFormat billFormat)
 //**********************************************************************************************************
 
 
-UtilityBillWidget::UtilityBillWidget(QGridLayout * gridLayout,
-  model::UtilityBill & utilityBill,
+BillingPeriodWidget::BillingPeriodWidget(QGridLayout * gridLayout,
+  FuelType fuelType,
   BillFormat billFormat,
-  // bool showPeak,
+  unsigned index,
   QWidget * parent)
   : QWidget(parent),
-  m_utilityBill(utilityBill)
+  m_index(index)
 {
-  createWidgets(gridLayout,billFormat);
+  createWidgets(gridLayout,fuelType,billFormat);
 }
 
-void UtilityBillWidget::createWidgets(QGridLayout * gridLayout,
+void BillingPeriodWidget::createWidgets(QGridLayout * gridLayout,
+  FuelType fuelType,
   BillFormat billFormat)
 {
   int columnIndex = 0;
 
   int rowIndex = gridLayout->rowCount();
 
-  static bool hasHeader = false;
-  if(!hasHeader){
-    hasHeader = true;
+  if(m_index == 0){
         
     if(billFormat == STARTDATE_ENDDATE){
       getStartDateLabel(gridLayout, rowIndex, columnIndex++);
@@ -546,8 +571,7 @@ void UtilityBillWidget::createWidgets(QGridLayout * gridLayout,
     columnIndex++;
 
     getLabel(gridLayout,rowIndex,columnIndex++,QString("Energy Use (kWh)"));
-    if(true){
-    // TODO if(fuelType == Electricity){
+    if(fuelType == FuelType::Electricity){
       getLabel(gridLayout,rowIndex,columnIndex++,QString("Peak (kW)"));
     }
     getLabel(gridLayout,rowIndex,columnIndex++,QString("Cost"));
@@ -594,7 +618,7 @@ void UtilityBillWidget::createWidgets(QGridLayout * gridLayout,
   gridLayout->addWidget(m_deleteBillWidget,rowIndex,columnIndex++,Qt::AlignLeft | Qt::AlignTop);
 }
 
-void UtilityBillWidget::getLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex, const QString& text)
+void BillingPeriodWidget::getLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex, const QString& text)
 {
   QLabel * label = new QLabel();
   label->setText(text);
@@ -603,12 +627,12 @@ void UtilityBillWidget::getLabel(QGridLayout * gridLayout, int rowIndex, int col
   gridLayout->addWidget(label,rowIndex,columnIndex,Qt::AlignLeft| Qt::AlignTop);
 }
 
-void UtilityBillWidget::getStartDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex)
+void BillingPeriodWidget::getStartDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex)
 {
   getLabel(gridLayout,rowIndex,columnIndex,QString("Start Date"));
 }
 
-void UtilityBillWidget::getDateEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex, QDateEdit * & dateEdit)
+void BillingPeriodWidget::getDateEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex, QDateEdit * & dateEdit)
 {
   dateEdit = new QDateEdit();
   dateEdit->setCalendarPopup(true);
@@ -617,7 +641,7 @@ void UtilityBillWidget::getDateEdit(QGridLayout * gridLayout, int rowIndex, int 
   gridLayout->addWidget(dateEdit,rowIndex,columnIndex,Qt::AlignLeft| Qt::AlignTop);
 }
 
-void UtilityBillWidget::getStartDateCalendar(QGridLayout * gridLayout, int rowIndex, int columnIndex)
+void BillingPeriodWidget::getStartDateCalendar(QGridLayout * gridLayout, int rowIndex, int columnIndex)
 {
   getDateEdit(gridLayout, rowIndex, columnIndex, m_startDateEdit);
 
@@ -626,12 +650,12 @@ void UtilityBillWidget::getStartDateCalendar(QGridLayout * gridLayout, int rowIn
   Q_ASSERT(isConnected);
 }
 
-void UtilityBillWidget::getEndDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex)
+void BillingPeriodWidget::getEndDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex)
 {
   getLabel(gridLayout,rowIndex,columnIndex,QString("End Date"));
 }
 
-void UtilityBillWidget::getEndDateCalendar(QGridLayout * gridLayout, int rowIndex, int columnIndex)
+void BillingPeriodWidget::getEndDateCalendar(QGridLayout * gridLayout, int rowIndex, int columnIndex)
 {
   getDateEdit(gridLayout, rowIndex, columnIndex, m_endDateEdit);
 
@@ -640,12 +664,12 @@ void UtilityBillWidget::getEndDateCalendar(QGridLayout * gridLayout, int rowInde
   Q_ASSERT(isConnected);
 }
 
-void UtilityBillWidget::getBillingPeriodLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex)
+void BillingPeriodWidget::getBillingPeriodLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex)
 {
   getLabel(gridLayout,rowIndex,columnIndex,QString("Billing Period Days"));
 }
 
-void UtilityBillWidget::getBillingPeriodLineEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex)
+void BillingPeriodWidget::getBillingPeriodLineEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex)
 {
   m_billingPeriodIntEdit = new QDoubleSpinBox();
   m_billingPeriodIntEdit->setDecimals(0);
@@ -659,7 +683,7 @@ void UtilityBillWidget::getBillingPeriodLineEdit(QGridLayout * gridLayout, int r
 
 //// SLOTS
 
-void UtilityBillWidget::startDateChanged(const QDate & newdate)
+void BillingPeriodWidget::startDateChanged(const QDate & newdate)
 {
   //model::RunPeriodControlDaylightSavingTime dst =
   //  m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
@@ -667,7 +691,7 @@ void UtilityBillWidget::startDateChanged(const QDate & newdate)
   //dst.setStartDate(monthOfYear(newdate.month()),newdate.day());
 }
 
-void UtilityBillWidget::endDateChanged(const QDate & newdate)
+void BillingPeriodWidget::endDateChanged(const QDate & newdate)
 {
   //model::RunPeriodControlDaylightSavingTime dst =
   //  m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
