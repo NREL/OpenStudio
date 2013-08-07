@@ -25,6 +25,7 @@
 #include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
 #include <model/SetpointManagerScheduled.hpp>
 #include <model/SetpointManagerOutdoorAirReset.hpp>
+#include <model/SetpointManagerWarmest.hpp>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -67,6 +68,13 @@ boost::optional<IdfObject> ForwardTranslator::translateNode( Node & modelObject 
   if( setpointManagerOutdoorAirReset )
   {
     translateAndMapModelObject( setpointManagerOutdoorAirReset.get());
+  }
+
+  boost::optional<SetpointManagerWarmest> setpointManagerWarmest
+    = modelObject.setpointManagerWarmest();
+  if( setpointManagerWarmest )
+  {
+    translateAndMapModelObject( setpointManagerWarmest.get());
   }
 
   return boost::optional<IdfObject>();

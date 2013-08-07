@@ -335,6 +335,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(SetpointManagerOutdoorAirReset);
     REGISTER_CONSTRUCTOR(SetpointManagerScheduled);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneReheat);
+    REGISTER_CONSTRUCTOR(SetpointManagerWarmest);
     REGISTER_CONSTRUCTOR(Shade);
     REGISTER_CONSTRUCTOR(ShadingSurface);
     REGISTER_CONSTRUCTOR(ShadingSurfaceGroup);
@@ -578,6 +579,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(SetpointManagerOutdoorAirReset);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduled);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneReheat);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerWarmest);
     REGISTER_COPYCONSTRUCTORS(Shade);
     REGISTER_COPYCONSTRUCTORS(ShadingSurface);
     REGISTER_COPYCONSTRUCTORS(ShadingSurfaceGroup);
