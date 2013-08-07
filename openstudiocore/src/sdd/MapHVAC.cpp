@@ -59,6 +59,7 @@
 #include <model/SetpointManagerMixedAir.hpp>
 #include <model/SetpointManagerSingleZoneReheat.hpp>
 #include <model/SetpointManagerScheduled.hpp>
+#include <model/SetpointManagerWarmest.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
 #include <model/AirTerminalSingleDuctUncontrolled.hpp>
@@ -507,9 +508,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     supplyOutletNode.addSetpointManager(spm);
 
-    model::Schedule schedule = alwaysOnSchedule(model);
-
     airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(40.0);
+  }
+  else if( istringEqual(airSystemTypeElement.text().toStdString(),"SZVAVAC") ||
+           istringEqual(airSystemTypeElement.text().toStdString(),"SZVAVHP")
+         )
+  {
+    model::SetpointManagerWarmest spm(model);
+
+    supplyOutletNode.addSetpointManagerWarmest(spm);
   }
   else
   {
@@ -1607,7 +1614,19 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
     }
   }
 
-  if( istringEqual("VAVReheatBox",typeElement.text().toStdString()) )
+  QDomElement airSysElement = trmlUnitElement.parentNode().toElement();
+
+  QDomElement airSystemTypeElement;
+
+  if( ! airSysElement.isNull() )
+  {
+    airSystemTypeElement = airSysElement.firstChildElement("Type");
+  }
+
+  if( istringEqual("VAVReheatBox",typeElement.text().toStdString()) ||
+      istringEqual("SZVAVAC",airSystemTypeElement.text().toStdString()) || 
+      istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString())
+    )
   {
     model::Schedule schedule = alwaysOnSchedule(model);
 
