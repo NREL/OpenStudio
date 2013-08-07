@@ -125,11 +125,12 @@ private:
   bool setTotalCost(double totalCost);
   boost::optional<double> totalCost() const;
 
-  void addBillingPeriod();
   void addBillingPeriod(model::BillingPeriod & billingPeriod);
+  void addBillingPeriod(model::BillingPeriod & billingPeriod, unsigned index);
   void addBillingPeriods();
 
-  //std::vector<model::UtilityBill> m_utilityBills; // TODO ???
+  void deleteBillingPeriod();
+  void deleteBillingPeriods();
 
   boost::optional<model::UtilityBill> m_utilityBill;
 
@@ -151,8 +152,6 @@ private:
   QPushButton * m_addBillingPeriod;
 
   QGridLayout * m_billGridLayout;
-
-  QScrollArea * m_scrollArea;
   
 private slots:
   
@@ -170,6 +169,7 @@ class BillingPeriodWidget : public QWidget
 public:
 
   BillingPeriodWidget(QGridLayout * gridLayout,
+    model::BillingPeriod billingPeriod,
     FuelType fuelType,
     BillFormat billFormat,
     unsigned index,
@@ -180,6 +180,7 @@ public:
 private:
 
   void createWidgets(QGridLayout * gridLayout,
+    model::BillingPeriod billingPeriod,
     FuelType fuelType,
     BillFormat billFormat);
 
@@ -203,8 +204,6 @@ private:
   QDoubleSpinBox * m_costDoubleEdit;
 
   QPushButton * m_deleteBillWidget;
-
-  //model::UtilityBill m_utilityBill;
 
   unsigned m_index;
 
