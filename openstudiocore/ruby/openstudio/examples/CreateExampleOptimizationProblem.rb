@@ -197,13 +197,13 @@ measures = Analysis::MeasureVector.new
   template.addArgument("field", "4") # Watts per Space Floor Area
   rubyMeasure = template.clone.to_RubyMeasure.get
   rubyMeasure.addArgument("value", "5.0")
-  measures.push_back(rubyMeasure)
+  measures.push(rubyMeasure)
   rubyMeasure = template.clone.to_RubyMeasure.get
-  rubyMeausre.addArgument("value","4.0")
-  measures.push_back(rubyMeasure)
+  rubyMeasure.addArgument("value","4.0")
+  measures.push(rubyMeasure)
   rubyMeasure = template.clone.to_RubyMeasure.get
-  rubyMeausre.addArgument("value","3.0")
-  measures.push_back(rubyMeasure)
+  rubyMeasure.addArgument("value","3.0")
+  measures.push(rubyMeasure)
   variables.push(OpenStudio::Analysis::MeasureGroup.new("Plug Load Density",measures))
 
   # variable 5: lighting power density
@@ -218,10 +218,10 @@ measures = Analysis::MeasureVector.new
   template.addArgument("field", "4") # Watts per Space Floor Area
   rubyMeasure = template.clone.to_RubyMeasure.get
   rubyMeasure.addArgument("value", "10.0")
-  measures.push_back(rubyMeasure)
+  measures.push(rubyMeasure)
   rubyMeasure = template.clone.to_RubyMeasure.get
-  rubyMeausre.addArgument("value","8.0")
-  measures.push_back(rubyMeasure)
+  rubyMeasure.addArgument("value","8.0")
+  measures.push(rubyMeasure)
   variables.push(OpenStudio::Analysis::MeasureGroup.new("Lighting Power Density",measures))
 
   # variable 6: building rotation
@@ -236,16 +236,16 @@ measures = Analysis::MeasureVector.new
   template.addArgument("field", "3") # North Axis
   rubyMeasure = template.clone.to_RubyMeasure.get
   rubyMeasure.addArgument("value", "0.0")
-  measures.push_back(rubyMeasure)
+  measures.push(rubyMeasure)
   rubyMeasure = template.clone.to_RubyMeasure.get
-  rubyMeausre.addArgument("value","90.0")
-  measures.push_back(rubyMeasure)
+  rubyMeasure.addArgument("value","90.0")
+  measures.push(rubyMeasure)
   rubyMeasure = template.clone.to_RubyMeasure.get
-  rubyMeausre.addArgument("value","180.0")
-  measures.push_back(rubyMeasure)
+  rubyMeasure.addArgument("value","180.0")
+  measures.push(rubyMeasure)
   rubyMeasure = template.clone.to_RubyMeasure.get
-  rubyMeausre.addArgument("value","270.0")
-  measures.push_back(rubyMeasure)
+  rubyMeasure.addArgument("value","270.0")
+  measures.push(rubyMeasure)
   variables.push(OpenStudio::Analysis::MeasureGroup.new("Building Rotation",measures))
 
   # variable 7: number of printers
@@ -260,10 +260,10 @@ measures = Analysis::MeasureVector.new
   template.addArgument("field", "5") # Multiplier
   rubyMeasure = template.clone.to_RubyMeasure.get
   rubyMeasure.addArgument("value", "2.0")
-  measures.push_back(rubyMeasure)
+  measures.push(rubyMeasure)
   rubyMeasure = template.clone.to_RubyMeasure.get
-  rubyMeausre.addArgument("value","1.0")
-  measures.push_back(rubyMeasure)
+  rubyMeasure.addArgument("value","1.0")
+  measures.push(rubyMeasure)
   variables.push(OpenStudio::Analysis::MeasureGroup.new("Number of Printers",measures))
 
   # variable 8: daylighting fraction
@@ -278,10 +278,10 @@ measures = Analysis::MeasureVector.new
   template.addArgument("field", "5") # Fraction Replacable
   rubyMeasure = template.clone.to_RubyMeasure.get
   rubyMeasure.addArgument("value", "0.5")
-  measures.push_back(rubyMeasure)
+  measures.push(rubyMeasure)
   rubyMeasure = template.clone.to_RubyMeasure.get
-  rubyMeausre.addArgument("value","1.0")
-  measures.push_back(rubyMeasure)
+  rubyMeasure.addArgument("value","1.0")
+  measures.push(rubyMeasure)
   variables.push(OpenStudio::Analysis::MeasureGroup.new("Daylighting Fraction",measures))
 
   # variable 9: overhangs
@@ -320,13 +320,13 @@ measures = Analysis::MeasureVector.new
   template.addArgument("field", "3") # Cooler Effectiveness
   rubyMeasure = template.clone.to_RubyMeasure.get
   rubyMeasure.addArgument("value", "0.6")
-  measures.push_back(rubyMeasure)
+  measures.push(rubyMeasure)
   rubyMeasure = template.clone.to_RubyMeasure.get
-  rubyMeausre.addArgument("value","0.8")
-  measures.push_back(rubyMeasure)
+  rubyMeasure.addArgument("value","0.8")
+  measures.push(rubyMeasure)
   rubyMeasure = template.clone.to_RubyMeasure.get
-  rubyMeausre.addArgument("value","0.9")
-  measures.push_back(rubyMeasure)
+  rubyMeasure.addArgument("value","0.9")
+  measures.push(rubyMeasure)
   variables.push(OpenStudio::Analysis::MeasureGroup.new("Evaporative Cooler Effectiveness",measures))
 
   # variable 11: fan characteristics
@@ -348,7 +348,7 @@ measures = Analysis::MeasureVector.new
   rubyMeasure.addArgument("value", "225.0")
   rubyMeasure.addArgument("field", "6") # Motor Efficiency
   rubyMeasure.addArgument("value", "0.92")
-  measures.push_back(rubyMeasure)
+  measures.push(rubyMeasure)
   # option package 2
   rubyMeasure = template.clone.to_RubyMeasure.get
   rubyMeasure.addArgument("field", "3") # Fan Efficiency
@@ -357,7 +357,7 @@ measures = Analysis::MeasureVector.new
   rubyMeasure.addArgument("value", "200.0")
   rubyMeasure.addArgument("field", "6") # Motor Efficiency
   rubyMeasure.addArgument("value", "0.96")
-  measures.push_back(rubyMeasure)
+  measures.push(rubyMeasure)
   variables.push(OpenStudio::Analysis::MeasureGroup.new("Fan Performance",measures))
 
   # variable 12: min supply air temperature
@@ -372,13 +372,13 @@ measures = Analysis::MeasureVector.new
   template.addArgument("field", "2") # Minimum Supply Air Temperature
   rubyMeasure = template.clone.to_RubyMeasure.get
   rubyMeasure.addArgument("value", "15.0")
-  measures.push_back(rubyMeasure)
+  measures.push(rubyMeasure)
   rubyMeasure = template.clone.to_RubyMeasure.get
-  rubyMeausre.addArgument("value","10.0")
-  measures.push_back(rubyMeasure)
+  rubyMeasure.addArgument("value","10.0")
+  measures.push(rubyMeasure)
   rubyMeasure = template.clone.to_RubyMeasure.get
-  rubyMeausre.addArgument("value","5.0")
-  measures.push_back(rubyMeasure)
+  rubyMeasure.addArgument("value","5.0")
+  measures.push(rubyMeasure)
   variables.push(OpenStudio::Analysis::MeasureGroup.new("Minimum Supply Air Temperature",measures))
 
   # variable 13: max supply air temperature
@@ -393,13 +393,13 @@ measures = Analysis::MeasureVector.new
   template.addArgument("field", "3") # Maximum Supply Air Temperature
   rubyMeasure = template.clone.to_RubyMeasure.get
   rubyMeasure.addArgument("value", "18.0")
-  measures.push_back(rubyMeasure)
+  measures.push(rubyMeasure)
   rubyMeasure = template.clone.to_RubyMeasure.get
-  rubyMeausre.addArgument("value","22.0")
-  measures.push_back(rubyMeasure)
+  rubyMeasure.addArgument("value","22.0")
+  measures.push(rubyMeasure)
   rubyMeasure = template.clone.to_RubyMeasure.get
-  rubyMeausre.addArgument("value","26.0")
-  measures.push_back(rubyMeasure)
+  rubyMeasure.addArgument("value","26.0")
+  measures.push(rubyMeasure)
   variables.push(OpenStudio::Analysis::MeasureGroup.new("Maximum Supply Air Temperature",measures))
 
   # variable 14: heating setpoints
