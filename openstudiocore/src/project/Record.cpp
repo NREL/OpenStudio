@@ -66,17 +66,17 @@ namespace project {
         m_handle(),
         m_haveLastValues(false)
     {
-      BOOST_ASSERT(query.isValid());
-      BOOST_ASSERT(query.isActive());
-      BOOST_ASSERT(query.isSelect());
+      OS_ASSERT(query.isValid());
+      OS_ASSERT(query.isActive());
+      OS_ASSERT(query.isSelect());
 
       QVariant value;
       value = query.value(RecordColumns::id);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       m_id = value.toInt();
 
       value = query.value(RecordColumns::handle);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       m_handle = toUUID(value.toString().toStdString());
     }
 
@@ -87,7 +87,7 @@ namespace project {
     ProjectDatabase Record_Impl::projectDatabase() const
     {
       boost::shared_ptr<detail::ProjectDatabase_Impl> impl = m_projectDatabaseWeakImpl.lock();
-      BOOST_ASSERT(impl);
+      OS_ASSERT(impl);
       return ProjectDatabase(impl);
     }
 
@@ -119,7 +119,7 @@ namespace project {
 
     void Record_Impl::bindValues(QSqlQuery& query) const
     {
-      BOOST_ASSERT(m_id);
+      OS_ASSERT(m_id);
 
       query.bindValue(RecordColumns::id, m_id);
       query.bindValue(RecordColumns::handle, toQString(toString(m_handle)));
@@ -127,22 +127,22 @@ namespace project {
 
     void Record_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
     {
-      BOOST_ASSERT(query.isValid());
-      BOOST_ASSERT(query.isActive());
-      BOOST_ASSERT(query.isSelect());
+      OS_ASSERT(query.isValid());
+      OS_ASSERT(query.isActive());
+      OS_ASSERT(query.isSelect());
 
       QVariant value;
       value = query.value(ObjectRecordColumns::id);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       if (m_id == std::numeric_limits<int>::min()){
         m_id = value.toInt();
       }else{
-        BOOST_ASSERT(m_id == value.toInt());
+        OS_ASSERT(m_id == value.toInt());
       }
 
       value = query.value(ObjectRecordColumns::handle);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
-      BOOST_ASSERT(m_handle == toUUID(value.toString().toStdString()));
+      OS_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(m_handle == toUUID(value.toString().toStdString()));
 
       m_haveLastValues = true;
     }
@@ -154,14 +154,14 @@ namespace project {
 
     void Record_Impl::revertToLastValues()
     {
-      BOOST_ASSERT(m_haveLastValues);
+      OS_ASSERT(m_haveLastValues);
     }
 
     bool Record_Impl::compareValues(const QSqlQuery& query) const
     {
-      BOOST_ASSERT(query.isValid());
-      BOOST_ASSERT(query.isActive());
-      BOOST_ASSERT(query.isSelect());
+      OS_ASSERT(query.isValid());
+      OS_ASSERT(query.isActive());
+      OS_ASSERT(query.isSelect());
 
       bool result = true;
 
@@ -169,11 +169,11 @@ namespace project {
 
       // ids may be different
       //value = query.value(ObjectRecordColumns::id);
-      //BOOST_ASSERT(value.isValid() && !value.isNull());
+      //OS_ASSERT(value.isValid() && !value.isNull());
       //result = result && (m_id == value.toInt());
 
       value = query.value(ObjectRecordColumns::handle);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       result = result && (m_handle == toUUID(value.toString().toStdString()));
 
       return result;
@@ -213,7 +213,7 @@ namespace project {
       query.prepare(QString::fromStdString("SELECT id FROM " + this->databaseTableName() + " WHERE handle=:handle"));
       query.bindValue(":handle", toQString(toString(this->handle())));
       assertExec(query);
-      BOOST_ASSERT(!query.first());
+      OS_ASSERT(!query.first());
 
       // do the insert
       query.prepare(QString::fromStdString("INSERT INTO " + this->databaseTableName() + " (id) VALUES (:id)"));
@@ -223,7 +223,7 @@ namespace project {
       // get the new id
       if (database->driver()->hasFeature(QSqlDriver::LastInsertId)){
         QVariant id = query.lastInsertId().toInt();
-        BOOST_ASSERT(id.isValid() && !id.isNull());
+        OS_ASSERT(id.isValid() && !id.isNull());
         m_id = id.toInt();
       }else{
         query.prepare(QString::fromStdString("SELECT id FROM " + this->databaseTableName()));
@@ -316,7 +316,7 @@ namespace project {
     boost::optional<Record> record = projectDatabase.findLoadedRecord(impl->handle());
     if (record) {
       m_impl = record->getImpl<detail::Record_Impl>();
-      BOOST_ASSERT(typeid(*impl) == typeid(*m_impl));
+      OS_ASSERT(typeid(*impl) == typeid(*m_impl));
     }
 
     // check if this object is in the database but not yet loaded
@@ -352,13 +352,13 @@ namespace project {
       projectDatabase.addNewRecord(record);
     }
 
-    BOOST_ASSERT(m_impl);
+    OS_ASSERT(m_impl);
   }
 
   Record::Record(boost::shared_ptr<detail::Record_Impl> impl)
     : m_impl(impl)
   {
-    BOOST_ASSERT(m_impl);
+    OS_ASSERT(m_impl);
   }
 
   ProjectDatabase Record::projectDatabase() const

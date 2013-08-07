@@ -462,7 +462,7 @@ SubSurfaceInspectorView::SubSurfaceInspectorView(bool isIP, const openstudio::mo
   // planar surface widget
   m_planarSurfaceWidget = new PlanarSurfaceWidget(m_isIP);
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_planarSurfaceWidget, SLOT(toggleUnits(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   mainGridLayout->addWidget(m_planarSurfaceWidget,5,0,1,2);
 

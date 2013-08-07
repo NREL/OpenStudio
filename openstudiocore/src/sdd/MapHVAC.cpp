@@ -59,6 +59,7 @@
 #include <model/SetpointManagerMixedAir.hpp>
 #include <model/SetpointManagerSingleZoneReheat.hpp>
 #include <model/SetpointManagerScheduled.hpp>
+#include <model/SetpointManagerWarmest.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
 #include <model/AirTerminalSingleDuctUncontrolled.hpp>
@@ -295,7 +296,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
           if( boost::optional<model::ModelObject> mo = 
                 translateCoilCooling(airSegmentChildElement,doc,model) )
           {
-            BOOST_ASSERT(mo);
+            OS_ASSERT(mo);
 
             model::HVACComponent hvacComponent = mo->cast<model::HVACComponent>();
 
@@ -307,13 +308,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
               {
                 boost::optional<model::ControllerWaterCoil> controller = coilCoolingWater->controllerWaterCoil();
 
-                BOOST_ASSERT(controller);
+                OS_ASSERT(controller);
 
                 controller->setControllerConvergenceTolerance(0.1);
 
                 boost::optional<double> maxFlow = coilCoolingWater->designWaterFlowRate();
 
-                BOOST_ASSERT(maxFlow);
+                OS_ASSERT(maxFlow);
 
                 controller->setMaximumActuatedFlow(maxFlow.get() * 1.25);
               }
@@ -325,7 +326,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         {
           boost::optional<model::ModelObject> mo = translateCoilHeating(airSegmentChildElement,doc,model);
 
-          BOOST_ASSERT(mo);
+          OS_ASSERT(mo);
 
           model::HVACComponent hvacComponent = mo->cast<model::HVACComponent>();
 
@@ -335,7 +336,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
           {
             boost::optional<model::ControllerWaterCoil> controller = coilHeatingWater->controllerWaterCoil();
 
-            BOOST_ASSERT(controller);
+            OS_ASSERT(controller);
 
             controller->setControllerConvergenceTolerance(0.1);
 
@@ -347,11 +348,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
               boost::optional<double> outletTemp = coilHeatingWater->ratedOutletWaterTemperature();
 
-              BOOST_ASSERT(capacity);
+              OS_ASSERT(capacity);
 
-              BOOST_ASSERT(inletTemp);
+              OS_ASSERT(inletTemp);
 
-              BOOST_ASSERT(outletTemp);
+              OS_ASSERT(outletTemp);
 
               double density = 1000.0;
 
@@ -459,7 +460,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       {
         Quantity valueIP(value,createFahrenheitTemperature());
         OptionalQuantity valueSI = QuantityConverter::instance().convert(valueIP, UnitSystem(UnitSystem::Celcius));
-        BOOST_ASSERT(valueSI);
+        OS_ASSERT(valueSI);
         oaController.setEconomizerMaximumLimitDryBulbTemperature(valueSI->value());
       }
 
@@ -472,7 +473,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       {
         Quantity valueIP(value,createFahrenheitTemperature());
         OptionalQuantity valueSI = QuantityConverter::instance().convert(valueIP, UnitSystem(UnitSystem::Celcius));
-        BOOST_ASSERT(valueSI);
+        OS_ASSERT(valueSI);
         oaController.setEconomizerMinimumLimitDryBulbTemperature(valueSI->value());
       }
     }
@@ -507,9 +508,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     supplyOutletNode.addSetpointManager(spm);
 
-    model::Schedule schedule = alwaysOnSchedule(model);
-
     airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(40.0);
+  }
+  else if( istringEqual(airSystemTypeElement.text().toStdString(),"SZVAVAC") ||
+           istringEqual(airSystemTypeElement.text().toStdString(),"SZVAVHP")
+         )
+  {
+    model::SetpointManagerWarmest spm(model);
+
+    supplyOutletNode.addSetpointManagerWarmest(spm);
   }
   else
   {
@@ -553,7 +560,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     {
       Quantity valueIP(value,createBTUPower());
       OptionalQuantity valueSI = QuantityConverter::instance().convert(valueIP, UnitSystem(UnitSystem::SI));
-      BOOST_ASSERT(valueSI);
+      OS_ASSERT(valueSI);
       capTotGrossRtd = valueSI->value();
     }
   }
@@ -733,7 +740,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
     {
       Quantity flowRateIP(value,createCFMVolumetricFlowrate());
       OptionalQuantity flowRateSI = QuantityConverter::instance().convert(flowRateIP, UnitSystem(UnitSystem::SI));
-      BOOST_ASSERT(flowRateSI);
+      OS_ASSERT(flowRateSI);
       flowCap = flowRateSI->value();
     }
   }
@@ -985,7 +992,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
         {
           Quantity flowRateIP(value,createCFMVolumetricFlowrate());
           OptionalQuantity flowRateSI = QuantityConverter::instance().convert(flowRateIP, UnitSystem(UnitSystem::SI));
-          BOOST_ASSERT(flowRateSI);
+          OS_ASSERT(flowRateSI);
           coilCooling.setRatedAirFlowRate(flowRateSI->value());
         }
       }
@@ -1002,7 +1009,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
         {
           Quantity valueIP(value,createBTUPower());
           OptionalQuantity valueSI = QuantityConverter::instance().convert(valueIP, UnitSystem(UnitSystem::SI));
-          BOOST_ASSERT(valueSI);
+          OS_ASSERT(valueSI);
           coilCooling.setRatedTotalCoolingCapacity(valueSI->value());
 
           totalCapacity = value;
@@ -1149,7 +1156,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
         {
           Quantity flowRateIP(value,createCFMVolumetricFlowrate());
           OptionalQuantity flowRateSI = QuantityConverter::instance().convert(flowRateIP, UnitSystem(UnitSystem::SI));
-          BOOST_ASSERT(flowRateSI);
+          OS_ASSERT(flowRateSI);
           coilCooling.setRatedHighSpeedAirFlowRate(flowRateSI->value());
         }
       }
@@ -1166,7 +1173,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
         {
           Quantity valueIP(value,createBTUPower());
           OptionalQuantity valueSI = QuantityConverter::instance().convert(valueIP, UnitSystem(UnitSystem::SI));
-          BOOST_ASSERT(valueSI);
+          OS_ASSERT(valueSI);
           coilCooling.setRatedHighSpeedTotalCoolingCapacity(valueSI->value());
 
           totalCapacity = value;
@@ -1234,7 +1241,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
       Quantity flowRateIP(value,createCFMVolumetricFlowrate());
       OptionalQuantity flowRateSI = QuantityConverter::instance().convert(flowRateIP, UnitSystem(UnitSystem::SI));
-      BOOST_ASSERT(flowRateSI);
+      OS_ASSERT(flowRateSI);
       coilCooling.setDesignAirFlowRate(flowRateSI->value());
     }
 
@@ -1306,8 +1313,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   {
     openstudio::Quantity ventRateIP(ventRtElement.text().toDouble(), openstudio::createUnit("cfm",UnitSystem::BTU).get());
     OptionalQuantity ventRateSI = QuantityConverter::instance().convert(ventRateIP, siSys);
-    BOOST_ASSERT(ventRateSI);
-    BOOST_ASSERT(ventRateSI->units() == SIUnit(SIExpnt(0,3,-1)));
+    OS_ASSERT(ventRateSI);
+    OS_ASSERT(ventRateSI->units() == SIUnit(SIExpnt(0,3,-1)));
 
     // DsgnVentRt is CFM, so divide it up evenly among all attached spaces.
     std::vector<model::Space> spaces = thermalZone.spaces();
@@ -1602,12 +1609,24 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
     {
       Quantity flowRateIP(value,createCFMVolumetricFlowrate());
       OptionalQuantity flowRateSI = QuantityConverter::instance().convert(flowRateIP, UnitSystem(UnitSystem::SI));
-      BOOST_ASSERT(flowRateSI);
+      OS_ASSERT(flowRateSI);
       primaryAirFlow = flowRateSI->value();
     }
   }
 
-  if( istringEqual("VAVReheatBox",typeElement.text().toStdString()) )
+  QDomElement airSysElement = trmlUnitElement.parentNode().toElement();
+
+  QDomElement airSystemTypeElement;
+
+  if( ! airSysElement.isNull() )
+  {
+    airSystemTypeElement = airSysElement.firstChildElement("Type");
+  }
+
+  if( istringEqual("VAVReheatBox",typeElement.text().toStdString()) ||
+      istringEqual("SZVAVAC",airSystemTypeElement.text().toStdString()) || 
+      istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString())
+    )
   {
     model::Schedule schedule = alwaysOnSchedule(model);
 
@@ -1619,7 +1638,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
     {
       boost::optional<model::ModelObject> mo = translateCoilHeating(coilElement,doc,model);
 
-      BOOST_ASSERT(mo);
+      OS_ASSERT(mo);
 
       coil = mo->cast<model::HVACComponent>();
     }
@@ -1628,7 +1647,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
       coil = model::CoilHeatingElectric(model,schedule);
     }
 
-    BOOST_ASSERT(coil);
+    OS_ASSERT(coil);
 
     model::AirTerminalSingleDuctVAVReheat terminal(model,schedule,coil.get());
 
@@ -2312,7 +2331,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     {
       Quantity flowRateIP(value,createCFMVolumetricFlowrate());
       OptionalQuantity flowRateSI = QuantityConverter::instance().convert(flowRateIP, UnitSystem(UnitSystem::SI));
-      BOOST_ASSERT(flowRateSI);
+      OS_ASSERT(flowRateSI);
       flowCap = flowRateSI->value();
     }
   }
@@ -2327,7 +2346,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
 
     mo = translateFan(fanElement,doc,model);    
 
-    BOOST_ASSERT(mo);
+    OS_ASSERT(mo);
 
     model::HVACComponent fan = mo->cast<model::HVACComponent>();
  
@@ -2337,7 +2356,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     
     mo = translateCoilHeating(heatingCoilElement,doc,model);
 
-    BOOST_ASSERT(mo);
+    OS_ASSERT(mo);
 
     model::HVACComponent heatingCoil = mo->cast<model::HVACComponent>();
 
@@ -2347,7 +2366,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
 
     mo = translateCoilCooling(coolingCoilElement,doc,model);
 
-    BOOST_ASSERT(mo);
+    OS_ASSERT(mo);
 
     model::HVACComponent coolingCoil = mo->cast<model::HVACComponent>();
 
@@ -2378,7 +2397,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
 
     mo = translateFan(fanElement,doc,model);    
 
-    BOOST_ASSERT(mo);
+    OS_ASSERT(mo);
 
     model::HVACComponent fan = mo->cast<model::HVACComponent>();
  
@@ -2388,7 +2407,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     
     mo = translateCoilHeating(heatingCoilElement,doc,model);
 
-    BOOST_ASSERT(mo);
+    OS_ASSERT(mo);
 
     model::HVACComponent heatingCoil = mo->cast<model::HVACComponent>();
 
@@ -2398,7 +2417,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
 
     mo = translateCoilCooling(coolingCoilElement,doc,model);
 
-    BOOST_ASSERT(mo);
+    OS_ASSERT(mo);
 
     model::HVACComponent coolingCoil = mo->cast<model::HVACComponent>();
 
@@ -2524,7 +2543,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
 
     mo = translateFan(fanElement,doc,model);    
 
-    BOOST_ASSERT(mo);
+    OS_ASSERT(mo);
 
     model::HVACComponent fan = mo->cast<model::HVACComponent>();
  
@@ -2534,7 +2553,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     
     mo = translateCoilHeating(heatingCoilElement,doc,model);
 
-    BOOST_ASSERT(mo);
+    OS_ASSERT(mo);
 
     model::HVACComponent heatingCoil = mo->cast<model::HVACComponent>();
 
@@ -2561,7 +2580,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
 
     mo = translateCoilCooling(coolingCoilElement,doc,model);
 
-    BOOST_ASSERT(mo);
+    OS_ASSERT(mo);
 
     model::HVACComponent coolingCoil = mo->cast<model::HVACComponent>();
 

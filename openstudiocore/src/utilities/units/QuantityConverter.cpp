@@ -34,6 +34,8 @@
 #include <utilities/units/ThermUnit.hpp>
 #include <utilities/units/WhUnit.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 boost::optional<Quantity> QuantityConverterSingleton::convert(const Quantity &q,
@@ -528,8 +530,8 @@ OSQuantityVector convert(const OSQuantityVector& original, UnitSystem sys) {
   }
   testQuantity.setValue(1.0);
   OptionalQuantity factorPlusOffset = convert(testQuantity,sys);
-  BOOST_ASSERT(factorPlusOffset);
-  BOOST_ASSERT(offset->units() == factorPlusOffset->units());
+  OS_ASSERT(factorPlusOffset);
+  OS_ASSERT(offset->units() == factorPlusOffset->units());
   result = OSQuantityVector(offset->units(),original.values());
   result = result * (factorPlusOffset->value() - offset->value()) + offset.get();
   return result;
@@ -548,8 +550,8 @@ OSQuantityVector convert(const OSQuantityVector& original, const Unit& targetUni
   }
   testQuantity.setValue(1.0);
   OptionalQuantity factorPlusOffset = convert(testQuantity,targetUnits);
-  BOOST_ASSERT(factorPlusOffset);
-  BOOST_ASSERT(offset->units() == factorPlusOffset->units());
+  OS_ASSERT(factorPlusOffset);
+  OS_ASSERT(offset->units() == factorPlusOffset->units());
   result = OSQuantityVector(offset->units(),original.values());
   result = result * (factorPlusOffset->value() - offset->value()) + offset.get();
   return result;

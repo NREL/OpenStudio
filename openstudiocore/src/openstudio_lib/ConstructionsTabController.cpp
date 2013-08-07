@@ -27,6 +27,8 @@
 #include <model/Construction.hpp>
 #include <model/Model.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 ConstructionsTabController::ConstructionsTabController(bool isIP, const model::Model& model)
@@ -44,23 +46,23 @@ ConstructionsTabController::ConstructionsTabController(bool isIP, const model::M
 
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         m_defaultConstructionSetsController->subTabView(), SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         m_constructionsController->subTabView(), SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         m_materialsController->subTabView(), SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_defaultConstructionSetsController.get(), SIGNAL(openBclDlgClicked()),
                                  this, SIGNAL(openBclDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_defaultConstructionSetsController.get(), SIGNAL(openLibDlgClicked()),
                                  this, SIGNAL(openLibDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 ConstructionsTabController::~ConstructionsTabController()

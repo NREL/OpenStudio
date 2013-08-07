@@ -41,7 +41,7 @@ namespace project {
     Rule_Clause_JoinRecord_Impl::Rule_Clause_JoinRecord_Impl(const RuleRecord& ruleRecord, const ClauseRecord& clauseRecord)
       : JoinRecord_Impl(ruleRecord.id(), ruleRecord.handle(), clauseRecord.id(), clauseRecord.handle(), ruleRecord.projectDatabase())
     {
-      BOOST_ASSERT(ruleRecord.projectDatabase().handle() == clauseRecord.projectDatabase().handle());
+      OS_ASSERT(ruleRecord.projectDatabase().handle() == clauseRecord.projectDatabase().handle());
     }
 
     Rule_Clause_JoinRecord_Impl::Rule_Clause_JoinRecord_Impl(const QSqlQuery& query, const ProjectDatabase& database)
@@ -63,7 +63,7 @@ namespace project {
     {
       ProjectDatabase projectDatabase = this->projectDatabase();
       boost::optional<RuleRecord> ruleRecord = RuleRecord::getRuleRecord(this->leftId(), projectDatabase);
-      BOOST_ASSERT(ruleRecord);
+      OS_ASSERT(ruleRecord);
       return *ruleRecord;
     }
 
@@ -71,7 +71,7 @@ namespace project {
     {
       ProjectDatabase projectDatabase = this->projectDatabase();
       boost::optional<ClauseRecord> clauseRecord = ClauseRecord::getClauseRecord(this->rightId(), projectDatabase);
-      BOOST_ASSERT(clauseRecord);
+      OS_ASSERT(clauseRecord);
       return *clauseRecord;
     }
     
@@ -109,7 +109,7 @@ namespace project {
            itend = result.columnValues.end(); it != itend; ++it)
       {
         // require 0 based columns, don't skip any
-        BOOST_ASSERT(*it == expectedValue);
+        OS_ASSERT(*it == expectedValue);
         // column name is name, type is description
         ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
         // is this the last column?
@@ -145,19 +145,19 @@ namespace project {
   Rule_Clause_JoinRecord::Rule_Clause_JoinRecord(const RuleRecord& ruleRecord, const ClauseRecord& clauseRecord)
     : JoinRecord(boost::shared_ptr<detail::Rule_Clause_JoinRecord_Impl>(new detail::Rule_Clause_JoinRecord_Impl(ruleRecord, clauseRecord)), ruleRecord.projectDatabase()) 
   {
-    BOOST_ASSERT(getImpl<detail::Rule_Clause_JoinRecord_Impl>());
+    OS_ASSERT(getImpl<detail::Rule_Clause_JoinRecord_Impl>());
   }
 
   Rule_Clause_JoinRecord::Rule_Clause_JoinRecord(boost::shared_ptr<detail::Rule_Clause_JoinRecord_Impl> impl, ProjectDatabase projectDatabase)
     : JoinRecord(impl, projectDatabase)
   {
-    BOOST_ASSERT(getImpl<detail::Rule_Clause_JoinRecord_Impl>());
+    OS_ASSERT(getImpl<detail::Rule_Clause_JoinRecord_Impl>());
   }  
   
   Rule_Clause_JoinRecord::Rule_Clause_JoinRecord(boost::shared_ptr<detail::Rule_Clause_JoinRecord_Impl> impl)
     : JoinRecord(impl)
   {
-    BOOST_ASSERT(getImpl<detail::Rule_Clause_JoinRecord_Impl>());
+    OS_ASSERT(getImpl<detail::Rule_Clause_JoinRecord_Impl>());
   }
 
   std::vector<RuleRecord> Rule_Clause_JoinRecord::getRuleRecords(const ClauseRecord& clauseRecord)
@@ -176,14 +176,14 @@ namespace project {
     while (query.next()) {
       QVariant value;
       value = query.value(JoinRecordColumns::leftId);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       ruleRecordIds.push_back(value.toInt());
     }
 
     // now get RuleRecords
     BOOST_FOREACH(int id, ruleRecordIds){
       boost::optional<RuleRecord> ruleRecord = RuleRecord::getRuleRecord(id, database);
-      BOOST_ASSERT(ruleRecord);
+      OS_ASSERT(ruleRecord);
       result.push_back(*ruleRecord);
     }
 
@@ -206,14 +206,14 @@ namespace project {
     while (query.next()) {
       QVariant value;
       value = query.value(JoinRecordColumns::rightId);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       clauseRecordIds.push_back(value.toInt());
     }
 
     // now get ClauseRecords
     BOOST_FOREACH(int id, clauseRecordIds){
       boost::optional<ClauseRecord> clauseRecord = ClauseRecord::getClauseRecord(id, database);
-      BOOST_ASSERT(clauseRecord);
+      OS_ASSERT(clauseRecord);
       result.push_back(*clauseRecord);
     }
 

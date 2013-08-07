@@ -20,6 +20,8 @@
 #include <analysis/HistogramBinDistribution.hpp>
 #include <analysis/UncertaintyDescription_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -126,7 +128,7 @@ void HistogramBinDistribution::resetOrdinates() {
 HistogramBinDistribution::HistogramBinDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
-  BOOST_ASSERT(type() == HistogramBinDistribution::type());
+  OS_ASSERT(type() == HistogramBinDistribution::type());
 }
 
 } // analysis

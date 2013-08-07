@@ -171,9 +171,9 @@ openstudio::analysis::Problem AnalysisDriverFixture::retrieveProblem(
       original = createBuggyBCLMeasureProblem();
       break;
     default :
-      BOOST_ASSERT(false);
+      OS_ASSERT(false);
   }
-  BOOST_ASSERT(original);
+  OS_ASSERT(original);
 
   analysis::Problem result = original.get();
   appendDefaultSimulationWorkflow(result,modelToIdf,energyPlus);

@@ -37,11 +37,11 @@ namespace detail {
   ModelObjectFilterAttribute_Impl::ModelObjectFilterAttribute_Impl(const QDomElement& element)
     : ModelObjectFilterClause_Impl(element)
   {
-    BOOST_ASSERT(!element.isNull());
+    OS_ASSERT(!element.isNull());
 
     QDomElement attributeNameElement = element.firstChildElement(QString::fromStdString("AttributeName"));
 
-    BOOST_ASSERT(!attributeNameElement.isNull());
+    OS_ASSERT(!attributeNameElement.isNull());
 
     m_attributeName = attributeNameElement.firstChild().nodeValue().toStdString();
   }
@@ -77,7 +77,7 @@ ModelObjectFilterAttribute::ModelObjectFilterAttribute(
     boost::shared_ptr<detail::ModelObjectFilterAttribute_Impl> impl)
   : ModelObjectFilterClause(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterAttribute_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterAttribute_Impl>());
 }
 /// @endcond
 

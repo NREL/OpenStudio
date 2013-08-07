@@ -41,8 +41,8 @@ namespace detail {
   Rule_Impl::Rule_Impl(const std::string& name)
     : RulesetObject_Impl(), m_name(name), m_active(true)
   {
-    BOOST_ASSERT(m_filters.empty());
-    BOOST_ASSERT(m_actions.empty());
+    OS_ASSERT(m_filters.empty());
+    OS_ASSERT(m_actions.empty());
   }
 
   Rule_Impl::Rule_Impl(const std::string& name, bool active, const UUID& uuid, const UUID& versionUUID,
@@ -53,20 +53,20 @@ namespace detail {
   Rule_Impl::Rule_Impl(const QDomElement& element)
     : RulesetObject_Impl(element)
   {
-    BOOST_ASSERT(!element.isNull());
+    OS_ASSERT(!element.isNull());
 
     // name
     QDomElement nameElement = element.firstChildElement(QString::fromStdString("Name"));
-    BOOST_ASSERT(!nameElement.isNull());
+    OS_ASSERT(!nameElement.isNull());
     m_name = nameElement.firstChild().nodeValue().toStdString();
 
     // active
     QDomElement activeElement = element.firstChildElement(QString::fromStdString("Active"));
-    BOOST_ASSERT(!activeElement.isNull());
+    OS_ASSERT(!activeElement.isNull());
     std::string boolValue = activeElement.firstChild().nodeValue().toStdString();
     if (boolValue == "true") { m_active = true; }
     else if (boolValue == "false") { m_active = false; }
-    else { BOOST_ASSERT(false); }
+    else { OS_ASSERT(false); }
 
     QDomElement filtersElement = element.firstChildElement(QString::fromStdString("Filters"));
     QDomElement actionsElement = element.firstChildElement(QString::fromStdString("Actions"));
@@ -76,7 +76,7 @@ namespace detail {
       for (int i = 0; i < childNodes.count(); i++){
         QDomElement childElement = childNodes.at(i).toElement();
         boost::optional<Clause> clause = Clause::factoryFromXml(childElement);
-        BOOST_ASSERT(clause);
+        OS_ASSERT(clause);
         m_filters.push_back(clause->cast<FilterClause>());
       }
     }
@@ -86,7 +86,7 @@ namespace detail {
       for (int i = 0; i < childNodes.count(); i++){
         QDomElement childElement = childNodes.at(i).toElement();
         boost::optional<Clause> clause = Clause::factoryFromXml(childElement);
-        BOOST_ASSERT(clause);
+        OS_ASSERT(clause);
         m_actions.push_back(clause->cast<ActionClause>());
       }
     }
@@ -393,7 +393,7 @@ bool Rule::containsEquivalentData(const ActionClause& action) const {
 Rule::Rule(const boost::shared_ptr<detail::Rule_Impl>& impl)
   : RulesetObject(impl)
 {
-  BOOST_ASSERT(getImpl<detail::Rule_Impl>());
+  OS_ASSERT(getImpl<detail::Rule_Impl>());
 }
 /// @endcond
 

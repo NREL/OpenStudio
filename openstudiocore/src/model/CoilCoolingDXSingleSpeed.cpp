@@ -54,14 +54,14 @@ namespace detail{
   CoilCoolingDXSingleSpeed_Impl::CoilCoolingDXSingleSpeed_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : StraightComponent_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CoilCoolingDXSingleSpeed::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CoilCoolingDXSingleSpeed::iddObjectType());
   }
 
   CoilCoolingDXSingleSpeed_Impl::CoilCoolingDXSingleSpeed_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
         : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CoilCoolingDXSingleSpeed::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CoilCoolingDXSingleSpeed::iddObjectType());
   }
 
   CoilCoolingDXSingleSpeed_Impl::CoilCoolingDXSingleSpeed_Impl(
@@ -170,11 +170,11 @@ namespace detail{
       // so we hook up to global always on schedule
       LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
       value = this->model().alwaysOnDiscreteSchedule();
-      BOOST_ASSERT(value);
+      OS_ASSERT(value);
       const_cast<CoilCoolingDXSingleSpeed_Impl*>(this)->setAvailabilitySchedule(*value);
       value = optionalAvailabilitySchedule();
     }
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -209,7 +209,7 @@ namespace detail{
   Curve CoilCoolingDXSingleSpeed_Impl::totalCoolingCapacityFunctionOfTemperatureCurve()const
   {
     OptionalCurve result = optionalTotalCoolingCapacityFunctionOfTemperatureCurve();
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result.get();
   }
 
@@ -225,13 +225,13 @@ namespace detail{
       return;
     }
 
-    BOOST_ASSERT(this->setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::TotalCoolingCapacityFunctionofTemperatureCurveName, curve.handle()));
+    OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::TotalCoolingCapacityFunctionofTemperatureCurveName, curve.handle()));
   }
 
   Curve CoilCoolingDXSingleSpeed_Impl::totalCoolingCapacityFunctionOfFlowFractionCurve()const
   {
     OptionalCurve result = optionalTotalCoolingCapacityFunctionOfFlowFractionCurve();
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result.get();
   }
 
@@ -258,13 +258,13 @@ namespace detail{
       return;
     }
 
-    BOOST_ASSERT(this->setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::TotalCoolingCapacityFunctionofFlowFractionCurveName, curve.handle()));
+    OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::TotalCoolingCapacityFunctionofFlowFractionCurveName, curve.handle()));
   }
 
   Curve CoilCoolingDXSingleSpeed_Impl::energyInputRatioFunctionOfTemperatureCurve()const
   {
     OptionalCurve result = optionalEnergyInputRatioFunctionOfTemperatureCurve();
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result.get();
   }
 
@@ -280,13 +280,13 @@ namespace detail{
       return;
     }
 
-    BOOST_ASSERT(this->setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::EnergyInputRatioFunctionofTemperatureCurveName, curve.handle()));
+    OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::EnergyInputRatioFunctionofTemperatureCurveName, curve.handle()));
   }
 
   Curve CoilCoolingDXSingleSpeed_Impl::energyInputRatioFunctionOfFlowFractionCurve()const
   {
     OptionalCurve result = optionalEnergyInputRatioFunctionOfFlowFractionCurve();
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result.get();
   }
 
@@ -313,13 +313,13 @@ namespace detail{
       return;
     }
 
-    BOOST_ASSERT(this->setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::EnergyInputRatioFunctionofFlowFractionCurveName, curve.handle()));
+    OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::EnergyInputRatioFunctionofFlowFractionCurveName, curve.handle()));
   }
 
   Curve CoilCoolingDXSingleSpeed_Impl::partLoadFractionCorrelationCurve() const
   {
     OptionalCurve result = optionalPartLoadFractionCorrelationCurve();
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result.get();
   }
 
@@ -346,7 +346,7 @@ namespace detail{
       return;
     }
 
-    BOOST_ASSERT(this->setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::PartLoadFractionCorrelationCurveName, curve.handle()));
+    OS_ASSERT(this->setPointer(OS_Coil_Cooling_DX_SingleSpeedFields::PartLoadFractionCorrelationCurveName, curve.handle()));
   }
 
   OptionalDouble CoilCoolingDXSingleSpeed_Impl::nominalTimeForCondensateRemovalToBegin() const
@@ -505,7 +505,7 @@ namespace detail{
 
   void CoilCoolingDXSingleSpeed_Impl::resetBasinHeaterOperatingSchedule() {
     bool result = setString(OS_Coil_Cooling_DX_SingleSpeedFields::BasinHeaterOperatingScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<HVACComponent> CoilCoolingDXSingleSpeed_Impl::containingHVACComponent() const
@@ -679,7 +679,7 @@ namespace detail{
 
   void CoilCoolingDXSingleSpeed_Impl::autosizeRatedTotalCoolingCapacity() {
     bool result = setString(OS_Coil_Cooling_DX_SingleSpeedFields::RatedTotalCoolingCapacity, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<double> CoilCoolingDXSingleSpeed_Impl::ratedSensibleHeatRatio() const {
@@ -725,7 +725,7 @@ namespace detail{
 
   void CoilCoolingDXSingleSpeed_Impl::autosizeRatedSensibleHeatRatio() {
     bool result = setString(OS_Coil_Cooling_DX_SingleSpeedFields::RatedSensibleHeatRatio, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<double> CoilCoolingDXSingleSpeed_Impl::ratedAirFlowRate() const {
@@ -771,7 +771,7 @@ namespace detail{
 
   void CoilCoolingDXSingleSpeed_Impl::autosizeRatedAirFlowRate() {
     bool result = setString(OS_Coil_Cooling_DX_SingleSpeedFields::RatedAirFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 }// detail
@@ -786,7 +786,7 @@ CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(const Model& model,
                                                    const Curve& partLoadFraction)
   : StraightComponent(CoilCoolingDXSingleSpeed::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CoilCoolingDXSingleSpeed_Impl>());
+  OS_ASSERT(getImpl<detail::CoilCoolingDXSingleSpeed_Impl>());
   bool ok = setAvailabilitySchedule(availabilitySchedule);
   if (!ok) {
     remove();

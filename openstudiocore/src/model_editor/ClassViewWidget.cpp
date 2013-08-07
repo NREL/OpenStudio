@@ -22,14 +22,17 @@
 #include <QSplitter>
 #include <QStringList>
 
-#include <boost/foreach.hpp>
 #include <model_editor/InspectorGadget.hpp>
 #include <model_editor/ModelExplorer.hpp>
 #include <model_editor/tablemodel.h>
 #include <model_editor/TableView.hpp>
+#include <model_editor/ClassViewWidget.hpp>
+
 #include <utilities/idf/WorkspaceObjectOrder.hpp>
 
-#include <model_editor/ClassViewWidget.hpp>
+#include <utilities/core/Assert.hpp>
+
+#include <boost/foreach.hpp>
 
 namespace modeleditor
 {
@@ -136,19 +139,19 @@ void ClassViewWidget::connectSignalsAndSlots()
   bool connected;
   connected = connect(mTableView,SIGNAL(eventUpDnKeyRelease()), 
     this,SLOT(viewSelection()));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(mTableView,SIGNAL(clicked(const QModelIndex&)), 
     this,SLOT(viewSelection(const QModelIndex&)));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(mTableView,SIGNAL(eventEnter()),
     this,SIGNAL(eventEnter()));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(mTableView,SIGNAL(eventLeave()),
     this,SIGNAL(eventLeave()));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 }
 
 void ClassViewWidget::createLayout()
@@ -306,7 +309,7 @@ void ClassViewWidget::on_nameChanged(QString)
     QModelIndexList rowList;
     if(mTableView->getSelectedRows(rowList)){
       ///! we are only coded to handle a single row
-      Q_ASSERT(rowList.size() == 1);
+      OS_ASSERT(rowList.size() == 1);
       //rowList.at(0).
     }
   }

@@ -75,7 +75,7 @@ OptionalModelObject ReverseTranslator::translateZoneVentilationDesignFlowRate( c
   }
 
   s = workspaceObject.getString(openstudio::ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, true);
-  BOOST_ASSERT(s);
+  OS_ASSERT(s);
 
   OptionalDouble d;
   if (istringEqual("Flow/Zone", *s)){

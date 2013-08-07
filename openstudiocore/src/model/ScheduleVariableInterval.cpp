@@ -39,7 +39,7 @@ namespace detail {
   ScheduleVariableInterval_Impl::ScheduleVariableInterval_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ScheduleInterval_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ScheduleVariableInterval::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ScheduleVariableInterval::iddObjectType());
   }
 
   ScheduleVariableInterval_Impl::ScheduleVariableInterval_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -47,7 +47,7 @@ namespace detail {
                                                          bool keepHandle)
     : ScheduleInterval_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ScheduleVariableInterval::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ScheduleVariableInterval::iddObjectType());
   }
 
   ScheduleVariableInterval_Impl::ScheduleVariableInterval_Impl(const ScheduleVariableInterval_Impl& other,
@@ -79,7 +79,7 @@ namespace detail {
 
   bool ScheduleVariableInterval_Impl::interpolatetoTimestep() const {
     boost::optional<std::string> value = getString(OS_Schedule_VariableIntervalFields::InterpolatetoTimestep,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -89,19 +89,19 @@ namespace detail {
 
   int ScheduleVariableInterval_Impl::startMonth() const {
     boost::optional<int> value = getInt(OS_Schedule_VariableIntervalFields::StartMonth,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   int ScheduleVariableInterval_Impl::startDay() const {
     boost::optional<int> value = getInt(OS_Schedule_VariableIntervalFields::StartDay,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double ScheduleVariableInterval_Impl::outOfRangeValue() const {
     boost::optional<double> value = getDouble(OS_Schedule_VariableIntervalFields::OutOfRangeValue,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -116,12 +116,12 @@ namespace detail {
     } else {
       result = setString(OS_Schedule_VariableIntervalFields::InterpolatetoTimestep, "No", driverMethod);
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ScheduleVariableInterval_Impl::resetInterpolatetoTimestep(bool driverMethod) {
     bool result = setString(OS_Schedule_VariableIntervalFields::InterpolatetoTimestep, "", driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ScheduleVariableInterval_Impl::setStartMonth(int startMonth, bool driverMethod) {
@@ -139,12 +139,12 @@ namespace detail {
   void ScheduleVariableInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
     bool result = false;
     result = setDouble(OS_Schedule_VariableIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ScheduleVariableInterval_Impl::resetOutOfRangeValue(bool driverMethod) {
     bool result = setString(OS_Schedule_VariableIntervalFields::OutOfRangeValue, "", driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   openstudio::TimeSeries ScheduleVariableInterval_Impl::timeSeries() const
@@ -164,11 +164,11 @@ namespace detail {
       OptionalInt hour = group.getInt(2);
       OptionalInt minute = group.getInt(3);
       OptionalDouble x = group.getDouble(4);
-      BOOST_ASSERT(month);
-      BOOST_ASSERT(day);
-      BOOST_ASSERT(hour);
-      BOOST_ASSERT(minute);
-      BOOST_ASSERT(x);
+      OS_ASSERT(month);
+      OS_ASSERT(day);
+      OS_ASSERT(hour);
+      OS_ASSERT(minute);
+      OS_ASSERT(x);
       dateTimes.push_back(DateTime(Date(MonthOfYear(*month), *day), Time(0, *hour, *minute)));
       values[i] = *x;
       ++i;
@@ -212,7 +212,7 @@ namespace detail {
       temp.push_back(toString(values[i]));
 
       ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
-      BOOST_ASSERT(!group.empty());
+      OS_ASSERT(!group.empty());
     }
     
     this->emitChangeSignals();
@@ -225,7 +225,7 @@ namespace detail {
 ScheduleVariableInterval::ScheduleVariableInterval(const Model& model)
   : ScheduleInterval(ScheduleVariableInterval::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ScheduleVariableInterval_Impl>());
+  OS_ASSERT(getImpl<detail::ScheduleVariableInterval_Impl>());
 }
 
 IddObjectType ScheduleVariableInterval::iddObjectType() {

@@ -30,6 +30,7 @@
 #include <analysis/NullPerturbation_Impl.hpp>
 #include <analysis/DiscreteVariable.hpp>
 #include <analysis/DiscreteVariable_Impl.hpp>
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 #include <QLineEdit>
 #include <QTextEdit>
@@ -67,22 +68,22 @@ DesignAlternativesTabController::DesignAlternativesTabController()
   designAlternativesTabView->designAltsView->designAltsListView->setDelegate(m_designAltItemDelegate);
 
   bool bingo = connect(designAlternativesTabView->designAltsView->createOneWithSelectedMeasuresButton,SIGNAL(clicked()),m_designAltListController.data(),SLOT(addOneItemWithAllSelectedMeasures()));
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   bingo = connect(designAlternativesTabView->designAltsView->createOneForEachSelectedMeasureButton,SIGNAL(clicked()),m_designAltListController.data(),SLOT(addOneItemForEachSelectedMeasure()));
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   bingo = connect(designAlternativesTabView->designAltsView->createFromFileButton,SIGNAL(clicked()),m_designAltListController.data(),SLOT(addItemFromExternalFile()));
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   bingo = connect(designAlternativesTabView->clearSelectionsButton,SIGNAL(clicked()),m_variableGroupListController->selectionController().data(),SLOT(unselectAllItems()));
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   bingo = connect(designAlternativesTabView->selectAllButton,SIGNAL(clicked()),m_variableGroupListController->selectionController().data(),SLOT(selectAllItems()));
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   bingo = connect(m_variableGroupListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(updateButtonStatusBasedOnSelection()));
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 }
 
 DesignAlternativesTabController::~DesignAlternativesTabController()
@@ -254,7 +255,7 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     bool bingo = connect(measureItem.data(),SIGNAL(nameChanged(const QString &)),measureItemView->label,SLOT(setText(const QString &)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     // Selection
 
@@ -262,11 +263,11 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     bingo = connect(measureItemView,SIGNAL(clicked()),measureItem.data(),SLOT(toggleSelected()));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     bingo = connect(measureItem.data(),SIGNAL(selectedChanged(bool)),measureItemView,SLOT(setHasEmphasis(bool)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     return measureItemView;
   }
@@ -345,7 +346,7 @@ void DesignAltListController::removeItemForDataPoint(analysis::DataPoint datapoi
 
   std::vector<analysis::DataPoint>::const_iterator it = std::find(points.begin(),points.end(),datapoint);
 
-  Q_ASSERT(it != points.end());
+  OS_ASSERT(it != points.end());
 
   int index = it - points.begin();
 
@@ -357,7 +358,7 @@ void DesignAltListController::removeItemForDataPoint(analysis::DataPoint datapoi
   analysisdriver::AnalysisDriver analysisDriver = project->analysisDriver();
   bool bingo = analysisdriver::removeDataPoint(analysis,datapoint,analysisDriver);
 
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   emit itemRemoved(index);
 }
@@ -440,7 +441,7 @@ void DesignAltListController::addOneItemForEachSelectedMeasure()
             // get the null pert for this variable and add it to selectedperts
             std::vector<analysis::NullPerturbation> nullPerts = subsetCastVector<analysis::NullPerturbation>(varperts);
 
-            Q_ASSERT(nullPerts.size() > 0);
+            OS_ASSERT(nullPerts.size() > 0);
 
             newPointPerts.push_back(nullPerts.front());
           } else {
@@ -538,7 +539,7 @@ void DesignAltListController::addOneItemWithAllSelectedMeasures()
           // get the null pert for this variable and add it to selectedperts
           std::vector<analysis::NullPerturbation> nullPerts = subsetCastVector<analysis::NullPerturbation>(varperts);
 
-          Q_ASSERT(nullPerts.size() > 0);
+          OS_ASSERT(nullPerts.size() > 0);
 
           newPointPerts.push_back(nullPerts.front());
         } else {
@@ -636,7 +637,7 @@ QWidget * DesignAltItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     bool bingo = connect(designAltItemView->designAltHeaderView->designAltNameEdit,SIGNAL(textEdited(const QString &)),designAltItem.data(),SLOT(setName(const QString &)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     // Description
 
@@ -644,13 +645,13 @@ QWidget * DesignAltItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     bingo = connect(designAltItemView->designAltContentView,SIGNAL(descriptionChanged(const QString &)),designAltItem.data(),SLOT(setDescription(const QString &)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     // Remove
 
     bingo = connect(designAltItemView->designAltHeaderView->removeButton,SIGNAL(clicked()),designAltItem.data(),SLOT(remove()));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     // Perturbations
 

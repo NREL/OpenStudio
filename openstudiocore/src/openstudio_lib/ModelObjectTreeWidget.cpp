@@ -25,6 +25,8 @@
 #include <model/ModelObject.hpp>
 #include <model/ModelObject_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <QVBoxLayout>
 #include <QTreeWidget>
 #include <QPainter>
@@ -52,14 +54,14 @@ ModelObjectTreeWidget::ModelObjectTreeWidget(const model::Model& model, QWidget*
                         this,
                         SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
                         SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
                         SLOT(objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 OSItem* ModelObjectTreeWidget::selectedItem() const

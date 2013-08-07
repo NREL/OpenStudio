@@ -65,15 +65,15 @@ OSArgument::OSArgument(const UUID& uuid,
   bool result;
   if (value) {
     result = setValue(value.get());
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
   if (defaultValue) {
     result = setDefaultValue(defaultValue.get());
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
   if (!domain.empty()) {
     result = setDomain(domain);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
   m_versionUUID = versionUUID;
 }
@@ -410,7 +410,7 @@ bool OSArgument::setValue(bool value) {
     else {
       m_value.setValue(QString("false"));
     }
-    BOOST_ASSERT(hasValue());
+    OS_ASSERT(hasValue());
     onChange();
     result = true;
   }
@@ -421,7 +421,7 @@ bool OSArgument::setValue(double value) {
   bool result = false;
   if (m_type == OSArgumentType::Double) {
     m_value.setValue(value);
-    BOOST_ASSERT(hasValue());
+    OS_ASSERT(hasValue());
     onChange();
     result = true;
   }
@@ -432,7 +432,7 @@ bool OSArgument::setValue(const Quantity& value) {
   bool result = false;
   if (m_type == OSArgumentType::Quantity) {
     m_value = QVariant::fromValue<openstudio::Quantity>(value);
-    BOOST_ASSERT(hasValue());
+    OS_ASSERT(hasValue());
     onChange();
     result = true;
   }
@@ -443,7 +443,7 @@ bool OSArgument::setValue(int value) {
   bool result = false;
   if (m_type == OSArgumentType::Integer) {
     m_value.setValue(value);
-    BOOST_ASSERT(hasValue());
+    OS_ASSERT(hasValue());
     onChange();
     result = true;
   }
@@ -456,7 +456,7 @@ bool OSArgument::setValue(int value) {
 bool OSArgument::setValue(const std::string& value) {
   bool result = setStringInternal(m_value, value);
   if (result) {
-    BOOST_ASSERT(hasValue());
+    OS_ASSERT(hasValue());
     onChange();
   }
   return result;
@@ -470,7 +470,7 @@ bool OSArgument::setValue(const openstudio::path& value) {
   bool result = false;
   if (m_type == OSArgumentType::Path) {
     m_value.setValue(toQString(value));
-    BOOST_ASSERT(hasValue());
+    OS_ASSERT(hasValue());
     onChange();
     result = true;
   }
@@ -479,7 +479,7 @@ bool OSArgument::setValue(const openstudio::path& value) {
 
 void OSArgument::clearValue() {
   m_value = QVariant();
-  BOOST_ASSERT(!hasValue());
+  OS_ASSERT(!hasValue());
   onChange();
 }
 
@@ -492,7 +492,7 @@ bool OSArgument::setDefaultValue(bool defaultValue) {
     else {
       m_defaultValue.setValue(QString("false"));
     }
-    BOOST_ASSERT(hasDefaultValue());
+    OS_ASSERT(hasDefaultValue());
     onChange();
     result = true;
   }
@@ -503,7 +503,7 @@ bool OSArgument::setDefaultValue(double defaultValue) {
   bool result = false;
   if (m_type == OSArgumentType::Double){
     m_defaultValue.setValue(defaultValue);
-    BOOST_ASSERT(hasDefaultValue());
+    OS_ASSERT(hasDefaultValue());
     onChange();
     result = true;
   }
@@ -514,7 +514,7 @@ bool OSArgument::setDefaultValue(const Quantity& value) {
   bool result = false;
   if (m_type == OSArgumentType::Quantity) {
     m_defaultValue = QVariant::fromValue<openstudio::Quantity>(value);
-    BOOST_ASSERT(hasDefaultValue());
+    OS_ASSERT(hasDefaultValue());
     onChange();
     result = true;
   }
@@ -526,7 +526,7 @@ bool OSArgument::setDefaultValue(int defaultValue)
   bool result = false;
   if (m_type == OSArgumentType::Integer){
     m_defaultValue.setValue(defaultValue);
-    BOOST_ASSERT(hasDefaultValue());
+    OS_ASSERT(hasDefaultValue());
     onChange();
     result = true;
   }
@@ -539,7 +539,7 @@ bool OSArgument::setDefaultValue(int defaultValue)
 bool OSArgument::setDefaultValue(const std::string& defaultValue) {
   bool result = setStringInternal(m_defaultValue, defaultValue);
   if (result) {
-    BOOST_ASSERT(hasDefaultValue());
+    OS_ASSERT(hasDefaultValue());
     onChange();
   }
   return result;
@@ -553,7 +553,7 @@ bool OSArgument::setDefaultValue(const openstudio::path& defaultValue) {
   bool result = false;
   if (m_type == OSArgumentType::Path){
     m_defaultValue.setValue(toQString(defaultValue));
-    BOOST_ASSERT(hasDefaultValue());
+    OS_ASSERT(hasDefaultValue());
     onChange();
     result = true;
   }
@@ -580,7 +580,7 @@ bool OSArgument::setDomainType(const OSDomainType& domainType) {
       case OSDomainType::Enumeration :
         break;
       default :
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
     }
 
     // if so, change and clear current domain
@@ -594,7 +594,7 @@ bool OSArgument::setDomainType(const OSDomainType& domainType) {
 bool OSArgument::setDomain(const std::vector<bool>& domain) {
   bool result(false);
   if (m_type == OSArgumentType::Boolean) {
-    BOOST_ASSERT(m_domainType == OSDomainType::Enumeration);
+    OS_ASSERT(m_domainType == OSDomainType::Enumeration);
     // could check for uniqueness, but pass on that for now
     m_domain.clear();
     BOOST_FOREACH(bool value,domain) {
@@ -683,7 +683,7 @@ bool OSArgument::setDomain(const std::vector<std::string>& domain) {
 bool OSArgument::setDomain(const std::vector<openstudio::path>& domain) {
   bool result(false);
   if (m_type == OSArgumentType::Path) {
-    BOOST_ASSERT(m_domainType == OSDomainType::Enumeration);
+    OS_ASSERT(m_domainType == OSDomainType::Enumeration);
     // could check for uniqueness, but pass on that for now
     m_domain.clear();
     BOOST_FOREACH(const openstudio::path& value, domain) {
@@ -744,7 +744,7 @@ std::string OSArgument::print() const {
   if (hasDomain()) {
     ss << m_domainType.valueName() << " Domain: ";
     if (m_domainType == OSDomainType::Interval) {
-      BOOST_ASSERT(m_domain.size() == 2u);
+      OS_ASSERT(m_domain.size() == 2u);
       ss << "[" << printQVariant(m_domain[0]) << ", " << printQVariant(m_domain[1]) << "]" << std::endl;
     }
     else {
@@ -870,7 +870,7 @@ bool OSArgument::setStringInternal(QVariant& variant, const std::string& value) 
 }
 
 std::string OSArgument::printQVariant(const QVariant& toPrint) const {
-  BOOST_ASSERT(!toPrint.isNull());
+  OS_ASSERT(!toPrint.isNull());
   std::string result;
 
   std::stringstream ss;
@@ -892,7 +892,7 @@ std::string OSArgument::printQVariant(const QVariant& toPrint) const {
       result = toPrint.toString().toStdString();
       break;
     default:
-      BOOST_ASSERT(false);
+      OS_ASSERT(false);
   }
 
   return result;

@@ -54,9 +54,9 @@ namespace detail {
   LinearFunctionRecord_Impl::LinearFunctionRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : FunctionRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
   }
 
   void LinearFunctionRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
@@ -82,7 +82,7 @@ namespace detail {
         coefficients.push_back(*coefficient);
       }
     }
-    BOOST_ASSERT(coefficients.empty() || (coefficients.size() == variables.size()));
+    OS_ASSERT(coefficients.empty() || (coefficients.size() == variables.size()));
     return analysis::LinearFunction(handle(),
                                     uuidLast(),
                                     name(),
@@ -97,17 +97,17 @@ namespace detail {
   }
 
   void LinearFunctionRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     FunctionRecord_Impl::setLastValues(query,projectDatabase);
   }
 
   bool LinearFunctionRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = FunctionRecord_Impl::compareValues(query);
 
@@ -135,7 +135,7 @@ LinearFunctionRecord::LinearFunctionRecord(const analysis::LinearFunction& linea
                                               functionVectorIndex)),
         problemRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::LinearFunctionRecord_Impl>());
+  OS_ASSERT(getImpl<detail::LinearFunctionRecord_Impl>());
 
   LinearFunctionRecord copyOfThis(getImpl<detail::LinearFunctionRecord_Impl>());
   ProjectDatabase database = copyOfThis.projectDatabase();
@@ -147,7 +147,7 @@ LinearFunctionRecord::LinearFunctionRecord(const analysis::LinearFunction& linea
   DoubleVector coefficients = linearFunction.coefficients();
   int n = variables.size();
   // empty coefficients implies vector of 1's.
-  BOOST_ASSERT(coefficients.empty() || (coefficients.size() == static_cast<size_t>(n)));
+  OS_ASSERT(coefficients.empty() || (coefficients.size() == static_cast<size_t>(n)));
   for (int i = 0; i < n; ++i) {
     variableUUIDs.push_back(variables[i].uuid());
     if (variables[i].isDirty() || isNew) {
@@ -171,14 +171,14 @@ LinearFunctionRecord::LinearFunctionRecord(const QSqlQuery& query, ProjectDataba
         new detail::LinearFunctionRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::LinearFunctionRecord_Impl>());
+  OS_ASSERT(getImpl<detail::LinearFunctionRecord_Impl>());
 }
 
 LinearFunctionRecord::LinearFunctionRecord(boost::shared_ptr<detail::LinearFunctionRecord_Impl> impl,
                                            ProjectDatabase database)
   : FunctionRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::LinearFunctionRecord_Impl>());
+  OS_ASSERT(getImpl<detail::LinearFunctionRecord_Impl>());
 }
 
 boost::optional<LinearFunctionRecord> LinearFunctionRecord::factoryFromQuery(

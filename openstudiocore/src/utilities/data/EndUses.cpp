@@ -183,7 +183,7 @@ namespace openstudio {
       m_attribute.setValue(QVariant::fromValue(fuelTypeAttributes));
       fuelTypeAttribute = m_attribute.findChildByName(fuelType.valueName());
     }
-    BOOST_ASSERT(fuelTypeAttribute);
+    OS_ASSERT(fuelTypeAttribute);
 
     boost::optional<Attribute> categoryAttribute = fuelTypeAttribute->findChildByName(category.valueName());
     if(!categoryAttribute){
@@ -193,14 +193,14 @@ namespace openstudio {
       fuelTypeAttribute->setValue(QVariant::fromValue(categoryAttributes));
       categoryAttribute = fuelTypeAttribute->findChildByName(category.valueName());
     }
-    BOOST_ASSERT(categoryAttribute);
+    OS_ASSERT(categoryAttribute);
 
     bool found = false;
     std::vector<Attribute> subCategories = categoryAttribute->valueAsAttributeVector();
     std::vector<Attribute> newSubCategories = subCategories;
     for(unsigned i = 0; i < subCategories.size(); ++i){
       if (subCategories[i].name() == subCategory){
-        BOOST_ASSERT(!found);
+        OS_ASSERT(!found);
         newSubCategories[i] = Attribute(subCategory, subCategories[i].valueAsDouble() + value, subCategories[i].units());
         found = true;
       }

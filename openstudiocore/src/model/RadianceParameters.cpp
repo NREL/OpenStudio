@@ -37,7 +37,7 @@ namespace detail {
                                                    bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == RadianceParameters::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == RadianceParameters::iddObjectType());
   }
 
   RadianceParameters_Impl::RadianceParameters_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                                                    bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == RadianceParameters::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == RadianceParameters::iddObjectType());
   }
 
   RadianceParameters_Impl::RadianceParameters_Impl(const RadianceParameters_Impl& other,
@@ -68,7 +68,7 @@ namespace detail {
 
   int RadianceParameters_Impl::accumulatedRaysperRecord() const {
     boost::optional<int> value = getInt(OS_RadianceParametersFields::AccumulatedRaysperRecord,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -78,14 +78,14 @@ namespace detail {
 
   double RadianceParameters_Impl::directThreshold() const {
     boost::optional<double> value = getDouble(OS_RadianceParametersFields::DirectThreshold,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RadianceParameters_Impl::getDirectThreshold(bool returnIP) const {
     OptionalDouble value = directThreshold();
     OSOptionalQuantity result = getQuantityFromDouble(OS_RadianceParametersFields::DirectThreshold, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -95,14 +95,14 @@ namespace detail {
 
   double RadianceParameters_Impl::directCertainty() const {
     boost::optional<double> value = getDouble(OS_RadianceParametersFields::DirectCertainty,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RadianceParameters_Impl::getDirectCertainty(bool returnIP) const {
     OptionalDouble value = directCertainty();
     OSOptionalQuantity result = getQuantityFromDouble(OS_RadianceParametersFields::DirectCertainty, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -112,14 +112,14 @@ namespace detail {
 
   double RadianceParameters_Impl::directJitter() const {
     boost::optional<double> value = getDouble(OS_RadianceParametersFields::DirectJitter,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RadianceParameters_Impl::getDirectJitter(bool returnIP) const {
     OptionalDouble value = directJitter();
     OSOptionalQuantity result = getQuantityFromDouble(OS_RadianceParametersFields::DirectJitter, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -129,14 +129,14 @@ namespace detail {
 
   double RadianceParameters_Impl::directPretest() const {
     boost::optional<double> value = getDouble(OS_RadianceParametersFields::DirectPretest,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RadianceParameters_Impl::getDirectPretest(bool returnIP) const {
     OptionalDouble value = directPretest();
     OSOptionalQuantity result = getQuantityFromDouble(OS_RadianceParametersFields::DirectPretest, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -146,7 +146,7 @@ namespace detail {
 
   int RadianceParameters_Impl::ambientBouncesVMX() const {
     boost::optional<int> value = getInt(OS_RadianceParametersFields::AmbientBouncesVMX,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -156,7 +156,7 @@ namespace detail {
 
   int RadianceParameters_Impl::ambientBouncesDMX() const {
     boost::optional<int> value = getInt(OS_RadianceParametersFields::AmbientBouncesDMX,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -166,7 +166,7 @@ namespace detail {
 
   int RadianceParameters_Impl::ambientDivisionsVMX() const {
     boost::optional<int> value = getInt(OS_RadianceParametersFields::AmbientDivisionsVMX,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -176,7 +176,7 @@ namespace detail {
 
   int RadianceParameters_Impl::ambientDivisionsDMX() const {
     boost::optional<int> value = getInt(OS_RadianceParametersFields::AmbientDivisionsDMX,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -186,7 +186,7 @@ namespace detail {
 
   int RadianceParameters_Impl::ambientSupersamples() const {
     boost::optional<int> value = getInt(OS_RadianceParametersFields::AmbientSupersamples,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -196,14 +196,14 @@ namespace detail {
 
   double RadianceParameters_Impl::limitWeightVMX() const {
     boost::optional<double> value = getDouble(OS_RadianceParametersFields::LimitWeightVMX,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RadianceParameters_Impl::getLimitWeightVMX(bool returnIP) const {
     OptionalDouble value = limitWeightVMX();
     OSOptionalQuantity result = getQuantityFromDouble(OS_RadianceParametersFields::LimitWeightVMX, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -213,14 +213,14 @@ namespace detail {
 
   double RadianceParameters_Impl::limitWeightDMX() const {
     boost::optional<double> value = getDouble(OS_RadianceParametersFields::LimitWeightDMX,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RadianceParameters_Impl::getLimitWeightDMX(bool returnIP) const {
     OptionalDouble value = limitWeightDMX();
     OSOptionalQuantity result = getQuantityFromDouble(OS_RadianceParametersFields::LimitWeightDMX, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -230,7 +230,7 @@ namespace detail {
 
   int RadianceParameters_Impl::klemsSamplingDensity() const {
     boost::optional<int> value = getInt(OS_RadianceParametersFields::KlemsSamplingDensity,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -240,7 +240,7 @@ namespace detail {
 
   std::string RadianceParameters_Impl::skyDiscretizationResolution() const {
     boost::optional<std::string> value = getString(OS_RadianceParametersFields::SkyDiscretizationResolution,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -251,7 +251,7 @@ namespace detail {
 
   void RadianceParameters_Impl::resetSkyDiscretizationResolution() {
     bool result = setString(OS_RadianceParametersFields::SkyDiscretizationResolution, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   std::vector<std::string> RadianceParameters_Impl::skyDiscretizationResolutionValues() const {
@@ -265,7 +265,7 @@ namespace detail {
 
   void RadianceParameters_Impl::resetAccumulatedRaysperRecord() {
     bool result = setString(OS_RadianceParametersFields::AccumulatedRaysperRecord, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RadianceParameters_Impl::setDirectThreshold(double directThreshold) {
@@ -283,7 +283,7 @@ namespace detail {
 
   void RadianceParameters_Impl::resetDirectThreshold() {
     bool result = setString(OS_RadianceParametersFields::DirectThreshold, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RadianceParameters_Impl::setDirectCertainty(double directCertainty) {
@@ -301,7 +301,7 @@ namespace detail {
 
   void RadianceParameters_Impl::resetDirectCertainty() {
     bool result = setString(OS_RadianceParametersFields::DirectCertainty, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RadianceParameters_Impl::setDirectJitter(double directJitter) {
@@ -319,7 +319,7 @@ namespace detail {
 
   void RadianceParameters_Impl::resetDirectJitter() {
     bool result = setString(OS_RadianceParametersFields::DirectJitter, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RadianceParameters_Impl::setDirectPretest(double directPretest) {
@@ -337,7 +337,7 @@ namespace detail {
 
   void RadianceParameters_Impl::resetDirectPretest() {
     bool result = setString(OS_RadianceParametersFields::DirectPretest, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RadianceParameters_Impl::setAmbientBouncesVMX(int ambientBouncesVMX) {
@@ -347,7 +347,7 @@ namespace detail {
 
   void RadianceParameters_Impl::resetAmbientBouncesVMX() {
     bool result = setString(OS_RadianceParametersFields::AmbientBouncesVMX, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RadianceParameters_Impl::setAmbientBouncesDMX(int ambientBouncesDMX) {
@@ -357,7 +357,7 @@ namespace detail {
 
   void RadianceParameters_Impl::resetAmbientBouncesDMX() {
     bool result = setString(OS_RadianceParametersFields::AmbientBouncesDMX, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RadianceParameters_Impl::setAmbientDivisionsVMX(int ambientDivisionsVMX) {
@@ -368,7 +368,7 @@ namespace detail {
 
   void RadianceParameters_Impl::resetAmbientDivisionsVMX() {
     bool result = setString(OS_RadianceParametersFields::AmbientDivisionsVMX, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RadianceParameters_Impl::setAmbientDivisionsDMX(int ambientDivisionsDMX) {
@@ -378,7 +378,7 @@ namespace detail {
 
   void RadianceParameters_Impl::resetAmbientDivisionsDMX() {
     bool result = setString(OS_RadianceParametersFields::AmbientDivisionsDMX, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RadianceParameters_Impl::setAmbientSupersamples(int ambientSupersamples) {
@@ -388,7 +388,7 @@ namespace detail {
 
   void RadianceParameters_Impl::resetAmbientSupersamples() {
     bool result = setString(OS_RadianceParametersFields::AmbientSupersamples, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RadianceParameters_Impl::setLimitWeightVMX(double LimitWeightVMX) {
@@ -406,12 +406,12 @@ namespace detail {
 
   void RadianceParameters_Impl::resetLimitWeightVMX() {
     bool result = setString(OS_RadianceParametersFields::LimitWeightVMX, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RadianceParameters_Impl::setLimitWeightDMX(double LimitWeightDMX) {
     bool result = setDouble(OS_RadianceParametersFields::LimitWeightDMX, LimitWeightDMX);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RadianceParameters_Impl::setLimitWeightDMX(const Quantity& LimitWeightDMX) {
@@ -425,7 +425,7 @@ namespace detail {
 
   void RadianceParameters_Impl::resetLimitWeightDMX() {
     bool result = setString(OS_RadianceParametersFields::LimitWeightDMX, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RadianceParameters_Impl::setKlemsSamplingDensity(int klemsSamplingDensity) {
@@ -435,7 +435,7 @@ namespace detail {
 
   void RadianceParameters_Impl::resetKlemsSamplingDensity() {
     bool result = setString(OS_RadianceParametersFields::KlemsSamplingDensity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   openstudio::Quantity RadianceParameters_Impl::directThreshold_SI() const {
@@ -788,35 +788,35 @@ RadianceParameters::RadianceParameters(Model& model,
                                        std::string skyDiscretizationResolution)
   : ModelObject(RadianceParameters::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::RadianceParameters_Impl>());
+  OS_ASSERT(getImpl<detail::RadianceParameters_Impl>());
 
   bool ok = true;
   ok = setAccumulatedRaysperRecord(accumulatedRaysperRecord);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setDirectThreshold(directThreshold);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setDirectCertainty(directCertainty);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setDirectJitter(directJitter);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setDirectPretest(directPretest);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setAmbientBouncesVMX(ambientBouncesVMX);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setAmbientBouncesDMX(ambientBouncesDMX);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setAmbientDivisionsVMX(ambientDivisionsVMX);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setAmbientDivisionsDMX(ambientDivisionsDMX);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setAmbientSupersamples(ambientSupersamples);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setLimitWeightVMX(LimitWeightVMX);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   setLimitWeightDMX(LimitWeightDMX);
   setKlemsSamplingDensity(klemsSamplingDensity);
   ok = setSkyDiscretizationResolution(skyDiscretizationResolution);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 /// @endcond

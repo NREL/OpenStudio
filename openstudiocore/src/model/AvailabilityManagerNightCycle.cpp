@@ -40,7 +40,7 @@ namespace detail {
                                                                          bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == AvailabilityManagerNightCycle::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == AvailabilityManagerNightCycle::iddObjectType());
   }
 
   AvailabilityManagerNightCycle_Impl::AvailabilityManagerNightCycle_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -48,7 +48,7 @@ namespace detail {
                                                                          bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == AvailabilityManagerNightCycle::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == AvailabilityManagerNightCycle::iddObjectType());
   }
 
   AvailabilityManagerNightCycle_Impl::AvailabilityManagerNightCycle_Impl(const AvailabilityManagerNightCycle_Impl& other,
@@ -77,7 +77,7 @@ namespace detail {
 
   std::string AvailabilityManagerNightCycle_Impl::controlType() const {
     boost::optional<std::string> value = getString(OS_AvailabilityManager_NightCycleFields::ControlType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -87,14 +87,14 @@ namespace detail {
 
   double AvailabilityManagerNightCycle_Impl::thermostatTolerance() const {
     boost::optional<double> value = getDouble(OS_AvailabilityManager_NightCycleFields::ThermostatTolerance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity AvailabilityManagerNightCycle_Impl::getThermostatTolerance(bool returnIP) const {
     OptionalDouble value = thermostatTolerance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_AvailabilityManager_NightCycleFields::ThermostatTolerance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -104,14 +104,14 @@ namespace detail {
 
   double AvailabilityManagerNightCycle_Impl::cyclingRunTime() const {
     boost::optional<double> value = getDouble(OS_AvailabilityManager_NightCycleFields::CyclingRunTime,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity AvailabilityManagerNightCycle_Impl::getCyclingRunTime(bool returnIP) const {
     OptionalDouble value = cyclingRunTime();
     OSOptionalQuantity result = getQuantityFromDouble(OS_AvailabilityManager_NightCycleFields::CyclingRunTime, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -130,12 +130,12 @@ namespace detail {
 
   void AvailabilityManagerNightCycle_Impl::resetControlType() {
     bool result = setString(OS_AvailabilityManager_NightCycleFields::ControlType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void AvailabilityManagerNightCycle_Impl::setThermostatTolerance(double thermostatTolerance) {
     bool result = setDouble(OS_AvailabilityManager_NightCycleFields::ThermostatTolerance, thermostatTolerance);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool AvailabilityManagerNightCycle_Impl::setThermostatTolerance(const Quantity& thermostatTolerance) {
@@ -149,12 +149,12 @@ namespace detail {
 
   void AvailabilityManagerNightCycle_Impl::resetThermostatTolerance() {
     bool result = setString(OS_AvailabilityManager_NightCycleFields::ThermostatTolerance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void AvailabilityManagerNightCycle_Impl::setCyclingRunTime(double cyclingRunTime) {
     bool result = setDouble(OS_AvailabilityManager_NightCycleFields::CyclingRunTime, cyclingRunTime);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool AvailabilityManagerNightCycle_Impl::setCyclingRunTime(const Quantity& cyclingRunTime) {
@@ -168,7 +168,7 @@ namespace detail {
 
   void AvailabilityManagerNightCycle_Impl::resetCyclingRunTime() {
     bool result = setString(OS_AvailabilityManager_NightCycleFields::CyclingRunTime, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool AvailabilityManagerNightCycle_Impl::setControlThermalZone(const boost::optional<ThermalZone>& thermalZone) {
@@ -185,7 +185,7 @@ namespace detail {
 
   void AvailabilityManagerNightCycle_Impl::resetControlThermalZone() {
     bool result = setString(OS_AvailabilityManager_NightCycleFields::ControlThermalZone, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   std::vector<std::string> AvailabilityManagerNightCycle_Impl::controlTypeValues() const {
@@ -239,7 +239,7 @@ namespace detail {
 AvailabilityManagerNightCycle::AvailabilityManagerNightCycle(const Model& model)
   : ModelObject(AvailabilityManagerNightCycle::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::AvailabilityManagerNightCycle_Impl>());
+  OS_ASSERT(getImpl<detail::AvailabilityManagerNightCycle_Impl>());
 }
 
 IddObjectType AvailabilityManagerNightCycle::iddObjectType() {

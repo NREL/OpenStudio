@@ -47,13 +47,13 @@ namespace detail {
   ClauseRecord_Impl::ClauseRecord_Impl(const QSqlQuery& query, const ProjectDatabase& projectDatabase)
     : ObjectRecord_Impl(projectDatabase, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
     value = query.value(ClauseRecordColumns::clauseRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_clauseRecordType = ClauseRecordType(value.toInt());
   }
 
@@ -71,15 +71,15 @@ namespace detail {
 
   void ClauseRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     ObjectRecord_Impl::setLastValues(query, projectDatabase);
 
     QVariant value;
     value = query.value(ClauseRecordColumns::clauseRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastClauseRecordType = ClauseRecordType(value.toInt());
   }
 
@@ -91,7 +91,7 @@ namespace detail {
 
     QVariant value;
     value = query.value(ClauseRecordColumns::clauseRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_clauseRecordType == ClauseRecordType(value.toInt()));
 
     return result;
@@ -131,7 +131,7 @@ UpdateByIdQueryData ClauseRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -174,13 +174,13 @@ void ClauseRecord::updatePathData(ProjectDatabase database,
 ClauseRecord::ClauseRecord(boost::shared_ptr<detail::ClauseRecord_Impl> impl, ProjectDatabase projectDatabase)
   : ObjectRecord(impl, projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ClauseRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ClauseRecord_Impl>());
 }
 
 ClauseRecord::ClauseRecord(boost::shared_ptr<detail::ClauseRecord_Impl> impl)
   : ObjectRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ClauseRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ClauseRecord_Impl>());
 }
 
 std::vector<ClauseRecord> ClauseRecord::getClauseRecords(ProjectDatabase& database)
@@ -192,7 +192,7 @@ std::vector<ClauseRecord> ClauseRecord::getClauseRecords(ProjectDatabase& databa
   assertExec(query);
   while (query.next()) {
     boost::optional<ClauseRecord> clauseRecord = factoryFromQuery(query, database);
-    BOOST_ASSERT(clauseRecord);
+    OS_ASSERT(clauseRecord);
     result.push_back(*clauseRecord);
   }
 

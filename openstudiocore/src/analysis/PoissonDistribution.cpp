@@ -20,6 +20,8 @@
 #include <analysis/PoissonDistribution.hpp>
 #include <analysis/UncertaintyDescription_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -57,7 +59,7 @@ bool PoissonDistribution::setLambda(double value) {
 PoissonDistribution::PoissonDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
-  BOOST_ASSERT(type() == PoissonDistribution::type());
+  OS_ASSERT(type() == PoissonDistribution::type());
 }
 
 } // analysis

@@ -20,6 +20,8 @@
 #include <model/Material.hpp>
 #include <model/Material_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <boost/foreach.hpp>
 
 namespace openstudio {
@@ -54,7 +56,7 @@ namespace detail {
 Material::Material(IddObjectType type,const Model& model)
   : ResourceObject(type,model) 
 {
-  BOOST_ASSERT(getImpl<detail::Material_Impl>());
+  OS_ASSERT(getImpl<detail::Material_Impl>());
 }
 
 double Material::thickness() const {

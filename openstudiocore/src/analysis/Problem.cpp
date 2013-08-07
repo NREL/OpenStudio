@@ -53,6 +53,7 @@
 
 #include <utilities/bcl/BCLMeasure.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/Finder.hpp>
 #include <utilities/core/URLHelpers.hpp>
@@ -128,8 +129,8 @@ namespace detail {
       step.onChange();
       connectChild(step,false);
       if (step.isInputVariable()) {
-        BOOST_ASSERT(step.inputVariable().parent());
-        BOOST_ASSERT(step.inputVariable().parent().get() == step);
+        OS_ASSERT(step.inputVariable().parent());
+        OS_ASSERT(step.inputVariable().parent().get() == step);
       }
     }
     BOOST_FOREACH(Function& response,m_responses) {
@@ -153,8 +154,8 @@ namespace detail {
       step.onChange();
       connectChild(step,false);
       if (step.isInputVariable()) {
-        BOOST_ASSERT(step.inputVariable().parent());
-        BOOST_ASSERT(step.inputVariable().parent().get() == step);
+        OS_ASSERT(step.inputVariable().parent());
+        OS_ASSERT(step.inputVariable().parent().get() == step);
       }
     }
   }
@@ -236,10 +237,10 @@ namespace detail {
       if (step.isInputVariable()) {
         result.push_back(step.inputVariable());
         // debug asserts
-        BOOST_ASSERT(result.back().parent());
-        BOOST_ASSERT(result.back().parent().get() == step);
-        BOOST_ASSERT(step.parent());
-        BOOST_ASSERT(step.parent().get() == copyOfThis);
+        OS_ASSERT(result.back().parent());
+        OS_ASSERT(result.back().parent().get() == step);
+        OS_ASSERT(step.parent());
+        OS_ASSERT(step.parent().get() == copyOfThis);
       }
       ++i;
     }
@@ -560,7 +561,7 @@ namespace detail {
         continue;
       }
       // OptionalContinuousVariable continuousVariable = variables[i].optionalCast<ContinuousVariable>();
-      // BOOST_ASSERT(continuousVariable);
+      // OS_ASSERT(continuousVariable);
       intermediate.push_back(QVariant(QVariant::Double));
     }
     result = intermediate;
@@ -677,9 +678,9 @@ namespace detail {
     connectChild(m_workflow[index],true);
     if (step.isInputVariable()) {
       onChange(AnalysisObject_Impl::InvalidatesDataPoints);
-      BOOST_ASSERT(step.inputVariable().parent());
-      BOOST_ASSERT(step.inputVariable().parent().get() == step);
-      BOOST_ASSERT(step.inputVariable().parent().get() == m_workflow[index]);
+      OS_ASSERT(step.inputVariable().parent());
+      OS_ASSERT(step.inputVariable().parent().get() == step);
+      OS_ASSERT(step.inputVariable().parent().get() == m_workflow[index]);
     }
     else {
       onChange(AnalysisObject_Impl::InvalidatesResults);
@@ -1297,7 +1298,7 @@ namespace detail {
     }
     int dvn = ddvs.size();
     if (algorithm.requiresContinuousVariables()) {
-      BOOST_ASSERT(dvn == 0);
+      OS_ASSERT(dvn == 0);
     }
     for (int i = 0; i < dvn; ++i) {
       variableValues[ddvs[i]] = QVariant(dvValues[i]);
@@ -1419,7 +1420,7 @@ namespace detail {
   void Problem_Impl::updateDataPoint(DataPoint& dataPoint,
                                      const runmanager::Job& completedJob) const
   {
-    BOOST_ASSERT((completedJob.treeStatus() == runmanager::TreeStatusEnum::Finished) ||
+    OS_ASSERT((completedJob.treeStatus() == runmanager::TreeStatusEnum::Finished) ||
                  (completedJob.treeStatus() == runmanager::TreeStatusEnum::Failed));
 
     dataPoint.markComplete();
@@ -1513,7 +1514,7 @@ namespace detail {
           if (areInCompoundMeasure(currentStep,nextStep)) {
             // yes
             // no job yet, eventual job cannot be null, current step must be continuous variable
-            BOOST_ASSERT(var.optionalCast<ContinuousVariable>());
+            OS_ASSERT(var.optionalCast<ContinuousVariable>());
             result.push_back(WorkflowStepJob(currentStep,QVariant(var.getValue(dataPoint))));
           }
           else {
@@ -1521,10 +1522,10 @@ namespace detail {
             // is currentJob null?
             if ((!currentJob) || (currentJob->jobType() == runmanager::JobType::Null)) {
               // must be null perturbation
-              BOOST_ASSERT(var.optionalCast<DiscreteVariable>());
+              OS_ASSERT(var.optionalCast<DiscreteVariable>());
               DiscreteVariable dvar = var.cast<DiscreteVariable>();
               DiscretePerturbation dpert = dvar.getPerturbation(dataPoint);
-              BOOST_ASSERT(dpert.optionalCast<NullPerturbation>());
+              OS_ASSERT(dpert.optionalCast<NullPerturbation>());
               if (!optimize) {
                 // include in results
                 if (currentJob) {
@@ -1541,7 +1542,7 @@ namespace detail {
                   currentJob.reset();
                 }
                 else {
-                  BOOST_ASSERT(childJobs.size() == 1u);
+                  OS_ASSERT(childJobs.size() == 1u);
                   currentJob = childJobs[0];
                 }
               }
@@ -1573,7 +1574,7 @@ namespace detail {
                   currentJob.reset();
                 }
                 else {
-                  BOOST_ASSERT(childJobs.size() == 1u);
+                  OS_ASSERT(childJobs.size() == 1u);
                   currentJob = childJobs[0];
                 }
               }
@@ -1600,8 +1601,8 @@ namespace detail {
           }
           else {
             // non-null work item
-            BOOST_ASSERT(currentJob);
-            BOOST_ASSERT(currentJob->jobType() == workItem.type);
+            OS_ASSERT(currentJob);
+            OS_ASSERT(currentJob->jobType() == workItem.type);
             result.push_back(WorkflowStepJob(*currentJob,currentStep));
           }
 
@@ -1611,7 +1612,7 @@ namespace detail {
               currentJob.reset();
             }
             else {
-              BOOST_ASSERT(childJobs.size() == 1u);
+              OS_ASSERT(childJobs.size() == 1u);
               currentJob = childJobs[0];
             }
           }

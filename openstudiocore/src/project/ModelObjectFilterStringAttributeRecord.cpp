@@ -49,17 +49,17 @@ namespace detail {
   ModelObjectFilterStringAttributeRecord_Impl::ModelObjectFilterStringAttributeRecord_Impl(const QSqlQuery& query, const ProjectDatabase& projectDatabase)
     : ModelObjectFilterAttributeRecord_Impl(query, projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
     value = query.value(ClauseRecordColumns::attributeValue);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_attributeValue = value.toString().toStdString();
 
     value = query.value(ClauseRecordColumns::predicate);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_predicate = ruleset::RulesetStringPredicate(value.toInt());
   }
 
@@ -117,11 +117,11 @@ namespace detail {
 
     QVariant value;
     value = query.value(ClauseRecordColumns::attributeValue);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastAttributeValue = value.toString().toStdString();
 
     value = query.value(ClauseRecordColumns::predicate);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastPredicate = ruleset::RulesetStringPredicate(value.toInt());
   }
 
@@ -133,11 +133,11 @@ namespace detail {
 
     QVariant value;
     value = query.value(ClauseRecordColumns::attributeValue);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_attributeValue == value.toString().toStdString());
 
     value = query.value(ClauseRecordColumns::predicate);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_predicate == ruleset::RulesetStringPredicate(value.toInt()));
 
     return result;
@@ -164,25 +164,25 @@ namespace detail {
 ModelObjectFilterStringAttributeRecord::ModelObjectFilterStringAttributeRecord(const openstudio::ruleset::ModelObjectFilterStringAttribute& modelObjectFilterStringAttribute, ProjectDatabase& projectDatabase)
   : ModelObjectFilterAttributeRecord(boost::shared_ptr<detail::ModelObjectFilterStringAttributeRecord_Impl>(new detail::ModelObjectFilterStringAttributeRecord_Impl(modelObjectFilterStringAttribute, projectDatabase)), projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterStringAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterStringAttributeRecord_Impl>());
 }
 
 ModelObjectFilterStringAttributeRecord::ModelObjectFilterStringAttributeRecord(const QSqlQuery& query, ProjectDatabase& projectDatabase)
   : ModelObjectFilterAttributeRecord(boost::shared_ptr<detail::ModelObjectFilterStringAttributeRecord_Impl>(new detail::ModelObjectFilterStringAttributeRecord_Impl(query, projectDatabase)), projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterStringAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterStringAttributeRecord_Impl>());
 }
 
 ModelObjectFilterStringAttributeRecord::ModelObjectFilterStringAttributeRecord(boost::shared_ptr<detail::ModelObjectFilterStringAttributeRecord_Impl> impl, ProjectDatabase projectDatabase)
   : ModelObjectFilterAttributeRecord(impl, projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterStringAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterStringAttributeRecord_Impl>());
 }
 
 ModelObjectFilterStringAttributeRecord::ModelObjectFilterStringAttributeRecord(boost::shared_ptr<detail::ModelObjectFilterStringAttributeRecord_Impl> impl)
   : ModelObjectFilterAttributeRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterStringAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterStringAttributeRecord_Impl>());
 }
 
 boost::optional<ModelObjectFilterStringAttributeRecord> ModelObjectFilterStringAttributeRecord::factoryFromQuery(

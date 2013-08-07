@@ -59,8 +59,8 @@ namespace detail {
       m_outputFileType(measure.outputFileType()),
       m_isUserScript(false)
   {
-    BOOST_ASSERT((m_inputFileType == FileReferenceType::OSM) || (m_inputFileType == FileReferenceType::IDF));
-    BOOST_ASSERT((m_outputFileType == FileReferenceType::OSM) || (m_outputFileType == FileReferenceType::IDF));
+    OS_ASSERT((m_inputFileType == FileReferenceType::OSM) || (m_inputFileType == FileReferenceType::IDF));
+    OS_ASSERT((m_outputFileType == FileReferenceType::OSM) || (m_outputFileType == FileReferenceType::IDF));
   }
 
   RubyPerturbation_Impl::RubyPerturbation_Impl(const openstudio::path& perturbationScript,
@@ -74,9 +74,9 @@ namespace detail {
       m_outputFileType(outputFileType),
       m_isUserScript(isUserScript)
   {
-    BOOST_ASSERT(m_perturbationScript->fileType() == FileReferenceType::RB);
-    BOOST_ASSERT((inputFileType == FileReferenceType::OSM) || (inputFileType == FileReferenceType::IDF));
-    BOOST_ASSERT((outputFileType == FileReferenceType::OSM) || (outputFileType == FileReferenceType::IDF));
+    OS_ASSERT(m_perturbationScript->fileType() == FileReferenceType::RB);
+    OS_ASSERT((inputFileType == FileReferenceType::OSM) || (inputFileType == FileReferenceType::IDF));
+    OS_ASSERT((outputFileType == FileReferenceType::OSM) || (outputFileType == FileReferenceType::IDF));
   }
 
   RubyPerturbation_Impl::RubyPerturbation_Impl(
@@ -100,7 +100,7 @@ namespace detail {
       m_arguments(arguments)
   {
     if (usesBCLMeasure) {
-      BOOST_ASSERT(m_perturbationScript->fileType() == FileReferenceType::Unknown);
+      OS_ASSERT(m_perturbationScript->fileType() == FileReferenceType::Unknown);
       m_measureDirectory = m_perturbationScript->path();
       m_measureUUID = m_perturbationScript->uuid();
       m_measureVersionUUID = m_perturbationScript->versionUUID();
@@ -162,7 +162,7 @@ namespace detail {
         // this is what happens if can't actually load the measure
         // basically delays failure
         // perhaps should just throw
-        BOOST_ASSERT(m_measureDirectory);
+        OS_ASSERT(m_measureDirectory);
         rubyJobBuilder = runmanager::RubyJobBuilder::createUserScriptRubyJob(
               *m_measureDirectory / toPath("measure.rb"),
               arguments());
@@ -312,7 +312,7 @@ namespace detail {
 
     m_measure = newVersion;
     m_measureDirectory = newVersion.directory();
-    BOOST_ASSERT(m_measureUUID.get() == newVersion.uuid());
+    OS_ASSERT(m_measureUUID.get() == newVersion.uuid());
     m_measureVersionUUID = newVersion.versionUUID();
     m_inputFileType = inputFileType;
     m_outputFileType = outputFileType;

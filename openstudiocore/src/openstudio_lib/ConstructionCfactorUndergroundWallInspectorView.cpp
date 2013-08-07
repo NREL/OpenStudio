@@ -72,7 +72,7 @@ void ConstructionCfactorUndergroundWallInspectorView::createLayout()
 
   m_cfactorEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_cfactorEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_cfactorEdit,3,0);
 
   // Height
@@ -83,7 +83,7 @@ void ConstructionCfactorUndergroundWallInspectorView::createLayout()
 
   m_heightEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_heightEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_heightEdit,5,0);
 
   // Stretch

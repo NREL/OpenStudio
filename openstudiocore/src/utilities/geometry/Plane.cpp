@@ -25,6 +25,8 @@
 #include <utilities/data/Vector.hpp>
 #include <utilities/data/Matrix.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <boost/foreach.hpp>
 
 namespace openstudio{
@@ -35,7 +37,7 @@ namespace openstudio{
     // test that normal has length 1
     double length = m_a*m_a + m_b*m_b + m_c*m_c;
     double tol = 0.0001;
-    BOOST_ASSERT(abs(1.0-length) < tol);
+    OS_ASSERT(abs(1.0-length) < tol);
   }
 
   Plane::Plane(const Point3d& point, const Vector3d& outwardNormal)
@@ -227,7 +229,7 @@ namespace openstudio{
       // test that normal has length 1
       double length = m_a*m_a + m_b*m_b + m_c*m_c;
       tol = 0.0001;
-      BOOST_ASSERT(abs(1.0-length) <= tol);
+      OS_ASSERT(abs(1.0-length) <= tol);
     }
   }
 
@@ -237,7 +239,7 @@ namespace openstudio{
     // test that normal has length 1
     double length = m_a*m_a + m_b*m_b + m_c*m_c;
     double tol = 0.0001;
-    BOOST_ASSERT(abs(1.0-length) <= tol);
+    OS_ASSERT(abs(1.0-length) <= tol);
   }
 
   Plane::~Plane()

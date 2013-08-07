@@ -38,7 +38,7 @@ namespace detail {
                       discretePerturbationRecord.handle(), 
                       dataPointRecord.projectDatabase())
   {
-    BOOST_ASSERT(dataPointRecord.projectDatabase().handle() == discretePerturbationRecord.projectDatabase().handle());
+    OS_ASSERT(dataPointRecord.projectDatabase().handle() == discretePerturbationRecord.projectDatabase().handle());
   }
 
   DataPoint_DiscretePerturbation_JoinRecord_Impl::DataPoint_DiscretePerturbation_JoinRecord_Impl(
@@ -69,14 +69,14 @@ namespace detail {
   DataPointRecord DataPoint_DiscretePerturbation_JoinRecord_Impl::dataPointRecord() const {
     ProjectDatabase database = this->projectDatabase();
     boost::optional<DataPointRecord> dataPointRecord = DataPointRecord::getDataPointRecord(this->leftId(),database);
-    BOOST_ASSERT(dataPointRecord);
+    OS_ASSERT(dataPointRecord);
     return *dataPointRecord;
   }
 
   DiscretePerturbationRecord DataPoint_DiscretePerturbation_JoinRecord_Impl::discretePerturbationRecord() const {
     ProjectDatabase database = this->projectDatabase();
     boost::optional<DiscretePerturbationRecord> discretePerturbationRecord = DiscretePerturbationRecord::getDiscretePerturbationRecord(this->rightId(),database);
-    BOOST_ASSERT(discretePerturbationRecord);
+    OS_ASSERT(discretePerturbationRecord);
     return *discretePerturbationRecord;
   }
 
@@ -89,7 +89,7 @@ DataPoint_DiscretePerturbation_JoinRecord::DataPoint_DiscretePerturbation_JoinRe
         new detail::DataPoint_DiscretePerturbation_JoinRecord_Impl(dataPointRecord, discretePerturbationRecord)), 
         dataPointRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::DataPoint_DiscretePerturbation_JoinRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DataPoint_DiscretePerturbation_JoinRecord_Impl>());
 }
 
 DataPoint_DiscretePerturbation_JoinRecord::DataPoint_DiscretePerturbation_JoinRecord(
@@ -97,7 +97,7 @@ DataPoint_DiscretePerturbation_JoinRecord::DataPoint_DiscretePerturbation_JoinRe
     ProjectDatabase database)
   : JoinRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::DataPoint_DiscretePerturbation_JoinRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DataPoint_DiscretePerturbation_JoinRecord_Impl>());
 }
 
 std::string DataPoint_DiscretePerturbation_JoinRecord::databaseTableName() {
@@ -118,7 +118,7 @@ UpdateByIdQueryData DataPoint_DiscretePerturbation_JoinRecord::updateByIdQueryDa
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -169,14 +169,14 @@ DataPoint_DiscretePerturbation_JoinRecord::getDiscretePerturbationRecords(
   while (query.next()) {
     QVariant value;
     value = query.value(JoinRecordColumns::rightId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     discretePerturbationRecordIds.push_back(value.toInt());
   }
 
   BOOST_FOREACH(int id, discretePerturbationRecordIds) {
     boost::optional<DiscretePerturbationRecord> discretePerturbationRecord = 
         DiscretePerturbationRecord::getDiscretePerturbationRecord(id,database);
-    BOOST_ASSERT(discretePerturbationRecord);
+    OS_ASSERT(discretePerturbationRecord);
     result.push_back(*discretePerturbationRecord);
   }
 
@@ -199,14 +199,14 @@ std::vector<DataPointRecord> DataPoint_DiscretePerturbation_JoinRecord::getDataP
   while (query.next()) {
     QVariant value;
     value = query.value(JoinRecordColumns::leftId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     dataPointRecordIds.push_back(value.toInt());
   }
 
   BOOST_FOREACH(int id, dataPointRecordIds) {
     boost::optional<DataPointRecord> dataPointRecord = 
         DataPointRecord::getDataPointRecord(id,database);
-    BOOST_ASSERT(dataPointRecord);
+    OS_ASSERT(dataPointRecord);
     result.push_back(*dataPointRecord);
   }
 

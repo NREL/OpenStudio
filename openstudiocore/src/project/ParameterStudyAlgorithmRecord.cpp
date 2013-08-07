@@ -49,14 +49,14 @@ namespace detail {
                                                                          ProjectDatabase& database)
     : DakotaAlgorithmRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(ParameterStudyAlgorithmRecord::ColumnsType::parameterStudyAlgorithmType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_algorithmType = analysis::ParameterStudyAlgorithmType(value.toInt());
   }
 
@@ -132,30 +132,30 @@ namespace detail {
 
   void ParameterStudyAlgorithmRecord_Impl::setLastValues(const QSqlQuery& query,
                                                          ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     DakotaAlgorithmRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(ParameterStudyAlgorithmRecord::ColumnsType::parameterStudyAlgorithmType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastAlgorithmType = analysis::ParameterStudyAlgorithmType(value.toInt());
   }
 
   bool ParameterStudyAlgorithmRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = DakotaAlgorithmRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(ParameterStudyAlgorithmRecord::ColumnsType::parameterStudyAlgorithmType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_algorithmType == analysis::ParameterStudyAlgorithmType(value.toInt()));
 
     return result;
@@ -183,7 +183,7 @@ ParameterStudyAlgorithmRecord::ParameterStudyAlgorithmRecord(
         analysisRecord.projectDatabase(),
         parameterStudyAlgorithm)
 {
-  BOOST_ASSERT(getImpl<detail::ParameterStudyAlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ParameterStudyAlgorithmRecord_Impl>());
 
   constructRelatedRecords(parameterStudyAlgorithm);
 }
@@ -195,7 +195,7 @@ ParameterStudyAlgorithmRecord::ParameterStudyAlgorithmRecord(const QSqlQuery& qu
         database,
         boost::none)
 {
-  BOOST_ASSERT(getImpl<detail::ParameterStudyAlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ParameterStudyAlgorithmRecord_Impl>());
 }
 
 ParameterStudyAlgorithmRecord::ParameterStudyAlgorithmRecord(
@@ -203,7 +203,7 @@ ParameterStudyAlgorithmRecord::ParameterStudyAlgorithmRecord(
     ProjectDatabase database)
   : DakotaAlgorithmRecord(impl, database, boost::none)
 {
-  BOOST_ASSERT(getImpl<detail::ParameterStudyAlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ParameterStudyAlgorithmRecord_Impl>());
 }
 
 boost::optional<ParameterStudyAlgorithmRecord> ParameterStudyAlgorithmRecord::factoryFromQuery(

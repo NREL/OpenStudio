@@ -39,6 +39,8 @@
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QStyleOption>
@@ -60,7 +62,7 @@ FacilityView::FacilityView(bool isIP, const openstudio::model::Model& model, QWi
 
   bool isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                         modelObjectInspectorView(),SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 void FacilityView::toggleUnits(bool displayIP)
@@ -77,7 +79,7 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
   // index of hidden widget is 0
   QWidget* hiddenWidget = new QWidget();
   int index = this->stackedWidget()->addWidget(hiddenWidget);
-  BOOST_ASSERT(index == 0);
+  OS_ASSERT(index == 0);
 
   // index of the default is 1
   DefaultInspectorView* defaultInspectorView = new DefaultInspectorView(model, parent);
@@ -85,21 +87,21 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
                         SIGNAL(dropZoneItemClicked(OSItem*)),
                         this, 
                         SIGNAL(dropZoneItemClicked(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   index = this->stackedWidget()->addWidget(defaultInspectorView);
-  BOOST_ASSERT(index == 1);
+  OS_ASSERT(index == 1);
 
   BuildingInspectorView* buildingInspectorView = new BuildingInspectorView(isIP, model, parent);
   isConnected = connect(this, 
                         SIGNAL(toggleUnitsClicked(bool)),
                         buildingInspectorView, 
                         SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(buildingInspectorView, 
                       SIGNAL(dropZoneItemClicked(OSItem*)),
                       this, 
                       SIGNAL(dropZoneItemClicked(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   index = this->stackedWidget()->addWidget(buildingInspectorView);
   m_inspectorIndexMap[IddObjectType::OS_Building] = index;
 
@@ -108,12 +110,12 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
                         SIGNAL(toggleUnitsClicked(bool)),
                         buildingStoryInspectorView, 
                         SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(buildingStoryInspectorView, 
                         SIGNAL(dropZoneItemClicked(OSItem*)),
                         this, 
                         SIGNAL(dropZoneItemClicked(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   index = this->stackedWidget()->addWidget(buildingStoryInspectorView);
   m_inspectorIndexMap[IddObjectType::OS_BuildingStory] = index;
 
@@ -122,12 +124,12 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
                         SIGNAL(toggleUnitsClicked(bool)),
                         thermalZoneView, 
                         SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(thermalZoneView, 
                         SIGNAL(dropZoneItemClicked(OSItem*)),
                         this, 
                         SIGNAL(dropZoneItemClicked(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   index = this->stackedWidget()->addWidget(thermalZoneView);
   m_inspectorIndexMap[IddObjectType::OS_ThermalZone] = index;
 
@@ -136,7 +138,7 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
                         SIGNAL(dropZoneItemClicked(OSItem*)),
                         this, 
                         SIGNAL(dropZoneItemClicked(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   index = this->stackedWidget()->addWidget(spaceTypeInspectorView);
   m_inspectorIndexMap[IddObjectType::OS_SpaceType] = index;
   SpaceInspectorView* spaceInspectorView = new SpaceInspectorView(isIP, model, parent);
@@ -144,12 +146,12 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
                         SIGNAL(toggleUnitsClicked(bool)),
                         spaceInspectorView, 
                         SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(spaceInspectorView, 
                         SIGNAL(dropZoneItemClicked(OSItem*)),
                         this, 
                         SIGNAL(dropZoneItemClicked(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   index = this->stackedWidget()->addWidget(spaceInspectorView);
   m_inspectorIndexMap[IddObjectType::OS_Space] = index;
 
@@ -158,12 +160,12 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
                         SIGNAL(toggleUnitsClicked(bool)),
                         surfaceInspectorView, 
                         SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(surfaceInspectorView, 
                         SIGNAL(dropZoneItemClicked(OSItem*)),
                         this, 
                         SIGNAL(dropZoneItemClicked(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   index = this->stackedWidget()->addWidget(surfaceInspectorView);
   m_inspectorIndexMap[IddObjectType::OS_Surface] = index;
 
@@ -172,12 +174,12 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
                         SIGNAL(toggleUnitsClicked(bool)),
                         subSurfaceInspectorView, 
                         SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(subSurfaceInspectorView, 
                         SIGNAL(dropZoneItemClicked(OSItem*)),
                         this, 
                         SIGNAL(dropZoneItemClicked(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   index = this->stackedWidget()->addWidget(subSurfaceInspectorView);
   m_inspectorIndexMap[IddObjectType::OS_SubSurface] = index;
   //ShadingSurfaceGroupInspectorView* shadingSurfaceGroupInspectorView = new ShadingSurfaceGroupInspectorView(model, parent);
@@ -185,12 +187,12 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
   //                      SIGNAL(toggleUnitsClicked(bool)),
   //                      shadingSurfaceGroupInspectorView, 
   //                      SIGNAL(toggleUnitsClicked(bool)));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //isConnected = connect(shadingSurfaceGroupInspectorView, 
   //                      SIGNAL(dropZoneItemClicked(OSItem*)),
   //                      this, 
   //                      SIGNAL(dropZoneItemClicked(OSItem*)));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //index = this->stackedWidget()->addWidget(shadingSurfaceGroupInspectorView);
   //m_inspectorIndexMap[IddObjectType::OS_ShadingSurfaceGroup] = index;
 
@@ -199,12 +201,12 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
   //                      SIGNAL(toggleUnitsClicked(bool)),
   //                      shadingSurfaceInspectorView, 
   //                      SIGNAL(toggleUnitsClicked(bool)));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //isConnected = connect(shadingSurfaceInspectorView, 
   //                      SIGNAL(dropZoneItemClicked(OSItem*)),
   //                      this, 
   //                      SIGNAL(dropZoneItemClicked(OSItem*)));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //index = this->stackedWidget()->addWidget(shadingSurfaceInspectorView);
   //m_inspectorIndexMap[IddObjectType::OS_ShadingSurface] = index;
 
@@ -213,12 +215,12 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
   //                      SIGNAL(toggleUnitsClicked(bool)),
   //                      interiorPartitionSurfaceGroupInspectorView, 
   //                      SIGNAL(toggleUnitsClicked(bool)));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //isConnected = connect(interiorPartitionSurfaceGroupInspectorView, 
   //                      SIGNAL(dropZoneItemClicked(OSItem*)),
   //                      this, 
   //                      SIGNAL(dropZoneItemClicked(OSItem*)));
-  //BOOST_ASSERT(isConnected);  
+  //OS_ASSERT(isConnected);  
   //index = this->stackedWidget()->addWidget(interiorPartitionSurfaceGroupInspectorView);
   //m_inspectorIndexMap[IddObjectType::OS_InteriorPartitionSurfaceGroup] = index;
 
@@ -227,12 +229,12 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
   //                      SIGNAL(toggleUnitsClicked(bool)),
   //                      interiorPartitionSurfaceInspectorView, 
   //                      SIGNAL(toggleUnitsClicked(bool)));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //isConnected = connect(interiorPartitionSurfaceInspectorView, 
   //                      SIGNAL(dropZoneItemClicked(OSItem*)),
   //                      this, 
   //                      SIGNAL(dropZoneItemClicked(OSItem*)));
-  //BOOST_ASSERT(isConnected);  
+  //OS_ASSERT(isConnected);  
   //index = this->stackedWidget()->addWidget(interiorPartitionSurfaceInspectorView);
   //m_inspectorIndexMap[IddObjectType::OS_InteriorPartitionSurface] = index;
 
@@ -241,12 +243,12 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
   //                    SIGNAL(toggleUnitsClicked(bool)),
   //                    daylightingControlInspectorView, 
   //                    SIGNAL(toggleUnitsClicked(bool)));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //isConnected = connect(daylightingControlInspectorView, 
   //                      SIGNAL(dropZoneItemClicked(OSItem*)),
   //                      this, 
   //                      SIGNAL(dropZoneItemClicked(OSItem*)));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //index = this->stackedWidget()->addWidget(daylightingControlInspectorView);
   //m_inspectorIndexMap[IddObjectType::OS_Daylighting_Control] = index;
   
@@ -255,12 +257,12 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
   //                    SIGNAL(toggleUnitsClicked(bool)),
   //                    daylightingControlInspectorView, 
   //                    SIGNAL(toggleUnitsClicked(bool)));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //isConnected = connect(glareSensorInspectorView, 
   //                      SIGNAL(dropZoneItemClicked(OSItem*)),
   //                      this, 
   //                      SIGNAL(dropZoneItemClicked(OSItem*)));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //index = this->stackedWidget()->addWidget(glareSensorInspectorView);
   //m_inspectorIndexMap[IddObjectType::OS_GlareSensor] = index;
   
@@ -269,12 +271,12 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
   //                    SIGNAL(toggleUnitsClicked(bool)),
   //                    illuminanceMapInspectorView, 
   //                    SIGNAL(toggleUnitsClicked(bool)));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //isConnected = connect(illuminanceMapInspectorView, 
   //                      SIGNAL(dropZoneItemClicked(OSItem*)),
   //                      this, 
   //                      SIGNAL(dropZoneItemClicked(OSItem*)));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //index = this->stackedWidget()->addWidget(illuminanceMapInspectorView);
   //m_inspectorIndexMap[IddObjectType::OS_IlluminanceMap] = index;
 
@@ -283,12 +285,12 @@ FacilityInspectorView::FacilityInspectorView(bool isIP,
   //                      SIGNAL(toggleUnitsClicked(bool)),
   //                      peopleInspectorView, 
   //                      SIGNAL(toggleUnitsClicked(bool)));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //isConnected = connect(peopleInspectorView, 
   //                      SIGNAL(dropZoneItemClicked(OSItem*)),
   //                      this, 
   //                      SIGNAL(dropZoneItemClicked(OSItem*)));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //index = this->stackedWidget()->addWidget(peopleInspectorView);
   //m_inspectorIndexMap[IddObjectType::OS_People] = index;
 
@@ -317,7 +319,7 @@ void FacilityInspectorView::onSelectModelObject(const openstudio::model::ModelOb
 
   QWidget* widget = this->stackedWidget()->widget(index);
   ModelObjectInspectorView* modelObjectInspectorView = qobject_cast<ModelObjectInspectorView*>(widget);
-  BOOST_ASSERT(modelObjectInspectorView);
+  OS_ASSERT(modelObjectInspectorView);
   modelObjectInspectorView->selectModelObject(modelObject);
   this->stackedWidget()->setCurrentIndex(index);
 }

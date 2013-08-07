@@ -51,39 +51,39 @@ namespace detail {
   ModelObjectActionSetAttributeRecord_Impl::ModelObjectActionSetAttributeRecord_Impl(const QSqlQuery& query, const ProjectDatabase& projectDatabase)
     : ModelObjectActionClauseRecord_Impl(query, projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
     value = query.value(ClauseRecordColumns::attributeName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_attributeName = value.toString().toStdString();
 
     value = query.value(ClauseRecordColumns::attributeValueType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_attributeValueType = AttributeValueType(value.toInt());
 
     value = query.value(ClauseRecordColumns::attributeValue);
     switch(m_attributeValueType.value()){
       case AttributeValueType::Boolean:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_attributeValue = value.toBool();
         break;
       case AttributeValueType::Integer:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_attributeValue = value.toInt();
         break;
       case AttributeValueType::Unsigned:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_attributeValue = value.toUInt();
         break;
       case AttributeValueType::Double:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_attributeValue = value.toDouble();
         break;
       case AttributeValueType::String:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_attributeValue.setValue(value.toString().toStdString());
         break;
       case AttributeValueType::AttributeVector:
@@ -91,7 +91,7 @@ namespace detail {
         m_attributeValue.clear();
         break;
       default:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
         break;
     }
 
@@ -169,7 +169,7 @@ namespace detail {
         query.bindValue(ClauseRecordColumns::attributeValue, QVariant());
         break;
       default:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
         break;
     }
   }
@@ -180,41 +180,41 @@ namespace detail {
 
     QVariant value;
     value = query.value(ClauseRecordColumns::attributeName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastAttributeName = value.toString().toStdString();
 
     value = query.value(ClauseRecordColumns::attributeValueType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastAttributeValueType = AttributeValueType(value.toInt());
 
     value = query.value(ClauseRecordColumns::attributeValue);
     
     switch(m_attributeValueType.value()){
       case AttributeValueType::Boolean:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_lastAttributeValue = value.toBool();
         break;
       case AttributeValueType::Integer:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_lastAttributeValue = value.toInt();
         break;
       case AttributeValueType::Unsigned:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_lastAttributeValue = value.toUInt();
         break;
       case AttributeValueType::Double:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_lastAttributeValue = value.toDouble();
         break;
       case AttributeValueType::String:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_lastAttributeValue.setValue(value.toString().toStdString());
         break;
       case AttributeValueType::AttributeVector:
         m_lastAttributeValue.clear();
         break;
       default:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
         break;
     }
   }
@@ -227,39 +227,39 @@ namespace detail {
 
     QVariant value;
     value = query.value(ClauseRecordColumns::attributeName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_attributeName == value.toString().toStdString());
 
     value = query.value(ClauseRecordColumns::attributeValueType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_attributeValueType == AttributeValueType(value.toInt()));
 
     value = query.value(ClauseRecordColumns::attributeValue);
     switch(m_attributeValueType.value()){
       case AttributeValueType::Boolean:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         result = result && (m_attributeValue.toBool() == value.toBool());
         break;
       case AttributeValueType::Integer:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         result = result && (m_attributeValue.toInt() == value.toInt());
         break;
       case AttributeValueType::Unsigned:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         result = result && (m_attributeValue.toUInt() == value.toUInt());
         break;
       case AttributeValueType::Double:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         result = result && (m_attributeValue.toDouble() == value.toDouble());
         break;
       case AttributeValueType::String:
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         result = result && (m_attributeValue.toString().toStdString() == value.toString().toStdString());
         break;
       case AttributeValueType::AttributeVector:
         break;
       default:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
         break;
     }
 
@@ -289,25 +289,25 @@ namespace detail {
 ModelObjectActionSetAttributeRecord::ModelObjectActionSetAttributeRecord(const openstudio::ruleset::ModelObjectActionSetAttribute& modelObjectActionSetAttribute, ProjectDatabase& projectDatabase)
   : ModelObjectActionClauseRecord(boost::shared_ptr<detail::ModelObjectActionSetAttributeRecord_Impl>(new detail::ModelObjectActionSetAttributeRecord_Impl(modelObjectActionSetAttribute, projectDatabase)), projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectActionSetAttributeRecord_Impl>());
 }
 
 ModelObjectActionSetAttributeRecord::ModelObjectActionSetAttributeRecord(const QSqlQuery& query, ProjectDatabase& projectDatabase)
   : ModelObjectActionClauseRecord(boost::shared_ptr<detail::ModelObjectActionSetAttributeRecord_Impl>(new detail::ModelObjectActionSetAttributeRecord_Impl(query, projectDatabase)), projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectActionSetAttributeRecord_Impl>());
 }
 
 ModelObjectActionSetAttributeRecord::ModelObjectActionSetAttributeRecord(boost::shared_ptr<detail::ModelObjectActionSetAttributeRecord_Impl> impl, ProjectDatabase projectDatabase)
   : ModelObjectActionClauseRecord(impl, projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectActionSetAttributeRecord_Impl>());
 }
 
 ModelObjectActionSetAttributeRecord::ModelObjectActionSetAttributeRecord(boost::shared_ptr<detail::ModelObjectActionSetAttributeRecord_Impl> impl)
   : ModelObjectActionClauseRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectActionSetAttributeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectActionSetAttributeRecord_Impl>());
 }
 
 boost::optional<ModelObjectActionSetAttributeRecord> ModelObjectActionSetAttributeRecord::factoryFromQuery(

@@ -37,6 +37,8 @@
 #include <analysis/RubyPerturbation.hpp>
 #include <analysis/RubyPerturbation_Impl.hpp>
 #include <analysis/WorkflowStep.hpp>
+
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/RubyException.hpp>
 
@@ -81,7 +83,7 @@ MeasuresTabController::MeasuresTabController()
   measuresTabView->variableGroupListView->setDelegate(m_variableGroupItemDelegate);
 
   bool bingo = connect(measuresTabView->selectBaselineButton,SIGNAL(clicked()),this,SLOT(selectBaseline()));
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){

@@ -41,7 +41,7 @@ namespace detail {
                                                                                                bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ZoneCapacitanceMultiplierResearchSpecial::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ZoneCapacitanceMultiplierResearchSpecial::iddObjectType());
   }
 
   ZoneCapacitanceMultiplierResearchSpecial_Impl::ZoneCapacitanceMultiplierResearchSpecial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -49,7 +49,7 @@ namespace detail {
                                                                                                bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ZoneCapacitanceMultiplierResearchSpecial::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ZoneCapacitanceMultiplierResearchSpecial::iddObjectType());
   }
 
   ZoneCapacitanceMultiplierResearchSpecial_Impl::ZoneCapacitanceMultiplierResearchSpecial_Impl(const ZoneCapacitanceMultiplierResearchSpecial_Impl& other,
@@ -88,14 +88,14 @@ namespace detail {
 
   double ZoneCapacitanceMultiplierResearchSpecial_Impl::temperatureCapacityMultiplier() const {
     boost::optional<double> value = getDouble(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::TemperatureCapacityMultiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity ZoneCapacitanceMultiplierResearchSpecial_Impl::getTemperatureCapacityMultiplier(bool returnIP) const {
     OptionalDouble value = temperatureCapacityMultiplier();
     OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::TemperatureCapacityMultiplier, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -105,14 +105,14 @@ namespace detail {
 
   double ZoneCapacitanceMultiplierResearchSpecial_Impl::humidityCapacityMultiplier() const {
     boost::optional<double> value = getDouble(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::HumidityCapacityMultiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity ZoneCapacitanceMultiplierResearchSpecial_Impl::getHumidityCapacityMultiplier(bool returnIP) const {
     OptionalDouble value = humidityCapacityMultiplier();
     OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::HumidityCapacityMultiplier, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -122,14 +122,14 @@ namespace detail {
 
   double ZoneCapacitanceMultiplierResearchSpecial_Impl::carbonDioxideCapacityMultiplier() const {
     boost::optional<double> value = getDouble(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::CarbonDioxideCapacityMultiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity ZoneCapacitanceMultiplierResearchSpecial_Impl::getCarbonDioxideCapacityMultiplier(bool returnIP) const {
     OptionalDouble value = carbonDioxideCapacityMultiplier();
     OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::CarbonDioxideCapacityMultiplier, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -152,7 +152,7 @@ namespace detail {
 
   void ZoneCapacitanceMultiplierResearchSpecial_Impl::resetTemperatureCapacityMultiplier() {
     bool result = setString(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::TemperatureCapacityMultiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneCapacitanceMultiplierResearchSpecial_Impl::setHumidityCapacityMultiplier(double humidityCapacityMultiplier) {
@@ -170,7 +170,7 @@ namespace detail {
 
   void ZoneCapacitanceMultiplierResearchSpecial_Impl::resetHumidityCapacityMultiplier() {
     bool result = setString(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::HumidityCapacityMultiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneCapacitanceMultiplierResearchSpecial_Impl::setCarbonDioxideCapacityMultiplier(double carbonDioxideCapacityMultiplier) {
@@ -188,7 +188,7 @@ namespace detail {
 
   void ZoneCapacitanceMultiplierResearchSpecial_Impl::resetCarbonDioxideCapacityMultiplier() {
     bool result = setString(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::CarbonDioxideCapacityMultiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   openstudio::Quantity ZoneCapacitanceMultiplierResearchSpecial_Impl::temperatureCapacityMultiplier_SI() const {
@@ -300,7 +300,7 @@ ZoneCapacitanceMultiplierResearchSpecial::ZoneCapacitanceMultiplierResearchSpeci
 ZoneCapacitanceMultiplierResearchSpecial::ZoneCapacitanceMultiplierResearchSpecial(Model& model)
   : ModelObject(ZoneCapacitanceMultiplierResearchSpecial::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl>());
+  OS_ASSERT(getImpl<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl>());
 }
 
 /// @endcond

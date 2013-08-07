@@ -155,25 +155,25 @@ namespace project {
     : RuleRecord(modelRule, boost::shared_ptr<detail::ModelRuleRecord_Impl>(new detail::ModelRuleRecord_Impl(modelRule, projectDatabase)), projectDatabase)
   {
     LOG(Trace,"Constructing ModelRuleRecord for " << modelRule.name() << ".");
-    BOOST_ASSERT(getImpl<detail::ModelRuleRecord_Impl>());
+    OS_ASSERT(getImpl<detail::ModelRuleRecord_Impl>());
   }
 
   ModelRuleRecord::ModelRuleRecord(const QSqlQuery& query, ProjectDatabase& projectDatabase)
     : RuleRecord(boost::shared_ptr<detail::ModelRuleRecord_Impl>(new detail::ModelRuleRecord_Impl(query, projectDatabase)), projectDatabase)
   {
-    BOOST_ASSERT(getImpl<detail::ModelRuleRecord_Impl>());
+    OS_ASSERT(getImpl<detail::ModelRuleRecord_Impl>());
   }
 
   ModelRuleRecord::ModelRuleRecord(boost::shared_ptr<detail::ModelRuleRecord_Impl> impl, ProjectDatabase projectDatabase)
     : RuleRecord(impl, projectDatabase)
   {
-    BOOST_ASSERT(getImpl<detail::ModelRuleRecord_Impl>());
+    OS_ASSERT(getImpl<detail::ModelRuleRecord_Impl>());
   }
 
   ModelRuleRecord::ModelRuleRecord(boost::shared_ptr<detail::ModelRuleRecord_Impl> impl)
     : RuleRecord(impl)
   {
-    BOOST_ASSERT(getImpl<detail::ModelRuleRecord_Impl>());
+    OS_ASSERT(getImpl<detail::ModelRuleRecord_Impl>());
   }
 
   boost::optional<ModelRuleRecord> ModelRuleRecord::factoryFromQuery(

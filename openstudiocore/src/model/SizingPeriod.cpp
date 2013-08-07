@@ -85,7 +85,7 @@ namespace detail {
 SizingPeriod::SizingPeriod(IddObjectType type,const Model& model)
   : ParentObject(type,model) 
 {
-  BOOST_ASSERT(getImpl<detail::SizingPeriod_Impl>());
+  OS_ASSERT(getImpl<detail::SizingPeriod_Impl>());
 }
 
 // constructor

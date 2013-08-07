@@ -180,7 +180,7 @@ namespace detail{
     bool resort(false);
     while (query.next()){
       boost::optional<DiscretePerturbationRecord> perturbation = DiscretePerturbationRecord::factoryFromQuery(query, database);
-      BOOST_ASSERT(perturbation);
+      OS_ASSERT(perturbation);
       result.push_back(*perturbation);
       OptionalInt index = result.back().perturbationVectorIndex();
       if (previousIndex && index) {
@@ -274,7 +274,7 @@ DiscreteVariableRecord::DiscreteVariableRecord(const analysis::DiscreteVariable&
         problemRecord.projectDatabase(),
         discreteVariable)
 {
-  BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
 
   constructDiscretePerturbationRecords(discreteVariable);
 }
@@ -291,7 +291,7 @@ DiscreteVariableRecord::DiscreteVariableRecord(const analysis::DiscreteVariable&
         functionRecord.projectDatabase(),
         discreteVariable)
 {
-  BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
 
   constructDiscretePerturbationRecords(discreteVariable);
 }
@@ -302,21 +302,21 @@ DiscreteVariableRecord::DiscreteVariableRecord(const QSqlQuery& query, ProjectDa
         database,
         analysis::OptionalInputVariable())
 {
-  BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
 }
 
 DiscreteVariableRecord::DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl,
                                                ProjectDatabase database)
   : InputVariableRecord(impl, database, analysis::OptionalInputVariable())
 {
-  BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
 }
 
 /// @cond
 DiscreteVariableRecord::DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl)
   : InputVariableRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DiscreteVariableRecord_Impl>());
 }
 /// @endcond
 

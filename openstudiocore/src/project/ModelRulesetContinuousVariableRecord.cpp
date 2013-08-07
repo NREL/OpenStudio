@@ -88,18 +88,18 @@ namespace detail {
       const QSqlQuery& query, ProjectDatabase& database)
     : ContinuousVariableRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(ModelRulesetContinuousVariableRecord::ColumnsType::attributeName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_attributeName = value.toString().toStdString();
 
     value = query.value(ModelRulesetContinuousVariableRecord::ColumnsType::rulesetRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_modelRulesetRecordId = value.toInt();
   }
 
@@ -144,10 +144,10 @@ namespace detail {
   {
     ruleset::ModelRuleset ruleset = modelRulesetRecord().modelRuleset();
     ruleset::ModelRuleVector rules = ruleset.rules();
-    BOOST_ASSERT(rules.size() == 1u);
+    OS_ASSERT(rules.size() == 1u);
     ruleset::ModelObjectFilterClauseVector modelObjectFilters =
         castVector<ruleset::ModelObjectFilterClause>(rules[0].filters());
-    BOOST_ASSERT(rules[0].actions().empty());
+    OS_ASSERT(rules[0].actions().empty());
     return analysis::ModelRulesetContinuousVariable(handle(),
                                                     uuidLast(),
                                                     name(),
@@ -174,38 +174,38 @@ namespace detail {
   void ModelRulesetContinuousVariableRecord_Impl::setLastValues(const QSqlQuery& query,
                                                                 ProjectDatabase& projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     ContinuousVariableRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(ModelRulesetContinuousVariableRecord::ColumnsType::attributeName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastAttributeName = value.toString().toStdString();
 
     value = query.value(ModelRulesetContinuousVariableRecord::ColumnsType::rulesetRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastModelRulesetRecordId = value.toInt();
   }
 
   bool ModelRulesetContinuousVariableRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = ContinuousVariableRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(ModelRulesetContinuousVariableRecord::ColumnsType::attributeName);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_attributeName == value.toString().toStdString());
 
     value = query.value(ModelRulesetContinuousVariableRecord::ColumnsType::rulesetRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_modelRulesetRecordId == value.toInt());
 
     return result;
@@ -238,7 +238,7 @@ ModelRulesetContinuousVariableRecord::ModelRulesetContinuousVariableRecord(
         problemRecord.projectDatabase(),
         modelRulesetContinuousVariable)
 {
-  BOOST_ASSERT(getImpl<detail::ModelRulesetContinuousVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelRulesetContinuousVariableRecord_Impl>());
 }
 
 ModelRulesetContinuousVariableRecord::ModelRulesetContinuousVariableRecord(
@@ -254,7 +254,7 @@ ModelRulesetContinuousVariableRecord::ModelRulesetContinuousVariableRecord(
         functionRecord.projectDatabase(),
         modelRulesetContinuousVariable)
 {
-  BOOST_ASSERT(getImpl<detail::ModelRulesetContinuousVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelRulesetContinuousVariableRecord_Impl>());
 }
 
 ModelRulesetContinuousVariableRecord::ModelRulesetContinuousVariableRecord(const QSqlQuery& query,
@@ -264,14 +264,14 @@ ModelRulesetContinuousVariableRecord::ModelRulesetContinuousVariableRecord(const
         database,
         analysis::OptionalContinuousVariable())
 {
-  BOOST_ASSERT(getImpl<detail::ModelRulesetContinuousVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelRulesetContinuousVariableRecord_Impl>());
 }
 
 ModelRulesetContinuousVariableRecord::ModelRulesetContinuousVariableRecord(boost::shared_ptr<detail::ModelRulesetContinuousVariableRecord_Impl> impl,
                                                                            ProjectDatabase database)
   : ContinuousVariableRecord(impl, database, analysis::OptionalContinuousVariable())
 {
-  BOOST_ASSERT(getImpl<detail::ModelRulesetContinuousVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelRulesetContinuousVariableRecord_Impl>());
 }
 
 boost::optional<ModelRulesetContinuousVariableRecord> ModelRulesetContinuousVariableRecord::factoryFromQuery(

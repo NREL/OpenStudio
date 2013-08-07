@@ -48,13 +48,13 @@ namespace detail {
   ModelObjectFilterTypeRecord_Impl::ModelObjectFilterTypeRecord_Impl(const QSqlQuery& query, const ProjectDatabase& projectDatabase)
     : ModelObjectFilterClauseRecord_Impl(query, projectDatabase)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
     value = query.value(ClauseRecordColumns::iddObjectType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_iddObjectType = IddObjectType(value.toString().toStdString());
   }
 
@@ -111,7 +111,7 @@ namespace detail {
 
     QVariant value;
     value = query.value(ClauseRecordColumns::iddObjectType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastIddObjectType = IddObjectType(value.toString().toStdString());
   }
 
@@ -123,7 +123,7 @@ namespace detail {
 
     QVariant value;
     value = query.value(ClauseRecordColumns::iddObjectType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_iddObjectType == IddObjectType(value.toString().toStdString()));
 
     return result;
@@ -148,25 +148,25 @@ namespace detail {
 ModelObjectFilterTypeRecord::ModelObjectFilterTypeRecord(const openstudio::ruleset::ModelObjectFilterType& modelObjectFilterType, ProjectDatabase& projectDatabase)
   : ModelObjectFilterClauseRecord(boost::shared_ptr<detail::ModelObjectFilterTypeRecord_Impl>(new detail::ModelObjectFilterTypeRecord_Impl(modelObjectFilterType, projectDatabase)), projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterTypeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterTypeRecord_Impl>());
 }
 
 ModelObjectFilterTypeRecord::ModelObjectFilterTypeRecord(const QSqlQuery& query, ProjectDatabase& projectDatabase)
   : ModelObjectFilterClauseRecord(boost::shared_ptr<detail::ModelObjectFilterTypeRecord_Impl>(new detail::ModelObjectFilterTypeRecord_Impl(query, projectDatabase)), projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterTypeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterTypeRecord_Impl>());
 }
 
 ModelObjectFilterTypeRecord::ModelObjectFilterTypeRecord(boost::shared_ptr<detail::ModelObjectFilterTypeRecord_Impl> impl, ProjectDatabase projectDatabase)
   : ModelObjectFilterClauseRecord(impl, projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterTypeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterTypeRecord_Impl>());
 }
 
 ModelObjectFilterTypeRecord::ModelObjectFilterTypeRecord(boost::shared_ptr<detail::ModelObjectFilterTypeRecord_Impl> impl)
   : ModelObjectFilterClauseRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterTypeRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterTypeRecord_Impl>());
 }
 
 boost::optional<ModelObjectFilterTypeRecord> ModelObjectFilterTypeRecord::factoryFromQuery(

@@ -21,6 +21,9 @@
 #include <openstudio_lib/ServiceWaterGridItems.hpp>
 #include <openstudio_lib/IconLibrary.hpp>
 #include <openstudio_lib/LoopScene.hpp>
+
+#include <utilities/core/Assert.hpp>
+
 #include <QPainter>
 #include <QMimeData>
 #include <QGraphicsSceneDragDropEvent>
@@ -56,6 +59,8 @@
 #include <model/SetpointManagerScheduled_Impl.hpp>
 #include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
 #include <model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp>
+#include <model/SetpointManagerWarmest.hpp>
+#include <model/SetpointManagerWarmest_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/Splitter.hpp>
@@ -75,6 +80,7 @@ bool hasSPM(model::Node & node)
       || node.getSetpointManagerMixedAir()
       || node.setpointManagerOutdoorAirReset()
       || node.setpointManagerScheduled()
+      || node.setpointManagerWarmest()
       || node.setpointManagerFollowOutdoorAirTemperature() )
   {
     return true;
@@ -817,7 +823,7 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
 {
   boost::optional<model::Loop> optionalLoop = splitter.loop();
 
-  BOOST_ASSERT( optionalLoop );
+  OS_ASSERT( optionalLoop );
 
   model::Loop loop = optionalLoop.get(); 
 
@@ -1806,6 +1812,10 @@ void OneThreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
       {
         painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_outdoorair.png"));
       }  
+      else if( node->setpointManagerWarmest() )
+      {
+        painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_warmest.png"));
+      }  
     }  
   }
 }
@@ -1939,6 +1949,10 @@ void TwoFourNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
       {
         painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_outdoorair_right.png"));
       }  
+      else if( node->setpointManagerWarmest() )
+      {
+        painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest_right.png"));
+      }  
     }  
   }
 }
@@ -2020,6 +2034,10 @@ void OAStraightNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
       else if( node->setpointManagerOutdoorAirReset() )
       {
         painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_outdoorair.png"));
+      }  
+      else if( node->setpointManagerWarmest() )
+      {
+        painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest.png"));
       }  
     }  
   }
@@ -2901,13 +2919,13 @@ NodeContextButtonItem::NodeContextButtonItem(GridItem * parent)
   bool bingo;
 
   bingo = connect(this,SIGNAL(mouseClicked()),this,SLOT(showContextMenu()));
-  BOOST_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   bingo = connect( this, 
              SIGNAL(removeModelObjectClicked( model::ModelObject & ) ),
              parent,
              SIGNAL(removeModelObjectClicked( model::ModelObject & ) ) );
-  BOOST_ASSERT(bingo);
+  OS_ASSERT(bingo);
 }
 
 void NodeContextButtonItem::showContextMenu()
@@ -2929,7 +2947,7 @@ void NodeContextButtonItem::showContextMenu()
     QAction removeSPMAction(QIcon(":/images/delete-icon.png"),"Delete Setpoint Manager",&menu);
     menu.addAction(&removeSPMAction);
     bingo = connect(&removeSPMAction,SIGNAL(triggered()),this,SLOT(onRemoveSPMActionTriggered()));
-    BOOST_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     menu.exec(menuPos); 
   }
@@ -2958,6 +2976,10 @@ void NodeContextButtonItem::onRemoveSPMActionTriggered()
         emit removeModelObjectClicked( spm.get() );
       }
       else if(boost::optional<SetpointManagerScheduled> spm = node.setpointManagerScheduled())
+      {
+        emit removeModelObjectClicked( spm.get() );
+      }
+      else if(boost::optional<SetpointManagerWarmest> spm = node.setpointManagerWarmest())
       {
         emit removeModelObjectClicked( spm.get() );
       }
