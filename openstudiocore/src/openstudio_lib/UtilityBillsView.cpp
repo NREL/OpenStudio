@@ -20,20 +20,29 @@
 #include <openstudio_lib/UtilityBillsView.hpp>
 
 #include <openstudio_lib/ModelObjectListView.hpp>
+#include <openstudio_lib/ModelObjectTypeListView.hpp>
+#include <openstudio_lib/OSItem.hpp>
 
 #include "../shared_gui_components/Buttons.hpp"
-#include "../shared_gui_components/OSDoubleEdit.hpp"
-#include "../shared_gui_components/OSIntegerEdit.hpp"
-#include "../shared_gui_components/OSLineEdit.hpp"
 
 #include <model/Model_Impl.hpp>
+#include <model/UtilityBill_Impl.hpp>
+#include <model/WeatherFile.hpp>
+#include <model/WeatherFile_Impl.hpp>
+#include <model/YearDescription.hpp>
+#include <model/YearDescription_Impl.hpp>
+
+#include <utilities/data/DataEnums.hpp>
+#include <utilities/time/Date.hpp>
 
 #include <QBoxLayout>
 #include <QButtonGroup>
 #include <QDate>
 #include <QDateEdit>
+#include <QDoubleSpinBox>
 #include <QGroupBox>
 #include <QLabel>
+#include <QLineEdit>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QStackedWidget>
@@ -45,11 +54,67 @@ namespace openstudio {
 
 // "Utility Calibration"
 
-UtilityBillsView::UtilityBillsView(const model::Model & model, QWidget * parent)
-  : ModelSubTabView(new ModelObjectListView(IddObjectType::OS_BuildingStory, model, true, parent),// TODO use OS_UtilityBill
-               new UtilityBillsInspectorView(model,true),
-               parent)
+UtilityBillsView::UtilityBillsView(const openstudio::model::Model& model, QWidget * parent)
+                     : ModelSubTabView(new ModelObjectTypeListView(UtilityBillsView::modelObjectTypesAndNames(), 
+                                                                   model, 
+                                                                   false, 
+                                                                   OSItem::COLLAPSIBLE_LIST_HEADER, 
+                                                                   parent),
+                                       new UtilityBillsInspectorView(model,parent),
+                                       parent)
 {
+
+  boost::optional<model::YearDescription> yearDescription = model.yearDescription();
+  if(yearDescription){
+    boost::optional<int> calendarYear = yearDescription.get().calendarYear();
+    if(calendarYear){
+      int temp = *calendarYear;
+    }
+  }
+
+  boost::optional<model::WeatherFile> weatherFile = model.weatherFile();
+  if(weatherFile){
+    // TODO weatherFile.get().startDate();
+    // TODO weatherFile.get().endDate();
+  }
+
+}
+
+std::vector<std::pair<IddObjectType, std::string> > UtilityBillsView::modelObjectTypesAndNames()
+{
+ //Electric Utility Bills
+//Gas Utility Bills
+//District Cooling Utility Bills
+//District Heating Utility Bills
+//Gasoline Bills
+//Diesel Bills
+//Coal Bills
+//Fuel Oil #1 Bills
+//Fuel Oil #2 Bills
+//Propane Bills
+//Water Bills
+
+//OPENSTUDIO_ENUM(FuelType,
+//  ((Electricity))
+//  ((Gas)(NaturalGas))
+//  ((Gasoline))
+//  ((Diesel))
+//  ((FuelOil_1))
+//  ((FuelOil_2))
+//  ((Propane))
+//  ((Water))
+//  ((Steam))
+//  ((DistrictCooling))
+//  ((DistrictHeating))
+//  ((EnergyTransfer))); 
+  
+  std::vector<std::pair<IddObjectType, std::string> > result;
+  result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_UtilityBill, "Electric Utility Bills"));
+  result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_UtilityBill, "Gas Utility Bills"));
+  result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_UtilityBill, "District Heating Utility Bills"));
+  result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_UtilityBill, "District Cooling Utility Bills"));
+
+  return result;
 }
 
 
@@ -57,13 +122,77 @@ UtilityBillsView::UtilityBillsView(const model::Model & model, QWidget * parent)
 
 
 UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
-                                                     bool addScrollArea,
-                                                     QWidget * parent)
+  bool addScrollArea,
+  QWidget * parent)
   : ModelObjectInspectorView(model,
-                             true,
-                             parent),
+      true,
+      parent),
     m_billFormatDialog(NULL)
 {
+  boost::optional<model::UtilityBill> electricBill;
+  boost::optional<model::UtilityBill> gasBill;
+  boost::optional<model::UtilityBill> gasolineBill;
+  boost::optional<model::UtilityBill> dieselBill;
+  boost::optional<model::UtilityBill> coalBill;
+  boost::optional<model::UtilityBill> fuelOil1Bill;
+  boost::optional<model::UtilityBill> fuelOil2Bill;
+  boost::optional<model::UtilityBill> propaneBill;
+  boost::optional<model::UtilityBill> waterBill;
+  boost::optional<model::UtilityBill> steamBill;
+  boost::optional<model::UtilityBill> districtCoolingBill;
+  boost::optional<model::UtilityBill> districtHeatingBill;
+  boost::optional<model::UtilityBill> energyTransferBill;
+
+  std::vector<WorkspaceObject> workspaceObjects = m_model.getObjectsByType(IddObjectType::OS_UtilityBill);
+
+  if(workspaceObjects.size() > 0){
+    bool success = true;
+  }
+  
+  // sort by name
+  std::sort(workspaceObjects.begin(), workspaceObjects.end(), WorkspaceObjectNameGreater());
+
+  BOOST_FOREACH(WorkspaceObject workspaceObject,workspaceObjects){
+    if(!workspaceObject.handle().isNull()){
+      openstudio::model::ModelObject modelObject = workspaceObject.cast<openstudio::model::ModelObject>();
+      if(boost::optional<model::UtilityBill> utilityBill = modelObject.optionalCast<model::UtilityBill>()) {
+        if(utilityBill){
+          FuelType fuelType = utilityBill.get().fuelType();
+
+          if(fuelType ==  FuelType::Electricity){
+            m_utilityBill = utilityBill.get();
+            //electricBill =  utilityBill.get();
+          } else if(fuelType ==  FuelType::Gas){
+            gasBill =  utilityBill.get();            
+          } else if(fuelType ==  FuelType::Gasoline){
+            gasolineBill =  utilityBill.get();
+          } else if(fuelType ==  FuelType::Diesel){
+            dieselBill =  utilityBill.get();
+          } else if(fuelType ==  FuelType::FuelOil_1){
+            fuelOil1Bill =  utilityBill.get();
+          } else if(fuelType ==  FuelType::FuelOil_2){
+            fuelOil2Bill =  utilityBill.get();
+          } else if(fuelType ==  FuelType::Propane){
+            propaneBill =  utilityBill.get();
+          } else if(fuelType ==  FuelType::Water){
+            waterBill =  utilityBill.get();
+          } else if(fuelType ==  FuelType::Steam){
+            steamBill =  utilityBill.get();
+          } else if(fuelType ==  FuelType::DistrictCooling){
+            districtCoolingBill =  utilityBill.get();
+          } else if(fuelType ==  FuelType::DistrictHeating){
+            districtHeatingBill =  utilityBill.get();
+          } else if(fuelType ==  FuelType::EnergyTransfer){
+            energyTransferBill =  utilityBill.get();
+          } else {
+            // Shouldn't be here
+            Q_ASSERT(false);
+          }
+        }
+      }
+    }
+  }
+
   createWidgets();
 }
 
@@ -88,16 +217,14 @@ void UtilityBillsInspectorView::createWidgets()
   vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   vLayout->setSpacing(10);
 
-
   m_buttonGroup = new QButtonGroup(this);
 
   isConnected = connect(m_buttonGroup, SIGNAL(buttonClicked(int)),
-    this, SLOT(deleteBill(int)));
+    this, SLOT(deleteBillingPeriod(int)));
   Q_ASSERT(isConnected);
 
   //m_buttonGroup->addButton(radioButton,0); // TODO need to add delete button to this
   
-
   // Name
 
   vLayout = new QVBoxLayout();
@@ -109,16 +236,14 @@ void UtilityBillsInspectorView::createWidgets()
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_name = new OSLineEdit();
-  m_name->setReadOnly(true);
+  m_name = new QLineEdit();
+  //m_name->setReadOnly(true);
   m_name->setFixedWidth(OS_EDIT_WIDTH);
-  //m_name->bind();
   vLayout->addWidget(m_name);
 
   mainLayout->addLayout(vLayout);
 
-
-  // Consumption Units and Energy Demand Units
+  // Consumption Units and Peak Demand Units
 
   QGridLayout * gridLayout = new QGridLayout();
   gridLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
@@ -130,40 +255,57 @@ void UtilityBillsInspectorView::createWidgets()
   vLayout->setSpacing(10);
 
   label = new QLabel();
-  label->setText("Consumption Units");
+  label->setText("\nConsumption Units");
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_consumptionUnits = new OSLineEdit();
-  m_consumptionUnits->setReadOnly(true);
+  m_consumptionUnits = new QLineEdit();
+  //m_consumptionUnits->setReadOnly(true);
   m_consumptionUnits->setFixedWidth(OS_EDIT_WIDTH);
-  //m_consumptionUnits->bind();
   vLayout->addWidget(m_consumptionUnits);
 
   gridLayout->addLayout(vLayout,0,0,Qt::AlignLeft | Qt::AlignTop);
 
-  vLayout = new QVBoxLayout();
-  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-  vLayout->setSpacing(10);
+  if(true){
+  //if(fuelType == Electricity){
+    vLayout = new QVBoxLayout();
+    vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    vLayout->setSpacing(10);
 
-  label = new QLabel();
-  label->setText("Energy Demand Units");
-  label->setObjectName("H2");
-  vLayout->addWidget(label);
+    label = new QLabel();
+    label->setText("\nPeak Demand Units");
+    label->setObjectName("H2");
+    vLayout->addWidget(label);
 
-  m_energyDemandUnits = new OSLineEdit();
-  m_energyDemandUnits->setReadOnly(true);
-  m_energyDemandUnits->setFixedWidth(OS_EDIT_WIDTH);
-  //m_energyDemandUnits->bind();
-  vLayout->addWidget(m_energyDemandUnits);
+    m_energyDemandUnits = new QLineEdit();
+    //m_energyDemandUnits->setReadOnly(true);
+    m_energyDemandUnits->setFixedWidth(OS_EDIT_WIDTH);
+    vLayout->addWidget(m_energyDemandUnits);
 
-  gridLayout->addLayout(vLayout,0,1,Qt::AlignLeft | Qt::AlignTop);
+    gridLayout->addLayout(vLayout,0,1,Qt::AlignLeft | Qt::AlignTop);
+  
+    vLayout = new QVBoxLayout();
+    vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    vLayout->setSpacing(10);
+
+    label = new QLabel();
+    label->setText("Peak Demand\nWindow Timesteps");
+    label->setObjectName("H2");
+    vLayout->addWidget(label);
+
+    m_windowTimesteps = new QDoubleSpinBox();
+    m_windowTimesteps->setMinimum(1);
+    m_windowTimesteps->setDecimals(0);
+    m_windowTimesteps->setFixedWidth(OS_EDIT_WIDTH);
+    vLayout->addWidget(m_windowTimesteps);
+
+    gridLayout->addLayout(vLayout,0,2,Qt::AlignLeft | Qt::AlignTop);
+  }
 
   gridLayout->setColumnStretch(100,100);
   
   mainLayout->addLayout(gridLayout);
 
-  
   // Weather File
 
   vLayout = new QVBoxLayout();
@@ -175,14 +317,12 @@ void UtilityBillsInspectorView::createWidgets()
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_weatherFile = new OSLineEdit();
-  m_weatherFile->setReadOnly(true);
+  m_weatherFile = new QLineEdit();
+ // m_weatherFile->setReadOnly(true);
   m_weatherFile->setFixedWidth(OS_EDIT_WIDTH);
-  //m_weatherFile->bind();
   vLayout->addWidget(m_weatherFile);
 
   mainLayout->addLayout(vLayout);
-
 
   // Billing Period
 
@@ -197,45 +337,27 @@ void UtilityBillsInspectorView::createWidgets()
 
   mainLayout->addLayout(vLayout);
 
-
   // Bill Widget Grid Layouts
 
-  m_beforeRangeGridLayout = new QGridLayout();
-  m_beforeRangeGridLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-  m_beforeRangeGridLayout->setContentsMargins(0,0,0,0);
-  m_beforeRangeGridLayout->setSpacing(10);
-  mainLayout->addLayout(m_beforeRangeGridLayout);
-
-  m_inRangeGridLayout = new QGridLayout();
-  m_inRangeGridLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-  m_inRangeGridLayout->setContentsMargins(0,0,0,0);
-  m_inRangeGridLayout->setSpacing(10);
-
-  m_groupBox = new QGroupBox("Within Range");
-  m_groupBox->setLayout(m_inRangeGridLayout);
-  mainLayout->addWidget(m_groupBox);
-
-  showGroupBoxIfBills();
-
-  m_afterRangeGridLayout = new QGridLayout();
-  m_afterRangeGridLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-  m_afterRangeGridLayout->setContentsMargins(0,0,0,0);
-  m_afterRangeGridLayout->setSpacing(10);
-  mainLayout->addLayout(m_afterRangeGridLayout);
+  m_billGridLayout = new QGridLayout();
+  m_billGridLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+  m_billGridLayout->setContentsMargins(0,0,0,0);
+  m_billGridLayout->setSpacing(10);
+  mainLayout->addLayout(m_billGridLayout);
 
   // Add Bill Button
   QHBoxLayout * hLayout = new QHBoxLayout();
   hLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
-  m_addNewBill = new QPushButton();
-  m_addNewBill->setFlat(true);
-  m_addNewBill->setObjectName("AddButton");
-  m_addNewBill->setToolTip("Add new object");
-  m_addNewBill->setFixedSize(24,24);
-  hLayout->addWidget(m_addNewBill);
+  m_addBillingPeriod = new QPushButton();
+  m_addBillingPeriod->setFlat(true);
+  m_addBillingPeriod->setObjectName("AddButton");
+  m_addBillingPeriod->setToolTip("Add new object");
+  m_addBillingPeriod->setFixedSize(24,24);
+  hLayout->addWidget(m_addBillingPeriod);
 
-  isConnected = connect(m_addNewBill, SIGNAL(clicked(bool)),
-    this, SLOT(addBill(bool)));
+  isConnected = connect(m_addBillingPeriod, SIGNAL(clicked(bool)),
+    this, SLOT(addBillingPeriod(bool)));
   Q_ASSERT(isConnected);
 
   label = new QLabel();
@@ -252,29 +374,70 @@ void UtilityBillsInspectorView::createWidgets()
   isConnected = connect(m_billFormatDialog, SIGNAL(billFormatSignal(BillFormat)),
     this, SLOT(setBillFormat(BillFormat)));
   Q_ASSERT(isConnected);
+
+  // TODO showBillFormatDialog();
+
 }
 
-  // TODO
-  //QScrollArea * centralScrollArea = new QScrollArea(this);
-  //centralScrollArea->setFrameStyle(QFrame::NoFrame);
-  //centralScrollArea->setObjectName("GrayWidget");
-  //centralScrollArea->setWidgetResizable(true);
-  //centralScrollArea->setWidget(m_centralWidget);
+bool UtilityBillsInspectorView::setStartDate(const Date& startDate)
+{
+  return false;
+}
+Date UtilityBillsInspectorView::startDate() const
+{
+  return Date();
+}
 
-  //// The right pane
+bool UtilityBillsInspectorView::setEndDate(const Date& endDate)
+{
+  return false;
+}
+Date UtilityBillsInspectorView::endDate() const
+{
+  return Date();
+}
 
-  //m_rightScrollArea = new QScrollArea(this);
-  //m_rightScrollArea->setFrameStyle(QFrame::NoFrame);
-  //m_rightScrollArea->setObjectName("GrayWidget");
-  //m_rightScrollArea->setWidgetResizable(true);
+bool UtilityBillsInspectorView::setNumberOfDays(unsigned numberOfDays)
+{
+  return false;
+}
+unsigned UtilityBillsInspectorView::numberOfDays() const
+{
+  return 0;
+}
 
-  //QSplitter * splitter = new QSplitter(this);
-  //splitter->setOrientation(Qt::Horizontal);
-  //splitter->addWidget(leftPaneWidget);
-  //splitter->addWidget(centralScrollArea);
-  //splitter->addWidget(m_rightScrollArea);
+bool UtilityBillsInspectorView::setConsumption(double consumption)
+{
+  return false;
+}
+boost::optional<double> UtilityBillsInspectorView::consumption() const
+{
+  boost::optional<double> value;
+  value = 0.1;
+  return value;
+}
 
+bool UtilityBillsInspectorView::setPeakDemand(double peakDemand)
+{
+  return false;
+}
+boost::optional<double> UtilityBillsInspectorView::peakDemand() const
+{
+  boost::optional<double> value;
+  value = 0.1;
+  return value;
+}
 
+bool UtilityBillsInspectorView::setTotalCost(double totalCost)
+{
+  return false;
+}
+boost::optional<double> UtilityBillsInspectorView::totalCost() const
+{
+  boost::optional<double> value;
+  value = 0.1;
+  return value;
+}
 
 //void UtilityBillsInspectorView::onSelectItem(OSItem *item)
 //{
@@ -299,49 +462,34 @@ void UtilityBillsInspectorView::showBillFormatDialog()
   m_billFormatDialog->show();
 }
 
-
-void UtilityBillsInspectorView::showGroupBoxIfBills()
-{
-  if(m_inRangeGridLayout->rowCount() > 0){
-    m_groupBox->show();
-  }
-  else{
-    m_groupBox->hide();
-  }
-}
-
 void UtilityBillsInspectorView::showAddButton()
 {
-  m_addNewBill->show();
+  m_addBillingPeriod->show();
 }
 
 void UtilityBillsInspectorView::hideAddButton()
 {
-  m_addNewBill->hide();
+  m_addBillingPeriod->hide();
 }
 
 void UtilityBillsInspectorView::enableAddButton()
 {
-  m_addNewBill->setEnabled(true);
+  m_addBillingPeriod->setEnabled(true);
 }
 
 void UtilityBillsInspectorView::disableAddButton()
 {
-  m_addNewBill->setEnabled(false);
+  m_addBillingPeriod->setEnabled(false);
 }
 
 ////// SLOTS ///////
 
-void UtilityBillsInspectorView::addBill(bool checked)
+void UtilityBillsInspectorView::addBillingPeriod(bool checked)
 {
-  if(m_sortedBills.size() == 0){
-    showBillFormatDialog();
-  }
-
-  UtilityBillWidget * utilityBillWidget = new UtilityBillWidget(m_inRangeGridLayout,m_billFormat,m_showPeak);
+  // TODO UtilityBillWidget * utilityBillWidget = new UtilityBillWidget(m_billGridLayout,m_utilityBill,m_billFormat);
 }
 
-void UtilityBillsInspectorView::deleteBill(int index)
+void UtilityBillsInspectorView::deleteBillingPeriod(int index)
 {
 }
 
@@ -350,175 +498,168 @@ void UtilityBillsInspectorView::setBillFormat(BillFormat billFormat)
   m_billFormat = billFormat;
 }
 
+//void UtilityBillsInspectorView::resetUtilityBills()
+//{
+//}
 
 //**********************************************************************************************************
 
 
 UtilityBillWidget::UtilityBillWidget(QGridLayout * gridLayout,
+  model::UtilityBill & utilityBill,
   BillFormat billFormat,
-  bool showPeak,
+  // bool showPeak,
   QWidget * parent)
-  : QWidget(parent)
+  : QWidget(parent),
+  m_utilityBill(utilityBill)
 {
-  createWidgets(gridLayout,billFormat,showPeak);
+  createWidgets(gridLayout,billFormat);
 }
 
 void UtilityBillWidget::createWidgets(QGridLayout * gridLayout,
-  BillFormat billFormat,
-  bool showPeak)
+  BillFormat billFormat)
 {
   int columnIndex = 0;
 
   int rowIndex = gridLayout->rowCount();
+
+  static bool hasHeader = false;
+  if(!hasHeader){
+    hasHeader = true;
+        
+    if(billFormat == STARTDATE_ENDDATE){
+      getStartDateLabel(gridLayout, rowIndex, columnIndex++);
+      getEndDateLabel(gridLayout, rowIndex, columnIndex++);
+    }
+    else if(billFormat == STARTDATE_NUMDAYS){
+      getStartDateLabel(gridLayout, rowIndex, columnIndex++);
+      getBillingPeriodLabel(gridLayout, rowIndex, columnIndex++);
+    }
+    else if(billFormat == ENDDATE_NUMDAYS){
+      getBillingPeriodLabel(gridLayout, rowIndex, columnIndex++);
+      getEndDateLabel(gridLayout, rowIndex, columnIndex++);      
+    }
+    else{
+      Q_ASSERT(false);
+    }
+
+    columnIndex++;
+
+    getLabel(gridLayout,rowIndex,columnIndex++,QString("Energy Use (kWh)"));
+    if(true){
+    // TODO if(fuelType == Electricity){
+      getLabel(gridLayout,rowIndex,columnIndex++,QString("Peak (kW)"));
+    }
+    getLabel(gridLayout,rowIndex,columnIndex++,QString("Cost"));
+    getLabel(gridLayout,rowIndex,columnIndex++,QString(""));
+
+    gridLayout->setColumnStretch(1000,1000);
+    
+    columnIndex = 0;
+
+    rowIndex++;
+  }
   
   if(billFormat == STARTDATE_ENDDATE){
-    getStartDate(gridLayout, rowIndex, columnIndex);
-    getEndDate(gridLayout, rowIndex, columnIndex);
+    getStartDateCalendar(gridLayout, rowIndex, columnIndex++);
+    getEndDateCalendar(gridLayout, rowIndex, columnIndex++);
   }
   else if(billFormat == STARTDATE_NUMDAYS){
-    getStartDate(gridLayout, rowIndex, columnIndex);
-    getBillingPeriod(gridLayout, rowIndex, columnIndex);
+    getStartDateCalendar(gridLayout, rowIndex, columnIndex++);
+    getBillingPeriodLineEdit(gridLayout, rowIndex, columnIndex++);
   }
   else if(billFormat == ENDDATE_NUMDAYS){
-    getBillingPeriod(gridLayout, rowIndex, columnIndex);
-    getEndDate(gridLayout, rowIndex, columnIndex);
+    getEndDateCalendar(gridLayout, rowIndex, columnIndex++);
+    getBillingPeriodLineEdit(gridLayout, rowIndex, columnIndex++);
   }
   else{
     Q_ASSERT(false);
   }
 
-  QLabel * label = NULL;
+  columnIndex++;
 
-  QVBoxLayout * vLayout = NULL;
-  
-  vLayout = new QVBoxLayout();
-  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-
-  label = new QLabel();
-  label->setText("Energy Use (kWh)");
-  label->setObjectName("H2");
-  vLayout->addWidget(label);
-
-  m_energyUseDoubleEdit = new OSDoubleEdit();
+  m_energyUseDoubleEdit = new QDoubleSpinBox();
   m_energyUseDoubleEdit->setFixedWidth(OS_UTILITY_WIDTH);
-  //m_energyUseDoubleEdit->bind();
-  vLayout->addWidget(m_energyUseDoubleEdit);
-
-  gridLayout->addLayout(vLayout,rowIndex,++columnIndex,Qt::AlignLeft | Qt::AlignTop);
-
-  vLayout = new QVBoxLayout();
-  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-
-  label = new QLabel();
-  label->setText("Peak (kW)");
-  label->setObjectName("H2");
-  vLayout->addWidget(label);
-
-  m_peaklDoubleEdit = new OSDoubleEdit();
-  m_peaklDoubleEdit->setFixedWidth(OS_UTILITY_WIDTH);
-  //m_peaklDoubleEdit->bind();
-  vLayout->addWidget(m_peaklDoubleEdit);
-
-  gridLayout->addLayout(vLayout,rowIndex,++columnIndex,Qt::AlignLeft | Qt::AlignTop);
-
-
-  vLayout = new QVBoxLayout();
-  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-
-  label = new QLabel();
-  label->setText("Cost");
-  label->setObjectName("H2");
-  vLayout->addWidget(label);
-
-  m_costDoubleEdit = new OSDoubleEdit();
-  m_costDoubleEdit->setFixedWidth(OS_UTILITY_WIDTH);
-  //m_costDoubleEdit->bind();
-  vLayout->addWidget(m_costDoubleEdit);
-
-  gridLayout->addLayout(vLayout,rowIndex,++columnIndex,Qt::AlignLeft | Qt::AlignTop);
-
+  gridLayout->addWidget(m_energyUseDoubleEdit,rowIndex,columnIndex++,Qt::AlignLeft | Qt::AlignTop);
   
-  vLayout = new QVBoxLayout();
-  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+  m_peaklDoubleEdit = new QDoubleSpinBox();
+  m_peaklDoubleEdit->setFixedWidth(OS_UTILITY_WIDTH);
+  gridLayout->addWidget(m_peaklDoubleEdit,rowIndex,columnIndex++,Qt::AlignLeft | Qt::AlignTop);
 
-  label = new QLabel();
-  vLayout->addWidget(label);
+  m_costDoubleEdit = new QDoubleSpinBox();
+  m_costDoubleEdit->setFixedWidth(OS_UTILITY_WIDTH);
+  gridLayout->addWidget(m_costDoubleEdit,rowIndex,columnIndex++,Qt::AlignLeft | Qt::AlignTop);
 
   m_deleteBillWidget = new SofterRemoveButton();
-  vLayout->addWidget(m_deleteBillWidget);
-  
-  gridLayout->addLayout(vLayout,rowIndex,++columnIndex,Qt::AlignLeft | Qt::AlignTop);
-
-
-  gridLayout->setColumnStretch(100,100);
+  gridLayout->addWidget(m_deleteBillWidget,rowIndex,columnIndex++,Qt::AlignLeft | Qt::AlignTop);
 }
 
-void UtilityBillWidget::getStartDate(QGridLayout * gridLayout, int & rowIndex, int & columnIndex)
+void UtilityBillWidget::getLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex, const QString& text)
 {
-  QVBoxLayout * vLayout = new QVBoxLayout();
-  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+  QLabel * label = new QLabel();
+  label->setText(text);
+  label->setObjectName("H2");
 
-  m_startDateLbl = new QLabel();
-  m_startDateLbl->setText("Start Date");
-  m_startDateLbl->setObjectName("H2");
-  vLayout->addWidget(m_startDateLbl);
-   
-  m_startDateEdit = new QDateEdit();
-  m_startDateEdit->setCalendarPopup(true);
-  m_startDateEdit->setFixedWidth(OS_UTILITY_WIDTH);
-  vLayout->addWidget(m_startDateEdit);
+  gridLayout->addWidget(label,rowIndex,columnIndex,Qt::AlignLeft| Qt::AlignTop);
+}
+
+void UtilityBillWidget::getStartDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex)
+{
+  getLabel(gridLayout,rowIndex,columnIndex,QString("Start Date"));
+}
+
+void UtilityBillWidget::getDateEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex, QDateEdit * & dateEdit)
+{
+  dateEdit = new QDateEdit();
+  dateEdit->setCalendarPopup(true);
+  dateEdit->setFixedWidth(OS_UTILITY_WIDTH);
+
+  gridLayout->addWidget(dateEdit,rowIndex,columnIndex,Qt::AlignLeft| Qt::AlignTop);
+}
+
+void UtilityBillWidget::getStartDateCalendar(QGridLayout * gridLayout, int rowIndex, int columnIndex)
+{
+  getDateEdit(gridLayout, rowIndex, columnIndex, m_startDateEdit);
 
   bool isConnected = connect(m_startDateEdit,SIGNAL(dateChanged(const QDate &)),
-    this,SIGNAL(dstStartDateChanged(const QDate &)));
-
-
-  gridLayout->addLayout(vLayout,rowIndex,++columnIndex,Qt::AlignLeft| Qt::AlignTop);
+    this,SLOT(startDateChanged(const QDate &)));
+  Q_ASSERT(isConnected);
 }
 
-void UtilityBillWidget::getEndDate(QGridLayout * gridLayout, int & rowIndex, int & columnIndex)
+void UtilityBillWidget::getEndDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex)
 {
-  
-  QVBoxLayout * vLayout = new QVBoxLayout();
-  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-
-  m_endDateLbl = new QLabel();
-  m_endDateLbl->setText("End Date");
-  m_endDateLbl->setObjectName("H2");
-  vLayout->addWidget(m_endDateLbl);
-
-  m_endDateEdit = new QDateEdit();
-  m_endDateEdit->setCalendarPopup(true);
-  m_endDateEdit->setFixedWidth(OS_UTILITY_WIDTH);
-  //m_endDateEdit->bind(); not available in an OS object
-  vLayout->addWidget(m_endDateEdit);
-
-  connect(m_endDateEdit,SIGNAL(dateChanged(const QDate &)),
-    this,SIGNAL(dstEndDateChanged(const QDate &)));
-
-  gridLayout->addLayout(vLayout,rowIndex,++columnIndex,Qt::AlignLeft | Qt::AlignTop);
+  getLabel(gridLayout,rowIndex,columnIndex,QString("End Date"));
 }
 
-void UtilityBillWidget::getBillingPeriod(QGridLayout * gridLayout, int & rowIndex, int & columnIndex)
+void UtilityBillWidget::getEndDateCalendar(QGridLayout * gridLayout, int rowIndex, int columnIndex)
 {
-  QVBoxLayout * vLayout = new QVBoxLayout();
-  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+  getDateEdit(gridLayout, rowIndex, columnIndex, m_endDateEdit);
 
-  m_billingPeriodIntLbl = new QLabel();
-  m_billingPeriodIntLbl->setText("Billing Period Days");
-  m_billingPeriodIntLbl->setObjectName("H2");
-  vLayout->addWidget(m_billingPeriodIntLbl);
+  bool isConnected = connect(m_endDateEdit,SIGNAL(dateChanged(const QDate &)),
+    this,SLOT(endDateChanged(const QDate &)));
+  Q_ASSERT(isConnected);
+}
 
-  m_billingPeriodIntEdit = new OSIntegerEdit();
+void UtilityBillWidget::getBillingPeriodLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex)
+{
+  getLabel(gridLayout,rowIndex,columnIndex,QString("Billing Period Days"));
+}
+
+void UtilityBillWidget::getBillingPeriodLineEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex)
+{
+  m_billingPeriodIntEdit = new QDoubleSpinBox();
+  m_billingPeriodIntEdit->setDecimals(0);
+  // TODO m_billingPeriodIntEdit->setMinimum(0);
+  m_billingPeriodIntEdit->setMinimum(28);
+  m_billingPeriodIntEdit->setMaximum(31);
   m_billingPeriodIntEdit->setFixedWidth(OS_UTILITY_WIDTH);
-  //m_billingPeriodIntEdit->bind();
-  vLayout->addWidget(m_billingPeriodIntEdit);
 
-  gridLayout->addLayout(vLayout,rowIndex,++columnIndex,Qt::AlignLeft | Qt::AlignTop);
+  gridLayout->addWidget(m_billingPeriodIntEdit,rowIndex,columnIndex,Qt::AlignLeft | Qt::AlignTop);
 }
 
 //// SLOTS
 
-void UtilityBillWidget::setDstStartDate(const QDate & newdate)
+void UtilityBillWidget::startDateChanged(const QDate & newdate)
 {
   //model::RunPeriodControlDaylightSavingTime dst =
   //  m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
@@ -526,7 +667,7 @@ void UtilityBillWidget::setDstStartDate(const QDate & newdate)
   //dst.setStartDate(monthOfYear(newdate.month()),newdate.day());
 }
 
-void UtilityBillWidget::setDstEndDate(const QDate & newdate)
+void UtilityBillWidget::endDateChanged(const QDate & newdate)
 {
   //model::RunPeriodControlDaylightSavingTime dst =
   //  m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
@@ -552,13 +693,11 @@ void BillFormatDialog::createLayout()
 
   cancelButton()->hide();
 
-
   QLabel * label = NULL;
 
   label = new QLabel("Select the best match for you utility bill",this);
   label->setObjectName("H1");
   upperLayout()->addWidget(label);
-
 
   QButtonGroup * buttonGroup = new QButtonGroup(this);
 
@@ -567,7 +706,6 @@ void BillFormatDialog::createLayout()
   isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(setBillFormat(int)));
   Q_ASSERT(isConnected);
-
 
   QRadioButton * radioButton = NULL; 
 
@@ -586,7 +724,6 @@ void BillFormatDialog::createLayout()
   buttonGroup->button(0)->click();
   Q_ASSERT(buttonGroup->checkedId() != -1);
   setBillFormat(buttonGroup->checkedId());
-
 }
 
 void BillFormatDialog::setBillFormat(int index)

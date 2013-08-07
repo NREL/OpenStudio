@@ -21,35 +21,32 @@
 #define OPENSTUDIO_UTILITYBILLSTABVIEW_H
 
 #include <openstudio_lib/ModelObjectInspectorView.hpp>
-
 #include <openstudio_lib/ModelSubTabView.hpp>
 
 #include "../shared_gui_components/OSDialog.hpp"
 
 #include <model/Model.hpp>
+#include <model/UtilityBill.hpp>
 
 #include <QWidget>
 
 class QButtonGroup;
 class QDate;
 class QDateEdit;
+class QDoubleSpinBox;
 class QGridLayout;
 class QGroupBox;
 class QLabel;
+class QLineEdit;
 class QPushButton;
 class QScrollArea;
 
 namespace openstudio {
 
-class OSDoubleEdit;
-class OSLineEdit;
-class OSIntegerEdit;
-
 class BillFormatDialog;
 
-namespace model {
-  class Model;
-}
+class Date;
+class FuelType;
 
 enum BillFormat{
   STARTDATE_ENDDATE,
@@ -68,6 +65,12 @@ public:
   
   virtual ~UtilityBillsView() {}
 
+private:
+
+  void resetUtilityBills();
+
+  std::vector<std::pair<IddObjectType, std::string> > modelObjectTypesAndNames();
+
 };
 
 class UtilityBillsInspectorView : public ModelObjectInspectorView
@@ -82,7 +85,6 @@ public:
 
   virtual ~UtilityBillsInspectorView() {}
 
-  
 protected:
 
   //virtual void onSelectItem(OSItem *item);
@@ -98,12 +100,33 @@ private:
 
   void createWidgets();
   void showBillFormatDialog();
-  void showGroupBoxIfBills();
   void getSortedBills();
   void showAddButton();
   void hideAddButton();
   void enableAddButton();
   void disableAddButton();
+
+  bool setStartDate(const Date& startDate);
+  Date startDate() const;
+
+  bool setEndDate(const Date& endDate); 
+  Date endDate() const;
+
+  bool setNumberOfDays(unsigned numberOfDays);
+  unsigned numberOfDays() const;
+
+  bool setConsumption(double consumption);
+  boost::optional<double> consumption() const;
+
+  bool setPeakDemand(double peakDemand); 
+  boost::optional<double> peakDemand() const;
+
+  bool setTotalCost(double totalCost);
+  boost::optional<double> totalCost() const;
+
+  std::vector<model::UtilityBill> m_utilityBills; // TODO ???
+
+  boost::optional<model::UtilityBill> m_utilityBill;
 
   BillFormatDialog * m_billFormatDialog;
 
@@ -113,27 +136,23 @@ private:
   
   QButtonGroup * m_buttonGroup;
 
-  OSLineEdit * m_name;
-  OSLineEdit * m_consumptionUnits;
-  OSLineEdit * m_energyDemandUnits;
-  OSLineEdit * m_weatherFile;
+  QLineEdit * m_name;
+  QLineEdit * m_consumptionUnits;
+  QLineEdit * m_energyDemandUnits;
+  QLineEdit * m_weatherFile;
 
-  QPushButton * m_addNewBill;
+  QDoubleSpinBox * m_windowTimesteps;
 
-  QGridLayout * m_beforeRangeGridLayout;
-  QGridLayout * m_inRangeGridLayout;
-  QGridLayout * m_afterRangeGridLayout;
+  QPushButton * m_addBillingPeriod;
 
-  QGroupBox * m_groupBox;
+  QGridLayout * m_billGridLayout;
 
   QScrollArea * m_scrollArea;
-
-  std::vector<double> m_sortedBills;
   
 private slots:
   
-  void addBill(bool checked);
-  void deleteBill(int index);
+  void addBillingPeriod(bool checked);
+  void deleteBillingPeriod(int index);
   void setBillFormat(BillFormat billFormat);
 
 };
@@ -146,40 +165,44 @@ class UtilityBillWidget : public QWidget
 public:
 
   UtilityBillWidget(QGridLayout * gridLayout,
+    model::UtilityBill & utilityBill,
     BillFormat billFormat,
-    bool showPeak,
     QWidget * parent = 0);
 
   virtual ~UtilityBillWidget() {}
 
-  void createWidgets(QGridLayout * gridLayout,
-    BillFormat billFormat,
-    bool showPeak);
-
-  void getStartDate(QGridLayout * gridLayout, int & rowIndex, int & columnIndex);
-  void getEndDate(QGridLayout * gridLayout, int & rowIndex, int & columnIndex);
-  void getBillingPeriod(QGridLayout * gridLayout, int & rowIndex, int & columnIndex);
-
 private:
 
-  QLabel * m_startDateLbl;
+  void createWidgets(QGridLayout * gridLayout,
+    BillFormat billFormat);
+
+  void getLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex, const QString& text);
+  void getStartDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex);
+  void getEndDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex);
+  void getBillingPeriodLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex);
+
+  void getDateEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex, QDateEdit * & dateEdit);
+  void getStartDateCalendar(QGridLayout * gridLayout, int rowIndex, int columnIndex);
+  void getEndDateCalendar(QGridLayout * gridLayout, int rowIndex, int columnIndex);
+
+  void getBillingPeriodLineEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex);
+
   QDateEdit * m_startDateEdit;
-
-  QLabel * m_billingPeriodIntLbl;
-  OSIntegerEdit * m_billingPeriodIntEdit;
-
-  QLabel * m_endDateLbl;
   QDateEdit * m_endDateEdit;
 
-  OSDoubleEdit * m_energyUseDoubleEdit;
-  OSDoubleEdit * m_peaklDoubleEdit;
-  OSDoubleEdit * m_costDoubleEdit;
+  QDoubleSpinBox * m_billingPeriodIntEdit;
+  QDoubleSpinBox * m_energyUseDoubleEdit;
+  QDoubleSpinBox * m_peaklDoubleEdit;
+  QDoubleSpinBox * m_costDoubleEdit;
+
   QPushButton * m_deleteBillWidget;
+
+  model::UtilityBill m_utilityBill;
 
 private slots:
 
-  void setDstStartDate(const QDate & newdate);
-  void setDstEndDate(const QDate & newdate);
+  void startDateChanged(const QDate & newdate);
+  void endDateChanged(const QDate & newdate);
 
 };
 

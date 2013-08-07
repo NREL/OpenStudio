@@ -22,10 +22,10 @@
 #include <openstudio_lib/UtilityBillsView.hpp>
 
 #include <model/Model.hpp>
-//
-//#include <model/BuildingStory.hpp>
-//#include <model/BuildingStory_Impl.hpp>
-//#include <model/Space.hpp>
+#include <model/Model_Impl.hpp>
+
+#include <model/UtilityBill.hpp>
+#include <model/UtilityBill_Impl.hpp>
 
 namespace openstudio {
 
@@ -38,6 +38,8 @@ void UtilityBillsController::onAddObject(const openstudio::IddObjectType& iddObj
 {
   //BOOST_ASSERT(IddObjectType::OS_BuildingStory == iddObjectType.value());
   //openstudio::model::BuildingStory(this->model());
+
+   Q_ASSERT(IddObjectType::OS_UtilityBill == iddObjectType.value());
 }
 
 void UtilityBillsController::onCopyObject(const openstudio::model::ModelObject& modelObject)
@@ -52,28 +54,18 @@ void UtilityBillsController::onRemoveObject(openstudio::model::ModelObject model
 
 void UtilityBillsController::onReplaceObject(openstudio::model::ModelObject modelObject, const OSItemId& replacementItemId)
 {
-  // not yet implemented
 }
 
 void UtilityBillsController::onPurgeObjects(const openstudio::IddObjectType& iddObjectType)
 {
-  //BOOST_FOREACH(model::BuildingStory buildingStory, this->model().getModelObjects<model::BuildingStory>()){
-  //  if (buildingStory.spaces().empty()){
-  //    buildingStory.remove();
-  //  }
-  //}
+  Q_FOREACH(model::UtilityBill utilityBill, this->model().getModelObjects<model::UtilityBill>()){
+    utilityBill.remove();
+  }
+
 }
 
 void UtilityBillsController::onDrop(const OSItemId& itemId)
 {
-  //boost::optional<model::ModelObject> modelObject = this->getModelObject(itemId);
-  //if (modelObject){
-  //  if (modelObject->optionalCast<model::BuildingStory>()){
-  //    if (this->fromComponentLibrary(itemId)){
-  //      modelObject = modelObject->clone(this->model());
-  //    }
-  //  }
-  //}
 }
 
 void UtilityBillsController::onInspectItem(OSItem* item)
