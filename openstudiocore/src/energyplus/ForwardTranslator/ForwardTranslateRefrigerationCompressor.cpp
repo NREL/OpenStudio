@@ -22,7 +22,7 @@
 #include <model/RefrigerationCompressor.hpp>
 #include <model/CurveBicubic.hpp>
 
-#include <utilities/idd/OS_Refrigeration_Compressor_FieldEnums.hxx>
+#include <utilities/idd/Refrigeration_Compressor_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -40,9 +40,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCompressor( 
   boost::optional<double> d;
 
 // Name
-  IdfObject object = createRegisterAndNameIdfObject(openstudio::IddObjectType::OS_Refrigeration_Compressor, modelObject);
-
-  //m_idfObjects.push_back(object);
+  IdfObject object = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_Compressor, modelObject);
 
 //Refrigeration Compressor Power Curve Name
   boost::optional<CurveBicubic> powerCurve = modelObject.refrigerationCompressorPowerCurve();
@@ -53,7 +51,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCompressor( 
 
     if( _powerCurve && _powerCurve->name() )
     {
-      object.setString(OS_Refrigeration_CompressorFields::RefrigerationCompressorPowerCurveName,_powerCurve->name().get());
+      object.setString(Refrigeration_CompressorFields::RefrigerationCompressorPowerCurveName,_powerCurve->name().get());
     }
   }
 
@@ -66,49 +64,49 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCompressor( 
 
     if( _capacityCurve && _capacityCurve->name() )
     {
-      object.setString(OS_Refrigeration_CompressorFields::RefrigerationCompressorCapacityCurveName,_capacityCurve->name().get());
+      object.setString(Refrigeration_CompressorFields::RefrigerationCompressorCapacityCurveName,_capacityCurve->name().get());
     }
   }
 
 //Rated Superheat
   d = modelObject.ratedSuperheat();
   if (d) {
-    object.setDouble(OS_Refrigeration_CompressorFields::RatedSuperheat,d.get());
+    object.setDouble(Refrigeration_CompressorFields::RatedSuperheat,d.get());
   }
 
 //Rated Return Gas Temperature
   d = modelObject.ratedReturnGasTemperature();
   if (d) {
-    object.setDouble(OS_Refrigeration_CompressorFields::RatedReturnGasTemperature,d.get());
+    object.setDouble(Refrigeration_CompressorFields::RatedReturnGasTemperature,d.get());
   }
 
 //Rated Liquid Temperature
   d = modelObject.ratedLiquidTemperature();
   if (d) {
-    object.setDouble(OS_Refrigeration_CompressorFields::RatedLiquidTemperature,d.get());
+    object.setDouble(Refrigeration_CompressorFields::RatedLiquidTemperature,d.get());
   }
 
 //Rated Subcooling
   d = modelObject.ratedSubcooling();
   if (d) {
-    object.setDouble(OS_Refrigeration_CompressorFields::RatedSubcooling,d.get());
+    object.setDouble(Refrigeration_CompressorFields::RatedSubcooling,d.get());
   }
 
 //End-Use Subcategory
   s = modelObject.endUseSubcategory();
   if (s) {
-    object.setString(OS_Refrigeration_CompressorFields::EndUseSubcategory,s.get());
+    object.setString(Refrigeration_CompressorFields::EndUseSubcategory,s.get());
   }
 
 //Mode of Operation
-  object.setString(OS_Refrigeration_CompressorFields::ModeofOperation,"Subcritical");
+  object.setString(Refrigeration_CompressorFields::ModeofOperation,"Subcritical");
   /*s = modelObject.modeofOperation();
   if (s) {
-    object.setString(OS_Refrigeration_CompressorFields::ModeofOperation,s.get());
+    object.setString(Refrigeration_CompressorFields::ModeofOperation,s.get());
   }*/
 
 //Transcritical Compressor Power Curve Name
-  object.setString(OS_Refrigeration_CompressorFields::TranscriticalCompressorPowerCurveName,"");
+  object.setString(Refrigeration_CompressorFields::TranscriticalCompressorPowerCurveName,"");
 
   /*boost::optional<CurveBicubic> transcriticalPowerCurve = modelObject.transcriticalCompressorPowerCurve();
 
@@ -118,12 +116,12 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCompressor( 
 
     if( _transcriticalPowerCurve && _transcriticalPowerCurve->name() )
     {
-      object.setString(OS_Refrigeration_CompressorFields::TranscriticalCompressorPowerCurveName,_transcriticalPowerCurve->name().get());
+      object.setString(Refrigeration_CompressorFields::TranscriticalCompressorPowerCurveName,_transcriticalPowerCurve->name().get());
     }
   }*/
 
 //Transcritical Compressor Capacity Curve Name
-  object.setString(OS_Refrigeration_CompressorFields::TranscriticalCompressorCapacityCurveName,"");
+  object.setString(Refrigeration_CompressorFields::TranscriticalCompressorCapacityCurveName,"");
 
   /*boost::optional<CurveBicubic> transcriticalCapacityCurve = modelObject.transcriticalCompressorCapacityCurve();
 
@@ -133,7 +131,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCompressor( 
 
     if( _transcriticalCapacityCurve && _transcriticalCapacityCurve->name() )
     {
-      object.setString(OS_Refrigeration_CompressorFields::TranscriticalCompressorCapacityCurveName,_transcriticalCapacityCurve->name().get());
+      object.setString(Refrigeration_CompressorFields::TranscriticalCompressorCapacityCurveName,_transcriticalCapacityCurve->name().get());
     }
   }*/
 

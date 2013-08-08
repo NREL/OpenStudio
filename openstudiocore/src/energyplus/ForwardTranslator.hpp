@@ -604,7 +604,18 @@ class ENERGYPLUS_API ForwardTranslator {
   static std::vector<IddObjectType> iddObjectsToTranslate();
   static std::vector<IddObjectType> iddObjectsToTranslateInitializer();
 
+  boost::optional<IdfFile> findIdfFile(const std::string& path);
+
+  //returns FluidProperties:Name IdfObject
+  boost::optional<IdfObject> createFluidProperties(const std::string& fluidType );
+
+  void createFluidPropertiesMap();
+
   typedef std::map<const openstudio::Handle, const IdfObject> ModelObjectMap;
+
+  typedef std::map<const std::string, const std::string> FluidPropertiesMap;
+
+  FluidPropertiesMap m_fluidPropertiesMap;
 
   ModelObjectMap m_map;
 

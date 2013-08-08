@@ -1,6 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
   <qresource>
     <file>Resources/LCCusePriceEscalationDataSet2011.idf</file>
+    <file>Resources/R11_FluidPropertiesDataSet.idf</file>
   </qresource>
 </RCC>
 

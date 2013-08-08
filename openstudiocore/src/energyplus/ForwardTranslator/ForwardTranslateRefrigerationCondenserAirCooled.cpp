@@ -23,7 +23,7 @@
 #include <model/CurveLinear.hpp>
 #include <model/ThermalZone.hpp>
 
-#include <utilities/idd/OS_Refrigeration_Condenser_AirCooled_FieldEnums.hxx>
+#include <utilities/idd/Refrigeration_Condenser_AirCooled_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -41,9 +41,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCondenserAir
   boost::optional<double> d;
 
 // Name
-  IdfObject object = createRegisterAndNameIdfObject(openstudio::IddObjectType::OS_Refrigeration_Condenser_AirCooled, modelObject);
-
-  //m_idfObjects.push_back(object);
+  IdfObject object = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_Condenser_AirCooled, modelObject);
 
 //Rated Effective Total Heat Rejection Rate Curve Name
   boost::optional<CurveLinear> heatRejectCurve = modelObject.ratedEffectiveTotalHeatRejectionRateCurve();
@@ -54,26 +52,26 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCondenserAir
 
     if( _heatRejectCurve && _heatRejectCurve->name() )
     {
-      object.setString(OS_Refrigeration_Condenser_AirCooledFields::RatedEffectiveTotalHeatRejectionRateCurveName,_heatRejectCurve->name().get());
+      object.setString(Refrigeration_Condenser_AirCooledFields::RatedEffectiveTotalHeatRejectionRateCurveName,_heatRejectCurve->name().get());
     }
   }
 
 //Rated Subcooling Temperature Difference
   d = modelObject.ratedSubcoolingTemperatureDifference();
   if (d) {
-    object.setDouble(OS_Refrigeration_Condenser_AirCooledFields::RatedSubcoolingTemperatureDifference,d.get());
+    object.setDouble(Refrigeration_Condenser_AirCooledFields::RatedSubcoolingTemperatureDifference,d.get());
   }
 
 //Condenser Fan Speed Control Type
   s = modelObject.condenserFanSpeedControlType();
   if (s) {
-    object.setString(OS_Refrigeration_Condenser_AirCooledFields::CondenserFanSpeedControlType,s.get());
+    object.setString(Refrigeration_Condenser_AirCooledFields::CondenserFanSpeedControlType,s.get());
   }
 
 //Rated Fan Power
   d = modelObject.ratedFanPower();
   if (d) {
-    object.setDouble(OS_Refrigeration_Condenser_AirCooledFields::RatedFanPower,d.get());
+    object.setDouble(Refrigeration_Condenser_AirCooledFields::RatedFanPower,d.get());
   }
 
 //Air Inlet Node Name or Zone Name
@@ -85,32 +83,32 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCondenserAir
 
     if( _airInletZone && _airInletZone->name() )
     {
-      object.setString(OS_Refrigeration_Condenser_AirCooledFields::AirInletZoneName,_airInletZone->name().get());
+      object.setString(Refrigeration_Condenser_AirCooledFields::AirInletNodeNameorZoneName,_airInletZone->name().get());
     }
   }
 
 //End-Use Subcategory
   s = modelObject.endUseSubcategory();
   if (s) {
-    object.setString(OS_Refrigeration_Condenser_AirCooledFields::EndUseSubcategory,s.get());
+    object.setString(Refrigeration_Condenser_AirCooledFields::EndUseSubcategory,s.get());
   }
 
 //Condenser Refrigerant Operating Charge Inventory
   d = modelObject.condenserRefrigerantOperatingChargeInventory();
   if (d) {
-    object.setDouble(OS_Refrigeration_Condenser_AirCooledFields::CondenserRefrigerantOperatingChargeInventory,d.get());
+    object.setDouble(Refrigeration_Condenser_AirCooledFields::CondenserRefrigerantOperatingChargeInventory,d.get());
   }
 
 //Condensate Receiver Refrigerant Inventory
   d = modelObject.condensateReceiverRefrigerantInventory();
   if (d) {
-    object.setDouble(OS_Refrigeration_Condenser_AirCooledFields::CondensateReceiverRefrigerantInventory,d.get());
+    object.setDouble(Refrigeration_Condenser_AirCooledFields::CondensateReceiverRefrigerantInventory,d.get());
   }
 
 //Condensate Piping Refrigerant Inventory
   d = modelObject.condensatePipingRefrigerantInventory();
   if (d) {
-    object.setDouble(OS_Refrigeration_Condenser_AirCooledFields::CondensatePipingRefrigerantInventory,d.get());
+    object.setDouble(Refrigeration_Condenser_AirCooledFields::CondensatePipingRefrigerantInventory,d.get());
   }
 
   return object;

@@ -1,11 +1,12 @@
+!  Version,
+!    8.0;                    !- Version Identifier
+
+
 ! =============================================================================
 !
 !                Property Data for Refrigerant   R11
 !
 ! =============================================================================
-
-!  Version,
-!    8.0;                    !- Version Identifier
 
   FluidProperties:Name,
     R11,                     !- Fluid Name

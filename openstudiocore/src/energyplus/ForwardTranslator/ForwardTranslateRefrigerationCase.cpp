@@ -24,7 +24,7 @@
 #include <model/ThermalZone.hpp>
 #include <model/Schedule.hpp>
 
-#include <utilities/idd/OS_Refrigeration_Case_FieldEnums.hxx>
+#include <utilities/idd/Refrigeration_Case_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -42,9 +42,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
   boost::optional<double> d;
 
 // Name
-  IdfObject object = createRegisterAndNameIdfObject(openstudio::IddObjectType::OS_Refrigeration_Case, modelObject);
-
-  //m_idfObjects.push_back(object);
+  IdfObject object = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_Case, modelObject);
 
 // AvailabilityScheduleName
   boost::optional<Schedule> availabilitySchedule = modelObject.availabilitySchedule();
@@ -55,7 +53,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
 
     if( _availabilitySchedule && _availabilitySchedule->name() )
     {
-      object.setString(OS_Refrigeration_CaseFields::AvailabilityScheduleName,_availabilitySchedule->name().get());
+      object.setString(Refrigeration_CaseFields::AvailabilityScheduleName,_availabilitySchedule->name().get());
     }
   }
 
@@ -68,56 +66,56 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
 
     if( _thermalZone && _thermalZone->name() )
     {
-      object.setString(OS_Refrigeration_CaseFields::ZoneName,_thermalZone->name().get());
+      object.setString(Refrigeration_CaseFields::ZoneName,_thermalZone->name().get());
     }
   }
 
 //RatedAmbientTemperature
   d = modelObject.ratedAmbientTemperature();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::RatedAmbientTemperature,d.get());
+    object.setDouble(Refrigeration_CaseFields::RatedAmbientTemperature,d.get());
   }
 
 //RatedAmbientRelativeHumidity
   d = modelObject.ratedAmbientRelativeHumidity();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::RatedAmbientRelativeHumidity,d.get());
+    object.setDouble(Refrigeration_CaseFields::RatedAmbientRelativeHumidity,d.get());
   }
 
 //RatedTotalCoolingCapacityperUnitLength
   d = modelObject.ratedTotalCoolingCapacityperUnitLength();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::RatedTotalCoolingCapacityperUnitLength,d.get());
+    object.setDouble(Refrigeration_CaseFields::RatedTotalCoolingCapacityperUnitLength,d.get());
   }
 
 //RatedLatentHeatRatio
   d = modelObject.ratedLatentHeatRatio();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::RatedLatentHeatRatio,d.get());
+    object.setDouble(Refrigeration_CaseFields::RatedLatentHeatRatio,d.get());
   }
 
 //RatedRuntimeFraction
   d = modelObject.ratedRuntimeFraction();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::RatedRuntimeFraction,d.get());
+    object.setDouble(Refrigeration_CaseFields::RatedRuntimeFraction,d.get());
   }
 
 //CaseLength
   d = modelObject.caseLength();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::CaseLength,d.get());
+    object.setDouble(Refrigeration_CaseFields::CaseLength,d.get());
   }
 
 //CaseOperatingTemperature
   d = modelObject.caseOperatingTemperature();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::CaseOperatingTemperature,d.get());
+    object.setDouble(Refrigeration_CaseFields::CaseOperatingTemperature,d.get());
   }
 
 //LatentCaseCreditCurveType
   s = modelObject.latentCaseCreditCurveType();
   if (s) {
-    object.setString(OS_Refrigeration_CaseFields::LatentCaseCreditCurveType,s.get());
+    object.setString(Refrigeration_CaseFields::LatentCaseCreditCurveType,s.get());
   }
 
 //LatentCaseCreditCurveName
@@ -129,32 +127,32 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
 
     if( _latentCaseCreditCurve && _latentCaseCreditCurve->name() )
     {
-      object.setString(OS_Refrigeration_CaseFields::LatentCaseCreditCurveName,_latentCaseCreditCurve->name().get());
+      object.setString(Refrigeration_CaseFields::LatentCaseCreditCurveName,_latentCaseCreditCurve->name().get());
     }
   }
 
 //StandardCaseFanPowerperUnitLength
   d = modelObject.standardCaseFanPowerperUnitLength();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::StandardCaseFanPowerperUnitLength,d.get());
+    object.setDouble(Refrigeration_CaseFields::StandardCaseFanPowerperUnitLength,d.get());
   }
 
 //OperatingCaseFanPowerperUnitLength
   d = modelObject.operatingCaseFanPowerperUnitLength();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::OperatingCaseFanPowerperUnitLength,d.get());
+    object.setDouble(Refrigeration_CaseFields::OperatingCaseFanPowerperUnitLength,d.get());
   }
 
 //StandardCaseLightingPowerperUnitLength
   d = modelObject.standardCaseLightingPowerperUnitLength();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::StandardCaseLightingPowerperUnitLength,d.get());
+    object.setDouble(Refrigeration_CaseFields::StandardCaseLightingPowerperUnitLength,d.get());
   }
 
 //InstalledCaseLightingPowerperUnitLength
   d = modelObject.installedCaseLightingPowerperUnitLength();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::InstalledCaseLightingPowerperUnitLength,d.get());
+    object.setDouble(Refrigeration_CaseFields::InstalledCaseLightingPowerperUnitLength,d.get());
   }
 
 //CaseLightingScheduleName
@@ -166,62 +164,62 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
 
     if( _caseLightingSchedule && _caseLightingSchedule->name() )
     {
-      object.setString(OS_Refrigeration_CaseFields::CaseLightingScheduleName,_caseLightingSchedule->name().get());
+      object.setString(Refrigeration_CaseFields::CaseLightingScheduleName,_caseLightingSchedule->name().get());
     }
   }
 
 //FractionofLightingEnergytoCase
   d = modelObject.fractionofLightingEnergytoCase();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::FractionofLightingEnergytoCase,d.get());
+    object.setDouble(Refrigeration_CaseFields::FractionofLightingEnergytoCase,d.get());
   }
 
 //CaseAntiSweatHeaterPowerperUnitLength
   d = modelObject.caseAntiSweatHeaterPowerperUnitLength();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::CaseAntiSweatHeaterPowerperUnitLength,d.get());
+    object.setDouble(Refrigeration_CaseFields::CaseAntiSweatHeaterPowerperUnitLength,d.get());
   }
 
 //MinimumAntiSweatHeaterPowerperUnitLength
   d = modelObject.minimumAntiSweatHeaterPowerperUnitLength();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::MinimumAntiSweatHeaterPowerperUnitLength,d.get());
+    object.setDouble(Refrigeration_CaseFields::MinimumAntiSweatHeaterPowerperUnitLength,d.get());
   }
 
 //AntiSweatHeaterControlType
   s = modelObject.antiSweatHeaterControlType();
   if (s) {
-    object.setString(OS_Refrigeration_CaseFields::AntiSweatHeaterControlType,s.get());
+    object.setString(Refrigeration_CaseFields::AntiSweatHeaterControlType,s.get());
   }
 
 //HumidityatZeroAntiSweatHeaterEnergy
   d = modelObject.humidityatZeroAntiSweatHeaterEnergy();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::HumidityatZeroAntiSweatHeaterEnergy,d.get());
+    object.setDouble(Refrigeration_CaseFields::HumidityatZeroAntiSweatHeaterEnergy,d.get());
   }
 
 //CaseHeight
   d = modelObject.caseHeight();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::CaseHeight,d.get());
+    object.setDouble(Refrigeration_CaseFields::CaseHeight,d.get());
   }
 
 //FractionofAntiSweatHeaterEnergytoCase
   d = modelObject.fractionofAntiSweatHeaterEnergytoCase();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::FractionofAntiSweatHeaterEnergytoCase,d.get());
+    object.setDouble(Refrigeration_CaseFields::FractionofAntiSweatHeaterEnergytoCase,d.get());
   }
 
 //CaseDefrostPowerperUnitLength
   d = modelObject.caseDefrostPowerperUnitLength();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::CaseDefrostPowerperUnitLength,d.get());
+    object.setDouble(Refrigeration_CaseFields::CaseDefrostPowerperUnitLength,d.get());
   }
 
 //CaseDefrostType
   s = modelObject.caseDefrostType();
   if (s) {
-    object.setString(OS_Refrigeration_CaseFields::CaseDefrostType,s.get());
+    object.setString(Refrigeration_CaseFields::CaseDefrostType,s.get());
   }
 
 //CaseDefrostScheduleName
@@ -233,7 +231,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
 
     if( _caseDefrostSchedule && _caseDefrostSchedule->name() )
     {
-      object.setString(OS_Refrigeration_CaseFields::CaseDefrostScheduleName,_caseDefrostSchedule->name().get());
+      object.setString(Refrigeration_CaseFields::CaseDefrostScheduleName,_caseDefrostSchedule->name().get());
     }
   }
 
@@ -246,14 +244,14 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
 
     if( _caseDefrostDripDownSchedule && _caseDefrostDripDownSchedule->name() )
     {
-      object.setString(OS_Refrigeration_CaseFields::CaseDefrostDripDownScheduleName,_caseDefrostDripDownSchedule->name().get());
+      object.setString(Refrigeration_CaseFields::CaseDefrostDripDownScheduleName,_caseDefrostDripDownSchedule->name().get());
     }
   }
 
 //DefrostEnergyCorrectionCurveType
   s = modelObject.defrostEnergyCorrectionCurveType();
   if (s) {
-    object.setString(OS_Refrigeration_CaseFields::DefrostEnergyCorrectionCurveType,s.get());
+    object.setString(Refrigeration_CaseFields::DefrostEnergyCorrectionCurveType,s.get());
   }
 
 //DefrostEnergyCorrectionCurveName
@@ -265,14 +263,14 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
 
     if( _defrostEnergyCorrectionCurve && _defrostEnergyCorrectionCurve->name() )
     {
-      object.setString(OS_Refrigeration_CaseFields::DefrostEnergyCorrectionCurveName,_defrostEnergyCorrectionCurve->name().get());
+      object.setString(Refrigeration_CaseFields::DefrostEnergyCorrectionCurveName,_defrostEnergyCorrectionCurve->name().get());
     }
   }
 
 //UnderCaseHVACReturnAirFraction
   d = modelObject.underCaseHVACReturnAirFraction();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::UnderCaseHVACReturnAirFraction,d.get());
+    object.setDouble(Refrigeration_CaseFields::UnderCaseHVACReturnAirFraction,d.get());
   }
 
 //RefrigeratedCaseRestockingScheduleName
@@ -284,7 +282,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
 
     if( _refrigeratedCaseRestockingSchedule && _refrigeratedCaseRestockingSchedule->name() )
     {
-      object.setString(OS_Refrigeration_CaseFields::RefrigeratedCaseRestockingScheduleName,_refrigeratedCaseRestockingSchedule->name().get());
+      object.setString(Refrigeration_CaseFields::RefrigeratedCaseRestockingScheduleName,_refrigeratedCaseRestockingSchedule->name().get());
     }
   }
 
@@ -297,20 +295,20 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
 
     if( _caseCreditFractionSchedule && _caseCreditFractionSchedule->name() )
     {
-      object.setString(OS_Refrigeration_CaseFields::CaseCreditFractionScheduleName,_caseCreditFractionSchedule->name().get());
+      object.setString(Refrigeration_CaseFields::CaseCreditFractionScheduleName,_caseCreditFractionSchedule->name().get());
     }
   }
 
 //DesignEvaporatorTemperatureorBrineInletTemperature
   d = modelObject.designEvaporatorTemperatureorBrineInletTemperature();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::DesignEvaporatorTemperatureorBrineInletTemperature,d.get());
+    object.setDouble(Refrigeration_CaseFields::DesignEvaporatorTemperatureorBrineInletTemperature,d.get());
   }
 
 //AverageRefrigerantChargeInventory
   d = modelObject.averageRefrigerantChargeInventory();
   if (d) {
-    object.setDouble(OS_Refrigeration_CaseFields::AverageRefrigerantChargeInventory,d.get());
+    object.setDouble(Refrigeration_CaseFields::AverageRefrigerantChargeInventory,d.get());
   }
 
   return object;

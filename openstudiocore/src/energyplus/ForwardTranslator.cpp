@@ -37,9 +37,11 @@
 
 #include <utilities/idf/Workspace.hpp>
 #include <utilities/idf/IdfExtensibleGroup.hpp>
+#include <utilities/idf/IdfFile.hpp>
 #include <utilities/idf/WorkspaceObjectOrder.hpp>
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/idd/FluidProperties_Name_FieldEnums.hxx>
 #include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
 #include <utilities/idd/Output_Table_SummaryReports_FieldEnums.hxx>
 #include <utilities/idd/OutputControl_Table_Style_FieldEnums.hxx>
@@ -50,6 +52,8 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/plot/ProgressBar.hpp>
 
+#include <QFile>
+#include <QTextStream>
 #include <QThread>
 
 using namespace openstudio::model;
@@ -65,6 +69,7 @@ ForwardTranslator::ForwardTranslator()
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ForwardTranslator"));
   m_logSink.setThreadId(QThread::currentThread());
+  createFluidPropertiesMap();
 }
 
 Workspace ForwardTranslator::translateModel( const Model & model, ProgressBar* progressBar )
@@ -2057,6 +2062,67 @@ IdfObject ForwardTranslator::createRegisterAndNameIdfObject(const IddObjectType&
   if (OptionalString moName = modelObject.name()) {
     idfObject.setName(*moName);
   }
+  return idfObject;
+}
+
+boost::optional<IdfFile> ForwardTranslator::findIdfFile(const std::string& path) {
+  QFile file(QString().fromStdString(path));
+  bool opened = file.open(QIODevice::ReadOnly | QIODevice::Text);
+  BOOST_ASSERT(opened);
+
+  QTextStream in(&file);
+  std::stringstream ss;
+  ss << in.readAll().toStdString();
+
+  return IdfFile::load(ss, IddFileType::EnergyPlus);
+}
+
+void ForwardTranslator::createFluidPropertiesMap()
+{
+  m_fluidPropertiesMap.insert(make_pair("R11", ":/Resources/R11_FluidPropertiesDataSet.idf"));
+  //m_fluidPropertiesMap.insert(make_pair("R22", ":/Resources/R22_FluidPropertiesDataSet.idf"));
+}
+
+boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::string& fluidType) {
+
+  boost::optional<IdfObject> idfObject;
+  boost::optional<IdfFile> idfFile;
+
+  for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
+     it != m_idfObjects.end();
+     it++ )
+  {
+    if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
+      if(istringEqual(it->getString(FluidProperties_NameFields::FluidName,true).get(), fluidType)) {
+        return *it;
+      }
+    }
+  }
+
+  FluidPropertiesMap::const_iterator objInMap = m_fluidPropertiesMap.find( fluidType );
+  if( objInMap != m_fluidPropertiesMap.end() )
+  {
+    idfFile = findIdfFile(objInMap->second);
+  }
+  else
+  {
+    return boost::none;
+  }
+
+  if(idfFile){
+    std::vector<IdfObject> fluidObjects = idfFile->objects();
+
+    for( std::vector<IdfObject>::iterator it = fluidObjects.begin();
+       it != fluidObjects.end();
+       it++ )
+    {
+      if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
+        idfObject = *it;
+      }
+      m_idfObjects.push_back(*it);
+    }
+  }
+
   return idfObject;
 }
 
