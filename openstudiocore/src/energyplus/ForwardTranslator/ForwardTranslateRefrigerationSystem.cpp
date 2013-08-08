@@ -20,19 +20,12 @@
 #include <energyplus/ForwardTranslator.hpp>
 #include <model/Model.hpp>
 #include <model/RefrigerationSystem.hpp>
-#include <model/RefrigerationSystem_Impl.hpp>
 #include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
 //#include <model/RefrigerationCondenserAirCooled.hpp>
-//#include <model/RefrigerationCondenserAirCooled_Impl.hpp>
 #include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCase_Impl.hpp>
 #include <model/RefrigerationCompressor.hpp>
-#include <model/RefrigerationCompressor_Impl.hpp>
 //#include <model/RefrigerationWalkin.hpp>
-//#include <model/RefrigerationWalkin_Impl.hpp>
 //#include <model/RefrigerationSubcooler.hpp>
-//#include <model/RefrigerationSubcooler_Impl.hpp>
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 
 #include <utilities/idd/OS_Refrigeration_System_FieldEnums.hxx>
@@ -41,11 +34,134 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
+#include <utilities/idf/IdfFile.hpp>
+#include <utilities/core/Logger.hpp>
+
+#include <QFile>
+#include <QTextStream>
+#include <QString>
+
 using namespace openstudio::model;
+
+using namespace std;
 
 namespace openstudio {
 
 namespace energyplus {
+
+typedef std::map<const std::string, const boost::optional<IdfFile> > FluidPropertiesMap;
+
+typedef std::map<const openstudio::Handle, const IdfObject> ModelObjectMap;
+
+//FluidPropertiesMap fluidPropertiesMap;
+
+boost::optional<IdfFile> findIdfFile(QString fileName) {
+  QFile file(fileName);
+  bool opened = file.open(QIODevice::ReadOnly | QIODevice::Text);
+  BOOST_ASSERT(opened);
+
+  QTextStream in(&file);
+  std::stringstream ss;
+  ss << in.readAll().toStdString();
+
+  return IdfFile::load(ss, IddFileType::EnergyPlus);
+}
+
+FluidPropertiesMap createFluidPropertiesMap()
+{
+  FluidPropertiesMap m;
+  m.insert(make_pair("R11", findIdfFile(":/Resources/R11_FluidPropertiesDataSet.idf")));
+  //m.insert(make_pair("R22", findIdfFile(":/Resources/R22_FluidPropertiesDataSet.idf")));
+  return m;
+}
+
+FluidPropertiesMap m_fluidPropertiesMap = createFluidPropertiesMap();
+
+IdfObject mapCreateAndRegisterIdfObject(const IddObjectType& idfObjectType, const IdfObject& idfObject, const std::string& name,
+                                            std::vector<IdfObject>& m_idfObjects, ModelObjectMap& m_map) {
+  // if already translated then exit
+  ModelObjectMap::const_iterator objInMap = m_map.find( idfObject.handle() );
+  if( objInMap != m_map.end() )
+  {
+    return objInMap->second;
+  }
+
+  //IdfObject idfObject(idfObjectType);
+  m_idfObjects.push_back(idfObject);
+  m_map.insert(std::make_pair(idfObject.handle(),idfObject));
+  //if (OptionalString moName = modelObject.name()) {
+  //  idfObject.setName(*moName);
+  //}
+  //idfObject.setName(name);
+  return idfObject;
+}
+
+boost::optional<IdfObject> addFluid(const std::string& fluidType, std::vector<IdfObject>& m_idfObjects, ModelObjectMap& m_map) {
+
+  boost::optional<IdfObject> idfObject;
+  boost::optional<IdfFile> idfFile;
+  FluidPropertiesMap::const_iterator objInMap = m_fluidPropertiesMap.find( fluidType );
+  if( objInMap != m_fluidPropertiesMap.end() )
+  {
+    idfFile = boost::optional<IdfFile>(objInMap->second);
+  }
+  else
+  {
+    return boost::none;
+  }
+
+  std::vector<IdfObject> fluidObjects = idfFile->objects();
+
+  for( std::vector<IdfObject>::iterator it = fluidObjects.begin();
+     it != fluidObjects.end();
+     it++ )
+  {
+    switch(it->iddObject().type().value())
+    {
+    case openstudio::IddObjectType::FluidProperties_Name :
+      {
+        idfObject = mapCreateAndRegisterIdfObject(openstudio::IddObjectType::FluidProperties_Name, *it, fluidType, m_idfObjects, m_map);
+        break;
+      }
+    case openstudio::IddObjectType::FluidProperties_Temperatures :
+      {
+        mapCreateAndRegisterIdfObject(openstudio::IddObjectType::FluidProperties_Temperatures, *it, fluidType + "world", m_idfObjects, m_map);
+        break;
+      }
+    case openstudio::IddObjectType::FluidProperties_Saturated :
+      {
+        mapCreateAndRegisterIdfObject(openstudio::IddObjectType::FluidProperties_Saturated, *it, fluidType + "world", m_idfObjects, m_map);
+        break;
+      }
+    case openstudio::IddObjectType::FluidProperties_Superheated :
+      {
+        mapCreateAndRegisterIdfObject(openstudio::IddObjectType::FluidProperties_Superheated, *it, fluidType + "world", m_idfObjects, m_map);
+        break;
+      }
+    case openstudio::IddObjectType::FluidProperties_GlycolConcentration :
+      {
+        mapCreateAndRegisterIdfObject(openstudio::IddObjectType::FluidProperties_GlycolConcentration, *it, fluidType + "world", m_idfObjects, m_map);
+        break;
+      }
+    case openstudio::IddObjectType::FluidProperties_Concentration :
+      {
+        mapCreateAndRegisterIdfObject(openstudio::IddObjectType::FluidProperties_Concentration, *it, fluidType + "world", m_idfObjects, m_map);
+        break;
+      }
+    //If no case statement log a warning
+    default:
+      {
+        //LOG(Warn, "Unknown IddObjectType: '" << it->iddObject().name() << "'");
+      }
+    }
+  }
+
+  /*if(istringEqual(fluidType,"R11"))
+  {
+
+  }*/
+  return idfObject;
+}
 
 boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( RefrigerationSystem & modelObject )
 {
@@ -59,7 +175,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
   IdfObject refrigerationSystem = createRegisterAndNameIdfObject(openstudio::IddObjectType::OS_Refrigeration_System,
                                                           modelObject);
 
-  m_idfObjects.push_back(refrigerationSystem);
+  //m_idfObjects.push_back(refrigerationSystem);
 
 //Refrigerated Case or Walkin or CaseAndWalkInList Name
   std::vector<RefrigerationCase> cases = modelObject.cases();
@@ -129,27 +245,27 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
   {
   	// Name
   	name = " Compressor List";
-	refrigerationSystem.setString(OS_Refrigeration_SystemFields::CompressorListName, refrigerationSystem.name().get() + name);
+  	refrigerationSystem.setString(OS_Refrigeration_SystemFields::CompressorListName, refrigerationSystem.name().get() + name);
 
-	IdfObject _compressorList(IddObjectType::Refrigeration_CompressorList);
+  	IdfObject _compressorList(IddObjectType::Refrigeration_CompressorList);
 
-	m_idfObjects.push_back(_compressorList);
+  	m_idfObjects.push_back(_compressorList);
 
-	_compressorList.setName(refrigerationSystem.name().get() + name);
+  	_compressorList.setName(refrigerationSystem.name().get() + name);
 
-	for( std::vector<RefrigerationCompressor>::iterator it = compressors.begin();
-	   it != compressors.end();
-	   it++ )
-	{
-		boost::optional<IdfObject> _compressor = translateAndMapModelObject(*it);
+  	for( std::vector<RefrigerationCompressor>::iterator it = compressors.begin();
+  	   it != compressors.end();
+  	   it++ )
+  	{
+  		boost::optional<IdfObject> _compressor = translateAndMapModelObject(*it);
 
-		if( _compressor )
-		{
-		  IdfExtensibleGroup eg = _compressorList.pushExtensibleGroup();
+  		if( _compressor )
+  		{
+  		  IdfExtensibleGroup eg = _compressorList.pushExtensibleGroup();
 
-		  eg.setString(Refrigeration_CompressorListExtensibleFields::RefrigerationCompressorName,_compressor->name().get()); 
-		}
-	}
+  		  eg.setString(Refrigeration_CompressorListExtensibleFields::RefrigerationCompressorName,_compressor->name().get()); 
+  		}
+  	}
   }
 
 //Minimum Condensing Temperature
@@ -159,7 +275,11 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
   }
 
 //Refrigeration System Working Fluid Type
-
+  s = modelObject.refrigerationSystemWorkingFluidType();
+  if (s) {
+    boost::optional<IdfObject> fluidProperties = addFluid(s.get(), m_idfObjects, m_map);
+    refrigerationSystem.setString(OS_Refrigeration_SystemFields::RefrigerationSystemWorkingFluidType,s.get());
+  }
 
 //Suction Temperature Control Type
   s = modelObject.suctionTemperatureControlType();

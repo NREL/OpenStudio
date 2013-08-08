@@ -20,11 +20,8 @@
 #include <energyplus/ForwardTranslator.hpp>
 #include <model/Model.hpp>
 #include <model/RefrigerationCondenserAirCooled.hpp>
-#include <model/RefrigerationCondenserAirCooled_Impl.hpp>
 #include <model/CurveLinear.hpp>
-#include <model/CurveLinear_Impl.hpp>
 #include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
 
 #include <utilities/idd/OS_Refrigeration_Condenser_AirCooled_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -46,7 +43,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCondenserAir
 // Name
   IdfObject object = createRegisterAndNameIdfObject(openstudio::IddObjectType::OS_Refrigeration_Condenser_AirCooled, modelObject);
 
-  m_idfObjects.push_back(object);
+  //m_idfObjects.push_back(object);
 
 //Rated Effective Total Heat Rejection Rate Curve Name
   boost::optional<CurveLinear> heatRejectCurve = modelObject.ratedEffectiveTotalHeatRejectionRateCurve();

@@ -767,16 +767,16 @@ namespace detail {
 
 } // detail
 
-RefrigerationCase::RefrigerationCase(const Model& model, const ThermalZone& zone, const CurveCubic& curveCubic)
+RefrigerationCase::RefrigerationCase(const Model& model)
   : ModelObject(RefrigerationCase::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::RefrigerationCase_Impl>());
 
   bool ok = true;
   BOOST_ASSERT(ok);
-  ok = setThermalZone(zone);
+  //ok = setThermalZone(zone);
   BOOST_ASSERT(ok);
-  ok = setLatentCaseCreditCurve(curveCubic);
+  //ok = setLatentCaseCreditCurve(curveCubic);
   BOOST_ASSERT(ok);
 }
 

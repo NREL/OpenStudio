@@ -49,13 +49,15 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit RefrigerationSystem(const Model& model, const ModelObject& condenser, const RefrigerationCompressor& compressor, double minCondensingTemp); //, const Fluid& workingFluid);
+  explicit RefrigerationSystem(const Model& model);
 
   virtual ~RefrigerationSystem() {}
 
   //@}
 
   static IddObjectType iddObjectType();
+
+  static std::vector<std::string> refrigerationSystemWorkingFluidTypeValues();
 
   static std::vector<std::string> suctionTemperatureControlTypeValues();
 
@@ -105,7 +107,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   double minimumCondensingTemperature() const;
 
   // TODO: Check return type. From object lists, some candidates are: Fluid.
-  //Fluid refrigerationSystemWorkingFluidType() const;
+  std::string refrigerationSystemWorkingFluidType() const;
 
   std::string suctionTemperatureControlType() const;
 
@@ -166,7 +168,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   void setMinimumCondensingTemperature(double minimumCondensingTemperature);
 
   // TODO: Check argument type. From object lists, some candidates are: Fluid.
-  //bool setRefrigerationSystemWorkingFluidType(const Fluid& fluid);
+  bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
 
   bool setSuctionTemperatureControlType(std::string suctionTemperatureControlType);
 

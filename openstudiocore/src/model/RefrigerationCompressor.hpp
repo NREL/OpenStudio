@@ -42,7 +42,7 @@ class MODEL_API RefrigerationCompressor : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit RefrigerationCompressor(const Model& model, const CurveBicubic& powerCurve, const CurveBicubic& capacityCurve);
+  explicit RefrigerationCompressor(const Model& model);
 
   virtual ~RefrigerationCompressor() {}
 

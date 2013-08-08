@@ -95,7 +95,7 @@ namespace detail {
     double minimumCondensingTemperature() const;
 
     // TODO: Check return type. From object lists, some candidates are: Fluid.
-    //Fluid refrigerationSystemWorkingFluidType() const;
+    std::string refrigerationSystemWorkingFluidType() const;
 
     std::string suctionTemperatureControlType() const;
 
@@ -178,7 +178,7 @@ namespace detail {
     void setMinimumCondensingTemperature(double minimumCondensingTemperature);
 
     // TODO: Check argument type. From object lists, some candidates are: Fluid.
-    //bool setRefrigerationSystemWorkingFluidType(const Fluid& fluid);
+    bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
 
     bool setSuctionTemperatureControlType(std::string suctionTemperatureControlType);
 
@@ -239,7 +239,6 @@ namespace detail {
     // objects should be returned as boost::optionals
     boost::optional<ModelObject> optionalRefrigerationCondenser() const;
     boost::optional<ModelObjectList> optionalCompressorList() const;
-    //boost::optional<Fluid> optionalRefrigerationSystemWorkingFluidType() const;
   };
 
 } // detail

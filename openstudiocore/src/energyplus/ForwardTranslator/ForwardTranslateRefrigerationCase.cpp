@@ -20,13 +20,9 @@
 #include <energyplus/ForwardTranslator.hpp>
 #include <model/Model.hpp>
 #include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCase_Impl.hpp>
 #include <model/CurveCubic.hpp>
-#include <model/CurveCubic_Impl.hpp>
 #include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
 #include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
 
 #include <utilities/idd/OS_Refrigeration_Case_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -48,7 +44,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
 // Name
   IdfObject object = createRegisterAndNameIdfObject(openstudio::IddObjectType::OS_Refrigeration_Case, modelObject);
 
-  m_idfObjects.push_back(object);
+  //m_idfObjects.push_back(object);
 
 // AvailabilityScheduleName
   boost::optional<Schedule> availabilitySchedule = modelObject.availabilitySchedule();

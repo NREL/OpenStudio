@@ -272,16 +272,16 @@ namespace detail {
 
 } // detail
 
-RefrigerationCompressor::RefrigerationCompressor(const Model& model, const CurveBicubic& powerCurve, const CurveBicubic& capacityCurve)
+RefrigerationCompressor::RefrigerationCompressor(const Model& model)
   : ModelObject(RefrigerationCompressor::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::RefrigerationCompressor_Impl>());
   
   bool ok = true;
   BOOST_ASSERT(ok);
-  ok = setRefrigerationCompressorPowerCurve(powerCurve);
+  //ok = setRefrigerationCompressorPowerCurve(powerCurve);
   BOOST_ASSERT(ok);
-  ok = setRefrigerationCompressorCapacityCurve(capacityCurve);
+  //ok = setRefrigerationCompressorCapacityCurve(capacityCurve);
   BOOST_ASSERT(ok);
 }
 

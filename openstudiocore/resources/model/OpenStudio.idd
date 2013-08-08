@@ -5916,12 +5916,18 @@ OS:Refrigeration:System,
   A7,   \field Refrigeration System Working Fluid Type
         \type object-list
         \required-field
-        \object-list FluidNames
-        \note Fluid property data for the refrigerant must be entered.
-        \note The fluid property data, including the objects:
-        \note FluidProperties:Name, FluidProperties:Temperatures,
-        \note FluidProperties:Saturated and FluidProperties:Superheated
-        \note can be copied from the FluidPropertiesRefData.idf dataset
+        \type choice
+        \key R11
+        \key R12
+        \key R22
+        \key R123
+        \key R134a
+        \key R404a
+        \key R407a
+        \key R410a
+        \key NH3
+        \key R507a
+        \key R744
   A8,   \field Suction Temperature Control Type
         \type choice
         \key FloatSuctionTemperature

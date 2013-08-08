@@ -20,9 +20,7 @@
 #include <energyplus/ForwardTranslator.hpp>
 #include <model/Model.hpp>
 #include <model/RefrigerationCompressor.hpp>
-#include <model/RefrigerationCompressor_Impl.hpp>
 #include <model/CurveBicubic.hpp>
-#include <model/CurveBicubic_Impl.hpp>
 
 #include <utilities/idd/OS_Refrigeration_Compressor_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -44,7 +42,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCompressor( 
 // Name
   IdfObject object = createRegisterAndNameIdfObject(openstudio::IddObjectType::OS_Refrigeration_Compressor, modelObject);
 
-  m_idfObjects.push_back(object);
+  //m_idfObjects.push_back(object);
 
 //Refrigeration Compressor Power Curve Name
   boost::optional<CurveBicubic> powerCurve = modelObject.refrigerationCompressorPowerCurve();

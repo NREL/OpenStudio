@@ -44,7 +44,7 @@ class MODEL_API RefrigerationCase : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit RefrigerationCase(const Model& model, const ThermalZone& zone, const CurveCubic& curveCubic);
+  explicit RefrigerationCase(const Model& model);
 
   virtual ~RefrigerationCase() {}
 
