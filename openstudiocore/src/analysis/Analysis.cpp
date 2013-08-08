@@ -703,6 +703,38 @@ namespace detail {
     return openstudio::toJSON(json);
   }
 
+  bool Analysis_Impl::saveServerRequestForProblemFormulation(const openstudio::path& p,
+                                                             bool overwrite) const
+  {
+    QVariant json = serverFormulationVariant();
+    return openstudio::saveJSON(json,p,overwrite);
+  }
+
+  std::ostream& Analysis_Impl::serverRequestForProblemFormulation(std::ostream& os) const {
+    os << serverRequestForProblemFormulation();
+    return os;
+  }
+
+  std::string Analysis_Impl::serverRequestForProblemFormulation() const {
+    QVariant json = serverFormulationVariant();
+    return openstudio::toJSON(json);
+  }
+
+  bool Analysis_Impl::saveServerRequestForDataPoints(const openstudio::path& p,bool overwrite) const {
+    QVariant json = serverDataPointsVariant();
+    return openstudio::saveJSON(json,p,overwrite);
+  }
+
+  std::ostream& Analysis_Impl::serverRequestForDataPoints(std::ostream& os) const {
+    os << serverRequestForDataPoints();
+    return os;
+  }
+
+  std::string Analysis_Impl::serverRequestForDataPoints() const {
+    QVariant json = serverDataPointsVariant();
+    return openstudio::toJSON(json);
+  }
+
   QVariant Analysis_Impl::toVariant() const {
     QVariantMap analysisData = AnalysisObject_Impl::toVariant().toMap();
 
@@ -1033,6 +1065,32 @@ std::ostream& Analysis::toJSON(std::ostream& os,
 
 std::string Analysis::toJSON(AnalysisSerializationScope scope) const {
   return getImpl<detail::Analysis_Impl>()->toJSON(scope);
+}
+
+bool Analysis::saveServerRequestForProblemFormulation(const openstudio::path& p,
+                                                      bool overwrite) const
+{
+  return getImpl<detail::Analysis_Impl>()->saveServerRequestForProblemFormulation(p,overwrite);
+}
+
+std::ostream& Analysis::serverRequestForProblemFormulation(std::ostream& os) const {
+  return getImpl<detail::Analysis_Impl>()->serverRequestForProblemFormulation(os);
+}
+
+std::string Analysis::serverRequestForProblemFormulation() const {
+  return getImpl<detail::Analysis_Impl>()->serverRequestForProblemFormulation();
+}
+
+bool Analysis::saveServerRequestForDataPoints(const openstudio::path& p,bool overwrite) const {
+  return getImpl<detail::Analysis_Impl>()->saveServerRequestForDataPoints(p,overwrite);
+}
+
+std::ostream& Analysis::serverRequestForDataPoints(std::ostream& os) const {
+  return getImpl<detail::Analysis_Impl>()->serverRequestForDataPoints(os);
+}
+
+std::string Analysis::serverRequestForDataPoints() const {
+  return getImpl<detail::Analysis_Impl>()->serverRequestForDataPoints();
 }
 
 /// @cond

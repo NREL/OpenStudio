@@ -171,6 +171,14 @@ namespace detail {
     return QVariant(analysisObjectData);
   }
 
+  QVariant AnalysisObject_Impl::serverFormulationVariant() const {
+    return QVariant();
+  }
+
+  QVariant AnalysisObject_Impl::serverDataPointsVariant() const {
+    return QVariant();
+  }
+
   void AnalysisObject_Impl::onChildChanged(ChangeType changeType) {
     onChange(changeType);
   }
@@ -317,6 +325,14 @@ void AnalysisObject::onChange() {
 
 QVariant AnalysisObject::toVariant() const {
   return getImpl<detail::AnalysisObject_Impl>()->toVariant();
+}
+
+QVariant AnalysisObject::serverFormulationVariant() const {
+  return getImpl<detail::AnalysisObject_Impl>()->serverFormulationVariant();
+}
+
+QVariant AnalysisObject::serverDataPointsVariant() const {
+  return getImpl<detail::AnalysisObject_Impl>()->serverDataPointsVariant();
 }
 
 /// @endcond

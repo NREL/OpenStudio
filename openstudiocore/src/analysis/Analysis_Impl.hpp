@@ -242,10 +242,12 @@ namespace detail {
     Table summaryTable() const;
 
     //@}
-    /** @name Serialization */
+    /** @name Serialization
+     *  Methods to save to json format. See AnalysisObject.hpp, openstudio::analysis::loadJSON for
+     *  the de-serialization methods. */
     //@{
 
-    bool saveJSON(openstudio::path p,
+    bool saveJSON(const openstudio::path& p,
                   AnalysisSerializationScope scope=AnalysisSerializationScope::Full,
                   bool overwrite=false) const;
 
@@ -253,6 +255,32 @@ namespace detail {
                          AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
 
     std::string toJSON(AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
+
+    /** Saves the openstudio-server view of the problem formulation to file. This format cannot be
+     *  de-serialized. */
+    bool saveServerRequestForProblemFormulation(const openstudio::path& p,
+                                                bool overwrite=false) const;
+
+    /** Prints the openstudio-server view of the problem formulation. This format cannot be
+     *  de-serialized. */
+    std::ostream& serverRequestForProblemFormulation(std::ostream& os) const;
+
+    /** Prints the openstudio-server view of the problem formulation. This format cannot be
+     *  de-serialized. */
+    std::string serverRequestForProblemFormulation() const;
+
+    /** Saves the openstudio-server view of DataPoints that are not complete and do not have
+     *  a RunManager job attached (have not been started) to file. This format cannot be
+     *  de-serialized. */
+    bool saveServerRequestForDataPoints(const openstudio::path& p,bool overwrite=false) const;
+
+    /** Prints the openstudio-server view of DataPoints that are not complete and do not have
+     *  a RunManager job attached (have not been started). This format cannot be de-serialized. */
+    std::ostream& serverRequestForDataPoints(std::ostream& os) const;
+
+    /** Prints the openstudio-server view of DataPoints that are not complete and do not have
+     *  a RunManager job attached (have not been started). This format cannot be de-serialized. */
+    std::string serverRequestForDataPoints() const;
 
     //@}
     /** @name Protected in or Absent from Public Class */
@@ -266,6 +294,10 @@ namespace detail {
     QVariant toVariant(AnalysisSerializationScope scope) const;
 
     static Analysis fromVariant(const QVariant& variant,const VersionString& version);
+
+    virtual QVariant serverFormulationVariant() const;
+
+    virtual QVariant serverDataPointsVariant() const;
 
     //@}
    signals:
