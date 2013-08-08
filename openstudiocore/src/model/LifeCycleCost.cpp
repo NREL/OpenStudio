@@ -517,11 +517,11 @@ LifeCycleCost::LifeCycleCost(const ModelObject& modelObject)
   }else if (modelObject.optionalCast<SteamEquipmentDefinition>()){
     test = setString(OS_LifeCycleCostFields::ItemType, "Equipment");
     OS_ASSERT(test);
-  }else if (modelObject.optionalCast<HVACComponent >()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "HVAC Component");
+  }else if (modelObject.optionalCast<HVACComponent>()){
+    test = setString(OS_LifeCycleCostFields::ItemType, "HVACComponent");
     OS_ASSERT(test);
-  }else if (modelObject.optionalCast<ZoneHVACComponent >()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "Zone HVAC Component");
+  }else if (modelObject.optionalCast<ZoneHVACComponent>()){
+    test = setString(OS_LifeCycleCostFields::ItemType, "ZoneHVACComponent");
     OS_ASSERT(test);
   }else{
     this->remove();
