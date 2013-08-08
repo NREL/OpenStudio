@@ -20,11 +20,16 @@
 #include <analysis/InputVariable.hpp>
 #include <analysis/InputVariable_Impl.hpp>
 
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+#include <analysis/RubyContinuousVariable.hpp>
+#include <analysis/RubyContinuousVariable_Impl.hpp>
 #include <analysis/WorkflowStep.hpp>
 #include <analysis/WorkflowStep_Impl.hpp>
 
 #include <runmanager/lib/WorkItem.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/FileReference.hpp>
 
 namespace openstudio {
@@ -82,6 +87,72 @@ namespace detail {
   void InputVariable_Impl::resetUncertaintyDescription() {
     m_uncertaintyDescription.reset();
     onChange(AnalysisObject_Impl::Benign);
+  }
+
+  QVariant InputVariable_Impl::toVariant() const {
+    QVariantMap inputVariableData = AnalysisObject_Impl::toVariant().toMap();
+
+    if (OptionalUncertaintyDescription udesc = uncertaintyDescription()) {
+      inputVariableData["uncertainty_description"] = analysis::detail::toVariant(udesc.get());
+    }
+
+    return QVariant(inputVariableData);
+  }
+
+  InputVariable InputVariable_Impl::factoryFromVariant(const QVariant &variant, const VersionString &version)
+  {
+    QVariantMap map = variant.toMap();
+
+    if (!(map.contains("workflow_step_type") || map.contains("variable_type"))) {
+      LOG_AND_THROW("Unable to find InputVariable in expected location.");
+    }
+
+    std::string variableType;
+    if (map.contains("workflow_step_type")) {
+      variableType = map["workflow_step_type"].toString().toStdString();
+    }
+    else {
+      OS_ASSERT(map.contains("variable_type"));
+      variableType = map["variable_type"].toString().toStdString();
+    }
+
+    if (variableType == "MeasureGroup") {
+      return MeasureGroup_Impl::fromVariant(variant,version);
+    }
+    if (variableType == "RubyContinuousVariable") {
+      return RubyContinuousVariable_Impl::fromVariant(variant,version);
+    }
+
+    LOG_AND_THROW("Unexpected workflow_step_type or variable_type " << variableType << ".");
+    return OptionalInputVariable().get();
+  }
+
+  InputVariable InputVariable_Impl::factoryFromVariant(const QVariant &variant,
+                                                       const Measure &measure,
+                                                       const VersionString &version)
+  {
+    QVariantMap map = variant.toMap();
+
+    if (!(map.contains("workflow_step_type") || map.contains("variable_type"))) {
+      LOG_AND_THROW("Unable to find InputVariable in expected location.");
+    }
+
+    std::string variableType;
+    if (map.contains("workflow_step_type")) {
+      variableType = map["workflow_step_type"].toString().toStdString();
+    }
+    else {
+      OS_ASSERT(map.contains("variable_type"));
+      variableType = map["variable_type"].toString().toStdString();
+    }
+
+    // This type of constructor is not appropriate for MeasureGroups.
+    if (variableType == "RubyContinuousVariable") {
+      return RubyContinuousVariable_Impl::fromVariant(variant,measure,version);
+    }
+
+    LOG_AND_THROW("Unexpected workflow_step_type or variable_type " << variableType << ".");
+    return OptionalInputVariable().get();
   }
 
 } // detail

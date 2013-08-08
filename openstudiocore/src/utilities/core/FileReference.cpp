@@ -154,5 +154,51 @@ bool FileReference::update(const openstudio::path& searchDirectory) {
   return ok;
 }
 
+namespace detail {
+
+  QVariant toVariant(const FileReference& fileReference) {
+    QVariantMap fileReferenceData;
+
+    fileReferenceData["uuid"] = fileReference.uuid().toString();
+    fileReferenceData["version_uuid"] = fileReference.versionUUID().toString();
+    std::string str = fileReference.name();
+    if (!str.empty()) {
+      fileReferenceData["name"] = toQString(str);
+    }
+    str = fileReference.displayName();
+    if (!str.empty()) {
+      fileReferenceData["display_name"] = toQString(str);
+    }
+    str = fileReference.description();
+    if (!str.empty()) {
+      fileReferenceData["description"] = toQString(str);
+    }
+    fileReferenceData["path"] = toQString(fileReference.path());
+    fileReferenceData["file_type"] = toQString(fileReference.fileType().valueName());
+    fileReferenceData["timestamp_create"] = toQString(fileReference.timestampCreate().toString());
+    fileReferenceData["timestamp_last"] = toQString(fileReference.timestampLast().toString());
+    fileReferenceData["checksum_create"] = toQString(fileReference.checksumCreate());
+    fileReferenceData["checksum_last"] = toQString(fileReference.checksumLast());
+
+    return QVariant(fileReferenceData);
+  }
+
+  FileReference toFileReference(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+    return FileReference(openstudio::UUID(map["uuid"].toString()),
+                         openstudio::UUID(map["version_uuid"].toString()),
+                         map.contains("name") ? map["name"].toString().toStdString() : std::string(),
+                         map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                         map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                         toPath(map["path"].toString()),
+                         FileReferenceType(map["file_type"].toString().toStdString()),
+                         DateTime(map["timestamp_create"].toString().toStdString()),
+                         DateTime(map["timestamp_last"].toString().toStdString()),
+                         map["checksum_create"].toString().toStdString(),
+                         map["checksum_last"].toString().toStdString());
+  }
+
+} // detail
+
 } // openstudio
 

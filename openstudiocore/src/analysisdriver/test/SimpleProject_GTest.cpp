@@ -32,10 +32,10 @@
 #include <analysis/DDACEAlgorithm.hpp>
 #include <analysis/DesignOfExperimentsOptions.hpp>
 #include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/RubyPerturbation.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/RubyMeasure.hpp>
 #include <analysis/WorkflowStep.hpp>
 
 #include <project/ProjectDatabase.hpp>
@@ -227,9 +227,9 @@ TEST_F(AnalysisDriverFixture,SimpleProject_InsertMeasure) {
     EXPECT_EQ(args[i].type(),argsCopy[i].type());
   }
 
-  // use this measure to create a new variable/ruby perturbation
+  // use this measure to create a new variable/ruby measure
   // now it is important to use the copy in the project
-  DiscreteVariable dv("New Measure Group",DiscretePerturbationVector());
+  MeasureGroup dv("New Measure Group",MeasureVector());
   Problem problem = project.analysis().problem();
   problem.push(dv);
   // here, expect this test to pass.
@@ -237,7 +237,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_InsertMeasure) {
   EXPECT_TRUE(problem.fileTypesAreCompatible(dv,
                                              projectMeasure.inputFileType(),
                                              projectMeasure.outputFileType()));
-  EXPECT_TRUE(dv.push(RubyPerturbation(projectMeasure)));
+  EXPECT_TRUE(dv.push(RubyMeasure(projectMeasure)));
 }
 
 TEST_F(AnalysisDriverFixture,SimpleProject_UpdateMeasure) {
@@ -256,10 +256,10 @@ TEST_F(AnalysisDriverFixture,SimpleProject_UpdateMeasure) {
   project.registerArguments(projectMeasure,args);
   EXPECT_EQ(1u,project.measures().size());
 
-  // use the measure to create a new variable/ruby perturbation
-  DiscreteVariable dv("New Measure Group",DiscretePerturbationVector());
+  // use the measure to create a new variable/ruby measure
+  MeasureGroup dv("New Measure Group",MeasureVector());
   EXPECT_TRUE(problem.push(dv));
-  RubyPerturbation rp(projectMeasure);
+  RubyMeasure rp(projectMeasure);
   rp.setArguments(args);
   EXPECT_TRUE(dv.push(rp));
   EXPECT_EQ(args.size(),rp.arguments().size());
@@ -295,7 +295,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_UpdateMeasure) {
     // update the measure
     project.updateMeasure(newVersion,newArgs);
 
-    // verify the final state of SimpleProject and RubyPerturbation
+    // verify the final state of SimpleProject and RubyMeasure
     EXPECT_EQ(1u,project.measures().size());
     BCLMeasure retrievedMeasure = project.getMeasureByUUID(measure.uuid()).get();
     EXPECT_NE(measure.versionUUID(),retrievedMeasure.versionUUID());
@@ -317,8 +317,8 @@ TEST_F(AnalysisDriverFixture,SimpleProject_NonPATToPATProject) {
     openstudio::path measuresDir = resourcesPath() / toPath("/utilities/BCL/Measures");
     openstudio::path dir = measuresDir / toPath("SetWindowToWallRatioByFacade");
     BCLMeasure measure = BCLMeasure::load(dir).get();
-    RubyPerturbation rpert(measure);
-    project.analysis().problem().push(DiscreteVariable("My Variable",DiscretePerturbationVector(1u,rpert)));
+    RubyMeasure rmeasure(measure);
+    project.analysis().problem().push(MeasureGroup("My Variable",MeasureVector(1u,rmeasure)));
     DataPoint baseline = project.baselineDataPoint();
     EXPECT_EQ(1u,baseline.variableValues().size());
     EXPECT_TRUE(project.analysis().isDirty());
@@ -353,12 +353,12 @@ TEST_F(AnalysisDriverFixture,SimpleProject_EditProblemWithTwoWorkflows) {
     Problem problem = project.analysis().problem();
     OptionalInt index = problem.getWorkflowStepIndexByJobType(JobType::EnergyPlusPreProcess);
     ASSERT_TRUE(index);
-    DiscreteVariable dv("Idf Measure",DiscretePerturbationVector(1u,NullPerturbation()));
+    MeasureGroup dv("Idf Measure",MeasureVector(1u,NullMeasure()));
     problem.insert(*index,dv);
     BOOST_FOREACH(const BCLMeasure& measure,BCLMeasure::patApplicationMeasures()) {
       if (measure.inputFileType() == FileReferenceType::IDF) {
-        RubyPerturbation pert(measure);
-        dv.push(pert);
+        RubyMeasure measure(measure);
+        dv.push(measure);
         break;
       }
     }

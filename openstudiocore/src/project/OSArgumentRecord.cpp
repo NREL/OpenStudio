@@ -19,14 +19,15 @@
 
 #include <project/OSArgumentRecord.hpp>
 #include <project/OSArgumentRecord_Impl.hpp>
-#include <project/RubyPerturbationRecord.hpp>
+#include <project/RubyMeasureRecord.hpp>
 #include <project/RubyContinuousVariableRecord.hpp>
 
 #include <project/JoinRecord.hpp>
 
 #include <utilities/document/Table.hpp>
-#include <utilities/core/Containers.hpp>
+
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Containers.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
 #include <boost/foreach.hpp>
@@ -38,14 +39,14 @@ namespace detail {
 
   OSArgumentRecord_Impl::OSArgumentRecord_Impl(
       const ruleset::OSArgument& osArgument,
-      RubyPerturbationRecord& rubyPerturbationRecord)
-    : ObjectRecord_Impl(rubyPerturbationRecord.projectDatabase(),
+      RubyMeasureRecord& rubyMeasureRecord)
+    : ObjectRecord_Impl(rubyMeasureRecord.projectDatabase(),
                         osArgument.uuid(),
                         osArgument.name(),
                         osArgument.displayName(),
                         "",
                         osArgument.versionUUID()),
-      m_rubyPerturbationRecordId(rubyPerturbationRecord.id()),
+      m_rubyMeasureRecordId(rubyMeasureRecord.id()),
       m_argumentType(osArgument.type()),
       m_required(osArgument.required()),
       m_domainType(osArgument.domainType()),
@@ -118,7 +119,7 @@ namespace detail {
 
     value = query.value(OSArgumentRecord::ColumnsType::rubyPerturbationRecordId);
     if (value.isValid() && !value.isNull()) {
-      m_rubyPerturbationRecordId = value.toInt();
+      m_rubyMeasureRecordId = value.toInt();
     }
 
     value = query.value(OSArgumentRecord::ColumnsType::rubyContinuousVariableRecordId);
@@ -176,8 +177,8 @@ namespace detail {
 
   boost::optional<ObjectRecord> OSArgumentRecord_Impl::parent() const {
     OptionalObjectRecord result;
-    if (m_rubyPerturbationRecordId) {
-      result = rubyPerturbationRecord().get();
+    if (m_rubyMeasureRecordId) {
+      result = rubyMeasureRecord().get();
     }
     else {
       OS_ASSERT(m_rubyContinuousVariableRecordId);
@@ -229,11 +230,11 @@ namespace detail {
     }
   }
 
-  boost::optional<RubyPerturbationRecord> OSArgumentRecord_Impl::rubyPerturbationRecord() const {
-    OptionalRubyPerturbationRecord result;
-    if (m_rubyPerturbationRecordId) {
+  boost::optional<RubyMeasureRecord> OSArgumentRecord_Impl::rubyMeasureRecord() const {
+    OptionalRubyMeasureRecord result;
+    if (m_rubyMeasureRecordId) {
       ProjectDatabase database = projectDatabase();
-      result = RubyPerturbationRecord::getRubyPerturbationRecord(*m_rubyPerturbationRecordId,database);
+      result = RubyMeasureRecord::getRubyMeasureRecord(*m_rubyMeasureRecordId,database);
       OS_ASSERT(result);
     }
     return result;
@@ -308,9 +309,9 @@ namespace detail {
   void OSArgumentRecord_Impl::bindValues(QSqlQuery& query) const {
     ObjectRecord_Impl::bindValues(query);
 
-    if (m_rubyPerturbationRecordId) {
+    if (m_rubyMeasureRecordId) {
       query.bindValue(OSArgumentRecord::ColumnsType::rubyPerturbationRecordId,
-                      *m_rubyPerturbationRecordId);
+                      *m_rubyMeasureRecordId);
     }
     else {
       query.bindValue(OSArgumentRecord::ColumnsType::rubyPerturbationRecordId,
@@ -373,10 +374,10 @@ namespace detail {
 
     value = query.value(OSArgumentRecord::ColumnsType::rubyPerturbationRecordId);
     if (value.isValid() && !value.isNull()) {
-      m_lastRubyPerturbationRecordId = value.toInt();
+      m_lastRubyMeasureRecordId = value.toInt();
     }
     else {
-      m_lastRubyPerturbationRecordId.reset();
+      m_lastRubyMeasureRecordId.reset();
     }
 
     value = query.value(OSArgumentRecord::ColumnsType::rubyContinuousVariableRecordId);
@@ -451,10 +452,10 @@ namespace detail {
 
     value = query.value(OSArgumentRecordColumns::rubyPerturbationRecordId);
     if (value.isValid() && !value.isNull()) {
-      result = result && m_rubyPerturbationRecordId && (*m_rubyPerturbationRecordId == value.toInt());
+      result = result && m_rubyMeasureRecordId && (*m_rubyMeasureRecordId == value.toInt());
     }
     else {
-      result = result && !m_rubyPerturbationRecordId;
+      result = result && !m_rubyMeasureRecordId;
     }
 
     value = query.value(OSArgumentRecordColumns::rubyContinuousVariableRecordId);
@@ -523,7 +524,7 @@ namespace detail {
   void OSArgumentRecord_Impl::saveLastValues() {
     ObjectRecord_Impl::saveLastValues();
 
-    m_lastRubyPerturbationRecordId = m_rubyPerturbationRecordId;
+    m_lastRubyMeasureRecordId = m_rubyMeasureRecordId;
     m_lastRubyContinuousVariableRecordId = m_rubyContinuousVariableRecordId;
     m_lastArgumentType = m_argumentType;
     m_lastRequired = m_required;
@@ -540,7 +541,7 @@ namespace detail {
   void OSArgumentRecord_Impl::revertToLastValues() {
     ObjectRecord_Impl::revertToLastValues();
 
-    m_rubyPerturbationRecordId = m_lastRubyPerturbationRecordId;
+    m_rubyMeasureRecordId = m_lastRubyMeasureRecordId;
     m_rubyContinuousVariableRecordId = m_lastRubyContinuousVariableRecordId;
     m_argumentType = m_lastArgumentType;
     m_required = m_lastRequired;
@@ -581,10 +582,10 @@ namespace detail {
 
 OSArgumentRecord::OSArgumentRecord(
     const ruleset::OSArgument& osArgument,
-    RubyPerturbationRecord& rubyPerturbationRecord)
+    RubyMeasureRecord& rubyMeasureRecord)
   : ObjectRecord(boost::shared_ptr<detail::OSArgumentRecord_Impl>(
-        new detail::OSArgumentRecord_Impl(osArgument, rubyPerturbationRecord)),
-        rubyPerturbationRecord.projectDatabase())
+        new detail::OSArgumentRecord_Impl(osArgument, rubyMeasureRecord)),
+        rubyMeasureRecord.projectDatabase())
 {
   OS_ASSERT(getImpl<detail::OSArgumentRecord_Impl>());
 }
@@ -738,8 +739,8 @@ boost::optional<OSArgumentRecord> OSArgumentRecord::getOSArgumentRecord(int id, 
   return result;
 }
 
-boost::optional<RubyPerturbationRecord> OSArgumentRecord::rubyPerturbationRecord() const {
-  return getImpl<detail::OSArgumentRecord_Impl>()->rubyPerturbationRecord();
+boost::optional<RubyMeasureRecord> OSArgumentRecord::rubyMeasureRecord() const {
+  return getImpl<detail::OSArgumentRecord_Impl>()->rubyMeasureRecord();
 }
 
 boost::optional<RubyContinuousVariableRecord> OSArgumentRecord::rubyContinuousVariableRecord() const  {
@@ -778,4 +779,5 @@ OSArgumentRecord::OSArgumentRecord(boost::shared_ptr<detail::OSArgumentRecord_Im
 
 } // project
 } // openstudio
+
 

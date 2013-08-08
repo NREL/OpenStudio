@@ -19,23 +19,24 @@
 
 #include <project/DataPointRecord.hpp>
 #include <project/DataPointRecord_Impl.hpp>
-#include <project/DataPoint_DiscretePerturbation_JoinRecord.hpp>
-#include <project/DataPoint_DiscretePerturbation_JoinRecord_Impl.hpp>
+#include <project/DataPoint_Measure_JoinRecord.hpp>
+#include <project/DataPoint_Measure_JoinRecord_Impl.hpp>
 #include <project/DataPointValueRecord.hpp>
 
 #include <project/AnalysisRecord.hpp>
+#include <project/AttributeRecord.hpp>
 #include <project/ProblemRecord.hpp>
+#include <project/ContinuousVariableRecord.hpp>
+#include <project/ContinuousVariableRecord_Impl.hpp>
+#include <project/FunctionRecord.hpp>
+#include <project/FileReferenceRecord.hpp>
+#include <project/MeasureGroupRecord.hpp>
+#include <project/MeasureGroupRecord_Impl.hpp>
+#include <project/MeasureRecord.hpp>
 #include <project/OptimizationProblemRecord.hpp>
 #include <project/OptimizationProblemRecord_Impl.hpp>
 #include <project/OptimizationDataPointRecord.hpp>
-#include <project/ContinuousVariableRecord.hpp>
-#include <project/ContinuousVariableRecord_Impl.hpp>
-#include <project/DiscreteVariableRecord.hpp>
-#include <project/DiscreteVariableRecord_Impl.hpp>
-#include <project/DiscretePerturbationRecord.hpp>
-#include <project/FunctionRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/AttributeRecord.hpp>
+
 #include <project/TagRecord.hpp>
 
 #include <analysis/DataPoint.hpp>
@@ -197,8 +198,8 @@ namespace detail {
   std::vector<JoinRecord> DataPointRecord_Impl::joinRecords() const {
     JoinRecordVector result;
 
-    DataPoint_DiscretePerturbation_JoinRecordVector discretePerturbationJoins =
-      JoinRecord::getJoinRecordsForLeftId<DataPoint_DiscretePerturbation_JoinRecord>(id(),projectDatabase());
+    DataPoint_Measure_JoinRecordVector discretePerturbationJoins =
+      JoinRecord::getJoinRecordsForLeftId<DataPoint_Measure_JoinRecord>(id(),projectDatabase());
     result.insert(result.end(),discretePerturbationJoins.begin(),discretePerturbationJoins.end());
 
     return result;
@@ -371,18 +372,18 @@ namespace detail {
     BOOST_FOREACH(const InputVariableRecord& inputVariableRecord,inputVariableRecords) {
       if (inputVariableRecord.optionalCast<DiscreteVariableRecord>()) {
         QSqlQuery query(*(database.qSqlDatabase()));
-        query.prepare(toQString("SELECT * FROM " + DiscretePerturbationRecord::databaseTableName() + " o , " +
-            DataPoint_DiscretePerturbation_JoinRecord::databaseTableName() + " j " +
+        query.prepare(toQString("SELECT * FROM " + MeasureRecord::databaseTableName() + " o , " +
+            DataPoint_Measure_JoinRecord::databaseTableName() + " j " +
             " WHERE o.variableRecordId=:variableRecordId AND j.leftId=:leftId AND o.id=j.rightId "));
         query.bindValue(":variableRecordId",inputVariableRecord.id());
         query.bindValue(":leftId",id());
         assertExec(query);
         if (query.first()) {
-          // by asking for whole record, perturbationVectorIndex() will be correct even if
+          // by asking for whole record, measureVectorIndex() will be correct even if
           // record is dirty
-          OptionalDiscretePerturbationRecord dpr = DiscretePerturbationRecord::factoryFromQuery(query,database);
-          if (dpr && dpr->perturbationVectorIndex()) {
-            variableValues.push_back(dpr->perturbationVectorIndex().get());
+          OptionalMeasureRecord dpr = MeasureRecord::factoryFromQuery(query,database);
+          if (dpr && dpr->measureVectorIndex()) {
+            variableValues.push_back(dpr->measureVectorIndex().get());
           }
         }
       }
@@ -408,6 +409,7 @@ namespace detail {
     OptionalFileReference oIdfInputData;
     OptionalFileReference oSqlOutputData;
     OptionalFileReference oXmlOutputData;
+    AttributeVector attributes;
     ofrr = osmInputDataRecord();
     if (ofrr) {
       oOsmInputData = ofrr->fileReference();
@@ -423,6 +425,9 @@ namespace detail {
     ofrr = xmlOutputDataRecord();
     if (ofrr) {
       oXmlOutputData = ofrr->fileReference();
+      Q_FOREACH(const AttributeRecord& attributeRecord, ofrr->attributeRecords()) {
+        attributes.push_back(attributeRecord.attribute());
+      }
     }
 
     TagRecordVector tagRecords = this->tagRecords();
@@ -447,9 +452,9 @@ namespace detail {
                                name(),
                                displayName(),
                                description(),
+                               problemRecord.problem(),
                                m_complete,
                                m_failed,
-                               problemRecord.problem(),
                                variableValues,
                                responseValues(),
                                m_directory,
@@ -457,9 +462,10 @@ namespace detail {
                                oIdfInputData,
                                oSqlOutputData,
                                oXmlOutputData,
-                               tags,
                                topLevelJob,
-                               m_dakotaParametersFiles);
+                               m_dakotaParametersFiles,
+                               tags,
+                               attributes);
   }
 
   void DataPointRecord_Impl::setDirectory(const openstudio::path& directory) {
@@ -1078,10 +1084,10 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
     InputVariableRecordVector inputVariableRecords = problemRecord.inputVariableRecords();
     OS_ASSERT(inputVariableRecords.size() == variableValues.size());
     for (int i = 0, n = variableValues.size(); i < n; ++i) {
-      if (OptionalDiscreteVariableRecord odvr = inputVariableRecords[i].optionalCast<DiscreteVariableRecord>())
+      if (OptionalMeasureGroupRecord omgr = inputVariableRecords[i].optionalCast<MeasureGroupRecord>())
       {
-        DiscretePerturbationRecord dpr = odvr->getDiscretePerturbationRecord(variableValues[i].toInt());
-        DataPoint_DiscretePerturbation_JoinRecord discreteVariableValueRecord(copyOfThis,dpr);
+        MeasureRecord mr = omgr->getMeasureRecord(variableValues[i].toInt());
+        DataPoint_Measure_JoinRecord discreteVariableValueRecord(copyOfThis,mr);
       }
       else {
         OptionalContinuousVariableRecord ocvr = inputVariableRecords[i].optionalCast<ContinuousVariableRecord>();
@@ -1112,11 +1118,11 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
       InputVariableRecordVector inputVariableRecords = problemRecord.inputVariableRecords();
       OS_ASSERT(inputVariableRecords.size() == variableValues.size());
       for (int i = 0, n = variableValues.size(); i < n; ++i) {
-        if (OptionalDiscreteVariableRecord odvr = inputVariableRecords[i].optionalCast<DiscreteVariableRecord>())
+        if (OptionalMeasureGroupRecord omgr = inputVariableRecords[i].optionalCast<MeasureGroupRecord>())
         {
-          LOG(Debug,"Variable " << i << ": " << odvr->name() << ", Value: " << variableValues[i].toInt());
-          DiscretePerturbationRecord dpr = odvr->getDiscretePerturbationRecord(variableValues[i].toInt());
-          DataPoint_DiscretePerturbation_JoinRecord discreteVariableValueRecord(copyOfThis,dpr);
+          LOG(Debug,"Variable " << i << ": " << omgr->name() << ", Value: " << variableValues[i].toInt());
+          MeasureRecord mr = omgr->getMeasureRecord(variableValues[i].toInt());
+          DataPoint_Measure_JoinRecord discreteVariableValueRecord(copyOfThis,mr);
         }
         else {
           OptionalContinuousVariableRecord ocvr = inputVariableRecords[i].optionalCast<ContinuousVariableRecord>();

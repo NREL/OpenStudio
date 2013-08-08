@@ -21,10 +21,14 @@
 #include <analysis/WorkflowStep_Impl.hpp>
 
 #include <analysis/InputVariable_Impl.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/Problem_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
+#include <runmanager/lib/JSON.hpp>
+
 #include <utilities/core/FileReference.hpp>
 
 namespace openstudio {
@@ -56,7 +60,7 @@ namespace detail {
     OS_ASSERT(!(inputVariable && workItem));
     if (isInputVariable()) {
       setName(inputVariable->name() + " Workflow Step");
-      m_inputVariable->onChange();
+      // deserialization constructor, so do not call m_inputVariable->onChange()
       connectChild(m_inputVariable.get(),false);
     }
     else {
@@ -189,6 +193,44 @@ namespace detail {
       onChange(AnalysisObject_Impl::InvalidatesResults);
     }
     return true;
+  }
+
+  QVariant WorkflowStep_Impl::toVariant() const {
+    QVariant result;
+
+    if (isInputVariable()) {
+      result = inputVariable().toVariant();
+    }
+    else {
+      QVariantMap workItemData = runmanager::detail::JSON::toVariant(workItem()).toMap();
+      workItemData["workflow_step_type"] = "WorkItem";
+      result = QVariant(workItemData);
+    }
+
+    return result;
+  }
+
+  WorkflowStep WorkflowStep_Impl::factoryFromVariant(const QVariant& variant, const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+
+    if (!map.contains("workflow_step_type")) {
+      LOG_AND_THROW("Unable to find WorkflowStep in expected location.");
+    }
+
+    std::string workflowStepType = map["workflow_step_type"].toString().toStdString();
+    if (workflowStepType == "WorkItem") {
+      return WorkflowStep(OptionalInputVariable(),
+                          runmanager::detail::JSON::toWorkItem(variant,version));
+    }
+    if (workflowStepType == "MeasureGroup") {
+      return WorkflowStep(MeasureGroup_Impl::fromVariant(variant,version),
+                          boost::optional<runmanager::WorkItem>());
+    }
+
+    // workflowStepType == "Measure" is handled by Problem_Impl
+    LOG_AND_THROW("Unexpected workflow_step_type " << workflowStepType << ".");
+    return OptionalWorkflowStep().get();
   }
 
 } // detail

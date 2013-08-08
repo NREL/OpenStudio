@@ -22,10 +22,12 @@
 
 #include <analysis/GenericUncertaintyDescription.hpp>
 
-#include <utilities/core/Finder.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Finder.hpp>
+#include <utilities/core/Json.hpp>
 
 #include <boost/foreach.hpp>
+#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -611,6 +613,41 @@ UncertaintyDescription::UncertaintyDescription(boost::shared_ptr<detail::Uncerta
 boost::shared_ptr<detail::UncertaintyDescription_Impl> UncertaintyDescription::impl() const {
   return m_impl;
 }
+
+namespace detail {
+
+  QVariant toVariant(const UncertaintyDescription& udesc) {
+    GenericUncertaintyDescription generic = udesc.cast<GenericUncertaintyDescription>();
+
+    QVariantMap udescMap;
+    udescMap["type"] = toQString(generic.actualType().valueName());
+    if (!generic.attributes().empty()) {
+      QVariantList attributesList;
+      Q_FOREACH(const Attribute& attribute,generic.attributes()) {
+        attributesList.push_back(openstudio::detail::toVariant(attribute));
+      }
+      udescMap["attributes"] = QVariant(attributesList);
+    }
+
+    return QVariant(udescMap);
+  }
+
+  UncertaintyDescription toUncertaintyDescription(const QVariant& variant,
+                                                  const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+
+    AttributeVector attributes = deserializeUnorderedVector(
+          map["attributes"].toList(),
+          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+
+    GenericUncertaintyDescription result(UncertaintyDescriptionType(map["type"].toString().toStdString()),
+                                         attributes);
+
+    return result.cast<UncertaintyDescription>();
+  }
+
+} // detail
 
 } // analysis
 } // openstudio

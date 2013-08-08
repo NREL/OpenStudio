@@ -25,9 +25,9 @@
 
 #include <analysisdriver/CurrentAnalysis.hpp>
 
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
 #include <analysis/InputVariable.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/Analysis.hpp>
@@ -247,11 +247,11 @@ std::string MeasureManager::suggestMeasureName(const BCLMeasure &t_measure, bool
     analysis::Analysis analysis = project->analysis();
     analysis::Problem problem = analysis.problem();
     BOOST_FOREACH(const analysis::InputVariable& variable, problem.variables()){
-      boost::optional<analysis::DiscreteVariable> discreteVariable = variable.optionalCast<analysis::DiscreteVariable>();
+      boost::optional<analysis::MeasureGroup> discreteVariable = variable.optionalCast<analysis::MeasureGroup>();
       if (discreteVariable){
-        BOOST_FOREACH(const analysis::DiscretePerturbation& perturbation, discreteVariable->perturbations(false)){
-          allNames.insert(perturbation.name());
-          allNames.insert(perturbation.displayName());
+        BOOST_FOREACH(const analysis::Measure& measure, discreteVariable->measures(false)){
+          allNames.insert(measure.name());
+          allNames.insert(measure.displayName());
         }
       }
     }

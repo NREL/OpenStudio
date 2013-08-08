@@ -50,7 +50,7 @@ namespace openstudio {
 
 namespace analysis {
   class DataPoint;
-  class DiscreteVariable;
+  class MeasureGroup;
   class WorkflowStep;
 }
 
@@ -208,10 +208,10 @@ class ANALYSISDRIVER_API SimpleProject : public QObject {
   /** Returns true if this project only contains structures that can be displayed in PAT. */
   bool isPATProject() const;
 
-  /** Returns the analysis::DiscreteVariable in analysis().problem() that implements the alternate
+  /** Returns the analysis::MeasureGroup in analysis().problem() that implements the alternate
    *  model option in PAT, if it exists. The variable is identified by its name and (exclusive) 
    *  use of a specific BCLMeasure (identified by UUID). */
-  boost::optional<analysis::DiscreteVariable> getAlternativeModelVariable() const;
+  boost::optional<analysis::MeasureGroup> getAlternativeModelVariable() const;
 
   //@}
   /** @name Actions */

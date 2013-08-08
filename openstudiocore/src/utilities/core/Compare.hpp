@@ -177,6 +177,20 @@ struct SecondOfPairLess {
   }
 };
 
+template<class T, class U>
+struct GetFirstOfPair {
+  T operator()(const std::pair<T,U>& pair) const {
+    return pair.first;
+  }
+};
+
+template<class T, class U>
+struct GetSecondOfPair {
+  U operator()(const std::pair<T,U>& pair) const {
+    return pair.second;
+  }
+};
+
 template<class T>
 struct IndexLess {
   bool operator()(const T& left, const T& right) const {

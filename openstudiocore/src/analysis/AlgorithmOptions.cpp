@@ -144,6 +144,18 @@ namespace detail {
     m_algorithm = algorithm;
   }
 
+  QVariant AlgorithmOptions_Impl::toVariant() const {
+    QVariantMap map;
+
+    QVariantList attributesList;
+    Q_FOREACH(const Attribute& option,options()) {
+      attributesList.push_back(openstudio::detail::toVariant(option));
+    }
+    map["attributes"] = attributesList;
+
+    return QVariant(map);
+  }
+
 } // detail
 
 AlgorithmOptions::AlgorithmOptions()
@@ -191,6 +203,10 @@ AlgorithmOptions::AlgorithmOptions(boost::shared_ptr<detail::AlgorithmOptions_Im
 
 void AlgorithmOptions::setAlgorithm(const Algorithm& algorithm) {
   getImpl<detail::AlgorithmOptions_Impl>()->setAlgorithm(algorithm);
+}
+
+QVariant AlgorithmOptions::toVariant() const {
+  return getImpl<detail::AlgorithmOptions_Impl>()->toVariant();
 }
 
 } // analysis
