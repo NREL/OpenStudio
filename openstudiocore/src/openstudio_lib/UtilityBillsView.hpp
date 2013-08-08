@@ -129,7 +129,6 @@ private:
   void addBillingPeriod(model::BillingPeriod & billingPeriod, unsigned index);
   void addBillingPeriods();
 
-  void deleteBillingPeriod();
   void deleteBillingPeriods();
 
   boost::optional<model::UtilityBill> m_utilityBill;
@@ -159,6 +158,19 @@ private slots:
   void deleteBillingPeriod(int index);
   void setBillFormat(BillFormat billFormat);
 
+  void nameChanged(const QString & text);
+  void consumptionUnitsChanged(const QString & text);
+  void energyDemandUnitsChanged(const QString & text);
+  void weatherFileChanged(const QString & text);
+  void windowTimestepsChanged(double timeSteps);
+
+  void startDateChanged(const QDate & newdate);
+  void endDateChanged(const QDate & newdate);
+  void numberOfDaysChanged(double numberOfDays);
+  void consumptionChanged(double consumption);
+  void peakDemandChanged(double peakDemand); 
+  void totalCostChanged(double totalCost);
+
 };
 
 class BillingPeriodWidget : public QWidget
@@ -176,6 +188,17 @@ public:
     QWidget * parent = 0);
 
   virtual ~BillingPeriodWidget() {}
+
+  QDateEdit * m_startDateEdit;
+  QDateEdit * m_endDateEdit;
+
+  QDoubleSpinBox * m_billingPeriodIntEdit;
+  QDoubleSpinBox * m_energyUseDoubleEdit;
+  QDoubleSpinBox * m_peaklDoubleEdit;
+  QDoubleSpinBox * m_costDoubleEdit;
+
+  QPushButton * m_deleteBillWidget; 
+  unsigned m_index;
 
 private:
 
@@ -195,22 +218,7 @@ private:
 
   void getBillingPeriodLineEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex);
 
-  QDateEdit * m_startDateEdit;
-  QDateEdit * m_endDateEdit;
-
-  QDoubleSpinBox * m_billingPeriodIntEdit;
-  QDoubleSpinBox * m_energyUseDoubleEdit;
-  QDoubleSpinBox * m_peaklDoubleEdit;
-  QDoubleSpinBox * m_costDoubleEdit;
-
-  QPushButton * m_deleteBillWidget;
-
-  unsigned m_index;
-
 private slots:
-
-  void startDateChanged(const QDate & newdate);
-  void endDateChanged(const QDate & newdate);
 
 };
 

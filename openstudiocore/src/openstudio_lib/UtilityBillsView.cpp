@@ -224,8 +224,6 @@ void UtilityBillsInspectorView::createWidgets()
   isConnected = connect(m_buttonGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(deleteBillingPeriod(int)));
   Q_ASSERT(isConnected);
-
-  //m_buttonGroup->addButton(radioButton,0); // TODO need to add delete button to this
   
   // Name
 
@@ -242,6 +240,10 @@ void UtilityBillsInspectorView::createWidgets()
   //m_name->setReadOnly(true);
   m_name->setFixedWidth(OS_EDIT_WIDTH);
   vLayout->addWidget(m_name);
+    
+  isConnected = connect(m_name, SIGNAL(textChanged(const QString &)),
+    this, SLOT(nameChanged(const QString &)));
+  Q_ASSERT(isConnected);
 
   mainLayout->addLayout(vLayout);
 
@@ -266,10 +268,18 @@ void UtilityBillsInspectorView::createWidgets()
   m_consumptionUnits->setFixedWidth(OS_EDIT_WIDTH);
   vLayout->addWidget(m_consumptionUnits);
 
+  isConnected = connect(m_consumptionUnits, SIGNAL(textChanged(const QString &)),
+    this, SLOT(consumptionUnitsChanged(const QString &)));
+  Q_ASSERT(isConnected);
+
   gridLayout->addLayout(vLayout,0,0,Qt::AlignLeft | Qt::AlignTop);
 
-  if(true){
-  //if(fuelType == Electricity){
+  FuelType fuelType = FuelType::Electricity;
+  if(m_utilityBill.is_initialized()){
+    fuelType = m_utilityBill.get().fuelType();
+  }
+
+  if(fuelType == FuelType::Electricity){
     vLayout = new QVBoxLayout();
     vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     vLayout->setSpacing(10);
@@ -283,6 +293,10 @@ void UtilityBillsInspectorView::createWidgets()
     //m_energyDemandUnits->setReadOnly(true);
     m_energyDemandUnits->setFixedWidth(OS_EDIT_WIDTH);
     vLayout->addWidget(m_energyDemandUnits);
+
+    isConnected = connect(m_energyDemandUnits, SIGNAL(textChanged(const QString &)),
+      this, SLOT(energyDemandUnitsChanged(const QString &)));
+    Q_ASSERT(isConnected);
 
     gridLayout->addLayout(vLayout,0,1,Qt::AlignLeft | Qt::AlignTop);
   
@@ -300,6 +314,10 @@ void UtilityBillsInspectorView::createWidgets()
     m_windowTimesteps->setDecimals(0);
     m_windowTimesteps->setFixedWidth(OS_EDIT_WIDTH);
     vLayout->addWidget(m_windowTimesteps);
+
+    isConnected = connect(m_windowTimesteps,SIGNAL(valueChanged(double)),
+      this,SLOT(windowTimestepsChanged(double)));
+    Q_ASSERT(isConnected);
 
     gridLayout->addLayout(vLayout,0,2,Qt::AlignLeft | Qt::AlignTop);
   }
@@ -323,6 +341,10 @@ void UtilityBillsInspectorView::createWidgets()
  // m_weatherFile->setReadOnly(true);
   m_weatherFile->setFixedWidth(OS_EDIT_WIDTH);
   vLayout->addWidget(m_weatherFile);
+
+  isConnected = connect(m_weatherFile, SIGNAL(textChanged(const QString &)),
+    this, SLOT(weatherFileChanged(const QString &)));
+  Q_ASSERT(isConnected);
 
   mainLayout->addLayout(vLayout);
 
@@ -501,8 +523,9 @@ void UtilityBillsInspectorView::addBillingPeriods()
 {
   if(m_utilityBill.is_initialized()){
     std::vector<model::BillingPeriod> billingPeriods = m_utilityBill.get().billingPeriods();
-    for(unsigned i = 0; i < billingPeriods.size(); i++)
-    addBillingPeriod(billingPeriods.at(i),i);
+    for(unsigned i = 0; i < billingPeriods.size(); i++){
+      addBillingPeriod(billingPeriods.at(i),i);
+    }
   }
 }
 
@@ -514,13 +537,42 @@ void UtilityBillsInspectorView::addBillingPeriod(model::BillingPeriod & billingP
 void UtilityBillsInspectorView::addBillingPeriod(model::BillingPeriod & billingPeriod, unsigned index)
 {
   if(m_utilityBill.is_initialized()){
-    new BillingPeriodWidget(m_billGridLayout,billingPeriod,m_utilityBill.get().fuelType(),m_billFormat,index);
-  }
-}
+    BillingPeriodWidget * billingPeriodWidget = new BillingPeriodWidget(m_billGridLayout,billingPeriod,m_utilityBill.get().fuelType(),m_billFormat,index);
+    m_buttonGroup->addButton(billingPeriodWidget->m_deleteBillWidget,billingPeriodWidget->m_index);
 
-void UtilityBillsInspectorView::deleteBillingPeriod(const unsigned index)
-{
-  // TODO
+    bool isConnected = false;
+
+    if(billingPeriodWidget->m_startDateEdit){
+      isConnected = connect(billingPeriodWidget->m_startDateEdit,SIGNAL(dateChanged(const QDate &)),
+        this,SLOT(startDateChanged(const QDate &)));
+      Q_ASSERT(isConnected);
+    }
+
+    if(billingPeriodWidget->m_endDateEdit){
+      isConnected = connect(billingPeriodWidget->m_endDateEdit,SIGNAL(dateChanged(const QDate &)),
+        this,SLOT(endDateChanged(const QDate &)));
+      Q_ASSERT(isConnected);
+    }
+
+    if(billingPeriodWidget->m_billingPeriodIntEdit){
+      isConnected = connect(billingPeriodWidget->m_billingPeriodIntEdit,SIGNAL(valueChanged(double)),
+        this,SLOT(numberOfDaysChanged(double)));
+      Q_ASSERT(isConnected);
+    }
+
+    isConnected = connect(billingPeriodWidget->m_energyUseDoubleEdit,SIGNAL(valueChanged(double)),
+      this,SLOT(consumptionChanged(double)));
+    Q_ASSERT(isConnected);
+
+    isConnected = connect(billingPeriodWidget->m_peaklDoubleEdit,SIGNAL(valueChanged(double)),
+      this,SLOT(peakDemandChanged(double)));
+    Q_ASSERT(isConnected);
+
+    isConnected = connect(billingPeriodWidget->m_costDoubleEdit,SIGNAL(valueChanged(double)),
+      this,SLOT(totalCostChanged(double)));
+    Q_ASSERT(isConnected);
+
+  }
 }
 
 void UtilityBillsInspectorView::deleteBillingPeriods()
@@ -535,7 +587,6 @@ void UtilityBillsInspectorView::deleteBillingPeriods()
   }
 }
 
-
 ////// SLOTS ///////
 
 void UtilityBillsInspectorView::addBillingPeriod(bool checked)
@@ -547,6 +598,16 @@ void UtilityBillsInspectorView::addBillingPeriod(bool checked)
 
 void UtilityBillsInspectorView::deleteBillingPeriod(int index)
 {
+  if(m_utilityBill.is_initialized()){
+    std::vector<model::BillingPeriod> billingPeriods =  m_utilityBill.get().billingPeriods();
+    model::BillingPeriod billingPeriod = billingPeriods.at(index);
+    std::vector<WorkspaceObject> workspaceObjects = billingPeriod.getTargets();
+    Q_FOREACH(WorkspaceObject workspaceObject, workspaceObjects){
+      workspaceObject.remove();
+    }
+    deleteBillingPeriods();
+    addBillingPeriods();
+  }
 }
 
 void UtilityBillsInspectorView::setBillFormat(BillFormat billFormat)
@@ -554,9 +615,75 @@ void UtilityBillsInspectorView::setBillFormat(BillFormat billFormat)
   m_billFormat = billFormat;
 }
 
-//void UtilityBillsInspectorView::resetUtilityBills()
-//{
-//}
+void UtilityBillsInspectorView::nameChanged(const QString & text)
+{
+  if(m_utilityBill.is_initialized()){
+    m_utilityBill.get();
+  }
+}
+
+void UtilityBillsInspectorView::consumptionUnitsChanged(const QString & text)
+{
+  if(m_utilityBill.is_initialized()){
+    m_utilityBill.get();
+  }
+}
+
+void UtilityBillsInspectorView::energyDemandUnitsChanged(const QString & text)
+{
+  if(m_utilityBill.is_initialized()){
+    m_utilityBill.get();
+  }
+}
+
+void UtilityBillsInspectorView::weatherFileChanged(const QString & text)
+{
+  if(m_utilityBill.is_initialized()){
+    m_utilityBill.get();
+  }
+}
+
+void UtilityBillsInspectorView::windowTimestepsChanged(double timeSteps)
+{
+    // cast to int
+  if(m_utilityBill.is_initialized()){
+    m_utilityBill.get();
+  }
+}
+
+void UtilityBillsInspectorView::startDateChanged(const QDate & newdate)
+{
+  //model::RunPeriodControlDaylightSavingTime dst =
+  //  m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
+
+  //dst.setStartDate(monthOfYear(newdate.month()),newdate.day());
+}
+
+void UtilityBillsInspectorView::endDateChanged(const QDate & newdate)
+{
+  //model::RunPeriodControlDaylightSavingTime dst =
+  //  m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
+
+  //dst.setEndDate(monthOfYear(newdate.month()),newdate.day());
+}
+
+void UtilityBillsInspectorView::numberOfDaysChanged(double numberOfDays)
+{
+  // cast to int
+}
+
+void UtilityBillsInspectorView::consumptionChanged(double consumption)
+{
+}
+
+void UtilityBillsInspectorView::peakDemandChanged(double peakDemand)
+{
+}
+
+void UtilityBillsInspectorView::totalCostChanged(double totalCost)
+{
+}
+
 
 //**********************************************************************************************************
 
@@ -709,10 +836,6 @@ void BillingPeriodWidget::getDateEdit(QGridLayout * gridLayout, int rowIndex, in
 void BillingPeriodWidget::getStartDateCalendar(QGridLayout * gridLayout, int rowIndex, int columnIndex)
 {
   getDateEdit(gridLayout, rowIndex, columnIndex, m_startDateEdit);
-
-  bool isConnected = connect(m_startDateEdit,SIGNAL(dateChanged(const QDate &)),
-    this,SLOT(startDateChanged(const QDate &)));
-  Q_ASSERT(isConnected);
 }
 
 void BillingPeriodWidget::getEndDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex)
@@ -723,10 +846,6 @@ void BillingPeriodWidget::getEndDateLabel(QGridLayout * gridLayout, int rowIndex
 void BillingPeriodWidget::getEndDateCalendar(QGridLayout * gridLayout, int rowIndex, int columnIndex)
 {
   getDateEdit(gridLayout, rowIndex, columnIndex, m_endDateEdit);
-
-  bool isConnected = connect(m_endDateEdit,SIGNAL(dateChanged(const QDate &)),
-    this,SLOT(endDateChanged(const QDate &)));
-  Q_ASSERT(isConnected);
 }
 
 void BillingPeriodWidget::getBillingPeriodLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex)
@@ -738,30 +857,11 @@ void BillingPeriodWidget::getBillingPeriodLineEdit(QGridLayout * gridLayout, int
 {
   m_billingPeriodIntEdit = new QDoubleSpinBox();
   m_billingPeriodIntEdit->setDecimals(0);
-  // TODO m_billingPeriodIntEdit->setMinimum(0);
   m_billingPeriodIntEdit->setMinimum(28);
   m_billingPeriodIntEdit->setMaximum(31);
   m_billingPeriodIntEdit->setFixedWidth(OS_UTILITY_WIDTH);
 
   gridLayout->addWidget(m_billingPeriodIntEdit,rowIndex,columnIndex,Qt::AlignLeft | Qt::AlignTop);
-}
-
-//// SLOTS
-
-void BillingPeriodWidget::startDateChanged(const QDate & newdate)
-{
-  //model::RunPeriodControlDaylightSavingTime dst =
-  //  m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
-
-  //dst.setStartDate(monthOfYear(newdate.month()),newdate.day());
-}
-
-void BillingPeriodWidget::endDateChanged(const QDate & newdate)
-{
-  //model::RunPeriodControlDaylightSavingTime dst =
-  //  m_model.getUniqueModelObject<model::RunPeriodControlDaylightSavingTime>();
-
-  //dst.setEndDate(monthOfYear(newdate.month()),newdate.day());
 }
 
 
