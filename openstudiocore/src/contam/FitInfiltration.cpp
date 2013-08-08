@@ -268,12 +268,16 @@ int main(int argc, char *argv[])
   }
 
   if(verbose)
+  {
     std::cout << "Found " << extSurfaces.size() << " exterior surfaces." << std::endl;
+  }
+
+  int nspaces = model->getConcreteModelObjects<openstudio::model::Space>().size();
 
   // This is a stand-in for a more complete procedure (such as Ng et al.)
 
-  QVector<double> Q10(translator.data.zones.size(),0.0);
-  QVector<double> Q20(translator.data.zones.size(),0.0);
+  QVector<double> Q10(nspaces,0.0);
+  QVector<double> Q20(nspaces,0.0);
 
   for(double angle=0.0;angle<360.0;angle+=90.0)
   {
@@ -317,8 +321,8 @@ int main(int argc, char *argv[])
     {
       double calcQ10 = Q10[i]*(C[i]*4.4704 + D[i]*4.4704*4.4704);
       double calcQ20 = Q10[i]*(C[i]*8.9408 + D[i]*8.9408*8.9408);
-      std::cout<<Q10[i]<<" ?= "<<calcQ10<<" ("<<Q10[i]-calcQ10<<") "<<std::endl;
-      std::cout<<Q20[i]<<" ?= "<<calcQ20<<" ("<<Q20[i]-calcQ20<<") "<<std::endl;
+      std::cout<<Q10[i]<<" ?= "<<calcQ10<<" ("<<Q10[i]-calcQ10<<")"<<std::endl;
+      std::cout<<Q20[i]<<" ?= "<<calcQ20<<" ("<<Q20[i]-calcQ20<<")"<<std::endl;
     }
   }
 

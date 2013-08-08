@@ -51,8 +51,6 @@ namespace contam
       const openstudio::path& mapPath);
     static bool modelToContam(const openstudio::model::Model& model, const openstudio::path& path);
 
-    prj::Data data; // This has to be public for now
-
     bool valid() const {return m_valid && data.valid;}
     std::map <Handle, int> surfaceMap() const {return m_surfaceMap;}
 
@@ -63,6 +61,8 @@ namespace contam
     int tableLookup(QMap<Handle,int> map, Handle handle, const char *name);
     std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
     Handle ForwardTranslator::reverseLookup(QMap<Handle,int> map, int nr, const char *name);
+
+    prj::Data data;
     // Maps - will be populated after a call of translateToPrj
     // I'm not clear on how this information will be propagated for
     // postprocessing purposes - write a file?
