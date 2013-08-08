@@ -43,6 +43,8 @@
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/PlantLoop.hpp>
 #include <model/PlantLoop_Impl.hpp>
+#include <model/HVACComponent.hpp>
+#include <model/HVACComponent_Impl.hpp>
 #include <model/ZoneHVACComponent.hpp>
 #include <model/ZoneHVACComponent_Impl.hpp>
 #include <model/Model.hpp>
@@ -145,6 +147,10 @@ std::vector<std::string> LifeCycleCost_Impl::validCostUnitsValues() const
   }else if (istringEqual("Equipment", itemType)){
     result.push_back("CostPerEach");
     result.push_back("CostPerArea");
+  }else if (istringEqual("HVACComponent", itemType)){
+    result.push_back("CostPerEach");
+  }else if (istringEqual("ZoneHVACComponent", itemType)){
+    result.push_back("CostPerEach");
   }else{
     result.push_back("CostPerEach");
   }
@@ -510,6 +516,12 @@ LifeCycleCost::LifeCycleCost(const ModelObject& modelObject)
     OS_ASSERT(test);
   }else if (modelObject.optionalCast<SteamEquipmentDefinition>()){
     test = setString(OS_LifeCycleCostFields::ItemType, "Equipment");
+    OS_ASSERT(test);
+  }else if (modelObject.optionalCast<HVACComponent >()){
+    test = setString(OS_LifeCycleCostFields::ItemType, "HVAC Component");
+    OS_ASSERT(test);
+  }else if (modelObject.optionalCast<ZoneHVACComponent >()){
+    test = setString(OS_LifeCycleCostFields::ItemType, "Zone HVAC Component");
     OS_ASSERT(test);
   }else{
     this->remove();

@@ -11825,6 +11825,8 @@ OS:LifeCycleCost,
        \key Lights
        \key Luminaire
        \key Equipment
+       \key HVAC Component
+       \key Zone HVAC Component
   A5, \field Item Name
        \type object-list
        \required-field
