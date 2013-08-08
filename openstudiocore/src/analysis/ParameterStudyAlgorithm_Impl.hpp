@@ -26,6 +26,7 @@
 namespace openstudio {
 namespace analysis {
 
+class ParameterStudyAlgorithm;
 class ParameterStudyAlgorithmOptions;
 
 namespace detail {
@@ -80,12 +81,20 @@ namespace detail {
     virtual std::string dakotaInFileDescription() const;
 
     //@}
+    /** @name Getters and Queries */
     //@{
 
     ParameterStudyAlgorithmOptions parameterStudyAlgorithmOptions() const;
 
     //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
 
+    virtual QVariant toVariant() const;
+
+    static ParameterStudyAlgorithm fromVariant(const QVariant& variant, const VersionString& version);
+
+    //@}
    private:
     REGISTER_LOGGER("openstudio.analysis.ParameterStudyAlgorithm");
   };

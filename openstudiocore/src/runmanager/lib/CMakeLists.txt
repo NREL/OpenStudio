@@ -96,8 +96,6 @@ SET( runmanager_src
   ToolFinder.cpp
   ModelInModelOutJob.hpp
   ModelInModelOutJob.cpp
-  ModelObjectPerturbationJob.hpp
-  ModelObjectPerturbationJob.cpp
   EnergyPlusPostProcessJob.hpp
   EnergyPlusPostProcessJob.cpp
   EnergyPlusPreProcessJob.hpp
@@ -197,7 +195,6 @@ SET( runmanager_moc
   UserScriptJob.hpp
   NullJob.hpp
   ModelInModelOutJob.hpp
-  ModelObjectPerturbationJob.hpp
   EnergyPlusPostProcessJob.hpp
   OpenStudioPostProcessJob.hpp
   EnergyPlusPreProcessJob.hpp
@@ -252,7 +249,6 @@ SET( runmanager_test_src
   Test/MergeJobs_GTest.cpp
   Test/EnergyPlusPostProcessJob_GTest.cpp
   Test/OpenStudioPostProcessJob_GTest.cpp
-  Test/ModelObjectPerturbationJob_GTest.cpp
   Test/FlatOutDir_GTest.cpp
   Test/ModelToRadJob_GTest.cpp
   Test/UserScript_GTest.cpp
@@ -304,12 +300,12 @@ IF(BUILD_TESTING)
     ${runmanager_test_moc_src}
   )
   SET(runmanager_test_depends
-    ${runamanger_depends}
+    ${runmanager_depends}
     openstudio_runmanager_lib_test
     )
 ELSE()
   SET(runmanager_test_depends
-    ${runamanger_depends}
+    ${runmanager_depends}
     )
 ENDIF()
 

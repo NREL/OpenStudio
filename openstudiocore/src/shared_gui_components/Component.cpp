@@ -20,6 +20,7 @@
 #include <shared_gui_components/Component.hpp>
 
 #include <utilities/bcl/LocalBCL.hpp>
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Compare.hpp>
 
 #include <OpenStudio.hxx>
@@ -423,7 +424,7 @@ void Component::createCompleteLayout()
     else{
       // should never get here
       // see utility::bcl for utilized types
-      Q_ASSERT(false);
+      OS_ASSERT(false);
     }
     item = new QTableWidgetItem(string);
     tableWidget->setItem(tableWidget->rowCount() - 1, 1, item);

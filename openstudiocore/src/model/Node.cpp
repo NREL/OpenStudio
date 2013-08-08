@@ -61,7 +61,7 @@ namespace detail{
   Node_Impl::Node_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : StraightComponent_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == Node::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == Node::iddObjectType());
   }
 
   Node_Impl::Node_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
@@ -69,7 +69,7 @@ namespace detail{
                        bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == Node::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == Node::iddObjectType());
   }
 
   Node_Impl::Node_Impl(const Node_Impl& other, Model_Impl* model, bool keepHandle)
@@ -515,7 +515,7 @@ namespace detail{
 Node::Node(const Model& model)
   : StraightComponent(Node::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::Node_Impl>());
+  OS_ASSERT(getImpl<detail::Node_Impl>());
 }
 
 Node::Node(boost::shared_ptr<detail::Node_Impl> p)

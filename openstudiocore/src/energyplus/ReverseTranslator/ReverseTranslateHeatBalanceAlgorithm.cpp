@@ -25,6 +25,7 @@
 #include <utilities/idd/HeatBalanceAlgorithm_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Optional.hpp>
 
 using namespace openstudio::model;
@@ -35,7 +36,7 @@ namespace energyplus {
 boost::optional<model::ModelObject> ReverseTranslator::translateHeatBalanceAlgorithm(
     const WorkspaceObject& workspaceObject)
 {
-  BOOST_ASSERT(workspaceObject.iddObject().type() == IddObjectType::HeatBalanceAlgorithm);
+  OS_ASSERT(workspaceObject.iddObject().type() == IddObjectType::HeatBalanceAlgorithm);
 
   HeatBalanceAlgorithm heatBalanceAlgorithm = m_model.getUniqueModelObject<HeatBalanceAlgorithm>();
 

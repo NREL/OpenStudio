@@ -73,8 +73,7 @@ namespace openstudio{
   /** Singleton logger class.  Singleton Logger object maintains logging state throughout
    *   program execution.
    */
-  class UTILITIES_API LoggerSingleton
-  {
+  class UTILITIES_API LoggerSingleton {
 
     friend class Singleton<LoggerSingleton>;
 
@@ -93,7 +92,7 @@ namespace openstudio{
     /// exist a new logger will be set up at the default level
     LoggerType& loggerFromChannel(const LogChannel& logChannel);
 
-    protected:
+   protected:
 
     friend class detail::LogSink_Impl;
 
@@ -106,7 +105,7 @@ namespace openstudio{
     /// removes a sink to the logging core, equivalent to logSink.disable()
     void removeSink(boost::shared_ptr<LogSinkBackend> sink);
 
-    private:
+   private:
 
     /// private constructor
     LoggerSingleton();

@@ -20,6 +20,8 @@
 #include <pat_app/HorizontalTabWidget.hpp>
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 
+#include <utilities/core/Assert.hpp>
+
 #include <QBoxLayout>
 #include <QPainter>
 #include <QPixmap>
@@ -89,7 +91,7 @@ void HorizontalTabWidget::addTab( int id,
   bool isConnected = false;
 
   isConnected = connect(button,SIGNAL(clicked()),this,SLOT(select()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_ids.push_back(id);
 

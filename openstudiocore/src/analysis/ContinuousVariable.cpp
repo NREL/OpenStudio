@@ -171,6 +171,28 @@ namespace detail {
     return result;
   }
 
+  QVariant ContinuousVariable_Impl::toVariant() const {
+    QVariantMap variableData = InputVariable_Impl::toVariant().toMap();
+
+    if (minimum()) {
+      variableData["minimum"] = minimum().get();
+    }
+
+    if (maximum()) {
+      variableData["maximum"] = maximum().get();
+    }
+
+    if (increment()) {
+      variableData["increment"] = increment().get();
+    }
+
+    if (nSteps()) {
+      variableData["n_steps"] = nSteps().get();
+    }
+
+    return QVariant(variableData);
+  }
+
 } // detail
 
 boost::optional<double> ContinuousVariable::minimum() const {

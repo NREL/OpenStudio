@@ -37,7 +37,7 @@ namespace detail {
   CurveRectangularHyperbola2_Impl::CurveRectangularHyperbola2_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : Curve_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CurveRectangularHyperbola2::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CurveRectangularHyperbola2::iddObjectType());
   }
 
   CurveRectangularHyperbola2_Impl::CurveRectangularHyperbola2_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                                                                    bool keepHandle)
     : Curve_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CurveRectangularHyperbola2::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CurveRectangularHyperbola2::iddObjectType());
   }
 
   CurveRectangularHyperbola2_Impl::CurveRectangularHyperbola2_Impl(const CurveRectangularHyperbola2_Impl& other,
@@ -71,7 +71,7 @@ namespace detail {
   }
 
   double CurveRectangularHyperbola2_Impl::evaluate(const std::vector<double>& x) const {
-    BOOST_ASSERT(x.size() == 1u);
+    OS_ASSERT(x.size() == 1u);
     double result = coefficient1C1() * x[0];
     double temp = coefficient2C2() + x[0];
     result /= temp;
@@ -81,31 +81,31 @@ namespace detail {
 
   double CurveRectangularHyperbola2_Impl::coefficient1C1() const {
     boost::optional<double> value = getDouble(OS_Curve_RectangularHyperbola2Fields::Coefficient1C1,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveRectangularHyperbola2_Impl::coefficient2C2() const {
     boost::optional<double> value = getDouble(OS_Curve_RectangularHyperbola2Fields::Coefficient2C2,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveRectangularHyperbola2_Impl::coefficient3C3() const {
     boost::optional<double> value = getDouble(OS_Curve_RectangularHyperbola2Fields::Coefficient3C3,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveRectangularHyperbola2_Impl::minimumValueofx() const {
     boost::optional<double> value = getDouble(OS_Curve_RectangularHyperbola2Fields::MinimumValueofx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveRectangularHyperbola2_Impl::maximumValueofx() const {
     boost::optional<double> value = getDouble(OS_Curve_RectangularHyperbola2Fields::MaximumValueofx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -119,7 +119,7 @@ namespace detail {
 
   std::string CurveRectangularHyperbola2_Impl::inputUnitTypeforx() const {
     boost::optional<std::string> value = getString(OS_Curve_RectangularHyperbola2Fields::InputUnitTypeforx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -129,7 +129,7 @@ namespace detail {
 
   std::string CurveRectangularHyperbola2_Impl::outputUnitType() const {
     boost::optional<std::string> value = getString(OS_Curve_RectangularHyperbola2Fields::OutputUnitType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -140,31 +140,31 @@ namespace detail {
   void CurveRectangularHyperbola2_Impl::setCoefficient1C1(double coefficient1C1) {
     bool result = false;
     result = setDouble(OS_Curve_RectangularHyperbola2Fields::Coefficient1C1, coefficient1C1);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveRectangularHyperbola2_Impl::setCoefficient2C2(double coefficient2C2) {
     bool result = false;
     result = setDouble(OS_Curve_RectangularHyperbola2Fields::Coefficient2C2, coefficient2C2);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveRectangularHyperbola2_Impl::setCoefficient3C3(double coefficient3C3) {
     bool result = false;
     result = setDouble(OS_Curve_RectangularHyperbola2Fields::Coefficient3C3, coefficient3C3);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveRectangularHyperbola2_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = false;
     result = setDouble(OS_Curve_RectangularHyperbola2Fields::MinimumValueofx, minimumValueofx);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveRectangularHyperbola2_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = false;
     result = setDouble(OS_Curve_RectangularHyperbola2Fields::MaximumValueofx, maximumValueofx);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveRectangularHyperbola2_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
@@ -174,12 +174,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_RectangularHyperbola2Fields::MinimumCurveOutput, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveRectangularHyperbola2_Impl::resetMinimumCurveOutput() {
     bool result = setString(OS_Curve_RectangularHyperbola2Fields::MinimumCurveOutput, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveRectangularHyperbola2_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
@@ -189,12 +189,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_RectangularHyperbola2Fields::MaximumCurveOutput, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveRectangularHyperbola2_Impl::resetMaximumCurveOutput() {
     bool result = setString(OS_Curve_RectangularHyperbola2Fields::MaximumCurveOutput, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CurveRectangularHyperbola2_Impl::setInputUnitTypeforx(std::string inputUnitTypeforx) {
@@ -205,7 +205,7 @@ namespace detail {
 
   void CurveRectangularHyperbola2_Impl::resetInputUnitTypeforx() {
     bool result = setString(OS_Curve_RectangularHyperbola2Fields::InputUnitTypeforx, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CurveRectangularHyperbola2_Impl::setOutputUnitType(std::string outputUnitType) {
@@ -216,7 +216,7 @@ namespace detail {
 
   void CurveRectangularHyperbola2_Impl::resetOutputUnitType() {
     bool result = setString(OS_Curve_RectangularHyperbola2Fields::OutputUnitType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -224,7 +224,7 @@ namespace detail {
 CurveRectangularHyperbola2::CurveRectangularHyperbola2(const Model& model)
   : Curve(CurveRectangularHyperbola2::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CurveRectangularHyperbola2_Impl>());
+  OS_ASSERT(getImpl<detail::CurveRectangularHyperbola2_Impl>());
   setDouble(OS_Curve_RectangularHyperbola2Fields::Coefficient1C1,1.0);
   setDouble(OS_Curve_RectangularHyperbola2Fields::Coefficient2C2,1.0);
   setDouble(OS_Curve_RectangularHyperbola2Fields::Coefficient3C3,1.0);

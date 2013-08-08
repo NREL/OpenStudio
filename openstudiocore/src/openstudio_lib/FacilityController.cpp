@@ -20,6 +20,8 @@
 #include <openstudio_lib/FacilityController.hpp>
 #include <openstudio_lib/FacilityView.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 FacilityController::FacilityController(bool isIP, const model::Model& model)
@@ -27,7 +29,7 @@ FacilityController::FacilityController(bool isIP, const model::Model& model)
 {
   bool isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                              subTabView(),SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 FacilityController::~FacilityController()

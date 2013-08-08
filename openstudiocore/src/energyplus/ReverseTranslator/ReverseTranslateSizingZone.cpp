@@ -32,6 +32,8 @@
 #include <utilities/idd/DesignSpecification_ZoneAirDistribution_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -142,7 +144,7 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
       if (mo){
         if (mo->optionalCast<DesignSpecificationOutdoorAir>()){
           std::vector<Space> spaces = thermalZone.spaces();
-          BOOST_ASSERT(spaces.size() == 1);
+          OS_ASSERT(spaces.size() == 1);
           spaces[0].setDesignSpecificationOutdoorAir(mo->cast<DesignSpecificationOutdoorAir>());
         }
       }

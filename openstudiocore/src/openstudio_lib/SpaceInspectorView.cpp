@@ -799,7 +799,7 @@ SpaceInspectorView::SpaceInspectorView(bool isIP, const openstudio::model::Model
                         SIGNAL(itemClicked(OSItem*)),
                         this, 
                         SIGNAL(dropZoneItemClicked(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   vLayout->addStretch();
 
@@ -825,7 +825,7 @@ SpaceInspectorView::SpaceInspectorView(bool isIP, const openstudio::model::Model
                         SIGNAL(itemClicked(OSItem*)),
                         this, 
                         SIGNAL(dropZoneItemClicked(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   vLayout->addStretch();
 
@@ -851,7 +851,7 @@ SpaceInspectorView::SpaceInspectorView(bool isIP, const openstudio::model::Model
                         SIGNAL(itemClicked(OSItem*)),
                         this, 
                         SIGNAL(dropZoneItemClicked(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   vLayout->addStretch();
 
@@ -867,7 +867,7 @@ SpaceInspectorView::SpaceInspectorView(bool isIP, const openstudio::model::Model
 
   m_directionofRelativeNorthEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_directionofRelativeNorthEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   vLayout->addWidget(m_directionofRelativeNorthEdit);
 
   vLayout->addStretch();
@@ -900,7 +900,7 @@ SpaceInspectorView::SpaceInspectorView(bool isIP, const openstudio::model::Model
 
   m_xOriginEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_xOriginEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   vLayout->addWidget(m_xOriginEdit);
 
   hLayout->addLayout(vLayout);
@@ -916,7 +916,7 @@ SpaceInspectorView::SpaceInspectorView(bool isIP, const openstudio::model::Model
 
   m_yOriginEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_yOriginEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   vLayout->addWidget(m_yOriginEdit);
 
   vLayout->addStretch();
@@ -932,7 +932,7 @@ SpaceInspectorView::SpaceInspectorView(bool isIP, const openstudio::model::Model
 
   m_zOriginEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_zOriginEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   vLayout->addWidget(m_zOriginEdit);
 
   vLayout->addStretch();

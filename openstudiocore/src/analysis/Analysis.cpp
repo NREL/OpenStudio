@@ -24,7 +24,7 @@
 #include <analysis/DakotaAlgorithm.hpp>
 #include <analysis/DakotaAlgorithm_Impl.hpp>
 #include <analysis/DataPoint_Impl.hpp>
-#include <analysis/DiscretePerturbation.hpp>
+#include <analysis/Measure.hpp>
 #include <analysis/InputVariable.hpp>
 #include <analysis/OpenStudioAlgorithm.hpp>
 #include <analysis/OpenStudioAlgorithm_Impl.hpp>
@@ -33,6 +33,9 @@
 #include <runmanager/lib/Job.hpp>
 
 #include <utilities/document/Table.hpp>
+
+#include <utilities/core/Assert.hpp>
+#include <utilities/core/Json.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -301,12 +304,12 @@ namespace detail {
   }
 
   std::vector<DataPoint> Analysis_Impl::getDataPoints(
-      const std::vector< boost::optional<DiscretePerturbation> >& perturbations) const
+      const std::vector< boost::optional<Measure> >& measures) const
   {
     DataPointVector result;
-    std::vector<QVariant> variableValues = problem().getVariableValues(perturbations);
-    if (variableValues.size() == perturbations.size()) {
-      // problem was able to match all perturbations
+    std::vector<QVariant> variableValues = problem().getVariableValues(measures);
+    if (variableValues.size() == measures.size()) {
+      // problem was able to match all measures
       result = getDataPoints(variableValues);
     }
     return result;
@@ -323,14 +326,14 @@ namespace detail {
   }
 
   boost::optional<DataPoint> Analysis_Impl::getDataPoint(
-      const std::vector<DiscretePerturbation>& perturbations) const
+      const std::vector<Measure>& measures) const
   {
     OptionalDataPoint result;
-    std::vector<QVariant> variableValues = problem().getVariableValues(perturbations);
-    if (variableValues.size() == perturbations.size()) {
-      // problem was able to match all perturbations
+    std::vector<QVariant> variableValues = problem().getVariableValues(measures);
+    if (variableValues.size() == measures.size()) {
+      // problem was able to match all measures
       DataPointVector intermediate = getDataPoints(variableValues);
-      BOOST_ASSERT(intermediate.size() < 2u);
+      OS_ASSERT(intermediate.size() < 2u);
       if (intermediate.size() == 1u) {
         result = intermediate[0];
       }
@@ -472,7 +475,7 @@ namespace detail {
     }
     DataPointVector existingDataPoints = getDataPoints(dataPoint.variableValues());
     if (existingDataPoints.size() > 0) {
-      BOOST_ASSERT(existingDataPoints.size() == 1); // dataPoint must be fully specified to be valid
+      OS_ASSERT(existingDataPoints.size() == 1); // dataPoint must be fully specified to be valid
       LOG(Info,"DataPoint not added to Analysis '" << name() << "', because it already exists.");
       return false;
     }
@@ -482,13 +485,13 @@ namespace detail {
     return true;
   }
 
-  bool Analysis_Impl::addDataPoint(const std::vector<DiscretePerturbation>& perturbations) {
-    OptionalDataPoint dataPoint = problem().createDataPoint(perturbations);
+  bool Analysis_Impl::addDataPoint(const std::vector<Measure>& measures) {
+    OptionalDataPoint dataPoint = problem().createDataPoint(measures);
     if (dataPoint) {
       return addDataPoint(*dataPoint);
     }
     LOG(Error,"Cannot add DataPoint to Analysis '" << name() << "', because the provided "
-        "perturbations were invalid for Problem '" << problem().name() << "'.");
+        "measures were invalid for Problem '" << problem().name() << "'.");
     return false;
   }
 
@@ -507,7 +510,7 @@ namespace detail {
     OptionalDataPoint exactDataPoint = getDataPointByUUID(dataPoint);
     if (exactDataPoint) {
       DataPointVector::iterator it = std::find(m_dataPoints.begin(),m_dataPoints.end(),*exactDataPoint);
-      BOOST_ASSERT(it != m_dataPoints.end());
+      OS_ASSERT(it != m_dataPoints.end());
       disconnectChild(*it);
       m_dataPoints.erase(it);
       // TODO: It may be that the algorithm should be reset, or at least marked not-complete.
@@ -680,6 +683,91 @@ namespace detail {
     return table;
   }
 
+  bool Analysis_Impl::saveJSON(openstudio::path p,
+                               AnalysisSerializationScope scope,
+                               bool overwrite) const
+  {
+    QVariant json = toVariant(scope);
+    return openstudio::saveJSON(json,p,overwrite);
+  }
+
+  std::ostream& Analysis_Impl::toJSON(std::ostream& os,
+                                      AnalysisSerializationScope scope) const
+  {
+    os << toJSON(scope);
+    return os;
+  }
+
+  std::string Analysis_Impl::toJSON(AnalysisSerializationScope scope) const {
+    QVariant json = this->toVariant(scope);
+    return openstudio::toJSON(json);
+  }
+
+  QVariant Analysis_Impl::toVariant() const {
+    QVariantMap analysisData = AnalysisObject_Impl::toVariant().toMap();
+
+    analysisData["problem"] = problem().toVariant();
+    if (algorithm()) {
+      analysisData["algorithm"] = algorithm()->toVariant();
+    }
+    analysisData["seed"] = openstudio::detail::toVariant(seed());
+    if (weatherFile()) {
+      analysisData["weather_file"] = openstudio::detail::toVariant(weatherFile().get());
+    }
+    analysisData["results_are_invalid"] = QVariant(resultsAreInvalid());
+    analysisData["data_points_are_invalid"] = QVariant(dataPointsAreInvalid());
+
+    return QVariant(analysisData);
+  }
+
+  QVariant Analysis_Impl::toVariant(AnalysisSerializationScope scope) const {
+    QVariantMap analysisData = toVariant().toMap();
+
+    if (scope == AnalysisSerializationScope::Full) {
+      // add data point information
+      QVariantList dataPointList;
+      Q_FOREACH(const DataPoint& dataPoint, dataPoints()) {
+        dataPointList.push_back(dataPoint.toVariant());
+      }
+
+      analysisData["data_points"] = QVariant(dataPointList);
+    }
+
+    // create top-level of final file
+    QVariantMap result;
+    result["metadata"] = jsonMetadata();
+    result["analysis"] = QVariant(analysisData);
+
+    return result;
+  }
+
+  Analysis Analysis_Impl::fromVariant(const QVariant& variant,const VersionString& version) {
+    QVariantMap map = variant.toMap();
+    Problem problem = Problem_Impl::factoryFromVariant(map["problem"],version);
+    OptionalAlgorithm algorithm;
+    if (map.contains("algorithm")) {
+      algorithm =  Algorithm_Impl::factoryFromVariant(map["algorithm"],version);
+    }
+    DataPointVector dataPoints;
+    if (map.contains("data_points")) {
+      dataPoints = deserializeUnorderedVector<DataPoint>(
+            map["data_points"].toList(),
+            boost::function<DataPoint (const QVariant&)>(boost::bind(openstudio::analysis::detail::DataPoint_Impl::factoryFromVariant,_1,version)));
+    }
+    return Analysis(openstudio::UUID(map["uuid"].toString()),
+                    openstudio::UUID(map["version_uuid"].toString()),
+                    map.contains("name") ? map["name"].toString().toStdString() : std::string(),
+                    map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                    map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                    problem,
+                    algorithm,
+                    openstudio::detail::toFileReference(map["seed"],version),
+                    map.contains("weather_file") ? openstudio::detail::toFileReference(map["weather_file"],version) : OptionalFileReference(),
+                    dataPoints,
+                    map["results_are_invalid"].toBool(),
+                    map["data_points_are_invalid"].toBool());
+  }
+
   void Analysis_Impl::onChange(ChangeType changeType) {
     AnalysisObject_Impl::onChange(changeType);
     if ((changeType == AnalysisObject_Impl::InvalidatesResults) &&
@@ -822,9 +910,9 @@ std::vector<DataPoint> Analysis::getDataPoints(const std::vector<QVariant>& vari
 }
 
 std::vector<DataPoint> Analysis::getDataPoints(
-    const std::vector< boost::optional<DiscretePerturbation> >& perturbations) const
+    const std::vector< boost::optional<Measure> >& measures) const
 {
-  return getImpl<detail::Analysis_Impl>()->getDataPoints(perturbations);
+  return getImpl<detail::Analysis_Impl>()->getDataPoints(measures);
 }
 
 std::vector<DataPoint> Analysis::getDataPoints(const std::string& tag) const {
@@ -832,9 +920,9 @@ std::vector<DataPoint> Analysis::getDataPoints(const std::string& tag) const {
 }
 
 boost::optional<DataPoint> Analysis::getDataPoint(
-    const std::vector<DiscretePerturbation>& perturbations) const
+    const std::vector<Measure>& measures) const
 {
-  return getImpl<detail::Analysis_Impl>()->getDataPoint(perturbations);
+  return getImpl<detail::Analysis_Impl>()->getDataPoint(measures);
 }
 
 boost::optional<DataPoint> Analysis::getDataPointByUUID(const UUID& uuid) const {
@@ -885,8 +973,8 @@ bool Analysis::addDataPoint(const DataPoint& dataPoint) {
   return getImpl<detail::Analysis_Impl>()->addDataPoint(dataPoint);
 }
 
-bool Analysis::addDataPoint(const std::vector<DiscretePerturbation>& perturbations) {
-  return getImpl<detail::Analysis_Impl>()->addDataPoint(perturbations);
+bool Analysis::addDataPoint(const std::vector<Measure>& measures) {
+  return getImpl<detail::Analysis_Impl>()->addDataPoint(measures);
 }
 
 bool Analysis::setDataPointRunInformation(DataPoint& dataPoint, const runmanager::Job& topLevelJob, const std::vector<openstudio::path>& dakotaParametersFiles)
@@ -928,6 +1016,23 @@ void Analysis::updateDakotaAlgorithm(const runmanager::Job& completedDakotaJob) 
 
 Table Analysis::summaryTable() const {
   return getImpl<detail::Analysis_Impl>()->summaryTable();
+}
+
+bool Analysis::saveJSON(const openstudio::path& p,
+                        AnalysisSerializationScope scope,
+                        bool overwrite) const
+{
+  return getImpl<detail::Analysis_Impl>()->saveJSON(p,scope,overwrite);
+}
+
+std::ostream& Analysis::toJSON(std::ostream& os,
+                               AnalysisSerializationScope scope) const
+{
+  return getImpl<detail::Analysis_Impl>()->toJSON(os,scope);
+}
+
+std::string Analysis::toJSON(AnalysisSerializationScope scope) const {
+  return getImpl<detail::Analysis_Impl>()->toJSON(scope);
 }
 
 /// @cond

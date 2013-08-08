@@ -135,7 +135,7 @@ void ConstructionInternalSourceInspectorView::createLayout()
 
   m_tubeSpacingEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_tubeSpacingEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_tubeSpacingEdit,13,0);
 
   // Stretch

@@ -59,14 +59,14 @@ namespace detail {
   FanConstantVolume_Impl::FanConstantVolume_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : StraightComponent_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == FanConstantVolume::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == FanConstantVolume::iddObjectType());
   }
 
   FanConstantVolume_Impl::FanConstantVolume_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
         : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == FanConstantVolume::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == FanConstantVolume::iddObjectType());
   }
 
   FanConstantVolume_Impl::FanConstantVolume_Impl(const FanConstantVolume_Impl& other,
@@ -119,11 +119,11 @@ namespace detail {
       // so we hook up to global always on schedule
       LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
       value = this->model().alwaysOnDiscreteSchedule();
-      BOOST_ASSERT(value);
+      OS_ASSERT(value);
       const_cast<FanConstantVolume_Impl*>(this)->setAvailabilitySchedule(*value);
       value = optionalAvailabilitySchedule();
     }
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -433,12 +433,12 @@ namespace detail {
 
   void FanConstantVolume_Impl::resetMaximumFlowRate() {
     bool result = setString(OS_Fan_ConstantVolumeFields::MaximumFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void FanConstantVolume_Impl::autosizeMaximumFlowRate() {
     bool result = setString(OS_Fan_ConstantVolumeFields::MaximumFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -448,7 +448,7 @@ FanConstantVolume::FanConstantVolume(const Model& model,
                                      Schedule& s)
   : StraightComponent(FanConstantVolume::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::FanConstantVolume_Impl>());
+  OS_ASSERT(getImpl<detail::FanConstantVolume_Impl>());
   setString(openstudio::OS_Fan_ConstantVolumeFields::MaximumFlowRate,"AutoSize");
   setAvailabilitySchedule(s);
   setEndUseSubcategory("");

@@ -209,11 +209,11 @@ void IddFileFactoryData::parseFile(const path& outPath,
           << "                                             \"" << group << "\"," << std::endl
           << "                                             ss.str()," << std::endl
           << "                                             objType);" << std::endl
-          << "    BOOST_ASSERT(oObj);" << std::endl
+          << "    OS_ASSERT(oObj);" << std::endl
           << "    object = *oObj;" << std::endl
           << "  }" << std::endl
           << std::endl
-          << "  BOOST_ASSERT(object.type() == IddObjectType::" << objectName.first << ");" << std::endl
+          << "  OS_ASSERT(object.type() == IddObjectType::" << objectName.first << ");" << std::endl
           << "  return object;" << std::endl
           << "}" << std::endl;
 

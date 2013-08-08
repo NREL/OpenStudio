@@ -38,14 +38,14 @@ namespace detail {
       const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ModelObject_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == OutsideSurfaceConvectionAlgorithm::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == OutsideSurfaceConvectionAlgorithm::iddObjectType());
   }
 
   OutsideSurfaceConvectionAlgorithm_Impl::OutsideSurfaceConvectionAlgorithm_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == OutsideSurfaceConvectionAlgorithm::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == OutsideSurfaceConvectionAlgorithm::iddObjectType());
   }
 
   OutsideSurfaceConvectionAlgorithm_Impl::OutsideSurfaceConvectionAlgorithm_Impl(
@@ -85,7 +85,7 @@ namespace detail {
 
   std::string OutsideSurfaceConvectionAlgorithm_Impl::algorithm() const {
     boost::optional<std::string> value = getString(OS_SurfaceConvectionAlgorithm_OutsideFields::Algorithm,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -101,7 +101,7 @@ namespace detail {
 
   void OutsideSurfaceConvectionAlgorithm_Impl::resetAlgorithm() {
     bool result = setString(OS_SurfaceConvectionAlgorithm_OutsideFields::Algorithm, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -110,7 +110,7 @@ namespace detail {
 OutsideSurfaceConvectionAlgorithm::OutsideSurfaceConvectionAlgorithm(const Model& model)
   : ModelObject(OutsideSurfaceConvectionAlgorithm::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::OutsideSurfaceConvectionAlgorithm_Impl>());
+  OS_ASSERT(getImpl<detail::OutsideSurfaceConvectionAlgorithm_Impl>());
 
   setAlgorithm("DOE-2");
 }

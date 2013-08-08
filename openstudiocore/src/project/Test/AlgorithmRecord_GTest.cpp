@@ -39,6 +39,7 @@
 
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/Containers.hpp>
+#include <utilities/data/Attribute.hpp>
 #include <utilities/data/Tag.hpp>
 
 using namespace openstudio;
@@ -112,9 +113,9 @@ TEST_F(ProjectFixture, DesignOfExperiments_RoundTrip_PostRun) {
                       std::string(),
                       std::string(),
                       std::string(),
-                      true,
-                      true,
                       analysis.problem(),
+                      true,
+                      true,
                       std::vector<QVariant>(),
                       DoubleVector(),
                       openstudio::path(),
@@ -122,9 +123,10 @@ TEST_F(ProjectFixture, DesignOfExperiments_RoundTrip_PostRun) {
                       boost::none,
                       boost::none,
                       boost::none,
-                      TagVector(),
                       boost::none,
-                      std::vector<openstudio::path>()); // DLM: Elaine is this ok?
+                      std::vector<openstudio::path>(),
+                      TagVector(),
+                      AttributeVector());
   EXPECT_TRUE(analysis.addDataPoint(dataPoint));
 
   ProjectDatabase database = getCleanDatabase("DesignOfExperiments_RoundTrip_PostRun");
@@ -183,9 +185,9 @@ TEST_F(ProjectFixture, DesignOfExperiments_RemoveAlgorithm) {
                       std::string(),
                       std::string(),
                       std::string(),
-                      true,
-                      true,
                       analysis.problem(),
+                      true,
+                      true,
                       std::vector<QVariant>(),
                       DoubleVector(),
                       openstudio::path(),
@@ -193,9 +195,10 @@ TEST_F(ProjectFixture, DesignOfExperiments_RemoveAlgorithm) {
                       boost::none,
                       boost::none,
                       boost::none,
-                      TagVector(),
                       boost::none,
-                      std::vector<openstudio::path>()); // DLM: Elaine is this ok?
+                      std::vector<openstudio::path>(),
+                      TagVector(),
+                      AttributeVector());
   EXPECT_TRUE(analysis.addDataPoint(dataPoint));
 
   ProjectDatabase database = getCleanDatabase("DesignOfExperiments_RemoveAlgorithm");
@@ -245,9 +248,9 @@ TEST_F(ProjectFixture, DesignOfExperiments_RemoveAnalysis) {
                       std::string(),
                       std::string(),
                       std::string(),
-                      true,
-                      true,
                       analysis.problem(),
+                      true,
+                      true,
                       std::vector<QVariant>(),
                       DoubleVector(),
                       openstudio::path(),
@@ -255,9 +258,10 @@ TEST_F(ProjectFixture, DesignOfExperiments_RemoveAnalysis) {
                       boost::none,
                       boost::none,
                       boost::none,
-                      TagVector(),
                       boost::none,
-                      std::vector<openstudio::path>()); // DLM: Elaine is this ok?
+                      std::vector<openstudio::path>(),
+                      TagVector(),
+                      AttributeVector());
   EXPECT_TRUE(analysis.addDataPoint(dataPoint));
 
   ProjectDatabase database = getCleanDatabase("DesignOfExperiments_RemoveAnalysis");

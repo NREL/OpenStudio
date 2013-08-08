@@ -113,7 +113,7 @@ bool IGLineEdit::checkValue(QString& txt)
     txt = doubleToQString( val );
     int dummy=0;
     bool state = (dv->validate(txt,dummy) != QValidator::Invalid);
-    Q_ASSERT(state);
+    OS_ASSERT(state);
     return state;
   }
   else if( const QIntValidator* iv = qobject_cast<const QIntValidator*>(v) )
@@ -134,12 +134,12 @@ bool IGLineEdit::checkValue(QString& txt)
     txt = QString::number(val);
     int dummy=0;
     bool state = (iv->validate(txt,dummy) != QValidator::Invalid);
-    Q_ASSERT(state);
+    OS_ASSERT(state);
     return state;
   }
 
   // shouldn't get here
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return false;
 
 }

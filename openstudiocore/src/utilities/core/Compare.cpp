@@ -21,6 +21,7 @@
 #include <utilities/core/Logger.hpp>
 #include <utilities/idf/WorkspaceObject.hpp>
 #include <utilities/bcl/BCLComponent.hpp>
+#include <utilities/core/Assert.hpp>
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -102,7 +103,7 @@ bool VersionString::operator<(const VersionString& other) const {
     return false;
   }
 
-  BOOST_ASSERT(meCurrent == otherCurrent);
+  OS_ASSERT(meCurrent == otherCurrent);
 
   meCurrent = minor();
   otherCurrent = other.minor();
@@ -114,7 +115,7 @@ bool VersionString::operator<(const VersionString& other) const {
     return false;
   }
 
-  BOOST_ASSERT(meCurrent == otherCurrent);
+  OS_ASSERT(meCurrent == otherCurrent);
 
   if (patch() && other.patch()) {
     meCurrent = patch().get();
@@ -127,7 +128,7 @@ bool VersionString::operator<(const VersionString& other) const {
       return false;
     }
 
-    BOOST_ASSERT(meCurrent == otherCurrent);
+    OS_ASSERT(meCurrent == otherCurrent);
 
     if (build() && other.build()) {
 
@@ -141,7 +142,7 @@ bool VersionString::operator<(const VersionString& other) const {
         return false;
       }
 
-      BOOST_ASSERT(meCurrent == otherCurrent);
+      OS_ASSERT(meCurrent == otherCurrent);
     }
   }
 

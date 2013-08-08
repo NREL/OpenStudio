@@ -41,20 +41,7 @@
 
 #include <utilities/sql/SqlFile.hpp>
 
-#include <QPolygon>
-
-#undef BOOST_UBLAS_TYPE_CHECK
-#include <boost/geometry/geometry.hpp>
-#include <boost/geometry/geometries/point_xy.hpp>
-#include <boost/geometry/geometries/polygon.hpp>
-#include <boost/geometry/geometries/ring.hpp>
-#include <boost/geometry/multi/geometries/multi_polygon.hpp>
-#include <boost/geometry/geometries/adapted/boost_tuple.hpp>
-
-typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
-typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
-typedef boost::geometry::model::ring<BoostPoint> BoostRing;
-typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
+#include <QPolygonF>
 
 using boost::to_upper_copy;
 
@@ -68,7 +55,7 @@ namespace detail {
                              bool keepHandle)
     : PlanarSurface_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == Surface::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == Surface::iddObjectType());
   }
 
   Surface_Impl::Surface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -76,7 +63,7 @@ namespace detail {
                              bool keepHandle)
     : PlanarSurface_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == Surface::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == Surface::iddObjectType());
   }
 
   Surface_Impl::Surface_Impl(const Surface_Impl& other,
@@ -271,7 +258,7 @@ namespace detail {
 
   std::string Surface_Impl::surfaceType() const {
     boost::optional<std::string> value = getString(OS_SurfaceFields::SurfaceType,true,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -282,7 +269,7 @@ namespace detail {
 
   std::string Surface_Impl::outsideBoundaryCondition() const {
     boost::optional<std::string> value = getString(OS_SurfaceFields::OutsideBoundaryCondition,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -312,7 +299,7 @@ namespace detail {
 
   std::string Surface_Impl::sunExposure() const {
     boost::optional<std::string> value = getString(OS_SurfaceFields::SunExposure,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -327,7 +314,7 @@ namespace detail {
 
   std::string Surface_Impl::windExposure() const {
     boost::optional<std::string> value = getString(OS_SurfaceFields::WindExposure,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -409,7 +396,7 @@ namespace detail {
       }else if(adjacentSurface){
         // restore the adjacent surface if set boundary condition fails
         bool test = setAdjacentSurface(*adjacentSurface);
-        BOOST_ASSERT(test);
+        OS_ASSERT(test);
       }
     }
 
@@ -435,7 +422,7 @@ namespace detail {
 
   void Surface_Impl::resetSunExposure() {
     bool result = setString(OS_SurfaceFields::SunExposure, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Surface_Impl::setWindExposure(std::string windExposure) {
@@ -453,7 +440,7 @@ namespace detail {
 
   void Surface_Impl::resetWindExposure() {
     bool result = setString(OS_SurfaceFields::WindExposure, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Surface_Impl::setViewFactortoGround(boost::optional<double> viewFactortoGround) {
@@ -474,12 +461,12 @@ namespace detail {
 
   void Surface_Impl::resetViewFactortoGround() {
     bool result = setString(OS_SurfaceFields::ViewFactortoGround, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Surface_Impl::autocalculateViewFactortoGround() {
     bool result = setString(OS_SurfaceFields::ViewFactortoGround, "Autocalculate");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Surface_Impl::setNumberofVertices(boost::optional<double> numberofVertices) {
@@ -500,12 +487,12 @@ namespace detail {
 
   void Surface_Impl::resetNumberofVertices() {
     bool result = setString(OS_SurfaceFields::NumberofVertices, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Surface_Impl::autocalculateNumberofVertices() {
     bool result = setString(OS_SurfaceFields::NumberofVertices, "Autocalculate");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   SubSurfaceVector Surface_Impl::subSurfaces() const
@@ -704,7 +691,7 @@ namespace detail {
 
         Surface otherSurface = wo.cast<Surface>();
         test = otherSurface.setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
-        BOOST_ASSERT(test);
+        OS_ASSERT(test);
         otherSurface.assignDefaultBoundaryCondition();
         otherSurface.assignDefaultSunExposure();
         otherSurface.assignDefaultWindExposure();
@@ -723,7 +710,7 @@ namespace detail {
 
           Surface otherSurface = wo.cast<Surface>();
           test = otherSurface.setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
-          BOOST_ASSERT(test);
+          OS_ASSERT(test);
           otherSurface.assignDefaultBoundaryCondition();
           otherSurface.assignDefaultSunExposure();
           otherSurface.assignDefaultWindExposure();
@@ -748,17 +735,17 @@ namespace detail {
 
       // pointer was set up above, it may be unset during calls to resetAdjacentSubSurface above, just reset it here
       bool test = this->setPointer(OS_SurfaceFields::OutsideBoundaryConditionObject, surface.handle());
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       test = this->setString(OS_SurfaceFields::OutsideBoundaryCondition, "Surface");
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       this->assignDefaultSunExposure();
       this->assignDefaultWindExposure();
 
       if (!isSameSurface){
         test = surface.setPointer(OS_SurfaceFields::OutsideBoundaryConditionObject, this->handle());
-        BOOST_ASSERT(test);
+        OS_ASSERT(test);
         test = surface.setString(OS_SurfaceFields::OutsideBoundaryCondition, "Surface");
-        BOOST_ASSERT(test);
+        OS_ASSERT(test);
         surface.assignDefaultSunExposure();
         surface.assignDefaultWindExposure();
       }
@@ -775,7 +762,7 @@ namespace detail {
     boost::optional<Surface> adjacentSurface = this->adjacentSurface();
     if (adjacentSurface){
       test = setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       this->assignDefaultBoundaryCondition();
       this->assignDefaultSunExposure();
       this->assignDefaultWindExposure();
@@ -791,7 +778,7 @@ namespace detail {
 
       Surface otherSurface = wo.cast<Surface>();
       test = otherSurface.setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       otherSurface.assignDefaultBoundaryCondition();
       otherSurface.assignDefaultSunExposure();
       otherSurface.assignDefaultWindExposure();
@@ -802,53 +789,19 @@ namespace detail {
     }
   }
 
-
-  std::vector<Point3d> verticesFromBoostPolygon(const BoostPolygon& polygon)
-  {
-    std::vector<Point3d> result;
-
-    BoostRing outer = polygon.outer();
-    if (outer.empty()){
-      return result;
-    }
-
-    // add point for each vertex except final vertex
-    for(unsigned i = 0; i < outer.size() - 1; ++i){
-      result.push_back(Point3d(outer[i].x(), outer[i].y(), 0.0));
-    }
-    Point3d lastPoint = result.back();
-
-    BOOST_FOREACH(const BoostRing& inner, polygon.inners()){
-      if (!inner.empty()){
-        // inner loop already in reverse order
-        BOOST_FOREACH(const BoostPoint& p, inner){
-          result.push_back(Point3d(p.x(), p.y(), 0.0));
-        }
-        result.push_back(lastPoint);
-      }
-    }
-
-    result = removeColinear(result);
-
-    return result;
-  }
-
   bool Surface_Impl::intersect(Surface& otherSurface)
   {
     boost::optional<Space> space = this->space();
     boost::optional<Space> otherSpace = otherSurface.space();
     if (!space || !otherSpace || space->handle() == otherSpace->handle()){
-      LOG(Error, "Cannot find spaces for each surface in intersection or surfaces in same space.");
       return false;
     }
 
     if (!this->subSurfaces().empty() || !otherSurface.subSurfaces().empty()){
-      LOG(Error, "Subsurfaces are not allowed in intersection");
       return false;
     }
 
     if (this->adjacentSurface() || otherSurface.adjacentSurface()){
-      LOG(Error, "Adjacent surfaces are not allowed in intersection");
       return false;
     }
 
@@ -869,170 +822,215 @@ namespace detail {
     std::vector<Point3d> buildingVertices = spaceTransformation * this->vertices();
     std::vector<Point3d> otherBuildingVertices = otherSpaceTransformation * otherSurface.vertices();
 
-    if ((buildingVertices.size() < 3) || (otherBuildingVertices.size() < 3)){
-      return false;
-    }
-
     // goes from face coordinates of building vertices to building coordinates
-    Transformation faceTransformation; 
-    Transformation faceTransformationInverse;
-    try {
-      faceTransformation = Transformation::alignFace(buildingVertices);
-      faceTransformationInverse = faceTransformation.inverse();
-    }catch(const std::exception&){
-      return false;
-    }
+    Transformation faceTransformation = Transformation::alignFace(buildingVertices);
+    Transformation faceTransformationInverse = faceTransformation.inverse();
 
     // put building vertices into face coordinates
     std::vector<Point3d> faceVertices = faceTransformationInverse * buildingVertices;
     std::vector<Point3d> otherFaceVertices = faceTransformationInverse * otherBuildingVertices;
+    std::vector<Point3d> otherFaceVerticesReversed(otherFaceVertices);
+    std::reverse(otherFaceVerticesReversed.begin(), otherFaceVerticesReversed.end());
 
-    // boost polygon wants vertices in clockwise order, faceVertices must be reversed, otherFaceVertices already CCW
-    std::reverse(faceVertices.begin(), faceVertices.end());
-    //std::reverse(otherFaceVertices.begin(), otherFaceVertices.end());
-
-    // convert vertices to boost rings
-    BoostRing facePolygon;
+    QPolygonF facePolygon;
     BOOST_FOREACH(const Point3d& faceVertex, faceVertices){
-      boost::geometry::append(facePolygon, boost::make_tuple(faceVertex.x(), faceVertex.y()));
-
       // should all have zero z coordinate now
+      facePolygon.push_back(QPointF(faceVertex.x(), faceVertex.y()));
       double z = faceVertex.z();
       if (abs(z) > 0.001){
-        LOG(Warn, "Not all points on common plane in intersection");
+        LOG(Warn, "Not all points on common plane");
       }
     }
-    boost::geometry::append(facePolygon, boost::make_tuple(faceVertices[0].x(), faceVertices[0].y()));
 
-    // convert vertices to boost rings
-    BoostRing otherFacePolygon;
+    QPolygonF otherFacePolygon;
     BOOST_FOREACH(const Point3d& otherFaceVertex, otherFaceVertices){
-      boost::geometry::append(otherFacePolygon, boost::make_tuple(otherFaceVertex.x(), otherFaceVertex.y()));
-
       // should all have zero z coordinate now
+      otherFacePolygon.push_back(QPointF(otherFaceVertex.x(), otherFaceVertex.y()));
       double z = otherFaceVertex.z();
       if (abs(z) > 0.001){
-        LOG(Warn, "Not all points on common plane in intersection");
+        LOG(Warn, "Not all points on common plane");
       }
     }
-    boost::geometry::append(otherFacePolygon, boost::make_tuple(otherFaceVertices[0].x(), otherFaceVertices[0].y()));
-    
-    // do we need to check if either polygon overlaps itself?
 
-    // intersect the points in face coordinates, 
-    std::vector<BoostPolygon> intersectionResult;
-    boost::geometry::intersection(facePolygon, otherFacePolygon, intersectionResult);
+    // intersect the points in face coordinates, treats input polygon as implicitly closed just like E+
+    // the output polygon will be explicitly closed (e.g. last point == first point)
+    QPolygonF intersection = facePolygon.intersected(otherFacePolygon);
 
     // check if intersection is empty
-    if (intersectionResult.empty()){
+    if (intersection.empty()){
       return false;
     }
+    OS_ASSERT(intersection.size() >= 4);
 
     // non-zero intersection
-
-    // could match here but will save that for other discrete operation
-
-    // this surface minus the intersection
-    std::vector<BoostPolygon> faceDifferenceResult;
-    boost::geometry::difference(facePolygon, otherFacePolygon, faceDifferenceResult);
-
-    // other surface minus the intersection
-    std::vector<BoostPolygon> otherFaceDifferenceResult;
-    boost::geometry::difference(otherFacePolygon, facePolygon, otherFaceDifferenceResult);
-
-    // if both differences are empty then these were the same polygon
-    if (faceDifferenceResult.empty() && otherFaceDifferenceResult.empty()){
-      return false;
-    }
 
     // goes from building coordinates to local system 
     Transformation spaceTransformationInverse = spaceTransformation.inverse();
     Transformation otherSpaceTransformationInverse =  otherSpaceTransformation.inverse();
 
-    // first intersection geometry will be set on original surfaces below
+    // calculate new face polygons
+    QPolygonF newFacePolygon = facePolygon.subtracted(intersection);
+    QPolygonF newOtherFacePolygon = otherFacePolygon.subtracted(intersection);
 
-    // if more than one intersection, need to make a new surface in each space
-    for (unsigned i = 1; i < intersectionResult.size(); ++i){
-
-      // new vertices in face coordinates
-      std::vector<Point3d> intersectionVertices = verticesFromBoostPolygon(intersectionResult[i]);
-
-      // new surface in this space
-      std::vector<Point3d> newBuildingVertices = faceTransformation * intersectionVertices;
-      std::vector<Point3d> newVertices = spaceTransformationInverse * newBuildingVertices;
-      std::reverse(newVertices.begin(), newVertices.end());
-      newVertices = reorderULC(newVertices);
-      Surface newSurface(newVertices, this->model());
-      newSurface.setSpace(*space);
-
-      // new surface in other space
-      std::vector<Point3d> newOtherBuildingVertices = faceTransformation * intersectionVertices;
-      std::vector<Point3d> newOtherVertices = otherSpaceTransformationInverse * newOtherBuildingVertices;
-      newOtherVertices = reorderULC(newOtherVertices);
-      Surface newOtherSurface(newOtherVertices, this->model());
-      newOtherSurface.setSpace(*otherSpace);
-
-      // could match here but will save that for other discrete operation
+    // calculate new vertices in face coordinates, do not add last point
+    std::vector<Point3d> intersectionVertices;
+    for (int i = 0; i < intersection.size() - 1; ++i){
+      intersectionVertices.push_back(Point3d(intersection[i].x(), intersection[i].y(), 0.0));
     }
 
-    if (faceDifferenceResult.empty()){
-      // the entire surface was the intersection, no-op
-    }else{
-      // only part of the surface was the intersection
+    std::vector<Point3d> newFaceVertices;
+    for (int i = 0; i < newFacePolygon.size() - 1; ++i){
+      newFaceVertices.push_back(Point3d(newFacePolygon[i].x(), newFacePolygon[i].y(), 0.0));
+    }
 
-      // new vertices in face coordinates
-      std::vector<Point3d> intersectionVertices = verticesFromBoostPolygon(intersectionResult[0]);
+    std::vector<Point3d> newOtherFaceVertices;
+    for (int i = 0; i < newOtherFacePolygon.size() - 1; ++i){
+      newOtherFaceVertices.push_back(Point3d(newOtherFacePolygon[i].x(), newOtherFacePolygon[i].y(), 0.0));
+    }
 
-      // new vertices in this space
-      std::vector<Point3d> newBuildingVertices = faceTransformation * intersectionVertices;
-      std::vector<Point3d> newVertices = spaceTransformationInverse * newBuildingVertices;
-      std::reverse(newVertices.begin(), newVertices.end());
-      newVertices = reorderULC(newVertices);
-      this->setVertices(newVertices);
+    // check the different intersection possibilities
+    if (newFaceVertices.empty() && newOtherFaceVertices.empty()){
+      // surfaces were the same
+      this->setAdjacentSurface(otherSurface);
+      return false;
 
-      // create surface for each difference
-      for (unsigned i = 0; i < faceDifferenceResult.size(); ++i){
+    }else if(newFaceVertices.empty()){
+      // one new surface created
+      OS_ASSERT(newOtherFaceVertices.size() >= 3);
 
-        // new vertices in face coordinates, do not add last point
-        std::vector<Point3d> faceDifferenceVertices = verticesFromBoostPolygon(faceDifferenceResult[i]);
+      // get other surface's previous outward normal
+      Vector3d otherOutwardNormal = otherSurface.outwardNormal();
 
-        // new surface in this space
-        std::vector<Point3d> newBuildingVertices = faceTransformation * faceDifferenceVertices;
+      // no need to change this surface's vertices
+
+      // change other surface's vertices
+      {
+        std::vector<Point3d> newOtherBuildingVertices = faceTransformation * newOtherFaceVertices;
+        std::vector<Point3d> newOtherVertices = otherSpaceTransformationInverse * newOtherBuildingVertices;
+        boost::optional<Vector3d> newOtherOutwardNormal = getOutwardNormal(newOtherVertices);
+        OS_ASSERT(newOtherOutwardNormal);
+        if (otherOutwardNormal.dot(*newOtherOutwardNormal) < 0){
+          std::reverse(newOtherVertices.begin(), newOtherVertices.end());
+        }
+        otherSurface.setVertices(newOtherVertices);
+      }
+
+      // create new surface in other space
+      {
+        std::vector<Point3d> newBuildingVertices = faceTransformation * intersectionVertices;
+        std::vector<Point3d> newVertices = otherSpaceTransformationInverse * newBuildingVertices;
+        boost::optional<Vector3d> newOutwardNormal = getOutwardNormal(newVertices);
+        OS_ASSERT(newOutwardNormal);
+        if (otherOutwardNormal.dot(*newOutwardNormal) < 0){
+          std::reverse(newVertices.begin(), newVertices.end());
+        }
+        Surface newSurface(newVertices, this->model());
+        newSurface.setSpace(*otherSpace);
+        
+        // match this surface to new surface in other space
+        this->setAdjacentSurface(newSurface);
+      }
+
+    }else if (newOtherFaceVertices.empty()){
+      // one new surface created
+      OS_ASSERT(newFaceVertices.size() >= 3);
+
+      // get this surface's previous outward normal
+      Vector3d outwardNormal = this->outwardNormal();
+
+      // no need to change other surface's vertices
+
+      // change this surface's vertices
+      {
+        std::vector<Point3d> newBuildingVertices = faceTransformation * newFaceVertices;
         std::vector<Point3d> newVertices = spaceTransformationInverse * newBuildingVertices;
-        std::reverse(newVertices.begin(), newVertices.end());
-        newVertices = reorderULC(newVertices);
+        boost::optional<Vector3d> newOutwardNormal = getOutwardNormal(newVertices);
+        OS_ASSERT(newOutwardNormal);
+        if (outwardNormal.dot(*newOutwardNormal) < 0){
+          std::reverse(newVertices.begin(), newVertices.end());
+        }
+        this->setVertices(newVertices);
+      }
+
+      // create new surface in this space
+      {
+        std::vector<Point3d> newBuildingVertices = faceTransformation * intersectionVertices;
+        std::vector<Point3d> newVertices = spaceTransformationInverse * newBuildingVertices;
+        boost::optional<Vector3d> newOutwardNormal = getOutwardNormal(newVertices);
+        OS_ASSERT(newOutwardNormal);
+        if (outwardNormal.dot(*newOutwardNormal) < 0){
+          std::reverse(newVertices.begin(), newVertices.end());
+        }
         Surface newSurface(newVertices, this->model());
         newSurface.setSpace(*space);
+
+        // match other surface to new surface in this space
+        otherSurface.setAdjacentSurface(newSurface);
       }
-    }
 
-    if (otherFaceDifferenceResult.empty()){
-      // the entire surface was the intersection, no-op
     }else{
-      // only part of the surface was the intersection
+      // two new surfaces created
+      OS_ASSERT(newFaceVertices.size() >= 3);
+      OS_ASSERT(newOtherFaceVertices.size() >= 3);
 
-      // new vertices in face coordinates, do not add last point
-      std::vector<Point3d> intersectionVertices = verticesFromBoostPolygon(intersectionResult[0]);
+      // get this surface's previous outward normal
+      Vector3d outwardNormal = this->outwardNormal();
 
-      // new vertices in other space
-      std::vector<Point3d> newOtherBuildingVertices = faceTransformation * intersectionVertices;
-      std::vector<Point3d> newOtherVertices = otherSpaceTransformationInverse * newOtherBuildingVertices;
-      newOtherVertices = reorderULC(newOtherVertices);
-      otherSurface.setVertices(newOtherVertices);
+      // get other surface's previous outward normal
+      Vector3d otherOutwardNormal = otherSurface.outwardNormal();
 
-      // create surface for each difference
-      for (unsigned i = 0; i < otherFaceDifferenceResult.size(); ++i){
+      // change this surface's vertices
+      {
+        std::vector<Point3d> newBuildingVertices = faceTransformation * newFaceVertices;
+        std::vector<Point3d> newVertices = spaceTransformationInverse * newBuildingVertices;
+        boost::optional<Vector3d> newOutwardNormal = getOutwardNormal(newVertices);
+        OS_ASSERT(newOutwardNormal);
+        if (outwardNormal.dot(*newOutwardNormal) < 0){
+          std::reverse(newVertices.begin(), newVertices.end());
+        }
+        this->setVertices(newVertices);
+      }
 
-        // new vertices in face coordinates, do not add last point
-        std::vector<Point3d> otherFaceDifferenceVertices = verticesFromBoostPolygon(otherFaceDifferenceResult[i]);
+      // change other surface's vertices
+      {
+        std::vector<Point3d> newOtherBuildingVertices = faceTransformation * newOtherFaceVertices;
+        std::vector<Point3d> newOtherVertices = otherSpaceTransformationInverse * newOtherBuildingVertices;
+        boost::optional<Vector3d> newOtherOutwardNormal = getOutwardNormal(newOtherVertices);
+        OS_ASSERT(newOtherOutwardNormal);
+        if (otherOutwardNormal.dot(*newOtherOutwardNormal) < 0){
+          std::reverse(newOtherVertices.begin(), newOtherVertices.end());
+        }
+        otherSurface.setVertices(newOtherVertices);
+      }
+
+      // create intersecting surfaces
+      {
+        // new surface in this space
+        std::vector<Point3d> newBuildingVertices = faceTransformation * intersectionVertices;
+        std::vector<Point3d> newVertices = spaceTransformationInverse * newBuildingVertices;
+        boost::optional<Vector3d> newOutwardNormal = getOutwardNormal(newVertices);
+        OS_ASSERT(newOutwardNormal);
+        if (outwardNormal.dot(*newOutwardNormal) < 0){
+          std::reverse(newVertices.begin(), newVertices.end());
+        }
+        Surface newSurface(newVertices, this->model());
+        newSurface.setSpace(*space);
 
         // new surface in other space
-        std::vector<Point3d> newOtherBuildingVertices = faceTransformation * otherFaceDifferenceVertices;
+        std::vector<Point3d> newOtherBuildingVertices = faceTransformation * intersectionVertices;
         std::vector<Point3d> newOtherVertices = otherSpaceTransformationInverse * newOtherBuildingVertices;
-        newOtherVertices = reorderULC(newOtherVertices);
+        boost::optional<Vector3d> newOtherOutwardNormal = getOutwardNormal(newOtherVertices);
+        OS_ASSERT(newOtherOutwardNormal);
+        if (otherOutwardNormal.dot(*newOtherOutwardNormal) < 0){
+          std::reverse(newOtherVertices.begin(), newOtherVertices.end());
+        }
         Surface newOtherSurface(newOtherVertices, this->model());
         newOtherSurface.setSpace(*otherSpace);
+        
+        // match new surface in this space to new surface in other space
+        newSurface.setAdjacentSurface(newOtherSurface);
       }
+
     }
 
     return true;
@@ -1105,13 +1103,13 @@ namespace detail {
     bool ok = true;
     if (degTilt < 60){
       ok = setSurfaceType("RoofCeiling", driverMethod);
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
     }else if(degTilt < 179){
       ok = setSurfaceType("Wall", driverMethod);
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
     }else{
       ok = setSurfaceType("Floor", driverMethod);
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
     }
   }
 
@@ -1124,13 +1122,13 @@ namespace detail {
   {
     if (this->adjacentSurface()){
       bool test = this->setOutsideBoundaryCondition("Surface", driverMethod);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }else if (istringEqual("Floor", this->surfaceType())){
       bool test = this->setOutsideBoundaryCondition("Ground", driverMethod);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }else{
       bool test = this->setOutsideBoundaryCondition("Outdoors", driverMethod);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
   }
 
@@ -1144,10 +1142,10 @@ namespace detail {
     std::string outsideBoundaryCondition = this->outsideBoundaryCondition();
     if (istringEqual("Outdoors", this->outsideBoundaryCondition())){
       bool test = this->setSunExposure("SunExposed", driverMethod);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }else{
       bool test = this->setSunExposure("NoSun", driverMethod);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
   }
      
@@ -1161,10 +1159,10 @@ namespace detail {
     std::string outsideBoundaryCondition = this->outsideBoundaryCondition();
     if (istringEqual("Outdoors", this->outsideBoundaryCondition())){
       bool test = setWindExposure("WindExposed", driverMethod);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }else{
       bool test = setWindExposure("NoWind", driverMethod);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
   }
 
@@ -1446,7 +1444,7 @@ namespace detail {
 Surface::Surface(const std::vector<Point3d>& vertices, const Model& model)
   : PlanarSurface(Surface::iddObjectType(), vertices, model)
 {
-  BOOST_ASSERT(getImpl<detail::Surface_Impl>());
+  OS_ASSERT(getImpl<detail::Surface_Impl>());
   getImpl<detail::Surface_Impl>()->assignDefaultSurfaceType(false);
   getImpl<detail::Surface_Impl>()->assignDefaultBoundaryCondition(false);
   getImpl<detail::Surface_Impl>()->assignDefaultSunExposure(false);

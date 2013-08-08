@@ -79,13 +79,13 @@ namespace detail {
 
   ComponentData Component_Impl::componentData() const {
     ComponentDataVector candidates = model().getModelObjects<ComponentData>();
-    BOOST_ASSERT(candidates.size() == 1);
+    OS_ASSERT(candidates.size() == 1);
     return candidates[0];
   }
 
   ModelObject Component_Impl::primaryObject() const {
     ComponentData metaDataAndContents = componentData();
-    BOOST_ASSERT(metaDataAndContents.numComponentObjects() > 0);
+    OS_ASSERT(metaDataAndContents.numComponentObjects() > 0);
     return metaDataAndContents.primaryComponentObject();
   }
 
@@ -204,7 +204,7 @@ Component::Component(const openstudio::IdfFile& idfFile)
     LOG_AND_THROW("Cannot construct Component from IdfFile because the file contains "
       << componentDataObjects.size() << " ComponentData objects.");
   }
-  BOOST_ASSERT(componentDataObjects.size() == 1);
+  OS_ASSERT(componentDataObjects.size() == 1);
   ComponentData componentData = componentDataObjects[0];
 
   // All other objects are Component contents
@@ -274,10 +274,10 @@ Component::Component(const std::vector<ModelObject>& contents)
   openstudio::detail::WorkspaceObject_ImplPtrVector objectImplPtrs;
   objectImplPtrs.push_back(getImpl<detail::Component_Impl>()->createObject(IdfObject(ComponentData::iddObjectType()),false));
   WorkspaceObjectVector objects = getImpl<openstudio::detail::Workspace_Impl>()->addObjects(objectImplPtrs);
-  BOOST_ASSERT(objects.size() == static_cast<unsigned>(1));
+  OS_ASSERT(objects.size() == static_cast<unsigned>(1));
 
   ComponentDataVector cdTemp = getModelObjects<ComponentData>();
-  BOOST_ASSERT(cdTemp.size() == 1);
+  OS_ASSERT(cdTemp.size() == 1);
   ComponentData componentData = cdTemp[0];
   componentData.setString(OS_ComponentDataFields::UUID,toString(createUUID()));
   componentData.setInt(OS_ComponentDataFields::CreationTimestamp,time(NULL));
@@ -288,7 +288,7 @@ Component::Component(const std::vector<ModelObject>& contents)
   HandleMap oldNewHandleMap;
   Model model = contents[0].model();
   BOOST_FOREACH(const ModelObject& mo,contents) {
-    BOOST_ASSERT(mo.model() == model);
+    OS_ASSERT(mo.model() == model);
     newObjectImplPtrs.push_back(getImpl<ImplType>()->createObject(
         mo.getImpl<detail::ModelObject_Impl>(),false) );
     oldNewHandleMap.insert(HandleMap::value_type(mo.handle(),newObjectImplPtrs.back()->handle()));
@@ -296,14 +296,14 @@ Component::Component(const std::vector<ModelObject>& contents)
   WorkspaceObjectVector newObjects = getImpl<detail::Model_Impl>()->addClones(newObjectImplPtrs,
                                                                               oldNewHandleMap,
                                                                               true);
-  BOOST_ASSERT(newObjects.size() == newObjectImplPtrs.size());
+  OS_ASSERT(newObjects.size() == newObjectImplPtrs.size());
 
   // populate ComponentData
   componentData.clearExtensibleGroups();
   BOOST_FOREACH(WorkspaceObject& newObject,newObjects) {
     ModelObject mo = newObject.cast<ModelObject>();
     bool ok = componentData.getImpl<detail::ComponentData_Impl>()->registerObject(mo);
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
   }
 
   getImpl<detail::Model_Impl>()->createComponentWatchers();

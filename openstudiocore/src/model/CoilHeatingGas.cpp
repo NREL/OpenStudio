@@ -45,7 +45,7 @@ namespace detail{
   CoilHeatingGas_Impl::CoilHeatingGas_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : StraightComponent_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CoilHeatingGas::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CoilHeatingGas::iddObjectType());
   }
 
   CoilHeatingGas_Impl::CoilHeatingGas_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -53,7 +53,7 @@ namespace detail{
                                            bool keepHandle)
                                              : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CoilHeatingGas::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CoilHeatingGas::iddObjectType());
   }
 
   CoilHeatingGas_Impl::CoilHeatingGas_Impl(const CoilHeatingGas_Impl& other,
@@ -104,11 +104,11 @@ namespace detail{
       // so we hook up to global always on schedule
       LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
       value = this->model().alwaysOnDiscreteSchedule();
-      BOOST_ASSERT(value);
+      OS_ASSERT(value);
       const_cast<CoilHeatingGas_Impl*>(this)->setAvailabilitySchedule(*value);
       value = optionalAvailabilitySchedule();
     }
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
   bool CoilHeatingGas_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -285,7 +285,7 @@ namespace detail{
       resetNominalCapacity();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilHeatingGas_Impl::setNominalCapacity(const OSOptionalQuantity& nominalCapacity) {
@@ -307,12 +307,12 @@ namespace detail{
 
   void CoilHeatingGas_Impl::resetNominalCapacity() {
     bool result = setString(OS_Coil_Heating_GasFields::NominalCapacity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingGas_Impl::autosizeNominalCapacity() {
     bool result = setString(OS_Coil_Heating_GasFields::NominalCapacity, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 }// detail
@@ -322,7 +322,7 @@ CoilHeatingGas::CoilHeatingGas(const Model& model,
                                Schedule& schedule)
   : StraightComponent(CoilHeatingGas::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CoilHeatingGas_Impl>());
+  OS_ASSERT(getImpl<detail::CoilHeatingGas_Impl>());
   bool ok = setAvailableSchedule(schedule);
   if (!ok) {
     remove();

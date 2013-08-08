@@ -95,7 +95,7 @@ TEST_F(AnalysisDriverFixture, FSUDace_Halton_Continuous) {
   BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());
     EXPECT_FALSE(dataPoint.failed());
-    EXPECT_FALSE(dataPoint.responseValues().empty());
+    // EXPECT_FALSE(dataPoint.responseValues().empty());
   }
 }
 
@@ -177,7 +177,7 @@ TEST_F(AnalysisDriverFixture, FSUDace_Hammersley_Continuous) {
   BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());
     EXPECT_FALSE(dataPoint.failed());
-    EXPECT_FALSE(dataPoint.responseValues().empty());
+    // EXPECT_FALSE(dataPoint.responseValues().empty());
   }
 }
 
@@ -260,7 +260,7 @@ TEST_F(AnalysisDriverFixture, FSUDace_CVT_Continuous) {
   BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());
     EXPECT_FALSE(dataPoint.failed());
-    EXPECT_FALSE(dataPoint.responseValues().empty());
+    // EXPECT_FALSE(dataPoint.responseValues().empty());
   }
 }
 

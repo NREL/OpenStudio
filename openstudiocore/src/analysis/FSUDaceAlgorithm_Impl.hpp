@@ -26,6 +26,7 @@
 namespace openstudio {
 namespace analysis {
 
+class FSUDaceAlgorithm;
 class FSUDaceAlgorithmOptions;
 
 namespace detail {
@@ -78,12 +79,20 @@ namespace detail {
     virtual std::string dakotaInFileDescription() const;
 
     //@}
+    /** @name Getters and Queries */
     //@{
 
     FSUDaceAlgorithmOptions fsudaceAlgorithmOptions() const;
 
     //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
 
+    virtual QVariant toVariant() const;
+
+    static FSUDaceAlgorithm fromVariant(const QVariant& variant, const VersionString& version);
+
+    //@}
    private:
     REGISTER_LOGGER("openstudio.analysis.FSUDaceAlgorithm");
   };

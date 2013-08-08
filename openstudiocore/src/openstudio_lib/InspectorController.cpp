@@ -49,6 +49,8 @@
 #include <model/WaterToAirComponent.hpp>
 #include <model/WaterToAirComponent_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 InspectorController::InspectorController()
@@ -61,7 +63,7 @@ InspectorController::InspectorController()
 
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorView, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   connect( m_inspectorView,SIGNAL(removeZoneClicked(model::ThermalZone &)),
            this,SLOT(removeBranchForZone(model::ThermalZone &)));

@@ -48,15 +48,15 @@ AnalysisDriverWatcher::AnalysisDriverWatcher(const AnalysisDriver& analysisDrive
   ok = m_analysisDriver.connect(SIGNAL(dataPointQueued(const openstudio::UUID&,const openstudio::UUID&)),
                                 this,
                                 SLOT(dataPointQueued(const openstudio::UUID&,const openstudio::UUID&)));
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = m_analysisDriver.connect(SIGNAL(dataPointComplete(const openstudio::UUID&,const openstudio::UUID&)),
                                 this,
                                 SLOT(dataPointComplete(const openstudio::UUID&,const openstudio::UUID&)));
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = m_analysisDriver.connect(SIGNAL(analysisComplete(const openstudio::UUID&)),
                                 this,
                                 SLOT(analysisComplete(const openstudio::UUID&)));
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 void AnalysisDriverWatcher::watch(const openstudio::UUID& analysis) {

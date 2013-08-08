@@ -29,6 +29,7 @@ class Table;
 
 namespace analysis {
 
+class SequentialSearch;
 class SequentialSearchOptions;
 class DataPoint;
 class OptimizationDataPoint;
@@ -96,6 +97,14 @@ namespace detail {
     Table getSummaryTable(Analysis& analysis) const;
 
     std::vector< std::vector<QVariant> > getCandidateCombinations(const DataPoint& dataPoint) const;
+
+    //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    static SequentialSearch fromVariant(const QVariant& variant, const VersionString& version);
 
     //@}
    private:

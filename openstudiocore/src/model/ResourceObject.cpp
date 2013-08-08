@@ -20,6 +20,8 @@
 #include <model/ResourceObject.hpp>
 #include <model/ResourceObject_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <boost/foreach.hpp>
 
 namespace openstudio {
@@ -72,7 +74,7 @@ namespace detail {
 ResourceObject::ResourceObject(IddObjectType type,const Model& model)
   : ParentObject(type,model) 
 {
-  BOOST_ASSERT(getImpl<detail::ResourceObject_Impl>());
+  OS_ASSERT(getImpl<detail::ResourceObject_Impl>());
 }
 
 ResourceObject::ResourceObject(boost::shared_ptr<detail::ResourceObject_Impl> impl)

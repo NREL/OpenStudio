@@ -24,6 +24,8 @@
 
 #include <model/Model_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <QBoxLayout>
 #include <QButtonGroup>
 #include <QComboBox>
@@ -99,7 +101,7 @@ void LifeCycleCostsView::createWidgets()
 
   isConnected = connect(m_fempGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(fempGroupClicked(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   radioButton = new QRadioButton("Federal Energy Management Program (FEMP)");
   m_fempGroup->addButton(radioButton,0);
@@ -168,7 +170,7 @@ void LifeCycleCostsView::createWidgets()
 
   isConnected = connect(m_nistGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(nistGroupClicked(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   radioButton = new QRadioButton("Yes");
   m_nistGroup->addButton(radioButton,0);
@@ -379,10 +381,10 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
 
   gridLayout->setColumnStretch(100,100);
 
-  Q_ASSERT(m_fempGroup->button(0));
+  OS_ASSERT(m_fempGroup->button(0));
   m_fempGroup->button(0)->setChecked(true);
 
-  Q_ASSERT(m_nistGroup->button(0));
+  OS_ASSERT(m_nistGroup->button(0));
   m_nistGroup->button(0)->setChecked(true);
 
   return widget;
@@ -418,7 +420,7 @@ QWidget * LifeCycleCostsView::createNistWidget()
 
   isConnected = connect(m_nistRegionComboBox, SIGNAL(currentIndexChanged(const QString&)),
                                         this, SLOT(nistRegionChanged(const QString&)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   vLayout->addStretch();
   gridLayout->addLayout(vLayout,0,0,Qt::AlignLeft);
@@ -439,7 +441,7 @@ QWidget * LifeCycleCostsView::createNistWidget()
 
   isConnected = connect(m_nistSectorComboBox, SIGNAL(currentIndexChanged(const QString&)),
                                         this, SLOT(nistSectorChanged(const QString&)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   vLayout->addStretch();
   gridLayout->addLayout(vLayout,0,1,Qt::AlignLeft);

@@ -104,6 +104,10 @@ namespace detail {
 
     virtual void reset();
 
+    virtual QVariant toVariant() const;
+
+    static Algorithm factoryFromVariant(const QVariant& variant, const VersionString& version);
+
     //@}
    protected:
     bool m_complete;

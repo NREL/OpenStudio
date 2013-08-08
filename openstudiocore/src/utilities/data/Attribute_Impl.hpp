@@ -52,6 +52,7 @@ namespace detail {
       Attribute_Impl(const openstudio::UUID& uuid,
                      const openstudio::UUID& versionUUID,
                      const std::string& name,
+                     const boost::optional<std::string>& displayName,
                      bool value,
                      const boost::optional<std::string>& units);
 
@@ -59,6 +60,7 @@ namespace detail {
       Attribute_Impl(const openstudio::UUID& uuid,
                      const openstudio::UUID& versionUUID,
                      const std::string& name,
+                     const boost::optional<std::string>& displayName,
                      double value,
                      const boost::optional<std::string>& units);
 
@@ -68,18 +70,21 @@ namespace detail {
       Attribute_Impl(const openstudio::UUID& uuid,
                      const openstudio::UUID& versionUUID,
                      const std::string& name,
+                     const boost::optional<std::string>& displayName,
                      const Quantity& value);
 
       Attribute_Impl(const std::string& name, const Unit& value);
       Attribute_Impl(const openstudio::UUID& uuid,
                      const openstudio::UUID& versionUUID,
                      const std::string& name,
+                     const boost::optional<std::string>& displayName,
                      const Unit& value);
 
       Attribute_Impl(const std::string& name, int value, const boost::optional<std::string>& units);
       Attribute_Impl(const openstudio::UUID& uuid,
                      const openstudio::UUID& versionUUID,
                      const std::string& name,
+                     const boost::optional<std::string>& displayName,
                      int value,
                      const boost::optional<std::string>& units);
 
@@ -87,6 +92,7 @@ namespace detail {
       Attribute_Impl(const openstudio::UUID& uuid,
                      const openstudio::UUID& versionUUID,
                      const std::string& name,
+                     const boost::optional<std::string>& displayName,
                      unsigned value,
                      const boost::optional<std::string>& units);
 
@@ -94,6 +100,7 @@ namespace detail {
       Attribute_Impl(const openstudio::UUID& uuid,
                      const openstudio::UUID& versionUUID,
                      const std::string& name,
+                     const boost::optional<std::string>& displayName,
                      const char* value,
                      const boost::optional<std::string>& units);
 
@@ -101,6 +108,7 @@ namespace detail {
       Attribute_Impl(const openstudio::UUID& uuid,
                      const openstudio::UUID& versionUUID,
                      const std::string& name,
+                     const boost::optional<std::string>& displayName,
                      const std::string& value,
                      const boost::optional<std::string>& units);
 
@@ -108,6 +116,7 @@ namespace detail {
       Attribute_Impl(const openstudio::UUID& uuid,
                      const openstudio::UUID& versionUUID,
                      const std::string& name,
+                     const boost::optional<std::string>& displayName,
                      const std::vector<openstudio::Attribute>& value,
                      const boost::optional<std::string>& units);
 

@@ -19,6 +19,8 @@
 
 #include <model_editor/IGSpinBoxes.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <QWheelEvent>
 #include <string>
 
@@ -139,6 +141,6 @@ void IGDSpinBox::togglePrec()
   }
   catch(...)
   {
-    Q_ASSERT(false);
+    OS_ASSERT(false);
   }
 }

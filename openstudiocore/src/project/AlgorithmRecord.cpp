@@ -63,26 +63,26 @@ namespace detail {
   AlgorithmRecord_Impl::AlgorithmRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : ObjectRecord_Impl(database, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(AlgorithmRecordColumns::algorithmRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_algorithmRecordType = AlgorithmRecordType(value.toInt());
 
     value = query.value(AlgorithmRecordColumns::complete);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_complete = value.toBool();
 
     value = query.value(AlgorithmRecordColumns::failed);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_failed = value.toBool();
 
     value = query.value(AlgorithmRecordColumns::iter);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_iter = value.toInt();
 
   }
@@ -122,7 +122,7 @@ namespace detail {
       candidates.push_back(AnalysisRecord(query,database));
     }
 
-    BOOST_ASSERT(candidates.size() == 1u);
+    OS_ASSERT(candidates.size() == 1u);
 
     return candidates[0];
   }
@@ -166,54 +166,54 @@ namespace detail {
   }
 
   void AlgorithmRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     ObjectRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(AlgorithmRecordColumns::algorithmRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastAlgorithmRecordType = AlgorithmRecordType(value.toInt());
 
     value = query.value(AlgorithmRecordColumns::complete);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastComplete = value.toBool();
 
     value = query.value(AlgorithmRecordColumns::failed);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastFailed = value.toBool();
 
     value = query.value(AlgorithmRecordColumns::iter);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastIter = value.toInt();
   }
 
   bool AlgorithmRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = ObjectRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(AlgorithmRecordColumns::algorithmRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_algorithmRecordType == AlgorithmRecordType(value.toInt()));
 
     value = query.value(AlgorithmRecordColumns::complete);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_complete == value.toBool());
 
     value = query.value(AlgorithmRecordColumns::failed);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_failed == value.toBool());
 
     value = query.value(AlgorithmRecordColumns::iter);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_iter == value.toInt());
 
     return result;
@@ -244,7 +244,7 @@ AlgorithmRecord::AlgorithmRecord(boost::shared_ptr<detail::AlgorithmRecord_Impl>
                                  const boost::optional<analysis::Algorithm>& algorithm)
 : ObjectRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::AlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::AlgorithmRecord_Impl>());
   if (algorithm) {
     constructRelatedRecords(*algorithm);
   }
@@ -295,7 +295,7 @@ UpdateByIdQueryData AlgorithmRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -382,7 +382,7 @@ AlgorithmRecord AlgorithmRecord::factoryFromAlgorithm(const analysis::Algorithm&
         analysisRecord);
   }
 
-  BOOST_ASSERT(result);
+  OS_ASSERT(result);
   return *result;
 }
 

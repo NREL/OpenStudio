@@ -46,7 +46,7 @@ namespace detail {
       bool keepHandle)
     : SpaceLoad_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == SpaceInfiltrationEffectiveLeakageArea::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == SpaceInfiltrationEffectiveLeakageArea::iddObjectType());
   }
 
   SpaceInfiltrationEffectiveLeakageArea_Impl::SpaceInfiltrationEffectiveLeakageArea_Impl(
@@ -55,7 +55,7 @@ namespace detail {
       bool keepHandle)
     : SpaceLoad_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == SpaceInfiltrationEffectiveLeakageArea::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == SpaceInfiltrationEffectiveLeakageArea::iddObjectType());
   }
 
   SpaceInfiltrationEffectiveLeakageArea_Impl::SpaceInfiltrationEffectiveLeakageArea_Impl(
@@ -110,40 +110,40 @@ namespace detail {
 
   double SpaceInfiltrationEffectiveLeakageArea_Impl::effectiveAirLeakageArea() const {
     boost::optional<double> value = getDouble(OS_SpaceInfiltration_EffectiveLeakageAreaFields::EffectiveAirLeakageArea,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SpaceInfiltrationEffectiveLeakageArea_Impl::getEffectiveAirLeakageArea(bool returnIP) const {
     OptionalDouble value = effectiveAirLeakageArea();
     OSOptionalQuantity result = getQuantityFromDouble(OS_SpaceInfiltration_EffectiveLeakageAreaFields::EffectiveAirLeakageArea, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double SpaceInfiltrationEffectiveLeakageArea_Impl::stackCoefficient() const {
     boost::optional<double> value = getDouble(OS_SpaceInfiltration_EffectiveLeakageAreaFields::StackCoefficient,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SpaceInfiltrationEffectiveLeakageArea_Impl::getStackCoefficient(bool returnIP) const {
     OptionalDouble value = stackCoefficient();
     OSOptionalQuantity result = getQuantityFromDouble(OS_SpaceInfiltration_EffectiveLeakageAreaFields::StackCoefficient, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double SpaceInfiltrationEffectiveLeakageArea_Impl::windCoefficient() const {
     boost::optional<double> value = getDouble(OS_SpaceInfiltration_EffectiveLeakageAreaFields::WindCoefficient,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SpaceInfiltrationEffectiveLeakageArea_Impl::getWindCoefficient(bool returnIP) const {
     OptionalDouble value = windCoefficient();
     OSOptionalQuantity result = getQuantityFromDouble(OS_SpaceInfiltration_EffectiveLeakageAreaFields::WindCoefficient, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -223,7 +223,7 @@ namespace detail {
   void SpaceInfiltrationEffectiveLeakageArea_Impl::resetSchedule()
   {
     bool result = setString(OS_SpaceInfiltration_EffectiveLeakageAreaFields::ScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   openstudio::Quantity SpaceInfiltrationEffectiveLeakageArea_Impl::effectiveAirLeakageArea_SI() const {
@@ -281,13 +281,13 @@ namespace detail {
 SpaceInfiltrationEffectiveLeakageArea::SpaceInfiltrationEffectiveLeakageArea(const Model& model)
   : SpaceLoad(SpaceInfiltrationEffectiveLeakageArea::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::SpaceInfiltrationEffectiveLeakageArea_Impl>());
+  OS_ASSERT(getImpl<detail::SpaceInfiltrationEffectiveLeakageArea_Impl>());
   bool test = setEffectiveAirLeakageArea(0.1);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = setStackCoefficient(0.1);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = setWindCoefficient(0.1);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 }
 
 IddObjectType SpaceInfiltrationEffectiveLeakageArea::iddObjectType() {

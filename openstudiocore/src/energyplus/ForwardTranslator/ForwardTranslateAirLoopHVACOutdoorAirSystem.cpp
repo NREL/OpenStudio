@@ -39,6 +39,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -93,7 +95,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
 
   if (addGroup) {
     IdfExtensibleGroup eg = controllerListIdf.pushExtensibleGroup(groupFields);
-    BOOST_ASSERT(!eg.empty());
+    OS_ASSERT(!eg.empty());
   }
 
   // Field: Availability Manager List Name //////////////////////////////////

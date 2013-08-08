@@ -39,7 +39,7 @@ namespace detail {
                      bool keepHandle)
     : GasLayer_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == Gas::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == Gas::iddObjectType());
   }
 
   Gas_Impl::Gas_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -47,7 +47,7 @@ namespace detail {
                      bool keepHandle)
     : GasLayer_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == Gas::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == Gas::iddObjectType());
   }
 
   Gas_Impl::Gas_Impl(const Gas_Impl& other,
@@ -70,13 +70,13 @@ namespace detail {
 
   std::string Gas_Impl::gasType() const {
     boost::optional<std::string> value = getString(OS_WindowMaterial_GasFields::GasType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double Gas_Impl::thickness() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_GasFields::Thickness,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -344,7 +344,7 @@ namespace detail {
       }
       catch (...) {
         // lack of gasType should already be listed
-        BOOST_ASSERT(report.numErrors() > 0);
+        OS_ASSERT(report.numErrors() > 0);
       }
     } // if
 
@@ -353,7 +353,7 @@ namespace detail {
   Quantity Gas_Impl::getThickness(bool returnIP) const {
     OptionalDouble value = thickness();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_GasFields::Thickness, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -483,7 +483,7 @@ namespace detail {
       resetConductivityCoefficientA();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Gas_Impl::setConductivityCoefficientA(const OSOptionalQuantity& conductivityCoefficientA) {
@@ -505,7 +505,7 @@ namespace detail {
 
   void Gas_Impl::resetConductivityCoefficientA() {
     bool result = setString(OS_WindowMaterial_GasFields::ConductivityCoefficientA, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Gas_Impl::setConductivityCoefficientB(boost::optional<double> conductivityCoefficientB) {
@@ -517,7 +517,7 @@ namespace detail {
       resetConductivityCoefficientB();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Gas_Impl::setConductivityCoefficientB(const OSOptionalQuantity& conductivityCoefficientB) {
@@ -539,7 +539,7 @@ namespace detail {
 
   void Gas_Impl::resetConductivityCoefficientB() {
     bool result = setString(OS_WindowMaterial_GasFields::ConductivityCoefficientB, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Gas_Impl::setConductivityCoefficientC(boost::optional<double> conductivityCoefficientC) {
@@ -551,7 +551,7 @@ namespace detail {
       resetConductivityCoefficientC();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Gas_Impl::setConductivityCoefficientC(const OSOptionalQuantity& conductivityCoefficientC) {
@@ -573,7 +573,7 @@ namespace detail {
 
   void Gas_Impl::resetConductivityCoefficientC() {
     bool result = setString(OS_WindowMaterial_GasFields::ConductivityCoefficientC, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Gas_Impl::setViscosityCoefficientA(boost::optional<double> viscosityCoefficientA) {
@@ -605,7 +605,7 @@ namespace detail {
 
   void Gas_Impl::resetViscosityCoefficientA() {
     bool result = setString(OS_WindowMaterial_GasFields::ViscosityCoefficientA, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Gas_Impl::setViscosityCoefficientB(boost::optional<double> viscosityCoefficientB) {
@@ -617,7 +617,7 @@ namespace detail {
       resetViscosityCoefficientB();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Gas_Impl::setViscosityCoefficientB(const OSOptionalQuantity& viscosityCoefficientB) {
@@ -639,7 +639,7 @@ namespace detail {
 
   void Gas_Impl::resetViscosityCoefficientB() {
     bool result = setString(OS_WindowMaterial_GasFields::ViscosityCoefficientB, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Gas_Impl::setViscosityCoefficientC(boost::optional<double> viscosityCoefficientC) {
@@ -651,7 +651,7 @@ namespace detail {
       resetViscosityCoefficientC();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Gas_Impl::setViscosityCoefficientC(const OSOptionalQuantity& viscosityCoefficientC) {
@@ -673,7 +673,7 @@ namespace detail {
 
   void Gas_Impl::resetViscosityCoefficientC() {
     bool result = setString(OS_WindowMaterial_GasFields::ViscosityCoefficientC, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Gas_Impl::setSpecificHeatCoefficientA(boost::optional<double> specificHeatCoefficientA) {
@@ -705,7 +705,7 @@ namespace detail {
 
   void Gas_Impl::resetSpecificHeatCoefficientA() {
     bool result = setString(OS_WindowMaterial_GasFields::SpecificHeatCoefficientA, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Gas_Impl::setSpecificHeatCoefficientB(boost::optional<double> specificHeatCoefficientB) {
@@ -717,7 +717,7 @@ namespace detail {
       resetSpecificHeatCoefficientB();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Gas_Impl::setSpecificHeatCoefficientB(const OSOptionalQuantity& specificHeatCoefficientB) {
@@ -739,7 +739,7 @@ namespace detail {
 
   void Gas_Impl::resetSpecificHeatCoefficientB() {
     bool result = setString(OS_WindowMaterial_GasFields::SpecificHeatCoefficientB, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Gas_Impl::setSpecificHeatCoefficientC(boost::optional<double> specificHeatCoefficientC) {
@@ -751,7 +751,7 @@ namespace detail {
       resetSpecificHeatCoefficientC();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Gas_Impl::setSpecificHeatCoefficientC(const OSOptionalQuantity& specificHeatCoefficientC) {
@@ -773,7 +773,7 @@ namespace detail {
 
   void Gas_Impl::resetSpecificHeatCoefficientC() {
     bool result = setString(OS_WindowMaterial_GasFields::SpecificHeatCoefficientC, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Gas_Impl::setMolecularWeight(boost::optional<double> molecularWeight) {
@@ -805,7 +805,7 @@ namespace detail {
 
   void Gas_Impl::resetMolecularWeight() {
     bool result = setString(OS_WindowMaterial_GasFields::MolecularWeight, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Gas_Impl::setSpecificHeatRatio(boost::optional<double> specificHeatRatio) {
@@ -837,7 +837,7 @@ namespace detail {
 
   void Gas_Impl::resetSpecificHeatRatio() {
     bool result = setString(OS_WindowMaterial_GasFields::SpecificHeatRatio, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   std::vector<std::string> Gas_Impl::gasTypeValues() const {
@@ -947,16 +947,16 @@ Gas::Gas(const Model& model,
          double thickness)
   : GasLayer(Gas::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::Gas_Impl>());
+  OS_ASSERT(getImpl<detail::Gas_Impl>());
 
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setGasType(gasType);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
    ok = setThickness(thickness);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 const std::vector<std::string>& Gas::validGasTypes() {
@@ -964,7 +964,7 @@ const std::vector<std::string>& Gas::validGasTypes() {
   if (result.empty()) {
     result = getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                             OS_WindowMaterial_GasFields::GasType);
-    BOOST_ASSERT(!result.empty());
+    OS_ASSERT(!result.empty());
   }
   return result;
 }
