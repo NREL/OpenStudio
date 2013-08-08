@@ -51,29 +51,29 @@ namespace contam
       const openstudio::path& mapPath);
     static bool modelToContam(const openstudio::model::Model& model, const openstudio::path& path);
 
-    bool valid() const {return m_valid && data.valid;}
+    bool valid() const {return m_valid && m_data.valid;}
     std::map <Handle, int> surfaceMap() const {return m_surfaceMap;}
+    std::map <Handle, int> zoneMap() const {return m_zoneMap;}
 
     bool setSteadyWeather(double windSpeed, double windDirection); // This is all we need now, expand later
 
   private:
     int tableLookup(QMap<std::string,int> map, std::string str, const char *name);
     int tableLookup(QMap<Handle,int> map, Handle handle, const char *name);
+    int tableLookup(std::map<Handle,int> map, Handle handle, const char *name);
     std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
     Handle ForwardTranslator::reverseLookup(QMap<Handle,int> map, int nr, const char *name);
 
-    prj::Data data;
+    prj::Data m_data;
     // Maps - will be populated after a call of translateToPrj
-    // I'm not clear on how this information will be propagated for
-    // postprocessing purposes - write a file?
-    // These map element names to the CONTAM index (1,2,...,nElement)
-    QMap<QString,int> afeMap;
-    QMap <Handle, int> levelMap;      // Building story to level map by handle
-    QMap <Handle, int> zoneMap;       // Thermal zone to airflow zone map by handle
+    // All map to the CONTAM index (1,2,...,nElement)
+    QMap<QString,int> m_afeMap;
+    QMap <Handle, int> m_levelMap;      // Building story to level map by handle
+    std::map <Handle, int> m_zoneMap;       // Thermal zone to airflow zone map by handle
     //QMap <std::string, int> volumeMap; // Map of AHS volumes - may not be needed
-    QMap <std::string, int> pathMap;  // AHS paths stored by name
+    QMap <std::string, int> m_pathMap;  // AHS paths stored by name
     std::map <Handle, int> m_surfaceMap;    // Surface paths stored by handle
-    QMap <Handle, int> ahsMap;        // Airloop to AHS map by handle
+    QMap <Handle, int> m_ahsMap;        // Airloop to AHS map by handle
 
     bool m_valid;
 

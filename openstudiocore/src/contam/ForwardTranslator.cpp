@@ -76,6 +76,21 @@ namespace contam
     return nr;
   }
 
+  int ForwardTranslator::tableLookup(std::map<Handle,int> map, Handle handle, const char *name)
+  {
+    std::map<Handle,int>::const_iterator iter = map.find(handle);
+    int nr = 0;
+    if(iter == map.end())
+    {
+      LOG(Warn, "Unable to look up '" << handle << "' in " << name);
+    }
+    else
+    {
+      nr = iter->second;
+    }
+    return nr;
+  }
+
   std::string ForwardTranslator::reverseLookup(QMap<std::string,int> map, int nr, const char *name)
   {
     if(nr > 0)
@@ -185,20 +200,20 @@ namespace contam
     int nr;
     // Load the template
     //openstudio::contam::prj::Data data(":/templates/template.prj",false);
-    data.read(":/templates/template.prj",false);
-    if(!data.valid)
+    m_data.read(":/templates/template.prj",false);
+    if(!m_data.valid)
       return false;
     // The template is a legal PRJ file, so it has one level. Not for long.
-    data.levels.clear();
+    m_data.levels.clear();
     // Build the airflow element lookup table
-    for(int i=0;i<data.airflowElements.size();i++)
-      afeMap[data.airflowElements[i]->name] = data.airflowElements[i]->nr;
+    for(int i=0;i<m_data.airflowElements.size();i++)
+      m_afeMap[m_data.airflowElements[i]->name] = m_data.airflowElements[i]->nr;
     // Build up data for setting wall leakage
     QMap<QString,int> extWallAFE;
     QMap<QString,int> intWallAFE;
     QMap<QString,int> floorAFE;
     QMap<QString,int> roofAFE;
-    findAFEs(afeMap,extWallAFE,intWallAFE,floorAFE,roofAFE);
+    findAFEs(m_afeMap,extWallAFE,intWallAFE,floorAFE,roofAFE);
     // Set top-level model info
     boost::optional<model::Building> building = model.getOptionalUniqueModelObject<model::Building>();
     QString modelDescr = QString("Automatically generated OpenStudio model");
@@ -208,7 +223,7 @@ namespace contam
       if(name)
         modelDescr = QString("Automatically generated from \"%1\" OpenStudio model").arg(openstudio::toQString(name.get()));
     }
-    data.rc.prjdesc = modelDescr;
+    m_data.rc.prjdesc = modelDescr;
     // Translate each building story into a level and generate a lookup table by handle.
     // Probably need to add something here to complain about lack of stories
     nr=1;
@@ -217,7 +232,7 @@ namespace contam
     {
       openstudio::contam::prj::Level level;
       level.name = QString("<%1>").arg(nr);
-      levelMap[buildingStory.handle()] = nr;
+      m_levelMap[buildingStory.handle()] = nr;
       double ht = buildingStory.nominalFloortoFloorHeight();
       totalHeight += ht;
       boost::optional<double> elevation = buildingStory.nominalZCoordinate();
@@ -227,12 +242,12 @@ namespace contam
       level.nr = nr;
       level.refht = QString("%1").arg(z);
       level.delht = QString("%1").arg(ht);
-      data.levels << level;
+      m_data.levels << level;
       nr++;
     }
-    data.rc.wind_H = QString().sprintf("%g",totalHeight);
+    m_data.rc.wind_H = QString().sprintf("%g",totalHeight);
     // Check for levels - translation can't proceed without levels
-    if(data.levels.size() == 0)
+    if(m_data.levels.size() == 0)
     {
       LOG(Error, "Failed to find building stories in model, translation aborted");
       m_valid = false;
@@ -245,7 +260,7 @@ namespace contam
     {
       nr++;
       openstudio::contam::prj::Zone zone;
-      zoneMap[thermalZone.handle()] = nr;
+      m_zoneMap[thermalZone.handle()] = nr;
       //volumeMap[thermalZone.name().get()] = nr;
       zone.nr = nr;
       zone.name = QString("Zone_%1").arg(nr);
@@ -283,7 +298,7 @@ namespace contam
         boost::optional<openstudio::model::BuildingStory> story = space.buildingStory();
         if(story)
         {
-          levelNr = tableLookup(levelMap,(*story).handle(),"levelMap");
+          levelNr = tableLookup(m_levelMap,(*story).handle(),"levelMap");
           break;
         }
       }
@@ -299,14 +314,14 @@ namespace contam
       }
       // set T0
       zone.T0 = QString("293.15");
-      data.zones << zone;
+      m_data.zones << zone;
     }
 
     // Create paths and generate a lookup table by name
     nr = 0;
     // Loop over surfaces and generate paths
     QList <openstudio::Handle>used;
-    double wind_H = data.rc.wind_H.toDouble();
+    double wind_H = m_data.rc.wind_H.toDouble();
     BOOST_FOREACH(openstudio::model::Surface surface, model.getConcreteModelObjects<openstudio::model::Surface>())
     {
       openstudio::contam::prj::Path path;
@@ -328,9 +343,9 @@ namespace contam
         }
         // Use the lookup table to get the zone info
         int zoneNr;
-        if(!(zoneNr=tableLookup(zoneMap,thermalZone->handle(),"zoneMap")))
+        if(!(zoneNr=tableLookup(m_zoneMap,thermalZone->handle(),"zoneMap")))
           continue;
-        openstudio::contam::prj::Zone *zone = &(data.zones[zoneNr-1]);
+        openstudio::contam::prj::Zone *zone = &(m_data.zones[zoneNr-1]);
         // Get the surface area - will need to do more work here later if large openings are present
         double area = surface.grossArea();
         std::string type = surface.surfaceType();
@@ -341,7 +356,7 @@ namespace contam
           averageZ += point.z();
         }
         // Now set the path info
-        path.relHt = QString().sprintf("%g",averageZ / numVertices - data.levels[zone->pl-1].refht.toDouble());
+        path.relHt = QString().sprintf("%g",averageZ / numVertices - m_data.levels[zone->pl-1].refht.toDouble());
         path.pld = zone->pl;
         path.mult = QString().sprintf("%g",area);
         // Now for the type specific info
@@ -367,7 +382,7 @@ namespace contam
           }
           path.nr = ++nr;
           m_surfaceMap[surface.handle()] = path.nr;
-          data.paths << path;
+          m_data.paths << path;
         }
         else if (bc == "Surface")
         {
@@ -384,7 +399,7 @@ namespace contam
                 {
                   // Make an interior flow path
                   path.pzn = zone->nr;
-                  path.pzm = zoneMap[adjacentZone->handle()];
+                  path.pzm = m_zoneMap[adjacentZone->handle()];
                   // Set flow element
                   if(type == "Floor" || type == "RoofCeiling")
                   {
@@ -396,7 +411,7 @@ namespace contam
                   }
                   path.nr = ++nr;
                   m_surfaceMap[surface.handle()] = path.nr;
-                  data.paths << path;
+                  m_data.paths << path;
                   used << adjacentSurface->handle();
                 }
               }
@@ -436,11 +451,11 @@ namespace contam
           continue;
         openstudio::contam::prj::Ahs ahs;
         ahs.nr = ++nr;
-        ahsMap[airloop.handle()] = nr;
+        m_ahsMap[airloop.handle()] = nr;
         ahs.name = QString("AHS_%1").arg(nr);
         // Create supply and return zones
         openstudio::contam::prj::Zone rz;
-        rz.nr = data.zones.size()+1;
+        rz.nr = m_data.zones.size()+1;
         rz.pl = 1;
         rz.T0 = QString("293.15");
         rz.setSystem(true);
@@ -459,20 +474,20 @@ namespace contam
         ahs.zone_r = rz.nr;
         ahs.zone_s = sz.nr;
         // Add them to the zone list
-        data.zones << rz << sz;
+        m_data.zones << rz << sz;
         // Now hook the served zones up to the supply and return zones
         BOOST_FOREACH(openstudio::model::ThermalZone thermalZone, airloop.thermalZones())
         {
-          int zoneNr = tableLookup(zoneMap,thermalZone.handle(),"zoneMap");
+          int zoneNr = tableLookup(m_zoneMap,thermalZone.handle(),"zoneMap");
           // Supply path
           openstudio::contam::prj::Path sp;
-          sp.nr = data.paths.size()+1;
+          sp.nr = m_data.paths.size()+1;
           sp.pld = 1;
           sp.pzn = ahs.zone_s;
           sp.pzm = zoneNr;
           sp.pa = ahs.nr;
           sp.setSystem(true);
-          pathMap[(thermalZone.name().get()+" supply")] = sp.nr;
+          m_pathMap[(thermalZone.name().get()+" supply")] = sp.nr;
           // Return path
           openstudio::contam::prj::Path rp;
           rp.nr = sp.nr+1;
@@ -481,49 +496,49 @@ namespace contam
           rp.pzm = ahs.zone_r;
           rp.pa = ahs.nr;
           rp.setSystem(true);
-          pathMap[(thermalZone.name().get()+" return")] = rp.nr;
+          m_pathMap[(thermalZone.name().get()+" return")] = rp.nr;
           // Add the paths to the path list
-          data.paths << sp << rp;
+          m_data.paths << sp << rp;
         }
-        data.ahs << ahs;
+        m_data.ahs << ahs;
       }
 
       // Now loop back through the AHS list and connect the supply and return zones together
-      for(int i=0;i<data.ahs.size();i++)
+      for(int i=0;i<m_data.ahs.size();i++)
       {
         std::string loopName = QString("AHS_%1").arg(i+1).toStdString();
         // Recirculation path
         openstudio::contam::prj::Path recirc;
-        recirc.nr = data.paths.size()+1;
+        recirc.nr = m_data.paths.size()+1;
         recirc.pld = 1;
         // Set the OA fraction schedule here
         //recirc.ps = ?
-        recirc.pzn = data.ahs[i].zone_r;
-        recirc.pzm = data.ahs[i].zone_s;
+        recirc.pzn = m_data.ahs[i].zone_r;
+        recirc.pzm = m_data.ahs[i].zone_s;
         recirc.setRecirculation(true);
-        pathMap[loopName + " recirculation"] = recirc.nr;
+        m_pathMap[loopName + " recirculation"] = recirc.nr;
         // Outside air path
         openstudio::contam::prj::Path oa;
         oa.nr = recirc.nr+1;
         oa.pld = 1;
         oa.pzn = -1;
-        oa.pzm = data.ahs[i].zone_s;
+        oa.pzm = m_data.ahs[i].zone_s;
         oa.setOutsideAir(true);
-        pathMap[loopName + " oa"] = oa.nr;
+        m_pathMap[loopName + " oa"] = oa.nr;
         // Exhaust path;
         openstudio::contam::prj::Path exhaust;
         exhaust.nr = oa.nr+1;
         exhaust.pld = 1;
-        exhaust.pzn = data.ahs[i].zone_r;
+        exhaust.pzn = m_data.ahs[i].zone_r;
         exhaust.pzm = -1;
         exhaust.setExhaust(true);
-        pathMap[loopName + " exhaust"] = exhaust.nr;
+        m_pathMap[loopName + " exhaust"] = exhaust.nr;
         // Add the paths to the path list
-        data.paths << recirc << oa << exhaust;
+        m_data.paths << recirc << oa << exhaust;
         // Store the nrs in the ahs
-        data.ahs[i].path_r = recirc.nr;
-        data.ahs[i].path_s = oa.nr;
-        data.ahs[i].path_x = exhaust.nr;
+        m_data.ahs[i].path_r = recirc.nr;
+        m_data.ahs[i].path_s = oa.nr;
+        m_data.ahs[i].path_x = exhaust.nr;
       }
 
       // Try to use E+ results to set flow rates. The supply and return flow paths are in the path
@@ -602,17 +617,17 @@ namespace contam
             std::string supplyName = thermalZone.name().get() + " supply";
             std::string returnName = thermalZone.name().get() + " return";
             int supplyNr,returnNr;
-            if(supplyNr = pathMap.value(supplyName,0))
-              data.paths[supplyNr-1].Fahs = QString().sprintf("%g",flowRate);
-            if(returnNr = pathMap.value(returnName,0))
-              data.paths[returnNr-1].Fahs = QString().sprintf("%g",0.9*flowRate);
+            if(supplyNr = m_pathMap.value(supplyName,0))
+              m_data.paths[supplyNr-1].Fahs = QString().sprintf("%g",flowRate);
+            if(returnNr = m_pathMap.value(returnName,0))
+              m_data.paths[returnNr-1].Fahs = QString().sprintf("%g",0.9*flowRate);
           }
         }
       }
     }
     m_valid = true;
 
-    return boost::optional<std::string>(data.print().toStdString());
+    return boost::optional<std::string>(m_data.print().toStdString());
 
     // these are probably useful, will have to ask Kyle
     // Kyle, should these functions be const?
@@ -630,7 +645,7 @@ namespace contam
   {
     if(valid())
     {
-      return boost::optional<std::string>(data.print().toStdString());
+      return boost::optional<std::string>(m_data.print().toStdString());
     }
     return false;
   }
@@ -660,8 +675,8 @@ namespace contam
       windSpeed = -windSpeed; // Maybe should return false in this case?
     }
     // Is a negative wind direction allowed? Will have to check
-    data.rc.ssWeather.windspd = QString().sprintf("%g",windSpeed);
-    data.rc.ssWeather.winddir = QString().sprintf("%g",windDirection);
+    m_data.rc.ssWeather.windspd = QString().sprintf("%g",windSpeed);
+    m_data.rc.ssWeather.winddir = QString().sprintf("%g",windDirection);
     return true;
   }
 } // contam

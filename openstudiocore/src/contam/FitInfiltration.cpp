@@ -345,12 +345,12 @@ int main(int argc, char *argv[])
     std::vector<openstudio::model::SpaceInfiltrationDesignFlowRate> design = space->spaceInfiltrationDesignFlowRates();
     BOOST_FOREACH(openstudio::model::SpaceInfiltrationDesignFlowRate inf, design)
     {
-      inf.resetSpace();
+      inf.remove();
     }
     std::vector<openstudio::model::SpaceInfiltrationEffectiveLeakageArea> leakage = space->spaceInfiltrationEffectiveLeakageAreas();
     BOOST_FOREACH(openstudio::model::SpaceInfiltrationEffectiveLeakageArea inf, leakage)
     {
-      inf.resetSpace();
+      inf.remove();
     }
     infObj.setSpace(*space);
   }
@@ -362,9 +362,6 @@ int main(int argc, char *argv[])
     std::cout << "Failed to write OSM file." << std::endl;
     return EXIT_FAILURE;
   }
-  // The details on what we should do with these maps are still unclear
-  // openstudio::path mapPath = inputPath.replace_extension(openstudio::toPath("map").string());
-  // translator.writeMaps(mapPath);
     
   return EXIT_SUCCESS;
 }
