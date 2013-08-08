@@ -22,7 +22,7 @@
 
 #include <ruleset/OSArgument.hpp>
 #include <utilities/core/Logger.hpp>
-#include <analysis/RubyPerturbation.hpp>
+#include <analysis/RubyMeasure.hpp>
 #include <QObject>
 #include <QPointer>
 #include <QSharedPointer> 
@@ -34,7 +34,7 @@ namespace openstudio {
 
 class OSViewSwitcher;
   
-class EditRubyPerturbationView;
+class EditRubyMeasureView;
 class EditNullView;
 class InputController;
 class InputView;
@@ -53,7 +53,7 @@ class EditController : public QObject
 
   QPointer<OSViewSwitcher> editView;
 
-  QPointer<EditRubyPerturbationView> editRubyPerturbationView;
+  QPointer<EditRubyMeasureView> editRubyMeasureView;
 
   EditController();
 
@@ -63,7 +63,7 @@ class EditController : public QObject
 
   measuretab::MeasureItem * measureItem() const;
 
-  // Show something when no RubyPerturbation is selected
+  // Show something when no RubyMeasure is selected
   void reset();
 
   private slots:

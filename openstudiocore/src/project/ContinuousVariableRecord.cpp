@@ -23,11 +23,8 @@
 #include <project/JoinRecord.hpp>
 #include <project/ProblemRecord.hpp>
 #include <project/FunctionRecord.hpp>
-#include <project/ModelRulesetContinuousVariableRecord.hpp>
 #include <project/RubyContinuousVariableRecord.hpp>
 
-#include <analysis/ModelRulesetContinuousVariable.hpp>
-#include <analysis/ModelRulesetContinuousVariable_Impl.hpp>
 #include <analysis/RubyContinuousVariable.hpp>
 #include <analysis/RubyContinuousVariable_Impl.hpp>
 
@@ -299,9 +296,6 @@ boost::optional<ContinuousVariableRecord> ContinuousVariableRecord::factoryFromQ
       query.value(VariableRecordColumns::continuousVariableRecordType).toInt();
 
   switch (continuousVariableRecordType){
-    case ContinuousVariableRecordType::ModelRulesetContinuousVariableRecord :
-      result = ModelRulesetContinuousVariableRecord(query,database);
-      break;
     case ContinuousVariableRecordType::RubyContinuousVariableRecord :
       result = RubyContinuousVariableRecord(query,database);
       break;
@@ -317,12 +311,6 @@ ContinuousVariableRecord ContinuousVariableRecord::factoryFromContinuousVariable
     ProblemRecord& problemRecord,
     int variableVectorIndex)
 {
-  if (variable.optionalCast<analysis::ModelRulesetContinuousVariable>()) {
-    return ModelRulesetContinuousVariableRecord(
-        variable.cast<analysis::ModelRulesetContinuousVariable>(),
-        problemRecord,
-        variableVectorIndex);
-  }
   if (variable.optionalCast<analysis::RubyContinuousVariable>()) {
     return RubyContinuousVariableRecord(
         variable.cast<analysis::RubyContinuousVariable>(),
@@ -340,13 +328,6 @@ ContinuousVariableRecord ContinuousVariableRecord::factoryFromContinuousVariable
     int variableVectorIndex,
     boost::optional<double> functionCoefficient)
 {
-  if (variable.optionalCast<analysis::ModelRulesetContinuousVariable>()) {
-    return ModelRulesetContinuousVariableRecord(
-        variable.cast<analysis::ModelRulesetContinuousVariable>(),
-        functionRecord,
-        variableVectorIndex,
-        functionCoefficient);
-  }
   if (variable.optionalCast<analysis::RubyContinuousVariable>()) {
     return RubyContinuousVariableRecord(
         variable.cast<analysis::RubyContinuousVariable>(),

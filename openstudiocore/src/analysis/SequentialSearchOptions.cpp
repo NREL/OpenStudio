@@ -21,6 +21,9 @@
 #include <analysis/SequentialSearchOptions_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Json.hpp>
+
+#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -46,6 +49,16 @@ namespace detail {
     OptionalAttribute option = getOption("objectiveToMinimizeFirst");
     OS_ASSERT(option);
     return option->valueAsInteger();
+  }
+
+  SequentialSearchOptions SequentialSearchOptions_Impl::fromVariant(const QVariant& variant,
+                                                                const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+    AttributeVector attributes = deserializeUnorderedVector(
+          map["attributes"].toList(),
+          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+    return SequentialSearchOptions(attributes);
   }
 
 } // detail

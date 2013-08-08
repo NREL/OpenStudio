@@ -28,9 +28,12 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/Compare.hpp>
+#include <utilities/core/Json.hpp>
 
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/bind.hpp>
+#include <boost/functional/value_factory.hpp>
 
 #include <sstream>
 
@@ -77,6 +80,36 @@ OSArgument::OSArgument(const UUID& uuid,
   }
   m_versionUUID = versionUUID;
 }
+
+OSArgument::OSArgument(const UUID& uuid,
+                       const UUID& versionUUID,
+                       const std::string& name,
+                       const std::string& displayName,
+                       const OSArgumentType& type,
+                       bool required,
+                       const QVariant& value,
+                       const QVariant& defaultValue,
+                       const OSDomainType& domainType,
+                       std::vector<QVariant>& domain,
+                       const std::vector<std::string>& choices,
+                       const std::vector<std::string>& choiceDisplayNames,
+                       bool isRead,
+                       const std::string& extension)
+  : m_uuid(uuid),
+    m_versionUUID(versionUUID),
+    m_name(name),
+    m_displayName(displayName),
+    m_type(type),
+    m_required(required),
+    m_value(value),
+    m_defaultValue(defaultValue),
+    m_domainType(domainType),
+    m_domain(domain),
+    m_choices(choices),
+    m_choiceDisplayNames(choiceDisplayNames),
+    m_isRead(isRead),
+    m_extension(extension)
+{}
 
 OSArgument OSArgument::clone() const {
   OSArgument result(*this);
@@ -183,7 +216,12 @@ bool OSArgument::hasValue() const {
 
 bool OSArgument::valueAsBool() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasValue()) {
+    LOG_AND_THROW("This argument does not have a value set.")
+  }
+  if (type() != OSArgumentType::Boolean) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Bool.");
+  }
   if ("true" == m_value.toString()){
     return true;
   }
@@ -192,19 +230,34 @@ bool OSArgument::valueAsBool() const
 
 double OSArgument::valueAsDouble() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasValue()) {
+    LOG_AND_THROW("This argument does not have a value set.")
+  }
+  if (type() != OSArgumentType::Double) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Double.");
+  }
   return m_value.toDouble();
 }
 
 Quantity OSArgument::valueAsQuantity() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasValue()) {
+    LOG_AND_THROW("This argument does not have a value set.")
+  }
+  if (type() != OSArgumentType::Quantity) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Quantity.");
+  }
   return m_value.value<openstudio::Quantity>();
 }
 
 int OSArgument::valueAsInteger() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasValue()) {
+    LOG_AND_THROW("This argument does not have a value set.")
+  }
+  if (type() != OSArgumentType::Integer) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Integer.");
+  }
   return m_value.toInt();
 }
 
@@ -218,7 +271,12 @@ std::string OSArgument::valueAsString() const
 
 openstudio::path OSArgument::valueAsPath() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasValue()) {
+    LOG_AND_THROW("This argument does not have a value set.")
+  }
+  if (type() != OSArgumentType::Path) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Path.");
+  }
   return toPath(m_value.toString());
 }
 
@@ -232,7 +290,12 @@ bool OSArgument::hasDefaultValue() const {
 
 bool OSArgument::defaultValueAsBool() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasDefaultValue()) {
+    LOG_AND_THROW("This argument does not have a default value set.")
+  }
+  if (type() != OSArgumentType::Boolean) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Bool.");
+  }
   if ("true" == m_defaultValue.toString()){
     return true;
   }
@@ -241,19 +304,34 @@ bool OSArgument::defaultValueAsBool() const
 
 double OSArgument::defaultValueAsDouble() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasDefaultValue()) {
+    LOG_AND_THROW("This argument does not have a default value set.")
+  }
+  if (type() != OSArgumentType::Double) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Double.");
+  }
   return m_defaultValue.toDouble();
 }
 
 Quantity OSArgument::defaultValueAsQuantity() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasDefaultValue()) {
+    LOG_AND_THROW("This argument does not have a default value set.")
+  }
+  if (type() != OSArgumentType::Quantity) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Quantity.");
+  }
   return m_defaultValue.value<openstudio::Quantity>();
 }
 
 int OSArgument::defaultValueAsInteger() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasDefaultValue()) {
+    LOG_AND_THROW("This argument does not have a default value set.")
+  }
+  if (type() != OSArgumentType::Integer) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Integer.");
+  }
   return m_defaultValue.toInt();
 }
 
@@ -267,7 +345,12 @@ std::string OSArgument::defaultValueAsString() const
 
 openstudio::path OSArgument::defaultValueAsPath() const
 {
-  // TODO: Throw if (!hasValue()) or wrong type.
+  if (!hasDefaultValue()) {
+    LOG_AND_THROW("This argument does not have a default value set.")
+  }
+  if (type() != OSArgumentType::Path) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Path.");
+  }
   return toPath(m_defaultValue.toString());
 }
 
@@ -982,6 +1065,181 @@ std::map<std::string,OSArgument> convertOSArgumentVectorToMap(const std::vector<
   }
   return argMap;
 }
+
+namespace detail {
+
+  QVariant toVariant(const OSArgument& argument) {
+    QVariantMap argumentData;
+
+    argumentData["uuid"] = argument.uuid().toString();
+    argumentData["version_uuid"] = argument.versionUUID().toString();
+    argumentData["name"] = toQString(argument.name());
+    if (!argument.displayName().empty()) {
+      argumentData["display_name"] = toQString(argument.displayName());
+    }
+    OSArgumentType type = argument.type();
+    argumentData["type"] = toQString(type.valueName());
+    argumentData["required"] = argument.required();
+    if (argument.hasValue()) {
+      if (type == OSArgumentType::Quantity) {
+        Quantity value = argument.valueAsQuantity();
+        argumentData["value"] = value.value();
+        argumentData["value_units"] = toQString(value.units().standardString());
+      }
+      else {
+        // use QVariant directly
+        argumentData["value"] = argument.valueAsQVariant();
+      }
+    }
+    if (argument.hasDefaultValue()) {
+      if (type == OSArgumentType::Quantity) {
+        Quantity defaultValue = argument.defaultValueAsQuantity();
+        argumentData["default_value"] = defaultValue.value();
+        argumentData["default_value_units"] = toQString(defaultValue.units().standardString());
+      }
+      else {
+        // use QVariant directly
+        argumentData["default_value"] = argument.defaultValueAsQVariant();
+      }
+    }
+    argumentData["domain_type"] = toQString(argument.domainType().valueName());
+    if (argument.hasDomain()) {
+      QVariantList domainList;
+      int index(0);
+      Q_FOREACH(const QVariant& dval,argument.domainAsQVariant()) {
+        QVariantMap domainValueMap;
+        domainValueMap["domain_value_index"] = index;
+        if (type == OSArgumentType::Quantity) {
+          Quantity q = dval.value<openstudio::Quantity>();
+          domainValueMap["value"] = q.value();
+          domainValueMap["units"] = toQString(q.units().standardString());
+        }
+        else {
+          domainValueMap["value"] = dval;
+        }
+        domainList.push_back(domainValueMap);
+        ++index;
+      }
+      argumentData["domain"] = domainList;
+    }
+    if (type == OSArgumentType::Choice) {
+      QVariantList choicesList;
+      StringVector displayNames = argument.choiceValueDisplayNames();
+      int index(0), displayNamesN(displayNames.size());
+      Q_FOREACH(const std::string& choice,argument.choiceValues()) {
+        QVariantMap choiceMap;
+        choiceMap["choice_index"] = index;
+        choiceMap["value"] = toQString(choice);
+        if (index < displayNamesN) {
+          choiceMap["display_name"] = toQString(displayNames[index]);
+        }
+        choicesList.push_back(choiceMap);
+        ++index;
+      }
+      argumentData["choices"] = QVariant(choicesList);
+    }
+    if (type == OSArgumentType::Path) {
+      argumentData["is_read"] = argument.isRead();
+      argumentData["extension"] = toQString(argument.extension());
+    }
+
+    return QVariant(argumentData);
+  }
+
+  OSArgument toOSArgument(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+
+    OSArgumentType type(map["type"].toString().toStdString());
+
+    QVariant value, defaultValue;
+    OS_ASSERT(value.isNull() && defaultValue.isNull());
+    if (map.contains("value")) {
+      if (type == OSArgumentType::Quantity) {
+        value = toQuantityQVariant(map,"value","value_units");
+      }
+      else {
+        value = map["value"];
+      }
+    }
+    if (map.contains("default_value")) {
+      if (type == OSArgumentType::Quantity) {
+        defaultValue = toQuantityQVariant(map,"default_value","default_value_units");
+      }
+      else {
+        defaultValue = map["default_value"];
+      }
+    }
+
+    std::vector<QVariant> domain;
+    if (map.contains("domain")) {
+      if (type == OSArgumentType::Quantity) {
+        domain = deserializeOrderedVector(
+              map["domain"].toList(),
+              "domain_value_index",
+              boost::function<QVariant (QVariant*)>(boost::bind(
+                                                            toQuantityQVariant,
+                                                            boost::bind(&QVariant::toMap,_1),
+                                                            "value",
+                                                            "units")));
+      }
+      else {
+        domain = deserializeOrderedVector(
+              map["domain"].toList(),
+              "value",
+              "domain_value_index",
+              boost::function<QVariant (const QVariant&)>(boost::bind(boost::value_factory<QVariant>(),_1)));
+      }
+    }
+
+    StringVector choices, choiceDisplayNames;
+    if (map.contains("choices")) {
+      QVariantList choicesList = map["choices"].toList();
+      choices = deserializeOrderedVector(
+            choicesList,
+            "value",
+            "choice_index",
+            boost::function<std::string (QVariant*)>(boost::bind(&QString::toStdString,
+                                                                 boost::bind(&QVariant::toString,_1))));
+      if (!choicesList.empty() && choicesList[0].toMap().contains("display_name")) {
+        try {
+          choiceDisplayNames = deserializeOrderedVector(
+                choicesList,
+                "display_name",
+                "choice_index",
+                boost::function<std::string (QVariant*)>(boost::bind(&QString::toStdString,
+                                                                     boost::bind(&QVariant::toString,_1))));
+        }
+        catch (...) {
+          LOG_FREE(Warn,"openstudio.ruleset.OSArgument","Unable to deserialize partial list of choice display names.");
+        }
+      }
+    }
+
+    return OSArgument(openstudio::UUID(map["uuid"].toString()),
+                      openstudio::UUID(map["version_uuid"].toString()),
+                      map["name"].toString().toStdString(),
+                      map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                      type,
+                      map["required"].toBool(),
+                      value,
+                      defaultValue,
+                      OSDomainType(map["domain_type"].toString().toStdString()),
+                      domain,
+                      choices,
+                      choiceDisplayNames,
+                      map.contains("is_read") ? map["is_read"].toBool() : false,
+                      map.contains("extension") ? map["extension"].toString().toStdString() : std::string());
+  }
+
+  QVariant toQuantityQVariant(const QVariantMap& map,
+                              const std::string& valueKey,
+                              const std::string& unitsKey)
+  {
+    Quantity q = createQuantity(map[toQString(valueKey)].toDouble(),map[toQString(unitsKey)].toString().toStdString()).get();
+    return QVariant::fromValue<openstudio::Quantity>(q);
+  }
+
+} // detail
 
 } // ruleset
 } // openstudio

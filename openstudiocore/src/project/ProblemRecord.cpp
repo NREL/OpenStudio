@@ -20,11 +20,11 @@
 #include <project/ProblemRecord.hpp>
 #include <project/ProblemRecord_Impl.hpp>
 
-#include <project/DiscreteVariableRecord.hpp>
-#include <project/DiscreteVariableRecord_Impl.hpp>
 #include <project/FunctionRecord.hpp>
 #include <project/InputVariableRecord.hpp>
 #include <project/JoinRecord.hpp>
+#include <project/MeasureGroupRecord.hpp>
+#include <project/MeasureGroupRecord_Impl.hpp>
 #include <project/OptimizationProblemRecord.hpp>
 #include <project/ProjectDatabase.hpp>
 #include <project/WorkflowRecord.hpp>
@@ -287,15 +287,15 @@ namespace detail {
                              responses);
   }
 
-  boost::optional<int> ProblemRecord_Impl::combinatorialSize(bool selectedPerturbationsOnly) const {
+  boost::optional<int> ProblemRecord_Impl::combinatorialSize(bool selectedMeasuresOnly) const {
     int result(1);
     InputVariableRecordVector inputVariableRecords = this->inputVariableRecords();
     BOOST_FOREACH(const InputVariableRecord& inputVariableRecord, inputVariableRecords) {
-      OptionalDiscreteVariableRecord odvr = inputVariableRecord.optionalCast<DiscreteVariableRecord>();
-      if (!odvr) {
+      OptionalMeasureGroupRecord omgr = inputVariableRecord.optionalCast<MeasureGroupRecord>();
+      if (!omgr) {
         return boost::none;
       }
-      result *= odvr->numPerturbations(selectedPerturbationsOnly);
+      result *= omgr->numMeasures(selectedMeasuresOnly);
     }
     return result;
   }
@@ -485,8 +485,8 @@ analysis::Problem ProblemRecord::problem() const {
   return getImpl<detail::ProblemRecord_Impl>()->problem();
 }
 
-boost::optional<int> ProblemRecord::combinatorialSize(bool selectedPerturbationsOnly) const {
-  return getImpl<detail::ProblemRecord_Impl>()->combinatorialSize(selectedPerturbationsOnly);
+boost::optional<int> ProblemRecord::combinatorialSize(bool selectedMeasuresOnly) const {
+  return getImpl<detail::ProblemRecord_Impl>()->combinatorialSize(selectedMeasuresOnly);
 }
 
 ProblemRecord::ProblemRecord(boost::shared_ptr<detail::ProblemRecord_Impl> impl,

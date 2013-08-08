@@ -553,11 +553,9 @@ namespace detail {
     std::vector< std::vector<QVariant> > result;
     for (int i = 0, n = problem.numVariables(); i < n; ++i) {
       DiscreteVariable variable = problem.getVariable(i).cast<DiscreteVariable>();
-      // only use selected perturbations
-      DiscretePerturbationVector perturbations = variable.perturbations(true);
+      // only use selected items
       int currentValue = currentValues[i].toInt();
-      BOOST_FOREACH(const DiscretePerturbation& perturbation,perturbations) {
-        int j = variable.getIndexByUUID(perturbation).get();
+      BOOST_FOREACH(int j, variable.validValues(true)) {
         if (currentValue != j) {
           std::vector<QVariant> newValues = currentValues;
           newValues[i] = j;
@@ -566,6 +564,27 @@ namespace detail {
       }
     }
     return result;
+  }
+
+  QVariant SequentialSearch_Impl::toVariant() const {
+    QVariantMap map = Algorithm_Impl::toVariant().toMap();
+
+    map["algorithm_type"] = QString("SequentialSearch");
+
+    return QVariant(map);
+  }
+
+  SequentialSearch SequentialSearch_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+    SequentialSearchOptions options = SequentialSearchOptions_Impl::fromVariant(map["options"],version);
+    return SequentialSearch(openstudio::UUID(map["uuid"].toString()),
+                            openstudio::UUID(map["version_uuid"].toString()),
+                            map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                            map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                            map["complete"].toBool(),
+                            map["failed"].toBool(),
+                            map["iter"].toInt(),
+                            options);
   }
 
 } // detail

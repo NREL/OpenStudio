@@ -94,13 +94,9 @@ namespace detail {
   }
 
   analysis::SamplingAlgorithm SamplingAlgorithmRecord_Impl::samplingAlgorithm() const {
-    analysis::SamplingAlgorithmOptions opts(options());
-    if (m_sampleType) {
-      opts.setSampleType(*m_sampleType);
-    }
-    if (m_rngType) {
-      opts.setRNGType(*m_rngType);
-    }
+    analysis::SamplingAlgorithmOptions opts(m_sampleType,
+                                            m_rngType,
+                                            options());
     OptionalFileReference restartFile, outFile;
     OptionalFileReferenceRecord ofr = restartFileReferenceRecord();
     if (ofr) {

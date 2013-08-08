@@ -24,9 +24,9 @@
 #include <pat_app/PatVerticalTabWidget.hpp>
 
 #include <analysis/DataPoint_Impl.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/NullPerturbation_Impl.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/NullMeasure_Impl.hpp>
 
 #include <analysisdriver/AnalysisDriver.hpp>
 #include <analysisdriver/AnalysisRunOptions.hpp>

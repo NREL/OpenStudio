@@ -131,20 +131,21 @@ namespace detail {
                                            prelim.name(),
                                            prelim.displayName(),
                                            prelim.description(),
+                                           prelim.problem().cast<analysis::OptimizationProblem>(),
                                            prelim.isComplete(),
                                            prelim.failed(),
-                                           prelim.problem().cast<analysis::OptimizationProblem>(),
-                                           objectiveValues(),
                                            prelim.variableValues(),
                                            responseValues(),
+                                           objectiveValues(),
                                            prelim.directory(),
                                            prelim.osmInputData(),
                                            prelim.idfInputData(),
                                            prelim.sqlOutputData(),
                                            prelim.xmlOutputData(),
-                                           prelim.tags(),
                                            prelim.topLevelJob(),
-                                           prelim.dakotaParametersFiles());
+                                           prelim.dakotaParametersFiles(),
+                                           prelim.tags(),
+                                           prelim.outputAttributes());
   }
 
   void OptimizationDataPointRecord_Impl::bindValues(QSqlQuery& query) const {

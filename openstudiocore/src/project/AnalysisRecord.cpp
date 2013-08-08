@@ -26,9 +26,9 @@
 #include <project/DataPointRecord.hpp>
 #include <project/DataPointRecord_Impl.hpp>
 #include <project/FileReferenceRecord.hpp>
-#include <project/VariableRecord.hpp>
-#include <project/DiscretePerturbationRecord.hpp>
-#include <project/DataPoint_DiscretePerturbation_JoinRecord.hpp>
+#include <project/InputVariableRecord.hpp>
+#include <project/MeasureRecord.hpp>
+#include <project/DataPoint_Measure_JoinRecord.hpp>
 #include <project/TagRecord.hpp>
 
 #include <analysis/Analysis.hpp>
@@ -267,35 +267,47 @@ namespace detail {
     // TODO: Have this work for Problems with ContinuousVariables. Perhaps need eps bound on
     // actual value of continous variables.
 
+    InputVariableRecordVector ivrs = problemRecord().inputVariableRecords();
+    IntVector variableVectorIndices;
+    Q_FOREACH(const InputVariableRecord& ivr, ivrs) {
+      variableVectorIndices.push_back(ivr.variableVectorIndex());
+    }
+    if (variableValues.size() > variableVectorIndices.size()) {
+      return result;
+    }
+
     ProjectDatabase database = projectDatabase();
-    IntVector discretePerturbationRecordIds;
-    for (int variableVectorIndex = 0, n = variableValues.size(); variableVectorIndex < n;
-         ++variableVectorIndex)
+    IntVector measureRecordIds;
+    for (int index = 0, n = variableValues.size(); index < n; ++index)
     {
-      QVariant value = variableValues[variableVectorIndex];
+      QVariant value = variableValues[index];
       if (!value.isNull()) {
         QSqlQuery query(*(database.qSqlDatabase()));
-        query.prepare(toQString("SELECT p.id FROM " +
-            DiscretePerturbationRecord::databaseTableName() + " p, " +
+        query.prepare(toQString("SELECT m.id FROM " +
+            MeasureRecord::databaseTableName() + " m, " +
             VariableRecord::databaseTableName() + " v WHERE " +
-            "p.perturbationVectorIndex=:perturbationVectorIndex AND " +
-            "p.variableRecordId=v.id AND " +
+            "m.measureVectorIndex=:measureVectorIndex AND " +
+            "m.variableRecordId=v.id AND " +
             "v.problemRecordId=:problemRecordId AND " +
             "v.variableVectorIndex=:variableVectorIndex"));
-        query.bindValue(":perturbationVectorIndex",value.toInt());
+        query.bindValue(":measureVectorIndex",value.toInt());
         query.bindValue(":problemRecordId",m_problemRecordId);
-        query.bindValue(":variableVectorIndex",variableVectorIndex);
+        query.bindValue(":variableVectorIndex",variableVectorIndices[index]);
         assertExec(query);
         if (query.first()) {
-          discretePerturbationRecordIds.push_back(query.value(0).toInt());
+          measureRecordIds.push_back(query.value(0).toInt());
         }
         else {
+          LOG(Debug,"Query: " << query.lastQuery().toStdString() << std::endl
+              << value.toInt() << std::endl
+              << m_problemRecordId << std::endl
+              << variableVectorIndices[index]);
           return result;
         }
       }
     }
 
-    return getDataPointRecords(discretePerturbationRecordIds);
+    return getDataPointRecords(measureRecordIds);
   }
 
   std::vector<DataPointRecord> AnalysisRecord_Impl::getDataPointRecords(
@@ -311,7 +323,7 @@ namespace detail {
     for (int i = 0, n = discretePerturbationRecordIds.size(); i < n; ++i) {
       ss << " INTERSECT SELECT d.id FROM "
          << DataPointRecord::databaseTableName() << " d, "
-         << DataPoint_DiscretePerturbation_JoinRecord::databaseTableName() << " j "
+         << DataPoint_Measure_JoinRecord::databaseTableName() << " j "
          << "WHERE ";
       ss << "d.id=j.leftId AND j.rightId=:rightId" << i;
     }
