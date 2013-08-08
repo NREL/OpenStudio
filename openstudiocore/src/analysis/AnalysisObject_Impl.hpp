@@ -152,9 +152,9 @@ namespace detail {
 
     virtual QVariant toVariant() const;
 
-    virtual QVariant serverFormulationVariant() const;
+    virtual QVariant toServerFormulationVariant() const;
 
-    virtual QVariant serverDataPointsVariant() const;
+    virtual QVariant toServerDataPointsVariant() const;
 
     //@}
    public slots:

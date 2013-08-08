@@ -683,7 +683,7 @@ namespace detail {
     return table;
   }
 
-  bool Analysis_Impl::saveJSON(openstudio::path p,
+  bool Analysis_Impl::saveJSON(const openstudio::path& p,
                                AnalysisSerializationScope scope,
                                bool overwrite) const
   {
@@ -706,7 +706,7 @@ namespace detail {
   bool Analysis_Impl::saveServerRequestForProblemFormulation(const openstudio::path& p,
                                                              bool overwrite) const
   {
-    QVariant json = serverFormulationVariant();
+    QVariant json = toServerFormulationVariant();
     return openstudio::saveJSON(json,p,overwrite);
   }
 
@@ -716,12 +716,12 @@ namespace detail {
   }
 
   std::string Analysis_Impl::serverRequestForProblemFormulation() const {
-    QVariant json = serverFormulationVariant();
+    QVariant json = toServerFormulationVariant();
     return openstudio::toJSON(json);
   }
 
   bool Analysis_Impl::saveServerRequestForDataPoints(const openstudio::path& p,bool overwrite) const {
-    QVariant json = serverDataPointsVariant();
+    QVariant json = toServerDataPointsVariant();
     return openstudio::saveJSON(json,p,overwrite);
   }
 
@@ -731,7 +731,7 @@ namespace detail {
   }
 
   std::string Analysis_Impl::serverRequestForDataPoints() const {
-    QVariant json = serverDataPointsVariant();
+    QVariant json = toServerDataPointsVariant();
     return openstudio::toJSON(json);
   }
 
@@ -798,6 +798,25 @@ namespace detail {
                     dataPoints,
                     map["results_are_invalid"].toBool(),
                     map["data_points_are_invalid"].toBool());
+  }
+
+  QVariant Analysis_Impl::toServerFormulationVariant() const {
+    QVariantMap map = problem().toServerFormulationVariant().toMap();
+    return QVariant(map);
+  }
+
+  QVariant Analysis_Impl::toServerDataPointsVariant() const {
+    QVariantMap map;
+
+    QVariantList dataPointList;
+    Q_FOREACH(const DataPoint& dataPoint, dataPoints()) {
+      if (!dataPoint.isComplete() && !dataPoint.topLevelJob()) {
+        dataPointList.push_back(dataPoint.toServerDataPointsVariant());
+      }
+    }
+    map["data_points"] = QVariant(dataPointList);
+
+    return QVariant(map);
   }
 
   void Analysis_Impl::onChange(ChangeType changeType) {

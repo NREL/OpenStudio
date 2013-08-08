@@ -424,5 +424,11 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun) {
   }
   EXPECT_FALSE(copy.dataPoints().empty());
 
+  // Serialize openstudio-server requests
+  p = toPath("AnalysisFixtureData/server_problem_request.json");
+  analysis.saveServerRequestForProblemFormulation(p,true);
+  p = toPath("AnalysisFixtureData/server_datapoints_request.json");
+  analysis.saveServerRequestForDataPoints(p,true);
+
 }
 

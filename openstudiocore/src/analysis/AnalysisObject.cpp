@@ -171,11 +171,11 @@ namespace detail {
     return QVariant(analysisObjectData);
   }
 
-  QVariant AnalysisObject_Impl::serverFormulationVariant() const {
+  QVariant AnalysisObject_Impl::toServerFormulationVariant() const {
     return QVariant();
   }
 
-  QVariant AnalysisObject_Impl::serverDataPointsVariant() const {
+  QVariant AnalysisObject_Impl::toServerDataPointsVariant() const {
     return QVariant();
   }
 
@@ -327,12 +327,12 @@ QVariant AnalysisObject::toVariant() const {
   return getImpl<detail::AnalysisObject_Impl>()->toVariant();
 }
 
-QVariant AnalysisObject::serverFormulationVariant() const {
-  return getImpl<detail::AnalysisObject_Impl>()->serverFormulationVariant();
+QVariant AnalysisObject::toServerFormulationVariant() const {
+  return getImpl<detail::AnalysisObject_Impl>()->toServerFormulationVariant();
 }
 
-QVariant AnalysisObject::serverDataPointsVariant() const {
-  return getImpl<detail::AnalysisObject_Impl>()->serverDataPointsVariant();
+QVariant AnalysisObject::toServerDataPointsVariant() const {
+  return getImpl<detail::AnalysisObject_Impl>()->toServerDataPointsVariant();
 }
 
 /// @endcond

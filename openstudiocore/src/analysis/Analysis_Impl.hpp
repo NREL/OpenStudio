@@ -295,9 +295,9 @@ namespace detail {
 
     static Analysis fromVariant(const QVariant& variant,const VersionString& version);
 
-    virtual QVariant serverFormulationVariant() const;
+    virtual QVariant toServerFormulationVariant() const;
 
-    virtual QVariant serverDataPointsVariant() const;
+    virtual QVariant toServerDataPointsVariant() const;
 
     //@}
    signals:

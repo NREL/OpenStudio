@@ -31,8 +31,8 @@ namespace openstudio{
   BCLXML::BCLXML(const BCLXMLType& bclXMLType)
     : m_bclXMLType(bclXMLType)
   {
-    m_uid = UUID::createUuid().toString().replace("{", "").replace("}", "").toStdString();
-    m_versionId = UUID::createUuid().toString().replace("{", "").replace("}", "").toStdString();
+    m_uid = toUID(UUID::createUuid());
+    m_versionId = toUID(UUID::createUuid());
   }
 
   BCLXML::BCLXML(const openstudio::path& xmlPath):
@@ -613,12 +613,12 @@ namespace openstudio{
 
   void BCLXML::changeUID()
   {
-    m_uid = UUID::createUuid().toString().replace("{", "").replace("}", "").toStdString();
+    m_uid = toUID(UUID::createUuid());
   }
 
   void BCLXML::incrementVersionId()
   {
-    m_versionId = UUID::createUuid().toString().replace("{", "").replace("}", "").toStdString();
+    m_versionId = toUID(UUID::createUuid());
   }
 
 

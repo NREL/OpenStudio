@@ -22,6 +22,7 @@
 
 #include <analysis/Analysis.hpp>
 #include <analysis/Analysis_Impl.hpp>
+#include <analysis/InputVariable.hpp>
 #include <analysis/OptimizationDataPoint.hpp>
 #include <analysis/OptimizationDataPoint_Impl.hpp>
 
@@ -689,6 +690,29 @@ namespace detail {
                      dakotaParametersFiles,
                      tags,
                      outputAttributes);
+  }
+
+  QVariant DataPoint_Impl::toServerDataPointsVariant() const {
+    QVariantMap map;
+
+    map["uuid"] = toQString(toUID(uuid()));
+    map["version_uuid"] = toQString(toUID(uuid()));
+    map["name"] = toQString(name());
+    map["display_name"] = toQString(displayName());
+
+    QVariantList valuesList;
+    std::vector<QVariant> values = variableValues();
+    InputVariableVector variables = problem().variables();
+    unsigned n = values.size();
+    OS_ASSERT(variables.size() == n);
+    for (unsigned i = 0; i < n; ++i) {
+      QVariantMap valueMap;
+      valueMap["variable_index"] = i;
+      valueMap["variable_uuid"] = toQString(toUID(variables[i].uuid()));
+      valueMap["value"] = values[i];
+    }
+
+    return QVariant(map);
   }
 
 } // detail
