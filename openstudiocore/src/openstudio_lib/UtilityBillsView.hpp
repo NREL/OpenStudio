@@ -107,24 +107,6 @@ private:
   void enableAddButton();
   void disableAddButton();
 
-  bool setStartDate(const Date& startDate);
-  Date startDate() const;
-
-  bool setEndDate(const Date& endDate); 
-  Date endDate() const;
-
-  bool setNumberOfDays(unsigned numberOfDays);
-  unsigned numberOfDays() const;
-
-  bool setConsumption(double consumption);
-  boost::optional<double> consumption() const;
-
-  bool setPeakDemand(double peakDemand); 
-  boost::optional<double> peakDemand() const;
-
-  bool setTotalCost(double totalCost);
-  boost::optional<double> totalCost() const;
-
   void addBillingPeriod(model::BillingPeriod & billingPeriod);
   void addBillingPeriod(model::BillingPeriod & billingPeriod, unsigned index);
   void addBillingPeriods();
@@ -164,13 +146,6 @@ private slots:
   void weatherFileChanged(const QString & text);
   void windowTimestepsChanged(double timeSteps);
 
-  void startDateChanged(const QDate & newdate);
-  void endDateChanged(const QDate & newdate);
-  void numberOfDaysChanged(double numberOfDays);
-  void consumptionChanged(double consumption);
-  void peakDemandChanged(double peakDemand); 
-  void totalCostChanged(double totalCost);
-
 };
 
 class BillingPeriodWidget : public QWidget
@@ -203,7 +178,6 @@ public:
 private:
 
   void createWidgets(QGridLayout * gridLayout,
-    model::BillingPeriod billingPeriod,
     FuelType fuelType,
     BillFormat billFormat);
 
@@ -218,7 +192,16 @@ private:
 
   void getBillingPeriodLineEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex);
 
+  model::BillingPeriod m_billingPeriod;
+
 private slots:
+
+  void startDateChanged(const QDate & newdate);
+  void endDateChanged(const QDate & newdate);
+  void numberOfDaysChanged(double numberOfDays);
+  void consumptionChanged(double consumption);
+  void peakDemandChanged(double peakDemand); 
+  void totalCostChanged(double totalCost);
 
 };
 

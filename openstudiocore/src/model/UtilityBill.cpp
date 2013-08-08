@@ -808,6 +808,7 @@ namespace detail {
         yd = this->model().getUniqueModelObject<model::YearDescription>();
       }
 
+      bool wasBlocked = this->blockSignals(true);
       bool test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginMonth, 1);
       BOOST_ASSERT(test);
       test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginDayofMonth, 1);
@@ -816,9 +817,12 @@ namespace detail {
       BOOST_ASSERT(test);
       test = result.setUnsigned(OS_UtilityBillExtensibleFields::NumberofDaysinBillingPeriod, 30);
       BOOST_ASSERT(test);
+      this->blockSignals(wasBlocked);
+      this->emitChangeSignals();
     }else{
       Date startDate = billingPeriods.back().endDate() + Time(1);
 
+      bool wasBlocked = this->blockSignals(true);
       bool test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginMonth, startDate.monthOfYear().value());
       BOOST_ASSERT(test);
       test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginDayofMonth, startDate.dayOfMonth());
@@ -827,6 +831,8 @@ namespace detail {
       BOOST_ASSERT(test);
       test = result.setUnsigned(OS_UtilityBillExtensibleFields::NumberofDaysinBillingPeriod, billingPeriods.back().numberOfDays());
       BOOST_ASSERT(test);
+      this->blockSignals(wasBlocked);
+      this->emitChangeSignals();
     }
       
     return result;
