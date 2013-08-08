@@ -34,6 +34,7 @@
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <iomanip>
 
 using openstudio::model::ModelObject;
 

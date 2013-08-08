@@ -22,7 +22,7 @@
 
 #include <utilities/UtilitiesAPI.hpp>
 #include <utilities/core/Logger.hpp>
-#include <utilities/core/Serialization.hpp>
+//#include <utilities/core/Serialization.hpp>
 
 #include <utilities/document/DocumentEnums.hpp>
 
@@ -71,13 +71,13 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.DocumentElement");
 
-    // serialization support
-    friend class boost::serialization::access;
-    template<class Archive>
-    void serialize(Archive& ar, const unsigned int version) {}
+    //// serialization support
+    //friend class boost::serialization::access;
+    //template<class Archive>
+    //void serialize(Archive& ar, const unsigned int version) {}
   };
 
-  BOOST_SERIALIZATION_ASSUME_ABSTRACT(DocumentElement_Impl);
+  //BOOST_SERIALIZATION_ASSUME_ABSTRACT(DocumentElement_Impl);
 
 } // detail
 

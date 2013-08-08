@@ -56,32 +56,32 @@ OPENSTUDIO_ENUM(TableFormat,
 
 } // openstudio
 
-namespace boost { namespace serialization {
-  template<class Archive>
-    void save(Archive & ar, const openstudio::DocumentFormat& df, unsigned int version)
-    {
-      int value = df.value();
-      ar & boost::serialization::make_nvp("value", value);
-    }
-
-  template<class Archive>
-    void load(Archive & ar, openstudio::DocumentFormat& df, unsigned int version)
-    {
-      int value;
-      ar & boost::serialization::make_nvp("value", value);
-      df.setValue(value);
-    }
-
-  template<class Archive>
-    inline void serialize(
-        Archive & ar,
-        openstudio::DocumentFormat& t,
-        const unsigned int file_version
-        )
-    {
-      split_free(ar, t, file_version);
-    }
-}}
+//namespace boost { namespace serialization {
+//  template<class Archive>
+//    void save(Archive & ar, const openstudio::DocumentFormat& df, unsigned int version)
+//    {
+//      int value = df.value();
+//      ar & boost::serialization::make_nvp("value", value);
+//    }
+//
+//  template<class Archive>
+//    void load(Archive & ar, openstudio::DocumentFormat& df, unsigned int version)
+//    {
+//      int value;
+//      ar & boost::serialization::make_nvp("value", value);
+//      df.setValue(value);
+//    }
+//
+//  template<class Archive>
+//    inline void serialize(
+//        Archive & ar,
+//        openstudio::DocumentFormat& t,
+//        const unsigned int file_version
+//        )
+//    {
+//      split_free(ar, t, file_version);
+//    }
+//}}
 
 
 

@@ -38,15 +38,15 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.SectionElement");
 
-    // serialization support
-    friend class boost::serialization::access;
-    template<class Archive>
-    void serialize(Archive& ar, const unsigned int version) {
-      ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(DocumentElement_Impl);
-    }
+    //// serialization support
+    //friend class boost::serialization::access;
+    //template<class Archive>
+    //void serialize(Archive& ar, const unsigned int version) {
+    //  ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(DocumentElement_Impl);
+    //}
   };
 
-  BOOST_SERIALIZATION_ASSUME_ABSTRACT(SectionElement_Impl);
+  //BOOST_SERIALIZATION_ASSUME_ABSTRACT(SectionElement_Impl);
 
 } // detail
 

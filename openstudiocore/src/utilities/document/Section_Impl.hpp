@@ -102,14 +102,14 @@ namespace detail {
 
     REGISTER_LOGGER("openstudio.Section");
 
-    // serialization support
-    friend class boost::serialization::access;
-    template<class Archive>
-    void serialize(Archive& ar, const unsigned int version) {
-      ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(SectionElement_Impl);
-      ar & BOOST_SERIALIZATION_NVP(m_heading);
-      ar & BOOST_SERIALIZATION_NVP(m_contents);
-    }
+    //// serialization support
+    //friend class boost::serialization::access;
+    //template<class Archive>
+    //void serialize(Archive& ar, const unsigned int version) {
+    //  ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(SectionElement_Impl);
+    //  ar & BOOST_SERIALIZATION_NVP(m_heading);
+    //  ar & BOOST_SERIALIZATION_NVP(m_contents);
+    //}
   };
 
 } // detail

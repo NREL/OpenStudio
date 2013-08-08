@@ -151,18 +151,18 @@ class UTILITIES_API Document {
 
   std::string m_authorString() const;
 
-  // serialization support
-  friend class boost::serialization::access;
-  template<class Archive>
-  void serialize(Archive& ar, const unsigned int version) {
-    ar & BOOST_SERIALIZATION_NVP(m_title);
-    ar & BOOST_SERIALIZATION_NVP(m_authors);
-    ar & BOOST_SERIALIZATION_NVP(m_format);
-    ar & BOOST_SERIALIZATION_NVP(m_header);
-    ar & BOOST_SERIALIZATION_NVP(m_footer);
-    ar & BOOST_SERIALIZATION_NVP(m_contents);
-    ar & BOOST_SERIALIZATION_NVP(m_topHeadingLevel);
-  }
+  //// serialization support
+  //friend class boost::serialization::access;
+  //template<class Archive>
+  //void serialize(Archive& ar, const unsigned int version) {
+  //  ar & BOOST_SERIALIZATION_NVP(m_title);
+  //  ar & BOOST_SERIALIZATION_NVP(m_authors);
+  //  ar & BOOST_SERIALIZATION_NVP(m_format);
+  //  ar & BOOST_SERIALIZATION_NVP(m_header);
+  //  ar & BOOST_SERIALIZATION_NVP(m_footer);
+  //  ar & BOOST_SERIALIZATION_NVP(m_contents);
+  //  ar & BOOST_SERIALIZATION_NVP(m_topHeadingLevel);
+  //}
 };
 
 /** \relates Document */

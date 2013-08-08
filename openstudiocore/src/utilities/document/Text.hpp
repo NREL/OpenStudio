@@ -94,12 +94,12 @@ class UTILITIES_API Text : public SectionElement {
  private:
   REGISTER_LOGGER("openstudio.Text");
 
-  // serialization support
-  friend class boost::serialization::access;
-  template<class Archive>
-  void serialize(Archive& ar, const unsigned int version) {
-    ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(SectionElement);
-  }
+  //// serialization support
+  //friend class boost::serialization::access;
+  //template<class Archive>
+  //void serialize(Archive& ar, const unsigned int version) {
+  //  ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(SectionElement);
+  //}
 };
 
 /** \relates Text */

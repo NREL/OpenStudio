@@ -67,12 +67,12 @@ class UTILITIES_API SectionHeading : public DocumentElement {
  private:
   REGISTER_LOGGER("openstudio.SectionHeading");
 
-  // serialization support
-  friend class boost::serialization::access;
-  template<class Archive>
-  void serialize(Archive& ar, const unsigned int version) {
-    ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(DocumentElement);
-  }
+  //// serialization support
+  //friend class boost::serialization::access;
+  //template<class Archive>
+  //void serialize(Archive& ar, const unsigned int version) {
+  //  ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(DocumentElement);
+  //}
 };
 
 /** \relates SectionHeading */

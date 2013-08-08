@@ -51,15 +51,15 @@ class UTILITIES_API SectionElement : public DocumentElement {
   // bad default constructor for serialization
   SectionElement();
  
-  // serialization support
-  friend class boost::serialization::access;
-  template<class Archive>
-  void serialize(Archive& ar, const unsigned int version) {
-    ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(DocumentElement);
-  }
+  //// serialization support
+  //friend class boost::serialization::access;
+  //template<class Archive>
+  //void serialize(Archive& ar, const unsigned int version) {
+  //  ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(DocumentElement);
+  //}
 };
 
-BOOST_SERIALIZATION_ASSUME_ABSTRACT(SectionElement);
+//BOOST_SERIALIZATION_ASSUME_ABSTRACT(SectionElement);
 
 /** \relates SectionElement */
 typedef boost::optional<SectionElement> OptionalSectionElement;
