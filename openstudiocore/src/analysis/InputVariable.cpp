@@ -29,6 +29,7 @@
 
 #include <runmanager/lib/WorkItem.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/FileReference.hpp>
 
 namespace openstudio {
