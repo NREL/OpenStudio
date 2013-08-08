@@ -21,9 +21,14 @@
 #include <contam/ForwardTranslator.hpp>
 #include <contam/SimTxt.hpp>
 #include <model/Model.hpp>
+#include <model/Surface.hpp>
+#include <model/Surface_Impl.hpp>
+#include <model/Space.hpp>
+#include <model/Space_Impl.hpp>
 #include <osversion/VersionTranslator.hpp>
 #include <utilities/core/CommandLine.hpp>
 #include <utilities/core/Path.hpp>
+#include <utilities/idf/Handle.hpp>
 
 #include <QProcess>
 
@@ -136,6 +141,125 @@ QVector<double> runCase(openstudio::contam::prj::Data *data, double windSpeed,
   return results;
 }
 
+QVector<double> runCase2(std::map <openstudio::Handle,int> spaceMap,
+                         openstudio::contam::ForwardTranslator &translator,
+                         std::vector<openstudio::model::Surface> extSurfaces,
+                         double windSpeed, double windDirection, openstudio::path contamExePath, 
+                         openstudio::path simreadExePath, bool verbose=false)
+{
+  QVector<double> results(spaceMap.size(),0.0);
+  std::map<openstudio::Handle,int> surfaceMap = translator.surfaceMap();
+  translator.setSteadyWeather(windSpeed,windDirection);
+  openstudio::path inputPath = openstudio::toPath("temporary.prj"); // This should do something else
+  QString fileName = openstudio::toQString(inputPath);
+  
+  QFile file(fileName);
+  if(!file.open(QFile::WriteOnly))
+    {
+      std::cout << "Failed to open file '"<< fileName.toStdString() << "'." << std::endl;
+      std::cout << "Check that this file location is accessible and may be written." << std::endl;
+      return QVector<double>();
+    }
+  QTextStream textStream(&file);
+  if(verbose)
+    std::cout << "Writing file " << fileName.toStdString() << std::endl;
+  boost::optional<std::string> output = translator.toString();
+  textStream << openstudio::toQString(*output);
+  file.close();
+
+  // Run simulation
+  if(verbose)
+    std::cout << "Running CONTAM simulation (" << windSpeed << "," << windDirection 
+              << ")..." << std::endl;
+  QProcess contamProcess;
+  contamProcess.start(openstudio::toQString(contamExePath), QStringList() << fileName);
+  if(!contamProcess.waitForStarted(-1))
+  {
+    std::cout << "Failed to start CONTAM process." << std::endl;
+    return QVector<double>();
+  }
+  if(!contamProcess.waitForFinished(-1))
+  {
+    std::cout << "Failed to complete CONTAM process." << std::endl;
+    return QVector<double>();
+  }
+  // Run simread
+  if(verbose)
+    std::cout << "Running SimRead on SIM file..." << std::endl;
+  QProcess simreadProcess;
+  simreadProcess.start(openstudio::toQString(simreadExePath), QStringList() << fileName);
+  if(!simreadProcess.waitForStarted(-1))
+  {
+    std::cout << "Failed to start SimRead process." << std::endl;
+    return QVector<double>();
+  }
+  simreadProcess.write("y\n\ny\n\n"); // This should work for no contaminants
+  if(!simreadProcess.waitForFinished(-1))
+  {
+    std::cout << "Failed to complete SimRead process." << std::endl;
+    return QVector<double>();
+  }
+
+  // Collect results
+  if(verbose)
+    std::cout << "Reading results..." << std::endl;
+  openstudio::contam::sim::LinkFlow lfr;
+  openstudio::path lfrPath = inputPath.replace_extension(openstudio::toPath("lfr").string());
+  if(!lfr.read(lfrPath))
+  {
+    std::cout << "Failed to read link flow results." << std::endl;
+    return QVector<double>();
+  }
+
+  // Process results
+  std::vector<std::vector<double> > flow0 = lfr.F0();
+  //if(flow0.size() != data->paths.size())
+  //{
+  //  std::cout << "Mismatch between lfr data and model path count." << std::endl;
+  //  return QVector<double>();
+  //}
+  for(unsigned i=0;i<flow0.size();i++)
+  {
+    if(flow0[i].size() != 1)
+    {
+      std::cout << "Missing or additional data for path " << i+1 << "." << std::endl;
+      return QVector<double>();
+    }
+  }
+
+  // Everything should be good to go if we made it to this point
+  // Loop over the exterior surfaces and see what has happened
+  BOOST_FOREACH(openstudio::model::Surface surface, extSurfaces)
+  {
+    std::map<openstudio::Handle,int>::iterator indexIter;
+    indexIter = surfaceMap.find(surface.handle());
+    if(indexIter == surfaceMap.end())
+    {
+      std::cout << "Missing surface " << openstudio::toString(surface.handle()) << " in PRJ." << std::endl;
+      return QVector<double>();
+    }
+    int index = indexIter->second - 1;
+    if(flow0[index][0] < 0.0)
+    {
+      boost::optional<openstudio::model::Space> space = surface.space();
+      if(!space)
+      {
+        std::cout << "Surface " << openstudio::toString(surface.handle()) << " is not attached to a space." << std::endl;
+        return QVector<double>();
+      }
+      indexIter = spaceMap.find(space->handle());
+      if(indexIter == spaceMap.end())
+      { 
+        std::cout << "Missing space " << openstudio::toString(surface.handle()) << " in space map." << std::endl;
+        return QVector<double>();
+      }
+      // Only sum up the negative flows (flows in, not flows out)
+      results[indexIter->second] += flow0[index][0];
+    }
+  }
+  return results;
+}
+
 int main(int argc, char *argv[])
 {
   openstudio::path contamExePath = openstudio::toPath("C:\\Program Files (x86)\\NIST\\CONTAM 3.1\\ContamX3.exe");
@@ -208,12 +332,36 @@ int main(int argc, char *argv[])
   }
 
   QTextStream textStream(&file);
-  boost::optional<QString> output = translator.translateToPrj(*model,false);
+  boost::optional<std::string> output = translator.translateToPrj(*model,false);
   if(!output)
   {
     std::cout << "Translation failed, check errors and warnings for more information." << std::endl;
     return EXIT_FAILURE;
   }
+
+  // Get all the surfaces
+  std::vector<openstudio::model::Surface> surfaces = model->getConcreteModelObjects<openstudio::model::Surface>();
+  // Cut that down to the external surfaces
+  std::vector<openstudio::model::Surface> extSurfaces;
+  BOOST_FOREACH(openstudio::model::Surface surface, surfaces)
+  {
+    std::string bc = surface.outsideBoundaryCondition();
+    if(bc == "Outdoors")
+      extSurfaces.push_back(surface);
+  }
+
+  // Get all the spaces
+  std::vector<openstudio::model::Space> spaces = model->getConcreteModelObjects<openstudio::model::Space>();
+  // Build a map to the index
+  std::map<openstudio::Handle,int> spaceMap;
+  int index=0;
+  BOOST_FOREACH(openstudio::model::Space space, spaces)
+  {
+    spaceMap[space.handle()] = index++;
+  }
+
+  if(verbose)
+    std::cout << "Found " << extSurfaces.size() << " exterior surfaces." << std::endl;
 
   // This is a stand-in for a more complete procedure (such as Ng et al.)
 
@@ -320,6 +468,54 @@ int main(int argc, char *argv[])
     D << ( 10*Q20[i]/Q10[i]- 20.0)/2000.0;
   }
   
+  for(int i=0;i<Q10.size();i++)
+  {
+    std::cout<<i<<" "<<C[i]<<" "<<D[i]<<std::endl;
+  }
+
+  QVector<double> results = runCase(&(translator.data), 4.4704, 0.0, contamExePath,
+      simreadExePath, true);
+  for(int i=0;i<results.size();i++)
+  {
+    std::cout<<i<<" "<<results[i]<<std::endl;
+  }
+  results = runCase2(spaceMap,translator,extSurfaces, 4.4704, 0.0, contamExePath, simreadExePath, true);
+  for(int i=0;i<results.size();i++)
+  {
+    std::cout<<i<<" "<<results[i]<<std::endl;
+  }
+
+
+  Q10.fill(0.0);
+  Q20.fill(0.0);
+  for(double angle=0.0;angle<360.0;angle+=90.0)
+  {
+    QVector<double> results = runCase2(spaceMap, translator, extSurfaces, 4.4704, angle, contamExePath,
+      simreadExePath, true);
+    for(int i=0;i<results.size();i++)
+      Q10[i] += results[i];
+    results = runCase2(spaceMap, translator, extSurfaces, 8.9408, angle, contamExePath,
+      simreadExePath, true);
+    for(int i=0;i<results.size();i++)
+      Q20[i] += results[i];
+  }
+
+  for(int i=0;i<Q10.size();i++)
+  {
+    Q10[i] *= -0.25;
+    Q20[i] *= -0.25;
+    //std::cout<<i<<" "<<Q10[i]<<" "<<Q20[i]<<std::endl;
+  }
+
+  C.clear();
+  D.clear();
+  for(int i=0;i<Q10.size();i++)
+  {
+    C << (400.0-100*Q20[i]/Q10[i])/2000.0;
+    D << ( 10*Q20[i]/Q10[i]- 20.0)/2000.0;
+  }
+  
+  std::cout<<std::endl;
   for(int i=0;i<Q10.size();i++)
   {
     std::cout<<i<<" "<<C[i]<<" "<<D[i]<<std::endl;

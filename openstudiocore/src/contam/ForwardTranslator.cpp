@@ -135,7 +135,7 @@ namespace contam
   {
     ForwardTranslator translator;
 
-    boost::optional<QString> output;
+    boost::optional<std::string> output;
     output = translator.translateToPrj(model);
     if (!output)
       return false;
@@ -160,7 +160,7 @@ namespace contam
   {
     ForwardTranslator translator;
 
-    boost::optional<QString> output;
+    boost::optional<std::string> output;
     output = translator.translateToPrj(model);
     if (!output)
       return false;
@@ -178,11 +178,7 @@ namespace contam
     return false;
   }
 
-  ForwardTranslator::ForwardTranslator()
-  {
-  }
-
-  boost::optional<QString> ForwardTranslator::translateToPrj(const openstudio::model::Model& model,
+  boost::optional<std::string> ForwardTranslator::translateToPrj(const openstudio::model::Model& model,
     bool translateHVAC)
   {
     QString output;
@@ -239,6 +235,7 @@ namespace contam
     if(data.levels.size() == 0)
     {
       LOG(Error, "Failed to find building stories in model, translation aborted");
+      m_valid = false;
       return false;
     }
     // Translate each thermal zone and generate a lookup table by name.
@@ -297,6 +294,7 @@ namespace contam
       else
       {
         LOG(Error, "Unable to set level for zone '" << thermalZone.name().get() << "', translation aborted");
+        m_valid = false;
         return false;
       }
       // set T0
@@ -368,7 +366,7 @@ namespace contam
             path.pe = extWallAFE["Average"];
           }
           path.nr = ++nr;
-          surfaceMap[surface.handle()] = path.nr;
+          m_surfaceMap[surface.handle()] = path.nr;
           data.paths << path;
         }
         else if (bc == "Surface")
@@ -397,7 +395,7 @@ namespace contam
                     path.pe = intWallAFE["Average"];
                   }
                   path.nr = ++nr;
-                  surfaceMap[surface.handle()] = path.nr;
+                  m_surfaceMap[surface.handle()] = path.nr;
                   data.paths << path;
                   used << adjacentSurface->handle();
                 }
@@ -405,18 +403,21 @@ namespace contam
               else
               {
                 LOG(Error, "Unattached adjacent space '" << adjacentSpace->name().get() << "'");
+                m_valid = false;
                 return false;
               }
             }
             else
             {
               LOG(Error, "Unattached adjacent surface '" << adjacentSurface->name().get() << "'");
+              m_valid = false;
               return false;
             }
           }
           else
           {
             LOG(Error, "Unable to find adjacent surface for surface '" << surface.name().get() << "'");
+            m_valid = false;
             return false;
           }
         }
@@ -609,8 +610,9 @@ namespace contam
         }
       }
     }
+    m_valid = true;
 
-    return boost::optional<QString>(data.print());
+    return boost::optional<std::string>(data.print().toStdString());
 
     // these are probably useful, will have to ask Kyle
     // Kyle, should these functions be const?
@@ -622,6 +624,15 @@ namespace contam
     //ZoneData *afz = zoneList.at(i);
     //double flowRate = afz->area*0.00508*1.2041;  // Assume 1 scfm/ft^2 as an approximation
 
+  }
+
+  boost::optional<std::string> ForwardTranslator::toString()
+  {
+    if(valid())
+    {
+      return boost::optional<std::string>(data.print().toStdString());
+    }
+    return false;
   }
 
   bool ForwardTranslator::writeMaps(const openstudio::path& path)
@@ -639,6 +650,19 @@ namespace contam
     //  return true;
     //}
     return false;
+  }
+
+  bool ForwardTranslator::setSteadyWeather(double windSpeed, double windDirection)
+  {
+    if(windSpeed < 0)
+    {
+      LOG(Warn, "Steady state wind speed is negative, using absolute value.");
+      windSpeed = -windSpeed; // Maybe should return false in this case?
+    }
+    // Is a negative wind direction allowed? Will have to check
+    data.rc.ssWeather.windspd = QString().sprintf("%g",windSpeed);
+    data.rc.ssWeather.winddir = QString().sprintf("%g",windDirection);
+    return true;
   }
 } // contam
 } // openstudio

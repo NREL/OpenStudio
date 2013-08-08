@@ -41,15 +41,22 @@ namespace contam
   class CONTAM_API ForwardTranslator
   {
   public:
-    ForwardTranslator();
-    boost::optional<QString> translateToPrj(const openstudio::model::Model& model,
+    ForwardTranslator(){m_valid=false;}
+    boost::optional<std::string> translateToPrj(const openstudio::model::Model& model,
       bool translateHVAC=true);
+    boost::optional<std::string> toString();
+
     bool writeMaps(const openstudio::path& path);
     static bool modelToContam(const openstudio::model::Model& model, const openstudio::path& path,
       const openstudio::path& mapPath);
     static bool modelToContam(const openstudio::model::Model& model, const openstudio::path& path);
 
     prj::Data data; // This has to be public for now
+
+    bool valid() const {return m_valid && data.valid;}
+    std::map <Handle, int> surfaceMap() const {return m_surfaceMap;}
+
+    bool setSteadyWeather(double windSpeed, double windDirection); // This is all we need now, expand later
 
   private:
     int tableLookup(QMap<std::string,int> map, std::string str, const char *name);
@@ -65,8 +72,10 @@ namespace contam
     QMap <Handle, int> zoneMap;       // Thermal zone to airflow zone map by handle
     //QMap <std::string, int> volumeMap; // Map of AHS volumes - may not be needed
     QMap <std::string, int> pathMap;  // AHS paths stored by name
-    QMap <Handle, int> surfaceMap;    // Surface paths stored by handle
+    std::map <Handle, int> m_surfaceMap;    // Surface paths stored by handle
     QMap <Handle, int> ahsMap;        // Airloop to AHS map by handle
+
+    bool m_valid;
 
     REGISTER_LOGGER("openstudio.contam.ForwardTranslator");
   };
