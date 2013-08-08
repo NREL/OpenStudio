@@ -49,14 +49,23 @@ QVector<double> runCase(openstudio::contam::prj::Data *data, double windSpeed,
   QString fileName = openstudio::toQString(inputPath);
   
   QFile file(fileName);
+  if(!file.open(QFile::WriteOnly))
+    {
+      std::cout << "Failed to open file '"<< fileName.toStdString() << "'." << std::endl;
+      std::cout << "Check that this file location is accessible and may be written." << std::endl;
+      return QVector<double>();
+    }
   QTextStream textStream(&file);
+  if(verbose)
+    std::cout << "Writing file " << fileName.toStdString() << std::endl;
   boost::optional<QString> output = data->print();
   textStream << *output;
   file.close();
 
   // Run simulation
   if(verbose)
-    std::cout << "Running CONTAM simulation..." << std::endl;
+    std::cout << "Running CONTAM simulation (" << windSpeed << "," << windDirection 
+              << ")..." << std::endl;
   QProcess contamProcess;
   contamProcess.start(openstudio::toQString(contamExePath), QStringList() << fileName);
   if(!contamProcess.waitForStarted(-1))
@@ -79,7 +88,7 @@ QVector<double> runCase(openstudio::contam::prj::Data *data, double windSpeed,
     std::cout << "Failed to start SimRead process." << std::endl;
     return QVector<double>();
   }
-  simreadProcess.write("y\n\ny\n\n");
+  simreadProcess.write("y\n\ny\n\n"); // This should work for no contaminants
   if(!simreadProcess.waitForFinished(-1))
   {
     std::cout << "Failed to complete SimRead process." << std::endl;
@@ -98,24 +107,32 @@ QVector<double> runCase(openstudio::contam::prj::Data *data, double windSpeed,
   }
 
   // Process results
-  for(unsigned i=0;i<lfr.nr().size();i++)
+  std::vector<std::vector<double> > flow0 = lfr.F0();
+  if(flow0.size() != data->paths.size())
   {
-    std::cout << lfr.nr()[i] << std::endl;
+    std::cout << "Mismatch between lfr data and model path count." << std::endl;
+    return QVector<double>();
+  }
+  for(unsigned i=0;i<flow0.size();i++)
+  {
+    if(flow0[i].size() != 1)
+    {
+      std::cout << "Missing or additional data for path " << i+1 << "." << std::endl;
+      return QVector<double>();
+    }
   }
 
-  openstudio::TimeSeries dpts = lfr.deltaP(1);
-  openstudio::Vector dp = dpts.values();
-  std::cout<< dp.size() <<std::endl;
-
-  for(unsigned i=0;i<lfr.nr().size();i++)
+  // Everything should be good to go if we made it to this point
+  for(unsigned i=0;i<flow0.size();i++)
   {
-    openstudio::TimeSeries dpts = lfr.deltaP(i);
-    openstudio::Vector dp = dpts.values();
-    std::cout<< lfr.nr()[i] << " " << dp.size();
-    if(dp.size())
-      std::cout << " " << dp[0];
-    std::cout << std::endl;
+    if(data->paths[i].pzm == -1)
+      // Since there is no HVAC, this zone must connect the outside to a regular zone
+      if(flow0[i][0] < 0.0)
+        // Only sum up the negative flows (flows in, not flows out)
+        results[data->paths[i].pzn-1] += flow0[i][0];
   }
+  if(verbose)
+    std::cout << "Processing complete." << std::endl;
   return results;
 }
 
@@ -198,8 +215,11 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
 
+  // This is a stand-in for a more complete procedure (such as Ng et al.)
+
   QVector<double> Q10(translator.data.zones.size(),0.0);
   QVector<double> Q20(translator.data.zones.size(),0.0);
+  /*
 
   // This is a little clunky, but the prj::Data structure is too simple to do anything else right now
   translator.data.rc.ssWeather.windspd = QString("4.4704");
@@ -270,6 +290,39 @@ int main(int argc, char *argv[])
     if(dp.size())
       std::cout << " " << dp[0];
     std::cout << std::endl;
+  }
+  */
+
+  for(double angle=0.0;angle<360.0;angle+=90.0)
+  {
+    QVector<double> results = runCase(&(translator.data), 4.4704, angle, contamExePath,
+      simreadExePath, true);
+    for(int i=0;i<results.size();i++)
+      Q10[i] += results[i];
+    results = runCase(&(translator.data), 8.9408, angle, contamExePath,
+      simreadExePath, true);
+    for(int i=0;i<results.size();i++)
+      Q20[i] += results[i];
+  }
+
+  for(int i=0;i<Q10.size();i++)
+  {
+    Q10[i] *= -0.25;
+    Q20[i] *= -0.25;
+    //std::cout<<i<<" "<<Q10[i]<<" "<<Q20[i]<<std::endl;
+  }
+
+  QVector<double> C;
+  QVector<double> D;
+  for(int i=0;i<Q10.size();i++)
+  {
+    C << (400.0-100*Q20[i]/Q10[i])/2000.0;
+    D << ( 10*Q20[i]/Q10[i]- 20.0)/2000.0;
+  }
+  
+  for(int i=0;i<Q10.size();i++)
+  {
+    std::cout<<i<<" "<<C[i]<<" "<<D[i]<<std::endl;
   }
 
   // Generate infiltration objects and attach to spaces

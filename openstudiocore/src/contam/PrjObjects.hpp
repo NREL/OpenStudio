@@ -49,6 +49,7 @@
  *    23                 Annotations               Not supported
  */
 
+#include "ContamAPI.hpp"
 #include "PrjReader.hpp"
 
 #include <QVector>
@@ -1087,7 +1088,7 @@ public:
     QVector<RX> ic;
 };
 
-class Path
+class CONTAM_API Path
 {
 public:
     enum Flags {
