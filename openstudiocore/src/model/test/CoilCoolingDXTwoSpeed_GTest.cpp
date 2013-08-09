@@ -372,7 +372,7 @@ TEST(CoilCoolingDXTwoSpeed, CoilCoolingDXTwoSpeed_Cost)
   // this is temporarly remove when I get cost hooked up to coil
   openstudio::model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(m);
 
-   boost::optional<openstudio::model::LifeCycleCost> cost1 = openstudio::model::LifeCycleCost::createLifeCycleCost("Install", coil, 1000.0, "CostPerEach", "Construction");
+  boost::optional<openstudio::model::LifeCycleCost> cost1 = openstudio::model::LifeCycleCost::createLifeCycleCost("Install", coil, 1000.0, "CostPerEach", "Construction");
   ASSERT_TRUE(cost1);
 
   EXPECT_DOUBLE_EQ(1000.0, cost1->totalCost());
