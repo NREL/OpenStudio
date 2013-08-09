@@ -403,6 +403,9 @@ boost::optional<double> LifeCycleCost_Impl::costedArea() const
   }else if (modelObject.optionalCast<PlantLoop>()){
     // no area defined
 
+  }else if (modelObject.optionalCast<HVACComponent>()){
+    // no area defined
+
   }else if (modelObject.optionalCast<ZoneHVACComponent>()){
     // no area defined
 

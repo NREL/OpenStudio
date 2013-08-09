@@ -343,6 +343,7 @@ TEST(CoilCoolingDXTwoSpeed,CoilCoolingDXTwoSpeed_SetGetFields)
     ASSERT_EQ(basinSch,coil.getBasinHeaterOperatingSchedule().get());
 }
 
+//Test adding LifeCycleCost
 TEST(CoilCoolingDXTwoSpeed, CoilCoolingDXTwoSpeed_Cost)
 {
     //create a model to use in testing this code.
@@ -368,9 +369,6 @@ TEST(CoilCoolingDXTwoSpeed, CoilCoolingDXTwoSpeed_Cost)
                                       plf5,
                                       lsccfot6,
                                       lseirfot7);
-
-  // this is temporarly remove when I get cost hooked up to coil
-  openstudio::model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(m);
 
   boost::optional<openstudio::model::LifeCycleCost> cost1 = openstudio::model::LifeCycleCost::createLifeCycleCost("Install", coil, 1000.0, "CostPerEach", "Construction");
   ASSERT_TRUE(cost1);
