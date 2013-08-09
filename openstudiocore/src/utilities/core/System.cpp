@@ -112,4 +112,133 @@ namespace openstudio{
     return numberOfProcessors;
   }
 
+
+  void System::testExceptions1()
+  {
+    try {
+      std::cout << "testExceptions1: Test 1" << std::endl;
+      throw std::exception();
+    } catch (const std::exception &) {
+    }
+
+    try {
+      std::cout << "testExceptions1: Test 2" << std::endl;
+      throw std::exception();
+    } catch (...) {
+    }
+  }
+
+  void System::testExceptions2()
+  {
+    try {
+      std::cout << "testExceptions2: Test 1" << std::endl;
+      throw std::runtime_error("test");
+    } catch (const std::runtime_error &) {
+    }
+
+    try {
+      std::cout << "testExceptions2: Test 2" << std::endl;
+      throw std::runtime_error("test");
+    } catch (const std::exception &) {
+    }
+
+    try {
+      std::cout << "testExceptions2: Test 3" << std::endl;
+      throw std::runtime_error("test");
+    } catch (...) {
+    }
+   }
+
+  void System::testExceptions3()
+  {
+    class MyException : public std::runtime_error
+    {
+      public:
+        MyException() : std::runtime_error("exception")
+        {}
+
+        virtual ~MyException() throw() 
+        {}
+    };
+
+    try {
+      std::cout << "testExceptions3: Test 1" << std::endl;
+      throw MyException();
+    } catch (const MyException &) {
+    }
+
+    try {
+      std::cout << "testExceptions3: Test 2" << std::endl;
+      throw MyException();
+    } catch (const std::runtime_error &) {
+    }
+
+    try {
+      std::cout << "testExceptions3: Test 3" << std::endl;
+      throw MyException();
+    } catch (const std::exception &) {
+    }
+
+    try {
+      std::cout << "testExceptions3: Test 4" << std::endl;
+      throw MyException();
+    } catch (...) {
+    }
+  }
+
+  void System::testExceptions4()
+  {
+    class MyException : public std::runtime_error
+    {
+      public:
+        MyException() : std::runtime_error("exception")
+        {}
+
+        virtual ~MyException() throw() 
+        {}
+    };
+
+    class MyException2 : public MyException
+    {
+      public:
+        MyException2() 
+        {}
+
+        virtual ~MyException2() throw() 
+        {}
+    };
+
+
+    try {
+      std::cout << "testExceptions4: Test 1" << std::endl;
+      throw MyException2();
+    } catch (const MyException2 &) {
+    }
+
+    try {
+      std::cout << "testExceptions4: Test 2" << std::endl;
+      throw MyException2();
+    } catch (const MyException &) {
+    }
+
+    try {
+      std::cout << "testExceptions4: Test 3" << std::endl;
+      throw MyException2();
+    } catch (const std::runtime_error &) {
+    }
+
+    try {
+      std::cout << "testExceptions4: Test 4" << std::endl;
+      throw MyException2();
+    } catch (const std::exception &) {
+    }
+
+    try {
+      std::cout << "testExceptions4: Test 5" << std::endl;
+      throw MyException2();
+    } catch (...) {
+    }
+  }
+
+
 } // openstudio
