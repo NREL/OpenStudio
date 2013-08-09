@@ -538,10 +538,10 @@ namespace detail {
     // figure out numExtensibleGroupsRequired 
     if (m_properties.minFields > 0){
       unsigned minFields = m_properties.minFields;
-      if (minFields > m_fields.size()){
-        m_properties.numExtensibleGroupsRequired = 
-          std::ceil(static_cast<double>(minFields-m_fields.size())/
-                    static_cast<double>(numExtensible));
+      if (minFields > m_fields.size()) {
+        double numerator(minFields-m_fields.size());
+        double denominator(numExtensible);
+        m_properties.numExtensibleGroupsRequired = std::ceil(numerator/denominator);
       }
     }
   }

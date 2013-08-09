@@ -2106,7 +2106,7 @@ namespace openstudio{
             sqlite3_finalize(sqlStmtPtr);
           }
           // minutes - 1 to remove starting minute
-          return boost::optional<openstudio::Time>(openstudio::Time(0,0,minutes-1,0));
+          return boost::optional<openstudio::Time>(openstudio::Time(0,0,std::ceil(minutes-1.0),0));
           break;
         default:
           // unsupported
@@ -2137,7 +2137,7 @@ namespace openstudio{
         }
         sqlite3_finalize(sqlStmtPtr);
       }
-      return openstudio::DateTime(openstudio::Date(monthOfYear(month),day), openstudio::Time(0,hour, minute, 0.0));
+      return openstudio::DateTime(openstudio::Date(monthOfYear(month),day), openstudio::Time(0, hour, minute, 0));
     }
 
     openstudio::OptionalTimeSeries SqlFile_Impl::timeSeries(const DataDictionaryItem& dataDictionary)
@@ -2198,13 +2198,13 @@ namespace openstudio{
           if ((month==0) || (day==0)) // then values in db are null - assumed run period
           {
             startDate=firstDateTime();
-            openstudio::DateTime dateTime(startDate + openstudio::Time(0,0,interval,0.0));
+            openstudio::DateTime dateTime(startDate + openstudio::Time(0,0,interval,0));
             stdDaysFromFirstReport.push_back((dateTime-startDate).totalDays());
             lastDateTime = dateTime;
           }
           else
           {
-            openstudio::DateTime dateTime(openstudio::Date(monthOfYear(month),day,year), openstudio::Time(0,hour, minute, 0.0));
+            openstudio::DateTime dateTime(openstudio::Date(monthOfYear(month),day,year), openstudio::Time(0,hour, minute, 0));
             if (count==0) { 
               startDate=dateTime;
             } else {
@@ -2212,7 +2212,7 @@ namespace openstudio{
               if (dateTime < lastDateTime)
               {
                 ++year;
-                dateTime = openstudio::DateTime(openstudio::Date(monthOfYear(month),day,year), openstudio::Time(0,hour, minute, 0.0));
+                dateTime = openstudio::DateTime(openstudio::Date(monthOfYear(month),day,year), openstudio::Time(0,hour, minute, 0));
               }
             }
             stdDaysFromFirstReport.push_back((dateTime-startDate).totalDays());
@@ -2268,7 +2268,7 @@ namespace openstudio{
           day = sqlite3_column_int(sqlStmtPtr, 1);
           hour = sqlite3_column_int(sqlStmtPtr, 2);
           minute = sqlite3_column_int(sqlStmtPtr, 3);
-          openstudio::DateTime dateTime(openstudio::Date(monthOfYear(month),day), openstudio::Time(0,hour, minute, 0.0));
+          openstudio::DateTime dateTime(openstudio::Date(monthOfYear(month),day), openstudio::Time(0,hour, minute, 0));
           dateTimes.push_back(dateTime);
 
           // step to next row
@@ -3060,7 +3060,7 @@ namespace openstudio{
       {
         std::pair<int, DateTime> pair;
         pair.first = sqlite3_column_int(sqlStmtPtr,0);
-        pair.second = DateTime( Date( monthOfYear( sqlite3_column_int(sqlStmtPtr,1) ), sqlite3_column_int(sqlStmtPtr,2) ), Time( 0, sqlite3_column_int(sqlStmtPtr, 3), 0, 0.0) );
+        pair.second = DateTime( Date( monthOfYear( sqlite3_column_int(sqlStmtPtr,1) ), sqlite3_column_int(sqlStmtPtr,2) ), Time( 0, sqlite3_column_int(sqlStmtPtr, 3), 0, 0) );
         reportIndicesDates.push_back( pair );
         // step to next row
         code = sqlite3_step(sqlStmtPtr);
@@ -3097,7 +3097,7 @@ namespace openstudio{
       /// must finalize to prevent memory leaks
       sqlite3_finalize(sqlStmtPtr);
 
-      return DateTime(Date(monthOfYear(month),dayOfMonth), Time(0,hour, 0, 0.0));
+      return DateTime(Date(monthOfYear(month),dayOfMonth), Time(0,hour, 0, 0));
     }
 
     boost::optional<int> SqlFile_Impl::illuminanceMapHourlyReportIndex(const int& mapIndex, const DateTime& dateTime) const
