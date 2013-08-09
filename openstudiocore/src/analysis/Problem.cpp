@@ -1867,6 +1867,21 @@ namespace detail {
                    responses);
   }
 
+  QVariant Problem_Impl::toServerFormulationVariant() const {
+    QVariantMap map;
+
+    InputVariableVector vars = variables();
+    QVariantList varsList;
+    for (unsigned i = 0, n = vars.size(); i < n; ++i) {
+      QVariantMap varMap = vars[i].toServerFormulationVariant().toMap();
+      varMap["variable_index"] = i;
+      varsList.push_back(varMap);
+    }
+    map["variables"] = varsList;
+
+    return QVariant(map);
+  }
+
   std::vector<WorkflowStep> Problem_Impl::convertVariablesAndWorkflowToWorkflowSteps(
       const std::vector<Variable>& variables,
       const runmanager::Workflow& simulationWorkflow) const

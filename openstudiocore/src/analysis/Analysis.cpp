@@ -802,11 +802,14 @@ namespace detail {
 
   QVariant Analysis_Impl::toServerFormulationVariant() const {
     QVariantMap map = problem().toServerFormulationVariant().toMap();
+    map["metadata"] = jsonMetadata();
     return QVariant(map);
   }
 
   QVariant Analysis_Impl::toServerDataPointsVariant() const {
     QVariantMap map;
+
+    map["metadata"] = jsonMetadata();
 
     QVariantList dataPointList;
     Q_FOREACH(const DataPoint& dataPoint, dataPoints()) {

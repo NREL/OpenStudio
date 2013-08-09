@@ -710,7 +710,9 @@ namespace detail {
       valueMap["variable_index"] = i;
       valueMap["variable_uuid"] = toQString(toUID(variables[i].uuid()));
       valueMap["value"] = values[i];
+      valuesList.push_back(valueMap);
     }
+    map["values"] = valuesList;
 
     return QVariant(map);
   }

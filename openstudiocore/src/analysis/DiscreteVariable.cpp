@@ -24,6 +24,7 @@
 #include <analysis/Problem.hpp>
 
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Containers.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -60,6 +61,35 @@ namespace detail {
 
   int DiscreteVariable_Impl::numValidValues(bool selectedOnly) const {
     return this->validValues(selectedOnly).size();
+  }
+
+  QVariant DiscreteVariable_Impl::toServerFormulationVariant() const {
+    QVariantMap map;
+
+    map["uuid"] = toQString(toUID(uuid()));
+    map["version_uuid"] = toQString(toUID(uuid()));
+    map["name"] = toQString(name());
+    map["display_name"] = toQString(displayName());
+    map["type"] = QString("Integer"); // could be Discrete instead
+
+    // determine minimum, maximum from all values
+    IntVector allValues = validValues(false);
+    // right now, only have MeasureGroup, this will always be contiguous listing
+    map["minimum"] = 0;
+    map["maximum"] = int(allValues.size()) - 1;
+    // no initial_value implemented right now
+
+    // if selected values are subset, list them separately
+    IntVector selectedValues = validValues(true);
+    if (selectedValues.size() < allValues.size()) {
+      QVariantList selectedList;
+      Q_FOREACH(int val,selectedValues) {
+        selectedList.push_back(QVariant(val));
+      }
+      map["selected_values"] = selectedList;
+    }
+
+    return QVariant(map);
   }
 
 } // detail
