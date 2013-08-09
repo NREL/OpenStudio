@@ -463,12 +463,12 @@ namespace detail {
     onChange(AnalysisObject_Impl::InvalidatesResults);
   }
 
-  bool Analysis_Impl::addDataPoint(const DataPoint& dataPoint) {
+  bool Analysis_Impl::addDataPoint(DataPoint& dataPoint) {
     if (m_dataPointsAreInvalid) {
       LOG(Info,"Current data points are invalid. Call removeAllDataPoints before adding new ones.");
       return false;
     }
-    if (!(dataPoint.problem().uuid() == problem().uuid())) {
+    if (!(dataPoint.problemUUID() == problem().uuid())) {
       LOG(Error,"Cannot add given DataPoint to Analysis '" << name() <<
           "', because it is not associated with Problem '" << problem().name() << "'.");
       return false;
@@ -478,6 +478,9 @@ namespace detail {
       OS_ASSERT(existingDataPoints.size() == 1); // dataPoint must be fully specified to be valid
       LOG(Info,"DataPoint not added to Analysis '" << name() << "', because it already exists.");
       return false;
+    }
+    if (!dataPoint.hasProblem()) {
+      dataPoint.setProblem(problem());
     }
     m_dataPoints.push_back(dataPoint);
     connectChild(m_dataPoints.back(),true);
@@ -1023,7 +1026,7 @@ void Analysis::clearWeatherFile() {
   getImpl<detail::Analysis_Impl>()->clearWeatherFile();
 }
 
-bool Analysis::addDataPoint(const DataPoint& dataPoint) {
+bool Analysis::addDataPoint(DataPoint& dataPoint) {
   return getImpl<detail::Analysis_Impl>()->addDataPoint(dataPoint);
 }
 

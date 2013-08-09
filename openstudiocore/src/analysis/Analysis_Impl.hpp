@@ -186,7 +186,7 @@ namespace detail {
      *  openstudio::Exception if dataPoint.variableValues() are not valid for problem(). Should be
      *  called before running a given workflow. Usually called by Algorithm, but may also be called
      *  directly by a user to run custom analyses. */
-    bool addDataPoint(const DataPoint& dataPoint);
+    bool addDataPoint(DataPoint& dataPoint);
 
     /** Adds a DataPoint to this analysis and returns true if measures are valid for problem(),
      *  the resulting DataPoint is not yet in this Analysis, and if not dataPointsAreInvalid. */
