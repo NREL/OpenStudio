@@ -286,9 +286,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     {
       QDomNodeList airSegmentChildElements = airSegmentElement.childNodes();
 
-      for (int i = airSegmentChildElements.count() - 1; i >= 0 ; i--)
+      for (int j = airSegmentChildElements.count() - 1; j >= 0 ; j--)
       {
-        QDomElement airSegmentChildElement = airSegmentChildElements.at(i).toElement();
+        QDomElement airSegmentChildElement = airSegmentChildElements.at(j).toElement();
         
         // CoilCooling
         if( istringEqual(airSegmentChildElement.tagName().toStdString(),"CoilClg") )
@@ -322,7 +322,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
           }
         }
         // CoilHeating
-        else if( istringEqual(airSegmentChildElement.tagName().toStdString(),"CoilHtg") )
+        else if( istringEqual(airSegmentChildElement.tagName().toStdString(),"CoilHtg") &&
+                 ! ( istringEqual(airSystemTypeElement.text().toStdString(),"SZVAVAC") ||
+                     istringEqual(airSystemTypeElement.text().toStdString(),"SZVAVHP") 
+                   )
+               )
         {
           boost::optional<model::ModelObject> mo = translateCoilHeating(airSegmentChildElement,doc,model);
 
@@ -1641,6 +1645,42 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
       OS_ASSERT(mo);
 
       coil = mo->cast<model::HVACComponent>();
+    }
+    else if( istringEqual("SZVAVAC",airSystemTypeElement.text().toStdString()) || 
+             istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString()) )
+    {
+      if( ! airSysElement.isNull() )
+      {
+        // Air Segments
+        QDomNodeList airSegmentElements = airSysElement.elementsByTagName("AirSeg");
+
+        for (int i = 0; i < airSegmentElements.count(); i++)
+        {
+          QDomElement airSegmentElement = airSegmentElements.at(i).toElement();
+
+          QDomElement airSegmentTypeElement = airSegmentElement.firstChildElement("Type");
+
+          // Supply Segments
+          if(istringEqual(airSegmentTypeElement.text().toStdString(),"Supply"))
+          {
+            QDomNodeList airSegmentChildElements = airSegmentElement.childNodes();
+
+            for (int j = airSegmentChildElements.count() - 1; j >= 0 ; j--)
+            {
+              QDomElement airSegmentChildElement = airSegmentChildElements.at(j).toElement();
+
+              if( istringEqual(airSegmentChildElement.tagName().toStdString(),"CoilHtg") )
+              {
+                boost::optional<model::ModelObject> mo = translateCoilHeating(airSegmentChildElement,doc,model);
+
+                OS_ASSERT(mo);
+
+                coil = mo->cast<model::HVACComponent>();
+              }
+            }
+          } 
+        }
+      }
     }
     else // If no coil is specified in the SDD, create an electric coil
     {
