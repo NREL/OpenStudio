@@ -37,7 +37,7 @@ namespace openstudio{
     // test that normal has length 1
     double length = m_a*m_a + m_b*m_b + m_c*m_c;
     double tol = 0.0001;
-    OS_ASSERT(abs(1.0-length) < tol);
+    OS_ASSERT(fabs(1.0-length) < tol);
   }
 
   Plane::Plane(const Point3d& point, const Vector3d& outwardNormal)
@@ -229,7 +229,7 @@ namespace openstudio{
       // test that normal has length 1
       double length = m_a*m_a + m_b*m_b + m_c*m_c;
       tol = 0.0001;
-      OS_ASSERT(abs(1.0-length) <= tol);
+      OS_ASSERT(fabs(1.0-length) <= tol);
     }
   }
 
@@ -239,7 +239,7 @@ namespace openstudio{
     // test that normal has length 1
     double length = m_a*m_a + m_b*m_b + m_c*m_c;
     double tol = 0.0001;
-    OS_ASSERT(abs(1.0-length) <= tol);
+    OS_ASSERT(fabs(1.0-length) <= tol);
   }
 
   Plane::~Plane()
@@ -255,7 +255,7 @@ namespace openstudio{
   {
     // dot product of outward normals should be 1 or negative 1
     double dot = (m_a*other.a() + m_b*other.b() + m_c*other.c());
-    bool result = (abs(dot) >= 1.0-tol);
+    bool result = (fabs(dot) >= 1.0-tol);
     return result;
   }
 
@@ -265,7 +265,7 @@ namespace openstudio{
   {
     double dot = (m_a*other.a() + m_b*other.b() + m_c*other.c());
     double dist = m_d - other.d();
-    bool result = (dot >= 1-tol) && (abs(dist) <= tol);
+    bool result = (dot >= 1-tol) && (fabs(dist) <= tol);
     return result;
   }
 
@@ -275,7 +275,7 @@ namespace openstudio{
   {
     double dot = (m_a*other.a() + m_b*other.b() + m_c*other.c());
     double dist = m_d + other.d();
-    bool result = (dot <= -1+tol) && (abs(dist) <= tol);
+    bool result = (dot <= -1+tol) && (fabs(dist) <= tol);
     return result;
   }
 
