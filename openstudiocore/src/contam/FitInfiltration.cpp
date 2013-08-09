@@ -327,6 +327,18 @@ int main(int argc, char *argv[])
       std::cout<<Q20[i]<<" ?= "<<calcQ20<<" ("<<Q20[i]-calcQ20<<")"<<std::endl;
     }
   }
+  // Remove previous infiltration objects
+  std::vector<openstudio::model::SpaceInfiltrationDesignFlowRate> dfrInf = model->getConcreteModelObjects<openstudio::model::SpaceInfiltrationDesignFlowRate>();
+  BOOST_FOREACH(openstudio::model::SpaceInfiltrationDesignFlowRate inf, dfrInf)
+  {
+    inf.remove();
+  }
+  std::vector<openstudio::model::SpaceInfiltrationEffectiveLeakageArea> elaInf = model->getConcreteModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>();
+  BOOST_FOREACH(openstudio::model::SpaceInfiltrationEffectiveLeakageArea inf, elaInf)
+  {
+    inf.remove();
+  }
+
 
   // Generate infiltration objects and attach to spaces
   std::pair <openstudio::Handle,int> handleInt;
@@ -344,6 +356,7 @@ int main(int argc, char *argv[])
     infObj.setTemperatureTermCoefficient(0.0);
     infObj.setVelocityTermCoefficient(C[handleInt.second]);
     infObj.setVelocitySquaredTermCoefficient(D[handleInt.second]);
+    /*
     std::vector<openstudio::model::SpaceInfiltrationDesignFlowRate> design = space->spaceInfiltrationDesignFlowRates();
     BOOST_FOREACH(openstudio::model::SpaceInfiltrationDesignFlowRate inf, design)
     {
@@ -354,11 +367,14 @@ int main(int argc, char *argv[])
     {
       inf.remove();
     }
+    */
     infObj.setSpace(*space);
   }
 
   // Write out new OSM
-  openstudio::path outPath = openstudio::toPath("infiltrated.osm"); // = inputPath.replace_extension(openstudio::toPath("osm").string());
+  QString outstring = openstudio::toQString(inputPathString).replace(".osm",openstudio::toQString(leakageDescriptorString)+".osm");
+  //openstudio::path outPath = openstudio::toPath("infiltrated.osm"); // = inputPath.replace_extension(openstudio::toPath("osm").string());
+  openstudio::path outPath = openstudio::toPath(outstring);
   if(!model->save(outPath,true))
   {
     std::cout << "Failed to write OSM file." << std::endl;
