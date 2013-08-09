@@ -43,7 +43,7 @@ namespace contam
   public:
     ForwardTranslator(){m_valid=false;}
     boost::optional<std::string> translateToPrj(const openstudio::model::Model& model,
-      bool translateHVAC=true);
+      bool translateHVAC=true, std::string leakageDescriptor=std::string("Average"));
     boost::optional<std::string> toString();
 
     bool writeMaps(const openstudio::path& path);

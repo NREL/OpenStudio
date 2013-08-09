@@ -357,7 +357,7 @@ public:
 
 // Section 7: Kinetic Reactions - Not supported
 // Section 8a: Filter Elements
-
+/*
 class FilterElement
 {
 public:
@@ -427,7 +427,7 @@ public:
     //int nselmt;  // number of sub-elements(I2)
     QVector<int> elmt;  // sub-element numbers (IX) – converted to pointers
 };
-
+*/
 // Section 8b: Filters
 
 class Filter

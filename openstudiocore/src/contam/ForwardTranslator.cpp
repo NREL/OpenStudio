@@ -49,6 +49,7 @@
 
 #include <QFile>
 #include <QTextStream>
+#include <QList>
 #include <QMap>
 
 namespace openstudio 
@@ -194,7 +195,7 @@ namespace contam
   }
 
   boost::optional<std::string> ForwardTranslator::translateToPrj(const openstudio::model::Model& model,
-    bool translateHVAC)
+    bool translateHVAC, std::string leakageDescriptor)
   {
     QString output;
     int nr;
@@ -205,9 +206,21 @@ namespace contam
       return false;
     // The template is a legal PRJ file, so it has one level. Not for long.
     m_data.levels.clear();
+    // Verify that the leakageDescriptor is one we know about
+    QList<std::string> known = QList<std::string>() << std::string("Average") << std::string("Tight")
+      << std::string("Leaky");
+    QString descriptor = openstudio::toQString(leakageDescriptor);
+    if(!known.contains(leakageDescriptor))
+    {
+      LOG(Warn, "Unknown leakage descriptor '" << leakageDescriptor << "' using 'Average'");
+      descriptor = "Average";
+    }
     // Build the airflow element lookup table
     for(int i=0;i<m_data.airflowElements.size();i++)
+    {
       m_afeMap[m_data.airflowElements[i]->name] = m_data.airflowElements[i]->nr;
+      //std::cout << m_data.airflowElements[i]->name.toStdString() << " " << m_afeMap[m_data.airflowElements[i]->name] <<std::endl;
+    }
     // Build up data for setting wall leakage
     QMap<QString,int> extWallAFE;
     QMap<QString,int> intWallAFE;
@@ -373,12 +386,12 @@ namespace contam
           // Set flow element
           if(type == "RoofCeiling")
           {
-            path.pe = roofAFE["Average"];
+            path.pe = roofAFE[descriptor];
             path.pw = 5; // Assume standard template
           }
           else
           {
-            path.pe = extWallAFE["Average"];
+            path.pe = extWallAFE[descriptor];
           }
           path.nr = ++nr;
           m_surfaceMap[surface.handle()] = path.nr;
@@ -403,11 +416,11 @@ namespace contam
                   // Set flow element
                   if(type == "Floor" || type == "RoofCeiling")
                   {
-                    path.pe = floorAFE["Average"];
+                    path.pe = floorAFE[descriptor];
                   }
                   else
                   {
-                    path.pe = intWallAFE["Average"];
+                    path.pe = intWallAFE[descriptor];
                   }
                   path.nr = ++nr;
                   m_surfaceMap[surface.handle()] = path.nr;

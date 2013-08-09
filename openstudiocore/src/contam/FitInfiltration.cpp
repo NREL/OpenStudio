@@ -173,10 +173,12 @@ int main(int argc, char *argv[])
   double density = 1.2041;
 
   std::string inputPathString;
+  std::string leakageDescriptorString="Average";
   boost::program_options::options_description desc("Allowed options");
   desc.add_options()
     ("help,h", "print help message")
     ("inputPath,i", boost::program_options::value<std::string>(&inputPathString), "path to OSM file")
+    ("leakage,l", boost::program_options::value<std::string>(&leakageDescriptorString), "leakage level or grade")
     ("quiet,q", "suppress progress output");
 
   boost::program_options::positional_options_description pos;
@@ -239,7 +241,7 @@ int main(int argc, char *argv[])
   }
 
   QTextStream textStream(&file);
-  boost::optional<std::string> output = translator.translateToPrj(*model,false);
+  boost::optional<std::string> output = translator.translateToPrj(*model,false,leakageDescriptorString);
   if(!output)
   {
     std::cout << "Translation failed, check errors and warnings for more information." << std::endl;

@@ -665,7 +665,7 @@ QString WindPressureProfile::write()
 }
 
 // Section 8a: Filter Elements
-
+/*
 FilterElement* FilterElement::readElement(Reader *input)
 {
     FilterElement *out=NULL;
@@ -896,7 +896,7 @@ QString Fle_Spf::write()
         string += QString("%1 ").arg(elmt[i]);
     return string;
 }
-
+*/
 // Section 8b: Filters
 
 Filter::Filter()

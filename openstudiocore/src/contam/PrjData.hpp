@@ -112,7 +112,7 @@ public:
     QVector<WeekSchedule> weekSchedules;
     QVector<WindPressureProfile> windPressureProfiles;
     QString kinr;
-    QVector<QSharedPointer<FilterElement> > filterElements;
+    // QVector<QSharedPointer<FilterElement> > filterElements;
     QString flte;
     QVector<Filter> filters;
     QString filt;
