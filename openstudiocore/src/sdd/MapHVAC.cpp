@@ -2728,6 +2728,76 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvD
 
   curve.setCoefficient6xTIMESY(coef6Element.text().toDouble());
 
+  // MinVar1
+  
+  QDomElement minVar1Element = element.firstChildElement("MinVar1");
+
+  bool ok;
+
+  double value = minVar1Element.text().toDouble(&ok); 
+
+  if(ok)
+  {
+    curve.setMinimumValueofx(value);
+  }
+  else
+  {
+    curve.setMinimumValueofx(0.0);
+
+    LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Minimum Limit");
+  }
+
+  // MaxVar1
+  
+  QDomElement maxVar1Element = element.firstChildElement("MaxVar1");
+
+  value = maxVar1Element.text().toDouble(&ok);
+
+  if(ok)
+  {
+    curve.setMaximumValueofx(value);
+  }
+  else
+  {
+    curve.setMaximumValueofx(100.0);
+
+    LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Maximum Limit");
+  }
+
+  // MinVar2
+  
+  QDomElement minVar2Element = element.firstChildElement("MinVar2");
+
+  value = minVar2Element.text().toDouble(&ok);
+
+  if(ok)
+  {
+    curve.setMinimumValueofy(value);
+  }
+  else
+  {
+    curve.setMinimumValueofy(0.0);
+
+    LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing Y Minimum Limit");
+  }
+
+  // MaxVar2
+  
+  QDomElement maxVar2Element = element.firstChildElement("MaxVar2");
+
+  value = maxVar2Element.text().toDouble(&ok);
+
+  if(ok)
+  {
+    curve.setMaximumValueofy(value);
+  }
+  else
+  {
+    curve.setMaximumValueofy(100.0);
+
+    LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing Y Maximum Limit");
+  }
+
   return curve;
 }
 
@@ -2770,6 +2840,42 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvC
 
   curve.setCoefficient4xPOW3(coef4Element.text().toDouble());
 
+  // MinVar1
+  
+  QDomElement minVar1Element = element.firstChildElement("MinVar1");
+
+  bool ok;
+
+  double value = minVar1Element.text().toDouble(&ok);
+
+  if(ok)
+  {
+    curve.setMinimumValueofx(value);
+  }
+  else
+  {
+    curve.setMinimumValueofx(0.0);
+
+    LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Minimum Limit");
+  }
+
+  // MaxVar1
+  
+  QDomElement maxVar1Element = element.firstChildElement("MaxVar1");
+
+  value = maxVar1Element.text().toDouble(&ok);
+
+  if(ok)
+  {
+    curve.setMaximumValueofx(value);
+  }
+  else
+  {
+    curve.setMaximumValueofx(100.0);
+
+    LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Maximum Limit");
+  }
+
   return curve;
 }
 
@@ -2805,6 +2911,42 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvQ
   QDomElement coef3Element = element.firstChildElement("Coef3");
 
   curve.setCoefficient3xPOW2(coef3Element.text().toDouble());
+
+  // MinVar1
+  
+  QDomElement minVar1Element = element.firstChildElement("MinVar1");
+
+  bool ok;
+
+  double value = minVar1Element.text().toDouble(&ok);
+
+  if(ok)
+  {
+    curve.setMinimumValueofx(value);
+  }
+  else
+  {
+    curve.setMinimumValueofx(0.0);
+
+    LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Minimum Limit");
+  }
+
+  // MaxVar1
+  
+  QDomElement maxVar1Element = element.firstChildElement("MaxVar1");
+
+  value = maxVar1Element.text().toDouble(&ok);
+
+  if(ok)
+  {
+    curve.setMaximumValueofx(value);
+  }
+  else
+  {
+    curve.setMaximumValueofx(100.0);
+
+    LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Maximum Limit");
+  }
 
   return curve;
 }
