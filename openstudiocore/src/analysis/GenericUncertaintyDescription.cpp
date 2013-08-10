@@ -38,6 +38,10 @@ UncertaintyDescriptionType GenericUncertaintyDescription::type() {
   return UncertaintyDescriptionType(UncertaintyDescriptionType::Generic);
 }
 
+UncertaintyDescriptionType GenericUncertaintyDescription::actualType() const {
+  return impl()->type();
+}
+
 std::vector<Attribute> GenericUncertaintyDescription::attributes() const {
   return impl()->attributes(false);
 }

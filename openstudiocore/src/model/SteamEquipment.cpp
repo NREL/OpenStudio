@@ -44,7 +44,7 @@ namespace detail {
   SteamEquipment_Impl::SteamEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceLoadInstance_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == SteamEquipment::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == SteamEquipment::iddObjectType());
   }
 
   SteamEquipment_Impl::SteamEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -52,7 +52,7 @@ namespace detail {
                                            bool keepHandle)
     : SpaceLoadInstance_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == SteamEquipment::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == SteamEquipment::iddObjectType());
   }
 
   SteamEquipment_Impl::SteamEquipment_Impl(const SteamEquipment_Impl& other,
@@ -108,7 +108,7 @@ namespace detail {
       return definition.setDesignLevel(*peopleDensity * space->numberOfPeople());
     }
 
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
     return false;
   }
 
@@ -144,7 +144,7 @@ namespace detail {
 
   double SteamEquipment_Impl::multiplier() const {
     boost::optional<double> value = getDouble(OS_SteamEquipmentFields::Multiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -154,7 +154,7 @@ namespace detail {
 
   std::string SteamEquipment_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_SteamEquipmentFields::EndUseSubcategory,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -183,7 +183,7 @@ namespace detail {
 
   void SteamEquipment_Impl::resetSchedule() {
     bool ok = setString(OS_SteamEquipmentFields::ScheduleName,"");
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
   }
 
   bool SteamEquipment_Impl::setMultiplier(double multiplier) {
@@ -194,18 +194,18 @@ namespace detail {
 
   void SteamEquipment_Impl::resetMultiplier() {
     bool result = setString(OS_SteamEquipmentFields::Multiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SteamEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = false;
     result = setString(OS_SteamEquipmentFields::EndUseSubcategory, endUseSubcategory);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SteamEquipment_Impl::resetEndUseSubcategory() {
     bool result = setString(OS_SteamEquipmentFields::EndUseSubcategory, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   double SteamEquipment_Impl::getDesignLevel(double floorArea, double numPeople) const {
@@ -275,7 +275,7 @@ namespace detail {
 SteamEquipment::SteamEquipment(const SteamEquipmentDefinition& definition)
   : SpaceLoadInstance(SteamEquipment::iddObjectType(),definition)
 {
-  BOOST_ASSERT(getImpl<detail::SteamEquipment_Impl>());
+  OS_ASSERT(getImpl<detail::SteamEquipment_Impl>());
 }
 
 IddObjectType SteamEquipment::iddObjectType() {

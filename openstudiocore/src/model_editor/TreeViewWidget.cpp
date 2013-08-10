@@ -33,6 +33,8 @@
 
 #include <model_editor/TreeViewWidget.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 namespace modeleditor
@@ -142,27 +144,27 @@ void TreeViewWidget::connectSignalsAndSlots()
   bool connected;
   connected = connect(mTreeView,SIGNAL(eventUpDnKeyRelease()), 
     this,SLOT(viewSelection()));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(mTreeView,SIGNAL(clicked(const QModelIndex&)), 
     this,SLOT(viewSelection(const QModelIndex&)));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(mTreeView,SIGNAL(eventEnter()),
     this,SIGNAL(eventEnter()));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(mTreeView,SIGNAL(eventLeave()),
     this,SIGNAL(eventLeave()));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(this,SIGNAL(expandAll()),
     mTreeView,SLOT(expandAll()));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(this,SIGNAL(collapseAll()),
     mTreeView,SLOT(collapseAll()));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 }
 
 void TreeViewWidget::expandAllNodes()
@@ -365,7 +367,7 @@ void TreeViewWidget::on_nameChanged(QString)
     QModelIndexList rowList;
     if(mTreeView->getSelectedRows(rowList)){
       ///! we are only coded to handle a single row
-      Q_ASSERT(rowList.size() == 1);
+      OS_ASSERT(rowList.size() == 1);
       //rowList.at(0).
     }
   }

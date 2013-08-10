@@ -25,6 +25,8 @@
 
 #include <analysis/Problem.hpp>
 
+#include <runmanager/lib/JSON.hpp>
+
 #include <utilities/core/Optional.hpp>
 
 namespace openstudio {
@@ -121,6 +123,30 @@ namespace detail {
 
   DDACEAlgorithmOptions DDACEAlgorithm_Impl::ddaceAlgorithmOptions() const {
     return options().cast<DDACEAlgorithmOptions>();
+  }
+
+  QVariant DDACEAlgorithm_Impl::toVariant() const {
+    QVariantMap map = DakotaAlgorithm_Impl::toVariant().toMap();
+
+    map["algorithm_type"] = QString("DDACEAlgorithm");
+
+    return QVariant(map);
+  }
+
+  DDACEAlgorithm DDACEAlgorithm_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+    DDACEAlgorithmOptions options = DDACEAlgorithmOptions_Impl::fromVariant(map["options"],version);
+    return DDACEAlgorithm(openstudio::UUID(map["uuid"].toString()),
+                          openstudio::UUID(map["version_uuid"].toString()),
+                          map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                          map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                          map["complete"].toBool(),
+                          map["failed"].toBool(),
+                          map["iter"].toInt(),
+                          options,
+                          map.contains("restart_file_reference") ? openstudio::detail::toFileReference(map["restart_file_reference"],version) : OptionalFileReference(),
+                          map.contains("out_file_reference") ? openstudio::detail::toFileReference(map["out_file_reference"],version) : OptionalFileReference(),
+                          map.contains("job") ? runmanager::detail::JSON::toJob(map["job"],version, true) : boost::optional<runmanager::Job>());
   }
 
 } // detail

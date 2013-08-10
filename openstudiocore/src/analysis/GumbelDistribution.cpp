@@ -20,6 +20,8 @@
 #include <analysis/GumbelDistribution.hpp>
 #include <analysis/UncertaintyDescription_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -66,7 +68,7 @@ void GumbelDistribution::setBeta(double value) {
 GumbelDistribution::GumbelDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
-  BOOST_ASSERT(type() == GumbelDistribution::type());
+  OS_ASSERT(type() == GumbelDistribution::type());
 }
 
 } // analysis

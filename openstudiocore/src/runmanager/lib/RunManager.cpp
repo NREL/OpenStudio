@@ -40,7 +40,8 @@
 #include <model/Surface_Impl.hpp>
 #include <model/SubSurface_Impl.hpp>
 #include <model/Timestep_Impl.hpp>
-
+#include <model/DesignDay.hpp>
+#include <model/DesignDay_Impl.hpp>
 
 
 #include <QThread>
@@ -299,14 +300,15 @@ namespace runmanager {
   /// Load all of the jobs from the given JSON string, merging job trees
   void RunManager::updateJobs(const std::string &t_json, bool t_externallyManaged)
   {
-    updateJobs(detail::JSON::toVectorOfJob(t_json, t_externallyManaged)); 
+    std::pair<QVariant,VersionString> parseResult = loadJSON(t_json);
+    updateJobs(parseResult.first, parseResult.second, t_externallyManaged);
   }
 
   /// Load all of the jobs from the given JSON structure represented by a QVariant,
   /// merging job trees
-  void RunManager::updateJobs(const QVariant &t_variant, bool t_externallyManaged)
+  void RunManager::updateJobs(const QVariant &t_variant, const VersionString &t_version, bool t_externallyManaged)
   {
-    updateJobs(detail::JSON::toVectorOfJob(t_variant, t_externallyManaged));
+    updateJobs(detail::JSON::toVectorOfJob(t_variant, t_version, t_externallyManaged));
   }
 
   void RunManager::loadJobs(const openstudio::path &t_path)
@@ -323,10 +325,10 @@ namespace runmanager {
 
   std::string RunManager::jobsToJson() const
   {
-    return detail::JSON::toJSON(jobsToVariant());
+    return detail::JSON::toJSON(jobsForExport());
   }
 
-  QVariant RunManager::jobsToVariant() const
+  std::vector<Job> RunManager::jobsForExport() const
   {
     std::vector<Job> retval;
 
@@ -343,7 +345,7 @@ namespace runmanager {
       }
     }
 
-    return detail::JSON::toVariant(retval);
+    return retval;
   }
 
 
@@ -489,8 +491,85 @@ namespace runmanager {
     cl.setMinimumSystemTimestep(10);
     cl.setMaximumHVACIterations(10);
 
-  }
 
+    // clean up design days based on logic from openstudiolib
+    std::vector<model::DesignDay> days99;
+    std::vector<model::DesignDay> days99_6;
+    std::vector<model::DesignDay> days2;
+    std::vector<model::DesignDay> days1;
+    std::vector<model::DesignDay> days0_4;
+
+    bool unknownDay = false;
+
+    BOOST_FOREACH(model::DesignDay designDay, t_model.getModelObjects<model::DesignDay>()) {
+      boost::optional<std::string> name;
+      name = designDay.name();
+
+      if( name ) 
+      {
+        LOG(Debug, "analyzing design day: " << *name);
+        QString qname = QString::fromStdString(name.get()); 
+
+        if( qname.contains("99%") ) 
+        {
+          days99.push_back(designDay);
+        } 
+        else if( qname.contains("99.6%") )
+        {
+          days99_6.push_back(designDay);
+        }
+        else if( qname.contains("2%") )
+        {
+          days2.push_back(designDay);
+        }
+        else if( qname.contains("1%") )
+        {
+          days1.push_back(designDay);
+        }
+        else if( qname.contains(".4%") )
+        {
+          days0_4.push_back(designDay);
+        }
+        else
+        {
+          LOG(Info, "Unkown day found: " << *name);
+          unknownDay = true;
+        }
+      }
+
+    }
+
+    // Pick only the most stringent design points
+    if( ! unknownDay )
+    {
+      if( days99_6.size() > 0 )
+      {
+        LOG(Debug, "removing 99% days: " << days99.size());
+        BOOST_FOREACH(model::DesignDay designDay, days99) {
+          designDay.remove();
+        }
+      }
+
+      if( days0_4.size() > 0 )
+      {
+        LOG(Debug, "removing 1% days: " << days1.size());
+        BOOST_FOREACH(model::DesignDay designDay, days1) {
+          designDay.remove();
+        }
+        LOG(Debug, "removing 2% days: " << days2.size());
+        BOOST_FOREACH(model::DesignDay designDay, days2) {
+          designDay.remove();
+        }
+      }
+      else if( days1.size() > 0 )
+      {
+        LOG(Debug, "removing 2% days: " << days2.size());
+        BOOST_FOREACH(model::DesignDay designDay, days2) {
+          designDay.remove();
+        }
+      }
+    }
+  }
 
 }
 }

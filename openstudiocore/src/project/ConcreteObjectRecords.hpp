@@ -30,15 +30,6 @@
 #include <project/WorkflowRecord.hpp>
 
 // ruleset
-#include <project/ModelObjectActionSetAttributeRecord.hpp>
-#include <project/ModelObjectActionSetRelationshipRecord.hpp>
-#include <project/ModelObjectFilterBooleanAttributeRecord.hpp>
-#include <project/ModelObjectFilterNumericAttributeRecord.hpp>
-#include <project/ModelObjectFilterRelationshipRecord.hpp>
-#include <project/ModelObjectFilterStringAttributeRecord.hpp>
-#include <project/ModelObjectFilterTypeRecord.hpp>
-#include <project/ModelRuleRecord.hpp>
-#include <project/ModelRulesetRecord.hpp>
 #include <project/OSArgumentRecord.hpp>
 
 // analysis
@@ -47,12 +38,10 @@
 #include <project/DataPointValueRecord.hpp>
 #include <project/DDACEAlgorithmRecord.hpp>
 #include <project/DesignOfExperimentsRecord.hpp>
-#include <project/DiscreteVariableRecord.hpp>
 #include <project/FSUDaceAlgorithmRecord.hpp>
 #include <project/LinearFunctionRecord.hpp>
-#include <project/ModelRulesetContinuousVariableRecord.hpp>
-#include <project/ModelRulesetPerturbationRecord.hpp>
-#include <project/NullPerturbationRecord.hpp>
+#include <project/MeasureGroupRecord.hpp>
+#include <project/NullMeasureRecord.hpp>
 #include <project/OptimizationDataPointRecord.hpp>
 #include <project/OptimizationProblemRecord.hpp>
 #include <project/OutputAttributeVariableRecord.hpp>
@@ -60,7 +49,7 @@
 #include <project/ProblemRecord.hpp>
 #include <project/PSUADEDaceAlgorithmRecord.hpp>
 #include <project/RubyContinuousVariableRecord.hpp>
-#include <project/RubyPerturbationRecord.hpp>
+#include <project/RubyMeasureRecord.hpp>
 #include <project/SamplingAlgorithmRecord.hpp>
 #include <project/SequentialSearchRecord.hpp>
 
@@ -74,15 +63,6 @@
 #include <project/WorkflowRecord_Impl.hpp>
 
 // ruleset
-#include <project/ModelObjectActionSetAttributeRecord_Impl.hpp>
-#include <project/ModelObjectActionSetRelationshipRecord_Impl.hpp>
-#include <project/ModelObjectFilterBooleanAttributeRecord_Impl.hpp>
-#include <project/ModelObjectFilterNumericAttributeRecord_Impl.hpp>
-#include <project/ModelObjectFilterRelationshipRecord_Impl.hpp>
-#include <project/ModelObjectFilterStringAttributeRecord_Impl.hpp>
-#include <project/ModelObjectFilterTypeRecord_Impl.hpp>
-#include <project/ModelRuleRecord_Impl.hpp>
-#include <project/ModelRulesetRecord_Impl.hpp>
 #include <project/OSArgumentRecord_Impl.hpp>
 
 // analysis
@@ -91,12 +71,10 @@
 #include <project/DataPointValueRecord_Impl.hpp>
 #include <project/DDACEAlgorithmRecord_Impl.hpp>
 #include <project/DesignOfExperimentsRecord_Impl.hpp>
-#include <project/DiscreteVariableRecord_Impl.hpp>
 #include <project/FSUDaceAlgorithmRecord_Impl.hpp>
 #include <project/LinearFunctionRecord_Impl.hpp>
-#include <project/ModelRulesetContinuousVariableRecord_Impl.hpp>
-#include <project/ModelRulesetPerturbationRecord_Impl.hpp>
-#include <project/NullPerturbationRecord_Impl.hpp>
+#include <project/MeasureGroupRecord_Impl.hpp>
+#include <project/NullMeasureRecord_Impl.hpp>
 #include <project/OptimizationDataPointRecord_Impl.hpp>
 #include <project/OptimizationProblemRecord_Impl.hpp>
 #include <project/OutputAttributeVariableRecord_Impl.hpp>
@@ -104,7 +82,7 @@
 #include <project/ProblemRecord_Impl.hpp>
 #include <project/PSUADEDaceAlgorithmRecord_Impl.hpp>
 #include <project/RubyContinuousVariableRecord_Impl.hpp>
-#include <project/RubyPerturbationRecord_Impl.hpp>
+#include <project/RubyMeasureRecord_Impl.hpp>
 #include <project/SamplingAlgorithmRecord_Impl.hpp>
 #include <project/SequentialSearchRecord_Impl.hpp>
 

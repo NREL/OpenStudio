@@ -65,12 +65,12 @@ namespace detail {
   {
     SpaceLoadDefinition definition = this->definition();
     SpaceLoadInstanceVector instances = definition.instances();
-    BOOST_ASSERT(!instances.empty());
+    OS_ASSERT(!instances.empty());
     if (instances.size() == 1){
-      BOOST_ASSERT(this->handle() == instances[0].handle());
+      OS_ASSERT(this->handle() == instances[0].handle());
     }else{
       ModelObject clone = definition.clone(this->model());
-      BOOST_ASSERT(this->setPointer(this->definitionIndex(), clone.handle()));
+      OS_ASSERT(this->setPointer(this->definitionIndex(), clone.handle()));
     }
   }
 
@@ -111,8 +111,8 @@ namespace detail {
 SpaceLoadInstance::SpaceLoadInstance(IddObjectType type,const SpaceLoadDefinition& definition)
   : SpaceLoad(type,definition.model())
 {
-  BOOST_ASSERT(getImpl<detail::SpaceLoadInstance_Impl>());
-  BOOST_ASSERT(this->setPointer(getImpl<detail::SpaceLoadInstance_Impl>()->definitionIndex(), definition.handle()));
+  OS_ASSERT(getImpl<detail::SpaceLoadInstance_Impl>());
+  OS_ASSERT(this->setPointer(getImpl<detail::SpaceLoadInstance_Impl>()->definitionIndex(), definition.handle()));
 }
 
 SpaceLoadInstance::SpaceLoadInstance(boost::shared_ptr<detail::SpaceLoadInstance_Impl> impl)

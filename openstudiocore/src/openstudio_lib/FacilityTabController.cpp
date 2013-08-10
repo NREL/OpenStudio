@@ -21,6 +21,8 @@
 #include <openstudio_lib/FacilityTabView.hpp>
 #include <openstudio_lib/FacilityController.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 FacilityTabController::FacilityTabController(bool isIP, const model::Model& model)
@@ -34,19 +36,19 @@ FacilityTabController::FacilityTabController(bool isIP, const model::Model& mode
                         SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
                         this,
                         SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         m_facilityController.get(), SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_facilityController.get(), SIGNAL(openBclDlgClicked()),
                                  this, SIGNAL(openBclDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_facilityController.get(), SIGNAL(openLibDlgClicked()),
                                  this, SIGNAL(openLibDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   
   this->mainContentWidget()->addTabWidget(m_facilityController->subTabView());
 }

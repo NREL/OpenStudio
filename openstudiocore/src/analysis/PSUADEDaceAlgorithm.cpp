@@ -25,6 +25,9 @@
 
 #include <analysis/Problem.hpp>
 
+#include <runmanager/lib/JSON.hpp>
+
+#include <utilities/core/Json.hpp>
 #include <utilities/core/Optional.hpp>
 
 namespace openstudio {
@@ -101,6 +104,30 @@ namespace detail {
 
   PSUADEDaceAlgorithmOptions PSUADEDaceAlgorithm_Impl::psuadedaceAlgorithmOptions() const {
     return options().cast<PSUADEDaceAlgorithmOptions>();
+  }
+
+  QVariant PSUADEDaceAlgorithm_Impl::toVariant() const {
+    QVariantMap map = DakotaAlgorithm_Impl::toVariant().toMap();
+
+    map["algorithm_type"] = QString("PSUADEDaceAlgorithm");
+
+    return QVariant(map);
+  }
+
+  PSUADEDaceAlgorithm PSUADEDaceAlgorithm_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+    PSUADEDaceAlgorithmOptions options = PSUADEDaceAlgorithmOptions_Impl::fromVariant(map["options"],version);
+    return PSUADEDaceAlgorithm(openstudio::UUID(map["uuid"].toString()),
+                               openstudio::UUID(map["version_uuid"].toString()),
+                               map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                               map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                               map["complete"].toBool(),
+                               map["failed"].toBool(),
+                               map["iter"].toInt(),
+                               options,
+                               map.contains("restart_file_reference") ? openstudio::detail::toFileReference(map["restart_file_reference"],version) : OptionalFileReference(),
+                               map.contains("out_file_reference") ? openstudio::detail::toFileReference(map["out_file_reference"],version) : OptionalFileReference(),
+                               map.contains("job") ? runmanager::detail::JSON::toJob(variant,version,true) : boost::optional<runmanager::Job>());
   }
 
 } // detail

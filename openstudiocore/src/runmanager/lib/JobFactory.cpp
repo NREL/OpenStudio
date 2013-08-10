@@ -31,7 +31,6 @@
 #include "NullJob.hpp"
 #include "NormalizeURLs.hpp"
 #include "MergeJobError.hpp"
-#include "ModelObjectPerturbationJob.hpp"
 #include "EnergyPlusPostProcessJob.hpp"
 #include "EnergyPlusPreProcessJob.hpp"
 #include "OpenStudioPostProcessJob.hpp"
@@ -44,8 +43,6 @@
 #include "DakotaJob.hpp"
 #include "UserScriptJob.hpp"
 #include "Job_Impl.hpp"
-
-#include <ruleset/ModelRuleset.hpp>
 
 namespace openstudio {
 namespace runmanager {
@@ -91,8 +88,6 @@ namespace runmanager {
         return createUserScriptJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::Null:
         return createNullJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
-      case JobType::ModelObjectPerturbation:
-        return createModelObjectPerturbationJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::EnergyPlusPostProcess:
         return createEnergyPlusPostProcessJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::OpenStudioPostProcess:
@@ -263,47 +258,6 @@ namespace runmanager {
       )
   {
     return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ModelToRadPreProcessJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
-  }
-
-  Job JobFactory::createModelObjectPerturbationJob(
-      const openstudio::runmanager::Tools &t_tools,
-      const openstudio::runmanager::JobParams &t_params,
-      const openstudio::runmanager::Files &t_files,
-      const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
-      bool t_loading,
-      const boost::optional<openstudio::UUID> &t_uuid,
-      const JobState &t_state
-      )
-  {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ModelObjectPerturbationJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
-  }
-
-  // Creates a job that perturbs model objects
-  Job JobFactory::createModelObjectPerturbationJob(
-      const openstudio::path &t_osm,
-      const openstudio::ruleset::ModelRuleset& modelRuleset,
-      const boost::optional<openstudio::UUID> &t_uuid)
-  {
-    Files f;
-    f.append(FileInfo(t_osm, "osm"));
-
-    return createModelObjectPerturbationJob(Tools(), 
-        detail::ModelObjectPerturbationJob::formatRuleData(modelRuleset),
-        f,
-        std::vector<openstudio::URLSearchPath>(),
-        t_uuid);
-  }
-
-  // Creates a job that perturbs model objects
-  Job JobFactory::createModelObjectPerturbationJob(
-      const openstudio::ruleset::ModelRuleset& modelRuleset,
-      const boost::optional<openstudio::UUID> &t_uuid)
-  {
-    return createModelObjectPerturbationJob(Tools(), 
-        detail::ModelObjectPerturbationJob::formatRuleData(modelRuleset),
-        Files(),
-        std::vector<openstudio::URLSearchPath>(),
-        t_uuid);
   }
 
   Job JobFactory::createEnergyPlusJob(

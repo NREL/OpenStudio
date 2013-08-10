@@ -426,49 +426,6 @@ namespace runmanager {
           const openstudio::runmanager::JobState &t_state = JobState()
           );
 
-      /// Create a ModelObjectPerturbationJob, generic version
-      ///
-      /// \param[in] t_tools Tools to pass in
-      /// \param[in] t_params JobParams to pass in
-      /// \param[in] t_files Files to pass in
-      /// \param[in] t_url_search_paths Vector of paths to search when fixing up URLs in an IDF or OSM
-      /// \param[in] t_loading If true, skip fixing up of URLs, used when loading RunManager database file.
-      /// \param[in] t_uuid Option to specify the UUID of the job.
-      ///
-      /// \sa \ref ModelObjectPerturbationJobType
-      static Job createModelObjectPerturbationJob(
-          const openstudio::runmanager::Tools &t_tools,
-          const openstudio::runmanager::JobParams &t_params,
-          const openstudio::runmanager::Files &t_files,
-          const std::vector<openstudio::URLSearchPath> &t_url_search_paths = std::vector<openstudio::URLSearchPath>(),
-          bool t_loading = false,
-          const boost::optional<openstudio::UUID> &t_uuid = createUUID(),
-          const openstudio::runmanager::JobState &t_state = JobState()
-          );
-
-      /// Create a ModelObjectPerturbationJob
-      ///
-      /// \param[in] t_inputfile File to apply perturbations to
-      /// \param[in] t_modelRuleset Ruleset to apply
-      /// \param[in] t_uuid Option to specify the UUID of the job.
-      ///
-      /// \sa \ref ModelObjectPerturbationJobType
-      static Job createModelObjectPerturbationJob(
-          const openstudio::path &t_inputfile,
-          const openstudio::ruleset::ModelRuleset& t_modelRuleset,
-          const boost::optional<openstudio::UUID> &t_uuid = createUUID());
-
-      /// Create a ModelObjectPerturbationJob. This version uses the most recent
-      /// OSM file on the stack of input files to apply the ruleset to.
-      ///
-      /// \param[in] t_modelRuleset Ruleset to apply
-      /// \param[in] t_uuid Option to specify the UUID of the job.
-      ///
-      /// \sa \ref ModelObjectPerturbationJobType
-      static Job createModelObjectPerturbationJob(
-          const openstudio::ruleset::ModelRuleset& t_modelRuleset,
-          const boost::optional<openstudio::UUID> &t_uuid = createUUID());
-
       /// Create a EnergyPlusPostProcessJob, generic version
       ///
       /// \param[in] t_tools Tools to pass in

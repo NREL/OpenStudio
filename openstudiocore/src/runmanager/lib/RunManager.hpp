@@ -103,14 +103,14 @@ namespace detail {
 
       /// Load all of the jobs from the given JSON structure represented by a QVariant,
       /// updating job trees
-      void updateJobs(const QVariant &t_variant, bool t_externallyManaged);
+      void updateJobs(const QVariant &t_variant, const VersionString &t_version, bool t_externallyManaged);
 
       /// update job trees
       void updateJobs(const std::vector<Job> &t_jobs);
 
       std::string jobsToJson() const;
 
-      QVariant jobsToVariant() const;
+      std::vector<Job> jobsForExport() const;
 
       /// Queue up a job (and all children) for processing
       /// \param[in] job Job to enqueue
@@ -282,4 +282,5 @@ namespace detail {
 }
 
 #endif
+
 

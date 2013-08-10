@@ -37,7 +37,7 @@ namespace detail {
                                              bool keepHandle)
     : Glazing_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == StandardGlazing::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == StandardGlazing::iddObjectType());
   }
 
   StandardGlazing_Impl::StandardGlazing_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                                              bool keepHandle)
     : Glazing_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == StandardGlazing::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == StandardGlazing::iddObjectType());
   }
 
   StandardGlazing_Impl::StandardGlazing_Impl(const StandardGlazing_Impl& other,
@@ -68,7 +68,7 @@ namespace detail {
 
   std::string StandardGlazing_Impl::opticalDataType() const {
     boost::optional<std::string> value = getString(OS_WindowMaterial_GlazingFields::OpticalDataType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -78,7 +78,7 @@ namespace detail {
 
   double StandardGlazing_Impl::thickness() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_GlazingFields::Thickness,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -93,7 +93,7 @@ namespace detail {
   Quantity StandardGlazing_Impl::getThickness(bool returnIP) const {
     OptionalDouble value = thickness();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_GlazingFields::Thickness, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -166,14 +166,14 @@ namespace detail {
 
   double StandardGlazing_Impl::infraredTransmittanceatNormalIncidence() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_GlazingFields::InfraredTransmittanceatNormalIncidence,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity StandardGlazing_Impl::getInfraredTransmittanceatNormalIncidence(bool returnIP) const {
     OptionalDouble value = infraredTransmittanceatNormalIncidence();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_GlazingFields::InfraredTransmittanceatNormalIncidence, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -183,14 +183,14 @@ namespace detail {
 
   double StandardGlazing_Impl::frontSideInfraredHemisphericalEmissivity() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_GlazingFields::FrontSideInfraredHemisphericalEmissivity,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity StandardGlazing_Impl::getFrontSideInfraredHemisphericalEmissivity(bool returnIP) const {
     OptionalDouble value = frontSideInfraredHemisphericalEmissivity();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_GlazingFields::FrontSideInfraredHemisphericalEmissivity, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -200,14 +200,14 @@ namespace detail {
 
   double StandardGlazing_Impl::backSideInfraredHemisphericalEmissivity() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_GlazingFields::BackSideInfraredHemisphericalEmissivity,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity StandardGlazing_Impl::getBackSideInfraredHemisphericalEmissivity(bool returnIP) const {
     OptionalDouble value = backSideInfraredHemisphericalEmissivity();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_GlazingFields::BackSideInfraredHemisphericalEmissivity, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -225,14 +225,14 @@ namespace detail {
 
   double StandardGlazing_Impl::conductivity() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_GlazingFields::Conductivity,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity StandardGlazing_Impl::getConductivity(bool returnIP) const {
     OptionalDouble value = conductivity();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_GlazingFields::Conductivity, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -242,14 +242,14 @@ namespace detail {
 
   double StandardGlazing_Impl::dirtCorrectionFactorforSolarandVisibleTransmittance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_GlazingFields::DirtCorrectionFactorforSolarandVisibleTransmittance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity StandardGlazing_Impl::getDirtCorrectionFactorforSolarandVisibleTransmittance(bool returnIP) const {
     OptionalDouble value = dirtCorrectionFactorforSolarandVisibleTransmittance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_GlazingFields::DirtCorrectionFactorforSolarandVisibleTransmittance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -259,7 +259,7 @@ namespace detail {
 
   bool StandardGlazing_Impl::solarDiffusing() const {
     boost::optional<std::string> value = getString(OS_WindowMaterial_GlazingFields::SolarDiffusing,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -281,12 +281,12 @@ namespace detail {
       resetWindowGlassSpectralDataSetName();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void StandardGlazing_Impl::resetWindowGlassSpectralDataSetName() {
     bool result = setString(OS_WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool StandardGlazing_Impl::setThickness(double thickness) {
@@ -335,7 +335,7 @@ namespace detail {
 
   void StandardGlazing_Impl::resetSolarTransmittanceatNormalIncidence() {
     bool result = setString(OS_WindowMaterial_GlazingFields::SolarTransmittanceatNormalIncidence, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool StandardGlazing_Impl::setFrontSideSolarReflectanceatNormalIncidence(boost::optional<double> frontSideSolarReflectanceatNormalIncidence) {
@@ -367,7 +367,7 @@ namespace detail {
 
   void StandardGlazing_Impl::resetFrontSideSolarReflectanceatNormalIncidence() {
     bool result = setString(OS_WindowMaterial_GlazingFields::FrontSideSolarReflectanceatNormalIncidence, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool StandardGlazing_Impl::setBackSideSolarReflectanceatNormalIncidence(boost::optional<double> backSideSolarReflectanceatNormalIncidence) {
@@ -399,7 +399,7 @@ namespace detail {
 
   void StandardGlazing_Impl::resetBackSideSolarReflectanceatNormalIncidence() {
     bool result = setString(OS_WindowMaterial_GlazingFields::BackSideSolarReflectanceatNormalIncidence, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool StandardGlazing_Impl::setVisibleTransmittance(double value) {
@@ -435,7 +435,7 @@ namespace detail {
 
   void StandardGlazing_Impl::resetVisibleTransmittanceatNormalIncidence() {
     bool result = setString(OS_WindowMaterial_GlazingFields::VisibleTransmittanceatNormalIncidence, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool StandardGlazing_Impl::setFrontSideVisibleReflectanceatNormalIncidence(boost::optional<double> frontSideVisibleReflectanceatNormalIncidence) {
@@ -467,7 +467,7 @@ namespace detail {
 
   void StandardGlazing_Impl::resetFrontSideVisibleReflectanceatNormalIncidence() {
     bool result = setString(OS_WindowMaterial_GlazingFields::FrontSideVisibleReflectanceatNormalIncidence, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool StandardGlazing_Impl::setBackSideVisibleReflectanceatNormalIncidence(boost::optional<double> backSideVisibleReflectanceatNormalIncidence) {
@@ -499,7 +499,7 @@ namespace detail {
 
   void StandardGlazing_Impl::resetBackSideVisibleReflectanceatNormalIncidence() {
     bool result = setString(OS_WindowMaterial_GlazingFields::BackSideVisibleReflectanceatNormalIncidence, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool StandardGlazing_Impl::setInfraredTransmittance(double value) {
@@ -521,7 +521,7 @@ namespace detail {
 
   void StandardGlazing_Impl::resetInfraredTransmittanceatNormalIncidence() {
     bool result = setString(OS_WindowMaterial_GlazingFields::InfraredTransmittanceatNormalIncidence, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool StandardGlazing_Impl::setFrontSideInfraredHemisphericalEmissivity(double frontSideInfraredHemisphericalEmissivity) {
@@ -539,7 +539,7 @@ namespace detail {
 
   void StandardGlazing_Impl::resetFrontSideInfraredHemisphericalEmissivity() {
     bool result = setString(OS_WindowMaterial_GlazingFields::FrontSideInfraredHemisphericalEmissivity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool StandardGlazing_Impl::setBackSideInfraredHemisphericalEmissivity(double backSideInfraredHemisphericalEmissivity) {
@@ -557,7 +557,7 @@ namespace detail {
 
   void StandardGlazing_Impl::resetBackSideInfraredHemisphericalEmissivity() {
     bool result = setString(OS_WindowMaterial_GlazingFields::BackSideInfraredHemisphericalEmissivity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool StandardGlazing_Impl::setThermalConductivity(double value) {
@@ -579,7 +579,7 @@ namespace detail {
 
   void StandardGlazing_Impl::resetConductivity() {
     bool result = setString(OS_WindowMaterial_GlazingFields::Conductivity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool StandardGlazing_Impl::setDirtCorrectionFactorforSolarandVisibleTransmittance(double dirtCorrectionFactorforSolarandVisibleTransmittance) {
@@ -597,7 +597,7 @@ namespace detail {
 
   void StandardGlazing_Impl::resetDirtCorrectionFactorforSolarandVisibleTransmittance() {
     bool result = setString(OS_WindowMaterial_GlazingFields::DirtCorrectionFactorforSolarandVisibleTransmittance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void StandardGlazing_Impl::setSolarDiffusing(bool solarDiffusing) {
@@ -610,7 +610,7 @@ namespace detail {
 
   void StandardGlazing_Impl::resetSolarDiffusing() {
     bool result = setString(OS_WindowMaterial_GlazingFields::SolarDiffusing, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   double StandardGlazing_Impl::thermalConductance() const {
@@ -768,16 +768,16 @@ StandardGlazing::StandardGlazing(const Model& model,
                  double thickness)
   : Glazing(StandardGlazing::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::StandardGlazing_Impl>());
+  OS_ASSERT(getImpl<detail::StandardGlazing_Impl>());
 
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setOpticalDataType(opticalDataType);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setThickness(thickness);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType StandardGlazing::iddObjectType() {

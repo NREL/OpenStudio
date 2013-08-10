@@ -281,13 +281,13 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
 
   Workspace workspace(StrictnessLevel::None, IddFileType::EnergyPlus);
   OptionalWorkspaceObject vo = workspace.versionObject();
-  BOOST_ASSERT(vo);
+  OS_ASSERT(vo);
   workspace.removeObject(vo->handle());
 
   workspace.setFastNaming(true);
   workspace.addObjects(m_idfObjects);
   workspace.setFastNaming(false);
-  BOOST_ASSERT(workspace.getObjectsByType(IddObjectType::Version).size() == 1u);
+  OS_ASSERT(workspace.getObjectsByType(IddObjectType::Version).size() == 1u);
 
   return workspace;
 }
@@ -1099,6 +1099,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::SetpointManagerOutdoorAirReset spm = modelObject.cast<SetpointManagerOutdoorAirReset>();
       retVal = translateSetpointManagerOutdoorAirReset(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_Warmest :
+    {
+      model::SetpointManagerWarmest spm = modelObject.cast<SetpointManagerWarmest>();
+      retVal = translateSetpointManagerWarmest(spm);
       break;
     }
   case  openstudio::IddObjectType::OS_ShadingSurface :

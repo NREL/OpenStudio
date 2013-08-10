@@ -30,6 +30,9 @@
 #include <openstudio_lib/WaterUseEquipmentInspectorView.hpp>
 
 #include <model/Model_Impl.hpp>
+
+#include <utilities/core/Assert.hpp>
+
 #include <QStyleOption>
 #include <QPainter>
 #include <QVBoxLayout>
@@ -53,7 +56,7 @@ LoadsView::LoadsView(bool isIP, const openstudio::model::Model& model, QWidget *
 {
   bool isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                         modelObjectInspectorView(),SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 std::vector<std::pair<IddObjectType, std::string> > LoadsView::modelObjectTypesAndNames()
@@ -151,7 +154,7 @@ void LoadsInspectorView::showPeopleDefinitionsInspector(const openstudio::model:
                              SIGNAL(toggleUnitsClicked(bool)),
                              peopleDefinitionInspectorView, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   peopleDefinitionInspectorView->selectModelObject(modelObject);
 
@@ -165,7 +168,7 @@ void LoadsInspectorView::showLightsDefinitionsInspector(const openstudio::model:
                              SIGNAL(toggleUnitsClicked(bool)),
                              lightsDefinitionInspectorView, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   lightsDefinitionInspectorView->selectModelObject(modelObject);
 
@@ -179,7 +182,7 @@ void LoadsInspectorView::showLuminaireDefinitionsInspector(const openstudio::mod
                              SIGNAL(toggleUnitsClicked(bool)),
                              luminaireDefinitionInspectorView, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   luminaireDefinitionInspectorView->selectModelObject(modelObject);
 
@@ -193,7 +196,7 @@ void LoadsInspectorView::showElectricEquipmentDefinitionsInspector(const openstu
                              SIGNAL(toggleUnitsClicked(bool)),
                              electricEquipmentDefinitionInspectorView, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   electricEquipmentDefinitionInspectorView->selectModelObject(modelObject);
 
@@ -207,7 +210,7 @@ void LoadsInspectorView::showGasEquipmentDefinitionsInspector(const openstudio::
                              SIGNAL(toggleUnitsClicked(bool)),
                              gasEquipmentDefinitionInspectorView, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   gasEquipmentDefinitionInspectorView->selectModelObject(modelObject);
 
@@ -221,7 +224,7 @@ void LoadsInspectorView::showSteamEquipmentDefinitionsInspector(const openstudio
                              SIGNAL(toggleUnitsClicked(bool)),
                              steamEquipmentDefinitionInspectorView, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   steamEquipmentDefinitionInspectorView->selectModelObject(modelObject);
 
@@ -235,7 +238,7 @@ void LoadsInspectorView::showOtherEquipmentDefinitionsInspector(const openstudio
                              SIGNAL(toggleUnitsClicked(bool)),
                              otherEquipmentDefinitionInspectorView, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   otherEquipmentDefinitionInspectorView->selectModelObject(modelObject);
 
@@ -249,7 +252,7 @@ void LoadsInspectorView::showWaterUseEquipmentDefinitionsInspector(const openstu
                              SIGNAL(toggleUnitsClicked(bool)),
                              waterUseEquipmentDefinitionInspectorView, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   waterUseEquipmentDefinitionInspectorView->selectModelObject(modelObject);
 
@@ -263,7 +266,7 @@ void LoadsInspectorView::showInternalMassDefinitionsInspector(const openstudio::
                              SIGNAL(toggleUnitsClicked(bool)),
                              internalMassDefinitionInspectorView, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   internalMassDefinitionInspectorView->selectModelObject(modelObject);
 

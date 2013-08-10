@@ -35,7 +35,7 @@ namespace detail {
   DefaultScheduleSet_Impl::DefaultScheduleSet_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ResourceObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == DefaultScheduleSet::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == DefaultScheduleSet::iddObjectType());
   }
 
   DefaultScheduleSet_Impl::DefaultScheduleSet_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -43,7 +43,7 @@ namespace detail {
                                                    bool keepHandle)
     : ResourceObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == DefaultScheduleSet::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == DefaultScheduleSet::iddObjectType());
   }
 
   DefaultScheduleSet_Impl::DefaultScheduleSet_Impl(const DefaultScheduleSet_Impl& other,
@@ -162,7 +162,7 @@ namespace detail {
 
   void DefaultScheduleSet_Impl::resetHoursofOperationSchedule() {
     bool result = setString(OS_DefaultScheduleSetFields::HoursofOperationScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DefaultScheduleSet_Impl::setNumberofPeopleSchedule(Schedule& schedule) {
@@ -175,7 +175,7 @@ namespace detail {
 
   void DefaultScheduleSet_Impl::resetNumberofPeopleSchedule() {
     bool result = setString(OS_DefaultScheduleSetFields::NumberofPeopleScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DefaultScheduleSet_Impl::setPeopleActivityLevelSchedule(Schedule& schedule) {
@@ -188,7 +188,7 @@ namespace detail {
 
   void DefaultScheduleSet_Impl::resetPeopleActivityLevelSchedule() {
     bool result = setString(OS_DefaultScheduleSetFields::PeopleActivityLevelScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DefaultScheduleSet_Impl::setLightingSchedule(Schedule& schedule) {
@@ -201,7 +201,7 @@ namespace detail {
 
   void DefaultScheduleSet_Impl::resetLightingSchedule() {
     bool result = setString(OS_DefaultScheduleSetFields::LightingScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DefaultScheduleSet_Impl::setElectricEquipmentSchedule(Schedule& schedule) {
@@ -214,7 +214,7 @@ namespace detail {
 
   void DefaultScheduleSet_Impl::resetElectricEquipmentSchedule() {
     bool result = setString(OS_DefaultScheduleSetFields::ElectricEquipmentScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DefaultScheduleSet_Impl::setGasEquipmentSchedule(Schedule& schedule) {
@@ -227,7 +227,7 @@ namespace detail {
 
   void DefaultScheduleSet_Impl::resetGasEquipmentSchedule() {
     bool result = setString(OS_DefaultScheduleSetFields::GasEquipmentScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DefaultScheduleSet_Impl::setHotWaterEquipmentSchedule(Schedule& schedule) {
@@ -240,7 +240,7 @@ namespace detail {
 
   void DefaultScheduleSet_Impl::resetHotWaterEquipmentSchedule() {
     bool result = setString(OS_DefaultScheduleSetFields::HotWaterEquipmentScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DefaultScheduleSet_Impl::setInfiltrationSchedule(Schedule& schedule) {
@@ -253,7 +253,7 @@ namespace detail {
 
   void DefaultScheduleSet_Impl::resetInfiltrationSchedule() {
     bool result = setString(OS_DefaultScheduleSetFields::InfiltrationScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DefaultScheduleSet_Impl::setSteamEquipmentSchedule(Schedule& schedule) {
@@ -266,7 +266,7 @@ namespace detail {
 
   void DefaultScheduleSet_Impl::resetSteamEquipmentSchedule() {
     bool result = setString(OS_DefaultScheduleSetFields::SteamEquipmentScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DefaultScheduleSet_Impl::setOtherEquipmentSchedule(Schedule& schedule) {
@@ -279,7 +279,7 @@ namespace detail {
 
   void DefaultScheduleSet_Impl::resetOtherEquipmentSchedule() {
     bool result = setString(OS_DefaultScheduleSetFields::OtherEquipmentScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<Schedule> DefaultScheduleSet_Impl::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const
@@ -629,7 +629,7 @@ namespace detail {
 DefaultScheduleSet::DefaultScheduleSet(const Model& model)
   : ResourceObject(DefaultScheduleSet::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::DefaultScheduleSet_Impl>());
+  OS_ASSERT(getImpl<detail::DefaultScheduleSet_Impl>());
 }
 
 IddObjectType DefaultScheduleSet::iddObjectType() {

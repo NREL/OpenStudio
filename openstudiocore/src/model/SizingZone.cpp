@@ -36,7 +36,7 @@ namespace detail {
                                    bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == SizingZone::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == SizingZone::iddObjectType());
   }
 
   SizingZone_Impl::SizingZone_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -44,7 +44,7 @@ namespace detail {
                                    bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == SizingZone::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == SizingZone::iddObjectType());
   }
 
   SizingZone_Impl::SizingZone_Impl(const SizingZone_Impl& other,
@@ -75,53 +75,53 @@ namespace detail {
 
   double SizingZone_Impl::zoneCoolingDesignSupplyAirTemperature() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SizingZone_Impl::getZoneCoolingDesignSupplyAirTemperature(bool returnIP) const {
     OptionalDouble value = zoneCoolingDesignSupplyAirTemperature();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperature, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double SizingZone_Impl::zoneHeatingDesignSupplyAirTemperature() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SizingZone_Impl::getZoneHeatingDesignSupplyAirTemperature(bool returnIP) const {
     OptionalDouble value = zoneHeatingDesignSupplyAirTemperature();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperature, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double SizingZone_Impl::zoneCoolingDesignSupplyAirHumidityRatio() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirHumidityRatio,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SizingZone_Impl::getZoneCoolingDesignSupplyAirHumidityRatio(bool returnIP) const {
     OptionalDouble value = zoneCoolingDesignSupplyAirHumidityRatio();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirHumidityRatio, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double SizingZone_Impl::zoneHeatingDesignSupplyAirHumidityRatio() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirHumidityRatio,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SizingZone_Impl::getZoneHeatingDesignSupplyAirHumidityRatio(bool returnIP) const {
     OptionalDouble value = zoneHeatingDesignSupplyAirHumidityRatio();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirHumidityRatio, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -145,7 +145,7 @@ namespace detail {
 
   std::string SizingZone_Impl::coolingDesignAirFlowMethod() const {
     boost::optional<std::string> value = getString(OS_Sizing_ZoneFields::CoolingDesignAirFlowMethod,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -155,14 +155,14 @@ namespace detail {
 
   double SizingZone_Impl::coolingDesignAirFlowRate() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::CoolingDesignAirFlowRate,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SizingZone_Impl::getCoolingDesignAirFlowRate(bool returnIP) const {
     OptionalDouble value = coolingDesignAirFlowRate();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ZoneFields::CoolingDesignAirFlowRate, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -172,14 +172,14 @@ namespace detail {
 
   double SizingZone_Impl::coolingMinimumAirFlowperZoneFloorArea() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::CoolingMinimumAirFlowperZoneFloorArea,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SizingZone_Impl::getCoolingMinimumAirFlowperZoneFloorArea(bool returnIP) const {
     OptionalDouble value = coolingMinimumAirFlowperZoneFloorArea();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ZoneFields::CoolingMinimumAirFlowperZoneFloorArea, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -189,14 +189,14 @@ namespace detail {
 
   double SizingZone_Impl::coolingMinimumAirFlow() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::CoolingMinimumAirFlow,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SizingZone_Impl::getCoolingMinimumAirFlow(bool returnIP) const {
     OptionalDouble value = coolingMinimumAirFlow();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ZoneFields::CoolingMinimumAirFlow, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -206,14 +206,14 @@ namespace detail {
 
   double SizingZone_Impl::coolingMinimumAirFlowFraction() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::CoolingMinimumAirFlowFraction,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SizingZone_Impl::getCoolingMinimumAirFlowFraction(bool returnIP) const {
     OptionalDouble value = coolingMinimumAirFlowFraction();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ZoneFields::CoolingMinimumAirFlowFraction, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -223,7 +223,7 @@ namespace detail {
 
   std::string SizingZone_Impl::heatingDesignAirFlowMethod() const {
     boost::optional<std::string> value = getString(OS_Sizing_ZoneFields::HeatingDesignAirFlowMethod,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -233,14 +233,14 @@ namespace detail {
 
   double SizingZone_Impl::heatingDesignAirFlowRate() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::HeatingDesignAirFlowRate,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SizingZone_Impl::getHeatingDesignAirFlowRate(bool returnIP) const {
     OptionalDouble value = heatingDesignAirFlowRate();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ZoneFields::HeatingDesignAirFlowRate, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -250,14 +250,14 @@ namespace detail {
 
   double SizingZone_Impl::heatingMaximumAirFlowperZoneFloorArea() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::HeatingMaximumAirFlowperZoneFloorArea,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SizingZone_Impl::getHeatingMaximumAirFlowperZoneFloorArea(bool returnIP) const {
     OptionalDouble value = heatingMaximumAirFlowperZoneFloorArea();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ZoneFields::HeatingMaximumAirFlowperZoneFloorArea, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -267,14 +267,14 @@ namespace detail {
 
   double SizingZone_Impl::heatingMaximumAirFlow() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::HeatingMaximumAirFlow,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SizingZone_Impl::getHeatingMaximumAirFlow(bool returnIP) const {
     OptionalDouble value = heatingMaximumAirFlow();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ZoneFields::HeatingMaximumAirFlow, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -284,14 +284,14 @@ namespace detail {
 
   double SizingZone_Impl::heatingMaximumAirFlowFraction() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::HeatingMaximumAirFlowFraction,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SizingZone_Impl::getHeatingMaximumAirFlowFraction(bool returnIP) const {
     OptionalDouble value = heatingMaximumAirFlowFraction();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ZoneFields::HeatingMaximumAirFlowFraction, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -301,14 +301,14 @@ namespace detail {
 
   double SizingZone_Impl::designZoneAirDistributionEffectivenessinCoolingMode() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::DesignZoneAirDistributionEffectivenessinCoolingMode,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SizingZone_Impl::getDesignZoneAirDistributionEffectivenessinCoolingMode(bool returnIP) const {
     OptionalDouble value = designZoneAirDistributionEffectivenessinCoolingMode();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ZoneFields::DesignZoneAirDistributionEffectivenessinCoolingMode, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -318,14 +318,14 @@ namespace detail {
 
   double SizingZone_Impl::designZoneAirDistributionEffectivenessinHeatingMode() const {
     boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::DesignZoneAirDistributionEffectivenessinHeatingMode,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SizingZone_Impl::getDesignZoneAirDistributionEffectivenessinHeatingMode(bool returnIP) const {
     OptionalDouble value = designZoneAirDistributionEffectivenessinHeatingMode();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ZoneFields::DesignZoneAirDistributionEffectivenessinHeatingMode, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -340,7 +340,7 @@ namespace detail {
 
   void SizingZone_Impl::setZoneCoolingDesignSupplyAirTemperature(double zoneCoolingDesignSupplyAirTemperature) {
     bool result = setDouble(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperature, zoneCoolingDesignSupplyAirTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SizingZone_Impl::setZoneCoolingDesignSupplyAirTemperature(const Quantity& zoneCoolingDesignSupplyAirTemperature) {
@@ -354,7 +354,7 @@ namespace detail {
 
   void SizingZone_Impl::setZoneHeatingDesignSupplyAirTemperature(double zoneHeatingDesignSupplyAirTemperature) {
     bool result = setDouble(OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperature, zoneHeatingDesignSupplyAirTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SizingZone_Impl::setZoneHeatingDesignSupplyAirTemperature(const Quantity& zoneHeatingDesignSupplyAirTemperature) {
@@ -421,7 +421,7 @@ namespace detail {
 
   void SizingZone_Impl::resetZoneHeatingSizingFactor() {
     bool result = setString(OS_Sizing_ZoneFields::ZoneHeatingSizingFactor, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SizingZone_Impl::setZoneCoolingSizingFactor(boost::optional<double> zoneCoolingSizingFactor) {
@@ -453,7 +453,7 @@ namespace detail {
 
   void SizingZone_Impl::resetZoneCoolingSizingFactor() {
     bool result = setString(OS_Sizing_ZoneFields::ZoneCoolingSizingFactor, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SizingZone_Impl::setCoolingDesignAirFlowMethod(std::string coolingDesignAirFlowMethod) {
@@ -463,7 +463,7 @@ namespace detail {
 
   void SizingZone_Impl::resetCoolingDesignAirFlowMethod() {
     bool result = setString(OS_Sizing_ZoneFields::CoolingDesignAirFlowMethod, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SizingZone_Impl::setCoolingDesignAirFlowRate(double coolingDesignAirFlowRate) {
@@ -481,7 +481,7 @@ namespace detail {
 
   void SizingZone_Impl::resetCoolingDesignAirFlowRate() {
     bool result = setString(OS_Sizing_ZoneFields::CoolingDesignAirFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SizingZone_Impl::setCoolingMinimumAirFlowperZoneFloorArea(double coolingMinimumAirFlowperZoneFloorArea) {
@@ -499,7 +499,7 @@ namespace detail {
 
   void SizingZone_Impl::resetCoolingMinimumAirFlowperZoneFloorArea() {
     bool result = setString(OS_Sizing_ZoneFields::CoolingMinimumAirFlowperZoneFloorArea, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SizingZone_Impl::setCoolingMinimumAirFlow(double coolingMinimumAirFlow) {
@@ -517,7 +517,7 @@ namespace detail {
 
   void SizingZone_Impl::resetCoolingMinimumAirFlow() {
     bool result = setString(OS_Sizing_ZoneFields::CoolingMinimumAirFlow, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SizingZone_Impl::setCoolingMinimumAirFlowFraction(double coolingMinimumAirFlowFraction) {
@@ -535,7 +535,7 @@ namespace detail {
 
   void SizingZone_Impl::resetCoolingMinimumAirFlowFraction() {
     bool result = setString(OS_Sizing_ZoneFields::CoolingMinimumAirFlowFraction, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SizingZone_Impl::setHeatingDesignAirFlowMethod(std::string heatingDesignAirFlowMethod) {
@@ -545,7 +545,7 @@ namespace detail {
 
   void SizingZone_Impl::resetHeatingDesignAirFlowMethod() {
     bool result = setString(OS_Sizing_ZoneFields::HeatingDesignAirFlowMethod, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SizingZone_Impl::setHeatingDesignAirFlowRate(double heatingDesignAirFlowRate) {
@@ -563,7 +563,7 @@ namespace detail {
 
   void SizingZone_Impl::resetHeatingDesignAirFlowRate() {
     bool result = setString(OS_Sizing_ZoneFields::HeatingDesignAirFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SizingZone_Impl::setHeatingMaximumAirFlowperZoneFloorArea(double heatingMaximumAirFlowperZoneFloorArea) {
@@ -581,7 +581,7 @@ namespace detail {
 
   void SizingZone_Impl::resetHeatingMaximumAirFlowperZoneFloorArea() {
     bool result = setString(OS_Sizing_ZoneFields::HeatingMaximumAirFlowperZoneFloorArea, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SizingZone_Impl::setHeatingMaximumAirFlow(double heatingMaximumAirFlow) {
@@ -599,7 +599,7 @@ namespace detail {
 
   void SizingZone_Impl::resetHeatingMaximumAirFlow() {
     bool result = setString(OS_Sizing_ZoneFields::HeatingMaximumAirFlow, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SizingZone_Impl::setHeatingMaximumAirFlowFraction(double heatingMaximumAirFlowFraction) {
@@ -617,7 +617,7 @@ namespace detail {
 
   void SizingZone_Impl::resetHeatingMaximumAirFlowFraction() {
     bool result = setString(OS_Sizing_ZoneFields::HeatingMaximumAirFlowFraction, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SizingZone_Impl::setDesignZoneAirDistributionEffectivenessinCoolingMode(double designZoneAirDistributionEffectivenessinCoolingMode) {
@@ -635,7 +635,7 @@ namespace detail {
 
   void SizingZone_Impl::resetDesignZoneAirDistributionEffectivenessinCoolingMode() {
     bool result = setString(OS_Sizing_ZoneFields::DesignZoneAirDistributionEffectivenessinCoolingMode, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SizingZone_Impl::setDesignZoneAirDistributionEffectivenessinHeatingMode(double designZoneAirDistributionEffectivenessinHeatingMode) {
@@ -653,7 +653,7 @@ namespace detail {
 
   void SizingZone_Impl::resetDesignZoneAirDistributionEffectivenessinHeatingMode() {
     bool result = setString(OS_Sizing_ZoneFields::DesignZoneAirDistributionEffectivenessinHeatingMode, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<ThermalZone> SizingZone_Impl::optionalThermalZone() const {
@@ -817,7 +817,7 @@ namespace detail {
 SizingZone::SizingZone(const Model& model, const ThermalZone & thermalZone)
   : ModelObject(SizingZone::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::SizingZone_Impl>());
+  OS_ASSERT(getImpl<detail::SizingZone_Impl>());
 
   setThermalZone(thermalZone);
 

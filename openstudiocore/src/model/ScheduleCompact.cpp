@@ -49,7 +49,7 @@ namespace detail {
   ScheduleCompact_Impl::ScheduleCompact_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : Schedule_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ScheduleCompact::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ScheduleCompact::iddObjectType());
   }
 
   ScheduleCompact_Impl::ScheduleCompact_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -57,7 +57,7 @@ namespace detail {
                                              bool keepHandle)
     : Schedule_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ScheduleCompact::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ScheduleCompact::iddObjectType());
   }
 
   ScheduleCompact_Impl::ScheduleCompact_Impl(const ScheduleCompact_Impl& other,
@@ -146,18 +146,18 @@ namespace detail {
     StringVector values;
     values.push_back("Through: 12/31");
     IdfExtensibleGroup eg = pushExtensibleGroup(values);
-    BOOST_ASSERT(!eg.empty());
+    OS_ASSERT(!eg.empty());
     values[0] = "For: AllDays";
     eg = pushExtensibleGroup(values);
-    BOOST_ASSERT(!eg.empty());
+    OS_ASSERT(!eg.empty());
     values[0] = "Until: 24:00";
     eg = pushExtensibleGroup(values);
-    BOOST_ASSERT(!eg.empty());
+    OS_ASSERT(!eg.empty());
     values[0] = "";
     eg = pushExtensibleGroup(values);
-    BOOST_ASSERT(!eg.empty());
+    OS_ASSERT(!eg.empty());
     bool ok = eg.setDouble(0,value);
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
   }
 
   bool ScheduleCompact_Impl::setToConstantValue(const Quantity& value) {
@@ -199,20 +199,20 @@ namespace detail {
 ScheduleCompact::ScheduleCompact(const Model& model)
   : Schedule(ScheduleCompact::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ScheduleCompact_Impl>());
+  OS_ASSERT(getImpl<detail::ScheduleCompact_Impl>());
 }
 
 ScheduleCompact::ScheduleCompact(const Model& model,double constantValue)
   : Schedule(ScheduleCompact::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ScheduleCompact_Impl>());
+  OS_ASSERT(getImpl<detail::ScheduleCompact_Impl>());
   setToConstantValue(constantValue);
 }
 
 ScheduleCompact::ScheduleCompact(const Model& model,const Quantity& constantValue)
   : Schedule(ScheduleCompact::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ScheduleCompact_Impl>());
+  OS_ASSERT(getImpl<detail::ScheduleCompact_Impl>());
   setToConstantValue(constantValue);
 }  
 

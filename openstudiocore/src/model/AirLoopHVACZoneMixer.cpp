@@ -38,14 +38,14 @@ namespace detail {
   AirLoopHVACZoneMixer_Impl::AirLoopHVACZoneMixer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : Mixer_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == AirLoopHVACZoneMixer::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == AirLoopHVACZoneMixer::iddObjectType());
   }
 
   AirLoopHVACZoneMixer_Impl::AirLoopHVACZoneMixer_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
         : Mixer_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == AirLoopHVACZoneMixer::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == AirLoopHVACZoneMixer::iddObjectType());
   }
 
   AirLoopHVACZoneMixer_Impl::AirLoopHVACZoneMixer_Impl(
@@ -128,7 +128,7 @@ namespace detail {
 AirLoopHVACZoneMixer::AirLoopHVACZoneMixer(const Model& model)
   : Mixer(AirLoopHVACZoneMixer::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::AirLoopHVACZoneMixer_Impl>());
+  OS_ASSERT(getImpl<detail::AirLoopHVACZoneMixer_Impl>());
 }
 
 AirLoopHVACZoneMixer::AirLoopHVACZoneMixer(

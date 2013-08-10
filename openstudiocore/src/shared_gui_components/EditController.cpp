@@ -23,6 +23,7 @@
 #include <analysisdriver/SimpleProject.hpp>
 #include <analysis/DataPoint.hpp>
 #include <utilities/bcl/BCLMeasure.hpp>
+#include <utilities/core/Assert.hpp>
 #include <QWidget>
 #include <QLineEdit>
 #include <QLabel>
@@ -38,7 +39,7 @@ EditController::EditController()
 {
   editView = new OSViewSwitcher();
   m_editNullView = new EditNullView();
-  editRubyPerturbationView = new EditRubyPerturbationView();
+  editRubyMeasureView = new EditRubyMeasureView();
 
   reset();
 }
@@ -47,36 +48,36 @@ EditController::~EditController()
 {
   if( editView ) { delete editView; }
   if( m_editNullView ) { delete m_editNullView; }
-  if( editRubyPerturbationView ) { delete editRubyPerturbationView; }
+  if( editRubyMeasureView ) { delete editRubyMeasureView; }
 }
 
 void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseApp *t_app)
 {
   m_measureItem = measureItem;
 
-  editRubyPerturbationView->clear();
+  editRubyMeasureView->clear();
 
-  editView->setView(editRubyPerturbationView);
+  editView->setView(editRubyMeasureView);
 
-  // Ruby Perturbation Name
+  // Ruby Measure Name
 
-  editRubyPerturbationView->nameLineEdit->setText(m_measureItem->name());
+  editRubyMeasureView->nameLineEdit->setText(m_measureItem->name());
 
-  bool bingo = connect(editRubyPerturbationView->nameLineEdit,SIGNAL(textEdited(const QString &)),m_measureItem.data(),SLOT(setName(const QString &)));
+  bool bingo = connect(editRubyMeasureView->nameLineEdit,SIGNAL(textEdited(const QString &)),m_measureItem.data(),SLOT(setName(const QString &)));
 
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   // Measure Description
 
-  editRubyPerturbationView->descriptionTextEdit->setText(m_measureItem->description());
+  editRubyMeasureView->descriptionTextEdit->setText(m_measureItem->description());
 
-  bingo = connect(editRubyPerturbationView->descriptionTextEdit,SIGNAL(textChanged()),this,SLOT(updateDescription()));
+  bingo = connect(editRubyMeasureView->descriptionTextEdit,SIGNAL(textChanged()),this,SLOT(updateDescription()));
 
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   // Measure Modeler Description
 
-  editRubyPerturbationView->modelerDescriptionLabel->setText(m_measureItem->modelerDescription());
+  editRubyMeasureView->modelerDescriptionLabel->setText(m_measureItem->modelerDescription());
 
   // Inputs
 
@@ -90,7 +91,7 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
 
     m_inputControllers.push_back(inputController);
 
-    editRubyPerturbationView->addInputView(inputController->inputView);
+    editRubyMeasureView->addInputView(inputController->inputView);
   }
 }
 
@@ -101,7 +102,7 @@ measuretab::MeasureItem * EditController::measureItem() const
 
 void EditController::updateDescription()
 {
-  m_measureItem->setDescription(editRubyPerturbationView->descriptionTextEdit->toPlainText());
+  m_measureItem->setDescription(editRubyMeasureView->descriptionTextEdit->toPlainText());
 }
 
 void EditController::reset()
@@ -112,9 +113,9 @@ void EditController::reset()
 
   m_measureItem = NULL;
 
-  editRubyPerturbationView->nameLineEdit->disconnect();
+  editRubyMeasureView->nameLineEdit->disconnect();
 
-  editRubyPerturbationView->descriptionTextEdit->disconnect();
+  editRubyMeasureView->descriptionTextEdit->disconnect();
 }
 
 class EditMeasureMessageBox : public QMessageBox
@@ -160,7 +161,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     bool bingo = connect(doubleInputView->lineEdit,SIGNAL(textEdited(const QString &)),this,SLOT(setValue(const QString &)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     inputView = doubleInputView;
   }
@@ -223,7 +224,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     bool bingo = connect(choiceInputView->comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(setValueForIndex(int)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     inputView = choiceInputView;
   }
@@ -246,7 +247,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     bool bingo = connect(boolInputView->checkBox,SIGNAL(clicked(bool)),this,SLOT(setValue(bool)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     inputView = boolInputView;
   }
@@ -267,7 +268,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     bool bingo = connect(integerInputView->lineEdit,SIGNAL(textEdited(const QString &)),this,SLOT(setValue(const QString &)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     inputView = integerInputView;
   }
@@ -288,7 +289,7 @@ InputController::InputController(EditController * editController,const ruleset::
 
     bool bingo = connect(stringInputView->lineEdit,SIGNAL(textEdited(const QString &)),this,SLOT(setValue(const QString &)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     inputView = stringInputView;
   }
@@ -361,7 +362,7 @@ bool InputController::isArgumentIncomplete() const
 {
   // Get the argument from the ruby perturbation by the same name as m_argument
 
-  std::vector<ruleset::OSArgument> argumentVector = m_editController->measureItem()->perturbation().arguments();
+  std::vector<ruleset::OSArgument> argumentVector = m_editController->measureItem()->measure().arguments();
 
   std::map<std::string,ruleset::OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
 

@@ -43,6 +43,7 @@ namespace detail {
 
     /** Constructor provided for deserialization; not for general use. */
     FSUDaceAlgorithmOptions_Impl(const FSUDaceAlgorithmType& algorithmType,
+                                 const boost::optional<FSUDaceCvtTrialType>& trialType,
                                  const std::vector<Attribute>& options);
 
     virtual ~FSUDaceAlgorithmOptions_Impl() {}
@@ -163,6 +164,14 @@ namespace detail {
     void setTrialType(FSUDaceCvtTrialType value);
   
     void clearTrialType();  
+
+    //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    static FSUDaceAlgorithmOptions fromVariant(const QVariant& variant, const VersionString& version);
 
     //@}
    protected:

@@ -56,7 +56,7 @@ namespace detail {
 PlantLoop_Impl::PlantLoop_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : Loop_Impl(idfObject, model, keepHandle)
 {
-  BOOST_ASSERT(idfObject.iddObject().type() == PlantLoop::iddObjectType());
+  OS_ASSERT(idfObject.iddObject().type() == PlantLoop::iddObjectType());
 }
 
 PlantLoop_Impl::PlantLoop_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -64,7 +64,7 @@ PlantLoop_Impl::PlantLoop_Impl(const openstudio::detail::WorkspaceObject_Impl& o
                                    bool keepHandle)
   : Loop_Impl(other,model,keepHandle)
 {
-  BOOST_ASSERT(other.iddObject().type() == PlantLoop::iddObjectType());
+  OS_ASSERT(other.iddObject().type() == PlantLoop::iddObjectType());
 }
 
 PlantLoop_Impl::PlantLoop_Impl(const PlantLoop_Impl& other,
@@ -543,7 +543,7 @@ Node PlantLoop_Impl::loopTemperatureSetpointNode()
 
   node = getObject<ModelObject>().getModelObjectTarget<Node>(OS_PlantLoopFields::LoopTemperatureSetpointNodeName);
 
-  BOOST_ASSERT(node);
+  OS_ASSERT(node);
 
   return node.get();
 }
@@ -613,7 +613,7 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
 PlantLoop::PlantLoop(Model& model)
   : Loop(PlantLoop::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::PlantLoop_Impl>());
+  OS_ASSERT(getImpl<detail::PlantLoop_Impl>());
 
   SizingPlant sizingPlant(model,*this);
 

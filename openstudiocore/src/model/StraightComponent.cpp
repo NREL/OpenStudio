@@ -154,7 +154,7 @@ std::vector<openstudio::IdfObject> StraightComponent_Impl::remove()
           int i = splitter.branchIndexForOutletModelObject(sourceModelObject.get());
           int j = mixer.branchIndexForInletModelObject(targetModelObject.get());
 
-          BOOST_ASSERT(i == j);
+          OS_ASSERT(i == j);
 
           splitter.removePortForBranch(i);
           mixer.removePortForBranch(i);
@@ -239,7 +239,7 @@ std::vector<openstudio::IdfObject> StraightComponent_Impl::remove()
           int i = splitter->branchIndexForOutletModelObject(sourceModelObject.get());
           int j = mixer->branchIndexForInletModelObject(targetModelObject.get());
 
-          BOOST_ASSERT(i == j);
+          OS_ASSERT(i == j);
 
           splitter->removePortForBranch(i);
           mixer->removePortForBranch(i);
@@ -558,7 +558,7 @@ ModelObject StraightComponent_Impl::clone(Model model) const
 StraightComponent::StraightComponent(IddObjectType type,const Model& model)
   : HVACComponent(type,model)
 {
-  BOOST_ASSERT(getImpl<detail::StraightComponent_Impl>());
+  OS_ASSERT(getImpl<detail::StraightComponent_Impl>());
 }     
 
 StraightComponent::StraightComponent(boost::shared_ptr<detail::StraightComponent_Impl> p)

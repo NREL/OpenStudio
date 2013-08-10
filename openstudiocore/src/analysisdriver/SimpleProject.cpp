@@ -30,18 +30,18 @@
 #include <analysis/Algorithm.hpp>
 #include <analysis/Analysis_Impl.hpp>
 #include <analysis/DataPoint.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/NullPerturbation_Impl.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/NullMeasure_Impl.hpp>
 #include <analysis/OptimizationDataPoint.hpp>
 #include <analysis/OptimizationDataPoint_Impl.hpp>
 #include <analysis/OptimizationProblem.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/RubyContinuousVariable.hpp>
 #include <analysis/RubyContinuousVariable_Impl.hpp>
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/RubyPerturbation_Impl.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
 #include <analysis/Variable.hpp>
 
 #include <runmanager/lib/RunManager.hpp>
@@ -288,10 +288,10 @@ runmanager::RunManager SimpleProject::runManager() const {
 project::AnalysisRecord SimpleProject::analysisRecord() const {
   ProjectDatabase database = projectDatabase();
   AnalysisRecordVector analysisRecords = AnalysisRecord::getAnalysisRecords(database);
-  BOOST_ASSERT(analysisRecords.size() == 1u);
+  OS_ASSERT(analysisRecords.size() == 1u);
   AnalysisRecord result = analysisRecords[0];
   if (analysisIsLoaded()) {
-    BOOST_ASSERT(result.handle() == analysis().uuid());
+    OS_ASSERT(result.handle() == analysis().uuid());
   }
   return result;
 }
@@ -358,7 +358,7 @@ std::vector<BCLMeasure> SimpleProject::measures() const {
   }
   BOOST_FOREACH(BCLMeasure& gone,toRemove) {
     std::map<UUID,BCLMeasure>::iterator it1 = m_measures.find(gone.uuid());
-    BOOST_ASSERT(it1 != m_measures.end());
+    OS_ASSERT(it1 != m_measures.end());
     m_measures.erase(it1);
     std::map<UUID,std::vector<ruleset::OSArgument> >::iterator it2 = m_measureArguments.find(gone.uuid());
     if (it2 != m_measureArguments.end()) {
@@ -396,7 +396,7 @@ std::vector<BCLMeasure> SimpleProject::measures() const {
         }
         std::pair<std::map<UUID,BCLMeasure>::const_iterator,bool> insertResult =
             m_measures.insert(std::map<UUID,BCLMeasure>::value_type(newUUID,*newMeasure));
-        BOOST_ASSERT(insertResult.second);
+        OS_ASSERT(insertResult.second);
         result.push_back(*newMeasure);
       }
     }
@@ -438,7 +438,7 @@ boost::optional<BCLMeasure> SimpleProject::getMeasureByUUID(const UUID& uuid) co
           }
           std::pair<std::map<UUID,BCLMeasure>::const_iterator,bool> insertResult =
               m_measures.insert(std::map<UUID,BCLMeasure>::value_type(candidateUUID,*candidate));
-          BOOST_ASSERT(insertResult.second);
+          OS_ASSERT(insertResult.second);
           if (candidateUUID == uuid) {
             result = *candidate;
             return result;
@@ -538,15 +538,15 @@ bool SimpleProject::isPATProject() const {
   }
 
   BOOST_FOREACH(const InputVariable& variable,problem.variables()) {
-    if (OptionalDiscreteVariable dv = variable.optionalCast<DiscreteVariable>()) {
-      BOOST_FOREACH(const DiscretePerturbation& perturbation,dv->perturbations(false)) {
-        if (!perturbation.optionalCast<NullPerturbation>() &&
-            !perturbation.optionalCast<RubyPerturbation>())
+    if (OptionalMeasureGroup dv = variable.optionalCast<MeasureGroup>()) {
+      BOOST_FOREACH(const Measure& measure,dv->measures(false)) {
+        if (!measure.optionalCast<NullMeasure>() &&
+            !measure.optionalCast<RubyMeasure>())
         {
-          return false; // no ruleset perturbations
+          return false; // no ruleset measures
         }
-        if (OptionalRubyPerturbation rpert = perturbation.optionalCast<RubyPerturbation>()) {
-          // must be BCLMeasure RubyPerturbation
+        if (OptionalRubyMeasure rpert = measure.optionalCast<RubyMeasure>()) {
+          // must be BCLMeasure RubyMeasure
           if (!rpert->usesBCLMeasure()) {
             return false;
           }
@@ -569,8 +569,8 @@ bool SimpleProject::isPATProject() const {
       if ((!nextWorkItemType) || (step.workItemType() != nextWorkItemType.get())) {
         return false;
       }
-      BOOST_ASSERT(nextWorkItemType);
-      BOOST_ASSERT(step.workItemType() == nextWorkItemType.get());
+      OS_ASSERT(nextWorkItemType);
+      OS_ASSERT(step.workItemType() == nextWorkItemType.get());
       switch (nextWorkItemType->value()) {
         case JobType::ModelToIdf :
           nextWorkItemType = JobType(JobType::ExpandObjects);
@@ -591,7 +591,7 @@ bool SimpleProject::isPATProject() const {
           nextWorkItemType.reset();
           break;
         default :
-          BOOST_ASSERT(false);
+          OS_ASSERT(false);
       }
     }
   }
@@ -599,32 +599,32 @@ bool SimpleProject::isPATProject() const {
   return true;
 }
 
-boost::optional<DiscreteVariable> SimpleProject::getAlternativeModelVariable() const {
-  OptionalDiscreteVariable result;
+boost::optional<MeasureGroup> SimpleProject::getAlternativeModelVariable() const {
+  OptionalMeasureGroup result;
   Problem problem = analysis().problem();
   BOOST_FOREACH(const InputVariable& ivar,problem.variables()) {
-    if (OptionalDiscreteVariable dvar = ivar.optionalCast<DiscreteVariable>()) {
+    if (OptionalMeasureGroup dvar = ivar.optionalCast<MeasureGroup>()) {
       // must have correct name
       if (dvar->name() != "Alternative Model") {
         continue;
       }
-      // must have correct perturbations
+      // must have correct measures
       bool first(true);
       bool found(true);
-      BOOST_FOREACH(const DiscretePerturbation& pert,dvar->perturbations(false)) {
+      BOOST_FOREACH(const Measure& pert,dvar->measures(false)) {
         if (first) {
-          if (!pert.optionalCast<NullPerturbation>()) {
+          if (!pert.optionalCast<NullMeasure>()) {
             found = false;
             break;
           }
           first = false;
         }
         else {
-          if (!pert.optionalCast<RubyPerturbation>()) {
+          if (!pert.optionalCast<RubyMeasure>()) {
             found = false;
             break;
           }
-          RubyPerturbation rpert = pert.cast<RubyPerturbation>();
+          RubyMeasure rpert = pert.cast<RubyMeasure>();
           if (!rpert.usesBCLMeasure()) {
             found = false;
             break;
@@ -703,9 +703,9 @@ std::pair<bool,std::vector<BCLMeasure> > SimpleProject::setSeed(const FileRefere
   openstudio::path newPath = seedDir / toPath(currentSeedLocation.path().filename());
   boost::filesystem::copy_file(currentSeedLocation.path(),newPath);
   FileReference newSeed(newPath);
-  BOOST_ASSERT(newSeed.fileType() == fileType);
+  OS_ASSERT(newSeed.fileType() == fileType);
   ok = analysis().setSeed(newSeed);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
   if (fileType == FileReferenceType::OSM) {
     // do further fix-up
@@ -763,7 +763,7 @@ bool SimpleProject::updateMeasure(const BCLMeasure& measure,
     existing = overwriteMeasure(measure);
     // have arguments, so cache them
     bool ok = registerArguments(*existing,arguments);
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
 
     ok = analysis().problem().updateMeasure(*existing,arguments,false);
     if (!ok) {
@@ -813,10 +813,10 @@ bool SimpleProject::makeSelfContained() {
   std::map<UUID,openstudio::path> toUpdate;
   InputVariableVector vars = analysis().problem().variables();
   BOOST_FOREACH(InputVariable& var,vars) {
-    if (OptionalDiscreteVariable dv = var.optionalCast<DiscreteVariable>()) {
-      DiscretePerturbationVector dps = dv->perturbations(false);
-      BOOST_FOREACH(DiscretePerturbation& dp,dps) {
-        if (OptionalRubyPerturbation rp = dp.optionalCast<RubyPerturbation>()) {
+    if (OptionalMeasureGroup dv = var.optionalCast<MeasureGroup>()) {
+      MeasureVector dps = dv->measures(false);
+      BOOST_FOREACH(Measure& dp,dps) {
+        if (OptionalRubyMeasure rp = dp.optionalCast<RubyMeasure>()) {
           if (rp->usesBCLMeasure() &&
               (rp->measureDirectory().parent_path() != scriptsDir))
           {
@@ -826,10 +826,10 @@ bool SimpleProject::makeSelfContained() {
       }
     }
     else if (OptionalRubyContinuousVariable rcv = var.optionalCast<RubyContinuousVariable>()) {
-      if (rcv->perturbation().usesBCLMeasure() &&
-          (rcv->perturbation().measureDirectory().parent_path() != scriptsDir))
+      if (rcv->measure().usesBCLMeasure() &&
+          (rcv->measure().measureDirectory().parent_path() != scriptsDir))
       {
-        toUpdate[rcv->perturbation().measureUUID()] = rcv->perturbation().measureDirectory();
+        toUpdate[rcv->measure().measureUUID()] = rcv->measure().measureDirectory();
       }
     }
   }
@@ -852,7 +852,7 @@ bool SimpleProject::makeSelfContained() {
         continue;
       }
     }
-    BOOST_ASSERT(projectMeasure);
+    OS_ASSERT(projectMeasure);
     if (hasStoredArguments(*projectMeasure)) {
       result = result && analysis().problem().updateMeasure(
             *projectMeasure,
@@ -938,7 +938,7 @@ bool SimpleProject::clearAllResults() {
     database.save();
     if (didStartTransaction) {
       bool ok = database.commitTransaction();
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
     }
   }
   // ok to clean up anything left over because only one analysis per SimpleProject
@@ -1006,7 +1006,7 @@ bool SimpleProject::removeAllDataPoints() {
     database.save();
     if (didStartTransaction) {
       bool ok = database.commitTransaction();
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
     }
   }
   // ok to clean up anything left over because only one analysis per SimpleProject
@@ -1018,16 +1018,16 @@ analysis::DataPoint SimpleProject::baselineDataPoint() const {
   analysis::Analysis analysis = this->analysis();
   analysis::Problem problem = analysis.problem();
 
-  std::vector<analysis::DiscretePerturbation> baselinePerturbations;
+  std::vector<analysis::Measure> baselineMeasures;
   BOOST_FOREACH(const analysis::InputVariable& inputVariable, problem.variables()){
-    boost::optional<analysis::DiscreteVariable> discreteVariable = inputVariable.optionalCast<analysis::DiscreteVariable>();
-    if (discreteVariable){
+    boost::optional<analysis::MeasureGroup> measureGroup = inputVariable.optionalCast<analysis::MeasureGroup>();
+    if (measureGroup){
       bool found(false);
-      std::vector<DiscretePerturbation> perturbations = discreteVariable->perturbations(false);
+      std::vector<Measure> measures = measureGroup->measures(false);
 
-      BOOST_FOREACH(const analysis::DiscretePerturbation& perturbation, perturbations){
-        if (perturbation.optionalCast<analysis::NullPerturbation>()){
-          baselinePerturbations.push_back(perturbation);
+      BOOST_FOREACH(const analysis::Measure& measure, measures){
+        if (measure.optionalCast<analysis::NullMeasure>()){
+          baselineMeasures.push_back(measure);
           found = true;
           break;
         }
@@ -1035,18 +1035,18 @@ analysis::DataPoint SimpleProject::baselineDataPoint() const {
       if (!found) {
         // we don't want to add a null, we want to add the one that's there if the null wasn't found,
         // it must be the fixed measure
-        BOOST_ASSERT(perturbations.size() == 1);
-        baselinePerturbations.push_back(perturbations[0]);
+        OS_ASSERT(measures.size() == 1);
+        baselineMeasures.push_back(measures[0]);
       }
     }
   }
 
-  BOOST_ASSERT(int(baselinePerturbations.size()) == problem.numVariables());
+  OS_ASSERT(int(baselineMeasures.size()) == problem.numVariables());
 
-  boost::optional<DataPoint> result = analysis.getDataPoint(baselinePerturbations);
+  boost::optional<DataPoint> result = analysis.getDataPoint(baselineMeasures);
   if (!result){
-    result = problem.createDataPoint(baselinePerturbations);
-    BOOST_ASSERT(result);
+    result = problem.createDataPoint(baselineMeasures);
+    OS_ASSERT(result);
     analysis.addDataPoint(*result);
     result->setName("Baseline");
     result->setDisplayName("Baseline");
@@ -1077,19 +1077,19 @@ bool SimpleProject::addAlternateModel(const openstudio::path& altModel) {
   // add file to project
   copyModel(altModel,alternateModelsDir());
   openstudio::path newPath = alternateModelsDir() / toPath(altModel.filename());
-  BOOST_ASSERT(boost::filesystem::exists(newPath));
+  OS_ASSERT(boost::filesystem::exists(newPath));
   upgradeModel(newPath);
 
   // create swap measure for altModel
-  DiscreteVariable amvar = getAlternativeModelVariable().get();
+  MeasureGroup amvar = getAlternativeModelVariable().get();
   std::vector<BCLMeasure> patMeasures = BCLMeasure::patApplicationMeasures();
   std::vector<BCLMeasure>::const_iterator it = std::find_if(
         patMeasures.begin(),
         patMeasures.end(),
         boost::bind(uuidEquals<BCLMeasure,openstudio::UUID>,_1,alternativeModelMeasureUUID()));
-  BOOST_ASSERT(it != patMeasures.end());
+  OS_ASSERT(it != patMeasures.end());
   BCLMeasure replaceModelMeasure = insertMeasure(*it);
-  RubyPerturbation swapModel(replaceModelMeasure,false); // false so not used in algorithms
+  RubyMeasure swapModel(replaceModelMeasure,false); // false so not used in algorithms
   swapModel.setName("Alternate Model: " + toString(newPath.filename()));
   // hard-code argument since can't get arguments from library
   OSArgument arg = OSArgument::makePathArgument("alternativeModelPath",true,"osm");
@@ -1097,7 +1097,7 @@ bool SimpleProject::addAlternateModel(const openstudio::path& altModel) {
   arg.setValue(newPath);
   swapModel.setArgument(arg);
   amvar.push(swapModel);
-  int pIndex = amvar.numPerturbations(false) - 1;
+  int pIndex = amvar.numMeasures(false) - 1;
 
   // add data point
   Analysis analysis = this->analysis();
@@ -1109,19 +1109,19 @@ bool SimpleProject::addAlternateModel(const openstudio::path& altModel) {
     }
     else {
       int index = -1;
-      DiscreteVariable dvar = ivar.cast<DiscreteVariable>();
-      int n = dvar.numPerturbations(false);
+      MeasureGroup dvar = ivar.cast<MeasureGroup>();
+      int n = dvar.numMeasures(false);
       for (int i = 0; i < n; ++i) {
-        if (dvar.getPerturbation(i).optionalCast<NullPerturbation>()) {
+        if (dvar.getMeasure(i).optionalCast<NullMeasure>()) {
           index = i;
           break;
         }
       }
-      // ETH: This used to always push a null perturbation if there wasn't one. That is 
+      // ETH: This used to always push a null measure if there wasn't one. That is
       // inconsistent with how fixed measures were implemented. May want to revive this by 
-      // adding a non-selected null perturbation to fixed measures, but then code for 
+      // adding a non-selected null measure to fixed measures, but then code for
       // recognizing fixed measures will have to change. (Right now fixed measures 
-      // == 1 non-null perturbation. May want it also to be okay to have 1 non-null followed
+      // == 1 non-null measure. May want it also to be okay to have 1 non-null followed
       // but an un-selected null.)
       if (index == -1) {
         if (n == 1) {
@@ -1130,18 +1130,18 @@ bool SimpleProject::addAlternateModel(const openstudio::path& altModel) {
         }
         else {
           LOG(Warn,"Unexpectedly encountered discrete variable with multiple non-null options.");
-          // no null perturbation -- add it to bottom so doesn't invalidate anything
-          dvar.push(NullPerturbation());
-          index = dvar.numPerturbations(false) - 1;
+          // no null measure -- add it to bottom so doesn't invalidate anything
+          dvar.push(NullMeasure());
+          index = dvar.numMeasures(false) - 1;
         }
       }
       variableValues.push_back(QVariant(index));
     }
   }
   OptionalDataPoint dataPoint = problem.createDataPoint(variableValues);
-  BOOST_ASSERT(dataPoint);
+  OS_ASSERT(dataPoint);
   bool ok = analysis.addDataPoint(dataPoint.get());
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   dataPoint->setName(swapModel.name());
   dataPoint->setDescription("Replace baseline model with '" + toString(newPath) + "'.");
 
@@ -1159,8 +1159,8 @@ bool SimpleProject::insertAlternativeModelVariable() {
   }
 
   // try to add the variable
-  bool ok = analysis().problem().insert(0,DiscreteVariable("Alternative Model",
-                                                           DiscretePerturbationVector(1u,NullPerturbation())));
+  bool ok = analysis().problem().insert(0,MeasureGroup("Alternative Model",
+                                                           MeasureVector(1u,NullMeasure())));
   if (!ok) {
     return false;
   }
@@ -1181,22 +1181,23 @@ bool SimpleProject::insertAlternativeModelVariable() {
                                            "fake name so can use name to make dirty",
                                            optTempPoint.displayName(),
                                            optTempPoint.description(),
+                                           optTempPoint.optimizationProblem(),
                                            optTempPoint.isComplete(),
                                            optTempPoint.failed(),
-                                           optTempPoint.optimizationProblem(),
-                                           optTempPoint.objectiveValues(),
                                            variableValues,
                                            optTempPoint.responseValues(),
+                                           optTempPoint.objectiveValues(),
                                            optTempPoint.directory(),
                                            optTempPoint.osmInputData(),
                                            optTempPoint.idfInputData(),
                                            optTempPoint.sqlOutputData(),
                                            optTempPoint.xmlOutputData(),
-                                           optTempPoint.tags(),
                                            optTempPoint.topLevelJob(),
-                                           optTempPoint.dakotaParametersFiles());
+                                           optTempPoint.dakotaParametersFiles(),
+                                           optTempPoint.tags(),
+                                           optTempPoint.outputAttributes());
         optDataPoint.setName(optTempPoint.name());
-        BOOST_ASSERT(optDataPoint.isDirty());
+        OS_ASSERT(optDataPoint.isDirty());
         dataPoints.push_back(optDataPoint);
       }
       else {
@@ -1205,9 +1206,9 @@ bool SimpleProject::insertAlternativeModelVariable() {
                             "fake name so can use name to make dirty",
                             tempPoint.displayName(),
                             tempPoint.description(),
+                            tempPoint.problem(),
                             tempPoint.isComplete(),
                             tempPoint.failed(),
-                            tempPoint.problem(),
                             variableValues,
                             tempPoint.responseValues(),
                             tempPoint.directory(),
@@ -1215,15 +1216,16 @@ bool SimpleProject::insertAlternativeModelVariable() {
                             tempPoint.idfInputData(),
                             tempPoint.sqlOutputData(),
                             tempPoint.xmlOutputData(),
-                            tempPoint.tags(),
                             tempPoint.topLevelJob(),
-                            tempPoint.dakotaParametersFiles());
+                            tempPoint.dakotaParametersFiles(),
+                            tempPoint.tags(),
+                            tempPoint.outputAttributes());
         dataPoint.setName(tempPoint.name());
-        BOOST_ASSERT(dataPoint.isDirty());
+        OS_ASSERT(dataPoint.isDirty());
         dataPoints.push_back(dataPoint);
       }
     }
-    BOOST_ASSERT(temp.problem().isDirty());
+    OS_ASSERT(temp.problem().isDirty());
     m_analysis = Analysis(temp.uuid(),
                           temp.versionUUID(),
                           "fake name so can use name to make dirty",
@@ -1238,7 +1240,7 @@ bool SimpleProject::insertAlternativeModelVariable() {
                           false);
     m_analysis->setName(temp.name());
   }
-  BOOST_ASSERT(m_analysis->isDirty());
+  OS_ASSERT(m_analysis->isDirty());
 
   return true;
 }
@@ -1300,7 +1302,7 @@ SimpleProject::SimpleProject(const openstudio::path& projectDir,
     m_analysis->connect(SIGNAL(seedChanged()),this,SLOT(onSeedChanged()));
   }
   m_logFile.setLogLevel(options.logLevel());
-  BOOST_ASSERT(runManager().paused());
+  OS_ASSERT(runManager().paused());
   if (!options.pauseRunManagerQueue()) {
     runManager().setPaused(false);
   }
@@ -1351,8 +1353,8 @@ bool SimpleProject::copyModel(const openstudio::path& modelPath,
     }
   }
 
-  BOOST_ASSERT(boost::filesystem::exists(modelPath));
-  BOOST_ASSERT(boost::filesystem::exists(destinationDirectory));
+  OS_ASSERT(boost::filesystem::exists(modelPath));
+  OS_ASSERT(boost::filesystem::exists(destinationDirectory));
 
   // copy primary file
   openstudio::path newPath = destinationDirectory / toPath(modelPath.filename());
@@ -1464,7 +1466,7 @@ bool SimpleProject::setAnalysisWeatherFile(ProgressBar* progressBar) {
 
   // if one of the above methods successful, compose relative path in model,
   // compose absolute path and set on analysis
-  BOOST_ASSERT(weatherFileLocated);
+  OS_ASSERT(weatherFileLocated);
 
   // copy weather file into standard location if necessary
   if (!(p.parent_path() == destinationFolder)) {
@@ -1477,13 +1479,13 @@ bool SimpleProject::setAnalysisWeatherFile(ProgressBar* progressBar) {
 
   // set weather file path in OSM in uniform way
   bool ok = weatherFile->makeUrlRelative(); // totally relative
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = weatherFile->makeUrlAbsolute(destinationFolder); // totally absolute
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   wfp = weatherFile->path();
-  BOOST_ASSERT(wfp);
+  OS_ASSERT(wfp);
   ok = weatherFile->makeUrlRelative(companionFolder); // relative to companionFolder
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   model->save(modelPath,true);
 
   analysis().setWeatherFile(FileReference(*wfp));
@@ -1505,10 +1507,10 @@ std::vector<BCLMeasure> SimpleProject::importSeedModelMeasures(ProgressBar* prog
       Problem problem = analysis().problem();
 
       // ETH: Fixed measures would be more distinct if they were WorkItems, not
-      // DiscreteVariables.
+      // MeasureGroups.
       
       int fixedMeasureInsertIndex(0);
-      if (OptionalDiscreteVariable altModelVar = getAlternativeModelVariable()) {
+      if (OptionalMeasureGroup altModelVar = getAlternativeModelVariable()) {
         if (OptionalInt altModelVarIndex = problem.getVariableIndexByUUID(altModelVar->uuid())) {
           fixedMeasureInsertIndex = *altModelVarIndex + 1;
         }
@@ -1518,7 +1520,7 @@ std::vector<BCLMeasure> SimpleProject::importSeedModelMeasures(ProgressBar* prog
       BOOST_FOREACH(const WorkflowStep& seedModelStep,sp->analysis().problem().workflow()) {
         if (isPATFixedMeasure(seedModelStep)) {
 
-          RubyPerturbation fixedMeasure = seedModelStep.inputVariable().cast<DiscreteVariable>().perturbations(false)[0].cast<RubyPerturbation>();
+          RubyMeasure fixedMeasure = seedModelStep.inputVariable().cast<MeasureGroup>().measures(false)[0].cast<RubyMeasure>();
           
           // change insert index if this is first EnergyPlus measure
           if ((fixedMeasure.inputFileType() == FileReferenceType(FileReferenceType::IDF)) && 
@@ -1556,14 +1558,14 @@ std::vector<BCLMeasure> SimpleProject::importSeedModelMeasures(ProgressBar* prog
             if (!projectMeasure) {
               projectMeasure = insertMeasure(*seedMeasure);
             }
-            BOOST_ASSERT(projectMeasure);
+            OS_ASSERT(projectMeasure);
             // add new variable with that measure, same arguments as seed model
-            RubyPerturbation newMeasure(*projectMeasure);
+            RubyMeasure newMeasure(*projectMeasure);
             newMeasure.setName(fixedMeasure.name());
             newMeasure.setDisplayName(fixedMeasure.displayName());
             newMeasure.setDescription(fixedMeasure.description());
             newMeasure.setArguments(fixedMeasure.arguments());
-            DiscreteVariable newDVar(projectMeasure->name(),DiscretePerturbationVector(1u,newMeasure));
+            MeasureGroup newDVar(projectMeasure->name(),MeasureVector(1u,newMeasure));
             problem.insert(fixedMeasureInsertIndex,newDVar);
             ++fixedMeasureInsertIndex;
           }
@@ -1579,18 +1581,18 @@ bool SimpleProject::isPATFixedMeasure(const WorkflowStep& step) const {
     return false;
   }
   InputVariable ivar = step.inputVariable();
-  if (!ivar.optionalCast<DiscreteVariable>()) {
+  if (!ivar.optionalCast<MeasureGroup>()) {
     return false;
   }
-  DiscreteVariable dvar = ivar.cast<DiscreteVariable>();
-  if (dvar.numPerturbations(false) != 1u) {
+  MeasureGroup dvar = ivar.cast<MeasureGroup>();
+  if (dvar.numMeasures(false) != 1u) {
     return false;
   }
-  DiscretePerturbation dpert = dvar.getPerturbation(0);
-  if (!dpert.optionalCast<RubyPerturbation>()) {
+  Measure dpert = dvar.getMeasure(0);
+  if (!dpert.optionalCast<RubyMeasure>()) {
     return false;
   }
-  RubyPerturbation fixedMeasure = dpert.cast<RubyPerturbation>();
+  RubyMeasure fixedMeasure = dpert.cast<RubyMeasure>();
   if (!fixedMeasure.usesBCLMeasure()) {
     return false;
   }
@@ -1652,7 +1654,7 @@ BCLMeasure SimpleProject::addMeasure(const BCLMeasure& measure) {
   }
   std::pair<std::map<UUID,BCLMeasure>::const_iterator,bool> insertResult =
       m_measures.insert(std::map<UUID,BCLMeasure>::value_type(result.uuid(),result));
-  BOOST_ASSERT(insertResult.second);
+  OS_ASSERT(insertResult.second);
   std::map<UUID,std::vector<ruleset::OSArgument> >::iterator it2 = m_measureArguments.find(result.uuid());
   if (it2 != m_measureArguments.end()) {
     m_measureArguments.erase(it2);
@@ -1661,9 +1663,9 @@ BCLMeasure SimpleProject::addMeasure(const BCLMeasure& measure) {
 }
 
 void SimpleProject::removeMeasure(const BCLMeasure& measure) {
-  BOOST_ASSERT(completeAndNormalize(measure.directory().parent_path()) == completeAndNormalize(scriptsDir()));
+  OS_ASSERT(completeAndNormalize(measure.directory().parent_path()) == completeAndNormalize(scriptsDir()));
   std::map<UUID,BCLMeasure>::iterator it1 = m_measures.find(measure.uuid());
-  BOOST_ASSERT(it1 != m_measures.end());
+  OS_ASSERT(it1 != m_measures.end());
   try {
     boost::filesystem::remove_all(measure.directory());
   }
@@ -1698,7 +1700,7 @@ boost::optional<SimpleProject> createPATProject(const openstudio::path& projectD
     Problem problem = result->analysis().problem();
 
     // add swap variable
-    DiscreteVariable dvar("Alternative Model",DiscretePerturbationVector(1u,NullPerturbation()));
+    MeasureGroup dvar("Alternative Model",MeasureVector(1u,NullMeasure()));
     problem.push(dvar);
 
     // set up simulation workflow
@@ -1773,7 +1775,7 @@ boost::optional<SimpleProject> saveAs(const SimpleProject& project,
   if (ok) {
     // opens the new project. this will fix up whatever paths are already there.
     result = SimpleProject::open(newProjectDir);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     // save paths used for fixing up paths stored in database
     openstudio::path originalLocation, newLocation;
     { 
@@ -1815,4 +1817,5 @@ boost::optional<SimpleProject> saveAs(const SimpleProject& project,
 
 } // analysisdriver
 } // openstudio
+
 

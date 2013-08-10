@@ -103,8 +103,8 @@ namespace detail {
   }
 
   void CurrentAnalysis_Impl::setNumOSJobsInIteration(int numJobs) {
-    BOOST_ASSERT(m_numOSJobsInIteration == m_numOSJobsComplete);
-    BOOST_ASSERT(m_queuedOSDataPoints.size() == 0u);
+    OS_ASSERT(m_numOSJobsInIteration == m_numOSJobsComplete);
+    OS_ASSERT(m_queuedOSDataPoints.size() == 0u);
 
     m_numOSJobsInIteration = numJobs;
     m_numOSJobsComplete = 0;
@@ -208,7 +208,7 @@ namespace detail {
     analysis::DataPointVector::iterator it = std::find_if(m_queuedOSDataPoints.begin(),
                                                           m_queuedOSDataPoints.end(),
                                                           boost::bind(jobUUIDsEqual,_1,completedJob));
-    BOOST_ASSERT(it != m_queuedOSDataPoints.end());
+    OS_ASSERT(it != m_queuedOSDataPoints.end());
     analysis::DataPoint result = *it;
     m_queuedOSDataPoints.erase(it);
     ++m_numOSJobsComplete;
@@ -220,7 +220,7 @@ namespace detail {
     analysis::DataPointVector::iterator it = std::find_if(m_queuedDakotaDataPoints.begin(),
                                                           m_queuedDakotaDataPoints.end(),
                                                           boost::bind(jobUUIDsEqual,_1,completedJob));
-    BOOST_ASSERT(it != m_queuedDakotaDataPoints.end());
+    OS_ASSERT(it != m_queuedDakotaDataPoints.end());
     analysis::DataPoint result = *it;
     m_queuedDakotaDataPoints.erase(it);
     return result;

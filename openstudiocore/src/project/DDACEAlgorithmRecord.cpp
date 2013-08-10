@@ -49,14 +49,14 @@ namespace detail {
                                                        ProjectDatabase& database)
     : DakotaAlgorithmRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(DDACEAlgorithmRecord::ColumnsType::ddaceAlgorithmType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_algorithmType = analysis::DDACEAlgorithmType(value.toInt());
   }
 
@@ -129,30 +129,30 @@ namespace detail {
   }
 
   void DDACEAlgorithmRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     DakotaAlgorithmRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(DDACEAlgorithmRecord::ColumnsType::ddaceAlgorithmType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastAlgorithmType = analysis::DDACEAlgorithmType(value.toInt());
   }
 
   bool DDACEAlgorithmRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = DakotaAlgorithmRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(DDACEAlgorithmRecord::ColumnsType::ddaceAlgorithmType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_algorithmType == analysis::DDACEAlgorithmType(value.toInt()));
 
     return result;
@@ -179,7 +179,7 @@ DDACEAlgorithmRecord::DDACEAlgorithmRecord(const analysis::DDACEAlgorithm& ddace
         analysisRecord.projectDatabase(),
         ddaceAlgorithm)
 {
-  BOOST_ASSERT(getImpl<detail::DDACEAlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DDACEAlgorithmRecord_Impl>());
 
   constructRelatedRecords(ddaceAlgorithm);
 }
@@ -190,14 +190,14 @@ DDACEAlgorithmRecord::DDACEAlgorithmRecord(const QSqlQuery& query, ProjectDataba
         database,
         boost::optional<analysis::DakotaAlgorithm>())
 {
-  BOOST_ASSERT(getImpl<detail::DDACEAlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DDACEAlgorithmRecord_Impl>());
 }
 
 DDACEAlgorithmRecord::DDACEAlgorithmRecord(boost::shared_ptr<detail::DDACEAlgorithmRecord_Impl> impl,
                                            ProjectDatabase database)
   : DakotaAlgorithmRecord(impl, database, boost::optional<analysis::DakotaAlgorithm>())
 {
-  BOOST_ASSERT(getImpl<detail::DDACEAlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DDACEAlgorithmRecord_Impl>());
 }
 
 boost::optional<DDACEAlgorithmRecord> DDACEAlgorithmRecord::factoryFromQuery(

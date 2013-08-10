@@ -20,11 +20,11 @@
 #include <project/ProblemRecord.hpp>
 #include <project/ProblemRecord_Impl.hpp>
 
-#include <project/DiscreteVariableRecord.hpp>
-#include <project/DiscreteVariableRecord_Impl.hpp>
 #include <project/FunctionRecord.hpp>
 #include <project/InputVariableRecord.hpp>
 #include <project/JoinRecord.hpp>
+#include <project/MeasureGroupRecord.hpp>
+#include <project/MeasureGroupRecord_Impl.hpp>
 #include <project/OptimizationProblemRecord.hpp>
 #include <project/ProjectDatabase.hpp>
 #include <project/WorkflowRecord.hpp>
@@ -68,14 +68,14 @@ namespace detail {
   ProblemRecord_Impl::ProblemRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : ObjectRecord_Impl(database, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(ProblemRecordColumns::problemRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_problemRecordType = ProblemRecordType(value.toInt());
   }
 
@@ -239,12 +239,12 @@ namespace detail {
     for (int i = 0, n = ivrN + wrN; i < n; ++i) {
       if (!wrWIndex || (ivrWIndex && (*ivrWIndex < *wrWIndex))) {
         // InputVariable is next
-        BOOST_ASSERT(*ivrWIndex == wIndex); // saved and expected index into workflow match
-        BOOST_ASSERT(ivrIndex < ivrN);      // there is an input variable record to deserialize
+        OS_ASSERT(*ivrWIndex == wIndex); // saved and expected index into workflow match
+        OS_ASSERT(ivrIndex < ivrN);      // there is an input variable record to deserialize
         workflow.push_back(WorkflowStep(inputVariableRecords[ivrIndex].inputVariable()));
         ++ivrIndex; // go to next input variable record
         ++wIndex;   // and next index into workflow
-        BOOST_ASSERT(wIndex == int(workflow.size())); // next index into workflow should match current size
+        OS_ASSERT(wIndex == int(workflow.size())); // next index into workflow should match current size
         if (ivrIndex < ivrN) {
           ivrWIndex = inputVariableRecords[ivrIndex].variableVectorIndex();
         }
@@ -254,15 +254,15 @@ namespace detail {
       }
       else {
         // Workflow is next
-        BOOST_ASSERT(wrWIndex);
+        OS_ASSERT(wrWIndex);
         int temp = *wrWIndex; // for debugging
-        BOOST_ASSERT(temp == wIndex); // saved index into workflow should match expected value
-        BOOST_ASSERT(wrIndex < wrN);  // there is a workflow record to deserialize
+        OS_ASSERT(temp == wIndex); // saved index into workflow should match expected value
+        OS_ASSERT(wrIndex < wrN);  // there is a workflow record to deserialize
         std::vector<runmanager::WorkItem> workItems = workflowRecords[wrIndex].workflow().toWorkItems();
         workflow.insert(workflow.end(),workItems.begin(),workItems.end());
         ++wrIndex; // go to next workflow record
         wIndex += workItems.size(); // update next expected workflow index
-        BOOST_ASSERT(wIndex == int(workflow.size())); // next index into workflow should match current size
+        OS_ASSERT(wIndex == int(workflow.size())); // next index into workflow should match current size
         if (wrIndex < wrN) {
           wrWIndex = workflowRecords[wrIndex].workflowIndex();
         }
@@ -287,15 +287,15 @@ namespace detail {
                              responses);
   }
 
-  boost::optional<int> ProblemRecord_Impl::combinatorialSize(bool selectedPerturbationsOnly) const {
+  boost::optional<int> ProblemRecord_Impl::combinatorialSize(bool selectedMeasuresOnly) const {
     int result(1);
     InputVariableRecordVector inputVariableRecords = this->inputVariableRecords();
     BOOST_FOREACH(const InputVariableRecord& inputVariableRecord, inputVariableRecords) {
-      OptionalDiscreteVariableRecord odvr = inputVariableRecord.optionalCast<DiscreteVariableRecord>();
-      if (!odvr) {
+      OptionalMeasureGroupRecord omgr = inputVariableRecord.optionalCast<MeasureGroupRecord>();
+      if (!omgr) {
         return boost::none;
       }
-      result *= odvr->numPerturbations(selectedPerturbationsOnly);
+      result *= omgr->numMeasures(selectedMeasuresOnly);
     }
     return result;
   }
@@ -314,7 +314,7 @@ namespace detail {
     QVariant value;
 
     value = query.value(ProblemRecordColumns::problemRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastProblemRecordType = ProblemRecordType(value.toInt());
   }
 
@@ -325,7 +325,7 @@ namespace detail {
     QVariant value;
 
     value = query.value(ProblemRecordColumns::problemRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_problemRecordType == ProblemRecordType(value.toInt()));
 
     return result;
@@ -366,7 +366,7 @@ UpdateByIdQueryData ProblemRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -485,22 +485,22 @@ analysis::Problem ProblemRecord::problem() const {
   return getImpl<detail::ProblemRecord_Impl>()->problem();
 }
 
-boost::optional<int> ProblemRecord::combinatorialSize(bool selectedPerturbationsOnly) const {
-  return getImpl<detail::ProblemRecord_Impl>()->combinatorialSize(selectedPerturbationsOnly);
+boost::optional<int> ProblemRecord::combinatorialSize(bool selectedMeasuresOnly) const {
+  return getImpl<detail::ProblemRecord_Impl>()->combinatorialSize(selectedMeasuresOnly);
 }
 
 ProblemRecord::ProblemRecord(boost::shared_ptr<detail::ProblemRecord_Impl> impl,
                              ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::ProblemRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ProblemRecord_Impl>());
 }
 
 /// @cond
 ProblemRecord::ProblemRecord(boost::shared_ptr<detail::ProblemRecord_Impl> impl)
   : ObjectRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ProblemRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ProblemRecord_Impl>());
 }
 /// @endcond
 
@@ -586,7 +586,7 @@ ProblemRecord::ProblemRecord(const analysis::Problem& problem, ProjectDatabase& 
         new detail::ProblemRecord_Impl(problem, ProblemRecordType::ProblemRecord, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::ProblemRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ProblemRecord_Impl>());
 
   constructRelatedRecords(problem);
 }
@@ -596,7 +596,7 @@ ProblemRecord::ProblemRecord(const QSqlQuery& query, ProjectDatabase& database)
         new detail::ProblemRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::ProblemRecord_Impl>());
+  OS_ASSERT(getImpl<detail::ProblemRecord_Impl>());
 }
 
 void ProblemRecord::removeInputVariableRecords(const std::vector<UUID>& uuidsToKeep,

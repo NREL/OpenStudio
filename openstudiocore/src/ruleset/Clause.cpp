@@ -93,7 +93,7 @@ boost::optional<Clause> Clause::factoryFromXml(const QDomElement& element)
 Clause::Clause(boost::shared_ptr<detail::Clause_Impl> impl)
   : RulesetObject(impl)
 {
-  BOOST_ASSERT(getImpl<detail::Clause_Impl>());
+  OS_ASSERT(getImpl<detail::Clause_Impl>());
 }
 /// @endcond
 

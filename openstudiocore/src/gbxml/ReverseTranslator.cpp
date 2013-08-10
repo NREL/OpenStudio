@@ -213,7 +213,7 @@ namespace gbxml {
     for (int i = 0; i < materialElements.count(); i++){
       QDomElement materialElement = materialElements.at(i).toElement();
       boost::optional<model::ModelObject> material = translateMaterial(materialElement, doc, model);
-      BOOST_ASSERT(material); // Krishnan, what type of error handling do you want?
+      OS_ASSERT(material); // Krishnan, what type of error handling do you want?
       
       if (m_progressBar){
         m_progressBar->setValue(m_progressBar->value() + 1);
@@ -233,7 +233,7 @@ namespace gbxml {
     for (int i = 0; i < constructionElements.count(); i++){
       QDomElement constructionElement = constructionElements.at(i).toElement();
       boost::optional<model::ModelObject> construction = translateConstruction(constructionElement, layerElements, doc, model);
-      BOOST_ASSERT(construction); // Krishnan, what type of error handling do you want?
+      OS_ASSERT(construction); // Krishnan, what type of error handling do you want?
       
       if (m_progressBar){
         m_progressBar->setValue(m_progressBar->value() + 1);
@@ -252,7 +252,7 @@ namespace gbxml {
     for (int i = 0; i < scheduleElements.count(); i++){
       QDomElement scheduleElement = scheduleElements.at(i).toElement();
       boost::optional<model::ModelObject> schedule = translateSchedule(scheduleElement, doc, model);
-      BOOST_ASSERT(schedule); // Krishnan, what type of error handling do you want?
+      OS_ASSERT(schedule); // Krishnan, what type of error handling do you want?
       
       if (m_progressBar){
         m_progressBar->setValue(m_progressBar->value() + 1);
@@ -260,10 +260,10 @@ namespace gbxml {
     }
 
     QDomNodeList campusElements = element.elementsByTagName("Campus");
-    BOOST_ASSERT(campusElements.count() == 1);
+    OS_ASSERT(campusElements.count() == 1);
     QDomElement campusElement = campusElements.at(0).toElement();
     boost::optional<model::ModelObject> facility = translateCampus(campusElement, doc, model);
-    BOOST_ASSERT(facility); // Krishnan, what type of error handling do you want?
+    OS_ASSERT(facility); // Krishnan, what type of error handling do you want?
 
     model.setFastNaming(false);
 
@@ -275,10 +275,10 @@ namespace gbxml {
     openstudio::model::Facility facility = model.getUniqueModelObject<openstudio::model::Facility>();
 
     QDomNodeList buildingElements = element.elementsByTagName("Building");
-    BOOST_ASSERT(buildingElements.count() == 1);
+    OS_ASSERT(buildingElements.count() == 1);
 
     boost::optional<model::ModelObject> building = translateBuilding(buildingElements.at(0).toElement(), doc, model);
-    BOOST_ASSERT(building);
+    OS_ASSERT(building);
 
     QDomNodeList surfaceElements = element.elementsByTagName("Surface");
     if (m_progressBar){
@@ -321,7 +321,7 @@ namespace gbxml {
 
     for (int i = 0; i < spaceElements.count(); ++i){
       boost::optional<model::ModelObject> space = translateSpace(spaceElements.at(i).toElement(), doc, model);
-      BOOST_ASSERT(space);
+      OS_ASSERT(space);
 
       if (m_progressBar){
         m_progressBar->setValue(m_progressBar->value() + 1);
@@ -373,7 +373,7 @@ namespace gbxml {
 
     for (int i = 0; i < cartesianPointElements.count(); i++){
       QDomNodeList coordinateElements = cartesianPointElements.at(i).toElement().elementsByTagName("Coordinate");
-      BOOST_ASSERT(coordinateElements.size() == 3);
+      OS_ASSERT(coordinateElements.size() == 3);
 
       /* Calling these conversions every time is uneccesarily slow
 
@@ -511,7 +511,7 @@ namespace gbxml {
 
     for (int i = 0; i < cartesianPointElements.count(); i++){
       QDomNodeList coordinateElements = cartesianPointElements.at(i).toElement().elementsByTagName("Coordinate");
-      BOOST_ASSERT(coordinateElements.size() == 3);
+      OS_ASSERT(coordinateElements.size() == 3);
 
       /* Calling these conversions every time is uneccesarily slow
 

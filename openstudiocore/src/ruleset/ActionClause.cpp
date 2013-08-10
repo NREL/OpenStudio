@@ -56,7 +56,7 @@ namespace detail {
 ActionClause::ActionClause(boost::shared_ptr<detail::ActionClause_Impl> impl)
   : Clause(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ActionClause_Impl>());
+  OS_ASSERT(getImpl<detail::ActionClause_Impl>());
 }
 /// @endcond
 

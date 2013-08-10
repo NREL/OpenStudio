@@ -60,7 +60,7 @@ TEST_F(ProjectFixture, AttributeRecord_LoadSave)
     id = attributeRecord.id();
     handle = attributeRecord.handle();
     EXPECT_EQ("name", attributeRecord.name());
-    EXPECT_EQ("name", attributeRecord.displayName());
+    EXPECT_EQ("", attributeRecord.displayName());
     EXPECT_EQ("", attributeRecord.description());
     EXPECT_EQ(AttributeValueType::Double, attributeRecord.attributeValueType().value());
     EXPECT_EQ(1.0, attributeRecord.attributeValueAsDouble());
@@ -91,7 +91,7 @@ TEST_F(ProjectFixture, AttributeRecord_LoadSave)
     id = attributeRecord.id();
     handle = attributeRecord.handle();
     EXPECT_EQ("name", attributeRecord.name());
-    EXPECT_EQ("name", attributeRecord.displayName());
+    EXPECT_EQ("", attributeRecord.displayName());
     EXPECT_EQ("", attributeRecord.description());
     EXPECT_EQ(AttributeValueType::Double, attributeRecord.attributeValueType().value());
     EXPECT_EQ(1.0, attributeRecord.attributeValueAsDouble());
@@ -132,7 +132,7 @@ TEST_F(ProjectFixture, AttributeRecord_LoadSave)
     EXPECT_EQ(id, attributeRecord.id());
     EXPECT_EQ(handle, attributeRecord.handle());
     EXPECT_EQ("name", attributeRecord.name());
-    EXPECT_EQ("name", attributeRecord.displayName());
+    EXPECT_EQ("", attributeRecord.displayName());
     EXPECT_EQ("", attributeRecord.description());
     EXPECT_EQ(AttributeValueType::Double, attributeRecord.attributeValueType().value());
     EXPECT_EQ(1.0, attributeRecord.attributeValueAsDouble());
@@ -176,7 +176,7 @@ TEST_F(ProjectFixture, AttributeRecord_LoadSave)
     EXPECT_EQ(id, attributeRecord.id());
     EXPECT_EQ(handle, attributeRecord.handle());
     EXPECT_EQ("name", attributeRecord.name());
-    EXPECT_EQ("name", attributeRecord.displayName());
+    EXPECT_EQ("", attributeRecord.displayName());
     EXPECT_EQ("", attributeRecord.description());
     EXPECT_EQ(AttributeValueType::Double, attributeRecord.attributeValueType().value());
     EXPECT_EQ(1.0, attributeRecord.attributeValueAsDouble());
@@ -352,8 +352,8 @@ TEST_F(ProjectFixture, AttributeRecord_FromScratch_Database)
   EXPECT_NO_THROW(record2.cast<AttributeRecord>());
   EXPECT_TRUE(record1.description().empty());
   EXPECT_TRUE(record2.description().empty());
-  EXPECT_EQ("occupancy type",record1.displayName());
-  EXPECT_EQ("energy use",record2.displayName());
+  EXPECT_EQ("",record1.displayName());
+  EXPECT_EQ("",record2.displayName());
   EXPECT_NE(std::numeric_limits<int>::min(), record1.id());
   EXPECT_NE(std::numeric_limits<int>::min(), record2.id());
   EXPECT_EQ("occupancy type",record1.name());

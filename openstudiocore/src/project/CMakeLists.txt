@@ -44,63 +44,6 @@ SET( ${target_name}_src
 
   # ruleset
 
-  ActionClauseRecord.hpp
-  ActionClauseRecord_Impl.hpp
-  ActionClauseRecord.cpp
-  ClauseRecord.hpp
-  ClauseRecord_Impl.hpp
-  ClauseRecord.cpp
-  FilterClauseRecord.hpp
-  FilterClauseRecord_Impl.hpp
-  FilterClauseRecord.cpp
-  ModelObjectActionClauseRecord.hpp
-  ModelObjectActionClauseRecord_Impl.hpp
-  ModelObjectActionClauseRecord.cpp
-  ModelObjectActionSetAttributeRecord.hpp
-  ModelObjectActionSetAttributeRecord_Impl.hpp
-  ModelObjectActionSetAttributeRecord.cpp
-  ModelObjectActionSetRelationshipRecord.hpp
-  ModelObjectActionSetRelationshipRecord_Impl.hpp
-  ModelObjectActionSetRelationshipRecord.cpp
-  ModelObjectFilterAttributeRecord.hpp
-  ModelObjectFilterAttributeRecord_Impl.hpp
-  ModelObjectFilterAttributeRecord.cpp
-  ModelObjectFilterBooleanAttributeRecord.hpp
-  ModelObjectFilterBooleanAttributeRecord_Impl.hpp
-  ModelObjectFilterBooleanAttributeRecord.cpp
-  ModelObjectFilterClauseRecord.hpp
-  ModelObjectFilterClauseRecord_Impl.hpp
-  ModelObjectFilterClauseRecord.cpp
-  ModelObjectFilterNumericAttributeRecord.hpp
-  ModelObjectFilterNumericAttributeRecord_Impl.hpp
-  ModelObjectFilterNumericAttributeRecord.cpp
-  ModelObjectFilterRelationshipRecord.hpp
-  ModelObjectFilterRelationshipRecord_Impl.hpp
-  ModelObjectFilterRelationshipRecord.cpp
-  ModelObjectFilterStringAttributeRecord.hpp
-  ModelObjectFilterStringAttributeRecord_Impl.hpp
-  ModelObjectFilterStringAttributeRecord.cpp
-  ModelObjectFilterTypeRecord.hpp
-  ModelObjectFilterTypeRecord_Impl.hpp
-  ModelObjectFilterTypeRecord.cpp
-  ModelRuleRecord.hpp
-  ModelRuleRecord_Impl.hpp
-  ModelRuleRecord.cpp
-  ModelRulesetRecord.hpp
-  ModelRulesetRecord_Impl.hpp
-  ModelRulesetRecord.cpp
-  Rule_Clause_JoinRecord.hpp
-  Rule_Clause_JoinRecord_Impl.hpp
-  Rule_Clause_JoinRecord.cpp
-  RuleRecord.hpp
-  RuleRecord_Impl.hpp
-  RuleRecord.cpp
-  Ruleset_Rule_JoinRecord.hpp
-  Ruleset_Rule_JoinRecord_Impl.hpp
-  Ruleset_Rule_JoinRecord.cpp
-  RulesetRecord.hpp
-  RulesetRecord_Impl.hpp
-  RulesetRecord.cpp
   OSArgumentRecord.hpp
   OSArgumentRecord_Impl.hpp
   OSArgumentRecord.cpp
@@ -125,18 +68,15 @@ SET( ${target_name}_src
   DataPointValueRecord.hpp
   DataPointValueRecord_Impl.hpp
   DataPointValueRecord.cpp
-  DataPoint_DiscretePerturbation_JoinRecord.hpp
-  DataPoint_DiscretePerturbation_JoinRecord_Impl.hpp
-  DataPoint_DiscretePerturbation_JoinRecord.cpp
+  DataPoint_Measure_JoinRecord.hpp
+  DataPoint_Measure_JoinRecord_Impl.hpp
+  DataPoint_Measure_JoinRecord.cpp
   DDACEAlgorithmRecord.hpp
   DDACEAlgorithmRecord_Impl.hpp
   DDACEAlgorithmRecord.cpp
   DesignOfExperimentsRecord.hpp
   DesignOfExperimentsRecord_Impl.hpp
   DesignOfExperimentsRecord.cpp
-  DiscretePerturbationRecord.hpp
-  DiscretePerturbationRecord_Impl.hpp
-  DiscretePerturbationRecord.cpp
   DiscreteVariableRecord.hpp
   DiscreteVariableRecord_Impl.hpp
   DiscreteVariableRecord.cpp
@@ -152,15 +92,15 @@ SET( ${target_name}_src
   LinearFunctionRecord.hpp
   LinearFunctionRecord_Impl.hpp
   LinearFunctionRecord.cpp
-  ModelRulesetContinuousVariableRecord.hpp
-  ModelRulesetContinuousVariableRecord_Impl.hpp
-  ModelRulesetContinuousVariableRecord.cpp
-  ModelRulesetPerturbationRecord.hpp
-  ModelRulesetPerturbationRecord_Impl.hpp
-  ModelRulesetPerturbationRecord.cpp
-  NullPerturbationRecord.hpp
-  NullPerturbationRecord_Impl.hpp
-  NullPerturbationRecord.cpp
+  MeasureGroupRecord.hpp
+  MeasureGroupRecord_Impl.hpp
+  MeasureGroupRecord.cpp
+  MeasureRecord.hpp
+  MeasureRecord_Impl.hpp
+  MeasureRecord.cpp
+  NullMeasureRecord.hpp
+  NullMeasureRecord_Impl.hpp
+  NullMeasureRecord.cpp
   OpenStudioAlgorithmRecord.hpp
   OpenStudioAlgorithmRecord_Impl.hpp
   OpenStudioAlgorithmRecord.cpp
@@ -188,9 +128,9 @@ SET( ${target_name}_src
   RubyContinuousVariableRecord.hpp
   RubyContinuousVariableRecord_Impl.hpp
   RubyContinuousVariableRecord.cpp
-  RubyPerturbationRecord.hpp
-  RubyPerturbationRecord_Impl.hpp
-  RubyPerturbationRecord.cpp
+  RubyMeasureRecord.hpp
+  RubyMeasureRecord_Impl.hpp
+  RubyMeasureRecord.cpp
   SamplingAlgorithmRecord.hpp
   SamplingAlgorithmRecord_Impl.hpp
   SamplingAlgorithmRecord.cpp
@@ -222,25 +162,6 @@ SET( ${target_name}_moc
 
   # ruleset
 
-  ActionClauseRecord_Impl.hpp
-  ClauseRecord_Impl.hpp
-  FilterClauseRecord_Impl.hpp
-  ModelObjectActionClauseRecord_Impl.hpp
-  ModelObjectActionSetAttributeRecord_Impl.hpp
-  ModelObjectActionSetRelationshipRecord_Impl.hpp
-  ModelObjectFilterAttributeRecord_Impl.hpp
-  ModelObjectFilterBooleanAttributeRecord_Impl.hpp
-  ModelObjectFilterClauseRecord_Impl.hpp
-  ModelObjectFilterNumericAttributeRecord_Impl.hpp
-  ModelObjectFilterRelationshipRecord_Impl.hpp
-  ModelObjectFilterStringAttributeRecord_Impl.hpp
-  ModelObjectFilterTypeRecord_Impl.hpp
-  ModelRuleRecord_Impl.hpp
-  ModelRulesetRecord_Impl.hpp
-  Rule_Clause_JoinRecord_Impl.hpp
-  RuleRecord_Impl.hpp
-  Ruleset_Rule_JoinRecord_Impl.hpp
-  RulesetRecord_Impl.hpp
   OSArgumentRecord_Impl.hpp
 
   # analysis
@@ -251,18 +172,17 @@ SET( ${target_name}_moc
   DakotaAlgorithmRecord_Impl.hpp
   DataPointRecord_Impl.hpp
   DataPointValueRecord_Impl.hpp
-  DataPoint_DiscretePerturbation_JoinRecord_Impl.hpp
+  DataPoint_Measure_JoinRecord_Impl.hpp
   DDACEAlgorithmRecord_Impl.hpp
   DesignOfExperimentsRecord_Impl.hpp
-  DiscretePerturbationRecord_Impl.hpp
   DiscreteVariableRecord_Impl.hpp
   FSUDaceAlgorithmRecord_Impl.hpp
   FunctionRecord_Impl.hpp
   InputVariableRecord_Impl.hpp
   LinearFunctionRecord_Impl.hpp
-  ModelRulesetContinuousVariableRecord_Impl.hpp
-  ModelRulesetPerturbationRecord_Impl.hpp
-  NullPerturbationRecord_Impl.hpp
+  MeasureGroupRecord_Impl.hpp
+  MeasureRecord_Impl.hpp
+  NullMeasureRecord_Impl.hpp
   OpenStudioAlgorithmRecord_Impl.hpp
   OptimizationDataPointRecord_Impl.hpp
   OptimizationProblemRecord_Impl.hpp
@@ -272,7 +192,7 @@ SET( ${target_name}_moc
   ProblemRecord_Impl.hpp
   PSUADEDaceAlgorithmRecord_Impl.hpp
   RubyContinuousVariableRecord_Impl.hpp
-  RubyPerturbationRecord_Impl.hpp
+  RubyMeasureRecord_Impl.hpp
   SamplingAlgorithmRecord_Impl.hpp
   SequentialSearchRecord_Impl.hpp
   VariableRecord_Impl.hpp
@@ -306,14 +226,11 @@ SET( ${target_name}_test_src
   Test/AnalysisRecord_GTest.cpp
   Test/AttributeRecord_GTest.cpp
   Test/DataPointRecord_GTest.cpp
-  Test/DiscreteVariableRecord_GTest.cpp
+  Test/MeasureGroupRecord_GTest.cpp
   Test/FileReferenceRecord_GTest.cpp
-  Test/ModelObjectFilterTypeRecord_GTest.cpp
-  Test/ModelRuleRecord_GTest.cpp
-  Test/ModelRulesetRecord_GTest.cpp
   Test/ProblemRecord_GTest.cpp
   Test/ProjectDatabaseRecord_GTest.cpp
-  Test/RubyPerturbationRecord_GTest.cpp
+  Test/RubyMeasureRecord_GTest.cpp
   Test/RubyContinuousVariableRecord_GTest.cpp
   Test/TagRecord_GTest.cpp
   Test/URLSearchPathRecord_GTest.cpp

@@ -51,7 +51,7 @@ namespace detail {
   ShadingSurfaceGroup_Impl::ShadingSurfaceGroup_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : PlanarSurfaceGroup_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ShadingSurfaceGroup::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ShadingSurfaceGroup::iddObjectType());
   }
 
   ShadingSurfaceGroup_Impl::ShadingSurfaceGroup_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -59,7 +59,7 @@ namespace detail {
                                                      bool keepHandle)
     : PlanarSurfaceGroup_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ShadingSurfaceGroup::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ShadingSurfaceGroup::iddObjectType());
   }
 
   ShadingSurfaceGroup_Impl::ShadingSurfaceGroup_Impl(const ShadingSurfaceGroup_Impl& other,
@@ -189,13 +189,13 @@ namespace detail {
 
   std::string ShadingSurfaceGroup_Impl::shadingSurfaceType() const {
     boost::optional<std::string> value = getString(OS_ShadingSurfaceGroupFields::ShadingSurfaceType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double ShadingSurfaceGroup_Impl::directionofRelativeNorth() const {
     boost::optional<double> value = getDouble(OS_ShadingSurfaceGroupFields::DirectionofRelativeNorth,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -205,7 +205,7 @@ namespace detail {
 
   double ShadingSurfaceGroup_Impl::xOrigin() const {
     boost::optional<double> value = getDouble(OS_ShadingSurfaceGroupFields::XOrigin,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -215,7 +215,7 @@ namespace detail {
 
   double ShadingSurfaceGroup_Impl::yOrigin() const {
     boost::optional<double> value = getDouble(OS_ShadingSurfaceGroupFields::YOrigin,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -225,7 +225,7 @@ namespace detail {
 
   double ShadingSurfaceGroup_Impl::zOrigin() const {
     boost::optional<double> value = getDouble(OS_ShadingSurfaceGroupFields::ZOrigin,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -239,16 +239,16 @@ namespace detail {
     if (istringEqual("Site", shadingSurfaceType)){
       result = setString(OS_ShadingSurfaceGroupFields::ShadingSurfaceType, shadingSurfaceType);
       bool test = setString(OS_ShadingSurfaceGroupFields::SpaceName, "");
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }else if (istringEqual("Building", shadingSurfaceType)){
       result = setString(OS_ShadingSurfaceGroupFields::ShadingSurfaceType, shadingSurfaceType);
       bool test = setString(OS_ShadingSurfaceGroupFields::SpaceName, "");
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }else if (istringEqual("Space", shadingSurfaceType)){
       result = this->space();
       if (result){
         bool test = setString(OS_ShadingSurfaceGroupFields::ShadingSurfaceType, shadingSurfaceType);
-        BOOST_ASSERT(test);
+        OS_ASSERT(test);
       }
     }
 
@@ -258,45 +258,45 @@ namespace detail {
   void ShadingSurfaceGroup_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
     bool result = false;
     result = setDouble(OS_ShadingSurfaceGroupFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ShadingSurfaceGroup_Impl::resetDirectionofRelativeNorth() {
     bool result = setString(OS_ShadingSurfaceGroupFields::DirectionofRelativeNorth, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ShadingSurfaceGroup_Impl::setXOrigin(double xOrigin, bool driverMethod) {
     bool result = false;
     result = setDouble(OS_ShadingSurfaceGroupFields::XOrigin, xOrigin, driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ShadingSurfaceGroup_Impl::resetXOrigin() {
     bool result = setString(OS_ShadingSurfaceGroupFields::XOrigin, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ShadingSurfaceGroup_Impl::setYOrigin(double yOrigin, bool driverMethod) {
     bool result = false;
     result = setDouble(OS_ShadingSurfaceGroupFields::YOrigin, yOrigin, driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ShadingSurfaceGroup_Impl::resetYOrigin() {
     bool result = setString(OS_ShadingSurfaceGroupFields::YOrigin, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ShadingSurfaceGroup_Impl::setZOrigin(double zOrigin, bool driverMethod) {
     bool result = false;
     result = setDouble(OS_ShadingSurfaceGroupFields::ZOrigin, zOrigin, driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ShadingSurfaceGroup_Impl::resetZOrigin() {
     bool result = setString(OS_ShadingSurfaceGroupFields::ZOrigin, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<Space> ShadingSurfaceGroup_Impl::space() const
@@ -314,7 +314,7 @@ namespace detail {
     bool result = setPointer(OS_ShadingSurfaceGroupFields::SpaceName, space.handle());
     if (result){
       bool test = setString(OS_ShadingSurfaceGroupFields::ShadingSurfaceType, "Space");
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
     return result;
   }
@@ -322,7 +322,7 @@ namespace detail {
   void ShadingSurfaceGroup_Impl::resetSpace() {
     if (space()) {
       bool ok = setShadingSurfaceType("Building");
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
     }
   }
 
@@ -366,9 +366,9 @@ namespace detail {
 ShadingSurfaceGroup::ShadingSurfaceGroup(const Model& model)
   : PlanarSurfaceGroup(ShadingSurfaceGroup::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ShadingSurfaceGroup_Impl>());
+  OS_ASSERT(getImpl<detail::ShadingSurfaceGroup_Impl>());
   bool ok = this->setShadingSurfaceType("Building");
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType ShadingSurfaceGroup::iddObjectType() {

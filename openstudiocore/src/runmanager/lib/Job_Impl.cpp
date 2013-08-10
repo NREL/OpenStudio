@@ -25,6 +25,7 @@
 #include <QWriteLocker>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <utilities/core/Application.hpp>
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/PathHelpers.hpp>
 #include <QDir>
 
@@ -273,7 +274,7 @@ namespace detail {
     emitStatusChanged(AdvancedStatus(AdvancedStatusEnum::Idle));
     exit();
 
-    BOOST_ASSERT(this != QThread::currentThread());
+    OS_ASSERT(this != QThread::currentThread());
 
 
     while (!wait(1))
@@ -281,8 +282,8 @@ namespace detail {
       openstudio::Application::instance().processEvents();
     }
 
-    BOOST_ASSERT(!isRunning());
-    BOOST_ASSERT(isFinished());
+    OS_ASSERT(!isRunning());
+    OS_ASSERT(isFinished());
 
     JobErrors errors = this->errors();
 
@@ -1171,7 +1172,7 @@ namespace detail {
 
     bool outofdateinternal = outOfDateInternal(p, lastrun);
 
-//    LOG(Debug, description() << " " << outofdateinternal << " " << parentOutOfDate << " " << parentRunning << " " << parentChildrenRunning << " " << parentRunning << " " << parentFailed << " " << parentChildrenFailed)
+    // LOG(Debug, description() << " " << outofdateinternal << " " << parentOutOfDate << " " << parentRunning << " " << parentChildrenRunning << " " << parentRunning << " " << parentFailed << " " << parentChildrenFailed << " " << (lastrun?openstudio::toString(lastrun->toString()):"not previously run") )
     return outofdateinternal && !parentOutOfDate
                && !parentRunning && !parentChildrenRunning
                && !parentFailed && !parentChildrenFailed;
@@ -1477,6 +1478,8 @@ namespace detail {
 
   TreeStatusEnum Job_Impl::treeStatus() const
   {
+    JobErrors err = errors();
+
     QReadLocker l(&m_mutex);
     TreeStatusEnum res;
 
@@ -1484,7 +1487,7 @@ namespace detail {
     {
       res = TreeStatusEnum::Running;
     } else if (lastRunInternal()) {
-      if (m_errors.succeeded())
+      if (err.succeeded())
       {
         res = TreeStatusEnum::Finished;
       } else {

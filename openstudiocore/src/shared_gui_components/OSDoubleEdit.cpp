@@ -21,6 +21,7 @@
 
 #include <model/ModelObject_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/data/Attribute.hpp>
 
@@ -97,15 +98,15 @@ void OSDoubleEdit2::completeBind() {
 
   bool isConnected = false;
   isConnected = connect( this, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
                          this,SLOT(onModelObjectChange()) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
                          this,SLOT(onModelObjectRemove(Handle)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   refreshTextAndLabel();
 }
@@ -196,7 +197,7 @@ void OSDoubleEdit2::refreshTextAndLabel() {
       od = (*m_get)();
     }
     else {
-      Q_ASSERT(m_getOptional);
+      OS_ASSERT(m_getOptional);
       od = (*m_getOptional)();
     }
     if (od) {
@@ -289,30 +290,30 @@ void OSDoubleEdit::bind(model::ModelObject& modelObject,
   // check for attribute existence
   StringVector attributeNames = modelObject.attributeNames();
   StringVector::const_iterator anb(attributeNames.begin()),ane(attributeNames.end());
-  BOOST_ASSERT(std::find(anb,ane,m_property) != ane);
+  OS_ASSERT(std::find(anb,ane,m_property) != ane);
   if (m_isDefaultedProperty) {
-    BOOST_ASSERT(std::find(anb,ane,*m_isDefaultedProperty) != ane);
+    OS_ASSERT(std::find(anb,ane,*m_isDefaultedProperty) != ane);
   }
   if (m_isAutosizedProperty) {
-    BOOST_ASSERT(std::find(anb,ane,*m_isAutosizedProperty) != ane);
+    OS_ASSERT(std::find(anb,ane,*m_isAutosizedProperty) != ane);
   }
   if (m_isAutocalculatedProperty) {
-    BOOST_ASSERT(std::find(anb,ane,*m_isAutocalculatedProperty) != ane);
+    OS_ASSERT(std::find(anb,ane,*m_isAutocalculatedProperty) != ane);
   }
 
   setEnabled(true);
 
   bool isConnected = false;
   isConnected = connect( this, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
                          this,SLOT(onModelObjectChange()) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
                          this,SLOT(onModelObjectRemove(Handle)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   refreshTextAndLabel();
 }

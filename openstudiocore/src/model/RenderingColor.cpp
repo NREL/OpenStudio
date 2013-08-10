@@ -36,22 +36,22 @@ namespace detail {
   RenderingColor_Impl::RenderingColor_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ResourceObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == RenderingColor::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == RenderingColor::iddObjectType());
 
     QColor color = RenderingColor::randomColor();
     bool test;
 
     if (!getInt(OS_Rendering_ColorFields::RenderingRedValue,true)) {
       test = setRenderingRedValue(color.red(), false);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
     if (!getInt(OS_Rendering_ColorFields::RenderingGreenValue,true)) {
       test = setRenderingGreenValue(color.green(), false);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
     if (!getInt(OS_Rendering_ColorFields::RenderingBlueValue,true)) {
       test = setRenderingBlueValue(color.blue(), false);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
     //getImpl<detail::RenderingColor_Impl>()->emitChangeSignals(); // emit signals here
   }
@@ -61,7 +61,7 @@ namespace detail {
                                            bool keepHandle)
     : ResourceObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == RenderingColor::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == RenderingColor::iddObjectType());
   }
 
   RenderingColor_Impl::RenderingColor_Impl(const RenderingColor_Impl& other,
@@ -84,25 +84,25 @@ namespace detail {
 
   int RenderingColor_Impl::renderingRedValue() const {
     boost::optional<int> value = getInt(OS_Rendering_ColorFields::RenderingRedValue,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   int RenderingColor_Impl::renderingGreenValue() const {
     boost::optional<int> value = getInt(OS_Rendering_ColorFields::RenderingGreenValue,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   int RenderingColor_Impl::renderingBlueValue() const {
     boost::optional<int> value = getInt(OS_Rendering_ColorFields::RenderingBlueValue,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   int RenderingColor_Impl::renderingAlphaValue() const {
     boost::optional<int> value = getInt(OS_Rendering_ColorFields::RenderingAlphaValue,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -152,7 +152,7 @@ namespace detail {
 
   void RenderingColor_Impl::resetRenderingAlphaValue() {
     bool result = setString(OS_Rendering_ColorFields::RenderingAlphaValue, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -160,7 +160,7 @@ namespace detail {
 RenderingColor::RenderingColor(const Model& model)
   : ResourceObject(RenderingColor::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::RenderingColor_Impl>());
+  OS_ASSERT(getImpl<detail::RenderingColor_Impl>());
 }
 
 IddObjectType RenderingColor::iddObjectType() {

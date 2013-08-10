@@ -138,6 +138,7 @@ class UTILITIES_API Attribute {
   Attribute(const openstudio::UUID& uuid,
             const openstudio::UUID& versionUUID,
             const std::string& name,
+            const boost::optional<std::string>& displayName,
             bool value,
             const boost::optional<std::string>& units);
 
@@ -147,6 +148,7 @@ class UTILITIES_API Attribute {
   Attribute(const openstudio::UUID& uuid,
             const openstudio::UUID& versionUUID,
             const std::string& name,
+            const boost::optional<std::string>& displayName,
             double value,
             const boost::optional<std::string>& units);
 
@@ -157,12 +159,14 @@ class UTILITIES_API Attribute {
   Attribute(const openstudio::UUID& uuid,
             const openstudio::UUID& versionUUID,
             const std::string& name,
+            const boost::optional<std::string>& displayName,
             const Quantity& value);
 
   Attribute(const std::string& name, const Unit& value);
   Attribute(const openstudio::UUID& uuid,
             const openstudio::UUID& versionUUID,
             const std::string& name,
+            const boost::optional<std::string>& displayName,
             const Unit& value);
 
   Attribute(const std::string& name, int value);
@@ -171,6 +175,7 @@ class UTILITIES_API Attribute {
   Attribute(const openstudio::UUID& uuid,
             const openstudio::UUID& versionUUID,
             const std::string& name,
+            const boost::optional<std::string>& displayName,
             int value,
             const boost::optional<std::string>& units);
 
@@ -180,6 +185,7 @@ class UTILITIES_API Attribute {
   Attribute(const openstudio::UUID& uuid,
             const openstudio::UUID& versionUUID,
             const std::string& name,
+            const boost::optional<std::string>& displayName,
             unsigned value,
             const boost::optional<std::string>& units);
 
@@ -189,6 +195,7 @@ class UTILITIES_API Attribute {
   Attribute(const openstudio::UUID& uuid,
             const openstudio::UUID& versionUUID,
             const std::string& name,
+            const boost::optional<std::string>& displayName,
             const char* value,
             const boost::optional<std::string>& units);
 
@@ -198,6 +205,7 @@ class UTILITIES_API Attribute {
   Attribute(const openstudio::UUID& uuid,
             const openstudio::UUID& versionUUID,
             const std::string& name,
+            const boost::optional<std::string>& displayName,
             const std::string& value,
             const boost::optional<std::string>& units);
 
@@ -207,6 +215,7 @@ class UTILITIES_API Attribute {
   Attribute(const openstudio::UUID& uuid,
             const openstudio::UUID& versionUUID,
             const std::string& name,
+            const boost::optional<std::string>& displayName,
             const std::vector<openstudio::Attribute>& value,
             const boost::optional<std::string>& units);
 
@@ -395,6 +404,14 @@ UTILITIES_API bool isConsistent(const Attribute& candidate,const AttributeDescri
  *  !isConsistent(attribute,descripton). \relates Attribute */
 // DLM: can this be a member of Attribute?
 UTILITIES_API bool prepareForDisplay(Attribute& attribute, const AttributeDescription& description);
+
+namespace detail {
+  /** Places attribute's data in a QVariant for JSON serialization. */
+  UTILITIES_API QVariant toVariant(const Attribute& attribute);
+
+  /** Deserializes json variant to Attribute. */
+  UTILITIES_API Attribute toAttribute(const QVariant& variant, const VersionString& version);
+}
 
 } // openstudio
 

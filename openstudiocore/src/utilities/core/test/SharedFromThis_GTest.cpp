@@ -47,9 +47,9 @@ struct Object
   Object(boost::shared_ptr<Object_Impl> impl)
     : m_impl(impl)
   {
-    BOOST_ASSERT(m_impl);
+    OS_ASSERT(m_impl);
     boost::weak_ptr<Object_Impl> weakImpl(impl);
-    BOOST_ASSERT(weakImpl.lock());
+    OS_ASSERT(weakImpl.lock());
   }
 
   ~Object()
@@ -73,7 +73,7 @@ struct Object
 Object_Impl::Object_Impl(boost::shared_ptr<int> counter)
   : m_counter(counter)
 {
-  BOOST_ASSERT(m_counter);
+  OS_ASSERT(m_counter);
 }
 
 Object_Impl::~Object_Impl()

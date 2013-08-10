@@ -51,7 +51,7 @@ namespace detail {
                                            bool keepHandle)
     : PlanarSurface_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ShadingSurface::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ShadingSurface::iddObjectType());
   }
 
   ShadingSurface_Impl::ShadingSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -59,7 +59,7 @@ namespace detail {
                                            bool keepHandle)
     : PlanarSurface_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ShadingSurface::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ShadingSurface::iddObjectType());
   }
 
   ShadingSurface_Impl::ShadingSurface_Impl(const ShadingSurface_Impl& other,
@@ -235,12 +235,12 @@ namespace detail {
 
   void ShadingSurface_Impl::resetNumberofVertices() {
     bool result = setString(OS_ShadingSurfaceFields::NumberofVertices, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ShadingSurface_Impl::autocalculateNumberofVertices() {
     bool result = setString(OS_ShadingSurfaceFields::NumberofVertices, "Autocalculate");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<ShadingSurfaceGroup> ShadingSurface_Impl::shadingSurfaceGroup() const
@@ -260,7 +260,7 @@ namespace detail {
 
   void ShadingSurface_Impl::resetShadingSurfaceGroup() {
     bool ok = setString(OS_ShadingSurfaceFields::ShadingSurfaceGroupName, "");
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
   }
 
   boost::optional<Schedule> ShadingSurface_Impl::transmittanceSchedule() const
@@ -285,7 +285,7 @@ namespace detail {
   void ShadingSurface_Impl::resetTransmittanceSchedule()
   {
     bool test = this->setString(OS_ShadingSurfaceFields::TransmittanceScheduleName, "");
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   boost::optional<ModelObject> ShadingSurface_Impl::shadingSurfaceGroupAsModelObject() const {
@@ -344,7 +344,7 @@ namespace detail {
 ShadingSurface::ShadingSurface(const std::vector<Point3d>& vertices, const Model& model)
   : PlanarSurface(ShadingSurface::iddObjectType(),vertices,model)
 {
-  BOOST_ASSERT(getImpl<detail::ShadingSurface_Impl>());
+  OS_ASSERT(getImpl<detail::ShadingSurface_Impl>());
 }
 
 IddObjectType ShadingSurface::iddObjectType() {

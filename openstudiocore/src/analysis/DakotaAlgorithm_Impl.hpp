@@ -117,6 +117,8 @@ namespace detail {
     /** Sets the RunManager job. */
     void setJob(const runmanager::Job& job);
 
+    virtual QVariant toVariant() const;
+
     //@}
    private:
     boost::optional<FileReference> m_restartFileReference;
