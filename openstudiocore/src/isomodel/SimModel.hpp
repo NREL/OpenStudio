@@ -43,6 +43,30 @@ namespace openstudio {
 
 namespace isomodel { 
 
+//flag to turn on debug printing of many intermediate variables to stdout
+#define DEBUG false
+
+
+Vector mult(const double* v1, const double s1, int size);
+Vector mult(const Vector& v1, const double s1);
+Vector mult(const Vector& v1, const double* v2);
+Vector mult(const Vector& v1, const Vector& v2);
+Vector div(const Vector& v1,const double s1);
+Vector div(const double s1, const Vector& v1);
+Vector div(const Vector& v1, const Vector& v2);
+Vector sum(const Vector& v1, const Vector& v2);
+Vector sum(const Vector& v1, const double v2);
+Vector dif(const Vector& v1, const Vector& v2);
+Vector dif(const Vector& v1, const double v2);
+Vector dif(const double v1, const Vector& v2);
+double max(const Vector& v1);
+Vector max(const Vector& v1, const Vector& v2);
+Vector max(const Vector& v1, double val);
+double min(const Vector& v1);
+Vector min(const Vector& v1, double val);
+Vector abs(const Vector& v1);
+Vector pow(const Vector& v1, const double xp);
+
   struct ISOResults{    
       std::vector<EndUses> monthlyResults;
   };

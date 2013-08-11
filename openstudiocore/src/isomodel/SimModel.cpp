@@ -17,16 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 #include <isomodel/SimModel.hpp>
+//to run main
 #include <isomodel/UserModel.hpp>
+
 
 using namespace openstudio::isomodel;
 using namespace openstudio;
 
 namespace openstudio {
 namespace isomodel {
-//flag to turn on debug printing of many intermediate variables to stdout
-#define DEBUG false
 
+
+
+//Utility Functions -- breaks when you attempt to move into the .hpp
 void printVector(const char* vecName, Vector vec){
   if(DEBUG)
   {
@@ -78,26 +81,6 @@ void one(Vector& vec){
   vectorInit(vec, 1);
 }
 
-const double daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-const double hoursInMonth[] = {744,	672,	744,	720,	744,	720,	744,	744,	720,	744,	720,	744};
-const double megasecondsInMonth[] = {2.6784,	2.4192,	2.6784,	2.592,	2.6784,	2.592,	2.6784,	2.6784,	2.592,	2.6784,	2.592,	2.6784};
-const double monthFractionOfYear[] = {0.0849315068493151,	0.0767123287671233,	0.0849315068493151,	0.0821917808219178,	0.0849315068493151,	0.0821917808219178,	0.0849315068493151,	0.0849315068493151,	0.0821917808219178,	0.0849315068493151,	0.0821917808219178,	0.0849315068493151};
-const double daysInYear = 365;
-const double hoursInYear = 8760;
-const double hoursInWeek = 168;
-const double  EECALC_NUM_MONTHS = 12;
-const double  EECALC_NUM_HOURS = 24;
-const double  EECALC_WEEKDAY_START = 7;
-const double kWh2MJ = 3.6f;
-
-  SimModel::SimModel()
-  {
-  }
-
-  SimModel::~SimModel()
-  {
-  }
-  //Utility Functions
   /// array-scalar product
   Vector mult(const double* v1, const double s1, int size)
   {
@@ -258,8 +241,29 @@ const double kWh2MJ = 3.6f;
     return va;
   }
 
-  //End Utility Functions
+//End Utility Functions
 
+
+
+const double daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+const double hoursInMonth[] = {744,	672,	744,	720,	744,	720,	744,	744,	720,	744,	720,	744};
+const double megasecondsInMonth[] = {2.6784,	2.4192,	2.6784,	2.592,	2.6784,	2.592,	2.6784,	2.6784,	2.592,	2.6784,	2.592,	2.6784};
+const double monthFractionOfYear[] = {0.0849315068493151,	0.0767123287671233,	0.0849315068493151,	0.0821917808219178,	0.0849315068493151,	0.0821917808219178,	0.0849315068493151,	0.0849315068493151,	0.0821917808219178,	0.0849315068493151,	0.0821917808219178,	0.0849315068493151};
+const double daysInYear = 365;
+const double hoursInYear = 8760;
+const double hoursInWeek = 168;
+const double  EECALC_NUM_MONTHS = 12;
+const double  EECALC_NUM_HOURS = 24;
+const double  EECALC_WEEKDAY_START = 7;
+const double kWh2MJ = 3.6f;
+
+  SimModel::SimModel()
+  {
+  }
+
+  SimModel::~SimModel()
+  {
+  }
   //Solver functions
   void SimModel::scheduleAndOccupancy(Vector& weekdayOccupiedMegaseconds, 
     Vector& weekdayUnoccupiedMegaseconds,
@@ -786,8 +790,6 @@ v_phi_sol=v_win_phi_sol+v_wall_phi_sol;  % total envelope solar heat gain in W
 v_E_sol= v_phi_sol.* v_Msec_ina_mo(I); % total envelope heat gain in MJ
   */
   }
-
-
   void SimModel::heatGainsAndLosses(double frac_hrs_wk_day, 
       double Q_illum_occ, 
       double Q_illum_unocc,
@@ -2473,29 +2475,6 @@ Ebldg.mon=sum(Ebldg.total,2);  % sum normally works down columns but by putting 
 Ebldg.yr=sum(Ebldg.mon);
   */
   }
-  void loadDefaults(SimModel &simModel)
-  {
-    /**Population test data **/
-    boost::shared_ptr<Population> pop(new Population);
-    pop->setDaysEnd(5);
-    pop->setDaysStart(1);
-    pop->setHoursEnd(18);
-    pop->setHoursStart(7);
-    pop->setDensityOccupied(10.3530866271645);
-    pop->setDensityUnoccupied(103.530866271645);
-    pop->setHeatGainPerPerson(80);
-    simModel.setPop(pop);
-
-    /**Weather Test Data **/
-    boost::shared_ptr<WeatherData> weather(new WeatherData);
-    
-
-    /**Location test data **/
-    boost::shared_ptr<Location> loc(new Location);
-    loc->setTerrain(0.8);
-    simModel.setLocation(loc);
-  }
-
 } // isomodel
 } // openstudio
 

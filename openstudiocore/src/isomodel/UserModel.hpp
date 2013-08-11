@@ -22,6 +22,7 @@
 
 #include "ISOModelAPI.hpp"
 #include <isomodel/EpwData.hpp>
+#include <isomodel/SimModel.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <utilities/core/Logger.hpp>
 

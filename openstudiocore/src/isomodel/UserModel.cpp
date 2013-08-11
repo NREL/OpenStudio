@@ -18,8 +18,6 @@
  **********************************************************************/
 
 #include <isomodel/UserModel.hpp>
-#include <isomodel/SimModel.hpp>
-#include <isomodel/EpwData.hpp>
 
 using namespace std;
 namespace openstudio {
@@ -692,3 +690,4 @@ namespace isomodel {
 
 } // isomodel
 } // openstudio
+
