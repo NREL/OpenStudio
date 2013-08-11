@@ -97,26 +97,6 @@ const double kWh2MJ = 3.6f;
   SimModel::~SimModel()
   {
   }
-  void SimModel::initForTests()
-  {
-    this->pop = boost::shared_ptr<Population>(new Population);
-    this->location = boost::shared_ptr<Location>(new Location);
-    this->lights = boost::shared_ptr<Lighting>(new Lighting);
-    this->building = boost::shared_ptr<Building>(new Building);
-    this->structure = boost::shared_ptr<Structure>(new Structure);
-    this->heating = boost::shared_ptr<Heating> (new Heating);
-    this->cooling = boost::shared_ptr<Cooling> (new Cooling);
-    this->ventilation = boost::shared_ptr<Ventilation> (new Ventilation);      
-
-    this->pop->setHoursEnd(18);
-    this->pop->setHoursStart(8);
-    this->pop->setDaysEnd(5);
-    this->pop->setDaysStart(1);
-    this->pop->setDensityOccupied(15);
-    this->pop->setDensityUnoccupied(150);
-    
-  }
-
   //Utility Functions
   /// array-scalar product
   Vector mult(const double* v1, const double s1, int size)
@@ -2504,7 +2484,7 @@ Ebldg.yr=sum(Ebldg.mon);
     pop->setDensityOccupied(10.3530866271645);
     pop->setDensityUnoccupied(103.530866271645);
     pop->setHeatGainPerPerson(80);
-    simModel.pop = pop;
+    simModel.setPop(pop);
 
     /**Weather Test Data **/
     boost::shared_ptr<WeatherData> weather(new WeatherData);
@@ -2513,7 +2493,7 @@ Ebldg.yr=sum(Ebldg.mon);
     /**Location test data **/
     boost::shared_ptr<Location> loc(new Location);
     loc->setTerrain(0.8);
-    simModel.location = loc;
+    simModel.setLocation(loc);
   }
 
 } // isomodel

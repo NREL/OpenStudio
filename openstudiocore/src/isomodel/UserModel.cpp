@@ -45,12 +45,12 @@ namespace isomodel {
     pop->setDensityOccupied(_peopleDensityOccupied);
     pop->setDensityUnoccupied(_peopleDensityUnoccupied);
     pop->setHeatGainPerPerson(_heatGainPerPerson);
-    sim.pop = pop;
+    sim.setPop(pop);
 
     boost::shared_ptr<Location> loc(new Location);
     loc->setTerrain(_terrainClass);
     loc->setWeatherData(_weather);
-    sim.location = loc;
+    sim.setLocation(loc);
 
     boost::shared_ptr<Building> building(new Building);
     building->setBuildingEnergyManagement(_bemType);
@@ -60,7 +60,7 @@ namespace isomodel {
     building->setGasApplianceHeatGainOccupied(_gasPowerAppliancesOccupied);
     building->setGasApplianceHeatGainUnoccupied(_gasPowerAppliancesUnoccupied);
     building->setLightingOccupancySensor(_lightingOccupancySensorSystem);
-    sim.building = building;
+    sim.setBuilding(building);
 
     boost::shared_ptr<Cooling> cooling(new Cooling);
     cooling->setCOP(_coolingSystemCOP);
@@ -69,7 +69,7 @@ namespace isomodel {
     cooling->setPumpControlReduction(_coolingPumpControl);
     cooling->setTemperatureSetPointOccupied(_coolingOccupiedSetpoint);
     cooling->setTemperatureSetPointUnoccupied(_coolingUnoccupiedSetpoint);
-    sim.cooling = cooling;
+    sim.setCooling(cooling);
     
     boost::shared_ptr<Heating> heating(new Heating);
     heating->setEfficiency(_heatingSystemEfficiency);
@@ -83,14 +83,14 @@ namespace isomodel {
     heating->setPumpControlReduction(_heatingPumpControl);
     heating->setTemperatureSetPointOccupied(_heatingOccupiedSetpoint);
     heating->setTemperatureSetPointUnoccupied(_heatingUnoccupiedSetpoint);
-    sim.heating = heating;
+    sim.setHeating(heating);
 
     boost::shared_ptr<Lighting> lighting(new Lighting);
     lighting->setDimmingFraction(_daylightSensorSystem);
     lighting->setExteriorEnergy(_exteriorLightingPower);
     lighting->setPowerDensityOccupied(_lightingPowerIntensityOccupied);
     lighting->setPowerDensityUnoccupied(_lightingPowerIntensityUnoccupied);
-    sim.lights = lighting;
+    sim.setLights(lighting);
 
     boost::shared_ptr<Structure> structure(new Structure);
     structure->setFloorArea(_floorArea);
@@ -196,7 +196,7 @@ namespace isomodel {
     winU[7] = _windowUvalueSW;
     winU[8] = _skylightUvalue;
     structure->setWindowUniform(winU);//vector
-    sim.structure = structure;
+    sim.setStructure(structure);
 
     boost::shared_ptr<Ventilation> ventilation(new Ventilation);
     ventilation->setExhaustAirRecirculated(_exhaustAirRecirclation);
@@ -207,7 +207,7 @@ namespace isomodel {
     ventilation->setSupplyRate(_freshAirFlowRate);
     ventilation->setType(_ventilationType);
     ventilation->setWasteFactor(_hvacWasteFactor);//??
-    sim.ventilation = ventilation;
+    sim.setVentilation(ventilation);
     return sim;
   }
   //http://stackoverflow.com/questions/10051679/c-tokenize-string

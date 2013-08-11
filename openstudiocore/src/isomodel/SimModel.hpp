@@ -49,7 +49,6 @@ namespace isomodel {
 
   class ISOMODEL_API SimModel {
   private:      
-  public:
     boost::shared_ptr<Population> pop;
     boost::shared_ptr<Location> location;
     boost::shared_ptr<Lighting> lights;
@@ -59,10 +58,6 @@ namespace isomodel {
     boost::shared_ptr<Cooling> cooling;
     boost::shared_ptr<Ventilation> ventilation;  
 
-    SimModel();
-    virtual ~SimModel();
-    ISOResults simulate() const;
-    void initForTests();
     void scheduleAndOccupancy(Vector& weekdayOccupiedMegaseconds, 
             Vector& weekdayUnoccupiedMegaseconds,
             Vector& weekendOccupiedMegaseconds,
@@ -200,8 +195,18 @@ namespace isomodel {
             const Vector& v_Qcl_gas_tot,
             const Vector& v_Q_dhw_gas,
             double frac_hrs_wk_day) const;
-
-
+  public:
+    void setPop(boost::shared_ptr<Population> value){pop=value;}
+    void setLocation(boost::shared_ptr<Location> value){location=value;}
+    void setLights(boost::shared_ptr<Lighting> value){lights=value;}
+    void setBuilding(boost::shared_ptr<Building> value){building=value;}
+    void setStructure(boost::shared_ptr<Structure> value){structure=value;}
+    void setHeating(boost::shared_ptr<Heating> value){heating=value;}
+    void setCooling(boost::shared_ptr<Cooling> value){cooling=value;}
+    void setVentilation(boost::shared_ptr<Ventilation> value){ventilation=value;}
+    SimModel();
+    virtual ~SimModel();
+    ISOResults simulate() const;
     REGISTER_LOGGER("openstudio.isomodel.SimModel");
   };
 } // isomodel
