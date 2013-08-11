@@ -21,27 +21,30 @@
 #define ISOMODEL_USERMODEL_HPP
 
 #include "ISOModelAPI.hpp"
-
+#include <isomodel/EpwData.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <utilities/core/Logger.hpp>
 
 namespace openstudio {
 
 namespace isomodel {
-
   
   class SimModel;
+  class WeatherData;
 
   class ISOMODEL_API UserModel {
   private:
+    void resolveFilename(const char* baseFile, const char* relativeFile, char* result);
+    void parseStructure(std::string attributeName, const char* attributeValue);
     REGISTER_LOGGER("openstudio.isomodel.UserModel");
+    boost::shared_ptr<WeatherData> _weather; 
     double _terrainClass;
-    double _stories;
     double _floorArea;
-    double _floorToFloorHeight;
+    double _buildingHeight;
     double _buildingOccupancyFrom;
     double _buildingOccupancyTo;
     double _equivFullLoadOccupancyFrom;
-    double _qeuivFullLoadOccupancyTo;
+    double _equivFullLoadOccupancyTo;
     double _peopleDensityOccupied;
     double _peopleDensityUnoccupied;
     double _heatingOccupiedSetpoint;
@@ -50,10 +53,10 @@ namespace isomodel {
     double _coolingUnoccupiedSetpoint;
     double _elecPowerAppliancesOccupied;
     double _elecPowerAppliancesUnoccupied;
-    double _gasPowerAppliancedOccupied;
-    double _gasPowerAppliancedUnoccupied;
-    double _lightingpowerIntensityOccupied;
-    double _lightingpowerIntensityUnoccupied;
+    double _gasPowerAppliancesOccupied;
+    double _gasPowerAppliancesUnoccupied;
+    double _lightingPowerIntensityOccupied;
+    double _lightingPowerIntensityUnoccupied;
     double _exteriorLightingPower;
     double _daylightSensorSystem;
     double _lightingOccupancySensorSystem;
@@ -66,7 +69,7 @@ namespace isomodel {
     double _freshAirFlowRate;
     double _supplyExhaustRate;
     double _heatRecovery;
-    double _exhaustAirRecirculation;
+    double _exhaustAirRecirclation;
     double _buildingAirLeakage;
     double _dhwDemand;
     double _dhwEfficiency;
@@ -76,18 +79,9 @@ namespace isomodel {
     double _interiorHeatCapacity;
     double _specificFanPower;
     double _fanFlowControlFactor;
-    double _windowUValue;
-    double _windowSolarAbsorbtion;
-    double _windowThermalEmissivity;
-
-    double _windowSHGC;
-    double _windowSCF;
-    double _windowSD;
-    double _wallUValue;
-    double _wallSolarAbsorbtion;
-    double _wallThermalEmissivity;
-    double _roofUValue;
     double _roofSHGC;
+
+    /* Area */
     double _wallAreaS;
     double _wallAreaSE;
     double _wallAreaE;
@@ -97,6 +91,40 @@ namespace isomodel {
     double _wallAreaW;
     double _wallAreaSW;
     double _roofArea;
+    
+    /* UValue */
+    double _wallUvalueS;
+    double _wallUvalueSE;
+    double _wallUvalueE;
+    double _wallUvalueNE;
+    double _wallUvalueN;
+    double _wallUvalueNW;
+    double _wallUvalueW;
+    double _wallUvalueSW;
+    double _roofUValue;
+    
+    /* SolarAbsorption */
+    double _wallSolarAbsorptionS;
+    double _wallSolarAbsorptionSE;
+    double _wallSolarAbsorptionE;
+    double _wallSolarAbsorptionNE;
+    double _wallSolarAbsorptionN;
+    double _wallSolarAbsorptionNW;
+    double _wallSolarAbsorptionW;
+    double _wallSolarAbsorptionSW;
+    double _roofSolarAbsorption;
+
+    /* ThermalEmissivity */
+    double _wallThermalEmissivityS;
+    double _wallThermalEmissivitySE;
+    double _wallThermalEmissivityE;
+    double _wallThermalEmissivityNE;
+    double _wallThermalEmissivityN;
+    double _wallThermalEmissivityNW;
+    double _wallThermalEmissivityW;
+    double _wallThermalEmissivitySW;
+    double _roofThermalEmissivity;
+
     double _windowAreaS;
     double _windowAreaSE;
     double _windowAreaE;
@@ -107,6 +135,44 @@ namespace isomodel {
     double _windowAreaSW;
     double _skylightArea;
 
+    double _windowUvalueS;
+    double _windowUvalueSE;
+    double _windowUvalueE;
+    double _windowUvalueNE;
+    double _windowUvalueN;
+    double _windowUvalueNW;
+    double _windowUvalueW;
+    double _windowUvalueSW;
+    double _skylightUvalue;
+
+    double _windowSHGCS;
+    double _windowSHGCSE;
+    double _windowSHGCE;
+    double _windowSHGCNE;
+    double _windowSHGCN;
+    double _windowSHGCNW;
+    double _windowSHGCW;
+    double _windowSHGCSW;
+    double _skylightSHGC;
+
+    double _windowSCFS;
+    double _windowSCFSE;
+    double _windowSCFE;
+    double _windowSCFNE;
+    double _windowSCFN;
+    double _windowSCFNW;
+    double _windowSCFW;
+    double _windowSCFSW;
+
+    double _windowSDFS;
+    double _windowSDFSE;
+    double _windowSDFE;
+    double _windowSDFNE;
+    double _windowSDFN;
+    double _windowSDFNW;
+    double _windowSDFW;
+    double _windowSDFSW;
+
     double _exteriorHeatCapacity;
     double _infiltration;
     double _hvacWasteFactor;
@@ -116,64 +182,64 @@ namespace isomodel {
     double _heatingPumpControl;
     double _coolingPumpControl;
     double _heatGainPerPerson;
+
+    std::string _weatherFilePath;
+    const char* dataFile;
+
+
+    void parseLine(std::string line);
+    void loadBuilding(const char* buildingFile);
+    boost::shared_ptr<WeatherData> loadWeather();
+    int weatherState(std::string header);
   public:
+    void load(const char* buildingFile);
     UserModel();
     virtual ~UserModel();    
     SimModel toSimModel() const;
-    double terrainClass(){return _terrainClass;}
-    double stories(){return _stories;}
-    double floorArea(){return _floorArea;}
-    double floorToFloorHeight(){return _floorToFloorHeight;}
-    double buildingOccupancyFrom(){return _buildingOccupancyFrom;}
-    double buildingOccupancyTo(){return _buildingOccupancyTo;}
-    double equivFullLoadOccupancyFrom(){return _equivFullLoadOccupancyFrom;}
-    double qeuivFullLoadOccupancyTo(){return _qeuivFullLoadOccupancyTo;}
-    double peopleDensityOccupied(){return _peopleDensityOccupied;}
-    double peopleDensityUnoccupied(){return _peopleDensityUnoccupied;}
-    double heatingOccupiedSetpoint(){return _heatingOccupiedSetpoint;}
-    double heatingUnoccupiedSetpoint(){return _heatingUnoccupiedSetpoint;}
-    double coolingOccupiedSetpoint(){return _coolingOccupiedSetpoint;}
-    double coolingUnoccupiedSetpoint(){return _coolingUnoccupiedSetpoint;}
-    double elecPowerAppliancesOccupied(){return _elecPowerAppliancesOccupied;}
-    double elecPowerAppliancesUnoccupied(){return _elecPowerAppliancesUnoccupied;}
-    double gasPowerAppliancedOccupied(){return _gasPowerAppliancedOccupied;}
-    double gasPowerAppliancedUnoccupied(){return _gasPowerAppliancedUnoccupied;}
-    double lightingpowerIntensityOccupied(){return _lightingpowerIntensityOccupied;}
-    double lightingpowerIntensityUnoccupied(){return _lightingpowerIntensityUnoccupied;}
-    double exteriorLightingPower(){return _exteriorLightingPower;}
-    double daylightSensorSystem(){return _daylightSensorSystem;}
-    double lightingOccupancySensorSystem(){return _lightingOccupancySensorSystem;}
-    double constantIlluminationControl(){return _constantIlluminationControl;}
-    double coolingSystemCOP(){return _coolingSystemCOP;}
-    double coolingSystemIPLV(){return _coolingSystemIPLV;}
-    double heatingEnergyCarrier(){return _heatingEnergyCarrier;}
-    double heatingSystemEfficiency(){return _heatingSystemEfficiency;}
-    double ventilationType(){return _ventilationType;}
-    double freshAirFlowRate(){return _freshAirFlowRate;}
-    double supplyExhaustRate(){return _supplyExhaustRate;}
-    double heatRecovery(){return _heatRecovery;}
-    double exhaustAirRecirculation(){return _exhaustAirRecirculation;}
-    double buildingAirLeakage(){return _buildingAirLeakage;}
-    double dhwDemand(){return _dhwDemand;}
-    double dhwEfficiency(){return _dhwEfficiency;}
-    double dhwDistributionSystem(){return _dhwDistributionSystem;}
-    double dhwEnergyCarrier(){return _dhwEnergyCarrier;}
-    double bemType(){return _bemType;}
-    double interiorHeatCapacity(){return _interiorHeatCapacity;}
-    double specificFanPower(){return _specificFanPower;}
-    double fanFlowControlFactor(){return _fanFlowControlFactor;}
-    double windowUValue(){return _windowUValue;}
-    double windowSolarAbsorbtion(){return _windowSolarAbsorbtion;}
-    double windowThermalEmissivity(){return _windowThermalEmissivity;}
+    const char * weatherFilePath(){return _weatherFilePath.c_str();}
+    double terrainClass(){return _terrainClass;} const 
+    double floorArea(){return _floorArea;} const 
+    double buildingHeight(){return _buildingHeight;} const 
+    double buildingOccupancyFrom(){return _buildingOccupancyFrom;} const 
+    double buildingOccupancyTo(){return _buildingOccupancyTo;} const 
+    double equivFullLoadOccupancyFrom(){return _equivFullLoadOccupancyFrom;} const 
+    double equivFullLoadOccupancyTo(){return _equivFullLoadOccupancyTo;} const 
+    double peopleDensityOccupied(){return _peopleDensityOccupied;} const 
+    double peopleDensityUnoccupied(){return _peopleDensityUnoccupied;} const 
+    double heatingOccupiedSetpoint(){return _heatingOccupiedSetpoint;} const 
+    double heatingUnoccupiedSetpoint(){return _heatingUnoccupiedSetpoint;} const 
+    double coolingOccupiedSetpoint(){return _coolingOccupiedSetpoint;} const 
+    double coolingUnoccupiedSetpoint(){return _coolingUnoccupiedSetpoint;} const 
+    double elecPowerAppliancesOccupied(){return _elecPowerAppliancesOccupied;} const 
+    double elecPowerAppliancesUnoccupied(){return _elecPowerAppliancesUnoccupied;} const 
+    double gasPowerAppliancesOccupied(){return _gasPowerAppliancesOccupied;} const 
+    double gasPowerAppliancesUnoccupied(){return _gasPowerAppliancesUnoccupied;} const 
+    double lightingPowerIntensityOccupied(){return _lightingPowerIntensityOccupied;} const 
+    double lightingPowerIntensityUnoccupied(){return _lightingPowerIntensityUnoccupied;} const 
+    double exteriorLightingPower(){return _exteriorLightingPower;} const 
+    double daylightSensorSystem(){return _daylightSensorSystem;} const 
+    double lightingOccupancySensorSystem(){return _lightingOccupancySensorSystem;} const 
+    double constantIlluminationControl(){return _constantIlluminationControl;} const 
+    double coolingSystemCOP(){return _coolingSystemCOP;} const 
+    double coolingSystemIPLV(){return _coolingSystemIPLV;} const 
+    double heatingEnergyCarrier(){return _heatingEnergyCarrier;} const 
+    double heatingSystemEfficiency(){return _heatingSystemEfficiency;} const 
+    double ventilationType(){return _ventilationType;} const 
+    double freshAirFlowRate(){return _freshAirFlowRate;} const 
+    double supplyExhaustRate(){return _supplyExhaustRate;} const 
+    double heatRecovery(){return _heatRecovery;} const 
+    double exhaustAirRecirclation(){return _exhaustAirRecirclation;} const 
+    double buildingAirLeakage(){return _buildingAirLeakage;} const 
+    double dhwDemand(){return _dhwDemand;} const 
+    double dhwEfficiency(){return _dhwEfficiency;} const 
+    double dhwDistributionSystem(){return _dhwDistributionSystem;} const 
+    double dhwEnergyCarrier(){return _dhwEnergyCarrier;} const 
+    double bemType(){return _bemType;} const 
+    double interiorHeatCapacity(){return _interiorHeatCapacity;} const 
+    double specificFanPower(){return _specificFanPower;} const 
+    double fanFlowControlFactor(){return _fanFlowControlFactor;} const 
 
-    double windowSHGC(){return _windowSHGC;}
-    double windowSCF(){return _windowSCF;}
-    double windowSD(){return _windowSD;}
-    double wallUValue(){return _wallUValue;}
-    double wallSolarAbsorbtion(){return _wallSolarAbsorbtion;}
-    double wallThermalEmissivity(){return _wallThermalEmissivity;}
     double roofUValue(){return _roofUValue;}
-    double roofSHGC(){return _roofSHGC;}
     double wallAreaS(){return _wallAreaS;}
     double wallAreaSE(){return _wallAreaSE;}
     double wallAreaE(){return _wallAreaE;}
@@ -192,6 +258,10 @@ namespace isomodel {
     double windowAreaW(){return _windowAreaW;}
     double windowAreaSW(){return _windowAreaSW;}
     double skylightArea(){return _skylightArea;}
+    double roofSolarAbsorption(){return _roofSolarAbsorption;}
+    double roofThermalEmissivity(){return _roofThermalEmissivity;}
+    double skylightUvalue(){return _skylightUvalue;}
+    double skylightSHGC(){return _skylightSHGC;}
     
     double exteriorHeatCapacity(){return _exteriorHeatCapacity;}
     double infiltration(){return _infiltration;}
@@ -203,14 +273,14 @@ namespace isomodel {
     double coolingPumpControl(){return _coolingPumpControl;}
     double heatGainPerPerson(){return _heatGainPerPerson;}
     
+    void setWeatherFilePath(std::string val){_weatherFilePath = val;}
     void setTerrainClass(double val){ _terrainClass = val;}
-    void setStories(double val){ _stories = val;}
     void setFloorArea(double val){ _floorArea = val;}
-    void setFloorToFloorHeight(double val){ _floorToFloorHeight = val;}
+    void setBuildingHeight(double val){ _buildingHeight = val;}
     void setBuildingOccupancyFrom(double val){ _buildingOccupancyFrom = val;}
     void setBuildingOccupancyTo(double val){ _buildingOccupancyTo = val;}
     void setEquivFullLoadOccupancyFrom(double val){ _equivFullLoadOccupancyFrom = val;}
-    void setQeuivFullLoadOccupancyTo(double val){ _qeuivFullLoadOccupancyTo = val;}
+    void setEquivFullLoadOccupancyTo(double val){ _equivFullLoadOccupancyTo = val;}
     void setPeopleDensityOccupied(double val){ _peopleDensityOccupied = val;}
     void setPeopleDensityUnoccupied(double val){ _peopleDensityUnoccupied = val;}
     void setHeatingOccupiedSetpoint(double val){ _heatingOccupiedSetpoint = val;}
@@ -219,10 +289,10 @@ namespace isomodel {
     void setCoolingUnoccupiedSetpoint(double val){ _coolingUnoccupiedSetpoint = val;}
     void setElecPowerAppliancesOccupied(double val){ _elecPowerAppliancesOccupied = val;}
     void setElecPowerAppliancesUnoccupied(double val){ _elecPowerAppliancesUnoccupied = val;}
-    void setGasPowerAppliancedOccupied(double val){ _gasPowerAppliancedOccupied = val;}
-    void setGasPowerAppliancedUnoccupied(double val){ _gasPowerAppliancedUnoccupied = val;}
-    void setLightingpowerIntensityOccupied(double val){ _lightingpowerIntensityOccupied = val;}
-    void setLightingpowerIntensityUnoccupied(double val){ _lightingpowerIntensityUnoccupied = val;}
+    void setGasPowerAppliancesOccupied(double val){ _gasPowerAppliancesOccupied = val;}
+    void setGasPowerAppliancesUnoccupied(double val){ _gasPowerAppliancesUnoccupied = val;}
+    void setLightingPowerIntensityOccupied(double val){ _lightingPowerIntensityOccupied = val;}
+    void setLightingPowerIntensityUnoccupied(double val){ _lightingPowerIntensityUnoccupied = val;}
     void setExteriorLightingPower(double val){ _exteriorLightingPower = val;}
     void setDaylightSensorSystem(double val){ _daylightSensorSystem = val;}
     void setLightingOccupancySensorSystem(double val){ _lightingOccupancySensorSystem = val;}
@@ -235,7 +305,7 @@ namespace isomodel {
     void setFreshAirFlowRate(double val){ _freshAirFlowRate = val;}
     void setSupplyExhaustRate(double val){ _supplyExhaustRate = val;}
     void setHeatRecovery(double val){ _heatRecovery = val;}
-    void setExhaustAirRecirculation(double val){ _exhaustAirRecirculation = val;}
+    void setExhaustAirRecirclation(double val){ _exhaustAirRecirclation = val;}
     void setBuildingAirLeakage(double val){ _buildingAirLeakage = val;}
     void setDhwDemand(double val){ _dhwDemand = val;}
     void setDhwEfficiency(double val){ _dhwEfficiency = val;}
@@ -245,18 +315,7 @@ namespace isomodel {
     void setInteriorHeatCapacity(double val){ _interiorHeatCapacity = val;}
     void setSpecificFanPower(double val){ _specificFanPower = val;}
     void setFanFlowControlFactor(double val){ _fanFlowControlFactor = val;}
-    void setWindowUValue(double val){ _windowUValue = val;}
-    void setWindowSolarAbsorbtion(double val){ _windowSolarAbsorbtion = val;}
-    void setWindowThermalEmissivity(double val){ _windowThermalEmissivity = val;}
-
-    void setWindowSHGC(double val){ _windowSHGC = val;}
-    void setWindowSCF(double val){ _windowSCF = val;}
-    void setWindowSD(double val){ _windowSD = val;}
-    void setWallUValue(double val){ _wallUValue = val;}
-    void setWallSolarAbsorbtion(double val){ _wallSolarAbsorbtion = val;}
-    void setWallThermalEmissivity(double val){ _wallThermalEmissivity = val;}
     void setRoofUValue(double val){ _roofUValue = val;}
-    void setRoofSHGC(double val){ _roofSHGC = val;}
     void setWallAreaS(double val){ _wallAreaS = val;}
     void setWallAreaSE(double val){ _wallAreaSE = val;}
     void setWallAreaE(double val){ _wallAreaE = val;}
@@ -275,6 +334,10 @@ namespace isomodel {
     void setWindowAreaW(double val){ _windowAreaW = val;}
     void setWindowAreaSW(double val){ _windowAreaSW = val;}
     void setSkylightArea(double val){ _skylightArea = val;}
+    void setRoofSolarAbsorption(double val){_roofSolarAbsorption = val;}
+    void setRoofThermalEmissivity(double val){_roofThermalEmissivity = val;}
+    void setSkylightUvalue(double val){_skylightUvalue = val;}
+    void setSkylightSHGC(double val){_skylightSHGC = val;}
 
     void setExteriorHeatCapacity(double val){ _exteriorHeatCapacity = val;}
     void setInfiltration(double val){ _infiltration = val;}

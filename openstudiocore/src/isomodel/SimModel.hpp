@@ -41,19 +41,15 @@ namespace openstudio {
 
   class EndUses;
 
-namespace isomodel {
+namespace isomodel { 
+
+  struct ISOResults{    
+      std::vector<EndUses> monthlyResults;
+  };
 
   class ISOMODEL_API SimModel {
+  private:      
   public:
-
-    SimModel();
-
-    virtual ~SimModel();
-
-    /** Can't get the shared_ptr to work with EndUses so revert to just pointer **/
-    EndUses* simulate() const;
-  
-  private:
     boost::shared_ptr<Population> pop;
     boost::shared_ptr<Location> location;
     boost::shared_ptr<Lighting> lights;
@@ -61,8 +57,12 @@ namespace isomodel {
     boost::shared_ptr<Structure> structure;
     boost::shared_ptr<Heating> heating;
     boost::shared_ptr<Cooling> cooling;
-    boost::shared_ptr<Ventilation> ventilation;        
+    boost::shared_ptr<Ventilation> ventilation;  
 
+    SimModel();
+    virtual ~SimModel();
+    ISOResults simulate() const;
+    void initForTests();
     void scheduleAndOccupancy(Vector& weekdayOccupiedMegaseconds, 
             Vector& weekdayUnoccupiedMegaseconds,
             Vector& weekendOccupiedMegaseconds,
@@ -169,6 +169,8 @@ namespace isomodel {
             double phi_I_tot,
             double frac_hrs_wk_day,
             Vector& v_Qfan_tot,
+            Vector& v_Qneed_ht,
+            Vector& v_Qneed_cl,
             double& Qneed_ht_yr,
             double& Qneed_cl_yr) const;
     void hvac(const Vector& v_Qneed_ht,
@@ -187,8 +189,7 @@ namespace isomodel {
     void energyGeneration() const;
     void heatedWater(Vector& v_Q_dhw_elec, Vector& v_Q_dhw_gas) const;
 
-    /** Can't get the shared_ptr to work with EndUses so revert to just pointer **/
-    EndUses* outputGeneration(const Vector& v_Qelec_ht,
+    ISOResults outputGeneration(const Vector& v_Qelec_ht,
             const Vector& v_Qcl_elec_tot,
             const Vector& v_Q_illum_tot,
             const Vector& v_Q_illum_ext_tot,
@@ -203,7 +204,6 @@ namespace isomodel {
 
     REGISTER_LOGGER("openstudio.isomodel.SimModel");
   };
-
 } // isomodel
 } // openstudio
 

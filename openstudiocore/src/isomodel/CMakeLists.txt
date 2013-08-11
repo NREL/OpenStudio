@@ -27,6 +27,12 @@ SET( ${target_name}_src
   Structure.hpp
   Ventilation.hpp
   WeatherData.hpp
+  EpwData.hpp
+  EpwData.cpp
+  SolarRadiation.hpp
+  SolarRadiation.cpp
+  TimeFrame.hpp
+  TimeFrame.cpp
 )
 
 SET( ${target_name}_test_src
