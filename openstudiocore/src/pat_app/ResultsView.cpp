@@ -1161,7 +1161,7 @@ void DataPointCalibrationView::update()
       if (nmbe){
         label->setText(QString::number(*nmbe, 'f', 2));
       }else{
-        label->setText("");
+        label->setText("--");
       }
       hLayout->addWidget(label);
 
@@ -1172,7 +1172,7 @@ void DataPointCalibrationView::update()
       if (cvrmse){
         label->setText(QString::number(*cvrmse, 'f', 2));
       }else{
-        label->setText("");
+        label->setText("--");
       }
       hLayout->addWidget(label);
     }
