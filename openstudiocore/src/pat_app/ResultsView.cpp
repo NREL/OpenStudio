@@ -217,7 +217,7 @@ ResultsView::ResultsView()
   resultsHeader = new DataPointCalibrationHeaderView();
   innerContentVLayout->addWidget(resultsHeader);
 
-  // Calibration list (includes header)
+  // Calibration list 
   dataPointCalibrationListView = new OSListView(true);
   dataPointCalibrationListView->setVerticalScrollBarAlwaysOn(true);
   dataPointCalibrationListView->setSpacing(0);
@@ -1071,8 +1071,10 @@ DataPointCalibrationHeaderView::DataPointCalibrationHeaderView()
   nameLabel->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
   nameLabel->setText("Design\nAlternative\nName");
   hLayout->addWidget(nameLabel);
+  hLayout->setStretchFactor(nameLabel, 100);
   
   QLabel* space = new QLabel();
+  space->setStyleSheet(style);
   space->setFixedWidth(SPACER_WIDTH);
   space->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
   hLayout->addWidget(space);
@@ -1102,7 +1104,12 @@ DataPointCalibrationHeaderView::DataPointCalibrationHeaderView()
     }
   }
 
-  hLayout->addStretch();
+  hLayout->addStretch(10);
+
+  QLabel* scrollSpacer = new QLabel();
+  scrollSpacer->setStyleSheet(style);
+  scrollSpacer->setFixedWidth(SCROLL_SPACER_WIDTH);
+  hLayout->addWidget(scrollSpacer);
 }
 
 DataPointCalibrationView::DataPointCalibrationView(const openstudio::analysis::DataPoint& dataPoint,
@@ -1122,7 +1129,8 @@ void DataPointCalibrationView::update()
   hLayout->setSpacing(0);
   this->setLayout(hLayout);
 
-  QString style("QLabel { border-right: 1px solid black; color: black; }");
+  QString style("QLabel {color: black;}");
+  QString borderStyle("QLabel {border-right: 1px solid black; color: black;}");
 
   m_nameLabel = new QLabel();
   m_nameLabel->setWordWrap(true);
@@ -1132,8 +1140,10 @@ void DataPointCalibrationView::update()
   m_nameLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
   m_nameLabel->setText(m_dataPoint.name().c_str());
   hLayout->addWidget(m_nameLabel);
+  hLayout->setStretchFactor(m_nameLabel, 100);
 
   QLabel* space = new QLabel();
+  space->setStyleSheet(borderStyle);
   space->setFixedWidth(SPACER_WIDTH);
   space->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
   hLayout->addWidget(space);
@@ -1156,7 +1166,7 @@ void DataPointCalibrationView::update()
       hLayout->addWidget(label);
 
       label = new QLabel();
-      label->setStyleSheet(style);
+      label->setStyleSheet(borderStyle);
       label->setFixedWidth(CALIBRATION_LABEL_WIDTH);
       label->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
       if (cvrmse){
@@ -1168,7 +1178,7 @@ void DataPointCalibrationView::update()
     }
   }
 
-  hLayout->addStretch();
+  hLayout->addStretch(10);
 }
 
 void DataPointCalibrationView::setHasEmphasis(bool hasEmphasis)
