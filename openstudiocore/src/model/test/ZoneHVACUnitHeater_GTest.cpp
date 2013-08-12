@@ -18,7 +18,6 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
 #include <model/test/ModelFixture.hpp>
 #include <model/FanConstantVolume.hpp>
 #include <model/FanConstantVolume_Impl.hpp>
@@ -33,9 +32,9 @@
 #include <model/ThermalZone_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
-
 #include <utilities/units/Quantity.hpp>
 #include <utilities/units/Unit.hpp>
+#include <model/LifeCycleCost.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -172,4 +171,20 @@ TEST_F(ModelFixture,ZoneHVACUnitHeater_Check_Heating_Coil) {
   EXPECT_EQ(zoneHVACUnitHeater.heatingConvergenceTolerance(),0.001);
   EXPECT_TRUE(zoneHVACUnitHeater.isHeatingConvergenceToleranceDefaulted());
 }
- 
+
+// Test add Life Cycle Costs
+
+TEST_F(ModelFixture,ZoneHVACUnitHeater_addLifeCycleCosts) {
+  
+  Model model;
+  ScheduleConstant sched(model);
+  sched.setValue(1.0); // Always on
+  FanConstantVolume fan(model,sched);
+  CoilHeatingWater heatingCoil(model,sched);
+  ZoneHVACUnitHeater zoneHVACUnitHeater(model,sched,fan,heatingCoil);
+
+  boost::optional<openstudio::model::LifeCycleCost> cost1 = openstudio::model::LifeCycleCost::createLifeCycleCost("Install", zoneHVACUnitHeater, 1000.0, "CostPerEach", "Construction");
+  ASSERT_TRUE(cost1);
+
+  EXPECT_DOUBLE_EQ(1000.0, cost1->totalCost());
+}
