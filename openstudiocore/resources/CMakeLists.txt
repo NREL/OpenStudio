@@ -577,6 +577,8 @@ ENDIF(BUILD_SDD)
 SET(ENERGYPLUS_OUTPUTS "")
 
 SET(analysis_resources_src
+  analysis/version/analysis_1-0-3.json
+  analysis/version/data_point_1-0-3.json
 )
 
 # update the resources
