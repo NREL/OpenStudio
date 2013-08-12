@@ -33,6 +33,7 @@
 #include <model/CurveCubic_Impl.hpp>
 #include <model/CurveQuadratic.hpp>
 #include <model/CurveQuadratic_Impl.hpp>
+#include <model/LifeCycleCost.hpp>
 
 using namespace openstudio;
 
@@ -342,4 +343,36 @@ TEST(CoilCoolingDXTwoSpeed,CoilCoolingDXTwoSpeed_SetGetFields)
     ASSERT_EQ(basinSch,coil.getBasinHeaterOperatingSchedule().get());
 }
 
+//Test adding LifeCycleCost
+TEST(CoilCoolingDXTwoSpeed, CoilCoolingDXTwoSpeed_Cost)
+{
+    //create a model to use in testing this code.
+    model::Model m;
 
+    //create a schedule and the curves to use in the constructor
+    model::ScheduleCompact schedule(m);
+    model::CurveBiquadratic ccfot1(m);
+    model::CurveCubic ccfof2(m);
+    model::CurveBiquadratic eirfot3(m);
+    model::CurveQuadratic eirfof4(m);
+    model::CurveCubic plf5(m);
+    model::CurveBiquadratic lsccfot6(m);
+    model::CurveBiquadratic lseirfot7(m);
+
+    //make a coil to do the testing on
+    model::CoilCoolingDXTwoSpeed coil(m,
+                                      schedule,
+                                      ccfot1,
+                                      ccfof2,
+                                      eirfot3,
+                                      eirfof4,
+                                      plf5,
+                                      lsccfot6,
+                                      lseirfot7);
+
+  boost::optional<openstudio::model::LifeCycleCost> cost1 = openstudio::model::LifeCycleCost::createLifeCycleCost("Install", coil, 1000.0, "CostPerEach", "Construction");
+  ASSERT_TRUE(cost1);
+
+  EXPECT_DOUBLE_EQ(1000.0, cost1->totalCost());
+
+}
