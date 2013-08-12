@@ -100,6 +100,11 @@ rescue Exception=>e
       #path_string = `where ruby`
       #$OpenStudio_RubyExe = OpenStudio::Path.new(path_string.strip)
       #$OpenStudio_RubyExeDir = $OpenStudio_RubyExe.parent_path()
+      
+      # only do this for dev for running unit tests
+      $OpenStudio_RubyExe = OpenStudio::Path.new($OpenStudio_RubyExe)
+      $OpenStudio_RubyExeDir = $OpenStudio_RubyExe.parent_path()
+  
     rescue Exception=>e
     end
   else
@@ -107,6 +112,11 @@ rescue Exception=>e
       #path_string = `which ruby`
       #$OpenStudio_RubyExe = OpenStudio::Path.new(path_string.strip)
       #$OpenStudio_RubyExeDir = $OpenStudio_RubyExe.parent_path()
+      
+      # only do this for dev for running unit tests
+      $OpenStudio_RubyExe = OpenStudio::Path.new($OpenStudio_RubyExe)
+      $OpenStudio_RubyExeDir = $OpenStudio_RubyExe.parent_path()
+      
     rescue Exception=>e
     end
   end
