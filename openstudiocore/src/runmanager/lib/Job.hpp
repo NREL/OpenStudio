@@ -353,6 +353,9 @@ namespace detail {
 
       void moveToThread(QThread* targetThread);
 
+      /// \returns true if the job is flagged as externally managed
+      bool externallyManaged() const;
+
     protected:
       Job(const boost::shared_ptr<detail::Job_Impl> &t_impl);
 

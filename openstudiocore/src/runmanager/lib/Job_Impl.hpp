@@ -298,6 +298,10 @@ namespace detail {
       /// Update this job tree with the details from the other job tree
       void updateJob(const boost::shared_ptr<Job_Impl> &t_other);
 
+
+      /// \returns true if this job is externallyManaged
+      bool externallyManaged() const;
+
     protected:
       /// Called when the base path has changed
       virtual void basePathChanged() = 0;

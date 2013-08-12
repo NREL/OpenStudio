@@ -2359,6 +2359,7 @@ namespace detail {
 
   void RunManager_Impl::updateJobs(const std::vector<Job> &t_jobTrees)
   {
+    LOG(Info, "Updating jobs: " << t_jobTrees.size());
     for (std::vector<Job>::const_iterator itr = t_jobTrees.begin();
          itr != t_jobTrees.end();
          ++itr)
@@ -2366,7 +2367,7 @@ namespace detail {
       try {
         Job j = getJob(itr->uuid());
         j.updateJob(*itr);
-      } catch (const std::runtime_error &) {
+      } catch (const std::out_of_range &) {
         // job didn't exist
         enqueue(*itr, true, m_dbfile.parent_path());
       }

@@ -480,6 +480,10 @@ namespace runmanager {
     m_impl->updateJob(t_other.m_impl);
   }
 
+  bool Job::externallyManaged() const
+  {
+    return m_impl->externallyManaged();
+  }
 }
 }
 

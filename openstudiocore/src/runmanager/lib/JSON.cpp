@@ -54,7 +54,11 @@ namespace detail {
 
   std::string JSON::toJSON(const std::vector<Job> &t_jobs)
   {
-    return openstudio::toJSON(toVariant(t_jobs));
+    QVariantMap result;
+    result["metadata"] = jsonMetadata();
+    result["jobs"] = toVariant(t_jobs);
+
+    return openstudio::toJSON(QVariant(result));
   }
 
 
@@ -86,11 +90,11 @@ namespace detail {
       {
         params.remove("jobExternallyManaged");
       }
+    }
 
-      if (t_externallyManaged)
-      {
-        params.append("jobExternallyManaged", "true");
-      }
+    if (t_externallyManaged)
+    {
+      params.append("jobExternallyManaged", "true");
     }
 
     Job job = JobFactory::createJob(
@@ -103,9 +107,9 @@ namespace detail {
         map.contains("uuid") ? openstudio::UUID(map["uuid"].toString()) : boost::optional<openstudio::UUID>(),
 
         JobState(
-          map.contains("lastRun")?openstudio::DateTime(toString(map["lastRun"].toString())):boost::optional<openstudio::DateTime>(),
+          map.contains("last_run")?openstudio::DateTime(toString(map["last_run"].toString())):boost::optional<openstudio::DateTime>(),
           toJobErrors(map["errors"], t_version),
-          Files(toVectorOfFileInfo(map["outputFiles"], t_version)),
+          Files(toVectorOfFileInfo(map["output_files"], t_version)),
           toAdvancedStatus(map["status"], t_version)
           )
         );

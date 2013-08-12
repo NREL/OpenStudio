@@ -1776,6 +1776,11 @@ namespace detail {
     }
   }
 
+  bool Job_Impl::externallyManaged() const
+  {
+    QReadLocker l(&m_mutex);
+    return m_externallyManaged;
+  }
 }
 }
 }

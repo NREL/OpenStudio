@@ -301,7 +301,7 @@ namespace runmanager {
   void RunManager::updateJobs(const std::string &t_json, bool t_externallyManaged)
   {
     std::pair<QVariant,VersionString> parseResult = loadJSON(t_json);
-    updateJobs(parseResult.first, parseResult.second, t_externallyManaged);
+    updateJobs(parseResult.first.toMap()["jobs"], parseResult.second, t_externallyManaged);
   }
 
   /// Load all of the jobs from the given JSON structure represented by a QVariant,
@@ -344,6 +344,8 @@ namespace runmanager {
         retval.push_back(*itr);
       }
     }
+
+    LOG(Debug, "Returning jobs for export: " << retval.size());
 
     return retval;
   }
