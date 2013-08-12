@@ -45,6 +45,7 @@
 #include <project/AnalysisRecord_Impl.hpp>
 
 #include <utilities/data/Attribute.hpp>
+#include <utilities/data/CalibrationResult.hpp>
 #include <utilities/units/Quantity.hpp>
 #include <utilities/units/QuantityConverter.hpp>
 #include <utilities/units/Unit.hpp>
@@ -63,17 +64,60 @@
 #include <QTableWidget>
 #include <QTableWidgetItem>
 #include <QTimer>
+#include <QButtonGroup>
+#include <QStackedWidget>
 
 #define NAME_LABEL_WIDTH 90
 #define SPACER_WIDTH 3
 #define RESULT_LABEL_WIDTH 90
-#define RESULT_DIV_LABEL_WIDTH 5
-#define RESULT_PCT_LABEL_WIDTH 40
+#define CALIBRATION_LABEL_WIDTH 140
 #define SCROLL_SPACER_WIDTH 18
 
 namespace openstudio {
   
 namespace pat {
+
+
+boost::optional<double> getNMBE(const FuelType& fuelType, const analysis::DataPoint& dataPoint){
+  boost::optional<Attribute> attribute = dataPoint.getOutputAttribute(CalibrationResult::attributeName());
+  if(attribute){
+    boost::optional<CalibrationResult> calibrationResult = CalibrationResult::fromAttribute(*attribute);
+    if (calibrationResult){
+      Q_FOREACH(const CalibrationUtilityBill& bill, calibrationResult->utilityBills()){
+        if (bill.fuelType() == fuelType){
+          return bill.NMBE();
+        }
+      }
+    }
+  }
+  return boost::none;
+}
+
+boost::optional<double> getCVRMSE(const FuelType& fuelType, const analysis::DataPoint& dataPoint){
+  boost::optional<Attribute> attribute = dataPoint.getOutputAttribute(CalibrationResult::attributeName());
+  if(attribute){
+    boost::optional<CalibrationResult> calibrationResult = CalibrationResult::fromAttribute(*attribute);
+    if (calibrationResult){
+      Q_FOREACH(const CalibrationUtilityBill& bill, calibrationResult->utilityBills()){
+        if (bill.fuelType() == fuelType){
+          return bill.CVRMSE();
+        }
+      }
+    }
+  }
+  return boost::none;
+}
+
+bool hasCalibrationResults(const analysis::DataPoint& dataPoint){
+  Q_FOREACH(int i, FuelType::getValues()){
+    FuelType fuelType(i);
+    if (getNMBE(fuelType, dataPoint) || getCVRMSE(fuelType, dataPoint)){
+      return true;
+    }
+  }
+  return false;
+}
+
 
 ResultsView::ResultsView()
   : PatMainTabView()
@@ -89,14 +133,44 @@ ResultsView::ResultsView()
   mainContentVLayout->setSpacing(0);
   mainContentVLayout->setAlignment(Qt::AlignTop);
   mainContent->setLayout(mainContentVLayout);
+  viewSwitcher->setView(mainContent);
+  
+  // Make Selection Button Widget
+  
+  QHBoxLayout* hLayout = new QHBoxLayout(this);
+  QLabel* reportLabel = new QLabel("View: ",this);
+  reportLabel->setObjectName("H2");
+  reportLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+  hLayout->addWidget(reportLabel, 0, Qt::AlignLeft | Qt::AlignTop);
 
-  QVBoxLayout * innerContentVLayout = new QVBoxLayout();
+  QButtonGroup* buttonGroup = new QButtonGroup(this);
+  bool isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(selectView(int)));
+  Q_ASSERT(isConnected);
+
+  m_standardResultsBtn = new QPushButton("Standard",this);
+  m_standardResultsBtn->setCheckable(true);
+  hLayout->addWidget(m_standardResultsBtn, 0, Qt::AlignLeft | Qt::AlignTop);
+  buttonGroup->addButton(m_standardResultsBtn,0);
+
+  m_calibrationResultsBtn = new QPushButton("Calibration",this);
+  m_calibrationResultsBtn->setCheckable(true);
+  hLayout->addWidget(m_calibrationResultsBtn, 0, Qt::AlignLeft | Qt::AlignTop);
+  buttonGroup->addButton(m_calibrationResultsBtn,1);
+
+  hLayout->addStretch();
+  QWidget* widget = new QWidget(this);
+  widget->setLayout(hLayout);
+  mainContentVLayout->addWidget(widget);
+
+  m_stackedWidget = new QStackedWidget(this);
+  mainContentVLayout->addWidget(m_stackedWidget);
+
+  //********************************************* PAGE 1 *********************************************
+
+  QVBoxLayout* innerContentVLayout = new QVBoxLayout();
   innerContentVLayout->setContentsMargins(5,5,5,5);
   innerContentVLayout->setSpacing(5);
   innerContentVLayout->setAlignment(Qt::AlignTop);
-  mainContentVLayout->addLayout(innerContentVLayout);
-
-  viewSwitcher->setView(mainContent);
 
   // Baseline header
   QWidget * baselineHeader = new ResultsHeader(true);
@@ -127,7 +201,35 @@ ResultsView::ResultsView()
   dataPointResultsListView->setStyleSheet("openstudio--OSListView { border: 1px solid black; }");
   innerContentVLayout->addWidget(dataPointResultsListView);
 
-  bool isConnected = false;
+  // create widget for stacked widget
+  widget = new QWidget(this);
+  widget->setLayout(innerContentVLayout);
+  m_stackedWidget->addWidget(widget);
+
+  //********************************************* PAGE 2 *********************************************
+
+  innerContentVLayout = new QVBoxLayout();
+  innerContentVLayout->setContentsMargins(5,5,5,5);
+  innerContentVLayout->setSpacing(5);
+  innerContentVLayout->setAlignment(Qt::AlignTop);
+
+  // Results header
+  resultsHeader = new DataPointCalibrationHeaderView();
+  innerContentVLayout->addWidget(resultsHeader);
+
+  // Calibration list (includes header)
+  dataPointCalibrationListView = new OSListView(true);
+  dataPointCalibrationListView->setVerticalScrollBarAlwaysOn(true);
+  dataPointCalibrationListView->setSpacing(0);
+  dataPointCalibrationListView->setContentsMargins(1,1,1,1);
+  dataPointCalibrationListView->setStyleSheet("openstudio--OSListView { border: 1px solid black; }");
+  innerContentVLayout->addWidget(dataPointCalibrationListView);
+
+  widget = new QWidget(this);
+  widget->setLayout(innerContentVLayout);
+  m_stackedWidget->addWidget(widget);
+
+  //********************************************* Footer *********************************************
 
   QWidget * footer = new QWidget();
   footer->setObjectName("Footer");
@@ -139,7 +241,7 @@ ResultsView::ResultsView()
   footer->setStyleSheet(style);
 
   // Open File Button
-  QHBoxLayout* hLayout = new QHBoxLayout();
+  hLayout = new QHBoxLayout();
   hLayout->setContentsMargins(5,5,5,5);
   hLayout->setSpacing(10);
   footer->setLayout(hLayout);
@@ -163,6 +265,35 @@ ResultsView::ResultsView()
   
   hLayout->addStretch();
   mainContentVLayout->addWidget(footer);
+
+  updateReportButtons();
+  selectView(0);
+}
+
+void ResultsView::updateReportButtons()
+{
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  if(project){
+
+    analysis::DataPoint baselineDataPoint = project.get().baselineDataPoint();
+
+    bool hasUtilityBills = hasCalibrationResults(baselineDataPoint);
+
+    if (hasUtilityBills){
+      m_standardResultsBtn->setEnabled(true);
+      m_calibrationResultsBtn->setEnabled(true);
+    }else{
+      m_standardResultsBtn->setEnabled(false);
+      m_calibrationResultsBtn->setEnabled(false);
+      selectView(0);
+    }
+  }
+
+}
+
+void ResultsView::selectView(int index)
+{
+  m_stackedWidget->setCurrentIndex(index);
 }
 
 void ResultsView::enableViewFileButton(bool enable)
@@ -919,6 +1050,150 @@ boost::optional<double> DataPointResultsView::simplePayback()
   }
   return result;
 }
+
+
+DataPointCalibrationHeaderView::DataPointCalibrationHeaderView()
+  : QWidget()
+{
+  this->setMinimumHeight(75);
+
+  QHBoxLayout* hLayout = new QHBoxLayout();
+  hLayout->setContentsMargins(0,0,0,0);
+  hLayout->setSpacing(0);
+  this->setLayout(hLayout);
+
+  QString style("QLabel {font-size: 12px; font: bold; color: black;}");
+
+  QLabel* nameLabel = new QLabel();
+  nameLabel->setStyleSheet(style);
+  nameLabel->setMinimumWidth(NAME_LABEL_WIDTH);
+  //nameLabel->setFixedWidth(NAME_LABEL_WIDTH);
+  nameLabel->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
+  nameLabel->setText("Design\nAlternative\nName");
+  hLayout->addWidget(nameLabel);
+  
+  QLabel* space = new QLabel();
+  space->setFixedWidth(SPACER_WIDTH);
+  space->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
+  hLayout->addWidget(space);
+
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  if(project){
+
+    analysis::DataPoint baselineDataPoint = project.get().baselineDataPoint();
+
+    Q_FOREACH(int i, FuelType::getValues()){
+      FuelType fuelType(i);
+      if (getNMBE(fuelType, baselineDataPoint) || getCVRMSE(fuelType, baselineDataPoint)){
+        QLabel* label = new QLabel();
+        label->setStyleSheet(style);
+        label->setFixedWidth(CALIBRATION_LABEL_WIDTH);
+        label->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
+        label->setText(toQString(fuelType.valueDescription() + "\nConsumption\nNMBE"));
+        hLayout->addWidget(label);
+
+        label = new QLabel();
+        label->setStyleSheet(style);
+        label->setFixedWidth(CALIBRATION_LABEL_WIDTH);
+        label->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
+        label->setText(toQString(fuelType.valueDescription() + "\nConsumption\nCVRMSE"));
+        hLayout->addWidget(label);
+      }
+    }
+  }
+
+  hLayout->addStretch();
+}
+
+DataPointCalibrationView::DataPointCalibrationView(const openstudio::analysis::DataPoint& dataPoint,
+                                                   const openstudio::analysis::DataPoint& baselineDataPoint,
+                                                   bool alternateRow)
+  : QAbstractButton(), m_dataPoint(dataPoint), m_baselineDataPoint(baselineDataPoint), m_alternateRow(alternateRow)
+{
+  this->setMinimumHeight(75);
+
+  update();
+}
+
+void DataPointCalibrationView::update()
+{
+  QHBoxLayout* hLayout = new QHBoxLayout;
+  hLayout->setContentsMargins(0,0,0,0);
+  hLayout->setSpacing(0);
+  this->setLayout(hLayout);
+
+  QString style("QLabel { border-right: 1px solid black; color: black; }");
+
+  m_nameLabel = new QLabel();
+  m_nameLabel->setWordWrap(true);
+  m_nameLabel->setStyleSheet(style);
+  m_nameLabel->setMinimumWidth(NAME_LABEL_WIDTH);
+  //m_nameLabel->setFixedWidth(NAME_LABEL_WIDTH);
+  m_nameLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+  m_nameLabel->setText(m_dataPoint.name().c_str());
+  hLayout->addWidget(m_nameLabel);
+
+  QLabel* space = new QLabel();
+  space->setFixedWidth(SPACER_WIDTH);
+  space->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+  hLayout->addWidget(space);
+
+  Q_FOREACH(int i, FuelType::getValues()){
+    FuelType fuelType(i);
+    if (getNMBE(fuelType, m_baselineDataPoint) || getCVRMSE(fuelType, m_baselineDataPoint)){
+      boost::optional<double> nmbe = getNMBE(fuelType, m_dataPoint);
+      boost::optional<double> cvrmse = getCVRMSE(fuelType, m_dataPoint);
+
+      QLabel* label = new QLabel();
+      label->setStyleSheet(style);
+      label->setFixedWidth(CALIBRATION_LABEL_WIDTH);
+      label->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+      if (nmbe){
+        label->setText(QString::number(*nmbe, 'f', 2));
+      }else{
+        label->setText("");
+      }
+      hLayout->addWidget(label);
+
+      label = new QLabel();
+      label->setStyleSheet(style);
+      label->setFixedWidth(CALIBRATION_LABEL_WIDTH);
+      label->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+      if (cvrmse){
+        label->setText(QString::number(*cvrmse, 'f', 2));
+      }else{
+        label->setText("");
+      }
+      hLayout->addWidget(label);
+    }
+  }
+
+  hLayout->addStretch();
+}
+
+void DataPointCalibrationView::setHasEmphasis(bool hasEmphasis)
+{
+  if( hasEmphasis ){
+    setStyleSheet("openstudio--pat--DataPointCalibrationView { background: #FECD60; border: 2px solid #EE641A; }");
+  }else{
+    if (m_dataPoint.uuid() == m_baselineDataPoint.uuid()){
+      setStyleSheet("openstudio--pat--DataPointCalibrationView {background: #B6B5B6;}");
+    }else if (m_alternateRow){
+      setStyleSheet("openstudio--pat--DataPointCalibrationView {background: #E0E0E0;}");
+    }else{
+      setStyleSheet("openstudio--pat--DataPointCalibrationView {background: #D0D0D0;}");
+    }
+  }
+}
+
+void DataPointCalibrationView::paintEvent(QPaintEvent * e)
+{
+  QStyleOption opt;
+  opt.init(this);
+  QPainter p(this);
+  style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
 
 } // pat
 

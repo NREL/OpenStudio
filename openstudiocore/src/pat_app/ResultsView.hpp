@@ -31,6 +31,7 @@ class QStringList;
 class QTableWidget;
 class QTimer;
 class QPaintEvent;
+class QStackedWidget;
 
 namespace openstudio{
 
@@ -54,6 +55,8 @@ class ResultsView : public PatMainTabView
 
     OSListView* dataPointResultsListView;
 
+    OSListView* dataPointCalibrationListView;
+
   signals: 
 
     void openButtonClicked(bool clicked);
@@ -62,12 +65,19 @@ class ResultsView : public PatMainTabView
 
   public slots:
 
+    void updateReportButtons();
+
+    void selectView(int index);
+
     void enableViewFileButton(bool enable);
 
     void enableOpenDirectoryButton(bool enable);
 
   private:
+    QStackedWidget * m_stackedWidget;
 
+    QPushButton * m_standardResultsBtn;
+    QPushButton * m_calibrationResultsBtn;
     QPushButton* m_viewFileButton;
 
     OpenDirectoryButton* m_openDirButton;
@@ -159,6 +169,65 @@ private:
   void setResultLabelText(QLabel* label, const boost::optional<double> & value);
   void setResultPctLabelText(QLabel* label, const boost::optional<double> & value);
 
+  openstudio::analysis::DataPoint m_dataPoint;
+  openstudio::analysis::DataPoint m_baselineDataPoint;
+  bool m_alternateRow;
+};
+
+class DataPointCalibrationHeaderView : public QWidget
+{
+  Q_OBJECT
+
+public:
+  
+  DataPointCalibrationHeaderView();
+
+private:
+
+};
+
+class DataPointCalibrationView : public QAbstractButton
+{
+  Q_OBJECT
+
+public:
+
+  DataPointCalibrationView(const openstudio::analysis::DataPoint& dataPoint,
+                           const openstudio::analysis::DataPoint& baselineDataPoint,
+                           bool alternateRow);
+
+  virtual ~DataPointCalibrationView() {}
+
+public slots:
+  
+  void update();
+
+  void setHasEmphasis(bool hasEmphasis);
+
+protected:
+
+  void paintEvent(QPaintEvent * e);
+
+private:
+
+  QLabel* m_nameLabel;
+
+/*
+  boost::optional<double> getValue(const std::string& attribute);
+  boost::optional<double> getBaselineValue(const std::string& attribute);
+  boost::optional<double> getDifference(const std::string& attribute);
+  boost::optional<double> getPctDifference(const std::string& attribute);
+  boost::optional<double> simplePayback();
+
+  boost::optional<double> getValue(const std::string& attribute, const Attribute& attr);
+
+  void setBaselineLabels(QLabel* resultLabel, const boost::optional<double> & value);
+  void setBaselineLabels(QLabel* resultLabel, QLabel* resultDivLabel, QLabel* resultPctLabel, const boost::optional<double> & value);
+  void setResultLabels(QLabel* resultLabel, const boost::optional<double> & value);
+  void setResultLabels(QLabel* resultLabel, QLabel* resultDivLabel, QLabel* resultPctLabel, const boost::optional<double> & value, const boost::optional<double> & pct);
+  void setResultLabelText(QLabel* label, const boost::optional<double> & value);
+  void setResultPctLabelText(QLabel* label, const boost::optional<double> & value);
+*/
   openstudio::analysis::DataPoint m_dataPoint;
   openstudio::analysis::DataPoint m_baselineDataPoint;
   bool m_alternateRow;
