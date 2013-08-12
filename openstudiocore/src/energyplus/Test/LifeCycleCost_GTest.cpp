@@ -51,6 +51,24 @@
 #include <utilities/idd/LifeCycleCost_NonrecurringCost_FieldEnums.hxx>
 #include <utilities/idd/LifeCycleCost_RecurringCosts_FieldEnums.hxx>
 
+#include <model/CoilCoolingDXTwoSpeed.hpp>
+#include <model/CoilCoolingDXTwoSpeed_Impl.hpp>
+#include <model/ScheduleConstant.hpp>
+#include <model/Curve.hpp>
+#include <model/CurveBiquadratic.hpp>
+#include <model/CurveBiquadratic_Impl.hpp>
+#include <model/CurveCubic.hpp>
+#include <model/CurveCubic_Impl.hpp>
+#include <model/CurveQuadratic.hpp>
+#include <model/CurveQuadratic_Impl.hpp>
+
+#include <model/FanConstantVolume.hpp>
+#include <model/FanConstantVolume_Impl.hpp>
+#include <model/CoilHeatingWater.hpp>
+#include <model/CoilHeatingWater_Impl.hpp>
+#include <model/ZoneHVACUnitHeater.hpp>
+#include <model/ZoneHVACUnitHeater_Impl.hpp>
+
 #include <sstream>
 
 using namespace openstudio;
@@ -427,20 +445,21 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_HVACComponent)
 {
 
   //create a model to use in testing this code.
-  model::Model m;
+  model::Model model;
 
   //create a schedule and the curves to use in the constructor
-  model::ScheduleCompact schedule(m);
-  model::CurveBiquadratic ccfot1(m);
-  model::CurveCubic ccfof2(m);
-  model::CurveBiquadratic eirfot3(m);
-  model::CurveQuadratic eirfof4(m);
-  model::CurveCubic plf5(m);
-  model::CurveBiquadratic lsccfot6(m);
-  model::CurveBiquadratic lseirfot7(m);
+  ScheduleConstant schedule(model);
+  schedule.setValue(1.0); // Always on
+  model::CurveBiquadratic ccfot1(model);
+  model::CurveCubic ccfof2(model);
+  model::CurveBiquadratic eirfot3(model);
+  model::CurveQuadratic eirfof4(model);
+  model::CurveCubic plf5(model);
+  model::CurveBiquadratic lsccfot6(model);
+  model::CurveBiquadratic lseirfot7(model);
 
   //make a coil to do the testing on
-  model::CoilCoolingDXTwoSpeed coil(m,
+  model::CoilCoolingDXTwoSpeed coil(model,
                                     schedule,
                                     ccfot1,
                                     ccfof2,
@@ -492,7 +511,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_HVACComponent)
 TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_ZoneHVACComponent)
 {
 
-  model::Model m;
+  model::Model model;
   ScheduleConstant sched(model);
   sched.setValue(1.0); // Always on
   FanConstantVolume fan(model,sched);
