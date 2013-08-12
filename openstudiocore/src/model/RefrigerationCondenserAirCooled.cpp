@@ -282,7 +282,21 @@ RefrigerationCondenserAirCooled::RefrigerationCondenserAirCooled(const Model& mo
   BOOST_ASSERT(getImpl<detail::RefrigerationCondenserAirCooled_Impl>());
 
   bool ok = true;
+
+  CurveLinear heatRejectionCurve = CurveLinear(model);
+  heatRejectionCurve.setName("Refrigeration Condenser Air Cooled HR Curve");
+  heatRejectionCurve.setCoefficient1Constant(0.0);
+  heatRejectionCurve.setCoefficient2x(22000.0);
+  heatRejectionCurve.setMinimumValueofx(5.0);
+  heatRejectionCurve.setMaximumValueofx(22.2);
+
+  setRatedEffectiveTotalHeatRejectionRateCurve(heatRejectionCurve);
   BOOST_ASSERT(ok);
+
+  setRatedSubcoolingTemperatureDifference(0.0);
+  setCondenserFanSpeedControlType("VariableSpeed");
+  setRatedFanPower(7000.0);
+  setMinimumFanAirFlowRatio(0.25);
 }
 
 IddObjectType RefrigerationCondenserAirCooled::iddObjectType() {

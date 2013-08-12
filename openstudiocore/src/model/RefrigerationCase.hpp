@@ -44,7 +44,7 @@ class MODEL_API RefrigerationCase : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit RefrigerationCase(const Model& model);
+  explicit RefrigerationCase(const Model& model, Schedule& caseLightingSchedule, Schedule& caseDefrostSchedule, Schedule& caseDefrostDripDownSchedule);
 
   virtual ~RefrigerationCase() {}
 

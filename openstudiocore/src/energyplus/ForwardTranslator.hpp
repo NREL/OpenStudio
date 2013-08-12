@@ -604,11 +604,28 @@ class ENERGYPLUS_API ForwardTranslator {
   static std::vector<IddObjectType> iddObjectsToTranslate();
   static std::vector<IddObjectType> iddObjectsToTranslateInitializer();
 
+  /** Takes the path to a Qt resource file, loads the IdfFile from the qrc, and returns the
+   *  IdfFile if successful. */
   boost::optional<IdfFile> findIdfFile(const std::string& path);
 
-  //returns FluidProperties:Name IdfObject
-  boost::optional<IdfObject> createFluidProperties(const std::string& fluidType );
+  /** Creates the FluidProperties IdfObjects and adds them to m_idfObjects based on the input 
+   *  fluidType. Returns an uninitialized object if unsuccessful for any reason. If successful, returns
+   *  the FluidProperties:Name IdfObject. If the fluidType already exists in m_idfObjects, it will not
+   *  add new IdfObjects and will return the existing FluidProperties:Name IdfObject. Valid choices for 
+   *  fluidType are: R11, R12, R22, R123, R134a, R404a, R407a, R410a, NH3, R507a, R744 */
+  boost::optional<IdfObject> createFluidProperties(const std::string& fluidType);
 
+  /** Creates the FluidProperties IdfObjects and adds them to m_idfObjects based on the input 
+   *  glycolType adn glycolConcentration. Returns an uninitialized object if unsuccessful for any reason. 
+   *  If successful, returns the FluidProperties:Name IdfObject with a FluidName of 
+   *  glycolType + "_" + glycolConcentration ie. PropyleneGlycol_30. If the fluidType already 
+   *  exists in m_idfObjects, it will not add new IdfObjects and will return the existing 
+   *  FluidProperties:Name IdfObject. Valid choices for glycolType are: PropyleneGlycol, EthyleneGlycol
+   *   */
+  boost::optional<IdfObject> createFluidProperties(const std::string& glycolType, int glycolConcentration);
+
+  /** Initializes m_fluidPropertiesMap with refrigerant names and path to refrigerant resource files.
+   *  Valid refrigerants are: R11, R12, R22, R123, R134a, R404a, R407a, R410a, NH3, R507a, R744 */
   void createFluidPropertiesMap();
 
   typedef std::map<const openstudio::Handle, const IdfObject> ModelObjectMap;

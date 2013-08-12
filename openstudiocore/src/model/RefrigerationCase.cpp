@@ -767,17 +767,50 @@ namespace detail {
 
 } // detail
 
-RefrigerationCase::RefrigerationCase(const Model& model)
+RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseLightingSchedule, Schedule& caseDefrostSchedule, Schedule& caseDefrostDripDownSchedule)
   : ModelObject(RefrigerationCase::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::RefrigerationCase_Impl>());
 
   bool ok = true;
+  CurveCubic latentCaseCreditCurve = CurveCubic(model);
+  latentCaseCreditCurve.setName("Refrigeration Case Latent Credit Curve");
+  latentCaseCreditCurve.setCoefficient1Constant(0.026526281);
+  latentCaseCreditCurve.setCoefficient2x(0.001078032);
+  latentCaseCreditCurve.setCoefficient3xPOW2(-0.0000602558);
+  latentCaseCreditCurve.setCoefficient4xPOW3(0.00000123732);
+  latentCaseCreditCurve.setMinimumValueofx(-35);
+  latentCaseCreditCurve.setMaximumValueofx(20);
+
+  setRatedAmbientTemperature(24.00);
+  setRatedAmbientRelativeHumidity(55.00);
+  setRatedTotalCoolingCapacityperUnitLength(1432.66);
+  setRatedLatentHeatRatio(0.30);
+  setRatedRuntimeFraction(0.85);
+  setCaseLength(3.66);
+  setCaseOperatingTemperature(2.78);
+  setLatentCaseCreditCurveType("CaseTemperatureMethod");
+
+  ok = setLatentCaseCreditCurve(latentCaseCreditCurve);
   BOOST_ASSERT(ok);
-  //ok = setThermalZone(zone);
-  BOOST_ASSERT(ok);
-  //ok = setLatentCaseCreditCurve(curveCubic);
-  BOOST_ASSERT(ok);
+
+  setStandardCaseFanPowerperUnitLength(41.01);
+  setOperatingCaseFanPowerperUnitLength(41.01);
+  setStandardCaseLightingPowerperUnitLength(45.93);
+  setInstalledCaseLightingPowerperUnitLength(45.93);
+  setCaseLightingSchedule(caseLightingSchedule);
+  setFractionofLightingEnergytoCase(1);
+  setAntiSweatHeaterControlType("None");
+  setHumidityatZeroAntiSweatHeaterEnergy(-10);
+  setCaseHeight(1.5);
+  setFractionofAntiSweatHeaterEnergytoCase(1.0);
+  setCaseDefrostPowerperUnitLength(0.0);
+  setCaseDefrostType("OffCycle");
+  setCaseDefrostSchedule(caseDefrostSchedule);
+  setCaseDefrostDripDownSchedule(caseDefrostDripDownSchedule);
+  setDefrostEnergyCorrectionCurveType("None");
+  setUnderCaseHVACReturnAirFraction(0.0);
+  setDesignEvaporatorTemperatureorBrineInletTemperature(-5.56);
 }
 
 IddObjectType RefrigerationCase::iddObjectType() {

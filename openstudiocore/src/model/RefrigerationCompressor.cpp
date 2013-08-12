@@ -278,11 +278,55 @@ RefrigerationCompressor::RefrigerationCompressor(const Model& model)
   BOOST_ASSERT(getImpl<detail::RefrigerationCompressor_Impl>());
   
   bool ok = true;
+
+  CurveBicubic powerCurve = CurveBicubic(model);
+  powerCurve.setName("Refrigeration Compressor Power Curve");
+  powerCurve.setCoefficient1Constant(4451.46);
+  powerCurve.setCoefficient2x(-166.108);
+  powerCurve.setCoefficient3xPOW2(-5.35664);
+  powerCurve.setCoefficient4y(263.553);
+  powerCurve.setCoefficient5yPOW2(-0.958849);
+  powerCurve.setCoefficient6xTIMESY(8.09252);
+  powerCurve.setCoefficient7xPOW3(-0.0239354);
+  powerCurve.setCoefficient8yPOW3(0.000633306);
+  powerCurve.setCoefficient9xPOW2TIMESY(0.0778798);
+  powerCurve.setCoefficient10xTIMESYPOW2(-0.0167386);
+  powerCurve.setMinimumValueofx(-23.3);
+  powerCurve.setMaximumValueofx(7.2);
+  powerCurve.setMinimumValueofy(10.0);
+  powerCurve.setMaximumValueofy(60.0);
+  powerCurve.setInputUnitTypeforX("Temperature");
+  powerCurve.setInputUnitTypeforY("Temperature");
+  powerCurve.setOutputUnitType("Power");
+
+  ok = setRefrigerationCompressorPowerCurve(powerCurve);
   BOOST_ASSERT(ok);
-  //ok = setRefrigerationCompressorPowerCurve(powerCurve);
+
+  CurveBicubic capacityCurve = CurveBicubic(model);
+  capacityCurve.setName("Refrigeration Compressor Capacity Curve");
+  capacityCurve.setCoefficient1Constant(83249.9);
+  capacityCurve.setCoefficient2x(3147.96);
+  capacityCurve.setCoefficient3xPOW2(44.9276);
+  capacityCurve.setCoefficient4y(-1035.51);
+  capacityCurve.setCoefficient5yPOW2(3.74692);
+  capacityCurve.setCoefficient6xTIMESY(-37.3907);
+  capacityCurve.setCoefficient7xPOW3(0.179897);
+  capacityCurve.setCoefficient8yPOW3(-0.0199971);
+  capacityCurve.setCoefficient9xPOW2TIMESY(-0.481641);
+  capacityCurve.setCoefficient10xTIMESYPOW2(0.0428673);
+  capacityCurve.setMinimumValueofx(-23.3);
+  capacityCurve.setMaximumValueofx(7.2);
+  capacityCurve.setMinimumValueofy(10.0);
+  capacityCurve.setMaximumValueofy(60.0);
+  capacityCurve.setInputUnitTypeforX("Temperature");
+  capacityCurve.setInputUnitTypeforY("Temperature");
+  capacityCurve.setOutputUnitType("Capacity");
+  
+  ok = setRefrigerationCompressorCapacityCurve(capacityCurve);
   BOOST_ASSERT(ok);
-  //ok = setRefrigerationCompressorCapacityCurve(capacityCurve);
-  BOOST_ASSERT(ok);
+
+  setRatedReturnGasTemperature(18.3);
+  setRatedSubcooling(0.0);
 }
 
 IddObjectType RefrigerationCompressor::iddObjectType() {

@@ -23,8 +23,8 @@
 // TODO: Check the following class names against object getters and setters.
 #include <model/ModelObjectList.hpp>
 #include <model/ModelObjectList_Impl.hpp>
-//#include <model/RefrigerationCondenserAirCooled.hpp>
-//#include <model/RefrigerationCondenserAirCooled_Impl.hpp>
+#include <model/RefrigerationCondenserAirCooled.hpp>
+#include <model/RefrigerationCondenserAirCooled_Impl.hpp>
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCase_Impl.hpp>
 #include <model/RefrigerationCompressor.hpp>
@@ -523,16 +523,19 @@ RefrigerationSystem::RefrigerationSystem(const Model& model)
 
   bool ok = true;
   BOOST_ASSERT(ok);
-  //ok = setRefrigerationCondenser(condenser);
+  RefrigerationCondenserAirCooled condenser = RefrigerationCondenserAirCooled(model);
+  ok = setRefrigerationCondenser(condenser);
   BOOST_ASSERT(ok);
   ModelObjectList compressorlist = ModelObjectList(model);
   ok = setCompressorList(compressorlist);
   BOOST_ASSERT(ok);
-  //ok = addCompressor(compressor);
+  RefrigerationCompressor compressor = RefrigerationCompressor(model);
+  ok = addCompressor(compressor);
   BOOST_ASSERT(ok);
-  //setMinimumCondensingTemperature(minCondensingTemp);
-  //ok = setRefrigerationSystemWorkingFluidType(workingFluid);
-  //BOOST_ASSERT(ok);
+  setMinimumCondensingTemperature(21.0);
+  ok = setRefrigerationSystemWorkingFluidType("R404a");
+  BOOST_ASSERT(ok);
+  setSuctionTemperatureControlType("ConstantSuctionTemperature");
 }
 
 IddObjectType RefrigerationSystem::iddObjectType() {

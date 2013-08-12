@@ -42,6 +42,7 @@
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/idd/FluidProperties_Name_FieldEnums.hxx>
+#include <utilities/idd/FluidProperties_GlycolConcentration_FieldEnums.hxx>
 #include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
 #include <utilities/idd/Output_Table_SummaryReports_FieldEnums.hxx>
 #include <utilities/idd/OutputControl_Table_Style_FieldEnums.hxx>
@@ -55,6 +56,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QThread>
+
+#include <sstream>
 
 using namespace openstudio::model;
 
@@ -2080,7 +2083,56 @@ boost::optional<IdfFile> ForwardTranslator::findIdfFile(const std::string& path)
 void ForwardTranslator::createFluidPropertiesMap()
 {
   m_fluidPropertiesMap.insert(make_pair("R11", ":/Resources/R11_FluidPropertiesDataSet.idf"));
-  //m_fluidPropertiesMap.insert(make_pair("R22", ":/Resources/R22_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R12", ":/Resources/R12_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R22", ":/Resources/R22_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R123", ":/Resources/R123_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R134a", ":/Resources/R134a_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R404a", ":/Resources/R404a_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R407a", ":/Resources/R407a_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R410a", ":/Resources/R410a_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("NH3", ":/Resources/NH3_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R507a", ":/Resources/R507a_FluidPropertiesDataSet.idf"));
+  m_fluidPropertiesMap.insert(make_pair("R744", ":/Resources/R744_FluidPropertiesDataSet.idf"));
+}
+
+boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::string& glycolType, int glycolConcentration) {
+
+  std::stringstream sstm;
+  sstm << glycolType << "_" << glycolConcentration;
+  std::string glycolName = sstm.str();
+
+  for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
+     it != m_idfObjects.end();
+     it++ )
+  {
+    if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
+      if(istringEqual(it->getString(FluidProperties_NameFields::FluidName,true).get(), glycolName)) {
+        return *it;
+      }
+    }
+  }
+
+  IdfObject fluidPropName(openstudio::IddObjectType::FluidProperties_Name);
+  fluidPropName.setString(FluidProperties_NameFields::FluidName, glycolName);
+  fluidPropName.setString(FluidProperties_NameFields::FluidType, "Glycol");
+
+  IdfObject fluidPropGlyConcentration(openstudio::IddObjectType::FluidProperties_GlycolConcentration);
+  fluidPropGlyConcentration.setName(glycolName);
+  if(istringEqual(glycolType, "PropyleneGlycol")){
+    fluidPropGlyConcentration.setString(FluidProperties_GlycolConcentrationFields::GlycolType, "PropyleneGlycol");
+  }
+  else if(istringEqual(glycolType, "EthyleneGlycol")){
+    fluidPropGlyConcentration.setString(FluidProperties_GlycolConcentrationFields::GlycolType, "EthyleneGlycol");
+  }
+  else {
+    return boost::none;
+  }
+  fluidPropGlyConcentration.setDouble(FluidProperties_GlycolConcentrationFields::GlycolConcentration, glycolConcentration * 0.01);
+
+  m_idfObjects.push_back(fluidPropName);
+  m_idfObjects.push_back(fluidPropGlyConcentration);
+
+  return fluidPropName;
 }
 
 boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::string& fluidType) {
@@ -2106,6 +2158,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
   }
   else
   {
+    LOG(Warn, "Fluid Type not valid choice: '" << fluidType << "'");
     return boost::none;
   }
 
