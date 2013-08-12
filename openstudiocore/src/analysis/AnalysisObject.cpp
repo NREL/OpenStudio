@@ -153,8 +153,8 @@ namespace detail {
   QVariant AnalysisObject_Impl::toVariant() const {
     QVariantMap analysisObjectData;
 
-    analysisObjectData["uuid"] = uuid().toString();
-    analysisObjectData["version_uuid"] = versionUUID().toString();
+    analysisObjectData["uuid"] = toQString(toUID(uuid()));
+    analysisObjectData["version_uuid"] = toQString(toUID(versionUUID()));
     std::string str = name();
     if (!str.empty()) {
       analysisObjectData["name"] = toQString(str);

@@ -494,9 +494,9 @@ namespace detail {
     QVariantMap dataPointData = AnalysisObject_Impl::toVariant().toMap();
 
     dataPointData["data_point_type"] = QString("DataPoint");
-    dataPointData["problem_uuid"] = problemUUID().toString();
+    dataPointData["problem_uuid"] = toQString(toUID(problemUUID()));
     if (analysisUUID()) {
-      dataPointData["analysis_uuid"] = analysisUUID().get().toString();
+      dataPointData["analysis_uuid"] = toQString(toUID(analysisUUID().get()));
     }
 
     dataPointData["complete"] = isComplete();
@@ -670,13 +670,13 @@ namespace detail {
             boost::function<openstudio::path (QVariant*)>(boost::bind(fToPath,boost::bind(&QVariant::toString,_1))));
     }
 
-    return DataPoint(openstudio::UUID(map["uuid"].toString()),
-                     openstudio::UUID(map["version_uuid"].toString()),
+    return DataPoint(toUUID(map["uuid"].toString().toStdString()),
+                     toUUID(map["version_uuid"].toString().toStdString()),
                      map.contains("name") ? map["name"].toString().toStdString() : std::string(),
                      map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                      map.contains("description") ? map["description"].toString().toStdString() : std::string(),
-                     openstudio::UUID(map["problem_uuid"].toString()),
-                     map.contains("analysis_uuid") ? openstudio::UUID(map["analysis_uuid"].toString()) : boost::optional<openstudio::UUID>(),
+                     toUUID(map["problem_uuid"].toString().toStdString()),
+                     map.contains("analysis_uuid") ? toUUID(map["analysis_uuid"].toString().toStdString()) : boost::optional<openstudio::UUID>(),
                      map["complete"].toBool(),
                      map["failed"].toBool(),
                      variableValues,

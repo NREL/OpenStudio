@@ -789,8 +789,8 @@ namespace detail {
             map["data_points"].toList(),
             boost::function<DataPoint (const QVariant&)>(boost::bind(openstudio::analysis::detail::DataPoint_Impl::factoryFromVariant,_1,version)));
     }
-    return Analysis(openstudio::UUID(map["uuid"].toString()),
-                    openstudio::UUID(map["version_uuid"].toString()),
+    return Analysis(toUUID(map["uuid"].toString().toStdString()),
+                    toUUID(map["version_uuid"].toString().toStdString()),
                     map.contains("name") ? map["name"].toString().toStdString() : std::string(),
                     map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                     map.contains("description") ? map["description"].toString().toStdString() : std::string(),

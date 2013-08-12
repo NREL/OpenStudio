@@ -156,8 +156,8 @@ namespace detail {
   FSUDaceAlgorithm FSUDaceAlgorithm_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
     QVariantMap map = variant.toMap();
     FSUDaceAlgorithmOptions options = FSUDaceAlgorithmOptions_Impl::fromVariant(map["options"],version);
-    return FSUDaceAlgorithm(openstudio::UUID(map["uuid"].toString()),
-                            openstudio::UUID(map["version_uuid"].toString()),
+    return FSUDaceAlgorithm(toUUID(map["uuid"].toString().toStdString()),
+                            toUUID(map["version_uuid"].toString().toStdString()),
                             map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                             map.contains("description") ? map["description"].toString().toStdString() : std::string(),
                             map["complete"].toBool(),

@@ -18,10 +18,12 @@
 **********************************************************************/
 
 #include <utilities/core/Json.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/String.hpp>
+
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Compare.hpp>
+#include <utilities/core/Logger.hpp>
+#include <utilities/core/PathHelpers.hpp>
+#include <utilities/core/String.hpp>
 
 #include <OpenStudio.hxx>
 
@@ -45,7 +47,7 @@ namespace detail {
 
 QVariant jsonMetadata() {
   QVariantMap metadata;
-  metadata["version"] = toQString(openStudioVersion());
+  metadata["openstudio_version"] = toQString(openStudioVersion());
   return metadata;
 }
 
@@ -99,14 +101,21 @@ std::pair<QVariant,VersionString> loadJSON(const openstudio::path& p) {
     file.close();
     if (ok) {
       QVariantMap metadata = variant.toMap()["metadata"].toMap();
-      VersionString version(metadata["version"].toString().toStdString());
-      if (version > VersionString(openStudioVersion())) {
+      OptionalVersionString version;
+      if (metadata.contains("openstudio_version")) {
+        version = VersionString(metadata["openstudio_version"].toString().toStdString());
+      }
+      else {
+        version = VersionString(metadata["version"].toString().toStdString());
+      }
+      OS_ASSERT(version);
+      if (version.get() > VersionString(openStudioVersion())) {
         LOG_FREE(Warn,"openstudio.Json","Loading json file from version " << version
                  << " with OpenStudio version " << VersionString(openStudioVersion())
                  << ". OpenStudio json files are not designed to be forwards-compatible. "
                  << "Unexpected behavior may result.")
       }
-      return std::make_pair<QVariant,VersionString>(variant,version);
+      return std::make_pair<QVariant,VersionString>(variant,version.get());
     }
     LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parser.errorString()));
   }
@@ -123,14 +132,21 @@ std::pair<QVariant,VersionString> loadJSON(const std::string& json) {
   if (ok)
   {
     QVariantMap metadata = variant.toMap()["metadata"].toMap();
-    VersionString version(metadata["version"].toString().toStdString());
-    if (version > VersionString(openStudioVersion())) {
+    OptionalVersionString version;
+    if (metadata.contains("openstudio_version")) {
+      version = VersionString(metadata["openstudio_version"].toString().toStdString());
+    }
+    else {
+      version = VersionString(metadata["version"].toString().toStdString());
+    }
+    OS_ASSERT(version);
+    if (version.get() > VersionString(openStudioVersion())) {
       LOG_FREE(Warn,"openstudio.Json","Loading json file from version " << version
                << " with OpenStudio version " << VersionString(openStudioVersion())
                << ". OpenStudio json files are not designed to be forwards-compatible. "
                << "Unexpected behavior may result.")
     }
-    return std::make_pair<QVariant,VersionString>(variant,version);
+    return std::make_pair<QVariant,VersionString>(variant,version.get());
   }
 
   LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parser.errorString()));
