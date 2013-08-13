@@ -39,6 +39,10 @@ void UtilityBillsController::onAddObject(const openstudio::IddObjectType& iddObj
   //BOOST_ASSERT(IddObjectType::OS_BuildingStory == iddObjectType.value());
   //openstudio::model::BuildingStory(this->model());
 
+  // TODO
+  // not being hit
+  // why not?
+
    Q_ASSERT(IddObjectType::OS_UtilityBill == iddObjectType.value());
 }
 
@@ -61,7 +65,6 @@ void UtilityBillsController::onPurgeObjects(const openstudio::IddObjectType& idd
   Q_FOREACH(model::UtilityBill utilityBill, this->model().getModelObjects<model::UtilityBill>()){
     utilityBill.remove();
   }
-
 }
 
 void UtilityBillsController::onDrop(const OSItemId& itemId)

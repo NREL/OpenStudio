@@ -33,18 +33,18 @@
 class QButtonGroup;
 class QDate;
 class QDateEdit;
-class QDoubleSpinBox;
 class QGridLayout;
-class QGroupBox;
 class QLabel;
-class QLineEdit;
 class QPushButton;
-class QScrollArea;
 
 namespace openstudio {
 
 class BillFormatDialog;
 
+class OSComboBox2;
+class OSDoubleEdit2;
+class OSIntegerEdit2;
+class OSLineEdit2;
 class BillingPeriod;
 class Date;
 class FuelType;
@@ -94,7 +94,6 @@ protected:
   virtual void onUpdate();
 
 protected slots:
-
   //virtual void toggleUnits(bool displayIP);
 
 private:
@@ -106,6 +105,7 @@ private:
   void hideAddButton();
   void enableAddButton();
   void disableAddButton();
+  void attach(openstudio::model::UtilityBill & utilityBill);
 
   void addBillingPeriod(model::BillingPeriod & billingPeriod);
   void addBillingPeriod(model::BillingPeriod & billingPeriod, unsigned index);
@@ -123,28 +123,23 @@ private:
   
   QButtonGroup * m_buttonGroup;
 
-  QLineEdit * m_name;
-  QLineEdit * m_consumptionUnits;
-  QLineEdit * m_energyDemandUnits;
-  QLineEdit * m_weatherFile;
+  OSLineEdit2 * m_name;
+  OSLineEdit2 * m_weatherFile;
 
-  QDoubleSpinBox * m_windowTimesteps;
+  OSComboBox2 * m_consumptionUnits;
+  OSComboBox2 * m_energyDemandUnits;
+
+  OSIntegerEdit2 * m_windowTimesteps;
 
   QPushButton * m_addBillingPeriod;
 
   QGridLayout * m_billGridLayout;
   
 private slots:
-  
+  void addUtilityBill();
   void addBillingPeriod(bool checked);
   void deleteBillingPeriod(int index);
   void setBillFormat(BillFormat billFormat);
-
-  void nameChanged(const QString & text);
-  void consumptionUnitsChanged(const QString & text);
-  void energyDemandUnitsChanged(const QString & text);
-  void weatherFileChanged(const QString & text);
-  void windowTimestepsChanged(double timeSteps);
 
 };
 
@@ -167,10 +162,10 @@ public:
   QDateEdit * m_startDateEdit;
   QDateEdit * m_endDateEdit;
 
-  QDoubleSpinBox * m_billingPeriodIntEdit;
-  QDoubleSpinBox * m_energyUseDoubleEdit;
-  QDoubleSpinBox * m_peaklDoubleEdit;
-  QDoubleSpinBox * m_costDoubleEdit;
+  OSIntegerEdit2 * m_billingPeriodIntEdit;
+  OSDoubleEdit2 * m_energyUseDoubleEdit;
+  OSDoubleEdit2 * m_peaklDoubleEdit;
+  OSDoubleEdit2 * m_costDoubleEdit;
 
   QPushButton * m_deleteBillWidget; 
   unsigned m_index;
@@ -192,16 +187,14 @@ private:
 
   void getBillingPeriodLineEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex);
 
-  model::BillingPeriod m_billingPeriod;
+  void attach(openstudio::model::BillingPeriod & billingPeriod);
+
+  boost::optional<model::BillingPeriod> m_billingPeriod;
 
 private slots:
 
   void startDateChanged(const QDate & newdate);
   void endDateChanged(const QDate & newdate);
-  void numberOfDaysChanged(double numberOfDays);
-  void consumptionChanged(double consumption);
-  void peakDemandChanged(double peakDemand); 
-  void totalCostChanged(double totalCost);
 
 };
 
