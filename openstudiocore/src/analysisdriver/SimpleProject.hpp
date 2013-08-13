@@ -23,19 +23,9 @@
 #include <analysisdriver/AnalysisDriverAPI.hpp>
 #include <analysisdriver/AnalysisDriver.hpp>
 
-#include <analysis/Analysis.hpp>
-
-#include <ruleset/OSArgument.hpp>
-
-#include <model/Model.hpp>
-
-#include <utilities/idf/Workspace.hpp>
-
-#include <utilities/bcl/BCLMeasure.hpp>
-
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/Path.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include <utilities/core/UUID.hpp>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
@@ -46,9 +36,21 @@
 
 namespace openstudio {
 
-  class ProgressBar;
+class BCLMeasure;
+class FileReference;
+class ProgressBar;
+class Workspace;
+
+namespace model {
+  class Model;
+}
+
+namespace ruleset {
+  class OSArgument;
+}
 
 namespace analysis {
+  class Analysis;
   class DataPoint;
   class MeasureGroup;
   class WorkflowStep;
@@ -64,6 +66,10 @@ namespace project {
 }
 
 namespace analysisdriver {
+
+namespace detail {
+  class SimpleProject_Impl;
+}
 
 /** Options class for opening or creating a SimpleProject. */
 class ANALYSISDRIVER_API SimpleProjectOptions {
@@ -109,21 +115,12 @@ class ANALYSISDRIVER_API SimpleProjectOptions {
  *  \link SimpleProject SimpleProjects\endlink are fully contained in a single directory, in which 
  *  there is a ProjectDatabase and a RunManager database, and which also serves as the RunManager 
  *  run directory for the lone analysis stored in project.osp. */
-class ANALYSISDRIVER_API SimpleProject : public QObject {
-  Q_OBJECT;
+class ANALYSISDRIVER_API SimpleProject {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-   /** Copy constructor. SimpleProject is plain-old-data (POD) plus some signal-slot connections, 
-    *  so this constructor copies data and hooks up signals. (Connections in other are not 
-    *  affected.) */
-  SimpleProject(const SimpleProject& other);
-
-  /** Assignment operator. Similar to copy constructor. */
-  SimpleProject& operator=(const SimpleProject& other);
-
-  virtual ~SimpleProject();
+  virtual ~SimpleProject() {};
 
   /** Open an existing SimpleProject, fails if cant find osp or if has 0 or > 1 analyses. 
    *  Purposefully does not deserialize the analysis::Analysis from project::AnalysisRecord. */
@@ -163,19 +160,11 @@ class ANALYSISDRIVER_API SimpleProject : public QObject {
   FileReference seed() const;
 
   /** Returns the analysis seed model, if it is positively specified, can be located, and is an 
-   *  OpenStudio Model (not an EnergyPlus IDF). 
-   *
-   *  Note: Because SimpleProject is plain-old-data (not impl-ized), be sure to call this 
-   *  on the real project and not a copy. (Otherwise, seed model caching will not work as
-   *  expected.) */
+   *  OpenStudio Model (not an EnergyPlus IDF). */
   boost::optional<model::Model> seedModel(ProgressBar* progressBar = NULL) const;
 
   /** Returns the analysis seed if it is an IDF, or the seed model translated to IDF
-   *  otherwise. 
-   *
-   *  Note: Because SimpleProject is plain-old-data (not impl-ized), be sure to call this 
-   *  on the real project and not a copy. (Otherwise, seed model caching will not work as
-   *  expected.) */
+   *  otherwise. */
   boost::optional<Workspace> seedIdf(ProgressBar* progressBar = NULL) const;
 
   /** Returns the BCLMeasures in this project's scripts directory. */
@@ -239,11 +228,7 @@ class ANALYSISDRIVER_API SimpleProject : public QObject {
    *
    *  At this time, we do not attempt to delete any measures brought in with earlier seed
    *  models. The user is responsible for deleting any such measures that are no longer
-   *  needed/desired.
-   *
-   *  Note: Because SimpleProject is plain-old-data (not impl-ized), be sure to call this 
-   *  on the real project and not a copy. (Otherwise, seed model caching will not work as
-   *  expected.) */
+   *  needed/desired. */
   std::pair<bool,std::vector<BCLMeasure> > setSeed(const FileReference& currentSeedLocation, 
                                                    ProgressBar* progressBar = NULL);
 
@@ -298,6 +283,10 @@ class ANALYSISDRIVER_API SimpleProject : public QObject {
    *  if operation is incomplete (if not all files can be removed from the file system). */
   bool removeAllDataPoints();
 
+  /** Creates a zip file of the items needed to run individual DataPoints on a remote system, and
+   *  returns the path to that (temporary) file. The file is deleted by SimpleProject's destructor. */
+  openstudio::path zipFileForRemoteSystem() const;
+
   //@}
   /** @name PAT-Specific Actions */
   //@{
@@ -330,73 +319,20 @@ class ANALYSISDRIVER_API SimpleProject : public QObject {
   bool saveAs(const openstudio::path& newProjectDir) const;
 
   //@}
- public slots:
+ protected:
+  boost::shared_ptr<detail::SimpleProject_Impl> getImpl() const;
 
-  void onSeedChanged() const;
+  /// @cond
+  typedef detail::SimpleProject_Impl ImplType;
 
+  explicit SimpleProject(boost::shared_ptr<detail::SimpleProject_Impl> impl);
+
+  /// @endcond
  private:
+
+  boost::shared_ptr<detail::SimpleProject_Impl> m_impl;
+
   REGISTER_LOGGER("openstudio.analysisdriver.SimpleProject");
-
-  openstudio::path m_projectDir;
-  analysisdriver::AnalysisDriver m_analysisDriver;
-  mutable boost::optional<analysis::Analysis> m_analysis; // mutable for lazy load on open
-  FileLogSink m_logFile;
-
-  mutable boost::optional<model::Model> m_seedModel; // clear optional when analysis's seed changes
-  mutable boost::optional<Workspace> m_seedIdf;      // clear optional when analysis's seed changes
-  mutable std::map<UUID,BCLMeasure> m_measures;
-  mutable std::map<UUID,std::vector<ruleset::OSArgument> > m_measureArguments;
-
-  /** Called by open and create. */
-  SimpleProject(const openstudio::path& projectDir,
-                const AnalysisDriver& analysisDriver,
-                const boost::optional<analysis::Analysis>& analysis,
-                const SimpleProjectOptions& options);
-
-  openstudio::path alternateModelsDir() const;
-
-  openstudio::path scriptsDir() const;
-
-  openstudio::path seedDir() const;
-
-  /** Returns paths to all OSM files in alternateModelsDir(). */
-  std::vector<openstudio::path> alternateModelPaths() const;
-
-  /** Copy the OSM at modelPath into destinationDirectory. */
-  bool copyModel(const openstudio::path& modelPath, const openstudio::path& destinationDirectory);
-
-  /** Return true if the OSM at modelPath needs version translation. */
-  bool requiresVersionTranslation(const openstudio::path& modelPath) const;
-
-  /** Version translates the OSM at modelPath, and saves it back to disk. Returns true if model
-   *  successfully translated and saved. */
-  bool upgradeModel(const openstudio::path& modelPath, ProgressBar* progressBar = NULL);
-
-  /** Look for the seedModel's weather file and set the analysis weather file to match if
-   *  located. */
-  bool setAnalysisWeatherFile(ProgressBar* progressBar = NULL);
-
-  /** Import measures in the seed model workflow as fixed measures. */
-  std::vector<BCLMeasure> importSeedModelMeasures(ProgressBar* progressBar = NULL);
-
-  bool isPATFixedMeasure(const analysis::WorkflowStep& step) const;
-
-  /** Removes any orphaned dataPointX or Dakota folders. Such folders can become orphaned if
-   *  clearAllResults or removeAllDataPoints is called on Windows when one or more of the files
-   *  in those folders are open. */
-  void removeOrphanedResultFiles();
-
-  /** Copies measure into this project's scripts directory and returns a BCLMeasure object
-   *  pointing to the new copy. */
-  BCLMeasure addMeasure(const BCLMeasure& measure);
-
-  void removeMeasure(const BCLMeasure& measure);
-
-  /** Copies measure into this project's scripts directory, overwriting the existing measure
-   *  with the same UUID. */
-  BCLMeasure overwriteMeasure(const BCLMeasure& measure);
-
-  static openstudio::UUID alternativeModelMeasureUUID();
 };
 
 /** \relates SimpleProject*/
