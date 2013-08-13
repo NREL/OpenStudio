@@ -1765,6 +1765,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   model::Node supplyInletNode = plantLoop.supplyInletNode();
   model::Node supplyOutletNode = plantLoop.supplyOutletNode();
 
+  bool bypass = false;
+
   // Name
 
   plantLoop.setName(nameElement.text().toStdString());
@@ -1820,24 +1822,30 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     if( boost::optional<model::ModelObject> mo = translateBoiler(boilerElement,doc,model) )
     {
-      plantLoop.addSupplyBranchForComponent(mo->cast<model::BoilerHotWater>());
-    }
+      model::BoilerHotWater boiler = mo->cast<model::BoilerHotWater>();
 
-    QDomElement pumpElement = boilerElement.firstChildElement("Pump"); 
+      plantLoop.addSupplyBranchForComponent(boiler);
 
-    if( ! pumpElement.isNull() )
-    {
-      boost::optional<model::ModelObject> mo = translatePump(pumpElement,doc,model);
+      QDomElement pumpElement = boilerElement.firstChildElement("Pump"); 
 
-      if( mo )
+      if( ! pumpElement.isNull() )
       {
-        if( boost::optional<model::PumpVariableSpeed> pump = mo->optionalCast<model::PumpVariableSpeed>() )
+        boost::optional<model::ModelObject> mo2 = translatePump(pumpElement,doc,model);
+
+        if( mo2 )
         {
-          pump->addToNode(supplyInletNode);
-        }
-        else if( boost::optional<model::PumpConstantSpeed> pump = mo->optionalCast<model::PumpConstantSpeed>() )
-        {
-          pump->addToNode(supplyInletNode);
+          model::Node inletNode = boiler.inletModelObject()->cast<model::Node>();
+
+          if( boost::optional<model::PumpVariableSpeed> pump = mo2->optionalCast<model::PumpVariableSpeed>() )
+          {
+            pump->addToNode(inletNode);
+
+            LOG(Warn,"Variable speed branch pumps are unsupported");
+          }
+          else if( boost::optional<model::PumpConstantSpeed> pump = mo2->optionalCast<model::PumpConstantSpeed>() )
+          {
+            pump->addToNode(inletNode);
+          }
         }
       }
     }
@@ -1853,25 +1861,38 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     if( boost::optional<model::ModelObject> mo = translateChiller(chillerElement,doc,model) )
     {
-      plantLoop.addSupplyBranchForComponent(mo->cast<model::HVACComponent>());
-    }
+      model::ChillerElectricEIR chiller = mo->cast<model::ChillerElectricEIR>();
 
-    QDomElement pumpElement = chillerElement.firstChildElement("Pump"); 
+      plantLoop.addSupplyBranchForComponent(chiller);
 
-    if( ! pumpElement.isNull() )
-    {
-      boost::optional<model::ModelObject> mo = translatePump(pumpElement,doc,model);
+      QDomElement pumpElement = chillerElement.firstChildElement("Pump"); 
 
-      if( mo )
+      if( ! pumpElement.isNull() )
       {
-        if( boost::optional<model::PumpVariableSpeed> pump = mo->optionalCast<model::PumpVariableSpeed>() )
+        boost::optional<model::ModelObject> mo2 = translatePump(pumpElement,doc,model);
+
+        if( mo2 )
         {
-          pump->addToNode(supplyInletNode);
+          model::Node inletNode = chiller.supplyInletModelObject()->cast<model::Node>();
+
+          if( boost::optional<model::PumpVariableSpeed> pump = mo2->optionalCast<model::PumpVariableSpeed>() )
+          {
+            pump->addToNode(inletNode);
+
+            LOG(Warn,"Variable speed branch pumps are unsupported");
+          }
+          else if( boost::optional<model::PumpConstantSpeed> pump = mo2->optionalCast<model::PumpConstantSpeed>() )
+          {
+            pump->addToNode(inletNode);
+          }
         }
-        else if( boost::optional<model::PumpConstantSpeed> pump = mo->optionalCast<model::PumpConstantSpeed>() )
-        {
-          pump->addToNode(supplyInletNode);
-        }
+      }
+
+      QDomElement evapHasBypassElement = chillerElement.firstChildElement("EvapHasBypass");
+
+      if( evapHasBypassElement.text() == "1" )
+      {
+        bypass = true;
       }
     }
   }
@@ -1906,9 +1927,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
   // Add a default bypass
 
-  model::PipeAdiabatic pipe(model);
+  if(bypass)
+  {
+    model::PipeAdiabatic pipe(model);
 
-  plantLoop.addSupplyBranchForComponent(pipe);
+    plantLoop.addSupplyBranchForComponent(pipe);
+  }
 
   // Add a default hot water heater for servicehotwater systems
 
@@ -1981,7 +2005,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     
     // Translate Primary Supply
     
-    if( typeElement.text().toLower() == "primarysupply" )
+    if( typeElement.text().toLower() == "primaryreturn" || 
+        typeElement.text().toLower() == "primarysupply"
+      )
     {
       QDomElement pumpElement = fluidSegElement.firstChildElement("Pump");
 
