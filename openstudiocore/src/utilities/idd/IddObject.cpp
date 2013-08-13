@@ -541,7 +541,7 @@ namespace detail {
       if (minFields > m_fields.size()) {
         double numerator(minFields-m_fields.size());
         double denominator(numExtensible);
-        m_properties.numExtensibleGroupsRequired = std::ceil(numerator/denominator);
+        m_properties.numExtensibleGroupsRequired = unsigned(std::ceil(numerator/denominator));
       }
     }
   }
