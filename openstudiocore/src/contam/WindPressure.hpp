@@ -25,21 +25,15 @@
 #define WIND_API
 #endif
 
-//#include <QString>
-//#include <QVector>
-//#include <QFile>
-
-//#include <utilities/data/TimeSeries.hpp>
-//#include <utilities/core/Path.hpp>
-
-//#include "ContamAPI.hpp"
-
 #include <string>
 
 namespace openstudio{
   namespace wind{
 
-    enum ShelterClass { Default, Urban, Suburban, Airport, LargeObstruction15ft, LargeObstruction40ft, LargeObstruction100ft, FlatTerrain };
+    // These classes are a mixture of definitions from the CONTAM docs and old 
+    // Fundamentals handbooks - references are needed
+    enum ShelterClass { Default, Urban, Suburban, Airport, LargeObstruction15ft, 
+      LargeObstruction40ft, LargeObstruction100ft, FlatTerrain };
 
     double WIND_API pressureModifier(ShelterClass shelter, double H, double Href=10.0);
   }

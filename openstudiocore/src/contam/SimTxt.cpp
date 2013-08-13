@@ -22,10 +22,7 @@
 #include <QStringList>
 #include <QDateTime>
 
-//#include <utilities/data/TimeSeries.hpp>
 #include <utilities/time/DateTime.hpp>
-//#include <utilities/time/Date.hpp>
-//#include <utilities/time/Time.hpp>
 
 namespace openstudio{ 
   namespace contam {

@@ -29,9 +29,7 @@
 #include "ContamAPI.hpp"
 
 namespace openstudio {
-  //class TimeSeries;
   class DateTime;
-  //class Vector;
 }
 
 namespace openstudio{ 
@@ -41,7 +39,6 @@ namespace openstudio{
       {
       public:
 
-        // we would normally use openstudio::path for file path's
         virtual bool read(openstudio::path path)=0;
         virtual void clear();
 

@@ -60,22 +60,26 @@ QVector<double> runCase(std::map <openstudio::Handle,int> spaceMap,
   
   QFile file(fileName);
   if(!file.open(QFile::WriteOnly))
-    {
-      std::cout << "Failed to open file '"<< fileName.toStdString() << "'." << std::endl;
-      std::cout << "Check that this file location is accessible and may be written." << std::endl;
-      return QVector<double>();
-    }
+  {
+    std::cout << "Failed to open file '"<< fileName.toStdString() << "'." << std::endl;
+    std::cout << "Check that this file location is accessible and may be written." << std::endl;
+    return QVector<double>();
+  }
   QTextStream textStream(&file);
   if(verbose)
+  {
     std::cout << "Writing file " << fileName.toStdString() << std::endl;
+  }
   boost::optional<std::string> output = translator.toString();
   textStream << openstudio::toQString(*output);
   file.close();
 
   // Run simulation
   if(verbose)
+  {
     std::cout << "Running CONTAM simulation (" << windSpeed << "," << windDirection 
               << ")..." << std::endl;
+  }
   QProcess contamProcess;
   contamProcess.start(openstudio::toQString(contamExePath), QStringList() << fileName);
   if(!contamProcess.waitForStarted(-1))
@@ -90,7 +94,9 @@ QVector<double> runCase(std::map <openstudio::Handle,int> spaceMap,
   }
   // Run simread
   if(verbose)
+  {
     std::cout << "Running SimRead on SIM file..." << std::endl;
+  }
   QProcess simreadProcess;
   simreadProcess.start(openstudio::toQString(simreadExePath), QStringList() << fileName);
   if(!simreadProcess.waitForStarted(-1))
@@ -107,7 +113,9 @@ QVector<double> runCase(std::map <openstudio::Handle,int> spaceMap,
 
   // Collect results
   if(verbose)
+  {
     std::cout << "Reading results..." << std::endl;
+  }
   openstudio::contam::sim::LinkFlow lfr;
   openstudio::path lfrPath = inputPath.replace_extension(openstudio::toPath("lfr").string());
   if(!lfr.read(lfrPath))
@@ -229,18 +237,8 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
 
-  openstudio::path prjPath = inputPath.replace_extension(openstudio::toPath("prj").string());
   openstudio::contam::ForwardTranslator translator;
   
-  QFile file(openstudio::toQString(prjPath));
-  if(!file.open(QFile::WriteOnly))
-  {
-    std::cout << "Failed to open file '"<< openstudio::toString(prjPath) << "'." << std::endl;
-    std::cout << "Check that this file location is accessible and may be written." << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  QTextStream textStream(&file);
   boost::optional<std::string> output = translator.translateToPrj(*model,false,leakageDescriptorString);
   if(!output)
   {
@@ -286,18 +284,22 @@ int main(int argc, char *argv[])
     QVector<double> results = runCase(spaceMap, translator, extSurfaces, 4.4704, angle, contamExePath,
       simreadExePath, true);
     for(int i=0;i<results.size();i++)
+    {
       Q10[i] += results[i];
+    }
     results = runCase(spaceMap, translator, extSurfaces, 8.9408, angle, contamExePath,
       simreadExePath, true);
     for(int i=0;i<results.size();i++)
+    {
       Q20[i] += results[i];
+    }
   }
 
   for(int i=0;i<Q10.size();i++)
   {
     Q10[i] *= -0.25;
     Q20[i] *= -0.25;
-    std::cout<<i<<" "<<Q10[i]<<" "<<Q20[i]<<std::endl;
+    //std::cout<<i<<" "<<Q10[i]<<" "<<Q20[i]<<std::endl;
   }
 
   QVector<double> C;
@@ -311,10 +313,10 @@ int main(int argc, char *argv[])
     D << (4.4704*Q20[i]/Q10[i] - 8.9408)/denom;
   }
   
-  for(int i=0;i<Q10.size();i++)
-  {
-    std::cout<<i<<" "<<C[i]<<" "<<D[i]<<std::endl;
-  }
+  //for(int i=0;i<Q10.size();i++)
+  //{
+  //  std::cout<<i<<" "<<C[i]<<" "<<D[i]<<std::endl;
+  //}
 
   //Check
   if(verbose)
@@ -327,6 +329,7 @@ int main(int argc, char *argv[])
       std::cout<<Q20[i]<<" ?= "<<calcQ20<<" ("<<Q20[i]-calcQ20<<")"<<std::endl;
     }
   }
+
   // Remove previous infiltration objects
   std::vector<openstudio::model::SpaceInfiltrationDesignFlowRate> dfrInf = model->getConcreteModelObjects<openstudio::model::SpaceInfiltrationDesignFlowRate>();
   BOOST_FOREACH(openstudio::model::SpaceInfiltrationDesignFlowRate inf, dfrInf)
@@ -338,7 +341,6 @@ int main(int argc, char *argv[])
   {
     inf.remove();
   }
-
 
   // Generate infiltration objects and attach to spaces
   std::pair <openstudio::Handle,int> handleInt;
@@ -356,24 +358,11 @@ int main(int argc, char *argv[])
     infObj.setTemperatureTermCoefficient(0.0);
     infObj.setVelocityTermCoefficient(C[handleInt.second]);
     infObj.setVelocitySquaredTermCoefficient(D[handleInt.second]);
-    /*
-    std::vector<openstudio::model::SpaceInfiltrationDesignFlowRate> design = space->spaceInfiltrationDesignFlowRates();
-    BOOST_FOREACH(openstudio::model::SpaceInfiltrationDesignFlowRate inf, design)
-    {
-      inf.remove();
-    }
-    std::vector<openstudio::model::SpaceInfiltrationEffectiveLeakageArea> leakage = space->spaceInfiltrationEffectiveLeakageAreas();
-    BOOST_FOREACH(openstudio::model::SpaceInfiltrationEffectiveLeakageArea inf, leakage)
-    {
-      inf.remove();
-    }
-    */
     infObj.setSpace(*space);
   }
 
   // Write out new OSM
   QString outstring = openstudio::toQString(inputPathString).replace(".osm",openstudio::toQString(leakageDescriptorString)+".osm");
-  //openstudio::path outPath = openstudio::toPath("infiltrated.osm"); // = inputPath.replace_extension(openstudio::toPath("osm").string());
   openstudio::path outPath = openstudio::toPath(outstring);
   if(!model->save(outPath,true))
   {
