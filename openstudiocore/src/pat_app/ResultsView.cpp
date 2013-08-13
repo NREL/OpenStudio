@@ -44,6 +44,8 @@
 #include <project/AnalysisRecord.hpp>
 #include <project/AnalysisRecord_Impl.hpp>
 
+#include <model/UtilityBill.hpp>
+
 #include <utilities/data/Attribute.hpp>
 #include <utilities/data/CalibrationResult.hpp>
 #include <utilities/units/Quantity.hpp>
@@ -66,6 +68,7 @@
 #include <QTimer>
 #include <QButtonGroup>
 #include <QStackedWidget>
+#include <QComboBox>
 
 #define NAME_LABEL_WIDTH 90
 #define SPACER_WIDTH 3
@@ -213,6 +216,27 @@ ResultsView::ResultsView()
   innerContentVLayout->setSpacing(5);
   innerContentVLayout->setAlignment(Qt::AlignTop);
 
+  // select calibration method
+  hLayout = new QHBoxLayout();
+
+  QComboBox* calibrationComboBox = new QComboBox();
+  Q_FOREACH(const std::string& calibrationGuideline, model::UtilityBill::calibrationGuidelines()){
+    calibrationComboBox->addItem(toQString(calibrationGuideline));
+  }
+  calibrationComboBox->setCurrentIndex(-1); // needed so change to index 0 emits signal
+  hLayout->addWidget(calibrationComboBox);
+
+  m_calibrationMethodLabel = new QLabel();
+  hLayout->addWidget(m_calibrationMethodLabel);
+
+  hLayout->addStretch();
+
+  isConnected = connect(calibrationComboBox, SIGNAL(currentIndexChanged(const QString &)),
+    this, SLOT(selectCalibrationMethod(const QString &)));
+  Q_ASSERT(isConnected);
+
+  innerContentVLayout->addLayout(hLayout);
+
   // Results header
   resultsHeader = new DataPointCalibrationHeaderView();
   innerContentVLayout->addWidget(resultsHeader);
@@ -267,7 +291,18 @@ ResultsView::ResultsView()
   mainContentVLayout->addWidget(footer);
 
   updateReportButtons();
+  calibrationComboBox->setCurrentIndex(0);
   selectView(0);
+}
+
+double ResultsView::calibrationMaxNMBE() const
+{
+  return m_calibrationMaxNMBE;
+}
+
+double ResultsView::calibrationMaxCVRMSE() const
+{
+  return m_calibrationMaxCVRMSE;
 }
 
 void ResultsView::updateReportButtons()
@@ -305,6 +340,28 @@ void ResultsView::enableOpenDirectoryButton(bool enable)
 {
   m_openDirButton->setEnabled(enable);
 }
+
+void ResultsView::selectCalibrationMethod(const QString& value)
+{
+  std::string calibrationGuideline = toString(value);
+  boost::optional<double> maxNMBE = model::UtilityBill::maxNMBE(calibrationGuideline);
+  boost::optional<double> maxCVRMSE = model::UtilityBill::maxCVRMSE(calibrationGuideline);
+  Q_ASSERT(maxNMBE);
+  Q_ASSERT(maxCVRMSE);
+
+  m_calibrationMaxNMBE = *maxNMBE;
+  m_calibrationMaxCVRMSE = *maxCVRMSE;
+  
+  QString text("NBME of ");
+  text += QString::number(m_calibrationMaxNMBE);
+  text += "% or less and CV(RSME) of ";
+  text += QString::number(m_calibrationMaxCVRMSE);
+  text += "% relative to monthly data.\nMust contain all utility data for one year and real weather data.\nCheck the guideline for additional requirements.";
+  m_calibrationMethodLabel->setText(text);
+
+  emit calibrationThresholdsChanged(m_calibrationMaxNMBE, m_calibrationMaxCVRMSE);
+}
+
 
 ResultsHeader::ResultsHeader(bool isBaseline)
   : QWidget()
@@ -1114,8 +1171,9 @@ DataPointCalibrationHeaderView::DataPointCalibrationHeaderView()
 
 DataPointCalibrationView::DataPointCalibrationView(const openstudio::analysis::DataPoint& dataPoint,
                                                    const openstudio::analysis::DataPoint& baselineDataPoint,
-                                                   bool alternateRow)
-  : QAbstractButton(), m_dataPoint(dataPoint), m_baselineDataPoint(baselineDataPoint), m_alternateRow(alternateRow)
+                                                   bool alternateRow, double maxNMBE, double maxCVRMSE)
+  : QAbstractButton(), m_dataPoint(dataPoint), m_baselineDataPoint(baselineDataPoint), 
+    m_alternateRow(alternateRow), m_calibrationMaxNMBE(maxNMBE), m_calibrationMaxCVRMSE(maxCVRMSE)
 {
   this->setMinimumHeight(75);
 
@@ -1159,7 +1217,11 @@ void DataPointCalibrationView::update()
       label->setFixedWidth(CALIBRATION_LABEL_WIDTH);
       label->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
       if (nmbe){
-        label->setText(QString::number(*nmbe, 'f', 2));
+        if (std::abs(*nmbe) > m_calibrationMaxNMBE){
+          label->setText("<font color=\"red\">" + QString::number(*nmbe, 'f', 2) + "%</font>");
+        }else{
+          label->setText(QString::number(*nmbe, 'f', 2) + "%");
+        }
       }else{
         label->setText("--");
       }
@@ -1170,7 +1232,11 @@ void DataPointCalibrationView::update()
       label->setFixedWidth(CALIBRATION_LABEL_WIDTH);
       label->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
       if (cvrmse){
-        label->setText(QString::number(*cvrmse, 'f', 2));
+        if (*cvrmse > m_calibrationMaxCVRMSE){
+          label->setText("<font color=\"red\">" + QString::number(*cvrmse, 'f', 2) + "%</font>");
+        }else{
+          label->setText(QString::number(*cvrmse, 'f', 2) + "%");
+        }
       }else{
         label->setText("--");
       }

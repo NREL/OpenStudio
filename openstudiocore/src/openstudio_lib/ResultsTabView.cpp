@@ -656,17 +656,19 @@ UtilityBillComparisonView::UtilityBillComparisonView(const openstudio::model::Mo
   hLayout->addWidget(label);
 
   QComboBox* comboBox = new QComboBox();
-  comboBox->addItem("ASHRAE 14 (5%)");
-  comboBox->addItem("FEMP (15%)");
-  comboBox->setCurrentIndex(0);
+  Q_FOREACH(const std::string& calibrationGuideline, model::UtilityBill::calibrationGuidelines()){
+    comboBox->addItem(toQString(calibrationGuideline));
+  }
   hLayout->addWidget(comboBox);
 
   m_calibrationMethodLabel = new QLabel();
   hLayout->addWidget(m_calibrationMethodLabel);
 
-  bool isConnected = connect(comboBox, SIGNAL(currentIndexChanged(int)),
-    this, SLOT(selectCalibrationMethod(int)));
+  bool isConnected = connect(comboBox, SIGNAL(currentIndexChanged(const QString &)),
+    this, SLOT(selectCalibrationMethod(const QString &)));
   Q_ASSERT(isConnected);
+
+  comboBox->setCurrentIndex(0);
   
   hLayout->addStretch();
 
@@ -691,8 +693,6 @@ UtilityBillComparisonView::UtilityBillComparisonView(const openstudio::model::Mo
                    this,
                    SLOT(onObjectRemoved(const WorkspaceObject&)) );
   Q_ASSERT(isConnected);
-
-  selectCalibrationMethod(0);
 }
 
 struct UtilityBillSorter 
@@ -761,24 +761,16 @@ void UtilityBillComparisonView::buildGridLayout()
   }
 }
 
-void UtilityBillComparisonView::selectCalibrationMethod(int index)
+void UtilityBillComparisonView::selectCalibrationMethod(const QString& value)
 {
-  QString nmbeValue;
-  QString rsmeValue;
+  std::string calibrationGuideline = toString(value);
+  boost::optional<double> maxNMBE = model::UtilityBill::maxNMBE(calibrationGuideline);
+  boost::optional<double> maxCVRMSE = model::UtilityBill::maxCVRMSE(calibrationGuideline);
+  Q_ASSERT(maxNMBE);
+  Q_ASSERT(maxCVRMSE);
 
-  if(index == 0){
-    // ASHRAE
-    m_calibrationMaxCVRMSE = 15;
-    m_calibrationMaxNMBE = 5;
-  }
-  else if(index == 1){
-    // FEMP 
-    m_calibrationMaxCVRMSE = 10;
-    m_calibrationMaxNMBE = 15;
-  }
-  else{
-    Q_ASSERT(false);
-  }
+  m_calibrationMaxCVRMSE = *maxCVRMSE;
+  m_calibrationMaxNMBE = *maxNMBE;
   
   QString text("NBME of ");
   text += QString::number(m_calibrationMaxNMBE);

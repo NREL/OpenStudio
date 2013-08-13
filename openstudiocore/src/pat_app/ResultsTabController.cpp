@@ -23,6 +23,8 @@
 
 #include <analysis/DataPoint.hpp>
 
+#include <model/UtilityBill.hpp>
+
 #include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/FileInfo.hpp>
 
@@ -62,7 +64,7 @@ ResultsTabController::ResultsTabController()
     m_dataPointResultsListController = QSharedPointer<DataPointResultsListController>(new DataPointResultsListController(analysis));
     m_dataPointResultItemDelegate = QSharedPointer<DataPointResultItemDelegate>(new DataPointResultItemDelegate());
     m_dataPointCalibrationListController = QSharedPointer<DataPointCalibrationListController>(new DataPointCalibrationListController(analysis));
-    m_dataPointCalibrationItemDelegate = QSharedPointer<DataPointCalibrationItemDelegate>(new DataPointCalibrationItemDelegate());
+    m_dataPointCalibrationItemDelegate = QSharedPointer<DataPointCalibrationItemDelegate>(new DataPointCalibrationItemDelegate(resultsView->calibrationMaxNMBE(), resultsView->calibrationMaxCVRMSE()));
 
     // can only select one item between both lists
     m_dataPointResultsListController->setSelectionController(m_baselineDataPointResultListController->selectionController());
@@ -73,6 +75,13 @@ ResultsTabController::ResultsTabController()
     Q_ASSERT(bingo);
 
     bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
+    Q_ASSERT(bingo);
+
+    bingo = connect(resultsView,SIGNAL(calibrationThresholdsChanged(double, double)),m_dataPointCalibrationItemDelegate.data(),SLOT(setCalibrationThresholds(double, double)));
+    Q_ASSERT(bingo);
+
+    // want to reset the list after changing the delegate
+    bingo = connect(resultsView,SIGNAL(calibrationThresholdsChanged(double, double)),resultsView->dataPointCalibrationListView,SLOT(refreshAllViews()));
     Q_ASSERT(bingo);
 
     resultsView->baselineDataPointResultListView->setListController(m_baselineDataPointResultListController);
@@ -286,6 +295,9 @@ QWidget * DataPointResultItemDelegate::view(QSharedPointer<OSListItem> dataSourc
   return result;
 }
 
+DataPointCalibrationItemDelegate::DataPointCalibrationItemDelegate(double maxNMBE, double maxCVRMSE)
+ : m_calibrationMaxNMBE(maxNMBE), m_calibrationMaxCVRMSE(maxCVRMSE)
+{}
 
 QWidget * DataPointCalibrationItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
@@ -296,7 +308,7 @@ QWidget * DataPointCalibrationItemDelegate::view(QSharedPointer<OSListItem> data
   openstudio::analysis::DataPoint baselineDataPoint = dataPointCalibrationListItem->baselineDataPoint();
   bool alternateRow = dataPointCalibrationListItem->alternateRow();
 
-  DataPointCalibrationView* result = new DataPointCalibrationView(dataPoint, baselineDataPoint, alternateRow);
+  DataPointCalibrationView* result = new DataPointCalibrationView(dataPoint, baselineDataPoint, alternateRow, m_calibrationMaxNMBE, m_calibrationMaxCVRMSE);
   result->setHasEmphasis(dataPointCalibrationListItem->isSelected());
 
   bool test = connect(result,SIGNAL(clicked()),dataPointCalibrationListItem.data(),SLOT(toggleSelected()));
@@ -306,6 +318,12 @@ QWidget * DataPointCalibrationItemDelegate::view(QSharedPointer<OSListItem> data
   Q_ASSERT(test);
 
   return result;
+}
+
+void DataPointCalibrationItemDelegate::setCalibrationThresholds(double maxNMBE, double maxCVRMSE)
+{
+  m_calibrationMaxNMBE = maxNMBE;
+  m_calibrationMaxCVRMSE = maxCVRMSE;
 }
 
 BaselineDataPointResultListController::BaselineDataPointResultListController(const openstudio::analysis::Analysis& analysis)

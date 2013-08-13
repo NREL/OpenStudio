@@ -159,4 +159,11 @@ TEST_F(ModelFixture, UtilityBill_Coverage) {
       }
     }
   }
+
+
+  BOOST_FOREACH(const std::string& calibrationGuideline, UtilityBill::calibrationGuidelines()){
+    // results tabs in OS app and PAT require these return values for each calibrationGuideline
+    EXPECT_TRUE(UtilityBill::maxNMBE(calibrationGuideline)) << "maxNMBE " << calibrationGuideline;
+    EXPECT_TRUE(UtilityBill::maxCVRMSE(calibrationGuideline)) << "maxCVRMSE " << calibrationGuideline;
+  }
 }

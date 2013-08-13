@@ -144,10 +144,21 @@ class DataPointCalibrationItemDelegate : public OSItemDelegate
 
   public:
 
+  DataPointCalibrationItemDelegate(double maxNMBE, double maxCVRMSE);
+
   virtual ~DataPointCalibrationItemDelegate() {}
 
   /// Widget returned will be a DataPointCalibrationListItem
   QWidget * view(QSharedPointer<OSListItem> dataSource);
+
+  public slots:
+    
+  void setCalibrationThresholds(double maxNMBE, double maxCVRMSE);
+
+  private:
+
+  double m_calibrationMaxNMBE;
+  double m_calibrationMaxCVRMSE;
 };
 
 /// Controller class for the list of baseline data points on the results tab
