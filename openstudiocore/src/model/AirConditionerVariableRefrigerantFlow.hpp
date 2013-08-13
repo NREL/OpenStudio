@@ -30,7 +30,7 @@ namespace model {
 class Schedule;
 class CurveBiquadratic;
 class CurveCubic;
-class CurveLinear;
+class CurveCubic;
 class ThermalZone;
 
 namespace detail {
@@ -97,9 +97,9 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
   void resetCoolingCapacityRatioModifierFunctionofLowTemperatureCurve();
 
 
-  boost::optional<CurveLinear> coolingCapacityRatioBoundaryCurve() const;
+  boost::optional<CurveCubic> coolingCapacityRatioBoundaryCurve() const;
 
-  bool setCoolingCapacityRatioBoundaryCurve(const CurveLinear& curveLinear);
+  bool setCoolingCapacityRatioBoundaryCurve(const CurveCubic& curveCubic);
 
   void resetCoolingCapacityRatioBoundaryCurve();
 
@@ -118,9 +118,9 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
   void resetCoolingEnergyInputRatioModifierFunctionofLowTemperatureCurve();
 
 
-  boost::optional<CurveLinear> coolingEnergyInputRatioBoundaryCurve() const;
+  boost::optional<CurveCubic> coolingEnergyInputRatioBoundaryCurve() const;
 
-  bool setCoolingEnergyInputRatioBoundaryCurve(const CurveLinear& curveLinear);
+  bool setCoolingEnergyInputRatioBoundaryCurve(const CurveCubic& curve);
 
   void resetCoolingEnergyInputRatioBoundaryCurve();
 
@@ -132,30 +132,30 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
   void resetCoolingEnergyInputRatioModifierFunctionofHighTemperatureCurve();
 
 
-  boost::optional<CurveLinear> coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve() const;
+  boost::optional<CurveCubic> coolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve() const;
 
-  bool setCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(const CurveLinear& curveLinear);
+  bool setCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve(const CurveCubic& curveCubic);
 
   void resetCoolingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
 
 
-  boost::optional<CurveLinear> coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() const;
+  boost::optional<CurveCubic> coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() const;
 
-  bool setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(const CurveLinear& curveLinear);
+  bool setCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(const CurveCubic& curveCubic);
 
   void resetCoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
 
 
-  boost::optional<CurveLinear> coolingCombinationRatioCorrectionFactorCurve() const;
+  boost::optional<CurveCubic> coolingCombinationRatioCorrectionFactorCurve() const;
 
-  bool setCoolingCombinationRatioCorrectionFactorCurve(const CurveLinear& curveLinear);
+  bool setCoolingCombinationRatioCorrectionFactorCurve(const CurveCubic& curveCubic);
 
   void resetCoolingCombinationRatioCorrectionFactorCurve();
 
 
-  boost::optional<CurveLinear> coolingPartLoadFractionCorrelationCurve() const;
+  boost::optional<CurveCubic> coolingPartLoadFractionCorrelationCurve() const;
 
-  bool setCoolingPartLoadFractionCorrelationCurve(const CurveLinear& curveLinear);
+  bool setCoolingPartLoadFractionCorrelationCurve(const CurveCubic& curveCubic);
 
   void resetCoolingPartLoadFractionCorrelationCurve();
 
@@ -196,9 +196,9 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
   void resetHeatingCapacityRatioModifierFunctionofLowTemperatureCurve();
 
 
-  boost::optional<CurveLinear> heatingCapacityRatioBoundaryCurve() const;
+  boost::optional<CurveCubic> heatingCapacityRatioBoundaryCurve() const;
 
-  bool setHeatingCapacityRatioBoundaryCurve(const CurveLinear& curveLinear);
+  bool setHeatingCapacityRatioBoundaryCurve(const CurveCubic& curveCubic);
 
   void resetHeatingCapacityRatioBoundaryCurve();
 
@@ -217,9 +217,9 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
   void resetHeatingEnergyInputRatioModifierFunctionofLowTemperatureCurve();
 
 
-  boost::optional<CurveLinear> heatingEnergyInputRatioBoundaryCurve() const;
+  boost::optional<CurveCubic> heatingEnergyInputRatioBoundaryCurve() const;
 
-  bool setHeatingEnergyInputRatioBoundaryCurve(const CurveLinear& curveLinear);
+  bool setHeatingEnergyInputRatioBoundaryCurve(const CurveCubic& curveCubic);
 
   void resetHeatingEnergyInputRatioBoundaryCurve();
 
@@ -243,23 +243,23 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
   void resetHeatingEnergyInputRatioModifierFunctionofLowPartLoadRatioCurve();
 
 
-  boost::optional<CurveLinear> heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() const;
+  boost::optional<CurveCubic> heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() const;
 
-  bool setHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(const CurveLinear& curveLinear);
+  bool setHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve(const CurveCubic& curveCubic);
 
   void resetHeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve();
 
 
-  boost::optional<CurveLinear> heatingCombinationRatioCorrectionFactorCurve() const;
+  boost::optional<CurveCubic> heatingCombinationRatioCorrectionFactorCurve() const;
 
-  bool setHeatingCombinationRatioCorrectionFactorCurve(const CurveLinear& curveLinear);
+  bool setHeatingCombinationRatioCorrectionFactorCurve(const CurveCubic& curveCubic);
 
   void resetHeatingCombinationRatioCorrectionFactorCurve();
 
 
-  boost::optional<CurveLinear> heatingPartLoadFractionCorrelationCurve() const;
+  boost::optional<CurveCubic> heatingPartLoadFractionCorrelationCurve() const;
 
-  bool setHeatingPartLoadFractionCorrelationCurve(const CurveLinear& curveLinear);
+  bool setHeatingPartLoadFractionCorrelationCurve(const CurveCubic& curveCubic);
 
   void resetHeatingPartLoadFractionCorrelationCurve();
 
@@ -303,9 +303,9 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
   void setVerticalHeightusedforPipingCorrectionFactor(double verticalHeightusedforPipingCorrectionFactor);
 
 
-  boost::optional<CurveLinear> pipingCorrectionFactorforLengthinCoolingModeCurve() const;
+  boost::optional<CurveBiquadratic> pipingCorrectionFactorforLengthinCoolingModeCurve() const;
 
-  bool setPipingCorrectionFactorforLengthinCoolingModeCurve(const CurveLinear& curveLinear);
+  bool setPipingCorrectionFactorforLengthinCoolingModeCurve(const CurveBiquadratic& curveCubic);
 
   void resetPipingCorrectionFactorforLengthinCoolingModeCurve();
 
@@ -320,9 +320,9 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
   void setEquivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode(double equivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode);
 
 
-  boost::optional<CurveLinear> pipingCorrectionFactorforLengthinHeatingModeCurve() const;
+  boost::optional<CurveCubic> pipingCorrectionFactorforLengthinHeatingModeCurve() const;
 
-  bool setPipingCorrectionFactorforLengthinHeatingModeCurve(const CurveLinear& curveLinear);
+  bool setPipingCorrectionFactorforLengthinHeatingModeCurve(const CurveCubic& curveCubic);
 
   void resetPipingCorrectionFactorforLengthinHeatingModeCurve();
 

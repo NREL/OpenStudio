@@ -18,12 +18,25 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
 #include <model/test/ModelFixture.hpp>
-
 #include <model/AirConditionerVariableRefrigerantFlow.hpp>
 #include <model/AirConditionerVariableRefrigerantFlow_Impl.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
+
+TEST(ModelFixture,AirConditionerVariableRefrigerantFlow)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_EXIT ( 
+  {  
+     model::Model m; 
+
+     model::AirConditionerVariableRefrigerantFlow vrf(m); 
+
+     exit(0); 
+  } ,
+    ::testing::ExitedWithCode(0), "" );
+}
 
