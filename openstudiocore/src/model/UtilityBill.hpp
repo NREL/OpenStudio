@@ -164,6 +164,12 @@ class MODEL_API UtilityBill : public ModelObject {
 
   std::vector<std::string> peakDemandUnitValues();
 
+  static std::vector<std::string> calibrationGuidelines();
+
+  static boost::optional<double> maxNMBE(const std::string& calibrationGuideline);
+
+  static boost::optional<double> maxCVRMSE(const std::string& calibrationGuideline);
+
   /** @name Getters */
   //@{
 

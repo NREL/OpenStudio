@@ -344,10 +344,10 @@ namespace openstudio {
       values.push_back(Attribute("numberBillingPeriodsInCalculations", *numberBillingPeriodsInCalculations));
     }
     if (CVRMSE){
-      values.push_back(Attribute("CVRMSE", *CVRMSE));
+      values.push_back(Attribute("cvrmse", *CVRMSE));
     }
     if (NMBE){
-      values.push_back(Attribute("NMBE", *NMBE));
+      values.push_back(Attribute("nmbe", *NMBE));
     }
 
     values.push_back(Attribute("billingPeriods", std::vector<Attribute>()));
@@ -487,7 +487,7 @@ namespace openstudio {
   
   boost::optional<double> CalibrationUtilityBill::CVRMSE() const
   {
-    boost::optional<Attribute> attribute = m_attribute.findChildByName("CVRMSE");
+    boost::optional<Attribute> attribute = m_attribute.findChildByName("cvrmse");
     if (attribute){
       BOOST_ASSERT(attribute->valueType() == AttributeValueType::Double);
       return attribute->valueAsDouble();
@@ -497,7 +497,7 @@ namespace openstudio {
   
   boost::optional<double> CalibrationUtilityBill::NMBE() const
   {
-    boost::optional<Attribute> attribute = m_attribute.findChildByName("NMBE");
+    boost::optional<Attribute> attribute = m_attribute.findChildByName("nmbe");
     if (attribute){
       BOOST_ASSERT(attribute->valueType() == AttributeValueType::Double);
       return attribute->valueAsDouble();

@@ -150,7 +150,7 @@ namespace openstudio {
 
     private slots:
     
-      void selectCalibrationMethod(int);
+      void selectCalibrationMethod(const QString &);
       void onObjectAdded(const WorkspaceObject& workspaceObject);
       void onObjectRemoved(const WorkspaceObject& workspaceObject);
           

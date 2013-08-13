@@ -1349,6 +1349,36 @@ std::vector<std::string> UtilityBill::peakDemandUnitValues() {
   return getImpl<detail::UtilityBill_Impl>()->peakDemandUnitValues();
 }
 
+std::vector<std::string> UtilityBill::calibrationGuidelines()
+{
+  std::vector<std::string> result;
+  result.push_back("ASHRAE 14-2002");
+  result.push_back("FEMP"); // TODO, name, year?
+  return result;
+}
+
+boost::optional<double> UtilityBill::maxNMBE(const std::string& calibrationGuideline)
+{
+  boost::optional<double> result;
+  if (istringEqual("ASHRAE 14-2002", calibrationGuideline)){
+    result = 5;
+  }else if (istringEqual("FEMP", calibrationGuideline)){
+    result = 15;
+  }
+  return result;
+}
+
+boost::optional<double> UtilityBill::maxCVRMSE(const std::string& calibrationGuideline)
+{
+  boost::optional<double> result;
+  if (istringEqual("ASHRAE 14-2002", calibrationGuideline)){
+    result = 15;
+  }else if (istringEqual("FEMP", calibrationGuideline)){
+    result = 10;
+  }
+  return result;
+}
+
 FuelType UtilityBill::fuelType() const {
   return getImpl<detail::UtilityBill_Impl>()->fuelType();
 }
