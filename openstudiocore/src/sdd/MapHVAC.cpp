@@ -2005,7 +2005,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     
     // Translate Primary Supply
     
-    if( typeElement.text().toLower() == "primaryreturn" )
+    if( typeElement.text().toLower() == "primaryreturn" || 
+        typeElement.text().toLower() == "primarysupply"
+      )
     {
       QDomElement pumpElement = fluidSegElement.firstChildElement("Pump");
 
