@@ -241,6 +241,9 @@ namespace detail {
     /** Returns a csv summary of all the data points in this analysis. */
     Table summaryTable() const;
 
+    /// Relocate path data from originalBase to newBase.
+    virtual void updatePathData(const openstudio::path& originalBase, const openstudio::path& newBase);
+
     //@}
     /** @name Serialization */
     //@{

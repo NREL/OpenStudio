@@ -36,6 +36,7 @@
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Json.hpp>
+#include <utilities/core/PathHelpers.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -683,6 +684,39 @@ namespace detail {
     return table;
   }
 
+  void Analysis_Impl::updatePathData(const openstudio::path& originalBase,
+                                     const openstudio::path& newBase)
+  {
+    // seed
+    openstudio::path temp = relocatePath(seed().path(),originalBase,newBase);
+    if (!temp.empty()) {
+      m_seed.setPath(temp);
+    }
+
+    // weather file
+    if (weatherFile()) {
+      temp = relocatePath(weatherFile()->path(),originalBase,newBase);
+      if (!temp.empty()) {
+        m_weatherFile->setPath(temp);
+      }
+    }
+
+    // problem
+    // HERE -- Implement for Problem.
+    m_problem.getImpl<detail::Problem_Impl>()->updatePathData(originalBase,newBase);
+
+    // algorithm
+    if (algorithm()) {
+      m_algorithm->getImpl<detail::Algorithm_Impl>()->updatePathData(originalBase,newBase);
+    }
+
+    // data points
+    DataPointVector dataPoints = this->dataPoints();
+    BOOST_FOREACH(DataPoint& dataPoint,dataPoints) {
+      dataPoint.getImpl<detail::DataPoint_Impl>()->updatePathData(originalBase,newBase);
+    }
+  }
+
   bool Analysis_Impl::saveJSON(openstudio::path p,
                                AnalysisSerializationScope scope,
                                bool overwrite) const
@@ -1016,6 +1050,12 @@ void Analysis::updateDakotaAlgorithm(const runmanager::Job& completedDakotaJob) 
 
 Table Analysis::summaryTable() const {
   return getImpl<detail::Analysis_Impl>()->summaryTable();
+}
+
+void Analysis::updatePathData(const openstudio::path& originalBase,
+                              const openstudio::path& newBase)
+{
+  return getImpl<detail::Analysis_Impl>()->updatePathData(originalBase,newBase);
 }
 
 bool Analysis::saveJSON(const openstudio::path& p,

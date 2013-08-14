@@ -119,6 +119,9 @@ namespace detail {
                     const QObject* receiver=0,
                     const char* slot=0) const;
 
+    /// Relocate path data from originalBase to newBase.
+    virtual void updatePathData(const openstudio::path& originalBase, const openstudio::path& newBase);
+
     //@}
     /** @name Type Casting */
     //@{

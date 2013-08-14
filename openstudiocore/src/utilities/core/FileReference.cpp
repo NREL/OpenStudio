@@ -19,19 +19,26 @@
 
 #include <utilities/core/FileReference.hpp>
 
-#include <utilities/time/DateTime.hpp>
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Checksum.hpp>
 #include <utilities/core/PathHelpers.hpp>
+#include <utilities/time/DateTime.hpp>
+
+#include <QDateTime>
+#include <QFileInfo>
 
 namespace openstudio {
 
 FileReference::FileReference(const openstudio::path& p)
-  : m_uuid(createUUID()), m_versionUUID(createUUID()),
+  : m_uuid(createUUID()),
+    m_versionUUID(createUUID()),
     m_name(toString(p)),
-    m_displayName(toString(p.stem())),
+    m_displayName(toString(p.filename())),
     m_path(completeAndNormalize(p)),
-    m_timestampCreate(DateTime::now()), m_timestampLast(m_timestampCreate),
-    m_checksumCreate(checksum(m_path)), m_checksumLast(m_checksumCreate)
+    m_timestampCreate(DateTime::now()),
+    m_timestampLast(m_timestampCreate),
+    m_checksumCreate(checksum(m_path)),
+    m_checksumLast(m_checksumCreate)
 {
   try {
     m_fileType = FileReferenceType(getFileExtension(p));
@@ -39,6 +46,7 @@ FileReference::FileReference(const openstudio::path& p)
   catch (...) {
     m_fileType = FileReferenceType::Unknown;
   }
+  update(openstudio::path(),false);
 }
 
 /** De-serialization constructor. Not for general use. */
@@ -53,11 +61,17 @@ FileReference::FileReference(const openstudio::UUID& uuid,
                              const DateTime& timestampLast,
                              const std::string& checksumCreate,
                              const std::string& checksumLast)
-  : m_uuid(uuid), m_versionUUID(versionUUID),
-    m_name(name), m_displayName(displayName), m_description(description),
-    m_path(p), m_fileType(fileType),
-    m_timestampCreate(timestampCreate), m_timestampLast(timestampLast), 
-    m_checksumCreate(checksumCreate), m_checksumLast(checksumLast)
+  : m_uuid(uuid),
+    m_versionUUID(versionUUID),
+    m_name(name),
+    m_displayName(displayName),
+    m_description(description),
+    m_path(p),
+    m_fileType(fileType),
+    m_timestampCreate(timestampCreate),
+    m_timestampLast(timestampLast),
+    m_checksumCreate(checksumCreate),
+    m_checksumLast(checksumLast)
 {}
 
 FileReference FileReference::clone() const {
@@ -87,28 +101,50 @@ std::string FileReference::description() const {
   return m_description;
 }
 
-openstudio::path FileReference::path() const { return m_path; }
+openstudio::path FileReference::path() const {
+  return m_path;
+}
 
-FileReferenceType FileReference::fileType() const { return m_fileType; }
+FileReferenceType FileReference::fileType() const {
+  return m_fileType;
+}
 
-DateTime FileReference::timestampCreate() const { return m_timestampCreate; }
+DateTime FileReference::timestampCreate() const {
+  return m_timestampCreate;
+}
 
-DateTime FileReference::timestampLast() const { return m_timestampLast; }
+DateTime FileReference::timestampLast() const {
+  return m_timestampLast;
+}
 
-std::string FileReference::checksumCreate() const { return m_checksumCreate; }
+std::string FileReference::checksumCreate() const {
+  return m_checksumCreate;
+}
 
-std::string FileReference::checksumLast() const { return m_checksumLast; }
+std::string FileReference::checksumLast() const {
+  return m_checksumLast;
+}
 
 void FileReference::setName(const std::string& newName) {
   m_name = newName;
+  m_versionUUID = createUUID();
 }
 
 void FileReference::setDisplayName(const std::string& newDisplayName) {
   m_displayName = newDisplayName;
+  m_versionUUID = createUUID();
 }
 
 void FileReference::setDescription(const std::string& newDescription) {
   m_description = newDescription;
+  m_versionUUID = createUUID();
+}
+
+void FileReference::setPath(const openstudio::path& newPath) {
+  if (newPath != m_path) {
+    m_path = newPath;
+    m_versionUUID = createUUID();
+  }
 }
 
 bool FileReference::makePathAbsolute(const openstudio::path& searchDirectory) {
@@ -123,8 +159,11 @@ bool FileReference::makePathAbsolute(const openstudio::path& searchDirectory) {
     workingPath = toPath(currentPath.filename());
   }
   openstudio::path newPath = boost::filesystem::complete(workingPath,searchDirectory);
-  if (newPath.empty() || !boost::filesystem::exists(newPath)) { return false; }
+  if (newPath.empty() || !boost::filesystem::exists(newPath)) {
+    return false;
+  }
   m_path = completeAndNormalize(newPath);
+  m_versionUUID = createUUID();
   return true;
 }
 
@@ -136,22 +175,35 @@ bool FileReference::makePathRelative(const openstudio::path& basePath) {
   else {
     newPath = relativePath(path(),basePath);
   }
-  if (newPath.empty()) { return false; }
+  if (newPath.empty()) {
+    return false;
+  }
   m_path = newPath;
+  m_versionUUID = createUUID();
   return true;
 }
 
 bool FileReference::update(const openstudio::path& searchDirectory) {
-  openstudio::path originalPath = path();
-  bool ok = makePathAbsolute(searchDirectory);
-  if (ok) {
-    m_timestampLast = DateTime::now();
-    m_checksumLast = checksum(path());
+  return update(searchDirectory,true);
+}
+
+bool FileReference::update(const openstudio::path& searchDirectory,bool lastOnly) {
+  makePathAbsolute(searchDirectory);
+  openstudio::path p = path();
+  if (boost::filesystem::exists(p)) {
+    QFileInfo fileInfo(toQString(p));
+    OS_ASSERT(fileInfo.exists());
+
+    if (!lastOnly) {
+      m_timestampCreate = toDateTime(fileInfo.created());
+    }
+
+    m_timestampLast = toDateTime(fileInfo.lastModified());
+    m_checksumLast = checksum(p);
+    m_versionUUID = createUUID();
+    return true;
   }
-  else {
-    m_path = originalPath;
-  }
-  return ok;
+  return false;
 }
 
 namespace detail {

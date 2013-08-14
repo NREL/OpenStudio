@@ -132,6 +132,10 @@ namespace detail {
     return QObject::disconnect(this,signal,receiver,slot);
   }
 
+  void AnalysisObject_Impl::updatePathData(const openstudio::path& originalBase,
+                                           const openstudio::path& newBase)
+  {}
+
   void AnalysisObject_Impl::onChange(ChangeType changeType) {
     m_versionUUID = createUUID();
     m_dirty = true;
