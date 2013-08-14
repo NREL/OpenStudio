@@ -182,7 +182,7 @@ namespace detail {
 
       std::vector<ModelObject> modelObjects = compressorList().modelObjects();
 
-      if(modelObjects.empty()) {
+      if(!modelObjects.empty()) {
         for(std::vector<ModelObject>::iterator it = modelObjects.begin(); it != modelObjects.end(); ++it) {
             result.push_back(it->cast<RefrigerationCompressor>());
         }
@@ -308,11 +308,16 @@ namespace detail {
     if( boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList() ) {
       std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
 
-      for(std::vector<ModelObject>::iterator it = modelObjects.end(); it != modelObjects.begin(); --it) {
+      for(std::vector<ModelObject>::iterator it = modelObjects.begin(); it != modelObjects.end(); ++it) {
           boost::optional<T> caseOrWalkin = it->optionalCast<T>();
           if (caseOrWalkin) {
             modelObjectList->removeModelObject(*it);
           }
+      }
+      modelObjects = modelObjectList->modelObjects();
+      if(modelObjects.empty()){
+        modelObjectList->remove();
+        resetRefrigeratedCaseAndWalkInList();
       }
     }  
   }
@@ -329,15 +334,21 @@ namespace detail {
     return list.get().addModelObject(refrigerationCase);
   }
 
-  void RefrigerationSystem_Impl::removeCase( const RefrigerationCase& refrigerationCase) {
+  void RefrigerationSystem_Impl::removeCase( RefrigerationCase& refrigerationCase) {
     boost::optional<ModelObjectList> list = refrigeratedCaseAndWalkInList();
     if (list) {
       list.get().removeModelObject(refrigerationCase);
+      refrigerationCase.remove();
     }
   }
 
   void RefrigerationSystem_Impl::removeAllCases() {
+    std::vector<RefrigerationCase> cases = this->cases();
     removeAllCasesOrWalkins<RefrigerationCase>();
+    for(std::vector<RefrigerationCase>::iterator it = cases.begin(); it != cases.end(); ++it) {
+      it->remove();
+    }
+
   }
 
   /*bool RefrigerationSystem_Impl::addWalkin( const RefrigerationWalkin& refrigerationWalkin) {
@@ -351,27 +362,37 @@ namespace detail {
     return list.get().addModelObject(refrigerationWalkin);
   }
 
-  void RefrigerationSystem_Impl::removeWalkin( const RefrigerationWalkin& refrigerationWalkin) {
+  void RefrigerationSystem_Impl::removeWalkin( RefrigerationWalkin& refrigerationWalkin) {
     boost::optional<ModelObjectList> list = refrigeratedCaseAndWalkInList();
     if (list) {
       list.get().removeModelObject(refrigerationWalkin);
+      refrigerationWalkin.remove();
     }
   }
 
   void RefrigerationSystem_Impl::removeAllWalkins() {
-    removeAllCasesOrWalkins(walkins());
+    std::vector<RefrigerationWalkin> walkins = this->walkins();
+    removeAllCasesOrWalkins<RefrigerationWalkin>();
+    for(std::vector<RefrigerationWalkin>::iterator it = walkins.begin(); it != walkins.end(); ++it) {
+      it->remove();
+    }
   }*/
 
   bool RefrigerationSystem_Impl::addCompressor(const RefrigerationCompressor& refrigerationCompressor) {
     return compressorList().addModelObject(refrigerationCompressor);
   }
 
-  void RefrigerationSystem_Impl::removeCompressor(const RefrigerationCompressor& refrigerationCompressor) {
-    return compressorList().removeModelObject(refrigerationCompressor);
+  void RefrigerationSystem_Impl::removeCompressor(RefrigerationCompressor& refrigerationCompressor) {
+    compressorList().removeModelObject(refrigerationCompressor);
+    refrigerationCompressor.remove();
   }
 
   void RefrigerationSystem_Impl::removeAllCompressors() {
+    std::vector<RefrigerationCompressor> compressors = this->compressors();
     compressorList().removeAllModelObjects();
+    for(std::vector<RefrigerationCompressor>::iterator it = compressors.begin(); it != compressors.end(); ++it) {
+      it->remove();
+    }
   }
 
   bool RefrigerationSystem_Impl::setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList) {
@@ -724,7 +745,7 @@ bool RefrigerationSystem::addCase(const RefrigerationCase& refrigerationCase) {
   return getImpl<detail::RefrigerationSystem_Impl>()->addCase(refrigerationCase);
 }
 
-void RefrigerationSystem::removeCase(const RefrigerationCase& refrigerationCase) {
+void RefrigerationSystem::removeCase(RefrigerationCase& refrigerationCase) {
   return getImpl<detail::RefrigerationSystem_Impl>()->removeCase(refrigerationCase);
 }
 
@@ -736,7 +757,7 @@ void RefrigerationSystem::removeAllCases() {
   return getImpl<detail::RefrigerationSystem_Impl>()->addWalkin(refrigerationWalkin);
 }
 
-void RefrigerationSystem::removeWalkin(const RefrigerationWalkin& refrigerationWalkin) {
+void RefrigerationSystem::removeWalkin(RefrigerationWalkin& refrigerationWalkin) {
   return getImpl<detail::RefrigerationSystem_Impl>()->removeWalkin(refrigerationWalkin);
 }
 
@@ -748,7 +769,7 @@ bool RefrigerationSystem::addCompressor(const RefrigerationCompressor& refrigera
   return getImpl<detail::RefrigerationSystem_Impl>()->addCompressor(refrigerationCompressor);
 }
 
-void RefrigerationSystem::removeCompressor(const RefrigerationCompressor& refrigerationCompressor) {
+void RefrigerationSystem::removeCompressor(RefrigerationCompressor& refrigerationCompressor) {
   return getImpl<detail::RefrigerationSystem_Impl>()->removeCompressor(refrigerationCompressor);
 }
 

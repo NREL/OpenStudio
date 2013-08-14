@@ -146,19 +146,19 @@ namespace detail {
 
     bool addCase( const RefrigerationCase & refrigerationCase);
 
-    void removeCase( const RefrigerationCase & refrigerationCase);
+    void removeCase( RefrigerationCase & refrigerationCase);
 
     void removeAllCases();
 
     //bool addWalkin( const RefrigerationWalkin & refrigerationWalkin);
 
-    //void removeWalkin( const RefrigerationWalkin & refrigerationWalkin);
+    //void removeWalkin( RefrigerationWalkin & refrigerationWalkin);
 
     //void removeAllWalkins();
 
     bool addCompressor( const RefrigerationCompressor & compressor);
 
-    void removeCompressor( const RefrigerationCompressor & compressor);
+    void removeCompressor( RefrigerationCompressor & compressor);
 
     void removeAllCompressors();
 
