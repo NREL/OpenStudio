@@ -75,7 +75,7 @@ namespace openstudio{
     virtual bool reconnect(const UUID& sessionID) = 0;
 
     /// returns the ip address of the cloud server if it is started and running
-    virtual boost::optional<QUrl> serverAddress() const;
+    virtual boost::optional<QUrl> serverAddress() const = 0;
 
     /// returns true if the cloud server successfully begins to start the server node
     /// returns false if terminated
@@ -83,7 +83,7 @@ namespace openstudio{
     virtual bool startServer() = 0;
 
     /// returns the ip address of all cloud workers that are started and running
-    virtual std::vector<QUrl> workerAddresses() const;
+    virtual std::vector<QUrl> workerAddresses() const = 0;
 
     /// returns the number of workers to be requested
     virtual unsigned numWorkers() const = 0;
