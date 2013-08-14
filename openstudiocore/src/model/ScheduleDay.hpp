@@ -100,6 +100,10 @@ class MODEL_API ScheduleDay : public ScheduleBase {
    *  scheduleTypeLimits(). Otherwise, converts value appropriately and then sets the value. */
   bool addValue(const openstudio::Time& untilTime, const Quantity& value);
 
+  /** Remove a value added by addValue at the exact time.  Returns the removed
+   *  value if there was one. */
+  boost::optional<double> removeValue(const openstudio::Time& time);
+
   /// Clear all values from this schedule.
   void clearValues();
 

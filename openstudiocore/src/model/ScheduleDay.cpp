@@ -307,6 +307,41 @@ namespace detail {
     return false;
   }
 
+
+  boost::optional<double> ScheduleDay_Impl::removeValue(const openstudio::Time& time){
+    
+    boost::optional<unsigned> timeIndex;
+
+    std::vector<openstudio::Time> times = this->times();
+    for (unsigned i = 0; i < times.size(); ++i){
+      if (times[i] == time){
+        timeIndex = i;
+        break;
+      }
+    }
+
+    if (!timeIndex){
+      return boost::none; 
+    }
+
+    boost::optional<double> result;
+
+    std::vector<double> values = this->values();
+    OS_ASSERT(values.size() == times.size());
+
+    clearValues();
+    for (unsigned i = 0; i < times.size(); ++i){
+      if (i == *timeIndex){
+        result = values[i];
+      }else{
+        addValue(times[i], values[i]);
+      }
+    }
+
+    return result;
+  }
+
+
   void ScheduleDay_Impl::clearValues()
   {
     this->clearExtensibleGroups();
@@ -410,6 +445,10 @@ bool ScheduleDay::addValue(const openstudio::Time& untilTime, double value) {
 
 bool ScheduleDay::addValue(const openstudio::Time& untilTime, const Quantity& value) {
   return getImpl<detail::ScheduleDay_Impl>()->addValue(untilTime,value);
+}
+
+boost::optional<double> ScheduleDay::removeValue(const openstudio::Time& time){
+  return getImpl<detail::ScheduleDay_Impl>()->removeValue(time);
 }
 
 void ScheduleDay::clearValues()
