@@ -46,6 +46,10 @@ class MODEL_API ModelObjectList : public ModelObject {
 
   static IddObjectType iddObjectType();
 
+  std::vector<IdfObject> remove();
+
+  ModelObject clone(Model model) const;
+
   bool addModelObject(const ModelObject & modelObject );
 
   void removeModelObject(const ModelObject & modelObject );
