@@ -33,6 +33,7 @@ using std::cout;
 using openstudio::UUID;
 using openstudio::createUUID;
 using openstudio::toUUID;
+using openstudio::toUID;
 using openstudio::toString;
 using std::string;
 using std::stringstream;
@@ -85,4 +86,13 @@ TEST(UUID, UUID_QVariant)
   ASSERT_TRUE(variant.canConvert<UUID>());
   UUID uuid2 = variant.value<UUID>();
   EXPECT_TRUE(uuid == uuid2);
+}
+
+TEST(UUID, UUID_UID) {
+  UUID uuid = createUUID();
+  std::string uuidStr = toString(uuid);
+  std::string uidStr = toUID(uuid);
+  EXPECT_EQ("{" + uidStr + "}",uuidStr);
+  EXPECT_EQ(uuid,toUUID(uuidStr));
+  EXPECT_EQ(uuid,toUUID(uidStr)); // no extra conversion process
 }

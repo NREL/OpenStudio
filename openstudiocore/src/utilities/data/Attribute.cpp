@@ -1530,8 +1530,8 @@ namespace detail {
   QVariant toVariant(const Attribute& attribute) {
     QVariantMap attributeData;
 
-    attributeData["uuid"] = attribute.uuid().toString();
-    attributeData["version_uuid"] = attribute.versionUUID().toString();
+    attributeData["uuid"] = toQString(toUID(attribute.uuid()));
+    attributeData["version_uuid"] = toQString(toUID(attribute.versionUUID()));
     attributeData["name"] = toQString(attribute.name());
     if (attribute.displayName()) {
       attributeData["display_name"] = toQString(attribute.displayName().get());
@@ -1570,8 +1570,8 @@ namespace detail {
   Attribute toAttribute(const QVariant& variant, const VersionString& version) {
     QVariantMap map = variant.toMap();
 
-    openstudio::UUID uuid(map["uuid"].toString());
-    openstudio::UUID versionUUID(map["version_uuid"].toString());
+    openstudio::UUID uuid = toUUID(map["uuid"].toString().toStdString());
+    openstudio::UUID versionUUID = toUUID(map["version_uuid"].toString().toStdString());
     std::string name = map["name"].toString().toStdString();
     OptionalString displayName;
     if (map.contains("display_name")) {

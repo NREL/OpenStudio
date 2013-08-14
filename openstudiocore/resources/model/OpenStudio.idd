@@ -1,4 +1,4 @@
-!IDD_Version 1.0.3
+!IDD_Version 1.0.4
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -11825,6 +11825,8 @@ OS:LifeCycleCost,
        \key Lights
        \key Luminaire
        \key Equipment
+       \key HVACComponent
+       \key ZoneHVACComponent
   A5, \field Item Name
        \type object-list
        \required-field

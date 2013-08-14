@@ -217,7 +217,7 @@ class ANALYSIS_API Analysis : public AnalysisObject {
    *  openstudio::Exception if dataPoint.variableValues() are not valid for problem(). Should be
    *  called before running a given workflow. Usually called by Algorithm, but may also be called
    *  directly by a user to run custom analyses. */
-  bool addDataPoint(const DataPoint& dataPoint);
+  bool addDataPoint(DataPoint& dataPoint);
 
   /** Adds a DataPoint to this analysis and returns true if measures are valid for problem(),
    *  the resulting DataPoint is not yet in this Analysis, and if not dataPointsAreInvalid. */
@@ -268,7 +268,9 @@ class ANALYSIS_API Analysis : public AnalysisObject {
   Table summaryTable() const;
 
   //@}
-  /** @name Serialization */
+  /** @name Serialization
+   *  Methods to save to json format. See AnalysisObject.hpp, openstudio::analysis::loadJSON for
+   *  the de-serialization methods. */
   //@{
 
   bool saveJSON(const openstudio::path& p,
@@ -279,6 +281,32 @@ class ANALYSIS_API Analysis : public AnalysisObject {
                        AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
 
   std::string toJSON(AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
+
+  /** Saves the openstudio-server view of the problem formulation to file. This format cannot be
+   *  de-serialized. */
+  bool saveServerRequestForProblemFormulation(const openstudio::path& p,
+                                              bool overwrite=false) const;
+
+  /** Prints the openstudio-server view of the problem formulation. This format cannot be
+   *  de-serialized. */
+  std::ostream& serverRequestForProblemFormulation(std::ostream& os) const;
+
+  /** Prints the openstudio-server view of the problem formulation. This format cannot be
+   *  de-serialized. */
+  std::string serverRequestForProblemFormulation() const;
+
+  /** Saves the openstudio-server view of DataPoints that are not complete and do not have
+   *  a RunManager job attached (have not been started) to file. This format cannot be
+   *  de-serialized. */
+  bool saveServerRequestForDataPoints(const openstudio::path& p,bool overwrite=false) const;
+
+  /** Prints the openstudio-server view of DataPoints that are not complete and do not have
+   *  a RunManager job attached (have not been started). This format cannot be de-serialized. */
+  std::ostream& serverRequestForDataPoints(std::ostream& os) const;
+
+  /** Prints the openstudio-server view of DataPoints that are not complete and do not have
+   *  a RunManager job attached (have not been started). This format cannot be de-serialized. */
+  std::string serverRequestForDataPoints() const;
 
   //@}
  protected:

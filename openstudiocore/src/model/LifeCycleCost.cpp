@@ -43,6 +43,8 @@
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/PlantLoop.hpp>
 #include <model/PlantLoop_Impl.hpp>
+#include <model/HVACComponent.hpp>
+#include <model/HVACComponent_Impl.hpp>
 #include <model/ZoneHVACComponent.hpp>
 #include <model/ZoneHVACComponent_Impl.hpp>
 #include <model/Model.hpp>
@@ -145,6 +147,10 @@ std::vector<std::string> LifeCycleCost_Impl::validCostUnitsValues() const
   }else if (istringEqual("Equipment", itemType)){
     result.push_back("CostPerEach");
     result.push_back("CostPerArea");
+  }else if (istringEqual("HVACComponent", itemType)){
+    result.push_back("CostPerEach");
+  }else if (istringEqual("ZoneHVACComponent", itemType)){
+    result.push_back("CostPerEach");
   }else{
     result.push_back("CostPerEach");
   }
@@ -352,6 +358,9 @@ boost::optional<int> LifeCycleCost_Impl::costedQuantity() const
 
   }else if (modelObject.optionalCast<PlantLoop>()){
     result = 1;
+	
+  }else if (modelObject.optionalCast<HVACComponent>()){
+    result = 1;
 
   }else if (modelObject.optionalCast<ZoneHVACComponent>()){
     result = 1;
@@ -392,6 +401,9 @@ boost::optional<double> LifeCycleCost_Impl::costedArea() const
     // no area defined
 
   }else if (modelObject.optionalCast<PlantLoop>()){
+    // no area defined
+
+  }else if (modelObject.optionalCast<HVACComponent>()){
     // no area defined
 
   }else if (modelObject.optionalCast<ZoneHVACComponent>()){
@@ -510,6 +522,12 @@ LifeCycleCost::LifeCycleCost(const ModelObject& modelObject)
     OS_ASSERT(test);
   }else if (modelObject.optionalCast<SteamEquipmentDefinition>()){
     test = setString(OS_LifeCycleCostFields::ItemType, "Equipment");
+    OS_ASSERT(test);
+  }else if (modelObject.optionalCast<HVACComponent>()){
+    test = setString(OS_LifeCycleCostFields::ItemType, "HVACComponent");
+    OS_ASSERT(test);
+  }else if (modelObject.optionalCast<ZoneHVACComponent>()){
+    test = setString(OS_LifeCycleCostFields::ItemType, "ZoneHVACComponent");
     OS_ASSERT(test);
   }else{
     this->remove();

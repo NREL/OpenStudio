@@ -113,6 +113,8 @@ namespace detail {
 
     virtual QVariant toVariant() const;
 
+    virtual QVariant toServerFormulationVariant() const;
+
     //@}
    protected:
     boost::optional<double> m_minimum;

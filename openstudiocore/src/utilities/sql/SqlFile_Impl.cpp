@@ -2106,7 +2106,7 @@ namespace openstudio{
             sqlite3_finalize(sqlStmtPtr);
           }
           // minutes - 1 to remove starting minute
-          return boost::optional<openstudio::Time>(openstudio::Time(0,0,std::ceil(minutes-1.0),0));
+          return boost::optional<openstudio::Time>(openstudio::Time(0,0,int(std::ceil(minutes-1.0)),0));
           break;
         default:
           // unsupported

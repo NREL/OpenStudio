@@ -221,6 +221,9 @@ SET(osversion_resources_src
   osversion/1_0_2/OpenStudio.idd
   osversion/1_0_2/example.osm
   osversion/1_0_2/example.osc
+  osversion/1_0_3/OpenStudio.idd
+  osversion/1_0_3/example.osm
+  osversion/1_0_3/example.osc
   osversion/unknown.osc
 )
 
@@ -577,6 +580,8 @@ ENDIF(BUILD_SDD)
 SET(ENERGYPLUS_OUTPUTS "")
 
 SET(analysis_resources_src
+  analysis/version/analysis_1-0-3.json
+  analysis/version/data_point_1-0-3.json
 )
 
 # update the resources
