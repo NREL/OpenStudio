@@ -46,6 +46,9 @@ SET( ${target_name}_src
   AirLoopHVACZoneSplitter.hpp
   AirLoopHVACZoneSplitter_Impl.hpp
   AirLoopHVACZoneSplitter.cpp
+  AirTerminalSingleDuctConstantVolumeCooledBeam.hpp
+  AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeCooledBeam.cpp
   AirTerminalSingleDuctParallelPIUReheat.hpp
   AirTerminalSingleDuctParallelPIUReheat_Impl.hpp
   AirTerminalSingleDuctParallelPIUReheat.cpp
@@ -97,6 +100,9 @@ SET( ${target_name}_src
   ClimateZones.hpp
   ClimateZones_Impl.hpp
   ClimateZones.cpp
+  CoilCoolingCooledBeam.hpp
+  CoilCoolingCooledBeam_Impl.hpp
+  CoilCoolingCooledBeam.cpp
   CoilCoolingDXSingleSpeed.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
   CoilCoolingDXSingleSpeed.cpp
@@ -775,6 +781,7 @@ SET( ${target_name}_moc
   AirLoopHVACOutdoorAirSystem_Impl.hpp
   AirLoopHVACZoneMixer_Impl.hpp
   AirLoopHVACZoneSplitter_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp
   AirTerminalSingleDuctParallelPIUReheat_Impl.hpp
   AirTerminalSingleDuctUncontrolled_Impl.hpp
   AirTerminalSingleDuctVAVReheat_Impl.hpp
@@ -792,6 +799,7 @@ SET( ${target_name}_moc
   CFactorUndergroundWallConstruction_Impl.hpp
   ChillerElectricEIR_Impl.hpp
   ClimateZones_Impl.hpp
+  CoilCoolingCooledBeam_Impl.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
   CoilCoolingDXTwoSpeed_Impl.hpp
   CoilCoolingWater_Impl.hpp
@@ -1039,6 +1047,7 @@ SET( ${target_name}_test_src
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp
   test/AirLoopHVAC_GTest.cpp
+  test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
   test/Alpha1_GTest.cpp
   test/AvailabilityManagerAssignmentList_GTest.cpp
@@ -1050,6 +1059,7 @@ SET( ${target_name}_test_src
   test/Building_GTest.cpp
   test/ChillerElectricEIR_GTest.cpp
   test/ClimateZones_GTest.cpp
+  test/CoilCoolingCooledBeam_GTest.cpp
   test/CoilCoolingDXSingleSpeed_GTest.cpp
   test/CoilCoolingDXTwoSpeed_GTest.cpp
   test/CoilCoolingWater_GTest.cpp

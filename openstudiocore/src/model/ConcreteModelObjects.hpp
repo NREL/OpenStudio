@@ -26,6 +26,7 @@
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirLoopHVACZoneMixer.hpp>
 #include <model/AirLoopHVACZoneSplitter.hpp>
+#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
 #include <model/AirTerminalSingleDuctUncontrolled.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat.hpp>
@@ -42,6 +43,7 @@
 #include <model/CFactorUndergroundWallConstruction.hpp>
 #include <model/ClimateZones.hpp>
 #include <model/ChillerElectricEIR.hpp>
+#include <model/CoilCoolingCooledBeam.hpp>
 #include <model/CoilCoolingDXSingleSpeed.hpp>
 #include <model/CoilCoolingDXTwoSpeed.hpp>
 #include <model/CoilCoolingWater.hpp>
@@ -237,6 +239,7 @@
 #include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
 #include <model/AirLoopHVACZoneMixer_Impl.hpp>
 #include <model/AirLoopHVACZoneSplitter_Impl.hpp>
+#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
 #include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
@@ -253,6 +256,7 @@
 #include <model/CFactorUndergroundWallConstruction_Impl.hpp>
 #include <model/ChillerElectricEIR_Impl.hpp>
 #include <model/ClimateZones_Impl.hpp>
+#include <model/CoilCoolingCooledBeam_Impl.hpp>
 #include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
 #include <model/CoilCoolingDXTwoSpeed_Impl.hpp>
 #include <model/CoilCoolingWater_Impl.hpp>
