@@ -98,6 +98,20 @@ namespace detail {
       /// Load all of the jobs from the given database file into the current RunManager, enqueuing them
       void loadJobs(const openstudio::path &t_db);
 
+      /// Load all of the jobs from the given JSON string, updating job trees
+      void updateJobs(const std::string &t_json, bool t_externallyManaged);
+
+      /// Load all of the jobs from the given JSON structure represented by a QVariant,
+      /// updating job trees
+      void updateJobs(const QVariant &t_variant, const VersionString &t_version, bool t_externallyManaged);
+
+      /// update job trees
+      void updateJobs(const std::vector<Job> &t_jobs);
+
+      std::string jobsToJson() const;
+
+      std::vector<Job> jobsForExport() const;
+
       /// Queue up a job (and all children) for processing
       /// \param[in] job Job to enqueue
       /// \param[in] force Process job even if it is out of date
@@ -268,4 +282,5 @@ namespace detail {
 }
 
 #endif
+
 

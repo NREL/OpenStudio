@@ -166,7 +166,7 @@ namespace detail {
                             options,
                             map.contains("restart_file_reference") ? openstudio::detail::toFileReference(map["restart_file_reference"],version) : OptionalFileReference(),
                             map.contains("out_file_reference") ? openstudio::detail::toFileReference(map["out_file_reference"],version) : OptionalFileReference(),
-                            map.contains("job") ? runmanager::detail::JSON::toJob(map["job"],version) : boost::optional<runmanager::Job>());
+                            map.contains("job") ? runmanager::detail::JSON::toJob(map["job"],version, true) : boost::optional<runmanager::Job>());
   }
 
 } // detail
