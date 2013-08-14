@@ -100,6 +100,7 @@ namespace detail {
       l.unlock();
       return outputFilesImpl();
     } else {
+      LOG(Debug, "Returning previously saved outputfiles");
       std::vector<FileInfo> fis = m_jobState.outputFiles.files();
 
       for (std::vector<FileInfo>::iterator itr = fis.begin();
@@ -108,7 +109,10 @@ namespace detail {
       {
         if (!itr->fullPath.is_complete())
         {
-          itr->fullPath = outpath / itr->fullPath;
+          if (relativePath(itr->fullPath, outpath).empty())
+          {
+            itr->fullPath = outpath / itr->fullPath;
+          }
         }
       }
       return Files(fis);
@@ -345,7 +349,11 @@ namespace detail {
       openstudio::path f = itr->fullPath;
       if (!f.is_complete())
       {
-        f = outpath / f;
+        // only add outpath if we are not relative already
+        if (relativePath(f, outpath).empty())
+        {
+          f = outpath / f;
+        }
       }
 
       f = openstudio::completeAndNormalize(f);
