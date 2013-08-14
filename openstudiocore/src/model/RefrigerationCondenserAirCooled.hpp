@@ -21,7 +21,7 @@
 #define MODEL_REFRIGERATIONCONDENSERAIRCOOLED_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include <model/ParentObject.hpp>
 
 namespace openstudio {
 
@@ -37,8 +37,8 @@ namespace detail {
 
 } // detail
 
-/** RefrigerationCondenserAirCooled is a ModelObject that wraps the OpenStudio IDD object 'OS:Refrigeration:Condenser:AirCooled'. */
-class MODEL_API RefrigerationCondenserAirCooled : public ModelObject {
+/** RefrigerationCondenserAirCooled is a ParentObject that wraps the OpenStudio IDD object 'OS:Refrigeration:Condenser:AirCooled'. */
+class MODEL_API RefrigerationCondenserAirCooled : public ParentObject {
  public:
   /** @name Constructors and Destructors */
   //@{

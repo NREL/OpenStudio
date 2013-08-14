@@ -21,7 +21,7 @@
 #define MODEL_REFRIGERATIONCASE_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include <model/ParentObject.hpp>
 
 namespace openstudio {
 
@@ -38,8 +38,8 @@ namespace detail {
 
 } // detail
 
-/** RefrigerationCase is a ModelObject that wraps the OpenStudio IDD object 'OS:Refrigeration:Case'. */
-class MODEL_API RefrigerationCase : public ModelObject {
+/** RefrigerationCase is a ParentObject that wraps the OpenStudio IDD object 'OS:Refrigeration:Case'. */
+class MODEL_API RefrigerationCase : public ParentObject {
  public:
   /** @name Constructors and Destructors */
   //@{

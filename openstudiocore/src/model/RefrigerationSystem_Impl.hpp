@@ -32,7 +32,6 @@ class RefrigerationCase;
 class RefrigerationCompressor;
 //class RefrigerationWalkin;
 //class RefrigerationAllTypesCondenser;
-//class Fluid;
 //class RefrigerationSubcooler;
 class ThermalZone;
 
@@ -70,6 +69,10 @@ namespace detail {
     //@}
     /** @name Getters */
     //@{
+
+    std::vector<IdfObject> remove();
+
+    ModelObject clone(Model model) const;
 
     std::vector<RefrigerationCase> cases() const;
 

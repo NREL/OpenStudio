@@ -21,7 +21,7 @@
 #define MODEL_REFRIGERATIONCOMPRESSOR_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include <model/ParentObject_Impl.hpp>
 
 namespace openstudio {
 namespace model {
@@ -31,8 +31,8 @@ class CurveBicubic;
 
 namespace detail {
 
-  /** RefrigerationCompressor_Impl is a ModelObject_Impl that is the implementation class for RefrigerationCompressor.*/
-  class MODEL_API RefrigerationCompressor_Impl : public ModelObject_Impl {
+  /** RefrigerationCompressor_Impl is a ParentObject_Impl that is the implementation class for RefrigerationCompressor.*/
+  class MODEL_API RefrigerationCompressor_Impl : public ParentObject_Impl {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
@@ -63,6 +63,8 @@ namespace detail {
     //@}
     /** @name Getters */
     //@{
+
+    std::vector<ModelObject> children() const;
 
     // TODO: Check return type. From object lists, some candidates are: CurveBicubic.
     CurveBicubic refrigerationCompressorPowerCurve() const;

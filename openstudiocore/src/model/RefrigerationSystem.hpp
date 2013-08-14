@@ -33,7 +33,6 @@ class ModelObjectList;
 class RefrigerationCase;
 class RefrigerationCompressor;
 //class RefrigerationWalkin;
-//class Fluid;
 //class RefrigerationSubcooler;
 class ThermalZone;
 
@@ -64,6 +63,10 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   static std::vector<std::string> numberofCompressorStagesValues();
 
   static std::vector<std::string> intercoolerTypeValues();
+
+  std::vector<IdfObject> remove();
+
+  ModelObject clone(Model model) const;
 
   bool addCase( const RefrigerationCase & refrigerationCase);
 
@@ -163,7 +166,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   bool setRefrigerationCondenser(const ModelObject& refrigerationCondenser);
 
   // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
-  bool setCompressorList(const ModelObjectList& modelObjectLists);
+  //bool setCompressorList(const ModelObjectList& modelObjectLists);
 
   void setMinimumCondensingTemperature(double minimumCondensingTemperature);
 

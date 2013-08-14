@@ -21,7 +21,7 @@
 #define MODEL_REFRIGERATIONCONDENSERAIRCOOLED_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include <model/ParentObject_Impl.hpp>
 
 namespace openstudio {
 namespace model {
@@ -32,8 +32,8 @@ class ThermalZone;
 
 namespace detail {
 
-  /** RefrigerationCondenserAirCooled_Impl is a ModelObject_Impl that is the implementation class for RefrigerationCondenserAirCooled.*/
-  class MODEL_API RefrigerationCondenserAirCooled_Impl : public ModelObject_Impl {
+  /** RefrigerationCondenserAirCooled_Impl is a ParentObject that is the implementation class for RefrigerationCondenserAirCooled.*/
+  class MODEL_API RefrigerationCondenserAirCooled_Impl : public ParentObject_Impl {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
@@ -64,6 +64,8 @@ namespace detail {
     //@}
     /** @name Getters */
     //@{
+
+    std::vector<ModelObject> children() const;
 
     // TODO: Check return type. From object lists, some candidates are: CurveLinear.
     boost::optional<CurveLinear> ratedEffectiveTotalHeatRejectionRateCurve() const;

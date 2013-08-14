@@ -45,7 +45,7 @@ namespace detail {
   RefrigerationCase_Impl::RefrigerationCase_Impl(const IdfObject& idfObject,
                                                  Model_Impl* model,
                                                  bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : ParentObject_Impl(idfObject,model,keepHandle)
   {
     BOOST_ASSERT(idfObject.iddObject().type() == RefrigerationCase::iddObjectType());
   }
@@ -53,7 +53,7 @@ namespace detail {
   RefrigerationCase_Impl::RefrigerationCase_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                  Model_Impl* model,
                                                  bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ParentObject_Impl(other,model,keepHandle)
   {
     BOOST_ASSERT(other.iddObject().type() == RefrigerationCase::iddObjectType());
   }
@@ -61,7 +61,7 @@ namespace detail {
   RefrigerationCase_Impl::RefrigerationCase_Impl(const RefrigerationCase_Impl& other,
                                                  Model_Impl* model,
                                                  bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ParentObject_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& RefrigerationCase_Impl::outputVariableNames() const
@@ -105,6 +105,15 @@ namespace detail {
     if (std::find(b,e,OS_Refrigeration_CaseFields::CaseCreditFractionScheduleName) != e)
     {
       result.push_back(ScheduleTypeKey("RefrigerationCase","Case Credit Fraction"));
+    }
+    return result;
+  }
+
+  std::vector<ModelObject> RefrigerationCase_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    if (boost::optional<CurveCubic> intermediate = latentCaseCreditCurve()) {
+      result.push_back(*intermediate);
     }
     return result;
   }
@@ -768,7 +777,7 @@ namespace detail {
 } // detail
 
 RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseLightingSchedule, Schedule& caseDefrostSchedule, Schedule& caseDefrostDripDownSchedule)
-  : ModelObject(RefrigerationCase::iddObjectType(),model)
+  : ParentObject(RefrigerationCase::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::RefrigerationCase_Impl>());
 
@@ -1335,7 +1344,7 @@ void RefrigerationCase::resetAverageRefrigerantChargeInventory() {
 
 /// @cond
 RefrigerationCase::RefrigerationCase(boost::shared_ptr<detail::RefrigerationCase_Impl> impl)
-  : ModelObject(impl)
+  : ParentObject(impl)
 {}
 /// @endcond
 

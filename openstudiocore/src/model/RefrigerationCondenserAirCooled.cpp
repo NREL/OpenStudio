@@ -41,7 +41,7 @@ namespace detail {
   RefrigerationCondenserAirCooled_Impl::RefrigerationCondenserAirCooled_Impl(const IdfObject& idfObject,
                                                                              Model_Impl* model,
                                                                              bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : ParentObject_Impl(idfObject,model,keepHandle)
   {
     BOOST_ASSERT(idfObject.iddObject().type() == RefrigerationCondenserAirCooled::iddObjectType());
   }
@@ -49,7 +49,7 @@ namespace detail {
   RefrigerationCondenserAirCooled_Impl::RefrigerationCondenserAirCooled_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                              Model_Impl* model,
                                                                              bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ParentObject_Impl(other,model,keepHandle)
   {
     BOOST_ASSERT(other.iddObject().type() == RefrigerationCondenserAirCooled::iddObjectType());
   }
@@ -57,7 +57,7 @@ namespace detail {
   RefrigerationCondenserAirCooled_Impl::RefrigerationCondenserAirCooled_Impl(const RefrigerationCondenserAirCooled_Impl& other,
                                                                              Model_Impl* model,
                                                                              bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ParentObject_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& RefrigerationCondenserAirCooled_Impl::outputVariableNames() const
@@ -70,6 +70,15 @@ namespace detail {
 
   IddObjectType RefrigerationCondenserAirCooled_Impl::iddObjectType() const {
     return RefrigerationCondenserAirCooled::iddObjectType();
+  }
+
+  std::vector<ModelObject> RefrigerationCondenserAirCooled_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    if (boost::optional<CurveLinear> intermediate = ratedEffectiveTotalHeatRejectionRateCurve()) {
+      result.push_back(*intermediate);
+    }
+    return result;
   }
 
   boost::optional<CurveLinear> RefrigerationCondenserAirCooled_Impl::ratedEffectiveTotalHeatRejectionRateCurve() const {
@@ -277,7 +286,7 @@ namespace detail {
 } // detail
 
 RefrigerationCondenserAirCooled::RefrigerationCondenserAirCooled(const Model& model)
-  : ModelObject(RefrigerationCondenserAirCooled::iddObjectType(),model)
+  : ParentObject(RefrigerationCondenserAirCooled::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::RefrigerationCondenserAirCooled_Impl>());
 
@@ -462,7 +471,7 @@ void RefrigerationCondenserAirCooled::resetCondensatePipingRefrigerantInventory(
 
 /// @cond
 RefrigerationCondenserAirCooled::RefrigerationCondenserAirCooled(boost::shared_ptr<detail::RefrigerationCondenserAirCooled_Impl> impl)
-  : ModelObject(impl)
+  : ParentObject(impl)
 {}
 /// @endcond
 

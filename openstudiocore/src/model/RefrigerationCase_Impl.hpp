@@ -21,7 +21,7 @@
 #define MODEL_REFRIGERATIONCASE_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include <model/ParentObject_Impl.hpp>
 
 namespace openstudio {
 namespace model {
@@ -33,8 +33,8 @@ class CurveCubic;
 
 namespace detail {
 
-  /** RefrigerationCase_Impl is a ModelObject_Impl that is the implementation class for RefrigerationCase.*/
-  class MODEL_API RefrigerationCase_Impl : public ModelObject_Impl {
+  /** RefrigerationCase_Impl is a ParentObject_Impl that is the implementation class for RefrigerationCase.*/
+  class MODEL_API RefrigerationCase_Impl : public ParentObject_Impl {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
@@ -67,6 +67,8 @@ namespace detail {
     //@}
     /** @name Getters */
     //@{
+
+    std::vector<ModelObject> children() const;
 
     // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> availabilitySchedule() const;

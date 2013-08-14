@@ -21,7 +21,7 @@
 #define MODEL_REFRIGERATIONCOMPRESSOR_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include <model/ParentObject.hpp>
 
 namespace openstudio {
 
@@ -36,8 +36,8 @@ namespace detail {
 
 } // detail
 
-/** RefrigerationCompressor is a ModelObject that wraps the OpenStudio IDD object 'OS:Refrigeration:Compressor'. */
-class MODEL_API RefrigerationCompressor : public ModelObject {
+/** RefrigerationCompressor is a ParentObject that wraps the OpenStudio IDD object 'OS:Refrigeration:Compressor'. */
+class MODEL_API RefrigerationCompressor : public ParentObject {
  public:
   /** @name Constructors and Destructors */
   //@{

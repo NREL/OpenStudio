@@ -39,7 +39,7 @@ namespace detail {
   RefrigerationCompressor_Impl::RefrigerationCompressor_Impl(const IdfObject& idfObject,
                                                              Model_Impl* model,
                                                              bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : ParentObject_Impl(idfObject,model,keepHandle)
   {
     BOOST_ASSERT(idfObject.iddObject().type() == RefrigerationCompressor::iddObjectType());
   }
@@ -47,7 +47,7 @@ namespace detail {
   RefrigerationCompressor_Impl::RefrigerationCompressor_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                              Model_Impl* model,
                                                              bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ParentObject_Impl(other,model,keepHandle)
   {
     BOOST_ASSERT(other.iddObject().type() == RefrigerationCompressor::iddObjectType());
   }
@@ -55,7 +55,7 @@ namespace detail {
   RefrigerationCompressor_Impl::RefrigerationCompressor_Impl(const RefrigerationCompressor_Impl& other,
                                                              Model_Impl* model,
                                                              bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ParentObject_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& RefrigerationCompressor_Impl::outputVariableNames() const
@@ -68,6 +68,25 @@ namespace detail {
 
   IddObjectType RefrigerationCompressor_Impl::iddObjectType() const {
     return RefrigerationCompressor::iddObjectType();
+  }
+
+  std::vector<ModelObject> RefrigerationCompressor_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    boost::optional<CurveBicubic> intermediate;
+    if ( (intermediate = refrigerationCompressorPowerCurve()) ) {
+      result.push_back(*intermediate);
+    }
+    if ( (intermediate = refrigerationCompressorCapacityCurve()) ) {
+      result.push_back(*intermediate);
+    }
+    /*if ( (intermediate = transcriticalCompressorPowerCurve()) ) {
+      result.push_back(*intermediate);
+    }
+    if ( (intermediate = transcriticalCompressorCapacityCurve()) ) {
+      result.push_back(*intermediate);
+    }*/
+    return result;
   }
 
   CurveBicubic RefrigerationCompressor_Impl::refrigerationCompressorPowerCurve() const {
@@ -273,7 +292,7 @@ namespace detail {
 } // detail
 
 RefrigerationCompressor::RefrigerationCompressor(const Model& model)
-  : ModelObject(RefrigerationCompressor::iddObjectType(),model)
+  : ParentObject(RefrigerationCompressor::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::RefrigerationCompressor_Impl>());
   
@@ -460,7 +479,7 @@ void RefrigerationCompressor::resetTranscriticalCompressorCapacityCurve() {
 
 /// @cond
 RefrigerationCompressor::RefrigerationCompressor(boost::shared_ptr<detail::RefrigerationCompressor_Impl> impl)
-  : ModelObject(impl)
+  : ParentObject(impl)
 {}
 /// @endcond
 
