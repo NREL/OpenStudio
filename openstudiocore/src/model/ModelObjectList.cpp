@@ -19,6 +19,8 @@
 
 #include <model/ModelObjectList.hpp>
 #include <model/ModelObjectList_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 
 #include <utilities/idd/OS_ModelObjectList_FieldEnums.hxx>
 
@@ -62,6 +64,47 @@ namespace detail {
 
   IddObjectType ModelObjectList_Impl::iddObjectType() const {
     return ModelObjectList::iddObjectType();
+  }
+
+  std::vector<IdfObject> ModelObjectList_Impl::remove()
+  {
+    std::vector<IdfObject> result;
+
+    std::vector<ModelObject> modelObjects = this->modelObjects();
+
+    if ( !modelObjects.empty() ){
+      for( std::vector<ModelObject>::iterator it = modelObjects.begin();
+       it != modelObjects.end();
+       it++ )
+      {
+        std::vector<IdfObject> removedModelObject = it->remove();
+        result.insert(result.end(), removedModelObject.begin(), removedModelObject.end());
+      }
+    }
+
+    std::vector<IdfObject> removedModelObjectList = ModelObject_Impl::remove();
+    result.insert(result.end(), removedModelObjectList.begin(), removedModelObjectList.end());
+
+    return result;
+  }
+
+  ModelObject ModelObjectList_Impl::clone(Model model) const
+  {
+    ModelObjectList modelObjectListClone = ModelObject_Impl::clone(model).cast<ModelObjectList>();
+
+    std::vector<ModelObject> modelObjects = this->modelObjects();
+
+    if ( !modelObjects.empty() ){
+      for( std::vector<ModelObject>::iterator it = modelObjects.begin();
+       it != modelObjects.end();
+       it++ )
+      {
+        ModelObject modelObjectClone = it->clone(model);
+        modelObjectListClone.addModelObject(modelObjectClone);
+      }
+    }
+
+    return modelObjectListClone;
   }
 
   std::vector<ModelObject> ModelObjectList_Impl::modelObjects() const {
@@ -141,6 +184,14 @@ ModelObjectList::ModelObjectList(const Model& model)
 
 IddObjectType ModelObjectList::iddObjectType() {
   return IddObjectType(IddObjectType::OS_ModelObjectList);
+}
+
+std::vector<IdfObject> ModelObjectList::remove() {
+  return getImpl<detail::ModelObjectList_Impl>()->remove();
+}
+
+ModelObject ModelObjectList::clone(Model model) const {
+  return getImpl<detail::ModelObjectList_Impl>()->clone(model);
 }
 
 std::vector<ModelObject> ModelObjectList::modelObjects() const

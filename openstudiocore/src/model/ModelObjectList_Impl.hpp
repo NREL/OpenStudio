@@ -58,6 +58,10 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
+    std::vector<IdfObject> remove();
+
+    ModelObject clone(Model model) const;
+
     bool addModelObject(const ModelObject & modelObject );
 
     void removeModelObject(const ModelObject & modelObject );
