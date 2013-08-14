@@ -201,6 +201,17 @@ SET( bcl_src
   bcl/RemoteBCL.cpp
 )
 
+SET( cloud_src
+  cloud/AWSProvider.hpp
+  cloud/AWSProvider.cpp
+  cloud/CloudProvider.hpp
+  cloud/CloudProvider.cpp
+  cloud/OSServer.hpp
+  cloud/OSServer.cpp
+  cloud/VagrantProvider.hpp
+  cloud/VagrantProvider.cpp
+)
+
 SET( documentation_src
   mainpage.hpp
 )
@@ -236,6 +247,13 @@ SET( bcl_moc
   bcl/BCL.hpp
   bcl/LocalBCL.hpp
   bcl/RemoteBCL.hpp
+)
+
+SET( cloud_moc
+  cloud/AWSProvider.hpp
+  cloud/CloudProvider.hpp
+  cloud/OSServer.hpp
+  cloud/VagrantProvider.hpp
 )
 
 SET( core_moc
@@ -288,6 +306,7 @@ ENDFOREACH()
 
 ## Qt MOC generation
 qt4_wrap_cpp( bcl_moc_src ${bcl_moc} )
+qt4_wrap_cpp( cloud_moc_src ${cloud_moc} )
 qt4_wrap_cpp( core_moc_src ${core_moc} )
 qt4_wrap_cpp( idf_moc_src ${idfxx_moc} )
 qt4_wrap_cpp( data_moc_src ${data_moc} )
@@ -302,6 +321,7 @@ SET( bcl_qrc
 qt4_add_resources(bcl_qrc_src ${bcl_qrc})
 # set up groups of source files for Visual Studio
 SOURCE_GROUP( bcl FILES ${bcl_src} )
+SOURCE_GROUP( cloud FILES ${cloud_src} )
 SOURCE_GROUP( core FILES ${core_src} )
 SOURCE_GROUP( data FILES ${data_src} )
 SOURCE_GROUP( document FILES ${document_src} )
@@ -332,6 +352,8 @@ SET( ${target_name}_src
   ${bcl_src}
   ${bcl_moc_src}
   ${bcl_qrc_src}
+  ${cloud_src}
+  ${cloud_moc_src}
   ${core_src}  
   ${core_moc_src}
   ${data_src} 
