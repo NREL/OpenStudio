@@ -136,8 +136,8 @@ namespace detail {
   DDACEAlgorithm DDACEAlgorithm_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
     QVariantMap map = variant.toMap();
     DDACEAlgorithmOptions options = DDACEAlgorithmOptions_Impl::fromVariant(map["options"],version);
-    return DDACEAlgorithm(openstudio::UUID(map["uuid"].toString()),
-                          openstudio::UUID(map["version_uuid"].toString()),
+    return DDACEAlgorithm(toUUID(map["uuid"].toString().toStdString()),
+                          toUUID(map["version_uuid"].toString().toStdString()),
                           map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                           map.contains("description") ? map["description"].toString().toStdString() : std::string(),
                           map["complete"].toBool(),

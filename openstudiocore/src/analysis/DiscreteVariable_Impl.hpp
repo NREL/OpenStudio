@@ -75,6 +75,12 @@ namespace detail {
     int numValidValues(bool selectedOnly) const;
 
     //@}
+    /** @name Serialization */
+    //@{
+
+    virtual QVariant toServerFormulationVariant() const;
+
+    //@}
    protected:
    private:
     REGISTER_LOGGER("openstudio.analysis.DiscreteVariable");

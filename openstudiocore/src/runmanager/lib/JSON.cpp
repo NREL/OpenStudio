@@ -4,6 +4,7 @@
 #include "JobFactory.hpp"
 #include "WorkItem.hpp"
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Json.hpp>
 #include <utilities/core/Compare.hpp>
 
@@ -25,11 +26,11 @@ namespace detail {
     if (!t_jobTree.tools().empty()) {
       map["tools"] = toVariant(t_jobTree.tools());
     }
-    map["uuid"] = QVariant(t_jobTree.uuid().toString());
+    map["uuid"] = toQString(toUID(t_jobTree.uuid()));
 
     if (t_jobTree.lastRun())
     {
-      map["last_run"] = QVariant(toQString(t_jobTree.lastRun()->toString()));
+      map["last_run"] = QVariant(toQString(t_jobTree.lastRun()->toISO8601()));
     }
 
     if (!t_jobTree.outputFiles().empty()) {
@@ -67,6 +68,16 @@ namespace detail {
       throw std::runtime_error("Unable to find Job object at expected location");
     }
 
+    OptionalDateTime lastRun;
+    if (map.contains("last_run")) {
+      if (version < VersionString("1.0.4")) {
+        lastRun = DateTime(map["last_run"].toString().toStdString());
+      }
+      else {
+        lastRun = DateTime::fromISO8601(map["last_run"].toString().toStdString());
+      }
+    }
+
     Job job = JobFactory::createJob(
         toJobType(map["job_type"],version),
         map.contains("tools") ? Tools(toVectorOfToolInfo(map["tools"],version)) : Tools(),
@@ -74,8 +85,8 @@ namespace detail {
         map.contains("files") ? Files(toVectorOfFileInfo(map["files"],version)) : Files(),
         std::vector<openstudio::URLSearchPath>(),
         false,
-        map.contains("uuid") ? openstudio::UUID(map["uuid"].toString()) : boost::optional<openstudio::UUID>(),
-        map.contains("last_run") ? openstudio::DateTime(toString(map["last_run"].toString())) : boost::optional<openstudio::DateTime>(),
+        map.contains("uuid") ? toUUID(map["uuid"].toString().toStdString()) : boost::optional<openstudio::UUID>(),
+        lastRun,
         toJobErrors(map["errors"],version),
         map.contains("output_files") ? Files(toVectorOfFileInfo(map["output_files"],version)) : Files());
 
@@ -212,7 +223,7 @@ namespace detail {
     map["full_path"] = toQString(t_file.fullPath);
     map["file_name"] = toQString(t_file.filename);
     map["exists"] = t_file.exists;
-    map["last_modified"] = toQString(t_file.lastModified.toString());
+    map["last_modified"] = toQString(t_file.lastModified.toISO8601());
     map["key"] = toQString(t_file.key);
 
     if (!t_file.requiredFiles.empty()) {
@@ -230,9 +241,18 @@ namespace detail {
       throw std::runtime_error("Unable to find FileInfo object at expected location");
     }
 
+    OptionalDateTime lastModified;
+    if (version < VersionString("1.0.4")) {
+      lastModified = openstudio::DateTime(toString(map["last_modified"].toString()));
+    }
+    else {
+      lastModified = openstudio::DateTime::fromISO8601(map["last_modified"].toString().toStdString());
+    }
+    OS_ASSERT(lastModified);
+
     FileInfo fi(
         toString(map["file_name"].toString()),
-        openstudio::DateTime(toString(map["last_modified"].toString())),
+        lastModified.get(),
         toString(map["key"].toString()),
         toPath(map["full_path"].toString()),
         map["exists"].toBool());

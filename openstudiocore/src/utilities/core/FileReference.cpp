@@ -20,6 +20,8 @@
 #include <utilities/core/FileReference.hpp>
 
 #include <utilities/time/DateTime.hpp>
+
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Checksum.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
@@ -159,8 +161,8 @@ namespace detail {
   QVariant toVariant(const FileReference& fileReference) {
     QVariantMap fileReferenceData;
 
-    fileReferenceData["uuid"] = fileReference.uuid().toString();
-    fileReferenceData["version_uuid"] = fileReference.versionUUID().toString();
+    fileReferenceData["uuid"] = toQString(toUID(fileReference.uuid()));
+    fileReferenceData["version_uuid"] = toQString(toUID(fileReference.versionUUID()));
     std::string str = fileReference.name();
     if (!str.empty()) {
       fileReferenceData["name"] = toQString(str);
@@ -175,8 +177,8 @@ namespace detail {
     }
     fileReferenceData["path"] = toQString(fileReference.path());
     fileReferenceData["file_type"] = toQString(fileReference.fileType().valueName());
-    fileReferenceData["timestamp_create"] = toQString(fileReference.timestampCreate().toString());
-    fileReferenceData["timestamp_last"] = toQString(fileReference.timestampLast().toString());
+    fileReferenceData["timestamp_create"] = toQString(fileReference.timestampCreate().toISO8601());
+    fileReferenceData["timestamp_last"] = toQString(fileReference.timestampLast().toISO8601());
     fileReferenceData["checksum_create"] = toQString(fileReference.checksumCreate());
     fileReferenceData["checksum_last"] = toQString(fileReference.checksumLast());
 
@@ -185,15 +187,26 @@ namespace detail {
 
   FileReference toFileReference(const QVariant& variant, const VersionString& version) {
     QVariantMap map = variant.toMap();
-    return FileReference(openstudio::UUID(map["uuid"].toString()),
-                         openstudio::UUID(map["version_uuid"].toString()),
+    OptionalDateTime timestampCreate, timestampLast;
+    if (version < VersionString("1.0.4")) {
+      timestampCreate = DateTime(map["timestamp_create"].toString().toStdString());
+      timestampLast = DateTime(map["timestamp_last"].toString().toStdString());
+    }
+    else {
+      timestampCreate = DateTime::fromISO8601(map["timestamp_create"].toString().toStdString());
+      timestampLast = DateTime::fromISO8601(map["timestamp_last"].toString().toStdString());
+    }
+    OS_ASSERT(timestampCreate);
+    OS_ASSERT(timestampLast);
+    return FileReference(toUUID(map["uuid"].toString().toStdString()),
+                         toUUID(map["version_uuid"].toString().toStdString()),
                          map.contains("name") ? map["name"].toString().toStdString() : std::string(),
                          map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                          map.contains("description") ? map["description"].toString().toStdString() : std::string(),
                          toPath(map["path"].toString()),
                          FileReferenceType(map["file_type"].toString().toStdString()),
-                         DateTime(map["timestamp_create"].toString().toStdString()),
-                         DateTime(map["timestamp_last"].toString().toStdString()),
+                         timestampCreate.get(),
+                         timestampLast.get(),
                          map["checksum_create"].toString().toStdString(),
                          map["checksum_last"].toString().toStdString());
   }

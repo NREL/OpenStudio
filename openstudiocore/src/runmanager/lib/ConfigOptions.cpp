@@ -144,8 +144,34 @@ namespace runmanager {
       const openstudio::path &t_ruby, 
       const openstudio::path &t_dakota)
   {
-    return makeTools(t_energyplus, t_xmlpreproc, t_radiance, t_ruby, t_dakota, 
-      openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+    Tools tools;
+
+    if (!t_energyplus.empty())
+    {
+      tools.append(makeTools(ToolType::EnergyPlus, t_energyplus, openstudio::path(), ToolFinder::parseToolVersion(t_energyplus)));
+    }
+
+    if (!t_xmlpreproc.empty())
+    {
+      tools.append(makeTools(ToolType::XMLPreprocessor, t_xmlpreproc, openstudio::path(), ToolFinder::parseToolVersion(t_xmlpreproc)));
+    }
+
+    if (!t_radiance.empty())
+    {
+      tools.append(makeTools(ToolType::Radiance, t_radiance, openstudio::path(), ToolFinder::parseToolVersion(t_radiance)));
+    }
+
+    if (!t_ruby.empty())
+    {
+      tools.append(makeTools(ToolType::Ruby, t_ruby, openstudio::path(), ToolFinder::parseToolVersion(t_ruby)));
+    }
+
+    if (!t_dakota.empty())
+    {
+      tools.append(makeTools(ToolType::Dakota, t_dakota, openstudio::path(), ToolFinder::parseToolVersion(t_dakota)));
+    }
+
+    return tools;
   }
 
   openstudio::runmanager::Tools ConfigOptions::makeTools(

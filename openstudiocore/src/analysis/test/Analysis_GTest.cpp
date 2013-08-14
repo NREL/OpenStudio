@@ -46,6 +46,7 @@
 #include <utilities/data/Tag.hpp>
 
 #include <resources.hxx>
+#include <OpenStudio.hxx>
 
 using namespace openstudio;
 using namespace openstudio::analysis;
@@ -330,27 +331,9 @@ TEST_F(AnalysisFixture, Analysis_ClearAllResults) {
   EXPECT_FALSE(analysis.algorithm()->cast<DakotaAlgorithm>().outFileReference());
 }
 
-TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun) {
+TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun_Roundtrip) {
   // Create example analysis
-  Analysis analysis = analysis1();
-  Problem problem = analysis.problem();
-
-  // Add data points
-  std::vector<QVariant> values;
-  values.push_back(0);
-  values.push_back(0.2);
-  values.push_back(0.9);
-  OptionalDataPoint dataPoint = problem.createDataPoint(values);
-  ASSERT_TRUE(dataPoint);
-  EXPECT_TRUE(analysis.addDataPoint(*dataPoint));
-  values[0] = 1; values[1] = 0.21851789; values[2] = 1.1681938;
-  dataPoint = problem.createDataPoint(values);
-  ASSERT_TRUE(dataPoint);
-  EXPECT_TRUE(analysis.addDataPoint(*dataPoint));
-  values[0] = 2; values[1] = 0.0; values[2] = 0.581563892;
-  dataPoint = problem.createDataPoint(values);
-  ASSERT_TRUE(dataPoint);
-  EXPECT_TRUE(analysis.addDataPoint(*dataPoint));
+  Analysis analysis = analysis1(PreRun);
 
   // Serialize Analysis with no data points
   std::string json = analysis.toJSON(AnalysisSerializationScope::ProblemFormulation);
@@ -424,5 +407,40 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun) {
   }
   EXPECT_FALSE(copy.dataPoints().empty());
 
+  // Serialize openstudio-server requests
+  p = toPath("AnalysisFixtureData/server_problem_request.json");
+  analysis.saveServerRequestForProblemFormulation(p,true);
+  p = toPath("AnalysisFixtureData/server_datapoints_request.json");
+  analysis.saveServerRequestForDataPoints(p,true);
+
+}
+
+TEST_F(AnalysisFixture,Analysis_JSONSerialization_Versioning) {
+  openstudio::path dir = resourcesPath() / toPath("analysis/version");
+
+  // create the formulation json file
+  Analysis analysis = analysis1(PreRun);
+  std::string dashVersionString = boost::regex_replace(openStudioVersion(),boost::regex("\\."),"-");
+  openstudio::path p = dir / toPath("analysis_" + dashVersionString + ".json");
+  bool ok = analysis.saveJSON(p,AnalysisSerializationScope::ProblemFormulation,true);
+  EXPECT_TRUE(ok);
+
+  // loop through all versions' json files
+  for (openstudio::directory_iterator it(dir); it != openstudio::directory_iterator(); ++it) {
+    if (boost::regex_match(toString(it->path().stem()),boost::regex("analysis_.*"))) {
+      LOG(Debug,"Loading " << toString(it->filename()) << ".");
+
+      // open and check results
+      OptionalAnalysisObject analysisObject = loadJSON(it->path());
+      ASSERT_TRUE(analysisObject);
+      ASSERT_TRUE(analysisObject->optionalCast<Analysis>());
+      Analysis loaded = analysisObject->cast<Analysis>();
+      
+      Problem problem = loaded.problem();
+      EXPECT_EQ(3u,problem.numVariables());
+      EXPECT_EQ(7u,problem.numWorkflowSteps());
+      EXPECT_EQ(3u,problem.numResponses());
+    }
+  }
 }
 

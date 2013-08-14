@@ -238,6 +238,8 @@ namespace detail {
 
     static DataPoint fromVariant(const QVariant& variant, const VersionString& version);
 
+    virtual QVariant toServerDataPointsVariant() const;
+
     //@}
    protected:
     // relationship state

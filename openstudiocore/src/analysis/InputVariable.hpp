@@ -42,6 +42,7 @@ class WorkflowStep;
 
 namespace detail {
   class InputVariable_Impl;
+  class Problem_Impl;
   class WorkflowStep_Impl;
 }
 
@@ -104,6 +105,7 @@ class ANALYSIS_API InputVariable : public Variable {
   friend class detail::InputVariable_Impl; // calls setParent
   friend class WorkflowStep; // calls setParent
   friend class detail::WorkflowStep_Impl; // calls onChange
+  friend class detail::Problem_Impl; // calls toServerFormulationVariant
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.analysis.InputVariable");

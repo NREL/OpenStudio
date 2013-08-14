@@ -463,12 +463,12 @@ namespace detail {
     onChange(AnalysisObject_Impl::InvalidatesResults);
   }
 
-  bool Analysis_Impl::addDataPoint(const DataPoint& dataPoint) {
+  bool Analysis_Impl::addDataPoint(DataPoint& dataPoint) {
     if (m_dataPointsAreInvalid) {
       LOG(Info,"Current data points are invalid. Call removeAllDataPoints before adding new ones.");
       return false;
     }
-    if (!(dataPoint.problem().uuid() == problem().uuid())) {
+    if (!(dataPoint.problemUUID() == problem().uuid())) {
       LOG(Error,"Cannot add given DataPoint to Analysis '" << name() <<
           "', because it is not associated with Problem '" << problem().name() << "'.");
       return false;
@@ -478,6 +478,9 @@ namespace detail {
       OS_ASSERT(existingDataPoints.size() == 1); // dataPoint must be fully specified to be valid
       LOG(Info,"DataPoint not added to Analysis '" << name() << "', because it already exists.");
       return false;
+    }
+    if (!dataPoint.hasProblem()) {
+      dataPoint.setProblem(problem());
     }
     m_dataPoints.push_back(dataPoint);
     connectChild(m_dataPoints.back(),true);
@@ -683,7 +686,7 @@ namespace detail {
     return table;
   }
 
-  bool Analysis_Impl::saveJSON(openstudio::path p,
+  bool Analysis_Impl::saveJSON(const openstudio::path& p,
                                AnalysisSerializationScope scope,
                                bool overwrite) const
   {
@@ -700,6 +703,38 @@ namespace detail {
 
   std::string Analysis_Impl::toJSON(AnalysisSerializationScope scope) const {
     QVariant json = this->toVariant(scope);
+    return openstudio::toJSON(json);
+  }
+
+  bool Analysis_Impl::saveServerRequestForProblemFormulation(const openstudio::path& p,
+                                                             bool overwrite) const
+  {
+    QVariant json = toServerFormulationVariant();
+    return openstudio::saveJSON(json,p,overwrite);
+  }
+
+  std::ostream& Analysis_Impl::serverRequestForProblemFormulation(std::ostream& os) const {
+    os << serverRequestForProblemFormulation();
+    return os;
+  }
+
+  std::string Analysis_Impl::serverRequestForProblemFormulation() const {
+    QVariant json = toServerFormulationVariant();
+    return openstudio::toJSON(json);
+  }
+
+  bool Analysis_Impl::saveServerRequestForDataPoints(const openstudio::path& p,bool overwrite) const {
+    QVariant json = toServerDataPointsVariant();
+    return openstudio::saveJSON(json,p,overwrite);
+  }
+
+  std::ostream& Analysis_Impl::serverRequestForDataPoints(std::ostream& os) const {
+    os << serverRequestForDataPoints();
+    return os;
+  }
+
+  std::string Analysis_Impl::serverRequestForDataPoints() const {
+    QVariant json = toServerDataPointsVariant();
     return openstudio::toJSON(json);
   }
 
@@ -754,8 +789,8 @@ namespace detail {
             map["data_points"].toList(),
             boost::function<DataPoint (const QVariant&)>(boost::bind(openstudio::analysis::detail::DataPoint_Impl::factoryFromVariant,_1,version)));
     }
-    return Analysis(openstudio::UUID(map["uuid"].toString()),
-                    openstudio::UUID(map["version_uuid"].toString()),
+    return Analysis(toUUID(map["uuid"].toString().toStdString()),
+                    toUUID(map["version_uuid"].toString().toStdString()),
                     map.contains("name") ? map["name"].toString().toStdString() : std::string(),
                     map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                     map.contains("description") ? map["description"].toString().toStdString() : std::string(),
@@ -766,6 +801,28 @@ namespace detail {
                     dataPoints,
                     map["results_are_invalid"].toBool(),
                     map["data_points_are_invalid"].toBool());
+  }
+
+  QVariant Analysis_Impl::toServerFormulationVariant() const {
+    QVariantMap map = problem().toServerFormulationVariant().toMap();
+    map["metadata"] = jsonMetadata();
+    return QVariant(map);
+  }
+
+  QVariant Analysis_Impl::toServerDataPointsVariant() const {
+    QVariantMap map;
+
+    map["metadata"] = jsonMetadata();
+
+    QVariantList dataPointList;
+    Q_FOREACH(const DataPoint& dataPoint, dataPoints()) {
+      if (!dataPoint.isComplete() && !dataPoint.topLevelJob()) {
+        dataPointList.push_back(dataPoint.toServerDataPointsVariant());
+      }
+    }
+    map["data_points"] = QVariant(dataPointList);
+
+    return QVariant(map);
   }
 
   void Analysis_Impl::onChange(ChangeType changeType) {
@@ -969,7 +1026,7 @@ void Analysis::clearWeatherFile() {
   getImpl<detail::Analysis_Impl>()->clearWeatherFile();
 }
 
-bool Analysis::addDataPoint(const DataPoint& dataPoint) {
+bool Analysis::addDataPoint(DataPoint& dataPoint) {
   return getImpl<detail::Analysis_Impl>()->addDataPoint(dataPoint);
 }
 
@@ -1033,6 +1090,32 @@ std::ostream& Analysis::toJSON(std::ostream& os,
 
 std::string Analysis::toJSON(AnalysisSerializationScope scope) const {
   return getImpl<detail::Analysis_Impl>()->toJSON(scope);
+}
+
+bool Analysis::saveServerRequestForProblemFormulation(const openstudio::path& p,
+                                                      bool overwrite) const
+{
+  return getImpl<detail::Analysis_Impl>()->saveServerRequestForProblemFormulation(p,overwrite);
+}
+
+std::ostream& Analysis::serverRequestForProblemFormulation(std::ostream& os) const {
+  return getImpl<detail::Analysis_Impl>()->serverRequestForProblemFormulation(os);
+}
+
+std::string Analysis::serverRequestForProblemFormulation() const {
+  return getImpl<detail::Analysis_Impl>()->serverRequestForProblemFormulation();
+}
+
+bool Analysis::saveServerRequestForDataPoints(const openstudio::path& p,bool overwrite) const {
+  return getImpl<detail::Analysis_Impl>()->saveServerRequestForDataPoints(p,overwrite);
+}
+
+std::ostream& Analysis::serverRequestForDataPoints(std::ostream& os) const {
+  return getImpl<detail::Analysis_Impl>()->serverRequestForDataPoints(os);
+}
+
+std::string Analysis::serverRequestForDataPoints() const {
+  return getImpl<detail::Analysis_Impl>()->serverRequestForDataPoints();
 }
 
 /// @cond
