@@ -17,8 +17,13 @@ namespace openstudio {
 
       ~ZipFile();
 
-      /// Extracts all files in the archive to the given path, preserving relative paths.
+      /// Adds t_localPath to the ZipFile, placing it at relative location t_destinationPath
+      /// in the archive.
       void addFile(const openstudio::path &t_localPath, const openstudio::path &t_destinationPath);
+
+      /// Recursively adds all files in t_localDir to the ZipFile, placing them in the archive
+      /// relative to t_destinationDir.
+      void addDirectory(const openstudio::path& t_localDir, const openstudio::path& t_destinationDir);
 
     private:
       void *m_zipFile;

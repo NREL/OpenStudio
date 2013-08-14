@@ -58,20 +58,22 @@
 #include <model/WeatherFile.hpp>
 #include <model/WeatherFile_Impl.hpp>
 
+#include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include <utilities/core/Compare.hpp>
+#include <utilities/core/Containers.hpp>
+#include <utilities/core/FileLogSink.hpp>
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/Optional.hpp>
-#include <utilities/core/FileLogSink.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/PathHelpers.hpp>
+#include <utilities/core/ZipFile.hpp>
 
 #include <OpenStudio.hxx>
 
 #include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 
+using namespace openstudio;
 using namespace openstudio::model;
 using namespace openstudio::osversion;
 using namespace openstudio::ruleset;
@@ -88,7 +90,7 @@ namespace detail {
                                          const analysisdriver::AnalysisDriver& analysisDriver,
                                          const boost::optional<analysis::Analysis>& analysis,
                                          const SimpleProjectOptions& options)
-    : m_projectDir(projectDir),
+    : m_projectDir(completeAndNormalize(projectDir)),
       m_analysisDriver(analysisDriver),
       m_analysis(analysis),
       m_logFile(projectDir / toPath("project.log"))
@@ -104,7 +106,12 @@ namespace detail {
   }
 
   SimpleProject_Impl::~SimpleProject_Impl() {
+    // stop collecting log messages
     m_logFile.disable();
+    // delete zip file
+    if (!m_zipFileForRemoteSystem.empty()) {
+      boost::filesystem::remove(m_zipFileForRemoteSystem);
+    }
   }
 
   openstudio::path SimpleProject_Impl::projectDir() const {
@@ -482,8 +489,9 @@ namespace detail {
     return result;
   }
 
-  std::pair<bool,std::vector<BCLMeasure> > SimpleProject_Impl::setSeed(const FileReference& currentSeedLocation,
-                                                                  ProgressBar* progressBar)
+  std::pair<bool,std::vector<BCLMeasure> > SimpleProject_Impl::setSeed(
+      const FileReference& currentSeedLocation,
+      ProgressBar* progressBar)
   {
     std::pair<bool,BCLMeasureVector> result(false,BCLMeasureVector());
 
@@ -639,9 +647,11 @@ namespace detail {
 
     // seed
     FileReference currentSeed = analysis().seed();
-    if ((toString(currentSeed.path().stem()) != "*") &&
+    if (boost::filesystem::exists(currentSeed.path()) &&
         (currentSeed.path().parent_path() != seedDir()))
     {
+      LOG(Info,"Copying seed model at " << toString(currentSeed.path()) << " to "
+          << toString(seedDir()));
       result = setSeed(currentSeed).first;
     }
 
@@ -853,8 +863,65 @@ namespace detail {
   }
 
   openstudio::path SimpleProject_Impl::zipFileForRemoteSystem() const {
-    openstudio::path result;
-    return result;
+    openstudio::path tempDir;
+    if (m_zipFileForRemoteSystem.empty()) {
+      // get temp directory
+      tempDir = openstudio::tempDir();
+    }
+    else {
+      // already exists -- delete current zip file
+      // (instead of trying to determine if it's still okay, just go ahead and make a new one)
+      tempDir = m_zipFileForRemoteSystem.parent_path();
+      boost::filesystem::remove(m_zipFileForRemoteSystem);
+    }
+
+    // create zip file
+    // HERE -- Change toString to toUID after JSON Server View to develop.
+    m_zipFileForRemoteSystem = tempDir / toPath("analysis_" + toString(analysis().uuid()) + ".zip");
+    ZipFile zipFile(m_zipFileForRemoteSystem,false);
+
+    // add contents
+    //
+    // right now using current contents of projectDir(). may want to create a temporary
+    // copy and call makeSelfContained() on it before creating zip.
+    //
+    // 1 - problem formulation json
+    openstudio::path tempFile = tempDir / toPath("formulation.json");
+    analysis().saveJSON(tempFile,AnalysisSerializationScope::ProblemFormulation,true);
+    zipFile.addFile(tempFile,toPath("formulation.json"));
+    boost::filesystem::remove(tempFile);
+    // 2 - seed folder
+    openstudio::path seedPath = analysis().seed().path();
+    if (boost::filesystem::exists(seedPath)) {
+      tempFile = tempDir / toPath("seed");
+      if (!boost::filesystem::exists(tempFile)) {
+        boost::filesystem::create_directory(tempFile);
+      }
+      copyModel(seedPath,tempFile,true);
+      zipFile.addDirectory(tempFile,toPath("seed"));
+      removeDirectory(tempFile);
+    }
+    // 3 - scripts folder
+    //
+    // right now copying directly, may want to strip out unused scripts and test files
+    //
+    zipFile.addDirectory(scriptsDir(),toPath("scripts"));
+
+    // 4 - alternatives folder
+    std::vector<openstudio::path> alternates = alternateModelPaths();
+    if (!alternates.empty()) {
+      tempFile = tempDir / toPath("alternatives");
+      if (!boost::filesystem::exists(tempFile)) {
+        boost::filesystem::create_directory(tempFile);
+      }
+      Q_FOREACH(const openstudio::path& alternate,alternates) {
+        copyModel(alternate,tempFile,true);
+      }
+      zipFile.addDirectory(tempFile,toPath("alternatives"));
+      removeDirectory(tempFile);
+    }
+
+    return m_zipFileForRemoteSystem;
   }
 
   analysis::DataPoint SimpleProject_Impl::baselineDataPoint() const {
@@ -1160,7 +1227,8 @@ namespace detail {
   }
 
   bool SimpleProject_Impl::copyModel(const openstudio::path& modelPath,
-                                const openstudio::path& destinationDirectory)
+                                     const openstudio::path& destinationDirectory,
+                                     bool minimal) const
   {
     bool result(true);
 
@@ -1190,12 +1258,26 @@ namespace detail {
         boost::filesystem::is_directory(companionFolder))
     {
       openstudio::path companionDestination = destinationDirectory / toPath(modelPath.stem());
-      copyDirectory(companionFolder,companionDestination);
-      // clean out data that is irrelevant/conflicting in the SimpleProject context
+      if (minimal) {
+        // only copy companionFolder/files
+        openstudio::path filesFolder = companionFolder / toPath("files");
+        if (boost::filesystem::exists(filesFolder) &&
+            boost::filesystem::is_directory(filesFolder))
+        {
+          if (!boost::filesystem::exists(companionDestination)) {
+            boost::filesystem::create_directory(companionDestination);
+          }
+          copyDirectory(filesFolder,companionDestination / toPath("files"));
+        }
+      }
+      else {
+        copyDirectory(companionFolder,companionDestination);
+        // clean out data that is irrelevant/conflicting in the SimpleProject context
 
-      // ETH@20130619 - Was deleting run.db and run folder. However, now run.db is required
-      // to open model-specific project.osp, so cannot delete that. Will go ahead and leave
-      // run folder too.
+        // ETH@20130619 - Was deleting run.db and run folder. However, now run.db is required
+        // to open model-specific project.osp, so cannot delete that. Will go ahead and leave
+        // run folder too.
+      }
     }
 
     return result;

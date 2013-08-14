@@ -284,7 +284,7 @@ namespace detail {
     mutable boost::optional<Workspace> m_seedIdf;      // clear optional when analysis's seed changes
     mutable std::map<UUID,BCLMeasure> m_measures;
     mutable std::map<UUID,std::vector<ruleset::OSArgument> > m_measureArguments;
-    mutable openstudio::path m_zipFileForRemoteSystem;
+    mutable openstudio::path m_zipFileForRemoteSystem; // zip file always re-created, but reuse tempDir
 
     openstudio::path alternateModelsDir() const;
 
@@ -296,7 +296,9 @@ namespace detail {
     std::vector<openstudio::path> alternateModelPaths() const;
 
     /** Copy the OSM at modelPath into destinationDirectory. */
-    bool copyModel(const openstudio::path& modelPath, const openstudio::path& destinationDirectory);
+    bool copyModel(const openstudio::path& modelPath,
+                   const openstudio::path& destinationDirectory,
+                   bool minimal=false) const;
 
     /** Return true if the OSM at modelPath needs version translation. */
     bool requiresVersionTranslation(const openstudio::path& modelPath) const;
