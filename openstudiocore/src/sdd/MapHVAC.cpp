@@ -286,9 +286,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     {
       QDomNodeList airSegmentChildElements = airSegmentElement.childNodes();
 
-      for (int i = airSegmentChildElements.count() - 1; i >= 0 ; i--)
+      for (int j = airSegmentChildElements.count() - 1; j >= 0 ; j--)
       {
-        QDomElement airSegmentChildElement = airSegmentChildElements.at(i).toElement();
+        QDomElement airSegmentChildElement = airSegmentChildElements.at(j).toElement();
         
         // CoilCooling
         if( istringEqual(airSegmentChildElement.tagName().toStdString(),"CoilClg") )
@@ -322,7 +322,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
           }
         }
         // CoilHeating
-        else if( istringEqual(airSegmentChildElement.tagName().toStdString(),"CoilHtg") )
+        else if( istringEqual(airSegmentChildElement.tagName().toStdString(),"CoilHtg") &&
+                 ! ( istringEqual(airSystemTypeElement.text().toStdString(),"SZVAVAC") ||
+                     istringEqual(airSystemTypeElement.text().toStdString(),"SZVAVHP") 
+                   )
+               )
         {
           boost::optional<model::ModelObject> mo = translateCoilHeating(airSegmentChildElement,doc,model);
 
@@ -1642,6 +1646,42 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
 
       coil = mo->cast<model::HVACComponent>();
     }
+    else if( istringEqual("SZVAVAC",airSystemTypeElement.text().toStdString()) || 
+             istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString()) )
+    {
+      if( ! airSysElement.isNull() )
+      {
+        // Air Segments
+        QDomNodeList airSegmentElements = airSysElement.elementsByTagName("AirSeg");
+
+        for (int i = 0; i < airSegmentElements.count(); i++)
+        {
+          QDomElement airSegmentElement = airSegmentElements.at(i).toElement();
+
+          QDomElement airSegmentTypeElement = airSegmentElement.firstChildElement("Type");
+
+          // Supply Segments
+          if(istringEqual(airSegmentTypeElement.text().toStdString(),"Supply"))
+          {
+            QDomNodeList airSegmentChildElements = airSegmentElement.childNodes();
+
+            for (int j = airSegmentChildElements.count() - 1; j >= 0 ; j--)
+            {
+              QDomElement airSegmentChildElement = airSegmentChildElements.at(j).toElement();
+
+              if( istringEqual(airSegmentChildElement.tagName().toStdString(),"CoilHtg") )
+              {
+                boost::optional<model::ModelObject> mo = translateCoilHeating(airSegmentChildElement,doc,model);
+
+                OS_ASSERT(mo);
+
+                coil = mo->cast<model::HVACComponent>();
+              }
+            }
+          } 
+        }
+      }
+    }
     else // If no coil is specified in the SDD, create an electric coil
     {
       coil = model::CoilHeatingElectric(model,schedule);
@@ -1725,6 +1765,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   model::Node supplyInletNode = plantLoop.supplyInletNode();
   model::Node supplyOutletNode = plantLoop.supplyOutletNode();
 
+  bool bypass = false;
+
   // Name
 
   plantLoop.setName(nameElement.text().toStdString());
@@ -1780,24 +1822,30 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     if( boost::optional<model::ModelObject> mo = translateBoiler(boilerElement,doc,model) )
     {
-      plantLoop.addSupplyBranchForComponent(mo->cast<model::BoilerHotWater>());
-    }
+      model::BoilerHotWater boiler = mo->cast<model::BoilerHotWater>();
 
-    QDomElement pumpElement = boilerElement.firstChildElement("Pump"); 
+      plantLoop.addSupplyBranchForComponent(boiler);
 
-    if( ! pumpElement.isNull() )
-    {
-      boost::optional<model::ModelObject> mo = translatePump(pumpElement,doc,model);
+      QDomElement pumpElement = boilerElement.firstChildElement("Pump"); 
 
-      if( mo )
+      if( ! pumpElement.isNull() )
       {
-        if( boost::optional<model::PumpVariableSpeed> pump = mo->optionalCast<model::PumpVariableSpeed>() )
+        boost::optional<model::ModelObject> mo2 = translatePump(pumpElement,doc,model);
+
+        if( mo2 )
         {
-          pump->addToNode(supplyInletNode);
-        }
-        else if( boost::optional<model::PumpConstantSpeed> pump = mo->optionalCast<model::PumpConstantSpeed>() )
-        {
-          pump->addToNode(supplyInletNode);
+          model::Node inletNode = boiler.inletModelObject()->cast<model::Node>();
+
+          if( boost::optional<model::PumpVariableSpeed> pump = mo2->optionalCast<model::PumpVariableSpeed>() )
+          {
+            pump->addToNode(inletNode);
+
+            LOG(Warn,"Variable speed branch pumps are unsupported");
+          }
+          else if( boost::optional<model::PumpConstantSpeed> pump = mo2->optionalCast<model::PumpConstantSpeed>() )
+          {
+            pump->addToNode(inletNode);
+          }
         }
       }
     }
@@ -1813,25 +1861,38 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     if( boost::optional<model::ModelObject> mo = translateChiller(chillerElement,doc,model) )
     {
-      plantLoop.addSupplyBranchForComponent(mo->cast<model::HVACComponent>());
-    }
+      model::ChillerElectricEIR chiller = mo->cast<model::ChillerElectricEIR>();
 
-    QDomElement pumpElement = chillerElement.firstChildElement("Pump"); 
+      plantLoop.addSupplyBranchForComponent(chiller);
 
-    if( ! pumpElement.isNull() )
-    {
-      boost::optional<model::ModelObject> mo = translatePump(pumpElement,doc,model);
+      QDomElement pumpElement = chillerElement.firstChildElement("Pump"); 
 
-      if( mo )
+      if( ! pumpElement.isNull() )
       {
-        if( boost::optional<model::PumpVariableSpeed> pump = mo->optionalCast<model::PumpVariableSpeed>() )
+        boost::optional<model::ModelObject> mo2 = translatePump(pumpElement,doc,model);
+
+        if( mo2 )
         {
-          pump->addToNode(supplyInletNode);
+          model::Node inletNode = chiller.supplyInletModelObject()->cast<model::Node>();
+
+          if( boost::optional<model::PumpVariableSpeed> pump = mo2->optionalCast<model::PumpVariableSpeed>() )
+          {
+            pump->addToNode(inletNode);
+
+            LOG(Warn,"Variable speed branch pumps are unsupported");
+          }
+          else if( boost::optional<model::PumpConstantSpeed> pump = mo2->optionalCast<model::PumpConstantSpeed>() )
+          {
+            pump->addToNode(inletNode);
+          }
         }
-        else if( boost::optional<model::PumpConstantSpeed> pump = mo->optionalCast<model::PumpConstantSpeed>() )
-        {
-          pump->addToNode(supplyInletNode);
-        }
+      }
+
+      QDomElement evapHasBypassElement = chillerElement.firstChildElement("EvapHasBypass");
+
+      if( evapHasBypassElement.text() == "1" )
+      {
+        bypass = true;
       }
     }
   }
@@ -1866,9 +1927,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
   // Add a default bypass
 
-  model::PipeAdiabatic pipe(model);
+  if(bypass)
+  {
+    model::PipeAdiabatic pipe(model);
 
-  plantLoop.addSupplyBranchForComponent(pipe);
+    plantLoop.addSupplyBranchForComponent(pipe);
+  }
 
   // Add a default hot water heater for servicehotwater systems
 
@@ -1941,7 +2005,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     
     // Translate Primary Supply
     
-    if( typeElement.text().toLower() == "primarysupply" )
+    if( typeElement.text().toLower() == "primaryreturn" || 
+        typeElement.text().toLower() == "primarysupply"
+      )
     {
       QDomElement pumpElement = fluidSegElement.firstChildElement("Pump");
 
@@ -2688,6 +2754,76 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvD
 
   curve.setCoefficient6xTIMESY(coef6Element.text().toDouble());
 
+  // MinVar1
+  
+  QDomElement minVar1Element = element.firstChildElement("MinVar1");
+
+  bool ok;
+
+  double value = minVar1Element.text().toDouble(&ok); 
+
+  if(ok)
+  {
+    curve.setMinimumValueofx(value);
+  }
+  else
+  {
+    curve.setMinimumValueofx(0.0);
+
+    LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Minimum Limit");
+  }
+
+  // MaxVar1
+  
+  QDomElement maxVar1Element = element.firstChildElement("MaxVar1");
+
+  value = maxVar1Element.text().toDouble(&ok);
+
+  if(ok)
+  {
+    curve.setMaximumValueofx(value);
+  }
+  else
+  {
+    curve.setMaximumValueofx(100.0);
+
+    LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Maximum Limit");
+  }
+
+  // MinVar2
+  
+  QDomElement minVar2Element = element.firstChildElement("MinVar2");
+
+  value = minVar2Element.text().toDouble(&ok);
+
+  if(ok)
+  {
+    curve.setMinimumValueofy(value);
+  }
+  else
+  {
+    curve.setMinimumValueofy(0.0);
+
+    LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing Y Minimum Limit");
+  }
+
+  // MaxVar2
+  
+  QDomElement maxVar2Element = element.firstChildElement("MaxVar2");
+
+  value = maxVar2Element.text().toDouble(&ok);
+
+  if(ok)
+  {
+    curve.setMaximumValueofy(value);
+  }
+  else
+  {
+    curve.setMaximumValueofy(100.0);
+
+    LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing Y Maximum Limit");
+  }
+
   return curve;
 }
 
@@ -2730,6 +2866,42 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvC
 
   curve.setCoefficient4xPOW3(coef4Element.text().toDouble());
 
+  // MinVar1
+  
+  QDomElement minVar1Element = element.firstChildElement("MinVar1");
+
+  bool ok;
+
+  double value = minVar1Element.text().toDouble(&ok);
+
+  if(ok)
+  {
+    curve.setMinimumValueofx(value);
+  }
+  else
+  {
+    curve.setMinimumValueofx(0.0);
+
+    LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Minimum Limit");
+  }
+
+  // MaxVar1
+  
+  QDomElement maxVar1Element = element.firstChildElement("MaxVar1");
+
+  value = maxVar1Element.text().toDouble(&ok);
+
+  if(ok)
+  {
+    curve.setMaximumValueofx(value);
+  }
+  else
+  {
+    curve.setMaximumValueofx(100.0);
+
+    LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Maximum Limit");
+  }
+
   return curve;
 }
 
@@ -2765,6 +2937,42 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvQ
   QDomElement coef3Element = element.firstChildElement("Coef3");
 
   curve.setCoefficient3xPOW2(coef3Element.text().toDouble());
+
+  // MinVar1
+  
+  QDomElement minVar1Element = element.firstChildElement("MinVar1");
+
+  bool ok;
+
+  double value = minVar1Element.text().toDouble(&ok);
+
+  if(ok)
+  {
+    curve.setMinimumValueofx(value);
+  }
+  else
+  {
+    curve.setMinimumValueofx(0.0);
+
+    LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Minimum Limit");
+  }
+
+  // MaxVar1
+  
+  QDomElement maxVar1Element = element.firstChildElement("MaxVar1");
+
+  value = maxVar1Element.text().toDouble(&ok);
+
+  if(ok)
+  {
+    curve.setMaximumValueofx(value);
+  }
+  else
+  {
+    curve.setMaximumValueofx(100.0);
+
+    LOG(Warn,"Curve: " << nameElement.text().toStdString() << " Missing X Maximum Limit");
+  }
 
   return curve;
 }

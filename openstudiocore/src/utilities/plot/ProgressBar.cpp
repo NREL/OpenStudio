@@ -21,6 +21,8 @@
 
 #include <utilities/core/Application.hpp>
 
+#include <cmath>
+
 namespace openstudio{
 
   /// constructor
@@ -173,7 +175,7 @@ namespace openstudio{
       newPercentage = 100.0 * (value - min) / range;
     }
 
-    if (abs(newPercentage-m_percentage) >= 1.0){
+    if (fabs(newPercentage-m_percentage) >= 1.0){
       m_percentage = newPercentage;
       emit percentageUpdated(m_percentage);
       onPercentageUpdated(m_percentage);

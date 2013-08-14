@@ -448,7 +448,9 @@ namespace openstudio{
 
   int RemoteBCL::numResultPages() const
   {
-    return std::ceil(static_cast<double>(m_lastTotalResults)/static_cast<double>(m_numResultsPerQuery));
+    double numerator(lastTotalResults());
+    double denominator(resultsPerQuery());
+    return int(std::ceil(numerator/denominator));
   }
 
   bool RemoteBCL::validateAuthKey(const std::string& authKey, const std::string& remoteUrl)

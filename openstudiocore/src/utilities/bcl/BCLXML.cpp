@@ -18,10 +18,14 @@
 **********************************************************************/
 
 #include <utilities/bcl/BCLXML.hpp>
-#include <utilities/core/System.hpp>
+
 #include <utilities/data/Attribute.hpp>
+
 #include <utilities/units/Unit.hpp>
 #include <utilities/units/Quantity.hpp>
+
+#include <utilities/core/String.hpp>
+#include <utilities/core/System.hpp>
 
 #include <QDomDocument>
 #include <QFile>
@@ -500,7 +504,7 @@ namespace openstudio{
           dataType = "float";
           break;
         case AttributeValueType::Quantity :
-          value = boost::lexical_cast<double>(attribute.valueAsQuantity());
+          value = toString(attribute.valueAsQuantity().value());
           dataType = "float";
           break;
         case AttributeValueType::Unit :

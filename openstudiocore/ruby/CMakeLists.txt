@@ -43,7 +43,7 @@ FOREACH( f ${RUBY_TEST_SRC} )
         # $<CONFIGURATION> may resolve to 'Release' on Mac or Linux but directory will not exist
         ADD_TEST(NAME "RubyTest-${FILE_NAME}-${TEST_NAME}"
           COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}"
-          "$<TARGET_FILE:ruby_cpp>" -I"${RUBY_RUBY_LIB_DIR}" -I. "openstudio_test.rb" "--name=test_${TEST_NAME}"
+          "${RUBY_EXECUTABLE}" -I"${RUBY_RUBY_LIB_DIR}" -I. "openstudio_test.rb" "--name=test_${TEST_NAME}"
         )
       ENDIF()
       SET_TESTS_PROPERTIES("RubyTest-${FILE_NAME}-${TEST_NAME}" PROPERTIES DEPENDS "${ALL_RUBY_BINDING_TARGETS}" ruby_cpp ResultsViewer_resources)
@@ -181,7 +181,7 @@ ENDIF()
 # run all the unit tests
 IF( ENABLE_TEST_RUNNER_TARGETS )
   ADD_CUSTOM_TARGET( ruby_run_tests
-    ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_CPP_EXE}" -I. -I"${RUBY_RUBY_LIB_DIR}" "openstudio_test.rb"
+    ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I. -I"${RUBY_RUBY_LIB_DIR}" "openstudio_test.rb"
     DEPENDS ${ALL_RUBY_BINDING_TARGETS} ruby_cpp ResultsViewer_resources openstudio_energyplus_resources
   )
 ENDIF()
