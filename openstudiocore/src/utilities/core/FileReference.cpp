@@ -177,8 +177,8 @@ namespace detail {
     }
     fileReferenceData["path"] = toQString(fileReference.path());
     fileReferenceData["file_type"] = toQString(fileReference.fileType().valueName());
-    fileReferenceData["timestamp_create"] = int(fileReference.timestampCreate().toEpoch());
-    fileReferenceData["timestamp_last"] = int(fileReference.timestampLast().toEpoch());
+    fileReferenceData["timestamp_create"] = toQString(fileReference.timestampCreate().toISO8601());
+    fileReferenceData["timestamp_last"] = toQString(fileReference.timestampLast().toISO8601());
     fileReferenceData["checksum_create"] = toQString(fileReference.checksumCreate());
     fileReferenceData["checksum_last"] = toQString(fileReference.checksumLast());
 
@@ -193,8 +193,8 @@ namespace detail {
       timestampLast = DateTime(map["timestamp_last"].toString().toStdString());
     }
     else {
-      timestampCreate = DateTime::fromEpoch(std::time_t(map["timestamp_create"].toInt()));
-      timestampLast = DateTime::fromEpoch(std::time_t(map["timestamp_last"].toInt()));
+      timestampCreate = DateTime::fromISO8601(map["timestamp_create"].toString().toStdString());
+      timestampLast = DateTime::fromISO8601(map["timestamp_last"].toString().toStdString());
     }
     OS_ASSERT(timestampCreate);
     OS_ASSERT(timestampLast);
