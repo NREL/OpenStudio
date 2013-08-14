@@ -111,8 +111,8 @@ namespace detail {
   {
     QVariantMap map = variant.toMap();
 
-    return OutputAttributeVariable(openstudio::UUID(map["uuid"].toString()),
-                                   openstudio::UUID(map["version_uuid"].toString()),
+    return OutputAttributeVariable(toUUID(map["uuid"].toString().toStdString()),
+                                   toUUID(map["version_uuid"].toString().toStdString()),
                                    map.contains("name") ? map["name"].toString().toStdString() : std::string(),
                                    map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                                    map.contains("description") ? map["description"].toString().toStdString() : std::string(),

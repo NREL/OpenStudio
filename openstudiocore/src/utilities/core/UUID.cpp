@@ -70,6 +70,10 @@ UUID toUUID(const std::string& str)
   try{
     uuid = UUID(toQString(str));
   }catch(...){
+    try {
+      uuid = UUID(toQString("{" + str + "}"));
+    }
+    catch(...) {}
   }
   return uuid;
 }
@@ -86,6 +90,10 @@ std::string createUniqueName(const std::string& prefix) {
   }
   ss << toString(createUUID());
   return ss.str();
+}
+
+std::string toUID(const UUID& uuid) {
+  return uuid.toString().replace("{", "").replace("}", "").toStdString();
 }
 
 std::ostream& operator<<(std::ostream& os,const UUID& uuid) {

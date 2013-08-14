@@ -1858,13 +1858,28 @@ namespace detail {
             boost::function<Function (const QVariant&)>(boost::bind(analysis::detail::Function_Impl::factoryFromVariant,_1,version)));
     }
 
-    return Problem(openstudio::UUID(map["uuid"].toString()),
-                   openstudio::UUID(map["version_uuid"].toString()),
+    return Problem(toUUID(map["uuid"].toString().toStdString()),
+                   toUUID(map["version_uuid"].toString().toStdString()),
                    map.contains("name") ? map["name"].toString().toStdString() : std::string(),
                    map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                    map.contains("description") ? map["description"].toString().toStdString() : std::string(),
                    workflow,
                    responses);
+  }
+
+  QVariant Problem_Impl::toServerFormulationVariant() const {
+    QVariantMap map;
+
+    InputVariableVector vars = variables();
+    QVariantList varsList;
+    for (unsigned i = 0, n = vars.size(); i < n; ++i) {
+      QVariantMap varMap = vars[i].toServerFormulationVariant().toMap();
+      varMap["variable_index"] = i;
+      varsList.push_back(varMap);
+    }
+    map["variables"] = varsList;
+
+    return QVariant(map);
   }
 
   std::vector<WorkflowStep> Problem_Impl::convertVariablesAndWorkflowToWorkflowSteps(

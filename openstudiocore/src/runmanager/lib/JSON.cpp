@@ -25,7 +25,7 @@ namespace detail {
     if (!t_jobTree.tools().empty()) {
       map["tools"] = toVariant(t_jobTree.tools());
     }
-    map["uuid"] = QVariant(t_jobTree.uuid().toString());
+    map["uuid"] = toQString(toUID(t_jobTree.uuid()));
 
     if (t_jobTree.lastRun())
     {
@@ -74,7 +74,7 @@ namespace detail {
         map.contains("files") ? Files(toVectorOfFileInfo(map["files"],version)) : Files(),
         std::vector<openstudio::URLSearchPath>(),
         false,
-        map.contains("uuid") ? openstudio::UUID(map["uuid"].toString()) : boost::optional<openstudio::UUID>(),
+        map.contains("uuid") ? toUUID(map["uuid"].toString().toStdString()) : boost::optional<openstudio::UUID>(),
         map.contains("last_run") ? openstudio::DateTime(toString(map["last_run"].toString())) : boost::optional<openstudio::DateTime>(),
         toJobErrors(map["errors"],version),
         map.contains("output_files") ? Files(toVectorOfFileInfo(map["output_files"],version)) : Files());

@@ -153,8 +153,8 @@ namespace detail {
   QVariant AnalysisObject_Impl::toVariant() const {
     QVariantMap analysisObjectData;
 
-    analysisObjectData["uuid"] = uuid().toString();
-    analysisObjectData["version_uuid"] = versionUUID().toString();
+    analysisObjectData["uuid"] = toQString(toUID(uuid()));
+    analysisObjectData["version_uuid"] = toQString(toUID(versionUUID()));
     std::string str = name();
     if (!str.empty()) {
       analysisObjectData["name"] = toQString(str);
@@ -169,6 +169,14 @@ namespace detail {
     }
 
     return QVariant(analysisObjectData);
+  }
+
+  QVariant AnalysisObject_Impl::toServerFormulationVariant() const {
+    return QVariant();
+  }
+
+  QVariant AnalysisObject_Impl::toServerDataPointsVariant() const {
+    return QVariant();
   }
 
   void AnalysisObject_Impl::onChildChanged(ChangeType changeType) {
@@ -317,6 +325,14 @@ void AnalysisObject::onChange() {
 
 QVariant AnalysisObject::toVariant() const {
   return getImpl<detail::AnalysisObject_Impl>()->toVariant();
+}
+
+QVariant AnalysisObject::toServerFormulationVariant() const {
+  return getImpl<detail::AnalysisObject_Impl>()->toServerFormulationVariant();
+}
+
+QVariant AnalysisObject::toServerDataPointsVariant() const {
+  return getImpl<detail::AnalysisObject_Impl>()->toServerDataPointsVariant();
 }
 
 /// @endcond

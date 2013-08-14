@@ -99,6 +99,8 @@ class UTILITIES_API VersionString {
 
 UTILITIES_API std::ostream& operator<<(std::ostream& os,const VersionString& version);
 
+typedef boost::optional<VersionString> OptionalVersionString;
+
 // sorts WorkspaceObjects by name
 struct UTILITIES_API WorkspaceObjectNameLess {
   bool operator()(const WorkspaceObject& a, const WorkspaceObject& b) const;

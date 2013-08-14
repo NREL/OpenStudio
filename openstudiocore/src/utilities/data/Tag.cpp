@@ -51,7 +51,7 @@ namespace detail {
   QVariant toVariant(const Tag& tag) {
     QVariantMap tagData;
 
-    tagData["uuid"] = tag.uuid().toString();
+    tagData["uuid"] = toQString(toUID(tag.uuid()));
     tagData["name"] = toQString(tag.name());
 
     return QVariant(tagData);
@@ -59,7 +59,7 @@ namespace detail {
 
   Tag toTag(const QVariant& variant, const VersionString& version) {
     QVariantMap map = variant.toMap();
-    return Tag(openstudio::UUID(map["uuid"].toString()),
+    return Tag(toUUID(map["uuid"].toString().toStdString()),
                map["name"].toString().toStdString());
   }
 
