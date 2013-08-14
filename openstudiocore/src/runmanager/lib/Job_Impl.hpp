@@ -474,6 +474,8 @@ namespace detail {
 
       static TreeStatusEnum compareTreeStatus(const TreeStatusEnum &lhs, const TreeStatusEnum &rhs);
 
+      static bool fileComparitor(const openstudio::path &t_lhs, const openstudio::path &t_rhs);
+
       void maximumClean();
 
       void standardClean();
