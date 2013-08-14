@@ -23,6 +23,8 @@
 #include <analysis/AnalysisAPI.hpp>
 #include <analysis/AnalysisObject_Impl.hpp>
 
+#include <analysis/Analysis.hpp>
+
 #include <analysis/Problem.hpp>
 #include <analysis/Algorithm.hpp>
 #include <analysis/DataPoint.hpp>
@@ -40,8 +42,6 @@ namespace runmanager {
 }
 
 namespace analysis {
-
-class Analysis;
 
 namespace detail {
 
@@ -135,16 +135,16 @@ namespace detail {
      *  the correct type, which means that any value at that position should be returned. */
     std::vector<DataPoint> getDataPoints(const std::vector<QVariant>& variableValues) const;
 
-    /** Get the DataPoints defined by perturbations. Perturbations must be translatable into a valid set
+    /** Get the DataPoints defined by measures. Perturbations must be translatable into a valid set
      *  of variableValues for the problem(). */
     std::vector<DataPoint> getDataPoints(
-        const std::vector< boost::optional<DiscretePerturbation> >& perturbations) const;
+        const std::vector< boost::optional<Measure> >& measures) const;
 
     std::vector<DataPoint> getDataPoints(const std::string& tag) const;
 
-    /** Get the DataPoint defined by perturbations, if it exists. Perturbations must be a valid set
+    /** Get the DataPoint defined by measures, if it exists. Perturbations must be a valid set
      *  of variable values for the problem(). */
-    boost::optional<DataPoint> getDataPoint(const std::vector<DiscretePerturbation>& perturbations) const;
+    boost::optional<DataPoint> getDataPoint(const std::vector<Measure>& measures) const;
 
     boost::optional<DataPoint> getDataPointByUUID(const UUID& uuid) const;
 
@@ -188,9 +188,9 @@ namespace detail {
      *  directly by a user to run custom analyses. */
     bool addDataPoint(const DataPoint& dataPoint);
 
-    /** Adds a DataPoint to this analysis and returns true if perturbations are valid for problem(),
+    /** Adds a DataPoint to this analysis and returns true if measures are valid for problem(),
      *  the resulting DataPoint is not yet in this Analysis, and if not dataPointsAreInvalid. */
-    bool addDataPoint(const std::vector<DiscretePerturbation>& perturbations);
+    bool addDataPoint(const std::vector<Measure>& measures);
 
     /** Sets run information on a DataPoint. Returns false if dataPoint is not in this analysis by
      *  UUID. */
@@ -240,6 +240,32 @@ namespace detail {
 
     /** Returns a csv summary of all the data points in this analysis. */
     Table summaryTable() const;
+
+    //@}
+    /** @name Serialization */
+    //@{
+
+    bool saveJSON(openstudio::path p,
+                  AnalysisSerializationScope scope=AnalysisSerializationScope::Full,
+                  bool overwrite=false) const;
+
+    std::ostream& toJSON(std::ostream& os,
+                         AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
+
+    std::string toJSON(AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
+
+    //@}
+    /** @name Protected in or Absent from Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    /** Finalizes Analysis JSON by a) appending DataPoints to toVariant() if scope ==
+     *  AnalysisSerializationScope::Full, and b) wrapping those contents in a map with version
+     *  meta-data and the "analysis" indicator. */
+    QVariant toVariant(AnalysisSerializationScope scope) const;
+
+    static Analysis fromVariant(const QVariant& variant,const VersionString& version);
 
     //@}
    signals:

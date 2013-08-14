@@ -62,23 +62,23 @@ namespace detail {
   ModelObjectFilterNumericAttribute_Impl::ModelObjectFilterNumericAttribute_Impl(const QDomElement& element)
     : ModelObjectFilterAttribute_Impl(element)
   {
-    BOOST_ASSERT(!element.isNull());
-    BOOST_ASSERT(element.tagName() == toQString(this->xmlElementName()));
+    OS_ASSERT(!element.isNull());
+    OS_ASSERT(element.tagName() == toQString(this->xmlElementName()));
 
     QDomElement predicateElement = element.firstChildElement(QString::fromStdString("Predicate"));
     QDomElement attributeValueTypeElement = element.firstChildElement(QString::fromStdString("AttributeValueType"));
     QDomElement testValueElement = element.firstChildElement(QString::fromStdString("TestValue"));
 
-    BOOST_ASSERT(!predicateElement.isNull());
-    BOOST_ASSERT(!attributeValueTypeElement.isNull());
-    BOOST_ASSERT(!testValueElement.isNull());
+    OS_ASSERT(!predicateElement.isNull());
+    OS_ASSERT(!attributeValueTypeElement.isNull());
+    OS_ASSERT(!testValueElement.isNull());
 
     m_predicate = RulesetNumericalPredicate(predicateElement.firstChild().nodeValue().toStdString());
     m_attributeValueType = AttributeValueType(attributeValueTypeElement.firstChild().nodeValue().toStdString());
 
     switch(m_attributeValueType.value()){
       case AttributeValueType::Boolean:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
         break;
       case AttributeValueType::Integer:
         m_testValue = testValueElement.firstChild().nodeValue().toInt();
@@ -90,13 +90,13 @@ namespace detail {
         m_testValue = testValueElement.firstChild().nodeValue().toDouble();
         break;
       case AttributeValueType::String:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
         break;
       case AttributeValueType::AttributeVector:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
         break;
       default:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
         break;
       }
   }
@@ -141,7 +141,7 @@ namespace detail {
     childElement = doc.createElement(QString::fromStdString("TestValue"));
     switch(m_attributeValueType.value()){
       case AttributeValueType::Boolean:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
         break;
       case AttributeValueType::Integer:
         text = doc.createTextNode(QString::number(m_testValue.toInt()));
@@ -156,13 +156,13 @@ namespace detail {
         childElement.appendChild(text);
         break;
       case AttributeValueType::String:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
         break;
       case AttributeValueType::AttributeVector:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
         break;
       default:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
         break;
     }
     element.appendChild(childElement);
@@ -211,7 +211,7 @@ namespace detail {
               result = (attribute->valueAsUnsigned() <= m_testValue.toUInt());
               break;
             default:
-              BOOST_ASSERT(false);
+              OS_ASSERT(false);
           }
 
           break;
@@ -240,7 +240,7 @@ namespace detail {
               result = (attribute->valueAsInteger() <= m_testValue.toInt());
               break;
             default:
-              BOOST_ASSERT(false);
+              OS_ASSERT(false);
           }
 
           break;
@@ -269,12 +269,12 @@ namespace detail {
               result = (attribute->valueAsDouble() <= m_testValue.toDouble());
               break;
             default:
-              BOOST_ASSERT(false);
+              OS_ASSERT(false);
           }
 
           break;
         default:
-          BOOST_ASSERT(false);
+          OS_ASSERT(false);
       }
     }
 
@@ -291,53 +291,53 @@ std::string ModelObjectFilterNumericAttribute::xmlElementName()
 ModelObjectFilterNumericAttribute::ModelObjectFilterNumericAttribute(const std::string& attributeName, const RulesetNumericalPredicate& predicate, unsigned testValue)
   : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
 }
 
 ModelObjectFilterNumericAttribute::ModelObjectFilterNumericAttribute(const std::string& attributeName, const RulesetNumericalPredicate& predicate, unsigned testValue,
                                                                      const UUID& uuid, const UUID& versionUUID)
   : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue, uuid, versionUUID)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
 }
 
 ModelObjectFilterNumericAttribute::ModelObjectFilterNumericAttribute(const std::string& attributeName, const RulesetNumericalPredicate& predicate, int testValue)
   : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
 }
 
 ModelObjectFilterNumericAttribute::ModelObjectFilterNumericAttribute(const std::string& attributeName, const RulesetNumericalPredicate& predicate, int testValue,
                                                                      const UUID& uuid, const UUID& versionUUID)
   : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue, uuid, versionUUID)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
 }
 
 ModelObjectFilterNumericAttribute::ModelObjectFilterNumericAttribute(const std::string& attributeName, const RulesetNumericalPredicate& predicate, double testValue)
   : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
 }
 
 ModelObjectFilterNumericAttribute::ModelObjectFilterNumericAttribute(const std::string& attributeName, const RulesetNumericalPredicate& predicate, double testValue,
                                                                      const UUID& uuid, const UUID& versionUUID)
   : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue, uuid, versionUUID)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
 }
 
 ModelObjectFilterNumericAttribute::ModelObjectFilterNumericAttribute(const QDomElement& element)
   : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(element)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
 }
 
 /// @cond
 ModelObjectFilterNumericAttribute::ModelObjectFilterNumericAttribute(const boost::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>& impl)
   : ModelObjectFilterAttribute(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
 }
 /// @endcond
 

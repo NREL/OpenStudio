@@ -65,22 +65,22 @@ namespace detail {
   WorkflowRecord_Impl::WorkflowRecord_Impl(const QSqlQuery& query, const ProjectDatabase& projectDatabase)
     : ObjectRecord_Impl(projectDatabase, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(WorkflowRecordColumns::runManagerWorkflowKey);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_runManagerWorkflowKey = value.toString().toStdString();
 
     value = query.value(WorkflowRecordColumns::problemRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_problemRecordId = value.toInt();
 
     value = query.value(WorkflowRecordColumns::workflowIndex);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_workflowIndex = value.toInt();
 
   }
@@ -162,15 +162,15 @@ namespace detail {
     QVariant value;
 
     value = query.value(WorkflowRecordColumns::runManagerWorkflowKey);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastRunManagerWorkflowKey = value.toString().toStdString();
 
     value = query.value(WorkflowRecordColumns::problemRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastProblemRecordId = value.toInt();
 
     value = query.value(WorkflowRecordColumns::workflowIndex);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastWorkflowIndex = value.toInt();
   }
 
@@ -183,15 +183,15 @@ namespace detail {
     QVariant value;
 
     value = query.value(WorkflowRecordColumns::runManagerWorkflowKey);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_runManagerWorkflowKey == value.toString().toStdString());
 
     value = query.value(WorkflowRecordColumns::problemRecordId);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_problemRecordId == value.toInt());
 
     value = query.value(WorkflowRecordColumns::workflowIndex);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_workflowIndex == value.toInt());
 
     return result;
@@ -226,7 +226,7 @@ WorkflowRecord::WorkflowRecord(const runmanager::Workflow& workflow,
                                                    workflowIndex)),
                  problemRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::WorkflowRecord_Impl>());
+  OS_ASSERT(getImpl<detail::WorkflowRecord_Impl>());
 }
 
 WorkflowRecord::WorkflowRecord(const QSqlQuery& query,ProjectDatabase& database)
@@ -234,7 +234,7 @@ WorkflowRecord::WorkflowRecord(const QSqlQuery& query,ProjectDatabase& database)
                    new detail::WorkflowRecord_Impl(query,database)),
                    database)
 {
-  BOOST_ASSERT(getImpl<detail::WorkflowRecord_Impl>());
+  OS_ASSERT(getImpl<detail::WorkflowRecord_Impl>());
 }
 
 std::string WorkflowRecord::databaseTableName()
@@ -256,7 +256,7 @@ UpdateByIdQueryData WorkflowRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -357,7 +357,7 @@ runmanager::Workflow WorkflowRecord::workflow() const {
 WorkflowRecord::WorkflowRecord(boost::shared_ptr<detail::WorkflowRecord_Impl> impl)
   : ObjectRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::WorkflowRecord_Impl>());
+  OS_ASSERT(getImpl<detail::WorkflowRecord_Impl>());
 }
 /// @endcond
 

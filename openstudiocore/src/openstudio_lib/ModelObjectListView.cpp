@@ -48,14 +48,14 @@ ModelObjectListController::ModelObjectListController(const openstudio::IddObject
                         this,
                         SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
                         SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
                         SLOT(objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
 }
 
@@ -156,7 +156,7 @@ IddObjectType ModelObjectListView::iddObjectType() const
 {
   OSVectorController* vectorController = this->vectorController();
   ModelObjectListController* modelObjectListController = qobject_cast<ModelObjectListController*>(vectorController);
-  BOOST_ASSERT(modelObjectListController);
+  OS_ASSERT(modelObjectListController);
   return modelObjectListController->iddObjectType();
 }
 

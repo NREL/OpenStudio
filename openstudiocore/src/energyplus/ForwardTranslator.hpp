@@ -135,6 +135,7 @@ class SetpointManagerMixedAir;
 class SetpointManagerOutdoorAirReset;
 class SetpointManagerScheduled;
 class SetpointManagerSingleZoneReheat;
+class SetpointManagerWarmest;
 class ShadowCalculation;
 class Shade;
 class SimulationControl;
@@ -467,6 +468,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSetpointManagerScheduled( model::SetpointManagerScheduled & modelObject );
 
   boost::optional<IdfObject> translateSetpointManagerSingleZoneReheat( model::SetpointManagerSingleZoneReheat & modelObject);
+
+  boost::optional<IdfObject> translateSetpointManagerWarmest( model::SetpointManagerWarmest & modelObject);
 
   boost::optional<IdfObject> translateShade( model::Shade & modelObject );
 

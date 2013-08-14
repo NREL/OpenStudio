@@ -131,7 +131,7 @@ namespace detail {
   }
 
   void ComponentWatcher_Impl::relationshipChange(int index,Handle newHandle,Handle oldHandle) {
-    BOOST_ASSERT(newHandle != oldHandle);
+    OS_ASSERT(newHandle != oldHandle);
     // if oldHandle is in the Component nullify the component
     HandleVector hs = getHandles<ModelObject>(m_componentObjects);
     if (std::find(hs.begin(),hs.end(),oldHandle) != hs.end()) {
@@ -150,7 +150,7 @@ namespace detail {
       return;
     }
     // if removedObject is the primary componentObject, nullify the component.
-    BOOST_ASSERT(m_componentObjects.size() > 0);
+    OS_ASSERT(m_componentObjects.size() > 0);
     if (handleOfRemovedObject == m_componentObjects[0].handle()) {
       mf_removeComponent();
       return;
@@ -160,7 +160,7 @@ namespace detail {
     ModelObjectVector::iterator it = std::find_if(m_componentObjects.begin(),
         m_componentObjects.end(),boost::bind(handleEquals<ModelObject,Handle>,_1,handleOfRemovedObject));
     if (it != m_componentObjects.end()) {
-      BOOST_ASSERT(it != m_componentObjects.begin());
+      OS_ASSERT(it != m_componentObjects.begin());
       m_componentObjects.erase(it);
       mf_refreshComponentContents(false);
       return;
@@ -177,21 +177,21 @@ namespace detail {
     // disconnect componentDataChange slot to avoid endless loop
     boost::shared_ptr<ModelObject_Impl> implPtr = m_componentData.getImpl<ModelObject_Impl>();
     bool ok = disconnect(implPtr.get(),SIGNAL(onDataChange()),this,SLOT(componentDataChange()));
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
 
     // change version UUID
     m_componentData.createVersionUUID();
 
     // reconnect componentDataChange
     ok = connect(implPtr.get(),SIGNAL(onDataChange()),SLOT(componentDataChange()));
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
   }
 
   void ComponentWatcher_Impl::mf_refreshComponentContents(bool logWarnings) {
     // disconnect componentDataChange slot to avoid endless loop
     boost::shared_ptr<ModelObject_Impl> implPtr = m_componentData.getImpl<ModelObject_Impl>();
     bool ok = disconnect(implPtr.get(),SIGNAL(onDataChange()),this,SLOT(componentDataChange()));
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
 
     // \todo logWarnings
     m_componentData.clearExtensibleGroups();
@@ -201,7 +201,7 @@ namespace detail {
 
     // reconnect componentDataChange
     ok = connect(implPtr.get(),SIGNAL(onDataChange()),SLOT(componentDataChange()));
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
   }
 
   void ComponentWatcher_Impl::mf_removeComponent() {

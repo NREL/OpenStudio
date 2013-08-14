@@ -70,7 +70,7 @@ namespace detail {
   Facility_Impl::Facility_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ParentObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == Facility::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == Facility::iddObjectType());
   }
 
   Facility_Impl::Facility_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -78,7 +78,7 @@ namespace detail {
                                bool keepHandle)
     : ParentObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == Facility::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == Facility::iddObjectType());
   }
 
   Facility_Impl::Facility_Impl(const Facility_Impl& other,

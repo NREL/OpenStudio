@@ -23,9 +23,10 @@
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
-
 #include <model/UtilityBill.hpp>
 #include <model/UtilityBill_Impl.hpp>
+
+#include <utilities/core/Assert.hpp>
 
 namespace openstudio {
 
@@ -36,14 +37,14 @@ UtilityBillsController::UtilityBillsController(const model::Model& model)
 
 void UtilityBillsController::onAddObject(const openstudio::IddObjectType& iddObjectType)
 {
-  //BOOST_ASSERT(IddObjectType::OS_BuildingStory == iddObjectType.value());
+  //OS_ASSERT(IddObjectType::OS_BuildingStory == iddObjectType.value());
   //openstudio::model::BuildingStory(this->model());
 
   // TODO
   // not being hit
   // why not?
 
-   Q_ASSERT(IddObjectType::OS_UtilityBill == iddObjectType.value());
+   OS_ASSERT(IddObjectType::OS_UtilityBill == iddObjectType.value());
 }
 
 void UtilityBillsController::onCopyObject(const openstudio::model::ModelObject& modelObject)

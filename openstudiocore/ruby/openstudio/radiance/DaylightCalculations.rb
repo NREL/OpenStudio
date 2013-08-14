@@ -194,14 +194,14 @@ if sqlPath.empty?
 end
 
 # execute DaylightSim to create daylighting coefficients
-result = exec_statement("ruby #{load_paths} '#{dirname}/DaylightSim.rb' '#{modelPath}' '#{sqlPath}' --dc --x")
+result = exec_statement("ruby #{load_paths} '#{dirname}/DaylightSim-Simple.rb' '#{modelPath}' '#{sqlPath}' --dc --x")
 if not result
   puts "failed to run DaylightSim"
   exit false
 end
 
 # execute DaylightSim to run annual simulation
-result = exec_statement("ruby #{load_paths} '#{dirname}/DaylightSim.rb' '#{modelPath}' '#{sqlPath}' --dcts --x")
+result = exec_statement("ruby #{load_paths} '#{dirname}/DaylightSim-Simple.rb' '#{modelPath}' '#{sqlPath}' --dcts --x")
 if not result
   puts "failed to run DaylightSim"
   exit false

@@ -59,13 +59,13 @@ ExternalModelInterface::ExternalModelInterface(const std::string& key, const Mod
   // connect signals
   bool test;
   test = connect(this, SIGNAL(requestInitialModelObjects()), modelHolder.ptr(), SLOT(reportInitialModelObjects()), Qt::QueuedConnection);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = connect(modelHolder.ptr(), SIGNAL(initialModelObject(openstudio::model::detail::ModelObject_Impl*, const openstudio::IddObjectType&, const openstudio::UUID&)), this, SLOT(initialModelObject(openstudio::model::detail::ModelObject_Impl*, const openstudio::IddObjectType&, const openstudio::UUID&)), Qt::QueuedConnection);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = connect(modelHolder.ptr(), SIGNAL(initialReportComplete()), this, SLOT(initialize()), Qt::QueuedConnection);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = connect(modelHolder.ptr(), SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)), this, SLOT(newWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)), Qt::QueuedConnection);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 
   emit requestInitialModelObjects();
 }
@@ -112,7 +112,7 @@ void ExternalModelInterface::newWorkspaceObject(boost::shared_ptr<openstudio::de
 {
   LOG(Trace, "newWorkspaceObject");
   boost::shared_ptr<openstudio::model::detail::ModelObject_Impl> modelObject = boost::dynamic_pointer_cast<openstudio::model::detail::ModelObject_Impl>(workspaceObject);
-  BOOST_ASSERT(modelObject);
+  OS_ASSERT(modelObject);
   ModelObjectHolder modelObjectHolder(modelObject.get());
   onNewModelObject(modelObjectHolder, iddObjectType, handle);
 } 

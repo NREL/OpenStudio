@@ -27,6 +27,7 @@
 #include <utilities/units/OSOptionalQuantity.hpp>
 #include <utilities/units/Quantity.hpp>
 #include <utilities/time/Time.hpp>
+#include <utilities/core/Assert.hpp>
 
 #include <QBoxLayout>
 #include <QComboBox>
@@ -90,10 +91,10 @@ void ScheduleDialog::createLayout()
     m_className->setObjectName("ScheduleDialog");
     isConnected = connect(m_className, SIGNAL(currentIndexChanged(const QString &)),
                           this, SLOT(on_classNameComboBox(const QString &)));
-    Q_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
     isConnected = connect(m_className, SIGNAL(currentIndexChanged(const QString &)),
                           this, SIGNAL(classNameCurrentIndexChanged(const QString &)));
-    Q_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
     hLayout->addWidget(m_className);
     hLayout->addStretch();
 
@@ -126,10 +127,10 @@ void ScheduleDialog::createLayout()
     m_scheduleType->setObjectName("ScheduleDialog");
     isConnected = connect(m_scheduleType, SIGNAL(currentIndexChanged(int)),
                           this, SLOT(on_scheduleTypeComboBox(int)));
-    Q_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
     isConnected = connect(m_scheduleType, SIGNAL(currentIndexChanged(const QString &)),
                           this, SIGNAL(scheduleTypeCurrentIndexChanged(const QString &)));
-    Q_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
     hLayout->addWidget(m_scheduleType);
     hLayout->addStretch();
    
@@ -217,7 +218,7 @@ void ScheduleDialog::createLayout()
 
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         this, SLOT(toggleUnits(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_className->setCurrentIndex(1); // TODO awkward way to load all 3 comboBoxes
   m_className->setCurrentIndex(0);
@@ -278,7 +279,7 @@ void ScheduleDialog::on_okButton(bool checked)
 
   model::ScheduleRuleset schedule(m_model);
   bool ok = schedule.setScheduleTypeLimits(scheduleTypeLimits);
-  Q_ASSERT(ok);
+  OS_ASSERT(ok);
   model::ScheduleDay daySchedule = schedule.defaultDaySchedule();
   daySchedule.addValue(Time(1,0),SchedulesTabController::defaultStartingValue(daySchedule));
 

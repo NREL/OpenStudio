@@ -36,6 +36,7 @@
 #include <model/YearDescription.hpp>
 #include <model/YearDescription_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/data/DataEnums.hpp>
 #include <utilities/time/Date.hpp>
 
@@ -164,7 +165,7 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
             energyTransferBill =  utilityBill.get();
           } else {
             // Shouldn't get here
-            Q_ASSERT(false);
+            OS_ASSERT(false);
           }
         }
       }
@@ -200,7 +201,7 @@ void UtilityBillsInspectorView::createWidgets()
 
   isConnected = connect(m_buttonGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(deleteBillingPeriod(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   
   // Name
 
@@ -317,7 +318,7 @@ void UtilityBillsInspectorView::createWidgets()
 
   //isConnected = connect(m_weatherFile, SIGNAL(textChanged(const QString &)),
   //  this, SLOT(weatherFileChanged(const QString &)));
-  //Q_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
 
   mainLayout->addLayout(vLayout);
 
@@ -356,7 +357,7 @@ void UtilityBillsInspectorView::createWidgets()
 
   isConnected = connect(m_addBillingPeriod, SIGNAL(clicked(bool)),
     this, SLOT(addBillingPeriod(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   label = new QLabel();
   label->setObjectName("H2");
@@ -371,7 +372,7 @@ void UtilityBillsInspectorView::createWidgets()
 
   isConnected = connect(m_billFormatDialog, SIGNAL(billFormatSignal(BillFormat)),
     this, SLOT(setBillFormat(BillFormat)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   //if(m_utilityBill.is_initialized()){
   //  m_name->setText(m_utilityBill.get().name().get().c_str());
@@ -565,7 +566,7 @@ BillingPeriodWidget::BillingPeriodWidget(QGridLayout * gridLayout,
   m_costDoubleEdit(0),
   m_index(index)
 {
-  Q_ASSERT(m_billingPeriod.is_initialized());
+  OS_ASSERT(m_billingPeriod.is_initialized());
 
   createWidgets(gridLayout,fuelType,billFormat);
 }
@@ -593,7 +594,7 @@ void BillingPeriodWidget::createWidgets(QGridLayout * gridLayout,
       getEndDateLabel(gridLayout, rowIndex, columnIndex++);      
     }
     else{
-      Q_ASSERT(false);
+      OS_ASSERT(false);
     }
 
     columnIndex++;
@@ -625,7 +626,7 @@ void BillingPeriodWidget::createWidgets(QGridLayout * gridLayout,
     getBillingPeriodLineEdit(gridLayout, rowIndex, columnIndex++);
   }
   else{
-    Q_ASSERT(false);
+    OS_ASSERT(false);
   }
 
   columnIndex++;
@@ -676,32 +677,32 @@ void BillingPeriodWidget::createWidgets(QGridLayout * gridLayout,
   if(m_startDateEdit){
     isConnected = connect(m_startDateEdit,SIGNAL(dateChanged(const QDate &)),
       this,SLOT(startDateChanged(const QDate &)));
-    Q_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
   }
 
   if(m_endDateEdit){
     isConnected = connect(m_endDateEdit,SIGNAL(dateChanged(const QDate &)),
       this,SLOT(endDateChanged(const QDate &)));
-    Q_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
   }
 
   //if(m_billingPeriodIntEdit){
   //  isConnected = connect(m_billingPeriodIntEdit,SIGNAL(valueChanged(double)),
   //    this,SLOT(numberOfDaysChanged(double)));
-  //  Q_ASSERT(isConnected);
+  //  OS_ASSERT(isConnected);
   //}
 
   //isConnected = connect(m_energyUseDoubleEdit,SIGNAL(valueChanged(double)),
   //  this,SLOT(consumptionChanged(double)));
-  //Q_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
 
   //isConnected = connect(m_peaklDoubleEdit,SIGNAL(valueChanged(double)),
   //  this,SLOT(peakDemandChanged(double)));
-  //Q_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
 
   //isConnected = connect(m_costDoubleEdit,SIGNAL(valueChanged(double)),
   //  this,SLOT(totalCostChanged(double)));
-  //Q_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
 
 }
 
@@ -829,7 +830,7 @@ void BillFormatDialog::createLayout()
 
   isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(setBillFormat(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QRadioButton * radioButton = NULL; 
 
@@ -846,7 +847,7 @@ void BillFormatDialog::createLayout()
   upperLayout()->addWidget(radioButton);
 
   buttonGroup->button(0)->click();
-  Q_ASSERT(buttonGroup->checkedId() != -1);
+  OS_ASSERT(buttonGroup->checkedId() != -1);
   setBillFormat(buttonGroup->checkedId());
 }
 
@@ -862,7 +863,7 @@ void BillFormatDialog::setBillFormat(int index)
     m_billFormat = ENDDATE_NUMDAYS;
   }
   else{
-    Q_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 

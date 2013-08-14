@@ -27,16 +27,17 @@
 #include "LocalLibraryController.hpp"
 
 #include <analysis/DataPoint.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/NullPerturbation_Impl.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/NullMeasure_Impl.hpp>
 #include <analysis/Problem.hpp>
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/RubyPerturbation_Impl.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
 #include <analysis/WorkflowStep.hpp>
 #include <analysisdriver/SimpleProject.hpp>
+
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/RubyException.hpp>
 
@@ -137,14 +138,14 @@ QWidget * VariableGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource)
       bool bingo = connect(variableGroupItemView->variableGroupContentView->newGroupView->dropZone,SIGNAL(dataDropped(QDropEvent * )),
           variableListController.data(),SLOT(addItemForDroppedMeasure(QDropEvent *)));
 
-      Q_ASSERT(bingo);
+      OS_ASSERT(bingo);
     }
 
     variableGroupItemView->variableGroupContentView->newFixedGroupView->dropZone->setAcceptedMimeType(MeasureDragData::mimeType(variableListController->measureType()));
 
     bool bingo = connect(variableGroupItemView->variableGroupContentView->newFixedGroupView->dropZone,SIGNAL(dataDropped(QDropEvent * )),
                          variableListController.data(),SLOT(addFixedItemForDroppedMeasure(QDropEvent *)));
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     variableGroupItemView->variableGroupContentView->variableListView->setListController(variableListController);
     variableGroupItemView->variableGroupContentView->variableListView->setDelegate(variableItemDelegate);
@@ -174,11 +175,11 @@ MeasureType VariableListController::measureType() const
 
 QSharedPointer<OSListItem> VariableListController::itemAt(int i)
 {
-  std::vector<analysis::DiscreteVariable> vars = variables();
+  std::vector<analysis::MeasureGroup> vars = variables();
 
   if( i >= 0 && i < (int)vars.size() )
   {
-    analysis::DiscreteVariable var = vars[i];
+    analysis::MeasureGroup var = vars[i];
 
     QSharedPointer<VariableItem> item = QSharedPointer<VariableItem>(new VariableItem(var,m_type, m_app));
 
@@ -197,9 +198,9 @@ int VariableListController::count()
   return variables().size();
 }
 
-std::vector<analysis::DiscreteVariable> VariableListController::variables() const
+std::vector<analysis::MeasureGroup> VariableListController::variables() const
 {
-  std::vector<analysis::DiscreteVariable> result;
+  std::vector<analysis::MeasureGroup> result;
 
   boost::optional<analysisdriver::SimpleProject> project = m_app->project();
 
@@ -209,21 +210,21 @@ std::vector<analysis::DiscreteVariable> VariableListController::variables() cons
     analysis::WorkflowStepVector workflow = problem.workflow();
 
     if (measureType() == MeasureType::ModelMeasure) {
-      analysis::OptionalDiscreteVariable modelSwapVariable = project->getAlternativeModelVariable();
+      analysis::OptionalMeasureGroup modelSwapVariable = project->getAlternativeModelVariable();
       OptionalInt stopIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
-      Q_ASSERT(stopIndex);
+      OS_ASSERT(stopIndex);
       for (int i = 0; i < *stopIndex; ++i) {
         if (workflow[i].isInputVariable()) {
           analysis::InputVariable var = workflow[i].inputVariable();
-          if (analysis::OptionalDiscreteVariable dvar = var.optionalCast<analysis::DiscreteVariable>()) {
+          if (analysis::OptionalMeasureGroup dvar = var.optionalCast<analysis::MeasureGroup>()) {
             if (modelSwapVariable && (*dvar == *modelSwapVariable)) {
               continue;
             }
-            std::vector<analysis::DiscretePerturbation> discretePerts = dvar->perturbations(false);
-            if (!m_filterFixed || discretePerts.size() > 1)
+            std::vector<analysis::Measure> measures = dvar->measures(false);
+            if (!m_filterFixed || measures.size() > 1)
             {
               // don't add the fixed measures here, they are always selected
-              std::vector<analysis::RubyPerturbation> rubyPerts = subsetCastVector<analysis::RubyPerturbation>(discretePerts);
+              std::vector<analysis::RubyMeasure> rubyPerts = subsetCastVector<analysis::RubyMeasure>(measures);
               if (!rubyPerts.empty()) {
                 result.push_back(*dvar);
               }
@@ -233,19 +234,19 @@ std::vector<analysis::DiscreteVariable> VariableListController::variables() cons
       }
     }
     else {
-      Q_ASSERT(measureType() == MeasureType::EnergyPlusMeasure);
+      OS_ASSERT(measureType() == MeasureType::EnergyPlusMeasure);
       OptionalInt startIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ExpandObjects);
       OptionalInt stopIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlusPreProcess);
-      Q_ASSERT(startIndex && stopIndex);
+      OS_ASSERT(startIndex && stopIndex);
       for (int i = (*startIndex + 1); i < *stopIndex; ++i) {
         if (workflow[i].isInputVariable()) {
           analysis::InputVariable var = workflow[i].inputVariable();
-          if (analysis::OptionalDiscreteVariable dvar = var.optionalCast<analysis::DiscreteVariable>()) {
-            std::vector<analysis::DiscretePerturbation> discretePerts = dvar->perturbations(false);
-            if (!m_filterFixed || discretePerts.size() > 1)
+          if (analysis::OptionalMeasureGroup dvar = var.optionalCast<analysis::MeasureGroup>()) {
+            std::vector<analysis::Measure> measures = dvar->measures(false);
+            if (!m_filterFixed || measures.size() > 1)
             {
               // don't add the fixed measures here, they are always selected
-              std::vector<analysis::RubyPerturbation> rubyPerts = subsetCastVector<analysis::RubyPerturbation>(discretePerts);
+              std::vector<analysis::RubyMeasure> rubyPerts = subsetCastVector<analysis::RubyMeasure>(measures);
               if (!rubyPerts.empty()) {
                 result.push_back(*dvar);
               }
@@ -259,16 +260,16 @@ std::vector<analysis::DiscreteVariable> VariableListController::variables() cons
   return result;
 }
 
-void VariableListController::removeItemForVariable(analysis::DiscreteVariable variable)
+void VariableListController::removeItemForVariable(analysis::MeasureGroup variable)
 {
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() )
   {
-    std::vector<analysis::DiscreteVariable> vars = variables();
+    std::vector<analysis::MeasureGroup> vars = variables();
 
     int i = 0;
     bool bingo = false;
 
-    for( std::vector<analysis::DiscreteVariable>::const_iterator it = vars.begin();
+    for( std::vector<analysis::MeasureGroup>::const_iterator it = vars.begin();
          it != vars.end();
          it++ )
     {
@@ -342,13 +343,13 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
 
       // prep discrete variable
       std::string name = m_app->measureManager().suggestMeasureGroupName(projectMeasure);
-      analysis::DiscreteVariable dv(name, analysis::DiscretePerturbationVector());
+      analysis::MeasureGroup dv(name, analysis::MeasureVector());
       dv.setDisplayName(name);
    
       // measure
-      analysis::RubyPerturbation pert(projectMeasure);
+      analysis::RubyMeasure measure(projectMeasure);
       try{
-        pert.setArguments(m_app->measureManager().getArguments(*project, projectMeasure));
+        measure.setArguments(m_app->measureManager().getArguments(*project, projectMeasure));
       } catch ( const RubyException&e ) {
         LOG(Error, "Failed to compute arguments for measure: " << e.what());
         QString errorMessage("Failed to compute arguments for measure: \n\n");
@@ -359,32 +360,32 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
 
       if (!t_fixed)
       {
-        // null perturbation
-        analysis::NullPerturbation nullPert;
+        // null measure
+        analysis::NullMeasure nullPert;
         dv.push(nullPert);
       }
 
-      // the new perturbation
+      // the new measure
       name = m_app->measureManager().suggestMeasureName(projectMeasure, t_fixed);
-      pert.setName(name);
-      pert.setDisplayName(name);
-      pert.setDescription(projectMeasure.description());
-      dv.push(pert);
+      measure.setName(name);
+      measure.setDisplayName(name);
+      measure.setDescription(projectMeasure.description());
+      dv.push(measure);
 
       // try to add to problem. can fail if measure is of wrong type.
       analysis::Problem problem = project->analysis().problem();
       OptionalInt index;
       FileReferenceType inType = projectMeasure.inputFileType();
       if (inType == FileReferenceType::OSM) {
-        Q_ASSERT(measureType() == MeasureType::ModelMeasure);
+        OS_ASSERT(measureType() == MeasureType::ModelMeasure);
         index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
       }
       else {
-        Q_ASSERT(inType == FileReferenceType::IDF);
-        Q_ASSERT(measureType() == MeasureType::EnergyPlusMeasure);
+        OS_ASSERT(inType == FileReferenceType::IDF);
+        OS_ASSERT(measureType() == MeasureType::EnergyPlusMeasure);
         index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlusPreProcess);
       }
-      Q_ASSERT(index);
+      OS_ASSERT(index);
       bool ok = problem.insert(*index,dv);
       if (ok) {
         emit itemInserted(variables().size() - 1);
@@ -401,17 +402,17 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
   }
 }
 
-void VariableListController::moveUp(analysis::DiscreteVariable variable)
+void VariableListController::moveUp(analysis::MeasureGroup variable)
 {
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() )
   {
     // HERE - Logic seems questionable. Also check dirty flags.
-    std::vector<analysis::DiscreteVariable> vars = variables();
+    std::vector<analysis::MeasureGroup> vars = variables();
 
     int i = 0;
     bool bingo = false;
 
-    for( std::vector<analysis::DiscreteVariable>::const_iterator it = vars.begin();
+    for( std::vector<analysis::MeasureGroup>::const_iterator it = vars.begin();
          it != vars.end();
          it++ )
     {
@@ -438,16 +439,16 @@ void VariableListController::moveUp(analysis::DiscreteVariable variable)
   }
 }
 
-void VariableListController::moveDown(analysis::DiscreteVariable variable)
+void VariableListController::moveDown(analysis::MeasureGroup variable)
 {
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() )
   {
-    std::vector<analysis::DiscreteVariable> vars = variables();
+    std::vector<analysis::MeasureGroup> vars = variables();
 
     int i = 0;
     bool bingo = false;
 
-    for( std::vector<analysis::DiscreteVariable>::const_iterator it = vars.begin();
+    for( std::vector<analysis::MeasureGroup>::const_iterator it = vars.begin();
          it != vars.end();
          it++ )
     {
@@ -474,7 +475,7 @@ void VariableListController::moveDown(analysis::DiscreteVariable variable)
   }
 }
 
-VariableItem::VariableItem(const analysis::DiscreteVariable & variable, MeasureType type, openstudio::BaseApp *t_app)
+VariableItem::VariableItem(const analysis::MeasureGroup & variable, MeasureType type, openstudio::BaseApp *t_app)
   : OSListItem(),
     m_app(t_app),
     m_variable(variable),
@@ -497,7 +498,7 @@ void VariableItem::setName(const QString & name)
 bool VariableItem::isFixedMeasure()
 {
   // logic borrowed from Problem.cpp:numStaticTransformations
-  return m_variable.numPerturbations(true) < 2;
+  return m_variable.numMeasures(true) < 2;
 }
 
 void VariableItem::remove()
@@ -540,7 +541,7 @@ QWidget * VariableItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     bool bingo = connect(variableItemView->variableHeaderView->variableNameEdit,SIGNAL(textEdited(const QString &)),
                          variableItem.data(),SLOT(setName(const QString &)));
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     QSharedPointer<MeasureListController> measureListController = variableItem->measureListController();
     variableItemView->variableContentView->measureListView->setListController(measureListController);
@@ -550,20 +551,20 @@ QWidget * VariableItemDelegate::view(QSharedPointer<OSListItem> dataSource)
       variableItemView->variableContentView->dropZone->setAcceptedMimeType(MeasureDragData::mimeType(variableItem->measureType()));
       bingo = connect(variableItemView->variableContentView->dropZone,SIGNAL(dataDropped(QDropEvent *)),
           variableItem->measureListController().data(),SLOT(addItemForDroppedMeasure(QDropEvent *)));
-      Q_ASSERT(bingo);
+      OS_ASSERT(bingo);
     }
 
     bingo = connect(variableItemView->variableHeaderView->removeButton,SIGNAL(clicked()),
                     variableItem.data(),SLOT(remove()));
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     bingo = connect(variableItemView->variableHeaderView->upButton,SIGNAL(clicked()),
                     variableItem.data(),SLOT(moveUp()));
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     bingo = connect(variableItemView->variableHeaderView->downButton,SIGNAL(clicked()),
                     variableItem.data(),SLOT(moveDown()));
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     QSharedPointer<MeasureItemDelegate> measureItemDelegate = QSharedPointer<MeasureItemDelegate>(new MeasureItemDelegate(variableItem->isFixedMeasure()));
     variableItemView->variableContentView->measureListView->setDelegate(measureItemDelegate);
@@ -589,13 +590,13 @@ MeasureListController::MeasureListController(VariableItem * variableItem, openst
 
 QSharedPointer<OSListItem> MeasureListController::itemAt(int i)
 {
-  std::vector<analysis::RubyPerturbation> perts = perturbations();
+  std::vector<analysis::RubyMeasure> measures = this->measures();
 
-  if( i >= 0 && i < static_cast<int>(perts.size()) )
+  if( i >= 0 && i < static_cast<int>(measures.size()) )
   {
-    analysis::RubyPerturbation pert = perts[i];
+    analysis::RubyMeasure measure = measures[i];
 
-    QSharedPointer<MeasureItem> item = QSharedPointer<MeasureItem>(new MeasureItem(pert, m_app));
+    QSharedPointer<MeasureItem> item = QSharedPointer<MeasureItem>(new MeasureItem(measure, m_app));
 
     item->setController(this);
 
@@ -607,21 +608,21 @@ QSharedPointer<OSListItem> MeasureListController::itemAt(int i)
 
 int MeasureListController::count()
 {
-  return perturbations().size();
+  return measures().size();
 }
 
-void MeasureListController::removeItemForPerturbation(const analysis::DiscretePerturbation & pert)
+void MeasureListController::removeItemForMeasure(const analysis::Measure & measure)
 {
-  std::vector<analysis::RubyPerturbation> perts = perturbations();
+  std::vector<analysis::RubyMeasure> measures = this->measures();
 
   int i = 0;
   bool bingo = false;
 
-  for( std::vector<analysis::RubyPerturbation>::const_iterator it = perts.begin();
-       it != perts.end();
+  for( std::vector<analysis::RubyMeasure>::const_iterator it = measures.begin();
+       it != measures.end();
        it++ )
   {
-    if( pert == *it )
+    if( measure == *it )
     {
       bingo = true;
 
@@ -633,30 +634,30 @@ void MeasureListController::removeItemForPerturbation(const analysis::DiscretePe
 
   if( bingo )
   {
-    if( perts.size() == 1 )
+    if( measures.size() == 1 )
     {
       qobject_cast<VariableListController *>(m_variableItem->controller())->removeItemForVariable(m_variableItem->variable());
     }
     else
     {
-      m_variableItem->variable().erase(pert);
+      m_variableItem->variable().erase(measure);
 
       emit itemRemoved(i);
     }
   }
 }
 
-std::vector<analysis::RubyPerturbation> MeasureListController::perturbations() const
+std::vector<analysis::RubyMeasure> MeasureListController::measures() const
 {
-  std::vector<analysis::RubyPerturbation> result;
+  std::vector<analysis::RubyMeasure> result;
 
-  std::vector<analysis::DiscretePerturbation> allPerts = m_variableItem->variable().perturbations(false);
+  std::vector<analysis::Measure> allPerts = m_variableItem->variable().measures(false);
 
-  for( std::vector<analysis::DiscretePerturbation>::iterator it = allPerts.begin();
+  for( std::vector<analysis::Measure>::iterator it = allPerts.begin();
       it != allPerts.end();
       it++ )
   {
-    if( boost::optional<analysis::RubyPerturbation> rubyPert = it->optionalCast<analysis::RubyPerturbation>() )
+    if( boost::optional<analysis::RubyMeasure> rubyPert = it->optionalCast<analysis::RubyMeasure>() )
     {
       //if( boost::optional<BCLMeasure> measure = rubyPert->measure() )
       //{
@@ -690,10 +691,10 @@ void MeasureListController::addItemForDroppedMeasure(QDropEvent * event)
     try {
       BCLMeasure projectMeasure = m_app->measureManager().insertReplaceMeasure(*project, id);
 
-      analysis::RubyPerturbation pert(projectMeasure);
+      analysis::RubyMeasure measure(projectMeasure);
 
       try {
-        pert.setArguments(m_app->measureManager().getArguments(*project, projectMeasure));
+        measure.setArguments(m_app->measureManager().getArguments(*project, projectMeasure));
       } catch ( const RubyException& e ) {
         LOG(Error, "Failed to compute arguments for measure: " << e.what());
         QString rejectMessage("Failed to compute arguments for measure: \n\n");
@@ -703,13 +704,13 @@ void MeasureListController::addItemForDroppedMeasure(QDropEvent * event)
       }
 
       std::string name = m_app->measureManager().suggestMeasureName(projectMeasure, false);
-      pert.setName(name);
-      pert.setDisplayName(name);
-      pert.setDescription(projectMeasure.description());
+      measure.setName(name);
+      measure.setDisplayName(name);
+      measure.setDescription(projectMeasure.description());
 
-      bool ok = m_variableItem->variable().push(pert);
+      bool ok = m_variableItem->variable().push(measure);
       if (ok) {
-        emit itemInserted(perturbations().size() - 1);
+        emit itemInserted(measures().size() - 1);
       }else{
         LOG(Error, "Failed to add measure at this workflow location.");
         QString rejectMessage("Failed to add measure at this workflow location.");
@@ -723,27 +724,27 @@ void MeasureListController::addItemForDroppedMeasure(QDropEvent * event)
   }
 }
 
-MeasureItem::MeasureItem(const analysis::RubyPerturbation & pert, openstudio::BaseApp *t_app)
+MeasureItem::MeasureItem(const analysis::RubyMeasure & measure, openstudio::BaseApp *t_app)
   : OSListItem(),
     m_app(t_app),
-    m_pert(pert)
+    m_measure(measure)
 {
 }
 
-analysis::RubyPerturbation MeasureItem::perturbation() const
+analysis::RubyMeasure MeasureItem::measure() const
 {
-  return m_pert;
+  return m_measure;
 }
 
 QString MeasureItem::name() const
 {
-  return QString::fromStdString(m_pert.name());
+  return QString::fromStdString(m_measure.name());
 }
 
 void MeasureItem::setName(const QString & name)
 {
-  m_pert.setName(name.toStdString());
-  m_pert.setDisplayName(name.toStdString());
+  m_measure.setName(name.toStdString());
+  m_measure.setDisplayName(name.toStdString());
 
   emit nameChanged(name);
 }
@@ -751,23 +752,23 @@ void MeasureItem::setName(const QString & name)
 QString MeasureItem::description() const
 {
   // ETH: Was pulling from measure, but this should be an instance-specific description.
-  return QString::fromStdString(m_pert.description());
+  return QString::fromStdString(m_measure.description());
 }
 
 QString MeasureItem::modelerDescription() const
 {
-  Q_ASSERT(m_pert.usesBCLMeasure());
+  OS_ASSERT(m_measure.usesBCLMeasure());
 
-  return QString::fromStdString(m_pert.measure()->modelerDescription());
+  return QString::fromStdString(m_measure.measure()->modelerDescription());
 }
 
 QString MeasureItem::scriptFileName() const
 {
-  Q_ASSERT(m_pert.usesBCLMeasure());
+  OS_ASSERT(m_measure.usesBCLMeasure());
 
   QString scriptName;
 
-  if( boost::optional<openstudio::path> path = m_pert.measure()->primaryRubyScriptPath() )
+  if( boost::optional<openstudio::path> path = m_measure.measure()->primaryRubyScriptPath() )
   {
     scriptName = toQString(path->leaf());
   }
@@ -777,28 +778,28 @@ QString MeasureItem::scriptFileName() const
 
 void MeasureItem::setDescription(const QString & description)
 {
-  Q_ASSERT(m_pert.usesBCLMeasure());
+  OS_ASSERT(m_measure.usesBCLMeasure());
 
-  // ETH: Was setting description on the measure itself (m_pert.measure()), however, this 
-  // description should be attached to the instantiated perturbation, not the global measure.
-  m_pert.setDescription(description.toStdString());
+  // ETH: Was setting description on the measure itself (m_measure.measure()), however, this
+  // description should be attached to the instantiated measure, not the global measure.
+  m_measure.setDescription(description.toStdString());
 
   emit descriptionChanged();
 }
 
 std::vector<ruleset::OSArgument> MeasureItem::arguments() const
 {
-  return m_pert.arguments();
+  return m_measure.arguments();
 }
 
 bool MeasureItem::hasIncompleteArguments() const
 {
-  return m_pert.hasIncompleteArguments();
+  return m_measure.hasIncompleteArguments();
 }
 
 void MeasureItem::setArgument(const ruleset::OSArgument& argument)
 {
-  m_pert.setArgument(argument);
+  m_measure.setArgument(argument);
 
   emit argumentsChanged(hasIncompleteArguments());
 }
@@ -823,7 +824,7 @@ void MeasureItem::remove()
 
   m_app->editController()->reset();
 
-  qobject_cast<MeasureListController *>(controller())->removeItemForPerturbation(m_pert);
+  qobject_cast<MeasureListController *>(controller())->removeItemForMeasure(m_measure);
 }
 
 void MeasureItem::setSelected(bool isSelected)
@@ -836,7 +837,7 @@ void MeasureItem::setSelected(bool isSelected)
   {
     if( isSelected )
     {
-      if( boost::optional<analysis::RubyPerturbation> rubyPert = m_pert.optionalCast<analysis::RubyPerturbation>() )
+      if( boost::optional<analysis::RubyMeasure> rubyPert = m_measure.optionalCast<analysis::RubyMeasure>() )
       {
         m_app->chooseHorizontalEditTab();
 
@@ -862,13 +863,13 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     bool bingo = connect(measureItem.data(),SIGNAL(nameChanged(const QString &)),measureItemView->measureItemButton->nameLabel,SLOT(setText(const QString &)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     // Remove
 
     bingo = connect(measureItemView->removeButton,SIGNAL(clicked()),measureItem.data(),SLOT(remove()));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     // Selection
 
@@ -876,11 +877,11 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     bingo = connect(measureItemView->measureItemButton,SIGNAL(clicked()),measureItem.data(),SLOT(toggleSelected()));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     bingo = connect(measureItem.data(),SIGNAL(selectedChanged(bool)),measureItemView->measureItemButton,SLOT(setHasEmphasis(bool)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     // Warning Icon
 
@@ -888,7 +889,7 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     bingo = connect(measureItem.data(),SIGNAL(argumentsChanged(bool)),measureItemView->measureItemButton->cautionLabel,SLOT(setVisible(bool)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     return measureItemView;
   }
@@ -900,4 +901,5 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
 
 } // openstudio
+
 

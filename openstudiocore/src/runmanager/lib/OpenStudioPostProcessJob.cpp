@@ -69,7 +69,7 @@ namespace detail {
     try {
       m_sql = files.getLastByFilename("eplusout.sql");
       resetFiles(m_files, m_sql);
-    } catch (const std::exception &) {
+    } catch (const std::runtime_error &) {
     }
 
     // what should this be?

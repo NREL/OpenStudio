@@ -100,7 +100,7 @@ namespace detail {
     }
 
     IdfExtensibleGroup idfGroup = getExtensibleGroup(layerIndex);
-    BOOST_ASSERT(!idfGroup.empty());
+    OS_ASSERT(!idfGroup.empty());
     ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
     OptionalMaterial oMaterial = group.getModelObjectTarget<Material>(0);
     if (!oMaterial) {
@@ -132,7 +132,7 @@ namespace detail {
   bool LayeredConstruction_Impl::insertLayer(unsigned layerIndex, 
                                              const Material& material) 
   {
-    BOOST_ASSERT(material.model() == model());
+    OS_ASSERT(material.model() == model());
     layerIndex = mf_clearNullLayers(layerIndex);
 
     unsigned n = numLayers();
@@ -144,15 +144,15 @@ namespace detail {
            (insertAtIt != layersEnd)) 
     { ++insertAtIt; }
     layers.insert(insertAtIt, material);
-    BOOST_ASSERT(layers.size() == ++n);
+    OS_ASSERT(layers.size() == ++n);
     if ((model().strictnessLevel() < StrictnessLevel::Final) || 
         LayeredConstruction::layersAreValid(layers)) 
     {
       IdfExtensibleGroup idfGroup = insertExtensibleGroup(layerIndex,StringVector());
-      BOOST_ASSERT(!idfGroup.empty());
+      OS_ASSERT(!idfGroup.empty());
       ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
       bool ok = group.setPointer(0,material.handle());
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
       return true;
     }
 
@@ -162,7 +162,7 @@ namespace detail {
   bool LayeredConstruction_Impl::setLayer(unsigned layerIndex, 
                                           const Material& material)
   {
-    BOOST_ASSERT(material.model() == model());
+    OS_ASSERT(material.model() == model());
     layerIndex = mf_clearNullLayers(layerIndex);
     if (layerIndex >= numLayers()) {
       LOG(Info,"Asked to change the Material at layer " << layerIndex << " in "
@@ -175,9 +175,9 @@ namespace detail {
     if ((model().strictnessLevel() < StrictnessLevel::Final) || 
         LayeredConstruction::layersAreValid(layers)) {
       ModelExtensibleGroup group = getExtensibleGroup(layerIndex).cast<ModelExtensibleGroup>();
-      BOOST_ASSERT(!group.empty());
+      OS_ASSERT(!group.empty());
       bool ok = group.setPointer(0,material.handle());
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
       return true;
     }
 
@@ -191,11 +191,11 @@ namespace detail {
     {
       clearExtensibleGroups();
       BOOST_FOREACH(const Material& material, materials) {
-        BOOST_ASSERT(material.model() == model());
+        OS_ASSERT(material.model() == model());
         ModelExtensibleGroup group = pushExtensibleGroup(StringVector()).cast<ModelExtensibleGroup>();
-        BOOST_ASSERT(!group.empty());
+        OS_ASSERT(!group.empty());
         bool ok = group.setPointer(0,material.handle());
-        BOOST_ASSERT(ok);
+        OS_ASSERT(ok);
       }
       return true;
     }
@@ -205,12 +205,12 @@ namespace detail {
 
   bool LayeredConstruction_Impl::setLayer(const ModelPartitionMaterial& modelPartitionMaterial) {
 
-    BOOST_ASSERT(modelPartitionMaterial.model() == model());
+    OS_ASSERT(modelPartitionMaterial.model() == model());
     clearExtensibleGroups();
     ModelExtensibleGroup group = pushExtensibleGroup(StringVector()).cast<ModelExtensibleGroup>();
-    BOOST_ASSERT(!group.empty());
+    OS_ASSERT(!group.empty());
     bool ok = group.setPointer(0,modelPartitionMaterial.handle());
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
     return true;
   }
 
@@ -598,7 +598,7 @@ namespace detail {
     for (int i = indices.size()-1; i >= 0; --i) {
       unsigned index = indices[i];
       StringVector eraseResult = eraseExtensibleGroup(index);
-      BOOST_ASSERT(!eraseResult.empty());
+      OS_ASSERT(!eraseResult.empty());
       if (layerIndex > index) { --layerIndex; }
     }
     return layerIndex;
@@ -634,7 +634,7 @@ namespace detail {
 LayeredConstruction::LayeredConstruction(IddObjectType type,const Model& model)
   : ConstructionBase(type,model) 
 {
-  BOOST_ASSERT(getImpl<detail::LayeredConstruction_Impl>());
+  OS_ASSERT(getImpl<detail::LayeredConstruction_Impl>());
 }
 
 LayeredConstruction::LayeredConstruction(boost::shared_ptr<detail::LayeredConstruction_Impl> impl)

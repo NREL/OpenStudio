@@ -32,6 +32,8 @@
   #include <runmanager/lib/JobStatusWidget.hpp>
   #include <runmanager/lib/RubyJobUtils.hpp>
   #include <runmanager/lib/WorkItem.hpp>
+  #include <runmanager/lib/SimulationEngine.hpp>
+  #include <runmanager/lib/ErrorEstimation.hpp>
   
   #include <ruleset/OSArgument.hpp>
   #include <utilities/core/Path.hpp>
@@ -40,6 +42,36 @@
   #include <utilities/plot/Plot2D.hpp>
   #include <utilities/plot/LinePlot.hpp>
   #include <utilities/plot/FloodPlot.hpp>
+
+  #include <utilities/units/CFMUnit.hpp>
+  #include <utilities/units/IPUnit.hpp>
+  #include <utilities/units/ThermUnit.hpp>
+  #include <utilities/units/OSQuantityVector.hpp>
+  #include <utilities/units/WhUnit.hpp>
+  #include <utilities/units/MPHUnit.hpp>
+  #include <utilities/units/QuantityConverter.hpp>
+  #include <utilities/units/GPDUnit.hpp>
+  #include <utilities/units/BTUUnit.hpp>
+  #include <utilities/units/Scale.hpp>
+  #include <utilities/units/QuantityFactory.hpp>
+  #include <utilities/units/IddUnitString.hpp>
+  #include <utilities/units/SIUnit.hpp>
+  #include <utilities/units/TemperatureUnit.hpp>
+  #include <utilities/units/Misc1Unit.hpp>
+  #include <utilities/units/FahrenheitUnit.hpp>
+  #include <utilities/units/page.hpp>
+  #include <utilities/units/CelciusUnit.hpp>
+  #include <utilities/units/QuantityRegex.hpp>
+  #include <utilities/units/Quantity.hpp>
+  #include <utilities/units/UnitFactory.hpp>
+  #include <utilities/units/OSOptionalQuantity.hpp>
+  #include <utilities/units/Unit.hpp>
+
+
+
+  #include <utilities/data/DataEnums.hpp>
+  #include <utilities/sql/SqlFileEnums.hpp>
+  #include <utilities/sql/SqlFile.hpp>
 
   #include <model/Component.hpp>
   
@@ -127,6 +159,8 @@
 %template(ErrorTypeStringPairVector) std::vector<std::pair<openstudio::runmanager::ErrorType, std::string> >;
 
 
+%include <runmanager/lib/SimulationEngine.hpp>
+%include <runmanager/lib/ErrorEstimation.hpp>
 %include <runmanager/lib/Workflow.hpp>
 %include <runmanager/lib/WorkItem.hpp>
 %include <runmanager/lib/JobType.hpp>

@@ -41,7 +41,7 @@ namespace detail {
   YearDescription_Impl::YearDescription_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ParentObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == YearDescription::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == YearDescription::iddObjectType());
   }
 
   YearDescription_Impl::YearDescription_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -49,7 +49,7 @@ namespace detail {
                                              bool keepHandle)
     : ParentObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == YearDescription::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == YearDescription::iddObjectType());
   }
 
   YearDescription_Impl::YearDescription_Impl(const YearDescription_Impl& other,
@@ -109,7 +109,7 @@ namespace detail {
     }
 
     boost::optional<std::string> value = getString(OS_YearDescriptionFields::DayofWeekforStartDay,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -127,7 +127,7 @@ namespace detail {
     }
 
     boost::optional<std::string> value = getString(OS_YearDescriptionFields::IsLeapYear,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -144,12 +144,12 @@ namespace detail {
     } else {
       result = setString(OS_YearDescriptionFields::CalendarYear, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void YearDescription_Impl::resetCalendarYear() {
     bool result = setString(OS_YearDescriptionFields::CalendarYear, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool YearDescription_Impl::setDayofWeekforStartDay(std::string dayofWeekforStartDay) {
@@ -162,7 +162,7 @@ namespace detail {
 
   void YearDescription_Impl::resetDayofWeekforStartDay() {
     bool result = setString(OS_YearDescriptionFields::DayofWeekforStartDay, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool YearDescription_Impl::setIsLeapYear(bool isLeapYear) {
@@ -179,7 +179,7 @@ namespace detail {
 
   void YearDescription_Impl::resetIsLeapYear() {
     bool result = setString(OS_YearDescriptionFields::IsLeapYear, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   int YearDescription_Impl::assumedYear() const

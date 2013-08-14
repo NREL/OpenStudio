@@ -23,12 +23,12 @@
 #include <analysis/Problem.hpp>
 #include <analysis/Variable.hpp>
 #include <analysis/Function.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/RubyPerturbation_Impl.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
 #include <analysis/WorkflowStep.hpp>
 
 #include <runmanager/lib/Workflow.hpp>
@@ -48,7 +48,7 @@ using namespace openstudio::analysis;
 
 TEST_F(AnalysisFixture, Problem_Constructors) {
   VariableVector variables;
-  DiscretePerturbationVector perturbations;
+  MeasureVector measures;
   runmanager::Workflow workflow;
 
   // almost-default constructor
@@ -60,59 +60,59 @@ TEST_F(AnalysisFixture, Problem_Constructors) {
 
   // variables with consistent file types
   variables.clear();
-  perturbations.clear();
-  perturbations.push_back(NullPerturbation());
+  measures.clear();
+  measures.push_back(NullMeasure());
   openstudio::path rubyScriptPath = toPath(rubyLibDir()) /
                                     toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
-  perturbations.push_back(RubyPerturbation(rubyScriptPath,
+  measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::OSM,
                                            FileReferenceType::OSM));
-  perturbations.push_back(RubyPerturbation(rubyScriptPath,
+  measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::OSM,
                                            FileReferenceType::OSM));
-  variables.push_back(DiscreteVariable("Variable 1",perturbations));
-  perturbations.clear();
-  perturbations.push_back(RubyPerturbation(rubyScriptPath,
+  variables.push_back(MeasureGroup("Variable 1",measures));
+  measures.clear();
+  measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::OSM,
                                            FileReferenceType::IDF));
-  variables.push_back(DiscreteVariable("Variable 2",perturbations));
-  perturbations.clear();
-  perturbations.push_back(NullPerturbation());
-  perturbations.push_back(RubyPerturbation(rubyScriptPath,
+  variables.push_back(MeasureGroup("Variable 2",measures));
+  measures.clear();
+  measures.push_back(NullMeasure());
+  measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::IDF,
                                            FileReferenceType::IDF));
-  variables.push_back(DiscreteVariable("Variable 3",perturbations));
+  variables.push_back(MeasureGroup("Variable 3",measures));
   problem = Problem("Problem",variables,workflow);
   EXPECT_EQ(3,problem.numVariables());
   EXPECT_EQ(6,problem.combinatorialSize(true).get());
 
   // variables with inconistent file types
   variables.clear();
-  perturbations.clear();
-  perturbations.push_back(NullPerturbation());
-  perturbations.push_back(RubyPerturbation(rubyScriptPath,
+  measures.clear();
+  measures.push_back(NullMeasure());
+  measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::OSM,
                                            FileReferenceType::OSM));
-  perturbations.push_back(RubyPerturbation(rubyScriptPath,
+  measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::OSM,
                                            FileReferenceType::OSM));
-  variables.push_back(DiscreteVariable("Variable 1",perturbations));
-  perturbations.clear();
-  perturbations.push_back(NullPerturbation());
-  perturbations.push_back(RubyPerturbation(rubyScriptPath,
+  variables.push_back(MeasureGroup("Variable 1",measures));
+  measures.clear();
+  measures.push_back(NullMeasure());
+  measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::IDF,
                                            FileReferenceType::IDF));
-  variables.push_back(DiscreteVariable("Variable 2",perturbations));
+  variables.push_back(MeasureGroup("Variable 2",measures));
   EXPECT_THROW(Problem("Problem",variables,workflow),std::exception);
 
   // variables and non-null workflow with consistent file types
   variables.clear();
-  perturbations.clear();
-  perturbations.push_back(NullPerturbation());
-  perturbations.push_back(RubyPerturbation(rubyScriptPath,
+  measures.clear();
+  measures.push_back(NullMeasure());
+  measures.push_back(RubyMeasure(rubyScriptPath,
                                            FileReferenceType::IDF,
                                            FileReferenceType::IDF));
-  variables.push_back(DiscreteVariable("Variable 1",perturbations));
+  variables.push_back(MeasureGroup("Variable 1",measures));
   workflow = runmanager::Workflow();
   workflow.addJob(openstudio::runmanager::JobType::EnergyPlus);
   problem = Problem("Problem",variables,workflow);
@@ -146,7 +146,7 @@ TEST_F(AnalysisFixture, Problem_Constructors) {
 
 TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_VariableNotInProblem) {
   // fileTypesAreCompatible only works with variables that are in the problem
-  DiscreteVariable notInProblem("Not in Problem",DiscretePerturbationVector());
+  MeasureGroup notInProblem("Not in Problem",MeasureVector());
 
   Problem problem("My Problem, Not Yours",VariableVector(),runmanager::Workflow());
   EXPECT_FALSE(problem.fileTypesAreCompatible(notInProblem,
@@ -159,9 +159,9 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_VariableNotInProblem) {
                                               FileReferenceType(FileReferenceType::OSM),
                                               boost::none));
 
-  problem.push(DiscreteVariable("Variable 1",DiscretePerturbationVector(1u,NullPerturbation())));
-  problem.push(DiscreteVariable("Variable 2",DiscretePerturbationVector(1u,NullPerturbation())));
-  problem.push(DiscreteVariable("Variable 3",DiscretePerturbationVector(1u,NullPerturbation())));
+  problem.push(MeasureGroup("Variable 1",MeasureVector(1u,NullMeasure())));
+  problem.push(MeasureGroup("Variable 2",MeasureVector(1u,NullMeasure())));
+  problem.push(MeasureGroup("Variable 3",MeasureVector(1u,NullMeasure())));
   problem.push(runmanager::WorkItem(runmanager::JobType::ModelToIdf));
   problem.push(runmanager::WorkItem(runmanager::JobType::EnergyPlus));
   EXPECT_EQ(3u,problem.variables().size());
@@ -177,40 +177,40 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_VariableNotInProblem) {
                                               boost::none));
 }
 
-TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_NewDiscreteVariable) {
+TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_NewMeasureGroup) {
   // ok to insert null-only discrete variable anywhere in the chain
   // (between null-model, model-model, idf-idf, idf-workflow)
   VariableVector variables;
   // 0
   variables.push_back(
-        DiscreteVariable("Null Variable 1",
-                         DiscretePerturbationVector(1u,NullPerturbation())));
+        MeasureGroup("Null Variable 1",
+                     MeasureVector(1u,NullMeasure())));
   // 1
   variables.push_back(
-        DiscreteVariable("Model Variable 1",
-                         DiscretePerturbationVector(1u,RubyPerturbation(toPath("modelUserScript.rb"),
+        MeasureGroup("Model Variable 1",
+                         MeasureVector(1u,RubyMeasure(toPath("modelUserScript.rb"),
                                                                         FileReferenceType::OSM,
                                                                         FileReferenceType::OSM,
                                                                         true))));
   // 2
   variables.push_back(
-        DiscreteVariable("Translation Variable 1",
-                         DiscretePerturbationVector(1u,RubyPerturbation(toPath("translationUserScript.rb"),
+        MeasureGroup("Translation Variable 1",
+                         MeasureVector(1u,RubyMeasure(toPath("translationUserScript.rb"),
                                                                         FileReferenceType::OSM,
                                                                         FileReferenceType::IDF,
                                                                         true))));
   // 3
   variables.push_back(
-        DiscreteVariable("Workspace Variable 1",
-                         DiscretePerturbationVector(1u,RubyPerturbation(toPath("workspaceUserScript.rb"),
+        MeasureGroup("Workspace Variable 1",
+                         MeasureVector(1u,RubyMeasure(toPath("workspaceUserScript.rb"),
                                                                         FileReferenceType::IDF,
                                                                         FileReferenceType::IDF,
                                                                         true))));
   runmanager::Workflow workflow;
   workflow.addJob(runmanager::JobType::EnergyPlus);
   Problem problem("Problem 1",variables,workflow);
-  DiscreteVariable newVar("New Discrete Variable",
-                          DiscretePerturbationVector(1u,NullPerturbation()));
+  MeasureGroup newVar("New Discrete Variable",
+                          MeasureVector(1u,NullMeasure()));
   EXPECT_TRUE(problem.insert(4,newVar.clone().cast<InputVariable>()));
   ASSERT_EQ(5,problem.numVariables());
   EXPECT_EQ("New Discrete Variable",problem.variables()[4].name());
@@ -238,19 +238,19 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_NewDiscreteVariable) {
   variables.clear();
   // 0
   variables.push_back(
-        DiscreteVariable("Null Variable 1",
-                         DiscretePerturbationVector(1u,NullPerturbation())));
+        MeasureGroup("Null Variable 1",
+                         MeasureVector(1u,NullMeasure())));
   // 1
   variables.push_back(
-        DiscreteVariable("Workspace Variable 1",
-                         DiscretePerturbationVector(1u,RubyPerturbation(toPath("workspaceUserScript.rb"),
+        MeasureGroup("Workspace Variable 1",
+                         MeasureVector(1u,RubyMeasure(toPath("workspaceUserScript.rb"),
                                                                         FileReferenceType::IDF,
                                                                         FileReferenceType::IDF,
                                                                         true))));
   // 2
   variables.push_back(
-        DiscreteVariable("Workspace Variable 2",
-                         DiscretePerturbationVector(1u,RubyPerturbation(toPath("workspaceUserScript.rb"),
+        MeasureGroup("Workspace Variable 2",
+                         MeasureVector(1u,RubyMeasure(toPath("workspaceUserScript.rb"),
                                                                         FileReferenceType::IDF,
                                                                         FileReferenceType::IDF,
                                                                         true))));
@@ -270,37 +270,37 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_NewDiscreteVariable) {
     }
   }
 
-  // expected behavior for then adding first perturbation
-  // test with BCLMeasure first. verify with RubyPerturbation.
+  // expected behavior for then adding first measure
+  // test with BCLMeasure first. verify with RubyMeasure.
   openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade");
-  BCLMeasure measure = BCLMeasure::load(dir).get();
-  EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),measure.inputFileType());
-  EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),measure.outputFileType());
-  RubyPerturbation perturbation(measure);
+  BCLMeasure bclMeasure = BCLMeasure::load(dir).get();
+  EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),bclMeasure.inputFileType());
+  EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),bclMeasure.outputFileType());
+  RubyMeasure measure(bclMeasure);
 
   // have idf-only problem with two null variables at the top
-  // try to add perturbations to first variable
-  DiscreteVariable firstVariable = problem.variables()[0].cast<DiscreteVariable>();
+  // try to add measures to first variable
+  MeasureGroup firstVariable = problem.variables()[0].cast<MeasureGroup>();
   ASSERT_TRUE(firstVariable.parent());
   WorkflowStep step0 = problem.workflow()[0];
   EXPECT_TRUE(firstVariable.parent().get() == step0);
-  EXPECT_EQ(1u,firstVariable.numPerturbations(false));
+  EXPECT_EQ(1u,firstVariable.numMeasures(false));
   EXPECT_FALSE(problem.fileTypesAreCompatible(firstVariable,
                                               measure.inputFileType(),
                                               measure.outputFileType()));
   ASSERT_TRUE(firstVariable.parent());
   EXPECT_TRUE(firstVariable.parent().get() == problem.workflow()[0]);
   EXPECT_TRUE(problem.workflow()[0] == step0);
-  EXPECT_FALSE(firstVariable.push(perturbation));
-  EXPECT_EQ(1u,firstVariable.numPerturbations(false));
+  EXPECT_FALSE(firstVariable.push(measure));
+  EXPECT_EQ(1u,firstVariable.numMeasures(false));
 
   // make second variable a translation variable
-  DiscreteVariable secondVariable = problem.variables()[1].cast<DiscreteVariable>();
-  EXPECT_FALSE(secondVariable.push(RubyPerturbation(toPath("myTranslationScript.rb"),
+  MeasureGroup secondVariable = problem.variables()[1].cast<MeasureGroup>();
+  EXPECT_FALSE(secondVariable.push(RubyMeasure(toPath("myTranslationScript.rb"),
                                                     FileReferenceType::OSM,
                                                     FileReferenceType::IDF)));
-  secondVariable.erase(secondVariable.perturbations(false)[0]);
-  EXPECT_TRUE(secondVariable.push(RubyPerturbation(toPath("myTranslationScript.rb"),
+  secondVariable.erase(secondVariable.measures(false)[0]);
+  EXPECT_TRUE(secondVariable.push(RubyMeasure(toPath("myTranslationScript.rb"),
                                                    FileReferenceType::OSM,
                                                    FileReferenceType::IDF)));
 
@@ -308,83 +308,83 @@ TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_NewDiscreteVariable) {
   EXPECT_TRUE(problem.fileTypesAreCompatible(firstVariable,
                                              measure.inputFileType(),
                                              measure.outputFileType()));
-  EXPECT_TRUE(firstVariable.push(perturbation));
-  EXPECT_EQ(2u,firstVariable.numPerturbations(false));
+  EXPECT_TRUE(firstVariable.push(measure));
+  EXPECT_EQ(2u,firstVariable.numMeasures(false));
 }
 
-TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_ExistingDiscreteVariable) {
-  // expected behavior when discrete variable already contains perturbations
-  // test with BCLMeasure first. verify with RubyPerturbation.
+TEST_F(AnalysisFixture, Problem_FileTypesAreCompatible_ExistingMeasureGroup) {
+  // expected behavior when discrete variable already contains measures
+  // test with BCLMeasure first. verify with RubyMeasure.
 
   // create problem
   VariableVector variables;
   variables.push_back(
-        DiscreteVariable("Model Variable 1",
-                         DiscretePerturbationVector(1u,RubyPerturbation(toPath("modelUserScript.rb"),
+        MeasureGroup("Model Variable 1",
+                         MeasureVector(1u,RubyMeasure(toPath("modelUserScript.rb"),
                                                                         FileReferenceType::OSM,
                                                                         FileReferenceType::OSM,
                                                                         true))));
-  variables.back().cast<DiscreteVariable>().insert(0,NullPerturbation());
+  variables.back().cast<MeasureGroup>().insert(0,NullMeasure());
   // 2
   variables.push_back(
-        DiscreteVariable("Translation Variable 1",
-                         DiscretePerturbationVector(1u,RubyPerturbation(toPath("translationUserScript.rb"),
+        MeasureGroup("Translation Variable 1",
+                         MeasureVector(1u,RubyMeasure(toPath("translationUserScript.rb"),
                                                                         FileReferenceType::OSM,
                                                                         FileReferenceType::IDF,
                                                                         true))));
   // 3
   variables.push_back(
-        DiscreteVariable("Workspace Variable 1",
-                         DiscretePerturbationVector(1u,RubyPerturbation(toPath("workspaceUserScript.rb"),
+        MeasureGroup("Workspace Variable 1",
+                         MeasureVector(1u,RubyMeasure(toPath("workspaceUserScript.rb"),
                                                                         FileReferenceType::IDF,
                                                                         FileReferenceType::IDF,
                                                                         true))));
-  variables.back().cast<DiscreteVariable>().insert(0,NullPerturbation());
+  variables.back().cast<MeasureGroup>().insert(0,NullMeasure());
   runmanager::Workflow workflow;
   workflow.addJob(runmanager::JobType::EnergyPlus);
   Problem problem("Problem",variables,workflow);
 
-  // create perturbation to be pushed onto a variable
+  // create measure to be pushed onto a variable
   openstudio::path dir = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade");
-  BCLMeasure measure = BCLMeasure::load(dir).get();
-  EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),measure.inputFileType());
-  EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),measure.outputFileType());
-  RubyPerturbation perturbation(measure);
+  BCLMeasure bclMeasure = BCLMeasure::load(dir).get();
+  EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),bclMeasure.inputFileType());
+  EXPECT_EQ(FileReferenceType(FileReferenceType::OSM),bclMeasure.outputFileType());
+  RubyMeasure measure(bclMeasure);
 
   ASSERT_EQ(3,problem.numVariables());
 
   // can be added to variable 0 (OSM)
   WorkflowStep step = problem.workflow()[0];
   InputVariable var = step.inputVariable();
-  EXPECT_EQ(2u,var.cast<DiscreteVariable>().numPerturbations(false));
+  EXPECT_EQ(2u,var.cast<MeasureGroup>().numMeasures(false));
   EXPECT_TRUE(problem.fileTypesAreCompatible(step,
                                              measure.inputFileType(),
                                              measure.outputFileType()));
-  EXPECT_TRUE(var.cast<DiscreteVariable>().push(perturbation));
-  EXPECT_EQ(3u,var.cast<DiscreteVariable>().numPerturbations(false));
+  EXPECT_TRUE(var.cast<MeasureGroup>().push(measure));
+  EXPECT_EQ(3u,var.cast<MeasureGroup>().numMeasures(false));
 
   // cannot be added to variable 1 (translation)
   step = problem.workflow()[1];
   var = step.inputVariable();
-  EXPECT_EQ(1u,var.cast<DiscreteVariable>().numPerturbations(false));
+  EXPECT_EQ(1u,var.cast<MeasureGroup>().numMeasures(false));
   EXPECT_FALSE(problem.fileTypesAreCompatible(step,
                                               measure.inputFileType(),
                                               measure.outputFileType()));
-  EXPECT_FALSE(var.cast<DiscreteVariable>().push(perturbation));
-  EXPECT_EQ(1u,var.cast<DiscreteVariable>().numPerturbations(false));
+  EXPECT_FALSE(var.cast<MeasureGroup>().push(measure));
+  EXPECT_EQ(1u,var.cast<MeasureGroup>().numMeasures(false));
 
   // cannot be added to variable 2 (IDF)
   step = problem.variables()[2];
   var = step.inputVariable();
-  EXPECT_EQ(2u,var.cast<DiscreteVariable>().numPerturbations(false));
+  EXPECT_EQ(2u,var.cast<MeasureGroup>().numMeasures(false));
   EXPECT_FALSE(problem.fileTypesAreCompatible(step,
                                               measure.inputFileType(),
                                               measure.outputFileType()));
-  EXPECT_FALSE(var.cast<DiscreteVariable>().push(perturbation));
-  EXPECT_EQ(2u,var.cast<DiscreteVariable>().numPerturbations(false));
+  EXPECT_FALSE(var.cast<MeasureGroup>().push(measure));
+  EXPECT_EQ(2u,var.cast<MeasureGroup>().numMeasures(false));
 }
 
-TEST_F(AnalysisFixture, Problem_UpdateMeasure_DiscreteVariables) {
+TEST_F(AnalysisFixture, Problem_UpdateMeasure_MeasureGroups) {
   // open up example measure
   openstudio::path measuresPath = resourcesPath() / toPath("/utilities/BCL/Measures");
   openstudio::path dir = measuresPath / toPath("SetWindowToWallRatioByFacade");
@@ -416,19 +416,19 @@ TEST_F(AnalysisFixture, Problem_UpdateMeasure_DiscreteVariables) {
 
     // create a problem that uses multiple BCLMeasures
     Problem problem("Problem",VariableVector(),runmanager::Workflow());
-    DiscreteVariable dv("South WWR",DiscretePerturbationVector(1u,NullPerturbation()));
+    MeasureGroup dv("South WWR",MeasureVector(1u,NullMeasure()));
     problem.push(dv);
-    RubyPerturbation rp(measure1);
+    RubyMeasure rp(measure1);
     rp.setArguments(args1);
     dv.push(rp);
-    dv.push(rp.clone().cast<RubyPerturbation>());
-    ASSERT_EQ(3u,dv.numPerturbations(false));
-    rp = dv.perturbations(false)[2].cast<RubyPerturbation>();
+    dv.push(rp.clone().cast<RubyMeasure>());
+    ASSERT_EQ(3u,dv.numMeasures(false));
+    rp = dv.measures(false)[2].cast<RubyMeasure>();
     EXPECT_EQ(2u,rp.arguments().size());
     EXPECT_TRUE(rp.hasIncompleteArguments());
-    dv = DiscreteVariable("Occupancy",DiscretePerturbationVector(1u,NullPerturbation()));
+    dv = MeasureGroup("Occupancy",MeasureVector(1u,NullMeasure()));
     problem.push(dv);
-    rp = RubyPerturbation(measure2);
+    rp = RubyMeasure(measure2);
     rp.setArguments(args2);
     dv.push(rp);
     OSArgument arg = args2[0].clone();
@@ -436,9 +436,9 @@ TEST_F(AnalysisFixture, Problem_UpdateMeasure_DiscreteVariables) {
     rp.setArgument(arg);
     EXPECT_EQ(1u,rp.arguments().size());
     EXPECT_FALSE(rp.hasIncompleteArguments());
-    dv = DiscreteVariable("North WWR",DiscretePerturbationVector(1u,NullPerturbation()));
+    dv = MeasureGroup("North WWR",MeasureVector(1u,NullMeasure()));
     problem.push(dv);
-    rp = RubyPerturbation(measure1);
+    rp = RubyMeasure(measure1);
     rp.setArguments(args1);
     arg = args1[0].clone();
     arg.setValue(0.32);
@@ -449,7 +449,7 @@ TEST_F(AnalysisFixture, Problem_UpdateMeasure_DiscreteVariables) {
     EXPECT_EQ(2u,rp.arguments().size());
     EXPECT_FALSE(rp.hasIncompleteArguments());
     dv.push(rp);
-    EXPECT_EQ(2u,dv.numPerturbations(false));
+    EXPECT_EQ(2u,dv.numMeasures(false));
 
     // call update
     problem.clearDirtyFlag();
@@ -462,25 +462,25 @@ TEST_F(AnalysisFixture, Problem_UpdateMeasure_DiscreteVariables) {
     EXPECT_FALSE(vars[1].isDirty());
     EXPECT_TRUE(vars[2].isDirty());
 
-    dv = vars[0].cast<DiscreteVariable>();
-    ASSERT_EQ(3u,dv.numPerturbations(false));
-    DiscretePerturbationVector ps = dv.perturbations(false);
+    dv = vars[0].cast<MeasureGroup>();
+    ASSERT_EQ(3u,dv.numMeasures(false));
+    MeasureVector ps = dv.measures(false);
     EXPECT_FALSE(ps[0].isDirty());
     EXPECT_TRUE(ps[1].isDirty());
-    rp = ps[1].cast<RubyPerturbation>();
+    rp = ps[1].cast<RubyMeasure>();
     EXPECT_EQ(3u,rp.arguments().size());
     EXPECT_EQ(3u,rp.incompleteArguments().size());
     EXPECT_TRUE(ps[2].isDirty());
-    rp = ps[2].cast<RubyPerturbation>();
+    rp = ps[2].cast<RubyMeasure>();
     EXPECT_EQ(3u,rp.arguments().size());
     EXPECT_EQ(3u,rp.incompleteArguments().size());
 
-    dv = vars[2].cast<DiscreteVariable>();
-    ASSERT_EQ(2u,dv.numPerturbations(false));
-    ps = dv.perturbations(false);
+    dv = vars[2].cast<MeasureGroup>();
+    ASSERT_EQ(2u,dv.numMeasures(false));
+    ps = dv.measures(false);
     EXPECT_FALSE(ps[0].isDirty());
     EXPECT_TRUE(ps[1].isDirty());
-    rp = ps[1].cast<RubyPerturbation>();
+    rp = ps[1].cast<RubyMeasure>();
     EXPECT_EQ(3u,rp.arguments().size());
     EXPECT_EQ(2u,rp.incompleteArguments().size());
   }

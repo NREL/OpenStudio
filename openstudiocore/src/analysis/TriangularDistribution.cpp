@@ -20,6 +20,8 @@
 #include <analysis/TriangularDistribution.hpp>
 #include <analysis/UncertaintyDescription_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -68,7 +70,7 @@ void TriangularDistribution::setUpperBound(double value) {
 TriangularDistribution::TriangularDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
-  BOOST_ASSERT(type() == TriangularDistribution::type());
+  OS_ASSERT(type() == TriangularDistribution::type());
 }
 
 } // analysis

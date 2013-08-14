@@ -123,6 +123,15 @@ class ANALYSIS_API UncertaintyDescription {
 /** \relates UncertaintyDescription */
 typedef boost::optional<UncertaintyDescription> OptionalUncertaintyDescription;
 
+namespace detail {
+
+  QVariant toVariant(const UncertaintyDescription& udesc);
+
+  UncertaintyDescription toUncertaintyDescription(const QVariant& variant,
+                                                  const VersionString& version);
+
+}
+
 } // analysis
 } // openstudio
 

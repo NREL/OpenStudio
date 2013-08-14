@@ -30,6 +30,8 @@
 #include <model/PortList.hpp>
 #include <model/PortList_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace model {
 
@@ -246,7 +248,7 @@ ZoneHVACComponent::ZoneHVACComponent(boost::shared_ptr<detail::ZoneHVACComponent
 ZoneHVACComponent::ZoneHVACComponent(IddObjectType type,const Model& model)
   : ParentObject(type,model)
 {
-  BOOST_ASSERT(getImpl<detail::ZoneHVACComponent_Impl>());
+  OS_ASSERT(getImpl<detail::ZoneHVACComponent_Impl>());
 }     
 
 std::vector<ModelObject> ZoneHVACComponent::children() const

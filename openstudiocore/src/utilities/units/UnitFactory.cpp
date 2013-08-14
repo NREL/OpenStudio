@@ -258,7 +258,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnit(const std::string& unitSt
     }
   }
 
-  BOOST_ASSERT(result);
+  OS_ASSERT(result);
 
   // impose overall scale
   if (scale().exponent != 0) {
@@ -296,7 +296,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
       OptionalUnit temp;
       // try base map
       callbackMap = m_callbackMaps.find(UnitSystem(UnitSystem::Mixed));
-      BOOST_ASSERT(callbackMap != m_callbackMaps.end());
+      OS_ASSERT(callbackMap != m_callbackMaps.end());
       callbackPair = callbackMap->second.find(standardString);
       if ((callbackPair != callbackMap->second.end()) && (callbackPair->second != NULL)) {
         temp = callbackPair->second();
@@ -330,7 +330,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
         }
       }
 
-      BOOST_ASSERT(temp);
+      OS_ASSERT(temp);
 
       // decide whether to keep temp
       if (!candidate || (temp->system() == system)) {
@@ -773,7 +773,7 @@ Unit createDimensionlessUnit(UnitSystem system) {
   case UnitSystem::Fahrenheit:
     return FahrenheitUnit();
   default:
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
   return Unit();
 }

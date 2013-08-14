@@ -43,6 +43,7 @@
 #include <utilities/core/Application.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/sql/SqlFile.hpp>
+#include <utilities/core/Assert.hpp>
 
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
@@ -122,7 +123,7 @@ RunView::RunView(const model::Model & model,
 
   mainLayout->addWidget(m_playButton, 0, 0);
   isConnected = connect(m_playButton, SIGNAL(clicked(bool)), this, SLOT(playButtonClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // Progress bar area
   m_progressBar = new QProgressBar();
@@ -137,7 +138,7 @@ RunView::RunView(const model::Model & model,
 
   isConnected = connect(m_radianceGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(on_radianceGroupClicked(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   int buttonCount = 0;
 
@@ -153,7 +154,7 @@ RunView::RunView(const model::Model & model,
 
   isConnected = connect(m_radianceWarningsAndErrorsButton, SIGNAL(clicked(bool)),
                         this, SLOT(on_radianceWarningsAndErrorsClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QHBoxLayout * radianceHLayout = new QHBoxLayout();
   radianceHLayout->addWidget(m_radianceButton);
@@ -196,7 +197,7 @@ RunView::RunView(const model::Model & model,
   QPushButton *openrunmanagerbutton = new QPushButton("Open RunManager\nfor Multiple Runs");
   mainLayout->addWidget(openrunmanagerbutton, 0, 2);
   isConnected = connect(openrunmanagerbutton, SIGNAL(clicked(bool)), this, SLOT(openRunManagerClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
 
   updateRunManagerStats(t_runManager);
@@ -630,7 +631,7 @@ void RunView::on_radianceWarningsAndErrorsClicked(bool checked)
 void RunView::on_radianceGroupClicked(int idx)
 {
   QAbstractButton * button = m_radianceGroup->button(idx);
-  Q_ASSERT(button);
+  OS_ASSERT(button);
   if(button == m_radianceButton){
     emit useRadianceStateChanged(true);
     updateToolsWarnings();

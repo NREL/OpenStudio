@@ -60,7 +60,7 @@ namespace detail {
     try {
       m_input = files.getLastByExtension("idf");
       resetFiles(m_files, m_input);
-    } catch (const std::exception &) {
+    } catch (const std::runtime_error &) {
     }
 
     m_description = buildDescription("idf");

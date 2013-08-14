@@ -28,10 +28,10 @@
 #include <analysis/Analysis_Impl.hpp>
 #include <analysis/DataPoint.hpp>
 #include <analysis/DataPoint_Impl.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/DiscretePerturbation_Impl.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/NullPerturbation_Impl.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/Measure_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/NullMeasure_Impl.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/Problem_Impl.hpp>
 #include <analysis/Variable.hpp>
@@ -277,7 +277,7 @@ ResultsView::ResultsView()
   hLayout->addWidget(m_viewFileButton);
   
   isConnected = connect(m_viewFileButton, SIGNAL(clicked(bool)), this, SIGNAL(openButtonClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_openDirButton = new OpenDirectoryButton(this);
   m_openDirButton->setToolTip("Open the directory for the selected file.");
@@ -285,7 +285,7 @@ ResultsView::ResultsView()
   hLayout->addWidget(m_openDirButton);
 
   isConnected = connect(m_openDirButton, SIGNAL(clicked(bool)), this, SIGNAL(openDirButtonClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   
   hLayout->addStretch();
   mainContentVLayout->addWidget(footer);
@@ -696,10 +696,10 @@ DataPointResultsView::DataPointResultsView(const openstudio::analysis::DataPoint
   hLayout->addWidget(m_scrollSpacer);
 
   bool test = dataPoint.connect(SIGNAL(changed(ChangeType)), this, SLOT(update()));
-  Q_ASSERT(test);
+  OS_ASSERT(test);
 
   test = baselineDataPoint.connect(SIGNAL(changed(ChangeType)), this, SLOT(update()));
-  Q_ASSERT(test);
+  OS_ASSERT(test);
 
   update();
 }
@@ -707,7 +707,7 @@ DataPointResultsView::DataPointResultsView(const openstudio::analysis::DataPoint
 void DataPointResultsView::update()
 {
   QString name;
-  QString measures;
+  QString listOfMeasures;
 
   boost::optional<double> netSiteEnergyIntensity;
   boost::optional<double> peakElectricDemand;
@@ -736,7 +736,7 @@ void DataPointResultsView::update()
   if (m_dataPoint.uuid() == m_baselineDataPoint.uuid()){
 
     name = "Baseline";
-    measures = "";
+    listOfMeasures = "";
     
     netSiteEnergyIntensity = getBaselineValue("Net Site Energy Use Intentsity");
     peakElectricDemand = getBaselineValue("Instantaneous Peak Electricity Demand");
@@ -761,18 +761,18 @@ void DataPointResultsView::update()
     if(project){
       openstudio::analysis::Problem problem = project->analysis().problem();
       std::vector<QVariant> variableValues = m_dataPoint.variableValues();
-      std::vector<boost::optional<analysis::DiscretePerturbation> > discretePerturbations = problem.getDiscretePerturbations(variableValues);
-      Q_FOREACH(boost::optional<analysis::DiscretePerturbation> discretePerturbation, discretePerturbations){
-        if (discretePerturbation){
-          if (!discretePerturbation->optionalCast<analysis::NullPerturbation>()){
-            measures += discretePerturbation->name().c_str();
-            measures += '\n';
+      std::vector<boost::optional<analysis::Measure> > measures = problem.getMeasures(variableValues);
+      Q_FOREACH(boost::optional<analysis::Measure> measure, measures){
+        if (measure){
+          if (!measure->optionalCast<analysis::NullMeasure>()){
+            listOfMeasures += measure->name().c_str();
+            listOfMeasures += '\n';
           }
         }
       }
     }
 
-    measures = measures.trimmed();
+    listOfMeasures = listOfMeasures.trimmed();
 
     netSiteEnergyIntensity = getDifference("Net Site Energy Use Intentsity");
     peakElectricDemand = getDifference("Instantaneous Peak Electricity Demand");
@@ -828,7 +828,7 @@ void DataPointResultsView::update()
   }else{
 
     m_nameLabel->setText(name);
-    m_nameLabel->setToolTip(measures);
+    m_nameLabel->setToolTip(listOfMeasures);
     m_nameLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
     m_nameLabel->setMinimumWidth(NAME_LABEL_WIDTH);
     //m_nameLabel->setFixedWidth(NAME_LABEL_WIDTH);
@@ -1019,7 +1019,7 @@ boost::optional<double> DataPointResultsView::getValue(const std::string& attrib
       }
       else{
         // should never get here
-        Q_ASSERT(false);
+        OS_ASSERT(false);
       }
 
       Quantity currentQuantity(*currentResult,currentUnit);

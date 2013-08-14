@@ -20,6 +20,7 @@
 #include <shared_gui_components/OSLineEdit.hpp>
 #include <model/ModelObject.hpp>
 #include <model/ModelObject_Impl.hpp>
+#include <utilities/core/Assert.hpp>
 #include <boost/optional.hpp>
 #include <QString>
 
@@ -68,14 +69,14 @@ void OSLineEdit2::completeBind() {
   bool isConnected = false;
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
                          this,SLOT(onModelObjectChange()) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
                          this,SLOT(onModelObjectRemove(Handle)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( this, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   onModelObjectChange();
 }
@@ -107,7 +108,7 @@ void OSLineEdit2::onModelObjectChange() {
       value = (*m_get)();
     }
     else {
-      Q_ASSERT(m_getOptional);
+      OS_ASSERT(m_getOptional);
       value = (*m_getOptional)();
     }
     std::string text;
@@ -141,14 +142,14 @@ void OSLineEdit::bind(model::ModelObject & modelObject, const char * property)
   bool isConnected = false;
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
                          this,SLOT(onModelObjectChange()) );
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
                          this,SLOT(onModelObjectRemove(Handle)) );
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( this, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()) );
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   onModelObjectChange();
 }

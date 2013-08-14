@@ -112,10 +112,12 @@ OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( con
 
               // duplicate subsurface in other space
               SubSurface adjacentSubSurface = subSurface.clone(m_model).cast<SubSurface>();
+              adjacentSubSurface.setName(subSurface.name().get() + " Reversed");
               std::reverse(vertices.begin(), vertices.end());
               adjacentSubSurface.setVertices(transformation*vertices);
               adjacentSubSurface.setSurface(adjacentSurface);
               subSurface.setAdjacentSubSurface(adjacentSubSurface);
+
               return subSurface;
             }
           }

@@ -18,6 +18,9 @@
  **********************************************************************/
 
 #include "OSListController.hpp"
+
+#include <utilities/core/Assert.hpp>
+
 #include <algorithm>
 
 namespace openstudio {
@@ -32,7 +35,7 @@ OSListController::OSListController()
 
 OSListController::~OSListController()
 {
-  Q_ASSERT(m_selectionController);
+  OS_ASSERT(m_selectionController);
 
   m_selectionController->unregisterListController(this);
 }
@@ -77,7 +80,7 @@ void OSListController::unregisterItem(QPointer<OSListItem> item)
   std::vector<QPointer<OSListItem> >::iterator it = std::find(m_registeredItems.begin(),m_registeredItems.end(),item);
 
   // This should be true because we manage m_registeredItems and the use of the acccessor methods.
-  Q_ASSERT(it != m_registeredItems.end());
+  OS_ASSERT(it != m_registeredItems.end());
 
   m_registeredItems.erase(it);
 }
@@ -259,14 +262,14 @@ void OSItemSelectionController::unregisterListController(OSListController * list
   std::vector<QPointer<OSListController> >::iterator it = std::find(m_listControllers.begin(),m_listControllers.end(),listController);
 
   // This should be true because we manage m_listControllers and the use of the acccessor methods.
-  Q_ASSERT(it != m_listControllers.end());
+  OS_ASSERT(it != m_listControllers.end());
 
   m_listControllers.erase(it);
 }
 
 void OSItemSelectionController::addSelectedItem(OSListItem * item)
 {
-  Q_ASSERT(item);
+  OS_ASSERT(item);
 
   m_selectedItems.push_back(item);
 
@@ -275,7 +278,7 @@ void OSItemSelectionController::addSelectedItem(OSListItem * item)
 
 void OSItemSelectionController::removeSelectedItem(OSListItem * item)
 {
-  Q_ASSERT(item);
+  OS_ASSERT(item);
 
   std::vector<QPointer<OSListItem> >::iterator it = 
     std::find(m_selectedItems.begin(),m_selectedItems.end(),item);

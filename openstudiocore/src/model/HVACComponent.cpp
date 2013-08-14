@@ -30,6 +30,8 @@
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace model {
 
@@ -288,7 +290,7 @@ HVACComponent::HVACComponent(boost::shared_ptr<detail::HVACComponent_Impl> p)
 HVACComponent::HVACComponent(IddObjectType type,const Model& model)
   : ParentObject(type,model)
 {
-  BOOST_ASSERT(getImpl<detail::HVACComponent_Impl>());
+  OS_ASSERT(getImpl<detail::HVACComponent_Impl>());
 }     
 
 boost::optional<Loop> HVACComponent::loop() const

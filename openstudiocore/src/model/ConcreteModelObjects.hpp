@@ -170,6 +170,7 @@
 #include <model/SetpointManagerOutdoorAirReset.hpp>
 #include <model/SetpointManagerScheduled.hpp>
 #include <model/SetpointManagerSingleZoneReheat.hpp>
+#include <model/SetpointManagerWarmest.hpp>
 #include <model/Shade.hpp>
 #include <model/ShadingSurface.hpp>
 #include <model/ShadingSurfaceGroup.hpp>
@@ -383,6 +384,7 @@
 #include <model/SetpointManagerOutdoorAirReset_Impl.hpp>
 #include <model/SetpointManagerScheduled_Impl.hpp>
 #include <model/SetpointManagerSingleZoneReheat_Impl.hpp>
+#include <model/SetpointManagerWarmest_Impl.hpp>
 #include <model/Shade_Impl.hpp>
 #include <model/ShadingSurface_Impl.hpp>
 #include <model/ShadingSurfaceGroup_Impl.hpp>

@@ -21,6 +21,8 @@
 #include <shared_gui_components/CollapsibleComponentHeader.hpp>
 #include <shared_gui_components/ComponentList.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <QBoxLayout>
 #include <QButtonGroup>
 #include <QLabel>
@@ -38,8 +40,9 @@ CollapsibleComponent::CollapsibleComponent(CollapsibleComponentHeader * collapsi
     m_componentList(componentList),
     m_mainLayout(NULL)
 {
-  Q_ASSERT(m_collapsibleComponentHeader);
-  Q_ASSERT(m_componentList);
+
+  OS_ASSERT(m_collapsibleComponentHeader);
+  OS_ASSERT(m_componentList);
 
   setObjectName("CollapsibleComponent");
 
@@ -55,30 +58,30 @@ CollapsibleComponent::CollapsibleComponent(CollapsibleComponentHeader * collapsi
 
   isConnected = connect(collapsibleComponentHeader, SIGNAL(clicked(bool)),
                         this, SIGNAL(headerClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponentHeader, SIGNAL(clicked(bool)),
                         this, SLOT(on_headerClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponentHeader, SIGNAL(getComponentsByPage(int)), 
                         this, SIGNAL(getComponentsByPage(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponentHeader, SIGNAL(getComponentsByPage(int)),
                         this, SLOT(on_getComponentsByPage(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // component list
   m_mainLayout->addWidget(m_componentList);
   
   isConnected = connect(componentList, SIGNAL(componentClicked(bool)),
                         this, SIGNAL(componentClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(componentList, SIGNAL(componentClicked(bool)),
                         this, SLOT(on_componentClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_mainLayout->addStretch();
 

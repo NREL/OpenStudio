@@ -54,7 +54,7 @@ ModelObjectInspectorView::ModelObjectInspectorView(const openstudio::model::Mode
                              SIGNAL(toggleUnitsClicked(bool)),
                              this, 
                              SLOT(toggleUnits(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 void ModelObjectInspectorView::selectModelObject(const openstudio::model::ModelObject& modelObject)
@@ -70,7 +70,7 @@ void ModelObjectInspectorView::selectModelObject(const openstudio::model::ModelO
                         SIGNAL(onChange()),
                         this,
                         SLOT(update()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   onSelectModelObject(*m_modelObject);
 }
@@ -87,7 +87,7 @@ void ModelObjectInspectorView::onClearSelection()
 void ModelObjectInspectorView::onSelectItem(OSItem *item)
 {
   ModelObjectItem* modelObjectItem = qobject_cast<ModelObjectItem*>(item);
-  BOOST_ASSERT(modelObjectItem);
+  OS_ASSERT(modelObjectItem);
   selectModelObject(modelObjectItem->modelObject());
 }
 
@@ -156,7 +156,7 @@ void DefaultInspectorView::onSelectModelObject(const openstudio::model::ModelObj
 void DefaultInspectorView::onUpdate()
 {
   boost::optional<openstudio::model::ModelObject> modelObject = this->modelObject();
-  BOOST_ASSERT(modelObject);
+  OS_ASSERT(modelObject);
 
   std::stringstream ss;
   ss << *modelObject;

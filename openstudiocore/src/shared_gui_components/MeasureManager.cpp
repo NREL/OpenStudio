@@ -25,9 +25,9 @@
 
 #include <analysisdriver/CurrentAnalysis.hpp>
 
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
 #include <analysis/InputVariable.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/Analysis.hpp>
@@ -37,6 +37,7 @@
 #include <runmanager/lib/RunManager.hpp>
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/RubyException.hpp>
 #include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/bcl/RemoteBCL.hpp>
@@ -99,7 +100,7 @@ std::pair<bool,std::string> MeasureManager::updateMeasure(analysisdriver::Simple
 BCLMeasure MeasureManager::insertReplaceMeasure(analysisdriver::SimpleProject &t_project, const UUID &t_id)
 {
   boost::optional<BCLMeasure> measure = getMeasure(t_id);
-  Q_ASSERT(measure);
+  OS_ASSERT(measure);
   bool isMyMeasure = (m_myMeasures.find(t_id) != m_myMeasures.end());
   if (isMyMeasure) {
     bool updated = measure->checkForUpdates();
@@ -137,10 +138,10 @@ BCLMeasure MeasureManager::insertReplaceMeasure(analysisdriver::SimpleProject &t
     buttons->addWidget(apply);
 
     bool connected = connect(cancel, SIGNAL(pressed()), &dialog, SLOT(reject()));
-    Q_ASSERT(connected);
+    OS_ASSERT(connected);
 
     connected = connect(apply, SIGNAL(pressed()), &dialog, SLOT(accept()));
-    Q_ASSERT(connected);
+    OS_ASSERT(connected);
 
     mainContentVLayout->addLayout(buttons);
 
@@ -153,7 +154,7 @@ BCLMeasure MeasureManager::insertReplaceMeasure(analysisdriver::SimpleProject &t
         if (updateResult.first)
         {
           boost::optional<BCLMeasure> updatedMeasure = getMeasure(t_id);
-          Q_ASSERT(updatedMeasure);
+          OS_ASSERT(updatedMeasure);
           return *updatedMeasure;
         } else {
           QMessageBox::critical(m_app->mainWidget(), QString("Error Updating Measure"), QString::fromStdString(updateResult.second));
@@ -244,11 +245,11 @@ std::string MeasureManager::suggestMeasureName(const BCLMeasure &t_measure, bool
     analysis::Analysis analysis = project->analysis();
     analysis::Problem problem = analysis.problem();
     Q_FOREACH(const analysis::InputVariable& variable, problem.variables()){
-      boost::optional<analysis::DiscreteVariable> discreteVariable = variable.optionalCast<analysis::DiscreteVariable>();
+      boost::optional<analysis::MeasureGroup> discreteVariable = variable.optionalCast<analysis::MeasureGroup>();
       if (discreteVariable){
-        Q_FOREACH(const analysis::DiscretePerturbation& perturbation, discreteVariable->perturbations(false)){
-          allNames.insert(perturbation.name());
-          allNames.insert(perturbation.displayName());
+        Q_FOREACH(const analysis::Measure& measure, discreteVariable->measures(false)){
+          allNames.insert(measure.name());
+          allNames.insert(measure.displayName());
         }
       }
     }
@@ -523,7 +524,7 @@ void MeasureManager::addMeasure()
 
 void MeasureManager::duplicateSelectedMeasure()
 {
-  Q_ASSERT(m_libraryController);
+  OS_ASSERT(m_libraryController);
   QPointer<LibraryItem> item = m_libraryController->selectedItem();
 
   if( !item.isNull() )

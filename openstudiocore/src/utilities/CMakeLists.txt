@@ -32,6 +32,8 @@ SET( core_src
   core/FileReference.hpp
   core/FileReference.cpp
   core/Finder.hpp
+  core/Json.hpp
+  core/Json.cpp
   core/Logger.hpp
   core/Logger.cpp
   core/LogMessage.hpp

@@ -63,12 +63,21 @@ class AnalysisDriverWatcher_Test < Test::Unit::TestCase
     seed = OpenStudio::FileReference.new(exampleModelPath)
     
     # create univariate problem
+    perturbObjectScript = OpenStudio::Path.new(
+        $OpenStudio_LibPath + "openstudio/runmanager/rubyscripts/PerturbObject.rb")
     variables = OpenStudio::Analysis::VariableVector.new
-    filters = OpenStudio::Ruleset::ModelObjectFilterClauseVector.new
-    filters.push(OpenStudio::Ruleset::ModelObjectFilterType.new("OS:Lights:Definition".to_IddObjectType))
-    continuousVariable = OpenStudio::Analysis::ModelRulesetContinuousVariable.new("Lighting Power Density",
-                                                                                  filters,
-                                                                                  "wattsperSpaceFloorArea") 
+    rubyMeasure = OpenStudio::Analysis::RubyMeasure.new(perturbObjectScript,
+                                                        "OSM".to_FileReferenceType,
+                                                        "OSM".to_FileReferenceType)
+    rubyMeasure.addArgument("inputPath","in.osm");
+    rubyMeasure.addArgument("outputPath","out.osm");
+    rubyMeasure.addArgument("objectType","OS:Lights:Definition");
+    rubyMeasure.addArgument("nameRegex", ".*");
+    rubyMeasure.addArgument("field", "4"); # Watts per Space Floor Area
+    continuousVariable = OpenStudio::Analysis::RubyContinuousVariable.new(
+        "Lighting Power Density",
+        OpenStudio::Ruleset::OSArgument::makeDoubleArgument("value"),
+        rubyMeasure) 
     continuousVariable.setMinimum(6.0)
     continuousVariable.setMaximum(12.0)
     variables.push(continuousVariable)

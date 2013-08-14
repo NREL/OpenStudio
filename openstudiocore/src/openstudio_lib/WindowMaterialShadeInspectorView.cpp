@@ -89,7 +89,7 @@ void WindowMaterialShadeInspectorView::createLayout()
 
   m_solarTransmittance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_solarTransmittance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_solarTransmittance,row++,0,1,3);
 
   // Solar Reflectance
@@ -100,7 +100,7 @@ void WindowMaterialShadeInspectorView::createLayout()
 
   m_solarReflectance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_solarReflectance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_solarReflectance,row++,0,1,3);
 
   // Visible Transmittance
@@ -111,7 +111,7 @@ void WindowMaterialShadeInspectorView::createLayout()
 
   m_visibleTransmittance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_visibleTransmittance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_visibleTransmittance,row++,0,1,3);
 
   // Visible Reflectance
@@ -122,7 +122,7 @@ void WindowMaterialShadeInspectorView::createLayout()
 
   m_visibleReflectance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_visibleReflectance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_visibleReflectance,row++,0,1,3);
 
   // Thermal Hemispherical Emissivity
@@ -133,7 +133,7 @@ void WindowMaterialShadeInspectorView::createLayout()
 
   m_thermalHemisphericalEmissivity = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thermalHemisphericalEmissivity, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_thermalHemisphericalEmissivity,row++,0,1,3);
 
   // Thermal Transmittance
@@ -144,7 +144,7 @@ void WindowMaterialShadeInspectorView::createLayout()
 
   m_thermalTransmittance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thermalTransmittance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_thermalTransmittance,row++,0,1,3);
 
   // Thickness
@@ -155,7 +155,7 @@ void WindowMaterialShadeInspectorView::createLayout()
 
   m_thickness = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thickness, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_thickness,row++,0,1,3);
 
   // Conductivity
@@ -166,7 +166,7 @@ void WindowMaterialShadeInspectorView::createLayout()
 
   m_conductivity = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_conductivity, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_conductivity,row++,0,1,3);
 
   // Shade To Glass Distance
@@ -177,7 +177,7 @@ void WindowMaterialShadeInspectorView::createLayout()
 
   m_shadeToGlassDistance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_shadeToGlassDistance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_shadeToGlassDistance,row++,0,1,3);
 
   // Top Opening Multiplier
@@ -188,7 +188,7 @@ void WindowMaterialShadeInspectorView::createLayout()
 
   m_topOpeningMultiplier = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_topOpeningMultiplier, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_topOpeningMultiplier,row++,0,1,3);
 
   // Bottom Opening Multiplier
@@ -199,7 +199,7 @@ void WindowMaterialShadeInspectorView::createLayout()
 
   m_bottomOpeningMultiplier = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_bottomOpeningMultiplier, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_bottomOpeningMultiplier,row++,0,1,3);
 
   // Left-Side Opening Multiplier
@@ -210,7 +210,7 @@ void WindowMaterialShadeInspectorView::createLayout()
 
   m_leftSideOpeningMultiplier = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_leftSideOpeningMultiplier, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_leftSideOpeningMultiplier,row++,0,1,3);
 
   // Right-Side Opening Multiplier
@@ -221,7 +221,7 @@ void WindowMaterialShadeInspectorView::createLayout()
 
   m_rightSideOpeningMultiplier = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_rightSideOpeningMultiplier, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_rightSideOpeningMultiplier,row++,0,1,3);
 
   // Airflow Permeability
@@ -232,7 +232,7 @@ void WindowMaterialShadeInspectorView::createLayout()
 
   m_airflowPermeability = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_airflowPermeability, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_airflowPermeability,row++,0,1,3);
 
   // Stretch

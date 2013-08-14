@@ -24,6 +24,7 @@
 #include <model/Material_Impl.hpp>
 #include <model/ModelExtensibleGroup.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/idd/OS_Construction_InternalSource_FieldEnums.hxx>
 
 #include <boost/foreach.hpp>
@@ -37,14 +38,14 @@ namespace detail {
       const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : LayeredConstruction_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ConstructionWithInternalSource::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ConstructionWithInternalSource::iddObjectType());
   }
 
   ConstructionWithInternalSource_Impl::ConstructionWithInternalSource_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : LayeredConstruction_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ConstructionWithInternalSource::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ConstructionWithInternalSource::iddObjectType());
   }
 
   ConstructionWithInternalSource_Impl::ConstructionWithInternalSource_Impl(
@@ -72,7 +73,7 @@ namespace detail {
   int ConstructionWithInternalSource_Impl::sourcePresentAfterLayerNumber() const
   {
     boost::optional<int> value = getInt(OS_Construction_InternalSourceFields::SourcePresentAfterLayerNumber,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -84,7 +85,7 @@ namespace detail {
   int ConstructionWithInternalSource_Impl::temperatureCalculationRequestedAfterLayerNumber() const
   {
     boost::optional<int> value = getInt(OS_Construction_InternalSourceFields::TemperatureCalculationRequestedAfterLayerNumber,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -96,7 +97,7 @@ namespace detail {
   int ConstructionWithInternalSource_Impl::dimensionsForTheCTFCalculation() const
   {
     boost::optional<int> value = getInt(OS_Construction_InternalSourceFields::DimensionsfortheCTFCalculation,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -108,13 +109,13 @@ namespace detail {
   double ConstructionWithInternalSource_Impl::tubeSpacing() const
   {
     boost::optional<double> value = getDouble(OS_Construction_InternalSourceFields::TubeSpacing,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity ConstructionWithInternalSource_Impl::getTubeSpacing(bool returnIP) const {
     OSOptionalQuantity value = getQuantity(OS_Construction_InternalSourceFields::TubeSpacing,true,returnIP);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
@@ -148,7 +149,7 @@ ConstructionWithInternalSource::ConstructionWithInternalSource(const Model& mode
                                                                double tubeSpacing)
   : LayeredConstruction(ConstructionWithInternalSource::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ConstructionWithInternalSource_Impl>());
+  OS_ASSERT(getImpl<detail::ConstructionWithInternalSource_Impl>());
 
   setSourcePresentAfterLayerNumber(sourcePresentAfterLayerNumber);
   setTemperatureCalculationRequestedAfterLayerNumber(temperatureCalculationRequestedAfterLayerNumber);

@@ -40,7 +40,7 @@ namespace detail {
                                                                                  bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == AvailabilityManagerAssignmentList::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == AvailabilityManagerAssignmentList::iddObjectType());
   }
 
   AvailabilityManagerAssignmentList_Impl::AvailabilityManagerAssignmentList_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -48,7 +48,7 @@ namespace detail {
                                                                                  bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == AvailabilityManagerAssignmentList::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == AvailabilityManagerAssignmentList::iddObjectType());
   }
 
   AvailabilityManagerAssignmentList_Impl::AvailabilityManagerAssignmentList_Impl(const AvailabilityManagerAssignmentList_Impl& other,
@@ -73,7 +73,7 @@ namespace detail {
   {
     WorkspaceExtensibleGroup group = getExtensibleGroup(0).cast<WorkspaceExtensibleGroup>();
 
-    Q_ASSERT( ! group.empty() );
+    OS_ASSERT( ! group.empty() );
 
     return group.getTarget(OS_AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName)->cast<AvailabilityManagerScheduled>();
   }
@@ -82,7 +82,7 @@ namespace detail {
   {
     WorkspaceExtensibleGroup group = getExtensibleGroup(1).cast<WorkspaceExtensibleGroup>();
 
-    Q_ASSERT( ! group.empty() );
+    OS_ASSERT( ! group.empty() );
 
     return group.getTarget(OS_AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName)->cast<AvailabilityManagerNightCycle>();
   }
@@ -120,7 +120,7 @@ namespace detail {
 AvailabilityManagerAssignmentList::AvailabilityManagerAssignmentList(const Model& model)
   : ModelObject(AvailabilityManagerAssignmentList::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::AvailabilityManagerAssignmentList_Impl>());
+  OS_ASSERT(getImpl<detail::AvailabilityManagerAssignmentList_Impl>());
 
   AvailabilityManagerScheduled avm(model);
 

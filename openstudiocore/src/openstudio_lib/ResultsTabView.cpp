@@ -47,6 +47,7 @@
 #include <vtkCharts/Color.h>
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/Assert.hpp>
 #include <utilities/units/Quantity.hpp>
 #include <utilities/units/QuantityConverter.hpp>
 #include <utilities/units/Scale.hpp>
@@ -666,7 +667,7 @@ UtilityBillComparisonView::UtilityBillComparisonView(const openstudio::model::Mo
 
   bool isConnected = connect(comboBox, SIGNAL(currentIndexChanged(const QString &)),
     this, SLOT(selectCalibrationMethod(const QString &)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   comboBox->setCurrentIndex(0);
   
@@ -686,13 +687,13 @@ UtilityBillComparisonView::UtilityBillComparisonView(const openstudio::model::Mo
                    SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
                    this,
                    SLOT(onObjectAdded(const WorkspaceObject&)) );
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
                    SIGNAL(removeWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
                    this,
                    SLOT(onObjectRemoved(const WorkspaceObject&)) );
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 struct UtilityBillSorter 
@@ -766,8 +767,8 @@ void UtilityBillComparisonView::selectCalibrationMethod(const QString& value)
   std::string calibrationGuideline = toString(value);
   boost::optional<double> maxNMBE = model::UtilityBill::maxNMBE(calibrationGuideline);
   boost::optional<double> maxCVRMSE = model::UtilityBill::maxCVRMSE(calibrationGuideline);
-  Q_ASSERT(maxNMBE);
-  Q_ASSERT(maxCVRMSE);
+  OS_ASSERT(maxNMBE);
+  OS_ASSERT(maxCVRMSE);
 
   m_calibrationMaxCVRMSE = *maxCVRMSE;
   m_calibrationMaxNMBE = *maxNMBE;
@@ -813,7 +814,7 @@ UtilityBillComparisonChart::UtilityBillComparisonChart(const openstudio::model::
 
   bool isConnected = connect( m_utilityBill.getImpl<openstudio::model::detail::UtilityBill_Impl>().get(),
                    SIGNAL(onChange()), this, SLOT(onUtilityBillChanged()) );
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   this->setLayout(vLayout);
 
@@ -998,7 +999,7 @@ UtilityBillComparisonLegend::UtilityBillComparisonLegend(const openstudio::FuelT
   s.push_back("Model");
 
   std::vector<vtkCharts::Color3ub> c = getColors(m_fuelType);
-  Q_ASSERT(c.size() == 2);
+  OS_ASSERT(c.size() == 2);
 
   for (size_t i = 0; i < 2; ++i)
   {
@@ -1094,7 +1095,7 @@ UtilityBillComparisonTable::UtilityBillComparisonTable(const openstudio::model::
 
   bool isConnected = connect( m_utilityBill.getImpl<openstudio::model::detail::UtilityBill_Impl>().get(),
                    SIGNAL(onChange()), this, SLOT(onUtilityBillChanged()) );
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   this->setLayout(m_grid);
 
@@ -1354,7 +1355,7 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
 
   isConnected = connect(m_openResultsViewerBtn, SIGNAL(clicked()),
       this, SLOT(openResultsViewerClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   
   //********************************************* BUTTON WIDGET ATOP PAGE 1 AND PAGE 2 *********************************************
 
@@ -1369,7 +1370,7 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
   buttonGroup = new QButtonGroup(this);
   isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(selectView(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_standardResultsBtn = new QPushButton("Standard",this);
   m_standardResultsBtn->setCheckable(true);
@@ -1435,24 +1436,24 @@ ResultsView::ResultsView(const model::Model & model, QWidget *t_parent)
                    SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
                    this,
                    SLOT(onObjectAdded(const WorkspaceObject&)) );
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
                    SIGNAL(removeWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
                    this,
                    SLOT(onObjectRemoved(const WorkspaceObject&)) );
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   boost::optional<model::YearDescription> yd = m_model.yearDescription();
   if (!yd){
     yd = m_model.getUniqueModelObject<model::YearDescription>();
   }
-  Q_ASSERT(yd);
+  OS_ASSERT(yd);
   isConnected = connect( yd->getImpl<openstudio::model::detail::YearDescription_Impl>().get(),
                    SIGNAL(onChange()),
                    this,
                    SLOT(updateReportButtons()) );
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // enable or disable report buttons
   updateReportButtons();

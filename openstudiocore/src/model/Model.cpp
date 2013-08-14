@@ -164,7 +164,7 @@ namespace detail {
   void Model_Impl::createComponentWatchers() {
     ComponentDataVector componentDataObjects = castVector<ComponentData>(getObjectsByType(ComponentData::iddObjectType()));
     if (!m_componentWatchers.empty()) {
-      BOOST_ASSERT(m_componentWatchers.size() == componentDataObjects.size());
+      OS_ASSERT(m_componentWatchers.size() == componentDataObjects.size());
       return;
     }
     BOOST_FOREACH(ComponentData& object,componentDataObjects) {
@@ -335,6 +335,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(SetpointManagerOutdoorAirReset);
     REGISTER_CONSTRUCTOR(SetpointManagerScheduled);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneReheat);
+    REGISTER_CONSTRUCTOR(SetpointManagerWarmest);
     REGISTER_CONSTRUCTOR(Shade);
     REGISTER_CONSTRUCTOR(ShadingSurface);
     REGISTER_CONSTRUCTOR(ShadingSurfaceGroup);
@@ -409,7 +410,7 @@ if (_className::iddObjectType() == typeToCreate) { \
       const boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>& originalObjectImplPtr,
       bool keepHandle) {
 
-    BOOST_ASSERT(originalObjectImplPtr);
+    OS_ASSERT(originalObjectImplPtr);
     // perhaps also assert that originalObjectImplPtr is initialized?
 
     boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> result;
@@ -424,7 +425,7 @@ if (_className::iddObjectType() == typeToCreate) { \
         *dynamic_pointer_cast<_className##_Impl>(originalObjectImplPtr),this,keepHandle)); \
   } \
   else { \
-    BOOST_ASSERT(!dynamic_pointer_cast<ModelObject_Impl>(originalObjectImplPtr)); \
+    OS_ASSERT(!dynamic_pointer_cast<ModelObject_Impl>(originalObjectImplPtr)); \
     result = boost::shared_ptr<_className##_Impl>(new _className##_Impl( \
         *originalObjectImplPtr,this,keepHandle)); \
   } \
@@ -579,6 +580,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(SetpointManagerOutdoorAirReset);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduled);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneReheat);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerWarmest);
     REGISTER_COPYCONSTRUCTORS(Shade);
     REGISTER_COPYCONSTRUCTORS(ShadingSurface);
     REGISTER_COPYCONSTRUCTORS(ShadingSurfaceGroup);
@@ -671,7 +673,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   }
 
   bool Model_Impl::setIddFile(IddFileType iddFileType) {
-    BOOST_ASSERT(iddFileType == IddFileType::OpenStudio);
+    OS_ASSERT(iddFileType == IddFileType::OpenStudio);
     return false;
   }
 
@@ -688,7 +690,7 @@ if (_className::iddObjectType() == typeToCreate) { \
                                         SIGNAL(onRemoveFromWorkspace(Handle)),
                                         this,
                                         SLOT(clearCachedBuilding()));
-      BOOST_ASSERT(connected);
+      OS_ASSERT(connected);
     }
 
     return m_cachedBuilding;
@@ -707,7 +709,7 @@ if (_className::iddObjectType() == typeToCreate) { \
                                         SIGNAL(onRemoveFromWorkspace(Handle)),
                                         this,
                                         SLOT(clearCachedLifeCycleCostParameters()));
-      BOOST_ASSERT(connected);
+      OS_ASSERT(connected);
     }
 
     return m_cachedLifeCycleCostParameters;
@@ -866,7 +868,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     }
     WorkspaceObjectVector resultingObjects = model().addObjects(component.objects());
     if (resultingObjects.empty()) { return boost::none; }
-    BOOST_ASSERT(resultingObjects.size() == component.numObjects());
+    OS_ASSERT(resultingObjects.size() == component.numObjects());
     BOOST_FOREACH(const WorkspaceObject& wo,resultingObjects) {
       OptionalComponentData ocd = wo.optionalCast<ComponentData>();
       if (ocd) {
@@ -875,7 +877,7 @@ if (_className::iddObjectType() == typeToCreate) { \
         return componentDataObject;
       }
     }
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
     return boost::none;
   }
 
@@ -1025,7 +1027,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   void Model_Impl::obsoleteComponentWatcher(const ComponentWatcher& watcher) {
     ComponentWatcherVector::iterator it = std::find(m_componentWatchers.begin(),
         m_componentWatchers.end(),watcher);
-    BOOST_ASSERT(it != m_componentWatchers.end());
+    OS_ASSERT(it != m_componentWatchers.end());
     m_componentWatchers.erase(it);
   }
 
@@ -1376,12 +1378,12 @@ void addExampleModelObjects(Model& model)
 
   // add schedules
   addExampleSchedules(model);
-  BOOST_ASSERT(model.getModelObjects<DefaultScheduleSet>().size() >= 1);
+  OS_ASSERT(model.getModelObjects<DefaultScheduleSet>().size() >= 1);
   DefaultScheduleSet defaultScheduleSet = model.getModelObjects<DefaultScheduleSet>()[0];
 
   // add constructions
   addExampleConstructions(model);
-  BOOST_ASSERT(model.getModelObjects<DefaultConstructionSet>().size() >= 1);
+  OS_ASSERT(model.getModelObjects<DefaultConstructionSet>().size() >= 1);
   DefaultConstructionSet defaultConstructionSet = model.getModelObjects<DefaultConstructionSet>()[0];
 
   // add a space type
@@ -1440,7 +1442,7 @@ void addExampleModelObjects(Model& model)
 
   // make spaces
   boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
-  BOOST_ASSERT(space1);
+  OS_ASSERT(space1);
   space1->setThermalZone(thermalZone);
   space1->setBuildingStory(buildingStory);
 
@@ -1466,7 +1468,7 @@ void addExampleModelObjects(Model& model)
 
   // find south wall
   searchResults = space1->findSurfaces(180.0,180.0,90.0,90.0);
-  BOOST_ASSERT(searchResults.size() >= 1);
+  OS_ASSERT(searchResults.size() >= 1);
 
   // add door
   SubSurface door(doorPoints, model);
@@ -1481,7 +1483,7 @@ void addExampleModelObjects(Model& model)
 
   // find east wall
   searchResults = space2.findSurfaces(90.0,90.0,90.0,90.0);
-  BOOST_ASSERT(searchResults.size() >= 1);
+  OS_ASSERT(searchResults.size() >= 1);
 
   // add window
   SubSurface window(windowPoints, model);
@@ -1489,7 +1491,7 @@ void addExampleModelObjects(Model& model)
 
   // add overhang to the window
   bool test = window.addOverhangByProjectionFactor(0.5, 0.1);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 
   // add daylighting control point to center of space2
   DaylightingControl daylightingControl(model);
@@ -1498,7 +1500,7 @@ void addExampleModelObjects(Model& model)
 
   // hook daylighting control up to zone
   test = thermalZone.setPrimaryDaylightingControl(daylightingControl);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   thermalZone.setFractionofZoneControlledbyPrimaryDaylightingControl(0.25);
 
   // add illuminance map to space2
@@ -1512,7 +1514,7 @@ void addExampleModelObjects(Model& model)
 
   // hook illuminanceMap up to zone
   test = thermalZone.setIlluminanceMap(illuminanceMap);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 
 
   // add a glare sensor to center of space2

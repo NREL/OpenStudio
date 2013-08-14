@@ -570,7 +570,7 @@ class ModelClassGenerator < SubProjectClassGenerator
       result << " " * implConstructorStart.size << "bool keepHandle)" << "\n"
       result << "    : " << @baseClassName << "_Impl(idfObject,model,keepHandle)" << "\n"
       result << "  {" << "\n"
-      result << "    BOOST_ASSERT(idfObject.iddObject().type() == " << @className << "::iddObjectType());" << "\n"
+      result << "    OS_ASSERT(idfObject.iddObject().type() == " << @className << "::iddObjectType());" << "\n"
       result << "  }" << "\n"
       result << "\n"
       result << implConstructorStart << "const openstudio::detail::WorkspaceObject_Impl& other," << "\n"
@@ -578,7 +578,7 @@ class ModelClassGenerator < SubProjectClassGenerator
       result << " " * implConstructorStart.size << "bool keepHandle)" << "\n"
       result << "    : " << @baseClassName << "_Impl(other,model,keepHandle)" << "\n"
       result << "  {" << "\n"
-      result << "    BOOST_ASSERT(other.iddObject().type() == " << @className << "::iddObjectType());" << "\n"
+      result << "    OS_ASSERT(other.iddObject().type() == " << @className << "::iddObjectType());" << "\n"
       result << "  }" << "\n"
       result << "\n"
       result << implConstructorStart << "const " << @className << "_Impl& other," << "\n"
@@ -605,7 +605,7 @@ class ModelClassGenerator < SubProjectClassGenerator
         result << @className << "::" << @className << "(const Model& model)\n"
         result << "  : " << @baseClassName << "(" << @className << "::iddObjectType(),model)\n"
         result << "{\n"
-        result << "  BOOST_ASSERT(getImpl<detail::" << @className << "_Impl>());\n\n"
+        result << "  OS_ASSERT(getImpl<detail::" << @className << "_Impl>());\n\n"
           
         result << "  // TODO: Appropriately handle the following required object-list fields.\n"
         @nonextensibleFields.each { |field| 
@@ -620,7 +620,7 @@ class ModelClassGenerator < SubProjectClassGenerator
             if field.setCanFail?
               result << preamble            
               result << "  // ok = " << field.setterName << "();\n"
-              result << "  BOOST_ASSERT(ok);\n"
+              result << "  OS_ASSERT(ok);\n"
               preamble = String.new
             else
               result << "  // " << field.setterName << "();\n"
@@ -910,7 +910,7 @@ class ModelClassGenerator < SubProjectClassGenerator
             result << "    return result;"
           else
             result << "    boost::optional<std::string> value = " << field.getterAccessor << "(" << field.fieldEnum << ",true);\n"
-            result << "    BOOST_ASSERT(value);\n"
+            result << "    OS_ASSERT(value);\n"
             result << "    return openstudio::istringEqual(value.get(), \"" << field.booleanChoiceTrue << "\");\n"
           end
           
@@ -938,7 +938,7 @@ class ModelClassGenerator < SubProjectClassGenerator
           
             result << "    boost::optional<" << field.getterReturnType << "> value = " <<
                       field.getterAccessor << "(" << field.fieldEnum << ",true);\n"
-            result << "    BOOST_ASSERT(value);\n"
+            result << "    OS_ASSERT(value);\n"
             
           end
           
@@ -1060,7 +1060,7 @@ class ModelClassGenerator < SubProjectClassGenerator
         if field.setCanFail?
           result << "    return result;\n"
         else
-          result << "    BOOST_ASSERT(result);\n"
+          result << "    OS_ASSERT(result);\n"
         end
 
         result << "  }\n\n"
@@ -1068,21 +1068,21 @@ class ModelClassGenerator < SubProjectClassGenerator
         if field.hasReset?
           result << "  void " << @className << "_Impl::" << field.resetName << "() {\n"
           result << "    bool result = setString(" << field.fieldEnum << ", \"\");\n"
-          result << "    BOOST_ASSERT(result);\n"
+          result << "    OS_ASSERT(result);\n"
           result << "  }\n\n"
         end
 
         if field.canAutosize?
           result << "  void " << @className << "_Impl::" << field.autosizeName << "() {\n"
           result << "    bool result = setString(" << field.fieldEnum << ", \"autosize\");\n"
-          result << "    BOOST_ASSERT(result);\n"
+          result << "    OS_ASSERT(result);\n"
           result << "  }\n\n"
         end
 
         if field.canAutocalculate?
           result << "  void " << @className << "_Impl::" << field.autocalculateName << "() {\n"
           result << "    bool result = setString(" << field.fieldEnum << ", \"autocalculate\");\n"
-          result << "    BOOST_ASSERT(result);\n"
+          result << "    OS_ASSERT(result);\n"
           result << "  }\n\n"
         end
         

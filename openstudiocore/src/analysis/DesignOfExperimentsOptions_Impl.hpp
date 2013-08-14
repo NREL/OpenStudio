@@ -57,6 +57,14 @@ namespace detail {
     void setDesignType(const DesignOfExperimentsType& designType);
 
     //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    static DesignOfExperimentsOptions fromVariant(const QVariant& variant, const VersionString& version);
+
+    //@}
    protected:
     DesignOfExperimentsType m_designType;
    private:

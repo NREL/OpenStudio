@@ -540,6 +540,9 @@ SET( ${target_name}_src
   SetpointManagerSingleZoneReheat.hpp
   SetpointManagerSingleZoneReheat_Impl.hpp
   SetpointManagerSingleZoneReheat.cpp
+  SetpointManagerWarmest.hpp
+  SetpointManagerWarmest_Impl.hpp
+  SetpointManagerWarmest.cpp
   Shade.hpp
   Shade_Impl.hpp
   Shade.cpp
@@ -941,6 +944,7 @@ SET( ${target_name}_moc
   SetpointManagerOutdoorAirReset_Impl.hpp
   SetpointManagerScheduled_Impl.hpp
   SetpointManagerSingleZoneReheat_Impl.hpp
+  SetpointManagerWarmest_Impl.hpp
   Shade_Impl.hpp
   ShadingMaterial_Impl.hpp
   ShadingSurface_Impl.hpp
@@ -1130,6 +1134,7 @@ SET( ${target_name}_test_src
   test/RunPeriodControlDaylightSavingTime_GTest.cpp
   test/RunPeriodControlSpecialDays_GTest.cpp
   test/SetpointManagerOutdoorAirReset_GTest.cpp
+  test/SetpointManagerWarmest_GTest.cpp
   test/ScheduleDay_GTest.cpp
   test/ScheduleInterval_GTest.cpp
   test/ScheduleRuleset_GTest.cpp

@@ -34,14 +34,14 @@ namespace detail {
                                                                bool keepHandle)
     : SizingPeriod_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == WeatherFileConditionType::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == WeatherFileConditionType::iddObjectType());
   }
 
   WeatherFileConditionType_Impl::WeatherFileConditionType_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : SizingPeriod_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == WeatherFileConditionType::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == WeatherFileConditionType::iddObjectType());
   }
 
   WeatherFileConditionType_Impl::WeatherFileConditionType_Impl(
@@ -69,7 +69,7 @@ namespace detail {
 WeatherFileConditionType::WeatherFileConditionType(const Model& model)
   : SizingPeriod(WeatherFileConditionType::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::WeatherFileConditionType_Impl>());
+  OS_ASSERT(getImpl<detail::WeatherFileConditionType_Impl>());
 }
 
 // constructor

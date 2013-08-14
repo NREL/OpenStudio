@@ -29,6 +29,7 @@
 #include <runmanager/lib/FileInfo.hpp>
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/FileReference.hpp>
 
 #include <QDesktopServices>
@@ -48,10 +49,10 @@ ResultsTabController::ResultsTabController()
   bool test = false;
 
   test = connect(resultsView, SIGNAL(openButtonClicked(bool)), this, SLOT(onOpenButtonClicked()));
-  Q_ASSERT(test);
+  OS_ASSERT(test);
 
   test = connect(resultsView, SIGNAL(openDirButtonClicked(bool)), this, SLOT(openDirectory()));
-  Q_ASSERT(test);
+  OS_ASSERT(test);
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
@@ -72,10 +73,10 @@ ResultsTabController::ResultsTabController()
     bool bingo = false;
 
     bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableViewFileButton()));
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     bingo = connect(resultsView,SIGNAL(calibrationThresholdsChanged(double, double)),m_dataPointCalibrationItemDelegate.data(),SLOT(setCalibrationThresholds(double, double)));
     Q_ASSERT(bingo);
@@ -287,10 +288,10 @@ QWidget * DataPointResultItemDelegate::view(QSharedPointer<OSListItem> dataSourc
   result->setHasEmphasis(dataPointResultListItem->isSelected());
 
   bool test = connect(result,SIGNAL(clicked()),dataPointResultListItem.data(),SLOT(toggleSelected()));
-  Q_ASSERT(test);
+  OS_ASSERT(test);
 
   test = connect(dataPointResultListItem.data(),SIGNAL(selectedChanged(bool)),result,SLOT(setHasEmphasis(bool)));
-  Q_ASSERT(test);
+  OS_ASSERT(test);
 
   return result;
 }

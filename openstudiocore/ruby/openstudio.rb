@@ -169,5 +169,41 @@ end
 class OutputAttributeContinuousVariableVector < OutputAttributeVariableVector
 end
 
+# support for name deprecated as of 1.0.3
+class DiscretePerturbation < Measure
+end
+
+# support for name deprecated as of 1.0.3
+class OptionalDiscretePerturbation < OptionalMeasure
+end
+
+# support for name deprecated as of 1.0.3
+class DiscretePerturbationVector < MeasureVector
+end
+
+# support for name deprecated as of 1.0.3
+class NullPerturbation < NullMeasure
+end
+
+# support for name deprecated as of 1.0.3
+class OptionalNullPerturbation < OptionalNullMeasure
+end
+
+# support for name deprecated as of 1.0.3
+class NullPerturbationVector < NullMeasureVector
+end
+
+# support for name deprecated as of 1.0.3
+class RubyPerturbation < RubyMeasure
+end
+
+# support for name deprecated as of 1.0.3
+class OptionalRubyPerturbation < OptionalRubyMeasure
+end
+
+# support for name deprecated as of 1.0.3
+class RubyPerturbationVector < RubyMeasureVector
+end
+
 end # module Analysis
 end

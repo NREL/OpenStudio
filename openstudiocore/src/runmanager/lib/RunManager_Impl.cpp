@@ -140,11 +140,14 @@ namespace detail {
         setText(toQString(m_job.outdir().external_file_string()));
         break;
       case 7:
-        try
         {
-          setText(toQString(m_job.treeDetailedDescription().at(0)));
-        } catch (const std::exception &) {
-          setText("");
+          std::vector<std::string> descs = m_job.treeDetailedDescription();
+          if (!descs.empty())
+          {
+            setText(toQString(descs[0]));
+          } else {
+            setText("");
+          }
         }
     };
   }

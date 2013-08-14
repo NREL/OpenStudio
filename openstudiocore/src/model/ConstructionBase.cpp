@@ -37,6 +37,8 @@
 #include <model/RenderingColor_Impl.hpp>
 #include <model/Space.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <boost/foreach.hpp>
 
 using std::vector;
@@ -205,7 +207,7 @@ namespace detail {
 
   void ConstructionBase_Impl::resetRenderingColor(){
     bool test = setString(this->renderingColorIndex(), "");
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
 } // detail
@@ -298,7 +300,7 @@ void ConstructionBase::resetRenderingColor(){
 ConstructionBase::ConstructionBase(IddObjectType type,const Model& model)
   : ResourceObject(type,model)
 {
-  BOOST_ASSERT(getImpl<detail::ConstructionBase_Impl>());
+  OS_ASSERT(getImpl<detail::ConstructionBase_Impl>());
 }
 
 ConstructionBase::ConstructionBase(boost::shared_ptr<detail::ConstructionBase_Impl> impl)
