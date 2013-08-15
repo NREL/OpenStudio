@@ -33,7 +33,8 @@
 
 namespace openstudio {
 
-UtilityBillFuelTypeListController::UtilityBillFuelTypeListController(const model::Model& model)
+UtilityBillFuelTypeListController::UtilityBillFuelTypeListController(const model::Model& model,
+  openstudio::FuelType m_fuelType)
   : m_iddObjectType(model::UtilityBill::iddObjectType()), m_model(model)
 {
   bool isConnected = false;
@@ -56,6 +57,11 @@ UtilityBillFuelTypeListController::UtilityBillFuelTypeListController(const model
 IddObjectType UtilityBillFuelTypeListController::iddObjectType() const
 {
   return m_iddObjectType;
+}
+
+FuelType UtilityBillFuelTypeListController::fuelType() const
+{
+  return m_fuelType;
 }
 
 void UtilityBillFuelTypeListController::objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
@@ -94,6 +100,7 @@ std::vector<OSItemId> UtilityBillFuelTypeListController::makeVector()
     if (!workspaceObject.handle().isNull()){
       openstudio::model::ModelObject modelObject = workspaceObject.cast<openstudio::model::ModelObject>();
       if(boost::optional<model::UtilityBill> utilityBill = modelObject.optionalCast<model::UtilityBill>()) {
+        // do some more here about types
         result.push_back(modelObjectToItemId(modelObject, false));
       }
     }
@@ -103,9 +110,10 @@ std::vector<OSItemId> UtilityBillFuelTypeListController::makeVector()
 }
 
 UtilityBillFuelTypeListView::UtilityBillFuelTypeListView(const model::Model& model, 
-                                         bool addScrollArea,
-                                         QWidget * parent )
-  : OSItemList(new UtilityBillFuelTypeListController(model),addScrollArea)
+  openstudio::FuelType fuelType,
+  bool addScrollArea,
+  QWidget * parent)
+  : OSItemList(new UtilityBillFuelTypeListController(model,fuelType),addScrollArea)
 { 
 }  
 
@@ -125,6 +133,19 @@ IddObjectType UtilityBillFuelTypeListView::iddObjectType() const
   UtilityBillFuelTypeListController* utilityBillListController = qobject_cast<UtilityBillFuelTypeListController*>(vectorController);
   OS_ASSERT(utilityBillListController);
   return utilityBillListController->iddObjectType();
+}
+
+boost::optional<openstudio::FuelType> UtilityBillFuelTypeListView::fuelType() const
+{
+  boost::optional<openstudio::model::ModelObject> modelObject = selectedModelObject();
+  if(modelObject){
+    if(boost::optional<model::UtilityBill> utilityBill = modelObject.get().optionalCast<model::UtilityBill>()){
+      return utilityBill.get().fuelType();
+    }
+    // Opps, its not a UtilityBill!
+    OS_ASSERT(false);
+  }
+  return boost::none;
 }
 
 } // openstudio
