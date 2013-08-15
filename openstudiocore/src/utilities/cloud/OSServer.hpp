@@ -21,8 +21,15 @@
 #define UTILITIES_CLOUD_OSSERVER_HPP
 
 #include <utilities/UtilitiesAPI.hpp>
+#include <utilities/core/UUID.hpp>
+#include <utilities/core/Path.hpp>
 
 #include <QObject>
+
+#include <string>
+
+// TODO: we will need to swig QUrl
+class QUrl;
 
 namespace openstudio{
 
@@ -37,7 +44,7 @@ namespace openstudio{
     //@{
 
     /// default constructor
-    OSServer();
+    OSServer(const QUrl& url);
 
     //@}
     /** @name Destructors */
@@ -50,8 +57,64 @@ namespace openstudio{
     /** @name Class members */
     //@{
 
+    /// Get the server view of all projects in JSON format
+    // DLM: what file format is this?  do we have this defined or any examples? 
+    // do we need this at all?  do we need to be able to parse this somewhere?
+    std::string projectsJSON() const; 
+
+    /// Send a project server view JSON file, adds the project
+    // DLM: what file format is this?  do we have this defined or any examples? 
+    bool postProjectJSON(const std::string& projectJSON) const;
+
+    /// Get the server view of all analyses for project in JSON format
+    // DLM: what file format is this?  do we have this defined or any examples? 
+    // do we need this at all?  do we need to be able to parse this somewhere?
+    std::string analysesJSON(const UUID& projectUUID) const; 
+
+    /// Send an analysis server view JSON file for project, adds the analyis to project
+    bool postAnalysisJSON(const UUID& projectUUID, const std::string& analysisJSON) const;
+
+    /// Send a datapoint server view JSON file for analysis, adds the dataPoint to analysis
+    bool postDataPointJSON(const UUID& analysisUUID, const std::string& dataPointJSON) const;
+
+    /// Upload a zip file of all the files needed for analysis
+    // DLM: is the structure of this defined somewhere? 
+    bool uploadAnalysisFiles(const UUID& analysisUUID, const openstudio::path& analysisZipFile);
+
+    /// Send the server a request to start the analysis
+    bool start(const UUID& analysisUUID) const;
+
+    /// Send the server a request to stop the analysis
+    bool stop(const UUID& analysisUUID) const;
+
+    /// Get a list of all dataPoints in the analysis
+    // DLM: what file format is this?  do we have this defined or any examples? 
+    std::string dataPointsJSON(const UUID& analysisUUID) const;
+
+    /// Get a list of all running dataPoints in the analysis
+    // DLM: what file format is this?  do we have this defined or any examples? 
+    std::string runningDataPointsJSON(const UUID& analysisUUID) const;
+
+    /// Get a list of all queued dataPoints in the analysis
+    // DLM: what file format is this?  do we have this defined or any examples? 
+    std::string queuedDataPointsJSON(const UUID& analysisUUID) const;
+
+    /// Get a list of all complete dataPoints in the analysis
+    // DLM: what file format is this?  do we have this defined or any examples? 
+    std::string completeDataPointsJSON(const UUID& analysisUUID) const;
+
+    /// Get a full deserializable JSON of dataPoint
+    std::string getDataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID) const;
+
+    /// Get a detailed results for dataPoint, will be a zip file of the dataPoint directory
+    bool downloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath) const;
+
     //@}
+
   private:
+
+    // no body on purpose, do not want this generated
+    OSServer(const OSServer& other);
 
   };
 

@@ -19,9 +19,12 @@
 #include <utilities/cloud/OSServer.hpp>
 #include <utilities/core/Application.hpp>
 
+#include <QUrl>
+
+
 namespace openstudio{
 
-  OSServer::OSServer()
+  OSServer::OSServer(const QUrl& url)
     : QObject()
   {
     //Make sure a QApplication exists
