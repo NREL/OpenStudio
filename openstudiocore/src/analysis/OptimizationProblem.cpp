@@ -327,6 +327,22 @@ namespace detail {
                                slice.responses());
   }
 
+  void OptimizationProblem_Impl::updateInputPathData(const openstudio::path& originalBase,
+                                                     const openstudio::path& newBase)
+  {
+    Problem_Impl::updateInputPathData(originalBase,newBase);
+
+    // objectives
+    //
+    // currently does nothing, because the only variables that have path data are
+    // input variables, and any of those used by an objective should also be in workflow().
+    //
+    FunctionVector functions = objectives();
+    BOOST_FOREACH(Function& func,functions) {
+      func.getImpl<detail::Function_Impl>()->updateInputPathData(originalBase,newBase);
+    }
+  }
+
 } // detail
 
 OptimizationProblem::OptimizationProblem(const std::string& name,

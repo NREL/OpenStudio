@@ -684,8 +684,8 @@ namespace detail {
     return table;
   }
 
-  void Analysis_Impl::updatePathData(const openstudio::path& originalBase,
-                                     const openstudio::path& newBase)
+  void Analysis_Impl::updateInputPathData(const openstudio::path& originalBase,
+                                          const openstudio::path& newBase)
   {
     // seed
     openstudio::path temp = relocatePath(seed().path(),originalBase,newBase);
@@ -702,18 +702,23 @@ namespace detail {
     }
 
     // problem
-    // HERE -- Implement for Problem.
-    m_problem.getImpl<detail::Problem_Impl>()->updatePathData(originalBase,newBase);
+    m_problem.getImpl<detail::Problem_Impl>()->updateInputPathData(originalBase,newBase);
 
     // algorithm
+    //
+    // Doing nothing because paths are outputs from running an analysis.
+    //
     if (algorithm()) {
-      m_algorithm->getImpl<detail::Algorithm_Impl>()->updatePathData(originalBase,newBase);
+      m_algorithm->getImpl<detail::Algorithm_Impl>()->updateInputPathData(originalBase,newBase);
     }
 
     // data points
+    //
+    // Doing nothing because paths are outputs from running an analysis.
+    //
     DataPointVector dataPoints = this->dataPoints();
     BOOST_FOREACH(DataPoint& dataPoint,dataPoints) {
-      dataPoint.getImpl<detail::DataPoint_Impl>()->updatePathData(originalBase,newBase);
+      dataPoint.getImpl<detail::DataPoint_Impl>()->updateInputPathData(originalBase,newBase);
     }
   }
 
@@ -1052,10 +1057,10 @@ Table Analysis::summaryTable() const {
   return getImpl<detail::Analysis_Impl>()->summaryTable();
 }
 
-void Analysis::updatePathData(const openstudio::path& originalBase,
+void Analysis::updateInputPathData(const openstudio::path& originalBase,
                               const openstudio::path& newBase)
 {
-  return getImpl<detail::Analysis_Impl>()->updatePathData(originalBase,newBase);
+  return getImpl<detail::Analysis_Impl>()->updateInputPathData(originalBase,newBase);
 }
 
 bool Analysis::saveJSON(const openstudio::path& p,

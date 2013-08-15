@@ -242,7 +242,8 @@ namespace detail {
     Table summaryTable() const;
 
     /// Relocate path data from originalBase to newBase.
-    virtual void updatePathData(const openstudio::path& originalBase, const openstudio::path& newBase);
+    virtual void updateInputPathData(const openstudio::path& originalBase,
+                                     const openstudio::path& newBase);
 
     //@}
     /** @name Serialization */

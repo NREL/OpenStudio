@@ -119,9 +119,6 @@ namespace detail {
                     const QObject* receiver=0,
                     const char* slot=0) const;
 
-    /// Relocate path data from originalBase to newBase.
-    virtual void updatePathData(const openstudio::path& originalBase, const openstudio::path& newBase);
-
     //@}
     /** @name Type Casting */
     //@{
@@ -141,7 +138,7 @@ namespace detail {
       InvalidatesDataPoints,
     };
 
-    /** @name Protected in Public Class */
+    /** @name Protected in or Absent from Public Class */
     //@{
 
     /** Changes version UUID, sets to dirty, and emits changed signal. */
@@ -154,6 +151,11 @@ namespace detail {
     void clearParent() const;
 
     virtual QVariant toVariant() const;
+
+    /// Relocate path data from originalBase to newBase.
+    virtual void updateInputPathData(const openstudio::path& originalBase,
+                                     const openstudio::path& newBase);
+
 
     //@}
    public slots:

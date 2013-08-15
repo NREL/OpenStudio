@@ -38,6 +38,7 @@
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/Finder.hpp>
 #include <utilities/core/Json.hpp>
+#include <utilities/core/PathHelpers.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -529,6 +530,39 @@ namespace detail {
                        map["is_user_script"].toBool(),
                        arguments,
                        map.contains("bcl_measure_directory"));
+  }
+
+  void RubyMeasure_Impl::updateInputPathData(const openstudio::path& originalBase,
+                                             const openstudio::path& newBase)
+  {
+    openstudio::path temp;
+
+    // BCL Measure Directory
+    if (m_bclMeasureDirectory) {
+      temp = relocatePath(*m_bclMeasureDirectory,originalBase,newBase);
+      if (!temp.empty()) {
+        m_bclMeasureDirectory = temp;
+      }
+    }
+
+    // Perturbation Script
+    if (m_perturbationScript) {
+      temp = relocatePath(m_perturbationScript->path(),originalBase,newBase);
+      if (!temp.empty()) {
+        m_perturbationScript->setPath(temp);
+      }
+    }
+
+    // Path Argument Values
+    BOOST_FOREACH(OSArgument& arg,m_arguments) {
+      if ((arg.type() == OSArgumentType::Path) && arg.hasValue()) {
+        temp = relocatePath(arg.valueAsPath(),originalBase,newBase);
+        if (!temp.empty()) {
+          arg.setValue(temp);
+        }
+      }
+      // default value for path argument should not be absolute, so skip
+    }
   }
 
   bool RubyMeasure_Impl::fileTypesAreCompatible(

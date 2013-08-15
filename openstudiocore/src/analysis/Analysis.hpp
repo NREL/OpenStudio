@@ -267,8 +267,11 @@ class ANALYSIS_API Analysis : public AnalysisObject {
   /** Returns a csv summary of all the data points in this analysis. */
   Table summaryTable() const;
 
-  /// Relocate path data from originalBase to newBase.
-  void updatePathData(const openstudio::path& originalBase, const openstudio::path& newBase);
+  /** Relocate input path data from originalBase to newBase. Only updates file paths used to set
+   *  up an analysis; paths that point to analysis results should be fixed up by a separate import
+   *  process. */
+  void updateInputPathData(const openstudio::path& originalBase,
+                           const openstudio::path& newBase);
 
   //@}
   /** @name Serialization */

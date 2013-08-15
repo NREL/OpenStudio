@@ -47,4 +47,4 @@ class StopWatcher : public openstudio::analysisdriver::AnalysisDriverWatcher {
   openstudio::Time m_stoppingTime;
 };
 
-#endif ANALYSISDRIVER_TEST_STOPWATCHER_HPP
+#endif // ANALYSISDRIVER_TEST_STOPWATCHER_HPP
