@@ -450,7 +450,7 @@ namespace openstudio{
   {
     double numerator(lastTotalResults());
     double denominator(resultsPerQuery());
-    return std::ceil(numerator/denominator);
+    return int(std::ceil(numerator/denominator));
   }
 
   bool RemoteBCL::validateAuthKey(const std::string& authKey, const std::string& remoteUrl)
