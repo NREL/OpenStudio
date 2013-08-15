@@ -19,6 +19,9 @@
 
 #include <utilities/data/Tag.hpp>
 
+#include <utilities/core/String.hpp>
+#include <utilities/core/Compare.hpp>
+
 namespace openstudio {
 
 Tag::Tag(const std::string& name)
@@ -42,5 +45,24 @@ UUID Tag::uuid() const {
 std::string Tag::name() const {
   return m_name;
 }
+
+namespace detail {
+
+  QVariant toVariant(const Tag& tag) {
+    QVariantMap tagData;
+
+    tagData["uuid"] = tag.uuid().toString();
+    tagData["name"] = toQString(tag.name());
+
+    return QVariant(tagData);
+  }
+
+  Tag toTag(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+    return Tag(openstudio::UUID(map["uuid"].toString()),
+               map["name"].toString().toStdString());
+  }
+
+} // detail
 
 } // openstudio

@@ -76,21 +76,29 @@ namespace runmanager {
     openstudio::path epwdir;
 
     try {
-      openstudio::path epwfile = toPath(t_params.get("epwfile").children.at(0).value);
-
-      if (!epwfile.empty() && boost::filesystem::exists(epwfile))
+      if (t_params.has("epwfile"))
       {
-        LOG(Info, "Valid epwfile found, returning: " << openstudio::toString(epwfile));
+        openstudio::path epwfile = toPath(t_params.get("epwfile").children.at(0).value);
 
-        return epwfile;
+        if (!epwfile.empty() && boost::filesystem::exists(epwfile))
+        {
+          LOG(Info, "Valid epwfile found, returning: " << openstudio::toString(epwfile));
+
+          return epwfile;
+        }
+      } else {
+        LOG(Info, "No epwfile found in params, moving on for other methods of finding weather file");
       }
     } catch (const std::exception &) {
       // No epw dir set in params
-      LOG(Info, "No epwfile found in params, moving on for other methods of finding weather file");
+      LOG(Info, "Error with epwfile found in params, moving on for other methods of finding weather file");
     }
 
     try {
-      epwdir = toPath(t_params.get("epwdir").children.at(0).value);
+      if (t_params.has("epwdir"))
+      {
+        epwdir = toPath(t_params.get("epwdir").children.at(0).value);
+      }
     } catch (const std::exception &) {
       // No epw dir set in params
       LOG(Info, "No EPWDir known finding weather file will be much harder");

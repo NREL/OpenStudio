@@ -32,7 +32,7 @@ class RubyContinuousVariable;
 namespace project {
 
 class OSArgumentRecord;
-class RubyPerturbationRecord;
+class RubyMeasureRecord;
 
 namespace detail {
 
@@ -85,7 +85,7 @@ class PROJECT_API RubyContinuousVariableRecord : public ContinuousVariableRecord
 
   OSArgumentRecord osArgumentRecord() const;
 
-  RubyPerturbationRecord rubyPerturbationRecord() const;
+  RubyMeasureRecord rubyMeasureRecord() const;
 
   analysis::RubyContinuousVariable rubyContinuousVariable() const;
 

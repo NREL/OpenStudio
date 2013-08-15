@@ -23,6 +23,8 @@
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 namespace model {
@@ -168,7 +170,7 @@ Mixer::Mixer(boost::shared_ptr<detail::Mixer_Impl> p)
 Mixer::Mixer(IddObjectType type,const Model& model)
   : HVACComponent(type,model)
 {
-  BOOST_ASSERT(getImpl<detail::Mixer_Impl>());
+  OS_ASSERT(getImpl<detail::Mixer_Impl>());
 }     
 
 unsigned Mixer::outletPort()

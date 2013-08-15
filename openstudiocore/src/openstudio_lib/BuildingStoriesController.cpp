@@ -25,6 +25,8 @@
 #include <model/BuildingStory_Impl.hpp>
 #include <model/Space.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 BuildingStoriesController::BuildingStoriesController(const model::Model& model)
@@ -34,7 +36,7 @@ BuildingStoriesController::BuildingStoriesController(const model::Model& model)
 
 void BuildingStoriesController::onAddObject(const openstudio::IddObjectType& iddObjectType)
 {
-  BOOST_ASSERT(IddObjectType::OS_BuildingStory == iddObjectType.value());
+  OS_ASSERT(IddObjectType::OS_BuildingStory == iddObjectType.value());
   openstudio::model::BuildingStory(this->model());
 }
 

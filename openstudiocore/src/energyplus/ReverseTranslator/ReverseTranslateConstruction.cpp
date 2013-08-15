@@ -35,6 +35,8 @@
 #include <utilities/idd/Construction_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -49,7 +51,7 @@ OptionalModelObject ReverseTranslator::translateConstruction( const WorkspaceObj
   }
 
   Construction construction(m_model);
-  BOOST_ASSERT(construction.numLayers() == 0u);
+  OS_ASSERT(construction.numLayers() == 0u);
   OptionalString optS = workspaceObject.name();
   if (optS) {
     construction.setName(*optS);

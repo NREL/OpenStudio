@@ -37,7 +37,7 @@ namespace detail {
                                                                                            bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == DesignSpecificationZoneAirDistribution::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == DesignSpecificationZoneAirDistribution::iddObjectType());
   }
 
   DesignSpecificationZoneAirDistribution_Impl::DesignSpecificationZoneAirDistribution_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                                                                                            bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == DesignSpecificationZoneAirDistribution::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == DesignSpecificationZoneAirDistribution::iddObjectType());
   }
 
   DesignSpecificationZoneAirDistribution_Impl::DesignSpecificationZoneAirDistribution_Impl(const DesignSpecificationZoneAirDistribution_Impl& other,
@@ -80,14 +80,14 @@ namespace detail {
 
   double DesignSpecificationZoneAirDistribution_Impl::zoneAirDistributionEffectivenessinCoolingMode() const {
     boost::optional<double> value = getDouble(OS_DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinCoolingMode,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity DesignSpecificationZoneAirDistribution_Impl::getZoneAirDistributionEffectivenessinCoolingMode(bool returnIP) const {
     OptionalDouble value = zoneAirDistributionEffectivenessinCoolingMode();
     OSOptionalQuantity result = getQuantityFromDouble(OS_DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinCoolingMode, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -97,14 +97,14 @@ namespace detail {
 
   double DesignSpecificationZoneAirDistribution_Impl::zoneAirDistributionEffectivenessinHeatingMode() const {
     boost::optional<double> value = getDouble(OS_DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinHeatingMode,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity DesignSpecificationZoneAirDistribution_Impl::getZoneAirDistributionEffectivenessinHeatingMode(bool returnIP) const {
     OptionalDouble value = zoneAirDistributionEffectivenessinHeatingMode();
     OSOptionalQuantity result = getQuantityFromDouble(OS_DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinHeatingMode, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -118,14 +118,14 @@ namespace detail {
 
   double DesignSpecificationZoneAirDistribution_Impl::zoneSecondaryRecirculationFraction() const {
     boost::optional<double> value = getDouble(OS_DesignSpecification_ZoneAirDistributionFields::ZoneSecondaryRecirculationFraction,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity DesignSpecificationZoneAirDistribution_Impl::getZoneSecondaryRecirculationFraction(bool returnIP) const {
     OptionalDouble value = zoneSecondaryRecirculationFraction();
     OSOptionalQuantity result = getQuantityFromDouble(OS_DesignSpecification_ZoneAirDistributionFields::ZoneSecondaryRecirculationFraction, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -148,7 +148,7 @@ namespace detail {
 
   void DesignSpecificationZoneAirDistribution_Impl::resetZoneAirDistributionEffectivenessinCoolingMode() {
     bool result = setString(OS_DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinCoolingMode, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DesignSpecificationZoneAirDistribution_Impl::setZoneAirDistributionEffectivenessinHeatingMode(double zoneAirDistributionEffectivenessinHeatingMode) {
@@ -166,7 +166,7 @@ namespace detail {
 
   void DesignSpecificationZoneAirDistribution_Impl::resetZoneAirDistributionEffectivenessinHeatingMode() {
     bool result = setString(OS_DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinHeatingMode, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DesignSpecificationZoneAirDistribution_Impl::setZoneAirDistributionEffectivenessSchedule(Schedule& schedule) {
@@ -179,7 +179,7 @@ namespace detail {
 
   void DesignSpecificationZoneAirDistribution_Impl::resetZoneAirDistributionEffectivenessSchedule() {
     bool result = setString(OS_DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessSchedule, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DesignSpecificationZoneAirDistribution_Impl::setZoneSecondaryRecirculationFraction(double zoneSecondaryRecirculationFraction) {
@@ -197,7 +197,7 @@ namespace detail {
 
   void DesignSpecificationZoneAirDistribution_Impl::resetZoneSecondaryRecirculationFraction() {
     bool result = setString(OS_DesignSpecification_ZoneAirDistributionFields::ZoneSecondaryRecirculationFraction, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   openstudio::Quantity DesignSpecificationZoneAirDistribution_Impl::zoneAirDistributionEffectivenessinCoolingMode_SI() const {
@@ -255,7 +255,7 @@ namespace detail {
 DesignSpecificationZoneAirDistribution::DesignSpecificationZoneAirDistribution(const Model& model)
   : ModelObject(DesignSpecificationZoneAirDistribution::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>());
+  OS_ASSERT(getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>());
 
 }
 

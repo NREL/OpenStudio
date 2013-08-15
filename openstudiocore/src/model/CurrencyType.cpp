@@ -35,7 +35,7 @@ namespace detail {
   CurrencyType_Impl::CurrencyType_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ParentObject_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CurrencyType::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CurrencyType::iddObjectType());
   }
 
   CurrencyType_Impl::CurrencyType_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -43,7 +43,7 @@ namespace detail {
                                        bool keepHandle)
                                          : ParentObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CurrencyType::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CurrencyType::iddObjectType());
   }
 
   CurrencyType_Impl::CurrencyType_Impl(const CurrencyType_Impl& other,Model_Impl* model,bool keepHandle)
@@ -107,7 +107,7 @@ namespace detail {
 CurrencyType::CurrencyType(const Model& model)
   : ParentObject(CurrencyType::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CurrencyType_Impl>());
+  OS_ASSERT(getImpl<detail::CurrencyType_Impl>());
 }
 
 // constructor

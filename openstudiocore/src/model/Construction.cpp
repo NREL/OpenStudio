@@ -30,6 +30,8 @@
 
 #include <utilities/idd/OS_Construction_FieldEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 #include <boost/foreach.hpp>
 
 namespace openstudio {
@@ -40,7 +42,7 @@ namespace detail {
   Construction_Impl::Construction_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : LayeredConstruction_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == Construction::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == Construction::iddObjectType());
   }
 
   Construction_Impl::Construction_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -48,7 +50,7 @@ namespace detail {
                                        bool keepHandle)
     : LayeredConstruction_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == Construction::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == Construction::iddObjectType());
   }
 
   Construction_Impl::Construction_Impl(const Construction_Impl& other,
@@ -119,7 +121,7 @@ namespace detail {
 Construction::Construction(const Model& model)
   : LayeredConstruction(Construction::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::Construction_Impl>());
+  OS_ASSERT(getImpl<detail::Construction_Impl>());
 }
 
 Construction::Construction(const std::vector<OpaqueMaterial>& opaqueMaterials)
@@ -127,7 +129,7 @@ Construction::Construction(const std::vector<OpaqueMaterial>& opaqueMaterials)
 {
   std::vector<Material> materials = castVector<Material>(opaqueMaterials);
   bool ok = setLayers(materials);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 Construction::Construction(const std::vector<FenestrationMaterial>& fenestrationMaterials)
@@ -135,14 +137,14 @@ Construction::Construction(const std::vector<FenestrationMaterial>& fenestration
 {
   std::vector<Material> materials = castVector<Material>(fenestrationMaterials);
   bool ok = setLayers(materials);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 Construction::Construction(const ModelPartitionMaterial& modelPartitionMaterial)
   : LayeredConstruction(Construction::iddObjectType(),modelPartitionMaterial.model())
 {
   bool ok = setLayer(modelPartitionMaterial);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 Construction Construction::reverseConstruction() const{

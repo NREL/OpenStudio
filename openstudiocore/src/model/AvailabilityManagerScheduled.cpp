@@ -39,7 +39,7 @@ namespace detail {
                                                                        bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == AvailabilityManagerScheduled::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == AvailabilityManagerScheduled::iddObjectType());
   }
 
   AvailabilityManagerScheduled_Impl::AvailabilityManagerScheduled_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -47,7 +47,7 @@ namespace detail {
                                                                        bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == AvailabilityManagerScheduled::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == AvailabilityManagerScheduled::iddObjectType());
   }
 
   AvailabilityManagerScheduled_Impl::AvailabilityManagerScheduled_Impl(const AvailabilityManagerScheduled_Impl& other,
@@ -133,11 +133,11 @@ namespace detail {
 AvailabilityManagerScheduled::AvailabilityManagerScheduled(const Model& model)
   : ModelObject(AvailabilityManagerScheduled::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::AvailabilityManagerScheduled_Impl>());
+  OS_ASSERT(getImpl<detail::AvailabilityManagerScheduled_Impl>());
 
   Schedule s = model.alwaysOnDiscreteSchedule();
 
-  BOOST_ASSERT(setSchedule(s));
+  OS_ASSERT(setSchedule(s));
 }
 
 IddObjectType AvailabilityManagerScheduled::iddObjectType() {

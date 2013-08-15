@@ -37,7 +37,7 @@ namespace gbxml {
           return construction;
         }
 
-        BOOST_ASSERT(layerIdList.count() == 1);
+        OS_ASSERT(layerIdList.count() == 1);
         QString layerId = layerIdList.at(0).toElement().attribute("layerIdRef");
 
         std::vector<openstudio::model::Material> materials;
@@ -51,7 +51,7 @@ namespace gbxml {
               // we are naming openstudio objects with id to guarantee unique names, there should be a material with this name in the openstudio model
               std::string materialName = materialId.toStdString();
               boost::optional<openstudio::model::Material> material = model.getModelObjectByName<openstudio::model::Material>(materialName);
-              BOOST_ASSERT(material); // Krishnan, what type of error handling do you want?
+              OS_ASSERT(material); // Krishnan, what type of error handling do you want?
               materials.push_back(*material);
             }
             break;
@@ -70,7 +70,7 @@ namespace gbxml {
             test = construction.setLayer(materials[i].cast<openstudio::model::ModelPartitionMaterial>());
           }
           
-          BOOST_ASSERT(test); // Krishnan, what type of error handling do you want?
+          OS_ASSERT(test); // Krishnan, what type of error handling do you want?
         }
 
         return construction;

@@ -52,15 +52,15 @@ namespace openstudio{
   Transformation::Transformation(const Matrix& matrix)
     : m_storage(matrix)
   {
-    BOOST_ASSERT(matrix.size1() == 4);
-    BOOST_ASSERT(matrix.size2() == 4);
+    OS_ASSERT(matrix.size1() == 4);
+    OS_ASSERT(matrix.size2() == 4);
   }
 
   /// constructor from storage, asserts vector is size 16
   Transformation::Transformation(const Vector& vector)
     : m_storage(Matrix(4,4))
   {
-    BOOST_ASSERT(vector.size() == 16);
+    OS_ASSERT(vector.size() == 16);
     
     m_storage(0,0) = vector[0];
     m_storage(1,0) = vector[1];

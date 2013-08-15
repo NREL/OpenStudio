@@ -45,6 +45,9 @@
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
+
+#include <utilities/core/Assert.hpp>
+
 #include <QStackedWidget>
 #include <QLayout>
 
@@ -86,7 +89,7 @@ MainRightColumnController::MainRightColumnController(const model::Model & model,
   m_inspectorController = boost::shared_ptr<InspectorController>( new InspectorController() );
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorController.get(), SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 void MainRightColumnController::inspectModelObject(model::OptionalModelObject & modelObject, bool readOnly)
@@ -495,7 +498,7 @@ void MainRightColumnController::configureForLoadsSubTab(int subTabID)
 void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
 {
   // no sub tabs
-  BOOST_ASSERT(subTabID == -1);
+  OS_ASSERT(subTabID == -1);
 
   setEditView(NULL);
 
@@ -577,7 +580,7 @@ void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
 void MainRightColumnController::configureForBuildingStoriesSubTab(int subTabID)
 {
   // no sub tabs
-  BOOST_ASSERT(subTabID == -1);
+  OS_ASSERT(subTabID == -1);
 
   setEditView(NULL);
 
@@ -627,7 +630,7 @@ void MainRightColumnController::configureForBuildingStoriesSubTab(int subTabID)
 void MainRightColumnController::configureForFacilitySubTab(int subTabID)
 {
   // no sub tabs
-  BOOST_ASSERT(subTabID == -1);
+  OS_ASSERT(subTabID == -1);
 
   setEditView(NULL);
 
@@ -816,6 +819,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_MixedAir,"Setpoint Manager Mixed Air");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_FollowOutdoorAirTemperature,"Setpoint Manager Follow Outdoor Air Temperature");
   libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_OutdoorAirReset,"Setpoint Manager Outdoor Air Reset");
+  libraryWidget->addModelObjectType(IddObjectType::OS_SetpointManager_Warmest,"Setpoint Manager Warmest");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pump_ConstantSpeed,"Pump Constant Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pump_VariableSpeed,"Pump Variable Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pipe_Adiabatic, "Pipes");

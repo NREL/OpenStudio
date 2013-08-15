@@ -38,14 +38,14 @@ namespace detail {
                                                                        bool keepHandle)
     : ModelObject_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == BuildingStandardsInformation::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == BuildingStandardsInformation::iddObjectType());
   }
 
   BuildingStandardsInformation_Impl::BuildingStandardsInformation_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == BuildingStandardsInformation::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == BuildingStandardsInformation::iddObjectType());
   }
 
   BuildingStandardsInformation_Impl::BuildingStandardsInformation_Impl(
@@ -109,7 +109,7 @@ namespace detail {
 BuildingStandardsInformation::BuildingStandardsInformation(Model& model) 
   : ModelObject(BuildingStandardsInformation::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::BuildingStandardsInformation_Impl>());
+  OS_ASSERT(getImpl<detail::BuildingStandardsInformation_Impl>());
 }
 
 IddObjectType BuildingStandardsInformation::iddObjectType() {

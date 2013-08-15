@@ -1,4 +1,4 @@
-!IDD_Version 1.0.3
+!IDD_Version 1.0.4
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -711,8 +711,8 @@ OS:RadianceParameters,
        \type choice
        \default 146
        \key 146
-       \key 581
-       \key 2321
+       \key 578
+       \key 2306
 
 \group OpenStudio Site
 
@@ -10318,6 +10318,37 @@ OS:SetpointManager:Scheduled,
        \required-field
        \object-list Node
 
+OS:SetpointManager:Warmest,
+       \min-fields 1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference SetpointManagers
+  A3 , \field Control Variable
+       \type choice
+       \required-field
+       \key Temperature
+  N1 , \field Minimum Setpoint Temperature
+       \units C
+       \type real
+       \minimum> 0.0
+       \required-field
+  N2 , \field Maximum Setpoint Temperature
+       \units C
+       \type real
+       \minimum> 0.0
+       \required-field
+  A4 , \field Strategy
+       \type choice
+       \key MaximumTemperature
+       \required-field
+  A5 ; \field Setpoint Node or NodeList Name
+       \type object-list
+       \required-field
+       \object-list Node
+
 OS:Sizing:Plant,
   \min-fields 5
   A1, \field Handle
@@ -12104,6 +12135,8 @@ OS:LifeCycleCost,
        \key Lights
        \key Luminaire
        \key Equipment
+       \key HVACComponent
+       \key ZoneHVACComponent
   A5, \field Item Name
        \type object-list
        \required-field

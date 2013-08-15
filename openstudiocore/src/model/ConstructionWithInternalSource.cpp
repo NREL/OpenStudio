@@ -19,13 +19,12 @@
 
 #include <model/ConstructionWithInternalSource.hpp>
 #include <model/ConstructionWithInternalSource_Impl.hpp>
-#include <model/Model.hpp>
 
 #include <model/Material.hpp>
 #include <model/Material_Impl.hpp>
-#include <model/OpaqueMaterial.hpp>
 #include <model/ModelExtensibleGroup.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/idd/OS_Construction_InternalSource_FieldEnums.hxx>
 
 #include <boost/foreach.hpp>
@@ -39,14 +38,14 @@ namespace detail {
       const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : LayeredConstruction_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ConstructionWithInternalSource::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ConstructionWithInternalSource::iddObjectType());
   }
 
   ConstructionWithInternalSource_Impl::ConstructionWithInternalSource_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : LayeredConstruction_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ConstructionWithInternalSource::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ConstructionWithInternalSource::iddObjectType());
   }
 
   ConstructionWithInternalSource_Impl::ConstructionWithInternalSource_Impl(
@@ -71,46 +70,14 @@ namespace detail {
     return OS_Construction_InternalSourceFields::SurfaceRenderingName;
   }
 
-  bool ConstructionWithInternalSource_Impl::eraseLayer(unsigned layerIndex)
-  {
-    if (this->numLayers() < 3){
-      return false;
-    }
-    bool result = LayeredConstruction_Impl::eraseLayer(layerIndex);
-    if (result){
-      onNumLayersChanged();
-    }
-    return result;
-  }
-
-  bool ConstructionWithInternalSource_Impl::setLayers(const std::vector<Material>& materials)
-  {
-    if (materials.size() < 2){
-      return false;
-    }
-    bool result = LayeredConstruction_Impl::setLayers(materials);
-    if (result){
-      onNumLayersChanged();
-    }
-    return result;
-  }
-
-  bool ConstructionWithInternalSource_Impl::setLayer(const ModelPartitionMaterial& modelPartitionMaterial)
-  {
-    return false;
-  }
-
   int ConstructionWithInternalSource_Impl::sourcePresentAfterLayerNumber() const
   {
     boost::optional<int> value = getInt(OS_Construction_InternalSourceFields::SourcePresentAfterLayerNumber,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   bool ConstructionWithInternalSource_Impl::setSourcePresentAfterLayerNumber(int sourcePresentAfterLayerNumber) {
-    if (sourcePresentAfterLayerNumber < 1 || sourcePresentAfterLayerNumber > (int)this->numLayers()){
-      return false;
-    }
     bool result = setInt(OS_Construction_InternalSourceFields::SourcePresentAfterLayerNumber,sourcePresentAfterLayerNumber);
     return result;
   }
@@ -118,14 +85,11 @@ namespace detail {
   int ConstructionWithInternalSource_Impl::temperatureCalculationRequestedAfterLayerNumber() const
   {
     boost::optional<int> value = getInt(OS_Construction_InternalSourceFields::TemperatureCalculationRequestedAfterLayerNumber,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   bool ConstructionWithInternalSource_Impl::setTemperatureCalculationRequestedAfterLayerNumber(int temperatureCalculationRequestedAfterLayerNumber) {
-    if (temperatureCalculationRequestedAfterLayerNumber < 1 || temperatureCalculationRequestedAfterLayerNumber > (int)this->numLayers()){
-      return false;
-    }    
     bool result = setInt(OS_Construction_InternalSourceFields::TemperatureCalculationRequestedAfterLayerNumber,temperatureCalculationRequestedAfterLayerNumber);
     return result;
   }
@@ -133,14 +97,11 @@ namespace detail {
   int ConstructionWithInternalSource_Impl::dimensionsForTheCTFCalculation() const
   {
     boost::optional<int> value = getInt(OS_Construction_InternalSourceFields::DimensionsfortheCTFCalculation,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   bool ConstructionWithInternalSource_Impl::setDimensionsForTheCTFCalculation(int dimensionsForTheCTFCalculation) {
-    if (dimensionsForTheCTFCalculation < 1 || dimensionsForTheCTFCalculation > 2){
-      return false;
-    }
     bool result = setInt(OS_Construction_InternalSourceFields::DimensionsfortheCTFCalculation,dimensionsForTheCTFCalculation);
     return result;
   }
@@ -148,13 +109,13 @@ namespace detail {
   double ConstructionWithInternalSource_Impl::tubeSpacing() const
   {
     boost::optional<double> value = getDouble(OS_Construction_InternalSourceFields::TubeSpacing,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity ConstructionWithInternalSource_Impl::getTubeSpacing(bool returnIP) const {
     OSOptionalQuantity value = getQuantity(OS_Construction_InternalSourceFields::TubeSpacing,true,returnIP);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
@@ -179,100 +140,21 @@ namespace detail {
     return setTubeSpacing(value.get());
   }
 
-  ConstructionWithInternalSource ConstructionWithInternalSource_Impl::reverseConstructionWithInternalSource() const
-  {
-    MaterialVector reverseLayers(this->layers());
-    std::reverse(reverseLayers.begin(), reverseLayers.end());
-
-    int numLayers = (int)this->numLayers();
-    int reverseSourcePresentAfterLayerNumber = numLayers - this->sourcePresentAfterLayerNumber();
-    int reverseTemperatureCalculationRequestedAfterLayerNumber = numLayers - this->temperatureCalculationRequestedAfterLayerNumber();
-    int dimensionsForTheCTFCalculation = this->dimensionsForTheCTFCalculation();
-    double tubeSpacing = this->tubeSpacing();
-
-    Model model = this->model();
-    BOOST_FOREACH(const ConstructionWithInternalSource& other, model.getModelObjects<ConstructionWithInternalSource>()) {
-      
-      if (other.sourcePresentAfterLayerNumber() != reverseSourcePresentAfterLayerNumber){
-        continue;
-      }
-
-      if (other.temperatureCalculationRequestedAfterLayerNumber() != reverseTemperatureCalculationRequestedAfterLayerNumber){
-        continue;
-      }
-
-      if (other.dimensionsForTheCTFCalculation() != dimensionsForTheCTFCalculation){
-        continue;
-      }
-
-      if (other.tubeSpacing() != tubeSpacing){
-        continue;
-      }
-
-      MaterialVector layers = other.layers();
-      if (layers.size() != reverseLayers.size()){
-        continue;
-      }
-
-      bool test = true;
-      for (unsigned i = 0; i < layers.size(); ++i){
-        if (layers[i].handle() != reverseLayers[i].handle()){
-          test = false;
-          break; // break out of loop over layers
-        }
-      }
-
-      if (test){
-        return other;
-      }
-    }
-
-    // TODO: this should also copy (and modify) standards information object
-
-    // no match, make one
-    ConstructionWithInternalSource result(model);
-    result.setName(this->name().get() + " Reversed");
-    result.setSourcePresentAfterLayerNumber(reverseSourcePresentAfterLayerNumber);
-    result.setTemperatureCalculationRequestedAfterLayerNumber(reverseTemperatureCalculationRequestedAfterLayerNumber);
-    result.setDimensionsForTheCTFCalculation(dimensionsForTheCTFCalculation);
-    result.setTubeSpacing(tubeSpacing);
-    result.setLayers(reverseLayers);
-
-    return result;
-  }
-
-  void ConstructionWithInternalSource_Impl::onNumLayersChanged()
-  {
-    int numLayers = (int)this->numLayers();
-    if (this->sourcePresentAfterLayerNumber() > numLayers-1){
-      bool test = setString(OS_Construction_InternalSourceFields::SourcePresentAfterLayerNumber, "");
-      BOOST_ASSERT(test);
-    }
-    if (this->temperatureCalculationRequestedAfterLayerNumber() > numLayers-1){
-      bool test = setString(OS_Construction_InternalSourceFields::TemperatureCalculationRequestedAfterLayerNumber, "");
-      BOOST_ASSERT(test);
-    }
-  }
-
-
 } // detail
 
-ConstructionWithInternalSource::ConstructionWithInternalSource(const Model& model)
+ConstructionWithInternalSource::ConstructionWithInternalSource(const Model& model,
+                                                               int sourcePresentAfterLayerNumber,
+                                                               int temperatureCalculationRequestedAfterLayerNumber,
+                                                               int dimensionsForTheCTFCalculation,
+                                                               double tubeSpacing)
   : LayeredConstruction(ConstructionWithInternalSource::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ConstructionWithInternalSource_Impl>());
-}
+  OS_ASSERT(getImpl<detail::ConstructionWithInternalSource_Impl>());
 
-ConstructionWithInternalSource::ConstructionWithInternalSource(const std::vector<OpaqueMaterial>& opaqueMaterials)
-  : LayeredConstruction(ConstructionWithInternalSource::iddObjectType(),opaqueMaterials.at(0).model())
-{
-  if(opaqueMaterials.size() < 2){
-    this->remove();
-    LOG_AND_THROW("Cannot create a internal source construction with fewer than 2 layers");
-  }
-  std::vector<Material> materials = castVector<Material>(opaqueMaterials);
-  bool ok = setLayers(materials);
-  BOOST_ASSERT(ok);
+  setSourcePresentAfterLayerNumber(sourcePresentAfterLayerNumber);
+  setTemperatureCalculationRequestedAfterLayerNumber(temperatureCalculationRequestedAfterLayerNumber);
+  setDimensionsForTheCTFCalculation(dimensionsForTheCTFCalculation);
+  setTubeSpacing(tubeSpacing);
 }
 
 IddObjectType ConstructionWithInternalSource::iddObjectType() {
@@ -308,13 +190,16 @@ double ConstructionWithInternalSource::tubeSpacing() const {
   return getImpl<detail::ConstructionWithInternalSource_Impl>()->tubeSpacing();
 }
 
+Quantity ConstructionWithInternalSource::getTubeSpacing(bool returnIP) const {
+  return getImpl<detail::ConstructionWithInternalSource_Impl>()->getTubeSpacing(returnIP);
+}
+
 bool ConstructionWithInternalSource::setTubeSpacing(double tubeSpacing) {
   return getImpl<detail::ConstructionWithInternalSource_Impl>()->setTubeSpacing(tubeSpacing);
 }
 
-ConstructionWithInternalSource ConstructionWithInternalSource::reverseConstructionWithInternalSource() const
-{
-  return getImpl<detail::ConstructionWithInternalSource_Impl>()->reverseConstructionWithInternalSource();
+bool ConstructionWithInternalSource::setTubeSpacing(const Quantity& tubeSpacing) {
+  return getImpl<detail::ConstructionWithInternalSource_Impl>()->setTubeSpacing(tubeSpacing);
 }
 
 /// @cond

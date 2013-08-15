@@ -29,6 +29,7 @@
 #include <utilities/bcl/LocalBCL.hpp>
 #include <utilities/bcl/RemoteBCL.hpp>
 #include <utilities/data/Attribute.hpp>
+#include <utilities/core/Assert.hpp>
 
 #include <QApplication>
 #include <QBoxLayout>
@@ -86,12 +87,12 @@ void BuildingComponentDialogCentralWidget::createLayout()
 
   isConnected = connect(comboBox, SIGNAL(currentIndexChanged(const QString &)),
                         this, SLOT(comboBoxIndexChanged(const QString &)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QPushButton * upperPushButton = new QPushButton("Check All");
   isConnected = connect(upperPushButton, SIGNAL(clicked()),
                         this, SLOT(upperPushButtonClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QHBoxLayout * upperLayout = new QHBoxLayout();
   upperLayout->addWidget(label);
@@ -103,35 +104,35 @@ void BuildingComponentDialogCentralWidget::createLayout()
 
   isConnected = connect(m_collapsibleComponentList, SIGNAL(headerClicked(bool)),
                         this, SIGNAL(headerClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_collapsibleComponentList, SIGNAL(headerClicked(bool)),
                         this, SLOT(on_headerClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_collapsibleComponentList, SIGNAL(componentClicked(bool)),
                         this, SIGNAL(componentClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_collapsibleComponentList, SIGNAL(componentClicked(bool)),
                         this, SLOT(on_componentClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_collapsibleComponentList, SIGNAL(collapsibleComponentClicked(bool)),
                         this, SIGNAL(collapsibleComponentClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_collapsibleComponentList, SIGNAL(collapsibleComponentClicked(bool)),
                         this, SLOT(on_collapsibleComponentClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_collapsibleComponentList, SIGNAL(getComponentsByPage(int)),
                         this, SIGNAL(getComponentsByPage(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_collapsibleComponentList, SIGNAL(getComponentsByPage(int)),
                         this, SLOT(on_getComponentsByPage(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   //*******************************************************************
   // Hack code to be removed (TODO)
@@ -152,7 +153,7 @@ void BuildingComponentDialogCentralWidget::createLayout()
   QPushButton * lowerPushButton = new QPushButton("Download");
   isConnected = connect(lowerPushButton, SIGNAL(clicked()),
                         this, SLOT(lowerPushButtonClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QHBoxLayout * lowerLayout = new QHBoxLayout();
   lowerLayout->addStretch();
@@ -281,7 +282,7 @@ void BuildingComponentDialogCentralWidget::lowerPushButtonClicked()
       {
         bool isConnected = connect(remoteBCL, SIGNAL(componentDownloaded(const std::string&, const boost::optional<BCLComponent>&)),
                                    this, SLOT(componentDownloadComplete(const std::string&, const boost::optional<BCLComponent>&)));
-        Q_ASSERT(isConnected);
+        OS_ASSERT(isConnected);
 
         bool downloadStarted = remoteBCL->downloadComponent(component->uid());
         if (downloadStarted){
@@ -308,7 +309,7 @@ void BuildingComponentDialogCentralWidget::lowerPushButtonClicked()
       {
         bool isConnected = connect(remoteBCL, SIGNAL(measureDownloaded(const std::string&, const boost::optional<BCLMeasure>&)),
                                    this, SLOT(measureDownloadComplete(const std::string&, const boost::optional<BCLMeasure>&)));
-        Q_ASSERT(isConnected);
+        OS_ASSERT(isConnected);
 
         bool downloadStarted = remoteBCL->downloadMeasure(component->uid());
         if (downloadStarted){

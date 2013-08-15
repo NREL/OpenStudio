@@ -35,7 +35,7 @@ namespace detail {
   Timestep_Impl::Timestep_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ModelObject_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == Timestep::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == Timestep::iddObjectType());
   }
 
   Timestep_Impl::Timestep_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -43,7 +43,7 @@ namespace detail {
                                bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == Timestep::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == Timestep::iddObjectType());
   }
 
   Timestep_Impl::Timestep_Impl(const Timestep_Impl& other,Model_Impl* model,bool keepHandle)
@@ -82,7 +82,7 @@ namespace detail {
 
   int Timestep_Impl::numberOfTimestepsPerHour() const {
     boost::optional<int> value = getInt(OS_TimestepFields::NumberofTimestepsperHour,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -98,7 +98,7 @@ namespace detail {
 
   void Timestep_Impl::resetNumberOfTimestepsPerHour() {
     bool result = setString(OS_TimestepFields::NumberofTimestepsperHour, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -107,7 +107,7 @@ namespace detail {
 Timestep::Timestep(const Model& model)
   : ModelObject(Timestep::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::Timestep_Impl>());
+  OS_ASSERT(getImpl<detail::Timestep_Impl>());
 
   setNumberOfTimestepsPerHour(6);
 }

@@ -23,12 +23,10 @@
 #include <project/AnalysisRecord.hpp>
 
 #include <analysis/Problem.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/ModelRulesetPerturbation.hpp>
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/ModelRulesetContinuousVariable.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/RubyMeasure.hpp>
 #include <analysis/RubyContinuousVariable.hpp>
 #include <analysis/LinearFunction.hpp>
 #include <analysis/OutputAttributeVariable.hpp>
@@ -40,16 +38,11 @@
 #include <runmanager/lib/Workflow.hpp>
 #include <runmanager/Test/ToolBin.hxx>
 
-#include <ruleset/ModelRuleset.hpp>
-#include <ruleset/ModelRule.hpp>
-#include <ruleset/ModelObjectFilterType.hpp>
-#include <ruleset/ModelObjectFilterNumericAttribute.hpp>
-#include <ruleset/ModelObjectFilterStringAttribute.hpp>
-#include <ruleset/ModelObjectActionSetRelationship.hpp>
 #include <ruleset/OSArgument.hpp>
 
 #include <utilities/idd/IddEnums.hxx>
 
+#include <utilities/data/Attribute.hpp>
 #include <utilities/data/Tag.hpp>
 
 #include <utilities/units/Quantity.hpp>
@@ -79,7 +72,7 @@ void ProjectVersioningFixture::TearDown() {}
 void ProjectVersioningFixture::SetUpTestCase() {
   // set up logging
   logFile = FileLogSink(toPath("./ProjectVersioningFixture.log"));
-  logFile->setLogLevel(Info);
+  logFile->setLogLevel(Debug);
   Logger::instance().standardOutLogger().disable();
 
   // set up folder for data
@@ -163,64 +156,43 @@ void ProjectVersioningFixture::addAnalysis(ProjectDatabase& database) {
   // create a Problem
   analysis::VariableVector variables;
 
-  analysis::DiscretePerturbationVector perturbations;
+  analysis::MeasureVector measures;
 
   // discrete variable
-  perturbations.push_back(analysis::NullPerturbation());
-  analysis::RubyPerturbation rubyPerturbation(toPath("myScript.rb"),
-                                              FileReferenceType::OSM,
-                                              FileReferenceType::OSM,
-                                              false,
-                                              false);
-  rubyPerturbation.addArgument("cost","50.00");
-  rubyPerturbation.addArgument("size","102.11");
-  perturbations.push_back(rubyPerturbation);
-  rubyPerturbation = analysis::RubyPerturbation(toPath("myUserScript.rb"),
-                                                FileReferenceType::OSM,
-                                                FileReferenceType::OSM,
-                                                true);
+  measures.push_back(analysis::NullMeasure());
+  analysis::RubyMeasure rubyMeasure(toPath("myScript.rb"),
+                                    FileReferenceType::OSM,
+                                    FileReferenceType::OSM,
+                                    false,
+                                    false);
+  rubyMeasure.addArgument("cost","50.00");
+  rubyMeasure.addArgument("size","102.11");
+  measures.push_back(rubyMeasure);
+  rubyMeasure = analysis::RubyMeasure(toPath("myUserScript.rb"),
+                                      FileReferenceType::OSM,
+                                      FileReferenceType::OSM,
+                                      true);
   ruleset::OSArgument arg = ruleset::OSArgument::makeBoolArgument("allOrNothing");
   arg.setValue(true);
-  rubyPerturbation.addArgument(arg);
+  rubyMeasure.addArgument(arg);
   arg = ruleset::OSArgument::makeDoubleArgument("thickness");
   arg.setValue(0.6207);
-  rubyPerturbation.addArgument(arg);
+  rubyMeasure.addArgument(arg);
   arg = ruleset::OSArgument::makeQuantityArgument("height");
   arg.setValue(Quantity(53.2,createSILength()));
-  rubyPerturbation.addArgument(arg);
-  perturbations.push_back(rubyPerturbation);
-  ruleset::ModelRuleset ruleset("My Ruleset");
-  ruleset::ModelRule rule("My Rule");
-  rule.add(ruleset::ModelObjectFilterType(IddObjectType(IddObjectType::OS_Surface)));
-  rule.add(ruleset::ModelObjectFilterNumericAttribute(
-      "uFactor",
-      ruleset::RulesetNumericalPredicate(ruleset::RulesetNumericalPredicate::GreaterThan),
-      0.5));
-  rule.add(ruleset::ModelObjectActionSetRelationship("construction",toPath("myConstruction.osc")));
-  ruleset.add(rule);
-  perturbations.push_back(analysis::ModelRulesetPerturbation(ruleset));
-  variables.push_back(analysis::DiscreteVariable("Hodgepodge",perturbations));
-
-  // model ruleset continuous variable
-  ruleset::ModelObjectFilterClauseVector filters;
-  filters.push_back(ruleset::ModelObjectFilterType(IddObjectType(IddObjectType::OS_Lights_Definition)));
-  filters.push_back(ruleset::ModelObjectFilterStringAttribute("designLevelCalculationMethod",
-                                                              ruleset::RulesetStringPredicate(ruleset::RulesetStringPredicate::IEquals),
-                                                              "designLevel"));
-  analysis::ModelRulesetContinuousVariable rulesetVariable("Lighting Power",filters,"designLevel");
-  rulesetVariable.setMinimum(10.0);
-  rulesetVariable.setMaximum(1000.0);
-  variables.push_back(rulesetVariable);
+  rubyMeasure.addArgument(arg);
+  measures.push_back(rubyMeasure);
+  variables.push_back(analysis::MeasureGroup("Hodgepodge",measures));
 
   // ruby continuous variable
-  rubyPerturbation = analysis::RubyPerturbation(toPath("myUserScript.rb"),
-                                                FileReferenceType::OSM,
-                                                FileReferenceType::OSM,
-                                                true);
+  rubyMeasure = analysis::RubyMeasure(toPath("myUserScript.rb"),
+                                      FileReferenceType::OSM,
+                                      FileReferenceType::OSM,
+                                      true);
   arg = ruleset::OSArgument::makeDoubleArgument("thickness");
-  variables.push_back(analysis::RubyContinuousVariable("Thickness",arg,rubyPerturbation));
+  variables.push_back(analysis::RubyContinuousVariable("Thickness",arg,rubyMeasure));
   arg = ruleset::OSArgument::makeQuantityArgument("height");
-  variables.push_back(analysis::RubyContinuousVariable("Height",arg,rubyPerturbation));
+  variables.push_back(analysis::RubyContinuousVariable("Height",arg,rubyMeasure));
 
   analysis::FunctionVector responses;
   analysis::OutputAttributeContinuousVariable outputVariable("Energy Use","Site Energy Use");
@@ -259,9 +231,9 @@ void ProjectVersioningFixture::addAnalysis(ProjectDatabase& database) {
     int n = problem.numVariables();
     std::vector<QVariant> values(n);
     for (int j = 0; j < n; ++j) {
-      if (analysis::OptionalDiscreteVariable dv = variables[j].optionalCast<analysis::DiscreteVariable>()) {
-        int value = int(floor(double(rand()) * double(dv->numPerturbations(false)) / double(RAND_MAX)));
-        if (value == int(dv->numPerturbations(false))) { --value; }
+      if (analysis::OptionalMeasureGroup dv = variables[j].optionalCast<analysis::MeasureGroup>()) {
+        int value = int(floor(double(rand()) * double(dv->numMeasures(false)) / double(RAND_MAX)));
+        if (value == int(dv->numMeasures(false))) { --value; }
         values[j] = QVariant(value);
       }
       else {
@@ -273,9 +245,9 @@ void ProjectVersioningFixture::addAnalysis(ProjectDatabase& database) {
                                   "",
                                   "",
                                   "",
+                                  problem,
                                   true,
                                   false,
-                                  problem,
                                   values,
                                   DoubleVector(1u,double(rand()) * 10000.0 / double(RAND_MAX)),
                                   toPath("C:/projectPath/aDataPointPath/"),
@@ -283,9 +255,10 @@ void ProjectVersioningFixture::addAnalysis(ProjectDatabase& database) {
                                   OptionalFileReference(),
                                   OptionalFileReference(),
                                   OptionalFileReference(),
-                                  TagVector(1u,Tag("alg1")),
                                   boost::none,
-                                  std::vector<openstudio::path>()); // DLM: Elaine is this ok?
+                                  std::vector<openstudio::path>(),
+                                  TagVector(1u,Tag("alg1")),
+                                  AttributeVector());
     analysis.addDataPoint(dataPoint);
   }
 

@@ -32,6 +32,7 @@
 #include <utilities/idf/ValidityReport.hpp>
 #include <utilities/idf/IdfFile.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Compare.hpp>
 #include <utilities/idf/IdfFile.hpp>
@@ -285,15 +286,15 @@ void OpenStudioApp::buildCompLibraries()
   osversion::VersionTranslator versionTranslator;
 
   path p = resourcesPath() / toPath("MinimalTemplate.osm");
-  BOOST_ASSERT(exists(p));
+  OS_ASSERT(exists(p));
   boost::optional<Model> temp = versionTranslator.loadModel(p);
-  BOOST_ASSERT(temp);
+  OS_ASSERT(temp);
   m_compLibrary = temp.get();
 
   p = resourcesPath() / toPath("hvaclibrary/hvac_library.osm");
-  BOOST_ASSERT(exists(p));
+  OS_ASSERT(exists(p));
   temp = versionTranslator.loadModel(p);
-  BOOST_ASSERT(temp);
+  OS_ASSERT(temp);
   m_hvacCompLibrary = temp.get();
 }
 

@@ -31,7 +31,7 @@ namespace analysis {
 namespace project {
 
 class OSArgumentRecord;
-class RubyPerturbationRecord;
+class RubyMeasureRecord;
 
 namespace detail {
 
@@ -76,7 +76,7 @@ namespace detail {
 
     OSArgumentRecord osArgumentRecord() const;
 
-    RubyPerturbationRecord rubyPerturbationRecord() const;
+    RubyMeasureRecord rubyMeasureRecord() const;
 
     virtual analysis::Variable variable() const;
 
@@ -94,7 +94,7 @@ namespace detail {
      *   constructor so can access old related records for comparison and possible removal. */
     void revertToLastRecordIds();
 
-    void setRubyPerturbationRecordId(int id);
+    void setRubyMeasureRecordId(int id);
 
     //@}
    protected:
@@ -116,9 +116,9 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.project.RubyContinuousVariableRecord");
 
-    int m_rubyPerturbationRecordId;
+    int m_rubyMeasureRecordId;
 
-    int m_lastRubyPerturbationRecordId;
+    int m_lastRubyMeasureRecordId;
   };
 
 } // detail

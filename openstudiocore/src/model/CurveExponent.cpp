@@ -37,7 +37,7 @@ namespace detail {
   CurveExponent_Impl::CurveExponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : Curve_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CurveExponent::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CurveExponent::iddObjectType());
   }
 
   CurveExponent_Impl::CurveExponent_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                                          bool keepHandle)
     : Curve_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CurveExponent::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CurveExponent::iddObjectType());
   }
 
   CurveExponent_Impl::CurveExponent_Impl(const CurveExponent_Impl& other,
@@ -71,7 +71,7 @@ namespace detail {
   }
 
   double CurveExponent_Impl::evaluate(const std::vector<double>& x) const {
-    BOOST_ASSERT(x.size() == 1u);
+    OS_ASSERT(x.size() == 1u);
     double result = coefficient1Constant();
     result += coefficient2Constant() * pow(x[0],coefficient3Constant());
     return result;
@@ -79,31 +79,31 @@ namespace detail {
 
   double CurveExponent_Impl::coefficient1Constant() const {
     boost::optional<double> value = getDouble(OS_Curve_ExponentFields::Coefficient1Constant,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveExponent_Impl::coefficient2Constant() const {
     boost::optional<double> value = getDouble(OS_Curve_ExponentFields::Coefficient2Constant,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveExponent_Impl::coefficient3Constant() const {
     boost::optional<double> value = getDouble(OS_Curve_ExponentFields::Coefficient3Constant,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveExponent_Impl::minimumValueofx() const {
     boost::optional<double> value = getDouble(OS_Curve_ExponentFields::MinimumValueofx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveExponent_Impl::maximumValueofx() const {
     boost::optional<double> value = getDouble(OS_Curve_ExponentFields::MaximumValueofx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -117,7 +117,7 @@ namespace detail {
 
   std::string CurveExponent_Impl::inputUnitTypeforX() const {
     boost::optional<std::string> value = getString(OS_Curve_ExponentFields::InputUnitTypeforX,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -127,7 +127,7 @@ namespace detail {
 
   std::string CurveExponent_Impl::outputUnitType() const {
     boost::optional<std::string> value = getString(OS_Curve_ExponentFields::OutputUnitType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -138,31 +138,31 @@ namespace detail {
   void CurveExponent_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = false;
     result = setDouble(OS_Curve_ExponentFields::Coefficient1Constant, coefficient1Constant);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveExponent_Impl::setCoefficient2Constant(double coefficient2Constant) {
     bool result = false;
     result = setDouble(OS_Curve_ExponentFields::Coefficient2Constant, coefficient2Constant);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveExponent_Impl::setCoefficient3Constant(double coefficient3Constant) {
     bool result = false;
     result = setDouble(OS_Curve_ExponentFields::Coefficient3Constant, coefficient3Constant);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveExponent_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = false;
     result = setDouble(OS_Curve_ExponentFields::MinimumValueofx, minimumValueofx);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveExponent_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = false;
     result = setDouble(OS_Curve_ExponentFields::MaximumValueofx, maximumValueofx);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveExponent_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
@@ -172,12 +172,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_ExponentFields::MinimumCurveOutput, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveExponent_Impl::resetMinimumCurveOutput() {
     bool result = setString(OS_Curve_ExponentFields::MinimumCurveOutput, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveExponent_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
@@ -187,12 +187,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_ExponentFields::MaximumCurveOutput, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveExponent_Impl::resetMaximumCurveOutput() {
     bool result = setString(OS_Curve_ExponentFields::MaximumCurveOutput, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CurveExponent_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
@@ -203,7 +203,7 @@ namespace detail {
 
   void CurveExponent_Impl::resetInputUnitTypeforX() {
     bool result = setString(OS_Curve_ExponentFields::InputUnitTypeforX, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CurveExponent_Impl::setOutputUnitType(std::string outputUnitType) {
@@ -214,7 +214,7 @@ namespace detail {
 
   void CurveExponent_Impl::resetOutputUnitType() {
     bool result = setString(OS_Curve_ExponentFields::OutputUnitType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -222,7 +222,7 @@ namespace detail {
 CurveExponent::CurveExponent(const Model& model)
   : Curve(CurveExponent::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CurveExponent_Impl>());
+  OS_ASSERT(getImpl<detail::CurveExponent_Impl>());
   setDouble(OS_Curve_ExponentFields::Coefficient1Constant,0.0);
   setDouble(OS_Curve_ExponentFields::Coefficient2Constant,1.0);
   setDouble(OS_Curve_ExponentFields::Coefficient3Constant,1.0);

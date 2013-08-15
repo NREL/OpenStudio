@@ -32,10 +32,10 @@
 #include <analysis/DDACEAlgorithm.hpp>
 #include <analysis/DesignOfExperimentsOptions.hpp>
 #include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/RubyPerturbation.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/RubyMeasure.hpp>
 #include <analysis/WorkflowStep.hpp>
 
 #include <project/ProjectDatabase.hpp>
@@ -118,7 +118,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_DakotaClearAllResults) {
   DataPoint dataPoint = analysis.dataPoints()[0];
   EXPECT_TRUE(dataPoint.isComplete());
   EXPECT_FALSE(dataPoint.failed());
-  EXPECT_FALSE(dataPoint.responseValues().empty());
+  EXPECT_TRUE(dataPoint.responseValues().empty());
   EXPECT_FALSE(dataPoint.directory().empty());
   EXPECT_TRUE(boost::filesystem::exists(dataPoint.directory()));
   ASSERT_TRUE(dataPoint.osmInputData());
@@ -162,7 +162,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_DakotaClearAllResults) {
     EXPECT_FALSE(dataPointRecord.failed());
     EXPECT_FALSE(dataPointRecord.directory().empty());
     EXPECT_TRUE(boost::filesystem::exists(dataPointRecord.directory()));
-    EXPECT_FALSE(dataPointRecord.responseValues().empty());
+    EXPECT_TRUE(dataPointRecord.responseValues().empty());
     frr = dataPointRecord.osmInputDataRecord();
     ASSERT_TRUE(frr);
     EXPECT_TRUE(boost::filesystem::exists(frr->path()));

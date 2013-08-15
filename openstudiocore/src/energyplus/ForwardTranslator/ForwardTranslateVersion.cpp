@@ -22,6 +22,8 @@
 #include <utilities/idd/Version_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 using namespace std;
@@ -32,7 +34,7 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateVersion( Version& modelObject )
 {
   IdfObject version(openstudio::IddObjectType::Version);
-  BOOST_ASSERT(istringEqual(version.iddObject().name(),"Version"));
+  OS_ASSERT(istringEqual(version.iddObject().name(),"Version"));
 
   m_idfObjects.push_back(version);
 

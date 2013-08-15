@@ -74,9 +74,9 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
             const std::string& name,
             const std::string& displayName,
             const std::string& description,
+            const Problem& problem,
             bool complete,
             bool failed,
-            const Problem& problem,
             const std::vector<QVariant>& variableValues,
             const std::vector<double>& responseValues,
             const openstudio::path& directory,
@@ -84,9 +84,32 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
             const boost::optional<FileReference>& idfInputData,
             const boost::optional<FileReference>& sqlOutputData,
             const boost::optional<FileReference>& xmlOutputData,
-            const std::vector<Tag>& tags,
             const boost::optional<runmanager::Job>& topLevelJob,
-            const std::vector<openstudio::path>& dakotaParametersFiles);
+            const std::vector<openstudio::path>& dakotaParametersFiles,
+            const std::vector<Tag>& tags,
+            const std::vector<Attribute>& outputAttributes);
+
+  /** Constructor provided for deserialization; not for general use. */
+  DataPoint(const UUID& uuid,
+            const UUID& versionUUID,
+            const std::string& name,
+            const std::string& displayName,
+            const std::string& description,
+            const UUID& problemUUID,
+            const boost::optional<UUID>& analysisUUID,
+            bool complete,
+            bool failed,
+            const std::vector<QVariant>& variableValues,
+            const std::vector<double>& responseValues,
+            const openstudio::path& directory,
+            const boost::optional<FileReference>& osmInputData,
+            const boost::optional<FileReference>& idfInputData,
+            const boost::optional<FileReference>& sqlOutputData,
+            const boost::optional<FileReference>& xmlOutputData,
+            const boost::optional<runmanager::Job>& topLevelJob,
+            const std::vector<openstudio::path>& dakotaParametersFiles,
+            const std::vector<Tag>& tags,
+            const std::vector<Attribute>& outputAttributes);
 
   virtual ~DataPoint() {}
 
@@ -94,15 +117,26 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   /** @name Getters and Queries */
   //@{
 
+  /** Returns true if DataPoint has access to the Problem that created it. Should be true
+   *  unless DataPoint was deserialized from JSON and has not yet been assimilated back
+   *  into its parent Analysis. */
+  bool hasProblem() const;
+
+  /** Returns the Problem used to create/associated with this DataPoint. */
+  Problem problem() const;
+
+  /** Returns the UUID of the Problem that created this DataPoint. */
+  UUID problemUUID() const;
+
+  /** Returns the UUID of the Analysis that parents this DataPoint. */
+  boost::optional<UUID> analysisUUID() const;
+
   /** Returns true if the DataPoint has been simulated. */
   bool isComplete() const;
 
   /** Returns true if the DataPoint was simulated, but the simulation failed, or output results
    *  could not be retrieved for some other reason. */
   bool failed() const;
-
-  /** Returns the Problem used to create/associated with this DataPoint. */
-  Problem problem() const;
 
   /** Returns the variableValues to be applied in simulating this DataPoint. (That is, inputData
    *  will be the result of applying variableValues to the Analysis seed file.) */
@@ -187,6 +221,17 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   void clearAllDataFromCache() const;
 
   void clearResults();
+
+  //@}
+  /** @name Serialization */
+  //@{
+
+  bool saveJSON(const openstudio::path& p,
+                bool overwrite=false) const;
+
+  std::ostream& toJSON(std::ostream& os) const;
+
+  std::string toJSON() const;
 
   //@}
  protected:

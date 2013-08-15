@@ -46,7 +46,7 @@ namespace detail {
   InternalMassDefinition_Impl::InternalMassDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceLoadDefinition_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == InternalMassDefinition::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == InternalMassDefinition::iddObjectType());
   }
 
   InternalMassDefinition_Impl::InternalMassDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -54,7 +54,7 @@ namespace detail {
                                                            bool keepHandle)
     : SpaceLoadDefinition_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == InternalMassDefinition::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == InternalMassDefinition::iddObjectType());
   }
 
   InternalMassDefinition_Impl::InternalMassDefinition_Impl(const InternalMassDefinition_Impl& other,
@@ -77,7 +77,7 @@ namespace detail {
 
   std::string InternalMassDefinition_Impl::designLevelCalculationMethod() const {
     boost::optional<std::string> value = getString(OS_InternalMass_DefinitionFields::DesignLevelCalculationMethod,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -85,7 +85,7 @@ namespace detail {
     boost::optional<double> result;
     if (istringEqual("SurfaceArea", this->designLevelCalculationMethod())){
       result = getDouble(OS_InternalMass_DefinitionFields::SurfaceArea, true);
-      //BOOST_ASSERT(result);
+      //OS_ASSERT(result);
     }
     return result;
   }
@@ -94,7 +94,7 @@ namespace detail {
     boost::optional<double> result;
     if (istringEqual("SurfaceArea/Area", this->designLevelCalculationMethod())){
       result = getDouble(OS_InternalMass_DefinitionFields::SurfaceAreaperSpaceFloorArea, true);
-      //BOOST_ASSERT(result);
+      //OS_ASSERT(result);
     }
     return result;
   }
@@ -103,7 +103,7 @@ namespace detail {
     boost::optional<double> result;
     if (istringEqual("SurfaceArea/Person", this->designLevelCalculationMethod())){
       result = getDouble(OS_InternalMass_DefinitionFields::SurfaceAreaperPerson, true);
-      //BOOST_ASSERT(result);
+      //OS_ASSERT(result);
     }
     return result;
   }
@@ -115,13 +115,13 @@ namespace detail {
         result = false;
       }else{
         result = setString(OS_InternalMass_DefinitionFields::DesignLevelCalculationMethod, "SurfaceArea");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setDouble(OS_InternalMass_DefinitionFields::SurfaceArea, surfaceArea.get());
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setString(OS_InternalMass_DefinitionFields::SurfaceAreaperSpaceFloorArea, "");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setString(OS_InternalMass_DefinitionFields::SurfaceAreaperPerson, "");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
       }
     } else {
       if (istringEqual("SurfaceArea", this->designLevelCalculationMethod())){
@@ -138,13 +138,13 @@ namespace detail {
         result = false;
       }else{
         result = setString(OS_InternalMass_DefinitionFields::DesignLevelCalculationMethod, "SurfaceArea/Area");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setString(OS_InternalMass_DefinitionFields::SurfaceArea, "");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setDouble(OS_InternalMass_DefinitionFields::SurfaceAreaperSpaceFloorArea, surfaceAreaperSpaceFloorArea.get());
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setString(OS_InternalMass_DefinitionFields::SurfaceAreaperPerson, "");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
       }
     } else {
       if (istringEqual("SurfaceArea/Area", this->designLevelCalculationMethod())){
@@ -161,13 +161,13 @@ namespace detail {
         result = false;
       }else{
         result = setString(OS_InternalMass_DefinitionFields::DesignLevelCalculationMethod, "SurfaceArea/Person");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setString(OS_InternalMass_DefinitionFields::SurfaceArea, "");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setString(OS_InternalMass_DefinitionFields::SurfaceAreaperSpaceFloorArea, "");
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
         result = setDouble(OS_InternalMass_DefinitionFields::SurfaceAreaperPerson, surfaceAreaperPerson.get());
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
       }
     } else {
       if (istringEqual("SurfaceArea/Person", this->designLevelCalculationMethod())){
@@ -210,7 +210,7 @@ namespace detail {
       return surfaceAreaperPerson().get() * numPeople;
     }
 
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
     return 0.0;
   }
 
@@ -235,7 +235,7 @@ namespace detail {
       return surfaceAreaperPerson().get() * numPeople / floorArea;
     }
 
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
     return 0.0;
   }
 
@@ -260,7 +260,7 @@ namespace detail {
       return surfaceAreaperPerson().get();
     }
 
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
     return 0.0;
   }
 
@@ -314,9 +314,9 @@ namespace detail {
 InternalMassDefinition::InternalMassDefinition(const Model& model)
   : SpaceLoadDefinition(InternalMassDefinition::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::InternalMassDefinition_Impl>());
+  OS_ASSERT(getImpl<detail::InternalMassDefinition_Impl>());
   bool test = this->setSurfaceArea(0.0);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 }
 
 IddObjectType InternalMassDefinition::iddObjectType() {

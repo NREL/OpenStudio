@@ -62,18 +62,18 @@ namespace detail {
   }
 
   TableElement Table_Impl::element(unsigned rowIndex,unsigned colIndex) const {
-    BOOST_ASSERT(rowIndex < m_nRows);
-    BOOST_ASSERT(colIndex < m_nCols);
+    OS_ASSERT(rowIndex < m_nRows);
+    OS_ASSERT(colIndex < m_nCols);
     return m_table[rowIndex][colIndex];
   }
 
   std::vector<TableElement>& Table_Impl::operator[](unsigned rowIndex) {
-    BOOST_ASSERT(rowIndex < m_nRows);
+    OS_ASSERT(rowIndex < m_nRows);
     return m_table[rowIndex];
   }
 
   const std::vector<TableElement>& Table_Impl::operator[](unsigned rowIndex) const {
-    BOOST_ASSERT(rowIndex < m_nRows);
+    OS_ASSERT(rowIndex < m_nRows);
     return m_table[rowIndex];
   }
 
@@ -215,7 +215,7 @@ namespace detail {
         for (unsigned i = 0; i < num; ++i, ++itEraseEnd);
         m_table.erase(m_table.begin(),itEraseEnd);
       }
-      BOOST_ASSERT(m_table.size() == m_nRows - num);
+      OS_ASSERT(m_table.size() == m_nRows - num);
       m_nRows = m_table.size();
     }
 
@@ -234,7 +234,7 @@ namespace detail {
           TableRow::iterator itEraseEnd = row.begin();
           for (unsigned i = 0; i < num; ++i, ++itEraseEnd);
           row.erase(row.begin(),itEraseEnd);
-          BOOST_ASSERT(row.size() == m_nCols - num);
+          OS_ASSERT(row.size() == m_nCols - num);
         }
         m_nCols -= num;
       }
@@ -347,7 +347,7 @@ namespace detail {
   // QUERIES
 
   unsigned Table_Impl::nRows() const {
-    BOOST_ASSERT(m_nRows == m_table.size());
+    OS_ASSERT(m_nRows == m_table.size());
     return m_nRows;
   }
 
@@ -427,7 +427,7 @@ namespace detail {
 
   bool Table_Impl::isEmptyRow(unsigned index) const {
     if (index >= m_nRows) { return false; }
-    BOOST_ASSERT(index < m_table.size());
+    OS_ASSERT(index < m_table.size());
 
     bool allEmpty = true;
     BOOST_FOREACH(const TableElement& e, m_table[index]) {
@@ -443,7 +443,7 @@ namespace detail {
 
     bool allEmpty = true;
     BOOST_FOREACH(const TableRow& row, m_table) {
-      BOOST_ASSERT(index < row.size());
+      OS_ASSERT(index < row.size());
       allEmpty = allEmpty && row[index].empty();
       if (!allEmpty) {
         break;
@@ -720,7 +720,7 @@ namespace detail {
       newQuantities = convert(originalQuantities,*targetSystem);
     }
     else {
-      BOOST_ASSERT(targetUnits);
+      OS_ASSERT(targetUnits);
       newQuantities = convert(originalQuantities,*targetUnits);
     }
     if (newQuantities.size() != originalQuantities.size()) {
@@ -1261,7 +1261,7 @@ Table Table::loadFromCsv(std::istream& is,
         if (boost::regex_search(lineString,matches,complexElement) ||
             boost::regex_search(lineString,matches,simpleElement))
         {
-          BOOST_ASSERT(matches[0].first == lineString.begin());
+          OS_ASSERT(matches[0].first == lineString.begin());
           elementString = std::string(matches[1].first,matches[1].second);
           row.push_back(elementString);
           std::string temp = std::string(matches[0].second,std::string::const_iterator(lineString.end()));

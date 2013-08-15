@@ -22,6 +22,8 @@
 #include <model/Model.hpp>
 #include <model/Node.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 namespace model {
@@ -177,7 +179,7 @@ Splitter::Splitter(boost::shared_ptr<detail::Splitter_Impl> p)
 Splitter::Splitter(IddObjectType type,const Model& model)
   : HVACComponent(type,model)
 {
-  BOOST_ASSERT(getImpl<detail::Splitter_Impl>());
+  OS_ASSERT(getImpl<detail::Splitter_Impl>());
 }     
 
 unsigned Splitter::inletPort()

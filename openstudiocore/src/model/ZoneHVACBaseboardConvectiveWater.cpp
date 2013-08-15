@@ -49,7 +49,7 @@ namespace detail {
                                                                                bool keepHandle)
     : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ZoneHVACBaseboardConvectiveWater::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ZoneHVACBaseboardConvectiveWater::iddObjectType());
   }
 
   ZoneHVACBaseboardConvectiveWater_Impl::ZoneHVACBaseboardConvectiveWater_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -57,7 +57,7 @@ namespace detail {
                                                                                bool keepHandle)
     : ZoneHVACComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ZoneHVACBaseboardConvectiveWater::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ZoneHVACBaseboardConvectiveWater::iddObjectType());
   }
 
   ZoneHVACBaseboardConvectiveWater_Impl::ZoneHVACBaseboardConvectiveWater_Impl(const ZoneHVACBaseboardConvectiveWater_Impl& other,
@@ -265,7 +265,7 @@ std::vector<IdfObject> ZoneHVACBaseboardConvectiveWater_Impl::remove()
 ZoneHVACBaseboardConvectiveWater::ZoneHVACBaseboardConvectiveWater(const Model& model, Schedule& availabilitySchedule,StraightComponent& heatingCoilBaseboard)
   : ZoneHVACComponent(ZoneHVACBaseboardConvectiveWater::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ZoneHVACBaseboardConvectiveWater_Impl>());
+  OS_ASSERT(getImpl<detail::ZoneHVACBaseboardConvectiveWater_Impl>());
 
   //     OS_ZoneHVAC_Baseboard_Convective_WaterFields::AvailabilityScheduleName
   //     OS_ZoneHVAC_Baseboard_Convective_WaterFields::HeatingCoilName
@@ -276,7 +276,7 @@ ZoneHVACBaseboardConvectiveWater::ZoneHVACBaseboardConvectiveWater(const Model& 
                   << availabilitySchedule.briefDescription() << ".");
   }
   ok = setHeatingCoil(heatingCoilBaseboard);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType ZoneHVACBaseboardConvectiveWater::iddObjectType() {

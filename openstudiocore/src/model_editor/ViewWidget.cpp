@@ -30,6 +30,8 @@
 
 #include <utilities/idd/IddFile.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace modeleditor
 {
 
@@ -42,7 +44,7 @@ ViewWidget::ViewWidget(QWidget *parent)
   mModelDirty(false)
 {
   mModelExplorer = qobject_cast<ModelExplorer *>(this->parent());
-  Q_ASSERT(mModelExplorer);
+  OS_ASSERT(mModelExplorer);
 
   createWidgets();
   createLayout();
@@ -59,7 +61,7 @@ ViewWidget::ViewWidget(openstudio::model::Model model, QWidget *parent)
   mModelDirty(false)
 {
   mModelExplorer = qobject_cast<ModelExplorer *>(this->parent());
-  Q_ASSERT(mModelExplorer);
+  OS_ASSERT(mModelExplorer);
 
   createWidgets();
   createLayout();
@@ -118,55 +120,55 @@ void ViewWidget::connectSignalsAndSlots()
                       SIGNAL(nameChanged(QString)), 
                       this,
                       SLOT(on_nameChanged(QString)));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(this,
                       SIGNAL(commentsShow(bool)),
                       mIG,
                       SLOT(commentConfig(bool)));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(this,
                       SIGNAL(precisionDlgShow()),
                       mIGPrecisionDlg,
                       SLOT(show()));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(this,
                       SIGNAL(precisionDlgHide()),
                       mIGPrecisionDlg,
                       SLOT(hide()));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(mIGPrecisionDlg,
                       SIGNAL(accepted()),
                       mIG,
                       SLOT(setPrec()));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(mIGPrecisionDlg,
                       SIGNAL(accepted()),
                       this,
                       SIGNAL(precisionDlgFinished()));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(mIGPrecisionDlg,
                       SIGNAL(rejected()),
                       this,
                       SIGNAL(precisionDlgFinished()));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(mIGPrecisionDlg,
                       SIGNAL(finished(int)),
                       this,
                       SIGNAL(precisionDlgFinished()));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 
   connected = connect(mIG,
                       SIGNAL(dirty()),
                       this,
                       SIGNAL(modelDirty()));
-  Q_ASSERT(connected);
+  OS_ASSERT(connected);
 
  
 }

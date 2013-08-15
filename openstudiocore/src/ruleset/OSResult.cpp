@@ -19,6 +19,8 @@
 
 #include <ruleset/OSResult.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 
@@ -82,7 +84,7 @@ OSResult::OSResult(const QDomElement& element) {
   if (!initialConditionElement.isNull()) {
     QDomNodeList childNodes = initialConditionElement.childNodes();
     int n = childNodes.count();
-    BOOST_ASSERT(n < 2);
+    OS_ASSERT(n < 2);
     if (n > 0) {
       QDomElement childElement = childNodes.at(0).toElement();
       m_initialCondition = logMessageFromXML(Info,childElement);
@@ -92,7 +94,7 @@ OSResult::OSResult(const QDomElement& element) {
   if (!finalConditionElement.isNull()) {
     QDomNodeList childNodes = finalConditionElement.childNodes();
     int n = childNodes.count();
-    BOOST_ASSERT(n < 2);
+    OS_ASSERT(n < 2);
     if (n > 0) {
       QDomElement childElement = childNodes.at(0).toElement();
       m_finalCondition = logMessageFromXML(Info,childElement);

@@ -35,6 +35,8 @@
 #include <utilities/idd/People_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -57,7 +59,7 @@ OptionalModelObject ReverseTranslator::translatePeople( const WorkspaceObject & 
   }
 
   s = workspaceObject.getString(openstudio::PeopleFields::NumberofPeopleCalculationMethod, true);
-  BOOST_ASSERT(s);
+  OS_ASSERT(s);
 
   OptionalDouble d;
   if (istringEqual("People", *s)){
@@ -121,7 +123,7 @@ OptionalModelObject ReverseTranslator::translatePeople( const WorkspaceObject & 
 
   for (unsigned i = 0, n = workspaceObject.numExtensibleGroups(); i < n; ++i) {
     IdfExtensibleGroup eg = workspaceObject.getExtensibleGroup(i);
-    BOOST_ASSERT(!eg.empty());
+    OS_ASSERT(!eg.empty());
     s = eg.getString(openstudio::PeopleExtensibleFields::ThermalComfortModelType);
     if (s) {
       definition.setThermalComfortModelType(i,*s);

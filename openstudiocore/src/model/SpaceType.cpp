@@ -85,7 +85,7 @@ namespace detail {
   SpaceType_Impl::SpaceType_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ResourceObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == SpaceType::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == SpaceType::iddObjectType());
   }
 
   SpaceType_Impl::SpaceType_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -93,7 +93,7 @@ namespace detail {
                                  bool keepHandle)
     : ResourceObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == SpaceType::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == SpaceType::iddObjectType());
   }
 
   SpaceType_Impl::SpaceType_Impl(const SpaceType_Impl& other,
@@ -352,7 +352,7 @@ namespace detail {
   void SpaceType_Impl::resetDesignSpecificationOutdoorAir()
   {
     bool test = setString(OS_SpaceTypeFields::DesignSpecificationOutdoorAirObjectName, "");
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void SpaceType_Impl::hardApplySpaceLoadSchedules()
@@ -409,12 +409,12 @@ namespace detail {
 
     // set space type and people perSpaceFloorArea
     bool ok(true);
-    BOOST_ASSERT(myPeople);
+    OS_ASSERT(myPeople);
     myPeople->makeUnique();
-    ok = myPeople->setSpaceType(getObject<SpaceType>()); BOOST_ASSERT(ok);
+    ok = myPeople->setSpaceType(getObject<SpaceType>()); OS_ASSERT(ok);
     ok = myPeople->peopleDefinition().setPeopleperSpaceFloorArea(peoplePerFloorArea);
-    BOOST_ASSERT(ok);
-    ok = myPeople->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myPeople->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other people
     PeopleVector allMyPeople = people();
@@ -461,12 +461,12 @@ namespace detail {
 
     // set space type and people perSpaceFloorArea
     bool ok(true);
-    BOOST_ASSERT(myPeople);
+    OS_ASSERT(myPeople);
     myPeople->makeUnique();
-    ok = myPeople->setSpaceType(getObject<SpaceType>()); BOOST_ASSERT(ok);
+    ok = myPeople->setSpaceType(getObject<SpaceType>()); OS_ASSERT(ok);
     ok = myPeople->peopleDefinition().setSpaceFloorAreaperPerson(spaceFloorAreaPerPerson);
-    BOOST_ASSERT(ok);
-    ok = myPeople->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myPeople->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other people
     PeopleVector allMyPeople = people();
@@ -545,12 +545,12 @@ namespace detail {
 
     // set space type and lighting power per space floor area
     bool ok(true);
-    BOOST_ASSERT(myLights);
+    OS_ASSERT(myLights);
     myLights->makeUnique();
-    ok = myLights->setSpaceType(getObject<SpaceType>()); BOOST_ASSERT(ok);
+    ok = myLights->setSpaceType(getObject<SpaceType>()); OS_ASSERT(ok);
     ok = myLights->lightsDefinition().setWattsperSpaceFloorArea(lightingPowerPerFloorArea);
-    BOOST_ASSERT(ok);
-    ok = myLights->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myLights->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other lights
     LightsVector allMyLights = lights();
@@ -613,12 +613,12 @@ namespace detail {
 
     // set space type and lighting power per person
     bool ok(true);
-    BOOST_ASSERT(myLights);
+    OS_ASSERT(myLights);
     myLights->makeUnique();
-    ok = myLights->setSpaceType(getObject<SpaceType>()); BOOST_ASSERT(ok);
+    ok = myLights->setSpaceType(getObject<SpaceType>()); OS_ASSERT(ok);
     ok = myLights->lightsDefinition().setWattsperPerson(lightingPowerPerPerson);
-    BOOST_ASSERT(ok);
-    ok = myLights->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myLights->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other lights
     LightsVector allMyLights = lights();
@@ -717,12 +717,12 @@ namespace detail {
 
     // set space type and electric equipment WattsperSpaceFloorArea
     bool ok(true);
-    BOOST_ASSERT(myEquipment);
+    OS_ASSERT(myEquipment);
     myEquipment->makeUnique();
-    ok = myEquipment->setSpaceType(getObject<SpaceType>()); BOOST_ASSERT(ok);
+    ok = myEquipment->setSpaceType(getObject<SpaceType>()); OS_ASSERT(ok);
     ok = myEquipment->electricEquipmentDefinition().setWattsperSpaceFloorArea(electricEquipmentPowerPerFloorArea);
-    BOOST_ASSERT(ok);
-    ok = myEquipment->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myEquipment->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other electric equipment
     ElectricEquipmentVector allMyEquipment = electricEquipment();
@@ -780,12 +780,12 @@ namespace detail {
 
     // set space type and electric equipment WattsperSpaceFloorArea
     bool ok(true);
-    BOOST_ASSERT(myEquipment);
+    OS_ASSERT(myEquipment);
     myEquipment->makeUnique();
-    ok = myEquipment->setSpaceType(getObject<SpaceType>()); BOOST_ASSERT(ok);
+    ok = myEquipment->setSpaceType(getObject<SpaceType>()); OS_ASSERT(ok);
     ok = myEquipment->electricEquipmentDefinition().setWattsperPerson(electricEquipmentPowerPerPerson);
-    BOOST_ASSERT(ok);
-    ok = myEquipment->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myEquipment->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other electric equipment
     ElectricEquipmentVector allMyEquipment = electricEquipment();
@@ -871,12 +871,12 @@ namespace detail {
 
     // set space type and gas equipment WattsperSpaceFloorArea
     bool ok(true);
-    BOOST_ASSERT(myEquipment);
+    OS_ASSERT(myEquipment);
     myEquipment->makeUnique();
-    ok = myEquipment->setSpaceType(getObject<SpaceType>()); BOOST_ASSERT(ok);
+    ok = myEquipment->setSpaceType(getObject<SpaceType>()); OS_ASSERT(ok);
     ok = myEquipment->gasEquipmentDefinition().setWattsperSpaceFloorArea(gasEquipmentPowerPerFloorArea);
-    BOOST_ASSERT(ok);
-    ok = myEquipment->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myEquipment->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other gas equipment
     GasEquipmentVector allMyEquipment = gasEquipment();
@@ -933,12 +933,12 @@ namespace detail {
 
     // set space type and gas equipment WattsperSpaceFloorArea
     bool ok(true);
-    BOOST_ASSERT(myEquipment);
+    OS_ASSERT(myEquipment);
     myEquipment->makeUnique();
-    ok = myEquipment->setSpaceType(getObject<SpaceType>()); BOOST_ASSERT(ok);
+    ok = myEquipment->setSpaceType(getObject<SpaceType>()); OS_ASSERT(ok);
     ok = myEquipment->gasEquipmentDefinition().setWattsperPerson(gasEquipmentPowerPerPerson);
-    BOOST_ASSERT(ok);
-    ok = myEquipment->setMultiplier(1); BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
+    ok = myEquipment->setMultiplier(1); OS_ASSERT(ok);
 
     // remove all other gas equipment
     GasEquipmentVector allMyEquipment = gasEquipment();
@@ -1155,7 +1155,7 @@ namespace detail {
       }
       it->remove();
     }
-    BOOST_ASSERT(count == 1);
+    OS_ASSERT(count == 1);
   }
 
 } // detail
@@ -1163,7 +1163,7 @@ namespace detail {
 SpaceType::SpaceType(const Model& model)
   : ResourceObject(SpaceType::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::SpaceType_Impl>());
+  OS_ASSERT(getImpl<detail::SpaceType_Impl>());
 }
 
 IddObjectType SpaceType::iddObjectType() {

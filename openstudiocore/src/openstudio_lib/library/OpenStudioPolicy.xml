@@ -126,6 +126,9 @@
   <POLICY IddObjectType="OS_SetpointManager_OutdoorAirReset">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_SetpointManager_Warmest">
+    <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_AirLoopHVAC_OutdoorAirSystem">
     <rule IddField="Controller Name" Access="HIDDEN"/>
     <rule IddField="Outdoor Air Equipment List Name" Access="HIDDEN"/>

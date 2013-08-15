@@ -49,7 +49,7 @@ namespace detail {
   Ruleset_Impl::Ruleset_Impl(const QDomElement& element)
     : RulesetObject_Impl(element)
   {
-    BOOST_ASSERT(!element.isNull());
+    OS_ASSERT(!element.isNull());
 
     QDomElement nameElement = element.firstChildElement(QString::fromStdString("Name"));
 
@@ -128,7 +128,7 @@ boost::optional<Ruleset> Ruleset::factoryFromXml(const QDomElement& element)
 Ruleset::Ruleset(boost::shared_ptr<detail::Ruleset_Impl> impl)
   : RulesetObject(impl)
 {
-  BOOST_ASSERT(getImpl<detail::Ruleset_Impl>());
+  OS_ASSERT(getImpl<detail::Ruleset_Impl>());
 }
 /// @endcond
 

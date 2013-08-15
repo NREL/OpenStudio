@@ -109,6 +109,8 @@ struct RUNMANAGER_API FileInfo {
   /// \throws std::runtime_error if the required file could not be found
   std::pair<QUrl, openstudio::path> getRequiredFile(const openstudio::path &filename);
 
+  bool hasRequiredFile(const openstudio::path &filename);
+
   openstudio::path fullPath;         ///< Full local filename
   std::string filename;              ///< Short filename
   bool exists;                       ///< True if the file exists, false if it was removed

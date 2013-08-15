@@ -72,7 +72,7 @@ InternalMassDefinitionInspectorView::InternalMassDefinitionInspectorView(bool is
 
   m_surfaceAreaEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_surfaceAreaEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_surfaceAreaEdit,3,0);
 
   // Surface Area Per Space Floor Area
@@ -83,7 +83,7 @@ InternalMassDefinitionInspectorView::InternalMassDefinitionInspectorView(bool is
 
   m_surfaceAreaPerSpaceFloorAreaEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_surfaceAreaPerSpaceFloorAreaEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_surfaceAreaPerSpaceFloorAreaEdit,3,1);
 
   // Surface Area Per Person
@@ -94,7 +94,7 @@ InternalMassDefinitionInspectorView::InternalMassDefinitionInspectorView(bool is
 
   m_surfaceAreaPerPersonEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_surfaceAreaPerPersonEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_surfaceAreaPerPersonEdit,3,2);
 
   // Construction

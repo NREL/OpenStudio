@@ -29,7 +29,7 @@
 
 namespace openstudio {
 namespace analysis {
-  class Problem;
+  class Analysis;
 }
 }
 
@@ -51,6 +51,8 @@ class AnalysisFixture : public ::testing::Test {
 
   // static variables
   static boost::optional<openstudio::FileLogSink> logFile;
+
+  static openstudio::analysis::Analysis analysis1();
 };
 
 #endif // ANALYSIS_TEST_ANALYSISFIXTURE_HPP

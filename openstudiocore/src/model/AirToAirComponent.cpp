@@ -102,27 +102,27 @@ std::vector<openstudio::IdfObject> AirToAirComponent_Impl::remove()
 
     boost::optional<Node> node = mo->optionalCast<Node>();
 
-    BOOST_ASSERT(node);
+    OS_ASSERT(node);
 
     oaOutletNode = node;
 
     boost::optional<ModelObject> mo2 = oaOutletNode->outletModelObject();
 
-    BOOST_ASSERT(mo2);
+    OS_ASSERT(mo2);
 
     oaOutletModelObject = mo2;
 
     oaOutletModelObjectPort = oaOutletNode->connectedObjectPort(oaOutletNode->outletPort());
 
-    BOOST_ASSERT(oaOutletModelObjectPort);
+    OS_ASSERT(oaOutletModelObjectPort);
 
     mo2 = primaryAirInletModelObject();
 
-    BOOST_ASSERT(mo2);
+    OS_ASSERT(mo2);
 
     node = mo2->optionalCast<Node>();
 
-    BOOST_ASSERT(node);
+    OS_ASSERT(node);
 
     oaInletNode = node;
   }
@@ -133,27 +133,27 @@ std::vector<openstudio::IdfObject> AirToAirComponent_Impl::remove()
 
     boost::optional<Node> node = mo->optionalCast<Node>();
 
-    BOOST_ASSERT(node);
+    OS_ASSERT(node);
 
     reliefInletNode = node;
 
     boost::optional<ModelObject> mo2 = reliefInletNode->inletModelObject();
 
-    BOOST_ASSERT(mo2);
+    OS_ASSERT(mo2);
 
     reliefInletModelObject = mo2;
 
     reliefInletModelObjectPort = reliefInletNode->connectedObjectPort(reliefInletNode->inletPort());
 
-    BOOST_ASSERT(reliefInletModelObjectPort);
+    OS_ASSERT(reliefInletModelObjectPort);
 
     mo2 = secondaryAirOutletModelObject();
 
-    BOOST_ASSERT(mo2);
+    OS_ASSERT(mo2);
 
     node = mo2->optionalCast<Node>();
 
-    BOOST_ASSERT(node);
+    OS_ASSERT(node);
 
     reliefOutletNode = node;
   }
@@ -220,7 +220,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       std::vector<ModelObject>::iterator dropNodeLocation = std::find(oaComponents.begin(),oaComponents.end(),node);
 
-      BOOST_ASSERT( dropNodeLocation != oaComponents.end() );
+      OS_ASSERT( dropNodeLocation != oaComponents.end() );
 
       for( std::vector<ModelObject>::iterator it = dropNodeLocation;
            it != oaComponents.end();
@@ -244,7 +244,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
       std::vector<ModelObject>::reverse_iterator rDropNodeLocation = 
         std::find(oaComponents.rbegin(),oaComponents.rend(),node);
 
-      BOOST_ASSERT( rDropNodeLocation != oaComponents.rend() );
+      OS_ASSERT( rDropNodeLocation != oaComponents.rend() );
 
       for( std::vector<ModelObject>::reverse_iterator it = rDropNodeLocation;
            it != oaComponents.rend();
@@ -267,7 +267,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       // Find nextReliefComponent
 
-      BOOST_ASSERT(prevReliefComponent);
+      OS_ASSERT(prevReliefComponent);
 
       std::vector<ModelObject>::iterator prevReliefComponentLocation;
 
@@ -306,11 +306,11 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
       {
         boost::optional<ModelObject> mo = *(prevReliefComponentLocation + n);
 
-        BOOST_ASSERT(mo);
+        OS_ASSERT(mo);
 
         reliefNode = mo->optionalCast<Node>();
 
-        BOOST_ASSERT(reliefNode);
+        OS_ASSERT(reliefNode);
       }
       else
       {
@@ -322,18 +322,18 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
         {
           boost::optional<AirToAirComponent> comp = nextReliefComponent->optionalCast<AirToAirComponent>();
 
-          BOOST_ASSERT(comp);
+          OS_ASSERT(comp);
 
           boost::optional<ModelObject> comp2 = comp->secondaryAirInletModelObject();
 
           reliefNode = comp2->optionalCast<Node>();
 
-          BOOST_ASSERT(reliefNode);
+          OS_ASSERT(reliefNode);
         }
       }
 
-      BOOST_ASSERT(reliefNode);
-      BOOST_ASSERT(oaNode);
+      OS_ASSERT(reliefNode);
+      OS_ASSERT(oaNode);
     }
     else if( oaSystem->reliefComponent(node.handle()) )
     {
@@ -349,7 +349,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       std::vector<ModelObject>::iterator dropNodeLocation = std::find(reliefComponents.begin(),reliefComponents.end(),node);
 
-      BOOST_ASSERT( dropNodeLocation != reliefComponents.end() );
+      OS_ASSERT( dropNodeLocation != reliefComponents.end() );
 
       for( std::vector<ModelObject>::iterator it = dropNodeLocation;
            it != reliefComponents.end();
@@ -373,7 +373,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
       std::vector<ModelObject>::reverse_iterator rDropNodeLocation = 
         std::find(reliefComponents.rbegin(),reliefComponents.rend(),node);
 
-      BOOST_ASSERT( rDropNodeLocation != reliefComponents.rend() );
+      OS_ASSERT( rDropNodeLocation != reliefComponents.rend() );
 
       for( std::vector<ModelObject>::reverse_iterator it = rDropNodeLocation;
            it != reliefComponents.rend();
@@ -403,7 +403,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       // Find nextSupplyComponent
 
-      BOOST_ASSERT(prevSupplyComponent);
+      OS_ASSERT(prevSupplyComponent);
 
       std::vector<ModelObject>::iterator prevSupplyComponentLocation;
 
@@ -432,11 +432,11 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
       {
         boost::optional<ModelObject> mo = *(prevSupplyComponentLocation + n);
 
-        BOOST_ASSERT(mo);
+        OS_ASSERT(mo);
 
         oaNode = mo->optionalCast<Node>();
 
-        BOOST_ASSERT(oaNode);
+        OS_ASSERT(oaNode);
       }
       else
       {
@@ -448,22 +448,22 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
         {
           boost::optional<AirToAirComponent> comp = nextSupplyComponent->optionalCast<AirToAirComponent>();
 
-          BOOST_ASSERT(comp);
+          OS_ASSERT(comp);
 
           boost::optional<ModelObject> comp2 = comp->primaryAirInletModelObject();
 
           oaNode = comp2->optionalCast<Node>();
 
-          BOOST_ASSERT(oaNode);
+          OS_ASSERT(oaNode);
         }
       }
 
-      BOOST_ASSERT(reliefNode);
-      BOOST_ASSERT(oaNode);
+      OS_ASSERT(reliefNode);
+      OS_ASSERT(oaNode);
     }
 
-    BOOST_ASSERT(reliefNode);
-    BOOST_ASSERT(oaNode);
+    OS_ASSERT(reliefNode);
+    OS_ASSERT(oaNode);
 
     // Make new connections on the oa side
 
@@ -530,7 +530,7 @@ ModelObject AirToAirComponent_Impl::clone(Model model) const
 AirToAirComponent::AirToAirComponent(IddObjectType type,const Model& model)
   : HVACComponent(type,model)
 {
-  BOOST_ASSERT(getImpl<detail::AirToAirComponent_Impl>());
+  OS_ASSERT(getImpl<detail::AirToAirComponent_Impl>());
 }     
 
 AirToAirComponent::AirToAirComponent(boost::shared_ptr<detail::AirToAirComponent_Impl> p)

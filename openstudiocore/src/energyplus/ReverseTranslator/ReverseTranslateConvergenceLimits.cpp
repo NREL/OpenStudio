@@ -25,6 +25,7 @@
 #include <utilities/idd/ConvergenceLimits_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Optional.hpp>
 
 using namespace openstudio::model;
@@ -35,7 +36,7 @@ namespace energyplus {
 boost::optional<model::ModelObject> ReverseTranslator::translateConvergenceLimits(
     const WorkspaceObject& workspaceObject)
 {
-  BOOST_ASSERT(workspaceObject.iddObject().type() == IddObjectType::ConvergenceLimits);
+  OS_ASSERT(workspaceObject.iddObject().type() == IddObjectType::ConvergenceLimits);
 
   OptionalInt i;
 
