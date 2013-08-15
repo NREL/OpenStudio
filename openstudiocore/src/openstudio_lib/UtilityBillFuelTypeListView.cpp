@@ -18,61 +18,99 @@
 **********************************************************************/
 
 #include <openstudio_lib/UtilityBillFuelTypeListView.hpp>
-//#include <openstudio_lib/UtilityBillAllFuelTypesListView.hpp>
-#include <openstudio_lib/ModelObjectTypeItem.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/ModelObjectListView.hpp>
-#include <openstudio_lib/OSCollapsibleItemHeader.hpp>
-#include <openstudio_lib/OSItem.hpp>
 
-#include <model/Model.hpp>
+#include <openstudio_lib/BCLComponentItem.hpp>
+#include <openstudio_lib/ModelObjectItem.hpp>
+
 #include <model/Model_Impl.hpp>
+#include <model/ModelObject_Impl.hpp>
+#include <model/UtilityBill.hpp>
+#include <model/UtilityBill_Impl.hpp>
+
+#include <utilities/bcl/LocalBCL.hpp>
 #include <utilities/core/Assert.hpp>
 
 #include <iostream>
 
 namespace openstudio {
 
-UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const model::Model& model, 
-                                                 bool addScrollArea, 
-                                                 OSItem::Type headerType, 
-                                                 bool showLocalBCL,
-                                                 QWidget * parent )
-  : OSCollapsibleItemList(addScrollArea, parent), m_model(model), m_headerType(headerType), m_showLocalBCL(showLocalBCL)
-{ 
+UtilityBillFuelTypeListController::UtilityBillFuelTypeListController(const model::Model& model)
+  : m_iddObjectType(model::UtilityBill::iddObjectType()), m_model(model)
+{
+  bool isConnected = false;
+  isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
+                        SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        this,
+                        SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        Qt::QueuedConnection);
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
+                        SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        this,
+                        SLOT(objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        Qt::QueuedConnection);
+  OS_ASSERT(isConnected);
+
 }
 
-UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const std::vector<std::pair<IddObjectType, std::string> >& modelObjectTypesAndNames,
-                                                 const model::Model& model, bool addScrollArea, 
-                                                 OSItem::Type headerType, bool showLocalBCL, QWidget * parent )
-  : OSCollapsibleItemList(addScrollArea, parent), 
-    m_modelObjectTypesAndNames(modelObjectTypesAndNames), 
-    m_model(model), m_headerType(headerType), m_showLocalBCL(showLocalBCL)
-{ 
-  typedef std::vector<std::pair<IddObjectType, std::string> >::value_type PairType;
-  BOOST_REVERSE_FOREACH(PairType modelObjectTypeAndName, m_modelObjectTypesAndNames){
-    addModelObjectType(modelObjectTypeAndName.first, modelObjectTypeAndName.second);
+IddObjectType UtilityBillFuelTypeListController::iddObjectType() const
+{
+  return m_iddObjectType;
+}
+
+void UtilityBillFuelTypeListController::objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+{
+  if (iddObjectType == m_iddObjectType){
+    std::vector<OSItemId> ids = this->makeVector();
+    emit itemIds(ids);
+
+    BOOST_FOREACH(const OSItemId& id, ids){
+      if (id.itemId() == impl->handle().toString()){
+        emit selectedItemId(id);
+        break;
+      }
+    }
   }
 }
 
-void UtilityBillAllFuelTypesListView::addModelObjectType(const IddObjectType& iddObjectType, const std::string& name)
+void UtilityBillFuelTypeListController::objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
-  OSCollapsibleItemHeader* collapsibleItemHeader = new OSCollapsibleItemHeader(name, OSItemId("", "", false), m_headerType);
-  ModelObjectListView* modelObjectListView = new ModelObjectListView(iddObjectType, m_model, false,m_showLocalBCL);
-  ModelObjectTypeItem* modelObjectTypeItem = new ModelObjectTypeItem(collapsibleItemHeader, modelObjectListView);
-
-  addCollapsibleItem(modelObjectTypeItem);
+  if (iddObjectType == m_iddObjectType){
+    emit itemIds(makeVector());
+  }
 }
 
-IddObjectType UtilityBillAllFuelTypesListView::currentIddObjectType() const
+std::vector<OSItemId> UtilityBillFuelTypeListController::makeVector()
 {
-  OSCollapsibleItem* selectedCollapsibleItem = this->selectedCollapsibleItem();
-  ModelObjectTypeItem* modelObjectTypeItem = qobject_cast<ModelObjectTypeItem*>(selectedCollapsibleItem);
-  OS_ASSERT(modelObjectTypeItem);
-  return modelObjectTypeItem->iddObjectType();
+  std::vector<OSItemId> result;
+
+  // get objects by type
+  std::vector<WorkspaceObject> workspaceObjects = m_model.getObjectsByType(m_iddObjectType);
+
+  // sort by name
+  std::sort(workspaceObjects.begin(), workspaceObjects.end(), WorkspaceObjectNameGreater());
+
+  BOOST_FOREACH(WorkspaceObject workspaceObject,workspaceObjects){
+    if (!workspaceObject.handle().isNull()){
+      openstudio::model::ModelObject modelObject = workspaceObject.cast<openstudio::model::ModelObject>();
+      if(boost::optional<model::UtilityBill> utilityBill = modelObject.optionalCast<model::UtilityBill>()) {
+        result.push_back(modelObjectToItemId(modelObject, false));
+      }
+    }
+  }
+
+  return result;
 }
 
-boost::optional<openstudio::model::ModelObject> UtilityBillAllFuelTypesListView::selectedModelObject() const
+UtilityBillFuelTypeListView::UtilityBillFuelTypeListView(const model::Model& model, 
+                                         bool addScrollArea,
+                                         QWidget * parent )
+  : OSItemList(new UtilityBillFuelTypeListController(model,addScrollArea)
+{ 
+}  
+
+boost::optional<openstudio::model::ModelObject> UtilityBillFuelTypeListView::selectedModelObject() const
 {
   OSItem* selectedItem = this->selectedItem();
   ModelObjectItem* modelObjectItem = qobject_cast<ModelObjectItem*>(selectedItem);
@@ -80,6 +118,14 @@ boost::optional<openstudio::model::ModelObject> UtilityBillAllFuelTypesListView:
     return modelObjectItem->modelObject();
   }
   return boost::none;
+}
+
+IddObjectType UtilityBillFuelTypeListView::iddObjectType() const
+{
+  OSVectorController* vectorController = this->vectorController();
+  UtilityBillFuelTypeListController* utilityBillListController = qobject_cast<UtilityBillFuelTypeListController*>(vectorController);
+  OS_ASSERT(utilityBillListController);
+  return utilityBillListController->iddObjectType();
 }
 
 } // openstudio

@@ -17,58 +17,61 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_UTILITYBILLALLFUELTYPESLISTVIEW_H
-#define OPENSTUDIO_UTILITYBILLALLFUELTYPESLISTVIEW_H
+#ifndef OPENSTUDIO_UTILITYBILLFUELTYPELISTVIEW_H
+#define OPENSTUDIO_UTILITYBILLFUELTYPELISTVIEW_H
 
-#include <openstudio_lib/OSCollapsibleItemList.hpp>
+#include <openstudio_lib/OSItemList.hpp>
+#include <openstudio_lib/OSVectorController.hpp>
 
 #include <model/Model.hpp>
 #include <model/ModelObject.hpp>
 
-#include <boost/optional.hpp>
-
-class QVBoxLayout;
-
-class QHBoxLayout;
-
 namespace openstudio {
 
-class UtilityBillAllFuelTypesListView : public OSCollapsibleItemList
+class UtilityBillFuelTypeListController : public OSVectorController
 {
   Q_OBJECT
 
-  public:
-    UtilityBillAllFuelTypesListView(const model::Model& model, 
-                            bool addScrollArea, 
-                            OSItem::Type headerType,
-                            bool showLocalBCL = false,
-                            QWidget * parent = 0);
+public:
 
-    UtilityBillAllFuelTypesListView(const std::vector<std::pair<IddObjectType, std::string> >& modelObjectTypesAndNames,
-                            const model::Model& model, bool addScrollArea, OSItem::Type headerType,
-                            bool showLocalBCL = false,
-                            QWidget * parent = 0);
+  UtilityBillFuelTypeListController(const model::Model& model);
 
-    virtual ~UtilityBillAllFuelTypesListView() {}
+  virtual ~UtilityBillFuelTypeListController() {}
 
-    void addModelObjectType(const IddObjectType& iddObjectType, const std::string& name);
+  IddObjectType iddObjectType() const;
 
-    virtual IddObjectType currentIddObjectType() const;
+private slots:
+  void objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
+  void objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
 
-    virtual boost::optional<openstudio::model::ModelObject> selectedModelObject() const;
+protected:
+  virtual std::vector<OSItemId> makeVector();
 
-  private:
-
-    std::vector<std::pair<IddObjectType, std::string> > m_modelObjectTypesAndNames;
-
-    model::Model m_model;
-    OSItem::Type m_headerType;
-    bool m_showLocalBCL;
+private:
+  openstudio::IddObjectType m_iddObjectType;
+  model::Model m_model;
 };
 
+class UtilityBillFuelTypeListView : public OSItemList
+{
+  Q_OBJECT
 
+public:
+
+  UtilityBillFuelTypeListView(const model::Model& model,
+                      bool addScrollArea,
+                      QWidget * parent = 0);
+
+  virtual ~UtilityBillFuelTypeListView() {}
+
+  boost::optional<openstudio::model::ModelObject> selectedModelObject() const;
+
+  IddObjectType iddObjectType() const;
+};
+
+  
 
 } // openstudio
 
-#endif // OPENSTUDIO_UTILITYBILLALLFUELTYPESLISTVIEW_H
+#endif // OPENSTUDIO_UTILITYBILLFUELTYPELISTVIEW_H
 
