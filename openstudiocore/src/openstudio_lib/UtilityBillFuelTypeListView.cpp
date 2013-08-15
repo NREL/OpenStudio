@@ -19,15 +19,14 @@
 
 #include <openstudio_lib/UtilityBillFuelTypeListView.hpp>
 
-#include <openstudio_lib/BCLComponentItem.hpp>
 #include <openstudio_lib/ModelObjectItem.hpp>
+#include <openstudio_lib/OSItemList.hpp>
 
 #include <model/Model_Impl.hpp>
 #include <model/ModelObject_Impl.hpp>
 #include <model/UtilityBill.hpp>
 #include <model/UtilityBill_Impl.hpp>
 
-#include <utilities/bcl/LocalBCL.hpp>
 #include <utilities/core/Assert.hpp>
 
 #include <iostream>
@@ -106,7 +105,7 @@ std::vector<OSItemId> UtilityBillFuelTypeListController::makeVector()
 UtilityBillFuelTypeListView::UtilityBillFuelTypeListView(const model::Model& model, 
                                          bool addScrollArea,
                                          QWidget * parent )
-  : OSItemList(new UtilityBillFuelTypeListController(model,addScrollArea)
+  : OSItemList(new UtilityBillFuelTypeListController(model),addScrollArea)
 { 
 }  
 

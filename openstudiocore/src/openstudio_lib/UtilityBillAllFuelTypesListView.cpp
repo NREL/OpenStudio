@@ -36,19 +36,18 @@ namespace openstudio {
 
 UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const model::Model& model, 
                                                  bool addScrollArea, 
-                                                 OSItem::Type headerType, 
-                                                 bool showLocalBCL,
+                                                 OSItem::Type headerType,
                                                  QWidget * parent )
-  : OSCollapsibleItemList(addScrollArea, parent), m_model(model), m_headerType(headerType), m_showLocalBCL(showLocalBCL)
+  : OSCollapsibleItemList(addScrollArea, parent), m_model(model), m_headerType(headerType)
 { 
 }
 
 UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const std::vector<std::pair<IddObjectType, std::string> >& modelObjectTypesAndNames,
                                                  const model::Model& model, bool addScrollArea, 
-                                                 OSItem::Type headerType, bool showLocalBCL, QWidget * parent )
+                                                 OSItem::Type headerType, QWidget * parent )
   : OSCollapsibleItemList(addScrollArea, parent), 
     m_modelObjectTypesAndNames(modelObjectTypesAndNames), 
-    m_model(model), m_headerType(headerType), m_showLocalBCL(showLocalBCL)
+    m_model(model), m_headerType(headerType)
 { 
   typedef std::vector<std::pair<IddObjectType, std::string> >::value_type PairType;
   BOOST_REVERSE_FOREACH(PairType modelObjectTypeAndName, m_modelObjectTypesAndNames){

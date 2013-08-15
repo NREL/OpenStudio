@@ -41,12 +41,10 @@ class UtilityBillAllFuelTypesListView : public OSCollapsibleItemList
     UtilityBillAllFuelTypesListView(const model::Model& model, 
                             bool addScrollArea, 
                             OSItem::Type headerType,
-                            bool showLocalBCL = false,
                             QWidget * parent = 0);
 
     UtilityBillAllFuelTypesListView(const std::vector<std::pair<IddObjectType, std::string> >& modelObjectTypesAndNames,
                             const model::Model& model, bool addScrollArea, OSItem::Type headerType,
-                            bool showLocalBCL = false,
                             QWidget * parent = 0);
 
     virtual ~UtilityBillAllFuelTypesListView() {}
