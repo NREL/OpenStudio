@@ -2669,6 +2669,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
   {
     boost::optional<openstudio::model::ModelObject> mo;
 
+    QDomElement htPumpSuppTempElement;
+
     // Fan
     
     QDomElement fanElement = element.firstChildElement("Fan"); 
@@ -2681,13 +2683,38 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
  
     // Heating Coil
 
-    QDomElement heatingCoilElement = element.firstChildElement("CoilHtg"); 
-    
-    mo = translateCoilHeating(heatingCoilElement,doc,model);
+    boost::optional<model::HVACComponent> heatingCoil;
 
-    OS_ASSERT(mo);
+    boost::optional<model::HVACComponent> suppHeatingCoil;
 
-    model::HVACComponent heatingCoil = mo->cast<model::HVACComponent>();
+    QDomNodeList heatingCoilElements = element.elementsByTagName("CoilHtg"); 
+
+    for(int i = 0; i < heatingCoilElements.count(); i++)
+    {
+      QDomElement heatingCoilElement = heatingCoilElements.at(i).toElement();
+
+      QDomElement typeElement = heatingCoilElement.firstChildElement("Type");
+
+      mo = translateCoilHeating(heatingCoilElement,doc,model);
+
+      OS_ASSERT(mo);
+
+      if(istringEqual(typeElement.text().toStdString(),"HeatPump"))
+      {
+        heatingCoil = mo->cast<model::HVACComponent>();
+
+        htPumpSuppTempElement = heatingCoilElement.firstChildElement("HtPumpSuppTemp");
+      }
+      else
+      {
+        suppHeatingCoil = mo->cast<model::HVACComponent>();
+      }
+
+      if( i > 1 )
+      {
+        LOG(Warn,name << " has unused heating coils defined.");
+      }
+    }
 
     // Cooling Coil
 
@@ -2699,15 +2726,80 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
 
     model::HVACComponent coolingCoil = mo->cast<model::HVACComponent>();
 
-    // Supplemental Heating Coil
+    // Default Supplemental Heating Coil if one is not provided
     
-    model::Schedule alwaysOnDiscreteSchedule = model.alwaysOnDiscreteSchedule();
+    if( ! suppHeatingCoil )
+    {
+      model::Schedule alwaysOnDiscreteSchedule = model.alwaysOnDiscreteSchedule();
 
-    model::CoilHeatingElectric suppHeatingCoil(model,alwaysOnDiscreteSchedule);
+      suppHeatingCoil = model::CoilHeatingElectric(model,alwaysOnDiscreteSchedule);
+
+      LOG(Warn,name << " creating a default supplementary heating coil");
+    }
+
+    // Default Heating Coil if one is not provided
+    
+    if( ! heatingCoil )
+    {
+      model::Schedule alwaysOnDiscreteSchedule = model.alwaysOnDiscreteSchedule();
+
+      model::CurveCubic totalHeatingCapacityFunctionofTemperatureCurve(model);
+      totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient1Constant(0.758746);
+      totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient2x(0.027626);
+      totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient3xPOW2(0.000148716);
+      totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient4xPOW3(0.0000034992);
+      totalHeatingCapacityFunctionofTemperatureCurve.setMinimumValueofx(-20.0);
+      totalHeatingCapacityFunctionofTemperatureCurve.setMaximumValueofx(20.0);
+
+      model::CurveCubic totalHeatingCapacityFunctionofFlowFractionCurve(model);
+      totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient1Constant(0.84);
+      totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient2x(0.16);
+      totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient3xPOW2(0.0);
+      totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient4xPOW3(0.0);
+      totalHeatingCapacityFunctionofFlowFractionCurve.setMinimumValueofx(0.5);
+      totalHeatingCapacityFunctionofFlowFractionCurve.setMaximumValueofx(1.5);
+
+      model::CurveCubic energyInputRatioFunctionofTemperatureCurve(model);
+      energyInputRatioFunctionofTemperatureCurve.setCoefficient1Constant(1.19248);
+      energyInputRatioFunctionofTemperatureCurve.setCoefficient2x(-0.0300438);
+      energyInputRatioFunctionofTemperatureCurve.setCoefficient3xPOW2(0.00103745);
+      energyInputRatioFunctionofTemperatureCurve.setCoefficient4xPOW3(-0.000023328);
+      energyInputRatioFunctionofTemperatureCurve.setMinimumValueofx(-20.0);
+      energyInputRatioFunctionofTemperatureCurve.setMaximumValueofx(20.0);
+
+      model::CurveQuadratic energyInputRatioFunctionofFlowFractionCurve(model);
+      energyInputRatioFunctionofFlowFractionCurve.setCoefficient1Constant(1.3824);
+      energyInputRatioFunctionofFlowFractionCurve.setCoefficient2x(-0.4336);
+      energyInputRatioFunctionofFlowFractionCurve.setCoefficient3xPOW2(0.0512);
+      energyInputRatioFunctionofFlowFractionCurve.setMinimumValueofx(0.0);
+      energyInputRatioFunctionofFlowFractionCurve.setMaximumValueofx(1.0);
+
+      model::CurveQuadratic partLoadFractionCorrelationCurve(model);
+      partLoadFractionCorrelationCurve.setCoefficient1Constant(0.75);
+      partLoadFractionCorrelationCurve.setCoefficient2x(0.25);
+      partLoadFractionCorrelationCurve.setCoefficient3xPOW2(0.0);
+      partLoadFractionCorrelationCurve.setMinimumValueofx(0.0);
+      partLoadFractionCorrelationCurve.setMaximumValueofx(1.0);
+
+      suppHeatingCoil = model::CoilHeatingDXSingleSpeed( model,
+                               alwaysOnDiscreteSchedule,
+                               totalHeatingCapacityFunctionofTemperatureCurve,
+                               totalHeatingCapacityFunctionofFlowFractionCurve,
+                               energyInputRatioFunctionofTemperatureCurve,
+                               energyInputRatioFunctionofFlowFractionCurve,
+                               partLoadFractionCorrelationCurve ); 
+
+      LOG(Warn,name << " creating a default heating coil");
+    }
 
     // PTHP
 
-    model::ZoneHVACPackagedTerminalHeatPump pthp(model,schedule.get(),fan,heatingCoil,coolingCoil,suppHeatingCoil);
+    model::ZoneHVACPackagedTerminalHeatPump pthp(model,
+                                                 schedule.get(),
+                                                 fan,
+                                                 heatingCoil.get(),
+                                                 coolingCoil,
+                                                 suppHeatingCoil.get());
 
     if( flowCap )
     {
@@ -2719,6 +2811,19 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     // Name
 
     pthp.setName(name);
+
+    // HtPumpSuppTemp
+
+    bool ok;
+
+    double value = htPumpSuppTempElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      value = unitToUnit(value,"F","C").get();
+
+      pthp.setMaximumSupplyAirTemperaturefromSupplementalHeater(value);
+    }
 
     return pthp;
   }
