@@ -1,0 +1,85 @@
+/**********************************************************************
+*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+*  All rights reserved.
+*
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+*
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*  Lesser General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+**********************************************************************/
+
+#include <openstudio_lib/UtilityBillFuelTypeListView.hpp>
+#include <openstudio_lib/ModelObjectTypeItem.hpp>
+#include <openstudio_lib/ModelObjectItem.hpp>
+#include <openstudio_lib/ModelObjectListView.hpp>
+#include <openstudio_lib/OSCollapsibleItemHeader.hpp>
+#include <openstudio_lib/OSItem.hpp>
+
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
+#include <utilities/core/Assert.hpp>
+
+#include <iostream>
+
+namespace openstudio {
+
+UtilityBillFuelTypeListView::UtilityBillFuelTypeListView(const model::Model& model, 
+                                                 bool addScrollArea, 
+                                                 OSItem::Type headerType, 
+                                                 bool showLocalBCL,
+                                                 QWidget * parent )
+  : OSCollapsibleItemList(addScrollArea, parent), m_model(model), m_headerType(headerType), m_showLocalBCL(showLocalBCL)
+{ 
+}
+
+UtilityBillFuelTypeListView::UtilityBillFuelTypeListView(const std::vector<std::pair<IddObjectType, std::string> >& modelObjectTypesAndNames,
+                                                 const model::Model& model, bool addScrollArea, 
+                                                 OSItem::Type headerType, bool showLocalBCL, QWidget * parent )
+  : OSCollapsibleItemList(addScrollArea, parent), 
+    m_modelObjectTypesAndNames(modelObjectTypesAndNames), 
+    m_model(model), m_headerType(headerType), m_showLocalBCL(showLocalBCL)
+{ 
+  typedef std::vector<std::pair<IddObjectType, std::string> >::value_type PairType;
+  BOOST_REVERSE_FOREACH(PairType modelObjectTypeAndName, m_modelObjectTypesAndNames){
+    addModelObjectType(modelObjectTypeAndName.first, modelObjectTypeAndName.second);
+  }
+}
+
+void UtilityBillFuelTypeListView::addModelObjectType(const IddObjectType& iddObjectType, const std::string& name)
+{
+  OSCollapsibleItemHeader* collapsibleItemHeader = new OSCollapsibleItemHeader(name, OSItemId("", "", false), m_headerType);
+  ModelObjectListView* modelObjectListView = new ModelObjectListView(iddObjectType, m_model, false,m_showLocalBCL);
+  ModelObjectTypeItem* modelObjectTypeItem = new ModelObjectTypeItem(collapsibleItemHeader, modelObjectListView);
+
+  addCollapsibleItem(modelObjectTypeItem);
+}
+
+IddObjectType UtilityBillFuelTypeListView::currentIddObjectType() const
+{
+  OSCollapsibleItem* selectedCollapsibleItem = this->selectedCollapsibleItem();
+  ModelObjectTypeItem* modelObjectTypeItem = qobject_cast<ModelObjectTypeItem*>(selectedCollapsibleItem);
+  OS_ASSERT(modelObjectTypeItem);
+  return modelObjectTypeItem->iddObjectType();
+}
+
+boost::optional<openstudio::model::ModelObject> UtilityBillFuelTypeListView::selectedModelObject() const
+{
+  OSItem* selectedItem = this->selectedItem();
+  ModelObjectItem* modelObjectItem = qobject_cast<ModelObjectItem*>(selectedItem);
+  if (modelObjectItem){
+    return modelObjectItem->modelObject();
+  }
+  return boost::none;
+}
+
+} // openstudio
+
