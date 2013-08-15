@@ -22,6 +22,7 @@
 #include <openstudio_lib/ModelObjectListView.hpp>
 #include <openstudio_lib/ModelObjectTypeListView.hpp>
 #include <openstudio_lib/OSItem.hpp>
+#include <openstudio_lib/UtilityBillListView.hpp>
 
 #include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"

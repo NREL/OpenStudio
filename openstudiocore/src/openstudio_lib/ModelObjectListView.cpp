@@ -122,8 +122,6 @@ std::vector<OSItemId> ModelObjectListController::makeVector()
         if( (! hvacComponent->containingHVACComponent()) && (! hvacComponent->containingZoneHVACComponent()) ) {
           result.push_back(modelObjectToItemId(hvacComponent.get(), false));
         }
-      } else if(boost::optional<model::UtilityBill> utilityBill = modelObject.optionalCast<model::UtilityBill>()) {
-        result.push_back(modelObjectToItemId(modelObject, false));
       } else {
         result.push_back(modelObjectToItemId(modelObject, false));
       }

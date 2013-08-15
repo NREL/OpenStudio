@@ -40,14 +40,14 @@ class QPushButton;
 namespace openstudio {
 
 class BillFormatDialog;
-
+class BillingPeriod;
+class Date;
+class FuelType;
 class OSComboBox2;
 class OSDoubleEdit2;
 class OSIntegerEdit2;
 class OSLineEdit2;
-class BillingPeriod;
-class Date;
-class FuelType;
+class UtilityBillListView;
 
 enum BillFormat{
   STARTDATE_ENDDATE,
