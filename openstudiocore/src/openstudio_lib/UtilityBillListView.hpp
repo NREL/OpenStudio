@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_UTILITYBILLLISTVIEW_H
-#define OPENSTUDIO_UTILITYBILLLISTVIEW_H
+#ifndef OPENSTUDIO_UTILITYBILLFUELTYPELISTVIEW_H
+#define OPENSTUDIO_UTILITYBILLFUELTYPELISTVIEW_H
 
 #include <openstudio_lib/OSItemList.hpp>
 #include <openstudio_lib/OSVectorController.hpp>
@@ -28,17 +28,17 @@
 
 namespace openstudio {
 
-class UtilityBillListController : public OSVectorController
+class UtilityBillFuelTypeListController : public OSVectorController
 {
   Q_OBJECT
 
 public:
 
-  UtilityBillListController(const openstudio::IddObjectType& iddObjectType, 
+  UtilityBillFuelTypeListController(const openstudio::IddObjectType& iddObjectType, 
                             const model::Model& model,
                             bool showLocalBCL = false);
 
-  virtual ~UtilityBillListController() {}
+  virtual ~UtilityBillFuelTypeListController() {}
 
   IddObjectType iddObjectType() const;
 
@@ -55,19 +55,19 @@ private:
   bool m_showLocalBCL;
 };
 
-class UtilityBillListView : public OSItemList
+class UtilityBillFuelTypeListView : public OSItemList
 {
   Q_OBJECT
 
 public:
 
-  UtilityBillListView(const openstudio::IddObjectType& iddObjectType, 
+  UtilityBillFuelTypeListView(const openstudio::IddObjectType& iddObjectType, 
                       const model::Model& model,
                       bool addScrollArea,
                       bool showLocalBCL = false,
                       QWidget * parent = 0);
 
-  virtual ~UtilityBillListView() {}
+  virtual ~UtilityBillFuelTypeListView() {}
 
   boost::optional<openstudio::model::ModelObject> selectedModelObject() const;
 
@@ -78,5 +78,5 @@ public:
 
 } // openstudio
 
-#endif // OPENSTUDIO_UTILITYBILLLISTVIEW_H
+#endif // OPENSTUDIO_UTILITYBILLFUELTYPELISTVIEW_H
 

@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include <openstudio_lib/UtilityBillListView.hpp>
+//#include <openstudio_lib/UtilityBillFuelTypeListView.hpp>
 
 #include <openstudio_lib/BCLComponentItem.hpp>
 #include <openstudio_lib/ModelObjectItem.hpp>
@@ -34,7 +35,7 @@
 
 namespace openstudio {
 
-UtilityBillListController::UtilityBillListController(const openstudio::IddObjectType& iddObjectType, 
+UtilityBillFuelTypeListController::UtilityBillFuelTypeListController(const openstudio::IddObjectType& iddObjectType, 
                                                      const model::Model& model,
                                                      bool showLocalBCL)
   : m_iddObjectType(iddObjectType), m_model(model), m_showLocalBCL(showLocalBCL)
@@ -56,12 +57,12 @@ UtilityBillListController::UtilityBillListController(const openstudio::IddObject
 
 }
 
-IddObjectType UtilityBillListController::iddObjectType() const
+IddObjectType UtilityBillFuelTypeListController::iddObjectType() const
 {
   return m_iddObjectType;
 }
 
-void UtilityBillListController::objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+void UtilityBillFuelTypeListController::objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   if (iddObjectType == m_iddObjectType){
     std::vector<OSItemId> ids = this->makeVector();
@@ -76,14 +77,14 @@ void UtilityBillListController::objectAdded(boost::shared_ptr<openstudio::detail
   }
 }
 
-void UtilityBillListController::objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+void UtilityBillFuelTypeListController::objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   if (iddObjectType == m_iddObjectType){
     emit itemIds(makeVector());
   }
 }
 
-std::vector<OSItemId> UtilityBillListController::makeVector()
+std::vector<OSItemId> UtilityBillFuelTypeListController::makeVector()
 {
   std::vector<OSItemId> result;
 
@@ -124,16 +125,16 @@ std::vector<OSItemId> UtilityBillListController::makeVector()
   return result;
 }
 
-UtilityBillListView::UtilityBillListView(const openstudio::IddObjectType& iddObjectType, 
+UtilityBillFuelTypeListView::UtilityBillFuelTypeListView(const openstudio::IddObjectType& iddObjectType, 
                                          const model::Model& model, 
                                          bool addScrollArea,
                                          bool showLocalBCL,
                                          QWidget * parent )
-  : OSItemList(new UtilityBillListController(iddObjectType, model,showLocalBCL), addScrollArea)
+  : OSItemList(new UtilityBillFuelTypeListController(iddObjectType, model,showLocalBCL), addScrollArea)
 { 
 }  
 
-boost::optional<openstudio::model::ModelObject> UtilityBillListView::selectedModelObject() const
+boost::optional<openstudio::model::ModelObject> UtilityBillFuelTypeListView::selectedModelObject() const
 {
   OSItem* selectedItem = this->selectedItem();
   ModelObjectItem* modelObjectItem = qobject_cast<ModelObjectItem*>(selectedItem);
@@ -143,10 +144,10 @@ boost::optional<openstudio::model::ModelObject> UtilityBillListView::selectedMod
   return boost::none;
 }
 
-IddObjectType UtilityBillListView::iddObjectType() const
+IddObjectType UtilityBillFuelTypeListView::iddObjectType() const
 {
   OSVectorController* vectorController = this->vectorController();
-  UtilityBillListController* utilityBillListController = qobject_cast<UtilityBillListController*>(vectorController);
+  UtilityBillFuelTypeListController* utilityBillListController = qobject_cast<UtilityBillFuelTypeListController*>(vectorController);
   OS_ASSERT(utilityBillListController);
   return utilityBillListController->iddObjectType();
 }

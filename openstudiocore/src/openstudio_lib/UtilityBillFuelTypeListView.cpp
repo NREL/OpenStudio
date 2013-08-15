@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include <openstudio_lib/UtilityBillFuelTypeListView.hpp>
+//#include <openstudio_lib/UtilityBillAllFuelTypesListView.hpp>
 #include <openstudio_lib/ModelObjectTypeItem.hpp>
 #include <openstudio_lib/ModelObjectItem.hpp>
 #include <openstudio_lib/ModelObjectListView.hpp>
@@ -32,7 +33,7 @@
 
 namespace openstudio {
 
-UtilityBillFuelTypeListView::UtilityBillFuelTypeListView(const model::Model& model, 
+UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const model::Model& model, 
                                                  bool addScrollArea, 
                                                  OSItem::Type headerType, 
                                                  bool showLocalBCL,
@@ -41,7 +42,7 @@ UtilityBillFuelTypeListView::UtilityBillFuelTypeListView(const model::Model& mod
 { 
 }
 
-UtilityBillFuelTypeListView::UtilityBillFuelTypeListView(const std::vector<std::pair<IddObjectType, std::string> >& modelObjectTypesAndNames,
+UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const std::vector<std::pair<IddObjectType, std::string> >& modelObjectTypesAndNames,
                                                  const model::Model& model, bool addScrollArea, 
                                                  OSItem::Type headerType, bool showLocalBCL, QWidget * parent )
   : OSCollapsibleItemList(addScrollArea, parent), 
@@ -54,7 +55,7 @@ UtilityBillFuelTypeListView::UtilityBillFuelTypeListView(const std::vector<std::
   }
 }
 
-void UtilityBillFuelTypeListView::addModelObjectType(const IddObjectType& iddObjectType, const std::string& name)
+void UtilityBillAllFuelTypesListView::addModelObjectType(const IddObjectType& iddObjectType, const std::string& name)
 {
   OSCollapsibleItemHeader* collapsibleItemHeader = new OSCollapsibleItemHeader(name, OSItemId("", "", false), m_headerType);
   ModelObjectListView* modelObjectListView = new ModelObjectListView(iddObjectType, m_model, false,m_showLocalBCL);
@@ -63,7 +64,7 @@ void UtilityBillFuelTypeListView::addModelObjectType(const IddObjectType& iddObj
   addCollapsibleItem(modelObjectTypeItem);
 }
 
-IddObjectType UtilityBillFuelTypeListView::currentIddObjectType() const
+IddObjectType UtilityBillAllFuelTypesListView::currentIddObjectType() const
 {
   OSCollapsibleItem* selectedCollapsibleItem = this->selectedCollapsibleItem();
   ModelObjectTypeItem* modelObjectTypeItem = qobject_cast<ModelObjectTypeItem*>(selectedCollapsibleItem);
@@ -71,7 +72,7 @@ IddObjectType UtilityBillFuelTypeListView::currentIddObjectType() const
   return modelObjectTypeItem->iddObjectType();
 }
 
-boost::optional<openstudio::model::ModelObject> UtilityBillFuelTypeListView::selectedModelObject() const
+boost::optional<openstudio::model::ModelObject> UtilityBillAllFuelTypesListView::selectedModelObject() const
 {
   OSItem* selectedItem = this->selectedItem();
   ModelObjectItem* modelObjectItem = qobject_cast<ModelObjectItem*>(selectedItem);
