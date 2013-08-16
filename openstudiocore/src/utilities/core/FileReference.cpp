@@ -161,8 +161,8 @@ namespace detail {
   QVariant toVariant(const FileReference& fileReference) {
     QVariantMap fileReferenceData;
 
-    fileReferenceData["uuid"] = toQString(toUID(fileReference.uuid()));
-    fileReferenceData["version_uuid"] = toQString(toUID(fileReference.versionUUID()));
+    fileReferenceData["uuid"] = toQString(removeBraces(fileReference.uuid()));
+    fileReferenceData["version_uuid"] = toQString(removeBraces(fileReference.versionUUID()));
     std::string str = fileReference.name();
     if (!str.empty()) {
       fileReferenceData["name"] = toQString(str);

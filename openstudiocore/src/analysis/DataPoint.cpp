@@ -497,9 +497,9 @@ namespace detail {
     QVariantMap dataPointData = AnalysisObject_Impl::toVariant().toMap();
 
     dataPointData["data_point_type"] = QString("DataPoint");
-    dataPointData["problem_uuid"] = toQString(toUID(problemUUID()));
+    dataPointData["problem_uuid"] = toQString(removeBraces(problemUUID()));
     if (analysisUUID()) {
-      dataPointData["analysis_uuid"] = toQString(toUID(analysisUUID().get()));
+      dataPointData["analysis_uuid"] = toQString(removeBraces(analysisUUID().get()));
     }
 
     dataPointData["complete"] = isComplete();
@@ -724,8 +724,8 @@ namespace detail {
   QVariant DataPoint_Impl::toServerDataPointsVariant() const {
     QVariantMap map;
 
-    map["uuid"] = toQString(toUID(uuid()));
-    map["version_uuid"] = toQString(toUID(uuid()));
+    map["uuid"] = toQString(removeBraces(uuid()));
+    map["version_uuid"] = toQString(removeBraces(uuid()));
     map["name"] = toQString(name());
     map["display_name"] = toQString(displayName());
 
@@ -737,7 +737,7 @@ namespace detail {
     for (unsigned i = 0; i < n; ++i) {
       QVariantMap valueMap;
       valueMap["variable_index"] = i;
-      valueMap["variable_uuid"] = toQString(toUID(variables[i].uuid()));
+      valueMap["variable_uuid"] = toQString(removeBraces(variables[i].uuid()));
       valueMap["value"] = values[i];
       valuesList.push_back(valueMap);
     }

@@ -66,8 +66,8 @@ namespace detail {
   QVariant DiscreteVariable_Impl::toServerFormulationVariant() const {
     QVariantMap map;
 
-    map["uuid"] = toQString(toUID(uuid()));
-    map["version_uuid"] = toQString(toUID(uuid()));
+    map["uuid"] = toQString(removeBraces(uuid()));
+    map["version_uuid"] = toQString(removeBraces(uuid()));
     map["name"] = toQString(name());
     map["display_name"] = toQString(displayName());
     map["type"] = QString("Integer"); // could be Discrete instead

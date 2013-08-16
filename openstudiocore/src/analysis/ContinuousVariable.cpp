@@ -196,8 +196,8 @@ namespace detail {
   QVariant ContinuousVariable_Impl::toServerFormulationVariant() const {
     QVariantMap map;
 
-    map["uuid"] = toQString(toUID(uuid()));
-    map["version_uuid"] = toQString(toUID(uuid()));
+    map["uuid"] = toQString(removeBraces(uuid()));
+    map["version_uuid"] = toQString(removeBraces(uuid()));
     map["name"] = toQString(name());
     map["display_name"] = toQString(displayName());
     map["type"] = QString("Double"); // could be Continuous instead

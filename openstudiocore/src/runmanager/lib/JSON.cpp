@@ -26,7 +26,7 @@ namespace detail {
     if (!t_jobTree.tools().empty()) {
       map["tools"] = toVariant(t_jobTree.tools());
     }
-    map["uuid"] = toQString(toUID(t_jobTree.uuid()));
+    map["uuid"] = toQString(removeBraces(t_jobTree.uuid()));
 
     if (t_jobTree.lastRun())
     {

@@ -462,8 +462,8 @@ namespace detail {
     rubyMeasureData["measure_type"] = QString("RubyMeasure");
     if (m_bclMeasureDirectory) {
       rubyMeasureData["bcl_measure_directory"] = toQString(m_bclMeasureDirectory.get());
-      rubyMeasureData["bcl_measure_uuid"] = toQString(toUID(m_bclMeasureUUID.get()));
-      rubyMeasureData["bcl_measure_version_uuid"] = toQString(toUID(m_bclMeasureVersionUUID.get()));
+      rubyMeasureData["bcl_measure_uuid"] = toQString(removeBraces(m_bclMeasureUUID.get()));
+      rubyMeasureData["bcl_measure_version_uuid"] = toQString(removeBraces(m_bclMeasureVersionUUID.get()));
     }
     else {
       OS_ASSERT(m_perturbationScript);

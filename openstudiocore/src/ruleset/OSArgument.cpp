@@ -1071,8 +1071,8 @@ namespace detail {
   QVariant toVariant(const OSArgument& argument) {
     QVariantMap argumentData;
 
-    argumentData["uuid"] = toQString(toUID(argument.uuid()));
-    argumentData["version_uuid"] = toQString(toUID(argument.versionUUID()));
+    argumentData["uuid"] = toQString(removeBraces(argument.uuid()));
+    argumentData["version_uuid"] = toQString(removeBraces(argument.versionUUID()));
     argumentData["name"] = toQString(argument.name());
     if (!argument.displayName().empty()) {
       argumentData["display_name"] = toQString(argument.displayName());

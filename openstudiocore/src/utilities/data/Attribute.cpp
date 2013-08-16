@@ -1530,8 +1530,8 @@ namespace detail {
   QVariant toVariant(const Attribute& attribute) {
     QVariantMap attributeData;
 
-    attributeData["uuid"] = toQString(toUID(attribute.uuid()));
-    attributeData["version_uuid"] = toQString(toUID(attribute.versionUUID()));
+    attributeData["uuid"] = toQString(removeBraces(attribute.uuid()));
+    attributeData["version_uuid"] = toQString(removeBraces(attribute.versionUUID()));
     attributeData["name"] = toQString(attribute.name());
     if (attribute.displayName()) {
       attributeData["display_name"] = toQString(attribute.displayName().get());

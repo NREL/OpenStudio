@@ -51,7 +51,7 @@ namespace detail {
   QVariant toVariant(const Tag& tag) {
     QVariantMap tagData;
 
-    tagData["uuid"] = toQString(toUID(tag.uuid()));
+    tagData["uuid"] = toQString(removeBraces(tag.uuid()));
     tagData["name"] = toQString(tag.name());
 
     return QVariant(tagData);
