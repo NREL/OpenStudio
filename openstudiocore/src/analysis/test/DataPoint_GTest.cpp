@@ -160,9 +160,13 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
         std::vector<openstudio::URLSearchPath>(),
         false,
         createUUID(),
-        DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,34,21)),
-        errorsObject,
-        outFilesObject); // OpenStudioPostProcess
+        JobState(
+          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,34,21)),
+          errorsObject,
+          outFilesObject,
+          openstudio::runmanager::AdvancedStatus(openstudio::runmanager::AdvancedStatusEnum::Idle)
+        )
+        ); // OpenStudioPostProcess
 
   Job jobLast = job;
   wi = workItems[4];
@@ -195,9 +199,13 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
         std::vector<openstudio::URLSearchPath>(),
         false,
         createUUID(),
-        DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,33,42)),
-        errorsObject,
-        outFilesObject); // EnergyPlus
+        JobState(
+          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,33,42)),
+          errorsObject,
+          outFilesObject,
+          openstudio::runmanager::AdvancedStatus(openstudio::runmanager::AdvancedStatusEnum::Idle)
+        )
+        ); // EnergyPlus
   job.addChild(jobLast);
 
   jobLast = job;
@@ -224,9 +232,13 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
         std::vector<openstudio::URLSearchPath>(),
         false,
         createUUID(),
-        DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,23,12)),
-        errorsObject,
-        outFilesObject); // EnergyPlusPreProcess
+        JobState(
+          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,23,12)),
+          errorsObject,
+          outFilesObject,
+          openstudio::runmanager::AdvancedStatus(openstudio::runmanager::AdvancedStatusEnum::Idle)
+        )
+        ); // EnergyPlusPreProcess
   job.addChild(jobLast);
 
   jobLast = job;
@@ -255,9 +267,13 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
         std::vector<openstudio::URLSearchPath>(),
         false,
         createUUID(),
-        DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,22,32)),
-        errorsObject,
-        outFilesObject); // ModelToIdf
+        JobState(
+          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,22,32)),
+          errorsObject,
+          outFilesObject,
+          openstudio::runmanager::AdvancedStatus(openstudio::runmanager::AdvancedStatusEnum::Idle)
+        )
+        ); // ModelToIdf
   job.addChild(jobLast);
 
   jobLast = job;
@@ -277,9 +293,13 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
         std::vector<openstudio::URLSearchPath>(),
         false,
         createUUID(),
-        DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,21,52)),
-        errorsObject,
-        outFilesObject); // Variables 2 & 3
+        JobState(
+          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,21,52)),
+          errorsObject,
+          outFilesObject,
+          openstudio::runmanager::AdvancedStatus(openstudio::runmanager::AdvancedStatusEnum::Idle)
+        )
+        ); // Variables 2 & 3
   job.addChild(jobLast);
 
   jobLast = job;
@@ -301,9 +321,13 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
         std::vector<openstudio::URLSearchPath>(),
         false,
         createUUID(),
-        DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,21,10)),
-        errorsObject,
-        outFilesObject); // Variable 1
+        JobState(
+          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,21,10)),
+          errorsObject,
+          outFilesObject,
+          openstudio::runmanager::AdvancedStatus(openstudio::runmanager::AdvancedStatusEnum::Idle)
+        )
+        ); // Variable 1
   job.addChild(jobLast);
 
   DataPoint dataPoint(createUUID(),
