@@ -148,7 +148,7 @@ ResultsView::ResultsView()
 
   QButtonGroup* buttonGroup = new QButtonGroup(this);
   bool isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(selectView(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_standardResultsBtn = new QPushButton("Standard",this);
   m_standardResultsBtn->setCheckable(true);
@@ -233,7 +233,7 @@ ResultsView::ResultsView()
 
   isConnected = connect(calibrationComboBox, SIGNAL(currentIndexChanged(const QString &)),
     this, SLOT(selectCalibrationMethod(const QString &)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   innerContentVLayout->addLayout(hLayout);
 
@@ -346,8 +346,8 @@ void ResultsView::selectCalibrationMethod(const QString& value)
   std::string calibrationGuideline = toString(value);
   boost::optional<double> maxNMBE = model::UtilityBill::maxNMBE(calibrationGuideline);
   boost::optional<double> maxCVRMSE = model::UtilityBill::maxCVRMSE(calibrationGuideline);
-  Q_ASSERT(maxNMBE);
-  Q_ASSERT(maxCVRMSE);
+  OS_ASSERT(maxNMBE);
+  OS_ASSERT(maxCVRMSE);
 
   m_calibrationMaxNMBE = *maxNMBE;
   m_calibrationMaxCVRMSE = *maxCVRMSE;

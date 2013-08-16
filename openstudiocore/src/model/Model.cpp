@@ -728,7 +728,7 @@ if (_className::iddObjectType() == typeToCreate) { \
                                         SIGNAL(onRemoveFromWorkspace(Handle)),
                                         this,
                                         SLOT(clearCachedRunPeriod()));
-      BOOST_ASSERT(connected);
+      OS_ASSERT(connected);
     }
 
     return m_cachedRunPeriod;
@@ -747,7 +747,7 @@ if (_className::iddObjectType() == typeToCreate) { \
                                         SIGNAL(onRemoveFromWorkspace(Handle)),
                                         this,
                                         SLOT(clearCachedYearDescription()));
-      BOOST_ASSERT(connected);
+      OS_ASSERT(connected);
     }
 
     return m_cachedYearDescription;
@@ -766,7 +766,7 @@ if (_className::iddObjectType() == typeToCreate) { \
                                         SIGNAL(onRemoveFromWorkspace(Handle)),
                                         this,
                                         SLOT(clearCachedWeatherFile()));
-      BOOST_ASSERT(connected);
+      OS_ASSERT(connected);
     }
 
     return m_cachedWeatherFile;

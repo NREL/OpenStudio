@@ -55,7 +55,7 @@ namespace detail {
                                      bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == UtilityBill::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == UtilityBill::iddObjectType());
   }
 
   UtilityBill_Impl::UtilityBill_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -63,7 +63,7 @@ namespace detail {
                                      bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == UtilityBill::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == UtilityBill::iddObjectType());
   }
 
   UtilityBill_Impl::UtilityBill_Impl(const UtilityBill_Impl& other,
@@ -86,13 +86,13 @@ namespace detail {
 
   FuelType UtilityBill_Impl::fuelType() const {
     boost::optional<std::string> value = getString(OS_UtilityBillFields::FuelType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return FuelType(value.get());
   }
 
   InstallLocationType UtilityBill_Impl::meterInstallLocation() const {
     boost::optional<std::string> value = getString(OS_UtilityBillFields::MeterInstallLocation,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return InstallLocationType(value.get());
   }
 
@@ -119,7 +119,7 @@ namespace detail {
 
   std::string UtilityBill_Impl::consumptionUnit() const {
     boost::optional<std::string> value = getString(OS_UtilityBillFields::ConsumptionUnit,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -388,7 +388,7 @@ namespace detail {
     }
 
 
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -470,7 +470,7 @@ namespace detail {
 
   void UtilityBill_Impl::resetMeterInstallLocation() {
     bool result = setString(OS_UtilityBillFields::MeterInstallLocation, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool UtilityBill_Impl::setMeterSpecificInstallLocation(const std::string& meterSpecificInstallLocation) {
@@ -480,7 +480,7 @@ namespace detail {
 
   void UtilityBill_Impl::resetMeterSpecificInstallLocation() {
     bool result = setString(OS_UtilityBillFields::MeterSpecificInstallLocation, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool UtilityBill_Impl::setMeterEndUseCategory(const EndUseCategoryType& meterEndUseCategory) {
@@ -490,7 +490,7 @@ namespace detail {
 
   void UtilityBill_Impl::resetMeterEndUseCategory() {
     bool result = setString(OS_UtilityBillFields::MeterEndUseCategory, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool UtilityBill_Impl::setMeterSpecificEndUse(const std::string& meterSpecificEndUse) {
@@ -500,7 +500,7 @@ namespace detail {
 
   void UtilityBill_Impl::resetMeterSpecificEndUse() {
     bool result = setString(OS_UtilityBillFields::MeterSpecificEndUse, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool UtilityBill_Impl::setConsumptionUnit(const std::string& consumptionUnit) {
@@ -524,7 +524,7 @@ namespace detail {
 
   void UtilityBill_Impl::resetConsumptionUnitConversionFactor() {
     bool result = setString(OS_UtilityBillFields::ConsumptionUnitConversionFactor, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool UtilityBill_Impl::setPeakDemandUnit(const std::string& peakDemandUnit) {
@@ -550,7 +550,7 @@ namespace detail {
 
   void UtilityBill_Impl::resetTimestepsInPeakDemandWindow(){
     bool test = setString(OS_UtilityBillFields::TimestepsinPeakDemandWindow, "");
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   std::vector<std::string> UtilityBill_Impl::consumptionUnitValues() const {
@@ -791,7 +791,7 @@ namespace detail {
   void UtilityBill_Impl::clearBillingPeriods()
   {
     clearExtensibleGroups();
-    BOOST_ASSERT(numExtensibleGroups() == 0u);
+    OS_ASSERT(numExtensibleGroups() == 0u);
   }
 
   BillingPeriod UtilityBill_Impl::addBillingPeriod()
@@ -810,13 +810,13 @@ namespace detail {
 
       bool wasBlocked = this->blockSignals(true);
       bool test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginMonth, 1);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginDayofMonth, 1);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginYear, yd->assumedYear());
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       test = result.setUnsigned(OS_UtilityBillExtensibleFields::NumberofDaysinBillingPeriod, 30);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       this->blockSignals(wasBlocked);
       this->emitChangeSignals();
     }else{
@@ -824,13 +824,13 @@ namespace detail {
 
       bool wasBlocked = this->blockSignals(true);
       bool test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginMonth, startDate.monthOfYear().value());
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginDayofMonth, startDate.dayOfMonth());
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       test = result.setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginYear, startDate.year());
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       test = result.setUnsigned(OS_UtilityBillExtensibleFields::NumberofDaysinBillingPeriod, billingPeriods.back().numberOfDays());
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       this->blockSignals(wasBlocked);
       this->emitChangeSignals();
     }
@@ -916,11 +916,11 @@ namespace detail {
 Date BillingPeriod::startDate() const
 {
   boost::optional<unsigned> beginMonth = getUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginMonth);
-  BOOST_ASSERT(beginMonth);
+  OS_ASSERT(beginMonth);
   boost::optional<unsigned> beginDay = getUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginDayofMonth);
-  BOOST_ASSERT(beginDay);
+  OS_ASSERT(beginDay);
   boost::optional<unsigned> beginYear = getUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginYear);
-  BOOST_ASSERT(beginYear);
+  OS_ASSERT(beginYear);
 
   return Date(beginMonth.get(), beginDay.get(), beginYear.get());
 }
@@ -934,7 +934,7 @@ Date BillingPeriod::endDate() const
 unsigned BillingPeriod::numberOfDays() const
 {
   boost::optional<unsigned> numberOfDays = getUnsigned(OS_UtilityBillExtensibleFields::NumberofDaysinBillingPeriod);
-  BOOST_ASSERT(numberOfDays);
+  OS_ASSERT(numberOfDays);
   return numberOfDays.get();
 }
 
@@ -963,16 +963,16 @@ bool BillingPeriod::setStartDate(const Date& startDate)
      If startDate is after endDate then numberOfDays is retained. */
 
   bool test = setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginMonth, startDate.monthOfYear().value());
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginDayofMonth, startDate.dayOfMonth());
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = setUnsigned(OS_UtilityBillExtensibleFields::BillingPeriodBeginYear, startDate.assumedBaseYear());
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 
   if (startDate < currentEndDate){
     Time newNumberOfDays = currentEndDate - startDate;
     test = this->setNumberOfDays(newNumberOfDays.days() + 1);
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   return test;
@@ -992,13 +992,13 @@ bool BillingPeriod::setEndDate(const Date& endDate)
   if (endDate > currentStartDate){
     Time newNumberOfDays = endDate - currentStartDate;
     test = this->setNumberOfDays(newNumberOfDays.days() + 1);
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }else{
     Date newStartDate = endDate - Time(currentNumberOfDays - 1);
     test = this->setStartDate(newStartDate);
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     test = this->setNumberOfDays(currentNumberOfDays);
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   return test;
@@ -1018,7 +1018,7 @@ bool BillingPeriod::setConsumption(double consumption)
 void BillingPeriod::resetConsumption()
 {
   bool test = setString(OS_UtilityBillExtensibleFields::BillingPeriodConsumption, "");
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 }
 
 bool BillingPeriod::setPeakDemand(double peakDemand)
@@ -1029,7 +1029,7 @@ bool BillingPeriod::setPeakDemand(double peakDemand)
 void BillingPeriod::resetPeakDemand()
 {
   bool test = setString(OS_UtilityBillExtensibleFields::BillingPeriodPeakDemand, "");
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 }
 
 bool BillingPeriod::setTotalCost(double totalCost)
@@ -1040,7 +1040,7 @@ bool BillingPeriod::setTotalCost(double totalCost)
 void BillingPeriod::resetTotalCost()
 {
   bool test = setString(OS_UtilityBillExtensibleFields::BillingPeriodTotalCost, "");
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 }
 
 bool BillingPeriod::withinRunPeriod() const
@@ -1195,7 +1195,7 @@ Vector BillingPeriod::modelConsumptionValues() const
         Date tmp(date.monthOfYear(), date.dayOfMonth());
         dateTime = DateTime(tmp, Time(1));
       }
-      BOOST_ASSERT(dateTime);
+      OS_ASSERT(dateTime);
 
       double value = timeseries->value(*dateTime);
       if (value == outOfRangeValue){
@@ -1315,24 +1315,24 @@ BillingPeriod::BillingPeriod(boost::shared_ptr<detail::UtilityBill_Impl> impl,un
 UtilityBill::UtilityBill(const FuelType& fuelType, const Model& model)
   : ModelObject(UtilityBill::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::UtilityBill_Impl>());
+  OS_ASSERT(getImpl<detail::UtilityBill_Impl>());
 
   bool test;
   test = setString(OS_UtilityBillFields::FuelType, fuelType.valueName());
   if (!test){
     LOG(Error, fuelType.valueName());
   }
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 
   std::vector<std::string> consumptionUnitValues = this->consumptionUnitValues();
-  BOOST_ASSERT(!consumptionUnitValues.empty());
+  OS_ASSERT(!consumptionUnitValues.empty());
   test = setConsumptionUnit(consumptionUnitValues[0]);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 
   std::vector<std::string> peakDemandUnitValues = this->peakDemandUnitValues();
   if (!peakDemandUnitValues.empty()){
     test = setPeakDemandUnit(peakDemandUnitValues[0]);
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
 }
