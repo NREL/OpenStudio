@@ -873,6 +873,20 @@ namespace detail {
     return result;
   }
 
+  double Space_Impl::exteriorWallArea() const {
+    double result = 0;
+    BOOST_FOREACH(const Surface& surface, this->surfaces()) {
+      if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors"))
+      {
+        if (istringEqual(surface.surfaceType(), "Wall"))
+        {
+          result += surface.grossArea();
+        }
+      }
+    }
+    return result;
+  }
+
   double Space_Impl::volume() const {
     double result = 0;
 
@@ -2889,6 +2903,10 @@ double Space::floorArea() const {
 
 double Space::exteriorArea() const {
   return getImpl<detail::Space_Impl>()->exteriorArea();
+}
+
+double Space::exteriorWallArea() const {
+  return getImpl<detail::Space_Impl>()->exteriorWallArea();
 }
 
 double Space::volume() const {

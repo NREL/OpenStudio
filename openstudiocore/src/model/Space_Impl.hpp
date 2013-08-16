@@ -89,6 +89,7 @@ namespace detail {
 
     Q_PROPERTY(double floorArea READ floorArea);
     Q_PROPERTY(double exteriorArea READ exteriorArea);
+    Q_PROPERTY(double exteriorWallArea READ exteriorWallArea);
     Q_PROPERTY(double volume READ volume);
     Q_PROPERTY(double numberOfPeople READ numberOfPeople WRITE setNumberOfPeople);
     Q_PROPERTY(double peoplePerFloorArea READ peoplePerFloorArea WRITE setPeoplePerFloorArea);
@@ -349,6 +350,8 @@ namespace detail {
     double floorArea() const;
 
     double exteriorArea() const;
+
+    double exteriorWallArea() const;
 
     double volume() const;
 
