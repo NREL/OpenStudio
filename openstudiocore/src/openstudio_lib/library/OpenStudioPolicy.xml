@@ -301,7 +301,7 @@
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
-    <rule IddField="Part Load Fraction Correlation Curve Name" Access="HIDDEN"/>
+    <rule IddField="Part Load Fraction Correlation Curve Name" Access="LOCKED"/>
     <rule IddField="Temperature Setpoint Node Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_AirLoopHVAC_ZoneSplitter">

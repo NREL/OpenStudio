@@ -220,6 +220,10 @@ class ENERGYPLUS_API ForwardTranslator {
    */
   std::vector<LogMessage> errors() const;
 
+  /** Temporary code, use to preserve holidays in the model.
+   */ 
+  void setKeepRunControlSpecialDays(bool keepRunControlSpecialDays);
+
  private:
 
   REGISTER_LOGGER("openstudio.energyplus.ForwardTranslator");
@@ -608,6 +612,9 @@ class ENERGYPLUS_API ForwardTranslator {
   ProgressBar* m_progressBar;
 
   friend struct detail::ForwardTranslatorInitializer;
+
+  // temp code
+  bool m_keepRunControlSpecialDays;
 };
 
 namespace detail
