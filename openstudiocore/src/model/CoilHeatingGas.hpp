@@ -28,6 +28,8 @@
 namespace openstudio {
 namespace model {
 
+class Curve;
+
 class Schedule;
 
 namespace detail {
@@ -108,6 +110,12 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
   void resetNominalCapacity();
 
   void autosizeNominalCapacity();
+
+  boost::optional<Curve> partLoadFractionCorrelationCurve() const;
+
+  bool setPartLoadFractionCorrelationCurve( const Curve& curve );
+
+  void resetPartLoadFractionCorrelationCurve();
 
   //@}
  protected:
