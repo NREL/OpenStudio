@@ -588,6 +588,7 @@ namespace detail {
     }
 
     if (options.osServerView && hasProblem()) {
+      // this data is not read upon deserialization
       metadata["server_view"] = toServerDataPointsVariant();
     }
 

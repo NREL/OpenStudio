@@ -744,6 +744,7 @@ namespace detail {
 
     if (options.osServerView) {
 
+      // this data is not read upon deserialization
       QVariantMap serverView = problem().toServerFormulationVariant().toMap();
 
       if (options.scope == AnalysisSerializationScope::Full) {
