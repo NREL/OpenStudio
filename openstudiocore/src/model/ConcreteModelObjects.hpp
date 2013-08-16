@@ -45,6 +45,7 @@
 #include <model/ChillerElectricEIR.hpp>
 #include <model/CoilCoolingDXSingleSpeed.hpp>
 #include <model/CoilCoolingDXTwoSpeed.hpp>
+#include <model/CoilCoolingDXVariableRefrigerantFlow.hpp>
 #include <model/CoilCoolingWater.hpp>
 #include <model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp>
 #include <model/CoilHeatingDXSingleSpeed.hpp>
@@ -258,6 +259,7 @@
 #include <model/ClimateZones_Impl.hpp>
 #include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
 #include <model/CoilCoolingDXTwoSpeed_Impl.hpp>
+#include <model/CoilCoolingDXVariableRefrigerantFlow_Impl.hpp>
 #include <model/CoilCoolingWater_Impl.hpp>
 #include <model/CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp>
 #include <model/CoilHeatingDXSingleSpeed_Impl.hpp>

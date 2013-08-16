@@ -106,6 +106,9 @@ SET( ${target_name}_src
   CoilCoolingDXTwoSpeed.hpp
   CoilCoolingDXTwoSpeed_Impl.hpp
   CoilCoolingDXTwoSpeed.cpp
+  CoilCoolingDXVariableRefrigerantFlow.hpp
+  CoilCoolingDXVariableRefrigerantFlow_Impl.hpp
+  CoilCoolingDXVariableRefrigerantFlow.cpp
   CoilCoolingWater.hpp
   CoilCoolingWater_Impl.hpp
   CoilCoolingWater.cpp
@@ -801,6 +804,7 @@ SET( ${target_name}_moc
   ClimateZones_Impl.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
   CoilCoolingDXTwoSpeed_Impl.hpp
+  CoilCoolingDXVariableRefrigerantFlow_Impl.hpp
   CoilCoolingWater_Impl.hpp
   CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp
   CoilHeatingDXSingleSpeed_Impl.hpp
