@@ -215,6 +215,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CoilCoolingWater);
     REGISTER_CONSTRUCTOR(CoilCoolingWaterToAirHeatPumpEquationFit);
     REGISTER_CONSTRUCTOR(CoilHeatingDXSingleSpeed);
+    REGISTER_CONSTRUCTOR(CoilHeatingDXVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(CoilHeatingElectric);
     REGISTER_CONSTRUCTOR(CoilHeatingGas);
     REGISTER_CONSTRUCTOR(CoilHeatingWater);
@@ -461,6 +462,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWater);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWaterToAirHeatPumpEquationFit);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXSingleSpeed);
+    REGISTER_COPYCONSTRUCTORS(CoilHeatingDXVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingElectric);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingGas);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingWater);

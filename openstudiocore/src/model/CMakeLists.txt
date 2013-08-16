@@ -118,6 +118,9 @@ SET( ${target_name}_src
   CoilHeatingDXSingleSpeed.hpp
   CoilHeatingDXSingleSpeed_Impl.hpp
   CoilHeatingDXSingleSpeed.cpp
+  CoilHeatingDXVariableRefrigerantFlow.hpp
+  CoilHeatingDXVariableRefrigerantFlow_Impl.hpp
+  CoilHeatingDXVariableRefrigerantFlow.cpp
   CoilHeatingElectric.hpp
   CoilHeatingElectric_Impl.hpp
   CoilHeatingElectric.cpp
@@ -808,6 +811,7 @@ SET( ${target_name}_moc
   CoilCoolingWater_Impl.hpp
   CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp
   CoilHeatingDXSingleSpeed_Impl.hpp
+  CoilHeatingDXVariableRefrigerantFlow_Impl.hpp
   CoilHeatingElectric_Impl.hpp
   CoilHeatingGas_Impl.hpp
   CoilHeatingWater_Impl.hpp

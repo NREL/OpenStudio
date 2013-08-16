@@ -49,6 +49,7 @@
 #include <model/CoilCoolingWater.hpp>
 #include <model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp>
 #include <model/CoilHeatingDXSingleSpeed.hpp>
+#include <model/CoilHeatingDXVariableRefrigerantFlow.hpp>
 #include <model/CoilHeatingElectric.hpp>
 #include <model/CoilHeatingGas.hpp>
 #include <model/CoilHeatingWater.hpp>
@@ -263,6 +264,7 @@
 #include <model/CoilCoolingWater_Impl.hpp>
 #include <model/CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp>
 #include <model/CoilHeatingDXSingleSpeed_Impl.hpp>
+#include <model/CoilHeatingDXVariableRefrigerantFlow_Impl.hpp>
 #include <model/CoilHeatingElectric_Impl.hpp>
 #include <model/CoilHeatingGas_Impl.hpp>
 #include <model/CoilHeatingWater_Impl.hpp>
