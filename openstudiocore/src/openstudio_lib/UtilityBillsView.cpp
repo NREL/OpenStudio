@@ -19,10 +19,9 @@
 
 #include <openstudio_lib/UtilityBillsView.hpp>
 
-#include <openstudio_lib/ModelObjectListView.hpp>
-#include <openstudio_lib/ModelObjectTypeListView.hpp>
 #include <openstudio_lib/OSItem.hpp>
-#include <openstudio_lib/UtilityBillListView.hpp>
+#include <openstudio_lib/UtilityBillFuelTypeListView.hpp>
+#include <openstudio_lib/UtilityBillAllFuelTypesListView.hpp>
 
 #include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"
@@ -38,7 +37,6 @@
 #include <model/YearDescription_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
-#include <utilities/data/DataEnums.hpp>
 #include <utilities/time/Date.hpp>
 
 #include <boost/bind.hpp>
@@ -60,7 +58,7 @@ namespace openstudio {
 // "Utility Calibration"
 
 UtilityBillsView::UtilityBillsView(const openstudio::model::Model& model, QWidget * parent)
-                     : ModelSubTabView(new ModelObjectTypeListView(UtilityBillsView::modelObjectTypesAndNames(), 
+                     : ModelSubTabView(new UtilityBillAllFuelTypesListView(UtilityBillsView::utilityBillFuelTypesAndNames(), 
                                                                    model, 
                                                                    false, 
                                                                    OSItem::COLLAPSIBLE_LIST_HEADER, 
@@ -85,13 +83,13 @@ UtilityBillsView::UtilityBillsView(const openstudio::model::Model& model, QWidge
 
 }
 
-std::vector<std::pair<IddObjectType, std::string> > UtilityBillsView::modelObjectTypesAndNames()
+std::vector<std::pair<FuelType, std::string> > UtilityBillsView::utilityBillFuelTypesAndNames()
 {
-  std::vector<std::pair<IddObjectType, std::string> > result;
-  result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_UtilityBill, "Electric Utility Bills"));
-  result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_UtilityBill, "Gas Utility Bills"));
-  result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_UtilityBill, "District Heating Utility Bills"));
-  result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_UtilityBill, "District Cooling Utility Bills"));
+  std::vector<std::pair<FuelType, std::string> > result;
+  result.push_back(std::make_pair<FuelType, std::string>(FuelType::Electricity, "Electric Utility Bills"));
+  result.push_back(std::make_pair<FuelType, std::string>(FuelType::Gas, "Gas Utility Bills"));
+  result.push_back(std::make_pair<FuelType, std::string>(FuelType::DistrictHeating, "District Heating Utility Bills"));
+  result.push_back(std::make_pair<FuelType, std::string>(FuelType::DistrictCooling, "District Cooling Utility Bills"));
 
   return result;
 }

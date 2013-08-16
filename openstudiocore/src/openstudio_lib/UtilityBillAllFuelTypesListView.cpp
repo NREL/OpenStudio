@@ -24,6 +24,7 @@
 #include <openstudio_lib/ModelObjectListView.hpp>
 #include <openstudio_lib/OSCollapsibleItemHeader.hpp>
 #include <openstudio_lib/OSItem.hpp>
+#include <openstudio_lib/UtilityBillFuelTypeItem.hpp>
 #include <openstudio_lib/UtilityBillFuelTypeListView.hpp>
 
 #include <model/Model.hpp>
@@ -42,26 +43,39 @@ UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const model::Mo
 { 
 }
 
-UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const std::vector<std::pair<IddObjectType, std::string> >& modelObjectTypesAndNames,
-                                                 const model::Model& model, bool addScrollArea, 
-                                                 OSItem::Type headerType, QWidget * parent )
+UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const std::vector<std::pair<FuelType, std::string> >& utilityBillFuelTypesAndNames,
+                                                 const model::Model& model,
+                                                 bool addScrollArea, 
+                                                 OSItem::Type headerType,
+                                                 QWidget * parent )
   : OSCollapsibleItemList(addScrollArea, parent), 
-    m_modelObjectTypesAndNames(modelObjectTypesAndNames), 
-    m_model(model), m_headerType(headerType)
+    m_utilityBillFuelTypesAndNames(utilityBillFuelTypesAndNames), 
+    m_model(model),
+    m_headerType(headerType)
 { 
-  typedef std::vector<std::pair<IddObjectType, std::string> >::value_type PairType;
-  BOOST_REVERSE_FOREACH(PairType modelObjectTypeAndName, m_modelObjectTypesAndNames){
-    addModelObjectType(modelObjectTypeAndName.first, modelObjectTypeAndName.second);
+  typedef std::vector<std::pair<FuelType, std::string> >::value_type PairType;
+  BOOST_REVERSE_FOREACH(PairType utilityBillFuelTypesAndNames, m_utilityBillFuelTypesAndNames){
+    addUtilityBillFuelType(utilityBillFuelTypesAndNames.first, utilityBillFuelTypesAndNames.second);
   }
 }
 
 void UtilityBillAllFuelTypesListView::addModelObjectType(const IddObjectType& iddObjectType, const std::string& name)
 {
   OSCollapsibleItemHeader* collapsibleItemHeader = new OSCollapsibleItemHeader(name, OSItemId("", "", false), m_headerType);
-  ModelObjectListView* modelObjectListView = new ModelObjectListView(iddObjectType, m_model, false,m_showLocalBCL);
+  ModelObjectListView* modelObjectListView = new ModelObjectListView(iddObjectType, m_model, false,false);
   ModelObjectTypeItem* modelObjectTypeItem = new ModelObjectTypeItem(collapsibleItemHeader, modelObjectListView);
 
   addCollapsibleItem(modelObjectTypeItem);
+}
+
+
+void UtilityBillAllFuelTypesListView::addUtilityBillFuelType(const FuelType & fuelType, const std::string& name)
+{
+  OSCollapsibleItemHeader* collapsibleItemHeader = new OSCollapsibleItemHeader(name, OSItemId("", "", false), m_headerType);
+  UtilityBillFuelTypeListView* utilityBillFuelTypeListView = new UtilityBillFuelTypeListView(m_model, fuelType, false);
+  UtilityBillFuelTypeItem* utilityBillFuelTypeItem = new UtilityBillFuelTypeItem(collapsibleItemHeader, utilityBillFuelTypeListView);
+
+  addCollapsibleItem(utilityBillFuelTypeItem);
 }
 
 IddObjectType UtilityBillAllFuelTypesListView::currentIddObjectType() const

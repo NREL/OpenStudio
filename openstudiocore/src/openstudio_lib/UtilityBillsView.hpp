@@ -28,6 +28,8 @@
 #include <model/Model.hpp>
 #include <model/UtilityBill.hpp>
 
+#include <utilities/data/DataEnums.hpp>
+
 #include <QWidget>
 
 class QButtonGroup;
@@ -70,7 +72,7 @@ private:
 
   void resetUtilityBills();
 
-  std::vector<std::pair<IddObjectType, std::string> > modelObjectTypesAndNames();
+  static std::vector<std::pair<FuelType, std::string> > utilityBillFuelTypesAndNames();
 
 };
 

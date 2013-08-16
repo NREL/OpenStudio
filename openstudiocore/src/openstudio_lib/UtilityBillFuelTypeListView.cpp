@@ -99,9 +99,10 @@ std::vector<OSItemId> UtilityBillFuelTypeListController::makeVector()
   BOOST_FOREACH(WorkspaceObject workspaceObject,workspaceObjects){
     if (!workspaceObject.handle().isNull()){
       openstudio::model::ModelObject modelObject = workspaceObject.cast<openstudio::model::ModelObject>();
-      if(boost::optional<model::UtilityBill> utilityBill = modelObject.optionalCast<model::UtilityBill>()) {
-        // do some more here about types
-        result.push_back(modelObjectToItemId(modelObject, false));
+      if(boost::optional<model::UtilityBill> utilityBill = modelObject.optionalCast<model::UtilityBill>()){
+        if(utilityBill.get().fuelType() == m_fuelType){
+          result.push_back(modelObjectToItemId(modelObject, false));
+        }
       }
     }
   }

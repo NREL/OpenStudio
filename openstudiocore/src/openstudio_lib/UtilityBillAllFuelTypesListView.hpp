@@ -25,13 +25,13 @@
 #include <model/Model.hpp>
 #include <model/ModelObject.hpp>
 
+#include <utilities/data/DataEnums.hpp>
+
 #include <boost/optional.hpp>
 
-class QVBoxLayout;
-
-class QHBoxLayout;
-
 namespace openstudio {
+
+class FuelType;
 
 class UtilityBillAllFuelTypesListView : public OSCollapsibleItemList
 {
@@ -43,11 +43,15 @@ class UtilityBillAllFuelTypesListView : public OSCollapsibleItemList
                             OSItem::Type headerType,
                             QWidget * parent = 0);
 
-    UtilityBillAllFuelTypesListView(const std::vector<std::pair<IddObjectType, std::string> >& modelObjectTypesAndNames,
-                            const model::Model& model, bool addScrollArea, OSItem::Type headerType,
+    UtilityBillAllFuelTypesListView(const std::vector<std::pair<FuelType, std::string> >& utilityBillFuelTypesAndNames,
+                            const model::Model& model,
+                            bool addScrollArea,
+                            OSItem::Type headerType,
                             QWidget * parent = 0);
 
     virtual ~UtilityBillAllFuelTypesListView() {}
+
+    void addUtilityBillFuelType(const FuelType & fuelType, const std::string& name);
 
     void addModelObjectType(const IddObjectType& iddObjectType, const std::string& name);
 
@@ -57,7 +61,7 @@ class UtilityBillAllFuelTypesListView : public OSCollapsibleItemList
 
   private:
 
-    std::vector<std::pair<IddObjectType, std::string> > m_modelObjectTypesAndNames;
+    std::vector<std::pair<FuelType, std::string> > m_utilityBillFuelTypesAndNames;
 
     model::Model m_model;
     OSItem::Type m_headerType;

@@ -304,6 +304,8 @@ SET( ${target_name}_SRC
   ThermalZonesTabView.hpp
   ThermalZonesView.cpp
   ThermalZonesView.hpp
+  UtilityBillFuelTypeItem.cpp
+  UtilityBillFuelTypeItem.hpp
   UtilityBillFuelTypeListView.cpp
   UtilityBillFuelTypeListView.hpp
   UtilityBillAllFuelTypesListView.cpp
@@ -573,6 +575,7 @@ SET( ${target_name}_moc
   ThermalZonesTabController.hpp
   ThermalZonesTabView.hpp
   ThermalZonesView.hpp
+  UtilityBillFuelTypeItem.hpp
   UtilityBillFuelTypeListView.hpp
   UtilityBillAllFuelTypesListView.hpp
   UtilityBillsController.hpp

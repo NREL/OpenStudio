@@ -55,6 +55,7 @@
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/RubyJobUtils.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/ZipFile.hpp>
 #include <utilities/bcl/BCLMeasure.hpp>
