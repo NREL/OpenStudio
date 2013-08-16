@@ -70,7 +70,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   bool addCase( const RefrigerationCase & refrigerationCase);
 
-  void removeCase( RefrigerationCase & refrigerationCase);
+  void removeCase( const RefrigerationCase & refrigerationCase);
 
   void removeAllCases();
 
@@ -86,7 +86,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   bool addCompressor( const RefrigerationCompressor & compressor);
 
-  void removeCompressor( RefrigerationCompressor & compressor);
+  void removeCompressor( const RefrigerationCompressor & compressor);
 
   void removeAllCompressors();
 

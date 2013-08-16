@@ -192,7 +192,6 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"PumpVariableSpeed","Maximum Pressure","maximumPressureSchedule",true,"Pressure",OptionalDouble(),OptionalDouble()},
     {"PumpVariableSpeed","Minimum RPM","minimumRPMSchedule",true,"RotationsPerMinute",OptionalDouble(),OptionalDouble()},
     {"PumpVariableSpeed","Maximum RPM","maximumRPMSchedule",true,"RotationsPerMinute",OptionalDouble(),OptionalDouble()},
-//TODO: Make sure these schedules are setup correctly - MBA
     {"RefrigerationCase","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"RefrigerationCase","Case Lighting","caseLightingSchedule",true,"",0.0,1.0},
     {"RefrigerationCase","Case Defrost","caseDefrostSchedule",true,"",0.0,1.0},

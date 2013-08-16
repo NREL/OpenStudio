@@ -144,9 +144,15 @@ namespace detail {
     template <class T>
     void removeAllCasesOrWalkins();
 
+    template <class T>
+    void removeCaseOrWalkin( const T & refrigerationCaseOrWalkin );
+
+    template <class T>
+    bool addCaseOrWalkin( const T & refrigerationCaseOrWalkin );
+
     bool addCase( const RefrigerationCase & refrigerationCase);
 
-    void removeCase( RefrigerationCase & refrigerationCase);
+    void removeCase( const RefrigerationCase & refrigerationCase);
 
     void removeAllCases();
 
@@ -158,7 +164,7 @@ namespace detail {
 
     bool addCompressor( const RefrigerationCompressor & compressor);
 
-    void removeCompressor( RefrigerationCompressor & compressor);
+    void removeCompressor( const RefrigerationCompressor & compressor);
 
     void removeAllCompressors();
 
