@@ -70,6 +70,16 @@ OPENSTUDIO_ENUM(AnalysisSerializationScope,
     ((Full))
 );
 
+struct ANALYSIS_API AnalysisSerializationOptions {
+  openstudio::path projectPath;
+  AnalysisSerializationScope scope;
+  bool osServerView;
+
+  AnalysisSerializationOptions(const openstudio::path& t_projectPath=openstudio::path(),
+                               const AnalysisSerializationScope& t_scope=AnalysisSerializationScope::ProblemFormulation,
+                               bool t_osServerView=true);
+};
+
 /** Analysis is a AnalysisObject that contains an entire analysis. It is constructed from a
  *  Problem, an optional Algorithm, an optional seed FileReference (an OSM or IDF file), and
  *  an optional weather FileReference (needed for IDF seeds). Analysis::addDataPoint can be
@@ -274,39 +284,12 @@ class ANALYSIS_API Analysis : public AnalysisObject {
   //@{
 
   bool saveJSON(const openstudio::path& p,
-                AnalysisSerializationScope scope=AnalysisSerializationScope::Full,
+                const AnalysisSerializationOptions& options,
                 bool overwrite=false) const;
 
-  std::ostream& toJSON(std::ostream& os,
-                       AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
+  std::ostream& toJSON(std::ostream& os,const AnalysisSerializationOptions& options) const;
 
-  std::string toJSON(AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
-
-  /** Saves the openstudio-server view of the problem formulation to file. This format cannot be
-   *  de-serialized. */
-  bool saveServerRequestForProblemFormulation(const openstudio::path& p,
-                                              bool overwrite=false) const;
-
-  /** Prints the openstudio-server view of the problem formulation. This format cannot be
-   *  de-serialized. */
-  std::ostream& serverRequestForProblemFormulation(std::ostream& os) const;
-
-  /** Prints the openstudio-server view of the problem formulation. This format cannot be
-   *  de-serialized. */
-  std::string serverRequestForProblemFormulation() const;
-
-  /** Saves the openstudio-server view of DataPoints that are not complete and do not have
-   *  a RunManager job attached (have not been started) to file. This format cannot be
-   *  de-serialized. */
-  bool saveServerRequestForDataPoints(const openstudio::path& p,bool overwrite=false) const;
-
-  /** Prints the openstudio-server view of DataPoints that are not complete and do not have
-   *  a RunManager job attached (have not been started). This format cannot be de-serialized. */
-  std::ostream& serverRequestForDataPoints(std::ostream& os) const;
-
-  /** Prints the openstudio-server view of DataPoints that are not complete and do not have
-   *  a RunManager job attached (have not been started). This format cannot be de-serialized. */
-  std::string serverRequestForDataPoints() const;
+  std::string toJSON(const AnalysisSerializationOptions& options) const;
 
   //@}
  protected:

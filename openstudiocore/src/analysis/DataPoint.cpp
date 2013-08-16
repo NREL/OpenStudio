@@ -426,19 +426,22 @@ namespace detail {
   }
 
   bool DataPoint_Impl::saveJSON(const openstudio::path& p,
+                                const DataPointSerializationOptions& options,
                                 bool overwrite) const
   {
-    QVariant json = toTopLevelVariant();
+    QVariant json = toTopLevelVariant(options);
     return openstudio::saveJSON(json,p,overwrite);
   }
 
-  std::ostream& DataPoint_Impl::toJSON(std::ostream& os) const {
-    os << toJSON();
+  std::ostream& DataPoint_Impl::toJSON(std::ostream& os,
+                                       const DataPointSerializationOptions& options) const
+  {
+    os << toJSON(options);
     return os;
   }
 
-  std::string DataPoint_Impl::toJSON() const {
-    QVariant json = toTopLevelVariant();
+  std::string DataPoint_Impl::toJSON(const DataPointSerializationOptions& options) const {
+    QVariant json = toTopLevelVariant(options);
     return openstudio::toJSON(json);
   }
 
@@ -575,19 +578,30 @@ namespace detail {
     return QVariant(dataPointData);
   }
 
-  QVariant DataPoint_Impl::toTopLevelVariant() const {
+  QVariant DataPoint_Impl::toTopLevelVariant(const DataPointSerializationOptions& options) const {
     QVariant dataPointData = this->toVariant();
+
+    QVariantMap metadata = jsonMetadata().toMap();
+
+    if (!options.projectPath.empty()) {
+      metadata["project_path"] = toQString(options.projectPath);
+    }
+
+    if (options.osServerView && hasProblem()) {
+      metadata["server_view"] = toServerDataPointsVariant();
+    }
 
     // create top-level of final file
     QVariantMap result;
-    result["metadata"] = jsonMetadata();
+    result["metadata"] = metadata;
     result["data_point"] = dataPointData;
 
     return result;
   }
 
   DataPoint DataPoint_Impl::factoryFromVariant(const QVariant& variant,
-                                               const VersionString& version)
+                                               const VersionString& version,
+                                               const boost::optional<Problem>& problem)
   {
     QVariantMap map = variant.toMap();
 
@@ -595,15 +609,29 @@ namespace detail {
       LOG_AND_THROW("Unable to find DataPoint in expected location.");
     }
 
+    OptionalDataPoint result;
     std::string dataPointType = map["data_point_type"].toString().toStdString();
     if (dataPointType == "DataPoint") {
-      return DataPoint_Impl::fromVariant(variant,version);
+      result = DataPoint_Impl::fromVariant(variant,version);
     }
-    if (dataPointType == "OptimizationDataPoint") {
-      return OptimizationDataPoint_Impl::fromVariant(variant,version);
+    else if (dataPointType == "OptimizationDataPoint") {
+      result = OptimizationDataPoint_Impl::fromVariant(variant,version);
+    }
+    else {
+      LOG_AND_THROW("Unexpected data_point_type " << dataPointType << ".");
     }
 
-    LOG_AND_THROW("Unexpected data_point_type " << dataPointType << ".");
+    OS_ASSERT(result);
+    if (problem) {
+      if (result->problemUUID() != problem->uuid()) {
+        LOG_AND_THROW("Problem UUID stored for this DataPoint, " << toString(result->problemUUID())
+                      << " does not match the UUID of Problem " << problem->name() << ", which is "
+                      << toString(problem->uuid()) << ".");
+      }
+      result->setProblem(*problem);
+    }
+
+    return result.get();
   }
 
   DataPoint DataPoint_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
@@ -718,6 +746,13 @@ namespace detail {
   }
 
 } // detail
+
+DataPointSerializationOptions::DataPointSerializationOptions(
+    const openstudio::path& t_projectPath,
+    bool t_osServerView)
+  : projectPath(t_projectPath),
+    osServerView(t_osServerView)
+{}
 
 DataPoint::DataPoint(const Problem& problem,
                      const std::vector<QVariant>& variableValues)
@@ -927,16 +962,21 @@ void DataPoint::clearResults() {
   getImpl<detail::DataPoint_Impl>()->clearResults();
 }
 
-bool DataPoint::saveJSON(const openstudio::path& p,bool overwrite) const {
-  return getImpl<detail::DataPoint_Impl>()->saveJSON(p,overwrite);
+bool DataPoint::saveJSON(const openstudio::path& p,
+                         const DataPointSerializationOptions& options,
+                         bool overwrite) const
+{
+  return getImpl<detail::DataPoint_Impl>()->saveJSON(p,options,overwrite);
 }
 
-std::ostream& DataPoint::toJSON(std::ostream& os) const {
-  return getImpl<detail::DataPoint_Impl>()->toJSON(os);
+std::ostream& DataPoint::toJSON(std::ostream& os,
+                                const DataPointSerializationOptions& options) const
+{
+  return getImpl<detail::DataPoint_Impl>()->toJSON(os,options);
 }
 
-std::string DataPoint::toJSON() const {
-  return getImpl<detail::DataPoint_Impl>()->toJSON();
+std::string DataPoint::toJSON(const DataPointSerializationOptions& options) const {
+  return getImpl<detail::DataPoint_Impl>()->toJSON(options);
 }
 
 /// @cond

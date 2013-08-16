@@ -687,54 +687,22 @@ namespace detail {
   }
 
   bool Analysis_Impl::saveJSON(const openstudio::path& p,
-                               AnalysisSerializationScope scope,
+                               const AnalysisSerializationOptions& options,
                                bool overwrite) const
   {
-    QVariant json = toVariant(scope);
+    QVariant json = toVariant(options);
     return openstudio::saveJSON(json,p,overwrite);
   }
 
   std::ostream& Analysis_Impl::toJSON(std::ostream& os,
-                                      AnalysisSerializationScope scope) const
+                                      const AnalysisSerializationOptions& options) const
   {
-    os << toJSON(scope);
+    os << toJSON(options);
     return os;
   }
 
-  std::string Analysis_Impl::toJSON(AnalysisSerializationScope scope) const {
-    QVariant json = this->toVariant(scope);
-    return openstudio::toJSON(json);
-  }
-
-  bool Analysis_Impl::saveServerRequestForProblemFormulation(const openstudio::path& p,
-                                                             bool overwrite) const
-  {
-    QVariant json = toServerFormulationVariant();
-    return openstudio::saveJSON(json,p,overwrite);
-  }
-
-  std::ostream& Analysis_Impl::serverRequestForProblemFormulation(std::ostream& os) const {
-    os << serverRequestForProblemFormulation();
-    return os;
-  }
-
-  std::string Analysis_Impl::serverRequestForProblemFormulation() const {
-    QVariant json = toServerFormulationVariant();
-    return openstudio::toJSON(json);
-  }
-
-  bool Analysis_Impl::saveServerRequestForDataPoints(const openstudio::path& p,bool overwrite) const {
-    QVariant json = toServerDataPointsVariant();
-    return openstudio::saveJSON(json,p,overwrite);
-  }
-
-  std::ostream& Analysis_Impl::serverRequestForDataPoints(std::ostream& os) const {
-    os << serverRequestForDataPoints();
-    return os;
-  }
-
-  std::string Analysis_Impl::serverRequestForDataPoints() const {
-    QVariant json = toServerDataPointsVariant();
+  std::string Analysis_Impl::toJSON(const AnalysisSerializationOptions& options) const {
+    QVariant json = this->toVariant(options);
     return openstudio::toJSON(json);
   }
 
@@ -755,10 +723,10 @@ namespace detail {
     return QVariant(analysisData);
   }
 
-  QVariant Analysis_Impl::toVariant(AnalysisSerializationScope scope) const {
+  QVariant Analysis_Impl::toVariant(const AnalysisSerializationOptions& options) const {
     QVariantMap analysisData = toVariant().toMap();
 
-    if (scope == AnalysisSerializationScope::Full) {
+    if (options.scope == AnalysisSerializationScope::Full) {
       // add data point information
       QVariantList dataPointList;
       Q_FOREACH(const DataPoint& dataPoint, dataPoints()) {
@@ -768,9 +736,32 @@ namespace detail {
       analysisData["data_points"] = QVariant(dataPointList);
     }
 
+    QVariantMap metadata = jsonMetadata().toMap();
+
+    if (!options.projectPath.empty()) {
+      metadata["project_path"] = toQString(options.projectPath);
+    }
+
+    if (options.osServerView) {
+
+      QVariantMap serverView = problem().toServerFormulationVariant().toMap();
+
+      if (options.scope == AnalysisSerializationScope::Full) {
+        QVariantList dataPointList;
+        Q_FOREACH(const DataPoint& dataPoint, dataPoints()) {
+          if (dataPoint.hasProblem()) {
+            dataPointList.push_back(dataPoint.toServerDataPointsVariant());
+          }
+        }
+        serverView["data_points"] = QVariant(dataPointList);
+      }
+
+      metadata["server_view"] = serverView;
+    }
+
     // create top-level of final file
     QVariantMap result;
-    result["metadata"] = jsonMetadata();
+    result["metadata"] = metadata;
     result["analysis"] = QVariant(analysisData);
 
     return result;
@@ -787,7 +778,7 @@ namespace detail {
     if (map.contains("data_points")) {
       dataPoints = deserializeUnorderedVector<DataPoint>(
             map["data_points"].toList(),
-            boost::function<DataPoint (const QVariant&)>(boost::bind(openstudio::analysis::detail::DataPoint_Impl::factoryFromVariant,_1,version)));
+            boost::function<DataPoint (const QVariant&)>(boost::bind(openstudio::analysis::detail::DataPoint_Impl::factoryFromVariant,_1,version,problem)));
     }
     return Analysis(toUUID(map["uuid"].toString().toStdString()),
                     toUUID(map["version_uuid"].toString().toStdString()),
@@ -801,28 +792,6 @@ namespace detail {
                     dataPoints,
                     map["results_are_invalid"].toBool(),
                     map["data_points_are_invalid"].toBool());
-  }
-
-  QVariant Analysis_Impl::toServerFormulationVariant() const {
-    QVariantMap map = problem().toServerFormulationVariant().toMap();
-    map["metadata"] = jsonMetadata();
-    return QVariant(map);
-  }
-
-  QVariant Analysis_Impl::toServerDataPointsVariant() const {
-    QVariantMap map;
-
-    map["metadata"] = jsonMetadata();
-
-    QVariantList dataPointList;
-    Q_FOREACH(const DataPoint& dataPoint, dataPoints()) {
-      if (!dataPoint.isComplete() && !dataPoint.topLevelJob()) {
-        dataPointList.push_back(dataPoint.toServerDataPointsVariant());
-      }
-    }
-    map["data_points"] = QVariant(dataPointList);
-
-    return QVariant(map);
   }
 
   void Analysis_Impl::onChange(ChangeType changeType) {
@@ -841,6 +810,15 @@ namespace detail {
   }
 
 } // detail
+
+AnalysisSerializationOptions::AnalysisSerializationOptions(
+    const openstudio::path& t_projectPath,
+    const AnalysisSerializationScope& t_scope,
+    bool t_osServerView)
+  : projectPath(t_projectPath),
+    scope(t_scope),
+    osServerView(t_osServerView)
+{}
 
 Analysis::Analysis(const std::string& name,
                    const Problem& problem,
@@ -1076,46 +1054,20 @@ Table Analysis::summaryTable() const {
 }
 
 bool Analysis::saveJSON(const openstudio::path& p,
-                        AnalysisSerializationScope scope,
+                        const AnalysisSerializationOptions& options,
                         bool overwrite) const
 {
-  return getImpl<detail::Analysis_Impl>()->saveJSON(p,scope,overwrite);
+  return getImpl<detail::Analysis_Impl>()->saveJSON(p,options,overwrite);
 }
 
 std::ostream& Analysis::toJSON(std::ostream& os,
-                               AnalysisSerializationScope scope) const
+                               const AnalysisSerializationOptions& options) const
 {
-  return getImpl<detail::Analysis_Impl>()->toJSON(os,scope);
+  return getImpl<detail::Analysis_Impl>()->toJSON(os,options);
 }
 
-std::string Analysis::toJSON(AnalysisSerializationScope scope) const {
-  return getImpl<detail::Analysis_Impl>()->toJSON(scope);
-}
-
-bool Analysis::saveServerRequestForProblemFormulation(const openstudio::path& p,
-                                                      bool overwrite) const
-{
-  return getImpl<detail::Analysis_Impl>()->saveServerRequestForProblemFormulation(p,overwrite);
-}
-
-std::ostream& Analysis::serverRequestForProblemFormulation(std::ostream& os) const {
-  return getImpl<detail::Analysis_Impl>()->serverRequestForProblemFormulation(os);
-}
-
-std::string Analysis::serverRequestForProblemFormulation() const {
-  return getImpl<detail::Analysis_Impl>()->serverRequestForProblemFormulation();
-}
-
-bool Analysis::saveServerRequestForDataPoints(const openstudio::path& p,bool overwrite) const {
-  return getImpl<detail::Analysis_Impl>()->saveServerRequestForDataPoints(p,overwrite);
-}
-
-std::ostream& Analysis::serverRequestForDataPoints(std::ostream& os) const {
-  return getImpl<detail::Analysis_Impl>()->serverRequestForDataPoints(os);
-}
-
-std::string Analysis::serverRequestForDataPoints() const {
-  return getImpl<detail::Analysis_Impl>()->serverRequestForDataPoints();
+std::string Analysis::toJSON(const AnalysisSerializationOptions& options) const {
+  return getImpl<detail::Analysis_Impl>()->toJSON(options);
 }
 
 /// @cond

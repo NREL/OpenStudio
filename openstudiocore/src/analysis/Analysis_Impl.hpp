@@ -23,8 +23,6 @@
 #include <analysis/AnalysisAPI.hpp>
 #include <analysis/AnalysisObject_Impl.hpp>
 
-#include <analysis/Analysis.hpp>
-
 #include <analysis/Problem.hpp>
 #include <analysis/Algorithm.hpp>
 #include <analysis/DataPoint.hpp>
@@ -42,6 +40,8 @@ namespace runmanager {
 }
 
 namespace analysis {
+
+class AnalysisSerializationOptions;
 
 namespace detail {
 
@@ -248,39 +248,12 @@ namespace detail {
     //@{
 
     bool saveJSON(const openstudio::path& p,
-                  AnalysisSerializationScope scope=AnalysisSerializationScope::Full,
+                  const AnalysisSerializationOptions& options,
                   bool overwrite=false) const;
 
-    std::ostream& toJSON(std::ostream& os,
-                         AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
+    std::ostream& toJSON(std::ostream& os,const AnalysisSerializationOptions& options) const;
 
-    std::string toJSON(AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
-
-    /** Saves the openstudio-server view of the problem formulation to file. This format cannot be
-     *  de-serialized. */
-    bool saveServerRequestForProblemFormulation(const openstudio::path& p,
-                                                bool overwrite=false) const;
-
-    /** Prints the openstudio-server view of the problem formulation. This format cannot be
-     *  de-serialized. */
-    std::ostream& serverRequestForProblemFormulation(std::ostream& os) const;
-
-    /** Prints the openstudio-server view of the problem formulation. This format cannot be
-     *  de-serialized. */
-    std::string serverRequestForProblemFormulation() const;
-
-    /** Saves the openstudio-server view of DataPoints that are not complete and do not have
-     *  a RunManager job attached (have not been started) to file. This format cannot be
-     *  de-serialized. */
-    bool saveServerRequestForDataPoints(const openstudio::path& p,bool overwrite=false) const;
-
-    /** Prints the openstudio-server view of DataPoints that are not complete and do not have
-     *  a RunManager job attached (have not been started). This format cannot be de-serialized. */
-    std::ostream& serverRequestForDataPoints(std::ostream& os) const;
-
-    /** Prints the openstudio-server view of DataPoints that are not complete and do not have
-     *  a RunManager job attached (have not been started). This format cannot be de-serialized. */
-    std::string serverRequestForDataPoints() const;
+    std::string toJSON(const AnalysisSerializationOptions& options) const;
 
     //@}
     /** @name Protected in or Absent from Public Class */
@@ -288,16 +261,10 @@ namespace detail {
 
     virtual QVariant toVariant() const;
 
-    /** Finalizes Analysis JSON by a) appending DataPoints to toVariant() if scope ==
-     *  AnalysisSerializationScope::Full, and b) wrapping those contents in a map with version
-     *  meta-data and the "analysis" indicator. */
-    QVariant toVariant(AnalysisSerializationScope scope) const;
+    /** Finalizes Analysis JSON based on options. */
+    QVariant toVariant(const AnalysisSerializationOptions& options) const;
 
     static Analysis fromVariant(const QVariant& variant,const VersionString& version);
-
-    virtual QVariant toServerFormulationVariant() const;
-
-    virtual QVariant toServerDataPointsVariant() const;
 
     //@}
    signals:

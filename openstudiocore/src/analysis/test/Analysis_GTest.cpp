@@ -336,7 +336,7 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun_Roundtrip) {
   Analysis analysis = analysis1(PreRun);
 
   // Serialize Analysis with no data points
-  std::string json = analysis.toJSON(AnalysisSerializationScope::ProblemFormulation);
+  std::string json = analysis.toJSON(AnalysisSerializationOptions());
   EXPECT_FALSE(json.empty());
 
   // Deserialize and check results
@@ -344,7 +344,7 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun_Roundtrip) {
   ASSERT_TRUE(formulationCopyAsAnalysisObject);
   ASSERT_TRUE(formulationCopyAsAnalysisObject->optionalCast<Analysis>());
   Analysis formulationCopy = formulationCopyAsAnalysisObject->cast<Analysis>();
-  std::string jsonCopy = formulationCopy.toJSON(AnalysisSerializationScope::ProblemFormulation);
+  std::string jsonCopy = formulationCopy.toJSON(AnalysisSerializationOptions());
   bool test = (jsonCopy == json);
   EXPECT_TRUE(test);
   if (!test) {
@@ -355,14 +355,14 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun_Roundtrip) {
 
   // Save analysis with no data points
   openstudio::path p = toPath("AnalysisFixtureData/formulation_pre_run.json");
-  EXPECT_TRUE(analysis.saveJSON(p,AnalysisSerializationScope::ProblemFormulation,true));
+  EXPECT_TRUE(analysis.saveJSON(p,AnalysisSerializationOptions(),true));
 
   // Load and check results
   formulationCopyAsAnalysisObject = loadJSON(p);
   ASSERT_TRUE(formulationCopyAsAnalysisObject);
   ASSERT_TRUE(formulationCopyAsAnalysisObject->optionalCast<Analysis>());
   formulationCopy = formulationCopyAsAnalysisObject->cast<Analysis>();
-  jsonCopy = formulationCopy.toJSON(AnalysisSerializationScope::ProblemFormulation);
+  jsonCopy = formulationCopy.toJSON(AnalysisSerializationOptions());
   test = (jsonCopy == json);
   EXPECT_TRUE(test);
   if (!test) {
@@ -372,7 +372,8 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun_Roundtrip) {
   EXPECT_EQ(0u,formulationCopy.dataPoints().size());
 
   // Serialize Analysis with data points
-  json = analysis.toJSON(AnalysisSerializationScope::Full);
+  AnalysisSerializationOptions options(openstudio::path(),AnalysisSerializationScope::Full);
+  json = analysis.toJSON(options);
   EXPECT_FALSE(json.empty());
 
   // Deserialize and check results
@@ -380,7 +381,7 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun_Roundtrip) {
   ASSERT_TRUE(copyAsAnalysisObject);
   ASSERT_TRUE(copyAsAnalysisObject->optionalCast<Analysis>());
   Analysis copy = copyAsAnalysisObject->cast<Analysis>();
-  jsonCopy = copy.toJSON(AnalysisSerializationScope::Full);
+  jsonCopy = copy.toJSON(options);
   test = (jsonCopy == json);
   EXPECT_TRUE(test);
   if (!test) {
@@ -391,14 +392,14 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun_Roundtrip) {
 
   // Save analysis with data points
   p = toPath("AnalysisFixtureData/analysis_pre_run.json");
-  EXPECT_TRUE(analysis.saveJSON(p,AnalysisSerializationScope::Full,true));
+  EXPECT_TRUE(analysis.saveJSON(p,options,true));
 
   // Load and check results
   copyAsAnalysisObject = loadJSON(p);
   ASSERT_TRUE(copyAsAnalysisObject);
   ASSERT_TRUE(copyAsAnalysisObject->optionalCast<Analysis>());
   copy = copyAsAnalysisObject->cast<Analysis>();
-  jsonCopy = copy.toJSON(AnalysisSerializationScope::Full);
+  jsonCopy = copy.toJSON(options);
   test = (jsonCopy == json);
   EXPECT_TRUE(test);
   if (!test) {
@@ -406,13 +407,6 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun_Roundtrip) {
     LOG(Debug,"Copy JSON: " << std::endl << jsonCopy);
   }
   EXPECT_FALSE(copy.dataPoints().empty());
-
-  // Serialize openstudio-server requests
-  p = toPath("AnalysisFixtureData/server_problem_request.json");
-  analysis.saveServerRequestForProblemFormulation(p,true);
-  p = toPath("AnalysisFixtureData/server_datapoints_request.json");
-  analysis.saveServerRequestForDataPoints(p,true);
-
 }
 
 TEST_F(AnalysisFixture,Analysis_JSONSerialization_Versioning) {
@@ -422,7 +416,7 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_Versioning) {
   Analysis analysis = analysis1(PreRun);
   std::string dashVersionString = boost::regex_replace(openStudioVersion(),boost::regex("\\."),"-");
   openstudio::path p = dir / toPath("analysis_" + dashVersionString + ".json");
-  bool ok = analysis.saveJSON(p,AnalysisSerializationScope::ProblemFormulation,true);
+  bool ok = analysis.saveJSON(p,AnalysisSerializationOptions(),true);
   EXPECT_TRUE(ok);
 
   // loop through all versions' json files
