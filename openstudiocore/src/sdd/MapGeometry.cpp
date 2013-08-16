@@ -458,7 +458,7 @@ namespace sdd {
           OptionalQuantity dsgnInfRtSI = QuantityConverter::instance().convert(dsgnInfRtIP, siSys);
           OS_ASSERT(dsgnInfRtSI);
           OS_ASSERT(dsgnInfRtSI->units() == SIUnit(SIExpnt(0,1,-1)));
-          spaceInfiltrationDesignFlowRate.setFlowperExteriorSurfaceArea(dsgnInfRtSI->value());
+          spaceInfiltrationDesignFlowRate.setFlowperExteriorWallArea(dsgnInfRtSI->value());
 
           if (!infSchRefElement.isNull()){
             std::string scheduleName = escapeName(infSchRefElement.text());

@@ -75,6 +75,8 @@ class MODEL_API SpaceInfiltrationDesignFlowRate : public SpaceLoad {
 
   boost::optional<double> flowperExteriorSurfaceArea() const;
 
+  boost::optional<double> flowperExteriorWallArea() const;
+
   boost::optional<double> airChangesperHour() const;
 
   double constantTermCoefficient() const;
@@ -108,6 +110,8 @@ class MODEL_API SpaceInfiltrationDesignFlowRate : public SpaceLoad {
   bool setFlowperSpaceFloorArea(double flowperSpaceFloorArea);
 
   bool setFlowperExteriorSurfaceArea(double flowperExteriorSurfaceArea);
+
+  bool setFlowperExteriorWallArea(double flowperExteriorWallArea);
 
   bool setAirChangesperHour(double airChangesperHour);
 
