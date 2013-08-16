@@ -1,6 +1,9 @@
 #see the URL below for information on how to write OpenStudio measures
 # http://openstudio.nrel.gov/openstudio-measure-writing-guide
 
+#see the URL below for information on using life cycle cost objects in OpenStudio
+# http://openstudio.nrel.gov/openstudio-life-cycle-examples
+
 #see the URL below for access to C++ documentation on model objects (click on "model" in the main window to view model objects)
 # http://openstudio.nrel.gov/sites/openstudio.nrel.gov/files/nv_data/cpp_documentation_it/model/html/namespaces.html
 
@@ -55,7 +58,7 @@ class ModelMeasure < OpenStudio::Ruleset::ModelUserScript
       runner.registerWarning("Your entered name was not capitalized.")    
     end
     
-    #returning the name in an a sentence
+    #returning the name in an a sentance
     runner.registerInfo("Hello #{user_name}, thanks for entering your name.")
 
     #reporting initial condition of model
@@ -66,7 +69,6 @@ class ModelMeasure < OpenStudio::Ruleset::ModelUserScript
     if add_space == true
       new_space = OpenStudio::Model::Space.new(model)
       new_space.setName("Hello_World test space")
-      runner.registerInfo("Space #{new_space.name} was added.")
       
     else
       runner.registerAsNotApplicable("You have chosen not to add a space. Your model will not be altered.")

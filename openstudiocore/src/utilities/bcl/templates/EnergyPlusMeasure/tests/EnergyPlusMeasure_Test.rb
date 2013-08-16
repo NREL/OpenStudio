@@ -1,4 +1,5 @@
 require 'openstudio'
+
 require 'openstudio/ruleset/ShowRunnerOutput'
 
 require "#{File.dirname(__FILE__)}/../measure.rb"
@@ -6,12 +7,7 @@ require "#{File.dirname(__FILE__)}/../measure.rb"
 require 'test/unit'
 
 class EnergyPlusMeasure_Test < Test::Unit::TestCase
-  
-  # def setup
-  # end
 
-  # def teardown
-  # end
   
   def test_EnergyPlusMeasure
      
@@ -57,8 +53,9 @@ class EnergyPlusMeasure_Test < Test::Unit::TestCase
     show_output(result)
     assert(result.value.valueName == "Success")
     assert(result.warnings.size == 1)
-    assert(result.info.size == 2)
+    assert(result.info.size == 1)
     
   end
+  
 
 end

@@ -1,5 +1,4 @@
 require 'openstudio'
-require 'openstudio/ruleset/ShowRunnerOutput'
 
 require "#{File.dirname(__FILE__)}/../measure.rb"
 
@@ -53,7 +52,7 @@ class ModelMeasure_Test < Test::Unit::TestCase
     show_output(result)
     assert(result.value.valueName == "Success")
     assert(result.warnings.size == 1)
-    assert(result.info.size == 2)
+    assert(result.info.size == 1)
     
   end  
 
