@@ -1813,7 +1813,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
   QDomElement typeElement = trmlUnitElement.firstChildElement("Type");
 
   // PriAirFlow
-  QDomElement priAirFlowElement = trmlUnitElement.firstChildElement("PriAirFlow");
+  QDomElement priAirFlowElement = trmlUnitElement.firstChildElement("PriAirFlowMax");
 
   boost::optional<double> primaryAirFlow;
 
