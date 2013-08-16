@@ -261,7 +261,7 @@ SET( runmanager_test_src
   Test/ParallelEnergyPlusJob_GTest.cpp
   Test/ErrorEstimation_GTest.cpp
   Test/JSON_GTest.cpp
-  Test/ExternallyManagedJobs_GTest.cpp
+  #Test/ExternallyManagedJobs_GTest.cpp
   "${CMAKE_BINARY_DIR}/src/runmanager/Test/ToolBin.hxx"
 )
 
