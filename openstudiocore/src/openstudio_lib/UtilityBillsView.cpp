@@ -61,57 +61,13 @@ namespace openstudio {
 
 UtilityBillsView::UtilityBillsView(const openstudio::model::Model& model, QWidget * parent)
                      : ModelSubTabView(new UtilityBillAllFuelTypesListView(UtilityBillsView::utilityBillFuelTypesAndNames(), 
-                                                                   model, 
-                                                                   false, 
-                                                                   OSItem::COLLAPSIBLE_LIST_HEADER, 
-                                                                   parent),
+                                                                           model, 
+                                                                           false, 
+                                                                           OSItem::COLLAPSIBLE_LIST_HEADER, 
+                                                                           parent),
                                        new UtilityBillsInspectorView(model,parent),
                                        parent)
 {
-  QString beginAndEndDates;
-  boost::optional<int> calendarYear;
-  boost::optional<model::YearDescription> yearDescription = model.yearDescription();
-  if(yearDescription){
-    calendarYear = yearDescription.get().calendarYear();
-    if(calendarYear){
-      boost::optional<model::WeatherFile> weatherFile = model.weatherFile();
-      if(weatherFile){
-        boost::optional<model::RunPeriod> runPeriod = model.getOptionalUniqueModelObject<model::RunPeriod>();
-        if(runPeriod.is_initialized()){
-          int beginMonth = runPeriod.get().getBeginMonth();
-          int beginDayOfMonth = runPeriod.get().getBeginDayOfMonth();
-          int beginYear = calendarYear.get();
-          int endMonth = runPeriod.get().getEndMonth();
-          int endDayOfMonth = runPeriod.get().getEndDayOfMonth();
-          int endYear = calendarYear.get();
-
-          // Check for wrap-around runPeriod
-          if( (beginMonth > endMonth) || (beginMonth == endMonth && beginDayOfMonth > endDayOfMonth)){
-            endYear++;
-          }
-          
-          beginAndEndDates += "Start Date ";
-          beginAndEndDates += beginAndEndDates.setNum(beginMonth);
-          beginAndEndDates += "/";
-          beginAndEndDates += beginAndEndDates.setNum(beginDayOfMonth);
-          beginAndEndDates += "/";
-          beginAndEndDates += beginAndEndDates.setNum(beginYear);
-          beginAndEndDates += "   End Date ";
-          beginAndEndDates += beginAndEndDates.setNum(endMonth);
-          beginAndEndDates += "/";
-          beginAndEndDates += beginAndEndDates.setNum(endDayOfMonth);
-          beginAndEndDates += "/";
-          beginAndEndDates += beginAndEndDates.setNum(endYear);
-          
-        }
-      } else {
-        // TODO tell user that they must have a runPeriod and hide tab
-      }
-    } else {
-      // TODO tell user that they must have a yearDescription and hide tab
-    }
-  }
-
 }
 
 std::vector<std::pair<FuelType, std::string> > UtilityBillsView::utilityBillFuelTypesAndNames()
@@ -138,76 +94,51 @@ std::vector<std::pair<FuelType, std::string> > UtilityBillsView::utilityBillFuel
 
 
 UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
-  bool addScrollArea,
-  QWidget * parent)
+                                                     bool addScrollArea,
+                                                     QWidget * parent)
   : ModelObjectInspectorView(model,
-      true,
-      parent),
-    m_billFormatDialog(NULL)
+                             true,
+                             parent),
+    m_billFormatDialog(NULL),
+    m_beginAndEndDates(QString())
 {
-  boost::optional<model::UtilityBill> electricBill;
-  boost::optional<model::UtilityBill> gasBill;
-  boost::optional<model::UtilityBill> gasolineBill;
-  boost::optional<model::UtilityBill> dieselBill;
-  boost::optional<model::UtilityBill> coalBill;
-  boost::optional<model::UtilityBill> fuelOil1Bill;
-  boost::optional<model::UtilityBill> fuelOil2Bill;
-  boost::optional<model::UtilityBill> propaneBill;
-  boost::optional<model::UtilityBill> waterBill;
-  boost::optional<model::UtilityBill> steamBill;
-  boost::optional<model::UtilityBill> districtCoolingBill;
-  boost::optional<model::UtilityBill> districtHeatingBill;
-  boost::optional<model::UtilityBill> energyTransferBill;
+  boost::optional<int> calendarYear;
+  boost::optional<model::YearDescription> yearDescription = model.yearDescription();
+  if(yearDescription){
+    calendarYear = yearDescription.get().calendarYear();
+    if(calendarYear){
+      boost::optional<model::WeatherFile> weatherFile = model.weatherFile();
+      if(weatherFile){
+        boost::optional<model::RunPeriod> runPeriod = model.getOptionalUniqueModelObject<model::RunPeriod>();
+        if(runPeriod.is_initialized()){
+          int beginMonth = runPeriod.get().getBeginMonth();
+          int beginDayOfMonth = runPeriod.get().getBeginDayOfMonth();
+          int beginYear = calendarYear.get();
+          int endMonth = runPeriod.get().getEndMonth();
+          int endDayOfMonth = runPeriod.get().getEndDayOfMonth();
+          int endYear = calendarYear.get();
 
-  std::vector<WorkspaceObject> workspaceObjects = m_model.getObjectsByType(IddObjectType::OS_UtilityBill);
-
-  if(workspaceObjects.size() > 0){
-    bool success = true;
-  }
-  
-  // sort by name
-  std::sort(workspaceObjects.begin(), workspaceObjects.end(), WorkspaceObjectNameGreater());
-
-  BOOST_FOREACH(WorkspaceObject workspaceObject,workspaceObjects){
-    if(!workspaceObject.handle().isNull()){
-      openstudio::model::ModelObject modelObject = workspaceObject.cast<openstudio::model::ModelObject>();
-      if(boost::optional<model::UtilityBill> utilityBill = modelObject.optionalCast<model::UtilityBill>()) {
-        if(utilityBill){
-          FuelType fuelType = utilityBill.get().fuelType();
-
-          if(fuelType ==  FuelType::Electricity){
-            m_utilityBill = utilityBill.get();
-            break;
-            // TODO electricBill =  utilityBill.get();
-          } else if(fuelType ==  FuelType::Gas){
-            gasBill =  utilityBill.get();            
-          } else if(fuelType ==  FuelType::Gasoline){
-            gasolineBill =  utilityBill.get();
-          } else if(fuelType ==  FuelType::Diesel){
-            dieselBill =  utilityBill.get();
-          } else if(fuelType ==  FuelType::FuelOil_1){
-            fuelOil1Bill =  utilityBill.get();
-          } else if(fuelType ==  FuelType::FuelOil_2){
-            fuelOil2Bill =  utilityBill.get();
-          } else if(fuelType ==  FuelType::Propane){
-            propaneBill =  utilityBill.get();
-          } else if(fuelType ==  FuelType::Water){
-            waterBill =  utilityBill.get();
-          } else if(fuelType ==  FuelType::Steam){
-            steamBill =  utilityBill.get();
-          } else if(fuelType ==  FuelType::DistrictCooling){
-            districtCoolingBill =  utilityBill.get();
-          } else if(fuelType ==  FuelType::DistrictHeating){
-            districtHeatingBill =  utilityBill.get();
-          } else if(fuelType ==  FuelType::EnergyTransfer){
-            energyTransferBill =  utilityBill.get();
-          } else {
-            // Shouldn't get here
-            OS_ASSERT(false);
+          // Check for wrap-around runPeriod
+          if( (beginMonth > endMonth) || (beginMonth == endMonth && beginDayOfMonth > endDayOfMonth)){
+            endYear++;
           }
+          
+          m_beginAndEndDates += "Start Date ";
+          m_beginAndEndDates += m_beginAndEndDates.setNum(beginMonth);
+          m_beginAndEndDates += "/";
+          m_beginAndEndDates += m_beginAndEndDates.setNum(beginDayOfMonth);
+          m_beginAndEndDates += "/";
+          m_beginAndEndDates += m_beginAndEndDates.setNum(beginYear);
+          m_beginAndEndDates += "   End Date ";
+          m_beginAndEndDates += m_beginAndEndDates.setNum(endMonth);
+          m_beginAndEndDates += "/";
+          m_beginAndEndDates += m_beginAndEndDates.setNum(endDayOfMonth);
+          m_beginAndEndDates += "/";
+          m_beginAndEndDates += m_beginAndEndDates.setNum(endYear);
+          
         }
-      }
-    }
+      } 
+    } 
   }
 
   createWidgets();
@@ -231,6 +162,20 @@ void UtilityBillsInspectorView::createWidgets()
   mainLayout->setSpacing(20);
   visibleWidget->setLayout(mainLayout);
 
+  if(m_beginAndEndDates.length() == 0){
+    vLayout = new QVBoxLayout();
+    vLayout->setAlignment(Qt::AlignCenter);
+    vLayout->setSpacing(10);
+
+    label = new QLabel();
+    label->setObjectName("H1");
+    // TODO replace with an image from Marj
+    label->setText("You must have a valid weather file to do utility calibration.\n(replace with image)");
+    vLayout->addWidget(label,0,Qt::AlignCenter);
+    mainLayout->addLayout(vLayout);
+    return;
+  }
+
   vLayout = new QVBoxLayout();
   vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   vLayout->setSpacing(10);
@@ -253,7 +198,6 @@ void UtilityBillsInspectorView::createWidgets()
   vLayout->addWidget(label);
 
   m_name = new OSLineEdit2();
-  //m_name->setReadOnly(true);
   m_name->setFixedWidth(OS_EDIT_WIDTH);
   vLayout->addWidget(m_name);
 
@@ -276,13 +220,6 @@ void UtilityBillsInspectorView::createWidgets()
   vLayout->addWidget(label);
 
   m_consumptionUnits = new OSComboBox2();
-  //if(m_utilityBill.is_initialized()){
-  //  std::vector<std::string> consumptionUnitValues = m_utilityBill.get().consumptionUnitValues();
-  //  Q_FOREACH(const std::string & text, consumptionUnitValues){
-  //     m_energyDemandUnits->addItem(text.c_str());
-  //  }
-  //}
-  //m_consumptionUnits->setReadOnly(true);
   m_consumptionUnits->setFixedWidth(OS_EDIT_WIDTH);
   vLayout->addWidget(m_consumptionUnits);
 
@@ -310,7 +247,6 @@ void UtilityBillsInspectorView::createWidgets()
          m_energyDemandUnits->addItem(text.c_str());
       }
     }
-    //m_energyDemandUnits->setReadOnly(true);
     m_energyDemandUnits->setFixedWidth(OS_EDIT_WIDTH);
     vLayout->addWidget(m_energyDemandUnits);
 
@@ -326,7 +262,8 @@ void UtilityBillsInspectorView::createWidgets()
     vLayout->addWidget(label);
 
     m_windowTimesteps = new OSIntegerEdit2();
-    //m_windowTimesteps->setMinimum(1); TODO
+    // TODO replace below with validator
+    //m_windowTimesteps->setMinimum(1);
     //m_windowTimesteps->setDecimals(0);
     m_windowTimesteps->setFixedWidth(OS_EDIT_WIDTH);
     vLayout->addWidget(m_windowTimesteps);
@@ -408,20 +345,12 @@ void UtilityBillsInspectorView::createWidgets()
     this, SLOT(setBillFormat(BillFormat)));
   OS_ASSERT(isConnected);
 
-  //if(m_utilityBill.is_initialized()){
-  //  m_name->setText(m_utilityBill.get().name().get().c_str());
-  //  // TODO m_consumptionUnits->setText(m_utilityBill.get().consumptionUnit().c_str());
-  //  if(m_utilityBill.get().peakDemandUnit().is_initialized()){
-  //    // TODO m_energyDemandUnits->setText(m_utilityBill.get().peakDemandUnit().get().c_str());
-  //  }
-  //  // TODO m_weatherFile->setText(m_utilityBill.get().name().c_str());
+  if(m_utilityBill.is_initialized()){ // TODO remove
+    attach(m_utilityBill.get()); // TODO remove
+  }
 
-  //  if(m_utilityBill.get().timestepsInPeakDemandWindow().is_initialized()){
-  //    // TODO m_windowTimesteps->setValue(m_utilityBill.get().timestepsInPeakDemandWindow().get());
-  //  }
-  //}
-
-  // TODO showBillFormatDialog();
+  // TODO move to add utility bill slot
+  // showBillFormatDialog();
 }
 
 void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityBill)
@@ -445,23 +374,7 @@ void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityB
       OptionalStringGetter(boost::bind(&model::UtilityBill::peakDemandUnit,m_utilityBill.get_ptr())),
       boost::optional<StringSetter>(boost::bind(&model::UtilityBill::setPeakDemandUnit,m_utilityBill.get_ptr(),_1)));
   
-
-    //boost::optional<unsigned> timestepsInPeakDemandWindow() const;
-    //bool isTimestepsInPeakDemandWindowDefaulted() const;
-    //bool setTimestepsInPeakDemandWindow(unsigned timestepsInPeakDemandWindow);
-    //void resetTimestepsInPeakDemandWindow();
-
-    //void bind(model::ModelObject& modelObject,
-    //        IntGetter get,
-    //        boost::optional<IntSetter> set=boost::none,
-    //        boost::optional<NoFailAction> reset=boost::none,
-    //        boost::optional<NoFailAction> autosize=boost::none,
-    //        boost::optional<NoFailAction> autocalculate=boost::none,
-    //        boost::optional<BasicQuery> isDefaulted=boost::none,
-    //        boost::optional<BasicQuery> isAutosized=boost::none,
-    //        boost::optional<BasicQuery> isAutocalculated=boost::none);
-
-  ////////////////  TODO
+  //  TODO may need bind for unsigned
   //m_windowTimesteps->bind(
   //  *m_utilityBill,
   //  OptionalIntGetter(boost::bind(&model::UtilityBill::timestepsInPeakDemandWindow,m_utilityBill.get_ptr())),
@@ -469,13 +382,13 @@ void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityB
 
 }
 
-//void UtilityBillsInspectorView::onSelectItem(OSItem *item)
-//{
-//}
+void UtilityBillsInspectorView::onSelectItem(OSItem *item)
+{
+}
 
-//void UtilityBillsInspectorView::onClearSelection()
-//{
-//}
+void UtilityBillsInspectorView::onClearSelection()
+{
+}
 
 void UtilityBillsInspectorView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
 {
@@ -555,8 +468,6 @@ void UtilityBillsInspectorView::addUtilityBill()
 
 }
 
-
-
 void UtilityBillsInspectorView::addBillingPeriod(bool checked)
 {
   if(m_utilityBill.is_initialized()){
@@ -580,6 +491,7 @@ void UtilityBillsInspectorView::setBillFormat(BillFormat billFormat)
 {
   m_billFormat = billFormat;
 }
+
 
 //**********************************************************************************************************
 
@@ -813,7 +725,8 @@ void BillingPeriodWidget::getBillingPeriodLabel(QGridLayout * gridLayout, int ro
 void BillingPeriodWidget::getBillingPeriodLineEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex)
 {
   m_billingPeriodIntEdit = new OSIntegerEdit2();
-  //m_billingPeriodIntEdit->setDecimals(0); TODO
+  // TODO apply validator
+  //m_billingPeriodIntEdit->setDecimals(0);
   //m_billingPeriodIntEdit->setMinimum(28);
   //m_billingPeriodIntEdit->setMaximum(31);
   m_billingPeriodIntEdit->setFixedWidth(OS_UTILITY_WIDTH);

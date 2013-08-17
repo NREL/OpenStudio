@@ -91,8 +91,8 @@ public:
 
 protected:
 
-  //virtual void onSelectItem(OSItem *item);
-  //virtual void onClearSelection();
+  virtual void onSelectItem(OSItem *item);
+  virtual void onClearSelection();
   virtual void onSelectModelObject(const openstudio::model::ModelObject& modelObject);
   virtual void onUpdate();
 
@@ -121,6 +121,8 @@ private:
   BillFormatDialog * m_billFormatDialog;
 
   BillFormat m_billFormat;
+
+  QString m_beginAndEndDates;
 
   bool m_showPeak;
   
