@@ -102,6 +102,8 @@ std::vector<OSItemId> UtilityBillFuelTypeListController::makeVector()
       if(boost::optional<model::UtilityBill> utilityBill = modelObject.optionalCast<model::UtilityBill>()){
         if(utilityBill.get().fuelType() == m_fuelType){
           result.push_back(modelObjectToItemId(modelObject, false));
+          // becasue there is no more than 1 utility bill per fuel type...
+          break;
         }
       }
     }

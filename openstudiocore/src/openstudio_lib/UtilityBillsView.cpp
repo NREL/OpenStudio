@@ -30,6 +30,8 @@
 #include "../shared_gui_components/OSLineEdit.hpp"
 
 #include <model/Model_Impl.hpp>
+#include <model/RunPeriod.hpp>
+#include <model/RunPeriod_Impl.hpp>
 #include <model/UtilityBill_Impl.hpp>
 #include <model/WeatherFile.hpp>
 #include <model/WeatherFile_Impl.hpp>
@@ -66,19 +68,48 @@ UtilityBillsView::UtilityBillsView(const openstudio::model::Model& model, QWidge
                                        new UtilityBillsInspectorView(model,parent),
                                        parent)
 {
-
+  QString beginAndEndDates;
+  boost::optional<int> calendarYear;
   boost::optional<model::YearDescription> yearDescription = model.yearDescription();
   if(yearDescription){
-    boost::optional<int> calendarYear = yearDescription.get().calendarYear();
+    calendarYear = yearDescription.get().calendarYear();
     if(calendarYear){
-      int temp = *calendarYear;
-    }
-  }
+      boost::optional<model::WeatherFile> weatherFile = model.weatherFile();
+      if(weatherFile){
+        boost::optional<model::RunPeriod> runPeriod = model.getOptionalUniqueModelObject<model::RunPeriod>();
+        if(runPeriod.is_initialized()){
+          int beginMonth = runPeriod.get().getBeginMonth();
+          int beginDayOfMonth = runPeriod.get().getBeginDayOfMonth();
+          int beginYear = calendarYear.get();
+          int endMonth = runPeriod.get().getEndMonth();
+          int endDayOfMonth = runPeriod.get().getEndDayOfMonth();
+          int endYear = calendarYear.get();
 
-  boost::optional<model::WeatherFile> weatherFile = model.weatherFile();
-  if(weatherFile){
-    // TODO weatherFile.get().startDate();
-    // TODO weatherFile.get().endDate();
+          // Check for wrap-around runPeriod
+          if( (beginMonth > endMonth) || (beginMonth == endMonth && beginDayOfMonth > endDayOfMonth)){
+            endYear++;
+          }
+          
+          beginAndEndDates += "Start Date ";
+          beginAndEndDates += beginAndEndDates.setNum(beginMonth);
+          beginAndEndDates += "/";
+          beginAndEndDates += beginAndEndDates.setNum(beginDayOfMonth);
+          beginAndEndDates += "/";
+          beginAndEndDates += beginAndEndDates.setNum(beginYear);
+          beginAndEndDates += "   End Date ";
+          beginAndEndDates += beginAndEndDates.setNum(endMonth);
+          beginAndEndDates += "/";
+          beginAndEndDates += beginAndEndDates.setNum(endDayOfMonth);
+          beginAndEndDates += "/";
+          beginAndEndDates += beginAndEndDates.setNum(endYear);
+          
+        }
+      } else {
+        // TODO tell user that they must have a runPeriod and hide tab
+      }
+    } else {
+      // TODO tell user that they must have a yearDescription and hide tab
+    }
   }
 
 }
@@ -86,10 +117,18 @@ UtilityBillsView::UtilityBillsView(const openstudio::model::Model& model, QWidge
 std::vector<std::pair<FuelType, std::string> > UtilityBillsView::utilityBillFuelTypesAndNames()
 {
   std::vector<std::pair<FuelType, std::string> > result;
-  result.push_back(std::make_pair<FuelType, std::string>(FuelType::Electricity, "Electric Utility Bills"));
-  result.push_back(std::make_pair<FuelType, std::string>(FuelType::Gas, "Gas Utility Bills"));
-  result.push_back(std::make_pair<FuelType, std::string>(FuelType::DistrictHeating, "District Heating Utility Bills"));
-  result.push_back(std::make_pair<FuelType, std::string>(FuelType::DistrictCooling, "District Cooling Utility Bills"));
+  result.push_back(std::make_pair<FuelType, std::string>(FuelType::Electricity, "Electric Utility Bill"));
+  result.push_back(std::make_pair<FuelType, std::string>(FuelType::Gas, "Gas Utility Bill"));
+  result.push_back(std::make_pair<FuelType, std::string>(FuelType::DistrictHeating, "District Heating Utility Bill"));
+  result.push_back(std::make_pair<FuelType, std::string>(FuelType::DistrictCooling, "District Cooling Utility Bill"));
+  result.push_back(std::make_pair<FuelType, std::string>(FuelType::Gasoline, "Gasoline Utility Bill"));
+  result.push_back(std::make_pair<FuelType, std::string>(FuelType::Diesel, "Diesel Utility Bill"));
+  result.push_back(std::make_pair<FuelType, std::string>(FuelType::FuelOil_1, "Fuel Oil #1 Utility Bill"));
+  result.push_back(std::make_pair<FuelType, std::string>(FuelType::FuelOil_2, "Fuel Oil #2 Utility Bill"));
+  result.push_back(std::make_pair<FuelType, std::string>(FuelType::Propane, "Propane Utility Bill"));
+  result.push_back(std::make_pair<FuelType, std::string>(FuelType::Water, "Water Utility Bill"));
+  result.push_back(std::make_pair<FuelType, std::string>(FuelType::Steam, "Steam Utility Bill"));
+  result.push_back(std::make_pair<FuelType, std::string>(FuelType::EnergyTransfer, "Energy Transfer Utility Bill"));
 
   return result;
 }
@@ -299,25 +338,21 @@ void UtilityBillsInspectorView::createWidgets()
   
   mainLayout->addLayout(gridLayout);
 
-  // Weather File
+  // Run Period
 
   vLayout = new QVBoxLayout();
   vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   vLayout->setSpacing(10);
 
   label = new QLabel();
-  label->setText("Weather File");
+  label->setText("Run Period");
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_weatherFile = new OSLineEdit2();
- // m_weatherFile->setReadOnly(true);
-  m_weatherFile->setFixedWidth(OS_EDIT_WIDTH);
-  vLayout->addWidget(m_weatherFile);
-
-  //isConnected = connect(m_weatherFile, SIGNAL(textChanged(const QString &)),
-  //  this, SLOT(weatherFileChanged(const QString &)));
-  //OS_ASSERT(isConnected);
+  m_runPeriodLineEdit = new QLineEdit();
+  m_runPeriodLineEdit->setReadOnly(true);
+  m_runPeriodLineEdit->setFixedWidth(OS_EDIT_WIDTH);
+  vLayout->addWidget(m_runPeriodLineEdit);
 
   mainLayout->addLayout(vLayout);
 

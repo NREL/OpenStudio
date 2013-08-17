@@ -19,7 +19,7 @@
 
 #include <openstudio_lib/UtilityBillFuelTypeItem.hpp>
 #include <openstudio_lib/OSCollapsibleItemHeader.hpp>
-//#include <openstudio_lib/ModelObjectListView.hpp>
+// TODO #include <openstudio_lib/ModelObjectListView.hpp>
 #include <openstudio_lib/UtilityBillFuelTypeListView.hpp>
 
 #include <model/Model.hpp>
@@ -40,22 +40,23 @@ UtilityBillFuelTypeItem::UtilityBillFuelTypeItem(OSCollapsibleItemHeader* collap
 {
 }
 
-//IddObjectType UtilityBillFuelTypeItem::iddObjectType() const
-//{
-//  OSItemList* itemList = this->itemList();
-//  ModelObjectListView* modelObjectListView = qobject_cast<ModelObjectListView*>(itemList);
-//  OS_ASSERT(modelObjectListView);
-//  return modelObjectListView->iddObjectType();
-//}
+IddObjectType UtilityBillFuelTypeItem::iddObjectType() const
+{
+  OSItemList* itemList = this->itemList();
+  UtilityBillFuelTypeListView* utilityBillFuelTypeListView = qobject_cast<UtilityBillFuelTypeListView*>(itemList);
+  OS_ASSERT(utilityBillFuelTypeListView);
+  return utilityBillFuelTypeListView->iddObjectType();
+}
 
 FuelType UtilityBillFuelTypeItem::fuelType() const
 {
-  //OSItemList* itemList = this->itemList();
-  //ModelObjectListView* modelObjectListView = qobject_cast<ModelObjectListView*>(itemList);
-  //OS_ASSERT(modelObjectListView);
-  //return modelObjectListView->iddObjectType();
-
-  return FuelType::Electricity;
+  OSItemList* itemList = this->itemList();
+  UtilityBillFuelTypeListView* utilityBillFuelTypeListView = qobject_cast<UtilityBillFuelTypeListView*>(itemList);
+  OS_ASSERT(utilityBillFuelTypeListView);
+  boost::optional<FuelType> fuelType = utilityBillFuelTypeListView->fuelType();
+  
+  OS_ASSERT(fuelType.is_initialized());
+  return utilityBillFuelTypeListView->fuelType().get();
 }
 
 } // openstudio

@@ -37,6 +37,7 @@ class QDate;
 class QDateEdit;
 class QGridLayout;
 class QLabel;
+class QLineEdit;
 class QPushButton;
 
 namespace openstudio {
@@ -126,7 +127,7 @@ private:
   QButtonGroup * m_buttonGroup;
 
   OSLineEdit2 * m_name;
-  OSLineEdit2 * m_weatherFile;
+  QLineEdit * m_runPeriodLineEdit;
 
   OSComboBox2 * m_consumptionUnits;
   OSComboBox2 * m_energyDemandUnits;

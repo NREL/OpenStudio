@@ -27,7 +27,7 @@
 namespace openstudio {
 
 class FuelType;
-//class ModelObjectListView;
+// TODO class ModelObjectListView;
 class UtilityBillFuelTypeListView;
 class OSCollapsibleItemHeader;
 
@@ -43,7 +43,7 @@ class UtilityBillFuelTypeItem : public OSCollapsibleItem
 
     virtual ~UtilityBillFuelTypeItem() {}
 
-    //IddObjectType iddObjectType() const;
+    IddObjectType iddObjectType() const;
 
     FuelType fuelType() const;
 
