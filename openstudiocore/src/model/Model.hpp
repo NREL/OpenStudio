@@ -24,6 +24,7 @@
 #include <model/ModelObject.hpp>
 
 #include <utilities/idf/Workspace.hpp>
+#include <utilities/core/Assert.hpp>
 
 #include <vector>
 
@@ -257,7 +258,7 @@ class MODEL_API Model : public openstudio::Workspace {
     boost::optional<T> result;
     std::vector<T> intermediate = getModelObjectsByName<T>(name,true);
     if (!intermediate.empty()) {
-      BOOST_ASSERT(intermediate.size() == 1u);
+      OS_ASSERT(intermediate.size() == 1u);
       result = intermediate[0];
     }
     return result;

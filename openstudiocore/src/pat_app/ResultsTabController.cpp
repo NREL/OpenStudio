@@ -79,11 +79,11 @@ ResultsTabController::ResultsTabController()
     OS_ASSERT(bingo);
 
     bingo = connect(resultsView,SIGNAL(calibrationThresholdsChanged(double, double)),m_dataPointCalibrationItemDelegate.data(),SLOT(setCalibrationThresholds(double, double)));
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     // want to reset the list after changing the delegate
     bingo = connect(resultsView,SIGNAL(calibrationThresholdsChanged(double, double)),resultsView->dataPointCalibrationListView,SLOT(refreshAllViews()));
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     resultsView->baselineDataPointResultListView->setListController(m_baselineDataPointResultListController);
     resultsView->baselineDataPointResultListView->setDelegate(m_dataPointResultItemDelegate);
@@ -303,7 +303,7 @@ DataPointCalibrationItemDelegate::DataPointCalibrationItemDelegate(double maxNMB
 QWidget * DataPointCalibrationItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
   QSharedPointer<DataPointCalibrationListItem> dataPointCalibrationListItem = dataSource.dynamicCast<DataPointCalibrationListItem>();
-  Q_ASSERT(dataPointCalibrationListItem);
+  OS_ASSERT(dataPointCalibrationListItem);
 
   openstudio::analysis::DataPoint dataPoint = dataPointCalibrationListItem->dataPoint();
   openstudio::analysis::DataPoint baselineDataPoint = dataPointCalibrationListItem->baselineDataPoint();
@@ -313,10 +313,10 @@ QWidget * DataPointCalibrationItemDelegate::view(QSharedPointer<OSListItem> data
   result->setHasEmphasis(dataPointCalibrationListItem->isSelected());
 
   bool test = connect(result,SIGNAL(clicked()),dataPointCalibrationListItem.data(),SLOT(toggleSelected()));
-  Q_ASSERT(test);
+  OS_ASSERT(test);
 
   test = connect(dataPointCalibrationListItem.data(),SIGNAL(selectedChanged(bool)),result,SLOT(setHasEmphasis(bool)));
-  Q_ASSERT(test);
+  OS_ASSERT(test);
 
   return result;
 }
