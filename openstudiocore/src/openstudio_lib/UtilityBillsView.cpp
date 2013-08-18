@@ -286,7 +286,7 @@ void UtilityBillsInspectorView::createWidgets()
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_runPeriodLineEdit = new QLineEdit();
+  m_runPeriodLineEdit = new QLineEdit(m_beginAndEndDates);
   m_runPeriodLineEdit->setReadOnly(true);
   m_runPeriodLineEdit->setFixedWidth(OS_EDIT_WIDTH);
   vLayout->addWidget(m_runPeriodLineEdit);
