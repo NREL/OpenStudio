@@ -20,7 +20,7 @@ class EnergyPlusMeasure_Test < Test::Unit::TestCase
     # make an empty model
     model = OpenStudio::Model::Model.new
 
-    # forward translate OSM file to IDF file
+    # forward translate OpenStudio Model to EnergyPlus Workspace
     ft = OpenStudio::EnergyPlus::ForwardTranslator.new
     workspace = ft.translateModel(model)
     

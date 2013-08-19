@@ -7,7 +7,7 @@
 #see the URL below for information on using life cycle cost objects in OpenStudio
 # http://openstudio.nrel.gov/openstudio-life-cycle-examples
 
-#see the URL below for access to C++ documentation on model objects (click on "workspace" in the main window to view model objects)
+#see the URL below for access to C++ documentation on workspace objects (click on "workspace" in the main window to view workspace objects)
 # http://openstudio.nrel.gov/sites/openstudio.nrel.gov/files/nv_data/cpp_documentation_it/utilities/html/idf_page.html
 
 #start the measure
