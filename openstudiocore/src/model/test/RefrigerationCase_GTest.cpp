@@ -693,7 +693,7 @@ TEST_F(ModelFixture, RefrigerationCase_CloneOneModelWithCustomData)
 	EXPECT_DOUBLE_EQ( 0.5, testObjectClone.ratedRuntimeFraction() );
 	EXPECT_DOUBLE_EQ( 1.0, testObjectClone.caseLength()); 
 	EXPECT_DOUBLE_EQ( 1.0, testObjectClone.caseOperatingTemperature());  
-	EXPECT_EQ( "CaseTemperatureMethod", testObjectClone.latentCaseCreditCurveType() );
+	EXPECT_EQ( "RelativeHumidityMethod", testObjectClone.latentCaseCreditCurveType() );
 	EXPECT_DOUBLE_EQ( 45.0, testObjectClone.standardCaseFanPowerperUnitLength());
 	EXPECT_DOUBLE_EQ( 45.0, testObjectClone.operatingCaseFanPowerperUnitLength());
 	EXPECT_DOUBLE_EQ( 30.0, testObjectClone.standardCaseLightingPowerperUnitLength());
