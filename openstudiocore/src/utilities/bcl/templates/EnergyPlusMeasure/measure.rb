@@ -1,11 +1,14 @@
 #see the URL below for information on how to write OpenStudio measures
 # http://openstudio.nrel.gov/openstudio-measure-writing-guide
 
+#see your EnergyPlus installation or the URL below for information on EnergyPlus objects
+# http://apps1.eere.energy.gov/buildings/energyplus/pdfs/inputoutputreference.pdf
+
 #see the URL below for information on using life cycle cost objects in OpenStudio
 # http://openstudio.nrel.gov/openstudio-life-cycle-examples
 
-#see the URL below for access to C++ documentation on model objects (click on "model" in the main window to view model objects)
-# http://openstudio.nrel.gov/sites/openstudio.nrel.gov/files/nv_data/cpp_documentation_it/model/html/namespaces.html
+#see the URL below for access to C++ documentation on model objects (click on "workspace" in the main window to view model objects)
+# http://openstudio.nrel.gov/sites/openstudio.nrel.gov/files/nv_data/cpp_documentation_it/utilities/html/idf_page.html
 
 #start the measure
 class EnergyPlusMeasure < OpenStudio::Ruleset::WorkspaceUserScript
@@ -60,7 +63,7 @@ class EnergyPlusMeasure < OpenStudio::Ruleset::WorkspaceUserScript
       runner.registerWarning("Your entered name was not capitalized.")    
     end
     
-    #returning the name in an a sentance
+    #returning the name in an a sentence
     runner.registerInfo("Hello #{user_name}, thanks for entering your name.")
 
     #get all thermal zones in model
@@ -91,7 +94,9 @@ class EnergyPlusMeasure < OpenStudio::Ruleset::WorkspaceUserScript
     
       #you could just add variable in the string above. Name is changed after zone added just to demonstrate setString
       new_zone.setString(0,"Hello_World test zone")
-            
+
+      runner.registerInfo("A zone named '#{new_zone.getString(0)}' was added.")
+
     else
       runner.registerAsNotApplicable("You have chosen not to add a zone. Your model will not be altered.")
       return true

@@ -53,7 +53,7 @@ class EnergyPlusMeasure_Test < Test::Unit::TestCase
     show_output(result)
     assert(result.value.valueName == "Success")
     assert(result.warnings.size == 1)
-    assert(result.info.size == 1)
+    assert(result.info.size == 2)
     
   end
   

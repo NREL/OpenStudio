@@ -58,7 +58,7 @@ class ModelMeasure < OpenStudio::Ruleset::ModelUserScript
       runner.registerWarning("Your entered name was not capitalized.")    
     end
     
-    #returning the name in an a sentance
+    #returning the name in an a sentence
     runner.registerInfo("Hello #{user_name}, thanks for entering your name.")
 
     #reporting initial condition of model
@@ -69,6 +69,7 @@ class ModelMeasure < OpenStudio::Ruleset::ModelUserScript
     if add_space == true
       new_space = OpenStudio::Model::Space.new(model)
       new_space.setName("Hello_World test space")
+      runner.registerInfo("Space #{new_space.name} was added.")
       
     else
       runner.registerAsNotApplicable("You have chosen not to add a space. Your model will not be altered.")
