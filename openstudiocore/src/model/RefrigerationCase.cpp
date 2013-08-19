@@ -29,6 +29,8 @@
 #include <model/CurveCubic_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_Case_FieldEnums.hxx>
@@ -106,6 +108,26 @@ namespace detail {
     {
       result.push_back(ScheduleTypeKey("RefrigerationCase","Case Credit Fraction"));
     }
+    return result;
+  }
+
+  ModelObject RefrigerationCase_Impl::clone(Model model) const
+  {
+    RefrigerationCase modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCase>();
+
+    if (boost::optional<CurveCubic> latentCaseCreditCurve = this->latentCaseCreditCurve()) {
+      modelObjectClone.setLatentCaseCreditCurve(latentCaseCreditCurve.get().clone(model).cast<CurveCubic>());
+    }    
+
+    modelObjectClone.resetThermalZone();
+
+    return modelObjectClone;
+  }
+
+  std::vector<IddObjectType> RefrigerationCase_Impl::allowableChildTypes() const
+  {
+    std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_Curve_Cubic);
     return result;
   }
 

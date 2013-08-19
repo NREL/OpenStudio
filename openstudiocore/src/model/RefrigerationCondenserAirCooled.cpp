@@ -25,6 +25,8 @@
 #include <model/CurveLinear_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_Condenser_AirCooled_FieldEnums.hxx>
@@ -70,6 +72,27 @@ namespace detail {
 
   IddObjectType RefrigerationCondenserAirCooled_Impl::iddObjectType() const {
     return RefrigerationCondenserAirCooled::iddObjectType();
+  }
+
+  ModelObject RefrigerationCondenserAirCooled_Impl::clone(Model model) const
+  {
+    RefrigerationCondenserAirCooled modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCondenserAirCooled>();
+
+    boost::optional<CurveLinear> heatRejectionCurve = ratedEffectiveTotalHeatRejectionRateCurve();
+    if(heatRejectionCurve){
+      modelObjectClone.setRatedEffectiveTotalHeatRejectionRateCurve(heatRejectionCurve.get().clone(model).cast<CurveLinear>());
+    }
+
+    modelObjectClone.resetAirInletZone();
+
+    return modelObjectClone;
+  }
+
+  std::vector<IddObjectType> RefrigerationCondenserAirCooled_Impl::allowableChildTypes() const
+  {
+    std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_Curve_Linear);
+    return result;
   }
 
   std::vector<ModelObject> RefrigerationCondenserAirCooled_Impl::children() const

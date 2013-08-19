@@ -23,6 +23,8 @@
 // TODO: Check the following class names against object getters and setters.
 #include <model/CurveBicubic.hpp>
 #include <model/CurveBicubic_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_Compressor_FieldEnums.hxx>
@@ -68,6 +70,26 @@ namespace detail {
 
   IddObjectType RefrigerationCompressor_Impl::iddObjectType() const {
     return RefrigerationCompressor::iddObjectType();
+  }
+
+  ModelObject RefrigerationCompressor_Impl::clone(Model model) const
+  {
+    RefrigerationCompressor modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCompressor>();
+
+    CurveBicubic refPowerCurve = refrigerationCompressorPowerCurve();
+    modelObjectClone.setRefrigerationCompressorPowerCurve(refPowerCurve.clone(model).cast<CurveBicubic>());
+
+    CurveBicubic refCapacitryCurve = refrigerationCompressorCapacityCurve();
+    modelObjectClone.setRefrigerationCompressorCapacityCurve(refCapacitryCurve.clone(model).cast<CurveBicubic>());
+
+    return modelObjectClone;
+  }
+
+  std::vector<IddObjectType> RefrigerationCompressor_Impl::allowableChildTypes() const
+  {
+    std::vector<IddObjectType> result;
+    result.push_back(IddObjectType::OS_Curve_Bicubic);
+    return result;
   }
 
   std::vector<ModelObject> RefrigerationCompressor_Impl::children() const

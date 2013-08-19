@@ -123,6 +123,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneTwoModelsWithDefaultData)
   EXPECT_TRUE(testObjectClone2.isSumUASuctionPipingDefaulted());
   EXPECT_DOUBLE_EQ(0.0, testObjectClone2.sumUASuctionPiping());
   EXPECT_NE(testObjectClone2, testObjectClone);
+  EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_Compressors)

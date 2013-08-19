@@ -64,11 +64,15 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
+    virtual ModelObject clone(Model model) const;
+
+    virtual std::vector<IddObjectType> allowableChildTypes() const;
+
+    virtual std::vector<ModelObject> children() const;
+
     //@}
     /** @name Getters */
     //@{
-
-    std::vector<ModelObject> children() const;
 
     // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> availabilitySchedule() const;
