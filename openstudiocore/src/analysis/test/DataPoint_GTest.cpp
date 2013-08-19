@@ -23,21 +23,12 @@
 #include <analysis/Analysis.hpp>
 #include <analysis/DataPoint.hpp>
 #include <analysis/DataPoint_Impl.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/RubyContinuousVariable_Impl.hpp>
 
 #include <runmanager/lib/WorkItem.hpp>
-#include <runmanager/lib/JobFactory.hpp>
 
 #include <utilities/data/Attribute.hpp>
-#include <utilities/data/Tag.hpp>
 
 #include <utilities/time/Date.hpp>
-
-#include <utilities/units/QuantityFactory.hpp>
 
 #include <utilities/core/Containers.hpp>
 
@@ -49,21 +40,20 @@ using namespace openstudio::analysis;
 using namespace openstudio::runmanager;
 using namespace openstudio::ruleset;
 
-TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PreRun) {
-  Analysis analysis = analysis1();
-  Problem problem = analysis.problem();
+TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PreRun_Roundtrip) {
+  // Right now, round-tripping only works with no server view attached.
+  // Should be able to relax this once Analysis has a method to update its
+  // DataPoints from JSON.
+  DataPointSerializationOptions options(openstudio::path(),false);
 
-  // Create data point and add to analysis
-  std::vector<QVariant> values;
-  values.push_back(1);
-  values.push_back(0.3);
-  values.push_back(0.9);
-  OptionalDataPoint dataPoint = problem.createDataPoint(values);
-  ASSERT_TRUE(dataPoint);
-  EXPECT_TRUE(analysis.addDataPoint(*dataPoint));
+  Analysis analysis = analysis1(PreRun);
+
+  // Retrieve data point
+  ASSERT_FALSE(analysis.dataPoints().empty());
+  DataPoint dataPoint = analysis.dataPoints()[0];
 
   // Serialize data point
-  std::string json = dataPoint->toJSON();
+  std::string json = dataPoint.toJSON(options);
   EXPECT_FALSE(json.empty());
 
   // Deserialize and check results
@@ -71,288 +61,36 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PreRun) {
   ASSERT_TRUE(copyAsAnalysisObject);
   ASSERT_TRUE(copyAsAnalysisObject->optionalCast<DataPoint>());
   DataPoint copy = copyAsAnalysisObject->cast<DataPoint>();
-  EXPECT_EQ(json,copy.toJSON());
+  EXPECT_EQ(json,copy.toJSON(options));
 
   // Save data point
   openstudio::path p = toPath("AnalysisFixtureData/data_point_pre_run.json");
-  EXPECT_TRUE(dataPoint->saveJSON(p,true));
+  EXPECT_TRUE(dataPoint.saveJSON(p,options,true));
 
   // Load and check results
   copyAsAnalysisObject = loadJSON(p);
   ASSERT_TRUE(copyAsAnalysisObject);
   ASSERT_TRUE(copyAsAnalysisObject->optionalCast<DataPoint>());
   copy = copyAsAnalysisObject->cast<DataPoint>();
-  EXPECT_EQ(json,copy.toJSON());
+  EXPECT_EQ(json,copy.toJSON(options));
 
 }
 
-TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
-  // Create problem
-  Analysis analysis = analysis1();
-  Problem problem = analysis.problem();
+TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun_Roundtrip) {
+  // Right now, round-tripping only works with no server view attached.
+  // Should be able to relax this once Analysis has a method to update its
+  // DataPoints from JSON.
+  DataPointSerializationOptions options(openstudio::path(),false);
 
-  // Create "simulated" data point
-  std::vector<QVariant> values;
-  values.push_back(1);
-  values.push_back(0.3);
-  values.push_back(0.9);
-  DoubleVector responseValues;
-  responseValues.push_back(58.281967);
-  responseValues.push_back(718952.281);
-  responseValues.push_back(0.3);
-  TagVector tags;
-  tags.push_back(Tag("custom"));
-  tags.push_back(Tag("faked"));
-  // attributes
-  AttributeVector attributes;
-  attributes.push_back(Attribute("electricity.Cooling",281.281567,"kWh"));
-  attributes.push_back(Attribute("electricity.Lighting",19206.291876,"kWh"));
-  attributes.push_back(Attribute("electricity.Equipment",5112.125718,"kWh"));
-  attributes = AttributeVector(1u,Attribute("enduses.electric",attributes));
-  attributes.push_back(Attribute("eui",createQuantity(128.21689,"kBtu/ft^2").get()));
-  // complete job
-  // 1. get vector of work items
-  std::vector<WorkItem> workItems;
-  // 0
-  workItems.push_back(problem.variables()[0].cast<MeasureGroup>().createWorkItem(QVariant(1),
-                                                                                 toPath(rubyOpenStudioDir())));
-  RubyContinuousVariable rcv = problem.variables()[1].cast<RubyContinuousVariable>();
-  RubyMeasure rm = rcv.measure();
-  OSArgument arg = rcv.argument().clone();
-  arg.setValue(values[1].toDouble());
-  rm.setArgument(arg);
-  rcv = problem.variables()[2].cast<RubyContinuousVariable>();
-  arg = rcv.argument().clone();
-  arg.setValue(values[2].toDouble());
-  rm.setArgument(arg);
-  // 1
-  workItems.push_back(rm.createWorkItem(toPath(rubyOpenStudioDir())));
-  // 2
-  workItems.push_back(WorkItem(JobType::ModelToIdf));
-  // 3
-  workItems.push_back(WorkItem(JobType::EnergyPlusPreProcess));
-  // 4
-  workItems.push_back(WorkItem(JobType::EnergyPlus));
-  // 5
-  workItems.push_back(WorkItem(JobType::OpenStudioPostProcess));
-  // 2. step through work items and create jobs with results
-  WorkItem wi = workItems[5];
-  std::vector<FileInfo> inFiles = wi.files.files();
-  inFiles.push_back(FileInfo("eplusout.sql",
-                             DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,33,32)),
-                             "",
-                             toPath("myProject/fakeDataPoint/75-OpenStudioPostProcess-0/eplusout.sql")));                             
-  Files inFilesObject(inFiles);
-  std::vector<std::pair<ErrorType, std::string> > errors;
-  errors.push_back(std::make_pair(ErrorType::Info,"Post-process completed successfully."));
-  JobErrors errorsObject(OSResultValue::Success,errors);
-  std::vector<FileInfo> outFiles;
-  outFiles.push_back(FileInfo("report.xml",
-                              DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,34,21)),
-                              "",
-                              toPath("myProject/fakeDataPoint/75-OpenStudioPostProcess-0/report.xml")));
-  Files outFilesObject(outFiles);
-  Job job = JobFactory::createJob(
-        wi.type,
-        wi.tools,
-        wi.params,
-        inFilesObject,
-        std::vector<openstudio::URLSearchPath>(),
-        false,
-        createUUID(),
-        JobState(
-          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,34,21)),
-          errorsObject,
-          outFilesObject,
-          openstudio::runmanager::AdvancedStatus(openstudio::runmanager::AdvancedStatusEnum::Idle)
-        )
-        ); // OpenStudioPostProcess
+  // Create analysis
+  Analysis analysis = analysis1(PostRun);
 
-  Job jobLast = job;
-  wi = workItems[4];
-  inFiles = wi.files.files();
-  inFiles.push_back(FileInfo("in.idf",
-                              DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,23,05)),
-                              "",
-                              toPath("myProject/fakeDataPoint/74-EnergyPlus-0/in.idf")));
-  inFilesObject = Files(inFiles);
-  errors.clear();
-  errors.push_back(std::make_pair(ErrorType::Warning,"ENERGYPLUS WARNING: ..."));
-  errors.push_back(std::make_pair(ErrorType::Warning,"ENERGYPLUS WARNING: ..."));
-  errors.push_back(std::make_pair(ErrorType::Warning,"ENERGYPLUS WARNING: ..."));
-  errorsObject = JobErrors(OSResultValue::Success,errors);
-  outFiles.clear();
-  outFiles.push_back(FileInfo("eplusout.sql",
-                              DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,33,32)),
-                              "",
-                              toPath("myProject/fakeDataPoint/74-EnergyPlus-0/eplusout.sql")));
-  outFiles.push_back(FileInfo("eplusout.err",
-                              DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,33,34)),
-                              "",
-                              toPath("myProject/fakeDataPoint/74-EnergyPlus-0/eplusout.err")));
-  outFilesObject = Files(outFiles);
-  job = JobFactory::createJob(
-        wi.type,
-        wi.tools,
-        wi.params,
-        inFilesObject,
-        std::vector<openstudio::URLSearchPath>(),
-        false,
-        createUUID(),
-        JobState(
-          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,33,42)),
-          errorsObject,
-          outFilesObject,
-          openstudio::runmanager::AdvancedStatus(openstudio::runmanager::AdvancedStatusEnum::Idle)
-        )
-        ); // EnergyPlus
-  job.addChild(jobLast);
-
-  jobLast = job;
-  wi = workItems[3];
-  inFiles = wi.files.files();
-  inFiles.push_back(FileInfo("in.idf",
-                              DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,22,30)),
-                              "",
-                              toPath("myProject/fakeDataPoint/73-EnergyPlusPreProcess-0/in.idf")));
-  inFilesObject = Files(inFiles);
-  errors.clear();
-  errorsObject = JobErrors(OSResultValue::Success,errors);
-  outFiles.clear();
-  outFiles.push_back(FileInfo("out.idf",
-                              DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,23,05)),
-                              "",
-                              toPath("myProject/fakeDataPoint/73-EnergyPlusPreProcess-0/out.idf")));
-  outFilesObject = Files(outFiles);
-  job = JobFactory::createJob(
-        wi.type,
-        wi.tools,
-        wi.params,
-        inFilesObject,
-        std::vector<openstudio::URLSearchPath>(),
-        false,
-        createUUID(),
-        JobState(
-          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,23,12)),
-          errorsObject,
-          outFilesObject,
-          openstudio::runmanager::AdvancedStatus(openstudio::runmanager::AdvancedStatusEnum::Idle)
-        )
-        ); // EnergyPlusPreProcess
-  job.addChild(jobLast);
-
-  jobLast = job;
-  wi = workItems[2];
-  inFiles = wi.files.files();
-  inFiles.push_back(FileInfo("in.osm",
-                              DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,22,01)),
-                              "",
-                              toPath("myProject/fakeDataPoint/72-ModelToIdf-0/in.osm")));
-  inFilesObject = Files(inFiles);
-  errors.clear();
-  errors.push_back(std::make_pair(ErrorType::Info,"Did not find ScheduleTypeLimits for Schedule ..."));
-  errors.push_back(std::make_pair(ErrorType::Warning,"Unexpectedly did not find a child object of a certain type, replaced with a default one."));
-  errorsObject = JobErrors(OSResultValue::Success,errors);
-  outFiles.clear();
-  outFiles.push_back(FileInfo("out.idf",
-                              DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,22,30)),
-                              "",
-                              toPath("myProject/fakeDataPoint/72-ModelToIdf-0/out.idf")));
-  outFilesObject = Files(outFiles);
-  job = JobFactory::createJob(
-        wi.type,
-        wi.tools,
-        wi.params,
-        inFilesObject,
-        std::vector<openstudio::URLSearchPath>(),
-        false,
-        createUUID(),
-        JobState(
-          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,22,32)),
-          errorsObject,
-          outFilesObject,
-          openstudio::runmanager::AdvancedStatus(openstudio::runmanager::AdvancedStatusEnum::Idle)
-        )
-        ); // ModelToIdf
-  job.addChild(jobLast);
-
-  jobLast = job;
-  wi = workItems[1];
-  errors.clear();
-  errors.push_back(std::make_pair(ErrorType::InitialCondition,"Started with a window to wall ratio of ..."));
-  errors.push_back(std::make_pair(ErrorType::FinalCondition,"Set the window to wall ratio ..."));
-  errorsObject = JobErrors(OSResultValue::Success,errors);
-  outFiles.clear();
-  outFilesObject = Files(outFiles);
-  wi.params.append("outdir","myProject/fakeDataPoint/");
-  job = JobFactory::createJob(
-        wi.type,
-        wi.tools,
-        wi.params,
-        wi.files,
-        std::vector<openstudio::URLSearchPath>(),
-        false,
-        createUUID(),
-        JobState(
-          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,21,52)),
-          errorsObject,
-          outFilesObject,
-          openstudio::runmanager::AdvancedStatus(openstudio::runmanager::AdvancedStatusEnum::Idle)
-        )
-        ); // Variables 2 & 3
-  job.addChild(jobLast);
-
-  jobLast = job;
-  wi = workItems[0];
-  errors.clear();
-  errors.push_back(std::make_pair(ErrorType::InitialCondition,"Started with a window to wall ratio of ..."));
-  errors.push_back(std::make_pair(ErrorType::FinalCondition,"Set the window to wall ratio ..."));
-  errorsObject = JobErrors(OSResultValue::Success,errors);
-  outFiles.clear();
-  outFilesObject = Files(outFiles);
-  // add outdir job param
-  JobParams params = wi.params;
-  params.append("outdir","myProject/fakeDataPoint");
-  job = JobFactory::createJob(
-        wi.type,
-        wi.tools,
-        params,
-        wi.files,
-        std::vector<openstudio::URLSearchPath>(),
-        false,
-        createUUID(),
-        JobState(
-          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,21,10)),
-          errorsObject,
-          outFilesObject,
-          openstudio::runmanager::AdvancedStatus(openstudio::runmanager::AdvancedStatusEnum::Idle)
-        )
-        ); // Variable 1
-  job.addChild(jobLast);
-
-  DataPoint dataPoint(createUUID(),
-                      createUUID(),
-                      "fakeDataPoint",
-                      "Fake Data Point",
-                      "Demonstrating json serialization of complete DataPoint.",
-                      problem,
-                      true,
-                      false,
-                      values,
-                      responseValues,
-                      toPath("myProject/fakeDataPoint/"),
-                      FileReference(toPath("myProject/fakeDataPoint/71-Ruby-0/out.osm")),
-                      FileReference(toPath("myProject/fakeDataPoint/72-ModelToIdf-0/out.idf")),
-                      FileReference(toPath("myProject/fakeDataPoint/74-EnergyPlus-0/eplusout.sql")),
-                      FileReference(toPath("myProject/fakeDataPoint/75-OpenStudioPostProcess-0/report.xml")),
-                      job,
-                      std::vector<openstudio::path>(),
-                      tags,
-                      attributes);
-  EXPECT_TRUE(analysis.addDataPoint(dataPoint));
+  // Retrieve "simulated" data point
+  ASSERT_FALSE(analysis.dataPoints().empty());
+  DataPoint dataPoint = analysis.dataPoints()[0];
 
   // Serialize data point
-  std::string json = dataPoint.toJSON();
+  std::string json = dataPoint.toJSON(options);
   EXPECT_FALSE(json.empty());
 
   // Deserialize and check results
@@ -360,17 +98,42 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun) {
   ASSERT_TRUE(copyAsAnalysisObject);
   ASSERT_TRUE(copyAsAnalysisObject->optionalCast<DataPoint>());
   DataPoint copy = copyAsAnalysisObject->cast<DataPoint>();
-  EXPECT_EQ(json,copy.toJSON());
+  EXPECT_EQ(json,copy.toJSON(options));
 
   // Save data point
   openstudio::path p = toPath("AnalysisFixtureData/data_point_post_run.json");
-  EXPECT_TRUE(dataPoint.saveJSON(p,true));
+  EXPECT_TRUE(dataPoint.saveJSON(p,options,true));
 
   // Load and check results
   copyAsAnalysisObject = loadJSON(p);
   ASSERT_TRUE(copyAsAnalysisObject);
   ASSERT_TRUE(copyAsAnalysisObject->optionalCast<DataPoint>());
   copy = copyAsAnalysisObject->cast<DataPoint>();
-  EXPECT_EQ(json,copy.toJSON());
+  EXPECT_EQ(json,copy.toJSON(options));
+}
 
+TEST_F(AnalysisFixture, DataPoint_JSONSerialization_Versioning) {
+  openstudio::path dir = resourcesPath() / toPath("analysis/version");
+  
+  // create this version's json file
+  DataPoint dataPoint = analysis1(PostRun).dataPoints()[0];
+  std::string dashVersionString = boost::regex_replace(openStudioVersion(),boost::regex("\\."),"-");
+  openstudio::path p = dir / toPath("data_point_" + dashVersionString + ".json");
+  bool ok = dataPoint.saveJSON(p,DataPointSerializationOptions(),true);
+  EXPECT_TRUE(ok);
+
+  // loop through all versions' json files
+  for (openstudio::directory_iterator it(dir); it != openstudio::directory_iterator(); ++it) {
+    if (boost::regex_match(toString(it->path().stem()),boost::regex("data_point_.*"))) {
+      LOG(Debug,"Loading " << toString(it->filename()) << ".");
+
+      // open and check results
+      OptionalAnalysisObject analysisObject = loadJSON(it->path());
+      ASSERT_TRUE(analysisObject);
+      ASSERT_TRUE(analysisObject->optionalCast<DataPoint>());
+      DataPoint loaded = analysisObject->cast<DataPoint>();
+
+      EXPECT_TRUE(loaded.topLevelJob());
+    }
+  }
 }

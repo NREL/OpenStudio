@@ -47,6 +47,7 @@ namespace runmanager {
 namespace analysis {
 
 class DataPoint;
+class DataPointSerializationOptions;
 
 namespace detail {
 
@@ -202,11 +203,12 @@ namespace detail {
     //@{
 
     bool saveJSON(const openstudio::path& p,
+                  const DataPointSerializationOptions& options,
                   bool overwrite=false) const;
 
-    std::ostream& toJSON(std::ostream& os) const;
+    std::ostream& toJSON(std::ostream& os,const DataPointSerializationOptions& options) const;
 
-    std::string toJSON() const;
+    std::string toJSON(const DataPointSerializationOptions& options) const;
 
     //@}
     /** @name Protected in or Absent from Public Class */
@@ -232,11 +234,15 @@ namespace detail {
 
     /** Contents of toVariant finalized for direct serialization (adds jsonMetadata and
      *  data_point moniker. */
-    QVariant toTopLevelVariant() const;
+    QVariant toTopLevelVariant(const DataPointSerializationOptions& options) const;
 
-    static DataPoint factoryFromVariant(const QVariant& variant,const VersionString& version);
+    static DataPoint factoryFromVariant(const QVariant& variant,
+                                        const VersionString& version,
+                                        const boost::optional<Problem>& problem);
 
     static DataPoint fromVariant(const QVariant& variant, const VersionString& version);
+
+    virtual QVariant toServerDataPointsVariant() const;
 
     //@}
    protected:

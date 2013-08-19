@@ -52,7 +52,9 @@ class AnalysisFixture : public ::testing::Test {
   // static variables
   static boost::optional<openstudio::FileLogSink> logFile;
 
-  static openstudio::analysis::Analysis analysis1();
+  enum AnalysisState { PreRun, PostRun };
+
+  static openstudio::analysis::Analysis analysis1(AnalysisState state);
 };
 
 #endif // ANALYSIS_TEST_ANALYSISFIXTURE_HPP
