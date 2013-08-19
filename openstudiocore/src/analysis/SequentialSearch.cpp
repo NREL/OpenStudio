@@ -577,8 +577,8 @@ namespace detail {
   SequentialSearch SequentialSearch_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
     QVariantMap map = variant.toMap();
     SequentialSearchOptions options = SequentialSearchOptions_Impl::fromVariant(map["options"],version);
-    return SequentialSearch(openstudio::UUID(map["uuid"].toString()),
-                            openstudio::UUID(map["version_uuid"].toString()),
+    return SequentialSearch(toUUID(map["uuid"].toString().toStdString()),
+                            toUUID(map["version_uuid"].toString().toStdString()),
                             map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                             map.contains("description") ? map["description"].toString().toStdString() : std::string(),
                             map["complete"].toBool(),

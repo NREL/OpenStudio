@@ -23,23 +23,30 @@
 #include <analysis/DataPoint.hpp>
 #include <analysis/LinearFunction.hpp>
 #include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
 #include <analysis/NormalDistribution.hpp>
 #include <analysis/NullMeasure.hpp>
 #include <analysis/OutputAttributeVariable.hpp>
 #include <analysis/Problem.hpp>
+#include <analysis/RubyContinuousVariable.hpp>
+#include <analysis/RubyContinuousVariable_Impl.hpp>
 #include <analysis/RubyMeasure.hpp>
 #include <analysis/RubyMeasure_Impl.hpp>
 #include <analysis/RubyContinuousVariable.hpp>
 #include <analysis/TriangularDistribution.hpp>
 
+#include <runmanager/lib/JobFactory.hpp>
 #include <runmanager/lib/WorkItem.hpp>
 
 #include <ruleset/OSArgument.hpp>
 
 #include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/core/Containers.hpp>
+#include <utilities/data/Tag.hpp>
+#include <utilities/units/QuantityFactory.hpp>
 
 #include <resources.hxx>
+#include <OpenStudio.hxx>
 
 using namespace openstudio;
 using namespace openstudio::analysis;
@@ -69,7 +76,7 @@ void AnalysisFixture::TearDownTestCase() {
 // static variables
 boost::optional<openstudio::FileLogSink> AnalysisFixture::logFile;
 
-openstudio::analysis::Analysis AnalysisFixture::analysis1() {
+openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
   // Create problem and analysis
   Problem problem("My Problem");
 
@@ -143,6 +150,278 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1() {
   problem.pushResponse(response3);
 
   Analysis analysis("My Analysis",problem,FileReferenceType::OSM);
+
+  if (state == PreRun) {
+    // Add three DataPoints
+    std::vector<QVariant> values;
+    values.push_back(0);
+    values.push_back(0.2);
+    values.push_back(0.9);
+    OptionalDataPoint dataPoint = problem.createDataPoint(values);
+    analysis.addDataPoint(*dataPoint);
+    values[0] = 1; values[1] = 0.21851789; values[2] = 1.1681938;
+    dataPoint = problem.createDataPoint(values);
+    analysis.addDataPoint(*dataPoint);
+    values[0] = 2; values[1] = 0.0; values[2] = 0.581563892;
+    dataPoint = problem.createDataPoint(values);
+    analysis.addDataPoint(*dataPoint);
+  }
+  else {
+    // state == PostRun
+    // Add one complete DataPoint
+    std::vector<QVariant> values;
+    values.push_back(1);
+    values.push_back(0.3);
+    values.push_back(0.9);
+    DoubleVector responseValues;
+    responseValues.push_back(58.281967);
+    responseValues.push_back(718952.281);
+    responseValues.push_back(0.3);
+    TagVector tags;
+    tags.push_back(Tag("custom"));
+    tags.push_back(Tag("faked"));
+    // attributes
+    AttributeVector attributes;
+    attributes.push_back(Attribute("electricity.Cooling",281.281567,"kWh"));
+    attributes.push_back(Attribute("electricity.Lighting",19206.291876,"kWh"));
+    attributes.push_back(Attribute("electricity.Equipment",5112.125718,"kWh"));
+    attributes = AttributeVector(1u,Attribute("enduses.electric",attributes));
+    attributes.push_back(Attribute("eui",createQuantity(128.21689,"kBtu/ft^2").get()));
+    // complete job
+    // 1. get vector of work items
+    std::vector<WorkItem> workItems;
+    // 0
+    workItems.push_back(problem.variables()[0].cast<MeasureGroup>().createWorkItem(QVariant(1),
+                                                                                   toPath(rubyOpenStudioDir())));
+    RubyContinuousVariable rcv = problem.variables()[1].cast<RubyContinuousVariable>();
+    RubyMeasure rm = rcv.measure();
+    OSArgument arg = rcv.argument().clone();
+    arg.setValue(values[1].toDouble());
+    rm.setArgument(arg);
+    rcv = problem.variables()[2].cast<RubyContinuousVariable>();
+    arg = rcv.argument().clone();
+    arg.setValue(values[2].toDouble());
+    rm.setArgument(arg);
+    // 1
+    workItems.push_back(rm.createWorkItem(toPath(rubyOpenStudioDir())));
+    // 2
+    workItems.push_back(WorkItem(JobType::ModelToIdf));
+    // 3
+    workItems.push_back(WorkItem(JobType::EnergyPlusPreProcess));
+    // 4
+    workItems.push_back(WorkItem(JobType::EnergyPlus));
+    // 5
+    workItems.push_back(WorkItem(JobType::OpenStudioPostProcess));
+    // 2. step through work items and create jobs with results
+    WorkItem wi = workItems[5];
+    std::vector<FileInfo> inFiles = wi.files.files();
+    inFiles.push_back(FileInfo("eplusout.sql",
+                               DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,33,32)),
+                               "",
+                               toPath("myProject/fakeDataPoint/75-OpenStudioPostProcess-0/eplusout.sql")));                             
+    Files inFilesObject(inFiles);
+    std::vector<std::pair<ErrorType, std::string> > errors;
+    errors.push_back(std::make_pair(ErrorType::Info,"Post-process completed successfully."));
+    JobErrors errorsObject(OSResultValue::Success,errors);
+    std::vector<FileInfo> outFiles;
+    outFiles.push_back(FileInfo("report.xml",
+                                DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,34,21)),
+                                "",
+                                toPath("myProject/fakeDataPoint/75-OpenStudioPostProcess-0/report.xml")));
+    Files outFilesObject(outFiles);
+    Job job = JobFactory::createJob(
+          wi.type,
+          wi.tools,
+          wi.params,
+          inFilesObject,
+          std::vector<openstudio::URLSearchPath>(),
+          false,
+          createUUID(),
+          JobState(
+            DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,34,21)),
+            errorsObject,
+            outFilesObject,
+            AdvancedStatus())
+          ); // OpenStudioPostProcess
+
+    Job jobLast = job;
+    wi = workItems[4];
+    inFiles = wi.files.files();
+    inFiles.push_back(FileInfo("in.idf",
+                                DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,23,05)),
+                                "",
+                                toPath("myProject/fakeDataPoint/74-EnergyPlus-0/in.idf")));
+    inFilesObject = Files(inFiles);
+    errors.clear();
+    errors.push_back(std::make_pair(ErrorType::Warning,"ENERGYPLUS WARNING: ..."));
+    errors.push_back(std::make_pair(ErrorType::Warning,"ENERGYPLUS WARNING: ..."));
+    errors.push_back(std::make_pair(ErrorType::Warning,"ENERGYPLUS WARNING: ..."));
+    errorsObject = JobErrors(OSResultValue::Success,errors);
+    outFiles.clear();
+    outFiles.push_back(FileInfo("eplusout.sql",
+                                DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,33,32)),
+                                "",
+                                toPath("myProject/fakeDataPoint/74-EnergyPlus-0/eplusout.sql")));
+    outFiles.push_back(FileInfo("eplusout.err",
+                                DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,33,34)),
+                                "",
+                                toPath("myProject/fakeDataPoint/74-EnergyPlus-0/eplusout.err")));
+    outFilesObject = Files(outFiles);
+    job = JobFactory::createJob(
+          wi.type,
+          wi.tools,
+          wi.params,
+          inFilesObject,
+          std::vector<openstudio::URLSearchPath>(),
+          false,
+          createUUID(),
+          JobState(
+            DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,33,42)),
+            errorsObject,
+            outFilesObject,
+            AdvancedStatus())
+          ); // EnergyPlus
+    job.addChild(jobLast);
+
+    jobLast = job;
+    wi = workItems[3];
+    inFiles = wi.files.files();
+    inFiles.push_back(FileInfo("in.idf",
+                                DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,22,30)),
+                                "",
+                                toPath("myProject/fakeDataPoint/73-EnergyPlusPreProcess-0/in.idf")));
+    inFilesObject = Files(inFiles);
+    errors.clear();
+    errorsObject = JobErrors(OSResultValue::Success,errors);
+    outFiles.clear();
+    outFiles.push_back(FileInfo("out.idf",
+                                DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,23,05)),
+                                "",
+                                toPath("myProject/fakeDataPoint/73-EnergyPlusPreProcess-0/out.idf")));
+    outFilesObject = Files(outFiles);
+    job = JobFactory::createJob(
+          wi.type,
+          wi.tools,
+          wi.params,
+          inFilesObject,
+          std::vector<openstudio::URLSearchPath>(),
+          false,
+          createUUID(),
+          JobState(
+            DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,23,12)),
+            errorsObject,
+            outFilesObject,
+            AdvancedStatus())
+          ); // EnergyPlusPreProcess
+    job.addChild(jobLast);
+
+    jobLast = job;
+    wi = workItems[2];
+    inFiles = wi.files.files();
+    inFiles.push_back(FileInfo("in.osm",
+                                DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,22,01)),
+                                "",
+                                toPath("myProject/fakeDataPoint/72-ModelToIdf-0/in.osm")));
+    inFilesObject = Files(inFiles);
+    errors.clear();
+    errors.push_back(std::make_pair(ErrorType::Info,"Did not find ScheduleTypeLimits for Schedule ..."));
+    errors.push_back(std::make_pair(ErrorType::Warning,"Unexpectedly did not find a child object of a certain type, replaced with a default one."));
+    errorsObject = JobErrors(OSResultValue::Success,errors);
+    outFiles.clear();
+    outFiles.push_back(FileInfo("out.idf",
+                                DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,22,30)),
+                                "",
+                                toPath("myProject/fakeDataPoint/72-ModelToIdf-0/out.idf")));
+    outFilesObject = Files(outFiles);
+    job = JobFactory::createJob(
+          wi.type,
+          wi.tools,
+          wi.params,
+          inFilesObject,
+          std::vector<openstudio::URLSearchPath>(),
+          false,
+          createUUID(),
+          JobState(
+            DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,22,32)),
+            errorsObject,
+            outFilesObject,
+            AdvancedStatus())
+          ); // ModelToIdf
+    job.addChild(jobLast);
+
+    jobLast = job;
+    wi = workItems[1];
+    errors.clear();
+    errors.push_back(std::make_pair(ErrorType::InitialCondition,"Started with a window to wall ratio of ..."));
+    errors.push_back(std::make_pair(ErrorType::FinalCondition,"Set the window to wall ratio ..."));
+    errorsObject = JobErrors(OSResultValue::Success,errors);
+    outFiles.clear();
+    outFilesObject = Files(outFiles);
+    wi.params.append("outdir","myProject/fakeDataPoint/");
+    job = JobFactory::createJob(
+          wi.type,
+          wi.tools,
+          wi.params,
+          wi.files,
+          std::vector<openstudio::URLSearchPath>(),
+          false,
+          createUUID(),
+          JobState(
+            DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,21,52)),
+            errorsObject,
+            outFilesObject,
+            AdvancedStatus())
+          ); // Variables 2 & 3
+    job.addChild(jobLast);
+
+    jobLast = job;
+    wi = workItems[0];
+    errors.clear();
+    errors.push_back(std::make_pair(ErrorType::InitialCondition,"Started with a window to wall ratio of ..."));
+    errors.push_back(std::make_pair(ErrorType::FinalCondition,"Set the window to wall ratio ..."));
+    errorsObject = JobErrors(OSResultValue::Success,errors);
+    outFiles.clear();
+    outFilesObject = Files(outFiles);
+    // add outdir job param
+    JobParams params = wi.params;
+    params.append("outdir","myProject/fakeDataPoint");
+    job = JobFactory::createJob(
+          wi.type,
+          wi.tools,
+          params,
+          wi.files,
+          std::vector<openstudio::URLSearchPath>(),
+          false,
+          createUUID(),
+          JobState(
+            DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,21,10)),
+            errorsObject,
+            outFilesObject,
+            AdvancedStatus())
+          ); // Variable 1
+    job.addChild(jobLast);
+
+    DataPoint dataPoint(createUUID(),
+                        createUUID(),
+                        "fakeDataPoint",
+                        "Fake Data Point",
+                        "Demonstrating json serialization of complete DataPoint.",
+                        problem,
+                        true,
+                        false,
+                        values,
+                        responseValues,
+                        toPath("myProject/fakeDataPoint/"),
+                        FileReference(toPath("myProject/fakeDataPoint/71-Ruby-0/out.osm")),
+                        FileReference(toPath("myProject/fakeDataPoint/72-ModelToIdf-0/out.idf")),
+                        FileReference(toPath("myProject/fakeDataPoint/74-EnergyPlus-0/eplusout.sql")),
+                        FileReference(toPath("myProject/fakeDataPoint/75-OpenStudioPostProcess-0/report.xml")),
+                        job,
+                        std::vector<openstudio::path>(),
+                        tags,
+                        attributes);
+    EXPECT_TRUE(analysis.addDataPoint(dataPoint));
+  }
 
   return analysis;
 }

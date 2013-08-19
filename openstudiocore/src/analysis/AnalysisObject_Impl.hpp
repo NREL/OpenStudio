@@ -152,6 +152,10 @@ namespace detail {
 
     virtual QVariant toVariant() const;
 
+    virtual QVariant toServerFormulationVariant() const;
+
+    virtual QVariant toServerDataPointsVariant() const;
+
     //@}
    public slots:
     /** Default implementation calls onChange(invalidateDataPoints). */

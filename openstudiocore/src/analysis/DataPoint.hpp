@@ -55,6 +55,14 @@ namespace detail {
   class Analysis_Impl;
 } // detail
 
+struct ANALYSIS_API DataPointSerializationOptions {
+  openstudio::path projectPath;
+  bool osServerView;
+
+  DataPointSerializationOptions(const openstudio::path& t_projectPath = openstudio::path(),
+                                bool t_osServerView=true);
+};
+
 /** DataPoint is an AnalysisObject that describes a single simulation run/to be run for a given
  *  Analysis. New \link DataPoint DataPoints \endlink are constructed using
  *  Problem::createDataPoint, since the DataPoint variableValues only make sense in the context of
@@ -227,11 +235,12 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   //@{
 
   bool saveJSON(const openstudio::path& p,
+                const DataPointSerializationOptions& options,
                 bool overwrite=false) const;
 
-  std::ostream& toJSON(std::ostream& os) const;
+  std::ostream& toJSON(std::ostream& os,const DataPointSerializationOptions& options) const;
 
-  std::string toJSON() const;
+  std::string toJSON(const DataPointSerializationOptions& options) const;
 
   //@}
  protected:

@@ -4,6 +4,7 @@
 #include "JobFactory.hpp"
 #include "WorkItem.hpp"
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Json.hpp>
 #include <utilities/core/Compare.hpp>
 
@@ -25,11 +26,11 @@ namespace detail {
     if (!t_jobTree.tools().empty()) {
       map["tools"] = toVariant(t_jobTree.tools());
     }
-    map["uuid"] = QVariant(t_jobTree.uuid().toString());
+    map["uuid"] = toQString(removeBraces(t_jobTree.uuid()));
 
     if (t_jobTree.lastRun())
     {
-      map["last_run"] = QVariant(toQString(t_jobTree.lastRun()->toString()));
+      map["last_run"] = QVariant(toQString(t_jobTree.lastRun()->toISO8601()));
     }
 
     if (!t_jobTree.outputFiles().empty()) {
@@ -80,20 +81,24 @@ namespace detail {
       throw std::runtime_error("Unable to find Job object at expected location");
     }
 
-    JobParams params;
-    
-    if (map.contains("params"))
-    {
-      params = toVectorOfJobParam(map["params"], t_version);
-
-      if (params.has("jobExternallyManaged"))
-      {
-        params.remove("jobExternallyManaged");
+    OptionalDateTime lastRun;
+    if (map.contains("last_run")) {
+      if (t_version < VersionString("1.0.4")) {
+        lastRun = DateTime(map["last_run"].toString().toStdString());
+      }
+      else {
+        lastRun = DateTime::fromISO8601(map["last_run"].toString().toStdString());
       }
     }
 
-    if (t_externallyManaged)
-    {
+    JobParams params;    
+    if (map.contains("params")) {
+      params = toVectorOfJobParam(map["params"], t_version);
+      if (params.has("jobExternallyManaged")) {
+        params.remove("jobExternallyManaged");
+      }
+    }
+    if (t_externallyManaged) {
       params.append("jobExternallyManaged", "true");
     }
 
@@ -104,12 +109,11 @@ namespace detail {
         map.contains("files") ? Files(toVectorOfFileInfo(map["files"],t_version)) : Files(),
         std::vector<openstudio::URLSearchPath>(),
         false,
-        map.contains("uuid") ? openstudio::UUID(map["uuid"].toString()) : boost::optional<openstudio::UUID>(),
-
+        map.contains("uuid") ? toUUID(map["uuid"].toString().toStdString()) : boost::optional<openstudio::UUID>(),        
         JobState(
-          map.contains("last_run")?openstudio::DateTime(toString(map["last_run"].toString())):boost::optional<openstudio::DateTime>(),
+          lastRun,
           toJobErrors(map["errors"], t_version),
-          Files(toVectorOfFileInfo(map["output_files"], t_version)),
+          map.contains("output_files") ? Files(toVectorOfFileInfo(map["output_files"],t_version)) : Files(),
           toAdvancedStatus(map["status"], t_version)
           )
         );
@@ -247,7 +251,7 @@ namespace detail {
     map["full_path"] = toQString(t_file.fullPath);
     map["file_name"] = toQString(t_file.filename);
     map["exists"] = t_file.exists;
-    map["last_modified"] = toQString(t_file.lastModified.toString());
+    map["last_modified"] = toQString(t_file.lastModified.toISO8601());
     map["key"] = toQString(t_file.key);
 
     if (!t_file.requiredFiles.empty()) {
@@ -265,9 +269,18 @@ namespace detail {
       throw std::runtime_error("Unable to find FileInfo object at expected location");
     }
 
+    OptionalDateTime lastModified;
+    if (t_version < VersionString("1.0.4")) {
+      lastModified = openstudio::DateTime(toString(map["last_modified"].toString()));
+    }
+    else {
+      lastModified = openstudio::DateTime::fromISO8601(map["last_modified"].toString().toStdString());
+    }
+    OS_ASSERT(lastModified);
+
     FileInfo fi(
         toString(map["file_name"].toString()),
-        openstudio::DateTime(toString(map["last_modified"].toString())),
+        lastModified.get(),
         toString(map["key"].toString()),
         toPath(map["full_path"].toString()),
         map["exists"].toBool());
@@ -415,7 +428,6 @@ namespace detail {
     QVariantMap qvm;
 
     qvm["name"] = toQString(t_tool.name);
-    qvm["t_version"] = toQString(t_tool.version.toString());
     qvm["local_bin_path"] = toQString(t_tool.localBinPath);
     qvm["remote_archive"] = toQString(t_tool.remoteArchive);
     qvm["remote_exe"] = toQString(t_tool.remoteExe);
@@ -427,14 +439,13 @@ namespace detail {
   ToolInfo JSON::toToolInfo(const QVariant &t_variant, const VersionString& t_version) {
     QVariantMap qvm = t_variant.toMap();
 
-    if (qvm.empty() || !qvm.contains("name") || !qvm.contains("t_version"))
-    {
+    if (qvm.empty() || !qvm.contains("name") || !qvm.contains("version")) {
       throw std::runtime_error("Unable to find ToolInfo object at expected location");
     }
 
     return ToolInfo(
         toString(qvm["name"].toString()),
-        ToolVersion::fromString(toString(qvm["t_version"].toString())),
+        ToolVersion::fromString(toString(qvm["version"].toString())),
         toPath(qvm["local_bin_path"].toString()),
         toPath(qvm["remote_archive"].toString()),
         toPath(qvm["remote_exe"].toString()),

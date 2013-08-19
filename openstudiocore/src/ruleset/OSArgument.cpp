@@ -1071,8 +1071,8 @@ namespace detail {
   QVariant toVariant(const OSArgument& argument) {
     QVariantMap argumentData;
 
-    argumentData["uuid"] = argument.uuid().toString();
-    argumentData["version_uuid"] = argument.versionUUID().toString();
+    argumentData["uuid"] = toQString(removeBraces(argument.uuid()));
+    argumentData["version_uuid"] = toQString(removeBraces(argument.versionUUID()));
     argumentData["name"] = toQString(argument.name());
     if (!argument.displayName().empty()) {
       argumentData["display_name"] = toQString(argument.displayName());
@@ -1215,8 +1215,8 @@ namespace detail {
       }
     }
 
-    return OSArgument(openstudio::UUID(map["uuid"].toString()),
-                      openstudio::UUID(map["version_uuid"].toString()),
+    return OSArgument(toUUID(map["uuid"].toString().toStdString()),
+                      toUUID(map["version_uuid"].toString().toStdString()),
                       map["name"].toString().toStdString(),
                       map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                       type,
