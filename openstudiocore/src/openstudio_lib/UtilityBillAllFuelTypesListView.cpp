@@ -29,6 +29,9 @@
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
+#include <model/UtilityBill.hpp>
+#include <model/UtilityBill_Impl.hpp>
+
 #include <utilities/core/Assert.hpp>
 
 #include <iostream>
@@ -68,7 +71,6 @@ void UtilityBillAllFuelTypesListView::addModelObjectType(const IddObjectType& id
   addCollapsibleItem(modelObjectTypeItem);
 }
 
-
 void UtilityBillAllFuelTypesListView::addUtilityBillFuelType(const FuelType & fuelType, const std::string& name)
 {
   OSCollapsibleItemHeader* collapsibleItemHeader = new OSCollapsibleItemHeader(name, OSItemId("", "", false), m_headerType);
@@ -83,6 +85,7 @@ IddObjectType UtilityBillAllFuelTypesListView::currentIddObjectType() const
   OSCollapsibleItem* selectedCollapsibleItem = this->selectedCollapsibleItem();
   ModelObjectTypeItem* modelObjectTypeItem = qobject_cast<ModelObjectTypeItem*>(selectedCollapsibleItem);
   OS_ASSERT(modelObjectTypeItem);
+  OS_ASSERT(modelObjectTypeItem->iddObjectType() == openstudio::IddObjectType::OS_UtilityBill);
   return modelObjectTypeItem->iddObjectType();
 }
 
@@ -92,6 +95,19 @@ boost::optional<openstudio::model::ModelObject> UtilityBillAllFuelTypesListView:
   ModelObjectItem* modelObjectItem = qobject_cast<ModelObjectItem*>(selectedItem);
   if (modelObjectItem){
     return modelObjectItem->modelObject();
+  }
+  return boost::none;
+}
+
+boost::optional<openstudio::FuelType> UtilityBillAllFuelTypesListView::fuelType() const
+{
+  boost::optional<openstudio::model::ModelObject> modelObject = selectedModelObject();
+  if(modelObject){
+    if(boost::optional<model::UtilityBill> utilityBill = modelObject.get().optionalCast<model::UtilityBill>()){
+      return utilityBill.get().fuelType();
+    }
+    // Opps, its not a UtilityBill!
+    OS_ASSERT(false);
   }
   return boost::none;
 }

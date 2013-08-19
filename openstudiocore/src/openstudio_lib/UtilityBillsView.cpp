@@ -62,7 +62,7 @@ namespace openstudio {
 UtilityBillsView::UtilityBillsView(const openstudio::model::Model& model, QWidget * parent)
                      : ModelSubTabView(new UtilityBillAllFuelTypesListView(UtilityBillsView::utilityBillFuelTypesAndNames(), 
                                                                            model, 
-                                                                           false, 
+                                                                           true, 
                                                                            OSItem::COLLAPSIBLE_LIST_HEADER, 
                                                                            parent),
                                        new UtilityBillsInspectorView(model,parent),
@@ -162,7 +162,8 @@ void UtilityBillsInspectorView::createWidgets()
   mainLayout->setSpacing(20);
   visibleWidget->setLayout(mainLayout);
 
-  if(m_beginAndEndDates.length() == 0){
+  if(false){  // TODO remove
+  //if(m_beginAndEndDates.length() == 0){
     vLayout = new QVBoxLayout();
     vLayout->setAlignment(Qt::AlignCenter);
     vLayout->setSpacing(10);

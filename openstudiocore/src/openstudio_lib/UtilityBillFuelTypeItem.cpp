@@ -45,6 +45,7 @@ IddObjectType UtilityBillFuelTypeItem::iddObjectType() const
   OSItemList* itemList = this->itemList();
   UtilityBillFuelTypeListView* utilityBillFuelTypeListView = qobject_cast<UtilityBillFuelTypeListView*>(itemList);
   OS_ASSERT(utilityBillFuelTypeListView);
+  OS_ASSERT(utilityBillFuelTypeListView->iddObjectType() == openstudio::IddObjectType::OS_UtilityBill);
   return utilityBillFuelTypeListView->iddObjectType();
 }
 
