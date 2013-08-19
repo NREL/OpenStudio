@@ -16,30 +16,51 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
+
+#ifndef UTILITIES_CLOUD_AWSPROVIDER_IMPL_HPP
+#define UTILITIES_CLOUD_AWSPROVIDER_IMPL_HPP
+
+#include <utilities/cloud/CloudProvider_Impl.hpp>
 
 namespace openstudio{
-  namespace detail{
+namespace detail{
 
-    AWSProvider_Impl::AWSProvider_Impl()
-      : CloudProvider_Impl()
-    {
-    }
+  /// AWSProvider is a CloudProvider that provides access to Amazon EC2 resources.
+  class UTILITIES_API AWSProvider_Impl : public CloudProvider_Impl {
 
-    AWSProvider_Impl::~AWSProvider_Impl()
-    {
-    }
+    Q_OBJECT
 
-  } // detail
+  public:
 
-  AWSProvider::AWSProvider()
-    : CloudProvider(boost::shared_ptr<detail::AWSProvider_Impl>())
-  {
-  }
+    /** @name Constructor */
+    //@{
 
-  AWSProvider::~AWSProvider()
-  {
-  }
+    /// default constructor
+    AWSProvider_Impl();
 
+    //@}
+    /** @name Destructors */
+    //@{
+
+    /// virtual destructor
+    virtual ~AWSProvider_Impl();
+
+    //@}
+    /** @name Inherited members */
+    //@{
+
+    //@}
+    /** @name Class members */
+    //@{
+
+    //@}
+  private:
+
+    // configure logging
+    REGISTER_LOGGER("utilities.cloud.AWSProvider");
+  };
+
+} // detail;
 } // openstudio
+
+#endif // UTILITIES_CLOUD_AWSPROVIDER_IMPL_HPP

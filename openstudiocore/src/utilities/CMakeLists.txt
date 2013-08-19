@@ -67,6 +67,7 @@ SET( core_src
   core/System.cpp
   core/UpdateManager.hpp
   core/UpdateManager.cpp
+  core/Url.hpp
   core/UUID.hpp
   core/UUID.cpp
   core/URLHelpers.hpp
@@ -203,12 +204,16 @@ SET( bcl_src
 
 SET( cloud_src
   cloud/AWSProvider.hpp
+  cloud/AWSProvider_Impl.hpp
   cloud/AWSProvider.cpp
   cloud/CloudProvider.hpp
+  cloud/CloudProvider_Impl.hpp
   cloud/CloudProvider.cpp
   cloud/OSServer.hpp
+  cloud/OSServer_Impl.hpp
   cloud/OSServer.cpp
   cloud/VagrantProvider.hpp
+  cloud/VagrantProvider_Impl.hpp
   cloud/VagrantProvider.cpp
 )
 
@@ -250,10 +255,10 @@ SET( bcl_moc
 )
 
 SET( cloud_moc
-  cloud/AWSProvider.hpp
-  cloud/CloudProvider.hpp
-  cloud/OSServer.hpp
-  cloud/VagrantProvider.hpp
+  cloud/AWSProvider_Impl.hpp
+  cloud/CloudProvider_Impl.hpp
+  cloud/OSServer_Impl.hpp
+  cloud/VagrantProvider_Impl.hpp
 )
 
 SET( core_moc
@@ -557,6 +562,7 @@ MAKE_SWIG_TARGET( OpenStudioUtilitiesIdd utilitiesidd "${CMAKE_CURRENT_SOURCE_DI
 MAKE_SWIG_TARGET( OpenStudioUtilitiesIdf utilitiesidf "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesIdf.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesIdd )
 
 MAKE_SWIG_TARGET( OpenStudioUtilitiesBCL utilitiesbcl "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesBCL.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesIdf )
+MAKE_SWIG_TARGET( OpenStudioUtilitiesCloud utilitiescloud "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesCloud.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesCore )
 MAKE_SWIG_TARGET( OpenStudioUtilitiesData utilitiesdata "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesData.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesBCL )
 MAKE_SWIG_TARGET( OpenStudioUtilitiesDocument utilitiesdocument "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesDocument.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesData )
 MAKE_SWIG_TARGET( OpenStudioUtilitiesEconomics utilitieseconomics "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesEconomics.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesDocument )

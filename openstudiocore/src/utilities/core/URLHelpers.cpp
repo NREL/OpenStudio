@@ -19,6 +19,7 @@
 
 #include "URLHelpers.hpp"
 #include <utilities/core/Path.hpp>
+#include <utilities/core/String.hpp>
 
 namespace openstudio {
   
@@ -66,6 +67,10 @@ QUrl completeURL(const QUrl &t_source, const std::vector<QUrl> &t_searchPaths, b
 
 QUrl toURL(const openstudio::path& p) {
   return QUrl::fromLocalFile(toQString(p));
+}
+
+QUrl toURL(const std::string& s) {
+  return QUrl(toQString(s));
 }
 
 std::string toString(const QUrl& url) {

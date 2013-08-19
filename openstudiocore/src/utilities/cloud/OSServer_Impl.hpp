@@ -17,38 +17,41 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef UTILITIES_CLOUD_OSSERVER_HPP
-#define UTILITIES_CLOUD_OSSERVER_HPP
+#ifndef UTILITIES_CLOUD_OSSERVER_IMPL_HPP
+#define UTILITIES_CLOUD_OSSERVER_IMPL_HPP
 
 #include <utilities/UtilitiesAPI.hpp>
 #include <utilities/core/UUID.hpp>
-#include <utilities/core/Path.hpp>
 #include <utilities/core/Url.hpp>
+#include <utilities/core/Path.hpp>
 #include <utilities/core/Logger.hpp>
+
+#include <QObject>
 
 #include <string>
 
 namespace openstudio{
-  namespace detail{
-    class OSServer_Impl;
-  }
+namespace detail{
 
   /// OSServer is a class for accessing the rails server started on machines provided by a CloudProvider.
-  class UTILITIES_API OSServer {
+  class UTILITIES_API OSServer_Impl : public QObject {
+
+    Q_OBJECT
+
   public:
 
     /** @name Constructor */
     //@{
 
-    // constructor
-    OSServer(const Url& url);
+    /// default constructor
+    OSServer_Impl(const Url& url);
 
     //@}
     /** @name Destructors */
     //@{
 
     /// virtual destructor
-    virtual ~OSServer();
+    virtual ~OSServer_Impl();
 
     //@}
     /** @name Class members */
@@ -126,49 +129,14 @@ namespace openstudio{
     std::vector<std::string> warnings() const;
 
     //@}
-    /** @name Type Casting */
-    //@{
-
-      template<typename T>
-        boost::shared_ptr<T> getImpl() const
-      {  return boost::dynamic_pointer_cast<T>(m_impl); }
-
-      /// cast to type T, can throw std::bad_cast
-      template<typename T>
-      T cast() const{
-        boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
-        if (!impl){
-          throw(std::bad_cast());
-        }
-        return T(impl);
-      }
-
-      /// cast to optional of type T
-      template<typename T>
-      boost::optional<T> optionalCast() const{
-        boost::optional<T> result;
-        boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
-        if (impl){
-          result = T(impl);
-        }
-        return result;
-      }
-
-    //@}
-
-  protected:
-
-    OSServer(const boost::shared_ptr<detail::OSServer_Impl>& impl);
 
   private:
 
-    boost::shared_ptr<detail::OSServer_Impl> m_impl;
-    
     // configure logging
     REGISTER_LOGGER("utilities.cloud.OSServer");
-
   };
 
+} // detail
 } // openstudio
 
-#endif // UTILITIES_CLOUD_OSSERVER_HPP
+#endif // UTILITIES_CLOUD_OSSERVER_IMPL_HPP

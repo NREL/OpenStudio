@@ -26,9 +26,6 @@ namespace openstudio{
 
   /// AWSProvider is a CloudProvider that provides access to Amazon EC2 resources.
   class UTILITIES_API AWSProvider : public CloudProvider {
-
-    Q_OBJECT
-
   public:
 
     /** @name Constructor */
@@ -55,8 +52,8 @@ namespace openstudio{
     //@}
   private:
 
-    // no body on purpose, do not want this generated
-    AWSProvider(const AWSProvider& other);
+    // configure logging
+    REGISTER_LOGGER("utilities.cloud.AWSProvider");
 
   };
 

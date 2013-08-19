@@ -16,30 +16,52 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
+
+#ifndef UTILITIES_CLOUD_VAGRANTPROVIDER_IMPL_HPP
+#define UTILITIES_CLOUD_VAGRANTPROVIDER_IMPL_HPP
+
+#include <utilities/cloud/CloudProvider_Impl.hpp>
 
 namespace openstudio{
-  namespace detail{
+namespace detail{
 
-    AWSProvider_Impl::AWSProvider_Impl()
-      : CloudProvider_Impl()
-    {
-    }
+  /// VagrantProvider is a CloudProvider that provides access to local Vagrant virtual machines for testing.
+  class UTILITIES_API VagrantProvider_Impl : public CloudProvider_Impl {
 
-    AWSProvider_Impl::~AWSProvider_Impl()
-    {
-    }
+    Q_OBJECT
 
-  } // detail
+  public:
 
-  AWSProvider::AWSProvider()
-    : CloudProvider(boost::shared_ptr<detail::AWSProvider_Impl>())
-  {
-  }
+    /** @name Constructor */
+    //@{
 
-  AWSProvider::~AWSProvider()
-  {
-  }
+    /// default constructor
+    VagrantProvider_Impl();
 
+    //@}
+    /** @name Destructors */
+    //@{
+
+    /// virtual destructor
+    virtual ~VagrantProvider_Impl();
+
+    //@}
+    /** @name Inherited members */
+    //@{
+
+    //@}
+    /** @name Class members */
+    //@{
+
+    //@}
+  private:
+
+    // configure logging
+    REGISTER_LOGGER("utilities.cloud.VagrantProvider");
+
+  };
+
+} // detail
 } // openstudio
+
+#endif // UTILITIES_CLOUD_VAGRANTPROVIDER_IMPL_HPP

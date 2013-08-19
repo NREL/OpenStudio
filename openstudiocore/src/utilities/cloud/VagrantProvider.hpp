@@ -26,9 +26,6 @@ namespace openstudio{
 
   /// VagrantProvider is a CloudProvider that provides access to local Vagrant virtual machines for testing.
   class UTILITIES_API VagrantProvider : public CloudProvider {
-
-    Q_OBJECT
-
   public:
 
     /** @name Constructor */

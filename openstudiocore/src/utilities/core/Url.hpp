@@ -1,5 +1,5 @@
 /**********************************************************************
-* Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -16,30 +16,29 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
 
-namespace openstudio{
-  namespace detail{
+#ifndef UTILITIES_CORE_URL_HPP
+#define UTILITIES_CORE_URL_HPP
 
-    AWSProvider_Impl::AWSProvider_Impl()
-      : CloudProvider_Impl()
-    {
-    }
+#include <utilities/UtilitiesAPI.hpp>
 
-    AWSProvider_Impl::~AWSProvider_Impl()
-    {
-    }
+#include <QUrl>
+#include <boost/optional.hpp>
+#include <vector>
 
-  } // detail
+namespace openstudio {
 
-  AWSProvider::AWSProvider()
-    : CloudProvider(boost::shared_ptr<detail::AWSProvider_Impl>())
-  {
-  }
+  /// Uniform resource locator
+  typedef QUrl Url;
 
-  AWSProvider::~AWSProvider()
-  {
-  }
+  /// optional Url
+  typedef boost::optional<Url> OptionalUrl;
+
+  /// vector of Url
+  typedef std::vector<Url> UrlVector;
 
 } // openstudio
+
+
+
+#endif // UTILITIES_CORE_URL_HPP

@@ -17,11 +17,22 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 #include <utilities/cloud/VagrantProvider.hpp>
+#include <utilities/cloud/VagrantProvider_Impl.hpp>
 
 namespace openstudio{
+  namespace detail{
+    VagrantProvider_Impl::VagrantProvider_Impl()
+      : CloudProvider_Impl()
+    {
+    }
+
+    VagrantProvider_Impl::~VagrantProvider_Impl()
+    {
+    }
+  }// detail
 
   VagrantProvider::VagrantProvider()
-    : CloudProvider()
+    : CloudProvider(boost::shared_ptr<detail::VagrantProvider_Impl>())
   {
   }
 

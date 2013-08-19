@@ -17,19 +17,137 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 #include <utilities/cloud/CloudProvider.hpp>
+#include <utilities/cloud/CloudProvider_Impl.hpp>
 #include <utilities/core/Application.hpp>
 
 namespace openstudio{
+  namespace detail {
 
-  CloudProvider::CloudProvider()
-    : QObject()
+    CloudProvider_Impl::CloudProvider_Impl()
+      : QObject()
+    {
+      //Make sure a QApplication exists
+      openstudio::Application::instance().application();
+    }
+
+    CloudProvider_Impl::~CloudProvider_Impl()
+    {
+    }
+
+  } // detail
+
+  CloudSession::CloudSession(const std::string& cloudProviderType, const std::string& sessionId, const boost::optional<Url>& serverUrl, const std::vector<Url>& workerUrls)
+    : m_cloudProviderType(cloudProviderType), m_sessionId(sessionId), m_serverUrl(serverUrl), m_workerUrls(workerUrls)
+  {}
+
+  std::string CloudSession::cloudProviderType() const
   {
-    //Make sure a QApplication exists
-    openstudio::Application::instance().application();
+    return m_cloudProviderType;
+  }
+
+  std::string CloudSession::sessionId() const
+  {
+    return m_sessionId;
+  }
+
+  boost::optional<Url> CloudSession::serverUrl() const
+  {
+    return m_serverUrl;
+  }
+
+  std::vector<Url> CloudSession::workerUrls() const
+  {
+    return m_workerUrls;
+  }
+
+
+  CloudProvider::CloudProvider(const boost::shared_ptr<detail::CloudProvider_Impl>& impl)
+    : m_impl(impl)
+  {
   }
 
   CloudProvider::~CloudProvider()
   {
+  }
+
+  std::string CloudProvider::type() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->type();
+  }
+  
+  bool CloudProvider::internetAvailable() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->internetAvailable();
+  }
+
+  bool CloudProvider::serviceAvailable() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->serviceAvailable();
+  }
+
+  bool CloudProvider::validateCredentials() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->validateCredentials();
+  }
+
+  CloudSession CloudProvider::session() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->session();
+  }
+
+  bool CloudProvider::reconnect(const CloudSession& session)
+  {
+    return getImpl<detail::CloudProvider_Impl>()->reconnect(session);
+  }
+
+  boost::optional<Url> CloudProvider::serverUrl() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->serverUrl();
+  }
+
+  bool CloudProvider::startServer()
+  {
+    return getImpl<detail::CloudProvider_Impl>()->startServer();
+  }
+
+  std::vector<Url> CloudProvider::workerUrls() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->workerUrls();
+  }
+
+  unsigned CloudProvider::numWorkers() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->numWorkers();
+  }
+
+  bool CloudProvider::startWorkers()
+  {
+    return getImpl<detail::CloudProvider_Impl>()->startWorkers();
+  }
+
+  bool CloudProvider::running() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->running();
+  }
+
+  bool CloudProvider::terminate()
+  {
+    return getImpl<detail::CloudProvider_Impl>()->terminate();
+  }
+
+  bool CloudProvider::terminated() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->terminated();
+  }
+
+  std::vector<std::string> CloudProvider::errors() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->errors();
+  }
+  
+  std::vector<std::string> CloudProvider::warnings() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->warnings();
   }
 
 } // openstudio
