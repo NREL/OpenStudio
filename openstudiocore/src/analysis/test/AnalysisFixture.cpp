@@ -237,9 +237,12 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
           std::vector<openstudio::URLSearchPath>(),
           false,
           createUUID(),
-          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,34,21)),
-          errorsObject,
-          outFilesObject); // OpenStudioPostProcess
+          JobState(
+            DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,34,21)),
+            errorsObject,
+            outFilesObject,
+            AdvancedStatus()
+          ); // OpenStudioPostProcess
 
     Job jobLast = job;
     wi = workItems[4];
@@ -272,9 +275,12 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
           std::vector<openstudio::URLSearchPath>(),
           false,
           createUUID(),
-          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,33,42)),
-          errorsObject,
-          outFilesObject); // EnergyPlus
+          JobState(
+            DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,33,42)),
+            errorsObject,
+            outFilesObject,
+            AdvancedStatus())
+          ); // EnergyPlus
     job.addChild(jobLast);
 
     jobLast = job;
@@ -301,9 +307,12 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
           std::vector<openstudio::URLSearchPath>(),
           false,
           createUUID(),
-          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,23,12)),
-          errorsObject,
-          outFilesObject); // EnergyPlusPreProcess
+          JobState(
+            DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,23,12)),
+            errorsObject,
+            outFilesObject,
+            AdvancedStatus())
+          ); // EnergyPlusPreProcess
     job.addChild(jobLast);
 
     jobLast = job;
@@ -332,9 +341,12 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
           std::vector<openstudio::URLSearchPath>(),
           false,
           createUUID(),
-          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,22,32)),
-          errorsObject,
-          outFilesObject); // ModelToIdf
+          JobState(
+            DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,22,32)),
+            errorsObject,
+            outFilesObject,
+            AdvancedStatus())
+          ); // ModelToIdf
     job.addChild(jobLast);
 
     jobLast = job;
@@ -354,9 +366,12 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
           std::vector<openstudio::URLSearchPath>(),
           false,
           createUUID(),
-          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,21,52)),
-          errorsObject,
-          outFilesObject); // Variables 2 & 3
+          JobState(
+            DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,21,52)),
+            errorsObject,
+            outFilesObject,
+            AdvancedStatus())
+          ); // Variables 2 & 3
     job.addChild(jobLast);
 
     jobLast = job;
@@ -378,9 +393,12 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
           std::vector<openstudio::URLSearchPath>(),
           false,
           createUUID(),
-          DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,21,10)),
-          errorsObject,
-          outFilesObject); // Variable 1
+          JobState(
+            DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,21,10)),
+            errorsObject,
+            outFilesObject,
+            AdvancedStatus())
+          ); // Variable 1
     job.addChild(jobLast);
 
     DataPoint dataPoint(createUUID(),

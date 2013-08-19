@@ -148,6 +148,9 @@ UTILITIES_API std::ostream& operator<<(std::ostream& os, const DateTime& dateTim
 // conversion from QDateTime
 UTILITIES_API DateTime toDateTime(const QDateTime &qdt);
 
+// conversion to QDateTime
+UTILITIES_API QDateTime toQDateTime(const DateTime& dt);
+
 } // openstudio
 
 namespace openstudio {

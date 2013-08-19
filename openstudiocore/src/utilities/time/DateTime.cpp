@@ -279,6 +279,17 @@ DateTime toDateTime(const QDateTime &qdt)
   return DateTime(d,t);
 }
 
+QDateTime toQDateTime(const DateTime& dt) {
+  return QDateTime(
+      QDate(dt.date().year(), 
+            (dt.date().monthOfYear().value()) - openstudio::MonthOfYear::Jan + 1, 
+            dt.date().dayOfMonth()),
+      QTime(dt.time().hours(), 
+            dt.time().minutes(), 
+            dt.time().seconds())
+      );
+}
+
 namespace detail{
   DateTimeMetaTypeInitializer::DateTimeMetaTypeInitializer()
   {

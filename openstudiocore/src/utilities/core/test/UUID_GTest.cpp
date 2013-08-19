@@ -33,7 +33,7 @@ using std::cout;
 using openstudio::UUID;
 using openstudio::createUUID;
 using openstudio::toUUID;
-using openstudio::toUID;
+using openstudio::removeBraces;
 using openstudio::toString;
 using std::string;
 using std::stringstream;
@@ -91,7 +91,7 @@ TEST(UUID, UUID_QVariant)
 TEST(UUID, UUID_UID) {
   UUID uuid = createUUID();
   std::string uuidStr = toString(uuid);
-  std::string uidStr = toUID(uuid);
+  std::string uidStr = removeBraces(uuid);
   EXPECT_EQ("{" + uidStr + "}",uuidStr);
   EXPECT_EQ(uuid,toUUID(uuidStr));
   EXPECT_EQ(uuid,toUUID(uidStr)); // no extra conversion process

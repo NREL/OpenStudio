@@ -17,6 +17,7 @@ SET( runmanager_src
   Job.hpp
   Job_Impl.cpp
   Job_Impl.hpp
+  JobState.hpp
   RunManager.cpp
   RunManager.hpp
   RunManager_Impl.cpp

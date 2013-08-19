@@ -83,27 +83,22 @@ namespace detail {
 
     OptionalDateTime lastRun;
     if (map.contains("last_run")) {
-      if (version < VersionString("1.0.4")) {
+      if (t_version < VersionString("1.0.4")) {
         lastRun = DateTime(map["last_run"].toString().toStdString());
       }
       else {
         lastRun = DateTime::fromISO8601(map["last_run"].toString().toStdString());
       }
     }
-    JobParams params;
-    
-    if (map.contains("params"))
-    {
-      params = toVectorOfJobParam(map["params"], t_version);
 
-      if (params.has("jobExternallyManaged"))
-      {
+    JobParams params;    
+    if (map.contains("params")) {
+      params = toVectorOfJobParam(map["params"], t_version);
+      if (params.has("jobExternallyManaged")) {
         params.remove("jobExternallyManaged");
       }
     }
-
-    if (t_externallyManaged)
-    {
+    if (t_externallyManaged) {
       params.append("jobExternallyManaged", "true");
     }
 
@@ -114,14 +109,11 @@ namespace detail {
         map.contains("files") ? Files(toVectorOfFileInfo(map["files"],t_version)) : Files(),
         std::vector<openstudio::URLSearchPath>(),
         false,
-        map.contains("uuid") ? toUUID(map["uuid"].toString().toStdString()) : boost::optional<openstudio::UUID>(),
-        lastRun,
-        map.contains("output_files") ? Files(toVectorOfFileInfo(map["output_files"],version)) : Files());
-
+        map.contains("uuid") ? toUUID(map["uuid"].toString().toStdString()) : boost::optional<openstudio::UUID>(),        
         JobState(
-          map.contains("last_run")?openstudio::DateTime(toString(map["last_run"].toString())):boost::optional<openstudio::DateTime>(),
+          lastRun,
           toJobErrors(map["errors"], t_version),
-          Files(toVectorOfFileInfo(map["output_files"], t_version)),
+          map.contains("output_files") ? Files(toVectorOfFileInfo(map["output_files"],t_version)) : Files(),
           toAdvancedStatus(map["status"], t_version)
           )
         );
@@ -278,7 +270,7 @@ namespace detail {
     }
 
     OptionalDateTime lastModified;
-    if (version < VersionString("1.0.4")) {
+    if (t_version < VersionString("1.0.4")) {
       lastModified = openstudio::DateTime(toString(map["last_modified"].toString()));
     }
     else {
@@ -447,12 +439,13 @@ namespace detail {
   ToolInfo JSON::toToolInfo(const QVariant &t_variant, const VersionString& t_version) {
     QVariantMap qvm = t_variant.toMap();
 
-    {
+    if (qvm.empty() || !qvm.contains("name") || !qvm.contains("version")) {
       throw std::runtime_error("Unable to find ToolInfo object at expected location");
     }
 
     return ToolInfo(
         toString(qvm["name"].toString()),
+        ToolVersion::fromString(toString(qvm["version"].toString())),
         toPath(qvm["local_bin_path"].toString()),
         toPath(qvm["remote_archive"].toString()),
         toPath(qvm["remote_exe"].toString()),
