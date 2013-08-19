@@ -20,6 +20,7 @@
 #include <openstudio_lib/UtilityBillsView.hpp>
 
 #include <openstudio_lib/OSItem.hpp>
+#include <openstudio_lib/ModelObjectItem.hpp>
 #include <openstudio_lib/UtilityBillFuelTypeListView.hpp>
 #include <openstudio_lib/UtilityBillAllFuelTypesListView.hpp>
 
@@ -381,24 +382,48 @@ void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityB
   //  OptionalIntGetter(boost::bind(&model::UtilityBill::timestepsInPeakDemandWindow,m_utilityBill.get_ptr())),
   //  boost::optional<IntSetter>(boost::bind(&model::UtilityBill::setTimestepsInPeakDemandWindow,m_utilityBill.get_ptr(),_1)));
 
+  this->stackedWidget()->setCurrentIndex(1);
+}
+
+void UtilityBillsInspectorView::detach()
+{
+  this->stackedWidget()->setCurrentIndex(0);
+
+  //m_constructionVC->detach();
+
+  m_name->unbind();
+  m_consumptionUnits->unbind();
+  m_energyDemandUnits->unbind();
+}
+
+void UtilityBillsInspectorView::refresh()
+{
 }
 
 void UtilityBillsInspectorView::onSelectItem(OSItem *item)
 {
+  ModelObjectItem* modelObjectItem = qobject_cast<ModelObjectItem*>(item);
+  OS_ASSERT(modelObjectItem);
+  onSelectModelObject(modelObjectItem->modelObject());
 }
 
 void UtilityBillsInspectorView::onClearSelection()
 {
+  ModelObjectInspectorView::onClearSelection(); // call parent implementation
+  detach();
 }
 
 void UtilityBillsInspectorView::onSelectModelObject(const openstudio::model::ModelObject& modelObject)
 {
-  // TODO implement
+  detach();
+  model::UtilityBill utilityBill = modelObject.cast<model::UtilityBill>();
+  attach(utilityBill);
+  refresh();
 }
 
 void UtilityBillsInspectorView::onUpdate()
 {
-  // TODO implement
+  refresh();
 }
 
 void UtilityBillsInspectorView::showBillFormatDialog()

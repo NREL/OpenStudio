@@ -33,6 +33,7 @@ namespace model {
 }
 
 class LocationTabView;
+class UtilityBillsController;
 
 class LocationTabController : public MainTabController
 {
@@ -55,7 +56,8 @@ public:
   };
 
 private:
-
+  boost::shared_ptr<UtilityBillsController> m_utilityBillsController;
+ 
 };
 
 } // openstudio

@@ -64,11 +64,13 @@ ModelSubTabView::ModelSubTabView(OSItemSelector* itemSelector,
                   SLOT(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(bingo);
 
+  // DLM: can we remove this?
   bingo = connect(itemSelector,SIGNAL(itemSelected(OSItem*)),
                   this,SLOT(onItemSelected()));
   OS_ASSERT(bingo);
 }
 
+// DLM: what purpose does this serve?
 void ModelSubTabView::onItemSelected()
 {
   boost::optional<model::ModelObject> mo;

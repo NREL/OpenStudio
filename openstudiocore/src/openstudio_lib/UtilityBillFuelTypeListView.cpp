@@ -34,8 +34,8 @@
 namespace openstudio {
 
 UtilityBillFuelTypeListController::UtilityBillFuelTypeListController(const model::Model& model,
-  openstudio::FuelType m_fuelType)
-  : m_iddObjectType(model::UtilityBill::iddObjectType()), m_model(model)
+  openstudio::FuelType fuelType)
+  : m_iddObjectType(model::UtilityBill::iddObjectType()), m_model(model), m_fuelType(fuelType)
 {
   bool isConnected = false;
   isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 

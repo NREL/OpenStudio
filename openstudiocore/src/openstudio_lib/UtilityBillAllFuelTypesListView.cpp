@@ -57,8 +57,8 @@ UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const std::vect
     m_headerType(headerType)
 { 
   typedef std::vector<std::pair<FuelType, std::string> >::value_type PairType;
-  BOOST_REVERSE_FOREACH(PairType utilityBillFuelTypesAndNames, m_utilityBillFuelTypesAndNames){
-    addUtilityBillFuelType(utilityBillFuelTypesAndNames.first, utilityBillFuelTypesAndNames.second);
+  BOOST_REVERSE_FOREACH(PairType utilityBillFuelTypesAndName, m_utilityBillFuelTypesAndNames){
+    addUtilityBillFuelType(utilityBillFuelTypesAndName.first, utilityBillFuelTypesAndName.second);
   }
 }
 

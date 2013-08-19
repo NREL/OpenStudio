@@ -26,6 +26,8 @@
 #include <model/UtilityBill.hpp>
 #include <model/UtilityBill_Impl.hpp>
 
+#include <openstudio_lib/OSItemSelectorButtons.hpp>
+
 #include <utilities/core/Assert.hpp>
 
 namespace openstudio {
@@ -33,6 +35,16 @@ namespace openstudio {
 UtilityBillsController::UtilityBillsController(const model::Model& model)
   : ModelSubTabController(new UtilityBillsView(model), model)
 {
+  subTabView()->itemSelectorButtons()->disableCopyButton();
+  subTabView()->itemSelectorButtons()->disablePurgeButton();
+
+  //bool isConnected = false;
+
+  QWidget * utilityBillsView = subTabView()->inspectorView(); 
+
+  bool isConnected = connect( this,SIGNAL(toggleUnitsClicked( bool )),
+                              utilityBillsView,SIGNAL(toggleUnitsClicked( bool )) );
+  OS_ASSERT(isConnected);
 }
 
 void UtilityBillsController::onAddObject(const openstudio::IddObjectType& iddObjectType)
@@ -63,17 +75,20 @@ void UtilityBillsController::onReplaceObject(openstudio::model::ModelObject mode
 
 void UtilityBillsController::onPurgeObjects(const openstudio::IddObjectType& iddObjectType)
 {
-  Q_FOREACH(model::UtilityBill utilityBill, this->model().getModelObjects<model::UtilityBill>()){
-    utilityBill.remove();
-  }
+  // DLM: we don't want the purge button enabled
+  //Q_FOREACH(model::UtilityBill utilityBill, this->model().getModelObjects<model::UtilityBill>()){
+  //  utilityBill.remove();
+  //}
 }
 
 void UtilityBillsController::onDrop(const OSItemId& itemId)
 {
+  // DLM: we don't want the drop zone enabled
 }
 
 void UtilityBillsController::onInspectItem(OSItem* item)
 {
+  subTabView()->inspectorView()->selectItem(item);
 }
 
 } // openstudio

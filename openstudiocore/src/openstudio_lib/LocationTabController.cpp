@@ -22,6 +22,7 @@
 #include <openstudio_lib/LifeCycleCostsTabView.hpp>
 #include <openstudio_lib/LocationTabView.hpp>
 #include <openstudio_lib/UtilityBillsView.hpp>
+#include <openstudio_lib/UtilityBillsController.hpp>
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
@@ -40,8 +41,8 @@ LocationTabController::LocationTabController(const model::Model & model,
   LifeCycleCostsView * lifeCycleCostsView = new LifeCycleCostsView(model);
   mainContentWidget()->addSubTab("Life Cycle Costs",lifeCycleCostsView,LIFE_CYCLE_COSTS);
 
-  UtilityBillsView * utilityBillsView = new UtilityBillsView(model);
-  mainContentWidget()->addSubTab("Utility Calibration",utilityBillsView,UTILITY_BILLS);
+  m_utilityBillsController = boost::shared_ptr<UtilityBillsController>(new UtilityBillsController(model));
+  mainContentWidget()->addSubTab("Utility Calibration",m_utilityBillsController->subTabView(),UTILITY_BILLS);
 
   QLabel * underConstructionLabel;
     

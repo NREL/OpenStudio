@@ -109,6 +109,8 @@ private:
   void enableAddButton();
   void disableAddButton();
   void attach(openstudio::model::UtilityBill & utilityBill);
+  void detach();
+  void refresh();
 
   void addBillingPeriod(model::BillingPeriod & billingPeriod);
   void addBillingPeriod(model::BillingPeriod & billingPeriod, unsigned index);
