@@ -241,7 +241,7 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
             DateTime(Date(MonthOfYear::Mar,21,2018),Time(0,8,34,21)),
             errorsObject,
             outFilesObject,
-            AdvancedStatus()
+            AdvancedStatus())
           ); // OpenStudioPostProcess
 
     Job jobLast = job;
