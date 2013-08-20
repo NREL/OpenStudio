@@ -177,8 +177,7 @@ void UtilityBillsInspectorView::createWidgets()
   mainLayout->setSpacing(20);
   visibleWidget->setLayout(mainLayout);
 
-  if(false){  // TODO remove
-  //if(m_beginAndEndDates.length() == 0){
+  if(m_beginAndEndDates.length() == 0){
     label = new QLabel();
     label->setPixmap(QPixmap(":/images/utility_calibration_warning.png"));
     label->setAlignment(Qt::AlignCenter);

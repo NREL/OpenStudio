@@ -94,7 +94,6 @@ FuelType UtilityBillAllFuelTypesListView::currentFuelType() const
   OSCollapsibleItem* selectedCollapsibleItem = this->selectedCollapsibleItem();
   UtilityBillFuelTypeItem* utilityBillFuelTypeItem = qobject_cast<UtilityBillFuelTypeItem*>(selectedCollapsibleItem);
   OS_ASSERT(utilityBillFuelTypeItem);
-  OS_ASSERT(utilityBillFuelTypeItem->fuelType() == openstudio::IddObjectType::OS_UtilityBill);
   return utilityBillFuelTypeItem->fuelType();
 }
 

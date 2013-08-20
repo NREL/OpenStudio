@@ -49,6 +49,10 @@ class UtilityBillsController : public ModelSubTabController
     virtual void onDrop(const OSItemId& itemId);
 
     virtual void onInspectItem(OSItem* item);
+
+    virtual void onSelectItem(OSItem *item);
+
+    virtual void onClearSelection();
 };
 
 } // openstudio

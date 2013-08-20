@@ -40,8 +40,7 @@ UtilityBillsController::UtilityBillsController(const model::Model& model)
 {
   subTabView()->itemSelectorButtons()->disableCopyButton();
   subTabView()->itemSelectorButtons()->disablePurgeButton();
-
-  //bool isConnected = false;
+  subTabView()->itemSelectorButtons()->hideDropZone();
 
   QWidget * utilityBillsView = subTabView()->inspectorView(); 
 
@@ -52,19 +51,11 @@ UtilityBillsController::UtilityBillsController(const model::Model& model)
 
 void UtilityBillsController::onAddObject(const openstudio::IddObjectType& iddObjectType)
 {
-  // Only allow one per fuel type
-  if(IddObjectType::OS_UtilityBill == iddObjectType.value()) return;
-
-  // call bill format dialog TODO
-  //UtilityBillsInspectorView * utilityBillsInspectorView = this->subTabView()->inspectorView();
-  //if(!utilityBillsInspectorView->showBillFormatDialog()) return;
-
   OSItemSelector* itemSelector = this->subTabView()->itemSelector(); 
   UtilityBillAllFuelTypesListView * utilityBillAllFuelTypesListView = qobject_cast<UtilityBillAllFuelTypesListView *>(itemSelector);
   OS_ASSERT(utilityBillAllFuelTypesListView);
   FuelType fuelType = utilityBillAllFuelTypesListView->currentFuelType();
   openstudio::model::UtilityBill(fuelType,this->model());
-
 }
 
 void UtilityBillsController::onCopyObject(const openstudio::model::ModelObject& modelObject)
@@ -97,5 +88,18 @@ void UtilityBillsController::onInspectItem(OSItem* item)
   subTabView()->inspectorView()->selectItem(item);
 }
 
-} // openstudio
+void UtilityBillsController::onSelectItem(OSItem* item)
+{
+  m_subTabView->inspectorView()->selectItem(item);
+  m_subTabView->itemSelectorButtons()->enableAddButton();
+  m_subTabView->itemSelectorButtons()->disableRemoveButton();
+}
 
+void UtilityBillsController::onClearSelection()
+{
+  m_subTabView->inspectorView()->clearSelection();
+  m_subTabView->itemSelectorButtons()->disableAddButton();
+  m_subTabView->itemSelectorButtons()->enableRemoveButton();
+}
+
+} // openstudio
