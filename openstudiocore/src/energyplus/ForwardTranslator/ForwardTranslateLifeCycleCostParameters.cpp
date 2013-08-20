@@ -29,14 +29,8 @@
 #include <utilities/idd/LifeCycleCost_UsePriceEscalation_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-<<<<<<< HEAD
-=======
 #include <utilities/core/Assert.hpp>
 
-#include <QFile>
-#include <QTextStream>
-
->>>>>>> develop
 using namespace openstudio::model;
 
 using namespace std;
@@ -130,19 +124,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCostParameters( 
 
     static boost::optional<IdfFile> usePriceEscalationFile;
     if (!usePriceEscalationFile){
-<<<<<<< HEAD
      usePriceEscalationFile = findIdfFile(":/Resources/LCCusePriceEscalationDataSet2011.idf");
-=======
-     QFile file(":/Resources/LCCusePriceEscalationDataSet2011.idf");
-     bool opened = file.open(QIODevice::ReadOnly | QIODevice::Text);
-     OS_ASSERT(opened);
-
-     QTextStream in(&file);
-     std::stringstream ss;
-     ss << in.readAll().toStdString();
-
-     usePriceEscalationFile = IdfFile::load(ss, IddFileType::EnergyPlus);
->>>>>>> develop
     }
     OS_ASSERT(usePriceEscalationFile);
 

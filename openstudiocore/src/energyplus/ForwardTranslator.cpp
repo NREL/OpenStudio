@@ -74,13 +74,10 @@ ForwardTranslator::ForwardTranslator()
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ForwardTranslator"));
   m_logSink.setThreadId(QThread::currentThread());
-<<<<<<< HEAD
   createFluidPropertiesMap();
-=======
 
   // temp code 
   m_keepRunControlSpecialDays = false;
->>>>>>> develop
 }
 
 Workspace ForwardTranslator::translateModel( const Model & model, ProgressBar* progressBar )
