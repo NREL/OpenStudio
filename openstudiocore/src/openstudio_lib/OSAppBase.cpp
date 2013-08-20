@@ -103,6 +103,12 @@ void OSAppBase::updateSelectedMeasureState()
     if (mainRightColumnController)
     {
       if (measureManager().isMeasureSelected()){
+        if(document->mainTabId() == openstudio::OSDocument::SITE){
+          //if(document->m_locationTabController->mainContentWidget()->currentId() == openstudio::LocationTabController::UTILITY_BILLS){
+          //  // only 1 bill per fuel type allowed
+          //  return;
+          //}
+        }
         mainRightColumnController->measuresLibraryController()->localLibraryView->duplicateMeasureButton->setEnabled(true);
       }else{
         mainRightColumnController->measuresLibraryController()->localLibraryView->duplicateMeasureButton->setEnabled(false);

@@ -19,7 +19,6 @@
 
 #include <openstudio_lib/UtilityBillFuelTypeItem.hpp>
 #include <openstudio_lib/OSCollapsibleItemHeader.hpp>
-// TODO #include <openstudio_lib/ModelObjectListView.hpp>
 #include <openstudio_lib/UtilityBillFuelTypeListView.hpp>
 
 #include <model/Model.hpp>
@@ -54,10 +53,8 @@ FuelType UtilityBillFuelTypeItem::fuelType() const
   OSItemList* itemList = this->itemList();
   UtilityBillFuelTypeListView* utilityBillFuelTypeListView = qobject_cast<UtilityBillFuelTypeListView*>(itemList);
   OS_ASSERT(utilityBillFuelTypeListView);
-  boost::optional<FuelType> fuelType = utilityBillFuelTypeListView->fuelType();
-  
-  OS_ASSERT(fuelType.is_initialized());
-  return utilityBillFuelTypeListView->fuelType().get();
+  FuelType fuelType = utilityBillFuelTypeListView->fuelType();
+  return utilityBillFuelTypeListView->fuelType();
 }
 
 } // openstudio

@@ -188,6 +188,10 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
     EDIT 
   };
 
+  int mainTabId() { return m_mainTabId; }
+
+  boost::shared_ptr<LocationTabController> locationTabController() { return m_locationTabController; }
+
   boost::shared_ptr<MainRightColumnController> mainRightColumnController() const;
 
  signals:

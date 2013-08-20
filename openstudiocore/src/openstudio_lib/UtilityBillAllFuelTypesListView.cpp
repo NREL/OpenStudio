@@ -89,6 +89,15 @@ IddObjectType UtilityBillAllFuelTypesListView::currentIddObjectType() const
   return modelObjectTypeItem->iddObjectType();
 }
 
+FuelType UtilityBillAllFuelTypesListView::currentFuelType() const
+{
+  OSCollapsibleItem* selectedCollapsibleItem = this->selectedCollapsibleItem();
+  UtilityBillFuelTypeItem* utilityBillFuelTypeItem = qobject_cast<UtilityBillFuelTypeItem*>(selectedCollapsibleItem);
+  OS_ASSERT(utilityBillFuelTypeItem);
+  OS_ASSERT(utilityBillFuelTypeItem->fuelType() == openstudio::IddObjectType::OS_UtilityBill);
+  return utilityBillFuelTypeItem->fuelType();
+}
+
 boost::optional<openstudio::model::ModelObject> UtilityBillAllFuelTypesListView::selectedModelObject() const
 {
   OSItem* selectedItem = this->selectedItem();
@@ -99,7 +108,7 @@ boost::optional<openstudio::model::ModelObject> UtilityBillAllFuelTypesListView:
   return boost::none;
 }
 
-boost::optional<openstudio::FuelType> UtilityBillAllFuelTypesListView::fuelType() const
+boost::optional<openstudio::FuelType> UtilityBillAllFuelTypesListView::selectedFuelType() const
 {
   boost::optional<openstudio::model::ModelObject> modelObject = selectedModelObject();
   if(modelObject){

@@ -77,7 +77,12 @@ public:
 
   IddObjectType iddObjectType() const;
 
-  boost::optional<openstudio::FuelType> fuelType() const;
+  FuelType fuelType() const;
+
+private:
+
+  openstudio::FuelType m_fuelType;
+
 };
 
 } // openstudio

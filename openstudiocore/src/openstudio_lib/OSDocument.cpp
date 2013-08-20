@@ -120,7 +120,8 @@ OSDocument::OSDocument( openstudio::model::Model library,
     m_onlineBclDialog(NULL),
     m_localLibraryDialog(NULL),
     m_savePath(filePath),
-    m_isPlugin(isPlugin)
+    m_isPlugin(isPlugin),
+    m_mainTabId(0)
 {
 
 

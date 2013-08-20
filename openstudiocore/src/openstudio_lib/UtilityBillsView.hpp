@@ -166,6 +166,9 @@ public:
 
   virtual ~BillingPeriodWidget() {}
 
+  void attach(openstudio::model::BillingPeriod & billingPeriod);
+  void detach();
+
   QDateEdit * m_startDateEdit;
   QDateEdit * m_endDateEdit;
 
@@ -175,7 +178,7 @@ public:
   OSDoubleEdit2 * m_costDoubleEdit;
 
   QPushButton * m_deleteBillWidget; 
-  unsigned m_index;
+  unsigned m_index; // TODO needed?
 
 private:
 
@@ -193,8 +196,6 @@ private:
   void getEndDateCalendar(QGridLayout * gridLayout, int rowIndex, int columnIndex);
 
   void getBillingPeriodLineEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex);
-
-  void attach(openstudio::model::BillingPeriod & billingPeriod);
 
   boost::optional<model::BillingPeriod> m_billingPeriod;
 

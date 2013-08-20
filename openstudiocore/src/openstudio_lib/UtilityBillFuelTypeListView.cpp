@@ -138,17 +138,9 @@ IddObjectType UtilityBillFuelTypeListView::iddObjectType() const
   return utilityBillListController->iddObjectType();
 }
 
-boost::optional<openstudio::FuelType> UtilityBillFuelTypeListView::fuelType() const
+FuelType UtilityBillFuelTypeListView::fuelType() const
 {
-  boost::optional<openstudio::model::ModelObject> modelObject = selectedModelObject();
-  if(modelObject){
-    if(boost::optional<model::UtilityBill> utilityBill = modelObject.get().optionalCast<model::UtilityBill>()){
-      return utilityBill.get().fuelType();
-    }
-    // Opps, its not a UtilityBill!
-    OS_ASSERT(false);
-  }
-  return boost::none;
+  return m_fuelType;
 }
 
 } // openstudio

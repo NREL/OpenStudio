@@ -19,6 +19,7 @@
 
 #include <openstudio_lib/UtilityBillsController.hpp>
 
+#include <openstudio_lib/UtilityBillAllFuelTypesListView.hpp>
 #include <openstudio_lib/UtilityBillsView.hpp>
 
 #include <model/Model.hpp>
@@ -26,9 +27,11 @@
 #include <model/UtilityBill.hpp>
 #include <model/UtilityBill_Impl.hpp>
 
+#include <openstudio_lib/OSInspectorView.hpp>
 #include <openstudio_lib/OSItemSelectorButtons.hpp>
 
 #include <utilities/core/Assert.hpp>
+#include <utilities/data/DataEnums.hpp>
 
 namespace openstudio {
 
@@ -49,19 +52,24 @@ UtilityBillsController::UtilityBillsController(const model::Model& model)
 
 void UtilityBillsController::onAddObject(const openstudio::IddObjectType& iddObjectType)
 {
-  //OS_ASSERT(IddObjectType::OS_BuildingStory == iddObjectType.value());
-  //openstudio::model::BuildingStory(this->model());
+  // Only allow one per fuel type
+  if(IddObjectType::OS_UtilityBill == iddObjectType.value()) return;
 
-  // TODO
-  // not being hit
-  // why not?
+  // call bill format dialog TODO
+  //UtilityBillsInspectorView * utilityBillsInspectorView = this->subTabView()->inspectorView();
+  //if(!utilityBillsInspectorView->showBillFormatDialog()) return;
 
-   OS_ASSERT(IddObjectType::OS_UtilityBill == iddObjectType.value());
+  OSItemSelector* itemSelector = this->subTabView()->itemSelector(); 
+  UtilityBillAllFuelTypesListView * utilityBillAllFuelTypesListView = qobject_cast<UtilityBillAllFuelTypesListView *>(itemSelector);
+  OS_ASSERT(utilityBillAllFuelTypesListView);
+  FuelType fuelType = utilityBillAllFuelTypesListView->currentFuelType();
+  openstudio::model::UtilityBill(fuelType,this->model());
+
 }
 
 void UtilityBillsController::onCopyObject(const openstudio::model::ModelObject& modelObject)
 {
-  modelObject.clone(this->model());
+  // not desired
 }
 
 void UtilityBillsController::onRemoveObject(openstudio::model::ModelObject modelObject)
@@ -71,14 +79,12 @@ void UtilityBillsController::onRemoveObject(openstudio::model::ModelObject model
 
 void UtilityBillsController::onReplaceObject(openstudio::model::ModelObject modelObject, const OSItemId& replacementItemId)
 {
+  // not yet implemented
 }
 
 void UtilityBillsController::onPurgeObjects(const openstudio::IddObjectType& iddObjectType)
 {
   // DLM: we don't want the purge button enabled
-  //Q_FOREACH(model::UtilityBill utilityBill, this->model().getModelObjects<model::UtilityBill>()){
-  //  utilityBill.remove();
-  //}
 }
 
 void UtilityBillsController::onDrop(const OSItemId& itemId)
