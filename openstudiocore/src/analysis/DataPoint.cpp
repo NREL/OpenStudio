@@ -22,6 +22,7 @@
 
 #include <analysis/Analysis.hpp>
 #include <analysis/Analysis_Impl.hpp>
+#include <analysis/InputVariable.hpp>
 #include <analysis/OptimizationDataPoint.hpp>
 #include <analysis/OptimizationDataPoint_Impl.hpp>
 
@@ -425,19 +426,22 @@ namespace detail {
   }
 
   bool DataPoint_Impl::saveJSON(const openstudio::path& p,
+                                const DataPointSerializationOptions& options,
                                 bool overwrite) const
   {
-    QVariant json = toTopLevelVariant();
+    QVariant json = toTopLevelVariant(options);
     return openstudio::saveJSON(json,p,overwrite);
   }
 
-  std::ostream& DataPoint_Impl::toJSON(std::ostream& os) const {
-    os << toJSON();
+  std::ostream& DataPoint_Impl::toJSON(std::ostream& os,
+                                       const DataPointSerializationOptions& options) const
+  {
+    os << toJSON(options);
     return os;
   }
 
-  std::string DataPoint_Impl::toJSON() const {
-    QVariant json = toTopLevelVariant();
+  std::string DataPoint_Impl::toJSON(const DataPointSerializationOptions& options) const {
+    QVariant json = toTopLevelVariant(options);
     return openstudio::toJSON(json);
   }
 
@@ -493,9 +497,9 @@ namespace detail {
     QVariantMap dataPointData = AnalysisObject_Impl::toVariant().toMap();
 
     dataPointData["data_point_type"] = QString("DataPoint");
-    dataPointData["problem_uuid"] = problemUUID().toString();
+    dataPointData["problem_uuid"] = toQString(removeBraces(problemUUID()));
     if (analysisUUID()) {
-      dataPointData["analysis_uuid"] = analysisUUID().get().toString();
+      dataPointData["analysis_uuid"] = toQString(removeBraces(analysisUUID().get()));
     }
 
     dataPointData["complete"] = isComplete();
@@ -574,19 +578,31 @@ namespace detail {
     return QVariant(dataPointData);
   }
 
-  QVariant DataPoint_Impl::toTopLevelVariant() const {
+  QVariant DataPoint_Impl::toTopLevelVariant(const DataPointSerializationOptions& options) const {
     QVariant dataPointData = this->toVariant();
+
+    QVariantMap metadata = jsonMetadata().toMap();
+
+    if (!options.projectPath.empty()) {
+      metadata["project_path"] = toQString(options.projectPath);
+    }
+
+    if (options.osServerView && hasProblem()) {
+      // this data is not read upon deserialization
+      metadata["server_view"] = toServerDataPointsVariant();
+    }
 
     // create top-level of final file
     QVariantMap result;
-    result["metadata"] = jsonMetadata();
+    result["metadata"] = metadata;
     result["data_point"] = dataPointData;
 
     return result;
   }
 
   DataPoint DataPoint_Impl::factoryFromVariant(const QVariant& variant,
-                                               const VersionString& version)
+                                               const VersionString& version,
+                                               const boost::optional<Problem>& problem)
   {
     QVariantMap map = variant.toMap();
 
@@ -594,15 +610,29 @@ namespace detail {
       LOG_AND_THROW("Unable to find DataPoint in expected location.");
     }
 
+    OptionalDataPoint result;
     std::string dataPointType = map["data_point_type"].toString().toStdString();
     if (dataPointType == "DataPoint") {
-      return DataPoint_Impl::fromVariant(variant,version);
+      result = DataPoint_Impl::fromVariant(variant,version);
     }
-    if (dataPointType == "OptimizationDataPoint") {
-      return OptimizationDataPoint_Impl::fromVariant(variant,version);
+    else if (dataPointType == "OptimizationDataPoint") {
+      result = OptimizationDataPoint_Impl::fromVariant(variant,version);
+    }
+    else {
+      LOG_AND_THROW("Unexpected data_point_type " << dataPointType << ".");
     }
 
-    LOG_AND_THROW("Unexpected data_point_type " << dataPointType << ".");
+    OS_ASSERT(result);
+    if (problem) {
+      if (result->problemUUID() != problem->uuid()) {
+        LOG_AND_THROW("Problem UUID stored for this DataPoint, " << toString(result->problemUUID())
+                      << " does not match the UUID of Problem " << problem->name() << ", which is "
+                      << toString(problem->uuid()) << ".");
+      }
+      result->setProblem(*problem);
+    }
+
+    return result.get();
   }
 
   DataPoint DataPoint_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
@@ -669,13 +699,13 @@ namespace detail {
             boost::function<openstudio::path (QVariant*)>(boost::bind(fToPath,boost::bind(&QVariant::toString,_1))));
     }
 
-    return DataPoint(openstudio::UUID(map["uuid"].toString()),
-                     openstudio::UUID(map["version_uuid"].toString()),
+    return DataPoint(toUUID(map["uuid"].toString().toStdString()),
+                     toUUID(map["version_uuid"].toString().toStdString()),
                      map.contains("name") ? map["name"].toString().toStdString() : std::string(),
                      map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                      map.contains("description") ? map["description"].toString().toStdString() : std::string(),
-                     openstudio::UUID(map["problem_uuid"].toString()),
-                     map.contains("analysis_uuid") ? openstudio::UUID(map["analysis_uuid"].toString()) : boost::optional<openstudio::UUID>(),
+                     toUUID(map["problem_uuid"].toString().toStdString()),
+                     map.contains("analysis_uuid") ? toUUID(map["analysis_uuid"].toString().toStdString()) : boost::optional<openstudio::UUID>(),
                      map["complete"].toBool(),
                      map["failed"].toBool(),
                      variableValues,
@@ -685,13 +715,45 @@ namespace detail {
                      map.contains("idf_input_data") ? openstudio::detail::toFileReference(map["idf_input_data"],version) : OptionalFileReference(),
                      map.contains("sql_output_data") ? openstudio::detail::toFileReference(map["sql_output_data"],version) : OptionalFileReference(),
                      map.contains("xml_output_data") ? openstudio::detail::toFileReference(map["xml_output_data"],version) : OptionalFileReference(),
-                     map.contains("top_level_job") ? runmanager::detail::JSON::toJob(map["top_level_job"],version) : boost::optional<runmanager::Job>(),
+                     map.contains("top_level_job") ? runmanager::detail::JSON::toJob(map["top_level_job"],version, true) : boost::optional<runmanager::Job>(),
                      dakotaParametersFiles,
                      tags,
                      outputAttributes);
   }
 
+  QVariant DataPoint_Impl::toServerDataPointsVariant() const {
+    QVariantMap map;
+
+    map["uuid"] = toQString(removeBraces(uuid()));
+    map["version_uuid"] = toQString(removeBraces(uuid()));
+    map["name"] = toQString(name());
+    map["display_name"] = toQString(displayName());
+
+    QVariantList valuesList;
+    std::vector<QVariant> values = variableValues();
+    InputVariableVector variables = problem().variables();
+    unsigned n = values.size();
+    OS_ASSERT(variables.size() == n);
+    for (unsigned i = 0; i < n; ++i) {
+      QVariantMap valueMap;
+      valueMap["variable_index"] = i;
+      valueMap["variable_uuid"] = toQString(removeBraces(variables[i].uuid()));
+      valueMap["value"] = values[i];
+      valuesList.push_back(valueMap);
+    }
+    map["values"] = valuesList;
+
+    return QVariant(map);
+  }
+
 } // detail
+
+DataPointSerializationOptions::DataPointSerializationOptions(
+    const openstudio::path& t_projectPath,
+    bool t_osServerView)
+  : projectPath(t_projectPath),
+    osServerView(t_osServerView)
+{}
 
 DataPoint::DataPoint(const Problem& problem,
                      const std::vector<QVariant>& variableValues)
@@ -901,16 +963,21 @@ void DataPoint::clearResults() {
   getImpl<detail::DataPoint_Impl>()->clearResults();
 }
 
-bool DataPoint::saveJSON(const openstudio::path& p,bool overwrite) const {
-  return getImpl<detail::DataPoint_Impl>()->saveJSON(p,overwrite);
+bool DataPoint::saveJSON(const openstudio::path& p,
+                         const DataPointSerializationOptions& options,
+                         bool overwrite) const
+{
+  return getImpl<detail::DataPoint_Impl>()->saveJSON(p,options,overwrite);
 }
 
-std::ostream& DataPoint::toJSON(std::ostream& os) const {
-  return getImpl<detail::DataPoint_Impl>()->toJSON(os);
+std::ostream& DataPoint::toJSON(std::ostream& os,
+                                const DataPointSerializationOptions& options) const
+{
+  return getImpl<detail::DataPoint_Impl>()->toJSON(os,options);
 }
 
-std::string DataPoint::toJSON() const {
-  return getImpl<detail::DataPoint_Impl>()->toJSON();
+std::string DataPoint::toJSON(const DataPointSerializationOptions& options) const {
+  return getImpl<detail::DataPoint_Impl>()->toJSON(options);
 }
 
 /// @cond

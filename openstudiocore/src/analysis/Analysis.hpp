@@ -70,6 +70,16 @@ OPENSTUDIO_ENUM(AnalysisSerializationScope,
     ((Full))
 );
 
+struct ANALYSIS_API AnalysisSerializationOptions {
+  openstudio::path projectPath;
+  AnalysisSerializationScope scope;
+  bool osServerView;
+
+  AnalysisSerializationOptions(const openstudio::path& t_projectPath=openstudio::path(),
+                               const AnalysisSerializationScope& t_scope=AnalysisSerializationScope::ProblemFormulation,
+                               bool t_osServerView=true);
+};
+
 /** Analysis is a AnalysisObject that contains an entire analysis. It is constructed from a
  *  Problem, an optional Algorithm, an optional seed FileReference (an OSM or IDF file), and
  *  an optional weather FileReference (needed for IDF seeds). Analysis::addDataPoint can be
@@ -217,7 +227,7 @@ class ANALYSIS_API Analysis : public AnalysisObject {
    *  openstudio::Exception if dataPoint.variableValues() are not valid for problem(). Should be
    *  called before running a given workflow. Usually called by Algorithm, but may also be called
    *  directly by a user to run custom analyses. */
-  bool addDataPoint(const DataPoint& dataPoint);
+  bool addDataPoint(DataPoint& dataPoint);
 
   /** Adds a DataPoint to this analysis and returns true if measures are valid for problem(),
    *  the resulting DataPoint is not yet in this Analysis, and if not dataPointsAreInvalid. */
@@ -274,17 +284,18 @@ class ANALYSIS_API Analysis : public AnalysisObject {
                            const openstudio::path& newBase);
 
   //@}
-  /** @name Serialization */
+  /** @name Serialization
+   *  Methods to save to json format. See AnalysisObject.hpp, openstudio::analysis::loadJSON for
+   *  the de-serialization methods. */
   //@{
 
   bool saveJSON(const openstudio::path& p,
-                AnalysisSerializationScope scope=AnalysisSerializationScope::Full,
+                const AnalysisSerializationOptions& options,
                 bool overwrite=false) const;
 
-  std::ostream& toJSON(std::ostream& os,
-                       AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
+  std::ostream& toJSON(std::ostream& os,const AnalysisSerializationOptions& options) const;
 
-  std::string toJSON(AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
+  std::string toJSON(const AnalysisSerializationOptions& options) const;
 
   //@}
  protected:

@@ -148,8 +148,8 @@ namespace detail {
           boost::function<double (QVariant*)>(boost::bind(&QVariant::toDouble,_1,&ok)));
     }
 
-    return LinearFunction(openstudio::UUID(map["uuid"].toString()),
-                          openstudio::UUID(map["version_uuid"].toString()),
+    return LinearFunction(toUUID(map["uuid"].toString().toStdString()),
+                          toUUID(map["version_uuid"].toString().toStdString()),
                           map.contains("name") ? map["name"].toString().toStdString() : std::string(),
                           map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                           map.contains("description") ? map["description"].toString().toStdString() : std::string(),

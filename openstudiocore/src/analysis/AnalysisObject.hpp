@@ -174,6 +174,14 @@ class ANALYSIS_API AnalysisObject {
   // Returns this object's data as a QVariant that can be serialized to JSON.
   QVariant toVariant() const;
 
+  // Returns this object's data as a QVariant that can be serialized to the openstudio-server
+  // problem formulation JSON.
+  QVariant toServerFormulationVariant() const;
+
+  // Returns this object's data as a QVariant that can be serialized to the openstudio-server
+  // data points request JSON.
+  QVariant toServerDataPointsVariant() const;
+
   /// @endcond
  private:
 

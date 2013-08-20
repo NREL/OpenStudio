@@ -464,12 +464,12 @@ namespace detail {
     onChange(AnalysisObject_Impl::InvalidatesResults);
   }
 
-  bool Analysis_Impl::addDataPoint(const DataPoint& dataPoint) {
+  bool Analysis_Impl::addDataPoint(DataPoint& dataPoint) {
     if (m_dataPointsAreInvalid) {
       LOG(Info,"Current data points are invalid. Call removeAllDataPoints before adding new ones.");
       return false;
     }
-    if (!(dataPoint.problem().uuid() == problem().uuid())) {
+    if (!(dataPoint.problemUUID() == problem().uuid())) {
       LOG(Error,"Cannot add given DataPoint to Analysis '" << name() <<
           "', because it is not associated with Problem '" << problem().name() << "'.");
       return false;
@@ -479,6 +479,9 @@ namespace detail {
       OS_ASSERT(existingDataPoints.size() == 1); // dataPoint must be fully specified to be valid
       LOG(Info,"DataPoint not added to Analysis '" << name() << "', because it already exists.");
       return false;
+    }
+    if (!dataPoint.hasProblem()) {
+      dataPoint.setProblem(problem());
     }
     m_dataPoints.push_back(dataPoint);
     connectChild(m_dataPoints.back(),true);
@@ -722,23 +725,22 @@ namespace detail {
     }
   }
 
-  bool Analysis_Impl::saveJSON(openstudio::path p,
-                               AnalysisSerializationScope scope,
-                               bool overwrite) const
+  bool Analysis_Impl::saveJSON(const openstudio::path& p,
+                               const AnalysisSerializationOptions& options,                               bool overwrite) const
   {
-    QVariant json = toVariant(scope);
+    QVariant json = toVariant(options);
     return openstudio::saveJSON(json,p,overwrite);
   }
 
   std::ostream& Analysis_Impl::toJSON(std::ostream& os,
-                                      AnalysisSerializationScope scope) const
+                                      const AnalysisSerializationOptions& options) const
   {
-    os << toJSON(scope);
+    os << toJSON(options);
     return os;
   }
 
-  std::string Analysis_Impl::toJSON(AnalysisSerializationScope scope) const {
-    QVariant json = this->toVariant(scope);
+  std::string Analysis_Impl::toJSON(const AnalysisSerializationOptions& options) const {
+    QVariant json = this->toVariant(options);
     return openstudio::toJSON(json);
   }
 
@@ -759,10 +761,10 @@ namespace detail {
     return QVariant(analysisData);
   }
 
-  QVariant Analysis_Impl::toVariant(AnalysisSerializationScope scope) const {
+  QVariant Analysis_Impl::toVariant(const AnalysisSerializationOptions& options) const {
     QVariantMap analysisData = toVariant().toMap();
 
-    if (scope == AnalysisSerializationScope::Full) {
+    if (options.scope == AnalysisSerializationScope::Full) {
       // add data point information
       QVariantList dataPointList;
       Q_FOREACH(const DataPoint& dataPoint, dataPoints()) {
@@ -772,9 +774,33 @@ namespace detail {
       analysisData["data_points"] = QVariant(dataPointList);
     }
 
+    QVariantMap metadata = jsonMetadata().toMap();
+
+    if (!options.projectPath.empty()) {
+      metadata["project_path"] = toQString(options.projectPath);
+    }
+
+    if (options.osServerView) {
+
+      // this data is not read upon deserialization
+      QVariantMap serverView = problem().toServerFormulationVariant().toMap();
+
+      if (options.scope == AnalysisSerializationScope::Full) {
+        QVariantList dataPointList;
+        Q_FOREACH(const DataPoint& dataPoint, dataPoints()) {
+          if (dataPoint.hasProblem()) {
+            dataPointList.push_back(dataPoint.toServerDataPointsVariant());
+          }
+        }
+        serverView["data_points"] = QVariant(dataPointList);
+      }
+
+      metadata["server_view"] = serverView;
+    }
+
     // create top-level of final file
     QVariantMap result;
-    result["metadata"] = jsonMetadata();
+    result["metadata"] = metadata;
     result["analysis"] = QVariant(analysisData);
 
     return result;
@@ -791,10 +817,10 @@ namespace detail {
     if (map.contains("data_points")) {
       dataPoints = deserializeUnorderedVector<DataPoint>(
             map["data_points"].toList(),
-            boost::function<DataPoint (const QVariant&)>(boost::bind(openstudio::analysis::detail::DataPoint_Impl::factoryFromVariant,_1,version)));
+            boost::function<DataPoint (const QVariant&)>(boost::bind(openstudio::analysis::detail::DataPoint_Impl::factoryFromVariant,_1,version,problem)));
     }
-    return Analysis(openstudio::UUID(map["uuid"].toString()),
-                    openstudio::UUID(map["version_uuid"].toString()),
+    return Analysis(toUUID(map["uuid"].toString().toStdString()),
+                    toUUID(map["version_uuid"].toString().toStdString()),
                     map.contains("name") ? map["name"].toString().toStdString() : std::string(),
                     map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                     map.contains("description") ? map["description"].toString().toStdString() : std::string(),
@@ -823,6 +849,15 @@ namespace detail {
   }
 
 } // detail
+
+AnalysisSerializationOptions::AnalysisSerializationOptions(
+    const openstudio::path& t_projectPath,
+    const AnalysisSerializationScope& t_scope,
+    bool t_osServerView)
+  : projectPath(t_projectPath),
+    scope(t_scope),
+    osServerView(t_osServerView)
+{}
 
 Analysis::Analysis(const std::string& name,
                    const Problem& problem,
@@ -1008,7 +1043,7 @@ void Analysis::clearWeatherFile() {
   getImpl<detail::Analysis_Impl>()->clearWeatherFile();
 }
 
-bool Analysis::addDataPoint(const DataPoint& dataPoint) {
+bool Analysis::addDataPoint(DataPoint& dataPoint) {
   return getImpl<detail::Analysis_Impl>()->addDataPoint(dataPoint);
 }
 
@@ -1058,26 +1093,26 @@ Table Analysis::summaryTable() const {
 }
 
 void Analysis::updateInputPathData(const openstudio::path& originalBase,
-                              const openstudio::path& newBase)
+                                   const openstudio::path& newBase)
 {
   return getImpl<detail::Analysis_Impl>()->updateInputPathData(originalBase,newBase);
 }
 
 bool Analysis::saveJSON(const openstudio::path& p,
-                        AnalysisSerializationScope scope,
+                        const AnalysisSerializationOptions& options,
                         bool overwrite) const
 {
-  return getImpl<detail::Analysis_Impl>()->saveJSON(p,scope,overwrite);
+  return getImpl<detail::Analysis_Impl>()->saveJSON(p,options,overwrite);
 }
 
 std::ostream& Analysis::toJSON(std::ostream& os,
-                               AnalysisSerializationScope scope) const
+                               const AnalysisSerializationOptions& options) const
 {
-  return getImpl<detail::Analysis_Impl>()->toJSON(os,scope);
+  return getImpl<detail::Analysis_Impl>()->toJSON(os,options);
 }
 
-std::string Analysis::toJSON(AnalysisSerializationScope scope) const {
-  return getImpl<detail::Analysis_Impl>()->toJSON(scope);
+std::string Analysis::toJSON(const AnalysisSerializationOptions& options) const {
+  return getImpl<detail::Analysis_Impl>()->toJSON(options);
 }
 
 /// @cond

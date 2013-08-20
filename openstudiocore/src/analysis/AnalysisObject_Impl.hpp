@@ -152,10 +152,13 @@ namespace detail {
 
     virtual QVariant toVariant() const;
 
+    virtual QVariant toServerFormulationVariant() const;
+
+    virtual QVariant toServerDataPointsVariant() const;
+
     /// Relocate path data from originalBase to newBase.
     virtual void updateInputPathData(const openstudio::path& originalBase,
                                      const openstudio::path& newBase);
-
 
     //@}
    public slots:

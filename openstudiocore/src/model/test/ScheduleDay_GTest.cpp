@@ -192,3 +192,86 @@ TEST_F(ModelFixture, Schedule_Day_Interp)
   EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, 24, 0)), tol);
   EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, 25, 0)), tol);
 }
+
+
+TEST_F(ModelFixture, Schedule_Day_Remove)
+{
+  Model model;
+
+  ScheduleDay daySchedule(model);
+
+  std::vector<openstudio::Time> times = daySchedule.times();
+  std::vector<double> values = daySchedule.values();
+  ASSERT_EQ(1u, times.size());
+  ASSERT_EQ(1u, values.size());
+  EXPECT_EQ(1.0, times[0].totalDays());
+  EXPECT_EQ(0.0, values[0]);
+
+  // schedule is 1 until 24:00
+  EXPECT_TRUE(daySchedule.addValue(Time(1, 0, 0), 1.0));
+
+  times = daySchedule.times();
+  values = daySchedule.values();
+  ASSERT_EQ(1u, times.size());
+  ASSERT_EQ(1u, values.size());
+  EXPECT_EQ(1.0, times[0].totalDays());
+  EXPECT_EQ(1.0, values[0]);
+
+  boost::optional<double> removed = daySchedule.removeValue(openstudio::Time(0.5));
+  EXPECT_FALSE(removed);
+
+  times = daySchedule.times();
+  values = daySchedule.values();
+  ASSERT_EQ(1u, times.size());
+  ASSERT_EQ(1u, values.size());
+  EXPECT_EQ(1.0, times[0].totalDays());
+  EXPECT_EQ(1.0, values[0]);
+
+  removed = daySchedule.removeValue(openstudio::Time(1.0));
+  ASSERT_TRUE(removed);
+  EXPECT_EQ(1.0, *removed);
+
+  times = daySchedule.times();
+  values = daySchedule.values();
+  ASSERT_EQ(1u, times.size());
+  ASSERT_EQ(1u, values.size());
+  EXPECT_EQ(1.0, times[0].totalDays());
+  EXPECT_EQ(0.0, values[0]);
+
+  // schedule is 1 until 12:00 then 2 until 24:00
+  EXPECT_TRUE(daySchedule.addValue(Time(0, 12, 0), 1.0));
+  EXPECT_TRUE(daySchedule.addValue(Time(1, 0, 0), 2.0));
+
+  times = daySchedule.times();
+  values = daySchedule.values();
+  ASSERT_EQ(2u, times.size());
+  ASSERT_EQ(2u, values.size());
+  EXPECT_EQ(0.5, times[0].totalDays());
+  EXPECT_EQ(1.0, values[0]);
+  EXPECT_EQ(1.0, times[1].totalDays());
+  EXPECT_EQ(2.0, values[1]);
+
+  removed = daySchedule.removeValue(openstudio::Time(0.4));
+  EXPECT_FALSE(removed);
+
+  times = daySchedule.times();
+  values = daySchedule.values();
+  ASSERT_EQ(2u, times.size());
+  ASSERT_EQ(2u, values.size());
+  EXPECT_EQ(0.5, times[0].totalDays());
+  EXPECT_EQ(1.0, values[0]);
+  EXPECT_EQ(1.0, times[1].totalDays());
+  EXPECT_EQ(2.0, values[1]);
+
+  removed = daySchedule.removeValue(openstudio::Time(0.5));
+  ASSERT_TRUE(removed);
+  EXPECT_EQ(1.0, *removed);
+
+  times = daySchedule.times();
+  values = daySchedule.values();
+  ASSERT_EQ(1u, times.size());
+  ASSERT_EQ(1u, values.size());
+  EXPECT_EQ(1.0, times[0].totalDays());
+  EXPECT_EQ(2.0, values[0]);
+
+}

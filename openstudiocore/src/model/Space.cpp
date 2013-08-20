@@ -873,6 +873,20 @@ namespace detail {
     return result;
   }
 
+  double Space_Impl::exteriorWallArea() const {
+    double result = 0;
+    BOOST_FOREACH(const Surface& surface, this->surfaces()) {
+      if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors"))
+      {
+        if (istringEqual(surface.surfaceType(), "Wall"))
+        {
+          result += surface.grossArea();
+        }
+      }
+    }
+    return result;
+  }
+
   double Space_Impl::volume() const {
     double result = 0;
 
@@ -2442,16 +2456,34 @@ namespace detail {
     OS_ASSERT(count == 1);
   }
 
+  // helper function to get a boost polygon point from a Point3d
+  boost::tuple<double, double> point3dToTuple(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol)
+  {
+    // simple method
+    //return boost::make_tuple(point3d.x(), point3d.y());
+
+    // detailed method, try to combine points within tolerance
+    BOOST_FOREACH(const Point3d& otherPoint, allPoints){
+      if (std::sqrt(std::pow(point3d.x()-otherPoint.x(), 2) + std::pow(point3d.y()-otherPoint.y(), 2)) < tol){
+        return boost::make_tuple(otherPoint.x(), otherPoint.y());
+      }
+    }
+    allPoints.push_back(point3d);
+    return boost::make_tuple(point3d.x(), point3d.y());
+  }
+
   std::vector<Point3d> Space_Impl::floorPrint() const
   {
-    // get all floors
-    double xmin = std::numeric_limits<double>::max();
-    double xmax = std::numeric_limits<double>::min();
-    double ymin = std::numeric_limits<double>::max();
-    double ymax = std::numeric_limits<double>::min();
+    double tol = 0.01; // 1 cm tolerance
+
+    // get all surfaces, sort so results are repeatable
+    std::vector<Surface> surfaces = this->surfaces();
+    std::sort(surfaces.begin(), surfaces.end(), IdfObjectNameLess());
+
+    // find all floors
     boost::optional<double> z;
     std::vector<Surface> floors;
-    BOOST_FOREACH(const Surface& surface, this->surfaces()){
+    BOOST_FOREACH(const Surface& surface, surfaces){
       if (surface.vertices().size() < 3){
         LOG(Warn, "Skipping floor with fewer than 3 vertices");
         continue;
@@ -2460,12 +2492,8 @@ namespace detail {
         floors.push_back(surface);
         BOOST_FOREACH(const Point3d& point, surface.vertices()){
           if (!z){
-            xmin = std::min(xmin, point.x());
-            xmax = std::max(xmax, point.x());
-            ymin = std::min(ymin, point.y());
-            ymax = std::max(ymax, point.y());
             z = point.z();
-          }else if (*z != point.z()){
+          }else if (std::abs(z.get()-point.z()) > tol){
             LOG(Error, "All floor surfaces must lie on the same x, y plane to compute space floor print");
             return std::vector<Point3d>();
           }
@@ -2474,6 +2502,7 @@ namespace detail {
     }
 
     std::vector<Point3d> result;
+    std::vector<Point3d> allPoints;
 
     if (floors.empty()){
       LOG(Error, "No floor surfaces found to compute space floor print");
@@ -2508,9 +2537,9 @@ namespace detail {
           BoostPolygon boostPolygon;
           std::vector<Point3d> vertices = floor.vertices();
           BOOST_FOREACH(const Point3d& point, vertices){
-            boost::geometry::append(boostPolygon, boost::make_tuple(point.x(), point.y()));
+            boost::geometry::append(boostPolygon, point3dToTuple(point, allPoints, tol));
           }
-          boost::geometry::append(boostPolygon, boost::make_tuple(vertices[0].x(), vertices[0].y()));
+          boost::geometry::append(boostPolygon, point3dToTuple(vertices[0], allPoints, tol));
 
           BoostMultiPolygon tmpResult;
           boost::geometry::union_(boostResult, boostPolygon, tmpResult);
@@ -2874,6 +2903,10 @@ double Space::floorArea() const {
 
 double Space::exteriorArea() const {
   return getImpl<detail::Space_Impl>()->exteriorArea();
+}
+
+double Space::exteriorWallArea() const {
+  return getImpl<detail::Space_Impl>()->exteriorWallArea();
 }
 
 double Space::volume() const {

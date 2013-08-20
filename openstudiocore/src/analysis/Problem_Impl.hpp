@@ -296,6 +296,8 @@ namespace detail {
 
     static Problem fromVariant(const QVariant& variant, const VersionString& version);
 
+    virtual QVariant toServerFormulationVariant() const;
+
     /// Relocate path data from originalBase to newBase.
     virtual void updateInputPathData(const openstudio::path& originalBase,
                                      const openstudio::path& newBase);

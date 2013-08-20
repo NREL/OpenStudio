@@ -157,8 +157,8 @@ namespace detail {
   QVariant AnalysisObject_Impl::toVariant() const {
     QVariantMap analysisObjectData;
 
-    analysisObjectData["uuid"] = uuid().toString();
-    analysisObjectData["version_uuid"] = versionUUID().toString();
+    analysisObjectData["uuid"] = toQString(removeBraces(uuid()));
+    analysisObjectData["version_uuid"] = toQString(removeBraces(versionUUID()));
     std::string str = name();
     if (!str.empty()) {
       analysisObjectData["name"] = toQString(str);
@@ -173,6 +173,14 @@ namespace detail {
     }
 
     return QVariant(analysisObjectData);
+  }
+
+  QVariant AnalysisObject_Impl::toServerFormulationVariant() const {
+    return QVariant();
+  }
+
+  QVariant AnalysisObject_Impl::toServerDataPointsVariant() const {
+    return QVariant();
   }
 
   void AnalysisObject_Impl::onChildChanged(ChangeType changeType) {
@@ -323,6 +331,14 @@ QVariant AnalysisObject::toVariant() const {
   return getImpl<detail::AnalysisObject_Impl>()->toVariant();
 }
 
+QVariant AnalysisObject::toServerFormulationVariant() const {
+  return getImpl<detail::AnalysisObject_Impl>()->toServerFormulationVariant();
+}
+
+QVariant AnalysisObject::toServerDataPointsVariant() const {
+  return getImpl<detail::AnalysisObject_Impl>()->toServerDataPointsVariant();
+}
+
 /// @endcond
 
 boost::optional<AnalysisObject> loadJSON(const openstudio::path& p) {
@@ -331,7 +347,7 @@ boost::optional<AnalysisObject> loadJSON(const openstudio::path& p) {
     std::pair<QVariant,VersionString> parseResult = openstudio::loadJSON(p);
     QVariantMap variant = parseResult.first.toMap();
     if (variant.contains("data_point")) {
-      result = detail::DataPoint_Impl::factoryFromVariant(variant["data_point"],parseResult.second);
+      result = detail::DataPoint_Impl::factoryFromVariant(variant["data_point"],parseResult.second,boost::none);
     }
     else if (variant.contains("analysis")) {
       result = detail::Analysis_Impl::fromVariant(variant["analysis"],parseResult.second);
@@ -373,7 +389,7 @@ boost::optional<AnalysisObject> loadJSON(const std::string& json) {
     std::pair<QVariant,VersionString> parseResult = openstudio::loadJSON(json);
     QVariantMap variant = parseResult.first.toMap();
     if (variant.contains("data_point")) {
-      result = detail::DataPoint_Impl::factoryFromVariant(variant["data_point"],parseResult.second);
+      result = detail::DataPoint_Impl::factoryFromVariant(variant["data_point"],parseResult.second,boost::none);
     }
     else if (variant.contains("analysis")) {
       result = detail::Analysis_Impl::fromVariant(variant["analysis"],parseResult.second);

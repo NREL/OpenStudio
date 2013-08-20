@@ -237,8 +237,6 @@ InputController::InputController(EditController * editController,const ruleset::
   {
     BoolInputView * boolInputView = new BoolInputView();
 
-    boolInputView->checkBox->setChecked(m_argument.valueAsBool());
-
     boolInputView->checkBox->setText(QString::fromStdString(m_argument.displayName()));
 
     if( m_argument.hasValue() )
@@ -248,6 +246,10 @@ InputController::InputController(EditController * editController,const ruleset::
     else if( m_argument.hasDefaultValue() )
     {
       boolInputView->checkBox->setChecked(m_argument.defaultValueAsBool());
+    }
+    else {
+      boolInputView->checkBox->setChecked(false);
+      setValue(false);
     }
 
     bool bingo = connect(boolInputView->checkBox,SIGNAL(clicked(bool)),this,SLOT(setValue(bool)));

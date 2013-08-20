@@ -133,8 +133,8 @@ namespace detail {
   SamplingAlgorithm SamplingAlgorithm_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
     QVariantMap map = variant.toMap();
     SamplingAlgorithmOptions options = SamplingAlgorithmOptions_Impl::fromVariant(map["options"],version);
-    return SamplingAlgorithm(openstudio::UUID(map["uuid"].toString()),
-                             openstudio::UUID(map["version_uuid"].toString()),
+    return SamplingAlgorithm(toUUID(map["uuid"].toString().toStdString()),
+                             toUUID(map["version_uuid"].toString().toStdString()),
                              map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                              map.contains("description") ? map["description"].toString().toStdString() : std::string(),
                              map["complete"].toBool(),
@@ -143,7 +143,7 @@ namespace detail {
                              options,
                              map.contains("restart_file_reference") ? openstudio::detail::toFileReference(map["restart_file_reference"],version) : OptionalFileReference(),
                              map.contains("out_file_reference") ? openstudio::detail::toFileReference(map["out_file_reference"],version) : OptionalFileReference(),
-                             map.contains("job") ? runmanager::detail::JSON::toJob(variant,version) : boost::optional<runmanager::Job>());
+                             map.contains("job") ? runmanager::detail::JSON::toJob(variant,version, true) : boost::optional<runmanager::Job>());
   }
 
 } // detail
