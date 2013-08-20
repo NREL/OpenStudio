@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef UTILITIES_UNITS_CELCIUSUNIT_HPP
-#define UTILITIES_UNITS_CELCIUSUNIT_HPP
+#ifndef UTILITIES_UNITS_CELSIUSUNIT_HPP
+#define UTILITIES_UNITS_CELSIUSUNIT_HPP
 
 #include <utilities/UtilitiesAPI.hpp>
 #include <utilities/units/TemperatureUnit.hpp>
@@ -26,18 +26,18 @@
 namespace openstudio {
 namespace detail {
 
-  class CelciusUnit_Impl;
+  class CelsiusUnit_Impl;
 
 } // detail
 
-/** CelciusUnit is a TemperatureUnit that supports absolute temperatures in degrees Celcius.
- *  Kelvin and Celcius are the same in situations of relative temperature, that is, when it is the
+/** CelsiusUnit is a TemperatureUnit that supports absolute temperatures in degrees Celsius.
+ *  Kelvin and Celsius are the same in situations of relative temperature, that is, when it is the
  *  difference in temperatures that matter, rather than the absolute value. This is normally the
  *  case when the temperature base unit shows up in combination with other units, and that is not
  *  the situation being addressed here. This class is for reporting actual temperatures in degrees
- *  Celcius. Printing out K's as C's in the former situation is a feature that may be added to this
+ *  Celsius. Printing out K's as C's in the former situation is a feature that may be added to this
  *  library at a later date. */
-class UTILITIES_API CelciusUnit : public TemperatureUnit {
+class UTILITIES_API CelsiusUnit : public TemperatureUnit {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -47,7 +47,7 @@ class UTILITIES_API CelciusUnit : public TemperatureUnit {
    *  \param[in] CExp exponent on baseUnit C.
    *  \param[in] scaleExponent exponent for scale. For instance 3 for kilo.
    *  \param[in] prettyString optional string to use in place of standardString. */
-  CelciusUnit(int CExp=0,int scaleExponent=0,const std::string& prettyString="");
+  CelsiusUnit(int CExp=0,int scaleExponent=0,const std::string& prettyString="");
 
   /** Alternate constructor creates an absolute temperature. Specify the abbreviation of the scale,
    *  rather than its exponent.
@@ -56,43 +56,43 @@ class UTILITIES_API CelciusUnit : public TemperatureUnit {
    *    "k" for kilo.
    *  \param[in] CExp exponent on baseUnit C.
    *  \param[in] prettyString optional string to use in place of standardString. */
-  CelciusUnit(const std::string& scaleAbbreviation,
+  CelsiusUnit(const std::string& scaleAbbreviation,
               int CExp=0,
               const std::string& prettyString="");
 
-  virtual ~CelciusUnit() {}
+  virtual ~CelsiusUnit() {}
 
   //@}
  protected:
   /// @cond
-  typedef detail::CelciusUnit_Impl ImplType;
+  typedef detail::CelsiusUnit_Impl ImplType;
 
-  explicit CelciusUnit(boost::shared_ptr<detail::CelciusUnit_Impl> impl);
+  explicit CelsiusUnit(boost::shared_ptr<detail::CelsiusUnit_Impl> impl);
 
   friend class Unit;
-  friend class detail::CelciusUnit_Impl;
+  friend class detail::CelsiusUnit_Impl;
 
   /// @endcond
  private:
 
-  REGISTER_LOGGER("openstudio.units.CelciusUnit");
+  REGISTER_LOGGER("openstudio.units.CelsiusUnit");
 };
 
-/** \relates CelciusUnit*/
-typedef boost::optional<CelciusUnit> OptionalCelciusUnit;
+/** \relates CelsiusUnit*/
+typedef boost::optional<CelsiusUnit> OptionalCelsiusUnit;
 
-/** \relates CelciusUnit*/
-typedef std::vector<CelciusUnit> CelciusUnitVector;
+/** \relates CelsiusUnit*/
+typedef std::vector<CelsiusUnit> CelsiusUnitVector;
 
 /** @name Create Functions Used by UnitFactory */
 //@{
 
-/** \relates CelciusUnit */
-UTILITIES_API CelciusUnit createCelciusTemperature();
+/** \relates CelsiusUnit */
+UTILITIES_API CelsiusUnit createCelsiusTemperature();
 
 //@}
 
 } // openstudio
 
-#endif // UTILITIES_UNITS_CELCIUSUNIT_HPP
+#endif // UTILITIES_UNITS_CELSIUSUNIT_HPP
 

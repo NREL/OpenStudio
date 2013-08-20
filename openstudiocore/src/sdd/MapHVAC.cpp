@@ -464,7 +464,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       if( ok ) 
       {
         Quantity valueIP(value,createFahrenheitTemperature());
-        OptionalQuantity valueSI = QuantityConverter::instance().convert(valueIP, UnitSystem(UnitSystem::Celcius));
+        OptionalQuantity valueSI = QuantityConverter::instance().convert(valueIP, UnitSystem(UnitSystem::Celsius));
         OS_ASSERT(valueSI);
         oaController.setEconomizerMaximumLimitDryBulbTemperature(valueSI->value());
       }
@@ -477,7 +477,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       if( ok ) 
       {
         Quantity valueIP(value,createFahrenheitTemperature());
-        OptionalQuantity valueSI = QuantityConverter::instance().convert(valueIP, UnitSystem(UnitSystem::Celcius));
+        OptionalQuantity valueSI = QuantityConverter::instance().convert(valueIP, UnitSystem(UnitSystem::Celsius));
         OS_ASSERT(valueSI);
         oaController.setEconomizerMinimumLimitDryBulbTemperature(valueSI->value());
       }

@@ -23,8 +23,8 @@
   #include <utilities/units/Misc1Unit_Impl.hpp>
   #include <utilities/units/TemperatureUnit.hpp>
   #include <utilities/units/TemperatureUnit_Impl.hpp>
-  #include <utilities/units/CelciusUnit.hpp>
-  #include <utilities/units/CelciusUnit_Impl.hpp>
+  #include <utilities/units/CelsiusUnit.hpp>
+  #include <utilities/units/CelsiusUnit_Impl.hpp>
   #include <utilities/units/FahrenheitUnit.hpp>
   #include <utilities/units/FahrenheitUnit_Impl.hpp>
 %}
@@ -41,7 +41,7 @@ SWIG_UNIT_TEMPLATES(Unit);
 %ignore std::vector<openstudio::TemperatureUnit>::vector(size_type);
 %ignore std::vector<openstudio::TemperatureUnit>::resize(size_type);
 SWIG_UNIT_TEMPLATES(TemperatureUnit);
-SWIG_UNIT_TEMPLATES(CelciusUnit);
+SWIG_UNIT_TEMPLATES(CelsiusUnit);
 SWIG_UNIT_TEMPLATES(FahrenheitUnit);
 SWIG_UNIT_TEMPLATES(SIUnit);
 SWIG_UNIT_TEMPLATES(IPUnit);
@@ -64,7 +64,7 @@ SWIG_UNIT_TEMPLATES(Misc1Unit);
 
 SWIG_UNIT(Unit);
 SWIG_UNIT(TemperatureUnit);
-SWIG_UNIT(CelciusUnit);
+SWIG_UNIT(CelsiusUnit);
 SWIG_UNIT(FahrenheitUnit);
 SWIG_UNIT(SIUnit);
 SWIG_UNIT(IPUnit);
