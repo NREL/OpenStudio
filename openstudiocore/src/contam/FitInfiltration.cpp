@@ -239,8 +239,7 @@ int main(int argc, char *argv[])
 
   openstudio::contam::ForwardTranslator translator;
   
-  boost::optional<std::string> output = translator.translateToPrj(*model,false,leakageDescriptorString);
-  if(!output)
+  if(!translator.translate(*model,false,leakageDescriptorString))
   {
     std::cout << "Translation failed, check errors and warnings for more information." << std::endl;
     return EXIT_FAILURE;
@@ -282,13 +281,13 @@ int main(int argc, char *argv[])
   for(double angle=0.0;angle<360.0;angle+=90.0)
   {
     QVector<double> results = runCase(spaceMap, translator, extSurfaces, 4.4704, angle, contamExePath,
-      simreadExePath, true);
+      simreadExePath, verbose);
     for(int i=0;i<results.size();i++)
     {
       Q10[i] += results[i];
     }
     results = runCase(spaceMap, translator, extSurfaces, 8.9408, angle, contamExePath,
-      simreadExePath, true);
+      simreadExePath, verbose);
     for(int i=0;i<results.size();i++)
     {
       Q20[i] += results[i];
@@ -318,15 +317,15 @@ int main(int argc, char *argv[])
   //  std::cout<<i<<" "<<C[i]<<" "<<D[i]<<std::endl;
   //}
 
-  //Check
+  // Check fit accuracy
   if(verbose)
   {
     for(int i=0;i<Q10.size();i++)
     {
       double calcQ10 = Q10[i]*(C[i]*4.4704 + D[i]*4.4704*4.4704);
       double calcQ20 = Q10[i]*(C[i]*8.9408 + D[i]*8.9408*8.9408);
-      std::cout<<Q10[i]<<" ?= "<<calcQ10<<" ("<<Q10[i]-calcQ10<<")"<<std::endl;
-      std::cout<<Q20[i]<<" ?= "<<calcQ20<<" ("<<Q20[i]-calcQ20<<")"<<std::endl;
+      std::cout<<openstudio::toString(spaces[i].handle())<<", 10 mph error: "<<Q10[i]-calcQ10<<std::endl;
+      std::cout<<openstudio::toString(spaces[i].handle())<<", 20 mph error: "<<Q20[i]-calcQ20<<std::endl;
     }
   }
 

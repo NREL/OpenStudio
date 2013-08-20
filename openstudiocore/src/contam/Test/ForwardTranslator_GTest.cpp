@@ -38,7 +38,7 @@ TEST_F(ContamFixture, ForwardTranslator_exampleModel)
 
   path p = openstudio::toPath("exampleModel.prj");
 
-  bool test = ForwardTranslator::modelToContam(model, p);
+  bool test = ForwardTranslator::modelToPrj(model, p);
 
   EXPECT_TRUE(test);
 }
