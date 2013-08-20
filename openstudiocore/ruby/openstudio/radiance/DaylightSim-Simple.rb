@@ -719,8 +719,8 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
                                          OpenStudio::DateTime::now(),
                                          OpenStudio::Calendar.new(firstReportDateTime.date().year()));
 
-#    puts "#{Time.now.getutc}: removing indexes"
-#    sqlOutFile.removeIndexes
+    puts "#{Time.now.getutc}: removing indexes"
+    sqlOutFile.removeIndexes
 
     t_space_names_to_calculate.each do |space_name|
       illuminanceMatrixMaps = OpenStudio::MatrixVector.new();
@@ -930,9 +930,9 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
       end
     end
 
-#    puts "#{Time.now.getutc}: creating indexes"
-#    sqlOutFile.createIndexes
-#    puts "#{Time.now.getutc}: done creating indexes"
+    puts "#{Time.now.getutc}: creating indexes"
+    sqlOutFile.createIndexes
+    puts "#{Time.now.getutc}: done creating indexes"
 
   end
 end
