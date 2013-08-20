@@ -422,7 +422,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_EditProblemWithTwoWorkflows) {
   }
 }
 
-TEST_F(AnalysisDriverFixture, SimpleProject_ZipFileForRemoteSystem) {
+TEST_F(AnalysisDriverFixture, SimpleProject_ZipFileForCloud) {
   openstudio::path tempZipFilePath;
 
   {
@@ -443,7 +443,7 @@ TEST_F(AnalysisDriverFixture, SimpleProject_ZipFileForRemoteSystem) {
     project.makeSelfContained();
 
     // create zip
-    tempZipFilePath = project.zipFileForRemoteSystem();
+    tempZipFilePath = project.zipFileForCloud();
 
     // unzip and check contents
     openstudio::path remoteDir = project.projectDir().parent_path() / toPath("UnzippedProject");

@@ -109,8 +109,8 @@ namespace detail {
     // stop collecting log messages
     m_logFile.disable();
     // delete zip file
-    if (!m_zipFileForRemoteSystem.empty()) {
-      boost::filesystem::remove(m_zipFileForRemoteSystem);
+    if (!m_zipFileForCloud.empty()) {
+      boost::filesystem::remove(m_zipFileForCloud);
     }
   }
 
@@ -862,22 +862,22 @@ namespace detail {
     return result;
   }
 
-  openstudio::path SimpleProject_Impl::zipFileForRemoteSystem() const {
+  openstudio::path SimpleProject_Impl::zipFileForCloud() const {
     openstudio::path tempDir;
-    if (m_zipFileForRemoteSystem.empty()) {
+    if (m_zipFileForCloud.empty()) {
       // get temp directory
       tempDir = openstudio::tempDir();
     }
     else {
       // already exists -- delete current zip file
       // (instead of trying to determine if it's still okay, just go ahead and make a new one)
-      tempDir = m_zipFileForRemoteSystem.parent_path();
-      boost::filesystem::remove(m_zipFileForRemoteSystem);
+      tempDir = m_zipFileForCloud.parent_path();
+      boost::filesystem::remove(m_zipFileForCloud);
     }
 
     // create zip file
-    m_zipFileForRemoteSystem = tempDir / toPath("analysis_" + removeBraces(analysis().uuid()) + ".zip");
-    ZipFile zipFile(m_zipFileForRemoteSystem,false);
+    m_zipFileForCloud = tempDir / toPath("analysis_" + removeBraces(analysis().uuid()) + ".zip");
+    ZipFile zipFile(m_zipFileForCloud,false);
 
     // add contents
     //
@@ -920,7 +920,7 @@ namespace detail {
       removeDirectory(tempFile);
     }
 
-    return m_zipFileForRemoteSystem;
+    return m_zipFileForCloud;
   }
 
   analysis::DataPoint SimpleProject_Impl::baselineDataPoint() const {
@@ -1873,8 +1873,8 @@ bool SimpleProject::removeAllDataPoints() {
   return getImpl()->removeAllDataPoints();
 }
 
-openstudio::path SimpleProject::zipFileForRemoteSystem() const {
-  return getImpl()->zipFileForRemoteSystem();
+openstudio::path SimpleProject::zipFileForCloud() const {
+  return getImpl()->zipFileForCloud();
 }
 
 analysis::DataPoint SimpleProject::baselineDataPoint() const {

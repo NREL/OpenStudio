@@ -234,7 +234,7 @@ namespace detail {
 
     /** Creates a zip file of the items needed to run individual DataPoints on a remote system, and
      *  returns the path to that (temporary) file. The file is deleted by SimpleProject's destructor. */
-    openstudio::path zipFileForRemoteSystem() const;
+    openstudio::path zipFileForCloud() const;
 
     //@}
     /** @name PAT-Specific Actions */
@@ -284,7 +284,7 @@ namespace detail {
     mutable boost::optional<Workspace> m_seedIdf;      // clear optional when analysis's seed changes
     mutable std::map<UUID,BCLMeasure> m_measures;
     mutable std::map<UUID,std::vector<ruleset::OSArgument> > m_measureArguments;
-    mutable openstudio::path m_zipFileForRemoteSystem; // zip file always re-created, but reuse tempDir
+    mutable openstudio::path m_zipFileForCloud; // zip file always re-created, but reuse tempDir
 
     openstudio::path alternateModelsDir() const;
 

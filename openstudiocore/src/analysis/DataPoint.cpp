@@ -583,8 +583,8 @@ namespace detail {
 
     QVariantMap metadata = jsonMetadata().toMap();
 
-    if (!options.projectPath.empty()) {
-      metadata["project_path"] = toQString(options.projectPath);
+    if (!options.projectDir.empty()) {
+      metadata["project_dir"] = toQString(options.projectDir);
     }
 
     if (options.osServerView && hasProblem()) {
@@ -749,9 +749,9 @@ namespace detail {
 } // detail
 
 DataPointSerializationOptions::DataPointSerializationOptions(
-    const openstudio::path& t_projectPath,
+    const openstudio::path& t_projectDir,
     bool t_osServerView)
-  : projectPath(t_projectPath),
+  : projectDir(t_projectDir),
     osServerView(t_osServerView)
 {}
 

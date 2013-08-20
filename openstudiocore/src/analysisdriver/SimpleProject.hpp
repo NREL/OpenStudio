@@ -285,7 +285,7 @@ class ANALYSISDRIVER_API SimpleProject {
 
   /** Creates a zip file of the items needed to run individual DataPoints on a remote system, and
    *  returns the path to that (temporary) file. The file is deleted by SimpleProject's destructor. */
-  openstudio::path zipFileForRemoteSystem() const;
+  openstudio::path zipFileForCloud() const;
 
   //@}
   /** @name PAT-Specific Actions */
