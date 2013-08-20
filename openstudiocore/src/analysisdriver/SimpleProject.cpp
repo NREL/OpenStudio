@@ -876,8 +876,7 @@ namespace detail {
     }
 
     // create zip file
-    // HERE -- Change toString to toUID after JSON Server View to develop.
-    m_zipFileForRemoteSystem = tempDir / toPath("analysis_" + toString(analysis().uuid()) + ".zip");
+    m_zipFileForRemoteSystem = tempDir / toPath("analysis_" + removeBraces(analysis().uuid()) + ".zip");
     ZipFile zipFile(m_zipFileForRemoteSystem,false);
 
     // add contents
@@ -887,7 +886,7 @@ namespace detail {
     //
     // 1 - problem formulation json
     openstudio::path tempFile = tempDir / toPath("formulation.json");
-    analysis().saveJSON(tempFile,AnalysisSerializationScope::ProblemFormulation,true);
+    analysis().saveJSON(tempFile,AnalysisSerializationOptions(projectDir()),true);
     zipFile.addFile(tempFile,toPath("formulation.json"));
     boost::filesystem::remove(tempFile);
     // 2 - seed folder
