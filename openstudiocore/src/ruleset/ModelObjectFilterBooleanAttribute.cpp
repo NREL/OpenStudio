@@ -44,12 +44,12 @@ namespace detail {
   ModelObjectFilterBooleanAttribute_Impl::ModelObjectFilterBooleanAttribute_Impl(const QDomElement& element)
     : ModelObjectFilterAttribute_Impl(element)
   {
-    BOOST_ASSERT(!element.isNull());
-    BOOST_ASSERT(element.tagName() == toQString(this->xmlElementName()));
+    OS_ASSERT(!element.isNull());
+    OS_ASSERT(element.tagName() == toQString(this->xmlElementName()));
 
     QDomElement testValueElement = element.firstChildElement(QString::fromStdString("TestValue"));
 
-    BOOST_ASSERT(!testValueElement.isNull());
+    OS_ASSERT(!testValueElement.isNull());
 
     if (testValueElement.firstChild().nodeValue() == "true"){
       m_testValue = true;
@@ -116,27 +116,27 @@ std::string ModelObjectFilterBooleanAttribute::xmlElementName()
 ModelObjectFilterBooleanAttribute::ModelObjectFilterBooleanAttribute(const std::string& attributeName, bool testValue)
   : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterBooleanAttribute_Impl>(new detail::ModelObjectFilterBooleanAttribute_Impl(attributeName, testValue)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttribute_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttribute_Impl>());
 }
 
 ModelObjectFilterBooleanAttribute::ModelObjectFilterBooleanAttribute(const std::string& attributeName, bool testValue,
                                                                      const UUID& uuid, const UUID& versionUUID)
   : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterBooleanAttribute_Impl>(new detail::ModelObjectFilterBooleanAttribute_Impl(attributeName, testValue, uuid, versionUUID)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttribute_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttribute_Impl>());
 }
 
 ModelObjectFilterBooleanAttribute::ModelObjectFilterBooleanAttribute(const QDomElement& element)
   : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterBooleanAttribute_Impl>(new detail::ModelObjectFilterBooleanAttribute_Impl(element)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttribute_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttribute_Impl>());
 }
 
 /// @cond
 ModelObjectFilterBooleanAttribute::ModelObjectFilterBooleanAttribute(const boost::shared_ptr<detail::ModelObjectFilterBooleanAttribute_Impl>& impl)
   : ModelObjectFilterAttribute(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttribute_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttribute_Impl>());
 }
 /// @endcond
 

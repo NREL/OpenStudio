@@ -20,6 +20,8 @@
 #include <analysis/NormalDistribution.hpp>
 #include <analysis/UncertaintyDescription_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -96,7 +98,7 @@ void NormalDistribution::resetUpperBound() {
 NormalDistribution::NormalDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
-  BOOST_ASSERT(type() == NormalDistribution::type());
+  OS_ASSERT(type() == NormalDistribution::type());
 }
 
 } // analysis

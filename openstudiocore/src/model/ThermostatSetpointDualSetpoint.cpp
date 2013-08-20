@@ -25,6 +25,8 @@
 
 #include <utilities/idd/OS_ThermostatSetpoint_DualSetpoint_FieldEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace model {
 
@@ -35,7 +37,7 @@ namespace detail {
                                                                            bool keepHandle):
     ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ThermostatSetpointDualSetpoint::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ThermostatSetpointDualSetpoint::iddObjectType());
   }
 
   ThermostatSetpointDualSetpoint_Impl::ThermostatSetpointDualSetpoint_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -43,7 +45,7 @@ namespace detail {
                                                                            bool keepHandle):
     ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ThermostatSetpointDualSetpoint::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ThermostatSetpointDualSetpoint::iddObjectType());
   }
 
 
@@ -101,7 +103,7 @@ namespace detail {
 
   void ThermostatSetpointDualSetpoint_Impl::resetHeatingSetpointTemperatureSchedule() {
     bool result = setString(OS_ThermostatSetpoint_DualSetpointFields::HeatingSetpointTemperatureScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ThermostatSetpointDualSetpoint_Impl::setCoolingSetpointTemperatureSchedule(Schedule& schedule) {
@@ -114,7 +116,7 @@ namespace detail {
 
   void ThermostatSetpointDualSetpoint_Impl::resetCoolingSetpointTemperatureSchedule() {
     bool result = setString(OS_ThermostatSetpoint_DualSetpointFields::CoolingSetpointTemperatureScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<ModelObject> ThermostatSetpointDualSetpoint_Impl::heatingSetpointTemperatureScheduleAsModelObject() const {
@@ -174,7 +176,7 @@ namespace detail {
 ThermostatSetpointDualSetpoint::ThermostatSetpointDualSetpoint( const Model& model ):
   ModelObject(ThermostatSetpointDualSetpoint::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ThermostatSetpointDualSetpoint_Impl>());
+  OS_ASSERT(getImpl<detail::ThermostatSetpointDualSetpoint_Impl>());
 }
 
 ThermostatSetpointDualSetpoint::ThermostatSetpointDualSetpoint(boost::shared_ptr<detail::ThermostatSetpointDualSetpoint_Impl> impl):

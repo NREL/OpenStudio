@@ -131,7 +131,7 @@ std::vector<Component *> CollapsibleComponentList::components()
 
 void CollapsibleComponentList::addCollapsibleComponent(CollapsibleComponent * collapsibleComponent)
 {
-  BOOST_ASSERT(collapsibleComponent);
+  OS_ASSERT(collapsibleComponent);
 
   m_mainLayout->addWidget(collapsibleComponent);
   m_collapsibleComponentGroup->addButton(collapsibleComponent,m_collapsibleComponentGroup->buttons().size());
@@ -140,35 +140,35 @@ void CollapsibleComponentList::addCollapsibleComponent(CollapsibleComponent * co
 
   isConnected = connect(collapsibleComponent, SIGNAL(headerClicked(bool)),
                         this, SIGNAL(headerClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponent, SIGNAL(headerClicked(bool)),
                         this, SLOT(on_headerClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponent, SIGNAL(componentClicked(bool)),
                         this, SIGNAL(componentClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponent, SIGNAL(componentClicked(bool)),
                         this, SLOT(on_componentClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponent, SIGNAL(clicked(bool)),
                         this, SIGNAL(collapsibleComponentClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponent, SIGNAL(clicked(bool)),
                         this, SLOT(on_collapsibleComponentClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponent, SIGNAL(getComponentsByPage(int)), 
                         this, SIGNAL(getComponentsByPage(int)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponent, SIGNAL(getComponentsByPage(int)),
                         this, SLOT(on_getComponentsByPage(int)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   collapsibleComponent->setChecked(true);
 

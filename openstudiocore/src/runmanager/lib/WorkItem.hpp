@@ -32,10 +32,6 @@ namespace openstudio {
 
 class FileReferenceType;
 
-namespace ruleset {
-  class ModelRuleset;
-}
-
 namespace runmanager {
 
 class RUNMANAGER_API WorkItem {
@@ -50,7 +46,6 @@ class RUNMANAGER_API WorkItem {
            const openstudio::runmanager::JobParams &t_params,
            const openstudio::runmanager::Files &t_files,
            const std::string &t_jobkeyname="");
-  WorkItem(const openstudio::ruleset::ModelRuleset& modelRuleset);
 
   //@}
   /** @name Getters and Queries */

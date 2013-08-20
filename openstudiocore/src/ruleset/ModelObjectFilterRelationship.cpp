@@ -47,12 +47,12 @@ namespace detail {
       const QDomElement& element)
     : ModelObjectFilterClause_Impl(element)
   {
-    BOOST_ASSERT(!element.isNull());
-    BOOST_ASSERT(element.tagName() == toQString(this->xmlElementName()));
+    OS_ASSERT(!element.isNull());
+    OS_ASSERT(element.tagName() == toQString(this->xmlElementName()));
 
     QDomElement relationshipNameElement = element.firstChildElement(QString::fromStdString("RelationshipName"));
 
-    BOOST_ASSERT(!relationshipNameElement.isNull());
+    OS_ASSERT(!relationshipNameElement.isNull());
 
     m_relationshipName = relationshipNameElement.firstChild().nodeValue().toStdString();
   }
@@ -118,7 +118,7 @@ ModelObjectFilterRelationship::ModelObjectFilterRelationship(const std::string& 
   : ModelObjectFilterClause(boost::shared_ptr<detail::ModelObjectFilterRelationship_Impl>(
                                 new detail::ModelObjectFilterRelationship_Impl(relationshipName)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterRelationship_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterRelationship_Impl>());
 }
 
 ModelObjectFilterRelationship::ModelObjectFilterRelationship(const std::string& relationshipName, 
@@ -127,14 +127,14 @@ ModelObjectFilterRelationship::ModelObjectFilterRelationship(const std::string& 
   : ModelObjectFilterClause(boost::shared_ptr<detail::ModelObjectFilterRelationship_Impl>(
         new detail::ModelObjectFilterRelationship_Impl(relationshipName,uuid,versionUUID)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterRelationship_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterRelationship_Impl>());
 }
 
 ModelObjectFilterRelationship::ModelObjectFilterRelationship(const QDomElement& element)
 : ModelObjectFilterClause(boost::shared_ptr<detail::ModelObjectFilterRelationship_Impl>(
         new detail::ModelObjectFilterRelationship_Impl(element)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectFilterRelationship_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectFilterRelationship_Impl>());
 }
 
 std::string ModelObjectFilterRelationship::relationshipName() const {

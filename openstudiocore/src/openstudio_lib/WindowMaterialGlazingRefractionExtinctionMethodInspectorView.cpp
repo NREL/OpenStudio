@@ -86,7 +86,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
 
   m_thickness = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thickness, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_thickness,row++,0,1,3);
 
   // Solar Index Of Refraction
@@ -97,7 +97,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
 
   m_solarIndexOfRefraction = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_solarIndexOfRefraction, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_solarIndexOfRefraction,row++,0,1,3);
 
   // Solar Extinction Coefficient
@@ -108,7 +108,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
 
   m_solarExtinctionCoefficient = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_solarExtinctionCoefficient, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_solarExtinctionCoefficient,row++,0,1,3);
 
   // Visible Index of Refraction
@@ -119,7 +119,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
 
   m_visibleIndexOfRefraction = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_visibleIndexOfRefraction, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_visibleIndexOfRefraction,row++,0,1,3);
 
   // Visible Extinction Coefficient
@@ -130,7 +130,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
 
   m_visibleExtinctionCoefficient = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_visibleExtinctionCoefficient, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_visibleExtinctionCoefficient,row++,0,1,3);
 
   // Infrared Transmittance At Normal Incidence
@@ -141,7 +141,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
 
   m_infraredTransmittanceAtNormalIncidence = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_infraredTransmittanceAtNormalIncidence, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_infraredTransmittanceAtNormalIncidence,row++,0,1,3);
 
   // Infrared Hemispherical Emissivity
@@ -152,7 +152,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
 
   m_infraredHemisphericalEmissivity = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_infraredHemisphericalEmissivity, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_infraredHemisphericalEmissivity,row++,0,1,3);
 
   // Conductivity
@@ -163,7 +163,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
 
   m_conductivity = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_conductivity, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_conductivity,row++,0,1,3);
 
   // Dirt Correction Factor For Solar And Visible Transmittance
@@ -174,7 +174,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::createLayout(
 
   m_dirtCorrectionFactorForSolarAndVisibleTransmittance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_dirtCorrectionFactorForSolarAndVisibleTransmittance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_dirtCorrectionFactorForSolarAndVisibleTransmittance,row++,0,1,3);
 
   // Solar Diffusing

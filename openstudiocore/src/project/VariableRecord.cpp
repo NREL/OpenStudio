@@ -82,9 +82,9 @@ namespace detail{
   VariableRecord_Impl::VariableRecord_Impl(const QSqlQuery& query, const ProjectDatabase& database)
     : ObjectRecord_Impl(database, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
@@ -94,7 +94,7 @@ namespace detail{
     }
 
     value = query.value(VariableRecordColumns::variableVectorIndex);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_variableVectorIndex = value.toInt();
 
     value = query.value(VariableRecordColumns::functionCoefficient);
@@ -103,7 +103,7 @@ namespace detail{
     }
 
     value = query.value(VariableRecordColumns::variableRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_variableRecordType = VariableRecordType(value.toInt());
   }
 
@@ -181,7 +181,7 @@ namespace detail{
     }
 
     value = query.value(VariableRecordColumns::variableVectorIndex);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastVariableVectorIndex = value.toInt();
 
     value = query.value(VariableRecordColumns::functionCoefficient);
@@ -193,7 +193,7 @@ namespace detail{
     }
 
     value = query.value(VariableRecordColumns::variableRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastVariableRecordType = VariableRecordType(value.toInt());
   }
 
@@ -214,7 +214,7 @@ namespace detail{
     }
 
     value = query.value(VariableRecordColumns::variableVectorIndex);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_variableVectorIndex == value.toInt());
 
     value = query.value(VariableRecordColumns::functionCoefficient);
@@ -226,7 +226,7 @@ namespace detail{
     }
 
     value = query.value(VariableRecordColumns::variableRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_variableRecordType == VariableRecordType(value.toInt()));
 
     return result;
@@ -273,7 +273,7 @@ UpdateByIdQueryData VariableRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -364,7 +364,7 @@ VariableRecord VariableRecord::factoryFromVariable(const analysis::Variable& var
                                                            functionCoefficient);
   }
 
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return VariableRecord(boost::shared_ptr<detail::VariableRecord_Impl>());
 }
 
@@ -377,7 +377,7 @@ std::vector<VariableRecord> VariableRecord::getVariableRecords(ProjectDatabase& 
   assertExec(query);
   while (query.next()) {
     boost::optional<VariableRecord> variable = factoryFromQuery(query, database);
-    BOOST_ASSERT(variable);
+    OS_ASSERT(variable);
     result.push_back(*variable);
   }
 
@@ -419,13 +419,13 @@ VariableRecord::VariableRecord(boost::shared_ptr<detail::VariableRecord_Impl> im
                                ProjectDatabase projectDatabase)
   : ObjectRecord(impl, projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::VariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::VariableRecord_Impl>());
 }
 
 VariableRecord::VariableRecord(boost::shared_ptr<detail::VariableRecord_Impl> impl)
   : ObjectRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::VariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::VariableRecord_Impl>());
 }
 
 bool VariableRecordVariableVectorIndexLess::operator()(const VariableRecord& left,

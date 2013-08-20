@@ -38,7 +38,7 @@ namespace detail {
                                                                  bool keepHandle)
     : StraightComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CoilHeatingWaterBaseboard::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CoilHeatingWaterBaseboard::iddObjectType());
   }
 
   CoilHeatingWaterBaseboard_Impl::CoilHeatingWaterBaseboard_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -46,7 +46,7 @@ namespace detail {
                                                                  bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CoilHeatingWaterBaseboard::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CoilHeatingWaterBaseboard::iddObjectType());
   }
 
   CoilHeatingWaterBaseboard_Impl::CoilHeatingWaterBaseboard_Impl(const CoilHeatingWaterBaseboard_Impl& other,
@@ -140,7 +140,7 @@ namespace detail {
 
   double CoilHeatingWaterBaseboard_Impl::convergenceTolerance() const {
     boost::optional<double> value = getDouble(OS_Coil_Heating_Water_BaseboardFields::ConvergenceTolerance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -157,17 +157,17 @@ namespace detail {
       resetUFactorTimesAreaValue();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
  void CoilHeatingWaterBaseboard_Impl::resetUFactorTimesAreaValue() {
     bool result = setString(OS_Coil_Heating_Water_BaseboardFields::UFactorTimesAreaValue, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingWaterBaseboard_Impl::autosizeUFactorTimesAreaValue() {
     bool result = setString(OS_Coil_Heating_Water_BaseboardFields::UFactorTimesAreaValue, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingWaterBaseboard_Impl::setMaximumWaterFlowRate(boost::optional<double> maximumWaterFlowRate) {
@@ -179,17 +179,17 @@ namespace detail {
       resetMaximumWaterFlowRate();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
  void CoilHeatingWaterBaseboard_Impl::resetMaximumWaterFlowRate() {
     bool result = setString(OS_Coil_Heating_Water_BaseboardFields::MaximumWaterFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingWaterBaseboard_Impl::autosizeMaximumWaterFlowRate() {
     bool result = setString(OS_Coil_Heating_Water_BaseboardFields::MaximumWaterFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilHeatingWaterBaseboard_Impl::setConvergenceTolerance(double convergenceTolerance) {
@@ -199,7 +199,7 @@ namespace detail {
 
   void CoilHeatingWaterBaseboard_Impl::resetConvergenceTolerance() {
     bool result = setString(OS_Coil_Heating_Water_BaseboardFields::ConvergenceTolerance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
  
@@ -208,7 +208,7 @@ namespace detail {
 CoilHeatingWaterBaseboard::CoilHeatingWaterBaseboard(const Model& model)
   : StraightComponent(CoilHeatingWaterBaseboard::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CoilHeatingWaterBaseboard_Impl>());
+  OS_ASSERT(getImpl<detail::CoilHeatingWaterBaseboard_Impl>());
 }
 unsigned CoilHeatingWaterBaseboard::inletPort()
 {

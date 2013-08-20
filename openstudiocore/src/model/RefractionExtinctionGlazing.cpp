@@ -36,7 +36,7 @@ namespace detail {
                                                                      bool keepHandle)
     : Glazing_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == RefractionExtinctionGlazing::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == RefractionExtinctionGlazing::iddObjectType());
   }
 
   RefractionExtinctionGlazing_Impl::RefractionExtinctionGlazing_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -44,7 +44,7 @@ namespace detail {
                                                                      bool keepHandle)
     : Glazing_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == RefractionExtinctionGlazing::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == RefractionExtinctionGlazing::iddObjectType());
   }
 
   RefractionExtinctionGlazing_Impl::RefractionExtinctionGlazing_Impl(const RefractionExtinctionGlazing_Impl& other,
@@ -67,79 +67,79 @@ namespace detail {
 
   double RefractionExtinctionGlazing_Impl::thickness() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::Thickness,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RefractionExtinctionGlazing_Impl::getThickness(bool returnIP) const {
     OptionalDouble value = thickness();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::Thickness, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double RefractionExtinctionGlazing_Impl::solarIndexofRefraction() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarIndexofRefraction,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RefractionExtinctionGlazing_Impl::getSolarIndexofRefraction(bool returnIP) const {
     OptionalDouble value = solarIndexofRefraction();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarIndexofRefraction, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double RefractionExtinctionGlazing_Impl::solarExtinctionCoefficient() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarExtinctionCoefficient,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RefractionExtinctionGlazing_Impl::getSolarExtinctionCoefficient(bool returnIP) const {
     OptionalDouble value = solarExtinctionCoefficient();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarExtinctionCoefficient, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double RefractionExtinctionGlazing_Impl::visibleIndexofRefraction() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::VisibleIndexofRefraction,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RefractionExtinctionGlazing_Impl::getVisibleIndexofRefraction(bool returnIP) const {
     OptionalDouble value = visibleIndexofRefraction();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::VisibleIndexofRefraction, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double RefractionExtinctionGlazing_Impl::visibleExtinctionCoefficient() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::VisibleExtinctionCoefficient,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RefractionExtinctionGlazing_Impl::getVisibleExtinctionCoefficient(bool returnIP) const {
     OptionalDouble value = visibleExtinctionCoefficient();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::VisibleExtinctionCoefficient, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double RefractionExtinctionGlazing_Impl::infraredTransmittanceatNormalIncidence() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::InfraredTransmittanceatNormalIncidence,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RefractionExtinctionGlazing_Impl::getInfraredTransmittanceatNormalIncidence(bool returnIP) const {
     OptionalDouble value = infraredTransmittanceatNormalIncidence();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::InfraredTransmittanceatNormalIncidence, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -149,14 +149,14 @@ namespace detail {
 
   double RefractionExtinctionGlazing_Impl::infraredHemisphericalEmissivity() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::InfraredHemisphericalEmissivity,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RefractionExtinctionGlazing_Impl::getInfraredHemisphericalEmissivity(bool returnIP) const {
     OptionalDouble value = infraredHemisphericalEmissivity();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::InfraredHemisphericalEmissivity, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -166,14 +166,14 @@ namespace detail {
 
   double RefractionExtinctionGlazing_Impl::conductivity() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::Conductivity,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RefractionExtinctionGlazing_Impl::getConductivity(bool returnIP) const {
     OptionalDouble value = conductivity();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::Conductivity, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -183,14 +183,14 @@ namespace detail {
 
   double RefractionExtinctionGlazing_Impl::dirtCorrectionFactorforSolarandVisibleTransmittance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::DirtCorrectionFactorforSolarandVisibleTransmittance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity RefractionExtinctionGlazing_Impl::getDirtCorrectionFactorforSolarandVisibleTransmittance(bool returnIP) const {
     OptionalDouble value = dirtCorrectionFactorforSolarandVisibleTransmittance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::DirtCorrectionFactorforSolarandVisibleTransmittance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -200,7 +200,7 @@ namespace detail {
 
   bool RefractionExtinctionGlazing_Impl::solarDiffusing() const {
     boost::optional<std::string> value = getString(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarDiffusing,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -334,7 +334,7 @@ namespace detail {
 
   void RefractionExtinctionGlazing_Impl::resetInfraredTransmittanceatNormalIncidence() {
     bool result = setString(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::InfraredTransmittanceatNormalIncidence, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefractionExtinctionGlazing_Impl::setInfraredHemisphericalEmissivity(double infraredHemisphericalEmissivity) {
@@ -352,7 +352,7 @@ namespace detail {
 
   void RefractionExtinctionGlazing_Impl::resetInfraredHemisphericalEmissivity() {
     bool result = setString(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::InfraredHemisphericalEmissivity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefractionExtinctionGlazing_Impl::setConductivity(double conductivity) {
@@ -370,7 +370,7 @@ namespace detail {
 
   void RefractionExtinctionGlazing_Impl::resetConductivity() {
     bool result = setString(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::Conductivity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefractionExtinctionGlazing_Impl::setThermalConductivity(double value) {
@@ -408,7 +408,7 @@ namespace detail {
 
   void RefractionExtinctionGlazing_Impl::resetDirtCorrectionFactorforSolarandVisibleTransmittance() {
     bool result = setString(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::DirtCorrectionFactorforSolarandVisibleTransmittance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefractionExtinctionGlazing_Impl::setSolarDiffusing(bool solarDiffusing) {
@@ -421,7 +421,7 @@ namespace detail {
 
   void RefractionExtinctionGlazing_Impl::resetSolarDiffusing() {
     bool result = setString(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarDiffusing, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   openstudio::Quantity RefractionExtinctionGlazing_Impl::thickness_SI() const {
@@ -507,22 +507,22 @@ RefractionExtinctionGlazing::RefractionExtinctionGlazing(const Model& model,
                                                          //double dirtCorrectionFactorforSolarandVisibleTransmittance)
   : Glazing(RefractionExtinctionGlazing::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::RefractionExtinctionGlazing_Impl>());
+  OS_ASSERT(getImpl<detail::RefractionExtinctionGlazing_Impl>());
 
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   //ok = setHandle();
-  //BOOST_ASSERT(ok);
+  //OS_ASSERT(ok);
   ok = this->setThickness(thickness);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = this->setSolarIndexofRefraction(solarIndexofRefraction);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = this->setSolarExtinctionCoefficient(solarExtinctionCoefficient);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = this->setVisibleIndexofRefraction(visibleIndexofRefraction);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = this->setVisibleExtinctionCoefficient(visibleExtinctionCoefficient);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType RefractionExtinctionGlazing::iddObjectType() {

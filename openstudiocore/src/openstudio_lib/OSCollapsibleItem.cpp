@@ -48,8 +48,8 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
     m_mainLayout(NULL),
     m_showFilterLayout(false)
 {
-  BOOST_ASSERT(m_collapsibleItemHeader);
-  BOOST_ASSERT(m_itemList);
+  OS_ASSERT(m_collapsibleItemHeader);
+  OS_ASSERT(m_itemList);
 
   //m_collapsibleItemHeader->setDraggable(false);
   //m_collapsibleItemHeader->setRemoveable(false);
@@ -82,12 +82,12 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
   m_filtersOnBtn->setText(FILTERS_ON);
   m_filtersOnBtn->setChecked(true);
   isConnected = connect(m_filtersOnBtn,SIGNAL(clicked()),this,SLOT(filtersOnClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_filtersOffBtn = new QRadioButton(this);
   m_filtersOffBtn->setText(FILTERS_OFF);
   isConnected = connect(m_filtersOffBtn,SIGNAL(clicked()),this,SLOT(filtersOffClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_filterBtnGroup = new QButtonGroup(this);
   m_filterBtnGroup->setExclusive(true);
@@ -105,7 +105,7 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
   m_openLibDlgButton->setLayoutDirection(Qt::RightToLeft);
   m_openLibDlgButton->setText("Edit");
   isConnected = connect(m_openLibDlgButton,SIGNAL(clicked()),this,SIGNAL(openLibDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QHBoxLayout * btnHLayout = new QHBoxLayout();
   btnHLayout->addLayout(radioBtnVLayout);
@@ -121,7 +121,7 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
   m_sortComboBox->addItem("Recently Downloaded from BCL");
   m_sortComboBox->addItem("BCL Components");
   isConnected = connect(m_sortComboBox,SIGNAL(currentIndexChanged(const QString &)),this,SLOT(comboBoxClicked(const QString &)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QVBoxLayout * vLayout = new QVBoxLayout();
   vLayout->addLayout(btnHLayout);
@@ -134,26 +134,26 @@ OSCollapsibleItem::OSCollapsibleItem(OSCollapsibleItemHeader * collapsibleItemHe
 
   isConnected = connect(collapsibleItemHeader, SIGNAL(clicked(OSCollapsibleItemHeader *)),
                         this, SLOT(onHeaderClicked(OSCollapsibleItemHeader *)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // item list
   m_mainLayout->addWidget(m_itemList);
   
   isConnected = connect(itemList, SIGNAL(itemSelected(OSItem*)),
                         this, SIGNAL(itemSelected(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(itemList, SIGNAL(itemRemoveClicked(OSItem*)),
                         this, SIGNAL(itemRemoveClicked(OSItem*)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(itemList, SIGNAL(itemReplacementDropped(OSItem*, const OSItemId&)),
                         this, SIGNAL(itemReplacementDropped(OSItem*, const OSItemId&)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(itemList, SIGNAL(selectionCleared()),
                         this, SIGNAL(selectionCleared()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_mainLayout->addStretch();
 

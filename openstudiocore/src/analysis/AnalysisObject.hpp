@@ -24,6 +24,7 @@
 
 #include <utilities/core/UUID.hpp>
 #include <utilities/core/Logger.hpp>
+#include <utilities/core/Path.hpp>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
@@ -170,6 +171,17 @@ class ANALYSIS_API AnalysisObject {
   // children can mark children as dirty for the ProjectDatabase.
   virtual void onChange();
 
+  // Returns this object's data as a QVariant that can be serialized to JSON.
+  QVariant toVariant() const;
+
+  // Returns this object's data as a QVariant that can be serialized to the openstudio-server
+  // problem formulation JSON.
+  QVariant toServerFormulationVariant() const;
+
+  // Returns this object's data as a QVariant that can be serialized to the openstudio-server
+  // data points request JSON.
+  QVariant toServerDataPointsVariant() const;
+
   /// @endcond
  private:
 
@@ -183,6 +195,18 @@ typedef boost::optional<AnalysisObject> OptionalAnalysisObject;
 
 /** \relates AnalysisObject*/
 typedef std::vector<AnalysisObject> AnalysisObjectVector;
+
+/** Factory method for loading JSON containing an AnalysisObject. Returned object will be of the
+ *  correct type. \relates AnalysisObject */
+ANALYSIS_API boost::optional<AnalysisObject> loadJSON(const openstudio::path& p);
+
+/** Factory method for loading JSON containing an AnalysisObject. Returned object will be of the
+ *  correct type. \relates AnalysisObject */
+ANALYSIS_API boost::optional<AnalysisObject> loadJSON(std::istream& json);
+
+/** Factory method for loading JSON containing an AnalysisObject. Returned object will be of the
+ *  correct type. \relates AnalysisObject */
+ANALYSIS_API boost::optional<AnalysisObject> loadJSON(const std::string& json);
 
 } // analysis
 } // openstudio

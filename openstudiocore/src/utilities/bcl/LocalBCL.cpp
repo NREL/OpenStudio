@@ -73,11 +73,11 @@ namespace openstudio{
     }
 
     bool test = m_qSqlDatabase->isValid();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     if (!m_qSqlDatabase->isOpen())
     {
       test = m_qSqlDatabase->open();
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
 
     //Check for out-of-date database
@@ -527,15 +527,15 @@ namespace openstudio{
     QSqlQuery query(*m_qSqlDatabase);
     bool test = query.exec(QString("DELETE FROM Components WHERE uid='%1' AND version_id='%2'").arg(escape(component.uid()),
       escape(component.versionId())));
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     test = query.exec(QString("DELETE FROM Files WHERE uid='%1' AND version_id='%2'").arg(escape(component.uid()),
       escape(component.versionId())));
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     test = query.exec(QString("DELETE FROM Attributes WHERE uid='%1' AND version_id='%2'").arg(escape(component.uid()),
       escape(component.versionId())));
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     return true;
   }
@@ -627,15 +627,15 @@ namespace openstudio{
     QSqlQuery query(*m_qSqlDatabase);
     bool test = query.exec(QString("DELETE FROM Measures WHERE uid='%1' AND version_id='%2'").arg(escape(measure.uid()),
       escape(measure.versionId())));
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     test = query.exec(QString("DELETE FROM Files WHERE uid='%1' AND version_id='%2'").arg(escape(measure.uid()),
       escape(measure.versionId())));
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     test = query.exec(QString("DELETE FROM Attributes WHERE uid='%1' AND version_id='%2'").arg(escape(measure.uid()),
       escape(measure.versionId())));
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     return true;
   }

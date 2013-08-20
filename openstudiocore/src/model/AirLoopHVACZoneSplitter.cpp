@@ -43,14 +43,14 @@ namespace detail{
                                                              bool keepHandle):
   Splitter_Impl(idfObject,model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == AirLoopHVACZoneSplitter::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == AirLoopHVACZoneSplitter::iddObjectType());
   }
 
   AirLoopHVACZoneSplitter_Impl::AirLoopHVACZoneSplitter_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
         : Splitter_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == AirLoopHVACZoneSplitter::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == AirLoopHVACZoneSplitter::iddObjectType());
   }
 
   AirLoopHVACZoneSplitter_Impl::AirLoopHVACZoneSplitter_Impl(
@@ -166,7 +166,7 @@ namespace detail{
 AirLoopHVACZoneSplitter::AirLoopHVACZoneSplitter(const Model& model)
   : Splitter(AirLoopHVACZoneSplitter::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::AirLoopHVACZoneSplitter_Impl>());
+  OS_ASSERT(getImpl<detail::AirLoopHVACZoneSplitter_Impl>());
 }
 
 AirLoopHVACZoneSplitter::AirLoopHVACZoneSplitter(boost::shared_ptr<detail::AirLoopHVACZoneSplitter_Impl> p)

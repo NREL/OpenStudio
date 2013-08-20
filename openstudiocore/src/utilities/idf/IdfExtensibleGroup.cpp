@@ -37,7 +37,7 @@ StringVector IdfExtensibleGroup::fields(bool returnDefault) const {
   StringVector result;
   for (unsigned i = 0, n = numFields(); i < n; ++i) {
     OptionalString str = getString(i,returnDefault);
-    BOOST_ASSERT(str);
+    OS_ASSERT(str);
     result.push_back(*str);
   }
   return result;
@@ -109,7 +109,7 @@ bool IdfExtensibleGroup::setFields(const std::vector<std::string>& values, bool 
   StringVector oldValues;
   for (unsigned i = 0; i < n; ++i) {
     OptionalString oValue = getString(i);
-    BOOST_ASSERT(oValue);
+    OS_ASSERT(oValue);
     oldValues.push_back(*oValue);
   }
 
@@ -124,7 +124,7 @@ bool IdfExtensibleGroup::setFields(const std::vector<std::string>& values, bool 
     // rollback
     for (unsigned i = 0; i < n; ++i) {
       bool rollbackOk = setString(i,oldValues[i],false);
-      BOOST_ASSERT(rollbackOk);
+      OS_ASSERT(rollbackOk);
     }
   }
 
@@ -167,7 +167,7 @@ IdfExtensibleGroup IdfExtensibleGroup::pushClone() const {
   }
 
   StringVector values = fields();
-  BOOST_ASSERT(values.size() == numFields());
+  OS_ASSERT(values.size() == numFields());
   return m_impl->pushExtensibleGroup(values);
 }
 
@@ -178,7 +178,7 @@ IdfExtensibleGroup IdfExtensibleGroup::insertClone(unsigned groupIndex) const {
   }
 
   StringVector values = fields();
-  BOOST_ASSERT(values.size() == numFields());
+  OS_ASSERT(values.size() == numFields());
   return m_impl->insertExtensibleGroup(groupIndex,values);
 }
 
@@ -200,7 +200,7 @@ unsigned IdfExtensibleGroup::numFields() const {
   if (empty()) { return 0; }
   unsigned n = m_impl->iddObject().properties().numExtensible;
   if (m_index + n > m_impl->numFields()) {
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
     return 0;
   }
   return n;
@@ -209,7 +209,7 @@ unsigned IdfExtensibleGroup::numFields() const {
 bool IdfExtensibleGroup::isValid(unsigned fieldIndex) const {
   if (empty()) { return false; }
   if (fieldIndex >= m_impl->iddObject().properties().numExtensible) { return false; }
-  BOOST_ASSERT(m_index + fieldIndex < m_impl->numFields());
+  OS_ASSERT(m_index + fieldIndex < m_impl->numFields());
   return true;
 }
 
@@ -261,7 +261,7 @@ unsigned IdfExtensibleGroup::mf_toIndex(unsigned fieldIndex) const {
     return m_impl->iddObject().index(ExtensibleIndex(groupIndex(),fieldIndex));
   }
   catch (...) { }
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return 0;
 }
 
@@ -277,7 +277,7 @@ std::vector<unsigned> IdfExtensibleGroup::mf_indices() const {
 
 UnsignedVector IdfExtensibleGroup::mf_subsetAndToFieldIndices(UnsignedVector indices) const {
   UnsignedVector result;
-  BOOST_ASSERT(!empty());
+  OS_ASSERT(!empty());
   // downselect and convert to only this ExtensibleGroup
   BOOST_FOREACH(unsigned index,indices) {
     if (index >= m_index) {

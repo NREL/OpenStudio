@@ -24,7 +24,7 @@
 #include <utilities/idd/IddObject.hpp>
 
 #include <utilities/core/Compare.hpp>
-
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Optional.hpp>
 
 namespace openstudio {
@@ -155,14 +155,14 @@ std::ostream& operator<<(std::ostream& os,const DataError& error) {
   os << std::setw(18) << std::left << error.type().valueName() << "." << std::endl;
 
   if (error.scope() == Scope::Field) {
-    BOOST_ASSERT(error.objectType());
+    OS_ASSERT(error.objectType());
     os << "Error is in an object of type '" << error.objectType()->valueDescription();
     os << "', named '" << error.objectName() << "', in field " << error.fieldIdentifier() << ".";
     os << std::endl;
   }
 
   if (error.scope() == Scope::Object) {
-    BOOST_ASSERT(error.objectType());
+    OS_ASSERT(error.objectType());
     os << "Error pertains to an object of type '" << error.objectType()->valueDescription();
     os << "', named '" << error.objectName() << "'." << std::endl;
   }

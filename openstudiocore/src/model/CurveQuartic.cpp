@@ -37,7 +37,7 @@ namespace detail {
   CurveQuartic_Impl::CurveQuartic_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : Curve_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CurveQuartic::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CurveQuartic::iddObjectType());
   }
 
   CurveQuartic_Impl::CurveQuartic_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                                        bool keepHandle)
     : Curve_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CurveQuartic::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CurveQuartic::iddObjectType());
   }
 
   CurveQuartic_Impl::CurveQuartic_Impl(const CurveQuartic_Impl& other,
@@ -71,7 +71,7 @@ namespace detail {
   }
 
   double CurveQuartic_Impl::evaluate(const std::vector<double>& x) const {
-    BOOST_ASSERT(x.size() == 1u);
+    OS_ASSERT(x.size() == 1u);
     double result = coefficient1Constant();
     result += coefficient2x() * x[0];
     result += coefficient3xPOW2() * pow(x[0],2);
@@ -82,43 +82,43 @@ namespace detail {
 
   double CurveQuartic_Impl::coefficient1Constant() const {
     boost::optional<double> value = getDouble(OS_Curve_QuarticFields::Coefficient1Constant,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuartic_Impl::coefficient2x() const {
     boost::optional<double> value = getDouble(OS_Curve_QuarticFields::Coefficient2x,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuartic_Impl::coefficient3xPOW2() const {
     boost::optional<double> value = getDouble(OS_Curve_QuarticFields::Coefficient3x_POW_2,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuartic_Impl::coefficient4xPOW3() const {
     boost::optional<double> value = getDouble(OS_Curve_QuarticFields::Coefficient4x_POW_3,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuartic_Impl::coefficient5xPOW4() const {
     boost::optional<double> value = getDouble(OS_Curve_QuarticFields::Coefficient5x_POW_4,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuartic_Impl::minimumValueofx() const {
     boost::optional<double> value = getDouble(OS_Curve_QuarticFields::MinimumValueofx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuartic_Impl::maximumValueofx() const {
     boost::optional<double> value = getDouble(OS_Curve_QuarticFields::MaximumValueofx,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -132,7 +132,7 @@ namespace detail {
 
   std::string CurveQuartic_Impl::inputUnitTypeforX() const {
     boost::optional<std::string> value = getString(OS_Curve_QuarticFields::InputUnitTypeforX,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -142,7 +142,7 @@ namespace detail {
 
   std::string CurveQuartic_Impl::outputUnitType() const {
     boost::optional<std::string> value = getString(OS_Curve_QuarticFields::OutputUnitType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -153,43 +153,43 @@ namespace detail {
   void CurveQuartic_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = false;
     result = setDouble(OS_Curve_QuarticFields::Coefficient1Constant, coefficient1Constant);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveQuartic_Impl::setCoefficient2x(double coefficient2x) {
     bool result = false;
     result = setDouble(OS_Curve_QuarticFields::Coefficient2x, coefficient2x);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveQuartic_Impl::setCoefficient3xPOW2(double coefficient3xPOW2) {
     bool result = false;
     result = setDouble(OS_Curve_QuarticFields::Coefficient3x_POW_2, coefficient3xPOW2);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveQuartic_Impl::setCoefficient4xPOW3(double coefficient4xPOW3) {
     bool result = false;
     result = setDouble(OS_Curve_QuarticFields::Coefficient4x_POW_3, coefficient4xPOW3);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveQuartic_Impl::setCoefficient5xPOW4(double coefficient5xPOW4) {
     bool result = false;
     result = setDouble(OS_Curve_QuarticFields::Coefficient5x_POW_4, coefficient5xPOW4);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveQuartic_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = false;
     result = setDouble(OS_Curve_QuarticFields::MinimumValueofx, minimumValueofx);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveQuartic_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = false;
     result = setDouble(OS_Curve_QuarticFields::MaximumValueofx, maximumValueofx);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveQuartic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
@@ -199,12 +199,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_QuarticFields::MinimumCurveOutput, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveQuartic_Impl::resetMinimumCurveOutput() {
     bool result = setString(OS_Curve_QuarticFields::MinimumCurveOutput, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveQuartic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
@@ -214,12 +214,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_QuarticFields::MaximumCurveOutput, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveQuartic_Impl::resetMaximumCurveOutput() {
     bool result = setString(OS_Curve_QuarticFields::MaximumCurveOutput, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CurveQuartic_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
@@ -230,7 +230,7 @@ namespace detail {
 
   void CurveQuartic_Impl::resetInputUnitTypeforX() {
     bool result = setString(OS_Curve_QuarticFields::InputUnitTypeforX, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CurveQuartic_Impl::setOutputUnitType(std::string outputUnitType) {
@@ -241,7 +241,7 @@ namespace detail {
 
   void CurveQuartic_Impl::resetOutputUnitType() {
     bool result = setString(OS_Curve_QuarticFields::OutputUnitType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -249,7 +249,7 @@ namespace detail {
 CurveQuartic::CurveQuartic(const Model& model)
   : Curve(CurveQuartic::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CurveQuartic_Impl>());
+  OS_ASSERT(getImpl<detail::CurveQuartic_Impl>());
   setDouble(OS_Curve_QuarticFields::Coefficient1Constant,0.0);
   setDouble(OS_Curve_QuarticFields::Coefficient2x,0.0);
   setDouble(OS_Curve_QuarticFields::Coefficient3x_POW_2,0.0);

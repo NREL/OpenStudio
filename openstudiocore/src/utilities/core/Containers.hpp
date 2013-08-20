@@ -47,7 +47,7 @@ typedef std::set<std::string,IstringCompare> IStringSet;
 
 typedef std::pair<std::string,std::string> StringPair;
 
-UTILITIES_API StringVector eraseEmptyElements(const StringVector& sv);
+UTILITIES_API std::vector<std::string> eraseEmptyElements(const std::vector<std::string>& sv);
 
 /** Helper function to cast a whole vector of objects. \relates IdfObject */
 template<typename T, typename U> 

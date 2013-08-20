@@ -37,7 +37,7 @@ namespace detail {
   DaylightingDeviceShelf_Impl::DaylightingDeviceShelf_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == DaylightingDeviceShelf::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == DaylightingDeviceShelf::iddObjectType());
   }
 
   DaylightingDeviceShelf_Impl::DaylightingDeviceShelf_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                                                            bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == DaylightingDeviceShelf::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == DaylightingDeviceShelf::iddObjectType());
   }
 
   DaylightingDeviceShelf_Impl::DaylightingDeviceShelf_Impl(const DaylightingDeviceShelf_Impl& other,
@@ -88,13 +88,13 @@ namespace detail {
 
   void DaylightingDeviceShelf_Impl::resetViewFactortoOutsideShelf() {
     bool result = setString(OS_DaylightingDevice_ShelfFields::ViewFactortoOutsideShelf, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   SubSurface DaylightingDeviceShelf_Impl::subSurface() const
   {
     OptionalSubSurface subSurface = getObject<ModelObject>().getModelObjectTarget<SubSurface>(OS_DaylightingDevice_ShelfFields::WindowName);
-    BOOST_ASSERT(subSurface);
+    OS_ASSERT(subSurface);
     return subSurface.get();
   }
 
@@ -108,8 +108,8 @@ namespace detail {
 DaylightingDeviceShelf::DaylightingDeviceShelf(const SubSurface& subSurface)
   : ModelObject(DaylightingDeviceShelf::iddObjectType(), subSurface.model())
 {
-  BOOST_ASSERT(getImpl<detail::DaylightingDeviceShelf_Impl>());
-  BOOST_ASSERT(this->setSubSurface(subSurface)); 
+  OS_ASSERT(getImpl<detail::DaylightingDeviceShelf_Impl>());
+  OS_ASSERT(this->setSubSurface(subSurface)); 
 }
 
 IddObjectType DaylightingDeviceShelf::iddObjectType() {

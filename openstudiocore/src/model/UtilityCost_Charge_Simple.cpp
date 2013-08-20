@@ -35,7 +35,7 @@ namespace detail {
 UtilityCost_Charge_Simple_Impl::UtilityCost_Charge_Simple_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : ParentObject_Impl(idfObject, model, keepHandle)
 {
-  BOOST_ASSERT(idfObject.iddObject().type() == UtilityCost_Charge_Simple::iddObjectType());
+  OS_ASSERT(idfObject.iddObject().type() == UtilityCost_Charge_Simple::iddObjectType());
 }
 
 UtilityCost_Charge_Simple_Impl::UtilityCost_Charge_Simple_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -43,7 +43,7 @@ UtilityCost_Charge_Simple_Impl::UtilityCost_Charge_Simple_Impl(const openstudio:
                                            bool keepHandle)
   : ParentObject_Impl(other,model,keepHandle)
 {
-  BOOST_ASSERT(other.iddObject().type() == UtilityCost_Charge_Simple::iddObjectType());
+  OS_ASSERT(other.iddObject().type() == UtilityCost_Charge_Simple::iddObjectType());
 }
 
 UtilityCost_Charge_Simple_Impl::UtilityCost_Charge_Simple_Impl(const UtilityCost_Charge_Simple_Impl& other,Model_Impl* model,bool keepHandle)
@@ -143,7 +143,7 @@ const std::vector<std::string>& UtilityCost_Charge_Simple_Impl::outputVariableNa
 UtilityCost_Charge_Simple::UtilityCost_Charge_Simple(const Model& model)
   : ParentObject(UtilityCost_Charge_Simple::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::UtilityCost_Charge_Simple_Impl>());
+  OS_ASSERT(getImpl<detail::UtilityCost_Charge_Simple_Impl>());
 }
 
 // constructor

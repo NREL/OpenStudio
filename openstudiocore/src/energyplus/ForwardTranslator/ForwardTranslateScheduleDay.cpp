@@ -64,7 +64,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleDay( ScheduleDay 
   std::vector<openstudio::Time> times = modelObject.times();
   
   unsigned N = values.size();
-  BOOST_ASSERT(N == times.size());
+  OS_ASSERT(N == times.size());
 
   scheduleDay.clearExtensibleGroups();
 

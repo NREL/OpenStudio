@@ -56,7 +56,7 @@ void PlanarSurfaceWidget::attach(const openstudio::model::PlanarSurface& planarS
                         SIGNAL(onChange()),
                         this, 
                         SLOT(refresh()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   refresh();
 }

@@ -33,6 +33,8 @@
 #include <utilities/idd/HotWaterEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -58,7 +60,7 @@ OptionalModelObject ReverseTranslator::translateHotWaterEquipment( const Workspa
   }
 
   s = workspaceObject.getString(openstudio::HotWaterEquipmentFields::DesignLevelCalculationMethod, true);
-  BOOST_ASSERT(s);
+  OS_ASSERT(s);
 
   OptionalDouble d;
   if (istringEqual("EquipmentLevel", *s)){

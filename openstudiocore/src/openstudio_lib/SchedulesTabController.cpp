@@ -47,6 +47,7 @@
 #include <utilities/units/Unit.hpp>
 #include <utilities/units/Quantity.hpp>
 #include <utilities/units/OSOptionalQuantity.hpp>
+#include <utilities/core/Assert.hpp>
 
 #include <energyplus/ReverseTranslator.hpp>
 
@@ -82,91 +83,91 @@ SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & m
 
   isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                         this,SLOT(toggleUnits(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         m_schedulesView, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_scheduleSetsController.get(), SIGNAL(openBclDlgClicked()),
                         this, SIGNAL(openBclDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_scheduleSetsController.get(), SIGNAL(openLibDlgClicked()),
                         this, SIGNAL(openLibDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_schedulesView,SIGNAL(addScheduleClicked()),this,SLOT(addScheduleRuleset()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_schedulesView,SIGNAL(removeSelectedScheduleClicked()),this,SLOT(removeSelectedSchedule()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_schedulesView,SIGNAL(purgeUnusedScheduleRulesetsClicked()),this,SLOT(purgeUnusedScheduleRulesets()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_schedulesView,SIGNAL(addRuleClicked(model::ScheduleRuleset &)),this,SLOT(addRule(model::ScheduleRuleset &)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_schedulesView,SIGNAL(addSummerProfileClicked(model::ScheduleRuleset &)),this,SLOT(addSummerProfile(model::ScheduleRuleset &)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_schedulesView,SIGNAL(addWinterProfileClicked(model::ScheduleRuleset &)),this,SLOT(addWinterProfile(model::ScheduleRuleset &)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_schedulesView,SIGNAL(dayScheduleSceneChanged( DayScheduleScene *, double, double )),
            this,SLOT(onDayScheduleSceneChanged( DayScheduleScene *, double, double )));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_schedulesView,SIGNAL(startDateTimeChanged(model::ScheduleRule &, const QDateTime &)),
            this,SLOT(onStartDateTimeChanged(model::ScheduleRule &, const QDateTime &)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_schedulesView,SIGNAL(endDateTimeChanged(model::ScheduleRule &, const QDateTime &)),
            this,SLOT(onEndDateTimeChanged(model::ScheduleRule &, const QDateTime &)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_schedulesView,SIGNAL(removeScheduleRuleClicked(model::ScheduleRule &)),
            this,SLOT(removeScheduleRule(model::ScheduleRule &)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_schedulesView,SIGNAL(itemDropped(const OSItemId &)),
            this,SLOT(onItemDropped(const OSItemId &)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_yearSettingsWidget,SIGNAL(calendarYearSelected(int)),
            this,SLOT(setCalendarYear(int)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_yearSettingsWidget,SIGNAL(firstDayofYearSelected(const QString &)),
            this,SLOT(setFirstDayofYear(const QString &)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_yearSettingsWidget,SIGNAL(daylightSavingTimeClicked(bool)),
            this,SLOT(setDaylightSavingsTime(bool)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_yearSettingsWidget,SIGNAL(dstStartDayOfWeekAndMonthChanged(int, int, int)),
            this,SLOT(setDstStartDayOfWeekAndMonth(int, int, int)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_yearSettingsWidget,SIGNAL(dstStartDateChanged(const QDate &)),
            this,SLOT(setDstStartDate(const QDate &)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_yearSettingsWidget,SIGNAL(dstEndDayOfWeekAndMonthChanged(int, int, int)),
            this,SLOT(setDstEndDayOfWeekAndMonth(int, int, int)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_yearSettingsWidget,SIGNAL(dstEndDateChanged(const QDate &)),
            this,SLOT(setDstEndDate(const QDate &)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 YearSettingsWidget * SchedulesTabController::yearSettingsWidget()
 {
   // assert non-null pointer
-  Q_ASSERT(m_yearSettingsWidget);
+  OS_ASSERT(m_yearSettingsWidget);
 
   return m_yearSettingsWidget;
 }
@@ -185,7 +186,7 @@ void SchedulesTabController::showScheduleDialog()
 
     isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                           m_scheduleDialog, SIGNAL(toggleUnitsClicked(bool)));
-    BOOST_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
   }
   m_scheduleDialog->show();
 }

@@ -44,7 +44,7 @@ namespace detail {
   Lights_Impl::Lights_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceLoadInstance_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == Lights::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == Lights::iddObjectType());
   }
 
   Lights_Impl::Lights_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -52,7 +52,7 @@ namespace detail {
                            bool keepHandle)
     : SpaceLoadInstance_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == Lights::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == Lights::iddObjectType());
   }
 
   Lights_Impl::Lights_Impl(const Lights_Impl& other,
@@ -94,8 +94,6 @@ namespace detail {
 
     this->makeUnique();
 
-    double floorArea = space->floorArea();
-
     LightsDefinition lightsDefinition = this->lightsDefinition();
     BOOST_FOREACH(LifeCycleCost cost, lightsDefinition.lifeCycleCosts()){
       cost.convertToCostPerEach();
@@ -131,7 +129,7 @@ namespace detail {
 
   double Lights_Impl::fractionReplaceable() const {
     boost::optional<double> value = getDouble(OS_LightsFields::FractionReplaceable,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -141,7 +139,7 @@ namespace detail {
 
   double Lights_Impl::multiplier() const {
     boost::optional<double> value = getDouble(OS_LightsFields::Multiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -151,7 +149,7 @@ namespace detail {
 
   std::string Lights_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_LightsFields::EndUseSubcategory,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -167,7 +165,7 @@ namespace detail {
 
   void Lights_Impl::resetFractionReplaceable() {
     bool result = setString(OS_LightsFields::FractionReplaceable, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Lights_Impl::setMultiplier(double multiplier) {
@@ -178,18 +176,18 @@ namespace detail {
 
   void Lights_Impl::resetMultiplier() {
     bool result = setString(OS_LightsFields::Multiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Lights_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = false;
     result = setString(OS_LightsFields::EndUseSubcategory, endUseSubcategory);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Lights_Impl::resetEndUseSubcategory() {
     bool result = setString(OS_LightsFields::EndUseSubcategory, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   int Lights_Impl::spaceIndex() const {
@@ -336,7 +334,7 @@ namespace detail {
 Lights::Lights(const LightsDefinition& lightsDefinition)
   : SpaceLoadInstance(Lights::iddObjectType(),lightsDefinition)
 {
-  BOOST_ASSERT(getImpl<detail::Lights_Impl>());
+  OS_ASSERT(getImpl<detail::Lights_Impl>());
 }
 
 IddObjectType Lights::iddObjectType() {

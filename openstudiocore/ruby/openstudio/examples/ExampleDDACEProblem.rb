@@ -98,7 +98,7 @@ weatherData_path = Path.new(ep_hash[:energyplus_weatherdata].to_s)
 
 
 # Daktoa
-dakota_hash = OpenStudio::Analysis::find_dakota()
+dakota_hash = OpenStudio::Analysis::find_dakota(5,3,1)
 if dakota_hash.nil?
   puts "Cannot run this script without Dakota. Please install Dakota (in a standard location) and try again."
   return
@@ -126,24 +126,36 @@ database.save
 variables = Analysis::VariableVector.new
 
   # variable 4: plug load density
-  filters = Ruleset::ModelObjectFilterClauseVector.new
-  filters.push(Ruleset::ModelObjectFilterType.new("OS:ElectricEquipment:Definition".to_IddObjectType))
-  filters.push(Ruleset::ModelObjectFilterStringAttribute.new("designLevelCalculationMethod",
-                                                             "IEquals".to_RulesetStringPredicate,
-                                                             "Watts/Area"))
-  continuousVariable = Analysis::ModelRulesetContinuousVariable.new("Plug Load Density",
-                                                                    filters,
-                                                                    "wattsperSpaceFloorArea")
+  perturbScript = OpenStudio::Path.new($OpenStudio_LibPath + "openstudio/runmanager/rubyscripts/PerturbObject.rb")
+  rubyMeasure = OpenStudio::Analysis::RubyMeasure.new(perturbScript,
+                                                      "OSM".to_FileReferenceType,
+                                                      "OSM".to_FileReferenceType)
+  rubyMeasure.addArgument("inputPath","in.osm")
+  rubyMeasure.addArgument("outputPath", "out.osm")
+  rubyMeasure.addArgument("objectType", "OS:ElectricEquipment:Definition")
+  rubyMeasure.addArgument("nameRegex", "Electric Equipment Definition [0-9]+") # Watts/Area
+  rubyMeasure.addArgument("field", "4") # Watts per Space Floor Area
+  continuousVariable = Analysis::RubyContinuousVariable.new(
+      "Plug Load Density",
+      OpenStudio::Ruleset::OSArgument::makeDoubleArgument("value"),
+      rubyMeasure)
   continuousVariable.setMinimum(0.0)
   continuousVariable.setMaximum(100.0)
   variables.push(continuousVariable)
 
   # variable 5: lighting power density
-  filters = Ruleset::ModelObjectFilterClauseVector.new
-  filters.push(Ruleset::ModelObjectFilterType.new("OS:Lights:Definition".to_IddObjectType))
-  continuousVariable = Analysis::ModelRulesetContinuousVariable.new("Lighting Power Density",
-                                                                    filters,
-                                                                    "wattsperSpaceFloorArea") 
+  rubyMeasure = OpenStudio::Analysis::RubyMeasure.new(perturbScript,
+                                                      "OSM".to_FileReferenceType,
+                                                      "OSM".to_FileReferenceType)
+  rubyMeasure.addArgument("inputPath","in.osm")
+  rubyMeasure.addArgument("outputPath", "out.osm")
+  rubyMeasure.addArgument("objectType", "OS:Lights:Definition")
+  rubyMeasure.addArgument("nameRegex", ".*")
+  rubyMeasure.addArgument("field", "4") # Watts per Space Floor Area
+  continuousVariable = Analysis::RubyContinuousVariable.new(
+      "Lighting Power Density",
+      OpenStudio::Ruleset::OSArgument::makeDoubleArgument("value"),
+      rubyMeasure)
   continuousVariable.setMinimum(0.0)
   continuousVariable.setMaximum(100.0)
   variables.push(continuousVariable)

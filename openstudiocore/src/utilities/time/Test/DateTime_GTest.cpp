@@ -163,6 +163,21 @@ TEST(DateTime, normalization2)
   EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Dec,30,2008));
 };
 
+TEST(DateTime,EpochConversions) {
+  DateTime dateTime = DateTime::now();
+  std::time_t asEpoch = dateTime.toEpoch();
+  DateTime copy = DateTime::fromEpoch(asEpoch);
+  EXPECT_EQ(dateTime,copy);
+}
+
+TEST(DateTime,ISO8601Conversions) {
+  DateTime dateTime = DateTime::now();
+  std::string asIso = dateTime.toISO8601();
+  OptionalDateTime copy = DateTime::fromISO8601(asIso);
+  ASSERT_TRUE(copy);
+  EXPECT_EQ(dateTime,copy.get());
+}
+
 
 /////////////////////////////////////////////////////////////
 // Calendar for 2008.  Format is day of month, day of year //

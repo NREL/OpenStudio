@@ -19,6 +19,8 @@
 
 #include <pat_app/PatMainMenu.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <QMenu>
 
 namespace openstudio{
@@ -51,31 +53,31 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
   bool isConnected = false;
 
   isConnected = connect(m_newAction, SIGNAL(triggered()), this, SIGNAL(newClicked()), Qt::QueuedConnection);
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_loadFileAction, SIGNAL(triggered()), this, SIGNAL(loadFileClicked()), Qt::QueuedConnection);
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_saveFileAction, SIGNAL(triggered()), this, SIGNAL(saveFileClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_saveAsFileAction, SIGNAL(triggered()), this, SIGNAL(saveAsFileClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_clearAllResultsAction, SIGNAL(triggered()), this, SIGNAL(clearAllResultsClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_exportXmlAction, SIGNAL(triggered()), this, SIGNAL(exportXmlClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_scanForToolsAction, SIGNAL(triggered()), this, SIGNAL(scanForToolsClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_showToolsAction, SIGNAL(triggered()), this, SIGNAL(showToolsClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_exitAction, SIGNAL(triggered()),this,SIGNAL(exitClicked()), Qt::QueuedConnection);
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_fileMenu->addAction(m_newAction);
   m_fileMenu->addAction(m_loadFileAction);
@@ -102,7 +104,7 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
   m_changeMeasuresDir = new QAction(tr("&Change My Measures Directory"),this);
 
   isConnected = connect(m_changeMeasuresDir, SIGNAL(triggered()),this,SIGNAL(changeMeasuresClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_preferencesMenu->addAction(m_changeMeasuresDir);
   
@@ -113,7 +115,7 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
   m_openBclDlgAction = new QAction(tr("Find &Measures"),this);
 
   isConnected = connect(m_openBclDlgAction, SIGNAL(triggered()),this,SIGNAL(openBclDlgClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_windowMenu->addAction(m_openBclDlgAction);
   
@@ -125,10 +127,10 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
   m_aboutAction = new QAction(tr("&About"),this);
 
   isConnected = connect(m_helpAction, SIGNAL(triggered()),this,SIGNAL(helpClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_aboutAction, SIGNAL(triggered()),this,SIGNAL(aboutClicked()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_helpMenu->addAction(m_helpAction);
   m_helpMenu->addAction(m_aboutAction);

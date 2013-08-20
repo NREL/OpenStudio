@@ -67,7 +67,7 @@ TEST_F(ModelFixture, OutputVariable_ThermalZone)
   EXPECT_EQ("*", lightsElectricPower.keyValue());
   EXPECT_EQ("Zone Lights Electric Power", lightsElectricPower.variableName());
 
-  // add Zone Lights Radiant Heat Gain to only zone1
+  // add Zone Lights Radiant Heating Energy to only zone1
   OutputVariable lightsRadiantHeatGain("Zone Lights Radiant Heating Energy", model);
   EXPECT_TRUE(lightsRadiantHeatGain.setKeyValue(zone1.name().get()));
   EXPECT_EQ(zone1.name().get(), lightsRadiantHeatGain.keyValue());

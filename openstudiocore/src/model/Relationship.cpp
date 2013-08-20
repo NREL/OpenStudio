@@ -57,7 +57,7 @@ boost::optional<ModelObject> Relationship::relatedModelObject() const
   assertSingular(true);
 
   QVariant value = m_object.getImpl<detail::ModelObject_Impl>()->property(m_name.c_str());
-  BOOST_ASSERT(value.canConvert<boost::optional<ModelObject> >());
+  OS_ASSERT(value.canConvert<boost::optional<ModelObject> >());
   boost::optional<ModelObject> result = value.value<boost::optional<ModelObject> >();
   return result;
 }
@@ -67,7 +67,7 @@ std::vector<ModelObject> Relationship::relatedModelObjects() const
   assertSingular(false);
 
   QVariant value = m_object.getImpl<detail::ModelObject_Impl>()->property(m_name.c_str());
-  BOOST_ASSERT(value.canConvert<std::vector<ModelObject> >());
+  OS_ASSERT(value.canConvert<std::vector<ModelObject> >());
   std::vector<ModelObject> result = value.value<std::vector<ModelObject> >();
   return result;
 }

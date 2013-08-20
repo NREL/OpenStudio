@@ -20,6 +20,9 @@
 #include <shared_gui_components/OSSwitch.hpp>
 #include <model/ModelObject.hpp>
 #include <model/ModelObject_Impl.hpp>
+
+#include <utilities/core/Assert.hpp>
+
 #include <boost/optional.hpp>
 #include <QString>
 
@@ -52,14 +55,14 @@ void OSSwitch2::bind(model::ModelObject & modelObject,
   bool isConnected = false;
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
                          this,SLOT(onModelObjectChange()) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
                          this,SLOT(onModelObjectRemove(Handle)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( this, SIGNAL(clicked(bool)), this, SLOT(onClicked(bool)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   onModelObjectChange();
 }
@@ -115,14 +118,14 @@ void OSSwitch::bind(model::ModelObject & modelObject, const char * property)
   bool isConnected = false;
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
                          this,SLOT(onModelObjectChange()) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
                          this,SLOT(onModelObjectRemove(Handle)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect( this, SIGNAL(clicked(bool)), this, SLOT(onClicked(bool)) );
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   onModelObjectChange();
 }

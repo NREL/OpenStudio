@@ -19,6 +19,8 @@
 
 #include "BCLMeasureDialog.hpp"
 
+#include <utilities/core/Assert.hpp>
+
 #include <QLabel>
 #include <QLineEdit>
 #include <QTextEdit>
@@ -376,10 +378,10 @@ void BCLMeasureDialog::init()
   upperLayout->addStretch();
 
   bool test = connect(m_nameLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(nameChanged(const QString&)));
-  Q_ASSERT(test);
+  OS_ASSERT(test);
 
   test = connect(m_taxonomyFirstLevelComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(firstLevelTaxonomyChanged(const QString&)));
-  Q_ASSERT(test);
+  OS_ASSERT(test);
 
   this->setWindowModality(Qt::ApplicationModal);
   //this->setSizeGripEnabled(true);

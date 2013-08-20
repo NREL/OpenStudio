@@ -30,7 +30,7 @@
 namespace openstudio {
 namespace project {
 
-class RubyPerturbationRecord;
+class RubyMeasureRecord;
 class RubyContinuousVariableRecord;
 
 namespace detail {
@@ -43,7 +43,7 @@ namespace detail {
     //@{
 
     OSArgumentRecord_Impl(const ruleset::OSArgument& osArgument,
-                          RubyPerturbationRecord& rubyPerturbationRecord);
+                          RubyMeasureRecord& rubyMeasureRecord);
 
     OSArgumentRecord_Impl(const ruleset::OSArgument& osArgument,
                           RubyContinuousVariableRecord& rubyContinuousVariableRecord);
@@ -85,8 +85,8 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    /** Get the RubyPerturbationRecord that parents this OSArgumentRecord. */
-    boost::optional<RubyPerturbationRecord> rubyPerturbationRecord() const;
+    /** Get the RubyMeasureRecord that parents this OSArgumentRecord. */
+    boost::optional<RubyMeasureRecord> rubyMeasureRecord() const;
 
     /** Get the RubyContinuousVariableRecord that parents this OSArgumentRecord. */
     boost::optional<RubyContinuousVariableRecord> rubyContinuousVariableRecord() const;
@@ -127,7 +127,7 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.project.OSArgumentRecord");
 
-    boost::optional<int> m_rubyPerturbationRecordId;
+    boost::optional<int> m_rubyMeasureRecordId;
     boost::optional<int> m_rubyContinuousVariableRecordId;
     ruleset::OSArgumentType m_argumentType;
     bool m_required;
@@ -140,7 +140,7 @@ namespace detail {
     bool m_isRead;
     std::string m_extension;
 
-    boost::optional<int> m_lastRubyPerturbationRecordId;
+    boost::optional<int> m_lastRubyMeasureRecordId;
     boost::optional<int> m_lastRubyContinuousVariableRecordId;
     ruleset::OSArgumentType m_lastArgumentType;
     bool m_lastRequired;

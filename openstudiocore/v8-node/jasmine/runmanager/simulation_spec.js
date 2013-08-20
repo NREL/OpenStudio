@@ -8,7 +8,7 @@ describe("RunManager", function() {
 
     var epw_path = openstudio.getSharedResourcesPath().append(new openstudio.path("runmanager")).append(new openstudio.path("USA_CO_Golden-NREL.724666_TMY3.epw"));
 
-    log("Loading EPW from " + openstudio.toString(epw_path));
+    console.log("Loading EPW from " + openstudio.toString(epw_path));
 
     epw_file = new openstudio.EpwFile(epw_path);
     openstudio.model.WeatherFile.setWeatherFile(model, epw_file);
@@ -31,11 +31,11 @@ describe("RunManager", function() {
     workflow.add(co.getTools());
 
     var outdir = openstudio.tempDir().append(new openstudio.path("TestJavaScriptRun"));
-    log("Running simulation in " + openstudio.toString(outdir));
+    console.log("Running simulation in " + openstudio.toString(outdir));
     openstudio.create_directory(outdir);
 
     var osmpath = outdir.append(new openstudio.path("test.osm"));
-    log("Saving OSM to " + openstudio.toString(osmpath));
+    console.log("Saving OSM to " + openstudio.toString(osmpath));
 
     expect(model.save(osmpath, true)).toBeTruthy();
 
@@ -43,15 +43,19 @@ describe("RunManager", function() {
     //workflow.parallelizeEnergyPlus(co.getMaxLocalJobs(), 1);
     var job = workflow.create(outdir, osmpath);
 
+    runmanager.setPaused(true);
     runmanager.enqueue(job, true);
+    runmanager.setPaused(false);
 
+    job.waitForFinished();
     runmanager.waitForFinished();
 
     expect(runmanager.workPending()).toBeFalsy();
 
     outfiles = job.treeOutputFiles();
 
-    
+    expect(outfiles.files().size() > 0);
+
     var sqlpath = outfiles.getLastByExtension("sql").fullPath;
     log(openstudio.toString(sqlpath));
 

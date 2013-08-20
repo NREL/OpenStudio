@@ -38,25 +38,25 @@ namespace project {
     JoinRecord_Impl::JoinRecord_Impl(const QSqlQuery& query, const ProjectDatabase& database)
       : Record_Impl(database, query)
     {
-        BOOST_ASSERT(query.isValid());
-        BOOST_ASSERT(query.isActive());
-        BOOST_ASSERT(query.isSelect());
+        OS_ASSERT(query.isValid());
+        OS_ASSERT(query.isActive());
+        OS_ASSERT(query.isSelect());
 
         QVariant value;
         value = query.value(JoinRecordColumns::leftId);
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_leftId = value.toInt();
 
         value = query.value(JoinRecordColumns::leftHandle);
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_leftHandle = toUUID(value.toString().toStdString());
 
         value = query.value(JoinRecordColumns::rightId);
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_rightId = value.toInt();
 
         value = query.value(JoinRecordColumns::rightHandle);
-        BOOST_ASSERT(value.isValid() && !value.isNull());
+        OS_ASSERT(value.isValid() && !value.isNull());
         m_rightHandle = toUUID(value.toString().toStdString());
     }
 
@@ -112,35 +112,35 @@ namespace project {
 
     void JoinRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase)
     {
-      BOOST_ASSERT(query.isValid());
-      BOOST_ASSERT(query.isActive());
-      BOOST_ASSERT(query.isSelect());
+      OS_ASSERT(query.isValid());
+      OS_ASSERT(query.isActive());
+      OS_ASSERT(query.isSelect());
 
       Record_Impl::setLastValues(query, projectDatabase);
 
       QVariant value;
       value = query.value(JoinRecordColumns::leftId);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       m_lastLeftId = value.toInt();
 
       value = query.value(JoinRecordColumns::leftHandle);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       m_lastLeftHandle = toUUID(value.toString().toStdString());
 
       value = query.value(JoinRecordColumns::rightId);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       m_lastRightId = value.toInt();
 
       value = query.value(JoinRecordColumns::rightHandle);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       m_lastRightHandle = toUUID(value.toString().toStdString());
     }
 
     bool JoinRecord_Impl::compareValues(const QSqlQuery& query) const
     {
-      BOOST_ASSERT(query.isValid());
-      BOOST_ASSERT(query.isActive());
-      BOOST_ASSERT(query.isSelect());
+      OS_ASSERT(query.isValid());
+      OS_ASSERT(query.isActive());
+      OS_ASSERT(query.isSelect());
 
       bool result = true;
 
@@ -149,19 +149,19 @@ namespace project {
       QVariant value;
 
       value = query.value(JoinRecordColumns::leftId);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       result = result && (m_leftId == value.toInt());
 
       value = query.value(JoinRecordColumns::leftHandle);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       result = result && (m_leftHandle == toUUID(value.toString().toStdString()));
 
       value = query.value(JoinRecordColumns::rightId);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       result = result && (m_rightId == value.toInt());
 
       value = query.value(JoinRecordColumns::rightHandle);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       result = result && (m_rightHandle == toUUID(value.toString().toStdString()));
 
       return result;
@@ -192,13 +192,13 @@ namespace project {
   JoinRecord::JoinRecord(boost::shared_ptr<detail::JoinRecord_Impl> impl, ProjectDatabase projectDatabase)
     : Record(impl, projectDatabase)
   {
-    BOOST_ASSERT(getImpl<detail::JoinRecord_Impl>());
+    OS_ASSERT(getImpl<detail::JoinRecord_Impl>());
   }
 
   JoinRecord::JoinRecord(boost::shared_ptr<detail::JoinRecord_Impl> impl)
     : Record(impl)
   {
-    BOOST_ASSERT(getImpl<detail::JoinRecord_Impl>());
+    OS_ASSERT(getImpl<detail::JoinRecord_Impl>());
   }
 
   void JoinRecord::createIndices(QSqlDatabase& qSqlDatabase, const std::string& databaseTableName)

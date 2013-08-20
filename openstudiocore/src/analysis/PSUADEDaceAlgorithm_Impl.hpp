@@ -26,6 +26,7 @@
 namespace openstudio {
 namespace analysis {
 
+class PSUADEDaceAlgorithm;
 class PSUADEDaceAlgorithmOptions;
 
 namespace detail {
@@ -77,9 +78,18 @@ namespace detail {
     virtual std::string dakotaInFileDescription() const;
 
     //@}
+    /** @name Getters and Setters */
     //@{
 
     PSUADEDaceAlgorithmOptions psuadedaceAlgorithmOptions() const;
+
+    //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    static PSUADEDaceAlgorithm fromVariant(const QVariant& variant, const VersionString& version);
 
     //@}
    private:

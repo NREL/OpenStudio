@@ -438,7 +438,7 @@ namespace gbxml {
       unsigned llcIndex = 0;
       unsigned N = vertices.size();
       for(unsigned i = 0; i < N; ++i){
-        BOOST_ASSERT(std::abs(faceVertices[i].z()) < 0.001);
+        OS_ASSERT(std::abs(faceVertices[i].z()) < 0.001);
         if ((minY > faceVertices[i].y()) || ((minY > faceVertices[i].y() - 0.00001) && (minX > faceVertices[i].x()))){
           llcIndex = i;
           minY = faceVertices[i].y();
@@ -597,7 +597,7 @@ namespace gbxml {
       unsigned llcIndex = 0;
       unsigned N = vertices.size();
       for(unsigned i = 0; i < N; ++i){
-        BOOST_ASSERT(std::abs(faceVertices[i].z()) < 0.001);
+        OS_ASSERT(std::abs(faceVertices[i].z()) < 0.001);
         if ((minY > faceVertices[i].y()) || ((minY > faceVertices[i].y() - 0.00001) && (minX > faceVertices[i].x()))){
           llcIndex = i;
           minY = faceVertices[i].y();

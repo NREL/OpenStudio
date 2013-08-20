@@ -182,7 +182,7 @@ namespace detail {
     boost::regex fieldIdRegex("([AN])([0-9]+)");
     boost::smatch m;
     bool ok = boost::regex_match(m_fieldId,m,fieldIdRegex);
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
     std::string letterStr(m[1].first,m[1].second);
     if (boost::regex_match(letterStr,fieldType)) {
       std::string numberStr(m[2].first,m[2].second);
@@ -388,7 +388,7 @@ namespace detail {
       {
         if (boost::algorithm::starts_with(lowerText, "default"))
         {
-          BOOST_ASSERT(boost::regex_search(text, matches, iddRegex::defaultProperty()));
+          OS_ASSERT(boost::regex_search(text, matches, iddRegex::defaultProperty()));
           std::string stringDefault(matches[1].first, matches[1].second);
           boost::trim(stringDefault);
           m_properties.stringDefault = stringDefault;
@@ -419,7 +419,7 @@ namespace detail {
       {
         if (boost::algorithm::starts_with(lowerText, "external-list"))
         {
-          BOOST_ASSERT(boost::regex_search(text, matches, iddRegex::externalListProperty()));
+          OS_ASSERT(boost::regex_search(text, matches, iddRegex::externalListProperty()));
           std::string externalList(matches[1].first, matches[1].second);
           boost::trim(externalList);
           m_properties.externalLists.push_back(externalList);
@@ -432,7 +432,7 @@ namespace detail {
       {
         if (boost::algorithm::starts_with(lowerText, "field"))
         {
-          BOOST_ASSERT(boost::regex_search(text, matches, iddRegex::nameProperty()));
+          OS_ASSERT(boost::regex_search(text, matches, iddRegex::nameProperty()));
           std::string fieldName(matches[1].first, matches[1].second);
           boost::trim(fieldName);
           notHandled=false;
@@ -448,7 +448,7 @@ namespace detail {
       {
         if (boost::algorithm::starts_with(lowerText, "ip-units"))
         {
-          BOOST_ASSERT(boost::regex_search(text, matches, iddRegex::ipUnitsProperty()));
+          OS_ASSERT(boost::regex_search(text, matches, iddRegex::ipUnitsProperty()));
           std::string ipUnits(matches[1].first, matches[1].second);
           boost::trim(ipUnits);
           m_properties.ipUnits = ipUnits;
@@ -461,7 +461,7 @@ namespace detail {
       {
         if (boost::algorithm::starts_with(lowerText, "key"))
         {
-          BOOST_ASSERT(boost::regex_search(text, matches, iddRegex::keyProperty()));
+          OS_ASSERT(boost::regex_search(text, matches, iddRegex::keyProperty()));
           std::string keyText(matches[1].first, matches[1].second);
           notHandled=false;
           boost::smatch keyMatches;
@@ -535,7 +535,7 @@ namespace detail {
         else if (boost::algorithm::starts_with(lowerText, "memo"))
         {
           notHandled=false;
-          BOOST_ASSERT(boost::regex_search(text, matches, iddRegex::memoProperty()));
+          OS_ASSERT(boost::regex_search(text, matches, iddRegex::memoProperty()));
           std::string memo(matches[1].first, matches[1].second);
           trim(memo);
           if (m_properties.note.empty()) { m_properties.note = memo; }
@@ -548,7 +548,7 @@ namespace detail {
         if (boost::algorithm::starts_with(lowerText, "note"))
         {
           notHandled=false;
-          BOOST_ASSERT(boost::regex_search(text, matches, iddRegex::noteProperty()));
+          OS_ASSERT(boost::regex_search(text, matches, iddRegex::noteProperty()));
           std::string note(matches[1].first, matches[1].second);
           trim(note);
           if (m_properties.note.empty()) { m_properties.note = note; }
@@ -560,7 +560,7 @@ namespace detail {
       {
         if (boost::algorithm::starts_with(lowerText, "object-list"))
         {
-          BOOST_ASSERT(boost::regex_search(text, matches, iddRegex::objectListProperty()));
+          OS_ASSERT(boost::regex_search(text, matches, iddRegex::objectListProperty()));
           std::string objectList(matches[1].first, matches[1].second);
           boost::trim(objectList);
           m_properties.objectLists.push_back(objectList);
@@ -577,7 +577,7 @@ namespace detail {
         }
         else if (boost::algorithm::starts_with(lowerText, "reference"))
         {
-          BOOST_ASSERT(boost::regex_search(text, matches, iddRegex::referenceProperty()));
+          OS_ASSERT(boost::regex_search(text, matches, iddRegex::referenceProperty()));
           std::string reference(matches[1].first, matches[1].second);
           boost::trim(reference);
           m_properties.references.push_back(reference);
@@ -595,7 +595,7 @@ namespace detail {
       {
         if (boost::algorithm::starts_with(lowerText, "type"))
         {
-          BOOST_ASSERT(boost::regex_search(text, matches, iddRegex::typeProperty()));
+          OS_ASSERT(boost::regex_search(text, matches, iddRegex::typeProperty()));
           std::string fieldType(matches[1].first, matches[1].second);
           boost::trim(fieldType);
           m_properties.type = IddFieldType(fieldType);
@@ -613,7 +613,7 @@ namespace detail {
         }
         else if (boost::algorithm::starts_with(lowerText, "units"))
         {
-          BOOST_ASSERT(boost::regex_search(text, matches, iddRegex::unitsProperty()));
+          OS_ASSERT(boost::regex_search(text, matches, iddRegex::unitsProperty()));
           std::string units(matches[1].first, matches[1].second);
           boost::trim(units);
           m_properties.units = units;

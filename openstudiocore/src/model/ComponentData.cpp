@@ -42,7 +42,7 @@ namespace detail {
                                          bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ComponentData::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ComponentData::iddObjectType());
   }
 
   ComponentData_Impl::ComponentData_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -50,7 +50,7 @@ namespace detail {
                                          bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ComponentData::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ComponentData::iddObjectType());
   }
 
   ComponentData_Impl::ComponentData_Impl(const ComponentData_Impl& other,
@@ -71,13 +71,13 @@ namespace detail {
 
   UUID ComponentData_Impl::uuid() const {
     OptionalString os = getString(OS_ComponentDataFields::UUID);
-    BOOST_ASSERT(os);
+    OS_ASSERT(os);
     return toUUID(*os);
   }
 
   UUID ComponentData_Impl::versionUUID() const {
     OptionalString os = getString(OS_ComponentDataFields::VersionUUID);
-    BOOST_ASSERT(os);
+    OS_ASSERT(os);
     return toUUID(*os);
   }
 
@@ -127,9 +127,9 @@ namespace detail {
 
   UUID ComponentData_Impl::createVersionUUID() {
     bool ok = setString(OS_ComponentDataFields::VersionUUID,toString(createUUID()));
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
     ok = setInt(OS_ComponentDataFields::VersionTimestamp,time(NULL));
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
     return versionUUID();
   }
 
@@ -200,7 +200,7 @@ unsigned ComponentData::numComponentObjects() const {
 ComponentData::ComponentData(const Model& model)
   : ModelObject(iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ComponentData_Impl>());
+  OS_ASSERT(getImpl<detail::ComponentData_Impl>());
   setString(OS_ComponentDataFields::UUID,toString(createUUID()));
   setInt(OS_ComponentDataFields::CreationTimestamp,time(NULL));
   createVersionUUID();

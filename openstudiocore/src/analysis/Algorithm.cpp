@@ -20,6 +20,21 @@
 #include <analysis/Algorithm.hpp>
 #include <analysis/Algorithm_Impl.hpp>
 
+#include <analysis/DDACEAlgorithm.hpp>
+#include <analysis/DDACEAlgorithm_Impl.hpp>
+#include <analysis/FSUDaceAlgorithm.hpp>
+#include <analysis/FSUDaceAlgorithm_Impl.hpp>
+#include <analysis/ParameterStudyAlgorithm.hpp>
+#include <analysis/ParameterStudyAlgorithm_Impl.hpp>
+#include <analysis/PSUADEDaceAlgorithm.hpp>
+#include <analysis/PSUADEDaceAlgorithm_Impl.hpp>
+#include <analysis/SamplingAlgorithm.hpp>
+#include <analysis/SamplingAlgorithm_Impl.hpp>
+#include <analysis/DesignOfExperiments.hpp>
+#include <analysis/DesignOfExperiments_Impl.hpp>
+#include <analysis/SequentialSearch.hpp>
+#include <analysis/SequentialSearch_Impl.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -99,6 +114,52 @@ namespace detail {
     m_failed = false;
     m_iter = -1;
     onChange(AnalysisObject_Impl::Benign);
+  }
+
+  QVariant Algorithm_Impl::toVariant() const {
+    QVariantMap map = AnalysisObject_Impl::toVariant().toMap();
+
+    map["complete"] = isComplete();
+    map["failed"] = failed();
+    map["iter"] = iter();
+    map["options"] = options().toVariant();
+
+    return QVariant(map);
+  }
+
+  Algorithm Algorithm_Impl::factoryFromVariant(const QVariant& variant,
+                                               const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+
+    if (!map.contains("algorithm_type")) {
+      LOG_AND_THROW("Unable to find Algorithm in expected location.");
+    }
+
+    std::string algorithmType = map["algorithm_type"].toString().toStdString();
+    if (algorithmType == "DDACEAlgorithm") {
+      return DDACEAlgorithm_Impl::fromVariant(variant,version);
+    }
+    if (algorithmType == "FSUDaceAlgorithm") {
+      return FSUDaceAlgorithm_Impl::fromVariant(variant,version);
+    }
+    if (algorithmType == "ParameterStudyAlgorithm") {
+      return ParameterStudyAlgorithm_Impl::fromVariant(variant,version);
+    }
+    if (algorithmType == "PSUADEDaceAlgorithm") {
+      return PSUADEDaceAlgorithm_Impl::fromVariant(variant,version);
+    }
+    if (algorithmType == "SamplingAlgorithm") {
+      return SamplingAlgorithm_Impl::fromVariant(variant,version);
+    }
+    if (algorithmType == "DesignOfExperiments") {
+      return DesignOfExperiments_Impl::fromVariant(variant,version);
+    }
+    if (algorithmType == "SequentialSearch") {
+      return SequentialSearch_Impl::fromVariant(variant,version);
+    }
+
+    LOG_AND_THROW("Unexpected algorithm_type " << algorithmType << ".");
   }
 
 } // detail

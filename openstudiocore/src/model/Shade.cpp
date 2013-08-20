@@ -36,7 +36,7 @@ namespace detail {
                          bool keepHandle)
     : ShadingMaterial_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == Shade::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == Shade::iddObjectType());
   }
 
   Shade_Impl::Shade_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -44,7 +44,7 @@ namespace detail {
                          bool keepHandle)
     : ShadingMaterial_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == Shade::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == Shade::iddObjectType());
   }
 
   Shade_Impl::Shade_Impl(const Shade_Impl& other,
@@ -68,20 +68,20 @@ namespace detail {
   Quantity Shade_Impl::getSolarTransmittance(bool returnIP) const {
     OptionalDouble value = solarTransmittance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::SolarTransmittance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   Quantity Shade_Impl::getSolarReflectance(bool returnIP) const {
     OptionalDouble value = solarReflectance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::SolarReflectance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double Shade_Impl::visibleTransmittance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ShadeFields::VisibleTransmittance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -93,40 +93,40 @@ namespace detail {
   Quantity Shade_Impl::getVisibleTransmittance(bool returnIP) const {
     OptionalDouble value = visibleTransmittance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::VisibleTransmittance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   Quantity Shade_Impl::getVisibleReflectance(bool returnIP) const {
     OptionalDouble value = visibleReflectance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::VisibleReflectance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double Shade_Impl::thermalHemisphericalEmissivity() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ShadeFields::ThermalHemisphericalEmissivity,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Shade_Impl::getThermalHemisphericalEmissivity(bool returnIP) const {
     OptionalDouble value = thermalHemisphericalEmissivity();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::ThermalHemisphericalEmissivity, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   Quantity Shade_Impl::getThermalTransmittance(bool returnIP) const {
     OptionalDouble value = thermalTransmittance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::ThermalTransmittance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double Shade_Impl::thickness() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ShadeFields::Thickness,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -217,33 +217,33 @@ namespace detail {
   Quantity Shade_Impl::getThickness(bool returnIP) const {
     OptionalDouble value = thickness();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::Thickness, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double Shade_Impl::conductivity() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ShadeFields::Conductivity,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Shade_Impl::getConductivity(bool returnIP) const {
     OptionalDouble value = conductivity();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::Conductivity, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double Shade_Impl::shadetoGlassDistance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ShadeFields::ShadetoGlassDistance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Shade_Impl::getShadetoGlassDistance(bool returnIP) const {
     OptionalDouble value = shadetoGlassDistance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::ShadetoGlassDistance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -253,14 +253,14 @@ namespace detail {
 
   double Shade_Impl::topOpeningMultiplier() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ShadeFields::TopOpeningMultiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Shade_Impl::getTopOpeningMultiplier(bool returnIP) const {
     OptionalDouble value = topOpeningMultiplier();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::TopOpeningMultiplier, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -270,14 +270,14 @@ namespace detail {
 
   double Shade_Impl::bottomOpeningMultiplier() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ShadeFields::BottomOpeningMultiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Shade_Impl::getBottomOpeningMultiplier(bool returnIP) const {
     OptionalDouble value = bottomOpeningMultiplier();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::BottomOpeningMultiplier, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -287,14 +287,14 @@ namespace detail {
 
   double Shade_Impl::leftSideOpeningMultiplier() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ShadeFields::LeftSideOpeningMultiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Shade_Impl::getLeftSideOpeningMultiplier(bool returnIP) const {
     OptionalDouble value = leftSideOpeningMultiplier();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::LeftSideOpeningMultiplier, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -304,14 +304,14 @@ namespace detail {
 
   double Shade_Impl::rightSideOpeningMultiplier() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ShadeFields::RightSideOpeningMultiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Shade_Impl::getRightSideOpeningMultiplier(bool returnIP) const {
     OptionalDouble value = rightSideOpeningMultiplier();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::RightSideOpeningMultiplier, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -321,14 +321,14 @@ namespace detail {
 
   double Shade_Impl::airflowPermeability() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ShadeFields::AirflowPermeability,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Shade_Impl::getAirflowPermeability(bool returnIP) const {
     OptionalDouble value = airflowPermeability();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::AirflowPermeability, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -455,7 +455,7 @@ namespace detail {
 
   void Shade_Impl::resetShadetoGlassDistance() {
     bool result = setString(OS_WindowMaterial_ShadeFields::ShadetoGlassDistance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Shade_Impl::setTopOpeningMultiplier(double topOpeningMultiplier) {
@@ -473,7 +473,7 @@ namespace detail {
 
   void Shade_Impl::resetTopOpeningMultiplier() {
     bool result = setString(OS_WindowMaterial_ShadeFields::TopOpeningMultiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Shade_Impl::setBottomOpeningMultiplier(double bottomOpeningMultiplier) {
@@ -491,7 +491,7 @@ namespace detail {
 
   void Shade_Impl::resetBottomOpeningMultiplier() {
     bool result = setString(OS_WindowMaterial_ShadeFields::BottomOpeningMultiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Shade_Impl::setLeftSideOpeningMultiplier(double leftSideOpeningMultiplier) {
@@ -509,7 +509,7 @@ namespace detail {
 
   void Shade_Impl::resetLeftSideOpeningMultiplier() {
     bool result = setString(OS_WindowMaterial_ShadeFields::LeftSideOpeningMultiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Shade_Impl::setRightSideOpeningMultiplier(double rightSideOpeningMultiplier) {
@@ -527,7 +527,7 @@ namespace detail {
 
   void Shade_Impl::resetRightSideOpeningMultiplier() {
     bool result = setString(OS_WindowMaterial_ShadeFields::RightSideOpeningMultiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Shade_Impl::setAirflowPermeability(double airflowPermeability) {
@@ -545,7 +545,7 @@ namespace detail {
 
   void Shade_Impl::resetAirflowPermeability() {
     bool result = setString(OS_WindowMaterial_ShadeFields::AirflowPermeability, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   openstudio::Quantity Shade_Impl::solarTransmittance_SI() const {
@@ -673,28 +673,28 @@ Shade::Shade(const Model& model,
   double conductivity)
   : ShadingMaterial(Shade::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::Shade_Impl>());
+  OS_ASSERT(getImpl<detail::Shade_Impl>());
 
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setSolarTransmittance(solarTransmittance);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setSolarReflectance(solarReflectance);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setVisibleTransmittance(visibleTransmittance);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setVisibleReflectance(visibleReflectance);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setThermalHemisphericalEmissivity(thermalHemisphericalEmissivity);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setThermalTransmittance(thermalTransmittance);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setThickness(thickness);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setConductivity(conductivity);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType Shade::iddObjectType() {

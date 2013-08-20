@@ -134,17 +134,31 @@ std::pair<double, double> runSimulation(openstudio::runmanager::ErrorEstimation 
   openstudio::SqlFile sqlfile2(runSimulation(m, true));
   qint64 reducedtime = et.elapsed();
 
-  LOG_FREE(Info, "compareUses", "OriginalTime " << originaltime << " reduced " << reducedtime);
+  LOG_FREE(Info, "runSimulation", "OriginalTime " << originaltime << " reduced " << reducedtime);
 
-  openstudio::runmanager::FuelUses fuses1 = t_ee.add(sqlfile1, "FullRun", "Rotation", t_rotation, true);
-  openstudio::runmanager::FuelUses fuses2 = t_ee.add(sqlfile2, "Estimation", "Rotation", t_rotation, true);
+  std::vector<double> variables;
+  variables.push_back(t_rotation);
+  openstudio::runmanager::FuelUses fuses0(0);
+  try {
+    fuses0 = t_ee.approximate(variables);
+  } catch (const std::exception &e) {
+    LOG_FREE(Info, "runSimulation", "Unable to generate estimate: " << e.what());
+  }
 
+  openstudio::runmanager::FuelUses fuses2 = t_ee.add(sqlfile2, "Estimation", variables);
+  openstudio::runmanager::FuelUses fuses1 = t_ee.add(sqlfile1, "FullRun", variables);
+
+  LOG_FREE(Info, "runSimulation", "Comparing Full Run to linear approximation");
+  compareUses(fuses1, fuses0);
+  LOG_FREE(Info, "runSimulation", "Comparing Full Run to error adjusted estimation run");
   return std::make_pair(compareSqlFile(sqlfile1, sqlfile2), compareUses(fuses1, fuses2));
 }
 
 TEST_F(RunManagerTestFixture, ErrorEstimationTest)
 {
-  openstudio::runmanager::ErrorEstimation ee("FullRun");
+  openstudio::runmanager::ErrorEstimation ee(1);
+  ee.setConfidence("FullRun", 1.0);
+  ee.setConfidence("Estimation", 0.75);
 
   std::pair<double, double> run1 = runSimulation(ee, 0);
   LOG(Info, "Run1 initialerror: " << run1.first*1000000000 << " adjustederror: " << run1.second);
@@ -158,7 +172,78 @@ TEST_F(RunManagerTestFixture, ErrorEstimationTest)
   std::pair<double, double> run4 = runSimulation(ee, 270);
   LOG(Info, "Run4 initialerror: " << run4.first*1000000000 << " adjustederror: " << run4.second);
 
+//  std::pair<double, double> run5 = runSimulation(ee, 225);
+//  LOG(Info, "Run5 initialerror: " << run5.first*1000000000 << " adjustederror: " << run5.second);
 
+}
+
+
+TEST_F(RunManagerTestFixture, LinearApproximationTestSimple)
+{
+    LinearApproximation la(1);
+    
+    std::vector<double> vals;
+    vals.push_back(0);
+    la.addVals(vals, 0);
+    vals[0] = 2;
+    la.addVals(vals, 2);
+
+    EXPECT_DOUBLE_EQ(2.0, la.approximate(vals));
+    vals[0] = 0;
+    EXPECT_DOUBLE_EQ(0.0, la.approximate(vals));
+    vals[0] = 1;
+    EXPECT_DOUBLE_EQ(1.0, la.approximate(vals));
+
+}
+
+TEST_F(RunManagerTestFixture, LinearApproximationTestHuge)
+{
+  const size_t size = 200;
+
+  LinearApproximation la(size);
+  
+  std::vector<double> vals(size);
+
+  // just establish a baseline
+  for (size_t i = 0; i < size; ++i)
+  {
+    vals[i] = i;
+  }
+
+  // let's say that this equals 100
+  la.addVals(vals, 100);
+
+  // and we should be able to get back the value we just put in
+  EXPECT_EQ(100.0, la.approximate(vals));
+
+  // now we'll modify one variable at a time
+  for (size_t i = 0; i < size; ++i)
+  {
+    std::vector<double> newvals(vals);
+
+    double origVariable = newvals[i];
+    double newVariable = origVariable * 2.0;
+
+    newvals[i] = newVariable;
+
+    double valueAtThisPoint = 100.0 + newvals[i];
+
+    la.addVals(newvals, valueAtThisPoint);
+    EXPECT_DOUBLE_EQ(valueAtThisPoint, la.approximate(newvals));
+
+    newvals[i] = (origVariable + newVariable) / 2;
+
+    EXPECT_DOUBLE_EQ((valueAtThisPoint + 100.0) / 2, la.approximate(newvals));
+  }
+
+  vals[size/10] = 62.4;
+  vals[size/8] = 99;
+  vals[size/6] = 99;
+  vals[size/4] = 102;
+  vals[size/2] = 102;
+
+
+  la.approximate(vals);
 }
 
 

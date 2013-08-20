@@ -34,6 +34,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -256,7 +258,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeed(
 
   boost::optional<IdfObject> _coilHeatingDXSingleSpeed = translateCoilHeatingDXSingleSpeedWithoutUnitary(modelObject);
 
-  BOOST_ASSERT(_coilHeatingDXSingleSpeed);
+  OS_ASSERT(_coilHeatingDXSingleSpeed);
 
   OptionalString s;
 

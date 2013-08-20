@@ -155,10 +155,10 @@ model.getThermalZones.each do |thermalZone|
   
   # get people schedule for zone
   # TODO: require people for occupancy controls
-  peopleTimeseries = sqlFile.timeSeries("Run Period 1".upcase, "Hourly", "Zone People Number Of Occupants", thermalZone.name.get.upcase)
+  peopleTimeseries = sqlFile.timeSeries("Run Period 1".upcase, "Hourly", "Zone People Occupant Count", thermalZone.name.get.upcase)
   
   if peopleTimeseries.empty?
-    puts "Cannot find timeseries 'Zone People Number Of Occupants' for ThermalZone '#{thermalZone.name}'."
+    puts "Cannot find timeseries 'Zone People Occupant Count' for ThermalZone '#{thermalZone.name}'."
   end
   
   # get lights schedule for zone

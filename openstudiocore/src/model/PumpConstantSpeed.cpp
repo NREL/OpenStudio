@@ -47,7 +47,7 @@ namespace detail {
                                                  bool keepHandle)
     : StraightComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == PumpConstantSpeed::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == PumpConstantSpeed::iddObjectType());
   }
 
   PumpConstantSpeed_Impl::PumpConstantSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -55,7 +55,7 @@ namespace detail {
                                                  bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == PumpConstantSpeed::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == PumpConstantSpeed::iddObjectType());
   }
 
   PumpConstantSpeed_Impl::PumpConstantSpeed_Impl(const PumpConstantSpeed_Impl& other,
@@ -108,14 +108,14 @@ namespace detail {
 
   double PumpConstantSpeed_Impl::ratedPumpHead() const {
     boost::optional<double> value = getDouble(OS_Pump_ConstantSpeedFields::RatedPumpHead,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity PumpConstantSpeed_Impl::getRatedPumpHead(bool returnIP) const {
     OptionalDouble value = ratedPumpHead();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Pump_ConstantSpeedFields::RatedPumpHead, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -143,14 +143,14 @@ namespace detail {
 
   double PumpConstantSpeed_Impl::motorEfficiency() const {
     boost::optional<double> value = getDouble(OS_Pump_ConstantSpeedFields::MotorEfficiency,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity PumpConstantSpeed_Impl::getMotorEfficiency(bool returnIP) const {
     OptionalDouble value = motorEfficiency();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Pump_ConstantSpeedFields::MotorEfficiency, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -160,14 +160,14 @@ namespace detail {
 
   double PumpConstantSpeed_Impl::fractionofMotorInefficienciestoFluidStream() const {
     boost::optional<double> value = getDouble(OS_Pump_ConstantSpeedFields::FractionofMotorInefficienciestoFluidStream,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity PumpConstantSpeed_Impl::getFractionofMotorInefficienciestoFluidStream(bool returnIP) const {
     OptionalDouble value = fractionofMotorInefficienciestoFluidStream();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Pump_ConstantSpeedFields::FractionofMotorInefficienciestoFluidStream, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -177,7 +177,7 @@ namespace detail {
 
   std::string PumpConstantSpeed_Impl::pumpControlType() const {
     boost::optional<std::string> value = getString(OS_Pump_ConstantSpeedFields::PumpControlType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -233,7 +233,7 @@ namespace detail {
       resetRatedFlowRate();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpConstantSpeed_Impl::setRatedFlowRate(const OSOptionalQuantity& ratedFlowRate) {
@@ -256,17 +256,17 @@ namespace detail {
 
   void PumpConstantSpeed_Impl::resetRatedFlowRate() {
     bool result = setString(OS_Pump_ConstantSpeedFields::RatedFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PumpConstantSpeed_Impl::autosizeRatedFlowRate() {
     bool result = setString(OS_Pump_ConstantSpeedFields::RatedFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PumpConstantSpeed_Impl::setRatedPumpHead(double ratedPumpHead) {
     bool result = setDouble(OS_Pump_ConstantSpeedFields::RatedPumpHead, ratedPumpHead);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpConstantSpeed_Impl::setRatedPumpHead(const Quantity& ratedPumpHead) {
@@ -280,7 +280,7 @@ namespace detail {
 
   void PumpConstantSpeed_Impl::resetRatedPumpHead() {
     bool result = setString(OS_Pump_ConstantSpeedFields::RatedPumpHead, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PumpConstantSpeed_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
@@ -292,7 +292,7 @@ namespace detail {
       resetRatedPowerConsumption();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpConstantSpeed_Impl::setRatedPowerConsumption(const OSOptionalQuantity& ratedPowerConsumption) {
@@ -315,12 +315,12 @@ namespace detail {
 
   void PumpConstantSpeed_Impl::resetRatedPowerConsumption() {
     bool result = setString(OS_Pump_ConstantSpeedFields::RatedPowerConsumption, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PumpConstantSpeed_Impl::autosizeRatedPowerConsumption() {
     bool result = setString(OS_Pump_ConstantSpeedFields::RatedPowerConsumption, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpConstantSpeed_Impl::setMotorEfficiency(double motorEfficiency) {
@@ -338,7 +338,7 @@ namespace detail {
 
   void PumpConstantSpeed_Impl::resetMotorEfficiency() {
     bool result = setString(OS_Pump_ConstantSpeedFields::MotorEfficiency, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpConstantSpeed_Impl::setFractionofMotorInefficienciestoFluidStream(double fractionofMotorInefficienciestoFluidStream) {
@@ -356,7 +356,7 @@ namespace detail {
 
   void PumpConstantSpeed_Impl::resetFractionofMotorInefficienciestoFluidStream() {
     bool result = setString(OS_Pump_ConstantSpeedFields::FractionofMotorInefficienciestoFluidStream, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpConstantSpeed_Impl::setPumpControlType(std::string pumpControlType) {
@@ -366,7 +366,7 @@ namespace detail {
 
   void PumpConstantSpeed_Impl::resetPumpControlType() {
     bool result = setString(OS_Pump_ConstantSpeedFields::PumpControlType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpConstantSpeed_Impl::setPumpFlowRateSchedule(Schedule& schedule) {
@@ -379,7 +379,7 @@ namespace detail {
 
   void PumpConstantSpeed_Impl::resetPumpFlowRateSchedule() {
     bool result = setString(OS_Pump_ConstantSpeedFields::PumpFlowRateSchedule, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpConstantSpeed_Impl::setPumpCurve(const boost::optional<Curve>& curve) {
@@ -398,7 +398,7 @@ namespace detail {
 
   void PumpConstantSpeed_Impl::resetPumpCurve() {
     bool result = setString(OS_Pump_ConstantSpeedFields::PumpCurve, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PumpConstantSpeed_Impl::setImpellerDiameter(boost::optional<double> impellerDiameter) {
@@ -410,7 +410,7 @@ namespace detail {
       resetImpellerDiameter();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpConstantSpeed_Impl::setImpellerDiameter(const OSOptionalQuantity& impellerDiameter) {
@@ -433,7 +433,7 @@ namespace detail {
 
   void PumpConstantSpeed_Impl::resetImpellerDiameter() {
     bool result = setString(OS_Pump_ConstantSpeedFields::ImpellerDiameter, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PumpConstantSpeed_Impl::setRotationalSpeed(boost::optional<double> rotationalSpeed) {
@@ -445,7 +445,7 @@ namespace detail {
       resetRotationalSpeed();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpConstantSpeed_Impl::setRotationalSpeed(const OSOptionalQuantity& rotationalSpeed) {
@@ -468,7 +468,7 @@ namespace detail {
 
   void PumpConstantSpeed_Impl::resetRotationalSpeed() {
     bool result = setString(OS_Pump_ConstantSpeedFields::RotationalSpeed, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpConstantSpeed_Impl::setZone(const boost::optional<ThermalZone>& thermalZone) {
@@ -485,7 +485,7 @@ namespace detail {
 
   void PumpConstantSpeed_Impl::resetZone() {
     bool result = setString(OS_Pump_ConstantSpeedFields::Zone, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpConstantSpeed_Impl::setSkinLossRadiativeFraction(boost::optional<double> skinLossRadiativeFraction) {
@@ -517,7 +517,7 @@ namespace detail {
 
   void PumpConstantSpeed_Impl::resetSkinLossRadiativeFraction() {
     bool result = setString(OS_Pump_ConstantSpeedFields::SkinLossRadiativeFraction, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   openstudio::OSOptionalQuantity PumpConstantSpeed_Impl::ratedFlowRate_SI() const {
@@ -693,7 +693,7 @@ namespace detail {
 PumpConstantSpeed::PumpConstantSpeed(const Model& model)
   : StraightComponent(PumpConstantSpeed::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::PumpConstantSpeed_Impl>());
+  OS_ASSERT(getImpl<detail::PumpConstantSpeed_Impl>());
 
   autosizeRatedFlowRate();
   autosizeRatedPowerConsumption();

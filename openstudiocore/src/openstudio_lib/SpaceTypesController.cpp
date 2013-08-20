@@ -29,6 +29,8 @@
 #include <model/ComponentData.hpp>
 #include <model/ComponentData_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 SpaceTypesController::SpaceTypesController(const model::Model& model)
@@ -39,7 +41,7 @@ SpaceTypesController::SpaceTypesController(const model::Model& model)
 
 void SpaceTypesController::onAddObject(const openstudio::IddObjectType& iddObjectType)
 {
-  BOOST_ASSERT(IddObjectType::OS_SpaceType == iddObjectType.value());
+  OS_ASSERT(IddObjectType::OS_SpaceType == iddObjectType.value());
   openstudio::model::SpaceType(this->model());
 }
 
