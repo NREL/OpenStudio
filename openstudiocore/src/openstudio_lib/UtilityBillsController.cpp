@@ -55,7 +55,8 @@ void UtilityBillsController::onAddObject(const openstudio::IddObjectType& iddObj
   UtilityBillAllFuelTypesListView * utilityBillAllFuelTypesListView = qobject_cast<UtilityBillAllFuelTypesListView *>(itemSelector);
   OS_ASSERT(utilityBillAllFuelTypesListView);
   FuelType fuelType = utilityBillAllFuelTypesListView->currentFuelType();
-  openstudio::model::UtilityBill(fuelType,this->model());
+  model::Model model = this->model();
+  openstudio::model::UtilityBill(fuelType,model);
 }
 
 void UtilityBillsController::onCopyObject(const openstudio::model::ModelObject& modelObject)
@@ -91,15 +92,15 @@ void UtilityBillsController::onInspectItem(OSItem* item)
 void UtilityBillsController::onSelectItem(OSItem* item)
 {
   m_subTabView->inspectorView()->selectItem(item);
-  m_subTabView->itemSelectorButtons()->enableAddButton();
-  m_subTabView->itemSelectorButtons()->disableRemoveButton();
+  m_subTabView->itemSelectorButtons()->disableAddButton();
+  m_subTabView->itemSelectorButtons()->enableRemoveButton();
 }
 
 void UtilityBillsController::onClearSelection()
 {
   m_subTabView->inspectorView()->clearSelection();
-  m_subTabView->itemSelectorButtons()->disableAddButton();
-  m_subTabView->itemSelectorButtons()->enableRemoveButton();
+  m_subTabView->itemSelectorButtons()->enableAddButton();
+  m_subTabView->itemSelectorButtons()->disableRemoveButton();
 }
 
 } // openstudio

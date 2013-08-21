@@ -80,15 +80,6 @@ void UtilityBillAllFuelTypesListView::addUtilityBillFuelType(const FuelType & fu
   addCollapsibleItem(utilityBillFuelTypeItem);
 }
 
-IddObjectType UtilityBillAllFuelTypesListView::currentIddObjectType() const
-{
-  OSCollapsibleItem* selectedCollapsibleItem = this->selectedCollapsibleItem();
-  ModelObjectTypeItem* modelObjectTypeItem = qobject_cast<ModelObjectTypeItem*>(selectedCollapsibleItem);
-  OS_ASSERT(modelObjectTypeItem);
-  OS_ASSERT(modelObjectTypeItem->iddObjectType() == openstudio::IddObjectType::OS_UtilityBill);
-  return modelObjectTypeItem->iddObjectType();
-}
-
 FuelType UtilityBillAllFuelTypesListView::currentFuelType() const
 {
   OSCollapsibleItem* selectedCollapsibleItem = this->selectedCollapsibleItem();

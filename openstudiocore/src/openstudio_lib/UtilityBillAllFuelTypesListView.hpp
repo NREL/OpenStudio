@@ -55,8 +55,6 @@ class UtilityBillAllFuelTypesListView : public OSCollapsibleItemList
 
     void addModelObjectType(const IddObjectType& iddObjectType, const std::string& name);
 
-    virtual IddObjectType currentIddObjectType() const;
-
     FuelType currentFuelType() const;
 
     boost::optional<openstudio::FuelType> selectedFuelType() const;

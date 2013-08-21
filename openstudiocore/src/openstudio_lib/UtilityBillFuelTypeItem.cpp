@@ -54,7 +54,7 @@ FuelType UtilityBillFuelTypeItem::fuelType() const
   UtilityBillFuelTypeListView* utilityBillFuelTypeListView = qobject_cast<UtilityBillFuelTypeListView*>(itemList);
   OS_ASSERT(utilityBillFuelTypeListView);
   FuelType fuelType = utilityBillFuelTypeListView->fuelType();
-  return utilityBillFuelTypeListView->fuelType();
+  return fuelType;
 }
 
 } // openstudio

@@ -116,7 +116,8 @@ UtilityBillFuelTypeListView::UtilityBillFuelTypeListView(const model::Model& mod
   openstudio::FuelType fuelType,
   bool addScrollArea,
   QWidget * parent)
-  : OSItemList(new UtilityBillFuelTypeListController(model,fuelType),addScrollArea)
+  : OSItemList(new UtilityBillFuelTypeListController(model,fuelType),addScrollArea),
+  m_fuelType(fuelType)
 { 
 }  
 

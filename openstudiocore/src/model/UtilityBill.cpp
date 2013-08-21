@@ -55,6 +55,7 @@ namespace detail {
                                      bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
+    // May need to set default fuelType
     OS_ASSERT(idfObject.iddObject().type() == UtilityBill::iddObjectType());
   }
 
