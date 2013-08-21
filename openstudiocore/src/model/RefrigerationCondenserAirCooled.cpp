@@ -45,7 +45,7 @@ namespace detail {
                                                                              bool keepHandle)
     : ParentObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == RefrigerationCondenserAirCooled::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == RefrigerationCondenserAirCooled::iddObjectType());
   }
 
   RefrigerationCondenserAirCooled_Impl::RefrigerationCondenserAirCooled_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -53,7 +53,7 @@ namespace detail {
                                                                              bool keepHandle)
     : ParentObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == RefrigerationCondenserAirCooled::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == RefrigerationCondenserAirCooled::iddObjectType());
   }
 
   RefrigerationCondenserAirCooled_Impl::RefrigerationCondenserAirCooled_Impl(const RefrigerationCondenserAirCooled_Impl& other,
@@ -110,7 +110,7 @@ namespace detail {
 
   double RefrigerationCondenserAirCooled_Impl::ratedSubcoolingTemperatureDifference() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_Condenser_AirCooledFields::RatedSubcoolingTemperatureDifference,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -120,7 +120,7 @@ namespace detail {
 
   std::string RefrigerationCondenserAirCooled_Impl::condenserFanSpeedControlType() const {
     boost::optional<std::string> value = getString(OS_Refrigeration_Condenser_AirCooledFields::CondenserFanSpeedControlType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -130,7 +130,7 @@ namespace detail {
 
   double RefrigerationCondenserAirCooled_Impl::ratedFanPower() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_Condenser_AirCooledFields::RatedFanPower,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -140,7 +140,7 @@ namespace detail {
 
   double RefrigerationCondenserAirCooled_Impl::minimumFanAirFlowRatio() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_Condenser_AirCooledFields::MinimumFanAirFlowRatio,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -154,7 +154,7 @@ namespace detail {
 
   std::string RefrigerationCondenserAirCooled_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_Refrigeration_Condenser_AirCooledFields::EndUseSubcategory,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -164,7 +164,7 @@ namespace detail {
 
   double RefrigerationCondenserAirCooled_Impl::condenserRefrigerantOperatingChargeInventory() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_Condenser_AirCooledFields::CondenserRefrigerantOperatingChargeInventory,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -174,7 +174,7 @@ namespace detail {
 
   double RefrigerationCondenserAirCooled_Impl::condensateReceiverRefrigerantInventory() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_Condenser_AirCooledFields::CondensateReceiverRefrigerantInventory,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -184,7 +184,7 @@ namespace detail {
 
   double RefrigerationCondenserAirCooled_Impl::condensatePipingRefrigerantInventory() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_Condenser_AirCooledFields::CondensatePipingRefrigerantInventory,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -206,7 +206,7 @@ namespace detail {
 
   void RefrigerationCondenserAirCooled_Impl::resetRatedEffectiveTotalHeatRejectionRateCurve() {
     bool result = setString(OS_Refrigeration_Condenser_AirCooledFields::RatedEffectiveTotalHeatRejectionRateCurveName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCondenserAirCooled_Impl::setRatedSubcoolingTemperatureDifference(double ratedSubcoolingTemperatureDifference) {
@@ -216,7 +216,7 @@ namespace detail {
 
   void RefrigerationCondenserAirCooled_Impl::resetRatedSubcoolingTemperatureDifference() {
     bool result = setString(OS_Refrigeration_Condenser_AirCooledFields::RatedSubcoolingTemperatureDifference, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCondenserAirCooled_Impl::setCondenserFanSpeedControlType(std::string condenserFanSpeedControlType) {
@@ -226,7 +226,7 @@ namespace detail {
 
   void RefrigerationCondenserAirCooled_Impl::resetCondenserFanSpeedControlType() {
     bool result = setString(OS_Refrigeration_Condenser_AirCooledFields::CondenserFanSpeedControlType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCondenserAirCooled_Impl::setRatedFanPower(double ratedFanPower) {
@@ -236,7 +236,7 @@ namespace detail {
 
   void RefrigerationCondenserAirCooled_Impl::resetRatedFanPower() {
     bool result = setString(OS_Refrigeration_Condenser_AirCooledFields::RatedFanPower, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCondenserAirCooled_Impl::setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio) {
@@ -246,7 +246,7 @@ namespace detail {
 
   void RefrigerationCondenserAirCooled_Impl::resetMinimumFanAirFlowRatio() {
     bool result = setString(OS_Refrigeration_Condenser_AirCooledFields::MinimumFanAirFlowRatio, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCondenserAirCooled_Impl::setAirInletZone(const boost::optional<ThermalZone>& thermalZone) {
@@ -263,47 +263,47 @@ namespace detail {
 
   void RefrigerationCondenserAirCooled_Impl::resetAirInletZone() {
     bool result = setString(OS_Refrigeration_Condenser_AirCooledFields::AirInletZoneName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCondenserAirCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_Condenser_AirCooledFields::EndUseSubcategory, endUseSubcategory);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCondenserAirCooled_Impl::resetEndUseSubcategory() {
     bool result = setString(OS_Refrigeration_Condenser_AirCooledFields::EndUseSubcategory, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCondenserAirCooled_Impl::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_AirCooledFields::CondenserRefrigerantOperatingChargeInventory, condenserRefrigerantOperatingChargeInventory);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCondenserAirCooled_Impl::resetCondenserRefrigerantOperatingChargeInventory() {
     bool result = setString(OS_Refrigeration_Condenser_AirCooledFields::CondenserRefrigerantOperatingChargeInventory, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCondenserAirCooled_Impl::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_AirCooledFields::CondensateReceiverRefrigerantInventory, condensateReceiverRefrigerantInventory);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCondenserAirCooled_Impl::resetCondensateReceiverRefrigerantInventory() {
     bool result = setString(OS_Refrigeration_Condenser_AirCooledFields::CondensateReceiverRefrigerantInventory, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCondenserAirCooled_Impl::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_AirCooledFields::CondensatePipingRefrigerantInventory, condensatePipingRefrigerantInventory);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCondenserAirCooled_Impl::resetCondensatePipingRefrigerantInventory() {
     bool result = setString(OS_Refrigeration_Condenser_AirCooledFields::CondensatePipingRefrigerantInventory, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -311,7 +311,7 @@ namespace detail {
 RefrigerationCondenserAirCooled::RefrigerationCondenserAirCooled(const Model& model)
   : ParentObject(RefrigerationCondenserAirCooled::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::RefrigerationCondenserAirCooled_Impl>());
+  OS_ASSERT(getImpl<detail::RefrigerationCondenserAirCooled_Impl>());
 
   bool ok = true;
 
@@ -323,7 +323,7 @@ RefrigerationCondenserAirCooled::RefrigerationCondenserAirCooled(const Model& mo
   heatRejectionCurve.setMaximumValueofx(22.2);
 
   setRatedEffectiveTotalHeatRejectionRateCurve(heatRejectionCurve);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
   setRatedSubcoolingTemperatureDifference(0.0);
   setCondenserFanSpeedControlType("VariableSpeed");

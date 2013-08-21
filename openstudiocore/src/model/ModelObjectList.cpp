@@ -37,7 +37,7 @@ namespace detail {
                                              bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ModelObjectList::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ModelObjectList::iddObjectType());
   }
 
   ModelObjectList_Impl::ModelObjectList_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                                              bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ModelObjectList::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ModelObjectList::iddObjectType());
   }
 
   ModelObjectList_Impl::ModelObjectList_Impl(const ModelObjectList_Impl& other,
@@ -159,7 +159,7 @@ namespace detail {
     {
       boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ModelObjectListExtensibleFields::ModelObject);
 
-      BOOST_ASSERT(wo);
+      OS_ASSERT(wo);
 
       if( wo->handle() == modelObject.handle() )
       {
@@ -169,7 +169,7 @@ namespace detail {
       }
     }
 
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
 
     return result.get();
   }
@@ -179,7 +179,7 @@ namespace detail {
 ModelObjectList::ModelObjectList(const Model& model)
   : ModelObject(ModelObjectList::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ModelObjectList_Impl>());
+  OS_ASSERT(getImpl<detail::ModelObjectList_Impl>());
 }
 
 IddObjectType ModelObjectList::iddObjectType() {

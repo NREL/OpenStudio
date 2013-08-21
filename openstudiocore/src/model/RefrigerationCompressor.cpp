@@ -43,7 +43,7 @@ namespace detail {
                                                              bool keepHandle)
     : ParentObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == RefrigerationCompressor::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == RefrigerationCompressor::iddObjectType());
   }
 
   RefrigerationCompressor_Impl::RefrigerationCompressor_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -51,7 +51,7 @@ namespace detail {
                                                              bool keepHandle)
     : ParentObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == RefrigerationCompressor::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == RefrigerationCompressor::iddObjectType());
   }
 
   RefrigerationCompressor_Impl::RefrigerationCompressor_Impl(const RefrigerationCompressor_Impl& other,
@@ -145,7 +145,7 @@ namespace detail {
 
   std::string RefrigerationCompressor_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_Refrigeration_CompressorFields::EndUseSubcategory,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -155,7 +155,7 @@ namespace detail {
 
   std::string RefrigerationCompressor_Impl::modeofOperation() const {
     boost::optional<std::string> value = getString(OS_Refrigeration_CompressorFields::ModeofOperation,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -190,12 +190,12 @@ namespace detail {
       resetRatedSuperheat();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCompressor_Impl::resetRatedSuperheat() {
     bool result = setString(OS_Refrigeration_CompressorFields::RatedSuperheat, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCompressor_Impl::setRatedReturnGasTemperature(boost::optional<double> ratedReturnGasTemperature) {
@@ -207,12 +207,12 @@ namespace detail {
       resetRatedReturnGasTemperature();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCompressor_Impl::resetRatedReturnGasTemperature() {
     bool result = setString(OS_Refrigeration_CompressorFields::RatedReturnGasTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCompressor_Impl::setRatedLiquidTemperature(boost::optional<double> ratedLiquidTemperature) {
@@ -224,12 +224,12 @@ namespace detail {
       resetRatedLiquidTemperature();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCompressor_Impl::resetRatedLiquidTemperature() {
     bool result = setString(OS_Refrigeration_CompressorFields::RatedLiquidTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCompressor_Impl::setRatedSubcooling(boost::optional<double> ratedSubcooling) {
@@ -241,22 +241,22 @@ namespace detail {
       resetRatedSubcooling();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCompressor_Impl::resetRatedSubcooling() {
     bool result = setString(OS_Refrigeration_CompressorFields::RatedSubcooling, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCompressor_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_CompressorFields::EndUseSubcategory, endUseSubcategory);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCompressor_Impl::resetEndUseSubcategory() {
     bool result = setString(OS_Refrigeration_CompressorFields::EndUseSubcategory, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCompressor_Impl::setModeofOperation(std::string modeofOperation) {
@@ -266,7 +266,7 @@ namespace detail {
 
   void RefrigerationCompressor_Impl::resetModeofOperation() {
     bool result = setString(OS_Refrigeration_CompressorFields::ModeofOperation, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCompressor_Impl::setTranscriticalCompressorPowerCurve(const boost::optional<CurveBicubic>& curveBicubic) {
@@ -283,7 +283,7 @@ namespace detail {
 
   void RefrigerationCompressor_Impl::resetTranscriticalCompressorPowerCurve() {
     bool result = setString(OS_Refrigeration_CompressorFields::TranscriticalCompressorPowerCurveName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCompressor_Impl::setTranscriticalCompressorCapacityCurve(const boost::optional<CurveBicubic>& curveBicubic) {
@@ -300,7 +300,7 @@ namespace detail {
 
   void RefrigerationCompressor_Impl::resetTranscriticalCompressorCapacityCurve() {
     bool result = setString(OS_Refrigeration_CompressorFields::TranscriticalCompressorCapacityCurveName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<CurveBicubic> RefrigerationCompressor_Impl::optionalRefrigerationCompressorPowerCurve() const {
@@ -316,7 +316,7 @@ namespace detail {
 RefrigerationCompressor::RefrigerationCompressor(const Model& model)
   : ParentObject(RefrigerationCompressor::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::RefrigerationCompressor_Impl>());
+  OS_ASSERT(getImpl<detail::RefrigerationCompressor_Impl>());
   
   bool ok = true;
 
@@ -341,7 +341,7 @@ RefrigerationCompressor::RefrigerationCompressor(const Model& model)
   powerCurve.setOutputUnitType("Power");
 
   ok = setRefrigerationCompressorPowerCurve(powerCurve);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
   CurveBicubic capacityCurve = CurveBicubic(model);
   capacityCurve.setName("Refrigeration Compressor Capacity Curve");
@@ -364,7 +364,7 @@ RefrigerationCompressor::RefrigerationCompressor(const Model& model)
   capacityCurve.setOutputUnitType("Capacity");
   
   ok = setRefrigerationCompressorCapacityCurve(capacityCurve);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
   setRatedReturnGasTemperature(18.3);
   setRatedSubcooling(0.0);

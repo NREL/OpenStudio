@@ -49,7 +49,7 @@ namespace detail {
                                                  bool keepHandle)
     : ParentObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == RefrigerationCase::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == RefrigerationCase::iddObjectType());
   }
 
   RefrigerationCase_Impl::RefrigerationCase_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -57,7 +57,7 @@ namespace detail {
                                                  bool keepHandle)
     : ParentObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == RefrigerationCase::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == RefrigerationCase::iddObjectType());
   }
 
   RefrigerationCase_Impl::RefrigerationCase_Impl(const RefrigerationCase_Impl& other,
@@ -150,7 +150,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::ratedAmbientTemperature() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::RatedAmbientTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -160,7 +160,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::ratedAmbientRelativeHumidity() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::RatedAmbientRelativeHumidity,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -170,7 +170,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::ratedTotalCoolingCapacityperUnitLength() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::RatedTotalCoolingCapacityperUnitLength,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -180,7 +180,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::ratedLatentHeatRatio() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::RatedLatentHeatRatio,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -190,7 +190,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::ratedRuntimeFraction() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::RatedRuntimeFraction,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -200,7 +200,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::caseLength() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::CaseLength,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -210,7 +210,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::caseOperatingTemperature() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::CaseOperatingTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -220,7 +220,7 @@ namespace detail {
 
   std::string RefrigerationCase_Impl::latentCaseCreditCurveType() const {
     boost::optional<std::string> value = getString(OS_Refrigeration_CaseFields::LatentCaseCreditCurveType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -238,7 +238,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::standardCaseFanPowerperUnitLength() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::StandardCaseFanPowerperUnitLength,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -248,7 +248,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::operatingCaseFanPowerperUnitLength() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::OperatingCaseFanPowerperUnitLength,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -258,7 +258,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::standardCaseLightingPowerperUnitLength() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::StandardCaseLightingPowerperUnitLength,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -276,7 +276,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::fractionofLightingEnergytoCase() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::FractionofLightingEnergytoCase,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -286,7 +286,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::caseAntiSweatHeaterPowerperUnitLength() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::CaseAntiSweatHeaterPowerperUnitLength,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -296,7 +296,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::minimumAntiSweatHeaterPowerperUnitLength() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::MinimumAntiSweatHeaterPowerperUnitLength,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -306,7 +306,7 @@ namespace detail {
 
   std::string RefrigerationCase_Impl::antiSweatHeaterControlType() const {
     boost::optional<std::string> value = getString(OS_Refrigeration_CaseFields::AntiSweatHeaterControlType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -316,7 +316,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::humidityatZeroAntiSweatHeaterEnergy() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::HumidityatZeroAntiSweatHeaterEnergy,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -326,7 +326,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::caseHeight() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::CaseHeight,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -336,7 +336,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::fractionofAntiSweatHeaterEnergytoCase() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::FractionofAntiSweatHeaterEnergytoCase,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -346,7 +346,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::caseDefrostPowerperUnitLength() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::CaseDefrostPowerperUnitLength,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -356,7 +356,7 @@ namespace detail {
 
   std::string RefrigerationCase_Impl::caseDefrostType() const {
     boost::optional<std::string> value = getString(OS_Refrigeration_CaseFields::CaseDefrostType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -374,7 +374,7 @@ namespace detail {
 
   std::string RefrigerationCase_Impl::defrostEnergyCorrectionCurveType() const {
     boost::optional<std::string> value = getString(OS_Refrigeration_CaseFields::DefrostEnergyCorrectionCurveType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -388,7 +388,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::underCaseHVACReturnAirFraction() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::UnderCaseHVACReturnAirFraction,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -410,7 +410,7 @@ namespace detail {
 
   double RefrigerationCase_Impl::averageRefrigerantChargeInventory() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_CaseFields::AverageRefrigerantChargeInventory,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -428,7 +428,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetAvailabilitySchedule() {
     bool result = setString(OS_Refrigeration_CaseFields::AvailabilityScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setThermalZone(const ThermalZone& thermalZone) {
@@ -438,7 +438,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetThermalZone() {
     bool result = setString(OS_Refrigeration_CaseFields::ZoneName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setRatedAmbientTemperature(double ratedAmbientTemperature) {
@@ -448,7 +448,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetRatedAmbientTemperature() {
     bool result = setString(OS_Refrigeration_CaseFields::RatedAmbientTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setRatedAmbientRelativeHumidity(double ratedAmbientRelativeHumidity) {
@@ -458,7 +458,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetRatedAmbientRelativeHumidity() {
     bool result = setString(OS_Refrigeration_CaseFields::RatedAmbientRelativeHumidity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setRatedTotalCoolingCapacityperUnitLength(double ratedTotalCoolingCapacityperUnitLength) {
@@ -468,7 +468,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetRatedTotalCoolingCapacityperUnitLength() {
     bool result = setString(OS_Refrigeration_CaseFields::RatedTotalCoolingCapacityperUnitLength, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setRatedLatentHeatRatio(double ratedLatentHeatRatio) {
@@ -478,7 +478,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetRatedLatentHeatRatio() {
     bool result = setString(OS_Refrigeration_CaseFields::RatedLatentHeatRatio, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setRatedRuntimeFraction(double ratedRuntimeFraction) {
@@ -488,7 +488,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetRatedRuntimeFraction() {
     bool result = setString(OS_Refrigeration_CaseFields::RatedRuntimeFraction, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setCaseLength(double caseLength) {
@@ -498,7 +498,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetCaseLength() {
     bool result = setString(OS_Refrigeration_CaseFields::CaseLength, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setCaseOperatingTemperature(double caseOperatingTemperature) {
@@ -508,7 +508,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetCaseOperatingTemperature() {
     bool result = setString(OS_Refrigeration_CaseFields::CaseOperatingTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setLatentCaseCreditCurveType(std::string latentCaseCreditCurveType) {
@@ -518,7 +518,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetLatentCaseCreditCurveType() {
     bool result = setString(OS_Refrigeration_CaseFields::LatentCaseCreditCurveType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setLatentCaseCreditCurve(const CurveCubic& curveCubic) {
@@ -533,7 +533,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetStandardCaseFanPowerperUnitLength() {
     bool result = setString(OS_Refrigeration_CaseFields::StandardCaseFanPowerperUnitLength, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setOperatingCaseFanPowerperUnitLength(double operatingCaseFanPowerperUnitLength) {
@@ -543,17 +543,17 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetOperatingCaseFanPowerperUnitLength() {
     bool result = setString(OS_Refrigeration_CaseFields::OperatingCaseFanPowerperUnitLength, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCase_Impl::setStandardCaseLightingPowerperUnitLength(double standardCaseLightingPowerperUnitLength) {
     bool result = setDouble(OS_Refrigeration_CaseFields::StandardCaseLightingPowerperUnitLength, standardCaseLightingPowerperUnitLength);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCase_Impl::resetStandardCaseLightingPowerperUnitLength() {
     bool result = setString(OS_Refrigeration_CaseFields::StandardCaseLightingPowerperUnitLength, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCase_Impl::setInstalledCaseLightingPowerperUnitLength(boost::optional<double> installedCaseLightingPowerperUnitLength) {
@@ -565,12 +565,12 @@ namespace detail {
       resetInstalledCaseLightingPowerperUnitLength();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCase_Impl::resetInstalledCaseLightingPowerperUnitLength() {
     bool result = setString(OS_Refrigeration_CaseFields::InstalledCaseLightingPowerperUnitLength, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setCaseLightingSchedule(Schedule& schedule) {
@@ -583,7 +583,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetCaseLightingSchedule() {
     bool result = setString(OS_Refrigeration_CaseFields::CaseLightingScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setFractionofLightingEnergytoCase(double fractionofLightingEnergytoCase) {
@@ -593,7 +593,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetFractionofLightingEnergytoCase() {
     bool result = setString(OS_Refrigeration_CaseFields::FractionofLightingEnergytoCase, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setCaseAntiSweatHeaterPowerperUnitLength(double caseAntiSweatHeaterPowerperUnitLength) {
@@ -603,7 +603,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetCaseAntiSweatHeaterPowerperUnitLength() {
     bool result = setString(OS_Refrigeration_CaseFields::CaseAntiSweatHeaterPowerperUnitLength, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setMinimumAntiSweatHeaterPowerperUnitLength(double minimumAntiSweatHeaterPowerperUnitLength) {
@@ -613,7 +613,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetMinimumAntiSweatHeaterPowerperUnitLength() {
     bool result = setString(OS_Refrigeration_CaseFields::MinimumAntiSweatHeaterPowerperUnitLength, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setAntiSweatHeaterControlType(std::string antiSweatHeaterControlType) {
@@ -623,17 +623,17 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetAntiSweatHeaterControlType() {
     bool result = setString(OS_Refrigeration_CaseFields::AntiSweatHeaterControlType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCase_Impl::setHumidityatZeroAntiSweatHeaterEnergy(double humidityatZeroAntiSweatHeaterEnergy) {
     bool result = setDouble(OS_Refrigeration_CaseFields::HumidityatZeroAntiSweatHeaterEnergy, humidityatZeroAntiSweatHeaterEnergy);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCase_Impl::resetHumidityatZeroAntiSweatHeaterEnergy() {
     bool result = setString(OS_Refrigeration_CaseFields::HumidityatZeroAntiSweatHeaterEnergy, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setCaseHeight(double caseHeight) {
@@ -643,7 +643,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetCaseHeight() {
     bool result = setString(OS_Refrigeration_CaseFields::CaseHeight, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setFractionofAntiSweatHeaterEnergytoCase(double fractionofAntiSweatHeaterEnergytoCase) {
@@ -653,7 +653,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetFractionofAntiSweatHeaterEnergytoCase() {
     bool result = setString(OS_Refrigeration_CaseFields::FractionofAntiSweatHeaterEnergytoCase, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setCaseDefrostPowerperUnitLength(double caseDefrostPowerperUnitLength) {
@@ -663,7 +663,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetCaseDefrostPowerperUnitLength() {
     bool result = setString(OS_Refrigeration_CaseFields::CaseDefrostPowerperUnitLength, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setCaseDefrostType(std::string caseDefrostType) {
@@ -673,7 +673,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetCaseDefrostType() {
     bool result = setString(OS_Refrigeration_CaseFields::CaseDefrostType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setCaseDefrostSchedule(Schedule& schedule) {
@@ -686,7 +686,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetCaseDefrostSchedule() {
     bool result = setString(OS_Refrigeration_CaseFields::CaseDefrostScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setCaseDefrostDripDownSchedule(Schedule& schedule) {
@@ -699,7 +699,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetCaseDefrostDripDownSchedule() {
     bool result = setString(OS_Refrigeration_CaseFields::CaseDefrostDripDownScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setDefrostEnergyCorrectionCurveType(std::string defrostEnergyCorrectionCurveType) {
@@ -709,7 +709,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetDefrostEnergyCorrectionCurveType() {
     bool result = setString(OS_Refrigeration_CaseFields::DefrostEnergyCorrectionCurveType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setDefrostEnergyCorrectionCurve(const boost::optional<CurveCubic>& curveCubic) {
@@ -726,7 +726,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetDefrostEnergyCorrectionCurve() {
     bool result = setString(OS_Refrigeration_CaseFields::DefrostEnergyCorrectionCurveName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setUnderCaseHVACReturnAirFraction(double underCaseHVACReturnAirFraction) {
@@ -736,7 +736,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetUnderCaseHVACReturnAirFraction() {
     bool result = setString(OS_Refrigeration_CaseFields::UnderCaseHVACReturnAirFraction, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setRefrigeratedCaseRestockingSchedule(Schedule& schedule) {
@@ -749,7 +749,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetRefrigeratedCaseRestockingSchedule() {
     bool result = setString(OS_Refrigeration_CaseFields::RefrigeratedCaseRestockingScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setCaseCreditFractionSchedule(Schedule& schedule) {
@@ -762,7 +762,7 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetCaseCreditFractionSchedule() {
     bool result = setString(OS_Refrigeration_CaseFields::CaseCreditFractionScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationCase_Impl::setDesignEvaporatorTemperatureorBrineInletTemperature(boost::optional<double> designEvaporatorTemperatureorBrineInletTemperature) {
@@ -779,17 +779,17 @@ namespace detail {
 
   void RefrigerationCase_Impl::resetDesignEvaporatorTemperatureorBrineInletTemperature() {
     bool result = setString(OS_Refrigeration_CaseFields::DesignEvaporatorTemperatureorBrineInletTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCase_Impl::setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory) {
     bool result = setDouble(OS_Refrigeration_CaseFields::AverageRefrigerantChargeInventory, averageRefrigerantChargeInventory);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationCase_Impl::resetAverageRefrigerantChargeInventory() {
     bool result = setString(OS_Refrigeration_CaseFields::AverageRefrigerantChargeInventory, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<CurveCubic> RefrigerationCase_Impl::optionalLatentCaseCreditCurve() const {
@@ -801,7 +801,7 @@ namespace detail {
 RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseLightingSchedule, Schedule& caseDefrostSchedule, Schedule& caseDefrostDripDownSchedule)
   : ParentObject(RefrigerationCase::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::RefrigerationCase_Impl>());
+  OS_ASSERT(getImpl<detail::RefrigerationCase_Impl>());
 
   bool ok = true;
   CurveCubic latentCaseCreditCurve = CurveCubic(model);
@@ -823,7 +823,7 @@ RefrigerationCase::RefrigerationCase(const Model& model, Schedule& caseLightingS
   setLatentCaseCreditCurveType("CaseTemperatureMethod");
 
   ok = setLatentCaseCreditCurve(latentCaseCreditCurve);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
   setStandardCaseFanPowerperUnitLength(41.01);
   setOperatingCaseFanPowerperUnitLength(41.01);

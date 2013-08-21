@@ -55,7 +55,7 @@ namespace detail {
                                                      bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == RefrigerationSystem::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == RefrigerationSystem::iddObjectType());
   }
 
   RefrigerationSystem_Impl::RefrigerationSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -63,7 +63,7 @@ namespace detail {
                                                      bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == RefrigerationSystem::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == RefrigerationSystem::iddObjectType());
   }
 
   RefrigerationSystem_Impl::RefrigerationSystem_Impl(const RefrigerationSystem_Impl& other,
@@ -219,19 +219,19 @@ namespace detail {
 
   double RefrigerationSystem_Impl::minimumCondensingTemperature() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_SystemFields::MinimumCondensingTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   std::string RefrigerationSystem_Impl::refrigerationSystemWorkingFluidType() const {
     boost::optional<std::string> value = getString(OS_Refrigeration_SystemFields::RefrigerationSystemWorkingFluidType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   std::string RefrigerationSystem_Impl::suctionTemperatureControlType() const {
     boost::optional<std::string> value = getString(OS_Refrigeration_SystemFields::SuctionTemperatureControlType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -249,7 +249,7 @@ namespace detail {
 
   double RefrigerationSystem_Impl::sumUASuctionPiping() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_SystemFields::SumUASuctionPiping,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -263,7 +263,7 @@ namespace detail {
 
   std::string RefrigerationSystem_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_Refrigeration_SystemFields::EndUseSubcategory,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -273,7 +273,7 @@ namespace detail {
 
   std::string RefrigerationSystem_Impl::numberofCompressorStages() const {
     boost::optional<std::string> value = getString(OS_Refrigeration_SystemFields::NumberofCompressorStages,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -283,7 +283,7 @@ namespace detail {
 
   std::string RefrigerationSystem_Impl::intercoolerType() const {
     boost::optional<std::string> value = getString(OS_Refrigeration_SystemFields::IntercoolerType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -293,7 +293,7 @@ namespace detail {
 
   double RefrigerationSystem_Impl::shellandCoilIntercoolerEffectiveness() const {
     boost::optional<double> value = getDouble(OS_Refrigeration_SystemFields::ShellandCoilIntercoolerEffectiveness,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -400,7 +400,7 @@ namespace detail {
 
   void RefrigerationSystem_Impl::resetRefrigeratedCaseAndWalkInList() {
     bool result = setString(OS_Refrigeration_SystemFields::RefrigeratedCaseAndWalkInListName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationSystem_Impl::setRefrigerationTransferLoadList(const boost::optional<ModelObjectList>& modelObjectList) {
@@ -417,7 +417,7 @@ namespace detail {
 
   void RefrigerationSystem_Impl::resetRefrigerationTransferLoadList() {
     bool result = setString(OS_Refrigeration_SystemFields::RefrigerationTransferLoadListName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationSystem_Impl::setRefrigerationCondenser(const ModelObject& refrigerationCondenser) {
@@ -432,7 +432,7 @@ namespace detail {
 
   void RefrigerationSystem_Impl::setMinimumCondensingTemperature(double minimumCondensingTemperature) {
     bool result = setDouble(OS_Refrigeration_SystemFields::MinimumCondensingTemperature, minimumCondensingTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationSystem_Impl::setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType) {
@@ -447,7 +447,7 @@ namespace detail {
 
   void RefrigerationSystem_Impl::resetSuctionTemperatureControlType() {
     bool result = setString(OS_Refrigeration_SystemFields::SuctionTemperatureControlType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   /*bool RefrigerationSystem_Impl::setMechanicalSubcooler(const boost::optional<RefrigerationSubcooler>& refrigerationSubcooler) {
@@ -464,7 +464,7 @@ namespace detail {
 
   void RefrigerationSystem_Impl::resetMechanicalSubcooler() {
     bool result = setString(OS_Refrigeration_SystemFields::MechanicalSubcoolerName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationSystem_Impl::setLiquidSuctionHeatExchangerSubcooler(const boost::optional<RefrigerationSubcooler>& refrigerationSubcooler) {
@@ -481,17 +481,17 @@ namespace detail {
 
   void RefrigerationSystem_Impl::resetLiquidSuctionHeatExchangerSubcooler() {
     bool result = setString(OS_Refrigeration_SystemFields::LiquidSuctionHeatExchangerSubcoolerName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }*/
 
   void RefrigerationSystem_Impl::setSumUASuctionPiping(double sumUASuctionPiping) {
     bool result = setDouble(OS_Refrigeration_SystemFields::SumUASuctionPiping, sumUASuctionPiping);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationSystem_Impl::resetSumUASuctionPiping() {
     bool result = setString(OS_Refrigeration_SystemFields::SumUASuctionPiping, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationSystem_Impl::setSuctionPipingZone(const boost::optional<ThermalZone>& thermalZone) {
@@ -508,17 +508,17 @@ namespace detail {
 
   void RefrigerationSystem_Impl::resetSuctionPipingZone() {
     bool result = setString(OS_Refrigeration_SystemFields::SuctionPipingZoneName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationSystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_SystemFields::EndUseSubcategory, endUseSubcategory);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationSystem_Impl::resetEndUseSubcategory() {
     bool result = setString(OS_Refrigeration_SystemFields::EndUseSubcategory, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationSystem_Impl::setNumberofCompressorStages(std::string numberofCompressorStages) {
@@ -528,7 +528,7 @@ namespace detail {
 
   void RefrigerationSystem_Impl::resetNumberofCompressorStages() {
     bool result = setString(OS_Refrigeration_SystemFields::NumberofCompressorStages, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationSystem_Impl::setIntercoolerType(std::string intercoolerType) {
@@ -538,17 +538,17 @@ namespace detail {
 
   void RefrigerationSystem_Impl::resetIntercoolerType() {
     bool result = setString(OS_Refrigeration_SystemFields::IntercoolerType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationSystem_Impl::setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness) {
     bool result = setDouble(OS_Refrigeration_SystemFields::ShellandCoilIntercoolerEffectiveness, shellandCoilIntercoolerEffectiveness);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void RefrigerationSystem_Impl::resetShellandCoilIntercoolerEffectiveness() {
     bool result = setString(OS_Refrigeration_SystemFields::ShellandCoilIntercoolerEffectiveness, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool RefrigerationSystem_Impl::setHighStageCompressorList(const boost::optional<ModelObjectList>& modelObjectList) {
@@ -565,7 +565,7 @@ namespace detail {
 
   void RefrigerationSystem_Impl::resetHighStageCompressorList() {
     bool result = setString(OS_Refrigeration_SystemFields::HighStageCompressorListName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<ModelObject> RefrigerationSystem_Impl::optionalRefrigerationCondenser() const {
@@ -581,22 +581,22 @@ namespace detail {
 RefrigerationSystem::RefrigerationSystem(const Model& model)
   : ModelObject(RefrigerationSystem::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::RefrigerationSystem_Impl>());
+  OS_ASSERT(getImpl<detail::RefrigerationSystem_Impl>());
 
   bool ok = true;
   ModelObjectList caseAndWalkinList = ModelObjectList(model);
   caseAndWalkinList.setName(this->name().get() + " Case and Walkin List");
   ok = getImpl<detail::RefrigerationSystem_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinList);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ModelObjectList compressorlist = ModelObjectList(model);
   compressorlist.setName(this->name().get() + " Compressor List");
   ok = getImpl<detail::RefrigerationSystem_Impl>()->setCompressorList(compressorlist);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   setMinimumCondensingTemperature(21.0);
   ok = setRefrigerationSystemWorkingFluidType("R404a");
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setSuctionTemperatureControlType("ConstantSuctionTemperature");
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType RefrigerationSystem::iddObjectType() {

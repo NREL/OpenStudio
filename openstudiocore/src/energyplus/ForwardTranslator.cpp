@@ -2095,7 +2095,7 @@ IdfObject ForwardTranslator::createRegisterAndNameIdfObject(const IddObjectType&
 boost::optional<IdfFile> ForwardTranslator::findIdfFile(const std::string& path) {
   QFile file(QString().fromStdString(path));
   bool opened = file.open(QIODevice::ReadOnly | QIODevice::Text);
-  BOOST_ASSERT(opened);
+  OS_ASSERT(opened);
 
   QTextStream in(&file);
   std::stringstream ss;
