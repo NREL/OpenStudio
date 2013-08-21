@@ -314,7 +314,7 @@ bool Data::read(QString filename, bool process)
 {
     QFile fp(filename);
 
-    valid = false;
+    valid = true;
     if (fp.open(QFile::ReadOnly))
     {
         QTextStream stream(&fp);
@@ -376,70 +376,85 @@ bool Data::read(QString filename, bool process)
         note = input.storeSection(FILELINE); // Skip it
         input.readEnd(FILELINE);
         fp.close();
-        if(process)
-        {
-            // Add an ambient zone
-            zones.prepend(Zone());
-            zones[0].name=QString("Ambient");
-            // Process the levels to get the walls of each zone
-            for(int k=0;k<levels.size();k++)
-            {
-                Level *level = &(levels[k]);
-                // Build a grid for the level
-                int nij = rc.skwidth*rc.skheight;
-                int *grid = new int[nij];
-                grids << grid;
-                for(int ij=0;ij<nij;ij++)
-                    grid[ij] = 0;
-                // Get all of the walls for this level
-                QList <QSharedPointer<Wall> > walls = findWalls(rc.skwidth, rc.skheight, grid, level->icons);
-                // Change all of the intersections to regular wall cells now that we have the walls drawn
-                for(int ij=0;ij<nij;ij++)
-                    if(grid[ij] > 0)
-                        grid[ij] = -1;
-                // Fill to find the extents of zones using zone icons
-                for(int i=0;i<level->icons.size();i++)
-                {
-                    if(level->icons[i].icon == ZONE_ST)
-                        fillFromPoint(zones[level->icons[i].nr].nr, level->icons[i].col, level->icons[i].row,
-                                rc.skwidth, rc.skheight, grid);
-                    else if(level->icons[i].icon == ZONE_PH)
-                    {
-                        if(k==0)
-                            error("Illegal phantom zone on first level" CFILELINE);
-                        int ij = level->icons[i].col + level->icons[i].row*rc.skwidth;
-                        fillFromPoint(grids[k-1][ij], level->icons[i].col, level->icons[i].row,
-                                rc.skwidth, rc.skheight, grid);
-                    }
-                }
-                // Now we can attach zones to each wall
-                QList <QSharedPointer<Wall> > others;
-                for(int i=0;i<walls.size();i++)
-                {
-                    walls[i]->getZones(rc.skwidth, rc.skheight, grid, zones);
-                    // Don't need left-hand side walls for the ambient zone
-                    if(walls[i]->left->nr == 0)
-                        walls[i]->reorient();
-                    else if(walls[i]->right->nr != 0)
-                        others << QSharedPointer<Wall>(new Wall(walls[i]->end,walls[i]->start,walls[i]->type,walls[i]->right,walls[i]->left));
-                }
-                walls += others;
-                this->walls << walls;
-                // Finally, we can use this to build the loops that geometrically represent the zones
-                for(int i=1;i<zones.size();i++)
-                {
-                    if(zones[i].pl!=k+1 || zones[i].system()) // Skip system zones and zones not on this level
-                      continue;
-                    ZoneGeometry geom(&(zones[i]),walls);
-                    if(!geom.valid)
-                        error("Creation of zone geometry has failed due to invalid geometry");
-                    geometry << geom;
-                }
-            }
-        }
-        valid = true;
+    }
+    if(process)
+    {
+        valid = this->process();
     }
     return valid;
+}
+
+bool Data::process()
+{
+  if(valid)
+  {
+    // Add an ambient zone
+    if(zones[0].name != "Ambient")
+    {
+      zones.prepend(Zone());
+      zones[0].name=QString("Ambient");
+    }
+    // Clear out any previous work
+    this->walls.clear();
+    this->geometry.clear();
+    //this->grids.clear();
+    // Process the levels to get the walls of each zone
+    for(int k=0;k<levels.size();k++)
+    {
+      Level *level = &(levels[k]);
+      // Build a grid for the level
+      int nij = rc.skwidth*rc.skheight;
+      int *grid = new int[nij];
+      grids << grid;
+      for(int ij=0;ij<nij;ij++)
+        grid[ij] = 0;
+      // Get all of the walls for this level
+      QList <QSharedPointer<Wall> > walls = findWalls(rc.skwidth, rc.skheight, grid, level->icons);
+      // Change all of the intersections to regular wall cells now that we have the walls drawn
+      for(int ij=0;ij<nij;ij++)
+        if(grid[ij] > 0)
+          grid[ij] = -1;
+      // Fill to find the extents of zones using zone icons
+      for(int i=0;i<level->icons.size();i++)
+      {
+        if(level->icons[i].icon == ZONE_ST)
+          fillFromPoint(zones[level->icons[i].nr].nr, level->icons[i].col, level->icons[i].row,
+          rc.skwidth, rc.skheight, grid);
+        else if(level->icons[i].icon == ZONE_PH)
+        {
+          if(k==0)
+            error("Illegal phantom zone on first level" CFILELINE);
+          int ij = level->icons[i].col + level->icons[i].row*rc.skwidth;
+          fillFromPoint(grids[k-1][ij], level->icons[i].col, level->icons[i].row,
+            rc.skwidth, rc.skheight, grid);
+        }
+      }
+      // Now we can attach zones to each wall
+      QList <QSharedPointer<Wall> > others;
+      for(int i=0;i<walls.size();i++)
+      {
+        walls[i]->getZones(rc.skwidth, rc.skheight, grid, zones);
+        // Don't need left-hand side walls for the ambient zone
+        if(walls[i]->left->nr == 0)
+          walls[i]->reorient();
+        else if(walls[i]->right->nr != 0)
+          others << QSharedPointer<Wall>(new Wall(walls[i]->end,walls[i]->start,walls[i]->type,walls[i]->right,walls[i]->left));
+      }
+      walls += others;
+      this->walls << walls;
+      // Finally, we can use this to build the loops that geometrically represent the zones
+      for(int i=1;i<zones.size();i++)
+      {
+        if(zones[i].pl!=k+1 || zones[i].system()) // Skip system zones and zones not on this level
+          continue;
+        ZoneGeometry geom(&(zones[i]),walls);
+        if(!geom.valid)
+          error("Creation of zone geometry has failed due to invalid geometry");
+        geometry << geom;
+      }
+    }
+  }
+  return true;
 }
 
 void Data::readZoneIC(Reader &input)

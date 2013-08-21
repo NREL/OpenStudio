@@ -99,6 +99,7 @@ public:
   Data(QString filename, bool process=true);
   //~Data();
   bool read(QString filename, bool process=true);
+  bool process();
   QString summary();
   bool write(QString filename);
 	QString print();
