@@ -26,6 +26,8 @@
 
 #include <utilities/idd/OS_Construction_FfactorGroundFloor_FieldEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 #include <boost/foreach.hpp>
 
 namespace openstudio {
@@ -37,14 +39,14 @@ namespace detail {
       const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ConstructionBase_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == FFactorGroundFloorConstruction::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == FFactorGroundFloorConstruction::iddObjectType());
   }
 
   FFactorGroundFloorConstruction_Impl::FFactorGroundFloorConstruction_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : ConstructionBase_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == FFactorGroundFloorConstruction::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == FFactorGroundFloorConstruction::iddObjectType());
   }
 
   FFactorGroundFloorConstruction_Impl::FFactorGroundFloorConstruction_Impl(
@@ -78,7 +80,7 @@ namespace detail {
   //double FFactorGroundFloorConstruction_Impl::fFactor() const
   //{
   //  boost::optional<double> value = getDouble(OS_Construction_FfactorGroundFloorFields::FFactor,true);
-  //  BOOST_ASSERT(value);
+  //  OS_ASSERT(value);
   //  return value.get();
   //}
 
@@ -89,7 +91,7 @@ namespace detail {
 
   Quantity FFactorGroundFloorConstruction_Impl::getFFactor(bool returnIP) const {
     OSOptionalQuantity value = getQuantity(OS_Construction_FfactorGroundFloorFields::FFactor,true,returnIP);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
@@ -114,7 +116,7 @@ namespace detail {
   //double FFactorGroundFloorConstruction_Impl::area() const
   //{
   //  boost::optional<double> value = getDouble(OS_Construction_FfactorGroundFloorFields::Area,true);
-  //  BOOST_ASSERT(value);
+  //  OS_ASSERT(value);
   //  return value.get();
   //}
 
@@ -125,7 +127,7 @@ namespace detail {
 
   Quantity FFactorGroundFloorConstruction_Impl::getArea(bool returnIP) const {
     OSOptionalQuantity value = getQuantity(OS_Construction_FfactorGroundFloorFields::Area,true,returnIP);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
@@ -150,7 +152,7 @@ namespace detail {
   //double FFactorGroundFloorConstruction_Impl::perimeterExposed() const
   //{
   //  boost::optional<double> value = getDouble(OS_Construction_FfactorGroundFloorFields::PerimeterExposed,true);
-  //  BOOST_ASSERT(value);
+  //  OS_ASSERT(value);
   //  return value.get();
   //}
 
@@ -161,7 +163,7 @@ namespace detail {
 
   Quantity FFactorGroundFloorConstruction_Impl::getPerimeterExposed(bool returnIP) const {
     OSOptionalQuantity value = getQuantity(OS_Construction_FfactorGroundFloorFields::PerimeterExposed,true,returnIP);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
@@ -191,7 +193,7 @@ FFactorGroundFloorConstruction::FFactorGroundFloorConstruction(const Model& mode
                                                                double perimeterExposed)
   : ConstructionBase(FFactorGroundFloorConstruction::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::FFactorGroundFloorConstruction_Impl>());
+  OS_ASSERT(getImpl<detail::FFactorGroundFloorConstruction_Impl>());
 
   setFFactor(fFactor);
   setArea(area);

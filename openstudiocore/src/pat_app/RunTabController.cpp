@@ -24,9 +24,9 @@
 #include <pat_app/PatVerticalTabWidget.hpp>
 
 #include <analysis/DataPoint_Impl.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/NullPerturbation_Impl.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/NullMeasure_Impl.hpp>
 
 #include <analysisdriver/AnalysisDriver.hpp>
 #include <analysisdriver/AnalysisRunOptions.hpp>
@@ -36,6 +36,7 @@
 #include <runmanager/lib/Job.hpp>
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/Assert.hpp>
 
 #include <OpenStudio.hxx>
 
@@ -52,7 +53,7 @@ RunTabController::RunTabController()
   runView = new RunView();
 
   bool isConnected = connect(runView->runStatusView, SIGNAL(playButtonClicked(bool)), this, SLOT(onPlayButtonClicked(bool)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
@@ -64,18 +65,18 @@ RunTabController::RunTabController()
 
     // connect currentAnalysis to refresh if data point is queued
     bool isConnected = analysisDriver.connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(reqestRefresh()), Qt::QueuedConnection);
-    Q_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
 
     std::vector<analysisdriver::CurrentAnalysis> currentAnalyses = analysisDriver.currentAnalyses();
     if (!currentAnalyses.empty()){
       // connect currentAnalysis to update progress on this
       isConnected = currentAnalyses[0].connect(SIGNAL(iterationProgress(int,int)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
-      Q_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
 
       // connect currentAnalysis to update progress in PatApp
       // DLM: PatApp is already connected to this signal
       //isConnected = currentAnalyses[0].connect(SIGNAL(iterationProgress(int,int)), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
-      //Q_ASSERT(isConnected);
+      //OS_ASSERT(isConnected);
     }
     onIterationProgress();
 
@@ -95,7 +96,7 @@ RunTabController::~RunTabController()
 void RunTabController::onPlayButtonClicked(bool clicked)
 {
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
-  Q_ASSERT(project);
+  OS_ASSERT(project);
 
   runmanager::RunManager runManager = project->runManager();
   analysis::Analysis analysis = project->analysis();
@@ -178,6 +179,7 @@ void RunTabController::onPlayButtonClicked(bool clicked)
                
           // enable the app
           PatApp::instance()->mainWindow->setEnabled(true);
+          PatApp::instance()->mainWindow->setFocus();
         
           // important to call, this controls tab 1 and 2 access
           onIterationProgress();
@@ -203,6 +205,7 @@ void RunTabController::onPlayButtonClicked(bool clicked)
 
           // enable the app
           PatApp::instance()->mainWindow->setEnabled(true);
+          PatApp::instance()->mainWindow->setFocus();
 
           // important to call, this controls tab 1 and 2 access
           onIterationProgress();
@@ -222,15 +225,16 @@ void RunTabController::onPlayButtonClicked(bool clicked)
 
       // connect currentAnalysis to update progress on this
       bool isConnected = currentAnalysis.connect(SIGNAL(iterationProgress(int,int)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
-      Q_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
 
       // connect currentAnalysis to update progress in PatApp
       // DLM: this re-enables tabs if analysis completes when we are not on this tab
       isConnected = currentAnalysis.connect(SIGNAL(iterationProgress(int,int)), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
-      Q_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
 
       // enable the app
       PatApp::instance()->mainWindow->setEnabled(true);
+      PatApp::instance()->mainWindow->setFocus();
 
     }else{
 
@@ -252,6 +256,7 @@ void RunTabController::onPlayButtonClicked(bool clicked)
 
     // enable the app
     PatApp::instance()->mainWindow->setEnabled(true);
+    PatApp::instance()->mainWindow->setFocus();
   }
 
   // important to call, this controls tab 1 and 2 access
@@ -263,7 +268,7 @@ void RunTabController::onIterationProgress()
   // connect to this slot via Qt::QueuedConnection so analysis is up to date when processing here
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
-  Q_ASSERT(project);
+  OS_ASSERT(project);
 
   runmanager::RunManager runManager = project->runManager();
   analysis::Analysis analysis = project->analysis();
@@ -335,12 +340,12 @@ QWidget * DataPointRunItemDelegate::view(QSharedPointer<OSListItem> dataSource)
   DataPointRunItemView* result = new DataPointRunItemView(dataPoint);
   bool test = connect(dataPoint.getImpl<openstudio::analysis::detail::DataPoint_Impl>().get(), SIGNAL(changed(ChangeType)),
                       result->dataPointRunHeaderView, SLOT(update()));
-  Q_ASSERT(test);
+  OS_ASSERT(test);
 
   if (dataPoint.topLevelJob()){
     test = dataPoint.topLevelJob()->connect(SIGNAL(treeChanged(const openstudio::UUID&)),
                                             result->dataPointRunHeaderView, SLOT(update()));
-    Q_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   QSharedPointer<DataPointJobController> dataPointJobController(new DataPointJobController(dataPoint));
@@ -401,9 +406,9 @@ QWidget * DataPointJobItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
   DataPointJobItemView* result = new DataPointJobItemView(workflowStepJob);
 
-  Q_ASSERT(workflowStepJob.job);
+  OS_ASSERT(workflowStepJob.job);
   bool test = workflowStepJob.job->connect(SIGNAL(statusChanged(const openstudio::runmanager::AdvancedStatus&)), result, SLOT(update()));
-  Q_ASSERT(test);
+  OS_ASSERT(test);
 
   return result;
 }

@@ -32,6 +32,7 @@
 #include "JobType.hpp"
 #include "ProcessCreator.hpp"
 #include "TreeStatus.hpp"
+#include "JobState.hpp"
 #include <QReadWriteLock>
 #include <QDateTime>
 
@@ -41,36 +42,6 @@ Q_DECLARE_METATYPE(QProcess::ProcessError);
 namespace openstudio {
 namespace runmanager {
 namespace detail {
-  struct JobState
-  {
-    JobState()
-    {
-    }
-
-    JobState(const boost::optional<DateTime> &t_lastRun, const JobErrors &t_errors, const Files &t_outputFiles)
-      : lastRun(toQDateTime(t_lastRun)), errors(t_errors), outputFiles(t_outputFiles)
-    {
-    }
-
-    static boost::optional<QDateTime> toQDateTime(const boost::optional<DateTime> &t_dateTime)
-    {
-      if (!t_dateTime)
-      {
-        return boost::optional<QDateTime>();
-      } else {
-        return QDateTime(
-            QDate(t_dateTime->date().year(), (t_dateTime->date().monthOfYear().value()) - openstudio::MonthOfYear::Jan + 1, t_dateTime->date().dayOfMonth()),
-            QTime(t_dateTime->time().hours(), t_dateTime->time().minutes(), t_dateTime->time().seconds())
-            );
-
-      }
-    }
-
-    boost::optional<QDateTime> lastRun;
-    JobErrors errors;
-    Files outputFiles;
-  };
-
 
   /// Public interface is defined in openstudio::runmanager::Job, see it for more details
   /// This interface is used by all Job implementations, such as EnergyPlusJob
@@ -324,6 +295,13 @@ namespace detail {
       /// Sets the base path by which relative paths will be evaluated from this job
       void setBasePath(const openstudio::path &t_basePath);
 
+      /// Update this job tree with the details from the other job tree
+      void updateJob(const boost::shared_ptr<Job_Impl> &t_other);
+
+
+      /// \returns true if this job is externallyManaged
+      bool externallyManaged() const;
+
     protected:
       /// Called when the base path has changed
       virtual void basePathChanged() = 0;
@@ -474,6 +452,8 @@ namespace detail {
 
       static TreeStatusEnum compareTreeStatus(const TreeStatusEnum &lhs, const TreeStatusEnum &rhs);
 
+      static bool fileComparitor(const openstudio::path &t_lhs, const openstudio::path &t_rhs);
+
       void maximumClean();
 
       void standardClean();
@@ -515,6 +495,7 @@ namespace detail {
 
       JobState m_jobState;
       bool m_hasRunSinceLoading;
+      bool m_externallyManaged;
 
       mutable boost::optional<Tools> m_allTools;
       mutable boost::optional<JobParams> m_allParams;

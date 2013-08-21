@@ -29,6 +29,8 @@
 #include <model/Construction_Impl.hpp>
 #include <model/RunPeriod.hpp>
 #include <model/RunPeriod_Impl.hpp>
+#include <model/RunPeriodControlSpecialDays.hpp>
+#include <model/RunPeriodControlSpecialDays_Impl.hpp>
 #include <model/SimulationControl.hpp>
 #include <model/SimulationControl_Impl.hpp>
 #include <model/Building.hpp>
@@ -65,6 +67,9 @@ ForwardTranslator::ForwardTranslator()
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ForwardTranslator"));
   m_logSink.setThreadId(QThread::currentThread());
+
+  // temp code 
+  m_keepRunControlSpecialDays = false;
 }
 
 Workspace ForwardTranslator::translateModel( const Model & model, ProgressBar* progressBar )
@@ -115,6 +120,13 @@ std::vector<LogMessage> ForwardTranslator::errors() const
 
   return result;
 }
+
+// temp code
+void ForwardTranslator::setKeepRunControlSpecialDays(bool keepRunControlSpecialDays)
+{
+  m_keepRunControlSpecialDays = keepRunControlSpecialDays;
+}
+
 
 Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool fullModelTranslation )
 {
@@ -190,6 +202,14 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
   }  
 
+  // temp code
+  if (!m_keepRunControlSpecialDays){
+    // DLM: we will not translate these objects until we support holidays in the GUI
+    // we will not warn users because these objects are not exposed in the GUI
+    BOOST_FOREACH(model::RunPeriodControlSpecialDays holiday, model.getModelObjects<model::RunPeriodControlSpecialDays>()){ 
+      holiday.remove();
+    }
+  }
 
   if (fullModelTranslation){
 
@@ -281,13 +301,13 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
 
   Workspace workspace(StrictnessLevel::None, IddFileType::EnergyPlus);
   OptionalWorkspaceObject vo = workspace.versionObject();
-  BOOST_ASSERT(vo);
+  OS_ASSERT(vo);
   workspace.removeObject(vo->handle());
 
   workspace.setFastNaming(true);
   workspace.addObjects(m_idfObjects);
   workspace.setFastNaming(false);
-  BOOST_ASSERT(workspace.getObjectsByType(IddObjectType::Version).size() == 1u);
+  OS_ASSERT(workspace.getObjectsByType(IddObjectType::Version).size() == 1u);
 
   return workspace;
 }
@@ -1012,10 +1032,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_RunPeriodControl_SpecialDays :
     {
-      // DLM: we will not translate these objects until we support holidays in the GUI
-      // we will not warn users because these objects are not exposed in the GUI
-      //model::RunPeriodControlSpecialDays mo = modelObject.cast<RunPeriodControlSpecialDays>();
-      //retVal = translateRunPeriodControlSpecialDays(mo);
+      model::RunPeriodControlSpecialDays mo = modelObject.cast<RunPeriodControlSpecialDays>();
+      retVal = translateRunPeriodControlSpecialDays(mo);
       break;
     }
   case openstudio::IddObjectType::OS_Schedule_Compact :
@@ -1105,6 +1123,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::SetpointManagerOutdoorAirReset spm = modelObject.cast<SetpointManagerOutdoorAirReset>();
       retVal = translateSetpointManagerOutdoorAirReset(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_Warmest :
+    {
+      model::SetpointManagerWarmest spm = modelObject.cast<SetpointManagerWarmest>();
+      retVal = translateSetpointManagerWarmest(spm);
       break;
     }
   case  openstudio::IddObjectType::OS_ShadingSurface :

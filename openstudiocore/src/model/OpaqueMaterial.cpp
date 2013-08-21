@@ -20,6 +20,8 @@
 #include <model/OpaqueMaterial.hpp>
 #include <model/OpaqueMaterial_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace model {
 
@@ -58,7 +60,7 @@ namespace detail {
 OpaqueMaterial::OpaqueMaterial(IddObjectType type,const Model& model)
   : Material(type,model) 
 {
-  BOOST_ASSERT(getImpl<detail::OpaqueMaterial_Impl>());
+  OS_ASSERT(getImpl<detail::OpaqueMaterial_Impl>());
 }
 
 double OpaqueMaterial::thermalConductivity() const {

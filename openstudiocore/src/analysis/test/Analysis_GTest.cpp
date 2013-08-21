@@ -21,16 +21,17 @@
 #include <analysis/test/AnalysisFixture.hpp>
 
 #include <analysis/Analysis.hpp>
+#include <analysis/Analysis_Impl.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/Variable.hpp>
 #include <analysis/DataPoint.hpp>
-#include <analysis/ModelRulesetContinuousVariable.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/RubyPerturbation_Impl.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
+#include <analysis/RubyContinuousVariable.hpp>
 #include <analysis/ParameterStudyAlgorithm.hpp>
 #include <analysis/ParameterStudyAlgorithm_Impl.hpp>
 #include <analysis/ParameterStudyAlgorithmOptions.hpp>
@@ -38,10 +39,14 @@
 
 #include <runmanager/lib/Workflow.hpp>
 
-#include <ruleset/ModelObjectFilterType.hpp>
+#include <ruleset/OSArgument.hpp>
 
 #include <utilities/core/Containers.hpp>
+#include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/data/Tag.hpp>
+
+#include <resources.hxx>
+#include <OpenStudio.hxx>
 
 using namespace openstudio;
 using namespace openstudio::analysis;
@@ -113,9 +118,9 @@ TEST_F(AnalysisFixture, Analysis_SetSeed) {
                         "Fake Data Point",
                         "",
                         "",
+                        analysis.problem(),
                         true,
                         false,
-                        analysis.problem(),
                         std::vector<QVariant>(),
                         DoubleVector(),
                         toPath("dataPoint1"),
@@ -123,9 +128,10 @@ TEST_F(AnalysisFixture, Analysis_SetSeed) {
                         FileReference(toPath("in.idf")),
                         OptionalFileReference(),
                         OptionalFileReference(),
-                        TagVector(),
                         boost::none,
-                        std::vector<openstudio::path>()); //DLM: Elaine is this ok?
+                        std::vector<openstudio::path>(),
+                        TagVector(),
+                        AttributeVector()); //DLM: Elaine is this ok?
   ok = analysis.addDataPoint(*dataPoint);
   EXPECT_TRUE(ok);
   analysis.clearDirtyFlag();
@@ -156,11 +162,10 @@ TEST_F(AnalysisFixture, Analysis_DataPointsAreInvalid) {
   // add a single, null-only variable
   // ETH@20130206 - Alternate code for this test.
   // Problem problem = analysis.problem();
-  // DiscreteVariable dv("South Facade WWR",
-  //                     DiscretePerturbationVector(1u,NullPerturbation()));
-  bool test = analysis.problem().push(
-        DiscreteVariable("South Facade WWR",
-                         DiscretePerturbationVector(1u,NullPerturbation())));
+  // MeasureGroup dv("South Facade WWR",
+  //                     MeasureVector(1u,NullMeasure()));
+  bool test = analysis.problem().push(MeasureGroup("South Facade WWR",
+                                                   MeasureVector(1u,NullMeasure())));
   // ETH@20130206
   // bool test = problem.push(dv);
   EXPECT_TRUE(test);
@@ -173,16 +178,16 @@ TEST_F(AnalysisFixture, Analysis_DataPointsAreInvalid) {
   test = analysis.addDataPoint(*dataPoint);
   EXPECT_TRUE(test);
 
-  // pushing perturbations does not invalidate data point
-  RubyPerturbation measure1(toPath("myMeasure.rb"),
-                           FileReferenceType::OSM,
-                           FileReferenceType::OSM,
-                           true);
+  // pushing measures does not invalidate data point
+  RubyMeasure measure1(toPath("myMeasure.rb"),
+                       FileReferenceType::OSM,
+                       FileReferenceType::OSM,
+                       true);
   // ETH@20130206
   // test = dv.push(measure1);
-  // EXPECT_EQ(1u,dv.numPerturbations(false));
-  // EXPECT_EQ(2u,analysis.problem().variables()[0].cast<DiscreteVariable>().numPerturbations(false));
-  test = analysis.problem().variables()[0].cast<DiscreteVariable>().push(measure1);
+  // EXPECT_EQ(1u,dv.numMeasures(false));
+  // EXPECT_EQ(2u,analysis.problem().variables()[0].cast<MeasureGroup>().numMeasures(false));
+  test = analysis.problem().variables()[0].cast<MeasureGroup>().push(measure1);
   EXPECT_TRUE(test);
   EXPECT_FALSE(analysis.dataPointsAreInvalid());
   // should be able to add another data point
@@ -191,13 +196,13 @@ TEST_F(AnalysisFixture, Analysis_DataPointsAreInvalid) {
   test = analysis.addDataPoint(*dataPoint);
   EXPECT_TRUE(test);
 
-  RubyPerturbation measure2 = measure1.clone().cast<RubyPerturbation>();
-  test = analysis.problem().variables()[0].cast<DiscreteVariable>().push(measure2);
+  RubyMeasure measure2 = measure1.clone().cast<RubyMeasure>();
+  test = analysis.problem().variables()[0].cast<MeasureGroup>().push(measure2);
   EXPECT_TRUE(test);
   EXPECT_FALSE(analysis.dataPointsAreInvalid());
 
-  // swapping perturbations invalidates data points
-  test = analysis.problem().variables()[0].cast<DiscreteVariable>().swap(measure1,measure2);
+  // swapping measures invalidates data points
+  test = analysis.problem().variables()[0].cast<MeasureGroup>().swap(measure1,measure2);
   EXPECT_TRUE(test);
   EXPECT_TRUE(analysis.dataPointsAreInvalid());
   // and should not be able to add data points now
@@ -216,7 +221,8 @@ TEST_F(AnalysisFixture, Analysis_DataPointsAreInvalid) {
   EXPECT_TRUE(test);
 
   // adding a new variable re-invalidates them
-  test = analysis.problem().push(DiscreteVariable("West Facade WWR",DiscretePerturbationVector(1u,NullPerturbation())));
+  test = analysis.problem().push(MeasureGroup("West Facade WWR",
+                                              MeasureVector(1u,NullMeasure())));
   EXPECT_TRUE(test);
   EXPECT_TRUE(analysis.dataPointsAreInvalid());
   std::vector<QVariant> values;
@@ -242,18 +248,20 @@ TEST_F(AnalysisFixture, Analysis_DataPointsAreInvalid) {
 
 TEST_F(AnalysisFixture, Analysis_ClearAllResults) {
   // create dummy problem
-  ModelObjectFilterType buildingType(IddObjectType::OS_Building);
-  ModelRulesetContinuousVariable var("Building Rotation",
-                                     ModelObjectFilterClauseVector(1u,buildingType),
-                                     "northAxis");
+  BCLMeasure bclMeasure(resourcesPath() / toPath("utilities/BCL/Measures/SetWindowToWallRatioByFacade"));
+  RubyMeasure measure(bclMeasure);
+  OSArgument arg = OSArgument::makeDoubleArgument("wwr");
+  RubyContinuousVariable var("Window to Wall Ratio",
+                             arg,
+                             measure);
   var.setMinimum(0.0);
-  var.setMaximum(360.0);
+  var.setMaximum(0.6);
   Problem problem("Problem",VariableVector(1u,var),runmanager::Workflow());
 
   // create dummy algorithm (already initialized to be complete)
   ParameterStudyAlgorithmOptions options(ParameterStudyAlgorithmType::list_parameter_study);
   DoubleVector points;
-  for (double val = 0.0; val < 360.0; val += 15.0) {
+  for (double val = 0.0; val < 0.6; val += 0.1) {
     points.push_back(val);
   }
   options.setListOfPoints(points);
@@ -282,9 +290,9 @@ TEST_F(AnalysisFixture, Analysis_ClearAllResults) {
                         "",
                         "",
                         "",
+                        problem,
                         true,
                         false,
-                        problem,
                         std::vector<QVariant>(1u,point),
                         DoubleVector(),
                         toPath(ss.str()),
@@ -292,9 +300,10 @@ TEST_F(AnalysisFixture, Analysis_ClearAllResults) {
                         FileReference(toPath(ss.str() + "/in.idf")),
                         OptionalFileReference(),
                         OptionalFileReference(),
-                        TagVector(),
                         boost::none,
-                        std::vector<openstudio::path>()); //DLM: Elaine is this ok?
+                        std::vector<openstudio::path>(),
+                        TagVector(),
+                        AttributeVector()); //DLM: Elaine is this ok?
     ss.str("");
     bool test = analysis.addDataPoint(dataPoint);
     EXPECT_TRUE(test);
@@ -321,3 +330,111 @@ TEST_F(AnalysisFixture, Analysis_ClearAllResults) {
   EXPECT_FALSE(analysis.algorithm()->cast<DakotaAlgorithm>().restartFileReference());
   EXPECT_FALSE(analysis.algorithm()->cast<DakotaAlgorithm>().outFileReference());
 }
+
+TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun_Roundtrip) {
+  // Create example analysis
+  Analysis analysis = analysis1(PreRun);
+
+  // Serialize Analysis with no data points
+  std::string json = analysis.toJSON(AnalysisSerializationOptions());
+  EXPECT_FALSE(json.empty());
+
+  // Deserialize and check results
+  OptionalAnalysisObject formulationCopyAsAnalysisObject = loadJSON(json);
+  ASSERT_TRUE(formulationCopyAsAnalysisObject);
+  ASSERT_TRUE(formulationCopyAsAnalysisObject->optionalCast<Analysis>());
+  Analysis formulationCopy = formulationCopyAsAnalysisObject->cast<Analysis>();
+  std::string jsonCopy = formulationCopy.toJSON(AnalysisSerializationOptions());
+  bool test = (jsonCopy == json);
+  EXPECT_TRUE(test);
+  if (!test) {
+    LOG(Debug,"Original JSON: " << std::endl << json);
+    LOG(Debug,"Copy JSON: " << std::endl << jsonCopy);
+  }
+  EXPECT_EQ(0u,formulationCopy.dataPoints().size());
+
+  // Save analysis with no data points
+  openstudio::path p = toPath("AnalysisFixtureData/formulation_pre_run.json");
+  EXPECT_TRUE(analysis.saveJSON(p,AnalysisSerializationOptions(),true));
+
+  // Load and check results
+  formulationCopyAsAnalysisObject = loadJSON(p);
+  ASSERT_TRUE(formulationCopyAsAnalysisObject);
+  ASSERT_TRUE(formulationCopyAsAnalysisObject->optionalCast<Analysis>());
+  formulationCopy = formulationCopyAsAnalysisObject->cast<Analysis>();
+  jsonCopy = formulationCopy.toJSON(AnalysisSerializationOptions());
+  test = (jsonCopy == json);
+  EXPECT_TRUE(test);
+  if (!test) {
+    LOG(Debug,"Original JSON: " << std::endl << json);
+    LOG(Debug,"Copy JSON: " << std::endl << jsonCopy);
+  }
+  EXPECT_EQ(0u,formulationCopy.dataPoints().size());
+
+  // Serialize Analysis with data points
+  AnalysisSerializationOptions options(openstudio::path(),AnalysisSerializationScope::Full);
+  json = analysis.toJSON(options);
+  EXPECT_FALSE(json.empty());
+
+  // Deserialize and check results
+  OptionalAnalysisObject copyAsAnalysisObject = loadJSON(json);
+  ASSERT_TRUE(copyAsAnalysisObject);
+  ASSERT_TRUE(copyAsAnalysisObject->optionalCast<Analysis>());
+  Analysis copy = copyAsAnalysisObject->cast<Analysis>();
+  jsonCopy = copy.toJSON(options);
+  test = (jsonCopy == json);
+  EXPECT_TRUE(test);
+  if (!test) {
+    LOG(Debug,"Original JSON: " << std::endl << json);
+    LOG(Debug,"Copy JSON: " << std::endl << jsonCopy);
+  }
+  EXPECT_FALSE(copy.dataPoints().empty());
+
+  // Save analysis with data points
+  p = toPath("AnalysisFixtureData/analysis_pre_run.json");
+  EXPECT_TRUE(analysis.saveJSON(p,options,true));
+
+  // Load and check results
+  copyAsAnalysisObject = loadJSON(p);
+  ASSERT_TRUE(copyAsAnalysisObject);
+  ASSERT_TRUE(copyAsAnalysisObject->optionalCast<Analysis>());
+  copy = copyAsAnalysisObject->cast<Analysis>();
+  jsonCopy = copy.toJSON(options);
+  test = (jsonCopy == json);
+  EXPECT_TRUE(test);
+  if (!test) {
+    LOG(Debug,"Original JSON: " << std::endl << json);
+    LOG(Debug,"Copy JSON: " << std::endl << jsonCopy);
+  }
+  EXPECT_FALSE(copy.dataPoints().empty());
+}
+
+TEST_F(AnalysisFixture,Analysis_JSONSerialization_Versioning) {
+  openstudio::path dir = resourcesPath() / toPath("analysis/version");
+
+  // create the formulation json file
+  Analysis analysis = analysis1(PreRun);
+  std::string dashVersionString = boost::regex_replace(openStudioVersion(),boost::regex("\\."),"-");
+  openstudio::path p = dir / toPath("analysis_" + dashVersionString + ".json");
+  bool ok = analysis.saveJSON(p,AnalysisSerializationOptions(),true);
+  EXPECT_TRUE(ok);
+
+  // loop through all versions' json files
+  for (openstudio::directory_iterator it(dir); it != openstudio::directory_iterator(); ++it) {
+    if (boost::regex_match(toString(it->path().stem()),boost::regex("analysis_.*"))) {
+      LOG(Debug,"Loading " << toString(it->filename()) << ".");
+
+      // open and check results
+      OptionalAnalysisObject analysisObject = loadJSON(it->path());
+      ASSERT_TRUE(analysisObject);
+      ASSERT_TRUE(analysisObject->optionalCast<Analysis>());
+      Analysis loaded = analysisObject->cast<Analysis>();
+      
+      Problem problem = loaded.problem();
+      EXPECT_EQ(3u,problem.numVariables());
+      EXPECT_EQ(7u,problem.numWorkflowSteps());
+      EXPECT_EQ(3u,problem.numResponses());
+    }
+  }
+}
+

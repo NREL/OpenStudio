@@ -47,7 +47,7 @@ namespace detail {
   PumpVariableSpeed_Impl::PumpVariableSpeed_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : StraightComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == PumpVariableSpeed::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == PumpVariableSpeed::iddObjectType());
   }
 
   PumpVariableSpeed_Impl::PumpVariableSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -55,7 +55,7 @@ namespace detail {
                                                  bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == PumpVariableSpeed::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == PumpVariableSpeed::iddObjectType());
   }
 
   PumpVariableSpeed_Impl::PumpVariableSpeed_Impl(const PumpVariableSpeed_Impl& other,
@@ -151,14 +151,14 @@ namespace detail {
 
   double PumpVariableSpeed_Impl::ratedPumpHead() const {
     boost::optional<double> value = getDouble(OS_Pump_VariableSpeedFields::RatedPumpHead,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity PumpVariableSpeed_Impl::getRatedPumpHead(bool returnIP) const {
     OptionalDouble value = ratedPumpHead();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Pump_VariableSpeedFields::RatedPumpHead, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -190,14 +190,14 @@ namespace detail {
 
   double PumpVariableSpeed_Impl::motorEfficiency() const {
     boost::optional<double> value = getDouble(OS_Pump_VariableSpeedFields::MotorEfficiency,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity PumpVariableSpeed_Impl::getMotorEfficiency(bool returnIP) const {
     OptionalDouble value = motorEfficiency();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Pump_VariableSpeedFields::MotorEfficiency, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -207,14 +207,14 @@ namespace detail {
 
   double PumpVariableSpeed_Impl::fractionofMotorInefficienciestoFluidStream() const {
     boost::optional<double> value = getDouble(OS_Pump_VariableSpeedFields::FractionofMotorInefficienciestoFluidStream,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity PumpVariableSpeed_Impl::getFractionofMotorInefficienciestoFluidStream(bool returnIP) const {
     OptionalDouble value = fractionofMotorInefficienciestoFluidStream();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Pump_VariableSpeedFields::FractionofMotorInefficienciestoFluidStream, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -224,14 +224,14 @@ namespace detail {
 
   double PumpVariableSpeed_Impl::coefficient1ofthePartLoadPerformanceCurve() const {
     boost::optional<double> value = getDouble(OS_Pump_VariableSpeedFields::Coefficient1ofthePartLoadPerformanceCurve,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity PumpVariableSpeed_Impl::getCoefficient1ofthePartLoadPerformanceCurve(bool returnIP) const {
     OptionalDouble value = coefficient1ofthePartLoadPerformanceCurve();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Pump_VariableSpeedFields::Coefficient1ofthePartLoadPerformanceCurve, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -241,14 +241,14 @@ namespace detail {
 
   double PumpVariableSpeed_Impl::coefficient2ofthePartLoadPerformanceCurve() const {
     boost::optional<double> value = getDouble(OS_Pump_VariableSpeedFields::Coefficient2ofthePartLoadPerformanceCurve,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity PumpVariableSpeed_Impl::getCoefficient2ofthePartLoadPerformanceCurve(bool returnIP) const {
     OptionalDouble value = coefficient2ofthePartLoadPerformanceCurve();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Pump_VariableSpeedFields::Coefficient2ofthePartLoadPerformanceCurve, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -258,14 +258,14 @@ namespace detail {
 
   double PumpVariableSpeed_Impl::coefficient3ofthePartLoadPerformanceCurve() const {
     boost::optional<double> value = getDouble(OS_Pump_VariableSpeedFields::Coefficient3ofthePartLoadPerformanceCurve,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity PumpVariableSpeed_Impl::getCoefficient3ofthePartLoadPerformanceCurve(bool returnIP) const {
     OptionalDouble value = coefficient3ofthePartLoadPerformanceCurve();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Pump_VariableSpeedFields::Coefficient3ofthePartLoadPerformanceCurve, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -275,14 +275,14 @@ namespace detail {
 
   double PumpVariableSpeed_Impl::coefficient4ofthePartLoadPerformanceCurve() const {
     boost::optional<double> value = getDouble(OS_Pump_VariableSpeedFields::Coefficient4ofthePartLoadPerformanceCurve,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity PumpVariableSpeed_Impl::getCoefficient4ofthePartLoadPerformanceCurve(bool returnIP) const {
     OptionalDouble value = coefficient4ofthePartLoadPerformanceCurve();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Pump_VariableSpeedFields::Coefficient4ofthePartLoadPerformanceCurve, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -292,14 +292,14 @@ namespace detail {
 
   double PumpVariableSpeed_Impl::minimumFlowRate() const {
     boost::optional<double> value = getDouble(OS_Pump_VariableSpeedFields::MinimumFlowRate,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity PumpVariableSpeed_Impl::getMinimumFlowRate(bool returnIP) const {
     OptionalDouble value = minimumFlowRate();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Pump_VariableSpeedFields::MinimumFlowRate, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -309,7 +309,7 @@ namespace detail {
 
   std::string PumpVariableSpeed_Impl::pumpControlType() const {
     boost::optional<std::string> value = getString(OS_Pump_VariableSpeedFields::PumpControlType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -367,7 +367,7 @@ namespace detail {
       resetRatedFlowRate();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setRatedFlowRate(const OSOptionalQuantity& ratedFlowRate) {
@@ -389,17 +389,17 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetRatedFlowRate() {
     bool result = setString(OS_Pump_VariableSpeedFields::RatedFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PumpVariableSpeed_Impl::autosizeRatedFlowRate() {
     bool result = setString(OS_Pump_VariableSpeedFields::RatedFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PumpVariableSpeed_Impl::setRatedPumpHead(double ratedPumpHead) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::RatedPumpHead, ratedPumpHead);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setRatedPumpHead(const Quantity& ratedPumpHead) {
@@ -413,7 +413,7 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetRatedPumpHead() {
     bool result = setString(OS_Pump_VariableSpeedFields::RatedPumpHead, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PumpVariableSpeed_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
@@ -425,7 +425,7 @@ namespace detail {
       resetRatedPowerConsumption();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setRatedPowerConsumption(const OSOptionalQuantity& ratedPowerConsumption) {
@@ -447,12 +447,12 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetRatedPowerConsumption() {
     bool result = setString(OS_Pump_VariableSpeedFields::RatedPowerConsumption, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PumpVariableSpeed_Impl::autosizeRatedPowerConsumption() {
     bool result = setString(OS_Pump_VariableSpeedFields::RatedPowerConsumption, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setMotorEfficiency(double motorEfficiency) {
@@ -470,7 +470,7 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetMotorEfficiency() {
     bool result = setString(OS_Pump_VariableSpeedFields::MotorEfficiency, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setFractionofMotorInefficienciestoFluidStream(double fractionofMotorInefficienciestoFluidStream) {
@@ -488,12 +488,12 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetFractionofMotorInefficienciestoFluidStream() {
     bool result = setString(OS_Pump_VariableSpeedFields::FractionofMotorInefficienciestoFluidStream, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PumpVariableSpeed_Impl::setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::Coefficient1ofthePartLoadPerformanceCurve, coefficient1ofthePartLoadPerformanceCurve);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setCoefficient1ofthePartLoadPerformanceCurve(const Quantity& coefficient1ofthePartLoadPerformanceCurve) {
@@ -507,12 +507,12 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetCoefficient1ofthePartLoadPerformanceCurve() {
     bool result = setString(OS_Pump_VariableSpeedFields::Coefficient1ofthePartLoadPerformanceCurve, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PumpVariableSpeed_Impl::setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::Coefficient2ofthePartLoadPerformanceCurve, coefficient2ofthePartLoadPerformanceCurve);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setCoefficient2ofthePartLoadPerformanceCurve(const Quantity& coefficient2ofthePartLoadPerformanceCurve) {
@@ -526,12 +526,12 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetCoefficient2ofthePartLoadPerformanceCurve() {
     bool result = setString(OS_Pump_VariableSpeedFields::Coefficient2ofthePartLoadPerformanceCurve, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PumpVariableSpeed_Impl::setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::Coefficient3ofthePartLoadPerformanceCurve, coefficient3ofthePartLoadPerformanceCurve);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setCoefficient3ofthePartLoadPerformanceCurve(const Quantity& coefficient3ofthePartLoadPerformanceCurve) {
@@ -545,12 +545,12 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetCoefficient3ofthePartLoadPerformanceCurve() {
     bool result = setString(OS_Pump_VariableSpeedFields::Coefficient3ofthePartLoadPerformanceCurve, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PumpVariableSpeed_Impl::setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::Coefficient4ofthePartLoadPerformanceCurve, coefficient4ofthePartLoadPerformanceCurve);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setCoefficient4ofthePartLoadPerformanceCurve(const Quantity& coefficient4ofthePartLoadPerformanceCurve) {
@@ -564,12 +564,12 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetCoefficient4ofthePartLoadPerformanceCurve() {
     bool result = setString(OS_Pump_VariableSpeedFields::Coefficient4ofthePartLoadPerformanceCurve, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void PumpVariableSpeed_Impl::setMinimumFlowRate(double minimumFlowRate) {
     bool result = setDouble(OS_Pump_VariableSpeedFields::MinimumFlowRate, minimumFlowRate);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setMinimumFlowRate(const Quantity& minimumFlowRate) {
@@ -583,7 +583,7 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetMinimumFlowRate() {
     bool result = setString(OS_Pump_VariableSpeedFields::MinimumFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setPumpControlType(std::string pumpControlType) {
@@ -593,7 +593,7 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetPumpControlType() {
     bool result = setString(OS_Pump_VariableSpeedFields::PumpControlType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setPumpFlowRateSchedule(Schedule& schedule) {
@@ -606,7 +606,7 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetPumpFlowRateSchedule() {
     bool result = setString(OS_Pump_VariableSpeedFields::PumpFlowRateScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setPumpCurve(const Curve& curve) {
@@ -620,7 +620,7 @@ namespace detail {
         wcurve = curve.clone().cast<Curve>();
       }
       bool ok = setPointer(OS_Pump_VariableSpeedFields::PumpCurveName,wcurve.handle());
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
       return true;
     }
     return false;
@@ -628,7 +628,7 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetPumpCurve() {
     bool ok = setString(OS_Pump_VariableSpeedFields::PumpCurveName,"");
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
   }
 
   void PumpVariableSpeed_Impl::setImpellerDiameter(boost::optional<double> impellerDiameter) {
@@ -640,7 +640,7 @@ namespace detail {
       resetImpellerDiameter();
       result = true;
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setImpellerDiameter(const OSOptionalQuantity& impellerDiameter) {
@@ -662,7 +662,7 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetImpellerDiameter() {
     bool result = setString(OS_Pump_VariableSpeedFields::ImpellerDiameter, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setVFDControlType(boost::optional<std::string> vFDControlType) {
@@ -679,7 +679,7 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetVFDControlType() {
     bool result = setString(OS_Pump_VariableSpeedFields::VFDControlType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setPumpRPMSchedule(Schedule& schedule) {
@@ -692,7 +692,7 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetPumpRPMSchedule() {
     bool result = setString(OS_Pump_VariableSpeedFields::PumprpmScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setMinimumPressureSchedule(Schedule& schedule) {
@@ -705,7 +705,7 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetMinimumPressureSchedule() {
     bool result = setString(OS_Pump_VariableSpeedFields::MinimumPressureSchedule, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setMaximumPressureSchedule(Schedule& schedule) {
@@ -718,7 +718,7 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetMaximumPressureSchedule() {
     bool result = setString(OS_Pump_VariableSpeedFields::MaximumPressureSchedule, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setMinimumRPMSchedule(Schedule& schedule) {
@@ -731,7 +731,7 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetMinimumRPMSchedule() {
     bool result = setString(OS_Pump_VariableSpeedFields::MinimumRPMSchedule, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::setMaximumRPMSchedule(Schedule& schedule) {
@@ -744,7 +744,7 @@ namespace detail {
 
   void PumpVariableSpeed_Impl::resetMaximumRPMSchedule() {
     bool result = setString(OS_Pump_VariableSpeedFields::MaximumRPMSchedule, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool PumpVariableSpeed_Impl::addToNode(Node & node)
@@ -1041,7 +1041,7 @@ namespace detail {
 PumpVariableSpeed::PumpVariableSpeed(const Model& model)
   : StraightComponent(PumpVariableSpeed::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::PumpVariableSpeed_Impl>());
+  OS_ASSERT(getImpl<detail::PumpVariableSpeed_Impl>());
 
   setPumpControlType("Intermittent");
 }

@@ -26,7 +26,7 @@
 #include <project/TagRecord.hpp>
 #include <project/AnalysisRecord.hpp>
 #include <project/DataPointRecord.hpp>
-#include <project/DiscretePerturbationRecord.hpp>
+#include <project/MeasureRecord.hpp>
 #include <project/AlgorithmRecord.hpp>
 
 #include <utilities/data/Attribute.hpp>
@@ -76,9 +76,9 @@ namespace detail {
                                                      ProjectDatabase& database)
     : ObjectRecord_Impl(database, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
@@ -93,19 +93,19 @@ namespace detail {
     }
 
     value = query.value(FileReferenceRecordColumns::fileReferenceType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_fileReferenceType = FileReferenceType(value.toInt());
 
     value = query.value(FileReferenceRecordColumns::path);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_path = toPath(value.toString());
 
     value = query.value(FileReferenceRecordColumns::checksumCreate);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_checksumCreate = value.toString().toStdString();
 
     value = query.value(FileReferenceRecordColumns::checksumLast);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_checksumLast = value.toString().toStdString();
   }
 
@@ -124,14 +124,14 @@ namespace detail {
       else if (parentDatabaseTableName == AnalysisRecord::databaseTableName()) {
         result = AnalysisRecord::getAnalysisRecord(*m_parentRecordId,database);
       }
-      else if (parentDatabaseTableName == DiscretePerturbationRecord::databaseTableName()) {
-        result = DiscretePerturbationRecord::getDiscretePerturbationRecord(*m_parentRecordId,database);
+      else if (parentDatabaseTableName == MeasureRecord::databaseTableName()) {
+        result = MeasureRecord::getMeasureRecord(*m_parentRecordId,database);
       }
       else if (parentDatabaseTableName == AlgorithmRecord::databaseTableName()) {
         result = AlgorithmRecord::getAlgorithmRecord(*m_parentRecordId,database);
       }
       else {
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
       }
     }
     return result;
@@ -328,19 +328,19 @@ namespace detail {
     }
 
     value = query.value(FileReferenceRecordColumns::fileReferenceType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastFileReferenceType = FileReferenceType(value.toInt());
 
     value = query.value(FileReferenceRecordColumns::path);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastPath = toPath(value.toString());
 
     value = query.value(FileReferenceRecordColumns::checksumCreate);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastChecksumCreate = value.toString().toStdString();
 
     value = query.value(FileReferenceRecordColumns::checksumLast);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastChecksumLast = value.toString().toStdString();
   }
 
@@ -365,19 +365,19 @@ namespace detail {
     }
 
     value = query.value(FileReferenceRecordColumns::fileReferenceType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_fileReferenceType == FileReferenceType(value.toInt()));
 
     value = query.value(FileReferenceRecordColumns::path);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_path == toPath(value.toString()));
  
     value = query.value(FileReferenceRecordColumns::checksumCreate);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_checksumCreate == value.toString().toStdString());
 
     value = query.value(FileReferenceRecordColumns::checksumLast);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_checksumLast == value.toString().toStdString());
 
     return result;
@@ -413,7 +413,7 @@ FileReferenceRecord::FileReferenceRecord(const FileReference& fileReference,
         new detail::FileReferenceRecord_Impl(fileReference, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::FileReferenceRecord_Impl>());
+  OS_ASSERT(getImpl<detail::FileReferenceRecord_Impl>());
 }
 
 FileReferenceRecord::FileReferenceRecord(const FileReference& fileReference, 
@@ -422,7 +422,7 @@ FileReferenceRecord::FileReferenceRecord(const FileReference& fileReference,
         new detail::FileReferenceRecord_Impl(fileReference, parentRecord)),
         parentRecord.projectDatabase())
 {
-  BOOST_ASSERT(getImpl<detail::FileReferenceRecord_Impl>());
+  OS_ASSERT(getImpl<detail::FileReferenceRecord_Impl>());
 }
 
 FileReferenceRecord::FileReferenceRecord(const QSqlQuery& query, ProjectDatabase& database)
@@ -430,14 +430,14 @@ FileReferenceRecord::FileReferenceRecord(const QSqlQuery& query, ProjectDatabase
         new detail::FileReferenceRecord_Impl(query, database)),
         database)
 {
-  BOOST_ASSERT(getImpl<detail::FileReferenceRecord_Impl>());
+  OS_ASSERT(getImpl<detail::FileReferenceRecord_Impl>());
 }
 
 FileReferenceRecord::FileReferenceRecord(boost::shared_ptr<detail::FileReferenceRecord_Impl> impl,
                                          ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::FileReferenceRecord_Impl>());
+  OS_ASSERT(getImpl<detail::FileReferenceRecord_Impl>());
 }
 
 std::string FileReferenceRecord::databaseTableName() {
@@ -458,7 +458,7 @@ UpdateByIdQueryData FileReferenceRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -504,7 +504,7 @@ void FileReferenceRecord::updatePathData(ProjectDatabase database,
 
   if (didStartTransaction) {
     bool test = database.commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 }
 

@@ -67,7 +67,7 @@ IddObjectType ModelObjectTypeListView::currentIddObjectType() const
 {
   OSCollapsibleItem* selectedCollapsibleItem = this->selectedCollapsibleItem();
   ModelObjectTypeItem* modelObjectTypeItem = qobject_cast<ModelObjectTypeItem*>(selectedCollapsibleItem);
-  BOOST_ASSERT(modelObjectTypeItem);
+  OS_ASSERT(modelObjectTypeItem);
   return modelObjectTypeItem->iddObjectType();
 }
 

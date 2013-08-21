@@ -64,8 +64,17 @@ namespace detail {
     virtual double getValue(const DataPoint& dataPoint) const = 0;
 
     //@}
+    /** @name Not in Public Class */
+    //@{
+
+    bool doNotParent(const Variable& variable) const;
+
+    static Function factoryFromVariant(const QVariant& variant, const VersionString& version);
+
+    //@}
    protected:
     std::vector<Variable> m_variables;
+
    private:
     REGISTER_LOGGER("openstudio.analysis.Function");
   };

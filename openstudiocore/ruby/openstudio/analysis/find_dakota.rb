@@ -24,8 +24,18 @@ module OpenStudio
   module Analysis
   
     # returns a hash with symbols 
-    # :dakota_exe - path to dakota
-    def find_dakota()
+    #   :dakota_exe - path to dakota
+    #
+    # example calls
+    #   find_dakota(5, 3)       # most recent build of 5.3
+    #   find_dakota(5, 3, '.*') # most recent build of 5.3
+    #   find_dakota(5, 3, 1)    # only version 5.3.1
+    def find_dakota(major_version, minor_version, patch_version = '.*')
+    
+      version = "#{major_version}\\.#{minor_version}\\.?#{patch_version}"
+      # By default, the Dakota 5.2 install folder does not include a version number.
+      # Check to see if any version is listed in the path.
+      any_version = "[0-9]+\\.[0-9]+(\\.[0-9]+)?" 
     
       potential_paths = []
       executableName = "dakota"
@@ -51,20 +61,34 @@ module OpenStudio
       # loop through and find the first match
       potential_paths.each do |path|
 
-        puts "Looking for Dakota at " + path
-
+        puts "Looking for Dakota at #{path}."
         path = Pathname.new(path)
-
+        
+        keep = false
+        
+        if /#{any_version}/.match(path)
+          if /#{version}/.match(path)
+            keep = true
+          end          
+        else
+          warn("No version information found. Will assume that the installed version is " + 
+            "acceptable. To avoid this warning in the future, add a string like -" + major_version.to_s + 
+            "." + minor_version.to_s + " to your Dakota folder, for example, C:\dakota-" + 
+            major_version.to_s + "." + minor_version.to_s + ".");          
+          keep = true
+        end
+        
         # check for dakota.exe
-        if File.exists?(path + "bin/" + executableName)
-          result = Hash.new
-          result[:dakota_exe] = path + "bin/" + executableName
-          puts "Found Dakota."
-          return result
+        if keep
+          if File.exists?(path + "bin/" + executableName)
+            result = Hash.new
+            result[:dakota_exe] = path + "bin/" + executableName
+            puts "Found Dakota at " + result[:dakota_exe].to_s + "."
+            return result
+          end
         end
 
       end
-
 
       # not found
       puts "Daktoa not found."

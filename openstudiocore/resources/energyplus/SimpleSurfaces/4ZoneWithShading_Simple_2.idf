@@ -80,11 +80,11 @@
 ! HTML Report:                    None
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
- 
-  Version,7.2;
- 
+
+  Version,8.0;
+
   Timestep,4;
- 
+
   Building,
     BUILDING #1,             !- Name
     0.0000000E+00,           !- North Axis {deg}
@@ -94,36 +94,36 @@
     FullExterior,            !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
     6;                       !- Minimum Number of Warmup Days
- 
+
   SurfaceConvectionAlgorithm:Inside,Simple;
- 
+
   SurfaceConvectionAlgorithm:Outside,SimpleCombined;
- 
+
   HeatBalanceAlgorithm,ConductionTransferFunction;
- 
+
  Lead Input;
- 
+
   SimulationControl,
     No,                      !- Do Zone Sizing Calculation
     No,                      !- Do System Sizing Calculation
     No,                      !- Do Plant Sizing Calculation
     Yes,                     !- Run Simulation for Sizing Periods
     No;                      !- Run Simulation for Weather File Run Periods
- 
+
   Site:Location,
     Chicago Ohare Intl Ap IL USA WMO=725300,  !- Name
     41.99,                   !- Latitude {deg}
     -87.91,                  !- Longitude {deg}
     -6.00,                   !- Time Zone {hr}
     205.00;                  !- Elevation {m}
- 
+
  ! Using Design Conditions from "Climate Design Data 2009 ASHRAE Handbook"
  ! Chicago Ohare Intl Ap IL USA Extreme Annual Wind Speeds, 1%=11.1m/s, 2.5%=9.4m/s, 5%=8.6m/s
  ! Chicago Ohare Intl Ap IL USA Extreme Annual Temperatures, Max Drybulb=-23.7°C Min Drybulb=35.9°C
  ! Chicago Ohare Intl Ap IL USA Annual Heating Design Conditions Wind Speed=4.9m/s Wind Dir=270
  ! Coldest Month=January
  ! Chicago Ohare Intl Ap IL USA Annual Heating 99%, MaxDB=-16.6°C
- 
+
   SizingPeriod:DesignDay,
     Chicago Ohare Intl Ap Ann Htg 99% Condns DB,  !- Name
     1,                       !- Month
@@ -132,7 +132,7 @@
     -16.6,                   !- Maximum Dry-Bulb Temperature {C}
     0.0,                     !- Daily Dry-Bulb Temperature Range {deltaC}
     ,                        !- Dry-Bulb Temperature Range Modifier Type
-    ,                        !- Dry-Bulb Temperature Range Modifier Schedule Name
+    ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     -16.6,                   !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
     ,                        !- Humidity Condition Day Schedule Name
@@ -151,9 +151,9 @@
     ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
     ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.00;                    !- Sky Clearness
- 
+
  ! Chicago Ohare Intl Ap IL USA Annual Cooling (DB=>MWB) 1%, MaxDB=31.6°C MWB=23°C
- 
+
   SizingPeriod:DesignDay,
     Chicago Ohare Intl Ap Ann Clg 1% Condns DB=>MWB,  !- Name
     7,                       !- Month
@@ -162,7 +162,7 @@
     31.6,                    !- Maximum Dry-Bulb Temperature {C}
     10.5,                    !- Daily Dry-Bulb Temperature Range {deltaC}
     ,                        !- Dry-Bulb Temperature Range Modifier Type
-    ,                        !- Dry-Bulb Temperature Range Modifier Schedule Name
+    ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
     Wetbulb,                 !- Humidity Condition Type
     23,                      !- Wetbulb or DewPoint at Maximum Dry-Bulb {C}
     ,                        !- Humidity Condition Day Schedule Name
@@ -181,7 +181,7 @@
     ,                        !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub) {dimensionless}
     ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     1.00;                    !- Sky Clearness
- 
+
   RunPeriod,
     ,                        !- Name
     1,                       !- Begin Month
@@ -194,9 +194,9 @@
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
     Yes;                     !- Use Weather File Snow Indicators
- 
+
   ! No location information present in original BLAST file
- 
+
   Material,
     A2 - 4 IN DENSE FACE BRICK,  !- Name
     Rough,                   !- Roughness
@@ -207,7 +207,7 @@
     0.9000000,               !- Thermal Absorptance
     0.9300000,               !- Solar Absorptance
     0.9300000;               !- Visible Absorptance
- 
+
   Material,
     B3 - 2 IN INSULATION,    !- Name
     VeryRough,               !- Roughness
@@ -218,7 +218,7 @@
     0.9000000,               !- Thermal Absorptance
     0.5000000,               !- Solar Absorptance
     0.5000000;               !- Visible Absorptance
- 
+
   Material,
     C2 - 4 IN LW CONCRETE BLOCK,  !- Name
     MediumRough,             !- Roughness
@@ -229,7 +229,7 @@
     0.9000000,               !- Thermal Absorptance
     0.6500000,               !- Solar Absorptance
     0.6500000;               !- Visible Absorptance
- 
+
   Material,
     E1 - 3 / 4 IN PLASTER OR GYP BOARD,  !- Name
     Smooth,                  !- Roughness
@@ -240,9 +240,9 @@
     0.9000000,               !- Thermal Absorptance
     0.9200000,               !- Solar Absorptance
     0.9200000;               !- Visible Absorptance
- 
+
    ! (R=.0472,TRANS=.80,VERY SMOOTH,GLASS), from 6mm clear
- 
+
   WindowMaterial:Glazing,
     GLASS - CLEAR PLATE 1 / 4 IN,  !- Name
     SpectralAverage,         !- Optical Data Type
@@ -258,7 +258,7 @@
     0.8400000,               !- Front Side Infrared Hemispherical Emissivity
     0.8400000,               !- Back Side Infrared Hemispherical Emissivity
     0.9000000;               !- Conductivity {W/m-K}
- 
+
   Material,
     WOOD - HARDWOOD 1 / 8 IN,!- Name
     MediumSmooth,            !- Roughness
@@ -269,11 +269,11 @@
     0.9000000,               !- Thermal Absorptance
     0.7800000,               !- Solar Absorptance
     0.7800000;               !- Visible Absorptance
- 
+
   Material:AirGap,
     B1 - AIRSPACE RESISTANCE,!- Name
     0.1603675;               !- Thermal Resistance {m2-K/W}
- 
+
   Material,
     C7 - 8 IN LW CONCRETE BLOCK,  !- Name
     Rough,                   !- Roughness
@@ -284,7 +284,7 @@
     0.9000000,               !- Thermal Absorptance
     0.6500000,               !- Solar Absorptance
     0.6500000;               !- Visible Absorptance
- 
+
   Material,
     E5 - ACOUSTIC TILE,      !- Name
     MediumSmooth,            !- Roughness
@@ -295,11 +295,11 @@
     0.9000000,               !- Thermal Absorptance
     0.3200000,               !- Solar Absorptance
     0.3200000;               !- Visible Absorptance
- 
+
   Material:AirGap,
     E4 - CEILING AIRSPACE,   !- Name
     0.1762280;               !- Thermal Resistance {m2-K/W}
- 
+
   Material,
     C5 - 4 IN HW CONCRETE,   !- Name
     MediumRough,             !- Roughness
@@ -310,7 +310,7 @@
     0.9000000,               !- Thermal Absorptance
     0.6500000,               !- Solar Absorptance
     0.6500000;               !- Visible Absorptance
- 
+
   Material,
     C10 - 8 IN HW CONCRETE,  !- Name
     MediumRough,             !- Roughness
@@ -321,7 +321,7 @@
     0.9000000,               !- Thermal Absorptance
     0.6500000,               !- Solar Absorptance
     0.6500000;               !- Visible Absorptance
- 
+
   Material,
     E2 - 1 / 2 IN SLAG OR STONE,  !- Name
     Rough,                   !- Roughness
@@ -332,7 +332,7 @@
     0.9000000,               !- Thermal Absorptance
     0.5500000,               !- Solar Absorptance
     0.5500000;               !- Visible Absorptance
- 
+
   Material,
     E3 - 3 / 8 IN FELT AND MEMBRANE,  !- Name
     Rough,                   !- Roughness
@@ -343,7 +343,7 @@
     0.9000000,               !- Thermal Absorptance
     0.7500000,               !- Solar Absorptance
     0.7500000;               !- Visible Absorptance
- 
+
   Material,
     B6 - 2 IN DENSE INSULATION,  !- Name
     VeryRough,               !- Roughness
@@ -354,7 +354,7 @@
     0.9000000,               !- Thermal Absorptance
     0.5000000,               !- Solar Absorptance
     0.5000000;               !- Visible Absorptance
- 
+
   Material,
     C12 - 2 IN HW CONCRETE,  !- Name
     MediumRough,             !- Roughness
@@ -365,63 +365,63 @@
     0.9000000,               !- Thermal Absorptance
     0.6500000,               !- Solar Absorptance
     0.6500000;               !- Visible Absorptance
- 
+
   Construction,
     EXTERIOR,                !- Name
     A2 - 4 IN DENSE FACE BRICK,  !- Outside Layer
     B3 - 2 IN INSULATION,    !- Layer 2
     C2 - 4 IN LW CONCRETE BLOCK,  !- Layer 3
     E1 - 3 / 4 IN PLASTER OR GYP BOARD;  !- Layer 4
- 
+
   Construction,
     SINGLE PANE HW WINDOW,   !- Name
     GLASS - CLEAR PLATE 1 / 4 IN;  !- Outside Layer
- 
+
   Construction,
     HOLLOW WOOD DOOR,        !- Name
     WOOD - HARDWOOD 1 / 8 IN,!- Outside Layer
     B1 - AIRSPACE RESISTANCE,!- Layer 2
     WOOD - HARDWOOD 1 / 8 IN;!- Layer 3
- 
+
   Construction,
     INTERIOR,                !- Name
     C7 - 8 IN LW CONCRETE BLOCK;  !- Outside Layer
- 
+
   Construction,
     FLOOR,                   !- Name
     E5 - ACOUSTIC TILE,      !- Outside Layer
     E4 - CEILING AIRSPACE,   !- Layer 2
     C5 - 4 IN HW CONCRETE;   !- Layer 3
- 
+
   Construction,
     CEILING34,               !- Name
     C10 - 8 IN HW CONCRETE;  !- Outside Layer
- 
+
   Construction,
     FLOOR34,                 !- Name
     C10 - 8 IN HW CONCRETE;  !- Outside Layer
- 
+
   Construction,
     ROOF31,                  !- Name
     E2 - 1 / 2 IN SLAG OR STONE,  !- Outside Layer
     E3 - 3 / 8 IN FELT AND MEMBRANE,  !- Layer 2
     B6 - 2 IN DENSE INSULATION,  !- Layer 3
     C12 - 2 IN HW CONCRETE;  !- Layer 4
- 
+
   ScheduleTypeLimits,
     Any Number;              !- Name
- 
+
   ScheduleTypeLimits,
     Fraction,                !- Name
     0.0,                     !- Lower Limit Value
     1.0,                     !- Upper Limit Value
     CONTINUOUS;              !- Numeric Type
- 
+
   Site:GroundTemperature:BuildingSurface,20,20,20,20,20,20,20,20,20,20,20,20;
- 
+
  End Lead Input;
  Simulation Data;
- 
+
   Zone,
     ZONE 1,                  !- Name
     0,                       !- Direction of Relative North {deg}
@@ -432,7 +432,7 @@
     1,                       !- Multiplier
     AutoCalculate,           !- Ceiling Height {m}
     AutoCalculate;           !- Volume {m3}
- 
+
   Zone,
     ZONE 2,                  !- Name
     0,                       !- Direction of Relative North {deg}
@@ -443,7 +443,7 @@
     1,                       !- Multiplier
     AutoCalculate,           !- Ceiling Height {m}
     AutoCalculate;           !- Volume {m3}
- 
+
   Zone,
     ZONE 3,                  !- Name
     0,                       !- Direction of Relative North {deg}
@@ -454,7 +454,7 @@
     1,                       !- Multiplier
     AutoCalculate,           !- Ceiling Height {m}
     AutoCalculate;           !- Volume {m3}
- 
+
   Zone,
     ZONE 4,                  !- Name
     0,                       !- Direction of Relative North {deg}
@@ -465,17 +465,17 @@
     1,                       !- Multiplier
     AutoCalculate,           !- Ceiling Height {m}
     AutoCalculate;           !- Volume {m3}
- 
+
  ! BLAST Translator units, UpperLeftCorner, Counter Clock-Wise, World Coordinate System
  ! Note original Building and Zone Origins are retained
- 
+
   GlobalGeometryRules,
     UpperLeftCorner,         !- Starting Vertex Position
     CounterClockWise,        !- Vertex Entry Direction
     Relative,                !- Coordinate System
     ,                        !- Daylighting Reference Point Coordinate System
     Relative;                !- Rectangular Surface Coordinate System
- 
+
   Shading:Building,
     Bushes-East,             !- Name
     90,                      !- Azimuth Angle {deg}
@@ -485,7 +485,7 @@
     0,                       !- Starting Z Coordinate {m}
     50,                      !- Length {m}
     1;                       !- Height {m}
- 
+
   Shading:Site,
     Bushes-North,            !- Name
     0,                       !- Azimuth Angle {deg}
@@ -495,7 +495,7 @@
     0,                       !- Starting Z Coordinate {m}
     50,                      !- Length {m}
     1;                       !- Height {m}
- 
+
   Shading:Site,
     Bushes-West,             !- Name
     270,                     !- Azimuth Angle {deg}
@@ -505,7 +505,7 @@
     0,                       !- Starting Z Coordinate {m}
     50,                      !- Length {m}
     1;                       !- Height {m}
- 
+
   Wall:Exterior,
     Zn001:Wall001,           !- Name
     EXTERIOR,                !- Construction Name
@@ -517,7 +517,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     10;                      !- Height {m}
- 
+
   Window,
     Zn001:Wall001:Win001,    !- Name
     SINGLE PANE HW WINDOW,   !- Construction Name
@@ -529,7 +529,7 @@
     3,                       !- Starting Z Coordinate {m}
     3,                       !- Length {m}
     5;                       !- Height {m}
- 
+
   GlazedDoor,
     Zn001:Wall001:Door001,   !- Name
     SINGLE PANE HW WINDOW,   !- Construction Name
@@ -541,7 +541,7 @@
     0,                       !- Starting Z Coordinate {m}
     3,                       !- Length {m}
     5;                       !- Height {m}
- 
+
   Shading:Overhang:Projection,
     Zn001:Wall001:Win001:Shade001,  !- Name
     Zn001:Wall001:Win001,    !- Window or Door Name
@@ -549,8 +549,8 @@
     90,                      !- Tilt Angle from Window/Door {deg}
     .2,                      !- Left extension from Window/Door Width {m}
     .2,                      !- Right extension from Window/Door Width {m}
-    .6;                      !- Depth as Fraction of Window/Door Height {m}
- 
+    .6;                      !- Depth as Fraction of Window/Door Height {dimensionless}
+
   Shading:Overhang,
     Zn001:Wall001:Door001:Shade001,  !- Name
     Zn001:Wall001:Door001,   !- Window or Door Name
@@ -559,7 +559,7 @@
     0,                       !- Left extension from Window/Door Width {m}
     0,                       !- Right extension from Window/Door Width {m}
     3;                       !- Depth {m}
- 
+
   Shading:Fin:Projection,
     Zn001:Wall001:Shade003,  !- Name
     Zn001:Wall001:Win001,    !- Window or Door Name
@@ -567,13 +567,13 @@
     .1,                      !- Left Distance Above Top of Window {m}
     .1,                      !- Left Distance Below Bottom of Window {m}
     90,                      !- Left Tilt Angle from Window/Door {deg}
-    .6,                      !- Left Depth as Fraction of Window/Door Width {m}
+    .6,                      !- Left Depth as Fraction of Window/Door Width {dimensionless}
     .1,                      !- Right Extension from Window/Door {m}
     .1,                      !- Right Distance Above Top of Window {m}
     .1,                      !- Right Distance Below Bottom of Window {m}
     90,                      !- Right Tilt Angle from Window/Door {deg}
-    .6;                      !- Right Depth as Fraction of Window/Door Width {m}
- 
+    .6;                      !- Right Depth as Fraction of Window/Door Width {dimensionless}
+
   Wall:Underground,
     Zn001:Wall002,           !- Name
     EXTERIOR,                !- Construction Name
@@ -585,7 +585,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     10;                      !- Height {m}
- 
+
   Wall:Underground,
     Zn001:Wall003,           !- Name
     EXTERIOR,                !- Construction Name
@@ -597,7 +597,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     10;                      !- Height {m}
- 
+
   Door,
     Zn001:Wall001:Door002,   !- Name
     HOLLOW WOOD DOOR,        !- Construction Name
@@ -607,7 +607,7 @@
     0,                       !- Starting Z Coordinate {m}
     3,                       !- Length {m}
     5;                       !- Height {m}
- 
+
   Wall:Adiabatic,
     Zn001:Wall004,           !- Name
     INTERIOR,                !- Construction Name
@@ -619,7 +619,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     10;                      !- Height {m}
- 
+
   Floor:GroundContact,
     Zn001:Flr001,            !- Name
     FLOOR,                   !- Construction Name
@@ -631,7 +631,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     20;                      !- Width {m}
- 
+
   Ceiling:Adiabatic,
     Zn001:Roof001,           !- Name
     CEILING34,               !- Construction Name
@@ -643,7 +643,7 @@
     10,                      !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     20;                      !- Width {m}
- 
+
   Wall:Exterior,
     Zn002:Wall001,           !- Name
     EXTERIOR,                !- Construction Name
@@ -655,7 +655,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     10;                      !- Height {m}
- 
+
   Window,
     Zn002:Wall001:Win001,    !- Name
     SINGLE PANE HW WINDOW,   !- Construction Name
@@ -667,7 +667,7 @@
     3,                       !- Starting Z Coordinate {m}
     3,                       !- Length {m}
     5;                       !- Height {m}
- 
+
   Shading:Overhang,
     Zn002:Wall001:Win001:Shade001,  !- Name
     Zn002:Wall001:Win001,    !- Window or Door Name
@@ -676,7 +676,7 @@
     0,                       !- Left extension from Window/Door Width {m}
     0,                       !- Right extension from Window/Door Width {m}
     3;                       !- Depth {m}
- 
+
   Window,
     Zn002:Wall001:Win002,    !- Name
     SINGLE PANE HW WINDOW,   !- Construction Name
@@ -688,7 +688,7 @@
     3,                       !- Starting Z Coordinate {m}
     3,                       !- Length {m}
     5;                       !- Height {m}
- 
+
   Wall:Underground,
     Zn002:Wall002,           !- Name
     EXTERIOR,                !- Construction Name
@@ -700,7 +700,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     10;                      !- Height {m}
- 
+
   Wall:Underground,
     Zn002:Wall003,           !- Name
     EXTERIOR,                !- Construction Name
@@ -712,7 +712,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     10;                      !- Height {m}
- 
+
   Wall:Adiabatic,
     Zn002:Wall004,           !- Name
     INTERIOR,                !- Construction Name
@@ -724,7 +724,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     10;                      !- Height {m}
- 
+
   Floor:GroundContact,
     Zn002:Flr001,            !- Name
     FLOOR,                   !- Construction Name
@@ -736,7 +736,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     20;                      !- Width {m}
- 
+
   Ceiling:Adiabatic,
     Zn002:Roof001,           !- Name
     CEILING34,               !- Construction Name
@@ -748,7 +748,7 @@
     10,                      !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     20;                      !- Width {m}
- 
+
   Wall:Exterior,
     Zn003:Wall001,           !- Name
     EXTERIOR,                !- Construction Name
@@ -760,7 +760,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     10;                      !- Height {m}
- 
+
   Window,
     Zn003:Wall001:Win001,    !- Name
     SINGLE PANE HW WINDOW,   !- Construction Name
@@ -772,7 +772,7 @@
     3,                       !- Starting Z Coordinate {m}
     3,                       !- Length {m}
     5;                       !- Height {m}
- 
+
   Wall:Exterior,
     Zn003:Wall002,           !- Name
     EXTERIOR,                !- Construction Name
@@ -784,7 +784,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     10;                      !- Height {m}
- 
+
   Wall:Exterior,
     Zn003:Wall003,           !- Name
     EXTERIOR,                !- Construction Name
@@ -796,7 +796,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     10;                      !- Height {m}
- 
+
   Wall:Interzone,
     Zn003:Wall004,           !- Name
     INTERIOR,                !- Construction Name
@@ -809,7 +809,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     10;                      !- Height {m}
- 
+
   GlazedDoor:Interzone,
     Zn003:Wall004:Door002,   !- Name
     SINGLE PANE HW WINDOW,   !- Construction Name
@@ -820,7 +820,7 @@
     0,                       !- Starting Z Coordinate {m}
     3,                       !- Length {m}
     5;                       !- Height {m}
- 
+
   Window:Interzone,
     Zn003:Wall004:Win001,    !- Name
     SINGLE PANE HW WINDOW,   !- Construction Name
@@ -831,7 +831,7 @@
     3,                       !- Starting Z Coordinate {m}
     3,                       !- Length {m}
     5;                       !- Height {m}
- 
+
   Door:Interzone,
     Zn003:Wall004:Door001,   !- Name
     HOLLOW WOOD DOOR,        !- Construction Name
@@ -842,7 +842,7 @@
     0,                       !- Starting Z Coordinate {m}
     3,                       !- Length {m}
     5;                       !- Height {m}
- 
+
   Floor:Interzone,
     Zn003:Flr001,            !- Name
     FLOOR34,                 !- Construction Name
@@ -855,7 +855,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     20;                      !- Width {m}
- 
+
   Roof,
     Zn003:Roof001,           !- Name
     ROOF31,                  !- Construction Name
@@ -867,7 +867,7 @@
     10,                      !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     20;                      !- Width {m}
- 
+
   Wall:Exterior,
     Zn004:Wall001,           !- Name
     EXTERIOR,                !- Construction Name
@@ -879,7 +879,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     10;                      !- Height {m}
- 
+
   Window,
     Zn004:Wall001:Win001,    !- Name
     SINGLE PANE HW WINDOW,   !- Construction Name
@@ -891,7 +891,7 @@
     3,                       !- Starting Z Coordinate {m}
     3,                       !- Length {m}
     5;                       !- Height {m}
- 
+
   Wall:Exterior,
     Zn004:Wall002,           !- Name
     EXTERIOR,                !- Construction Name
@@ -903,7 +903,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     10;                      !- Height {m}
- 
+
   Wall:Exterior,
     Zn004:Wall003,           !- Name
     EXTERIOR,                !- Construction Name
@@ -915,7 +915,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     10;                      !- Height {m}
- 
+
   Floor:Interzone,
     Zn004:Flr001,            !- Name
     FLOOR34,                 !- Construction Name
@@ -928,7 +928,7 @@
     0,                       !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     20;                      !- Width {m}
- 
+
   Roof,
     Zn004:Roof001,           !- Name
     ROOF31,                  !- Construction Name
@@ -940,26 +940,26 @@
     10,                      !- Starting Z Coordinate {m}
     20,                      !- Length {m}
     20;                      !- Width {m}
- 
+
   ScheduleTypeLimits,
     Temperature,             !- Name
     -100,                    !- Lower Limit Value
     200,                     !- Upper Limit Value
     CONTINUOUS;              !- Numeric Type
- 
+
   ScheduleTypeLimits,
     ControlType,             !- Name
     0,                       !- Lower Limit Value
     4,                       !- Upper Limit Value
     DISCRETE;                !- Numeric Type
- 
+
   SCHEDULE:COMPACT,
     ZONE CONTROL TYPE SCHEDULE,  !- Name
     CONTROLTYPE,             !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,4;          !- Field 3
- 
+
   SCHEDULE:COMPACT,
     ZONE HEATING SETPOINTS,  !- Name
     TEMPERATURE,             !- Schedule Type Limits Name
@@ -970,7 +970,7 @@
     Until: 24:00,15.60,      !- Field 7
     For: AllOtherDays,       !- Field 9
     Until: 24:00,15.60;      !- Field 10
- 
+
   SCHEDULE:COMPACT,
     ZONE COOLING SETPOINTS,  !- Name
     TEMPERATURE,             !- Schedule Type Limits Name
@@ -981,19 +981,19 @@
     Until: 24:00,100.00,     !- Field 7
     For: AllOtherDays,       !- Field 9
     Until: 24:00,100.00;     !- Field 10
- 
+
   ZoneControl:Thermostat,
     ZONE 1 CONTROLS,         !- Name
     ZONE 1,                  !- Zone or ZoneList Name
     Zone Control Type Schedule,  !- Control Type Schedule Name
     ThermostatSetpoint:DualSetpoint,  !- Control 1 Object Type
     ZONE 1 SETPOINTS;        !- Control 1 Name
- 
+
   ThermostatSetpoint:DualSetpoint,
     ZONE 1 SETPOINTS,        !- Name
     ZONE Heating Setpoints,  !- Heating Setpoint Temperature Schedule Name
     ZONE Cooling Setpoints;  !- Cooling Setpoint Temperature Schedule Name
- 
+
   ZoneHVAC:EquipmentConnections,
     ZONE 1,                  !- Zone Name
     ZONE 1 EQUIPMENT,        !- Zone Conditioning Equipment List Name
@@ -1001,14 +1001,14 @@
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZONE 1 NODE,             !- Zone Air Node Name
     ZONE 1 OUTLET;           !- Zone Return Air Node Name
- 
+
   ZoneHVAC:EquipmentList,
     ZONE 1 EQUIPMENT,        !- Name
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZONE 1 Ideal Loads,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1;                       !- Zone Equipment 1 Heating or No-Load Sequence
- 
+
   ZoneHVAC:IdealLoadsAirSystem,
     ZONE 1 Ideal Loads,      !- Name
     ,                        !- Availability Schedule Name
@@ -1036,23 +1036,23 @@
     ,                        !- Heat Recovery Type
     ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
     ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
- 
+
   NodeList,
     ZONE 1 INLETS,           !- Name
     ZONE 1 INLET;            !- Node 1 Name
- 
+
   ZoneControl:Thermostat,
     ZONE 2 CONTROLS,         !- Name
     ZONE 2,                  !- Zone or ZoneList Name
     Zone Control Type Schedule,  !- Control Type Schedule Name
     ThermostatSetpoint:DualSetpoint,  !- Control 1 Object Type
     ZONE 2 SETPOINTS;        !- Control 1 Name
- 
+
   ThermostatSetpoint:DualSetpoint,
     ZONE 2 SETPOINTS,        !- Name
     ZONE Heating Setpoints,  !- Heating Setpoint Temperature Schedule Name
     ZONE Cooling Setpoints;  !- Cooling Setpoint Temperature Schedule Name
- 
+
   ZoneHVAC:EquipmentConnections,
     ZONE 2,                  !- Zone Name
     ZONE 2 EQUIPMENT,        !- Zone Conditioning Equipment List Name
@@ -1060,14 +1060,14 @@
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZONE 2 NODE,             !- Zone Air Node Name
     ZONE 2 OUTLET;           !- Zone Return Air Node Name
- 
+
   ZoneHVAC:EquipmentList,
     ZONE 2 EQUIPMENT,        !- Name
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZONE 2 Ideal Loads,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1;                       !- Zone Equipment 1 Heating or No-Load Sequence
- 
+
   ZoneHVAC:IdealLoadsAirSystem,
     ZONE 2 Ideal Loads,      !- Name
     ,                        !- Availability Schedule Name
@@ -1095,23 +1095,23 @@
     ,                        !- Heat Recovery Type
     ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
     ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
- 
+
   NodeList,
     ZONE 2 INLETS,           !- Name
     ZONE 2 INLET;            !- Node 1 Name
- 
+
   ZoneControl:Thermostat,
     ZONE 3 CONTROLS,         !- Name
     ZONE 3,                  !- Zone or ZoneList Name
     Zone Control Type Schedule,  !- Control Type Schedule Name
     ThermostatSetpoint:DualSetpoint,  !- Control 1 Object Type
     ZONE 3 SETPOINTS;        !- Control 1 Name
- 
+
   ThermostatSetpoint:DualSetpoint,
     ZONE 3 SETPOINTS,        !- Name
     ZONE Heating Setpoints,  !- Heating Setpoint Temperature Schedule Name
     ZONE Cooling Setpoints;  !- Cooling Setpoint Temperature Schedule Name
- 
+
   ZoneHVAC:EquipmentConnections,
     ZONE 3,                  !- Zone Name
     ZONE 3 EQUIPMENT,        !- Zone Conditioning Equipment List Name
@@ -1119,14 +1119,14 @@
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZONE 3 NODE,             !- Zone Air Node Name
     ZONE 3 OUTLET;           !- Zone Return Air Node Name
- 
+
   ZoneHVAC:EquipmentList,
     ZONE 3 EQUIPMENT,        !- Name
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZONE 3 Ideal Loads,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1;                       !- Zone Equipment 1 Heating or No-Load Sequence
- 
+
   ZoneHVAC:IdealLoadsAirSystem,
     ZONE 3 Ideal Loads,      !- Name
     ,                        !- Availability Schedule Name
@@ -1154,23 +1154,23 @@
     ,                        !- Heat Recovery Type
     ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
     ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
- 
+
   NodeList,
     ZONE 3 INLETS,           !- Name
     ZONE 3 INLET;            !- Node 1 Name
- 
+
   ZoneControl:Thermostat,
     ZONE 4 CONTROLS,         !- Name
     ZONE 4,                  !- Zone or ZoneList Name
     Zone Control Type Schedule,  !- Control Type Schedule Name
     ThermostatSetpoint:DualSetpoint,  !- Control 1 Object Type
     ZONE 4 SETPOINTS;        !- Control 1 Name
- 
+
   ThermostatSetpoint:DualSetpoint,
     ZONE 4 SETPOINTS,        !- Name
     ZONE Heating Setpoints,  !- Heating Setpoint Temperature Schedule Name
     ZONE Cooling Setpoints;  !- Cooling Setpoint Temperature Schedule Name
- 
+
   ZoneHVAC:EquipmentConnections,
     ZONE 4,                  !- Zone Name
     ZONE 4 EQUIPMENT,        !- Zone Conditioning Equipment List Name
@@ -1178,14 +1178,14 @@
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZONE 4 NODE,             !- Zone Air Node Name
     ZONE 4 OUTLET;           !- Zone Return Air Node Name
- 
+
   ZoneHVAC:EquipmentList,
     ZONE 4 EQUIPMENT,        !- Name
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZONE 4 Ideal Loads,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1;                       !- Zone Equipment 1 Heating or No-Load Sequence
- 
+
   ZoneHVAC:IdealLoadsAirSystem,
     ZONE 4 Ideal Loads,      !- Name
     ,                        !- Availability Schedule Name
@@ -1213,33 +1213,33 @@
     ,                        !- Heat Recovery Type
     ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
     ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
- 
+
   NodeList,
     ZONE 4 INLETS,           !- Name
     ZONE 4 INLET;            !- Node 1 Name
- 
+
   Output:VariableDictionary,IDF;
- 
+
   Output:Surfaces:Drawing,DXF;
- 
+
   Output:Surfaces:List,DetailsWithVertices;
- 
+
   Output:Variable,*,Outdoor Dry Bulb,hourly;
- 
+
   Output:Variable,*,Zone/Sys Air Temperature,hourly;
- 
+
   Output:Variable,*,Zone Mean Radiant Temperature,hourly;
- 
+
   Output:Variable,*,Zone/Sys Sensible Cooling Energy,hourly;
- 
+
   Output:Variable,*,Zone/Sys Sensible Heating Energy,hourly;
- 
+
   Output:Variable,*,Zone/Sys Sensible Cooling Rate,hourly;
- 
+
   Output:Variable,*,Zone/Sys Sensible Heating Rate,hourly;
- 
+
   Output:Meter,DistrictHeating:Facility,hourly;
- 
+
   Output:Meter,DistrictCooling:Facility,hourly;
- 
+
  End Simulation Data;

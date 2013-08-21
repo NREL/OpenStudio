@@ -50,14 +50,14 @@ namespace detail {
   AirLoopHVACOutdoorAirSystem_Impl::AirLoopHVACOutdoorAirSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : HVACComponent_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == AirLoopHVACOutdoorAirSystem::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == AirLoopHVACOutdoorAirSystem::iddObjectType());
   }
 
   AirLoopHVACOutdoorAirSystem_Impl::AirLoopHVACOutdoorAirSystem_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
         : HVACComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == AirLoopHVACOutdoorAirSystem::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == AirLoopHVACOutdoorAirSystem::iddObjectType());
   }
 
   AirLoopHVACOutdoorAirSystem_Impl::AirLoopHVACOutdoorAirSystem_Impl(
@@ -608,7 +608,7 @@ namespace detail {
 AirLoopHVACOutdoorAirSystem::AirLoopHVACOutdoorAirSystem(Model & model, const ControllerOutdoorAir & controller)
   : HVACComponent(AirLoopHVACOutdoorAirSystem::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>());
+  OS_ASSERT(getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>());
 
   AirLoopHVACOutdoorAirSystem outdoorAirSystem =
     AirLoopHVACOutdoorAirSystem(getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>());

@@ -35,7 +35,7 @@ IdfObjectWatcher::IdfObjectWatcher(const IdfObject& idfObject)
   connected = connected && this->connect(objectImpl.get(), SIGNAL(onDataChange()), SLOT(dataChange()));
   connected = connected && this->connect(objectImpl.get(), SIGNAL(onNameChange()), SLOT(nameChange()));
   
-  BOOST_ASSERT(connected);
+  OS_ASSERT(connected);
 }
 
 IdfObjectWatcher::~IdfObjectWatcher()

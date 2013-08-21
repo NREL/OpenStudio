@@ -50,14 +50,14 @@ namespace detail {
                                                                  ProjectDatabase& database)
     : AlgorithmRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(OpenStudioAlgorithmRecord::ColumnsType::openStudioAlgorithmRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_openStudioAlgorithmRecordType = OpenStudioAlgorithmRecordType(value.toInt());
   }
 
@@ -77,30 +77,30 @@ namespace detail {
   }
 
   void OpenStudioAlgorithmRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     AlgorithmRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(OpenStudioAlgorithmRecord::ColumnsType::openStudioAlgorithmRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastOpenStudioAlgorithmRecordType = OpenStudioAlgorithmRecordType(value.toInt());
   }
 
   bool OpenStudioAlgorithmRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = AlgorithmRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(OpenStudioAlgorithmRecord::ColumnsType::openStudioAlgorithmRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_openStudioAlgorithmRecordType == OpenStudioAlgorithmRecordType(value.toInt()));
 
     return result;
@@ -125,7 +125,7 @@ OpenStudioAlgorithmRecord::OpenStudioAlgorithmRecord(boost::shared_ptr<detail::O
                                                      const boost::optional<analysis::OpenStudioAlgorithm>& algorithm)
   : AlgorithmRecord(impl, database, analysis::OptionalAlgorithm(algorithm))
 {
-  BOOST_ASSERT(getImpl<detail::OpenStudioAlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::OpenStudioAlgorithmRecord_Impl>());
 }
 
 boost::optional<OpenStudioAlgorithmRecord> OpenStudioAlgorithmRecord::factoryFromQuery(
@@ -166,7 +166,7 @@ OpenStudioAlgorithmRecord OpenStudioAlgorithmRecord::factoryFromOpenStudioAlgori
                                   analysisRecord);
   }
 
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return OpenStudioAlgorithmRecord(boost::shared_ptr<detail::OpenStudioAlgorithmRecord_Impl>());
 }
 

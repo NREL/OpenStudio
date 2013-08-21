@@ -40,8 +40,8 @@ CollapsibleComponent::CollapsibleComponent(CollapsibleComponentHeader * collapsi
     m_componentList(componentList),
     m_mainLayout(NULL)
 {
-  BOOST_ASSERT(m_collapsibleComponentHeader);
-  BOOST_ASSERT(m_componentList);
+  OS_ASSERT(m_collapsibleComponentHeader);
+  OS_ASSERT(m_componentList);
 
   setObjectName("CollapsibleComponent");
 
@@ -57,30 +57,30 @@ CollapsibleComponent::CollapsibleComponent(CollapsibleComponentHeader * collapsi
 
   isConnected = connect(collapsibleComponentHeader, SIGNAL(clicked(bool)),
                         this, SIGNAL(headerClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponentHeader, SIGNAL(clicked(bool)),
                         this, SLOT(on_headerClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponentHeader, SIGNAL(getComponentsByPage(int)), 
                         this, SIGNAL(getComponentsByPage(int)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(collapsibleComponentHeader, SIGNAL(getComponentsByPage(int)),
                         this, SLOT(on_getComponentsByPage(int)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // component list
   m_mainLayout->addWidget(m_componentList);
   
   isConnected = connect(componentList, SIGNAL(componentClicked(bool)),
                         this, SIGNAL(componentClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(componentList, SIGNAL(componentClicked(bool)),
                         this, SLOT(on_componentClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_mainLayout->addStretch();
 

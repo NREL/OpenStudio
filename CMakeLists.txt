@@ -4,7 +4,7 @@ PROJECT(OpenStudio)
 
 SET(CMAKE_VERSION_MAJOR 1)
 SET(CMAKE_VERSION_MINOR 0)
-SET(CMAKE_VERSION_PATCH 1)
+SET(CMAKE_VERSION_PATCH 4)
 
 SET(SUBVERSION_REVISION "Unknown")
 SET(CMAKE_VERSION_BUILD "${SUBVERSION_REVISION}" CACHE STRING "Build number") # svn revision
@@ -51,9 +51,6 @@ OPTION( BUILD_WITH_OPENSSL "Build With OpenSSL Support For SSH Connections" ON )
 # Build SimXML
 OPTION( BUILD_SIMXML "Build with SimXml support" OFF )
 
-# Build with Dakota support
-OPTION( BUILD_WITH_DAKOTA "Build with Dakota algorithm library support" OFF )
-
 # Build Ruby gem
 OPTION( BUILD_RUBY_GEM "Build Ruby Gem" OFF )
 
@@ -94,6 +91,16 @@ IF (BUILD_RUBY_GEM)
   MESSAGE("Enabling Ruby Gem overrides all of your packaging options. To build the Ruby Gem please type 'make package'")
 ENDIF()
 
+# Require that DAKOTA_FOUND
+#
+# Some code (certain analysisdriver tests) are conditionally compiled depending on 
+# the value of this variable.
+#
+# Dakota is an optional third party algorithm library that we use through its command line
+# interface.
+OPTION( REQUIRE_DAKOTA "Ensure Dakota (third party analysis tool) is found" OFF )
+MARK_AS_ADVANCED( REQUIRE_DAKOTA )
+
 IF(MSVC)
   # need to know if using the Express edition of Visual Studio, devenv is split into multiple programs
   OPTION( MSVC_IS_EXPRESS "using the Express editions of Visual Studio, must install both C++ and C# versions" FALSE )
@@ -109,6 +116,18 @@ IF(QT_QMAKE_EXECUTABLE)
   OPTION( BUILD_QT "Build Qt" OFF)
 ELSE()
   OPTION( BUILD_QT "Build Qt" ON)
+ENDIF()
+
+# Apple Sanity Check
+IF(APPLE)
+  IF (NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+    MESSAGE(FATAL_ERROR "OSX Deployment Target Must Be Set")
+  ENDIF()
+
+  IF (NOT CMAKE_OSX_SYSROOT)
+    MESSAGE(FATAL_ERROR "OSX Sysroot must be set")
+  ENDIF()
+
 ENDIF()
 
 include(${CMAKE_SOURCE_DIR}/ExternalProject.cmake)
@@ -186,20 +205,18 @@ ENDIF()
 IF(BUILD_NODE)
   # OSX can work with a static ruby library
   ExternalProject_Add(Node
-    URL http://nodejs.org/dist/v0.10.6/node-v0.10.6.tar.gz
+    URL http://nodejs.org/dist/v0.10.15/node-v0.10.15.tar.gz
     CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && sh -c "./configure --prefix=${CMAKE_BINARY_DIR}/Node-prefix/src/Node-install"
     BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && $(MAKE)
     INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && $(MAKE) install && $(MAKE) install-includes && ../Node-install/bin/npm install jasmine-node node-gyp -g && ../Node-install/bin/node ../Node-install/bin/node-gyp install
     )
   SET(NODE_BIN_DIR ${CMAKE_BINARY_DIR}/Node-prefix/src/Node-install/bin/)
-  SET(NODE_INCLUDE_DIR "$ENV{HOME}/.node-gyp/0.10.6")
+  SET(NODE_INCLUDE_DIR "$ENV{HOME}/.node-gyp/0.10.15")
 ENDIF()
 
 IF(BUILD_V8)
   ExternalProject_Add(V8
-    SVN_REPOSITORY http://v8.googlecode.com/svn/trunk/
-    # revision on 3/16/2013
-    SVN_REVISION -r13960
+    SVN_REPOSITORY http://v8.googlecode.com/svn/branches/3.19
     CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/V8-prefix/src/V8 && $(MAKE) dependencies
     BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/V8-prefix/src/V8 && $(MAKE) x64
     INSTALL_COMMAND ""
@@ -317,11 +334,13 @@ ENDIF()
 
 IF(BUILD_BOOST)
   IF(APPLE)
+    STRING(REGEX MATCH "[0-9]+\\.[0-9]+" OSX_SDK_VERSION ${CMAKE_OSX_SYSROOT})
     ExternalProject_Add( Boost
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_47_0.tar.gz
       URL_MD5 b0d9b288627b6a57d41d425d4f467592
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 variant=release variant=debug address-model=32_64 architecture=x86 --layout=tagged  --without-python --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT} install
+      PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_43.diff
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 variant=release variant=debug address-model=32_64 macosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET} macosx-version=${OSX_SDK_VERSION}  architecture=x86 --layout=tagged  --without-python --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT} install
       INSTALL_COMMAND ""
       )
     SET(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
@@ -361,6 +380,7 @@ IF(BUILD_BOOST)
     SET(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
   ENDIF()
 ENDIF()
+
 
 IF(BUILD_BOOST)
   list(APPEND BoostLog_DEPENDS Boost)
@@ -403,30 +423,36 @@ IF(BUILD_QT)
     # We're going to explicitly use the SDK specified in the configuration by the user
     SET(APPLE_SDK_COMMAND -sdk ${CMAKE_OSX_SYSROOT} )
 
+    IF (CMAKE_OSX_SYSROOT MATCHES ".*10.7.sdk")
+      SET(APPLE_PATCH_COMMAND "${CMAKE_COMMAND}" -E rename "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src/3rdparty/webkit/WebKitLibraries/libWebKitSystemInterfaceMountainLion.a" "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src/3rdparty/webkit/WebKitLibraries/libWebKitSystemInterfaceMountainLion.a.bak" COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src/3rdparty/webkit/WebKitLibraries/libWebKitSystemInterfaceLion.a" "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src/3rdparty/webkit/WebKitLibraries/libWebKitSystemInterfaceMountainLion.a")
+    ELSE()
+      SET(APPLE_PATCH_COMMAND "")
+    ENDIF()
+
     # At the moment we are building all of debug,release,x86 and x86_64
     # it would appear that calling "make" in some way that CMake can detect that we are calling
     # make (and attempt to pass parameters to the child make jobs) is breaking our ability to install
     # the below code circumvents that by calling make through a call to "sh"
     ExternalProject_Add( Qt
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-4.8.2.tar.gz
-      URL_MD5 cfca638afc8e9563fc9ae6051834a313
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-4.8.5.tar.gz
+      URL_MD5 1864987bdbb2f58f8ae8b350dfdbe133
       CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/configure  ${APPLE_SDK_COMMAND} -debug-and-release -opensource -arch x86 -arch x86_64 -qt-sql-sqlite -plugin-sql-sqlite -nomake examples -nomake demos -nomake docs -no-qt3support -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
-      PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/Qt/src ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src
+      PATCH_COMMAND ${APPLE_PATCH_COMMAND}
       BUILD_COMMAND $(MAKE) -f ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build/Makefile      
       INSTALL_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build && make -j1 install"
       )
   ELSEIF(UNIX)
     ExternalProject_Add( Qt
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-4.8.2.tar.gz
-      URL_MD5 cfca638afc8e9563fc9ae6051834a313
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-4.8.5.tar.gz
+      URL_MD5 1864987bdbb2f58f8ae8b350dfdbe133
       CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/configure -debug-and-release -opensource -confirm-license -shared -qt-sql-sqlite -no-qt3support -nomake examples -nomake demos -nomake docs -plugindir ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/share/openstudio/qtplugins -qtlibinfix OpenStudio -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
       BUILD_COMMAND $(MAKE) -f ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build/Makefile
       INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build && $(MAKE) install
       )
   ELSE()
     ExternalProject_Add( Qt
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-4.8.2.tar.gz
-      URL_MD5 cfca638afc8e9563fc9ae6051834a313
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-4.8.5.tar.gz
+      URL_MD5 1864987bdbb2f58f8ae8b350dfdbe133
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && configure -debug-and-release -opensource -confirm-license -shared -plugin-sql-sqlite -no-qt3support -nomake examples -nomake docs -nomake demos -mp -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
       BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && nmake 
       INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && nmake install
@@ -439,7 +465,24 @@ ENDIF()
 
 IF(BUILD_QT)
   list(APPEND VTK_DEPENDS Qt)
+  list(APPEND QJSON_DEPENDS Qt)
 ENDIF()
+
+ExternalProject_Add(QJSON
+  DEPENDS ${QJSON_DEPENDS}
+  URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qjson-0.8.1.tar.gz
+  URL_MD5 4eef13da988edf8f91c260a3e1baeea9
+  PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/QJSON/CMakeLists.txt  ${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON/src COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/QJSON/QJSONConfig.cmake.in ${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/QJSON/qjson_export.h ${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON/src
+
+  CMAKE_CACHE_ARGS
+  -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
+  -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
+  -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
+  -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+  -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
+  -DQT_QMAKE_EXECUTABLE:STRING=${QT_QMAKE_EXECUTABLE}
+  -DCMAKE_INSTALL_PREFIX:STRING=${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON-install
+)
 
 
 IF(UNIX)
@@ -497,6 +540,7 @@ ExternalProject_Add( vtkCharts
 set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build)
 
 set(BoostLog_DIR "${CMAKE_BINARY_DIR}/BoostLog-prefix/src/BoostLog-build")
+set(QJSON_DIR "${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON-build")
 
 set(VTK_CHARTS_LIB_DIR ${CMAKE_BINARY_DIR}/vtkCharts-prefix/src/vtkCharts-build)
 set(VTK_CHARTS_INCLUDE_DIR ${CMAKE_BINARY_DIR}/vtkCharts-prefix/src/)
@@ -505,6 +549,7 @@ set(VTK_CHARTS_INCLUDE_DIR ${CMAKE_BINARY_DIR}/vtkCharts-prefix/src/)
 SET(OpenStudioCore_DEPENDS vtkCharts)
 LIST(APPEND OpenStudioCore_DEPENDS BoostLog)
 LIST(APPEND OpenStudioCore_DEPENDS GoogleTest)
+LIST(APPEND OpenStudioCore_DEPENDS QJSON)
 
 IF(BUILD_QT)
   LIST(APPEND OpenStudioCore_DEPENDS Qt)
@@ -553,9 +598,9 @@ ExternalProject_Add( OpenStudioCore
     -DBUILD_PACKAGE:BOOL=${BUILD_PACKAGE}
     -DENABLE_TEST_RUNNER_TARGETS:BOOL=${ENABLE_TEST_RUNNER_TARGETS}
     -DBUILD_WITH_OPENSSL:BOOL=${BUILD_WITH_OPENSSL}
-    -DBUILD_WITH_DAKOTA:BOOL=${BUILD_WITH_DAKOTA}
     -DBUILD_RUBY_GEM:BOOL=${BUILD_RUBY_GEM}
     -DBUILD_RUBY_GEM_WITH_LIBS:BOOL=${BUILD_RUBY_GEM_WITH_LIBS}
+    -DREQUIRE_DAKOTA:BOOL=${REQUIRE_DAKOTA}
     -DMSVC_IS_EXPRESS:BOOL=${MSVC_IS_EXPRESS}
     -DUSE_PCH:BOOL=${USE_PCH}
     -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
@@ -583,6 +628,7 @@ ExternalProject_Add( OpenStudioCore
     -DDOXYGEN_EXECUTABLE:STRING=${DOXYGEN_EXECUTABLE}
     -DDOXYGEN_DOT_EXECUTABLE:STRING=${DOXYGEN_DOT_EXECUTABLE}
     -DBoostLog_DIR:STRING=${BoostLog_DIR}
+    -DQJSON_DIR:STRING=${QJSON_DIR}
     INSTALL_COMMAND ""
 )
 

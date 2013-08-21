@@ -1193,6 +1193,18 @@ describe("Model", function() {
     expect(runmanager.workPending()).toBeFalsy();
 
     outfiles = job.treeOutputFiles();
+
+    expect(outfiles.files().size() > 0);
+    console.log(outfiles.files());
+    files = outfiles.files();
+
+    for (var i = 0; i < files.size(); ++i)
+    {
+      console.log(openstudio.toString(files.get(i).fullPath));
+    }
+    
+    var sqlpath = outfiles.getLastByExtension("sql").fullPath;
+    log(openstudio.toString(sqlpath));
     
     var sqlpath = outfiles.getLastByExtension("sql").fullPath;
     log(openstudio.toString(sqlpath));

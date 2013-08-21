@@ -333,7 +333,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   m_northAxisEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_northAxisEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   vLayout->addWidget(m_northAxisEdit);
 
@@ -350,7 +350,7 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   //m_floorToFloorHeightEdit = new OSQuantityEdit(m_isIP);
   //isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), , SLOT(onUnitSystemChange(bool)));
-  //BOOST_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //vLayout->addWidget(m_floorToFloorHeightEdit);
 
   //vLayout->addStretch();

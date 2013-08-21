@@ -103,7 +103,7 @@ void ConstructionObjectVectorController::onDrop(const OSItemId& itemId)
       LayerType newLayerType = getLayerType(newIddObjectType);
 
       // Need a valid widget to hang the msgbox on
-      Q_ASSERT(this->parentWidget());
+      OS_ASSERT(this->parentWidget());
 
       if(existingLayerType == ConstructionObjectVectorController::AIRWALL){
         // Only 1 layer allowed for AirWall
@@ -161,7 +161,7 @@ ConstructionObjectVectorController::LayerType ConstructionObjectVectorController
   }
   else{
     // Should never get here
-    Q_ASSERT(false);
+    OS_ASSERT(false);
     return ConstructionObjectVectorController::UNKNOWN;
   }
 }

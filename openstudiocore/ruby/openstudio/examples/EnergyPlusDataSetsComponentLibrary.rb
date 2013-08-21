@@ -76,7 +76,7 @@ FileUtils.mkdir(projectDir.to_s) if not exists(projectDir)
 
 
 # find EnergyPlus DataSets
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(7,2)
+ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
 datasets_path = Path.new(ep_hash[:energyplus_datasets].to_s)
 
 

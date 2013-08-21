@@ -20,6 +20,7 @@
 #include <sdd/ForwardTranslator.hpp>
 
 #include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 #include <model/ModelObject.hpp>
 #include <model/ModelObject_Impl.hpp>
 #include <model/Material.hpp>
@@ -34,6 +35,10 @@
 #include <model/Building_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
+#include <model/Surface.hpp>
+#include <model/Surface_Impl.hpp>
+#include <model/SubSurface.hpp>
+#include <model/SubSurface_Impl.hpp>
 
 #include <utilities/plot/ProgressBar.hpp>
 #include <utilities/core/Assert.hpp>
@@ -65,7 +70,12 @@ namespace sdd {
 
     m_logSink.resetStringStream();
 
-    boost::optional<QDomDocument> doc = this->translateModel(model);
+    model::Model modelCopy = model.clone().cast<model::Model>();
+
+    // remove unused resource objects
+    modelCopy.purgeUnusedResourceObjects();
+
+    boost::optional<QDomDocument> doc = this->translateModel(modelCopy);
     if (!doc){
       return false;
     }
@@ -149,6 +159,8 @@ namespace sdd {
     projectClimateZoneElement.appendChild( doc.createTextNode( "unknown"));
 
     // set lat, lon, elev
+    // DLM: do not translate forward,  Issue 242: 	Forward Translator - Remove Proj:Lat/Lon/Elevation translation
+    /*
     boost::optional<model::Site> site = model.getOptionalUniqueModelObject<model::Site>();
     if (site){
       double latitude = site->latitude();
@@ -167,6 +179,7 @@ namespace sdd {
       projectElement.appendChild(elevationElement);
       elevationElement.appendChild( doc.createTextNode(QString::number(elevationIP)));
     }
+    */
 
     // todo: write out epw file path
     // todo: write out ddy file and set path
@@ -187,6 +200,7 @@ namespace sdd {
 
     // do materials before constructions 
     std::vector<model::Material> materials = model.getModelObjects<model::Material>();
+    std::sort(materials.begin(), materials.end(), WorkspaceObjectNameLess());
 
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Materials"));
@@ -210,6 +224,7 @@ namespace sdd {
     // do constructions before geometry
 
     std::vector<model::ConstructionBase> constructions = model.getModelObjects<model::ConstructionBase>();
+    std::sort(constructions.begin(), constructions.end(), WorkspaceObjectNameLess());
 
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Constructions"));
@@ -218,8 +233,33 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    // translate layered constructions
+    std::set<Handle> surfaceConstructions;
+    BOOST_FOREACH(const model::Surface& surface, model.getModelObjects<model::Surface>()){
+      boost::optional<model::ConstructionBase> construction = surface.construction();
+      if (construction){
+        surfaceConstructions.insert(construction->handle());
+      }
+    }
+
+    std::set<Handle> doorConstructions;
+    std::set<Handle> fenestrationConstructions;
+    BOOST_FOREACH(const model::SubSurface& subSurface, model.getModelObjects<model::SubSurface>()){
+      boost::optional<model::ConstructionBase> construction = subSurface.construction();
+      if (construction){
+        std::string subSurfaceType = subSurface.subSurfaceType();
+        if (istringEqual("Door", subSurfaceType) || istringEqual("OverheadDoor", subSurfaceType)){
+          doorConstructions.insert(construction->handle());
+        }else{
+          fenestrationConstructions.insert(construction->handle());
+        }
+      }
+    }
+
+    // translate surface constructions
     BOOST_FOREACH(const model::ConstructionBase& constructionBase, constructions){
+      if (surfaceConstructions.find(constructionBase.handle()) == surfaceConstructions.end()){
+        continue;
+      }
 
       boost::optional<QDomElement> constructionElement = translateConstructionBase(constructionBase, doc);
       if (constructionElement){
@@ -233,6 +273,9 @@ namespace sdd {
 
     // translate door constructions
     BOOST_FOREACH(const model::ConstructionBase& constructionBase, constructions){
+      if (doorConstructions.find(constructionBase.handle()) == doorConstructions.end()){
+        continue;
+      }
 
       boost::optional<QDomElement> constructionElement = translateDoorConstruction(constructionBase, doc);
       if (constructionElement){
@@ -246,7 +289,10 @@ namespace sdd {
 
     // translate fenestration constructions
     BOOST_FOREACH(const model::ConstructionBase& constructionBase, constructions){
-      
+      if (fenestrationConstructions.find(constructionBase.handle()) == fenestrationConstructions.end()){
+        continue;
+      }
+
       boost::optional<QDomElement> constructionElement = translateFenestrationConstruction(constructionBase, doc);
       if (constructionElement){
         projectElement.appendChild(*constructionElement);

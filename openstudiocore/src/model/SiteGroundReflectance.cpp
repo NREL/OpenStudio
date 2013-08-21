@@ -39,7 +39,7 @@ namespace detail {
                                                          bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == SiteGroundReflectance::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == SiteGroundReflectance::iddObjectType());
   }
 
   SiteGroundReflectance_Impl::SiteGroundReflectance_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -47,7 +47,7 @@ namespace detail {
                                                          bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == SiteGroundReflectance::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == SiteGroundReflectance::iddObjectType());
   }
 
   SiteGroundReflectance_Impl::SiteGroundReflectance_Impl(const SiteGroundReflectance_Impl& other,
@@ -76,7 +76,7 @@ namespace detail {
 
   double SiteGroundReflectance_Impl::januaryGroundReflectance() const {
     boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::JanuaryGroundReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -86,7 +86,7 @@ namespace detail {
 
   double SiteGroundReflectance_Impl::februaryGroundReflectance() const {
     boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::FebruaryGroundReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -96,7 +96,7 @@ namespace detail {
 
   double SiteGroundReflectance_Impl::marchGroundReflectance() const {
     boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::MarchGroundReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -106,7 +106,7 @@ namespace detail {
 
   double SiteGroundReflectance_Impl::aprilGroundReflectance() const {
     boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::AprilGroundReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -116,7 +116,7 @@ namespace detail {
 
   double SiteGroundReflectance_Impl::mayGroundReflectance() const {
     boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::MayGroundReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -126,7 +126,7 @@ namespace detail {
 
   double SiteGroundReflectance_Impl::juneGroundReflectance() const {
     boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::JuneGroundReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -136,7 +136,7 @@ namespace detail {
 
   double SiteGroundReflectance_Impl::julyGroundReflectance() const {
     boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::JulyGroundReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -146,7 +146,7 @@ namespace detail {
 
   double SiteGroundReflectance_Impl::augustGroundReflectance() const {
     boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::AugustGroundReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -156,7 +156,7 @@ namespace detail {
 
   double SiteGroundReflectance_Impl::septemberGroundReflectance() const {
     boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::SeptemberGroundReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -166,7 +166,7 @@ namespace detail {
 
   double SiteGroundReflectance_Impl::octoberGroundReflectance() const {
     boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::OctoberGroundReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -176,7 +176,7 @@ namespace detail {
 
   double SiteGroundReflectance_Impl::novemberGroundReflectance() const {
     boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::NovemberGroundReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -186,7 +186,7 @@ namespace detail {
 
   double SiteGroundReflectance_Impl::decemberGroundReflectance() const {
     boost::optional<double> value = getDouble(OS_Site_GroundReflectanceFields::DecemberGroundReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -202,7 +202,7 @@ namespace detail {
 
   void SiteGroundReflectance_Impl::resetJanuaryGroundReflectance() {
     bool result = setString(OS_Site_GroundReflectanceFields::JanuaryGroundReflectance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SiteGroundReflectance_Impl::setFebruaryGroundReflectance(double februaryGroundReflectance) {
@@ -213,7 +213,7 @@ namespace detail {
 
   void SiteGroundReflectance_Impl::resetFebruaryGroundReflectance() {
     bool result = setString(OS_Site_GroundReflectanceFields::FebruaryGroundReflectance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SiteGroundReflectance_Impl::setMarchGroundReflectance(double marchGroundReflectance) {
@@ -224,7 +224,7 @@ namespace detail {
 
   void SiteGroundReflectance_Impl::resetMarchGroundReflectance() {
     bool result = setString(OS_Site_GroundReflectanceFields::MarchGroundReflectance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SiteGroundReflectance_Impl::setAprilGroundReflectance(double aprilGroundReflectance) {
@@ -235,7 +235,7 @@ namespace detail {
 
   void SiteGroundReflectance_Impl::resetAprilGroundReflectance() {
     bool result = setString(OS_Site_GroundReflectanceFields::AprilGroundReflectance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SiteGroundReflectance_Impl::setMayGroundReflectance(double mayGroundReflectance) {
@@ -246,7 +246,7 @@ namespace detail {
 
   void SiteGroundReflectance_Impl::resetMayGroundReflectance() {
     bool result = setString(OS_Site_GroundReflectanceFields::MayGroundReflectance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SiteGroundReflectance_Impl::setJuneGroundReflectance(double juneGroundReflectance) {
@@ -257,7 +257,7 @@ namespace detail {
 
   void SiteGroundReflectance_Impl::resetJuneGroundReflectance() {
     bool result = setString(OS_Site_GroundReflectanceFields::JuneGroundReflectance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SiteGroundReflectance_Impl::setJulyGroundReflectance(double julyGroundReflectance) {
@@ -268,7 +268,7 @@ namespace detail {
 
   void SiteGroundReflectance_Impl::resetJulyGroundReflectance() {
     bool result = setString(OS_Site_GroundReflectanceFields::JulyGroundReflectance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SiteGroundReflectance_Impl::setAugustGroundReflectance(double augustGroundReflectance) {
@@ -279,7 +279,7 @@ namespace detail {
 
   void SiteGroundReflectance_Impl::resetAugustGroundReflectance() {
     bool result = setString(OS_Site_GroundReflectanceFields::AugustGroundReflectance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SiteGroundReflectance_Impl::setSeptemberGroundReflectance(double septemberGroundReflectance) {
@@ -290,7 +290,7 @@ namespace detail {
 
   void SiteGroundReflectance_Impl::resetSeptemberGroundReflectance() {
     bool result = setString(OS_Site_GroundReflectanceFields::SeptemberGroundReflectance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SiteGroundReflectance_Impl::setOctoberGroundReflectance(double octoberGroundReflectance) {
@@ -301,7 +301,7 @@ namespace detail {
 
   void SiteGroundReflectance_Impl::resetOctoberGroundReflectance() {
     bool result = setString(OS_Site_GroundReflectanceFields::OctoberGroundReflectance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SiteGroundReflectance_Impl::setNovemberGroundReflectance(double novemberGroundReflectance) {
@@ -312,7 +312,7 @@ namespace detail {
 
   void SiteGroundReflectance_Impl::resetNovemberGroundReflectance() {
     bool result = setString(OS_Site_GroundReflectanceFields::NovemberGroundReflectance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SiteGroundReflectance_Impl::setDecemberGroundReflectance(double decemberGroundReflectance) {
@@ -323,7 +323,7 @@ namespace detail {
 
   void SiteGroundReflectance_Impl::resetDecemberGroundReflectance() {
     bool result = setString(OS_Site_GroundReflectanceFields::DecemberGroundReflectance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail

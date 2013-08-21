@@ -151,12 +151,10 @@ namespace runmanager {
       //! \param[in] ruby results from getToolLocations create ToolInfo from
       static openstudio::runmanager::ToolInfo toRubyToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &ruby);
 
-
       //! Convert a pair returned from getToolLocation to a ToolInfo object
       //! appropriate for creating a DakotaJob
       //! \param[in] dakota result from getToolLocations create ToolInfo from
       static openstudio::runmanager::ToolInfo toDakotaToolInfo(const std::pair<ToolVersion, ToolLocationInfo>& dakota);
-
 
       //! Convert a pair returned from getToolLocation to a ToolInfo object
       //! \param[in] t_type Type of tool to create
@@ -166,7 +164,8 @@ namespace runmanager {
           const std::pair<ToolVersion, ToolLocationInfo> &t_tool);
 
       //! Convert some paths into standard understood ToolInfo objects. The created
-      //! ToolInfos have no version number or remote execution information associated
+      //! ToolInfos have version numbers determined by ToolFinder::parseToolVersion. 
+      //! They have no remote execution information associated with them.
       //! \param[in] t_energyplus Path to energy plus binaries
       //! \param[in] t_xmlpreproc Path to xmlpreproc binary
       //! \param[in] t_radiance Path to radiance binaries

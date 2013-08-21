@@ -21,6 +21,7 @@
 #include <utilities/core/System.hpp>
 #include "Job.hpp"
 #include "Job_Impl.hpp"
+#include "JSON.hpp"
 
 namespace openstudio {
 namespace runmanager {
@@ -464,7 +465,25 @@ namespace runmanager {
   }
 
 
+  Job Job::fromJSON(const std::string &t_json)
+  {
+    return detail::JSON::toJob(t_json, false);
+  }
 
+  std::string Job::toJSON() const
+  {
+    return detail::JSON::toJSON(*this);
+  }
+
+  void Job::updateJob(const Job &t_other)
+  {
+    m_impl->updateJob(t_other.m_impl);
+  }
+
+  bool Job::externallyManaged() const
+  {
+    return m_impl->externallyManaged();
+  }
 }
 }
 

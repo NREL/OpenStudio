@@ -151,13 +151,21 @@ boost::optional<Unit> UnitFactorySingleton::createUnit(const std::string& unitSt
     LOG(Warn,"UnitFactorySingleton::createUnit called, but the maps appear to be empty.");
   }
 
+  std::string resultCacheKey = unitString + " in unit system " + system.valueName();
+  ResultCacheMap::const_iterator findIt = m_resultCacheMap.find(resultCacheKey);
+  if (findIt != m_resultCacheMap.end()){
+    return findIt->second;
+  }
+
   if (!unitString.empty() && !isUnit(unitString)) {
     LOG(Error,unitString << " is not properly formatted.");
+    m_resultCacheMap[resultCacheKey] = boost::none;
     return boost::none;
   }
 
   OptionalUnit result = createUnitSimple(unitString,system);
   if (result) {
+    m_resultCacheMap[resultCacheKey] = result;
     return *result;
   }
 
@@ -171,6 +179,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnit(const std::string& unitSt
     if (scale().value == 0.0) {
       LOG(Error,"Scaled unit string " << wUnitString << " uses invalid scale abbreviation "
           << scaleAndUnit.first << ".");
+      m_resultCacheMap[resultCacheKey] = boost::none;
       return boost::none;
     }
     wUnitString = scaleAndUnit.second;
@@ -249,7 +258,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnit(const std::string& unitSt
     }
   }
 
-  BOOST_ASSERT(result);
+  OS_ASSERT(result);
 
   // impose overall scale
   if (scale().exponent != 0) {
@@ -257,6 +266,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnit(const std::string& unitSt
     result->setScale(resultScale.first().exponent);
   }
 
+  m_resultCacheMap[resultCacheKey] = result;
   return result;
 }
 
@@ -286,7 +296,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
       OptionalUnit temp;
       // try base map
       callbackMap = m_callbackMaps.find(UnitSystem(UnitSystem::Mixed));
-      BOOST_ASSERT(callbackMap != m_callbackMaps.end());
+      OS_ASSERT(callbackMap != m_callbackMaps.end());
       callbackPair = callbackMap->second.find(standardString);
       if ((callbackPair != callbackMap->second.end()) && (callbackPair->second != NULL)) {
         temp = callbackPair->second();
@@ -320,7 +330,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
         }
       }
 
-      BOOST_ASSERT(temp);
+      OS_ASSERT(temp);
 
       // decide whether to keep temp
       if (!candidate || (temp->system() == system)) {
@@ -763,7 +773,7 @@ Unit createDimensionlessUnit(UnitSystem system) {
   case UnitSystem::Fahrenheit:
     return FahrenheitUnit();
   default:
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
   return Unit();
 }

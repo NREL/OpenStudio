@@ -19,6 +19,8 @@
 
 #include <shared_gui_components/OSDialog.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <QBoxLayout>
 #include <QPainter>
 #include <QPainterPath>
@@ -32,12 +34,12 @@ namespace openstudio {
 OSDialog::OSDialog(bool isIP,
                    QWidget * parent)
   : QDialog(parent),
-  m_upperLayout(NULL),
+  m_isIP(isIP),
   m_cancelButton(NULL),
   m_okButton(NULL),
+  m_upperLayout(NULL),
   m_sizeHint(QSize(800,500)),
-  m_layoutContentsMargins(QMargins(20,70,20,20)),
-  m_isIP(isIP)
+  m_layoutContentsMargins(QMargins(20,70,20,20))
 {
   setStyleSheet("openstudio--OSDialog { background: #E6E6E6; }");
   
@@ -63,20 +65,20 @@ void OSDialog::createLayout()
   m_cancelButton = new QPushButton("Cancel",this);
   isConnected = connect(m_cancelButton, SIGNAL(clicked(bool)),
                         this, SLOT(on_cancelButton(bool))) ;
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(m_cancelButton, SIGNAL(clicked(bool)),
                         this, SIGNAL(cancelButtonClicked(bool))) ;
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   lowerLayout->addWidget(m_cancelButton);
 
   m_okButton = new QPushButton("OK",this);
   m_okButton->setDefault(true);
   isConnected = connect(m_okButton, SIGNAL(clicked(bool)),
                         this, SLOT(on_okButton(bool))) ;
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   isConnected = connect(m_okButton, SIGNAL(clicked(bool)),
                         this, SIGNAL(okButtonClicked(bool))) ;
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   lowerLayout->addWidget(m_okButton);
 
   QVBoxLayout * mainLayout = new QVBoxLayout();

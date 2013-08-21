@@ -100,6 +100,11 @@ rescue Exception=>e
       #path_string = `where ruby`
       #$OpenStudio_RubyExe = OpenStudio::Path.new(path_string.strip)
       #$OpenStudio_RubyExeDir = $OpenStudio_RubyExe.parent_path()
+      
+      # only do this for dev for running unit tests
+      $OpenStudio_RubyExe = OpenStudio::Path.new($OpenStudio_RubyExe)
+      $OpenStudio_RubyExeDir = $OpenStudio_RubyExe.parent_path()
+  
     rescue Exception=>e
     end
   else
@@ -107,6 +112,11 @@ rescue Exception=>e
       #path_string = `which ruby`
       #$OpenStudio_RubyExe = OpenStudio::Path.new(path_string.strip)
       #$OpenStudio_RubyExeDir = $OpenStudio_RubyExe.parent_path()
+      
+      # only do this for dev for running unit tests
+      $OpenStudio_RubyExe = OpenStudio::Path.new($OpenStudio_RubyExe)
+      $OpenStudio_RubyExeDir = $OpenStudio_RubyExe.parent_path()
+      
     rescue Exception=>e
     end
   end
@@ -147,6 +157,42 @@ end
 
 # support for name deprecated as of 0.10.5
 class OutputAttributeContinuousVariableVector < OutputAttributeVariableVector
+end
+
+# support for name deprecated as of 1.0.3
+class DiscretePerturbation < Measure
+end
+
+# support for name deprecated as of 1.0.3
+class OptionalDiscretePerturbation < OptionalMeasure
+end
+
+# support for name deprecated as of 1.0.3
+class DiscretePerturbationVector < MeasureVector
+end
+
+# support for name deprecated as of 1.0.3
+class NullPerturbation < NullMeasure
+end
+
+# support for name deprecated as of 1.0.3
+class OptionalNullPerturbation < OptionalNullMeasure
+end
+
+# support for name deprecated as of 1.0.3
+class NullPerturbationVector < NullMeasureVector
+end
+
+# support for name deprecated as of 1.0.3
+class RubyPerturbation < RubyMeasure
+end
+
+# support for name deprecated as of 1.0.3
+class OptionalRubyPerturbation < OptionalRubyMeasure
+end
+
+# support for name deprecated as of 1.0.3
+class RubyPerturbationVector < RubyMeasureVector
 end
 
 end # module Analysis

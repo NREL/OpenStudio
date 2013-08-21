@@ -61,32 +61,20 @@ class MODEL_API PeopleDefinition : public SpaceLoadDefinition {
   std::string numberofPeopleCalculationMethod() const;
 
   boost::optional<double> numberofPeople() const;
-  
-  OSOptionalQuantity getNumberofPeople(bool returnIP=false) const;
 
   boost::optional<double> peopleperSpaceFloorArea() const;
-  
-  OSOptionalQuantity getPeopleperSpaceFloorArea(bool returnIP=false) const;
 
   boost::optional<double> spaceFloorAreaperPerson() const;
-  
-  OSOptionalQuantity getSpaceFloorAreaperPerson(bool returnIP=false) const;
 
   double fractionRadiant() const;
-  
-  Quantity getFractionRadiant(bool returnIP=false) const;
 
   boost::optional<double> sensibleHeatFraction() const;
-  
-  OSOptionalQuantity getSensibleHeatFraction(bool returnIP=false) const;
 
   bool isSensibleHeatFractionDefaulted() const;
 
   bool isSensibleHeatFractionAutocalculated() const;
 
   double carbonDioxideGenerationRate() const;
-  
-  Quantity getCarbonDioxideGenerationRate(bool returnIP=false) const;
 
   bool isCarbonDioxideGenerationRateDefaulted() const;
 
@@ -111,36 +99,22 @@ class MODEL_API PeopleDefinition : public SpaceLoadDefinition {
 
   /** Also sets numberofPeopleCalculationMethod accordingly. */
   bool setNumberofPeople(double numberofPeople);
-  
-  bool setNumberofPeople(const Quantity& numberofPeople);  
 
   /** Also sets numberofPeopleCalculationMethod accordingly. */
   bool setPeopleperSpaceFloorArea(double peopleperSpaceFloorArea);
-  
-  bool setPeopleperSpaceFloorArea(const Quantity& peopleperSpaceFloorArea);  
 
   /** Also sets numberofPeopleCalculationMethod accordingly. */
   bool setSpaceFloorAreaperPerson(double spaceFloorAreaperPerson);
-  
-  bool setSpaceFloorAreaperPerson(const Quantity& spaceFloorAreaperPerson);  
 
   bool setFractionRadiant(double fractionRadiant);
-  
-  bool setFractionRadiant(const Quantity& fractionRadiant);
-
-  bool setSensibleHeatFraction(boost::optional<double> sensibleHeatFraction);
 
   bool setSensibleHeatFraction(double sensibleHeatFraction);
-  
-  bool setSensibleHeatFraction(const Quantity& sensibleHeatFraction);
 
   void resetSensibleHeatFraction();
 
   void autocalculateSensibleHeatFraction();
 
   bool setCarbonDioxideGenerationRate(double carbonDioxideGenerationRate);
-  
-  bool setCarbonDioxideGenerationRate(const Quantity& carbonDioxideGenerationRate);
 
   void resetCarbonDioxideGenerationRate();
 

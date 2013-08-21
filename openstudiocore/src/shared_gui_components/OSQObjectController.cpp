@@ -19,6 +19,8 @@
 
 #include "OSQObjectController.hpp"
 
+#include <utilities/core/Assert.hpp>
+
 #include <algorithm>
 
 namespace openstudio {
@@ -49,7 +51,7 @@ void OSQObjectController::addQObject(QObject * object)
   bool isConnected = false;
 
   isConnected = connect(object,SIGNAL(destroyed(QObject *)),this,SLOT(onObjectDestroyed(QObject *)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 void OSQObjectController::onObjectDestroyed(QObject * object)

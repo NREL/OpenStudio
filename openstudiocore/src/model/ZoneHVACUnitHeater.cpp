@@ -47,7 +47,7 @@ namespace detail {
                                                    bool keepHandle)
     : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
     {
-    BOOST_ASSERT(idfObject.iddObject().type() == ZoneHVACUnitHeater::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ZoneHVACUnitHeater::iddObjectType());
     }
 
   ZoneHVACUnitHeater_Impl::ZoneHVACUnitHeater_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -55,7 +55,7 @@ namespace detail {
                                                    bool keepHandle)
     : ZoneHVACComponent_Impl(other,model,keepHandle)
     {
-    BOOST_ASSERT(other.iddObject().type() == ZoneHVACUnitHeater::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ZoneHVACUnitHeater::iddObjectType());
     }
 
   ZoneHVACUnitHeater_Impl::ZoneHVACUnitHeater_Impl(const ZoneHVACUnitHeater_Impl& other,
@@ -97,14 +97,14 @@ namespace detail {
     static std::vector<std::string> result;
 
     if (result.empty())
-  {
-    result.push_back("Unit Heater Heating Rate");
-    result.push_back("Unit Heater Heating Energy");
-    result.push_back("Unit Heater Fan Electric Power");
-    result.push_back("Unit Heater Fan Electric Consumption");
-    result.push_back("Unit Heater Fan Availability Status");
-  }
-  return result;
+    {
+      result.push_back("Zone Unit Heater Heating Rate");
+      result.push_back("Zone Unit Heater Heating Energy");
+      result.push_back("Zone Unit Heater Fan Electric Power");
+      result.push_back("Zone Unit Heater Fan Electric Energy");
+      result.push_back("Zone Unit Heater Fan Availability Status");
+    }
+    return result;
   }
 
   IddObjectType ZoneHVACUnitHeater_Impl::iddObjectType() const {
@@ -189,7 +189,7 @@ namespace detail {
   std::string ZoneHVACUnitHeater_Impl::fanControlType() const 
   {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_UnitHeaterFields::FanControlType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -222,7 +222,7 @@ namespace detail {
   double ZoneHVACUnitHeater_Impl::minimumHotWaterFlowRate() const 
   {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_UnitHeaterFields::MinimumHotWaterFlowRate,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -234,7 +234,7 @@ namespace detail {
   double ZoneHVACUnitHeater_Impl::heatingConvergenceTolerance() const 
   {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_UnitHeaterFields::HeatingConvergenceTolerance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -272,7 +272,7 @@ namespace detail {
   void ZoneHVACUnitHeater_Impl::autosizeMaximumSupplyAirFlowRate() 
   {
     bool result = setString(OS_ZoneHVAC_UnitHeaterFields::MaximumSupplyAirFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACUnitHeater_Impl::setFanControlType(std::string fanControlType) 
@@ -306,13 +306,13 @@ namespace detail {
   void ZoneHVACUnitHeater_Impl::resetMaximumHotWaterFlowRate() 
   {
     bool result = setString(OS_ZoneHVAC_UnitHeaterFields::MaximumHotWaterFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ZoneHVACUnitHeater_Impl::autosizeMaximumHotWaterFlowRate() 
   {
     bool result = setString(OS_ZoneHVAC_UnitHeaterFields::MaximumHotWaterFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACUnitHeater_Impl::setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate) 
@@ -324,7 +324,7 @@ namespace detail {
   void ZoneHVACUnitHeater_Impl::resetMinimumHotWaterFlowRate() 
   {
     bool result = setString(OS_ZoneHVAC_UnitHeaterFields::MinimumHotWaterFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ZoneHVACUnitHeater_Impl::setHeatingConvergenceTolerance(double heatingConvergenceTolerance) 
@@ -336,7 +336,7 @@ namespace detail {
   void ZoneHVACUnitHeater_Impl::resetHeatingConvergenceTolerance() 
   {
     bool result = setString(OS_ZoneHVAC_UnitHeaterFields::HeatingConvergenceTolerance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<Schedule> ZoneHVACUnitHeater_Impl::optionalAvailabilitySchedule() const 
@@ -427,7 +427,7 @@ ZoneHVACUnitHeater::ZoneHVACUnitHeater(const Model& model,
                      HVACComponent & heatingCoil)
   : ZoneHVACComponent(ZoneHVACUnitHeater::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ZoneHVACUnitHeater_Impl>());
+  OS_ASSERT(getImpl<detail::ZoneHVACUnitHeater_Impl>());
 
   bool ok = true;
       
@@ -441,10 +441,10 @@ ZoneHVACUnitHeater::ZoneHVACUnitHeater(const Model& model,
   }
 
   ok = setSupplyAirFan(supplyAirFan);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
   ok = setHeatingCoil(heatingCoil);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 
   autosizeMaximumSupplyAirFlowRate();
 

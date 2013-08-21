@@ -79,25 +79,23 @@ TEST_F(AnalysisDriverFixture, FSUDace_Halton_Continuous) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    ProjectDatabase database = getCleanDatabase("FSUDaceHalton");
-    AnalysisDriver analysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
+  ProjectDatabase database = getCleanDatabase("FSUDaceHalton");
+  AnalysisDriver analysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
 
-    // output csv summary of data points
-    Table summary = currentAnalysis.analysis().summaryTable();
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  // output csv summary of data points
+  Table summary = currentAnalysis.analysis().summaryTable();
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-      EXPECT_FALSE(dataPoint.responseValues().empty());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
+    // EXPECT_FALSE(dataPoint.responseValues().empty());
   }
 }
 
@@ -120,28 +118,26 @@ TEST_F(AnalysisDriverFixture, FSUDace_Halton_MixedOsmIdf) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    analysis = Analysis("FSUDace Halton - MixedOsmIdf",
-                        problem,
-                        FSUDaceAlgorithm(algOptions),
-                        seedModel);
-    ProjectDatabase database = getCleanDatabase("FSUDaceHalton_MixedOsmIdf");
-    AnalysisDriver analysisDriver = AnalysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
-    EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
-    Table summary = currentAnalysis.analysis().summaryTable();
-    // EXPECT_EQ(10u,summary.nRows()); // 9 points
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  analysis = Analysis("FSUDace Halton - MixedOsmIdf",
+                      problem,
+                      FSUDaceAlgorithm(algOptions),
+                      seedModel);
+  ProjectDatabase database = getCleanDatabase("FSUDaceHalton_MixedOsmIdf");
+  AnalysisDriver analysisDriver = AnalysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
+  EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
+  Table summary = currentAnalysis.analysis().summaryTable();
+  // EXPECT_EQ(10u,summary.nRows()); // 9 points
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
   }
 
 }
@@ -165,25 +161,23 @@ TEST_F(AnalysisDriverFixture, FSUDace_Hammersley_Continuous) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    ProjectDatabase database = getCleanDatabase("FSUDaceHammersley");
-    AnalysisDriver analysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
+  ProjectDatabase database = getCleanDatabase("FSUDaceHammersley");
+  AnalysisDriver analysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
 
-    // output csv summary of data points
-    Table summary = currentAnalysis.analysis().summaryTable();
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  // output csv summary of data points
+  Table summary = currentAnalysis.analysis().summaryTable();
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-      EXPECT_FALSE(dataPoint.responseValues().empty());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
+    // EXPECT_FALSE(dataPoint.responseValues().empty());
   }
 }
 
@@ -206,28 +200,26 @@ TEST_F(AnalysisDriverFixture, FSUDace_Hammersley_MixedOsmIdf) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    analysis = Analysis("FSUDace Hammersley - MixedOsmIdf",
-                        problem,
-                        FSUDaceAlgorithm(algOptions),
-                        seedModel);
-    ProjectDatabase database = getCleanDatabase("FSUDaceHammersley_MixedOsmIdf");
-    AnalysisDriver analysisDriver = AnalysisDriver(database);
-    AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
-    CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
-    EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
-    Table summary = currentAnalysis.analysis().summaryTable();
-    // EXPECT_EQ(10u,summary.nRows()); // 9 points
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  analysis = Analysis("FSUDace Hammersley - MixedOsmIdf",
+                      problem,
+                      FSUDaceAlgorithm(algOptions),
+                      seedModel);
+  ProjectDatabase database = getCleanDatabase("FSUDaceHammersley_MixedOsmIdf");
+  AnalysisDriver analysisDriver = AnalysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
+  EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
+  Table summary = currentAnalysis.analysis().summaryTable();
+  // EXPECT_EQ(10u,summary.nRows()); // 9 points
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-    }
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
   }
 
 }
@@ -252,33 +244,23 @@ TEST_F(AnalysisDriverFixture, FSUDace_CVT_Continuous) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    ProjectDatabase database = getCleanDatabase("FSUDaceCVT_Continuous");
-    AnalysisDriver analysisDriver(database);
-    EXPECT_TRUE(false); // Remove and uncomment below when Dakota CVT bug is fixed.
-    /*
-    CurrentAnalysis currentAnalysis = analysisDriver.run(
-        analysis,
-        AnalysisRunOptions(analysisDriver.database().path().parent_path(),
-                           dakotaExePath(),
-                           4,
-                           QueuePausingBehavior::NoPause,
-                           toPath(rubyOpenStudioDir())));
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
+  ProjectDatabase database = getCleanDatabase("FSUDaceCVT_Continuous");
+  AnalysisDriver analysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
 
-    // output csv summary of data points
-    Table summary = currentAnalysis.analysis().summaryTable();
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  // output csv summary of data points
+  Table summary = currentAnalysis.analysis().summaryTable();
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-      EXPECT_FALSE(dataPoint.responseValues().empty());
-    }
-    */
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
+    // EXPECT_FALSE(dataPoint.responseValues().empty());
   }
 }
 
@@ -302,36 +284,26 @@ TEST_F(AnalysisDriverFixture, FSUDace_CVT_MixedOsmIdf) {
                     seedModel);
 
   // RUN ANALYSIS
-  if (!dakotaExePath().empty()) {
-    analysis = Analysis("FSUDace CVT - MixedOsmIdf",
-                        problem,
-                        FSUDaceAlgorithm(algOptions),
-                        seedModel);
-    ProjectDatabase database = getCleanDatabase("FSUDaceCVT_MixedOsmIdf");
-    AnalysisDriver analysisDriver = AnalysisDriver(database);
-    EXPECT_TRUE(false); // Remove and uncomment below when Dakota CVT bug is fixed.
-    /*
-    CurrentAnalysis currentAnalysis = analysisDriver.run(
-        analysis,
-        AnalysisRunOptions(analysisDriver.database().path().parent_path(),
-                           dakotaExePath(),
-                           4,
-                           QueuePausingBehavior::NoPause,
-                           toPath(rubyOpenStudioDir())));
-    EXPECT_TRUE(analysisDriver.waitForFinished());
-    boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
-    ASSERT_TRUE(jobErrors);
-    EXPECT_TRUE(jobErrors->errors().empty());
-    EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
-    Table summary = currentAnalysis.analysis().summaryTable();
-    // EXPECT_EQ(10u,summary.nRows()); // 9 points
-    summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
+  analysis = Analysis("FSUDace CVT - MixedOsmIdf",
+                      problem,
+                      FSUDaceAlgorithm(algOptions),
+                      seedModel);
+  ProjectDatabase database = getCleanDatabase("FSUDaceCVT_MixedOsmIdf");
+  AnalysisDriver analysisDriver = AnalysisDriver(database);
+  AnalysisRunOptions runOptions = standardRunOptions(analysisDriver.database().path().parent_path());
+  CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
+  EXPECT_TRUE(analysisDriver.waitForFinished());
+  boost::optional<runmanager::JobErrors> jobErrors = currentAnalysis.dakotaJobErrors();
+  ASSERT_TRUE(jobErrors);
+  EXPECT_TRUE(jobErrors->errors().empty());
+  EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
+  Table summary = currentAnalysis.analysis().summaryTable();
+  // EXPECT_EQ(10u,summary.nRows()); // 9 points
+  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
-      EXPECT_TRUE(dataPoint.isComplete());
-      EXPECT_FALSE(dataPoint.failed());
-    }
-    */
+  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    EXPECT_TRUE(dataPoint.isComplete());
+    EXPECT_FALSE(dataPoint.failed());
   }
 
 }

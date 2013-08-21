@@ -37,7 +37,7 @@ namespace detail {
                                bool keepHandle)
     : OpaqueMaterial_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == StandardOpaqueMaterial::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == StandardOpaqueMaterial::iddObjectType());
   }
 
   StandardOpaqueMaterial_Impl::StandardOpaqueMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                                bool keepHandle)
     : OpaqueMaterial_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == StandardOpaqueMaterial::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == StandardOpaqueMaterial::iddObjectType());
   }
 
   StandardOpaqueMaterial_Impl::StandardOpaqueMaterial_Impl(const StandardOpaqueMaterial_Impl& other,
@@ -72,33 +72,33 @@ namespace detail {
 
   std::string StandardOpaqueMaterial_Impl::roughness() const {
     boost::optional<std::string> value = getString(OS_MaterialFields::Roughness,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double StandardOpaqueMaterial_Impl::thickness() const {
     boost::optional<double> value = getDouble(OS_MaterialFields::Thickness,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity StandardOpaqueMaterial_Impl::getThickness(bool returnIP) const {
     OptionalDouble value = thickness();
     OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::Thickness, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double StandardOpaqueMaterial_Impl::conductivity() const {
     boost::optional<double> value = getDouble(OS_MaterialFields::Conductivity,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity StandardOpaqueMaterial_Impl::getConductivity(bool returnIP) const {
     OptionalDouble value = conductivity();
     OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::Conductivity, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -125,33 +125,33 @@ namespace detail {
 
   double StandardOpaqueMaterial_Impl::density() const {
     boost::optional<double> value = getDouble(OS_MaterialFields::Density,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity StandardOpaqueMaterial_Impl::getDensity(bool returnIP) const {
     OptionalDouble value = density();
     OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::Density, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double StandardOpaqueMaterial_Impl::specificHeat() const {
     boost::optional<double> value = getDouble(OS_MaterialFields::SpecificHeat,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity StandardOpaqueMaterial_Impl::getSpecificHeat(bool returnIP) const {
     OptionalDouble value = specificHeat();
     OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::SpecificHeat, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double StandardOpaqueMaterial_Impl::thermalAbsorptance() const {
     boost::optional<double> value = getDouble(OS_MaterialFields::ThermalAbsorptance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -167,7 +167,7 @@ namespace detail {
   Quantity StandardOpaqueMaterial_Impl::getThermalAbsorptance(bool returnIP) const {
     OptionalDouble value = thermalAbsorptance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::ThermalAbsorptance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -177,14 +177,14 @@ namespace detail {
 
   double StandardOpaqueMaterial_Impl::solarAbsorptance() const {
     boost::optional<double> value = getDouble(OS_MaterialFields::SolarAbsorptance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity StandardOpaqueMaterial_Impl::getSolarAbsorptance(bool returnIP) const {
     OptionalDouble value = solarAbsorptance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::SolarAbsorptance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -204,7 +204,7 @@ namespace detail {
 
   double StandardOpaqueMaterial_Impl::visibleAbsorptance() const {
     boost::optional<double> value = getDouble(OS_MaterialFields::VisibleAbsorptance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
   boost::optional<double> StandardOpaqueMaterial_Impl::visibleReflectance() const {
@@ -227,7 +227,7 @@ namespace detail {
   Quantity StandardOpaqueMaterial_Impl::getVisibleAbsorptance(bool returnIP) const {
     OptionalDouble value = visibleAbsorptance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::VisibleAbsorptance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -364,7 +364,7 @@ namespace detail {
 
   void StandardOpaqueMaterial_Impl::resetThermalAbsorptance() {
     bool result = setString(OS_MaterialFields::ThermalAbsorptance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool StandardOpaqueMaterial_Impl::setSolarAbsorptance(double solarAbsorptance) {
@@ -382,7 +382,7 @@ namespace detail {
 
   void StandardOpaqueMaterial_Impl::resetSolarAbsorptance() {
     bool result = setString(OS_MaterialFields::SolarAbsorptance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool StandardOpaqueMaterial_Impl::setVisibleAbsorptance(double visibleAbsorptance) {
@@ -400,7 +400,7 @@ namespace detail {
 
   void StandardOpaqueMaterial_Impl::resetVisibleAbsorptance() {
     bool result = setString(OS_MaterialFields::VisibleAbsorptance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   std::vector<std::string> StandardOpaqueMaterial_Impl::roughnessValues() const {
@@ -473,22 +473,22 @@ StandardOpaqueMaterial::StandardOpaqueMaterial(const Model& model,
                                double specificHeat)
                                : OpaqueMaterial(StandardOpaqueMaterial::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::StandardOpaqueMaterial_Impl>());
+  OS_ASSERT(getImpl<detail::StandardOpaqueMaterial_Impl>());
 
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setRoughness(roughness);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setThickness(thickness);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setConductivity(conductivity);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setDensity(density);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setSpecificHeat(specificHeat);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType StandardOpaqueMaterial::iddObjectType() {

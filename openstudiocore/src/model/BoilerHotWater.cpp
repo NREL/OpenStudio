@@ -39,7 +39,7 @@ namespace detail {
   BoilerHotWater_Impl::BoilerHotWater_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : StraightComponent_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == BoilerHotWater::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == BoilerHotWater::iddObjectType());
   }
 
   BoilerHotWater_Impl::BoilerHotWater_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -47,7 +47,7 @@ namespace detail {
                                            bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == BoilerHotWater::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == BoilerHotWater::iddObjectType());
   }
 
   BoilerHotWater_Impl::BoilerHotWater_Impl(const BoilerHotWater_Impl& other,
@@ -88,7 +88,7 @@ namespace detail {
 
   std::string BoilerHotWater_Impl::fuelType() const {
     boost::optional<std::string> value = getString(OS_Boiler_HotWaterFields::FuelType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -107,7 +107,7 @@ namespace detail {
 
   double BoilerHotWater_Impl::nominalThermalEfficiency() const {
     boost::optional<double> value = getDouble(OS_Boiler_HotWaterFields::NominalThermalEfficiency,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -138,7 +138,7 @@ namespace detail {
 
   double BoilerHotWater_Impl::minimumPartLoadRatio() const {
     boost::optional<double> value = getDouble(OS_Boiler_HotWaterFields::MinimumPartLoadRatio,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -148,7 +148,7 @@ namespace detail {
 
   double BoilerHotWater_Impl::maximumPartLoadRatio() const {
     boost::optional<double> value = getDouble(OS_Boiler_HotWaterFields::MaximumPartLoadRatio,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -158,7 +158,7 @@ namespace detail {
 
   double BoilerHotWater_Impl::optimumPartLoadRatio() const {
     boost::optional<double> value = getDouble(OS_Boiler_HotWaterFields::OptimumPartLoadRatio,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -168,7 +168,7 @@ namespace detail {
 
   double BoilerHotWater_Impl::waterOutletUpperTemperatureLimit() const {
     boost::optional<double> value = getDouble(OS_Boiler_HotWaterFields::WaterOutletUpperTemperatureLimit,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -178,7 +178,7 @@ namespace detail {
 
   std::string BoilerHotWater_Impl::boilerFlowMode() const {
     boost::optional<std::string> value = getString(OS_Boiler_HotWaterFields::BoilerFlowMode,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -192,7 +192,7 @@ namespace detail {
 
   double BoilerHotWater_Impl::sizingFactor() const {
     boost::optional<double> value = getDouble(OS_Boiler_HotWaterFields::SizingFactor,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -218,12 +218,12 @@ namespace detail {
 
   void BoilerHotWater_Impl::resetNominalCapacity() {
     bool result = setString(OS_Boiler_HotWaterFields::NominalCapacity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void BoilerHotWater_Impl::autosizeNominalCapacity() {
     bool result = setString(OS_Boiler_HotWaterFields::NominalCapacity, "Autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool BoilerHotWater_Impl::setNominalThermalEfficiency(double nominalThermalEfficiency) {
@@ -244,7 +244,7 @@ namespace detail {
 
   void BoilerHotWater_Impl::resetEfficiencyCurveTemperatureEvaluationVariable() {
     bool result = setString(OS_Boiler_HotWaterFields::EfficiencyCurveTemperatureEvaluationVariable, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool BoilerHotWater_Impl::setNormalizedBoilerEfficiencyCurve(
@@ -261,7 +261,7 @@ namespace detail {
 
   void BoilerHotWater_Impl::resetNormalizedBoilerEfficiencyCurve() {
     bool ok = setNormalizedBoilerEfficiencyCurve(boost::none);
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
   }
 
   void BoilerHotWater_Impl::setDesignWaterOutletTemperature(boost::optional<double> designWaterOutletTemperature) {
@@ -271,12 +271,12 @@ namespace detail {
     } else {
       result = setString(OS_Boiler_HotWaterFields::DesignWaterOutletTemperature, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void BoilerHotWater_Impl::resetDesignWaterOutletTemperature() {
     bool result = setString(OS_Boiler_HotWaterFields::DesignWaterOutletTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool BoilerHotWater_Impl::setDesignWaterFlowRate(boost::optional<double> designWaterFlowRate) {
@@ -291,12 +291,12 @@ namespace detail {
 
   void BoilerHotWater_Impl::resetDesignWaterFlowRate() {
     bool result = setString(OS_Boiler_HotWaterFields::DesignWaterFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void BoilerHotWater_Impl::autosizeDesignWaterFlowRate() {
     bool result = setString(OS_Boiler_HotWaterFields::DesignWaterFlowRate, "Autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool BoilerHotWater_Impl::setMinimumPartLoadRatio(double minimumPartLoadRatio) {
@@ -307,7 +307,7 @@ namespace detail {
 
   void BoilerHotWater_Impl::resetMinimumPartLoadRatio() {
     bool result = setString(OS_Boiler_HotWaterFields::MinimumPartLoadRatio, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool BoilerHotWater_Impl::setMaximumPartLoadRatio(double maximumPartLoadRatio) {
@@ -318,7 +318,7 @@ namespace detail {
 
   void BoilerHotWater_Impl::resetMaximumPartLoadRatio() {
     bool result = setString(OS_Boiler_HotWaterFields::MaximumPartLoadRatio, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool BoilerHotWater_Impl::setOptimumPartLoadRatio(double optimumPartLoadRatio) {
@@ -329,29 +329,37 @@ namespace detail {
 
   void BoilerHotWater_Impl::resetOptimumPartLoadRatio() {
     bool result = setString(OS_Boiler_HotWaterFields::OptimumPartLoadRatio, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void BoilerHotWater_Impl::setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit) {
     bool result = false;
     result = setDouble(OS_Boiler_HotWaterFields::WaterOutletUpperTemperatureLimit, waterOutletUpperTemperatureLimit);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void BoilerHotWater_Impl::resetWaterOutletUpperTemperatureLimit() {
     bool result = setString(OS_Boiler_HotWaterFields::WaterOutletUpperTemperatureLimit, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool BoilerHotWater_Impl::setBoilerFlowMode(std::string boilerFlowMode) {
     bool result = false;
-    result = setString(OS_Boiler_HotWaterFields::BoilerFlowMode, boilerFlowMode);
+    if(istringEqual(boilerFlowMode,"VariableFlow"))
+    {
+      // Support legacy key
+      result = setString(OS_Boiler_HotWaterFields::BoilerFlowMode,"LeavingSetpointModulated");
+    }
+    else
+    {
+      result = setString(OS_Boiler_HotWaterFields::BoilerFlowMode, boilerFlowMode);
+    }
     return result;
   }
 
   void BoilerHotWater_Impl::resetBoilerFlowMode() {
     bool result = setString(OS_Boiler_HotWaterFields::BoilerFlowMode, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool BoilerHotWater_Impl::setParasiticElectricLoad(boost::optional<double> parasiticElectricLoad) {
@@ -366,7 +374,7 @@ namespace detail {
 
   void BoilerHotWater_Impl::resetParasiticElectricLoad() {
     bool result = setString(OS_Boiler_HotWaterFields::ParasiticElectricLoad, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool BoilerHotWater_Impl::setSizingFactor(double sizingFactor) {
@@ -377,7 +385,7 @@ namespace detail {
 
   void BoilerHotWater_Impl::resetSizingFactor() {
     bool result = setString(OS_Boiler_HotWaterFields::SizingFactor, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool BoilerHotWater_Impl::addToNode(Node & node)
@@ -453,7 +461,7 @@ namespace detail {
 BoilerHotWater::BoilerHotWater(const Model& model)
   : StraightComponent(BoilerHotWater::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::BoilerHotWater_Impl>());
+  OS_ASSERT(getImpl<detail::BoilerHotWater_Impl>());
 
   setWaterOutletUpperTemperatureLimit(99.0);
 

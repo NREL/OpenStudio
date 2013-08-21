@@ -23,6 +23,8 @@
 
 #include <model/Model.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 SpaceTypesTabController::SpaceTypesTabController(const model::Model& model)
@@ -36,15 +38,15 @@ SpaceTypesTabController::SpaceTypesTabController(const model::Model& model)
                         SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
                         this,
                         SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_spaceTypesController.get(), SIGNAL(openBclDlgClicked()),
                                  this, SIGNAL(openBclDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_spaceTypesController.get(), SIGNAL(openLibDlgClicked()),
                                  this, SIGNAL(openLibDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   this->mainContentWidget()->addTabWidget(m_spaceTypesController->subTabView());
 }

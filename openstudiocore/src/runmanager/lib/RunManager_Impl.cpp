@@ -140,11 +140,14 @@ namespace detail {
         setText(toQString(m_job.outdir().external_file_string()));
         break;
       case 7:
-        try
         {
-          setText(toQString(m_job.treeDetailedDescription().at(0)));
-        } catch (const std::exception &) {
-          setText("");
+          std::vector<std::string> descs = m_job.treeDetailedDescription();
+          if (!descs.empty())
+          {
+            setText(toQString(descs[0]));
+          } else {
+            setText("");
+          }
         }
     };
   }
@@ -746,9 +749,7 @@ namespace detail {
                   std::vector<URLSearchPath>(),
                   true,
                   uuid,
-                  dt,
-                  e,
-                  f
+                  JobState(dt, e, f, AdvancedStatus(AdvancedStatusEnum::Idle))
                   );
 
               loadedjobs.push_back(std::make_pair(*itr, j));
@@ -1653,8 +1654,10 @@ namespace detail {
     QMutexLocker lock(&m_mutex);
 
 
-    try {
-      std::string key = job.jobParams().get("workflowkey").children.at(0).value;
+    JobParams params = job.jobParams();
+    if (params.has("workflowkey") && !params.get("workflowkey").children.empty())
+    {
+      std::string key = params.get("workflowkey").children.at(0).value;
       if (!key.empty() && m_workflowkeys.find(key) != m_workflowkeys.end())
       {
         // ETH@20121107 - This seems like an inefficient search. Is the most-parental job in the queue
@@ -1667,8 +1670,10 @@ namespace detail {
           if (!itr->parent())
           {
             // only try if it doesn't have a parent - if it's a top level job
-            try {
-              std::string queuekey = itr->jobParams().get("workflowkey").children.at(0).value;
+            JobParams params2 = itr->jobParams();
+            if (params2.has("workflowkey") && !params2.get("workflowkey").children.empty())
+            {
+              std::string queuekey = params2.get("workflowkey").children.at(0).value;
               if (key == queuekey)
               {
                 //Hey look, we found a workflow with the same key, so this is the one we need to
@@ -1679,15 +1684,11 @@ namespace detail {
                 return false;
               }
 
-            } catch (const std::exception &) {
-              // no key set, this cannot be our match
             }
           }
         }
       }
       m_workflowkeys.insert(key);
-    } catch (const std::exception &) {
-      // no key set, nothing to do
     }
 
 
@@ -1730,11 +1731,11 @@ namespace detail {
       }
 
       job.connect(SIGNAL(remoteProcessStarted(const openstudio::UUID &, int, int)), this,
-        SLOT(remoteProcessStarted(const openstudio::UUID &, int, int)), Qt::QueuedConnection);
+          SLOT(remoteProcessStarted(const openstudio::UUID &, int, int)), Qt::QueuedConnection);
       job.connect(SIGNAL(remoteProcessFinished(const openstudio::UUID &, int, int)), this,
-        SLOT(remoteProcessFinished(const openstudio::UUID &, int, int)), Qt::QueuedConnection);
+          SLOT(remoteProcessFinished(const openstudio::UUID &, int, int)), Qt::QueuedConnection);
       job.connect(SIGNAL(finishedExt(const openstudio::UUID &, const openstudio::runmanager::JobErrors &, const openstudio::DateTime &, const std::vector<openstudio::runmanager::FileInfo> &)), this,
-        SLOT(jobFinished(const openstudio::UUID &, const openstudio::runmanager::JobErrors &, const openstudio::DateTime &, const std::vector<openstudio::runmanager::FileInfo> &)), Qt::QueuedConnection);
+          SLOT(jobFinished(const openstudio::UUID &, const openstudio::runmanager::JobErrors &, const openstudio::DateTime &, const std::vector<openstudio::runmanager::FileInfo> &)), Qt::QueuedConnection);
     }
 
     lock.unlock();
@@ -1742,8 +1743,8 @@ namespace detail {
     std::vector<openstudio::runmanager::Job> children = job.children();
 
     for (std::vector<openstudio::runmanager::Job>::const_iterator itr = children.begin();
-         itr != children.end();
-         ++itr)
+        itr != children.end();
+        ++itr)
     {
       enqueueImpl(*itr, force, t_basePath);
     }
@@ -2352,6 +2353,23 @@ namespace detail {
       if (!itr->parent())
       {
         enqueue(*itr, true, t_path.parent_path());
+      }
+    }
+  }
+
+  void RunManager_Impl::updateJobs(const std::vector<Job> &t_jobTrees)
+  {
+    LOG(Info, "Updating jobs: " << t_jobTrees.size());
+    for (std::vector<Job>::const_iterator itr = t_jobTrees.begin();
+         itr != t_jobTrees.end();
+         ++itr)
+    {
+      try {
+        Job j = getJob(itr->uuid());
+        j.updateJob(*itr);
+      } catch (const std::out_of_range &) {
+        // job didn't exist
+        enqueue(*itr, true, m_dbfile.parent_path());
       }
     }
   }

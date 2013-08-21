@@ -38,7 +38,7 @@ namespace detail {
   InternalMass_Impl::InternalMass_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceLoadInstance_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == InternalMass::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == InternalMass::iddObjectType());
   }
 
   InternalMass_Impl::InternalMass_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -46,7 +46,7 @@ namespace detail {
                                        bool keepHandle)
     : SpaceLoadInstance_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == InternalMass::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == InternalMass::iddObjectType());
   }
 
   InternalMass_Impl::InternalMass_Impl(const InternalMass_Impl& other,
@@ -75,8 +75,6 @@ namespace detail {
     }
 
     this->makeUnique();
-
-    double floorArea = space->floorArea();
 
     InternalMassDefinition internalMassDefinition = this->internalMassDefinition();
     BOOST_FOREACH(LifeCycleCost cost, internalMassDefinition.lifeCycleCosts()){
@@ -108,7 +106,7 @@ namespace detail {
 
   double InternalMass_Impl::multiplier() const {
     boost::optional<double> value = getDouble(OS_InternalMassFields::Multiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -124,7 +122,7 @@ namespace detail {
 
   void InternalMass_Impl::resetMultiplier() {
     bool result = setString(OS_InternalMassFields::Multiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   int InternalMass_Impl::spaceIndex() const {
@@ -211,7 +209,7 @@ namespace detail {
 InternalMass::InternalMass(const InternalMassDefinition& internalMassDefinition)
   : SpaceLoadInstance(InternalMass::iddObjectType(),internalMassDefinition)
 {
-  BOOST_ASSERT(getImpl<detail::InternalMass_Impl>());
+  OS_ASSERT(getImpl<detail::InternalMass_Impl>());
 }
 
 IddObjectType InternalMass::iddObjectType() {

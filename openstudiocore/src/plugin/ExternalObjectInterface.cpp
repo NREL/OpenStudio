@@ -57,14 +57,14 @@ ExternalObjectInterface::ExternalObjectInterface(const ModelObjectHolder& modelO
   // connect signals
   bool test;
   test = connect(modelObjectHolder.ptr(), SIGNAL(onChange()), this, SLOT(requestModelObjectProperties()), Qt::QueuedConnection);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = connect(modelObjectHolder.ptr(), SIGNAL(reportProperties(const QVariantMap&)), this, SLOT(updateLocalPropertiesFromModelObjectProperties(const QVariantMap&)), Qt::QueuedConnection);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 
   test = connect(this, SIGNAL(requestProperties(const QStringList&)), modelObjectHolder.ptr(), SLOT(requestProperties(const QStringList&)), Qt::QueuedConnection);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
   test = connect(this, SIGNAL(setProperties(const QVariantMap&)), modelObjectHolder.ptr(), SLOT(setProperties(const QVariantMap&)), Qt::QueuedConnection);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 
   m_propertyNames.push_back("iddObjectType");
   m_propertyNames.push_back("handle");
@@ -86,7 +86,7 @@ IddObjectType ExternalObjectInterface::iddObjectType() const
   QVariant result = getLocalProperty("iddObjectType");
   if (!result.isNull() && result.isValid()){
     bool test = result.canConvert<openstudio::IddObjectType>();
-    //BOOST_ASSERT(test);
+    //OS_ASSERT(test);
     if (test){
       return result.value<openstudio::IddObjectType>();
     }
@@ -100,7 +100,7 @@ Handle ExternalObjectInterface::handle() const
   if (!result.isNull() && result.isValid()){
     bool test = result.canConvert<openstudio::Handle>();
     test = result.canConvert<openstudio::UUID>();
-    //BOOST_ASSERT(test);
+    //OS_ASSERT(test);
     if (test){
       return result.value<openstudio::UUID>();
     }
@@ -113,7 +113,7 @@ std::string ExternalObjectInterface::name()
   QVariant result = getLocalProperty("name");
   if (!result.isNull() && result.isValid()){
     bool test = result.canConvert<boost::optional<std::string> >();
-    //BOOST_ASSERT(test);
+    //OS_ASSERT(test);
     if (test){
       boost::optional<std::string> name = result.value<boost::optional<std::string> >();
       if (name){

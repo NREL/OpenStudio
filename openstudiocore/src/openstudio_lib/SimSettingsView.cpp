@@ -69,6 +69,8 @@
 #include <utilities/time/Date.hpp>
 #include <utilities/time/Time.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <boost/foreach.hpp>
 
 #include <QBoxLayout>
@@ -192,7 +194,7 @@ SimSettingsView::SimSettingsView(bool isIP,
 {
   bool isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                              this,SLOT(toggleUnits(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   // when the year settings object changes need to update the year in all child widgets
   model::YearDescription yearDescription = m_model.getUniqueModelObject<model::YearDescription>();
@@ -336,7 +338,7 @@ QWidget * SimSettingsView::createRunPeriodWidget()
   //
   //isConnected = connect(m_runPeriodGroup, SIGNAL(buttonClicked(int)),
   //  this, SLOT(on_runPeriodGroupClicked(int)));
-  //Q_ASSERT(isConnected);
+  //OS_ASSERT(isConnected);
   //
   //QRadioButton * radioButton = NULL;
   //
@@ -380,7 +382,7 @@ QWidget * SimSettingsView::createRunPeriodWidget()
 
   bool isConnected = connect(m_startDateEdit,SIGNAL(dateChanged(const QDate &)),
     this,SLOT(on_startDateChanged(const QDate &)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_endDateEdit = new QDateEdit();
   m_endDateEdit->setDisplayFormat("MMMM d");
@@ -390,7 +392,7 @@ QWidget * SimSettingsView::createRunPeriodWidget()
 
   isConnected = connect(m_endDateEdit,SIGNAL(dateChanged(const QDate &)),
     this,SLOT(on_endDateChanged(const QDate &)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QWidget * widget = new QWidget();
   widget->setLayout(mainVLayout);
@@ -422,35 +424,35 @@ QWidget * SimSettingsView::createRunControlWidget()
 
   isConnected = connect(m_runSimWeatherFiles, SIGNAL(stateChanged(int)),
     this, SLOT(on_runSimWeatherFiles(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_runSimDesignDays = new QCheckBox("Run Simulation for Design Days");
   layout->addWidget(m_runSimDesignDays);
 
   isConnected = connect(m_runSimDesignDays, SIGNAL(stateChanged(int)),
     this, SLOT(on_runSimDesignDays(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_performZoneSizing = new QCheckBox("Perform Zone Sizing");
   layout->addWidget(m_performZoneSizing);
 
   isConnected = connect(m_performZoneSizing, SIGNAL(stateChanged(int)),
     this, SLOT(on_performZoneSizing(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_performSystemSizing = new QCheckBox("Perform System Sizing");
   layout->addWidget(m_performSystemSizing);
 
   isConnected = connect(m_performSystemSizing, SIGNAL(stateChanged(int)),
     this, SLOT(on_performSystemSizing(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_performPlantSizing = new QCheckBox("Perform Plant Sizing");
   layout->addWidget(m_performPlantSizing);
 
   isConnected = connect(m_performPlantSizing, SIGNAL(stateChanged(int)),
     this, SLOT(on_performPlantSizing(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QWidget * widget = new QWidget();
   widget->setLayout(mainLayout);
@@ -692,6 +694,9 @@ QWidget * SimSettingsView::createShadowCalculationWidget()
   col = col + 2;
   addField(gridLayout,row,col,"Sky Diffuse Modeling Algorithm",m_skyDiffuseModelingAlgorithm);
 
+  gridLayout->setRowStretch(100,100);
+  gridLayout->setColumnStretch(100,100);
+
   QWidget * widget = new QWidget();
   widget->setLayout(gridLayout);
   widget->hide();
@@ -858,7 +863,7 @@ QWidget * SimSettingsView::createRadianceParametersWidget()
 
   isConnected = connect(m_radianceGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(on_radianceGroupClicked(int)));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   int buttonCount = 0;
 
@@ -1017,6 +1022,22 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
 void SimSettingsView::addField(QGridLayout * gridLayout,
                                int row,
                                int column,
+                               QString text,
+                               OSComboBox2 * & comboBox)
+{
+  QLabel * label = new QLabel(text,this);
+  label->setFixedWidth(TEXT_FIELD_WIDTH);
+  label->setObjectName("H2");
+  gridLayout->addWidget(label,row++,column);
+
+  comboBox = new OSComboBox2(this);
+  comboBox->setFixedWidth(OSCOMBOBOX_FIELD_WIDTH);
+  gridLayout->addWidget(comboBox,row,column);
+}
+
+void SimSettingsView::addField(QGridLayout * gridLayout,
+                               int row,
+                               int column,
                                QLabel * & label,
                                QString text,
                                OSComboBox * & comboBox)
@@ -1027,6 +1048,23 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
   gridLayout->addWidget(label,row++,column);
 
   comboBox = new OSComboBox(this);
+  comboBox->setFixedWidth(OSCOMBOBOX_FIELD_WIDTH);
+  gridLayout->addWidget(comboBox,row,column);
+}
+
+void SimSettingsView::addField(QGridLayout * gridLayout,
+                               int row,
+                               int column,
+                               QLabel * & label,
+                               QString text,
+                               OSComboBox2 * & comboBox)
+{
+  label = new QLabel(text,this);
+  label->setFixedWidth(TEXT_FIELD_WIDTH);
+  label->setObjectName("H2");
+  gridLayout->addWidget(label,row++,column);
+
+  comboBox = new OSComboBox2(this);
   comboBox->setFixedWidth(OSCOMBOBOX_FIELD_WIDTH);
   gridLayout->addWidget(comboBox,row,column);
 }
@@ -1050,6 +1088,22 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
 void SimSettingsView::addField(QGridLayout * gridLayout,
                                int row,
                                int column,
+                               QString text,
+                               OSIntegerEdit2 * & integerEdit)
+{
+  QLabel * label = new QLabel(text,this);
+  label->setFixedWidth(TEXT_FIELD_WIDTH);
+  label->setObjectName("H2");
+  gridLayout->addWidget(label,row++,column);
+
+  integerEdit = new OSIntegerEdit2(this);
+  integerEdit->setFixedWidth(OSINTEGEREDIT_FIELD_WIDTH);
+  gridLayout->addWidget(integerEdit,row,column);
+}
+
+void SimSettingsView::addField(QGridLayout * gridLayout,
+                               int row,
+                               int column,
                                QLabel * & label,
                                QString text,
                                OSIntegerEdit * & integerEdit)
@@ -1060,6 +1114,23 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
   gridLayout->addWidget(label,row++,column);
 
   integerEdit = new OSIntegerEdit(this);
+  integerEdit->setFixedWidth(OSINTEGEREDIT_FIELD_WIDTH);
+  gridLayout->addWidget(integerEdit,row,column);
+}
+
+void SimSettingsView::addField(QGridLayout * gridLayout,
+                               int row,
+                               int column,
+                               QLabel * & label,
+                               QString text,
+                               OSIntegerEdit2 * & integerEdit)
+{
+  label = new QLabel(text,this);
+  label->setFixedWidth(TEXT_FIELD_WIDTH);
+  label->setObjectName("H2");
+  gridLayout->addWidget(label,row++,column);
+
+  integerEdit = new OSIntegerEdit2(this);
   integerEdit->setFixedWidth(OSINTEGEREDIT_FIELD_WIDTH);
   gridLayout->addWidget(integerEdit,row,column);
 }
@@ -1094,7 +1165,7 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
   quantityEdit = new OSQuantityEdit(m_isIP,this);
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              quantityEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   gridLayout->addWidget(quantityEdit,row,column);
 }
@@ -1114,7 +1185,7 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
   quantityEdit = new OSQuantityEdit(m_isIP,this);
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              quantityEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   gridLayout->addWidget(quantityEdit,row,column);
 }
@@ -1131,6 +1202,21 @@ void SimSettingsView::addField(QGridLayout * gridLayout,
   gridLayout->addWidget(label,row++,column);
 
   osSwitch = new OSSwitch(this);
+  gridLayout->addWidget(osSwitch,row,column);
+}
+
+void SimSettingsView::addField(QGridLayout * gridLayout,
+                               int row,
+                               int column,
+                               QString text,
+                               OSSwitch2 * & osSwitch)
+{
+  QLabel * label = new QLabel(text,this);
+  label->setFixedWidth(TEXT_FIELD_WIDTH);
+  label->setObjectName("H2");
+  gridLayout->addWidget(label,row++,column);
+
+  osSwitch = new OSSwitch2(this);
   gridLayout->addWidget(osSwitch,row,column);
 }
 
@@ -1183,18 +1269,57 @@ void SimSettingsView::attachRunPeriodControlDaylightSavingTime()
 
 void SimSettingsView::attachSimulationControl()
 {
-  model::SimulationControl mo = m_model.getUniqueModelObject<model::SimulationControl>();
+  m_simulationControl = m_model.getUniqueModelObject<model::SimulationControl>();
 
-  m_doZoneSizingCalculation->bind(mo,"doZoneSizingCalculation");
-  m_doSystemSizingCalculation->bind(mo,"doSystemSizingCalculation");
-  m_doPlantSizingCalculation->bind(mo,"doPlantSizingCalculation");
-  m_runSimulationforSizingPeriods->bind(mo,"runSimulationforSizingPeriods");
-  m_runSimulationforWeatherFileRunPeriods->bind(mo,"runSimulationforWeatherFileRunPeriods");
-  m_maximumNumberofWarmupDays->bind(mo,"maximumNumberofWarmupDays");
-  m_minimumNumberofWarmupDays->bind(mo,"minimumNumberofWarmupDays");
-  m_loadsConvergenceToleranceValue->bind(mo,"loadsConvergenceToleranceValue",m_isIP);
-  m_temperatureConvergenceToleranceValue->bind(mo,"temperatureConvergenceToleranceValue",m_isIP);
-  m_solarDistribution->bind(mo,"solarDistribution");
+  m_doZoneSizingCalculation->bind(
+      *m_simulationControl,
+      boost::bind(&model::SimulationControl::doZoneSizingCalculation,m_simulationControl.get_ptr()),
+      boost::optional<BoolSetter>(boost::bind(&model::SimulationControl::setDoZoneSizingCalculation,m_simulationControl.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetDoZoneSizingCalculation,m_simulationControl.get_ptr())),
+      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isDoZoneSizingCalculationDefaulted,m_simulationControl.get_ptr())));
+  m_doSystemSizingCalculation->bind(
+      *m_simulationControl,
+      boost::bind(&model::SimulationControl::doSystemSizingCalculation,m_simulationControl.get_ptr()),
+      boost::optional<BoolSetter>(boost::bind(&model::SimulationControl::setDoSystemSizingCalculation,m_simulationControl.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetDoSystemSizingCalculation,m_simulationControl.get_ptr())),
+      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isDoSystemSizingCalculationDefaulted,m_simulationControl.get_ptr())));
+  m_doPlantSizingCalculation->bind(
+      *m_simulationControl,
+      boost::bind(&model::SimulationControl::doPlantSizingCalculation,m_simulationControl.get_ptr()),
+      boost::optional<BoolSetter>(boost::bind(&model::SimulationControl::setDoPlantSizingCalculation,m_simulationControl.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetDoPlantSizingCalculation,m_simulationControl.get_ptr())),
+      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isDoPlantSizingCalculationDefaulted,m_simulationControl.get_ptr())));
+  m_runSimulationforSizingPeriods->bind(
+      *m_simulationControl,
+      boost::bind(&model::SimulationControl::runSimulationforSizingPeriods,m_simulationControl.get_ptr()),
+      boost::optional<BoolSetter>(boost::bind(&model::SimulationControl::setRunSimulationforSizingPeriods,m_simulationControl.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetRunSimulationforSizingPeriods,m_simulationControl.get_ptr())),
+      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isRunSimulationforSizingPeriodsDefaulted,m_simulationControl.get_ptr())));
+  m_runSimulationforWeatherFileRunPeriods->bind(
+      *m_simulationControl,
+      boost::bind(&model::SimulationControl::runSimulationforWeatherFileRunPeriods,m_simulationControl.get_ptr()),
+      boost::optional<BoolSetter>(boost::bind(&model::SimulationControl::setRunSimulationforWeatherFileRunPeriods,m_simulationControl.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetRunSimulationforWeatherFileRunPeriods,m_simulationControl.get_ptr())),
+      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isRunSimulationforWeatherFileRunPeriodsDefaulted,m_simulationControl.get_ptr())));
+  m_maximumNumberofWarmupDays->bind(
+      *m_simulationControl,
+      IntGetter(boost::bind(&model::SimulationControl::maximumNumberofWarmupDays,m_simulationControl.get_ptr())),
+      boost::optional<IntSetter>(boost::bind(&model::SimulationControl::setMaximumNumberofWarmupDays,m_simulationControl.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetMaximumNumberofWarmupDays,m_simulationControl.get_ptr())),
+      boost::none,
+      boost::none,
+      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isMaximumNumberofWarmupDaysDefaulted,m_simulationControl.get_ptr())));
+  m_minimumNumberofWarmupDays->bind(
+      *m_simulationControl,
+      IntGetter(boost::bind(&model::SimulationControl::minimumNumberofWarmupDays,m_simulationControl.get_ptr())),
+      boost::optional<IntSetter>(boost::bind(&model::SimulationControl::setMinimumNumberofWarmupDays,m_simulationControl.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetMinimumNumberofWarmupDays,m_simulationControl.get_ptr())),
+      boost::none,
+      boost::none,
+      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isMinimumNumberofWarmupDaysDefaulted,m_simulationControl.get_ptr())));
+  m_loadsConvergenceToleranceValue->bind(*m_simulationControl,"loadsConvergenceToleranceValue",m_isIP);
+  m_temperatureConvergenceToleranceValue->bind(*m_simulationControl,"temperatureConvergenceToleranceValue",m_isIP);
+  m_solarDistribution->bind(*m_simulationControl,"solarDistribution");
 }
 
 void SimSettingsView::attachSizingParameters()
@@ -1240,12 +1365,23 @@ void SimSettingsView::attachConvergenceLimits()
 
 void SimSettingsView::attachShadowCalculation()
 {
-  model::ShadowCalculation mo = m_model.getUniqueModelObject<model::ShadowCalculation>();
+  m_shadowCalculation = m_model.getUniqueModelObject<model::ShadowCalculation>();
 
-  m_calculationFrequency->bind(mo,"calculationFrequency");
-  m_maximumFiguresInShadowOverlapCalculations->bind(mo,"maximumFiguresInShadowOverlapCalculations");
-  m_polygonClippingAlgorithm->bind(mo,"polygonClippingAlgorithm");
-  m_skyDiffuseModelingAlgorithm->bind(mo,"skyDiffuseModelingAlgorithm");
+  m_calculationFrequency->bind(*m_shadowCalculation,"calculationFrequency");
+  m_maximumFiguresInShadowOverlapCalculations->bind(*m_shadowCalculation,
+                                                    "maximumFiguresInShadowOverlapCalculations");
+  m_polygonClippingAlgorithm->bind(
+      *m_shadowCalculation,
+      boost::bind(model::ShadowCalculation::validPolygonClippingAlgorithmValues),
+      OptionalStringGetter(boost::bind(&model::ShadowCalculation::polygonClippingAlgorithm,m_shadowCalculation.get_ptr())),
+      boost::optional<StringSetter>(boost::bind(&model::ShadowCalculation::setPolygonClippingAlgorithm,m_shadowCalculation.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::ShadowCalculation::resetPolygonClippingAlgorithm,m_shadowCalculation.get_ptr())));
+  m_skyDiffuseModelingAlgorithm->bind(
+      *m_shadowCalculation,
+      boost::bind(model::ShadowCalculation::validSkyDiffuseModelingAlgorithmValues),
+      OptionalStringGetter(boost::bind(&model::ShadowCalculation::skyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr())),
+      boost::optional<StringSetter>(boost::bind(&model::ShadowCalculation::setSkyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::ShadowCalculation::resetSkyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr())));
 }
 
 void SimSettingsView::attachSurfaceConvectionAlgorithmInside()
@@ -1486,7 +1622,7 @@ void SimSettingsView::on_runPeriodGroupClicked(int idx)
   }
   else{
     // Should never get here
-    Q_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -1505,7 +1641,7 @@ void SimSettingsView::on_radianceGroupClicked(int idx)
   }
   else{
     // Should never get here
-    Q_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 

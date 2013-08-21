@@ -657,15 +657,9 @@ namespace runmanager {
       throw std::runtime_error("Unable to create workflow: no child jobs");
     }
 
-    try {
-      m_job->params.remove("workflowkey");
-    } catch (const std::exception &) {
-    }
+    m_job->params.remove("workflowkey");
 
-    try {
-      m_job->params.remove("workflowname");
-    } catch (const std::exception &) {
-    }
+    m_job->params.remove("workflowname");
 
     openstudio::runmanager::JobParams params;
     std::string k = key();
@@ -789,6 +783,7 @@ namespace runmanager {
     openstudio::path scriptsPath = openstudio::getOpenStudioRubyScriptsPath() / openstudio::toPath("openstudio/radiance/");
     rjb.addRequiredFile(scriptsPath / openstudio::toPath("ModelToRad.rb"), openstudio::toPath("ModelToRad.rb"));
     rjb.addRequiredFile(scriptsPath / openstudio::toPath("DaylightSim.rb"), openstudio::toPath("DaylightSim.rb"));
+    rjb.addRequiredFile(scriptsPath / openstudio::toPath("DaylightSim-Simple.rb"), openstudio::toPath("DaylightSim-Simple.rb"));
     rjb.addRequiredFile(scriptsPath / openstudio::toPath("MakeSchedules.rb"), openstudio::toPath("MakeSchedules.rb"));
     rjb.addRequiredFile(scriptsPath / openstudio::toPath("DaylightMetrics.rb"), openstudio::toPath("DaylightMetrics.rb"));
     rjb.copyRequiredFiles("osm", "osm", "in.epw");
@@ -896,12 +891,16 @@ namespace runmanager {
       JobParams p = wfi->params;
       std::string jobkeyname;
 
-      try {
-        jobkeyname = p.get("workflowjobkey").children.at(0).value;
+      if (p.has("workflowjobkey"))
+      {
+        // capture and erase the jobkey if it exists
+        if (!p.get("workflowjobkey").children.empty())
+        {
+          jobkeyname = p.get("workflowjobkey").children[0].value;
+        }
         p.remove("workflowjobkey");
-      } catch (const std::exception &) {
-        // seems there wasn't a jobkeyname set
       }
+      
 
       retval.push_back(WorkItem(wfi->type, wfi->tools, wfi->params, wfi->files, jobkeyname));
 

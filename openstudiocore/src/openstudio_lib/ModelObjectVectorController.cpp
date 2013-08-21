@@ -45,32 +45,32 @@ void ModelObjectVectorController::attach(const model::ModelObject& modelObject)
                         this,
                         SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_model->getImpl<model::detail::Model_Impl>().get(),
                         SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
                         SLOT(objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(),
                         SIGNAL(onRelationshipChange(int, Handle, Handle)),
                         this,
                         SLOT(changeRelationship(int, Handle, Handle)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(),
                         SIGNAL(onDataChange()),
                         this,
                         SLOT(dataChange()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(),
                         SIGNAL(onChange()),
                         this,
                         SLOT(change()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 void ModelObjectVectorController::attachModel(const model::Model& model)
@@ -88,14 +88,14 @@ void ModelObjectVectorController::attachModel(const model::Model& model)
                         this,
                         SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_model->getImpl<model::detail::Model_Impl>().get(),
                         SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
                         SLOT(objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 void ModelObjectVectorController::attachOtherModelObject(const model::ModelObject& modelObject)
@@ -114,7 +114,7 @@ void ModelObjectVectorController::attachOtherModelObject(const model::ModelObjec
                         SIGNAL(onRelationshipChange(int, Handle, Handle)),
                         this,
                         SLOT(changeRelationship(int, Handle, Handle)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 void ModelObjectVectorController::detach()

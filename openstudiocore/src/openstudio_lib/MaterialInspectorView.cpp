@@ -99,7 +99,7 @@ void MaterialInspectorView::createLayout()
 
   m_thickness = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thickness, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_thickness,row++,0,1,3);
 
   // Conductivity
@@ -110,7 +110,7 @@ void MaterialInspectorView::createLayout()
 
   m_conductivity = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_conductivity, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_conductivity,row++,0,1,3);
 
   // Density
@@ -121,7 +121,7 @@ void MaterialInspectorView::createLayout()
 
   m_density = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_density, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_density,row++,0,1,3);
 
   // Specific Heat
@@ -132,7 +132,7 @@ void MaterialInspectorView::createLayout()
 
   m_specificHeat = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_specificHeat, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_specificHeat,row++,0,1,3);
 
   // Thermal Absorptance
@@ -143,7 +143,7 @@ void MaterialInspectorView::createLayout()
 
   m_thermalAbsorptance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_thermalAbsorptance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_thermalAbsorptance,row++,0,1,3);
 
   // Solar Absorptance
@@ -154,7 +154,7 @@ void MaterialInspectorView::createLayout()
 
   m_solarAbsorptance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_solarAbsorptance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_solarAbsorptance,row++,0,1,3);
 
   // Visible Absorptance
@@ -165,7 +165,7 @@ void MaterialInspectorView::createLayout()
 
   m_visibleAbsorptance = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_visibleAbsorptance, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_visibleAbsorptance,row++,0,1,3);
 
   // Stretch

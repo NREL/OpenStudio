@@ -123,6 +123,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateSetpointManagerOutdoorAirReset.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerScheduled.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneReheat.cpp
+  ForwardTranslator/ForwardTranslateSetpointManagerWarmest.cpp
   ForwardTranslator/ForwardTranslateShade.cpp
   ForwardTranslator/ForwardTranslateShadowCalculation.cpp
   ForwardTranslator/ForwardTranslateShadingSurface.cpp

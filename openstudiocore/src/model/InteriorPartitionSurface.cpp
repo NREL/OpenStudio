@@ -43,7 +43,7 @@ namespace detail {
                                                                bool keepHandle)
     : PlanarSurface_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == InteriorPartitionSurface::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == InteriorPartitionSurface::iddObjectType());
   }
 
   InteriorPartitionSurface_Impl::InteriorPartitionSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -51,7 +51,7 @@ namespace detail {
                                                                bool keepHandle)
     : PlanarSurface_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == InteriorPartitionSurface::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == InteriorPartitionSurface::iddObjectType());
   }
 
   InteriorPartitionSurface_Impl::InteriorPartitionSurface_Impl(const InteriorPartitionSurface_Impl& other,
@@ -153,7 +153,7 @@ namespace detail {
 
   bool InteriorPartitionSurface_Impl::converttoInternalMass() const {
     boost::optional<std::string> value = getString(OS_InteriorPartitionSurfaceFields::ConverttoInternalMass,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -189,12 +189,12 @@ namespace detail {
     } else {
       result = setString(OS_InteriorPartitionSurfaceFields::ConverttoInternalMass, "No");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void InteriorPartitionSurface_Impl::resetConverttoInternalMass() {
     bool result = setString(OS_InteriorPartitionSurfaceFields::ConverttoInternalMass, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool InteriorPartitionSurface_Impl::setSurfaceArea(boost::optional<double> surfaceArea) {
@@ -215,7 +215,7 @@ namespace detail {
 
   void InteriorPartitionSurface_Impl::resetSurfaceArea() {
     bool result = setString(OS_InteriorPartitionSurfaceFields::SurfaceArea, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool InteriorPartitionSurface_Impl::setNumberofVertices(boost::optional<double> numberofVertices) {
@@ -236,12 +236,12 @@ namespace detail {
 
   void InteriorPartitionSurface_Impl::resetNumberofVertices() {
     bool result = setString(OS_InteriorPartitionSurfaceFields::NumberofVertices, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void InteriorPartitionSurface_Impl::autocalculateNumberofVertices() {
     bool result = setString(OS_InteriorPartitionSurfaceFields::NumberofVertices, "Autocalculate");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<InteriorPartitionSurfaceGroup> InteriorPartitionSurface_Impl::interiorPartitionSurfaceGroup() const
@@ -263,7 +263,7 @@ namespace detail {
   void InteriorPartitionSurface_Impl::resetInteriorPartitionSurfaceGroup() {
     bool ok = setString(OS_InteriorPartitionSurfaceFields::InteriorPartitionSurfaceGroupName,
                         "");
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
   }
 
   boost::optional<ModelObject> InteriorPartitionSurface_Impl::interiorPartitionSurfaceGroupAsModelObject() const {
@@ -296,7 +296,7 @@ namespace detail {
 InteriorPartitionSurface::InteriorPartitionSurface(const std::vector<Point3d>& vertices, const Model& model)
   : PlanarSurface(InteriorPartitionSurface::iddObjectType(),vertices,model)
 {
-  BOOST_ASSERT(getImpl<detail::InteriorPartitionSurface_Impl>());
+  OS_ASSERT(getImpl<detail::InteriorPartitionSurface_Impl>());
 }
 
 IddObjectType InteriorPartitionSurface::iddObjectType() {

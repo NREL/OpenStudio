@@ -66,14 +66,14 @@ namespace detail {
                                                          ProjectDatabase& database)
     : AlgorithmRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(DakotaAlgorithmRecord::ColumnsType::dakotaAlgorithmRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_dakotaAlgorithmRecordType = DakotaAlgorithmRecordType(value.toInt());
 
     value = query.value(DakotaAlgorithmRecord::ColumnsType::dakotaRestartFileRecordId);
@@ -193,16 +193,16 @@ namespace detail {
   }
 
   void DakotaAlgorithmRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     AlgorithmRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(DakotaAlgorithmRecord::ColumnsType::dakotaAlgorithmRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastDakotaAlgorithmRecordType = DakotaAlgorithmRecordType(value.toInt());
 
     value = query.value(DakotaAlgorithmRecord::ColumnsType::dakotaRestartFileRecordId);
@@ -230,16 +230,16 @@ namespace detail {
   }
 
   bool DakotaAlgorithmRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = AlgorithmRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(DakotaAlgorithmRecord::ColumnsType::dakotaAlgorithmRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_dakotaAlgorithmRecordType == DakotaAlgorithmRecordType(value.toInt()));
 
     value = query.value(DakotaAlgorithmRecord::ColumnsType::dakotaRestartFileRecordId);
@@ -294,7 +294,7 @@ DakotaAlgorithmRecord::DakotaAlgorithmRecord(boost::shared_ptr<detail::DakotaAlg
                                              const boost::optional<analysis::DakotaAlgorithm>& algorithm)
   : AlgorithmRecord(impl, database, boost::optional<analysis::Algorithm>(algorithm))
 {
-  BOOST_ASSERT(getImpl<detail::DakotaAlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::DakotaAlgorithmRecord_Impl>());
 }
 
 boost::optional<DakotaAlgorithmRecord> DakotaAlgorithmRecord::factoryFromQuery(
@@ -352,7 +352,7 @@ DakotaAlgorithmRecord DakotaAlgorithmRecord::factoryFromDakotaAlgorithm(
                                 analysisRecord);
   }
 
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return DakotaAlgorithmRecord(boost::shared_ptr<detail::DakotaAlgorithmRecord_Impl>());
 }
 

@@ -141,19 +141,19 @@ ModelObjectTreeItem::ModelObjectTreeItem(const openstudio::model::ModelObject& m
                         SIGNAL(onNameChange()),
                         this, 
                         SLOT(changeName()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
    
   isConnected = connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(),
                         SIGNAL(onChange()),
                         this, 
                         SLOT(change()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_modelObject->getImpl<model::detail::ModelObject_Impl>().get(),
                         SIGNAL(onRelationshipChange(int, Handle, Handle)),
                         this, 
                         SLOT(changeRelationship(int, Handle, Handle)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 ModelObjectTreeItem::ModelObjectTreeItem(const std::string& name, const openstudio::model::Model& model, QTreeWidgetItem* parent)
@@ -208,7 +208,7 @@ std::vector<ModelObjectTreeItem*> ModelObjectTreeItem::children() const
   for (int i = 0; i < n; ++i){
     QTreeWidgetItem* child = this->child(i);
     ModelObjectTreeItem* modelObjectTreeItem = dynamic_cast<ModelObjectTreeItem*>(child);
-    BOOST_ASSERT(modelObjectTreeItem);
+    OS_ASSERT(modelObjectTreeItem);
     result.push_back(modelObjectTreeItem);  
   }
 
@@ -223,7 +223,7 @@ std::vector<ModelObjectTreeItem*> ModelObjectTreeItem::recursiveChildren() const
   for (int i = 0; i < n; ++i){
     QTreeWidgetItem* child = this->child(i);
     ModelObjectTreeItem* modelObjectTreeItem = dynamic_cast<ModelObjectTreeItem*>(child);
-    BOOST_ASSERT(modelObjectTreeItem);
+    OS_ASSERT(modelObjectTreeItem);
     result.push_back(modelObjectTreeItem);  
 
     std::vector<ModelObjectTreeItem*> childChildren = modelObjectTreeItem->recursiveChildren();
@@ -311,7 +311,7 @@ void ModelObjectTreeItem::refresh()
   for (int i = 0; i < n; ++i){
     QTreeWidgetItem* child = this->child(i);
     ModelObjectTreeItem* modelObjectTreeItem = dynamic_cast<ModelObjectTreeItem*>(child);
-    BOOST_ASSERT(modelObjectTreeItem);
+    OS_ASSERT(modelObjectTreeItem);
 
     boost::optional<openstudio::model::ModelObject> modelObject = modelObjectTreeItem->modelObject();
     if (modelObject){
@@ -384,7 +384,7 @@ void ModelObjectTreeItem::refreshTree()
   for (int i = 0; i < N; ++i){
     QTreeWidgetItem* treeItem = treeWidget->topLevelItem(i);
     ModelObjectTreeItem* modelObjectTreeItem = dynamic_cast<ModelObjectTreeItem*>(treeItem);
-    BOOST_ASSERT(modelObjectTreeItem);
+    OS_ASSERT(modelObjectTreeItem);
 
     if (!modelObjectTreeItem->isDirty()){
       modelObjectTreeItem->makeDirty();
@@ -397,7 +397,7 @@ void ModelObjectTreeItem::refreshTree()
 void ModelObjectTreeItem::change()
 {
   boost::optional<model::ModelObject> modelObject = this->modelObject();
-  BOOST_ASSERT(modelObject);
+  OS_ASSERT(modelObject);
 
   // these objects have 'type' fields that are not relationships but change tree structure
   switch (modelObject->iddObjectType().value()){
@@ -425,7 +425,7 @@ void ModelObjectTreeItem::changeRelationship(int index, Handle newHandle, Handle
   }
 
   boost::optional<model::ModelObject> modelObject = this->modelObject();
-  BOOST_ASSERT(modelObject);
+  OS_ASSERT(modelObject);
 
   switch (modelObject->iddObjectType().value()){
     case IddObjectType::OS_Building:
@@ -638,7 +638,7 @@ void SiteShadingTreeItem::addModelObjectChild(const model::ModelObject& child, b
     this->addChild(treeItem);
     treeItem->setStyle(2, "");
   }else{
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -669,7 +669,7 @@ void ShadingSurfaceGroupTreeItem::addModelObjectChild(const model::ModelObject& 
     ModelObjectTreeItem* treeItem = new ModelObjectTreeItem(child, false, m_type, this);
     this->addChild(treeItem);
   }else{
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -717,7 +717,7 @@ void BuildingTreeItem::addModelObjectChild(const model::ModelObject& child, bool
     SpaceTypeTreeItem* treeItem = new SpaceTypeTreeItem(child.cast<model::SpaceType>(), this);
     this->addChild(treeItem);
   }else{
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -752,7 +752,7 @@ void BuildingTreeItem::addNonModelObjectChild(const std::string& child)
     NoSpaceTypeTreeItem* treeItem = new NoSpaceTypeTreeItem(this->model(), this);
     this->addChild(treeItem);
   }else{
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -790,7 +790,7 @@ void BuildingShadingTreeItem::addModelObjectChild(const model::ModelObject& chil
     ShadingSurfaceGroupTreeItem* treeItem = new ShadingSurfaceGroupTreeItem(child.cast<model::ShadingSurfaceGroup>(), this);
     this->addChild(treeItem);
   }else{
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -806,7 +806,7 @@ BuildingStoryTreeItem::BuildingStoryTreeItem(const openstudio::model::BuildingSt
 std::vector<model::ModelObject> BuildingStoryTreeItem::modelObjectChildren() const
 {
   boost::optional<model::ModelObject> modelObject = this->modelObject();
-  BOOST_ASSERT(modelObject);
+  OS_ASSERT(modelObject);
   std::vector<model::Space> spaces = modelObject->getModelObjectSources<model::Space>();
   std::vector<model::ModelObject> result(spaces.begin(), spaces.end());
   std::sort(result.begin(), result.end(), WorkspaceObjectNameLess());
@@ -822,7 +822,7 @@ void BuildingStoryTreeItem::addModelObjectChild(const model::ModelObject& child,
       treeItem->setStyle(0, "#006837");
     }
   }else{
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -859,7 +859,7 @@ void NoBuildingStoryTreeItem::addModelObjectChild(const model::ModelObject& chil
       treeItem->setStyle(0, "#006837");
     }
   }else{
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -886,7 +886,7 @@ ThermalZoneTreeItem::ThermalZoneTreeItem(const openstudio::model::ThermalZone& t
 std::vector<model::ModelObject> ThermalZoneTreeItem::modelObjectChildren() const
 {
   boost::optional<model::ModelObject> modelObject = this->modelObject();
-  BOOST_ASSERT(modelObject);
+  OS_ASSERT(modelObject);
   std::vector<model::Space> spaces = modelObject->getModelObjectSources<model::Space>();
   std::vector<model::ModelObject> result(spaces.begin(), spaces.end());
   std::sort(result.begin(), result.end(), WorkspaceObjectNameLess());
@@ -902,7 +902,7 @@ void ThermalZoneTreeItem::addModelObjectChild(const model::ModelObject& child, b
       treeItem->setStyle(0, "#006837");
     }
   }else{
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -940,7 +940,7 @@ void NoThermalZoneTreeItem::addModelObjectChild(const model::ModelObject& child,
       treeItem->setStyle(0, "#006837");
     }
   }else{
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -967,7 +967,7 @@ SpaceTypeTreeItem::SpaceTypeTreeItem(const openstudio::model::SpaceType& spaceTy
 std::vector<model::ModelObject> SpaceTypeTreeItem::modelObjectChildren() const
 {
   boost::optional<model::ModelObject> modelObject = this->modelObject();
-  BOOST_ASSERT(modelObject);
+  OS_ASSERT(modelObject);
   std::vector<model::Space> spaces = modelObject->getModelObjectSources<model::Space>();
   std::vector<model::ModelObject> result(spaces.begin(), spaces.end());
   std::sort(result.begin(), result.end(), WorkspaceObjectNameLess());
@@ -979,7 +979,7 @@ std::vector<model::ModelObject> SpaceTypeTreeItem::defaultedModelObjectChildren(
   std::vector<model::ModelObject> result;
 
   boost::optional<model::ModelObject> modelObject = this->modelObject();
-  BOOST_ASSERT(modelObject);
+  OS_ASSERT(modelObject);
   model::SpaceType spaceType = modelObject->cast<model::SpaceType>();
   
   // get spaces that inherit this space type as default
@@ -1002,7 +1002,7 @@ void SpaceTypeTreeItem::addModelObjectChild(const model::ModelObject& child, boo
       treeItem->setStyle(0, "#006837");
     }
   }else{
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -1039,7 +1039,7 @@ void NoSpaceTypeTreeItem::addModelObjectChild(const model::ModelObject& child, b
       treeItem->setStyle(0, "#006837");
     }
   }else{
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -1078,7 +1078,7 @@ std::vector<std::string> SpaceTreeItem::nonModelObjectChildren() const
 void SpaceTreeItem::addNonModelObjectChild(const std::string& child)
 {
   boost::optional<model::ModelObject> modelObject = this->modelObject();
-  BOOST_ASSERT(modelObject);
+  OS_ASSERT(modelObject);
   model::Space space = modelObject->cast<model::Space>();
 
   if (child == RoofsTreeItem::itemName()){
@@ -1103,7 +1103,7 @@ void SpaceTreeItem::addNonModelObjectChild(const std::string& child)
     LoadsTreeItem* treeItem = new LoadsTreeItem(space, this);
     this->addChild(treeItem);
   }else{
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -1138,7 +1138,7 @@ void RoofsTreeItem::addModelObjectChild(const model::ModelObject& child, bool is
     SurfaceTreeItem* treeItem = new SurfaceTreeItem(child.cast<model::Surface>(), this);
     this->addChild(treeItem);
   }else{
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -1173,7 +1173,7 @@ void WallsTreeItem::addModelObjectChild(const model::ModelObject& child, bool is
     SurfaceTreeItem* treeItem = new SurfaceTreeItem(child.cast<model::Surface>(), this);
     this->addChild(treeItem);
   }else{
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -1208,7 +1208,7 @@ void FloorsTreeItem::addModelObjectChild(const model::ModelObject& child, bool i
     SurfaceTreeItem* treeItem = new SurfaceTreeItem(child.cast<model::Surface>(), this);
     this->addChild(treeItem);
   }else{
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -1223,7 +1223,7 @@ SurfaceTreeItem::SurfaceTreeItem(const openstudio::model::Surface& surface, QTre
 std::vector<model::ModelObject> SurfaceTreeItem::modelObjectChildren() const
 {
   boost::optional<model::ModelObject> modelObject = this->modelObject();
-  BOOST_ASSERT(modelObject);
+  OS_ASSERT(modelObject);
   model::Surface surface = modelObject->cast<model::Surface>();
 
   std::vector<model::SubSurface> subSurfaces = surface.subSurfaces();
@@ -1260,7 +1260,7 @@ void SpaceShadingTreeItem::addModelObjectChild(const model::ModelObject& child, 
     ShadingSurfaceGroupTreeItem* treeItem = new ShadingSurfaceGroupTreeItem(child.cast<model::ShadingSurfaceGroup>(), this);
     this->addChild(treeItem);
   }else{
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -1291,7 +1291,7 @@ void InteriorPartitionsTreeItem::addModelObjectChild(const model::ModelObject& c
     InteriorPartitionSurfaceGroupTreeItem* treeItem = new InteriorPartitionSurfaceGroupTreeItem(child.cast<model::InteriorPartitionSurfaceGroup>(), this);
     this->addChild(treeItem);
   }else{
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
   }
 }
 
@@ -1307,7 +1307,7 @@ InteriorPartitionSurfaceGroupTreeItem::InteriorPartitionSurfaceGroupTreeItem(con
 std::vector<model::ModelObject> InteriorPartitionSurfaceGroupTreeItem::modelObjectChildren() const
 {
   boost::optional<model::ModelObject> modelObject = this->modelObject();
-  BOOST_ASSERT(modelObject);
+  OS_ASSERT(modelObject);
   model::InteriorPartitionSurfaceGroup interiorPartitionSurfaceGroup = modelObject->cast<model::InteriorPartitionSurfaceGroup>();
   
   std::vector<model::InteriorPartitionSurface> interiorPartitionSurfaces = interiorPartitionSurfaceGroup.interiorPartitionSurfaces();

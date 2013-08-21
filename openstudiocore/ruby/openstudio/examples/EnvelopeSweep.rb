@@ -65,7 +65,7 @@ if ARGV[2] and /[tT]rue/.match(ARGV[2])
 end
 
 # find EnergyPlus
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(7,2)
+ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
 ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
 ep_parent_path = ep_path.parent_path();
 idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
@@ -118,43 +118,43 @@ postProcessScript = OpenStudio::Path.new($OpenStudio_LibPath + "openstudio/examp
 variables = OpenStudio::Analysis::VariableVector.new
 
 # wall construction variable
-perturbations1 = OpenStudio::Analysis::DiscretePerturbationVector.new
-perturbations1.push(OpenStudio::Analysis::NullPerturbation.new)
+measures1 = OpenStudio::Analysis::MeasureVector.new
+measures1.push(OpenStudio::Analysis::NullMeasure.new)
 # perturb the wall construction object
-wallPerturbation1 = OpenStudio::Analysis::RubyPerturbation.new(perturbWallScript, 
-                                                               "OSM".to_FileReferenceType, 
-                                                               "OSM".to_FileReferenceType)
-wallPerturbation1.addArgument("insulation_thickness", "0.05")
-wallPerturbation1.addArgument("cost", "10.0")
-perturbations1.push(wallPerturbation1)
+wallMeasure1 = OpenStudio::Analysis::RubyMeasure.new(perturbWallScript, 
+                                                     "OSM".to_FileReferenceType, 
+                                                     "OSM".to_FileReferenceType)
+wallMeasure1.addArgument("insulation_thickness", "0.05")
+wallMeasure1.addArgument("cost", "10.0")
+measures1.push(wallMeasure1)
 # perturb the wall construction object
-wallPerturbation2 = OpenStudio::Analysis::RubyPerturbation.new(perturbWallScript, 
-                                                               "OSM".to_FileReferenceType, 
-                                                               "OSM".to_FileReferenceType)
-wallPerturbation2.addArgument("insulation_thickness", "0.10")
-wallPerturbation2.addArgument("cost", "13.0")
-perturbations1.push(wallPerturbation2)
-variable1 = OpenStudio::Analysis::DiscreteVariable.new("Wall Construction", perturbations1)
+wallMeasure2 = OpenStudio::Analysis::RubyMeasure.new(perturbWallScript, 
+                                                     "OSM".to_FileReferenceType, 
+                                                     "OSM".to_FileReferenceType)
+wallMeasure2.addArgument("insulation_thickness", "0.10")
+wallMeasure2.addArgument("cost", "13.0")
+measures1.push(wallMeasure2)
+variable1 = OpenStudio::Analysis::MeasureGroup.new("Wall Construction", measures1)
 variables.push(variable1)
 
 # window construction variable
-perturbations2 = OpenStudio::Analysis::DiscretePerturbationVector.new
-perturbations2.push(OpenStudio::Analysis::NullPerturbation.new)
+measures2 = OpenStudio::Analysis::MeasureVector.new
+measures2.push(OpenStudio::Analysis::NullMeasure.new)
 # perturb the window construction object
-windowPerturbation1 = OpenStudio::Analysis::RubyPerturbation.new(perturbWindowScript, 
-                                                               "OSM".to_FileReferenceType, 
-                                                               "OSM".to_FileReferenceType)
-windowPerturbation1.addArgument("uvalue", "0.77")
-windowPerturbation1.addArgument("cost", "30.0")
-perturbations2.push(windowPerturbation1)
+windowMeasure1 = OpenStudio::Analysis::RubyMeasure.new(perturbWindowScript, 
+                                                       "OSM".to_FileReferenceType, 
+                                                       "OSM".to_FileReferenceType)
+windowMeasure1.addArgument("uvalue", "0.77")
+windowMeasure1.addArgument("cost", "30.0")
+measures2.push(windowMeasure1)
 # perturb the window construction object
-windowPerturbation2 = OpenStudio::Analysis::RubyPerturbation.new(perturbWindowScript, 
-                                                               "OSM".to_FileReferenceType, 
-                                                               "OSM".to_FileReferenceType)
-windowPerturbation2.addArgument("uvalue", "0.47")
-windowPerturbation2.addArgument("cost", "40.0")
-perturbations2.push(windowPerturbation2)
-variable2 = OpenStudio::Analysis::DiscreteVariable.new("Window Construction", perturbations2)
+windowMeasure2 = OpenStudio::Analysis::RubyMeasure.new(perturbWindowScript, 
+                                                       "OSM".to_FileReferenceType, 
+                                                       "OSM".to_FileReferenceType)
+windowMeasure2.addArgument("uvalue", "0.47")
+windowMeasure2.addArgument("cost", "40.0")
+measures2.push(windowMeasure2)
+variable2 = OpenStudio::Analysis::MeasureGroup.new("Window Construction", measures2)
 variables.push(variable2)
 
 # configure workflow

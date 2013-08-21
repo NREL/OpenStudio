@@ -20,6 +20,15 @@
 #include <analysis/AnalysisObject.hpp>
 #include <analysis/AnalysisObject_Impl.hpp>
 
+// for deserializing top-level json files
+#include <analysis/Analysis.hpp>
+#include <analysis/Analysis_Impl.hpp>
+#include <analysis/DataPoint.hpp>
+#include <analysis/DataPoint_Impl.hpp>
+
+#include <utilities/core/Json.hpp>
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -123,51 +132,10 @@ namespace detail {
     return QObject::disconnect(this,signal,receiver,slot);
   }
 
-  void AnalysisObject_Impl::onChildChanged(ChangeType changeType) {
-    onChange(changeType);
-  }
-
-  void AnalysisObject_Impl::onParentClean() {
-    clearDirtyFlag();
-  }
-
   void AnalysisObject_Impl::onChange(ChangeType changeType) {
     m_versionUUID = createUUID();
     m_dirty = true;
     emit changed(changeType);
-  }
-
-  void AnalysisObject_Impl::connectChild(AnalysisObject& child, bool setParent) const {
-    if (setParent) {
-      AnalysisObject copyOfThis = getPublicObject<AnalysisObject>();
-      child.setParent(copyOfThis);
-    }
-
-    bool connected = connect(SIGNAL(clean()),
-                             child.getImpl<detail::AnalysisObject_Impl>().get(),
-                             SLOT(onParentClean()));
-    BOOST_ASSERT(connected);
-    connected = child.connect(SIGNAL(changed(ChangeType)),
-                              this,
-                              SLOT(onChildChanged(ChangeType)));
-    BOOST_ASSERT(connected);
-  }
-
-  void AnalysisObject_Impl::disconnectChild(AnalysisObject& child) const {
-    child.clearParent();
-
-    bool disconnected = disconnect(SIGNAL(clean()),
-                                   child.getImpl<detail::AnalysisObject_Impl>().get(),
-                                   SLOT(onParentClean()));
-    BOOST_ASSERT(disconnected);
-    disconnected = child.disconnect(SIGNAL(changed(ChangeType)),
-                                    this,
-                                    SLOT(onChildChanged(ChangeType)));
-    BOOST_ASSERT(disconnected);
-  }
-
-  void AnalysisObject_Impl::setDirtyFlag() {
-    m_dirty = true;
   }
 
   boost::optional<AnalysisObject> AnalysisObject_Impl::parent() const {
@@ -180,6 +148,78 @@ namespace detail {
 
   void AnalysisObject_Impl::clearParent() const {
     m_parent.reset();
+  }
+
+  QVariant AnalysisObject_Impl::toVariant() const {
+    QVariantMap analysisObjectData;
+
+    analysisObjectData["uuid"] = toQString(removeBraces(uuid()));
+    analysisObjectData["version_uuid"] = toQString(removeBraces(versionUUID()));
+    std::string str = name();
+    if (!str.empty()) {
+      analysisObjectData["name"] = toQString(str);
+    }
+    str = displayName();
+    if (!str.empty()) {
+      analysisObjectData["display_name"] = toQString(str);
+    }
+    str = description();
+    if (!str.empty()) {
+      analysisObjectData["description"] = toQString(str);
+    }
+
+    return QVariant(analysisObjectData);
+  }
+
+  QVariant AnalysisObject_Impl::toServerFormulationVariant() const {
+    return QVariant();
+  }
+
+  QVariant AnalysisObject_Impl::toServerDataPointsVariant() const {
+    return QVariant();
+  }
+
+  void AnalysisObject_Impl::onChildChanged(ChangeType changeType) {
+    onChange(changeType);
+  }
+
+  void AnalysisObject_Impl::onParentClean() {
+    clearDirtyFlag();
+  }
+
+  void AnalysisObject_Impl::connectChild(AnalysisObject& child, bool setParent) const {
+    if (setParent) {
+      AnalysisObject copyOfThis = getPublicObject<AnalysisObject>();
+      child.setParent(copyOfThis);
+    }
+
+    bool connected = connect(SIGNAL(clean()),
+                             child.getImpl<detail::AnalysisObject_Impl>().get(),
+                             SLOT(onParentClean()));
+    OS_ASSERT(connected);
+    connected = child.connect(SIGNAL(changed(ChangeType)),
+                              this,
+                              SLOT(onChildChanged(ChangeType)));
+    OS_ASSERT(connected);
+  }
+
+  void AnalysisObject_Impl::disconnectChild(AnalysisObject& child,bool clearParent) const {
+    if (clearParent) {
+      child.clearParent();
+    }
+
+    bool disconnected = disconnect(SIGNAL(clean()),
+                                   child.getImpl<detail::AnalysisObject_Impl>().get(),
+                                   SLOT(onParentClean()));
+    OS_ASSERT(disconnected);
+    disconnected = child.disconnect(SIGNAL(changed(ChangeType)),
+                                    this,
+                                    SLOT(onChildChanged(ChangeType)));
+    OS_ASSERT(disconnected);
+  }
+
+  void AnalysisObject_Impl::setDirtyFlag() {
+    m_dirty = true;
   }
 
 } // detail
@@ -283,7 +323,91 @@ void AnalysisObject::onChange() {
   getImpl<detail::AnalysisObject_Impl>()->onChange(detail::AnalysisObject_Impl::Benign);
 }
 
+QVariant AnalysisObject::toVariant() const {
+  return getImpl<detail::AnalysisObject_Impl>()->toVariant();
+}
+
+QVariant AnalysisObject::toServerFormulationVariant() const {
+  return getImpl<detail::AnalysisObject_Impl>()->toServerFormulationVariant();
+}
+
+QVariant AnalysisObject::toServerDataPointsVariant() const {
+  return getImpl<detail::AnalysisObject_Impl>()->toServerDataPointsVariant();
+}
+
 /// @endcond
+
+boost::optional<AnalysisObject> loadJSON(const openstudio::path& p) {
+  OptionalAnalysisObject result;
+  try {
+    std::pair<QVariant,VersionString> parseResult = openstudio::loadJSON(p);
+    QVariantMap variant = parseResult.first.toMap();
+    if (variant.contains("data_point")) {
+      result = detail::DataPoint_Impl::factoryFromVariant(variant["data_point"],parseResult.second,boost::none);
+    }
+    else if (variant.contains("analysis")) {
+      result = detail::Analysis_Impl::fromVariant(variant["analysis"],parseResult.second);
+    }
+    else {
+      LOG_FREE_AND_THROW("openstudio.analysis.AnalysisObject",
+                         "The file at " << toString(p) << " does not contain a data_point or "
+                         << "an analysis.");
+    }
+  }
+  catch (std::exception& e) {
+    LOG_FREE(Error,"openstudio.analysis.AnalysisObject",
+             "The file at " << toString(p) << " cannot be parsed as an OpenStudio "
+             << "analysis framework json file, because " << e.what());
+  }
+  catch (...) {
+    LOG_FREE(Error,"openstudio.analysis.AnalysisObject",
+             "The file at " << toString(p) << " cannot be parsed as an OpenStudio "
+             << "analysis framework json file.");
+  }
+
+  return result;
+}
+
+boost::optional<AnalysisObject> loadJSON(std::istream& json) {
+  // istream -> string code from
+  // http://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
+  std::string contents;
+  json.seekg(0, std::ios::end);
+  contents.resize(json.tellg());
+  json.seekg(0, std::ios::beg);
+  json.read(&contents[0], contents.size());
+  return loadJSON(contents);
+}
+
+boost::optional<AnalysisObject> loadJSON(const std::string& json) {
+  OptionalAnalysisObject result;
+  try {
+    std::pair<QVariant,VersionString> parseResult = openstudio::loadJSON(json);
+    QVariantMap variant = parseResult.first.toMap();
+    if (variant.contains("data_point")) {
+      result = detail::DataPoint_Impl::factoryFromVariant(variant["data_point"],parseResult.second,boost::none);
+    }
+    else if (variant.contains("analysis")) {
+      result = detail::Analysis_Impl::fromVariant(variant["analysis"],parseResult.second);
+    }
+    else {
+      LOG_FREE_AND_THROW("openstudio.analysis.AnalysisObject",
+                         "The parsed json string does not contain a data_point or an analysis.");
+    }
+  }
+  catch (std::exception& e) {
+    LOG_FREE(Error,"openstudio.analysis.AnalysisObject",
+             "The json string cannot be parsed as an OpenStudio analysis framework "
+             << "json file, because " << e.what() << ".");
+  }
+  catch (...) {
+    LOG_FREE(Error,"openstudio.analysis.AnalysisObject",
+             "The following string cannot be parsed as an OpenStudio analysis framework "
+             << "json file." << std::endl << std::endl << json);
+  }
+
+  return result;
+}
 
 } // analysis
 } // openstudio

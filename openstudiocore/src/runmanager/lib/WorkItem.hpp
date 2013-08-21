@@ -32,10 +32,6 @@ namespace openstudio {
 
 class FileReferenceType;
 
-namespace ruleset {
-  class ModelRuleset;
-}
-
 namespace runmanager {
 
 class RUNMANAGER_API WorkItem {
@@ -50,7 +46,6 @@ class RUNMANAGER_API WorkItem {
            const openstudio::runmanager::JobParams &t_params,
            const openstudio::runmanager::Files &t_files,
            const std::string &t_jobkeyname="");
-  WorkItem(const openstudio::ruleset::ModelRuleset& modelRuleset);
 
   //@}
   /** @name Getters and Queries */
@@ -67,6 +62,20 @@ class RUNMANAGER_API WorkItem {
   boost::optional<FileReferenceType> outputFileType() const;
 
   //@}
+ 
+  /// \returns WorkItem represented by the given JSON strong
+  ///
+  /// \throws std::exception with description if something goes wrong 
+  static WorkItem fromJSON(const std::string &t_json);
+
+  /// \returns a JSON representation of this WorkItem
+  ///
+  /// This is the prefered method of transferring Workflow components over a network
+  /// and between computers.
+  ///
+  /// \sa openstudio::runmanager::Job::toJSON for more advanced methods of persisting
+  ///     and transferring Worfklow objects
+  std::string toJSON() const;
 
   openstudio::runmanager::JobType type;
   openstudio::runmanager::Tools tools;
