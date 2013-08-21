@@ -134,18 +134,20 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
             endYear++;
           }
           
+          QString number;
+
           m_beginAndEndDates += "Start Date ";
-          m_beginAndEndDates += m_beginAndEndDates.setNum(beginMonth);
+          m_beginAndEndDates += number.setNum(beginMonth);
           m_beginAndEndDates += "/";
-          m_beginAndEndDates += m_beginAndEndDates.setNum(beginDayOfMonth);
+          m_beginAndEndDates += number.setNum(beginDayOfMonth);
           m_beginAndEndDates += "/";
-          m_beginAndEndDates += m_beginAndEndDates.setNum(beginYear);
+          m_beginAndEndDates += number.setNum(beginYear);
           m_beginAndEndDates += "   End Date ";
-          m_beginAndEndDates += m_beginAndEndDates.setNum(endMonth);
+          m_beginAndEndDates += number.setNum(endMonth);
           m_beginAndEndDates += "/";
-          m_beginAndEndDates += m_beginAndEndDates.setNum(endDayOfMonth);
+          m_beginAndEndDates += number.setNum(endDayOfMonth);
           m_beginAndEndDates += "/";
-          m_beginAndEndDates += m_beginAndEndDates.setNum(endYear);
+          m_beginAndEndDates += number.setNum(endYear);
           
         }
       } 
