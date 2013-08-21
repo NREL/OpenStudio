@@ -50,6 +50,7 @@ class OSComboBox2;
 class OSDoubleEdit2;
 class OSIntegerEdit2;
 class OSLineEdit2;
+class OSUnsignedEdit2;
 class UtilityBillListView;
 
 enum BillFormat{
@@ -138,7 +139,7 @@ private:
   QLabel * m_peakDemandUnitsLabel;
   OSComboBox2 * m_peakDemandUnits;
   QLabel * m_windowTimestepsLabel;
-  OSIntegerEdit2 * m_windowTimesteps;
+  OSUnsignedEdit2 * m_windowTimesteps;
 
   QPushButton * m_addBillingPeriod;
 

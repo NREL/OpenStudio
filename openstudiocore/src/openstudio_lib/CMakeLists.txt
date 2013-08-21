@@ -407,6 +407,8 @@ SET( ${target_name}_SRC
   ../shared_gui_components/OSQuantityEdit.hpp
   ../shared_gui_components/OSSwitch.cpp
   ../shared_gui_components/OSSwitch.hpp
+  ../shared_gui_components/OSUnsignedEdit.cpp
+  ../shared_gui_components/OSUnsignedEdit.hpp
   ../shared_gui_components/OSViewSwitcher.cpp
   ../shared_gui_components/OSViewSwitcher.hpp
   ../shared_gui_components/PageNavigator.cpp
@@ -626,6 +628,7 @@ SET( ${target_name}_moc
   ../shared_gui_components/OSQObjectController.hpp
   ../shared_gui_components/OSQuantityEdit.hpp
   ../shared_gui_components/OSSwitch.hpp
+  ../shared_gui_components/OSUnsignedEdit.hpp
   ../shared_gui_components/OSViewSwitcher.hpp
   ../shared_gui_components/PageNavigator.hpp
   ../shared_gui_components/TIDItemModel.hpp

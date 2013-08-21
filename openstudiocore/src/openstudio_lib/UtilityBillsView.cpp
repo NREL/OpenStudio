@@ -29,6 +29,7 @@
 #include "../shared_gui_components/OSDoubleEdit.hpp"
 #include "../shared_gui_components/OSIntegerEdit.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
+#include "../shared_gui_components/OSUnsignedEdit.hpp"
 
 #include <model/Model_Impl.hpp>
 #include <model/RunPeriod.hpp>
@@ -258,7 +259,7 @@ void UtilityBillsInspectorView::createWidgets()
   m_windowTimestepsLabel->setObjectName("H2");
   vLayout->addWidget(m_windowTimestepsLabel);
 
-  m_windowTimesteps = new OSIntegerEdit2();
+  m_windowTimesteps = new OSUnsignedEdit2();
   m_windowTimesteps->setFixedWidth(OS_EDIT_WIDTH);
   vLayout->addWidget(m_windowTimesteps);
 
@@ -365,11 +366,10 @@ void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityB
 
     m_windowTimestepsLabel->setVisible(true);
     m_windowTimesteps->setVisible(true);
-    //  TODO may need bind for unsigned
-    //m_windowTimesteps->bind(
-    //  *m_utilityBill,
-    //  OptionalIntGetter(boost::bind(&model::UtilityBill::timestepsInPeakDemandWindow,m_utilityBill.get_ptr())),
-    //  boost::optional<IntSetter>(boost::bind(&model::UtilityBill::setTimestepsInPeakDemandWindow,m_utilityBill.get_ptr(),_1)));
+    m_windowTimesteps->bind(
+      *m_utilityBill,
+      OptionalUnsignedGetter(boost::bind(&model::UtilityBill::timestepsInPeakDemandWindow,m_utilityBill.get_ptr())),
+      boost::optional<UnsignedSetter>(boost::bind(&model::UtilityBill::setTimestepsInPeakDemandWindow,m_utilityBill.get_ptr(),_1)));
   }else{
     m_peakDemandUnitsLabel->setVisible(false);
     m_peakDemandUnits->setVisible(false);
@@ -386,15 +386,21 @@ void UtilityBillsInspectorView::detach()
 {
   this->stackedWidget()->setCurrentIndex(0);
 
-  m_name->unbind();
+  if(m_name){
+    m_name->unbind();
+  }
 
-  m_consumptionUnits->unbind();
+  if(m_consumptionUnits){
+    m_consumptionUnits->unbind();
+  }
 
-  m_peakDemandUnits->unbind();
+  if(m_peakDemandUnits){
+    m_peakDemandUnits->unbind();
+  }
    
-  m_windowTimesteps->unbind();
-
-  deleteBillingPeriods();
+  if(m_windowTimesteps){
+    m_windowTimesteps->unbind();
+  }
 }
 
 void UtilityBillsInspectorView::refresh()
