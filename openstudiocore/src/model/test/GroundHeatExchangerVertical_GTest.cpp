@@ -26,9 +26,6 @@
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 
