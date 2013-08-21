@@ -69,7 +69,7 @@ UTILITIES_API path getApplicationOutputDirectory(const std::string& outdir);
 
   /// \returns The location of the ruby installation intended for aws-sdk use with aws-sdk
   ///          gem already installed
-  openstudio::path getOpenStudioAWSRubyPath();
+  UTILITIES_API openstudio::path getOpenStudioAWSRubyPath();
 
 } // openstudio
 
