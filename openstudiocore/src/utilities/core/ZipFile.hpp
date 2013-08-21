@@ -11,19 +11,19 @@ namespace openstudio {
   {
     public:
       /// Constructs a ZipFile object, opening the given file name. Throws if file could not be opened
-      /// \param[in] t_filename filename to open
-      /// \param[in] t_add If true, add new files to existing archive, if false, overwrite existing archive
-      ZipFile(const openstudio::path &t_filename, bool t_add);
+      /// \param[in] filename filename to open
+      /// \param[in] add If true, add new files to existing archive, if false, overwrite existing archive
+      ZipFile(const openstudio::path &filename, bool add);
 
       ~ZipFile();
 
-      /// Adds t_localPath to the ZipFile, placing it at relative location t_destinationPath
+      /// Adds localPath to the ZipFile, placing it at relative location destinationPath
       /// in the archive.
-      void addFile(const openstudio::path &t_localPath, const openstudio::path &t_destinationPath);
+      void addFile(const openstudio::path &localPath, const openstudio::path &destinationPath);
 
-      /// Recursively adds all files in t_localDir to the ZipFile, placing them in the archive
-      /// relative to t_destinationDir.
-      void addDirectory(const openstudio::path& t_localDir, const openstudio::path& t_destinationDir);
+      /// Recursively adds all files in localDir to the ZipFile, placing them in the archive
+      /// relative to destinationDir.
+      void addDirectory(const openstudio::path& localDir, const openstudio::path& destinationDir);
 
     private:
       void *m_zipFile;

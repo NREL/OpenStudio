@@ -29,11 +29,11 @@
 
 namespace openstudio {
 
-  ZipFile::ZipFile(const openstudio::path &t_filename, bool t_add)
-    : m_zipFile(zipOpen(openstudio::toString(t_filename).c_str(), t_add?APPEND_STATUS_ADDINZIP:APPEND_STATUS_CREATE))
+  ZipFile::ZipFile(const openstudio::path &filename, bool add)
+    : m_zipFile(zipOpen(openstudio::toString(filename).c_str(), add?APPEND_STATUS_ADDINZIP:APPEND_STATUS_CREATE))
   {
     if (!m_zipFile) {
-      throw std::runtime_error("ZipFile " + openstudio::toString(t_filename) + " could not be opened");
+      throw std::runtime_error("ZipFile " + openstudio::toString(filename) + " could not be opened");
     }
   }
 
@@ -42,9 +42,9 @@ namespace openstudio {
     zipClose(m_zipFile, 0);
   }
 
-  void ZipFile::addFile(const openstudio::path &t_localPath, const openstudio::path &t_destinationPath)
+  void ZipFile::addFile(const openstudio::path &localPath, const openstudio::path &destinationPath)
   {
-    if (zipOpenNewFileInZip(m_zipFile, openstudio::toString(t_destinationPath).c_str(),
+    if (zipOpenNewFileInZip(m_zipFile, openstudio::toString(destinationPath).c_str(),
           0,
           0, 0,
           0, 0,
@@ -52,15 +52,15 @@ namespace openstudio {
           Z_DEFLATED,
           Z_DEFAULT_COMPRESSION) != ZIP_OK)
     {
-      throw std::runtime_error("Unable to create new file in archive: " + openstudio::toString(t_destinationPath));
+      throw std::runtime_error("Unable to create new file in archive: " + openstudio::toString(destinationPath));
     }
 
     try {
-      std::ifstream ifs(openstudio::toString(t_localPath).c_str(), std::ios_base::in | std::ios_base::binary);
+      std::ifstream ifs(openstudio::toString(localPath).c_str(), std::ios_base::in | std::ios_base::binary);
 
       if (!ifs.is_open() || ifs.fail())
       {
-        throw std::runtime_error("Unable to open local file: " + openstudio::toString(t_localPath));
+        throw std::runtime_error("Unable to open local file: " + openstudio::toString(localPath));
       }
 
       while (!ifs.eof())
@@ -71,7 +71,7 @@ namespace openstudio {
 
         if (ifs.fail() && !ifs.eof())
         {
-          throw std::runtime_error("Error reading from local file: " + openstudio::toString(t_localPath));
+          throw std::runtime_error("Error reading from local file: " + openstudio::toString(localPath));
         }
 
         zipWriteInFileInZip(m_zipFile, &buffer.front(), static_cast<unsigned int>(bytesread));
@@ -84,13 +84,13 @@ namespace openstudio {
     zipCloseFileInZip(m_zipFile);
   }
 
-  void ZipFile::addDirectory(const openstudio::path& t_localDir, const openstudio::path& t_destinationDir) {
+  void ZipFile::addDirectory(const openstudio::path& localDir, const openstudio::path& destinationDir) {
     // following conventions in openstudio::copyDirectory
-    QDir srcDir(toQString(t_localDir));
+    QDir srcDir(toQString(localDir));
 
     Q_FOREACH(const QFileInfo& info, srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot)) {
-      QString srcItemPath = toQString(t_localDir) + "/" + info.fileName();
-      QString dstItemPath = toQString(t_destinationDir) + "/" + info.fileName();
+      QString srcItemPath = toQString(localDir) + "/" + info.fileName();
+      QString dstItemPath = toQString(destinationDir) + "/" + info.fileName();
       if (info.isDir()) {
         addDirectory(toPath(srcItemPath),toPath(dstItemPath));
       }
