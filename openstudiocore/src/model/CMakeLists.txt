@@ -759,6 +759,9 @@ SET( ${target_name}_src
   ZoneHVACPackagedTerminalAirConditioner.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner.cpp  
+  ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp
+  ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp   
+  ZoneHVACTerminalUnitVariableRefrigerantFlow.cpp
   ZoneHVACWaterToAirHeatPump.hpp
   ZoneHVACWaterToAirHeatPump_Impl.hpp
   ZoneHVACWaterToAirHeatPump.cpp    
@@ -1023,6 +1026,7 @@ SET( ${target_name}_moc
   ZoneHVACEquipmentList_Impl.hpp   
   ZoneHVACIdealLoadsAirSystem_Impl.hpp
   ZoneHVACFourPipeFanCoil_Impl.hpp  
+  ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp   
   ZoneHVACPackagedTerminalHeatPump_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
   ZoneHVACUnitHeater_Impl.hpp

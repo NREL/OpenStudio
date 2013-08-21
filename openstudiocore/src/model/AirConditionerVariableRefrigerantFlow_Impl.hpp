@@ -32,6 +32,8 @@ class CurveBiquadratic;
 class CurveCubic;
 class CurveCubic;
 class ThermalZone;
+class ModelObjectList;
+class ZoneHVACTerminalUnitVariableRefrigerantFlow;
 
 namespace detail {
 
@@ -449,6 +451,20 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
   unsigned inletPort();
 
   unsigned outletPort();
+
+  ModelObjectList vrfModelObjectList() const;
+
+  bool setVRFModelObjectList(const ModelObjectList & modelObjectList);
+
+  void addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow & vrf);
+
+  void removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow & vrf);
+
+  void removeAllTerminals();
+
+  std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
+
+  ModelObject clone(Model & model) const;
 
  private:
 

@@ -17,12 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 #include <model/CoilHeatingDXVariableRefrigerantFlow.hpp>
 #include <model/CoilHeatingDXVariableRefrigerantFlow_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/Curve.hpp>
 #include <model/Curve_Impl.hpp>
+#include <model/CurveBiquadratic.hpp>
+#include <model/CurveBiquadratic_Impl.hpp>
+#include <model/CurveQuadratic.hpp>
+#include <model/CurveQuadratic_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
 #include <utilities/idd/OS_Coil_Heating_DX_VariableRefrigerantFlow_FieldEnums.hxx>
@@ -38,7 +44,7 @@ namespace detail {
   CoilHeatingDXVariableRefrigerantFlow_Impl::CoilHeatingDXVariableRefrigerantFlow_Impl(const IdfObject& idfObject,
                                                                                        Model_Impl* model,
                                                                                        bool keepHandle)
-    : StraightComponent_Impl(idfObject,model,keepHandle)
+    : HVACComponent_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == CoilHeatingDXVariableRefrigerantFlow::iddObjectType());
   }
@@ -46,7 +52,7 @@ namespace detail {
   CoilHeatingDXVariableRefrigerantFlow_Impl::CoilHeatingDXVariableRefrigerantFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                                        Model_Impl* model,
                                                                                        bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
+    : HVACComponent_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == CoilHeatingDXVariableRefrigerantFlow::iddObjectType());
   }
@@ -54,7 +60,7 @@ namespace detail {
   CoilHeatingDXVariableRefrigerantFlow_Impl::CoilHeatingDXVariableRefrigerantFlow_Impl(const CoilHeatingDXVariableRefrigerantFlow_Impl& other,
                                                                                        Model_Impl* model,
                                                                                        bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
+    : HVACComponent_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& CoilHeatingDXVariableRefrigerantFlow_Impl::outputVariableNames() const
@@ -188,40 +194,44 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_DX_VariableRefrigerantFlowFields::HeatingCapacityModifierFunctionofFlowFractionCurve);
   }
 
-  unsigned CoilHeatingDXVariableRefrigerantFlow_Impl::inletPort()
-  {
-    return OS_Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode;
-  }
-
-  unsigned CoilHeatingDXVariableRefrigerantFlow_Impl::outletPort()
-  {
-    return OS_Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode;
-  }
-
 } // detail
 
 CoilHeatingDXVariableRefrigerantFlow::CoilHeatingDXVariableRefrigerantFlow(const Model& model)
-  : StraightComponent(CoilHeatingDXVariableRefrigerantFlow::iddObjectType(),model)
+  : HVACComponent(CoilHeatingDXVariableRefrigerantFlow::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilHeatingDXVariableRefrigerantFlow_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_Coil_Heating_DX_VariableRefrigerantFlowFields::AvailabilitySchedule
-  //     OS_Coil_Heating_DX_VariableRefrigerantFlowFields::HeatingCapacityRatioModifierFunctionofTemperatureCurve
-  //     OS_Coil_Heating_DX_VariableRefrigerantFlowFields::HeatingCapacityModifierFunctionofFlowFractionCurve
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // ok = setAvailabilitySchedule();
-  OS_ASSERT(ok);
-  // ok = setRatedTotalHeatingCapacity();
-  OS_ASSERT(ok);
-  // ok = setRatedAirFlowRate();
-  OS_ASSERT(ok);
-  // ok = setHeatingCapacityRatioModifierFunctionofTemperatureCurve();
-  OS_ASSERT(ok);
-  // ok = setHeatingCapacityModifierFunctionofFlowFractionCurve();
-  OS_ASSERT(ok);
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
+  setAvailabilitySchedule(schedule);
+
+  autosizeRatedTotalHeatingCapacity();
+
+  autosizeRatedAirFlowRate();
+
+  CurveBiquadratic vrfTUHeatCAPFT(model);
+  vrfTUHeatCAPFT.setName( name().get() + " VRFTUHeatCAPFT");
+  vrfTUHeatCAPFT.setCoefficient1Constant(0.375443994956127);
+  vrfTUHeatCAPFT.setCoefficient2x(6.68190645147821E-02);
+  vrfTUHeatCAPFT.setCoefficient3xPOW2(-1.94171026482001E-03);
+  vrfTUHeatCAPFT.setCoefficient4y(4.42618420640187E-02);
+  vrfTUHeatCAPFT.setCoefficient5yPOW2(-0.0004009578);
+  vrfTUHeatCAPFT.setCoefficient6xTIMESY(-0.0014819801);
+  vrfTUHeatCAPFT.setMinimumValueofx(21.11);
+  vrfTUHeatCAPFT.setMaximumValueofx(27.22);
+  vrfTUHeatCAPFT.setMinimumValueofy(-15);
+  vrfTUHeatCAPFT.setMaximumValueofy(18.33);
+  vrfTUHeatCAPFT.setMinimumCurveOutput(0.6074);
+  vrfTUHeatCAPFT.setMaximumCurveOutput(1.0);
+  setHeatingCapacityRatioModifierFunctionofTemperatureCurve(vrfTUHeatCAPFT);
+
+  CurveQuadratic vrfACCoolCapFFF(model);
+  vrfACCoolCapFFF.setName( name().get() + " VRFACCoolCapFFF");
+  vrfACCoolCapFFF.setCoefficient1Constant(0.8);
+  vrfACCoolCapFFF.setCoefficient2x(0.2);
+  vrfACCoolCapFFF.setCoefficient3xPOW2(0.0);
+  vrfACCoolCapFFF.setMinimumValueofx(0.5);
+  vrfACCoolCapFFF.setMaximumValueofx(1.5);
+  setHeatingCapacityModifierFunctionofFlowFractionCurve(vrfACCoolCapFFF);
 }
 
 IddObjectType CoilHeatingDXVariableRefrigerantFlow::iddObjectType() {
@@ -286,7 +296,7 @@ bool CoilHeatingDXVariableRefrigerantFlow::setHeatingCapacityModifierFunctionofF
 
 /// @cond
 CoilHeatingDXVariableRefrigerantFlow::CoilHeatingDXVariableRefrigerantFlow(boost::shared_ptr<detail::CoilHeatingDXVariableRefrigerantFlow_Impl> impl)
-  : StraightComponent(impl)
+  : HVACComponent(impl)
 {}
 /// @endcond
 

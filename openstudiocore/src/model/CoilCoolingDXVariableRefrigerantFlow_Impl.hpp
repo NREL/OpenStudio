@@ -21,7 +21,7 @@
 #define MODEL_COILCOOLINGDXVARIABLEREFRIGERANTFLOW_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/StraightComponent_Impl.hpp>
+#include <model/HVACComponent_Impl.hpp>
 
 namespace openstudio {
 
@@ -32,8 +32,8 @@ class Curve;
 
 namespace detail {
 
-  /** CoilCoolingDXVariableRefrigerantFlow_Impl is a StraightComponent_Impl that is the implementation class for CoilCoolingDXVariableRefrigerantFlow.*/
-  class MODEL_API CoilCoolingDXVariableRefrigerantFlow_Impl : public StraightComponent_Impl {
+  /** CoilCoolingDXVariableRefrigerantFlow_Impl is a HVACComponent_Impl that is the implementation class for CoilCoolingDXVariableRefrigerantFlow.*/
+  class MODEL_API CoilCoolingDXVariableRefrigerantFlow_Impl : public HVACComponent_Impl {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
@@ -110,10 +110,6 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-
-    unsigned inletPort();
-
-    unsigned outletPort();
 
     //@}
    protected:

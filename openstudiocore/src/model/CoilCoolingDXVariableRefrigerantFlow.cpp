@@ -46,7 +46,7 @@ namespace detail {
   CoilCoolingDXVariableRefrigerantFlow_Impl::CoilCoolingDXVariableRefrigerantFlow_Impl(const IdfObject& idfObject,
                                                                                        Model_Impl* model,
                                                                                        bool keepHandle)
-    : StraightComponent_Impl(idfObject,model,keepHandle)
+    : HVACComponent_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == CoilCoolingDXVariableRefrigerantFlow::iddObjectType());
   }
@@ -54,7 +54,7 @@ namespace detail {
   CoilCoolingDXVariableRefrigerantFlow_Impl::CoilCoolingDXVariableRefrigerantFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                                        Model_Impl* model,
                                                                                        bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
+    : HVACComponent_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == CoilCoolingDXVariableRefrigerantFlow::iddObjectType());
   }
@@ -62,7 +62,7 @@ namespace detail {
   CoilCoolingDXVariableRefrigerantFlow_Impl::CoilCoolingDXVariableRefrigerantFlow_Impl(const CoilCoolingDXVariableRefrigerantFlow_Impl& other,
                                                                                        Model_Impl* model,
                                                                                        bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
+    : HVACComponent_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& CoilCoolingDXVariableRefrigerantFlow_Impl::outputVariableNames() const
@@ -221,20 +221,10 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::CoolingCapacityModifierCurveFunctionofFlowFraction);
   }
 
-  unsigned CoilCoolingDXVariableRefrigerantFlow_Impl::inletPort()
-  {
-    return OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirInletNode;
-  }
-
-  unsigned CoilCoolingDXVariableRefrigerantFlow_Impl::outletPort()
-  {
-    return OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode;
-  }
-
 } // detail
 
 CoilCoolingDXVariableRefrigerantFlow::CoilCoolingDXVariableRefrigerantFlow(const Model& model)
-  : StraightComponent(CoilCoolingDXVariableRefrigerantFlow::iddObjectType(),model)
+  : HVACComponent(CoilCoolingDXVariableRefrigerantFlow::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>());
 
@@ -351,7 +341,7 @@ bool CoilCoolingDXVariableRefrigerantFlow::setCoolingCapacityModifierCurveFuncti
 
 /// @cond
 CoilCoolingDXVariableRefrigerantFlow::CoilCoolingDXVariableRefrigerantFlow(boost::shared_ptr<detail::CoilCoolingDXVariableRefrigerantFlow_Impl> impl)
-  : StraightComponent(impl)
+  : HVACComponent(impl)
 {}
 /// @endcond
 

@@ -25,7 +25,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST(ModelFixture,AirConditionerVariableRefrigerantFlow)
+TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
@@ -38,5 +38,7 @@ TEST(ModelFixture,AirConditionerVariableRefrigerantFlow)
      exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );
+
+  ASSERT_TRUE(true);
 }
 

@@ -19,6 +19,8 @@
 
 #include <model/AirConditionerVariableRefrigerantFlow.hpp>
 #include <model/AirConditionerVariableRefrigerantFlow_Impl.hpp>
+#include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp>
+#include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/CurveBiquadratic.hpp>
@@ -33,12 +35,15 @@
 #include <model/Connection_Impl.hpp>
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
+#include <model/ModelObjectList.hpp>
+#include <model/ModelObjectList_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_AirConditioner_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/units/Unit.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Containers.hpp>
 
 namespace openstudio {
 
@@ -1329,6 +1334,51 @@ namespace detail {
     return OS_AirConditioner_VariableRefrigerantFlowFields::CondenserOutletNode;
   }
 
+  ModelObjectList AirConditionerVariableRefrigerantFlow_Impl::vrfModelObjectList() const
+  {
+    boost::optional<ModelObjectList> mo = getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_AirConditioner_VariableRefrigerantFlowFields::ZoneTerminalUnitList);
+
+    Q_ASSERT(mo);
+
+    return mo.get();
+  }
+
+  bool AirConditionerVariableRefrigerantFlow_Impl::setVRFModelObjectList(const ModelObjectList & modelObjectList)
+  {
+    return setPointer(OS_AirConditioner_VariableRefrigerantFlowFields::ZoneTerminalUnitList,modelObjectList.handle());
+  }
+
+  void AirConditionerVariableRefrigerantFlow_Impl::addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow & vrf)
+  {
+    vrfModelObjectList().addModelObject(vrf);
+  }
+
+  void AirConditionerVariableRefrigerantFlow_Impl::removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow & vrf)
+  {
+    vrfModelObjectList().removeModelObject(vrf);
+  }
+
+  void AirConditionerVariableRefrigerantFlow_Impl::removeAllTerminals()
+  {
+    vrfModelObjectList().removeAllModelObjects();
+  }
+
+  std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> AirConditionerVariableRefrigerantFlow_Impl::terminals() const
+  {
+    return subsetCastVector<ZoneHVACTerminalUnitVariableRefrigerantFlow>(vrfModelObjectList().modelObjects());
+  }
+
+  ModelObject AirConditionerVariableRefrigerantFlow_Impl::clone(Model & model) const
+  {
+    ModelObject airConditionerClone = StraightComponent_Impl::clone(model);
+
+    ModelObjectList modelObjectList(model);
+
+    airConditionerClone.getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setVRFModelObjectList(modelObjectList);
+
+    return airConditionerClone;
+  }
+
 } // detail
 
 
@@ -1664,6 +1714,9 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(con
   coolingLengthCorrectionFactor.setMinimumValueofy(0.8);
   coolingLengthCorrectionFactor.setMaximumValueofy(1.5);
   setPipingCorrectionFactorforLengthinCoolingModeCurve(coolingLengthCorrectionFactor);
+
+  ModelObjectList vrfModelObjectList(model);
+  getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setVRFModelObjectList(vrfModelObjectList);
 }
 
 IddObjectType AirConditionerVariableRefrigerantFlow::iddObjectType() {
@@ -2461,6 +2514,26 @@ void AirConditionerVariableRefrigerantFlow::setInitialHeatRecoveryHeatingEnergyF
 
 void AirConditionerVariableRefrigerantFlow::setHeatRecoveryHeatingEnergyTimeConstant(double heatRecoveryHeatingEnergyTimeConstant) {
   getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setHeatRecoveryHeatingEnergyTimeConstant(heatRecoveryHeatingEnergyTimeConstant);
+}
+
+void AirConditionerVariableRefrigerantFlow::addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow & vrf)
+{
+  getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->addTerminal(vrf);
+}
+
+void AirConditionerVariableRefrigerantFlow::removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow & vrf)
+{
+  getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->removeTerminal(vrf);
+}
+
+void AirConditionerVariableRefrigerantFlow::removeAllTerminals()
+{
+  getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->removeAllTerminals();
+}
+
+std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> AirConditionerVariableRefrigerantFlow::terminals() const
+{
+  return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->terminals();
 }
 
 /// @cond

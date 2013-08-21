@@ -21,7 +21,7 @@
 #define MODEL_COILHEATINGDXVARIABLEREFRIGERANTFLOW_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/StraightComponent_Impl.hpp>
+#include <model/HVACComponent_Impl.hpp>
 
 namespace openstudio {
 namespace model {
@@ -31,8 +31,8 @@ class Curve;
 
 namespace detail {
 
-  /** CoilHeatingDXVariableRefrigerantFlow_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingDXVariableRefrigerantFlow.*/
-  class MODEL_API CoilHeatingDXVariableRefrigerantFlow_Impl : public StraightComponent_Impl {
+  /** CoilHeatingDXVariableRefrigerantFlow_Impl is a HVACComponent_Impl that is the implementation class for CoilHeatingDXVariableRefrigerantFlow.*/
+  class MODEL_API CoilHeatingDXVariableRefrigerantFlow_Impl : public HVACComponent_Impl {
     Q_OBJECT;
 
    public:
@@ -84,10 +84,6 @@ namespace detail {
     bool setHeatingCapacityRatioModifierFunctionofTemperatureCurve(const Curve& curve);
 
     bool setHeatingCapacityModifierFunctionofFlowFractionCurve(const Curve& curve);
-
-    unsigned inletPort();
-
-    unsigned outletPort();
 
    protected:
 

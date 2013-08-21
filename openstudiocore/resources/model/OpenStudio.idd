@@ -5677,7 +5677,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
   A28, \field Zone Terminal Unit List
        \required-field
        \type object-list
-       \object-list HVACComponentList
+       \object-list ModelObjectLists
   A29, \field Heat Pump Waste Heat Recovery
        \type choice
        \required-field

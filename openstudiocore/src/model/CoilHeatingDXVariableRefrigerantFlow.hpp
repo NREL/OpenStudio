@@ -21,7 +21,7 @@
 #define MODEL_COILHEATINGDXVARIABLEREFRIGERANTFLOW_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include <model/HVACComponent.hpp>
 
 namespace openstudio {
 
@@ -36,8 +36,8 @@ namespace detail {
 
 } // detail
 
-/** CoilHeatingDXVariableRefrigerantFlow is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:DX:VariableRefrigerantFlow'. */
-class MODEL_API CoilHeatingDXVariableRefrigerantFlow : public StraightComponent {
+/** CoilHeatingDXVariableRefrigerantFlow is a HVACComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:DX:VariableRefrigerantFlow'. */
+class MODEL_API CoilHeatingDXVariableRefrigerantFlow : public HVACComponent {
  public:
 
   explicit CoilHeatingDXVariableRefrigerantFlow(const Model& model);

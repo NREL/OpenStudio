@@ -32,6 +32,7 @@ class CurveBiquadratic;
 class CurveCubic;
 class CurveCubic;
 class ThermalZone;
+class ZoneHVACTerminalUnitVariableRefrigerantFlow;
 
 namespace detail {
 
@@ -518,6 +519,17 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
   double heatRecoveryHeatingEnergyTimeConstant() const;
 
   void setHeatRecoveryHeatingEnergyTimeConstant(double heatRecoveryHeatingEnergyTimeConstant);
+
+
+  void addTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow & vrf);
+
+  void removeTerminal(ZoneHVACTerminalUnitVariableRefrigerantFlow & vrf);
+
+  void removeAllTerminals();
+
+  std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
+
+  ModelObject clone(Model & model) const;
 
  protected:
 
