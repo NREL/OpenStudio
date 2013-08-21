@@ -10,15 +10,15 @@
 
 namespace openstudio {
 
-  UnzipFile::UnzipFile(const openstudio::path &t_filename)
-    : m_unzFile(unzOpen(openstudio::toString(t_filename).c_str()))
+  UnzipFile::UnzipFile(const openstudio::path &filename)
+    : m_unzFile(unzOpen(openstudio::toString(filename).c_str()))
   {
     if (!m_unzFile) {
-      if (!boost::filesystem::exists(t_filename))
+      if (!boost::filesystem::exists(filename))
       {
-        throw std::runtime_error("UnzipFile " + openstudio::toString(t_filename) + " does not exist, could not be opened");
+        throw std::runtime_error("UnzipFile " + openstudio::toString(filename) + " does not exist, could not be opened");
       } else {
-        throw std::runtime_error("UnzipFile " + openstudio::toString(t_filename) + "  exists, could not be opened");
+        throw std::runtime_error("UnzipFile " + openstudio::toString(filename) + "  exists, could not be opened");
       }
     }
   }
@@ -28,7 +28,7 @@ namespace openstudio {
     unzClose(m_unzFile);
   }
 
-  std::vector<openstudio::path> UnzipFile::extractAllFiles(const openstudio::path &t_outputPath) const
+  std::vector<openstudio::path> UnzipFile::extractAllFiles(const openstudio::path &outputPath) const
   {
     std::vector<openstudio::path> files = listFiles();
 
@@ -42,29 +42,29 @@ namespace openstudio {
       {
         // This is a directory - skip it
       } else {
-        retfiles.push_back(extractFile(*itr, t_outputPath));
+        retfiles.push_back(extractFile(*itr, outputPath));
       }
     }
 
     return retfiles;
   }
 
-  openstudio::path UnzipFile::extractFile(const openstudio::path &t_filename, const openstudio::path &t_outputPath) const
+  openstudio::path UnzipFile::extractFile(const openstudio::path &filename, const openstudio::path &outputPath) const
   {
-    if (unzLocateFile(m_unzFile, openstudio::toString(t_filename).c_str(), 1) != UNZ_OK)
+    if (unzLocateFile(m_unzFile, openstudio::toString(filename).c_str(), 1) != UNZ_OK)
     {
-      throw std::runtime_error("File does not exist in archive: " + openstudio::toString(t_filename));
+      throw std::runtime_error("File does not exist in archive: " + openstudio::toString(filename));
     }
 
     if (unzOpenCurrentFile(m_unzFile) != UNZ_OK)
     {
-      throw std::runtime_error("Unable to open file in archive: " + openstudio::toString(t_filename));
+      throw std::runtime_error("Unable to open file in archive: " + openstudio::toString(filename));
     }
 
     try {
       bool cont = true;
 
-      openstudio::path createdFile = t_outputPath / t_filename;
+      openstudio::path createdFile = outputPath / filename;
 
       QDir().mkpath(toQString(createdFile.parent_path()));
 
