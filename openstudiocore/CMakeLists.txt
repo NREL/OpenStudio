@@ -83,6 +83,7 @@ OPTION( BUILD_SDD "Build with SDD support" ON )
 
 # Build CONTAM
 OPTION( BUILD_CONTAM "Build with CONTAM support" OFF )
+
 # Build R package
 OPTION( BUILD_R "Build R package" OFF )
 

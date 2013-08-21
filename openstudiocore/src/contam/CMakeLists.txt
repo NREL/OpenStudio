@@ -15,6 +15,10 @@ SET( ${target_name}_src
   PrjDefs.hpp
   PrjData.hpp
   PrjData.cpp
+  SimTxt.hpp
+  SimTxt.cpp
+  WindPressure.hpp
+  WindPressure.cpp
 )
 
 # resource files
@@ -81,6 +85,14 @@ TARGET_LINK_LIBRARIES( OsmToPrj
 add_executable(PrjToOsm PrjToOsm.cpp)
 
 TARGET_LINK_LIBRARIES( PrjToOsm
+  ${${target_name}_depends}
+  openstudio_osversion
+  openstudio_contam
+)
+
+add_executable(FitInfiltration FitInfiltration.cpp)
+
+TARGET_LINK_LIBRARIES( FitInfiltration
   ${${target_name}_depends}
   openstudio_osversion
   openstudio_contam

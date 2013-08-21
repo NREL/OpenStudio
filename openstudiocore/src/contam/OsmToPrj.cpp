@@ -87,10 +87,10 @@ int main(int argc, char *argv[])
     if(file.open(QFile::WriteOnly))
     {
       QTextStream textStream(&file);
-      boost::optional<QString> output = translator.translateToPrj(*model);
+      boost::optional<std::string> output = translator.translateToString(*model);
       if(output)
       {
-        textStream << *output;
+        textStream << openstudio::toQString(*output);
       }
       else
       {
@@ -106,8 +106,8 @@ int main(int argc, char *argv[])
     }
     file.close();
     // The details on what we should do with these maps are still unclear
-    openstudio::path mapPath = inputPath.replace_extension(openstudio::toPath("map").string());
-    translator.writeMaps(mapPath);
+    // openstudio::path mapPath = inputPath.replace_extension(openstudio::toPath("map").string());
+    // translator.writeMaps(mapPath);
   }
   else
   {

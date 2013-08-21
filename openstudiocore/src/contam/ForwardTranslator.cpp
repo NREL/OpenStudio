@@ -20,6 +20,7 @@
 
 #include <contam/ForwardTranslator.hpp>
 #include <contam/PrjData.hpp>
+#include <contam/WindPressure.hpp>
 
 #include <model/Model.hpp>
 #include <model/Building.hpp>
@@ -41,6 +42,7 @@
 #include <utilities/sql/SqlFile.hpp>
 #include <utilities/core/Logger.hpp>
 #include <utilities/geometry/Geometry.hpp>
+#include <utilities/plot/ProgressBar.hpp>
 
 #include <boost/foreach.hpp>
 #include <boost/math/constants/constants.hpp>
@@ -48,342 +50,503 @@
 
 #include <QFile>
 #include <QTextStream>
+#include <QList>
 #include <QMap>
+#include <QThread>
 
-namespace openstudio 
-{
-namespace contam
-{
+namespace openstudio {
+namespace contam {
 
-  int ForwardTranslator::tableLookup(QMap<std::string,int> map, std::string str, const char *name)
+ForwardTranslator::ForwardTranslator()
+{
+  m_valid=false;
+  m_logSink.setLogLevel(Warn);
+  m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.ForwardTranslator"));
+  m_logSink.setThreadId(QThread::currentThread());
+  m_progressBar = 0;
+}
+
+int ForwardTranslator::tableLookup(QMap<std::string,int> map, std::string str, const char *name)
+{
+  int nr = map.value(str,0);
+  if(!nr)
   {
-    int nr = map.value(str,0);
-    if(!nr)
-    {
-      LOG(Warn, "Unable to look up '" << str << "' in " << name);
-    }
-    return nr;
+    LOG(Warn, "Unable to look up '" << str << "' in " << name);
   }
+  return nr;
+}
 
-  std::string ForwardTranslator::reverseLookup(QMap<std::string,int> map, int nr, const char *name)
+int ForwardTranslator::tableLookup(QMap<Handle,int> map, Handle handle, const char *name)
+{
+  int nr = map.value(handle,0);
+  if(!nr)
   {
-    if(nr > 0)
+    LOG(Warn, "Unable to look up '" << handle << "' in " << name);
+  }
+  return nr;
+}
+
+int ForwardTranslator::tableLookup(std::map<Handle,int> map, Handle handle, const char *name)
+{
+  std::map<Handle,int>::const_iterator iter = map.find(handle);
+  int nr = 0;
+  if(iter == map.end())
+  {
+    LOG(Warn, "Unable to look up '" << handle << "' in " << name);
+  }
+  else
+  {
+    nr = iter->second;
+  }
+  return nr;
+}
+
+std::string ForwardTranslator::reverseLookup(QMap<std::string,int> map, int nr, const char *name)
+{
+  if(nr > 0)
+  {
+    QList<std::string> keys = map.keys(nr);
+    if(keys.size()>0)
     {
-      QList<std::string> keys = map.keys(nr);
-      if(keys.size()>0)
+      if(keys.size()>1)
       {
-        if(keys.size()>1)
-        {
-          LOG(Warn, "Lookup table " << name << " contains multiple " << nr << " values");
-        }
-        return keys[0];
+        LOG(Warn, "Lookup table " << name << " contains multiple " << nr << " values");
       }
+      return keys[0];
     }
-    LOG(Warn, "Unable to revers look up " << nr << " in " << name);
-    return std::string();
   }
+  LOG(Warn, "Unable to reverse look up " << nr << " in " << name);
+  return std::string();
+}
 
-  void findAFEs(QMap<QString,int> &afeMap, QMap<QString,int> &extWallAFE, QMap<QString,int> &intWallAFE, 
-    QMap<QString,int> &floorAFE, QMap<QString,int> &roofAFE)
+Handle ForwardTranslator::reverseLookup(QMap<Handle,int> map, int nr, const char *name)
+{
+  if(nr > 0)
   {
-    QStringList grade, wallExt, wallInt, floor, roof;
-    grade << "Average" << "Leaky" << "Tight";
-    wallExt << "ExtWallAvg" << "ExtWallLeaky" << "ExtWallTight";
-    wallInt << "IntWallAvg" << "IntWallLeaky" << "IntWallTight";
-    floor << "FloorAvg" << "FloorLeaky" << "FloorTight";
-    roof << "RoofAvg" << "RoofLeaky" << "RoofTight";
-    for(int i=0;i<grade.size();i++)
+    QList<Handle> keys = map.keys(nr);
+    if(keys.size()>0)
     {
-      extWallAFE[grade[i]] = afeMap[wallExt[i]];
-      intWallAFE[grade[i]] = afeMap[wallInt[i]];
-      floorAFE[grade[i]] = afeMap[floor[i]];
-      roofAFE[grade[i]] = afeMap[roof[i]];
+      if(keys.size()>1)
+      {
+        LOG(Warn, "Lookup table " << name << " contains multiple " << nr << " values");
+      }
+      return keys[0];
     }
   }
+  LOG(Warn, "Unable to reverse look up " << nr << " in " << name);
+  return Handle();
+}
 
-  bool ForwardTranslator::modelToContam(const openstudio::model::Model& model, const openstudio::path& path,
-    const openstudio::path& mapPath)
+void findAFEs(QMap<QString,int> &afeMap, QMap<QString,int> &extWallAFE, QMap<QString,int> &intWallAFE, 
+              QMap<QString,int> &floorAFE, QMap<QString,int> &roofAFE)
+{
+  QStringList grade, wallExt, wallInt, floor, roof;
+  grade << "Leaky" << "Average" << "Tight";
+  wallExt << "ExtWallLeaky" << "ExtWallAvg" << "ExtWallTight";
+  wallInt << "IntWallLeaky" << "IntWallAvg" << "IntWallTight";
+  floor << "FloorLeaky" << "FloorAvg" << "FloorTight";
+  roof << "RoofLeaky" << "RoofAvg" << "RoofTight";
+  for(int i=0;i<grade.size();i++)
   {
-    ForwardTranslator translator;
+    extWallAFE[grade[i]] = afeMap[wallExt[i]];
+    intWallAFE[grade[i]] = afeMap[wallInt[i]];
+    floorAFE[grade[i]] = afeMap[floor[i]];
+    roofAFE[grade[i]] = afeMap[roof[i]];
+  }
+}
 
-    boost::optional<QString> output;
-    output = translator.translateToPrj(model);
-    if (!output)
-      return false;
-
+bool ForwardTranslator::toPrj(const openstudio::path& path)
+{
+  boost::optional<std::string> output = this->toString();
+  if(output)
+  {
     QFile file(toQString(path));
     if(file.open(QFile::WriteOnly))
     {
       QTextStream textStream(&file);
       textStream << *output;
       file.close();
-    }
-    else
-      return false;
-
-    if(translator.writeMaps(mapPath))
       return true;
+    }
+  }
+  return false;
+}
 
+bool ForwardTranslator::modelToPrj(const openstudio::model::Model& model, const openstudio::path& path,
+  bool translateHVAC, std::string leakageDescriptor, ProgressBar* progressBar)
+{
+  ForwardTranslator translator;
+
+  boost::optional<std::string> output;
+  output = translator.translateToString(model,translateHVAC,leakageDescriptor);
+  if (!output)
+  {
+    return false;
+  }
+  QFile file(toQString(path));
+  if(file.open(QFile::WriteOnly))
+  {
+    QTextStream textStream(&file);
+    textStream << *output;
+    file.close();
+  }
+  else
+  {
     return false;
   }
 
-  ForwardTranslator::ForwardTranslator()
-  {
-  }
+  return false;
+}
 
-  boost::optional<QString> ForwardTranslator::translateToPrj(const openstudio::model::Model& model)
+boost::optional<std::string> ForwardTranslator::translateToString(const openstudio::model::Model& model,
+                                                                  bool translateHVAC, std::string leakageDescriptor)
+{
+  if(translate(model,translateHVAC,leakageDescriptor))
+    return boost::optional<std::string>(m_data.print().toStdString());
+  return false;
+}
+
+bool ForwardTranslator::translate(const openstudio::model::Model& model, bool translateHVAC, std::string leakageDescriptor,
+  ProgressBar *progressBar)
+{
+  m_progressBar = progressBar;
+  m_logSink.setThreadId(QThread::currentThread());
+  m_logSink.resetStringStream();
+  QString output;
+  int nr;
+  // Load the template
+  //openstudio::contam::prj::Data data(":/templates/template.prj",false);
+  m_data.read(":/templates/template.prj",false);
+  if(!m_data.valid)
   {
-    QString output;
-    int nr;
-    // Load the template
-    openstudio::contam::prj::Data data(":/templates/template.prj",false);
-    if(!data.valid)
-      return false;
-    // The template is a legal PRJ file, so it has one level. Not for long.
-    data.levels.clear();
-    // Build the airflow element lookup table
-    for(int i=0;i<data.airflowElements.size();i++)
-      afeMap[data.airflowElements[i]->name] = data.airflowElements[i]->nr;
-    // Build up data for setting wall leakage
-    QMap<QString,int> extWallAFE;
-    QMap<QString,int> intWallAFE;
-    QMap<QString,int> floorAFE;
-    QMap<QString,int> roofAFE;
-    findAFEs(afeMap,extWallAFE,intWallAFE,floorAFE,roofAFE);
-    // Set top-level model info
-    boost::optional<model::Building> building = model.getOptionalUniqueModelObject<model::Building>();
-    QString modelDescr = QString("Automatically generated OpenStudio model");
-    if(building)
+    return false;
+  }
+  // The template is a legal PRJ file, so it has one level. Not for long.
+  m_data.levels.clear();
+  // Verify that the leakageDescriptor is one we know about
+  QList<std::string> known = QList<std::string>() << std::string("Average") << std::string("Tight")
+    << std::string("Leaky");
+  QString descriptor = openstudio::toQString(leakageDescriptor);
+  if(!known.contains(leakageDescriptor))
+  {
+    LOG(Warn, "Unknown leakage descriptor '" << leakageDescriptor << "' using 'Average'");
+    descriptor = "Average";
+  }
+  // Build the airflow element lookup table
+  for(int i=0;i<m_data.airflowElements.size();i++)
+  {
+    m_afeMap[m_data.airflowElements[i]->name] = m_data.airflowElements[i]->nr;
+    //std::cout << m_data.airflowElements[i]->name.toStdString() << " " << m_afeMap[m_data.airflowElements[i]->name] <<std::endl;
+  }
+  // Build up data for setting wall leakage
+  QMap<QString,int> extWallAFE;
+  QMap<QString,int> intWallAFE;
+  QMap<QString,int> floorAFE;
+  QMap<QString,int> roofAFE;
+  findAFEs(m_afeMap,extWallAFE,intWallAFE,floorAFE,roofAFE);
+  // Set top-level model info
+  boost::optional<model::Building> building = model.getOptionalUniqueModelObject<model::Building>();
+  QString modelDescr = QString("Automatically generated OpenStudio model");
+  if(building)
+  {
+    boost::optional<std::string> name = building->name();
+    if(name)
+      modelDescr = QString("Automatically generated from \"%1\" OpenStudio model").arg(openstudio::toQString(name.get()));
+  }
+  m_data.rc.prjdesc = modelDescr;
+  std::vector<openstudio::model::BuildingStory> stories = model.getModelObjects<openstudio::model::BuildingStory>();
+  // Translate each building story into a level and generate a lookup table by handle.
+  if (m_progressBar)
+  {
+    m_progressBar->setWindowTitle(openstudio::toString("Translating Stories"));
+    m_progressBar->setMinimum(0);
+    m_progressBar->setMaximum(stories.size());
+    m_progressBar->setValue(0);
+  }
+  nr=1;
+  double totalHeight = 0;
+  BOOST_FOREACH(const openstudio::model::BuildingStory& buildingStory, stories)
+  {
+    openstudio::contam::prj::Level level;
+    level.name = QString("<%1>").arg(nr);
+    m_levelMap[buildingStory.handle()] = nr;
+    double ht = buildingStory.nominalFloortoFloorHeight();
+    totalHeight += ht;
+    boost::optional<double> elevation = buildingStory.nominalZCoordinate();
+    double z = totalHeight;
+    if(elevation)
+      z = *elevation;
+    level.nr = nr;
+    level.refht = QString("%1").arg(z);
+    level.delht = QString("%1").arg(ht);
+    m_data.levels << level;
+    nr++;
+    if (m_progressBar)
     {
-      boost::optional<std::string> name = building->name();
-      if(name)
-        modelDescr = QString("Automatically generated from \"%1\" OpenStudio model").arg(openstudio::toQString(name.get()));
+      m_progressBar->setValue(m_progressBar->value() + 1);
     }
-    data.rc.prjdesc = modelDescr;
-    // Translate each building story into a level and generate a lookup table by name.
-    // Probably need to add something here to gripe about lack of info or maybe build it
-    nr=1;
-    double totalHeight = 0;
-    BOOST_FOREACH(const openstudio::model::BuildingStory& buildingStory, model.getModelObjects<openstudio::model::BuildingStory>())
+  }
+  m_data.rc.wind_H = QString().sprintf("%g",totalHeight);
+  // Check for levels - translation can't proceed without levels
+  if(m_data.levels.size() == 0)
+  {
+    LOG(Error, "Failed to find building stories in model, translation aborted");
+    m_valid = false;
+    return false;
+  }
+  // Translate each thermal zone and generate a lookup table by name.
+  std::vector<openstudio::model::ThermalZone> thermalZones = model.getConcreteModelObjects<openstudio::model::ThermalZone>();
+  if (m_progressBar)
+  {
+    m_progressBar->setWindowTitle(openstudio::toString("Translating Zones"));
+    m_progressBar->setMinimum(0);
+    m_progressBar->setMaximum(thermalZones.size());
+    m_progressBar->setValue(0);
+  }
+  nr=0;
+  BOOST_FOREACH(openstudio::model::ThermalZone thermalZone, thermalZones)
+  {
+    nr++;
+    openstudio::contam::prj::Zone zone;
+    m_zoneMap[thermalZone.handle()] = nr;
+    //volumeMap[thermalZone.name().get()] = nr;
+    zone.nr = nr;
+    zone.name = QString("Zone_%1").arg(nr);
+    boost::optional<double> volume = thermalZone.volume();
+    QString volString("0.0");
+    if(volume)
     {
-      openstudio::contam::prj::Level level;
-      level.name = QString("<%1>").arg(nr);
-      levelMap[buildingStory.name().get()] = nr;
-      double ht = buildingStory.nominalFloortoFloorHeight();
-      totalHeight += ht;
-      boost::optional<double> elevation = buildingStory.nominalZCoordinate();
-      double z = totalHeight;
-      if(elevation)
-        z = *elevation;
-      level.nr = nr;
-      level.refht = QString("%1").arg(z);
-      level.delht = QString("%1").arg(ht);
-      data.levels << level;
-      nr++;
+      volString = QString("%1").arg(*volume);
     }
-    // Check for levels - translation can't proceed without levels
-    if(data.levels.size() == 0)
+    else
     {
-      LOG(Error, "Failed to find building stories in model, translation aborted");
-      return false;
-    }
-    // Translate each thermal zone and generate a lookup table by name.
-    nr=0;
-    BOOST_FOREACH(openstudio::model::ThermalZone thermalZone,
-      model.getConcreteModelObjects<openstudio::model::ThermalZone>())
-    {
-      nr++;
-      openstudio::contam::prj::Zone zone;
-      zoneMap[thermalZone.name().get()] = nr;
-      zone.nr = nr;
-      zone.name = QString("Zone_%1").arg(nr);
-      boost::optional<double> volume = thermalZone.volume();
-      QString volString("0.0");
-      if(volume)
-      {
-        volString = QString("%1").arg(*volume);
-      }
-      else
-      {
-        // Since it seems this is a pretty common thing, no warning unless we can't get a value
-        // LOG(Warn, "Zone '" << name.toStdString() << "' has zero volume, trying to sum space volumes");
-        double vol=0.0;
-        BOOST_FOREACH(openstudio::model::Space space, thermalZone.spaces())
-        {
-          vol += space.volume();
-        }
-        if(vol == 0.0)
-        {
-          LOG(Warn, "Failed to compute volume for Zone '" << thermalZone.name().get() << "'");
-        }
-        else
-          volString = QString("%1").arg(vol);
-      }
-      zone.Vol = volString;
-      zone.setVariablePressure(true);
-      zone.setVariableContaminants(true);
-      // Set level - this is not great and will fail to create a legitimate model in cases
-      // where a zone is on more than one level. There are ugly workarounds - will need to
-      // think about
-      int levelNr = 0;
+      // Since it seems this is a pretty common thing, no warning unless we can't get a value
+      // LOG(Warn, "Zone '" << name.toStdString() << "' has zero volume, trying to sum space volumes");
+      double vol=0.0;
       BOOST_FOREACH(openstudio::model::Space space, thermalZone.spaces())
       {
-        boost::optional<openstudio::model::BuildingStory> story = space.buildingStory();
-        if(story)
-        {
-          levelNr = tableLookup(levelMap,(*story).name().get(),"levelMap");
-          break;
-        }
+        vol += space.volume();
       }
-      if(levelNr)
+      if(vol == 0.0)
       {
-        zone.pl = levelNr;
+        LOG(Warn, "Failed to compute volume for Zone '" << thermalZone.name().get() << "'");
       }
       else
       {
-        LOG(Error, "Unable to set level for zone '" << thermalZone.name().get() << "', translation aborted");
-        return false;
+        volString = QString("%1").arg(vol);
       }
-      // set T0
-      zone.T0 = QString("293.15");
-      data.zones << zone;
     }
-
-    // Create paths and generate a lookup table by name
-    nr = 0;
-    // Loop over surfaces and generate paths
-    QList <openstudio::Handle>used;
-    BOOST_FOREACH(openstudio::model::Surface surface, model.getConcreteModelObjects<openstudio::model::Surface>())
+    zone.Vol = volString;
+    zone.setVariablePressure(true);
+    zone.setVariableContaminants(true);
+    // Set level - this is not great and will fail to create a legitimate model in cases
+    // where a zone is on more than one level. There are ugly workarounds - will need to
+    // think about
+    int levelNr = 0;
+    BOOST_FOREACH(openstudio::model::Space space, thermalZone.spaces())
     {
-      openstudio::contam::prj::Path path;
-      std::string bc = surface.outsideBoundaryCondition();
-      if(!used.contains(surface.handle()) && bc != "Ground")
+      boost::optional<openstudio::model::BuildingStory> story = space.buildingStory();
+      if(story)
       {
-        // Get the associated thermal zone
-        boost::optional<openstudio::model::Space> space = surface.space();
-        if(!space)
+        levelNr = tableLookup(m_levelMap,(*story).handle(),"levelMap");
+        break;
+      }
+    }
+    if(levelNr)
+    {
+      zone.pl = levelNr;
+    }
+    else
+    {
+      LOG(Error, "Unable to set level for zone '" << thermalZone.name().get() << "', translation aborted");
+      m_valid = false;
+      return false;
+    }
+    // set T0
+    zone.T0 = QString("293.15");
+    m_data.zones << zone;
+    if (m_progressBar)
+    {
+      m_progressBar->setValue(m_progressBar->value() + 1);
+    }
+  }
+
+  // Create paths and generate a lookup table by name
+  std::vector<openstudio::model::Surface> surfaces = model.getConcreteModelObjects<openstudio::model::Surface>();
+  if (m_progressBar)
+  {
+    m_progressBar->setWindowTitle(openstudio::toString("Translating Surfaces"));
+    m_progressBar->setMinimum(0);
+    m_progressBar->setMaximum(surfaces.size());
+    m_progressBar->setValue(0);
+  }
+  nr = 0;
+  // Loop over surfaces and generate paths
+  QList <openstudio::Handle>used;
+  double wind_H = m_data.rc.wind_H.toDouble();
+  BOOST_FOREACH(openstudio::model::Surface surface,surfaces)
+  {
+    openstudio::contam::prj::Path path;
+    std::string bc = surface.outsideBoundaryCondition();
+    if(!used.contains(surface.handle()) && bc != "Ground")
+    {
+      // Get the associated thermal zone
+      boost::optional<openstudio::model::Space> space = surface.space();
+      if(!space)
+      {
+        LOG(Warn, "Unattached surface '" << surface.name().get() << "'");
+        if (m_progressBar)
         {
-          LOG(Warn, "Unattached surface '" << surface.name().get() << "'");
-          continue;
+          m_progressBar->setValue(m_progressBar->value() + 1);
         }
-        boost::optional<openstudio::model::ThermalZone> thermalZone = space->thermalZone();
-        if(!thermalZone)
+        continue;
+      }
+      boost::optional<openstudio::model::ThermalZone> thermalZone = space->thermalZone();
+      if(!thermalZone)
+      {
+        LOG(Warn, "Unattached space '" << space->name().get() << "'");
+        if (m_progressBar)
         {
-          LOG(Warn, "Unattached space '" << space->name().get() << "'");
-          continue;
+          m_progressBar->setValue(m_progressBar->value() + 1);
         }
-        // Use the lookup table to get the zone info
-        int zoneNr;
-        if(!(zoneNr=tableLookup(zoneMap,thermalZone->name().get(),"zoneMap")))
-          continue;
-        openstudio::contam::prj::Zone *zone = &(data.zones[zoneNr-1]);
-        // Get the surface area - will need to do more work here later if large openings are present
-        double area = surface.grossArea();
-        std::string type = surface.surfaceType();
-        double averageZ = 0;
-        double numVertices = surface.vertices().size();
-        BOOST_FOREACH(const Point3d& point, surface.vertices())
+        continue;
+      }
+      // Use the lookup table to get the zone info
+      int zoneNr;
+      if(!(zoneNr=tableLookup(m_zoneMap,thermalZone->handle(),"zoneMap")))
+      {
+        // Maybe this needs a warning?
+        if (m_progressBar)
         {
-          averageZ += point.z();
+          m_progressBar->setValue(m_progressBar->value() + 1);
         }
-        // Now set the path info
-        path.relHt = QString().sprintf("%g",averageZ / numVertices - data.levels[zone->pl-1].refht.toDouble());
-        path.pld = zone->pl;
-        path.mult = QString().sprintf("%g",area);
-        // Now for the type specific info
-        if(bc == "Outdoors")
+        continue;
+      }
+      openstudio::contam::prj::Zone *zone = &(m_data.zones[zoneNr-1]);
+      // Get the surface area - will need to do more work here later if large openings are present
+      double area = surface.grossArea();
+      std::string type = surface.surfaceType();
+      double averageZ = 0;
+      double numVertices = surface.vertices().size();
+      BOOST_FOREACH(const Point3d& point, surface.vertices())
+      {
+        averageZ += point.z();
+      }
+      // Now set the path info
+      path.relHt = QString().sprintf("%g",averageZ / numVertices - m_data.levels[zone->pl-1].refht.toDouble());
+      path.pld = zone->pl;
+      path.mult = QString().sprintf("%g",area);
+      // Now for the type specific info
+      if(bc == "Outdoors")
+      {
+        // Make an exterior flow path
+        path.pzn = zone->nr;
+        path.pzm = -1;
+        // Set the wind-related stuff here
+        path.wazm = QString().sprintf("%g",openstudio::radToDeg(surface.azimuth()));
+        path.setWindPressure(true);
+        path.wPmod = QString().sprintf("%g",openstudio::wind::pressureModifier(openstudio::wind::Default,wind_H));
+        path.pw = 4; // Assume standard template
+        // Set flow element
+        if(type == "RoofCeiling")
         {
-          // Make an exterior flow path
+          path.pe = roofAFE[descriptor];
+          path.pw = 5; // Assume standard template
+        }
+        else
+        {
+          path.pe = extWallAFE[descriptor];
+        }
+        path.nr = ++nr;
+        m_surfaceMap[surface.handle()] = path.nr;
+        m_data.paths << path;
+      }
+      else if (bc == "Surface")
+      {
+        boost::optional<openstudio::model::Surface> adjacentSurface = surface.adjacentSurface();
+        if(!adjacentSurface)
+        {
+          LOG(Error, "Unable to find adjacent surface for surface '" << surface.name().get() << "'");
+          m_valid = false;
+          return false;
+        }
+        boost::optional<openstudio::model::Space> adjacentSpace = adjacentSurface->space();
+        if(!adjacentSpace)
+        {
+          LOG(Error, "Unattached adjacent surface '" << adjacentSurface->name().get() << "'");
+          m_valid = false;
+          return false;
+        }
+        boost::optional<openstudio::model::ThermalZone> adjacentZone = adjacentSpace->thermalZone();
+        if(!adjacentZone)
+        {
+          LOG(Error, "Unattached adjacent space '" << adjacentSpace->name().get() << "'");
+          m_valid = false;
+          return false;
+        }
+        if(adjacentZone.get() != thermalZone.get()) // I don't really like doing this
+        {
+          // Make an interior flow path
           path.pzn = zone->nr;
-          path.pzm = -1;
-          // Set the wind-related stuff here
-          path.wazm = QString().sprintf("%g",openstudio::radToDeg(surface.azimuth()));
-          //path.setWindPressure(true);
+          path.pzm = m_zoneMap[adjacentZone->handle()];
           // Set flow element
-          if(type == "RoofCeiling")
+          if(type == "Floor" || type == "RoofCeiling")
           {
-            path.pe = roofAFE["Average"];
+            path.pe = floorAFE[descriptor];
           }
           else
           {
-            path.pe = extWallAFE["Average"];
+            path.pe = intWallAFE[descriptor];
           }
           path.nr = ++nr;
-          pathMap[surface.name().get()] = path.nr;
-          data.paths << path;
-        }
-        else if (bc == "Surface")
-        {
-          boost::optional<openstudio::model::Surface> adjacentSurface = surface.adjacentSurface();
-          if(adjacentSurface)
-          {
-            boost::optional<openstudio::model::Space> adjacentSpace = adjacentSurface->space();
-            if(adjacentSpace)
-            {
-              boost::optional<openstudio::model::ThermalZone> adjacentZone = adjacentSpace->thermalZone();
-              if(adjacentZone)
-              {
-                if(adjacentZone.get() != thermalZone.get()) // I don't really like doing this
-                {
-                  // Make an interior flow path
-                  path.pzn = zone->nr;
-                  path.pzm = zoneMap[adjacentZone->name().get()];
-                  // Set flow element
-                  if(type == "Floor" || type == "RoofCeiling")
-                  {
-                    path.pe = floorAFE["Average"];
-                  }
-                  else
-                  {
-                    path.pe = intWallAFE["Average"];
-                  }
-                  path.nr = ++nr;
-                  pathMap[surface.name().get()] = path.nr;
-                  data.paths << path;
-                  used << adjacentSurface->handle();
-                }
-              }
-              else
-              {
-                LOG(Error, "Unattached adjacent space '" << adjacentSpace->name().get() << "'");
-                return false;
-              }
-            }
-            else
-            {
-              LOG(Error, "Unattached adjacent surface '" << adjacentSurface->name().get() << "'");
-              return false;
-            }
-          }
-          else
-          {
-            LOG(Error, "Unable to find adjacent surface for surface '" << surface.name().get() << "'");
-            return false;
-          }
+          m_surfaceMap[surface.handle()] = path.nr;
+          m_data.paths << path;
+          used << adjacentSurface->handle();
         }
       }
     }
+    if (m_progressBar)
+    {
+      m_progressBar->setValue(m_progressBar->value() + 1);
+    }
+  }
 
+  if(translateHVAC)
+  {
     // Generate air handling systems
+    std::vector<openstudio::model::AirLoopHVAC> systems = model.getConcreteModelObjects<openstudio::model::AirLoopHVAC>();
+    if (m_progressBar)
+    {
+      m_progressBar->setWindowTitle(openstudio::toString("Translating AirLoops"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(systems.size());
+      m_progressBar->setValue(0);
+    }
     nr = 0;
-    BOOST_FOREACH(openstudio::model::AirLoopHVAC airloop, model.getConcreteModelObjects<openstudio::model::AirLoopHVAC>())
+    BOOST_FOREACH(openstudio::model::AirLoopHVAC airloop,systems)
     {
       // Skip loops with no zones attached
       if(!airloop.thermalZones().size())
+      {
+        if (m_progressBar)
+        {
+          m_progressBar->setValue(m_progressBar->value() + 1);
+        }
         continue;
+      }
       openstudio::contam::prj::Ahs ahs;
       ahs.nr = ++nr;
-      ahsMap[airloop.name().get()] = nr;
+      m_ahsMap[airloop.handle()] = nr;
       ahs.name = QString("AHS_%1").arg(nr);
       // Create supply and return zones
       openstudio::contam::prj::Zone rz;
-      rz.nr = data.zones.size()+1;
+      rz.nr = m_data.zones.size()+1;
       rz.pl = 1;
       rz.T0 = QString("293.15");
       rz.setSystem(true);
       rz.setVariableContaminants(true);
       rz.name = QString("AHS_%1(Rec)").arg(nr);
-      zoneMap[rz.name.toStdString()] = rz.nr;
+      //volumeMap[rz.name.toStdString()] = rz.nr;
       openstudio::contam::prj::Zone sz;
       sz.nr = rz.nr+1;
       sz.pl = 1;
@@ -391,25 +554,25 @@ namespace contam
       sz.setSystem(true);
       sz.setVariableContaminants(true);
       sz.name = QString("AHS_%1(Sup)").arg(nr);
-      zoneMap[sz.name.toStdString()] = sz.nr;
+      //volumeMap[sz.name.toStdString()] = sz.nr;
       // Store the zone numbers in the ahs
       ahs.zone_r = rz.nr;
       ahs.zone_s = sz.nr;
       // Add them to the zone list
-      data.zones << rz << sz;
+      m_data.zones << rz << sz;
       // Now hook the served zones up to the supply and return zones
       BOOST_FOREACH(openstudio::model::ThermalZone thermalZone, airloop.thermalZones())
       {
-        int zoneNr = tableLookup(zoneMap,thermalZone.name().get(),"zoneMap");
+        int zoneNr = tableLookup(m_zoneMap,thermalZone.handle(),"zoneMap");
         // Supply path
         openstudio::contam::prj::Path sp;
-        sp.nr = data.paths.size()+1;
+        sp.nr = m_data.paths.size()+1;
         sp.pld = 1;
         sp.pzn = ahs.zone_s;
         sp.pzm = zoneNr;
         sp.pa = ahs.nr;
         sp.setSystem(true);
-        pathMap[(thermalZone.name().get()+" supply")] = sp.nr;
+        m_pathMap[(thermalZone.name().get()+" supply")] = sp.nr;
         // Return path
         openstudio::contam::prj::Path rp;
         rp.nr = sp.nr+1;
@@ -418,50 +581,67 @@ namespace contam
         rp.pzm = ahs.zone_r;
         rp.pa = ahs.nr;
         rp.setSystem(true);
-        pathMap[(thermalZone.name().get()+" return")] = rp.nr;
+        m_pathMap[(thermalZone.name().get()+" return")] = rp.nr;
         // Add the paths to the path list
-        data.paths << sp << rp;
+        m_data.paths << sp << rp;
       }
-      data.ahs << ahs;
+      m_data.ahs << ahs;
+      if (m_progressBar)
+      {
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
     }
 
-    // Now loop back through the AHS list and connect the supply and return zones together
-    for(int i=0;i<data.ahs.size();i++)
+    if (m_progressBar)
     {
-      std::string loopName = reverseLookup(ahsMap,data.ahs[i].nr,"ahsMap");
+      m_progressBar->setWindowTitle(openstudio::toString("Connecting AHS to zones"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(m_data.ahs.size());
+      m_progressBar->setValue(0);
+    }
+    // Now loop back through the AHS list and connect the supply and return zones together
+    for(int i=0;i<m_data.ahs.size();i++)
+    {
+      std::string loopName = QString("AHS_%1").arg(i+1).toStdString();
       // Recirculation path
       openstudio::contam::prj::Path recirc;
-      recirc.nr = data.paths.size()+1;
+      recirc.nr = m_data.paths.size()+1;
       recirc.pld = 1;
       // Set the OA fraction schedule here
       //recirc.ps = ?
-      recirc.pzn = data.ahs[i].zone_r;
-      recirc.pzm = data.ahs[i].zone_s;
+      recirc.pzn = m_data.ahs[i].zone_r;
+      recirc.pzm = m_data.ahs[i].zone_s;
       recirc.setRecirculation(true);
-      pathMap[loopName + " recirculation"] = recirc.nr;
+      m_pathMap[loopName + " recirculation"] = recirc.nr;
       // Outside air path
       openstudio::contam::prj::Path oa;
       oa.nr = recirc.nr+1;
       oa.pld = 1;
       oa.pzn = -1;
-      oa.pzm = data.ahs[i].zone_s;
+      oa.pzm = m_data.ahs[i].zone_s;
       oa.setOutsideAir(true);
-      pathMap[loopName + " oa"] = oa.nr;
+      m_pathMap[loopName + " oa"] = oa.nr;
       // Exhaust path;
       openstudio::contam::prj::Path exhaust;
       exhaust.nr = oa.nr+1;
       exhaust.pld = 1;
-      exhaust.pzn = data.ahs[i].zone_r;
+      exhaust.pzn = m_data.ahs[i].zone_r;
       exhaust.pzm = -1;
       exhaust.setExhaust(true);
-      pathMap[loopName + " exhaust"] = exhaust.nr;
+      m_pathMap[loopName + " exhaust"] = exhaust.nr;
       // Add the paths to the path list
-      data.paths << recirc << oa << exhaust;
+      m_data.paths << recirc << oa << exhaust;
       // Store the nrs in the ahs
-      data.ahs[i].path_r = recirc.nr;
-      data.ahs[i].path_s = oa.nr;
-      data.ahs[i].path_x = exhaust.nr;
+      m_data.ahs[i].path_r = recirc.nr;
+      m_data.ahs[i].path_s = oa.nr;
+      m_data.ahs[i].path_x = exhaust.nr;
+      if (m_progressBar)
+      {
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
     }
+
+    // The rest of this isn't hooked into the progress bar yet, will need to do that at some point
 
     // Try to use E+ results to set flow rates. The supply and return flow paths are in the path
     // lookup table under the names thermalZone.name + supply|return (see above)
@@ -538,44 +718,87 @@ namespace contam
           double flowRate = area*0.00508*1.2041;  // Assume 1 scfm/ft^2 as an approximation
           std::string supplyName = thermalZone.name().get() + " supply";
           std::string returnName = thermalZone.name().get() + " return";
-          int supplyNr,returnNr;
-          if(supplyNr = pathMap.value(supplyName,0))
-            data.paths[supplyNr-1].Fahs = QString().sprintf("%g",flowRate);
-          if(returnNr = pathMap.value(returnName,0))
-            data.paths[returnNr-1].Fahs = QString().sprintf("%g",0.9*flowRate);
+          int supplyNr = m_pathMap.value(supplyName,0);
+          if(supplyNr)
+          {
+            m_data.paths[supplyNr-1].Fahs = QString().sprintf("%g",flowRate);
+          }
+          int returnNr = m_pathMap.value(returnName,0);
+          if(returnNr)
+          {
+            m_data.paths[returnNr-1].Fahs = QString().sprintf("%g",0.9*flowRate);
+          }
         }
       }
     }
-
-    return boost::optional<QString>(data.print());
-
-    // these are probably useful, will have to ask Kyle
-    // Kyle, should these functions be const?
-    //boost::optional<model::ModelObject> airInletModelObject = zone.airInletModelObject();
-    //boost::optional<model::ModelObject> returnAirModelObject = zone.returnAirModelObject();
-    //boost::optional<model::Node> exhaustAirNode = zone.exhaustAirNode();
-    //boost::optional<model::Node> zoneAirNode = zone.zoneAirNode();
-
-    //ZoneData *afz = zoneList.at(i);
-    //double flowRate = afz->area*0.00508*1.2041;  // Assume 1 scfm/ft^2 as an approximation
-
   }
+  m_valid = true;
 
-  bool ForwardTranslator::writeMaps(const openstudio::path& path)
+  return true;
+
+  // these are probably useful, will have to ask Kyle
+  // Kyle, should these functions be const?
+  //boost::optional<model::ModelObject> airInletModelObject = zone.airInletModelObject();
+  //boost::optional<model::ModelObject> returnAirModelObject = zone.returnAirModelObject();
+  //boost::optional<model::Node> exhaustAirNode = zone.exhaustAirNode();
+  //boost::optional<model::Node> zoneAirNode = zone.zoneAirNode();
+
+  //ZoneData *afz = zoneList.at(i);
+  //double flowRate = afz->area*0.00508*1.2041;  // Assume 1 scfm/ft^2 as an approximation
+
+}
+
+boost::optional<std::string> ForwardTranslator::toString()
+{
+  if(valid())
   {
-    QFile file(QString(toQString(path)));
-    if(file.open(QFile::WriteOnly))
-    {
-      QTextStream textStream(&file);
-      QList<std::string> keys = zoneMap.keys();
-      BOOST_FOREACH(std::string name,keys)
-      {
-        textStream << QString::fromStdString(name) + QString(",%1\n").arg(zoneMap[name]);
-      }
-      file.close();
-      return true;
-    }
-    return false;
+    return boost::optional<std::string>(m_data.print().toStdString());
   }
+  return false;
+}
+
+bool ForwardTranslator::setSteadyWeather(double windSpeed, double windDirection)
+{
+  if(windSpeed < 0)
+  {
+    LOG(Warn, "Steady state wind speed is negative, using absolute value.");
+    windSpeed = -windSpeed; // Maybe should return false in this case?
+  }
+  // Is a negative wind direction allowed? Will have to check
+  m_data.rc.ssWeather.windspd = QString().sprintf("%g",windSpeed);
+  m_data.rc.ssWeather.winddir = QString().sprintf("%g",windDirection);
+  return true;
+}
+
+std::vector<LogMessage> ForwardTranslator::warnings() const
+{
+  std::vector<LogMessage> result;
+
+  BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages())
+  {
+    if (logMessage.logLevel() == Warn)
+    {
+      result.push_back(logMessage);
+    }
+  }
+
+  return result;
+}
+
+std::vector<LogMessage> ForwardTranslator::errors() const
+{
+  std::vector<LogMessage> result;
+
+  BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages())
+  {
+    if (logMessage.logLevel() > Warn)
+    {
+      result.push_back(logMessage);
+    }
+  }
+
+  return result;
+}
+
 } // contam
 } // openstudio
