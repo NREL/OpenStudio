@@ -26,6 +26,9 @@ SET( ${target_name}_src
   Relationship.cpp
   ScheduleTypeRegistry.hpp
   ScheduleTypeRegistry.cpp
+  ModelObjectList.hpp
+  ModelObjectList_Impl.hpp
+  ModelObjectList.cpp
   
   ConcreteModelObjects.hpp
   AirGap.hpp
@@ -465,6 +468,18 @@ SET( ${target_name}_src
   RefractionExtinctionGlazing.hpp
   RefractionExtinctionGlazing_Impl.hpp
   RefractionExtinctionGlazing.cpp
+  RefrigerationCase.hpp
+  RefrigerationCase_Impl.hpp
+  RefrigerationCase.cpp
+  RefrigerationCompressor.hpp
+  RefrigerationCompressor_Impl.hpp
+  RefrigerationCompressor.cpp
+  RefrigerationCondenserAirCooled.hpp
+  RefrigerationCondenserAirCooled_Impl.hpp
+  RefrigerationCondenserAirCooled.cpp
+  RefrigerationSystem.hpp
+  RefrigerationSystem_Impl.hpp
+  RefrigerationSystem.cpp
   RenderingColor.hpp
   RenderingColor_Impl.hpp
   RenderingColor.cpp
@@ -771,6 +786,7 @@ SET( ${target_name}_moc
   ComponentWatcher_Impl.hpp
   ModelObject_Impl.hpp
   GenericModelObject_Impl.hpp
+  ModelObjectList_Impl.hpp
   
   AirGap_Impl.hpp
   AirLoopHVAC_Impl.hpp
@@ -916,6 +932,10 @@ SET( ${target_name}_moc
   PumpVariableSpeed_Impl.hpp
   RadianceParameters_Impl.hpp
   RefractionExtinctionGlazing_Impl.hpp
+  RefrigerationCase_Impl.hpp
+  RefrigerationCompressor_Impl.hpp
+  RefrigerationCondenserAirCooled_Impl.hpp
+  RefrigerationSystem_Impl.hpp
   RenderingColor_Impl.hpp
   ResourceObject_Impl.hpp
   RoofVegetation_Impl.hpp
@@ -1124,6 +1144,10 @@ SET( ${target_name}_test_src
   test/PumpVariableSpeed_GTest.cpp
   test/RadianceParameters_GTest.cpp
   test/RefractionExtinctionGlazing_GTest.cpp
+  test/RefrigerationCase_GTest.cpp
+  test/RefrigerationCompressor_GTest.cpp
+  test/RefrigerationCondenserAirCooled_GTest.cpp
+  test/RefrigerationSystem_GTest.cpp
   test/RenderingColor_GTest.cpp
   test/ResourceObject_GTest.cpp
   test/RoofVegetation_GTest.cpp
@@ -1206,5 +1230,7 @@ MAKE_SWIG_TARGET( OpenStudioModelGeometry model "${CMAKE_CURRENT_SOURCE_DIR}/Mod
 
 MAKE_SWIG_TARGET( OpenStudioModelHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelHVAC.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelGeometry )
 
-MAKE_SWIG_TARGET( OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelHVAC )
+MAKE_SWIG_TARGET( OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelHVAC )
+
+MAKE_SWIG_TARGET( OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelRefrigeration )
 
