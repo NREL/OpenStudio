@@ -304,6 +304,7 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   typedef detail::ModelObject_Impl ImplType;
 
   friend class openstudio::IdfObject;
+  friend class openstudio::IdfExtensibleGroup;
   friend class openstudio::detail::IdfObject_Impl;
   friend class detail::ModelObject_Impl;
   friend class openstudio::ModelObjectSelectorView;

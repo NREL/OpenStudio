@@ -23,6 +23,7 @@
 #include <shared_gui_components/FieldMethodTypedefs.hpp>
 
 #include <model/ModelObject.hpp>
+#include <model/ModelExtensibleGroup.hpp>
 
 #include <utilities/core/Logger.hpp>
 
@@ -59,6 +60,26 @@ class OSIntegerEdit2: public QLineEdit {
             boost::optional<BasicQuery> isAutosized=boost::none,
             boost::optional<BasicQuery> isAutocalculated=boost::none);
 
+  void bind(model::ModelExtensibleGroup& modelExtensibleGroup,
+            IntGetter get,
+            boost::optional<IntSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<NoFailAction> autosize=boost::none,
+            boost::optional<NoFailAction> autocalculate=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none,
+            boost::optional<BasicQuery> isAutosized=boost::none,
+            boost::optional<BasicQuery> isAutocalculated=boost::none);
+
+  void bind(model::ModelExtensibleGroup& modelExtensibleGroup,
+            OptionalIntGetter get,
+            boost::optional<IntSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<NoFailAction> autosize=boost::none,
+            boost::optional<NoFailAction> autocalculate=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none,
+            boost::optional<BasicQuery> isAutosized=boost::none,
+            boost::optional<BasicQuery> isAutocalculated=boost::none);
+
   void unbind();
 
  private slots:
@@ -70,7 +91,8 @@ class OSIntegerEdit2: public QLineEdit {
   void onModelObjectRemove(Handle handle);
 
  private:
-  boost::optional<model::ModelObject> m_modelObject;
+  boost::optional<model::ModelObject> m_modelObject; // will be set if attached to ModelObject or ModelExtensibleGroup
+  boost::optional<model::ModelExtensibleGroup> m_modelExtensibleGroup; // will only be set if attached to ModelExtensibleGroup
   boost::optional<IntGetter> m_get;
   boost::optional<OptionalIntGetter> m_getOptional;
   boost::optional<IntSetter> m_set;
