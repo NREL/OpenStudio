@@ -162,8 +162,10 @@ class ANALYSIS_API Analysis : public AnalysisObject {
 
   boost::optional<FileReference> weatherFile() const;
 
+  /** Returns all \link DataPoint DataPoints\endlink in this Analysis. */
   std::vector<DataPoint> dataPoints() const;
 
+  /** Returns all selected, incomplete \link DataPoint DataPoints\endlink. */
   std::vector<DataPoint> dataPointsToQueue() const;
 
   std::vector<DataPoint> completeDataPoints() const;
@@ -178,8 +180,7 @@ class ANALYSIS_API Analysis : public AnalysisObject {
 
   /** Get the DataPoints defined by measures. Perturbations must be translatable into a valid set
    *  of variableValues for the problem(). */
-  std::vector<DataPoint> getDataPoints(
-      const std::vector< boost::optional<Measure> >& measures) const;
+  std::vector<DataPoint> getDataPoints(const std::vector<boost::optional<Measure> >& measures) const;
 
   std::vector<DataPoint> getDataPoints(const std::string& tag) const;
 
