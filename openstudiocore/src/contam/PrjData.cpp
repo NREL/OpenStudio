@@ -150,6 +150,27 @@ void Wall::getZones(int nx, int ny, int *grid, QVector<Zone> &zones)
     left = &(zones[grid[left_ij]]);
 }
 
+void Wall::getZones(int nx, int ny, QVector<int> &grid, QVector<Zone> &zones)
+{
+    int ij = start->col + start->row*nx;
+    int right_ij, left_ij;
+    if(type == Wall::Horizontal)
+    {
+        right_ij = ij + 1 + nx;
+        left_ij = ij + 1 - nx;
+    }
+    else if(type == Wall::Vertical)
+    {
+        right_ij = ij + nx - 1;
+        left_ij = ij + nx + 1;
+    }
+    else
+        return; // Bail out!
+
+    right = &(zones[grid[right_ij]]);
+    left = &(zones[grid[left_ij]]);
+}
+
 Loop::Loop(QList<QSharedPointer<Wall> > &onleft)
 {
     QList<QSharedPointer<Wall> > unused;
@@ -404,10 +425,11 @@ bool Data::process()
       Level *level = &(levels[k]);
       // Build a grid for the level
       int nij = rc.skwidth*rc.skheight;
-      int *grid = new int[nij];
-      grids << grid;
-      for(int ij=0;ij<nij;ij++)
-        grid[ij] = 0;
+      //int *grid = new int[nij];
+      //grids << grid;
+      //for(int ij=0;ij<nij;ij++)
+      //  grid[ij] = 0;
+      QVector<int> grid(nij,0);
       // Get all of the walls for this level
       QList <QSharedPointer<Wall> > walls = findWalls(rc.skwidth, rc.skheight, grid, level->icons);
       // Change all of the intersections to regular wall cells now that we have the walls drawn
@@ -429,6 +451,7 @@ bool Data::process()
             rc.skwidth, rc.skheight, grid);
         }
       }
+      grids << grid;
       // Now we can attach zones to each wall
       QList <QSharedPointer<Wall> > others;
       for(int i=0;i<walls.size();i++)
@@ -855,7 +878,90 @@ int Data::drawLine(int i, int j, int di, int dj, int value, int w, int h, int *s
     return skpd[ij];
 }
 
+int Data::drawLine(int i, int j, int di, int dj, int value, int w, int h, QVector<int> &skpd)
+{
+    int ij = i+j*w;
+    if(skpd[ij] != 0)
+        return 0;
+    while(skpd[ij] == 0)
+    {
+        skpd[ij] = value;
+        i+=di;
+        if(i<0)
+            error(QString("Column index out of range: %1 < 0 ").arg(i) CFILELINE);
+        else if (i>=w)
+            error(QString("Column index out of range: %1 > %2 ").arg(i).arg(w) CFILELINE);
+        j+=dj;
+        if(j<0)
+            error(QString("Row index out of range: %1 < 0 ").arg(j) CFILELINE);
+        else if (j>=h)
+            error(QString("Row index out of range: %1 > %2 ").arg(j).arg(h) CFILELINE);
+        ij = i+j*w;
+    }
+    return skpd[ij];
+}
+
 QList<QSharedPointer<Wall> > Data::findWalls(int w, int h, int *skpd, QVector<Icon> &icons)
+{
+    QList<QSharedPointer<Wall> > walls;
+    int ij;
+    int other;
+    for(int ij=0;ij<w*h;ij++)
+        skpd[ij] = 0;
+    for(int i=0;i<icons.size();i++)
+    {
+        if(icons[i].isWall())
+        {
+            /* Should check to see if icon is legit here */
+            ij = icons[i].col + w*icons[i].row;
+            skpd[ij] = i+1;
+            //wallIcons << &(icons[i]);
+        }
+    }
+    for(int i=0;i<icons.size();i++)
+    {
+        if(icons[i].isWall())
+        {
+            uint bits = icons[i].bits();
+            if(bits & BIT_E)
+            {
+                other = drawLine(icons[i].col+1, icons[i].row, 1, 0, -1, w, h, skpd);
+                if(other)
+				{
+                    walls << QSharedPointer<Wall>(new Wall(&(icons[i]),&(icons[other-1]),Wall::Horizontal));
+                }
+            }
+            if(bits & BIT_S)
+            {
+                other = drawLine(icons[i].col, icons[i].row+1, 0, 1, -1, w, h, skpd);
+                if(other)
+                {
+                    walls << QSharedPointer<Wall>(new Wall(&(icons[i]),&(icons[other-1]),Wall::Vertical));
+                }
+            }
+            /* These two will only result in actual changes if a non-canonical ordering is used */
+            if(bits & BIT_W)
+            {
+                other = drawLine(icons[i].col-1, icons[i].row, -1, 0, -1, w, h, skpd);
+                if(other)
+                {
+                    walls << QSharedPointer<Wall>(new Wall(&(icons[i]),&(icons[other-1]),Wall::Horizontal));
+                }
+            }
+            if(bits & BIT_N)
+            {
+                other = drawLine(icons[i].col, icons[i].row-1, 0, -1, -1, w, h, skpd);
+                if(other)
+                {
+                    walls << QSharedPointer<Wall>(new Wall(&(icons[i]),&(icons[other-1]),Wall::Vertical));
+                }
+            }
+        }
+    }
+    return walls;
+}
+
+QList<QSharedPointer<Wall> > Data::findWalls(int w, int h, QVector<int> &skpd, QVector<Icon> &icons)
 {
     QList<QSharedPointer<Wall> > walls;
     int ij;
@@ -934,6 +1040,25 @@ void fill2D(int tofill, int fillwith, int *chk, int *buf, int x, int y, int nx, 
     return;
 }
 
+void fill2D(int tofill, int fillwith, QVector<int> &chk, QVector<int> &buf, int x, int y, int nx, int ny)
+{
+    int xy = x+y*nx;
+    buf[xy]=fillwith;
+    if(y >= 1)
+        if(chk[xy-nx]==tofill && buf[xy-nx]!=fillwith)
+            fill2D(tofill, fillwith, chk, buf, x, y-1, nx, ny);
+    if(y+1 < ny)
+        if(chk[xy+nx]==tofill && buf[xy+nx]!=fillwith)
+            fill2D(tofill, fillwith, chk, buf, x, y+1, nx, ny);
+    if(x >= 1)
+        if(chk[xy-1]==tofill && buf[xy-1]!=fillwith)
+            fill2D(tofill, fillwith, chk, buf, x-1, y, nx, ny);
+    if(x+1 < nx)
+        if(chk[xy+1]==tofill && buf[xy+1]!=fillwith)
+            fill2D(tofill, fillwith, chk, buf, x+1, y, nx, ny);
+    return;
+}
+
 QList <QPoint> subdivide(int nx, int ny, int *map)
 {
     int ij=nx, value = 1;
@@ -962,6 +1087,12 @@ void fillFromPoint(int value, QPoint pt, int nx, int ny, int *map)
 }
 
 void fillFromPoint(int value, int x, int y, int nx, int ny, int *map)
+{
+    int xy = x+y*nx;
+    fill2D(map[xy],value,map,map,x,y,nx,ny);
+}
+
+void fillFromPoint(int value, int x, int y, int nx, int ny, QVector<int> &map)
 {
     int xy = x+y*nx;
     fill2D(map[xy],value,map,map,x,y,nx,ny);

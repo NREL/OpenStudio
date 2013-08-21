@@ -48,6 +48,7 @@ public:
     void getZones(int nx, int ny, int *grid, QList<Zone*> zones);
     void getZones(int nx, int ny, int *grid, QList<Zone> &zones);
     void getZones(int nx, int ny, int *grid, QVector<Zone> &zones);
+    void getZones(int nx, int ny, QVector<int> &grid, QVector<Zone> &zones);
 
     Icon *start;
     Icon *end;
@@ -136,7 +137,8 @@ public:
 
     QList<QList<QSharedPointer<Wall> > > walls;
     QList<ZoneGeometry> geometry;
-    QList<int*>grids;
+    //QList<int*>grids;
+    QList<QVector<int> > grids;
 
 private:
     void readZoneIC(Reader &input);
@@ -144,7 +146,9 @@ private:
   void error(QString mesg DECCFILELINE);
 	void warning(QString mesg DECCFILELINE);
 	int drawLine(int i, int j, int di, int dj, int value, int w, int h, int *skpd);
+  int drawLine(int i, int j, int di, int dj, int value, int w, int h, QVector<int> &skpd);
 	QList<QSharedPointer<Wall> > findWalls(int w, int h, int *skpd, QVector<Icon> &icons);
+  QList<QSharedPointer<Wall> > findWalls(int w, int h, QVector<int> &skpd, QVector<Icon> &icons);
 
 	REGISTER_LOGGER("openstudio.contam.prj.Data");
 
@@ -156,6 +160,7 @@ QList<QSharedPointer<Wall> > findWalls(int w, int h, int *skpd, QVector<Icon> &i
 QList <QPoint> subdivide(int nx, int ny, int *map);
 void fillFromPoint(int value, QPoint pt, int nx, int ny, int *map);
 void fillFromPoint(int value, int x, int y, int nx, int ny, int *map);
+void fillFromPoint(int value, int x, int y, int nx, int ny, QVector<int> &map);
 QList<Wall*> zoneWalls(Zone *zone, QList<Wall *> walls);
 
 template <class T> int readSection(Reader *input, T **objects, QString name)
