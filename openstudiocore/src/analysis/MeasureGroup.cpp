@@ -473,6 +473,15 @@ namespace detail {
                         measures);
   }
 
+  void MeasureGroup_Impl::updateInputPathData(const openstudio::path& originalBase,
+                                              const openstudio::path& newBase)
+  {
+    MeasureVector measures = this->measures(false);
+    BOOST_FOREACH(Measure& measure,measures) {
+      measure.getImpl<detail::Measure_Impl>()->updateInputPathData(originalBase,newBase);
+    }
+  }
+
   std::pair<bool,boost::optional<FileReferenceType> > inputFileType(
       const std::vector<Measure>& measures)
   {

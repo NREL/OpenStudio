@@ -53,6 +53,7 @@
 
 #include <ruleset/OSArgument.hpp>
 
+#include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/core/StringHelpers.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
