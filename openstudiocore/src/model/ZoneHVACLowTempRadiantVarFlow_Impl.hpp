@@ -21,6 +21,8 @@
 #define MODEL_ZONEHVACLOWTEMPRADIANTVARFLOW_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
+#include <model/Surface.hpp>
+#include <model/Surface_Impl.hpp>
 #include <model/ZoneHVACComponent_Impl.hpp>
 
 namespace openstudio {
@@ -83,7 +85,9 @@ namespace detail {
 
     HVACComponent coolingCoil() const;
 
-    boost::optional<std::string> radiantSurfaceGroupName() const;
+    boost::optional<std::string> radiantSurfaceType() const;
+
+    std::vector<Surface> surfaces() const;
 
     double hydronicTubingInsideDiameter() const;
 
@@ -99,6 +103,10 @@ namespace detail {
 
     bool isTemperatureControlTypeDefaulted() const;
 
+    std::string numberofCircuits() const;
+
+    double circuitLength() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -109,19 +117,15 @@ namespace detail {
 
     bool setCoolingCoil(HVACComponent& coolingCoil);
 
-    bool setRadiantSurfaceGroupName(boost::optional<std::string> radiantSurfaceGroupName);
+    bool setRadiantSurfaceType(boost::optional<std::string> radiantSurfaceType);
 
-    void resetRadiantSurfaceGroupName();
+    void resetRadiantSurfaceType();
 
     bool setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter);
-
-    // bool setHydronicTubingInsideDiameter(const Quantity& hydronicTubingInsideDiameter);
 
     void resetHydronicTubingInsideDiameter();
 
     bool setHydronicTubingLength(boost::optional<double> hydronicTubingLength);
-
-    // bool setHydronicTubingLength(const OSOptionalQuantity& hydronicTubingLength);
 
     void resetHydronicTubingLength();
 
@@ -130,8 +134,12 @@ namespace detail {
     bool setTemperatureControlType(std::string temperatureControlType);
 
     void resetTemperatureControlType();
+
+    bool setNumberofCircuits(std::string numberofCircuits);
+
+    void setCircuitLength(double circuitLength);
     
-    boost::optional<ThermalZone> thermalZone();
+    boost::optional<ThermalZone> thermalZone() const;
 
     bool addToThermalZone(ThermalZone & thermalZone);
 
@@ -150,16 +158,9 @@ namespace detail {
     boost::optional<HVACComponent> optionalHeatingCoil() const;
     boost::optional<HVACComponent> optionalCoolingCoil() const;
     
-    std::vector<std::string> radiantSurfaceGroupNameValues() const;
+    std::vector<std::string> radiantSurfaceTypeValues() const;
     std::vector<std::string> temperatureControlTypeValues() const;
 
-    boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
-    boost::optional<ModelObject> heatingCoilAsModelObject() const;
-    boost::optional<ModelObject> coolingCoilAsModelObject() const;
-
-    bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setHeatingCoilAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setCoolingCoilAsModelObject(const boost::optional<ModelObject>& modelObject);
   };
 
 } // detail

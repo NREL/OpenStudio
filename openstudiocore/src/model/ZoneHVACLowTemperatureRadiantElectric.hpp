@@ -21,6 +21,8 @@
 #define MODEL_ZONEHVACLOWTEMPERATURERADIANTELECTRIC_HPP
 
 #include <model/ModelAPI.hpp>
+#include <model/Surface.hpp>
+#include <model/Surface_Impl.hpp>
 #include <model/ZoneHVACComponent.hpp>
 
 namespace openstudio {
@@ -42,9 +44,7 @@ class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
   /** @name Constructors and Destructors */
   //@{
 
-  explicit ZoneHVACLowTemperatureRadiantElectric(const Model& model,
-																																																							Schedule & availabilitySchedule,
-																																																							Schedule & heatingTemperatureSchedule);
+  explicit ZoneHVACLowTemperatureRadiantElectric(const Model& model, Schedule & availabilitySchedule, Schedule & heatingTemperatureSchedule);
 
   virtual ~ZoneHVACLowTemperatureRadiantElectric() {}
 
@@ -52,7 +52,7 @@ class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> radiantSurfaceGroupNameValues();
+  static std::vector<std::string> radiantSurfaceTypeValues();
 
   static std::vector<std::string> temperatureControlTypeValues();
 
@@ -62,7 +62,9 @@ class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
   
   Schedule heatingSetpointTemperatureSchedule() const; 
 
-  boost::optional<std::string> radiantSurfaceGroupName() const;
+  boost::optional<std::string> radiantSurfaceType() const;
+
+  std::vector<Surface> surfaces() const;
 
   boost::optional<double> maximumElectricalPowertoPanel() const;
 
@@ -78,19 +80,15 @@ class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
 
   bool isHeatingThrottlingRangeDefaulted() const;
 
-  // boost::optional<Schedule> heatingSetpointTemperatureSchedule() const;
-
   /** @name Setters */
 
   bool setAvailabilitySchedule(Schedule& schedule);
   
   bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
 
-  // void resetHeatingSetpointTemperatureSchedule();
+  bool setRadiantSurfaceType(std::string radiantSurfaceType);
 
-  bool setRadiantSurfaceGroupName(std::string radiantSurfaceGroupName);
-
-  void resetRadiantSurfaceGroupName();
+  void resetRadiantSurfaceType();
 
   bool setMaximumElectricalPowertoPanel(double maximumElectricalPowertoPanel);
 
@@ -106,7 +104,7 @@ class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
 
   void resetHeatingThrottlingRange();
   
-  boost::optional<ThermalZone> thermalZone();
+  boost::optional<ThermalZone> thermalZone() const;
 
   bool addToThermalZone(ThermalZone & thermalZone);
 

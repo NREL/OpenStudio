@@ -21,12 +21,11 @@
 #define MODEL_ZONEHVACLOWTEMPRADIANTCONSTFLOW_HPP
 
 #include <model/ModelAPI.hpp>
+#include <model/Surface.hpp>
+#include <model/Surface_Impl.hpp>
 #include <model/ZoneHVACComponent.hpp>
 
 namespace openstudio {
-
-//class Quantity;
-//class OSOptionalQuantity;
 
 namespace model {
 
@@ -56,7 +55,7 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> radiantSurfaceGroupNameValues();
+  static std::vector<std::string> radiantSurfaceTypeValues();
 
   static std::vector<std::string> temperatureControlTypeValues();
 
@@ -65,13 +64,15 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   Schedule availabilitySchedule() const;
 
-  boost::optional<std::string> radiantSurfaceGroupName() const;
+  boost::optional<std::string> radiantSurfaceType() const;
+
+  std::vector<Surface> surfaces() const;
 
   double hydronicTubingInsideDiameter() const;
 
   bool isHydronicTubingInsideDiameterDefaulted() const;
 
-  boost::optional<double> hydronicTubingLength() const;
+  double hydronicTubingLength() const;
 
   std::string temperatureControlType() const;
 
@@ -99,15 +100,19 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   bool isFractionofMotorInefficienciestoFluidStreamDefaulted() const;
 
+  std::string numberofCircuits() const;
+
+  double circuitLength() const;
+
   //@}
   /** @name Setters */
   //@{
 
   bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setRadiantSurfaceGroupName(std::string radiantSurfaceGroupName);
+  bool setRadiantSurfaceType(std::string radiantSurfaceType);
 
-  void resetRadiantSurfaceGroupName();
+  void resetRadiantSurfaceType();
 
   bool setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter);
 
@@ -149,7 +154,11 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   void resetFractionofMotorInefficienciestoFluidStream();
 
-  boost::optional<ThermalZone> thermalZone();
+  bool setNumberofCircuits(std::string numberofCircuits);
+
+  void setCircuitLength(double circuitLength);
+
+  boost::optional<ThermalZone> thermalZone() const;
 
   bool addToThermalZone(ThermalZone & thermalZone);
 

@@ -70,12 +70,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
   IdfObject idfObject(IddObjectType::ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
   m_idfObjects.push_back(idfObject);
 
-//Name
+  //Name
   std::string baseName = modelObject.name().get();
   idfObject.setName(baseName);
 
-  
-// AvailabilityScheduleName
+  // AvailabilityScheduleName
   if( boost::optional<Schedule> schedule = modelObject.availabilitySchedule() )
   {
     if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
@@ -83,7 +82,8 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
       idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::AvailabilityScheduleName,_schedule->name().get());
     }
   }
-//field Zone Name
+  
+  //field Zone Name
   boost::optional<std::string> thermalZoneName;
   if( boost::optional<ThermalZone> zone = modelObject.thermalZone() )
   {
@@ -95,107 +95,65 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
     }
   }
  
-//field Surface Name or Radiant Surface Group Name
- boost::optional<std::string> surfGrpName = modelObject.radiantSurfaceGroupName();
- IdfObject _surfaceGroup(IddObjectType::ZoneHVAC_LowTemperatureRadiant_SurfaceGroup);
- std::string sname = baseName + "" + surfGrpName.get();
- _surfaceGroup.setName(sname);
- idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::SurfaceNameorRadiantSurfaceGroupName,sname);
+  //field Surface Name or Radiant Surface Type
 
- boost::optional<ThermalZone> thermalZone = modelObject.thermalZone();
- std::vector<Space> spaces = (*thermalZone).spaces();
+  //create a new surface group object
+  IdfObject _surfaceGroup(IddObjectType::ZoneHVAC_LowTemperatureRadiant_SurfaceGroup);
 
- idfObject.clearExtensibleGroups();  //get rid of any existing surface (just to be safe)
- //loop through all the surfaces, adding them and their flow fractions (weighted per-area)
-
- BOOST_FOREACH(const Space& space, spaces){
-    double totalAreaOfSurfaces = 0;
-    std::vector<Surface> surfaces = space.surfaces();
-    BOOST_FOREACH(const Surface& surface, surfaces){
-    std::string surfaceType = surface.surfaceType();
-    
-    boost::optional<ConstructionBase> construction = surface.construction();
-    boost::optional<ConstructionWithInternalSource> constructionOptional = construction->optionalCast<ConstructionWithInternalSource>();
-
-     if(constructionOptional){
-        
-        totalAreaOfSurfaces = totalAreaOfSurfaces + surface.grossArea();
+  //create a name for the surface group
+  std::string sname = baseName + "" + modelObject.radiantSurfaceType().get();
+  _surfaceGroup.setName(sname);
   
-        if(istringEqual("RoofCeiling", surfaceType) && istringEqual("Ceilings",surfGrpName.get())){
-            
-            IdfExtensibleGroup group = _surfaceGroup.pushExtensibleGroup();
-          
-            BOOST_ASSERT(group.numFields() == 2);
-            
-            group.setString(0, surface.name().get());
-            
-            group.setDouble(1, (surface.grossArea()/totalAreaOfSurfaces) ); 
+  //attach the surface group to the zone low temp radiant object
+  idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::SurfaceNameorRadiantSurfaceGroupName,sname);
 
-        }
-        else if(istringEqual("Floor", surfaceType) && istringEqual("Floors",surfGrpName.get())){
-            
-            IdfExtensibleGroup group = _surfaceGroup.pushExtensibleGroup();
-          
-            BOOST_ASSERT(group.numFields() == 2);
-            
-            group.setString(0, surface.name().get());
-            
-            group.setDouble(1, (surface.grossArea()/totalAreaOfSurfaces) ); 
-
-        }
-        else if(istringEqual("Floor", surfaceType) || istringEqual("Ceiling", surfaceType) && istringEqual("CeilingsandFloors",surfGrpName.get())){
-            
-           IdfExtensibleGroup group = _surfaceGroup.pushExtensibleGroup();
-          
-            BOOST_ASSERT(group.numFields() == 2);
-            
-            group.setString(0, surface.name().get());
-            
-            group.setDouble(1, (surface.grossArea()/totalAreaOfSurfaces) ); 
-
-        }
-        else if(istringEqual("AllSurfaces",surfGrpName.get())){
-            
-            IdfExtensibleGroup group = _surfaceGroup.pushExtensibleGroup();
-          
-            BOOST_ASSERT(group.numFields() == 2);
-            
-            group.setString(0, surface.name().get());
-            
-            group.setDouble(1, (surface.grossArea()/totalAreaOfSurfaces) ); 
-
-        }
-     }
-    }
- }
-   m_idfObjects.push_back(_surfaceGroup);
-
+  //get rid of any existing surface (just to be safe)
+  idfObject.clearExtensibleGroups();  
  
-//field Hydronic Tubing Inside Diameter
+  //aggregator for total area; will be used to create weighted area
+  double totalAreaOfSurfaces = 0;
+
+  //loop thorugh all surfaces, adding up their area
+  BOOST_FOREACH(const Surface& surface, modelObject.surfaces()){
+    totalAreaOfSurfaces = totalAreaOfSurfaces + surface.grossArea();
+  }
+
+  //loop through all the surfaces, adding them and their flow fractions (weighted per-area)
+  BOOST_FOREACH(const Surface& surface, modelObject.surfaces()){
+    IdfExtensibleGroup group = _surfaceGroup.pushExtensibleGroup();
+    BOOST_ASSERT(group.numFields() == 2);
+    group.setString(0, surface.name().get());        
+    group.setDouble(1, (surface.grossArea()/totalAreaOfSurfaces) );     
+  }
+ 
+  //add the surface group to the list of idf objects
+  m_idfObjects.push_back(_surfaceGroup);
+
+ //field Hydronic Tubing Inside Diameter
  if( value = modelObject.hydronicTubingInsideDiameter() )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingInsideDiameter,value.get());
   }
 
-//field Hydronic Tubing Length
+  //field Hydronic Tubing Length
  if( value = modelObject.hydronicTubingLength() )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingLength,value.get());
   }
 
-//field Temperature Control Type
+  //field Temperature Control Type
  if(boost::optional<std::string> tempCtrlType= modelObject.temperatureControlType() )
   {
     idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::TemperatureControlType,tempCtrlType.get());
   }
 
-//field Rated Flow Rate
+  //field Rated Flow Rate
   if( value = modelObject.ratedFlowRate() )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedFlowRate,value.get());
   }
 
-//field Pump Flow Rate Schedule Name
+  //field Pump Flow Rate Schedule Name
   if( boost::optional<Schedule> schedule = modelObject.pumpFlowRateSchedule() )
   {
     if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
@@ -204,25 +162,25 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
     }
   }
 
-//field Rated Pump Head
+  //field Rated Pump Head
   if( value = modelObject.ratedPumpHead() )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedPumpHead,value.get());
   }
 
-//field Rated Power Consumption
+  //field Rated Power Consumption
   if( value = modelObject.ratedPowerConsumption() )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedPowerConsumption,value.get());
   }
 
-//field Motor Efficiency
+  //field Motor Efficiency
   if( value = modelObject.motorEfficiency() )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::MotorEfficiency,value.get());
   }
 
-//field Fraction of Motor Inefficiencies to Fluid Stream
+  //field Fraction of Motor Inefficiencies to Fluid Stream
   if( value = modelObject.fractionofMotorInefficienciestoFluidStream() )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::FractionofMotorInefficienciestoFluidStream,value.get());
@@ -231,7 +189,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
   HVACComponent heatingCoil = modelObject.heatingCoil();
   boost::optional<CoilHeatingLowTempRadiantConstFlow>  coilOptionalHeating = heatingCoil.optionalCast<CoilHeatingLowTempRadiantConstFlow>();
 
-// field Heating Water Inlet Node Name 
+  // field Heating Water Inlet Node Name 
   if (coilOptionalHeating){
     CoilHeatingLowTempRadiantConstFlow coilHeat = *coilOptionalHeating;
 
@@ -245,7 +203,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
       }
     }
 
-//field Heating Water Outlet Node Name 
+    //field Heating Water Outlet Node Name 
     temp = coilHeat.outletModelObject();
     if(temp)
     {
@@ -256,7 +214,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
       }
     }
   
-//field Heating High Water Temperature Schedule Name
+    //field Heating High Water Temperature Schedule Name
     if( boost::optional<Schedule> schedule = coilHeat.heatingHighWaterTemperatureSchedule() )
     {
       if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
@@ -265,7 +223,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
       }
     }
 
-//field Heating Low Water Temperature Schedule Name
+    //field Heating Low Water Temperature Schedule Name
     if( boost::optional<Schedule> schedule = coilHeat.heatingLowWaterTemperatureSchedule() )
     {
       if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
@@ -274,7 +232,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
       }
     }
 
-//field Heating High Control Temperature Schedule Name
+    //field Heating High Control Temperature Schedule Name
     if( boost::optional<Schedule> schedule = coilHeat.heatingHighControlTemperatureSchedule() )
     {
       if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
@@ -283,7 +241,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
       }
     }
 
-//field Heating Low Control Temperature Schedule Name    
+    //field Heating Low Control Temperature Schedule Name    
     if( boost::optional<Schedule> schedule = coilHeat.heatingLowControlTemperatureSchedule() )
     {
       if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
@@ -296,8 +254,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
   HVACComponent coolingCoil = modelObject.coolingCoil();
   boost::optional<CoilCoolingLowTempRadiantConstFlow>  coilOptionalCooling = coolingCoil.optionalCast<CoilCoolingLowTempRadiantConstFlow>();
 
-
-// field Cooling Water Inlet Node Name 
+  // field Cooling Water Inlet Node Name 
   if (coilOptionalCooling){
     CoilCoolingLowTempRadiantConstFlow coilCool = *coilOptionalCooling;
 
@@ -311,7 +268,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
       }
     }
 
-//field Cooling Water Outlet Node Name 
+    //field Cooling Water Outlet Node Name 
     temp = coilCool.outletModelObject();
     if(temp)
     {
@@ -322,7 +279,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
       }
     }
 
-//field Cooling High Water Temperature Schedule Name
+    //field Cooling High Water Temperature Schedule Name
     if( boost::optional<Schedule> schedule = coilCool.coolingHighWaterTemperatureSchedule() )
     {
       if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
@@ -331,7 +288,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
       }
     }
 
-//field Cooling Low Water Temperature Schedule Name
+    //field Cooling Low Water Temperature Schedule Name
     if( boost::optional<Schedule> schedule = coilCool.coolingLowWaterTemperatureSchedule() )
     {
       if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
@@ -340,8 +297,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
       }
     }
 
-
-//field Cooling High Control Temperature Schedule Name
+    //field Cooling High Control Temperature Schedule Name
     if( boost::optional<Schedule> schedule = coilCool.coolingHighControlTemperatureSchedule() )
     {
       if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
@@ -350,7 +306,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
       }
     }
 
-//field Cooling Low Control Temperature Schedule Name
+    //field Cooling Low Control Temperature Schedule Name
     if( boost::optional<Schedule> schedule = coilCool.coolingLowControlTemperatureSchedule() )
     {
       if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
@@ -359,18 +315,23 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
       }
     }
  
-//field Condensation Control Type
+    //field Condensation Control Type
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::CondensationControlType,coilCool.condensationControlType());
 
-  idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::CondensationControlType,coilCool.condensationControlType());
-
-
-//field Condensation Control Dewpoint Offset
-  if( value = coilCool.condensationControlDewpointOffset() )
-  {
-    idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::CondensationControlDewpointOffset,value.get());
+    //field Condensation Control Dewpoint Offset
+    if( value = coilCool.condensationControlDewpointOffset() )
+    {
+      idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::CondensationControlDewpointOffset,value.get());
+    }
+    
   }
-}
   
+  //field Number of Circuits
+  idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::NumberofCircuits,modelObject.numberofCircuits());
+
+  //field Circuit Length
+  idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::CircuitLength,modelObject.circuitLength());
+
   return idfObject;
 }
 

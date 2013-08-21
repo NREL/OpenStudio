@@ -308,6 +308,9 @@ SET( ${target_name}_test_src
   Test/SubSurface_GTest.cpp
   Test/Surface_GTest.cpp
   Test/ThermalZone_GTest.cpp
+  Test/ZoneHVACLowTemperatureRadiantConstFlow_GTest.cpp
+  Test/ZoneHVACLowTempRadiantElectric_GTest.cpp
+  Test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
 )
 
 SET( ${target_name}_swig_src

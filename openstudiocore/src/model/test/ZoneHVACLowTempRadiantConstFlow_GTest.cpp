@@ -33,6 +33,8 @@
 #include <model/CoilHeatingLowTempRadiantConstFlow_Impl.hpp>
 #include <model/ScheduleConstant.hpp>
 #include <model/ScheduleConstant_Impl.hpp>
+#include <model/StandardOpaqueMaterial.hpp>
+#include <model/StandardOpaqueMaterial_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
 
@@ -77,9 +79,9 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
   testRad.setCoolingCoil(testCC1);
   EXPECT_EQ(testRad.coolingCoil(),testCC1);
 
-  testRad.setRadiantSurfaceGroupName("Ceilings");
-  boost::optional<std::string> str1 = testRad.radiantSurfaceGroupName();
-  EXPECT_EQ(*str1,"Ceilings");
+  testRad.setRadiantSurfaceType("Floors");
+  boost::optional<std::string> str1 = testRad.radiantSurfaceType();
+  EXPECT_EQ(*str1,"Floors");
 
   testRad.setHydronicTubingInsideDiameter(0.01);
   double inDia = testRad.hydronicTubingInsideDiameter();
@@ -103,36 +105,45 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
   boost::optional<std::string> str3 = testRad.temperatureControlType();
   EXPECT_EQ(*str3,"MeanAirTemperature");
 
-//test Pump Flow Rate Schedule
+  //test Pump Flow Rate Schedule
   ScheduleConstant pumpFlowRateSched(model);
   pumpFlowRateSched.setValue(1.0);
   testRad.setPumpFlowRateSchedule(pumpFlowRateSched);
   boost::optional<Schedule> pumpFRSch = testRad.pumpFlowRateSchedule();
   EXPECT_EQ(*pumpFRSch,pumpFlowRateSched);
 
-//test Rated Pump Head
+  //test Rated Pump Head
   testRad.setRatedPumpHead(20000);
   double head = testRad.ratedPumpHead();
   EXPECT_EQ(head,20000);
   EXPECT_FALSE(testRad.isRatedPumpHeadDefaulted());
 
-//test Rated Power Consumption
+  //test Rated Power Consumption
   testRad.setRatedPowerConsumption(700);
   boost::optional<double> power = testRad.ratedPowerConsumption();
   EXPECT_EQ(*power,700);
 
-//test Motor Efficiency
+  //test Motor Efficiency
   testRad.setMotorEfficiency(0.9);
   double eff=testRad.motorEfficiency();
   EXPECT_EQ(eff,0.9);
 
-//test fraction of motor ineffficiencies to Fluid Stream
+  //test fraction of motor ineffficiencies to Fluid Stream
   testRad.setFractionofMotorInefficienciestoFluidStream(1.0);
   double inEff=testRad.fractionofMotorInefficienciestoFluidStream();
   EXPECT_EQ(inEff,1.0);
 
+  //test number of circuits
+  testRad.setNumberofCircuits("CalculateFromCircuitLength");
+  std::string numCirc = testRad.numberofCircuits();
+  EXPECT_EQ(numCirc,"CalculateFromCircuitLength");
 
-//test add and remove from thermal zone
+  //test circuit length
+  testRad.setCircuitLength(200.0);
+  double circLength = testRad.circuitLength();
+  EXPECT_EQ(circLength,200.0);
+
+  //test add and remove from thermal zone
   ThermalZone thermalZone(model);
   EXPECT_EQ(0u,thermalZone.equipment().size());
 

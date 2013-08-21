@@ -39,54 +39,54 @@ using namespace openstudio::model;
 TEST_F(ModelFixture,ZoneHVACLowTemperatureRadiantElectric_Check_Constructor) 
 {
 
-  // Test constructor
+	// Test constructor
 
-  Model model;
-  ScheduleConstant availabilitySchedule(model);
-  availabilitySchedule.setValue(1.0); // Always on
-  ScheduleConstant temperatureSchedule(model);
-  temperatureSchedule.setValue(70.0); // Fixed at 70
-  ZoneHVACLowTemperatureRadiantElectric zoneHVACLowTemperatureRadiantElectric(model,
+	Model model;
+	ScheduleConstant availabilitySchedule(model);
+	availabilitySchedule.setValue(1.0); // Always on
+	ScheduleConstant temperatureSchedule(model);
+	temperatureSchedule.setValue(70.0); // Fixed at 70
+	ZoneHVACLowTemperatureRadiantElectric zoneHVACLowTemperatureRadiantElectric(model,
 																																							availabilitySchedule,
 																																							temperatureSchedule);
-  // Testing .idd object type
-    
-  EXPECT_EQ(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric,zoneHVACLowTemperatureRadiantElectric.iddObjectType().value());
-  
-  //test add and remove from thermal zone
-  ThermalZone thermalZone(model);
-  EXPECT_EQ(0u,thermalZone.equipment().size());
+	// Testing .idd object type
+		
+	EXPECT_EQ(openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric,zoneHVACLowTemperatureRadiantElectric.iddObjectType().value());
+	
+	//test add and remove from thermal zone
+	ThermalZone thermalZone(model);
+	EXPECT_EQ(0u,thermalZone.equipment().size());
 
-  EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.addToThermalZone(thermalZone));
-  
-  EXPECT_EQ(1u,thermalZone.equipment().size());
-  
+	EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.addToThermalZone(thermalZone));
+	
+	EXPECT_EQ(1u,thermalZone.equipment().size());
+	
 }
 
 TEST_F(ModelFixture,ZoneHVACLowTemperatureRadiantElectric_Check_Schedules) 
 {
 
 	Model model;
-  ScheduleConstant availabilitySchedule(model);
-  availabilitySchedule.setValue(1.0); // Always on
-  ScheduleConstant temperatureSchedule(model);
-  temperatureSchedule.setValue(70.0); // Fixed at 70
-  ZoneHVACLowTemperatureRadiantElectric zoneHVACLowTemperatureRadiantElectric(model,
+	ScheduleConstant availabilitySchedule(model);
+	availabilitySchedule.setValue(1.0); // Always on
+	ScheduleConstant temperatureSchedule(model);
+	temperatureSchedule.setValue(70.0); // Fixed at 70
+	ZoneHVACLowTemperatureRadiantElectric zoneHVACLowTemperatureRadiantElectric(model,
 																																							availabilitySchedule,
 																																							temperatureSchedule);
-		//Test set and get availability schedule
-  
-  ScheduleConstant test_availability_schedule(model);
-  test_availability_schedule.setValue(1.0);
-  EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.setAvailabilitySchedule(test_availability_schedule));
-  EXPECT_EQ(zoneHVACLowTemperatureRadiantElectric.availabilitySchedule(),test_availability_schedule);
-  
-  //Test set and get temperature schedule
-  
-  ScheduleConstant test_temperature_schedule(model);
-  test_temperature_schedule.setValue(70.0);
-  EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.setHeatingSetpointTemperatureSchedule(test_temperature_schedule));
-  EXPECT_EQ(zoneHVACLowTemperatureRadiantElectric.heatingSetpointTemperatureSchedule(),test_temperature_schedule);
+	//Test set and get availability schedule
+	
+	ScheduleConstant test_availability_schedule(model);
+	test_availability_schedule.setValue(1.0);
+	EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.setAvailabilitySchedule(test_availability_schedule));
+	EXPECT_EQ(zoneHVACLowTemperatureRadiantElectric.availabilitySchedule(),test_availability_schedule);
+	
+	//Test set and get temperature schedule
+	
+	ScheduleConstant test_temperature_schedule(model);
+	test_temperature_schedule.setValue(70.0);
+	EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.setHeatingSetpointTemperatureSchedule(test_temperature_schedule));
+	EXPECT_EQ(zoneHVACLowTemperatureRadiantElectric.heatingSetpointTemperatureSchedule(),test_temperature_schedule);
 
 }
 		// Test cloning the coil
@@ -94,11 +94,11 @@ TEST_F(ModelFixture,ZoneHVACLowTemperatureRadiantElectric_Check_Schedules)
 TEST_F(ModelFixture,ZoneHVACLowTemperatureRadiantElectric_Check_Clone) 
 {
 		Model model;
-  ScheduleConstant availabilitySchedule(model);
-  availabilitySchedule.setValue(1.0); // Always on
-  ScheduleConstant temperatureSchedule(model);
-  temperatureSchedule.setValue(70.0); // Fixed at 70
-  ZoneHVACLowTemperatureRadiantElectric zoneHVACLowTemperatureRadiantElectric(model,
+	ScheduleConstant availabilitySchedule(model);
+	availabilitySchedule.setValue(1.0); // Always on
+	ScheduleConstant temperatureSchedule(model);
+	temperatureSchedule.setValue(70.0); // Fixed at 70
+	ZoneHVACLowTemperatureRadiantElectric zoneHVACLowTemperatureRadiantElectric(model,
 																																																																													 availabilitySchedule,
 																																																																													 temperatureSchedule);
 		zoneHVACLowTemperatureRadiantElectric.setMaximumElectricalPowertoPanel(100);
@@ -118,27 +118,27 @@ TEST_F(ModelFixture,ZoneHVACLowTemperatureRadiantElectric_Check_Setters_Getters)
 {
 
 		Model model;
-  ScheduleConstant availabilitySchedule(model);
-  availabilitySchedule.setValue(1.0); // Always on
-  ScheduleConstant temperatureSchedule(model);
-  temperatureSchedule.setValue(70.0); // Fixed at 70
-  ZoneHVACLowTemperatureRadiantElectric zoneHVACLowTemperatureRadiantElectric(model,
-																																																																													 availabilitySchedule,
-																																																																													 temperatureSchedule);
-		// Field A4 Radiant Surface Group Name
+	ScheduleConstant availabilitySchedule(model);
+	availabilitySchedule.setValue(1.0); // Always on
+	ScheduleConstant temperatureSchedule(model);
+	temperatureSchedule.setValue(70.0); // Fixed at 70
+	ZoneHVACLowTemperatureRadiantElectric zoneHVACLowTemperatureRadiantElectric(model,
+																																						  availabilitySchedule,
+																																						  temperatureSchedule);
+		// Field A4 Radiant Surface Type
 		
-		// Check default ("Floors")
-		boost::optional<std::string> testRadiantSurfaceGroupName = zoneHVACLowTemperatureRadiantElectric.radiantSurfaceGroupName();
-		EXPECT_EQ(*testRadiantSurfaceGroupName, "Floors");
-		
-		zoneHVACLowTemperatureRadiantElectric.resetRadiantSurfaceGroupName();
-	 testRadiantSurfaceGroupName = zoneHVACLowTemperatureRadiantElectric.radiantSurfaceGroupName();
-	 EXPECT_EQ(*testRadiantSurfaceGroupName,"");
+		// Check default ("Ceilings")
+		boost::optional<std::string> testRadiantSurfaceType = zoneHVACLowTemperatureRadiantElectric.radiantSurfaceType();
+		EXPECT_EQ(*testRadiantSurfaceType, "Ceilings");
+			 
+    zoneHVACLowTemperatureRadiantElectric.setRadiantSurfaceType("Floors");
+    boost::optional<std::string> str1 = zoneHVACLowTemperatureRadiantElectric.radiantSurfaceType();
+    EXPECT_EQ(*str1,"Floors");
 	 
-	 EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.setRadiantSurfaceGroupName("Ceilings"));
-	 testRadiantSurfaceGroupName = zoneHVACLowTemperatureRadiantElectric.radiantSurfaceGroupName();
-	 EXPECT_EQ(*testRadiantSurfaceGroupName,"Ceilings");
-	 
+    zoneHVACLowTemperatureRadiantElectric.resetRadiantSurfaceType();
+	  testRadiantSurfaceType = zoneHVACLowTemperatureRadiantElectric.radiantSurfaceType();
+	  EXPECT_EQ(*testRadiantSurfaceType,"Ceilings");
+
 		// Field N1 Maximum Electrical Power to Panel. Test set and get Maximum Electrical Power to Panel, and test autosize and reset functions
 			
 		EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.setMaximumElectricalPowertoPanel(100));

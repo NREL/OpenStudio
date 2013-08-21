@@ -21,10 +21,9 @@
 #define MODEL_ZONEHVACLOWTEMPRADIANTCONSTFLOW_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
+#include <model/Surface.hpp>
+#include <model/Surface_Impl.hpp>
 #include <model/ZoneHVACComponent_Impl.hpp>
-
-//#include <utilities/units/Quantity.hpp>
-//#include <utilities/units/OSOptionalQuantity.hpp>
 
 namespace openstudio {
 namespace model {
@@ -81,13 +80,15 @@ namespace detail {
 
     Schedule availabilitySchedule() const;
 
-    boost::optional<std::string> radiantSurfaceGroupName() const;
+    boost::optional<std::string> radiantSurfaceType() const;
+
+    std::vector<Surface> surfaces() const;
 
     double hydronicTubingInsideDiameter() const;
 
     bool isHydronicTubingInsideDiameterDefaulted() const;
 
-    boost::optional<double> hydronicTubingLength() const;
+    double hydronicTubingLength() const;
 
     std::string temperatureControlType() const;
 
@@ -115,15 +116,19 @@ namespace detail {
 
     bool isFractionofMotorInefficienciestoFluidStreamDefaulted() const;
 
+    std::string numberofCircuits() const;
+
+    double circuitLength() const;
+
     //@}
     /** @name Setters */
     //@{
 
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setRadiantSurfaceGroupName(boost::optional<std::string> radiantSurfaceGroupName);
+    bool setRadiantSurfaceType(boost::optional<std::string> radiantSurfaceType);
 
-    void resetRadiantSurfaceGroupName();
+    void resetRadiantSurfaceType();
 
     bool setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter);
 
@@ -165,7 +170,11 @@ namespace detail {
 
     void resetFractionofMotorInefficienciestoFluidStream();
 
-    boost::optional<ThermalZone> thermalZone();
+    bool setNumberofCircuits(std::string numberofCircuits);
+
+    void setCircuitLength(double circuitLength);
+
+    boost::optional<ThermalZone> thermalZone() const;
 
     bool addToThermalZone(ThermalZone & thermalZone);
 
@@ -188,32 +197,9 @@ namespace detail {
     boost::optional<HVACComponent> optionalHeatingCoil() const;
     boost::optional<HVACComponent> optionalCoolingCoil() const;
 
-    std::vector<std::string> radiantSurfaceGroupNameValues() const;
-    //openstudio::Quantity hydronicTubingInsideDiameter_SI() const;
-    //openstudio::Quantity hydronicTubingInsideDiameter_IP() const;
-    //openstudio::OSOptionalQuantity hydronicTubingLength_SI() const;
-    //openstudio::OSOptionalQuantity hydronicTubingLength_IP() const;
+    std::vector<std::string> radiantSurfaceTypeValues() const;
     std::vector<std::string> temperatureControlTypeValues() const;
-    //openstudio::OSOptionalQuantity ratedFlowRate_SI() const;
-    //openstudio::OSOptionalQuantity ratedFlowRate_IP() const;
-    //openstudio::Quantity ratedPumpHead_SI() const;
-    //openstudio::Quantity ratedPumpHead_IP() const;
-    //openstudio::OSOptionalQuantity ratedPowerConsumption_SI() const;
-    //openstudio::OSOptionalQuantity ratedPowerConsumption_IP() const;
-    //openstudio::Quantity motorEfficiency_SI() const;
-    //openstudio::Quantity motorEfficiency_IP() const;
-    //openstudio::Quantity fractionofMotorInefficienciestoFluidStream_SI() const;
-    //openstudio::Quantity fractionofMotorInefficienciestoFluidStream_IP() const;
 
-    boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
-    boost::optional<ModelObject> heatingCoilAsModelObject() const;
-    boost::optional<ModelObject> coolingCoilAsModelObject() const;
-    boost::optional<ModelObject> pumpFlowRateScheduleAsModelObject() const;
-
-    bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setHeatingCoilAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setCoolingCoilAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setPumpFlowRateScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
   };
 
 } // detail

@@ -21,6 +21,8 @@
 #define MODEL_ZONEHVACLOWTEMPERATURERADIANTELECTRIC_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
+#include <model/Surface.hpp>
+#include <model/Surface_Impl.hpp>
 #include <model/ZoneHVACComponent_Impl.hpp>
 
 namespace openstudio {
@@ -72,7 +74,9 @@ namespace detail {
     
     Schedule heatingSetpointTemperatureSchedule() const;
 
-    boost::optional<std::string> radiantSurfaceGroupName() const;
+    boost::optional<std::string> radiantSurfaceType() const;
+
+    std::vector<Surface> surfaces() const;
 
     boost::optional<double> maximumElectricalPowertoPanel() const;
 
@@ -88,19 +92,15 @@ namespace detail {
 
     bool isHeatingThrottlingRangeDefaulted() const;
 
-    //boost::optional<Schedule> heatingSetpointTemperatureSchedule() const;
-
     /** @name Setters */
 
     bool setAvailabilitySchedule(Schedule& schedule);
     
     bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
 
-    //void resetHeatingSetpointTemperatureSchedule();
+    bool setRadiantSurfaceType(boost::optional<std::string> radiantSurfaceType);
 
-    bool setRadiantSurfaceGroupName(boost::optional<std::string> radiantSurfaceGroupName);
-
-    void resetRadiantSurfaceGroupName();
+    void resetRadiantSurfaceType();
 
     bool setMaximumElectricalPowertoPanel(boost::optional<double> maximumElectricalPowertoPanel);
 
@@ -114,11 +114,9 @@ namespace detail {
 
     bool setHeatingThrottlingRange(double heatingThrottlingRange);
 
-    //bool setHeatingThrottlingRange(const Quantity& heatingThrottlingRange);
-
     void resetHeatingThrottlingRange();
     
-    boost::optional<ThermalZone> thermalZone();
+    boost::optional<ThermalZone> thermalZone() const;
 
     bool addToThermalZone(ThermalZone & thermalZone);
 
@@ -139,14 +137,9 @@ namespace detail {
     boost::optional<Schedule> optionalAvailabilitySchedule() const;
     boost::optional<Schedule> optionalHeatingSetpointTemperatureSchedule() const;
     
-    std::vector<std::string> radiantSurfaceGroupNameValues() const;
+    std::vector<std::string> radiantSurfaceTypeValues() const;
     std::vector<std::string> temperatureControlTypeValues() const;
 
-    boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
-    boost::optional<ModelObject> heatingSetpointTemperatureScheduleAsModelObject() const;
-
-    bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setHeatingSetpointTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
   };
 
 } // detail

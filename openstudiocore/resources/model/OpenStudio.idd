@@ -10848,14 +10848,14 @@ OS:ZoneHVAC:LowTemperatureRadiant:Electric,
         \required-field
         \type object-list
         \object-list ScheduleNames
-   A4 , \field Radiant Surface Group Name
-        \note Identifies surfaces that radiant system is embedded in
-        \note via a ZoneHVAC:LowTemperatureRadiant:SurfaceGroup object.
+   A4 , \field Radiant Surface Type
+        \note Identifies they types of surfaces that radiant system is embedded in
         \type choice
         \key Ceilings
         \key Floors
         \key CeilingsAndFloors
         \key AllSurfaces
+        \default Ceilings
    N1 , \field Maximum Electrical Power to Panel
         \units W
         \minimum 0
@@ -11156,14 +11156,14 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \type object-list
         \required-field
         \object-list ScheduleNames
-   A4 , \field Radiant Surface Group Name
-        \note Identifies surfaces that radiant system is embedded in
-        \note via a ZoneHVAC:LowTemperatureRadiant:SurfaceGroup object.
+   A4 , \field Radiant Surface Type
+        \note Identifies they types of surfaces that radiant system is embedded in
         \type choice
         \key Ceilings
         \key Floors
         \key CeilingsAndFloors
         \key AllSurfaces
+        \default Ceilings
    N1 , \field Hydronic Tubing Inside Diameter
         \units m
         \minimum> 0
@@ -11172,6 +11172,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \note Total length of pipe embedded in surface
         \units m
         \minimum> 0
+        \required-field
    A5 , \field Temperature Control Type
         \note Temperature used to control system
         \type choice
@@ -11210,10 +11211,18 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \minimum 0.0
         \maximum 1.0
         \default 0.9
-   N7 ; \field Fraction of Motor Inefficiencies to Fluid Stream
+   N7 , \field Fraction of Motor Inefficiencies to Fluid Stream
         \minimum 0.0
         \maximum 1.0
         \default 0.0
+   A9, \field Number of Circuits
+        \type choice
+        \key OnePerSurface
+        \key CalculateFromCircuitLength
+        \default OnePerSurface
+   N8 ; \field Circuit Length
+        \units m
+        \default 106.7
         
 OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \min-fields 9
@@ -11234,14 +11243,14 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \type object-List
         \required-field
         \object-list CoilCoolingLowTempRadiantVariableFlow    
-   A6 , \field Radiant Surface Group Name
-        \note Identifies surfaces that radiant system is embedded in
-        \note via a ZoneHVAC:LowTemperatureRadiant:SurfaceGroup object.
+   A6 , \field Radiant Surface Type
+        \note Identifies they types of surfaces that radiant system is embedded in
         \type choice
         \key Ceilings
         \key Floors
         \key CeilingsAndFloors
         \key AllSurfaces
+        \default Ceilings
    N1 , \field Hydronic Tubing Inside Diameter
         \units m
         \minimum> 0
@@ -11253,7 +11262,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \minimum> 0
         \autosizable
         \default autosize
-   A7 ; \field Temperature Control Type
+   A7 , \field Temperature Control Type
         \note (Temperature on which unit is controlled)
         \type choice
         \key MeanAirTemperature
@@ -11262,7 +11271,15 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \key OutdoorDryBulbTemperature
         \key OutdoorWetBulbTemperature
         \default MeanAirTemperature       
-
+   A8 , \field Number of Circuits
+        \type choice
+        \key OnePerSurface
+        \key CalculateFromCircuitLength
+        \default OnePerSurface
+   N3 ; \field Circuit Length
+        \units m
+        \default 106.7
+        
 OS:ZoneHVAC:PackagedTerminalHeatPump,
        \min-fields 24
   A1, \field Handle
