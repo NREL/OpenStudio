@@ -133,9 +133,11 @@ private:
   OSLineEdit2 * m_name;
   QLineEdit * m_runPeriodLineEdit;
 
+  QLabel * m_consumptionUnitsLabel;
   OSComboBox2 * m_consumptionUnits;
-  OSComboBox2 * m_energyDemandUnits;
-
+  QLabel * m_peakDemandUnitsLabel;
+  OSComboBox2 * m_peakDemandUnits;
+  QLabel * m_windowTimestepsLabel;
   OSIntegerEdit2 * m_windowTimesteps;
 
   QPushButton * m_addBillingPeriod;
@@ -174,7 +176,7 @@ public:
 
   OSIntegerEdit2 * m_billingPeriodIntEdit;
   OSDoubleEdit2 * m_energyUseDoubleEdit;
-  OSDoubleEdit2 * m_peaklDoubleEdit;
+  OSDoubleEdit2 * m_peakDoubleEdit;
   OSDoubleEdit2 * m_costDoubleEdit;
 
   QPushButton * m_deleteBillWidget; 

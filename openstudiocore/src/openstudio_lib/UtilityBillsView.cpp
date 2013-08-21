@@ -107,7 +107,7 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
     m_name(0),
     m_runPeriodLineEdit(0),
     m_consumptionUnits(0),
-    m_energyDemandUnits(0),
+    m_peakDemandUnits(0),
     m_windowTimesteps(0),
     m_addBillingPeriod(0),
     m_billGridLayout(0)
@@ -152,7 +152,6 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
   }
 
   createWidgets();
-  addBillingPeriods();
 }
 
 void UtilityBillsInspectorView::createWidgets()
@@ -224,10 +223,10 @@ void UtilityBillsInspectorView::createWidgets()
   vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   vLayout->setSpacing(10);
 
-  label = new QLabel();
-  label->setText("\nConsumption Units");
-  label->setObjectName("H2");
-  vLayout->addWidget(label);
+  m_consumptionUnitsLabel = new QLabel();
+  m_consumptionUnitsLabel->setText("\nConsumption Units");
+  m_consumptionUnitsLabel->setObjectName("H2");
+  vLayout->addWidget(m_consumptionUnitsLabel);
 
   m_consumptionUnits = new OSComboBox2();
   m_consumptionUnits->setFixedWidth(OS_EDIT_WIDTH);
@@ -235,51 +234,35 @@ void UtilityBillsInspectorView::createWidgets()
 
   gridLayout->addLayout(vLayout,0,0,Qt::AlignLeft | Qt::AlignTop);
 
-  FuelType fuelType = FuelType::Electricity;
-  if(m_utilityBill.is_initialized()){
-    fuelType = m_utilityBill.get().fuelType();
-  }
+  vLayout = new QVBoxLayout();
+  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+  vLayout->setSpacing(10);
 
-  if(fuelType == FuelType::Electricity){
-    vLayout = new QVBoxLayout();
-    vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-    vLayout->setSpacing(10);
+  m_peakDemandUnitsLabel = new QLabel();
+  m_peakDemandUnitsLabel->setText("\nPeak Demand Units");
+  m_peakDemandUnitsLabel->setObjectName("H2");
+  vLayout->addWidget(m_peakDemandUnitsLabel);
 
-    label = new QLabel();
-    label->setText("\nPeak Demand Units");
-    label->setObjectName("H2");
-    vLayout->addWidget(label);
+  m_peakDemandUnits = new OSComboBox2();
+  m_peakDemandUnits->setFixedWidth(OS_EDIT_WIDTH);
+  vLayout->addWidget(m_peakDemandUnits);
 
-    m_energyDemandUnits = new OSComboBox2();
-    if(m_utilityBill.is_initialized()){
-      std::vector<std::string> peakDemandUnitValues = m_utilityBill.get().peakDemandUnitValues();
-      Q_FOREACH(const std::string & text, peakDemandUnitValues){
-         m_energyDemandUnits->addItem(text.c_str());
-      }
-    }
-    m_energyDemandUnits->setFixedWidth(OS_EDIT_WIDTH);
-    vLayout->addWidget(m_energyDemandUnits);
+  gridLayout->addLayout(vLayout,0,1,Qt::AlignLeft | Qt::AlignTop);
 
-    gridLayout->addLayout(vLayout,0,1,Qt::AlignLeft | Qt::AlignTop);
-  
-    vLayout = new QVBoxLayout();
-    vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-    vLayout->setSpacing(10);
+  vLayout = new QVBoxLayout();
+  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+  vLayout->setSpacing(10);
 
-    label = new QLabel();
-    label->setText("Peak Demand\nWindow Timesteps");
-    label->setObjectName("H2");
-    vLayout->addWidget(label);
+  m_windowTimestepsLabel = new QLabel();
+  m_windowTimestepsLabel->setText("Peak Demand\nWindow Timesteps");
+  m_windowTimestepsLabel->setObjectName("H2");
+  vLayout->addWidget(m_windowTimestepsLabel);
 
-    m_windowTimesteps = new OSIntegerEdit2();
-    // TODO replace below with validator
-    //m_windowTimesteps->setMinimum(1);
-    //m_windowTimesteps->setDecimals(0);
-    m_windowTimesteps->setFixedWidth(OS_EDIT_WIDTH);
-    vLayout->addWidget(m_windowTimesteps);
+  m_windowTimesteps = new OSIntegerEdit2();
+  m_windowTimesteps->setFixedWidth(OS_EDIT_WIDTH);
+  vLayout->addWidget(m_windowTimesteps);
 
-    gridLayout->addLayout(vLayout,0,2,Qt::AlignLeft | Qt::AlignTop);
-  }
+  gridLayout->addLayout(vLayout,0,2,Qt::AlignLeft | Qt::AlignTop);
 
   gridLayout->setColumnStretch(100,100);
   
@@ -360,61 +343,58 @@ void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityB
 {
   m_utilityBill = utilityBill;
 
-  if(m_name){
-    m_name->bind(
+  m_name->bind(
+    *m_utilityBill,
+    OptionalStringGetter(boost::bind(&model::UtilityBill::name,m_utilityBill.get_ptr(),true)),
+    boost::optional<StringSetter>(boost::bind(&model::UtilityBill::setName,m_utilityBill.get_ptr(),_1)));
+
+  m_consumptionUnits->bind(
       *m_utilityBill,
-      OptionalStringGetter(boost::bind(&model::UtilityBill::name,m_utilityBill.get_ptr(),true)),
-      boost::optional<StringSetter>(boost::bind(&model::UtilityBill::setName,m_utilityBill.get_ptr(),_1)));
-  }
- 
-  if(m_consumptionUnits){
-    m_consumptionUnits->bind(
-        *m_utilityBill,
-        boost::bind(&model::UtilityBill::consumptionUnitValues,m_utilityBill.get_ptr()),
-        OptionalStringGetter(boost::bind(&model::UtilityBill::consumptionUnit,m_utilityBill.get_ptr())),
-        boost::optional<StringSetter>(boost::bind(&model::UtilityBill::setConsumptionUnit,m_utilityBill.get_ptr(),_1)));
-  }
-   
-  if(m_energyDemandUnits){
-    m_energyDemandUnits->bind(
+      boost::bind(&model::UtilityBill::consumptionUnitValues,m_utilityBill.get_ptr()),
+      OptionalStringGetter(boost::bind(&model::UtilityBill::consumptionUnit,m_utilityBill.get_ptr())),
+      boost::optional<StringSetter>(boost::bind(&model::UtilityBill::setConsumptionUnit,m_utilityBill.get_ptr(),_1)));
+
+  if (m_utilityBill->fuelType() == FuelType::Electricity){
+    m_peakDemandUnitsLabel->setVisible(true);
+    m_peakDemandUnits->setVisible(true);
+    m_peakDemandUnits->bind(
         *m_utilityBill,
         boost::bind(&model::UtilityBill::peakDemandUnitValues,m_utilityBill.get_ptr()),
         OptionalStringGetter(boost::bind(&model::UtilityBill::peakDemandUnit,m_utilityBill.get_ptr())),
         boost::optional<StringSetter>(boost::bind(&model::UtilityBill::setPeakDemandUnit,m_utilityBill.get_ptr(),_1)));
-  }
 
-  //  TODO may need bind for unsigned
-  if(m_windowTimesteps){
+    m_windowTimestepsLabel->setVisible(true);
+    m_windowTimesteps->setVisible(true);
+    //  TODO may need bind for unsigned
     //m_windowTimesteps->bind(
     //  *m_utilityBill,
     //  OptionalIntGetter(boost::bind(&model::UtilityBill::timestepsInPeakDemandWindow,m_utilityBill.get_ptr())),
     //  boost::optional<IntSetter>(boost::bind(&model::UtilityBill::setTimestepsInPeakDemandWindow,m_utilityBill.get_ptr(),_1)));
+  }else{
+    m_peakDemandUnitsLabel->setVisible(false);
+    m_peakDemandUnits->setVisible(false);
+    m_windowTimestepsLabel->setVisible(false);
+    m_windowTimesteps->setVisible(false);
   }
+  
+  this->stackedWidget()->setCurrentIndex(1);
 
-  if(m_name || m_consumptionUnits || m_energyDemandUnits || m_windowTimesteps){
-    this->stackedWidget()->setCurrentIndex(1);
-  }
+  addBillingPeriods();
 }
 
 void UtilityBillsInspectorView::detach()
 {
   this->stackedWidget()->setCurrentIndex(0);
 
-  if(m_name){
-    m_name->unbind();
-  }
+  m_name->unbind();
 
-  if(m_consumptionUnits){
-    m_consumptionUnits->unbind();
-  }
+  m_consumptionUnits->unbind();
 
-  if(m_energyDemandUnits){
-    m_energyDemandUnits->unbind();
-  }
+  m_peakDemandUnits->unbind();
    
-  if(m_windowTimesteps){
-    m_windowTimesteps->unbind();
-  }
+  m_windowTimesteps->unbind();
+
+  deleteBillingPeriods();
 }
 
 void UtilityBillsInspectorView::refresh()
@@ -555,13 +535,15 @@ BillingPeriodWidget::BillingPeriodWidget(QGridLayout * gridLayout,
   m_endDateEdit(0),
   m_billingPeriodIntEdit(0),
   m_energyUseDoubleEdit(0),
-  m_peaklDoubleEdit(0),
+  m_peakDoubleEdit(0),
   m_costDoubleEdit(0),
   m_index(index)
 {
   OS_ASSERT(m_billingPeriod.is_initialized());
 
   createWidgets(gridLayout,fuelType,billFormat);
+
+  attach(*m_billingPeriod);
 }
 
 void BillingPeriodWidget::createWidgets(QGridLayout * gridLayout,
@@ -628,9 +610,11 @@ void BillingPeriodWidget::createWidgets(QGridLayout * gridLayout,
   m_energyUseDoubleEdit->setFixedWidth(OS_UTILITY_WIDTH);
   gridLayout->addWidget(m_energyUseDoubleEdit,rowIndex,columnIndex++,Qt::AlignLeft | Qt::AlignTop);
   
-  m_peaklDoubleEdit = new OSDoubleEdit2();
-  m_peaklDoubleEdit->setFixedWidth(OS_UTILITY_WIDTH);
-  gridLayout->addWidget(m_peaklDoubleEdit,rowIndex,columnIndex++,Qt::AlignLeft | Qt::AlignTop);
+  if(fuelType == FuelType::Electricity){
+    m_peakDoubleEdit = new OSDoubleEdit2();
+    m_peakDoubleEdit->setFixedWidth(OS_UTILITY_WIDTH);
+    gridLayout->addWidget(m_peakDoubleEdit,rowIndex,columnIndex++,Qt::AlignLeft | Qt::AlignTop);
+  }
 
   m_costDoubleEdit = new OSDoubleEdit2();
   m_costDoubleEdit->setFixedWidth(OS_UTILITY_WIDTH);
@@ -669,34 +653,35 @@ void BillingPeriodWidget::attach(openstudio::model::BillingPeriod & billingPerio
 {
   m_billingPeriod = billingPeriod;
 
-  // TODO 
-
   if(m_billingPeriodIntEdit){
-    //m_billingPeriodIntEdit->bind(
-    //  *m_billingPeriod,
-    //  OptionalIntGetter(boost::bind(&model::BillingPeriod::numberOfDays,m_billingPeriod.get_ptr())),
-    //  boost::optional<IntSetter>(boost::bind(&model::BillingPeriod::setNumberOfDays,m_billingPeriod.get_ptr(),_1)));
+    m_billingPeriodIntEdit->bind(
+      *m_billingPeriod,
+      OptionalIntGetter(boost::bind(&model::BillingPeriod::numberOfDays,m_billingPeriod.get_ptr())),
+      boost::optional<IntSetter>(boost::bind(&model::BillingPeriod::setNumberOfDays,m_billingPeriod.get_ptr(),_1)));
   }
 
   if(m_energyUseDoubleEdit){
-    //m_energyUseDoubleEdit->bind(
-    //  *m_billingPeriod,
-    //  OptionalDoubleGetter(boost::bind(&model::BillingPeriod::consumption,m_billingPeriod.get_ptr())),
-    //  boost::optional<DoubleSetter>(boost::bind(&model::BillingPeriod::setConsumption,m_billingPeriod.get_ptr(),_1)));
+    m_energyUseDoubleEdit->bind(
+      *m_billingPeriod,
+      OptionalDoubleGetter(boost::bind(&model::BillingPeriod::consumption,m_billingPeriod.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::BillingPeriod::setConsumption,m_billingPeriod.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::BillingPeriod::resetConsumption,m_billingPeriod.get_ptr())));
   }
 
-  if(m_peaklDoubleEdit){
-    //  m_peaklDoubleEdit->bind(
-    //  *m_billingPeriod,
-    //  OptionalDoubleGetter(boost::bind(&model::BillingPeriod::peakDemand,m_billingPeriod.get_ptr())),
-    //  boost::optional<DoubleSetter>(boost::bind(&model::BillingPeriod::setPeakDemand,m_billingPeriod.get_ptr(),_1)));
+  if(m_peakDoubleEdit){
+      m_peakDoubleEdit->bind(
+      *m_billingPeriod,
+      OptionalDoubleGetter(boost::bind(&model::BillingPeriod::peakDemand,m_billingPeriod.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::BillingPeriod::setPeakDemand,m_billingPeriod.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::BillingPeriod::resetPeakDemand,m_billingPeriod.get_ptr())));
   }
 
   if(m_costDoubleEdit){
-    //m_costDoubleEdit->bind(
-    //  *m_billingPeriod,
-    //  OptionalDoubleGetter(boost::bind(&model::BillingPeriod::totalCost,m_billingPeriod.get_ptr())),
-    //  boost::optional<DoubleSetter>(boost::bind(&model::BillingPeriod::setTotalCost,m_billingPeriod.get_ptr(),_1)));
+    m_costDoubleEdit->bind(
+      *m_billingPeriod,
+      OptionalDoubleGetter(boost::bind(&model::BillingPeriod::totalCost,m_billingPeriod.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::BillingPeriod::setTotalCost,m_billingPeriod.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::BillingPeriod::resetTotalCost,m_billingPeriod.get_ptr())));
   }
 
 }
@@ -711,8 +696,8 @@ void BillingPeriodWidget::detach()
     m_energyUseDoubleEdit->unbind();
   }
 
-  if(m_peaklDoubleEdit){
-    m_peaklDoubleEdit->unbind();
+  if(m_peakDoubleEdit){
+    m_peakDoubleEdit->unbind();
   }
 
   if(m_costDoubleEdit){
