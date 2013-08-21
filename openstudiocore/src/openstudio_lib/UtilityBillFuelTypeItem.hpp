@@ -27,7 +27,6 @@
 namespace openstudio {
 
 class FuelType;
-// TODO class ModelObjectListView;
 class UtilityBillFuelTypeListView;
 class OSCollapsibleItemHeader;
 
