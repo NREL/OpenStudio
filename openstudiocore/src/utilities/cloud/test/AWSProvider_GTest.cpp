@@ -1,5 +1,5 @@
 /**********************************************************************
-* Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -17,42 +17,19 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef UTILITIES_CLOUD_AWSPROVIDER_HPP
-#define UTILITIES_CLOUD_AWSPROVIDER_HPP
+#include <gtest/gtest.h>
 
-#include <utilities/cloud/CloudProvider.hpp>
+#include <utilities/cloud/AWSProvider.hpp>
+#include <utilities/cloud/AWSProvider_Impl.hpp>
 
-namespace openstudio{
+#include <string>
 
-  /// AWSProvider is a CloudProvider that provides access to Amazon EC2 and CloudWatch services.
-  class UTILITIES_API AWSProvider : public CloudProvider {
-  public:
+using namespace std;
+using namespace openstudio;
 
-    /** @name Constructor */
-    //@{
-
-    /// default constructor
-    AWSProvider();
-
-    //@}
-    /** @name Destructors */
-    //@{
-
-    /// virtual destructor
-    virtual ~AWSProvider() {};
-
-    //@}
-    /** @name Class members */
-    //@{
-
-    //@}
-  private:
-
-    // configure logging
-    REGISTER_LOGGER("utilities.cloud.AWSProvider");
-
-  };
-
-} // openstudio
-
-#endif // UTILITIES_CLOUD_AWSPROVIDER_HPP
+TEST(AWSProvider, AWSProviderTest)
+{
+  AWSProvider awsProvider;
+  //cout << awsProvider.accessKey() << endl;
+  //cout << awsProvider.serviceAvailable() << endl;
+}
