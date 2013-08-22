@@ -1870,6 +1870,26 @@ namespace detail {
                    responses);
   }
 
+  void Problem_Impl::updateInputPathData(const openstudio::path& originalBase,
+                                         const openstudio::path& newBase)
+  {
+    // workflow steps
+    WorkflowStepVector steps = workflow();
+    BOOST_FOREACH(WorkflowStep& step,steps) {
+      step.getImpl<detail::WorkflowStep_Impl>()->updateInputPathData(originalBase,newBase);
+    }
+
+    // responses
+    //
+    // currently does nothing, because the only variables that have path data are
+    // input variables, and any of those used by a response should also be in workflow().
+    //
+    FunctionVector functions = responses();
+    BOOST_FOREACH(Function& func,functions) {
+      func.getImpl<detail::Function_Impl>()->updateInputPathData(originalBase,newBase);
+    }
+  }
+
   QVariant Problem_Impl::toServerFormulationVariant() const {
     QVariantMap map;
 

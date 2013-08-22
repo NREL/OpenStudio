@@ -36,6 +36,10 @@
 
 #include <runmanager/lib/RunManager.hpp>
 
+#include <ruleset/OSArgument.hpp>
+
+#include <model/Model.hpp>
+
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/RubyException.hpp>

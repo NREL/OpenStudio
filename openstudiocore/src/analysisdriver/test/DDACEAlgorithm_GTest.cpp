@@ -658,6 +658,7 @@ TEST_F(AnalysisDriverFixture, DDACE_LatinHypercube_Continuous) {
 
 TEST_F(AnalysisDriverFixture, DDACE_LatinHypercube_MixedOsmIdf_MoveProjectDatabase) {
   openstudio::path oldDir, newDir;
+  std::string originalAnalysisJSON;
   {
     // GET SIMPLE PROJECT
     SimpleProject project = getCleanSimpleProject("DDACE_LatinHypercube_MixedOsmIdf");
@@ -680,6 +681,10 @@ TEST_F(AnalysisDriverFixture, DDACE_LatinHypercube_MixedOsmIdf_MoveProjectDataba
     algOptions.setSamples(12); // test reprinting results.out for copies of same point
     DDACEAlgorithm algorithm(algOptions);
     analysis.setAlgorithm(algorithm);
+
+    // STORE ORIGINAL FORMULATION
+    AnalysisSerializationOptions options(project.projectDir());
+    originalAnalysisJSON = analysis.toJSON(options);
 
     // RUN ANALYSIS
     AnalysisDriver driver = project.analysisDriver();
@@ -737,6 +742,21 @@ TEST_F(AnalysisDriverFixture, DDACE_LatinHypercube_MixedOsmIdf_MoveProjectDataba
     if (!dataPoint.workspace()) {
       LOG(Debug,"Unsuccessful.")
     }
+  }
+
+  // Updating paths using JSON should match what ProjectDatabase did
+  AnalysisJSONLoadResult loadResult = loadJSON(originalAnalysisJSON);
+  ASSERT_TRUE(loadResult.analysisObject);
+  ASSERT_TRUE(loadResult.analysisObject->optionalCast<Analysis>());
+  Analysis originalAnalysis = loadResult.analysisObject.get().cast<Analysis>();
+  originalAnalysis.updateInputPathData(oldDir,project.projectDir());
+  AnalysisSerializationOptions options(project.projectDir());
+  std::string analysisJSON(analysis.toJSON(options));
+  std::string transformedOriginalAnalysisJSON(originalAnalysis.toJSON(options));
+  EXPECT_EQ(analysisJSON,transformedOriginalAnalysisJSON);
+  if (analysisJSON != transformedOriginalAnalysisJSON) {
+    analysis.saveJSON(project.projectDir() / toPath("formulation_osp_transformed.json"),options,true);
+    originalAnalysis.saveJSON(project.projectDir() / toPath("formulation_analysis_transformed.json"),options,true);
   }
 
   // Should be able to blow away results and run again

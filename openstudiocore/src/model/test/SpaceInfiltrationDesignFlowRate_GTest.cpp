@@ -37,4 +37,51 @@ TEST_F(ModelFixture, SpaceInfiltrationDesignFlowRate)
 
   SpaceInfiltrationDesignFlowRate spaceInfiltrationDesignFlowRate(model);
   EXPECT_EQ(1u, model.numObjects());
+
+  ASSERT_TRUE(spaceInfiltrationDesignFlowRate.designFlowRate());
+  EXPECT_EQ(0.0, spaceInfiltrationDesignFlowRate.designFlowRate().get());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.flowperSpaceFloorArea());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.flowperExteriorSurfaceArea());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.flowperExteriorWallArea());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.airChangesperHour());
+
+  EXPECT_TRUE(spaceInfiltrationDesignFlowRate.setDesignFlowRate(1.0));
+  ASSERT_TRUE(spaceInfiltrationDesignFlowRate.designFlowRate());
+  EXPECT_EQ(1.0, spaceInfiltrationDesignFlowRate.designFlowRate().get());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.flowperSpaceFloorArea());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.flowperExteriorSurfaceArea());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.flowperExteriorWallArea());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.airChangesperHour());
+
+  EXPECT_TRUE(spaceInfiltrationDesignFlowRate.setFlowperSpaceFloorArea(2.0));
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.designFlowRate());
+  ASSERT_TRUE(spaceInfiltrationDesignFlowRate.flowperSpaceFloorArea());
+  EXPECT_EQ(2.0, spaceInfiltrationDesignFlowRate.flowperSpaceFloorArea().get());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.flowperExteriorSurfaceArea());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.flowperExteriorWallArea());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.airChangesperHour());
+
+  EXPECT_TRUE(spaceInfiltrationDesignFlowRate.setFlowperExteriorSurfaceArea(3.0));
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.designFlowRate());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.flowperSpaceFloorArea());
+  ASSERT_TRUE(spaceInfiltrationDesignFlowRate.flowperExteriorSurfaceArea());
+  EXPECT_EQ(3.0, spaceInfiltrationDesignFlowRate.flowperExteriorSurfaceArea().get());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.flowperExteriorWallArea());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.airChangesperHour());
+
+  EXPECT_TRUE(spaceInfiltrationDesignFlowRate.setFlowperExteriorWallArea(4.0));
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.designFlowRate());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.flowperSpaceFloorArea());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.flowperExteriorSurfaceArea());
+  ASSERT_TRUE(spaceInfiltrationDesignFlowRate.flowperExteriorWallArea());
+  EXPECT_EQ(4.0, spaceInfiltrationDesignFlowRate.flowperExteriorWallArea().get());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.airChangesperHour());
+
+  EXPECT_TRUE(spaceInfiltrationDesignFlowRate.setAirChangesperHour(5.0));
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.designFlowRate());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.flowperSpaceFloorArea());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.flowperExteriorSurfaceArea());
+  EXPECT_FALSE(spaceInfiltrationDesignFlowRate.flowperExteriorWallArea());
+  ASSERT_TRUE(spaceInfiltrationDesignFlowRate.airChangesperHour());
+  EXPECT_EQ(5.0, spaceInfiltrationDesignFlowRate.airChangesperHour().get());
 }
