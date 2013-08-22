@@ -197,6 +197,7 @@ private:
 
 private slots:
 
+  void modelObjectChanged();
   void startDateChanged(const QDate & newdate);
   void endDateChanged(const QDate & newdate);
 

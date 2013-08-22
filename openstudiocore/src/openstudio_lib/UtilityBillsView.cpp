@@ -661,16 +661,6 @@ void BillingPeriodWidget::createWidgets(QGridLayout * gridLayout,
   m_deleteBillWidget = new SofterRemoveButton();
   gridLayout->addWidget(m_deleteBillWidget,rowIndex,columnIndex++,Qt::AlignLeft | Qt::AlignTop);
 
-  if(m_startDateEdit){
-    Date startDate = m_billingPeriod.get().startDate();
-    m_startDateEdit->setDate(QDate(startDate.year(),month(startDate.monthOfYear()),startDate.dayOfMonth()));
-  }
-
-  if(m_endDateEdit){
-    Date endDate = m_billingPeriod.get().endDate();
-    m_endDateEdit->setDate(QDate(endDate.year(),month(endDate.monthOfYear()),endDate.dayOfMonth()));
-  }
-
   bool isConnected = false;
 
   if(m_startDateEdit){
@@ -722,6 +712,21 @@ void BillingPeriodWidget::attach(openstudio::model::BillingPeriod & billingPerio
       boost::optional<NoFailAction>(boost::bind(&model::BillingPeriod::resetTotalCost,m_billingPeriod.get_ptr())));
   }
 
+  model::ModelObject modelObject = m_billingPeriod->getObject<openstudio::model::ModelObject>();
+  bool isConnected = connect( modelObject.getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
+                              this,SLOT(modelObjectChanged()) );
+  OS_ASSERT(isConnected);
+
+  if(m_startDateEdit){
+    m_startDateEdit->setEnabled(true);
+  }
+
+  if(m_endDateEdit){
+    m_endDateEdit->setEnabled(true);
+  }
+
+  modelObjectChanged();
+
 }
 
 void BillingPeriodWidget::detach()
@@ -740,6 +745,14 @@ void BillingPeriodWidget::detach()
 
   if(m_costDoubleEdit){
     m_costDoubleEdit->unbind();
+  }
+
+  if(m_startDateEdit){
+    m_startDateEdit->setEnabled(false);
+  }
+
+  if(m_endDateEdit){
+    m_endDateEdit->setEnabled(false);
   }
 }
 
@@ -799,6 +812,23 @@ void BillingPeriodWidget::getBillingPeriodLineEdit(QGridLayout * gridLayout, int
 }
 
 ///// SLOTS
+
+void BillingPeriodWidget::modelObjectChanged()
+{
+  if(m_startDateEdit){
+    Date startDate = m_billingPeriod.get().startDate();
+    bool wasBlocked = m_startDateEdit->blockSignals(true);
+    m_startDateEdit->setDate(QDate(startDate.year(),month(startDate.monthOfYear()),startDate.dayOfMonth()));
+    m_startDateEdit->blockSignals(wasBlocked);
+  }
+
+  if(m_endDateEdit){
+    Date endDate = m_billingPeriod.get().endDate();
+    bool wasBlocked = m_endDateEdit->blockSignals(true);
+    m_endDateEdit->setDate(QDate(endDate.year(),month(endDate.monthOfYear()),endDate.dayOfMonth()));
+    m_endDateEdit->blockSignals(wasBlocked);
+  }
+}
 
 void BillingPeriodWidget::startDateChanged(const QDate & newdate)
 { 
