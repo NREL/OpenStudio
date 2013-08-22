@@ -22,6 +22,9 @@
 
 #include <utilities/cloud/CloudProvider.hpp>
 
+#include <utilities/core/Path.hpp>
+#include <utilities/core/Url.hpp>
+
 namespace openstudio{
 
   /// VagrantProvider is a CloudProvider that provides access to local Vagrant virtual machines for testing.
@@ -31,8 +34,9 @@ namespace openstudio{
     /** @name Constructor */
     //@{
 
-    /// default constructor
-    VagrantProvider();
+    /// constructor
+    VagrantProvider(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
+                    const openstudio::path& workerPath, const openstudio::Url& workerUrl);
 
     //@}
     /** @name Destructors */
