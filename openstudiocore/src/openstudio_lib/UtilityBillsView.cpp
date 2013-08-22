@@ -101,13 +101,11 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
   : ModelObjectInspectorView(model,
                              true,
                              parent),
-    m_billFormatDialog(0),
-    m_billFormat(NONE),
+    m_billFormat(STARTDATE_ENDDATE),
     m_beginAndEndDates(QString()),
     m_showPeak(0),
     m_buttonGroup(0),
     m_name(0),
-    m_runPeriodLineEdit(0),
     m_consumptionUnits(0),
     m_peakDemandUnits(0),
     m_windowTimesteps(0),
@@ -283,10 +281,9 @@ void UtilityBillsInspectorView::createWidgets()
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_runPeriodLineEdit = new QLineEdit(m_beginAndEndDates);
-  m_runPeriodLineEdit->setReadOnly(true);
-  m_runPeriodLineEdit->setFixedWidth(OS_EDIT_WIDTH);
-  vLayout->addWidget(m_runPeriodLineEdit);
+  label = new QLabel();
+  label->setText(m_beginAndEndDates);
+  vLayout->addWidget(label);
 
   mainLayout->addLayout(vLayout);
 
@@ -300,6 +297,33 @@ void UtilityBillsInspectorView::createWidgets()
   label->setText("Billing Period");
   label->setObjectName("H2");
   vLayout->addWidget(label);
+
+  label = new QLabel();
+  label->setText("Select the best match for you utility bill");
+  label->setObjectName("H2");
+  vLayout->addWidget(label);
+
+  QButtonGroup * buttonGroup = new QButtonGroup(this);
+
+  isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
+    this, SLOT(setBillFormat(int)));
+  OS_ASSERT(isConnected);
+
+  QRadioButton * radioButton = NULL; 
+
+  radioButton = new QRadioButton("Start Date and End Date");
+  buttonGroup->addButton(radioButton,0);
+  vLayout->addWidget(radioButton);
+
+  radioButton = new QRadioButton("Start Date and Number of Days in Billing Period");
+  buttonGroup->addButton(radioButton,1);
+  vLayout->addWidget(radioButton);
+
+  radioButton = new QRadioButton("End Date and Number of Days in Billing Period");
+  buttonGroup->addButton(radioButton,2);
+  vLayout->addWidget(radioButton);
+
+  buttonGroup->button(0)->click();
 
   mainLayout->addLayout(vLayout);
 
@@ -332,15 +356,6 @@ void UtilityBillsInspectorView::createWidgets()
   label->setText("Add New Billing Period");
   hLayout->addWidget(label,0, Qt::AlignLeft | Qt::AlignVCenter);
   mainLayout->addLayout(hLayout);
-  
-  // Make Format Dialog
-
-  m_billFormatDialog = new BillFormatDialog();
-  m_billFormat = m_billFormatDialog->billFormat();
-
-  isConnected = connect(m_billFormatDialog, SIGNAL(billFormatSignal(BillFormat)),
-    this, SLOT(setBillFormat(BillFormat)));
-  OS_ASSERT(isConnected);
 }
 
 void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityBill)
@@ -437,11 +452,6 @@ void UtilityBillsInspectorView::onUpdate()
   refresh();
 }
 
-void UtilityBillsInspectorView::showBillFormatDialog()
-{
-  m_billFormatDialog->show();
-}
-
 void UtilityBillsInspectorView::showAddButton()
 {
   m_addBillingPeriod->show();
@@ -482,6 +492,8 @@ void UtilityBillsInspectorView::addBillingPeriod(model::BillingPeriod & billingP
 
 void UtilityBillsInspectorView::deleteBillingPeriods()
 {
+  if(m_billGridLayout ==0) return;
+
   QLayoutItem * child;
   while((child = m_billGridLayout->takeAt(0)) != 0 ){
     QWidget* widget = child->widget();
@@ -490,6 +502,11 @@ void UtilityBillsInspectorView::deleteBillingPeriods()
     }
     delete child;
   }
+  //delete m_billGridLayout;
+  //m_billGridLayout = new QGridLayout();
+  //m_billGridLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+  //m_billGridLayout->setContentsMargins(0,0,0,0);
+  //m_billGridLayout->setSpacing(10);
 }
 
 ////// SLOTS ///////
@@ -522,8 +539,26 @@ void UtilityBillsInspectorView::deleteBillingPeriod(int idx)
 void UtilityBillsInspectorView::setBillFormat(BillFormat billFormat)
 {
   m_billFormat = billFormat;
+  deleteBillingPeriods();
+  addBillingPeriods();
 }
 
+void UtilityBillsInspectorView::setBillFormat(int index)
+{
+  if(index == 0){
+    m_billFormat = STARTDATE_ENDDATE;
+  }
+  else if(index == 1){
+    m_billFormat = STARTDATE_NUMDAYS;
+  }
+  else if(index == 2){
+    m_billFormat = ENDDATE_NUMDAYS;
+  }
+  else{
+    OS_ASSERT(false);
+  }
+  setBillFormat(m_billFormat);
+}
 
 //**********************************************************************************************************
 
@@ -557,7 +592,8 @@ void BillingPeriodWidget::createWidgets(QGridLayout * gridLayout,
 
   int rowIndex = gridLayout->rowCount();
 
-  if(rowIndex == 0){
+  if(true){
+  //if(rowIndex == 1){
     if(billFormat == STARTDATE_ENDDATE){
       getStartDateLabel(gridLayout, rowIndex, columnIndex++);
       getEndDateLabel(gridLayout, rowIndex, columnIndex++);
@@ -766,85 +802,12 @@ void BillingPeriodWidget::getBillingPeriodLineEdit(QGridLayout * gridLayout, int
 
 void BillingPeriodWidget::startDateChanged(const QDate & newdate)
 { 
-  m_billingPeriod.get().setStartDate(Date(newdate.day(),newdate.month(),newdate.year()));
+  m_billingPeriod.get().setStartDate(Date(newdate.month(),newdate.day(),newdate.year()));
 }
 
 void BillingPeriodWidget::endDateChanged(const QDate & newdate)
 {
-  m_billingPeriod.get().setStartDate(Date(newdate.day(),newdate.month(),newdate.year()));
-}
-
-
-//**********************************************************************************************************
-
-
-BillFormatDialog::BillFormatDialog(QWidget * parent)
-  : OSDialog(parent)
-{
-  createLayout();
-}
-
-void BillFormatDialog::createLayout()
-{
-  setSizeHint(QSize(400,260));
-
-  okButton()->setText("Apply");
-
-  cancelButton()->hide();
-
-  QLabel * label = NULL;
-
-  label = new QLabel("Select the best match for you utility bill",this);
-  label->setObjectName("H1");
-  upperLayout()->addWidget(label);
-
-  QButtonGroup * buttonGroup = new QButtonGroup(this);
-
-  bool isConnected = false;
-
-  isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
-    this, SLOT(setBillFormat(int)));
-  OS_ASSERT(isConnected);
-
-  QRadioButton * radioButton = NULL; 
-
-  radioButton = new QRadioButton("Start Date and End Date");
-  buttonGroup->addButton(radioButton,0);
-  upperLayout()->addWidget(radioButton);
-
-  radioButton = new QRadioButton("Start Date and Number of Days in Billing Period");
-  buttonGroup->addButton(radioButton,1);
-  upperLayout()->addWidget(radioButton);
-
-  radioButton = new QRadioButton("End Date and Number of Days in Billing Period");
-  buttonGroup->addButton(radioButton,2);
-  upperLayout()->addWidget(radioButton);
-
-  buttonGroup->button(0)->click();
-  OS_ASSERT(buttonGroup->checkedId() != -1);
-  setBillFormat(buttonGroup->checkedId());
-}
-
-void BillFormatDialog::setBillFormat(int index)
-{
-  if(index == 0){
-    m_billFormat = STARTDATE_ENDDATE;
-  }
-  else if(index == 1){
-    m_billFormat = STARTDATE_NUMDAYS;
-  }
-  else if(index == 2){
-    m_billFormat = ENDDATE_NUMDAYS;
-  }
-  else{
-    OS_ASSERT(false);
-  }
-}
-
-void BillFormatDialog::on_okButton(bool checked)
-{
-  emit billFormatSignal(m_billFormat);
-  OSDialog::on_okButton(checked);
+  m_billingPeriod.get().setEndDate(Date(newdate.month(),newdate.day(),newdate.year()));
 }
 
 } // openstudio

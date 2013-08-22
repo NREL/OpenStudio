@@ -23,8 +23,6 @@
 #include <openstudio_lib/ModelObjectInspectorView.hpp>
 #include <openstudio_lib/ModelSubTabView.hpp>
 
-#include "../shared_gui_components/OSDialog.hpp"
-
 #include <model/Model.hpp>
 #include <model/UtilityBill.hpp>
 
@@ -56,8 +54,7 @@ class UtilityBillListView;
 enum BillFormat{
   STARTDATE_ENDDATE,
   STARTDATE_NUMDAYS,
-  ENDDATE_NUMDAYS,
-  NONE
+  ENDDATE_NUMDAYS
 };
 
 class UtilityBillsView : public ModelSubTabView
@@ -99,12 +96,12 @@ protected:
   virtual void onUpdate();
 
 protected slots:
+
   //virtual void toggleUnits(bool displayIP);
 
 private:
 
   void createWidgets();
-  void showBillFormatDialog();
   void getSortedBills();
   void showAddButton();
   void hideAddButton();
@@ -121,8 +118,6 @@ private:
 
   boost::optional<model::UtilityBill> m_utilityBill;
 
-  BillFormatDialog * m_billFormatDialog;
-
   BillFormat m_billFormat;
 
   QString m_beginAndEndDates;
@@ -132,7 +127,6 @@ private:
   QButtonGroup * m_buttonGroup;
 
   OSLineEdit2 * m_name;
-  QLineEdit * m_runPeriodLineEdit;
 
   QLabel * m_consumptionUnitsLabel;
   OSComboBox2 * m_consumptionUnits;
@@ -149,6 +143,7 @@ private slots:
   void addUtilityBill();
   void addBillingPeriod(bool checked);
   void deleteBillingPeriod(int index);
+  void setBillFormat(int index);
   void setBillFormat(BillFormat billFormat);
 
 };
@@ -204,35 +199,6 @@ private slots:
 
   void startDateChanged(const QDate & newdate);
   void endDateChanged(const QDate & newdate);
-
-};
-
-class BillFormatDialog : public OSDialog
-{
-  Q_OBJECT
-
-public:
-
-  BillFormatDialog(QWidget * parent = 0);
-
-  virtual ~BillFormatDialog() {}
-
-  BillFormat billFormat(){return m_billFormat;}
-
-private:
-
-  virtual void createLayout();
-
-  BillFormat m_billFormat;
-
-signals:
-
-  void billFormatSignal(BillFormat);
-
-private slots:
-
-  void on_okButton(bool checked);
-  void setBillFormat(int index);
 
 };
 
