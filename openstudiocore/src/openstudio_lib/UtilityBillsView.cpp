@@ -366,17 +366,22 @@ void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityB
 {
   m_utilityBill = utilityBill;
 
+  if(m_name){
   m_name->bind(
     *m_utilityBill,
     OptionalStringGetter(boost::bind(&model::UtilityBill::name,m_utilityBill.get_ptr(),true)),
     boost::optional<StringSetter>(boost::bind(&model::UtilityBill::setName,m_utilityBill.get_ptr(),_1)));
+  }
 
+  if(m_consumptionUnits){
   m_consumptionUnits->bind(
       *m_utilityBill,
       boost::bind(&model::UtilityBill::consumptionUnitValues,m_utilityBill.get_ptr()),
       OptionalStringGetter(boost::bind(&model::UtilityBill::consumptionUnit,m_utilityBill.get_ptr())),
       boost::optional<StringSetter>(boost::bind(&model::UtilityBill::setConsumptionUnit,m_utilityBill.get_ptr(),_1)));
+  }
 
+  if(m_peakDemandUnits){
   if (m_utilityBill->fuelType() == FuelType::Electricity){
     m_peakDemandUnitsLabel->setVisible(true);
     m_peakDemandUnits->setVisible(true);
@@ -385,18 +390,23 @@ void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityB
         boost::bind(&model::UtilityBill::peakDemandUnitValues,m_utilityBill.get_ptr()),
         OptionalStringGetter(boost::bind(&model::UtilityBill::peakDemandUnit,m_utilityBill.get_ptr())),
         boost::optional<StringSetter>(boost::bind(&model::UtilityBill::setPeakDemandUnit,m_utilityBill.get_ptr(),_1)));
+  }
 
+    if(m_windowTimesteps){
     m_windowTimestepsLabel->setVisible(true);
     m_windowTimesteps->setVisible(true);
     m_windowTimesteps->bind(
       *m_utilityBill,
       OptionalUnsignedGetter(boost::bind(&model::UtilityBill::timestepsInPeakDemandWindow,m_utilityBill.get_ptr())),
       boost::optional<UnsignedSetter>(boost::bind(&model::UtilityBill::setTimestepsInPeakDemandWindow,m_utilityBill.get_ptr(),_1)));
+    }
   }else{
+    if(m_peakDemandUnits && m_windowTimesteps){
     m_peakDemandUnitsLabel->setVisible(false);
     m_peakDemandUnits->setVisible(false);
     m_windowTimestepsLabel->setVisible(false);
     m_windowTimesteps->setVisible(false);
+    }
   }
   
   this->stackedWidget()->setCurrentIndex(1);
