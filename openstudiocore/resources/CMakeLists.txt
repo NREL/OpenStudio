@@ -338,7 +338,7 @@ CREATE_SRC_GROUPS( "${project_resources_src}" )
 SET(ENERGYPLUS_OUTPUTS "")
 
 SET(analysisdriver_resources_src
-  analysisdriver/PostProcessAppendToReportXML.rb
+  analysisdriver/PostProcessSecondXML.rb
 )
 
 # update the resources
