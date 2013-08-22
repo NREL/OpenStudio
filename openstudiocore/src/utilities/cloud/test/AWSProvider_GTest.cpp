@@ -31,5 +31,5 @@ TEST(AWSProvider, AWSProviderTest)
 {
   AWSProvider awsProvider;
   //cout << awsProvider.accessKey() << endl;
-  //cout << awsProvider.serviceAvailable() << endl;
+  cout << awsProvider.serviceAvailable() << endl;
 }

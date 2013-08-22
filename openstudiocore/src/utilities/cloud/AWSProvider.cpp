@@ -57,18 +57,41 @@ namespace openstudio{
       if (file.open()) {
         QTextStream out(&file);
         out << "require 'aws'\n"
+               "require 'json'\n"
+               "#require 'active_support/core_ext/hash/conversions'\n"
+               "\n"
+               "def error(code, msg)\n"
+               "  puts ({:error=>{:code=>code,:message=>msg}}.to_json)\n"
+               "  exit(1)\n"
+               "end\n"
+               "\n"
+               "if ARGV.length < 2\n"
+               "  error(-1, 'Invalid number of args')\n"
+               "end\n"
+               "\n"
                "AWS.config(\n"
-               "  :access_key_id => 'AKIAJ3T7Q3KLUYSXC3TQ',\n"
-               "  :secret_access_key => '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',\n"
+               "  :access_key_id => ARGV[0],\n"
+               "  :secret_access_key => ARGV[1],\n"
                "  :ssl_verify_peer => false\n"
                ")\n"
-               "cw = AWS::CloudWatch.new\n"
-               "resp = cw.client.list_metrics\n"
+               "\n"
+               "ec2 = AWS::EC2.new\n"
+               "begin\n"
+               "  resp = ec2.client.describe_availability_zones\n"
+               "  puts \"Status: #{resp.http_response.status}\"\n"
+               "rescue Exception => e\n"
+               "  if e.message == 'getaddrinfo: No such host is known. '\n"
+               "    error(503, 'Offline')\n"
+               "  end\n"
+               "  #puts Hash.from_xml(e.http_response.body).to_json\n"
+               "  error(e.http_response.status, e.code)\n"
+               "end\n"
                "puts resp.data.to_json\n";
+
         out.flush();
    
         QProcess *ruby2 = new QProcess();
-        ruby2->start("\"C:\\Ruby200\\bin\\ruby.exe\"", QStringList() << file.fileName().toUtf8());
+        ruby2->start("\"C:\\Ruby200\\bin\\ruby.exe\"", QStringList() << file.fileName().toUtf8() << "[accessKey]" << "[secretKey]");
         ruby2->waitForFinished();
         QString output = ruby2->readAllStandardOutput();
         QString errors = ruby2->readAllStandardError();
