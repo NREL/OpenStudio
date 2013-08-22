@@ -58,11 +58,19 @@ namespace openstudio{
       QProcess* vagrantProcess = new QProcess();
 
       QStringList args;
+      addProcessArguments(args);
       args << "help";
 
       vagrantProcess->setWorkingDirectory(toQString(m_serverPath));
-      vagrantProcess->start("vagrant", args);
+      vagrantProcess->start(processName(), args);
+
+      if (!vagrantProcess->waitForStarted()){
+        vagrantProcess->deleteLater();
+        return false;
+      }
+
       vagrantProcess->waitForFinished();
+
       int result = vagrantProcess->exitCode();
 
       vagrantProcess->deleteLater();
@@ -143,10 +151,16 @@ namespace openstudio{
       OS_ASSERT(test);
 
       QStringList args;
+      addProcessArguments(args);
       args << "up";
 
       m_startServerProcess->setWorkingDirectory(toQString(m_serverPath));
-      m_startServerProcess->start("vagrant", args);
+      m_startServerProcess->start(processName(), args);
+
+      if (!m_startServerProcess->waitForStarted()){
+        m_startServerProcess->deleteLater();
+        return false;
+      }
 
       emit serverStarting();
 
@@ -187,10 +201,16 @@ namespace openstudio{
       OS_ASSERT(test);
 
       QStringList args;
+      addProcessArguments(args);
       args << "up";
 
       m_startWorkerProcess->setWorkingDirectory(toQString(m_workerPath));
-      m_startWorkerProcess->start("vagrant", args);
+      m_startWorkerProcess->start(processName(), args);
+
+      if (!m_startWorkerProcess->waitForStarted()){
+        m_startWorkerProcess->deleteLater();
+        return false;
+      }
 
       emit workerStarting();
 
@@ -199,7 +219,7 @@ namespace openstudio{
 
     bool VagrantProvider_Impl::running() const
     {
-      return (m_serverStarted && m_workersStarted && !m_terminated);
+      return ((m_serverStarted || m_workersStarted) && !m_terminated);
     }
 
     /// returns true if the cloud server successfully begins to stop all nodes
@@ -216,21 +236,26 @@ namespace openstudio{
       clearErrorsAndWarnings();
 
       QStringList args;
-      args << "down";
+      addProcessArguments(args);
+      args << "halt";
 
       QProcess* stopServerProcess = new QProcess();
       stopServerProcess->setWorkingDirectory(toQString(m_serverPath));
-      stopServerProcess->start("vagrant", args);
+      stopServerProcess->start(processName(), args);
 
       QProcess* stopWorkerProcess = new QProcess();
       stopWorkerProcess->setWorkingDirectory(toQString(m_workerPath));
-      stopWorkerProcess->start("vagrant", args);
+      stopWorkerProcess->start(processName(), args);
 
       emit terminating();
 
-      stopServerProcess->waitForFinished();
-      stopWorkerProcess->waitForFinished();
-
+      if (stopServerProcess->waitForStarted()){
+        stopServerProcess->waitForFinished();
+      }
+      if (stopWorkerProcess->waitForStarted()){
+        stopWorkerProcess->waitForFinished();
+      }
+      
       stopServerProcess->deleteLater();
       stopWorkerProcess->deleteLater();
 
@@ -269,6 +294,8 @@ namespace openstudio{
         
         m_cloudSession.setServerUrl(m_serverUrl);
 
+        m_serverStarted = true;
+
         emit serverStarted(m_serverUrl);
 
         m_startServerProcess->deleteLater();
@@ -285,12 +312,36 @@ namespace openstudio{
         m_cloudSession.clearWorkerUrls();
         m_cloudSession.addWorkerUrl(m_workerUrl);
 
+        m_workersStarted = true;
+
         emit workerStarted(m_workerUrl);
 
         emit allWorkersStarted();
 
         m_startWorkerProcess->deleteLater();
       }
+    }
+
+    QString VagrantProvider_Impl::processName() const
+    {
+      QString result;
+#ifdef _WINDOWS
+      result = "cmd.exe";
+#else
+      result = "sh";
+#endif
+      return result;
+    }
+
+    void VagrantProvider_Impl::addProcessArguments(QStringList& args) const
+    {
+#ifdef _WINDOWS
+      args << "/C";
+      args << "vagrant.bat";
+#else
+      args << "vagrant.sh";
+#endif
+      return;
     }
 
   }// detail

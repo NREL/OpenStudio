@@ -28,6 +28,8 @@
 
 #include <QProcess>
 
+class QStringList;
+
 namespace openstudio{
 namespace detail{
 
@@ -146,6 +148,9 @@ namespace detail{
     mutable std::vector<std::string> m_warnings;
 
     void clearErrorsAndWarnings() const;
+
+    QString processName() const;
+    void addProcessArguments(QStringList& args) const;
 
     // configure logging
     REGISTER_LOGGER("utilities.cloud.VagrantProvider");
