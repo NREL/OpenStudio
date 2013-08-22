@@ -490,12 +490,14 @@ SET( ${target_name}_swig_src
   core/Singleton.i
   core/System.i
   core/UpdateManager.i
+  core/Url.i
   core/UUID.i
   core/UnzipFile.i
   core/ZipFile.i
   core/ruby/LanguageSpecific.i
   core/python/LanguageSpecific.i
   core/csharp/LanguageSpecific.i
+  cloud/Cloud.i
   economics/Economics.i
   filetypes/Filetypes.i
   geometry/Geometry.i
