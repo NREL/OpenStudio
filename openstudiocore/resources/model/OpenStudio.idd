@@ -3136,23 +3136,24 @@ OS:Construction:InternalSource,
   N1, \field Source Present After Layer Number
        \note refers to the list of materials which follows
        \type integer
-       \required-field
+       \default 1
        \minimum 1
   N2, \field Temperature Calculation Requested After Layer Number
        \note refers to the list of materials which follows
        \type integer
-       \required-field
+       \default 1
+       \minimum 1       
   N3, \field Dimensions for the CTF Calculation
        \note 1 = 1-dimensional calculation, 2 = 2-dimensional calculation
        \type integer
-       \required-field
+       \default 1
        \minimum 1
        \maximum 2
   N4, \field Tube Spacing
        \note uniform spacing between tubes or resistance wires in direction
        \note perpendicular to main intended direction of heat transfer
        \type real
-       \required-field
+       \default 0.154
        \units m
   A3, \field Surface Rendering Name
        \type object-list
@@ -4549,7 +4550,6 @@ OS:Surface,
        \reference HeatTranBaseSurfNames
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
        \reference SurfGroupAndHTSurfNames
        \reference AllShadingAndHTSurfNames
   A3, \field Surface Type
@@ -4654,7 +4654,6 @@ OS:SubSurface,
        \reference AllHeatTranSurfNames
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
-       \reference RadGroupAndSurfNames
        \reference SurfGroupAndHTSurfNames
        \reference AllShadingAndHTSurfNames
   A3, \field Sub Surface Type
@@ -7157,7 +7156,86 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \note throughout the entire simulation.
        \type object-list
        \object-list ScheduleNames
+              
+OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow,
+        \min-fields 10
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name      
+        \required-field
+        \reference CoilCoolingLowTempRadiantConstantFlow
+        \reference ConnectionObject 
+   A3, \field Cooling Water Inlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A4, \field Cooling Water Outlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A5, \field Cooling High Water Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A6, \field Cooling Low Water Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A7, \field Cooling High Control Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A8, \field Cooling Low Control Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A9, \field Condensation Control Type
+        \type choice
+        \key Off
+        \key SimpleOff
+        \key VariableOff
+        \default SimpleOff
+   N1 ; \field Condensation Control Dewpoint Offset
+        \units C
+        \default 1.0
 
+OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow,  
+        \min-fields 7
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name
+        \required-field
+        \reference CoilCoolingLowTempRadiantVariableFlow
+        \reference ConnectionObject        
+   N1 , \field Maximum Cold Water Flow
+        \units m3/s
+        \minimum 0
+        \autosizable
+        \ip-units gal/min
+        \default autosize        
+   A3 , \field Cooling Water Inlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A4, \field Cooling Water Outlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   N2 , \field Cooling Control Throttling Range
+        \units deltaC
+        \minimum 0.5
+        \default 0.5
+   A5, \field Cooling Control Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A6, \field Condensation Control Type
+        \type choice
+        \key Off
+        \key SimpleOff
+        \key VariableOff
+        \default SimpleOff
+   N3 ; \field Condensation Control Dewpoint Offset
+        \units C
+        \default 1.0
+        
 OS:Coil:Cooling:Water,
        \min-fields 16
   A1, \field Handle
@@ -7244,6 +7322,133 @@ OS:Coil:Cooling:Water,
        \default CounterFlow
        \key CrossFlow
        \key CounterFlow
+       
+OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
+       \Min-fields 29
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \type alpha
+       \required-field
+       \reference CoolingCoilsWaterToAirHP
+       \reference ConnectionObject
+  A3,  \field Water Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A4,  \field Water Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A5,  \field Air Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A6,  \field Air Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  N1,  \field Rated Air Flow Rate
+       \type real
+       \minimum> 0.0
+       \units m3/s
+       \autosizable
+       \default Autosize
+  N2,  \field Rated Water Flow Rate
+       \type real
+       \minimum> 0.0
+       \units m3/s
+       \ip-units gal/min
+       \autosizable
+       \default Autosize
+  N3,  \field Rated Total Cooling Capacity
+       \type real
+       \minimum> 0.0
+       \units W
+       \autosizable
+       \default Autosize
+  N4,  \field Rated Sensible Cooling Capacity
+       \type real
+       \minimum> 0.0
+       \units W
+       \autosizable
+       \default Autosize
+  N5,  \field Rated Cooling Coefficient of Performance
+       \required-field
+       \type real
+       \units W/W
+       \minimum> 0.0
+       \default 3.0
+  N6,  \field Total Cooling Capacity Coefficient 1
+       \required-field
+       \type real
+  N7,  \field Total Cooling Capacity Coefficient 2
+       \required-field
+       \type real
+  N8,  \field Total Cooling Capacity Coefficient 3
+       \required-field
+       \type real
+  N9,  \field Total Cooling Capacity Coefficient 4
+       \required-field
+       \type real
+  N10, \field Total Cooling Capacity Coefficient 5
+       \required-field
+       \type real
+  N11, \field Sensible Cooling Capacity Coefficient 1
+       \required-field
+       \type real
+  N12, \field Sensible Cooling Capacity Coefficient 2
+       \required-field
+       \type real
+  N13, \field Sensible Cooling Capacity Coefficient 3
+       \required-field
+       \type real
+  N14, \field Sensible Cooling Capacity Coefficient 4
+       \required-field
+       \type real
+  N15, \field Sensible Cooling Capacity Coefficient 5
+       \required-field
+       \type real
+  N16, \field Sensible Cooling Capacity Coefficient 6
+       \required-field
+       \type real
+  N17, \field Cooling Power Consumption Coefficient 1
+       \required-field
+       \type real
+  N18, \field Cooling Power Consumption Coefficient 2
+       \required-field
+       \type real
+  N19, \field Cooling Power Consumption Coefficient 3
+       \required-field
+       \type real
+  N20, \field Cooling Power Consumption Coefficient 4
+       \required-field
+       \type real
+  N21, \field Cooling Power Consumption Coefficient 5
+       \required-field
+       \type real
+  N22, \field Nominal Time for Condensate Removal to Begin
+       \type real
+       \units s
+       \minimum 0.0
+       \maximum 3000.0
+       \default 0.0
+       \note The nominal time for condensate to begin leaving the coil's condensate
+       \note drain line at the coil's rated air flow and temperature conditions.
+       \note Nominal time is equal to the ratio of the energy of the coil's maximum
+       \note condensate holding capacity (J) to the coil's steady state latent capacity (W).
+       \note Suggested value is 1000; zero value means latent degradation model is disabled.
+  N23; \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+       \type real
+       \units dimensionless
+       \minimum 0.0
+       \maximum 5.0
+       \default 0.0
+       \note Ratio of the initial moisture evaporation rate from the cooling coil (when
+       \note the compressor first turns off) and the coil's steady state latent capacity
+       \note at rated air flow rate and temperature conditions. Suggested value is 1.5; zero value
+       \note means latent degradation model is disabled.
 
 OS:Coil:Heating:DX:SingleSpeed,
        \min-fields 22
@@ -7489,7 +7694,79 @@ OS:Coil:Heating:Gas,
        \note parasitic gas load associated with the gas coil operation (i.e., standing pilot)
        \type real
        \units W
-
+              
+OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow,
+        \min-fields 8
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name      
+        \required-field
+        \reference CoilHeatingLowTempRadiantConstantFlow
+        \reference ConnectionObject     
+   A3 , \field Heating Water Inlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A4 , \field Heating Water Outlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A5 , \field Heating High Water Temperature Schedule Name
+        \note Water and control temperatures for heating work together to provide
+        \note a linear function that determines the water temperature sent to the
+        \note radiant system.  The current control temperature (see Temperature Control Type above) is
+        \note compared to the high and low control temperatures at the current time.
+        \note If the control temperature is above the high temperature, then the
+        \note inlet water temperature is set to the low water temperature.  If the
+        \note control temperature is below the low temperature, then the inlet
+        \note water temperature is set to the high water temperature.  If the control
+        \note temperature is between the high and low value, then the inlet water
+        \note temperature is linearly interpolated between the low and high water
+        \note temperature values.
+        \type object-list
+        \object-list ScheduleNames
+   A6 , \field Heating Low Water Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A7 , \field Heating High Control Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A8 ; \field Heating Low Control Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        
+OS:Coil:Heating:LowTemperatureRadiant:VariableFlow,
+        \min-fields 7
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name
+        \required-field
+        \reference CoilHeatingLowTempRadiantVariableFlow
+        \reference ConnectionObject
+   N1 , \field Maximum Hot Water Flow
+        \units m3/s
+        \minimum 0
+        \autosizable
+        \ip-units gal/min
+        \default autosize
+   A3 , \field Heating Water Inlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   A4 , \field Heating Water Outlet Node Name
+        \type object-list
+        \required-field
+        \object-list ConnectionNames
+   N2 , \field Heating Control Throttling Range
+        \units deltaC
+        \minimum 0.5
+        \default 0.5
+   A5 ; \field Heating Control Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+               
 OS:Coil:Heating:Water,
        \min-fields 16
   A1, \field Handle
@@ -7565,6 +7842,39 @@ OS:Coil:Heating:Water,
        \minimum> 0
        \default 0.5
 
+OS:Coil:Heating:Water:Baseboard,
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \type alpha
+      \required-field
+      \reference BaseboardHeatingCoil
+      \reference ConnectionObject
+  N1, \field U-Factor Times Area Value
+      \type real
+      \autosizable
+      \units W/K
+      \default autosize
+  N2, \field Maximum Water Flow Rate
+      \type real
+      \autosizable
+      \units m3/s
+      \ip-units gal/min
+      \default Autosize
+  N3, \field Convergence Tolerance
+      \type real
+      \minimum> 0.0
+      \default 0.001       
+  A3, \field Water Inlet Node Name
+      \type object-list
+      \required-field
+      \object-list ConnectionNames
+  A4; \field Water Outlet Node Name
+      \type object-list
+      \required-field
+      \object-list ConnectionNames
+   
 OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
        \Min-fields 20
   A1,  \field Handle
@@ -7646,166 +7956,6 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
        \type real
        \required-field
 
-OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
-       \Min-fields 29
-  A1,  \field Handle
-       \type handle
-       \required-field
-  A2,  \field Name
-       \type alpha
-       \required-field
-       \reference CoolingCoilsWaterToAirHP
-       \reference ConnectionObject
-  A3,  \field Water Inlet Node Name
-       \type object-list
-       \required-field
-       \object-list ConnectionNames
-  A4,  \field Water Outlet Node Name
-       \type object-list
-       \required-field
-       \object-list ConnectionNames
-  A5,  \field Air Inlet Node Name
-       \type object-list
-       \required-field
-       \object-list ConnectionNames
-  A6,  \field Air Outlet Node Name
-       \type object-list
-       \required-field
-       \object-list ConnectionNames
-  N1,  \field Rated Air Flow Rate
-       \type real
-       \minimum> 0.0
-       \units m3/s
-       \autosizable
-       \default Autosize
-  N2,  \field Rated Water Flow Rate
-       \type real
-       \minimum> 0.0
-       \units m3/s
-       \ip-units gal/min
-       \autosizable
-       \default Autosize
-  N3,  \field Rated Total Cooling Capacity
-       \type real
-       \minimum> 0.0
-       \units W
-       \autosizable
-       \default Autosize
-  N4,  \field Rated Sensible Cooling Capacity
-       \type real
-       \minimum> 0.0
-       \units W
-       \autosizable
-       \default Autosize
-  N5,  \field Rated Cooling Coefficient of Performance
-       \required-field
-       \type real
-       \units W/W
-       \minimum> 0.0
-       \default 3.0
-  N6,  \field Total Cooling Capacity Coefficient 1
-       \required-field
-       \type real
-  N7,  \field Total Cooling Capacity Coefficient 2
-       \required-field
-       \type real
-  N8,  \field Total Cooling Capacity Coefficient 3
-       \required-field
-       \type real
-  N9,  \field Total Cooling Capacity Coefficient 4
-       \required-field
-       \type real
-  N10, \field Total Cooling Capacity Coefficient 5
-       \required-field
-       \type real
-  N11, \field Sensible Cooling Capacity Coefficient 1
-       \required-field
-       \type real
-  N12, \field Sensible Cooling Capacity Coefficient 2
-       \required-field
-       \type real
-  N13, \field Sensible Cooling Capacity Coefficient 3
-       \required-field
-       \type real
-  N14, \field Sensible Cooling Capacity Coefficient 4
-       \required-field
-       \type real
-  N15, \field Sensible Cooling Capacity Coefficient 5
-       \required-field
-       \type real
-  N16, \field Sensible Cooling Capacity Coefficient 6
-       \required-field
-       \type real
-  N17, \field Cooling Power Consumption Coefficient 1
-       \required-field
-       \type real
-  N18, \field Cooling Power Consumption Coefficient 2
-       \required-field
-       \type real
-  N19, \field Cooling Power Consumption Coefficient 3
-       \required-field
-       \type real
-  N20, \field Cooling Power Consumption Coefficient 4
-       \required-field
-       \type real
-  N21, \field Cooling Power Consumption Coefficient 5
-       \required-field
-       \type real
-  N22, \field Nominal Time for Condensate Removal to Begin
-       \type real
-       \units s
-       \minimum 0.0
-       \maximum 3000.0
-       \default 0.0
-       \note The nominal time for condensate to begin leaving the coil's condensate
-       \note drain line at the coil's rated air flow and temperature conditions.
-       \note Nominal time is equal to the ratio of the energy of the coil's maximum
-       \note condensate holding capacity (J) to the coil's steady state latent capacity (W).
-       \note Suggested value is 1000; zero value means latent degradation model is disabled.
-  N23; \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
-       \type real
-       \units dimensionless
-       \minimum 0.0
-       \maximum 5.0
-       \default 0.0
-       \note Ratio of the initial moisture evaporation rate from the cooling coil (when
-       \note the compressor first turns off) and the coil's steady state latent capacity
-       \note at rated air flow rate and temperature conditions. Suggested value is 1.5; zero value
-       \note means latent degradation model is disabled.
-
-OS:Coil:Heating:Water:Baseboard,
-  A1, \field Handle
-      \type handle
-      \required-field
-  A2, \field Name
-      \type alpha
-      \required-field
-      \reference BaseboardHeatingCoil
-      \reference ConnectionObject
-  N1, \field U-Factor Times Area Value
-      \type real
-      \autosizable
-      \units W/K
-      \default autosize
-  N2, \field Maximum Water Flow Rate
-      \type real
-      \autosizable
-      \units m3/s
-      \ip-units gal/min
-      \default Autosize
-  N3, \field Convergence Tolerance
-      \type real
-      \minimum> 0.0
-      \default 0.001       
-  A3, \field Water Inlet Node Name
-      \type object-list
-      \required-field
-      \object-list ConnectionNames
-  A4; \field Water Outlet Node Name
-      \type object-list
-      \required-field
-      \object-list ConnectionNames
-      
 OS:Connection,
        \min-fields 1
   A1, \field Handle
@@ -10687,6 +10837,48 @@ OS:ZoneHVAC:Baseboard:Convective:Water,
        \required-field
        \object-list BaseboardHeatingCoil
 
+OS:ZoneHVAC:LowTemperatureRadiant:Electric,
+			  \min-fields 8
+   A1 , \field Handle
+        \type handle
+        \required-field
+	 A2 , \field Name
+        \required-field
+   A3 , \field Availability Schedule Name
+        \required-field
+        \type object-list
+        \object-list ScheduleNames
+   A4 , \field Radiant Surface Type
+        \note Identifies they types of surfaces that radiant system is embedded in
+        \type choice
+        \key Ceilings
+        \key Floors
+        \key CeilingsAndFloors
+        \key AllSurfaces
+        \default Ceilings
+   N1 , \field Maximum Electrical Power to Panel
+        \units W
+        \minimum 0
+        \autosizable
+				\default autosize
+        \ip-units W
+   A5 , \field Temperature Control Type
+        \note Temperature used to control unit
+        \type choice
+        \key MeanAirTemperature
+        \key MeanRadiantTemperature
+        \key OperativeTemperature
+        \key OutdoorDryBulbTemperature
+        \key OutdoorWetBulbTemperature
+        \default MeanAirTemperature
+   N2 , \field Heating Throttling Range
+        \units deltaC
+        \minimum 0
+        \default 0
+   A6 ; \field Heating Setpoint Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+	
 OS:ZoneHVAC:IdealLoadsAirSystem,
        \min-fields 26
   A1 , \field Handle
@@ -10953,6 +11145,141 @@ OS:ZoneHVAC:FourPipeFanCoil,
         \minimum> 0.0
         \default 0.001       
 
+OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
+        \min-fields 15
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name
+        \required-field
+   A3 , \field Availability Schedule Name
+        \type object-list
+        \required-field
+        \object-list ScheduleNames
+   A4 , \field Radiant Surface Type
+        \note Identifies they types of surfaces that radiant system is embedded in
+        \type choice
+        \key Ceilings
+        \key Floors
+        \key CeilingsAndFloors
+        \key AllSurfaces
+        \default Ceilings
+   N1 , \field Hydronic Tubing Inside Diameter
+        \units m
+        \minimum> 0
+        \default 0.013
+   N2 , \field Hydronic Tubing Length
+        \note Total length of pipe embedded in surface
+        \units m
+        \minimum> 0
+        \required-field
+   A5 , \field Temperature Control Type
+        \note Temperature used to control system
+        \type choice
+        \key MeanAirTemperature
+        \key MeanRadiantTemperature
+        \key OperativeTemperature
+        \key OutdoorDryBulbTemperature
+        \key OutdoorWetBulbTemperature
+        \default MeanAirTemperature
+   A6 , \field Low Temp Radiant Constant Flow Heating Coil Name
+        \type object-List
+        \required-field 
+        \object-list CoilHeatingLowTempRadiantConstantFlow
+   A7 , \field Low Temp Radiant Constant Flow Cooling Coil Name
+        \type object-List
+        \required-field 
+        \object-list CoilCoolingLowTempRadiantConstantFlow    
+   N3 , \field Rated Flow Rate
+        \units m3/s
+   A8 , \field Pump Flow Rate Schedule Name
+        \note Modifies the Rated Flow Rate of the pump on a time basis
+        \note the default is that the pump is ON and runs according to its other
+        \note operational requirements specified above.  The schedule is for special
+        \note pump operations. Values here are between 0 and 1 and are multipliers
+        \note on the previous field (Rated Flow Rate).
+        \type object-list
+        \object-list ScheduleNames
+   N4 , \field Rated Pump Head
+        \units Pa
+        \default 179352
+        \note default head is 60 feet
+   N5 , \field Rated Power Consumption
+        \units W
+   N6 , \field Motor Efficiency
+        \type real
+        \minimum 0.0
+        \maximum 1.0
+        \default 0.9
+   N7 , \field Fraction of Motor Inefficiencies to Fluid Stream
+        \minimum 0.0
+        \maximum 1.0
+        \default 0.0
+   A9, \field Number of Circuits
+        \type choice
+        \key OnePerSurface
+        \key CalculateFromCircuitLength
+        \default OnePerSurface
+   N8 ; \field Circuit Length
+        \units m
+        \default 106.7
+        
+OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
+        \min-fields 9
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name
+        \required-field
+   A3 , \field Availability Schedule Name
+        \type object-list
+        \required-field
+        \object-list ScheduleNames
+   A4 , \field Low Temp Radiant Variable Flow Heating Coil Name
+        \type object-List
+        \required-field 
+        \object-list CoilHeatingLowTempRadiantVariableFlow
+   A5 , \field Low Temp Radiant Variable Flow Cooling Coil Name
+        \type object-List
+        \required-field
+        \object-list CoilCoolingLowTempRadiantVariableFlow    
+   A6 , \field Radiant Surface Type
+        \note Identifies they types of surfaces that radiant system is embedded in
+        \type choice
+        \key Ceilings
+        \key Floors
+        \key CeilingsAndFloors
+        \key AllSurfaces
+        \default Ceilings
+   N1 , \field Hydronic Tubing Inside Diameter
+        \units m
+        \minimum> 0
+        \default 0.013
+        \ip-units in
+   N2 , \field Hydronic Tubing Length
+        \note (total length of pipe embedded in surface)
+        \units m
+        \minimum> 0
+        \autosizable
+        \default autosize
+   A7 , \field Temperature Control Type
+        \note (Temperature on which unit is controlled)
+        \type choice
+        \key MeanAirTemperature
+        \key MeanRadiantTemperature
+        \key OperativeTemperature
+        \key OutdoorDryBulbTemperature
+        \key OutdoorWetBulbTemperature
+        \default MeanAirTemperature       
+   A8 , \field Number of Circuits
+        \type choice
+        \key OnePerSurface
+        \key CalculateFromCircuitLength
+        \default OnePerSurface
+   N3 ; \field Circuit Length
+        \units m
+        \default 106.7
+        
 OS:ZoneHVAC:PackagedTerminalHeatPump,
        \min-fields 24
   A1, \field Handle

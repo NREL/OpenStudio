@@ -118,7 +118,7 @@ namespace detail {
           lastRun,
           toJobErrors(map["errors"], t_version),
           map.contains("output_files") ? Files(toVectorOfFileInfo(map["output_files"],t_version)) : Files(),
-          toAdvancedStatus(map["status"], t_version)
+          map.contains("status") ? toAdvancedStatus(map["status"], t_version) : AdvancedStatus()
           )
         );
 

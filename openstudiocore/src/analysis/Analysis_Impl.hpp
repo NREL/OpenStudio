@@ -241,6 +241,10 @@ namespace detail {
     /** Returns a csv summary of all the data points in this analysis. */
     Table summaryTable() const;
 
+    /// Relocate path data from originalBase to newBase.
+    virtual void updateInputPathData(const openstudio::path& originalBase,
+                                     const openstudio::path& newBase);
+
     //@}
     /** @name Serialization
      *  Methods to save to json format. See AnalysisObject.hpp, openstudio::analysis::loadJSON for

@@ -196,17 +196,32 @@ typedef boost::optional<AnalysisObject> OptionalAnalysisObject;
 /** \relates AnalysisObject*/
 typedef std::vector<AnalysisObject> AnalysisObjectVector;
 
-/** Factory method for loading JSON containing an AnalysisObject. Returned object will be of the
- *  correct type. \relates AnalysisObject */
-ANALYSIS_API boost::optional<AnalysisObject> loadJSON(const openstudio::path& p);
+struct ANALYSIS_API AnalysisJSONLoadResult {
+  /// loaded object
+  boost::optional<AnalysisObject> analysisObject;
+  openstudio::path projectDir;     /// metadata
+  VersionString originalOSVersion; /// metadata
+  /// errors -- Only !(.empty()) if (!analysisObject). Call .logMessage to get a std::string.
+  std::vector<LogMessage> errors;
+
+  AnalysisJSONLoadResult(const AnalysisObject& t_analysisObject,
+                         const openstudio::path& t_projectDir,
+                         const VersionString& t_originalOSVersion);
+
+  AnalysisJSONLoadResult(const std::vector<LogMessage>& t_errors);
+};
 
 /** Factory method for loading JSON containing an AnalysisObject. Returned object will be of the
- *  correct type. \relates AnalysisObject */
-ANALYSIS_API boost::optional<AnalysisObject> loadJSON(std::istream& json);
+ *  correct type. \relates AnalysisObject \relates Analysis \relates DataPoint */
+ANALYSIS_API AnalysisJSONLoadResult loadJSON(const openstudio::path& p);
 
 /** Factory method for loading JSON containing an AnalysisObject. Returned object will be of the
- *  correct type. \relates AnalysisObject */
-ANALYSIS_API boost::optional<AnalysisObject> loadJSON(const std::string& json);
+ *  correct type. \relates AnalysisObject \relates Analysis \relates DataPoint */
+ANALYSIS_API AnalysisJSONLoadResult loadJSON(std::istream& json);
+
+/** Factory method for loading JSON containing an AnalysisObject. Returned object will be of the
+ *  correct type. \relates AnalysisObject \relates Analysis \relates DataPoint */
+ANALYSIS_API AnalysisJSONLoadResult loadJSON(const std::string& json);
 
 } // analysis
 } // openstudio

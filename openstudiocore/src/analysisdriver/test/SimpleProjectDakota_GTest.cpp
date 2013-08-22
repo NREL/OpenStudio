@@ -60,6 +60,7 @@
 #include <model/Building.hpp>
 #include <model/Building_Impl.hpp>
 
+#include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/sql/SqlFile.hpp>

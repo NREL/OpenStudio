@@ -287,7 +287,7 @@ namespace detail {
     std::map<UncertaintyDescriptionType,std::vector<int> > getUncertainVariableIndices(const DakotaAlgorithm& dakotaAlgorithm) const;
 
     //@}
-    /** @name Protected in Public Class */
+    /** @name Protected in or Absent from Public Class */
     //@{
 
     virtual QVariant toVariant() const;
@@ -297,6 +297,10 @@ namespace detail {
     static Problem fromVariant(const QVariant& variant, const VersionString& version);
 
     virtual QVariant toServerFormulationVariant() const;
+
+    /// Relocate path data from originalBase to newBase.
+    virtual void updateInputPathData(const openstudio::path& originalBase,
+                                     const openstudio::path& newBase);
 
     //@}
    protected:

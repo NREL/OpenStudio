@@ -26,6 +26,7 @@
 #include "BaseApp.hpp"
 #include "LocalLibraryController.hpp"
 
+#include <analysis/Analysis.hpp>
 #include <analysis/DataPoint.hpp>
 #include <analysis/MeasureGroup.hpp>
 #include <analysis/MeasureGroup_Impl.hpp>
