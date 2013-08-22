@@ -815,18 +815,20 @@ void BillingPeriodWidget::getBillingPeriodLineEdit(QGridLayout * gridLayout, int
 
 void BillingPeriodWidget::modelObjectChanged()
 {
-  if(m_startDateEdit){
-    Date startDate = m_billingPeriod.get().startDate();
-    bool wasBlocked = m_startDateEdit->blockSignals(true);
-    m_startDateEdit->setDate(QDate(startDate.year(),month(startDate.monthOfYear()),startDate.dayOfMonth()));
-    m_startDateEdit->blockSignals(wasBlocked);
-  }
+  if(!m_billingPeriod.get().empty()){
+    if(m_startDateEdit && m_startDateEdit->isEnabled()){
+      Date startDate = m_billingPeriod.get().startDate();
+      bool wasBlocked = m_startDateEdit->blockSignals(true);
+      m_startDateEdit->setDate(QDate(startDate.year(),month(startDate.monthOfYear()),startDate.dayOfMonth()));
+      m_startDateEdit->blockSignals(wasBlocked);
+    }
 
-  if(m_endDateEdit){
-    Date endDate = m_billingPeriod.get().endDate();
-    bool wasBlocked = m_endDateEdit->blockSignals(true);
-    m_endDateEdit->setDate(QDate(endDate.year(),month(endDate.monthOfYear()),endDate.dayOfMonth()));
-    m_endDateEdit->blockSignals(wasBlocked);
+    if(m_endDateEdit  && m_endDateEdit->isEnabled()){
+      Date endDate = m_billingPeriod.get().endDate();
+      bool wasBlocked = m_endDateEdit->blockSignals(true);
+      m_endDateEdit->setDate(QDate(endDate.year(),month(endDate.monthOfYear()),endDate.dayOfMonth()));
+      m_endDateEdit->blockSignals(wasBlocked);
+    }
   }
 }
 
