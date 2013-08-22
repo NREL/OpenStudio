@@ -146,6 +146,8 @@ namespace openstudio {
     public:
       UtilityBillComparisonView(const openstudio::model::Model& model, QWidget *t_parent=0);
       virtual ~UtilityBillComparisonView() {}
+
+    public slots:
       void buildGridLayout();
 
     private slots:

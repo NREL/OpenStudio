@@ -41,6 +41,7 @@
 #include <QTableWidget>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QTimer>
 
 #include <iostream>
 
@@ -786,7 +787,7 @@ void UtilityBillComparisonView::selectCalibrationMethod(const QString& value)
 void UtilityBillComparisonView::onObjectAdded(const openstudio::WorkspaceObject& workspaceObject)
 {
   if (workspaceObject.iddObject().type() == IddObjectType::OS_UtilityBill){
-    buildGridLayout();
+    QTimer::singleShot(0, this, SLOT(buildGridLayout()));
   }
 }
 
@@ -1504,7 +1505,7 @@ void ResultsView::selectView(int index)
 void ResultsView::onObjectAdded(const WorkspaceObject& workspaceObject)
 {
   if (workspaceObject.iddObject().type() == IddObjectType::OS_UtilityBill){
-    updateReportButtons();
+    QTimer::singleShot(0, this, SLOT(updateReportButtons()));
   }
 }
 
