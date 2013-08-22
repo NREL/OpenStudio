@@ -15,6 +15,8 @@
     <file>images/cancel_simulation_button.png</file>
     <file>images/check.png</file>
     <file>images/chiller_air.png</file>
+    <file>images/coilheatinglowtemprad_constflow.png</file>
+    <file>images/coilheatinglowtemprad_varflow.png</file>    
     <file>images/coilheatingwater_baseboard.png</file>
     <file>images/combo_box_arrows.png</file>
     <file>images/combo_box_arrows_gray.png</file>
@@ -28,6 +30,8 @@
     <file>images/controller_icon_off.png</file>
     <file>images/controller_icon_on.png</file>
     <file>images/cool_coil.png</file>
+    <file>images/coilcoolinglowtemprad_constflow.png</file>   
+    <file>images/coilcoolinglowtemprad_varflow.png</file>      
     <file>images/cooling_tower.png</file>
     <file>images/delete-icon.png</file>
     <file>images/delete.png</file>
@@ -71,6 +75,8 @@
     <file>images/loop_button_over.png</file>
     <file>images/loop_button_press.png</file>
     <file>images/loop_name_icon.png</file>
+    <file>images/lowtempradiant_constflow.png</file>   
+    <file>images/lowtempradiant_varflow.png</file>       
     <file>images/mixer.png</file>
     <file>images/OAMixer.png</file>
     <file>images/off_building_stories_tab.png</file>
@@ -177,6 +183,7 @@
     <file>images/watertoairHP.png</file>
     <file>images/wizard.png</file>
     <file>images/zone.png</file>
+    <file>images/zonehvac_low_temperature_radiant_electric.png</file>
     <file>images/zone_icon_off.png</file>
     <file>images/zone_icon_pressed.png</file>
     <file>images/zoom-in-over.png</file>
@@ -204,6 +211,8 @@
     <file>images/mini_icons/coilheatingwater_baseboard_mini.png</file>
     <file>images/mini_icons/coil_ht_dx_singlespeed_mini.png</file>
     <file>images/mini_icons/cool_coil.png</file>
+    <file>images/mini_icons/coilcoolinglowtemprad_constflow.png</file>   
+    <file>images/mini_icons/coilcoolinglowtemprad_varflow.png</file>     
     <file>images/mini_icons/cooling_tower.png</file>
     <file>images/mini_icons/daylighting_control.png</file>
     <file>images/mini_icons/default_construction_set.png</file>
@@ -230,6 +239,8 @@
     <file>images/mini_icons/grassanddirt.png</file> 
     <file>images/mini_icons/ground_heat_exchanger_vertical.png</file>
     <file>images/mini_icons/heat_coil.png</file>
+    <file>images/mini_icons/coilheatinglowtemprad_constflow.png</file>
+    <file>images/mini_icons/coilheatinglowtemprad_varflow.png</file>    
     <file>images/mini_icons/heat_pump3.png</file>
     <file>images/mini_icons/heat_transfer_mini.png</file>
     <file>images/mini_icons/illuminance_map.png</file>
@@ -241,6 +252,9 @@
     <file>images/mini_icons/internal_mass_definition.png</file>
     <file>images/mini_icons/lights.png</file>
     <file>images/mini_icons/lights_definition.png</file>
+    <file>images/mini_icons/zonehvac_low_temperature_radiant_electric.png</file>    
+    <file>images/mini_icons/lowtempradiant_constflow.png</file>
+    <file>images/mini_icons/lowtempradiant_varflow.png</file>    
     <file>images/mini_icons/luminaire.png</file>
     <file>images/mini_icons/luminaire_definition.png</file>
     <file>images/mini_icons/material.png</file>

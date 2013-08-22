@@ -67,7 +67,7 @@ strs.each { |str|
   printReturn = (m == nil)
   
   # extract method name
-  methodRe = Regexp.new('^(const )?[\w:<>]*\&? (\w*::)?(\w*|operator ?\W+) ?\(')
+  methodRe = Regexp.new('^(const )?[\w:,<> ]*\&? (\w*::)?(\w*|operator ?\W+) ?\(')
   m = str.match(methodRe)
   raise "Unable to extract method name for string block " + "\n" + str if (m == nil)
   methodName = m[3]
@@ -135,3 +135,6 @@ newStrs.each { |newStr|
 File.open(newFilepath,"w") do |file|
   file.write(str)
 end
+
+puts "Printed implementations to " + newFilepath + "."
+

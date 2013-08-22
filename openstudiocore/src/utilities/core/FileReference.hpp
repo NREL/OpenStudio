@@ -68,8 +68,6 @@ class UTILITIES_API FileReference {
 
   explicit FileReference(const openstudio::path& p);
 
-  // ETH@20110712 Seems potentially really bad to have this exposed. Could move this class to
-  // project, then use friendship to hide it.
   /** De-serialization constructor. Not for general use. */
   FileReference(const openstudio::UUID& uuid,
                 const openstudio::UUID& versionUUID,
@@ -105,10 +103,16 @@ class UTILITIES_API FileReference {
 
   FileReferenceType fileType() const;
 
+  /** Time this object was created or time file was created, depending on
+   *  whether path exists at time of construction. */
   DateTime timestampCreate() const;
 
+  /** Last modified time of this file, or time object was created if path
+   *  does not actually exist on the file system. */
   DateTime timestampLast() const;
 
+  /** Checksum at time this object was created, if file exists. Otherwise
+   *  "00000000". */
   std::string checksumCreate() const;
 
   std::string checksumLast() const;
@@ -123,15 +127,15 @@ class UTILITIES_API FileReference {
 
   void setDescription(const std::string& newDescription);
 
+  void setPath(const openstudio::path& newPath);
+
   bool makePathAbsolute(const openstudio::path& searchDirectory);
 
   /** Save the path as relative to basePath, or just keep the file name and extension if 
    *  basePath.empty(). */
   bool makePathRelative(const openstudio::path& basePath=openstudio::path());
 
-  // ETH@20110712 Behavior of timestampLast? Pulled from filesystem? Updated only if checksum
-  // is different?
-  /** Updates checksumLast. If file is located, returns true. */ 
+  /** Returns true and updates timestampLast and checksumLast if file is located. */
   bool update(const openstudio::path& searchDirectory);
 
   //@}
@@ -149,6 +153,10 @@ class UTILITIES_API FileReference {
   std::string m_checksumLast;
 
   REGISTER_LOGGER("openstudio.utilities.FileReference");
+
+  /** Sets timestamps and checksums. If lastOnly, does not try to
+   *  determine timestampCreate. */
+  bool update(const openstudio::path& searchDirectory,bool lastOnly);
 };
 
 /** \relates FileReference*/

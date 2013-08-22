@@ -27,7 +27,7 @@
 #include <utilities/units/UnitFactory.hpp>
 
 #include <utilities/units/BTUUnit.hpp>
-#include <utilities/units/CelciusUnit.hpp>
+#include <utilities/units/CelsiusUnit.hpp>
 #include <utilities/units/CFMUnit.hpp>
 #include <utilities/units/FahrenheitUnit.hpp>
 #include <utilities/units/IPUnit.hpp>
@@ -219,8 +219,8 @@ TEST_F(UnitsFixture,QuantityConverter_OSQuantityVector) {
   EXPECT_EQ(resultQ->system(),resultVec.system());
 
   // temperature conversion
-  testVec = OSQuantityVector(createCelciusTemperature(),2u,20.0);
-  testQ = Quantity(20.0,createCelciusTemperature());
+  testVec = OSQuantityVector(createCelsiusTemperature(),2u,20.0);
+  testQ = Quantity(20.0,createCelsiusTemperature());
   resultVec = convert(testVec,UnitSystem(UnitSystem::Fahrenheit));
   resultQ = convert(testQ,UnitSystem(UnitSystem::Fahrenheit));
   ASSERT_EQ(2u,resultVec.size());

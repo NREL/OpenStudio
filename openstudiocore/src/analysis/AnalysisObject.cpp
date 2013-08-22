@@ -28,6 +28,7 @@
 
 #include <utilities/core/Json.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/StringStreamLogSink.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -131,6 +132,10 @@ namespace detail {
   {
     return QObject::disconnect(this,signal,receiver,slot);
   }
+
+  void AnalysisObject_Impl::updateInputPathData(const openstudio::path& originalBase,
+                                                const openstudio::path& newBase)
+  {}
 
   void AnalysisObject_Impl::onChange(ChangeType changeType) {
     m_versionUUID = createUUID();
@@ -337,8 +342,24 @@ QVariant AnalysisObject::toServerDataPointsVariant() const {
 
 /// @endcond
 
-boost::optional<AnalysisObject> loadJSON(const openstudio::path& p) {
+AnalysisJSONLoadResult::AnalysisJSONLoadResult(const AnalysisObject& t_analysisObject,
+                                               const openstudio::path& t_projectDir,
+                                               const VersionString& t_originalOSVersion)
+  : analysisObject(t_analysisObject),
+    projectDir(t_projectDir),
+    originalOSVersion(t_originalOSVersion)
+{}
+
+AnalysisJSONLoadResult::AnalysisJSONLoadResult(const std::vector<LogMessage>& t_errors)
+  : originalOSVersion(""),
+    errors(t_errors)
+{}
+
+AnalysisJSONLoadResult loadJSON(const openstudio::path& p) {
   OptionalAnalysisObject result;
+  StringStreamLogSink logger;
+  logger.setLogLevel(Error);
+
   try {
     std::pair<QVariant,VersionString> parseResult = openstudio::loadJSON(p);
     QVariantMap variant = parseResult.first.toMap();
@@ -353,6 +374,13 @@ boost::optional<AnalysisObject> loadJSON(const openstudio::path& p) {
                          "The file at " << toString(p) << " does not contain a data_point or "
                          << "an analysis.");
     }
+    OS_ASSERT(result);
+    openstudio::path projectDir;
+    QVariantMap metadata = variant["metadata"].toMap();
+    if (metadata.contains("project_dir")) {
+      projectDir = toPath(metadata["project_dir"].toString());
+    }
+    return AnalysisJSONLoadResult(*result,projectDir,parseResult.second);
   }
   catch (std::exception& e) {
     LOG_FREE(Error,"openstudio.analysis.AnalysisObject",
@@ -365,10 +393,10 @@ boost::optional<AnalysisObject> loadJSON(const openstudio::path& p) {
              << "analysis framework json file.");
   }
 
-  return result;
+  return AnalysisJSONLoadResult(logger.logMessages());
 }
 
-boost::optional<AnalysisObject> loadJSON(std::istream& json) {
+AnalysisJSONLoadResult loadJSON(std::istream& json) {
   // istream -> string code from
   // http://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
   std::string contents;
@@ -379,8 +407,11 @@ boost::optional<AnalysisObject> loadJSON(std::istream& json) {
   return loadJSON(contents);
 }
 
-boost::optional<AnalysisObject> loadJSON(const std::string& json) {
+AnalysisJSONLoadResult loadJSON(const std::string& json) {
   OptionalAnalysisObject result;
+  StringStreamLogSink logger;
+  logger.setLogLevel(Error);
+
   try {
     std::pair<QVariant,VersionString> parseResult = openstudio::loadJSON(json);
     QVariantMap variant = parseResult.first.toMap();
@@ -394,6 +425,13 @@ boost::optional<AnalysisObject> loadJSON(const std::string& json) {
       LOG_FREE_AND_THROW("openstudio.analysis.AnalysisObject",
                          "The parsed json string does not contain a data_point or an analysis.");
     }
+    OS_ASSERT(result);
+    openstudio::path projectDir;
+    QVariantMap metadata = variant["metadata"].toMap();
+    if (metadata.contains("project_dir")) {
+      projectDir = toPath(metadata["project_dir"].toString());
+    }
+    return AnalysisJSONLoadResult(*result,projectDir,parseResult.second);
   }
   catch (std::exception& e) {
     LOG_FREE(Error,"openstudio.analysis.AnalysisObject",
@@ -406,7 +444,7 @@ boost::optional<AnalysisObject> loadJSON(const std::string& json) {
              << "json file." << std::endl << std::endl << json);
   }
 
-  return result;
+  return AnalysisJSONLoadResult(logger.logMessages());
 }
 
 } // analysis

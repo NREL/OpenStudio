@@ -23,23 +23,30 @@
 #include <QDir>
 #include <QDomDocument>
 #include <QDomElement>
-#include <analysis/DataPoint.hpp>
+
 #include <analysisdriver/SimpleProject.hpp>
+
+#include <analysis/Analysis.hpp>
+#include <analysis/DataPoint.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/InputVariable.hpp>
 #include <analysis/InputVariable_Impl.hpp>
 #include <analysis/Measure.hpp>
 #include <analysis/DataPoint.hpp>
-#include <utilities/sql/SqlFile.hpp>
 #include <analysis/RubyMeasure.hpp>
 #include <analysis/RubyMeasure_Impl.hpp>
 #include <analysis/MeasureGroup.hpp>
 #include <analysis/MeasureGroup_Impl.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
 #include <analysis/WorkflowStep.hpp>
+
 #include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/Job_Impl.hpp>
+
+#include <model/Model.hpp>
 #include <model/Building.hpp>
+
+#include <utilities/bcl/BCLMeasure.hpp>
+#include <utilities/sql/SqlFile.hpp>
 #include <utilities/units/Quantity.hpp>
 #include <utilities/units/QuantityConverter.hpp>
 #include <utilities/units/Unit.hpp>

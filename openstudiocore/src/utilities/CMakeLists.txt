@@ -450,7 +450,7 @@ SET( ${target_name}_test_src
   units/test/IPUnit_GTest.cpp
   units/test/BTUUnit_GTest.cpp
   units/test/CFMUnit_GTest.cpp
-  units/test/CelciusUnit_GTest.cpp
+  units/test/CelsiusUnit_GTest.cpp
   units/test/FahrenheitUnit_GTest.cpp
   units/test/UnitFactory_GTest.cpp
   units/test/QuantityRegex_GTest.cpp

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef UTILITIES_UNITS_CELCIUSUNIT_IMPL_HPP
-#define UTILITIES_UNITS_CELCIUSUNIT_IMPL_HPP
+#ifndef UTILITIES_UNITS_CELSIUSUNIT_IMPL_HPP
+#define UTILITIES_UNITS_CELSIUSUNIT_IMPL_HPP
 
 #include <utilities/UtilitiesAPI.hpp>
 #include <utilities/units/TemperatureUnit_Impl.hpp>
@@ -26,8 +26,8 @@
 namespace openstudio {
 namespace detail {
 
-  /** CelciusUnit_Impl is a TemperatureUnit_Impl that is the implementation class for CelciusUnit.*/
-  class UTILITIES_API CelciusUnit_Impl : public TemperatureUnit_Impl {
+  /** CelsiusUnit_Impl is a TemperatureUnit_Impl that is the implementation class for CelsiusUnit.*/
+  class UTILITIES_API CelsiusUnit_Impl : public TemperatureUnit_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -37,7 +37,7 @@ namespace detail {
      *  \param[in] CExp exponent on baseUnit C.
      *  \param[in] scaleExponent exponent for scale. For instance 3 for kilo.
      *  \param[in] prettyString optional string to use in place of standardString. */
-    CelciusUnit_Impl(int CExp=0,int scaleExponent=0,const std::string& prettyString="");
+    CelsiusUnit_Impl(int CExp=0,int scaleExponent=0,const std::string& prettyString="");
 
     /** Alternate constructor creates an absolute temperature. Specify the abbreviation of the scale,
      *  rather than its exponent.
@@ -46,11 +46,11 @@ namespace detail {
      *    "k" for kilo.
      *  \param[in] CExp exponent on baseUnit C.
      *  \param[in] prettyString optional string to use in place of standardString. */
-    CelciusUnit_Impl(const std::string& scaleAbbreviation,
+    CelsiusUnit_Impl(const std::string& scaleAbbreviation,
                      int CExp=0,
                      const std::string& prettyString="");
 
-    virtual ~CelciusUnit_Impl() {}
+    virtual ~CelsiusUnit_Impl() {}
 
     /** Deep copy constructor. */
     virtual Unit clone() const;
@@ -59,18 +59,18 @@ namespace detail {
     /** @name Base Units and Scale */
     //@{
 
-    /** Throws if baseUnit is not a vaild for CelciusUnit. */
+    /** Throws if baseUnit is not a vaild for CelsiusUnit. */
     virtual void setBaseUnitExponent(const std::string& baseUnit, int exponent);
 
     //@}
    protected:
    private:
-    REGISTER_LOGGER("openstudio.units.CelciusUnit");
+    REGISTER_LOGGER("openstudio.units.CelsiusUnit");
   };
 
 } // detail
 
 } // openstudio
 
-#endif // UTILITIES_UNITS_CELCIUSUNIT_IMPL_HPP
+#endif // UTILITIES_UNITS_CELSIUSUNIT_IMPL_HPP
 
