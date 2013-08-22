@@ -75,6 +75,11 @@ namespace openstudio{
     m_workerUrls.push_back(workerUrl);
   }
 
+  void CloudSession::clearWorkerUrls()
+  {
+    m_workerUrls.clear();
+  }
+
 
   CloudProvider::CloudProvider(const boost::shared_ptr<detail::CloudProvider_Impl>& impl)
     : m_impl(impl)

@@ -26,6 +26,8 @@
 #include <utilities/core/Path.hpp>
 #include <utilities/core/Url.hpp>
 
+#include <QProcess>
+
 namespace openstudio{
 namespace detail{
 
@@ -119,6 +121,12 @@ namespace detail{
     //@{
 
     //@}
+
+  private slots:
+
+    void onServerStarted(int, QProcess::ExitStatus);
+    void onWorkerStarted(int, QProcess::ExitStatus);
+
   private:
 
     CloudSession m_cloudSession;
@@ -127,6 +135,12 @@ namespace detail{
     openstudio::Url m_serverUrl;
     openstudio::path m_workerPath;
     openstudio::Url m_workerUrl;
+
+    QProcess* m_startServerProcess;
+    QProcess* m_startWorkerProcess;
+    bool m_serverStarted;
+    bool m_workersStarted;
+    bool m_terminated;
 
     mutable std::vector<std::string> m_errors;
     mutable std::vector<std::string> m_warnings;

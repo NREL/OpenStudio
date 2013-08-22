@@ -45,6 +45,7 @@ namespace openstudio{
     void resetServerUrl();
     std::vector<Url> workerUrls() const;
     void addWorkerUrl(const Url& workerUrl);
+    void clearWorkerUrls();
   private:
     std::string m_cloudProviderType;
     std::string m_sessionId;
