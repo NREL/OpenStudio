@@ -56,7 +56,8 @@ class UtilityBillListView;
 enum BillFormat{
   STARTDATE_ENDDATE,
   STARTDATE_NUMDAYS,
-  ENDDATE_NUMDAYS
+  ENDDATE_NUMDAYS,
+  NONE
 };
 
 class UtilityBillsView : public ModelSubTabView
@@ -114,7 +115,6 @@ private:
   void refresh();
 
   void addBillingPeriod(model::BillingPeriod & billingPeriod);
-  void addBillingPeriod(model::BillingPeriod & billingPeriod, unsigned index);
   void addBillingPeriods();
 
   void deleteBillingPeriods();
@@ -164,7 +164,6 @@ public:
     model::BillingPeriod billingPeriod,
     FuelType fuelType,
     BillFormat billFormat,
-    unsigned index,
     QWidget * parent = 0);
 
   virtual ~BillingPeriodWidget() {}
@@ -180,8 +179,7 @@ public:
   OSDoubleEdit2 * m_peakDoubleEdit;
   OSDoubleEdit2 * m_costDoubleEdit;
 
-  QPushButton * m_deleteBillWidget; 
-  unsigned m_index; // TODO needed?
+  QPushButton * m_deleteBillWidget;
 
 private:
 

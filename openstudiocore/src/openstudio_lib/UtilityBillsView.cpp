@@ -101,7 +101,8 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
   : ModelObjectInspectorView(model,
                              true,
                              parent),
-    m_billFormatDialog(0), 
+    m_billFormatDialog(0),
+    m_billFormat(NONE),
     m_beginAndEndDates(QString()),
     m_showPeak(0),
     m_buttonGroup(0),
@@ -381,6 +382,7 @@ void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityB
   
   this->stackedWidget()->setCurrentIndex(1);
 
+  deleteBillingPeriods();
   addBillingPeriods();
 }
 
@@ -465,21 +467,16 @@ void UtilityBillsInspectorView::addBillingPeriods()
   if(m_utilityBill.is_initialized()){
     std::vector<model::BillingPeriod> billingPeriods = m_utilityBill.get().billingPeriods();
     for(unsigned i = 0; i < billingPeriods.size(); i++){
-      addBillingPeriod(billingPeriods.at(i),i);
+      addBillingPeriod(billingPeriods.at(i));
     }
   }
 }
 
 void UtilityBillsInspectorView::addBillingPeriod(model::BillingPeriod & billingPeriod)
 {
-  addBillingPeriod(billingPeriod,m_utilityBill.get().billingPeriods().size());
-}
-
-void UtilityBillsInspectorView::addBillingPeriod(model::BillingPeriod & billingPeriod, unsigned index)
-{
   if(m_utilityBill.is_initialized()){
-    BillingPeriodWidget * billingPeriodWidget = new BillingPeriodWidget(m_billGridLayout,billingPeriod,m_utilityBill.get().fuelType(),m_billFormat,index);
-    m_buttonGroup->addButton(billingPeriodWidget->m_deleteBillWidget,billingPeriodWidget->m_index);
+    BillingPeriodWidget * billingPeriodWidget = new BillingPeriodWidget(m_billGridLayout,billingPeriod,m_utilityBill.get().fuelType(),m_billFormat);
+    m_buttonGroup->addButton(billingPeriodWidget->m_deleteBillWidget,m_buttonGroup->buttons().size());
   }
 }
 
@@ -535,7 +532,6 @@ BillingPeriodWidget::BillingPeriodWidget(QGridLayout * gridLayout,
   model::BillingPeriod billingPeriod,
   FuelType fuelType,
   BillFormat billFormat,
-  unsigned index,
   QWidget * parent)
   : QWidget(parent),
   m_billingPeriod(billingPeriod),
@@ -544,8 +540,7 @@ BillingPeriodWidget::BillingPeriodWidget(QGridLayout * gridLayout,
   m_billingPeriodIntEdit(0),
   m_energyUseDoubleEdit(0),
   m_peakDoubleEdit(0),
-  m_costDoubleEdit(0),
-  m_index(index)
+  m_costDoubleEdit(0)
 {
   OS_ASSERT(m_billingPeriod.is_initialized());
 
@@ -562,8 +557,7 @@ void BillingPeriodWidget::createWidgets(QGridLayout * gridLayout,
 
   int rowIndex = gridLayout->rowCount();
 
-  if(m_index == 0){
-        
+  if(rowIndex == 0){
     if(billFormat == STARTDATE_ENDDATE){
       getStartDateLabel(gridLayout, rowIndex, columnIndex++);
       getEndDateLabel(gridLayout, rowIndex, columnIndex++);
