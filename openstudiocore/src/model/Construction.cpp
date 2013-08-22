@@ -125,7 +125,7 @@ Construction::Construction(const Model& model)
 }
 
 Construction::Construction(const std::vector<OpaqueMaterial>& opaqueMaterials)
-  : LayeredConstruction(Construction::iddObjectType(),opaqueMaterials[0].model())
+  : LayeredConstruction(Construction::iddObjectType(),opaqueMaterials.at(0).model())
 {
   std::vector<Material> materials = castVector<Material>(opaqueMaterials);
   bool ok = setLayers(materials);
@@ -133,7 +133,7 @@ Construction::Construction(const std::vector<OpaqueMaterial>& opaqueMaterials)
 }
 
 Construction::Construction(const std::vector<FenestrationMaterial>& fenestrationMaterials)
-  : LayeredConstruction(Construction::iddObjectType(),fenestrationMaterials[0].model())
+  : LayeredConstruction(Construction::iddObjectType(),fenestrationMaterials.at(0).model())
 {
   std::vector<Material> materials = castVector<Material>(fenestrationMaterials);
   bool ok = setLayers(materials);
