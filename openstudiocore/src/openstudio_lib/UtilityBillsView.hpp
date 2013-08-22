@@ -138,6 +138,8 @@ private:
   QPushButton * m_addBillingPeriod;
 
   QGridLayout * m_billGridLayout;
+
+  QWidget * m_billGridLayoutWidget;
   
 private slots:
   void addUtilityBill();
