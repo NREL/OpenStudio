@@ -45,6 +45,14 @@ class MODEL_API GroundHeatExchangerVertical : public StraightComponent {
 
   static IddObjectType iddObjectType();
 
+  bool addGFunction(double gFunctionLN, double gFunctionGValue);
+
+  void removeGFunction(int groupIndex);
+
+  void removeAllGFunctions();
+
+  std::vector< std::pair<double,double> > gFunctions();
+
   /** @name Getters */
   //@{
 
@@ -79,10 +87,6 @@ class MODEL_API GroundHeatExchangerVertical : public StraightComponent {
   double gFunctionReferenceRatio() const;
 
   bool isGFunctionReferenceRatioDefaulted() const;
-
-  boost::optional<int> numberofDataPairsoftheGFunction() const;
-
-  // TODO: Handle this object's extensible fields.
 
   //@}
   /** @name Setters */
@@ -148,12 +152,6 @@ class MODEL_API GroundHeatExchangerVertical : public StraightComponent {
   bool setGFunctionReferenceRatio(double gFunctionReferenceRatio);
 
   void resetGFunctionReferenceRatio();
-
-  bool setNumberofDataPairsoftheGFunction(int numberofDataPairsoftheGFunction);
-
-  void resetNumberofDataPairsoftheGFunction();
-
-  // TODO: Handle this object's extensible fields.
 
   //@}
   /** @name Other */

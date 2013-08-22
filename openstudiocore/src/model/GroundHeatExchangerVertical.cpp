@@ -24,8 +24,9 @@
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
 
+#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
+
 #include <utilities/idd/OS_GroundHeatExchanger_Vertical_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
 #include <utilities/core/Assert.hpp>
 
 namespace openstudio {
@@ -38,7 +39,7 @@ namespace detail {
                                                                      bool keepHandle)
     : StraightComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == GroundHeatExchangerVertical::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == GroundHeatExchangerVertical::iddObjectType());
   }
 
   GroundHeatExchangerVertical_Impl::GroundHeatExchangerVertical_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -46,7 +47,7 @@ namespace detail {
                                                                      bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == GroundHeatExchangerVertical::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == GroundHeatExchangerVertical::iddObjectType());
   }
 
   GroundHeatExchangerVertical_Impl::GroundHeatExchangerVertical_Impl(const GroundHeatExchangerVertical_Impl& other,
@@ -125,16 +126,12 @@ namespace detail {
 
   double GroundHeatExchangerVertical_Impl::gFunctionReferenceRatio() const {
     boost::optional<double> value = getDouble(OS_GroundHeatExchanger_VerticalFields::GFunctionReferenceRatio,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   bool GroundHeatExchangerVertical_Impl::isGFunctionReferenceRatioDefaulted() const {
     return isEmpty(OS_GroundHeatExchanger_VerticalFields::GFunctionReferenceRatio);
-  }
-
-  boost::optional<int> GroundHeatExchangerVertical_Impl::numberofDataPairsoftheGFunction() const {
-    return getInt(OS_GroundHeatExchanger_VerticalFields::NumberofDataPairsoftheGFunction,true);
   }
 
   bool GroundHeatExchangerVertical_Impl::setMaximumFlowRate(boost::optional<double> maximumFlowRate) {
@@ -151,7 +148,7 @@ namespace detail {
 
   void GroundHeatExchangerVertical_Impl::resetMaximumFlowRate() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::MaximumFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GroundHeatExchangerVertical_Impl::setNumberofBoreHoles(boost::optional<int> numberofBoreHoles) {
@@ -168,7 +165,7 @@ namespace detail {
 
   void GroundHeatExchangerVertical_Impl::resetNumberofBoreHoles() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::NumberofBoreHoles, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GroundHeatExchangerVertical_Impl::setBoreHoleLength(boost::optional<double> boreHoleLength) {
@@ -185,7 +182,7 @@ namespace detail {
 
   void GroundHeatExchangerVertical_Impl::resetBoreHoleLength() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::BoreHoleLength, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GroundHeatExchangerVertical_Impl::setBoreHoleRadius(boost::optional<double> boreHoleRadius) {
@@ -202,7 +199,7 @@ namespace detail {
 
   void GroundHeatExchangerVertical_Impl::resetBoreHoleRadius() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::BoreHoleRadius, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GroundHeatExchangerVertical_Impl::setGroundThermalConductivity(boost::optional<double> groundThermalConductivity) {
@@ -219,7 +216,7 @@ namespace detail {
 
   void GroundHeatExchangerVertical_Impl::resetGroundThermalConductivity() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::GroundThermalConductivity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GroundHeatExchangerVertical_Impl::setGroundThermalHeatCapacity(boost::optional<double> groundThermalHeatCapacity) {
@@ -236,7 +233,7 @@ namespace detail {
 
   void GroundHeatExchangerVertical_Impl::resetGroundThermalHeatCapacity() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::GroundThermalHeatCapacity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GroundHeatExchangerVertical_Impl::setGroundTemperature(boost::optional<double> groundTemperature) {
@@ -253,7 +250,7 @@ namespace detail {
 
   void GroundHeatExchangerVertical_Impl::resetGroundTemperature() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::GroundTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GroundHeatExchangerVertical_Impl::setDesignFlowRate(boost::optional<double> designFlowRate) {
@@ -270,7 +267,7 @@ namespace detail {
 
   void GroundHeatExchangerVertical_Impl::resetDesignFlowRate() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::DesignFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GroundHeatExchangerVertical_Impl::setGroutThermalConductivity(boost::optional<double> groutThermalConductivity) {
@@ -287,7 +284,7 @@ namespace detail {
 
   void GroundHeatExchangerVertical_Impl::resetGroutThermalConductivity() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::GroutThermalConductivity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GroundHeatExchangerVertical_Impl::setPipeThermalConductivity(boost::optional<double> pipeThermalConductivity) {
@@ -304,7 +301,7 @@ namespace detail {
 
   void GroundHeatExchangerVertical_Impl::resetPipeThermalConductivity() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::PipeThermalConductivity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GroundHeatExchangerVertical_Impl::setPipeOutDiameter(boost::optional<double> pipeOutDiameter) {
@@ -321,7 +318,7 @@ namespace detail {
 
   void GroundHeatExchangerVertical_Impl::resetPipeOutDiameter() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::PipeOutDiameter, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GroundHeatExchangerVertical_Impl::setUTubeDistance(boost::optional<double> uTubeDistance) {
@@ -337,7 +334,7 @@ namespace detail {
   }
   void GroundHeatExchangerVertical_Impl::resetUTubeDistance() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::UTubeDistance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GroundHeatExchangerVertical_Impl::setPipeThickness(boost::optional<double> pipeThickness) {
@@ -354,7 +351,7 @@ namespace detail {
 
   void GroundHeatExchangerVertical_Impl::resetPipeThickness() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::PipeThickness, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GroundHeatExchangerVertical_Impl::setMaximumLengthofSimulation(boost::optional<double> maximumLengthofSimulation) {
@@ -371,7 +368,7 @@ namespace detail {
 
   void GroundHeatExchangerVertical_Impl::resetMaximumLengthofSimulation() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::MaximumLengthofSimulation, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool GroundHeatExchangerVertical_Impl::setGFunctionReferenceRatio(double gFunctionReferenceRatio) {
@@ -381,24 +378,7 @@ namespace detail {
 
   void GroundHeatExchangerVertical_Impl::resetGFunctionReferenceRatio() {
     bool result = setString(OS_GroundHeatExchanger_VerticalFields::GFunctionReferenceRatio, "");
-    BOOST_ASSERT(result);
-  }
-
-  bool GroundHeatExchangerVertical_Impl::setNumberofDataPairsoftheGFunction(boost::optional<int> numberofDataPairsoftheGFunction) {
-    bool result(false);
-    if (numberofDataPairsoftheGFunction) {
-      result = setInt(OS_GroundHeatExchanger_VerticalFields::NumberofDataPairsoftheGFunction, numberofDataPairsoftheGFunction.get());
-    }
-    else {
-      resetNumberofDataPairsoftheGFunction();
-      result = true;
-    }
-    return result;
-  }
-
-  void GroundHeatExchangerVertical_Impl::resetNumberofDataPairsoftheGFunction() {
-    bool result = setString(OS_GroundHeatExchanger_VerticalFields::NumberofDataPairsoftheGFunction, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   unsigned GroundHeatExchangerVertical_Impl::inletPort()
@@ -435,7 +415,6 @@ namespace detail {
           {
             plantLoop->setFluidType("Water");  
           }
-
           return result;
         }
       }
@@ -447,9 +426,61 @@ namespace detail {
   //clone object
   ModelObject GroundHeatExchangerVertical_Impl::clone(Model model) const
   {
-    GroundHeatExchangerVertical newGroundHeatExchanger = ModelObject_Impl::clone(model).cast<GroundHeatExchangerVertical>();
+    GroundHeatExchangerVertical newGroundHeatExchanger = StraightComponent_Impl::clone(model).cast<GroundHeatExchangerVertical>();
 
     return newGroundHeatExchanger;
+  }
+
+  bool GroundHeatExchangerVertical_Impl::addGFunction(double gFunctionLN, double gFunctionGValue)
+  {
+    WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+
+    bool temp = eg.setDouble(OS_GroundHeatExchanger_VerticalExtensibleFields::GFunctionLn_T_Ts_Value,gFunctionLN);
+    bool ok = eg.setDouble(OS_GroundHeatExchanger_VerticalExtensibleFields::GFunctionGValue,gFunctionGValue);
+
+    if(temp) {
+      temp = ok;
+    }
+
+    if( !temp ) {
+      getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+      return temp;
+    }
+    return temp;
+  }
+
+  void GroundHeatExchangerVertical_Impl::removeGFunction(unsigned groupIndex)
+  {
+    unsigned numberofDataPairs = numExtensibleGroups();
+    if(groupIndex < numberofDataPairs) {
+      getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+    }
+  }
+
+  void GroundHeatExchangerVertical_Impl::removeAllGFunctions() 
+  {
+    getObject<ModelObject>().clearExtensibleGroups();
+  }
+
+  std::vector< std::pair<double,double> > GroundHeatExchangerVertical_Impl::gFunctions() 
+  {
+    std::vector< std::pair<double,double> > result;
+
+    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+
+    for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
+         it != groups.end();
+         it++ )
+    {
+      boost::optional<double> gFunctionLN = it->cast<WorkspaceExtensibleGroup>().getDouble(OS_GroundHeatExchanger_VerticalExtensibleFields::GFunctionLn_T_Ts_Value);
+      boost::optional<double> gFunctionGValue = it->cast<WorkspaceExtensibleGroup>().getDouble(OS_GroundHeatExchanger_VerticalExtensibleFields::GFunctionGValue);
+
+      if(gFunctionLN && gFunctionGValue) {
+        result.push_back( std::make_pair(gFunctionLN.get(), gFunctionGValue.get()) );
+      }
+    }
+
+    return result;
   }
 
 } // detail
@@ -457,110 +488,79 @@ namespace detail {
 GroundHeatExchangerVertical::GroundHeatExchangerVertical(const Model& model)
   : StraightComponent(GroundHeatExchangerVertical::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::GroundHeatExchangerVertical_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_GroundHeatExchanger_VerticalFields::InletNodeName
-  //     OS_GroundHeatExchanger_VerticalFields::OutletNodeName
+  OS_ASSERT(getImpl<detail::GroundHeatExchangerVertical_Impl>());
 
   setMaximumFlowRate(0.0033);
   setNumberofBoreHoles(120);
   setBoreHoleLength(76.2);
   setBoreHoleRadius(0.635080E-01);
-  setGroundThermalConductivity(0.692626E+00);
+  setGroundThermalConductivity(0.692626);
   setGroundThermalHeatCapacity(0.234700E+07);
   setGroundTemperature(13.375);
   setDesignFlowRate(0.0033);
-  setGroutThermalConductivity(0.692626E+00);
-  setPipeThermalConductivity(0.391312E+00);
+  setGroutThermalConductivity(0.692626);
+  setPipeThermalConductivity(0.391312);
   setPipeOutDiameter(2.66667E-02);
   setUTubeDistance(2.53977E-02);
   setPipeThickness(2.41285E-03);
   setMaximumLengthofSimulation(2);
   setGFunctionReferenceRatio(0.0005);
-  setNumberofDataPairsoftheGFunction(35);
-//  setGFunctionLn(T/Ts)Value(-15.2996);
-//  setGFunctionGValue(-0.348322);
-//    -14.201,                 !- G-Function Ln(T/Ts) Value 2
-//    0.022208,                !- G-Function G Value 2
-//    -13.2202,                !- G-Function Ln(T/Ts) Value 3
-//    0.412345,                !- G-Function G Value 3
-//    -12.2086,                !- G-Function Ln(T/Ts) Value 4
-//    0.867498,                !- G-Function G Value 4
-//    -11.1888,                !- G-Function Ln(T/Ts) Value 5
-//    1.357839,                !- G-Function G Value 5
-//    -10.1816,                !- G-Function Ln(T/Ts) Value 6
-//    1.852024,                !- G-Function G Value 6
-//    -9.1815,                 !- G-Function Ln(T/Ts) Value 7
-//    2.345656,                !- G-Function G Value 7
-//    -8.6809,                 !- G-Function Ln(T/Ts) Value 8
-//    2.593958,                !- G-Function G Value 8
-//    -8.5,                    !- G-Function Ln(T/Ts) Value 9
-//    2.679,                   !- G-Function G Value 9
-//    -7.8,                    !- G-Function Ln(T/Ts) Value 10
-//    3.023,                   !- G-Function G Value 10
-//    -7.2,                    !- G-Function Ln(T/Ts) Value 11
-//    3.32,                    !- G-Function G Value 11
-//    -6.5,                    !- G-Function Ln(T/Ts) Value 12
-//    3.681,                   !- G-Function G Value 12
-//    -5.9,                    !- G-Function Ln(T/Ts) Value 13
-//    4.071,                   !- G-Function G Value 13
-//    -5.2,                    !- G-Function Ln(T/Ts) Value 14
-//    4.828,                   !- G-Function G Value 14
-//    -4.5,                    !- G-Function Ln(T/Ts) Value 15
-//    6.253,                   !- G-Function G Value 15
-//    -3.963,                  !- G-Function Ln(T/Ts) Value 16
-//    7.894,                   !- G-Function G Value 16
-//    -3.27,                   !- G-Function Ln(T/Ts) Value 17
-//    11.82,                   !- G-Function G Value 17
-//    -2.864,                  !- G-Function Ln(T/Ts) Value 18
-//    15.117,                  !- G-Function G Value 18
-//    -2.577,                  !- G-Function Ln(T/Ts) Value 19
-//    18.006,                  !- G-Function G Value 19
-//    -2.171,                  !- G-Function Ln(T/Ts) Value 20
-//    22.887,                  !- G-Function G Value 20
-//    -1.884,                  !- G-Function Ln(T/Ts) Value 21
-//    26.924,                  !- G-Function G Value 21
-//    -1.191,                  !- G-Function Ln(T/Ts) Value 22
-//    38.004,                  !- G-Function G Value 22
-//    -0.497,                  !- G-Function Ln(T/Ts) Value 23
-//    49.919,                  !- G-Function G Value 23
-//    -0.274,                  !- G-Function Ln(T/Ts) Value 24
-//    53.407,                  !- G-Function G Value 24
-//    -0.051,                  !- G-Function Ln(T/Ts) Value 25
-//    56.632,                  !- G-Function G Value 25
-//    0.196,                   !- G-Function Ln(T/Ts) Value 26
-//    59.825,                  !- G-Function G Value 26
-//    0.419,                   !- G-Function Ln(T/Ts) Value 27
-//    62.349,                  !- G-Function G Value 27
-//    0.642,                   !- G-Function Ln(T/Ts) Value 28
-//    64.524,                  !- G-Function G Value 28
-//    0.873,                   !- G-Function Ln(T/Ts) Value 29
-//    66.412,                  !- G-Function G Value 29
-//    1.112,                   !- G-Function Ln(T/Ts) Value 30
-//    67.993,                  !- G-Function G Value 30
-//    1.335,                   !- G-Function Ln(T/Ts) Value 31
-//    69.162,                  !- G-Function G Value 31
-//    1.679,                   !- G-Function Ln(T/Ts) Value 32
-//    70.476,                  !- G-Function G Value 32
-//    2.028,                   !- G-Function Ln(T/Ts) Value 33
-//    71.361,                  !- G-Function G Value 33
-//    2.275,                   !- G-Function Ln(T/Ts) Value 34
-//    71.79,                   !- G-Function G Value 34
-//    3.003,                   !- G-Function Ln(T/Ts) Value 35
-//    72.511;                  !- G-Function G Value 35
+  addGFunction(-15.2996, -0.348322);
+  addGFunction(-14.201, 0.022208);
+  addGFunction(-13.2202, 0.412345);
+  addGFunction(-12.2086, 0.867498);
+  addGFunction(-11.1888, 1.357839);
+  addGFunction(-10.1816, 1.852024);
+  addGFunction(-9.1815, 2.345656);
+  addGFunction(-8.6809, 2.593958);
+  addGFunction(-8.5, 2.679);
+  addGFunction(-7.8, 3.023);
+  addGFunction(-7.2, 3.32);
+  addGFunction(-6.5, 3.681);
+  addGFunction(-5.9, 4.071);
+  addGFunction(-5.2, 4.828);
+  addGFunction(-4.5, 6.253);
+  addGFunction(-3.963, 7.894);
+  addGFunction(-3.27, 11.82);
+  addGFunction(-2.864, 15.117);
+  addGFunction(-2.577, 18.006);
+  addGFunction(-2.171, 22.887);
+  addGFunction(-1.884, 26.924);
+  addGFunction(-1.191, 38.004);
+  addGFunction(-0.497, 49.919);
+  addGFunction(-0.274, 53.407);
+  addGFunction(-0.051, 56.632);
+  addGFunction(0.196, 59.825);
+  addGFunction(0.419, 62.349);
+  addGFunction(0.642, 64.524);
+  addGFunction(0.873, 66.412);
+  addGFunction(1.112, 67.993);
+  addGFunction(1.335, 69.162);
+  addGFunction(1.679, 70.476);
+  addGFunction(2.028, 71.361);
+  addGFunction(2.275, 71.79);
+  addGFunction(3.003, 72.511);
 
-  bool ok = true;
-  // ok = setHandle();
-  BOOST_ASSERT(ok);
-  // ok = setInletNode();
-  BOOST_ASSERT(ok);
-  // ok = setOutletNode();
-  BOOST_ASSERT(ok);
 }
 
 IddObjectType GroundHeatExchangerVertical::iddObjectType() {
   return IddObjectType(IddObjectType::OS_GroundHeatExchanger_Vertical);
+}
+
+bool GroundHeatExchangerVertical::addGFunction(double gFunctionLN, double gFunctionGValue){
+  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->addGFunction(gFunctionLN, gFunctionGValue);
+}
+
+void GroundHeatExchangerVertical::removeGFunction(int groupIndex){
+  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->removeGFunction(groupIndex);
+}
+
+void GroundHeatExchangerVertical::removeAllGFunctions(){
+  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->removeAllGFunctions();
+}
+
+std::vector< std::pair<double,double> > GroundHeatExchangerVertical::gFunctions(){
+  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->gFunctions();
 }
 
 boost::optional<double> GroundHeatExchangerVertical::maximumFlowRate() const {
@@ -625,10 +625,6 @@ double GroundHeatExchangerVertical::gFunctionReferenceRatio() const {
 
 bool GroundHeatExchangerVertical::isGFunctionReferenceRatioDefaulted() const {
   return getImpl<detail::GroundHeatExchangerVertical_Impl>()->isGFunctionReferenceRatioDefaulted();
-}
-
-boost::optional<int> GroundHeatExchangerVertical::numberofDataPairsoftheGFunction() const {
-  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->numberofDataPairsoftheGFunction();
 }
 
 bool GroundHeatExchangerVertical::setMaximumFlowRate(double maximumFlowRate) {
@@ -749,14 +745,6 @@ bool GroundHeatExchangerVertical::setGFunctionReferenceRatio(double gFunctionRef
 
 void GroundHeatExchangerVertical::resetGFunctionReferenceRatio() {
   getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetGFunctionReferenceRatio();
-}
-
-bool GroundHeatExchangerVertical::setNumberofDataPairsoftheGFunction(int numberofDataPairsoftheGFunction) {
-  return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setNumberofDataPairsoftheGFunction(numberofDataPairsoftheGFunction);
-}
-
-void GroundHeatExchangerVertical::resetNumberofDataPairsoftheGFunction() {
-  getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetNumberofDataPairsoftheGFunction();
 }
 
 /// @cond

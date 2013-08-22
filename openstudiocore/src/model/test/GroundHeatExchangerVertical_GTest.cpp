@@ -29,313 +29,201 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST(GroundHeatExchangerVertical,GroundHeatExchangerVertical_connections)
+TEST_F(ModelFixture, GroundHeatExchangerVertical_DefaultConstructor)
 {
-  model::Model m; 
-  
-  model::GroundHeatExchangerVertical groundHeatExchanger(m); 
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  model::Node inletNode(m);
+  ASSERT_EXIT ( 
+  {  
+    Model model;
+    GroundHeatExchangerVertical testObject = GroundHeatExchangerVertical(model);
 
-  model::Node outletNode(m);
-
-  m.connect(inletNode,inletNode.outletPort(),groundHeatExchanger,groundHeatExchanger.inletPort());
-  m.connect(groundHeatExchanger,groundHeatExchanger.outletPort(),outletNode,outletNode.inletPort());
-
-  ASSERT_TRUE( groundHeatExchanger.inletModelObject() );
-  ASSERT_TRUE( groundHeatExchanger.outletModelObject() );
- 
-  EXPECT_EQ( inletNode.handle(), groundHeatExchanger.inletModelObject()->handle() );
-  EXPECT_EQ( outletNode.handle(), groundHeatExchanger.outletModelObject()->handle() );
+    exit(0); 
+  } ,
+    ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture,GroundHeatExchangerVertical_addToNode)
+TEST_F(ModelFixture, GroundHeatExchangerVertical_Connections)
+{
+  Model m; 
+  GroundHeatExchangerVertical testObject(m); 
+
+  Node inletNode(m);
+  Node outletNode(m);
+
+  m.connect(inletNode,inletNode.outletPort(),testObject,testObject.inletPort());
+  m.connect(testObject,testObject.outletPort(),outletNode,outletNode.inletPort());
+
+  ASSERT_TRUE( testObject.inletModelObject() );
+  ASSERT_TRUE( testObject.outletModelObject() );
+ 
+  EXPECT_EQ( inletNode.handle(), testObject.inletModelObject()->handle() );
+  EXPECT_EQ( outletNode.handle(), testObject.outletModelObject()->handle() );
+}
+
+TEST_F(ModelFixture, GroundHeatExchangerVertical_addToNode)
 {
   Model model; 
-  GroundHeatExchangerVertical groundHeatExchangerVertical(model);
+  GroundHeatExchangerVertical testObject(model);
 
-//  AirLoopHVAC airLoop(model);
   PlantLoop plantLoop(model);
 
-//  Node supplyOutletNode = airLoop.supplyOutletNode();
   Node supplyOutletNode = plantLoop.supplyOutletNode();
 
-  EXPECT_TRUE(groundHeatExchangerVertical.addToNode(supplyOutletNode));
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
 
-  ASSERT_EQ( (unsigned)3, plantLoop.supplyComponents().size() );
+  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 				
   // inlet and outlet ports
-  EXPECT_TRUE(groundHeatExchangerVertical.inletPort());
-  EXPECT_TRUE(groundHeatExchangerVertical.outletPort());
+  EXPECT_TRUE(testObject.inletPort());
+  EXPECT_TRUE(testObject.outletPort());
 
+}
+
+TEST_F(ModelFixture, GroundHeatExchangerVertical_addToNodeDemandSide)
+{
+  Model model; 
+  GroundHeatExchangerVertical testObject(model);
+
+  PlantLoop plantLoop(model);
+
+  Node demandInletNode = plantLoop.demandInletNode();
+
+  EXPECT_FALSE(testObject.addToNode(demandInletNode));
+
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+}
+
+TEST_F(ModelFixture, GroundHeatExchangerVertical_AddToNodeAirLoop)
+{
+  Model model; 
+  GroundHeatExchangerVertical testObject(model);
+
+  AirLoopHVAC airLoop(model);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  Node demandInletNode = airLoop.demandInletNode();
+
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_FALSE(testObject.addToNode(demandInletNode));
+
+  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ( (unsigned)5, airLoop.demandComponents().size() );
+}
+
+TEST_F(ModelFixture, GroundHeatExchangerVertical_AddRemoveSupplyBranchForComponent)
+{
+  Model model; 
+  GroundHeatExchangerVertical testObject(model);
+
+  PlantLoop plantLoop(model);
+
+  EXPECT_TRUE(plantLoop.addSupplyBranchForComponent(testObject));
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
+  EXPECT_NE((unsigned)9, plantLoop.supplyComponents().size());
+  
+  EXPECT_TRUE(testObject.inletPort());
+  EXPECT_TRUE(testObject.outletPort());
+
+  EXPECT_TRUE(plantLoop.removeSupplyBranchWithComponent(testObject));
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
+  EXPECT_NE((unsigned)7, plantLoop.supplyComponents().size());
+}
+
+TEST_F(ModelFixture, GroundHeatExchangerVertical_AddDemandBranchForComponent)
+{
+  Model model; 
+  GroundHeatExchangerVertical testObject(model);
+
+  PlantLoop plantLoop(model);
+
+  EXPECT_FALSE(plantLoop.addDemandBranchForComponent(testObject));
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
+  EXPECT_NE((unsigned)7, plantLoop.demandComponents().size());
+}
+
+TEST_F(ModelFixture, GroundHeatExchangerVertical_AddToNodeTwoSameObjects)
+{
+  Model model; 
+  GroundHeatExchangerVertical testObject(model);
+
+  PlantLoop plantLoop(model);
+
+  Node supplyOutletNode = plantLoop.supplyOutletNode();
+  testObject.addToNode(supplyOutletNode);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode)); 
+}
+
+TEST_F(ModelFixture, GroundHeatExchangerVertical_Remove)
+{
+  Model model; 
+  GroundHeatExchangerVertical testObject(model);
+
+  PlantLoop plantLoop(model);
+
+  Node supplyOutletNode = plantLoop.supplyOutletNode();
+  testObject.addToNode(supplyOutletNode);
+
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
+
+  testObject.remove();
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
 }
 
 //test cloning the object
-TEST(GroundHeatExchangerVertical,GroundHeatExchangerVertical_Clone){
-
-  openstudio::model::Model m;
-
+TEST_F(ModelFixture, GroundHeatExchangerVertical_Clone){
+  Model m;
   //make an object to clone, and edit some property to make sure the clone worked
-
-  openstudio::model::GroundHeatExchangerVertical GroundHeatExchangerVertical(m);
-
-  GroundHeatExchangerVertical.setMaximumFlowRate(3.14);
+  GroundHeatExchangerVertical testObject(m);
+  testObject.setMaximumFlowRate(3.14);
 
   //clone into the same model
-  
-  openstudio::model::GroundHeatExchangerVertical GroundHeatExchangerVerticalClone = GroundHeatExchangerVertical.clone(m).cast<openstudio::model::GroundHeatExchangerVertical>();
-
-  ASSERT_EQ(3.14,GroundHeatExchangerVerticalClone.maximumFlowRate());
+  GroundHeatExchangerVertical testObjectClone = testObject.clone(m).cast<GroundHeatExchangerVertical>();
+  EXPECT_EQ(3.14,testObjectClone.maximumFlowRate());
 
   //clone into another model
+  Model m2;
+  GroundHeatExchangerVertical testObjectClone2 = testObject.clone(m2).cast<GroundHeatExchangerVertical>();
+  EXPECT_EQ(3.14,testObjectClone2.maximumFlowRate());
 
-  openstudio::model::Model m2;
-
-  openstudio::model::GroundHeatExchangerVertical GroundHeatExchangerVerticalClone2 = GroundHeatExchangerVertical.clone(m2).cast<openstudio::model::GroundHeatExchangerVertical>();
-
-  ASSERT_EQ(3.14,GroundHeatExchangerVerticalClone2.maximumFlowRate());
-
+  EXPECT_NE(testObjectClone2, testObjectClone);
+  EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
 }
 
-TEST_F(ModelFixture,GroundHeatExchangerVertical_Test_Setters_and_Getters)
+TEST_F(ModelFixture, GroundHeatExchangerVertical_GFunctions)
 {
   Model model;
-  // TODO: Check constructor.
-  GroundHeatExchangerVertical groundHeatExchangerVertical(model);
+  GroundHeatExchangerVertical testObject(model);
 
-  // Maximum Flow Rate
-				
-  EXPECT_TRUE(groundHeatExchangerVertical.setMaximumFlowRate(0.0033));
-  boost::optional<double> testMaximumFlowRate = groundHeatExchangerVertical.maximumFlowRate();
-				 
-  EXPECT_EQ((*testMaximumFlowRate),0.0033);
-//  EXPECT_FALSE(groundHeatExchangerVertical.isMaximumFlowRateDefaulted());
-				 
-  groundHeatExchangerVertical.resetMaximumFlowRate();
-//  EXPECT_TRUE(groundHeatExchanger.isMaximumFlowRateDefaulted());
+  std::vector< std::pair<double,double> > gFunctions = testObject.gFunctions();
+  EXPECT_EQ(35, gFunctions.size());
 
+  testObject.removeAllGFunctions();
+
+  gFunctions = testObject.gFunctions();
+  EXPECT_EQ(0, gFunctions.size());
+
+  EXPECT_TRUE(testObject.addGFunction(1.0, 1.5));
+  gFunctions = testObject.gFunctions();
+  EXPECT_EQ(1, gFunctions.size());
+
+  testObject.addGFunction(2.0, 2.5);
+
+  testObject.removeGFunction(0);
+  gFunctions = testObject.gFunctions();
+  EXPECT_EQ(1, gFunctions.size());
+
+  EXPECT_DOUBLE_EQ(2.0, gFunctions[0].first);
+  EXPECT_DOUBLE_EQ(2.5, gFunctions[0].second);
+
+  testObject.removeAllGFunctions();
+  for (int i=0; i<100; i++) {
+    testObject.addGFunction(i, i + 0.5);
+  }
+  gFunctions = testObject.gFunctions();
+  EXPECT_EQ(100, gFunctions.size());
+  EXPECT_THROW(testObject.addGFunction(1.0, 1.5), openstudio::Exception);
 }
-
-//TEST_F(ModelFixture,GroundHeatExchangerVertical_MaximumFlowRate_Quantity) {
-//  Model model;
-//  // TODO: Check constructor.
-//  GroundHeatExchangerVertical groundHeatExchangerVertical(model);
-//
-//  Unit units = groundHeatExchangerVertical.getMaximumFlowRate(true).units(); // Get IP units.
-//  // TODO: Check that value is appropriate (within bounds)
-//  double value(1.0);
-//  Quantity testQ(value,units);
-//  EXPECT_TRUE(groundHeatExchangerVertical.setMaximumFlowRate(testQ));
-//  OSOptionalQuantity q = groundHeatExchangerVertical.getMaximumFlowRate(true);
-//  ASSERT_TRUE(q.isSet());
-//  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-//  EXPECT_EQ(units.standardString(),q.units().standardString());
-//}
-
-//TEST_F(ModelFixture,GroundHeatExchangerVertical_BoreHoleLength_Quantity) {
-//  Model model;
-//  // TODO: Check constructor.
-//  GroundHeatExchangerVertical groundHeatExchangerVertical(model);
-//
-//  Unit units = groundHeatExchangerVertical.getBoreHoleLength(true).units(); // Get IP units.
-//  // TODO: Check that value is appropriate (within bounds)
-//  double value(1.0);
-//  Quantity testQ(value,units);
-//  EXPECT_TRUE(groundHeatExchangerVertical.setBoreHoleLength(testQ));
-//  OSOptionalQuantity q = groundHeatExchangerVertical.getBoreHoleLength(true);
-//  ASSERT_TRUE(q.isSet());
-//  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-//  EXPECT_EQ(units.standardString(),q.units().standardString());
-//}
-
-//TEST_F(ModelFixture,GroundHeatExchangerVertical_BoreHoleRadius_Quantity) {
-//  Model model;
-//  // TODO: Check constructor.
-//  GroundHeatExchangerVertical groundHeatExchangerVertical(model);
-//
-//  Unit units = groundHeatExchangerVertical.getBoreHoleRadius(true).units(); // Get IP units.
-//  // TODO: Check that value is appropriate (within bounds)
-//  double value(1.0);
-//  Quantity testQ(value,units);
-//  EXPECT_TRUE(groundHeatExchangerVertical.setBoreHoleRadius(testQ));
-//  OSOptionalQuantity q = groundHeatExchangerVertical.getBoreHoleRadius(true);
-//  ASSERT_TRUE(q.isSet());
-//  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-//  EXPECT_EQ(units.standardString(),q.units().standardString());
-//}
-
-//TEST_F(ModelFixture,GroundHeatExchangerVertical_GroundThermalConductivity_Quantity) {
-//  Model model;
-//  // TODO: Check constructor.
-//  GroundHeatExchangerVertical groundHeatExchangerVertical(model);
-//
-//  Unit units = groundHeatExchangerVertical.getGroundThermalConductivity(true).units(); // Get IP units.
-//  // TODO: Check that value is appropriate (within bounds)
-//  double value(1.0);
-//  Quantity testQ(value,units);
-//  EXPECT_TRUE(groundHeatExchangerVertical.setGroundThermalConductivity(testQ));
-//  OSOptionalQuantity q = groundHeatExchangerVertical.getGroundThermalConductivity(true);
-//  ASSERT_TRUE(q.isSet());
-//  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-//  EXPECT_EQ(units.standardString(),q.units().standardString());
-//}
-
-//TEST_F(ModelFixture,GroundHeatExchangerVertical_GroundThermalHeatCapacity_Quantity) {
-//  Model model;
-//  // TODO: Check constructor.
-//  GroundHeatExchangerVertical groundHeatExchangerVertical(model);
-//
-//  Unit units = groundHeatExchangerVertical.getGroundThermalHeatCapacity(true).units(); // Get IP units.
-//  // TODO: Check that value is appropriate (within bounds)
-//  double value(1.0);
-//  Quantity testQ(value,units);
-//  EXPECT_TRUE(groundHeatExchangerVertical.setGroundThermalHeatCapacity(testQ));
-//  OSOptionalQuantity q = groundHeatExchangerVertical.getGroundThermalHeatCapacity(true);
-//  ASSERT_TRUE(q.isSet());
-//  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-//  EXPECT_EQ(units.standardString(),q.units().standardString());
-//}
-
-//TEST_F(ModelFixture,GroundHeatExchangerVertical_GroundTemperature_Quantity) {
-//  Model model;
-//  // TODO: Check constructor.
-//  GroundHeatExchangerVertical groundHeatExchangerVertical(model);
-//
-//  Unit units = groundHeatExchangerVertical.getGroundTemperature(true).units(); // Get IP units.
-//  // TODO: Check that value is appropriate (within bounds)
-//  double value(1.0);
-//  Quantity testQ(value,units);
-//  EXPECT_TRUE(groundHeatExchangerVertical.setGroundTemperature(testQ));
-//  OSOptionalQuantity q = groundHeatExchangerVertical.getGroundTemperature(true);
-//  ASSERT_TRUE(q.isSet());
-//  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-//  EXPECT_EQ(units.standardString(),q.units().standardString());
-//}
-
-//TEST_F(ModelFixture,GroundHeatExchangerVertical_DesignFlowRate_Quantity) {
-//  Model model;
-//  // TODO: Check constructor.
-//  GroundHeatExchangerVertical groundHeatExchangerVertical(model);
-//
-//  Unit units = groundHeatExchangerVertical.getDesignFlowRate(true).units(); // Get IP units.
-//  // TODO: Check that value is appropriate (within bounds)
-//  double value(1.0);
-//  Quantity testQ(value,units);
-//  EXPECT_TRUE(groundHeatExchangerVertical.setDesignFlowRate(testQ));
-//  OSOptionalQuantity q = groundHeatExchangerVertical.getDesignFlowRate(true);
-//  ASSERT_TRUE(q.isSet());
-//  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-//  EXPECT_EQ(units.standardString(),q.units().standardString());
-//}
-
-//TEST_F(ModelFixture,GroundHeatExchangerVertical_GroutThermalConductivity_Quantity) {
-//  Model model;
-//  // TODO: Check constructor.
-//  GroundHeatExchangerVertical groundHeatExchangerVertical(model);
-//
-//  Unit units = groundHeatExchangerVertical.getGroutThermalConductivity(true).units(); // Get IP units.
-//  // TODO: Check that value is appropriate (within bounds)
-//  double value(1.0);
-//  Quantity testQ(value,units);
-//  EXPECT_TRUE(groundHeatExchangerVertical.setGroutThermalConductivity(testQ));
-//  OSOptionalQuantity q = groundHeatExchangerVertical.getGroutThermalConductivity(true);
-//  ASSERT_TRUE(q.isSet());
-//  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-//  EXPECT_EQ(units.standardString(),q.units().standardString());
-//}
-
-//TEST_F(ModelFixture,GroundHeatExchangerVertical_PipeThermalConductivity_Quantity) {
-//  Model model;
-//  // TODO: Check constructor.
-//  GroundHeatExchangerVertical groundHeatExchangerVertical(model);
-//
-//  Unit units = groundHeatExchangerVertical.getPipeThermalConductivity(true).units(); // Get IP units.
-//  // TODO: Check that value is appropriate (within bounds)
-//  double value(1.0);
-//  Quantity testQ(value,units);
-//  EXPECT_TRUE(groundHeatExchangerVertical.setPipeThermalConductivity(testQ));
-//  OSOptionalQuantity q = groundHeatExchangerVertical.getPipeThermalConductivity(true);
-//  ASSERT_TRUE(q.isSet());
-//  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-//  EXPECT_EQ(units.standardString(),q.units().standardString());
-//}
-
-//TEST_F(ModelFixture,GroundHeatExchangerVertical_PipeOutDiameter_Quantity) {
-//  Model model;
-//  // TODO: Check constructor.
-//  GroundHeatExchangerVertical groundHeatExchangerVertical(model);
-//
-//  Unit units = groundHeatExchangerVertical.getPipeOutDiameter(true).units(); // Get IP units.
-//  // TODO: Check that value is appropriate (within bounds)
-//  double value(1.0);
-//  Quantity testQ(value,units);
-//  EXPECT_TRUE(groundHeatExchangerVertical.setPipeOutDiameter(testQ));
-//  OSOptionalQuantity q = groundHeatExchangerVertical.getPipeOutDiameter(true);
-//  ASSERT_TRUE(q.isSet());
-//  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-//  EXPECT_EQ(units.standardString(),q.units().standardString());
-//}
-
-//TEST_F(ModelFixture,GroundHeatExchangerVertical_UTubeDistance_Quantity) {
-//  Model model;
-//  // TODO: Check constructor.
-//  GroundHeatExchangerVertical groundHeatExchangerVertical(model);
-//
-//  Unit units = groundHeatExchangerVertical.getUTubeDistance(true).units(); // Get IP units.
-//  // TODO: Check that value is appropriate (within bounds)
-//  double value(1.0);
-//  Quantity testQ(value,units);
-//  EXPECT_TRUE(groundHeatExchangerVertical.setUTubeDistance(testQ));
-//  OSOptionalQuantity q = groundHeatExchangerVertical.getUTubeDistance(true);
-//  ASSERT_TRUE(q.isSet());
-//  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-//  EXPECT_EQ(units.standardString(),q.units().standardString());
-//}
-
-//TEST_F(ModelFixture,GroundHeatExchangerVertical_PipeThickness_Quantity) {
-//  Model model;
-//  // TODO: Check constructor.
-//  GroundHeatExchangerVertical groundHeatExchangerVertical(model);
-//
-//  Unit units = groundHeatExchangerVertical.getPipeThickness(true).units(); // Get IP units.
-//  // TODO: Check that value is appropriate (within bounds)
-//  double value(1.0);
-//  Quantity testQ(value,units);
-//  EXPECT_TRUE(groundHeatExchangerVertical.setPipeThickness(testQ));
-//  OSOptionalQuantity q = groundHeatExchangerVertical.getPipeThickness(true);
-//  ASSERT_TRUE(q.isSet());
-//  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-//  EXPECT_EQ(units.standardString(),q.units().standardString());
-//}
-
-//TEST_F(ModelFixture,GroundHeatExchangerVertical_MaximumLengthofSimulation_Quantity) {
-//  Model model;
-//  // TODO: Check constructor.
-//  GroundHeatExchangerVertical groundHeatExchangerVertical(model);
-//
-//  Unit units = groundHeatExchangerVertical.getMaximumLengthofSimulation(true).units(); // Get IP units.
-//  // TODO: Check that value is appropriate (within bounds)
-//  double value(1.0);
-//  Quantity testQ(value,units);
-//  EXPECT_TRUE(groundHeatExchangerVertical.setMaximumLengthofSimulation(testQ));
-//  OSOptionalQuantity q = groundHeatExchangerVertical.getMaximumLengthofSimulation(true);
-//  ASSERT_TRUE(q.isSet());
-//  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-//  EXPECT_EQ(units.standardString(),q.units().standardString());
-//}
-
-//TEST_F(ModelFixture,GroundHeatExchangerVertical_GFunctionReferenceRatio_Quantity) {
-//  Model model;
-//  // TODO: Check constructor.
-//  GroundHeatExchangerVertical groundHeatExchangerVertical(model);
-//
-//  Unit units = groundHeatExchangerVertical.getGFunctionReferenceRatio(true).units(); // Get IP units.
-//  // TODO: Check that value is appropriate (within bounds)
-// double value(1.0);
-//  Quantity testQ(value,units);
-//  EXPECT_TRUE(groundHeatExchangerVertical.setGFunctionReferenceRatio(testQ));
-//  Quantity q = groundHeatExchangerVertical.getGFunctionReferenceRatio(true);
-//  EXPECT_NEAR(value,q.value(),1.0E-8);
-//  EXPECT_EQ(units.standardString(),q.units().standardString());
-//}
-

@@ -6729,6 +6729,99 @@ OS:DistrictHeating,
        \minimum 0.0
        \default 1000000
      
+OS:GroundHeatExchanger:Vertical,
+        \extensible:2
+        \min-fields 21
+        \max-fields 219
+        \memo Variable short time step vertical ground heat exchanger model based on
+        \memo Yavuztruk, C., J.D.Spitler. 1999. A Short Time Step response Factor Model for
+        \memo Vertical Ground Loop Heat Exchangers
+        \memo The Fluid Type in the associated condenser loop must be same for which the
+        \memo g-functions below are calculated.
+  A1,   \field Handle
+        \type handle
+        \required-field
+  A2,   \field Name
+        \type alpha
+        \required-field
+        \reference ConnectionObject
+  A3,   \field Inlet Node Name
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
+  A4,   \field Outlet Node Name
+        \required-field
+        \type object-list
+        \object-list ConnectionNames
+  N1,   \field Maximum Flow Rate
+        \type real
+        \units m3/s
+        \minimum> 0.0
+        \ip-units gal/min
+  N2,   \field Number of Bore Holes
+        \type integer
+        \minimum> 0.0
+  N3,   \field Bore Hole Length
+        \type real
+        \units m
+        \minimum> 0.0
+  N4,   \field Bore Hole Radius
+        \type real
+        \units m
+        \minimum> 0.0
+  N5,   \field Ground Thermal Conductivity
+        \type real
+        \units W/m-K
+        \minimum> 0.0
+  N6,   \field Ground Thermal Heat Capacity
+        \type real
+        \units J/m3-K
+        \minimum> 0.0
+  N7,   \field Ground Temperature
+        \type real
+        \units C
+        \minimum> 0.0
+  N8,   \field Design Flow Rate
+        \type real
+        \units m3/s
+        \minimum> 0.0
+        \ip-units gal/min
+  N9,   \field Grout Thermal Conductivity
+        \type real
+        \units W/m-K
+        \minimum> 0.0
+  N10,  \field Pipe Thermal Conductivity
+        \type real
+        \units W/m-K
+        \minimum> 0.0
+  N11,  \field Pipe Out Diameter
+        \type real
+        \units m
+        \minimum> 0.0
+        \ip-units in
+  N12,  \field U-Tube Distance
+        \type real
+        \units m
+        \minimum> 0.0
+  N13,  \field Pipe Thickness
+        \type real
+        \units m
+        \minimum> 0.0
+        \ip-units in
+  N14,  \field Maximum Length of Simulation
+        \type real
+        \minimum> 0.0
+  N15,  \field G-Function Reference Ratio
+        \type real
+        \units dimensionless
+        \minimum> 0.0
+        \default 0.0005
+  N16,  \field G-Function Ln(T/Ts) Value
+        \type real
+        \begin-extensible
+  N17;  \field G-Function G Value
+        \type real
+
 OS:Coil:Cooling:DX:SingleSpeed,
        \min-fields 15
   A1, \field Handle
@@ -12382,99 +12475,4 @@ OS:Output:Variable,
   A6; \field Schedule Name
        \type object-list
        \object-list ScheduleNames
-
-OS:GroundHeatExchanger:Vertical,
- \extensible:2
- \min-fields 22
- \memo Variable short time step vertical ground heat exchanger model based on
- \memo Yavuztruk, C., J.D.Spitler. 1999. A Short Time Step response Factor Model for
- \memo Vertical Ground Loop Heat Exchangers
- \memo The Fluid Type in the associated condenser loop must be same for which the
- \memo g-functions below are calculated.
-  A1,   \field Handle
-        \type handle
-        \required-field
-  A2,   \field Name
-        \type alpha
-        \required-field
-  A3,   \field Inlet Node Name
-        \required-field
-        \type object-list
-        \object-list ConnectionNames
-  A4,   \field Outlet Node Name
-        \required-field
-        \type object-list
-        \object-list ConnectionNames
-  N1,   \field Maximum Flow Rate
-        \type real
-        \units m3/s
-        \minimum> 0.0
-        \ip-units gal/min
-  N2,   \field Number of Bore Holes
-        \type integer
-        \minimum> 0.0
-  N3,   \field Bore Hole Length
-        \type real
-        \units m
-        \minimum> 0.0
-  N4,   \field Bore Hole Radius
-        \type real
-        \units m
-        \minimum> 0.0
-  N5,   \field Ground Thermal Conductivity
-        \type real
-        \units W/m-K
-        \minimum> 0.0
-  N6,   \field Ground Thermal Heat Capacity
-        \type real
-        \units J/m3-K
-        \minimum> 0.0
-  N7,   \field Ground Temperature
-        \type real
-        \units C
-        \minimum> 0.0
-  N8,   \field Design Flow Rate
-        \type real
-        \units m3/s
-        \minimum> 0.0
-        \ip-units gal/min
-  N9,   \field Grout Thermal Conductivity
-        \type real
-        \units W/m-K
-        \minimum> 0.0
-  N10,  \field Pipe Thermal Conductivity
-        \type real
-        \units W/m-K
-        \minimum> 0.0
-  N11,  \field Pipe Out Diameter
-        \type real
-        \units m
-        \minimum> 0.0
-        \ip-units in
-  N12,  \field U-Tube Distance
-        \type real
-        \units m
-        \minimum> 0.0
-  N13,  \field Pipe Thickness
-        \type real
-        \units m
-        \minimum> 0.0
-        \ip-units in
-  N14,  \field Maximum Length of Simulation
-        \type real
-        \minimum> 0.0
-  N15,  \field G-Function Reference Ratio
-        \type real
-        \units dimensionless
-        \minimum> 0.0
-        \default 0.0005
-  N16,  \field Number of Data Pairs of the G Function
-        \type integer
-        \minimum> 0
-        \maximum 100
-  N17,  \field G-Function Ln(T/Ts) Value
-        \type real
-        \begin-extensible
-  N18;  \field G-Function G Value
-        \type real
 
