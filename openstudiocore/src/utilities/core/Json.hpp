@@ -37,9 +37,6 @@ namespace QJson {
 }
 
 namespace openstudio {
-
-class VersionString;
-
 namespace detail {
 
   /** Helper function to standardize JSON serialization settings. */
@@ -47,7 +44,7 @@ namespace detail {
 
 }
 
-/** Helper function to construct version meta-data object for JSON files. */
+/** Helper function to construct meta-data object containing openstudio_version for JSON files. */
 UTILITIES_API QVariant jsonMetadata();
 
 /** Helper function to save top-level json files. */
@@ -56,15 +53,15 @@ UTILITIES_API bool saveJSON(const QVariant& json, openstudio::path p, bool overw
 /** Helper function to print top-level json files to string. */
 UTILITIES_API std::string toJSON(const QVariant& json);
 
-/** Helper function to load top-level json files. Retrieved data is in .first,
- *  OpenStudio version of file is in .second.  This assumes that jsonMetadata is included
- *  at the top level.  If parsing generic JSON content use QJson::Parser directly.*/
-UTILITIES_API std::pair<QVariant,VersionString> loadJSON(const openstudio::path& p);
+/** Helper function to load top-level json files. */
+UTILITIES_API QVariant loadJSON(const openstudio::path& p);
 
 /** Helper function to load top-level json data. Retrieved data is in .first,
- *  OpenStudio version of serialization is in .second. This assumes that jsonMetadata is included
- *  at the top level.  If parsing generic JSON content use QJson::Parser directly.*/
-UTILITIES_API std::pair<QVariant,VersionString> loadJSON(const std::string& json);
+ *  OpenStudio version of serialization is in .second. */
+UTILITIES_API QVariant loadJSON(const std::string& json);
+
+/** Returns the openstudio_version stored in the top-level JSON variant. */
+UTILITIES_API VersionString extractOpenStudioVersion(const QVariant& variant);
 
 template<typename T>
 std::vector<T> deserializeOrderedVector(const QVariantList& list,

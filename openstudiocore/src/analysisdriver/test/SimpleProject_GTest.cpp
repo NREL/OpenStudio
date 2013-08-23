@@ -34,8 +34,10 @@
 #include <analysis/DesignOfExperiments.hpp>
 #include <analysis/Measure.hpp>
 #include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
 #include <analysis/NullMeasure.hpp>
 #include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
 #include <analysis/WorkflowStep.hpp>
 
 #include <project/ProjectDatabase.hpp>
@@ -465,4 +467,62 @@ TEST_F(AnalysisDriverFixture, SimpleProject_ZipFileForCloud) {
   EXPECT_FALSE(boost::filesystem::exists(tempZipFilePath.parent_path() / toPath("formulation.json")));
   EXPECT_FALSE(boost::filesystem::exists(tempZipFilePath.parent_path() / toPath("seed")));
   EXPECT_FALSE(boost::filesystem::exists(tempZipFilePath.parent_path() / toPath("alternatives")));
+}
+
+TEST_F(AnalysisDriverFixture,SimpleProject_AnalysisFixUpOfFilePaths) {
+    // GET SIMPLE PROJECT
+    SimpleProject project = getCleanSimpleProject("SimpleProject_AnalysisFixUpOfFilePaths");
+    Analysis analysis = project.analysis();
+
+    // SET PROBLEM
+    Problem problem = retrieveProblem("BuggyBCLMeasure",true,false);
+    analysis.setProblem(problem);
+
+    // DEFINE SEED
+    Model model = model::exampleModel();
+    openstudio::path p = toPath("./example.osm");
+    model.save(p,true);
+    FileReference seedModel(p);
+    analysis.setSeed(seedModel);
+
+    // MAKE SELF CONTAINED
+    project.makeSelfContained();
+    project.save();
+
+    // CREATE A COPY IN ANOTHER LOCATION
+    openstudio::path newProjectDir = project.projectDir().parent_path() / toPath("SimpleProjectAnalysisFixUpOfFilePathsCopy");
+    boost::filesystem::remove_all(newProjectDir);
+    OptionalSimpleProject oProjectCopy = saveAs(project,newProjectDir);
+    ASSERT_TRUE(oProjectCopy);
+    SimpleProject projectCopy = *oProjectCopy;
+
+    // UPDATE PATHS IN ORIGINAL ANALYSIS
+    EXPECT_NE(project.projectDir(),projectCopy.projectDir());
+    analysis.updateInputPathData(project.projectDir(),projectCopy.projectDir());
+
+    // BCLMeasure and Seed Paths should be the same.
+    Analysis analysisCopy = projectCopy.analysis();
+    EXPECT_EQ(analysisCopy.seed().path(),analysis.seed().path());
+    InputVariableVector variablesCopy = analysisCopy.problem().variables();
+    InputVariableVector variables = analysis.problem().variables();
+    ASSERT_EQ(variablesCopy.size(),variables.size());
+    for (unsigned i = 0, n = variablesCopy.size(); i < n; ++i) {
+      ASSERT_TRUE(variablesCopy[i].optionalCast<MeasureGroup>());
+      ASSERT_TRUE(variables[i].optionalCast<MeasureGroup>());
+      MeasureGroup measureGroupCopy = variablesCopy[i].cast<MeasureGroup>();
+      MeasureGroup measureGroup = variables[i].cast<MeasureGroup>();
+      ASSERT_EQ(measureGroupCopy.measures(false).size(),measureGroup.measures(false).size());
+      MeasureVector measuresCopy = measureGroupCopy.measures(false);
+      MeasureVector measures = measureGroup.measures(false);
+      for (unsigned j = 0, m = measuresCopy.size(); j < m; ++j) {
+        if (measuresCopy[j].optionalCast<RubyMeasure>()) {
+          ASSERT_TRUE(measures[j].optionalCast<RubyMeasure>());
+          RubyMeasure rubyMeasureCopy = measuresCopy[j].cast<RubyMeasure>();
+          RubyMeasure rubyMeasure = measures[j].cast<RubyMeasure>();
+          ASSERT_TRUE(rubyMeasureCopy.usesBCLMeasure());
+          ASSERT_TRUE(rubyMeasure.usesBCLMeasure());
+          EXPECT_EQ(rubyMeasureCopy.bclMeasureDirectory(),rubyMeasure.bclMeasureDirectory());
+        }
+      }
+    }
 }

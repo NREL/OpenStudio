@@ -707,6 +707,10 @@ namespace detail {
       update_1_0_2_to_1_0_3(dbv);
     }
 
+    if (dbv < VersionString("1.0.4")) {
+      update_1_0_3_to_1_0_4(dbv);
+    }
+
     if ((dbv != osv) || (!dbv.fidelityEqual(osv))) {
       LOG(Info,"Updating database version to " << osv << ".");
       bool didStartTransaction = startTransaction();
@@ -2173,6 +2177,40 @@ namespace detail {
           << "DataPoint simulation results will also be invalid/out of date.");
     }
 
+  }
+
+  void ProjectDatabase_Impl::update_1_0_3_to_1_0_4(const VersionString& startVersion) {
+    bool didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    LOG(Info,"Adding column for selected to " << DataPointRecord::databaseTableName() << ".");
+
+    ProjectDatabase database(this->shared_from_this());
+    QSqlQuery query(*(database.qSqlDatabase()));
+
+    DataPointRecordColumns selectedColumn("selected");
+    query.prepare(QString::fromStdString(
+        "ALTER TABLE " + DataPointRecord::databaseTableName() + " ADD COLUMN " +
+        selectedColumn.valueName() + " " + selectedColumn.valueDescription()));
+    assertExec(query);
+    query.clear();
+
+    save();
+    bool test = this->commitTransaction();
+    OS_ASSERT(test);
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    // By default, set all DataPoints to selected.
+    query.prepare(QString::fromStdString("UPDATE " + DataPointRecord::databaseTableName() +
+        " SET selected=:selected, xmlOutputDataRecordId=NULL"));
+    query.bindValue(":selected",true);
+    assertExec(query);
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::setProjectDatabaseRecord(const ProjectDatabaseRecord& projectDatabaseRecord)

@@ -109,6 +109,10 @@ namespace openstudio {
           static std::vector<std::pair<ErrorType, std::string> > toVectorOfError(const QVariant &t_variant, const VersionString& t_version);
 
           //@}
+          
+          /// \returns JobParams with job state management params (jobExternallyManaged) removed. Similar 
+          ///          work is performed when savings Jobs to the RunManager database
+          static JobParams cleanupParams(JobParams t_params);
       };
     }
   }

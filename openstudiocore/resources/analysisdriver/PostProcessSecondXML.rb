@@ -31,9 +31,6 @@ optparse = OptionParser.new do|opts|
     options[:sqlPath] = sqlPath
   end
   
-  opts.on('--xmlPath XMLPATH', String, "XML report file" ) do |xmlPath|
-    options[:xmlPath] = xmlPath
-  end
 end
 
 optparse.parse!
@@ -44,10 +41,6 @@ end
 
 if not options[:sqlPath]
   options[:sqlPath] = "eplusout.sql"
-end
-
-if not options[:xmlPath]
-  options[:xmlPath] = "in.xml"
 end
 
 # set up logging
@@ -64,12 +57,9 @@ raise "No EnergyPlus SQLite file at " + sql_path.to_s + "." if not OpenStudio::e
 sqlFile = OpenStudio::SqlFile.new(sql_path)
 model.setSqlFile(sqlFile)
 
-xml_path = OpenStudio::Path.new(options[:xmlPath])
-xmlFile = OpenStudio::Attribute.loadFromXml(xml_path)
-raise "Unable to load attribute xml file from " + xml_path.to_s + "." if xmlFile.empty?
-xmlFile = xmlFile.get
-
-report_vector = xmlFile.valueAsAttributeVector.dup # .dup makes an unfrozen copy of the vector
+# No longer have to append to existing report.xml.
+# Can just write a new one and both will be picked up.
+report_vector = OpenStudio::AttributeVector.new
 
 peak_value = model.sqlFile().get().execAndReturnFirstDouble("SELECT Value FROM tabulardatawithstrings WHERE ReportName='EnergyMeters'" +
     " AND ReportForString='Entire Facility' AND TableName='Annual and Peak Values - Electricity' AND RowName='Electricity:Facility'" +
