@@ -71,7 +71,7 @@ private:
   int tableLookup(QMap<Handle,int> map, Handle handle, const char *name);
   int tableLookup(std::map<Handle,int> map, Handle handle, const char *name);
   std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
-  Handle ForwardTranslator::reverseLookup(QMap<Handle,int> map, int nr, const char *name);
+  Handle reverseLookup(QMap<Handle,int> map, int nr, const char *name);
 
   prj::Data m_data;
   // Maps - will be populated after a call of translateToPrj
