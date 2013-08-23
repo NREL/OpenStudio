@@ -78,6 +78,7 @@ namespace detail {
       m_dataPointRecordType(dataPointRecordType),
       m_complete(dataPoint.isComplete()),
       m_failed(dataPoint.failed()),
+      m_selected(dataPoint.selected()),
       m_directory(dataPoint.directory()),
       m_dakotaParametersFiles(dataPoint.dakotaParametersFiles())
   {
@@ -116,6 +117,10 @@ namespace detail {
     OS_ASSERT(value.isValid() && !value.isNull());
     m_failed = value.toBool();
 
+    value = query.value(DataPointRecordColumns::selected);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_selected = value.toBool();
+
     value = query.value(DataPointRecordColumns::directory);
     OS_ASSERT(value.isValid() && !value.isNull());
     m_directory = toPath(value.toString());
@@ -133,11 +138,6 @@ namespace detail {
     value = query.value(DataPointRecordColumns::sqlOutputDataRecordId);
     if (value.isValid() && !value.isNull()) {
        m_sqlOutputDataRecordId = value.toInt();
-    }
-
-    value = query.value(DataPointRecordColumns::xmlOutputDataRecordId);
-    if (value.isValid() && !value.isNull()) {
-       m_xmlOutputDataRecordId = value.toInt();
     }
 
     value = query.value(DataPointRecordColumns::topLevelJobUUID);
@@ -180,10 +180,8 @@ namespace detail {
     if (ofrr) {
       result.push_back(*ofrr);
     }
-    ofrr = xmlOutputDataRecord();
-    if (ofrr) {
-      result.push_back(*ofrr);
-    }
+    FileReferenceRecordVector frrs = xmlOutputDataRecords();
+    result.insert(result.end(),frrs.begin(),frrs.end());
     DataPointValueRecordVector rvrs = responseValueRecords();
     result.insert(result.end(),rvrs.begin(),rvrs.end());
     return result;
@@ -233,11 +231,19 @@ namespace detail {
   }
 
   bool DataPointRecord_Impl::isComplete() const {
+    return complete();
+  }
+
+  bool DataPointRecord_Impl::complete() const {
     return m_complete;
   }
 
   bool DataPointRecord_Impl::failed() const {
     return m_failed;
+  }
+
+  bool DataPointRecord_Impl::selected() const {
+    return m_selected;
   }
 
   openstudio::path DataPointRecord_Impl::directory() const {
@@ -332,11 +338,21 @@ namespace detail {
     return result;
   }
 
-  boost::optional<FileReferenceRecord> DataPointRecord_Impl::xmlOutputDataRecord() const {
-    OptionalFileReferenceRecord result;
-    if (m_xmlOutputDataRecordId) {
-      ProjectDatabase database = projectDatabase();
-      result = FileReferenceRecord::getFileReferenceRecord(*m_xmlOutputDataRecordId,database);
+  std::vector<FileReferenceRecord> DataPointRecord_Impl::xmlOutputDataRecords() const {
+    FileReferenceRecordVector result;
+
+    ProjectDatabase database = projectDatabase();
+    QSqlQuery query(*(database.qSqlDatabase()));
+    query.prepare(toQString("SELECT * FROM " + FileReferenceRecord::databaseTableName() +
+                            " WHERE parentDatabaseTableName=:parentDatabaseTableName AND " +
+                            "parentRecordId=:parentRecordId AND " +
+                            "fileReferenceType=:fileReferenceType"));
+    query.bindValue(":parentDatabaseTableName",toQString(databaseTableName()));
+    query.bindValue(":parentRecordId",id());
+    query.bindValue(":fileReferenceType",int(FileReferenceType::XML));
+    assertExec(query);
+    while (query.next()) {
+      result.push_back(FileReferenceRecord(query, database));
     }
     return result;
   }
@@ -358,6 +374,15 @@ namespace detail {
       result.push_back(TagRecord(query, database));
     }
 
+    return result;
+  }
+
+  std::vector<AttributeRecord> DataPointRecord_Impl::attributeRecords() const {
+    AttributeRecordVector result;
+    Q_FOREACH(const FileReferenceRecord& fr,xmlOutputDataRecords()) {
+      AttributeRecordVector additions = fr.attributeRecords();
+      result.insert(result.end(),additions.begin(),additions.end());
+    }
     return result;
   }
 
@@ -408,7 +433,7 @@ namespace detail {
     OptionalFileReference oOsmInputData;
     OptionalFileReference oIdfInputData;
     OptionalFileReference oSqlOutputData;
-    OptionalFileReference oXmlOutputData;
+    FileReferenceVector xmlOutputData;
     AttributeVector attributes;
     ofrr = osmInputDataRecord();
     if (ofrr) {
@@ -422,12 +447,13 @@ namespace detail {
     if (ofrr) {
       oSqlOutputData = ofrr->fileReference();
     }
-    ofrr = xmlOutputDataRecord();
-    if (ofrr) {
-      oXmlOutputData = ofrr->fileReference();
-      Q_FOREACH(const AttributeRecord& attributeRecord, ofrr->attributeRecords()) {
-        attributes.push_back(attributeRecord.attribute());
-      }
+    FileReferenceRecordVector frrs = xmlOutputDataRecords();
+    Q_FOREACH(const FileReferenceRecord& frr,frrs) {
+      xmlOutputData.push_back(frr.fileReference());
+    }
+    AttributeRecordVector ars = attributeRecords();
+    Q_FOREACH(const AttributeRecord& ar,ars) {
+      attributes.push_back(ar.attribute());
     }
 
     TagRecordVector tagRecords = this->tagRecords();
@@ -455,13 +481,14 @@ namespace detail {
                                problemRecord.problem(),
                                m_complete,
                                m_failed,
+                               m_selected,
                                variableValues,
                                responseValues(),
                                m_directory,
                                oOsmInputData,
                                oIdfInputData,
                                oSqlOutputData,
-                               oXmlOutputData,
+                               xmlOutputData,
                                topLevelJob,
                                m_dakotaParametersFiles,
                                tags,
@@ -490,9 +517,9 @@ namespace detail {
     if (ofrr) {
       database.removeRecord(*ofrr);
     }
-    ofrr = xmlOutputDataRecord();
-    if (ofrr) {
-      database.removeRecord(*ofrr);
+    FileReferenceRecordVector frrs = xmlOutputDataRecords();
+    BOOST_FOREACH(FileReferenceRecord& frr,frrs) {
+      database.removeRecord(frr);
     }
     DataPointValueRecordVector rvrs = responseValueRecords();
     BOOST_FOREACH(DataPointValueRecord& rvr,rvrs) {
@@ -508,7 +535,6 @@ namespace detail {
     m_osmInputDataRecordId = m_lastOsmInputDataRecordId;
     m_idfInputDataRecordId = m_lastIdfInputDataRecordId;
     m_sqlOutputDataRecordId = m_lastSqlOutputDataRecordId;
-    m_xmlOutputDataRecordId = m_lastXmlOutputDataRecordId;
   }
 
   void DataPointRecord_Impl::setOsmInputDataRecordId(int id) {
@@ -547,18 +573,6 @@ namespace detail {
     }
   }
 
-  void DataPointRecord_Impl::setXmlOutputDataRecordId(int id) {
-    m_xmlOutputDataRecordId = id;
-    this->onChange(false);
-  }
-
-  void DataPointRecord_Impl::clearXmlOutputDataRecordId() {
-    if (m_xmlOutputDataRecordId) {
-      m_xmlOutputDataRecordId.reset();
-      this->onChange(false);
-    }
-  }
-
   void DataPointRecord_Impl::bindValues(QSqlQuery& query) const {
     ObjectRecord_Impl::bindValues(query);
 
@@ -567,6 +581,7 @@ namespace detail {
     query.bindValue(DataPointRecordColumns::dataPointRecordType, m_dataPointRecordType.value());
     query.bindValue(DataPointRecordColumns::complete, m_complete);
     query.bindValue(DataPointRecordColumns::failed, m_failed);
+    query.bindValue(DataPointRecordColumns::selected, m_selected);
     query.bindValue(DataPointRecordColumns::directory, toQString(m_directory));
     if (m_osmInputDataRecordId) {
       query.bindValue(DataPointRecordColumns::inputDataRecordId, *m_osmInputDataRecordId);
@@ -585,12 +600,6 @@ namespace detail {
     }
     else {
       query.bindValue(DataPointRecordColumns::sqlOutputDataRecordId, QVariant(QVariant::Int));
-    }
-    if (m_xmlOutputDataRecordId) {
-      query.bindValue(DataPointRecordColumns::xmlOutputDataRecordId, *m_xmlOutputDataRecordId);
-    }
-    else {
-      query.bindValue(DataPointRecordColumns::xmlOutputDataRecordId, QVariant(QVariant::Int));
     }
     if (m_topLevelJobUUID) {
       query.bindValue(DataPointRecordColumns::topLevelJobUUID, m_topLevelJobUUID->toString());
@@ -638,6 +647,10 @@ namespace detail {
     OS_ASSERT(value.isValid() && !value.isNull());
     m_lastFailed = value.toBool();
 
+    value = query.value(DataPointRecordColumns::selected);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastSelected = value.toBool();
+
     value = query.value(DataPointRecordColumns::directory);
     OS_ASSERT(value.isValid() && !value.isNull());
     m_lastDirectory = toPath(value.toString());
@@ -664,14 +677,6 @@ namespace detail {
     }
     else {
       m_lastSqlOutputDataRecordId.reset();
-    }
-
-    value = query.value(DataPointRecordColumns::xmlOutputDataRecordId);
-    if (value.isValid() && !value.isNull()) {
-      m_lastXmlOutputDataRecordId = value.toInt();
-    }
-    else {
-      m_lastXmlOutputDataRecordId.reset();
     }
 
     value = query.value(DataPointRecordColumns::topLevelJobUUID);
@@ -720,6 +725,10 @@ namespace detail {
     OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_failed == value.toBool());
 
+    value = query.value(DataPointRecordColumns::selected);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_selected == value.toBool());
+
     value = query.value(DataPointRecordColumns::directory);
     OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_directory == toPath(value.toString()));
@@ -743,13 +752,6 @@ namespace detail {
       result = result && m_sqlOutputDataRecordId && (*m_sqlOutputDataRecordId == value.toInt());
     }else{
       result = result && !m_sqlOutputDataRecordId;
-    }
-
-    value = query.value(DataPointRecordColumns::xmlOutputDataRecordId);
-    if (value.isValid() && !value.isNull()) {
-      result = result && m_xmlOutputDataRecordId && (*m_xmlOutputDataRecordId == value.toInt());
-    }else{
-      result = result && !m_xmlOutputDataRecordId;
     }
 
     value = query.value(DataPointRecordColumns::topLevelJobUUID);
@@ -782,11 +784,11 @@ namespace detail {
     m_lastDataPointRecordType = m_dataPointRecordType;
     m_lastComplete = m_complete;
     m_lastFailed = m_failed;
+    m_lastSelected = m_selected;
     m_lastDirectory = m_directory;
     m_lastOsmInputDataRecordId = m_osmInputDataRecordId;
     m_lastIdfInputDataRecordId = m_idfInputDataRecordId;
     m_lastSqlOutputDataRecordId = m_sqlOutputDataRecordId;
-    m_lastXmlOutputDataRecordId = m_xmlOutputDataRecordId;
     m_lastTopLevelJobUUID = m_topLevelJobUUID;
     m_lastDakotaParametersFiles = m_dakotaParametersFiles;
   }
@@ -799,11 +801,11 @@ namespace detail {
     m_dataPointRecordType = m_lastDataPointRecordType;
     m_complete = m_lastComplete;
     m_failed = m_lastFailed;
+    m_selected = m_lastSelected;
     m_directory = m_lastDirectory;
     m_osmInputDataRecordId = m_lastOsmInputDataRecordId;
     m_idfInputDataRecordId = m_lastIdfInputDataRecordId;
     m_sqlOutputDataRecordId = m_lastSqlOutputDataRecordId;
-    m_xmlOutputDataRecordId = m_lastXmlOutputDataRecordId;
     m_topLevelJobUUID = m_lastTopLevelJobUUID;
     m_dakotaParametersFiles = m_lastDakotaParametersFiles;
   }
@@ -1003,8 +1005,16 @@ bool DataPointRecord::isComplete() const {
   return getImpl<detail::DataPointRecord_Impl>()->isComplete();
 }
 
+bool DataPointRecord::complete() const {
+  return getImpl<detail::DataPointRecord_Impl>()->complete();
+}
+
 bool DataPointRecord::failed() const {
   return getImpl<detail::DataPointRecord_Impl>()->failed();
+}
+
+bool DataPointRecord::selected() const {
+  return getImpl<detail::DataPointRecord_Impl>()->selected();
 }
 
 openstudio::path DataPointRecord::directory() const {
@@ -1035,8 +1045,8 @@ boost::optional<FileReferenceRecord> DataPointRecord::sqlOutputDataRecord() cons
   return getImpl<detail::DataPointRecord_Impl>()->sqlOutputDataRecord();
 }
 
-boost::optional<FileReferenceRecord> DataPointRecord::xmlOutputDataRecord() const {
-  return getImpl<detail::DataPointRecord_Impl>()->xmlOutputDataRecord();
+std::vector<FileReferenceRecord> DataPointRecord::xmlOutputDataRecords() const {
+  return getImpl<detail::DataPointRecord_Impl>()->xmlOutputDataRecords();
 }
 
 boost::optional<openstudio::UUID> DataPointRecord::topLevelJobUUID() const {
@@ -1045,6 +1055,10 @@ boost::optional<openstudio::UUID> DataPointRecord::topLevelJobUUID() const {
 
 std::vector<TagRecord> DataPointRecord::tagRecords() const {
   return getImpl<detail::DataPointRecord_Impl>()->tagRecords();
+}
+
+std::vector<AttributeRecord> DataPointRecord::attributeRecords() const {
+  return getImpl<detail::DataPointRecord_Impl>()->attributeRecords();
 }
 
 analysis::DataPoint DataPointRecord::dataPoint() const {
@@ -1178,26 +1192,12 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
     OS_ASSERT(!newSqlOutputDataRecord);
     getImpl<detail::DataPointRecord_Impl>()->clearSqlOutputDataRecordId();
   }
-  OptionalFileReference xmlOutputData = dataPoint.xmlOutputData();
-  OptionalFileReferenceRecord newXmlOutputDataRecord =
-      saveChildFileReference(xmlOutputData,
-                             xmlOutputDataRecord(),
-                             copyOfThis,
-                             database,
-                             isNew);
-  if (newXmlOutputDataRecord) {
-    getImpl<detail::DataPointRecord_Impl>()->setXmlOutputDataRecordId(newXmlOutputDataRecord->id());
-    // save output attributes to database for quick access
-    // (old attributes will have been deleted by call to remove xmlOutputDataRecord())
-    AttributeVector attributes = dataPoint.outputAttributes();
-    BOOST_FOREACH(const Attribute& attribute,attributes) {
-      AttributeRecord attributeRecord(attribute,*newXmlOutputDataRecord);
-    }
-  }
-  if (!xmlOutputData) {
-    OS_ASSERT(!newXmlOutputDataRecord);
-    getImpl<detail::DataPointRecord_Impl>()->clearXmlOutputDataRecordId();
-  }
+  FileReferenceVector xmlOutputData = dataPoint.xmlOutputData();
+  saveChildFileReferences(xmlOutputData,
+                          xmlOutputDataRecords(),
+                          copyOfThis,
+                          database,
+                          isNew);
 
   // Remove old response function values
   if (!isNew) {
@@ -1265,6 +1265,63 @@ boost::optional<FileReferenceRecord> DataPointRecord::saveChildFileReference(
     LOG(Debug,"DataPoint " << id() << ", directory " << toString(directory()) << ", child FileReference "
       << toString(childFileReference->path()) << ".");
   }
+  return result;
+}
+
+std::vector<FileReferenceRecord> DataPointRecord::saveChildFileReferences(
+    const std::vector<FileReference>& childFileReferences,
+    std::vector<FileReferenceRecord> oldFileReferenceRecords,
+    DataPointRecord& copyOfThis,
+    ProjectDatabase& database,
+    bool isNew)
+{
+  FileReferenceRecordVector result;
+  Q_FOREACH(const FileReference& childFileReference, childFileReferences) {
+    bool save(true);
+    if (!isNew) {
+      // see if there is already a record
+      FileReferenceRecordVector::iterator it = std::find_if(
+            oldFileReferenceRecords.begin(),
+            oldFileReferenceRecords.end(),
+            boost::bind(handleEquals<ObjectRecord,UUID>,_1,childFileReference.uuid()));
+      if (it != oldFileReferenceRecords.end()) {
+        // found, see if has changed
+        if (it->uuidLast() == childFileReference.versionUUID()) {
+          save = false;
+        }
+        else {
+          // will save. clear out AttributeRecords associated with the old one.
+          AttributeRecordVector oldAttributes = it->attributeRecords();
+          BOOST_FOREACH(AttributeRecord& oldAttribute, oldAttributes) {
+            database.removeRecord(oldAttribute);
+          }
+        }
+        oldFileReferenceRecords.erase(it); // do not remove this existing record
+      }
+      database.unloadUnusedCleanRecords();
+    }
+    if (save || isNew) {
+      result.push_back(FileReferenceRecord(childFileReference,copyOfThis));
+      // save attributes
+      OptionalAttribute wrapperAttribute = Attribute::loadFromXml(childFileReference.path());
+      if (wrapperAttribute &&
+          (wrapperAttribute->valueType() == AttributeValueType::AttributeVector))
+      {
+        Q_FOREACH(const Attribute& attribute,wrapperAttribute->valueAsAttributeVector()) {
+          AttributeRecord attributeRecord(attribute,result.back());
+          Q_UNUSED(attributeRecord);
+        }
+      }
+    }
+  }
+
+  // remove remaining oldFileReferenceRecords
+  if (!isNew) {
+    BOOST_FOREACH(FileReferenceRecord& oldFileReferenceRecord,oldFileReferenceRecords) {
+      database.removeRecord(oldFileReferenceRecord);
+    }
+  }
+
   return result;
 }
 

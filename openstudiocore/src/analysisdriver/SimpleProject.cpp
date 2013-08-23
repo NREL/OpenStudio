@@ -1093,6 +1093,7 @@ namespace detail {
                                              optTempPoint.optimizationProblem(),
                                              optTempPoint.isComplete(),
                                              optTempPoint.failed(),
+                                             optTempPoint.selected(),
                                              variableValues,
                                              optTempPoint.responseValues(),
                                              optTempPoint.objectiveValues(),
@@ -1118,6 +1119,7 @@ namespace detail {
                               tempPoint.problem(),
                               tempPoint.isComplete(),
                               tempPoint.failed(),
+                              tempPoint.selected(),
                               variableValues,
                               tempPoint.responseValues(),
                               tempPoint.directory(),
@@ -2032,5 +2034,6 @@ boost::optional<SimpleProject> saveAs(const SimpleProject& project,
 
 } // analysisdriver
 } // openstudio
+
 
 
