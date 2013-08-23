@@ -1470,8 +1470,11 @@ namespace detail {
     catch (...) {}
 
     try {
-      openstudio::path xmlOutputDataPath = allFiles.getLastByExtension("xml").fullPath;
-      dataPoint.setXmlOutputData(FileReference(xmlOutputDataPath));
+      FileReferenceVector xmlOutputData;
+      Q_FOREACH(const runmanager::FileInfo& file, allFiles.getAllByExtension("xml").files()) {
+        xmlOutputData.push_back(FileReference(file.fullPath));
+      }
+      dataPoint.setXmlOutputData(xmlOutputData);
     }
     catch (...) {}
 

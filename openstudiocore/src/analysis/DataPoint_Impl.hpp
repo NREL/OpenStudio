@@ -72,13 +72,14 @@ namespace detail {
                    const Problem& problem,
                    bool complete,
                    bool failed,
+                   bool selected,
                    const std::vector<QVariant>& variableValues,
                    const std::vector<double>& responseValues,
                    const openstudio::path& directory,
                    const boost::optional<FileReference>& osmInputData,
                    const boost::optional<FileReference>& idfInputData,
                    const boost::optional<FileReference>& sqlOutputData,
-                   const boost::optional<FileReference>& xmlOutputData,
+                   const std::vector<FileReference>& xmlOutputData,
                    const boost::optional<runmanager::Job>& topLevelJob,
                    const std::vector<openstudio::path>& dakotaParametersFiles,
                    const std::vector<Tag>& tags,
@@ -94,13 +95,14 @@ namespace detail {
                    const boost::optional<UUID>& analysisUUID,
                    bool complete,
                    bool failed,
+                   bool selected,
                    const std::vector<QVariant>& variableValues,
                    const std::vector<double>& responseValues,
                    const openstudio::path& directory,
                    const boost::optional<FileReference>& osmInputData,
                    const boost::optional<FileReference>& idfInputData,
                    const boost::optional<FileReference>& sqlOutputData,
-                   const boost::optional<FileReference>& xmlOutputData,
+                   const std::vector<FileReference>& xmlOutputData,
                    const boost::optional<runmanager::Job>& topLevelJob,
                    const std::vector<openstudio::path>& dakotaParametersFiles,
                    const std::vector<Tag>& tags,
@@ -130,10 +132,21 @@ namespace detail {
     /** Returns the UUID of the Analysis that parents this DataPoint. */
     boost::optional<UUID> analysisUUID() const;
 
+    /** Returns true if the DataPoint has been simulated. \deprecated */
     bool isComplete() const;
 
+    /** Returns true if the DataPoint has been simulated. */
+    bool complete() const;
+
+    /** Returns true if the DataPoint was simulated, but the simulation failed, or output results
+     *  could not be retrieved for some other reason. */
     bool failed() const;
 
+    /** Returns true if the DataPoint is selected (to be simulated in the next batch). */
+    bool selected() const;
+
+    /** Returns the variableValues to be applied in simulating this DataPoint. (That is, inputData
+     *  will be the result of applying variableValues to the Analysis seed file.) */
     std::vector<QVariant> variableValues() const;
 
     /** Returns the value of the response functions for this DataPoint. Only non-empty if isComplete()
@@ -148,7 +161,10 @@ namespace detail {
 
     boost::optional<FileReference> sqlOutputData() const;
 
-    boost::optional<FileReference> xmlOutputData() const;
+    /** Returns the openstudio::Attribute XML files created by any reporting measures, if
+     *  complete() and not failed(), and problem() located such files during the update process.
+     *  Otherwise, the return value is .empty(). */
+    std::vector<FileReference> xmlOutputData() const;
 
     boost::optional<runmanager::Job> topLevelJob() const;
 
@@ -175,6 +191,8 @@ namespace detail {
     //@}
     /** @name Setters */
     //@{
+
+    void setSelected(bool selected);
 
     void setDirectory(const openstudio::path& directory);
 
@@ -220,7 +238,7 @@ namespace detail {
 
     void setSqlOutputData(const FileReference& file);
 
-    void setXmlOutputData(const FileReference& file);
+    void setXmlOutputData(const std::vector<FileReference>& files);
 
     void markComplete();
 
@@ -258,13 +276,15 @@ namespace detail {
                                             // set to true by Problem update
     bool m_failed;                          // false after construction
                                             // set to true by Problem update if point is unusable
+    bool m_selected;                        // true after construction
+                                            // used by Analysis to determine which points to run
     std::vector<QVariant> m_variableValues; // variable values for this run
     std::vector<double> m_responseValues;   // response function values for this run
     openstudio::path m_directory;           // directory containing results
     boost::optional<FileReference> m_osmInputData;  // an osm file
     boost::optional<FileReference> m_idfInputData;  // an idf file
     boost::optional<FileReference> m_sqlOutputData; // a sql file
-    boost::optional<FileReference> m_xmlOutputData; // attribute xml
+    std::vector<FileReference> m_xmlOutputData; // attribute xml
     boost::optional<runmanager::Job> m_topLevelJob;
     std::vector<openstudio::path> m_dakotaParametersFiles;
     std::vector<Tag> m_tags;                // meta-data for query and display

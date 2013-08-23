@@ -158,6 +158,9 @@ bool FileReference::makePathAbsolute(const openstudio::path& searchDirectory) {
   if (currentPath.is_complete()) {
     workingPath = toPath(currentPath.filename());
   }
+  if (searchDirectory.empty()) {
+    return false;
+  }
   openstudio::path newPath = boost::filesystem::complete(workingPath,searchDirectory);
   if (newPath.empty() || !boost::filesystem::exists(newPath)) {
     return false;

@@ -109,6 +109,11 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun_Roundtrip) {
   ASSERT_TRUE(loadResult.analysisObject->optionalCast<DataPoint>());
   copy = loadResult.analysisObject->cast<DataPoint>();
   EXPECT_EQ(json,copy.toJSON(options));
+  if (copy.toJSON(options) != json) {
+    p = toPath("AnalysisFixtureData/data_point_post_run_roundtripped.json");
+    copy.saveJSON(p,options,true);
+  }
+
 }
 
 TEST_F(AnalysisFixture, DataPoint_JSONSerialization_Versioning) {
@@ -135,4 +140,23 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_Versioning) {
       EXPECT_TRUE(loaded.topLevelJob());
     }
   }
+}
+
+TEST_F(AnalysisFixture, DataPoint_Selected) {
+  // Create analysis
+  Analysis analysis = analysis1(PreRun);
+
+  // See how many to queue
+  unsigned totalToRun = analysis.dataPointsToQueue().size();
+  ASSERT_LT(0u,totalToRun);
+
+  // Turn one off
+  ASSERT_FALSE(analysis.dataPoints().empty());
+  EXPECT_EQ(totalToRun,analysis.dataPoints().size());
+  DataPoint dataPoint = analysis.dataPoints()[0];
+  dataPoint.setSelected(false);
+  EXPECT_FALSE(dataPoint.selected());
+
+  // Make sure shows up in "ToQueue"
+  EXPECT_EQ(totalToRun - 1u,analysis.dataPointsToQueue().size());
 }

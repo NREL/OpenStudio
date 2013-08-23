@@ -20,9 +20,13 @@ namespace detail {
     if (!t_jobTree.rawInputFiles().empty()) {
       map["files"] = toVariant(t_jobTree.rawInputFiles());
     }
-    if (!t_jobTree.params().empty()) {
-      map["params"] = toVariant(t_jobTree.params());
+
+    std::vector<JobParam> params = cleanupParams(t_jobTree.params()).params();
+    if (!params.empty())
+    {
+      map["params"] = toVariant(params);
     }
+
     if (!t_jobTree.tools().empty()) {
       map["tools"] = toVariant(t_jobTree.tools());
     }
@@ -114,7 +118,7 @@ namespace detail {
           lastRun,
           toJobErrors(map["errors"], t_version),
           map.contains("output_files") ? Files(toVectorOfFileInfo(map["output_files"],t_version)) : Files(),
-          toAdvancedStatus(map["status"], t_version)
+          map.contains("status") ? toAdvancedStatus(map["status"], t_version) : AdvancedStatus()
           )
         );
 
@@ -141,10 +145,21 @@ namespace detail {
 
   /// \returns a JSON string representation of the given job tree
   Job JSON::toJob(const std::string &t_json, bool t_externallyManaged) {
-    std::pair<QVariant,VersionString> parseResult = loadJSON(t_json);
+    QVariant variant = loadJSON(t_json);
+    VersionString version = extractOpenStudioVersion(variant);
 
-    QVariant jobData = parseResult.first.toMap()["job"];
-    return toJob(jobData,parseResult.second, t_externallyManaged);
+    QVariant jobData = variant.toMap()["job"];
+    return toJob(jobData,version,t_externallyManaged);
+  }
+
+  JobParams JSON::cleanupParams(JobParams t_params)
+  {
+    if (t_params.has("jobExternallyManaged"))
+    {
+      t_params.remove("jobExternallyManaged");
+    }
+
+    return t_params;
   }
 
   QVariant JSON::toVariant(const WorkItem &t_workItem)
@@ -154,8 +169,10 @@ namespace detail {
     if (!t_workItem.tools.tools().empty()) {
       map["tools"] = toVariant(t_workItem.tools.tools());
     }
-    if (!t_workItem.params.params().empty()) {
-      map["params"] = toVariant(t_workItem.params.params());
+    std::vector<JobParam> params = cleanupParams(t_workItem.params).params();
+    if (!params.empty())
+    {
+      map["params"] = toVariant(params);
     }
     if (!t_workItem.files.files().empty()) {
       map["files"] = toVariant(t_workItem.files.files());
@@ -195,10 +212,11 @@ namespace detail {
   /// \returns a WorkItem from the given JSON string
   WorkItem JSON::toWorkItem(const std::string &t_json)
   {
-    std::pair<QVariant,VersionString> parseResult = loadJSON(t_json);
+    QVariant variant = loadJSON(t_json);
+    VersionString version = extractOpenStudioVersion(variant);
 
-    QVariant workItemData = parseResult.first.toMap()["work_item"];
-    return toWorkItem(workItemData,parseResult.second);
+    QVariant workItemData = variant.toMap()["work_item"];
+    return toWorkItem(workItemData,version);
   }
 
   // JobType

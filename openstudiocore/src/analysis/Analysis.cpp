@@ -255,7 +255,7 @@ namespace detail {
   std::vector<DataPoint> Analysis_Impl::dataPointsToQueue() const {
     DataPointVector result;
     BOOST_FOREACH(const DataPoint& dataPoint,m_dataPoints) {
-      if (!dataPoint.isComplete()) {
+      if (dataPoint.selected() && (!dataPoint.complete())) {
         result.push_back(dataPoint);
       }
     }
@@ -795,7 +795,7 @@ namespace detail {
         serverView["data_points"] = QVariant(dataPointList);
       }
 
-      metadata["server_view"] = serverView;
+      metadata.unite(serverView);
     }
 
     // create top-level of final file
