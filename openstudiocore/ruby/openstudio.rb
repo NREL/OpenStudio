@@ -109,7 +109,7 @@ begin
   # may not be defined, e.g for SketchUp plug-in
   require 'rbconfig'  
   
-  $OpenStudio_RubyExe = OpenStudio::Path.new(File.join(Config::CONFIG['bindir'], Config::CONFIG['ruby_install_name']).sub(/.*\s.*/m, '"\&"'))
+  $OpenStudio_RubyExe = OpenStudio::Path.new(File.join(RbConfig::CONFIG['bindir'], RbConfig::CONFIG['ruby_install_name']).sub(/.*\s.*/m, '"\&"'))
   $OpenStudio_RubyExeDir = $OpenStudio_RubyExe.parent_path()
 
 rescue Exception=>e
