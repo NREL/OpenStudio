@@ -34,9 +34,10 @@ class HVACComponent;
 namespace detail {
 
   /** ZoneHVACLowTempRadiantVarFlow_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACLowTempRadiantVarFlow.*/
-  
   class MODEL_API ZoneHVACLowTempRadiantVarFlow_Impl : public ZoneHVACComponent_Impl {
-   
+
+  Q_OBJECT
+
   public:
     /** @name Constructors and Destructors */
     //@{

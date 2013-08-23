@@ -186,6 +186,7 @@ ENDIF()
 FIND_PROGRAM( RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH )
 FIND_PACKAGE( Ruby )
 
+
 IF(WIN32 AND MSVC AND CMAKE_CL_64)
   MESSAGE(WARNING "64bit Support on Windows is EXPERIMENTAL. Ruby 2.0.0 will be built. The Sketchup plugin will not work. Expect problems with ruby support in general. Unless you've already built Boost and Qt you probably want to let this super build do it. There are lots of warnings, so we are disabling warnings as errors.") 
 ENDIF()
@@ -200,6 +201,15 @@ ELSE()
   # Always provide ruby on Windows
   OPTION(BUILD_RUBY "Build Ruby" ON)
   MARK_AS_ADVANCED(BUILD_RUBY)
+ENDIF()
+
+IF ( NOT BUILD_RUBY AND NOT BUILD_SWIG )
+  SET(RUBY_VER "${RUBY_VERSION_MAJOR}.${RUBY_VERSION_MINOR}.${RUBY_VERSION_PATCH}")
+
+  IF(${RUBY_VER} VERSION_GREATER "1.8.8"
+      AND ${SWIG_VERSION} VERSION_LESS "2.0.10")
+    MESSAGE(SEND_ERROR "For Ruby >= 1.9.0, SWIG >= 2.0.10 is required. Use of the BUILD_SWIG option is suggested")
+  ENDIF()
 ENDIF()
 
 IF(BUILD_NODE)
@@ -310,8 +320,8 @@ IF(BUILD_SWIG)
     ELSE()
       # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
       ExternalProject_Add( SWIG
-        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swig-2.0.9.tar.gz
-        URL_MD5 54d534b14a70badc226129159412ea85
+        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swig-2.0.10.tar.gz
+        URL_MD5 6d5e7ad05b4a404e5e85db9befb70c9a
         PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
         CONFIGURE_COMMAND ../SWIG/configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
         BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE)
@@ -322,8 +332,8 @@ IF(BUILD_SWIG)
   ELSE()
     # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
     ExternalProject_Add( SWIG
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swigwin-2.0.9.zip
-      URL_MD5 a1dc34766cf599f49e2092f7973c85f4
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swigwin-2.0.10.zip
+      URL_MD5 cbb7006ecc912f056a2ec7f322fe59fb
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ""
       INSTALL_COMMAND ""

@@ -35,7 +35,7 @@ namespace detail {
 
   /** CoilHeatingLowTempRadiantVarFlow_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingLowTempRadiantVarFlow.*/
   class MODEL_API CoilHeatingLowTempRadiantVarFlow_Impl : public StraightComponent_Impl {
-    //Q_OBJECT;
+    Q_OBJECT;
 
     //Q_PROPERTY(boost::optional<double> maximumHotWaterFlow READ maximumHotWaterFlow WRITE setMaximumHotWaterFlow RESET resetMaximumHotWaterFlow);
     //Q_PROPERTY(openstudio::OSOptionalQuantity maximumHotWaterFlow_SI READ maximumHotWaterFlow_SI WRITE setMaximumHotWaterFlow RESET resetMaximumHotWaterFlow);
