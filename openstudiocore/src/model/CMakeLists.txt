@@ -325,6 +325,9 @@ SET( ${target_name}_src
   Glazing.hpp
   Glazing_Impl.hpp
   Glazing.cpp
+  GroundHeatExchangerVertical.hpp
+  GroundHeatExchangerVertical_Impl.hpp
+  GroundHeatExchangerVertical.cpp
   HeatBalanceAlgorithm.hpp
   HeatBalanceAlgorithm_Impl.hpp
   HeatBalanceAlgorithm.cpp
@@ -889,6 +892,7 @@ SET( ${target_name}_moc
   GasMixture_Impl.hpp
   GlareSensor_Impl.hpp
   Glazing_Impl.hpp
+  GroundHeatExchangerVertical_Impl.hpp
   HeatBalanceAlgorithm_Impl.hpp
   HeatExchangerAirToAirSensibleAndLatent_Impl.hpp
   HotWaterEquipment_Impl.hpp
@@ -1120,6 +1124,7 @@ SET( ${target_name}_test_src
   test/GasMixture_GTest.cpp
   test/Gas_GTest.cpp
   test/GlareSensor_GTest.cpp
+  test/GroundHeatExchangerVertical_GTest.cpp
   test/HotWaterEquipment_GTest.cpp
   test/HeatExchangerAirToAirSensibleAndLatent_GTest.cpp
   test/IlluminanceMap_GTest.cpp
