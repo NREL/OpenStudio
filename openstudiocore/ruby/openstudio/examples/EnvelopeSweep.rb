@@ -270,7 +270,7 @@ analysisRecord.dataPointRecords.each do |dataPointRecord|
 
   row = []
   
-  xmlOutputDataRecord = dataPointRecord.xmlOutputDataRecord.get
+  xmlOutputDataRecord = dataPointRecord.xmlOutputDataRecords[0]
 
   wallInsulationThickness = xmlOutputDataRecord.getAttributeRecord("wallInsulationThickness").get.attributeValueAsDouble
   row << wallInsulationThickness.to_s
