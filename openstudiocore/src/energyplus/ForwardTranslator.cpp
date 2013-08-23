@@ -341,6 +341,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
 
   switch(modelObject.iddObject().type().value())
   {
+  case openstudio::IddObjectType::OS_AirConditioner_VariableRefrigerantFlow :
+    {
+      model::AirConditionerVariableRefrigerantFlow vrf = modelObject.cast<AirConditionerVariableRefrigerantFlow>();
+      retVal = translateAirConditionerVariableRefrigerantFlow(vrf);
+      break;
+    }
   case openstudio::IddObjectType::OS_AirLoopHVAC :
     {
       model::AirLoopHVAC airLoopHVAC = modelObject.cast<AirLoopHVAC>();
@@ -460,6 +466,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::CoilCoolingDXTwoSpeed coil = modelObject.cast<CoilCoolingDXTwoSpeed>();
       retVal = translateCoilCoolingDXTwoSpeed(coil);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow :
+    {
+      model::CoilCoolingDXVariableRefrigerantFlow coil = modelObject.cast<CoilCoolingDXVariableRefrigerantFlow>();
+      retVal = translateCoilCoolingDXVariableRefrigerantFlow(coil);
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Cooling_Water :
@@ -1341,6 +1353,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::ZoneHVACPackagedTerminalAirConditioner mo = modelObject.cast<ZoneHVACPackagedTerminalAirConditioner>();
       retVal = translateZoneHVACPackagedTerminalAirConditioner(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow :
+    {
+      model::ZoneHVACTerminalUnitVariableRefrigerantFlow mo = modelObject.cast<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+      retVal = translateZoneHVACTerminalUnitVariableRefrigerantFlow(mo);
       break;
     }
   case openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump :

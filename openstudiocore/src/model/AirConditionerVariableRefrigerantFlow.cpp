@@ -1379,6 +1379,19 @@ namespace detail {
     return airConditionerClone;
   }
 
+  std::vector<openstudio::IdfObject> AirConditionerVariableRefrigerantFlow_Impl::remove()
+  {
+    vrfModelObjectList().remove();
+
+    return StraightComponent_Impl::remove();
+  }
+
+  bool AirConditionerVariableRefrigerantFlow_Impl::addToNode(Node & node)
+  {
+    // At this time we cannot liquid cool
+    return false;
+  }
+
 } // detail
 
 

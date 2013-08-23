@@ -30,7 +30,6 @@ namespace model {
 class Schedule;
 class CurveBiquadratic;
 class CurveCubic;
-class CurveCubic;
 class ThermalZone;
 class ModelObjectList;
 class ZoneHVACTerminalUnitVariableRefrigerantFlow;
@@ -465,6 +464,10 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
   std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
 
   ModelObject clone(Model & model) const;
+
+  std::vector<openstudio::IdfObject> remove();
+
+  bool addToNode(Node & node);
 
  private:
 
