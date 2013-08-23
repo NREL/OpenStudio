@@ -97,7 +97,9 @@ namespace detail {
     LOG(Info, "Starting job");
 
 #if defined(_MSC_VER) && defined(_M_X64)
-    // If we're on 64bit windows, we're using ruby 2.0.0 and we want to disable gems
+    // If we're on 64bit windows, we're using ruby 2.0.0 and we want to add
+    // the current folder to the search path. This may need to be opened up to
+    // all platforms and versions of ruby, but this seems to be working for now
     addParameter("ruby", "-I.");
 #endif
 
