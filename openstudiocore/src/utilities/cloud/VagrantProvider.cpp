@@ -20,6 +20,7 @@
 #include <utilities/cloud/VagrantProvider_Impl.hpp>
 #include <utilities/cloud/OSServer.hpp>
 
+#include <utilities/core/Application.hpp>
 #include <utilities/core/Assert.hpp>
 
 #include <QProcess>
@@ -34,6 +35,8 @@ namespace openstudio{
         m_startServerProcess(NULL), m_startWorkerProcess(NULL), 
         m_serverStarted(false), m_workersStarted(false), m_terminated(false)
     {
+      //Make sure a QApplication exists
+      openstudio::Application::instance().application();
     }
 
     VagrantProvider_Impl::~VagrantProvider_Impl()

@@ -30,6 +30,9 @@
 
 #include <string>
 
+class QNetworkAccessManager;
+class QNetworkReply;
+
 namespace openstudio{
 namespace detail{
 
@@ -131,6 +134,11 @@ namespace detail{
     //@}
 
   private:
+
+    Url m_url;
+    boost::shared_ptr<QNetworkAccessManager> m_networkAccessManager;
+
+    bool block(QNetworkReply* reply, int timeout=3000) const;
 
     // configure logging
     REGISTER_LOGGER("utilities.cloud.OSServer");

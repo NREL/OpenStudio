@@ -18,13 +18,21 @@
 **********************************************************************/
 #include <utilities/cloud/OSServer.hpp>
 #include <utilities/cloud/OSServer_Impl.hpp>
+
 #include <utilities/core/Application.hpp>
+#include <utilities/core/System.hpp>
+#include <utilities/core/Json.hpp>
+#include <utilities/core/Assert.hpp>
+
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 
 namespace openstudio{
   namespace detail{
 
     OSServer_Impl::OSServer_Impl(const QUrl& url)
-      : QObject()
+      : QObject(), m_url(url), m_networkAccessManager(new QNetworkAccessManager())
     {
       //Make sure a QApplication exists
       openstudio::Application::instance().application();
@@ -36,12 +44,48 @@ namespace openstudio{
 
     bool OSServer_Impl::available() const
     {
-      return false;
+      QNetworkRequest request(m_url);
+      QNetworkReply* reply = m_networkAccessManager->get(request);
+
+      bool result = false;
+      if (block(reply)){
+        result = (reply->error() == QNetworkReply::NoError);
+      }
+      reply->deleteLater();
+
+      return result;
     }
 
     std::vector<UUID> OSServer_Impl::projectUUIDs() const
     {
-      return std::vector<UUID>();
+      std::vector<UUID> result;
+
+      QUrl url(m_url.toString().append("/projects.json"));
+      QNetworkRequest request(url);
+      QNetworkReply* reply = m_networkAccessManager->get(request);
+
+      if (block(reply)){
+        if(reply->error() == QNetworkReply::NoError){
+         
+          QByteArray bytes = reply->readAll();
+          QString jsonString(bytes); 
+
+          // TODO: how to parse this into a vector of uuids?
+          std::cout << toString(jsonString) << std::endl;
+
+          // DLM: this throws an exception due to no version string
+          //[{"_id":"521679fe8414eef93e000001","created_at":"2013-08-22T20:52:14Z","name":null,
+          //"updated_at":"2013-08-22T20:52:14Z","analyses":[]},{"_id":"5216d88d8414ee335c000001",
+          //"created_at":"2013-08-23T03:35:41Z","name":null,"updated_at":"2013-08-23T03:35:41Z",
+          //"analyses":[]}]
+
+          //std::pair<QVariant,VersionString> pair = loadJSON(toString(jsonString));
+          
+        }
+      }
+      reply->deleteLater();
+
+      return result;
     }
 
     std::vector<UUID> OSServer_Impl::analysisUUIDs() const
@@ -118,6 +162,18 @@ namespace openstudio{
     std::vector<std::string> OSServer_Impl::warnings() const
     {
       return std::vector<std::string>();
+    }
+
+    bool OSServer_Impl::block(QNetworkReply* reply, int timeout) const
+    {
+      bool result = false;
+      for (int i = 0; i < timeout; ++i){
+        if (reply->isFinished()){
+          return true;
+        }
+        System::msleep(1);
+      }
+      return false;
     }
   }
 
