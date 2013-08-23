@@ -9,9 +9,11 @@
 %{
   #include <utilities/cloud/OSServer.hpp>
   #include <utilities/cloud/CloudProvider.hpp>
+  #include <utilities/cloud/VagrantProvider.hpp>
 %}
 
 %include <utilities/cloud/OSServer.hpp>
 %include <utilities/cloud/CloudProvider.hpp>
+%include <utilities/cloud/VagrantProvider.hpp>
 
 #endif // UTILITIES_CLOUD_CLOUD_I

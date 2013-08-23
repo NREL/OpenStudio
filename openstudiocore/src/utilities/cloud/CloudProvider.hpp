@@ -41,7 +41,11 @@ namespace openstudio{
     std::string cloudProviderType() const;
     std::string sessionId() const;
     boost::optional<Url> serverUrl() const;
+    void setServerUrl(const Url& serverUrl);
+    void resetServerUrl();
     std::vector<Url> workerUrls() const;
+    void addWorkerUrl(const Url& workerUrl);
+    void clearWorkerUrls();
   private:
     std::string m_cloudProviderType;
     std::string m_sessionId;
