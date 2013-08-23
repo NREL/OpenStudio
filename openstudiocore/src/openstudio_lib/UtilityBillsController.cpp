@@ -99,8 +99,17 @@ void UtilityBillsController::onSelectItem(OSItem* item)
 void UtilityBillsController::onClearSelection()
 {
   m_subTabView->inspectorView()->clearSelection();
-  m_subTabView->itemSelectorButtons()->enableAddButton();
   m_subTabView->itemSelectorButtons()->disableRemoveButton();
+
+  openstudio::OSInspectorView * inspectorView = subTabView()->inspectorView();
+  UtilityBillsInspectorView * utilityBillsInspectorView = qobject_cast<UtilityBillsInspectorView *>(inspectorView);
+  OS_ASSERT(utilityBillsInspectorView);
+
+  if(utilityBillsInspectorView->runPeriodDates()){
+    m_subTabView->itemSelectorButtons()->enableAddButton();
+  } else {
+    m_subTabView->itemSelectorButtons()->disableAddButton();
+  };
 }
 
 } // openstudio
