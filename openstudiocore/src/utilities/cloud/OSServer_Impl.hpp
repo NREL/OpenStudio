@@ -28,6 +28,9 @@
 
 #include <QObject>
 
+// DLM: temporary
+#include <boost/bimap.hpp>
+
 #include <string>
 
 class QNetworkAccessManager;
@@ -137,8 +140,16 @@ namespace detail{
 
     Url m_url;
     boost::shared_ptr<QNetworkAccessManager> m_networkAccessManager;
+    mutable std::vector<std::string> m_errors;
+    mutable std::vector<std::string> m_warnings;
 
     bool block(QNetworkReply* reply, int timeout=3000) const;
+    void clearErrorsAndWarnings() const;
+    void logError(const std::string& error) const;
+    void logWarning(const std::string& warning) const;
+
+    // DLM: temporary
+    mutable boost::bimap<UUID,QString> m_uuidToIdMap;
 
     // configure logging
     REGISTER_LOGGER("utilities.cloud.OSServer");

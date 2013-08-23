@@ -28,6 +28,8 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 
+#include <qjson/parser.h>
+
 namespace openstudio{
   namespace detail{
 
@@ -44,12 +46,20 @@ namespace openstudio{
 
     bool OSServer_Impl::available() const
     {
+      clearErrorsAndWarnings();
+
       QNetworkRequest request(m_url);
       QNetworkReply* reply = m_networkAccessManager->get(request);
 
       bool result = false;
       if (block(reply)){
-        result = (reply->error() == QNetworkReply::NoError);
+        if (reply->error() == QNetworkReply::NoError){
+          result = true;
+        }else{
+          logError("Network error occurred");
+        }
+      }else{
+        logError("Response timed out");
       }
       reply->deleteLater();
 
@@ -68,20 +78,40 @@ namespace openstudio{
         if(reply->error() == QNetworkReply::NoError){
          
           QByteArray bytes = reply->readAll();
-          QString jsonString(bytes); 
 
-          // TODO: how to parse this into a vector of uuids?
-          std::cout << toString(jsonString) << std::endl;
+          bool test;
+          QJson::Parser parser;
+          QVariant variant = parser.parse(bytes, &test);
 
-          // DLM: this throws an exception due to no version string
-          //[{"_id":"521679fe8414eef93e000001","created_at":"2013-08-22T20:52:14Z","name":null,
-          //"updated_at":"2013-08-22T20:52:14Z","analyses":[]},{"_id":"5216d88d8414ee335c000001",
-          //"created_at":"2013-08-23T03:35:41Z","name":null,"updated_at":"2013-08-23T03:35:41Z",
-          //"analyses":[]}]
+          if (test){
+            QVariantList list = variant.toList();
+            Q_FOREACH(QVariant projectVariant, variant.toList()){
+              QVariantMap map = projectVariant.toMap();
+              if (map.contains("_id")){
+                QString id = map["_id"].toString();
 
-          //std::pair<QVariant,VersionString> pair = loadJSON(toString(jsonString));
-          
+                // DLM: temporary code
+                UUID uuid;
+                if (m_uuidToIdMap.right.find(id) == m_uuidToIdMap.right.end()){
+                  uuid = createUUID();
+                  m_uuidToIdMap.right.insert(std::make_pair<QString, UUID>(id,uuid));
+                }else{
+                  uuid = m_uuidToIdMap.right.find(id)->second;
+                }
+
+                result.push_back(uuid);
+              }else{
+                logError("Bad response received");
+              }
+            }
+          }else{
+            logError("Bad response received");
+          }
+        }else{
+          logError("Network error occurred");
         }
+      }else{
+        logError("Response timed out");
       }
       reply->deleteLater();
 
@@ -90,7 +120,55 @@ namespace openstudio{
 
     std::vector<UUID> OSServer_Impl::analysisUUIDs() const
     {
-      return std::vector<UUID>();
+      std::vector<UUID> result;
+
+      std::vector<UUID> projectUUIDs = this->projectUUIDs();
+      Q_FOREACH(const UUID& projectUUID, projectUUIDs){
+
+        // DLM: temporary code
+        QString id;
+        if (m_uuidToIdMap.left.find(projectUUID) != m_uuidToIdMap.left.end()){
+          id = m_uuidToIdMap.left.find(projectUUID)->second;
+        };
+
+        QUrl url(m_url.toString().append("/projects/").append(id).append("/analyses.json"));
+        QNetworkRequest request(url);
+        QNetworkReply* reply = m_networkAccessManager->get(request);
+
+        if (block(reply)){
+          if(reply->error() == QNetworkReply::NoError){
+           
+            QByteArray bytes = reply->readAll();
+
+            bool test;
+            QJson::Parser parser;
+            QVariant variant = parser.parse(bytes, &test);
+
+            if (test){
+              QVariantList list = variant.toList();
+              Q_FOREACH(QVariant projectVariant, variant.toList()){
+                QVariantMap map = projectVariant.toMap();
+                if (map.contains("_id")){
+                  QString id = map["_id"].toString();
+                  UUID uuid(id);
+                  result.push_back(uuid);
+                }else{
+                  logError("Bad response received");
+                }
+              }
+            }else{
+              logError("Bad response received");
+            }
+          }else{
+            logError("Network error occurred");
+          }
+        }else{
+          logError("Response timed out");
+        }
+        reply->deleteLater();
+      }
+
+      return result;
     }
 
     bool OSServer_Impl::postAnalysisJSON(const UUID& projectUUID, const std::string& analysisJSON) const
@@ -156,12 +234,12 @@ namespace openstudio{
 
     std::vector<std::string> OSServer_Impl::errors() const
     {
-      return std::vector<std::string>();
+      return m_errors;
     }
 
     std::vector<std::string> OSServer_Impl::warnings() const
     {
-      return std::vector<std::string>();
+      return m_warnings;
     }
 
     bool OSServer_Impl::block(QNetworkReply* reply, int timeout) const
@@ -175,6 +253,25 @@ namespace openstudio{
       }
       return false;
     }
+
+    void OSServer_Impl::clearErrorsAndWarnings() const
+    {
+      m_errors.clear();
+      m_warnings.clear();
+    }
+
+    void OSServer_Impl::logError(const std::string& error) const
+    {
+      m_errors.push_back(error);
+      LOG(Error, error);
+    }
+
+    void OSServer_Impl::logWarning(const std::string& warning) const
+    {
+      m_warnings.push_back(warning);
+      LOG(Warn, warning);
+    }
+
   }
 
   OSServer::OSServer(const QUrl& url)
