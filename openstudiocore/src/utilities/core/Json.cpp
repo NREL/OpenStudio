@@ -92,7 +92,7 @@ std::string toJSON(const QVariant& json) {
   return std::string();
 }
 
-std::pair<QVariant,VersionString> loadJSON(const openstudio::path& p) {
+QVariant loadJSON(const openstudio::path& p) {
   QFile file(toQString(p));
   if (file.open(QFile::ReadOnly)) {
     QJson::Parser parser;
@@ -102,39 +102,21 @@ std::pair<QVariant,VersionString> loadJSON(const openstudio::path& p) {
     if (!ok) {
       LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parser.errorString()));
     }
+    return variant;
   }
 
   LOG_FREE_AND_THROW("openstudio.Json","Could not open file " << toString(p) << " for reading.");
-  return std::make_pair<QVariant,VersionString>(QVariant(),VersionString(""));
+  return QVariant();
 }
 
-std::pair<QVariant,VersionString> loadJSON(const std::string& json) {
+QVariant loadJSON(const std::string& json) {
   QJson::Parser parser;
   bool ok = false;
   QVariant variant = parser.parse(toQString(json).toUtf8(), &ok);
-
-  if (ok)
-  {
-    QVariantMap metadata = variant.toMap()["metadata"].toMap();
-    OptionalVersionString version;
-    if (metadata.contains("openstudio_version")) {
-      version = VersionString(metadata["openstudio_version"].toString().toStdString());
-    }
-    else {
-      version = VersionString(metadata["version"].toString().toStdString());
-    }
-    OS_ASSERT(version);
-    if (version.get() > VersionString(openStudioVersion())) {
-      LOG_FREE(Warn,"openstudio.Json","Loading json file from version " << version
-               << " with OpenStudio version " << VersionString(openStudioVersion())
-               << ". OpenStudio json files are not designed to be forwards-compatible. "
-               << "Unexpected behavior may result.")
-    }
-    return std::make_pair<QVariant,VersionString>(variant,version.get());
+  if (!ok) {
+    LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parser.errorString()));
   }
-
-  LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parser.errorString()));
-  return std::make_pair<QVariant,VersionString>(QVariant(),VersionString(""));
+  return variant;
 }
 
 VersionString extractOpenStudioVersion(const QVariant& variant) {
