@@ -73,7 +73,19 @@ namespace openstudio{
     
     /// returns the name of this type of cloud provider, e.g. 'AWSProvider'
     std::string type() const;
-    
+
+    /// returns the user agreement text
+    /// blocking call
+    std::string userAgreementText() const;
+
+    /// returns true if the user has signed the user agreement
+    /// blocking call
+    bool userAgreementSigned() const;
+
+    /// signs the user agreement if passed in true, unsigns if passed in false
+    /// blocking call
+    void signUserAgreement(bool agree);
+
     /// returns true if this computer is connected to the internet
     /// blocking call, clears errors and warnings
     bool internetAvailable() const;

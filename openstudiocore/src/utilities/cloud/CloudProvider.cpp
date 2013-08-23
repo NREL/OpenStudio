@@ -94,7 +94,22 @@ namespace openstudio{
   {
     return getImpl<detail::CloudProvider_Impl>()->type();
   }
-  
+
+  std::string CloudProvider::userAgreementText() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->userAgreementText();
+  }
+
+  bool CloudProvider::userAgreementSigned() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->userAgreementSigned();
+  }
+
+  void CloudProvider::signUserAgreement(bool agree)
+  {
+    getImpl<detail::CloudProvider_Impl>()->signUserAgreement(agree);
+  }
+
   bool CloudProvider::internetAvailable() const
   {
     return getImpl<detail::CloudProvider_Impl>()->internetAvailable();

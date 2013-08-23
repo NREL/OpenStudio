@@ -20,8 +20,10 @@
 #include <utilities/cloud/VagrantProvider_Impl.hpp>
 #include <utilities/cloud/OSServer.hpp>
 
+#include <utilities/core/Application.hpp>
 #include <utilities/core/Assert.hpp>
 
+#include <QSettings>
 #include <QProcess>
 
 namespace openstudio{
@@ -34,6 +36,8 @@ namespace openstudio{
         m_startServerProcess(NULL), m_startWorkerProcess(NULL), 
         m_serverStarted(false), m_workersStarted(false), m_terminated(false)
     {
+      //Make sure a QApplication exists
+      openstudio::Application::instance().application();
     }
 
     VagrantProvider_Impl::~VagrantProvider_Impl()
@@ -43,6 +47,36 @@ namespace openstudio{
     std::string VagrantProvider_Impl::type() const
     {
       return "VagrantProvider";
+    }
+
+    std::string VagrantProvider_Impl::userAgreementText() const
+    {
+      return "Do you agree?";
+    }
+
+    bool VagrantProvider_Impl::userAgreementSigned() const
+    {
+      QSettings settings("OpenStudio", "VagrantProvider");
+      QString value = settings.value("userAgreementSigned", "No").toString();
+
+      bool result = false;
+      if (value == "Yes"){
+        result = true;
+      }
+
+      return result;
+    }
+
+    void VagrantProvider_Impl::signUserAgreement(bool agree)
+    {
+      QString value;
+      if (agree){
+        value = "Yes";
+      }else{
+        value = "No";
+      }
+      QSettings settings("OpenStudio", "VagrantProvider");
+      settings.setValue("userAgreementSigned", value);
     }
 
     bool VagrantProvider_Impl::internetAvailable() const
@@ -133,6 +167,9 @@ namespace openstudio{
     /// non-blocking call, clears errors and warnings
     bool VagrantProvider_Impl::startServer()
     {
+      if (!userAgreementSigned()){
+        return false;
+      }
       if (m_serverStarted){
         return false;
       }
@@ -183,6 +220,9 @@ namespace openstudio{
 
     bool VagrantProvider_Impl::startWorkers()
     {
+      if (!userAgreementSigned()){
+        return false;
+      }
       if (m_workersStarted){
         return false;
       }

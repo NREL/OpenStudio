@@ -57,11 +57,13 @@ UTILITIES_API bool saveJSON(const QVariant& json, openstudio::path p, bool overw
 UTILITIES_API std::string toJSON(const QVariant& json);
 
 /** Helper function to load top-level json files. Retrieved data is in .first,
- *  OpenStudio version of file is in .second. */
+ *  OpenStudio version of file is in .second.  This assumes that jsonMetadata is included
+ *  at the top level.  If parsing generic JSON content use QJson::Parser directly.*/
 UTILITIES_API std::pair<QVariant,VersionString> loadJSON(const openstudio::path& p);
 
 /** Helper function to load top-level json data. Retrieved data is in .first,
- *  OpenStudio version of serialization is in .second. */
+ *  OpenStudio version of serialization is in .second. This assumes that jsonMetadata is included
+ *  at the top level.  If parsing generic JSON content use QJson::Parser directly.*/
 UTILITIES_API std::pair<QVariant,VersionString> loadJSON(const std::string& json);
 
 template<typename T>
