@@ -37,6 +37,7 @@ class QGridLayout;
 class QLabel;
 class QLineEdit;
 class QPushButton;
+class QString;
 
 namespace openstudio {
 
@@ -101,6 +102,8 @@ protected slots:
 
 private:
 
+  boost::optional<QString> runPeriodDates();
+  void setCorrectCurrentIndex();
   void createWidgets();
   void getSortedBills();
   void showAddButton();
@@ -120,8 +123,6 @@ private:
 
   BillFormat m_billFormat;
 
-  QString m_beginAndEndDates;
-
   bool m_showPeak;
   
   QButtonGroup * m_buttonGroup;
@@ -140,6 +141,10 @@ private:
   QGridLayout * m_billGridLayout;
 
   QWidget * m_billGridLayoutWidget;
+
+  int m_hiddenWidgetIndex;
+  int m_warningWidgetIndex;
+  int m_visibleWidgetIndex;
   
 private slots:
   void addUtilityBill();

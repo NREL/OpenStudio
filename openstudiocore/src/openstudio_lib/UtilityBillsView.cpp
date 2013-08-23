@@ -53,13 +53,14 @@
 #include <QPushButton>
 #include <QRadioButton>
 #include <QStackedWidget>
+#include <QString>
 
 #define OS_UTILITY_WIDTH 150
 #define OS_EDIT_WIDTH 300
 
 namespace openstudio {
 
-// "Utility Calibration"
+// "Utility Bills"
 
 UtilityBillsView::UtilityBillsView(const openstudio::model::Model& model, QWidget * parent)
                      : ModelSubTabView(new UtilityBillAllFuelTypesListView(UtilityBillsView::utilityBillFuelTypesAndNames(), 
@@ -102,7 +103,6 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
                              true,
                              parent),
     m_billFormat(STARTDATE_ENDDATE),
-    m_beginAndEndDates(QString()),
     m_showPeak(0),
     m_buttonGroup(0),
     m_name(0),
@@ -111,16 +111,26 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
     m_windowTimesteps(0),
     m_addBillingPeriod(0),
     m_billGridLayout(0),
-    m_billGridLayoutWidget(0)
+    m_billGridLayoutWidget(0),
+    m_hiddenWidgetIndex(0),
+    m_warningWidgetIndex(0),
+    m_visibleWidgetIndex(0)
 {
+  createWidgets();
+}
+
+boost::optional<QString> UtilityBillsInspectorView::runPeriodDates()
+{
+  boost::optional<QString> beginAndEndDates;
+
   boost::optional<int> calendarYear;
-  boost::optional<model::YearDescription> yearDescription = model.yearDescription();
+  boost::optional<model::YearDescription> yearDescription = m_model.yearDescription();
   if(yearDescription){
     calendarYear = yearDescription.get().calendarYear();
     if(calendarYear){
-      boost::optional<model::WeatherFile> weatherFile = model.weatherFile();
+      boost::optional<model::WeatherFile> weatherFile = m_model.weatherFile();
       if(weatherFile){
-        boost::optional<model::RunPeriod> runPeriod = model.getOptionalUniqueModelObject<model::RunPeriod>();
+        boost::optional<model::RunPeriod> runPeriod = m_model.getOptionalUniqueModelObject<model::RunPeriod>();
         if(runPeriod.is_initialized()){
           int beginMonth = runPeriod.get().getBeginMonth();
           int beginDayOfMonth = runPeriod.get().getBeginDayOfMonth();
@@ -134,38 +144,42 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
             endYear++;
           }
           
+          QString string;
           QString number;
 
-          m_beginAndEndDates += "Start Date ";
-          m_beginAndEndDates += number.setNum(beginMonth);
-          m_beginAndEndDates += "/";
-          m_beginAndEndDates += number.setNum(beginDayOfMonth);
-          m_beginAndEndDates += "/";
-          m_beginAndEndDates += number.setNum(beginYear);
-          m_beginAndEndDates += "   End Date ";
-          m_beginAndEndDates += number.setNum(endMonth);
-          m_beginAndEndDates += "/";
-          m_beginAndEndDates += number.setNum(endDayOfMonth);
-          m_beginAndEndDates += "/";
-          m_beginAndEndDates += number.setNum(endYear);
-          
+          string += "Start Date ";
+          string += number.setNum(beginMonth);
+          string += "/";
+          string += number.setNum(beginDayOfMonth);
+          string += "/";
+          string += number.setNum(beginYear);
+          string += "   End Date ";
+          string += number.setNum(endMonth);
+          string += "/";
+          string += number.setNum(endDayOfMonth);
+          string += "/";
+          string += number.setNum(endYear);
+
+          beginAndEndDates = string;
         }
       } 
     } 
   }
-
-  createWidgets();
+  return beginAndEndDates;
 }
 
 void UtilityBillsInspectorView::createWidgets()
 {
   QWidget* hiddenWidget = new QWidget();
-  this->stackedWidget()->insertWidget(0, hiddenWidget);
+  m_hiddenWidgetIndex = this->stackedWidget()->insertWidget(0, hiddenWidget);
+
+  QWidget* warningWidget = new QWidget();
+  m_warningWidgetIndex = this->stackedWidget()->addWidget(warningWidget);
 
   QWidget* visibleWidget = new QWidget();
-  this->stackedWidget()->addWidget(visibleWidget);
+  m_visibleWidgetIndex = this->stackedWidget()->addWidget(visibleWidget);
 
-  this->stackedWidget()->setCurrentIndex(0);
+  this->stackedWidget()->setCurrentIndex(m_hiddenWidgetIndex);
 
   bool isConnected = false;
 
@@ -173,20 +187,26 @@ void UtilityBillsInspectorView::createWidgets()
 
   QVBoxLayout * vLayout = NULL;
 
+  // Warning widget if no weather file
+
+  vLayout = new QVBoxLayout();
+  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+  vLayout->setSpacing(10);
+
+  label = new QLabel();
+  label->setPixmap(QPixmap(":/images/utility_calibration_warning.png"));
+  label->setAlignment(Qt::AlignCenter);
+  vLayout->addWidget(label,0,Qt::AlignCenter);
+  warningWidget->setLayout(vLayout);
+  warningWidget->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
+
+  // Regular inspector body
+
   QVBoxLayout * mainLayout = new QVBoxLayout();
   mainLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   mainLayout->setContentsMargins(10,10,10,10);
   mainLayout->setSpacing(20);
   visibleWidget->setLayout(mainLayout);
-
-  if(m_beginAndEndDates.length() == 0){
-    label = new QLabel();
-    label->setPixmap(QPixmap(":/images/utility_calibration_warning.png"));
-    label->setAlignment(Qt::AlignCenter);
-    mainLayout->addWidget(label,0,Qt::AlignCenter);
-    visibleWidget->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
-    return;
-  }
 
   vLayout = new QVBoxLayout();
   vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
@@ -283,10 +303,14 @@ void UtilityBillsInspectorView::createWidgets()
   vLayout->addWidget(label);
 
   label = new QLabel();
-  label->setText(m_beginAndEndDates);
+  label->setText("N/A");
   vLayout->addWidget(label);
 
   mainLayout->addLayout(vLayout);
+
+  boost::optional<QString> dates;
+  dates = runPeriodDates();
+  if(dates) label->setText(*dates);
 
   // Billing Period
 
@@ -409,15 +433,24 @@ void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityB
     }
   }
   
-  this->stackedWidget()->setCurrentIndex(1);
+  setCorrectCurrentIndex();
 
   deleteBillingPeriods();
   addBillingPeriods();
 }
 
+void UtilityBillsInspectorView::setCorrectCurrentIndex()
+{
+  if(runPeriodDates()){
+    this->stackedWidget()->setCurrentIndex(m_visibleWidgetIndex);
+  } else {
+    this->stackedWidget()->setCurrentIndex(m_warningWidgetIndex);
+  }
+}
+
 void UtilityBillsInspectorView::detach()
 {
-  this->stackedWidget()->setCurrentIndex(0);
+  this->stackedWidget()->setCurrentIndex(m_hiddenWidgetIndex);
 
   if(m_name){
     m_name->unbind();

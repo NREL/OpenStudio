@@ -42,7 +42,7 @@ LocationTabController::LocationTabController(const model::Model & model,
   mainContentWidget()->addSubTab("Life Cycle Costs",lifeCycleCostsView,LIFE_CYCLE_COSTS);
 
   m_utilityBillsController = boost::shared_ptr<UtilityBillsController>(new UtilityBillsController(model));
-  mainContentWidget()->addSubTab("Utility Calibration",m_utilityBillsController->subTabView(),UTILITY_BILLS);
+  mainContentWidget()->addSubTab("Utility Bills",m_utilityBillsController->subTabView(),UTILITY_BILLS);
 
   QLabel * underConstructionLabel;
     
