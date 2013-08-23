@@ -169,6 +169,9 @@
   <POLICY IddObjectType="OS_Coil_Cooling_CooledBeam">
 		<rule IddField="Chilled Water Inlet Node Name" Access="HIDDEN"/>
 		<rule IddField="Chilled Water Outlet Node Name" Access="HIDDEN"/>
+		
+		
+		
 	</POLICY>
 	<POLICY IddObjectType="OS_Coil_Cooling_DX_SingleSpeed">
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>

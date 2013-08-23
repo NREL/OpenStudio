@@ -33,7 +33,7 @@
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <utilities/idd/AirTerminal_SingleDuct_ConstantVolume_CooledBeam_FieldEnums.hxx>
-//#include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
+#include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -56,9 +56,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
   boost::optional<ModelObject> temp;
                         
   // Forward Translate Cooling Coil
-  //get the cooling coil as a straight component, cast it to optional cool coil, if cast is successful, 
+  //get the cooling coil as a HVAC component, cast it to optional cool coil, if cast is successful, 
   //get the object of class CoilCoolingCooledBeam
-  StraightComponent coilCool = modelObject.coilCoolingCooledBeam();
+  HVACComponent coilCool = modelObject.coilCoolingCooledBeam();
   boost::optional<CoilCoolingCooledBeam>  optionalCoilCoolingCooledBeam = coilCool.optionalCast<CoilCoolingCooledBeam>();
                       
   if (optionalCoilCoolingCooledBeam) {

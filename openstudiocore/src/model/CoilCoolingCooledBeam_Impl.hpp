@@ -57,9 +57,9 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const; 
 
-    unsigned inletPort();
+    virtual unsigned inletPort();
 
-    unsigned outletPort();
+    virtual unsigned outletPort();
     
     virtual boost::optional<StraightComponent> containingStraightComponent() const; 
 

@@ -22,17 +22,17 @@
 
 #include <model/ModelAPI.hpp>
 #include <model/StraightComponent.hpp>
-#include <model/ThermalZone.hpp>
+//#include <model/ThermalZone.hpp>
 #include <model/ModelObject.hpp>
 #include <model/Connection.hpp>
-#include <model/Model.hpp>
+//#include <model/Model.hpp>
 
 namespace openstudio {
 
 namespace model {
 
 class Schedule;
-class StraightComponent;
+class HVACComponent;
 
 namespace detail {
 
@@ -48,7 +48,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeCooledBeam : public StraightC
 
   explicit AirTerminalSingleDuctConstantVolumeCooledBeam(const Model& model,
 																																																															Schedule & availabilitySchedule,
-																																																															StraightComponent & coilCoolingCooledBeam);
+																																																															HVACComponent & coilCoolingCooledBeam);
 
   virtual ~AirTerminalSingleDuctConstantVolumeCooledBeam() {}
 
@@ -61,7 +61,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeCooledBeam : public StraightC
 		
 		Schedule availabilitySchedule() const;
   
-		StraightComponent coilCoolingCooledBeam() const;
+		HVACComponent coilCoolingCooledBeam() const;
   
   static std::vector<std::string> cooledBeamTypeValues();
   
@@ -111,7 +111,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeCooledBeam : public StraightC
 
   bool setAvailabilitySchedule(Schedule& schedule);
   
-  bool setCoolingCoil(const StraightComponent& coilCoolingCooledBeam);
+  bool setCoolingCoil(HVACComponent& coilCoolingCooledBeam);
 
   bool setCooledBeamType(std::string cooledBeamType);
   

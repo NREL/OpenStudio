@@ -21,13 +21,20 @@
 #include <model/CoilCoolingCooledBeam_Impl.hpp>
 #include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
 #include <model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp>
+#include <model/StraightComponent.hpp>
+#include <model/StraightComponent_Impl.hpp>
 
-#include <utilities/idd/OS_Coil_Cooling_CooledBeam_FieldEnums.hxx>
-
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
 #include <utilities/units/Unit.hpp>
 #include <utilities/core/Compare.hpp>
 #include <utilities/core/Assert.hpp>
 #include <boost/foreach.hpp>
+
+#include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/OS_Coil_Cooling_CooledBeam_FieldEnums.hxx>
+#include <utilities/units/Unit.hpp>
+#include <utilities/core/Assert.hpp>
 
 namespace openstudio {
 namespace model {
@@ -96,7 +103,7 @@ namespace detail {
     it < airTerminalSingleDuctConstantVolumeCooledBeam.end();
     it++ )
     {
-      if( boost::optional<StraightComponent> coil = it-> coilCoolingCooledBeam() )
+      if( boost::optional<HVACComponent> coil = it-> coilCoolingCooledBeam() )
       {
         if( coil->handle() == this->handle() )
         {
@@ -330,15 +337,7 @@ CoilCoolingCooledBeam::CoilCoolingCooledBeam(const Model& model)
   BOOST_ASSERT(getImpl<detail::CoilCoolingCooledBeam_Impl>());
 }
 
-unsigned CoilCoolingCooledBeam::inletPort()
-{
-  return getImpl<detail::CoilCoolingCooledBeam_Impl>()->inletPort();
-}
 
-unsigned CoilCoolingCooledBeam::outletPort()
-{
-  return getImpl<detail::CoilCoolingCooledBeam_Impl>()->outletPort();
-}
 
 IddObjectType CoilCoolingCooledBeam::iddObjectType() 
 {

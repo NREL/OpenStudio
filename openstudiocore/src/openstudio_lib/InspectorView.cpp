@@ -555,6 +555,74 @@ void WaterToAirInspectorView::layoutControllerObject()
   }
 }
 
+AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView::AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView( QWidget * parent )
+  : BaseInspectorView(parent)
+{
+  m_inspectorGadget = new InspectorGadget();
+  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                             m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
+  BOOST_ASSERT(isConnected);
+
+  m_coolingLoopChooserView = new LoopChooserView();
+
+  m_libraryTabWidget->addTab( m_inspectorGadget,
+                              ":images/properties_icon_on.png",
+                              ":images/properties_icon_off.png" );
+
+  m_libraryTabWidget->addTab( m_coolingLoopChooserView,
+                              ":images/link_icon_on.png",
+                              ":images/link_icon_off.png" );
+
+  m_libraryTabWidget->setCurrentIndex(1);
+
+  connect( m_coolingLoopChooserView, SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+  
+  connect( m_coolingLoopChooserView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+}
+
+void AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
+{
+  m_modelObject = modelObject;
+
+  bool force=false;
+  bool recursive=true;
+  bool locked=readOnly;
+  bool hideChildren=false;
+  if( displayIP )
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::IP);
+  }
+  else
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::SI);
+  }
+  m_inspectorGadget->layoutModelObj(modelObject, force, recursive, locked, hideChildren);
+
+  bool coolCoil = false;
+
+  if( boost::optional<model::AirTerminalSingleDuctConstantVolumeCooledBeam> terminal = modelObject.optionalCast<model::AirTerminalSingleDuctConstantVolumeCooledBeam>() )
+  {
+    if( boost::optional<model::HVACComponent> coil = terminal->coilCoolingCooledBeam() )
+    {
+        boost::optional<model::ModelObject> mo = coil.get();
+
+        m_coolingLoopChooserView->layoutModelObject(mo);
+
+        coolCoil = true;
+     
+    }
+  }
+
+  if( !coolCoil )
+  {
+    boost::optional<model::ModelObject> mo;
+
+    m_coolingLoopChooserView->layoutModelObject(mo);
+  }
+}
+
 AirTerminalSingleDuctVAVReheatInspectorView::AirTerminalSingleDuctVAVReheatInspectorView( QWidget * parent )
   : BaseInspectorView(parent)
 {

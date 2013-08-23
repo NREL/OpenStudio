@@ -40,10 +40,13 @@
 #include <model/WaterToWaterComponent_Impl.hpp>
 #include <model/CoilHeatingWaterBaseboard.hpp>
 #include <model/CoilHeatingWaterBaseboard_Impl.hpp>
+#include <model/CoilCoolingCooledBeam.hpp>
+#include <model/CoilCoolingCooledBeam_Impl.hpp>
+#include <model/StraightComponent.hpp>
+#include <model/StraightComponent_Impl.hpp>
 #include <model/ZoneHVACComponent.hpp>
 #include <model/ZoneHVACComponent_Impl.hpp>
 #include <model/LifeCycleCost.hpp>
-
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -112,6 +115,20 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
               //Get the name and the idd object from the idf object version of this
               objectName = idfContZnBB->name().get();
               iddType = idfContZnBB->iddObject().name();
+            }
+          }
+        }
+       //special case for AirTerminalSingleDuctConstantVolumeChilledBeam
+       if (boost::optional<CoilCoolingCooledBeam> coilCB = it->optionalCast<CoilCoolingCooledBeam>() )
+        {
+          if (boost::optional<StraightComponent> airTerminalCB = coilCB->containingStraightComponent())
+          {
+            //translate and map containingZoneHVACBBConvWater
+            if ( boost::optional<IdfObject> idfAirTerminalCB = this->translateAndMapModelObject(*airTerminalCB) )
+            {
+              //Get the name and the idd object from the idf object version of this
+              objectName = idfAirTerminalCB->name().get();
+              iddType = idfAirTerminalCB->iddObject().name();
             }
           }
         }

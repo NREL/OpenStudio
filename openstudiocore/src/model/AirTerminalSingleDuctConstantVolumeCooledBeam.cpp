@@ -78,13 +78,13 @@ namespace detail {
 
 		ModelObject AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::clone(Model model) const
   {
-    AirTerminalSingleDuctConstantVolumeCooledBeam airTerminalSingleDuctConstantVolumeCooledBeamClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
+    AirTerminalSingleDuctConstantVolumeCooledBeam airTerminalCVCooledBeamClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
 
-    StraightComponent coilCoolingCooledBeamClone = this->coilCoolingCooledBeam().clone(model).cast<StraightComponent>();
+    HVACComponent coilCoolingClone = this->coilCoolingCooledBeam().clone(model).cast<HVACComponent>();
+    
+    airTerminalCVCooledBeamClone.setCoolingCoil(coilCoolingClone);
 
-    airTerminalSingleDuctConstantVolumeCooledBeamClone.setCoolingCoil(coilCoolingCooledBeamClone);
-
-    return airTerminalSingleDuctConstantVolumeCooledBeamClone;
+    return airTerminalCVCooledBeamClone;
   }
 
 		//std::vector<IdfObject> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::remove()
@@ -153,16 +153,16 @@ namespace detail {
   std::vector<ModelObject> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::children() const
   {
     std::vector<ModelObject> result;
-    if (OptionalStraightComponent intermediate = optionalCoolingCoil()) 
+    if (OptionalHVACComponent intermediate = optionalCoolingCoil()) 
     {
       result.push_back(*intermediate);
     }
     return result;
   }
 
-  StraightComponent AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::coilCoolingCooledBeam() const 
+  HVACComponent AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::coilCoolingCooledBeam() const 
   {
-    boost::optional<StraightComponent> value = optionalCoolingCoil();
+    boost::optional<HVACComponent> value = optionalCoolingCoil();
     if (!value) 
     {
       LOG_AND_THROW(briefDescription() << " does not have an Cooling Coil attached.");
@@ -371,7 +371,7 @@ namespace detail {
     BOOST_ASSERT(result);
   }*/
 
-  bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setCoolingCoil(const StraightComponent& coolingCoilCooledBeam) 
+  bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setCoolingCoil(HVACComponent& coolingCoilCooledBeam) 
   {
     bool result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::CoolingCoilName, coolingCoilCooledBeam.handle());
     return result;
@@ -541,9 +541,9 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::AvailabilityScheduleName);
   }
 
-  boost::optional<StraightComponent> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::optionalCoolingCoil() const 
+  boost::optional<HVACComponent> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::optionalCoolingCoil() const 
   {
-    return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::CoolingCoilName);
+    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::CoolingCoilName);
   }
   
   boost::optional<ModelObject> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::availabilityScheduleAsModelObject() const 
@@ -573,10 +573,10 @@ namespace detail {
   bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setCoolingCoilAsModelObject(const boost::optional<ModelObject>& modelObject) {
     if (modelObject) 
     {
-      OptionalStraightComponent intermediate = modelObject->optionalCast<StraightComponent>();
+      OptionalHVACComponent intermediate = modelObject->optionalCast<HVACComponent>();
       if (intermediate) 
       {
-        StraightComponent coilCoolingCooledBeam(*intermediate);
+        HVACComponent coilCoolingCooledBeam(*intermediate);
         return setCoolingCoil(coilCoolingCooledBeam);
       }
     }
@@ -670,7 +670,7 @@ namespace detail {
 
     std::vector<IdfObject> result;
 
-    StraightComponent _coolingCoil = coilCoolingCooledBeam();
+    HVACComponent _coolingCoil = coilCoolingCooledBeam();
 
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
     boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
@@ -785,7 +785,7 @@ namespace detail {
 
 AirTerminalSingleDuctConstantVolumeCooledBeam::AirTerminalSingleDuctConstantVolumeCooledBeam(const Model& model,
 																																																																																																			Schedule& availabilitySchedule,
-																																																																																																			StraightComponent& coilCoolingCooledBeam)
+																																																																																																			HVACComponent& coilCoolingCooledBeam)
   : StraightComponent(AirTerminalSingleDuctConstantVolumeCooledBeam::iddObjectType(),model)
 {
   BOOST_ASSERT(getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>());
@@ -818,7 +818,7 @@ Schedule AirTerminalSingleDuctConstantVolumeCooledBeam::availabilitySchedule() c
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->availabilitySchedule();
 }
 
-StraightComponent AirTerminalSingleDuctConstantVolumeCooledBeam::coilCoolingCooledBeam() const 
+HVACComponent AirTerminalSingleDuctConstantVolumeCooledBeam::coilCoolingCooledBeam() const 
 {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->coilCoolingCooledBeam();
 }
@@ -963,7 +963,7 @@ bool AirTerminalSingleDuctConstantVolumeCooledBeam::setCooledBeamType(std::strin
 //  getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->resetSupplyAirOutletNode();
 //}
 
-bool AirTerminalSingleDuctConstantVolumeCooledBeam::setCoolingCoil(const StraightComponent& coolingCoilCooledBeam) 
+bool AirTerminalSingleDuctConstantVolumeCooledBeam::setCoolingCoil(HVACComponent& coolingCoilCooledBeam) 
 {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->setCoolingCoil(coolingCoilCooledBeam);
 }

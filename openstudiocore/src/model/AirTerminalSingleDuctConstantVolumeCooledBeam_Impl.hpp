@@ -22,8 +22,6 @@
 
 //#include <model/ModelAPI.hpp>
 #include <model/StraightComponent_Impl.hpp>
-//#include <model/ThermalZone_Impl.hpp>
-//#include <model/Model_Impl.hpp>
 
 namespace openstudio {
 namespace model {
@@ -84,7 +82,7 @@ namespace detail {
 
     Schedule availabilitySchedule() const; 
     
-    StraightComponent coilCoolingCooledBeam() const; 
+    HVACComponent coilCoolingCooledBeam() const; 
 
     std::string cooledBeamType() const; 
 
@@ -132,7 +130,7 @@ namespace detail {
 
     bool setAvailabilitySchedule(Schedule& schedule); 
     
-    bool setCoolingCoil(const StraightComponent& coilCoolingCooledBeam); 
+    bool setCoolingCoil(HVACComponent& coilCoolingCooledBeam); 
 
     bool setCooledBeamType(std::string cooledBeamType); 
 
@@ -190,7 +188,7 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeCooledBeam");
     
     boost::optional<Schedule> optionalAvailabilitySchedule() const;
-    boost::optional<StraightComponent> optionalCoolingCoil() const;
+    boost::optional<HVACComponent> optionalCoolingCoil() const;
     
     boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
     boost::optional<ModelObject> coolingCoilAsModelObject() const;

@@ -21,6 +21,8 @@
 #include <model/HVACComponent_Impl.hpp>
 #include <model/ZoneHVACComponent.hpp>
 #include <model/ZoneHVACComponent_Impl.hpp>
+#include <model/StraightComponent.hpp>
+#include <model/StraightComponent_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/PlantLoop.hpp>
@@ -219,6 +221,10 @@ namespace detail {
     {
       return false;
     }
+    else if( containingStraightComponent() )
+    {
+      return false;
+    }    
     else
     {
       return true;
@@ -275,6 +281,11 @@ namespace detail {
   }
 
   boost::optional<ZoneHVACComponent> HVACComponent_Impl::containingZoneHVACComponent() const
+  {
+    return boost::none;
+  }
+  
+  boost::optional<StraightComponent> HVACComponent_Impl::containingStraightComponent() const
   {
     return boost::none;
   }
@@ -349,6 +360,11 @@ boost::optional<HVACComponent> HVACComponent::containingHVACComponent() const
 boost::optional<ZoneHVACComponent> HVACComponent::containingZoneHVACComponent() const
 {
   return getImpl<detail::HVACComponent_Impl>()->containingZoneHVACComponent();
+}
+
+boost::optional<StraightComponent> HVACComponent::containingStraightComponent() const
+{
+  return getImpl<detail::HVACComponent_Impl>()->containingStraightComponent();
 }
 
 } // model

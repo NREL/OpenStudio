@@ -23,7 +23,7 @@
 #include <model/Model.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
-#include <model/StraightComponent.hpp>
+#include <model/HVACComponent.hpp>
 #include <model/AirLoopHVAC.hpp>
 
 #include <model/CoilCoolingCooledBeam.hpp>

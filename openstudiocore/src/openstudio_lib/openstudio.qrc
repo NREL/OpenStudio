@@ -28,6 +28,7 @@
     <file>images/controller_icon_off.png</file>
     <file>images/controller_icon_on.png</file>
     <file>images/chilled_beam.png</file>
+		<file>images/coilcoolingchilledbeam.png</file>
 		<file>images/cool_coil.png</file>
     <file>images/cooling_tower.png</file>
     <file>images/delete-icon.png</file>
@@ -202,6 +203,7 @@
     <file>images/mini_icons/coilheatingwater_baseboard_mini.png</file>
     <file>images/mini_icons/coil_ht_dx_singlespeed_mini.png</file>
     <file>images/mini_icons/chilled_beam.png</file>
+		<file>images/mini_icons/coilcoolingchilledbeam_mini.png</file>	
 		<file>images/mini_icons/cool_coil.png</file>
     <file>images/mini_icons/cooling_tower.png</file>
     <file>images/mini_icons/daylighting_control.png</file>
