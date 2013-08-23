@@ -145,10 +145,11 @@ namespace detail {
 
   /// \returns a JSON string representation of the given job tree
   Job JSON::toJob(const std::string &t_json, bool t_externallyManaged) {
-    std::pair<QVariant,VersionString> parseResult = loadJSON(t_json);
+    QVariant variant = loadJSON(t_json);
+    VersionString version = extractOpenStudioVersion(variant);
 
-    QVariant jobData = parseResult.first.toMap()["job"];
-    return toJob(jobData,parseResult.second, t_externallyManaged);
+    QVariant jobData = variant.toMap()["job"];
+    return toJob(jobData,version,t_externallyManaged);
   }
 
   JobParams JSON::cleanupParams(JobParams t_params)
@@ -211,10 +212,11 @@ namespace detail {
   /// \returns a WorkItem from the given JSON string
   WorkItem JSON::toWorkItem(const std::string &t_json)
   {
-    std::pair<QVariant,VersionString> parseResult = loadJSON(t_json);
+    QVariant variant = loadJSON(t_json);
+    VersionString version = extractOpenStudioVersion(variant);
 
-    QVariant workItemData = parseResult.first.toMap()["work_item"];
-    return toWorkItem(workItemData,parseResult.second);
+    QVariant workItemData = variant.toMap()["work_item"];
+    return toWorkItem(workItemData,version);
   }
 
   // JobType

@@ -619,7 +619,7 @@ namespace detail {
 
     if (options.osServerView && hasProblem()) {
       // this data is not read upon deserialization
-      metadata["server_view"] = toServerDataPointsVariant();
+      metadata.unite(toServerDataPointsVariant());
     }
 
     // create top-level of final file

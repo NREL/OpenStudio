@@ -361,13 +361,14 @@ AnalysisJSONLoadResult loadJSON(const openstudio::path& p) {
   logger.setLogLevel(Error);
 
   try {
-    std::pair<QVariant,VersionString> parseResult = openstudio::loadJSON(p);
-    QVariantMap variant = parseResult.first.toMap();
-    if (variant.contains("data_point")) {
-      result = detail::DataPoint_Impl::factoryFromVariant(variant["data_point"],parseResult.second,boost::none);
+    QVariant variant = openstudio::loadJSON(p);
+    VersionString version = extractOpenStudioVersion(variant);
+    QVariantMap map = variant.toMap();
+    if (map.contains("data_point")) {
+      result = detail::DataPoint_Impl::factoryFromVariant(map["data_point"],version,boost::none);
     }
-    else if (variant.contains("analysis")) {
-      result = detail::Analysis_Impl::fromVariant(variant["analysis"],parseResult.second);
+    else if (map.contains("analysis")) {
+      result = detail::Analysis_Impl::fromVariant(map["analysis"],version);
     }
     else {
       LOG_FREE_AND_THROW("openstudio.analysis.AnalysisObject",
@@ -376,11 +377,11 @@ AnalysisJSONLoadResult loadJSON(const openstudio::path& p) {
     }
     OS_ASSERT(result);
     openstudio::path projectDir;
-    QVariantMap metadata = variant["metadata"].toMap();
+    QVariantMap metadata = map["metadata"].toMap();
     if (metadata.contains("project_dir")) {
       projectDir = toPath(metadata["project_dir"].toString());
     }
-    return AnalysisJSONLoadResult(*result,projectDir,parseResult.second);
+    return AnalysisJSONLoadResult(*result,projectDir,version);
   }
   catch (std::exception& e) {
     LOG_FREE(Error,"openstudio.analysis.AnalysisObject",
@@ -413,13 +414,14 @@ AnalysisJSONLoadResult loadJSON(const std::string& json) {
   logger.setLogLevel(Error);
 
   try {
-    std::pair<QVariant,VersionString> parseResult = openstudio::loadJSON(json);
-    QVariantMap variant = parseResult.first.toMap();
-    if (variant.contains("data_point")) {
-      result = detail::DataPoint_Impl::factoryFromVariant(variant["data_point"],parseResult.second,boost::none);
+    QVariant variant = openstudio::loadJSON(json);
+    VersionString version = extractOpenStudioVersion(variant);
+    QVariantMap map = variant.toMap();
+    if (map.contains("data_point")) {
+      result = detail::DataPoint_Impl::factoryFromVariant(map["data_point"],version,boost::none);
     }
-    else if (variant.contains("analysis")) {
-      result = detail::Analysis_Impl::fromVariant(variant["analysis"],parseResult.second);
+    else if (map.contains("analysis")) {
+      result = detail::Analysis_Impl::fromVariant(map["analysis"],version);
     }
     else {
       LOG_FREE_AND_THROW("openstudio.analysis.AnalysisObject",
@@ -427,11 +429,11 @@ AnalysisJSONLoadResult loadJSON(const std::string& json) {
     }
     OS_ASSERT(result);
     openstudio::path projectDir;
-    QVariantMap metadata = variant["metadata"].toMap();
+    QVariantMap metadata = map["metadata"].toMap();
     if (metadata.contains("project_dir")) {
       projectDir = toPath(metadata["project_dir"].toString());
     }
-    return AnalysisJSONLoadResult(*result,projectDir,parseResult.second);
+    return AnalysisJSONLoadResult(*result,projectDir,version);
   }
   catch (std::exception& e) {
     LOG_FREE(Error,"openstudio.analysis.AnalysisObject",

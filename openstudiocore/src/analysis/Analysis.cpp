@@ -795,7 +795,7 @@ namespace detail {
         serverView["data_points"] = QVariant(dataPointList);
       }
 
-      metadata["server_view"] = serverView;
+      metadata.unite(serverView);
     }
 
     // create top-level of final file
