@@ -30,9 +30,11 @@ class Schedule;
 
 namespace detail {
 
-			/** CoilCoolingLowTempRadiantVarFlow_Impl is a StraightComponent_Impl that is the implementation class for CoilCoolingLowTempRadiantVarFlow.*/
-			class MODEL_API CoilCoolingLowTempRadiantVarFlow_Impl : public StraightComponent_Impl {
-    
+/** CoilCoolingLowTempRadiantVarFlow_Impl is a StraightComponent_Impl that is the implementation class for CoilCoolingLowTempRadiantVarFlow.*/
+class MODEL_API CoilCoolingLowTempRadiantVarFlow_Impl : public StraightComponent_Impl {
+   
+    Q_OBJECT
+
    public:
     /** @name Constructors and Destructors */
     //@{
