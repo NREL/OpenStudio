@@ -103,6 +103,12 @@ SET( ${target_name}_src
   CoilCoolingDXTwoSpeed.hpp
   CoilCoolingDXTwoSpeed_Impl.hpp
   CoilCoolingDXTwoSpeed.cpp
+  CoilCoolingLowTempRadiantConstFlow.hpp
+  CoilCoolingLowTempRadiantConstFlow_Impl.hpp
+  CoilCoolingLowTempRadiantConstFlow.cpp
+	CoilCoolingLowTempRadiantVarFlow.hpp
+	CoilCoolingLowTempRadiantVarFlow_Impl.hpp
+	CoilCoolingLowTempRadiantVarFlow.cpp
   CoilCoolingWater.hpp
   CoilCoolingWater_Impl.hpp
   CoilCoolingWater.cpp
@@ -118,6 +124,12 @@ SET( ${target_name}_src
   CoilHeatingGas.hpp
   CoilHeatingGas_Impl.hpp
   CoilHeatingGas.cpp
+  CoilHeatingLowTempRadiantConstFlow.hpp
+  CoilHeatingLowTempRadiantConstFlow_Impl.hpp
+  CoilHeatingLowTempRadiantConstFlow.cpp
+	CoilHeatingLowTempRadiantVarFlow.hpp
+  CoilHeatingLowTempRadiantVarFlow_Impl.hpp
+	CoilHeatingLowTempRadiantVarFlow.cpp
   CoilHeatingWater.hpp
   CoilHeatingWater_Impl.hpp
   CoilHeatingWater.cpp
@@ -540,6 +552,9 @@ SET( ${target_name}_src
   SetpointManagerSingleZoneReheat.hpp
   SetpointManagerSingleZoneReheat_Impl.hpp
   SetpointManagerSingleZoneReheat.cpp
+  SetpointManagerWarmest.hpp
+  SetpointManagerWarmest_Impl.hpp
+  SetpointManagerWarmest.cpp
   Shade.hpp
   Shade_Impl.hpp
   Shade.cpp
@@ -734,7 +749,16 @@ SET( ${target_name}_src
   ZoneHVACIdealLoadsAirSystem.cpp
   ZoneHVACFourPipeFanCoil.hpp
   ZoneHVACFourPipeFanCoil_Impl.hpp
-  ZoneHVACFourPipeFanCoil.cpp  
+  ZoneHVACFourPipeFanCoil.cpp
+  ZoneHVACLowTemperatureRadiantElectric.hpp
+  ZoneHVACLowTemperatureRadiantElectric_Impl.hpp
+  ZoneHVACLowTemperatureRadiantElectric.cpp
+  ZoneHVACLowTempRadiantConstFlow.hpp
+  ZoneHVACLowTempRadiantConstFlow_Impl.hpp
+  ZoneHVACLowTempRadiantConstFlow.cpp
+	ZoneHVACLowTempRadiantVarFlow.hpp
+	ZoneHVACLowTempRadiantVarFlow_Impl.hpp
+	ZoneHVACLowTempRadiantVarFlow.cpp
   ZoneHVACPackagedTerminalHeatPump.hpp
   ZoneHVACPackagedTerminalHeatPump_Impl.hpp
   ZoneHVACPackagedTerminalHeatPump.cpp
@@ -794,11 +818,13 @@ SET( ${target_name}_moc
   ClimateZones_Impl.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
   CoilCoolingDXTwoSpeed_Impl.hpp
+	CoilCoolingLowTempRadiantVarFlow_Impl.hpp
   CoilCoolingWater_Impl.hpp
   CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp
   CoilHeatingDXSingleSpeed_Impl.hpp
   CoilHeatingElectric_Impl.hpp
   CoilHeatingGas_Impl.hpp
+	CoilHeatingLowTempRadiantVarFlow_Impl.hpp
   CoilHeatingWater_Impl.hpp
   CoilHeatingWaterBaseboard_Impl.hpp
   ComponentCostAdjustments_Impl.hpp
@@ -938,6 +964,7 @@ SET( ${target_name}_moc
   SetpointManagerOutdoorAirReset_Impl.hpp
   SetpointManagerScheduled_Impl.hpp
   SetpointManagerSingleZoneReheat_Impl.hpp
+  SetpointManagerWarmest_Impl.hpp
   Shade_Impl.hpp
   ShadingMaterial_Impl.hpp
   ShadingSurface_Impl.hpp
@@ -1002,7 +1029,9 @@ SET( ${target_name}_moc
   ZoneHVACBaseboardConvectiveWater_Impl.hpp
   ZoneHVACEquipmentList_Impl.hpp   
   ZoneHVACIdealLoadsAirSystem_Impl.hpp
-  ZoneHVACFourPipeFanCoil_Impl.hpp  
+  ZoneHVACFourPipeFanCoil_Impl.hpp
+  ZoneHVACLowTemperatureRadiantElectric_Impl.hpp
+	ZoneHVACLowTempRadiantVarFlow_Impl.hpp
   ZoneHVACPackagedTerminalHeatPump_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
   ZoneHVACUnitHeater_Impl.hpp
@@ -1052,17 +1081,22 @@ SET( ${target_name}_test_src
   test/ClimateZones_GTest.cpp
   test/CoilCoolingDXSingleSpeed_GTest.cpp
   test/CoilCoolingDXTwoSpeed_GTest.cpp
+  test/CoilCoolingLowTempRadiantConstFlow_GTest.cpp
+  test/CoilCoolingLowTempRadiantVarFlow_GTest.cpp
   test/CoilCoolingWater_GTest.cpp
   test/CoilCoolingWaterToAirHeatPumpEquationFit_GTest.cpp
   test/CoilHeatingDXSingleSpeed_GTest.cpp
   test/CoilHeatingElectric_GTest.cpp
   test/CoilHeatingGas_GTest.cpp
+  test/CoilHeatingLowTempRadiantConstFlow_GTest.cpp
+  test/CoilHeatingLowTempRadiantVarFlow_GTest.cpp
   test/CoilHeatingWater_GTest.cpp
   test/CoilHeatingWaterToAirHeatPumpEquationFit_GTest.cpp
   test/CoilHeatingWaterBaseboard_GTest.cpp
   test/Component_GTest.cpp
   test/Connection_GTest.cpp
   test/Construction_GTest.cpp
+  test/ConstructionWithInternalSource_GTest.cpp
   test/ControllerOutdoorAir_GTest.cpp
   test/ControllerMechanicalVentilation_GTest.cpp
   test/ControllerWaterCoil_GTest.cpp
@@ -1126,6 +1160,7 @@ SET( ${target_name}_test_src
   test/RunPeriodControlDaylightSavingTime_GTest.cpp
   test/RunPeriodControlSpecialDays_GTest.cpp
   test/SetpointManagerOutdoorAirReset_GTest.cpp
+  test/SetpointManagerWarmest_GTest.cpp
   test/ScheduleDay_GTest.cpp
   test/ScheduleInterval_GTest.cpp
   test/ScheduleRuleset_GTest.cpp
@@ -1165,6 +1200,9 @@ SET( ${target_name}_test_src
   test/ZoneHVACBaseboardConvectiveElectric_GTest.cpp
   test/ZoneHVACBaseboardConvectiveWater_GTest.cpp
   test/ZoneHVACFourPipeFanCoil_GTest.cpp
+  test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp
+  test/ZoneHVACLowTempRadiantConstFlow_GTest.cpp
+  test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
   test/ZoneHVACPackagedTerminalAirConditioner_GTest.cpp
   test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp    

@@ -50,7 +50,7 @@ optparse.parse!
 if options[:userScript]
   user_script_path = OpenStudio::Path.new(options[:userScript])
 else
-  user_script_path = OpenStudio::Path.new("user_script.rb")
+  user_script_path = OpenStudio::Path.new("./user_script.rb")
 end
 
 puts "Extracting arguments from user script " + user_script_path.to_s

@@ -20,6 +20,8 @@
 #include <model/ShadingMaterial.hpp>
 #include <model/ShadingMaterial_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace model {
 
@@ -46,7 +48,7 @@ namespace detail {
 ShadingMaterial::ShadingMaterial(IddObjectType type,const Model& model)
   : FenestrationMaterial(type,model) 
 {
-  BOOST_ASSERT(getImpl<detail::ShadingMaterial_Impl>());
+  OS_ASSERT(getImpl<detail::ShadingMaterial_Impl>());
 }
 
 /// @cond

@@ -40,7 +40,7 @@ namespace detail {
   DaylightingControl_Impl::DaylightingControl_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceItem_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == DaylightingControl::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == DaylightingControl::iddObjectType());
   }
 
   DaylightingControl_Impl::DaylightingControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -48,7 +48,7 @@ namespace detail {
                                                    bool keepHandle)
     : SpaceItem_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == DaylightingControl::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == DaylightingControl::iddObjectType());
   }
 
   DaylightingControl_Impl::DaylightingControl_Impl(const DaylightingControl_Impl& other,
@@ -71,25 +71,25 @@ namespace detail {
 
   double DaylightingControl_Impl::positionXCoordinate() const {
     boost::optional<double> value = getDouble(OS_Daylighting_ControlFields::PositionXCoordinate,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double DaylightingControl_Impl::positionYCoordinate() const {
     boost::optional<double> value = getDouble(OS_Daylighting_ControlFields::PositionYCoordinate,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double DaylightingControl_Impl::positionZCoordinate() const {
     boost::optional<double> value = getDouble(OS_Daylighting_ControlFields::PositionZCoordinate,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double DaylightingControl_Impl::psiRotationAroundXAxis() const {
     boost::optional<double> value = getDouble(OS_Daylighting_ControlFields::PsiRotationAroundXAxis,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -99,7 +99,7 @@ namespace detail {
 
   double DaylightingControl_Impl::thetaRotationAroundYAxis() const {
     boost::optional<double> value = getDouble(OS_Daylighting_ControlFields::ThetaRotationAroundYAxis,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -109,7 +109,7 @@ namespace detail {
 
   double DaylightingControl_Impl::phiRotationAroundZAxis() const {
     boost::optional<double> value = getDouble(OS_Daylighting_ControlFields::PhiRotationAroundZAxis,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -119,7 +119,7 @@ namespace detail {
 
   double DaylightingControl_Impl::illuminanceSetpoint() const {
     boost::optional<double> value = getDouble(OS_Daylighting_ControlFields::IlluminanceSetpoint,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -129,7 +129,7 @@ namespace detail {
 
   std::string DaylightingControl_Impl::lightingControlType() const {
     boost::optional<std::string> value = getString(OS_Daylighting_ControlFields::LightingControlType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -139,7 +139,7 @@ namespace detail {
 
   double DaylightingControl_Impl::minimumInputPowerFractionforContinuousDimmingControl() const {
     boost::optional<double> value = getDouble(OS_Daylighting_ControlFields::MinimumInputPowerFractionforContinuousDimmingControl,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -149,7 +149,7 @@ namespace detail {
 
   double DaylightingControl_Impl::minimumLightOutputFractionforContinuousDimmingControl() const {
     boost::optional<double> value = getDouble(OS_Daylighting_ControlFields::MinimumLightOutputFractionforContinuousDimmingControl,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -159,7 +159,7 @@ namespace detail {
 
   int DaylightingControl_Impl::numberofSteppedControlSteps() const {
     boost::optional<int> value = getInt(OS_Daylighting_ControlFields::NumberofSteppedControlSteps,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -169,7 +169,7 @@ namespace detail {
 
   double DaylightingControl_Impl::probabilityLightingwillbeResetWhenNeededinManualSteppedControl() const {
     boost::optional<double> value = getDouble(OS_Daylighting_ControlFields::ProbabilityLightingwillbeResetWhenNeededinManualSteppedControl,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -179,7 +179,7 @@ namespace detail {
 
   int DaylightingControl_Impl::numberofDaylightingViews() const {
     boost::optional<int> value = getInt(OS_Daylighting_ControlFields::NumberofDaylightingViews,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -194,53 +194,53 @@ namespace detail {
   void DaylightingControl_Impl::setPositionXCoordinate(double positionXCoordinate) {
     bool result = false;
     result = setDouble(OS_Daylighting_ControlFields::PositionXCoordinate, positionXCoordinate);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void DaylightingControl_Impl::setPositionYCoordinate(double positionYCoordinate) {
     bool result = false;
     result = setDouble(OS_Daylighting_ControlFields::PositionYCoordinate, positionYCoordinate);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void DaylightingControl_Impl::setPositionZCoordinate(double positionZCoordinate) {
     bool result = false;
     result = setDouble(OS_Daylighting_ControlFields::PositionZCoordinate, positionZCoordinate);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 
   void DaylightingControl_Impl::setPsiRotationAroundXAxis(double psiRotationAroundXAxis) {
     bool result = false;
     result = setDouble(OS_Daylighting_ControlFields::PsiRotationAroundXAxis, psiRotationAroundXAxis);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void DaylightingControl_Impl::resetPsiRotationAroundXAxis() {
     bool result = setString(OS_Daylighting_ControlFields::PsiRotationAroundXAxis, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void DaylightingControl_Impl::setThetaRotationAroundYAxis(double thetaRotationAroundYAxis) {
     bool result = false;
     result = setDouble(OS_Daylighting_ControlFields::ThetaRotationAroundYAxis, thetaRotationAroundYAxis);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void DaylightingControl_Impl::resetThetaRotationAroundYAxis() {
     bool result = setString(OS_Daylighting_ControlFields::ThetaRotationAroundYAxis, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void DaylightingControl_Impl::setPhiRotationAroundZAxis(double phiRotationAroundZAxis) {
     bool result = false;
     result = setDouble(OS_Daylighting_ControlFields::PhiRotationAroundZAxis, phiRotationAroundZAxis);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void DaylightingControl_Impl::resetPhiRotationAroundZAxis() {
     bool result = setString(OS_Daylighting_ControlFields::PhiRotationAroundZAxis, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DaylightingControl_Impl::setIlluminanceSetpoint(double illuminanceSetpoint) {
@@ -251,7 +251,7 @@ namespace detail {
 
   void DaylightingControl_Impl::resetIlluminanceSetpoint() {
     bool result = setString(OS_Daylighting_ControlFields::IlluminanceSetpoint, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DaylightingControl_Impl::setLightingControlType(std::string lightingControlType) {
@@ -262,7 +262,7 @@ namespace detail {
 
   void DaylightingControl_Impl::resetLightingControlType() {
     bool result = setString(OS_Daylighting_ControlFields::LightingControlType, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DaylightingControl_Impl::setMinimumInputPowerFractionforContinuousDimmingControl(double minimumInputPowerFractionforContinuousDimmingControl) {
@@ -273,7 +273,7 @@ namespace detail {
 
   void DaylightingControl_Impl::resetMinimumInputPowerFractionforContinuousDimmingControl() {
     bool result = setString(OS_Daylighting_ControlFields::MinimumInputPowerFractionforContinuousDimmingControl, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DaylightingControl_Impl::setMinimumLightOutputFractionforContinuousDimmingControl(double minimumLightOutputFractionforContinuousDimmingControl) {
@@ -284,18 +284,18 @@ namespace detail {
 
   void DaylightingControl_Impl::resetMinimumLightOutputFractionforContinuousDimmingControl() {
     bool result = setString(OS_Daylighting_ControlFields::MinimumLightOutputFractionforContinuousDimmingControl, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void DaylightingControl_Impl::setNumberofSteppedControlSteps(int numberofSteppedControlSteps) {
     bool result = false;
     result = setInt(OS_Daylighting_ControlFields::NumberofSteppedControlSteps, numberofSteppedControlSteps);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void DaylightingControl_Impl::resetNumberofSteppedControlSteps() {
     bool result = setString(OS_Daylighting_ControlFields::NumberofSteppedControlSteps, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DaylightingControl_Impl::setProbabilityLightingwillbeResetWhenNeededinManualSteppedControl(double probabilityLightingwillbeResetWhenNeededinManualSteppedControl) {
@@ -306,7 +306,7 @@ namespace detail {
 
   void DaylightingControl_Impl::resetProbabilityLightingwillbeResetWhenNeededinManualSteppedControl() {
     bool result = setString(OS_Daylighting_ControlFields::ProbabilityLightingwillbeResetWhenNeededinManualSteppedControl, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DaylightingControl_Impl::setNumberofDaylightingViews(int numberofDaylightingViews) {
@@ -317,7 +317,7 @@ namespace detail {
 
   void DaylightingControl_Impl::resetNumberofDaylightingViews() {
     bool result = setString(OS_Daylighting_ControlFields::NumberofDaylightingViews, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool DaylightingControl_Impl::setMaximumAllowableDiscomfortGlareIndex(boost::optional<double> maximumAllowableDiscomfortGlareIndex) {
@@ -332,7 +332,7 @@ namespace detail {
 
   void DaylightingControl_Impl::resetMaximumAllowableDiscomfortGlareIndex() {
     bool result = setString(OS_Daylighting_ControlFields::MaximumAllowableDiscomfortGlareIndex, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   Point3d DaylightingControl_Impl::position() const
@@ -386,7 +386,7 @@ namespace detail {
     bool result = false;
     std::vector<WorkspaceObject> workspaceObjects = this->getSources(IddObjectType::OS_ThermalZone);
     if (!workspaceObjects.empty()){
-      BOOST_ASSERT(workspaceObjects.size() == 1);
+      OS_ASSERT(workspaceObjects.size() == 1);
       boost::optional<DaylightingControl> control = workspaceObjects[0].cast<ThermalZone>().primaryDaylightingControl();
       if (control){
         result = (this->handle() == control->handle());
@@ -400,7 +400,7 @@ namespace detail {
     bool result = false;
     std::vector<WorkspaceObject> workspaceObjects = this->getSources(IddObjectType::OS_ThermalZone);
     if (!workspaceObjects.empty()){
-      BOOST_ASSERT(workspaceObjects.size() == 1);
+      OS_ASSERT(workspaceObjects.size() == 1);
       boost::optional<DaylightingControl> control = workspaceObjects[0].cast<ThermalZone>().secondaryDaylightingControl();
       if (control){
         result = (this->handle() == control->handle());
@@ -418,7 +418,7 @@ namespace detail {
 DaylightingControl::DaylightingControl(const Model& model)
   : SpaceItem(DaylightingControl::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::DaylightingControl_Impl>());
+  OS_ASSERT(getImpl<detail::DaylightingControl_Impl>());
 }
 
 IddObjectType DaylightingControl::iddObjectType() {

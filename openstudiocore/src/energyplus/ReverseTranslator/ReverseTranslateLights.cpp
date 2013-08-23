@@ -33,6 +33,8 @@
 #include <utilities/idd/Lights_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -56,7 +58,7 @@ OptionalModelObject ReverseTranslator::translateLights( const WorkspaceObject & 
   }
 
   s = workspaceObject.getString(openstudio::LightsFields::DesignLevelCalculationMethod, true);
-  BOOST_ASSERT(s);
+  OS_ASSERT(s);
 
   OptionalDouble d;
   if (istringEqual("LightingLevel", *s)){

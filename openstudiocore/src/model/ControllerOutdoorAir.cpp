@@ -56,14 +56,14 @@ namespace detail {
   ControllerOutdoorAir_Impl::ControllerOutdoorAir_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ParentObject_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ControllerOutdoorAir::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ControllerOutdoorAir::iddObjectType());
   }
 
   ControllerOutdoorAir_Impl::ControllerOutdoorAir_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
         : ParentObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ControllerOutdoorAir::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ControllerOutdoorAir::iddObjectType());
   }
 
   ControllerOutdoorAir_Impl::ControllerOutdoorAir_Impl(const ControllerOutdoorAir_Impl& other,
@@ -240,7 +240,7 @@ namespace detail {
     if (minimumOutdoorAirFlowRate) {
       result = setDouble(OS_Controller_OutdoorAirFields::MinimumOutdoorAirFlowRate, minimumOutdoorAirFlowRate.get());
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ControllerOutdoorAir_Impl::setMinimumOutdoorAirFlowRate(const OSOptionalQuantity& minimumOutdoorAirFlowRate) {
@@ -262,7 +262,7 @@ namespace detail {
 
   void ControllerOutdoorAir_Impl::autosizeMinimumOutdoorAirFlowRate() {
     bool result = setString(OS_Controller_OutdoorAirFields::MinimumOutdoorAirFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ControllerOutdoorAir_Impl::setMaximumOutdoorAirFlowRate(boost::optional<double> maximumOutdoorAirFlowRate) {
@@ -270,7 +270,7 @@ namespace detail {
     if (maximumOutdoorAirFlowRate) {
       result = setDouble(OS_Controller_OutdoorAirFields::MaximumOutdoorAirFlowRate, maximumOutdoorAirFlowRate.get());
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ControllerOutdoorAir_Impl::setMaximumOutdoorAirFlowRate(const OSOptionalQuantity& maximumOutdoorAirFlowRate) {
@@ -292,7 +292,7 @@ namespace detail {
 
   void ControllerOutdoorAir_Impl::autosizeMaximumOutdoorAirFlowRate() {
     bool result = setString(OS_Controller_OutdoorAirFields::MaximumOutdoorAirFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   std::string ControllerOutdoorAir_Impl::getEconomizerControlType() const
@@ -570,7 +570,7 @@ namespace detail {
 
   void ControllerOutdoorAir_Impl::resetMinimumOutdoorAirSchedule() {
     bool result = setString(OS_Controller_OutdoorAirFields::MinimumOutdoorAirScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<Schedule> ControllerOutdoorAir_Impl::minimumFractionofOutdoorAirSchedule() const {
@@ -587,7 +587,7 @@ namespace detail {
 
   void ControllerOutdoorAir_Impl::resetMinimumFractionofOutdoorAirSchedule() {
     bool result = setString(OS_Controller_OutdoorAirFields::MinimumFractionofOutdoorAirScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<Schedule> ControllerOutdoorAir_Impl::maximumFractionofOutdoorAirSchedule() const {
@@ -604,7 +604,7 @@ namespace detail {
 
   void ControllerOutdoorAir_Impl::resetMaximumFractionofOutdoorAirSchedule() {
     bool result = setString(OS_Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<Schedule> ControllerOutdoorAir_Impl::timeofDayEconomizerControlSchedule() const {
@@ -621,7 +621,7 @@ namespace detail {
 
   void ControllerOutdoorAir_Impl::resetTimeofDayEconomizerControlSchedule() {
     bool result = setString(OS_Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   std::vector<ScheduleTypeKey> ControllerOutdoorAir_Impl::getScheduleTypeKeys(const Schedule& schedule) const
@@ -655,7 +655,7 @@ namespace detail {
 ControllerOutdoorAir::ControllerOutdoorAir(const Model& model)
   : ParentObject(ControllerOutdoorAir::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ControllerOutdoorAir_Impl>());
+  OS_ASSERT(getImpl<detail::ControllerOutdoorAir_Impl>());
 
   setString(OS_Controller_OutdoorAirFields::MinimumOutdoorAirFlowRate,"Autosize");
   setString(OS_Controller_OutdoorAirFields::MaximumOutdoorAirFlowRate,"Autosize");
@@ -752,7 +752,7 @@ bool ControllerOutdoorAir::setEconomizerMaximumLimitDryBulbTemperature( double v
 void ControllerOutdoorAir::resetEconomizerMaximumLimitDryBulbTemperature( )
 {
   bool test = getImpl<detail::ControllerOutdoorAir_Impl>()->setEconomizerMaximumLimitDryBulbTemperature(boost::none);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 }
 
 boost::optional<double> ControllerOutdoorAir::getEconomizerMaximumLimitEnthalpy() const
@@ -768,7 +768,7 @@ bool ControllerOutdoorAir::setEconomizerMaximumLimitEnthalpy( double value )
 void ControllerOutdoorAir::resetEconomizerMaximumLimitEnthalpy( )
 {
   bool test = getImpl<detail::ControllerOutdoorAir_Impl>()->setEconomizerMaximumLimitEnthalpy(boost::none);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 }
 
 boost::optional<double> ControllerOutdoorAir::getEconomizerMaximumLimitDewpointTemperature() const
@@ -784,7 +784,7 @@ bool ControllerOutdoorAir::setEconomizerMaximumLimitDewpointTemperature( double 
 void ControllerOutdoorAir::resetEconomizerMaximumLimitDewpointTemperature( )
 {
   bool test = getImpl<detail::ControllerOutdoorAir_Impl>()->setEconomizerMaximumLimitDewpointTemperature(boost::none);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 }
 
 boost::optional<double> ControllerOutdoorAir::getEconomizerMinimumLimitDryBulbTemperature() const
@@ -800,7 +800,7 @@ bool ControllerOutdoorAir::setEconomizerMinimumLimitDryBulbTemperature( double v
 void ControllerOutdoorAir::resetEconomizerMinimumLimitDryBulbTemperature( )
 {
   bool test = getImpl<detail::ControllerOutdoorAir_Impl>()->setEconomizerMinimumLimitDryBulbTemperature(boost::none);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 }
 
 std::string ControllerOutdoorAir::getLockoutType() const

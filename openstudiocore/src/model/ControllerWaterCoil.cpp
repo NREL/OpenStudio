@@ -34,7 +34,7 @@ namespace detail {
 ControllerWaterCoil_Impl::ControllerWaterCoil_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : HVACComponent_Impl(idfObject,model,keepHandle)
 {
-  BOOST_ASSERT(idfObject.iddObject().type() == ControllerWaterCoil::iddObjectType());
+  OS_ASSERT(idfObject.iddObject().type() == ControllerWaterCoil::iddObjectType());
 }
 
 ControllerWaterCoil_Impl::ControllerWaterCoil_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -42,7 +42,7 @@ ControllerWaterCoil_Impl::ControllerWaterCoil_Impl(const openstudio::detail::Wor
                                                    bool keepHandle)
   : HVACComponent_Impl(other,model,keepHandle)
 {
-  BOOST_ASSERT(other.iddObject().type() == ControllerWaterCoil::iddObjectType());
+  OS_ASSERT(other.iddObject().type() == ControllerWaterCoil::iddObjectType());
 }
 
 ControllerWaterCoil_Impl::ControllerWaterCoil_Impl(const ControllerWaterCoil_Impl& other,
@@ -107,7 +107,7 @@ bool ControllerWaterCoil_Impl::isMaximumActuatedFlowAutosized() const {
 
 double ControllerWaterCoil_Impl::minimumActuatedFlow() const {
   boost::optional<double> value = getDouble(OS_Controller_WaterCoilFields::MinimumActuatedFlow,true);
-  BOOST_ASSERT(value);
+  OS_ASSERT(value);
   return value.get();
 }
 
@@ -127,7 +127,7 @@ bool ControllerWaterCoil_Impl::setControlVariable(boost::optional<std::string> c
 
 void ControllerWaterCoil_Impl::resetControlVariable() {
   bool result = setString(OS_Controller_WaterCoilFields::ControlVariable, "");
-  BOOST_ASSERT(result);
+  OS_ASSERT(result);
 }
 
 bool ControllerWaterCoil_Impl::setAction(boost::optional<std::string> action) {
@@ -142,7 +142,7 @@ bool ControllerWaterCoil_Impl::setAction(boost::optional<std::string> action) {
 
 void ControllerWaterCoil_Impl::resetAction() {
   bool result = setString(OS_Controller_WaterCoilFields::Action, "");
-  BOOST_ASSERT(result);
+  OS_ASSERT(result);
 }
 
 bool ControllerWaterCoil_Impl::setActuatorVariable(boost::optional<std::string> actuatorVariable) {
@@ -157,7 +157,7 @@ bool ControllerWaterCoil_Impl::setActuatorVariable(boost::optional<std::string> 
 
 void ControllerWaterCoil_Impl::resetActuatorVariable() {
   bool result = setString(OS_Controller_WaterCoilFields::ActuatorVariable, "");
-  BOOST_ASSERT(result);
+  OS_ASSERT(result);
 }
 
 void ControllerWaterCoil_Impl::setControllerConvergenceTolerance(boost::optional<double> controllerConvergenceTolerance) {
@@ -167,17 +167,17 @@ void ControllerWaterCoil_Impl::setControllerConvergenceTolerance(boost::optional
   } else {
     result = setString(OS_Controller_WaterCoilFields::ControllerConvergenceTolerance, "");
   }
-  BOOST_ASSERT(result);
+  OS_ASSERT(result);
 }
 
 void ControllerWaterCoil_Impl::resetControllerConvergenceTolerance() {
   bool result = setString(OS_Controller_WaterCoilFields::ControllerConvergenceTolerance, "");
-  BOOST_ASSERT(result);
+  OS_ASSERT(result);
 }
 
 void ControllerWaterCoil_Impl::autosizeControllerConvergenceTolerance() {
   bool result = setString(OS_Controller_WaterCoilFields::ControllerConvergenceTolerance, "Autosize");
-  BOOST_ASSERT(result);
+  OS_ASSERT(result);
 }
 
 void ControllerWaterCoil_Impl::setMaximumActuatedFlow(boost::optional<double> maximumActuatedFlow) {
@@ -187,28 +187,28 @@ void ControllerWaterCoil_Impl::setMaximumActuatedFlow(boost::optional<double> ma
   } else {
     result = setString(OS_Controller_WaterCoilFields::MaximumActuatedFlow, "");
   }
-  BOOST_ASSERT(result);
+  OS_ASSERT(result);
 }
 
 void ControllerWaterCoil_Impl::resetMaximumActuatedFlow() {
   bool result = setString(OS_Controller_WaterCoilFields::MaximumActuatedFlow, "");
-  BOOST_ASSERT(result);
+  OS_ASSERT(result);
 }
 
 void ControllerWaterCoil_Impl::autosizeMaximumActuatedFlow() {
   bool result = setString(OS_Controller_WaterCoilFields::MaximumActuatedFlow, "Autosize");
-  BOOST_ASSERT(result);
+  OS_ASSERT(result);
 }
 
 void ControllerWaterCoil_Impl::setMinimumActuatedFlow(double minimumActuatedFlow) {
   bool result = false;
   result = setDouble(OS_Controller_WaterCoilFields::MinimumActuatedFlow, minimumActuatedFlow);
-  BOOST_ASSERT(result);
+  OS_ASSERT(result);
 }
 
 void ControllerWaterCoil_Impl::resetMinimumActuatedFlow() {
   bool result = setString(OS_Controller_WaterCoilFields::MinimumActuatedFlow, "");
-  BOOST_ASSERT(result);
+  OS_ASSERT(result);
 }
 
 boost::optional<Node> ControllerWaterCoil_Impl::sensorNode() const
@@ -236,7 +236,7 @@ void ControllerWaterCoil_Impl::setActuatorNode( Node & node )
 ControllerWaterCoil::ControllerWaterCoil(const Model& model)
   : HVACComponent(ControllerWaterCoil::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ControllerWaterCoil_Impl>());
+  OS_ASSERT(getImpl<detail::ControllerWaterCoil_Impl>());
 }
 
 IddObjectType ControllerWaterCoil::iddObjectType() {

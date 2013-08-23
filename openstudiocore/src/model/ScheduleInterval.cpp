@@ -122,13 +122,13 @@ bool ScheduleInterval::setTimeSeries(const openstudio::TimeSeries& timeSeries)
 ScheduleInterval::ScheduleInterval(IddObjectType type,const Model& model)
   : Schedule(type,model)
 {
-  BOOST_ASSERT(getImpl<detail::ScheduleInterval_Impl>());
+  OS_ASSERT(getImpl<detail::ScheduleInterval_Impl>());
 }
 
 ScheduleInterval::ScheduleInterval(boost::shared_ptr<detail::ScheduleInterval_Impl> impl)
   : Schedule(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ScheduleInterval_Impl>());
+  OS_ASSERT(getImpl<detail::ScheduleInterval_Impl>());
 }
 
 } // model

@@ -98,7 +98,7 @@ namespace detail {
   ThermalZone_Impl::ThermalZone_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : HVACComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ThermalZone::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ThermalZone::iddObjectType());
   }
 
 
@@ -107,7 +107,7 @@ namespace detail {
                                      bool keepHandle)
     : HVACComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ThermalZone::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ThermalZone::iddObjectType());
   }
 
   ThermalZone_Impl::ThermalZone_Impl(const ThermalZone_Impl& other,
@@ -268,7 +268,7 @@ namespace detail {
 
   int ThermalZone_Impl::multiplier() const {
     boost::optional<int> value = getInt(OS_ThermalZoneFields::Multiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -330,19 +330,19 @@ namespace detail {
 
   std::string ThermalZone_Impl::zoneConditioningEquipmentListName() const {
     boost::optional<std::string> value = getString(OS_ThermalZoneFields::ZoneConditioningEquipmentListName,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double ThermalZone_Impl::fractionofZoneControlledbyPrimaryDaylightingControl() const {
     boost::optional<double> value = getDouble(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
   
   Quantity ThermalZone_Impl::getFractionofZoneControlledbyPrimaryDaylightingControl(bool returnIP) const {
     OSOptionalQuantity value = getQuantity(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl,true,returnIP);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
@@ -352,13 +352,13 @@ namespace detail {
 
   double ThermalZone_Impl::fractionofZoneControlledbySecondaryDaylightingControl() const {
     boost::optional<double> value = getDouble(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
   
   Quantity ThermalZone_Impl::getFractionofZoneControlledbySecondaryDaylightingControl(bool returnIP) const {
     OSOptionalQuantity value = getQuantity(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl,true,returnIP);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
@@ -374,7 +374,7 @@ namespace detail {
 
   void ThermalZone_Impl::resetMultiplier() {
     bool result = setString(OS_ThermalZoneFields::Multiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ThermalZone_Impl::setCeilingHeight(boost::optional<double> ceilingHeight) {
@@ -384,13 +384,13 @@ namespace detail {
     } else {
       result = setString(OS_ThermalZoneFields::CeilingHeight, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ThermalZone_Impl::setCeilingHeight(double ceilingHeight) {
     bool result = false;
     result = setDouble(OS_ThermalZoneFields::CeilingHeight, ceilingHeight);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
   
   bool ThermalZone_Impl::setCeilingHeight(const OSOptionalQuantity& ceilingHeight) {
@@ -405,12 +405,12 @@ namespace detail {
 
   void ThermalZone_Impl::resetCeilingHeight() {
     bool result = setString(OS_ThermalZoneFields::CeilingHeight, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ThermalZone_Impl::autocalculateCeilingHeight() {
     bool result = setString(OS_ThermalZoneFields::CeilingHeight, "autocalculate");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ThermalZone_Impl::setVolume(boost::optional<double> volume) {
@@ -420,13 +420,13 @@ namespace detail {
     } else {
       result = setString(OS_ThermalZoneFields::Volume, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ThermalZone_Impl::setVolume(double volume) {
     bool result = false;
     result = setDouble(OS_ThermalZoneFields::Volume, volume);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
   
   bool ThermalZone_Impl::setVolume(const OSOptionalQuantity& volume) {
@@ -441,12 +441,12 @@ namespace detail {
 
   void ThermalZone_Impl::resetVolume() {
     bool result = setString(OS_ThermalZoneFields::Volume, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ThermalZone_Impl::autocalculateVolume() {
     bool result = setString(OS_ThermalZoneFields::Volume, "autocalculate");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ThermalZone_Impl::setZoneInsideConvectionAlgorithm(boost::optional<std::string> zoneInsideConvectionAlgorithm) {
@@ -467,7 +467,7 @@ namespace detail {
 
   void ThermalZone_Impl::resetZoneInsideConvectionAlgorithm() {
     bool result = setString(OS_ThermalZoneFields::ZoneInsideConvectionAlgorithm, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ThermalZone_Impl::setZoneOutsideConvectionAlgorithm(boost::optional<std::string> zoneOutsideConvectionAlgorithm) {
@@ -488,13 +488,13 @@ namespace detail {
 
   void ThermalZone_Impl::resetZoneOutsideConvectionAlgorithm() {
     bool result = setString(OS_ThermalZoneFields::ZoneOutsideConvectionAlgorithm, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void ThermalZone_Impl::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
     bool result = false;
     result = setString(OS_ThermalZoneFields::ZoneConditioningEquipmentListName, zoneConditioningEquipmentListName);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl) {
@@ -509,7 +509,7 @@ namespace detail {
 
   void ThermalZone_Impl::resetFractionofZoneControlledbyPrimaryDaylightingControl() {
     bool result = setString(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbySecondaryDaylightingControl(double fractionofZoneControlledbySecondaryDaylightingControl) {
@@ -524,7 +524,7 @@ namespace detail {
 
   void ThermalZone_Impl::resetFractionofZoneControlledbySecondaryDaylightingControl() {
     bool result = setString(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   unsigned ThermalZone_Impl::returnAirPort()
@@ -560,7 +560,7 @@ namespace detail {
   void ThermalZone_Impl::resetPrimaryDaylightingControl()
   {
     bool test = setString(OS_ThermalZoneFields::PrimaryDaylightingControlName, "");
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     resetSecondaryDaylightingControl();
   }
 
@@ -577,7 +577,7 @@ namespace detail {
   void ThermalZone_Impl::resetSecondaryDaylightingControl()
   {
     bool test = setString(OS_ThermalZoneFields::SecondaryDaylightingControlName, "");
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   boost::optional<IlluminanceMap> ThermalZone_Impl::illuminanceMap() const
@@ -593,7 +593,7 @@ namespace detail {
   void ThermalZone_Impl::resetIlluminanceMap()
   {
     bool test = setString(OS_ThermalZoneFields::IlluminanceMapName, "");
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   bool ThermalZone_Impl::setDaylightingControlsAndIlluminanceMaps(const boost::optional<DaylightingControl>& primaryDaylightingControl, 
@@ -651,7 +651,7 @@ namespace detail {
   void ThermalZone_Impl::resetRenderingColor()
   {
     bool test = setString(OS_ThermalZoneFields::GroupRenderingName, "");
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   std::vector<Space> ThermalZone_Impl::spaces() const
@@ -1271,7 +1271,7 @@ namespace detail {
   bool ThermalZone_Impl::useIdealAirLoads() const
   {
     boost::optional<std::string> value = getString(OS_ThermalZoneFields::UseIdealAirLoads);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
   
@@ -1578,7 +1578,7 @@ namespace detail {
   {
     boost::optional<PortList> pl = getObject<ModelObject>().getModelObjectTarget<PortList>(OS_ThermalZoneFields::ZoneAirInletPortList);
 
-    BOOST_ASSERT(pl);
+    OS_ASSERT(pl);
 
     return pl.get();
   }
@@ -1587,7 +1587,7 @@ namespace detail {
   {
     boost::optional<PortList> pl = getObject<ModelObject>().getModelObjectTarget<PortList>(OS_ThermalZoneFields::ZoneAirExhaustPortList);
 
-    BOOST_ASSERT(pl);
+    OS_ASSERT(pl);
 
     return pl.get();
   }
@@ -1608,7 +1608,7 @@ namespace detail {
       }
     }
 
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
 
     return result.get();
   }
@@ -1675,7 +1675,7 @@ namespace detail {
 ThermalZone::ThermalZone(const Model& model)
   : HVACComponent(ThermalZone::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ThermalZone_Impl>());
+  OS_ASSERT(getImpl<detail::ThermalZone_Impl>());
 
   Node node(model);
   model.connect(*this,this->zoneAirPort(),node,node.inletPort());

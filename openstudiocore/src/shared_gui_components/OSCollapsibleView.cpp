@@ -24,6 +24,8 @@
 #include <QPainter>
 #include <QPushButton>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 OSHeader::OSHeader(QPushButton * button)
@@ -66,7 +68,7 @@ void OSCollapsibleView::setHeader(QWidget * header)
   {
     bool bingo = connect(m_osHeader->toggleButton,SIGNAL(toggled(bool)),this,SLOT(setExpanded(bool)));
 
-    Q_ASSERT(bingo);
+    OS_ASSERT(bingo);
   }
 }
 

@@ -26,6 +26,7 @@
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/core/FileReference.hpp>
 #include <utilities/data/Attribute.hpp>
+#include <utilities/core/Assert.hpp>
 
 #include <OpenStudio.hxx>
 
@@ -393,28 +394,28 @@ namespace openstudio{
   MeasureType BCLMeasure::measureType() const
   {
     boost::optional<Attribute> measureType = m_bclXML.getAttribute("Measure Type");
-    Q_ASSERT(measureType);
+    OS_ASSERT(measureType);
     return MeasureType(measureType->valueAsString());
   }
 
   MeasureFunction BCLMeasure::measureFunction() const
   {
     boost::optional<Attribute> measureFunction = m_bclXML.getAttribute("Measure Function");
-    Q_ASSERT(measureFunction);
+    OS_ASSERT(measureFunction);
     return MeasureFunction(measureFunction->valueAsString());
   }
 
   bool BCLMeasure::requiresEnergyPlusResults() const
   {
     boost::optional<Attribute> requiresEnergyPlusResults = m_bclXML.getAttribute("Requires EnergyPlus Results");
-    Q_ASSERT(requiresEnergyPlusResults);
+    OS_ASSERT(requiresEnergyPlusResults);
     return requiresEnergyPlusResults->valueAsBoolean();
   }
 
   bool BCLMeasure::usesSketchUpAPI() const
   {
     boost::optional<Attribute> usesSketchUpAPI = m_bclXML.getAttribute("Uses SketchUp API");
-    Q_ASSERT(usesSketchUpAPI);
+    OS_ASSERT(usesSketchUpAPI);
     return usesSketchUpAPI->valueAsBoolean();
   }
 

@@ -102,6 +102,8 @@ namespace detail {
 
     void setAlgorithm(const Algorithm& algorithm);
 
+    virtual QVariant toVariant() const;
+
     //@}
    protected:
     std::vector<Attribute> m_options;

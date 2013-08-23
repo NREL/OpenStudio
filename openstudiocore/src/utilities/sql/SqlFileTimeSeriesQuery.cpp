@@ -201,7 +201,7 @@ std::ostream& operator<<(std::ostream& os,const SqlFileTimeSeriesQuery& query) {
         os << "Key Value:           " << names[0] << std::endl;
       }
       else {
-        BOOST_ASSERT(names.size() > 1);
+        OS_ASSERT(names.size() > 1);
         os << "Key Values:          " << names[0] << std::endl;
         for (unsigned i = 1, n = names.size(); i < n; ++i) {
           os << std::setw(21) << " " << names[i] << std::endl;
@@ -221,7 +221,7 @@ StringSet environmentPeriods(const SqlFileTimeSeriesQueryVector& queries) {
   StringSet result;
   BOOST_FOREACH(const SqlFileTimeSeriesQuery& q,queries) {
     if (!q.vetted()) { return StringSet(); }
-    BOOST_ASSERT(q.environment().get().name());
+    OS_ASSERT(q.environment().get().name());
     result.insert(*(q.environment().get().name()));
   }
   return result;
@@ -231,7 +231,7 @@ ReportingFrequencySet reportingFrequencies(const SqlFileTimeSeriesQueryVector& q
   ReportingFrequencySet result;
   BOOST_FOREACH(const SqlFileTimeSeriesQuery& q,queries) {
     if (!q.vetted()) { return ReportingFrequencySet(); }
-    BOOST_ASSERT(q.reportingFrequency());
+    OS_ASSERT(q.reportingFrequency());
     result.insert(*(q.reportingFrequency()));
   }
   return result;
@@ -241,7 +241,7 @@ StringSet timeSeriesNames(const SqlFileTimeSeriesQueryVector& queries) {
   StringSet result;
   BOOST_FOREACH(const SqlFileTimeSeriesQuery& q,queries) {
     if (!q.vetted()) { return StringSet(); }
-    BOOST_ASSERT(q.timeSeries().get().name());
+    OS_ASSERT(q.timeSeries().get().name());
     result.insert(*(q.timeSeries().get().name()));
   }
   return result;

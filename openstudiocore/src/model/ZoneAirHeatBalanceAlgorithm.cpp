@@ -40,7 +40,7 @@ namespace detail {
                                                                      bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ZoneAirHeatBalanceAlgorithm::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ZoneAirHeatBalanceAlgorithm::iddObjectType());
   }
 
   ZoneAirHeatBalanceAlgorithm_Impl::ZoneAirHeatBalanceAlgorithm_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -48,7 +48,7 @@ namespace detail {
                                                                      bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ZoneAirHeatBalanceAlgorithm::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ZoneAirHeatBalanceAlgorithm::iddObjectType());
   }
 
   ZoneAirHeatBalanceAlgorithm_Impl::ZoneAirHeatBalanceAlgorithm_Impl(const ZoneAirHeatBalanceAlgorithm_Impl& other,
@@ -89,7 +89,7 @@ namespace detail {
 
   std::string ZoneAirHeatBalanceAlgorithm_Impl::algorithm() const {
     boost::optional<std::string> value = getString(OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -104,7 +104,7 @@ namespace detail {
 
   void ZoneAirHeatBalanceAlgorithm_Impl::resetAlgorithm() {
     bool result = setString(OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   std::vector<std::string> ZoneAirHeatBalanceAlgorithm_Impl::validAlgorithmValues() const {
@@ -147,7 +147,7 @@ ZoneAirHeatBalanceAlgorithm::ZoneAirHeatBalanceAlgorithm(boost::shared_ptr<detai
 ZoneAirHeatBalanceAlgorithm::ZoneAirHeatBalanceAlgorithm(Model& model)
   : ModelObject(ZoneAirHeatBalanceAlgorithm::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>());
+  OS_ASSERT(getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>());
 
   setAlgorithm("AnalyticalSolution");
 }

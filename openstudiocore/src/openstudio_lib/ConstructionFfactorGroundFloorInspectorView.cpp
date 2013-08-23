@@ -73,7 +73,7 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
 
   m_ffactorEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_ffactorEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_ffactorEdit,3,0);
 
   // Area
@@ -84,7 +84,7 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
 
   m_areaEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_areaEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_areaEdit,5,0);
 
   // Perimeter Exposed
@@ -95,7 +95,7 @@ void ConstructionFfactorGroundFloorInspectorView::createLayout()
 
   m_perimeterExposedEdit = new OSQuantityEdit(m_isIP);
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_perimeterExposedEdit, SLOT(onUnitSystemChange(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_perimeterExposedEdit,7,0);
 
   // Stretch

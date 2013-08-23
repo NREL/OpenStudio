@@ -1,4 +1,3 @@
-
 #include "LinearApproximation.hpp"
 
 #include <boost/numeric/ublas/matrix.hpp>

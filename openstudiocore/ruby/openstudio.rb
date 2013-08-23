@@ -51,6 +51,7 @@ require 'openstudioutilitiesplot'
 require 'openstudioutilitiesgeometry'
 require 'openstudioutilitiessql'
 require 'openstudioutilitiesbcl'
+require 'openstudioutilitiescloud'
 require 'openstudioutilitiesunits'
 require 'openstudioutilitiesdocument'
 require 'openstudioutilitiesidd'
@@ -108,7 +109,7 @@ begin
   # may not be defined, e.g for SketchUp plug-in
   require 'rbconfig'  
   
-  $OpenStudio_RubyExe = OpenStudio::Path.new(File.join(Config::CONFIG['bindir'], Config::CONFIG['ruby_install_name']).sub(/.*\s.*/m, '"\&"'))
+  $OpenStudio_RubyExe = OpenStudio::Path.new(File.join(RbConfig::CONFIG['bindir'], RbConfig::CONFIG['ruby_install_name']).sub(/.*\s.*/m, '"\&"'))
   $OpenStudio_RubyExeDir = $OpenStudio_RubyExe.parent_path()
 
 rescue Exception=>e
@@ -167,6 +168,42 @@ end
 
 # support for name deprecated as of 0.10.5
 class OutputAttributeContinuousVariableVector < OutputAttributeVariableVector
+end
+
+# support for name deprecated as of 1.0.3
+class DiscretePerturbation < Measure
+end
+
+# support for name deprecated as of 1.0.3
+class OptionalDiscretePerturbation < OptionalMeasure
+end
+
+# support for name deprecated as of 1.0.3
+class DiscretePerturbationVector < MeasureVector
+end
+
+# support for name deprecated as of 1.0.3
+class NullPerturbation < NullMeasure
+end
+
+# support for name deprecated as of 1.0.3
+class OptionalNullPerturbation < OptionalNullMeasure
+end
+
+# support for name deprecated as of 1.0.3
+class NullPerturbationVector < NullMeasureVector
+end
+
+# support for name deprecated as of 1.0.3
+class RubyPerturbation < RubyMeasure
+end
+
+# support for name deprecated as of 1.0.3
+class OptionalRubyPerturbation < OptionalRubyMeasure
+end
+
+# support for name deprecated as of 1.0.3
+class RubyPerturbationVector < RubyMeasureVector
 end
 
 end # module Analysis

@@ -1190,7 +1190,7 @@ namespace openstudio{
                                fuelType.valueDescription() + "') and (RowName ='" + category.valueDescription() + "') and (Units = '" + units + "')";
 
           boost::optional<double> value = execAndReturnFirstDouble(query);
-          BOOST_ASSERT(value);
+          OS_ASSERT(value);
 
           if (*value != 0.0){
             result.addEndUse(*value, fuelType, category);
@@ -2106,7 +2106,7 @@ namespace openstudio{
             sqlite3_finalize(sqlStmtPtr);
           }
           // minutes - 1 to remove starting minute
-          return boost::optional<openstudio::Time>(openstudio::Time(0,0,minutes-1,0));
+          return boost::optional<openstudio::Time>(openstudio::Time(0,0,int(std::ceil(minutes-1.0)),0));
           break;
         default:
           // unsupported
@@ -2137,7 +2137,7 @@ namespace openstudio{
         }
         sqlite3_finalize(sqlStmtPtr);
       }
-      return openstudio::DateTime(openstudio::Date(monthOfYear(month),day), openstudio::Time(0,hour, minute, 0.0));
+      return openstudio::DateTime(openstudio::Date(monthOfYear(month),day), openstudio::Time(0, hour, minute, 0));
     }
 
     openstudio::OptionalTimeSeries SqlFile_Impl::timeSeries(const DataDictionaryItem& dataDictionary)
@@ -2198,13 +2198,13 @@ namespace openstudio{
           if ((month==0) || (day==0)) // then values in db are null - assumed run period
           {
             startDate=firstDateTime();
-            openstudio::DateTime dateTime(startDate + openstudio::Time(0,0,interval,0.0));
+            openstudio::DateTime dateTime(startDate + openstudio::Time(0,0,interval,0));
             stdDaysFromFirstReport.push_back((dateTime-startDate).totalDays());
             lastDateTime = dateTime;
           }
           else
           {
-            openstudio::DateTime dateTime(openstudio::Date(monthOfYear(month),day,year), openstudio::Time(0,hour, minute, 0.0));
+            openstudio::DateTime dateTime(openstudio::Date(monthOfYear(month),day,year), openstudio::Time(0,hour, minute, 0));
             if (count==0) { 
               startDate=dateTime;
             } else {
@@ -2212,7 +2212,7 @@ namespace openstudio{
               if (dateTime < lastDateTime)
               {
                 ++year;
-                dateTime = openstudio::DateTime(openstudio::Date(monthOfYear(month),day,year), openstudio::Time(0,hour, minute, 0.0));
+                dateTime = openstudio::DateTime(openstudio::Date(monthOfYear(month),day,year), openstudio::Time(0,hour, minute, 0));
               }
             }
             stdDaysFromFirstReport.push_back((dateTime-startDate).totalDays());
@@ -2268,7 +2268,7 @@ namespace openstudio{
           day = sqlite3_column_int(sqlStmtPtr, 1);
           hour = sqlite3_column_int(sqlStmtPtr, 2);
           minute = sqlite3_column_int(sqlStmtPtr, 3);
-          openstudio::DateTime dateTime(openstudio::Date(monthOfYear(month),day), openstudio::Time(0,hour, minute, 0.0));
+          openstudio::DateTime dateTime(openstudio::Date(monthOfYear(month),day), openstudio::Time(0,hour, minute, 0));
           dateTimes.push_back(dateTime);
 
           // step to next row
@@ -2412,7 +2412,7 @@ namespace openstudio{
             envNames.push_back(envId.name().get());
           }
           else {
-            BOOST_ASSERT(envId.type());
+            OS_ASSERT(envId.type());
             EnvironmentType envType = envId.type().get();
             BOOST_FOREACH(const std::string& envName,availableEnvPeriods()) {
               OptionalEnvironmentType oEnvType = environmentType(envName);
@@ -2464,7 +2464,7 @@ namespace openstudio{
         }
         // filter by regex if applicable
         if (query.timeSeries()) {
-          BOOST_ASSERT(query.timeSeries().get().regex());
+          OS_ASSERT(query.timeSeries().get().regex());
           boost::regex re = query.timeSeries().get().regex().get();
           for (StringVector::iterator it = tsNames.begin(); it != tsNames.end(); ) {
             if (!boost::regex_match(*it,re)) {
@@ -2546,7 +2546,7 @@ namespace openstudio{
                 << ".");
           }
           else {
-            BOOST_ASSERT(expanded.size() > 1);
+            OS_ASSERT(expanded.size() > 1);
             LOG(Info,"Unable to return timeSeries based on query: " << std::endl << query
                 << ", because it expands to more than one (" << expanded.size() << ") query.");
           }
@@ -2554,13 +2554,13 @@ namespace openstudio{
         }
       }
 
-      BOOST_ASSERT(wquery.m_vetted);
-      BOOST_ASSERT(wquery.environment()); 
-      BOOST_ASSERT(!wquery.environment().get().type());
-      BOOST_ASSERT(wquery.reportingFrequency());
-      BOOST_ASSERT(wquery.timeSeries());
-      BOOST_ASSERT(!wquery.timeSeries().get().regex());
-      if (wquery.keyValues()) { BOOST_ASSERT(!wquery.keyValues().get().regex()); }
+      OS_ASSERT(wquery.m_vetted);
+      OS_ASSERT(wquery.environment()); 
+      OS_ASSERT(!wquery.environment().get().type());
+      OS_ASSERT(wquery.reportingFrequency());
+      OS_ASSERT(wquery.timeSeries());
+      OS_ASSERT(!wquery.timeSeries().get().regex());
+      if (wquery.keyValues()) { OS_ASSERT(!wquery.keyValues().get().regex()); }
 
       // environment, reportingPeriod, and timeSeries will all be unique and explicit.
       // keyValues may or may not be explicit.
@@ -3060,7 +3060,7 @@ namespace openstudio{
       {
         std::pair<int, DateTime> pair;
         pair.first = sqlite3_column_int(sqlStmtPtr,0);
-        pair.second = DateTime( Date( monthOfYear( sqlite3_column_int(sqlStmtPtr,1) ), sqlite3_column_int(sqlStmtPtr,2) ), Time( 0, sqlite3_column_int(sqlStmtPtr, 3), 0, 0.0) );
+        pair.second = DateTime( Date( monthOfYear( sqlite3_column_int(sqlStmtPtr,1) ), sqlite3_column_int(sqlStmtPtr,2) ), Time( 0, sqlite3_column_int(sqlStmtPtr, 3), 0, 0) );
         reportIndicesDates.push_back( pair );
         // step to next row
         code = sqlite3_step(sqlStmtPtr);
@@ -3097,7 +3097,7 @@ namespace openstudio{
       /// must finalize to prevent memory leaks
       sqlite3_finalize(sqlStmtPtr);
 
-      return DateTime(Date(monthOfYear(month),dayOfMonth), Time(0,hour, 0, 0.0));
+      return DateTime(Date(monthOfYear(month),dayOfMonth), Time(0,hour, 0, 0));
     }
 
     boost::optional<int> SqlFile_Impl::illuminanceMapHourlyReportIndex(const int& mapIndex, const DateTime& dateTime) const
@@ -3397,7 +3397,7 @@ namespace openstudio{
             }
           }
           else if (envName) {
-            BOOST_ASSERT(!rfSet.empty());
+            OS_ASSERT(!rfSet.empty());
             BOOST_FOREACH(const ReportingFrequency& rf,rfSet) {
               kvAvail = availableKeyValues(*envName,rf.valueDescription(),*tsName);
               BOOST_FOREACH(const std::string& kv,keyValueNames) {
@@ -3408,7 +3408,7 @@ namespace openstudio{
             }
           }
           else if (rf) {
-            BOOST_ASSERT(!envNames.empty());
+            OS_ASSERT(!envNames.empty());
             BOOST_FOREACH(const std::string& envName,envNames) {
               kvAvail = availableKeyValues(envName,rf->valueDescription(),*tsName);
               BOOST_FOREACH(const std::string& kv,keyValueNames) {
@@ -3461,7 +3461,7 @@ namespace openstudio{
         OptionalReportingFrequency orf = sqlFileImpl.reportingFrequencyFromDB(rfStr);
         if (orf) { rfSet.insert(*orf); }
       }
-      BOOST_ASSERT(rfSet.size() == rfStrs.size());
+      OS_ASSERT(rfSet.size() == rfStrs.size());
       return rfSet;
     }
   } // detail

@@ -51,7 +51,7 @@ namespace detail {
   OutputVariable_Impl::OutputVariable_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ModelObject_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == OutputVariable::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == OutputVariable::iddObjectType());
   }
 
   OutputVariable_Impl::OutputVariable_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -59,7 +59,7 @@ namespace detail {
                                            bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == OutputVariable::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == OutputVariable::iddObjectType());
   }
 
   OutputVariable_Impl::OutputVariable_Impl(const OutputVariable_Impl& other,
@@ -95,7 +95,7 @@ namespace detail {
   std::string OutputVariable_Impl::keyValue() const
   {
     OptionalString result = getString(OS_Output_VariableFields::KeyValue, true);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result.get();
   }
 
@@ -107,14 +107,14 @@ namespace detail {
   std::string OutputVariable_Impl::variableName() const
   {
     OptionalString result = getString(OS_Output_VariableFields::VariableName, true);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result.get();
   }
 
   std::string OutputVariable_Impl::reportingFrequency() const
   {
     OptionalString result = getString(OS_Output_VariableFields::ReportingFrequency, true);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result.get();
   }
 
@@ -131,7 +131,7 @@ namespace detail {
   void OutputVariable_Impl::resetKeyValue()
   {
     bool test = setString(OS_Output_VariableFields::KeyValue, "");
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   bool OutputVariable_Impl::setVariableName(const std::string& variableName)
@@ -147,7 +147,7 @@ namespace detail {
   void OutputVariable_Impl::resetReportingFrequency()
   {
     bool test = setString(OS_Output_VariableFields::ReportingFrequency, "");
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   boost::optional<Schedule> OutputVariable_Impl::schedule() const
@@ -215,9 +215,9 @@ namespace detail {
 OutputVariable::OutputVariable(const std::string& variableName, const Model& model)
   : ModelObject(OutputVariable::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::OutputVariable_Impl>());
+  OS_ASSERT(getImpl<detail::OutputVariable_Impl>());
   bool test = getImpl<detail::OutputVariable_Impl>()->setVariableName(variableName);
-  BOOST_ASSERT(test);
+  OS_ASSERT(test);
 }
 
 OutputVariable::OutputVariable(boost::shared_ptr<detail::OutputVariable_Impl> impl)

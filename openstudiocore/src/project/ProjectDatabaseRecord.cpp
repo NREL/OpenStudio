@@ -52,17 +52,17 @@ namespace detail {
   ProjectDatabaseRecord_Impl::ProjectDatabaseRecord_Impl(const QSqlQuery& query, const ProjectDatabase& projectDatabase)
     : ObjectRecord_Impl(projectDatabase, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
     value = query.value(ProjectDatabaseRecordColumns::version);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_version = value.toString().toStdString();
 
     value = query.value(ProjectDatabaseRecordColumns::runManagerDBPath);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_runManagerDBPath = toPath(value.toString());
   }
 
@@ -142,11 +142,11 @@ namespace detail {
     
     QVariant value;
     value = query.value(ProjectDatabaseRecordColumns::version);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastVersion = value.toString().toStdString();
 
     value = query.value(ProjectDatabaseRecordColumns::runManagerDBPath);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastRunManagerDBPath = toPath(value.toString());
   }
 
@@ -158,11 +158,11 @@ namespace detail {
 
     QVariant value;
     value = query.value(ProjectDatabaseRecordColumns::version);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_version == value.toString().toStdString());
 
     value = query.value(ProjectDatabaseRecordColumns::runManagerDBPath);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_runManagerDBPath == toPath(value.toString()));
 
     return result;
@@ -204,7 +204,7 @@ UpdateByIdQueryData ProjectDatabaseRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -254,7 +254,7 @@ void ProjectDatabaseRecord::updatePathData(ProjectDatabase database,
 
   if (didStartTransaction) {
     bool test = database.commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 }
 
@@ -267,13 +267,13 @@ ProjectDatabaseRecord::ProjectDatabaseRecord(const std::string& version,
                                                             projectDatabase)),
                  projectDatabase)
 {
-  BOOST_ASSERT(this->getImpl<detail::ProjectDatabaseRecord_Impl>());
+  OS_ASSERT(this->getImpl<detail::ProjectDatabaseRecord_Impl>());
 }
 
 ProjectDatabaseRecord::ProjectDatabaseRecord(boost::shared_ptr<detail::ProjectDatabaseRecord_Impl> impl)
   : ObjectRecord(impl)
 {
-  BOOST_ASSERT(this->getImpl<detail::ProjectDatabaseRecord_Impl>());
+  OS_ASSERT(this->getImpl<detail::ProjectDatabaseRecord_Impl>());
 }
 
 std::string ProjectDatabaseRecord::version() const

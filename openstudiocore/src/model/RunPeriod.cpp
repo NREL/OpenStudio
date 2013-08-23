@@ -42,7 +42,7 @@ namespace detail {
   RunPeriod_Impl::RunPeriod_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ParentObject_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == RunPeriod::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == RunPeriod::iddObjectType());
   }
 
   RunPeriod_Impl::RunPeriod_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -50,7 +50,7 @@ namespace detail {
                                  bool keepHandle)
     : ParentObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == RunPeriod::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == RunPeriod::iddObjectType());
   }
 
   RunPeriod_Impl::RunPeriod_Impl(const RunPeriod_Impl& other,Model_Impl* model,bool keepHandle)
@@ -277,7 +277,7 @@ namespace detail {
 RunPeriod::RunPeriod(const Model& model)
   : ParentObject(RunPeriod::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::RunPeriod_Impl>());
+  OS_ASSERT(getImpl<detail::RunPeriod_Impl>());
   setBeginMonth(1);
   setBeginDayOfMonth(1);
   setEndMonth(12);

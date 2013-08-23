@@ -41,7 +41,7 @@ namespace detail {
                                                                              bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ControllerMechanicalVentilation::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ControllerMechanicalVentilation::iddObjectType());
   }
 
   ControllerMechanicalVentilation_Impl::ControllerMechanicalVentilation_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -49,7 +49,7 @@ namespace detail {
                                                                              bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ControllerMechanicalVentilation::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ControllerMechanicalVentilation::iddObjectType());
   }
 
   ControllerMechanicalVentilation_Impl::ControllerMechanicalVentilation_Impl(const ControllerMechanicalVentilation_Impl& other,
@@ -93,7 +93,7 @@ namespace detail {
 
   bool ControllerMechanicalVentilation_Impl::demandControlledVentilation() const {
     boost::optional<std::string> value = getString(OS_Controller_MechanicalVentilationFields::DemandControlledVentilation,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -103,7 +103,7 @@ namespace detail {
 
   std::string ControllerMechanicalVentilation_Impl::systemOutdoorAirMethod() const {
     boost::optional<std::string> value = getString(OS_Controller_MechanicalVentilationFields::SystemOutdoorAirMethod,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -130,7 +130,7 @@ namespace detail {
 
   void ControllerMechanicalVentilation_Impl::resetDemandControlledVentilation() {
     bool result = setString(OS_Controller_MechanicalVentilationFields::DemandControlledVentilation, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ControllerMechanicalVentilation_Impl::setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod) {
@@ -140,7 +140,7 @@ namespace detail {
 
   void ControllerMechanicalVentilation_Impl::resetSystemOutdoorAirMethod() {
     bool result = setString(OS_Controller_MechanicalVentilationFields::SystemOutdoorAirMethod, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<Schedule> ControllerMechanicalVentilation_Impl::optionalAvailabilitySchedule() const {
@@ -184,7 +184,7 @@ namespace detail {
       }
     }
 
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
 
     return result.get();
   }
@@ -194,7 +194,7 @@ namespace detail {
 ControllerMechanicalVentilation::ControllerMechanicalVentilation(const Model& model)
   : ModelObject(ControllerMechanicalVentilation::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ControllerMechanicalVentilation_Impl>());
+  OS_ASSERT(getImpl<detail::ControllerMechanicalVentilation_Impl>());
 
   Schedule schedule = model.alwaysOnDiscreteSchedule();
 

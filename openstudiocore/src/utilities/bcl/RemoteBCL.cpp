@@ -82,7 +82,7 @@ namespace openstudio{
     // DLM: this assert was failing for me, wait until SSL is required dependency to try this again
     //bool isConnected = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
     //  this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    //Q_ASSERT(isConnected);
+    //OS_ASSERT(isConnected);
   }
 
   RemoteBCL::~RemoteBCL()
@@ -228,10 +228,10 @@ namespace openstudio{
 
       // when the reply is finished call onSearchResponseComplete
       bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
-      Q_ASSERT(test);
+      OS_ASSERT(test);
       test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
         this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-      Q_ASSERT(test);
+      OS_ASSERT(test);
 
       QNetworkRequest request = QNetworkRequest(QUrl(url));
       request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -268,10 +268,10 @@ namespace openstudio{
 
       // when the reply is finished call onSearchResponseComplete
       bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
-      Q_ASSERT(test);
+      OS_ASSERT(test);
       test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
         this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-      Q_ASSERT(test);
+      OS_ASSERT(test);
 
       QNetworkRequest request = QNetworkRequest(QUrl(url));
       request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -448,7 +448,9 @@ namespace openstudio{
 
   int RemoteBCL::numResultPages() const
   {
-    return std::ceil(static_cast<double>(m_lastTotalResults)/static_cast<double>(m_numResultsPerQuery));
+    double numerator(lastTotalResults());
+    double denominator(resultsPerQuery());
+    return int(std::ceil(numerator/denominator));
   }
 
   bool RemoteBCL::validateAuthKey(const std::string& authKey, const std::string& remoteUrl)
@@ -489,10 +491,10 @@ namespace openstudio{
 
       // when the reply is finished call onSearchResponseComplete
       bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
-      Q_ASSERT(test);
+      OS_ASSERT(test);
       test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
         this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-      Q_ASSERT(test);
+      OS_ASSERT(test);
 
       QNetworkRequest request = QNetworkRequest(QUrl(url));
       request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -590,19 +592,19 @@ namespace openstudio{
 
     // disconnect all signals from m_networkManager to this
     disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
-    //Q_ASSERT(test);
+    //OS_ASSERT(test);
 
     // when the reply is finished call onDownloadComplete
     bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onDownloadComplete(QNetworkReply*)));
-    Q_ASSERT(test);
+    OS_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    Q_ASSERT(test);
+    OS_ASSERT(test);
 
     m_downloadReply = m_networkManager->post(request, data);
         
     test = connect(m_downloadReply, SIGNAL(readyRead()), this, SLOT(downloadData()));
-    Q_ASSERT(test);
+    OS_ASSERT(test);
 
     return true;
   }
@@ -626,14 +628,14 @@ namespace openstudio{
 
     // disconnect all signals from m_networkManager to this
     disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
-    //Q_ASSERT(test);
+    //OS_ASSERT(test);
 
     // when the reply is finished call onOnDemandGeneratorResponseComplete
     bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onOnDemandGeneratorResponseComplete(QNetworkReply*)));
-    Q_ASSERT(test);
+    OS_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    Q_ASSERT(test);
+    OS_ASSERT(test);
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -673,18 +675,18 @@ namespace openstudio{
 
       if (it->dataType() == OnDemandGeneratorArgumentType::String){
         boost::optional<std::string> value = it->valueAsString();
-        Q_ASSERT(value);
+        OS_ASSERT(value);
         arguments += toQString(*value);
       }else if (it->dataType() == OnDemandGeneratorArgumentType::Float){
         boost::optional<double> value = it->valueAsDouble();
-        Q_ASSERT(value);
+        OS_ASSERT(value);
         arguments += QString::number(*value);
       }else if (it->dataType() == OnDemandGeneratorArgumentType::Integer){
         boost::optional<int> value = it->valueAsInteger();
-        Q_ASSERT(value);
+        OS_ASSERT(value);
         arguments += QString::number(*value);
       }else{
-        Q_ASSERT(false);
+        OS_ASSERT(false);
       }
 
       if (it < itend-1){
@@ -702,19 +704,19 @@ namespace openstudio{
 
     // disconnect all signals from m_networkManager to this
     disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
-    //Q_ASSERT(test);
+    //OS_ASSERT(test);
 
     // when the reply is finished call onDownloadComplete
     bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onDownloadComplete(QNetworkReply*)));
-    Q_ASSERT(test);
+    OS_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    Q_ASSERT(test);
+    OS_ASSERT(test);
 
     m_downloadReply = m_networkManager->get(request);
 
     test = connect(m_downloadReply, SIGNAL(readyRead()), this, SLOT(downloadData()));
-    Q_ASSERT(test);
+    OS_ASSERT(test);
 
     return true;
   }
@@ -744,14 +746,14 @@ namespace openstudio{
 
     // disconnect all signals from m_networkManager to this
     disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
-    //Q_ASSERT(test);
+    //OS_ASSERT(test);
 
     // when the reply is finished call onMetaSearchResponseComplete
     bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onMetaSearchResponseComplete(QNetworkReply*)));
-    Q_ASSERT(test);
+    OS_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    Q_ASSERT(test);
+    OS_ASSERT(test);
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -786,14 +788,14 @@ namespace openstudio{
 
     // disconnect all signals from m_networkManager to this
     disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
-    //Q_ASSERT(test);
+    //OS_ASSERT(test);
 
     // when the reply is finished call onMetaSearchResponseComplete
     bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onMetaSearchResponseComplete(QNetworkReply*)));
-    Q_ASSERT(test);
+    OS_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    Q_ASSERT(test);
+    OS_ASSERT(test);
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -829,14 +831,14 @@ namespace openstudio{
 
     // disconnect all signals from m_networkManager to this
     disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
-    //Q_ASSERT(test);
+    //OS_ASSERT(test);
 
     // when the reply is finished call onSearchResponseComplete
     bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
-    Q_ASSERT(test);
+    OS_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    Q_ASSERT(test);
+    OS_ASSERT(test);
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -872,14 +874,14 @@ namespace openstudio{
 
     // disconnect all signals from m_networkManager to this
     disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
-    //Q_ASSERT(test);
+    //OS_ASSERT(test);
 
     // when the reply is finished call onSearchResponseComplete
     bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
-    Q_ASSERT(test);
+    OS_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    Q_ASSERT(test);
+    OS_ASSERT(test);
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -1051,7 +1053,7 @@ namespace openstudio{
 
   void RemoteBCL::downloadData()
   {
-    Q_ASSERT(m_downloadReply);
+    OS_ASSERT(m_downloadReply);
     m_downloadFile->write(m_downloadReply->readAll());
   }
 

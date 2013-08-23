@@ -40,7 +40,7 @@ namespace detail {
       bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == SiteGroundTemperatureBuildingSurface::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == SiteGroundTemperatureBuildingSurface::iddObjectType());
   }
 
   SiteGroundTemperatureBuildingSurface_Impl::SiteGroundTemperatureBuildingSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -48,7 +48,7 @@ namespace detail {
                                                                                        bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == SiteGroundTemperatureBuildingSurface::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == SiteGroundTemperatureBuildingSurface::iddObjectType());
   }
 
   SiteGroundTemperatureBuildingSurface_Impl::SiteGroundTemperatureBuildingSurface_Impl(const SiteGroundTemperatureBuildingSurface_Impl& other,
@@ -77,7 +77,7 @@ namespace detail {
 
   double SiteGroundTemperatureBuildingSurface_Impl::januaryGroundTemperature() const {
     boost::optional<double> value = getDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::JanuaryGroundTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -87,7 +87,7 @@ namespace detail {
 
   double SiteGroundTemperatureBuildingSurface_Impl::februaryGroundTemperature() const {
     boost::optional<double> value = getDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::FebruaryGroundTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -97,7 +97,7 @@ namespace detail {
 
   double SiteGroundTemperatureBuildingSurface_Impl::marchGroundTemperature() const {
     boost::optional<double> value = getDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::MarchGroundTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -107,7 +107,7 @@ namespace detail {
 
   double SiteGroundTemperatureBuildingSurface_Impl::aprilGroundTemperature() const {
     boost::optional<double> value = getDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::AprilGroundTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -117,7 +117,7 @@ namespace detail {
 
   double SiteGroundTemperatureBuildingSurface_Impl::mayGroundTemperature() const {
     boost::optional<double> value = getDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::MayGroundTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -127,7 +127,7 @@ namespace detail {
 
   double SiteGroundTemperatureBuildingSurface_Impl::juneGroundTemperature() const {
     boost::optional<double> value = getDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::JuneGroundTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -137,7 +137,7 @@ namespace detail {
 
   double SiteGroundTemperatureBuildingSurface_Impl::julyGroundTemperature() const {
     boost::optional<double> value = getDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::JulyGroundTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -147,7 +147,7 @@ namespace detail {
 
   double SiteGroundTemperatureBuildingSurface_Impl::augustGroundTemperature() const {
     boost::optional<double> value = getDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::AugustGroundTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -157,7 +157,7 @@ namespace detail {
 
   double SiteGroundTemperatureBuildingSurface_Impl::septemberGroundTemperature() const {
     boost::optional<double> value = getDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::SeptemberGroundTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -167,7 +167,7 @@ namespace detail {
 
   double SiteGroundTemperatureBuildingSurface_Impl::octoberGroundTemperature() const {
     boost::optional<double> value = getDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::OctoberGroundTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -177,7 +177,7 @@ namespace detail {
 
   double SiteGroundTemperatureBuildingSurface_Impl::novemberGroundTemperature() const {
     boost::optional<double> value = getDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::NovemberGroundTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -187,7 +187,7 @@ namespace detail {
 
   double SiteGroundTemperatureBuildingSurface_Impl::decemberGroundTemperature() const {
     boost::optional<double> value = getDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::DecemberGroundTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -198,133 +198,133 @@ namespace detail {
   void SiteGroundTemperatureBuildingSurface_Impl::setJanuaryGroundTemperature(double januaryGroundTemperature) {
     bool result = false;
     result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::JanuaryGroundTemperature, januaryGroundTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::resetJanuaryGroundTemperature() {
     bool result = setString(OS_Site_GroundTemperature_BuildingSurfaceFields::JanuaryGroundTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::setFebruaryGroundTemperature(double februaryGroundTemperature) {
     bool result = false;
     result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::FebruaryGroundTemperature, februaryGroundTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::resetFebruaryGroundTemperature() {
     bool result = setString(OS_Site_GroundTemperature_BuildingSurfaceFields::FebruaryGroundTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::setMarchGroundTemperature(double marchGroundTemperature) {
     bool result = false;
     result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::MarchGroundTemperature, marchGroundTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::resetMarchGroundTemperature() {
     bool result = setString(OS_Site_GroundTemperature_BuildingSurfaceFields::MarchGroundTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::setAprilGroundTemperature(double aprilGroundTemperature) {
     bool result = false;
     result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::AprilGroundTemperature, aprilGroundTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::resetAprilGroundTemperature() {
     bool result = setString(OS_Site_GroundTemperature_BuildingSurfaceFields::AprilGroundTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::setMayGroundTemperature(double mayGroundTemperature) {
     bool result = false;
     result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::MayGroundTemperature, mayGroundTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::resetMayGroundTemperature() {
     bool result = setString(OS_Site_GroundTemperature_BuildingSurfaceFields::MayGroundTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::setJuneGroundTemperature(double juneGroundTemperature) {
     bool result = false;
     result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::JuneGroundTemperature, juneGroundTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::resetJuneGroundTemperature() {
     bool result = setString(OS_Site_GroundTemperature_BuildingSurfaceFields::JuneGroundTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::setJulyGroundTemperature(double julyGroundTemperature) {
     bool result = false;
     result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::JulyGroundTemperature, julyGroundTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::resetJulyGroundTemperature() {
     bool result = setString(OS_Site_GroundTemperature_BuildingSurfaceFields::JulyGroundTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::setAugustGroundTemperature(double augustGroundTemperature) {
     bool result = false;
     result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::AugustGroundTemperature, augustGroundTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::resetAugustGroundTemperature() {
     bool result = setString(OS_Site_GroundTemperature_BuildingSurfaceFields::AugustGroundTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::setSeptemberGroundTemperature(double septemberGroundTemperature) {
     bool result = false;
     result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::SeptemberGroundTemperature, septemberGroundTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::resetSeptemberGroundTemperature() {
     bool result = setString(OS_Site_GroundTemperature_BuildingSurfaceFields::SeptemberGroundTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::setOctoberGroundTemperature(double octoberGroundTemperature) {
     bool result = false;
     result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::OctoberGroundTemperature, octoberGroundTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::resetOctoberGroundTemperature() {
     bool result = setString(OS_Site_GroundTemperature_BuildingSurfaceFields::OctoberGroundTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::setNovemberGroundTemperature(double novemberGroundTemperature) {
     bool result = false;
     result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::NovemberGroundTemperature, novemberGroundTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::resetNovemberGroundTemperature() {
     bool result = setString(OS_Site_GroundTemperature_BuildingSurfaceFields::NovemberGroundTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::setDecemberGroundTemperature(double decemberGroundTemperature) {
     bool result = false;
     result = setDouble(OS_Site_GroundTemperature_BuildingSurfaceFields::DecemberGroundTemperature, decemberGroundTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SiteGroundTemperatureBuildingSurface_Impl::resetDecemberGroundTemperature() {
     bool result = setString(OS_Site_GroundTemperature_BuildingSurfaceFields::DecemberGroundTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail

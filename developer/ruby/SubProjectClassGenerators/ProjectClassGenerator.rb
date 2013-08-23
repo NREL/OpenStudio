@@ -68,25 +68,56 @@ class ProjectClassGenerator < SubProjectClassGenerator
       @objectRecord = true
       re = Regexp.new('(\w*)Record')
       m = @className.match(re)
-      @serializedClass = m[1]
-      
+      @serializedClass = m[1]      
       @serializedClassArgument = @serializedClass.gsub(/\b\w/){$&.downcase}
     end
     
   end
   
+  def implHppIncludes()
+    result = String.new
+    if @objectRecord
+      result << "// TODO: Delete this include if no derived classes (and no " << @className << "Type enum).\n"
+      result << "#include <project/" << @className << ".hpp>\n\n"
+    end
+    return result
+  end
+
   def cppIncludes()
     result = String.new
     if @joinRecord
       result << "#include <project/" << @leftJoinClass << "Record.hpp>\n"
       result << "#include <project/" << @rightJoinClass << "Record.hpp>\n"
     else 
-      result << "#include <project/JoinRecord.hpp>\n\n"
+      result << "#include <project/JoinRecord.hpp>\n"
+      result << "// TODO: Add derived class includes for factory methods if this is a base class.\n\n"
+      result << "// TODO: Replace with derived class includes if this is a base class.\n"
+      result << "#include <NAMESPACE/" << @serializedClass << ".hpp>\n\n"
     end
     result << "#include <utilities/core/Assert.hpp>\n\n"
     return result
   end
   
+  def hppOSForwardDeclarations
+    result = String.new
+    if @objectRecord
+      result << "namespace NAMESPACE {\n"
+      result << "  class " << @serializedClass << ";\n"
+      result << "}\n"
+    end
+    return result
+  end
+
+  def implHppOSForwardDeclarations
+    result = String.new
+    if @objectRecord
+      result << "namespace NAMESPACE {\n"
+      result << "  class " << @serializedClass << ";\n"
+      result << "}\n"
+    end
+    return result
+  end 
+
   def hppSubProjectForwardDeclarations
     result = String.new
     if @joinRecord
@@ -108,6 +139,24 @@ class ProjectClassGenerator < SubProjectClassGenerator
   def hppPreClass()
     result = String.new
     
+    if @objectRecord
+
+      result << "// TODO: Populate or delete this enumeration if there are/are not any derived types, respectively.\n"
+      result << "/** \\class " << @className << "Type\n"
+      result << " *  \\brief ObjectRecord types that derive from " << @className << ".\n"
+      result << " *  \\details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual\n"
+      result << " *  macro call is:\n"
+      result << " *  \\code\n"
+      result << "OPENSTUDIO_ENUM(" << @className << "Type,\n"
+      result << "    ((" << @className << "DerivedRecord1))\n"
+      result << ");\n"
+      result << " *  \\endcode */\n"
+      result << "OPENSTUDIO_ENUM(" << @className << "Type,\n"
+      result << "    ((" << @className << "DerivedRecord1))\n"
+      result << ");\n\n"
+
+    end
+
     if @baseClassName == "ObjectRecord"
     
       # Start Enum for Table Columns
@@ -125,6 +174,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << "  ((timestampLast)(TEXT)(6))\n"
       result << "  ((uuidLast)(TEXT)(7))\n"
       result << "  // TODO: Add Columns to Record Class (and Derived-Class)-Specific Data.\n"
+      result << "  ((" << @classArgument << "Type)(INTEGER)(8))\n"
       result << ");\n\n"
     
     end
@@ -137,6 +187,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
   def hppPublicTypedefs() 
     result = String.new
     
+    result << "\n"
     result << "  typedef detail::" << @className << "_Impl ImplType;\n"
     if @joinRecord
       result << "  typedef JoinRecordColumns ColumnsType;\n\n"
@@ -171,7 +222,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
 
       # construct from serializedClass
       result << "  // TODO: Delete if " << @serializedClass << " is abstract, make private if " 
-      result << @serializedClass << " has derived classes.\n"
+      result << @serializedClass << " is concrete and has derived classes.\n"
       result << "  // TODO: Replace ProjectDatabase& database (or add another object if it is ok for " 
       result << @className << " to be and orphan) with const& to parent Record if the Table contains a parent id.\n"
       result << "  // TODO: Find-replace on 'NAMESPACE'.\n"
@@ -180,7 +231,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
       
       # construct from query
       result << "  // TODO: Delete if " << @serializedClass << " is abstract, make private if " 
-      result << @serializedClass << " has derived classes.\n"
+      result << @serializedClass << " is concrete and has derived classes.\n"
       result << "  " << @className << "(const QSqlQuery& query, ProjectDatabase& database);\n\n"
       
     end
@@ -200,15 +251,19 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << ");\n\n"      
     
     else
+
+      implConstructorStart = String.new
+      implConstructorStart << "    " << @className << "_Impl("
     
       # construct from serializedClass
-      result << "    // TODO: May need to add type enum to accept from derived record class if\n" 
-      result << "    // " << @serializedClass << " is abstract.\n"
+      result << "    // TODO: May need to remove type enum if " << @serializedClass 
+        result << " is a leaf of the inheritance tree.\n"
       result << "    // TODO: Replace ProjectDatabase& database with parent Record and/or add more \n"
       result << "    // construtors to match public class.\n"
       result << "    // TODO: Find-replace on 'NAMESPACE'.\n"
-      result << "    " << @className << "_Impl(const NAMESPACE::" << @serializedClass << "& " << @serializedClassArgument
-      result << ", ProjectDatabase& database);\n\n"
+      result << implConstructorStart << "const NAMESPACE::" << @serializedClass << "& " << @serializedClassArgument << ",\n"
+      result << " " * implConstructorStart.size << "const " << @className << "Type& " << @classArgument << "Type,\n"
+      result << " " * implConstructorStart.size << "ProjectDatabase& database);\n\n"
     
     end
     
@@ -233,7 +288,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << "    : JoinRecord_Impl(" << @leftArgument << ".id(), " << @leftArgument << ".handle(), " 
       result << @rightArgument << ".id(), " << @rightArgument << ".handle(), " << @leftArgument << ".projectDatabase())\n"
       result << "  {\n"
-      result << "    BOOST_ASSERT(" << @leftArgument << ".projectDatabase().handle() == " 
+      result << "    OS_ASSERT(" << @leftArgument << ".projectDatabase().handle() == " 
       result << @rightArgument << ".projectDatabase().handle());\n"
       result << "  }\n\n"
       
@@ -245,18 +300,21 @@ class ProjectClassGenerator < SubProjectClassGenerator
     else
     
       # construct from serializedClass    
-      result << constructorPreamble << "const NAMESPACE::" << @serializedClass << "& " << @serializedClassArgument 
-      result << ", ProjectDatabase& database)\n"
+      result << constructorPreamble << "const NAMESPACE::" << @serializedClass << "& " << @serializedClassArgument << ",\n"
+      result << " " * constructorPreamble.size << "const " << @className << "Type& " << @classArgument << "Type,\n"
+      result << " " * constructorPreamble.size << "ProjectDatabase& database)\n"
       result << "    : " << @baseClassName << "_Impl("     
       if @baseClassName == "ObjectRecord"
         result << "database," << @serializedClassArgument << ".uuid()," 
         result << @serializedClassArgument << ".name()," << @serializedClassArgument << ".name(),\"\","
-        result << @serializedClassArgument << ".versionUUID())\n"
+        result << @serializedClassArgument << ".versionUUID()),\n"
       else
-        result << @serializedClassArgument << ", database)\n"
+        result << @serializedClassArgument << ", database),\n"
       end
+      result << "  // TODO: Delete member enum initialization if deleted from _Impl.hpp\n"
+      result << "      m_" << @classArgument << "Type(" << @classArgument << "Type)\n"
       result << "  {\n"
-      result << "    BOOST_ASSERT(false);\n"
+      result << "    OS_ASSERT(false);\n"
       result << "    // TODO: Initialize data members, check constructor call for base class.\n"
       result << "  }\n\n"
       
@@ -271,14 +329,19 @@ class ProjectClassGenerator < SubProjectClassGenerator
         result << "(query, database)\n"
       end
       result << "  {\n"
-      result << "    BOOST_ASSERT(query.isValid());\n"
-      result << "    BOOST_ASSERT(query.isActive());\n"
-      result << "    BOOST_ASSERT(query.isSelect());\n\n"
+      result << "    OS_ASSERT(query.isValid());\n"
+      result << "    OS_ASSERT(query.isActive());\n"
+      result << "    OS_ASSERT(query.isSelect());\n\n"
       result << "    QVariant value;\n\n"
+      result << "    // TODO: Delete deserialization of enum if deleted from _Impl.hpp\n"
+      result << "    value = query.value(" << @className << "::ColumnsType::" << @classArgument 
+          result << "Type);\n"
+      result << "    OS_ASSERT(value.isValid() && !value.isNull());\n"
+      result << "    m_" << @classArgument << "Type = " << @className << "Type(value.toInt());\n\n"
       result << "    // TODO: Extract data members from query. Templates follow.\n\n"
       result << "    // Required data member\n"
       result << "    // value = query.value(" << @className << "::ColumnsType::DATAMEMBERNAME);\n"
-      result << "    // BOOST_ASSERT(value.isValid() && !value.isNull());\n"
+      result << "    // OS_ASSERT(value.isValid() && !value.isNull());\n"
       result << "    // m_DATAMEMBERNAME = value.toTYPE();\n\n"
       result << "    // Optional data member\n"
       result << "    // value = query.value(" << @className << "::ColumnsType::DATAMEMBERNAME);\n"
@@ -300,12 +363,15 @@ class ProjectClassGenerator < SubProjectClassGenerator
     
     if @joinRecord
         
-      result << constructorPreamble << "const " << @leftJoinClass << "Record& " << @leftArgument << ",\n"
-      result << " " * constructorPreamble.size << "const " << @rightJoinClass << "Record& " << @rightArgument << ")\n"
+      result << constructorPreamble << "const " << @leftJoinClass << "Record& " << @leftArgument 
+          result << ",\n"
+      result << " " * constructorPreamble.size << "const " << @rightJoinClass << "Record& " 
+          result << @rightArgument << ")\n"
       result << "  : JoinRecord(boost::shared_ptr<detail::" << @className << "_Impl(\n"
-      result << "        new detail::" << @className << "_Impl(" << @leftArgument << ", " << @rightArgument << ")), " << @leftArgument << ".projectDatabase())\n"
+      result << "        new detail::" << @className << "_Impl(" << @leftArgument << ", " 
+          result << @rightArgument << ")), " << @leftArgument << ".projectDatabase())\n"
       result << "{\n"
-      result << "  BOOST_ASSERT(getImpl<detail::" << @className << "_Impl>());\n"
+      result << "  OS_ASSERT(getImpl<detail::" << @className << "_Impl>());\n"
       result << "}\n\n"
     
     else
@@ -317,8 +383,8 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << "        new detail::" << @className << "_Impl(" << @serializedClassArgument << ", database)),\n"
       result << "        database)\n"
       result << "{\n"
-      result << "  BOOST_ASSERT(getImpl<detail::" << @className << "_Impl>());\n\n"
-      result << "  BOOST_ASSERT(false);\n"
+      result << "  OS_ASSERT(getImpl<detail::" << @className << "_Impl>());\n\n"
+      result << "  OS_ASSERT(false);\n"
       result << "  // TODO: Align with final public constructors.\n"
       result << "  // TODO: Handle relationships (setting id fields) as needed.\n"
       result << "}\n\n"
@@ -329,7 +395,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << "        new detail::" << @className << "_Impl(query, database)),\n"
       result << "        database)\n"
       result << "{\n"
-      result << "  BOOST_ASSERT(getImpl<detail::" << @className << "_Impl>());\n"
+      result << "  OS_ASSERT(getImpl<detail::" << @className << "_Impl>());\n"
       result << "}\n\n"
     
     end
@@ -487,13 +553,13 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << "  boost::optional<ObjectRecord> " << @className << "_Impl::parent() const {\n"
       result << "    // Return this object's parent, if it has one. See ComponentAttributeRecord_Impl\n"
       result << "    // for an example.\n"
-      result << "    BOOST_ASSERT(false);\n"
+      result << "    OS_ASSERT(false);\n"
       result << "    return boost::none;\n"
       result << "  }\n\n"
     
       result << "  std::vector<ObjectRecord> " << @className << "_Impl::children() const {\n"
       result << "    // Return this object's children. See ComponentReferenceRecord_Impl for an example.\n"
-      result << "    BOOST_ASSERT(false);\n"
+      result << "    OS_ASSERT(false);\n"
       result << "    ObjectRecordVector result;\n"
       result << "    return result;\n"
       result << "  }\n\n"
@@ -501,7 +567,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << "  std::vector<ObjectRecord> " << @className << "_Impl::resources() const {\n"
       result << "    // Return this object's resources. See ModelObjectActionSetRelationshipRecord_Impl\n"
       result << "    // for an example.\n"
-      result << "    BOOST_ASSERT(false);\n"
+      result << "    OS_ASSERT(false);\n"
       result << "    ObjectRecordVector result;\n"
       result << "    return result;\n"
       result << "  }\n\n"    
@@ -509,7 +575,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << "  std::vector<JoinRecord> " << @className << "_Impl::joinRecords() const {\n"
       result << "    // Return the join relationships between this object and others. See\n"
       result << "    // ModelObjectActionSetRelationshipRecord_Impl for an example.\n"
-      result << "    BOOST_ASSERT(false);\n"
+      result << "    OS_ASSERT(false);\n"
       result << "    JoinRecordVector result;\n"
       result << "    return result;\n"
       result << "  }\n\n"
@@ -536,14 +602,14 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << "  " << @leftJoinClass << "Record " << @className << "_Impl::" << @leftArgument << "() const {\n"
       result << "    ProjectDatabase database = this->projectDatabase();\n"
       result << "    boost::optional<" << @leftJoinClass << "Record> " << @leftArgument << " = " << @leftJoinClass << "Record::get" << @leftJoinClass << "Record(this->leftId(),database);\n"
-      result << "    BOOST_ASSERT(" << @leftArgument << ");\n"
+      result << "    OS_ASSERT(" << @leftArgument << ");\n"
       result << "    return *" << @leftArgument << ";\n"
       result << "  }\n\n"
       
       result << "  " << @rightJoinClass << "Record " << @className << "_Impl::" << @rightArgument << "() const {\n"
       result << "    ProjectDatabase database = this->projectDatabase();\n"
       result << "    boost::optional<" << @rightJoinClass << "Record> " << @rightArgument << " = " << @rightJoinClass << "Record::get" << @rightJoinClass << "Record(this->rightId(),database);\n"
-      result << "    BOOST_ASSERT(" << @rightArgument << ");\n"
+      result << "    OS_ASSERT(" << @rightArgument << ");\n"
       result << "    return *" << @rightArgument << ";\n"
       result << "  }\n\n"
     
@@ -552,7 +618,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << "  NAMESPACE::" << @serializedClass << " " << @className << "::" << @serializedClassArgument
       result << "() const {\n"    
       result << "    // TODO: De-serialize the object here.\n"
-      result << "    BOOST_ASSERT(false);\n"
+      result << "    OS_ASSERT(false);\n"
       result << "  }\n\n"
     
     end    
@@ -592,7 +658,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << "boost::optional<" << @className << "> " << @className << "::factoryFromQuery(const QSqlQuery& query, ProjectDatabase& database)\n"
       result << "{\n"
       result << "  Optional" << @className << " result;\n\n"
-      result << "  // Template for base classes. See, for instance, DiscretePerturbationRecord::factoryFromQuery.\n"
+      result << "  // Template for base classes. See, for instance, MeasureRecord::factoryFromQuery.\n"
       result << "  // int " << @classArgument << "Type = query.value(" 
       result << @className << "Columns::" << @classArgument << "Type).toInt();\n\n"
       result << "  // switch (" << @classArgument << "Type) {\n"
@@ -619,14 +685,14 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << ", ProjectDatabase& database)\n" 
       result << "{\n"
       result << "  // TODO: Delete if no derived classes.\n"
-      result << "  BOOST_ASSERT(false);\n\n"
+      result << "  OS_ASSERT(false);\n\n"
       result << "  // Template. See, for instance, StandardsFilterObjectAttributeRecord::factoryFromFilter.\n\n"
       result << "  // if (" << @serializedClassArgument << ".optionalCast<NAMESPACE::FIRST_DERIVED_CLASS>()) {\n"
       result << "  //   return FIRST_DERIVED_CLASSRecord(" << @serializedClassArgument << ".cast<NAMESPACE::FIRST_DERIVED_CLASS>(), database);\n"
       result << "  // else if {\n"
       result << "  //   ...\n"
       result << "  // }\n\n"
-      result << "  BOOST_ASSERT(false);\n"
+      result << "  OS_ASSERT(false);\n"
       result << "  return " << @className << "(boost::shared_ptr<detail::" << @className << "_Impl>());\n"
       result << "}\n\n"
       
@@ -647,13 +713,13 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << "  while (query.next()) {\n"
       result << "    QVariant value;\n"
       result << "    value = query.value(JoinRecordColumns::rightId);\n"
-      result << "    BOOST_ASSERT(value.isValid() && !value.isNull());\n"
+      result << "    OS_ASSERT(value.isValid() && !value.isNull());\n"
       result << "    " << @rightArgument << "Ids.push_back(value.toInt());\n"
       result << "  }\n\n"
       result << "  BOOST_FOREACH(int id, " << @rightArgument << "Ids) {\n"
       result << "    boost::optional<" << @rightJoinClass << "Record> " << @rightArgument << " = " 
       result << @rightJoinClass << "Record::get" << @rightJoinClass << "Record(id,database);\n"
-      result << "    BOOST_ASSERT(" << @rightArgument << ");\n"
+      result << "    OS_ASSERT(" << @rightArgument << ");\n"
       result << "    result.push_back(*" << @rightArgument << ");\n"
       result << "  }\n\n"
       result << "  return result;\n"
@@ -672,13 +738,13 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << "  while (query.next()) {\n"
       result << "    QVariant value;\n"
       result << "    value = query.value(JoinRecordColumns::leftId);\n"
-      result << "    BOOST_ASSERT(value.isValid() && !value.isNull());\n"
+      result << "    OS_ASSERT(value.isValid() && !value.isNull());\n"
       result << "    " << @leftArgument << "Ids.push_back(value.toInt());\n"
       result << "  }\n\n"
       result << "  BOOST_FOREACH(int id, " << @leftArgument << "Ids) {\n"
       result << "    boost::optional<" << @leftJoinClass << "Record> " << @leftArgument << " = " 
       result << @leftJoinClass << "Record::get" << @leftJoinClass << "Record(id,database);\n"
-      result << "    BOOST_ASSERT(" << @leftArgument << ");\n"
+      result << "    OS_ASSERT(" << @leftArgument << ");\n"
       result << "    result.push_back(*" << @leftArgument << ");\n"
       result << "  }\n\n"
       result << "  return result;\n"
@@ -833,26 +899,37 @@ class ProjectClassGenerator < SubProjectClassGenerator
     
       result << "  void " << @className << "_Impl::bindValues(QSqlQuery& query) const {\n"
       result << "    " << @baseClassName << "_Impl::bindValues(query);\n\n"
+      result << "    // TODO: Delete bind for enum if no derived classes.\n"
+      result << "    query.bindValue(" << @className << "::ColumnsType::" << @classArgument 
+          result << "Type,m_" << @classArgument << "Type.value());\n"
       result << "    // Template for required data.\n"
-      result << "    // query.bindValue(" << @className << "::ColumnsType::DATAMEMBERNAME,m_DATAMEMBERNAME);\n"
+      result << "    // query.bindValue(" << @className << "::ColumnsType::DATAMEMBERNAME,"
+          result << "m_DATAMEMBERNAME);\n"
       result << "    // Template for optional data.\n"
       result << "    // if (m_DATAMEMBERNAME) {\n"
-      result << "    //   query.bindValue(" << @className << "::ColumnsType::DATAMEMBERNAME,*m_DATAMEMBERNAME);\n"
+      result << "    //   query.bindValue(" << @className << "::ColumnsType::DATAMEMBERNAME,"
+          result << "*m_DATAMEMBERNAME);\n"
       result << "    // }\n"
       result << "    // else {\n"
-      result << "    //   query.bindValue(" << @className << "::ColumnsType::DATAMEMBERNAME,QVariant(QVariant::TYPE));\n"
+      result << "    //   query.bindValue(" << @className << "::ColumnsType::DATAMEMBERNAME,"
+          result << "QVariant(QVariant::TYPE));\n"
       result << "    // }\n"
       result << "  }\n\n"
     
       result << "  void " << @className << "_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {\n"
-      result << "    BOOST_ASSERT(query.isValid());\n"
-      result << "    BOOST_ASSERT(query.isActive());\n"
-      result << "    BOOST_ASSERT(query.isSelect());\n\n"
+      result << "    OS_ASSERT(query.isValid());\n"
+      result << "    OS_ASSERT(query.isActive());\n"
+      result << "    OS_ASSERT(query.isSelect());\n\n"
       result << "    " << @baseClassName << "_Impl::setLastValues(query,projectDatabase);\n\n"
       result << "    QVariant value;\n\n"
+      result << "    // TODO: Delete if no derived classes.\n"
+      result << "    value = query.value(" << @className << "::ColumnsType::" << @classArgument
+          result << "Type);\n"
+      result << "    OS_ASSERT(value.isValid() && !value.isNull());\n"
+      result << "    m_last" << @className << "Type = " << @className << "Type(value.toInt());\n\n"
       result << "    // Template for required data.\n"
       result << "    // value = query.value(" << @className << "::ColumnsType::DATAMEMBERNAME);\n"
-      result << "    // BOOST_ASSERT(value.isValid() && !value.isNull());\n"
+      result << "    // OS_ASSERT(value.isValid() && !value.isNull());\n"
       result << "    // m_lastDATAMEMBERNAME = value.toTYPE();\n\n"
       result << "    // Template for optional data.\n"
       result << "    // value = query.value(" << @className << "::ColumnsType::DATAMEMBERNAME);\n"
@@ -865,14 +942,20 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << "  }\n\n"
     
       result << "  bool " << @className << "_Impl::compareValues(const QSqlQuery& query) const {\n"
-      result << "    BOOST_ASSERT(query.isValid());\n"
-      result << "    BOOST_ASSERT(query.isActive());\n"
-      result << "    BOOST_ASSERT(query.isSelect());\n\n"
+      result << "    OS_ASSERT(query.isValid());\n"
+      result << "    OS_ASSERT(query.isActive());\n"
+      result << "    OS_ASSERT(query.isSelect());\n\n"
       result << "    bool result = " << @baseClassName << "_Impl::compareValues(query);\n\n"
       result << "    QVariant value;\n\n"
+      result << "    // TODO: Delete if no derived classes.\n"
+      result << "    value = query.value(" << @className << "::ColumnsType::" << @classArgument
+          result << "Type);\n"
+      result << "    OS_ASSERT(value.isValid() && !value.isNull());\n"
+      result << "    result = result && (m_" << @classArgument << "Type == " << @className
+          result << "Type(value.toInt()));\n\n"
       result << "    // Template for required data.\n"
       result << "    // value = query.value(" << @className << "::ColumnsType::DATAMEMBERNAME);\n"
-      result << "    // BOOST_ASSERT(value.isValid() && !value.isNull());\n"
+      result << "    // OS_ASSERT(value.isValid() && !value.isNull());\n"
       result << "    // result = result && (m_DATAMEMBERNAME == value.toTYPE());\n\n"
       result << "    // Template for optional data.\n"
       result << "    // value = query.value(" << @className << "::ColumnsType::DATAMEMBERNAME);\n"
@@ -887,11 +970,15 @@ class ProjectClassGenerator < SubProjectClassGenerator
     
       result << "  void " << @className << "_Impl::saveLastValues() {\n"
       result << "    " << @baseClassName << "_Impl::saveLastValues();\n\n"
+      result << "    // TODO: Delete if no derived types.\n"
+      result << "    m_last" << @className << "Type = m_" << @classArgument << "Type;\n"
       result << "    // m_lastDATAMEMBERNAME = m_DATAMEMBERNAME;\n"
       result << "  }\n\n"
     
       result << "  void " << @className << "_Impl::revertToLastValues() {\n"
       result << "    " << @baseClassName << "_Impl::revertToLastValues();\n\n"
+      result << "    // TODO: Delete if no derived types.\n"
+      result << "    m_" << @classArgument << "Type = m_last" << @className << "Type;\n"
       result << "    // m_DATAMEMBERNAME = m_lastDATAMEMBERNAME;\n"
       result << "  }\n\n"
       
@@ -913,11 +1000,26 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << " " * constructorPreamble.size << "ProjectDatabase database)\n"
       result << "  : " << @baseClassName << "(impl, database)\n"
       result << "{\n"
-      result << "  BOOST_ASSERT(getImpl<detail::" << @className << "_Impl>());\n"
+      result << "  OS_ASSERTgetImpl<detail::" << @className << "_Impl>());\n"
       result << "}\n"
     end
 
     return result
   end  
+
+  def implHppPrivateMethods()
+    result = String.new
+   
+    if @objectRecord
+
+      result << "\n"
+      result << "    // TODO: Delete enums if no derived classes.\n"
+      result << "    " << @className << "Type m_" << @classArgument << "Type;\n\n"
+      result << "    " << @className << "Type m_last" << @className << "Type;\n"
+
+    end
+
+    return result
+  end
     
 end

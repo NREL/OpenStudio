@@ -36,7 +36,7 @@ namespace detail {
 UtilityCost_Charge_Block_Impl::UtilityCost_Charge_Block_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : ParentObject_Impl(idfObject, model, keepHandle)
 {
-  BOOST_ASSERT(idfObject.iddObject().type() == UtilityCost_Charge_Block::iddObjectType());
+  OS_ASSERT(idfObject.iddObject().type() == UtilityCost_Charge_Block::iddObjectType());
 }
 
 UtilityCost_Charge_Block_Impl::UtilityCost_Charge_Block_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -44,7 +44,7 @@ UtilityCost_Charge_Block_Impl::UtilityCost_Charge_Block_Impl(const openstudio::d
                                            bool keepHandle)
   : ParentObject_Impl(other,model,keepHandle)
 {
-  BOOST_ASSERT(other.iddObject().type() == UtilityCost_Charge_Block::iddObjectType());
+  OS_ASSERT(other.iddObject().type() == UtilityCost_Charge_Block::iddObjectType());
 }
 
 UtilityCost_Charge_Block_Impl::UtilityCost_Charge_Block_Impl(const UtilityCost_Charge_Block_Impl& other,Model_Impl* model,bool keepHandle)
@@ -120,7 +120,7 @@ bool UtilityCost_Charge_Block_Impl::setBlockSizeValueOrVariableName(unsigned ind
     values[OS_UtilityCost_Charge_BlockExtensibleFields::BlockSizeValueorVariableName] = str;
     return !insertExtensibleGroup(index,values).empty();
   }
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return false;
 }
 
@@ -142,7 +142,7 @@ bool UtilityCost_Charge_Block_Impl::setBlockCostPerUnitValueOrVariableName(unsig
     values[OS_UtilityCost_Charge_BlockExtensibleFields::BlockCostperUnitValueorVariableName] = str;
     return !insertExtensibleGroup(index,values).empty();
   }
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return false;
 }
 
@@ -196,7 +196,7 @@ const std::vector<std::string>& UtilityCost_Charge_Block_Impl::outputVariableNam
 UtilityCost_Charge_Block::UtilityCost_Charge_Block(const Model& model)
   : ParentObject(UtilityCost_Charge_Block::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::UtilityCost_Charge_Block_Impl>());
+  OS_ASSERT(getImpl<detail::UtilityCost_Charge_Block_Impl>());
 }
 
 // constructor

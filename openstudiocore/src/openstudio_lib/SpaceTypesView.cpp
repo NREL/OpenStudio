@@ -22,6 +22,9 @@
 #include <openstudio_lib/ModelObjectListView.hpp>
 
 #include <model/Model_Impl.hpp>
+
+#include <utilities/core/Assert.hpp>
+
 #include <QStyleOption>
 #include <QPainter>
 #include <QVBoxLayout>
@@ -41,7 +44,7 @@ SpaceTypesView::SpaceTypesView(const openstudio::model::Model& model,
                     parent)
 {
   ModelObjectListView* modelObjectListView = qobject_cast<ModelObjectListView*>(this->itemSelector());
-  BOOST_ASSERT(modelObjectListView);
+  OS_ASSERT(modelObjectListView);
   modelObjectListView->setItemsDraggable(false);
 }
 

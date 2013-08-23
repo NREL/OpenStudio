@@ -27,15 +27,20 @@
 #include "JobOutputCleanup.hpp"
 #include "RunManager_Util.hpp"
 
-#include <utilities/time/DateTime.hpp>
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
 #include <model/WeatherFile.hpp>
 #include <model/WeatherFile_Impl.hpp>
+
 #include <energyplus/ReverseTranslator.hpp>
+
 #include <utilities/idf/IdfFile.hpp>
 #include <utilities/idf/Workspace.hpp>
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
+
+#include <utilities/core/Assert.hpp>
+#include <utilities/time/DateTime.hpp>
+
 
 #include <QDir>
 #include <QDateTime>
@@ -139,7 +144,7 @@ namespace detail {
         model = rt.translateWorkspace(*workspace);
       }
 
-      BOOST_ASSERT(model);
+      OS_ASSERT(model);
 
       openstudio::path outfile = outpath / openstudio::toPath("out.osm");
 

@@ -33,30 +33,25 @@
 #include <project/AlgorithmRecord_Impl.hpp>
 #include <project/AttributeRecord.hpp>
 #include <project/AttributeRecord_Impl.hpp>
-#include <project/ClauseRecord.hpp>
-#include <project/ClauseRecord_Impl.hpp>
 #include <project/ContinuousVariableRecord.hpp>
 #include <project/DataPointRecord.hpp>
 #include <project/DataPointRecord_Impl.hpp>
 #include <project/DataPointValueRecord.hpp>
 #include <project/DataPointValueRecord_Impl.hpp>
-#include <project/DiscretePerturbationRecord.hpp>
-#include <project/DiscretePerturbationRecord_Impl.hpp>
+#include <project/DiscreteVariableRecord.hpp>
 #include <project/FileReferenceRecord.hpp>
 #include <project/FileReferenceRecord_Impl.hpp>
 #include <project/FunctionRecord.hpp>
 #include <project/FunctionRecord_Impl.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/ProblemRecord_Impl.hpp>
-#include <project/RuleRecord.hpp>
-#include <project/RuleRecord_Impl.hpp>
-#include <project/RulesetRecord.hpp>
-#include <project/RulesetRecord_Impl.hpp>
-#include <project/TagRecord.hpp>
-#include <project/TagRecord_Impl.hpp>
 #include <project/OSArgumentRecord.hpp>
 #include <project/OSArgumentRecord_Impl.hpp>
 #include <project/OutputVariableRecord.hpp>
+#include <project/MeasureRecord.hpp>
+#include <project/MeasureRecord_Impl.hpp>
+#include <project/ProblemRecord.hpp>
+#include <project/ProblemRecord_Impl.hpp>
+#include <project/TagRecord.hpp>
+#include <project/TagRecord_Impl.hpp>
 #include <project/URLSearchPathRecord.hpp>
 #include <project/URLSearchPathRecord_Impl.hpp>
 #include <project/VariableRecord.hpp>
@@ -64,12 +59,8 @@
 #include <project/WorkflowRecord.hpp>
 #include <project/WorkflowRecord_Impl.hpp>
 
-#include <project/DataPoint_DiscretePerturbation_JoinRecord.hpp>
-#include <project/DataPoint_DiscretePerturbation_JoinRecord_Impl.hpp>
-#include <project/Rule_Clause_JoinRecord.hpp>
-#include <project/Rule_Clause_JoinRecord_Impl.hpp>
-#include <project/Ruleset_Rule_JoinRecord.hpp>
-#include <project/Ruleset_Rule_JoinRecord_Impl.hpp>
+#include <project/DataPoint_Measure_JoinRecord.hpp>
+#include <project/DataPoint_Measure_JoinRecord_Impl.hpp>
 
 #include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/Workflow.hpp>
@@ -118,9 +109,9 @@ namespace detail {
     }
 
     QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE", toQString(path));
-    BOOST_ASSERT(database.isValid());
+    OS_ASSERT(database.isValid());
     database.setDatabaseName(toQString(path));
-    BOOST_ASSERT(database.open());
+    OS_ASSERT(database.open());
     m_qSqlDatabase = boost::shared_ptr<QSqlDatabase>(new QSqlDatabase(database));
 
     QSqlQuery query(*m_qSqlDatabase);
@@ -176,13 +167,13 @@ namespace detail {
 
     if (didStartTransaction){
       bool didCommitTransaction = this->commitTransaction();
-      BOOST_ASSERT(didCommitTransaction);
+      OS_ASSERT(didCommitTransaction);
     }else{
       // any uncommitted transactions will now be lost
     }
 
     // make sure we are the last one using database connection
-    BOOST_ASSERT(m_qSqlDatabase.use_count() == 1);
+    OS_ASSERT(m_qSqlDatabase.use_count() == 1);
 
     m_qSqlDatabase->close();
     m_qSqlDatabase.reset(); // actually delete the database before removeDatabase
@@ -213,67 +204,67 @@ namespace detail {
 
   UUID ProjectDatabase_Impl::handle() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->handle();
   }
 
   std::string ProjectDatabase_Impl::name() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->name();
   }
 
   bool ProjectDatabase_Impl::setName(const std::string& name)
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->setName(name);
   }
 
   std::string ProjectDatabase_Impl::displayName() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->displayName();
   }
 
   bool ProjectDatabase_Impl::setDisplayName(const std::string& displayName)
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->setDisplayName(displayName);
   }
 
   std::string ProjectDatabase_Impl::description() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->description();
   }
 
   bool ProjectDatabase_Impl::setDescription(const std::string& description)
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->setDescription(description);
   }
 
   DateTime ProjectDatabase_Impl::timestampCreate() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->timestampCreate();
   }
 
   DateTime ProjectDatabase_Impl::timestampLast() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->timestampLast();
   }
 
   UUID ProjectDatabase_Impl::uuidLast() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->uuidLast();
   }
 
   std::string ProjectDatabase_Impl::version() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->version();
   }
 
@@ -299,7 +290,7 @@ namespace detail {
 
   openstudio::path ProjectDatabase_Impl::runManagerDBPath() const
   {
-    BOOST_ASSERT(m_projectDatabaseRecord);
+    OS_ASSERT(m_projectDatabaseRecord);
     return m_projectDatabaseRecord->runManagerDBPath();
   }
 
@@ -369,14 +360,14 @@ namespace detail {
 
     // update the project database record
     if (didChange){
-      BOOST_ASSERT(m_projectDatabaseRecord);
+      OS_ASSERT(m_projectDatabaseRecord);
       m_projectDatabaseRecord->onChange();
       m_projectDatabaseRecord->saveRow(other);
     }
 
     if (didStartTransaction){
       bool didCommitTransaction = this->commitTransaction();
-      BOOST_ASSERT(didCommitTransaction);
+      OS_ASSERT(didCommitTransaction);
     }
 
     m_ignoreSignals = false;
@@ -443,7 +434,7 @@ namespace detail {
     if (topLevelObject){
       if (didStartTransaction){
         bool didCommitTransaction = this->commitTransaction();
-        BOOST_ASSERT(didCommitTransaction);
+        OS_ASSERT(didCommitTransaction);
       }
       m_ignoreSignals = false;
     }
@@ -453,7 +444,7 @@ namespace detail {
 
   boost::optional<RemoveUndo> ProjectDatabase_Impl::removeRecord(Record& record, bool saveResult)
   {
-    BOOST_ASSERT(this->handle() == record.projectDatabase().handle());
+    OS_ASSERT(this->handle() == record.projectDatabase().handle());
 
     ProjectDatabase other(this->shared_from_this());
 
@@ -548,7 +539,7 @@ namespace detail {
         m_handleCleanRecordMap.erase(it);
         break;
       default:
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
       }
 
       // delete row
@@ -556,7 +547,7 @@ namespace detail {
 
       if (didStartTransaction){
         bool didCommitTransaction = this->commitTransaction();
-        BOOST_ASSERT(didCommitTransaction);
+        OS_ASSERT(didCommitTransaction);
       }
 
     }
@@ -575,15 +566,12 @@ namespace detail {
     AlgorithmRecord::updatePathData(other,originalBase,newBase);
     AnalysisRecord::updatePathData(other,originalBase,newBase);
     AttributeRecord::updatePathData(other,originalBase,newBase);
-    ClauseRecord::updatePathData(other,originalBase,newBase);
     DataPointRecord::updatePathData(other,originalBase,newBase);
     DataPointValueRecord::updatePathData(other,originalBase,newBase);
-    DiscretePerturbationRecord::updatePathData(other,originalBase,newBase);
     FileReferenceRecord::updatePathData(other,originalBase,newBase);
     FunctionRecord::updatePathData(other,originalBase,newBase);
+    MeasureRecord::updatePathData(other,originalBase,newBase);
     ProblemRecord::updatePathData(other,originalBase,newBase);
-    RuleRecord::updatePathData(other,originalBase,newBase);
-    RulesetRecord::updatePathData(other,originalBase,newBase);
     TagRecord::updatePathData(other,originalBase,newBase);
     URLSearchPathRecord::updatePathData(other,originalBase,newBase);
     OSArgumentRecord::updatePathData(other,originalBase,newBase);
@@ -594,20 +582,20 @@ namespace detail {
 
     if (didStartTransaction) {
       bool test = this->commitTransaction();
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
   }
 
   void ProjectDatabase_Impl::addNewRecord(Record& record)
   {
-    BOOST_ASSERT(this->handle() == record.projectDatabase().handle());
+    OS_ASSERT(this->handle() == record.projectDatabase().handle());
 
     ProjectDatabase other(this->shared_from_this());
 
     UUID handle = record.handle();
 
     // make sure object isn't already loaded
-    BOOST_ASSERT(!findLoadedRecord(handle));
+    OS_ASSERT(!findLoadedRecord(handle));
 
     // insert object, will get id
     record.insertRow(other);
@@ -625,14 +613,14 @@ namespace detail {
 
   void ProjectDatabase_Impl::addDirtyRecord(const Record& record)
   {
-    BOOST_ASSERT(this->handle() == record.projectDatabase().handle());
+    OS_ASSERT(this->handle() == record.projectDatabase().handle());
 
     ProjectDatabase other(this->shared_from_this());
 
     UUID handle = record.handle();
 
     // make sure object isn't already loaded
-    BOOST_ASSERT(!findLoadedRecord(handle));
+    OS_ASSERT(!findLoadedRecord(handle));
 
     // connect signals
     connectSignals(record);
@@ -644,14 +632,14 @@ namespace detail {
 
   void ProjectDatabase_Impl::addCleanRecord(const Record& record)
   {
-    BOOST_ASSERT(this->handle() == record.projectDatabase().handle());
+    OS_ASSERT(this->handle() == record.projectDatabase().handle());
 
     ProjectDatabase other(this->shared_from_this());
 
     UUID handle = record.handle();
 
     // make sure object isn't already loaded
-    BOOST_ASSERT(!findLoadedRecord(handle));
+    OS_ASSERT(!findLoadedRecord(handle));
 
     // connect signals
     connectSignals(record);
@@ -713,16 +701,24 @@ namespace detail {
 
     if (dbv < VersionString("1.0.1")) {
       update_1_0_0_to_1_0_1(dbv);
-	}
+    }
+
+    if (dbv < VersionString("1.0.3")) {
+      update_1_0_2_to_1_0_3(dbv);
+    }
+
+    if (dbv < VersionString("1.0.4")) {
+      update_1_0_3_to_1_0_4(dbv);
+    }
 
     if ((dbv != osv) || (!dbv.fidelityEqual(osv))) {
       LOG(Info,"Updating database version to " << osv << ".");
       bool didStartTransaction = startTransaction();
-      BOOST_ASSERT(didStartTransaction);
+      OS_ASSERT(didStartTransaction);
       m_projectDatabaseRecord->setVersion(osv.str());
       save();
       bool test = this->commitTransaction();
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
   }
 
@@ -832,34 +828,34 @@ namespace detail {
 
     std::map<UUID, Record>::const_iterator it = m_handleNewRecordMap.find(handle);
     if (it != m_handleNewRecordMap.end()){
-      BOOST_ASSERT(!result);
+      OS_ASSERT(!result);
       result = it->second;
     }
 
     it = m_handleDirtyRecordMap.find(handle);
     if (it != m_handleDirtyRecordMap.end()){
-      BOOST_ASSERT(!result);
+      OS_ASSERT(!result);
       result = it->second;
     }
 
     it = m_handleCleanRecordMap.find(handle);
     if (it != m_handleCleanRecordMap.end()){
-      BOOST_ASSERT(!result);
+      OS_ASSERT(!result);
       result = it->second;
     }
 
     it = m_handleRemovedRecordMap.find(handle);
     if (it != m_handleRemovedRecordMap.end()){
-      BOOST_ASSERT(!result);
+      OS_ASSERT(!result);
       result = it->second;
     }
 
     if (result) {
       Record record = *result;
-      BOOST_ASSERT(handle == record.handle());
+      OS_ASSERT(handle == record.handle());
       std::string passedInHandleString = toString(handle);
       std::string loadedHandleString = toString(record.handle());
-      BOOST_ASSERT(passedInHandleString == loadedHandleString);
+      OS_ASSERT(passedInHandleString == loadedHandleString);
     }
     return result;
   }
@@ -897,27 +893,24 @@ namespace detail {
   void ProjectDatabase_Impl::connectSignals(const Record& record) const
   {
     bool test = record.connect(SIGNAL(onChange(const UUID&)), this, SLOT(recordChanged(const UUID&)));
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::initialize() {
     bool didStartTransaction = this->startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // create object tables
     createTable<AlgorithmRecord>();
     createTable<AnalysisRecord>();
     createTable<AttributeRecord>();
-    createTable<ClauseRecord>();
     createTable<DataPointRecord>();
     createTable<DataPointValueRecord>();
-    createTable<DiscretePerturbationRecord>();
     createTable<FileReferenceRecord>();
     createTable<FunctionRecord>();
+    createTable<MeasureRecord>();
     createTable<ProblemRecord>();
     createTable<ProjectDatabaseRecord>();
-    createTable<RuleRecord>();
-    createTable<RulesetRecord>();
     createTable<TagRecord>();
     createTable<OSArgumentRecord>();
     createTable<URLSearchPathRecord>();
@@ -925,17 +918,15 @@ namespace detail {
     createTable<WorkflowRecord>();
 
     // create join tables
-    createTable<DataPoint_DiscretePerturbation_JoinRecord>();
-    createTable<Rule_Clause_JoinRecord>();
-    createTable<Ruleset_Rule_JoinRecord>();
+    createTable<DataPoint_Measure_JoinRecord>();
 
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_0_6_6_to_0_7_0(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // add functionType column to FunctionRecords and set any entries to FunctionType::Objective
     LOG(Info,"Adding functionType column to " << FunctionRecord::databaseTableName() << ".");
@@ -958,12 +949,12 @@ namespace detail {
 
     save();
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_0_8_0_to_0_8_1(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     ProjectDatabase database(this->shared_from_this());
     QSqlQuery query(*(database.qSqlDatabase()));
@@ -1006,10 +997,10 @@ namespace detail {
 
     save();
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // pre-0.8.1 AlgorithmRecordColumns
     /*OPENSTUDIO_ENUM(AlgorithmRecordColumns,
@@ -1047,20 +1038,20 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // warning this will create the table in current format not in 0.8.1 format
     createTable<AlgorithmRecord>();
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // extract previous data
     query.prepare(QString("SELECT * FROM AlgorithmRecordsOldFormat"));
@@ -1085,7 +1076,7 @@ namespace detail {
       AttributeVector attributes;
 
       QVariant value = query.value(0);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       int id = value.toInt();
       ids << value;
 
@@ -1159,7 +1150,7 @@ namespace detail {
     algAddQuery.addBindValue(complete);
     algAddQuery.addBindValue(failed);
     test = algAddQuery.execBatch();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     algAddQuery.clear();
     query.clear();
 
@@ -1183,10 +1174,10 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // delete old format table
     query.prepare(QString("DROP TABLE AlgorithmRecordsOldFormat"));
@@ -1195,12 +1186,12 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_0_8_3_to_0_8_4(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     ProjectDatabase database(this->shared_from_this());
     QSqlQuery query(*(database.qSqlDatabase()));
@@ -1226,14 +1217,14 @@ namespace detail {
 
     save();
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_0_9_0_to_0_9_1(const VersionString &startVersion) {
     if (startVersion > VersionString("0.8.0")) {
       // If goes through 0.8.0 to 0.8.1 translator, automatically gets up-to-date columns.
       bool didStartTransaction = startTransaction();
-      BOOST_ASSERT(didStartTransaction);
+      OS_ASSERT(didStartTransaction);
 
       ProjectDatabase database(this->shared_from_this());
       QSqlQuery query(*(database.qSqlDatabase()));
@@ -1270,13 +1261,13 @@ namespace detail {
 
       save();
       bool test = this->commitTransaction();
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
   }
 
   void ProjectDatabase_Impl::update_0_10_0_to_0_10_1(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     ProjectDatabase database(this->shared_from_this());
     QSqlQuery query(*(database.qSqlDatabase()));
@@ -1310,10 +1301,10 @@ namespace detail {
 
     save();
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // extract previous data
     query.prepare(QString("SELECT * FROM UserScriptArgumentRecords"));
@@ -1340,7 +1331,7 @@ namespace detail {
 
       // do not keep record if userScriptArgumentType is 7 (WorkspaceObject)
       value = query.value(10);
-      BOOST_ASSERT(value.isValid() && !value.isNull());
+      OS_ASSERT(value.isValid() && !value.isNull());
       int argTypeCode = value.toInt();
       if (argTypeCode == 7) {
         LOG(Warn,"The WorkspaceObject argument type has been deprecated. The ProjectDatabase "
@@ -1409,16 +1400,16 @@ namespace detail {
     argAddQuery.addBindValue(extensions);
 
     test = argAddQuery.execBatch();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     argAddQuery.clear();
     query.clear();
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // delete old table
     query.prepare(QString("DROP TABLE UserScriptArgumentRecords"));
@@ -1427,12 +1418,12 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_0_10_2_to_0_10_3(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     LOG(Info,"Adding resultsAreInvalid and dataPointsAreInvalid columns to "
         << AnalysisRecord::databaseTableName() << ".");
@@ -1468,28 +1459,25 @@ namespace detail {
 
     save();
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_0_10_3_to_0_10_4(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     ProjectDatabase database(this->shared_from_this());
     QSqlQuery query(*(database.qSqlDatabase()));
 
-    LOG(Info,"Adding usesBCLMeasure column to " << DiscretePerturbationRecord::databaseTableName()
-        << ".");
+    LOG(Info,"Adding usesBCLMeasure column to DiscretePerturbationRecords.");
 
-    DiscretePerturbationRecordColumns usesBCLMeasureColumn("usesBCLMeasure");
     query.prepare(QString::fromStdString(
-        "ALTER TABLE " + DiscretePerturbationRecord::databaseTableName() + " ADD COLUMN " +
-        usesBCLMeasureColumn.valueName() + " " + usesBCLMeasureColumn.valueDescription()));
+        "ALTER TABLE DiscretePerturbationRecords ADD COLUMN usesBCLMeasure BOOLEAN"));
     assertExec(query);
     query.clear();
 
-    query.prepare(toQString("UPDATE " + DiscretePerturbationRecord::databaseTableName() +
-                            " SET usesBCLMeasure=:usesBCLMeasure"));
+    query.prepare(QString::fromStdString(
+        "UPDATE DiscretePerturbationRecords SET usesBCLMeasure=:usesBCLMeasure"));
     query.bindValue(":usesBCLMeasure",false);
     assertExec(query);
     query.clear();
@@ -1546,12 +1534,12 @@ namespace detail {
 
     save();
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_0_10_4_to_0_10_5(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     LOG(Info,"Changing inheritance hierarchy of " << VariableRecord::databaseTableName() << ".");
 
@@ -1603,9 +1591,9 @@ namespace detail {
 
     save();
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // Update each row in VariableRecords to follow the new hierarchy
 
@@ -1640,8 +1628,7 @@ namespace detail {
     query.bindValue(":variableRecordType",VariableRecordType::InputVariableRecord);
     query.bindValue(":inputVariableRecordType",
                     InputVariableRecordType::ContinuousVariableRecord);
-    query.bindValue(":continuousVariableRecordType",
-                    ContinuousVariableRecordType::RubyContinuousVariableRecord);
+    query.bindValue(":continuousVariableRecordType",1);
     assertExec(query);
     query.clear();
 
@@ -1654,8 +1641,7 @@ namespace detail {
     query.bindValue(":variableRecordType",VariableRecordType::InputVariableRecord);
     query.bindValue(":inputVariableRecordType",
                     InputVariableRecordType::ContinuousVariableRecord);
-    query.bindValue(":continuousVariableRecordType",
-                    ContinuousVariableRecordType::ModelRulesetContinuousVariableRecord);
+    query.bindValue(":continuousVariableRecordType",0);
     assertExec(query);
     query.clear();
 
@@ -1674,9 +1660,9 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     LOG(Info,"Changing how Problems refer to their runmanager::Workflows.");
 
@@ -1698,9 +1684,9 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // Populate new WorkflowRecords columns with data from ProblemRecords and VariableRecords
     query.prepare(QString::fromStdString("SELECT id, workflowRecordId FROM " +
@@ -1739,12 +1725,12 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_0_11_5_to_0_11_6(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     LOG(Info,"Adding column for IDF input data to " << DataPointRecord::databaseTableName() << ".");
 
@@ -1761,9 +1747,9 @@ namespace detail {
 
     save();
     bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // If there is already an inputDataRecordId, move it to idfInputDataRecordId if
     // it points to an IDF file.
@@ -1778,12 +1764,12 @@ namespace detail {
 
     save();
     test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::update_1_0_0_to_1_0_1(const VersionString& startVersion) {
     bool didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     LOG(Info,"Dropping deprecated table RulesetOptionRecords.");
 
@@ -1796,12 +1782,12 @@ namespace detail {
 
     save();
   	bool test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     LOG(Info,"Removing all standards rule and ruleset information.");
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // remove RulesetRecord entries with rulesetRecordType == 1
     query.prepare(QString::fromStdString("DELETE FROM RulesetRecords WHERE rulesetRecordType=1"));
@@ -1810,10 +1796,10 @@ namespace detail {
 
     save();
   	test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // remove RuleRecord entries with ruleRecordType > 0
     query.prepare(QString::fromStdString("DELETE FROM RuleRecords WHERE ruleRecordType>0"));
@@ -1822,10 +1808,10 @@ namespace detail {
 
     save();
   	test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // remove ClauseRecord entries with (clauseRecordType == 0 AND filterClauseRecordType == 2) OR
     // (clauseRecordType == 1 AND actionClauseRecordType == 2)
@@ -1837,10 +1823,10 @@ namespace detail {
 
     save();
   	test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
-    BOOST_ASSERT(didStartTransaction);
+    OS_ASSERT(didStartTransaction);
 
     // remove orphaned join records
     query.prepare(QString::fromStdString(std::string("DELETE FROM Ruleset_Rule_JoinRecords WHERE ") + 
@@ -1855,7 +1841,376 @@ namespace detail {
 
     save();
   	test = this->commitTransaction();
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
+  }
+
+  void ProjectDatabase_Impl::update_1_0_2_to_1_0_3(const VersionString& startVersion) {
+    ProjectDatabase database(this->shared_from_this());
+    QSqlQuery query(*(database.qSqlDatabase()));
+
+    // This is a big change to the database. All PAT-created OSPs should be preserved just
+    // fine, but any OSPs with rulesets ARE NOT GUARANTEED TO BEHAVE WELL AFTER THIS UPGRADE.
+    // Model ruleset perturbations and continuous variables are unceremoniously dropped; we
+    // do not attempt to fix various vector indices and DataPoints back up after this is done.
+    // We do issue warnings when we make such changes.
+
+    bool usedRulesets(false);
+
+    LOG(Info,"Dropping deprecated tables ClauseRecords, RuleRecords, RulesetRecords, "
+        << "Rule_Clause_JoinRecords, Ruleset_Rule_JoinRecords.");
+
+    bool didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    query.prepare(QString("DROP TABLE ClauseRecords"));
+    assertExec(query);
+    query.clear();
+
+    query.prepare(QString("DROP TABLE RuleRecords"));
+    assertExec(query);
+    query.clear();
+
+    query.prepare(QString("DROP TABLE RulesetRecords"));
+    assertExec(query);
+    query.clear();
+
+    query.prepare(QString("DROP TABLE Rule_Clause_JoinRecords"));
+    assertExec(query);
+    query.clear();
+
+    query.prepare(QString("DROP TABLE Ruleset_Rule_JoinRecords"));
+    assertExec(query);
+    query.clear();
+
+    save();
+    bool test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    LOG(Info,"Adding column discreteVariableRecordType to table VariableRecords.");
+
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    VariableRecordColumns discreteVariableRecordTypeColumn("discreteVariableRecordType");
+    query.prepare(QString::fromStdString(
+        "ALTER TABLE " + VariableRecord::databaseTableName() + " ADD COLUMN " +
+        discreteVariableRecordTypeColumn.valueName() + " " +
+        discreteVariableRecordTypeColumn.valueDescription()));
+    assertExec(query);
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    LOG(Info,"Erase old model ruleset continuous variables from " << VariableRecord::databaseTableName()
+        << " table and update ContinuousVariableRecordType entries accordingly.");
+
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    // First determine if anything is to be removed.
+    query.prepare(QString::fromStdString("SELECT COUNT(id) FROM " + VariableRecord::databaseTableName() +
+                                         " WHERE variableRecordType=:variableRecordType AND " +
+                                         "inputVariableRecordType=:inputVariableRecordType AND " +
+                                         "continuousVariableRecordType=:continuousVariableRecordType"));
+    query.bindValue(":variableRecordType",VariableRecordType::InputVariableRecord);
+    query.bindValue(":inputVariableRecordType",InputVariableRecordType::ContinuousVariableRecord);
+    query.bindValue(":continuousVariableRecordType",QVariant(int(0))); // was 0
+    assertExec(query);
+    int count = query.value(0).toInt();
+    if (count > 0) {
+      usedRulesets = true;
+      LOG(Info,"Removing " << count << " ModelRulesetContinuousVariables from this OSP. "
+          << "ModelRulesetContinuousVariables are no longer supported by OpenStudio.");
+      query.clear();
+
+      // Then do the removal.
+      query.prepare(QString::fromStdString("DELETE FROM " + VariableRecord::databaseTableName() +
+                                           " WHERE variableRecordType=:variableRecordType AND " +
+                                           "inputVariableRecordType=:inputVariableRecordType AND " +
+                                           "continuousVariableRecordType=:continuousVariableRecordType"));
+      query.bindValue(":variableRecordType",VariableRecordType::InputVariableRecord);
+      query.bindValue(":inputVariableRecordType",InputVariableRecordType::ContinuousVariableRecord);
+      query.bindValue(":continuousVariableRecordType",QVariant(int(0))); // was 0
+      assertExec(query);
+    }
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    // Ruby continuous variables were ContinuousVariableRecordType 1, now they are 0.
+    query.prepare(QString::fromStdString("UPDATE " + VariableRecord::databaseTableName() +
+                                         " SET continuousVariableRecordType=:newContinuousVariableRecordType " +
+                                         "WHERE variableRecordType=:variableRecordType AND " +
+                                         "inputVariableRecordType=:inputVariableRecordType AND " +
+                                         "continuousVariableRecordType=:oldContinuousVariableRecordType"));
+    query.bindValue(":newContinuousVariableRecordType",ContinuousVariableRecordType::RubyContinuousVariableRecord);
+    query.bindValue(":variableRecordType",VariableRecordType::InputVariableRecord);
+    query.bindValue(":inputVariableRecordType",InputVariableRecordType::ContinuousVariableRecord);
+    query.bindValue(":oldContinuousVariableRecordType",QVariant(int(1))); // was 1
+    assertExec(query);
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    LOG(Info,"Processing current DiscreteVariableRecords to turn them into MeasureGroupRecords.");
+
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    // get VariableRecords with inputVariableRecordType == 0 (DiscreteVariableRecord) and
+    // set their discreteVariableRecordType to 0 (MeasureGroupRecord)
+    query.prepare(QString::fromStdString("UPDATE " + VariableRecord::databaseTableName() +
+        " SET discreteVariableRecordType=:discreteVariableRecordType " +
+        "WHERE inputVariableRecordType=:inputVariableRecordType"));
+    query.bindValue(":discreteVariableRecordType",DiscreteVariableRecordType::MeasureGroupRecord);
+    query.bindValue(":inputVariableRecordType",InputVariableRecordType::DiscreteVariableRecord);
+    assertExec(query);
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    LOG(Info,"Creating " << MeasureRecord::databaseTableName() << " table and populating it with "
+        << "data from DiscretePerturbationRecords table, which will then be dropped.");
+
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    createTable<MeasureRecord>();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    // extract previous data
+    query.prepare(QString("SELECT * FROM DiscretePerturbationRecords"));
+    assertExec(query);
+    QSqlQuery measureAddQuery(*(database.qSqlDatabase()));
+    measureAddQuery.prepare(QString::fromStdString(
+        "INSERT INTO " + MeasureRecord::databaseTableName() +
+        " (id, handle, name, displayName, description, timestampCreate, timestampLast, " +
+        "uuidLast, measureRecordType, variableRecordId, measureVectorIndex, isSelected, " +
+        "inputFileType, outputFileType, fileReferenceRecordId, isUserScript, usesBCLMeasure) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"));
+
+    // loop through and move data to new format
+    QVariantList ids, handles, names, displayNames, descriptions, timestampCreates;
+    QVariantList timestampLasts, uuidLasts, measureRecordTypes, variableRecordIds;
+    QVariantList measureVectorIndices, isSelecteds, inputFileTypes, outputFileTypes;
+    QVariantList fileReferenceRecordIds, isUserScripts, usesBCLMeasures;
+    // note ids that are being dropped because they were associated with ModelRulesetPerturbations
+    std::set<int> modelRulesetPerturbationIds;
+    while (query.next()) {
+      QVariant value = query.value(0);
+      OS_ASSERT(value.isValid() && !value.isNull());
+
+      int id = value.toInt();
+
+      // drop model ruleset perturbations
+      int recordType = query.value(8).toInt();
+      if (recordType == 2) {
+        usedRulesets = true;
+        LOG(Info,"Dropping ModelRulesetPerturbation '" << query.value(2).toString().toStdString()
+            << "' associated with VariableRecord " << query.value(9).toInt() << ".");
+        modelRulesetPerturbationIds.insert(id);
+        continue;
+      }
+      OS_ASSERT(recordType == 0 || recordType == 1);
+
+      ids << value;
+
+      handles << query.value(1);
+      names << query.value(2);
+      displayNames << query.value(3);
+      descriptions << query.value(4);
+      timestampCreates << query.value(5);
+      timestampLasts << query.value(6);
+      uuidLasts << query.value(7);
+
+      measureRecordTypes << query.value(8);
+      variableRecordIds << query.value(9);
+      measureVectorIndices << query.value(11);
+      isSelecteds << query.value(10);
+      inputFileTypes << query.value(13);
+      outputFileTypes << query.value(14);
+      fileReferenceRecordIds << query.value(12);
+      isUserScripts << query.value(15);
+      usesBCLMeasures << query.value(17);
+    }
+    measureAddQuery.addBindValue(ids);
+    measureAddQuery.addBindValue(handles);
+    measureAddQuery.addBindValue(names);
+    measureAddQuery.addBindValue(displayNames);
+    measureAddQuery.addBindValue(descriptions);
+    measureAddQuery.addBindValue(timestampCreates);
+    measureAddQuery.addBindValue(timestampLasts);
+    measureAddQuery.addBindValue(uuidLasts);
+
+    measureAddQuery.addBindValue(measureRecordTypes);
+    measureAddQuery.addBindValue(variableRecordIds);
+    measureAddQuery.addBindValue(measureVectorIndices);
+    measureAddQuery.addBindValue(isSelecteds);
+    measureAddQuery.addBindValue(inputFileTypes);
+    measureAddQuery.addBindValue(outputFileTypes);
+    measureAddQuery.addBindValue(fileReferenceRecordIds);
+    measureAddQuery.addBindValue(isUserScripts);
+    measureAddQuery.addBindValue(usesBCLMeasures);
+
+    test = measureAddQuery.execBatch();
+    OS_ASSERT(test);
+    measureAddQuery.clear();
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    query.prepare(QString("DROP TABLE DiscretePerturbationRecords"));
+    assertExec(query);
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    LOG(Info,"Renaming DataPoint_DiscretePerturbation_JoinRecord to DataPoint_Measure_JoinRecord "
+        << "and dropping entries corresponding to old ModelRulesetPerturbations.");
+
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    createTable<DataPoint_Measure_JoinRecord>();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    // extract previous data
+    query.prepare(QString("SELECT * FROM DataPoint_DiscretePerturbation_JoinRecords"));
+    assertExec(query);
+    QSqlQuery joinRecordAddQuery(*(database.qSqlDatabase()));
+    joinRecordAddQuery.prepare(QString::fromStdString(
+        "INSERT INTO " + DataPoint_Measure_JoinRecord::databaseTableName() +
+        " (id, handle, leftId, leftHandle, rightId, rightHandle) " +
+        "VALUES (?, ?, ?, ?, ?, ?)"));
+
+    // loop through and move data to new format
+    ids.clear();
+    handles.clear();
+    QVariantList leftIds, leftHandles, rightIds, rightHandles;
+    // drop records with rightId in modelRulesetPerturbationIds
+    while (query.next()) {
+      int rightId = query.value(4).toInt();
+      if (std::find(modelRulesetPerturbationIds.begin(),
+                    modelRulesetPerturbationIds.end(),
+                    rightId) != modelRulesetPerturbationIds.end())
+      {
+        // don't keep record
+        continue;
+      }
+
+      ids << query.value(0);
+      handles << query.value(1);
+      leftIds << query.value(2);
+      leftHandles << query.value(3);
+      rightIds << query.value(4);
+      rightHandles << query.value(5);
+    }
+    joinRecordAddQuery.addBindValue(ids);
+    joinRecordAddQuery.addBindValue(handles);
+    joinRecordAddQuery.addBindValue(leftIds);
+    joinRecordAddQuery.addBindValue(leftHandles);
+    joinRecordAddQuery.addBindValue(rightIds);
+    joinRecordAddQuery.addBindValue(rightHandles);
+
+    test = joinRecordAddQuery.execBatch();
+    QSqlError error = joinRecordAddQuery.lastError();
+    LOG(Debug,"Last QSql Query: " << joinRecordAddQuery.lastQuery().toStdString());
+    LOG(Debug,"Last QSql Error: " << error.text().toStdString());
+    OS_ASSERT(test);
+    joinRecordAddQuery.clear();
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    query.prepare(QString("DROP TABLE DataPoint_DiscretePerturbation_JoinRecords"));
+    assertExec(query);
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    if (usedRulesets) {
+      LOG(Warn,"This OSP contained ruleset::ModelRuleset information that was being used by a "
+          << "ModelRulesetPerturbation or a ModelRulesetContinuousVariable. Those classes are "
+          << "no longer available in or supported by OpenStudio. Since those classes were not "
+          << "being widely used, the upgrade code did not attempt to fix up indices and other "
+          << "values that are now corrupt because this data was dropped. If you would like to "
+          << "keep using this file, you may need to hand-edit some data (using a basic SQLite "
+          << "interface). In particular, take a look at MeasureRecords::measureVectorIndex, "
+          << "VariableRecords::variableVectorIndex, and WorkflowRecords::workflowIndex. Any "
+          << "DataPoint simulation results will also be invalid/out of date.");
+    }
+
+  }
+
+  void ProjectDatabase_Impl::update_1_0_3_to_1_0_4(const VersionString& startVersion) {
+    bool didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    LOG(Info,"Adding column for selected to " << DataPointRecord::databaseTableName() << ".");
+
+    ProjectDatabase database(this->shared_from_this());
+    QSqlQuery query(*(database.qSqlDatabase()));
+
+    DataPointRecordColumns selectedColumn("selected");
+    query.prepare(QString::fromStdString(
+        "ALTER TABLE " + DataPointRecord::databaseTableName() + " ADD COLUMN " +
+        selectedColumn.valueName() + " " + selectedColumn.valueDescription()));
+    assertExec(query);
+    query.clear();
+
+    save();
+    bool test = this->commitTransaction();
+    OS_ASSERT(test);
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    // By default, set all DataPoints to selected.
+    query.prepare(QString::fromStdString("UPDATE " + DataPointRecord::databaseTableName() +
+        " SET selected=:selected, xmlOutputDataRecordId=NULL"));
+    query.bindValue(":selected",true);
+    assertExec(query);
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::setProjectDatabaseRecord(const ProjectDatabaseRecord& projectDatabaseRecord)
@@ -1914,7 +2269,7 @@ ProjectDatabase::ProjectDatabase(const openstudio::path& path,
 }
 
 void ProjectDatabase::initialize(const openstudio::path& path) {
-  BOOST_ASSERT(m_impl);
+  OS_ASSERT(m_impl);
 
   ProjectDatabase other(m_impl);
 
@@ -1969,17 +2324,17 @@ void ProjectDatabase::initialize(const openstudio::path& path) {
 ProjectDatabase::ProjectDatabase(const ProjectDatabase& other)
   : m_impl(other.m_impl)
 {
-  BOOST_ASSERT(m_impl);
-  BOOST_ASSERT(m_impl->qSqlDatabase());
-  BOOST_ASSERT(m_impl->qSqlDatabase()->isOpen());
+  OS_ASSERT(m_impl);
+  OS_ASSERT(m_impl->qSqlDatabase());
+  OS_ASSERT(m_impl->qSqlDatabase()->isOpen());
 }
 
 ProjectDatabase::ProjectDatabase(boost::shared_ptr<detail::ProjectDatabase_Impl> impl)
   : m_impl(impl)
 {
-  BOOST_ASSERT(m_impl);
-  BOOST_ASSERT(m_impl->qSqlDatabase());
-  BOOST_ASSERT(m_impl->qSqlDatabase()->isOpen());
+  OS_ASSERT(m_impl);
+  OS_ASSERT(m_impl->qSqlDatabase());
+  OS_ASSERT(m_impl->qSqlDatabase()->isOpen());
 }
 
 boost::optional<ProjectDatabase> ProjectDatabase::open(const openstudio::path& path,

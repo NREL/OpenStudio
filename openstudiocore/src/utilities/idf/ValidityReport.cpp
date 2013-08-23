@@ -103,8 +103,8 @@ std::ostream& operator<<(std::ostream& os,const ValidityReport& report) {
     }
   }
   else {
-    BOOST_ASSERT(report.scope() == Scope::Object);
-    BOOST_ASSERT(report.objectType());
+    OS_ASSERT(report.scope() == Scope::Object);
+    OS_ASSERT(report.objectType());
     if (report.numErrors() == 0) { 
       os << "The object of type '" << report.objectType()->valueDescription() << "', named '";
       os << report.objectName() << "', is VALID at strictness level '";

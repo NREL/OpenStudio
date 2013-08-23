@@ -24,6 +24,8 @@
 #include <model/Model.hpp>
 #include <model/Construction.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 LoadsTabController::LoadsTabController(bool isIP, const model::Model& model)
@@ -34,15 +36,15 @@ LoadsTabController::LoadsTabController(bool isIP, const model::Model& model)
 
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         m_LoadsController.get(), SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_LoadsController.get(), SIGNAL(openBclDlgClicked()),
                                  this, SIGNAL(openBclDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_LoadsController.get(), SIGNAL(openLibDlgClicked()),
                                  this, SIGNAL(openLibDlgClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 LoadsTabController::~LoadsTabController()

@@ -37,14 +37,14 @@ namespace detail {
   ShadowCalculation_Impl::ShadowCalculation_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ModelObject_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ShadowCalculation::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ShadowCalculation::iddObjectType());
   }
 
   ShadowCalculation_Impl::ShadowCalculation_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ShadowCalculation::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ShadowCalculation::iddObjectType());
   }
 
   ShadowCalculation_Impl::ShadowCalculation_Impl(const ShadowCalculation_Impl& other,
@@ -85,7 +85,7 @@ namespace detail {
 
   int ShadowCalculation_Impl::calculationFrequency() const {
     boost::optional<int> value = getInt(OS_ShadowCalculationFields::CalculationFrequency,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -95,7 +95,7 @@ namespace detail {
 
   int ShadowCalculation_Impl::maximumFiguresInShadowOverlapCalculations() const {
     boost::optional<int> value = getInt(OS_ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -119,7 +119,7 @@ namespace detail {
 
   void ShadowCalculation_Impl::resetCalculationFrequency() {
     bool result = setString(OS_ShadowCalculationFields::CalculationFrequency, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ShadowCalculation_Impl::setMaximumFiguresInShadowOverlapCalculations(int maximumFiguresInShadowOverlapCalculations) {
@@ -130,7 +130,7 @@ namespace detail {
 
   void ShadowCalculation_Impl::resetMaximumFiguresInShadowOverlapCalculations() {
     bool result = setString(OS_ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ShadowCalculation_Impl::setPolygonClippingAlgorithm(boost::optional<std::string> polygonClippingAlgorithm) {
@@ -145,7 +145,7 @@ namespace detail {
 
   void ShadowCalculation_Impl::resetPolygonClippingAlgorithm() {
     bool result = setString(OS_ShadowCalculationFields::PolygonClippingAlgorithm, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ShadowCalculation_Impl::setSkyDiffuseModelingAlgorithm(boost::optional<std::string> skyDiffuseModelingAlgorithm) {
@@ -160,7 +160,7 @@ namespace detail {
 
   void ShadowCalculation_Impl::resetSkyDiffuseModelingAlgorithm() {
     bool result = setString(OS_ShadowCalculationFields::SkyDiffuseModelingAlgorithm, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -169,7 +169,7 @@ namespace detail {
 ShadowCalculation::ShadowCalculation(const Model& model)
   : ModelObject(ShadowCalculation::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ShadowCalculation_Impl>());
+  OS_ASSERT(getImpl<detail::ShadowCalculation_Impl>());
 
   this->setCalculationFrequency(7);
 
