@@ -25,6 +25,7 @@
 #include <model/Material.hpp>
 #include <model/Material_Impl.hpp>
 #include <model/LifeCycleCost.hpp>
+#include <model/ShadingControl.hpp>
 
 #include <utilities/idd/Construction_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -56,6 +57,11 @@ boost::optional<IdfObject> ForwardTranslator::translateConstruction( Constructio
     Material material = layers[layerIndex];
     translateAndMapModelObject(material);
     construction.setString(fieldIndex++, material.name().get());
+  }
+  
+  boost::optional<ShadingControl> shadingControl = modelObject.shadingControl();
+  if (shadingControl){
+    translateAndMapModelObject(*shadingControl);
   }
 
   return boost::optional<IdfObject>(construction);

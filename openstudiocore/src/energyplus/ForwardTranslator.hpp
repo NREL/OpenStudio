@@ -159,6 +159,7 @@ class ScheduleTypeLimits;
 class ScheduleVariableInterval;
 class ScheduleWeek;
 class ScheduleYear;
+class ShadingControl;
 class ShadingSurface;
 class ShadingSurfaceGroup;
 class Site;
@@ -483,6 +484,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateShade( model::Shade & modelObject );
 
+  boost::optional<IdfObject> translateShadingControl( model::ShadingControl & modelObject );
+  
   boost::optional<IdfObject> translateShadingSurface( model::ShadingSurface & modelObject );
 
   boost::optional<IdfObject> translateShadingSurfaceGroup( model::ShadingSurfaceGroup & modelObject );

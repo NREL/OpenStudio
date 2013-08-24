@@ -80,8 +80,6 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   bool isNumberofVerticesAutocalculated() const;
 
-  boost::optional<ShadingControl> shadingControl();
-
   //@}
   /** @name Setters */
   //@{

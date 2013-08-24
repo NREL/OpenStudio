@@ -917,7 +917,7 @@ bool SubSurface::isViewFactortoGroundAutocalculated() const {
   return getImpl<detail::SubSurface_Impl>()->isViewFactortoGroundAutocalculated();
 }
 
-boost::optional<ShadingControl> SubSurface::shadingControl()
+boost::optional<ShadingControl> SubSurface::shadingControl() const
 {
   return getImpl<detail::SubSurface_Impl>()->shadingControl();
 }
