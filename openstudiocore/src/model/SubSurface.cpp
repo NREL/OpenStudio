@@ -30,10 +30,12 @@
 #include <model/ShadingSurface_Impl.hpp>
 #include <model/ShadingSurfaceGroup.hpp>
 #include <model/ShadingSurfaceGroup_Impl.hpp>
+#include <model/ShadingControl.hpp>
+#include <model/ShadingControl_Impl.hpp>
 #include <model/ConstructionBase.hpp>
 #include <model/ConstructionBase_Impl.hpp>
-#include <model/LayeredConstruction.hpp>
-#include <model/LayeredConstruction_Impl.hpp>
+#include <model/Construction.hpp>
+#include <model/Construction_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
@@ -228,12 +230,18 @@ namespace detail {
 
   bool SubSurface_Impl::setConstruction(const ConstructionBase& construction)
   {
-    return setPointer(OS_SubSurfaceFields::ConstructionName, construction.handle());
+    bool result = setPointer(OS_SubSurfaceFields::ConstructionName, construction.handle());
+    if (result){
+      resetShadingControl();
+    }
+    return result;
   }
 
   void SubSurface_Impl::resetConstruction()
   {
-    setString(OS_SubSurfaceFields::ConstructionName, "");
+    bool result = setString(OS_SubSurfaceFields::ConstructionName, "");
+    OS_ASSERT(result);
+    resetShadingControl();
   }
 
   boost::optional<PlanarSurfaceGroup> SubSurface_Impl::planarSurfaceGroup() const
@@ -408,6 +416,11 @@ namespace detail {
     return result;
   }
 
+  boost::optional<ShadingControl> SubSurface_Impl::shadingControl() const
+  {
+    return getObject<SubSurface>().getModelObjectTarget<ShadingControl>(OS_SubSurfaceFields::ShadingControlName);
+  }
+
   double SubSurface_Impl::multiplier() const {
     boost::optional<double> value = getDouble(OS_SubSurfaceFields::Multiplier,true);
     OS_ASSERT(value);
@@ -469,6 +482,37 @@ namespace detail {
   void SubSurface_Impl::autocalculateViewFactortoGround() {
     bool result = setString(OS_SubSurfaceFields::ViewFactortoGround, "Autocalculate");
     OS_ASSERT(result);
+  }
+
+  boost::optional<ShadingControl> SubSurface_Impl::addShadingControl()
+  {
+    if (this->adjacentSubSurface()){
+      return boost::none;
+    }
+
+    boost::optional<ShadingControl> result = this->shadingControl();
+    if (result){
+      return result;
+    }
+
+    boost::optional<ConstructionBase> construction = this->construction();
+    if (construction && construction->optionalCast<Construction>()){
+      result = construction->cast<Construction>().addShadingControl();
+      if (result){
+        bool test = this->setPointer(OS_SubSurfaceFields::ShadingControlName, result->handle());
+        OS_ASSERT(test);
+        test = this->setPointer(OS_SubSurfaceFields::ConstructionName, construction->handle());
+        OS_ASSERT(test);
+      }
+    }
+
+    return result;
+  }
+
+  void SubSurface_Impl::resetShadingControl()
+  {
+    bool test = setString(OS_SubSurfaceFields::ShadingControlName, "");
+    OS_ASSERT(test);
   }
 
   bool SubSurface_Impl::setMultiplier(double multiplier) {
@@ -602,6 +646,11 @@ namespace detail {
         }
       }
     }
+
+    if (result){
+      resetShadingControl();
+    }
+
     return result;
   }
   
@@ -868,6 +917,11 @@ bool SubSurface::isViewFactortoGroundAutocalculated() const {
   return getImpl<detail::SubSurface_Impl>()->isViewFactortoGroundAutocalculated();
 }
 
+boost::optional<ShadingControl> SubSurface::shadingControl()
+{
+  return getImpl<detail::SubSurface_Impl>()->shadingControl();
+}
+
 double SubSurface::multiplier() const {
   return getImpl<detail::SubSurface_Impl>()->multiplier();
 }
@@ -906,6 +960,14 @@ void SubSurface::resetViewFactortoGround() {
 
 void SubSurface::autocalculateViewFactortoGround() {
   getImpl<detail::SubSurface_Impl>()->autocalculateViewFactortoGround();
+}
+
+boost::optional<ShadingControl> SubSurface::addShadingControl(){
+  return getImpl<detail::SubSurface_Impl>()->addShadingControl();
+}
+
+void SubSurface::resetShadingControl(){
+  getImpl<detail::SubSurface_Impl>()->resetShadingControl();
 }
 
 bool SubSurface::setMultiplier(double multiplier) {

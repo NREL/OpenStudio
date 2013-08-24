@@ -4735,6 +4735,44 @@ OS:SubSurface,
        \required-field
        \units m
 
+OS:ShadingControl,
+       \min-fields 3
+  A1 , \field Name
+       \required-field
+       \type alpha
+       \reference WindowShadeControlNames
+       \note Referenced by surfaces that are exterior windows
+       \note Not used by interzone windows
+  A2 , \field Shading Type
+       \required-field
+       \type choice
+       \key InteriorShade
+       \key ExteriorShade
+       \key ExteriorScreen
+       \key InteriorBlind
+       \key ExteriorBlind
+       \key BetweenGlassShade
+       \key BetweenGlassBlind
+       \key SwitchableGlazing
+  A3 , \field Construction with Shading Name
+       \type object-list
+       \object-list ConstructionNames
+  A4 , \field Shading Control Type
+       \type choice
+       \key AlwaysOn
+       \key AlwaysOff
+       \key OnIfScheduleAllows
+       \key OnIfHighSolarOnWindow
+       \default OnIfHighSolarOnWindow
+  A5 ; \field Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Required if Shading Control Is Scheduled = Yes.
+       \note If schedule value = 1, shading control is active, i.e., shading can take place only
+       \note if the control test passes. If schedule value = 0, shading is off whether or not
+       \note the control test passes. Schedule Name is required if Shading Control Is Scheduled = Yes.
+       \note If Schedule Name is not specified, shading control is assumed to be active at all times.
+
 \group OpenStudio Space Loads
 
 OS:InternalMass,

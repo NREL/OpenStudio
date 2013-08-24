@@ -27,6 +27,10 @@
 #include <model/FenestrationMaterial.hpp>
 #include <model/ModelPartitionMaterial.hpp>
 #include <model/ModelExtensibleGroup.hpp>
+#include <model/ShadingMaterial.hpp>
+#include <model/ShadingMaterial_Impl.hpp>
+#include <model/ShadingControl.hpp>
+#include <model/ShadingControl_Impl.hpp>
 
 #include <utilities/idd/OS_Construction_FieldEnums.hxx>
 
@@ -69,6 +73,18 @@ namespace detail {
 
   IddObjectType Construction_Impl::iddObjectType() const {
     return Construction::iddObjectType();
+  }
+
+  std::vector<ModelObject> Construction_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+
+    boost::optional<ShadingControl> shadingControl = this->shadingControl();
+    if (shadingControl){
+      result.push_back(*shadingControl);
+    }
+
+    return result;
   }
 
   int Construction_Impl::renderingColorIndex() const
@@ -116,6 +132,41 @@ namespace detail {
     return result;
   }
 
+  boost::optional<ShadingControl> Construction_Impl::shadingControl() const
+  {
+    std::vector<ShadingControl> shadingControls = getObject<Construction>().getModelObjectSources<ShadingControl>();
+    if (shadingControls.empty()){
+      return boost::none;
+    }else if (shadingControls.size() == 1){
+      return shadingControls.front();
+    }
+    LOG(Error, "Duplicate shading controls for Construction '" << this->name().get() << "', returning first");
+    return shadingControls.front();
+  }
+
+  boost::optional<ShadingControl> Construction_Impl::addShadingControl()
+  {
+    boost::optional<ShadingControl> result = this->shadingControl();
+    if (result){
+      return result;
+    }
+
+    // check if any layer is a shading material
+    MaterialVector layers = this->layers();
+    BOOST_FOREACH(const Material& layer, layers){
+      if (layer.optionalCast<ShadingMaterial>()){
+        try{
+          Construction self = getObject<Construction>();
+          result = ShadingControl(self);
+          break;
+        }catch(const std::exception&){
+        }
+      }
+    }
+
+    return result;
+  }
+
 } // detail
 
 Construction::Construction(const Model& model)
@@ -149,6 +200,16 @@ Construction::Construction(const ModelPartitionMaterial& modelPartitionMaterial)
 
 Construction Construction::reverseConstruction() const{
   return getImpl<detail::Construction_Impl>()->reverseConstruction();
+}
+
+boost::optional<ShadingControl> Construction::shadingControl() const
+{
+  return getImpl<detail::Construction_Impl>()->shadingControl();
+}
+
+boost::optional<ShadingControl> Construction::addShadingControl()
+{
+  return getImpl<detail::Construction_Impl>()->addShadingControl();
 }
 
 IddObjectType Construction::iddObjectType() {
