@@ -300,8 +300,9 @@ namespace runmanager {
   /// Load all of the jobs from the given JSON string, merging job trees
   void RunManager::updateJobs(const std::string &t_json, bool t_externallyManaged)
   {
-    std::pair<QVariant,VersionString> parseResult = loadJSON(t_json);
-    updateJobs(parseResult.first.toMap()["jobs"], parseResult.second, t_externallyManaged);
+    QVariant variant = loadJSON(t_json);
+    VersionString version = extractOpenStudioVersion(variant);
+    updateJobs(variant.toMap()["jobs"], version, t_externallyManaged);
   }
 
   /// Load all of the jobs from the given JSON structure represented by a QVariant,

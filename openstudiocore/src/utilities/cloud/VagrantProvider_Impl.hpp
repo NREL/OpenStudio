@@ -62,6 +62,18 @@ namespace detail{
     /// blocking call
     virtual std::string type() const;
 
+    /// returns the user agreement text
+    /// blocking call
+    virtual std::string userAgreementText() const;
+
+    /// returns true if the user has signed the user agreement
+    /// blocking call
+    virtual bool userAgreementSigned() const;
+
+    /// signs the user agreement if passed in true, unsigns if passed in false
+    /// blocking call
+    virtual void signUserAgreement(bool agree);
+
     /// returns true if this computer is connected to the internet
     /// blocking call, clears errors and warnings
     virtual bool internetAvailable() const;
