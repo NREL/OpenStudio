@@ -25,8 +25,6 @@
 namespace openstudio {
 namespace model {
 
-  class ShadingControl;
-
 namespace detail {
 
   class MODEL_API Construction_Impl : public LayeredConstruction_Impl 
@@ -54,18 +52,11 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
-    // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const;
-
     virtual int renderingColorIndex() const;
 
     /** Searches the model for a layered construction with layers which are the reverse of this one.  Returns that construction 
      *  if found, creates one if not. */
     Construction reverseConstruction() const;
-
-    boost::optional<ShadingControl> shadingControl() const;
-
-    boost::optional<ShadingControl> addShadingControl();
 
    private:
 

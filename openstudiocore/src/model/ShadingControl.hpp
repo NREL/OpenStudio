@@ -21,27 +21,28 @@
 #define MODEL_SHADINGCONTROL_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include <model/ResourceObject.hpp>
 
 namespace openstudio {
 
 namespace model {
 
-class Construction;
+class ShadingMaterial;
 class Schedule;
 
 namespace detail {
 
-  class Construction_Impl;
   class ShadingControl_Impl;
 
 } // detail
 
-/** ShadingControl is a ModelObject that wraps the OpenStudio IDD object 'OS:ShadingControl'. */
-class MODEL_API ShadingControl : public ModelObject {
+/** ShadingControl is a ResourceObject that wraps the OpenStudio IDD object 'OS:ShadingControl'. */
+class MODEL_API ShadingControl : public ResourceObject {
  public:
   /** @name Constructors and Destructors */
   //@{
+
+  explicit ShadingControl(const ShadingMaterial& shadingMaterial);
 
   virtual ~ShadingControl() {}
 
@@ -56,7 +57,7 @@ class MODEL_API ShadingControl : public ModelObject {
   /** @name Getters */
   //@{
   
-  Construction construction() const;
+  ShadingMaterial shadingMaterial() const;
   
   std::string shadingType() const;
   
@@ -85,16 +86,13 @@ class MODEL_API ShadingControl : public ModelObject {
   /// @cond
   typedef detail::ShadingControl_Impl ImplType;
 
-  /// Will throw if Construction does not have any ShadingMaterial layers
-  explicit ShadingControl(const Construction& construction);
-
   explicit ShadingControl(boost::shared_ptr<detail::ShadingControl_Impl> impl);
 
   friend class detail::ShadingControl_Impl;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
-  friend class detail::Construction_Impl;
+
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.ShadingControl");

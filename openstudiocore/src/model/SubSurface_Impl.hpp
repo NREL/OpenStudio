@@ -168,7 +168,7 @@ namespace detail {
 
     void autocalculateViewFactortoGround();
 
-    boost::optional<ShadingControl> addShadingControl();
+    bool setShadingControl(const ShadingControl& shadingControl);
 
     void resetShadingControl();
 

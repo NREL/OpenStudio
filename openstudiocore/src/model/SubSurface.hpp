@@ -94,7 +94,7 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   void autocalculateViewFactortoGround();
 
-  boost::optional<ShadingControl> addShadingControl();
+  bool setShadingControl(const ShadingControl& shadingControl);
 
   void resetShadingControl();
 

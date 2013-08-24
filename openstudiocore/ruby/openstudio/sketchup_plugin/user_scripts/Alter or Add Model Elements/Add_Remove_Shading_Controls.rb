@@ -31,11 +31,14 @@ class AddRemoveShadingControls < OpenStudio::Ruleset::ModelUserScript
     result = OpenStudio::Ruleset::OSArgumentVector.new
 
     choices = OpenStudio::StringVector.new
-    choices << "Add Shading Controls"
-    choices << "Remove Shading Controls"
+    
+    model.getShadingMaterials.each do |sm|
+      choices << ("Add Shading Control for " + sm.name.get)
+    end
+    choices << "<Remove Shading Controls>"
     operation = OpenStudio::Ruleset::OSArgument::makeChoiceArgument("operation", choices, false)
     operation.setDisplayName("Operation")
-    operation.setDefaultValue("Add Shading Controls")
+    operation.setDefaultValue(choices[0])
     result << operation
     
     return result
@@ -52,36 +55,39 @@ class AddRemoveShadingControls < OpenStudio::Ruleset::ModelUserScript
     end
     
     operation = runner.getStringArgumentValue("operation",user_arguments)
-
-    any_in_selection = false
-    model.getSubSurfaces.each do |s|
-
-      next if not runner.inSelection(s)
-      
-      any_in_selection = true
-
-      shadingControl = s.shadingControl
-      
-      if operation == "Add Shading Controls"
-        if shadingControl.empty?
-          shadingControl = s.addShadingControl
-          if shadingControl.empty?
-            runner.registerInfo("Could not add shading controls to " + s.briefDescription + ".")    
-          else
-            runner.registerInfo("Added shading controls to " + s.briefDescription + ".")        
-          end
-        end
-      elsif operation == "Remove Shading Controls"
-        if not shadingControl.empty?
-          s.resetShadingControl
-          runner.registerInfo("Removed shading controls from " + s.briefDescription + ".")    
+    
+    remove = true
+    shadingMaterial = nil
+    shadingControl = nil
+    if match_data = /Add Shading Control for (.*)/.match(operation)
+      remove = false
+      name = match_data[1]
+      puts name
+      model.getShadingMaterials.each do |sm|
+        if name == sm.name.get
+          shadingMaterial = sm
+          break
         end
       end
-
+      
+      if not shadingMaterial
+        runner.registerError("Could not find ShadingMaterial '" + name + "'.")     
+        return(false)
+      end
+      
+      shadingControl = OpenStudio::Model::ShadingControl.new(shadingMaterial)
+      
     end
+
+    model.getSubSurfaces.each do |s|
     
-    if not any_in_selection
-      runner.registerAsNotApplicable("No sub surfaces in the current selection. Please select sub surfaces, surfaces, or spaces to modify.")
+      next if not runner.inSelection(s)
+
+      if remove
+        s.resetShadingControl
+      else
+        s.setShadingControl(shadingControl)
+      end
     end
     
     return true

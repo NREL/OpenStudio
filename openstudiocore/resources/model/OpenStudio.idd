@@ -4751,12 +4751,11 @@ OS:ShadingControl,
        \key ExteriorScreen
        \key InteriorBlind
        \key ExteriorBlind
-       \key BetweenGlassShade
-       \key BetweenGlassBlind
-       \key SwitchableGlazing
-  A3 , \field Construction with Shading Name
+  A3,  \field Shading Device Material Name
+       \required-field
        \type object-list
-       \object-list ConstructionNames
+       \object-list WindowShadesScreensAndBlinds
+       \note Enter then name of a WindowMaterial:Shade, WindowMaterial:Screen or WindowMaterial:Blind object.  
   A4 , \field Shading Control Type
        \type choice
        \key AlwaysOn
@@ -4764,7 +4763,7 @@ OS:ShadingControl,
        \key OnIfScheduleAllows
        \key OnIfHighSolarOnWindow
        \default OnIfHighSolarOnWindow
-  A5 ; \field Schedule Name
+  A5 , \field Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note Required if Shading Control Is Scheduled = Yes.
@@ -4772,7 +4771,52 @@ OS:ShadingControl,
        \note if the control test passes. If schedule value = 0, shading is off whether or not
        \note the control test passes. Schedule Name is required if Shading Control Is Scheduled = Yes.
        \note If Schedule Name is not specified, shading control is assumed to be active at all times.
-
+  N1 , \field Setpoint
+       \units BasedOnField A4
+       \note W/m2 for solar-based controls, W for cooling- or heating-based controls,
+       \note deg C for temperature-based controls.
+       \note Unused for Shading Control Type = AlwaysOn, AlwaysOff, OnIfScheduleAllows,
+       \note OnIfHighGlare, Glare, and DaylightIlluminance
+       \type real
+  A6 , \field Shading Control Is Scheduled
+       \type choice
+       \key No
+       \key Yes
+       \default No
+       \note If Yes, Schedule Name is required; if No, Schedule Name is not used.
+       \note Shading Control Is Scheduled = Yes is required if Shading Control Type = OnIfScheduleAllows.
+  A7 , \field Glare Control Is Active
+       \type choice
+       \key No
+       \key Yes
+       \default No
+       \note If Yes and window is in a daylit zone, shading is on if zone's discomfort glare index exceeds
+       \note the maximum discomfort glare index specified in the Daylighting object referenced by the zone.
+       \note The glare test is OR'ed with the test specified by Shading Control Type.
+       \note Glare Control Is Active = Yes is required if Shading Control Type = OnIfHighGlare.
+  A8 , \field Type of Slat Angle Control for Blinds
+       \type choice
+       \key FixedSlatAngle
+       \key ScheduledSlatAngle
+       \key BlockBeamSolar
+       \default FixedSlatAngle
+       \note Used only if Shading Type = InteriorBlind, ExteriorBlind or BetweenGlassBlind.
+       \note If choice is ScheduledSlatAngle then Slat Angle Schedule Name is required.
+  A9 , \field Slat Angle Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Used only if Shading Type = InteriorBlind, ExteriorBlind or BetweenGlassBlind.
+       \note Required if Type of Slat Angle Control for Blinds = ScheduledSlatAngle
+       \note Schedule values should be degrees (0 minimum, 180 maximum)
+  N2 ; \field Setpoint 2
+       \units BasedOnField A4
+       \note W/m2 for solar-based controls, deg C for temperature-based controls.
+       \note Used only as the second setpoint for the following two-setpoint control types:
+       \note OnIfHighOutdoorAirTempAndHighSolarOnWindow, OnIfHighOutdoorAirTempAndHighHorizontalSolar,
+       \note OnIfHighZoneAirTempAndHighSolarOnWindow, and OnIfHighZoneAirTempAndHighHorizontalSolar
+       \type real
+       \ip-units unknown
+       
 \group OpenStudio Space Loads
 
 OS:InternalMass,

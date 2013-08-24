@@ -27,10 +27,6 @@
 #include <model/Screen_Impl.hpp>
 #include <model/Shade.hpp>
 #include <model/Shade_Impl.hpp>
-#include <model/LayeredConstruction.hpp>
-#include <model/LayeredConstruction_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/Model.hpp>
@@ -49,7 +45,7 @@ namespace detail {
   ShadingControl_Impl::ShadingControl_Impl(const IdfObject& idfObject,
                                            Model_Impl* model,
                                            bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : ResourceObject_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == ShadingControl::iddObjectType());
   }
@@ -57,7 +53,7 @@ namespace detail {
   ShadingControl_Impl::ShadingControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                            Model_Impl* model,
                                            bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ResourceObject_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == ShadingControl::iddObjectType());
   }
@@ -65,7 +61,7 @@ namespace detail {
   ShadingControl_Impl::ShadingControl_Impl(const ShadingControl_Impl& other,
                                            Model_Impl* model,
                                            bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ResourceObject_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& ShadingControl_Impl::outputVariableNames() const
@@ -80,15 +76,10 @@ namespace detail {
   {
     return ShadingControl::iddObjectType();
   }
-
-  boost::optional<ParentObject> ShadingControl_Impl::parent() const
-  {
-    return this->construction();
-  }
   
-  Construction ShadingControl_Impl::construction() const
+  ShadingMaterial ShadingControl_Impl::shadingMaterial() const
   {
-    boost::optional<Construction> result = getObject<ShadingControl>().getModelObjectTarget<Construction>(OS_ShadingControlFields::ConstructionwithShadingName);
+    boost::optional<ShadingMaterial> result = getObject<ShadingControl>().getModelObjectTarget<ShadingMaterial>(OS_ShadingControlFields::ShadingDeviceMaterialName);
     OS_ASSERT(result);
     return result.get();
   }
@@ -136,52 +127,24 @@ namespace detail {
 
 } // detail
 
-ShadingControl::ShadingControl(const Construction& construction)
-  : ModelObject(ShadingControl::iddObjectType(),construction.model())
+ShadingControl::ShadingControl(const ShadingMaterial& shadingMaterial)
+  : ResourceObject(ShadingControl::iddObjectType(),shadingMaterial.model())
 {
   OS_ASSERT(getImpl<detail::ShadingControl_Impl>());
 
-  std::vector<Material> layers = construction.layers();
-
-  // check layers from inside out
-  unsigned i = layers.size() - 1;
   std::string type;
-  for (; i >=0; --i){
-    if (layers[i].optionalCast<Shade>()){
-      type = "Shade";
-      break;
-    }else if( layers[i].optionalCast<Blind>()){
-      type = "Blind";
-      break;
-    }else if( layers[i].optionalCast<Screen>()){
-      type = "Screen";
-      break;
-    }
+  if (shadingMaterial.optionalCast<Shade>()){
+    type = "InteriorShade";
+  }else if(shadingMaterial.optionalCast<Blind>()){
+    type = "InteriorBlind";
+  }else if(shadingMaterial.optionalCast<Screen>()){
+    type = "ExteriorScreen";
   }
 
-  if (type.empty()){
-    this->remove();
-    LOG_AND_THROW("Construction '" << construction.name().get() << "' does not include any ShadingMaterial layers");
-  }
-
-  std::string position;
-  if (i == layers.size() - 1){
-    position = "Interior";
-  }else if (i == 0){
-    position = "Exterior";
-  }else{
-    position = "BetweenGlass";
-  }
-
-  if (type == "Screen" && position != "Exterior"){
-    this->remove();
-    LOG_AND_THROW(position << type << " is not an allowable configuration for ShadingControl");
-  }
-
-  bool test = this->setShadingType(position + type);
+  bool test = this->setShadingType(type);
   OS_ASSERT(test);
 
-  test = this->setPointer(OS_ShadingControlFields::ConstructionwithShadingName, construction.handle());
+  test = this->setPointer(OS_ShadingControlFields::ShadingDeviceMaterialName, shadingMaterial.handle());
   OS_ASSERT(test);
 }
 
@@ -199,8 +162,8 @@ std::vector<std::string> ShadingControl::shadingControlTypeValues() {
                         OS_ShadingControlFields::ShadingControlType);
 }
 
-Construction ShadingControl::construction() const {
-  return getImpl<detail::ShadingControl_Impl>()->construction();
+ShadingMaterial ShadingControl::shadingMaterial() const {
+  return getImpl<detail::ShadingControl_Impl>()->shadingMaterial();
 }
 
 std::string ShadingControl::shadingType() const {
@@ -234,7 +197,7 @@ void ShadingControl::resetSchedule(){
 
 /// @cond
 ShadingControl::ShadingControl(boost::shared_ptr<detail::ShadingControl_Impl> impl)
-  : ModelObject(impl)
+  : ResourceObject(impl)
 {}
 /// @endcond
 

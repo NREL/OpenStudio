@@ -21,18 +21,18 @@
 #define MODEL_SHADINGCONTROL_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include <model/ResourceObject_Impl.hpp>
 
 namespace openstudio {
 namespace model {
 
-class Construction;
+class ShadingMaterial;
 class Schedule;
 
 namespace detail {
 
-  /** ShadingControl_Impl is a ModelObject_Impl that is the implementation class for ShadingControl.*/
-  class MODEL_API ShadingControl_Impl : public ModelObject_Impl {
+  /** ShadingControl_Impl is a ResourceObject_Impl that is the implementation class for ShadingControl.*/
+  class MODEL_API ShadingControl_Impl : public ResourceObject_Impl {
     Q_OBJECT;
 
    public:
@@ -62,14 +62,11 @@ namespace detail {
     
     virtual IddObjectType iddObjectType() const;
     
-    /// return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const;
-    
     //@}
     /** @name Getters */
     //@{
 
-    Construction construction() const;
+    ShadingMaterial shadingMaterial() const;
 
     std::string shadingType() const;
     

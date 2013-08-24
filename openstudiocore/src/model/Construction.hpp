@@ -26,8 +26,6 @@
 namespace openstudio {
 namespace model {
 
-  class ShadingControl;
-
 namespace detail{
   class Construction_Impl;
 }
@@ -63,10 +61,6 @@ class MODEL_API Construction : public LayeredConstruction {
   /** Searches the model for a layered construction with layers which are the reverse of this one.  Returns that construction 
    *  if found, creates one if not. */
   Construction reverseConstruction() const;
-
-  boost::optional<ShadingControl> shadingControl() const;
-
-  boost::optional<ShadingControl> addShadingControl();
 
  protected:
   /// @cond

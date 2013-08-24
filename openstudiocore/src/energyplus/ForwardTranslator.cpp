@@ -1650,6 +1650,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_Screen);
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_Shade);
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_SimpleGlazingSystem);
+  iddObjectTypes.push_back(IddObjectType::OS_ShadingControl);
 
   iddObjectTypes.push_back(IddObjectType::OS_Construction);
   iddObjectTypes.push_back(IddObjectType::OS_Construction_CfactorUndergroundWall);

@@ -58,11 +58,6 @@ boost::optional<IdfObject> ForwardTranslator::translateConstruction( Constructio
     translateAndMapModelObject(material);
     construction.setString(fieldIndex++, material.name().get());
   }
-  
-  boost::optional<ShadingControl> shadingControl = modelObject.shadingControl();
-  if (shadingControl){
-    translateAndMapModelObject(*shadingControl);
-  }
 
   return boost::optional<IdfObject>(construction);
 }

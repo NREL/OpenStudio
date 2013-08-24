@@ -33,32 +33,22 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,ShadingControl_Construction) {
-  Model model;
- 
-  Construction construction(model);
-  boost::optional<ShadingControl> shadingControl = construction.addShadingControl();
-  EXPECT_FALSE(shadingControl);
 
+TEST_F(ModelFixture,ShadingControl) {
+  Model model;
+
+  Construction construction(model);
+  
   SimpleGlazing glazing(model);
   EXPECT_TRUE(construction.insertLayer(0,glazing));
-  shadingControl = construction.addShadingControl();
-  EXPECT_FALSE(shadingControl);
 
   Blind blind(model);
-  EXPECT_TRUE(construction.insertLayer(1,blind));
-  shadingControl = construction.addShadingControl();
-  ASSERT_TRUE(shadingControl);
 
-  EXPECT_EQ(construction.handle(), shadingControl->construction().handle());
-  EXPECT_EQ("InteriorBlind", shadingControl->shadingType());
-  EXPECT_EQ("OnIfHighSolarOnWindow", shadingControl->shadingControlType());
-  EXPECT_FALSE(shadingControl->schedule());
-}
-
-
-TEST_F(ModelFixture,ShadingControl_SubSurface) {
-  Model model;
+  ShadingControl shadingControl(blind);
+  EXPECT_EQ(blind.handle(), shadingControl.shadingMaterial().handle());
+  EXPECT_EQ("InteriorBlind", shadingControl.shadingType());
+  EXPECT_EQ("OnIfHighSolarOnWindow", shadingControl.shadingControlType());
+  EXPECT_FALSE(shadingControl.schedule());
 
   std::vector<Point3d> vertices;
   vertices.push_back(Point3d(0,0,1));
@@ -66,26 +56,10 @@ TEST_F(ModelFixture,ShadingControl_SubSurface) {
   vertices.push_back(Point3d(1,0,0));
   vertices.push_back(Point3d(1,0,1));
 
-  SubSurface subSurface(vertices, model);
-  boost::optional<ShadingControl> shadingControl = subSurface.addShadingControl();
-
-  Construction construction(model);
+  SubSurface subSurface(vertices, model); 
   EXPECT_TRUE(subSurface.setConstruction(construction));
-  shadingControl = subSurface.addShadingControl();
-  EXPECT_FALSE(shadingControl);
-
-  SimpleGlazing glazing(model);
-  EXPECT_TRUE(construction.insertLayer(0,glazing));
-  shadingControl = subSurface.addShadingControl();
-  EXPECT_FALSE(shadingControl);
-
-  Blind blind(model);
-  EXPECT_TRUE(construction.insertLayer(1,blind));
-  shadingControl = subSurface.addShadingControl();
-  ASSERT_TRUE(shadingControl);
-
-  EXPECT_EQ(construction.handle(), shadingControl->construction().handle());
-  EXPECT_EQ("InteriorBlind", shadingControl->shadingType());
-  EXPECT_EQ("OnIfHighSolarOnWindow", shadingControl->shadingControlType());
-  EXPECT_FALSE(shadingControl->schedule());
+  EXPECT_FALSE(subSurface.shadingControl());
+  EXPECT_TRUE(subSurface.setShadingControl(shadingControl));
+  ASSERT_TRUE(subSurface.shadingControl());
+  EXPECT_EQ(blind.handle(), subSurface.shadingControl()->shadingMaterial().handle());
 }
