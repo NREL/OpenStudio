@@ -688,14 +688,10 @@ void BillingPeriodWidget::createWidgets(QGridLayout * gridLayout,
 
     columnIndex++;
 
-    getLabel(m_energyUseLabel,gridLayout,rowIndex,columnIndex++,QString());
+    getLabel(m_energyUseLabel,gridLayout,rowIndex,columnIndex++,getEnergyUseLabelText());
     if(fuelType == FuelType::Electricity){
-      getLabel(m_peakLabel,gridLayout,rowIndex,columnIndex++,QString());
+      getLabel(m_peakLabel,gridLayout,rowIndex,columnIndex++,getPeakLabelText());
     }
-    //getLabel(m_energyUseLabel,gridLayout,rowIndex,columnIndex++,getEnergyUseLabelText());
-    //if(fuelType == FuelType::Electricity){
-    //  getLabel(m_peakLabel,gridLayout,rowIndex,columnIndex++,getPeakLabelText());
-    //}
     getLabel(gridLayout,rowIndex,columnIndex++,QString("Cost"));
     getLabel(gridLayout,rowIndex,columnIndex++,QString(""));
 
@@ -952,14 +948,14 @@ void BillingPeriodWidget::updateEnergyUseLabelText(const QString& text)
 {
   m_energyUseUnits = text;
   QString energyUseLabelText = getEnergyUseLabelText();
-  if(m_energyUseLabel) m_energyUseLabel->setText(energyUseLabelText);
+  // TODO if(m_energyUseLabel) m_energyUseLabel->setText(energyUseLabelText);
 }
 
 void BillingPeriodWidget::updatePeakLabelText(const QString& text)
 {
   m_peakUnits = text;
   QString peakLabelText = getPeakLabelText();
-  if(m_peakLabel) m_peakLabel->setText(peakLabelText);
+ // TODO if(m_peakLabel) m_peakLabel->setText(peakLabelText);
 }
 
 void BillingPeriodWidget::modelObjectChanged()
