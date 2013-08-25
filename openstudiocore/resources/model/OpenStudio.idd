@@ -2296,7 +2296,7 @@ OS:WindowMaterial:Blind,
        \key Vertical
   N1, \field Slat Width
        \type real
-       \required-field
+       \default 0.025
        \units m
        \ip-units in
        \minimum> 0
@@ -2304,7 +2304,7 @@ OS:WindowMaterial:Blind,
   N2, \field Slat Separation
        \note Distance between adjacent slat faces
        \type real
-       \required-field
+       \default 0.01875
        \units m
        \ip-units in
        \minimum> 0
@@ -2317,7 +2317,7 @@ OS:WindowMaterial:Blind,
        \ip-units in
        \minimum> 0
        \maximum 0.1
-       \default 0.00025
+       \default 0.001
   N4, \field Slat Angle
        \note If WindowProperty:ShadingControl for the window that incorporates this blind
        \note has Type of Slat Angle Control for Blinds = FixedSlatAngle,
@@ -2343,15 +2343,15 @@ OS:WindowMaterial:Blind,
        \type real
        \minimum 0
        \maximum< 1
-       \default 0
+       \default 0.0
   N7, \field Front Side Slat Beam Solar Reflectance
        \type real
-       \required-field
+       \default 0.5
        \minimum 0
        \maximum< 1
   N8, \field Back Side Slat Beam Solar Reflectance
        \type real
-       \required-field
+       \default 0.5
        \minimum 0
        \maximum< 1
   N9, \field Slat Diffuse Solar Transmittance
@@ -2359,33 +2359,35 @@ OS:WindowMaterial:Blind,
        \type real
        \minimum 0
        \maximum< 1
-       \default 0
+       \default 0.0
   N10, \field Front Side Slat Diffuse Solar Reflectance
        \note Must equal "Front Side Slat Beam Solar Reflectance"
        \type real
-       \required-field
+       \default 0.5
        \minimum 0
        \maximum< 1
   N11, \field Back Side Slat Diffuse Solar Reflectance
        \note Must equal "Back Side Slat Beam Solar Reflectance"
        \type real
-       \required-field
+       \default 0.5
        \minimum 0
        \maximum< 1
   N12, \field Slat Beam Visible Transmittance
        \note Required for detailed daylighting calculation
        \type real
-       \required-field
+       \default 0.0
        \minimum 0
        \maximum< 1
   N13, \field Front Side Slat Beam Visible Reflectance
        \note Required for detailed daylighting calculation
        \type real
+       \default 0.5
        \minimum 0
        \maximum< 1
   N14, \field Back Side Slat Beam Visible Reflectance
        \note Required for detailed daylighting calculation
        \type real
+       \default 0.5
        \minimum 0
        \maximum< 1
   N15, \field Slat Diffuse Visible Transmittance
@@ -2394,24 +2396,26 @@ OS:WindowMaterial:Blind,
        \type real
        \minimum 0
        \maximum< 1
-       \default 0
+       \default 0.0
   N16, \field Front Side Slat Diffuse Visible Reflectance
        \note Required for detailed daylighting calculation
        \note Must equal "Front Side Slat Beam Visible Reflectance"
        \type real
+       \default 0.5
        \minimum 0
        \maximum< 1
   N17, \field Back Side Slat Diffuse Visible Reflectance
        \note Required for detailed daylighting calculation
        \note Must equal "Back Side Slat Beam Visible Reflectance"
        \type real
+       \default 0.5
        \minimum 0
        \maximum< 1
   N18, \field Slat Infrared Hemispherical Transmittance
        \type real
        \minimum 0
        \maximum< 1
-       \default 0
+       \default 0.0
   N19, \field Front Side Slat Infrared Hemispherical Emissivity
        \type real
        \minimum 0
@@ -2438,7 +2442,7 @@ OS:WindowMaterial:Blind,
        \type real
        \minimum 0
        \maximum 1
-       \default 0.0
+       \default 0.5
   N24, \field Blind Left Side Opening Multiplier
        \type real
        \minimum 0
@@ -2809,7 +2813,7 @@ OS:WindowMaterial:Screen,
        \note Diffuse reflectance of the screen material over the entire solar radiation spectrum.
        \note Assumed to be the same for both sides of the screen.
        \type real
-       \required-field
+       \default 0.08
        \units dimensionless
        \minimum 0
        \maximum< 1
@@ -2818,7 +2822,7 @@ OS:WindowMaterial:Screen,
        \note and weighted by the response of the human eye.
        \note Assumed to be the same for both sides of the screen.
        \type real
-       \required-field
+       \default 0.08
        \units dimensionless
        \minimum 0
        \maximum< 1
@@ -2840,14 +2844,14 @@ OS:WindowMaterial:Screen,
   N5, \field Screen Material Spacing
        \note Spacing assumed to be the same in both directions.
        \type real
-       \required-field
+       \default 0.00157
        \units m
        \ip-units in
        \minimum> 0
   N6, \field Screen Material Diameter
        \note Diameter assumed to be the same in both directions.
        \type real
-       \required-field
+       \default 0.000381
        \units m
        \ip-units in
        \minimum> 0
@@ -2918,7 +2922,7 @@ OS:WindowMaterial:Shade,
   N1, \field Solar Transmittance
        \note Assumed independent of incidence angle
        \type real
-       \required-field
+       \default 0.4
        \units dimensionless
        \minimum 0
        \maximum< 1
@@ -2926,14 +2930,14 @@ OS:WindowMaterial:Shade,
        \note Assumed same for both sides
        \note Assumed independent of incidence angle
        \type real
-       \required-field
+       \default 0.5
        \units dimensionless
        \minimum 0
        \maximum< 1
   N3, \field Visible Transmittance
        \note Assumed independent of incidence angle
        \type real
-       \required-field
+       \default 0.4
        \units dimensionless
        \minimum 0
        \maximum< 1
@@ -2941,31 +2945,31 @@ OS:WindowMaterial:Shade,
        \note Assumed same for both sides
        \note Assumed independent of incidence angle
        \type real
-       \required-field
+       \default 0.5
        \units dimensionless
        \minimum 0
        \maximum< 1
   N5, \field Thermal Hemispherical Emissivity
        \type real
-       \required-field
+       \default 0.9
        \units dimensionless
        \minimum> 0
        \maximum< 1
   N6, \field Thermal Transmittance
        \type real
-       \required-field
+       \default 0.0
        \units dimensionless
        \minimum 0
        \maximum< 1
   N7, \field Thickness
        \type real
-       \required-field
+       \default 0.005
        \units m
        \ip-units in
        \minimum> 0
   N8, \field Conductivity
        \type real
-       \required-field
+       \default 0.1
        \units W/m-K
        \minimum> 0
   N9, \field Shade to Glass Distance
@@ -2979,22 +2983,22 @@ OS:WindowMaterial:Shade,
        \type real
        \minimum 0
        \maximum 1
-       \default 0.5
+       \default 0.0
   N11, \field Bottom Opening Multiplier
        \type real
        \minimum 0
        \maximum 1
-       \default 0.5
+       \default 0.0
   N12, \field Left-Side Opening Multiplier
        \type real
        \minimum 0
        \maximum 1
-       \default 0.5
+       \default 0.0
   N13, \field Right-Side Opening Multiplier
        \type real
        \minimum 0
        \maximum 1
-       \default 0.5
+       \default 0.0
   N14; \field Airflow Permeability
        \type real
        \units dimensionless
