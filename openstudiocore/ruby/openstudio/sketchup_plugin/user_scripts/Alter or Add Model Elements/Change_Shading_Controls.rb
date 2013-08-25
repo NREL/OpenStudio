@@ -18,11 +18,11 @@
 ######################################################################
 
 # Each user script is implemented within a class that derives from OpenStudio::Ruleset::UserScript
-class AddRemoveShadingControls < OpenStudio::Ruleset::ModelUserScript
+class SetShadingControls < OpenStudio::Ruleset::ModelUserScript
 
   # override name to return the name of your script
   def name
-    return "Add or Remove Shading Controls"
+    return "Set Shading Controls"
   end
   
   # returns a vector of arguments, the runner will present these arguments to the user
@@ -32,22 +32,16 @@ class AddRemoveShadingControls < OpenStudio::Ruleset::ModelUserScript
 
     choices = OpenStudio::StringVector.new
     
-    model.getConstructions.each do |c|
-      c.layers.each do |layer|
-        if not layer.to_ShadingMaterial.empty?
-          choices << ("Add Shading Control for Construction " + c.name.get)
-          break
-        end
-      end
+    model.getShadingControls.each do |c|
+      choices << c.name.get
     end
-    model.getShadingMaterials.each do |sm|
-      choices << ("Add Shading Control for Material " + sm.name.get)
-    end
-    choices << "<Remove Shading Controls>"
-    operation = OpenStudio::Ruleset::OSArgument::makeChoiceArgument("operation", choices, false)
-    operation.setDisplayName("Operation")
-    operation.setDefaultValue(choices[0])
-    result << operation
+    choices << "<No Shading Control>"
+
+    name = OpenStudio::Ruleset::OSArgument::makeChoiceArgument("name", choices, false)
+    name.setDisplayName("Set Shading Controls")
+    name.setDefaultValue(choices[0])
+
+    result << name
     
     return result
   end
@@ -62,66 +56,42 @@ class AddRemoveShadingControls < OpenStudio::Ruleset::ModelUserScript
       return false
     end
     
-    operation = runner.getStringArgumentValue("operation",user_arguments)
+    name = runner.getStringArgumentValue("name",user_arguments)
     
     remove = true
     shadingControl = nil
+    if name != "<No Shading Control>"
+      remove = false
     
-    if match_data = /Add Shading Control for Construction (.*)/.match(operation)
-      remove = false
-      name = match_data[1]
-      
-      shadingConstruction = nil
-      model.getConstructions.each do |c|
+      model.getShadingControls.each do |c|
         if name == c.name.get
-          shadingConstruction = sm
+          shadingControl = c
           break
         end
       end
       
-      if not shadingConstruction
-        runner.registerError("Could not find Construction '" + name + "'.")     
+      if not shadingControl
+        runner.registerError("Could not find ShadingControl '" + name + "'.")     
         return(false)
-      end
-      
-      shadingControl = OpenStudio::Model::ShadingControl.new(shadingConstruction)
-      
-    elsif match_data = /Add Shading Control for Material (.*)/.match(operation)
-      remove = false
-      name = match_data[1]
-      
-      shadingMaterial = nil
-      model.getShadingMaterials.each do |sm|
-        if name == sm.name.get
-          shadingMaterial = sm
-          break
-        end
-      end
-      
-      if not shadingMaterial
-        runner.registerError("Could not find ShadingMaterial '" + name + "'.")     
-        return(false)
-      end
-      
-      shadingControl = OpenStudio::Model::ShadingControl.new(shadingMaterial)
+      end      
       
     end
-
-    model.getSubSurfaces.each do |s|
     
-      next if not runner.inSelection(s)
+    model.getSubSurfaces.each do |s|
 
+      next if not runner.inSelection(s)
+      
       if remove
         s.resetShadingControl
       else
         s.setShadingControl(shadingControl)
       end
+      
     end
     
-    return true
   end
-
+    
 end
 
 # this call registers your script with the OpenStudio SketchUp plug-in
-AddRemoveShadingControls.new.registerWithApplication
+SetShadingControls.new.registerWithApplication
