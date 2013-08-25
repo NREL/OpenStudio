@@ -65,7 +65,7 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
   }
 
   if (istringEqual("OnIfHighSolarOnWindow", shadingControlType)){
-    idfObject.setDouble(WindowProperty_ShadingControlFields::Setpoint, 1000.0);
+    idfObject.setDouble(WindowProperty_ShadingControlFields::Setpoint, 100.0);
   }
 
   idfObject.setString(WindowProperty_ShadingControlFields::GlareControlIsActive, "No");
