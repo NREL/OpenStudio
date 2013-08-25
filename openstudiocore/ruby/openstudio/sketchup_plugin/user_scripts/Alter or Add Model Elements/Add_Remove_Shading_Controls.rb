@@ -32,8 +32,16 @@ class AddRemoveShadingControls < OpenStudio::Ruleset::ModelUserScript
 
     choices = OpenStudio::StringVector.new
     
+    model.getConstructions.each do |c|
+      c.layers.each do |layer|
+        if not layer.to_ShadingMaterial.empty?
+          choices << ("Add Shading Control for Construction " + c.name.get)
+          break
+        end
+      end
+    end
     model.getShadingMaterials.each do |sm|
-      choices << ("Add Shading Control for " + sm.name.get)
+      choices << ("Add Shading Control for Material " + sm.name.get)
     end
     choices << "<Remove Shading Controls>"
     operation = OpenStudio::Ruleset::OSArgument::makeChoiceArgument("operation", choices, false)
@@ -57,12 +65,32 @@ class AddRemoveShadingControls < OpenStudio::Ruleset::ModelUserScript
     operation = runner.getStringArgumentValue("operation",user_arguments)
     
     remove = true
-    shadingMaterial = nil
     shadingControl = nil
-    if match_data = /Add Shading Control for (.*)/.match(operation)
+    
+    if match_data = /Add Shading Control for Construction (.*)/.match(operation)
       remove = false
       name = match_data[1]
-      puts name
+      
+      shadingConstruction = nil
+      model.getConstructions.each do |c|
+        if name == c.name.get
+          shadingConstruction = sm
+          break
+        end
+      end
+      
+      if not shadingConstruction
+        runner.registerError("Could not find Construction '" + name + "'.")     
+        return(false)
+      end
+      
+      shadingControl = OpenStudio::Model::ShadingControl.new(shadingConstruction)
+      
+    elsif match_data = /Add Shading Control for Material (.*)/.match(operation)
+      remove = false
+      name = match_data[1]
+      
+      shadingMaterial = nil
       model.getShadingMaterials.each do |sm|
         if name == sm.name.get
           shadingMaterial = sm

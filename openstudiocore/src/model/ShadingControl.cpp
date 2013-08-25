@@ -19,6 +19,8 @@
 
 #include <model/ShadingControl.hpp>
 #include <model/ShadingControl_Impl.hpp>
+#include <model/Construction.hpp>
+#include <model/Construction_Impl.hpp>
 #include <model/ShadingMaterial.hpp>
 #include <model/ShadingMaterial_Impl.hpp>
 #include <model/Blind.hpp>
@@ -76,12 +78,15 @@ namespace detail {
   {
     return ShadingControl::iddObjectType();
   }
-  
-  ShadingMaterial ShadingControl_Impl::shadingMaterial() const
+
+  boost::optional<Construction> ShadingControl_Impl::construction() const 
   {
-    boost::optional<ShadingMaterial> result = getObject<ShadingControl>().getModelObjectTarget<ShadingMaterial>(OS_ShadingControlFields::ShadingDeviceMaterialName);
-    OS_ASSERT(result);
-    return result.get();
+    return getObject<ShadingControl>().getModelObjectTarget<Construction>(OS_ShadingControlFields::ConstructionwithShadingName);
+  }
+
+  boost::optional<ShadingMaterial> ShadingControl_Impl::shadingMaterial() const
+  {
+    return getObject<ShadingControl>().getModelObjectTarget<ShadingMaterial>(OS_ShadingControlFields::ShadingDeviceMaterialName);
   }
 
   std::string ShadingControl_Impl::shadingType() const
@@ -127,6 +132,57 @@ namespace detail {
 
 } // detail
 
+
+ShadingControl::ShadingControl(const Construction& construction)
+  : ResourceObject(ShadingControl::iddObjectType(),construction.model())
+{
+  OS_ASSERT(getImpl<detail::ShadingControl_Impl>());
+
+  std::vector<Material> layers = construction.layers();
+
+  std::string type;
+
+  // check layers from inside out
+  int i = layers.size() - 1;
+  for (; i >=0; --i){
+    if (layers[i].optionalCast<Shade>()){
+      type = "Shade";
+      break;
+    }else if( layers[i].optionalCast<Blind>()){
+      type = "Blind";
+      break;
+    }else if( layers[i].optionalCast<Screen>()){
+      type = "Screen";
+      break;
+    }
+  }
+
+  std::string position;
+  if (i == layers.size() - 1){
+    position = "Interior";
+  }else if (i == 0){
+    position = "Exterior";
+  }else{
+    position = "BetweenGlass";
+  }
+
+  if (type.empty()){
+    type = "SwitchableGlazing";
+    position = "";
+  }
+
+  if (type == "Screen" && position != "Exterior"){
+    this->remove();
+    LOG_AND_THROW(position << type << " is not an allowable configuration for ShadingControl");
+  }
+
+  bool test = this->setShadingType(position + type);
+  OS_ASSERT(test);
+
+  test = this->setPointer(OS_ShadingControlFields::ConstructionwithShadingName, construction.handle());
+  OS_ASSERT(test);
+}
+
 ShadingControl::ShadingControl(const ShadingMaterial& shadingMaterial)
   : ResourceObject(ShadingControl::iddObjectType(),shadingMaterial.model())
 {
@@ -162,7 +218,11 @@ std::vector<std::string> ShadingControl::shadingControlTypeValues() {
                         OS_ShadingControlFields::ShadingControlType);
 }
 
-ShadingMaterial ShadingControl::shadingMaterial() const {
+boost::optional<Construction> ShadingControl::construction() const {
+  return getImpl<detail::ShadingControl_Impl>()->construction();
+}
+
+boost::optional<ShadingMaterial> ShadingControl::shadingMaterial() const {
   return getImpl<detail::ShadingControl_Impl>()->shadingMaterial();
 }
 

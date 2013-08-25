@@ -26,6 +26,7 @@
 namespace openstudio {
 namespace model {
 
+class Construction;
 class ShadingMaterial;
 class Schedule;
 
@@ -66,7 +67,9 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    ShadingMaterial shadingMaterial() const;
+    boost::optional<Construction> construction() const;
+
+    boost::optional<ShadingMaterial> shadingMaterial() const;
 
     std::string shadingType() const;
     

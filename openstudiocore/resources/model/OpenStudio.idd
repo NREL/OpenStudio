@@ -4736,14 +4736,17 @@ OS:SubSurface,
        \units m
 
 OS:ShadingControl,
-       \min-fields 3
-  A1 , \field Name
+       \min-fields 4
+  A1 , \field Handle
+       \type handle
+       \required-field       
+  A2 , \field Name
        \required-field
        \type alpha
        \reference WindowShadeControlNames
        \note Referenced by surfaces that are exterior windows
        \note Not used by interzone windows
-  A2 , \field Shading Type
+  A3 , \field Shading Type
        \required-field
        \type choice
        \key InteriorShade
@@ -4751,19 +4754,33 @@ OS:ShadingControl,
        \key ExteriorScreen
        \key InteriorBlind
        \key ExteriorBlind
-  A3,  \field Shading Device Material Name
-       \required-field
+       \key BetweenGlassShade
+       \key BetweenGlassBlind
+       \key SwitchableGlazing       
+  A4 , \field Construction with Shading Name
+       \type object-list
+       \object-list ConstructionNames
+       \note Required if Shading Type = SwitchableGlazing
+       \note Required if Shading Type = interior or exterior shade or blind, or exterior screen, and
+       \note "Shading Device Material Name" is not specified.
+       \note If both "Construction with Shading Name" and "Shading Device Material Name" are entered,
+       \note the former takes precedence.       
+  A5,  \field Shading Device Material Name
        \type object-list
        \object-list WindowShadesScreensAndBlinds
        \note Enter then name of a WindowMaterial:Shade, WindowMaterial:Screen or WindowMaterial:Blind object.  
-  A4 , \field Shading Control Type
+       \note Required if "Construction with Shading Name" is not specified.
+       \note Not used if Shading Control Type = SwitchableGlazing, BetweenGlassShade, or BetweenGlassBlind.
+       \note If both "Construction with Shading Name" and "Shading Device Material Name" are entered,
+       \note the former takes precedence. 
+  A6 , \field Shading Control Type
        \type choice
        \key AlwaysOn
        \key AlwaysOff
        \key OnIfScheduleAllows
        \key OnIfHighSolarOnWindow
        \default OnIfHighSolarOnWindow
-  A5 , \field Schedule Name
+  A7 , \field Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note Required if Shading Control Is Scheduled = Yes.
@@ -4778,14 +4795,14 @@ OS:ShadingControl,
        \note Unused for Shading Control Type = AlwaysOn, AlwaysOff, OnIfScheduleAllows,
        \note OnIfHighGlare, Glare, and DaylightIlluminance
        \type real
-  A6 , \field Shading Control Is Scheduled
+  A8 , \field Shading Control Is Scheduled
        \type choice
        \key No
        \key Yes
        \default No
        \note If Yes, Schedule Name is required; if No, Schedule Name is not used.
        \note Shading Control Is Scheduled = Yes is required if Shading Control Type = OnIfScheduleAllows.
-  A7 , \field Glare Control Is Active
+  A9 , \field Glare Control Is Active
        \type choice
        \key No
        \key Yes
@@ -4794,7 +4811,7 @@ OS:ShadingControl,
        \note the maximum discomfort glare index specified in the Daylighting object referenced by the zone.
        \note The glare test is OR'ed with the test specified by Shading Control Type.
        \note Glare Control Is Active = Yes is required if Shading Control Type = OnIfHighGlare.
-  A8 , \field Type of Slat Angle Control for Blinds
+  A10, \field Type of Slat Angle Control for Blinds
        \type choice
        \key FixedSlatAngle
        \key ScheduledSlatAngle
@@ -4802,7 +4819,7 @@ OS:ShadingControl,
        \default FixedSlatAngle
        \note Used only if Shading Type = InteriorBlind, ExteriorBlind or BetweenGlassBlind.
        \note If choice is ScheduledSlatAngle then Slat Angle Schedule Name is required.
-  A9 , \field Slat Angle Schedule Name
+  A11, \field Slat Angle Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note Used only if Shading Type = InteriorBlind, ExteriorBlind or BetweenGlassBlind.

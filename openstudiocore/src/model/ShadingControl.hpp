@@ -27,6 +27,7 @@ namespace openstudio {
 
 namespace model {
 
+class Construction;
 class ShadingMaterial;
 class Schedule;
 
@@ -41,6 +42,8 @@ class MODEL_API ShadingControl : public ResourceObject {
  public:
   /** @name Constructors and Destructors */
   //@{
+
+  explicit ShadingControl(const Construction& construction);
 
   explicit ShadingControl(const ShadingMaterial& shadingMaterial);
 
@@ -57,7 +60,9 @@ class MODEL_API ShadingControl : public ResourceObject {
   /** @name Getters */
   //@{
   
-  ShadingMaterial shadingMaterial() const;
+  boost::optional<Construction> construction() const;
+
+  boost::optional<ShadingMaterial> shadingMaterial() const;
   
   std::string shadingType() const;
   

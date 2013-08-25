@@ -20,6 +20,7 @@
 #include <energyplus/ForwardTranslator.hpp>
 
 #include <model/ShadingControl.hpp>
+#include <model/Construction.hpp>
 #include <model/ShadingMaterial.hpp>
 #include <model/Schedule.hpp>
 
@@ -42,7 +43,15 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
   
   idfObject.setString(WindowProperty_ShadingControlFields::ShadingType, modelObject.shadingType());
   
-  //idfObject.setString(WindowProperty_ShadingControlFields::ConstructionwithShadingName, "");
+  boost::optional<Construction> construction = modelObject.construction();
+  if (construction){
+    idfObject.setString(WindowProperty_ShadingControlFields::ConstructionwithShadingName, construction->name().get());
+  }
+
+  boost::optional<ShadingMaterial> shadingMaterial = modelObject.shadingMaterial();
+  if (shadingMaterial){
+    idfObject.setString(WindowProperty_ShadingControlFields::ShadingDeviceMaterialName, shadingMaterial->name().get());
+  }
   
   std::string shadingControlType = modelObject.shadingControlType();
   idfObject.setString(WindowProperty_ShadingControlFields::ShadingControlType, shadingControlType);
@@ -60,8 +69,6 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
   }
 
   idfObject.setString(WindowProperty_ShadingControlFields::GlareControlIsActive, "No");
-
-  idfObject.setString(WindowProperty_ShadingControlFields::ShadingDeviceMaterialName, modelObject.shadingMaterial().name().get());
 
   //idfObject.setString(WindowProperty_ShadingControlFields::TypeofSlatAngleControlforBlinds, "FixedSlatAngle");
 
