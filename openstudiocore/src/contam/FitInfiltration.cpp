@@ -182,11 +182,13 @@ int main(int argc, char *argv[])
 
   std::string inputPathString;
   std::string leakageDescriptorString="Average";
+  double flow=27.1;
   boost::program_options::options_description desc("Allowed options");
   desc.add_options()
+    ("flow,f", boost::program_options::value<double>(&flow), "leakage flow rate [m^3/h]")
     ("help,h", "print help message")
     ("inputPath,i", boost::program_options::value<std::string>(&inputPathString), "path to OSM file")
-    ("leakage,l", boost::program_options::value<std::string>(&leakageDescriptorString), "leakage level or grade")
+    ("level,l", boost::program_options::value<std::string>(&leakageDescriptorString), "leakage level or grade")
     ("quiet,q", "suppress progress output");
 
   boost::program_options::positional_options_description pos;
@@ -238,11 +240,23 @@ int main(int argc, char *argv[])
   }
 
   openstudio::contam::ForwardTranslator translator;
-  
-  if(!translator.translate(*model,false,leakageDescriptorString))
+
+  if(vm.count("flow"))
   {
-    std::cout << "Translation failed, check errors and warnings for more information." << std::endl;
-    return EXIT_FAILURE;
+    std::cout << flow << std::endl;
+    if(!translator.translate(*model,flow,false))
+    {
+      std::cout << "Translation failed, check errors and warnings for more information." << std::endl;
+      return EXIT_FAILURE;
+    }
+  }
+  else
+  {
+    if(!translator.translate(*model,false,leakageDescriptorString))
+    {
+      std::cout << "Translation failed, check errors and warnings for more information." << std::endl;
+      return EXIT_FAILURE;
+    }
   }
 
   // Get all the surfaces
