@@ -22,6 +22,8 @@
 
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
+#include <model/ControllerMechanicalVentilation.hpp>
+#include <model/ControllerMechanicalVentilation_Impl.hpp>
 #include <model/AirLoopHVACZoneSplitter.hpp>
 #include <model/AirLoopHVACZoneSplitter_Impl.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
@@ -1454,23 +1456,29 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       }
 
       // DX EIR function of Flow
-      // We do not have this in sdd yet
 
-      model::CurveQuadratic energyInputRatioFofFlow(model);
-      energyInputRatioFofFlow.setCoefficient1Constant(1.20550);
-      energyInputRatioFofFlow.setCoefficient2x(-0.32953);
-      energyInputRatioFofFlow.setCoefficient3xPOW2(0.12308);
-      energyInputRatioFofFlow.setMinimumValueofx(0.75918);
-      energyInputRatioFofFlow.setMaximumValueofx(1.13877);
+      boost::optional<model::Curve> energyInputRatioFofFlow;
+      QDomElement dxEIR_fFlowCrvRefElement = coolingCoilElement.firstChildElement("DXEIR_fFlowCrvRef");
+      energyInputRatioFofFlow = model.getModelObjectByName<model::Curve>(dxEIR_fFlowCrvRefElement.text().toStdString());
+      if( ! energyInputRatioFofFlow )
+      {
+        model::CurveQuadratic _energyInputRatioFofFlow(model);
+        _energyInputRatioFofFlow.setCoefficient1Constant(1.20550);
+        _energyInputRatioFofFlow.setCoefficient2x(-0.32953);
+        _energyInputRatioFofFlow.setCoefficient3xPOW2(0.12308);
+        _energyInputRatioFofFlow.setMinimumValueofx(0.75918);
+        _energyInputRatioFofFlow.setMaximumValueofx(1.13877);
+        energyInputRatioFofFlow = _energyInputRatioFofFlow;
+      }
 
       // DXEIR_fPLRCrvRef
 
       boost::optional<model::Curve> partLoadFraction;
-      QDomElement dxEIR_fPLRCrvRefElement = coolingCoilElement.firstChildElement("DXEIR_fPLRCrvRef");
-      partLoadFraction = model.getModelObjectByName<model::Curve>(dxEIR_fPLRCrvRefElement.text().toStdString());
+      QDomElement dxEIR_fPLFCrvRefElement = coolingCoilElement.firstChildElement("DXEIR_fPLFCrvRef");
+      partLoadFraction = model.getModelObjectByName<model::Curve>(dxEIR_fPLFCrvRefElement.text().toStdString());
       if( ! partLoadFraction )
       {
-        LOG(Error,"Coil: " << nameElement.text().toStdString() << "Broken DXEIR_fPLRCrvRef");
+        LOG(Error,"Coil: " << nameElement.text().toStdString() << "Broken DXEIR_fPLFCrvRef");
 
         // Provide default curves
         model::CurveQuadratic _partLoadFraction(model);
@@ -1487,7 +1495,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
                                               coolingCurveFofTemp.get(),
                                               coolingCurveFofFlow.get(),
                                               energyInputRatioFofTemp.get(),
-                                              energyInputRatioFofFlow,
+                                              energyInputRatioFofFlow.get(),
                                               partLoadFraction.get(), 
                                               coolingCurveFofTemp->clone(model).cast<model::Curve>(),
                                               energyInputRatioFofTemp->clone(model).cast<model::Curve>());
@@ -1769,6 +1777,20 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     }
   }
 
+  // DCV?
+  QDomElement ventCtrlMthdElement = thermalZoneElement.firstChildElement("VentCtrlMthd");
+  if( istringEqual(ventCtrlMthdElement.text().toStdString(),"OccupantSensors") ||
+      istringEqual(ventCtrlMthdElement.text().toStdString(),"CO2Sensors") )
+  {
+    if( airLoopHVAC )
+    {
+      if( boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVAC->airLoopHVACOutdoorAirSystem() )
+      {
+        oaSystem->getControllerOutdoorAir().controllerMechanicalVentilation().setDemandControlledVentilation(true);
+      }
+    }
+  }
+
   // ClgTstatSchRef
   QDomElement clgTstatSchRefElement = thermalZoneElement.firstChildElement("ClgTstatSchRef");
   if (!clgTstatSchRefElement.isNull()){
@@ -1970,7 +1992,10 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
   // PriAirFlow
   QDomElement priAirFlowElement = trmlUnitElement.firstChildElement("PriAirFlowMax");
 
+  QDomElement priAirFlowMinElement = trmlUnitElement.firstChildElement("PriAirFlowMin");
+
   boost::optional<double> primaryAirFlow;
+  boost::optional<double> primaryAirFlowMin;
 
   if( ! autosize() )
   {
@@ -1978,10 +2003,14 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
 
     if( ok ) 
     {
-      Quantity flowRateIP(value,createCFMVolumetricFlowrate());
-      OptionalQuantity flowRateSI = QuantityConverter::instance().convert(flowRateIP, UnitSystem(UnitSystem::SI));
-      OS_ASSERT(flowRateSI);
-      primaryAirFlow = flowRateSI->value();
+      primaryAirFlow = unitToUnit(value,"cfm","m^3/s").get();
+    }
+
+    value = priAirFlowMinElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      primaryAirFlowMin = unitToUnit(value,"cfm","m^3/s").get();
     }
   }
 
@@ -2063,6 +2092,23 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
       terminal.setMaximumAirFlowRate(primaryAirFlow.get());
     }
 
+    if( primaryAirFlowMin )
+    {
+      terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
+      terminal.setFixedMinimumAirFlowRate(primaryAirFlowMin.get());
+    }
+
+    // ReheatCtrlMthd
+    QDomElement reheatCtrlMthdElement = trmlUnitElement.firstChildElement("ReheatCtrlMthd");
+    if( istringEqual(reheatCtrlMthdElement.text().toStdString(),"DualMaximum") )
+    {
+      terminal.setDamperHeatingAction("Reverse");
+    }
+    else
+    {
+      terminal.setDamperHeatingAction("Normal");
+    }
+
     result = terminal;
   }
   else if( istringEqual("SeriesFanBox",typeElement.text().toStdString()) )
@@ -2074,6 +2120,16 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
     model::FanConstantVolume fan(model,schedule);
 
     model::AirTerminalSingleDuctParallelPIUReheat terminal(model,schedule,fan,coil);
+
+    if( primaryAirFlow )
+    {
+      terminal.setMaximumPrimaryAirFlowRate(primaryAirFlow.get());
+    }
+
+    if( primaryAirFlow && primaryAirFlowMin )
+    {
+      terminal.setMinimumPrimaryAirFlowFraction(primaryAirFlowMin.get() / primaryAirFlow.get());
+    }
 
     result = terminal;
   }
