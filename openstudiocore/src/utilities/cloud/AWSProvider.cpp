@@ -53,6 +53,20 @@ namespace openstudio{
       return "AWSProvider";
     }
 
+    std::string AWSProvider_Impl::userAgreementText() const
+    {
+      return std::string();
+    }
+
+    bool AWSProvider_Impl::userAgreementSigned() const
+    {
+      return false;
+    }
+
+    void AWSProvider_Impl::signUserAgreement(bool agree)
+    {
+    }
+
     bool AWSProvider_Impl::internetAvailable() const
     {
       return serviceAvailable();

@@ -126,6 +126,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateSetpointManagerWarmest.cpp
   ForwardTranslator/ForwardTranslateShade.cpp
   ForwardTranslator/ForwardTranslateShadowCalculation.cpp
+  ForwardTranslator/ForwardTranslateShadingControl.cpp
   ForwardTranslator/ForwardTranslateShadingSurface.cpp
   ForwardTranslator/ForwardTranslateShadingSurfaceGroup.cpp
   ForwardTranslator/ForwardTranslateSimpleGlazing.cpp
