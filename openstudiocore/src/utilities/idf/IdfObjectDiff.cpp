@@ -20,6 +20,8 @@
 #include <utilities/idf/IdfObjectDiff.hpp>
 #include <utilities/idf/IdfObjectDiff_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
   namespace detail {
 
@@ -64,19 +66,19 @@ namespace openstudio {
   IdfObjectDiff::IdfObjectDiff()
     : m_impl(boost::shared_ptr<detail::IdfObjectDiff_Impl>(new detail::IdfObjectDiff_Impl()))
   {
-    BOOST_ASSERT(m_impl);
+    OS_ASSERT(m_impl);
   }
 
   IdfObjectDiff::IdfObjectDiff(boost::optional<unsigned> index, boost::optional<std::string> oldValue, boost::optional<std::string> newValue)
     : m_impl(boost::shared_ptr<detail::IdfObjectDiff_Impl>(new detail::IdfObjectDiff_Impl(index, oldValue, newValue)))
   {
-    BOOST_ASSERT(m_impl);
+    OS_ASSERT(m_impl);
   }
 
   IdfObjectDiff::IdfObjectDiff(const boost::shared_ptr<detail::IdfObjectDiff_Impl>& impl)
     : m_impl(impl)
   {
-    BOOST_ASSERT(m_impl);
+    OS_ASSERT(m_impl);
   }
 
   boost::optional<unsigned> IdfObjectDiff::index() const

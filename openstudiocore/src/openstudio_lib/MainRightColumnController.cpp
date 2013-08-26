@@ -45,6 +45,9 @@
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
+
+#include <utilities/core/Assert.hpp>
+
 #include <QStackedWidget>
 #include <QLayout>
 
@@ -86,7 +89,7 @@ MainRightColumnController::MainRightColumnController(const model::Model & model,
   m_inspectorController = boost::shared_ptr<InspectorController>( new InspectorController() );
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorController.get(), SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 void MainRightColumnController::inspectModelObject(model::OptionalModelObject & modelObject, bool readOnly)
@@ -495,7 +498,7 @@ void MainRightColumnController::configureForLoadsSubTab(int subTabID)
 void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
 {
   // no sub tabs
-  BOOST_ASSERT(subTabID == -1);
+  OS_ASSERT(subTabID == -1);
 
   setEditView(NULL);
 
@@ -577,7 +580,7 @@ void MainRightColumnController::configureForSpaceTypesSubTab(int subTabID)
 void MainRightColumnController::configureForBuildingStoriesSubTab(int subTabID)
 {
   // no sub tabs
-  BOOST_ASSERT(subTabID == -1);
+  OS_ASSERT(subTabID == -1);
 
   setEditView(NULL);
 
@@ -627,7 +630,7 @@ void MainRightColumnController::configureForBuildingStoriesSubTab(int subTabID)
 void MainRightColumnController::configureForFacilitySubTab(int subTabID)
 {
   // no sub tabs
-  BOOST_ASSERT(subTabID == -1);
+  OS_ASSERT(subTabID == -1);
 
   setEditView(NULL);
 
@@ -684,6 +687,9 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump,"PTHP");
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner,"PTAC");
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump,"Water To Air HP");
+  myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow,"Low Temp Radiant Constant Flow");
+  myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow,"Low Temp Radiant Variable Flow");  
+  myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric,"Low Temp Radiant Electric");
   myLibraryList->addModelObjectType(IddObjectType::OS_Construction_WindowDataFile, "Window Data File Constructions");
   myLibraryList->addModelObjectType(IddObjectType::OS_Construction_FfactorGroundFloor, "F-factor Ground Floor Constructions");
   myLibraryList->addModelObjectType(IddObjectType::OS_Construction_CfactorUndergroundWall, "C-factor Underground Wall Constructions");
@@ -754,6 +760,9 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump,"PTHP");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump,"Water To Air HP");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner,"PTAC");
+  libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow,"Low Temp Radiant Constant Flow");
+  libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow,"Low Temp Radiant Variable Flow");  
+  libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric,"Low Temp Radiant Electric");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_UnitHeater,"Unit Heater");
   libraryWidget->addModelObjectType(IddObjectType::OS_Schedule_Compact,"Compact Schedules");
   libraryWidget->addModelObjectType(IddObjectType::OS_Schedule_Ruleset,"Schedule Rulesets");

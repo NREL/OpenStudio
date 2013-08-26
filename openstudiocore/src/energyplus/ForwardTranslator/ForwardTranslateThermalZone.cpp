@@ -178,7 +178,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
   if (spaces.empty()){
     LOG(Warn, "ThermalZone " << modelObject.name().get() << " does not have any geometry or loads associated with it.");
   }else{
-    BOOST_ASSERT(spaces.size() == 1);
+    OS_ASSERT(spaces.size() == 1);
 
     if (!spaces[0].isDirectionofRelativeNorthDefaulted()){
       idfObject.setDouble(openstudio::ZoneFields::DirectionofRelativeNorth, spaces[0].directionofRelativeNorth());
@@ -629,7 +629,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     if (sizingPeriod.size() > 0){
       SizingZone sizingZone = modelObject.sizingZone();
       sizingZoneIdf = translateAndMapModelObject(sizingZone);
-      BOOST_ASSERT(sizingZoneIdf);
+      OS_ASSERT(sizingZoneIdf);
     }
 
     // map the design specification outdoor air

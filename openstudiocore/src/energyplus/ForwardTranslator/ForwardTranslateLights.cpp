@@ -44,6 +44,8 @@
 #include <utilities/idd/Lights_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 using namespace std;
@@ -72,13 +74,13 @@ boost::optional<IdfObject> ForwardTranslator::translateLights( Lights & modelObj
     boost::optional<ThermalZone> thermalZone = space->thermalZone();
     if (thermalZone){
       relatedIdfObject = translateAndMapModelObject(*thermalZone);
-      BOOST_ASSERT(relatedIdfObject);
+      OS_ASSERT(relatedIdfObject);
       idfObject.setString(LightsFields::ZoneorZoneListName,
                           relatedIdfObject->name().get());
     }
   }else if(spaceType){
     relatedIdfObject = translateAndMapModelObject(*spaceType);
-    BOOST_ASSERT(relatedIdfObject);
+    OS_ASSERT(relatedIdfObject);
     idfObject.setString(LightsFields::ZoneorZoneListName,
                         relatedIdfObject->name().get());
   }
@@ -86,7 +88,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLights( Lights & modelObj
   boost::optional<Schedule> schedule = modelObject.schedule();
   if (schedule){
     relatedIdfObject = translateAndMapModelObject(*schedule);
-    BOOST_ASSERT(relatedIdfObject);
+    OS_ASSERT(relatedIdfObject);
     idfObject.setString(LightsFields::ScheduleName, relatedIdfObject->name().get());
   }
 

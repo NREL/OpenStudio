@@ -43,7 +43,7 @@ namespace detail {
                                                                                                bool keepHandle)
     : WaterToAirComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CoilHeatingWaterToAirHeatPumpEquationFit::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CoilHeatingWaterToAirHeatPumpEquationFit::iddObjectType());
   }
 
   CoilHeatingWaterToAirHeatPumpEquationFit_Impl::CoilHeatingWaterToAirHeatPumpEquationFit_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -51,7 +51,7 @@ namespace detail {
                                                                                                bool keepHandle)
     : WaterToAirComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CoilHeatingWaterToAirHeatPumpEquationFit::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CoilHeatingWaterToAirHeatPumpEquationFit::iddObjectType());
   }
 
   CoilHeatingWaterToAirHeatPumpEquationFit_Impl::CoilHeatingWaterToAirHeatPumpEquationFit_Impl(const CoilHeatingWaterToAirHeatPumpEquationFit_Impl& other,
@@ -146,7 +146,7 @@ namespace detail {
 
   double CoilHeatingWaterToAirHeatPumpEquationFit_Impl::ratedHeatingCoefficientofPerformance() const {
     boost::optional<double> value = getDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedHeatingCoefficientofPerformance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -156,61 +156,61 @@ namespace detail {
 
   double CoilHeatingWaterToAirHeatPumpEquationFit_Impl::heatingCapacityCoefficient1() const {
     boost::optional<double> value = getDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient1,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit_Impl::heatingCapacityCoefficient2() const {
     boost::optional<double> value = getDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient2,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit_Impl::heatingCapacityCoefficient3() const {
     boost::optional<double> value = getDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient3,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
  double CoilHeatingWaterToAirHeatPumpEquationFit_Impl::heatingCapacityCoefficient4() const {
     boost::optional<double> value = getDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient4,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit_Impl::heatingCapacityCoefficient5() const {
     boost::optional<double> value = getDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient5,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit_Impl::heatingPowerConsumptionCoefficient1() const {
     boost::optional<double> value = getDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCoefficient1,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit_Impl::heatingPowerConsumptionCoefficient2() const {
     boost::optional<double> value = getDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCoefficient2,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit_Impl::heatingPowerConsumptionCoefficient3() const {
     boost::optional<double> value = getDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCoefficient3,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit_Impl::heatingPowerConsumptionCoefficient4() const {
     boost::optional<double> value = getDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCoefficient4,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit_Impl::heatingPowerConsumptionCoefficient5() const {
     boost::optional<double> value = getDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCoefficient5,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -228,12 +228,12 @@ namespace detail {
 
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::resetRatedAirFlowRate() {
     bool result = setString(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosizeRatedAirFlowRate() {
     bool result = setString(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate, "Autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setRatedWaterFlowRate(boost::optional<double> ratedWaterFlowRate) {
@@ -250,12 +250,12 @@ namespace detail {
 
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::resetRatedWaterFlowRate() {
     bool result = setString(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosizeRatedWaterFlowRate() {
     bool result = setString(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate, "Autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setRatedHeatingCapacity(boost::optional<double> ratedHeatingCapacity) {
@@ -272,12 +272,12 @@ namespace detail {
 
  void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::resetRatedHeatingCapacity() {
     bool result = setString(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedHeatingCapacity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::autosizeRatedHeatingCapacity() {
     bool result = setString(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedHeatingCapacity, "Autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setRatedHeatingCoefficientofPerformance(double ratedHeatingCoefficientofPerformance) {
@@ -287,61 +287,61 @@ namespace detail {
 
  void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::resetRatedHeatingCoefficientofPerformance() {
     bool result = setString(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedHeatingCoefficientofPerformance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient1, heatingCapacityCoefficient1);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient2, heatingCapacityCoefficient2);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
  
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient3, heatingCapacityCoefficient3);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient4, heatingCapacityCoefficient4);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient5, heatingCapacityCoefficient5);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingPowerConsumptionCoefficient1(double heatingPowerConsumptionCoefficient1) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCoefficient1, heatingPowerConsumptionCoefficient1);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingPowerConsumptionCoefficient2(double heatingPowerConsumptionCoefficient2) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCoefficient2, heatingPowerConsumptionCoefficient2);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingPowerConsumptionCoefficient3(double heatingPowerConsumptionCoefficient3) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCoefficient3, heatingPowerConsumptionCoefficient3);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingPowerConsumptionCoefficient4(double heatingPowerConsumptionCoefficient4) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCoefficient4, heatingPowerConsumptionCoefficient4);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingPowerConsumptionCoefficient5(double heatingPowerConsumptionCoefficient5) {
     bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCoefficient5, heatingPowerConsumptionCoefficient5);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
  boost::optional<ZoneHVACComponent> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::containingZoneHVACComponent() const
@@ -374,7 +374,7 @@ namespace detail {
 CoilHeatingWaterToAirHeatPumpEquationFit::CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model)
   : WaterToAirComponent(CoilHeatingWaterToAirHeatPumpEquationFit::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>());
+  OS_ASSERT(getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>());
 
    setHeatingCapacityCoefficient1(-5.50102734);
    setHeatingCapacityCoefficient2(-0.96688754);

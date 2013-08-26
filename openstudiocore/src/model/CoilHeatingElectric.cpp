@@ -47,7 +47,7 @@ namespace detail {
   CoilHeatingElectric_Impl::CoilHeatingElectric_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : StraightComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CoilHeatingElectric::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CoilHeatingElectric::iddObjectType());
   }
 
   CoilHeatingElectric_Impl::CoilHeatingElectric_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -55,7 +55,7 @@ namespace detail {
                                                      bool keepHandle)
                                                        : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CoilHeatingElectric::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CoilHeatingElectric::iddObjectType());
   }
 
   CoilHeatingElectric_Impl::CoilHeatingElectric_Impl(const CoilHeatingElectric_Impl& other,
@@ -90,7 +90,7 @@ namespace detail {
 
   double CoilHeatingElectric_Impl::efficiency() const {
     boost::optional<double> value = getDouble(OS_Coil_Heating_ElectricFields::Efficiency,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -127,7 +127,7 @@ namespace detail {
 
   void CoilHeatingElectric_Impl::resetEfficiency() {
     bool result = setString(OS_Coil_Heating_ElectricFields::Efficiency, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingElectric_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
@@ -137,17 +137,17 @@ namespace detail {
     } else {
       result = setString(OS_Coil_Heating_ElectricFields::NominalCapacity, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingElectric_Impl::resetNominalCapacity() {
     bool result = setString(OS_Coil_Heating_ElectricFields::NominalCapacity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingElectric_Impl::autosizeNominalCapacity() {
     bool result = setString(OS_Coil_Heating_ElectricFields::NominalCapacity, "Autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CoilHeatingElectric_Impl::setTemperatureSetpointNode(Node & temperatureSetpointNode) {
@@ -156,7 +156,7 @@ namespace detail {
 
   void CoilHeatingElectric_Impl::resetTemperatureSetpointNode() {
     bool result = setString(OS_Coil_Heating_ElectricFields::TemperatureSetpointNodeName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   unsigned CoilHeatingElectric_Impl::inletPort()
@@ -176,11 +176,11 @@ namespace detail {
       // so we hook up to global always on schedule
       LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
       value = this->model().alwaysOnDiscreteSchedule();
-      BOOST_ASSERT(value);
+      OS_ASSERT(value);
       const_cast<CoilHeatingElectric_Impl*>(this)->setAvailabilitySchedule(*value);
       value = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Heating_ElectricFields::AvailabilityScheduleName);
     }
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -336,7 +336,7 @@ namespace detail {
 CoilHeatingElectric::CoilHeatingElectric(const Model& model, Schedule & schedule )
   : StraightComponent(CoilHeatingElectric::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CoilHeatingElectric_Impl>());
+  OS_ASSERT(getImpl<detail::CoilHeatingElectric_Impl>());
 
   setAvailabilitySchedule(schedule);
 }

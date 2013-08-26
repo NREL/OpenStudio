@@ -48,6 +48,7 @@
 #include <model/Model.hpp>
 #include <model/WeatherFile.hpp>
 
+#include <utilities/core/Finder.hpp>
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
@@ -67,7 +68,7 @@ using namespace openstudio::analysis;
 using namespace openstudio::project;
 using namespace openstudio::analysisdriver;
 
-TEST_F(AnalysisDriverFixture,PostProcessJobs_PostProcessAppendToReportXML) {
+TEST_F(AnalysisDriverFixture,PostProcessJobs_PostProcessSecondXML) {
 
   // CREATE MINIMAL PROBLEM
   openstudio::runmanager::Workflow simulationWorkflow;
@@ -75,7 +76,7 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_PostProcessAppendToReportXML) {
   simulationWorkflow.addJob(openstudio::runmanager::JobType::EnergyPlusPreProcess);
   simulationWorkflow.addJob(openstudio::runmanager::JobType::EnergyPlus);
   simulationWorkflow.addJob(openstudio::runmanager::JobType::OpenStudioPostProcess);
-  openstudio::path postProcessPath = resourcesPath() / toPath("analysisdriver/PostProcessAppendToReportXML.rb");
+  openstudio::path postProcessPath = resourcesPath() / toPath("analysisdriver/PostProcessSecondXML.rb");
   ASSERT_TRUE(boost::filesystem::exists(postProcessPath));
   RubyJobBuilder rjb;
   rjb.setScriptFile(postProcessPath);
@@ -104,7 +105,7 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_PostProcessAppendToReportXML) {
       rubyExePath().parent_path(),
       dakotaExePath().parent_path()));
 
-  Problem problem("No Variables PostProcessAppendToReportXML Workflow",VariableVector(),simulationWorkflow);
+  Problem problem("No Variables PostProcessSecondXML Workflow",VariableVector(),simulationWorkflow);
 
   // DEFINE SEED
   model::Model model = model::exampleModel();
@@ -117,7 +118,7 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_PostProcessAppendToReportXML) {
   FileReference seedModel(p);
 
   // CREATE ANALYSIS
-  Analysis analysis("Post-Process Append to Report XML",
+  Analysis analysis("Post-Process Second XML",
                     problem,
                     seedModel);
 
@@ -129,7 +130,7 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_PostProcessAppendToReportXML) {
   EXPECT_FALSE(oDataPoint->topLevelJob());
 
   // CREATE DRIVER
-  ProjectDatabase database = getCleanDatabase("PostProcessJobs_PostProcessAppendToReportXML");
+  ProjectDatabase database = getCleanDatabase("PostProcessJobs_PostProcessSecondXML");
   AnalysisDriver analysisDriver(database);
 
   // RUN ANALYSIS
@@ -162,13 +163,15 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_PostProcessAppendToReportXML) {
   DataPointRecordVector dataPointRecords = DataPointRecord::getDataPointRecords(database);
   ASSERT_EQ(1u,dataPointRecords.size());
   DataPointRecord dataPointRecord = dataPointRecords[0];
-  OptionalFileReferenceRecord oXmlRecord = dataPointRecord.xmlOutputDataRecord();
-  ASSERT_TRUE(oXmlRecord);
-  FileReferenceRecord xmlRecord = *oXmlRecord;
-  OptionalAttributeRecord attributeRecord = xmlRecord.getAttributeRecord("floorArea");
-  EXPECT_TRUE(attributeRecord);
-  attributeRecord = xmlRecord.getAttributeRecord("peakAnnualDemand");
-  EXPECT_TRUE(attributeRecord);
+  AttributeRecordVector attributeRecords = dataPointRecord.attributeRecords();
+  NameFinder<AttributeRecord> finder("floorArea",true);
+  AttributeRecordVector::const_iterator it = std::find_if(attributeRecords.begin(),
+                                                          attributeRecords.end(),
+                                                          finder);
+  EXPECT_FALSE(it == attributeRecords.end());
+  finder = NameFinder<AttributeRecord>("peakAnnualDemand",true);
+  it = std::find_if(attributeRecords.begin(),attributeRecords.end(),finder);
+  EXPECT_FALSE(it == attributeRecords.end());
 }
 
 TEST_F(AnalysisDriverFixture,PostProcessJobs_OpenStudioPostProcessAndResponses) {

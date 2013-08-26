@@ -839,28 +839,28 @@ Loop addSystemType5(Model & model)
   partLoadFraction.setMaximumValueofx(1.0);
 
   CurveBiquadratic coolingLowSpdCurveFofTemp = CurveBiquadratic(model);
-  coolingCurveFofTemp.setCoefficient1Constant(0.42415);
-  coolingCurveFofTemp.setCoefficient2x(0.04426);
-  coolingCurveFofTemp.setCoefficient3xPOW2(-0.00042);
-  coolingCurveFofTemp.setCoefficient4y(0.00333);
-  coolingCurveFofTemp.setCoefficient5yPOW2(-0.00008);
-  coolingCurveFofTemp.setCoefficient6xTIMESY(-0.00021);
-  coolingCurveFofTemp.setMinimumValueofx(17.0);
-  coolingCurveFofTemp.setMaximumValueofx(22.0);
-  coolingCurveFofTemp.setMinimumValueofy(13.0);
-  coolingCurveFofTemp.setMaximumValueofy(46.0);
+  coolingLowSpdCurveFofTemp.setCoefficient1Constant(0.42415);
+  coolingLowSpdCurveFofTemp.setCoefficient2x(0.04426);
+  coolingLowSpdCurveFofTemp.setCoefficient3xPOW2(-0.00042);
+  coolingLowSpdCurveFofTemp.setCoefficient4y(0.00333);
+  coolingLowSpdCurveFofTemp.setCoefficient5yPOW2(-0.00008);
+  coolingLowSpdCurveFofTemp.setCoefficient6xTIMESY(-0.00021);
+  coolingLowSpdCurveFofTemp.setMinimumValueofx(17.0);
+  coolingLowSpdCurveFofTemp.setMaximumValueofx(22.0);
+  coolingLowSpdCurveFofTemp.setMinimumValueofy(13.0);
+  coolingLowSpdCurveFofTemp.setMaximumValueofy(46.0);
 
   CurveBiquadratic energyLowSpdInputRatioFofTemp = CurveBiquadratic(model);
-  energyInputRatioFofTemp.setCoefficient1Constant(1.23649);
-  energyInputRatioFofTemp.setCoefficient2x(-0.02431);
-  energyInputRatioFofTemp.setCoefficient3xPOW2(0.00057);
-  energyInputRatioFofTemp.setCoefficient4y(-0.01434);
-  energyInputRatioFofTemp.setCoefficient5yPOW2(0.00063);
-  energyInputRatioFofTemp.setCoefficient6xTIMESY(-0.00038);
-  energyInputRatioFofTemp.setMinimumValueofx(17.0);
-  energyInputRatioFofTemp.setMaximumValueofx(22.0);
-  energyInputRatioFofTemp.setMinimumValueofy(13.0);
-  energyInputRatioFofTemp.setMaximumValueofy(46.0);
+  energyLowSpdInputRatioFofTemp.setCoefficient1Constant(1.23649);
+  energyLowSpdInputRatioFofTemp.setCoefficient2x(-0.02431);
+  energyLowSpdInputRatioFofTemp.setCoefficient3xPOW2(0.00057);
+  energyLowSpdInputRatioFofTemp.setCoefficient4y(-0.01434);
+  energyLowSpdInputRatioFofTemp.setCoefficient5yPOW2(0.00063);
+  energyLowSpdInputRatioFofTemp.setCoefficient6xTIMESY(-0.00038);
+  energyLowSpdInputRatioFofTemp.setMinimumValueofx(17.0);
+  energyLowSpdInputRatioFofTemp.setMaximumValueofx(22.0);
+  energyLowSpdInputRatioFofTemp.setMinimumValueofy(13.0);
+  energyLowSpdInputRatioFofTemp.setMaximumValueofy(46.0);
 
   CoilCoolingDXTwoSpeed coilCooling = CoilCoolingDXTwoSpeed( model,
                                                                    _alwaysOnSchedule,
@@ -1018,28 +1018,28 @@ Loop addSystemType6(Model & model)
   partLoadFraction.setMaximumValueofx(1.0);
 
   CurveBiquadratic coolingLowSpdCurveFofTemp = CurveBiquadratic(model);
-  coolingCurveFofTemp.setCoefficient1Constant(0.42415);
-  coolingCurveFofTemp.setCoefficient2x(0.04426);
-  coolingCurveFofTemp.setCoefficient3xPOW2(-0.00042);
-  coolingCurveFofTemp.setCoefficient4y(0.00333);
-  coolingCurveFofTemp.setCoefficient5yPOW2(-0.00008);
-  coolingCurveFofTemp.setCoefficient6xTIMESY(-0.00021);
-  coolingCurveFofTemp.setMinimumValueofx(17.0);
-  coolingCurveFofTemp.setMaximumValueofx(22.0);
-  coolingCurveFofTemp.setMinimumValueofy(13.0);
-  coolingCurveFofTemp.setMaximumValueofy(46.0);
+  coolingLowSpdCurveFofTemp.setCoefficient1Constant(0.42415);
+  coolingLowSpdCurveFofTemp.setCoefficient2x(0.04426);
+  coolingLowSpdCurveFofTemp.setCoefficient3xPOW2(-0.00042);
+  coolingLowSpdCurveFofTemp.setCoefficient4y(0.00333);
+  coolingLowSpdCurveFofTemp.setCoefficient5yPOW2(-0.00008);
+  coolingLowSpdCurveFofTemp.setCoefficient6xTIMESY(-0.00021);
+  coolingLowSpdCurveFofTemp.setMinimumValueofx(17.0);
+  coolingLowSpdCurveFofTemp.setMaximumValueofx(22.0);
+  coolingLowSpdCurveFofTemp.setMinimumValueofy(13.0);
+  coolingLowSpdCurveFofTemp.setMaximumValueofy(46.0);
 
   CurveBiquadratic energyLowSpdInputRatioFofTemp = CurveBiquadratic(model);
-  energyInputRatioFofTemp.setCoefficient1Constant(1.23649);
-  energyInputRatioFofTemp.setCoefficient2x(-0.02431);
-  energyInputRatioFofTemp.setCoefficient3xPOW2(0.00057);
-  energyInputRatioFofTemp.setCoefficient4y(-0.01434);
-  energyInputRatioFofTemp.setCoefficient5yPOW2(0.00063);
-  energyInputRatioFofTemp.setCoefficient6xTIMESY(-0.00038);
-  energyInputRatioFofTemp.setMinimumValueofx(17.0);
-  energyInputRatioFofTemp.setMaximumValueofx(22.0);
-  energyInputRatioFofTemp.setMinimumValueofy(13.0);
-  energyInputRatioFofTemp.setMaximumValueofy(46.0);
+  energyLowSpdInputRatioFofTemp.setCoefficient1Constant(1.23649);
+  energyLowSpdInputRatioFofTemp.setCoefficient2x(-0.02431);
+  energyLowSpdInputRatioFofTemp.setCoefficient3xPOW2(0.00057);
+  energyLowSpdInputRatioFofTemp.setCoefficient4y(-0.01434);
+  energyLowSpdInputRatioFofTemp.setCoefficient5yPOW2(0.00063);
+  energyLowSpdInputRatioFofTemp.setCoefficient6xTIMESY(-0.00038);
+  energyLowSpdInputRatioFofTemp.setMinimumValueofx(17.0);
+  energyLowSpdInputRatioFofTemp.setMaximumValueofx(22.0);
+  energyLowSpdInputRatioFofTemp.setMinimumValueofy(13.0);
+  energyLowSpdInputRatioFofTemp.setMaximumValueofy(46.0);
 
   CoilCoolingDXTwoSpeed coilCooling = CoilCoolingDXTwoSpeed( model,
                                                                    _alwaysOnSchedule,

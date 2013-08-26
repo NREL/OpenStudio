@@ -20,6 +20,11 @@
 #include <analysis/DesignOfExperimentsOptions.hpp>
 #include <analysis/DesignOfExperimentsOptions_Impl.hpp>
 
+#include <utilities/core/Json.hpp>
+
+#include <boost/function.hpp>
+#include <boost/bind.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -47,6 +52,25 @@ namespace detail {
 
   void DesignOfExperimentsOptions_Impl::setDesignType(const DesignOfExperimentsType& designType) {
     m_designType = designType;
+  }
+
+  QVariant DesignOfExperimentsOptions_Impl::toVariant() const {
+    QVariantMap map = AlgorithmOptions_Impl::toVariant().toMap();
+
+    map["design_type"] = toQString(designType().valueName());
+
+    return QVariant(map);
+  }
+
+  DesignOfExperimentsOptions DesignOfExperimentsOptions_Impl::fromVariant(const QVariant& variant,
+                                                                          const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+    AttributeVector attributes = deserializeUnorderedVector(
+          map["attributes"].toList(),
+          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+    return DesignOfExperimentsOptions(DesignOfExperimentsType(map["design_type"].toString().toStdString()),
+                                      attributes);
   }
 
 } // detail

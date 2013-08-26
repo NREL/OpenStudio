@@ -35,7 +35,7 @@ namespace openstudio{
     QDomElement nameElement = valueElement.firstChildElement("name");
     QDomElement nestedArgumentsElement = valueElement.firstChildElement("nested_arguments");
 
-    BOOST_ASSERT(!nameElement.isNull());
+    OS_ASSERT(!nameElement.isNull());
 
     m_name = nameElement.firstChild().nodeValue().toStdString();
    
@@ -103,11 +103,11 @@ namespace openstudio{
     QDomElement inputTypeElement = argumentElement.firstChildElement("input_type");
     QDomElement valuesElement = argumentElement.firstChildElement("values");
 
-    BOOST_ASSERT(!nameElement.isNull());
-    BOOST_ASSERT(!displayNameElement.isNull());
-    BOOST_ASSERT(!dataTypeElement.isNull());
-    BOOST_ASSERT(!requiredElement.isNull());
-    BOOST_ASSERT(!inputTypeElement.isNull());
+    OS_ASSERT(!nameElement.isNull());
+    OS_ASSERT(!displayNameElement.isNull());
+    OS_ASSERT(!dataTypeElement.isNull());
+    OS_ASSERT(!requiredElement.isNull());
+    OS_ASSERT(!inputTypeElement.isNull());
 
     m_name = nameElement.firstChild().nodeValue().toStdString();
 
@@ -121,7 +121,7 @@ namespace openstudio{
     }else if (istringEqual("integer", dataTypeString)){
       m_dataType = OnDemandGeneratorArgumentType::Integer;
     }else{
-      BOOST_ASSERT(false);
+      OS_ASSERT(false);
     }
 
     if (requiredElement.firstChild().nodeValue().toInt() == 1){
@@ -138,7 +138,7 @@ namespace openstudio{
     }else if (istringEqual("component", inputTypeString)){
       m_inputType = OnDemandGeneratorInputType::Component;
     }else{
-      BOOST_ASSERT(false);
+      OS_ASSERT(false);
     }
 
     if (!valuesElement.isNull()){
@@ -437,11 +437,11 @@ namespace openstudio{
     QDomElement descriptionElement = generatorElement.firstChildElement("description");
     QDomElement argumentsElement = generatorElement.firstChildElement("arguments");
 
-    BOOST_ASSERT(!nameElement.isNull());
-    BOOST_ASSERT(!uidElement.isNull());
-    BOOST_ASSERT(!versionIdElement.isNull());
-    BOOST_ASSERT(!descriptionElement.isNull());
-    BOOST_ASSERT(!argumentsElement.isNull());
+    OS_ASSERT(!nameElement.isNull());
+    OS_ASSERT(!uidElement.isNull());
+    OS_ASSERT(!versionIdElement.isNull());
+    OS_ASSERT(!descriptionElement.isNull());
+    OS_ASSERT(!argumentsElement.isNull());
 
     QString name = nameElement.firstChild().nodeValue().replace('_', ' ');
     while (name.indexOf("  ") != -1) {
@@ -569,7 +569,7 @@ namespace openstudio{
     // check that each active argument has a value
     BOOST_FOREACH(const std::string& activeArgumentName, this->activeArgumentNames()){
       boost::optional<OnDemandGeneratorArgument> activeArgument = this->getActiveArgument(activeArgumentName);
-      BOOST_ASSERT(activeArgument);
+      OS_ASSERT(activeArgument);
       if (!activeArgument->hasValue()){
         return false;
       }

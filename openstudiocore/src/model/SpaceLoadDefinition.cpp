@@ -93,7 +93,7 @@ namespace detail {
 SpaceLoadDefinition::SpaceLoadDefinition(IddObjectType type,const Model& model)
   : ResourceObject(type,model)
 {
-  BOOST_ASSERT(getImpl<detail::SpaceLoadDefinition_Impl>());
+  OS_ASSERT(getImpl<detail::SpaceLoadDefinition_Impl>());
 }
 
 SpaceLoadDefinition::SpaceLoadDefinition(boost::shared_ptr<detail::SpaceLoadDefinition_Impl> impl)

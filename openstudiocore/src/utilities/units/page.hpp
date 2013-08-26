@@ -12,7 +12,7 @@ namespace openstudio {
  *  \li IPQuantity
  *  \li BTUQuantity
  *  \li CFMQuantity
- *  \li CelciusQuantity
+ *  \li CelsiusQuantity
  *  \li FahrenheitQuantity
  *
  *  \li UnitFactory.hpp

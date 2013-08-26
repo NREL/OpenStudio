@@ -83,7 +83,9 @@ class ANALYSIS_API SamplingAlgorithmOptions : public DakotaAlgorithmOptions {
   SamplingAlgorithmOptions();
 
   /** Constructor provided for deserialization; not for general use. */
-  SamplingAlgorithmOptions(const std::vector<Attribute>& options);
+  SamplingAlgorithmOptions(const boost::optional<SamplingAlgorithmSampleType>& sampleType,
+                           const boost::optional<SamplingAlgorithmRNGType>& rngType,
+                           const std::vector<Attribute>& options);
 
   virtual ~SamplingAlgorithmOptions() {}
 

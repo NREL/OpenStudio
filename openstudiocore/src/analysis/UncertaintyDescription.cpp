@@ -22,10 +22,12 @@
 
 #include <analysis/GenericUncertaintyDescription.hpp>
 
-#include <utilities/core/Finder.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Finder.hpp>
+#include <utilities/core/Json.hpp>
 
 #include <boost/foreach.hpp>
+#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -35,7 +37,7 @@ namespace detail {
   UncertaintyDescription_Impl::UncertaintyDescription_Impl(const UncertaintyDescriptionType& type)
     : m_type(type)
   {
-    BOOST_ASSERT(this->type() != UncertaintyDescriptionType::Generic);
+    OS_ASSERT(this->type() != UncertaintyDescriptionType::Generic);
     populateAttributeDescriptions();
     restoreDefaults();
   }
@@ -45,7 +47,7 @@ namespace detail {
     : m_type(type),
       m_attributes(attributes)
   {
-    BOOST_ASSERT(this->type() != UncertaintyDescriptionType::Generic);
+    OS_ASSERT(this->type() != UncertaintyDescriptionType::Generic);
     populateAttributeDescriptions();
   }
 
@@ -54,7 +56,7 @@ namespace detail {
       m_attributes(other.attributes(true)),
       m_attributeDescriptions(other.attributeDescriptions())
   {
-    BOOST_ASSERT(type() != UncertaintyDescriptionType::Generic);
+    OS_ASSERT(type() != UncertaintyDescriptionType::Generic);
   }
 
   UncertaintyDescriptionType UncertaintyDescription_Impl::type() const {
@@ -74,7 +76,7 @@ namespace detail {
 
   Attribute UncertaintyDescription_Impl::getAttribute(const std::string& attributeName, bool clone) const {
     OptionalAttribute result = findByName<Attribute>(m_attributes,attributeName,true);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     if (clone) {
       return result->clone();
     }
@@ -95,7 +97,7 @@ namespace detail {
     OptionalAttributeDescription result = findStructByName<AttributeDescription>(m_attributeDescriptions,
                                                                                  attributeName,
                                                                                  true);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
     return result.get();
   }
 
@@ -132,7 +134,7 @@ namespace detail {
     else {
       m_attributes.push_back(candidate.clone());
       bool ok = prepareForDisplay(m_attributes.back(),getAttributeDescription(candidate.name()));
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
     }
     return true;
   }
@@ -241,7 +243,7 @@ namespace detail {
         setAttribute(createAttributeFromVector("counts",vectorValue),false);
        break;
       default :
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
     }
   }
 
@@ -523,7 +525,7 @@ namespace detail {
                                                                false));
        break;
       default :
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
     }
   }
 
@@ -611,6 +613,41 @@ UncertaintyDescription::UncertaintyDescription(boost::shared_ptr<detail::Uncerta
 boost::shared_ptr<detail::UncertaintyDescription_Impl> UncertaintyDescription::impl() const {
   return m_impl;
 }
+
+namespace detail {
+
+  QVariant toVariant(const UncertaintyDescription& udesc) {
+    GenericUncertaintyDescription generic = udesc.cast<GenericUncertaintyDescription>();
+
+    QVariantMap udescMap;
+    udescMap["type"] = toQString(generic.actualType().valueName());
+    if (!generic.attributes().empty()) {
+      QVariantList attributesList;
+      Q_FOREACH(const Attribute& attribute,generic.attributes()) {
+        attributesList.push_back(openstudio::detail::toVariant(attribute));
+      }
+      udescMap["attributes"] = QVariant(attributesList);
+    }
+
+    return QVariant(udescMap);
+  }
+
+  UncertaintyDescription toUncertaintyDescription(const QVariant& variant,
+                                                  const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+
+    AttributeVector attributes = deserializeUnorderedVector(
+          map["attributes"].toList(),
+          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+
+    GenericUncertaintyDescription result(UncertaintyDescriptionType(map["type"].toString().toStdString()),
+                                         attributes);
+
+    return result.cast<UncertaintyDescription>();
+  }
+
+} // detail
 
 } // analysis
 } // openstudio

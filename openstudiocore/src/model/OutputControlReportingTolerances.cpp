@@ -36,7 +36,7 @@ namespace detail {
                                                                                bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == OutputControlReportingTolerances::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == OutputControlReportingTolerances::iddObjectType());
   }
 
   OutputControlReportingTolerances_Impl::OutputControlReportingTolerances_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -44,7 +44,7 @@ namespace detail {
                                                                                bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == OutputControlReportingTolerances::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == OutputControlReportingTolerances::iddObjectType());
   }
 
   OutputControlReportingTolerances_Impl::OutputControlReportingTolerances_Impl(const OutputControlReportingTolerances_Impl& other,
@@ -67,14 +67,14 @@ namespace detail {
 
   double OutputControlReportingTolerances_Impl::toleranceforTimeHeatingSetpointNotMet() const {
     boost::optional<double> value = getDouble(OS_OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity OutputControlReportingTolerances_Impl::getToleranceforTimeHeatingSetpointNotMet(bool returnIP) const {
     OptionalDouble value = toleranceforTimeHeatingSetpointNotMet();
     OSOptionalQuantity result = getQuantityFromDouble(OS_OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -84,14 +84,14 @@ namespace detail {
 
   double OutputControlReportingTolerances_Impl::toleranceforTimeCoolingSetpointNotMet() const {
     boost::optional<double> value = getDouble(OS_OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity OutputControlReportingTolerances_Impl::getToleranceforTimeCoolingSetpointNotMet(bool returnIP) const {
     OptionalDouble value = toleranceforTimeCoolingSetpointNotMet();
     OSOptionalQuantity result = getQuantityFromDouble(OS_OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -114,7 +114,7 @@ namespace detail {
 
   void OutputControlReportingTolerances_Impl::resetToleranceforTimeHeatingSetpointNotMet() {
     bool result = setString(OS_OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool OutputControlReportingTolerances_Impl::setToleranceforTimeCoolingSetpointNotMet(double toleranceforTimeCoolingSetpointNotMet) {
@@ -132,7 +132,7 @@ namespace detail {
 
   void OutputControlReportingTolerances_Impl::resetToleranceforTimeCoolingSetpointNotMet() {
     bool result = setString(OS_OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   openstudio::Quantity OutputControlReportingTolerances_Impl::toleranceforTimeHeatingSetpointNotMet_SI() const {

@@ -110,7 +110,7 @@ namespace detail {
 ParentObject::ParentObject(IddObjectType type,const Model& model)
   : ModelObject(type,model)
 { 
-  BOOST_ASSERT(getImpl<detail::ParentObject_Impl>());
+  OS_ASSERT(getImpl<detail::ParentObject_Impl>());
 }
 
 ParentObject::ParentObject(boost::shared_ptr<detail::ParentObject_Impl> p)

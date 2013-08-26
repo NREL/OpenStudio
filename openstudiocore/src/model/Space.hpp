@@ -239,6 +239,10 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   /// Does not include space multiplier in calculation.
   double exteriorArea() const;
 
+  /// Returns the exterior wall area (gross area of surfaces with outdoor boundary condition) (m^2).
+  /// Does not include space multiplier in calculation.
+  double exteriorWallArea() const;
+
   /// Returns the volume (m^3).
   /// Does not include space multiplier in calculation.
   double volume() const;

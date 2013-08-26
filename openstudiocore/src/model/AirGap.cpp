@@ -36,7 +36,7 @@ namespace detail {
                            bool keepHandle)
     : OpaqueMaterial_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == AirGap::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == AirGap::iddObjectType());
   }
 
   AirGap_Impl::AirGap_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -44,7 +44,7 @@ namespace detail {
                            bool keepHandle)
     : OpaqueMaterial_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == AirGap::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == AirGap::iddObjectType());
   }
 
   AirGap_Impl::AirGap_Impl(const AirGap_Impl& other,
@@ -64,7 +64,7 @@ namespace detail {
   }
 
   double AirGap_Impl::thermalConductance() const {
-    BOOST_ASSERT(thermalResistance());
+    OS_ASSERT(thermalResistance());
     return 1.0/thermalResistance();
   }
 
@@ -206,7 +206,7 @@ namespace detail {
 
   void AirGap_Impl::resetThermalResistance() {
     bool result = setString(OS_Material_AirGapFields::ThermalResistance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   openstudio::OSOptionalQuantity AirGap_Impl::thermalResistance_SI() const {
@@ -223,14 +223,14 @@ AirGap::AirGap(const Model& model,
                double thermalResistance)
   : OpaqueMaterial(AirGap::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::AirGap_Impl>());
+  OS_ASSERT(getImpl<detail::AirGap_Impl>());
 
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setThermalResistance(thermalResistance);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType AirGap::iddObjectType() {

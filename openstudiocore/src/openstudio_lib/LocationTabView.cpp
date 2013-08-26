@@ -45,6 +45,7 @@
 
 #include <utilities/filetypes/EpwFile.hpp>
 #include <utilities/idf/IdfFile.hpp>
+#include <utilities/core/Assert.hpp>
 
 #include <boost/smart_ptr.hpp>
 
@@ -103,7 +104,7 @@ LocationView::LocationView(const model::Model & model,
   btn->setFlat(true);
   btn->setObjectName("StandardGrayButton");
   isConnected = connect(btn,SIGNAL(clicked()),this,SLOT(onWeatherFileBtnClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   hLayout = new QHBoxLayout();
   hLayout->setContentsMargins(0,5,0,5);
@@ -142,7 +143,7 @@ LocationView::LocationView(const model::Model & model,
   btn->setFlat(true);
   btn->setObjectName("StandardGrayButton");
   isConnected = connect(btn,SIGNAL(clicked()),this,SLOT(onDesignDayBtnClicked()));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   hLayout = new QHBoxLayout();
   hLayout->setContentsMargins(0,5,0,5);
@@ -300,7 +301,7 @@ void LocationView::onWeatherFileBtnClicked()
       }
 
       weatherFile = openstudio::model::WeatherFile::setWeatherFile(m_model, epwFile);
-      BOOST_ASSERT(weatherFile);
+      OS_ASSERT(weatherFile);
       weatherFile->makeUrlRelative(toPath(m_modelTempDir) / toPath("resources"));
 
       if (!previousEPWPath.empty()){

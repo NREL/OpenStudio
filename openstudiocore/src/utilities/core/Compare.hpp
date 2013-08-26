@@ -99,6 +99,8 @@ class UTILITIES_API VersionString {
 
 UTILITIES_API std::ostream& operator<<(std::ostream& os,const VersionString& version);
 
+typedef boost::optional<VersionString> OptionalVersionString;
+
 // sorts WorkspaceObjects by name
 struct UTILITIES_API WorkspaceObjectNameLess {
   bool operator()(const WorkspaceObject& a, const WorkspaceObject& b) const;
@@ -174,6 +176,20 @@ template<class T>
 struct SecondOfPairLess {
   bool operator()(const T& left, const T& right) const {
     return (left.second < right.second);
+  }
+};
+
+template<class T, class U>
+struct GetFirstOfPair {
+  T operator()(const std::pair<T,U>& pair) const {
+    return pair.first;
+  }
+};
+
+template<class T, class U>
+struct GetSecondOfPair {
+  U operator()(const std::pair<T,U>& pair) const {
+    return pair.second;
   }
 };
 

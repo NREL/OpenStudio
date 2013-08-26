@@ -743,7 +743,7 @@ ScheduleSetInspectorView::ScheduleSetInspectorView(const model::Model& model,
 
   row += 2;
 
-  BOOST_ASSERT(m_vectorControllers.size() == 10);
+  OS_ASSERT(m_vectorControllers.size() == 10);
 
   configDropZones();
 

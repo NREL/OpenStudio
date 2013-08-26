@@ -38,7 +38,7 @@ namespace detail {
   WindowDataFile_Impl::WindowDataFile_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ConstructionBase_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == WindowDataFile::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == WindowDataFile::iddObjectType());
   }
 
   WindowDataFile_Impl::WindowDataFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -46,7 +46,7 @@ namespace detail {
                                            bool keepHandle)
     : ConstructionBase_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == WindowDataFile::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == WindowDataFile::iddObjectType());
   }
 
   WindowDataFile_Impl::WindowDataFile_Impl(const WindowDataFile_Impl& other,
@@ -83,7 +83,7 @@ namespace detail {
 WindowDataFile::WindowDataFile(const Model& model)
   : ConstructionBase(WindowDataFile::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::WindowDataFile_Impl>());
+  OS_ASSERT(getImpl<detail::WindowDataFile_Impl>());
 }
 
 IddObjectType WindowDataFile::iddObjectType() {

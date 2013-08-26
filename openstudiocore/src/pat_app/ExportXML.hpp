@@ -25,7 +25,7 @@
 #include <QDomElement>
 #include <analysis/Problem.hpp>
 #include <analysisdriver/SimpleProject.hpp>
-#include <analysis/DiscretePerturbation.hpp>
+#include <analysis/Measure.hpp>
 #include <analysis/WorkflowStep.hpp>
 
 #include <model/ModelObject.hpp>
@@ -39,6 +39,7 @@ class QDomNodeList;
 namespace openstudio {
 
   class ProgressBar;
+  class SqlFile;
   class Transformation;
 
 namespace analysis {

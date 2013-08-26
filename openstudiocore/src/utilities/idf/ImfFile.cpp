@@ -187,7 +187,7 @@ bool ImfFile::m_load(std::istream& is) {
   // get CommentOnly IddObject
   OptionalIddObject commentOnlyIddObject;
   commentOnlyIddObject = IddFactory::instance().getObject(IddObjectType::CommentOnly);
-  BOOST_ASSERT(commentOnlyIddObject);
+  OS_ASSERT(commentOnlyIddObject);
 
   // Use a boost filter to make sure that no matter what line endings come in,
   // they are converted to what is expected by the current os
@@ -221,7 +221,7 @@ bool ImfFile::m_load(std::istream& is) {
         OptionalIdfObject commentOnlyObject;
         commentOnlyObject = IdfObject::load(commentOnlyIddObject->name() + ";" + comment,
                                             *commentOnlyIddObject);
-        BOOST_ASSERT(commentOnlyObject);
+        OS_ASSERT(commentOnlyObject);
 
         // put it in the object list
         m_sectionMap[section].push_back(*commentOnlyObject);
@@ -241,12 +241,12 @@ bool ImfFile::m_load(std::istream& is) {
       if (!comment.empty()){
         // make a comment only object to hold the comment
         OptionalIddObject commentOnlyIddObject = IddFactory::instance().getObject(IddObjectType::CommentOnly);
-        BOOST_ASSERT(commentOnlyIddObject);
+        OS_ASSERT(commentOnlyIddObject);
 
         OptionalIdfObject commentOnlyObject;
         commentOnlyObject = IdfObject::load(commentOnlyIddObject->name() + ";" + comment,
                                             *commentOnlyIddObject);
-        BOOST_ASSERT(commentOnlyObject);
+        OS_ASSERT(commentOnlyObject);
 
         // put it in the object list
         m_sectionMap[section].push_back(*commentOnlyObject);
@@ -268,7 +268,7 @@ bool ImfFile::m_load(std::istream& is) {
         OptionalIdfObject commentOnlyObject;
         commentOnlyObject = IdfObject::load(commentOnlyIddObject->name() + ";" + comment,
                                             *commentOnlyIddObject);
-        BOOST_ASSERT(commentOnlyObject);
+        OS_ASSERT(commentOnlyObject);
 
         // put it in the object list
         m_sectionMap[section].push_back(*commentOnlyObject);

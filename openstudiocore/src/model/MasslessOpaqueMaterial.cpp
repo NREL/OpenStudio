@@ -38,7 +38,7 @@ namespace detail {
                                                            bool keepHandle)
     : OpaqueMaterial_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == MasslessOpaqueMaterial::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == MasslessOpaqueMaterial::iddObjectType());
   }
 
   MasslessOpaqueMaterial_Impl::MasslessOpaqueMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -46,7 +46,7 @@ namespace detail {
                                                            bool keepHandle)
     : OpaqueMaterial_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == MasslessOpaqueMaterial::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == MasslessOpaqueMaterial::iddObjectType());
   }
 
   MasslessOpaqueMaterial_Impl::MasslessOpaqueMaterial_Impl(const MasslessOpaqueMaterial_Impl& other,
@@ -57,7 +57,7 @@ namespace detail {
 
   std::string MasslessOpaqueMaterial_Impl::roughness() const {
     boost::optional<std::string> value = getString(OS_Material_NoMassFields::Roughness,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -79,7 +79,7 @@ namespace detail {
 
   double MasslessOpaqueMaterial_Impl::thermalAbsorptance() const {
     boost::optional<double> value = getDouble(OS_Material_NoMassFields::ThermalAbsorptance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
 
   }
@@ -104,7 +104,7 @@ namespace detail {
 
   double MasslessOpaqueMaterial_Impl::visibleAbsorptance() const {
     boost::optional<double> value = getDouble(OS_Material_NoMassFields::VisibleAbsorptance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
 
   }
@@ -193,21 +193,21 @@ namespace detail {
 
   double MasslessOpaqueMaterial_Impl::thermalResistance() const {
     boost::optional<double> value = getDouble(OS_Material_NoMassFields::ThermalResistance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity MasslessOpaqueMaterial_Impl::getThermalResistance(bool returnIP) const {
     OptionalDouble value = thermalResistance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_NoMassFields::ThermalResistance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   Quantity MasslessOpaqueMaterial_Impl::getThermalAbsorptance(bool returnIP) const {
     OptionalDouble value = thermalAbsorptance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_NoMassFields::ThermalAbsorptance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -217,14 +217,14 @@ namespace detail {
 
   double MasslessOpaqueMaterial_Impl::solarAbsorptance() const {
     boost::optional<double> value = getDouble(OS_Material_NoMassFields::SolarAbsorptance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity MasslessOpaqueMaterial_Impl::getSolarAbsorptance(bool returnIP) const {
     OptionalDouble value = solarAbsorptance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_NoMassFields::SolarAbsorptance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -235,7 +235,7 @@ namespace detail {
   Quantity MasslessOpaqueMaterial_Impl::getVisibleAbsorptance(bool returnIP) const {
     OptionalDouble value = visibleAbsorptance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Material_NoMassFields::VisibleAbsorptance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -276,7 +276,7 @@ namespace detail {
 
   void MasslessOpaqueMaterial_Impl::resetThermalAbsorptance() {
     bool result = setString(OS_Material_NoMassFields::ThermalAbsorptance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool MasslessOpaqueMaterial_Impl::setSolarAbsorptance(double solarAbsorptance) {
@@ -294,7 +294,7 @@ namespace detail {
 
   void MasslessOpaqueMaterial_Impl::resetSolarAbsorptance() {
     bool result = setString(OS_Material_NoMassFields::SolarAbsorptance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool MasslessOpaqueMaterial_Impl::setVisibleAbsorptance(double visibleAbsorptance) {
@@ -312,7 +312,7 @@ namespace detail {
 
   void MasslessOpaqueMaterial_Impl::resetVisibleAbsorptance() {
     bool result = setString(OS_Material_NoMassFields::VisibleAbsorptance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   std::vector<std::string> MasslessOpaqueMaterial_Impl::roughnessValues() const {
@@ -371,7 +371,7 @@ namespace detail {
   Quantity MasslessOpaqueMaterial_Impl::getConductivity(bool returnIP) const {
     OptionalDouble value = conductivity();
     OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::Conductivity, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -407,7 +407,7 @@ namespace detail {
   Quantity MasslessOpaqueMaterial_Impl::getDensity(bool returnIP) const {
     OptionalDouble value = density();
     OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::Density, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -443,7 +443,7 @@ namespace detail {
   Quantity MasslessOpaqueMaterial_Impl::getSpecificHeat(bool returnIP) const {
     OptionalDouble value = specificHeat();
     OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::SpecificHeat, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -466,16 +466,16 @@ MasslessOpaqueMaterial::MasslessOpaqueMaterial(const Model& model,
                                                double thermalResistance)
   : OpaqueMaterial(MasslessOpaqueMaterial::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::MasslessOpaqueMaterial_Impl>());
+  OS_ASSERT(getImpl<detail::MasslessOpaqueMaterial_Impl>());
 
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   //ok = setHandle();
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setRoughness(roughness);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setThermalResistance(thermalResistance);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType MasslessOpaqueMaterial::iddObjectType() {

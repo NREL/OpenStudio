@@ -43,7 +43,7 @@ namespace detail {
                                                            bool keepHandle)
     : HVACComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == SetpointManagerWarmest::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == SetpointManagerWarmest::iddObjectType());
   }
 
   SetpointManagerWarmest_Impl::SetpointManagerWarmest_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -51,7 +51,7 @@ namespace detail {
                                                            bool keepHandle)
     : HVACComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == SetpointManagerWarmest::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == SetpointManagerWarmest::iddObjectType());
   }
 
   SetpointManagerWarmest_Impl::SetpointManagerWarmest_Impl(const SetpointManagerWarmest_Impl& other,
@@ -74,25 +74,25 @@ namespace detail {
 
   std::string SetpointManagerWarmest_Impl::controlVariable() const {
     boost::optional<std::string> value = getString(OS_SetpointManager_WarmestFields::ControlVariable,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double SetpointManagerWarmest_Impl::minimumSetpointTemperature() const {
     boost::optional<double> value = getDouble(OS_SetpointManager_WarmestFields::MinimumSetpointTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double SetpointManagerWarmest_Impl::maximumSetpointTemperature() const {
     boost::optional<double> value = getDouble(OS_SetpointManager_WarmestFields::MaximumSetpointTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   std::string SetpointManagerWarmest_Impl::strategy() const {
     boost::optional<std::string> value = getString(OS_SetpointManager_WarmestFields::Strategy,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -178,7 +178,7 @@ namespace detail {
 SetpointManagerWarmest::SetpointManagerWarmest(const Model& model)
   : HVACComponent(SetpointManagerWarmest::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::SetpointManagerWarmest_Impl>());
+  OS_ASSERT(getImpl<detail::SetpointManagerWarmest_Impl>());
 
   setControlVariable("Temperature");
   setMinimumSetpointTemperature(12.2);

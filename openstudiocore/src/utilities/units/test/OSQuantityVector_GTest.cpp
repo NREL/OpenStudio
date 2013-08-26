@@ -24,7 +24,7 @@
 #include <utilities/units/Quantity.hpp>
 #include <utilities/units/SIUnit.hpp>
 #include <utilities/units/WhUnit.hpp>
-#include <utilities/units/CelciusUnit.hpp>
+#include <utilities/units/CelsiusUnit.hpp>
 
 #include <utilities/data/Vector.hpp>
 
@@ -110,13 +110,13 @@ TEST_F(UnitsFixture,OSQuantityVector_MathematicalOperators) {
   EXPECT_EQ(resultQ,resultVec.getQuantity(1));
 
   // add temperatures
-  testVec1 = OSQuantityVector(createCelciusTemperature(),2u,20.0);
-  testVec2 = OSQuantityVector(createCelciusTemperature(),2u,5.0);
+  testVec1 = OSQuantityVector(createCelsiusTemperature(),2u,20.0);
+  testVec2 = OSQuantityVector(createCelsiusTemperature(),2u,5.0);
   EXPECT_TRUE(testVec1.isAbsolute()); EXPECT_FALSE(testVec1.isRelative());
   testVec2.setAsRelative();
   EXPECT_FALSE(testVec2.isAbsolute()); EXPECT_TRUE(testVec2.isRelative());
-  testQ1 = Quantity(20.0,createCelciusTemperature());
-  testQ2 = Quantity(5.0,createCelciusTemperature());
+  testQ1 = Quantity(20.0,createCelsiusTemperature());
+  testQ2 = Quantity(5.0,createCelsiusTemperature());
   testQ2.setAsRelative();
 
   resultVec = testVec1 + testVec2;

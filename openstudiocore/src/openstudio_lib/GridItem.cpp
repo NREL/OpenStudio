@@ -21,6 +21,9 @@
 #include <openstudio_lib/ServiceWaterGridItems.hpp>
 #include <openstudio_lib/IconLibrary.hpp>
 #include <openstudio_lib/LoopScene.hpp>
+
+#include <utilities/core/Assert.hpp>
+
 #include <QPainter>
 #include <QMimeData>
 #include <QGraphicsSceneDragDropEvent>
@@ -820,7 +823,7 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
 {
   boost::optional<model::Loop> optionalLoop = splitter.loop();
 
-  BOOST_ASSERT( optionalLoop );
+  OS_ASSERT( optionalLoop );
 
   model::Loop loop = optionalLoop.get(); 
 
@@ -2916,13 +2919,13 @@ NodeContextButtonItem::NodeContextButtonItem(GridItem * parent)
   bool bingo;
 
   bingo = connect(this,SIGNAL(mouseClicked()),this,SLOT(showContextMenu()));
-  BOOST_ASSERT(bingo);
+  OS_ASSERT(bingo);
 
   bingo = connect( this, 
              SIGNAL(removeModelObjectClicked( model::ModelObject & ) ),
              parent,
              SIGNAL(removeModelObjectClicked( model::ModelObject & ) ) );
-  BOOST_ASSERT(bingo);
+  OS_ASSERT(bingo);
 }
 
 void NodeContextButtonItem::showContextMenu()
@@ -2944,7 +2947,7 @@ void NodeContextButtonItem::showContextMenu()
     QAction removeSPMAction(QIcon(":/images/delete-icon.png"),"Delete Setpoint Manager",&menu);
     menu.addAction(&removeSPMAction);
     bingo = connect(&removeSPMAction,SIGNAL(triggered()),this,SLOT(onRemoveSPMActionTriggered()));
-    BOOST_ASSERT(bingo);
+    OS_ASSERT(bingo);
 
     menu.exec(menuPos); 
   }

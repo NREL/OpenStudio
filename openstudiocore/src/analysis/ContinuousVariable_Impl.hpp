@@ -108,6 +108,14 @@ namespace detail {
     boost::optional<double> truncate(double value) const;
 
     //@}
+    /** @name Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    virtual QVariant toServerFormulationVariant() const;
+
+    //@}
    protected:
     boost::optional<double> m_minimum;
     boost::optional<double> m_maximum;

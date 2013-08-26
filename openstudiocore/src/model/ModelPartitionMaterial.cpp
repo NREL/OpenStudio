@@ -20,6 +20,8 @@
 #include <model/ModelPartitionMaterial.hpp>
 #include <model/ModelPartitionMaterial_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace model {
 
@@ -163,7 +165,7 @@ namespace detail {
 ModelPartitionMaterial::ModelPartitionMaterial(IddObjectType type,const Model& model)
   : Material(type,model) 
 {
-  BOOST_ASSERT(getImpl<detail::ModelPartitionMaterial_Impl>());
+  OS_ASSERT(getImpl<detail::ModelPartitionMaterial_Impl>());
 }
 
 /// @cond

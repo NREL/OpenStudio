@@ -31,6 +31,8 @@
 #include <utilities/idd/IddKey.hpp>
 #include <utilities/idd/OS_SetpointManager_Scheduled_FieldEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 namespace model {
@@ -41,14 +43,14 @@ namespace detail{
       const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : HVACComponent_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == SetpointManagerScheduled::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == SetpointManagerScheduled::iddObjectType());
   }
 
   SetpointManagerScheduled_Impl::SetpointManagerScheduled_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
     : HVACComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == SetpointManagerScheduled::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == SetpointManagerScheduled::iddObjectType());
   }
 
   SetpointManagerScheduled_Impl::SetpointManagerScheduled_Impl(
@@ -181,7 +183,7 @@ namespace detail{
   std::string SetpointManagerScheduled_Impl::controlVariable() const
   {
     boost::optional<std::string> value = getString(OS_SetpointManager_ScheduledFields::ControlVariable,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -198,7 +200,7 @@ namespace detail{
   Schedule SetpointManagerScheduled_Impl::schedule() const
   {
     boost::optional<Schedule> value = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_SetpointManager_ScheduledFields::ScheduleName);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -229,7 +231,7 @@ namespace detail{
                                              schedule);
       if (result) {
         result = setString(OS_SetpointManager_ScheduledFields::ControlVariable,key->name());
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
       }
     }
     return result;
@@ -280,9 +282,9 @@ SetpointManagerScheduled::SetpointManagerScheduled(const Model& model,
                                                    Schedule& schedule)
   : HVACComponent(SetpointManagerScheduled::iddObjectType(),model) 
 {
-  BOOST_ASSERT(getImpl<detail::SetpointManagerScheduled_Impl>());
+  OS_ASSERT(getImpl<detail::SetpointManagerScheduled_Impl>());
   bool ok = setControlVariable("Temperature");
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   ok = setSchedule(schedule);
   if (!ok) {
     LOG_AND_THROW("Unable to set " << schedule.briefDescription() << " as "
@@ -295,7 +297,7 @@ SetpointManagerScheduled::SetpointManagerScheduled(const Model& model,
                                                    Schedule& setpointSchedule)
   : HVACComponent(SetpointManagerScheduled::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::SetpointManagerScheduled_Impl>());
+  OS_ASSERT(getImpl<detail::SetpointManagerScheduled_Impl>());
   bool ok = setControlVariable(controlVariable);
   if (!ok) {
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s control variable to "

@@ -81,15 +81,15 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool eraseLayer(unsigned layerIndex);
+    virtual bool eraseLayer(unsigned layerIndex);
 
-    bool insertLayer(unsigned layerIndex, const Material& material);
+    virtual bool insertLayer(unsigned layerIndex, const Material& material);
 
-    bool setLayer(unsigned layerIndex, const Material& material);
+    virtual bool setLayer(unsigned layerIndex, const Material& material);
 
-    bool setLayers(const std::vector<Material>& materials);
+    virtual bool setLayers(const std::vector<Material>& materials);
 
-    bool setLayer(const ModelPartitionMaterial& modelPartitionMaterial);
+    virtual bool setLayer(const ModelPartitionMaterial& modelPartitionMaterial);
 
     /** Set the u-factor of this surface in W/m^2*K, if possible. value should already include 
      *  appropriate film coefficients. By default, assumes still air indoors and 15 mph outdoor air 

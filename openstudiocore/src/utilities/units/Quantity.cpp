@@ -118,7 +118,7 @@ bool Quantity::setScale(int scaleExponent) {
   }
   m_value = m_value * (scale().value / candidateValue);
   bool ok = m_units.setScale(scaleExponent);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   return true;
 }
 
@@ -130,7 +130,7 @@ bool Quantity::setScale(const std::string& scaleAbbreviation) {
   }
   m_value = m_value * (scale().value / candidateValue);
   bool ok = m_units.setScale(scaleAbbreviation);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   return true;
 }
 
@@ -138,7 +138,7 @@ bool Quantity::isAbsolute() const {
   OptionalTemperatureUnit tu = m_units.optionalCast<TemperatureUnit>();
   if(!tu) {
     LOG_AND_THROW("Could not evaluate Quantity::isAbsolute for quantity " << *this
-        << " because it is in system " << system().valueName() << ", not Celcius or Fahrenheit.");
+        << " because it is in system " << system().valueName() << ", not Celsius or Fahrenheit.");
   }
   return tu->isAbsolute();
 }
@@ -151,7 +151,7 @@ void Quantity::setAsAbsolute() {
   OptionalTemperatureUnit tu = m_units.optionalCast<TemperatureUnit>();
   if(!tu) {
     LOG_AND_THROW("Could not Quantity::setAsAbsolute for quantity " << *this
-        << " because it is in system " << system().valueName() << ", not Celcius or Fahrenheit.");
+        << " because it is in system " << system().valueName() << ", not Celsius or Fahrenheit.");
   }
   tu->setAsAbsolute();
 }
@@ -160,7 +160,7 @@ void Quantity::setAsRelative() {
   OptionalTemperatureUnit tu = m_units.optionalCast<TemperatureUnit>();
   if(!tu) {
     LOG_AND_THROW("Could not Quantity::setAsRelative for quantity " << *this
-        << " because it is in system " << system().valueName() << ", not Celcius or Fahrenheit.");
+        << " because it is in system " << system().valueName() << ", not Celsius or Fahrenheit.");
   }
   tu->setAsRelative();
 }
@@ -180,7 +180,7 @@ void Quantity::lbmToLbf()
     iu->lbmToLbf();
     m_value /= std::pow(IPUnit::gc(),x);
   }
-  BOOST_ASSERT(baseUnitExponent("lb_m") == 0);
+  OS_ASSERT(baseUnitExponent("lb_m") == 0);
 }
 
 void Quantity::lbfToLbm() 
@@ -198,7 +198,7 @@ void Quantity::lbfToLbm()
     iu->lbfToLbm();
     m_value *= std::pow(IPUnit::gc(),x);
   }
-  BOOST_ASSERT(baseUnitExponent("lb_f") == 0);
+  OS_ASSERT(baseUnitExponent("lb_f") == 0);
 }
 
 Quantity& Quantity::operator+=(const Quantity& rQuantity) {

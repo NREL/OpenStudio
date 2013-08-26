@@ -80,9 +80,9 @@ namespace detail {
   InputVariableRecord_Impl::InputVariableRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : VariableRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
@@ -92,7 +92,7 @@ namespace detail {
     }
 
     value = query.value(VariableRecordColumns::inputVariableRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_inputVariableRecordType = InputVariableRecordType(value.toInt());
 
     value = query.value(VariableRecordColumns::uncertaintyDescriptionType);
@@ -104,7 +104,7 @@ namespace detail {
   boost::optional<ObjectRecord> InputVariableRecord_Impl::parent() const {
     OptionalObjectRecord result = VariableRecord_Impl::parent();
     if (m_problemRecordId) {
-      BOOST_ASSERT(!result);
+      OS_ASSERT(!result);
       result = problemRecord().get();
     }
     return result;
@@ -179,9 +179,9 @@ namespace detail {
   }
 
   void InputVariableRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     VariableRecord_Impl::setLastValues(query,projectDatabase);
 
@@ -204,14 +204,14 @@ namespace detail {
     }
 
     value = query.value(VariableRecordColumns::inputVariableRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastInputVariableRecordType = InputVariableRecordType(value.toInt());
   }
 
   bool InputVariableRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = VariableRecord_Impl::compareValues(query);
 
@@ -235,7 +235,7 @@ namespace detail {
     }
 
     value = query.value(VariableRecordColumns::inputVariableRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_inputVariableRecordType == InputVariableRecordType(value.toInt()));
 
     return result;
@@ -267,7 +267,7 @@ boost::optional<InputVariableRecord> InputVariableRecord::factoryFromQuery(
 
   switch (inputVariableRecordType) {
     case InputVariableRecordType::DiscreteVariableRecord :
-      result = DiscreteVariableRecord(query, database).cast<InputVariableRecord>();
+      result = DiscreteVariableRecord::factoryFromQuery(query, database);
       break;
     case InputVariableRecordType::ContinuousVariableRecord :
       result = ContinuousVariableRecord::factoryFromQuery(query,database);
@@ -287,9 +287,9 @@ InputVariableRecord InputVariableRecord::factoryFromInputVariable(
 {
   if (analysis::OptionalDiscreteVariable discreteVariable = inputVariable.optionalCast<analysis::DiscreteVariable>())
   {
-    return DiscreteVariableRecord(*discreteVariable,
-                                  problemRecord,
-                                  workflowIndex);
+    return DiscreteVariableRecord::factoryFromDiscreteVariable(*discreteVariable,
+                                                               problemRecord,
+                                                               workflowIndex);
   }
   if (analysis::OptionalContinuousVariable continuousVariable = inputVariable.optionalCast<analysis::ContinuousVariable>())
   {
@@ -298,7 +298,7 @@ InputVariableRecord InputVariableRecord::factoryFromInputVariable(
                                                                    workflowIndex);
   }
 
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return InputVariableRecord(boost::shared_ptr<detail::InputVariableRecord_Impl>());
 }
 
@@ -310,10 +310,10 @@ InputVariableRecord InputVariableRecord::factoryFromInputVariable(
 {
   if (analysis::OptionalDiscreteVariable discreteVariable = inputVariable.optionalCast<analysis::DiscreteVariable>())
   {
-    return DiscreteVariableRecord(*discreteVariable,
-                                  functionRecord,
-                                  variableVectorIndex,
-                                  functionCoefficient);
+    return DiscreteVariableRecord::factoryFromDiscreteVariable(*discreteVariable,
+                                                               functionRecord,
+                                                               variableVectorIndex,
+                                                               functionCoefficient);
   }
   if (analysis::OptionalContinuousVariable continuousVariable = inputVariable.optionalCast<analysis::ContinuousVariable>())
   {
@@ -323,7 +323,7 @@ InputVariableRecord InputVariableRecord::factoryFromInputVariable(
                                                                    functionCoefficient);
   }
 
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return InputVariableRecord(boost::shared_ptr<detail::InputVariableRecord_Impl>());
 }
 
@@ -387,7 +387,7 @@ InputVariableRecord::InputVariableRecord(boost::shared_ptr<detail::InputVariable
                                          const boost::optional<analysis::InputVariable>& inputVariable)
   : VariableRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::InputVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::InputVariableRecord_Impl>());
   if (inputVariable) {
     constructRelatedRecords(*inputVariable);
   }

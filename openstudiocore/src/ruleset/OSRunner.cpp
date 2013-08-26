@@ -27,6 +27,8 @@
 #include <utilities/units/Quantity.hpp>
 #include <utilities/math/FloatCompare.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <boost/foreach.hpp>
 
 namespace openstudio {
@@ -178,7 +180,7 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
             }
             break;
           default :
-            BOOST_ASSERT(false);
+            OS_ASSERT(false);
         }
         ss.str("");
       }

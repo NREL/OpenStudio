@@ -32,10 +32,18 @@
 #include <model/StraightComponent_Impl.hpp>
 #include <model/CoilCoolingWater.hpp>
 #include <model/CoilCoolingWater_Impl.hpp>
+#include <model/CoilCoolingLowTempRadiantConstFlow.hpp>
+#include <model/CoilCoolingLowTempRadiantConstFlow_Impl.hpp>
+#include <model/CoilCoolingLowTempRadiantVarFlow.hpp>
+#include <model/CoilCoolingLowTempRadiantVarFlow_Impl.hpp>
 #include <model/CoilHeatingWater.hpp>
 #include <model/CoilHeatingWater_Impl.hpp>
 #include <model/CoilHeatingWaterBaseboard.hpp>
 #include <model/CoilHeatingWaterBaseboard_Impl.hpp>
+#include <model/CoilHeatingLowTempRadiantConstFlow.hpp>
+#include <model/CoilHeatingLowTempRadiantConstFlow_Impl.hpp>
+#include <model/CoilHeatingLowTempRadiantVarFlow.hpp>
+#include <model/CoilHeatingLowTempRadiantVarFlow_Impl.hpp>
 #include <model/ControllerWaterCoil.hpp>
 #include <model/ControllerWaterCoil_Impl.hpp>
 #include <model/ConnectorSplitter.hpp>
@@ -50,12 +58,17 @@
 #include <model/ZoneHVACBaseboardConvectiveWater_Impl.hpp>
 #include <model/ZoneHVACFourPipeFanCoil.hpp>
 #include <model/ZoneHVACFourPipeFanCoil_Impl.hpp>
+#include <model/ZoneHVACLowTempRadiantConstFlow.hpp>
+#include <model/ZoneHVACLowTempRadiantConstFlow_Impl.hpp>
+#include <model/ZoneHVACLowTempRadiantVarFlow.hpp>
+#include <model/ZoneHVACLowTempRadiantVarFlow_Impl.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
 #include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
 #include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
 #include <model/ZoneHVACUnitHeater.hpp>
 #include <model/ZoneHVACUnitHeater_Impl.hpp>
+#include <utilities/core/Assert.hpp>
 #include <QStackedWidget>
 #include <QVBoxLayout>
 #include <QApplication>
@@ -98,7 +111,7 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             m_currentView, SIGNAL(toggleUnitsClicked(bool)));
-      BOOST_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
   
       m_currentView->layoutModelObject(splitter.get(), readOnly, displayIP);
 
@@ -118,7 +131,7 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       m_currentView = new SplitterMixerInspectorView();
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             m_currentView, SIGNAL(toggleUnitsClicked(bool)));
-      BOOST_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
   
       m_currentView->layoutModelObject(mixer.get(), readOnly, displayIP);
 
@@ -138,7 +151,7 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       m_currentView = new WaterToAirInspectorView();
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             m_currentView, SIGNAL(toggleUnitsClicked(bool)));
-      BOOST_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
   
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
@@ -160,7 +173,7 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       m_currentView = new AirTerminalSingleDuctVAVReheatInspectorView();
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             m_currentView, SIGNAL(toggleUnitsClicked(bool)));
-      BOOST_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
   
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
@@ -183,7 +196,7 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       m_currentView = new ZoneHVACBaseboardConvectiveWaterInspectorView();
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             m_currentView, SIGNAL(toggleUnitsClicked(bool)));
-      BOOST_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
   
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
@@ -204,6 +217,53 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       }
 
       m_currentView = new ZoneHVACFourPipeFanCoilInspectorView();
+      isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                            m_currentView, SIGNAL(toggleUnitsClicked(bool)));
+      OS_ASSERT(isConnected);
+  
+      m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
+
+      m_vLayout->addWidget(m_currentView);
+
+      connect( m_currentView, SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)),
+               this,  SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+      
+      connect( m_currentView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+               this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+    }
+    else if( boost::optional<model::ZoneHVACLowTempRadiantConstFlow> component = 
+             modelObject->optionalCast<model::ZoneHVACLowTempRadiantConstFlow>()  )
+    {
+      if( m_currentView )
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new ZoneHVACLowTempRadiantConstFlowInspectorView();
+      isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                            m_currentView, SIGNAL(toggleUnitsClicked(bool)));
+      BOOST_ASSERT(isConnected);
+  
+      m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
+
+      m_vLayout->addWidget(m_currentView);
+
+      connect( m_currentView, SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)),
+               this,  SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+      
+      connect( m_currentView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+               this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+    }
+    
+    else if( boost::optional<model::ZoneHVACLowTempRadiantVarFlow> component = 
+             modelObject->optionalCast<model::ZoneHVACLowTempRadiantVarFlow>()  )
+    {
+      if( m_currentView )
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new ZoneHVACLowTempRadiantVarFlowInspectorView();
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             m_currentView, SIGNAL(toggleUnitsClicked(bool)));
       BOOST_ASSERT(isConnected);
@@ -229,7 +289,7 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       m_currentView = new ZoneHVACWaterToAirHeatPumpInspectorView();
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             m_currentView, SIGNAL(toggleUnitsClicked(bool)));
-      BOOST_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
   
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
@@ -253,7 +313,7 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       m_currentView = new ZoneHVACPackagedTerminalAirConditionerInspectorView();
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             m_currentView, SIGNAL(toggleUnitsClicked(bool)));
-      BOOST_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
   
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
@@ -277,7 +337,7 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             m_currentView, SIGNAL(toggleUnitsClicked(bool)));
-      BOOST_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
   
       m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
 
@@ -300,7 +360,7 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       m_currentView = new GenericInspectorView();
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             m_currentView, SIGNAL(toggleUnitsClicked(bool)));
-      BOOST_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
 
       m_vLayout->addWidget(m_currentView);
     }
@@ -314,7 +374,7 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       m_currentView = new GenericInspectorView();
       isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                             m_currentView, SIGNAL(toggleUnitsClicked(bool)));
-      BOOST_ASSERT(isConnected);
+      OS_ASSERT(isConnected);
 
       m_currentView->layoutModelObject(modelObject.get(), readOnly, displayIP);
 
@@ -331,7 +391,7 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
     m_currentView = new GenericInspectorView();
     isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                           m_currentView, SIGNAL(toggleUnitsClicked(bool)));
-    BOOST_ASSERT(isConnected);
+    OS_ASSERT(isConnected);
 
     m_vLayout->addWidget(m_currentView);
   }
@@ -412,7 +472,7 @@ GenericInspectorView::GenericInspectorView( QWidget * parent )
   m_inspectorGadget = new InspectorGadget();
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_libraryTabWidget->addTab( m_inspectorGadget,"","");
                               //":images/components_icon_pressed.png",
@@ -442,12 +502,12 @@ WaterToAirInspectorView::WaterToAirInspectorView( QWidget * parent )
   m_inspectorGadget = new InspectorGadget();
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_coilControllerInspectorGadget = new InspectorGadget();
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         m_coilControllerInspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_loopChooserView = new LoopChooserView();
 
@@ -557,7 +617,7 @@ AirTerminalSingleDuctVAVReheatInspectorView::AirTerminalSingleDuctVAVReheatInspe
   m_inspectorGadget = new InspectorGadget();
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_loopChooserView = new LoopChooserView();
 
@@ -627,7 +687,7 @@ ZoneHVACBaseboardConvectiveWaterInspectorView::ZoneHVACBaseboardConvectiveWaterI
   m_inspectorGadget = new InspectorGadget();
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_heatingLoopChooserView = new LoopChooserView();
 
@@ -693,7 +753,7 @@ ZoneHVACFourPipeFanCoilInspectorView::ZoneHVACFourPipeFanCoilInspectorView( QWid
   m_inspectorGadget = new InspectorGadget();
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_heatingLoopChooserView = new LoopChooserView();
 
@@ -788,13 +848,221 @@ void ZoneHVACFourPipeFanCoilInspectorView::layoutModelObject( model::ModelObject
   }
 }
 
-ZoneHVACWaterToAirHeatPumpInspectorView::ZoneHVACWaterToAirHeatPumpInspectorView( QWidget * parent )
+ZoneHVACLowTempRadiantConstFlowInspectorView::ZoneHVACLowTempRadiantConstFlowInspectorView( QWidget * parent )
   : BaseInspectorView(parent)
 {
   m_inspectorGadget = new InspectorGadget();
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
   BOOST_ASSERT(isConnected);
+
+  m_heatingLoopChooserView = new LoopChooserView();
+  m_coolingLoopChooserView = new LoopChooserView();
+
+  m_libraryTabWidget->addTab( m_inspectorGadget,
+                              ":images/properties_icon_on.png",
+                              ":images/properties_icon_off.png" );
+
+  m_libraryTabWidget->addTab( m_heatingLoopChooserView,
+                              ":images/link_icon_on.png",
+                              ":images/link_icon_off.png" );
+
+  m_libraryTabWidget->addTab( m_coolingLoopChooserView,
+                              ":images/link_icon_on.png",
+                              ":images/link_icon_off.png" );
+
+  m_libraryTabWidget->setCurrentIndex(0);
+
+  connect( m_heatingLoopChooserView, SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+  
+  connect( m_heatingLoopChooserView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+
+  connect( m_coolingLoopChooserView, SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+  
+  connect( m_coolingLoopChooserView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+
+
+}
+
+void ZoneHVACLowTempRadiantConstFlowInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP )
+{
+  
+  m_modelObject = modelObject;
+
+  bool force=false;
+  bool recursive=true;
+  bool locked=readOnly;
+  bool hideChildren=false;
+  if( displayIP )
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::IP);
+  }
+  else
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::SI);
+  }
+  m_inspectorGadget->layoutModelObj(modelObject, force, recursive, locked, hideChildren);
+
+  bool waterHeatingCoil = false;
+  bool waterCoolingCoil = false;
+
+  if( boost::optional<model::ZoneHVACLowTempRadiantConstFlow> lowTempRadiant = 
+        modelObject.optionalCast<model::ZoneHVACLowTempRadiantConstFlow>() )
+  {
+    if( boost::optional<model::HVACComponent> coil = lowTempRadiant->heatingCoil() )
+    {
+      if( boost::optional<model::HVACComponent> waterToAirCoil = coil->optionalCast<model::HVACComponent>() )
+      {
+        boost::optional<model::ModelObject> moHeat = waterToAirCoil.get();
+
+        m_heatingLoopChooserView->layoutModelObject(moHeat);
+
+        waterHeatingCoil = true;
+      }
+    }
+    if( boost::optional<model::HVACComponent> coil = lowTempRadiant->coolingCoil() )
+    {
+      if( boost::optional<model::HVACComponent> waterToAirCoil = coil->optionalCast<model::HVACComponent>() )
+      {
+        boost::optional<model::ModelObject> moCool = waterToAirCoil.get();
+
+        m_coolingLoopChooserView->layoutModelObject(moCool);
+
+        waterCoolingCoil = true;
+      }
+    }
+  }
+
+  if( ! waterHeatingCoil )
+  {
+    boost::optional<model::ModelObject> moHeat;
+
+    m_heatingLoopChooserView->layoutModelObject(moHeat);
+  }
+  if( ! waterCoolingCoil )
+  {
+    boost::optional<model::ModelObject> moCool;
+
+    m_coolingLoopChooserView->layoutModelObject(moCool);
+  }
+
+}
+
+ZoneHVACLowTempRadiantVarFlowInspectorView::ZoneHVACLowTempRadiantVarFlowInspectorView( QWidget * parent )
+  : BaseInspectorView(parent)
+{
+  m_inspectorGadget = new InspectorGadget();
+  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                             m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
+  BOOST_ASSERT(isConnected);
+
+  m_heatingLoopChooserView = new LoopChooserView();
+  m_coolingLoopChooserView = new LoopChooserView();
+
+  m_libraryTabWidget->addTab( m_inspectorGadget,
+                              ":images/properties_icon_on.png",
+                              ":images/properties_icon_off.png" );
+
+  m_libraryTabWidget->addTab( m_heatingLoopChooserView,
+                              ":images/link_icon_on.png",
+                              ":images/link_icon_off.png" );
+
+  m_libraryTabWidget->addTab( m_coolingLoopChooserView,
+                              ":images/link_icon_on.png",
+                              ":images/link_icon_off.png" );
+
+  m_libraryTabWidget->setCurrentIndex(0);
+
+  connect( m_heatingLoopChooserView, SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+  
+  connect( m_heatingLoopChooserView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+
+  connect( m_coolingLoopChooserView, SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+  
+  connect( m_coolingLoopChooserView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+
+
+}
+
+void ZoneHVACLowTempRadiantVarFlowInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP )
+{
+  
+  m_modelObject = modelObject;
+
+  bool force=false;
+  bool recursive=true;
+  bool locked=readOnly;
+  bool hideChildren=false;
+  if( displayIP )
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::IP);
+  }
+  else
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::SI);
+  }
+  m_inspectorGadget->layoutModelObj(modelObject, force, recursive, locked, hideChildren);
+
+  bool waterHeatingCoil = false;
+  bool waterCoolingCoil = false;
+
+  if( boost::optional<model::ZoneHVACLowTempRadiantVarFlow> lowTempRadiant = 
+        modelObject.optionalCast<model::ZoneHVACLowTempRadiantVarFlow>() )
+  {
+    if( boost::optional<model::HVACComponent> coil = lowTempRadiant->heatingCoil() )
+    {
+      if( boost::optional<model::HVACComponent> waterToAirCoil = coil->optionalCast<model::HVACComponent>() )
+      {
+        boost::optional<model::ModelObject> moHeat = waterToAirCoil.get();
+
+        m_heatingLoopChooserView->layoutModelObject(moHeat);
+
+        waterHeatingCoil = true;
+      }
+    }
+    if( boost::optional<model::HVACComponent> coil = lowTempRadiant->coolingCoil() )
+    {
+      if( boost::optional<model::HVACComponent> waterToAirCoil = coil->optionalCast<model::HVACComponent>() )
+      {
+        boost::optional<model::ModelObject> moCool = waterToAirCoil.get();
+
+        m_coolingLoopChooserView->layoutModelObject(moCool);
+
+        waterCoolingCoil = true;
+      }
+    }
+  }
+
+  if( ! waterHeatingCoil )
+  {
+    boost::optional<model::ModelObject> moHeat;
+
+    m_heatingLoopChooserView->layoutModelObject(moHeat);
+  }
+  if( ! waterCoolingCoil )
+  {
+    boost::optional<model::ModelObject> moCool;
+
+    m_coolingLoopChooserView->layoutModelObject(moCool);
+  }
+
+}
+
+ZoneHVACWaterToAirHeatPumpInspectorView::ZoneHVACWaterToAirHeatPumpInspectorView( QWidget * parent )
+  : BaseInspectorView(parent)
+{
+  m_inspectorGadget = new InspectorGadget();
+  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                             m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
+  OS_ASSERT(isConnected);
 
   m_heatingLoopChooserView = new LoopChooserView();
 
@@ -926,7 +1194,7 @@ ZoneHVACPackagedTerminalAirConditionerInspectorView::ZoneHVACPackagedTerminalAir
   m_inspectorGadget = new InspectorGadget();
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_loopChooserView = new LoopChooserView();
 
@@ -998,7 +1266,7 @@ ZoneHVACUnitHeaterInspectorView::ZoneHVACUnitHeaterInspectorView( QWidget * pare
 
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   m_heatingLoopChooserView = new LoopChooserView();
 
