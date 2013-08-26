@@ -1,0 +1,150 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#ifndef PROJECT_CLOUDSESSIONRECORD_HPP
+#define PROJECT_CLOUDSESSIONRECORD_HPP
+
+#include <project/ProjectAPI.hpp>
+#include <project/ObjectRecord.hpp>
+
+namespace openstudio {
+namespace NAMESPACE {
+  class CloudSession;
+}
+namespace project {
+
+namespace detail {
+
+  class CloudSessionRecord_Impl;
+
+} // detail
+
+// TODO: Populate or delete this enumeration if there are/are not any derived types, respectively.
+/** \class CloudSessionRecordType
+ *  \brief ObjectRecord types that derive from CloudSessionRecord.
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+ *  macro call is:
+ *  \code
+OPENSTUDIO_ENUM(CloudSessionRecordType,
+    ((CloudSessionRecordDerivedRecord1))
+);
+ *  \endcode */
+OPENSTUDIO_ENUM(CloudSessionRecordType,
+    ((CloudSessionRecordDerivedRecord1))
+);
+
+/** \class CloudSessionRecordColumns
+ *  \brief Column definitions for the CloudSessionRecords table.
+ *
+ *  \relates CloudSessionRecord */
+OPENSTUDIO_ENUM(CloudSessionRecordColumns,
+  ((id)(INTEGER PRIMARY KEY)(0))
+  ((handle)(TEXT)(1))
+  ((name)(TEXT)(2))
+  ((displayName)(TEXT)(3))
+  ((description)(TEXT)(4))
+  ((timestampCreate)(TEXT)(5))
+  ((timestampLast)(TEXT)(6))
+  ((uuidLast)(TEXT)(7))
+  // TODO: Add Columns to Record Class (and Derived-Class)-Specific Data.
+  ((cloudSessionRecordType)(INTEGER)(8))
+);
+
+/** CloudSessionRecord is a ObjectRecord. */
+class PROJECT_API CloudSessionRecord : public ObjectRecord {
+ public:
+
+  typedef detail::CloudSessionRecord_Impl ImplType;
+  typedef CloudSessionRecordColumns ColumnsType;
+  typedef CloudSessionRecord ObjectRecordType;
+
+  /** @name Constructors and Destructors */
+  //@{
+
+  // TODO: Delete if CloudSession is abstract, make private if CloudSession is concrete and has derived classes.
+  // TODO: Replace ProjectDatabase& database (or add another object if it is ok for CloudSessionRecord to be and orphan) with const& to parent Record if the Table contains a parent id.
+  // TODO: Find-replace on 'NAMESPACE'.
+  CloudSessionRecord(const NAMESPACE::CloudSession& cloudSession, ProjectDatabase& database);
+
+  // TODO: Delete if CloudSession is abstract, make private if CloudSession is concrete and has derived classes.
+  CloudSessionRecord(const QSqlQuery& query, ProjectDatabase& database);
+
+  virtual ~CloudSessionRecord() {}
+
+  //@}
+
+  // TODO: Add a call to createTable in ProjectDatabase_Impl::initialize().
+  static std::string databaseTableName();
+
+  // TODO: Add a call to this updatePathData method in ProjectDatabase_Impl::updatePathData.
+  static void updatePathData(ProjectDatabase database,
+                             const openstudio::path& originalBase,
+                             const openstudio::path& newBase);
+
+  /** Get CloudSessionRecord from query. Returned object will be of the correct
+   *  derived type. */
+  static boost::optional<CloudSessionRecord> factoryFromQuery(const QSqlQuery& query, ProjectDatabase& database);
+
+  // TODO: Delete if no derived classes.
+  static CloudSessionRecord factoryFromCloudSession(const NAMESPACE::CloudSession& cloudSession, ProjectDatabase& database);
+
+  static std::vector<CloudSessionRecord> getCloudSessionRecords(ProjectDatabase& database);
+
+  static boost::optional<CloudSessionRecord> getCloudSessionRecord(int id, ProjectDatabase& database);
+
+  /** @name Getters */
+  //@{
+
+  // ADD METHODS FOR RETRIEVING PARENT, CHILD, AND RESOURCE RECORDS AS DESIRED
+
+  // ADD METHODS FOR GETTING/SETTING SPECIFIC DATA FIELDS AS DESIRED
+
+  NAMESPACE::CloudSession cloudSession() const;
+
+  //@}
+ protected:
+  /// @cond
+  typedef detail::CloudSessionRecord_Impl ImplType;
+
+  explicit CloudSessionRecord(boost::shared_ptr<detail::CloudSessionRecord_Impl> impl);
+
+  friend class detail::CloudSessionRecord_Impl;
+  friend class Record;
+  friend class ProjectDatabase;
+
+  /** Construct from impl. */
+  CloudSessionRecord(boost::shared_ptr<detail::CloudSessionRecord_Impl> impl,
+                     ProjectDatabase database);
+
+  /// @endcond
+ private:
+  REGISTER_LOGGER("openstudio.project.CloudSessionRecord");
+};
+
+/** \relates CloudSessionRecord*/
+typedef boost::optional<CloudSessionRecord> OptionalCloudSessionRecord;
+
+/** \relates CloudSessionRecord*/
+typedef std::vector<CloudSessionRecord> CloudSessionRecordVector;
+
+} // project
+} // openstudio
+
+#endif // PROJECT_CLOUDSESSIONRECORD_HPP
+

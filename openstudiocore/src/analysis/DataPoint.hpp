@@ -63,6 +63,23 @@ struct ANALYSIS_API DataPointSerializationOptions {
                                 bool t_osServerView=true);
 };
 
+/** \class DataPointRunType
+ *  \brief List of DataPoint run types.
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+ *  macro call is:
+ *  \code
+OPENSTUDIO_ENUM(DataPointRunType,
+    ((Local))
+    ((Cloud-Slim))
+    ((Cloud-Detailed))
+);
+ *  \endcode */
+OPENSTUDIO_ENUM(DataPointRunType,
+    ((Local))
+    ((Cloud-Slim))
+    ((Cloud-Detailed))
+);
+
 /** DataPoint is an AnalysisObject that describes a single simulation run/to be run for a given
  *  Analysis. New \link DataPoint DataPoints \endlink are constructed using
  *  Problem::createDataPoint, since the DataPoint variableValues only make sense in the context of
@@ -162,6 +179,8 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
    *  and not failed() (and problem().numResponses() > 0). */
   std::vector<double> responseValues() const;
 
+  DataPointRunType runType() const;
+
   /** Run directory for this DataPoint. Set by analysisdriver::AnalysisDriver. */
   openstudio::path directory() const;
 
@@ -220,6 +239,8 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   //@{
 
   void setSelected(bool selected);
+
+  void setRunType(const DataPointRunType& runType);
 
   /** Sets the run directory for this DataPoint. Generally called by
    *  analysisdriver::AnalysisDriver. */
