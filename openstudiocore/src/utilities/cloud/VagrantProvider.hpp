@@ -36,7 +36,8 @@ namespace openstudio{
 
     /// constructor
     VagrantProvider(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
-                    const openstudio::path& workerPath, const openstudio::Url& workerUrl);
+                    const openstudio::path& workerPath, const openstudio::Url& workerUrl,
+                    bool haltOnStop = true);
 
     //@}
     /** @name Destructors */

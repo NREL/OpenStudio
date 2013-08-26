@@ -30,9 +30,10 @@ namespace openstudio{
   namespace detail{
 
     VagrantProvider_Impl::VagrantProvider_Impl(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
-                                               const openstudio::path& workerPath, const openstudio::Url& workerUrl)
+                                               const openstudio::path& workerPath, const openstudio::Url& workerUrl,
+                                               bool haltOnStop)
       : CloudProvider_Impl(), m_cloudSession(this->type(), toString(createUUID()), boost::none, std::vector<Url>()),
-        m_serverPath(serverPath), m_serverUrl(serverUrl), m_workerPath(workerPath), m_workerUrl(workerUrl),
+        m_serverPath(serverPath), m_serverUrl(serverUrl), m_workerPath(workerPath), m_workerUrl(workerUrl), m_haltOnStop(haltOnStop),
         m_startServerProcess(NULL), m_startWorkerProcess(NULL), 
         m_serverStarted(false), m_workersStarted(false), m_terminated(false)
     {
@@ -275,29 +276,37 @@ namespace openstudio{
 
       clearErrorsAndWarnings();
 
-      QStringList args;
-      addProcessArguments(args);
-      args << "halt";
+      if (m_haltOnStop){
 
-      QProcess* stopServerProcess = new QProcess();
-      stopServerProcess->setWorkingDirectory(toQString(m_serverPath));
-      stopServerProcess->start(processName(), args);
+        QStringList args;
+        addProcessArguments(args);
+        args << "halt";
 
-      QProcess* stopWorkerProcess = new QProcess();
-      stopWorkerProcess->setWorkingDirectory(toQString(m_workerPath));
-      stopWorkerProcess->start(processName(), args);
+        QProcess* stopServerProcess = new QProcess();
+        stopServerProcess->setWorkingDirectory(toQString(m_serverPath));
+        stopServerProcess->start(processName(), args);
 
-      emit terminating();
+        QProcess* stopWorkerProcess = new QProcess();
+        stopWorkerProcess->setWorkingDirectory(toQString(m_workerPath));
+        stopWorkerProcess->start(processName(), args);
 
-      if (stopServerProcess->waitForStarted()){
-        stopServerProcess->waitForFinished();
+        emit terminating();
+
+        if (stopServerProcess->waitForStarted()){
+          stopServerProcess->waitForFinished();
+        }
+        if (stopWorkerProcess->waitForStarted()){
+          stopWorkerProcess->waitForFinished();
+        }
+        
+        stopServerProcess->deleteLater();
+        stopWorkerProcess->deleteLater();
+
+      }else{
+
+        emit terminating();
+
       }
-      if (stopWorkerProcess->waitForStarted()){
-        stopWorkerProcess->waitForFinished();
-      }
-      
-      stopServerProcess->deleteLater();
-      stopWorkerProcess->deleteLater();
 
       emit terminateComplete();
 
@@ -387,8 +396,9 @@ namespace openstudio{
   }// detail
 
   VagrantProvider::VagrantProvider(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
-                                   const openstudio::path& workerPath, const openstudio::Url& workerUrl)
-    : CloudProvider(boost::shared_ptr<detail::VagrantProvider_Impl>(new detail::VagrantProvider_Impl(serverPath, serverUrl, workerPath, workerUrl)))
+                                   const openstudio::path& workerPath, const openstudio::Url& workerUrl, 
+                                   bool haltOnStop)
+    : CloudProvider(boost::shared_ptr<detail::VagrantProvider_Impl>(new detail::VagrantProvider_Impl(serverPath, serverUrl, workerPath, workerUrl, haltOnStop)))
   {
   }
 

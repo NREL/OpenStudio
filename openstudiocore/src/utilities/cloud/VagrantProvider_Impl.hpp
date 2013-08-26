@@ -45,7 +45,8 @@ namespace detail{
 
     /// constructor
     VagrantProvider_Impl(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
-                         const openstudio::path& workerPath, const openstudio::Url& workerUrl);
+                         const openstudio::path& workerPath, const openstudio::Url& workerUrl,
+                         bool haltOnStop);
 
     //@}
     /** @name Destructors */
@@ -149,6 +150,7 @@ namespace detail{
     openstudio::Url m_serverUrl;
     openstudio::path m_workerPath;
     openstudio::Url m_workerUrl;
+    bool m_haltOnStop;
 
     QProcess* m_startServerProcess;
     QProcess* m_startWorkerProcess;
