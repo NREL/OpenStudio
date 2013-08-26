@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
   double flow=27.1;
   boost::program_options::options_description desc("Allowed options");
   desc.add_options()
-    ("flow,f", boost::program_options::value<double>(&flow), "leakage flow rate [m^3/h]")
+    ("flow,f", boost::program_options::value<double>(&flow), "leakage flow rate per envelope area [m^3/h/m^2]")
     ("help,h", "print help message")
     ("inputPath,i", boost::program_options::value<std::string>(&inputPathString), "path to OSM file")
     ("level,l", boost::program_options::value<std::string>(&leakageDescriptorString), "leakage level or grade")
