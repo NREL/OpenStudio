@@ -287,6 +287,9 @@ namespace openstudio{
       m_networkReply->deleteLater();
       m_networkReply = 0;
       m_mutex->unlock();
+
+      emit requestProcessed(false);
+
       return false;
     }
 
@@ -393,7 +396,23 @@ namespace openstudio{
 
     bool OSServer_Impl::requestDataPointUUIDs(const UUID& analysisUUID)
     {
-      return false;
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastDataPointUUIDs.clear();
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/data_points.json"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDataPointUUIDs()));
+      OS_ASSERT(test);
+
+      return true;
     }
 
     bool OSServer_Impl::requestRunningDataPointUUIDs(const UUID& analysisUUID)
@@ -423,8 +442,11 @@ namespace openstudio{
 
     void OSServer_Impl::processAvailable()
     {
+      bool success = false;
+
       if (m_networkReply->error() == QNetworkReply::NoError){
         m_lastAvailable = true;
+        success = true;
       }else{
         logError("Network error occurred");
       }
@@ -433,12 +455,16 @@ namespace openstudio{
       m_networkReply = 0;
 
       m_mutex->unlock();
+
+      emit requestProcessed(success);
     }
 
     void OSServer_Impl::processProjectUUIDs()
     {
+      bool success = false;
+
       if (m_networkReply->error() == QNetworkReply::NoError){
-        m_lastProjectUUIDs = processListOfUUID(m_networkReply->readAll());
+        m_lastProjectUUIDs = processListOfUUID(m_networkReply->readAll(), success);
       }else{
         logError("Network error occurred");
       }
@@ -447,12 +473,16 @@ namespace openstudio{
       m_networkReply = 0;
 
       m_mutex->unlock();
+
+      emit requestProcessed(success);
     }
 
     void OSServer_Impl::processAnalysisUUIDs()
     {
+      bool success = false;
+
       if (m_networkReply->error() == QNetworkReply::NoError){
-        m_lastAnalysisUUIDs = processListOfUUID(m_networkReply->readAll());
+        m_lastAnalysisUUIDs = processListOfUUID(m_networkReply->readAll(), success);
       }else{
         logError("Network error occurred");
       }
@@ -461,8 +491,28 @@ namespace openstudio{
       m_networkReply = 0;
 
       m_mutex->unlock();
+
+      emit requestProcessed(success);
     }
 
+    void OSServer_Impl::processDataPointUUIDs()
+    {
+      bool success = false;
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastDataPointUUIDs = processListOfUUID(m_networkReply->readAll(), success);
+      }else{
+        logError("Network error occurred");
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+    
     void OSServer_Impl::clearErrorsAndWarnings()
     {
       m_errors.clear();
@@ -481,8 +531,10 @@ namespace openstudio{
       LOG(Warn, warning);
     }
 
-    std::vector<UUID> OSServer_Impl::processListOfUUID(const QByteArray& bytes) const
+    std::vector<UUID> OSServer_Impl::processListOfUUID(const QByteArray& bytes, bool& success) const
     {
+      success = false;
+
       std::vector<UUID> result;
 
       bool test;
@@ -490,6 +542,8 @@ namespace openstudio{
       QVariant variant = parser.parse(bytes, &test);
 
       if (test){
+        success = true;
+
         QVariantList list = variant.toList();
         Q_FOREACH(QVariant projectVariant, variant.toList()){
           QVariantMap map = projectVariant.toMap();
@@ -497,6 +551,11 @@ namespace openstudio{
             QString id = map["_id"].toString();
             UUID uuid(id);
             result.push_back(uuid);
+          }else{
+            success = false;
+            result.clear();
+            logError("Incorrect JSON response");
+            break;
           }
         }
       }else{

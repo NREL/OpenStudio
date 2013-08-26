@@ -148,6 +148,10 @@ namespace detail{
 
     //@}
 
+  signals:
+
+    void requestProcessed(bool success);
+
   protected slots:
 
     void processAvailable();
@@ -155,6 +159,8 @@ namespace detail{
     void processProjectUUIDs(); 
 
     void processAnalysisUUIDs(); 
+
+    void processDataPointUUIDs();
 
   private:
 
@@ -184,7 +190,7 @@ namespace detail{
     void clearErrorsAndWarnings();
     void logError(const std::string& error) const;
     void logWarning(const std::string& warning) const;
-    std::vector<UUID> processListOfUUID(const QByteArray& bytes) const;
+    std::vector<UUID> processListOfUUID(const QByteArray& bytes, bool& success) const;
 
     // configure logging
     REGISTER_LOGGER("utilities.cloud.OSServer");
