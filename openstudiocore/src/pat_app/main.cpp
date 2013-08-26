@@ -19,6 +19,8 @@
 
 #include <pat_app/PatApp.hpp>
 
+#include <ruleset/OSArgument.hpp>
+
 #include <utilities/core/Application.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/FileLogSink.hpp>

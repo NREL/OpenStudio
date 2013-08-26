@@ -57,10 +57,10 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PreRun_Roundtrip) {
   EXPECT_FALSE(json.empty());
 
   // Deserialize and check results
-  OptionalAnalysisObject copyAsAnalysisObject = loadJSON(json);
-  ASSERT_TRUE(copyAsAnalysisObject);
-  ASSERT_TRUE(copyAsAnalysisObject->optionalCast<DataPoint>());
-  DataPoint copy = copyAsAnalysisObject->cast<DataPoint>();
+  AnalysisJSONLoadResult loadResult = loadJSON(json);
+  ASSERT_TRUE(loadResult.analysisObject);
+  ASSERT_TRUE(loadResult.analysisObject->optionalCast<DataPoint>());
+  DataPoint copy = loadResult.analysisObject->cast<DataPoint>();
   EXPECT_EQ(json,copy.toJSON(options));
 
   // Save data point
@@ -68,12 +68,11 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PreRun_Roundtrip) {
   EXPECT_TRUE(dataPoint.saveJSON(p,options,true));
 
   // Load and check results
-  copyAsAnalysisObject = loadJSON(p);
-  ASSERT_TRUE(copyAsAnalysisObject);
-  ASSERT_TRUE(copyAsAnalysisObject->optionalCast<DataPoint>());
-  copy = copyAsAnalysisObject->cast<DataPoint>();
+  loadResult = loadJSON(json);
+  ASSERT_TRUE(loadResult.analysisObject);
+  ASSERT_TRUE(loadResult.analysisObject->optionalCast<DataPoint>());
+  copy = loadResult.analysisObject->cast<DataPoint>();
   EXPECT_EQ(json,copy.toJSON(options));
-
 }
 
 TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun_Roundtrip) {
@@ -94,10 +93,10 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun_Roundtrip) {
   EXPECT_FALSE(json.empty());
 
   // Deserialize and check results
-  OptionalAnalysisObject copyAsAnalysisObject = loadJSON(json);
-  ASSERT_TRUE(copyAsAnalysisObject);
-  ASSERT_TRUE(copyAsAnalysisObject->optionalCast<DataPoint>());
-  DataPoint copy = copyAsAnalysisObject->cast<DataPoint>();
+  AnalysisJSONLoadResult loadResult = loadJSON(json);
+  ASSERT_TRUE(loadResult.analysisObject);
+  ASSERT_TRUE(loadResult.analysisObject->optionalCast<DataPoint>());
+  DataPoint copy = loadResult.analysisObject->cast<DataPoint>();
   EXPECT_EQ(json,copy.toJSON(options));
 
   // Save data point
@@ -105,11 +104,16 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_PostRun_Roundtrip) {
   EXPECT_TRUE(dataPoint.saveJSON(p,options,true));
 
   // Load and check results
-  copyAsAnalysisObject = loadJSON(p);
-  ASSERT_TRUE(copyAsAnalysisObject);
-  ASSERT_TRUE(copyAsAnalysisObject->optionalCast<DataPoint>());
-  copy = copyAsAnalysisObject->cast<DataPoint>();
+  loadResult = loadJSON(json);
+  ASSERT_TRUE(loadResult.analysisObject);
+  ASSERT_TRUE(loadResult.analysisObject->optionalCast<DataPoint>());
+  copy = loadResult.analysisObject->cast<DataPoint>();
   EXPECT_EQ(json,copy.toJSON(options));
+  if (copy.toJSON(options) != json) {
+    p = toPath("AnalysisFixtureData/data_point_post_run_roundtripped.json");
+    copy.saveJSON(p,options,true);
+  }
+
 }
 
 TEST_F(AnalysisFixture, DataPoint_JSONSerialization_Versioning) {
@@ -128,12 +132,31 @@ TEST_F(AnalysisFixture, DataPoint_JSONSerialization_Versioning) {
       LOG(Debug,"Loading " << toString(it->filename()) << ".");
 
       // open and check results
-      OptionalAnalysisObject analysisObject = loadJSON(it->path());
-      ASSERT_TRUE(analysisObject);
-      ASSERT_TRUE(analysisObject->optionalCast<DataPoint>());
-      DataPoint loaded = analysisObject->cast<DataPoint>();
+      AnalysisJSONLoadResult loadResult = loadJSON(it->path());
+      ASSERT_TRUE(loadResult.analysisObject);
+      ASSERT_TRUE(loadResult.analysisObject->optionalCast<DataPoint>());
+      DataPoint loaded = loadResult.analysisObject->cast<DataPoint>();
 
       EXPECT_TRUE(loaded.topLevelJob());
     }
   }
+}
+
+TEST_F(AnalysisFixture, DataPoint_Selected) {
+  // Create analysis
+  Analysis analysis = analysis1(PreRun);
+
+  // See how many to queue
+  unsigned totalToRun = analysis.dataPointsToQueue().size();
+  ASSERT_LT(0u,totalToRun);
+
+  // Turn one off
+  ASSERT_FALSE(analysis.dataPoints().empty());
+  EXPECT_EQ(totalToRun,analysis.dataPoints().size());
+  DataPoint dataPoint = analysis.dataPoints()[0];
+  dataPoint.setSelected(false);
+  EXPECT_FALSE(dataPoint.selected());
+
+  // Make sure shows up in "ToQueue"
+  EXPECT_EQ(totalToRun - 1u,analysis.dataPointsToQueue().size());
 }

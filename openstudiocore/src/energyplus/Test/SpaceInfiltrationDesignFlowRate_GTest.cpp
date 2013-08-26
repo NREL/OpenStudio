@@ -24,10 +24,12 @@
 #include <energyplus/ReverseTranslator.hpp>
 
 #include <model/Model.hpp>
+#include <model/Space.hpp>
+#include <model/ThermalZone.hpp>
 #include <model/SpaceInfiltrationDesignFlowRate.hpp>
 #include <model/SpaceInfiltrationDesignFlowRate_Impl.hpp>
 
-#include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
+#include <utilities/idd/ZoneInfiltration_DesignFlowRate_FieldEnums.hxx>
 
 #include <resources.hxx>
 
@@ -40,6 +42,30 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture,ForwardTranslator_SpaceInfiltrationDesignFlowRate)
 {
   Model model;
+
+  ThermalZone zone(model);
+
+  Space space(model);
+  space.setThermalZone(zone);
+
+  SpaceInfiltrationDesignFlowRate infiltration(model);
+  infiltration.setSpace(space);
+  infiltration.setFlowperExteriorWallArea(1.0);
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::ZoneInfiltration_DesignFlowRate);
+  ASSERT_EQ(1u, objects.size());
+
+  ASSERT_TRUE(objects[0].getString(ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod));
+  EXPECT_EQ("Flow/ExteriorWallArea", objects[0].getString(ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod).get());
+  EXPECT_FALSE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::DesignFlowRate));
+  EXPECT_FALSE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::FlowperZoneFloorArea));
+  ASSERT_TRUE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea));
+  EXPECT_EQ(1.0, objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea).get());
+  EXPECT_FALSE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::AirChangesperHour));
+
 }
 
 

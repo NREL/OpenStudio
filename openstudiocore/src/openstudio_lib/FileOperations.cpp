@@ -23,6 +23,7 @@
 #include <analysisdriver/SimpleProject.hpp>
 #include <analysisdriver/AnalysisRunOptions.hpp>
 
+#include <analysis/Analysis.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/DataPoint.hpp>
 

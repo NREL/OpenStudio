@@ -27,7 +27,15 @@ namespace openstudio{
   
 
   %extend Url{
-
+    Url(const std::string& s){
+      Url *p;
+      p = new Url(toQString(s));
+      return p;
+    }
+    
+    std::string __str__() const{
+      return toString(*self);
+    }    
   };
 
 } // openstudio

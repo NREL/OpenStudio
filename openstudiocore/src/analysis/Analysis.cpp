@@ -36,6 +36,7 @@
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Json.hpp>
+#include <utilities/core/PathHelpers.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -254,7 +255,7 @@ namespace detail {
   std::vector<DataPoint> Analysis_Impl::dataPointsToQueue() const {
     DataPointVector result;
     BOOST_FOREACH(const DataPoint& dataPoint,m_dataPoints) {
-      if (!dataPoint.isComplete()) {
+      if (dataPoint.selected() && (!dataPoint.complete())) {
         result.push_back(dataPoint);
       }
     }
@@ -686,9 +687,46 @@ namespace detail {
     return table;
   }
 
+  void Analysis_Impl::updateInputPathData(const openstudio::path& originalBase,
+                                          const openstudio::path& newBase)
+  {
+    // seed
+    openstudio::path temp = relocatePath(seed().path(),originalBase,newBase);
+    if (!temp.empty()) {
+      m_seed.setPath(temp);
+    }
+
+    // weather file
+    if (weatherFile()) {
+      temp = relocatePath(weatherFile()->path(),originalBase,newBase);
+      if (!temp.empty()) {
+        m_weatherFile->setPath(temp);
+      }
+    }
+
+    // problem
+    m_problem.getImpl<detail::Problem_Impl>()->updateInputPathData(originalBase,newBase);
+
+    // algorithm
+    //
+    // Doing nothing because paths are outputs from running an analysis.
+    //
+    if (algorithm()) {
+      m_algorithm->getImpl<detail::Algorithm_Impl>()->updateInputPathData(originalBase,newBase);
+    }
+
+    // data points
+    //
+    // Doing nothing because paths are outputs from running an analysis.
+    //
+    DataPointVector dataPoints = this->dataPoints();
+    BOOST_FOREACH(DataPoint& dataPoint,dataPoints) {
+      dataPoint.getImpl<detail::DataPoint_Impl>()->updateInputPathData(originalBase,newBase);
+    }
+  }
+
   bool Analysis_Impl::saveJSON(const openstudio::path& p,
-                               const AnalysisSerializationOptions& options,
-                               bool overwrite) const
+                               const AnalysisSerializationOptions& options,                               bool overwrite) const
   {
     QVariant json = toVariant(options);
     return openstudio::saveJSON(json,p,overwrite);
@@ -738,8 +776,8 @@ namespace detail {
 
     QVariantMap metadata = jsonMetadata().toMap();
 
-    if (!options.projectPath.empty()) {
-      metadata["project_path"] = toQString(options.projectPath);
+    if (!options.projectDir.empty()) {
+      metadata["project_dir"] = toQString(options.projectDir);
     }
 
     if (options.osServerView) {
@@ -757,7 +795,7 @@ namespace detail {
         serverView["data_points"] = QVariant(dataPointList);
       }
 
-      metadata["server_view"] = serverView;
+      metadata.unite(serverView);
     }
 
     // create top-level of final file
@@ -813,10 +851,10 @@ namespace detail {
 } // detail
 
 AnalysisSerializationOptions::AnalysisSerializationOptions(
-    const openstudio::path& t_projectPath,
+    const openstudio::path& t_projectDir,
     const AnalysisSerializationScope& t_scope,
     bool t_osServerView)
-  : projectPath(t_projectPath),
+  : projectDir(t_projectDir),
     scope(t_scope),
     osServerView(t_osServerView)
 {}
@@ -1052,6 +1090,12 @@ void Analysis::updateDakotaAlgorithm(const runmanager::Job& completedDakotaJob) 
 
 Table Analysis::summaryTable() const {
   return getImpl<detail::Analysis_Impl>()->summaryTable();
+}
+
+void Analysis::updateInputPathData(const openstudio::path& originalBase,
+                                   const openstudio::path& newBase)
+{
+  return getImpl<detail::Analysis_Impl>()->updateInputPathData(originalBase,newBase);
 }
 
 bool Analysis::saveJSON(const openstudio::path& p,
