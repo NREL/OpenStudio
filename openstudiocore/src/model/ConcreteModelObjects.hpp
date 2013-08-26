@@ -176,6 +176,7 @@
 #include <model/SetpointManagerSingleZoneReheat.hpp>
 #include <model/SetpointManagerWarmest.hpp>
 #include <model/Shade.hpp>
+#include <model/ShadingControl.hpp>
 #include <model/ShadingSurface.hpp>
 #include <model/ShadingSurfaceGroup.hpp>
 #include <model/ShadowCalculation.hpp>
@@ -396,6 +397,7 @@
 #include <model/SetpointManagerSingleZoneReheat_Impl.hpp>
 #include <model/SetpointManagerWarmest_Impl.hpp>
 #include <model/Shade_Impl.hpp>
+#include <model/ShadingControl_Impl.hpp>
 #include <model/ShadingSurface_Impl.hpp>
 #include <model/ShadingSurfaceGroup_Impl.hpp>
 #include <model/ShadowCalculation_Impl.hpp>
