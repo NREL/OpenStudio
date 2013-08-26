@@ -574,6 +574,7 @@ void InspectorDialog::init(InspectorDialogClient client)
       m_typesToDisplay.insert(IddObjectType::OS_Rendering_Color);
       m_typesToDisplay.insert(IddObjectType::OS_DesignSpecification_OutdoorAir);
       m_typesToDisplay.insert(IddObjectType::OS_SpaceType);
+      m_typesToDisplay.insert(IddObjectType::OS_ShadingControl);
 
       m_typesToDisplay.insert(IddObjectType::OS_Material);
       m_typesToDisplay.insert(IddObjectType::OS_Material_AirGap);
@@ -653,10 +654,11 @@ void InspectorDialog::init(InspectorDialogClient client)
       m_typesToDisplay.insert(IddObjectType::OS_Output_Variable);
 
       // DISABLE ADD
-
+      
       m_disableAddTypes.insert(IddObjectType::OS_RunPeriod);
       m_disableAddTypes.insert(IddObjectType::OS_Site);
       m_disableAddTypes.insert(IddObjectType::OS_WeatherFile);
+      m_disableAddTypes.insert(IddObjectType::OS_ShadingControl);
       m_disableAddTypes.insert(IddObjectType::OS_InteriorPartitionSurface);
       m_disableAddTypes.insert(IddObjectType::OS_InteriorPartitionSurfaceGroup);
       m_disableAddTypes.insert(IddObjectType::OS_ShadingSurface);

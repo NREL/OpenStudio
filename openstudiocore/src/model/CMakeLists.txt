@@ -558,6 +558,9 @@ SET( ${target_name}_src
   Shade.hpp
   Shade_Impl.hpp
   Shade.cpp
+  ShadingControl.hpp
+  ShadingControl_Impl.hpp
+  ShadingControl.cpp 
   ShadingMaterial.hpp
   ShadingMaterial_Impl.hpp
   ShadingMaterial.cpp
@@ -966,6 +969,7 @@ SET( ${target_name}_moc
   SetpointManagerSingleZoneReheat_Impl.hpp
   SetpointManagerWarmest_Impl.hpp
   Shade_Impl.hpp
+  ShadingControl_Impl.hpp
   ShadingMaterial_Impl.hpp
   ShadingSurface_Impl.hpp
   ShadingSurfaceGroup_Impl.hpp
@@ -1172,6 +1176,7 @@ SET( ${target_name}_test_src
   test/Schedule_GTest.cpp
   test/Screen_GTest.cpp
   test/Shade_GTest.cpp
+  test/ShadingControl_GTest.cpp
   test/ShadingSurfaceGroup_GTest.cpp
   test/ShadingSurface_GTest.cpp
   test/SimpleGlazing_GTest.cpp
