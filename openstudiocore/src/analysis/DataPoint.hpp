@@ -23,6 +23,7 @@
 #include <analysis/AnalysisAPI.hpp>
 #include <analysis/AnalysisObject.hpp>
 
+#include <utilities/core/Enum.hpp>
 #include <utilities/core/Path.hpp>
 
 #include <QVariant>
@@ -70,14 +71,14 @@ struct ANALYSIS_API DataPointSerializationOptions {
  *  \code
 OPENSTUDIO_ENUM(DataPointRunType,
     ((Local))
-    ((Cloud-Slim))
-    ((Cloud-Detailed))
+    ((CloudSlim))
+    ((CloudDetailed))
 );
  *  \endcode */
 OPENSTUDIO_ENUM(DataPointRunType,
     ((Local))
-    ((Cloud-Slim))
-    ((Cloud-Detailed))
+    ((CloudSlim))
+    ((CloudDetailed))
 );
 
 /** DataPoint is an AnalysisObject that describes a single simulation run/to be run for a given
