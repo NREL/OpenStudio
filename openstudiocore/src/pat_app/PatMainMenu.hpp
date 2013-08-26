@@ -60,6 +60,8 @@ class PatMainMenu : public QMenuBar
 
   void openBclDlgClicked();
 
+  void openCloudDlgClicked();
+
   void changeMeasuresClicked();
 
   void exitClicked();
@@ -78,9 +80,13 @@ class PatMainMenu : public QMenuBar
 
   QMenu * m_windowMenu;
 
+  QMenu * m_cloudMenu;
+
   QMenu * m_helpMenu;
 
   QAction *  m_openBclDlgAction;
+
+  QAction *  m_openCloudDlgAction;
 
   QAction * m_newAction;
   QAction * m_loadFileAction;

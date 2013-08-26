@@ -119,6 +119,17 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
 
   m_windowMenu->addAction(m_openBclDlgAction);
   
+  // Cloud menu
+  m_cloudMenu = new QMenu(tr("&Cloud"),this);
+  addMenu(m_cloudMenu);
+
+  m_openCloudDlgAction = new QAction(tr("Open Cloud Settings Page"),this);
+
+  isConnected = connect(m_openCloudDlgAction, SIGNAL(triggered()),this,SIGNAL(openCloudDlgClicked()));
+  OS_ASSERT(isConnected);
+
+  m_cloudMenu->addAction(m_openCloudDlgAction);
+  
   // Help menu
   m_helpMenu = new QMenu(tr("&Help"),this);
   addMenu(m_helpMenu);

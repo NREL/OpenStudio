@@ -20,20 +20,23 @@
 #ifndef OPENSTUDIO_PATAPP_HPP
 #define OPENSTUDIO_PATAPP_HPP
 
-#include <QObject>
-#include <QWidget>
 #include <QApplication>
+#include <QObject>
 #include <QPoint>
 #include <QPointer>
 #include <QSharedPointer>
+#include <QWidget>
+
+// TODO #include <pat_app/CloudDialog.hpp>
 
 #include <analysisdriver/SimpleProject.hpp>
 
 #include <model/Model.hpp>
 
-#include "../shared_gui_components/BuildingComponentDialog.hpp"
-#include "../shared_gui_components/OSDialog.hpp"
 #include "../shared_gui_components/BaseApp.hpp"
+#include "../shared_gui_components/BuildingComponentDialog.hpp"
+#include "../shared_gui_components/MeasureManager.hpp"
+#include "../shared_gui_components/OSDialog.hpp"
 
 #include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/core/Path.hpp>
@@ -42,8 +45,6 @@
 
 #include <vector>
 #include <map>
-
-#include "../shared_gui_components/MeasureManager.hpp"
 
 class QEvent;
 
@@ -178,6 +179,10 @@ class PatApp : public QApplication, public BaseApp
 
   void on_closeBclDlg();
 
+  void openCloudDlg();
+
+  void on_closeCloudDlg();
+
   void showHelp();
 
   void showAbout();
@@ -226,6 +231,7 @@ class PatApp : public QApplication, public BaseApp
 
   QPointer<StartupView> m_startupView;
   QPointer<BuildingComponentDialog> m_onlineBclDialog;
+  // TODO QPointer<CloudDialog> m_cloudDialog;
 
   QSharedPointer<DesignAlternativesTabController> m_designAlternativesTabController;
   QSharedPointer<MainRightColumnController> m_mainRightColumnController;

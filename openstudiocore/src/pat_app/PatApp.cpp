@@ -20,20 +20,15 @@
 #include <pat_app/PatApp.hpp>
 
 #include <pat_app/AboutBox.hpp>
-#include "../shared_gui_components/BCLMeasureDialog.hpp"
 #include <pat_app/DesignAlternativesTabController.hpp>
 #include <pat_app/DesignAlternativesView.hpp>
-#include "../shared_gui_components/EditController.hpp"
 #include <pat_app/ExportXML.hpp>
 #include <pat_app/HorizontalTabWidget.hpp>
-#include "../shared_gui_components/LocalLibraryController.hpp"
-#include "../shared_gui_components/LocalLibraryView.hpp"
 #include <pat_app/MainRightColumnController.hpp>
 #include <pat_app/MeasuresTabController.hpp>
 #include <pat_app/MeasuresView.hpp>
-#include "../shared_gui_components/OSViewSwitcher.hpp"
-#include <pat_app/PatMainWindow.hpp>
 #include <pat_app/PatMainMenu.hpp>
+#include <pat_app/PatMainWindow.hpp>
 #include <pat_app/PatVerticalTabWidget.hpp>
 #include <pat_app/ResultsTabController.hpp>
 #include <pat_app/ResultsView.hpp>
@@ -41,25 +36,33 @@
 #include <pat_app/RunView.hpp>
 #include <pat_app/StartupView.hpp>
 #include <pat_app/StartupView.hpp>
-#include "../shared_gui_components/ProcessEventsProgressBar.hpp"
+
+#include "../shared_gui_components/BCLMeasureDialog.hpp"
 #include "../shared_gui_components/BuildingComponentDialog.hpp"
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/System.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
+#include "../shared_gui_components/EditController.hpp"
+#include "../shared_gui_components/LocalLibraryController.hpp"
+#include "../shared_gui_components/LocalLibraryView.hpp"
+#include "../shared_gui_components/OSViewSwitcher.hpp"
+#include "../shared_gui_components/ProcessEventsProgressBar.hpp"
 
 #include <analysis/Analysis.hpp>
 #include <analysis/AnalysisObject.hpp>
 #include <analysis/AnalysisObject_Impl.hpp>
+#include <analysisdriver/CurrentAnalysis.hpp>
 
-#include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/RubyJobUtils.hpp>
+#include <runmanager/lib/RunManager.hpp>
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/ZipFile.hpp>
 #include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/bcl/LocalBCL.hpp>
+#include <utilities/core/Application.hpp>
+#include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/Assert.hpp>
+#include <utilities/core/System.hpp>
+#include <utilities/core/ZipFile.hpp>
+
+#include <boost/filesystem.hpp>
 
 #include <QAbstractButton>
 #include <QBoxLayout>
@@ -79,8 +82,6 @@
 #include <QRegExpValidator>
 #include <QTimer>
 #include <QUrl>
-
-#include <boost/filesystem.hpp>
 
 namespace openstudio {
 
@@ -189,6 +190,9 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
   OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(openBclDlgClicked()),this,SLOT(openBclDlg()));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(mainWindow, SIGNAL(openCloudDlgClicked()),this,SLOT(openCloudDlg()));
   OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(helpClicked()),this,SLOT(showHelp()));
@@ -431,6 +435,26 @@ void PatApp::on_closeBclDlg()
     m_measureManager.updateMeasuresLists();
     m_onlineBclDialog->setShowNewComponents(false);
   }
+}
+
+void PatApp::openCloudDlg()
+{
+  //if(!m_cloudDialog){
+  //  m_cloudDialog = new CloudDialog(mainWindow);
+
+  //  bool isConnected = connect(m_cloudDialog, SIGNAL(rejected()),
+  //                             this, SLOT(on_closeBclDlg()));
+  //  OS_ASSERT(isConnected);
+  //}
+  //if(m_cloudDialog && !m_cloudDialog->isVisible()){
+  //  m_cloudDialog->setGeometry(mainWindow->geometry());
+  //  m_cloudDialog->show();
+  //}
+}
+
+void PatApp::on_closeCloudDlg()
+{
+//m_cloudDialog
 }
 
 void PatApp::showHelp()
