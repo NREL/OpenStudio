@@ -417,28 +417,7 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
   values = []
   temp.split(/\n/).each do |val|
     ++linenum
-    line = []
-    val.strip!
-    hournum = 0
-    val.split(/\t/).each do |triplet|
-      ++hournum
-      # each triplet (hour) for this line
-      hour = []
-      triplet.split(/ /).each do |rgb|
-        # each value of the triplet
-        hour << [rgb.to_f, 0].max
-      end
-
-      if hour.size != 3
-        abort "Unable to parse hour, 3 color values not found (line: #{linenum} hour: #{hournum} triplet: #{triplet}) #{hour}"
-      end
-
-      # need to apply vLambda to calculations
-      illum = 179*((hour[0] * 0.265) + (hour[1] * 0.67) + (hour[2] * 0.065))
-      line << illum
-
-    end
-
+    line = OpenStudio::Radiance::parseGenDayMtxLine(val)
     if line.size != 8760
       abort "Unable to parse line, not enough hours found (line: #{linenum}): #{line}"
     end
