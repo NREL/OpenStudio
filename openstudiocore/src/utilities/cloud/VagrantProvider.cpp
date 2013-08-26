@@ -35,7 +35,7 @@ namespace openstudio{
       : CloudProvider_Impl(), m_cloudSession(this->type(), toString(createUUID()), boost::none, std::vector<Url>()),
         m_serverPath(serverPath), m_serverUrl(serverUrl), m_workerPath(workerPath), m_workerUrl(workerUrl), m_haltOnStop(haltOnStop),
         m_startServerProcess(NULL), m_startWorkerProcess(NULL), 
-        m_serverStarted(false), m_workersStarted(false), m_terminated(false)
+        m_serverStarted(false), m_workerStarted(false), m_terminated(false), m_serverStopped(false), m_workerStopped(false)
     {
       //Make sure a QApplication exists
       openstudio::Application::instance().application();
@@ -133,7 +133,7 @@ namespace openstudio{
       if (m_serverStarted){
         return false;
       }
-      if (m_workersStarted){
+      if (m_workerStarted){
         return false;
       }
       if (m_terminated){
@@ -197,6 +197,7 @@ namespace openstudio{
 
       if (!m_startServerProcess->waitForStarted()){
         m_startServerProcess->deleteLater();
+        m_startServerProcess = 0;
         return false;
       }
 
@@ -224,7 +225,7 @@ namespace openstudio{
       if (!userAgreementSigned()){
         return false;
       }
-      if (m_workersStarted){
+      if (m_workerStarted){
         return false;
       }
       if (m_terminated){
@@ -250,6 +251,7 @@ namespace openstudio{
 
       if (!m_startWorkerProcess->waitForStarted()){
         m_startWorkerProcess->deleteLater();
+        m_startWorkerProcess = 0;
         return false;
       }
 
@@ -260,7 +262,7 @@ namespace openstudio{
 
     bool VagrantProvider_Impl::running() const
     {
-      return ((m_serverStarted || m_workersStarted) && !m_terminated);
+      return ((m_serverStarted || m_workerStarted) && !m_terminated);
     }
 
     /// returns true if the cloud server successfully begins to stop all nodes
@@ -276,39 +278,51 @@ namespace openstudio{
 
       clearErrorsAndWarnings();
 
+      emit terminating();
+
       if (m_haltOnStop){
 
         QStringList args;
         addProcessArguments(args);
         args << "halt";
 
-        QProcess* stopServerProcess = new QProcess();
-        stopServerProcess->setWorkingDirectory(toQString(m_serverPath));
-        stopServerProcess->start(processName(), args);
+        m_stopServerProcess = new QProcess();
+        m_stopServerProcess->setWorkingDirectory(toQString(m_serverPath));
+        bool test = connect(m_stopServerProcess, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                            this, SLOT(onServerStopped(int, QProcess::ExitStatus)));
+        OS_ASSERT(test);
 
-        QProcess* stopWorkerProcess = new QProcess();
-        stopWorkerProcess->setWorkingDirectory(toQString(m_workerPath));
-        stopWorkerProcess->start(processName(), args);
+        m_stopWorkerProcess = new QProcess();
+        m_stopWorkerProcess->setWorkingDirectory(toQString(m_workerPath));
+        test = connect(m_stopWorkerProcess, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                       this, SLOT(onWorkerStopped(int, QProcess::ExitStatus)));
+        OS_ASSERT(test);
 
-        emit terminating();
+        m_stopServerProcess->start(processName(), args);
+        m_stopWorkerProcess->start(processName(), args);
 
-        if (stopServerProcess->waitForStarted()){
-          stopServerProcess->waitForFinished();
+        if (!m_stopServerProcess->waitForStarted()){
+          m_stopServerProcess->deleteLater();
+          m_stopServerProcess = 0;
+          m_serverStopped = true;
+          logError("Stop server process failed to start");
         }
-        if (stopWorkerProcess->waitForStarted()){
-          stopWorkerProcess->waitForFinished();
+
+        if (!m_stopWorkerProcess->waitForStarted()){
+          m_stopWorkerProcess->deleteLater();
+          m_stopWorkerProcess = 0;
+          m_workerStopped = true;
+          logError("Stop worker process failed to start");
         }
-        
-        stopServerProcess->deleteLater();
-        stopWorkerProcess->deleteLater();
 
       }else{
-
-        emit terminating();
-
+        m_serverStopped = true;
+        m_workerStopped = true;
       }
 
-      emit terminateComplete();
+      if (this->is_terminateComplete()){
+        emit terminateComplete();
+      }
 
       return true;
     }
@@ -328,47 +342,98 @@ namespace openstudio{
       return m_warnings;
     }
 
+    bool VagrantProvider_Impl::is_terminateComplete() const
+    {
+       return (m_serverStopped && m_workerStopped);
+    }
+
+    void VagrantProvider_Impl::onServerStarted(int, QProcess::ExitStatus)
+    {
+      OS_ASSERT(m_startServerProcess);
+
+      QString output = m_startServerProcess->readAllStandardOutput();
+      QString errors = m_startServerProcess->readAllStandardError();
+      
+      m_cloudSession.setServerUrl(m_serverUrl);
+
+      m_serverStarted = true;
+
+      emit serverStarted(m_serverUrl);
+
+      m_startServerProcess->deleteLater();
+      m_startServerProcess = 0;
+    }
+
+    void VagrantProvider_Impl::onWorkerStarted(int, QProcess::ExitStatus)
+    {
+      OS_ASSERT(m_startWorkerProcess);
+
+      QString output = m_startWorkerProcess->readAllStandardOutput();
+      QString errors = m_startWorkerProcess->readAllStandardError();
+      
+      m_cloudSession.clearWorkerUrls();
+      m_cloudSession.addWorkerUrl(m_workerUrl);
+
+      m_workerStarted = true;
+
+      emit workerStarted(m_workerUrl);
+
+      emit allWorkersStarted();
+
+      m_startWorkerProcess->deleteLater();
+      m_startWorkerProcess = 0;
+    }
+
+    void VagrantProvider_Impl::onServerStopped(int, QProcess::ExitStatus)
+    {
+      OS_ASSERT(m_stopServerProcess);
+
+      QString output = m_stopServerProcess->readAllStandardOutput();
+      QString errors = m_stopServerProcess->readAllStandardError();
+
+      m_serverStopped = true;
+
+      if (this->is_terminateComplete()){
+        emit terminateComplete();
+      }
+
+      m_startServerProcess->deleteLater();
+      m_startServerProcess = 0;
+    }
+
+    void VagrantProvider_Impl::onWorkerStopped(int, QProcess::ExitStatus)
+    {
+      OS_ASSERT(m_stopWorkerProcess);
+
+      QString output = m_stopWorkerProcess->readAllStandardOutput();
+      QString errors = m_stopWorkerProcess->readAllStandardError();
+
+      m_workerStopped = true;
+
+      if (this->is_terminateComplete()){
+        emit terminateComplete();
+      }
+
+      m_stopWorkerProcess->deleteLater();
+      m_stopWorkerProcess = 0;
+    }
+
     void VagrantProvider_Impl::clearErrorsAndWarnings() const
     {
       m_errors.clear();
       m_warnings.clear();
     }
 
-    void VagrantProvider_Impl::onServerStarted(int, QProcess::ExitStatus)
+    void VagrantProvider_Impl::logError(const std::string& error) const
     {
-      if (m_startServerProcess){
-
-        QString output = m_startServerProcess->readAllStandardOutput();
-        QString errors = m_startServerProcess->readAllStandardError();
-        
-        m_cloudSession.setServerUrl(m_serverUrl);
-
-        m_serverStarted = true;
-
-        emit serverStarted(m_serverUrl);
-
-        m_startServerProcess->deleteLater();
-      }
+      LOG(Error, error);
+      m_errors.push_back(error);
     }
 
-    void VagrantProvider_Impl::onWorkerStarted(int, QProcess::ExitStatus)
+    void VagrantProvider_Impl::logWarning(const std::string& warning) const
     {
-      if (m_startWorkerProcess){
-
-        QString output = m_startWorkerProcess->readAllStandardOutput();
-        QString errors = m_startWorkerProcess->readAllStandardError();
-        
-        m_cloudSession.clearWorkerUrls();
-        m_cloudSession.addWorkerUrl(m_workerUrl);
-
-        m_workersStarted = true;
-
-        emit workerStarted(m_workerUrl);
-
-        emit allWorkersStarted();
-
-        m_startWorkerProcess->deleteLater();
-      }
+      LOG(Warn, warning);
+      m_warnings.push_back(warning);
     }
 
     QString VagrantProvider_Impl::processName() const
@@ -404,6 +469,11 @@ namespace openstudio{
 
   VagrantProvider::~VagrantProvider()
   {
+  }
+
+  bool VagrantProvider::terminateComplete() const
+  {
+     return getImpl<detail::VagrantProvider_Impl>()->is_terminateComplete();
   }
 
 
