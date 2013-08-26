@@ -119,26 +119,34 @@ namespace detail{
 
     std::string secretKey() const;
 
-    bool setKeys(std::string accessKey, std::string secretKey);
+    bool setKeys(std::string accessKey, std::string secretKey) const;
 
   private:
 
     // configure logging
     REGISTER_LOGGER("utilities.cloud.AWSProvider");
 
+    bool loadCredentials() const;
+
+    bool saveCredentials() const;
+
     bool validAccessKey(std::string accessKey) const;
 
     bool validSecretKey(std::string secretKey) const;
 
+    QVariantMap awsRequest(std::string request, std::string service = "EC2") const;
+
     // members
 
-    std::string m_accessKey;
+    mutable std::string m_accessKey;
 
-    std::string m_secretKey;
+    mutable std::string m_secretKey;
 
-    bool m_validAccessKey;
+    mutable bool m_validAccessKey;
 
-    bool m_validSecretKey;
+    mutable bool m_validSecretKey;
+
+    std::string m_ami;
   };
 
 } // detail;
