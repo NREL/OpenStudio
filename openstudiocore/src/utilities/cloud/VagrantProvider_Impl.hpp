@@ -45,7 +45,8 @@ namespace detail{
 
     /// constructor
     VagrantProvider_Impl(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
-                         const openstudio::path& workerPath, const openstudio::Url& workerUrl);
+                         const openstudio::path& workerPath, const openstudio::Url& workerUrl,
+                         bool haltOnStop);
 
     //@}
     /** @name Destructors */
@@ -134,12 +135,18 @@ namespace detail{
     /** @name Class members */
     //@{
 
+    /// returns true if server and worker have terminated 
+    // DLM: give different name to avoid clash with signal terminateComplete
+    bool is_terminateComplete() const;
+
     //@}
 
   private slots:
 
     void onServerStarted(int, QProcess::ExitStatus);
     void onWorkerStarted(int, QProcess::ExitStatus);
+    void onServerStopped(int, QProcess::ExitStatus);
+    void onWorkerStopped(int, QProcess::ExitStatus);
 
   private:
 
@@ -149,17 +156,24 @@ namespace detail{
     openstudio::Url m_serverUrl;
     openstudio::path m_workerPath;
     openstudio::Url m_workerUrl;
+    bool m_haltOnStop;
 
     QProcess* m_startServerProcess;
     QProcess* m_startWorkerProcess;
+    QProcess* m_stopServerProcess;
+    QProcess* m_stopWorkerProcess;
     bool m_serverStarted;
-    bool m_workersStarted;
+    bool m_workerStarted;
+    bool m_serverStopped;
+    bool m_workerStopped;
     bool m_terminated;
 
     mutable std::vector<std::string> m_errors;
     mutable std::vector<std::string> m_warnings;
 
     void clearErrorsAndWarnings() const;
+    void logError(const std::string& error) const;
+    void logWarning(const std::string& warning) const;
 
     QString processName() const;
     void addProcessArguments(QStringList& args) const;

@@ -1,0 +1,30 @@
+
+OS:Version,
+  {e42ef2bd-e59a-4919-a3b3-b56be2869a1e}, !- Handle
+  1.0.4;                                  !- Version Identifier
+
+OS:Construction,
+  {c40806c8-5a46-4f18-9140-d6e3c55fad5d}, !- Handle
+  Interior Partition,                     !- Name
+  ,                                       !- Surface Rendering Name
+  {daf020f8-d064-4b6c-bea0-5ffc7e5c65b6}; !- Layer 1
+
+OS:Material,
+  {daf020f8-d064-4b6c-bea0-5ffc7e5c65b6}, !- Handle
+  G05 25mm wood,                          !- Name
+  MediumSmooth,                           !- Roughness
+  0.0254,                                 !- Thickness {m}
+  0.15,                                   !- Conductivity {W/m-K}
+  608,                                    !- Density {kg/m3}
+  1630;                                   !- Specific Heat {J/kg-K}
+
+OS:ComponentData,
+  {553889f5-d5c6-4868-982a-95995a723c58}, !- Handle
+  Component Data 1,                       !- Name
+  {e6bb4365-acab-4a96-afb4-2091224ca0db}, !- UUID
+  {51f05fe5-d81c-4b87-851b-876efbe5ba1e}, !- Version UUID
+  1377557705,                             !- Creation Timestamp
+  1377557705,                             !- Version Timestamp
+  {c40806c8-5a46-4f18-9140-d6e3c55fad5d}, !- Name of Object 1
+  {daf020f8-d064-4b6c-bea0-5ffc7e5c65b6}; !- Name of Object 2
+
