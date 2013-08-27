@@ -39,6 +39,8 @@
 #include <string>
 #include <iostream>
 
+#define SIMREADX
+
 void usage(boost::program_options::options_description desc)
 {
   std::cout << "Usage: FitInfiltration --inputPath=./path/to/input.osm" << std::endl;
@@ -55,8 +57,9 @@ QVector<double> runCase(std::map <openstudio::Handle,int> spaceMap,
   QVector<double> results(spaceMap.size(),0.0);
   std::map<openstudio::Handle,int> surfaceMap = translator.surfaceMap();
   translator.setSteadyWeather(windSpeed,windDirection);
-  openstudio::path inputPath = openstudio::toPath("temporary.prj"); // This should do something else
-  QString fileName = openstudio::toQString(inputPath);
+  QString fileName = QString("temporary-%1-%2.prj").arg(windSpeed).arg(windDirection);
+  openstudio::path inputPath = openstudio::toPath(fileName); // This should do something else
+  //QString fileName = openstudio::toQString(inputPath);
   
   QFile file(fileName);
   if(!file.open(QFile::WriteOnly))
@@ -98,6 +101,7 @@ QVector<double> runCase(std::map <openstudio::Handle,int> spaceMap,
     std::cout << "Running SimRead on SIM file..." << std::endl;
   }
   QProcess simreadProcess;
+#ifndef SIMREADX
   simreadProcess.start(openstudio::toQString(simreadExePath), QStringList() << fileName);
   if(!simreadProcess.waitForStarted(-1))
   {
@@ -105,6 +109,14 @@ QVector<double> runCase(std::map <openstudio::Handle,int> spaceMap,
     return QVector<double>();
   }
   simreadProcess.write("y\n\ny\n\n"); // This should work for no contaminants
+#else
+  simreadProcess.start(openstudio::toQString(simreadExePath), QStringList() << "-F" << fileName);
+  if(!simreadProcess.waitForStarted(-1))
+  {
+    std::cout << "Failed to start SimRead process." << std::endl;
+    return QVector<double>();
+  }
+#endif
   if(!simreadProcess.waitForFinished(-1))
   {
     std::cout << "Failed to complete SimRead process." << std::endl;
@@ -175,20 +187,27 @@ QVector<double> runCase(std::map <openstudio::Handle,int> spaceMap,
 
 int main(int argc, char *argv[])
 {
-  openstudio::path contamExePath = openstudio::toPath("C:\\Program Files (x86)\\NIST\\CONTAM 3.1\\ContamX3.exe");
-  openstudio::path simreadExePath = openstudio::toPath("C:\\Users\\jwd131\\Software\\CONTAM\\simread31.exe");
+  // Some ugly hard coded paths
+  // Windows
+  // openstudio::path contamExePath = openstudio::toPath("C:\\Program Files (x86)\\NIST\\CONTAM 3.1\\ContamX3.exe");
+  // openstudio::path simreadExePath = openstudio::toPath("C:\\Users\\jwd131\\Software\\CONTAM\\simread31.exe");
+  // Linux
+  openstudio::path contamExePath = openstudio::toPath("/usr/local/bin/contamx-3.1-linux-release-static.exe");
+  openstudio::path simreadExePath = openstudio::toPath("/usr/local/bin/simreadx-linux-static");
 
   double density = 1.2041;
 
   std::string inputPathString;
+  std::string outputPathString="customInfiltration.osm";
   std::string leakageDescriptorString="Average";
   double flow=27.1;
   boost::program_options::options_description desc("Allowed options");
   desc.add_options()
     ("flow,f", boost::program_options::value<double>(&flow), "leakage flow rate per envelope area [m^3/h/m^2]")
     ("help,h", "print help message")
-    ("inputPath,i", boost::program_options::value<std::string>(&inputPathString), "path to OSM file")
+    ("inputPath,i", boost::program_options::value<std::string>(&inputPathString), "path to input OSM file")
     ("level,l", boost::program_options::value<std::string>(&leakageDescriptorString), "leakage level or grade")
+    ("outputPath,o", boost::program_options::value<std::string>(&outputPathString), "path to output OSM file")
     ("quiet,q", "suppress progress output");
 
   boost::program_options::positional_options_description pos;
@@ -375,8 +394,8 @@ int main(int argc, char *argv[])
   }
 
   // Write out new OSM
-  QString outstring = openstudio::toQString(inputPathString).replace(".osm",openstudio::toQString(leakageDescriptorString)+".osm");
-  openstudio::path outPath = openstudio::toPath(outstring);
+  // QString outstring = openstudio::toQString(inputPathString).replace(".osm",openstudio::toQString(leakageDescriptorString)+".osm");
+  openstudio::path outPath = openstudio::toPath(outputPathString);
   if(!model->save(outPath,true))
   {
     std::cout << "Failed to write OSM file." << std::endl;
