@@ -62,31 +62,61 @@ class ANALYSISDRIVER_API CloudAnalysisDriver {
   SimpleProject project() const;
 
   //@}
-  /** @name Run Management */
+  /** @name Blocking Class Members */
   //@{
 
-  bool run();
+  bool run(int msec=-1);
+  bool lastRunSuccess() const;
+
+  bool stop(int msec=-1);
+  bool lastStopSuccess() const;
+
+  bool downloadDetailedResults(analysis::DataPoint& dataPoint,int msec=-1);
+  bool lastDownloadDetailedResultsSuccess() const;
 
   bool isRunning() const;
+  bool isDownloading() const;
 
-  bool waitForFinished(int m_secs=-1);
+  std::vector<std::string> errors() const;
+  std::vector<std::string> warnings() const;
 
-  void stop();
+  /** If no argument is specified, CloudAnalysisDriver will run until not isRunning() and
+   *  not isDownloading(). If msec is specified, will wait for at most msec milliseconds.
+   *  Returns true if not isRunning() and not isDownloading() upon exit; false otherwise. */
+  bool waitForFinished(int msec=-1);
 
+  //@}
+  /** @name Non-blocking class members */
+  //@{
+
+  /** Request the project() to run on the provider(). Returns false if isRunning().
+   *  Otherwise returns true and emits runRequestComplete(bool success) when either the
+   *  analysis has stopped running on the server or the process has failed. The ultimate
+   *  value of success will also be available from lastRunSuccess(). This method will try
+   *  to pick up where a previous run left off. */
+  bool requestRun();
+
+  // ETH@20130827 - Will OSServer::stop also kill downloads?
+  /** Request the project() to stop running on the provider(). Returns false if not
+   *  (isRunning() || isDownloading()). Otherwise returns true and emits
+   *  stopRequestComplete(bool success) when either the analysis has stopped running or the
+   *  process has failed. The ultimate value of success will also be available from
+   *  lastStopSuccess(). */
+  bool requestStop();
+
+  bool requestDownloadDetailedResults(analysis::DataPoint& dataPoint);
+
+  //@}
+  /** @name Signals, Slots, Threads */
+  //@{
+
+  /** Connect signal from this CloudAnalysisDriver to slot on qObject. */
   bool connect(const std::string& signal,
                const QObject* qObject,
                const std::string& slot,
                Qt::ConnectionType type = Qt::AutoConnection) const;
 
   void moveToThread(QThread* targetThread);
-
-  //@}
-  /** @name Actions */
-  //@{
-
-  /** If dataPoint was run on the cloud, but its detailed results have not yet been downloaded,
-   *  download them. */
-  bool downloadDetailedResults(analysis::DataPoint& dataPoint) const;
 
   //@}
   /** @name Type Casting */

@@ -34,6 +34,8 @@
 #include <boost/smart_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
+#include <deque>
+
 namespace openstudio {
 namespace analysisdriver {
 
@@ -59,26 +61,41 @@ namespace detail {
 
     SimpleProject project() const;
 
-    /// not in public object
-    bool hasServer() const;
-
-    /// not in public object
-    OSServer server() const;
-
-    /// not in public object
-    std::vector<analysis::DataPoint> queue() const;
-
     //@}
-    /** @name Run Management */
+    /** @name Blocking Class Members */
     //@{
 
-    bool run();
+    bool run(int msec=-1);
+    bool lastRunSuccess() const;
+
+    bool stop(int msec=-1);
+    bool lastStopSuccess() const;
+
+    bool downloadDetailedResults(analysis::DataPoint& dataPoint);
+    bool lastDownloadDetailedResultsSuccess() const;
 
     bool isRunning() const;
 
-    bool waitForFinished(int m_secs=-1);
+    bool isDownloading() const;
 
-    void stop();
+    /** If no argument is specified, CloudAnalysisDriver will run until not isRunning() and
+     *  not isDownloading(). If msec is specified, will wait for at most msec milliseconds.
+     *  Returns true if not isRunning() and not isDownloading() upon exit; false otherwise. */
+    bool waitForFinished(int msec=-1);
+
+    //@}
+    /** @name Non-blocking class members */
+    //@{
+
+    bool requestRun();
+
+    bool requestStop();
+
+    bool requestDownloadDetailedResults(analysis::DataPoint& dataPoint);
+
+    //@}
+    /** @name Signals, Slots, Threads */
+    //@{
 
     bool connect(const std::string& signal,
                  const QObject* qObject,
@@ -86,14 +103,6 @@ namespace detail {
                  Qt::ConnectionType type = Qt::AutoConnection) const;
 
     void moveToThread(QThread* targetThread);
-
-    //@}
-    /** @name Actions */
-    //@{
-
-    /** If dataPoint was run on the cloud, but its detailed results have not yet been downloaded,
-     *  download them. */
-    bool downloadDetailedResults(analysis::DataPoint& dataPoint) const;
 
     //@}
     /** @name Type Casting */
@@ -108,14 +117,72 @@ namespace detail {
     }
 
     //@}
+   signals:
+    /** @name Non-blocking Call Finished Signals */
+    //@{
+
+    void runRequestComplete(bool success);
+
+    void stopRequestComplete(bool success);
+
+    //@}
+    /** @name AnalysisDriver Progress Signals */
+    //@{
+
+    void resultsChanged();
+
+    // emitted when data point posted to server
+    void dataPointQueued(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
+
+    // emitted when data point results downloaded and incorporated into project
+    void dataPointComplete(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
+
+    // emitted when last data point downloaded and incorporated into project
+    void analysisComplete(const openstudio::UUID& analysis);
+
+    void analysisStopped(const openstudio::UUID& analysis);
+
+    //@}
+   protected slots:
+     // request run process
+     void availableForRun(bool success);
+     void analysisPosted(bool success);
+     void analysisUploaded(bool success);
+     void dataPointQueued(bool success);
+     void analysisStarted(bool success);
+
+     // watch for complete data points
+     void completeDataPointUUIDsReturned(bool success);
+
+     // download process
+     void dataPointDownloadComplete(bool success);
+
    protected:
    private:
     REGISTER_LOGGER("openstudio.analysisdriver.CloudAnalysisDriver");
 
     CloudProvider m_provider;
     SimpleProject m_project;
-    boost::optional<OSServer> m_server;
-    std::vector<analysis::DataPoint> m_queue;
+
+    bool m_lastRunSuccess;
+    bool m_lastStopSuccess;
+    bool m_lastDownloadDetaileResultsSuccess;
+
+    // request run process
+    boost::optional<OSServer> m_requestRun;
+    std::deque<DataPoint> m_uploadQueue;
+
+    // watch for complete data points
+    boost::optional<OSServer> m_monitorDataPoints;
+    std::vector<DataPoint> m_waitingQueue;
+
+    // download data points
+    boost::optional<OSServer> m_requestDownload;
+    std::deque<DataPoint> m_downloadQueue;
+
+    bool startDownloading();
+
+    bool requestDataPointDownload(const DataPoint& dataPoint);
   };
 
 } // detail
