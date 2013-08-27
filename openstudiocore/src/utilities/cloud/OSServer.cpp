@@ -28,6 +28,7 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QMutex>
+#include <QFile>
 
 #include <qjson/parser.h>
 #include <qjson/serializer.h>
@@ -520,11 +521,75 @@ namespace openstudio{
 
     bool OSServer_Impl::startUploadAnalysisFiles(const UUID& analysisUUID, const openstudio::path& analysisZipFile)
     {
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastUploadAnalysisFilesSuccess = false;
+
+      if (exists(analysisZipFile)){
+
+        QString id = toQString(removeBraces(analysisUUID));
+        QUrl url(m_url.toString().append("/analyses/").append(id).append("/upload.json")); // DLM: is this right?
+
+        QFile file(toQString(analysisZipFile));
+        QByteArray postData = file.readAll().toBase64(); // DLM: is this right?  
+
+        QNetworkRequest request(url);
+        //request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-zip-compressed"); // DLM: is this right?
+        request.setHeader(QNetworkRequest::ContentLengthHeader, postData.size()); // DLM: is this right?
+
+        m_networkReply = m_networkAccessManager->post(request, postData);
+
+        bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processUploadAnalysisFiles()));
+        OS_ASSERT(test);
+
+        return true;
+
+      }else{
+        logError("File does not exist");
+      }
+
       return false;
     }
 
     bool OSServer_Impl::requestStart(const UUID& analysisUUID)
     {
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastStartSuccess = false;
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/action.json"));
+
+      QVariantMap map;
+      map["action"] = "start";
+      
+      bool test;
+      QJson::Serializer serializer;
+      QByteArray json = serializer.serialize(map, &test);
+      if (test){
+
+        QByteArray postData; 
+        postData.append(json); 
+
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+        m_networkReply = m_networkAccessManager->post(request, postData);
+
+        bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processStart()));
+        OS_ASSERT(test);
+
+        return true;
+      }
+
       return false;
     }
 
@@ -535,6 +600,39 @@ namespace openstudio{
 
     bool OSServer_Impl::requestStop(const UUID& analysisUUID)
     {
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastStopSuccess = false;
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/action.json"));
+
+      QVariantMap map;
+      map["action"] = "stop";
+      
+      bool test;
+      QJson::Serializer serializer;
+      QByteArray json = serializer.serialize(map, &test);
+      if (test){
+
+        QByteArray postData; 
+        postData.append(json); 
+
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+        m_networkReply = m_networkAccessManager->post(request, postData);
+
+        bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processStop()));
+        OS_ASSERT(test);
+
+        return true;
+      }
+
       return false;
     }
 
@@ -796,6 +894,63 @@ namespace openstudio{
 
       if (m_networkReply->error() == QNetworkReply::NoError){
         m_lastPostDataPointJSONSuccess = true;
+        success = true;
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processUploadAnalysisFiles()
+    {
+      bool success = false;
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastUploadAnalysisFilesSuccess = true;
+        success = true;
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processStart()
+    {
+      bool success = false;
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastStartSuccess = true;
+        success = true;
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processStop()
+    {
+      bool success = false;
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastStopSuccess = true;
         success = true;
       }else{
         logNetworkError(m_networkReply->error());

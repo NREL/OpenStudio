@@ -178,6 +178,12 @@ namespace detail{
 
     void processPostDataPointJSON();
 
+    void processUploadAnalysisFiles();
+
+    void processStart();
+
+    void processStop();
+
     void processDataPointUUIDs();
 
     void processRunningDataPointUUIDs();
