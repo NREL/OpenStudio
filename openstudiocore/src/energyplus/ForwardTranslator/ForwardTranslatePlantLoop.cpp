@@ -122,9 +122,10 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
        if (boost::optional<CoilCoolingCooledBeam> coilCB = it->optionalCast<CoilCoolingCooledBeam>() )
         {
           if (boost::optional<StraightComponent> airTerminalCB = coilCB->containingStraightComponent())
-          {
-            //translate and map containingZoneHVACBBConvWater
-            if ( boost::optional<IdfObject> idfAirTerminalCB = this->translateAndMapModelObject(*airTerminalCB) )
+          {  
+                  boost::optional<IdfObject> idfAirTerminalCB = this->translateAndMapModelObject(*airTerminalCB);
+            //translate and map containingStraightComponent
+            if (idfAirTerminalCB)
             {
               //Get the name and the idd object from the idf object version of this
               objectName = idfAirTerminalCB->name().get();

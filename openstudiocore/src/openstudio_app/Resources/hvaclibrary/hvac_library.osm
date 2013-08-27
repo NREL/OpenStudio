@@ -2180,12 +2180,6 @@ OS:Building,
   ,                                       !- Default Construction Set Name
   ;                                       !- Default Schedule Set Name
 
-OS:Schedule:Constant,
-  {3c582c62-32d7-40ba-a8b0-617d3e345fbc}, !- Handle
-  Availability Schedule,                  !- Name
-  {5d97315b-6e49-4871-afdd-a11fe395de72}, !- Schedule Type Limits Name
-  1;                                      !- Value
-
 OS:Coil:Cooling:CooledBeam,
   {9409bb35-2087-4798-897c-a6703b5a7669}, !- Handle
   Coil Cooling Cooled Beam,               !- Name
@@ -2204,7 +2198,7 @@ OS:Coil:Cooling:CooledBeam,
 OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
   {3667b348-2052-4711-9cd2-7226dc650e72}, !- Handle
   Air Terminal Single Duct Constant Volume Cooled Beam 1, !- Name
-  {3c582c62-32d7-40ba-a8b0-617d3e345fbc}, !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Cooled Beam Type
   ,                                       !- Supply Air Inlet Node Name
   ,                                       !- Supply Air Outlet Node Name
@@ -2216,11 +2210,3 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
   15.0,                                   !- Design Inlet Water Temperature {C}
   17.0,                                   !- Design Outlet Water Temperature {C}
   Autocalculate;                          !- Coefficient of Induction Kin
-
-OS:ScheduleTypeLimits,
-  {5d97315b-6e49-4871-afdd-a11fe395de72}, !- Handle
-  OnOff,                                  !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
-  Discrete,                               !- Numeric Type
-  Availability;                           !- Unit Type

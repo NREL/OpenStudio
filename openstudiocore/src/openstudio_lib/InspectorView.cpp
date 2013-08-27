@@ -154,6 +154,28 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       connect( m_currentView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
                this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
     }
+    else if( boost::optional<model::AirTerminalSingleDuctConstantVolumeCooledBeam> component = modelObject->optionalCast<model::AirTerminalSingleDuctConstantVolumeCooledBeam>()  )
+    {
+      if( m_currentView )
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView();
+      isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                            m_currentView, SIGNAL(toggleUnitsClicked(bool)));
+      BOOST_ASSERT(isConnected);
+  
+      m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
+
+      m_vLayout->addWidget(m_currentView);
+
+      connect( m_currentView, SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+               this,  SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+      
+      connect( m_currentView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+               this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+    }
     else if( boost::optional<model::AirTerminalSingleDuctVAVReheat> component = modelObject->optionalCast<model::AirTerminalSingleDuctVAVReheat>()  )
     {
       if( m_currentView )

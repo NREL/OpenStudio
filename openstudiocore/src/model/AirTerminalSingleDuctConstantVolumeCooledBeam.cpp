@@ -142,12 +142,12 @@ namespace detail {
   
   unsigned AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::inletPort()
   {
-    return 0; // this object has no inlet or outlet node
+    return OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirInletNodeName;
   }
 
   unsigned AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outletPort()
   {
-    return 0; // this object has no inlet or outlet node
+    return OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirOutletNodeName;
   }
   
   std::vector<ModelObject> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::children() const
