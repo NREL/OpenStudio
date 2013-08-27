@@ -113,6 +113,8 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
     m_billGridLayout(0),
     m_billGridLayoutWidget(0),
     m_runPeriodDatesLabel(0),
+    m_energyUseLabel(0),
+    m_peakLabel(0),
     m_hiddenWidgetIndex(0),
     m_warningWidgetIndex(0),
     m_visibleWidgetIndex(0)
@@ -268,6 +270,10 @@ void UtilityBillsInspectorView::createWidgets()
   m_consumptionUnits->setFixedWidth(OS_EDIT_WIDTH);
   vLayout->addWidget(m_consumptionUnits);
 
+  isConnected = connect(m_consumptionUnits, SIGNAL(currentIndexChanged(const QString&)),
+    this, SLOT(updateEnergyUseLabelText(const QString&)));
+  OS_ASSERT(isConnected);
+
   gridLayout->addLayout(vLayout,0,0,Qt::AlignLeft | Qt::AlignTop);
 
   vLayout = new QVBoxLayout();
@@ -283,6 +289,10 @@ void UtilityBillsInspectorView::createWidgets()
   m_peakDemandUnits->setFixedWidth(OS_EDIT_WIDTH);
   vLayout->addWidget(m_peakDemandUnits);
 
+  isConnected = connect(m_peakDemandUnits, SIGNAL(currentIndexChanged(const QString&)),
+    this, SLOT(updatePeakLabelText(const QString&)));
+  OS_ASSERT(isConnected);
+  
   gridLayout->addLayout(vLayout,0,1,Qt::AlignLeft | Qt::AlignTop);
 
   vLayout = new QVBoxLayout();
@@ -449,6 +459,19 @@ void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityB
   updateRunPeriodDatesLabel();
   setCorrectInspectorView();
 
+  static bool initUnits = true;
+  if(initUnits && m_energyUseLabel){
+    initUnits = false;
+    m_energyUseUnits = m_consumptionUnits->currentText();
+    if(m_energyUseLabel){
+      m_energyUseLabel->setText(getEnergyUseLabelText());
+    }
+    m_peakUnits = m_peakDemandUnits->currentText();
+    if(m_peakLabel){
+      m_peakLabel->setText(getPeakLabelText());
+    }
+  }
+
   deleteBillingPeriods();
   addBillingPeriods();
 }
@@ -531,11 +554,50 @@ void UtilityBillsInspectorView::disableAddButton()
   m_addBillingPeriod->setEnabled(false);
 }
 
+void UtilityBillsInspectorView::addBillingPeriodsHeader()
+{
+  int columnIndex = 0;
+
+  int rowIndex = m_billGridLayout->rowCount();
+
+  OS_ASSERT(rowIndex == 1);
+   
+  if(m_billFormat == STARTDATE_ENDDATE){
+    getStartDateLabel(m_billGridLayout, rowIndex, columnIndex++);
+    getEndDateLabel(m_billGridLayout, rowIndex, columnIndex++);
+  }
+  else if(m_billFormat == STARTDATE_NUMDAYS){
+    getStartDateLabel(m_billGridLayout, rowIndex, columnIndex++);
+    getBillingPeriodLabel(m_billGridLayout, rowIndex, columnIndex++);
+  }
+  else if(m_billFormat == ENDDATE_NUMDAYS){
+    getEndDateLabel(m_billGridLayout, rowIndex, columnIndex++);
+    getBillingPeriodLabel(m_billGridLayout, rowIndex, columnIndex++);
+  }
+  else{
+    OS_ASSERT(false);
+  }
+
+  columnIndex++;
+
+  getLabel(m_energyUseLabel,m_billGridLayout,rowIndex,columnIndex++,getEnergyUseLabelText());
+  if(m_utilityBill.get().fuelType() == FuelType::Electricity){
+    getLabel(m_peakLabel,m_billGridLayout,rowIndex,columnIndex++,getPeakLabelText());
+  }
+  getLabel(m_billGridLayout,rowIndex,columnIndex++,QString("Cost"));
+  getLabel(m_billGridLayout,rowIndex,columnIndex++,QString(""));
+
+  m_billGridLayout->setColumnStretch(1000,1000);
+}
+
 void UtilityBillsInspectorView::addBillingPeriods()
 {
   if(m_utilityBill.is_initialized()){
     std::vector<model::BillingPeriod> billingPeriods = m_utilityBill.get().billingPeriods();
     for(unsigned i = 0; i < billingPeriods.size(); i++){
+      if(i == 0){
+        addBillingPeriodsHeader();
+      }
       addBillingPeriod(billingPeriods.at(i));
     }
   }
@@ -544,27 +606,15 @@ void UtilityBillsInspectorView::addBillingPeriods()
 void UtilityBillsInspectorView::addBillingPeriod(model::BillingPeriod & billingPeriod)
 {
   if(m_utilityBill.is_initialized()){
-    OS_ASSERT(m_consumptionUnits);
-    OS_ASSERT(m_peakDemandUnits);
+    int rowIndex = m_billGridLayout->rowCount();
+    if(rowIndex == 1){
+      addBillingPeriodsHeader();
+    }
     BillingPeriodWidget * billingPeriodWidget = new BillingPeriodWidget(m_billGridLayout,
                                                                         billingPeriod,
                                                                         m_utilityBill.get().fuelType(),
-                                                                        m_billFormat,
-                                                                        m_consumptionUnits->currentText(),
-                                                                        m_peakDemandUnits->currentText());
+                                                                        m_billFormat);
     m_buttonGroup->addButton(billingPeriodWidget->m_deleteBillWidget,m_buttonGroup->buttons().size());
-  
-
-    bool isConnected = false;
-
-    isConnected = connect(m_consumptionUnits, SIGNAL(currentIndexChanged(const QString&)),
-      billingPeriodWidget, SLOT(updateEnergyUseLabelText(const QString&)));
-    OS_ASSERT(isConnected);
-
-    isConnected = connect(m_peakDemandUnits, SIGNAL(currentIndexChanged(const QString&)),
-      billingPeriodWidget, SLOT(updatePeakLabelText(const QString&)));
-    OS_ASSERT(isConnected);
-
   }
 }
 
@@ -586,6 +636,55 @@ void UtilityBillsInspectorView::deleteBillingPeriods()
   m_billGridLayout->setContentsMargins(0,0,0,0);
   m_billGridLayout->setSpacing(10);
   m_billGridLayoutWidget->setLayout(m_billGridLayout);
+}
+
+QString UtilityBillsInspectorView::getEnergyUseLabelText()
+{
+  QString string("Energy Use (");
+  string += m_energyUseUnits;
+  string += ")";
+  return string;
+}
+
+QString UtilityBillsInspectorView::getPeakLabelText()
+{
+  QString string("Peak (");
+  string += m_peakUnits;
+  string += ")";
+  return string;
+}
+
+void UtilityBillsInspectorView::getLabel(QLabel * & label, QGridLayout * gridLayout, int rowIndex, int columnIndex, const QString& text)
+{
+  label = new QLabel();
+  label->setText(text);
+  label->setObjectName("H2");
+
+  gridLayout->addWidget(label,rowIndex,columnIndex,Qt::AlignLeft| Qt::AlignTop);
+}
+
+void UtilityBillsInspectorView::getLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex, const QString& text)
+{
+  QLabel * label = new QLabel();
+  label->setText(text);
+  label->setObjectName("H2");
+
+  gridLayout->addWidget(label,rowIndex,columnIndex,Qt::AlignLeft| Qt::AlignTop);
+}
+
+void UtilityBillsInspectorView::getStartDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex)
+{
+  getLabel(gridLayout,rowIndex,columnIndex,QString("Start Date"));
+}
+
+void UtilityBillsInspectorView::getEndDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex)
+{
+  getLabel(gridLayout,rowIndex,columnIndex,QString("End Date"));
+}
+
+void UtilityBillsInspectorView::getBillingPeriodLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex)
+{
+  getLabel(gridLayout,rowIndex,columnIndex,QString("Billing Period Days"));
 }
 
 ////// SLOTS ///////
@@ -633,6 +732,20 @@ void UtilityBillsInspectorView::setBillFormat(int index)
   setBillFormat(m_billFormat);
 }
 
+void UtilityBillsInspectorView::updateEnergyUseLabelText(const QString& text)
+{
+  m_energyUseUnits = text;
+  QString energyUseLabelText = getEnergyUseLabelText();
+    if(m_energyUseLabel) m_energyUseLabel->setText(energyUseLabelText);
+}
+
+void UtilityBillsInspectorView::updatePeakLabelText(const QString& text)
+{
+  m_peakUnits = text;
+  QString peakLabelText = getPeakLabelText();
+    if(m_peakLabel) m_peakLabel->setText(peakLabelText);
+}
+
 //**********************************************************************************************************
 
 
@@ -640,8 +753,6 @@ BillingPeriodWidget::BillingPeriodWidget(QGridLayout * gridLayout,
   model::BillingPeriod billingPeriod,
   FuelType fuelType,
   BillFormat billFormat,
-  const QString & energyUseUnits,
-  const QString & peakUnits,
   QWidget * parent)
   : QWidget(parent),
   m_billingPeriod(billingPeriod),
@@ -650,9 +761,7 @@ BillingPeriodWidget::BillingPeriodWidget(QGridLayout * gridLayout,
   m_billingPeriodIntEdit(0),
   m_energyUseDoubleEdit(0),
   m_peakDoubleEdit(0),
-  m_costDoubleEdit(0),
-  m_energyUseUnits(energyUseUnits),
-  m_peakUnits(peakUnits)
+  m_costDoubleEdit(0)
 {
   OS_ASSERT(m_billingPeriod.is_initialized());
 
@@ -668,39 +777,6 @@ void BillingPeriodWidget::createWidgets(QGridLayout * gridLayout,
   int columnIndex = 0;
 
   int rowIndex = gridLayout->rowCount();
-
-  if(rowIndex == 1){
-    if(billFormat == STARTDATE_ENDDATE){
-      getStartDateLabel(gridLayout, rowIndex, columnIndex++);
-      getEndDateLabel(gridLayout, rowIndex, columnIndex++);
-    }
-    else if(billFormat == STARTDATE_NUMDAYS){
-      getStartDateLabel(gridLayout, rowIndex, columnIndex++);
-      getBillingPeriodLabel(gridLayout, rowIndex, columnIndex++);
-    }
-    else if(billFormat == ENDDATE_NUMDAYS){
-      getEndDateLabel(gridLayout, rowIndex, columnIndex++);
-      getBillingPeriodLabel(gridLayout, rowIndex, columnIndex++);
-    }
-    else{
-      OS_ASSERT(false);
-    }
-
-    columnIndex++;
-
-    getLabel(m_energyUseLabel,gridLayout,rowIndex,columnIndex++,getEnergyUseLabelText());
-    if(fuelType == FuelType::Electricity){
-      getLabel(m_peakLabel,gridLayout,rowIndex,columnIndex++,getPeakLabelText());
-    }
-    getLabel(gridLayout,rowIndex,columnIndex++,QString("Cost"));
-    getLabel(gridLayout,rowIndex,columnIndex++,QString(""));
-
-    gridLayout->setColumnStretch(1000,1000);
-    
-    columnIndex = 0;
-
-    rowIndex++;
-  }
   
   if(billFormat == STARTDATE_ENDDATE){
     getStartDateCalendar(gridLayout, rowIndex, columnIndex++);
@@ -766,22 +842,6 @@ void BillingPeriodWidget::createWidgets(QGridLayout * gridLayout,
     m_endDateEdit->blockSignals(wasBlocked);
   }
 
-}
-
-QString BillingPeriodWidget::getEnergyUseLabelText()
-{
-  QString string("Energy Use (");
-  string += m_energyUseUnits;
-  string += ")";
-  return string;
-}
-
-QString BillingPeriodWidget::getPeakLabelText()
-{
-  QString string("Peak (");
-  string += m_peakUnits;
-  string += ")";
-  return string;
 }
 
 void BillingPeriodWidget::attach(openstudio::model::BillingPeriod & billingPeriod)
@@ -878,29 +938,6 @@ void BillingPeriodWidget::detach()
   }
 }
 
-void BillingPeriodWidget::getLabel(QLabel * & label, QGridLayout * gridLayout, int rowIndex, int columnIndex, const QString& text)
-{
-  label = new QLabel();
-  label->setText(text);
-  label->setObjectName("H2");
-
-  gridLayout->addWidget(label,rowIndex,columnIndex,Qt::AlignLeft| Qt::AlignTop);
-}
-
-void BillingPeriodWidget::getLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex, const QString& text)
-{
-  QLabel * label = new QLabel();
-  label->setText(text);
-  label->setObjectName("H2");
-
-  gridLayout->addWidget(label,rowIndex,columnIndex,Qt::AlignLeft| Qt::AlignTop);
-}
-
-void BillingPeriodWidget::getStartDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex)
-{
-  getLabel(gridLayout,rowIndex,columnIndex,QString("Start Date"));
-}
-
 void BillingPeriodWidget::getDateEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex, QDateEdit * & dateEdit)
 {
   dateEdit = new QDateEdit();
@@ -915,19 +952,9 @@ void BillingPeriodWidget::getStartDateCalendar(QGridLayout * gridLayout, int row
   getDateEdit(gridLayout, rowIndex, columnIndex, m_startDateEdit);
 }
 
-void BillingPeriodWidget::getEndDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex)
-{
-  getLabel(gridLayout,rowIndex,columnIndex,QString("End Date"));
-}
-
 void BillingPeriodWidget::getEndDateCalendar(QGridLayout * gridLayout, int rowIndex, int columnIndex)
 {
   getDateEdit(gridLayout, rowIndex, columnIndex, m_endDateEdit);
-}
-
-void BillingPeriodWidget::getBillingPeriodLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex)
-{
-  getLabel(gridLayout,rowIndex,columnIndex,QString("Billing Period Days"));
 }
 
 void BillingPeriodWidget::getBillingPeriodLineEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex)
@@ -944,23 +971,10 @@ void BillingPeriodWidget::getBillingPeriodLineEdit(QGridLayout * gridLayout, int
 
 ///// SLOTS
 
-void BillingPeriodWidget::updateEnergyUseLabelText(const QString& text)
-{
-  m_energyUseUnits = text;
-  QString energyUseLabelText = getEnergyUseLabelText();
-  // TODO if(m_energyUseLabel) m_energyUseLabel->setText(energyUseLabelText);
-}
-
-void BillingPeriodWidget::updatePeakLabelText(const QString& text)
-{
-  m_peakUnits = text;
-  QString peakLabelText = getPeakLabelText();
- // TODO if(m_peakLabel) m_peakLabel->setText(peakLabelText);
-}
-
 void BillingPeriodWidget::modelObjectChanged()
 {
   if(!m_billingPeriod.get().empty()){
+  // TODO uncomment
   //  if(m_startDateEdit){
   //    Date startDate = m_billingPeriod.get().startDate();
   //    bool wasBlocked = m_startDateEdit->blockSignals(true);
