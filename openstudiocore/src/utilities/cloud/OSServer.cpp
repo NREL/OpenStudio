@@ -40,6 +40,7 @@ namespace openstudio{
         m_networkReply(0), m_mutex(new QMutex()),
         m_lastAvailable(false),
         m_lastProjectUUIDs(), 
+        m_lastCreateProjectSuccess(false),
         m_lastDeleteProjectSuccess(false),
         m_lastAnalysisUUIDs(),
         m_lastPostAnalysisJSONSuccess(false),
@@ -94,6 +95,19 @@ namespace openstudio{
     std::vector<UUID> OSServer_Impl::lastProjectUUIDs() const
     {
       return m_lastProjectUUIDs;
+    }
+
+    bool OSServer_Impl::createProject(const UUID& projectUUID, int msec) 
+    {
+      if (requestCreateProject(projectUUID)){
+        waitForFinished(msec);
+      }
+      return lastCreateProjectSuccess();
+    }
+
+    bool OSServer_Impl::lastCreateProjectSuccess() const
+    {
+      return m_lastCreateProjectSuccess;
     }
 
     bool OSServer_Impl::deleteProject(const UUID& projectUUID, int msec) 
@@ -362,6 +376,50 @@ namespace openstudio{
 
       return true;
     } 
+    
+    bool OSServer_Impl::requestCreateProject(const UUID& projectUUID)
+    {
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastCreateProjectSuccess = false;
+
+      QString id = toQString(removeBraces(projectUUID));
+      QUrl url(m_url.toString().append("/projects.json"));
+  
+      QVariantMap map;
+      map["_id"] = id;
+      //"created_at": "2013-08-27T20:40:38Z",
+      map["name"] = id;
+      //"updated_at": "2013-08-27T20:40:38Z",
+      map["uuid"] = id;
+      map["analyses"] = QVariantList();
+      
+      bool test;
+
+      QJson::Serializer serializer;
+      QByteArray json = serializer.serialize(map, &test);
+      if (test){
+
+        QByteArray postData; 
+        postData.append(json); 
+
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+        m_networkReply = m_networkAccessManager->post(request, postData);
+
+        bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processCreateProject()));
+        OS_ASSERT(test);
+
+        return true;
+      }
+
+      return false;
+    }
 
     bool OSServer_Impl::requestDeleteProject(const UUID& projectUUID)
     {
@@ -408,12 +466,56 @@ namespace openstudio{
 
     bool OSServer_Impl::startPostAnalysisJSON(const UUID& projectUUID, const std::string& analysisJSON)
     {
-      return false;
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastPostAnalysisJSONSuccess = false;
+
+      QString id = toQString(removeBraces(projectUUID));
+      QUrl url(m_url.toString().append("/projects/").append(id).append("/analyses.json"));
+
+      QByteArray postData; 
+      postData.append(toQString(analysisJSON)); 
+
+      QNetworkRequest request(url);
+      request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+      m_networkReply = m_networkAccessManager->post(request, postData);
+
+      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processPostAnalysisJSON()));
+      OS_ASSERT(test);
+
+      return true;
     }
 
     bool OSServer_Impl::startPostDataPointJSON(const UUID& analysisUUID, const std::string& dataPointJSON)
     {
-      return false;
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastPostDataPointJSONSuccess = false;
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/data_points.json"));
+
+      QByteArray postData; 
+      postData.append(toQString(dataPointJSON)); 
+
+      QNetworkRequest request(url);
+      request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+      m_networkReply = m_networkAccessManager->post(request, postData);
+
+      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processPostDataPointJSON()));
+      OS_ASSERT(test);
+
+      return true;
     }
 
     bool OSServer_Impl::startUploadAnalysisFiles(const UUID& analysisUUID, const openstudio::path& analysisZipFile)
@@ -586,6 +688,25 @@ namespace openstudio{
       emit requestProcessed(success);
     }
 
+    void OSServer_Impl::processCreateProject()
+    {
+      bool success = false;
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastCreateProjectSuccess = true;
+        success = true;
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
     void OSServer_Impl::processDeleteProject()
     {
       bool success = false;
@@ -638,6 +759,44 @@ namespace openstudio{
           logError("Could not parse JSON response");
         }
 
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processPostAnalysisJSON()
+    {
+      bool success = false;
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastPostAnalysisJSONSuccess = true;
+        success = true;
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processPostDataPointJSON()
+    {
+      bool success = false;
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastPostDataPointJSONSuccess = true;
+        success = true;
       }else{
         logNetworkError(m_networkReply->error());
       }
@@ -945,6 +1104,16 @@ namespace openstudio{
     return getImpl<detail::OSServer_Impl>()->lastProjectUUIDs();
   } 
 
+  bool OSServer::createProject(const UUID& projectUUID, int msec) 
+  {
+    return getImpl<detail::OSServer_Impl>()->createProject(projectUUID, msec);
+  }
+
+  bool OSServer::lastCreateProjectSuccess() const
+  {
+    return getImpl<detail::OSServer_Impl>()->lastCreateProjectSuccess();
+  }
+
   bool OSServer::deleteProject(const UUID& projectUUID, int msec) 
   {
     return getImpl<detail::OSServer_Impl>()->deleteProject(projectUUID, msec);
@@ -1109,6 +1278,11 @@ namespace openstudio{
   {
     return getImpl<detail::OSServer_Impl>()->requestProjectUUIDs();
   } 
+
+  bool OSServer::requestCreateProject(const UUID& projectUUID) 
+  {
+    return getImpl<detail::OSServer_Impl>()->requestCreateProject(projectUUID);
+  }
 
   bool OSServer::requestDeleteProject(const UUID& projectUUID) 
   {

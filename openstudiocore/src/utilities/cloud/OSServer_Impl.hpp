@@ -67,7 +67,10 @@ namespace detail{
     std::vector<UUID> projectUUIDs(int msec); 
     std::vector<UUID> lastProjectUUIDs() const; 
 
-    bool deleteProject(const UUID& projectUUID, int msec=30000); 
+    bool createProject(const UUID& projectUUID, int msec); 
+    bool lastCreateProjectSuccess() const; 
+
+    bool deleteProject(const UUID& projectUUID, int msec); 
     bool lastDeleteProjectSuccess() const; 
 
     std::vector<UUID> analysisUUIDs(const UUID& projectUUID, int msec); 
@@ -123,6 +126,8 @@ namespace detail{
 
     bool requestProjectUUIDs(); 
 
+    bool requestCreateProject(const UUID& projectUUID); 
+
     bool requestDeleteProject(const UUID& projectUUID); 
 
     bool requestAnalysisUUIDs(const UUID& projectUUID); 
@@ -163,9 +168,15 @@ namespace detail{
 
     void processProjectUUIDs(); 
 
+    void processCreateProject();
+
     void processDeleteProject(); 
 
     void processAnalysisUUIDs(); 
+
+    void processPostAnalysisJSON();
+
+    void processPostDataPointJSON();
 
     void processDataPointUUIDs();
 
@@ -186,6 +197,7 @@ namespace detail{
 
     bool m_lastAvailable;
     std::vector<UUID> m_lastProjectUUIDs; 
+    bool m_lastCreateProjectSuccess;
     bool m_lastDeleteProjectSuccess;
     std::vector<UUID> m_lastAnalysisUUIDs;
     bool m_lastPostAnalysisJSONSuccess;

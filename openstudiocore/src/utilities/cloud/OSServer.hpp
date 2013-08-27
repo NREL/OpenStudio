@@ -60,6 +60,9 @@ namespace openstudio{
     std::vector<UUID> projectUUIDs(int msec=30000); 
     std::vector<UUID> lastProjectUUIDs() const; 
 
+    bool createProject(const UUID& projectUUID, int msec=30000); 
+    bool lastCreateProjectSuccess() const; 
+
     bool deleteProject(const UUID& projectUUID, int msec=30000); 
     bool lastDeleteProjectSuccess() const; 
 
@@ -115,6 +118,8 @@ namespace openstudio{
     bool requestAvailable();
 
     bool requestProjectUUIDs(); 
+
+    bool requestCreateProject(const UUID& projectUUID); 
 
     bool requestDeleteProject(const UUID& projectUUID); 
 
