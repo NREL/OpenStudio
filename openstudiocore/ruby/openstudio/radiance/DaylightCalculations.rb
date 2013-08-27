@@ -193,15 +193,23 @@ if sqlPath.empty?
   end
 end
 
+outPath = modelPath.parent_path / OpenStudio::Path.new(modelPath.stem) / OpenStudio::Path.new("model") / OpenStudio::Path.new("radiance")
+
+File.open("#{outPath}/options/daylightsim.opt", "r") do |file|
+  tempIO = file.read
+  daylightsimOpts = tempIO
+end	  
+
+
 # execute DaylightSim to create daylighting coefficients
-result = exec_statement("ruby #{load_paths} '#{dirname}/DaylightSim-Simple.rb' '#{modelPath}' '#{sqlPath}' --dc --x")
+result = exec_statement("ruby #{load_paths} '#{dirname}/DaylightSim-Simple.rb' '#{modelPath}' '#{sqlPath}' --dc #{daylightsimOpts}")
 if not result
   puts "failed to run DaylightSim"
   exit false
 end
 
 # execute DaylightSim to run annual simulation
-result = exec_statement("ruby #{load_paths} '#{dirname}/DaylightSim-Simple.rb' '#{modelPath}' '#{sqlPath}' --dcts --x")
+result = exec_statement("ruby #{load_paths} '#{dirname}/DaylightSim-Simple.rb' '#{modelPath}' '#{sqlPath}' --dcts #{daylightsimOpts}")
 if not result
   puts "failed to run DaylightSim"
   exit false

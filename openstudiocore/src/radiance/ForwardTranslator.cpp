@@ -37,6 +37,8 @@
 #include <model/ShadingSurface_Impl.hpp>
 #include <model/ShadingSurfaceGroup.hpp>
 #include <model/ShadingSurfaceGroup_Impl.hpp>
+#include <model/ShadingControl.hpp>
+#include <model/ShadingControl_Impl.hpp>
 #include <model/Space.hpp>
 #include <model/Space_Impl.hpp>
 #include <model/ThermalZone.hpp>
@@ -136,6 +138,7 @@ namespace radiance {
     m_logSink.setThreadId(QThread::currentThread());
 
     m_logSink.resetStringStream();
+
 
     std::vector<openstudio::path> outfiles;
 
@@ -284,8 +287,25 @@ namespace radiance {
 
       //    std::string dcmatsString = dcmatsStringin.gsub(',', ' ');
 
-	    // get Radiance sim settings
-	    openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
+      // get Radiance sim settings
+      openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
+
+
+      // write daylightsim options to files
+      //
+      std::vector<openstudio::model::ShadingControl> shadingControls = model.getModelObjects<openstudio::model::ShadingControl>();
+      openstudio::path daylightsimoptpath = radDir / openstudio::toPath("options/daylightsim.opt");
+      outfiles.push_back(daylightsimoptpath);
+      std::ofstream daylightsimopt(openstudio::toString(daylightsimoptpath).c_str());
+      if (shadingControls.empty())
+      {
+        // not 3-phase
+        daylightsimopt << "--x";
+      } else {
+        // yes 3-phase
+        daylightsimopt << "--z";
+      }
+
 
       // write Radiance options to file(s)
       // view matrix options
@@ -316,7 +336,7 @@ namespace radiance {
                 << "-dc " << radianceParameters.directCertainty() << " "
                 << "-lw " << radianceParameters.limitWeightDMX() << " ";
 
-	// Tregenza/Klems resolution options
+      // Tregenza/Klems resolution options
 
     openstudio::path tregoptpath = radDir / openstudio::toPath("options/treg.opt");
     outfiles.push_back(tregoptpath);
@@ -329,20 +349,20 @@ namespace radiance {
       tregopt << "-e MF:2 -f reinhart.cal -b rbin -bn Nrbins";
     } else if (radianceParameters.skyDiscretizationResolution() == "2306"){
       tregopt << "-e MF:4 -f reinhart.cal -b rbin -bn Nrbins";	
-	}
-	// TODO: make these values into a pulldown choice, add support for out of bounds
+    }
+    // TODO: make these values into a pulldown choice, add support for out of bounds
 
 
 
-      // Hi Qual options (illumimance maps)
-      openstudio::path mapsoptpath = radDir / openstudio::toPath("options/maps.opt");
-      outfiles.push_back(mapsoptpath);
-      std::ofstream mapsopt(openstudio::toString(mapsoptpath).c_str());
-      mapsopt << "-ab 10 -ad 8000 -as 50 -dt 0 -dc 1 -ds 0.05 -lw 0.00001";
+    // Hi Qual options (illumimance maps)
+    openstudio::path mapsoptpath = radDir / openstudio::toPath("options/maps.opt");
+    outfiles.push_back(mapsoptpath);
+    std::ofstream mapsopt(openstudio::toString(mapsoptpath).c_str());
+    mapsopt << "-ab 10 -ad 8000 -as 50 -dt 0 -dc 1 -ds 0.05 -lw 0.00001";
 
-      // the end
-      LOG(Debug, "Done. Radiance model located at: " << openstudio::toString(radDir) << ".");
-    
+    // the end
+    LOG(Debug, "Done. Radiance model located at: " << openstudio::toString(radDir) << ".");
+
     }catch(const std::exception& e){
       outfiles.clear();
 
