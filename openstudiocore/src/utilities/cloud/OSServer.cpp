@@ -30,6 +30,7 @@
 #include <QMutex>
 
 #include <qjson/parser.h>
+#include <qjson/serializer.h>
 
 namespace openstudio{
   namespace detail{
@@ -61,6 +62,11 @@ namespace openstudio{
 
     OSServer_Impl::~OSServer_Impl()
     {
+      if (m_networkReply){
+        m_networkReply->blockSignals(true);
+        m_networkReply->deleteLater();
+        m_networkReply = 0;
+      };
     }
  
     bool OSServer_Impl::available(int msec)
@@ -354,7 +360,8 @@ namespace openstudio{
       m_lastAnalysisUUIDs.clear();
 
       QString id = toQString(removeBraces(projectUUID));
-      QUrl url(m_url.toString().append("/projects/").append(id).append("/analyses.json"));
+      //QUrl url(m_url.toString().append("/projects/").append(id).append("/analyses.json"));
+      QUrl url(m_url.toString().append("/projects/").append(id).append(".json"));
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
@@ -405,7 +412,9 @@ namespace openstudio{
       m_lastDataPointUUIDs.clear();
 
       QString id = toQString(removeBraces(analysisUUID));
-      QUrl url(m_url.toString().append("/analyses/").append(id).append("/data_points.json"));
+      //QUrl url(m_url.toString().append("/analyses/").append(id).append("/data_points.json"));
+      //QUrl url(m_url.toString().append("/analyses/").append(id).append(".json"));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json"));
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
@@ -417,22 +426,87 @@ namespace openstudio{
 
     bool OSServer_Impl::requestRunningDataPointUUIDs(const UUID& analysisUUID)
     {
-      return false;
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastRunningDataPointUUIDs.clear();
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json=running"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processRunningDataPointUUIDs()));
+      OS_ASSERT(test);
+
+      return true;
     }
 
     bool OSServer_Impl::requestQueuedDataPointUUIDs(const UUID& analysisUUID)
     {
-      return false;
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastQueuedDataPointUUIDs.clear();
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json=queued"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processQueuedDataPointUUIDs()));
+      OS_ASSERT(test);
+
+      return true;
     }
 
     bool OSServer_Impl::requestCompleteDataPointUUIDs(const UUID& analysisUUID)
     {
-      return false;
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastCompleteDataPointUUIDs.clear();
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json=complete"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processCompleteDataPointUUIDs()));
+      OS_ASSERT(test);
+
+      return true;
     }
 
     bool OSServer_Impl::requestDataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID)
     {
-      return false;
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastDataPointJSON = "";
+
+      QString id = toQString(removeBraces(dataPointUUID));
+      //QUrl url(m_url.toString().append("/data_points/").append(id).append("/data_points.json"));
+      QUrl url(m_url.toString().append("/data_points/").append(id).append(".json"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDataPointJSON()));
+      OS_ASSERT(test);
+
+      return true;
     }
 
     bool OSServer_Impl::startDownloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath)
@@ -448,7 +522,7 @@ namespace openstudio{
         m_lastAvailable = true;
         success = true;
       }else{
-        logError("Network error occurred");
+        logNetworkError(m_networkReply->error());
       }
 
       m_networkReply->deleteLater();
@@ -466,7 +540,7 @@ namespace openstudio{
       if (m_networkReply->error() == QNetworkReply::NoError){
         m_lastProjectUUIDs = processListOfUUID(m_networkReply->readAll(), success);
       }else{
-        logError("Network error occurred");
+        logNetworkError(m_networkReply->error());
       }
 
       m_networkReply->deleteLater();
@@ -482,9 +556,36 @@ namespace openstudio{
       bool success = false;
 
       if (m_networkReply->error() == QNetworkReply::NoError){
-        m_lastAnalysisUUIDs = processListOfUUID(m_networkReply->readAll(), success);
+        //m_lastAnalysisUUIDs = processListOfUUID(m_networkReply->readAll(), success);
+
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply->readAll(), &test);
+
+        if (test){
+
+          QVariantMap map = variant.toMap();
+
+          if (map.contains("analyses")){
+
+            QVariantList list = map["analyses"].toList();
+
+            QJson::Serializer serializer;
+            QByteArray json = serializer.serialize(list, &test);
+            if (test){
+              m_lastAnalysisUUIDs = processListOfUUID(json, success);
+            }
+
+          }else{
+            logError("Incorrect JSON response");
+          }
+
+        }else{
+          logError("Could not parse JSON response");
+        }
+
       }else{
-        logError("Network error occurred");
+        logNetworkError(m_networkReply->error());
       }
 
       m_networkReply->deleteLater();
@@ -500,9 +601,117 @@ namespace openstudio{
       bool success = false;
 
       if (m_networkReply->error() == QNetworkReply::NoError){
-        m_lastDataPointUUIDs = processListOfUUID(m_networkReply->readAll(), success);
+        //m_lastDataPointUUIDs = processListOfUUID(m_networkReply->readAll(), success);
+
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply->readAll(), &test);
+
+        if (test){
+
+          QVariantMap map = variant.toMap();
+
+          if (map.contains("data_points")){
+            
+            QVariantList list = map["data_points"].toList();
+
+            QJson::Serializer serializer;
+            QByteArray json = serializer.serialize(list, &test);
+            if (test){
+              m_lastDataPointUUIDs = processListOfUUID(json, success);
+            }
+  
+          }else{
+            logError("Incorrect JSON response");
+          }
+
+        }else{
+          logError("Could not parse JSON response");
+        }
       }else{
-        logError("Network error occurred");
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processRunningDataPointUUIDs()
+    {
+      bool success = false;
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastRunningDataPointUUIDs = processListOfUUID(m_networkReply->readAll(), success);
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processQueuedDataPointUUIDs()
+    {
+      bool success = false;
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastQueuedDataPointUUIDs = processListOfUUID(m_networkReply->readAll(), success);
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processCompleteDataPointUUIDs()
+    {
+      bool success = false;
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastCompleteDataPointUUIDs = processListOfUUID(m_networkReply->readAll(), success);
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processDataPointJSON()
+    {
+      bool success = false;
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply->readAll(), &test);
+        if (test){
+          QJson::Serializer serializer;
+          QByteArray json = serializer.serialize(variant, &test);
+          if (test){
+            success = true;
+            m_lastDataPointJSON = QString(json).toStdString();
+          }
+        }
+      }else{
+        logNetworkError(m_networkReply->error());
       }
 
       m_networkReply->deleteLater();
@@ -523,6 +732,92 @@ namespace openstudio{
     {
       m_errors.push_back(error);
       LOG(Error, error);
+    }
+
+    void OSServer_Impl::logNetworkError(int error) const
+    {
+      std::stringstream ss; 
+      ss << "Network error '";
+      switch(error){
+        case QNetworkReply::NoError:
+          ss << "NoError";
+          break;
+        case QNetworkReply::ConnectionRefusedError:
+          ss << "ConnectionRefusedError";
+          break;
+        case QNetworkReply::RemoteHostClosedError:
+          ss << "RemoteHostClosedError";
+          break;
+        case QNetworkReply::HostNotFoundError:
+          ss << "HostNotFoundError";
+          break;
+        case QNetworkReply::TimeoutError:
+          ss << "TimeoutError";
+          break;
+        case QNetworkReply::OperationCanceledError:
+          ss << "OperationCanceledError";
+          break;
+        case QNetworkReply::SslHandshakeFailedError:
+          ss << "SslHandshakeFailedError";
+          break;
+        case QNetworkReply::TemporaryNetworkFailureError:
+          ss << "TemporaryNetworkFailureError";
+          break;
+        case QNetworkReply::ProxyConnectionRefusedError:
+          ss << "ProxyConnectionRefusedError";
+          break;
+        case QNetworkReply::ProxyConnectionClosedError:
+          ss << "ProxyConnectionClosedError";
+          break;
+        case QNetworkReply::ProxyNotFoundError:
+          ss << "ProxyNotFoundError";
+          break;
+        case QNetworkReply::ProxyTimeoutError:
+          ss << "ProxyTimeoutError";
+          break;
+        case QNetworkReply::ProxyAuthenticationRequiredError:
+          ss << "ProxyAuthenticationRequiredError";
+          break;
+        case QNetworkReply::ContentAccessDenied:
+          ss << "ContentAccessDenied";
+          break;
+        case QNetworkReply::ContentOperationNotPermittedError:
+          ss << "ContentOperationNotPermittedError";
+          break;
+        case QNetworkReply::ContentNotFoundError:
+          ss << "ContentNotFoundError";
+          break;
+        case QNetworkReply::AuthenticationRequiredError:
+          ss << "AuthenticationRequiredError";
+          break;
+        case QNetworkReply::ContentReSendError:
+          ss << "ContentReSendError";
+          break;
+        case QNetworkReply::ProtocolUnknownError:
+          ss << "ProtocolUnknownError";
+          break;
+        case QNetworkReply::ProtocolInvalidOperationError:
+          ss << "ProtocolInvalidOperationError";
+          break;
+        case QNetworkReply::UnknownNetworkError:
+          ss << "UnknownNetworkError";
+          break;
+        case QNetworkReply::UnknownProxyError:
+          ss << "UnknownProxyError";
+          break;
+        case QNetworkReply::UnknownContentError:
+          ss << "UnknownContentError";
+          break;
+        case QNetworkReply::ProtocolFailure:
+          ss << "ProtocolFailure";
+          break;
+        default:
+          ss << "Unknown";
+      }
+      ss<< "' occurred";
+
+      m_errors.push_back(ss.str());
+      LOG(Error, ss.str());
     }
 
     void OSServer_Impl::logWarning(const std::string& warning) const

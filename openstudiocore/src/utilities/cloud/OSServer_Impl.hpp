@@ -162,6 +162,14 @@ namespace detail{
 
     void processDataPointUUIDs();
 
+    void processRunningDataPointUUIDs();
+
+    void processQueuedDataPointUUIDs();
+
+    void processCompleteDataPointUUIDs();
+
+    void processDataPointJSON();
+
   private:
 
     Url m_url;
@@ -189,6 +197,7 @@ namespace detail{
 
     void clearErrorsAndWarnings();
     void logError(const std::string& error) const;
+    void logNetworkError(int error) const;
     void logWarning(const std::string& warning) const;
     std::vector<UUID> processListOfUUID(const QByteArray& bytes, bool& success) const;
 
