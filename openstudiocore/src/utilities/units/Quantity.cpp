@@ -138,7 +138,7 @@ bool Quantity::isAbsolute() const {
   OptionalTemperatureUnit tu = m_units.optionalCast<TemperatureUnit>();
   if(!tu) {
     LOG_AND_THROW("Could not evaluate Quantity::isAbsolute for quantity " << *this
-        << " because it is in system " << system().valueName() << ", not Celcius or Fahrenheit.");
+        << " because it is in system " << system().valueName() << ", not Celsius or Fahrenheit.");
   }
   return tu->isAbsolute();
 }
@@ -151,7 +151,7 @@ void Quantity::setAsAbsolute() {
   OptionalTemperatureUnit tu = m_units.optionalCast<TemperatureUnit>();
   if(!tu) {
     LOG_AND_THROW("Could not Quantity::setAsAbsolute for quantity " << *this
-        << " because it is in system " << system().valueName() << ", not Celcius or Fahrenheit.");
+        << " because it is in system " << system().valueName() << ", not Celsius or Fahrenheit.");
   }
   tu->setAsAbsolute();
 }
@@ -160,7 +160,7 @@ void Quantity::setAsRelative() {
   OptionalTemperatureUnit tu = m_units.optionalCast<TemperatureUnit>();
   if(!tu) {
     LOG_AND_THROW("Could not Quantity::setAsRelative for quantity " << *this
-        << " because it is in system " << system().valueName() << ", not Celcius or Fahrenheit.");
+        << " because it is in system " << system().valueName() << ", not Celsius or Fahrenheit.");
   }
   tu->setAsRelative();
 }

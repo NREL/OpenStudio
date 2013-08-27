@@ -30,6 +30,9 @@
 #include <runmanager/lib/JSON.hpp>
 
 #include <utilities/core/FileReference.hpp>
+#include <utilities/core/PathHelpers.hpp>
+
+#include <boost/foreach.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -231,6 +234,27 @@ namespace detail {
     // workflowStepType == "Measure" is handled by Problem_Impl
     LOG_AND_THROW("Unexpected workflow_step_type " << workflowStepType << ".");
     return OptionalWorkflowStep().get();
+  }
+
+  void WorkflowStep_Impl::updateInputPathData(const openstudio::path& originalBase,
+                                              const openstudio::path& newBase)
+  {
+    if (isInputVariable()) {
+      m_inputVariable->getImpl<detail::InputVariable_Impl>()->updateInputPathData(originalBase,newBase);
+    }
+    else {
+      // WorkItem -- Try to update files.
+      BOOST_FOREACH(runmanager::FileInfo& info,m_workItem->files.files()) {
+        // update fullPath
+        openstudio::path temp = relocatePath(info.fullPath,originalBase,newBase);
+        if (!temp.empty()) {
+          info.fullPath = temp;
+        }
+
+        // update requiredFiles
+        // ETH@20130815 -- Skip for now. I think these are usually not absolute paths ...
+      }
+    }
   }
 
 } // detail

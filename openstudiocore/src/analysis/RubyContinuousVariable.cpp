@@ -240,6 +240,12 @@ namespace detail {
           measure.cast<RubyMeasure>());
   }
 
+  void RubyContinuousVariable_Impl::updateInputPathData(const openstudio::path& originalBase,
+                                                        const openstudio::path& newBase)
+  {
+    m_measure.getImpl<detail::RubyMeasure_Impl>()->updateInputPathData(originalBase,newBase);
+  }
+
 } // detail
 
 RubyContinuousVariable::RubyContinuousVariable(const std::string& name,

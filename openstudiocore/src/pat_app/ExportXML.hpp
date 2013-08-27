@@ -39,6 +39,7 @@ class QDomNodeList;
 namespace openstudio {
 
   class ProgressBar;
+  class SqlFile;
   class Transformation;
 
 namespace analysis {

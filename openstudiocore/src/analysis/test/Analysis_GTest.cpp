@@ -121,13 +121,14 @@ TEST_F(AnalysisFixture, Analysis_SetSeed) {
                         analysis.problem(),
                         true,
                         false,
+                        true,
                         std::vector<QVariant>(),
                         DoubleVector(),
                         toPath("dataPoint1"),
                         FileReference(toPath("out.osm")),
                         FileReference(toPath("in.idf")),
                         OptionalFileReference(),
-                        OptionalFileReference(),
+                        FileReferenceVector(),
                         boost::none,
                         std::vector<openstudio::path>(),
                         TagVector(),
@@ -293,13 +294,14 @@ TEST_F(AnalysisFixture, Analysis_ClearAllResults) {
                         problem,
                         true,
                         false,
+                        true,
                         std::vector<QVariant>(1u,point),
                         DoubleVector(),
                         toPath(ss.str()),
                         FileReference(toPath(ss.str() + "/out.osm")),
                         FileReference(toPath(ss.str() + "/in.idf")),
                         OptionalFileReference(),
-                        OptionalFileReference(),
+                        FileReferenceVector(),
                         boost::none,
                         std::vector<openstudio::path>(),
                         TagVector(),
@@ -340,10 +342,10 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun_Roundtrip) {
   EXPECT_FALSE(json.empty());
 
   // Deserialize and check results
-  OptionalAnalysisObject formulationCopyAsAnalysisObject = loadJSON(json);
-  ASSERT_TRUE(formulationCopyAsAnalysisObject);
-  ASSERT_TRUE(formulationCopyAsAnalysisObject->optionalCast<Analysis>());
-  Analysis formulationCopy = formulationCopyAsAnalysisObject->cast<Analysis>();
+  AnalysisJSONLoadResult loadResult = loadJSON(json);
+  ASSERT_TRUE(loadResult.analysisObject);
+  ASSERT_TRUE(loadResult.analysisObject->optionalCast<Analysis>());
+  Analysis formulationCopy = loadResult.analysisObject->cast<Analysis>();
   std::string jsonCopy = formulationCopy.toJSON(AnalysisSerializationOptions());
   bool test = (jsonCopy == json);
   EXPECT_TRUE(test);
@@ -358,10 +360,10 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun_Roundtrip) {
   EXPECT_TRUE(analysis.saveJSON(p,AnalysisSerializationOptions(),true));
 
   // Load and check results
-  formulationCopyAsAnalysisObject = loadJSON(p);
-  ASSERT_TRUE(formulationCopyAsAnalysisObject);
-  ASSERT_TRUE(formulationCopyAsAnalysisObject->optionalCast<Analysis>());
-  formulationCopy = formulationCopyAsAnalysisObject->cast<Analysis>();
+  loadResult = loadJSON(p);
+  ASSERT_TRUE(loadResult.analysisObject);
+  ASSERT_TRUE(loadResult.analysisObject->optionalCast<Analysis>());
+  formulationCopy = loadResult.analysisObject->cast<Analysis>();
   jsonCopy = formulationCopy.toJSON(AnalysisSerializationOptions());
   test = (jsonCopy == json);
   EXPECT_TRUE(test);
@@ -377,10 +379,10 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun_Roundtrip) {
   EXPECT_FALSE(json.empty());
 
   // Deserialize and check results
-  OptionalAnalysisObject copyAsAnalysisObject = loadJSON(json);
-  ASSERT_TRUE(copyAsAnalysisObject);
-  ASSERT_TRUE(copyAsAnalysisObject->optionalCast<Analysis>());
-  Analysis copy = copyAsAnalysisObject->cast<Analysis>();
+  loadResult = loadJSON(json);
+  ASSERT_TRUE(loadResult.analysisObject);
+  ASSERT_TRUE(loadResult.analysisObject->optionalCast<Analysis>());
+  Analysis copy = loadResult.analysisObject->cast<Analysis>();
   jsonCopy = copy.toJSON(options);
   test = (jsonCopy == json);
   EXPECT_TRUE(test);
@@ -395,10 +397,10 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_PreRun_Roundtrip) {
   EXPECT_TRUE(analysis.saveJSON(p,options,true));
 
   // Load and check results
-  copyAsAnalysisObject = loadJSON(p);
-  ASSERT_TRUE(copyAsAnalysisObject);
-  ASSERT_TRUE(copyAsAnalysisObject->optionalCast<Analysis>());
-  copy = copyAsAnalysisObject->cast<Analysis>();
+  loadResult = loadJSON(p);
+  ASSERT_TRUE(loadResult.analysisObject);
+  ASSERT_TRUE(loadResult.analysisObject->optionalCast<Analysis>());
+  copy = loadResult.analysisObject->cast<Analysis>();
   jsonCopy = copy.toJSON(options);
   test = (jsonCopy == json);
   EXPECT_TRUE(test);
@@ -425,10 +427,10 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_Versioning) {
       LOG(Debug,"Loading " << toString(it->filename()) << ".");
 
       // open and check results
-      OptionalAnalysisObject analysisObject = loadJSON(it->path());
-      ASSERT_TRUE(analysisObject);
-      ASSERT_TRUE(analysisObject->optionalCast<Analysis>());
-      Analysis loaded = analysisObject->cast<Analysis>();
+      AnalysisJSONLoadResult loadResult = loadJSON(it->path());
+      ASSERT_TRUE(loadResult.analysisObject);
+      ASSERT_TRUE(loadResult.analysisObject->optionalCast<Analysis>());
+      Analysis loaded = loadResult.analysisObject->cast<Analysis>();
       
       Problem problem = loaded.problem();
       EXPECT_EQ(3u,problem.numVariables());

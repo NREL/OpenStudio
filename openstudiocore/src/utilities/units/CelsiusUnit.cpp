@@ -17,66 +17,66 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/units/CelciusUnit.hpp>
-#include <utilities/units/CelciusUnit_Impl.hpp>
+#include <utilities/units/CelsiusUnit.hpp>
+#include <utilities/units/CelsiusUnit_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
 
 namespace openstudio {
 namespace detail {
 
-  CelciusUnit_Impl::CelciusUnit_Impl(int CExp,int scaleExponent,const std::string& prettyString)
-    : TemperatureUnit_Impl(true,scaleExponent,prettyString,1,UnitSystem::Celcius)
+  CelsiusUnit_Impl::CelsiusUnit_Impl(int CExp,int scaleExponent,const std::string& prettyString)
+    : TemperatureUnit_Impl(true,scaleExponent,prettyString,1,UnitSystem::Celsius)
   {
     m_units[0].first = "C"; m_units[0].second = CExp;
   }
 
-  CelciusUnit_Impl::CelciusUnit_Impl(const std::string& scaleAbbreviation,
+  CelsiusUnit_Impl::CelsiusUnit_Impl(const std::string& scaleAbbreviation,
                                      int CExp,
                                      const std::string& prettyString)
-    : TemperatureUnit_Impl(true,scaleAbbreviation,prettyString,1,UnitSystem::Celcius)
+    : TemperatureUnit_Impl(true,scaleAbbreviation,prettyString,1,UnitSystem::Celsius)
   {
     m_units[0].first = "C"; m_units[0].second = CExp;
   }
 
-  Unit CelciusUnit_Impl::clone() const {
-    OS_ASSERT(system() == UnitSystem::Celcius);
-    boost::shared_ptr<CelciusUnit_Impl> impl(new CelciusUnit_Impl(*this));
-    return CelciusUnit(impl).cast<Unit>();
+  Unit CelsiusUnit_Impl::clone() const {
+    OS_ASSERT(system() == UnitSystem::Celsius);
+    boost::shared_ptr<CelsiusUnit_Impl> impl(new CelsiusUnit_Impl(*this));
+    return CelsiusUnit(impl).cast<Unit>();
   }
 
-  void CelciusUnit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent) {
+  void CelsiusUnit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent) {
     std::vector<UnitElement>::iterator loc = findBaseUnit(baseUnit);
     if (loc != m_units.end()) {
       loc->second = exponent;
     }
     else {
-      LOG_AND_THROW("Cannot add base units to an instance of CelciusUnit.");
+      LOG_AND_THROW("Cannot add base units to an instance of CelsiusUnit.");
     }
   }
 
 } // detail
 
-CelciusUnit::CelciusUnit(int CExp,int scaleExponent,const std::string& prettyString)
-  : TemperatureUnit(boost::shared_ptr<detail::CelciusUnit_Impl>(
-                        new detail::CelciusUnit_Impl(CExp,scaleExponent,prettyString)))
+CelsiusUnit::CelsiusUnit(int CExp,int scaleExponent,const std::string& prettyString)
+  : TemperatureUnit(boost::shared_ptr<detail::CelsiusUnit_Impl>(
+                        new detail::CelsiusUnit_Impl(CExp,scaleExponent,prettyString)))
 {}
 
-CelciusUnit::CelciusUnit(const std::string& scaleAbbreviation,
+CelsiusUnit::CelsiusUnit(const std::string& scaleAbbreviation,
                          int CExp,
                          const std::string& prettyString)
-  : TemperatureUnit(boost::shared_ptr<detail::CelciusUnit_Impl>(
-                        new detail::CelciusUnit_Impl(scaleAbbreviation,CExp,prettyString)))
+  : TemperatureUnit(boost::shared_ptr<detail::CelsiusUnit_Impl>(
+                        new detail::CelsiusUnit_Impl(scaleAbbreviation,CExp,prettyString)))
 {}
 
 /// @cond
-CelciusUnit::CelciusUnit(boost::shared_ptr<detail::CelciusUnit_Impl> impl)
+CelsiusUnit::CelsiusUnit(boost::shared_ptr<detail::CelsiusUnit_Impl> impl)
   : TemperatureUnit(impl)
 {}
 /// @endcond
 
-CelciusUnit createCelciusTemperature() {
-  return CelciusUnit(1);
+CelsiusUnit createCelsiusTemperature() {
+  return CelsiusUnit(1);
 }
 
 } // openstudio

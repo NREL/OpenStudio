@@ -26,7 +26,7 @@
 #include <utilities/units/Quantity.hpp>
 #include <utilities/units/Unit.hpp>
 #include <utilities/units/BTUUnit.hpp>
-#include <utilities/units/CelciusUnit.hpp>
+#include <utilities/units/CelsiusUnit.hpp>
 #include <utilities/units/CFMUnit.hpp>
 #include <utilities/units/FahrenheitUnit.hpp>
 #include <utilities/units/IPUnit.hpp>
@@ -155,7 +155,7 @@ QuantityConverterSingleton::QuantityConverterSingleton()
     { UnitSystem::Therm, "yr", "s", 31556925.9747, 0 },
     { UnitSystem::Misc1, "ftH_{2}O", "kg/m*s^2", 2989.06692, 0 },
     { UnitSystem::Misc1, "crL", "m", 0.1, 0 },
-    { UnitSystem::Celcius, "C", "K", 1.0, 273.15 },
+    { UnitSystem::Celsius, "C", "K", 1.0, 273.15 },
     { UnitSystem::Fahrenheit, "F", "K", 0.555555555555555555556, 255.37222222222222222222222 },
     { UnitSystem::Mixed, "", "", 0.0, 0.0 }
   };
@@ -257,7 +257,7 @@ QuantityConverterSingleton::QuantityConverterSingleton()
     { UnitSystem::Misc1, "sr", "sr", 1.0, 0 },
     { UnitSystem::Misc1, "people", "people", 1.0, 0 },
     { UnitSystem::Misc1, "cycle", "cycle", 1.0, 0 },
-    { UnitSystem::Celcius, "K", "C", 1.0, -273.15 },
+    { UnitSystem::Celsius, "K", "C", 1.0, -273.15 },
     { UnitSystem::Fahrenheit, "K", "F", 1.8, -459.67 },
     { UnitSystem::Mixed, "", "", 0, 0 }
   };

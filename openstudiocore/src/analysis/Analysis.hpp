@@ -71,11 +71,11 @@ OPENSTUDIO_ENUM(AnalysisSerializationScope,
 );
 
 struct ANALYSIS_API AnalysisSerializationOptions {
-  openstudio::path projectPath;
+  openstudio::path projectDir;
   AnalysisSerializationScope scope;
   bool osServerView;
 
-  AnalysisSerializationOptions(const openstudio::path& t_projectPath=openstudio::path(),
+  AnalysisSerializationOptions(const openstudio::path& t_projectDir=openstudio::path(),
                                const AnalysisSerializationScope& t_scope=AnalysisSerializationScope::ProblemFormulation,
                                bool t_osServerView=true);
 };
@@ -162,8 +162,10 @@ class ANALYSIS_API Analysis : public AnalysisObject {
 
   boost::optional<FileReference> weatherFile() const;
 
+  /** Returns all \link DataPoint DataPoints\endlink in this Analysis. */
   std::vector<DataPoint> dataPoints() const;
 
+  /** Returns all selected, incomplete \link DataPoint DataPoints\endlink. */
   std::vector<DataPoint> dataPointsToQueue() const;
 
   std::vector<DataPoint> completeDataPoints() const;
@@ -178,8 +180,7 @@ class ANALYSIS_API Analysis : public AnalysisObject {
 
   /** Get the DataPoints defined by measures. Perturbations must be translatable into a valid set
    *  of variableValues for the problem(). */
-  std::vector<DataPoint> getDataPoints(
-      const std::vector< boost::optional<Measure> >& measures) const;
+  std::vector<DataPoint> getDataPoints(const std::vector<boost::optional<Measure> >& measures) const;
 
   std::vector<DataPoint> getDataPoints(const std::string& tag) const;
 
@@ -276,6 +277,12 @@ class ANALYSIS_API Analysis : public AnalysisObject {
 
   /** Returns a csv summary of all the data points in this analysis. */
   Table summaryTable() const;
+
+  /** Relocate input path data from originalBase to newBase. Only updates file paths used to set
+   *  up an analysis; paths that point to analysis results should be fixed up by a separate import
+   *  process. */
+  void updateInputPathData(const openstudio::path& originalBase,
+                           const openstudio::path& newBase);
 
   //@}
   /** @name Serialization

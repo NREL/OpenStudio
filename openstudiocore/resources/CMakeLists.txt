@@ -224,6 +224,9 @@ SET(osversion_resources_src
   osversion/1_0_3/OpenStudio.idd
   osversion/1_0_3/example.osm
   osversion/1_0_3/example.osc
+  osversion/1_0_4/OpenStudio.idd
+  osversion/1_0_4/example.osm
+  osversion/1_0_4/example.osc
   osversion/unknown.osc
 )
 
@@ -317,6 +320,8 @@ SET(project_resources_src
   project/version/project_0_11_5.db
   project/version/project_1_0_2.osp
   project/version/project_1_0_2.db
+  project/version/project_1_0_3.osp
+  project/version/project_1_0_3.db  
 )
 
 # update the resources
@@ -336,7 +341,7 @@ CREATE_SRC_GROUPS( "${project_resources_src}" )
 SET(ENERGYPLUS_OUTPUTS "")
 
 SET(analysisdriver_resources_src
-  analysisdriver/PostProcessAppendToReportXML.rb
+  analysisdriver/PostProcessSecondXML.rb
 )
 
 # update the resources

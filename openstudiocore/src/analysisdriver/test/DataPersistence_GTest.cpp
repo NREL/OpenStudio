@@ -24,6 +24,7 @@
 #include <analysisdriver/CurrentAnalysis.hpp>
 #include <analysisdriver/AnalysisRunOptions.hpp>
 
+#include <analysis/Analysis.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/DataPoint.hpp>
 #include <analysis/DDACEAlgorithm.hpp>
@@ -32,6 +33,7 @@
 
 #include <model/Model.hpp>
 
+#include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/core/FileReference.hpp>
 
 using namespace openstudio;

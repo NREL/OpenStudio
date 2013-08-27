@@ -27,6 +27,8 @@
 #include <model/Surface_Impl.hpp>
 #include <model/Construction.hpp>
 #include <model/Construction_Impl.hpp>
+#include <model/ConstructionWithInternalSource.hpp>
+#include <model/ConstructionWithInternalSource_Impl.hpp>
 #include <model/RunPeriod.hpp>
 #include <model/RunPeriod_Impl.hpp>
 #include <model/RunPeriodControlSpecialDays.hpp>
@@ -490,6 +492,16 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilCoolingDXTwoSpeed(coil);
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlow :
+    {
+      // no-op
+      return retVal;
+    }
+  case openstudio::IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_VariableFlow :
+    {
+      // no-op
+      return retVal;
+    }
   case openstudio::IddObjectType::OS_Coil_Cooling_Water :
     {
       model::CoilCoolingWater coil = modelObject.cast<CoilCoolingWater>();
@@ -519,6 +531,16 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::CoilHeatingGas coil = modelObject.cast<CoilHeatingGas>();
       retVal = translateCoilHeatingGas(coil);
       break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_LowTemperatureRadiant_ConstantFlow :
+    {
+      // no-op
+      return retVal;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_LowTemperatureRadiant_VariableFlow :
+    {
+      // no-op
+      return retVal;
     }
   case openstudio::IddObjectType::OS_Coil_Heating_Water :
     {
@@ -561,6 +583,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::Construction construction = modelObject.cast<Construction>();
       retVal = translateConstruction(construction);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Construction_InternalSource :
+    {
+      model::ConstructionWithInternalSource constructionIntSource = modelObject.cast<ConstructionWithInternalSource>();
+      retVal = translateConstructionWithInternalSource(constructionIntSource);
       break;
     }
   case openstudio::IddObjectType::OS_Construction_FfactorGroundFloor :
@@ -1157,6 +1185,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateSetpointManagerWarmest(spm);
       break;
     }
+  case  openstudio::IddObjectType::OS_ShadingControl :
+    {
+      model::ShadingControl shadingControl = modelObject.cast<ShadingControl>();
+      retVal = translateShadingControl(shadingControl);
+      break;
+    }    
   case  openstudio::IddObjectType::OS_ShadingSurface :
     {
       model::ShadingSurface shadingSurface = modelObject.cast<ShadingSurface>();
@@ -1381,6 +1415,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneHVACIdealLoadsAirSystem(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow :
+    { 
+      model::ZoneHVACLowTempRadiantConstFlow mo = modelObject.cast<ZoneHVACLowTempRadiantConstFlow>();
+      retVal = translateZoneHVACLowTempRadiantConstFlow(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow :
+    { 
+      model::ZoneHVACLowTempRadiantVarFlow mo = modelObject.cast<ZoneHVACLowTempRadiantVarFlow>();
+      retVal = translateZoneHVACLowTempRadiantVarFlow(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric :
+    {
+      model::ZoneHVACLowTemperatureRadiantElectric mo = modelObject.cast<ZoneHVACLowTemperatureRadiantElectric>();
+      retVal = translateZoneHVACLowTemperatureRadiantElectric(mo);
+      break;
+    }  
   case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump :
     {
       model::ZoneHVACPackagedTerminalHeatPump mo = modelObject.cast<ZoneHVACPackagedTerminalHeatPump>();
@@ -1598,6 +1650,9 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ThermostatSetpoint_DualSetpoint);
   result.push_back(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water);
   result.push_back(IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem);
+  result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
+  result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow);
+  result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
 
   result.push_back(IddObjectType::OS_Refrigeration_Case);
   result.push_back(IddObjectType::OS_Refrigeration_Compressor);
@@ -1632,6 +1687,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_Screen);
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_Shade);
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_SimpleGlazingSystem);
+  iddObjectTypes.push_back(IddObjectType::OS_ShadingControl);
 
   iddObjectTypes.push_back(IddObjectType::OS_Construction);
   iddObjectTypes.push_back(IddObjectType::OS_Construction_CfactorUndergroundWall);
@@ -1752,6 +1808,12 @@ model::ConstructionBase ForwardTranslator::reverseConstruction(const model::Cons
 
   if (construction.optionalCast<model::Construction>()){
     model::Construction reversed = construction.cast<model::Construction>().reverseConstruction();
+    m_constructionHandleToReversedConstructions.insert(std::make_pair<Handle, model::ConstructionBase>(construction.handle(), reversed)); 
+    return reversed;
+  }
+
+  if (construction.optionalCast<model::ConstructionWithInternalSource>()){
+    model::ConstructionWithInternalSource reversed = construction.cast<model::ConstructionWithInternalSource>().reverseConstructionWithInternalSource();
     m_constructionHandleToReversedConstructions.insert(std::make_pair<Handle, model::ConstructionBase>(construction.handle(), reversed)); 
     return reversed;
   }

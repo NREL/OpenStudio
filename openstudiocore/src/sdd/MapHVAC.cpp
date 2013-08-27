@@ -60,6 +60,7 @@
 #include <model/SetpointManagerSingleZoneReheat.hpp>
 #include <model/SetpointManagerScheduled.hpp>
 #include <model/SetpointManagerWarmest.hpp>
+#include <model/SetpointManagerOutdoorAirReset.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
 #include <model/AirTerminalSingleDuctUncontrolled.hpp>
@@ -272,6 +273,24 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     airLoopHVAC.setAvailabilitySchedule(availabilitySchedule.get());
   }
 
+  QDomElement nightCycleFanCtrlElement = airSystemElement.firstChildElement("NightCycleFanCtrl");
+  
+  if( istringEqual(nightCycleFanCtrlElement.text().toStdString(),"CycleOnCallAnyZone") )
+  {
+    airLoopHVAC.setNightCycleControlType("CycleOnAny");
+  }
+  else if( istringEqual(nightCycleFanCtrlElement.text().toStdString(),"CycleOnCallPrimaryZone") )
+  {
+    airLoopHVAC.setNightCycleControlType("CycleOnAny");
+
+    LOG(Warn,airLoopHVAC.name().get() << ": CycleOnAnyZoneFansOnly is not supported, using CycleOnAny.");
+  }
+  else if( istringEqual(nightCycleFanCtrlElement.text().toStdString(),"CycleZoneFansOnly") )
+  {
+    airLoopHVAC.setNightCycleControlType("CycleOnAnyZoneFansOnly");
+  }
+
+
   // Air Segments
   QDomNodeList airSegmentElements = airSystemElement.elementsByTagName("AirSeg");
 
@@ -464,7 +483,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       if( ok ) 
       {
         Quantity valueIP(value,createFahrenheitTemperature());
-        OptionalQuantity valueSI = QuantityConverter::instance().convert(valueIP, UnitSystem(UnitSystem::Celcius));
+        OptionalQuantity valueSI = QuantityConverter::instance().convert(valueIP, UnitSystem(UnitSystem::Celsius));
         OS_ASSERT(valueSI);
         oaController.setEconomizerMaximumLimitDryBulbTemperature(valueSI->value());
       }
@@ -477,7 +496,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       if( ok ) 
       {
         Quantity valueIP(value,createFahrenheitTemperature());
-        OptionalQuantity valueSI = QuantityConverter::instance().convert(valueIP, UnitSystem(UnitSystem::Celcius));
+        OptionalQuantity valueSI = QuantityConverter::instance().convert(valueIP, UnitSystem(UnitSystem::Celsius));
         OS_ASSERT(valueSI);
         oaController.setEconomizerMinimumLimitDryBulbTemperature(valueSI->value());
       }
@@ -503,33 +522,162 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     }
   }
 
-  // TODO Make this better.  Use cooling / heating control type or something
-  if( airSystemTypeElement.isNull() || 
-      istringEqual(airSystemTypeElement.text().toStdString(),"SZAC") ||
-      istringEqual(airSystemTypeElement.text().toStdString(),"SZHP")
-    )
+  QDomElement clgCtrlElement = airSystemElement.firstChildElement("ClgCtrl");
+
+  QDomElement clgSupAirTempElement = airSystemElement.firstChildElement("ClgSupAirTemp");
+
+  QDomElement htgSupAirTempElement = airSystemElement.firstChildElement("HtgSupAirTemp");
+
+  bool ok;
+
+  if( istringEqual(clgCtrlElement.text().toStdString(),"Fixed") )
   {
-    model::SetpointManagerSingleZoneReheat spm(model);
+    if( istringEqual(airSystemTypeElement.text().toStdString(),"SZAC") ||
+        istringEqual(airSystemTypeElement.text().toStdString(),"SZHP")
+      )
+    {
+      model::SetpointManagerSingleZoneReheat spm(model);
 
-    supplyOutletNode.addSetpointManager(spm);
+      supplyOutletNode.addSetpointManager(spm);
 
-    airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(40.0);
+      value = clgSupAirTempElement.text().toDouble(&ok);
+
+      if( ok )
+      {
+        airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
+      }
+      else
+      {
+        airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(12.8);
+      }
+
+      value = htgSupAirTempElement.text().toDouble(&ok);
+
+      if( ok )
+      {
+        airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(unitToUnit(value,"F","C").get());
+      }
+      else
+      {
+        airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(40.0);
+      }
+    }
+    else
+    {
+      model::ScheduleRuleset schedule(model);
+
+      schedule.setName(airLoopHVAC.name().get() + " Supply Air Temp Schedule");
+
+      value = clgSupAirTempElement.text().toDouble(&ok);
+
+      if( ok )
+      {
+        model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
+
+        value = unitToUnit(value,"F","C").get();
+
+        scheduleDay.addValue(Time(1.0),value);
+
+        airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(value);
+
+        airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(value);
+      }
+      else
+      {
+        model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
+
+        scheduleDay.addValue(Time(1.0),12.8);
+
+        airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(12.8);
+
+        airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(12.8);
+      }
+
+      model::SetpointManagerScheduled spm(model,schedule);
+
+      supplyOutletNode.addSetpointManager(spm);
+    }
   }
-  else if( istringEqual(airSystemTypeElement.text().toStdString(),"SZVAVAC") ||
-           istringEqual(airSystemTypeElement.text().toStdString(),"SZVAVHP")
-         )
+  else if( istringEqual(clgCtrlElement.text().toStdString(),"WarmestReset") )
   {
     model::SetpointManagerWarmest spm(model);
 
     supplyOutletNode.addSetpointManagerWarmest(spm);
-  }
-  else
-  {
-    model::Schedule schedule = defaultDeckTempSchedule(model);
 
-    model::SetpointManagerScheduled spm(model,schedule);
+    airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(12.8);
+
+    airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(40.0);
+  }
+  else if( istringEqual(clgCtrlElement.text().toStdString(),"Scheduled") )
+  {
+    QDomElement clgSetPtSchRefElement = airSystemElement.firstChildElement("ClgSetPtSchRef");
+
+    boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(clgSetPtSchRefElement.text().toStdString());
+
+    if( ! schedule )
+    {
+      model::ScheduleRuleset schedule(model);
+
+      schedule.setName(airLoopHVAC.name().get() + " Supply Air Temp Schedule");
+
+      model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
+
+      scheduleDay.addValue(Time(1.0),12.8);
+    }
+
+    model::SetpointManagerScheduled spm(model,schedule.get());
 
     supplyOutletNode.addSetpointManager(spm);
+
+    airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(12.8);
+
+    airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(40.0);
+  }
+  else if( istringEqual(clgCtrlElement.text().toStdString(),"OutsideAirReset") )
+  {
+    model::SetpointManagerOutdoorAirReset spm(model);
+
+    supplyOutletNode.addSetpointManager(spm);
+
+    QDomElement clRstSupHiElement = airSystemElement.firstChildElement("ClRstSupHiElement");
+
+    value = clRstSupHiElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      spm.setSetpointatOutdoorHighTemperature(unitToUnit(value,"F","C").get());
+    }
+
+    QDomElement clRstSupLowElement = airSystemElement.firstChildElement("ClRstSupLowElement");
+
+    value = clRstSupLowElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      spm.setSetpointatOutdoorLowTemperature(unitToUnit(value,"F","C").get());
+    }
+
+    QDomElement clRstOutdrHiElement = airSystemElement.firstChildElement("ClRstOutdrHiElement");
+
+    value = clRstOutdrHiElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      spm.setOutdoorHighTemperature(unitToUnit(value,"F","C").get());
+    }
+
+    QDomElement clRstOutdrLowElement = airSystemElement.firstChildElement("ClRstOutdrLowElement");
+
+    value = clRstOutdrLowElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      spm.setOutdoorLowTemperature(unitToUnit(value,"F","C").get());
+    }
+
+    airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(12.8);
+
+    airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(40.0);
   }
 
   return result;
@@ -1685,6 +1833,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
   airLoopHVAC = thermalZone.airLoopHVAC();
 
+  QDomElement airSystemElement;
+
   // Add an air terminal to serve the zone
   if( airLoopHVAC )
   {
@@ -1696,7 +1846,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
     for( int i = 0; i < airSystemElements.count(); i++ )
     {
-      QDomElement airSystemElement = airSystemElements.at(i).toElement();
+      airSystemElement = airSystemElements.at(i).toElement();
 
       QDomElement nameElement = airSystemElement.firstChildElement("Name");
 
@@ -1770,9 +1920,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     spm = supplyOutletNode.getSetpointManagerSingleZoneReheat();
 
     // Only set the control zone if there is a SetpointManagerSingleZoneReheat on the supply outlet node
-    if( spm )
+    if( spm && ! airSystemElement.isNull() )
     {
-      spm->setControlZone(thermalZone);
+      QDomElement ctrlZnRefElement = airSystemElement.firstChildElement("CtrlZnRef");
+
+      if( istringEqual(ctrlZnRefElement.text().toStdString(),thermalZone.name().get()) )
+      {
+        spm->setControlZone(thermalZone);
+      }
     }
   }
 

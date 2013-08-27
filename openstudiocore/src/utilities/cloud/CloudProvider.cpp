@@ -54,10 +54,30 @@ namespace openstudio{
   {
     return m_serverUrl;
   }
+    
+  void CloudSession::setServerUrl(const Url& serverUrl)
+  {
+    m_serverUrl = serverUrl;
+  }
+
+  void CloudSession::resetServerUrl()
+  {
+    m_serverUrl.reset();
+  }
 
   std::vector<Url> CloudSession::workerUrls() const
   {
     return m_workerUrls;
+  }
+
+  void CloudSession::addWorkerUrl(const Url& workerUrl)
+  {
+    m_workerUrls.push_back(workerUrl);
+  }
+
+  void CloudSession::clearWorkerUrls()
+  {
+    m_workerUrls.clear();
   }
 
 
@@ -74,7 +94,22 @@ namespace openstudio{
   {
     return getImpl<detail::CloudProvider_Impl>()->type();
   }
-  
+
+  std::string CloudProvider::userAgreementText() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->userAgreementText();
+  }
+
+  bool CloudProvider::userAgreementSigned() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->userAgreementSigned();
+  }
+
+  void CloudProvider::signUserAgreement(bool agree)
+  {
+    getImpl<detail::CloudProvider_Impl>()->signUserAgreement(agree);
+  }
+
   bool CloudProvider::internetAvailable() const
   {
     return getImpl<detail::CloudProvider_Impl>()->internetAvailable();

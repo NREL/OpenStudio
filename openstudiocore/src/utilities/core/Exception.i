@@ -19,7 +19,7 @@
     try {
       $action
     } catch (const std::exception& e) {
-      rb_raise(rb_eRuntimeError, e.what());
+      rb_raise(rb_eRuntimeError, "%s", e.what());
     }
   }
 

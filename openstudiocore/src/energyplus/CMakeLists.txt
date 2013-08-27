@@ -38,6 +38,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateCoilHeatingWater.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingWaterToAirHeatPumpEquationFit.cpp
   ForwardTranslator/ForwardTranslateConstruction.cpp
+  ForwardTranslator/ForwardTranslateConstructionWithInternalSource.cpp
   ForwardTranslator/ForwardTranslateConvergenceLimits.cpp
   ForwardTranslator/ForwardTranslateControllerMechanicalVentilation.cpp
   ForwardTranslator/ForwardTranslateControllerOutdoorAir.cpp
@@ -129,6 +130,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateSetpointManagerWarmest.cpp
   ForwardTranslator/ForwardTranslateShade.cpp
   ForwardTranslator/ForwardTranslateShadowCalculation.cpp
+  ForwardTranslator/ForwardTranslateShadingControl.cpp
   ForwardTranslator/ForwardTranslateShadingSurface.cpp
   ForwardTranslator/ForwardTranslateShadingSurfaceGroup.cpp
   ForwardTranslator/ForwardTranslateSimpleGlazing.cpp
@@ -164,6 +166,9 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateZoneHVACEquipmentList.cpp
   ForwardTranslator/ForwardTranslateZoneHVACFourPipeFanCoil.cpp    
   ForwardTranslator/ForwardTranslateZoneHVACIdealLoadsAirSystem.cpp
+  ForwardTranslator/ForwardTranslateZoneHVACLowTemperatureRadiantElectric.cpp
+  ForwardTranslator/ForwardTranslateZoneHVACLowTempRadiantConstFlow.cpp
+  ForwardTranslator/ForwardTranslateZoneHVACLowTempRadiantVarFlow.cpp
   ForwardTranslator/ForwardTranslateZoneHVACPackagedTerminalHeatPump.cpp
   ForwardTranslator/ForwardTranslateZoneHVACPackagedTerminalAirConditioner.cpp
   ForwardTranslator/ForwardTranslateZoneHVACWaterToAirHeatPump.cpp 
@@ -308,6 +313,9 @@ SET( ${target_name}_test_src
   Test/SubSurface_GTest.cpp
   Test/Surface_GTest.cpp
   Test/ThermalZone_GTest.cpp
+  Test/ZoneHVACLowTemperatureRadiantConstFlow_GTest.cpp
+  Test/ZoneHVACLowTempRadiantElectric_GTest.cpp
+  Test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
 )
 
 SET( ${target_name}_swig_src
