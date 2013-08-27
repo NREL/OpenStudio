@@ -3,6 +3,10 @@
 
 #include "RadianceAPI.hpp"
 
+#include <string>
+#include <vector>
+
+
 namespace openstudio {
 namespace radiance {
 
