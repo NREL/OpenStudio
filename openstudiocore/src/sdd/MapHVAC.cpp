@@ -121,6 +121,10 @@
 #include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
 #include <model/PipeAdiabatic.hpp>
 #include <model/PipeAdiabatic_Impl.hpp>
+#include <model/Splitter.hpp>
+#include <model/Splitter_Impl.hpp>
+#include <model/Mixer.hpp>
+#include <model/Mixer_Impl.hpp>
 
 #include <utilities/units/QuantityConverter.hpp>
 #include <utilities/units/IPUnit.hpp>
@@ -142,6 +146,9 @@
 
 namespace openstudio {
 namespace sdd {
+
+const double cpWater = 4180.0;
+const double densityWater = 1000.0;
 
 model::Schedule ReverseTranslator::defaultDeckTempSchedule(openstudio::model::Model& model)
 {
@@ -2572,6 +2579,56 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
   }
 
+  // Translate PlantLoop::MaximumLoopFlowRate
+  if( ! autosize() )
+  {
+    std::vector<model::ModelObject> constantPumps;
+    constantPumps = plantLoop.supplyComponents(plantLoop.supplyInletNode(),
+                                       plantLoop.supplySplitter(),
+                                       model::PumpConstantSpeed::iddObjectType());
+
+    std::vector<model::ModelObject> variablePumps;
+    variablePumps = plantLoop.supplyComponents(plantLoop.supplyInletNode(),
+                                       plantLoop.supplySplitter(),
+                                       model::PumpVariableSpeed::iddObjectType());
+    if( constantPumps.size() > 0 )
+    {
+      model::PumpConstantSpeed pump = constantPumps.front().cast<model::PumpConstantSpeed>();
+      if( boost::optional<double> value = pump.ratedFlowRate() )
+      {
+        plantLoop.setMaximumLoopFlowRate(value.get());
+      }
+    }
+    else if( variablePumps.size() > 0 )
+    {
+      model::PumpVariableSpeed pump = variablePumps.front().cast<model::PumpVariableSpeed>();
+      if( boost::optional<double> value = pump.ratedFlowRate() )
+      {
+        plantLoop.setMaximumLoopFlowRate(value.get());
+      }
+    }
+    else
+    {
+      constantPumps = plantLoop.supplyComponents(plantLoop.supplySplitter(),
+                                         plantLoop.supplyMixer(),
+                                         model::PumpConstantSpeed::iddObjectType());
+      if( constantPumps.size() > 0 )
+      {
+        double flowRate = 0.0;
+        for( std::vector<model::ModelObject>::iterator it = constantPumps.begin();
+             it != constantPumps.end();
+             it++ )
+        {
+          if( boost::optional<double> ratedFlowRate = it->cast<model::PumpConstantSpeed>().ratedFlowRate() )
+          {
+            flowRate = flowRate + ratedFlowRate.get();
+          }
+        }
+        plantLoop.setMaximumLoopFlowRate(flowRate);
+      }
+    }
+  }
+
   return plantLoop;
 }
 
@@ -2581,6 +2638,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
                                                   openstudio::model::Model& model )
 {
   boost::optional<openstudio::model::ModelObject> result;
+
+  double value;
+
+  bool ok;
 
   if( ! istringEqual(pumpElement.tagName().toStdString(),"Pump") )
   {
@@ -2595,6 +2656,32 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
 
     pump.setRatedPumpHead(149453.0);
 
+    if( ! autosize() )
+    {
+      boost::optional<double> flowCap;
+      boost::optional<double> pwr;
+
+      QDomElement flowCapElement = pumpElement.firstChildElement("FlowCap");
+      value = flowCapElement.text().toDouble(&ok);
+      if( ok )
+      {
+        flowCap = unitToUnit(value, "gal/min", "m^3/s").get();
+      }
+
+      QDomElement pwrElement = pumpElement.firstChildElement("Pwr");
+      value = pwrElement.text().toDouble(&ok);
+      if( ok )
+      {
+        pwr = unitToUnit(value,"Btu/h","W");
+      }
+
+      if( flowCap && pwr )
+      {
+        pump.setRatedFlowRate(value);
+        pump.setRatedPowerConsumption(pwr.get());
+      }
+    }
+
     result = pump;
   }
   else
@@ -2602,6 +2689,41 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
     model::PumpVariableSpeed pump(model);
 
     pump.setRatedPumpHead(149453.0);
+
+    if( ! autosize() )
+    {
+      boost::optional<double> flowCap;
+      boost::optional<double> flowMin;
+      boost::optional<double> pwr;
+
+      QDomElement flowCapElement = pumpElement.firstChildElement("FlowCap");
+      value = flowCapElement.text().toDouble(&ok);
+      if( ok )
+      {
+        flowCap = unitToUnit(value, "gal/min", "m^3/s");
+      }
+
+      QDomElement flowMinElement = pumpElement.firstChildElement("FlowMin");
+      value = flowCapElement.text().toDouble(&ok);
+      if( ok )
+      {
+        flowMin = unitToUnit(value, "gal/min", "m^3/s");
+      }
+
+      QDomElement pwrElement = pumpElement.firstChildElement("Pwr");
+      value = pwrElement.text().toDouble(&ok);
+      if( ok )
+      {
+        pwr = unitToUnit(value,"Btu/h","W");
+      }
+
+      if( flowMin && flowCap && pwr )
+      {
+        pump.setRatedFlowRate(flowCap.get());
+        pump.setMinimumFlowRate(flowMin.get());
+        pump.setRatedPowerConsumption(pwr.get());
+      }
+    }
 
     result = pump;
   }
@@ -2681,6 +2803,47 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateBoil
   if( ok )
   {
     boiler.setParasiticElectricLoad(unitToUnit(parasiticLd,"Btu/h","W").get());
+  }
+
+  double value;
+
+  if( ! autosize() )
+  {
+    // CapRtd
+    boost::optional<double> capRtd;
+    QDomElement capRtdElement = boilerElement.firstChildElement("CapRtd");
+    value = capRtdElement.text().toDouble(&ok);
+    if( ok )
+    {
+      capRtd = unitToUnit(value,"Btu/h","W");
+    }
+
+    // EntTempDsgn
+    boost::optional<double> entTempDsgn;
+    QDomElement entTempDsgnElement = boilerElement.firstChildElement("EntTempDsgn");
+    value = entTempDsgnElement.text().toDouble(&ok);
+    if( ok )
+    {
+      entTempDsgn = unitToUnit(value,"F","C");
+    }
+
+    // LvgTempDsgn
+    boost::optional<double> lvgTempDsgn;
+    QDomElement lvgTempDsgnElement = boilerElement.firstChildElement("LvgTempDsgn");
+    value = lvgTempDsgnElement.text().toDouble(&ok);
+    if( ok )
+    {
+      lvgTempDsgn = unitToUnit(value,"F","C");
+    }
+
+    if( capRtd && entTempDsgn && lvgTempDsgn )
+    {
+      boiler.setNominalCapacity(capRtd.get());
+
+      double flow = capRtd.get() / ( cpWater * densityWater * (lvgTempDsgn.get() - entTempDsgn.get()));
+
+      boiler.setDesignWaterFlowRate(flow);
+    }
   }
 
   return boiler;
@@ -2792,7 +2955,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
 
   // CndsrInRef
 
-  QDomElement cndsrInRefElement = chillerElement.firstChildElement("CndsrInRef");
+  QDomElement cndsrInRefElement = chillerElement.firstChildElement("CndsrFluidSegInRef");
 
   boost::optional<model::PlantLoop> condenserSystem = loopForSupplySegment(cndsrInRefElement.text(),doc,model);
 
@@ -2805,11 +2968,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
   bool ok;
 
   // COP
+  boost::optional<double> cop;
   QDomElement copElement = chillerElement.firstChildElement("COP");
   value = copElement.text().toDouble(&ok);
   if( ok )
   {
     chiller.setReferenceCOP(value);
+    cop = value;
   }
 
   // PartLdRatMin
@@ -2826,6 +2991,49 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
   if( ok )
   {
     chiller.setMinimumUnloadingRatio(value);
+  }
+
+  if( ! autosize() )
+  {
+    // CapRtd
+    boost::optional<double> capRtd;
+    QDomElement capRtdElement = chillerElement.firstChildElement("CapRtd");
+    value = capRtdElement.text().toDouble(&ok);
+    if( ok )
+    {
+      capRtd = unitToUnit(value,"Btu/h","W");
+    }
+
+    // EntTempDsgn
+    boost::optional<double> entTempDsgn;
+    QDomElement entTempDsgnElement = chillerElement.firstChildElement("EntTempDsgn");
+    value = entTempDsgnElement.text().toDouble(&ok);
+    if( ok )
+    {
+      entTempDsgn = unitToUnit(value,"F","C");
+    }
+
+    // LvgTempDsgn
+    boost::optional<double> lvgTempDsgn;
+    QDomElement lvgTempDsgnElement = chillerElement.firstChildElement("LvgTempDsgn");
+    value = lvgTempDsgnElement.text().toDouble(&ok);
+    if( ok )
+    {
+      lvgTempDsgn = unitToUnit(value,"F","C");
+    }
+
+    if( capRtd && entTempDsgn && lvgTempDsgn && cop )
+    {
+      chiller.setReferenceCapacity(capRtd.get());
+
+      double flow = capRtd.get() / ( cpWater * densityWater * (entTempDsgn.get() - lvgTempDsgn.get()));
+
+      chiller.setReferenceChilledWaterFlowRate(flow);
+
+      double condFlow = capRtd.get() * (1.0 + 1.0 / cop.get()) / ( cpWater * densityWater * (entTempDsgn.get() - lvgTempDsgn.get()));
+
+      chiller.setReferenceCondenserFluidFlowRate(condFlow);
+    }
   }
 
   return chiller;
