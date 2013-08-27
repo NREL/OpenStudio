@@ -484,6 +484,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         oaController.setEconomizerControlType("DifferentialEnthalpy");
       }
 
+      // EconoIntegration
+      QDomElement econoIntegrationElement = airSystemOACtrlElement.firstChildElement("EconoIntegration");
+      if( istringEqual(econoIntegrationElement.text().toStdString(),"Integrated") )
+      {
+        oaController.setLockoutType("NoLockout");
+      }
+      else if( istringEqual(econoIntegrationElement.text().toStdString(),"NonIntegrated") )
+      {
+        oaController.setLockoutType("LockoutWithCompressor");
+      }
+
       // EconoHiTempLockout
       QDomElement econoHiTempLockoutElement = airSystemOACtrlElement.firstChildElement("EconoHiTempLockout");
 
