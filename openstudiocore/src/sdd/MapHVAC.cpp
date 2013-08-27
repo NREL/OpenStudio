@@ -946,6 +946,64 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       heatingCoil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(value);
     }
 
+    // HtPumpCrankcaseHtCap
+    QDomElement htPumpCrankcaseHtCapElement = heatingCoilElement.firstChildElement("HtPumpCrankcaseHtCap");
+    value = htPumpCrankcaseHtCapElement.text().toDouble(&ok);
+    if( ok )
+    {
+      value = unitToUnit(value,"Btu/h","W").get();
+      heatingCoil.setCrankcaseHeaterCapacity(value);
+    }
+
+    // HtPumpCrankcaseCtrlTemp
+    QDomElement htPumpCrankcaseCtrlTempElement = heatingCoilElement.firstChildElement("HtPumpCrankcaseCtrlTemp");
+    value = htPumpCrankcaseCtrlTempElement.text().toDouble(&ok);
+    if( ok )
+    {
+      value = unitToUnit(value,"F","C").get();
+      heatingCoil.setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(value);
+    }
+
+    // HtPumpDefHtSrc
+    QDomElement htPumpDefHtSrcElement = heatingCoilElement.firstChildElement("HtPumpDefHtSrc");
+    if( istringEqual(htPumpDefHtSrcElement.text().toStdString(),"Electric") )
+    {
+      heatingCoil.setDefrostStrategy("Resistive");
+    }
+    else if( istringEqual(htPumpDefHtSrcElement.text().toStdString(),"HotGas") )
+    {
+      heatingCoil.setDefrostStrategy("ReverseCycle");
+    }
+
+    // HtPumpDefHtCap
+    QDomElement htPumpDefHtCapElement = heatingCoilElement.firstChildElement("HtPumpDefHtCap");
+    value = htPumpDefHtCapElement.text().toDouble(&ok);
+    if( ok )
+    {
+      value = unitToUnit(value,"Btu/h","W").get();
+      heatingCoil.setResistiveDefrostHeaterCapacity(value);
+    }
+
+    // HtPumpDefCtrl 
+    QDomElement htPumpDefCtrlElement = heatingCoilElement.firstChildElement("HtPumpDefCtrl");
+    if( istringEqual(htPumpDefCtrlElement.text().toStdString(),"OnDemand") )
+    {
+      heatingCoil.setDefrostControl("OnDemand");
+    }
+    else if( istringEqual(htPumpDefCtrlElement.text().toStdString(),"TimedCycle") )
+    {
+      heatingCoil.setDefrostControl("Timed");
+    }
+
+    // HtPumpDefCtrlTemp
+    QDomElement htPumpDefCtrlTempElement = heatingCoilElement.firstChildElement("HtPumpDefCtrlTemp");
+    value = htPumpDefCtrlTempElement.text().toDouble(&ok);
+    if( ok )
+    {
+      value = unitToUnit(value,"F","C").get();
+      heatingCoil.setMaximumOutdoorDryBulbTemperatureforDefrostOperation(value);
+    }
+
     result = heatingCoil;
   }
   else
@@ -1371,14 +1429,29 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       }
 
       // DXEIR
-      
       QDomElement dxEIRElement = coolingCoilElement.firstChildElement("DXEIR");
-
       value = dxEIRElement.text().toDouble(&ok);
-
       if( ok )
       {
         coilCooling.setRatedCOP( 1.0 / value);
+      }
+
+      // DXCrankcaseHtCap
+      QDomElement dxCrankcaseHtCapElement = coolingCoilElement.firstChildElement("DXCrankcaseHtCap");
+      value = dxCrankcaseHtCapElement.text().toDouble(&ok);
+      if( ok )
+      {
+        value = unitToUnit(value,"Btu/h","W").get();
+        coilCooling.setCrankcaseHeaterCapacity(value);
+      }
+
+      // DXCrankcaseCtrlTemp
+      QDomElement dxCrankcaseCtrlTempElement = coolingCoilElement.firstChildElement("DXCrankcaseCtrlTemp");
+      value = dxCrankcaseCtrlTempElement.text().toDouble(&ok);
+      if( ok )
+      {
+        value = unitToUnit(value,"F","C").get();
+        coilCooling.setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(value);
       }
 
       result = coilCooling;
@@ -1518,6 +1591,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
       boost::optional<double> totalCapacity;
       boost::optional<double> sensibleCapacity;
+      boost::optional<double> lowSpeedCapacityFraction;
 
       // CapTotRtd
       if( ! autosize() )
@@ -1530,6 +1604,26 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
           OptionalQuantity valueSI = QuantityConverter::instance().convert(valueIP, UnitSystem(UnitSystem::SI));
           OS_ASSERT(valueSI);
           coilCooling.setRatedHighSpeedTotalCoolingCapacity(valueSI->value());
+
+          // CapTotRtdStageFrac
+          QDomNodeList capTotRtdStageFracElements = coolingCoilElement.elementsByTagName("CapTotRtdStageFrac");
+          for( int j = 0; j < capTotRtdStageFracElements.count(); j++ )
+          {
+            QDomElement capTotRtdStageFracElement = capTotRtdStageFracElements.at(j).toElement();
+            QString indexAttribute = capTotRtdStageFracElement.attribute("index");
+            if( istringEqual(indexAttribute.toStdString(),"0") )
+            {
+              double fraction = capTotRtdStageFracElement.text().toDouble(&ok);
+              if( ok )
+              {
+                coilCooling.setRatedLowSpeedTotalCoolingCapacity(valueSI->value() * fraction);
+              }
+
+              lowSpeedCapacityFraction = fraction;
+
+              break;
+            }
+          }
 
           totalCapacity = value;
         }
@@ -1549,6 +1643,27 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       if( totalCapacity && sensibleCapacity )
       {
         coilCooling.setRatedHighSpeedSensibleHeatRatio( sensibleCapacity.get() / totalCapacity.get() );
+
+        // CapSensRtdStageFrac
+        if( lowSpeedCapacityFraction )
+        {
+          QDomNodeList capSensRtdStageFracElements = coolingCoilElement.elementsByTagName("CapSensRtdStageFrac");
+          for( int j = 0; j < capSensRtdStageFracElements.count(); j++ )
+          {
+            QDomElement capSensRtdStageFracElement = capSensRtdStageFracElements.at(j).toElement();
+            QString indexAttribute = capSensRtdStageFracElement.attribute("index");
+            if( istringEqual(indexAttribute.toStdString(),"0") )
+            {
+              double fraction = capSensRtdStageFracElement.text().toDouble(&ok);
+              if( ok )
+              {
+                double lowSHR = (sensibleCapacity.get() * fraction) / (totalCapacity.get() * lowSpeedCapacityFraction.get());
+                coilCooling.setRatedLowSpeedSensibleHeatRatio(lowSHR);
+              }
+              break;
+            }
+          }
+        }
       }
 
       // DXEIR
@@ -2103,6 +2218,15 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
     if( istringEqual(reheatCtrlMthdElement.text().toStdString(),"DualMaximum") )
     {
       terminal.setDamperHeatingAction("Reverse");
+
+      QDomElement htgAirFlowMaxElement = trmlUnitElement.firstChildElement("HtgAirFlowMax");
+      value = htgAirFlowMaxElement.text().toDouble(&ok);
+      if( ok && primaryAirFlow )
+      {
+         value = unitToUnit(value,"cfm","m^3/s").get();
+         double fraction = value / primaryAirFlow.get();
+         terminal.setMaximumFlowFractionDuringReheat(fraction);
+      }
     }
     else
     {
@@ -2675,6 +2799,33 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
   if( condenserSystem )
   {
     condenserSystem->addDemandBranchForComponent(chiller);
+  }
+
+  double value;
+  bool ok;
+
+  // COP
+  QDomElement copElement = chillerElement.firstChildElement("COP");
+  value = copElement.text().toDouble(&ok);
+  if( ok )
+  {
+    chiller.setReferenceCOP(value);
+  }
+
+  // PartLdRatMin
+  QDomElement partLdRatMinElement = chillerElement.firstChildElement("PartLdRatMin");
+  value = partLdRatMinElement.text().toDouble(&ok);
+  if( ok )
+  {
+    chiller.setMinimumPartLoadRatio(value);
+  }
+
+  // UnldRatMin
+  QDomElement unldRatMinElement = chillerElement.firstChildElement("UnldRatMin");
+  value = unldRatMinElement.text().toDouble(&ok);
+  if( ok )
+  {
+    chiller.setMinimumUnloadingRatio(value);
   }
 
   return chiller;
