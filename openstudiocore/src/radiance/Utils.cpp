@@ -1,6 +1,8 @@
 
 #include "Utils.hpp"
+
 #include <cassert>
+#include <sstream>
 
 namespace openstudio {
 namespace radiance {
