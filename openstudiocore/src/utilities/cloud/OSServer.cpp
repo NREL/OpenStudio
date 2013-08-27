@@ -40,6 +40,7 @@ namespace openstudio{
         m_networkReply(0), m_mutex(new QMutex()),
         m_lastAvailable(false),
         m_lastProjectUUIDs(), 
+        m_lastDeleteProjectSuccess(false),
         m_lastAnalysisUUIDs(),
         m_lastPostAnalysisJSONSuccess(false),
         m_lastPostDataPointJSONSuccess(false),
@@ -93,6 +94,19 @@ namespace openstudio{
     std::vector<UUID> OSServer_Impl::lastProjectUUIDs() const
     {
       return m_lastProjectUUIDs;
+    }
+
+    bool OSServer_Impl::deleteProject(const UUID& projectUUID, int msec) 
+    {
+      if (requestDeleteProject(projectUUID)){
+        waitForFinished(msec);
+      }
+      return lastDeleteProjectSuccess();
+    }
+
+    bool OSServer_Impl::lastDeleteProjectSuccess() const
+    {
+      return m_lastDeleteProjectSuccess;
     }
 
     std::vector<UUID> OSServer_Impl::analysisUUIDs(const UUID& projectUUID, int msec)
@@ -349,6 +363,27 @@ namespace openstudio{
       return true;
     } 
 
+    bool OSServer_Impl::requestDeleteProject(const UUID& projectUUID)
+    {
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastDeleteProjectSuccess = false;
+
+      QString id = toQString(removeBraces(projectUUID));
+      QUrl url(m_url.toString().append("/projects/").append(id));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->deleteResource(request);
+
+      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDeleteProject()));
+      OS_ASSERT(test);
+
+      return true;
+    } 
+
     bool OSServer_Impl::requestAnalysisUUIDs(const UUID& projectUUID)
     {
       if (!m_mutex->tryLock()){
@@ -539,6 +574,25 @@ namespace openstudio{
 
       if (m_networkReply->error() == QNetworkReply::NoError){
         m_lastProjectUUIDs = processListOfUUID(m_networkReply->readAll(), success);
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processDeleteProject()
+    {
+      bool success = false;
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastDeleteProjectSuccess = true;
+        success = true;
       }else{
         logNetworkError(m_networkReply->error());
       }
@@ -891,6 +945,16 @@ namespace openstudio{
     return getImpl<detail::OSServer_Impl>()->lastProjectUUIDs();
   } 
 
+  bool OSServer::deleteProject(const UUID& projectUUID, int msec) 
+  {
+    return getImpl<detail::OSServer_Impl>()->deleteProject(projectUUID, msec);
+  }
+
+  bool OSServer::lastDeleteProjectSuccess() const
+  {
+    return getImpl<detail::OSServer_Impl>()->lastDeleteProjectSuccess();
+  }
+
   std::vector<UUID> OSServer::analysisUUIDs(const UUID& projectUUID, int msec)
   {
     return getImpl<detail::OSServer_Impl>()->analysisUUIDs(projectUUID, msec);
@@ -1045,6 +1109,11 @@ namespace openstudio{
   {
     return getImpl<detail::OSServer_Impl>()->requestProjectUUIDs();
   } 
+
+  bool OSServer::requestDeleteProject(const UUID& projectUUID) 
+  {
+    return getImpl<detail::OSServer_Impl>()->requestDeleteProject(projectUUID);
+  }
 
   bool OSServer::requestAnalysisUUIDs(const UUID& projectUUID)
   {
