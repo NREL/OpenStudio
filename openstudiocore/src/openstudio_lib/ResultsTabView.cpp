@@ -661,6 +661,7 @@ UtilityBillComparisonView::UtilityBillComparisonView(const openstudio::model::Mo
   Q_FOREACH(const std::string& calibrationGuideline, model::UtilityBill::calibrationGuidelines()){
     comboBox->addItem(toQString(calibrationGuideline));
   }
+  comboBox->setCurrentIndex(0);
   hLayout->addWidget(comboBox);
 
   m_calibrationMethodLabel = new QLabel();
@@ -670,8 +671,6 @@ UtilityBillComparisonView::UtilityBillComparisonView(const openstudio::model::Mo
     this, SLOT(selectCalibrationMethod(const QString &)));
   OS_ASSERT(isConnected);
 
-  comboBox->setCurrentIndex(0);
-  
   hLayout->addStretch();
 
   vLayout->addLayout(hLayout);
@@ -679,6 +678,8 @@ UtilityBillComparisonView::UtilityBillComparisonView(const openstudio::model::Mo
   m_gridLayout = new QGridLayout();
   m_gridLayout->setContentsMargins(10,10,10,10);
   m_gridLayout->setSpacing(10);
+
+  selectCalibrationMethod(comboBox->currentText());
 
   vLayout->addLayout(m_gridLayout);
  
