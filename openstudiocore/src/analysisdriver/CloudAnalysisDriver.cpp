@@ -69,11 +69,14 @@ namespace detail {
   }
 
   bool CloudAnalysisDriver_Impl::downloadDetailedResults(analysis::DataPoint& dataPoint) {
-
+    if (requestDownloadDetailedResults(dataPoint)) {
+      waitForFinished(msec);
+    }
+    return lastDownloadDetailedResultsSuccess();
   }
 
   bool CloudAnalysisDriver_Impl::lastDownloadDetailedResultsSuccess() const {
-
+    return m_lastDownloadDetaileResultsSuccess;
   }
 
   bool CloudAnalysisDriver_Impl::isRunning() const {
@@ -108,9 +111,12 @@ namespace detail {
       return false;
     }
 
+    // try to start/restart run
+    m_lastRunSuccess = false;
+    clearErrorsAndWarnings();
+
     if (OptionalUrl url = provider().serverUrl()) {
 
-      m_lastRunSuccess = false;
       m_requestRun = OSServer(*url);
 
       // make sure the server is available
@@ -119,15 +125,17 @@ namespace detail {
 
       test = m_requestRun->requestAvailable();
       if (!test) {
+        appendErrorsAndWarnings(*m_requestRun);
         m_requestRun.reset();
         emit runRequestComplete(false);
       }
 
-      return test;
+      return true;
     }
 
-    LOG(Error,"Cannot start a run because the CloudProvider has not been started or has been terminated.")
-    return false;
+    logError("Cannot start a run because the CloudProvider has not been started or has been terminated.");
+    emit runRequestComplete(false);
+    return true;
   }
 
   bool CloudAnalysisDriver_Impl::connect(const std::string& signal,
@@ -144,16 +152,23 @@ namespace detail {
     OS_ASSERT(test);
 
     if (success) {
-      // post the analysis
-      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisPosted(bool)));
+      success = m_requestRun->lastAvailable();
+      logError("Run request failed because the server is not available.");
+    }
+    else {
+      logError("Run request failed on checking the server availability.");
+    }
+
+    if (success) {
+      // see if the analysis needs to be posted
+      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(HERE));
       OS_ASSERT(test);
 
-      success = m_requestRun->startPostAnalysisJSON(
-                    project().analysis().uuid(),
-                    project.analysis().toJSON(AnalysisSerializationOptions(project().projectDir())));
+      // HERE
     }
 
     if (!success) {
+      appendErrorsAndWarnings(*m_requestRun);
       m_requestRun.reset();
       emit runRequestComplete(false);
     }

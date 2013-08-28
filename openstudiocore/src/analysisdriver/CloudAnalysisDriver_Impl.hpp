@@ -71,12 +71,14 @@ namespace detail {
     bool stop(int msec=-1);
     bool lastStopSuccess() const;
 
-    bool downloadDetailedResults(analysis::DataPoint& dataPoint);
+    bool downloadDetailedResults(analysis::DataPoint& dataPoint,int msec=-1);
     bool lastDownloadDetailedResultsSuccess() const;
 
     bool isRunning() const;
-
     bool isDownloading() const;
+
+    std::vector<std::string> errors() const;
+    std::vector<std::string> warnings() const;
 
     /** If no argument is specified, CloudAnalysisDriver will run until not isRunning() and
      *  not isDownloading(). If msec is specified, will wait for at most msec milliseconds.
@@ -87,10 +89,22 @@ namespace detail {
     /** @name Non-blocking class members */
     //@{
 
+    /** Request the project() to run on the provider(). Returns false if isRunning().
+     *  Otherwise returns true and emits runRequestComplete(bool success) when either the
+     *  analysis has stopped running on the server or the process has failed. The ultimate
+     *  value of success will also be available from lastRunSuccess(). This method will try
+     *  to pick up where a previous run left off. */
     bool requestRun();
 
+    // ETH@20130827 - Will OSServer::stop also kill downloads?
+    /** Request the project() to stop running on the provider(). Returns false if not
+     *  (isRunning() || isDownloading()). Otherwise returns true and emits
+     *  stopRequestComplete(bool success) when either the analysis has stopped running or the
+     *  process has failed. The ultimate value of success will also be available from
+     *  lastStopSuccess(). */
     bool requestStop();
 
+    /** Request for dataPoint's detailed results to be downloaded. */
     bool requestDownloadDetailedResults(analysis::DataPoint& dataPoint);
 
     //@}
@@ -124,6 +138,8 @@ namespace detail {
     void runRequestComplete(bool success);
 
     void stopRequestComplete(bool success);
+
+    void downloadRequestsComplete(bool success);
 
     //@}
     /** @name AnalysisDriver Progress Signals */
@@ -168,6 +184,9 @@ namespace detail {
     bool m_lastStopSuccess;
     bool m_lastDownloadDetaileResultsSuccess;
 
+    std::vector<std::string> m_errors;
+    std::vector<std::string> m_warnings;
+
     // request run process
     boost::optional<OSServer> m_requestRun;
     std::deque<DataPoint> m_uploadQueue;
@@ -180,8 +199,12 @@ namespace detail {
     boost::optional<OSServer> m_requestDownload;
     std::deque<DataPoint> m_downloadQueue;
 
-    bool startDownloading();
+    void clearErrorsAndWarnings();
+    void logError(const std::string& error);
+    void logWarning(const std::string& warning);
+    void appendErrorsAndWarnings(const OSServer& server);
 
+    bool startDownloading();
     bool requestDataPointDownload(const DataPoint& dataPoint);
   };
 

@@ -104,6 +104,7 @@ class ANALYSISDRIVER_API CloudAnalysisDriver {
    *  lastStopSuccess(). */
   bool requestStop();
 
+  /** Request for dataPoint's detailed results to be downloaded. */
   bool requestDownloadDetailedResults(analysis::DataPoint& dataPoint);
 
   //@}
