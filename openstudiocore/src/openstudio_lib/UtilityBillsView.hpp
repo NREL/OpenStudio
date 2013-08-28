@@ -174,6 +174,8 @@ private slots:
   void setBillFormat(BillFormat billFormat);
   void updateEnergyUseLabelText(const QString& text);
   void updatePeakLabelText(const QString& text);
+  void updateRunPeriodDates();
+  void deleteAllWidgetsAndLayoutItems(QLayout * layout, bool deleteWidgets = true);
 
 };
 

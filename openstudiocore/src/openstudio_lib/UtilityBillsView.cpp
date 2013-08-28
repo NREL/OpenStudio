@@ -171,18 +171,6 @@ boost::optional<QString> UtilityBillsInspectorView::runPeriodDates()
   return beginAndEndDates;
 }
 
-
-  //boost::optional<model::YearDescription> yd = m_model.yearDescription();
-  //if (!yd){
-  //  yd = m_model.getUniqueModelObject<model::YearDescription>();
-  //}
-  //OS_ASSERT(yd);
-  //isConnected = connect( yd->getImpl<openstudio::model::detail::YearDescription_Impl>().get(),
-  //                 SIGNAL(onChange()),
-  //                 this,
-  //                 SLOT(updateReportButtons()) );
-  //OS_ASSERT(isConnected);
-
 void UtilityBillsInspectorView::createWidgets()
 {
   QWidget* hiddenWidget = new QWidget();
@@ -201,6 +189,15 @@ void UtilityBillsInspectorView::createWidgets()
   QLabel * label = NULL;
 
   QVBoxLayout * vLayout = NULL;
+  
+  boost::optional<model::YearDescription> yd = m_model.yearDescription();
+  if (!yd){
+    yd = m_model.getUniqueModelObject<model::YearDescription>();
+  }
+  OS_ASSERT(yd);
+  isConnected = connect( yd->getImpl<openstudio::model::detail::YearDescription_Impl>().get(), SIGNAL(onChange()),
+    this, SLOT(updateRunPeriodDates()) );
+  OS_ASSERT(isConnected);
 
   // Warning widget if no weather file
 
@@ -620,22 +617,43 @@ void UtilityBillsInspectorView::addBillingPeriod(model::BillingPeriod & billingP
 
 void UtilityBillsInspectorView::deleteBillingPeriods()
 {
-  if(m_billGridLayout ==0) return;
+  if(m_billGridLayout == 0) return; 
+  
+  int rowCount = 0;
 
-  QLayoutItem * child;
-  while((child = m_billGridLayout->takeAt(0)) != 0 ){
-    QWidget* widget = child->widget();
-    if (widget){
-      delete widget;
-    }
-    delete child;
-  }
+  rowCount = m_billGridLayout->rowCount();
+
+  if(rowCount == 1) return;
+
+  deleteAllWidgetsAndLayoutItems(m_billGridLayout);
+
+  rowCount = m_billGridLayout->rowCount();
+
+  if(rowCount == 1) return;
+
   delete m_billGridLayout;
   m_billGridLayout = new QGridLayout();
   m_billGridLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
   m_billGridLayout->setContentsMargins(0,0,0,0);
   m_billGridLayout->setSpacing(10);
   m_billGridLayoutWidget->setLayout(m_billGridLayout);
+}
+
+void UtilityBillsInspectorView::deleteAllWidgetsAndLayoutItems(QLayout * layout, bool deleteWidgets)
+{
+  if(!layout) return;
+
+  while(QLayoutItem * item = layout->takeAt(0)){
+    if (deleteWidgets){
+      if (QWidget* widget = item->widget()){
+        delete widget;
+      }
+    }
+    else if(QLayout * childLayout = item->layout()){
+      deleteAllWidgetsAndLayoutItems(childLayout, deleteWidgets);
+    }
+    delete item;
+  }
 }
 
 QString UtilityBillsInspectorView::getEnergyUseLabelText()
@@ -702,7 +720,7 @@ void UtilityBillsInspectorView::deleteBillingPeriod(int idx)
     std::vector<model::BillingPeriod> billingPeriods =  m_utilityBill.get().billingPeriods();
     model::BillingPeriod billingPeriod = billingPeriods.at(idx);
     unsigned index = billingPeriod.groupIndex();
-    m_utilityBill.get().eraseExtensibleGroup(index);
+    m_utilityBill.get().eraseExtensibleGroup(index); // TODO reorder 
     deleteBillingPeriods();
     addBillingPeriods();
   }
@@ -745,6 +763,12 @@ void UtilityBillsInspectorView::updatePeakLabelText(const QString& text)
   QString peakLabelText = getPeakLabelText();
     if(m_peakLabel) m_peakLabel->setText(peakLabelText);
 }
+
+void UtilityBillsInspectorView::updateRunPeriodDates()
+{
+  updateRunPeriodDatesLabel();
+}
+
 
 //**********************************************************************************************************
 
@@ -828,19 +852,19 @@ void BillingPeriodWidget::createWidgets(QGridLayout * gridLayout,
   }
 
   // TODO remove below and uncomment in modelObjectChanged()
-  if(m_startDateEdit){
-    Date startDate = m_billingPeriod.get().startDate();
-    bool wasBlocked = m_startDateEdit->blockSignals(true);
-    m_startDateEdit->setDate(QDate(startDate.year(),month(startDate.monthOfYear()),startDate.dayOfMonth()));
-    m_startDateEdit->blockSignals(wasBlocked);
-  }
+  //if(m_startDateEdit){
+  //  Date startDate = m_billingPeriod.get().startDate();
+  //  bool wasBlocked = m_startDateEdit->blockSignals(true);
+  //  m_startDateEdit->setDate(QDate(startDate.year(),month(startDate.monthOfYear()),startDate.dayOfMonth()));
+  //  m_startDateEdit->blockSignals(wasBlocked);
+  //}
 
-  if(m_endDateEdit){
-    Date endDate = m_billingPeriod.get().endDate();
-    bool wasBlocked = m_endDateEdit->blockSignals(true);
-    m_endDateEdit->setDate(QDate(endDate.year(),month(endDate.monthOfYear()),endDate.dayOfMonth()));
-    m_endDateEdit->blockSignals(wasBlocked);
-  }
+  //if(m_endDateEdit){
+  //  Date endDate = m_billingPeriod.get().endDate();
+  //  bool wasBlocked = m_endDateEdit->blockSignals(true);
+  //  m_endDateEdit->setDate(QDate(endDate.year(),month(endDate.monthOfYear()),endDate.dayOfMonth()));
+  //  m_endDateEdit->blockSignals(wasBlocked);
+  //}
 
 }
 
@@ -893,19 +917,19 @@ void BillingPeriodWidget::attach(openstudio::model::BillingPeriod & billingPerio
   }
 
   // TODO remove below and uncomment in modelObjectChanged()
-  if(m_startDateEdit){
-    Date startDate = m_billingPeriod.get().startDate();
-    bool wasBlocked = m_startDateEdit->blockSignals(true);
-    m_startDateEdit->setDate(QDate(startDate.year(),month(startDate.monthOfYear()),startDate.dayOfMonth()));
-    m_startDateEdit->blockSignals(wasBlocked);
-  }
+  //if(m_startDateEdit){
+  //  Date startDate = m_billingPeriod.get().startDate();
+  //  bool wasBlocked = m_startDateEdit->blockSignals(true);
+  //  m_startDateEdit->setDate(QDate(startDate.year(),month(startDate.monthOfYear()),startDate.dayOfMonth()));
+  //  m_startDateEdit->blockSignals(wasBlocked);
+  //}
 
-  if(m_endDateEdit){
-    Date endDate = m_billingPeriod.get().endDate();
-    bool wasBlocked = m_endDateEdit->blockSignals(true);
-    m_endDateEdit->setDate(QDate(endDate.year(),month(endDate.monthOfYear()),endDate.dayOfMonth()));
-    m_endDateEdit->blockSignals(wasBlocked);
-  }
+  //if(m_endDateEdit){
+  //  Date endDate = m_billingPeriod.get().endDate();
+  //  bool wasBlocked = m_endDateEdit->blockSignals(true);
+  //  m_endDateEdit->setDate(QDate(endDate.year(),month(endDate.monthOfYear()),endDate.dayOfMonth()));
+  //  m_endDateEdit->blockSignals(wasBlocked);
+  //}
 
   modelObjectChanged();
 
@@ -974,20 +998,19 @@ void BillingPeriodWidget::getBillingPeriodLineEdit(QGridLayout * gridLayout, int
 void BillingPeriodWidget::modelObjectChanged()
 {
   if(!m_billingPeriod.get().empty()){
-  // TODO uncomment
-  //  if(m_startDateEdit){
-  //    Date startDate = m_billingPeriod.get().startDate();
-  //    bool wasBlocked = m_startDateEdit->blockSignals(true);
-  //    m_startDateEdit->setDate(QDate(startDate.year(),month(startDate.monthOfYear()),startDate.dayOfMonth()));
-  //    m_startDateEdit->blockSignals(wasBlocked);
-  //  }
+    if(m_startDateEdit && !m_startDateEdit->signalsBlocked()){
+      Date startDate = m_billingPeriod.get().startDate();
+      m_startDateEdit->blockSignals(true);
+      m_startDateEdit->setDate(QDate(startDate.year(),month(startDate.monthOfYear()),startDate.dayOfMonth()));
+      m_startDateEdit->blockSignals(false);
+    }
 
-  //  if(m_endDateEdit){
-  //    Date endDate = m_billingPeriod.get().endDate();
-  //    bool wasBlocked = m_endDateEdit->blockSignals(true);
-  //    m_endDateEdit->setDate(QDate(endDate.year(),month(endDate.monthOfYear()),endDate.dayOfMonth()));
-  //    m_endDateEdit->blockSignals(wasBlocked);
-  //  }
+    if(m_endDateEdit && !m_endDateEdit->signalsBlocked()){
+      Date endDate = m_billingPeriod.get().endDate();
+      m_endDateEdit->blockSignals(true);
+      m_endDateEdit->setDate(QDate(endDate.year(),month(endDate.monthOfYear()),endDate.dayOfMonth()));
+      m_endDateEdit->blockSignals(false);
+    }
   }
 }
 
