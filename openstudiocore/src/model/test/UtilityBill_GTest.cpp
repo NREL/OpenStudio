@@ -118,6 +118,32 @@ TEST_F(ModelFixture, UtilityBill_Electricity) {
   
   Meter meter2 = utilityBill.consumptionMeter();
   EXPECT_EQ(1u, model.getModelObjects<Meter>().size());
+
+  Meter meter3 = utilityBill.consumptionMeter();
+  EXPECT_EQ(1u, model.getModelObjects<Meter>().size());
+
+  Meter meter4 = utilityBill.consumptionMeter();
+  EXPECT_EQ(1u, model.getModelObjects<Meter>().size());
+
+  boost::optional<Meter> meter5 = utilityBill.peakDemandMeter();
+  ASSERT_TRUE(meter5);
+  EXPECT_EQ(2u, model.getModelObjects<Meter>().size());
+
+  boost::optional<Meter> meter6 = utilityBill.peakDemandMeter();
+  ASSERT_TRUE(meter5);
+  EXPECT_EQ(2u, model.getModelObjects<Meter>().size());
+
+  boost::optional<Meter> meter7 = utilityBill.peakDemandMeter();
+  ASSERT_TRUE(meter6);
+  EXPECT_EQ(2u, model.getModelObjects<Meter>().size());
+
+  Meter meter8 = utilityBill.consumptionMeter();
+  EXPECT_EQ(2u, model.getModelObjects<Meter>().size());
+
+  boost::optional<Meter> meter9 = utilityBill.peakDemandMeter();
+  ASSERT_TRUE(meter9);
+  EXPECT_EQ(2u, model.getModelObjects<Meter>().size());
+
 }
 
 TEST_F(ModelFixture, UtilityBill_Coverage) {

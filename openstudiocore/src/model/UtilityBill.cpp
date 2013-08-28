@@ -756,13 +756,13 @@ namespace detail {
     boost::optional<Meter> result;
     BOOST_FOREACH(const Meter& meter, this->model().getModelObjects<Meter>()){
       if ((istringEqual(meter.name(), meterName)) &&
-          (istringEqual("Zone", meter.reportingFrequency()))){
+          (istringEqual("Timestep", meter.reportingFrequency()))){
         return meter;
       }
     }
 
     result = Meter(this->model());
-    result->setReportingFrequency("Zone");
+    result->setReportingFrequency("Timestep");
     result->setFuelType(fuelType);
     result->setInstallLocationType(meterInstallLocation);
     if (meterSpecificInstallLocation){
