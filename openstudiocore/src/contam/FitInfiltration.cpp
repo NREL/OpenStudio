@@ -39,7 +39,7 @@
 #include <string>
 #include <iostream>
 
-#define SIMREADX
+//#define SIMREADX
 
 void usage(boost::program_options::options_description desc)
 {
@@ -189,11 +189,11 @@ int main(int argc, char *argv[])
 {
   // Some ugly hard coded paths
   // Windows
-  // openstudio::path contamExePath = openstudio::toPath("C:\\Program Files (x86)\\NIST\\CONTAM 3.1\\ContamX3.exe");
-  // openstudio::path simreadExePath = openstudio::toPath("C:\\Users\\jwd131\\Software\\CONTAM\\simread31.exe");
+  openstudio::path contamExePath = openstudio::toPath("C:\\Program Files (x86)\\NIST\\CONTAM 3.1\\ContamX3.exe");
+  openstudio::path simreadExePath = openstudio::toPath("C:\\Users\\jwd131\\Software\\CONTAM\\simread31.exe");
   // Linux
-  openstudio::path contamExePath = openstudio::toPath("/usr/local/bin/contamx-3.1-linux-release-static.exe");
-  openstudio::path simreadExePath = openstudio::toPath("/usr/local/bin/simreadx-linux-static");
+  //openstudio::path contamExePath = openstudio::toPath("/usr/local/bin/contamx-3.1-linux-release-static.exe");
+  //openstudio::path simreadExePath = openstudio::toPath("/usr/local/bin/simreadx-linux-static");
 
   double density = 1.2041;
 
@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
     ("flow,f", boost::program_options::value<double>(&flow), "leakage flow rate per envelope area [m^3/h/m^2]")
     ("help,h", "print help message")
     ("inputPath,i", boost::program_options::value<std::string>(&inputPathString), "path to input OSM file")
-    ("level,l", boost::program_options::value<std::string>(&leakageDescriptorString), "leakage level or grade")
+    ("level,l", boost::program_options::value<std::string>(&leakageDescriptorString), "airtightness: Leaky|Average|Tight (default: Average)")
     ("outputPath,o", boost::program_options::value<std::string>(&outputPathString), "path to output OSM file")
     ("quiet,q", "suppress progress output");
 
