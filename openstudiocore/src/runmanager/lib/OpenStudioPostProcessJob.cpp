@@ -37,8 +37,6 @@
 #include <model/Facility_Impl.hpp>
 #include <model/TimeDependentValuation.hpp>
 #include <model/TimeDependentValuation_Impl.hpp>
-#include <model/UtilityBill.hpp>
-#include <model/UtilityBill_Impl.hpp>
 
 #include <energyplus/ReverseTranslator.hpp>
 
