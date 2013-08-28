@@ -2819,8 +2819,36 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
   }
 
+  // At this time undo any hard sized CondenserWater system pumps.
+  // We don't have full specifications for tower sizing.
+
+  if( istringEqual(typeElement.text().toStdString(),"CondenserWater") )
+  {
+    std::vector<model::ModelObject> constantPumps;
+    constantPumps = plantLoop.supplyComponents(model::PumpConstantSpeed::iddObjectType());
+
+    for(std::vector<model::ModelObject>::iterator it = constantPumps.begin();
+        it != constantPumps.end();
+        it++)
+    {
+      it->cast<model::PumpConstantSpeed>().autosizeRatedFlowRate();
+      it->cast<model::PumpConstantSpeed>().autosizeRatedPowerConsumption();
+    }
+
+    std::vector<model::ModelObject> variablePumps;
+    variablePumps = plantLoop.supplyComponents(model::PumpVariableSpeed::iddObjectType());
+
+    for(std::vector<model::ModelObject>::iterator it = variablePumps.begin();
+        it != variablePumps.end();
+        it++)
+    {
+      it->cast<model::PumpVariableSpeed>().autosizeRatedFlowRate();
+      it->cast<model::PumpVariableSpeed>().autosizeRatedPowerConsumption();
+    }
+  }
+
   // Translate PlantLoop::MaximumLoopFlowRate
-  if( ! autosize() )
+  if( ! autosize() && (! istringEqual(typeElement.text().toStdString(),"CondenserWater")) )
   {
     std::vector<model::ModelObject> constantPumps;
     constantPumps = plantLoop.supplyComponents(plantLoop.supplyInletNode(),
