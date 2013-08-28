@@ -347,7 +347,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirLoopHVAC(airLoopHVAC);
       break;
     }
-  case openstudio::IddObjectType::AirTerminal_SingleDuct_ConstantVolume_CooledBeam :
+  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam :
     {
       model::AirTerminalSingleDuctConstantVolumeCooledBeam airTerminal = modelObject.cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
       retVal = translateAirTerminalSingleDuctConstantVolumeCooledBeam(airTerminal);
