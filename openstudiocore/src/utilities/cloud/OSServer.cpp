@@ -317,7 +317,7 @@ namespace openstudio{
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processAvailable()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processAvailable()));
       OS_ASSERT(test);
 
       return true;
@@ -337,7 +337,7 @@ namespace openstudio{
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processProjectUUIDs()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processProjectUUIDs()));
       OS_ASSERT(test);
 
       return true;
@@ -358,7 +358,7 @@ namespace openstudio{
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processAnalysisUUIDs()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processAnalysisUUIDs()));
       OS_ASSERT(test);
 
       return true;
@@ -409,7 +409,7 @@ namespace openstudio{
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDataPointUUIDs()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDataPointUUIDs()));
       OS_ASSERT(test);
 
       return true;

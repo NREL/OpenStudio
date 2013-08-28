@@ -255,6 +255,13 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   /** @name Actions */
   //@{
 
+  /** Update high level results from json. */
+  bool updateFromJSON(const std::string& json);
+
+  /** Whoever downloaded the zip file should have setDirectory(), and pathToZipFile should be
+   *  in directory(). */
+  bool updateDetails(const openstudio::path& pathToZipFile);
+
   /** Clear model, workspace, and sqlFile from cache. */
   void clearFileDataFromCache() const;
 

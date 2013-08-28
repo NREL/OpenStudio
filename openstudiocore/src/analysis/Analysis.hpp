@@ -174,6 +174,13 @@ class ANALYSIS_API Analysis : public AnalysisObject {
 
   std::vector<DataPoint> failedDataPoints() const;
 
+  // HERE -- Check directory(), or missing FileReferences? directory() seems most robust for
+  // failed DataPoints (if we don't need/want to register a remote directory upon importing
+  // JSON).
+  /** Return all complete \link DataPoint DataPoints\endlink with runType() ==
+   *  DataPointRunType::CloudDetailed and an empty directory(). */
+  std::vector<DataPoint> dataPointsNeedingDetails() const;
+
   /** Get the DataPoints with matching variableValues. VariableValues may contain Null QVariants of
    *  the correct type, which means that any value at that position should be returned. */
   std::vector<DataPoint> getDataPoints(const std::vector<QVariant>& variableValues) const;

@@ -20,7 +20,7 @@
 #ifndef ANALYSISDRIVER_CLOUDANALYSISDRIVER_IMPL_HPP
 #define ANALYSISDRIVER_CLOUDANALYSISDRIVER_IMPL_HPP
 
-#include <analysisdriver/AnalysisdriverAPI.hpp>
+#include <analysisdriver/AnalysisDriverAPI.hpp>
 
 #include <analysisdriver/SimpleProject.hpp>
 
@@ -96,15 +96,19 @@ namespace detail {
      *  to pick up where a previous run left off. */
     bool requestRun();
 
-    // ETH@20130827 - Will OSServer::stop also kill downloads?
     /** Request the project() to stop running on the provider(). Returns false if not
      *  (isRunning() || isDownloading()). Otherwise returns true and emits
-     *  stopRequestComplete(bool success) when either the analysis has stopped running or the
-     *  process has failed. The ultimate value of success will also be available from
-     *  lastStopSuccess(). */
-    bool requestStop();
+     *  stopRequestComplete(bool success) when the analysis has stopped running and the
+     *  download queue is empty, or the process has failed. The ultimate value of
+     *  success will also be available from lastStopSuccess(). */
+    bool requestStop(bool waitForAlreadyRunningDataPoints=false);
 
-    /** Request for dataPoint's detailed results to be downloaded. */
+    /** Request for dataPoint's detailed results to be downloaded. Returns false if
+     *  !dataPoint.complete() or if the detailed results have already been downloaded.
+     *  Otherwise returns true and emits dowloadRequestsComplete(bool success) when the
+     *  detailed downloads queue is empty or the process has failed. Look for the
+     *  dataPointDetailsComplete signal to see when this particular dataPoint's results
+     *  have been incorporated. */
     bool requestDownloadDetailedResults(analysis::DataPoint& dataPoint);
 
     //@}
@@ -115,8 +119,6 @@ namespace detail {
                  const QObject* qObject,
                  const std::string& slot,
                  Qt::ConnectionType type = Qt::AutoConnection) const;
-
-    void moveToThread(QThread* targetThread);
 
     //@}
     /** @name Type Casting */
@@ -150,8 +152,11 @@ namespace detail {
     // emitted when data point posted to server
     void dataPointQueued(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
 
-    // emitted when data point results downloaded and incorporated into project
+    // emitted when data point slim results downloaded and incorporated into project
     void dataPointComplete(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
+
+    // emitted when data point detailed results downloaded and incorporated into project
+    void dataPointDetailsComplete(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
 
     // emitted when last data point downloaded and incorporated into project
     void analysisComplete(const openstudio::UUID& analysis);
@@ -160,20 +165,51 @@ namespace detail {
 
     //@}
    protected slots:
-     // request run process
+     // RUNNING ================================================================
+
+     // 1. Is the server available?
      void availableForRun(bool success);
+     // 2. If so, does the server know about our analysis?
+     void analysisOnServer(bool success);
+     // 3a. If not, post it.
      void analysisPosted(bool success);
+     // 3b. If so, are there any data points on the server?
+     void allDataPointUUIDsReturned(bool success);
+
+     // 4. If posted analysis (3a) or there are no data points (3b and result is empty),
+     //    upload the analysis files.
      void analysisUploaded(bool success);
+
+     // 5a. If there were data points (3b with non-empty result), figure out all the queues.
+     //     Gets complete data points.
+     void readyToSortOutQueues(bool success);
+
+     // 5b. If the analysis was uploaded (4), populate the postQueue and start posting
+     //     DataPoints.
+
+     // 6. Keep posting DataPoints until the postQueue is empty.
      void dataPointQueued(bool success);
+
+     // 7. Is the analysis already running on the server?
+     //    (Could skip this step if uploaded analysis, but doesn't seem worth the extra
+     //    state to do so.)
+     void analysisRunningOnServer(bool success);
+
+     // 8. If not, kick it off.
      void analysisStarted(bool success);
+
+     // 9. Start the monitoring process (if already running or just kicked off).
+
+     // MONITORING =============================================================
 
      // watch for complete data points
      void completeDataPointUUIDsReturned(bool success);
 
+     // DOWNLOADING ============================================================
+
      // download process
      void dataPointDownloadComplete(bool success);
 
-   protected:
    private:
     REGISTER_LOGGER("openstudio.analysisdriver.CloudAnalysisDriver");
 
@@ -182,34 +218,39 @@ namespace detail {
 
     bool m_lastRunSuccess;
     bool m_lastStopSuccess;
-    bool m_lastDownloadDetaileResultsSuccess;
+    bool m_lastDownloadDetailedResultsSuccess;
 
     std::vector<std::string> m_errors;
     std::vector<std::string> m_warnings;
 
     // request run process
     boost::optional<OSServer> m_requestRun;
-    std::deque<DataPoint> m_uploadQueue;
+    std::deque<analysis::DataPoint> m_postQueue;
 
     // watch for complete data points
     boost::optional<OSServer> m_monitorDataPoints;
-    std::vector<DataPoint> m_waitingQueue;
+    std::vector<analysis::DataPoint> m_waitingQueue;
 
     // download slim data points
     boost::optional<OSServer> m_requestJson;
-    std::deque<DataPoint> m_jsonQueue;
+    std::deque<analysis::DataPoint> m_jsonQueue;
 
     // download detailed results
     boost::optional<OSServer> m_requestDetails;
-    std::deque<DataPoint> m_downloadDetails;
+    std::deque<analysis::DataPoint> m_detailsQueue;
 
     void clearErrorsAndWarnings();
     void logError(const std::string& error);
     void logWarning(const std::string& warning);
     void appendErrorsAndWarnings(const OSServer& server);
 
-    bool startDownloading();
-    bool requestDataPointDownload(const DataPoint& dataPoint);
+    void registerRunFailure();
+
+    bool startDownloadingJson();
+    bool requestJsonDownload(const analysis::DataPoint& dataPoint);
+
+    bool startDownloadingDetails();
+    bool requestDetailsDownload(const analysis::DataPoint& dataPoint);
   };
 
 } // detail

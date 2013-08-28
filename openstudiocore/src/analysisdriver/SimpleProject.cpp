@@ -1820,10 +1820,6 @@ bool SimpleProject::isRunning() const {
   return getImpl()->isRunning();
 }
 
-AnalysisRunOptions SimpleProject::standardRunOptions() const {
-  return getImpl()->standardRunOptions();
-}
-
 bool SimpleProject::modelsRequireUpdate() const {
   return getImpl()->modelsRequireUpdate();
 }

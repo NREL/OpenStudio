@@ -37,6 +37,7 @@
 namespace openstudio {
 
 class BCLMeasure;
+class CloudProvider;
 class FileReference;
 class ProgressBar;
 class Workspace;

@@ -22,6 +22,10 @@
 
 #include <analysis/Analysis.hpp>
 
+#include <utilities/core/Assert.hpp>
+#include <utilities/core/Containers.hpp>
+#include <utilities/core/System.hpp>
+
 using namespace openstudio::analysis;
 
 namespace openstudio {
@@ -35,7 +39,7 @@ namespace detail {
       m_project(project),
       m_lastRunSuccess(false),
       m_lastStopSuccess(false),
-      m_lastDownloadDetaileResultsSuccess(false)
+      m_lastDownloadDetailedResultsSuccess(false)
   {}
 
   CloudProvider CloudAnalysisDriver_Impl::provider() const {
@@ -68,7 +72,9 @@ namespace detail {
     return m_lastStopSuccess;
   }
 
-  bool CloudAnalysisDriver_Impl::downloadDetailedResults(analysis::DataPoint& dataPoint) {
+  bool CloudAnalysisDriver_Impl::downloadDetailedResults(analysis::DataPoint& dataPoint,
+                                                         int msec)
+  {
     if (requestDownloadDetailedResults(dataPoint)) {
       waitForFinished(msec);
     }
@@ -76,7 +82,7 @@ namespace detail {
   }
 
   bool CloudAnalysisDriver_Impl::lastDownloadDetailedResultsSuccess() const {
-    return m_lastDownloadDetaileResultsSuccess;
+    return m_lastDownloadDetailedResultsSuccess;
   }
 
   bool CloudAnalysisDriver_Impl::isRunning() const {
@@ -84,7 +90,15 @@ namespace detail {
   }
 
   bool CloudAnalysisDriver_Impl::isDownloading() const {
-    return m_requestDownload;
+    return (m_requestJson || m_requestDetails);
+  }
+
+  std::vector<std::string> CloudAnalysisDriver_Impl::errors() const {
+    return m_errors;
+  }
+
+  std::vector<std::string> CloudAnalysisDriver_Impl::warnings() const {
+    return m_warnings;
   }
 
   bool CloudAnalysisDriver_Impl::waitForFinished(int msec) {
@@ -125,9 +139,7 @@ namespace detail {
 
       test = m_requestRun->requestAvailable();
       if (!test) {
-        appendErrorsAndWarnings(*m_requestRun);
-        m_requestRun.reset();
-        emit runRequestComplete(false);
+        registerRunFailure();
       }
 
       return true;
@@ -147,37 +159,80 @@ namespace detail {
   }
 
   void CloudAnalysisDriver_Impl::availableForRun(bool success) {
-
     bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(availableForRun(bool)));
     OS_ASSERT(test);
 
-    if (success) {
-      success = m_requestRun->lastAvailable();
-      logError("Run request failed because the server is not available.");
-    }
-    else {
+    if (!success) {
       logError("Run request failed on checking the server availability.");
     }
 
     if (success) {
+      success = m_requestRun->lastAvailable();
+      if (!success) {
+        logError("Run request failed because the server is not available.");
+      }
+    }
+
+    if (success) {
       // see if the analysis needs to be posted
-      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(HERE));
+      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisOnServer(bool)));
       OS_ASSERT(test);
 
-      // HERE
+      success = m_requestRun->requestAnalysisUUIDs(project().analysis().uuid());
     }
 
     if (!success) {
-      appendErrorsAndWarnings(*m_requestRun);
-      m_requestRun.reset();
-      emit runRequestComplete(false);
+      registerRunFailure();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::analysisOnServer(bool success) {
+    bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisOnServer(bool)));
+    OS_ASSERT(test);
+
+    if (!success) {
+      logError("Run request failed on retrieving analysis UUIDs.");
+    }
+
+    if (success) {
+      UUIDVector analysisUUIDs = m_requestRun->lastAnalysisUUIDs();
+      if (std::find(analysisUUIDs.begin(),analysisUUIDs.end(),project().analysis().uuid()) == analysisUUIDs.end()) {
+        // analysis not found -- post it
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisPosted(bool)));
+        OS_ASSERT(test);
+
+        success = m_requestRun->startPostAnalysisJSON(
+              project().analysis().uuid(),
+              project().analysis().toJSON(AnalysisSerializationOptions(project().projectDir())));
+      }
+      else {
+        // analysis found -- see if there are any data points already on the server
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(allDataPointUUIDsReturned(bool)));
+        OS_ASSERT(test);
+
+        success = m_requestRun->requestDataPointUUIDs(project().analysis().uuid());
+      }
+    }
+
+    if (!success) {
+      registerRunFailure();
     }
   }
 
   void CloudAnalysisDriver_Impl::analysisPosted(bool success) {
-
     bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisPosted(bool)));
     OS_ASSERT(test);
+
+    if (!success) {
+      logError("Run request failed on posting the Analysis JSON.");
+    }
+
+    if (success) {
+      success = m_requestRun->lastPostAnalysisJSONSuccess();
+      if (!success) {
+        logError("Run request failed because posting the analysis JSON failed.");
+      }
+    }
 
     if (success) {
       // upload the analysis
@@ -189,14 +244,57 @@ namespace detail {
     }
 
     if (!success) {
-      m_requestRun.reset();
-      emit runRequestComplete(false);
+      registerRunFailure();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::allDataPointUUIDsReturned(bool success) {
+    bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(allDataPointUUIDsReturned(bool)));
+    OS_ASSERT(test);
+
+    if (!success) {
+      logError("Run request failed on request for list of DataPoint UUIDs.");
+    }
+
+    if (success) {
+      if (m_requestRun->lastDataPointUUIDs().empty()) {
+        // no data points posted yet, upload the analysis files
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisUploaded(bool)));
+        OS_ASSERT(test);
+
+        success = m_requestRun->startUploadAnalysisFiles(project().analysis().uuid(),
+                                                         project().zipFileForCloud());
+      }
+      else {
+        // there are data points, sort out all the queues--have list of all data points
+        // server knows about. need list of complete data points to determine waiting versus
+        // downloading queues
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(readyToSortOutQueues(bool)));
+        OS_ASSERT(test);
+
+        success = m_requestRun->requestCompleteDataPointUUIDs(project().analysis().uuid());
+      }
+    }
+
+    if (!success) {
+      registerRunFailure();
     }
   }
 
   void CloudAnalysisDriver_Impl::analysisUploaded(bool success) {
     bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisUploaded(bool)));
     OS_ASSERT(test);
+
+    if (!success) {
+      logError("Run request failed on trying to upload the analysis files.");
+    }
+
+    if (success) {
+      success = m_requestRun->lastUploadAnalysisFilesSuccess();
+      if (!success) {
+        logError("Run request failed because uploading the analysis files failed.");
+      }
+    }
 
     if (success) {
       // start posting DataPoints
@@ -205,10 +303,10 @@ namespace detail {
 
       // initialize queue
       DataPointVector dataPoints = project().analysis().dataPointsToQueue();
-      m_uploadQueue = std::deque<DataPoint>(dataPoints.begin(),dataPoints.end());
+      m_postQueue = std::deque<DataPoint>(dataPoints.begin(),dataPoints.end());
 
-      DataPoint toQueue = m_uploadQueue.front();
-      m_uploadQueue.pop_front();
+      DataPoint toQueue = m_postQueue.front();
+      m_postQueue.pop_front();
       success = m_requestRun->startPostDataPointJSON(
                     project().analysis().uuid(),
                     toQueue.toJSON(DataPointSerializationOptions(project().projectDir())));
@@ -217,12 +315,51 @@ namespace detail {
     }
 
     if (!success) {
-      m_requestRun.reset();
-      emit runRequestComplete(false);
+      registerRunFailure();
     }
   }
 
-  void CloudAnalysisDriver_Impl::dataPointQueued(bool success) {
+  void CloudAnalysisDriver_Impl::readyToSortOutQueues(bool success) {
+    bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(readyToSortOutQueues(bool)));
+    OS_ASSERT(test);
+
+    if (!success) {
+      logError("Run request failed on trying to set up the queues based on the server state.");
+    }
+
+    if (success) {
+      UUIDVector allUUIDs = m_requestRun->lastDataPointUUIDs();
+      UUIDVector completeUUIDs = m_requestRun->lastCompleteDataPointUUIDs();
+
+      BOOST_FOREACH(const DataPoint& missingPoint, project().analysis().dataPointsToQueue()) {
+        if (std::find(allUUIDs.begin(),allUUIDs.end(),missingPoint.uuid()) == allUUIDs.end()) {
+          // post queue -- need to be run and are not in allUUIDs
+          m_postQueue.push_back(missingPoint);
+          continue;
+        }
+        if (std::find(completeUUIDs.begin(),completeUUIDs.end(),missingPoint.uuid()) == completeUUIDs.end()) {
+          // waiting queue -- need to be run and are not in completeUUIDs
+          m_waitingQueue.push_back(missingPoint);
+        }
+        else {
+          // json queue -- need to be run and are in completeUUIDs
+          m_jsonQueue.push_back(missingPoint);
+        }
+      }
+
+      BOOST_FOREACH(const DataPoint& missingDetails, project().analysis().dataPointsNeedingDetails()) {
+        // details queue -- are complete, but details were reqeusted and are not available yet
+
+        // out of luck -- not complete on this server, issue warning. user will need to clear
+        // results and re-run.
+
+      }
+
+    }
+
+  }
+
+  /* void CloudAnalysisDriver_Impl::dataPointQueued(bool success) {
     if (success) {
       // see if you make another post or go on to starting the analysis
       if (m_uploadQueue.empty()) {
@@ -252,9 +389,9 @@ namespace detail {
       m_requestRun.reset();
       emit runRequestComplete(false);
     }
-  }
+  } */
 
-  void CloudAnalysisDriver_Impl::analysisStarted(bool success) {
+  /* void CloudAnalysisDriver_Impl::analysisStarted(bool success) {
     bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisStarted(bool)));
     OS_ASSERT(test);
 
@@ -276,9 +413,9 @@ namespace detail {
     m_lastRunSuccess = success;
     m_requestRun.reset();
     emit runRequestComplete(success);
-  }
+  } */
 
-  void CloudAnalysisDriver_Impl::completeDataPointUUIDsReturned(bool success) {
+  /* void CloudAnalysisDriver_Impl::completeDataPointUUIDsReturned(bool success) {
     if (success) {
       OS_ASSERT(m_monitorDataPoints);
 
@@ -312,57 +449,121 @@ namespace detail {
       LOG(Error,"Server monitoring failed mid-run.");
       requestStop();
     }
+  } */
+
+  void CloudAnalysisDriver_Impl::clearErrorsAndWarnings() {
+    m_errors.clear();
+    m_warnings.clear();
   }
 
-  bool CloudAnalysisDriver_Impl::startDownloading() {
-    if (isDownloading()) {
-      LOG(Info,"Already started the download process.");
-      return false;
-    }
-
-    if (OptionalUrl url = provider().serverUrl()) {
-      m_requestDownload = OSServer(*url);
-
-      bool test = m_requestDownload->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointDownloadComplete(bool)));
-      OS_ASSERT(test);
-
-      DataPoint toDownload = m_downloadQueue.front();
-      test = requestDataPointDownload(toDownload);
-      return test;
-    }
-
-    LOG(Error,"Cannot start the download process because the CloudProvider has not been started or has been terminated.")
-    return false;
+  void CloudAnalysisDriver_Impl::logError(const std::string& error) {
+    m_errors.push_back(error);
+    LOG(Error,error);
   }
 
-  bool CloudAnalysisDriver_Impl::requestDataPointDownload(const DataPoint& dataPoint) {
-    OS_ASSERT(m_requestDownload);
+  void CloudAnalysisDriver_Impl::logWarning(const std::string& warning) {
+    m_warnings.push_back(warning);
+    LOG(Warn,warning);
+  }
 
-    bool result;
-    if (dataPoint.runType() == DataPointRunType::CloudSlim) {
-      result = m_requestDownload->requestDataPointJSON(project().analysis().uuid(),
-                                                       dataPoint.uuid());
-    }
-    else {
-      OS_ASSERT(dataPoint.runType() == DataPointRunType::CloudDetailed);
-      openstudio::path dataPointDir = project().projectDir() / toPath("dataPoint_" + removeBraces(dataPoint.uuid()));
-      dataPoint.setDirectory(dataPointDir);
-      if (boost::filesystem::exists(dataPointDir)) {
-        try {
-          boost::filesystem::remove_all(dataPointDir);
-        }
-        catch (...) {}
-      }
-      boost::filesystem::create_directory(dataPointDir);
-      result = m_requestDownload->startDownloadDataPoint(project().analysis().uuid(),
-                                                         dataPoint.uuid(),
-                                                         dataPointDir / toPath("data_point.zip"));
-    }
+  void CloudAnalysisDriver_Impl::appendErrorsAndWarnings(const OSServer& server) {
+    StringVector temp = server.errors();
+    m_errors.insert(m_errors.end(),temp.begin(),temp.end());
+    temp = server.warnings();
+    m_warnings.insert(m_warnings.end(),temp.begin(),temp.end());
+  }
 
-    return result;
+  void CloudAnalysisDriver_Impl::registerRunFailure() {
+    appendErrorsAndWarnings(*m_requestRun);
+    m_requestRun.reset();
+    m_postQueue.clear();
+    m_waitingQueue.clear();
+    emit runRequestComplete(false);
   }
 
 } // detail
+
+CloudAnalysisDriver::CloudAnalysisDriver(const CloudProvider& provider,
+                                         const SimpleProject& project)
+  : m_impl(boost::shared_ptr<detail::CloudAnalysisDriver_Impl>(
+             new detail::CloudAnalysisDriver_Impl(provider,project)))
+{}
+
+CloudProvider CloudAnalysisDriver::provider() const {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->provider();
+}
+
+SimpleProject CloudAnalysisDriver::project() const {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->project();
+}
+
+bool CloudAnalysisDriver::run(int msec) {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->run(msec);
+}
+
+bool CloudAnalysisDriver::lastRunSuccess() const {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->lastRunSuccess();
+}
+
+bool CloudAnalysisDriver::stop(int msec) {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->stop(msec);
+}
+
+bool CloudAnalysisDriver::lastStopSuccess() const {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->lastStopSuccess();
+}
+
+bool CloudAnalysisDriver::downloadDetailedResults(analysis::DataPoint& dataPoint,int msec) {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->downloadDetailedResults(dataPoint,msec);
+}
+
+bool CloudAnalysisDriver::lastDownloadDetailedResultsSuccess() const {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->lastDownloadDetailedResultsSuccess();
+}
+
+bool CloudAnalysisDriver::isRunning() const {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->isRunning();
+}
+
+bool CloudAnalysisDriver::isDownloading() const {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->isDownloading();
+}
+
+std::vector<std::string> CloudAnalysisDriver::errors() const {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->errors();
+}
+
+std::vector<std::string> CloudAnalysisDriver::warnings() const {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->warnings();
+}
+
+bool CloudAnalysisDriver::waitForFinished(int msec) {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->waitForFinished(msec);
+}
+
+bool CloudAnalysisDriver::requestRun() {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->requestRun();
+}
+
+bool CloudAnalysisDriver::requestStop(bool waitForAlreadyRunningDataPoints) {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->requestStop(waitForAlreadyRunningDataPoints);
+}
+
+bool CloudAnalysisDriver::requestDownloadDetailedResults(analysis::DataPoint& dataPoint) {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->requestDownloadDetailedResults(dataPoint);
+}
+
+bool CloudAnalysisDriver::connect(const std::string& signal,
+                                  const QObject* qObject,
+                                  const std::string& slot,
+                                  Qt::ConnectionType type) const
+{
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->connect(signal,qObject,slot,type);
+}
+
+void CloudAnalysisDriver::moveToThread(QThread* targetThread) {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->moveToThread(targetThread);
+}
 
 /// @cond
 CloudAnalysisDriver::CloudAnalysisDriver(boost::shared_ptr<detail::CloudAnalysisDriver_Impl> impl)

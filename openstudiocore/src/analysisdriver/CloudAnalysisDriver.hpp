@@ -20,7 +20,9 @@
 #ifndef ANALYSISDRIVER_CLOUDANALYSISDRIVER_HPP
 #define ANALYSISDRIVER_CLOUDANALYSISDRIVER_HPP
 
-#include <analysisdriver/AnalysisdriverAPI.hpp>
+#include <analysisdriver/AnalysisDriverAPI.hpp>
+
+#include <utilities/core/Logger.hpp>
 
 #include <boost/smart_ptr.hpp>
 #include <boost/optional.hpp>
@@ -30,6 +32,10 @@
 namespace openstudio {
 
 class CloudProvider;
+
+namespace analysis {
+  class DataPoint;
+}
 
 namespace analysisdriver {
 
@@ -96,15 +102,19 @@ class ANALYSISDRIVER_API CloudAnalysisDriver {
    *  to pick up where a previous run left off. */
   bool requestRun();
 
-  // ETH@20130827 - Will OSServer::stop also kill downloads?
   /** Request the project() to stop running on the provider(). Returns false if not
    *  (isRunning() || isDownloading()). Otherwise returns true and emits
    *  stopRequestComplete(bool success) when the analysis has stopped running and the 
-   *  download queue is complete, or the process has failed. The ultimate value of 
+   *  download queue is empty, or the process has failed. The ultimate value of
    *  success will also be available from lastStopSuccess(). */
   bool requestStop(bool waitForAlreadyRunningDataPoints=false);
 
-  /** Request for dataPoint's detailed results to be downloaded. */
+  /** Request for dataPoint's detailed results to be downloaded. Returns false if
+   *  !dataPoint.complete() or if the detailed results have already been downloaded.
+   *  Otherwise returns true and emits dowloadRequestsComplete(bool success) when the
+   *  detailed downloads queue is empty or the process has failed. Look for the
+   *  dataPointDetailsComplete signal to see when this particular dataPoint's results
+   *  have been incorporated. */
   bool requestDownloadDetailedResults(analysis::DataPoint& dataPoint);
 
   //@}
