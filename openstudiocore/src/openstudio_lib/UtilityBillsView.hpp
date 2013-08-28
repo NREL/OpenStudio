@@ -117,10 +117,20 @@ private:
   void refresh();
   void updateRunPeriodDatesLabel();
 
+  void addBillingPeriodsHeader();
   void addBillingPeriod(model::BillingPeriod & billingPeriod);
   void addBillingPeriods();
 
   void deleteBillingPeriods();
+
+  void getLabel(QLabel * & label, QGridLayout * gridLayout, int rowIndex, int columnIndex, const QString& text);
+  void getLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex, const QString& text);
+  void getStartDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex);
+  void getEndDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex);
+  void getBillingPeriodLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex);
+
+  QString getEnergyUseLabelText();
+  QString getPeakLabelText();
 
   boost::optional<model::UtilityBill> m_utilityBill;
 
@@ -147,6 +157,12 @@ private:
 
   QLabel * m_runPeriodDatesLabel;
 
+  QLabel * m_energyUseLabel;
+  QLabel * m_peakLabel;
+
+  QString m_energyUseUnits;
+  QString m_peakUnits;
+
   int m_hiddenWidgetIndex;
   int m_warningWidgetIndex;
   int m_visibleWidgetIndex;
@@ -156,6 +172,8 @@ private slots:
   void deleteBillingPeriod(int index);
   void setBillFormat(int index);
   void setBillFormat(BillFormat billFormat);
+  void updateEnergyUseLabelText(const QString& text);
+  void updatePeakLabelText(const QString& text);
 
 };
 
@@ -170,8 +188,6 @@ public:
     model::BillingPeriod billingPeriod,
     FuelType fuelType,
     BillFormat billFormat,
-    const QString & energyUseUnits,
-    const QString & peakUnits,
     QWidget * parent = 0);
 
   virtual ~BillingPeriodWidget() {}
@@ -189,22 +205,11 @@ public:
 
   QPushButton * m_deleteBillWidget;
 
-public slots:
-
-  void updateEnergyUseLabelText(const QString& text);
-  void updatePeakLabelText(const QString& text);
-
 private:
 
   void createWidgets(QGridLayout * gridLayout,
     FuelType fuelType,
     BillFormat billFormat);
-
-  void getLabel(QLabel * & label, QGridLayout * gridLayout, int rowIndex, int columnIndex, const QString& text);
-  void getLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex, const QString& text);
-  void getStartDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex);
-  void getEndDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex);
-  void getBillingPeriodLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex);
 
   void getDateEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex, QDateEdit * & dateEdit);
   void getStartDateCalendar(QGridLayout * gridLayout, int rowIndex, int columnIndex);
@@ -212,16 +217,7 @@ private:
 
   void getBillingPeriodLineEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex);
 
-  QString getEnergyUseLabelText();
-  QString getPeakLabelText();
-
   boost::optional<model::BillingPeriod> m_billingPeriod;
-
-  QLabel * m_energyUseLabel;
-  QLabel * m_peakLabel;
-
-  QString m_energyUseUnits;
-  QString m_peakUnits;
 
 private slots:
 
