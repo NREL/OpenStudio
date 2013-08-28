@@ -416,11 +416,13 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
   puts "#{Time.now.getutc}: Parsing result"
   values = []
   temp.split(/\n/).each do |val|
-    ++linenum
     line = OpenStudio::Radiance::parseGenDayMtxLine(val)
     if line.size != 8760
-      abort "Unable to parse line, not enough hours found (line: #{linenum}): #{line}"
+      abort "Unable to parse line, not enough hours found (line: #{linenum}): #{line}\nOriginal Line: #{val}"
+#    else
+#      puts "Line Parsed: #{line}"
     end
+    linenum = linenum + 1
     values << line;
   end
 
