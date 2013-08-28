@@ -33,11 +33,11 @@
 class QButtonGroup;
 class QDate;
 class QDateEdit;
-class QGridLayout;
 class QLabel;
 class QLineEdit;
 class QPushButton;
 class QString;
+class QVBoxLayout;
 
 namespace openstudio {
 
@@ -51,6 +51,8 @@ class OSIntegerEdit2;
 class OSLineEdit2;
 class OSUnsignedEdit2;
 class UtilityBillListView;
+
+class BillingPeriodWidget;
 
 enum BillFormat{
   STARTDATE_ENDDATE,
@@ -117,26 +119,24 @@ private:
   void refresh();
   void updateRunPeriodDatesLabel();
 
-  void addBillingPeriodsHeader();
-  void addBillingPeriod(model::BillingPeriod & billingPeriod);
-  void addBillingPeriods();
+  void createBillingPeriodHeaderWidget();
+  void addBillingPeriodWidget(model::BillingPeriod & billingPeriod);
+  void addBillingPeriodWidgets();
 
-  void deleteBillingPeriods();
-
-  void getLabel(QLabel * & label, QGridLayout * gridLayout, int rowIndex, int columnIndex, const QString& text);
-  void getLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex, const QString& text);
-  void getStartDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex);
-  void getEndDateLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex);
-  void getBillingPeriodLabel(QGridLayout * gridLayout, int rowIndex, int columnIndex);
+  void deleteBillingPeriodWidgets();
 
   QString getEnergyUseLabelText();
   QString getPeakLabelText();
 
   boost::optional<model::UtilityBill> m_utilityBill;
 
+  std::vector<BillingPeriodWidget *> m_billingPeriodWidgets;
+
   BillFormat m_billFormat;
 
   bool m_showPeak;
+
+  QWidget * m_billingPeriodHeaderWidget;
   
   QButtonGroup * m_buttonGroup;
 
@@ -151,9 +151,9 @@ private:
 
   QPushButton * m_addBillingPeriod;
 
-  QGridLayout * m_billGridLayout;
+  QVBoxLayout * m_billPeriodLayout;
 
-  QWidget * m_billGridLayoutWidget;
+  QWidget * m_billPeriodLayoutWidget;
 
   QLabel * m_runPeriodDatesLabel;
 
@@ -186,8 +186,7 @@ class BillingPeriodWidget : public QWidget
 
 public:
 
-  BillingPeriodWidget(QGridLayout * gridLayout,
-    model::BillingPeriod billingPeriod,
+  BillingPeriodWidget(model::BillingPeriod billingPeriod,
     FuelType fuelType,
     BillFormat billFormat,
     QWidget * parent = 0);
@@ -209,15 +208,8 @@ public:
 
 private:
 
-  void createWidgets(QGridLayout * gridLayout,
-    FuelType fuelType,
+  void createWidgets(FuelType fuelType,
     BillFormat billFormat);
-
-  void getDateEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex, QDateEdit * & dateEdit);
-  void getStartDateCalendar(QGridLayout * gridLayout, int rowIndex, int columnIndex);
-  void getEndDateCalendar(QGridLayout * gridLayout, int rowIndex, int columnIndex);
-
-  void getBillingPeriodLineEdit(QGridLayout * gridLayout, int rowIndex, int columnIndex);
 
   boost::optional<model::BillingPeriod> m_billingPeriod;
 
