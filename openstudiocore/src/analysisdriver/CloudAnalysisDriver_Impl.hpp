@@ -195,9 +195,13 @@ namespace detail {
     boost::optional<OSServer> m_monitorDataPoints;
     std::vector<DataPoint> m_waitingQueue;
 
-    // download data points
-    boost::optional<OSServer> m_requestDownload;
-    std::deque<DataPoint> m_downloadQueue;
+    // download slim data points
+    boost::optional<OSServer> m_requestJson;
+    std::deque<DataPoint> m_jsonQueue;
+
+    // download detailed results
+    boost::optional<OSServer> m_requestDetails;
+    std::deque<DataPoint> m_downloadDetails;
 
     void clearErrorsAndWarnings();
     void logError(const std::string& error);

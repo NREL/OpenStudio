@@ -99,10 +99,10 @@ class ANALYSISDRIVER_API CloudAnalysisDriver {
   // ETH@20130827 - Will OSServer::stop also kill downloads?
   /** Request the project() to stop running on the provider(). Returns false if not
    *  (isRunning() || isDownloading()). Otherwise returns true and emits
-   *  stopRequestComplete(bool success) when either the analysis has stopped running or the
-   *  process has failed. The ultimate value of success will also be available from
-   *  lastStopSuccess(). */
-  bool requestStop();
+   *  stopRequestComplete(bool success) when the analysis has stopped running and the 
+   *  download queue is complete, or the process has failed. The ultimate value of 
+   *  success will also be available from lastStopSuccess(). */
+  bool requestStop(bool waitForAlreadyRunningDataPoints=false);
 
   /** Request for dataPoint's detailed results to be downloaded. */
   bool requestDownloadDetailedResults(analysis::DataPoint& dataPoint);
