@@ -205,10 +205,16 @@ namespace detail {
      // watch for complete data points
      void completeDataPointUUIDsReturned(bool success);
 
+     // make sure analysis is still running (try to avoid spinning when nothing is happening)
+     void analysisStillRunning(bool success);
+
      // DOWNLOADING ============================================================
 
-     // download process
-     void dataPointDownloadComplete(bool success);
+     // slim results received
+     void jsonDownloadComplete(bool success);
+
+     // detailed results received
+     void detailsDownloadComplete(bool success);
 
    private:
     REGISTER_LOGGER("openstudio.analysisdriver.CloudAnalysisDriver");
@@ -244,13 +250,18 @@ namespace detail {
     void logWarning(const std::string& warning);
     void appendErrorsAndWarnings(const OSServer& server);
 
-    void registerRunFailure();
+    void registerRunRequestFailure();
+    bool postNextDataPoint();
+    bool startMonitoring();
+    void registerMonitoringFailure();
 
     bool startDownloadingJson();
     bool requestJsonDownload(const analysis::DataPoint& dataPoint);
+    void registerDownloadingJsonFailure();
 
     bool startDownloadingDetails();
     bool requestDetailsDownload(const analysis::DataPoint& dataPoint);
+    void registerDownloadingDetailsFailure();
   };
 
 } // detail
