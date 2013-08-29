@@ -26,6 +26,7 @@ class QCheckBox;
 class QComboBox;
 class QLineEdit;
 class QStackedWidget;
+class QVBoxLayout;
 
 namespace openstudio{
 
@@ -38,20 +39,30 @@ class CloudDialog : public OSDialog
     CloudDialog(QWidget * parent = 0);
 
     virtual ~CloudDialog();
-    
+
+  protected slots:
+
+    virtual void on_cancelButton(bool checked);
+
+    virtual void on_okButton(bool checked);
+
   private:
 
     void createWidgets();
 
+    void setLoginWidget(QWidget * widget);
+
+    QCheckBox * m_iAcceptCheckBox; 
+    
     QComboBox * m_cloudResourceComboBox;
 
     QStackedWidget * m_stackedWidget;
 
-    QCheckBox * m_iAcceptCheckBox;
+    QVBoxLayout * m_leftLayout;
 
-    private slots:
+  private slots:
 
-      void iAcceptClicked(bool checked);
+    void iAcceptClicked(bool checked);
 
 };
 
@@ -72,17 +83,16 @@ class CloudProvider : public QWidget
   protected:
 
     virtual void createWidgets();
-    virtual void createLoginWidget = 0;
-    virtual void createSettingsWidget = 0;
+    virtual void createLoginWidget() = 0;
+    virtual void createSettingsWidget() = 0;
 
-
-    QStackedWidget * m_stackedWidget;
+    QCheckBox * m_waitCheckBox;
+    QLineEdit * m_waitineEdit;
+    QVBoxLayout * m_loginLayout;
+    QVBoxLayout * m_leftSettingLayout;
+    QVBoxLayout * m_rightSettingsLayout;
     QWidget * m_loginWidget;
     QWidget * m_settingsWidget;
-
-  private:
-
-    creteWidgets();
 
 };
 
@@ -101,8 +111,8 @@ class Vagrant : public CloudProvider
 
   protected:
 
-    virtual void createLoginWidget;
-    virtual void createSettingsWidget;
+    virtual void createLoginWidget();
+    virtual void createSettingsWidget();
 
   private slots:
 
@@ -141,8 +151,8 @@ class Amazon : public CloudProvider
 
   protected:
 
-    virtual void createLoginWidget;
-    virtual void createSettingsWidget;
+    virtual void createLoginWidget();
+    virtual void createSettingsWidget();
 
 private:
 
