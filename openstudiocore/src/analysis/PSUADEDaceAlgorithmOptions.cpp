@@ -20,7 +20,12 @@
 #include <analysis/PSUADEDaceAlgorithmOptions.hpp>
 #include <analysis/PSUADEDaceAlgorithmOptions_Impl.hpp>
 
+#include <runmanager/lib/JSON.hpp>
+
+#include <utilities/core/Json.hpp>
 #include <utilities/core/Optional.hpp>
+
+#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -123,6 +128,16 @@ namespace detail {
 
   void PSUADEDaceAlgorithmOptions_Impl::clearPartitions() {
     clearOption("partitions");
+  }
+
+  PSUADEDaceAlgorithmOptions PSUADEDaceAlgorithmOptions_Impl::fromVariant(const QVariant& variant,
+                                                                          const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+    AttributeVector attributes = deserializeUnorderedVector(
+          map["attributes"].toList(),
+          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+    return PSUADEDaceAlgorithmOptions(attributes);
   }
 
 } // detail

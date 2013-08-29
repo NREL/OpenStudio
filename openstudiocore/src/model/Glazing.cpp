@@ -20,6 +20,8 @@
 #include <model/Glazing.hpp>
 #include <model/Glazing_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace model {
 
@@ -44,7 +46,7 @@ namespace detail {
 Glazing::Glazing(IddObjectType type,const Model& model)
   : FenestrationMaterial(type,model) 
 {
-  BOOST_ASSERT(getImpl<detail::Glazing_Impl>());
+  OS_ASSERT(getImpl<detail::Glazing_Impl>());
 }
 
 /// @cond

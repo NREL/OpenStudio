@@ -357,7 +357,7 @@ bool WaterToWaterComponent_Impl::removeFromPlantLoop()
       int i = splitter.branchIndexForOutletModelObject(sourceModelObject.get());
       int j = mixer.branchIndexForInletModelObject(targetModelObject.get());
 
-      BOOST_ASSERT(i == j);
+      OS_ASSERT(i == j);
 
       splitter.removePortForBranch(i);
       mixer.removePortForBranch(i);
@@ -460,7 +460,7 @@ bool WaterToWaterComponent_Impl::removeFromSecondaryPlantLoop()
       int i = splitter.branchIndexForOutletModelObject(sourceModelObject.get());
       int j = mixer.branchIndexForInletModelObject(targetModelObject.get());
 
-      BOOST_ASSERT(i == j);
+      OS_ASSERT(i == j);
 
       splitter.removePortForBranch(i);
       mixer.removePortForBranch(i);
@@ -501,7 +501,7 @@ bool WaterToWaterComponent_Impl::removeFromSecondaryPlantLoop()
 WaterToWaterComponent::WaterToWaterComponent(IddObjectType type,const Model& model) 
   : HVACComponent(type,model)
 {
-  BOOST_ASSERT(getImpl<detail::WaterToWaterComponent_Impl>());
+  OS_ASSERT(getImpl<detail::WaterToWaterComponent_Impl>());
 }     
 
 WaterToWaterComponent::WaterToWaterComponent(boost::shared_ptr<detail::WaterToWaterComponent_Impl> p)

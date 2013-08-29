@@ -113,6 +113,8 @@ namespace detail {
 
     bool addValue(const openstudio::Time& untilTime, const Quantity& value);
 
+    boost::optional<double> removeValue(const openstudio::Time& time);
+
     /// Clear all values from this schedule.
     void clearValues();
 

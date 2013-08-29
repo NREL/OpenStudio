@@ -50,14 +50,14 @@ namespace detail {
   OutputVariableRecord_Impl::OutputVariableRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
     : VariableRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(OutputVariableRecord::ColumnsType::outputVariableRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_outputVariableRecordType = OutputVariableRecordType(value.toInt());
   }
 
@@ -76,30 +76,30 @@ namespace detail {
   }
 
   void OutputVariableRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     VariableRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(OutputVariableRecord::ColumnsType::outputVariableRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastOutputVariableRecordType = OutputVariableRecordType(value.toInt());
   }
 
   bool OutputVariableRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = VariableRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(OutputVariableRecord::ColumnsType::outputVariableRecordType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_outputVariableRecordType == OutputVariableRecordType(value.toInt()));
 
     return result;
@@ -150,7 +150,7 @@ OutputVariableRecord OutputVariableRecord::factoryFromOutputVariable(const analy
                                          functionCoefficient);
   }
 
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return OutputVariableRecord(boost::shared_ptr<detail::OutputVariableRecord_Impl>());
 }
 
@@ -201,7 +201,7 @@ OutputVariableRecord::OutputVariableRecord(boost::shared_ptr<detail::OutputVaria
                                            ProjectDatabase database)
   : VariableRecord(impl, database)
 {
-  BOOST_ASSERT(getImpl<detail::OutputVariableRecord_Impl>());
+  OS_ASSERT(getImpl<detail::OutputVariableRecord_Impl>());
 }
 /// @endcond
 

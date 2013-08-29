@@ -68,7 +68,7 @@ namespace detail {
                              bool keepHandle)
     : PlanarSurface_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == Surface::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == Surface::iddObjectType());
   }
 
   Surface_Impl::Surface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -76,7 +76,7 @@ namespace detail {
                              bool keepHandle)
     : PlanarSurface_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == Surface::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == Surface::iddObjectType());
   }
 
   Surface_Impl::Surface_Impl(const Surface_Impl& other,
@@ -271,7 +271,7 @@ namespace detail {
 
   std::string Surface_Impl::surfaceType() const {
     boost::optional<std::string> value = getString(OS_SurfaceFields::SurfaceType,true,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -282,7 +282,7 @@ namespace detail {
 
   std::string Surface_Impl::outsideBoundaryCondition() const {
     boost::optional<std::string> value = getString(OS_SurfaceFields::OutsideBoundaryCondition,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -312,7 +312,7 @@ namespace detail {
 
   std::string Surface_Impl::sunExposure() const {
     boost::optional<std::string> value = getString(OS_SurfaceFields::SunExposure,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -327,7 +327,7 @@ namespace detail {
 
   std::string Surface_Impl::windExposure() const {
     boost::optional<std::string> value = getString(OS_SurfaceFields::WindExposure,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -409,7 +409,7 @@ namespace detail {
       }else if(adjacentSurface){
         // restore the adjacent surface if set boundary condition fails
         bool test = setAdjacentSurface(*adjacentSurface);
-        BOOST_ASSERT(test);
+        OS_ASSERT(test);
       }
     }
 
@@ -435,7 +435,7 @@ namespace detail {
 
   void Surface_Impl::resetSunExposure() {
     bool result = setString(OS_SurfaceFields::SunExposure, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Surface_Impl::setWindExposure(std::string windExposure) {
@@ -453,7 +453,7 @@ namespace detail {
 
   void Surface_Impl::resetWindExposure() {
     bool result = setString(OS_SurfaceFields::WindExposure, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Surface_Impl::setViewFactortoGround(boost::optional<double> viewFactortoGround) {
@@ -474,12 +474,12 @@ namespace detail {
 
   void Surface_Impl::resetViewFactortoGround() {
     bool result = setString(OS_SurfaceFields::ViewFactortoGround, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Surface_Impl::autocalculateViewFactortoGround() {
     bool result = setString(OS_SurfaceFields::ViewFactortoGround, "Autocalculate");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Surface_Impl::setNumberofVertices(boost::optional<double> numberofVertices) {
@@ -500,12 +500,12 @@ namespace detail {
 
   void Surface_Impl::resetNumberofVertices() {
     bool result = setString(OS_SurfaceFields::NumberofVertices, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void Surface_Impl::autocalculateNumberofVertices() {
     bool result = setString(OS_SurfaceFields::NumberofVertices, "Autocalculate");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   SubSurfaceVector Surface_Impl::subSurfaces() const
@@ -704,7 +704,7 @@ namespace detail {
 
         Surface otherSurface = wo.cast<Surface>();
         test = otherSurface.setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
-        BOOST_ASSERT(test);
+        OS_ASSERT(test);
         otherSurface.assignDefaultBoundaryCondition();
         otherSurface.assignDefaultSunExposure();
         otherSurface.assignDefaultWindExposure();
@@ -723,7 +723,7 @@ namespace detail {
 
           Surface otherSurface = wo.cast<Surface>();
           test = otherSurface.setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
-          BOOST_ASSERT(test);
+          OS_ASSERT(test);
           otherSurface.assignDefaultBoundaryCondition();
           otherSurface.assignDefaultSunExposure();
           otherSurface.assignDefaultWindExposure();
@@ -748,17 +748,17 @@ namespace detail {
 
       // pointer was set up above, it may be unset during calls to resetAdjacentSubSurface above, just reset it here
       bool test = this->setPointer(OS_SurfaceFields::OutsideBoundaryConditionObject, surface.handle());
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       test = this->setString(OS_SurfaceFields::OutsideBoundaryCondition, "Surface");
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       this->assignDefaultSunExposure();
       this->assignDefaultWindExposure();
 
       if (!isSameSurface){
         test = surface.setPointer(OS_SurfaceFields::OutsideBoundaryConditionObject, this->handle());
-        BOOST_ASSERT(test);
+        OS_ASSERT(test);
         test = surface.setString(OS_SurfaceFields::OutsideBoundaryCondition, "Surface");
-        BOOST_ASSERT(test);
+        OS_ASSERT(test);
         surface.assignDefaultSunExposure();
         surface.assignDefaultWindExposure();
       }
@@ -775,7 +775,7 @@ namespace detail {
     boost::optional<Surface> adjacentSurface = this->adjacentSurface();
     if (adjacentSurface){
       test = setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       this->assignDefaultBoundaryCondition();
       this->assignDefaultSunExposure();
       this->assignDefaultWindExposure();
@@ -791,7 +791,7 @@ namespace detail {
 
       Surface otherSurface = wo.cast<Surface>();
       test = otherSurface.setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
       otherSurface.assignDefaultBoundaryCondition();
       otherSurface.assignDefaultSunExposure();
       otherSurface.assignDefaultWindExposure();
@@ -1105,13 +1105,13 @@ namespace detail {
     bool ok = true;
     if (degTilt < 60){
       ok = setSurfaceType("RoofCeiling", driverMethod);
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
     }else if(degTilt < 179){
       ok = setSurfaceType("Wall", driverMethod);
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
     }else{
       ok = setSurfaceType("Floor", driverMethod);
-      BOOST_ASSERT(ok);
+      OS_ASSERT(ok);
     }
   }
 
@@ -1124,13 +1124,13 @@ namespace detail {
   {
     if (this->adjacentSurface()){
       bool test = this->setOutsideBoundaryCondition("Surface", driverMethod);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }else if (istringEqual("Floor", this->surfaceType())){
       bool test = this->setOutsideBoundaryCondition("Ground", driverMethod);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }else{
       bool test = this->setOutsideBoundaryCondition("Outdoors", driverMethod);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
   }
 
@@ -1144,10 +1144,10 @@ namespace detail {
     std::string outsideBoundaryCondition = this->outsideBoundaryCondition();
     if (istringEqual("Outdoors", this->outsideBoundaryCondition())){
       bool test = this->setSunExposure("SunExposed", driverMethod);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }else{
       bool test = this->setSunExposure("NoSun", driverMethod);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
   }
      
@@ -1161,10 +1161,10 @@ namespace detail {
     std::string outsideBoundaryCondition = this->outsideBoundaryCondition();
     if (istringEqual("Outdoors", this->outsideBoundaryCondition())){
       bool test = setWindExposure("WindExposed", driverMethod);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }else{
       bool test = setWindExposure("NoWind", driverMethod);
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
   }
 
@@ -1446,7 +1446,7 @@ namespace detail {
 Surface::Surface(const std::vector<Point3d>& vertices, const Model& model)
   : PlanarSurface(Surface::iddObjectType(), vertices, model)
 {
-  BOOST_ASSERT(getImpl<detail::Surface_Impl>());
+  OS_ASSERT(getImpl<detail::Surface_Impl>());
   getImpl<detail::Surface_Impl>()->assignDefaultSurfaceType(false);
   getImpl<detail::Surface_Impl>()->assignDefaultBoundaryCondition(false);
   getImpl<detail::Surface_Impl>()->assignDefaultSunExposure(false);

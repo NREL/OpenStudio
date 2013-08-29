@@ -13,23 +13,32 @@ namespace test
 {
   class Test_Listener : public QObject
   {
+    Q_OBJECT;
+
     public:
-      Q_OBJECT;
 
-      public slots:
-        void listen()
+      bool slot_fired;
+
+      Test_Listener()
+        : slot_fired(false)
+      {
+      }
+
+    public slots:
+      void listen()
+      {
+        slot_fired = true;
+        static volatile bool slotrunning = false;
+        ASSERT_FALSE(slotrunning);
+        slotrunning=true;
+        for (int i = 0; i < 10; ++i)
         {
-          static volatile bool slotrunning = false;
-          ASSERT_FALSE(slotrunning);
-          slotrunning=true;
-          for (int i = 0; i < 10; ++i)
-          {
-            QThread::yieldCurrentThread(); // make sure we yield and give another thread a chance to hop in here
-          }
-
-          slotrunning = false;
-
+          QThread::yieldCurrentThread(); // make sure we yield and give another thread a chance to hop in here
         }
+
+        slotrunning = false;
+
+      }
 
   };
 }

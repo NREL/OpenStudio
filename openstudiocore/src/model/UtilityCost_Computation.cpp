@@ -36,7 +36,7 @@ namespace detail {
 UtilityCost_Computation_Impl::UtilityCost_Computation_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : ParentObject_Impl(idfObject, model, keepHandle)
 {
-  BOOST_ASSERT(idfObject.iddObject().type() == UtilityCost_Computation::iddObjectType());
+  OS_ASSERT(idfObject.iddObject().type() == UtilityCost_Computation::iddObjectType());
 }
 
 UtilityCost_Computation_Impl::UtilityCost_Computation_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -44,7 +44,7 @@ UtilityCost_Computation_Impl::UtilityCost_Computation_Impl(const openstudio::det
                                            bool keepHandle)
   : ParentObject_Impl(other,model,keepHandle)
 {
-  BOOST_ASSERT(other.iddObject().type() == UtilityCost_Computation::iddObjectType());
+  OS_ASSERT(other.iddObject().type() == UtilityCost_Computation::iddObjectType());
 }
 
 UtilityCost_Computation_Impl::UtilityCost_Computation_Impl(const UtilityCost_Computation_Impl& other,Model_Impl* model,bool keepHandle)
@@ -79,7 +79,7 @@ bool UtilityCost_Computation_Impl::setComputeStep(unsigned index, const std::str
     StringVector values(1u,str);
     return !insertExtensibleGroup(index,values).empty();
   }
-  BOOST_ASSERT(false);
+  OS_ASSERT(false);
   return false;
 }
 
@@ -132,7 +132,7 @@ unsigned UtilityCost_Computation_Impl::maxComputeSteps() const {
 UtilityCost_Computation::UtilityCost_Computation(const Model& model)
   : ParentObject(UtilityCost_Computation::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::UtilityCost_Computation_Impl>());
+  OS_ASSERT(getImpl<detail::UtilityCost_Computation_Impl>());
 }
 
 // constructor

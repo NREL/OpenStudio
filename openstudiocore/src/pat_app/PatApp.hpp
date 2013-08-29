@@ -28,9 +28,13 @@
 #include <QSharedPointer>
 
 #include <analysisdriver/SimpleProject.hpp>
+
+#include <model/Model.hpp>
+
 #include "../shared_gui_components/BuildingComponentDialog.hpp"
 #include "../shared_gui_components/OSDialog.hpp"
 #include "../shared_gui_components/BaseApp.hpp"
+
 #include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/core/Path.hpp>
 #include <utilities/core/UUID.hpp>

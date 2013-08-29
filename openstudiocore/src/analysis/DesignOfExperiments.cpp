@@ -29,7 +29,9 @@
 #include <analysis/DiscreteVariable.hpp>
 #include <analysis/DiscreteVariable_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Optional.hpp>
+#include <utilities/core/Containers.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -82,10 +84,10 @@ namespace detail {
     int result(0);
 
     // to make sure problem type check has already occured. this is stated usage in header.
-    BOOST_ASSERT(analysis.algorithm().get() == getPublicObject<DesignOfExperiments>());
+    OS_ASSERT(analysis.algorithm().get() == getPublicObject<DesignOfExperiments>());
     // nothing else is supported yet
     DesignOfExperimentsOptions options = designOfExperimentsOptions();
-    BOOST_ASSERT(options.designType() == DesignOfExperimentsType::FullFactorial);
+    OS_ASSERT(options.designType() == DesignOfExperimentsType::FullFactorial);
 
     if (isComplete()) {
       LOG(Info,"Algorithm is already marked as complete. Returning without creating new points.");
@@ -118,24 +120,24 @@ namespace detail {
     BOOST_FOREACH(const Variable variable, analysis.problem().variables()) {
       // variable must be DiscreteVariable, otherwise !isCompatibleProblemType(analysis.problem())
       DiscreteVariable discreteVariable = variable.cast<DiscreteVariable>();
-      DiscretePerturbationVector discretePerturbations = discreteVariable.perturbations(false);
+      IntVector dvValues = discreteVariable.validValues(true);
       std::vector< std::vector<QVariant> > currentValues = variableValues;
-      for (unsigned i = 0, n = discreteVariable.numPerturbations(false); i < n; ++i) {
-        if (discretePerturbations[i].isSelected()) {
-          std::vector< std::vector<QVariant> > nextSet = currentValues;
-          if (currentValues.empty()) {
-            variableValues.push_back(std::vector<QVariant>(1u,QVariant(i)));
+      for (IntVector::const_iterator it = dvValues.begin(), itEnd = dvValues.end();
+           it != itEnd; ++it)
+      {
+        std::vector< std::vector<QVariant> > nextSet = currentValues;
+        if (currentValues.empty()) {
+          variableValues.push_back(std::vector<QVariant>(1u,QVariant(*it)));
+        }
+        else {
+          BOOST_FOREACH(std::vector<QVariant>& point,nextSet) {
+            point.push_back(QVariant(*it));
+          }
+          if (it == dvValues.begin()) {
+            variableValues = nextSet;
           }
           else {
-            BOOST_FOREACH(std::vector<QVariant>& point,nextSet) {
-              point.push_back(i);
-            }
-            if (i == 0) {
-              variableValues = nextSet;
-            }
-            else {
-              variableValues.insert(variableValues.end(),nextSet.begin(),nextSet.end());
-            }
+            variableValues.insert(variableValues.end(),nextSet.begin(),nextSet.end());
           }
         }
       }
@@ -165,6 +167,27 @@ namespace detail {
 
   DesignOfExperimentsOptions DesignOfExperiments_Impl::designOfExperimentsOptions() const {
     return m_options.cast<DesignOfExperimentsOptions>();
+  }
+
+  QVariant DesignOfExperiments_Impl::toVariant() const {
+    QVariantMap map = Algorithm_Impl::toVariant().toMap();
+
+    map["algorithm_type"] = QString("DesignOfExperiments");
+
+    return QVariant(map);
+  }
+
+  DesignOfExperiments DesignOfExperiments_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+    DesignOfExperimentsOptions options = DesignOfExperimentsOptions_Impl::fromVariant(map["options"],version);
+    return DesignOfExperiments(toUUID(map["uuid"].toString().toStdString()),
+                               toUUID(map["version_uuid"].toString().toStdString()),
+                               map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+                               map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+                               map["complete"].toBool(),
+                               map["failed"].toBool(),
+                               map["iter"].toInt(),
+                               options);
   }
 
 } // detail

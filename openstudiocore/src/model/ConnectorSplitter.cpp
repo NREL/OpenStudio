@@ -39,14 +39,14 @@ namespace detail{
                                                  bool keepHandle)
                                                    : Splitter_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ConnectorSplitter::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ConnectorSplitter::iddObjectType());
   }
 
   ConnectorSplitter_Impl::ConnectorSplitter_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
         : Splitter_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ConnectorSplitter::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ConnectorSplitter::iddObjectType());
   }
 
   ConnectorSplitter_Impl::ConnectorSplitter_Impl(
@@ -114,7 +114,7 @@ namespace detail{
 ConnectorSplitter::ConnectorSplitter(const Model& model)
   : Splitter(ConnectorSplitter::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::ConnectorSplitter_Impl>());
+  OS_ASSERT(getImpl<detail::ConnectorSplitter_Impl>());
 }
 
 ConnectorSplitter::ConnectorSplitter(boost::shared_ptr<detail::ConnectorSplitter_Impl> p)

@@ -44,17 +44,17 @@ namespace detail {
   URLSearchPathRecord_Impl::URLSearchPathRecord_Impl(const QSqlQuery& query, const ProjectDatabase& projectDatabase)
     : ObjectRecord_Impl(projectDatabase, query)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
     value = query.value(URLSearchPathRecordColumns::url);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_url = QUrl(value.toString());
 
     value = query.value(URLSearchPathRecordColumns::relativity);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_relativity = openstudio::URLSearchPath::Relative(value.toUInt());
 
     value = query.value(URLSearchPathRecordColumns::iddObjectType);
@@ -125,11 +125,11 @@ namespace detail {
 
     QVariant value;
     value = query.value(URLSearchPathRecordColumns::url);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastUrl = QUrl(value.toString());
 
     value = query.value(URLSearchPathRecordColumns::relativity);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastRelativity = openstudio::URLSearchPath::Relative(value.toUInt());
 
     value = query.value(URLSearchPathRecordColumns::iddObjectType);
@@ -148,11 +148,11 @@ namespace detail {
 
     QVariant value;
     value = query.value(URLSearchPathRecordColumns::url);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_url == QUrl(value.toString()));
 
     value = query.value(URLSearchPathRecordColumns::relativity);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (static_cast<unsigned>(m_relativity) == value.toUInt());
 
     value = query.value(URLSearchPathRecordColumns::iddObjectType);
@@ -203,7 +203,7 @@ UpdateByIdQueryData URLSearchPathRecord::updateByIdQueryData() {
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
-      BOOST_ASSERT(*it == expectedValue);
+      OS_ASSERT(*it == expectedValue);
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
@@ -244,25 +244,25 @@ void URLSearchPathRecord::updatePathData(ProjectDatabase database,
 URLSearchPathRecord::URLSearchPathRecord(const openstudio::URLSearchPath& uRLSearchPath, ProjectDatabase& projectDatabase)
   : ObjectRecord(boost::shared_ptr<detail::URLSearchPathRecord_Impl>(new detail::URLSearchPathRecord_Impl(uRLSearchPath, projectDatabase)), projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::URLSearchPathRecord_Impl>());
+  OS_ASSERT(getImpl<detail::URLSearchPathRecord_Impl>());
 }
 
 URLSearchPathRecord::URLSearchPathRecord(const QSqlQuery& query, ProjectDatabase& projectDatabase)
   : ObjectRecord(boost::shared_ptr<detail::URLSearchPathRecord_Impl>(new detail::URLSearchPathRecord_Impl(query, projectDatabase)), projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::URLSearchPathRecord_Impl>());
+  OS_ASSERT(getImpl<detail::URLSearchPathRecord_Impl>());
 }
 
 URLSearchPathRecord::URLSearchPathRecord(boost::shared_ptr<detail::URLSearchPathRecord_Impl> impl, ProjectDatabase projectDatabase)
   : ObjectRecord(impl, projectDatabase)
 {
-  BOOST_ASSERT(getImpl<detail::URLSearchPathRecord_Impl>());
+  OS_ASSERT(getImpl<detail::URLSearchPathRecord_Impl>());
 }
 
 URLSearchPathRecord::URLSearchPathRecord(boost::shared_ptr<detail::URLSearchPathRecord_Impl> impl)
   : ObjectRecord(impl)
 {
-  BOOST_ASSERT(getImpl<detail::URLSearchPathRecord_Impl>());
+  OS_ASSERT(getImpl<detail::URLSearchPathRecord_Impl>());
 }
 
 boost::optional<URLSearchPathRecord> URLSearchPathRecord::factoryFromQuery(

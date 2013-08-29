@@ -32,7 +32,7 @@ namespace detail {
   WeatherFileDays_Impl::WeatherFileDays_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SizingPeriod_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == WeatherFileDays::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == WeatherFileDays::iddObjectType());
   }
 
   WeatherFileDays_Impl::WeatherFileDays_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -40,7 +40,7 @@ namespace detail {
                                              bool keepHandle)
     : SizingPeriod_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == WeatherFileDays::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == WeatherFileDays::iddObjectType());
   }
 
   WeatherFileDays_Impl::WeatherFileDays_Impl(const WeatherFileDays_Impl& other,
@@ -69,7 +69,7 @@ namespace detail {
 WeatherFileDays::WeatherFileDays(const Model& model)
   : SizingPeriod(WeatherFileDays::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::WeatherFileDays_Impl>());
+  OS_ASSERT(getImpl<detail::WeatherFileDays_Impl>());
 }
 
 // constructor

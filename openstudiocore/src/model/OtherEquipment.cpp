@@ -44,7 +44,7 @@ namespace detail {
   OtherEquipment_Impl::OtherEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceLoadInstance_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == OtherEquipment::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == OtherEquipment::iddObjectType());
   }
 
   OtherEquipment_Impl::OtherEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -52,7 +52,7 @@ namespace detail {
                                            bool keepHandle)
     : SpaceLoadInstance_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == OtherEquipment::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == OtherEquipment::iddObjectType());
   }
 
   OtherEquipment_Impl::OtherEquipment_Impl(const OtherEquipment_Impl& other,
@@ -113,7 +113,7 @@ namespace detail {
     }
 
     // should never get here.
-    BOOST_ASSERT(false);
+    OS_ASSERT(false);
     return false;
   }
 
@@ -151,7 +151,7 @@ namespace detail {
 
   double OtherEquipment_Impl::multiplier() const {
     boost::optional<double> value = getDouble(OS_OtherEquipmentFields::Multiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -180,7 +180,7 @@ namespace detail {
 
   void OtherEquipment_Impl::resetSchedule() {
     bool ok = setString(OS_OtherEquipmentFields::ScheduleName,"");
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
   }
 
   bool OtherEquipment_Impl::setMultiplier(double multiplier) {
@@ -191,7 +191,7 @@ namespace detail {
 
   void OtherEquipment_Impl::resetMultiplier() {
     bool result = setString(OS_OtherEquipmentFields::Multiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   double OtherEquipment_Impl::getDesignLevel(double floorArea, double numPeople) const {
@@ -261,7 +261,7 @@ namespace detail {
 OtherEquipment::OtherEquipment(const OtherEquipmentDefinition& definition)
   : SpaceLoadInstance(OtherEquipment::iddObjectType(),definition)
 {
-  BOOST_ASSERT(getImpl<detail::OtherEquipment_Impl>());
+  OS_ASSERT(getImpl<detail::OtherEquipment_Impl>());
 }
 
 IddObjectType OtherEquipment::iddObjectType() {

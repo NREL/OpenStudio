@@ -22,6 +22,7 @@
 #include <analysis/AnalysisEnums.hpp>
 #include <analysis/UncertaintyDescription.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 
 #include <boost/filesystem/fstream.hpp>
@@ -417,27 +418,27 @@ namespace detail {
       }
     }
 
-    BOOST_ASSERT(m_continuousDesignVariableValues.size() == unsigned(ncdv));
-    BOOST_ASSERT(m_uncertainNormalVariableValues.size() == unsigned(nuv));
-    BOOST_ASSERT(m_uncertainLognormalVariableValues.size() == unsigned(lnuv));
-    BOOST_ASSERT(m_uncertainUniformVariableValues.size() == unsigned(uuv));
-    BOOST_ASSERT(m_uncertainLoguniformVariableValues.size() == unsigned(luuv));
-    BOOST_ASSERT(m_uncertainTriangularVariableValues.size() == unsigned(tuv));
-    BOOST_ASSERT(m_uncertainExponentialVariableValues.size() == unsigned(euv));
-    BOOST_ASSERT(m_uncertainBetaVariableValues.size() == unsigned(buv));
-    BOOST_ASSERT(m_uncertainGammaVariableValues.size() == unsigned(gauv));
-    BOOST_ASSERT(m_uncertainGumbelVariableValues.size() == unsigned(guuv));
-    BOOST_ASSERT(m_uncertainFrechetVariableValues.size() == unsigned(fuv));
-    BOOST_ASSERT(m_uncertainWeibullVariableValues.size() == unsigned(wuv));
-    BOOST_ASSERT(m_uncertainHistogramBinVariableValues.size() == unsigned(hbuv));
-    BOOST_ASSERT(m_discreteDesignIntegerVariableValues.size() == unsigned(nddiv));
-    BOOST_ASSERT(m_uncertainPoissonVariableValues.size() == unsigned(puv));
-    BOOST_ASSERT(m_uncertainBinomialVariableValues.size() == unsigned(biuv));
-    BOOST_ASSERT(m_uncertainNegativeBinomialVariableValues.size() == unsigned(nbuv));
-    BOOST_ASSERT(m_uncertainGeometricVariableValues.size() == unsigned(geuv));
-    BOOST_ASSERT(m_uncertainHypergeometricVariableValues.size() == unsigned(hguv));
-    BOOST_ASSERT(m_uncertainHistogramPointVariableValues.size() == unsigned(hpuv));
-    BOOST_ASSERT(ncdv + nuv + lnuv + uuv + luuv + tuv + euv + buv + gauv + guuv + fuv + wuv + hbuv
+    OS_ASSERT(m_continuousDesignVariableValues.size() == unsigned(ncdv));
+    OS_ASSERT(m_uncertainNormalVariableValues.size() == unsigned(nuv));
+    OS_ASSERT(m_uncertainLognormalVariableValues.size() == unsigned(lnuv));
+    OS_ASSERT(m_uncertainUniformVariableValues.size() == unsigned(uuv));
+    OS_ASSERT(m_uncertainLoguniformVariableValues.size() == unsigned(luuv));
+    OS_ASSERT(m_uncertainTriangularVariableValues.size() == unsigned(tuv));
+    OS_ASSERT(m_uncertainExponentialVariableValues.size() == unsigned(euv));
+    OS_ASSERT(m_uncertainBetaVariableValues.size() == unsigned(buv));
+    OS_ASSERT(m_uncertainGammaVariableValues.size() == unsigned(gauv));
+    OS_ASSERT(m_uncertainGumbelVariableValues.size() == unsigned(guuv));
+    OS_ASSERT(m_uncertainFrechetVariableValues.size() == unsigned(fuv));
+    OS_ASSERT(m_uncertainWeibullVariableValues.size() == unsigned(wuv));
+    OS_ASSERT(m_uncertainHistogramBinVariableValues.size() == unsigned(hbuv));
+    OS_ASSERT(m_discreteDesignIntegerVariableValues.size() == unsigned(nddiv));
+    OS_ASSERT(m_uncertainPoissonVariableValues.size() == unsigned(puv));
+    OS_ASSERT(m_uncertainBinomialVariableValues.size() == unsigned(biuv));
+    OS_ASSERT(m_uncertainNegativeBinomialVariableValues.size() == unsigned(nbuv));
+    OS_ASSERT(m_uncertainGeometricVariableValues.size() == unsigned(geuv));
+    OS_ASSERT(m_uncertainHypergeometricVariableValues.size() == unsigned(hguv));
+    OS_ASSERT(m_uncertainHistogramPointVariableValues.size() == unsigned(hpuv));
+    OS_ASSERT(ncdv + nuv + lnuv + uuv + luuv + tuv + euv + buv + gauv + guuv + fuv + wuv + hbuv
       + nddiv + puv + biuv + nbuv + geuv + hguv + hpuv == nvar);
 
     // parse functions
@@ -472,7 +473,7 @@ namespace detail {
       // ignoring matches[4] for now
     }
 
-    BOOST_ASSERT(m_functionASVs.size() == unsigned(nfun));
+    OS_ASSERT(m_functionASVs.size() == unsigned(nfun));
 
     return true;
   }

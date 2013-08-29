@@ -47,7 +47,7 @@ CONFIGURE_FILE(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
 # For Windows set the rc file pointing to the icon file
 IF( WIN32 )
   SET(RC_BUILD_STR "0")
-  IF( NOT CMAKE_VERSION_BUILD MATCHES "([a-zA-Z]+)" )
+  IF( NOT CMAKE_VERSION_BUILD STREQUAL "" AND NOT CMAKE_VERSION_BUILD MATCHES "([a-zA-Z]+)" )
     SET(RC_BUILD_STR "${CMAKE_VERSION_BUILD}")
   ENDIF()
   CONFIGURE_FILE(RunManagerUI.rc.in "${CMAKE_CURRENT_BINARY_DIR}/RunManagerUI.rc")

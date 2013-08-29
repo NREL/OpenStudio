@@ -50,14 +50,14 @@ namespace detail {
                                                            ProjectDatabase& database)
     : DakotaAlgorithmRecord_Impl(query, database)
   {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     QVariant value;
 
     value = query.value(FSUDaceAlgorithmRecord::ColumnsType::fsudaceAlgorithmType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_algorithmType = analysis::FSUDaceAlgorithmType(value.toInt());
 
     value = query.value(FSUDaceAlgorithmRecord::ColumnsType::fsudaceTrialType);
@@ -93,10 +93,7 @@ namespace detail {
   }
 
   analysis::FSUDaceAlgorithm FSUDaceAlgorithmRecord_Impl::fsudaceAlgorithm() const {
-    analysis::FSUDaceAlgorithmOptions opts(m_algorithmType, options());
-    if (m_trialType) {
-      opts.setTrialType(*m_trialType);
-    }
+    analysis::FSUDaceAlgorithmOptions opts(m_algorithmType, m_trialType, options());
     OptionalFileReference restartFile, outFile;
     OptionalFileReferenceRecord ofr = restartFileReferenceRecord();
     if (ofr) {
@@ -146,16 +143,16 @@ namespace detail {
 
   void FSUDaceAlgorithmRecord_Impl::setLastValues(const QSqlQuery& query,
                           ProjectDatabase& projectDatabase) {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     DakotaAlgorithmRecord_Impl::setLastValues(query,projectDatabase);
 
     QVariant value;
 
     value = query.value(FSUDaceAlgorithmRecord::ColumnsType::fsudaceAlgorithmType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     m_lastAlgorithmType = analysis::FSUDaceAlgorithmType(value.toInt());
 
     value = query.value(FSUDaceAlgorithmRecord::ColumnsType::fsudaceTrialType);
@@ -168,16 +165,16 @@ namespace detail {
   }
 
   bool FSUDaceAlgorithmRecord_Impl::compareValues(const QSqlQuery& query) const {
-    BOOST_ASSERT(query.isValid());
-    BOOST_ASSERT(query.isActive());
-    BOOST_ASSERT(query.isSelect());
+    OS_ASSERT(query.isValid());
+    OS_ASSERT(query.isActive());
+    OS_ASSERT(query.isSelect());
 
     bool result = DakotaAlgorithmRecord_Impl::compareValues(query);
 
     QVariant value;
 
     value = query.value(FSUDaceAlgorithmRecord::ColumnsType::fsudaceAlgorithmType);
-    BOOST_ASSERT(value.isValid() && !value.isNull());
+    OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_algorithmType == analysis::FSUDaceAlgorithmType(value.toInt()));
 
     value = query.value(FSUDaceAlgorithmRecord::ColumnsType::fsudaceTrialType);
@@ -214,7 +211,7 @@ FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(const analysis::FSUDaceAlgorithm&
         analysisRecord.projectDatabase(),
         fsudaceAlgorithm)
 {
-  BOOST_ASSERT(getImpl<detail::FSUDaceAlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::FSUDaceAlgorithmRecord_Impl>());
 
   constructRelatedRecords(fsudaceAlgorithm);
 }
@@ -225,7 +222,7 @@ FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(const QSqlQuery& query, ProjectDa
         database,
         boost::none)
 {
-  BOOST_ASSERT(getImpl<detail::FSUDaceAlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::FSUDaceAlgorithmRecord_Impl>());
 }
 
 FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(
@@ -233,7 +230,7 @@ FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(
     ProjectDatabase database)
   : DakotaAlgorithmRecord(impl, database, boost::none)
 {
-  BOOST_ASSERT(getImpl<detail::FSUDaceAlgorithmRecord_Impl>());
+  OS_ASSERT(getImpl<detail::FSUDaceAlgorithmRecord_Impl>());
 }
 
 boost::optional<FSUDaceAlgorithmRecord> FSUDaceAlgorithmRecord::factoryFromQuery(

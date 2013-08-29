@@ -21,10 +21,18 @@
 #include <analysis/WorkflowStep_Impl.hpp>
 
 #include <analysis/InputVariable_Impl.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/Problem_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+#include <runmanager/lib/JSON.hpp>
+
 #include <utilities/core/FileReference.hpp>
+#include <utilities/core/PathHelpers.hpp>
+
+#include <boost/foreach.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -35,7 +43,7 @@ namespace detail {
     : AnalysisObject_Impl(inputVariable.name() + " Workflow Step"),
       m_inputVariable(inputVariable)
   {
-    BOOST_ASSERT(!inputVariable.parent());
+    OS_ASSERT(!inputVariable.parent());
     m_inputVariable->onChange();
     connectChild(m_inputVariable.get(),false);
   }
@@ -51,11 +59,11 @@ namespace detail {
       m_inputVariable(inputVariable),
       m_workItem(workItem)
   {
-    BOOST_ASSERT(inputVariable || workItem);
-    BOOST_ASSERT(!(inputVariable && workItem));
+    OS_ASSERT(inputVariable || workItem);
+    OS_ASSERT(!(inputVariable && workItem));
     if (isInputVariable()) {
       setName(inputVariable->name() + " Workflow Step");
-      m_inputVariable->onChange();
+      // deserialization constructor, so do not call m_inputVariable->onChange()
       connectChild(m_inputVariable.get(),false);
     }
     else {
@@ -68,12 +76,12 @@ namespace detail {
       m_workItem(other.m_workItem)
   {
     if (other.isInputVariable()) {
-      BOOST_ASSERT(!m_workItem);
+      OS_ASSERT(!m_workItem);
       m_inputVariable = other.inputVariable().clone().cast<InputVariable>();
       connectChild(m_inputVariable.get(),false);
     }
     else {
-      BOOST_ASSERT(m_workItem);
+      OS_ASSERT(m_workItem);
     }
   }
 
@@ -188,6 +196,65 @@ namespace detail {
       onChange(AnalysisObject_Impl::InvalidatesResults);
     }
     return true;
+  }
+
+  QVariant WorkflowStep_Impl::toVariant() const {
+    QVariant result;
+
+    if (isInputVariable()) {
+      result = inputVariable().toVariant();
+    }
+    else {
+      QVariantMap workItemData = runmanager::detail::JSON::toVariant(workItem()).toMap();
+      workItemData["workflow_step_type"] = "WorkItem";
+      result = QVariant(workItemData);
+    }
+
+    return result;
+  }
+
+  WorkflowStep WorkflowStep_Impl::factoryFromVariant(const QVariant& variant, const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+
+    if (!map.contains("workflow_step_type")) {
+      LOG_AND_THROW("Unable to find WorkflowStep in expected location.");
+    }
+
+    std::string workflowStepType = map["workflow_step_type"].toString().toStdString();
+    if (workflowStepType == "WorkItem") {
+      return WorkflowStep(OptionalInputVariable(),
+                          runmanager::detail::JSON::toWorkItem(variant,version));
+    }
+    if (workflowStepType == "MeasureGroup") {
+      return WorkflowStep(MeasureGroup_Impl::fromVariant(variant,version),
+                          boost::optional<runmanager::WorkItem>());
+    }
+
+    // workflowStepType == "Measure" is handled by Problem_Impl
+    LOG_AND_THROW("Unexpected workflow_step_type " << workflowStepType << ".");
+    return OptionalWorkflowStep().get();
+  }
+
+  void WorkflowStep_Impl::updateInputPathData(const openstudio::path& originalBase,
+                                              const openstudio::path& newBase)
+  {
+    if (isInputVariable()) {
+      m_inputVariable->getImpl<detail::InputVariable_Impl>()->updateInputPathData(originalBase,newBase);
+    }
+    else {
+      // WorkItem -- Try to update files.
+      BOOST_FOREACH(runmanager::FileInfo& info,m_workItem->files.files()) {
+        // update fullPath
+        openstudio::path temp = relocatePath(info.fullPath,originalBase,newBase);
+        if (!temp.empty()) {
+          info.fullPath = temp;
+        }
+
+        // update requiredFiles
+        // ETH@20130815 -- Skip for now. I think these are usually not absolute paths ...
+      }
+    }
   }
 
 } // detail

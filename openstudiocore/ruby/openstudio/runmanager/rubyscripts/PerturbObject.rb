@@ -59,8 +59,9 @@ else
 end
 
 puts "Loading model from '" + input_path.to_s + "'."
+raise "There is no file at '" + input_path.to_s + "'." if not File.exist?(input_path.to_s)
 oIdfFile = OpenStudio::Workspace::load(input_path)
-raise "Unable to load model from '" + inputPath.to_s + "'." if oIdfFile.empty?
+raise "Unable to load model from '" + input_path.to_s + "'." if oIdfFile.empty?
 idf_file = oIdfFile.get
 
 idf_file.getObjectsByType(objectType).each do |object|

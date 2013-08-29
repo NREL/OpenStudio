@@ -19,6 +19,8 @@
 
 #include <openstudio_lib/VerticalTabWidget.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <QHBoxLayout>
 #include <QKeySequence>
 #include <QPixmap>
@@ -63,11 +65,11 @@ VerticalTabWidget::VerticalTabWidget(QWidget * parent)
 
   QShortcut* nextTabShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Tab), this);
   bool isConnected = connect(nextTabShortcut, SIGNAL(activated()), this, SLOT(nextTab()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   QShortcut* previousTabShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Tab), this);
   isConnected = connect(previousTabShortcut, SIGNAL(activated()), this, SLOT(previousTab()));
-  Q_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 
@@ -149,7 +151,7 @@ void VerticalTabWidget::setCurrentIndex(int index)
 
     QString style;
 
-    if (i == index)
+    if (i == static_cast<unsigned>(index))
     {
       imagePath = m_selectedPixmaps[i];
 

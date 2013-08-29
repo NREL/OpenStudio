@@ -37,7 +37,7 @@ namespace detail {
                            bool keepHandle)
     : ShadingMaterial_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == Screen::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == Screen::iddObjectType());
   }
 
   Screen_Impl::Screen_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -45,7 +45,7 @@ namespace detail {
                            bool keepHandle)
     : ShadingMaterial_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == Screen::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == Screen::iddObjectType());
   }
 
   Screen_Impl::Screen_Impl(const Screen_Impl& other,
@@ -113,7 +113,7 @@ namespace detail {
 
   std::string Screen_Impl::reflectedBeamTransmittanceAccountingMethod() const {
     boost::optional<std::string> value = getString(OS_WindowMaterial_ScreenFields::ReflectedBeamTransmittanceAccountingMethod,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -123,40 +123,40 @@ namespace detail {
 
   double Screen_Impl::diffuseSolarReflectance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ScreenFields::DiffuseSolarReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Screen_Impl::getDiffuseSolarReflectance(bool returnIP) const {
     OptionalDouble value = diffuseSolarReflectance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ScreenFields::DiffuseSolarReflectance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double Screen_Impl::diffuseVisibleReflectance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ScreenFields::DiffuseVisibleReflectance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Screen_Impl::getDiffuseVisibleReflectance(bool returnIP) const {
     OptionalDouble value = diffuseVisibleReflectance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ScreenFields::DiffuseVisibleReflectance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double Screen_Impl::thermalHemisphericalEmissivity() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ScreenFields::ThermalHemisphericalEmissivity,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Screen_Impl::getThermalHemisphericalEmissivity(bool returnIP) const {
     OptionalDouble value = thermalHemisphericalEmissivity();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ScreenFields::ThermalHemisphericalEmissivity, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -166,14 +166,14 @@ namespace detail {
 
   double Screen_Impl::conductivity() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ScreenFields::Conductivity,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Screen_Impl::getConductivity(bool returnIP) const {
     OptionalDouble value = conductivity();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ScreenFields::Conductivity, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -183,40 +183,40 @@ namespace detail {
 
   double Screen_Impl::screenMaterialSpacing() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ScreenFields::ScreenMaterialSpacing,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Screen_Impl::getScreenMaterialSpacing(bool returnIP) const {
     OptionalDouble value = screenMaterialSpacing();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ScreenFields::ScreenMaterialSpacing, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double Screen_Impl::screenMaterialDiameter() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ScreenFields::ScreenMaterialDiameter,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Screen_Impl::getScreenMaterialDiameter(bool returnIP) const {
     OptionalDouble value = screenMaterialDiameter();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ScreenFields::ScreenMaterialDiameter, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double Screen_Impl::screentoGlassDistance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ScreenFields::ScreentoGlassDistance,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Screen_Impl::getScreentoGlassDistance(bool returnIP) const {
     OptionalDouble value = screentoGlassDistance();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ScreenFields::ScreentoGlassDistance, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -226,14 +226,14 @@ namespace detail {
 
   double Screen_Impl::topOpeningMultiplier() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ScreenFields::TopOpeningMultiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Screen_Impl::getTopOpeningMultiplier(bool returnIP) const {
     OptionalDouble value = topOpeningMultiplier();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ScreenFields::TopOpeningMultiplier, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -243,14 +243,14 @@ namespace detail {
 
   double Screen_Impl::bottomOpeningMultiplier() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ScreenFields::BottomOpeningMultiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Screen_Impl::getBottomOpeningMultiplier(bool returnIP) const {
     OptionalDouble value = bottomOpeningMultiplier();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ScreenFields::BottomOpeningMultiplier, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -260,14 +260,14 @@ namespace detail {
 
   double Screen_Impl::leftSideOpeningMultiplier() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ScreenFields::LeftSideOpeningMultiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Screen_Impl::getLeftSideOpeningMultiplier(bool returnIP) const {
     OptionalDouble value = leftSideOpeningMultiplier();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ScreenFields::LeftSideOpeningMultiplier, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -277,14 +277,14 @@ namespace detail {
 
   double Screen_Impl::rightSideOpeningMultiplier() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ScreenFields::RightSideOpeningMultiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity Screen_Impl::getRightSideOpeningMultiplier(bool returnIP) const {
     OptionalDouble value = rightSideOpeningMultiplier();
     OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ScreenFields::RightSideOpeningMultiplier, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -294,7 +294,7 @@ namespace detail {
 
   std::string Screen_Impl::angleofResolutionforScreenTransmittanceOutputMap() const {
     boost::optional<std::string> value = getString(OS_WindowMaterial_ScreenFields::AngleofResolutionforScreenTransmittanceOutputMap,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -309,7 +309,7 @@ namespace detail {
 
   void Screen_Impl::resetReflectedBeamTransmittanceAccountingMethod() {
     bool result = setString(OS_WindowMaterial_ScreenFields::ReflectedBeamTransmittanceAccountingMethod, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Screen_Impl::setDiffuseSolarReflectance(double diffuseSolarReflectance) {
@@ -353,7 +353,7 @@ namespace detail {
 
   void Screen_Impl::resetThermalHemisphericalEmissivity() {
     bool result = setString(OS_WindowMaterial_ScreenFields::ThermalHemisphericalEmissivity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Screen_Impl::setConductivity(double conductivity) {
@@ -371,7 +371,7 @@ namespace detail {
 
   void Screen_Impl::resetConductivity() {
     bool result = setString(OS_WindowMaterial_ScreenFields::Conductivity, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Screen_Impl::setScreenMaterialSpacing(double screenMaterialSpacing) {
@@ -415,7 +415,7 @@ namespace detail {
 
   void Screen_Impl::resetScreentoGlassDistance() {
     bool result = setString(OS_WindowMaterial_ScreenFields::ScreentoGlassDistance, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Screen_Impl::setTopOpeningMultiplier(double topOpeningMultiplier) {
@@ -433,7 +433,7 @@ namespace detail {
 
   void Screen_Impl::resetTopOpeningMultiplier() {
     bool result = setString(OS_WindowMaterial_ScreenFields::TopOpeningMultiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Screen_Impl::setBottomOpeningMultiplier(double bottomOpeningMultiplier) {
@@ -451,7 +451,7 @@ namespace detail {
 
   void Screen_Impl::resetBottomOpeningMultiplier() {
     bool result = setString(OS_WindowMaterial_ScreenFields::BottomOpeningMultiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Screen_Impl::setLeftSideOpeningMultiplier(double leftSideOpeningMultiplier) {
@@ -469,7 +469,7 @@ namespace detail {
 
   void Screen_Impl::resetLeftSideOpeningMultiplier() {
     bool result = setString(OS_WindowMaterial_ScreenFields::LeftSideOpeningMultiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Screen_Impl::setRightSideOpeningMultiplier(double rightSideOpeningMultiplier) {
@@ -487,7 +487,7 @@ namespace detail {
 
   void Screen_Impl::resetRightSideOpeningMultiplier() {
     bool result = setString(OS_WindowMaterial_ScreenFields::RightSideOpeningMultiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool Screen_Impl::setAngleofResolutionforScreenTransmittanceOutputMap(std::string angleofResolutionforScreenTransmittanceOutputMap) {
@@ -497,7 +497,7 @@ namespace detail {
 
   void Screen_Impl::resetAngleofResolutionforScreenTransmittanceOutputMap() {
     bool result = setString(OS_WindowMaterial_ScreenFields::AngleofResolutionforScreenTransmittanceOutputMap, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   std::vector<std::string> Screen_Impl::reflectedBeamTransmittanceAccountingMethodValues() const {
@@ -605,20 +605,20 @@ Screen::Screen(const Model& model,
                double screenMaterialDiameter)
   : ShadingMaterial(Screen::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::Screen_Impl>());
+  OS_ASSERT(getImpl<detail::Screen_Impl>());
 
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
    ok = setDiffuseSolarReflectance(diffuseSolarReflectance);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
    ok = setDiffuseVisibleReflectance(diffuseVisibleReflectance);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
    ok = setScreenMaterialSpacing(screenMaterialSpacing);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
    ok = setScreenMaterialDiameter(screenMaterialDiameter);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType Screen::iddObjectType() {

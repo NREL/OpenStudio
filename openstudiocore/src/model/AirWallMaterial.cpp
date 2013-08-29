@@ -35,7 +35,7 @@ namespace detail {
                                              bool keepHandle)
     : ModelPartitionMaterial_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == AirWallMaterial::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == AirWallMaterial::iddObjectType());
   }
 
   AirWallMaterial_Impl::AirWallMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -43,7 +43,7 @@ namespace detail {
                                              bool keepHandle)
     : ModelPartitionMaterial_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == AirWallMaterial::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == AirWallMaterial::iddObjectType());
   }
 
   AirWallMaterial_Impl::AirWallMaterial_Impl(const AirWallMaterial_Impl& other,
@@ -69,12 +69,12 @@ namespace detail {
 AirWallMaterial::AirWallMaterial(const Model& model)
   : ModelPartitionMaterial(AirWallMaterial::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::AirWallMaterial_Impl>());
+  OS_ASSERT(getImpl<detail::AirWallMaterial_Impl>());
 
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
 }
 
 IddObjectType AirWallMaterial::iddObjectType() {

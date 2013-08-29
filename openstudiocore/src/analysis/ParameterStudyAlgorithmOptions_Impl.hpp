@@ -133,6 +133,14 @@ namespace detail {
     void clearPartitions();
 
     //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    static ParameterStudyAlgorithmOptions fromVariant(const QVariant& variant, const VersionString& version);
+
+    //@}
    protected:
     ParameterStudyAlgorithmType m_algorithmType;
 

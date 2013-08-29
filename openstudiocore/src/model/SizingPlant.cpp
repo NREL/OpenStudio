@@ -36,7 +36,7 @@ namespace detail {
                                      bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == SizingPlant::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == SizingPlant::iddObjectType());
   }
 
   SizingPlant_Impl::SizingPlant_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -44,7 +44,7 @@ namespace detail {
                                      bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == SizingPlant::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == SizingPlant::iddObjectType());
   }
 
   SizingPlant_Impl::SizingPlant_Impl(const SizingPlant_Impl& other,
@@ -75,33 +75,33 @@ namespace detail {
 
   std::string SizingPlant_Impl::loopType() const {
     boost::optional<std::string> value = getString(OS_Sizing_PlantFields::LoopType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double SizingPlant_Impl::designLoopExitTemperature() const {
     boost::optional<double> value = getDouble(OS_Sizing_PlantFields::DesignLoopExitTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SizingPlant_Impl::getDesignLoopExitTemperature(bool returnIP) const {
     OptionalDouble value = designLoopExitTemperature();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_PlantFields::DesignLoopExitTemperature, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double SizingPlant_Impl::loopDesignTemperatureDifference() const {
     boost::optional<double> value = getDouble(OS_Sizing_PlantFields::LoopDesignTemperatureDifference,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SizingPlant_Impl::getLoopDesignTemperatureDifference(bool returnIP) const {
     OptionalDouble value = loopDesignTemperatureDifference();
     OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_PlantFields::LoopDesignTemperatureDifference, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -117,7 +117,7 @@ namespace detail {
 
   void SizingPlant_Impl::setDesignLoopExitTemperature(double designLoopExitTemperature) {
     bool result = setDouble(OS_Sizing_PlantFields::DesignLoopExitTemperature, designLoopExitTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SizingPlant_Impl::setDesignLoopExitTemperature(const Quantity& designLoopExitTemperature) {
@@ -187,7 +187,7 @@ namespace detail {
 SizingPlant::SizingPlant(const Model& model, const PlantLoop & plantLoop)
   : ModelObject(SizingPlant::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::SizingPlant_Impl>());
+  OS_ASSERT(getImpl<detail::SizingPlant_Impl>());
 
   setPlantLoop(plantLoop);
 

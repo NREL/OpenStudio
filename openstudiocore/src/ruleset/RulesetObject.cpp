@@ -39,14 +39,14 @@ namespace detail {
 
   RulesetObject_Impl::RulesetObject_Impl(const QDomElement& element)
   {
-    BOOST_ASSERT(!element.isNull());
+    OS_ASSERT(!element.isNull());
 
     QDomElement uuidElement = element.firstChildElement(QString::fromStdString("UUID"));
-    BOOST_ASSERT(!uuidElement.isNull());
+    OS_ASSERT(!uuidElement.isNull());
     m_uuid = toUUID(uuidElement.firstChild().nodeValue().toStdString());
 
     QDomElement versionUUIDElement = element.firstChildElement(QString::fromStdString("VersionUUID"));
-    BOOST_ASSERT(!versionUUIDElement.isNull());
+    OS_ASSERT(!versionUUIDElement.isNull());
     m_versionUUID = toUUID(versionUUIDElement.firstChild().nodeValue().toStdString());
   }
 
@@ -68,7 +68,7 @@ namespace detail {
   {
     QDomDocument doc;
     QDomElement element = doc.createElement(toQString(this->xmlElementName()));
-    BOOST_ASSERT(!element.isNull());
+    OS_ASSERT(!element.isNull());
 
     this->writeValues(doc, element);
     doc.appendChild(element);
@@ -160,7 +160,7 @@ bool RulesetObject::operator<(const RulesetObject& other) const {
 RulesetObject::RulesetObject(boost::shared_ptr<detail::RulesetObject_Impl> impl)
   : m_impl(impl)
 {
-  BOOST_ASSERT(impl);
+  OS_ASSERT(impl);
 }
 /// @endcond
 

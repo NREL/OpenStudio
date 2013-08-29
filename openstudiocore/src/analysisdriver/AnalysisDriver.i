@@ -39,9 +39,7 @@
   #include <runmanager/lib/SimulationEngine.hpp>
   #include <runmanager/lib/ErrorEstimation.hpp>
 
-  #include <analysis/Analysis.hpp>
-  #include <analysis/DiscreteVariable.hpp>
-  #include <analysis/OptimizationDataPoint.hpp>
+  #include <analysis/ConcreteAnalysisObjects.hpp>
 
   #include <utilities/idf/URLSearchPath.hpp>
   #include <utilities/core/FileReference.hpp>

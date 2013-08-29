@@ -34,7 +34,7 @@ namespace detail {
   ConvergenceLimits_Impl::ConvergenceLimits_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ConvergenceLimits::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ConvergenceLimits::iddObjectType());
   }
 
   ConvergenceLimits_Impl::ConvergenceLimits_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -42,7 +42,7 @@ namespace detail {
                                                  bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ConvergenceLimits::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ConvergenceLimits::iddObjectType());
   }
 
   ConvergenceLimits_Impl::ConvergenceLimits_Impl(const ConvergenceLimits_Impl& other,
@@ -83,7 +83,7 @@ namespace detail {
 
   int ConvergenceLimits_Impl::maximumHVACIterations() const {
     boost::optional<int> value = getInt(OS_ConvergenceLimitsFields::MaximumHVACIterations,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -93,7 +93,7 @@ namespace detail {
 
   int ConvergenceLimits_Impl::minimumPlantIterations() const {
     boost::optional<int> value = getInt(OS_ConvergenceLimitsFields::MinimumPlantIterations,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -103,7 +103,7 @@ namespace detail {
 
   int ConvergenceLimits_Impl::maximumPlantIterations() const {
     boost::optional<int> value = getInt(OS_ConvergenceLimitsFields::MaximumPlantIterations,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -123,7 +123,7 @@ namespace detail {
 
   void ConvergenceLimits_Impl::resetMinimumSystemTimestep() {
     bool result = setString(OS_ConvergenceLimitsFields::MinimumSystemTimestep, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ConvergenceLimits_Impl::setMaximumHVACIterations(int maximumHVACIterations) {
@@ -134,7 +134,7 @@ namespace detail {
 
   void ConvergenceLimits_Impl::resetMaximumHVACIterations() {
     bool result = setString(OS_ConvergenceLimitsFields::MaximumHVACIterations, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ConvergenceLimits_Impl::setMinimumPlantIterations(int minimumPlantIterations) {
@@ -145,7 +145,7 @@ namespace detail {
 
   void ConvergenceLimits_Impl::resetMinimumPlantIterations() {
     bool result = setString(OS_ConvergenceLimitsFields::MinimumPlantIterations, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool ConvergenceLimits_Impl::setMaximumPlantIterations(int maximumPlantIterations) {
@@ -156,7 +156,7 @@ namespace detail {
 
   void ConvergenceLimits_Impl::resetMaximumPlantIterations() {
     bool result = setString(OS_ConvergenceLimitsFields::MaximumPlantIterations, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail

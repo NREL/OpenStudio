@@ -25,6 +25,7 @@
 #include <model/Material.hpp>
 #include <model/Material_Impl.hpp>
 #include <model/LifeCycleCost.hpp>
+#include <model/ShadingControl.hpp>
 
 #include <utilities/idd/Construction_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

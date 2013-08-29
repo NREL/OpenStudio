@@ -35,6 +35,8 @@ namespace runmanager {
 
 namespace analysis {
 
+class InputVariable;
+class Measure;
 class WorkflowStep;
 
 namespace detail {
@@ -97,6 +99,16 @@ namespace detail {
      *  openstudio::Exception if value is invalid for the variable. */
     virtual runmanager::WorkItem createWorkItem(const QVariant& value,
                                                 const openstudio::path& rubyIncludeDirectory) const = 0;
+
+    //@}
+    /** @name Protected in or Absent from Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    static InputVariable factoryFromVariant(const QVariant &variant, const VersionString &version);
+
+    static InputVariable factoryFromVariant(const QVariant& variant, const Measure& measure, const VersionString& version);
 
     //@}
    private:

@@ -249,12 +249,12 @@ namespace detail {
 
   // only call when m_directOrder == true
   std::vector<Handle>::iterator WorkspaceObjectOrder_Impl::getIterator(const Handle& handle) {
-    BOOST_ASSERT(m_directOrder);
+    OS_ASSERT(m_directOrder);
     return std::find(m_directOrder->begin(),m_directOrder->end(),handle);
   }
 
   std::vector<Handle>::iterator WorkspaceObjectOrder_Impl::getIterator(IddObjectType type) {
-    BOOST_ASSERT(m_directOrder);
+    OS_ASSERT(m_directOrder);
     for (HandleVector::iterator it = m_directOrder->begin(), 
          itEnd = m_directOrder->end(); it != itEnd; ++ it) 
     {
@@ -266,19 +266,19 @@ namespace detail {
   std::vector<Handle>::iterator WorkspaceObjectOrder_Impl::getIterator(
       const WorkspaceObject& object) 
   {
-    BOOST_ASSERT(m_directOrder);
+    OS_ASSERT(m_directOrder);
     return std::find(m_directOrder->begin(),m_directOrder->end(),object.handle());
   }
 
   std::vector<Handle>::const_iterator WorkspaceObjectOrder_Impl::getIterator(
       const Handle& handle) const 
   {
-    BOOST_ASSERT(m_directOrder);
+    OS_ASSERT(m_directOrder);
     return std::find(m_directOrder->begin(),m_directOrder->end(),handle);
   }
 
   std::vector<Handle>::const_iterator WorkspaceObjectOrder_Impl::getIterator(IddObjectType type) const {
-    BOOST_ASSERT(m_directOrder);
+    OS_ASSERT(m_directOrder);
     for (HandleVector::const_iterator it = m_directOrder->begin(), 
          itEnd = m_directOrder->end(); it != itEnd; ++ it) {
       if (getIddObjectType(*it) == type) { return it; }
@@ -289,14 +289,14 @@ namespace detail {
   std::vector<Handle>::const_iterator WorkspaceObjectOrder_Impl::getIterator(
       const WorkspaceObject& object) const 
   {
-    BOOST_ASSERT(m_directOrder);
+    OS_ASSERT(m_directOrder);
     return std::find(m_directOrder->begin(),m_directOrder->end(),object.handle());
   }
 
   boost::optional<IddObjectType> WorkspaceObjectOrder_Impl::getIddObjectType(
       const Handle& handle) const 
   {
-    BOOST_ASSERT(m_objectGetter);
+    OS_ASSERT(m_objectGetter);
     OptionalWorkspaceObject object = m_objectGetter(handle);
     if (object) { return object->iddObject().type(); }
     else { return boost::none; }
@@ -308,7 +308,7 @@ namespace detail {
     WorkspaceObjectVector objects;
     // loop through handles and try to find objects
     BOOST_FOREACH(const Handle& handle,handles) {
-      BOOST_ASSERT(m_objectGetter);
+      OS_ASSERT(m_objectGetter);
       OptionalWorkspaceObject object = m_objectGetter(handle);
       if (object) { objects.push_back(*object); }
     }

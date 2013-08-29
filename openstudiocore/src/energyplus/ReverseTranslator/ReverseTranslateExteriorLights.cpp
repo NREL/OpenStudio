@@ -79,7 +79,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateExteriorLights(
     exteriorLights = model::ExteriorLights(definition);
   }
 
-  BOOST_ASSERT(exteriorLights);
+  OS_ASSERT(exteriorLights);
 
   if (s = workspaceObject.name()) {
     exteriorLights->setName(*s);

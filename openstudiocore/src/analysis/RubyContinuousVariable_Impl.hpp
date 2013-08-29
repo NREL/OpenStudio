@@ -22,7 +22,7 @@
 
 #include <analysis/AnalysisAPI.hpp>
 #include <analysis/ContinuousVariable_Impl.hpp>
-#include <analysis/RubyPerturbation.hpp>
+#include <analysis/RubyMeasure.hpp>
 
 #include <ruleset/OSArgument.hpp>
 
@@ -41,7 +41,7 @@ namespace detail {
 
     RubyContinuousVariable_Impl(const std::string& name,
                                 const ruleset::OSArgument& argument,
-                                const RubyPerturbation& perturbation);
+                                const RubyMeasure& measure);
 
     RubyContinuousVariable_Impl(const UUID& uuid,
                                 const UUID& versionUUID,
@@ -54,7 +54,7 @@ namespace detail {
                                 boost::optional<double> increment,
                                 boost::optional<int> nSteps,
                                 const ruleset::OSArgument& argument,
-                                const RubyPerturbation& pertubation);
+                                const RubyMeasure& pertubation);
 
     RubyContinuousVariable_Impl(const RubyContinuousVariable_Impl& other);
 
@@ -91,7 +91,7 @@ namespace detail {
 
     ruleset::OSArgument argument() const;
 
-    RubyPerturbation perturbation() const;
+    RubyMeasure measure() const;
 
     //@}
     /** @name Setters */
@@ -99,22 +99,36 @@ namespace detail {
 
     void setArgument(const ruleset::OSArgument& argument);
 
-    bool setRubyPerturbation(const RubyPerturbation& perturbation);
+    bool setRubyMeasure(const RubyMeasure& measure);
 
     //@}
     /** @name Protected in Public Class */
     //@{
 
-    bool fileTypesAreCompatible(const RubyPerturbation& childRubyPerturbation,
+    bool fileTypesAreCompatible(const RubyMeasure& childRubyMeasure,
                                 const boost::optional<FileReferenceType>& proposedInputFileType,
                                 const boost::optional<FileReferenceType>& proposedOutputFileType) const;
+
+    //@}
+    /** @name Protected in or Absent from Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    static RubyContinuousVariable fromVariant(const QVariant& variant, const VersionString& version);
+
+    static RubyContinuousVariable fromVariant(const QVariant& variant, const Measure& measure, const VersionString& version);
+
+    /// Relocate path data from originalBase to newBase.
+    virtual void updateInputPathData(const openstudio::path& originalBase,
+                                     const openstudio::path& newBase);
 
     //@}
    private:
     REGISTER_LOGGER("openstudio.analysis.RubyContinuousVariable");
 
     ruleset::OSArgument m_argument;
-    RubyPerturbation m_perturbation;
+    RubyMeasure m_measure;
   };
 
 } // detail

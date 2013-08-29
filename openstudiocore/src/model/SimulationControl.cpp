@@ -66,14 +66,14 @@ namespace detail{
   SimulationControl_Impl::SimulationControl_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ParentObject_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == SimulationControl::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == SimulationControl::iddObjectType());
   }
 
   SimulationControl_Impl::SimulationControl_Impl(
         const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : ParentObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == SimulationControl::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == SimulationControl::iddObjectType());
   }
 
   SimulationControl_Impl::SimulationControl_Impl(const SimulationControl_Impl& other,
@@ -171,7 +171,7 @@ namespace detail{
 
   bool SimulationControl_Impl::doZoneSizingCalculation() const {
     boost::optional<std::string> value = getString(OS_SimulationControlFields::DoZoneSizingCalculation,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -181,7 +181,7 @@ namespace detail{
 
   bool SimulationControl_Impl::doSystemSizingCalculation() const {
     boost::optional<std::string> value = getString(OS_SimulationControlFields::DoSystemSizingCalculation,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -191,7 +191,7 @@ namespace detail{
 
   bool SimulationControl_Impl::doPlantSizingCalculation() const {
     boost::optional<std::string> value = getString(OS_SimulationControlFields::DoPlantSizingCalculation,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -201,7 +201,7 @@ namespace detail{
 
   bool SimulationControl_Impl::runSimulationforSizingPeriods() const {
     boost::optional<std::string> value = getString(OS_SimulationControlFields::RunSimulationforSizingPeriods,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -211,7 +211,7 @@ namespace detail{
 
   bool SimulationControl_Impl::runSimulationforWeatherFileRunPeriods() const {
     boost::optional<std::string> value = getString(OS_SimulationControlFields::RunSimulationforWeatherFileRunPeriods,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -221,14 +221,14 @@ namespace detail{
 
   double SimulationControl_Impl::loadsConvergenceToleranceValue() const {
     boost::optional<double> value = getDouble(OS_SimulationControlFields::LoadsConvergenceToleranceValue,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SimulationControl_Impl::getLoadsConvergenceToleranceValue(bool returnIP) const {
     OptionalDouble value = loadsConvergenceToleranceValue();
     OSOptionalQuantity result = getQuantityFromDouble(OS_SimulationControlFields::LoadsConvergenceToleranceValue, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -238,14 +238,14 @@ namespace detail{
 
   double SimulationControl_Impl::temperatureConvergenceToleranceValue() const {
     boost::optional<double> value = getDouble(OS_SimulationControlFields::TemperatureConvergenceToleranceValue,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity SimulationControl_Impl::getTemperatureConvergenceToleranceValue(bool returnIP) const {
     OptionalDouble value = temperatureConvergenceToleranceValue();
     OSOptionalQuantity result = getQuantityFromDouble(OS_SimulationControlFields::TemperatureConvergenceToleranceValue, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -255,7 +255,7 @@ namespace detail{
 
   std::string SimulationControl_Impl::solarDistribution() const {
     boost::optional<std::string> value = getString(OS_SimulationControlFields::SolarDistribution,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -265,7 +265,7 @@ namespace detail{
 
   int SimulationControl_Impl::maximumNumberofWarmupDays() const {
     boost::optional<int> value = getInt(OS_SimulationControlFields::MaximumNumberofWarmupDays,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -275,7 +275,7 @@ namespace detail{
 
   int SimulationControl_Impl::minimumNumberofWarmupDays() const {
     boost::optional<int> value = getInt(OS_SimulationControlFields::MinimumNumberofWarmupDays,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -290,12 +290,12 @@ namespace detail{
     } else {
       result = setString(OS_SimulationControlFields::DoZoneSizingCalculation, "No");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SimulationControl_Impl::resetDoZoneSizingCalculation() {
     bool result = setString(OS_SimulationControlFields::DoZoneSizingCalculation, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SimulationControl_Impl::setDoSystemSizingCalculation(bool doSystemSizingCalculation) {
@@ -305,12 +305,12 @@ namespace detail{
     } else {
       result = setString(OS_SimulationControlFields::DoSystemSizingCalculation, "No");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SimulationControl_Impl::resetDoSystemSizingCalculation() {
     bool result = setString(OS_SimulationControlFields::DoSystemSizingCalculation, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SimulationControl_Impl::setDoPlantSizingCalculation(bool doPlantSizingCalculation) {
@@ -320,12 +320,12 @@ namespace detail{
     } else {
       result = setString(OS_SimulationControlFields::DoPlantSizingCalculation, "No");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SimulationControl_Impl::resetDoPlantSizingCalculation() {
     bool result = setString(OS_SimulationControlFields::DoPlantSizingCalculation, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SimulationControl_Impl::setRunSimulationforSizingPeriods(bool runSimulationforSizingPeriods) {
@@ -335,12 +335,12 @@ namespace detail{
     } else {
       result = setString(OS_SimulationControlFields::RunSimulationforSizingPeriods, "No");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SimulationControl_Impl::resetRunSimulationforSizingPeriods() {
     bool result = setString(OS_SimulationControlFields::RunSimulationforSizingPeriods, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SimulationControl_Impl::setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods) {
@@ -350,12 +350,12 @@ namespace detail{
     } else {
       result = setString(OS_SimulationControlFields::RunSimulationforWeatherFileRunPeriods, "No");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SimulationControl_Impl::resetRunSimulationforWeatherFileRunPeriods() {
     bool result = setString(OS_SimulationControlFields::RunSimulationforWeatherFileRunPeriods, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SimulationControl_Impl::setLoadsConvergenceToleranceValue(double loadsConvergenceToleranceValue) {
@@ -373,7 +373,7 @@ namespace detail{
 
   void SimulationControl_Impl::resetLoadsConvergenceToleranceValue() {
     bool result = setString(OS_SimulationControlFields::LoadsConvergenceToleranceValue, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SimulationControl_Impl::setTemperatureConvergenceToleranceValue(double temperatureConvergenceToleranceValue) {
@@ -391,7 +391,7 @@ namespace detail{
 
   void SimulationControl_Impl::resetTemperatureConvergenceToleranceValue() {
     bool result = setString(OS_SimulationControlFields::TemperatureConvergenceToleranceValue, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SimulationControl_Impl::setSolarDistribution(std::string solarDistribution) {
@@ -401,7 +401,7 @@ namespace detail{
 
   void SimulationControl_Impl::resetSolarDistribution() {
     bool result = setString(OS_SimulationControlFields::SolarDistribution, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SimulationControl_Impl::setMaximumNumberofWarmupDays(int maximumNumberofWarmupDays) {
@@ -411,7 +411,7 @@ namespace detail{
 
   void SimulationControl_Impl::resetMaximumNumberofWarmupDays() {
     bool result = setString(OS_SimulationControlFields::MaximumNumberofWarmupDays, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool SimulationControl_Impl::setMinimumNumberofWarmupDays(int minimumNumberofWarmupDays) {
@@ -421,7 +421,7 @@ namespace detail{
 
   void SimulationControl_Impl::resetMinimumNumberofWarmupDays() {
     bool result = setString(OS_SimulationControlFields::MinimumNumberofWarmupDays, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   openstudio::Quantity SimulationControl_Impl::loadsConvergenceToleranceValue_SI() const {
@@ -595,7 +595,7 @@ namespace detail{
 SimulationControl::SimulationControl( const Model& model ):
   ParentObject(iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::SimulationControl_Impl>());
+  OS_ASSERT(getImpl<detail::SimulationControl_Impl>());
 }
 
 SimulationControl::SimulationControl(boost::shared_ptr<detail::SimulationControl_Impl> impl)

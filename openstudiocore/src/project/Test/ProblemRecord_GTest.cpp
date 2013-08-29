@@ -19,20 +19,20 @@
 
 #include <gtest/gtest.h>
 
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/NullPerturbation.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/Problem_Impl.hpp>
-#include <analysis/RubyPerturbation.hpp>
-#include <analysis/RubyPerturbation_Impl.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
 
-#include <project/DiscreteVariableRecord.hpp>
-#include <project/DiscreteVariableRecord_Impl.hpp>
-#include <project/NullPerturbationRecord.hpp>
+#include <project/MeasureGroupRecord.hpp>
+#include <project/MeasureGroupRecord_Impl.hpp>
+#include <project/NullMeasureRecord.hpp>
 #include <project/ProblemRecord.hpp>
 #include <project/ProjectDatabase.hpp>
-#include <project/RubyPerturbationRecord.hpp>
+#include <project/RubyMeasureRecord.hpp>
 #include <project/Test/ProjectFixture.hpp>
 
 #include <runmanager/lib/Workflow.hpp>
@@ -65,12 +65,12 @@ TEST_F(ProjectFixture, ProblemRecord)
   // Variables
   VariableVector variables;
 
-  // Perturbations
-  DiscretePerturbationVector perturbations1;
-  DiscretePerturbationVector perturbations2;
+  // Measures
+  MeasureVector perturbations1;
+  MeasureVector perturbations2;
 
   // Discrete Variable Records
-  InputVariableRecordVector discreteVariableRecords;
+  InputVariableRecordVector measureGroupRecords;
 
   {
     // Problem
@@ -82,15 +82,15 @@ TEST_F(ProjectFixture, ProblemRecord)
     // Problem Record
     ProblemRecord problemRecord = ProblemRecord::factoryFromProblem(problem,database);
 
-    InputVariableRecordVector discreteVariableRecords = problemRecord.inputVariableRecords();
+    InputVariableRecordVector measureGroupRecords = problemRecord.inputVariableRecords();
 
-    EXPECT_EQ(0u,discreteVariableRecords.size());
+    EXPECT_EQ(0u,measureGroupRecords.size());
   }
 
   {
-    perturbations1.push_back(NullPerturbation());
+    perturbations1.push_back(NullMeasure());
 
-    variables.push_back(analysis::DiscreteVariable("",perturbations1));
+    variables.push_back(analysis::MeasureGroup("",perturbations1));
 
     // Problem
     Problem problem("perturbations1",variables,workflow);
@@ -101,19 +101,19 @@ TEST_F(ProjectFixture, ProblemRecord)
     // Problem Record
     ProblemRecord problemRecord = ProblemRecord::factoryFromProblem(problem,database);
 
-    discreteVariableRecords = problemRecord.inputVariableRecords();
+    measureGroupRecords = problemRecord.inputVariableRecords();
 
-    EXPECT_EQ(1u,discreteVariableRecords.size());
+    EXPECT_EQ(1u,measureGroupRecords.size());
 
     // Discrete Variable Record
-    DiscreteVariableRecord discreteVariableRecord = discreteVariableRecords.at(0).cast<DiscreteVariableRecord>();
+    MeasureGroupRecord measureGroupRecord = measureGroupRecords.at(0).cast<MeasureGroupRecord>();
 
-    EXPECT_EQ(1u,discreteVariableRecord.discretePerturbationRecordIds(true).size());
-    EXPECT_EQ(1u,discreteVariableRecord.discretePerturbationRecords(true).size());
+    EXPECT_EQ(1u,measureGroupRecord.measureRecordIds(true).size());
+    EXPECT_EQ(1u,measureGroupRecord.measureRecords(true).size());
   }
 
   {
-    variables.push_back(DiscreteVariable("Wall Construction",perturbations1));
+    variables.push_back(MeasureGroup("Wall Construction",perturbations1));
 
     // Problem
     Problem problem("perturbations1",variables,workflow);
@@ -124,22 +124,22 @@ TEST_F(ProjectFixture, ProblemRecord)
     // Problem Record
     ProblemRecord problemRecord = ProblemRecord::factoryFromProblem(problem,database);
 
-    discreteVariableRecords = problemRecord.inputVariableRecords();
+    measureGroupRecords = problemRecord.inputVariableRecords();
 
-    EXPECT_EQ(2u,discreteVariableRecords.size());
+    EXPECT_EQ(2u,measureGroupRecords.size());
 
     // Discrete Variable Record
-    DiscreteVariableRecord variable1 = discreteVariableRecords.at(0).cast<DiscreteVariableRecord>();
+    MeasureGroupRecord variable1 = measureGroupRecords.at(0).cast<MeasureGroupRecord>();
 
-    EXPECT_EQ(static_cast<unsigned>(1), variable1.discretePerturbationRecords(true).size());
-    EXPECT_EQ(static_cast<unsigned>(1), variable1.discretePerturbationRecords(false).size());
+    EXPECT_EQ(static_cast<unsigned>(1), variable1.measureRecords(true).size());
+    EXPECT_EQ(static_cast<unsigned>(1), variable1.measureRecords(false).size());
     EXPECT_EQ(static_cast<unsigned>(2), problemRecord.inputVariableRecords().size());
   }
 
   {
-    perturbations2.push_back(NullPerturbation());
+    perturbations2.push_back(NullMeasure());
 
-    variables.push_back(DiscreteVariable("Roof Construction",perturbations2));
+    variables.push_back(MeasureGroup("Roof Construction",perturbations2));
 
     // Problem
     Problem problem("perturbations2",variables,workflow);
@@ -150,58 +150,58 @@ TEST_F(ProjectFixture, ProblemRecord)
     // Problem Record
     ProblemRecord problemRecord = ProblemRecord::factoryFromProblem(problem,database);
 
-    discreteVariableRecords = problemRecord.inputVariableRecords();
+    measureGroupRecords = problemRecord.inputVariableRecords();
 
-    EXPECT_EQ(3u,discreteVariableRecords.size());
+    EXPECT_EQ(3u,measureGroupRecords.size());
 
     // Discrete Variable Record
-    DiscreteVariableRecord variable1 = discreteVariableRecords.at(0).cast<DiscreteVariableRecord>();
-    DiscreteVariableRecord variable2 = discreteVariableRecords.at(0).cast<DiscreteVariableRecord>();
-    DiscreteVariableRecord variable3 = discreteVariableRecords.at(0).cast<DiscreteVariableRecord>();
+    MeasureGroupRecord variable1 = measureGroupRecords.at(0).cast<MeasureGroupRecord>();
+    MeasureGroupRecord variable2 = measureGroupRecords.at(0).cast<MeasureGroupRecord>();
+    MeasureGroupRecord variable3 = measureGroupRecords.at(0).cast<MeasureGroupRecord>();
 
-    EXPECT_EQ(static_cast<size_t>(1), variable1.discretePerturbationRecords(true).size());
-    EXPECT_EQ(static_cast<size_t>(1), variable1.discretePerturbationRecords(false).size());
+    EXPECT_EQ(static_cast<size_t>(1), variable1.measureRecords(true).size());
+    EXPECT_EQ(static_cast<size_t>(1), variable1.measureRecords(false).size());
     EXPECT_EQ(static_cast<size_t>(3), problemRecord.inputVariableRecords().size());
 
     UUID uuid1;
     UUID versionUUID1;
-    NullPerturbation nullPerturbation1(uuid1,versionUUID1,"","","",true);
-    NullPerturbationRecord nullPerturbationRecord1(nullPerturbation1,variable1,0);
+    NullMeasure nullMeasure1(uuid1,versionUUID1,"","","",true);
+    NullMeasureRecord nullMeasureRecord1(nullMeasure1,variable1,0);
 
-    EXPECT_EQ(static_cast<unsigned>(2), variable1.discretePerturbationRecords(true).size());
-    EXPECT_EQ(static_cast<unsigned>(2), variable1.discretePerturbationRecords(false).size());
-    EXPECT_EQ(static_cast<unsigned>(2), variable2.discretePerturbationRecords(true).size());
-    EXPECT_EQ(static_cast<unsigned>(2), variable2.discretePerturbationRecords(false).size());
+    EXPECT_EQ(static_cast<unsigned>(2), variable1.measureRecords(true).size());
+    EXPECT_EQ(static_cast<unsigned>(2), variable1.measureRecords(false).size());
+    EXPECT_EQ(static_cast<unsigned>(2), variable2.measureRecords(true).size());
+    EXPECT_EQ(static_cast<unsigned>(2), variable2.measureRecords(false).size());
 
     UUID uuid2;
     UUID versionUUID2;
-    NullPerturbation nullPerturbation2(uuid2,versionUUID2,"","","",true);
-    NullPerturbationRecord nullPerturbationRecord2(nullPerturbation2,variable1,0);
+    NullMeasure nullMeasure2(uuid2,versionUUID2,"","","",true);
+    NullMeasureRecord nullMeasureRecord2(nullMeasure2,variable1,0);
 
-    EXPECT_EQ(static_cast<unsigned>(2), variable1.discretePerturbationRecords(true).size());
-    EXPECT_EQ(static_cast<unsigned>(2), variable1.discretePerturbationRecords(false).size());
-    EXPECT_EQ(static_cast<unsigned>(2), variable2.discretePerturbationRecords(true).size());
-    EXPECT_EQ(static_cast<unsigned>(2), variable2.discretePerturbationRecords(false).size());
+    EXPECT_EQ(static_cast<unsigned>(2), variable1.measureRecords(true).size());
+    EXPECT_EQ(static_cast<unsigned>(2), variable1.measureRecords(false).size());
+    EXPECT_EQ(static_cast<unsigned>(2), variable2.measureRecords(true).size());
+    EXPECT_EQ(static_cast<unsigned>(2), variable2.measureRecords(false).size());
 
-    DiscretePerturbationVector perturbations;
-    DiscreteVariable discreteVariable("Wall Construction",perturbations);
-    DiscreteVariableRecord discreteVariableRecord(discreteVariable, problemRecord,0);
+    MeasureVector perturbations;
+    MeasureGroup measureGroup("Wall Construction",perturbations);
+    MeasureGroupRecord measureGroupRecord(measureGroup, problemRecord,0);
 
     openstudio::path rubyPath = resourcesPath() / openstudio::toPath("project/rubyscripts/*.rb");
     openstudio::path perturbScript = rubyPath/openstudio::toPath("openstudio/runmanager/rubyscripts/PerturbObject.rb");
-    RubyPerturbation rubyPerturbation(perturbScript,FileReferenceType::OSM,FileReferenceType::OSM);
-    RubyPerturbationRecord rubyPerturbationRecord1(rubyPerturbation,discreteVariableRecord,0);
+    RubyMeasure rubyMeasure(perturbScript,FileReferenceType::OSM,FileReferenceType::OSM);
+    RubyMeasureRecord rubyMeasureRecord1(rubyMeasure,measureGroupRecord,0);
 
-    EXPECT_EQ(static_cast<unsigned>(1), discreteVariableRecord.numPerturbations(true));
-    EXPECT_EQ(static_cast<unsigned>(1), discreteVariableRecord.discretePerturbationRecordIds(true).size());
-    EXPECT_EQ(static_cast<unsigned>(1), discreteVariableRecord.discretePerturbationRecords(true).size());
+    EXPECT_EQ(static_cast<unsigned>(1), measureGroupRecord.numMeasures(true));
+    EXPECT_EQ(static_cast<unsigned>(1), measureGroupRecord.measureRecordIds(true).size());
+    EXPECT_EQ(static_cast<unsigned>(1), measureGroupRecord.measureRecords(true).size());
 
-    RubyPerturbationRecord rubyPerturbationRecord(rubyPerturbation,discreteVariableRecord,0);
+    RubyMeasureRecord rubyMeasureRecord(rubyMeasure,measureGroupRecord,0);
 
-    EXPECT_EQ(static_cast<unsigned>(1), discreteVariableRecord.numPerturbations(true));
-    EXPECT_EQ(static_cast<unsigned>(1), discreteVariableRecord.discretePerturbationRecordIds(true).size());
-    EXPECT_EQ(rubyPerturbationRecord.id(), discreteVariableRecord.discretePerturbationRecordIds(true)[0]);
-    EXPECT_EQ(static_cast<unsigned>(1), discreteVariableRecord.discretePerturbationRecords(true).size());
-    EXPECT_EQ(rubyPerturbationRecord.handle(), discreteVariableRecord.discretePerturbationRecords(true)[0].handle());
+    EXPECT_EQ(static_cast<unsigned>(1), measureGroupRecord.numMeasures(true));
+    EXPECT_EQ(static_cast<unsigned>(1), measureGroupRecord.measureRecordIds(true).size());
+    EXPECT_EQ(rubyMeasureRecord.id(), measureGroupRecord.measureRecordIds(true)[0]);
+    EXPECT_EQ(static_cast<unsigned>(1), measureGroupRecord.measureRecords(true).size());
+    EXPECT_EQ(rubyMeasureRecord.handle(), measureGroupRecord.measureRecords(true)[0].handle());
   }
 }

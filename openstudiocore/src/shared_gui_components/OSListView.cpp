@@ -19,6 +19,9 @@
 
 #include "OSListView.hpp"
 #include "OSListController.hpp"
+
+#include <utilities/core/Assert.hpp>
+
 #include <QVBoxLayout>
 #include <QScrollArea>
 #include <QStyleOption>
@@ -145,7 +148,7 @@ void OSListView::refreshAllViews()
   {
       QWidget * widget = child->widget();
 
-      Q_ASSERT(widget);
+      OS_ASSERT(widget);
 
       delete widget;
 
@@ -163,11 +166,11 @@ void OSListView::refreshAllViews()
 
 void OSListView::insertItemView(int i)
 {
-  Q_ASSERT(m_listController);
+  OS_ASSERT(m_listController);
 
   QSharedPointer<OSListItem> itemData = m_listController->itemAt(i);
 
-  Q_ASSERT(itemData);
+  OS_ASSERT(itemData);
 
   QWidget * itemView = m_delegate->view(itemData);
 
@@ -179,18 +182,18 @@ void OSListView::insertItemView(int i)
 
   bool bingo = connect(itemView,SIGNAL(destroyed(QObject *)),this,SLOT(removePair(QObject *)));
 
-  Q_ASSERT(bingo);
+  OS_ASSERT(bingo);
 }
 
 void OSListView::removeItemView(int i)
 {
   QLayoutItem * item = m_mainVLayout->takeAt(i);
 
-  Q_ASSERT(item);
+  OS_ASSERT(item);
 
   QWidget * widget = item->widget();
 
-  Q_ASSERT(widget);
+  OS_ASSERT(widget);
 
   delete widget;
 

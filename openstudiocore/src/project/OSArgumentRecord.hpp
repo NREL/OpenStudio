@@ -28,7 +28,7 @@
 namespace openstudio {
 namespace project {
 
-class RubyPerturbationRecord;
+class RubyMeasureRecord;
 class RubyContinuousVariableRecord;
 
 namespace detail {
@@ -39,8 +39,34 @@ namespace detail {
 
 /** \class OSArgumentRecordColumns
  *  \brief Column definitions for the OSArgumentRecords table.
- *
- *  \relates OSArgumentRecord */
+ *  \details At some point, rubyPerturbationRecordId should be renamed to
+ *  rubyMeasureRecordId. For general information, see the
+ *  OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
+ *  call is:
+ *  \code
+OPENSTUDIO_ENUM(OSArgumentRecordColumns,
+  ((id)(INTEGER PRIMARY KEY)(0))
+  ((handle)(TEXT)(1))
+  ((name)(TEXT)(2))
+  ((displayName)(TEXT)(3))
+  ((description)(TEXT)(4))
+  ((timestampCreate)(TEXT)(5))
+  ((timestampLast)(TEXT)(6))
+  ((uuidLast)(TEXT)(7))
+  ((rubyPerturbationRecordId)(INTEGER)(8))
+  ((rubyContinuousVariableRecordId)(INTEGER)(9))
+  ((argumentType)(INTEGER)(10))
+  ((required)(BOOLEAN)(11))
+  ((argumentValue)(TEXT)(12))
+  ((defaultArgumentValue)(TEXT)(13))
+  ((domainType)(INTEGER)(14))
+  ((domainValues)(TEXT)(15))
+  ((choices)(TEXT)(16))
+  ((choiceDisplayNames)(TEXT)(17))
+  ((isRead)(BOOLEAN)(18))
+  ((extension)(TEXT)(19))
+);
+ *  \endcode */
 OPENSTUDIO_ENUM(OSArgumentRecordColumns,
   ((id)(INTEGER PRIMARY KEY)(0))
   ((handle)(TEXT)(1))
@@ -76,7 +102,7 @@ class PROJECT_API OSArgumentRecord : public ObjectRecord {
   //@{
 
   OSArgumentRecord(const ruleset::OSArgument& osArgument,
-                   RubyPerturbationRecord& rubyPerturbationRecord);
+                   RubyMeasureRecord& rubyMeasureRecord);
 
   OSArgumentRecord(const ruleset::OSArgument& osArgument,
                    RubyContinuousVariableRecord& rubyContinuousVariableRecord);
@@ -112,8 +138,8 @@ class PROJECT_API OSArgumentRecord : public ObjectRecord {
   /** @name Getters */
   //@{
 
-  /** Get the RubyPerturbationRecord that parents this OSArgumentRecord. */
-  boost::optional<RubyPerturbationRecord> rubyPerturbationRecord() const;
+  /** Get the RubyMeasureRecord that parents this OSArgumentRecord. */
+  boost::optional<RubyMeasureRecord> rubyMeasureRecord() const;
 
   /** Get the RubyContinuousVariableRecord that parents this OSArgumentRecord. */
   boost::optional<RubyContinuousVariableRecord> rubyContinuousVariableRecord() const;

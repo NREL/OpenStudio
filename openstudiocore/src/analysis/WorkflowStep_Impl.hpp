@@ -99,6 +99,18 @@ namespace detail {
     bool set(const runmanager::WorkItem& workItem);
 
     //@}
+    /** @name Protected in or Absent from Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    static WorkflowStep factoryFromVariant(const QVariant& variant, const VersionString& version);
+
+    /// Relocate path data from originalBase to newBase.
+    virtual void updateInputPathData(const openstudio::path& originalBase,
+                                     const openstudio::path& newBase);
+
+    //@}
    private:
     REGISTER_LOGGER("openstudio.analysis.WorkflowStep")
 

@@ -42,7 +42,9 @@ namespace detail {
     explicit SamplingAlgorithmOptions_Impl();
 
     /** Constructor provided for deserialization; not for general use. */
-    SamplingAlgorithmOptions_Impl(const std::vector<Attribute>& options);
+    SamplingAlgorithmOptions_Impl(const boost::optional<SamplingAlgorithmSampleType>& sampleType,
+                                  const boost::optional<SamplingAlgorithmRNGType>& rngType,
+                                  const std::vector<Attribute>& options);
 
     virtual ~SamplingAlgorithmOptions_Impl() {}
 
@@ -116,6 +118,14 @@ namespace detail {
 
     /** Places the string "fixed_seed" in the .in file if true, otherwise nothing. */
     void setFixedSeed(bool value);
+
+    //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
+
+    virtual QVariant toVariant() const;
+
+    static SamplingAlgorithmOptions fromVariant(const QVariant& variant, const VersionString& version);
 
     //@}
    protected:

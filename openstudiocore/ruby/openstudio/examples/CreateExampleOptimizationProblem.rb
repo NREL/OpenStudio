@@ -142,198 +142,265 @@ componentLibrary = Project::ProjectDatabase.new(componentLibraryPath,componentLi
 # define variables
 puts "Setting up problem variables."
 variables = Analysis::VariableVector.new
-perturbations = Analysis::DiscretePerturbationVector.new
+measures = Analysis::MeasureVector.new
 
   # variable 1: exterior window construction
-  perturbations.clear
-  perturbations.push(Analysis::NullPerturbation.new)
-  # create basic rule
-  ruleTemplate = Ruleset::ModelRule.new("Template")
-  filters = Ruleset::FilterClauseVector.new
-  filter = Ruleset::ModelObjectFilterType.new("OS:DefaultSubSurfaceConstructions".to_IddObjectType)
-  filter = Ruleset::ModelObjectFilterStringAttribute.new("name",
-                                                         "IEquals".to_RulesetStringPredicate,
-                                                         "Exterior SubSurface Constructions")
-  filters.push(filter)
-  ruleTemplate.add(filters)
-  # create perturbations by referencing osc files
+  measures.clear
+  measures.push(Analysis::NullMeasure.new)
+  # create measures from osc files
   componentNames = []
   componentNames.push("Dbl Clr 6mm_13mm Arg")
   componentNames.push("Dbl LoE (e3=.1) Clr 3mm_6mm Air")
   componentNames.push("Trp LoE (e2=e5=.1) Clr 3mm_13mm Arg")
   componentNames.push("Quadruple LoE Films (88) 3mm_8mm Krypton")
+  # add component data to model
   componentNames.each { |componentName|
     componentRecord = Project::getFileReferenceRecordByName(componentLibrary,componentName).get
     componentPath = componentRecord.path
-    rule = Ruleset::ModelRule.new("Set Exterior Window Construction to '" + componentName + "'")
-    rule.add(ruleTemplate.filters)
-    action = Ruleset::ModelObjectActionSetRelationship.new("fixedWindowConstruction",componentPath)
-    rule.add(action)
-    ruleset = Ruleset::ModelRuleset.new(rule.name())
-    ruleset.add(rule)
-    perturbations.push(Analysis::ModelRulesetPerturbation.new(ruleset))
+    component = OpenStudio::Model::Component::load(componentPath).get
+    model.insertComponent(component)
   }
-  variables.push(Analysis::DiscreteVariable.new("Exterior Window Construction",perturbations))
+  # save model
+  model.save(exampleModelPath,true)
+  # download measure from BCL
+  remoteBCL = OpenStudio::RemoteBCL.new
+  bclMeasure = remoteBCL.getMeasure("e9cc8132-fe83-4cd6-a168-8c7637b04e12").get
+  # get measure arguments for model
+  args = OpenStudio::Ruleset::getArguments(bclMeasure,
+                                           OpenStudio::Model::OptionalModel.new(model))
+  runner = OpenStudio::Ruleset::OSRunner.new
+  argMap = runner.getUserInput(args)
+  # create measure instances based on componentNames
+  componentNames.each { |componentName|
+    rubyMeasure = OpenStudio::Analysis::RubyMeasure.new(bclMeasure)
+    arg = argMap["construction"]
+    arg.setValue(componentName)
+    rubyMeasure.setArgument(arg)
+    measures.push(rubyMeasure)
+  }
+  variables.push(Analysis::MeasureGroup.new("Exterior Window Construction",measures))
 
   # variable 2: exterior wall construction
 
   # variable 3: exterior roof construction
 
   # variable 4: plug load density
-  filters = Ruleset::ModelObjectFilterClauseVector.new
-  filters.push(Ruleset::ModelObjectFilterType.new("OS:ElectricEquipment:Definition".to_IddObjectType))
-  filters.push(Ruleset::ModelObjectFilterStringAttribute.new("designLevelCalculationMethod",
-                                                             "IEquals".to_RulesetStringPredicate,
-                                                             "Watts/Area"))
-  continuousVariable = Analysis::ModelRulesetContinuousVariable.new("Plug Load Density",
-                                                                    filters,
-                                                                    "wattsperSpaceFloorArea")
-  values = []
-  values.push(5.0) # baseline because first
-  values.push(4.0)
-  values.push(3.0)
-  variables.push(continuousVariable.discretize(values))
+  measures.clear
+  perturbScript = OpenStudio::Path.new($OpenStudio_LibPath + "openstudio/runmanager/rubyscripts/PerturbObject.rb")
+  template = OpenStudio::Analysis::RubyMeasure.new(perturbScript,
+                                                      "OSM".to_FileReferenceType,
+                                                      "OSM".to_FileReferenceType)
+  template.addArgument("inputPath","in.osm")
+  template.addArgument("outputPath", "out.osm")
+  template.addArgument("objectType", "OS:ElectricEquipment:Definition")
+  template.addArgument("nameRegex", "Electric Equipment Definition [0-9]+") # Watts/Area
+  template.addArgument("field", "4") # Watts per Space Floor Area
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value", "5.0")
+  measures.push(rubyMeasure)
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value","4.0")
+  measures.push(rubyMeasure)
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value","3.0")
+  measures.push(rubyMeasure)
+  variables.push(OpenStudio::Analysis::MeasureGroup.new("Plug Load Density",measures))
 
   # variable 5: lighting power density
-  filters = Ruleset::ModelObjectFilterClauseVector.new
-  filters.push(Ruleset::ModelObjectFilterType.new("OS:Lights:Definition".to_IddObjectType))
-  continuousVariable = Analysis::ModelRulesetContinuousVariable.new("Lighting Power Density",
-                                                                    filters,
-                                                                    "wattsperSpaceFloorArea") 
-  values = []
-  values.push(10.0) # baseline because first
-  values.push(8.0)
-  variables.push(continuousVariable.discretize(values))
+  measures.clear
+  template = OpenStudio::Analysis::RubyMeasure.new(perturbScript,
+                                                      "OSM".to_FileReferenceType,
+                                                      "OSM".to_FileReferenceType)
+  template.addArgument("inputPath","in.osm")
+  template.addArgument("outputPath", "out.osm")
+  template.addArgument("objectType", "OS:Lights:Definition")
+  template.addArgument("nameRegex", ".*")
+  template.addArgument("field", "4") # Watts per Space Floor Area
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value", "10.0")
+  measures.push(rubyMeasure)
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value","8.0")
+  measures.push(rubyMeasure)
+  variables.push(OpenStudio::Analysis::MeasureGroup.new("Lighting Power Density",measures))
 
   # variable 6: building rotation
-  filters = Ruleset::ModelObjectFilterClauseVector.new
-  filters.push(Ruleset::ModelObjectFilterType.new("OS:Building".to_IddObjectType))
-  continuousVariable = Analysis::ModelRulesetContinuousVariable.new("Building Rotation",
-                                                                    filters,
-                                                                    "northAxis")    
-  continuousVariable.setMinimum(0.0)
-  continuousVariable.setMaximum(270.0)
-  continuousVariable.setIncrement(90.0)
-  variables.push(continuousVariable.discretize)
+  measures.clear
+  template = OpenStudio::Analysis::RubyMeasure.new(perturbScript,
+                                                      "OSM".to_FileReferenceType,
+                                                      "OSM".to_FileReferenceType)
+  template.addArgument("inputPath","in.osm")
+  template.addArgument("outputPath", "out.osm")
+  template.addArgument("objectType", "OS:Building")
+  template.addArgument("nameRegex", ".*")
+  template.addArgument("field", "3") # North Axis
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value", "0.0")
+  measures.push(rubyMeasure)
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value","90.0")
+  measures.push(rubyMeasure)
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value","180.0")
+  measures.push(rubyMeasure)
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value","270.0")
+  measures.push(rubyMeasure)
+  variables.push(OpenStudio::Analysis::MeasureGroup.new("Building Rotation",measures))
 
   # variable 7: number of printers
-  filters = Ruleset::ModelObjectFilterClauseVector.new
-  filters.push(Ruleset::ModelObjectFilterType.new("OS:ElectricEquipment".to_IddObjectType))
-  filters.push(Ruleset::ModelObjectFilterStringAttribute.new("name",
-                                                             "IEquals".to_RulesetStringPredicate,
-                                                             "Printer"))
-  continuousVariable = Analysis::ModelRulesetContinuousVariable.new("Number of Printers",
-                                                                    filters,
-                                                                    "multiplier")
-  values = []
-  values.push(2.0) # baseline because first
-  values.push(1.0)
-  variables.push(continuousVariable.discretize(values))
+  measures.clear
+  template = OpenStudio::Analysis::RubyMeasure.new(perturbScript,
+                                                      "OSM".to_FileReferenceType,
+                                                      "OSM".to_FileReferenceType)
+  template.addArgument("inputPath","in.osm")
+  template.addArgument("outputPath", "out.osm")
+  template.addArgument("objectType", "OS:ElectricEquipment")
+  template.addArgument("nameRegex", "Printer")
+  template.addArgument("field", "5") # Multiplier
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value", "2.0")
+  measures.push(rubyMeasure)
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value","1.0")
+  measures.push(rubyMeasure)
+  variables.push(OpenStudio::Analysis::MeasureGroup.new("Number of Printers",measures))
 
   # variable 8: daylighting fraction
-  filters = Ruleset::ModelObjectFilterClauseVector.new
-  filters.push(Ruleset::ModelObjectFilterType.new("OS:Lights".to_IddObjectType))
-  continuousVariable = Analysis::ModelRulesetContinuousVariable.new("Daylighting Fraction",
-                                                                    filters,
-                                                                    "fractionReplacable")
-  continuousVariable.setMinimum(0.5)
-  continuousVariable.setMaximum(1.0)
-  continuousVariable.setIncrement(0.5)
-  variables.push(continuousVariable.discretize)
+  measures.clear
+  template = OpenStudio::Analysis::RubyMeasure.new(perturbScript,
+                                                      "OSM".to_FileReferenceType,
+                                                      "OSM".to_FileReferenceType)
+  template.addArgument("inputPath","in.osm")
+  template.addArgument("outputPath", "out.osm")
+  template.addArgument("objectType", "OS:Lights")
+  template.addArgument("nameRegex", ".*")
+  template.addArgument("field", "5") # Fraction Replacable
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value", "0.5")
+  measures.push(rubyMeasure)
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value","1.0")
+  measures.push(rubyMeasure)
+  variables.push(OpenStudio::Analysis::MeasureGroup.new("Daylighting Fraction",measures))
 
   # variable 9: overhangs
-  perturbations.clear
-  perturbations.push(Analysis::NullPerturbation.new)
+  measures.clear
+  measures.push(Analysis::NullMeasure.new)
   overhangScript = Path.new($OpenStudio_LibPath + "openstudio/examples/rubyscripts/AddOverhang.rb")
-  perturbation = Analysis::RubyPerturbation.new(overhangScript, 
-                                                "OSM".to_FileReferenceType, 
-                                                "OSM".to_FileReferenceType)
-  perturbation.addArgument("projectionfactor","0.5")
-  perturbation.addArgument("offsetfraction","0.1")
-  perturbations.push(perturbation)
-  perturbation = Analysis::RubyPerturbation.new(overhangScript, 
-                                                "OSM".to_FileReferenceType, 
-                                                "OSM".to_FileReferenceType)
-  perturbation.addArgument("projectionfactor","1.0")
-  perturbation.addArgument("offsetfraction","0.1")
-  perturbations.push(perturbation)
-  perturbation = Analysis::RubyPerturbation.new(overhangScript, 
-                                                "OSM".to_FileReferenceType, 
-                                                "OSM".to_FileReferenceType)
-  perturbation.addArgument("projectionfactor","1.5")
-  perturbation.addArgument("offsetfraction","0.1")
-  perturbations.push(perturbation)    
-  variables.push(Analysis::DiscreteVariable.new("Overhangs",perturbations))
+  measure = Analysis::RubyMeasure.new(overhangScript, 
+                                      "OSM".to_FileReferenceType, 
+                                      "OSM".to_FileReferenceType)
+  measure.addArgument("projectionfactor","0.5")
+  measure.addArgument("offsetfraction","0.1")
+  measures.push(measure)
+  measure = Analysis::RubyMeasure.new(overhangScript, 
+                                      "OSM".to_FileReferenceType, 
+                                      "OSM".to_FileReferenceType)
+  measure.addArgument("projectionfactor","1.0")
+  measure.addArgument("offsetfraction","0.1")
+  measures.push(measure)
+  measure = Analysis::RubyMeasure.new(overhangScript, 
+                                      "OSM".to_FileReferenceType, 
+                                      "OSM".to_FileReferenceType)
+  measure.addArgument("projectionfactor","1.5")
+  measure.addArgument("offsetfraction","0.1")
+  measures.push(measure)    
+  variables.push(Analysis::MeasureGroup.new("Overhangs",measures))
 
   # variable 10: evaporative cooler effectiveness
-  filters = Ruleset::ModelObjectFilterClauseVector.new
-  filters.push(Ruleset::ModelObjectFilterType.new("OS:EvaporativeCooler:Direct:ResearchSpecial".to_IddObjectType))
-  continuousVariable = Analysis::ModelRulesetContinuousVariable.new("Evaporative Cooler Effectiveness",
-                                                                    filters,
-                                                                    "coolerEffectiveness")
-  values = []
-  values.push(0.6) # baseline because first
-  values.push(0.8)
-  values.push(0.9)
-  variables.push(continuousVariable.discretize(values))
+  measures.clear
+  template = OpenStudio::Analysis::RubyMeasure.new(perturbScript,
+                                                      "OSM".to_FileReferenceType,
+                                                      "OSM".to_FileReferenceType)
+  template.addArgument("inputPath","in.osm")
+  template.addArgument("outputPath", "out.osm")
+  template.addArgument("objectType", "OS:EvaporativeCooler:Direct:ResearchSpecial")
+  template.addArgument("nameRegex", ".*")
+  template.addArgument("field", "3") # Cooler Effectiveness
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value", "0.6")
+  measures.push(rubyMeasure)
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value","0.8")
+  measures.push(rubyMeasure)
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value","0.9")
+  measures.push(rubyMeasure)
+  variables.push(OpenStudio::Analysis::MeasureGroup.new("Evaporative Cooler Effectiveness",measures))
 
   # variable 11: fan characteristics
-  perturbations.clear
-  perturbations.push(Analysis::NullPerturbation.new)
+  measures.clear
+  measures.push(Analysis::NullMeasure.new)
+
+  template = OpenStudio::Analysis::RubyMeasure.new(perturbScript,
+                                                   "OSM".to_FileReferenceType,
+                                                   "OSM".to_FileReferenceType)
+  template.addArgument("inputPath","in.osm")
+  template.addArgument("outputPath", "out.osm")
+  template.addArgument("objectType", "OS:Fan:ConstantVolume")
+  template.addArgument("nameRegex", ".*")
   # option package 1
-  rule = Ruleset::ModelRule.new("Better Fan")
-  filters = Ruleset::FilterClauseVector.new
-  filter = Ruleset::ModelObjectFilterType.new("OS:Fan:ConstantVolume".to_IddObjectType)
-  filters.push(filter)
-  rule.add(filters)
-  action = Ruleset::ModelObjectActionSetAttribute.new("fanEfficiency",0.8)
-  rule.add(action)
-  action = Ruleset::ModelObjectActionSetAttribute.new("pressureRise",225.0)
-  rule.add(action)
-  action = Ruleset::ModelObjectActionSetAttribute.new("motorEfficiency",0.92)
-  rule.add(action)    
-  ruleset = Ruleset::ModelRuleset.new(rule.name())
-  ruleset.add(rule)
-  perturbations.push(Analysis::ModelRulesetPerturbation.new(ruleset))
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("field", "3") # Fan Efficiency
+  rubyMeasure.addArgument("value", "0.8")
+  rubyMeasure.addArgument("field", "4") # Pressure Rise
+  rubyMeasure.addArgument("value", "225.0")
+  rubyMeasure.addArgument("field", "6") # Motor Efficiency
+  rubyMeasure.addArgument("value", "0.92")
+  measures.push(rubyMeasure)
   # option package 2
-  rule = Ruleset::ModelRule.new("Best Fan")
-  filters = Ruleset::FilterClauseVector.new
-  filter = Ruleset::ModelObjectFilterType.new("OS:Fan:ConstantVolume".to_IddObjectType)
-  filters.push(filter)
-  rule.add(filters)
-  action = Ruleset::ModelObjectActionSetAttribute.new("fanEfficiency",0.9)
-  rule.add(action)
-  action = Ruleset::ModelObjectActionSetAttribute.new("pressureRise",200.0)
-  rule.add(action)
-  action = Ruleset::ModelObjectActionSetAttribute.new("motorEfficiency",0.96)
-  rule.add(action)    
-  ruleset = Ruleset::ModelRuleset.new(rule.name())
-  ruleset.add(rule)
-  perturbations.push(Analysis::ModelRulesetPerturbation.new(ruleset))
-  variables.push(Analysis::DiscreteVariable.new("Fan Performance",perturbations))    
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("field", "3") # Fan Efficiency
+  rubyMeasure.addArgument("value", "0.9")
+  rubyMeasure.addArgument("field", "4") # Pressure Rise
+  rubyMeasure.addArgument("value", "200.0")
+  rubyMeasure.addArgument("field", "6") # Motor Efficiency
+  rubyMeasure.addArgument("value", "0.96")
+  measures.push(rubyMeasure)
+  variables.push(OpenStudio::Analysis::MeasureGroup.new("Fan Performance",measures))
 
   # variable 12: min supply air temperature
-  filters = Ruleset::ModelObjectFilterClauseVector.new
-  filters.push(Ruleset::ModelObjectFilterType.new("OS:SetpointManager:SingleZone:Reheat".to_IddObjectType))
-  continuousVariable = Analysis::ModelRulesetContinuousVariable.new("Minimum Supply Air Temperature",
-                                                                    filters,
-                                                                    "minimumSupplyAirTemperature")
-  values = []
-  values.push(15.0) # baseline because first
-  values.push(10.0)
-  values.push(5.0)
-  variables.push(continuousVariable.discretize(values))    
+  measures.clear
+  template = OpenStudio::Analysis::RubyMeasure.new(perturbScript,
+                                                   "OSM".to_FileReferenceType,
+                                                   "OSM".to_FileReferenceType)
+  template.addArgument("inputPath","in.osm")
+  template.addArgument("outputPath", "out.osm")
+  template.addArgument("objectType", "OS:SetpointManager:SingleZone:Reheat")
+  template.addArgument("nameRegex", ".*")
+  template.addArgument("field", "2") # Minimum Supply Air Temperature
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value", "15.0")
+  measures.push(rubyMeasure)
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value","10.0")
+  measures.push(rubyMeasure)
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value","5.0")
+  measures.push(rubyMeasure)
+  variables.push(OpenStudio::Analysis::MeasureGroup.new("Minimum Supply Air Temperature",measures))
 
   # variable 13: max supply air temperature
-  filters = Ruleset::ModelObjectFilterClauseVector.new
-  filters.push(Ruleset::ModelObjectFilterType.new("OS:SetpointManager:SingleZone:Reheat".to_IddObjectType))
-  continuousVariable = Analysis::ModelRulesetContinuousVariable.new("Maximum Supply Air Temperature",
-                                                                    filters,
-                                                                    "maximumSupplyAirTemperature")
-  continuousVariable.setMinimum(18.0)
-  continuousVariable.setMaximum(26.0)
-  continuousVariable.setIncrement(4.0)
-  variables.push(continuousVariable.discretize)
+  measures.clear
+  template = OpenStudio::Analysis::RubyMeasure.new(perturbScript,
+                                                   "OSM".to_FileReferenceType,
+                                                   "OSM".to_FileReferenceType)
+  template.addArgument("inputPath","in.osm")
+  template.addArgument("outputPath", "out.osm")
+  template.addArgument("objectType", "OS:SetpointManager:SingleZone:Reheat")
+  template.addArgument("nameRegex", ".*")
+  template.addArgument("field", "3") # Maximum Supply Air Temperature
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value", "18.0")
+  measures.push(rubyMeasure)
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value","22.0")
+  measures.push(rubyMeasure)
+  rubyMeasure = template.clone.to_RubyMeasure.get
+  rubyMeasure.addArgument("value","26.0")
+  measures.push(rubyMeasure)
+  variables.push(OpenStudio::Analysis::MeasureGroup.new("Maximum Supply Air Temperature",measures))
 
   # variable 14: heating setpoints
 

@@ -43,10 +43,10 @@ class MODEL_API Screen : public ShadingMaterial {
   //@{
 
   explicit Screen(const Model& model,
-                  double diffuseSolarReflectance = 0.1,
-                  double diffuseVisibleReflectance = 0.1,
-                  double screenMaterialSpacing = 0.1,
-                  double screenMaterialDiameter = 0.1);
+                  double diffuseSolarReflectance = 0.08,
+                  double diffuseVisibleReflectance = 0.08,
+                  double screenMaterialSpacing = 0.00157,
+                  double screenMaterialDiameter = 0.000381);
 
   virtual ~Screen() {}
 

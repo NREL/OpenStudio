@@ -13,7 +13,7 @@
   
   #include <utilities/units/Unit.hpp>
   #include <utilities/units/BTUUnit.hpp>
-  #include <utilities/units/CelciusUnit.hpp>
+  #include <utilities/units/CelsiusUnit.hpp>
   #include <utilities/units/CFMUnit.hpp>
   #include <utilities/units/FahrenheitUnit.hpp>
   #include <utilities/units/GPDUnit.hpp>

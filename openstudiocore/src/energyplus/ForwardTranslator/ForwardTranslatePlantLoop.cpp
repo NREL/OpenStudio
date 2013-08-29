@@ -40,6 +40,14 @@
 #include <model/WaterToWaterComponent_Impl.hpp>
 #include <model/CoilHeatingWaterBaseboard.hpp>
 #include <model/CoilHeatingWaterBaseboard_Impl.hpp>
+#include <model/CoilHeatingLowTempRadiantConstFlow.hpp>
+#include <model/CoilHeatingLowTempRadiantConstFlow_Impl.hpp>
+#include <model/CoilCoolingLowTempRadiantConstFlow.hpp>
+#include <model/CoilCoolingLowTempRadiantConstFlow_Impl.hpp>
+#include <model/CoilHeatingLowTempRadiantVarFlow.hpp>
+#include <model/CoilHeatingLowTempRadiantVarFlow_Impl.hpp>
+#include <model/CoilCoolingLowTempRadiantVarFlow.hpp>
+#include <model/CoilCoolingLowTempRadiantVarFlow_Impl.hpp>
 #include <model/ZoneHVACComponent.hpp>
 #include <model/ZoneHVACComponent_Impl.hpp>
 #include <model/LifeCycleCost.hpp>
@@ -59,6 +67,8 @@
 #include <utilities/idd/PlantEquipmentOperation_CoolingLoad_FieldEnums.hxx>
 #include <utilities/idd/PlantEquipmentList_FieldEnums.hxx>
 #include <utilities/idd/Sizing_Plant_FieldEnums.hxx>
+
+#include <utilities/core/Assert.hpp>
 
 using namespace openstudio::model;
 
@@ -112,6 +122,65 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
               //Get the name and the idd object from the idf object version of this
               objectName = idfContZnBB->name().get();
               iddType = idfContZnBB->iddObject().name();
+            }
+          }
+        }
+
+        //special case for ZoneHVAC:LowTemperatureRadiant:ConstantFlow and ZoneHVAC:LowTemperatureRadiant:VariableFlow.  In E+, this object appears on both the 
+        //zonehvac:equipmentlist and the branch.  In OpenStudio, this object was broken into 2 objects:
+        //ZoneHVACBaseboardConvectiveWater and CoilHeatingWaterBaseboard.  The ZoneHVAC goes onto the zone and
+        //has a child coil that goes onto the plantloop.  In order to get the correct translation to E+, we need
+        //to put the name of the containing ZoneHVACBaseboardConvectiveWater onto the branch.
+        if (boost::optional<CoilHeatingLowTempRadiantConstFlow> coilHLRC = it->optionalCast<CoilHeatingLowTempRadiantConstFlow>() )
+        {
+          if (boost::optional<ZoneHVACComponent> znLowTempRadConst = coilHLRC->containingZoneHVACComponent())
+          {
+            //translate and map containingZoneHVACBBConvWater
+            if ( boost::optional<IdfObject> idfZnLowTempRadConst = this->translateAndMapModelObject(*znLowTempRadConst) )
+            {
+              //Get the name and the idd object from the idf object version of this
+              objectName = idfZnLowTempRadConst->name().get();
+              iddType = idfZnLowTempRadConst->iddObject().name();
+            }
+          }
+        }
+       if (boost::optional<CoilCoolingLowTempRadiantConstFlow> coilCLRC = it->optionalCast<CoilCoolingLowTempRadiantConstFlow>() )
+        {
+          if (boost::optional<ZoneHVACComponent> znLowTempRadConst = coilCLRC->containingZoneHVACComponent())
+          {
+            //translate and map containingZoneHVACBBConvWater
+            if ( boost::optional<IdfObject> idfZnLowTempRadConst = this->translateAndMapModelObject(*znLowTempRadConst) )
+            {
+              //Get the name and the idd object from the idf object version of this
+              objectName = idfZnLowTempRadConst->name().get();
+              iddType = idfZnLowTempRadConst->iddObject().name();
+            }
+          }
+        }
+				
+				if (boost::optional<CoilHeatingLowTempRadiantVarFlow> coilHLRC = it->optionalCast<CoilHeatingLowTempRadiantVarFlow>() )
+        {
+          if (boost::optional<ZoneHVACComponent> znLowTempRadVar = coilHLRC->containingZoneHVACComponent())
+          {
+            //translate and map containingZoneHVACBBConvWater
+            if ( boost::optional<IdfObject> idfZnLowTempRadVar = this->translateAndMapModelObject(*znLowTempRadVar) )
+            {
+              //Get the name and the idd object from the idf object version of this
+              objectName = idfZnLowTempRadVar->name().get();
+              iddType = idfZnLowTempRadVar->iddObject().name();
+            }
+          }
+        }
+       if (boost::optional<CoilCoolingLowTempRadiantVarFlow> coilCLRC = it->optionalCast<CoilCoolingLowTempRadiantVarFlow>() )
+        {
+          if (boost::optional<ZoneHVACComponent> znLowTempRadVar = coilCLRC->containingZoneHVACComponent())
+          {
+            //translate and map containingZoneHVACBBConvWater
+            if ( boost::optional<IdfObject> idfZnLowTempRadVar = this->translateAndMapModelObject(*znLowTempRadVar) )
+            {
+              //Get the name and the idd object from the idf object version of this
+              objectName = idfZnLowTempRadVar->name().get();
+              iddType = idfZnLowTempRadVar->iddObject().name();
             }
           }
         }
@@ -457,7 +526,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   std::vector<ModelObject> supplyInletBranchModelObjects;
   supplyInletModelObjects = plantLoop.supplyComponents(supplyInletNode,supplySplitter);
 
-  BOOST_ASSERT( supplyInletModelObjects.size() >= 2 );
+  OS_ASSERT( supplyInletModelObjects.size() >= 2 );
 
   supplyInletModelObjects.erase(supplyInletModelObjects.begin());
   supplyInletModelObjects.erase(supplyInletModelObjects.end() - 1);
@@ -604,7 +673,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   std::vector<ModelObject> supplyOutletBranchModelObjects;
   supplyOutletModelObjects = plantLoop.supplyComponents(supplyMixer,supplyOutletNode);  
 
-  BOOST_ASSERT( supplyOutletModelObjects.size() >= 2 );
+  OS_ASSERT( supplyOutletModelObjects.size() >= 2 );
 
   supplyOutletModelObjects.erase(supplyOutletModelObjects.begin());
   supplyOutletModelObjects.erase(supplyOutletModelObjects.end() - 1);
@@ -712,7 +781,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   std::vector<ModelObject> demandInletBranchModelObjects;
   demandInletModelObjects = plantLoop.demandComponents(demandInletNode,demandSplitter);
 
-  BOOST_ASSERT( demandInletModelObjects.size() >= 2 );  
+  OS_ASSERT( demandInletModelObjects.size() >= 2 );  
 
   demandInletModelObjects.erase(demandInletModelObjects.begin());
   demandInletModelObjects.erase(demandInletModelObjects.end() - 1);
@@ -895,7 +964,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   std::vector<ModelObject> demandOutletBranchModelObjects;
   demandOutletModelObjects = plantLoop.demandComponents(demandMixer,demandOutletNode);  
 
-  BOOST_ASSERT( demandOutletModelObjects.size() >= 2 );
+  OS_ASSERT( demandOutletModelObjects.size() >= 2 );
 
   demandOutletModelObjects.erase(demandOutletModelObjects.begin());
   demandOutletModelObjects.erase(demandOutletModelObjects.end() - 1);
