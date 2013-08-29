@@ -2581,16 +2581,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   if( ok )
   {
     value = value / 1.8;
-
-    // Set some bounds.  Temperature differences above this are unreasonable
-    if( value < 20.0 )
-    {
-      sizingPlant.setLoopDesignTemperatureDifference(value);
-    }
-    else
-    {
-      LOG(Warn,plantLoop.name().get() << " DsgnSupWtrDelT is unreasonably high, using 11 C instead.");
-    }
+    sizingPlant.setLoopDesignTemperatureDifference(value);
   }
 
   if( istringEqual(typeElement.text().toStdString(),"HotWater") )
@@ -2955,12 +2946,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
       value = pwrElement.text().toDouble(&ok);
       if( ok )
       {
-        pwr = unitToUnit(value,"Btu/h","W");
+        // kW to W
+        pwr = value * 1000.0;
       }
 
       if( flowCap && pwr )
       {
-        pump.setRatedFlowRate(value);
+        pump.setRatedFlowRate(flowCap.get());
         pump.setRatedPowerConsumption(pwr.get());
       }
     }
@@ -2997,7 +2989,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
       value = pwrElement.text().toDouble(&ok);
       if( ok )
       {
-        pwr = unitToUnit(value,"Btu/h","W");
+        // kW to W
+        pwr = value * 1000.0;
       }
 
       if( flowMin && flowCap && pwr )
