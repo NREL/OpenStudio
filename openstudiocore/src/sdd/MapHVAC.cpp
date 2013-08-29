@@ -2952,7 +2952,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
 
       if( flowCap && pwr )
       {
-        pump.setRatedFlowRate(value);
+        pump.setRatedFlowRate(flowCap.get());
         pump.setRatedPowerConsumption(pwr.get());
       }
     }
