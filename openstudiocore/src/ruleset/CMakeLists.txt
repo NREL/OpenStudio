@@ -24,6 +24,7 @@ SET( ${target_name}_src
   UtilityUserScript.hpp
   UtilityUserScript.cpp
   RubyUserScriptArgumentGetter.hpp
+  RubyUserScriptArgumentGetter_Impl.hpp
   RubyUserScriptArgumentGetter.cpp
 )
 
