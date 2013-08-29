@@ -44,8 +44,23 @@ OSResult OSRunner::result() const {
   return m_result;
 }
 
+boost::optional<openstudio::path> OSRunner::lastSqlFilePath() const
+{
+  return m_lastSqlFilePath;
+}
+
 bool OSRunner::inSelection(const openstudio::model::ModelObject& modelObject) const {
   return true;
+}  
+
+void OSRunner::setLastSqlFilePath(const openstudio::path& lastSqlFilePath)
+{
+  m_lastSqlFilePath = lastSqlFilePath;
+}
+
+void OSRunner::resetLastSqlFilePath()
+{
+  m_lastSqlFilePath.reset();
 }
 
 std::map<std::string, OSArgument> OSRunner::getUserInput(std::vector<OSArgument>& arguments) const

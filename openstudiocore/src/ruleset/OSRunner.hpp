@@ -63,6 +63,9 @@ class RULESET_API OSRunner {
    *  run method.) */
   OSResult result() const;
 
+  /** Returns the path to the last SqlFile generated in the workflow if available. */
+  boost::optional<openstudio::path> lastSqlFilePath() const;
+
   /** Tests if the given ModelObject is in the application's current selection. Base class
    *  implementation always returns true. */
   virtual bool inSelection(const openstudio::model::ModelObject& modelObject) const;
@@ -70,6 +73,12 @@ class RULESET_API OSRunner {
   //@}
   /** @name Actions */
   //@{
+
+  /** Sets the path to the last SqlFile generated in the workflow. */
+  void setLastSqlFilePath(const openstudio::path& lastSqlFilePath);
+
+  /** Resets the path to the last SqlFile generated in the workflow. */
+  void resetLastSqlFilePath();
 
   /** Gets user input using dialog boxes, etc. Result is map of name to argument. Result is empty
    *  if user cancels or user did not provide values for all required arguments. Base class
@@ -202,6 +211,7 @@ class RULESET_API OSRunner {
 
   OSResult m_result;
   std::string m_channel;
+  boost::optional<openstudio::path> m_lastSqlFilePath;
 };
 
 } // ruleset

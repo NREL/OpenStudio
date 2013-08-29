@@ -46,6 +46,12 @@ namespace detail {
   {
     LOG(Debug, "Creating a UserScriptJob");
 
+    try {
+      FileInfo sql = t_files.getLastByFilename("eplusout.sql");
+      // addParam("lastSqlFilePath", sql.fullPath); // Jason how do I do this?
+    } catch (const std::runtime_error &) {
+    }
+
     LOG(Debug, "UserScriptJob Created");
   }
 

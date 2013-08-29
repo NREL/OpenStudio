@@ -66,7 +66,7 @@ MeasuresTabController::MeasuresTabController()
   measuresTabView = new MeasuresTabView();
 
   m_variableGroupListController = QSharedPointer<openstudio::measuretab::VariableGroupListController>(new openstudio::measuretab::VariableGroupListController(false, PatApp::instance()));
-  m_variableGroupItemDelegate = QSharedPointer<openstudio::measuretab::VariableGroupItemDelegate>(new openstudio::measuretab::VariableGroupItemDelegate(false));
+  m_variableGroupItemDelegate = QSharedPointer<openstudio::measuretab::VariableGroupItemDelegate>(new openstudio::measuretab::VariableGroupItemDelegate());
 
   //m_groups[MeasureType::ModelMeasure] = QString("OpenStudio Measures");
   ////m_groups[MeasureType::EnergyPlusMeasure] = QString("EnergyPlus Measures");

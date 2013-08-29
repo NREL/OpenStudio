@@ -103,9 +103,9 @@ RectangularDropZone::RectangularDropZone(bool t_fixed)
   mainHLayout->addWidget(nameLabel);
 }
 
-void RectangularDropZone::setAcceptedMimeType(const QString & type)
+void RectangularDropZone::setAcceptedMimeTypes(const QStringList & types)
 {
-  m_acceptedMimeType = type;
+  m_acceptedMimeTypes = types;
 }
 
 void RectangularDropZone::paintEvent(QPaintEvent *)
@@ -123,9 +123,12 @@ void RectangularDropZone::dropEvent(QDropEvent * event)
 
 void RectangularDropZone::dragEnterEvent(QDragEnterEvent * event)
 {
-  if(event->mimeData()->hasFormat(m_acceptedMimeType))
-  {
-    event->accept();
+  Q_FOREACH(QString acceptedMimeType, m_acceptedMimeTypes){
+  if(event->mimeData()->hasFormat(acceptedMimeType))
+    {
+      event->accept();
+      break;
+    }
   }
 }
 

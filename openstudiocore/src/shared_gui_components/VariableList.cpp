@@ -62,18 +62,24 @@ namespace measuretab {
 VariableGroupListController::VariableGroupListController(bool filterFixed, BaseApp *t_app)
   : OSListController()
 {
-  std::map<MeasureType,QString> groups;
-  groups[MeasureType::ModelMeasure] = QString("OpenStudio Measures");
-  groups[MeasureType::EnergyPlusMeasure] = QString("EnergyPlus Measures");
+  QSharedPointer<VariableGroupItem> variableGroupItem;
+  std::vector<MeasureType> measureTypes;
 
-  for( std::map<MeasureType,QString>::const_iterator it = groups.begin();
-       it != groups.end();
-       it++ )
-  {
-    QSharedPointer<VariableGroupItem> variableGroupItem;
-    variableGroupItem = QSharedPointer<VariableGroupItem>(new VariableGroupItem(it->first,it->second, filterFixed, t_app));
-    addItem(variableGroupItem);
-  }
+  measureTypes.clear();
+  measureTypes.push_back(MeasureType::ModelMeasure);
+  variableGroupItem = QSharedPointer<VariableGroupItem>(new VariableGroupItem(measureTypes, "OpenStudio Measures", filterFixed, t_app));
+  addItem(variableGroupItem);
+
+  measureTypes.clear();
+  measureTypes.push_back(MeasureType::EnergyPlusMeasure);
+  variableGroupItem = QSharedPointer<VariableGroupItem>(new VariableGroupItem(measureTypes, "EnergyPlus Measures", filterFixed, t_app));
+  addItem(variableGroupItem);
+
+  measureTypes.clear();
+  measureTypes.push_back(MeasureType::ModelMeasure);
+  measureTypes.push_back(MeasureType::EnergyPlusMeasure);
+  variableGroupItem = QSharedPointer<VariableGroupItem>(new VariableGroupItem(measureTypes, "Reporting Measures", filterFixed, t_app));
+  addItem(variableGroupItem);
 }
 
 void VariableGroupListController::addItem(QSharedPointer<OSListItem> item)
@@ -101,11 +107,11 @@ int VariableGroupListController::count()
   return m_variableGroupItems.size();
 }
 
-VariableGroupItem::VariableGroupItem(MeasureType type, const QString & label, bool filterFixed, BaseApp *t_baseApp)
+VariableGroupItem::VariableGroupItem(std::vector<MeasureType> measureTypes, const QString & label, bool filterFixed, BaseApp *t_baseApp)
   : OSListItem(),
     m_label(label)
 {
-  m_variableListController = QSharedPointer<VariableListController>(new VariableListController(type, filterFixed, t_baseApp));
+  m_variableListController = QSharedPointer<VariableListController>(new VariableListController(measureTypes, filterFixed, t_baseApp));
 }
 
 QString VariableGroupItem::label() const
@@ -118,8 +124,7 @@ QSharedPointer<VariableListController> VariableGroupItem::variableListController
   return m_variableListController;
 }
 
-VariableGroupItemDelegate::VariableGroupItemDelegate(bool t_fixedMeasuresOnly)
-  : m_fixedMeasuresOnly(t_fixedMeasuresOnly)
+VariableGroupItemDelegate::VariableGroupItemDelegate()
 {
 }
 
@@ -130,11 +135,19 @@ QWidget * VariableGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     QSharedPointer<VariableListController> variableListController = variableGroupItem->variableListController();
     QSharedPointer<VariableItemDelegate> variableItemDelegate = QSharedPointer<VariableItemDelegate>(new VariableItemDelegate());
 
-    VariableGroupItemView * variableGroupItemView = new VariableGroupItemView(m_fixedMeasuresOnly);
+    QStringList acceptedMimeTypes;
+    Q_FOREACH(MeasureType measureType, variableListController->measureTypes()){
+      acceptedMimeTypes << MeasureDragData::mimeType(measureType);
+    }
 
-    if (!m_fixedMeasuresOnly)
+    // for right now only model and energyplus measures can have measure groups, reporting measures cannot
+    bool fixedMeasuresOnly = (acceptedMimeTypes.size() > 1);
+    VariableGroupItemView * variableGroupItemView = new VariableGroupItemView(fixedMeasuresOnly);
+
+    if (!fixedMeasuresOnly)
     {
-      variableGroupItemView->variableGroupContentView->newGroupView->dropZone->setAcceptedMimeType(MeasureDragData::mimeType(variableListController->measureType()));
+      variableGroupItemView->variableGroupContentView->newGroupView->setVisible(true);
+      variableGroupItemView->variableGroupContentView->newGroupView->dropZone->setAcceptedMimeTypes(acceptedMimeTypes);
 
       bool bingo = connect(variableGroupItemView->variableGroupContentView->newGroupView->dropZone,SIGNAL(dataDropped(QDropEvent * )),
           variableListController.data(),SLOT(addItemForDroppedMeasure(QDropEvent *)));
@@ -142,7 +155,7 @@ QWidget * VariableGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource)
       OS_ASSERT(bingo);
     }
 
-    variableGroupItemView->variableGroupContentView->newFixedGroupView->dropZone->setAcceptedMimeType(MeasureDragData::mimeType(variableListController->measureType()));
+    variableGroupItemView->variableGroupContentView->newFixedGroupView->dropZone->setAcceptedMimeTypes(acceptedMimeTypes);
 
     bool bingo = connect(variableGroupItemView->variableGroupContentView->newFixedGroupView->dropZone,SIGNAL(dataDropped(QDropEvent * )),
                          variableListController.data(),SLOT(addFixedItemForDroppedMeasure(QDropEvent *)));
@@ -159,18 +172,18 @@ QWidget * VariableGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource)
   return new QWidget();
 }
 
-VariableListController::VariableListController(MeasureType type, bool filterFixed, openstudio::BaseApp *t_app)
+VariableListController::VariableListController(std::vector<MeasureType> measureTypes, bool filterFixed, openstudio::BaseApp *t_app)
   : OSListController(),
     m_app(t_app),
-    m_type(type),
+    m_measureTypes(measureTypes),
     m_filterFixed(filterFixed)
 {
 }
 
 
-MeasureType VariableListController::measureType() const
+std::vector<MeasureType> VariableListController::measureTypes() const
 {
-  return m_type;
+  return m_measureTypes;
 }
 
 
@@ -182,7 +195,8 @@ QSharedPointer<OSListItem> VariableListController::itemAt(int i)
   {
     analysis::MeasureGroup var = vars[i];
 
-    QSharedPointer<VariableItem> item = QSharedPointer<VariableItem>(new VariableItem(var,m_type, m_app));
+    OS_ASSERT(!m_measureTypes.empty());
+    QSharedPointer<VariableItem> item = QSharedPointer<VariableItem>(new VariableItem(var, m_measureTypes[0], m_app));
 
     item->setController(this);
 
@@ -210,7 +224,9 @@ std::vector<analysis::MeasureGroup> VariableListController::variables() const
     analysis::Problem problem = project->analysis().problem();
     analysis::WorkflowStepVector workflow = problem.workflow();
 
-    if (measureType() == MeasureType::ModelMeasure) {
+    std::vector<MeasureType> measureTypes = this->measureTypes();
+
+    if ((measureTypes.size() == 1) && (measureTypes[0] == MeasureType::ModelMeasure)) {
       analysis::OptionalMeasureGroup modelSwapVariable = project->getAlternativeModelVariable();
       OptionalInt stopIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
       OS_ASSERT(stopIndex);
@@ -233,11 +249,34 @@ std::vector<analysis::MeasureGroup> VariableListController::variables() const
           }
         }
       }
-    }
-    else {
-      OS_ASSERT(measureType() == MeasureType::EnergyPlusMeasure);
+
+    } else if ((measureTypes.size() == 1) && (measureTypes[0] == MeasureType::EnergyPlusMeasure)){
+
       OptionalInt startIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ExpandObjects);
       OptionalInt stopIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlusPreProcess);
+      OS_ASSERT(startIndex && stopIndex);
+      for (int i = (*startIndex + 1); i < *stopIndex; ++i) {
+        if (workflow[i].isInputVariable()) {
+          analysis::InputVariable var = workflow[i].inputVariable();
+          if (analysis::OptionalMeasureGroup dvar = var.optionalCast<analysis::MeasureGroup>()) {
+            std::vector<analysis::Measure> measures = dvar->measures(false);
+            if (!m_filterFixed || measures.size() > 1)
+            {
+              // don't add the fixed measures here, they are always selected
+              std::vector<analysis::RubyMeasure> rubyPerts = subsetCastVector<analysis::RubyMeasure>(measures);
+              if (!rubyPerts.empty()) {
+                result.push_back(*dvar);
+              }
+            }
+          }
+        }
+      }
+
+    }else{
+      OS_ASSERT(measureTypes.size() == 2);
+
+      OptionalInt startIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlus);
+      OptionalInt stopIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::OpenStudioPostProcess);
       OS_ASSERT(startIndex && stopIndex);
       for (int i = (*startIndex + 1); i < *stopIndex; ++i) {
         if (workflow[i].isInputVariable()) {
@@ -316,7 +355,13 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
 
     const QMimeData * mimeData = event->mimeData();
 
-    QByteArray byteArray = mimeData->data(MeasureDragData::mimeType(m_type));
+    QByteArray byteArray;
+    Q_FOREACH(MeasureType measureType, m_measureTypes){
+      byteArray = mimeData->data(MeasureDragData::mimeType(measureType));
+      if (byteArray.size() > 0){
+        break;
+      }
+    }
 
     MeasureDragData measureDragData(byteArray);
 
@@ -373,18 +418,26 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
       measure.setDescription(projectMeasure.description());
       dv.push(measure);
 
+      std::vector<MeasureType> measureTypes = this->measureTypes();
+
       // try to add to problem. can fail if measure is of wrong type.
       analysis::Problem problem = project->analysis().problem();
       OptionalInt index;
       FileReferenceType inType = projectMeasure.inputFileType();
       if (inType == FileReferenceType::OSM) {
-        OS_ASSERT(measureType() == MeasureType::ModelMeasure);
-        index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
+        if ((measureTypes.size() == 1) && (measureTypes[0] == MeasureType::ModelMeasure)){
+          index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
+        }else if (measureTypes.size() == 2){
+          index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::OpenStudioPostProcess);
+        }
       }
       else {
         OS_ASSERT(inType == FileReferenceType::IDF);
-        OS_ASSERT(measureType() == MeasureType::EnergyPlusMeasure);
-        index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlusPreProcess);
+        if ((measureTypes.size() == 1) && (measureTypes[0] == MeasureType::EnergyPlusMeasure)){
+          index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlusPreProcess);
+        }else if (measureTypes.size() == 2){
+          index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::OpenStudioPostProcess);
+        }
       }
       OS_ASSERT(index);
       bool ok = problem.insert(*index,dv);
@@ -476,11 +529,11 @@ void VariableListController::moveDown(analysis::MeasureGroup variable)
   }
 }
 
-VariableItem::VariableItem(const analysis::MeasureGroup & variable, MeasureType type, openstudio::BaseApp *t_app)
+VariableItem::VariableItem(const analysis::MeasureGroup & variable, MeasureType measureType, openstudio::BaseApp *t_app)
   : OSListItem(),
     m_app(t_app),
     m_variable(variable),
-    m_type(type)
+    m_measureType(measureType)
 {
   m_measureListController = QSharedPointer<MeasureListController>(new MeasureListController(this, t_app));
 }
@@ -547,9 +600,12 @@ QWidget * VariableItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     QSharedPointer<MeasureListController> measureListController = variableItem->measureListController();
     variableItemView->variableContentView->measureListView->setListController(measureListController);
 
+    QStringList acceptedMimeTypes;
+    acceptedMimeTypes << MeasureDragData::mimeType(variableItem->measureType());
+      
     if (!variableItem->isFixedMeasure())
     {
-      variableItemView->variableContentView->dropZone->setAcceptedMimeType(MeasureDragData::mimeType(variableItem->measureType()));
+      variableItemView->variableContentView->dropZone->setAcceptedMimeTypes(acceptedMimeTypes);
       bingo = connect(variableItemView->variableContentView->dropZone,SIGNAL(dataDropped(QDropEvent *)),
           variableItem->measureListController().data(),SLOT(addItemForDroppedMeasure(QDropEvent *)));
       OS_ASSERT(bingo);

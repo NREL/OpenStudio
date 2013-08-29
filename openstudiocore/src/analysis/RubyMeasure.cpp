@@ -62,7 +62,7 @@ namespace detail {
       m_isUserScript(false)
   {
     OS_ASSERT((m_inputFileType == FileReferenceType::OSM) || (m_inputFileType == FileReferenceType::IDF));
-    OS_ASSERT((m_outputFileType == FileReferenceType::OSM) || (m_outputFileType == FileReferenceType::IDF));
+    OS_ASSERT((m_outputFileType == FileReferenceType::OSM) || (m_outputFileType == FileReferenceType::IDF)  || (m_outputFileType == FileReferenceType::XML));
   }
 
   RubyMeasure_Impl::RubyMeasure_Impl(const openstudio::path& perturbationScript,

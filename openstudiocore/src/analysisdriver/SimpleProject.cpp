@@ -404,7 +404,7 @@ namespace detail {
     }
 
     // check workflow
-    bool inputVariableOk = true;
+    bool inputVariableOk = true; // model measures ok
     boost::optional<JobType> nextWorkItemType = JobType(JobType::ModelToIdf);
     BOOST_FOREACH(const WorkflowStep& step,problem.workflow()) {
       if (!inputVariableOk && step.isInputVariable()) {
@@ -423,7 +423,7 @@ namespace detail {
             break;
           case JobType::ExpandObjects :
             nextWorkItemType = JobType(JobType::EnergyPlusPreProcess);
-            inputVariableOk = true;
+            inputVariableOk = true; // energyplus measures ok
             break;
           case JobType::EnergyPlusPreProcess :
             nextWorkItemType = JobType(JobType::EnergyPlus);
@@ -431,9 +431,11 @@ namespace detail {
             break;
           case JobType::EnergyPlus :
             nextWorkItemType = JobType(JobType::OpenStudioPostProcess);
+            inputVariableOk = true; // reporting measures ok
             break;
           case JobType::OpenStudioPostProcess :
             nextWorkItemType.reset();
+            inputVariableOk = false;
             break;
           default :
             OS_ASSERT(false);
