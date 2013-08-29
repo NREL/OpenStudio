@@ -2955,7 +2955,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
       value = pwrElement.text().toDouble(&ok);
       if( ok )
       {
-        pwr = unitToUnit(value,"Btu/h","W");
+        // kW to W
+        pwr = value * 1000.0;
       }
 
       if( flowCap && pwr )
@@ -2997,7 +2998,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
       value = pwrElement.text().toDouble(&ok);
       if( ok )
       {
-        pwr = unitToUnit(value,"Btu/h","W");
+        // kW to W
+        pwr = value * 1000.0;
       }
 
       if( flowMin && flowCap && pwr )
