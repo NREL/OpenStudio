@@ -137,6 +137,7 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/time/Time.hpp>
 #include <utilities/units/UnitFactory.hpp>
+#include <utilities/math/FloatCompare.hpp>
 
 #include <QFile>
 #include <QDomDocument>
@@ -756,10 +757,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     {
       spm.setOutdoorLowTemperature(unitToUnit(value,"F","C").get());
     }
-
-    airLoopHVAC.sizingSystem().setCentralCoolingDesignSupplyAirTemperature(12.8);
-
-    airLoopHVAC.sizingSystem().setCentralHeatingDesignSupplyAirTemperature(40.0);
   }
 
   return result;
@@ -1655,6 +1652,28 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
       coilCooling.setName(nameElement.text().toStdString());
 
+      boost::optional<double> totalCapacity;
+      boost::optional<double> sensibleCapacity;
+      boost::optional<double> lowSpeedCapacityFraction;
+
+      // CapTotRtdStageFrac
+      QDomNodeList capTotRtdStageFracElements = coolingCoilElement.elementsByTagName("CapTotRtdStageFrac");
+      for( int j = 0; j < capTotRtdStageFracElements.count(); j++ )
+      {
+        QDomElement capTotRtdStageFracElement = capTotRtdStageFracElements.at(j).toElement();
+        QString indexAttribute = capTotRtdStageFracElement.attribute("index");
+        if( istringEqual(indexAttribute.toStdString(),"0") )
+        {
+          double fraction = capTotRtdStageFracElement.text().toDouble(&ok);
+          if( ok )
+          {
+            lowSpeedCapacityFraction = fraction;
+          }
+
+          break;
+        }
+      }
+
       // FlowCap
       if( ! autosize() )
       {
@@ -1666,12 +1685,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
           OptionalQuantity flowRateSI = QuantityConverter::instance().convert(flowRateIP, UnitSystem(UnitSystem::SI));
           OS_ASSERT(flowRateSI);
           coilCooling.setRatedHighSpeedAirFlowRate(flowRateSI->value());
+          if( lowSpeedCapacityFraction )
+          {
+            coilCooling.setRatedLowSpeedAirFlowRate(flowRateSI->value() * lowSpeedCapacityFraction.get());
+          }
         }
       }
-
-      boost::optional<double> totalCapacity;
-      boost::optional<double> sensibleCapacity;
-      boost::optional<double> lowSpeedCapacityFraction;
 
       // CapTotRtd
       if( ! autosize() )
@@ -1684,25 +1703,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
           OptionalQuantity valueSI = QuantityConverter::instance().convert(valueIP, UnitSystem(UnitSystem::SI));
           OS_ASSERT(valueSI);
           coilCooling.setRatedHighSpeedTotalCoolingCapacity(valueSI->value());
-
-          // CapTotRtdStageFrac
-          QDomNodeList capTotRtdStageFracElements = coolingCoilElement.elementsByTagName("CapTotRtdStageFrac");
-          for( int j = 0; j < capTotRtdStageFracElements.count(); j++ )
+          if( lowSpeedCapacityFraction )
           {
-            QDomElement capTotRtdStageFracElement = capTotRtdStageFracElements.at(j).toElement();
-            QString indexAttribute = capTotRtdStageFracElement.attribute("index");
-            if( istringEqual(indexAttribute.toStdString(),"0") )
-            {
-              double fraction = capTotRtdStageFracElement.text().toDouble(&ok);
-              if( ok )
-              {
-                coilCooling.setRatedLowSpeedTotalCoolingCapacity(valueSI->value() * fraction);
-              }
-
-              lowSpeedCapacityFraction = fraction;
-
-              break;
-            }
+            coilCooling.setRatedLowSpeedTotalCoolingCapacity(valueSI->value() * lowSpeedCapacityFraction.get());
           }
 
           totalCapacity = value;
@@ -2952,8 +2955,16 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
 
       if( flowCap && pwr )
       {
-        pump.setRatedFlowRate(flowCap.get());
-        pump.setRatedPowerConsumption(pwr.get());
+        if( equal(flowCap.get(),0.0) || equal(pwr.get(),0.0)  )
+        {
+          LOG(Warn,pump.name().get() << " has 0 capacity specified.");
+        }
+        else
+        {
+          pump.setRatedFlowRate(flowCap.get());
+          pump.setRatedPowerConsumption(pwr.get());
+          pump.setRatedPumpHead(0.80 * pwr.get() / flowCap.get());
+        }
       }
     }
 
@@ -2995,9 +3006,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
 
       if( flowMin && flowCap && pwr )
       {
-        pump.setRatedFlowRate(flowCap.get());
-        pump.setMinimumFlowRate(flowMin.get());
-        pump.setRatedPowerConsumption(pwr.get());
+        if( equal(flowCap.get(),0.0) || equal(pwr.get(),0.0)  )
+        {
+          LOG(Warn,pump.name().get() << " has 0 capacity specified.");
+        }
+        else
+        {
+          pump.setRatedFlowRate(flowCap.get());
+          pump.setMinimumFlowRate(flowMin.get());
+          pump.setRatedPowerConsumption(pwr.get());
+          pump.setRatedPumpHead(0.80 * pwr.get() / flowCap.get());
+        }
       }
     }
 
