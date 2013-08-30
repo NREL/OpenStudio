@@ -54,6 +54,7 @@ namespace detail {
       m_complete(false),
       m_failed(false),
       m_selected(true),
+      m_runType(DataPointRunType::Local),
       m_variableValues(variableValues)
   {}
 
@@ -66,6 +67,7 @@ namespace detail {
                                  bool complete,
                                  bool failed,
                                  bool selected,
+                                 DataPointRunType runType,
                                  const std::vector<QVariant>& variableValues,
                                  const std::vector<double>& responseValues,
                                  const openstudio::path& directory,
@@ -83,6 +85,7 @@ namespace detail {
       m_complete(complete),
       m_failed(failed),
       m_selected(selected),
+      m_runType(runType),
       m_variableValues(variableValues),
       m_responseValues(responseValues),
       m_directory(directory),
@@ -106,6 +109,7 @@ namespace detail {
                                  bool complete,
                                  bool failed,
                                  bool selected,
+                                 DataPointRunType runType,
                                  const std::vector<QVariant>& variableValues,
                                  const std::vector<double>& responseValues,
                                  const openstudio::path& directory,
@@ -123,6 +127,7 @@ namespace detail {
       m_complete(complete),
       m_failed(failed),
       m_selected(selected),
+      m_runType(runType),
       m_variableValues(variableValues),
       m_responseValues(responseValues),
       m_directory(directory),
@@ -144,6 +149,7 @@ namespace detail {
       m_complete(other.isComplete()),
       m_failed(other.failed()),
       m_selected(other.selected()),
+      m_runType(other.runType()),
       m_variableValues(other.variableValues()),
       m_responseValues(other.responseValues()),
       m_directory(other.directory()),
@@ -226,6 +232,10 @@ namespace detail {
 
   bool DataPoint_Impl::selected() const {
     return m_selected;
+  }
+
+  DataPointRunType DataPoint_Impl::runType() const {
+    return m_runType;
   }
 
   std::vector<QVariant> DataPoint_Impl::variableValues() const {
@@ -391,6 +401,11 @@ namespace detail {
     onChange(AnalysisObject_Impl::Benign);
   }
 
+  void DataPoint_Impl::setRunType(const DataPointRunType& runType) {
+    m_runType = runType;
+    onChange(AnalysisObject_Impl::Benign);
+  }
+
   void DataPoint_Impl::setDirectory(const openstudio::path& directory) {
     m_directory = directory;
     onChange(AnalysisObject_Impl::Benign);
@@ -420,6 +435,55 @@ namespace detail {
       m_tags.erase(it);
       onChange(AnalysisObject_Impl::Benign);
     }
+  }
+
+  bool DataPoint_Impl::updateFromJSON(const std::string& json) {
+
+    if (complete() || !directory().empty()) {
+      LOG(Info,"Cannot update this DataPoint from JSON because it appears to have results already. "
+          << "Clear the old results before importing new ones.");
+      return false;
+    }
+
+    AnalysisJSONLoadResult loadedResult = loadJSON(json);
+    if (loadResult.analysisObject) {
+      if (OptionalDataPoint loaded = loadedResult.analysisObject->optionalCast<DataPoint>()) {
+        if (loaded->uuid() == uuid()) {
+          // generally require the variableValues to be the same, the loaded point to be complete
+          if ((variableValues() != loaded->variableValues()) || (!loaded->complete())) {
+            LOG(Info,"Cannot update DataPoint with a JSON version that is not complete or has different variable values.");
+            return false;
+          }
+          m_complete = loaded->complete();
+          OS_ASSERT(m_complete);
+          m_failed = loaded->failed();
+          m_responseValues = loaded->responseValues();
+          // do not pull file references over since they are not generally available for loading
+          // do pull job data over because it contains errors and warnings
+          m_topLevelJob = loaded->topLevelJob();
+          OS_ASSERT(m_topLevelJob);
+          m_tags = loaded->tags();
+          m_outputAttributes = loaded->outputAttributes();
+          onChange(AnalysisObject_Impl::Benign);
+          return true;
+        }
+        else {
+          LOG(Info,"Cannot update DataPoint because the DataPoint loaded from JSON has a different UUID.");
+        }
+      }
+      else {
+        LOG(Info,"Cannot update DataPoint because the AnalysisObject loaded from JSON is not a DataPoint.");
+      }
+    }
+    else {
+      LOG(Info,"Cannot update DataPoint from JSON because the JSON string could not be loaded.");
+    }
+
+    return false;
+  }
+
+  bool DataPoint_Impl::updateDetails() {
+    // HERE
   }
 
   void DataPoint_Impl::clearFileDataFromCache() const {
@@ -530,6 +594,7 @@ namespace detail {
     dataPointData["complete"] = isComplete();
     dataPointData["failed"] = failed();
     dataPointData["selected"] = selected();
+    dataPointData["run_type"] = toQString(runType().valueName());
 
     QVariantList variableValuesList;
     int index(0);
@@ -753,6 +818,7 @@ namespace detail {
                      map["complete"].toBool(),
                      map["failed"].toBool(),
                      version < VersionString("1.0.4") ? true : map["selected"].toBool(),
+                     version < VersionString("1.0.5") ? DataPointRunType(DataPointRunType::Local) : DataPointRunType(map["run_type"].toString().toStdString()),
                      variableValues,
                      responseValues,
                      map.contains("directory") ? toPath(map["directory"].toString()) : openstudio::path(),
@@ -815,6 +881,7 @@ DataPoint::DataPoint(const UUID& uuid,
                      bool complete,
                      bool failed,
                      bool selected,
+                     DataPointRunType runType,
                      const std::vector<QVariant>& variableValues,
                      const std::vector<double>& responseValues,
                      const openstudio::path& directory,
@@ -836,6 +903,7 @@ DataPoint::DataPoint(const UUID& uuid,
                                    complete,
                                    failed,
                                    selected,
+                                   runType,
                                    variableValues,
                                    responseValues,
                                    directory,
@@ -859,6 +927,7 @@ DataPoint::DataPoint(const UUID& uuid,
                      bool complete,
                      bool failed,
                      bool selected,
+                     DataPointRunType runType,
                      const std::vector<QVariant>& variableValues,
                      const std::vector<double>& responseValues,
                      const openstudio::path& directory,
@@ -881,6 +950,7 @@ DataPoint::DataPoint(const UUID& uuid,
                                    complete,
                                    failed,
                                    selected,
+                                   runType,
                                    variableValues,
                                    responseValues,
                                    directory,
@@ -924,6 +994,10 @@ bool DataPoint::failed() const {
 
 bool DataPoint::selected() const {
   return getImpl<detail::DataPoint_Impl>()->selected();
+}
+
+DataPointRunType DataPoint::runType() const {
+  return getImpl<detail::DataPoint_Impl>()->runType();
 }
 
 std::vector<QVariant> DataPoint::variableValues() const {
@@ -1000,6 +1074,10 @@ void DataPoint::setSelected(bool selected) {
   getImpl<detail::DataPoint_Impl>()->setSelected(selected);
 }
 
+void DataPoint::setRunType(const DataPointRunType& runType) {
+  getImpl<detail::DataPoint_Impl>()->setRunType(runType);
+}
+
 void DataPoint::setDirectory(const openstudio::path& directory) {
   getImpl<detail::DataPoint_Impl>()->setDirectory(directory);
 }
@@ -1010,6 +1088,14 @@ void DataPoint::addTag(const std::string& tagName) {
 
 void DataPoint::deleteTag(const std::string& tagName) {
   getImpl<detail::DataPoint_Impl>()->deleteTag(tagName);
+}
+
+bool DataPoint::updateFromJSON(const std::string& json) {
+  return getImpl<detail::DataPoint_Impl>()->updateFromJSON(json);
+}
+
+bool DataPoint::updateDetails() {
+  return getImpl<detail::DataPoint_Impl>()->updateDetails();
 }
 
 void DataPoint::clearFileDataFromCache() const {

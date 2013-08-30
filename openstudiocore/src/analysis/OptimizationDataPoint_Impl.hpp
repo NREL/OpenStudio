@@ -112,6 +112,17 @@ namespace detail {
     virtual void clearResults();
 
     //@}
+    /** @name Actions */
+    //@{
+
+    /** Update high level results from json. */
+    virtual bool updateFromJSON(const std::string& json);
+
+    /** Whoever downloaded the zip file should have setDirectory(), and had the file placed in
+     *  directory() / toPath("dataPoint.zip"). */
+    virtual bool updateDetails();
+
+    //@}
     /** @name Protected in or Absent from Public Class */
     //@{
 

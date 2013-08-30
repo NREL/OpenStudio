@@ -104,6 +104,7 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
             bool complete,
             bool failed,
             bool selected,
+            DataPointRunType runType,
             const std::vector<QVariant>& variableValues,
             const std::vector<double>& responseValues,
             const openstudio::path& directory,
@@ -127,6 +128,7 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
             bool complete,
             bool failed,
             bool selected,
+            DataPointRunType runType,
             const std::vector<QVariant>& variableValues,
             const std::vector<double>& responseValues,
             const openstudio::path& directory,
@@ -172,6 +174,8 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   /** Returns true if the DataPoint is selected (to be simulated in the next batch). */
   bool selected() const;
 
+  DataPointRunType runType() const;
+
   /** Returns the variableValues to be applied in simulating this DataPoint. (That is, inputData
    *  will be the result of applying variableValues to the Analysis seed file.) */
   std::vector<QVariant> variableValues() const;
@@ -179,8 +183,6 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   /** Returns the value of the response functions for this DataPoint. Only non-empty if isComplete()
    *  and not failed() (and problem().numResponses() > 0). */
   std::vector<double> responseValues() const;
-
-  DataPointRunType runType() const;
 
   /** Run directory for this DataPoint. Set by analysisdriver::AnalysisDriver. */
   openstudio::path directory() const;
