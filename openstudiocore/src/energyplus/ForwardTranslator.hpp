@@ -118,6 +118,7 @@ class Meter;
 class Node;
 class OtherEquipment;
 class OutsideSurfaceConvectionAlgorithm;
+class OutputControlReportingTolerances;
 class OutputVariable;
 class People;
 class PipeAdiabatic;
@@ -425,6 +426,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateOtherEquipment(model::OtherEquipment& modelObject);
 
   boost::optional<IdfObject> translateOutsideSurfaceConvectionAlgorithm( model::OutsideSurfaceConvectionAlgorithm & modelObject );
+
+  boost::optional<IdfObject> translateOutputControlReportingTolerances( model::OutputControlReportingTolerances & modelObject );
 
   boost::optional<IdfObject> translateOutputVariable( model::OutputVariable & modelObject );
 
