@@ -122,13 +122,19 @@ namespace detail {
   }
 
   bool CloudAnalysisDriver_Impl::requestRun() {
-    if (isRunning()) {
-      LOG(Info,"Cannot request a run when the CloudAnalysisDriver is already running.");
+    if (isRunning() || isDownloading()) {
+      LOG(Info,"Cannot request a run when the CloudAnalysisDriver is already running or downloading.");
       return false;
     }
 
     // try to start/restart run
     m_lastRunSuccess = false;
+    m_lastDownloadDetailedResultsSuccess = false;
+    // make sure all the queues are empty. will repopulate.
+    m_postQueue.clear();
+    m_waitingQueue.clear();
+    m_jsonQueue.clear();
+    m_detailsQueue.clear();
     clearErrorsAndWarnings();
 
     if (OptionalUrl url = provider().serverUrl()) {
@@ -505,10 +511,7 @@ namespace detail {
       if (m_waitingQueue.empty()) {
         appendErrorsAndWarnings(*m_monitorDataPoints); // keep warnings
         m_monitorDataPoints.reset();
-        if (!isDownloading()) {
-          m_lastRunSuccess = true;
-          emit runRequestComplete(true);
-        }
+        checkForRunComplete();
       }
       else {
         LOG(Info,"Waiting on " << m_waitingQueue.size() << " DataPoints.");
@@ -548,6 +551,91 @@ namespace detail {
 
     if (!success) {
       registerMonitoringFailure();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::jsonDownloadComplete(bool success) {
+
+    if (!success) {
+      logError("Unable to retrieve high level results for DataPoint '" +
+               m_jsonQueue.front().name() + "', " + removeBraces(m_jsonQueue.front().uuid()) +
+               " from server.");
+    }
+
+    if (success) {
+      std::string json = m_requestJson->lastDataPointJSON();
+      DataPoint toUpdate = m_jsonQueue.front();
+      m_jsonQueue.pop_front();
+      bool test = toUpdate.updateFromJSON(json);
+      emit dataPointComplete(project().analysis().uuid(),toUpdate.uuid());
+
+      if (test) {
+        if (toUpdate.runType() == DataPointRunType::CloudDetailed) {
+          m_detailsQueue.push_back(toUpdate);
+          if (!m_requestDetails) {
+            startDownloadingDetails();
+          }
+        }
+      }
+      else {
+        logWarning("Update of DataPoint '" + toUpdate.name() + "', " + removeBraces(toUpdate.uuid()) + " from JSON string failed.");
+      }
+
+      if (m_jsonQueue.empty()) {
+        test = m_requestJson->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(jsonDownloadComplete(bool)));
+        OS_ASSERT(test);
+        appendErrorsAndWarnings(*m_requestJson);
+        m_requestJson.reset();
+        emit jsonDownloadRequestsComplete(true);
+        checkForRunComplete();
+      }
+      else {
+        LOG(Info,"Have " << m_jsonQueue.size() << " DataPoints' slim results to download.");
+        success = requestNextJsonDownload();
+      }
+    }
+
+    if (!success) {
+      registerDownloadingJsonFailure();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::detailsDownloadComplete(bool success) {
+
+    if (success) {
+      success = m_requestDetails->lastDownloadDataPointSuccess();
+    }
+
+    if (!success) {
+      logError("Unable to download DataPoint '" + m_detailsQueue.front().name() + "', " +
+               removeBraces(m_detailsQueue.front().uuid()) + " from server.");
+    }
+
+    if (success) {
+      DataPoint toUpdate = m_detailsQueue.front();
+      m_detailsQueue.pop_front();
+      bool test = toUpdate.updateDetails();
+      emit dataPointDetailsComplete(project().analysis().uuid(),toUpdate.uuid());
+      if (!test) {
+        logWarning("Incorporation of DataPoint '" + toUpdate.name() + "', " + removeBraces(toUpdate.uuid()) + " files and details failed.");
+      }
+
+      if (m_detailsQueue.empty()) {
+        test = m_requestDetails->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(detailsDownloadComplete(bool)));
+        OS_ASSERT(test);
+        appendErrorsAndWarnings(*m_requestDetails);
+        m_requestDetails.reset();
+        emit detailedDownloadRequestsComplete(true);
+        checkForRunComplete();
+      }
+      else {
+        LOG(Info,"Have " << m_detailsQueue.size() << " DataPoints' detailed results to download.");
+        success = requestNextDetailsDownload();
+      }
+    }
+
+    if (!success) {
+      registerDownloadingDetailsFailure();
     }
   }
 
@@ -597,6 +685,8 @@ namespace detail {
   }
 
   bool CloudAnalysisDriver_Impl::startMonitoring() {
+    OS_ASSERT(!m_monitorDataPoints);
+
     bool success(false);
 
     if (OptionalUrl url = provider().serverUrl()) {
@@ -630,6 +720,7 @@ namespace detail {
 
     OS_ASSERT(m_requestRun);
     appendErrorsAndWarnings(*m_requestRun); // keep any warnings registered with this server
+    m_requestRun.reset();
 
     return success;
   }
@@ -644,6 +735,107 @@ namespace detail {
       m_detailsQueue.clear();
     }
     emit runRequestComplete(false);
+  }
+
+  bool CloudAnalysisDriver_Impl::startDownloadingJson() {
+    OS_ASSERT(!m_requestJson);
+    OS_ASSERT(!m_jsonQueue.empty());
+
+    bool success(false);
+
+    if (OptionalUrl url = provider().serverUrl()) {
+      m_requestJson = OSServer(*url);
+
+      bool test = m_requestJson->connect(SIGNAL(requestProcessed(bool)),this,SLOT(jsonDownloadComplete(bool)));
+      OS_ASSERT(test);
+
+      success = requestNextJsonDownload();
+    }
+    else {
+      logError("Cannot start download of DataPoint because the CloudProvider has been terminated.");
+      emit jsonDownloadRequestsComplete(false);
+      return success;
+    }
+
+    if (!success) {
+      registerDownloadingJsonFailure();
+    }
+
+    return success;
+  }
+
+  bool CloudAnalysisDriver_Impl::requestNextJsonDownload() {
+    OS_ASSERT(m_requestJson);
+    return m_requestJson->requestDataPointJSON(project().analysis().uuid(),
+                                               m_jsonQueue.front().uuid());
+  }
+
+  void CloudAnalysisDriver_Impl::registerDownloadingJsonFailure() {
+    appendErrorsAndWarnings(*m_requestJson);
+    m_requestJson.reset();
+    // HERE -- Not sure what to do with the queues.
+    // Am at least clearing them upon requestRun, and also requiring this driver not to be
+    // downloading when requestRun.
+    emit jsonDownloadRequestsComplete(false);
+  }
+
+  bool CloudAnalysisDriver_Impl::startDownloadingDetails() {
+    OS_ASSERT(!m_requestDetails);
+    OS_ASSERT(!m_detailsQueue.empty());
+
+    bool success(false);
+
+    if (OptionalUrl url = provider().serverUrl()) {
+      m_requestDetails = OSServer(*url);
+
+      bool test = m_requestDetails->connect(SIGNAL(requestProcessed(bool)),this,SLOT(detailsDownloadComplete(bool)));
+      OS_ASSERT(test);
+
+      success = requestNextDetailsDownload();
+    }
+    else {
+      logError("Cannot start download of DataPoint details because the CloudProvider has been terminated.");
+      emit detailedDownloadRequestsComplete(false);
+      return success;
+    }
+
+    if (!success) {
+      registerDownloadingDetailsFailure();
+    }
+
+    return success;
+  }
+
+  bool CloudAnalysisDriver_Impl::requestNextDetailsDownload() {
+    OS_ASSERT(m_requestDetails);
+    DataPoint needsDetails = m_detailsQueue.front();
+    openstudio::path resultsDirectory = project().projectDir() / toPath("dataPoint_" + removeBraces(needsDetails.uuid()));
+    if (boost::filesystem::exists(resultsDirectory)) {
+      boost::filesystem::remove_all(resultsDirectory);
+    }
+    boost::filesystem::create_directory(resultsDirectory);
+    needsDetails.setDirectory(resultsDirectory);
+    return m_requestDetails->startDownloadDataPoint(project().analysis().uuid(),
+                                                    needsDetails.uuid(),
+                                                    resultsDirectory / toPath("dataPoint.zip"));
+  }
+
+  void CloudAnalysisDriver_Impl::registerDownloadingDetailsFailure() {
+    appendErrorsAndWarnings(*m_requestDetails);
+    m_requestDetails.reset();
+    // HERE -- Not sure what to do with the queues.
+    // Am at least clearing them upon requestRun, and also requiring this driver not to be
+    // downloading when requestRun.
+    emit detailedDownloadRequestsComplete(false);
+  }
+
+  void CloudAnalysisDriver_Impl::checkForRunComplete() {
+    if (!isRunning() && !isDownloading()) {
+      if (m_postQueue.empty() && m_waitingQueue.empty() && m_jsonQueue.empty() && m_detailsQueue.empty()) {
+        emit runRequestComplete(true);
+        emit analysisComplete(project().analysis().uuid());
+      }
+    }
   }
 
 } // detail

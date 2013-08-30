@@ -141,7 +141,9 @@ namespace detail {
 
     void stopRequestComplete(bool success);
 
-    void downloadRequestsComplete(bool success);
+    void jsonDownloadRequestsComplete(bool success);
+
+    void detailedDownloadRequestsComplete(bool success);
 
     //@}
     /** @name AnalysisDriver Progress Signals */
@@ -256,12 +258,16 @@ namespace detail {
     void registerMonitoringFailure();
 
     bool startDownloadingJson();
-    bool requestJsonDownload(const analysis::DataPoint& dataPoint);
+    bool requestNextJsonDownload();
     void registerDownloadingJsonFailure();
 
     bool startDownloadingDetails();
-    bool requestDetailsDownload(const analysis::DataPoint& dataPoint);
+    bool requestNextDetailsDownload();
     void registerDownloadingDetailsFailure();
+
+    /// Emits signal that run completed successfully if not running, not downloading,
+    /// and all queues empty.
+    void checkForRunComplete();
   };
 
 } // detail
