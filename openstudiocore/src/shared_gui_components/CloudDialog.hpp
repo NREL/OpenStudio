@@ -30,141 +30,194 @@ class QVBoxLayout;
 
 namespace openstudio{
 
+class AmazonProviderWidget;
+class VagrantProviderWidget;
+
 class CloudDialog : public OSDialog
 {
   Q_OBJECT
 
-  public:
+public:
 
-    CloudDialog(QWidget * parent = 0);
+  CloudDialog(QWidget * parent = 0);
 
-    virtual ~CloudDialog();
+  virtual ~CloudDialog();
 
-  protected slots:
+protected slots:
 
-    virtual void on_cancelButton(bool checked);
+  virtual void on_cancelButton(bool checked);
 
-    virtual void on_okButton(bool checked);
-
-  private:
-
-    void createWidgets();
-
-    void setLoginWidget(QWidget * widget);
-
-    QCheckBox * m_iAcceptCheckBox; 
-    
-    QComboBox * m_cloudResourceComboBox;
-
-    QStackedWidget * m_stackedWidget;
-
-    QVBoxLayout * m_leftLayout;
-
-  private slots:
-
-    void iAcceptClicked(bool checked);
-
-};
-
-
-class CloudProvider : public QWidget
-{
-  Q_OBJECT
-
-  public:
-
-    CloudProvider(QWidget * parent = 0);
-
-    virtual ~CloudProvider();
-
-    virtual void loadData() = 0;
-    virtual void saveData() = 0;
-
-  protected:
-
-    virtual void createWidgets();
-    virtual void createLoginWidget() = 0;
-    virtual void createSettingsWidget() = 0;
-
-    QCheckBox * m_waitCheckBox;
-    QLineEdit * m_waitineEdit;
-    QVBoxLayout * m_loginLayout;
-    QVBoxLayout * m_leftSettingLayout;
-    QVBoxLayout * m_rightSettingsLayout;
-    QWidget * m_loginWidget;
-    QWidget * m_settingsWidget;
-
-};
-
-class Vagrant : public CloudProvider
-{
-  Q_OBJECT
-
-  public:
-
-    Vagrant(QWidget * parent = 0);
-
-    virtual ~Vagrant();
-
-    virtual void loadData();
-    virtual void saveData();
-
-  protected:
-
-    virtual void createLoginWidget();
-    virtual void createSettingsWidget();
-
-  private slots:
-
-    void serverDirButtonClicked(bool checked);
-    void workerDirButtonClicked(bool checked);
-
-  private:
-
-    QCheckBox * m_runOnStartUpCheckBox;
-
-    QLineEdit * m_serverUsernameLineEdit;
-    QLineEdit * m_serverPasswordLineEdit;
-    QLineEdit * m_workerUsernameLineEdit;
-    QLineEdit * m_workerPasswordLineEdit;
-    QLineEdit * m_serverDirLineEdit;
-    QLineEdit * m_serverIpLineEdit;
-    QLineEdit * m_serverIp2LineEdit;
-    QLineEdit * m_workerDirLineEdit;
-    QLineEdit * m_workerIpLineEdit;
-    QLineEdit * m_workerIp2LineEdit;
-
-};
-
-class Amazon : public CloudProvider
-{
-  Q_OBJECT
-
-  public:
-
-    Amazon(QWidget * parent = 0);
-
-    virtual ~Amazon();
-    
-    virtual void loadData();
-    virtual void saveData();
-
-  protected:
-
-    virtual void createLoginWidget();
-    virtual void createSettingsWidget();
+  virtual void on_okButton(bool checked);
 
 private:
 
-    QComboBox * m_regionComboBox;
-    QComboBox * m_serverInstanceTypeComboBox;
-    QComboBox * m_workerInstanceTypeComboBox;
+  void createWidgets();
 
-    QLineEdit * m_accessKeyLineEdit;
-    QLineEdit * m_secretKeyLineEdit;
-    QLineEdit * m_selectPrivateKeyLineEdit;
-    QLineEdit * m_numberOfWorkerInstancesLineEdit;
-    QLineEdit * m_elasticStorageCapacityLineEdit;
+  QCheckBox * m_iAcceptCheckBox; 
+    
+  QComboBox * m_cloudResourceComboBox;
+
+  QStackedWidget * m_stackedWidget;
+
+  QVBoxLayout * m_leftLoginLayout; 
+  
+  QVBoxLayout * m_rightLoginLayout;
+
+  QVBoxLayout * m_leftSettingsLayout;
+
+  QVBoxLayout * m_rightSettingsLayout;
+
+  int m_blankPageIdx;
+
+  int m_loginPageIdx;
+
+  int m_settingsPageIdx;
+
+  AmazonProviderWidget * m_amazonProviderWidget;
+
+  VagrantProviderWidget * m_vagrantProviderWidget;
+
+private slots:
+
+  void iAcceptClicked(bool checked);
+
+  void cloudResourceChanged(const QString & text);
+
+};
+
+class CloudProviderWidget : public QWidget
+{
+  Q_OBJECT
+
+public:
+
+  CloudProviderWidget(QWidget * parent = 0);
+
+  virtual ~CloudProviderWidget();
+
+  virtual void loadData() = 0;
+
+  virtual void saveData() = 0;
+
+  QVBoxLayout * m_leftLoginLayout;
+
+  //QVBoxLayout * m_rightLoginLayout;
+
+  QVBoxLayout * m_leftSettingsLayout;
+
+  QVBoxLayout * m_rightSettingsLayout;
+
+protected:
+
+  virtual void createWidgets();
+
+  virtual void createLoginWidget() = 0;
+
+  virtual void createSettingsWidget() = 0;
+
+  QCheckBox * m_waitCheckBox;
+
+  QLineEdit * m_waitineEdit;
+
+  //QWidget * m_loginWidget;
+
+  //QWidget * m_settingsWidget;
+
+protected slots:
+    
+  void waitClicked(bool checked);
+
+};
+
+class VagrantProviderWidget : public CloudProviderWidget
+{
+  Q_OBJECT
+
+public:
+
+  VagrantProviderWidget(QWidget * parent = 0);
+
+  virtual ~VagrantProviderWidget();
+
+  virtual void loadData();
+
+  virtual void saveData();
+
+protected:
+
+  virtual void createLoginWidget();
+
+  virtual void createSettingsWidget();
+
+private slots:
+
+  void serverDirButtonClicked(bool checked);
+
+  void workerDirButtonClicked(bool checked);
+
+private:
+
+  QCheckBox * m_runOnStartUpCheckBox;
+
+  QLineEdit * m_serverUsernameLineEdit;
+
+  QLineEdit * m_serverPasswordLineEdit;
+
+  QLineEdit * m_workerUsernameLineEdit;
+
+  QLineEdit * m_workerPasswordLineEdit;
+
+  QLineEdit * m_serverDirLineEdit;
+
+  QLineEdit * m_serverIpLineEdit;
+
+  QLineEdit * m_serverIp2LineEdit;
+
+  QLineEdit * m_workerDirLineEdit;
+
+  QLineEdit * m_workerIpLineEdit;
+
+  QLineEdit * m_workerIp2LineEdit;
+
+};
+
+class AmazonProviderWidget : public CloudProviderWidget
+{
+  Q_OBJECT
+
+public:
+
+  AmazonProviderWidget(QWidget * parent = 0);
+
+  virtual ~AmazonProviderWidget();
+    
+  virtual void loadData();
+
+  virtual void saveData();
+
+protected:
+
+  virtual void createLoginWidget();
+
+  virtual void createSettingsWidget();
+
+private:
+
+  QComboBox * m_regionComboBox;
+
+  QComboBox * m_serverInstanceTypeComboBox;
+
+  QComboBox * m_workerInstanceTypeComboBox;
+
+  QLineEdit * m_accessKeyLineEdit;
+
+  QLineEdit * m_secretKeyLineEdit;
+
+  QLineEdit * m_selectPrivateKeyLineEdit;
+
+  QLineEdit * m_numberOfWorkerInstancesLineEdit;
+
+  QLineEdit * m_elasticStorageCapacityLineEdit;
 
 };
 
