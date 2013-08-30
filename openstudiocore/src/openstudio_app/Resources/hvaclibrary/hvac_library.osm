@@ -1,6 +1,7 @@
+
 OS:Version,
-  {1ce1aa37-0a17-44e1-863b-48cb5ca5c8ed}, !- Handle
-  1.0.4;                                  !- Version Identifier
+  {136c4874-9749-4ef9-8694-da52987b6e41}, !- Handle
+  1.0.5;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -389,15 +390,42 @@ OS:Curve:Quadratic,
 
 OS:EvaporativeCooler:Direct:ResearchSpecial,
   {8d3b17e0-88c9-4d17-9de4-0b9dd0481b36}, ! Handle
-  OS:EvaporativeCooler:Direct:ResearchSpecial 1, ! Name
+  OS:EvaporativeCooler:Direct:ResearchSpecial, ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
-  1,                                      ! Cooler Effectiveness
-  0,                                      ! Recirculating Water Pump Power Consumption {W}
-  ,                                       ! Air Inlet Node Name
-  ,                                       ! Air Outlet Node Name
-  ,                                       ! Sensor Node Name
-  0,                                      ! Drift Loss Fraction
-  0;                                      ! Blowdown Concentration Ratio
+  1,                                      !- Cooler Effectiveness
+  0,                                      !- Recirculating Water Pump Power Consumption {W}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Sensor Node Name
+  0,                                      !- Drift Loss Fraction
+  0;                                      !- Blowdown Concentration Ratio
+
+OS:EvaporativeFluidCooler:SingleSpeed,
+  {b04f495c-cbc1-4d89-acec-e5f7711f00de}, !- Handle
+  Evaporative Fluid Cooler Single Speed, !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  autosize,                               !- Design Air Flow Rate {m3/s}
+  autosize,                               !- Fan Power at Design Air Flow Rate {W}
+  0.03,                                   !- Design Spray Water Flow Rate {m3/s}
+  UFactorTimesAreaAndDesignWaterFlowRate, !- Performance Input Method
+  ,                                       !- Outdoor Air Inlet Node Name
+  ,                                       !- Standard Design Capacity {W}
+  autosize,                               !- U-factor Times Area Value at Design Air Flow Rate {W/K}
+  autosize,                               !- Design Water Flow Rate {m3/s}
+  ,                                       !- User Specified Design Capacity {W}
+  ,                                       !- Design Entering Water Temperature {C}
+  ,                                       !- Design Entering Air Temperature {C}
+  ,                                       !- Design Entering Air Wet-bulb Temperature {C}
+  FanCycling,                             !- Capacity Control
+  1,                                      !- Sizing Factor
+  SaturatedExit,                          !- Evaporation Loss Mode
+  ,                                       !- Evaporation Loss Factor {percent/K}
+  0.008,                                  !- Drift Loss Percent {percent}
+  ConcentrationRatio,                     !- Blowdown Calculation Mode
+  3,                                      !- Blowdown Concentration Ratio
+  ,                                       !- Blowdown Makeup Water Usage Schedule Name
+  ;                                       !- Supply Water Storage Tank Name
 
 OS:AirTerminal:SingleDuct:Uncontrolled,
   {b883cca7-f436-48ce-ad23-7e8310c7a85d}, ! Handle
@@ -2109,7 +2137,7 @@ OS:Schedule:Day,
 
 OS:ZoneHVAC:LowTemperatureRadiant:Electric,
   {2630717b-a04c-4254-8ead-7be8b9f29a65}, !- Handle
-  Low Temperature Radiant Electric, !- Name
+  Low Temperature Radiant Electric,       !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   Ceilings,                               !- Radiant Surface Type
   autosize,                               !- Maximum Electrical Power to Panel {W}
@@ -2179,7 +2207,7 @@ OS:Schedule:Day,
 
 OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow,
   {b663c064-e5c7-4097-b85d-be8e73fec664}, !- Handle
-  Coil Heating Low Temp Rad Const Flow, !- Name
+  Coil Heating Low Temp Rad Const Flow,   !- Name
   ,                                       !- Heating Water Inlet Node Name
   ,                                       !- Heating Water Outlet Node Name
   {c6f277a7-8ea3-44c3-aaf6-4214a974fd19}, !- Heating High Water Temperature Schedule Name
@@ -2249,7 +2277,7 @@ OS:Schedule:Day,
 
 OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow,
   {ef54dfa0-4b17-4c66-9fef-582882b6678f}, !- Handle
-  Coil Cooling Low Temp Rad Const Flow, !- Name
+  Coil Cooling Low Temp Rad Const Flow,   !- Name
   ,                                       !- Cooling Water Inlet Node Name
   ,                                       !- Cooling Water Outlet Node Name
   {e8ad3d13-8608-4b2e-916a-38985eb5ac41}, !- Cooling High Water Temperature Schedule Name
@@ -2261,7 +2289,7 @@ OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow,
 
 OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
   {bc476496-ed8c-466f-8782-7956baa99b85}, !- Handle
-  Low Temp Radiant Const Flow, !- Name
+  Low Temp Radiant Const Flow,            !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Radiant Surface Type
   ,                                       !- Hydronic Tubing Inside Diameter {m}
@@ -2326,7 +2354,7 @@ OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow,
 
 OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
   {2839ddaf-2907-4c75-bcd1-c1f5a2000e5e}, !- Handle
-  Low Temp Radiant Var Flow, !- Name
+  Low Temp Radiant Var Flow,              !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   {0bb8d9e1-257b-4f72-872b-1c8352ebcff5}, !- Low Temp Radiant Variable Flow Heating Coil Name
   {bc6be488-1c8b-43d3-8064-00a09ab21444}, !- Low Temp Radiant Variable Flow Cooling Coil Name
@@ -2334,4 +2362,4 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
   ,                                       !- Hydronic Tubing Inside Diameter {m}
   ,                                       !- Hydronic Tubing Length {m}
   ;                                       !- Temperature Control Type
-  
+

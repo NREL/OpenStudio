@@ -67,6 +67,12 @@ namespace detail{
     std::vector<UUID> projectUUIDs(int msec); 
     std::vector<UUID> lastProjectUUIDs() const; 
 
+    bool createProject(const UUID& projectUUID, int msec); 
+    bool lastCreateProjectSuccess() const; 
+
+    bool deleteProject(const UUID& projectUUID, int msec); 
+    bool lastDeleteProjectSuccess() const; 
+
     std::vector<UUID> analysisUUIDs(const UUID& projectUUID, int msec); 
     std::vector<UUID> lastAnalysisUUIDs() const; 
 
@@ -120,6 +126,10 @@ namespace detail{
 
     bool requestProjectUUIDs(); 
 
+    bool requestCreateProject(const UUID& projectUUID); 
+
+    bool requestDeleteProject(const UUID& projectUUID); 
+
     bool requestAnalysisUUIDs(const UUID& projectUUID); 
 
     bool startPostAnalysisJSON(const UUID& projectUUID, const std::string& analysisJSON);
@@ -158,9 +168,31 @@ namespace detail{
 
     void processProjectUUIDs(); 
 
+    void processCreateProject();
+
+    void processDeleteProject(); 
+
     void processAnalysisUUIDs(); 
 
+    void processPostAnalysisJSON();
+
+    void processPostDataPointJSON();
+
+    void processUploadAnalysisFiles();
+
+    void processStart();
+
+    void processStop();
+
     void processDataPointUUIDs();
+
+    void processRunningDataPointUUIDs();
+
+    void processQueuedDataPointUUIDs();
+
+    void processCompleteDataPointUUIDs();
+
+    void processDataPointJSON();
 
   private:
 
@@ -171,6 +203,8 @@ namespace detail{
 
     bool m_lastAvailable;
     std::vector<UUID> m_lastProjectUUIDs; 
+    bool m_lastCreateProjectSuccess;
+    bool m_lastDeleteProjectSuccess;
     std::vector<UUID> m_lastAnalysisUUIDs;
     bool m_lastPostAnalysisJSONSuccess;
     bool m_lastPostDataPointJSONSuccess;
@@ -189,6 +223,7 @@ namespace detail{
 
     void clearErrorsAndWarnings();
     void logError(const std::string& error) const;
+    void logNetworkError(int error) const;
     void logWarning(const std::string& warning) const;
     std::vector<UUID> processListOfUUID(const QByteArray& bytes, bool& success) const;
 
