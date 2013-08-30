@@ -6805,7 +6805,6 @@ OS:DistrictCooling,
        \type object-list
        \object-list ConnectionNames
   N1 ; \field Nominal Capacity
-       \required-field
        \units W
        \minimum 0.0
        \default 1000000
@@ -6826,7 +6825,6 @@ OS:DistrictHeating,
        \type object-list
        \object-list ConnectionNames
   N1 ; \field Nominal Capacity
-       \required-field
        \units W
        \minimum 0.0
        \default 1000000
@@ -7478,7 +7476,6 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \autosizable
        \default Autosize
   N5,  \field Rated Cooling Coefficient of Performance
-       \required-field
        \type real
        \units W/W
        \minimum> 0.0
@@ -9882,7 +9879,6 @@ OS:Fan:OnOff,
        \default 0.6
   N2, \field Pressure Rise
        \type real
-       \required-field
        \units Pa
        \ip-units inH2O
        \default 250.0
