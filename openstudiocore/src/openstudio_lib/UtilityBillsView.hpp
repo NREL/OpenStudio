@@ -128,6 +128,9 @@ private:
   QString getEnergyUseLabelText();
   QString getPeakLabelText();
 
+  void updateEnergyUseLabelText();
+  void updatePeakLabelText();
+
   boost::optional<model::UtilityBill> m_utilityBill;
 
   std::vector<BillingPeriodWidget *> m_billingPeriodWidgets;
