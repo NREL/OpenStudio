@@ -111,11 +111,11 @@ class ANALYSISDRIVER_API CloudAnalysisDriver {
   bool requestStop(bool waitForAlreadyRunningDataPoints=false);
 
   /** Request for dataPoint's detailed results to be downloaded. Returns false if
-   *  !dataPoint.complete() or if the detailed results have already been downloaded.
-   *  Otherwise returns true and emits dowloadRequestsComplete(bool success) when the
-   *  detailed downloads queue is empty or the process has failed. Look for the
-   *  dataPointDetailsComplete signal to see when this particular dataPoint's results
-   *  have been incorporated. */
+   *  !dataPoint.complete() or if the detailed results have already been downloaded or
+   *  if the dataPoint does not belong to project().analysis(). Otherwise returns true
+   *  and emits dowloadRequestsComplete(bool success) when the detailed downloads queue
+   *  is empty or the process has failed. Look for the dataPointDetailsComplete signal
+   *  to see when this particular dataPoint's results have been incorporated. */
   bool requestDownloadDetailedResults(analysis::DataPoint& dataPoint);
 
   //@}

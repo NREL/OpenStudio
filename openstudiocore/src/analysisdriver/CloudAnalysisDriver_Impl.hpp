@@ -105,11 +105,11 @@ namespace detail {
     bool requestStop(bool waitForAlreadyRunningDataPoints=false);
 
     /** Request for dataPoint's detailed results to be downloaded. Returns false if
-     *  !dataPoint.complete() or if the detailed results have already been downloaded.
-     *  Otherwise returns true and emits dowloadRequestsComplete(bool success) when the
-     *  detailed downloads queue is empty or the process has failed. Look for the
-     *  dataPointDetailsComplete signal to see when this particular dataPoint's results
-     *  have been incorporated. */
+     *  !dataPoint.complete() or if the detailed results have already been downloaded or
+     *  if the dataPoint does not belong to project().analysis(). Otherwise returns true
+     *  and emits dowloadRequestsComplete(bool success) when the detailed downloads queue
+     *  is empty or the process has failed. Look for the dataPointDetailsComplete signal
+     *  to see when this particular dataPoint's results have been incorporated. */
     bool requestDownloadDetailedResults(analysis::DataPoint& dataPoint);
 
     //@}
@@ -233,6 +233,12 @@ namespace detail {
      // 2. Wait (almost-as) usual. If isStopping() and all processes have stopped, emit
      //    signal.
 
+     // DOWNLOADING SPECIFIC POINTS ============================================
+
+     // 1. If not already in queue for download, see if there are results that can be
+     //    downloaded. If so, just add the point(s) to the regular dowload queue.
+     void areResultsAvailableForDownload(bool success);
+
    private:
     REGISTER_LOGGER("openstudio.analysisdriver.CloudAnalysisDriver");
 
@@ -267,6 +273,10 @@ namespace detail {
     // stop analysis
     boost::optional<OSServer> m_requestStop;
 
+    // download detailed results for particular data points
+    boost::optional<OSServer> m_checkForResultsToDownload;
+    std::vector<analysis::DataPoint> m_preDetailsQueue;
+
     void clearErrorsAndWarnings();
     void logError(const std::string& error);
     void logWarning(const std::string& warning);
@@ -286,6 +296,8 @@ namespace detail {
     void registerDownloadingDetailsFailure();
 
     void registerStopRequestFailure();
+
+    void registerDownloadDetailsRequestFailure();
 
     void checkForRunCompleteOrStopped();
   };

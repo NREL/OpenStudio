@@ -204,6 +204,63 @@ namespace detail {
     return true;
   }
 
+  bool CloudAnalysisDriver_Impl::requestDownloadDetailedResults(analysis::DataPoint& dataPoint) {
+    OptionalDataPoint actualDataPoint = project().analysis().getDataPointByUUID(dataPoint.uuid());
+    if (!actualDataPoint || !actualDataPoint->complete() || !actualDataPoint->directory().empty()) {
+      return false;
+    }
+    if (isStopping()) {
+      logWarning("A download cannot be requested while the analysis is stopping.");
+      return false;
+    }
+
+    // this is probably already set, but just to be sure
+    actualDataPoint->setRunType(DataPointRunType::CloudDetailed);
+
+    m_lastDownloadDetailedResultsSuccess = false;
+    if (!(isRunning() || isDownloading())) {
+      clearErrorsAndWarnings();
+    }
+
+    // see if already in download queue (nothing to do for the moment)
+    bool found = !(std::find(m_detailsQueue.begin(),
+                             m_detailsQueue.end(),
+                             actualDataPoint.get()) == m_detailsQueue.end());
+
+    // if not, see if there are results on the server
+    if (!found) {
+      found = !(std::find(m_preDetailsQueue.begin(),
+                          m_preDetailsQueue.end(),
+                          actualDataPoint.get()) == m_preDetailsQueue.end());
+      if (!found) {
+        m_preDetailsQueue.push_back(*actualDataPoint);
+      }
+      if (!m_checkForResultsToDownload) {
+
+        if (OptionalUrl url = provider().serverUrl()) {
+          m_checkForResultsToDownload = OSServer(*url);
+
+          // request completed data point uuids
+          bool test = m_checkForResultsToDownload->connect(SIGNAL(requestProcessed(bool)),this,SLOT(areResultsAvailableForDownload(bool)));
+          OS_ASSERT(test);
+
+          test = m_checkForResultsToDownload->requestCompleteDataPointUUIDs(project().analysis().uuid());
+          if (!test) {
+            registerDownloadDetailsRequestFailure();
+          }
+
+          return true;
+        }
+
+        logError("Cannot request a detailed results download because the CloudProvider has not been started or has been terminated.");
+        emit detailedDownloadRequestsComplete(false);
+        return true;
+      }
+    }
+
+    return true;
+  }
+
   bool CloudAnalysisDriver_Impl::connect(const std::string& signal,
                                          const QObject* qObject,
                                          const std::string& slot,
@@ -380,10 +437,10 @@ namespace detail {
       UUIDVector completeUUIDs = m_requestRun->lastCompleteDataPointUUIDs();
 
       BOOST_FOREACH(const DataPoint& missingPoint, project().analysis().dataPointsToQueue()) {
-        // HERE -- Is missingPoint waiting on already running results, or does it need to be
-        //         re-run? Maybe need --force boolean. Then download complete results if
-        //         reconnected to CloudProvider, but force re-run if had previously completed
-        //         successfully.
+        // ETH@20130830 -- Is missingPoint waiting on already running results, or does it
+        //     need to be re-run? Maybe need --force boolean. Then download complete results
+        //     if reconnected to CloudProvider, but force re-run if had previously completed
+        //     successfully.
         if (std::find(allUUIDs.begin(),allUUIDs.end(),missingPoint.uuid()) == allUUIDs.end()) {
           // post queue -- need to be run and are not in allUUIDs
           m_postQueue.push_back(missingPoint);
@@ -715,6 +772,7 @@ namespace detail {
         OS_ASSERT(test);
         appendErrorsAndWarnings(*m_requestDetails);
         m_requestDetails.reset();
+        m_lastDownloadDetailedResultsSuccess = true;
         emit detailedDownloadRequestsComplete(true);
         checkForRunCompleteOrStopped();
       }
@@ -750,6 +808,50 @@ namespace detail {
     if (!success) {
       registerStopRequestFailure();
     }
+  }
+
+  void CloudAnalysisDriver_Impl::areResultsAvailableForDownload(bool success) {
+    bool test = m_checkForResultsToDownload->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(areResultsAvailableForDownload(bool)));
+    OS_ASSERT(test);
+
+    if (!success) {
+      logError("Could not complete request for detailed results download because asking server for the completed DataPoint UUIDs failed.");
+    }
+
+    if (success) {
+      UUIDVector temp = m_checkForResultsToDownload->lastCompleteDataPointUUIDs();
+      std::set<UUID> completeUUIDs(temp.begin(),temp.end());
+      DataPointVector::iterator it = m_preDetailsQueue.begin();
+      while (it != m_preDetailsQueue.end()) {
+        if (completeUUIDs.find(it->uuid()) != completeUUIDs.end()) {
+          m_detailsQueue.push_back(*it);
+          it = m_preDetailsQueue.erase(it);
+        }
+        else {
+          ++it;
+        }
+      }
+
+      if (!m_detailsQueue.empty() && !m_requestDetails) {
+        startDownloadingDetails();
+      }
+
+      BOOST_FOREACH(const DataPoint& dataPoint,m_preDetailsQueue) {
+        logWarning("Cannot download detailed results for DataPoint '" + dataPoint.name() +
+                   "', " + removeBraces(dataPoint.uuid()) +
+                   ", because it is not registered as complete on the server.");
+      }
+
+      if (!m_preDetailsQueue.empty() && !isDownloading()) {
+        emit detailedDownloadRequestsComplete(false);
+      }
+    }
+
+    if (!success) {
+      registerDownloadDetailsRequestFailure();
+    }
+
+    m_checkForResultsToDownload.reset();
   }
 
   void CloudAnalysisDriver_Impl::clearErrorsAndWarnings() {
@@ -886,9 +988,8 @@ namespace detail {
   void CloudAnalysisDriver_Impl::registerDownloadingJsonFailure() {
     appendErrorsAndWarnings(*m_requestJson);
     m_requestJson.reset();
-    // HERE -- Not sure what to do with the queues.
-    // Am at least clearing them upon requestRun, and also requiring this driver not to be
-    // downloading when requestRun.
+    // ETH@20130830 - Not sure what to do with the queues. Am at least clearing them upon
+    //     requestRun, and also requiring this driver not to be downloading when requestRun.
     emit jsonDownloadRequestsComplete(false);
   }
 
@@ -936,9 +1037,20 @@ namespace detail {
   void CloudAnalysisDriver_Impl::registerDownloadingDetailsFailure() {
     appendErrorsAndWarnings(*m_requestDetails);
     m_requestDetails.reset();
-    // HERE -- Not sure what to do with the queues.
-    // Am at least clearing them upon requestRun, and also requiring this driver not to be
-    // downloading when requestRun.
+    // ETH@20130830 - Not sure what to do with the queues. Am at least clearing them upon
+    //     requestRun, and also requiring this driver not to be downloading when requestRun.
+    emit detailedDownloadRequestsComplete(false);
+  }
+
+  void CloudAnalysisDriver_Impl::registerStopRequestFailure() {
+    appendErrorsAndWarnings(*m_requestStop);
+    m_requestStop.reset();
+    emit stopRequestComplete(false);
+  }
+
+  void CloudAnalysisDriver_Impl::registerDownloadDetailsRequestFailure() {
+    appendErrorsAndWarnings(*m_checkForResultsToDownload);
+    m_checkForResultsToDownload.reset();
     emit detailedDownloadRequestsComplete(false);
   }
 
