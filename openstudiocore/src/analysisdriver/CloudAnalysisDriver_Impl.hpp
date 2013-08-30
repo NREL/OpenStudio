@@ -75,6 +75,7 @@ namespace detail {
     bool lastDownloadDetailedResultsSuccess() const;
 
     bool isRunning() const;
+    bool isStopping() const;
     bool isDownloading() const;
 
     std::vector<std::string> errors() const;
@@ -210,6 +211,9 @@ namespace detail {
      // make sure analysis is still running (try to avoid spinning when nothing is happening)
      void analysisStillRunning(bool success);
 
+     // see if data points are still running (optional part of the stopping process)
+     void dataPointsStillRunning(bool success);
+
      // DOWNLOADING ============================================================
 
      // slim results received
@@ -217,6 +221,17 @@ namespace detail {
 
      // detailed results received
      void detailsDownloadComplete(bool success);
+
+     // STOPPING ===============================================================
+
+     // 0. If are to wait for already running DataPoints, switch the monitoring process to
+     //    look for running data points, not for the analysis running.
+
+     // 1. Stop the analysis.
+     void analysisStopped(bool success);
+
+     // 2. Wait (almost-as) usual. If isStopping() and all processes have stopped, emit
+     //    signal.
 
    private:
     REGISTER_LOGGER("openstudio.analysisdriver.CloudAnalysisDriver");
@@ -238,6 +253,8 @@ namespace detail {
     // watch for complete data points
     boost::optional<OSServer> m_monitorDataPoints;
     std::vector<analysis::DataPoint> m_waitingQueue;
+    bool m_checkDataPointsRunningInsteadOfAnalysis;
+    bool m_lastGetRunningDataPointsSuccess;
 
     // download slim data points
     boost::optional<OSServer> m_requestJson;
@@ -246,6 +263,9 @@ namespace detail {
     // download detailed results
     boost::optional<OSServer> m_requestDetails;
     std::deque<analysis::DataPoint> m_detailsQueue;
+
+    // stop analysis
+    boost::optional<OSServer> m_requestStop;
 
     void clearErrorsAndWarnings();
     void logError(const std::string& error);
@@ -265,9 +285,9 @@ namespace detail {
     bool requestNextDetailsDownload();
     void registerDownloadingDetailsFailure();
 
-    /// Emits signal that run completed successfully if not running, not downloading,
-    /// and all queues empty.
-    void checkForRunComplete();
+    void registerStopRequestFailure();
+
+    void checkForRunCompleteOrStopped();
   };
 
 } // detail

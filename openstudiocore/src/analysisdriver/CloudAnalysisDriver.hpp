@@ -81,6 +81,7 @@ class ANALYSISDRIVER_API CloudAnalysisDriver {
   bool lastDownloadDetailedResultsSuccess() const;
 
   bool isRunning() const;
+  bool isStopping() const;
   bool isDownloading() const;
 
   std::vector<std::string> errors() const;
