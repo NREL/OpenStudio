@@ -87,6 +87,9 @@ namespace detail{
 
     bool start(const UUID& analysisUUID, int msec);
     bool lastStartSuccess() const;
+    
+    bool isAnalysisQueued(const UUID& analysisUUID, int msec);
+    bool lastIsAnalysisQueued() const;
 
     bool isAnalysisRunning(const UUID& analysisUUID, int msec);
     bool lastIsAnalysisRunning() const;
@@ -140,6 +143,8 @@ namespace detail{
 
     bool requestStart(const UUID& analysisUUID);
 
+    bool requestIsAnalysisQueued(const UUID& analysisUUID);
+
     bool requestIsAnalysisRunning(const UUID& analysisUUID);
 
     bool requestStop(const UUID& analysisUUID);
@@ -182,6 +187,10 @@ namespace detail{
 
     void processStart();
 
+    void processIsAnalysisQueued();
+
+    void processIsAnalysisRunning();
+
     void processStop();
 
     void processDataPointUUIDs();
@@ -210,6 +219,7 @@ namespace detail{
     bool m_lastPostDataPointJSONSuccess;
     bool m_lastUploadAnalysisFilesSuccess;
     bool m_lastStartSuccess;
+    bool m_lastIsAnalysisQueued;
     bool m_lastIsAnalysisRunning;
     bool m_lastStopSuccess;
     std::vector<UUID> m_lastDataPointUUIDs;
