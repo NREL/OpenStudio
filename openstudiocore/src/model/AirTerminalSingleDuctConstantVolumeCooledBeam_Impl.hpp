@@ -72,10 +72,10 @@ namespace detail {
     
     virtual bool addToNode(Node & node); 
     
-    unsigned inletPort();
+    virtual unsigned inletPort();
 				
-    unsigned outletPort();
-
+    virtual unsigned outletPort();
+    
     //@}
     /** @name Getters */
     //@{

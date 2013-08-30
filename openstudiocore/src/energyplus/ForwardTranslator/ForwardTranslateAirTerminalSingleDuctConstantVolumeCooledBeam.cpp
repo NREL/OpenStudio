@@ -52,7 +52,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
   // Makes sure the modelObject gets put in the map, and that the new idfObject gets put in 
   // the final file. Also set's the idfObject's name.
   IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AirTerminal_SingleDuct_ConstantVolume_CooledBeam,modelObject);
+  
+  IdfObject _airDistributionUnit(openstudio::IddObjectType::ZoneHVAC_AirDistributionUnit);
+   _airDistributionUnit.createName();
+   
+  m_idfObjects.push_back(_airDistributionUnit);
 
+  m_idfObjects.push_back(idfObject);
+  
   boost::optional<std::string> s;
   boost::optional<double> value;
   boost::optional<int> number;
@@ -318,7 +325,16 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 				idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::CoefficientofInductionKin,value.get());
 		}
   
-		return idfObject;
+  // Populate fields for AirDistributionUnit
+  if( boost::optional<ModelObject> outletNode = modelObject.outletModelObject() )
+  {
+    _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirDistributionUnitOutletNodeName,outletNode->name().get());
+  }
+  _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalObjectType,idfObject.iddObject().name());
+  _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalName,idfObject.name().get());
+
+  return _airDistributionUnit;
+  
 }
 
 } // energyplus

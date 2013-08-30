@@ -19,87 +19,62 @@
 
 #include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
 #include <model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp>
-
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
 #include <model/StraightComponent.hpp>
 #include <model/StraightComponent_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
 #include <model/CoilCoolingCooledBeam.hpp>
 #include <model/CoilCoolingCooledBeam_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/AirLoopHVAC_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/PortList.hpp>
 #include <model/PortList_Impl.hpp>
+#include <model/HVACComponent.hpp>
+#include <model/HVACComponent_Impl.hpp>
 #include <model/AirLoopHVACZoneSplitter.hpp>
 #include <model/AirLoopHVACZoneSplitter_Impl.hpp>
 #include <model/AirLoopHVACZoneMixer.hpp>
 #include <model/AirLoopHVACZoneMixer_Impl.hpp>
-
+#include <model/ThermalZone.hpp>
+#include <model/ThermalZone_Impl.hpp>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam_FieldEnums.hxx>
-
+#include <utilities/core/Compare.hpp>
 #include <utilities/units/Unit.hpp>
 #include <utilities/core/Assert.hpp>
+#include <boost/foreach.hpp>
 
 namespace openstudio {
 namespace model {
 
 namespace detail {
 
-  AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl(const IdfObject& idfObject,
-                                                                                                         Model_Impl* model,
-                                                                                                         bool keepHandle)
+  AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl(const IdfObject& idfObject,Model_Impl* model,bool keepHandle)
     : StraightComponent_Impl(idfObject,model,keepHandle)
   {
     BOOST_ASSERT(idfObject.iddObject().type() == AirTerminalSingleDuctConstantVolumeCooledBeam::iddObjectType());
   }
 
-  AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                                         Model_Impl* model,
-                                                                                                         bool keepHandle)
+  AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl(
+  const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
     BOOST_ASSERT(other.iddObject().type() == AirTerminalSingleDuctConstantVolumeCooledBeam::iddObjectType());
   }
 
-  AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl(const AirTerminalSingleDuctConstantVolumeCooledBeam_Impl& other,
-                                                                                                         Model_Impl* model,
-                                                                                                         bool keepHandle)
+  AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl(
+  const AirTerminalSingleDuctConstantVolumeCooledBeam_Impl& other,Model_Impl* model,bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {}
+  const std::vector<std::string>& 
 
-		ModelObject AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::clone(Model model) const
-  {
-    AirTerminalSingleDuctConstantVolumeCooledBeam airTerminalCVCooledBeamClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
-
-    HVACComponent coilCoolingClone = this->coilCoolingCooledBeam().clone(model).cast<HVACComponent>();
-    
-    airTerminalCVCooledBeamClone.setCoolingCoil(coilCoolingClone);
-
-    return airTerminalCVCooledBeamClone;
-  }
-
-		//std::vector<IdfObject> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::remove()
-  //{
-  //  if( boost::optional<CoilCoolingCooledBeam> waterCoolingCoil = coilCoolingCooledBeam().optionalCast<CoilCoolingCooledBeam>() )
-  //  {
-  //    if( boost::optional<PlantLoop> plantLoop = waterCoolingCoil->plantLoop() )
-  //    {
-  //      plantLoop->removeDemandBranchWithComponent(waterCoolingCoil.get() );
-  //    }
-  //  }
-  //  return StraightComponent_Impl::remove();
-  //}
-  
-  const std::vector<std::string>& AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
+AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
     if (result.empty())
@@ -114,7 +89,7 @@ namespace detail {
     }
     return result;
   }
-
+  
   IddObjectType AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::iddObjectType() const 
   {
     return AirTerminalSingleDuctConstantVolumeCooledBeam::iddObjectType();
@@ -134,12 +109,24 @@ namespace detail {
 
   Schedule AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::availabilitySchedule() const {
     boost::optional<Schedule> value = optionalAvailabilitySchedule();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
+    if(!value){
+      value = this->model().alwaysOnDiscreteSchedule();
+      BOOST_ASSERT(value);
+      const_cast<AirTerminalSingleDuctConstantVolumeCooledBeam_Impl*>(this)->setAvailabilitySchedule(*value);
+      value = optionalAvailabilitySchedule();
     }
+    BOOST_ASSERT(value);
     return value.get();
   }
   
+   bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setAvailabilitySchedule(Schedule& schedule) 
+  {
+    bool result = setSchedule(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::AvailabilityScheduleName,
+                              "AirTerminalSingleDuctConstantVolumeCooledBeam",
+                              "Availability",
+                              schedule);
+    return result;
+  }
   unsigned AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::inletPort()
   {
     return OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirInletNodeName;
@@ -150,6 +137,153 @@ namespace detail {
     return OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirOutletNodeName;
   }
   
+   bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::addToNode(Node & node)
+  {
+    Model _model = node.model();
+
+    if( boost::optional<ModelObject> outlet = node.outletModelObject() )
+    {
+      boost::optional<ThermalZone> thermalZone;
+
+      if( boost::optional<PortList> portList = outlet->optionalCast<PortList>()  )
+      {
+        thermalZone = portList->thermalZone();
+      }
+
+      if( thermalZone || outlet->optionalCast<AirLoopHVACZoneMixer>() )
+      {
+        if( boost::optional<ModelObject> inlet = node.inletModelObject() )
+        {
+          if( boost::optional<AirLoopHVACZoneSplitter> splitter = inlet->optionalCast<AirLoopHVACZoneSplitter>() )
+          {
+            boost::optional<ModelObject> sourceModelObject = inlet;
+            boost::optional<unsigned> sourcePort = node.connectedObjectPort(node.inletPort());
+
+            if( sourcePort && sourceModelObject )
+            {
+              Node inletNode(_model);
+
+              _model.connect( sourceModelObject.get(),
+                              sourcePort.get(),
+                              inletNode,
+                              inletNode.inletPort() );
+              
+              _model.connect( inletNode,
+                              inletNode.outletPort(),
+                              this->getObject<ModelObject>(),
+                              this->inletPort() );
+
+              _model.connect( this->getObject<ModelObject>(),
+                              outletPort(),
+                              node,
+                              node.inletPort() );
+
+              if( thermalZone )
+              {
+                AirTerminalSingleDuctConstantVolumeCooledBeam mo = this->getObject<AirTerminalSingleDuctConstantVolumeCooledBeam>();
+
+                thermalZone->addEquipment(mo);
+ //               thermalZone->setHeatingPriority(mo,1);
+                thermalZone->setCoolingPriority(mo,1);
+              }
+
+              return true; 
+            }
+          }
+        }
+      }
+    }
+
+    return false;
+  }
+  
+  
+  std::vector<IdfObject> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::remove()
+  {
+    Model _model = this->model();
+    ModelObject thisObject = this->getObject<ModelObject>();
+
+    std::vector<IdfObject> result;
+
+    HVACComponent _coolingCoil = coilCoolingCooledBeam();
+
+    boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
+    boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
+    
+    boost::optional<ModelObject> targetModelObject = this->outletModelObject();
+    boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
+
+    std::vector<ThermalZone> thermalZones = _model.getModelObjects<ThermalZone>();
+    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
+         it != thermalZones.end();
+         it++ )
+    {
+      std::vector<ModelObject> equipment = it->equipment();
+
+      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
+      {
+        it->removeEquipment(thisObject);
+
+        break;
+      }
+    }
+
+    if( sourcePort && sourceModelObject
+        && targetPort && targetModelObject )
+    {
+      if( boost::optional<Node> inletNode = sourceModelObject->optionalCast<Node>() )
+      {
+        if( boost::optional<ModelObject> source2ModelObject = inletNode->inletModelObject() )
+        {
+          if( boost::optional<unsigned> source2Port = inletNode->connectedObjectPort(inletNode->inletPort()) )
+          {
+            _model.connect( source2ModelObject.get(),
+                            source2Port.get(),
+                            targetModelObject.get(),
+                            targetPort.get() );
+
+            inletNode->disconnect();
+            inletNode->remove();
+
+            if( boost::optional<PlantLoop> loop = _coolingCoil.plantLoop() )
+            {
+              loop->removeDemandBranchWithComponent(_coolingCoil);
+            }
+
+            return StraightComponent_Impl::remove();
+          }
+        }
+      }
+    }
+
+    model().disconnect(getObject<ModelObject>(),inletPort());
+    model().disconnect(getObject<ModelObject>(),outletPort());
+
+    if( boost::optional<PlantLoop> loop = _coolingCoil.plantLoop() )
+    {
+      loop->removeDemandBranchWithComponent(_coolingCoil);
+    }
+
+    return StraightComponent_Impl::remove();
+  }
+  
+    bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::isRemovable() const
+  {
+    return true;
+  }
+  
+    
+		ModelObject AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::clone(Model model) const
+  {
+    AirTerminalSingleDuctConstantVolumeCooledBeam airTerminalCVCooledBeamClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
+
+    HVACComponent coilCoolingClone = this->coilCoolingCooledBeam().clone(model).cast<HVACComponent>();
+    
+    airTerminalCVCooledBeamClone.setCoolingCoil(coilCoolingClone);
+
+    return airTerminalCVCooledBeamClone;
+  }
+
   std::vector<ModelObject> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::children() const
   {
     std::vector<ModelObject> result;
@@ -177,22 +311,6 @@ namespace detail {
     return value.get();
   }
 
-  /*boost::optional<Connection> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::supplyAirInletNode() const 
-  {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirInletNodeName);
-  }
-
-  boost::optional<Connection> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::supplyAirOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirOutletNodeName);
-  }*/
-
-  /*CoolingCoilCooledBeam AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::coolingCoil() const {
-    boost::optional<CoolingCoilCooledBeam> value = optionalCoolingCoil();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Cooling Coil attached.");
-    }
-    return value.get();
-  }*/
 
   boost::optional<double> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::supplyAirVolumetricFlowRate() const 
   {
@@ -322,54 +440,13 @@ namespace detail {
     return result;
   }
 
-  bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setAvailabilitySchedule(Schedule& schedule) 
-  {
-    bool result = setSchedule(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::AvailabilityScheduleName,
-                              "AirTerminalSingleDuctConstantVolumeCooledBeam",
-                              "Availability",
-                              schedule);
-    return result;
-  }
+ 
 
   bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setCooledBeamType(std::string cooledBeamType) 
   {
     bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::CooledBeamType, cooledBeamType);
     return result;
   }
-
-  /*bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setSupplyAirInletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirInletNodeName, connection.get().handle());
-    }
-    else {
-      resetSupplyAirInletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::resetSupplyAirInletNode() {
-    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirInletNodeName, "");
-    BOOST_ASSERT(result);
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setSupplyAirOutletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirOutletNodeName, connection.get().handle());
-    }
-    else {
-      resetSupplyAirOutletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::resetSupplyAirOutletNode() {
-    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirOutletNodeName, "");
-    BOOST_ASSERT(result);
-  }*/
 
   bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::setCoolingCoil(HVACComponent& coolingCoilCooledBeam) 
   {
@@ -583,203 +660,6 @@ namespace detail {
     return false;
   }
   
-  /*boost::optional<ThermalZone> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::thermalZone()
-  {
-    boost::optional<ThermalZone> result;
-    Model m = this->model();
-    std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
-    BOOST_FOREACH(ThermalZone& thermalZone, thermalZones)
-    {
-      std::vector<ModelObject> equipments = thermalZone.equipment(); 
-      BOOST_FOREACH(ModelObject& equipment, equipments)
-      {
-        if (equipment.handle() == this->handle())
-        {
-          result = thermalZone;
-        }
-      }
-    }
-
-    return result;
-  }*/
-  
-   bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::addToNode(Node & node)
-  {
-    Model _model = node.model();
-
-    if( boost::optional<ModelObject> outlet = node.outletModelObject() )
-    {
-      boost::optional<ThermalZone> thermalZone;
-
-      if( boost::optional<PortList> portList = outlet->optionalCast<PortList>()  )
-      {
-        thermalZone = portList->thermalZone();
-      }
-
-      if( thermalZone || outlet->optionalCast<AirLoopHVACZoneMixer>() )
-      {
-        if( boost::optional<ModelObject> inlet = node.inletModelObject() )
-        {
-          if( boost::optional<AirLoopHVACZoneSplitter> splitter = inlet->optionalCast<AirLoopHVACZoneSplitter>() )
-          {
-            boost::optional<ModelObject> sourceModelObject = inlet;
-            boost::optional<unsigned> sourcePort = node.connectedObjectPort(node.inletPort());
-
-            if( sourcePort && sourceModelObject )
-            {
-              Node inletNode(_model);
-
-              _model.connect( sourceModelObject.get(),
-                              sourcePort.get(),
-                              inletNode,
-                              inletNode.inletPort() );
-              
-              _model.connect( inletNode,
-                              inletNode.outletPort(),
-                              this->getObject<ModelObject>(),
-                              this->inletPort() );
-
-              _model.connect( this->getObject<ModelObject>(),
-                              outletPort(),
-                              node,
-                              node.inletPort() );
-
-              if( thermalZone )
-              {
-                AirTerminalSingleDuctConstantVolumeCooledBeam mo = this->getObject<AirTerminalSingleDuctConstantVolumeCooledBeam>();
-
-                thermalZone->addEquipment(mo);
-                thermalZone->setHeatingPriority(mo,1);
-                thermalZone->setCoolingPriority(mo,1);
-              }
-
-              return true; 
-            }
-          }
-        }
-      }
-    }
-
-    return false;
-  }
-
-  std::vector<IdfObject> AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::remove()
-  {
-    Model _model = this->model();
-    ModelObject thisObject = this->getObject<ModelObject>();
-
-    std::vector<IdfObject> result;
-
-    HVACComponent _coolingCoil = coilCoolingCooledBeam();
-
-    boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
-    boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
-    
-    boost::optional<ModelObject> targetModelObject = this->outletModelObject();
-    boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
-
-    std::vector<ThermalZone> thermalZones = _model.getModelObjects<ThermalZone>();
-    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
-         it != thermalZones.end();
-         it++ )
-    {
-      std::vector<ModelObject> equipment = it->equipment();
-
-      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
-      {
-        it->removeEquipment(thisObject);
-
-        break;
-      }
-    }
-
-    if( sourcePort && sourceModelObject
-        && targetPort && targetModelObject )
-    {
-      if( boost::optional<Node> inletNode = sourceModelObject->optionalCast<Node>() )
-      {
-        if( boost::optional<ModelObject> source2ModelObject = inletNode->inletModelObject() )
-        {
-          if( boost::optional<unsigned> source2Port = inletNode->connectedObjectPort(inletNode->inletPort()) )
-          {
-            _model.connect( source2ModelObject.get(),
-                            source2Port.get(),
-                            targetModelObject.get(),
-                            targetPort.get() );
-
-            inletNode->disconnect();
-            inletNode->remove();
-
-            if( boost::optional<PlantLoop> loop = _coolingCoil.plantLoop() )
-            {
-              loop->removeDemandBranchWithComponent(_coolingCoil);
-            }
-
-            return StraightComponent_Impl::remove();
-          }
-        }
-      }
-    }
-
-    model().disconnect(getObject<ModelObject>(),inletPort());
-    model().disconnect(getObject<ModelObject>(),outletPort());
-
-    if( boost::optional<PlantLoop> loop = _coolingCoil.plantLoop() )
-    {
-      loop->removeDemandBranchWithComponent(_coolingCoil);
-    }
-
-    return StraightComponent_Impl::remove();
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::isRemovable() const
-  {
-    return true;
-  }
-
-  ////reimplemented to override the base-class method in StraightComponentComponent
-  ////because this component doesn't get attached to the zone inlet and zone outlet nodes
-  //bool AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::addToThermalZone(ThermalZone & thermalZone)
-  //{
-  //  Model m = this->model();
-
-  //  if( thermalZone.model() != m )
-  //  {
-  //    return false;
-  //  }
-
-  //  removeFromThermalZone();
-
-  //  thermalZone.setUseIdealAirLoads(false);
-
-  //  thermalZone.addEquipment(this->getObject<StraightComponent>());
-
-  //  return true;
-  //}
-
-  ////reimplemented to override the base-class method in StraightComponentComponent
-  ////because this component doesn't get attached to the zone inlet and zone outlet nodes
-  ////and therefore doesn't need to be removed from them when removed from the zone
-  //void AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::removeFromThermalZone()
-  //{
-  //  boost::optional<ThermalZone> thermalZone = this->thermalZone();
-  //  Model m = this->model();
-  //  ModelObject thisObject = this->getObject<ModelObject>();
-  //  std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
-  //  for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
-  //       it != thermalZones.end();
-  //       it++ )
-  //  {
-  //    std::vector<ModelObject> equipment = it->equipment();
-
-  //    if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
-  //    {
-  //      it->removeEquipment(thisObject);
-
-  //      break;
-  //    }
-  //  }
-  //}
 
 } // detail
 
@@ -799,6 +679,7 @@ AirTerminalSingleDuctConstantVolumeCooledBeam::AirTerminalSingleDuctConstantVolu
   }
   
   ok = setCoolingCoil(coilCoolingCooledBeam);
+  this->setCooledBeamType("Passive");
   BOOST_ASSERT(ok);
 }
 
@@ -827,20 +708,6 @@ std::string AirTerminalSingleDuctConstantVolumeCooledBeam::cooledBeamType() cons
 {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->cooledBeamType();
 }
-
-//boost::optional<Connection> AirTerminalSingleDuctConstantVolumeCooledBeam::supplyAirInletNode() const 
-//{
-//  return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->supplyAirInletNode();
-//}
-//
-//boost::optional<Connection> AirTerminalSingleDuctConstantVolumeCooledBeam::supplyAirOutletNode() const {
-//  return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->supplyAirOutletNode();
-//}
-
-//CoolingCoilCooledBeam AirTerminalSingleDuctConstantVolumeCooledBeam::coolingCoil() const {
-//
-//  return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->coolingCoil();
-//}
 
 boost::optional<double> AirTerminalSingleDuctConstantVolumeCooledBeam::supplyAirVolumetricFlowRate() const 
 {
@@ -947,22 +814,6 @@ bool AirTerminalSingleDuctConstantVolumeCooledBeam::setCooledBeamType(std::strin
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->setCooledBeamType(cooledBeamType);
 }
 
-//bool AirTerminalSingleDuctConstantVolumeCooledBeam::setSupplyAirInletNode(const Connection& connection) {
-//  return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->setSupplyAirInletNode(connection);
-//}
-//
-//void AirTerminalSingleDuctConstantVolumeCooledBeam::resetSupplyAirInletNode() {
-//  getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->resetSupplyAirInletNode();
-//}
-//
-//bool AirTerminalSingleDuctConstantVolumeCooledBeam::setSupplyAirOutletNode(const Connection& connection) {
-//  return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->setSupplyAirOutletNode(connection);
-//}
-//
-//void AirTerminalSingleDuctConstantVolumeCooledBeam::resetSupplyAirOutletNode() {
-//  getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->resetSupplyAirOutletNode();
-//}
-
 bool AirTerminalSingleDuctConstantVolumeCooledBeam::setCoolingCoil(HVACComponent& coolingCoilCooledBeam) 
 {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->setCoolingCoil(coolingCoilCooledBeam);
@@ -1063,22 +914,6 @@ void AirTerminalSingleDuctConstantVolumeCooledBeam::autocalculateCoefficientofIn
   getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->autocalculateCoefficientofInductionKin();
 }
 
-//boost::optional<ThermalZone> AirTerminalSingleDuctConstantVolumeCooledBeam::thermalZone()
-//{
-//  return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->thermalZone();
-//}
-
-//bool AirTerminalSingleDuctConstantVolumeCooledBeam::addToThermalZone(ThermalZone & thermalZone)
-//{
-//  return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->addToThermalZone(thermalZone);
-//}
-//
-//void AirTerminalSingleDuctConstantVolumeCooledBeam::removeFromThermalZone()
-//{
-//  return getImpl<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl>()->removeFromThermalZone();
-//}
-
-/// @cond
 AirTerminalSingleDuctConstantVolumeCooledBeam::AirTerminalSingleDuctConstantVolumeCooledBeam(boost::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl> impl)
   : StraightComponent(impl)
 {}
