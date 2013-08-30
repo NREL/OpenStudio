@@ -136,8 +136,6 @@ class MODEL_API EvaporativeFluidCoolerSingleSpeed : public StraightComponent {
 
   void resetPerformanceInputMethod();
 
-  void resetOutdoorAirInletNode();
-
   bool setStandardDesignCapacity(double standardDesignCapacity);
 
   void resetStandardDesignCapacity();
