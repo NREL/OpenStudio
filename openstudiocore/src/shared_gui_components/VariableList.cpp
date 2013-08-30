@@ -124,7 +124,8 @@ QSharedPointer<VariableListController> VariableGroupItem::variableListController
   return m_variableListController;
 }
 
-VariableGroupItemDelegate::VariableGroupItemDelegate()
+VariableGroupItemDelegate::VariableGroupItemDelegate(bool t_fixedMeasuresOnly)
+  : m_fixedMeasuresOnly(t_fixedMeasuresOnly)
 {
 }
 
@@ -141,7 +142,7 @@ QWidget * VariableGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     }
 
     // for right now only model and energyplus measures can have measure groups, reporting measures cannot
-    bool fixedMeasuresOnly = (acceptedMimeTypes.size() > 1);
+    bool fixedMeasuresOnly = (m_fixedMeasuresOnly || (acceptedMimeTypes.size() > 1));
     VariableGroupItemView * variableGroupItemView = new VariableGroupItemView(fixedMeasuresOnly);
 
     if (!fixedMeasuresOnly)

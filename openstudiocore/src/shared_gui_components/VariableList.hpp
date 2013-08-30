@@ -101,11 +101,12 @@ class VariableGroupItemDelegate : public OSItemDelegate
 
   public:
 
-  VariableGroupItemDelegate();
+  VariableGroupItemDelegate(bool t_fixedMeasuresOnly);
   QWidget * view(QSharedPointer<OSListItem> dataSource);
 
   private:
 
+  bool m_fixedMeasuresOnly;
 };
 
 class VariableListController : public OSListController

@@ -186,7 +186,22 @@ namespace detail {
       addParameter("ruby", *itr);
     }
 
-     
+    if (rjb.userScriptJob()){
+
+      try {
+        boost::shared_ptr<Job_Impl> parentJob = parent();
+        if (parentJob){
+          while(parentJob && parentJob->parent()){
+            parentJob = parentJob->parent();
+          }
+
+          FileInfo sql = parentJob->treeOutputFiles().getLastByExtension("sql");
+          std::string lastSqlFilePathArgument = "--lastSqlFilePath=" + toString(sql.fullPath);
+          addParameter("ruby", lastSqlFilePathArgument);
+        } 
+      } catch (const std::exception &) {
+      }
+    }
 
   }
 

@@ -113,7 +113,7 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
   std::string measureFunctionStr = toString(m_measureFunctionComboBox->currentText());
   MeasureFunction measureFunction(measureFunctionStr);
 
-  bool requiresEnergyPlusResults = false; //disabled for now, m_requiresEnergyPlusResults->isChecked();
+  bool requiresEnergyPlusResults = m_requiresEnergyPlusResults->isChecked();
   bool usesSketchUpAPI = false; //disabled for now, m_usesSketchUpAPI->isChecked();
 
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
@@ -179,6 +179,8 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
 {
   m_taxonomySecondLevelComboBox->clear();
   m_taxonomySecondLevelComboBox->setEnabled(false);
+  m_measureFunctionComboBox->setCurrentIndex(0);
+  m_requiresEnergyPlusResults->setChecked(false);
 
   if (newName == "Envelope"){
     m_taxonomySecondLevelComboBox->addItem("Fenestration");
@@ -226,6 +228,8 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
   }else if (newName == "Reporting"){
+    m_measureFunctionComboBox->setCurrentIndex(1);
+    m_requiresEnergyPlusResults->setChecked(true);
     m_taxonomySecondLevelComboBox->addItem("QAQC");
     m_taxonomySecondLevelComboBox->addItem("Troubleshooting");
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
@@ -305,9 +309,10 @@ void BCLMeasureDialog::init()
   vLayout2->addWidget(label);
   m_measureFunctionComboBox = new QComboBox(this);
   m_measureFunctionComboBox->addItem("Measure");
-  //m_measureFunctionComboBox->addItem("Report"); // Disable for now
+  m_measureFunctionComboBox->addItem("Report"); 
   //m_measureFunctionComboBox->addItem("Other"); // Disable for now
   m_measureFunctionComboBox->setCurrentIndex(0);
+  m_measureFunctionComboBox->setEnabled(false);
   vLayout2->addWidget(m_measureFunctionComboBox);
   vLayout2->addSpacing(10);
 
@@ -332,13 +337,14 @@ void BCLMeasureDialog::init()
   vLayout2->addLayout(tempHLayout);
   vLayout2->addSpacing(10);
 
-  /* Disable for now 
   m_requiresEnergyPlusResults = new QRadioButton(this);
   m_requiresEnergyPlusResults->setText("Yes");
   m_requiresEnergyPlusResults->setChecked(false);
+  m_requiresEnergyPlusResults->setEnabled(false);
   QRadioButton* notRequiresEnergyPlusResults = new QRadioButton(this);
   notRequiresEnergyPlusResults->setText("No");
   notRequiresEnergyPlusResults->setChecked(true);
+  notRequiresEnergyPlusResults->setEnabled(false);
   tempHLayout = new QHBoxLayout;
   tempHLayout->addWidget(m_requiresEnergyPlusResults);
   tempHLayout->addWidget(notRequiresEnergyPlusResults);
@@ -348,7 +354,6 @@ void BCLMeasureDialog::init()
   groupBox->setLayout(tempHLayout);
   vLayout2->addWidget(groupBox);
   vLayout2->addSpacing(10);
-  */
 
   /* Disable for now 
   m_usesSketchUpAPI = new QRadioButton(this);
