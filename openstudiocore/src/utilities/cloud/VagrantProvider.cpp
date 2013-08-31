@@ -104,7 +104,7 @@ namespace openstudio{
 
       QStringList args;
       addProcessArguments(args);
-      args << "help";
+      args << "-v";
 
       vagrantProcess->setWorkingDirectory(toQString(m_serverPath));
       vagrantProcess->start(processName(), args);
