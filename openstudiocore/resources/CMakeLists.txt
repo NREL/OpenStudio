@@ -319,6 +319,8 @@ SET(project_resources_src
   project/version/project_1_0_2.db
   project/version/project_1_0_3.osp
   project/version/project_1_0_3.db  
+  project/version/project_1_0_4.osp
+  project/version/project_1_0_4.db  
 )
 
 # update the resources
@@ -584,6 +586,8 @@ SET(ENERGYPLUS_OUTPUTS "")
 SET(analysis_resources_src
   analysis/version/analysis_1-0-3.json
   analysis/version/data_point_1-0-3.json
+  analysis/version/analysis_1-0-4.json
+  analysis/version/data_point_1-0-4.json
 )
 
 # update the resources
