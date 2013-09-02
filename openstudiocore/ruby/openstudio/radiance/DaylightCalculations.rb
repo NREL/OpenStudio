@@ -193,8 +193,10 @@ if sqlPath.empty?
   end
 end
 
-outPath = modelPath.parent_path / OpenStudio::Path.new(modelPath.stem) / OpenStudio::Path.new("model") / OpenStudio::Path.new("radiance")
+modelPathObj = OpenStudio::Path.new(modelPath)
+outPath = modelPathObj.parent_path / OpenStudio::Path.new(modelPathObj.stem) / OpenStudio::Path.new("model") / OpenStudio::Path.new("radiance")
 
+daylightsimOpts = "--x"
 File.open("#{outPath}/options/daylightsim.opt", "r") do |file|
   tempIO = file.read
   daylightsimOpts = tempIO
