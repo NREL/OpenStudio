@@ -22,6 +22,8 @@
 
 #include <shared_gui_components/OSDialog.hpp>
 
+#include <utilities/core/Optional.hpp>
+
 class QCheckBox;
 class QComboBox;
 class QLineEdit;
@@ -32,6 +34,8 @@ namespace openstudio{
 
 class AmazonProviderWidget;
 class VagrantProviderWidget;
+
+class CloudProviderWidget;
 
 class CloudDialog : public OSDialog
 {
@@ -45,6 +49,8 @@ public:
 
 protected slots:
 
+  virtual void on_backButton(bool checked);
+
   virtual void on_cancelButton(bool checked);
 
   virtual void on_okButton(bool checked);
@@ -52,6 +58,12 @@ protected slots:
 private:
 
   void createWidgets();
+
+  boost::optional<CloudProviderWidget *> getCurrentCloudProviderWidget();
+
+  void loadData();
+
+  void saveData();
 
   QCheckBox * m_iAcceptCheckBox; 
     
@@ -75,7 +87,13 @@ private:
 
   AmazonProviderWidget * m_amazonProviderWidget;
 
-  VagrantProviderWidget * m_vagrantProviderWidget;
+  VagrantProviderWidget * m_vagrantProviderWidget;  
+
+  static const int m_nullProviderIdx = 0;
+  
+  static const int m_vagrantProviderIdx = 1;
+
+  static const int m_amazonProviderIdx = 2;
 
 private slots:
 
@@ -117,11 +135,7 @@ protected:
 
   QCheckBox * m_waitCheckBox;
 
-  QLineEdit * m_waitineEdit;
-
-  //QWidget * m_loginWidget;
-
-  //QWidget * m_settingsWidget;
+  QLineEdit * m_waitLineEdit;
 
 protected slots:
     

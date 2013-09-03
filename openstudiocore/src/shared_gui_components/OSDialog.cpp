@@ -35,6 +35,7 @@ OSDialog::OSDialog(bool isIP,
                    QWidget * parent)
   : QDialog(parent),
   m_isIP(isIP),
+  m_backButton(NULL),
   m_cancelButton(NULL),
   m_okButton(NULL),
   m_upperLayout(NULL),
@@ -62,14 +63,15 @@ void OSDialog::createLayout()
 
   bool isConnected = false;
 
-  m_cancelButton = new QPushButton("Cancel",this);
-  isConnected = connect(m_cancelButton, SIGNAL(clicked(bool)),
-                        this, SLOT(on_cancelButton(bool))) ;
+  m_backButton = new QPushButton("Back",this);
+  isConnected = connect(m_backButton, SIGNAL(clicked(bool)),
+                        this, SLOT(on_backButton(bool))) ;
   OS_ASSERT(isConnected);
-  isConnected = connect(m_cancelButton, SIGNAL(clicked(bool)),
-                        this, SIGNAL(cancelButtonClicked(bool))) ;
+  isConnected = connect(m_backButton, SIGNAL(clicked(bool)),
+                        this, SIGNAL(backButtonClicked(bool))) ;
   OS_ASSERT(isConnected);
-  lowerLayout->addWidget(m_cancelButton);
+  lowerLayout->addWidget(m_backButton);
+  m_backButton->hide();
 
   m_okButton = new QPushButton("OK",this);
   m_okButton->setDefault(true);
@@ -80,6 +82,15 @@ void OSDialog::createLayout()
                         this, SIGNAL(okButtonClicked(bool))) ;
   OS_ASSERT(isConnected);
   lowerLayout->addWidget(m_okButton);
+
+  m_cancelButton = new QPushButton("Cancel",this);
+  isConnected = connect(m_cancelButton, SIGNAL(clicked(bool)),
+                        this, SLOT(on_cancelButton(bool))) ;
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_cancelButton, SIGNAL(clicked(bool)),
+                        this, SIGNAL(cancelButtonClicked(bool))) ;
+  OS_ASSERT(isConnected);
+  lowerLayout->addWidget(m_cancelButton);
 
   QVBoxLayout * mainLayout = new QVBoxLayout();
   mainLayout->setContentsMargins(m_layoutContentsMargins);
@@ -102,6 +113,11 @@ void OSDialog::setOkButtonAsDefault(bool isDefault)
 QBoxLayout * OSDialog::upperLayout()
 {
   return m_upperLayout;
+}
+
+QPushButton * OSDialog::backButton()
+{
+  return m_backButton;
 }
 
 QPushButton * OSDialog::cancelButton()
@@ -163,6 +179,10 @@ void OSDialog::setLayoutContentsMargins(const QMargins & layoutContentsMargins)
 }
 
 // ***** SLOTS *****
+
+void OSDialog::on_backButton(bool checked)
+{
+}
 
 void OSDialog::on_cancelButton(bool checked)
 {
