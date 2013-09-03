@@ -33,9 +33,9 @@ class QVBoxLayout;
 namespace openstudio{
 
 class AmazonProviderWidget;
-class VagrantProviderWidget;
-
+class BlankProviderWidget;
 class CloudProviderWidget;
+class VagrantProviderWidget;
 
 class CloudDialog : public OSDialog
 {
@@ -69,15 +69,17 @@ private:
     
   QComboBox * m_cloudResourceComboBox;
 
-  QStackedWidget * m_stackedWidget;
+  QStackedWidget * m_pageStackedWidget;
+
+  QStackedWidget * m_loginStackedWidget;
+
+  QStackedWidget * m_settingsStackedWidget;
 
   QVBoxLayout * m_leftLoginLayout; 
   
   QVBoxLayout * m_rightLoginLayout;
 
-  QVBoxLayout * m_leftSettingsLayout;
-
-  QVBoxLayout * m_rightSettingsLayout;
+  QVBoxLayout * m_mainSettingsLayout;
 
   int m_blankPageIdx;
 
@@ -87,9 +89,11 @@ private:
 
   AmazonProviderWidget * m_amazonProviderWidget;
 
+  BlankProviderWidget * m_blankProviderWidget;
+
   VagrantProviderWidget * m_vagrantProviderWidget;  
 
-  static const int m_nullProviderIdx = 0;
+  static const int m_blankProviderIdx = 0;
   
   static const int m_vagrantProviderIdx = 1;
 
@@ -117,13 +121,9 @@ public:
 
   virtual void saveData() = 0;
 
-  QVBoxLayout * m_leftLoginLayout;
+  QWidget * m_loginWidget;
 
-  //QVBoxLayout * m_rightLoginLayout;
-
-  QVBoxLayout * m_leftSettingsLayout;
-
-  QVBoxLayout * m_rightSettingsLayout;
+  QWidget * m_settingsWidget;
 
 protected:
 
@@ -133,6 +133,14 @@ protected:
 
   virtual void createSettingsWidget() = 0;
 
+  QVBoxLayout * m_leftLoginLayout;
+
+  //QVBoxLayout * m_rightLoginLayout;
+
+  QVBoxLayout * m_leftSettingsLayout;
+
+  QVBoxLayout * m_rightSettingsLayout;
+
   QCheckBox * m_waitCheckBox;
 
   QLineEdit * m_waitLineEdit;
@@ -140,6 +148,29 @@ protected:
 protected slots:
     
   void waitClicked(bool checked);
+
+};
+
+
+class BlankProviderWidget : public CloudProviderWidget
+{
+  Q_OBJECT
+
+public:
+
+  BlankProviderWidget(QWidget * parent = 0);
+
+  virtual ~BlankProviderWidget();
+
+  virtual void loadData();
+
+  virtual void saveData();
+
+private:
+
+  virtual void createLoginWidget();
+
+  virtual void createSettingsWidget();
 
 };
 

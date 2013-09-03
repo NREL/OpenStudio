@@ -50,15 +50,15 @@ CloudDialog::CloudDialog(QWidget* parent)
   : OSDialog(false, parent),
   m_iAcceptCheckBox(0),
   m_cloudResourceComboBox(0),
-  m_stackedWidget(0),
+  m_pageStackedWidget(0),
   m_leftLoginLayout(0),
   m_rightLoginLayout(0),
-  m_leftSettingsLayout(0),
-  m_rightSettingsLayout(0),
+  m_mainSettingsLayout(0),
   m_blankPageIdx(-1),
   m_loginPageIdx(-1),
   m_settingsPageIdx(-1),
   m_amazonProviderWidget(0),
+  m_blankProviderWidget(0),
   m_vagrantProviderWidget(0)
 {
   this->setWindowTitle("Cloud Settings");
@@ -73,6 +73,10 @@ void CloudDialog::createWidgets()
 {
   QLabel * label = 0;
   bool isConnected = false;
+
+  m_amazonProviderWidget = new AmazonProviderWidget(this);
+  m_blankProviderWidget = new BlankProviderWidget(this);
+  m_vagrantProviderWidget = new VagrantProviderWidget(this);
 
   // BLANK PAGE
   QWidget * blankPageWidget = new QWidget();
@@ -106,6 +110,17 @@ void CloudDialog::createWidgets()
     this, SLOT(cloudResourceChanged(const QString &)));
   OS_ASSERT(isConnected); 
 
+  // LOGIN STACKED WIDGET
+
+  m_loginStackedWidget = new  QStackedWidget();
+  m_leftLoginLayout->addWidget(m_loginStackedWidget);
+
+  m_loginStackedWidget->addWidget(m_blankProviderWidget->m_loginWidget);
+  m_loginStackedWidget->addWidget(m_vagrantProviderWidget->m_loginWidget);
+  m_loginStackedWidget->addWidget(m_amazonProviderWidget->m_loginWidget);
+
+  m_loginStackedWidget->setCurrentIndex(m_blankProviderIdx);
+
   // RIGHT LOGIN LAYOUT
   
   m_rightLoginLayout = new QVBoxLayout();
@@ -133,34 +148,37 @@ void CloudDialog::createWidgets()
     
   // SETTINGS PAGE
 
-  QHBoxLayout * mainSettingsLayout = new QHBoxLayout;
-  mainSettingsLayout->setContentsMargins(QMargins(0,0,0,0));
+  m_mainSettingsLayout = new QVBoxLayout;
+  m_mainSettingsLayout->setContentsMargins(QMargins(0,0,0,0));
 
   QWidget * settingsPageWidget = new QWidget;
-  settingsPageWidget->setLayout(mainSettingsLayout);
+  settingsPageWidget->setLayout(m_mainSettingsLayout);
 
-  m_leftSettingsLayout = new QVBoxLayout();
-  mainSettingsLayout->addLayout(m_leftSettingsLayout);
+  // SETTINGS STACKED WIDGET
 
-  m_rightSettingsLayout = new QVBoxLayout();
-  mainSettingsLayout->addLayout(m_rightSettingsLayout);
+  m_settingsStackedWidget = new  QStackedWidget();
+  m_mainSettingsLayout->addWidget(m_settingsStackedWidget);
 
-  // STACKED WIDGET
+  m_settingsStackedWidget->addWidget(m_blankProviderWidget->m_settingsWidget);
+  m_settingsStackedWidget->addWidget(m_vagrantProviderWidget->m_settingsWidget);
+  m_settingsStackedWidget->addWidget(m_amazonProviderWidget->m_settingsWidget);
 
-  m_stackedWidget = new  QStackedWidget();
-  upperLayout()->addWidget(m_stackedWidget);
+  m_settingsStackedWidget->setCurrentIndex(m_blankProviderIdx);
 
-  m_blankPageIdx = m_stackedWidget->addWidget(blankPageWidget);
-  m_loginPageIdx = m_stackedWidget->addWidget(loginPageWidget);
-  m_settingsPageIdx = m_stackedWidget->addWidget(settingsPageWidget);
+  // PAGE STACKED WIDGET
 
-  m_stackedWidget->setCurrentIndex(m_loginPageIdx);
+  m_pageStackedWidget = new  QStackedWidget();
+  upperLayout()->addWidget(m_pageStackedWidget);
+
+  m_blankPageIdx = m_pageStackedWidget->addWidget(blankPageWidget);
+  m_loginPageIdx = m_pageStackedWidget->addWidget(loginPageWidget);
+  m_settingsPageIdx = m_pageStackedWidget->addWidget(settingsPageWidget);
+
+  m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
 
   // BUTTONS
 
   this->okButton()->setText("Continue");
-
-  // TODO add below to OSDialog
 
   // OS SETTINGS
 
@@ -170,15 +188,6 @@ void CloudDialog::createWidgets()
     setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
   #endif
 
-  //m_vagrantProviderWidget = new VagrantProviderWidget(this);
-  //m_leftLoginLayout->addLayout(m_vagrantProviderWidget->m_leftLoginLayout);
-  //m_leftSettingsLayout->addLayout(m_vagrantProviderWidget->m_leftSettingsLayout);
-  //m_rightSettingsLayout->addLayout(m_vagrantProviderWidget->m_rightSettingsLayout);
-
-  m_amazonProviderWidget = new AmazonProviderWidget(this);
-  m_leftLoginLayout->addLayout(m_amazonProviderWidget->m_leftLoginLayout);
-  m_leftSettingsLayout->addLayout(m_amazonProviderWidget->m_leftSettingsLayout);
-  m_rightSettingsLayout->addLayout(m_amazonProviderWidget->m_rightSettingsLayout);
 }
 
 boost::optional<CloudProviderWidget *> CloudDialog::getCurrentCloudProviderWidget()
@@ -200,7 +209,7 @@ void  CloudDialog::loadData()
   
   m_iAcceptCheckBox->setChecked(checked);
 
-  CloudProviderWidget * cloudProviderWidget = qobject_cast<CloudProviderWidget *>(this->m_stackedWidget->currentWidget());
+  CloudProviderWidget * cloudProviderWidget = qobject_cast<CloudProviderWidget *>(this->m_pageStackedWidget->currentWidget());
   cloudProviderWidget->loadData();
 }
 
@@ -210,7 +219,7 @@ void  CloudDialog::saveData()
   
   checked = m_iAcceptCheckBox->isChecked();
 
-  CloudProviderWidget * cloudProviderWidget = qobject_cast<CloudProviderWidget *>(this->m_stackedWidget->currentWidget());
+  CloudProviderWidget * cloudProviderWidget = qobject_cast<CloudProviderWidget *>(this->m_pageStackedWidget->currentWidget());
   cloudProviderWidget->saveData();
 }
 
@@ -218,8 +227,8 @@ void  CloudDialog::saveData()
 
 void CloudDialog::on_backButton(bool checked)
 {
-  if(m_stackedWidget->currentIndex() == m_settingsPageIdx){
-    m_stackedWidget->setCurrentIndex(m_loginPageIdx);
+  if(m_pageStackedWidget->currentIndex() == m_settingsPageIdx){
+    m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
     this->backButton()->hide();
     this->okButton()->setText("Continue");
   }
@@ -234,11 +243,11 @@ void CloudDialog::on_okButton(bool checked)
 {
   QPushButton * pushButton = 0;
 
- if(m_stackedWidget->currentIndex() == m_loginPageIdx){
-    m_stackedWidget->setCurrentIndex(m_settingsPageIdx);
+ if(m_pageStackedWidget->currentIndex() == m_loginPageIdx){
+    m_pageStackedWidget->setCurrentIndex(m_settingsPageIdx);
     this->backButton()->show();
     this->okButton()->setText("Save");
-  } else if(m_stackedWidget->currentIndex() == m_settingsPageIdx){
+  } else if(m_pageStackedWidget->currentIndex() == m_settingsPageIdx){
     // Save data
      boost::optional<CloudProviderWidget *> cloudProviderWidget = this->getCurrentCloudProviderWidget();
      if(cloudProviderWidget.is_initialized()){
@@ -260,19 +269,15 @@ void CloudDialog::iAcceptClicked(bool checked)
 void CloudDialog::cloudResourceChanged(const QString & text)
 {
   if(text == NO_PROVIDER){
-    this->m_stackedWidget->setCurrentIndex(m_blankPageIdx);
+    this->m_pageStackedWidget->setCurrentIndex(m_blankPageIdx);
   } else if(text == VAGRANT_PROVIDER) {
-    if(!m_vagrantProviderWidget){
-      m_vagrantProviderWidget = new VagrantProviderWidget(this);
-      m_vagrantProviderWidget->loadData();
-    }
-    this->m_stackedWidget->setCurrentIndex(m_loginPageIdx);
+    this->m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
+    this->m_loginStackedWidget->setCurrentIndex(m_vagrantProviderIdx);
+    this->m_settingsStackedWidget->setCurrentIndex(m_vagrantProviderIdx);
   } else if(text == AMAZON_PROVIDER) {
-    if(!m_amazonProviderWidget){
-      m_amazonProviderWidget = new AmazonProviderWidget(this);
-      m_amazonProviderWidget->loadData();
-    }
-    this->m_stackedWidget->setCurrentIndex(m_loginPageIdx);
+    this->m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
+    this->m_loginStackedWidget->setCurrentIndex(m_amazonProviderIdx);
+    this->m_settingsStackedWidget->setCurrentIndex(m_amazonProviderIdx);
   } else {
     // should never get here
     OS_ASSERT(false);
@@ -287,6 +292,8 @@ CloudProviderWidget::CloudProviderWidget(QWidget * parent)
   : QWidget(parent),
   m_waitCheckBox(0),
   m_waitLineEdit(0),
+  m_loginWidget(0),
+  m_settingsWidget(0),
   m_leftLoginLayout(0),
   //m_rightLoginLayout(0),
   m_leftSettingsLayout(0),
@@ -307,21 +314,28 @@ void CloudProviderWidget::createWidgets()
   QLabel * label = 0;
   bool isConnected = false;
 
-  // LEFT LOGIN PAGE
+  // LOGIN PAGE
+  m_loginWidget = new QWidget();
 
+  // LEFT LOGIN PAGE
   m_leftLoginLayout = new QVBoxLayout(this);
+  m_loginWidget->setLayout(m_leftLoginLayout);
 
   // RIGHT LOGIN PAGE
 
   //m_rightLoginLayout = new QVBoxLayout(this);
 
   // LEFT SETTINGS PAGE
-  
+  m_settingsWidget = new QWidget();
+
+  // LEFT SETTINGS PAGE
   m_leftSettingsLayout = new QVBoxLayout(this);
-  
+  m_settingsWidget->setLayout(m_leftSettingsLayout);  
+
   // RIGHT SETTINGS PAGE
 
   m_rightSettingsLayout = new QVBoxLayout(this);
+  m_settingsWidget->setLayout(m_rightSettingsLayout);  
 
   label = new QLabel;
   label->setObjectName("H2");
@@ -369,6 +383,35 @@ void CloudProviderWidget::createWidgets()
 void CloudProviderWidget::waitClicked(bool checked)
 {
 }
+
+
+//****************************************************************************************************
+
+
+  BlankProviderWidget::BlankProviderWidget(QWidget * parent)
+    : CloudProviderWidget(parent)
+  {
+  }
+
+  BlankProviderWidget::~BlankProviderWidget()
+  {
+  }
+
+  void BlankProviderWidget::loadData()
+  {
+  }
+
+  void BlankProviderWidget::saveData()
+  {
+  }
+
+  void BlankProviderWidget::createLoginWidget()
+  {
+  }
+
+  void BlankProviderWidget::createSettingsWidget()
+  {
+  }
 
 
 //****************************************************************************************************
