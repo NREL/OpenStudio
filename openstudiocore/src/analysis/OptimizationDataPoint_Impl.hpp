@@ -53,6 +53,7 @@ namespace detail {
                                bool complete,
                                bool failed,
                                bool selected,
+                               DataPointRunType runType,
                                const std::vector<QVariant>& variableValues,
                                const std::vector<double>& responseValues,
                                const std::vector<double>& objectiveValues,
@@ -77,6 +78,7 @@ namespace detail {
                                bool complete,
                                bool failed,
                                bool selected,
+                               DataPointRunType runType,
                                const std::vector<QVariant>& variableValues,
                                const std::vector<double>& responseValues,
                                const std::vector<double>& objectiveValues,
@@ -116,11 +118,7 @@ namespace detail {
     //@{
 
     /** Update high level results from json. */
-    virtual bool updateFromJSON(const std::string& json);
-
-    /** Whoever downloaded the zip file should have setDirectory(), and had the file placed in
-     *  directory() / toPath("dataPoint.zip"). */
-    virtual bool updateDetails();
+    virtual bool updateFromJSON(const AnalysisJSONLoadResult& loadResult);
 
     //@}
     /** @name Protected in or Absent from Public Class */
