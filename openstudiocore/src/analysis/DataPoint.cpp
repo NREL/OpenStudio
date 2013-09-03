@@ -36,6 +36,7 @@
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/Finder.hpp>
 #include <utilities/core/Json.hpp>
+#include <utilities/core/UnzipFile.hpp>
 
 #include <boost/foreach.hpp>
 #include <boost/function.hpp>
@@ -445,9 +446,13 @@ namespace detail {
       return false;
     }
 
-    AnalysisJSONLoadResult loadedResult = loadJSON(json);
+    return this->updateFromJSON(loadJSON(json));
+  }
+
+  bool DataPoint_Impl::updateFromJSON(const AnalysisJSONLoadResult& loadResult) {
+
     if (loadResult.analysisObject) {
-      if (OptionalDataPoint loaded = loadedResult.analysisObject->optionalCast<DataPoint>()) {
+      if (OptionalDataPoint loaded = loadResult.analysisObject->optionalCast<DataPoint>()) {
         if (loaded->uuid() == uuid()) {
           // generally require the variableValues to be the same, the loaded point to be complete
           if ((variableValues() != loaded->variableValues()) || (!loaded->complete())) {
@@ -461,6 +466,7 @@ namespace detail {
           // do not pull file references over since they are not generally available for loading
           // do pull job data over because it contains errors and warnings
           m_topLevelJob = loaded->topLevelJob();
+          // HERE -- need to update top level job in RunManager database so errors and warnings get saved
           OS_ASSERT(m_topLevelJob);
           m_tags = loaded->tags();
           m_outputAttributes = loaded->outputAttributes();
@@ -483,7 +489,60 @@ namespace detail {
   }
 
   bool DataPoint_Impl::updateDetails() {
-    // HERE
+    if (directory().empty()) {
+      LOG(Info,"No directory set for this DataPoint.");
+      return false;
+    }
+
+    openstudio::path zipPath = directory() / toPath("dataPoint.zip");
+    if (!boost::filesystem::exists(zipPath)) {
+      LOG(Info,"No dataPoint.zip file in directory '" << toString(directory()) << "'.");
+      return false;
+    }
+
+    // unzip 
+    UnzipFile unzip(zipPath);
+    unzip.extractAllFiles(directory());
+    // TODO: Delete zip file once extracted. Leave for now for debugging.
+
+    // fix up topLevelJob
+    // HERE -- need to update file paths in topLevelJob/RunManager database so the following 
+    // file references will be valid
+
+    // get file references for
+    //   m_osmInputData
+    //   m_idfInputData
+    //   m_sqlOutputData
+    //   m_xmlOutputData (vector)
+    // if had json now, could transform those, but use topLevelJob instead,
+    // since not preserving the json file references makes it clear that 
+    // there is no model, idf, sql without downloading details.
+    runmanager::Files allFiles = topLevelJob()->treeAllFiles();
+    try {
+      openstudio::path osmInputDataPath = allFiles.getLastByExtension("osm").fullPath;
+      setOsmInputData(FileReference(osmInputDataPath));
+    }
+    catch (...) {}
+    try {
+      openstudio::path idfInputDataPath = allFiles.getLastByExtension("idf").fullPath;
+      setIdfInputData(FileReference(idfInputDataPath));
+    }
+    catch (...) {}
+    try {
+      openstudio::path sqlOutputDataPath = allFiles.getLastByExtension("sql").fullPath;
+      setSqlOutputData(FileReference(sqlOutputDataPath));
+    }
+    catch (...) {}
+    try {
+      FileReferenceVector xmlOutputData;
+      Q_FOREACH(const runmanager::FileInfo& file, allFiles.getAllByExtension("xml").files()) {
+        xmlOutputData.push_back(FileReference(file.fullPath));
+      }
+      setXmlOutputData(xmlOutputData);
+    }
+    catch (...) {}
+
+    return true;
   }
 
   void DataPoint_Impl::clearFileDataFromCache() const {
@@ -785,7 +844,6 @@ namespace detail {
             boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
     }
 
-    // HERE Adjust version string once clocks over to 1.0.5
     FileReferenceVector xmlOutputData;
     if (map.contains("xml_output_data")) {
       if (version < VersionString("1.0.4")) {
@@ -807,7 +865,6 @@ namespace detail {
             boost::function<openstudio::path (QVariant*)>(boost::bind(fToPath,boost::bind(&QVariant::toString,_1))));
     }
 
-    // HERE Adjust version string on "selected" once clocks over to 1.0.5
     return DataPoint(toUUID(map["uuid"].toString().toStdString()),
                      toUUID(map["version_uuid"].toString().toStdString()),
                      map.contains("name") ? map["name"].toString().toStdString() : std::string(),

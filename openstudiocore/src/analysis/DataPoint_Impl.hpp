@@ -213,11 +213,13 @@ namespace detail {
     //@{
 
     /** Update high level results from json. */
-    virtual bool updateFromJSON(const std::string& json);
+    bool updateFromJSON(const std::string& json);
+
+    virtual bool updateFromJSON(const AnalysisJSONLoadResult& loadResult);
 
     /** Whoever downloaded the zip file should have setDirectory(), and had the file placed in
      *  directory() / toPath("dataPoint.zip"). */
-    virtual bool updateDetails();
+    bool updateDetails();
 
     /** Clear model, workspace, and sqlFile from cache. */
     void clearFileDataFromCache() const;
