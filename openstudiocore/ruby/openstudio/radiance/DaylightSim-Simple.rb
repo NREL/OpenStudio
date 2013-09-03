@@ -397,56 +397,101 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
 
 end
 
-def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
-  #if t_verbose == 'v'
-    puts "simulation command: #{t_cmd}"
-  #end        
-  puts "Executing simulation"
-  tempIO = IO.popen(t_cmd)
+def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
 
 
-  temp = tempIO.readlines.to_s
-  tempIO.close
+  allValues = []
 
-  linenum = 0
+  t_cmds.each do | command | 
+    # TODO exec all simulations, then parse, then select the appropriate value for each windowgroup/hour
 
-  puts "Parsing result"
+    #if t_verbose == 'v'
+    puts "simulation command: #{command}"
+    #end        
+    puts "Executing simulation"
+    tempIO = IO.popen(command)
+
+
+    temp = tempIO.readlines.to_s
+    tempIO.close
+
+    linenum = 0
+
+    puts "Parsing result"
+    cmdValues = []
+    temp.split(/\n/).each do |val|
+      ++linenum
+      line = []
+      val.strip!
+      hournum = 0
+      val.split(/\t/).each do |triplet|
+        ++hournum
+        # each triplet (hour) for this line
+        hour = []
+        triplet.split(/ /).each do |rgb|
+          # each value of the triplet
+          hour << [rgb.to_f, 0].max
+        end
+
+        if hour.size != 3
+          abort "Unable to parse hour, 3 color values not found (line: #{linenum} hour: #{hournum} triplet: #{triplet}) #{hour}"
+        end
+
+        # need to apply vLambda to calculations
+        illum = 179*((hour[0] * 0.265) + (hour[1] * 0.67) + (hour[2] * 0.065))
+        line << illum
+
+      end
+
+      if line.size != 8760
+        abort "Unable to parse line, not enough hours found (line: #{linenum}): #{line}"
+      end
+      cmdValues << line;
+    end
+
+    if cmdValues.empty?
+      puts "ERROR: simulation command generated no results: #{command}"
+    end
+
+    allValues << cmdValues
+  end
+
   values = []
-  temp.split(/\n/).each do |val|
-    ++linenum
-    line = []
-    val.strip!
-    hournum = 0
-    val.split(/\t/).each do |triplet|
-      ++hournum
-      # each triplet (hour) for this line
-      hour = []
-      triplet.split(/ /).each do |rgb|
-        # each value of the triplet
-        hour << [rgb.to_f, 0].max
-      end
 
-      if hour.size != 3
-        abort "Unable to parse hour, 3 color values not found (line: #{linenum} hour: #{hournum} triplet: #{triplet}) #{hour}"
-      end
 
-      # need to apply vLambda to calculations
-      illum = 179*((hour[0] * 0.265) + (hour[1] * 0.67) + (hour[2] * 0.065))
-      line << illum
-
-    end
-
-    if line.size != 8760
-      abort "Unable to parse line, not enough hours found (line: #{linenum}): #{line}"
-    end
-    values << line;
+  # preset all 0's for the result values
+  allValues[0].size().times do |row|
+    values << Array.new(8760, 0)
   end
 
-  if values.empty?
-    puts "ERROR: simulation command generated no results: #{t_cmd}"
+  # this might be slow, but the idea is that we are looping over each window's contributions
+  # if the particular index should contribute light, then we add it to the value
+  #
+  # example: the index of values might be:
+  # [window1open, window1closed, window2open, window2closed, window3open, window3closed]
+  #
+  # After calling the t_mapping function for all of the window state indexes for a particular hour we
+  # might get a light contribution map that looks like:
+  #
+  # [true, false, false, true, true, false]
+  #
+  # Saying for that hour of the day, window1 and window3 blinds were open, but window2 blinds were closed.
+  #
+  # The result is the summation of each window's vLambda contributions.
+  allValues.size().times do |index|
+    allValues[index].size().times do |row|
+      8760.times do |hour|
+        if t_mapping.call(index, hour) 
+          # does this index and hour match the mapping function? that is, should this index
+          # of data be used with this hour?
+          values[row][hour] = allValues[index][row][hour] + values[row][hour]
+        end 
+      end
+    end
   end
 
 
+  # how proceed on, as we have all of the contributions we want
   allhours = []
 
   8760.times do |hour|
@@ -548,13 +593,36 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
   puts "Running annual simulation"
 
 
-  # Use ascii piping on Windows, binary on unixish OS's
-  if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-    rawValues = execSimulation("gendaymtx  -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep  -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\"  ", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
+  simulations = []
+  windowMapping = nil
+
+  if t_options.z == true
+    # 3-phase
+    #
+
+    # TODO rpg777
+    # for w in windowgroups
+    #  simulations << "closed gendaymtx command for this window group"
+    #  simulations << "open gendaymtx command for this window group"
+    #  build window mapping 
+    # end
   else
-    rawValues = execSimulation("gendaymtx  -m #{t_options.skyvecDensity} -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\"  ", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
+    # 2-phase 
+    #
+    
+    # Use ascii piping on Windows, binary on unixish OS's
+    if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+      simulations << "gendaymtx  -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep  -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\"  "
+    else
+      simulations << "gendaymtx  -m #{t_options.skyvecDensity} -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\"  "
+    end
+
+    # TODO lefticus 
+    # set window mapping to always be 'true, use this one'
+    windowMapping = lambda { |index, hour| true }
   end
 
+  rawValues = execSimulation(simulations, windowMapping, t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
 
   dcVectors = nil
 

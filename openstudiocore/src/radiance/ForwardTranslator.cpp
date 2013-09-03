@@ -45,6 +45,7 @@
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/PathHelpers.hpp>
+#include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/geometry/Transformation.hpp>
 
 #include <QtGui/QPolygonF>
@@ -304,7 +305,18 @@ namespace radiance {
       } else {
         // yes 3-phase
         daylightsimopt << "--z";
+
+        // copy required bsdf files into place
+        openstudio::path bsdfoutpath = radDir/ openstudio::toPath("bsdf");
+
+        boost::filesystem::copy_file(getSharedResourcesPath() / openstudio::toPath("radiance/Daylighting/clear_100.xml"), bsdfoutpath / openstudio::toPath("clear_100.xml"), boost::filesystem::copy_option::overwrite_if_exists);
+        boost::filesystem::copy_file(getSharedResourcesPath() / openstudio::toPath("radiance/Daylighting/shade_020.xml"), bsdfoutpath / openstudio::toPath("shade_020.xml"), boost::filesystem::copy_option::overwrite_if_exists);
+
+        /// \todo rpg777 do we need reference these files in the materias.rad file?
+        //
+        /// \todo rgp777 also, we only want to group windows if they share the same shadinggroup
       }
+
 
 
       // write Radiance options to file(s)
