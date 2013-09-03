@@ -27,12 +27,85 @@
 
 namespace openstudio{
 
+  /// VagrantSettings is a CloudSettings.
+  class UTILITIES_API VagrantSettings : public CloudSettings {
+  public:
+    /** @name Constructor */
+    //@{
+
+    // default constructor, loads defaults from settings
+    VagrantSettings();
+
+    // constructor
+    VagrantSettings(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
+                    const openstudio::path& workerPath, const openstudio::Url& workerUrl,
+                    bool haltOnStop);
+
+    //@}
+    /** @name Destructors */
+    //@{
+
+    /// virtual destructor
+    virtual ~VagrantSettings();
+
+    //@}
+    /** @name Inherited members */
+    //@{
+
+    //@}
+    /** @name Class members */
+    //@{
+
+    openstudio::path serverPath()const; 
+    openstudio::Url serverUrl() const;
+    openstudio::path workerPath() const;
+    openstudio::Url workerUrl() const;
+    bool haltOnStop() const;
+
+    //@}
+
+  private:
+
+  };
+
+  /// VagrantSession is a CloudSession.
+  class UTILITIES_API VagrantSession : public CloudSession {
+  public:
+
+    /** @name Constructor */
+    //@{
+
+    //constructor
+    VagrantSession(const std::string& sessionId, const boost::optional<Url>& serverUrl, const std::vector<Url>& workerUrls);
+    
+    //@}
+    /** @name Destructors */
+    //@{
+
+    /// virtual destructor
+    virtual ~VagrantSession();
+
+    //@}
+    /** @name Inherited members */
+    //@{
+
+    //@}
+    /** @name Class members */
+    //@{
+
+  private:
+
+  };
+
   /// VagrantProvider is a CloudProvider that provides access to local Vagrant virtual machines for testing.
   class UTILITIES_API VagrantProvider : public CloudProvider {
   public:
 
     /** @name Constructor */
     //@{
+
+    /// default constructor, loads settings
+    VagrantProvider();
 
     /// constructor
     VagrantProvider(const openstudio::path& serverPath, const openstudio::Url& serverUrl,

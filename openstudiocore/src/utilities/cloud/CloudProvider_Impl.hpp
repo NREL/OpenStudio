@@ -30,9 +30,55 @@
 
 namespace openstudio{
   
+  class CloudSettings;
   class CloudSession;
 
 namespace detail{
+
+  /// CloudSettings_Impl is an abstract base class that returns the information needed to use a CloudProvider (e.g. username, password, etc)
+  class UTILITIES_API CloudSettings_Impl {
+  public:
+
+    virtual ~CloudSettings_Impl();
+
+    virtual std::string cloudProviderType() const = 0;
+
+    virtual bool loadSettings(bool overwriteExisting = false) = 0;
+
+    virtual bool saveToSettings(bool overwriteExisting = false) const = 0;
+
+  protected:
+
+    CloudSettings_Impl();
+
+  private:
+
+    // configure logging
+    REGISTER_LOGGER("utilities.cloud.CloudSettings");
+  };
+
+  /// CloudSession_Impl is an abstract base class for the information needed to identify and reconnect to compute nodes started by a previous CloudProvider.
+  class UTILITIES_API CloudSession_Impl {
+  public:
+    virtual ~CloudSession_Impl();
+    virtual std::string cloudProviderType() const = 0;
+    std::string sessionId() const;
+    boost::optional<Url> serverUrl() const;
+    void setServerUrl(const Url& serverUrl);
+    void resetServerUrl();
+    std::vector<Url> workerUrls() const;
+    void addWorkerUrl(const Url& workerUrl);
+    void clearWorkerUrls();
+  protected:
+    CloudSession_Impl(const std::string& sessionId, const boost::optional<Url>& serverUrl, const std::vector<Url>& workerUrls);
+  private:
+    std::string m_sessionId;
+    boost::optional<Url> m_serverUrl;
+    std::vector<Url> m_workerUrls;
+
+    // configure logging
+    REGISTER_LOGGER("utilities.cloud.CloudSession");
+  };
 
   /// CloudProvider_Impl is an abstract base class for classes that provide cloud resources.
   class UTILITIES_API CloudProvider_Impl : public QObject {
@@ -85,6 +131,14 @@ namespace detail{
     /// returns true if the cloud service validates user credentials
     /// blocking call, clears errors and warnings
     virtual bool validateCredentials() const = 0;
+
+    /// returns the current settings
+    /// blocking call
+    virtual CloudSettings settings() const = 0;
+
+    /// returns true if can assign settings
+    /// blocking call, clears errors and warnings
+    virtual bool setSettings(const CloudSettings& settings) = 0;
 
     /// returns the current session id
     /// blocking call

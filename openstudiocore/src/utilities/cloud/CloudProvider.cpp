@@ -20,8 +20,62 @@
 #include <utilities/cloud/CloudProvider_Impl.hpp>
 #include <utilities/core/Application.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio{
   namespace detail {
+
+    CloudSettings_Impl::CloudSettings_Impl()
+    {
+    }
+
+    CloudSettings_Impl::~CloudSettings_Impl()
+    {
+    }
+
+    CloudSession_Impl::CloudSession_Impl(const std::string& sessionId, const boost::optional<Url>& serverUrl, const std::vector<Url>& workerUrls)
+      : m_sessionId(sessionId), m_serverUrl(serverUrl), m_workerUrls(workerUrls)
+    {
+    }
+
+    CloudSession_Impl::~CloudSession_Impl()
+    {
+    }
+
+    std::string CloudSession_Impl::sessionId() const
+    {
+      return m_sessionId;
+    }
+
+    boost::optional<Url> CloudSession_Impl::serverUrl() const
+    {
+      return m_serverUrl;
+    }
+      
+    void CloudSession_Impl::setServerUrl(const Url& serverUrl)
+    {
+      m_serverUrl = serverUrl;
+    }
+
+    void CloudSession_Impl::resetServerUrl()
+    {
+      m_serverUrl.reset();
+    }
+
+    std::vector<Url> CloudSession_Impl::workerUrls() const
+    {
+      return m_workerUrls;
+    }
+
+    void CloudSession_Impl::addWorkerUrl(const Url& workerUrl)
+    {
+      m_workerUrls.push_back(workerUrl);
+    }
+
+    void CloudSession_Impl::clearWorkerUrls()
+    {
+      m_workerUrls.clear();
+    }
 
     CloudProvider_Impl::CloudProvider_Impl()
       : QObject()
@@ -36,54 +90,86 @@ namespace openstudio{
 
   } // detail
 
-  CloudSession::CloudSession(const std::string& cloudProviderType, const std::string& sessionId, const boost::optional<Url>& serverUrl, const std::vector<Url>& workerUrls)
-    : m_cloudProviderType(cloudProviderType), m_sessionId(sessionId), m_serverUrl(serverUrl), m_workerUrls(workerUrls)
-  {}
+  CloudSettings::CloudSettings(const boost::shared_ptr<detail::CloudSettings_Impl>& impl)
+    : m_impl(impl)
+  {
+    OS_ASSERT(getImpl<detail::CloudSettings_Impl>());
+  }
+
+  CloudSettings::~CloudSettings()
+  {
+  }
+
+  std::string CloudSettings::cloudProviderType() const
+  {
+    return getImpl<detail::CloudSettings_Impl>()->cloudProviderType();
+  }
+  
+  bool CloudSettings::loadSettings(bool overwriteExisting)
+  {
+    return getImpl<detail::CloudSettings_Impl>()->loadSettings(overwriteExisting);
+  }
+
+  bool CloudSettings::saveToSettings(bool overwriteExisting) const
+  {
+    return getImpl<detail::CloudSettings_Impl>()->saveToSettings(overwriteExisting);
+  }
+
+  CloudSession::CloudSession(const boost::shared_ptr<detail::CloudSession_Impl>& impl)
+    : m_impl(impl)
+  {
+    OS_ASSERT(getImpl<detail::CloudSession_Impl>());
+  }
+
+  CloudSession::~CloudSession()
+  {
+  }
 
   std::string CloudSession::cloudProviderType() const
   {
-    return m_cloudProviderType;
+    return getImpl<detail::CloudSession_Impl>()->cloudProviderType();
   }
 
   std::string CloudSession::sessionId() const
   {
-    return m_sessionId;
+    return getImpl<detail::CloudSession_Impl>()->sessionId();
   }
 
   boost::optional<Url> CloudSession::serverUrl() const
   {
-    return m_serverUrl;
+    return getImpl<detail::CloudSession_Impl>()->serverUrl();
   }
     
   void CloudSession::setServerUrl(const Url& serverUrl)
   {
-    m_serverUrl = serverUrl;
+    getImpl<detail::CloudSession_Impl>()->setServerUrl(serverUrl);
   }
 
   void CloudSession::resetServerUrl()
   {
-    m_serverUrl.reset();
+    getImpl<detail::CloudSession_Impl>()->resetServerUrl();
   }
 
   std::vector<Url> CloudSession::workerUrls() const
   {
-    return m_workerUrls;
+    return getImpl<detail::CloudSession_Impl>()->workerUrls();
   }
 
   void CloudSession::addWorkerUrl(const Url& workerUrl)
   {
-    m_workerUrls.push_back(workerUrl);
+    getImpl<detail::CloudSession_Impl>()->addWorkerUrl(workerUrl);
   }
 
   void CloudSession::clearWorkerUrls()
   {
-    m_workerUrls.clear();
+    getImpl<detail::CloudSession_Impl>()->clearWorkerUrls();
   }
 
 
   CloudProvider::CloudProvider(const boost::shared_ptr<detail::CloudProvider_Impl>& impl)
     : m_impl(impl)
   {
+    OS_ASSERT(getImpl<detail::CloudProvider_Impl>());
   }
 
   CloudProvider::~CloudProvider()
@@ -123,6 +209,16 @@ namespace openstudio{
   bool CloudProvider::validateCredentials() const
   {
     return getImpl<detail::CloudProvider_Impl>()->validateCredentials();
+  }
+
+  CloudSettings CloudProvider::settings() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->settings();
+  }
+
+  bool CloudProvider::setSettings(const CloudSettings& settings)
+  {
+    return getImpl<detail::CloudProvider_Impl>()->setSettings(settings);
   }
 
   CloudSession CloudProvider::session() const
