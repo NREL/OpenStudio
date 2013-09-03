@@ -596,6 +596,8 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
   simulations = []
   windowMapping = nil
 
+  exec_statement("gendaymtx  -m #{t_options.skyvecDensity} -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" ")
+
   if t_options.z == true
     # 3-phase
     #
@@ -610,14 +612,8 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
     # 2-phase 
     #
     
-    # Use ascii piping on Windows, binary on unixish OS's
-    if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-      simulations << "gendaymtx  -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep  -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\"  "
-    else
-      simulations << "gendaymtx  -m #{t_options.skyvecDensity} -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\"  "
-    end
+    simulations << "dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" "
 
-    # TODO lefticus 
     # set window mapping to always be 'true, use this one'
     windowMapping = lambda { |index, hour| true }
   end
