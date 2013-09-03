@@ -371,6 +371,7 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
         if t_options.verbose == 'v'
           puts "computing daylight coefficients for #{space_name}"
         end
+
         view_def = ""
         dims = t_options.dims
         view_def ="-x #{dims} -y #{dims} -vf #{Dir.pwd}/numeric/#{space_name}.sns"
@@ -378,19 +379,18 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
           vwrays_out = `vwrays -d #{view_def}`.strip
           exec_statement("vwrays -ff #{view_def} | rcontrib #{rtrace_args = "#{t_options.vmx}"} -V- -fo -ffc #{vwrays_out} \
 		-f #{t_options.tregVars} -o #{binDir}/#{space_name}_treg%03d.hdr -m skyglow model_dc.oct")
+
+          hdrs = Dir.glob("#{binDir}/*.hdr")
+          # there is a limit on the length of the command line on Windows systems -- just one of the OS's great many shortcomings.
+          hdrs = hdrs[0..12]
+          exec_statement("pcompos -a 10 #{hdrs.join(' ')} | pfilt -x /6 -y /6 | ra_bmp -e +2 - #{binDir}/#{space_name}contact-sheet.bmp")
         else
           exec_statement("vwrays -ff #{view_def} | rcontrib #{t_options.vmx} -n #{t_simCores} -V- -fo -ffc \
 		$(vwrays -d #{view_def}) -f #{t_options.tregVars} -o #{binDir}/#{space_name}treg%03d.hdr -m skyglow model_dc.oct")
-          # create "contact sheet" of DC images for reference/troubleshooting
-          if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-            hdrs = Dir.glob("#{binDir}/*.hdr")
-            # there is a limit on the length of the command line on Windows systems -- just one of the OS's great many shortcomings.
-            hdrs = hdrs[0..12]
-            exec_statement("pcompos -a 10 #{hdrs.join(' ')} | pfilt -x /6 -y /6 | ra_bmp -e +2 - #{binDir}/#{space_name}contact-sheet.bmp")
-          else
-            exec_statement("pcompos -a 10 #{binDir}/*.hdr | pfilt -x /6 -y /6 | ra_tiff -e +2 -z - #{binDir}/#{space_name}contact-sheet.tif")
-          end
+
+          exec_statement("pcompos -a 10 #{binDir}/*.hdr | pfilt -x /6 -y /6 | ra_tiff -e +2 -z - #{binDir}/#{space_name}contact-sheet.tif")
         end
+
       end
     end
   end
@@ -611,7 +611,6 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
   else
     # 2-phase 
     #
-    
     simulations << "dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" "
 
     # set window mapping to always be 'true, use this one'
