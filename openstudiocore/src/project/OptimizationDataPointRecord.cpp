@@ -135,6 +135,7 @@ namespace detail {
                                            prelim.complete(),
                                            prelim.failed(),
                                            prelim.selected(),
+                                           prelim.runType(),
                                            prelim.variableValues(),
                                            responseValues(),
                                            objectiveValues(),

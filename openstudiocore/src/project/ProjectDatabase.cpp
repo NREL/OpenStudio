@@ -62,6 +62,8 @@
 #include <project/DataPoint_Measure_JoinRecord.hpp>
 #include <project/DataPoint_Measure_JoinRecord_Impl.hpp>
 
+#include <analysis/DataPoint.hpp>
+
 #include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/Workflow.hpp>
 
@@ -84,6 +86,8 @@
 #include <QSqlDriver>
 #include <QSqlQuery>
 #include <QSqlError>
+
+using namespace openstudio::analysis;
 
 namespace openstudio {
 namespace project {
@@ -709,6 +713,10 @@ namespace detail {
 
     if (dbv < VersionString("1.0.4")) {
       update_1_0_3_to_1_0_4(dbv);
+    }
+
+    if (dbv < VersionString("1.0.5")) {
+      update_1_0_4_to_1_0_5(dbv);
     }
 
     if ((dbv != osv) || (!dbv.fidelityEqual(osv))) {
@@ -2211,6 +2219,42 @@ namespace detail {
     save();
     test = this->commitTransaction();
     OS_ASSERT(test);
+  }
+
+  void ProjectDatabase_Impl::update_1_0_4_to_1_0_5(const VersionString& startVersion) {
+    bool didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    LOG(Info,"Adding column for run type to " << DataPointRecord::databaseTableName() << ".");
+
+    ProjectDatabase database(this->shared_from_this());
+    QSqlQuery query(*(database.qSqlDatabase()));
+
+    DataPointRecordColumns runTypeColumn("runType");
+    query.prepare(QString::fromStdString(
+        "ALTER TABLE " + DataPointRecord::databaseTableName() + " ADD COLUMN " +
+        runTypeColumn.valueName() + " " + runTypeColumn.valueDescription()));
+    assertExec(query);
+    query.clear();
+
+    save();
+    bool test = this->commitTransaction();
+    OS_ASSERT(test);
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    // By default, set all DataPoints to DataPointRunType::Local.
+    query.prepare(QString::fromStdString("UPDATE " + DataPointRecord::databaseTableName() +
+        " SET runType=:runType"));
+    query.bindValue(":runType",DataPointRunType(DataPointRunType::Local).value());
+    assertExec(query);
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    // HERE -- Add tables for CloudSession storage.
   }
 
   void ProjectDatabase_Impl::setProjectDatabaseRecord(const ProjectDatabaseRecord& projectDatabaseRecord)
