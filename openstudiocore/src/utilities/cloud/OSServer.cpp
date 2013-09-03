@@ -799,7 +799,7 @@ namespace openstudio{
     {
       return false;
     }
-
+/*
     bool OSServer_Impl::connect(const std::string& signal,
                                 const QObject* qObject,
                                 const std::string& slot,
@@ -814,7 +814,7 @@ namespace openstudio{
     {
       return QObject::disconnect(this,signal,receiver,slot);
     }
-
+*/
     void OSServer_Impl::processAvailable()
     {
       bool success = false;
@@ -1678,19 +1678,19 @@ namespace openstudio{
     return getImpl<detail::OSServer_Impl>()->startDownloadDataPoint(analysisUUID, dataPointUUID, downloadPath);
   }
 
-  bool OSServer::connect(const std::string& signal,
+  bool OSServer::connect(const char* signal,
                          const QObject* qObject,
-                         const std::string& slot,
+                         const char* slot,
                          Qt::ConnectionType type) const
   {
-    return getImpl<detail::OSServer_Impl>()->connect(signal,qObject,slot,type);
+    return QObject::connect(getImpl<detail::OSServer_Impl>().get(), signal, qObject, slot, type);
   }
 
   bool OSServer::disconnect(const char* signal,
                             const QObject* receiver,
                             const char* slot) const
   {
-    return getImpl<detail::OSServer_Impl>()->disconnect(signal,receiver,slot);
+    return QObject::disconnect(getImpl<detail::OSServer_Impl>().get(), signal, receiver, slot);
   }
 
 } // openstudio

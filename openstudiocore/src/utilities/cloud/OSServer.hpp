@@ -159,9 +159,9 @@ namespace openstudio{
     //@{
 
     /** Connect signal from this OSServer to slot on qObject. */
-    bool connect(const std::string& signal,
+    bool connect(const char* signal,
                  const QObject* qObject,
-                 const std::string& slot,
+                 const char* slot,
                  Qt::ConnectionType type = Qt::AutoConnection) const;
 
     /** Disconnect signal from this OSServer to slot on receiver. */
