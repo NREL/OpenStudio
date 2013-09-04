@@ -28,6 +28,7 @@
 
 #include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/JSON.hpp>
+#include <runmanager/lib/RunManager.hpp>
 
 #include <utilities/math/FloatCompare.hpp>
 
@@ -438,7 +439,7 @@ namespace detail {
     }
   }
 
-  bool DataPoint_Impl::updateFromJSON(const std::string& json) {
+  bool DataPoint_Impl::updateFromJSON(const std::string& json, boost::optional<runmanager::RunManager>& runManager) {
 
     if (complete() || !directory().empty()) {
       LOG(Info,"Cannot update this DataPoint from JSON because it appears to have results already. "
@@ -446,11 +447,12 @@ namespace detail {
       return false;
     }
 
-    return this->updateFromJSON(loadJSON(json));
+    return this->updateFromJSON(loadJSON(json),runManager);
   }
 
-  bool DataPoint_Impl::updateFromJSON(const AnalysisJSONLoadResult& loadResult) {
-
+  bool DataPoint_Impl::updateFromJSON(const AnalysisJSONLoadResult& loadResult, 
+                                      boost::optional<runmanager::RunManager>& runManager) 
+  {
     if (loadResult.analysisObject) {
       if (OptionalDataPoint loaded = loadResult.analysisObject->optionalCast<DataPoint>()) {
         if (loaded->uuid() == uuid()) {
@@ -466,7 +468,10 @@ namespace detail {
           // do not pull file references over since they are not generally available for loading
           // do pull job data over because it contains errors and warnings
           m_topLevelJob = loaded->topLevelJob();
-          // HERE -- need to update top level job in RunManager database so errors and warnings get saved
+          if (runManager) {
+            // HERE -- job not in runManager yet, directory().empty(), no local copy of files yet
+            runManager->updateJobs(std::vector<runmanager::Job>(1u,*m_topLevelJob));
+          }
           OS_ASSERT(m_topLevelJob);
           m_tags = loaded->tags();
           m_outputAttributes = loaded->outputAttributes();
@@ -488,7 +493,7 @@ namespace detail {
     return false;
   }
 
-  bool DataPoint_Impl::updateDetails() {
+  bool DataPoint_Impl::updateDetails(boost::optional<runmanager::RunManager>& runManager) {
     if (directory().empty()) {
       LOG(Info,"No directory set for this DataPoint.");
       return false;
@@ -506,8 +511,11 @@ namespace detail {
     // TODO: Delete zip file once extracted. Leave for now for debugging.
 
     // fix up topLevelJob
-    // HERE -- need to update file paths in topLevelJob/RunManager database so the following 
-    // file references will be valid
+    OS_ASSERT(m_topLevelJob);
+    if (runManager) {
+      // HERE -- files are now in directory(), need to update paths
+      runManager->updateJobs(std::vector<runmanager::Job>(1u,*m_topLevelJob));
+    }
 
     // get file references for
     //   m_osmInputData
@@ -1147,12 +1155,12 @@ void DataPoint::deleteTag(const std::string& tagName) {
   getImpl<detail::DataPoint_Impl>()->deleteTag(tagName);
 }
 
-bool DataPoint::updateFromJSON(const std::string& json) {
-  return getImpl<detail::DataPoint_Impl>()->updateFromJSON(json);
+bool DataPoint::updateFromJSON(const std::string& json, boost::optional<runmanager::RunManager>& runManager) {
+  return getImpl<detail::DataPoint_Impl>()->updateFromJSON(json,runManager);
 }
 
-bool DataPoint::updateDetails() {
-  return getImpl<detail::DataPoint_Impl>()->updateDetails();
+bool DataPoint::updateDetails(boost::optional<runmanager::RunManager>& runManager) {
+  return getImpl<detail::DataPoint_Impl>()->updateDetails(runManager);
 }
 
 void DataPoint::clearFileDataFromCache() const {

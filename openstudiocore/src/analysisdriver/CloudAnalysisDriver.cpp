@@ -22,6 +22,8 @@
 
 #include <analysis/Analysis.hpp>
 
+#include <runmanager/lib/RunManager.hpp>
+
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/System.hpp>
@@ -29,6 +31,7 @@
 #include <boost/foreach.hpp>
 
 using namespace openstudio::analysis;
+using namespace openstudio::runmanager;
 
 namespace openstudio {
 namespace analysisdriver {
@@ -713,7 +716,9 @@ namespace detail {
       std::string json = m_requestJson->lastDataPointJSON();
       DataPoint toUpdate = m_jsonQueue.front();
       m_jsonQueue.pop_front();
-      bool test = toUpdate.updateFromJSON(json);
+      boost::optional<RunManager> rm = project().runManager();
+      bool test = toUpdate.updateFromJSON(json,rm);
+      project().save();
       emit dataPointComplete(project().analysis().uuid(),toUpdate.uuid());
 
       if (test) {
@@ -761,7 +766,9 @@ namespace detail {
     if (success) {
       DataPoint toUpdate = m_detailsQueue.front();
       m_detailsQueue.pop_front();
-      bool test = toUpdate.updateDetails();
+      boost::optional<RunManager> rm = project().runManager();
+      bool test = toUpdate.updateDetails(rm);
+      project().save();
       emit dataPointDetailsComplete(project().analysis().uuid(),toUpdate.uuid());
       if (!test) {
         logWarning("Incorporation of DataPoint '" + toUpdate.name() + "', " + removeBraces(toUpdate.uuid()) + " files and details failed.");

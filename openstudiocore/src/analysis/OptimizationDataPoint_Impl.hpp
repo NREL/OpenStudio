@@ -118,7 +118,8 @@ namespace detail {
     //@{
 
     /** Update high level results from json. */
-    virtual bool updateFromJSON(const AnalysisJSONLoadResult& loadResult);
+    virtual bool updateFromJSON(const AnalysisJSONLoadResult& loadResult, 
+                                boost::optional<runmanager::RunManager>& runManager);
 
     //@}
     /** @name Protected in or Absent from Public Class */

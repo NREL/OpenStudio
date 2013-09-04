@@ -39,6 +39,7 @@ class Tag;
 
 namespace runmanager {
   class Job;
+  class RunManager;
 }
 
 namespace model {
@@ -258,11 +259,11 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   //@{
 
   /** Update high level results from json. */
-  bool updateFromJSON(const std::string& json);
+  bool updateFromJSON(const std::string& json, boost::optional<runmanager::RunManager>& runManager);
 
   /** Whoever downloaded the zip file should have setDirectory(), and had the file placed in
    *  directory() / toPath("dataPoint.zip"). */
-  bool updateDetails();
+  bool updateDetails(boost::optional<runmanager::RunManager>& runManager);
 
   /** Clear model, workspace, and sqlFile from cache. */
   void clearFileDataFromCache() const;

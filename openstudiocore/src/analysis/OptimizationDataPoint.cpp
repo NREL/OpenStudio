@@ -159,10 +159,10 @@ namespace detail {
     m_objectiveValues.clear();
   }
 
-  bool OptimizationDataPoint_Impl::updateFromJSON(const AnalysisJSONLoadResult& loadResult) {
+  bool OptimizationDataPoint_Impl::updateFromJSON(const AnalysisJSONLoadResult& loadResult, boost::optional<runmanager::RunManager>& runManager) {
     if (loadResult.analysisObject) {
       if (OptionalOptimizationDataPoint loaded = loadResult.analysisObject->optionalCast<OptimizationDataPoint>()) {
-        bool result = DataPoint_Impl::updateFromJSON(loadResult);
+        bool result = DataPoint_Impl::updateFromJSON(loadResult,runManager);
         if (result) {
           m_objectiveValues = loaded->objectiveValues();
         }
