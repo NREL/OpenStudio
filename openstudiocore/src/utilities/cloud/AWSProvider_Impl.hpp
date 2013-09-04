@@ -158,7 +158,21 @@ namespace detail{
 
     mutable bool m_validSecretKey;
 
-    std::string m_ami;
+    bool m_userAgreementSigned;
+
+    unsigned m_numWorkers;
+
+    void setNumWorkers(const unsigned numWorkers);
+
+    void clearErrorsAndWarnings() const;
+
+    mutable std::vector<std::string> m_errors;
+
+    mutable std::vector<std::string> m_warnings;
+
+    void logError(const std::string& error) const;
+
+    void logWarning(const std::string& warning) const;
   };
 
 } // detail;

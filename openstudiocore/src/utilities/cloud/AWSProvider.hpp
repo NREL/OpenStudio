@@ -34,6 +34,8 @@ namespace openstudio{
     /// default constructor
     AWSProvider();
 
+    unsigned numWorkers();
+
     //@}
     /** @name Destructors */
     //@{

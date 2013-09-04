@@ -41,7 +41,8 @@ namespace openstudio{
       : CloudProvider_Impl(),
         m_validAccessKey(false),
         m_validSecretKey(false),
-        m_ami("ami-d0f89fb9")
+        m_userAgreementSigned(false),
+        m_numWorkers(0)
     {
       if (loadCredentials()) {
         validateCredentials();
@@ -55,16 +56,17 @@ namespace openstudio{
 
     std::string AWSProvider_Impl::userAgreementText() const
     {
-      return std::string();
+      return "NREL is not responsible for any charges you may incur as a result of using the OpenStudio suite with Amazon Web Services.";
     }
 
     bool AWSProvider_Impl::userAgreementSigned() const
     {
-      return false;
+      return m_userAgreementSigned;
     }
 
     void AWSProvider_Impl::signUserAgreement(bool agree)
     {
+      m_userAgreementSigned = agree;
     }
 
     bool AWSProvider_Impl::internetAvailable() const
@@ -136,7 +138,7 @@ namespace openstudio{
 
     unsigned AWSProvider_Impl::numWorkers() const
     {
-      return 0;
+      return m_numWorkers;
     }
 
     bool AWSProvider_Impl::startWorkers()
@@ -167,6 +169,29 @@ namespace openstudio{
     std::vector<std::string> AWSProvider_Impl::warnings() const
     {
       return std::vector<std::string>();
+    }
+
+    void AWSProvider_Impl::setNumWorkers(const unsigned numWorkers)
+    {
+      m_numWorkers = numWorkers;
+    }
+     
+    void AWSProvider_Impl::clearErrorsAndWarnings() const
+    {
+      m_errors.clear();
+      m_warnings.clear();
+    }
+
+    void AWSProvider_Impl::logError(const std::string& error) const
+    {
+      m_errors.push_back(error);
+      LOG(Error, error);
+    }
+
+    void AWSProvider_Impl::logWarning(const std::string& warning) const
+    {
+      m_warnings.push_back(warning);
+      LOG(Warn, warning);
     }
 
 
@@ -261,6 +286,10 @@ namespace openstudio{
   AWSProvider::AWSProvider()
     : CloudProvider(boost::shared_ptr<detail::AWSProvider_Impl>(new detail::AWSProvider_Impl()))
   {
+  }
+
+  unsigned AWSProvider::numWorkers() {
+    return getImpl<detail::AWSProvider_Impl>()->numWorkers();
   }
 
 } // openstudio
