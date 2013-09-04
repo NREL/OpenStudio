@@ -146,6 +146,7 @@ SET( ${target_name}_moc
   ../shared_gui_components/BuildingComponentDialogCentralWidget.hpp
   ../shared_gui_components/BusyWidget.hpp
   ../shared_gui_components/Buttons.hpp
+  ../shared_gui_components/CloudDialog.hpp
   ../shared_gui_components/CollapsibleComponent.hpp
   ../shared_gui_components/CollapsibleComponentHeader.hpp
   ../shared_gui_components/CollapsibleComponentList.hpp

@@ -441,14 +441,13 @@ void PatApp::on_closeBclDlg()
 void PatApp::openCloudDlg()
 {
   if(!m_cloudDialog){
-    m_cloudDialog = new CloudDialog(mainWindow);
+    m_cloudDialog = new CloudDialog();
 
     bool isConnected = connect(m_cloudDialog, SIGNAL(rejected()),
                                this, SLOT(on_closeBclDlg()));
     OS_ASSERT(isConnected);
   }
   if(m_cloudDialog && !m_cloudDialog->isVisible()){
-    m_cloudDialog->setGeometry(mainWindow->geometry());
     m_cloudDialog->show();
   }
 }
