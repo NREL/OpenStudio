@@ -92,6 +92,7 @@ class DistrictCooling;
 class DistrictHeating;
 class ElectricEquipment;
 class EvaporativeCoolerDirectResearchSpecial;
+class EvaporativeFluidCoolerSingleSpeed;
 class ExteriorLights;
 class FanConstantVolume;
 class FanOnOff;
@@ -118,6 +119,7 @@ class Meter;
 class Node;
 class OtherEquipment;
 class OutsideSurfaceConvectionAlgorithm;
+class OutputControlReportingTolerances;
 class OutputVariable;
 class People;
 class PipeAdiabatic;
@@ -372,6 +374,8 @@ class ENERGYPLUS_API ForwardTranslator {
   
   boost::optional<IdfObject> translateElectricEquipment( model::ElectricEquipment & modelObject );
 
+  boost::optional<IdfObject> translateEvaporativeFluidCoolerSingleSpeed( model::EvaporativeFluidCoolerSingleSpeed & modelObject );
+  
   boost::optional<IdfObject> translateExteriorLights(model::ExteriorLights& modelObject);
 
   boost::optional<IdfObject> translateFanConstantVolume( model::FanConstantVolume & modelObject );
@@ -425,6 +429,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateOtherEquipment(model::OtherEquipment& modelObject);
 
   boost::optional<IdfObject> translateOutsideSurfaceConvectionAlgorithm( model::OutsideSurfaceConvectionAlgorithm & modelObject );
+
+  boost::optional<IdfObject> translateOutputControlReportingTolerances( model::OutputControlReportingTolerances & modelObject );
 
   boost::optional<IdfObject> translateOutputVariable( model::OutputVariable & modelObject );
 

@@ -44,6 +44,7 @@ namespace openstudio {
     static void testExceptions2();
     static void testExceptions3();
     static void testExceptions4();
+    static void testExceptions5();
   };
 
 } // openstudio

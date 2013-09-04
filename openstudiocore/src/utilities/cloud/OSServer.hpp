@@ -60,6 +60,12 @@ namespace openstudio{
     std::vector<UUID> projectUUIDs(int msec=30000); 
     std::vector<UUID> lastProjectUUIDs() const; 
 
+    bool createProject(const UUID& projectUUID, int msec=30000); 
+    bool lastCreateProjectSuccess() const; 
+
+    bool deleteProject(const UUID& projectUUID, int msec=30000); 
+    bool lastDeleteProjectSuccess() const; 
+
     std::vector<UUID> analysisUUIDs(const UUID& projectUUID, int msec=30000); 
     std::vector<UUID> lastAnalysisUUIDs() const; 
 
@@ -74,6 +80,9 @@ namespace openstudio{
 
     bool start(const UUID& analysisUUID, int msec=30000);
     bool lastStartSuccess() const;
+
+    bool isAnalysisQueued(const UUID& analysisUUID, int msec=30000);
+    bool lastIsAnalysisQueued() const;
 
     bool isAnalysisRunning(const UUID& analysisUUID, int msec=30000);
     bool lastIsAnalysisRunning() const;
@@ -113,6 +122,10 @@ namespace openstudio{
 
     bool requestProjectUUIDs(); 
 
+    bool requestCreateProject(const UUID& projectUUID); 
+
+    bool requestDeleteProject(const UUID& projectUUID); 
+
     bool requestAnalysisUUIDs(const UUID& projectUUID); 
 
     bool startPostAnalysisJSON(const UUID& projectUUID, const std::string& analysisJSON);
@@ -122,6 +135,8 @@ namespace openstudio{
     bool startUploadAnalysisFiles(const UUID& analysisUUID, const openstudio::path& analysisZipFile);
 
     bool requestStart(const UUID& analysisUUID);
+
+    bool requestIsAnalysisQueued(const UUID& analysisUUID);
 
     bool requestIsAnalysisRunning(const UUID& analysisUUID);
 
