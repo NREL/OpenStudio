@@ -546,22 +546,40 @@ namespace openstudio{
       if (exists(analysisZipFile)){
 
         QString id = toQString(removeBraces(analysisUUID));
-        QUrl url(m_url.toString().append("/analyses/").append(id).append("/upload.json")); // DLM: is this right?
+        QUrl url(m_url.toString().append("/analyses/").append(id).append("/upload.json")); 
 
         QFile file(toQString(analysisZipFile));
-        QByteArray postData = file.readAll().toBase64(); // DLM: is this right?  
+        if (file.open(QIODevice::ReadOnly)){
+          QByteArray data = file.readAll();
+          QByteArray data64 = data.toBase64(); // DLM: is this right?
+          file.close();
 
-        QNetworkRequest request(url);
-        //request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-zip-compressed"); // DLM: is this right?
-        request.setHeader(QNetworkRequest::ContentLengthHeader, postData.size()); // DLM: is this right?
+          QVariantMap fileMap;
+          fileMap["data"] = data64;
 
-        m_networkReply = m_networkAccessManager->post(request, postData);
+          QVariantMap map;
+          map["file"] = fileMap;
 
-        bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processUploadAnalysisFiles()));
-        OS_ASSERT(test);
+          bool test;
+          QJson::Serializer serializer;
+          QByteArray json = serializer.serialize(map, &test);
+          if (test){
 
-        return true;
+            QByteArray postData;  
+            postData.append(json); 
 
+            QNetworkRequest request(url);
+            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+            request.setHeader(QNetworkRequest::ContentLengthHeader, postData.size()); // DLM: is this right?
+
+            m_networkReply = m_networkAccessManager->post(request, postData);
+
+            bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processUploadAnalysisFiles()));
+            OS_ASSERT(test);
+
+            return true;
+          }
+        }
       }else{
         logError("File does not exist");
       }
