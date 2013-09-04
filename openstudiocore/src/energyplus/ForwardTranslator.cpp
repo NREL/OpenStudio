@@ -334,10 +334,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   ModelObjectMap::const_iterator objInMap = m_map.find( modelObject.handle() );
   if( objInMap != m_map.end() )
   {
-    if (modelObject.iddObject().type().value() == openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam ) {
-      retVal = boost::optional<IdfObject>(objInMap->second);
-    }
-    
     return boost::optional<IdfObject>(objInMap->second);
   }
 
