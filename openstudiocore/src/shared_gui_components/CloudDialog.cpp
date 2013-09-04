@@ -32,6 +32,7 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QStackedWidget>
 
@@ -85,6 +86,7 @@ void CloudDialog::createWidgets()
 
   QHBoxLayout * mainLoginLayout = new QHBoxLayout;
   mainLoginLayout->setContentsMargins(QMargins(0,0,0,0));
+  mainLoginLayout->setSpacing(5);
 
   QWidget * loginPageWidget = new QWidget;
   loginPageWidget->setLayout(mainLoginLayout);
@@ -145,11 +147,14 @@ void CloudDialog::createWidgets()
   isConnected = connect(m_iAcceptCheckBox, SIGNAL(clicked(bool)),
     this, SLOT(iAcceptClicked(bool)));
   OS_ASSERT(isConnected);
+
+  m_rightLoginLayout->addStretch();
     
   // SETTINGS PAGE
 
   m_mainSettingsLayout = new QVBoxLayout;
   m_mainSettingsLayout->setContentsMargins(QMargins(0,0,0,0));
+  m_mainSettingsLayout->setSpacing(5);
 
   QWidget * settingsPageWidget = new QWidget;
   settingsPageWidget->setLayout(m_mainSettingsLayout);
@@ -241,10 +246,12 @@ void CloudDialog::on_cancelButton(bool checked)
 
 void CloudDialog::on_okButton(bool checked)
 {
-  QPushButton * pushButton = 0;
 
  if(m_pageStackedWidget->currentIndex() == m_loginPageIdx){
     m_pageStackedWidget->setCurrentIndex(m_settingsPageIdx);
+    // TODO test login settings, pop error and exit if need be
+    //QString error("Error");
+    //QMessageBox::critical(this, "Alert", error);
     this->backButton()->show();
     this->okButton()->setText("Save");
   } else if(m_pageStackedWidget->currentIndex() == m_settingsPageIdx){
@@ -306,8 +313,6 @@ CloudProviderWidget::~CloudProviderWidget()
 {
 }
 
-// TODO add warning dialog
-
 void CloudProviderWidget::createWidgets()
 {
   QHBoxLayout * hLayout = 0;
@@ -344,6 +349,7 @@ void CloudProviderWidget::createWidgets()
 
   hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(5);
   m_rightSettingsLayout->addLayout(hLayout);
 
   m_waitCheckBox = new QCheckBox();
@@ -360,6 +366,7 @@ void CloudProviderWidget::createWidgets()
 
   hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(5);
   m_rightSettingsLayout->addLayout(hLayout);
 
   m_waitLineEdit = new QLineEdit();
@@ -482,6 +489,8 @@ void VagrantProviderWidget::createLoginWidget()
   m_workerPasswordLineEdit->setFixedWidth(EDIT_WIDTH);
   m_leftLoginLayout->addWidget(m_workerPasswordLineEdit);
 
+  m_leftLoginLayout->addStretch();
+
   // RIGHT LOGIN PAGE
 
   // m_rightLoginLayout N/A
@@ -504,6 +513,7 @@ void VagrantProviderWidget::createSettingsWidget()
 
   hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(5);
   m_leftSettingsLayout->addLayout(hLayout);
 
   m_serverDirLineEdit = new QLineEdit();
@@ -517,6 +527,8 @@ void VagrantProviderWidget::createSettingsWidget()
     this, SLOT(serverDirButtonClicked(bool)));
   OS_ASSERT(isConnected);
 
+  hLayout->addStretch();
+
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Server IP");
@@ -524,6 +536,7 @@ void VagrantProviderWidget::createSettingsWidget()
 
   hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(5);
   m_leftSettingsLayout->addLayout(hLayout);
 
   m_serverIpLineEdit = new QLineEdit();
@@ -534,6 +547,8 @@ void VagrantProviderWidget::createSettingsWidget()
   m_serverIp2LineEdit->setFixedWidth(PORT_WIDTH);
   hLayout->addWidget(m_serverIp2LineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
+  hLayout->addStretch();
+
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Worker Dir");
@@ -541,6 +556,7 @@ void VagrantProviderWidget::createSettingsWidget()
 
   hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(5);
   m_leftSettingsLayout->addLayout(hLayout);
 
   m_workerDirLineEdit = new QLineEdit();
@@ -554,6 +570,8 @@ void VagrantProviderWidget::createSettingsWidget()
     this, SLOT(workerDirButtonClicked(bool)));
   OS_ASSERT(isConnected);
 
+  hLayout->addStretch();
+
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Worker IP");
@@ -561,6 +579,7 @@ void VagrantProviderWidget::createSettingsWidget()
 
   hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(5);
   m_leftSettingsLayout->addLayout(hLayout);
 
   m_workerIpLineEdit = new QLineEdit();
@@ -570,6 +589,10 @@ void VagrantProviderWidget::createSettingsWidget()
   m_workerIp2LineEdit = new QLineEdit();
   m_workerIp2LineEdit->setFixedWidth(PORT_WIDTH);
   hLayout->addWidget(m_workerIp2LineEdit,0,Qt::AlignTop | Qt::AlignLeft);
+
+  hLayout->addStretch();
+
+  m_leftSettingsLayout->addStretch();
 
   // RIGHT SETTINGS PAGE
 
@@ -695,6 +718,8 @@ void AmazonProviderWidget::createLoginWidget()
   m_secretKeyLineEdit->setFixedWidth(EDIT_WIDTH);
   m_leftLoginLayout->addWidget(m_selectPrivateKeyLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
+  m_leftLoginLayout->addStretch();
+
   // RIGHT LOGIN PAGE
 
   // m_rightLoginLayout N/A
@@ -719,6 +744,7 @@ void AmazonProviderWidget::createSettingsWidget()
 
   label = new QLabel;
   label->setFixedWidth(TEXT_WIDTH);
+  label->setFixedHeight(60);
   label->setWordWrap(true);
   label->setText("This is the only region with CloudWatch enabled.  CloudWatch allows you to monitor your cost and performance.  The AWS Management Console provides a dashboard, alarms, and graphs.");
   m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
@@ -756,6 +782,8 @@ void AmazonProviderWidget::createSettingsWidget()
   m_elasticStorageCapacityLineEdit = new QLineEdit();
   m_elasticStorageCapacityLineEdit->setFixedWidth(EDIT_WIDTH);
   m_leftSettingsLayout->addWidget(m_elasticStorageCapacityLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
+
+  m_leftSettingsLayout->addStretch();
 
   // RIGHT SETTINGS PAGE
 
