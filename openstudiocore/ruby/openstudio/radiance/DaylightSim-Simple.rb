@@ -458,18 +458,22 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
 end
 
 def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
-  #if t_verbose == 'v'
-    puts "#{Time.now.getutc}: simulation command: #{t_cmd}"
-  #end        
+  if t_verbose == 'v'
+    puts "#{Time.now.getutc}: simulation commandis: #{t_cmds}"
+  end        
   puts "#{Time.now.getutc}: Executing simulation"
-  tempIO = IO.popen(t_cmd)
-
+  
 
   allValues = []
 
   t_cmds.each do | command | 
+    tempIO = IO.popen(command)
+    temp = tempIO.readlines.to_s
+    tempIO.close
+
     puts "#{Time.now.getutc}: Parsing result"
-    values = []
+    cmdValues = []
+    linenum = 0
     temp.split(/\n/).each do |val|
       line = OpenStudio::Radiance::parseGenDayMtxLine(val)
       if line.size != 8760
