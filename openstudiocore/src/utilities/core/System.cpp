@@ -163,17 +163,16 @@ namespace openstudio{
 
     struct BreakUBlas
     {
-      template <class T> 
-      static bool invertMatrix(matrix<T>& orig, matrix<T>& inverted) { 
+      static bool invertMatrix(matrix<double>& orig, matrix<double>& inverted) { 
         typedef permutation_matrix<std::size_t> pmatrix; 
-        matrix<T> A(orig); 
+        matrix<double> A(orig); 
         pmatrix pm(A.size1()); 
 
         // perform LU-factorization 
         int res = lu_factorize(A,pm); 
         if( res != 0 ) return false; 
 
-        inverted.assign(identity_matrix<T>(A.size1())); 
+        inverted.assign(identity_matrix<double>(A.size1())); 
         lu_substitute(A, pm, inverted); 
   
         return true; 
