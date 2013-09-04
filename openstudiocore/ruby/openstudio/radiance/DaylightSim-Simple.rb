@@ -395,6 +395,63 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     end
   end
 
+  # "three phase" method
+  if t_options.z == true
+
+
+    # TODO actually generate the necessary DMX files
+    # rpg777 this is copy and pasted from the old code
+
+    puts "using three phase method (have you modified your 'mapping.txt' file?)..."
+    binPairs = Array.new
+    matrixGroups = Array.new
+    aziVectorX = ""
+    aziVectorY = ""
+    puts "Using 3-phase method"
+    #do three phase method (views not supported yet) RPG 2012.02.18
+    system("oconv #{t_outPath}/materials/materials.rad #{t_outPath}/materials/materials_vmx.rad model.rad #{t_outPath}/skies/dc.sky > #{t_outPath}/octrees/model_dc.oct")
+    #read DC materials file
+    windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
+    # get materials, compute vectors
+    # plan (2D) only for now
+      #t_space_names_to_calculate.each do |space_name|
+      windowMaps.each do |row|
+          #row[0..-1].each do |azi|
+          matchVmx = /glaz_(.*?)_azi-(.*?)_tn-(.*).vmx/.match(row)
+          space_name = matchVmx[1]
+          aziVector = matchVmx[2]
+          glazingTransmissivity = matchVmx[3]
+          aziAngle = aziVector.to_f * (180 / Math::PI)
+          # swap sin and cos so we get vectors that align with compass headings (which makes sense to this idiot -->(RPG).)
+          aziVectorX = Math::sin(aziVector)
+          aziVectorY = Math::cos(aziVector)
+          viewVectorX = -aziVectorX
+          viewVectorY = -aziVectorY
+          # sanity checks
+          puts "window azimuth: #{aziAngle}"
+          puts "daylight vector (window to sky): #{aziVectorX.round_to_str(2)},#{aziVectorY.round_to_str(2)},0.00"
+          puts "view vector (window to interior): #{viewVectorX.round_to_str(2)},#{viewVectorY.round_to_str(2)},0.00"
+          binPairs << " -b 'kbin(#{viewVectorX.round_to_str(2)},#{viewVectorY.round_to_str(2)},0,0,0,1)' -m glaz_#{space_name}_azi-#{aziVector}_tn-#{glazingTransmissivity}"
+          # compute daylight matri(ces)
+          system("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{t_outPath}/scene/glazing/#{space_name}_glaz_#{aziVector}.rad > #{t_outPath}/window_temp.rad")
+
+          exec_statement("#{perlPrefix}genklemsamp#{perlExtension} #{klemsDensity} -vd #{aziVectorX.round_to_str(2)} #{aziVectorY.round_to_str(2)} 0.00 #{t_outPath}/window_temp.rad \
+          | rcontrib #{klemsDensity} #{tregVars} -m skyglow -fa #{t_outPath}/octrees/model_dc.oct > \
+                         #{t_outPath}/output/dc/merged_space/maps/glaz_#{space_name}_azi-#{aziVector}_tn-#{glazingTransmissivity}.dmx")
+          #end
+      end
+      #end
+    # compute view matri(ces)
+    puts "computing view matri(ces) for merged_space.map..."
+    if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM) #Windows commands
+      exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | rcontrib #{rtrace_args} -I+ -fo #{klemsDensity} #{tregVars} \
+       -o #{t_outPath}/output/dc/merged_space/maps/%s.vmx -m skyglow model_dc.oct")
+    else #UNIX commands
+      exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | rcontrib #{rtrace_args} -n #{t_simCores} -I+ -fa #{klemsDensity} #{tregVars} \
+      -o #{t_outPath}/output/dc/merged_space/maps/%s.vmx #{binPairs} #{t_outPath}/octrees/model_dc.oct")
+    end
+
+  end
 end
 
 def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
@@ -602,12 +659,32 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
     # 3-phase
     #
 
-    # TODO rpg777
-    # for w in windowgroups
-    #  simulations << "closed gendaymtx command for this window group"
-    #  simulations << "open gendaymtx command for this window group"
-    #  build window mapping 
-    # end
+    dmx_mapping_data = []
+
+    # expected file name:
+    Dir.glob("#{t_outPath}/output/dc/merged_space/maps/*.dmx") do |dmx_file|
+      # TODO parse filename here to get these things
+      # @rpg777
+      # azimuth, window_group, blinds_closed = someparsingfunction(dmx_file)
+      azimuth = 1
+      window_group = "group"
+      blinds_closed = false
+
+      simulations << "dctimestep -if -n 8760 \"#{dmx_file}\" \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" "
+      
+      dmx_mapping_data << [azimuth, window_group, blinds_closed]
+    end
+
+    windowMapping = lambda { |index, hour| 
+      data = dmx_mapping_data[index]
+      # TODO are blinds open for this point in space time?
+      # @rpg777
+      # blindsopen = magicalFunction(data[0], data[1], hour)
+      blindsopen = false
+      
+      return data[2] == blindsopen;
+    }
+
   else
     # 2-phase 
     #
