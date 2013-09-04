@@ -99,9 +99,9 @@ def exec_statement(s)
   if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
     s = s.gsub("/", "\\")
   end
-  puts "'#{s}'"
+  puts "#{Time.now.getutc}: '#{s}'"
   result = system(s)
-  puts 
+  puts "#{Time.now.getutc}: completed '#{s}'"
   return result
 end
 
