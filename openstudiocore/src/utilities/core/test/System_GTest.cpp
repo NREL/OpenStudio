@@ -42,6 +42,6 @@ TEST(System, ExceptionHandling)
   System::testExceptions2();
   System::testExceptions3();
   System::testExceptions4();
-
+  System::testExceptions5();
 
 }

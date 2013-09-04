@@ -51,79 +51,108 @@ namespace openstudio{
     virtual ~OSServer();
 
     //@}
-    /** @name Class members */
+    /** @name Blocking class members */
     //@{
 
-    /// Returns true if the server can be reached
-    /// blocking call, clears errors and warnings
-    bool available() const;
+    bool available(int msec=30000);
+    bool lastAvailable() const;
 
-    /// Get a list of all project UUIDs
-    /// blocking call, clears errors and warnings
-    std::vector<UUID> projectUUIDs() const; 
+    std::vector<UUID> projectUUIDs(int msec=30000); 
+    std::vector<UUID> lastProjectUUIDs() const; 
 
-    /// Get a list of all analysis UUIDs
-    /// blocking call, clears errors and warnings
-    std::vector<UUID> analysisUUIDs() const; 
+    bool createProject(const UUID& projectUUID, int msec=30000); 
+    bool lastCreateProjectSuccess() const; 
 
-    /// Send an analysis server view JSON file for analsysis, adds the analyis to project
-    /// projectUUID can be an existing project or a new one
-    /// analysisJSON includes analysis UUID 
-    /// blocking call, clears errors and warnings
-    bool postAnalysisJSON(const UUID& projectUUID, const std::string& analysisJSON) const;
+    bool deleteProject(const UUID& projectUUID, int msec=30000); 
+    bool lastDeleteProjectSuccess() const; 
 
-    /// Send a datapoint server view JSON file for analysis, adds the dataPoint to analysis
-    /// analysisUUID must be an existing analysis
-    /// dataPointJSON includes data point UUID 
-    /// blocking call, clears errors and warnings
-    bool postDataPointJSON(const UUID& analysisUUID, const std::string& dataPointJSON) const;
+    std::vector<UUID> analysisUUIDs(const UUID& projectUUID, int msec=30000); 
+    std::vector<UUID> lastAnalysisUUIDs() const; 
 
-    /// Upload a zip file of all the files needed for analysis
-    /// blocking call, clears errors and warnings
-    // DLM: is the structure of this defined somewhere? 
-    bool uploadAnalysisFiles(const UUID& analysisUUID, const openstudio::path& analysisZipFile);
+    bool postAnalysisJSON(const UUID& projectUUID, const std::string& analysisJSON, int msec=30000);
+    bool lastPostAnalysisJSONSuccess() const;
 
-    /// Send the server a request to start the analysis
-    /// blocking call, clears errors and warnings
-    bool start(const UUID& analysisUUID) const;
+    bool postDataPointJSON(const UUID& analysisUUID, const std::string& dataPointJSON, int msec=30000);
+    bool lastPostDataPointJSONSuccess() const;
 
-    /// Returns true if the analysis is running
-    /// blocking call, clears errors and warnings
-    bool isAnalysisRunning(const UUID& analysisUUID) const;
+    bool uploadAnalysisFiles(const UUID& analysisUUID, const openstudio::path& analysisZipFile, int msec=30000);
+    bool lastUploadAnalysisFilesSuccess() const;
 
-    /// Send the server a request to stop the analysis
-    /// blocking call, clears errors and warnings
-    bool stop(const UUID& analysisUUID) const;
+    bool start(const UUID& analysisUUID, int msec=30000);
+    bool lastStartSuccess() const;
 
-    /// Get a list of all dataPoint UUIDs in the analysis
-    /// blocking call, clears errors and warnings
-    std::vector<UUID> dataPointsJSON(const UUID& analysisUUID) const;
+    bool isAnalysisQueued(const UUID& analysisUUID, int msec=30000);
+    bool lastIsAnalysisQueued() const;
 
-    /// Get a list of all running dataPoint UUIDs in the analysis
-    /// blocking call, clears errors and warnings
-    std::vector<UUID> runningDataPointsJSON(const UUID& analysisUUID) const;
+    bool isAnalysisRunning(const UUID& analysisUUID, int msec=30000);
+    bool lastIsAnalysisRunning() const;
 
-    /// Get a list of all queued dataPoint UUIDs in the analysis
-    /// blocking call, clears errors and warnings
-    std::vector<UUID> queuedDataPointsJSON(const UUID& analysisUUID) const;
+    bool stop(const UUID& analysisUUID, int msec=30000);
+    bool lastStopSuccess() const;
 
-    /// Get a list of all complete dataPoint UUIDs in the analysis
-    /// blocking call, clears errors and warnings 
-    std::vector<UUID> completeDataPointsJSON(const UUID& analysisUUID) const;
+    std::vector<UUID> dataPointUUIDs(const UUID& analysisUUID, int msec=30000);
+    std::vector<UUID> lastDataPointUUIDs() const;
 
-    /// Get a full deserializable JSON of dataPoint
-    /// blocking call, clears errors and warnings 
-    std::string getDataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID) const;
+    std::vector<UUID> runningDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
+    std::vector<UUID> lastRunningDataPointUUIDs() const;
 
-    /// Get a detailed results for dataPoint, will be a zip file of the dataPoint directory
-    /// blocking call, clears errors and warnings 
-    bool downloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath) const;
+    std::vector<UUID> queuedDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
+    std::vector<UUID> lastQueuedDataPointUUIDs() const;
 
-    /// returns errors generated by the last operation
+    std::vector<UUID> completeDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
+    std::vector<UUID> lastCompleteDataPointUUIDs() const;
+
+    std::string dataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID, int msec=30000);
+    std::string lastDataPointJSON() const;
+
+    bool downloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath, int msec=30000);
+    bool lastDownloadDataPointSuccess() const;
+
+    bool waitForFinished(int msec=30000);
+
     std::vector<std::string> errors() const;
     
-    /// returns warnings generated by the last operation
     std::vector<std::string> warnings() const;
+
+    //@}
+    /** @name Non-blocking class members */
+    //@{
+
+    bool requestAvailable();
+
+    bool requestProjectUUIDs(); 
+
+    bool requestCreateProject(const UUID& projectUUID); 
+
+    bool requestDeleteProject(const UUID& projectUUID); 
+
+    bool requestAnalysisUUIDs(const UUID& projectUUID); 
+
+    bool startPostAnalysisJSON(const UUID& projectUUID, const std::string& analysisJSON);
+
+    bool startPostDataPointJSON(const UUID& analysisUUID, const std::string& dataPointJSON);
+
+    bool startUploadAnalysisFiles(const UUID& analysisUUID, const openstudio::path& analysisZipFile);
+
+    bool requestStart(const UUID& analysisUUID);
+
+    bool requestIsAnalysisQueued(const UUID& analysisUUID);
+
+    bool requestIsAnalysisRunning(const UUID& analysisUUID);
+
+    bool requestStop(const UUID& analysisUUID);
+
+    bool requestDataPointUUIDs(const UUID& analysisUUID);
+
+    bool requestRunningDataPointUUIDs(const UUID& analysisUUID);
+
+    bool requestQueuedDataPointUUIDs(const UUID& analysisUUID);
+
+    bool requestCompleteDataPointUUIDs(const UUID& analysisUUID);
+
+    bool requestDataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID);
+
+    bool startDownloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath);
 
     //@}
     /** @name Type Casting */
