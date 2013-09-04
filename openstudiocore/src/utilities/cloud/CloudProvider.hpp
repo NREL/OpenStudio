@@ -42,6 +42,13 @@ namespace openstudio{
 
     virtual ~CloudSettings();
 
+    /** Unique identifier for OSP. */
+    UUID uuid() const;
+
+    /** Unique identifier of version for OSP. (To avoid unnecessary overhead when nothing 
+     *  has changed.) */
+    UUID versionUUID() const;
+
     std::string cloudProviderType() const;
 
     bool loadSettings(bool overwriteExisting = false);
@@ -98,6 +105,13 @@ namespace openstudio{
   public:
 
     virtual ~CloudSession();
+
+    /** Unique identifier for OSP. */
+    UUID uuid() const;
+
+    /** Unique identifier of version for OSP. (To avoid unnecessary overhead when nothing 
+     *  has changed.) */
+    UUID versionUUID() const;
 
     std::string cloudProviderType() const;
 

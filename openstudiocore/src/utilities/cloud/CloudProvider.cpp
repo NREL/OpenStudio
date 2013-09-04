@@ -26,6 +26,8 @@ namespace openstudio{
   namespace detail {
 
     CloudSettings_Impl::CloudSettings_Impl()
+      : m_uuid(createUUID()),
+        m_versionUUID(createUUID())
     {
     }
 
@@ -33,13 +35,39 @@ namespace openstudio{
     {
     }
 
-    CloudSession_Impl::CloudSession_Impl(const std::string& sessionId, const boost::optional<Url>& serverUrl, const std::vector<Url>& workerUrls)
-      : m_sessionId(sessionId), m_serverUrl(serverUrl), m_workerUrls(workerUrls)
+    UUID CloudSettings_Impl::uuid() const {
+      return m_uuid;
+    }
+
+    UUID CloudSettings_Impl::versionUUID() const {
+      return m_versionUUID;
+    }
+
+    void CloudSettings_Impl::onChange() {
+      m_versionUUID = createUUID();
+    }
+
+    CloudSession_Impl::CloudSession_Impl(const std::string& sessionId, 
+                                         const boost::optional<Url>& serverUrl, 
+                                         const std::vector<Url>& workerUrls)
+      : m_uuid(createUUID()),
+        m_versionUUID(createUUID()),
+        m_sessionId(sessionId), 
+        m_serverUrl(serverUrl), 
+        m_workerUrls(workerUrls)
     {
     }
 
     CloudSession_Impl::~CloudSession_Impl()
     {
+    }
+
+    UUID CloudSession_Impl::uuid() const {
+      return m_uuid;
+    }
+
+    UUID CloudSession_Impl::versionUUID() const {
+      return m_versionUUID;
     }
 
     std::string CloudSession_Impl::sessionId() const
@@ -55,11 +83,13 @@ namespace openstudio{
     void CloudSession_Impl::setServerUrl(const Url& serverUrl)
     {
       m_serverUrl = serverUrl;
+      onChange();
     }
 
     void CloudSession_Impl::resetServerUrl()
     {
       m_serverUrl.reset();
+      onChange();
     }
 
     std::vector<Url> CloudSession_Impl::workerUrls() const
@@ -70,11 +100,17 @@ namespace openstudio{
     void CloudSession_Impl::addWorkerUrl(const Url& workerUrl)
     {
       m_workerUrls.push_back(workerUrl);
+      onChange();
     }
 
     void CloudSession_Impl::clearWorkerUrls()
     {
       m_workerUrls.clear();
+      onChange();
+    }
+
+    void CloudSession_Impl::onChange() {
+      m_versionUUID = createUUID();
     }
 
     CloudProvider_Impl::CloudProvider_Impl()
@@ -100,6 +136,14 @@ namespace openstudio{
   {
   }
 
+  UUID CloudSettings::uuid() const {
+    return getImpl<detail::CloudSettings_Impl>()->uuid();
+  }
+
+  UUID CloudSettings::versionUUID() const {
+    return getImpl<detail::CloudSettings_Impl>()->versionUUID();
+  }
+
   std::string CloudSettings::cloudProviderType() const
   {
     return getImpl<detail::CloudSettings_Impl>()->cloudProviderType();
@@ -123,6 +167,14 @@ namespace openstudio{
 
   CloudSession::~CloudSession()
   {
+  }
+
+  UUID CloudSession::uuid() const {
+    return getImpl<detail::CloudSession_Impl>()->uuid();
+  }
+
+  UUID CloudSession::versionUUID() const {
+    return getImpl<detail::CloudSession_Impl>()->versionUUID();
   }
 
   std::string CloudSession::cloudProviderType() const

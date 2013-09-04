@@ -23,29 +23,27 @@
 #include <project/ProjectAPI.hpp>
 #include <project/ObjectRecord_Impl.hpp>
 
-// TODO: Delete this include if no derived classes (and no CloudSessionRecordType enum).
 #include <project/CloudSessionRecord.hpp>
 
 namespace openstudio {
-namespace NAMESPACE {
-  class CloudSession;
-}
+
+class CloudSession;
+
 namespace project {
+
+class UrlRecord;
 
 namespace detail {
 
-  /** CloudSessionRecord_Impl is a ObjectRecord_Impl that is the implementation class for CloudSessionRecord.*/
+  /** CloudSessionRecord_Impl is a ObjectRecord_Impl that is the implementation class for 
+   *  CloudSessionRecord.*/
   class PROJECT_API CloudSessionRecord_Impl : public ObjectRecord_Impl {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    // TODO: May need to remove type enum if CloudSession is a leaf of the inheritance tree.
-    // TODO: Replace ProjectDatabase& database with parent Record and/or add more 
-    // construtors to match public class.
-    // TODO: Find-replace on 'NAMESPACE'.
-    CloudSessionRecord_Impl(const NAMESPACE::CloudSession& cloudSession,
+    CloudSessionRecord_Impl(const CloudSession& cloudSession,
                             const CloudSessionRecordType& cloudSessionRecordType,
                             ProjectDatabase& database);
 
@@ -83,11 +81,13 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // ADD METHODS FOR RETRIEVING PARENT, CHILD, AND RESOURCE RECORDS AS DESIRED
+    std::string sessionId() const;
 
-    // ADD METHODS FOR GETTING/SETTING SPECIFIC DATA FIELDS AS DESIRED
+    boost::optional<UrlRecord> serverUrlRecord() const;
 
-    NAMESPACE::CloudSession cloudSession() const;
+    std::vector<UrlRecord> workerUrlRecords() const;
+
+    CloudSession cloudSession() const;
 
     //@}
    protected:
@@ -109,10 +109,13 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.project.CloudSessionRecord");
 
-    // TODO: Delete enums if no derived classes.
     CloudSessionRecordType m_cloudSessionRecordType;
+    std::string m_sessionId;
+    boost::optional<int> m_serverUrlRecordId;
 
     CloudSessionRecordType m_lastCloudSessionRecordType;
+    std::string m_lastSessionId;
+    boost::optional<int> m_lasServerUrlRecordId;
   };
 
 } // detail

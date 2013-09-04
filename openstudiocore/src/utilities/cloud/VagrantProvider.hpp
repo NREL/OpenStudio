@@ -107,7 +107,9 @@ namespace openstudio{
     //@{
 
     //constructor
-    VagrantSession(const std::string& sessionId, const boost::optional<Url>& serverUrl, const std::vector<Url>& workerUrls);
+    VagrantSession(const std::string& sessionId, 
+                   const boost::optional<Url>& serverUrl, 
+                   const std::vector<Url>& workerUrls);
     
     //@}
     /** @name Destructors */

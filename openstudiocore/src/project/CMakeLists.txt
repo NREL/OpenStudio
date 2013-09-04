@@ -26,15 +26,30 @@ SET( ${target_name}_src
   AttributeRecord.hpp
   AttributeRecord_Impl.hpp
   AttributeRecord.cpp
+  CloudSessionRecord.hpp
+  CloudSessionRecord_Impl.hpp
+  CloudSessionRecord.cpp
+  CloudSettingsRecord.hpp
+  CloudSettingsRecord_Impl.hpp
+  CloudSettingsRecord.cpp
   FileReferenceRecord.hpp
   FileReferenceRecord_Impl.hpp
   FileReferenceRecord.cpp
   TagRecord.hpp
   TagRecord_Impl.hpp
   TagRecord.cpp
+  UrlRecord.hpp
+  UrlRecord_Impl.hpp
+  UrlRecord.cpp
   URLSearchPathRecord.hpp
   URLSearchPathRecord_Impl.hpp
   URLSearchPathRecord.cpp
+  VagrantSessionRecord.hpp
+  VagrantSessionRecord_Impl.hpp
+  VagrantSessionRecord.cpp
+  VagrantSettingsRecord.hpp
+  VagrantSettingsRecord_Impl.hpp
+  VagrantSettingsRecord.cpp
 
   # runmanager
 
@@ -152,9 +167,14 @@ SET( ${target_name}_moc
   # utilities
 
   AttributeRecord_Impl.hpp
+  CloudSessionRecord_Impl.hpp
+  CloudSettingsRecord_Impl.hpp
   FileReferenceRecord_Impl.hpp
   TagRecord_Impl.hpp
+  UrlRecord_Impl.hpp
   URLSearchPathRecord_Impl.hpp
+  VagrantSessionRecord_Impl.hpp
+  VagrantSettingsRecord_Impl.hpp
 
   # runmanager
 

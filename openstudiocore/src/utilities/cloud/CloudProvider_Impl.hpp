@@ -41,6 +41,13 @@ namespace detail{
 
     virtual ~CloudSettings_Impl();
 
+    /** Unique identifier for OSP. */
+    UUID uuid() const;
+
+    /** Unique identifier of version for OSP. (To avoid unnecessary overhead when nothing 
+     *  has changed.) */
+    UUID versionUUID() const;
+
     virtual std::string cloudProviderType() const = 0;
 
     virtual bool loadSettings(bool overwriteExisting = false) = 0;
@@ -51,27 +58,57 @@ namespace detail{
 
     CloudSettings_Impl();
 
-  private:
+    /** Changes the versionUUID. */
+    void onChange();
 
+  private:
     // configure logging
     REGISTER_LOGGER("utilities.cloud.CloudSettings");
+
+    UUID m_uuid;
+    UUID m_versionUUID;
   };
 
   /// CloudSession_Impl is an abstract base class for the information needed to identify and reconnect to compute nodes started by a previous CloudProvider.
   class UTILITIES_API CloudSession_Impl {
-  public:
+   public:
+
     virtual ~CloudSession_Impl();
+
+    /** Unique identifier for OSP. */
+    UUID uuid() const;
+
+    /** Unique identifier of version for OSP. (To avoid unnecessary overhead when nothing 
+     *  has changed.) */
+    UUID versionUUID() const;
+
     virtual std::string cloudProviderType() const = 0;
+    
     std::string sessionId() const;
+    
     boost::optional<Url> serverUrl() const;
+    
     void setServerUrl(const Url& serverUrl);
+    
     void resetServerUrl();
+    
     std::vector<Url> workerUrls() const;
+    
     void addWorkerUrl(const Url& workerUrl);
+    
     void clearWorkerUrls();
-  protected:
-    CloudSession_Impl(const std::string& sessionId, const boost::optional<Url>& serverUrl, const std::vector<Url>& workerUrls);
-  private:
+  
+   protected:
+    CloudSession_Impl(const std::string& sessionId, 
+                      const boost::optional<Url>& serverUrl, 
+                      const std::vector<Url>& workerUrls);
+
+    /** Changes the versionUUID. */
+    void onChange();
+
+   private:
+    UUID m_uuid;
+    UUID m_versionUUID;
     std::string m_sessionId;
     boost::optional<Url> m_serverUrl;
     std::vector<Url> m_workerUrls;

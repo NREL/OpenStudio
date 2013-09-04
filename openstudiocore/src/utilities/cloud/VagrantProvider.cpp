@@ -90,6 +90,8 @@ namespace openstudio{
         m_password = settings.value("password").toString().toStdString();
       }
 
+      onChange();
+
       // if succeeded we will have values for everything
       bool result = !(m_serverPath.empty() || m_serverUrl.isEmpty() || 
                       m_workerPath.empty() || m_workerUrl.isEmpty() ||
@@ -137,7 +139,7 @@ namespace openstudio{
       return true;
     }
 
-    openstudio::path VagrantSettings_Impl::serverPath()const
+    openstudio::path VagrantSettings_Impl::serverPath() const
     {
       return m_serverPath;
     }
@@ -145,6 +147,7 @@ namespace openstudio{
     void VagrantSettings_Impl::setServerPath(const openstudio::path& serverPath)
     {
       m_serverPath = serverPath;
+      onChange();
     }
  
     openstudio::Url VagrantSettings_Impl::serverUrl() const
@@ -155,6 +158,7 @@ namespace openstudio{
     void VagrantSettings_Impl::setServerUrl(const openstudio::Url& serverUrl)
     {
       m_serverUrl = serverUrl;
+      onChange();
     }
 
     openstudio::path VagrantSettings_Impl::workerPath() const
@@ -165,6 +169,7 @@ namespace openstudio{
     void VagrantSettings_Impl::setWorkerPath(const openstudio::path& workerPath)
     {
       m_workerPath = workerPath;
+      onChange();
     }
 
     openstudio::Url VagrantSettings_Impl::workerUrl() const
@@ -175,6 +180,7 @@ namespace openstudio{
     void VagrantSettings_Impl::setWorkerUrl(const openstudio::Url& workerUrl)
     {
       m_workerUrl = workerUrl;
+      onChange();
     }
 
     bool VagrantSettings_Impl::haltOnStop() const
@@ -185,6 +191,7 @@ namespace openstudio{
     void VagrantSettings_Impl::setHaltOnStop(bool haltOnStop)
     {
       m_haltOnStop = haltOnStop;
+      onChange();
     }
 
     std::string VagrantSettings_Impl::username() const
@@ -195,6 +202,7 @@ namespace openstudio{
     void VagrantSettings_Impl::setUsername(const std::string& username)
     {
       m_username = username;
+      onChange();
     }
 
     std::string VagrantSettings_Impl::password() const
@@ -205,6 +213,7 @@ namespace openstudio{
     void VagrantSettings_Impl::setPassword(const std::string& password)
     {
       m_password = password;
+      // not stored in OSP, so no onChange()
     }
 
 

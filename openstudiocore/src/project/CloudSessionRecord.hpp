@@ -24,10 +24,12 @@
 #include <project/ObjectRecord.hpp>
 
 namespace openstudio {
-namespace NAMESPACE {
-  class CloudSession;
-}
+
+class CloudSession;
+
 namespace project {
+
+class UrlRecord;
 
 namespace detail {
 
@@ -35,18 +37,17 @@ namespace detail {
 
 } // detail
 
-// TODO: Populate or delete this enumeration if there are/are not any derived types, respectively.
 /** \class CloudSessionRecordType
  *  \brief ObjectRecord types that derive from CloudSessionRecord.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
  *  macro call is:
  *  \code
 OPENSTUDIO_ENUM(CloudSessionRecordType,
-    ((CloudSessionRecordDerivedRecord1))
+    ((VagrantSessionRecord))
 );
  *  \endcode */
 OPENSTUDIO_ENUM(CloudSessionRecordType,
-    ((CloudSessionRecordDerivedRecord1))
+    ((VagrantSessionRecord))
 );
 
 /** \class CloudSessionRecordColumns
@@ -62,8 +63,9 @@ OPENSTUDIO_ENUM(CloudSessionRecordColumns,
   ((timestampCreate)(TEXT)(5))
   ((timestampLast)(TEXT)(6))
   ((uuidLast)(TEXT)(7))
-  // TODO: Add Columns to Record Class (and Derived-Class)-Specific Data.
   ((cloudSessionRecordType)(INTEGER)(8))
+  ((sessionId)(TEXT)(9))
+  ((serverUrlRecordId)(TEXT)(10))
 );
 
 /** CloudSessionRecord is a ObjectRecord. */
@@ -77,32 +79,23 @@ class PROJECT_API CloudSessionRecord : public ObjectRecord {
   /** @name Constructors and Destructors */
   //@{
 
-  // TODO: Delete if CloudSession is abstract, make private if CloudSession is concrete and has derived classes.
-  // TODO: Replace ProjectDatabase& database (or add another object if it is ok for CloudSessionRecord to be and orphan) with const& to parent Record if the Table contains a parent id.
-  // TODO: Find-replace on 'NAMESPACE'.
-  CloudSessionRecord(const NAMESPACE::CloudSession& cloudSession, ProjectDatabase& database);
-
-  // TODO: Delete if CloudSession is abstract, make private if CloudSession is concrete and has derived classes.
-  CloudSessionRecord(const QSqlQuery& query, ProjectDatabase& database);
-
   virtual ~CloudSessionRecord() {}
 
   //@}
 
-  // TODO: Add a call to createTable in ProjectDatabase_Impl::initialize().
   static std::string databaseTableName();
 
-  // TODO: Add a call to this updatePathData method in ProjectDatabase_Impl::updatePathData.
   static void updatePathData(ProjectDatabase database,
                              const openstudio::path& originalBase,
                              const openstudio::path& newBase);
 
   /** Get CloudSessionRecord from query. Returned object will be of the correct
    *  derived type. */
-  static boost::optional<CloudSessionRecord> factoryFromQuery(const QSqlQuery& query, ProjectDatabase& database);
+  static boost::optional<CloudSessionRecord> factoryFromQuery(const QSqlQuery& query, 
+                                                              ProjectDatabase& database);
 
-  // TODO: Delete if no derived classes.
-  static CloudSessionRecord factoryFromCloudSession(const NAMESPACE::CloudSession& cloudSession, ProjectDatabase& database);
+  static CloudSessionRecord factoryFromCloudSession(const CloudSession& cloudSession, 
+                                                    ProjectDatabase& database);
 
   static std::vector<CloudSessionRecord> getCloudSessionRecords(ProjectDatabase& database);
 
@@ -111,11 +104,13 @@ class PROJECT_API CloudSessionRecord : public ObjectRecord {
   /** @name Getters */
   //@{
 
-  // ADD METHODS FOR RETRIEVING PARENT, CHILD, AND RESOURCE RECORDS AS DESIRED
+  std::string sessionId() const;
 
-  // ADD METHODS FOR GETTING/SETTING SPECIFIC DATA FIELDS AS DESIRED
+  boost::optional<UrlRecord> serverUrlRecord() const;
 
-  NAMESPACE::CloudSession cloudSession() const;
+  std::vector<UrlRecord> workerUrlRecords() const;
+
+  CloudSession cloudSession() const;
 
   //@}
  protected:

@@ -570,6 +570,8 @@ namespace detail {
     AlgorithmRecord::updatePathData(other,originalBase,newBase);
     AnalysisRecord::updatePathData(other,originalBase,newBase);
     AttributeRecord::updatePathData(other,originalBase,newBase);
+    CloudSessionRecord::updatePathData(other,originalBase,newBase);
+    CloudSettingsRecord::updatePathData(other,originalBase,newBase);
     DataPointRecord::updatePathData(other,originalBase,newBase);
     DataPointValueRecord::updatePathData(other,originalBase,newBase);
     FileReferenceRecord::updatePathData(other,originalBase,newBase);
@@ -577,6 +579,7 @@ namespace detail {
     MeasureRecord::updatePathData(other,originalBase,newBase);
     ProblemRecord::updatePathData(other,originalBase,newBase);
     TagRecord::updatePathData(other,originalBase,newBase);
+    UrlRecord::updatePathData(other,originalBase,newBase);
     URLSearchPathRecord::updatePathData(other,originalBase,newBase);
     OSArgumentRecord::updatePathData(other,originalBase,newBase);
     VariableRecord::updatePathData(other,originalBase,newBase);
@@ -912,6 +915,8 @@ namespace detail {
     createTable<AlgorithmRecord>();
     createTable<AnalysisRecord>();
     createTable<AttributeRecord>();
+    createTable<CloudSessionRecord>();
+    createTable<CloudSettingsRecrd>();
     createTable<DataPointRecord>();
     createTable<DataPointValueRecord>();
     createTable<FileReferenceRecord>();
@@ -921,6 +926,7 @@ namespace detail {
     createTable<ProjectDatabaseRecord>();
     createTable<TagRecord>();
     createTable<OSArgumentRecord>();
+    createTable<UrlRecord>();
     createTable<URLSearchPathRecord>();
     createTable<VariableRecord>();
     createTable<WorkflowRecord>();
@@ -2253,8 +2259,16 @@ namespace detail {
     save();
     test = this->commitTransaction();
     OS_ASSERT(test);
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
 
-    // HERE -- Add tables for CloudSession storage.
+    createTable<CloudSessionRecord>();
+    createTable<CloudSettingsRecrd>();
+    createTable<UrlRecord>();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);    
   }
 
   void ProjectDatabase_Impl::setProjectDatabaseRecord(const ProjectDatabaseRecord& projectDatabaseRecord)
