@@ -27,6 +27,12 @@
 
 namespace openstudio{
 
+  namespace detail{
+    class VagrantSettings_Impl;
+    class VagrantSession_Impl;
+    class VagrantProvider_Impl;
+  }
+
   /// VagrantSettings is a CloudSettings.
   class UTILITIES_API VagrantSettings : public CloudSettings {
   public:
@@ -35,11 +41,6 @@ namespace openstudio{
 
     // default constructor, loads defaults from settings
     VagrantSettings();
-
-    // constructor
-    VagrantSettings(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
-                    const openstudio::path& workerPath, const openstudio::Url& workerUrl,
-                    bool haltOnStop);
 
     //@}
     /** @name Destructors */
@@ -57,12 +58,42 @@ namespace openstudio{
     //@{
 
     openstudio::path serverPath()const; 
+
+    void setServerPath(const openstudio::path& serverPath);
+
     openstudio::Url serverUrl() const;
+
+    void setServerUrl(const openstudio::Url& serverUrl);
+
     openstudio::path workerPath() const;
+
+    void setWorkerPath(const openstudio::path& workerPath);
+
     openstudio::Url workerUrl() const;
+
+    void setWorkerUrl(const openstudio::Url& workerUrl);
+
     bool haltOnStop() const;
 
+    void setHaltOnStop(bool haltOnStop);
+
+    std::string username() const;
+
+    void setUsername(const std::string& username);
+
+    std::string password() const;
+
+    void setPassword(const std::string& password);
+
     //@}
+
+  protected:
+    
+    VagrantSettings(const boost::shared_ptr<detail::VagrantSettings_Impl>& impl);
+   
+    typedef detail::VagrantSettings_Impl ImplType;
+
+    friend class CloudSettings;
 
   private:
 
@@ -93,6 +124,14 @@ namespace openstudio{
     /** @name Class members */
     //@{
 
+  protected:
+
+    VagrantSession(const boost::shared_ptr<detail::VagrantSession_Impl>& impl);
+    
+    typedef detail::VagrantSession_Impl ImplType;
+
+    friend class CloudSession;
+
   private:
 
   };
@@ -106,11 +145,6 @@ namespace openstudio{
 
     /// default constructor, loads settings
     VagrantProvider();
-
-    /// constructor
-    VagrantProvider(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
-                    const openstudio::path& workerPath, const openstudio::Url& workerUrl,
-                    bool haltOnStop = true);
 
     //@}
     /** @name Destructors */
@@ -131,6 +165,15 @@ namespace openstudio{
     bool terminateComplete() const;
 
     //@}
+
+  protected:
+
+    VagrantProvider(const boost::shared_ptr<detail::VagrantProvider_Impl>& impl);
+    
+    typedef detail::VagrantProvider_Impl ImplType;
+
+    friend class CloudProvider;
+
   private:
 
     // no body on purpose, do not want this generated

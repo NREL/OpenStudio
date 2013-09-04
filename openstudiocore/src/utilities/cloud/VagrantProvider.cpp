@@ -32,13 +32,15 @@ namespace openstudio{
     VagrantSettings_Impl::VagrantSettings_Impl()
       : CloudSettings_Impl()
     {
-      this->loadSettings();
+      this->loadSettings(true);
     }
 
     VagrantSettings_Impl::VagrantSettings_Impl(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
                                                const openstudio::path& workerPath, const openstudio::Url& workerUrl,
-                                               bool haltOnStop)
-      : CloudSettings_Impl(), m_serverPath(serverPath), m_serverUrl(serverUrl), m_workerPath(workerPath), m_workerUrl(workerUrl), m_haltOnStop(haltOnStop)
+                                               bool haltOnStop, const std::string& username, const std::string& password)
+      : CloudSettings_Impl(), m_serverPath(serverPath), m_serverUrl(serverUrl), 
+        m_workerPath(workerPath), m_workerUrl(workerUrl), m_haltOnStop(haltOnStop),
+        m_username(username), m_password(password)
     {
     }
 
@@ -53,19 +55,96 @@ namespace openstudio{
 
     bool VagrantSettings_Impl::loadSettings(bool overwriteExisting)
     {
-      // TODO
-      return false;
+      QSettings settings("OpenStudio", toQString(cloudProviderType()));
+
+      if (overwriteExisting || m_serverPath.empty()){
+        m_serverPath = toPath(settings.value("serverPath").toString());
+      }
+            
+      if (overwriteExisting || m_serverUrl.isEmpty()){
+        m_serverUrl = settings.value("serverUrl").toString();
+      }
+
+      if (overwriteExisting || m_workerPath.empty()){
+        m_workerPath = toPath(settings.value("workerPath").toString());
+      }
+            
+      if (overwriteExisting || m_workerUrl.isEmpty()){
+        m_workerUrl = settings.value("workerUrl").toString();
+      }
+
+      if (overwriteExisting){
+        if (settings.value("haltOnStop").toString() == "Yes"){
+          m_haltOnStop = true;
+        }else{
+          m_haltOnStop = false;
+        }
+      }
+
+      // DLM: i thought we wanted to write these to a file in ~/.ssh?
+      if (overwriteExisting || m_username.empty()){
+        m_username = settings.value("username").toString().toStdString();
+      }
+
+      if (overwriteExisting || m_password.empty()){
+        m_password = settings.value("password").toString().toStdString();
+      }
+
+      // if succeeded we will have values for everything
+      bool result = !(m_serverPath.empty() || m_serverUrl.isEmpty() || 
+                      m_workerPath.empty() || m_workerUrl.isEmpty() ||
+                      m_username.empty() || m_password.empty());
+      return result;
     }
 
     bool VagrantSettings_Impl::saveToSettings(bool overwriteExisting) const
     {
-      // TODO
-      return false;
+      QSettings settings("OpenStudio", toQString(cloudProviderType()));
+
+      if (overwriteExisting || settings.value("serverPath").isNull()){
+        settings.setValue("serverPath", toQString(m_serverPath));
+      }
+
+      if (overwriteExisting || settings.value("serverUrl").isNull()){
+        settings.setValue("serverUrl", m_serverUrl);
+      }
+
+      if (overwriteExisting || settings.value("workerPath").isNull()){
+        settings.setValue("workerPath", toQString(m_workerPath));
+      }
+
+      if (overwriteExisting || settings.value("workerUrl").isNull()){
+        settings.setValue("workerUrl", m_workerUrl);
+      }
+
+      if (overwriteExisting || settings.value("haltOnStop").isNull()){
+        if (m_haltOnStop){
+          settings.setValue("haltOnStop", "Yes");
+        }else{
+          settings.setValue("haltOnStop", "No");
+        }
+      }
+
+      // DLM: i thought we wanted to write these to a file in ~/.ssh?
+      if (overwriteExisting || settings.value("username").isNull()){
+        settings.setValue("username", toQString(m_username));
+      }
+
+      if (overwriteExisting || settings.value("password").isNull()){
+        settings.setValue("password", toQString(m_password));
+      }
+
+      return true;
     }
 
     openstudio::path VagrantSettings_Impl::serverPath()const
     {
       return m_serverPath;
+    }
+
+    void VagrantSettings_Impl::setServerPath(const openstudio::path& serverPath)
+    {
+      m_serverPath = serverPath;
     }
  
     openstudio::Url VagrantSettings_Impl::serverUrl() const
@@ -73,9 +152,19 @@ namespace openstudio{
       return m_serverUrl;
     }
 
+    void VagrantSettings_Impl::setServerUrl(const openstudio::Url& serverUrl)
+    {
+      m_serverUrl = serverUrl;
+    }
+
     openstudio::path VagrantSettings_Impl::workerPath() const
     {
       return m_workerPath;
+    }
+
+    void VagrantSettings_Impl::setWorkerPath(const openstudio::path& workerPath)
+    {
+      m_workerPath = workerPath;
     }
 
     openstudio::Url VagrantSettings_Impl::workerUrl() const
@@ -83,10 +172,41 @@ namespace openstudio{
       return m_workerUrl;
     }
 
+    void VagrantSettings_Impl::setWorkerUrl(const openstudio::Url& workerUrl)
+    {
+      m_workerUrl = workerUrl;
+    }
+
     bool VagrantSettings_Impl::haltOnStop() const
     {
       return m_haltOnStop;
     }
+
+    void VagrantSettings_Impl::setHaltOnStop(bool haltOnStop)
+    {
+      m_haltOnStop = haltOnStop;
+    }
+
+    std::string VagrantSettings_Impl::username() const
+    {
+      return m_username;
+    }
+
+    void VagrantSettings_Impl::setUsername(const std::string& username)
+    {
+      m_username = username;
+    }
+
+    std::string VagrantSettings_Impl::password() const
+    {
+      return m_password;
+    }
+
+    void VagrantSettings_Impl::setPassword(const std::string& password)
+    {
+      m_password = password;
+    }
+
 
     VagrantSession_Impl::VagrantSession_Impl(const std::string& sessionId, const boost::optional<Url>& serverUrl, const std::vector<Url>& workerUrls)
       : CloudSession_Impl(sessionId, serverUrl, workerUrls)
@@ -117,24 +237,6 @@ namespace openstudio{
       openstudio::Application::instance().application();
     }
 
-    VagrantProvider_Impl::VagrantProvider_Impl(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
-                                               const openstudio::path& workerPath, const openstudio::Url& workerUrl,
-                                               bool haltOnStop)
-      : CloudProvider_Impl(),
-        m_vagrantSettings(serverPath, serverUrl, workerPath, workerUrl, haltOnStop),
-        m_vagrantSession(toString(createUUID()), boost::none, std::vector<Url>()),
-        m_startServerProcess(NULL),
-        m_startWorkerProcess(NULL),
-        m_serverStarted(false),
-        m_workerStarted(false),
-        m_serverStopped(false),
-        m_workerStopped(false),
-        m_terminated(false)
-    {
-      //Make sure a QApplication exists
-      openstudio::Application::instance().application();
-    }
-
     VagrantProvider_Impl::~VagrantProvider_Impl()
     {
     }
@@ -151,7 +253,7 @@ namespace openstudio{
 
     bool VagrantProvider_Impl::userAgreementSigned() const
     {
-      QSettings settings("OpenStudio", cloudProviderType());
+      QSettings settings("OpenStudio", toQString(cloudProviderType()));
       QString value = settings.value("userAgreementSigned", "No").toString();
 
       bool result = false;
@@ -170,7 +272,7 @@ namespace openstudio{
       }else{
         value = "No";
       }
-      QSettings settings("OpenStudio", cloudProviderType());
+      QSettings settings("OpenStudio", toQString(cloudProviderType()));
       settings.setValue("userAgreementSigned", value);
     }
 
@@ -224,8 +326,23 @@ namespace openstudio{
 
     bool VagrantProvider_Impl::setSettings(const CloudSettings& settings)
     {
-      // TODO, can't do this if running
-      return false;
+      boost::optional<VagrantSettings> vagrantSettings = settings.optionalCast<VagrantSettings>();
+      if (!vagrantSettings){
+        return false;
+      }
+      if (m_serverStarted){
+        return false;
+      }
+      if (m_workerStarted){
+        return false;
+      }
+      if (m_terminated){
+        return false;
+      }
+      
+      m_vagrantSettings = *vagrantSettings;
+
+      return true;
     }
 
     CloudSession VagrantProvider_Impl::session() const
@@ -235,6 +352,10 @@ namespace openstudio{
 
     bool VagrantProvider_Impl::reconnect(const CloudSession& session)
     {
+      boost::optional<VagrantSession> vagrantSession = session.optionalCast<VagrantSession>();
+      if (!vagrantSession){
+        return false;
+      }
       if (m_serverStarted){
         return false;
       }
@@ -251,9 +372,7 @@ namespace openstudio{
       if (serverUrl){
         OSServer server(*serverUrl);
         if (server.available()){
-          
-// TODO:
-          //m_vagrantSession = session;
+          m_vagrantSession = *vagrantSession;
           return true;
         }
       }
@@ -575,13 +694,13 @@ namespace openstudio{
   VagrantSettings::VagrantSettings()
     : CloudSettings(boost::shared_ptr<detail::VagrantSettings_Impl>(new detail::VagrantSettings_Impl()))
   {
+    OS_ASSERT(getImpl<detail::VagrantSettings_Impl>());
   }
 
-  VagrantSettings::VagrantSettings(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
-                                   const openstudio::path& workerPath, const openstudio::Url& workerUrl,
-                                   bool haltOnStop)
-    : CloudSettings(boost::shared_ptr<detail::VagrantSettings_Impl>(new detail::VagrantSettings_Impl(serverPath, serverUrl, workerPath, workerUrl, haltOnStop)))
+  VagrantSettings::VagrantSettings(const boost::shared_ptr<detail::VagrantSettings_Impl>& impl)
+    : CloudSettings(impl)
   {
+    OS_ASSERT(getImpl<detail::VagrantSettings_Impl>());
   }
 
   VagrantSettings::~VagrantSettings()
@@ -593,9 +712,19 @@ namespace openstudio{
     return getImpl<detail::VagrantSettings_Impl>()->serverPath();
   }
 
+  void VagrantSettings::setServerPath(const openstudio::path& serverPath)
+  {
+    getImpl<detail::VagrantSettings_Impl>()->setServerPath(serverPath);
+  }
+
   openstudio::Url VagrantSettings::serverUrl() const
   {
     return getImpl<detail::VagrantSettings_Impl>()->serverUrl();
+  }
+
+  void VagrantSettings::setServerUrl(const openstudio::Url& serverUrl)
+  {
+    getImpl<detail::VagrantSettings_Impl>()->setServerUrl(serverUrl);
   }
 
   openstudio::path VagrantSettings::workerPath() const
@@ -603,9 +732,19 @@ namespace openstudio{
     return getImpl<detail::VagrantSettings_Impl>()->workerPath();
   }
 
+  void VagrantSettings::setWorkerPath(const openstudio::path& workerPath)
+  {
+    getImpl<detail::VagrantSettings_Impl>()->setWorkerPath(workerPath);
+  }
+
   openstudio::Url VagrantSettings::workerUrl() const
   {
     return getImpl<detail::VagrantSettings_Impl>()->workerUrl();
+  }
+
+  void VagrantSettings::setWorkerUrl(const openstudio::Url& workerUrl)
+  {
+    getImpl<detail::VagrantSettings_Impl>()->setWorkerUrl(workerUrl);
   }
 
   bool VagrantSettings::haltOnStop() const
@@ -613,9 +752,41 @@ namespace openstudio{
     return getImpl<detail::VagrantSettings_Impl>()->haltOnStop();
   }
 
+  void VagrantSettings::setHaltOnStop(bool haltOnStop)
+  {
+    getImpl<detail::VagrantSettings_Impl>()->setHaltOnStop(haltOnStop);
+  }
+
+  std::string VagrantSettings::username() const
+  {
+    return getImpl<detail::VagrantSettings_Impl>()->username();
+  }
+
+  void VagrantSettings::setUsername(const std::string& username)
+  {
+    getImpl<detail::VagrantSettings_Impl>()->setUsername(username);
+  }
+
+  std::string VagrantSettings::password() const
+  {
+    return getImpl<detail::VagrantSettings_Impl>()->password();
+  }
+
+  void VagrantSettings::setPassword(const std::string& password)
+  {
+    getImpl<detail::VagrantSettings_Impl>()->setPassword(password);
+  }
+
   VagrantSession::VagrantSession(const std::string& sessionId, const boost::optional<Url>& serverUrl, const std::vector<Url>& workerUrls)
     : CloudSession(boost::shared_ptr<detail::VagrantSession_Impl>(new detail::VagrantSession_Impl(sessionId, serverUrl, workerUrls)))
   {
+    OS_ASSERT(getImpl<detail::VagrantSession_Impl>());
+  }
+
+  VagrantSession::VagrantSession(const boost::shared_ptr<detail::VagrantSession_Impl>& impl)
+    : CloudSession(impl)
+  {
+    OS_ASSERT(getImpl<detail::VagrantSession_Impl>());
   }
 
   VagrantSession::~VagrantSession()
@@ -625,13 +796,13 @@ namespace openstudio{
   VagrantProvider::VagrantProvider()
     : CloudProvider(boost::shared_ptr<detail::VagrantProvider_Impl>(new detail::VagrantProvider_Impl()))
   {
+    OS_ASSERT(getImpl<detail::VagrantProvider_Impl>());
   }
 
-  VagrantProvider::VagrantProvider(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
-                                   const openstudio::path& workerPath, const openstudio::Url& workerUrl, 
-                                   bool haltOnStop)
-    : CloudProvider(boost::shared_ptr<detail::VagrantProvider_Impl>(new detail::VagrantProvider_Impl(serverPath, serverUrl, workerPath, workerUrl, haltOnStop)))
+  VagrantProvider::VagrantProvider(const boost::shared_ptr<detail::VagrantProvider_Impl>& impl)
+    : CloudProvider(impl)
   {
+    OS_ASSERT(getImpl<detail::VagrantProvider_Impl>());
   }
 
   VagrantProvider::~VagrantProvider()

@@ -83,6 +83,8 @@ namespace openstudio{
 
     CloudSettings(const boost::shared_ptr<detail::CloudSettings_Impl>& impl);
 
+    typedef detail::CloudSettings_Impl ImplType;
+
   private:
 
     boost::shared_ptr<detail::CloudSettings_Impl> m_impl;
@@ -147,6 +149,8 @@ namespace openstudio{
   protected:
 
     CloudSession(const boost::shared_ptr<detail::CloudSession_Impl>& impl);
+
+    typedef detail::CloudSession_Impl ImplType;
 
   private:
 
@@ -287,6 +291,8 @@ namespace openstudio{
   protected:
 
     CloudProvider(const boost::shared_ptr<detail::CloudProvider_Impl>& impl);
+
+    typedef detail::CloudProvider_Impl ImplType;
 
   private:
 

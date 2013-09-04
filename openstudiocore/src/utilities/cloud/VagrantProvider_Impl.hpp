@@ -45,7 +45,7 @@ namespace detail{
 
     VagrantSettings_Impl(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
                          const openstudio::path& workerPath, const openstudio::Url& workerUrl,
-                         bool haltOnStop);
+                         bool haltOnStop, const std::string& username, const std::string& password);
     //@}
     /** @name Destructors */
     //@{
@@ -67,10 +67,32 @@ namespace detail{
     //@{
 
     openstudio::path serverPath()const; 
+
+    void setServerPath(const openstudio::path& serverPath);
+
     openstudio::Url serverUrl() const;
+
+    void setServerUrl(const openstudio::Url& serverUrl);
+
     openstudio::path workerPath() const;
+
+    void setWorkerPath(const openstudio::path& workerPath);
+
     openstudio::Url workerUrl() const;
+
+    void setWorkerUrl(const openstudio::Url& workerUrl);
+
     bool haltOnStop() const;
+
+    void setHaltOnStop(bool haltOnStop);
+
+    std::string username() const;
+
+    void setUsername(const std::string& username);
+
+    std::string password() const;
+
+    void setPassword(const std::string& password);
 
     //@}
 
@@ -83,6 +105,8 @@ namespace detail{
     openstudio::path m_workerPath;
     openstudio::Url m_workerUrl;
     bool m_haltOnStop;
+    std::string m_username;
+    std::string m_password;
   };
 
   /// VagrantSession_Impl is a CloudSession_Impl.
@@ -128,11 +152,6 @@ namespace detail{
 
     /// default constructor, loads settings
     VagrantProvider_Impl();
-
-    /// constructor
-    VagrantProvider_Impl(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
-                         const openstudio::path& workerPath, const openstudio::Url& workerUrl,
-                         bool haltOnStop);
 
     //@}
     /** @name Destructors */
