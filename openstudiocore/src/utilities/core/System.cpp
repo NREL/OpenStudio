@@ -200,21 +200,21 @@ namespace openstudio{
       std::cout << "testExceptions5: Test 1" << std::endl;
       BreakUBlas::breakIt();
       assert(!"Exception Not Thrown");
-    } catch (boost::numeric::ublas::internal_logic &e) {
+    } catch (boost::numeric::ublas::internal_logic &) {
     }
 
     try {
       std::cout << "testExceptions5: Test 2" << std::endl;
       BreakUBlas::breakIt();
       assert(!"Exception Not Thrown");
-    } catch (std::logic_error &e) {
+    } catch (std::logic_error &) {
     }
 
     try {
       std::cout << "testExceptions5: Test 3" << std::endl;
       BreakUBlas::breakIt();
       assert(!"Exception Not Thrown");
-    } catch (std::exception &e) {
+    } catch (std::exception &) {
     }
 
 
