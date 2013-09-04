@@ -214,15 +214,15 @@ private:
 
   QLineEdit * m_serverDirLineEdit;
 
-  QLineEdit * m_serverIpLineEdit;
+  QLineEdit * m_serverAddressIpLineEdit;
 
-  QLineEdit * m_serverIp2LineEdit;
+  QLineEdit * m_serverPortIpLineEdit;
 
   QLineEdit * m_workerDirLineEdit;
 
-  QLineEdit * m_workerIpLineEdit;
+  QLineEdit * m_workerAddressIpLineEdit;
 
-  QLineEdit * m_workerIp2LineEdit;
+  QLineEdit * m_workerPortIpLineEdit;
 
 };
 

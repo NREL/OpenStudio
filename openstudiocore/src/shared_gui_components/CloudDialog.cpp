@@ -30,6 +30,7 @@
 #include <QBoxLayout>
 #include <QCheckBox>
 #include <QComboBox>
+#include <QFileDialog>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMessageBox>
@@ -432,11 +433,11 @@ VagrantProviderWidget::VagrantProviderWidget(QWidget * parent)
   m_workerUsernameLineEdit(0),
   m_workerPasswordLineEdit(0),
   m_serverDirLineEdit(0),
-  m_serverIpLineEdit(0),
-  m_serverIp2LineEdit(0),
+  m_serverAddressIpLineEdit(0),
+  m_serverPortIpLineEdit(0),
   m_workerDirLineEdit(0),
-  m_workerIpLineEdit(0),
-  m_workerIp2LineEdit(0)
+  m_workerAddressIpLineEdit(0),
+  m_workerPortIpLineEdit(0)
 {
   createLoginWidget();
   createSettingsWidget();
@@ -539,13 +540,13 @@ void VagrantProviderWidget::createSettingsWidget()
   hLayout->setSpacing(5);
   m_leftSettingsLayout->addLayout(hLayout);
 
-  m_serverIpLineEdit = new QLineEdit();
-  m_serverIpLineEdit->setFixedWidth(ADDRESS_WIDTH);
-  hLayout->addWidget(m_serverIpLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
+  m_serverAddressIpLineEdit = new QLineEdit();
+  m_serverAddressIpLineEdit->setFixedWidth(ADDRESS_WIDTH);
+  hLayout->addWidget(m_serverAddressIpLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
-  m_serverIp2LineEdit = new QLineEdit();
-  m_serverIp2LineEdit->setFixedWidth(PORT_WIDTH);
-  hLayout->addWidget(m_serverIp2LineEdit,0,Qt::AlignTop | Qt::AlignLeft);
+  m_serverPortIpLineEdit = new QLineEdit();
+  m_serverPortIpLineEdit->setFixedWidth(PORT_WIDTH);
+  hLayout->addWidget(m_serverPortIpLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
   hLayout->addStretch();
 
@@ -582,13 +583,13 @@ void VagrantProviderWidget::createSettingsWidget()
   hLayout->setSpacing(5);
   m_leftSettingsLayout->addLayout(hLayout);
 
-  m_workerIpLineEdit = new QLineEdit();
-  m_workerIpLineEdit->setFixedWidth(ADDRESS_WIDTH);
-  hLayout->addWidget(m_workerIpLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
+  m_workerAddressIpLineEdit = new QLineEdit();
+  m_workerAddressIpLineEdit->setFixedWidth(ADDRESS_WIDTH);
+  hLayout->addWidget(m_workerAddressIpLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
-  m_workerIp2LineEdit = new QLineEdit();
-  m_workerIp2LineEdit->setFixedWidth(PORT_WIDTH);
-  hLayout->addWidget(m_workerIp2LineEdit,0,Qt::AlignTop | Qt::AlignLeft);
+  m_workerPortIpLineEdit = new QLineEdit();
+  m_workerPortIpLineEdit->setFixedWidth(PORT_WIDTH);
+  hLayout->addWidget(m_workerPortIpLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
   hLayout->addStretch();
 
@@ -621,11 +622,11 @@ void  VagrantProviderWidget::loadData()
   m_workerUsernameLineEdit->setText(text);
   m_workerPasswordLineEdit->setText(text);
   m_serverDirLineEdit->setText(text);
-  m_serverIpLineEdit->setText(text);
-  m_serverIp2LineEdit->setText(text);
+  m_serverAddressIpLineEdit->setText(text);
+  m_serverPortIpLineEdit->setText(text);
   m_workerDirLineEdit->setText(text);
-  m_workerIpLineEdit->setText(text);
-  m_workerIp2LineEdit->setText(text);
+  m_workerAddressIpLineEdit->setText(text);
+  m_workerPortIpLineEdit->setText(text);
 }
 
 void  VagrantProviderWidget::saveData()
@@ -640,21 +641,35 @@ void  VagrantProviderWidget::saveData()
   text = m_workerUsernameLineEdit->text();
   text = m_workerPasswordLineEdit->text();
   text = m_serverDirLineEdit->text();
-  text = m_serverIpLineEdit->text();
-  text = m_serverIp2LineEdit->text();
+  text = m_serverAddressIpLineEdit->text();
+  text = m_serverPortIpLineEdit->text();
   text = m_workerDirLineEdit->text();
-  text = m_workerIpLineEdit->text();
-  text = m_workerIp2LineEdit->text();
+  text = m_workerAddressIpLineEdit->text();
+  text = m_workerPortIpLineEdit->text();
 }
 
 //***** SLOTS *****
 
 void VagrantProviderWidget::serverDirButtonClicked(bool checked)
 {
+  // TODO
+  QString dir = QFileDialog::getExistingDirectory( this,
+                                                   tr("Choose Directory"),
+                                                   QDir::homePath());
+
+  if(!dir.length()) return;
+
 }
 
 void VagrantProviderWidget::workerDirButtonClicked(bool checked)
 {
+  // TODO
+  QString dir = QFileDialog::getExistingDirectory( this,
+                                                   tr("Choose Directory"),
+                                                   QDir::homePath());
+
+  if(!dir.length()) return;
+
 }
 
 
