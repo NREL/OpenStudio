@@ -45,29 +45,36 @@ namespace isomodel {
 
 //flag to turn on debug printing of many intermediate variables to stdout
 #define DEBUG false
+/*
 
+*/
+ISOMODEL_API Vector mult(const double* v1, const double s1, int size);
+ISOMODEL_API Vector mult(const Vector& v1, const double s1);
+ISOMODEL_API Vector mult(const Vector& v1, const double* v2);
+ISOMODEL_API Vector mult(const Vector& v1, const Vector& v2);
+ISOMODEL_API Vector div(const Vector& v1,const double s1);
+ISOMODEL_API Vector div(const double s1, const Vector& v1);
+ISOMODEL_API Vector div(const Vector& v1, const Vector& v2);
+ISOMODEL_API Vector sum(const Vector& v1, const Vector& v2);
+ISOMODEL_API Vector sum(const Vector& v1, const double v2);
+ISOMODEL_API Vector dif(const Vector& v1, const Vector& v2);
+ISOMODEL_API Vector dif(const Vector& v1, const double v2);
+ISOMODEL_API Vector dif(const double v1, const Vector& v2);
+#ifdef max
+  #undef max
+#endif
+ISOMODEL_API Vector max(const Vector& v1, const Vector& v2);
+ISOMODEL_API Vector max(const Vector& v1, double val);
+ISOMODEL_API double max(const Vector& v1);
+#ifdef min
+  #undef min
+#endif
+ISOMODEL_API Vector min(const Vector& v1, double val);
+ISOMODEL_API double min(const Vector& v1);
+ISOMODEL_API Vector abs(const Vector& v1);
+ISOMODEL_API Vector pow(const Vector& v1, const double xp);
 
-Vector mult(const double* v1, const double s1, int size);
-Vector mult(const Vector& v1, const double s1);
-Vector mult(const Vector& v1, const double* v2);
-Vector mult(const Vector& v1, const Vector& v2);
-Vector div(const Vector& v1,const double s1);
-Vector div(const double s1, const Vector& v1);
-Vector div(const Vector& v1, const Vector& v2);
-Vector sum(const Vector& v1, const Vector& v2);
-Vector sum(const Vector& v1, const double v2);
-Vector dif(const Vector& v1, const Vector& v2);
-Vector dif(const Vector& v1, const double v2);
-Vector dif(const double v1, const Vector& v2);
-double max(const Vector& v1);
-Vector max(const Vector& v1, const Vector& v2);
-Vector max(const Vector& v1, double val);
-double min(const Vector& v1);
-Vector min(const Vector& v1, double val);
-Vector abs(const Vector& v1);
-Vector pow(const Vector& v1, const double xp);
-
-  struct ISOResults{    
+  struct ISOMODEL_API ISOResults{    
       std::vector<EndUses> monthlyResults;
   };
 

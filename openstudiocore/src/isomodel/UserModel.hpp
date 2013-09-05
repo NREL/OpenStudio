@@ -197,6 +197,7 @@ namespace isomodel {
     UserModel();
     virtual ~UserModel();    
     SimModel toSimModel() const;
+
     const char * weatherFilePath(){return _weatherFilePath.c_str();}
     double terrainClass(){return _terrainClass;} const 
     double floorArea(){return _floorArea;} const 
@@ -240,7 +241,126 @@ namespace isomodel {
     double specificFanPower(){return _specificFanPower;} const 
     double fanFlowControlFactor(){return _fanFlowControlFactor;} const 
 
-    double roofUValue(){return _roofUValue;}
+    double roofUValue(){return _roofUValue;} const
+    double roofSHGC(){return _roofSHGC;} const
+    double wallUvalueS(){return _wallUvalueS;} const	
+    double wallUvalueSE(){return _wallUvalueSE;} const	
+    double wallUvalueE(){return _wallUvalueE;} const	
+    double wallUvalueNE(){return _wallUvalueNE;} const	
+    double wallUvalueN(){return _wallUvalueN;} const	
+    double wallUvalueNW(){return _wallUvalueNW;} const	
+    double wallUvalueW(){return _wallUvalueW;} const	
+    double wallUvalueSW(){return _wallUvalueSW;} const	
+    double wallSolarAbsorptionS(){return _wallSolarAbsorptionS;} const
+    double wallSolarAbsorptionSE(){return _wallSolarAbsorptionSE;} const
+    double wallSolarAbsorptionE(){return _wallSolarAbsorptionE;} const
+    double wallSolarAbsorptionNE(){return _wallSolarAbsorptionNE;} const
+    double wallSolarAbsorptionN(){return _wallSolarAbsorptionN;} const
+    double wallSolarAbsorptionNW(){return _wallSolarAbsorptionNW;} const
+    double wallSolarAbsorptionW(){return _wallSolarAbsorptionW;} const
+    double wallSolarAbsorptionSW(){return _wallSolarAbsorptionSW;} const
+    double wallThermalEmissivityS(){return _wallThermalEmissivityS;} const
+    double wallThermalEmissivitySE(){return _wallThermalEmissivitySE;} const
+    double wallThermalEmissivityE(){return _wallThermalEmissivityE;} const
+    double wallThermalEmissivityNE(){return _wallThermalEmissivityNE;} const
+    double wallThermalEmissivityN(){return _wallThermalEmissivityN;} const
+    double wallThermalEmissivityNW(){return _wallThermalEmissivityNW;} const
+    double wallThermalEmissivityW(){return _wallThermalEmissivityW;} const
+    double wallThermalEmissivitySW(){return _wallThermalEmissivitySW;} const
+    double windowUvalueS(){return _windowUvalueS;} const
+    double windowUvalueSE(){return _windowUvalueSE;} const
+    double windowUvalueE(){return _windowUvalueE;} const
+    double windowUvalueNE(){return _windowUvalueNE;} const
+    double windowUvalueN(){return _windowUvalueN;} const
+    double windowUvalueNW(){return _windowUvalueNW;} const
+    double windowUvalueW(){return _windowUvalueW;} const
+    double windowUvalueSW(){return _windowUvalueSW;} const
+    double windowSHGCS(){return _windowSHGCS;} const
+    double windowSHGCSE(){return _windowSHGCSE;} const
+    double windowSHGCE(){return _windowSHGCE;} const
+    double windowSHGCNE(){return _windowSHGCNE;} const
+    double windowSHGCN(){return _windowSHGCN;} const
+    double windowSHGCNW(){return _windowSHGCNW;} const
+    double windowSHGCW(){return _windowSHGCW;} const
+    double windowSHGCSW(){return _windowSHGCSW;} const
+    double windowSCFS(){return _windowSCFS;} const
+    double windowSCFSE(){return _windowSCFSE;} const
+    double windowSCFE(){return _windowSCFE;} const
+    double windowSCFNE(){return _windowSCFNE;} const
+    double windowSCFN(){return _windowSCFN;} const
+    double windowSCFNW(){return _windowSCFNW;} const
+    double windowSCFW(){return _windowSCFW;} const
+    double windowSCFSW(){return _windowSCFSW;} const
+    double windowSDFS(){return _windowSDFS;} const
+    double windowSDFSE(){return _windowSDFSE;} const
+    double windowSDFE(){return _windowSDFE;} const
+    double windowSDFNE(){return _windowSDFNE;} const
+    double windowSDFN(){return _windowSDFN;} const
+    double windowSDFNW(){return _windowSDFNW;} const
+    double windowSDFW(){return _windowSDFW;} const
+    double windowSDFSW(){return _windowSDFSW;} const
+
+
+
+    void setWallUvalueW(double val){_wallUvalueW=val;}
+    void setWallUvalueNW(double val){_wallUvalueNW=val;}
+    void setWallUvalueN(double val){_wallUvalueN=val;}
+    void setWallUvalueNE(double val){_wallUvalueNE=val;}
+    void setRoofSHGC(double val){_roofSHGC=val;}
+    void setWallUvalueE(double val){_wallUvalueE=val;}
+    void setWallUvalueSE(double val){_wallUvalueSE=val;}
+    void setWallUvalueS(double val){_wallUvalueS=val;}
+    void setWallUvalueSW(double val){_wallUvalueSW=val;}
+    void setWallSolarAbsorptionS(double val){_wallSolarAbsorptionS=val;}
+    void setWallSolarAbsorptionSE(double val){_wallSolarAbsorptionSE=val;}
+    void setWallSolarAbsorptionE(double val){_wallSolarAbsorptionE=val;}
+    void setWallSolarAbsorptionNE(double val){_wallSolarAbsorptionNE=val;}
+    void setWallSolarAbsorptionN(double val){_wallSolarAbsorptionN=val;}
+    void setWallSolarAbsorptionNW(double val){_wallSolarAbsorptionNW=val;}
+    void setWallSolarAbsorptionW(double val){_wallSolarAbsorptionW=val;}
+    void setWallSolarAbsorptionSW(double val){_wallSolarAbsorptionSW=val;}
+    void setWallThermalEmissivityS(double val){_wallThermalEmissivityS=val;}
+    void setWallThermalEmissivitySE(double val){_wallThermalEmissivitySE=val;}
+    void setWallThermalEmissivityE(double val){_wallThermalEmissivityE=val;}
+    void setWallThermalEmissivityNE(double val){_wallThermalEmissivityNE=val;}
+    void setWallThermalEmissivityN(double val){_wallThermalEmissivityN=val;}
+    void setWallThermalEmissivityNW(double val){_wallThermalEmissivityNW=val;}
+    void setWallThermalEmissivityW(double val){_wallThermalEmissivityW=val;}
+    void setWallThermalEmissivitySW(double val){_wallThermalEmissivitySW=val;}
+    void setWindowSCFS(double val){_windowSCFS=val;}
+    void setWindowSCFSE(double val){_windowSCFSE=val;}
+    void setWindowSCFE(double val){_windowSCFE=val;}
+    void setWindowSCFNE(double val){_windowSCFNE=val;}
+    void setWindowSCFN(double val){_windowSCFN=val;}
+    void setWindowSCFNW(double val){_windowSCFNW=val;}
+    void setWindowSCFW(double val){_windowSCFW=val;}
+    void setWindowSCFSW(double val){_windowSCFSW=val;}
+    void setWindowSDFS(double val){_windowSDFS=val;}
+    void setWindowSDFSE(double val){_windowSDFSE=val;}
+    void setWindowSDFE(double val){_windowSDFE=val;}
+    void setWindowSDFNE(double val){_windowSDFNE=val;}
+    void setWindowSDFN(double val){_windowSDFN=val;}
+    void setWindowSDFNW(double val){_windowSDFNW=val;}
+    void setWindowSDFW(double val){_windowSDFW=val;}
+    void setWindowSDFSW(double val){_windowSDFSW=val;}
+    void setWindowSHGCS(double val){_windowSHGCS=val;}
+    void setWindowSHGCSE(double val){_windowSHGCSE=val;}
+    void setWindowSHGCE(double val){_windowSHGCE=val;}
+    void setWindowSHGCNE(double val){_windowSHGCNE=val;}
+    void setWindowSHGCN(double val){_windowSHGCN=val;}
+    void setWindowSHGCNW(double val){_windowSHGCNW=val;}
+    void setWindowSHGCW(double val){_windowSHGCW=val;}
+    void setWindowSHGCSW(double val){_windowSHGCSW=val;}
+    void setWindowUvalueS(double val){_windowUvalueS=val;}
+    void setWindowUvalueSE(double val){_windowUvalueSE=val;}
+    void setWindowUvalueE(double val){_windowUvalueE=val;}
+    void setWindowUvalueNE(double val){_windowUvalueNE=val;}
+    void setWindowUvalueN(double val){_windowUvalueN=val;}
+    void setWindowUvalueNW(double val){_windowUvalueNW=val;}
+    void setWindowUvalueW(double val){_windowUvalueW=val;}
+    void setWindowUvalueSW(double val){_windowUvalueSW=val;}
+
+
     double wallAreaS(){return _wallAreaS;}
     double wallAreaSE(){return _wallAreaSE;}
     double wallAreaE(){return _wallAreaE;}

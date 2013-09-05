@@ -27,7 +27,6 @@ using namespace openstudio::isomodel;
 using namespace openstudio;
 
 void testGenericFunctions() {
-/*//unable to resolve global namespace functions via linker for some reason.
   double scalar = 2, dResults=0;
   double test[] = {0,1,2,3,4,5,6,7,8,9,10,11};
   Vector vTest = Vector(12), vTest2 = Vector(12);
@@ -151,11 +150,12 @@ void testGenericFunctions() {
   for(unsigned int i = 0;i<vTest.size();i++){
     EXPECT_EQ(i, results[i]);
   }
-  */
+  
 }
 TEST_F(ISOModelFixture, SimModel)
 {
-  SimModel simModel;
-  
+  SimModel simModel;  
   testGenericFunctions();
+
+
 }
