@@ -46,7 +46,6 @@
 #define TEXT_WIDTH 300
 
 namespace openstudio {
-  
 
 CloudDialog::CloudDialog(QWidget* parent)
   : OSDialog(false, parent),
@@ -165,9 +164,51 @@ void CloudDialog::createWidgets()
   m_settingsStackedWidget = new  QStackedWidget();
   m_mainSettingsLayout->addWidget(m_settingsStackedWidget);
 
-  m_settingsStackedWidget->addWidget(m_blankProviderWidget->m_settingsWidget);
-  m_settingsStackedWidget->addWidget(m_vagrantProviderWidget->m_settingsWidget);
-  m_settingsStackedWidget->addWidget(m_amazonProviderWidget->m_settingsWidget);
+  QWidget * widget = new QWidget();
+
+  QHBoxLayout * hLayout = new QHBoxLayout;
+  hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(5);
+  widget->setLayout(hLayout);
+
+  hLayout->addWidget(m_blankProviderWidget->m_leftSettingsWidget);
+  hLayout->addWidget(m_blankProviderWidget->m_rightSettingsWidget);
+
+
+  m_settingsStackedWidget->addWidget(widget);
+
+
+   widget = new QWidget();
+
+   hLayout = new QHBoxLayout;
+  hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(5);
+  widget->setLayout(hLayout);
+
+  hLayout->addWidget(m_vagrantProviderWidget->m_leftSettingsWidget);
+  hLayout->addWidget(m_vagrantProviderWidget->m_rightSettingsWidget);
+
+    m_settingsStackedWidget->addWidget(widget);
+
+
+
+
+    
+   widget = new QWidget();
+
+   hLayout = new QHBoxLayout;
+  hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(5);
+  widget->setLayout(hLayout);
+
+  hLayout->addWidget(m_amazonProviderWidget->m_leftSettingsWidget);
+  hLayout->addWidget(m_amazonProviderWidget->m_rightSettingsWidget);
+
+    m_settingsStackedWidget->addWidget(widget);
+
+  //m_settingsStackedWidget->addWidget(m_blankProviderWidget->m_settingsWidget);
+  //m_settingsStackedWidget->addWidget(m_vagrantProviderWidget->m_settingsWidget);
+  //m_settingsStackedWidget->addWidget(m_amazonProviderWidget->m_settingsWidget);
 
   m_settingsStackedWidget->setCurrentIndex(m_blankProviderIdx);
 
@@ -277,7 +318,9 @@ void CloudDialog::iAcceptClicked(bool checked)
 void CloudDialog::cloudResourceChanged(const QString & text)
 {
   if(text == NO_PROVIDER){
-    this->m_pageStackedWidget->setCurrentIndex(m_blankPageIdx);
+    this->m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
+    this->m_loginStackedWidget->setCurrentIndex(m_blankProviderIdx);
+    this->m_settingsStackedWidget->setCurrentIndex(m_blankProviderIdx);
   } else if(text == VAGRANT_PROVIDER) {
     this->m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
     this->m_loginStackedWidget->setCurrentIndex(m_vagrantProviderIdx);
@@ -301,7 +344,8 @@ CloudProviderWidget::CloudProviderWidget(QWidget * parent)
   m_waitCheckBox(0),
   m_waitLineEdit(0),
   m_loginWidget(0),
-  m_settingsWidget(0),
+  m_leftSettingsWidget(0),
+  m_rightSettingsWidget(0),
   m_leftLoginLayout(0),
   //m_rightLoginLayout(0),
   m_leftSettingsLayout(0),
@@ -331,17 +375,19 @@ void CloudProviderWidget::createWidgets()
 
   //m_rightLoginLayout = new QVBoxLayout(this);
 
-  // LEFT SETTINGS PAGE
-  m_settingsWidget = new QWidget();
+  // SETTINGS PAGE
 
   // LEFT SETTINGS PAGE
+  m_leftSettingsWidget = new QWidget();
+
   m_leftSettingsLayout = new QVBoxLayout(this);
-  m_settingsWidget->setLayout(m_leftSettingsLayout);  
+  m_leftSettingsWidget->setLayout(m_leftSettingsLayout);
 
   // RIGHT SETTINGS PAGE
+  m_rightSettingsWidget = new QWidget();
 
   m_rightSettingsLayout = new QVBoxLayout(this);
-  m_settingsWidget->setLayout(m_rightSettingsLayout);  
+  m_rightSettingsWidget->setLayout(m_rightSettingsLayout);  
 
   label = new QLabel;
   label->setObjectName("H2");
@@ -365,6 +411,8 @@ void CloudProviderWidget::createWidgets()
   label->setWordWrap(true);
   hLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
+  hLayout->addStretch();
+
   hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(QMargins(0,0,0,0));
   hLayout->setSpacing(5);
@@ -377,6 +425,8 @@ void CloudProviderWidget::createWidgets()
   label = new QLabel;
   label->setText("minutes");
   hLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  hLayout->addStretch();
 
   label = new QLabel;
   label->setFixedWidth(TEXT_WIDTH);
@@ -599,6 +649,8 @@ void VagrantProviderWidget::createSettingsWidget()
 
   m_runOnStartUpCheckBox = new QCheckBox("Run Vagrant Halt on Stop");
   m_rightSettingsLayout->addWidget(m_runOnStartUpCheckBox,0,Qt::AlignTop | Qt::AlignLeft);
+
+  m_rightSettingsLayout->addStretch();
 }
 
 void  VagrantProviderWidget::loadData()
@@ -810,6 +862,7 @@ void AmazonProviderWidget::createSettingsWidget()
   label->setText("Review pricing for cloud service at:\nhttp://aws.amazon.com/ec2/pricing/");
   m_rightSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
+  m_rightSettingsLayout->addStretch();
 }
 
 void  AmazonProviderWidget::loadData()

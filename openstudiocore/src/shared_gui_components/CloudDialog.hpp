@@ -123,7 +123,9 @@ public:
 
   QWidget * m_loginWidget;
 
-  QWidget * m_settingsWidget;
+  QWidget * m_leftSettingsWidget;
+
+  QWidget * m_rightSettingsWidget;
 
 protected:
 
