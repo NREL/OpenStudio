@@ -379,7 +379,7 @@ namespace openstudio{
       args << "/C";
       args << "vagrant.bat";
 #else
-      args << "vagrant.sh";
+      args << "vagrant";
 #endif
       return;
     }
