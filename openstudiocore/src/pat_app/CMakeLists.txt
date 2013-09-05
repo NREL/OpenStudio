@@ -199,6 +199,10 @@ qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
 # this needs to be configured to embed the build number
 CONFIGURE_FILE(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
 
+# configure vagrant 
+SET(VAGRANT_SERVER_PATH "" CACHE PATH "Pat to vagrant openstudio server")
+SET(VAGRANT_WORKER_PATH "" CACHE PATH "Pat to vagrant openstudio worker")
+CONFIGURE_FILE(VagrantConfiguration.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/VagrantConfiguration.hxx")
 
 IF( WIN32 )
   SET(RC_BUILD_STR "0")

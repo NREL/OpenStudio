@@ -23,6 +23,7 @@
 #include <pat_app/RunView.hpp>
 #include <pat_app/PatMainWindow.hpp>
 #include <pat_app/PatVerticalTabWidget.hpp>
+#include <pat_app/VagrantConfiguration.hxx>
 
 #include <analysis/DataPoint_Impl.hpp>
 #include <analysis/Measure.hpp>
@@ -99,9 +100,9 @@ RunTabController::RunTabController()
 QSharedPointer<VagrantProvider> RunTabController::makeProvider()
 {
   // create the vagrant provider
-  path serverPath("/Users/kbenne/Development/openstudio-server/vagrant/server");
+  path serverPath = vagrantServerPath();
   Url serverUrl("http://localhost:8080");
-  path workerPath("/Users/kbenne/Development/openstudio-server/vagrant/worker");
+  path workerPath = vagrantWorkerPath();
   Url workerUrl("http://localhost:8081");
 
   QSharedPointer<VagrantProvider> provider;
