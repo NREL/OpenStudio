@@ -139,6 +139,13 @@ RunStatusView::RunStatusView()
   mainHLayout->addLayout(percentCompleteLayout);
 
   mainHLayout->addStretch();
+
+  // Start Cloud
+
+  toggleCloudButton = new ToggleCloudButton();
+  mainHLayout->addWidget(toggleCloudButton);
+
+  mainHLayout->addStretch();
 }
 
 void RunStatusView::paintEvent(QPaintEvent * e)
@@ -203,6 +210,105 @@ void RunStatusView::setProgress(int numCompletedJobs, int numFailedJobs, int num
     m_percentFailed->setText("");
     m_percentComplete->setText("");
   }
+}
+
+ToggleCloudButton::ToggleCloudButton()
+  : GrayButton(),
+    m_starting(false),
+    m_stopping(false)
+{
+  m_turnOnText  = "Turn On Cloud";
+  m_turnOffText = "Turn Off Cloud";
+
+  setCheckable(true);
+
+  QFontMetrics fm(font());
+  int onWidth = fm.width(m_turnOnText);
+  int offWidth = fm.width(m_turnOffText);
+
+  if( onWidth > offWidth )
+  {
+    setFixedWidth(onWidth + 20);
+  }
+  else
+  {
+    setFixedWidth(offWidth + 20);
+  }
+
+  updateText();
+}
+
+void ToggleCloudButton::updateText()
+{
+  if( ! isChecked() && ! m_starting && ! m_stopping )
+  {
+    setText(m_turnOnText);
+  }
+  else if( m_starting )
+  {
+    setText("Starting");
+  }
+  else if( isChecked() )
+  {
+    setText(m_turnOffText);
+  }
+  else if( m_stopping )
+  {
+    setText("Stopping");
+  }
+}
+
+bool ToggleCloudButton::isStarting() const
+{
+  return m_starting;
+}
+
+void ToggleCloudButton::setStarting(bool isStarting)
+{
+  m_starting = isStarting;
+
+  updateText();
+}
+
+bool ToggleCloudButton::isStopping() const
+{
+  return m_stopping;
+}
+
+void ToggleCloudButton::setStopping(bool isStopping)
+{
+  m_stopping = isStopping;
+
+  updateText();
+}
+
+void ToggleCloudButton::nextCheckState()
+{
+  if( ! isChecked() && ! m_starting && ! m_stopping ) // Not Running
+  {
+    m_starting = true; 
+    setChecked(true);
+  }
+  else if( m_starting )
+  {
+    m_starting = false;
+    m_stopping = false;
+    setChecked(true); 
+  }
+  else if( isChecked() ) // Running
+  {
+    m_starting = false;
+    m_stopping = true;
+    setChecked(false);  
+  }
+  else if( m_stopping )
+  {
+    m_stopping = false;
+    m_starting = false;
+    setChecked(false);
+  }
+
+  updateText();
 }
 
 DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataPoint& dataPoint)

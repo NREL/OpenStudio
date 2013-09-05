@@ -17,6 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
+#include <pat_app/CloudMonitor.hpp>
 #include <pat_app/PatApp.hpp>
 #include <pat_app/RunTabController.hpp>
 #include <pat_app/RunView.hpp>
@@ -37,6 +38,7 @@
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/cloud/VagrantProvider.hpp>
 
 #include <OpenStudio.hxx>
 
@@ -52,8 +54,12 @@ RunTabController::RunTabController()
 {
   runView = new RunView();
 
-  bool isConnected = connect(runView->runStatusView, SIGNAL(playButtonClicked(bool)), this, SLOT(onPlayButtonClicked(bool)));
-  OS_ASSERT(isConnected);
+  bool bingo;
+  bingo = connect(runView->runStatusView, SIGNAL(playButtonClicked(bool)), this, SLOT(onPlayButtonClicked(bool)));
+  OS_ASSERT(bingo);
+
+  bingo = connect(runView->runStatusView->toggleCloudButton,SIGNAL(toggled(bool)),this,SLOT(toggleCloud(bool)));
+  OS_ASSERT(bingo);
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
@@ -64,19 +70,19 @@ RunTabController::RunTabController()
     analysisdriver::AnalysisDriver analysisDriver = project->analysisDriver();
 
     // connect currentAnalysis to refresh if data point is queued
-    bool isConnected = analysisDriver.connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(reqestRefresh()), Qt::QueuedConnection);
-    OS_ASSERT(isConnected);
+    bool bingo = analysisDriver.connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(reqestRefresh()), Qt::QueuedConnection);
+    OS_ASSERT(bingo);
 
     std::vector<analysisdriver::CurrentAnalysis> currentAnalyses = analysisDriver.currentAnalyses();
     if (!currentAnalyses.empty()){
       // connect currentAnalysis to update progress on this
-      isConnected = currentAnalyses[0].connect(SIGNAL(iterationProgress(int,int)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
-      OS_ASSERT(isConnected);
+      bingo = currentAnalyses[0].connect(SIGNAL(iterationProgress(int,int)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
+      OS_ASSERT(bingo);
 
       // connect currentAnalysis to update progress in PatApp
       // DLM: PatApp is already connected to this signal
-      //isConnected = currentAnalyses[0].connect(SIGNAL(iterationProgress(int,int)), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
-      //OS_ASSERT(isConnected);
+      //bingo = currentAnalyses[0].connect(SIGNAL(iterationProgress(int,int)), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
+      //OS_ASSERT(bingo);
     }
     onIterationProgress();
 
@@ -86,6 +92,26 @@ RunTabController::RunTabController()
     runView->dataPointRunListView->setListController(m_dataPointRunListController);
     runView->dataPointRunListView->setDelegate(m_dataPointRunItemDelegate);
   }
+
+  makeProvider();
+}
+
+QSharedPointer<VagrantProvider> RunTabController::makeProvider()
+{
+  // create the vagrant provider
+  path serverPath("/Users/kbenne/Development/openstudio-server/vagrant/server");
+  Url serverUrl("http://localhost:8080");
+  path workerPath("/Users/kbenne/Development/openstudio-server/vagrant/worker");
+  Url workerUrl("http://localhost:8081");
+
+  QSharedPointer<VagrantProvider> provider;
+  provider = QSharedPointer<VagrantProvider>(new VagrantProvider(serverPath, serverUrl, workerPath, workerUrl));
+
+  provider->signUserAgreement(true);
+
+  PatApp::instance()->cloudMonitor()->setCloudProvider(provider);
+
+  return provider;
 }
 
 RunTabController::~RunTabController()
@@ -261,6 +287,48 @@ void RunTabController::onPlayButtonClicked(bool clicked)
 
   // important to call, this controls tab 1 and 2 access
   onIterationProgress();
+}
+
+void RunTabController::toggleCloud(bool on)
+{
+  bool bingo;
+
+  if( on )
+  {
+    bingo = connect(PatApp::instance()->cloudMonitor().data(),SIGNAL(serverStarted(const Url&)),
+                    this,SLOT(onCloudStartupComplete()));
+    OS_ASSERT(bingo);
+
+    runView->runStatusView->toggleCloudButton->setEnabled(false);
+
+    PatApp::instance()->cloudMonitor()->cloudProvider()->startServer();
+  }
+  else
+  {
+    bingo = connect(PatApp::instance()->cloudMonitor().data(),SIGNAL(terminateComplete()),
+                   this,SLOT(onCloudTerminateComplete()));
+    OS_ASSERT(bingo);
+
+    runView->runStatusView->toggleCloudButton->setEnabled(false);
+
+    PatApp::instance()->cloudMonitor()->cloudProvider()->terminate();
+  }
+}
+
+void RunTabController::onCloudStartupComplete()
+{
+  runView->runStatusView->toggleCloudButton->setStarting(false);
+
+  runView->runStatusView->toggleCloudButton->setEnabled(true);
+}
+
+void RunTabController::onCloudTerminateComplete()
+{
+  runView->runStatusView->toggleCloudButton->setStopping(false);
+
+  makeProvider();
+
+  runView->runStatusView->toggleCloudButton->setEnabled(true);
 }
 
 void RunTabController::onIterationProgress()

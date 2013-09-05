@@ -35,6 +35,9 @@
 #include <QSharedPointer>
 
 namespace openstudio {
+
+class VagrantProvider;
+
 namespace pat {
 
 class RunView;
@@ -56,6 +59,8 @@ class RunTabController : public QObject
 
   public slots:
 
+    void toggleCloud(bool on);
+
     void onPlayButtonClicked(bool clicked);
 
     void onIterationProgress();
@@ -64,12 +69,23 @@ class RunTabController : public QObject
 
     void refresh();
 
+  private slots:
+
+    void onCloudStartupComplete();
+
+    void onCloudTerminateComplete();
+
   private:
+
+    QSharedPointer<VagrantProvider> makeProvider();
 
     bool m_refreshScheduled;
 
     QSharedPointer<DataPointRunListController> m_dataPointRunListController;
+
     QSharedPointer<DataPointRunItemDelegate> m_dataPointRunItemDelegate;
+
+    //QSharedPointer<VagrantProvider> m_vagrantProvider;
 
     REGISTER_LOGGER("openstudio.pat.RunTabController");
 };

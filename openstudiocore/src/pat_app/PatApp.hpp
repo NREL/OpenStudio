@@ -40,6 +40,7 @@
 
 #include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/core/Path.hpp>
+#include <utilities/core/Url.hpp>
 #include <utilities/core/UUID.hpp>
 #include <utilities/plot/ProgressBar.hpp>
 
@@ -52,6 +53,7 @@ namespace openstudio {
 
 class BCLMeasure;
 class LocalLibraryController;
+class CloudProvider;
 
 namespace osversion {
 
@@ -78,6 +80,7 @@ class SystemComponent;
 class MainWindow;
 class AddToModelView;
 class StartupView;
+class CloudMonitor;
 
 class PatApp : public QApplication, public BaseApp
 {
@@ -97,6 +100,8 @@ class PatApp : public QApplication, public BaseApp
   virtual bool notify(QObject* receiver, QEvent* event);
 
   boost::optional<analysisdriver::SimpleProject> project() {return m_project;}
+
+  QSharedPointer<CloudMonitor> cloudMonitor() const;
 
   // ensure that we set the seed on this project not a copy, will also cached the seed models
   bool setSeed(const FileReference& currentSeedLocation);
@@ -240,6 +245,8 @@ class PatApp : public QApplication, public BaseApp
   QSharedPointer<RunTabController> m_runTabController;
 
   boost::optional<analysisdriver::SimpleProject> m_project;
+
+  QSharedPointer<CloudMonitor> m_cloudMonitor;
 
   MeasureManager m_measureManager;
 

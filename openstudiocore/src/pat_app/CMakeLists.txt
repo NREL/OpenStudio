@@ -7,7 +7,9 @@ SET( ${target_name}_SRC
   main.cpp
   PatApp.cpp
   PatApp.hpp
-  
+
+  CloudMonitor.cpp
+  CloudMonitor.hpp
   ../shared_gui_components/BCLMeasureDialog.cpp
   ../shared_gui_components/BCLMeasureDialog.hpp
   ../shared_gui_components/Buttons.cpp
@@ -128,6 +130,7 @@ SET( ${target_name}_SRC
 # moc files
 SET( ${target_name}_moc
   PatApp.hpp
+  CloudMonitor.hpp
 
   ../shared_gui_components/BCLMeasureDialog.hpp
   ../shared_gui_components/Buttons.hpp

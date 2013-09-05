@@ -20,6 +20,7 @@
 #include <pat_app/PatApp.hpp>
 
 #include <pat_app/AboutBox.hpp>
+#include <pat_app/CloudMonitor.hpp>
 #include <pat_app/DesignAlternativesTabController.hpp>
 #include <pat_app/DesignAlternativesView.hpp>
 #include <pat_app/ExportXML.hpp>
@@ -34,7 +35,6 @@
 #include <pat_app/ResultsView.hpp>
 #include <pat_app/RunTabController.hpp>
 #include <pat_app/RunView.hpp>
-#include <pat_app/StartupView.hpp>
 #include <pat_app/StartupView.hpp>
 
 #include "../shared_gui_components/BCLMeasureDialog.hpp"
@@ -61,6 +61,8 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/System.hpp>
 #include <utilities/core/ZipFile.hpp>
+#include <utilities/cloud/CloudProvider.hpp>
+#include <utilities/cloud/CloudProvider_Impl.hpp>
 
 #include <boost/filesystem.hpp>
 
@@ -124,7 +126,7 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
     LOG_FREE(Warn, "PatApp", "Incorrect number of arguments " << args.size());
   }
 
-
+  m_cloudMonitor = QSharedPointer<CloudMonitor>(new CloudMonitor());
 
   mainWindow = new PatMainWindow();
 
@@ -1240,6 +1242,10 @@ QWidget *PatApp::mainWidget() {
   return w; 
 }
 
+QSharedPointer<CloudMonitor> PatApp::cloudMonitor() const
+{
+  return m_cloudMonitor;
+}
 
 NewProjectDialog::NewProjectDialog(QWidget * parent)
   : OSDialog(parent)
@@ -1318,6 +1324,45 @@ void NewProjectDialog::enableOkButton()
     m_okButton->setEnabled(false);
   }
 }
+
+//QSharedPointer<CloudProvider> CloudMonitor::cloudProvider() const
+//{
+//  return m_cloudProvider;
+//}
+//
+//void CloudMonitor::setCloudProvider(QSharedPointer<CloudProvider> cloudProvider)
+//{
+//  m_cloudProvider = cloudProvider;
+//
+//  bool bingo;
+//
+//  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(serverStarting()),this,SIGNAL(serverStarting()));
+//  OS_ASSERT(bingo);
+//
+//  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(serverStarted(const Url&)),
+//                  this,SIGNAL(serverStarted(const Url&)));
+//  OS_ASSERT(bingo);
+//
+//  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(workerStarting()),
+//                  this,SIGNAL(workerStarting()));
+//  OS_ASSERT(bingo);
+//
+//  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(workerStarted(const Url&)),
+//                  this,SIGNAL(workerStarted(const Url&)));
+//  OS_ASSERT(bingo);
+//
+//  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(allWorkersStarted()),
+//                  this,SIGNAL(allWorkersStarted()));
+//  OS_ASSERT(bingo);
+//
+//  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(terminating()),
+//                  this,SIGNAL(terminating()));
+//  OS_ASSERT(bingo);
+//
+//  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(terminateComplete()),
+//                  this,SIGNAL(terminateComplete()));
+//  OS_ASSERT(bingo);
+//}
 
 } // pat
 
