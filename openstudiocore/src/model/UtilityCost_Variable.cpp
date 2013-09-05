@@ -35,7 +35,7 @@ namespace detail {
 UtilityCost_Variable_Impl::UtilityCost_Variable_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : ParentObject_Impl(idfObject, model, keepHandle)
 {
-  BOOST_ASSERT(idfObject.iddObject().type() == UtilityCost_Variable::iddObjectType());
+  OS_ASSERT(idfObject.iddObject().type() == UtilityCost_Variable::iddObjectType());
 }
 
 UtilityCost_Variable_Impl::UtilityCost_Variable_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -43,7 +43,7 @@ UtilityCost_Variable_Impl::UtilityCost_Variable_Impl(const openstudio::detail::W
                                            bool keepHandle)
   : ParentObject_Impl(other,model,keepHandle)
 {
-  BOOST_ASSERT(other.iddObject().type() == UtilityCost_Variable::iddObjectType());
+  OS_ASSERT(other.iddObject().type() == UtilityCost_Variable::iddObjectType());
 }
 
 UtilityCost_Variable_Impl::UtilityCost_Variable_Impl(const UtilityCost_Variable_Impl& other,Model_Impl* model,bool keepHandle)
@@ -233,7 +233,7 @@ const std::vector<std::string>& UtilityCost_Variable_Impl::outputVariableNames()
 UtilityCost_Variable::UtilityCost_Variable(const Model& model)
   : ParentObject(UtilityCost_Variable::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::UtilityCost_Variable_Impl>());
+  OS_ASSERT(getImpl<detail::UtilityCost_Variable_Impl>());
 }
 
 // constructor

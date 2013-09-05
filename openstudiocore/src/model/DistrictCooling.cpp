@@ -38,7 +38,7 @@ namespace detail {
                                              bool keepHandle)
     : StraightComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == DistrictCooling::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == DistrictCooling::iddObjectType());
   }
 
   DistrictCooling_Impl::DistrictCooling_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -46,7 +46,7 @@ namespace detail {
                                              bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == DistrictCooling::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == DistrictCooling::iddObjectType());
   }
 
   DistrictCooling_Impl::DistrictCooling_Impl(const DistrictCooling_Impl& other,
@@ -70,14 +70,14 @@ namespace detail {
 
   double DistrictCooling_Impl::nominalCapacity() const {
     boost::optional<double> value = getDouble(OS_DistrictCoolingFields::NominalCapacity,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity DistrictCooling_Impl::getNominalCapacity(bool returnIP) const {
     OptionalDouble value = nominalCapacity();
     OSOptionalQuantity result = getQuantityFromDouble(OS_DistrictCoolingFields::NominalCapacity, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -130,7 +130,7 @@ namespace detail {
 DistrictCooling::DistrictCooling(const Model& model)
   : StraightComponent(DistrictCooling::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::DistrictCooling_Impl>());
+  OS_ASSERT(getImpl<detail::DistrictCooling_Impl>());
 }
 
 IddObjectType DistrictCooling::iddObjectType() {

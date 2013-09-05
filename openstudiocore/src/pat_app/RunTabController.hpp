@@ -25,7 +25,7 @@
 
 #include <analysis/Analysis.hpp>
 #include <analysis/DataPoint.hpp>
-#include <analysis/DiscretePerturbation.hpp>
+#include <analysis/Measure.hpp>
 #include <analysis/Problem.hpp>
 
 #include <runmanager/lib/Job.hpp>

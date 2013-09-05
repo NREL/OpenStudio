@@ -18,6 +18,9 @@
  **********************************************************************/
 
 #include <openstudio_lib/MainTabView.hpp>
+
+#include <utilities/core/Assert.hpp>
+
 #include <QStackedWidget>
 #include <QPixmap>
 #include <QHBoxLayout>
@@ -120,7 +123,7 @@ MainTabView::MainTabView(const QString & tabLabel, bool hasSubTab, QWidget * par
 bool MainTabView::addTabWidget(QWidget * widget)
 {
   // This method should only be called in cases where the tab will not have sub tabs
-  BOOST_ASSERT(!m_hasSubTab);
+  OS_ASSERT(!m_hasSubTab);
   if(m_hasSubTab) return false;
 
   m_stackedWidget->addWidget(widget);
@@ -130,7 +133,7 @@ bool MainTabView::addTabWidget(QWidget * widget)
 bool MainTabView::addSubTab(const QString & subTablabel, QWidget * widget, int id)
 {
   // This method should only be called in cases where the tab will have sub tabs
-  BOOST_ASSERT(m_hasSubTab);
+  OS_ASSERT(m_hasSubTab);
   if(!m_hasSubTab) return false;
 
   QPushButton * button = new QPushButton(this);

@@ -37,7 +37,7 @@ namespace project {
 
 class ProblemRecord;
 class InputVariableRecord;
-class DiscretePerturbationRecord;
+class MeasureRecord;
 class FunctionRecord;
 class WorkflowRecord;
 
@@ -148,7 +148,7 @@ class PROJECT_API ProblemRecord : public ObjectRecord {
   analysis::Problem problem() const;
 
   /** Returns the total number of discrete combinations, if all variables are discrete. */
-  boost::optional<int> combinatorialSize(bool selectedPerturbationsOnly) const;
+  boost::optional<int> combinatorialSize(bool selectedMeasuresOnly) const;
 
   //@}
  protected:

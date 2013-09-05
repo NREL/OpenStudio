@@ -132,14 +132,13 @@ namespace detail {
     }
 
     //@}
-
     enum ChangeType {
       Benign,
       InvalidatesResults,
       InvalidatesDataPoints,
     };
 
-    /** @name Protected in Public Class */
+    /** @name Protected in or Absent from Public Class */
     //@{
 
     /** Changes version UUID, sets to dirty, and emits changed signal. */
@@ -150,6 +149,16 @@ namespace detail {
     void setParent(const AnalysisObject& parent) const;
 
     void clearParent() const;
+
+    virtual QVariant toVariant() const;
+
+    virtual QVariant toServerFormulationVariant() const;
+
+    virtual QVariant toServerDataPointsVariant() const;
+
+    /// Relocate path data from originalBase to newBase.
+    virtual void updateInputPathData(const openstudio::path& originalBase,
+                                     const openstudio::path& newBase);
 
     //@}
    public slots:
@@ -172,11 +181,12 @@ namespace detail {
 
     void connectChild(AnalysisObject& child, bool setParent) const;
 
-    void disconnectChild(AnalysisObject& child) const;
+    void disconnectChild(AnalysisObject& child, bool clearParent=true) const;
 
     // Intended for overriding default construction behavior, as appropriate. Example:
     // deserializing an Analysis with resultsAreInvalid or dataPointsAreInvalid.
     void setDirtyFlag();
+
    private:
     REGISTER_LOGGER("openstudio.analysis.AnalysisObject");
 

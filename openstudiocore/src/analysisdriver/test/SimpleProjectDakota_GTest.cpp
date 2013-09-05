@@ -32,10 +32,10 @@
 #include <analysis/DDACEAlgorithm.hpp>
 #include <analysis/DesignOfExperimentsOptions.hpp>
 #include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/RubyPerturbation.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/RubyMeasure.hpp>
 #include <analysis/WorkflowStep.hpp>
 
 #include <project/ProjectDatabase.hpp>
@@ -60,6 +60,7 @@
 #include <model/Building.hpp>
 #include <model/Building_Impl.hpp>
 
+#include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/sql/SqlFile.hpp>
@@ -118,7 +119,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_DakotaClearAllResults) {
   DataPoint dataPoint = analysis.dataPoints()[0];
   EXPECT_TRUE(dataPoint.isComplete());
   EXPECT_FALSE(dataPoint.failed());
-  EXPECT_FALSE(dataPoint.responseValues().empty());
+  EXPECT_TRUE(dataPoint.responseValues().empty());
   EXPECT_FALSE(dataPoint.directory().empty());
   EXPECT_TRUE(boost::filesystem::exists(dataPoint.directory()));
   ASSERT_TRUE(dataPoint.osmInputData());
@@ -126,7 +127,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_DakotaClearAllResults) {
   ASSERT_TRUE(dataPoint.idfInputData());
   EXPECT_TRUE(boost::filesystem::exists(dataPoint.idfInputData().get().path()));
   EXPECT_FALSE(dataPoint.sqlOutputData());
-  EXPECT_FALSE(dataPoint.xmlOutputData());
+  EXPECT_TRUE(dataPoint.xmlOutputData().empty());
   EXPECT_TRUE(dataPoint.model());
   EXPECT_TRUE(dataPoint.workspace());
   EXPECT_FALSE(dataPoint.sqlFile());
@@ -162,7 +163,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_DakotaClearAllResults) {
     EXPECT_FALSE(dataPointRecord.failed());
     EXPECT_FALSE(dataPointRecord.directory().empty());
     EXPECT_TRUE(boost::filesystem::exists(dataPointRecord.directory()));
-    EXPECT_FALSE(dataPointRecord.responseValues().empty());
+    EXPECT_TRUE(dataPointRecord.responseValues().empty());
     frr = dataPointRecord.osmInputDataRecord();
     ASSERT_TRUE(frr);
     EXPECT_TRUE(boost::filesystem::exists(frr->path()));
@@ -171,8 +172,8 @@ TEST_F(AnalysisDriverFixture,SimpleProject_DakotaClearAllResults) {
     EXPECT_TRUE(boost::filesystem::exists(frr->path()));
     frr = dataPointRecord.sqlOutputDataRecord();
     EXPECT_FALSE(frr);
-    frr = dataPointRecord.xmlOutputDataRecord();
-    EXPECT_FALSE(frr);
+    FileReferenceRecordVector frrs = dataPointRecord.xmlOutputDataRecords();
+    EXPECT_TRUE(frrs.empty());
     ASSERT_TRUE(dataPointRecord.topLevelJobUUID());
     dataPointJobUUID = dataPointRecord.topLevelJobUUID().get();
     EXPECT_NO_THROW(runManager.getJob(dataPointJobUUID));
@@ -199,7 +200,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_DakotaClearAllResults) {
   EXPECT_FALSE(dataPoint.osmInputData());
   EXPECT_FALSE(dataPoint.idfInputData());
   EXPECT_FALSE(dataPoint.sqlOutputData());
-  ASSERT_FALSE(dataPoint.xmlOutputData());
+  EXPECT_TRUE(dataPoint.xmlOutputData().empty());
   EXPECT_FALSE(dataPoint.model());
   EXPECT_FALSE(dataPoint.workspace());
   EXPECT_FALSE(dataPoint.sqlFile());
@@ -237,8 +238,8 @@ TEST_F(AnalysisDriverFixture,SimpleProject_DakotaClearAllResults) {
     EXPECT_FALSE(frr);
     frr = dataPointRecord.sqlOutputDataRecord();
     EXPECT_FALSE(frr);
-    frr = dataPointRecord.xmlOutputDataRecord();
-    EXPECT_FALSE(frr);
+    FileReferenceRecordVector frrs = dataPointRecord.xmlOutputDataRecords();
+    EXPECT_TRUE(frrs.empty());
     EXPECT_FALSE(dataPointRecord.topLevelJobUUID());
     EXPECT_ANY_THROW(runManager.getJob(dataPointJobUUID));
   }

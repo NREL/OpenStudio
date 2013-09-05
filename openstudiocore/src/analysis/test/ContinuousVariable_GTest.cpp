@@ -20,17 +20,11 @@
 #include <gtest/gtest.h>
 #include <analysis/test/AnalysisFixture.hpp>
 
-#include <analysis/ModelRulesetContinuousVariable.hpp>
 #include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/RubyPerturbation.hpp>
+#include <analysis/RubyMeasure.hpp>
 #include <analysis/NormalDistribution.hpp>
 #include <analysis/WeibullDistribution.hpp>
 
-#include <ruleset/ModelRuleset.hpp>
-#include <ruleset/ModelRule.hpp>
-#include <ruleset/ModelObjectFilterType.hpp>
-#include <ruleset/ModelObjectFilterStringAttribute.hpp>
-#include <ruleset/ModelObjectFilterRelationship.hpp>
 #include <ruleset/OSArgument.hpp>
 
 #include <utilities/core/FileReference.hpp>
@@ -40,22 +34,8 @@ using namespace openstudio;
 using namespace openstudio::analysis;
 using namespace openstudio::ruleset;
 
-TEST_F(AnalysisFixture, ModelRulesetContinuousVariable_FiltersIncludeModelObjectFilterRelationship) {
-  ModelObjectFilterClauseVector filters;
-  filters.push_back(ModelObjectFilterType(IddObjectType::OS_Construction));
-  filters.push_back(ModelObjectFilterStringAttribute("name",RulesetStringPredicate::IEquals,"Mass Non-res Ext Wall"));
-  filters.push_back(ModelObjectFilterRelationship("insulation"));
-  ModelRulesetContinuousVariable continuousVariable("Wall Insulation R-Value",filters,"thermalResistance");
-
-  ModelRuleset ruleset = continuousVariable.getModelRuleset(1.0);
-  EXPECT_EQ(1u,ruleset.rules().size());
-  ModelRule rule = ruleset.rules()[0];
-  EXPECT_EQ(3u,rule.filters().size());
-  EXPECT_EQ(1u,rule.actions().size());
-}
-
 TEST_F(AnalysisFixture, RubyContinuousVariable_UserScript) {
-  RubyPerturbation userScript(toPath("setGeometry.rb"),
+  RubyMeasure userScript(toPath("setGeometry.rb"),
                               FileReferenceType::OSM,
                               FileReferenceType::OSM,
                               true);
@@ -74,10 +54,10 @@ TEST_F(AnalysisFixture, RubyContinuousVariable_UserScript) {
   RubyContinuousVariable var("Floor Area (m^2)",arg,userScript);
   var.setMinimum(500.0);
   var.setMaximum(1000.0);
-  EXPECT_EQ(2u,var.perturbation().arguments().size());
-  EXPECT_TRUE(var.perturbation().isUserScript());
+  EXPECT_EQ(2u,var.measure().arguments().size());
+  EXPECT_TRUE(var.measure().isUserScript());
   EXPECT_EQ(toString(completeAndNormalize(toPath("setGeometry.rb"))),
-            toString(var.perturbation().perturbationScript().path()));
+            toString(var.measure().perturbationScript().path()));
   ASSERT_TRUE(var.minimum());
   EXPECT_DOUBLE_EQ(500.0,var.minimum().get());
   ASSERT_TRUE(var.maximum());
@@ -102,7 +82,7 @@ TEST_F(AnalysisFixture, RubyContinuousVariable_UserScript) {
 }
 
 TEST_F(AnalysisFixture, RubyContinuousVariable_PlainScript) {
-  RubyPerturbation script(toPath("addUtilityRate.rb"),
+  RubyMeasure script(toPath("addUtilityRate.rb"),
                           FileReferenceType::IDF,
                           FileReferenceType::IDF);
   script.addArgument("noDemandCharge");
@@ -114,10 +94,10 @@ TEST_F(AnalysisFixture, RubyContinuousVariable_PlainScript) {
   OSArgument arg = OSArgument::makeDoubleArgument("energyCharge");
   RubyContinuousVariable var("Energy Charge ($/kWh)",arg,script);
   var.setMinimum(0.005);
-  EXPECT_EQ(1u,var.perturbation().arguments().size());
-  EXPECT_FALSE(var.perturbation().isUserScript());
+  EXPECT_EQ(1u,var.measure().arguments().size());
+  EXPECT_FALSE(var.measure().isUserScript());
   EXPECT_EQ(toString(completeAndNormalize(toPath("addUtilityRate.rb"))),
-            toString(var.perturbation().perturbationScript().path()));
+            toString(var.measure().perturbationScript().path()));
   ASSERT_TRUE(var.minimum());
   EXPECT_DOUBLE_EQ(0.005,var.minimum().get());
   EXPECT_FALSE(var.maximum());

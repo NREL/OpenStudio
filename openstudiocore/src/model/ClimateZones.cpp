@@ -26,6 +26,7 @@
 
 #include <utilities/idd/OS_ClimateZones_FieldEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/String.hpp>
 
 #include <boost/foreach.hpp>
@@ -38,7 +39,7 @@ namespace detail {
   ClimateZones_Impl::ClimateZones_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ModelObject_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == ClimateZones::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == ClimateZones::iddObjectType());
   }
 
   ClimateZones_Impl::ClimateZones_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
@@ -46,7 +47,7 @@ namespace detail {
                                        bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == ClimateZones::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == ClimateZones::iddObjectType());
   }
 
   ClimateZones_Impl::ClimateZones_Impl(const ClimateZones_Impl& other, 
@@ -151,12 +152,12 @@ namespace detail {
       }
       result = czs[0];
     }
-    BOOST_ASSERT(!result.empty());
+    OS_ASSERT(!result.empty());
     bool ok = true;
     ok = setString(OS_ClimateZonesFields::ActiveInstitution,result.institution());
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
     ok = setUnsigned(OS_ClimateZonesFields::ActiveYear,result.year());
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
     return result;
   }
 
@@ -167,9 +168,9 @@ namespace detail {
     }
     bool ok = true;
     ok = setString(OS_ClimateZonesFields::ActiveInstitution,result.institution());
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
     ok = setUnsigned(OS_ClimateZonesFields::ActiveYear,result.year());
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
     return result;
   }
 
@@ -276,7 +277,7 @@ namespace detail {
 // ClimateZone
 
 std::string ClimateZone::institution() const {
-  BOOST_ASSERT(!empty());
+  OS_ASSERT(!empty());
   std::string result;
   OptionalString os = getString(OS_ClimateZonesExtensibleFields::ClimateZoneInstitutionName,true);
   if (os) { result = *os; }
@@ -284,7 +285,7 @@ std::string ClimateZone::institution() const {
 }
 
 std::string ClimateZone::documentName() const {
-  BOOST_ASSERT(!empty());
+  OS_ASSERT(!empty());
   std::string result;
   OptionalString os = getString(OS_ClimateZonesExtensibleFields::ClimateZoneDocumentName,true);
   if (os) { result = *os; }
@@ -292,7 +293,7 @@ std::string ClimateZone::documentName() const {
 }
 
 unsigned ClimateZone::year() const {
-  BOOST_ASSERT(!empty());
+  OS_ASSERT(!empty());
   OptionalUnsigned ou = getUnsigned(OS_ClimateZonesExtensibleFields::ClimateZoneDocumentYear,true);
   if (!ou) { 
     LOG_AND_THROW("Climate zone year is not yet set for the " << groupIndex() << "th ClimateZone."); 
@@ -301,7 +302,7 @@ unsigned ClimateZone::year() const {
 }
 
 std::string ClimateZone::value() const {
-  BOOST_ASSERT(!empty());
+  OS_ASSERT(!empty());
   std::string result;
   OptionalString os = getString(OS_ClimateZonesExtensibleFields::ClimateZoneValue,true);
   if (os) { result = *os; }

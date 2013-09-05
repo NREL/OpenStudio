@@ -79,6 +79,9 @@ if (ARGV.size() >= 3 and (not ARGV[2].empty?))
 end
 puts "Running simulation."
 sql_path = simulateOneWorkspace(workspace,epw,outputDirectory)
+if sql_path.empty 
+  raise "Simulation at " + outputDirectory.to_s + " did not complete successfully." 
+end
 
 launchResultsViewer = true
 if ARGV.size >= 4 and ARGV[3].match(/(false|f|no|0)$/i)
@@ -105,3 +108,4 @@ if (launchResultsViewer and sql_path and (not sql_path.empty()))
   end
   
 end
+

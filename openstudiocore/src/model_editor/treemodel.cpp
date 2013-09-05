@@ -70,6 +70,8 @@
 
 #include <model_editor/treemodel.h>
 
+#include <utilities/core/Assert.hpp>
+
 #define guidOpenCurlyBrace '{'
 #define guidCloseCurlyBrace '}'
 
@@ -161,7 +163,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 openstudio::model::OptionalModelObject TreeModel::modelAtIndex(const QModelIndex &index) const
 {
 
-  Q_ASSERT(index.isValid());
+  OS_ASSERT(index.isValid());
   TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
   return item->modelObject();
 }
@@ -225,9 +227,9 @@ bool TreeModel::insertRows(const QModelIndex row, const QModelIndexList rowList,
 
   QModelIndex parent = row;
   TreeItem * parentItem = getItem(row);
-  Q_ASSERT(parentItem);
+  OS_ASSERT(parentItem);
   //OptionalWorkspaceObject workspaceObject = parentItem->data().workspaceObject();
-  //Q_ASSERT(workspaceObject);
+  //OS_ASSERT(workspaceObject);
   //QString iddObjectName(workspaceObject->iddObject().name().c_str());
 
   ///! For now, we should only try objects without children as the children wouldn't be
@@ -307,7 +309,7 @@ bool TreeModel::pasteRows(const QModelIndex& parentRow, std::vector<openstudio::
   bool success = false;
 
   TreeItem * parentItem = getItem(parentRow);
-  Q_ASSERT(parentItem);
+  OS_ASSERT(parentItem);
 
   openstudio::OptionalWorkspaceObject optionalWorkspaceObject;
   openstudio::OptionalWorkspaceObject optionalWorkspaceObjectToPaste;
@@ -350,7 +352,7 @@ QModelIndex TreeModel::parent(const QModelIndex &index) const
     return QModelIndex();
 
   ///! If we get here, parentItem cannot be NULL
-  Q_ASSERT(parentItem);
+  OS_ASSERT(parentItem);
 
   return createIndex(parentItem->row(), 0, parentItem);
 }
@@ -502,7 +504,7 @@ bool TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
   if(action != Qt::CopyAction) return success;
 
  TreeItem * parentItem = getItem(parent);
- Q_ASSERT(parentItem);
+ OS_ASSERT(parentItem);
 
  if(data->hasText()){
     if(!data->hasFormat("ListWidget data")) return success;
@@ -542,7 +544,7 @@ bool TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
     }
   }
   else{
-    Q_ASSERT(mTreeViewWidget && mTreeViewWidget->getTreeView());
+    OS_ASSERT(mTreeViewWidget && mTreeViewWidget->getTreeView());
     QModelIndexList rowList;
     if(!mTreeViewWidget->getTreeView()->getSelectedRows(rowList)){
       return success;

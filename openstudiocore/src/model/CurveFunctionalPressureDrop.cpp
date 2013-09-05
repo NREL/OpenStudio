@@ -36,7 +36,7 @@ namespace detail {
   CurveFunctionalPressureDrop_Impl::CurveFunctionalPressureDrop_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : Curve_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == CurveFunctionalPressureDrop::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == CurveFunctionalPressureDrop::iddObjectType());
   }
 
   CurveFunctionalPressureDrop_Impl::CurveFunctionalPressureDrop_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -44,7 +44,7 @@ namespace detail {
                                                                      bool keepHandle)
     : Curve_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CurveFunctionalPressureDrop::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CurveFunctionalPressureDrop::iddObjectType());
   }
 
   CurveFunctionalPressureDrop_Impl::CurveFunctionalPressureDrop_Impl(const CurveFunctionalPressureDrop_Impl& other,
@@ -79,7 +79,7 @@ namespace detail {
 
   double CurveFunctionalPressureDrop_Impl::diameter() const {
     boost::optional<double> value = getDouble(OS_Curve_Functional_PressureDropFields::Diameter,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -102,7 +102,7 @@ namespace detail {
   void CurveFunctionalPressureDrop_Impl::setDiameter(double diameter) {
     bool result = false;
     result = setDouble(OS_Curve_Functional_PressureDropFields::Diameter, diameter);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveFunctionalPressureDrop_Impl::setMinorLossCoefficient(boost::optional<double> minorLossCoefficient) {
@@ -112,12 +112,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_Functional_PressureDropFields::MinorLossCoefficient, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveFunctionalPressureDrop_Impl::resetMinorLossCoefficient() {
     bool result = setString(OS_Curve_Functional_PressureDropFields::MinorLossCoefficient, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveFunctionalPressureDrop_Impl::setLength(boost::optional<double> length) {
@@ -127,12 +127,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_Functional_PressureDropFields::Length, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveFunctionalPressureDrop_Impl::resetLength() {
     bool result = setString(OS_Curve_Functional_PressureDropFields::Length, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveFunctionalPressureDrop_Impl::setRoughness(boost::optional<double> roughness) {
@@ -142,12 +142,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_Functional_PressureDropFields::Roughness, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveFunctionalPressureDrop_Impl::resetRoughness() {
     bool result = setString(OS_Curve_Functional_PressureDropFields::Roughness, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveFunctionalPressureDrop_Impl::setFixedFrictionFactor(boost::optional<double> fixedFrictionFactor) {
@@ -157,12 +157,12 @@ namespace detail {
     } else {
       result = setString(OS_Curve_Functional_PressureDropFields::FixedFrictionFactor, "");
     }
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void CurveFunctionalPressureDrop_Impl::resetFixedFrictionFactor() {
     bool result = setString(OS_Curve_Functional_PressureDropFields::FixedFrictionFactor, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
 } // detail
@@ -170,7 +170,7 @@ namespace detail {
 CurveFunctionalPressureDrop::CurveFunctionalPressureDrop(const Model& model)
   : Curve(CurveFunctionalPressureDrop::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CurveFunctionalPressureDrop_Impl>());
+  OS_ASSERT(getImpl<detail::CurveFunctionalPressureDrop_Impl>());
   setDouble(OS_Curve_Functional_PressureDropFields::Diameter,0.05);
 }
 

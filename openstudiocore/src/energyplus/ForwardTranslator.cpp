@@ -27,8 +27,12 @@
 #include <model/Surface_Impl.hpp>
 #include <model/Construction.hpp>
 #include <model/Construction_Impl.hpp>
+#include <model/ConstructionWithInternalSource.hpp>
+#include <model/ConstructionWithInternalSource_Impl.hpp>
 #include <model/RunPeriod.hpp>
 #include <model/RunPeriod_Impl.hpp>
+#include <model/RunPeriodControlSpecialDays.hpp>
+#include <model/RunPeriodControlSpecialDays_Impl.hpp>
 #include <model/SimulationControl.hpp>
 #include <model/SimulationControl_Impl.hpp>
 #include <model/Building.hpp>
@@ -65,6 +69,9 @@ ForwardTranslator::ForwardTranslator()
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ForwardTranslator"));
   m_logSink.setThreadId(QThread::currentThread());
+
+  // temp code 
+  m_keepRunControlSpecialDays = false;
 }
 
 Workspace ForwardTranslator::translateModel( const Model & model, ProgressBar* progressBar )
@@ -115,6 +122,13 @@ std::vector<LogMessage> ForwardTranslator::errors() const
 
   return result;
 }
+
+// temp code
+void ForwardTranslator::setKeepRunControlSpecialDays(bool keepRunControlSpecialDays)
+{
+  m_keepRunControlSpecialDays = keepRunControlSpecialDays;
+}
+
 
 Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool fullModelTranslation )
 {
@@ -190,6 +204,14 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
   }  
 
+  // temp code
+  if (!m_keepRunControlSpecialDays){
+    // DLM: we will not translate these objects until we support holidays in the GUI
+    // we will not warn users because these objects are not exposed in the GUI
+    BOOST_FOREACH(model::RunPeriodControlSpecialDays holiday, model.getModelObjects<model::RunPeriodControlSpecialDays>()){ 
+      holiday.remove();
+    }
+  }
 
   if (fullModelTranslation){
 
@@ -281,13 +303,13 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
 
   Workspace workspace(StrictnessLevel::None, IddFileType::EnergyPlus);
   OptionalWorkspaceObject vo = workspace.versionObject();
-  BOOST_ASSERT(vo);
+  OS_ASSERT(vo);
   workspace.removeObject(vo->handle());
 
   workspace.setFastNaming(true);
   workspace.addObjects(m_idfObjects);
   workspace.setFastNaming(false);
-  BOOST_ASSERT(workspace.getObjectsByType(IddObjectType::Version).size() == 1u);
+  OS_ASSERT(workspace.getObjectsByType(IddObjectType::Version).size() == 1u);
 
   return workspace;
 }
@@ -468,6 +490,16 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateCoilCoolingDXTwoSpeed(coil);
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlow :
+    {
+      // no-op
+      return retVal;
+    }
+  case openstudio::IddObjectType::OS_Coil_Cooling_LowTemperatureRadiant_VariableFlow :
+    {
+      // no-op
+      return retVal;
+    }
   case openstudio::IddObjectType::OS_Coil_Cooling_Water :
     {
       model::CoilCoolingWater coil = modelObject.cast<CoilCoolingWater>();
@@ -497,6 +529,16 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::CoilHeatingGas coil = modelObject.cast<CoilHeatingGas>();
       retVal = translateCoilHeatingGas(coil);
       break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_LowTemperatureRadiant_ConstantFlow :
+    {
+      // no-op
+      return retVal;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_LowTemperatureRadiant_VariableFlow :
+    {
+      // no-op
+      return retVal;
     }
   case openstudio::IddObjectType::OS_Coil_Heating_Water :
     {
@@ -539,6 +581,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::Construction construction = modelObject.cast<Construction>();
       retVal = translateConstruction(construction);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Construction_InternalSource :
+    {
+      model::ConstructionWithInternalSource constructionIntSource = modelObject.cast<ConstructionWithInternalSource>();
+      retVal = translateConstructionWithInternalSource(constructionIntSource);
       break;
     }
   case openstudio::IddObjectType::OS_Construction_FfactorGroundFloor :
@@ -759,11 +807,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::ElectricEquipment equipment = modelObject.cast<ElectricEquipment>();
       retVal = translateElectricEquipment(equipment);
       break;
-    }
+    }     
   case openstudio::IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial :
     {
       model::EvaporativeCoolerDirectResearchSpecial evap = modelObject.cast<EvaporativeCoolerDirectResearchSpecial>();
       retVal = translateEvaporativeCoolerDirectResearchSpecial(evap);
+      break;
+    }
+  case openstudio::IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed :
+    {
+      model::EvaporativeFluidCoolerSingleSpeed evap = modelObject.cast<EvaporativeFluidCoolerSingleSpeed>();
+      retVal = translateEvaporativeFluidCoolerSingleSpeed(evap);
       break;
     }
   case openstudio::IddObjectType::OS_Exterior_Lights :
@@ -793,6 +847,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::FanVariableVolume fan = modelObject.cast<FanVariableVolume>();
       retVal = translateFanVariableVolume(fan);
+      break;
+    }
+  case openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical :
+    {
+      model::GroundHeatExchangerVertical groundHeatExchangerVertical = modelObject.cast<GroundHeatExchangerVertical>();
+      retVal = translateGroundHeatExchangerVertical(groundHeatExchangerVertical);
       break;
     }
   case openstudio::IddObjectType::OS_HeatBalanceAlgorithm :
@@ -969,6 +1029,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translatePumpVariableSpeed(pump);
       break;
     }
+  case openstudio::IddObjectType::OS_OutputControl_ReportingTolerances :
+    {
+      model::OutputControlReportingTolerances outputControl = modelObject.cast<OutputControlReportingTolerances>();
+      retVal = translateOutputControlReportingTolerances(outputControl);
+      break;
+    }
   case openstudio::IddObjectType::OS_Output_Variable :
     {
       model::OutputVariable outputVariable = modelObject.cast<OutputVariable>();
@@ -1012,10 +1078,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_RunPeriodControl_SpecialDays :
     {
-      // DLM: we will not translate these objects until we support holidays in the GUI
-      // we will not warn users because these objects are not exposed in the GUI
-      //model::RunPeriodControlSpecialDays mo = modelObject.cast<RunPeriodControlSpecialDays>();
-      //retVal = translateRunPeriodControlSpecialDays(mo);
+      model::RunPeriodControlSpecialDays mo = modelObject.cast<RunPeriodControlSpecialDays>();
+      retVal = translateRunPeriodControlSpecialDays(mo);
       break;
     }
   case openstudio::IddObjectType::OS_Schedule_Compact :
@@ -1107,6 +1171,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateSetpointManagerOutdoorAirReset(spm);
       break;
     }
+  case  openstudio::IddObjectType::OS_SetpointManager_Warmest :
+    {
+      model::SetpointManagerWarmest spm = modelObject.cast<SetpointManagerWarmest>();
+      retVal = translateSetpointManagerWarmest(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_ShadingControl :
+    {
+      model::ShadingControl shadingControl = modelObject.cast<ShadingControl>();
+      retVal = translateShadingControl(shadingControl);
+      break;
+    }    
   case  openstudio::IddObjectType::OS_ShadingSurface :
     {
       model::ShadingSurface shadingSurface = modelObject.cast<ShadingSurface>();
@@ -1331,6 +1407,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneHVACIdealLoadsAirSystem(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow :
+    { 
+      model::ZoneHVACLowTempRadiantConstFlow mo = modelObject.cast<ZoneHVACLowTempRadiantConstFlow>();
+      retVal = translateZoneHVACLowTempRadiantConstFlow(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow :
+    { 
+      model::ZoneHVACLowTempRadiantVarFlow mo = modelObject.cast<ZoneHVACLowTempRadiantVarFlow>();
+      retVal = translateZoneHVACLowTempRadiantVarFlow(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric :
+    {
+      model::ZoneHVACLowTemperatureRadiantElectric mo = modelObject.cast<ZoneHVACLowTemperatureRadiantElectric>();
+      retVal = translateZoneHVACLowTemperatureRadiantElectric(mo);
+      break;
+    }  
   case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump :
     {
       model::ZoneHVACPackagedTerminalHeatPump mo = modelObject.cast<ZoneHVACPackagedTerminalHeatPump>();
@@ -1441,6 +1535,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneAirContaminantBalance);
   result.push_back(IddObjectType::OS_ZoneAirHeatBalanceAlgorithm);
   result.push_back(IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial);
+  result.push_back(IddObjectType::OS_OutputControl_ReportingTolerances);
 
   result.push_back(IddObjectType::OS_Site);
   result.push_back(IddObjectType::OS_Site_GroundReflectance);
@@ -1549,7 +1644,9 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ThermostatSetpoint_DualSetpoint);
   result.push_back(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water);
   result.push_back(IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem);
-
+  result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
+  result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow);
+  result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);
 
@@ -1578,6 +1675,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_Screen);
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_Shade);
   iddObjectTypes.push_back(IddObjectType::OS_WindowMaterial_SimpleGlazingSystem);
+  iddObjectTypes.push_back(IddObjectType::OS_ShadingControl);
 
   iddObjectTypes.push_back(IddObjectType::OS_Construction);
   iddObjectTypes.push_back(IddObjectType::OS_Construction_CfactorUndergroundWall);
@@ -1698,6 +1796,12 @@ model::ConstructionBase ForwardTranslator::reverseConstruction(const model::Cons
 
   if (construction.optionalCast<model::Construction>()){
     model::Construction reversed = construction.cast<model::Construction>().reverseConstruction();
+    m_constructionHandleToReversedConstructions.insert(std::make_pair<Handle, model::ConstructionBase>(construction.handle(), reversed)); 
+    return reversed;
+  }
+
+  if (construction.optionalCast<model::ConstructionWithInternalSource>()){
+    model::ConstructionWithInternalSource reversed = construction.cast<model::ConstructionWithInternalSource>().reverseConstructionWithInternalSource();
     m_constructionHandleToReversedConstructions.insert(std::make_pair<Handle, model::ConstructionBase>(construction.handle(), reversed)); 
     return reversed;
   }

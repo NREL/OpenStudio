@@ -165,20 +165,20 @@ namespace gbxml {
 
       QString beginDateString = scheduleYearElement.elementsByTagName("BeginDate").at(0).toElement().text();
       QStringList beginDateParts = beginDateString.split('-'); // 2011-01-01
-      BOOST_ASSERT(beginDateParts.size() == 3);
+      OS_ASSERT(beginDateParts.size() == 3);
       yd.setCalendarYear(beginDateParts.at(0).toInt());
       openstudio::Date beginDate = yd.makeDate(beginDateParts.at(1).toInt(), beginDateParts.at(2).toInt());
 
       // handle case if schedule does not start on 1/1
       if ((i == 0) && (beginDate != yd.makeDate(1,1))){
-        BOOST_ASSERT(false);
+        OS_ASSERT(false);
       }
 
       QString endDateString = scheduleYearElement.elementsByTagName("EndDate").at(0).toElement().text();
       QStringList endDateParts = endDateString.split('-'); // 2011-12-31
-      BOOST_ASSERT(endDateParts.size() == 3);
-      BOOST_ASSERT(yd.calendarYear());
-      BOOST_ASSERT(yd.calendarYear().get() == endDateParts.at(0).toInt());
+      OS_ASSERT(endDateParts.size() == 3);
+      OS_ASSERT(yd.calendarYear());
+      OS_ASSERT(yd.calendarYear().get() == endDateParts.at(0).toInt());
       openstudio::Date endDate = yd.makeDate(endDateParts.at(1).toInt(), endDateParts.at(2).toInt());
       
       QString weekScheduleId = element.elementsByTagName("WeekScheduleId").at(0).toElement().attribute("weekScheduleIdRef");

@@ -24,6 +24,8 @@
 
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 #include <OpenStudio.hxx>
 
 namespace openstudio {
@@ -36,7 +38,7 @@ namespace detail {
                              bool keepHandle)
     : ModelObject_Impl(idfObject, model, keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == Version::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == Version::iddObjectType());
   }
 
   Version_Impl::Version_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -44,7 +46,7 @@ namespace detail {
                              bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == Version::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == Version::iddObjectType());
   }
 
   Version_Impl::Version_Impl(const Version_Impl& other,
@@ -94,7 +96,7 @@ namespace detail {
 Version::Version(const Model& model)
   : ModelObject(iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::Version_Impl>());
+  OS_ASSERT(getImpl<detail::Version_Impl>());
   setVersionIdentifier( openStudioVersion() );
 }
 

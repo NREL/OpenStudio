@@ -75,20 +75,25 @@ namespace detail {
       if (t_params.has("filename") && !t_params.get("filename").children.empty())
       {
         // first, see if we can get a filename that was specifically requested by the job creation
-        
         std::string filename = t_params.get("filename").children[0].value;
-       
+
         LOG(Info, "Looking for filename: " << filename); 
-        try {
-          m_idf = t_files.getLastByFilename(filename);
-        } catch (const std::runtime_error &) {
+
+        std::vector<FileInfo> files = t_files.getAllByFilename(filename).files();
+        if (!files.empty())
+        {
+          m_idf = files.back();
+        } else {
           // a filename param was provided, but the file hasn't been generated ... yet
         }
       } else {
         // if not, try to get any old IDF that was passed in
-        try {
-          m_idf = t_files.getLastByExtension("idf");
-        } catch (const std::runtime_error &) {
+        std::vector<FileInfo> files = t_files.getAllByExtension("idf").files();
+        if (!files.empty())
+        {
+          m_idf = files.back();
+        } else {
+          // there are not any idf files at all
         }
       }
     }
@@ -132,10 +137,10 @@ namespace detail {
   {
     if (m_idf)
     {
-      try {
+      if (m_idf->hasRequiredFile(toPath("in.epw")))
+      {
         return toString(m_idf->getRequiredFile(toPath("in.epw")).first.toString());
-      } catch (const std::exception &) {
-      }
+      } 
     }
 
     // Fall through case
@@ -152,16 +157,14 @@ namespace detail {
       throw std::runtime_error("No IDF file found in input files");
     } 
 
-    try {
-      m_idf->getRequiredFile(toPath("Energy+.idd"));
-    } catch (const std::runtime_error &) {
+    if (!m_idf->hasRequiredFile(toPath("Energy+.idd")))
+    {
       // We did not have an idd set, so we should find one
       m_idf->addRequiredFile( toPath("Energy+.idd"), toPath("Energy+.idd"));
     }
 
-    try {
-      m_idf->getRequiredFile(toPath("in.epw")); 
-    } catch (const std::runtime_error &) {
+    if (!m_idf->hasRequiredFile(toPath("in.epw")))
+    {
       openstudio::path epw = WeatherFileFinder::find(allParams(), m_filelocationname, m_weatherfilename);
 
       if (!epw.empty())

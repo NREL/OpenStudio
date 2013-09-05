@@ -45,8 +45,8 @@ namespace detail {
   ModelRuleset_Impl::ModelRuleset_Impl(const QDomElement& element)
     : Ruleset_Impl(element)
   {
-    BOOST_ASSERT(!element.isNull());
-    BOOST_ASSERT(element.tagName() == toQString(this->xmlElementName()));
+    OS_ASSERT(!element.isNull());
+    OS_ASSERT(element.tagName() == toQString(this->xmlElementName()));
 
     {
       QString str;
@@ -68,7 +68,7 @@ namespace detail {
       for (int i = 0; i < childNodes.count(); i++){
         QDomElement childElement = childNodes.at(i).toElement();
         boost::optional<Rule> rule = Rule::factoryFromXml(childElement);
-        BOOST_ASSERT(rule);
+        OS_ASSERT(rule);
         m_rules.push_back(rule->cast<ModelRule>());
       }
     }else{
@@ -130,27 +130,27 @@ std::string ModelRuleset::xmlElementName()
 ModelRuleset::ModelRuleset(const std::string& name)
   : Ruleset(boost::shared_ptr<detail::ModelRuleset_Impl>(new detail::ModelRuleset_Impl(name)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelRuleset_Impl>());
+  OS_ASSERT(getImpl<detail::ModelRuleset_Impl>());
 }
 
 ModelRuleset::ModelRuleset(const std::string& name, const UUID& uuid, const UUID& versionUUID,
                            const std::vector<ModelRule>& rules)
   : Ruleset(boost::shared_ptr<detail::ModelRuleset_Impl>(new detail::ModelRuleset_Impl(name,uuid,versionUUID,rules)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelRuleset_Impl>());
+  OS_ASSERT(getImpl<detail::ModelRuleset_Impl>());
 }
 
 ModelRuleset::ModelRuleset(const QDomElement& element)
   : Ruleset(boost::shared_ptr<detail::ModelRuleset_Impl>(new detail::ModelRuleset_Impl(element)))
 {
-  BOOST_ASSERT(getImpl<detail::ModelRuleset_Impl>());
+  OS_ASSERT(getImpl<detail::ModelRuleset_Impl>());
 }
 
 /// @cond
 ModelRuleset::ModelRuleset(boost::shared_ptr<detail::ModelRuleset_Impl> impl)
   : Ruleset(impl)
 {
-  BOOST_ASSERT(getImpl<detail::ModelRuleset_Impl>());
+  OS_ASSERT(getImpl<detail::ModelRuleset_Impl>());
 }
 /// @endcond
 

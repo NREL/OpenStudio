@@ -24,6 +24,10 @@
 #include <analysis/OptimizationProblem_Impl.hpp>
 
 #include <utilities/core/Containers.hpp>
+#include <utilities/core/Json.hpp>
+
+#include <boost/function.hpp>
+#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace analysis {
@@ -42,28 +46,31 @@ namespace detail {
       const std::string& name,
       const std::string& displayName,
       const std::string& description,
+      const OptimizationProblem& optimizationProblem,
       bool complete,
       bool failed,
-      const OptimizationProblem& optimizationProblem,
-      const std::vector<double>& objectiveValues,
+      bool selected,
       const std::vector<QVariant>& variableValues,
       const std::vector<double>& responseValues,
+      const std::vector<double>& objectiveValues,
       const openstudio::path& directory,
       const boost::optional<FileReference>& osmInputData,
       const boost::optional<FileReference>& idfInputData,
       const boost::optional<FileReference>& sqlOutputData,
-      const boost::optional<FileReference>& xmlOutputData,
-      const std::vector<Tag>& tags,
+      const std::vector<FileReference>& xmlOutputData,
       const boost::optional<runmanager::Job>& topLevelJob,
-      const std::vector<openstudio::path>& dakotaParametersFiles)
+      const std::vector<openstudio::path>& dakotaParametersFiles,
+      const std::vector<Tag>& tags,
+      const std::vector<Attribute>& outputAttributes)
     : DataPoint_Impl(uuid,
                      versionUUID,
                      name,
                      displayName,
                      description,
+                     optimizationProblem,
                      complete,
                      failed,
-                     optimizationProblem,
+                     selected,
                      variableValues,
                      responseValues,
                      directory,
@@ -71,9 +78,57 @@ namespace detail {
                      idfInputData,
                      sqlOutputData,
                      xmlOutputData,
-                     tags,
                      topLevelJob,
-                     dakotaParametersFiles),
+                     dakotaParametersFiles,
+                     tags,
+                     outputAttributes),
+      m_objectiveValues(objectiveValues)
+  {}
+
+  OptimizationDataPoint_Impl::OptimizationDataPoint_Impl(
+      const UUID& uuid,
+      const UUID& versionUUID,
+      const std::string& name,
+      const std::string& displayName,
+      const std::string& description,
+      const UUID& problemUUID,
+      const boost::optional<UUID>& analysisUUID,
+      bool complete,
+      bool failed,
+      bool selected,
+      const std::vector<QVariant>& variableValues,
+      const std::vector<double>& responseValues,
+      const std::vector<double>& objectiveValues,
+      const openstudio::path& directory,
+      const boost::optional<FileReference>& osmInputData,
+      const boost::optional<FileReference>& idfInputData,
+      const boost::optional<FileReference>& sqlOutputData,
+      const std::vector<FileReference>& xmlOutputData,
+      const boost::optional<runmanager::Job>& topLevelJob,
+      const std::vector<openstudio::path>& dakotaParametersFiles,
+      const std::vector<Tag>& tags,
+      const std::vector<Attribute>& outputAttributes)
+    : DataPoint_Impl(uuid,
+                     versionUUID,
+                     name,
+                     displayName,
+                     description,
+                     problemUUID,
+                     analysisUUID,
+                     complete,
+                     failed,
+                     selected,
+                     variableValues,
+                     responseValues,
+                     directory,
+                     osmInputData,
+                     idfInputData,
+                     sqlOutputData,
+                     xmlOutputData,
+                     topLevelJob,
+                     dakotaParametersFiles,
+                     tags,
+                     outputAttributes),
       m_objectiveValues(objectiveValues)
   {}
 
@@ -105,6 +160,63 @@ namespace detail {
     onChange(AnalysisObject_Impl::Benign);
   }
 
+  QVariant OptimizationDataPoint_Impl::toVariant() const {
+    QVariantMap dataPointData = DataPoint_Impl::toVariant().toMap();
+
+    dataPointData["data_point_type"] = QString("OptimizationDataPoint");
+
+    if (!objectiveValues().empty()) {
+      QVariantList objectiveValuesList;
+      int index(0);
+      Q_FOREACH(double value,objectiveValues()) {
+        QVariantMap objectiveMap;
+        objectiveMap["objective_value_index"] = QVariant(index);
+        objectiveMap["value"] = QVariant(value);
+        objectiveValuesList.push_back(objectiveMap);
+        ++index;
+      }
+      dataPointData["objective_values"] = objectiveValuesList;
+    }
+
+    return QVariant(dataPointData);
+  }
+
+  OptimizationDataPoint OptimizationDataPoint_Impl::fromVariant(const QVariant& variant, const VersionString& version) {
+    DataPoint slice = DataPoint_Impl::fromVariant(variant,version);
+
+    QVariantMap map = variant.toMap();
+
+    bool ok(false);
+    DoubleVector objectiveValues = deserializeOrderedVector<double>(
+          map["objective_values"].toList(),
+          "value",
+          "objective_value_index",
+          boost::function<double (QVariant*)>(boost::bind(&QVariant::toDouble,_1,&ok)));
+
+    return OptimizationDataPoint(slice.uuid(),
+                                 slice.versionUUID(),
+                                 slice.name(),
+                                 slice.displayName(),
+                                 slice.description(),
+                                 slice.problemUUID(),
+                                 slice.analysisUUID(),
+                                 slice.isComplete(),
+                                 slice.failed(),
+                                 slice.selected(),
+                                 slice.variableValues(),
+                                 slice.responseValues(),
+                                 objectiveValues,
+                                 slice.directory(),
+                                 slice.osmInputData(),
+                                 slice.idfInputData(),
+                                 slice.sqlOutputData(),
+                                 slice.xmlOutputData(),
+                                 slice.topLevelJob(),
+                                 slice.dakotaParametersFiles(),
+                                 slice.tags(),
+                                 slice.outputAttributes());
+  }
+
 } // detail
 
 OptimizationDataPoint::OptimizationDataPoint(const OptimizationProblem& optimizationProblem,
@@ -118,40 +230,91 @@ OptimizationDataPoint::OptimizationDataPoint(const UUID& uuid,
                                              const std::string& name,
                                              const std::string& displayName,
                                              const std::string& description,
+                                             const OptimizationProblem& optimizationProblem,
                                              bool complete,
                                              bool failed,
-                                             const OptimizationProblem& optimizationProblem,
-                                             const std::vector<double>& objectiveValues,
+                                             bool selected,
                                              const std::vector<QVariant>& variableValues,
                                              const std::vector<double>& responseValues,
+                                             const std::vector<double>& objectiveValues,
                                              const openstudio::path& directory,
                                              const boost::optional<FileReference>& osmInputData,
                                              const boost::optional<FileReference>& idfInputData,
                                              const boost::optional<FileReference>& sqlOutputData,
-                                             const boost::optional<FileReference>& xmlOutputData,
-                                             const std::vector<Tag>& tags,
+                                             const std::vector<FileReference>& xmlOutputData,
                                              const boost::optional<runmanager::Job>& topLevelJob,
-                                             const std::vector<openstudio::path>& dakotaParametersFiles)
+                                             const std::vector<openstudio::path>& dakotaParametersFiles,
+                                             const std::vector<Tag>& tags,
+                                             const std::vector<Attribute>& outputAttributes)
   : DataPoint(boost::shared_ptr<detail::OptimizationDataPoint_Impl>(
                   new detail::OptimizationDataPoint_Impl(uuid,
                                                          versionUUID,
                                                          name,
                                                          displayName,
                                                          description,
+                                                         optimizationProblem,
                                                          complete,
                                                          failed,
-                                                         optimizationProblem,
-                                                         objectiveValues,
+                                                         selected,
                                                          variableValues,
                                                          responseValues,
+                                                         objectiveValues,
                                                          directory,
                                                          osmInputData,
                                                          idfInputData,
                                                          sqlOutputData,
                                                          xmlOutputData,
-                                                         tags,
                                                          topLevelJob,
-                                                         dakotaParametersFiles)))
+                                                         dakotaParametersFiles,
+                                                         tags,
+                                                         outputAttributes)))
+{}
+
+OptimizationDataPoint::OptimizationDataPoint(const UUID& uuid,
+                                             const UUID& versionUUID,
+                                             const std::string& name,
+                                             const std::string& displayName,
+                                             const std::string& description,
+                                             const UUID& problemUUID,
+                                             const boost::optional<UUID>& analysisUUID,
+                                             bool complete,
+                                             bool failed,
+                                             bool selected,
+                                             const std::vector<QVariant>& variableValues,
+                                             const std::vector<double>& responseValues,
+                                             const std::vector<double>& objectiveValues,
+                                             const openstudio::path& directory,
+                                             const boost::optional<FileReference>& osmInputData,
+                                             const boost::optional<FileReference>& idfInputData,
+                                             const boost::optional<FileReference>& sqlOutputData,
+                                             const std::vector<FileReference>& xmlOutputData,
+                                             const boost::optional<runmanager::Job>& topLevelJob,
+                                             const std::vector<openstudio::path>& dakotaParametersFiles,
+                                             const std::vector<Tag>& tags,
+                                             const std::vector<Attribute>& outputAttributes)
+  : DataPoint(boost::shared_ptr<detail::OptimizationDataPoint_Impl>(
+                  new detail::OptimizationDataPoint_Impl(uuid,
+                                                         versionUUID,
+                                                         name,
+                                                         displayName,
+                                                         description,
+                                                         problemUUID,
+                                                         analysisUUID,
+                                                         complete,
+                                                         failed,
+                                                         selected,
+                                                         variableValues,
+                                                         responseValues,
+                                                         objectiveValues,
+                                                         directory,
+                                                         osmInputData,
+                                                         idfInputData,
+                                                         sqlOutputData,
+                                                         xmlOutputData,
+                                                         topLevelJob,
+                                                         dakotaParametersFiles,
+                                                         tags,
+                                                         outputAttributes)))
 {}
 
 OptimizationProblem OptimizationDataPoint::optimizationProblem() const {

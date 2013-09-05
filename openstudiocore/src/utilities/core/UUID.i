@@ -32,6 +32,8 @@ namespace openstudio{
   
   UUID createUUID();
   
+  std::string removeBraces(const UUID& uuid);
+  
   %extend UUID{
   
     static UUID create(){

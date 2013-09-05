@@ -44,7 +44,7 @@ namespace detail {
   GasEquipment_Impl::GasEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceLoadInstance_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == GasEquipment::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == GasEquipment::iddObjectType());
   }
 
   GasEquipment_Impl::GasEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -52,7 +52,7 @@ namespace detail {
                                        bool keepHandle)
     : SpaceLoadInstance_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == GasEquipment::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == GasEquipment::iddObjectType());
   }
 
   GasEquipment_Impl::GasEquipment_Impl(const GasEquipment_Impl& other,
@@ -129,7 +129,7 @@ namespace detail {
 
   double GasEquipment_Impl::multiplier() const {
     boost::optional<double> value = getDouble(OS_GasEquipmentFields::Multiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -139,7 +139,7 @@ namespace detail {
 
   std::string GasEquipment_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_GasEquipmentFields::EndUseSubcategory,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -155,18 +155,18 @@ namespace detail {
 
   void GasEquipment_Impl::resetMultiplier() {
     bool result = setString(OS_GasEquipmentFields::Multiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void GasEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = false;
     result = setString(OS_GasEquipmentFields::EndUseSubcategory, endUseSubcategory);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void GasEquipment_Impl::resetEndUseSubcategory() {
     bool result = setString(OS_GasEquipmentFields::EndUseSubcategory, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   int GasEquipment_Impl::spaceIndex() const {
@@ -208,7 +208,7 @@ namespace detail {
 
   void GasEquipment_Impl::resetSchedule() {
     bool result = setString(OS_GasEquipmentFields::ScheduleName, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   GasEquipmentDefinition GasEquipment_Impl::gasEquipmentDefinition() const
@@ -314,7 +314,7 @@ namespace detail {
 GasEquipment::GasEquipment(const GasEquipmentDefinition& gasEquipmentDefinition)
   : SpaceLoadInstance(GasEquipment::iddObjectType(),gasEquipmentDefinition)
 {
-  BOOST_ASSERT(getImpl<detail::GasEquipment_Impl>());
+  OS_ASSERT(getImpl<detail::GasEquipment_Impl>());
 }
 
 IddObjectType GasEquipment::iddObjectType() {

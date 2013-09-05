@@ -163,9 +163,14 @@ runmanager = OpenStudio::Runmanager::RunManager.new(runmanager_path, true)
 runmanager.setPaused(true)
 
 # run 
+runDir = OpenStudio::system_complete(runDir)
+puts "Creating rundir: #{runDir}"
+OpenStudio::makeParentFolder(runDir, OpenStudio::Path.new(), true)
+puts "Creating workflow"
 jobtree = workflow.create(OpenStudio::system_complete(runDir), OpenStudio::system_complete(modelPath), OpenStudio::Path.new())
 runmanager.enqueue(jobtree, true)
 runmanager.getJobs.each {|job| job.setBasePath(resourcePath)}
+puts "Running jobs"
 runmanager.setPaused(false)
 runmanager.waitForFinished()
 

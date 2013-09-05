@@ -53,7 +53,7 @@ void CollapsibleInspector::createLayout()
 
   bool isConnected = connect(m_header,SIGNAL(toggled(bool)),
                              this,SLOT(on_headerToggled(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 }
 
 ///! SLOTS
@@ -106,7 +106,7 @@ void CollapsibleInspectorHeader::createLayout()
 
   bool isConnected = connect(this,SIGNAL(toggled(bool)),
                              this,SLOT(on_toggled(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   setChecked(false);
 }

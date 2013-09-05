@@ -88,6 +88,12 @@ namespace detail {
     void clearPartitions();
 
     //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
+
+    static PSUADEDaceAlgorithmOptions fromVariant(const QVariant& variant, const VersionString& version);
+
+    //@}
    private:
     REGISTER_LOGGER("openstudio.analysis.PSUADEDaceAlgorithmOptions");
   };

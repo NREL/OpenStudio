@@ -32,6 +32,7 @@
 #include <utilities/idf/ValidityReport.hpp>
 #include <utilities/idf/IdfFile.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Compare.hpp>
 #include <utilities/idf/IdfFile.hpp>
@@ -39,6 +40,7 @@
 #include <utilities/idf/ValidityReport.hpp>
 #include <utilities/idf/Workspace.hpp>
 
+#include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
@@ -73,8 +75,11 @@
 #include <model/SetpointManagerSingleZoneReheat.hpp>
 #include <model/ZoneHVACBaseboardConvectiveWater.hpp>
 #include <model/ZoneHVACFourPipeFanCoil.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
+#include <model/ZoneHVACLowTempRadiantConstFlow.hpp>
+#include <model/ZoneHVACLowTemperatureRadiantElectric.hpp>
+#include <model/ZoneHVACLowTempRadiantVarFlow.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
+#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
 #include <model/ZoneHVACUnitHeater.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump.hpp>
 
@@ -284,15 +289,15 @@ void OpenStudioApp::buildCompLibraries()
   osversion::VersionTranslator versionTranslator;
 
   path p = resourcesPath() / toPath("MinimalTemplate.osm");
-  BOOST_ASSERT(exists(p));
+  OS_ASSERT(exists(p));
   boost::optional<Model> temp = versionTranslator.loadModel(p);
-  BOOST_ASSERT(temp);
+  OS_ASSERT(temp);
   m_compLibrary = temp.get();
 
   p = resourcesPath() / toPath("hvaclibrary/hvac_library.osm");
-  BOOST_ASSERT(exists(p));
+  OS_ASSERT(exists(p));
   temp = versionTranslator.loadModel(p);
-  BOOST_ASSERT(temp);
+  OS_ASSERT(temp);
   m_hvacCompLibrary = temp.get();
 }
 

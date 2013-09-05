@@ -27,7 +27,7 @@
 #include <utilities/units/CFMUnit.hpp>
 #include <utilities/units/IPUnit.hpp>
 #include <utilities/units/SIUnit.hpp>
-#include <utilities/units/CelciusUnit.hpp>
+#include <utilities/units/CelsiusUnit.hpp>
 #include <utilities/units/FahrenheitUnit.hpp>
 #include <utilities/units/TemperatureUnit.hpp>
 

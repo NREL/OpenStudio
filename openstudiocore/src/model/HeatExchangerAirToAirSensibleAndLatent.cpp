@@ -41,7 +41,7 @@ namespace detail {
                                                                                            bool keepHandle)
     : AirToAirComponent_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == HeatExchangerAirToAirSensibleAndLatent::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == HeatExchangerAirToAirSensibleAndLatent::iddObjectType());
   }
 
   HeatExchangerAirToAirSensibleAndLatent_Impl::HeatExchangerAirToAirSensibleAndLatent_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -49,7 +49,7 @@ namespace detail {
                                                                                            bool keepHandle)
     : AirToAirComponent_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == HeatExchangerAirToAirSensibleAndLatent::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == HeatExchangerAirToAirSensibleAndLatent::iddObjectType());
   }
 
   HeatExchangerAirToAirSensibleAndLatent_Impl::HeatExchangerAirToAirSensibleAndLatent_Impl(const HeatExchangerAirToAirSensibleAndLatent_Impl& other,
@@ -110,149 +110,149 @@ namespace detail {
 
   double HeatExchangerAirToAirSensibleAndLatent_Impl::sensibleEffectivenessat100HeatingAirFlow() const {
     boost::optional<double> value = getDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat100_HeatingAirFlow,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity HeatExchangerAirToAirSensibleAndLatent_Impl::getSensibleEffectivenessat100HeatingAirFlow(bool returnIP) const {
     OptionalDouble value = sensibleEffectivenessat100HeatingAirFlow();
     OSOptionalQuantity result = getQuantityFromDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat100_HeatingAirFlow, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double HeatExchangerAirToAirSensibleAndLatent_Impl::latentEffectivenessat100HeatingAirFlow() const {
     boost::optional<double> value = getDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat100_HeatingAirFlow,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity HeatExchangerAirToAirSensibleAndLatent_Impl::getLatentEffectivenessat100HeatingAirFlow(bool returnIP) const {
     OptionalDouble value = latentEffectivenessat100HeatingAirFlow();
     OSOptionalQuantity result = getQuantityFromDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat100_HeatingAirFlow, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double HeatExchangerAirToAirSensibleAndLatent_Impl::sensibleEffectivenessat75HeatingAirFlow() const {
     boost::optional<double> value = getDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat75_HeatingAirFlow,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity HeatExchangerAirToAirSensibleAndLatent_Impl::getSensibleEffectivenessat75HeatingAirFlow(bool returnIP) const {
     OptionalDouble value = sensibleEffectivenessat75HeatingAirFlow();
     OSOptionalQuantity result = getQuantityFromDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat75_HeatingAirFlow, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double HeatExchangerAirToAirSensibleAndLatent_Impl::latentEffectivenessat75HeatingAirFlow() const {
     boost::optional<double> value = getDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat75_HeatingAirFlow,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity HeatExchangerAirToAirSensibleAndLatent_Impl::getLatentEffectivenessat75HeatingAirFlow(bool returnIP) const {
     OptionalDouble value = latentEffectivenessat75HeatingAirFlow();
     OSOptionalQuantity result = getQuantityFromDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat75_HeatingAirFlow, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double HeatExchangerAirToAirSensibleAndLatent_Impl::sensibleEffectivenessat100CoolingAirFlow() const {
     boost::optional<double> value = getDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat100_CoolingAirFlow,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity HeatExchangerAirToAirSensibleAndLatent_Impl::getSensibleEffectivenessat100CoolingAirFlow(bool returnIP) const {
     OptionalDouble value = sensibleEffectivenessat100CoolingAirFlow();
     OSOptionalQuantity result = getQuantityFromDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat100_CoolingAirFlow, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double HeatExchangerAirToAirSensibleAndLatent_Impl::latentEffectivenessat100CoolingAirFlow() const {
     boost::optional<double> value = getDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat100_CoolingAirFlow,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity HeatExchangerAirToAirSensibleAndLatent_Impl::getLatentEffectivenessat100CoolingAirFlow(bool returnIP) const {
     OptionalDouble value = latentEffectivenessat100CoolingAirFlow();
     OSOptionalQuantity result = getQuantityFromDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat100_CoolingAirFlow, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double HeatExchangerAirToAirSensibleAndLatent_Impl::sensibleEffectivenessat75CoolingAirFlow() const {
     boost::optional<double> value = getDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat75_CoolingAirFlow,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity HeatExchangerAirToAirSensibleAndLatent_Impl::getSensibleEffectivenessat75CoolingAirFlow(bool returnIP) const {
     OptionalDouble value = sensibleEffectivenessat75CoolingAirFlow();
     OSOptionalQuantity result = getQuantityFromDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat75_CoolingAirFlow, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double HeatExchangerAirToAirSensibleAndLatent_Impl::latentEffectivenessat75CoolingAirFlow() const {
     boost::optional<double> value = getDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat75_CoolingAirFlow,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity HeatExchangerAirToAirSensibleAndLatent_Impl::getLatentEffectivenessat75CoolingAirFlow(bool returnIP) const {
     OptionalDouble value = latentEffectivenessat75CoolingAirFlow();
     OSOptionalQuantity result = getQuantityFromDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat75_CoolingAirFlow, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   double HeatExchangerAirToAirSensibleAndLatent_Impl::nominalElectricPower() const {
     boost::optional<double> value = getDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::NominalElectricPower,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity HeatExchangerAirToAirSensibleAndLatent_Impl::getNominalElectricPower(bool returnIP) const {
     OptionalDouble value = nominalElectricPower();
     OSOptionalQuantity result = getQuantityFromDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::NominalElectricPower, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
   bool HeatExchangerAirToAirSensibleAndLatent_Impl::supplyAirOutletTemperatureControl() const {
     boost::optional<std::string> value = getString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletTemperatureControl,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
   std::string HeatExchangerAirToAirSensibleAndLatent_Impl::heatExchangerType() const {
     boost::optional<std::string> value = getString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::HeatExchangerType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   std::string HeatExchangerAirToAirSensibleAndLatent_Impl::frostControlType() const {
     boost::optional<std::string> value = getString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::FrostControlType,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   double HeatExchangerAirToAirSensibleAndLatent_Impl::thresholdTemperature() const {
     boost::optional<double> value = getDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::ThresholdTemperature,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
   Quantity HeatExchangerAirToAirSensibleAndLatent_Impl::getThresholdTemperature(bool returnIP) const {
     OptionalDouble value = thresholdTemperature();
     OSOptionalQuantity result = getQuantityFromDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::ThresholdTemperature, value, returnIP);
-    BOOST_ASSERT(result.isSet());
+    OS_ASSERT(result.isSet());
     return result.get();
   }
 
@@ -280,7 +280,7 @@ namespace detail {
 
   bool HeatExchangerAirToAirSensibleAndLatent_Impl::economizerLockout() const {
     boost::optional<std::string> value = getString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::EconomizerLockout,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
@@ -317,7 +317,7 @@ namespace detail {
 
   void HeatExchangerAirToAirSensibleAndLatent_Impl::autosizeNominalSupplyAirFlowRate() {
     bool result = setString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::NominalSupplyAirFlowRate, "autosize");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool HeatExchangerAirToAirSensibleAndLatent_Impl::setSensibleEffectivenessat100HeatingAirFlow(double sensibleEffectivenessat100HeatingAirFlow) {
@@ -457,7 +457,7 @@ namespace detail {
 
   void HeatExchangerAirToAirSensibleAndLatent_Impl::setThresholdTemperature(double thresholdTemperature) {
     bool result = setDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::ThresholdTemperature, thresholdTemperature);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool HeatExchangerAirToAirSensibleAndLatent_Impl::setThresholdTemperature(const Quantity& thresholdTemperature) {
@@ -471,7 +471,7 @@ namespace detail {
 
   void HeatExchangerAirToAirSensibleAndLatent_Impl::resetThresholdTemperature() {
     bool result = setString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::ThresholdTemperature, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool HeatExchangerAirToAirSensibleAndLatent_Impl::setInitialDefrostTimeFraction(boost::optional<double> initialDefrostTimeFraction) {
@@ -503,7 +503,7 @@ namespace detail {
 
   void HeatExchangerAirToAirSensibleAndLatent_Impl::resetInitialDefrostTimeFraction() {
     bool result = setString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::InitialDefrostTimeFraction, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool HeatExchangerAirToAirSensibleAndLatent_Impl::setRateofDefrostTimeFractionIncrease(boost::optional<double> rateofDefrostTimeFractionIncrease) {
@@ -535,7 +535,7 @@ namespace detail {
 
   void HeatExchangerAirToAirSensibleAndLatent_Impl::resetRateofDefrostTimeFractionIncrease() {
     bool result = setString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::RateofDefrostTimeFractionIncrease, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void HeatExchangerAirToAirSensibleAndLatent_Impl::setEconomizerLockout(bool economizerLockout) {
@@ -703,7 +703,7 @@ namespace detail {
 HeatExchangerAirToAirSensibleAndLatent::HeatExchangerAirToAirSensibleAndLatent(const Model& model)
   : AirToAirComponent(HeatExchangerAirToAirSensibleAndLatent::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>());
+  OS_ASSERT(getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>());
 
   Schedule schedule = model.alwaysOnDiscreteSchedule();
   setAvailabilitySchedule(schedule);

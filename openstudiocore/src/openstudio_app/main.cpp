@@ -52,6 +52,15 @@ static const char *logfilepath = "/var/log/openstudio.log";
 
 int main(int argc, char *argv[])
 {
+
+#if RUBY_API_VERSION_MAJOR && RUBY_API_VERSION_MAJOR==2
+  ruby_sysinit(&argc, &argv);
+  {
+    RUBY_INIT_STACK;
+    ruby_init();
+  }
+#endif
+
 #if _DEBUG || (__GNUC__ && !NDEBUG)
   openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
   openstudio::FileLogSink fileLog(openstudio::toPath(logfilepath));

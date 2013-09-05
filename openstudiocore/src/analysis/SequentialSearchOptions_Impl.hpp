@@ -65,6 +65,12 @@ namespace detail {
     int objectiveToMinimizeFirst() const;
 
     //@}
+    /** @name Absent or Protected in Public Class */
+    //@{
+
+    static SequentialSearchOptions fromVariant(const QVariant& variant, const VersionString& version);
+
+    //@}
    private:
     REGISTER_LOGGER("openstudio.analysis.SequentialSearchOptions");
   };

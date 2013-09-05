@@ -26,6 +26,8 @@
 #include <model/Surface_Impl.hpp>
 #include <model/ConstructionBase.hpp>
 #include <model/ConstructionBase_Impl.hpp>
+#include <model/ShadingControl.hpp>
+#include <model/ShadingControl_Impl.hpp>
 
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 
@@ -81,7 +83,10 @@ boost::optional<IdfObject> ForwardTranslator::translateSubSurface( model::SubSur
     idfObject.setDouble(FenestrationSurface_DetailedFields::ViewFactortoGround, *viewFactortoGround);
   }
 
-  // TODO: \field Shading Control Name
+  boost::optional<ShadingControl> shadingControl = modelObject.shadingControl();
+  if (shadingControl){
+    idfObject.setString(FenestrationSurface_DetailedFields::ShadingControlName, shadingControl->name().get());
+  }
 
   // TODO: \field Frame and Divider Name
 

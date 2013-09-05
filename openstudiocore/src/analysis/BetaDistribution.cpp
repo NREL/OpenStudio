@@ -20,6 +20,8 @@
 #include <analysis/BetaDistribution.hpp>
 #include <analysis/UncertaintyDescription_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -77,7 +79,7 @@ void BetaDistribution::setUpperBound(double value) {
 BetaDistribution::BetaDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
-  BOOST_ASSERT(type() == BetaDistribution::type());
+  OS_ASSERT(type() == BetaDistribution::type());
 }
 
 } // analysis

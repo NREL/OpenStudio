@@ -38,6 +38,7 @@ namespace detail {
     Q_PROPERTY(boost::optional<double> designFlowRate READ designFlowRate WRITE setDesignFlowRate);
     Q_PROPERTY(boost::optional<double> flowperSpaceFloorArea READ flowperSpaceFloorArea WRITE setFlowperSpaceFloorArea);
     Q_PROPERTY(boost::optional<double> flowperExteriorSurfaceArea READ flowperExteriorSurfaceArea WRITE setFlowperExteriorSurfaceArea);
+    Q_PROPERTY(boost::optional<double> flowperExteriorWallArea READ flowperExteriorWallArea WRITE setFlowperExteriorWallArea);
     Q_PROPERTY(boost::optional<double> airChangesperHour READ airChangesperHour WRITE setAirChangesperHour);
     Q_PROPERTY(double constantTermCoefficient READ constantTermCoefficient WRITE setConstantTermCoefficient RESET resetConstantTermCoefficient);
     Q_PROPERTY(bool isConstantTermCoefficientDefaulted READ isConstantTermCoefficientDefaulted);
@@ -98,6 +99,8 @@ namespace detail {
 
     boost::optional<double> flowperExteriorSurfaceArea() const;
 
+    boost::optional<double> flowperExteriorWallArea() const;
+
     boost::optional<double> airChangesperHour() const;
 
     double constantTermCoefficient() const;
@@ -131,6 +134,8 @@ namespace detail {
     bool setFlowperSpaceFloorArea(boost::optional<double> flowperSpaceFloorArea);
 
     bool setFlowperExteriorSurfaceArea(boost::optional<double> flowperExteriorSurfaceArea);
+
+    bool setFlowperExteriorWallArea(boost::optional<double> flowperExteriorWallArea);
 
     bool setAirChangesperHour(boost::optional<double> airChangesperHour);
 

@@ -33,6 +33,8 @@
 #include <utilities/idd/SteamEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -59,7 +61,7 @@ OptionalModelObject ReverseTranslator::translateSteamEquipment(
   }
 
   s = workspaceObject.getString(openstudio::SteamEquipmentFields::DesignLevelCalculationMethod, true);
-  BOOST_ASSERT(s);
+  OS_ASSERT(s);
 
   OptionalDouble d;
   if (istringEqual("EquipmentLevel", *s)){

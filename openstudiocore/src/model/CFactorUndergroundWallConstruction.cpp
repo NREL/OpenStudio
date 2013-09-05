@@ -26,6 +26,8 @@
 
 #include <utilities/idd/OS_Construction_CfactorUndergroundWall_FieldEnums.hxx>
 
+#include <utilities/core/Assert.hpp>
+
 #include <boost/foreach.hpp>
 
 namespace openstudio {
@@ -37,7 +39,7 @@ namespace detail {
       const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ConstructionBase_Impl(idfObject, model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() ==
+    OS_ASSERT(idfObject.iddObject().type() ==
                  CFactorUndergroundWallConstruction::iddObjectType());
   }
 
@@ -45,7 +47,7 @@ namespace detail {
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
     : ConstructionBase_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == CFactorUndergroundWallConstruction::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == CFactorUndergroundWallConstruction::iddObjectType());
   }
 
   CFactorUndergroundWallConstruction_Impl::CFactorUndergroundWallConstruction_Impl(
@@ -79,7 +81,7 @@ namespace detail {
   //double CFactorUndergroundWallConstruction_Impl::cFactor() const
   //{
   //  boost::optional<double> value = getDouble(OS_Construction_CfactorUndergroundWallFields::CFactor,true);
-  //  BOOST_ASSERT(value);
+  //  OS_ASSERT(value);
   //  return value.get();
   //}
 
@@ -90,7 +92,7 @@ namespace detail {
 
   Quantity CFactorUndergroundWallConstruction_Impl::getCFactor(bool returnIP) const {
     OSOptionalQuantity value = getQuantity(OS_Construction_CfactorUndergroundWallFields::CFactor,true,returnIP);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
@@ -115,7 +117,7 @@ namespace detail {
   //double CFactorUndergroundWallConstruction_Impl::height() const
   //{
   //  boost::optional<double> value = getDouble(OS_Construction_CfactorUndergroundWallFields::Height,true);
-  //  BOOST_ASSERT(value);
+  //  OS_ASSERT(value);
   //  return value.get();
   //}
 
@@ -126,7 +128,7 @@ namespace detail {
 
   Quantity CFactorUndergroundWallConstruction_Impl::getHeight(bool returnIP) const {
     OSOptionalQuantity value = getQuantity(OS_Construction_CfactorUndergroundWallFields::Height,true,returnIP);
-    BOOST_ASSERT(value.isSet());
+    OS_ASSERT(value.isSet());
     return value.get();
   }
 
@@ -155,7 +157,7 @@ CFactorUndergroundWallConstruction::CFactorUndergroundWallConstruction(const Mod
                                                                        double height)
   : ConstructionBase(CFactorUndergroundWallConstruction::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::CFactorUndergroundWallConstruction_Impl>());
+  OS_ASSERT(getImpl<detail::CFactorUndergroundWallConstruction_Impl>());
   
   this->setCFactor(cFactor);
   this->setHeight(height);

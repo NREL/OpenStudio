@@ -46,7 +46,7 @@ namespace detail {
   InteriorPartitionSurfaceGroup_Impl::InteriorPartitionSurfaceGroup_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : PlanarSurfaceGroup_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == InteriorPartitionSurfaceGroup::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == InteriorPartitionSurfaceGroup::iddObjectType());
   }
 
   InteriorPartitionSurfaceGroup_Impl::InteriorPartitionSurfaceGroup_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -54,7 +54,7 @@ namespace detail {
                                                                          bool keepHandle)
     : PlanarSurfaceGroup_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == InteriorPartitionSurfaceGroup::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == InteriorPartitionSurfaceGroup::iddObjectType());
   }
 
   InteriorPartitionSurfaceGroup_Impl::InteriorPartitionSurfaceGroup_Impl(const InteriorPartitionSurfaceGroup_Impl& other,
@@ -149,7 +149,7 @@ namespace detail {
 
   double InteriorPartitionSurfaceGroup_Impl::directionofRelativeNorth() const {
     boost::optional<double> value = getDouble(OS_InteriorPartitionSurfaceGroupFields::DirectionofRelativeNorth,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -159,7 +159,7 @@ namespace detail {
 
   double InteriorPartitionSurfaceGroup_Impl::xOrigin() const {
     boost::optional<double> value = getDouble(OS_InteriorPartitionSurfaceGroupFields::XOrigin,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -169,7 +169,7 @@ namespace detail {
 
   double InteriorPartitionSurfaceGroup_Impl::yOrigin() const {
     boost::optional<double> value = getDouble(OS_InteriorPartitionSurfaceGroupFields::YOrigin,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -179,7 +179,7 @@ namespace detail {
 
   double InteriorPartitionSurfaceGroup_Impl::zOrigin() const {
     boost::optional<double> value = getDouble(OS_InteriorPartitionSurfaceGroupFields::ZOrigin,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -189,7 +189,7 @@ namespace detail {
 
   int InteriorPartitionSurfaceGroup_Impl::multiplier() const {
     boost::optional<int> value = getInt(OS_InteriorPartitionSurfaceGroupFields::Multiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -200,45 +200,45 @@ namespace detail {
   void InteriorPartitionSurfaceGroup_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
     bool result = false;
     result = setDouble(OS_InteriorPartitionSurfaceGroupFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void InteriorPartitionSurfaceGroup_Impl::resetDirectionofRelativeNorth() {
     bool result = setString(OS_InteriorPartitionSurfaceGroupFields::DirectionofRelativeNorth, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void InteriorPartitionSurfaceGroup_Impl::setXOrigin(double xOrigin, bool driverMethod) {
     bool result = false;
     result = setDouble(OS_InteriorPartitionSurfaceGroupFields::XOrigin, xOrigin, driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void InteriorPartitionSurfaceGroup_Impl::resetXOrigin() {
     bool result = setString(OS_InteriorPartitionSurfaceGroupFields::XOrigin, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void InteriorPartitionSurfaceGroup_Impl::setYOrigin(double yOrigin, bool driverMethod) {
     bool result = false;
     result = setDouble(OS_InteriorPartitionSurfaceGroupFields::YOrigin, yOrigin, driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void InteriorPartitionSurfaceGroup_Impl::resetYOrigin() {
     bool result = setString(OS_InteriorPartitionSurfaceGroupFields::YOrigin, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void InteriorPartitionSurfaceGroup_Impl::setZOrigin(double zOrigin, bool driverMethod) {
     bool result = false;
     result = setDouble(OS_InteriorPartitionSurfaceGroupFields::ZOrigin, zOrigin, driverMethod);
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void InteriorPartitionSurfaceGroup_Impl::resetZOrigin() {
     bool result = setString(OS_InteriorPartitionSurfaceGroupFields::ZOrigin, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   bool InteriorPartitionSurfaceGroup_Impl::setMultiplier(int multiplier) {
@@ -249,7 +249,7 @@ namespace detail {
 
   void InteriorPartitionSurfaceGroup_Impl::resetMultiplier() {
     bool result = setString(OS_InteriorPartitionSurfaceGroupFields::Multiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<Space> InteriorPartitionSurfaceGroup_Impl::space() const {
@@ -267,7 +267,7 @@ namespace detail {
 
   void InteriorPartitionSurfaceGroup_Impl::resetSpace() {
     bool ok = setString(OS_InteriorPartitionSurfaceGroupFields::SpaceName, "");
-    BOOST_ASSERT(ok);
+    OS_ASSERT(ok);
   }
 
   InteriorPartitionSurfaceVector InteriorPartitionSurfaceGroup_Impl::interiorPartitionSurfaces() const
@@ -310,7 +310,7 @@ namespace detail {
 InteriorPartitionSurfaceGroup::InteriorPartitionSurfaceGroup(const Model& model)
   : PlanarSurfaceGroup(InteriorPartitionSurfaceGroup::iddObjectType(),model)
 {
-  BOOST_ASSERT(getImpl<detail::InteriorPartitionSurfaceGroup_Impl>());
+  OS_ASSERT(getImpl<detail::InteriorPartitionSurfaceGroup_Impl>());
 }
 
 IddObjectType InteriorPartitionSurfaceGroup::iddObjectType() {

@@ -96,7 +96,7 @@ namespace detail {
   }
 
   Unit Unit_Impl::clone() const {
-    BOOST_ASSERT(system() == UnitSystem::Mixed);
+    OS_ASSERT(system() == UnitSystem::Mixed);
     boost::shared_ptr<Unit_Impl> impl(new Unit_Impl(*this));
     return Unit(impl);
   }

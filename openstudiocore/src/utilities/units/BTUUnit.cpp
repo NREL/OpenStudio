@@ -20,6 +20,8 @@
 #include <utilities/units/BTUUnit.hpp>
 #include <utilities/units/BTUUnit_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 namespace openstudio {
 
 namespace detail {
@@ -61,7 +63,7 @@ namespace detail {
   }
 
   Unit BTUUnit_Impl::clone() const {
-    BOOST_ASSERT(system() == UnitSystem::BTU);
+    OS_ASSERT(system() == UnitSystem::BTU);
     boost::shared_ptr<BTUUnit_Impl> impl(new BTUUnit_Impl(*this));
     return BTUUnit(impl).cast<Unit>();
   }

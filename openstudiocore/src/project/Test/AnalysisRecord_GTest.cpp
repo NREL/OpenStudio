@@ -23,12 +23,12 @@
 #include <project/Test/ProjectFixture.hpp>
 
 #include <project/ProblemRecord.hpp>
-#include <project/DiscreteVariableRecord.hpp>
-#include <project/DiscreteVariableRecord_Impl.hpp>
-#include <project/NullPerturbationRecord.hpp>
-#include <project/NullPerturbationRecord_Impl.hpp>
-#include <project/RubyPerturbationRecord.hpp>
-#include <project/RubyPerturbationRecord_Impl.hpp>
+#include <project/MeasureGroupRecord.hpp>
+#include <project/MeasureGroupRecord_Impl.hpp>
+#include <project/NullMeasureRecord.hpp>
+#include <project/NullMeasureRecord_Impl.hpp>
+#include <project/RubyMeasureRecord.hpp>
+#include <project/RubyMeasureRecord_Impl.hpp>
 #include <project/LinearFunctionRecord.hpp>
 #include <project/LinearFunctionRecord_Impl.hpp>
 #include <project/DataPointRecord.hpp>
@@ -38,10 +38,10 @@
 #include <analysis/Problem.hpp>
 #include <analysis/Problem_Impl.hpp>
 #include <analysis/DataPoint.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/RubyPerturbation.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/RubyMeasure.hpp>
 #include <analysis/RubyContinuousVariable.hpp>
 #include <analysis/LinearFunction.hpp>
 #include <analysis/OutputAttributeVariable.hpp>
@@ -65,28 +65,28 @@ TEST_F(ProjectFixture,AnalysisRecord_AddAndRemoveDataPoints) {
                     FileReferenceType::OSM);
   Problem problem = analysis.problem();
 
-  DiscretePerturbationVector perturbations;
+  MeasureVector measures;
   int pi = 1;
   std::stringstream ss;
   for (int i = 0; i < 3; ++i) {
-    perturbations.push_back(NullPerturbation());
+    measures.push_back(NullMeasure());
     for (int j = 0; j < 4; ++j) {
       ss << "measure" << pi << ".rb";
-      perturbations.push_back(RubyPerturbation(toPath(ss.str()),
-                                               FileReferenceType::OSM,
-                                               FileReferenceType::OSM,true));
+      measures.push_back(RubyMeasure(toPath(ss.str()),
+                                     FileReferenceType::OSM,
+                                     FileReferenceType::OSM,true));
       ss.str("");
       ++pi;
     }
     ss << "Variable " << i+1;
-    problem.push(DiscreteVariable(ss.str(),perturbations));
-    perturbations.clear();
+    problem.push(MeasureGroup(ss.str(),measures));
+    measures.clear();
     ss.str("");
   }
 
   EXPECT_EQ(3u,analysis.problem().variables().size());
   ASSERT_FALSE(problem.variables().empty());
-  EXPECT_EQ(5u,problem.variables()[0].cast<DiscreteVariable>().numPerturbations(true));
+  EXPECT_EQ(5u,problem.variables()[0].cast<MeasureGroup>().numMeasures(true));
 
   problem.pushResponse(
         LinearFunction("Energy Use",
@@ -115,9 +115,9 @@ TEST_F(ProjectFixture,AnalysisRecord_AddAndRemoveDataPoints) {
   EXPECT_TRUE(problem.isDirty());
   BOOST_FOREACH(const Variable& variable, problem.variables()) {
     EXPECT_TRUE(variable.isDirty());
-    ASSERT_TRUE(variable.optionalCast<DiscreteVariable>());
-    BOOST_FOREACH(const DiscretePerturbation& perturbation,variable.cast<DiscreteVariable>().perturbations(false)) {
-      EXPECT_TRUE(perturbation.isDirty());
+    ASSERT_TRUE(variable.optionalCast<MeasureGroup>());
+    BOOST_FOREACH(const Measure& measure,variable.cast<MeasureGroup>().measures(false)) {
+      EXPECT_TRUE(measure.isDirty());
     }
   }
   BOOST_FOREACH(const Function& response, problem.responses()) {
@@ -143,12 +143,12 @@ TEST_F(ProjectFixture,AnalysisRecord_AddAndRemoveDataPoints) {
     InputVariableRecordVector variableRecords = problemRecord.inputVariableRecords();
     EXPECT_EQ(3u,variableRecords.size());
     ASSERT_FALSE(variableRecords.empty());
-    ASSERT_TRUE(variableRecords[0].optionalCast<DiscreteVariableRecord>());
-    DiscretePerturbationRecordVector perturbationRecords = variableRecords[0].cast<DiscreteVariableRecord>().discretePerturbationRecords(false);
-    EXPECT_EQ(5u,perturbationRecords.size());
-    ASSERT_TRUE(perturbationRecords.size() > 1);
-    EXPECT_TRUE(perturbationRecords[0].optionalCast<NullPerturbationRecord>());
-    EXPECT_TRUE(perturbationRecords[1].optionalCast<RubyPerturbationRecord>());
+    ASSERT_TRUE(variableRecords[0].optionalCast<MeasureGroupRecord>());
+    MeasureRecordVector measureRecords = variableRecords[0].cast<MeasureGroupRecord>().measureRecords(false);
+    EXPECT_EQ(5u,measureRecords.size());
+    ASSERT_TRUE(measureRecords.size() > 1);
+    EXPECT_TRUE(measureRecords[0].optionalCast<NullMeasureRecord>());
+    EXPECT_TRUE(measureRecords[1].optionalCast<RubyMeasureRecord>());
     EXPECT_EQ(3u,analysisRecord.dataPointRecords().size());
     EXPECT_TRUE(analysisRecord.completeDataPointRecords().empty());
   }
@@ -158,9 +158,9 @@ TEST_F(ProjectFixture,AnalysisRecord_AddAndRemoveDataPoints) {
   EXPECT_FALSE(problem.isDirty());
   BOOST_FOREACH(const Variable& variable, problem.variables()) {
     EXPECT_FALSE(variable.isDirty());
-    ASSERT_TRUE(variable.optionalCast<DiscreteVariable>());
-    BOOST_FOREACH(const DiscretePerturbation& perturbation,variable.cast<DiscreteVariable>().perturbations(false)) {
-      EXPECT_FALSE(perturbation.isDirty());
+    ASSERT_TRUE(variable.optionalCast<MeasureGroup>());
+    BOOST_FOREACH(const Measure& measure,variable.cast<MeasureGroup>().measures(false)) {
+      EXPECT_FALSE(measure.isDirty());
     }
   }
   BOOST_FOREACH(const Function& response, problem.responses()) {
@@ -190,9 +190,9 @@ TEST_F(ProjectFixture,AnalysisRecord_AddAndRemoveDataPoints) {
   EXPECT_FALSE(problem.isDirty());
   BOOST_FOREACH(const Variable& variable, problem.variables()) {
     EXPECT_FALSE(variable.isDirty());
-    ASSERT_TRUE(variable.optionalCast<DiscreteVariable>());
-    BOOST_FOREACH(const DiscretePerturbation& perturbation,variable.cast<DiscreteVariable>().perturbations(false)) {
-      EXPECT_FALSE(perturbation.isDirty());
+    ASSERT_TRUE(variable.optionalCast<MeasureGroup>());
+    BOOST_FOREACH(const Measure& measure,variable.cast<MeasureGroup>().measures(false)) {
+      EXPECT_FALSE(measure.isDirty());
     }
   }
   BOOST_FOREACH(const Function& response, problem.responses()) {
@@ -228,12 +228,12 @@ TEST_F(ProjectFixture,AnalysisRecord_AddAndRemoveDataPoints) {
     InputVariableRecordVector variableRecords = problemRecord.inputVariableRecords();
     EXPECT_EQ(3u,variableRecords.size());
     ASSERT_FALSE(variableRecords.empty());
-    ASSERT_TRUE(variableRecords[0].optionalCast<DiscreteVariableRecord>());
-    DiscretePerturbationRecordVector perturbationRecords = variableRecords[0].cast<DiscreteVariableRecord>().discretePerturbationRecords(false);
-    EXPECT_EQ(5u,perturbationRecords.size());
-    ASSERT_TRUE(perturbationRecords.size() > 1);
-    EXPECT_TRUE(perturbationRecords[0].optionalCast<NullPerturbationRecord>());
-    EXPECT_TRUE(perturbationRecords[1].optionalCast<RubyPerturbationRecord>());
+    ASSERT_TRUE(variableRecords[0].optionalCast<MeasureGroupRecord>());
+    MeasureRecordVector measureRecords = variableRecords[0].cast<MeasureGroupRecord>().measureRecords(false);
+    EXPECT_EQ(5u,measureRecords.size());
+    ASSERT_TRUE(measureRecords.size() > 1);
+    EXPECT_TRUE(measureRecords[0].optionalCast<NullMeasureRecord>());
+    EXPECT_TRUE(measureRecords[1].optionalCast<RubyMeasureRecord>());
     EXPECT_EQ(5u,analysisRecord.dataPointRecords().size());
     EXPECT_TRUE(analysisRecord.completeDataPointRecords().empty());
   }
@@ -243,9 +243,9 @@ TEST_F(ProjectFixture,AnalysisRecord_AddAndRemoveDataPoints) {
   EXPECT_FALSE(problem.isDirty());
   BOOST_FOREACH(const Variable& variable, problem.variables()) {
     EXPECT_FALSE(variable.isDirty());
-    ASSERT_TRUE(variable.optionalCast<DiscreteVariable>());
-    BOOST_FOREACH(const DiscretePerturbation& perturbation,variable.cast<DiscreteVariable>().perturbations(false)) {
-      EXPECT_FALSE(perturbation.isDirty());
+    ASSERT_TRUE(variable.optionalCast<MeasureGroup>());
+    BOOST_FOREACH(const Measure& measure,variable.cast<MeasureGroup>().measures(false)) {
+      EXPECT_FALSE(measure.isDirty());
     }
   }
   BOOST_FOREACH(const Function& response, problem.responses()) {
@@ -279,12 +279,12 @@ TEST_F(ProjectFixture,AnalysisRecord_AddAndRemoveDataPoints) {
     InputVariableRecordVector variableRecords = problemRecord.inputVariableRecords();
     EXPECT_EQ(3u,variableRecords.size());
     ASSERT_FALSE(variableRecords.empty());
-    ASSERT_TRUE(variableRecords[0].optionalCast<DiscreteVariableRecord>());
-    DiscretePerturbationRecordVector perturbationRecords = variableRecords[0].cast<DiscreteVariableRecord>().discretePerturbationRecords(false);
-    EXPECT_EQ(5u,perturbationRecords.size());
-    ASSERT_TRUE(perturbationRecords.size() > 1);
-    EXPECT_TRUE(perturbationRecords[0].optionalCast<NullPerturbationRecord>());
-    EXPECT_TRUE(perturbationRecords[1].optionalCast<RubyPerturbationRecord>());
+    ASSERT_TRUE(variableRecords[0].optionalCast<MeasureGroupRecord>());
+    MeasureRecordVector measureRecords = variableRecords[0].cast<MeasureGroupRecord>().measureRecords(false);
+    EXPECT_EQ(5u,measureRecords.size());
+    ASSERT_TRUE(measureRecords.size() > 1);
+    EXPECT_TRUE(measureRecords[0].optionalCast<NullMeasureRecord>());
+    EXPECT_TRUE(measureRecords[1].optionalCast<RubyMeasureRecord>());
     EXPECT_EQ(4u,analysisRecord.dataPointRecords().size());
     OptionalDataPointRecord searchResult = database.getObjectRecordByHandle<DataPointRecord>(toRemove.uuid());
     EXPECT_FALSE(searchResult);
@@ -340,7 +340,7 @@ TEST_F(ProjectFixture,AnalysisRecord_SetProblem) {
   EXPECT_FALSE(problem1.isDirty());
   EXPECT_TRUE(problem2.isDirty());
   EXPECT_TRUE(analysis.dataPointsAreInvalid());
-  RubyPerturbation userScript(toPath("measure.rb"),
+  RubyMeasure userScript(toPath("measure.rb"),
                               FileReferenceType::IDF,
                               FileReferenceType::IDF,
                               true);

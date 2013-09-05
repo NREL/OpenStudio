@@ -32,10 +32,12 @@
 #include <analysis/DDACEAlgorithm.hpp>
 #include <analysis/DesignOfExperimentsOptions.hpp>
 #include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/RubyPerturbation.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
 #include <analysis/WorkflowStep.hpp>
 
 #include <project/ProjectDatabase.hpp>
@@ -59,9 +61,13 @@
 #include <model/Model.hpp>
 #include <model/Building.hpp>
 #include <model/Building_Impl.hpp>
+#include <model/WeatherFile.hpp>
 
+#include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/PathHelpers.hpp>
+#include <utilities/core/UnzipFile.hpp>
+#include <utilities/filetypes/EpwFile.hpp>
 #include <utilities/sql/SqlFile.hpp>
 
 #include <OpenStudio.hxx>
@@ -227,9 +233,9 @@ TEST_F(AnalysisDriverFixture,SimpleProject_InsertMeasure) {
     EXPECT_EQ(args[i].type(),argsCopy[i].type());
   }
 
-  // use this measure to create a new variable/ruby perturbation
+  // use this measure to create a new variable/ruby measure
   // now it is important to use the copy in the project
-  DiscreteVariable dv("New Measure Group",DiscretePerturbationVector());
+  MeasureGroup dv("New Measure Group",MeasureVector());
   Problem problem = project.analysis().problem();
   problem.push(dv);
   // here, expect this test to pass.
@@ -237,7 +243,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_InsertMeasure) {
   EXPECT_TRUE(problem.fileTypesAreCompatible(dv,
                                              projectMeasure.inputFileType(),
                                              projectMeasure.outputFileType()));
-  EXPECT_TRUE(dv.push(RubyPerturbation(projectMeasure)));
+  EXPECT_TRUE(dv.push(RubyMeasure(projectMeasure)));
 }
 
 TEST_F(AnalysisDriverFixture,SimpleProject_UpdateMeasure) {
@@ -256,10 +262,10 @@ TEST_F(AnalysisDriverFixture,SimpleProject_UpdateMeasure) {
   project.registerArguments(projectMeasure,args);
   EXPECT_EQ(1u,project.measures().size());
 
-  // use the measure to create a new variable/ruby perturbation
-  DiscreteVariable dv("New Measure Group",DiscretePerturbationVector());
+  // use the measure to create a new variable/ruby measure
+  MeasureGroup dv("New Measure Group",MeasureVector());
   EXPECT_TRUE(problem.push(dv));
-  RubyPerturbation rp(projectMeasure);
+  RubyMeasure rp(projectMeasure);
   rp.setArguments(args);
   EXPECT_TRUE(dv.push(rp));
   EXPECT_EQ(args.size(),rp.arguments().size());
@@ -295,7 +301,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_UpdateMeasure) {
     // update the measure
     project.updateMeasure(newVersion,newArgs);
 
-    // verify the final state of SimpleProject and RubyPerturbation
+    // verify the final state of SimpleProject and RubyMeasure
     EXPECT_EQ(1u,project.measures().size());
     BCLMeasure retrievedMeasure = project.getMeasureByUUID(measure.uuid()).get();
     EXPECT_NE(measure.versionUUID(),retrievedMeasure.versionUUID());
@@ -317,8 +323,8 @@ TEST_F(AnalysisDriverFixture,SimpleProject_NonPATToPATProject) {
     openstudio::path measuresDir = resourcesPath() / toPath("/utilities/BCL/Measures");
     openstudio::path dir = measuresDir / toPath("SetWindowToWallRatioByFacade");
     BCLMeasure measure = BCLMeasure::load(dir).get();
-    RubyPerturbation rpert(measure);
-    project.analysis().problem().push(DiscreteVariable("My Variable",DiscretePerturbationVector(1u,rpert)));
+    RubyMeasure rmeasure(measure);
+    project.analysis().problem().push(MeasureGroup("My Variable",MeasureVector(1u,rmeasure)));
     DataPoint baseline = project.baselineDataPoint();
     EXPECT_EQ(1u,baseline.variableValues().size());
     EXPECT_TRUE(project.analysis().isDirty());
@@ -353,12 +359,12 @@ TEST_F(AnalysisDriverFixture,SimpleProject_EditProblemWithTwoWorkflows) {
     Problem problem = project.analysis().problem();
     OptionalInt index = problem.getWorkflowStepIndexByJobType(JobType::EnergyPlusPreProcess);
     ASSERT_TRUE(index);
-    DiscreteVariable dv("Idf Measure",DiscretePerturbationVector(1u,NullPerturbation()));
+    MeasureGroup dv("Idf Measure",MeasureVector(1u,NullMeasure()));
     problem.insert(*index,dv);
     BOOST_FOREACH(const BCLMeasure& measure,BCLMeasure::patApplicationMeasures()) {
       if (measure.inputFileType() == FileReferenceType::IDF) {
-        RubyPerturbation pert(measure);
-        dv.push(pert);
+        RubyMeasure measure(measure);
+        dv.push(measure);
         break;
       }
     }
@@ -416,4 +422,107 @@ TEST_F(AnalysisDriverFixture,SimpleProject_EditProblemWithTwoWorkflows) {
     ASSERT_EQ(1u,problemRecords.size());
     ASSERT_NO_FATAL_FAILURE(problemRecords[0].problem());
   }
+}
+
+TEST_F(AnalysisDriverFixture, SimpleProject_ZipFileForCloud) {
+  openstudio::path tempZipFilePath;
+
+  {
+    // get project
+    SimpleProject project = getCleanSimpleProject("ProjectToZip");
+    Problem problem = retrieveProblem(AnalysisDriverFixtureProblem::BuggyBCLMeasure,true,true);
+    project.analysis().setProblem(problem);
+    Model model = model::exampleModel();
+    openstudio::path weatherFilePath = energyPlusWeatherDataPath() / toPath("USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw");
+    EpwFile weatherFile(weatherFilePath);
+    OptionalWeatherFile oWeatherFileObject = WeatherFile::setWeatherFile(model,weatherFile);
+    EXPECT_TRUE(oWeatherFileObject);
+    openstudio::path p = toPath("./example.osm");
+    model.save(p,true);
+    FileReference seedModel(p);
+    std::pair<bool,std::vector<BCLMeasure> > result = project.setSeed(seedModel);
+    EXPECT_TRUE(result.first);
+    project.makeSelfContained();
+
+    // create zip
+    tempZipFilePath = project.zipFileForCloud();
+
+    // unzip and check contents
+    openstudio::path remoteDir = project.projectDir().parent_path() / toPath("UnzippedProject");
+    if (boost::filesystem::exists(remoteDir)) {
+      boost::filesystem::remove_all(remoteDir);
+    }
+    boost::filesystem::create_directory(remoteDir);
+    openstudio::path zipFilePath = remoteDir / toPath(tempZipFilePath.filename());
+    boost::filesystem::copy_file(tempZipFilePath,zipFilePath);
+    UnzipFile unzip(zipFilePath);
+    unzip.extractAllFiles(remoteDir);
+    EXPECT_TRUE(boost::filesystem::exists(remoteDir / toPath("formulation.json")));
+    EXPECT_TRUE(boost::filesystem::exists(remoteDir / toPath("seed")));
+    EXPECT_TRUE(boost::filesystem::exists(remoteDir / toPath("seed/example/files")));
+  }
+
+  // make sure temp files have been removed
+  EXPECT_FALSE(boost::filesystem::exists(tempZipFilePath));
+  EXPECT_FALSE(boost::filesystem::exists(tempZipFilePath.parent_path() / toPath("formulation.json")));
+  EXPECT_FALSE(boost::filesystem::exists(tempZipFilePath.parent_path() / toPath("seed")));
+  EXPECT_FALSE(boost::filesystem::exists(tempZipFilePath.parent_path() / toPath("alternatives")));
+}
+
+TEST_F(AnalysisDriverFixture,SimpleProject_AnalysisFixUpOfFilePaths) {
+    // GET SIMPLE PROJECT
+    SimpleProject project = getCleanSimpleProject("SimpleProject_AnalysisFixUpOfFilePaths");
+    Analysis analysis = project.analysis();
+
+    // SET PROBLEM
+    Problem problem = retrieveProblem("BuggyBCLMeasure",true,false);
+    analysis.setProblem(problem);
+
+    // DEFINE SEED
+    Model model = model::exampleModel();
+    openstudio::path p = toPath("./example.osm");
+    model.save(p,true);
+    FileReference seedModel(p);
+    analysis.setSeed(seedModel);
+
+    // MAKE SELF CONTAINED
+    project.makeSelfContained();
+    project.save();
+
+    // CREATE A COPY IN ANOTHER LOCATION
+    openstudio::path newProjectDir = project.projectDir().parent_path() / toPath("SimpleProjectAnalysisFixUpOfFilePathsCopy");
+    boost::filesystem::remove_all(newProjectDir);
+    OptionalSimpleProject oProjectCopy = saveAs(project,newProjectDir);
+    ASSERT_TRUE(oProjectCopy);
+    SimpleProject projectCopy = *oProjectCopy;
+
+    // UPDATE PATHS IN ORIGINAL ANALYSIS
+    EXPECT_NE(project.projectDir(),projectCopy.projectDir());
+    analysis.updateInputPathData(project.projectDir(),projectCopy.projectDir());
+
+    // BCLMeasure and Seed Paths should be the same.
+    Analysis analysisCopy = projectCopy.analysis();
+    EXPECT_EQ(analysisCopy.seed().path(),analysis.seed().path());
+    InputVariableVector variablesCopy = analysisCopy.problem().variables();
+    InputVariableVector variables = analysis.problem().variables();
+    ASSERT_EQ(variablesCopy.size(),variables.size());
+    for (unsigned i = 0, n = variablesCopy.size(); i < n; ++i) {
+      ASSERT_TRUE(variablesCopy[i].optionalCast<MeasureGroup>());
+      ASSERT_TRUE(variables[i].optionalCast<MeasureGroup>());
+      MeasureGroup measureGroupCopy = variablesCopy[i].cast<MeasureGroup>();
+      MeasureGroup measureGroup = variables[i].cast<MeasureGroup>();
+      ASSERT_EQ(measureGroupCopy.measures(false).size(),measureGroup.measures(false).size());
+      MeasureVector measuresCopy = measureGroupCopy.measures(false);
+      MeasureVector measures = measureGroup.measures(false);
+      for (unsigned j = 0, m = measuresCopy.size(); j < m; ++j) {
+        if (measuresCopy[j].optionalCast<RubyMeasure>()) {
+          ASSERT_TRUE(measures[j].optionalCast<RubyMeasure>());
+          RubyMeasure rubyMeasureCopy = measuresCopy[j].cast<RubyMeasure>();
+          RubyMeasure rubyMeasure = measures[j].cast<RubyMeasure>();
+          ASSERT_TRUE(rubyMeasureCopy.usesBCLMeasure());
+          ASSERT_TRUE(rubyMeasure.usesBCLMeasure());
+          EXPECT_EQ(rubyMeasureCopy.bclMeasureDirectory(),rubyMeasure.bclMeasureDirectory());
+        }
+      }
+    }
 }

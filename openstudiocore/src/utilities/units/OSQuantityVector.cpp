@@ -29,6 +29,7 @@
 #include <utilities/data/Vector.hpp>
 
 #include <utilities/core/Containers.hpp>
+#include <utilities/core/Assert.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -126,7 +127,7 @@ bool OSQuantityVector::setScale(int scaleExponent) {
   }
   (*this) *= (scale().value / candidateValue);
   bool ok = m_units.setScale(scaleExponent);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   return true;
 }
 
@@ -138,7 +139,7 @@ bool OSQuantityVector::setScale(const std::string& scaleAbbreviation) {
   }
   (*this) *= (scale().value / candidateValue);
   bool ok = m_units.setScale(scaleAbbreviation);
-  BOOST_ASSERT(ok);
+  OS_ASSERT(ok);
   return true;
 }
 
@@ -174,7 +175,7 @@ bool OSQuantityVector::isAbsolute() const {
     return tu->isAbsolute();
   }
   LOG_AND_THROW("Could not evaluate OSQuantityVector::isAbsolute because the units are in system "
-                << system().valueName() << ", not Celcius or Fahrenheit.");
+                << system().valueName() << ", not Celsius or Fahrenheit.");
   return false;
 }
 
@@ -188,7 +189,7 @@ void OSQuantityVector::setAsAbsolute() {
   }
   else {
     LOG_AND_THROW("Could not OSQuantityVector::setAsAbsolute because the units are in system "
-                  << system().valueName() << ", not Celcius or Fahrenheit.");
+                  << system().valueName() << ", not Celsius or Fahrenheit.");
   }
 }
 
@@ -198,7 +199,7 @@ void OSQuantityVector::setAsRelative() {
   }
   else {
     LOG_AND_THROW("Could not OSQuantityVector::setAsRelative because the units are in system "
-                  << system().valueName() << ", not Celcius or Fahrenheit.");
+                  << system().valueName() << ", not Celsius or Fahrenheit.");
   }
 }
 
@@ -209,7 +210,7 @@ void OSQuantityVector::lbmToLbf() {
       (*this) /= std::pow(IPUnit::gc(),x);
       iu->lbmToLbf();
     }
-    BOOST_ASSERT(m_units.baseUnitExponent("lb_m") == 0);
+    OS_ASSERT(m_units.baseUnitExponent("lb_m") == 0);
   }
   LOG_AND_THROW("Cannot convert non-IP units " << m_units << " in system " << system().valueName()
                 << " from lb_m to lb_f.");
@@ -222,7 +223,7 @@ void OSQuantityVector::lbfToLbm() {
       (*this) *= std::pow(IPUnit::gc(),x);
       iu->lbmToLbf();
     }
-    BOOST_ASSERT(m_units.baseUnitExponent("lb_f") == 0);
+    OS_ASSERT(m_units.baseUnitExponent("lb_f") == 0);
   }
   LOG_AND_THROW("Cannot convert non-IP units " << m_units << " in system " << system().valueName()
                 << " from lb_f to lb_m.");

@@ -1,8 +1,14 @@
 
 OS:Version,
+<<<<<<< .mine
   {4f0fbb7d-cc92-41b3-a620-1091a558fb38}, !- Handle
   1.0.3;                                  !- Version Identifier
 
+=======
+  {136c4874-9749-4ef9-8694-da52987b6e41}, !- Handle
+  1.0.5;                                  !- Version Identifier
+
+>>>>>>> .theirs
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
   Always On Discrete,                     !- Name
@@ -223,6 +229,15 @@ OS:SetpointManager:SingleZone:Reheat,
   ,                                       ! Control Zone Name
   ;                                       ! Setpoint Node or NodeList Name
 
+OS:SetpointManager:Warmest,
+  {4f12e925-01e9-4ce2-9f56-daa5d024ac5d}, !- Handle
+  Setpoint Manager Warmest,               !- Name
+  Temperature,                            !- Control Variable
+  12.2,                                   !- Minimum Setpoint Temperature {C}
+  15.6,                                   !- Maximum Setpoint Temperature {C}
+  MaximumTemperature,                     !- Strategy
+  ;                                       !- Setpoint Node or NodeList Name
+
 OS:Fan:ConstantVolume,
   {c15ef75a-56db-4ec3-9720-d06294deabcc}, ! Handle
   Constant Speed Fan,                     ! Name
@@ -381,15 +396,42 @@ OS:Curve:Quadratic,
 
 OS:EvaporativeCooler:Direct:ResearchSpecial,
   {8d3b17e0-88c9-4d17-9de4-0b9dd0481b36}, ! Handle
-  OS:EvaporativeCooler:Direct:ResearchSpecial 1, ! Name
+  OS:EvaporativeCooler:Direct:ResearchSpecial, ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
-  1,                                      ! Cooler Effectiveness
-  0,                                      ! Recirculating Water Pump Power Consumption {W}
-  ,                                       ! Air Inlet Node Name
-  ,                                       ! Air Outlet Node Name
-  ,                                       ! Sensor Node Name
-  0,                                      ! Drift Loss Fraction
-  0;                                      ! Blowdown Concentration Ratio
+  1,                                      !- Cooler Effectiveness
+  0,                                      !- Recirculating Water Pump Power Consumption {W}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Sensor Node Name
+  0,                                      !- Drift Loss Fraction
+  0;                                      !- Blowdown Concentration Ratio
+
+OS:EvaporativeFluidCooler:SingleSpeed,
+  {b04f495c-cbc1-4d89-acec-e5f7711f00de}, !- Handle
+  Evaporative Fluid Cooler Single Speed, !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  autosize,                               !- Design Air Flow Rate {m3/s}
+  autosize,                               !- Fan Power at Design Air Flow Rate {W}
+  0.03,                                   !- Design Spray Water Flow Rate {m3/s}
+  UFactorTimesAreaAndDesignWaterFlowRate, !- Performance Input Method
+  ,                                       !- Outdoor Air Inlet Node Name
+  ,                                       !- Standard Design Capacity {W}
+  autosize,                               !- U-factor Times Area Value at Design Air Flow Rate {W/K}
+  autosize,                               !- Design Water Flow Rate {m3/s}
+  ,                                       !- User Specified Design Capacity {W}
+  ,                                       !- Design Entering Water Temperature {C}
+  ,                                       !- Design Entering Air Temperature {C}
+  ,                                       !- Design Entering Air Wet-bulb Temperature {C}
+  FanCycling,                             !- Capacity Control
+  1,                                      !- Sizing Factor
+  SaturatedExit,                          !- Evaporation Loss Mode
+  ,                                       !- Evaporation Loss Factor {percent/K}
+  0.008,                                  !- Drift Loss Percent {percent}
+  ConcentrationRatio,                     !- Blowdown Calculation Mode
+  3,                                      !- Blowdown Concentration Ratio
+  ,                                       !- Blowdown Makeup Water Usage Schedule Name
+  ;                                       !- Supply Water Storage Tank Name
 
 OS:AirTerminal:SingleDuct:Uncontrolled,
   {b883cca7-f436-48ce-ad23-7e8310c7a85d}, ! Handle
@@ -2084,6 +2126,136 @@ OS:HeatExchanger:AirToAir:SensibleAndLatent,
   ,                                       !- Rate of Defrost Time Fraction Increase {1/K}
   Yes;                                    !- Economizer Lockout
 
+OS:Schedule:Ruleset,
+  {859796f4-c144-4b41-8cdf-85a012be8c24}, !- Handle
+  Low Temp Rad Elec Htg Sch,              !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  {c96897c6-4dfe-4beb-8289-1a2274edd626}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {c96897c6-4dfe-4beb-8289-1a2274edd626}, !- Handle
+  Low Temp Rad Elec Htg Sch All Days,     !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  21.11;                                  !- Value Until Time 1
+
+OS:ZoneHVAC:LowTemperatureRadiant:Electric,
+  {2630717b-a04c-4254-8ead-7be8b9f29a65}, !- Handle
+  Low Temperature Radiant Electric,       !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  Ceilings,                               !- Radiant Surface Type
+  autosize,                               !- Maximum Electrical Power to Panel {W}
+  MeanAirTemperature,                     !- Temperature Control Type
+  2,                                      !- Heating Throttling Range {deltaC}
+  {859796f4-c144-4b41-8cdf-85a012be8c24}; !- Heating Setpoint Temperature Schedule Name
+
+OS:Schedule:Ruleset,
+  {c6f277a7-8ea3-44c3-aaf6-4214a974fd19}, !- Handle
+  Const Vol Rad Htg Hi Wtr Temp Sch,      !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  {7ff43983-0033-4fbf-84a8-56e7142a17c7}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {7ff43983-0033-4fbf-84a8-56e7142a17c7}, !- Handle
+  Const Vol Rad Htg Hi Wtr Temp Sch All Days, !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  50;                                     !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {abac7590-f5b5-4f8c-a69a-f8359e7fc8bb}, !- Handle
+  Const Vol Rad Htg Low Wtr Temp Sch,     !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  {2fb39887-8077-4c7c-aa0f-8fbda6665e6a}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {2fb39887-8077-4c7c-aa0f-8fbda6665e6a}, !- Handle
+  Const Vol Rad Htg Low Wtr Temp Sch All Days, !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  30;                                     !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {cae503c6-31c2-4c00-b6a5-68ea77a5b573}, !- Handle
+  Const Vol Rad Htg Hi Air Temp Sch,      !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  {0ea072fa-b2f4-4f0b-8b0d-9e80ae1f79ab}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {0ea072fa-b2f4-4f0b-8b0d-9e80ae1f79ab}, !- Handle
+  Const Vol Rad Htg Hi Air Temp Sch All Days, !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  20;                                     !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {5d1c8195-75d5-48fd-9a17-d9b6a62aea22}, !- Handle
+  Const Vol Rad Htg Low Air Temp Sch,     !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  {129b4ae0-31a3-405f-9e13-54bcd84deb53}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {129b4ae0-31a3-405f-9e13-54bcd84deb53}, !- Handle
+  Const Vol Rad Htg Low Air Temp Sch All Days, !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  17;                                     !- Value Until Time 1
+
+OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow,
+  {b663c064-e5c7-4097-b85d-be8e73fec664}, !- Handle
+  Coil Heating Low Temp Rad Const Flow,   !- Name
+  ,                                       !- Heating Water Inlet Node Name
+  ,                                       !- Heating Water Outlet Node Name
+  {c6f277a7-8ea3-44c3-aaf6-4214a974fd19}, !- Heating High Water Temperature Schedule Name
+  {abac7590-f5b5-4f8c-a69a-f8359e7fc8bb}, !- Heating Low Water Temperature Schedule Name
+  {cae503c6-31c2-4c00-b6a5-68ea77a5b573}, !- Heating High Control Temperature Schedule Name
+  {5d1c8195-75d5-48fd-9a17-d9b6a62aea22}; !- Heating Low Control Temperature Schedule Name
+
+OS:Schedule:Ruleset,
+  {e8ad3d13-8608-4b2e-916a-38985eb5ac41}, !- Handle
+  Const Vol Rad Clg Hi Wtr Temp Sch,      !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  {a98ecf06-fd99-4949-8cc9-2e26f8236fa1}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {a98ecf06-fd99-4949-8cc9-2e26f8236fa1}, !- Handle
+  Const Vol Rad Clg Hi Wtr Temp Sch All Days, !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  15;                                     !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {3a3fa7c4-2ad6-4316-bbbc-4beb416b7da1}, !- Handle
+  Const Vol Rad Clg Low Wtr Temp Sch,     !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  {850fbc26-36ef-40f0-88dd-5901bb675757}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {850fbc26-36ef-40f0-88dd-5901bb675757}, !- Handle
+  Const Vol Rad Clg Low Wtr Temp Sch All Days, !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  10;                                     !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {3b97ff7d-f35f-4bf2-bad1-d6fb73133d4b}, !- Handle
+  Const Vol Rad Clg Hi Air Temp Sch,      !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  {1d3ca4dd-4786-4a6b-98d3-84d051d232b8}; !- Default Day Schedule Name
 OS:YearDescription,
   {ed125c68-9e16-4966-934f-d52ec8639420}; !- Handle
 
@@ -2210,3 +2382,414 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
   15.0,                                   !- Design Inlet Water Temperature {C}
   17.0,                                   !- Design Outlet Water Temperature {C}
   Autocalculate;                          !- Coefficient of Induction Kin
+<<<<<<< .mine
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=======
+
+OS:Schedule:Day,
+  {1d3ca4dd-4786-4a6b-98d3-84d051d232b8}, !- Handle
+  Const Vol Rad Clg Hi Air Temp Sch All Days, !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  25;                                     !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {70e36250-05e8-44e9-af78-d8eeee167965}, !- Handle
+  Const Vol Rad Clg Low Air Temp Sch,     !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  {00467e20-e645-4a8e-9fda-739d6b6980aa}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {00467e20-e645-4a8e-9fda-739d6b6980aa}, !- Handle
+  Const Vol Rad Clg Low Air Temp Sch All Days, !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  21;                                     !- Value Until Time 1
+
+OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow,
+  {ef54dfa0-4b17-4c66-9fef-582882b6678f}, !- Handle
+  Coil Cooling Low Temp Rad Const Flow,   !- Name
+  ,                                       !- Cooling Water Inlet Node Name
+  ,                                       !- Cooling Water Outlet Node Name
+  {e8ad3d13-8608-4b2e-916a-38985eb5ac41}, !- Cooling High Water Temperature Schedule Name
+  {3a3fa7c4-2ad6-4316-bbbc-4beb416b7da1}, !- Cooling Low Water Temperature Schedule Name
+  {3b97ff7d-f35f-4bf2-bad1-d6fb73133d4b}, !- Cooling High Control Temperature Schedule Name
+  {70e36250-05e8-44e9-af78-d8eeee167965}, !- Cooling Low Control Temperature Schedule Name
+  ,                                       !- Condensation Control Type
+  ;                                       !- Condensation Control Dewpoint Offset {C}
+
+OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
+  {bc476496-ed8c-466f-8782-7956baa99b85}, !- Handle
+  Low Temp Radiant Const Flow,            !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Radiant Surface Type
+  ,                                       !- Hydronic Tubing Inside Diameter {m}
+  200,                                    !- Hydronic Tubing Length {m}
+  ,                                       !- Temperature Control Type
+  {b663c064-e5c7-4097-b85d-be8e73fec664}, !- Low Temp Radiant Constant Flow Heating Coil Name
+  {ef54dfa0-4b17-4c66-9fef-582882b6678f}, !- Low Temp Radiant Constant Flow Cooling Coil Name
+  ,                                       !- Rated Flow Rate {m3/s}
+  ,                                       !- Pump Flow Rate Schedule Name
+  ,                                       !- Rated Pump Head {Pa}
+  1200,                                   !- Rated Power Consumption {W}
+  ,                                       !- Motor Efficiency
+  ;                                       !- Fraction of Motor Inefficiencies to Fluid Stream
+
+OS:Schedule:Ruleset,
+  {64e58138-415f-4e79-a84d-ada0e75818a5}, !- Handle
+  Var Vol Rad Htg Air Temp Sch,           !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  {a942c4bf-5dd0-49e6-91cd-acbe6c781899}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {a942c4bf-5dd0-49e6-91cd-acbe6c781899}, !- Handle
+  Var Vol Rad Htg Air Temp Sch All Days,  !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  50;                                     !- Value Until Time 1
+
+OS:Coil:Heating:LowTemperatureRadiant:VariableFlow,
+  {0bb8d9e1-257b-4f72-872b-1c8352ebcff5}, !- Handle
+  Coil Heating Low Temperature Rad Var Flow, !- Name
+  ,                                       !- Maximum Hot Water Flow {m3/s}
+  ,                                       !- Heating Water Inlet Node Name
+  ,                                       !- Heating Water Outlet Node Name
+  ,                                       !- Heating Control Throttling Range {deltaC}
+  {64e58138-415f-4e79-a84d-ada0e75818a5}; !- Heating Control Temperature Schedule Name
+
+OS:Schedule:Ruleset,
+  {80eb7021-5770-4a34-8803-d55413988f54}, !- Handle
+  Var Vol Rad Clg Air Temp Sch,           !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  {2f9cd70f-f64a-4616-9843-e00b343fa6c2}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {2f9cd70f-f64a-4616-9843-e00b343fa6c2}, !- Handle
+  Var Vol Rad Clg Air Temp Sch All Days,  !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  15;                                     !- Value Until Time 1
+
+OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow,
+  {bc6be488-1c8b-43d3-8064-00a09ab21444}, !- Handle
+  Coil Cooling Low Temperature Rad Var Flow, !- Name
+  ,                                       !- Maximum Cold Water Flow {m3/s}
+  ,                                       !- Cooling Water Inlet Node Name
+  ,                                       !- Cooling Water Outlet Node Name
+  ,                                       !- Cooling Control Throttling Range {deltaC}
+  {80eb7021-5770-4a34-8803-d55413988f54}; !- Cooling Control Temperature Schedule Name
+
+OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
+  {2839ddaf-2907-4c75-bcd1-c1f5a2000e5e}, !- Handle
+  Low Temp Radiant Var Flow,              !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  {0bb8d9e1-257b-4f72-872b-1c8352ebcff5}, !- Low Temp Radiant Variable Flow Heating Coil Name
+  {bc6be488-1c8b-43d3-8064-00a09ab21444}, !- Low Temp Radiant Variable Flow Cooling Coil Name
+  ,                                       !- Radiant Surface Type
+  ,                                       !- Hydronic Tubing Inside Diameter {m}
+  ,                                       !- Hydronic Tubing Length {m}
+  ;                                       !- Temperature Control Type
+
+OS:GroundHeatExchanger:Vertical,
+  {2a737b1f-3c8b-4532-b605-aaddf5b555d0}, !- Handle
+  Ground Heat Exchanger Vertical 1,       !- Name
+  ,                                       !- Inlet Node Name
+  ,                                       !- Outlet Node Name
+  0.0033,                                 !- Maximum Flow Rate {m3/s}
+  120,                                    !- Number of Bore Holes
+  76.2,                                   !- Bore Hole Length {m}
+  0.063508,                               !- Bore Hole Radius {m}
+  0.692626,                               !- Ground Thermal Conductivity {W/m-K}
+  2347000,                                !- Ground Thermal Heat Capacity {J/m3-K}
+  13.375,                                 !- Ground Temperature {C}
+  0.0033,                                 !- Design Flow Rate {m3/s}
+  0.692626,                               !- Grout Thermal Conductivity {W/m-K}
+  0.391312,                               !- Pipe Thermal Conductivity {W/m-K}
+  0.0266667,                              !- Pipe Out Diameter {m}
+  0.0253977,                              !- U-Tube Distance {m}
+  0.00241285,                             !- Pipe Thickness {m}
+  2,                                      !- Maximum Length of Simulation
+  0.0005,                                 !- G-Function Reference Ratio {dimensionless}
+  -15.2996,                               !- G-Function Ln(T/Ts) Value 1
+  -0.348322,                              !- G-Function G Value 1
+  -14.201,                                !- G-Function Ln(T/Ts) Value 2
+  0.022208,                               !- G-Function G Value 2
+  -13.2202,                               !- G-Function Ln(T/Ts) Value 3
+  0.412345,                               !- G-Function G Value 3
+  -12.2086,                               !- G-Function Ln(T/Ts) Value 4
+  0.867498,                               !- G-Function G Value 4
+  -11.1888,                               !- G-Function Ln(T/Ts) Value 5
+  1.357839,                               !- G-Function G Value 5
+  -10.1816,                               !- G-Function Ln(T/Ts) Value 6
+  1.852024,                               !- G-Function G Value 6
+  -9.1815,                                !- G-Function Ln(T/Ts) Value 7
+  2.345656,                               !- G-Function G Value 7
+  -8.6809,                                !- G-Function Ln(T/Ts) Value 8
+  2.593958,                               !- G-Function G Value 8
+  -8.5,                                   !- G-Function Ln(T/Ts) Value 9
+  2.679,                                  !- G-Function G Value 9
+  -7.8,                                   !- G-Function Ln(T/Ts) Value 10
+  3.023,                                  !- G-Function G Value 10
+  -7.2,                                   !- G-Function Ln(T/Ts) Value 11
+  3.32,                                   !- G-Function G Value 11
+  -6.5,                                   !- G-Function Ln(T/Ts) Value 12
+  3.681,                                  !- G-Function G Value 12
+  -5.9,                                   !- G-Function Ln(T/Ts) Value 13
+  4.071,                                  !- G-Function G Value 13
+  -5.2,                                   !- G-Function Ln(T/Ts) Value 14
+  4.828,                                  !- G-Function G Value 14
+  -4.5,                                   !- G-Function Ln(T/Ts) Value 15
+  6.253,                                  !- G-Function G Value 15
+  -3.963,                                 !- G-Function Ln(T/Ts) Value 16
+  7.894,                                  !- G-Function G Value 16
+  -3.27,                                  !- G-Function Ln(T/Ts) Value 17
+  11.82,                                  !- G-Function G Value 17
+  -2.864,                                 !- G-Function Ln(T/Ts) Value 18
+  15.117,                                 !- G-Function G Value 18
+  -2.577,                                 !- G-Function Ln(T/Ts) Value 19
+  18.006,                                 !- G-Function G Value 19
+  -2.171,                                 !- G-Function Ln(T/Ts) Value 20
+  22.887,                                 !- G-Function G Value 20
+  -1.884,                                 !- G-Function Ln(T/Ts) Value 21
+  26.924,                                 !- G-Function G Value 21
+  -1.191,                                 !- G-Function Ln(T/Ts) Value 22
+  38.004,                                 !- G-Function G Value 22
+  -0.497,                                 !- G-Function Ln(T/Ts) Value 23
+  49.919,                                 !- G-Function G Value 23
+  -0.274,                                 !- G-Function Ln(T/Ts) Value 24
+  53.407,                                 !- G-Function G Value 24
+  -0.051,                                 !- G-Function Ln(T/Ts) Value 25
+  56.632,                                 !- G-Function G Value 25
+  0.196,                                  !- G-Function Ln(T/Ts) Value 26
+  59.825,                                 !- G-Function G Value 26
+  0.419,                                  !- G-Function Ln(T/Ts) Value 27
+  62.349,                                 !- G-Function G Value 27
+  0.642,                                  !- G-Function Ln(T/Ts) Value 28
+  64.524,                                 !- G-Function G Value 28
+  0.873,                                  !- G-Function Ln(T/Ts) Value 29
+  66.412,                                 !- G-Function G Value 29
+  1.112,                                  !- G-Function Ln(T/Ts) Value 30
+  67.993,                                 !- G-Function G Value 30
+  1.335,                                  !- G-Function Ln(T/Ts) Value 31
+  69.162,                                 !- G-Function G Value 31
+  1.679,                                  !- G-Function Ln(T/Ts) Value 32
+  70.476,                                 !- G-Function G Value 32
+  2.028,                                  !- G-Function Ln(T/Ts) Value 33
+  71.361,                                 !- G-Function G Value 33
+  2.275,                                  !- G-Function Ln(T/Ts) Value 34
+  71.79,                                  !- G-Function G Value 34
+  3.003,                                  !- G-Function Ln(T/Ts) Value 35
+  72.511;                                 !- G-Function G Value 35
+
+>>>>>>> .theirs

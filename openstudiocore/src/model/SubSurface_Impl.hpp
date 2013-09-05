@@ -29,6 +29,7 @@ namespace model {
 class Surface;
 class SubSurface;
 class ShadingSurface;
+class ShadingControl;
 
 namespace detail {
 
@@ -141,6 +142,8 @@ namespace detail {
 
     bool isViewFactortoGroundAutocalculated() const;
 
+    boost::optional<ShadingControl> shadingControl() const;
+
     double multiplier() const;
 
     bool isMultiplierDefaulted() const;
@@ -164,6 +167,10 @@ namespace detail {
     void resetViewFactortoGround();
 
     void autocalculateViewFactortoGround();
+
+    bool setShadingControl(const ShadingControl& shadingControl);
+
+    void resetShadingControl();
 
     bool setMultiplier(double multiplier);
 

@@ -30,10 +30,12 @@
 #include <model/ShadingSurface_Impl.hpp>
 #include <model/ShadingSurfaceGroup.hpp>
 #include <model/ShadingSurfaceGroup_Impl.hpp>
+#include <model/ShadingControl.hpp>
+#include <model/ShadingControl_Impl.hpp>
 #include <model/ConstructionBase.hpp>
 #include <model/ConstructionBase_Impl.hpp>
-#include <model/LayeredConstruction.hpp>
-#include <model/LayeredConstruction_Impl.hpp>
+#include <model/Construction.hpp>
+#include <model/Construction_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
@@ -56,7 +58,7 @@ namespace detail {
                                    bool keepHandle)
     : PlanarSurface_Impl(idfObject,model,keepHandle)
   {
-    BOOST_ASSERT(idfObject.iddObject().type() == SubSurface::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == SubSurface::iddObjectType());
   }
 
   SubSurface_Impl::SubSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
@@ -64,7 +66,7 @@ namespace detail {
                                    bool keepHandle)
     : PlanarSurface_Impl(other,model,keepHandle)
   {
-    BOOST_ASSERT(other.iddObject().type() == SubSurface::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == SubSurface::iddObjectType());
   }
 
   SubSurface_Impl::SubSurface_Impl(const SubSurface_Impl& other,
@@ -228,12 +230,14 @@ namespace detail {
 
   bool SubSurface_Impl::setConstruction(const ConstructionBase& construction)
   {
-    return setPointer(OS_SubSurfaceFields::ConstructionName, construction.handle());
+    bool result = setPointer(OS_SubSurfaceFields::ConstructionName, construction.handle());
+    return result;
   }
 
   void SubSurface_Impl::resetConstruction()
   {
-    setString(OS_SubSurfaceFields::ConstructionName, "");
+    bool result = setString(OS_SubSurfaceFields::ConstructionName, "");
+    OS_ASSERT(result);
   }
 
   boost::optional<PlanarSurfaceGroup> SubSurface_Impl::planarSurfaceGroup() const
@@ -383,7 +387,7 @@ namespace detail {
 
   std::string SubSurface_Impl::subSurfaceType() const {
     boost::optional<std::string> value = getString(OS_SubSurfaceFields::SubSurfaceType,true,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -408,9 +412,14 @@ namespace detail {
     return result;
   }
 
+  boost::optional<ShadingControl> SubSurface_Impl::shadingControl() const
+  {
+    return getObject<SubSurface>().getModelObjectTarget<ShadingControl>(OS_SubSurfaceFields::ShadingControlName);
+  }
+
   double SubSurface_Impl::multiplier() const {
     boost::optional<double> value = getDouble(OS_SubSurfaceFields::Multiplier,true);
-    BOOST_ASSERT(value);
+    OS_ASSERT(value);
     return value.get();
   }
 
@@ -438,9 +447,19 @@ namespace detail {
   bool SubSurface_Impl::setSubSurfaceType(std::string subSurfaceType) {
     bool result = false;
     result = setString(OS_SubSurfaceFields::SubSurfaceType, subSurfaceType);
-    boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface();
-    if (adjacentSubSurface){
-      adjacentSubSurface->setString(OS_SubSurfaceFields::SubSurfaceType, subSurfaceType);
+    if (result){
+
+      if (!(istringEqual("FixedWindow", subSurfaceType) ||
+            istringEqual("OperableWindow", subSurfaceType) ||
+            istringEqual("GlassDor", subSurfaceType))){
+        this->resetShadingControl();
+      }
+
+      boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface();
+      if (adjacentSubSurface){
+        adjacentSubSurface->setString(OS_SubSurfaceFields::SubSurfaceType, subSurfaceType);
+        adjacentSubSurface->resetShadingControl();
+      }
     }
     return result;
   }
@@ -463,12 +482,30 @@ namespace detail {
 
   void SubSurface_Impl::resetViewFactortoGround() {
     bool result = setString(OS_SubSurfaceFields::ViewFactortoGround, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SubSurface_Impl::autocalculateViewFactortoGround() {
     bool result = setString(OS_SubSurfaceFields::ViewFactortoGround, "Autocalculate");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
+  }
+
+  bool SubSurface_Impl::setShadingControl(const ShadingControl& shadingControl)
+  {
+    bool result = false;
+    std::string subSurfaceType = this->subSurfaceType();
+    if (istringEqual("FixedWindow", subSurfaceType) ||
+        istringEqual("OperableWindow", subSurfaceType) ||
+        istringEqual("GlassDor", subSurfaceType)){
+      result = setPointer(OS_SubSurfaceFields::ShadingControlName, shadingControl.handle());
+    }
+    return result;
+  }
+
+  void SubSurface_Impl::resetShadingControl()
+  {
+    bool result = setString(OS_SubSurfaceFields::ShadingControlName, "");
+    OS_ASSERT(result);  
   }
 
   bool SubSurface_Impl::setMultiplier(double multiplier) {
@@ -479,7 +516,7 @@ namespace detail {
       boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface();
       if (adjacentSubSurface){
         result = adjacentSubSurface->setDouble(OS_SubSurfaceFields::Multiplier, multiplier);
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
       }
     }
 
@@ -488,12 +525,12 @@ namespace detail {
 
   void SubSurface_Impl::resetMultiplier() {
     bool result = setString(OS_SubSurfaceFields::Multiplier, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
 
     boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface();
     if (adjacentSubSurface){
       result = adjacentSubSurface->setString(OS_SubSurfaceFields::Multiplier, "");
-      BOOST_ASSERT(result);
+      OS_ASSERT(result);
     }
   }
 
@@ -515,12 +552,12 @@ namespace detail {
 
   void SubSurface_Impl::resetNumberofVertices() {
     bool result = setString(OS_SubSurfaceFields::NumberofVertices, "");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   void SubSurface_Impl::autocalculateNumberofVertices() {
     bool result = setString(OS_SubSurfaceFields::NumberofVertices, "Autocalculate");
-    BOOST_ASSERT(result);
+    OS_ASSERT(result);
   }
 
   boost::optional<Surface> SubSurface_Impl::surface() const
@@ -594,25 +631,28 @@ namespace detail {
         }
 
         result = setPointer(OS_SubSurfaceFields::OutsideBoundaryConditionObject, subSurface.handle());
-        BOOST_ASSERT(result);
+        OS_ASSERT(result);
+        this->resetShadingControl();
 
         if (!isSameSubSurface){
           result = subSurface.setPointer(OS_SubSurfaceFields::OutsideBoundaryConditionObject, this->handle());
-          BOOST_ASSERT(result);
+          OS_ASSERT(result);
+          subSurface.resetShadingControl();
         }
       }
     }
+
     return result;
   }
   
   void SubSurface_Impl::resetAdjacentSubSurface()
   {
     bool test = setString(OS_SubSurfaceFields::OutsideBoundaryConditionObject, "");
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
 
     BOOST_FOREACH(WorkspaceObject wo, this->getSources(IddObjectType::OS_SubSurface)){
       test = wo.setString(OS_SubSurfaceFields::OutsideBoundaryConditionObject, "");
-      BOOST_ASSERT(test);
+      OS_ASSERT(test);
     }
   }
 
@@ -660,7 +700,7 @@ namespace detail {
   {
     std::string defaultSubSurfaceType = this->defaultSubSurfaceType();
     bool test = setSubSurfaceType(defaultSubSurfaceType);
-    BOOST_ASSERT(test);
+    OS_ASSERT(test);
   }
 
   std::string SubSurface_Impl::outsideBoundaryCondition() const {
@@ -838,7 +878,7 @@ namespace detail {
 SubSurface::SubSurface(const std::vector<Point3d>& vertices, const Model& model)
   : PlanarSurface(SubSurface::iddObjectType(),vertices,model)
 {
-  BOOST_ASSERT(getImpl<detail::SubSurface_Impl>());
+  OS_ASSERT(getImpl<detail::SubSurface_Impl>());
   assignDefaultSubSurfaceType();
 }
 
@@ -866,6 +906,11 @@ bool SubSurface::isViewFactortoGroundDefaulted() const {
 
 bool SubSurface::isViewFactortoGroundAutocalculated() const {
   return getImpl<detail::SubSurface_Impl>()->isViewFactortoGroundAutocalculated();
+}
+
+boost::optional<ShadingControl> SubSurface::shadingControl() const
+{
+  return getImpl<detail::SubSurface_Impl>()->shadingControl();
 }
 
 double SubSurface::multiplier() const {
@@ -930,6 +975,14 @@ void SubSurface::resetNumberofVertices() {
 
 void SubSurface::autocalculateNumberofVertices() {
   getImpl<detail::SubSurface_Impl>()->autocalculateNumberofVertices();
+}
+
+bool SubSurface::setShadingControl(const ShadingControl& shadingControl) {
+  return getImpl<detail::SubSurface_Impl>()->setShadingControl(shadingControl);
+}
+
+void SubSurface::resetShadingControl() {
+  getImpl<detail::SubSurface_Impl>()->resetShadingControl();
 }
 
 boost::optional<Surface> SubSurface::surface() const {

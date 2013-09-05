@@ -28,6 +28,8 @@
 
 #include <model/Model_Impl.hpp>
 
+#include <utilities/core/Assert.hpp>
+
 #include <QStackedWidget>
 
 namespace openstudio {
@@ -41,7 +43,7 @@ ConstructionsView::ConstructionsView(bool isIP,
 {
   bool isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                              modelObjectInspectorView(),SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
 }
 
@@ -112,7 +114,7 @@ void ConstructionsInspectorView::showConstructionInspector(const openstudio::mod
                              SIGNAL(toggleUnitsClicked(bool)),
                              constructionInspectorView, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   constructionInspectorView->selectModelObject(modelObject);
 
@@ -126,7 +128,7 @@ void ConstructionsInspectorView::showCfactorUndergroundWallInspector(const opens
                              SIGNAL(toggleUnitsClicked(bool)),
                              constructionCfactorUndergroundWallInspectorView, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   constructionCfactorUndergroundWallInspectorView->selectModelObject(modelObject);
 
@@ -140,7 +142,7 @@ void ConstructionsInspectorView::showFfactorGroundFloorInspector(const openstudi
                              SIGNAL(toggleUnitsClicked(bool)),
                              constructionFfactorGroundFloorInspectorView, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   constructionFfactorGroundFloorInspectorView->selectModelObject(modelObject);
 
@@ -154,7 +156,7 @@ void ConstructionsInspectorView::showInternalSourceInspector(const openstudio::m
                              SIGNAL(toggleUnitsClicked(bool)),
                              constructionInternalSourceInspectorView, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   constructionInternalSourceInspectorView->selectModelObject(modelObject);
 
@@ -168,7 +170,7 @@ void ConstructionsInspectorView::showWindowDataFileInspector(const openstudio::m
                              SIGNAL(toggleUnitsClicked(bool)),
                              constructionWindowDataFileInspectorView, 
                              SIGNAL(toggleUnitsClicked(bool)));
-  BOOST_ASSERT(isConnected);
+  OS_ASSERT(isConnected);
 
   constructionWindowDataFileInspectorView->selectModelObject(modelObject);
 
