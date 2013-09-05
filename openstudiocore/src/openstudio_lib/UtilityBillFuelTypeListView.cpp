@@ -67,13 +67,20 @@ FuelType UtilityBillFuelTypeListController::fuelType() const
 void UtilityBillFuelTypeListController::objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   if (iddObjectType == m_iddObjectType){
-    std::vector<OSItemId> ids = this->makeVector();
-    emit itemIds(ids);
+    // in a ModelObjectTypeListView this is sufficient to say that a new item has been added to our list
+    // however, in this case we need to also check the fuel type
+    if (boost::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)){
+      if (boost::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)->fuelType() == m_fuelType){
 
-    BOOST_FOREACH(const OSItemId& id, ids){
-      if (id.itemId() == impl->handle().toString()){
-        emit selectedItemId(id);
-        break;
+        std::vector<OSItemId> ids = this->makeVector();
+        emit itemIds(ids);
+
+        BOOST_FOREACH(const OSItemId& id, ids){
+          if (id.itemId() == impl->handle().toString()){
+            emit selectedItemId(id);
+            break;
+          }
+        }
       }
     }
   }
@@ -82,7 +89,14 @@ void UtilityBillFuelTypeListController::objectAdded(boost::shared_ptr<openstudio
 void UtilityBillFuelTypeListController::objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   if (iddObjectType == m_iddObjectType){
-    emit itemIds(makeVector());
+    // in a ModelObjectTypeListView this is sufficient to say that a new item has been added to our list
+    // however, in this case we need to also check the fuel type
+    if (boost::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)){
+      if (boost::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)->fuelType() == m_fuelType){
+
+        emit itemIds(makeVector());
+      }
+    }
   }
 }
 
