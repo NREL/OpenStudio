@@ -36,9 +36,10 @@
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/Job.hpp>
 
+#include <utilities/cloud/VagrantProvider.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
+#include <utilities/core/Path.hpp>
 
 #include <OpenStudio.hxx>
 
@@ -99,9 +100,9 @@ RunTabController::RunTabController()
 QSharedPointer<VagrantProvider> RunTabController::makeProvider()
 {
   // create the vagrant provider
-  path serverPath("/Users/kbenne/Development/openstudio-server/vagrant/server");
+  path serverPath(toPath("/Users/kbenne/Development/openstudio-server/vagrant/server"));
   Url serverUrl("http://localhost:8080");
-  path workerPath("/Users/kbenne/Development/openstudio-server/vagrant/worker");
+  path workerPath(toPath("/Users/kbenne/Development/openstudio-server/vagrant/worker"));
   Url workerUrl("http://localhost:8081");
 
   QSharedPointer<VagrantProvider> provider;
