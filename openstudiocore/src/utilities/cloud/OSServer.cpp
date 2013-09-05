@@ -27,6 +27,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QHttpMultiPart>
 #include <QMutex>
 #include <QFile>
 
@@ -545,41 +546,39 @@ namespace openstudio{
 
       if (exists(analysisZipFile)){
 
-        QString id = toQString(removeBraces(analysisUUID));
-        QUrl url(m_url.toString().append("/analyses/").append(id).append("/upload.json")); 
-
         QFile file(toQString(analysisZipFile));
         if (file.open(QIODevice::ReadOnly)){
-          QByteArray data = file.readAll();
-          QByteArray data64 = data.toBase64(); // DLM: is this right?
+
+          QString bound="-------marge"; // DLM: can this be anything we want?
+
+          QByteArray data(QString("--" + bound + "\r\n").toAscii());
+          data += "Content-Disposition: form-data; name=\"action\"\r\n\r\n";
+          data += "\r\n";
+          data += QString("--" + bound + "\r\n").toAscii();
+          data += "Content-Disposition: form-data; name=\"seed_zip\"; filename=\"seed_zip.zip\"\r\n";
+          data += "Content-Type: application/zip\r\n\r\n";
+          data.append(file.readAll());
+          data += "\r\n";
+          data += QString("--" + bound + "\r\n.").toAscii();
+          data += "\r\n";
+
           file.close();
 
-          QVariantMap fileMap;
-          fileMap["data"] = data64;
+          QString id = toQString(removeBraces(analysisUUID));
+          QUrl url(m_url.toString().append("/analyses/").append(id).append("/upload.json")); 
 
-          QVariantMap map;
-          map["file"] = fileMap;
+          QNetworkRequest request(url);
+          request.setRawHeader(QString("Content-Type").toAscii(),QString("multipart/form-data; boundary=" + bound).toAscii());
+          request.setRawHeader(QString("Content-Length").toAscii(), QString::number(data.length()).toAscii());
+         
+          m_networkReply = m_networkAccessManager->post(request, data);
 
-          bool test;
-          QJson::Serializer serializer;
-          QByteArray json = serializer.serialize(map, &test);
-          if (test){
+          bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processUploadAnalysisFiles()));
+          OS_ASSERT(test);
 
-            QByteArray postData;  
-            postData.append(json); 
-
-            QNetworkRequest request(url);
-            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-            request.setHeader(QNetworkRequest::ContentLengthHeader, postData.size()); // DLM: is this right?
-
-            m_networkReply = m_networkAccessManager->post(request, postData);
-
-            bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processUploadAnalysisFiles()));
-            OS_ASSERT(test);
-
-            return true;
-          }
+          return true;
         }
+
       }else{
         logError("File does not exist");
       }
