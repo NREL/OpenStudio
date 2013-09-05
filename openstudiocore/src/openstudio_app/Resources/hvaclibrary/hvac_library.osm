@@ -2256,338 +2256,6 @@ OS:Schedule:Ruleset,
   Const Vol Rad Clg Hi Air Temp Sch,      !- Name
   {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
   {1d3ca4dd-4786-4a6b-98d3-84d051d232b8}; !- Default Day Schedule Name
-OS:YearDescription,
-  {ed125c68-9e16-4966-934f-d52ec8639420}; !- Handle
-
-OS:RadianceParameters,
-  {3dc1d560-e09c-4a2d-a6e3-f7258ca82663}, !- Handle
-  1,                                      !- Accumulated Rays per Record
-  0,                                      !- Direct Threshold
-  1,                                      !- Direct Certainty
-  1,                                      !- Direct Jitter
-  1,                                      !- Direct Pretest
-  6,                                      !- Ambient Bounces VMX
-  2,                                      !- Ambient Bounces DMX
-  4050,                                   !- Ambient Divisions VMX
-  512,                                    !- Ambient Divisions DMX
-  256,                                    !- Ambient Supersamples
-  0.001,                                  !- Limit Weight VMX
-  0.001,                                  !- Limit Weight DMX
-  500,                                    !- Klems Sampling Density
-  146;                                    !- Sky Discretization Resolution
-
-OS:SimulationControl,
-  {f166978d-5551-40d6-813e-665c5bbd60f7}; !- Handle
-
-OS:Sizing:Parameters,
-  {04f484b0-4c3a-4880-87ab-35e8f0491577}, !- Handle
-  1.25,                                   !- Heating Sizing Factor
-  1.15;                                   !- Cooling Sizing Factor
-
-OS:ProgramControl,
-  {306630ac-ba0a-4e63-962a-88341ad897b9}; !- Handle
-
-OS:Timestep,
-  {10565632-4481-4202-81dd-2947d4c08dcc}, !- Handle
-  6;                                      !- Number of Timesteps per Hour
-
-OS:OutputControl:ReportingTolerances,
-  {aa866c2c-978b-4e5d-83fa-4f3329398c35}; !- Handle
-
-OS:ConvergenceLimits,
-  {bd2c64fa-45bd-4b9a-85f4-ce50023e17e8}; !- Handle
-
-OS:ShadowCalculation,
-  {137743cc-9078-403b-aefe-2d5dd9b9b31f}, !- Handle
-  7,                                      !- Calculation Frequency
-  15000;                                  !- Maximum Figures in Shadow Overlap Calculations
-
-OS:SurfaceConvectionAlgorithm:Inside,
-  {f7be76d2-d433-42f7-a64e-4a900e4c90bb}, !- Handle
-  TARP;                                   !- Algorithm
-
-OS:SurfaceConvectionAlgorithm:Outside,
-  {0cf3f090-d61e-41a9-80c7-771598666fa7}, !- Handle
-  DOE-2;                                  !- Algorithm
-
-OS:HeatBalanceAlgorithm,
-  {59b9818e-556a-422b-969a-1226b1b0512c}, !- Handle
-  ConductionTransferFunction,             !- Algorithm
-  200;                                    !- Surface Temperature Upper Limit {F}
-
-OS:ZoneAirHeatBalanceAlgorithm,
-  {d2768913-6405-49f4-b365-f12ef13c4f98}, !- Handle
-  AnalyticalSolution;                     !- Algorithm
-
-OS:ZoneAirContaminantBalance,
-  {9c43b8b2-41d4-404c-877b-ed60a003ddcc}; !- Handle
-
-OS:ZoneCapacitanceMultiplier:ResearchSpecial,
-  {14bb9f15-3e25-4006-98a0-9ebce06d88f9}, !- Handle
-  ,                                       !- Temperature Capacity Multiplier
-  ,                                       !- Humidity Capacity Multiplier
-  ;                                       !- Carbon Dioxide Capacity Multiplier
-
-OS:RunPeriod,
-  {817ff871-7bcc-41a7-a069-c1b50c79d4c8}, !- Handle
-  Run Period 1,                           !- Name
-  1,                                      !- Begin Month
-  1,                                      !- Begin Day of Month
-  12,                                     !- End Month
-  31,                                     !- End Day of Month
-  ,                                       !- Use Weather File Holidays and Special Days
-  ,                                       !- Use Weather File Daylight Saving Period
-  ,                                       !- Apply Weekend Holiday Rule
-  ,                                       !- Use Weather File Rain Indicators
-  ,                                       !- Use Weather File Snow Indicators
-  ;                                       !- Number of Times Runperiod to be Repeated
-
-OS:Building,
-  {8c8cfa58-38ec-49b2-a817-105d6c3998e8}, !- Handle
-  Building 1,                             !- Name
-  ,                                       !- Building Type
-  ,                                       !- North Axis {deg}
-  ,                                       !- Nominal Floor to Floor Height {m}
-  ,                                       !- Space Type Name
-  ,                                       !- Default Construction Set Name
-  ;                                       !- Default Schedule Set Name
-
-OS:Coil:Cooling:CooledBeam,
-  {9409bb35-2087-4798-897c-a6703b5a7669}, !- Handle
-  Coil Cooling Cooled Beam,               !- Name
-  ,                                       !- Chilled Water Inlet Node Name
-  ,                                       !- Chilled Water Outlet Node Name
-  5.422,                                  !- Coil Surface Area per Coil Length {m2/m}
-  15.3,                                   !- Model Parameter a
-  0.0,                                    !- Model Parameter n1
-  0.84,                                   !- Model Parameter n2
-  0.12,                                   !- Model Parameter n3
-  0.171,                                  !- Model Parameter a0 {m2/m}
-  0.0057,                                 !- Model Parameter K1
-  0.4,                                    !- Model Parameter n
-  0.0145;                                 !- Leaving Pipe Inside Diameter {m}
-
-OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
-  {3667b348-2052-4711-9cd2-7226dc650e72}, !- Handle
-  Air Terminal Single Duct Constant Volume Cooled Beam 1, !- Name
-  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  ,                                       !- Cooled Beam Type
-  ,                                       !- Supply Air Inlet Node Name
-  ,                                       !- Supply Air Outlet Node Name
-  {9409bb35-2087-4798-897c-a6703b5a7669}, !- Cooling Coil Name
-  autosize,                               !- Supply Air Volumetric Flow Rate {m3/s}
-  autosize,                               !- Maximum Total Chilled Water Volumetric Flow Rate {m3/s}
-  autosize,                               !- Number of Beams
-  autosize,                               !- Beam Length {m}
-  15.0,                                   !- Design Inlet Water Temperature {C}
-  17.0,                                   !- Design Outlet Water Temperature {C}
-  Autocalculate;                          !- Coefficient of Induction Kin
-<<<<<<< .mine
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
 
 OS:Schedule:Day,
   {1d3ca4dd-4786-4a6b-98d3-84d051d232b8}, !- Handle
@@ -2792,4 +2460,33 @@ OS:GroundHeatExchanger:Vertical,
   3.003,                                  !- G-Function Ln(T/Ts) Value 35
   72.511;                                 !- G-Function G Value 35
 
->>>>>>> .theirs
+OS:Coil:Cooling:CooledBeam,
+  {9409bb35-2087-4798-897c-a6703b5a7669}, !- Handle
+  Coil Cooling Cooled Beam,               !- Name
+  ,                                       !- Chilled Water Inlet Node Name
+  ,                                       !- Chilled Water Outlet Node Name
+  5.422,                                  !- Coil Surface Area per Coil Length {m2/m}
+  15.3,                                   !- Model Parameter a
+  0.0,                                    !- Model Parameter n1
+  0.84,                                   !- Model Parameter n2
+  0.12,                                   !- Model Parameter n3
+  0.171,                                  !- Model Parameter a0 {m2/m}
+  0.0057,                                 !- Model Parameter K1
+  0.4,                                    !- Model Parameter n
+  0.0145;                                 !- Leaving Pipe Inside Diameter {m}
+
+OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
+  {3667b348-2052-4711-9cd2-7226dc650e72}, !- Handle
+  Air Terminal Single Duct Constant Volume Cooled Beam 1, !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Cooled Beam Type
+  ,                                       !- Supply Air Inlet Node Name
+  ,                                       !- Supply Air Outlet Node Name
+  {9409bb35-2087-4798-897c-a6703b5a7669}, !- Cooling Coil Name
+  autosize,                               !- Supply Air Volumetric Flow Rate {m3/s}
+  autosize,                               !- Maximum Total Chilled Water Volumetric Flow Rate {m3/s}
+  autosize,                               !- Number of Beams
+  autosize,                               !- Beam Length {m}
+  15.0,                                   !- Design Inlet Water Temperature {C}
+  17.0,                                   !- Design Outlet Water Temperature {C}
+  Autocalculate;                          !- Coefficient of Induction Kin
