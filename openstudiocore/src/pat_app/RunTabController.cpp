@@ -37,9 +37,10 @@
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/Job.hpp>
 
+#include <utilities/cloud/VagrantProvider.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
+#include <utilities/core/Path.hpp>
 
 #include <OpenStudio.hxx>
 

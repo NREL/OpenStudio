@@ -46,7 +46,6 @@
 #define TEXT_WIDTH 300
 
 namespace openstudio {
-  
 
 CloudDialog::CloudDialog(QWidget* parent)
   : OSDialog(false, parent),
@@ -61,7 +60,8 @@ CloudDialog::CloudDialog(QWidget* parent)
   m_settingsPageIdx(-1),
   m_amazonProviderWidget(0),
   m_blankProviderWidget(0),
-  m_vagrantProviderWidget(0)
+  m_vagrantProviderWidget(0),
+  m_legalAgreement(0)
 {
   this->setWindowTitle("Cloud Settings");
   createWidgets();
@@ -131,18 +131,20 @@ void CloudDialog::createWidgets()
 
   AWSProvider awsProvider;
 
-  label = new QLabel;
-  label->setText("TBD NREL Legal statement");
+  m_legalAgreement = new QLabel;
+  m_legalAgreement->hide();
+  m_legalAgreement->setText("TBD NREL Legal statement");
   // TODO
   //boost::optional<CloudProviderWidget *> cloudProviderWidget = this->getCurrentCloudProviderWidget();
   //if(cloudProviderWidget.is_initialized()){
   //  cloudProviderWidget.get()->saveData();
-  //  label->setText(awsProvider.userAgreementText().c_str()); 
+  //  m_legalAgreement->setText(awsProvider.userAgreementText().c_str()); 
   //}
 
-  m_rightLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+  m_rightLoginLayout->addWidget(m_legalAgreement,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_iAcceptCheckBox = new QCheckBox("I Agree");
+  m_iAcceptCheckBox->hide();
   m_rightLoginLayout->addWidget(m_iAcceptCheckBox,0,Qt::AlignTop | Qt::AlignLeft);
 
   isConnected = connect(m_iAcceptCheckBox, SIGNAL(clicked(bool)),
@@ -165,9 +167,41 @@ void CloudDialog::createWidgets()
   m_settingsStackedWidget = new  QStackedWidget();
   m_mainSettingsLayout->addWidget(m_settingsStackedWidget);
 
-  m_settingsStackedWidget->addWidget(m_blankProviderWidget->m_settingsWidget);
-  m_settingsStackedWidget->addWidget(m_vagrantProviderWidget->m_settingsWidget);
-  m_settingsStackedWidget->addWidget(m_amazonProviderWidget->m_settingsWidget);
+  QWidget * widget = new QWidget();
+
+  QHBoxLayout * hLayout = new QHBoxLayout;
+  hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(5);
+  widget->setLayout(hLayout);
+
+  hLayout->addWidget(m_blankProviderWidget->m_leftSettingsWidget);
+  hLayout->addWidget(m_blankProviderWidget->m_rightSettingsWidget);
+
+  m_settingsStackedWidget->addWidget(widget);
+
+  widget = new QWidget();
+
+  hLayout = new QHBoxLayout;
+  hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(5);
+  widget->setLayout(hLayout);
+
+  hLayout->addWidget(m_vagrantProviderWidget->m_leftSettingsWidget);
+  hLayout->addWidget(m_vagrantProviderWidget->m_rightSettingsWidget);
+
+  m_settingsStackedWidget->addWidget(widget);
+
+  widget = new QWidget();
+
+  hLayout = new QHBoxLayout;
+  hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(5);
+  widget->setLayout(hLayout);
+
+  hLayout->addWidget(m_amazonProviderWidget->m_leftSettingsWidget);
+  hLayout->addWidget(m_amazonProviderWidget->m_rightSettingsWidget);
+
+  m_settingsStackedWidget->addWidget(widget);
 
   m_settingsStackedWidget->setCurrentIndex(m_blankProviderIdx);
 
@@ -185,6 +219,7 @@ void CloudDialog::createWidgets()
   // BUTTONS
 
   this->okButton()->setText("Continue");
+  this->okButton()->setEnabled(false);
 
   // OS SETTINGS
 
@@ -277,12 +312,23 @@ void CloudDialog::iAcceptClicked(bool checked)
 void CloudDialog::cloudResourceChanged(const QString & text)
 {
   if(text == NO_PROVIDER){
-    this->m_pageStackedWidget->setCurrentIndex(m_blankPageIdx);
+    this->okButton()->setEnabled(false);
+    m_legalAgreement->hide();
+    m_iAcceptCheckBox->hide();
+    this->m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
+    this->m_loginStackedWidget->setCurrentIndex(m_blankProviderIdx);
+    this->m_settingsStackedWidget->setCurrentIndex(m_blankProviderIdx);
   } else if(text == VAGRANT_PROVIDER) {
+    this->okButton()->setEnabled(true);
+    m_legalAgreement->show();
+    m_iAcceptCheckBox->show();
     this->m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
     this->m_loginStackedWidget->setCurrentIndex(m_vagrantProviderIdx);
     this->m_settingsStackedWidget->setCurrentIndex(m_vagrantProviderIdx);
   } else if(text == AMAZON_PROVIDER) {
+    this->okButton()->setEnabled(true);
+    m_legalAgreement->show();
+    m_iAcceptCheckBox->show();
     this->m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
     this->m_loginStackedWidget->setCurrentIndex(m_amazonProviderIdx);
     this->m_settingsStackedWidget->setCurrentIndex(m_amazonProviderIdx);
@@ -301,7 +347,8 @@ CloudProviderWidget::CloudProviderWidget(QWidget * parent)
   m_waitCheckBox(0),
   m_waitLineEdit(0),
   m_loginWidget(0),
-  m_settingsWidget(0),
+  m_leftSettingsWidget(0),
+  m_rightSettingsWidget(0),
   m_leftLoginLayout(0),
   //m_rightLoginLayout(0),
   m_leftSettingsLayout(0),
@@ -331,17 +378,19 @@ void CloudProviderWidget::createWidgets()
 
   //m_rightLoginLayout = new QVBoxLayout(this);
 
-  // LEFT SETTINGS PAGE
-  m_settingsWidget = new QWidget();
+  // SETTINGS PAGE
 
   // LEFT SETTINGS PAGE
+  m_leftSettingsWidget = new QWidget();
+
   m_leftSettingsLayout = new QVBoxLayout(this);
-  m_settingsWidget->setLayout(m_leftSettingsLayout);  
+  m_leftSettingsWidget->setLayout(m_leftSettingsLayout);
 
   // RIGHT SETTINGS PAGE
+  m_rightSettingsWidget = new QWidget();
 
   m_rightSettingsLayout = new QVBoxLayout(this);
-  m_settingsWidget->setLayout(m_rightSettingsLayout);  
+  m_rightSettingsWidget->setLayout(m_rightSettingsLayout);  
 
   label = new QLabel;
   label->setObjectName("H2");
@@ -365,6 +414,8 @@ void CloudProviderWidget::createWidgets()
   label->setWordWrap(true);
   hLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
+  hLayout->addStretch();
+
   hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(QMargins(0,0,0,0));
   hLayout->setSpacing(5);
@@ -377,6 +428,8 @@ void CloudProviderWidget::createWidgets()
   label = new QLabel;
   label->setText("minutes");
   hLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  hLayout->addStretch();
 
   label = new QLabel;
   label->setFixedWidth(TEXT_WIDTH);
@@ -599,6 +652,8 @@ void VagrantProviderWidget::createSettingsWidget()
 
   m_runOnStartUpCheckBox = new QCheckBox("Run Vagrant Halt on Stop");
   m_rightSettingsLayout->addWidget(m_runOnStartUpCheckBox,0,Qt::AlignTop | Qt::AlignLeft);
+
+  m_rightSettingsLayout->addStretch();
 }
 
 void  VagrantProviderWidget::loadData()
@@ -701,9 +756,10 @@ void AmazonProviderWidget::createLoginWidget()
   QLabel * label = 0;
 
   // LEFT LOGIN PAGE
-    
+  
   label = new QLabel;
-  label->setText("To create an account go to http://aws.amazon.com");
+  label->setOpenExternalLinks(true);
+  label->setText("To create an account go to <a href=\"http://aws.amazon.com\">aws.amazon.com</a>");
   m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   label = new QLabel;
@@ -754,7 +810,7 @@ void AmazonProviderWidget::createSettingsWidget()
   m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_regionComboBox = new QComboBox();
-  m_regionComboBox->addItem("North");  // TODO remove
+  m_regionComboBox->addItem("East","us-east-1");
   m_leftSettingsLayout->addWidget(m_regionComboBox,0,Qt::AlignTop | Qt::AlignLeft);
 
   label = new QLabel;
@@ -803,13 +859,16 @@ void AmazonProviderWidget::createSettingsWidget()
   // RIGHT SETTINGS PAGE
 
   label = new QLabel;
-  label->setText("Monitor your cloud use with CloudWatch and AWS Management Console.");
+  label->setOpenExternalLinks(true);
+  label->setText("Monitor your cloud use with <a href=\"http://aws.amazon.com/cloudwatch\">CloudWatch</a> and <a href=\"http://aws.amazon.com/console\">AWS Management Console</a>.");
   m_rightSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
   
   label = new QLabel;
-  label->setText("Review pricing for cloud service at:\nhttp://aws.amazon.com/ec2/pricing/");
+  label->setOpenExternalLinks(true);
+  label->setText("Review pricing for cloud service at <a href=\"http://aws.amazon.com/ec2/pricing\">aws.amazon.com/ec2/pricing</a>");
   m_rightSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
+  m_rightSettingsLayout->addStretch();
 }
 
 void  AmazonProviderWidget::loadData()

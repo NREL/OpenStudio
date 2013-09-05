@@ -26,6 +26,7 @@
 
 class QCheckBox;
 class QComboBox;
+class QLabel;
 class QLineEdit;
 class QStackedWidget;
 class QVBoxLayout;
@@ -76,7 +77,7 @@ private:
   QStackedWidget * m_settingsStackedWidget;
 
   QVBoxLayout * m_leftLoginLayout; 
-  
+
   QVBoxLayout * m_rightLoginLayout;
 
   QVBoxLayout * m_mainSettingsLayout;
@@ -93,8 +94,10 @@ private:
 
   VagrantProviderWidget * m_vagrantProviderWidget;  
 
+  QLabel * m_legalAgreement;
+
   static const int m_blankProviderIdx = 0;
-  
+
   static const int m_vagrantProviderIdx = 1;
 
   static const int m_amazonProviderIdx = 2;
@@ -123,7 +126,9 @@ public:
 
   QWidget * m_loginWidget;
 
-  QWidget * m_settingsWidget;
+  QWidget * m_leftSettingsWidget;
+
+  QWidget * m_rightSettingsWidget;
 
 protected:
 
