@@ -470,7 +470,7 @@ namespace detail {
           m_topLevelJob = loaded->topLevelJob();
           if (runManager) {
             // HERE -- job not in runManager yet, directory().empty(), no local copy of files yet
-            runManager->updateJobs(std::vector<runmanager::Job>(1u,*m_topLevelJob));
+            runManager->updateJob(*m_topLevelJob);
           }
           OS_ASSERT(m_topLevelJob);
           m_tags = loaded->tags();
@@ -514,7 +514,7 @@ namespace detail {
     OS_ASSERT(m_topLevelJob);
     if (runManager) {
       // HERE -- files are now in directory(), need to update paths
-      runManager->updateJobs(std::vector<runmanager::Job>(1u,*m_topLevelJob));
+      runManager->updateJob(*m_topLevelJob, directory());
     }
 
     // get file references for

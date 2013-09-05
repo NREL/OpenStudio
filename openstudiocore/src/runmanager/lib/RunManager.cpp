@@ -297,6 +297,18 @@ namespace runmanager {
     return m_impl->getJobs(t_indexes);
   }
 
+
+  void RunManager::updateJob(const openstudio::runmanager::Job &t_job, const openstudio::path &t_path)
+  {
+    m_impl->updateJob(t_job, t_path);
+  }
+
+  void RunManager::updateJob(const openstudio::runmanager::Job &t_job)
+  {
+    m_impl->updateJob(t_job);
+  }
+
+
   /// Load all of the jobs from the given JSON string, merging job trees
   void RunManager::updateJobs(const std::string &t_json, bool t_externallyManaged)
   {
