@@ -49,23 +49,25 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctConstantVolumeCooledBeam(
 	AirTerminalSingleDuctConstantVolumeCooledBeam & modelObject ){
 		
+	//Name
+	IdfObject idfObject(openstudio::IddObjectType::AirTerminal_SingleDuct_ConstantVolume_CooledBeam);
+	m_idfObjects.push_back(idfObject); 
+	
+	std:: string baseName = modelObject.name().get();
+	idfObject.setName(baseName);	
+	
 	//register the air distribution unit in the map rather than the chilled beam air terminal itself.
 	//this is necessary because the air distribution unit encapsulating the chilled beam air terminal 
-  //goes on both the brachlist and the zone HVAC equipment list
+	//goes on both the brachlist and the zone HVAC equipment list
 	//since the branches are translated first, when the chilled beam's coil is encountered in the branchlist, the air distribution unit
-  //that encapsulates the chilled beam is returned and put onto the branch list.  
-  //When the chilled beam air terminal is encountered again on the zone HVAC equipment list,
+	//that encapsulates the chilled beam is returned and put onto the branch list.  
+	//When the chilled beam air terminal is encountered again on the zone HVAC equipment list,
 	//the map must return the air distribution unit to ensure that the air distribution unit is on the translated
 	//equipment list.
 
-	IdfObject _airDistributionUnit = createRegisterAndNameIdfObject(IddObjectType::ZoneHVAC_AirDistributionUnit,modelObject);
-	//_airDistributionUnit.createName();
-	//_airDistributionUnit.setName(_airDistributionUnit.name().get() + " Air Distribution Unit");
-	//m_idfObjects.push_back(_airDistributionUnit);
-
-	IdfObject idfObject(openstudio::IddObjectType::AirTerminal_SingleDuct_ConstantVolume_CooledBeam);
-	idfObject.createName();
-	m_idfObjects.push_back(idfObject);  
+	IdfObject _airDistributionUnit(IddObjectType::ZoneHVAC_AirDistributionUnit);
+	_airDistributionUnit.setName("ADU " + baseName ); //ADU: Air Distribution Unit
+	m_idfObjects.push_back(_airDistributionUnit);
 
 	boost::optional<std::string> s;
 	boost::optional<double> value;
