@@ -31,6 +31,12 @@ namespace openstudio{
     {
     }
 
+    CloudSettings_Impl::CloudSettings_Impl(const UUID& uuid,
+                                           const UUID& versionUUID)
+      : m_uuid(uuid),
+        m_versionUUID(versionUUID)
+    {}
+
     CloudSettings_Impl::~CloudSettings_Impl()
     {
     }
@@ -57,6 +63,18 @@ namespace openstudio{
         m_workerUrls(workerUrls)
     {
     }
+
+    CloudSession_Impl::CloudSession_Impl(const UUID& uuid,
+                                         const UUID& versionUUID,
+                                         const std::string& sessionId,
+                                         const boost::optional<Url>& serverUrl,
+                                         const std::vector<Url>& workerUrls)
+      : m_uuid(uuid),
+        m_versionUUID(versionUUID),
+        m_sessionId(sessionId),
+        m_serverUrl(serverUrl),
+        m_workerUrls(workerUrls)
+    {}
 
     CloudSession_Impl::~CloudSession_Impl()
     {

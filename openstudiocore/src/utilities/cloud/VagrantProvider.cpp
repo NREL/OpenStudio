@@ -49,6 +49,25 @@ namespace openstudio{
       }
     }
 
+    VagrantSettings_Impl::VagrantSettings_Impl(const UUID& uuid,
+                                               const UUID& versionUUID,
+                                               bool userAgreementSigned,
+                                               const openstudio::path& serverPath,
+                                               const openstudio::Url& serverUrl,
+                                               const openstudio::path& workerPath,
+                                               const openstudio::Url& workerUrl,
+                                               bool haltOnStop,
+                                               const std::string& username)
+      : CloudSettings_Impl(uuid,versionUUID),
+        m_userAgreementSigned(userAgreementSigned),
+        m_serverPath(serverPath),
+        m_serverUrl(serverUrl),
+        m_workerPath(workerPath),
+        m_workerUrl(workerUrl),
+        m_haltOnStop(haltOnStop),
+        m_username(username)
+    {}
+
     VagrantSettings_Impl::~VagrantSettings_Impl()
     {
     }
@@ -256,8 +275,18 @@ namespace openstudio{
     }
 
 
-    VagrantSession_Impl::VagrantSession_Impl(const std::string& sessionId, const boost::optional<Url>& serverUrl, const std::vector<Url>& workerUrls)
+    VagrantSession_Impl::VagrantSession_Impl(const std::string& sessionId, 
+                                             const boost::optional<Url>& serverUrl, 
+                                             const std::vector<Url>& workerUrls)
       : CloudSession_Impl(sessionId, serverUrl, workerUrls)
+    {}
+
+    VagrantSession_Impl::VagrantSession_Impl(const UUID& uuid,
+                                             const UUID& versionUUID,
+                                             const std::string& sessionId,
+                                             const boost::optional<Url>& serverUrl,
+                                             const std::vector<Url>& workerUrls)
+      : CloudSession_Impl(uuid,versionUUID,sessionId,serverUrl,workerUrls)
     {}
 
     VagrantSession_Impl::~VagrantSession_Impl()
@@ -715,6 +744,29 @@ namespace openstudio{
     OS_ASSERT(getImpl<detail::VagrantSettings_Impl>());
   }
 
+  VagrantSettings::VagrantSettings(const UUID& uuid,
+                                   const UUID& versionUUID,
+                                   bool userAgreementSigned,
+                                   const openstudio::path& serverPath,
+                                   const openstudio::Url& serverUrl,
+                                   const openstudio::path& workerPath,
+                                   const openstudio::Url& workerUrl,
+                                   bool haltOnStop,
+                                   const std::string& username)
+    : CloudSettings(boost::shared_ptr<detail::VagrantSettings_Impl>(
+                        new detail::VagrantSettings_Impl(uuid,
+                                                         versionUUID,
+                                                         userAgreementSigned,
+                                                         serverPath,
+                                                         serverUrl,
+                                                         workerPath,
+                                                         workerUrl,
+                                                         haltOnStop,
+                                                         username)))
+  {
+    OS_ASSERT(getImpl<detail::VagrantSettings_Impl>());
+  }
+
   VagrantSettings::VagrantSettings(const boost::shared_ptr<detail::VagrantSettings_Impl>& impl)
     : CloudSettings(impl)
   {
@@ -795,8 +847,28 @@ namespace openstudio{
     getImpl<detail::VagrantSettings_Impl>()->setPassword(password);
   }
 
-  VagrantSession::VagrantSession(const std::string& sessionId, const boost::optional<Url>& serverUrl, const std::vector<Url>& workerUrls)
-    : CloudSession(boost::shared_ptr<detail::VagrantSession_Impl>(new detail::VagrantSession_Impl(sessionId, serverUrl, workerUrls)))
+  VagrantSession::VagrantSession(const std::string& sessionId, 
+                                 const boost::optional<Url>& serverUrl, 
+                                 const std::vector<Url>& workerUrls)
+    : CloudSession(boost::shared_ptr<detail::VagrantSession_Impl>(
+                       new detail::VagrantSession_Impl(sessionId, 
+                                                       serverUrl, 
+                                                       workerUrls)))
+  {
+    OS_ASSERT(getImpl<detail::VagrantSession_Impl>());
+  }
+
+  VagrantSession::VagrantSession(const UUID& uuid,
+                                 const UUID& versionUUID,
+                                 const std::string& sessionId, 
+                                 const boost::optional<Url>& serverUrl, 
+                                 const std::vector<Url>& workerUrls)
+    : CloudSession(boost::shared_ptr<detail::VagrantSession_Impl>(
+                       new detail::VagrantSession_Impl(uuid,
+                                                       versionUUID,
+                                                       sessionId, 
+                                                       serverUrl, 
+                                                       workerUrls)))
   {
     OS_ASSERT(getImpl<detail::VagrantSession_Impl>());
   }

@@ -46,6 +46,18 @@ namespace detail{
     VagrantSettings_Impl(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
                          const openstudio::path& workerPath, const openstudio::Url& workerUrl,
                          bool haltOnStop, const std::string& username, const std::string& password);
+
+    /** Constructor provided for deserialization; not for general use. */
+    VagrantSettings_Impl(const UUID& uuid,
+                         const UUID& versionUUID,
+                         bool userAgreementSigned,
+                         const openstudio::path& serverPath,
+                         const openstudio::Url& serverUrl,
+                         const openstudio::path& workerPath,
+                         const openstudio::Url& workerUrl,
+                         bool haltOnStop,
+                         const std::string& username);
+
     //@}
     /** @name Destructors */
     //@{
@@ -122,7 +134,16 @@ namespace detail{
     /** @name Constructor */
     //@{
 
-    VagrantSession_Impl(const std::string& sessionId, const boost::optional<Url>& serverUrl, const std::vector<Url>& workerUrls);
+    VagrantSession_Impl(const std::string& sessionId, 
+                        const boost::optional<Url>& serverUrl, 
+                        const std::vector<Url>& workerUrls);
+
+    /** Constructor provided for deserialization; not for general use. */
+    VagrantSession_Impl(const UUID& uuid,
+                        const UUID& versionUUID,
+                        const std::string& sessionId,
+                        const boost::optional<Url>& serverUrl,
+                        const std::vector<Url>& workerUrls);
     
     //@}
     /** @name Destructors */

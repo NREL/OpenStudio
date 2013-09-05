@@ -39,6 +39,10 @@ namespace detail{
   class UTILITIES_API CloudSettings_Impl {
   public:
 
+    /** Constructor provided for deserialization; not for general use. */
+    CloudSettings_Impl(const UUID& uuid,
+                       const UUID& versionUUID);
+
     virtual ~CloudSettings_Impl();
 
     /** Unique identifier for OSP. */
@@ -78,6 +82,13 @@ namespace detail{
   /// CloudSession_Impl is an abstract base class for the information needed to identify and reconnect to compute nodes started by a previous CloudProvider.
   class UTILITIES_API CloudSession_Impl {
    public:
+
+    /** Constructor provided for deserialization; not for general use. */
+    CloudSession_Impl(const UUID& uuid,
+                      const UUID& versionUUID,
+                      const std::string& sessionId,
+                      const boost::optional<Url>& serverUrl,
+                      const std::vector<Url>& workerUrls);
 
     virtual ~CloudSession_Impl();
 

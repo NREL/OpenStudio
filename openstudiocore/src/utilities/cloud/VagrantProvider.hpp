@@ -42,6 +42,17 @@ namespace openstudio{
     // default constructor, loads defaults from settings
     VagrantSettings();
 
+    /** Constructor provided for deserialization; not for general use. */
+    VagrantSettings(const UUID& uuid,
+                    const UUID& versionUUID,
+                    bool userAgreementSigned,
+                    const openstudio::path& serverPath,
+                    const openstudio::Url& serverUrl,
+                    const openstudio::path& workerPath,
+                    const openstudio::Url& workerUrl,
+                    bool haltOnStop,
+                    const std::string& username);
+
     //@}
     /** @name Destructors */
     //@{
@@ -109,6 +120,13 @@ namespace openstudio{
     //constructor
     VagrantSession(const std::string& sessionId, 
                    const boost::optional<Url>& serverUrl, 
+                   const std::vector<Url>& workerUrls);
+
+    /** Constructor provided for deserialization; not for general use. */
+    VagrantSession(const UUID& uuid,
+                   const UUID& versionUUID,
+                   const std::string& sessionId,
+                   const boost::optional<Url>& serverUrl,
                    const std::vector<Url>& workerUrls);
     
     //@}
