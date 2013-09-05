@@ -27,14 +27,13 @@
 #include <QSharedPointer>
 #include <QWidget>
 
-// TODO #include <pat_app/CloudDialog.hpp>
-
 #include <analysisdriver/SimpleProject.hpp>
 
 #include <model/Model.hpp>
 
 #include "../shared_gui_components/BaseApp.hpp"
 #include "../shared_gui_components/BuildingComponentDialog.hpp"
+#include "../shared_gui_components/CloudDialog.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSDialog.hpp"
 
@@ -236,7 +235,7 @@ class PatApp : public QApplication, public BaseApp
 
   QPointer<StartupView> m_startupView;
   QPointer<BuildingComponentDialog> m_onlineBclDialog;
-  // TODO QPointer<CloudDialog> m_cloudDialog;
+  QPointer<CloudDialog> m_cloudDialog;
 
   QSharedPointer<DesignAlternativesTabController> m_designAlternativesTabController;
   QSharedPointer<MainRightColumnController> m_mainRightColumnController;

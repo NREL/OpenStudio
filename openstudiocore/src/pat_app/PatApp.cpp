@@ -91,7 +91,8 @@ namespace pat {
 
 PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptArgumentGetter> &t_argumentGetter )
   : QApplication(argc, argv),
-    m_onlineBclDialog(NULL),
+    m_onlineBclDialog(0),
+    m_cloudDialog(0),
     m_measureManager(t_argumentGetter, this)
 {
   bool isConnected = connect(this,SIGNAL(userMeasuresDirChanged()),&m_measureManager,SLOT(updateMeasuresLists()));
@@ -441,22 +442,21 @@ void PatApp::on_closeBclDlg()
 
 void PatApp::openCloudDlg()
 {
-  //if(!m_cloudDialog){
-  //  m_cloudDialog = new CloudDialog(mainWindow);
+  if(!m_cloudDialog){
+    m_cloudDialog = new CloudDialog();
 
-  //  bool isConnected = connect(m_cloudDialog, SIGNAL(rejected()),
-  //                             this, SLOT(on_closeBclDlg()));
-  //  OS_ASSERT(isConnected);
-  //}
-  //if(m_cloudDialog && !m_cloudDialog->isVisible()){
-  //  m_cloudDialog->setGeometry(mainWindow->geometry());
-  //  m_cloudDialog->show();
-  //}
+    bool isConnected = connect(m_cloudDialog, SIGNAL(rejected()),
+                               this, SLOT(on_closeBclDlg()));
+    OS_ASSERT(isConnected);
+  }
+  if(m_cloudDialog && !m_cloudDialog->isVisible()){
+    m_cloudDialog->show();
+  }
 }
 
 void PatApp::on_closeCloudDlg()
 {
-//m_cloudDialog
+// TODO m_cloudDialog
 }
 
 void PatApp::showHelp()

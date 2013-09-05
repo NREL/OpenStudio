@@ -19,25 +19,52 @@
 
 #include "CloudDialog.hpp"
 
+#include <utilities/cloud/AWSProvider.hpp>
+#include <utilities/cloud/AWSProvider_Impl.hpp>
+#include <utilities/cloud/CloudProvider.hpp>
+#include <utilities/cloud/CloudProvider_Impl.hpp>
+#include <utilities/cloud/VagrantProvider.hpp>
+#include <utilities/cloud/VagrantProvider_Impl.hpp>
 #include <utilities/core/Assert.hpp>
 
 #include <QBoxLayout>
 #include <QCheckBox>
 #include <QComboBox>
+#include <QFileDialog>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QStackedWidget>
+
+#define NO_PROVIDER ""
+#define VAGRANT_PROVIDER "VagrantProviderWidget"
+#define AMAZON_PROVIDER "AmazonProviderWidget"
+#define EDIT_WIDTH 150
+#define ADDRESS_WIDTH 110
+#define PORT_WIDTH 30
+#define TEXT_WIDTH 300
 
 namespace openstudio {
   
 
 CloudDialog::CloudDialog(QWidget* parent)
-  : OSDialog(false, parent)
+  : OSDialog(false, parent),
+  m_iAcceptCheckBox(0),
+  m_cloudResourceComboBox(0),
+  m_pageStackedWidget(0),
+  m_leftLoginLayout(0),
+  m_rightLoginLayout(0),
+  m_mainSettingsLayout(0),
+  m_blankPageIdx(-1),
+  m_loginPageIdx(-1),
+  m_settingsPageIdx(-1),
+  m_amazonProviderWidget(0),
+  m_blankProviderWidget(0),
+  m_vagrantProviderWidget(0)
 {
   this->setWindowTitle("Cloud Settings");
-
-  init();
+  createWidgets();
 }
 
 CloudDialog::~CloudDialog()
@@ -47,264 +74,564 @@ CloudDialog::~CloudDialog()
 void CloudDialog::createWidgets()
 {
   QLabel * label = 0;
-  QHBoxLayout * hLayout = 0;
-  QVBoxLayout * vLayout = 0;
-  QPushButton * pushButton = 0;
   bool isConnected = false;
+
+  m_amazonProviderWidget = new AmazonProviderWidget(this);
+  m_blankProviderWidget = new BlankProviderWidget(this);
+  m_vagrantProviderWidget = new VagrantProviderWidget(this);
+
+  // BLANK PAGE
+  QWidget * blankPageWidget = new QWidget();
+
+  // LOGIN PAGE
+
+  QHBoxLayout * mainLoginLayout = new QHBoxLayout;
+  mainLoginLayout->setContentsMargins(QMargins(0,0,0,0));
+  mainLoginLayout->setSpacing(5);
+
+  QWidget * loginPageWidget = new QWidget;
+  loginPageWidget->setLayout(mainLoginLayout);
+
+  // LEFT LOGIN LAYOUT
+
+  m_leftLoginLayout = new QVBoxLayout();
+  mainLoginLayout->addLayout(m_leftLoginLayout);
 
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Cloud Resources");
-  vLayout->addWidget(label);
+  m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  m_cloudResourceComboBox = new QComboBox();
+  m_leftLoginLayout->addWidget(m_cloudResourceComboBox,0,Qt::AlignTop | Qt::AlignLeft);
+ 
+  m_cloudResourceComboBox->addItem(NO_PROVIDER);
+  m_cloudResourceComboBox->addItem(VAGRANT_PROVIDER);
+  m_cloudResourceComboBox->addItem(AMAZON_PROVIDER);
+
+  isConnected = connect(m_cloudResourceComboBox, SIGNAL(currentIndexChanged(const QString &)),
+    this, SLOT(cloudResourceChanged(const QString &)));
+  OS_ASSERT(isConnected); 
+
+  // LOGIN STACKED WIDGET
+
+  m_loginStackedWidget = new  QStackedWidget();
+  m_leftLoginLayout->addWidget(m_loginStackedWidget);
+
+  m_loginStackedWidget->addWidget(m_blankProviderWidget->m_loginWidget);
+  m_loginStackedWidget->addWidget(m_vagrantProviderWidget->m_loginWidget);
+  m_loginStackedWidget->addWidget(m_amazonProviderWidget->m_loginWidget);
+
+  m_loginStackedWidget->setCurrentIndex(m_blankProviderIdx);
+
+  // RIGHT LOGIN LAYOUT
+  
+  m_rightLoginLayout = new QVBoxLayout();
+  mainLoginLayout->addLayout(m_rightLoginLayout);
+
+  AWSProvider awsProvider;
 
   label = new QLabel;
-  label->setObjectName("H2");
-  label->setText("To create an account go to http://aws.amazon.com");
-  vLayout->addWidget(label);
+  label->setText("TBD NREL Legal statement");
+  // TODO
+  //boost::optional<CloudProviderWidget *> cloudProviderWidget = this->getCurrentCloudProviderWidget();
+  //if(cloudProviderWidget.is_initialized()){
+  //  cloudProviderWidget.get()->saveData();
+  //  label->setText(awsProvider.userAgreementText().c_str()); 
+  //}
 
-  label = new QLabel;
-  label->setObjectName("H2");
-  label->setText("");
-  vLayout->addWidget(label);
-
-  label = new QLabel;
-  label->setObjectName("H2");
-  label->setText("");
-  vLayout->addWidget(label);
-
-
-
-  hLayout = new QHBoxLayout;
-  hLayout->setContentsMargins(QMargins(0,0,0,0));
-
-  vLayout = new QVBoxLayout;
-  vLayout->setContentsMargins(QMargins(0,0,0,0));
-
-
-
+  m_rightLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_iAcceptCheckBox = new QCheckBox("I Agree");
+  m_rightLoginLayout->addWidget(m_iAcceptCheckBox,0,Qt::AlignTop | Qt::AlignLeft);
+
   isConnected = connect(m_iAcceptCheckBox, SIGNAL(clicked(bool)),
-                        this, SLOT(iAcceptClicked(bool)));
+    this, SLOT(iAcceptClicked(bool)));
   OS_ASSERT(isConnected);
-  vLayout->addWidget(m_iAcceptCheckBox);
 
-  pushButton = this->cancelButton();
-  pushButton->setText("Cancel");
+  m_rightLoginLayout->addStretch();
+    
+  // SETTINGS PAGE
 
-  pushButton = this->okButton();
-  pushButton->setText("Continue");
+  m_mainSettingsLayout = new QVBoxLayout;
+  m_mainSettingsLayout->setContentsMargins(QMargins(0,0,0,0));
+  m_mainSettingsLayout->setSpacing(5);
+
+  QWidget * settingsPageWidget = new QWidget;
+  settingsPageWidget->setLayout(m_mainSettingsLayout);
+
+  // SETTINGS STACKED WIDGET
+
+  m_settingsStackedWidget = new  QStackedWidget();
+  m_mainSettingsLayout->addWidget(m_settingsStackedWidget);
+
+  m_settingsStackedWidget->addWidget(m_blankProviderWidget->m_settingsWidget);
+  m_settingsStackedWidget->addWidget(m_vagrantProviderWidget->m_settingsWidget);
+  m_settingsStackedWidget->addWidget(m_amazonProviderWidget->m_settingsWidget);
+
+  m_settingsStackedWidget->setCurrentIndex(m_blankProviderIdx);
+
+  // PAGE STACKED WIDGET
+
+  m_pageStackedWidget = new  QStackedWidget();
+  upperLayout()->addWidget(m_pageStackedWidget);
+
+  m_blankPageIdx = m_pageStackedWidget->addWidget(blankPageWidget);
+  m_loginPageIdx = m_pageStackedWidget->addWidget(loginPageWidget);
+  m_settingsPageIdx = m_pageStackedWidget->addWidget(settingsPageWidget);
+
+  m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
+
+  // BUTTONS
+
+  this->okButton()->setText("Continue");
+
+  // OS SETTINGS
 
   #ifdef Q_WS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
   #else
     setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
   #endif
+
+}
+
+boost::optional<CloudProviderWidget *> CloudDialog::getCurrentCloudProviderWidget()
+{
+  boost::optional<CloudProviderWidget *> cloudProviderWidget;
+
+  if(m_cloudResourceComboBox->currentIndex() == m_vagrantProviderIdx){
+    cloudProviderWidget = m_vagrantProviderWidget;
+  } else if(m_cloudResourceComboBox->currentIndex() == m_amazonProviderIdx){
+    cloudProviderWidget = m_amazonProviderWidget;
+  }
+
+  return cloudProviderWidget;
+}
+
+void  CloudDialog::loadData()
+{
+  bool checked = false;
+  
+  m_iAcceptCheckBox->setChecked(checked);
+
+  CloudProviderWidget * cloudProviderWidget = qobject_cast<CloudProviderWidget *>(this->m_pageStackedWidget->currentWidget());
+  cloudProviderWidget->loadData();
+}
+
+void  CloudDialog::saveData()
+{
+  bool checked = false;
+  
+  checked = m_iAcceptCheckBox->isChecked();
+
+  CloudProviderWidget * cloudProviderWidget = qobject_cast<CloudProviderWidget *>(this->m_pageStackedWidget->currentWidget());
+  cloudProviderWidget->saveData();
 }
 
 //***** SLOTS *****
 
-void iAcceptClicked(bool checked)
+void CloudDialog::on_backButton(bool checked)
 {
-  QPushButton * pushButton = 0;
+  if(m_pageStackedWidget->currentIndex() == m_settingsPageIdx){
+    m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
+    this->backButton()->hide();
+    this->okButton()->setText("Continue");
+  }
+}
 
-  pushButton = this->okButton();
-  pushButton->setEnabled(checked);
+void CloudDialog::on_cancelButton(bool checked)
+{
+  OSDialog::on_cancelButton(checked);
+}
+
+void CloudDialog::on_okButton(bool checked)
+{
+
+ if(m_pageStackedWidget->currentIndex() == m_loginPageIdx){
+    m_pageStackedWidget->setCurrentIndex(m_settingsPageIdx);
+    // TODO test login settings, pop error and exit if need be
+    //QString error("Error");
+    //QMessageBox::critical(this, "Alert", error);
+    this->backButton()->show();
+    this->okButton()->setText("Save");
+  } else if(m_pageStackedWidget->currentIndex() == m_settingsPageIdx){
+    // Save data
+     boost::optional<CloudProviderWidget *> cloudProviderWidget = this->getCurrentCloudProviderWidget();
+     if(cloudProviderWidget.is_initialized()){
+       cloudProviderWidget.get()->saveData();
+     }
+  }
+}
+
+void CloudDialog::iAcceptClicked(bool checked)
+{
+  AWSProvider awsProvider;
+  awsProvider.signUserAgreement(checked);
+
+  this->okButton()->setEnabled(checked);
+
+  // show / hide leftLayout
+}
+
+void CloudDialog::cloudResourceChanged(const QString & text)
+{
+  if(text == NO_PROVIDER){
+    this->m_pageStackedWidget->setCurrentIndex(m_blankPageIdx);
+  } else if(text == VAGRANT_PROVIDER) {
+    this->m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
+    this->m_loginStackedWidget->setCurrentIndex(m_vagrantProviderIdx);
+    this->m_settingsStackedWidget->setCurrentIndex(m_vagrantProviderIdx);
+  } else if(text == AMAZON_PROVIDER) {
+    this->m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
+    this->m_loginStackedWidget->setCurrentIndex(m_amazonProviderIdx);
+    this->m_settingsStackedWidget->setCurrentIndex(m_amazonProviderIdx);
+  } else {
+    // should never get here
+    OS_ASSERT(false);
+  }
 }
 
 
 //****************************************************************************************************
 
 
-CloudProvider::CloudProvider(QWidget * parent)
-  : QWidget(parent)
+CloudProviderWidget::CloudProviderWidget(QWidget * parent)
+  : QWidget(parent),
+  m_waitCheckBox(0),
+  m_waitLineEdit(0),
+  m_loginWidget(0),
+  m_settingsWidget(0),
+  m_leftLoginLayout(0),
+  //m_rightLoginLayout(0),
+  m_leftSettingsLayout(0),
+  m_rightSettingsLayout(0)
 {
   createWidgets();
 }
 
-CloudDialog::~CloudDialog()
+CloudProviderWidget::~CloudProviderWidget()
 {
 }
 
-CloudDialog::createWidgets()
+void CloudProviderWidget::createWidgets()
 {
+  QHBoxLayout * hLayout = 0;
+  QLabel * label = 0;
+  bool isConnected = false;
 
+  // LOGIN PAGE
+  m_loginWidget = new QWidget();
+
+  // LEFT LOGIN PAGE
+  m_leftLoginLayout = new QVBoxLayout(this);
+  m_loginWidget->setLayout(m_leftLoginLayout);
+
+  // RIGHT LOGIN PAGE
+
+  //m_rightLoginLayout = new QVBoxLayout(this);
+
+  // LEFT SETTINGS PAGE
+  m_settingsWidget = new QWidget();
+
+  // LEFT SETTINGS PAGE
+  m_leftSettingsLayout = new QVBoxLayout(this);
+  m_settingsWidget->setLayout(m_leftSettingsLayout);  
+
+  // RIGHT SETTINGS PAGE
+
+  m_rightSettingsLayout = new QVBoxLayout(this);
+  m_settingsWidget->setLayout(m_rightSettingsLayout);  
+
+  label = new QLabel;
+  label->setObjectName("H2");
+  label->setText("Cloud Session Default Setting");
+  m_rightSettingsLayout->addWidget(label);
+
+  hLayout = new QHBoxLayout;
+  hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(5);
+  m_rightSettingsLayout->addLayout(hLayout);
+
+  m_waitCheckBox = new QCheckBox();
+  hLayout->addWidget(m_waitCheckBox,0,Qt::AlignTop | Qt::AlignLeft);
+
+  isConnected = connect(m_waitCheckBox, SIGNAL(clicked(bool)),
+    this, SLOT(waitClicked(bool)));
+  OS_ASSERT(isConnected);
+
+  label = new QLabel("After simulations complete and selected detailed results are downloaded, wait the number of minutes below and automatically terminate cloud session.  Parametric Analysis Tool must be on to stop cloud session.");
+  label->setFixedWidth(TEXT_WIDTH);
+  label->setWordWrap(true);
+  hLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  hLayout = new QHBoxLayout;
+  hLayout->setContentsMargins(QMargins(0,0,0,0));
+  hLayout->setSpacing(5);
+  m_rightSettingsLayout->addLayout(hLayout);
+
+  m_waitLineEdit = new QLineEdit();
+  m_waitLineEdit->setFixedWidth(EDIT_WIDTH);
+  hLayout->addWidget(m_waitLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
+
+  label = new QLabel;
+  label->setText("minutes");
+  hLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
+  label = new QLabel;
+  label->setFixedWidth(TEXT_WIDTH);
+  label->setWordWrap(true);
+  label->setObjectName("H2");
+  label->setText("Stopping the cloud will terminate all instances.  Any detailed results not selected for download will lost.");
+  m_rightSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 }
-
-
 
 //***** SLOTS *****
+
+void CloudProviderWidget::waitClicked(bool checked)
+{
+}
 
 
 //****************************************************************************************************
 
 
-Vagrant::Vagrant(QWidget * parent)
-  : CloudProvider(parent),
+  BlankProviderWidget::BlankProviderWidget(QWidget * parent)
+    : CloudProviderWidget(parent)
+  {
+  }
+
+  BlankProviderWidget::~BlankProviderWidget()
+  {
+  }
+
+  void BlankProviderWidget::loadData()
+  {
+  }
+
+  void BlankProviderWidget::saveData()
+  {
+  }
+
+  void BlankProviderWidget::createLoginWidget()
+  {
+  }
+
+  void BlankProviderWidget::createSettingsWidget()
+  {
+  }
+
+
+//****************************************************************************************************
+
+
+VagrantProviderWidget::VagrantProviderWidget(QWidget * parent)
+  : CloudProviderWidget(parent),
   m_runOnStartUpCheckBox(0),
   m_serverUsernameLineEdit(0),
   m_serverPasswordLineEdit(0),
   m_workerUsernameLineEdit(0),
   m_workerPasswordLineEdit(0),
   m_serverDirLineEdit(0),
-  m_serverIpLineEdit(0),
-  m_serverIp2LineEdit(0),
+  m_serverAddressIpLineEdit(0),
+  m_serverPortIpLineEdit(0),
   m_workerDirLineEdit(0),
-  m_workerIpLineEdit(0),
-  m_workerIpLineEdit(0),
-  m_workerIp2LineEdit(0)
+  m_workerAddressIpLineEdit(0),
+  m_workerPortIpLineEdit(0)
+{
+  createLoginWidget();
+  createSettingsWidget();
+  loadData();
+}
+
+VagrantProviderWidget::~VagrantProviderWidget()
 {
 }
 
-Vagrant::~Vagrant()
-{
-}
-
-void Vagrant::createLoginWidget
+void VagrantProviderWidget::createLoginWidget()
 {
   QLabel * label = 0;
-  QVBoxLayout * vLayout = 0;
-  
+
+  // LEFT LOGIN PAGE
+
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Server Username");
-  vLayout->addWidget(label);
+  m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_serverUsernameLineEdit = new QLineEdit();
-  vLayout->addWidget(m_serverUsernameLineEdit);
+  m_serverUsernameLineEdit->setFixedWidth(EDIT_WIDTH);
+  m_leftLoginLayout->addWidget(m_serverUsernameLineEdit);
 
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Server Password");
-  vLayout->addWidget(label);
+  m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_serverPasswordLineEdit = new QLineEdit();
-  vLayout->addWidget(m_serverPasswordLineEdit);
+  m_serverPasswordLineEdit->setFixedWidth(EDIT_WIDTH);
+  m_leftLoginLayout->addWidget(m_serverPasswordLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Worker Instance");
-  vLayout->addWidget(label);
+  m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_workerUsernameLineEdit = new QLineEdit();
-  vLayout->addWidget(m_workerUsernameLineEdit); 
+  m_workerUsernameLineEdit->setFixedWidth(EDIT_WIDTH);
+  m_leftLoginLayout->addWidget(m_workerUsernameLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
   
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Worker Password");
-  vLayout->addWidget(label);
+  m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
     
   m_workerPasswordLineEdit = new QLineEdit();
-  vLayout->addWidget(m_workerPasswordLineEdit);
+  m_workerPasswordLineEdit->setFixedWidth(EDIT_WIDTH);
+  m_leftLoginLayout->addWidget(m_workerPasswordLineEdit);
 
-  m_loginWidget->setLayout(vLayout);
+  m_leftLoginLayout->addStretch();
+
+  // RIGHT LOGIN PAGE
+
+  // m_rightLoginLayout N/A
 }
 
-void Vagrant::createSettingsWidget
+void VagrantProviderWidget::createSettingsWidget()
 {
-  QVBoxLayout * vLayout = 0;
   QHBoxLayout * hLayout = 0;
   QLabel * label = 0;
   QPushButton * pushButton = 0;
+  QWidget * widget = 0;
   bool isConnected = false;
 
-  vLayout = new QVBoxLayout;
-  vLayout->setContentsMargins(QMargins(0,0,0,0));
+  // LEFT SETTINGS PAGE
 
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Server Dir");
-  vLayout->addWidget(label);
+  m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(QMargins(0,0,0,0));
-  vLayout->addLayout(hLayout);
+  hLayout->setSpacing(5);
+  m_leftSettingsLayout->addLayout(hLayout);
 
   m_serverDirLineEdit = new QLineEdit();
-  hLayout->addWidget(m_serverDirLineEdit);
+  m_serverDirLineEdit->setFixedWidth(EDIT_WIDTH);
+  hLayout->addWidget(m_serverDirLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
   
-  button = new QPushbutton();
-  button->setCheckable(false);
-  hLayout->addWidget(button);
-  isConnected = connect(button, SIGNAL(clicked(bool)),
-                        this, SLOT(serverDirButtonClicked(bool)));
+  pushButton = new QPushButton("Browse");
+  pushButton->setCheckable(false);
+  hLayout->addWidget(pushButton,0,Qt::AlignTop | Qt::AlignLeft);
+  isConnected = connect(pushButton, SIGNAL(clicked(bool)),
+    this, SLOT(serverDirButtonClicked(bool)));
   OS_ASSERT(isConnected);
+
+  hLayout->addStretch();
 
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Server IP");
-  vLayout->addWidget(label);
+  m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(QMargins(0,0,0,0));
-  vLayout->addLayout(hLayout);
+  hLayout->setSpacing(5);
+  m_leftSettingsLayout->addLayout(hLayout);
 
-  m_serverIpLineEdit = new QLineEdit();
-  hLayout->addWidget(m_serverIpLineEdit);
+  m_serverAddressIpLineEdit = new QLineEdit();
+  m_serverAddressIpLineEdit->setFixedWidth(ADDRESS_WIDTH);
+  hLayout->addWidget(m_serverAddressIpLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
-  m_serverIp2LineEdit = new QLineEdit();
-  hLayout->addWidget(m_serverIp2LineEdit);
+  m_serverPortIpLineEdit = new QLineEdit();
+  m_serverPortIpLineEdit->setFixedWidth(PORT_WIDTH);
+  hLayout->addWidget(m_serverPortIpLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
+
+  hLayout->addStretch();
 
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Worker Dir");
-  vLayout->addWidget(label);
+  m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(QMargins(0,0,0,0));
-  vLayout->addLayout(hLayout);
+  hLayout->setSpacing(5);
+  m_leftSettingsLayout->addLayout(hLayout);
 
   m_workerDirLineEdit = new QLineEdit();
-  hLayout->addWidget(m_workerDirLineEdit);
+  m_workerDirLineEdit->setFixedWidth(EDIT_WIDTH);
+  hLayout->addWidget(m_workerDirLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
-  button = new QPushbutton();
-  button->setCheckable(false);
-  hLayout->addWidget(button);
-  isConnected = connect(button, SIGNAL(clicked(bool)),
-                        this, SLOT(workerDirButtonClicked(bool)));
+  pushButton = new QPushButton("Browse");
+  pushButton->setCheckable(false);
+  hLayout->addWidget(pushButton,0,Qt::AlignTop | Qt::AlignLeft);
+  isConnected = connect(pushButton, SIGNAL(clicked(bool)),
+    this, SLOT(workerDirButtonClicked(bool)));
   OS_ASSERT(isConnected);
+
+  hLayout->addStretch();
 
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Worker IP");
-  vLayout->addWidget(label);
+  m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(QMargins(0,0,0,0));
-  vLayout->addLayout(hLayout);
+  hLayout->setSpacing(5);
+  m_leftSettingsLayout->addLayout(hLayout);
 
-  m_workerIpLineEdit = new QLineEdit();
-  hLayout->addWidget(m_workerIpLineEdit);
+  m_workerAddressIpLineEdit = new QLineEdit();
+  m_workerAddressIpLineEdit->setFixedWidth(ADDRESS_WIDTH);
+  hLayout->addWidget(m_workerAddressIpLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
-  m_workerIp2LineEdit = new QLineEdit();
-  hLayout->addWidget(m_workerIp2LineEdit);
+  m_workerPortIpLineEdit = new QLineEdit();
+  m_workerPortIpLineEdit->setFixedWidth(PORT_WIDTH);
+  hLayout->addWidget(m_workerPortIpLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
-  m_runOnStartUpCheckBox = new QCheckBox("Run Vagrant Up on Start Cloud");
-  vLayout->addWidget(m_runOnStartUpCheckBox);
+  hLayout->addStretch();
 
-  m_loginWidget->setLayout(vLayout);
+  m_leftSettingsLayout->addStretch();
+
+  // RIGHT SETTINGS PAGE
+
+  m_runOnStartUpCheckBox = new QCheckBox("Run Vagrant Halt on Stop");
+  m_rightSettingsLayout->addWidget(m_runOnStartUpCheckBox,0,Qt::AlignTop | Qt::AlignLeft);
 }
 
-void  Vagrant::loadData()
+void  VagrantProviderWidget::loadData()
 {
+  openstudio::path serverPath;
+  openstudio::Url serverUrl;
+  openstudio::path workerPath;
+  openstudio::Url workerUrl;
+
+  VagrantProvider vagrantProvider(serverPath,serverUrl,workerPath,workerUrl);
+  std::vector<Url> workerUrls = vagrantProvider.workerUrls();
+  boost::optional<Url> optionalServerUrl = vagrantProvider.serverUrl();
+
   bool isChecked = true;
   m_runOnStartUpCheckBox->setChecked(isChecked);
 
-  QString text;
+  QString text("N/A");
+
   m_serverUsernameLineEdit->setText(text);
   m_serverPasswordLineEdit->setText(text);
   m_workerUsernameLineEdit->setText(text);
-  m_workerPasswordLineEdit;->setText(text);
+  m_workerPasswordLineEdit->setText(text);
   m_serverDirLineEdit->setText(text);
-  m_serverIpLineEdit->setText(text);
-  m_serverIp2LineEdit->setText(text);
+  m_serverAddressIpLineEdit->setText(text);
+  m_serverPortIpLineEdit->setText(text);
   m_workerDirLineEdit->setText(text);
-  m_workerIpLineEdit->setText(text);
-  m_workerIp2LineEdit->setText(text);
+  m_workerAddressIpLineEdit->setText(text);
+  m_workerPortIpLineEdit->setText(text);
 }
 
-void  Vagrant::saveData()
+void  VagrantProviderWidget::saveData()
 {
+
   bool isChecked = true;
   isChecked = m_runOnStartUpCheckBox->isChecked();
 
@@ -314,30 +641,43 @@ void  Vagrant::saveData()
   text = m_workerUsernameLineEdit->text();
   text = m_workerPasswordLineEdit->text();
   text = m_serverDirLineEdit->text();
-  text = m_serverIpLineEdit->text();
-  text = m_serverIp2LineEdit->text();
+  text = m_serverAddressIpLineEdit->text();
+  text = m_serverPortIpLineEdit->text();
   text = m_workerDirLineEdit->text();
-  text = m_workerIpLineEdit->text();
-  text = m_workerIp2LineEdit->text();
+  text = m_workerAddressIpLineEdit->text();
+  text = m_workerPortIpLineEdit->text();
 }
-
 
 //***** SLOTS *****
 
-void Vagrant::serverDirButtonClicked(bool checked)
+void VagrantProviderWidget::serverDirButtonClicked(bool checked)
 {
+  // TODO
+  QString dir = QFileDialog::getExistingDirectory( this,
+                                                   tr("Choose Directory"),
+                                                   QDir::homePath());
+
+  if(!dir.length()) return;
+
 }
 
-void Vagrant::workerDirButtonClicked(bool checked)
+void VagrantProviderWidget::workerDirButtonClicked(bool checked)
 {
+  // TODO
+  QString dir = QFileDialog::getExistingDirectory( this,
+                                                   tr("Choose Directory"),
+                                                   QDir::homePath());
+
+  if(!dir.length()) return;
+
 }
 
 
 //****************************************************************************************************
 
 
-Amazon::Amazon(QWidget * parent)
-  : CloudProvider(parent),
+AmazonProviderWidget::AmazonProviderWidget(QWidget * parent)
+  : CloudProviderWidget(parent),
   m_regionComboBox(0),
   m_serverInstanceTypeComboBox(0),
   m_workerInstanceTypeComboBox(0),
@@ -347,102 +687,135 @@ Amazon::Amazon(QWidget * parent)
   m_numberOfWorkerInstancesLineEdit(0),
   m_elasticStorageCapacityLineEdit(0)
 {
+  createLoginWidget();
+  createSettingsWidget();
+  loadData();
 }
 
-Amazon::~Amazon()
+AmazonProviderWidget::~AmazonProviderWidget()
 {
 }
 
-void Amazon::createLoginWidget
+void AmazonProviderWidget::createLoginWidget()
 {
-  QVBoxLayout * vLayout = 0;
   QLabel * label = 0;
 
-  vLayout = new QVBoxLayout;
-  vLayout->setContentsMargins(QMargins(0,0,0,0));
-  
+  // LEFT LOGIN PAGE
+    
+  label = new QLabel;
+  label->setText("To create an account go to http://aws.amazon.com");
+  m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Access Key");
-  vLayout->addWidget(label);
+  m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_accessKeyLineEdit = new QLineEdit();
-  vLayout->addWidget(m_accessKeyLineEdit); 
+  m_accessKeyLineEdit->setFixedWidth(EDIT_WIDTH);
+  m_leftLoginLayout->addWidget(m_accessKeyLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
   
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Secret Key");
-  vLayout->addWidget(label);
+  m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_secretKeyLineEdit = new QLineEdit();
-  vLayout->addWidget(m_secretKeyLineEdit); 
+  m_secretKeyLineEdit->setFixedWidth(EDIT_WIDTH);
+  m_leftLoginLayout->addWidget(m_secretKeyLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
   
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Select Private Key File");
-  vLayout->addWidget(label);
+  m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
     
   m_selectPrivateKeyLineEdit = new QLineEdit();
-  vLayout->addWidget(m_selectPrivateKeyLineEdit);
+  m_secretKeyLineEdit->setFixedWidth(EDIT_WIDTH);
+  m_leftLoginLayout->addWidget(m_selectPrivateKeyLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
-  m_loginWidget->setLayout(vLayout);
+  m_leftLoginLayout->addStretch();
+
+  // RIGHT LOGIN PAGE
+
+  // m_rightLoginLayout N/A
+
 }
 
-void Amazon::createSettingsWidget
+void AmazonProviderWidget::createSettingsWidget()
 {
-  QVBoxLayout * vLayout = 0;
   QLabel * label = 0;
+  QWidget * widget = 0;
 
-  vLayout = new QVBoxLayout;
-  vLayout->setContentsMargins(QMargins(0,0,0,0));
+  // LEFT SETTINGS PAGE
 
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Region");
-  vLayout->addWidget(label);
+  m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_regionComboBox = new QComboBox();
-  vLayout->addWidget(m_regionComboBox);
+  m_regionComboBox->addItem("North");  // TODO remove
+  m_leftSettingsLayout->addWidget(m_regionComboBox,0,Qt::AlignTop | Qt::AlignLeft);
+
+  label = new QLabel;
+  label->setFixedWidth(TEXT_WIDTH);
+  label->setFixedHeight(60);
+  label->setWordWrap(true);
+  label->setText("This is the only region with CloudWatch enabled.  CloudWatch allows you to monitor your cost and performance.  The AWS Management Console provides a dashboard, alarms, and graphs.");
+  m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Server Instance Type");
-  vLayout->addWidget(label);
+  m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_serverInstanceTypeComboBox = new QComboBox();
-  vLayout->addWidget(m_serverInstanceTypeComboBox);
+  m_leftSettingsLayout->addWidget(m_serverInstanceTypeComboBox,0,Qt::AlignTop | Qt::AlignLeft);
   
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Worker Instance Type");
-  vLayout->addWidget(label);
+  m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_workerInstanceTypeComboBox = new QComboBox();
-  vLayout->addWidget(m_workerInstanceTypeComboBox);
+  m_leftSettingsLayout->addWidget(m_workerInstanceTypeComboBox,0,Qt::AlignTop | Qt::AlignLeft);
   
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Number of Worker Instances");
-  vLayout->addWidget(label);
+  m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_numberOfWorkerInstancesLineEdit = new QLineEdit();
-  vLayout->addWidget(m_numberOfWorkerInstancesLineEdit);
+  m_numberOfWorkerInstancesLineEdit->setFixedWidth(EDIT_WIDTH);
+  m_leftSettingsLayout->addWidget(m_numberOfWorkerInstancesLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
   
   label = new QLabel;
   label->setObjectName("H2");
   label->setText("Elastic Storage Capacity (GB)");
-  vLayout->addWidget(label);
+  m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
   
   m_elasticStorageCapacityLineEdit = new QLineEdit();
-  vLayout->addWidget(m_elasticStorageCapacityLineEdit);
+  m_elasticStorageCapacityLineEdit->setFixedWidth(EDIT_WIDTH);
+  m_leftSettingsLayout->addWidget(m_elasticStorageCapacityLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
-  m_loginWidget->setLayout(vLayout);
+  m_leftSettingsLayout->addStretch();
+
+  // RIGHT SETTINGS PAGE
+
+  label = new QLabel;
+  label->setText("Monitor your cloud use with CloudWatch and AWS Management Console.");
+  m_rightSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+  
+  label = new QLabel;
+  label->setText("Review pricing for cloud service at:\nhttp://aws.amazon.com/ec2/pricing/");
+  m_rightSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
+
 }
 
-void  Amazon::loadData()
+void  AmazonProviderWidget::loadData()
 {
-  QString text;
-
+  AWSProvider awsProvider;
+  
   //m_regionComboBox;
   //m_serverInstanceTypeComboBox;
   //m_workerInstanceTypeComboBox;
@@ -455,26 +828,28 @@ void  Amazon::loadData()
   //OS_ASSERT(index != -1);
   //comboBox->setCurrentIndex(index);
 
-  m_accessKeyLineEdit->setText(text);
-  m_secretKeyLineEdit->setText(text);
-  m_selectPrivateKeyLineEdit->setText(text);
-  m_numberOfWorkerInstancesLineEdit->setText(text);
-  m_elasticStorageCapacityLineEdit->setText(text);
+  //m_accessKeyLineEdit->setText(awsProvider.accessKey());
+  //m_secretKeyLineEdit->setText(awsProvider.secretKey());
+
+  QString text;
+  m_numberOfWorkerInstancesLineEdit->setText(text.setNum(awsProvider.numWorkers()));
 }
 
-void  Amazon::saveData()
+void  AmazonProviderWidget::saveData()
 {
+  AWSProvider awsProvider;
+
   QString text;
 
   text = m_regionComboBox->currentText();
   text = m_serverInstanceTypeComboBox->currentText();
   text = m_workerInstanceTypeComboBox->currentText();
 
-  text = m_accessKeyLineEdit->text();
-  text = m_secretKeyLineEdit->text();
-  text = m_selectPrivateKeyLineEdit->text();
+  //awsProvider.setKeys(m_accessKeyLineEdit->text(),m_secretKeyLineEdit->text());
+
   text = m_numberOfWorkerInstancesLineEdit->text();
-  text = m_elasticStorageCapacityLineEdit->text();
+  unsigned numWorkers = text.toUInt();
+  //awsProvider.setNumWorkers();
 }
 
 //***** SLOTS *****

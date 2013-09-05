@@ -53,6 +53,8 @@ public:
 
   QBoxLayout * upperLayout();
 
+  QPushButton * backButton();
+
   QPushButton * cancelButton();
 
   QPushButton * okButton();
@@ -66,6 +68,8 @@ protected:
   void paintEvent(QPaintEvent *event);
 
   bool m_isIP;
+
+  QPushButton * m_backButton;
 
   QPushButton * m_cancelButton;
 
@@ -83,6 +87,8 @@ private:
 
 signals:
 
+  void backButtonClicked(bool checked);
+
   void cancelButtonClicked(bool checked);
 
   void okButtonClicked(bool checked);
@@ -91,6 +97,8 @@ signals:
 
 protected slots:
 
+  virtual void on_backButton(bool checked); 
+  
   virtual void on_cancelButton(bool checked);
 
   virtual void on_okButton(bool checked);
