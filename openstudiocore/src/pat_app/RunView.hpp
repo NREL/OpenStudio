@@ -23,6 +23,7 @@
 #include <pat_app/PatMainTabView.hpp>
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/HeaderViews.hpp"
+#include "../shared_gui_components/Buttons.hpp"
 
 #include <analysis/Problem.hpp>
 #include <analysis/DataPoint.hpp>
@@ -49,6 +50,7 @@ namespace pat {
 
 class PatProgressBar;
 class RunStatusView;
+class ToggleCloudButton;
 
 class RunView : public PatMainTabView
 {
@@ -81,6 +83,8 @@ class RunStatusView : public QWidget
 
    void setProgress(int numCompletedJobs, int numFailedJobs, int numJobsInIteration, bool isRunning);
 
+   ToggleCloudButton * toggleCloudButton;
+
    void paintEvent(QPaintEvent * e);
 
  signals:
@@ -93,6 +97,44 @@ class RunStatusView : public QWidget
   PatProgressBar* m_progressBar;
   QLabel* m_percentComplete;
   QLabel* m_percentFailed;
+};
+
+class ToggleCloudButton : public GrayButton
+{
+  Q_OBJECT
+
+ public:
+
+  // These are the possible states in order
+  // Not Running, Starting, Running, Stopping
+  // isChecked() == true means the cloud is running, or starting
+  // isChecked() == false means the cloud is not running, or stopping
+
+  ToggleCloudButton();
+
+  bool isStarting() const;
+
+  void setStarting(bool isStarting);
+
+  bool isStopping() const;
+
+  void setStopping(bool isStopping);
+
+ protected:
+
+  void nextCheckState();
+
+  void updateText();
+
+ private:
+
+  bool m_starting;
+
+  bool m_stopping;
+
+  QString m_turnOnText;
+
+  QString m_turnOffText;
 };
 
 class DataPointRunHeaderView : public OSHeader

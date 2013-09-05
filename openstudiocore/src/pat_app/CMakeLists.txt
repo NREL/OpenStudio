@@ -4,6 +4,8 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
 
 # source files
 SET( ${target_name}_SRC
+  CloudMonitor.hpp
+  CloudMonitor.cpp
   DesignAlternativesTabController.cpp
   DesignAlternativesTabController.hpp
   DesignAlternativesView.cpp
@@ -124,6 +126,7 @@ SET( ${target_name}_SRC
 
 # moc files
 SET( ${target_name}_moc
+  CloudMonitor.hpp
   DesignAlternativesTabController.hpp
   DesignAlternativesView.hpp
   HorizontalTabWidget.hpp
