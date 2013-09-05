@@ -11,6 +11,10 @@
     <rule IddField="Nominal Capacity" Access="HIDDEN"/>
     <rule IddField="Free Convection Capacity" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_GroundHeatExchanger_Vertical">
+    <rule IddField="Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_Coil_Cooling_Water">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
