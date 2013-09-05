@@ -21,6 +21,7 @@
 #include <project/CloudSessionRecord_Impl.hpp>
 
 #include <project/JoinRecord.hpp>
+#include <project/ProjectDatabase.hpp>
 #include <project/UrlRecord.hpp>
 #include <project/VagrantSessionRecord.hpp>
 #include <project/VagrantSessionRecord_Impl.hpp>
@@ -80,7 +81,7 @@ namespace detail {
       result.push_back(*sur);
     }
     UrlRecordVector workers = workerUrlRecords();
-    result.insert(result.back(),workers.begin(),workers.end());
+    result.insert(result.end(),workers.begin(),workers.end());
     return result;
   }
 
@@ -94,8 +95,8 @@ namespace detail {
     return result;
   }
 
-  void CloudSessionRecord_Impl::saveRow(ProjectDatabase& projectDatabase) {
-    QSqlQuery query(*(projectDatabase.qSqlDatabase()));
+  void CloudSessionRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) {
+    QSqlQuery query(*database);
     this->makeUpdateByIdQuery<CloudSessionRecord>(query);
     this->bindValues(query);
     assertExec(query);
@@ -152,14 +153,14 @@ namespace detail {
   }
 
   void CloudSessionRecord_Impl::clearServerUrlRecordId() {
-    m_serverUrlRecordId.clear();
+    m_serverUrlRecordId.reset();
   }
 
   void CloudSessionRecord_Impl::bindValues(QSqlQuery& query) const {
     ObjectRecord_Impl::bindValues(query);
 
     query.bindValue(CloudSessionRecord::ColumnsType::cloudSessionRecordType,m_cloudSessionRecordType.value());
-    query.bindValue(CloudSessionRecord::ColumnsType::sessionId,toQString(m_sessionId);
+    query.bindValue(CloudSessionRecord::ColumnsType::sessionId,toQString(m_sessionId));
     if (m_serverUrlRecordId) {
       query.bindValue(CloudSessionRecord::ColumnsType::serverUrlRecordId,*m_serverUrlRecordId);
     }
@@ -242,6 +243,53 @@ namespace detail {
 
 std::string CloudSessionRecord::databaseTableName() {
   return "CloudSessionRecords";
+}
+
+UpdateByIdQueryData CloudSessionRecord::updateByIdQueryData() {
+  static UpdateByIdQueryData result;
+  if (result.queryString.empty()) {
+    // numeric column identifiers
+    result.columnValues = ColumnsType::getValues();
+
+    // query string
+    std::stringstream ss;
+    ss << "UPDATE " << databaseTableName() << " SET ";
+    int expectedValue = 0;
+    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+         itend = result.columnValues.end(); it != itend; ++it)
+    {
+      // require 0 based columns, don't skip any
+      OS_ASSERT(*it == expectedValue);
+      // column name is name, type is description
+      ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
+      // is this the last column?
+      std::set<int>::const_iterator nextIt = it;
+      ++nextIt;
+      if (nextIt == itend) {
+        ss << " ";
+      }
+      else {
+        ss << ", ";
+      }
+      ++expectedValue;
+    }
+    ss << "WHERE id=:id";
+    result.queryString = ss.str();
+
+    // null values
+    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+         itend = result.columnValues.end(); it != itend; ++it)
+    {
+      // bind all values to avoid parameter mismatch error
+      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+        result.nulls.push_back(QVariant(QVariant::Int));
+      }
+      else {
+        result.nulls.push_back(QVariant(QVariant::String));
+      }
+    }
+  }
+  return result;
 }
 
 void CloudSessionRecord::updatePathData(ProjectDatabase database,
@@ -335,12 +383,12 @@ CloudSessionRecord::CloudSessionRecord(boost::shared_ptr<detail::CloudSessionRec
                                        ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
-  OS_ASSERTgetImpl<detail::CloudSessionRecord_Impl>());
+  OS_ASSERT(getImpl<detail::CloudSessionRecord_Impl>());
 }
 /// @endcond
 
 void CloudSessionRecord::constructRelatedRecords(const CloudSession& cloudSession,
-                                                 ProjectDatabase& databaase)
+                                                 ProjectDatabase& database)
 {
   CloudSessionRecord copyOfThis(getImpl<detail::CloudSessionRecord_Impl>());
   bool isNew = database.isNewRecord(copyOfThis);
@@ -357,7 +405,7 @@ void CloudSessionRecord::constructRelatedRecords(const CloudSession& cloudSessio
     // create new UrlRecords 
     if (OptionalUrl serverUrl = cloudSession.serverUrl()) {
       UrlRecord serverRecord(*serverUrl,copyOfThis);
-      getImpl<detail::DataPointRecord_Impl>()->setServerUrlRecordId(serverRecord.id());
+      getImpl<detail::CloudSessionRecord_Impl>()->setServerUrlRecordId(serverRecord.id());
     }
     BOOST_FOREACH(const Url& workerUrl, cloudSession.workerUrls()) {
       UrlRecord workerRecord(workerUrl,copyOfThis);

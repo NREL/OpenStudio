@@ -81,8 +81,8 @@ namespace detail {
     return result;
   }
 
-  void CloudSettingsRecord_Impl::saveRow(ProjectDatabase& projectDatabase) {
-    QSqlQuery query(*(projectDatabase.qSqlDatabase()));
+  void CloudSettingsRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) {
+    QSqlQuery query(*database);
     this->makeUpdateByIdQuery<CloudSettingsRecord>(query);
     this->bindValues(query);
     assertExec(query);
@@ -140,6 +140,53 @@ namespace detail {
 
 std::string CloudSettingsRecord::databaseTableName() {
   return "CloudSettingsRecords";
+}
+
+UpdateByIdQueryData CloudSettingsRecord::updateByIdQueryData() {
+  static UpdateByIdQueryData result;
+  if (result.queryString.empty()) {
+    // numeric column identifiers
+    result.columnValues = ColumnsType::getValues();
+
+    // query string
+    std::stringstream ss;
+    ss << "UPDATE " << databaseTableName() << " SET ";
+    int expectedValue = 0;
+    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+         itend = result.columnValues.end(); it != itend; ++it)
+    {
+      // require 0 based columns, don't skip any
+      OS_ASSERT(*it == expectedValue);
+      // column name is name, type is description
+      ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
+      // is this the last column?
+      std::set<int>::const_iterator nextIt = it;
+      ++nextIt;
+      if (nextIt == itend) {
+        ss << " ";
+      }
+      else {
+        ss << ", ";
+      }
+      ++expectedValue;
+    }
+    ss << "WHERE id=:id";
+    result.queryString = ss.str();
+
+    // null values
+    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+         itend = result.columnValues.end(); it != itend; ++it)
+    {
+      // bind all values to avoid parameter mismatch error
+      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+        result.nulls.push_back(QVariant(QVariant::Int));
+      }
+      else {
+        result.nulls.push_back(QVariant(QVariant::String));
+      }
+    }
+  }
+  return result;
 }
 
 void CloudSettingsRecord::updatePathData(ProjectDatabase database,
@@ -220,7 +267,7 @@ CloudSettingsRecord::CloudSettingsRecord(boost::shared_ptr<detail::CloudSettings
                                          ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
-  OS_ASSERTgetImpl<detail::CloudSettingsRecord_Impl>());
+  OS_ASSERT(getImpl<detail::CloudSettingsRecord_Impl>());
 }
 /// @endcond
 

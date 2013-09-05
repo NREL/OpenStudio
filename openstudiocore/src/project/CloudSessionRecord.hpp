@@ -85,6 +85,8 @@ class PROJECT_API CloudSessionRecord : public ObjectRecord {
 
   static std::string databaseTableName();
 
+  static UpdateByIdQueryData updateByIdQueryData();
+
   static void updatePathData(ProjectDatabase database,
                              const openstudio::path& originalBase,
                              const openstudio::path& newBase);
@@ -130,7 +132,7 @@ class PROJECT_API CloudSessionRecord : public ObjectRecord {
   /// @endcond
 
   void constructRelatedRecords(const CloudSession& cloudSession,
-                               ProjectDatabase& databaase);
+                               ProjectDatabase& database);
  private:
   REGISTER_LOGGER("openstudio.project.CloudSessionRecord");
 };

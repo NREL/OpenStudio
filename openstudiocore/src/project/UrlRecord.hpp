@@ -73,6 +73,8 @@ class PROJECT_API UrlRecord : public ObjectRecord {
 
   static std::string databaseTableName();
 
+  static UpdateByIdQueryData updateByIdQueryData();
+
   static void updatePathData(ProjectDatabase database,
                              const openstudio::path& originalBase,
                              const openstudio::path& newBase);

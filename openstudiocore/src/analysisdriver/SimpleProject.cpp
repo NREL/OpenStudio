@@ -351,49 +351,6 @@ namespace detail {
     return m_cloudSettings;
   }
 
-  AnalysisRunOptions SimpleProject_Impl::standardRunOptions() const {
-    openstudio::path workingDirectory = projectDir();
-
-    // tools
-    runmanager::ConfigOptions configOpts(true);
-    runManager().setConfigOptions(configOpts);
-    runmanager::Tools tools = configOpts.getTools();
-    openstudio::path rubyIncludeDirectory = getOpenStudioRubyIncludePath();
-    openstudio::path dakotaExePath;
-    try {
-      runmanager::ToolInfo dakotaTool = tools.getTool("dakota");
-      dakotaExePath = dakotaTool.localBinPath;
-      LOG(Debug,"Set dakota.exe path to " << toString(dakotaExePath) << ".");
-    }
-    catch (...) {}
-
-    analysisdriver::AnalysisRunOptions runOptions(workingDirectory,
-                                                  rubyIncludeDirectory,
-                                                  dakotaExePath);
-    runOptions.setRunManagerTools(tools);
-
-    // weather file path
-    openstudio::path seedPath = analysis().seed().path();
-    if (boost::filesystem::exists(seedPath)) {
-      openstudio::path searchPath = seedPath.parent_path() / toPath(seedPath.stem()) / toPath("files");
-      LOG(Debug,"Appending search path for weather files: " << toString(searchPath));
-      runOptions.setUrlSearchPaths(std::vector<openstudio::URLSearchPath>(1u,searchPath));
-    }
-
-    // ETH@20130306 - Is this the best option?
-    // DLM: for now we will let run manager manage the number of jobs running at a time
-    //      even though this does result in long time to queue initially
-    // DLM: i did confirm that the data points in the run list update correctly if this is set
-    //runOptions.setQueueSize(configOpts.getMaxLocalJobs());
-
-    // DLM: in the future would be good to set JobCleanUpBehavior to standard
-    // however there seem to be intermittant failures when this is done (bug 1077)
-    // for now keep this setting, should also be a user option for debugging
-    runOptions.setJobCleanUpBehavior(analysisdriver::JobCleanUpBehavior::none);
-
-    return runOptions;
-  }
-
   bool SimpleProject_Impl::modelsRequireUpdate() const {
     if ((!analysis().weatherFile()) || (!boost::filesystem::exists(analysis().weatherFile()->path()))) {
       return true;
@@ -1257,7 +1214,7 @@ namespace detail {
           }
 
           database.save();
-          if (disStartTransaction) {
+          if (didStartTransaction) {
             database.commitTransaction();
           }
         }
@@ -1283,7 +1240,7 @@ namespace detail {
         }
 
         database.save();
-        if (disStartTransaction) {
+        if (didStartTransaction) {
           database.commitTransaction();
         }
       }
@@ -2180,6 +2137,52 @@ boost::optional<SimpleProject> saveAs(const SimpleProject& project,
   }
   return result;
 }
+
+AnalysisRunOptions standardRunOptions(const SimpleProject& project) {
+  openstudio::path workingDirectory = project.projectDir();
+
+  // tools
+  runmanager::ConfigOptions configOpts(true);
+  project.runManager().setConfigOptions(configOpts);
+  runmanager::Tools tools = configOpts.getTools();
+  openstudio::path rubyIncludeDirectory = getOpenStudioRubyIncludePath();
+  openstudio::path dakotaExePath;
+  try {
+    runmanager::ToolInfo dakotaTool = tools.getTool("dakota");
+    dakotaExePath = dakotaTool.localBinPath;
+    LOG_FREE(Debug,"openstudio.analysisdriver.SimpleProject",
+             "Set dakota.exe path to " << toString(dakotaExePath) << ".");
+  }
+  catch (...) {}
+
+  analysisdriver::AnalysisRunOptions runOptions(workingDirectory,
+                                                rubyIncludeDirectory,
+                                                dakotaExePath);
+  runOptions.setRunManagerTools(tools);
+
+  // weather file path
+  openstudio::path seedPath = project.analysis().seed().path();
+  if (boost::filesystem::exists(seedPath)) {
+    openstudio::path searchPath = seedPath.parent_path() / toPath(seedPath.stem()) / toPath("files");
+    LOG_FREE(Debug,"openstudio.analysisdriver.SimpleProject",
+             "Appending search path for weather files: " << toString(searchPath));
+    runOptions.setUrlSearchPaths(std::vector<openstudio::URLSearchPath>(1u,searchPath));
+  }
+
+  // ETH@20130306 - Is this the best option?
+  // DLM: for now we will let run manager manage the number of jobs running at a time
+  //      even though this does result in long time to queue initially
+  // DLM: i did confirm that the data points in the run list update correctly if this is set
+  //runOptions.setQueueSize(configOpts.getMaxLocalJobs());
+
+  // DLM: in the future would be good to set JobCleanUpBehavior to standard
+  // however there seem to be intermittant failures when this is done (bug 1077)
+  // for now keep this setting, should also be a user option for debugging
+  runOptions.setJobCleanUpBehavior(analysisdriver::JobCleanUpBehavior::none);
+
+  return runOptions;
+}
+
 
 } // analysisdriver
 } // openstudio

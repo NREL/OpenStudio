@@ -68,7 +68,7 @@ namespace detail {
     virtual std::vector<JoinRecord> joinRecords() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(ProjectDatabase& projectDatabase);
+    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
 
     //@}
     /** @name Getters */

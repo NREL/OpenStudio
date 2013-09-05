@@ -378,7 +378,7 @@ ANALYSISDRIVER_API boost::optional<SimpleProject> saveAs(const SimpleProject& pr
                                                          const openstudio::path& newProjectDir);
 
 /** Returns basic run options for project. */
-AnalysisRunOptions standardRunOptions(const SimpleProject& project);
+ANALYSISDRIVER_API AnalysisRunOptions standardRunOptions(const SimpleProject& project);
 
 } // analysisdriver
 } // openstudio

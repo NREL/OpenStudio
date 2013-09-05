@@ -20,6 +20,8 @@
 #include <analysisdriver/CloudAnalysisDriver.hpp>
 #include <analysisdriver/CloudAnalysisDriver_Impl.hpp>
 
+#include <project/ProjectDatabase.hpp>
+
 #include <analysis/Analysis.hpp>
 
 #include <runmanager/lib/RunManager.hpp>

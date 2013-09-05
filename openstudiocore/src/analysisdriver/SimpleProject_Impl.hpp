@@ -298,7 +298,7 @@ namespace detail {
     mutable boost::optional<analysis::Analysis> m_analysis; // mutable for lazy load on open
     mutable boost::optional<CloudSession> m_cloudSession;   // mutable for lazy load on open
     mutable boost::optional<CloudSettings> m_cloudSettings; // mutable for lazy load on open
-    bool m_cloudSessionSettingsDirty; // don't lazy load if user has explicitly set
+    mutable bool m_cloudSessionSettingsDirty; // don't lazy load if user has explicitly set
     FileLogSink m_logFile;
 
     mutable boost::optional<model::Model> m_seedModel; // clear optional when analysis's seed changes

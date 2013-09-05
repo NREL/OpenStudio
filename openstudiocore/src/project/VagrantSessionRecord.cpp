@@ -24,6 +24,7 @@
 #include <project/UrlRecord.hpp>
 
 #include <utilities/cloud/VagrantProvider.hpp>
+#include <utilities/cloud/VagrantProvider_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
 
@@ -49,8 +50,8 @@ namespace detail {
     OS_ASSERT(query.isSelect());
   }
 
-  void VagrantSessionRecord_Impl::saveRow(ProjectDatabase& projectDatabase) {
-    QSqlQuery query(*(projectDatabase.qSqlDatabase()));
+  void VagrantSessionRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) {
+    QSqlQuery query(*database);
     this->makeUpdateByIdQuery<VagrantSessionRecord>(query);
     this->bindValues(query);
     assertExec(query);
@@ -66,7 +67,7 @@ namespace detail {
       serverUrl = sur->url();
     }
     UrlVector workerUrls;
-    BOOST_FOREACH(const UrlRecord& wur = workerUrlRecords()) {
+    BOOST_FOREACH(const UrlRecord& wur,workerUrlRecords()) {
       workerUrls.push_back(wur.url());
     }
     return VagrantSession(handle(),

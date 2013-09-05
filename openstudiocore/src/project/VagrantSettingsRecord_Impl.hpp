@@ -57,7 +57,7 @@ namespace detail {
     virtual std::vector<ObjectRecord> children() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(ProjectDatabase& projectDatabase);
+    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
 
     //@}
     /** @name Getters */
@@ -83,13 +83,7 @@ namespace detail {
     void setServerUrlRecordId(int id);
 
     /** Impl-only method. */
-    void clearServerUrlRecordId();
-
-    /** Impl-only method. */
     void setWorkerUrlRecordId(int id);
-
-    /** Impl-only method. */
-    void clearWorkerUrlRecordId();
 
     //@}
    protected:

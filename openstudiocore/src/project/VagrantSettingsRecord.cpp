@@ -24,8 +24,11 @@
 #include <project/UrlRecord.hpp>
 
 #include <utilities/cloud/VagrantProvider.hpp>
+#include <utilities/cloud/VagrantProvider_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
+
+#include <boost/foreach.hpp>
 
 namespace openstudio {
 namespace project {
@@ -90,28 +93,28 @@ namespace detail {
     return result;
   }
 
-  void VagrantSettingsRecord_Impl::saveRow(ProjectDatabase& projectDatabase) {
-    QSqlQuery query(*(projectDatabase.qSqlDatabase()));
+  void VagrantSettingsRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) {
+    QSqlQuery query(*database);
     this->makeUpdateByIdQuery<VagrantSettingsRecord>(query);
     this->bindValues(query);
     assertExec(query);
   }
 
-  UrlRecord VagrantSettingsRecord::serverUrlRecord() const {
+  UrlRecord VagrantSettingsRecord_Impl::serverUrlRecord() const {
     ProjectDatabase database = projectDatabase();
     return UrlRecord::getUrlRecord(m_serverUrlRecordId,database).get();
   }
 
-  UrlRecord VagrantSettingsRecord::workerUrlRecord() const {
+  UrlRecord VagrantSettingsRecord_Impl::workerUrlRecord() const {
     ProjectDatabase database = projectDatabase();
     return UrlRecord::getUrlRecord(m_workerUrlRecordId,database).get();
   }
 
-  CloudSettings VagrantSettingsRecord::cloudSettings() const {
-    return vagrantSettings.cast<CloudSettings>();
+  CloudSettings VagrantSettingsRecord_Impl::cloudSettings() const {
+    return vagrantSettings().cast<CloudSettings>();
   }
 
-  VagrantSettings VagrantSettingsRecord::vagrantSettings() const {
+  VagrantSettings VagrantSettingsRecord_Impl::vagrantSettings() const {
     return VagrantSettings(handle(),
                            uuidLast(),
                            m_userAgreementSigned,
@@ -132,16 +135,8 @@ namespace detail {
     m_serverUrlRecordId = id;
   }
 
-  void VagrantSettingsRecord_Impl::clearServerUrlRecordId() {
-    m_serverUrlRecordId.reset();
-  }
-
   void VagrantSettingsRecord_Impl::setWorkerUrlRecordId(int id) {
     m_workerUrlRecordId = id;
-  }
-
-  void VagrantSettingsRecord_Impl::clearWorkerUrlRecordId() {
-    m_workerUrlRecordId.reset();
   }
 
   void VagrantSettingsRecord_Impl::bindValues(QSqlQuery& query) const {
@@ -153,7 +148,7 @@ namespace detail {
     query.bindValue(VagrantSettingsRecord::ColumnsType::workerPath,toQString(m_workerPath));
     query.bindValue(VagrantSettingsRecord::ColumnsType::workerUrlRecordId,m_workerUrlRecordId);
     query.bindValue(VagrantSettingsRecord::ColumnsType::haltOnStop,m_haltOnStop);
-    query.bindValue(VagrantSettingsRecord::ColumnsType::username,m_username);
+    query.bindValue(VagrantSettingsRecord::ColumnsType::username,toQString(m_username));
   }
 
   void VagrantSettingsRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
@@ -237,7 +232,7 @@ namespace detail {
   void VagrantSettingsRecord_Impl::saveLastValues() {
     CloudSettingsRecord_Impl::saveLastValues();
 
-    m_lastUserAgreementSsigned = m_userAgreementSigned;
+    m_lastUserAgreementSigned = m_userAgreementSigned;
     m_lastServerPath = m_serverPath;
     m_lastServerUrlRecordId = m_serverUrlRecordId;
     m_lastWorkerPath = m_workerPath;
@@ -342,7 +337,7 @@ VagrantSettingsRecord::VagrantSettingsRecord(boost::shared_ptr<detail::VagrantSe
                                              ProjectDatabase database)
   : CloudSettingsRecord(impl, database)
 {
-  OS_ASSERTgetImpl<detail::VagrantSettingsRecord_Impl>());
+  OS_ASSERT(getImpl<detail::VagrantSettingsRecord_Impl>());
 }
 /// @endcond
 
@@ -353,7 +348,7 @@ void VagrantSettingsRecord::constructRelatedRecords(const VagrantSettings& vagra
     getImpl<detail::VagrantSettingsRecord_Impl>()->revertToLastRecordIds();
   }
 
-  if (isNew || (getImpl<detail::VagrantSettingsRecord_Impl>()->lastUuidLast() != cloudSession.versionUUID())) {
+  if (isNew || (getImpl<detail::VagrantSettingsRecord_Impl>()->lastUuidLast() != vagrantSettings.versionUUID())) {
     // remove any existing UrlRecords that have this object as its parent
     ObjectRecordVector childUrls = children();
     BOOST_FOREACH(ObjectRecord& childUrl,childUrls) {
@@ -361,7 +356,9 @@ void VagrantSettingsRecord::constructRelatedRecords(const VagrantSettings& vagra
     }
     // create new UrlRecords 
     UrlRecord serverUrlRecord(vagrantSettings.serverUrl(),copyOfThis);
+    getImpl<detail::VagrantSettingsRecord_Impl>()->setServerUrlRecordId(serverUrlRecord.id());
     UrlRecord workerUrlRecord(vagrantSettings.workerUrl(),copyOfThis);
+    getImpl<detail::VagrantSettingsRecord_Impl>()->setWorkerUrlRecordId(workerUrlRecord.id());
   }
 }
 

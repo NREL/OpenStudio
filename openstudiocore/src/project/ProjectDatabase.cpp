@@ -33,6 +33,10 @@
 #include <project/AlgorithmRecord_Impl.hpp>
 #include <project/AttributeRecord.hpp>
 #include <project/AttributeRecord_Impl.hpp>
+#include <project/CloudSessionRecord.hpp>
+#include <project/CloudSessionRecord_Impl.hpp>
+#include <project/CloudSettingsRecord.hpp>
+#include <project/CloudSettingsRecord_Impl.hpp>
 #include <project/ContinuousVariableRecord.hpp>
 #include <project/DataPointRecord.hpp>
 #include <project/DataPointRecord_Impl.hpp>
@@ -52,6 +56,8 @@
 #include <project/ProblemRecord_Impl.hpp>
 #include <project/TagRecord.hpp>
 #include <project/TagRecord_Impl.hpp>
+#include <project/UrlRecord.hpp>
+#include <project/UrlRecord_Impl.hpp>
 #include <project/URLSearchPathRecord.hpp>
 #include <project/URLSearchPathRecord_Impl.hpp>
 #include <project/VariableRecord.hpp>
@@ -916,7 +922,7 @@ namespace detail {
     createTable<AnalysisRecord>();
     createTable<AttributeRecord>();
     createTable<CloudSessionRecord>();
-    createTable<CloudSettingsRecrd>();
+    createTable<CloudSettingsRecord>();
     createTable<DataPointRecord>();
     createTable<DataPointValueRecord>();
     createTable<FileReferenceRecord>();
@@ -2263,7 +2269,7 @@ namespace detail {
     OS_ASSERT(didStartTransaction);
 
     createTable<CloudSessionRecord>();
-    createTable<CloudSettingsRecrd>();
+    createTable<CloudSettingsRecord>();
     createTable<UrlRecord>();
 
     save();

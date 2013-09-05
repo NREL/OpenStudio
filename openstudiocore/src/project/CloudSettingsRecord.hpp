@@ -88,6 +88,8 @@ class PROJECT_API CloudSettingsRecord : public ObjectRecord {
 
   static std::string databaseTableName();
 
+  static UpdateByIdQueryData updateByIdQueryData();
+
   static void updatePathData(ProjectDatabase database,
                              const openstudio::path& originalBase,
                              const openstudio::path& newBase);
