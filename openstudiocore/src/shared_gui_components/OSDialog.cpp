@@ -34,12 +34,12 @@ namespace openstudio {
 OSDialog::OSDialog(bool isIP,
                    QWidget * parent)
   : QDialog(parent),
-  m_upperLayout(NULL),
+  m_isIP(isIP),
   m_cancelButton(NULL),
   m_okButton(NULL),
+  m_upperLayout(NULL),
   m_sizeHint(QSize(800,500)),
-  m_layoutContentsMargins(QMargins(20,70,20,20)),
-  m_isIP(isIP)
+  m_layoutContentsMargins(QMargins(20,70,20,20))
 {
   setStyleSheet("openstudio--OSDialog { background: #E6E6E6; }");
   

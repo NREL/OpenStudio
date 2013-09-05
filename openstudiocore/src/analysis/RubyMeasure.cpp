@@ -38,6 +38,7 @@
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/Finder.hpp>
 #include <utilities/core/Json.hpp>
+#include <utilities/core/PathHelpers.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -462,8 +463,8 @@ namespace detail {
     rubyMeasureData["measure_type"] = QString("RubyMeasure");
     if (m_bclMeasureDirectory) {
       rubyMeasureData["bcl_measure_directory"] = toQString(m_bclMeasureDirectory.get());
-      rubyMeasureData["bcl_measure_uuid"] = m_bclMeasureUUID.get().toString();
-      rubyMeasureData["bcl_measure_version_uuid"] = m_bclMeasureVersionUUID.get().toString();
+      rubyMeasureData["bcl_measure_uuid"] = toQString(removeBraces(m_bclMeasureUUID.get()));
+      rubyMeasureData["bcl_measure_version_uuid"] = toQString(removeBraces(m_bclMeasureVersionUUID.get()));
     }
     else {
       OS_ASSERT(m_perturbationScript);
@@ -493,8 +494,8 @@ namespace detail {
     OptionalFileReference perturbationScriptOrBCLMeasureDir;
     if (map.contains("bcl_measure_directory")) {
       perturbationScriptOrBCLMeasureDir = FileReference(
-            openstudio::UUID(map["bcl_measure_uuid"].toString()),
-            openstudio::UUID(map["bcl_measure_version_uuid"].toString()),
+            toUUID(map["bcl_measure_uuid"].toString().toStdString()),
+            toUUID(map["bcl_measure_version_uuid"].toString().toStdString()),
             "",
             "",
             "",
@@ -517,8 +518,8 @@ namespace detail {
             boost::function<OSArgument (const QVariant&)>(boost::bind(ruleset::detail::toOSArgument,_1,version)));
     }
 
-    return RubyMeasure(openstudio::UUID(map["uuid"].toString()),
-                       openstudio::UUID(map["version_uuid"].toString()),
+    return RubyMeasure(toUUID(map["uuid"].toString().toStdString()),
+                       toUUID(map["version_uuid"].toString().toStdString()),
                        map.contains("name") ? map["name"].toString().toStdString() : std::string(),
                        map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
                        map.contains("description") ? map["description"].toString().toStdString() : std::string(),
@@ -529,6 +530,39 @@ namespace detail {
                        map["is_user_script"].toBool(),
                        arguments,
                        map.contains("bcl_measure_directory"));
+  }
+
+  void RubyMeasure_Impl::updateInputPathData(const openstudio::path& originalBase,
+                                             const openstudio::path& newBase)
+  {
+    openstudio::path temp;
+
+    // BCL Measure Directory
+    if (m_bclMeasureDirectory) {
+      temp = relocatePath(*m_bclMeasureDirectory,originalBase,newBase);
+      if (!temp.empty()) {
+        m_bclMeasureDirectory = temp;
+      }
+    }
+
+    // Perturbation Script
+    if (m_perturbationScript) {
+      temp = relocatePath(m_perturbationScript->path(),originalBase,newBase);
+      if (!temp.empty()) {
+        m_perturbationScript->setPath(temp);
+      }
+    }
+
+    // Path Argument Values
+    BOOST_FOREACH(OSArgument& arg,m_arguments) {
+      if ((arg.type() == OSArgumentType::Path) && arg.hasValue()) {
+        temp = relocatePath(arg.valueAsPath(),originalBase,newBase);
+        if (!temp.empty()) {
+          arg.setValue(temp);
+        }
+      }
+      // default value for path argument should not be absolute, so skip
+    }
   }
 
   bool RubyMeasure_Impl::fileTypesAreCompatible(

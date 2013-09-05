@@ -87,6 +87,11 @@ boost::optional<IdfObject> ForwardTranslator::translateSpaceInfiltrationDesignFl
     idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, *d);
   }
 
+  d = modelObject.flowperExteriorWallArea();
+  if (d){
+    idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, *d);
+  }
+
   d = modelObject.airChangesperHour();
   if (d){
     idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::AirChangesperHour, *d);

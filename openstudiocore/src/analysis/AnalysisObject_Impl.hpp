@@ -138,7 +138,7 @@ namespace detail {
       InvalidatesDataPoints,
     };
 
-    /** @name Protected in Public Class */
+    /** @name Protected in or Absent from Public Class */
     //@{
 
     /** Changes version UUID, sets to dirty, and emits changed signal. */
@@ -151,6 +151,14 @@ namespace detail {
     void clearParent() const;
 
     virtual QVariant toVariant() const;
+
+    virtual QVariant toServerFormulationVariant() const;
+
+    virtual QVariant toServerDataPointsVariant() const;
+
+    /// Relocate path data from originalBase to newBase.
+    virtual void updateInputPathData(const openstudio::path& originalBase,
+                                     const openstudio::path& newBase);
 
     //@}
    public slots:

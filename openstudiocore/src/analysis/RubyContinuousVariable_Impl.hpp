@@ -110,7 +110,7 @@ namespace detail {
                                 const boost::optional<FileReferenceType>& proposedOutputFileType) const;
 
     //@}
-    /** @name Protected in Public Class */
+    /** @name Protected in or Absent from Public Class */
     //@{
 
     virtual QVariant toVariant() const;
@@ -118,6 +118,10 @@ namespace detail {
     static RubyContinuousVariable fromVariant(const QVariant& variant, const VersionString& version);
 
     static RubyContinuousVariable fromVariant(const QVariant& variant, const Measure& measure, const VersionString& version);
+
+    /// Relocate path data from originalBase to newBase.
+    virtual void updateInputPathData(const openstudio::path& originalBase,
+                                     const openstudio::path& newBase);
 
     //@}
    private:

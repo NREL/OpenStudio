@@ -120,6 +120,9 @@ namespace detail {
       /// Load all of the jobs from the given database file into the current RunManager, enqueuing them
       void loadJobs(const openstudio::path &t_path);
 
+      /// Load all of the jobs from the given JSON string, merging existing job trees
+      void updateJobs(const std::vector<Job> &t_jobs);
+
       /// Update all out of date jobs to be runnable again
       void setOutOfDateRunnable();
 

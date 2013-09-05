@@ -466,6 +466,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       //modelObject = translateEvaporativeCoolerDirectResearchSpecial(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::EvaporativeFluidCooler_SingleSpeed :
+    {
+      modelObject = translateEvaporativeFluidCoolerSingleSpeed(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::Fan_ConstantVolume :
     {
       //modelObject = translateFanConstantVolume(workspaceObject );
@@ -485,6 +490,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
   case openstudio::IddObjectType::GasEquipment :
     {
       modelObject = translateGasEquipment(workspaceObject );
+      break;
+    }
+  case openstudio::IddObjectType::GroundHeatExchanger_Vertical :
+    {
+      //modelObject = translateGroundHeatExchangerVertical(workspaceObject );
       break;
     }
   case openstudio::IddObjectType::HeatBalanceAlgorithm :

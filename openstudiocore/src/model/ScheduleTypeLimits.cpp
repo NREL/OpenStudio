@@ -30,7 +30,7 @@
 #include <utilities/units/BTUUnit.hpp>
 #include <utilities/units/CFMUnit.hpp>
 #include <utilities/units/WhUnit.hpp>
-#include <utilities/units/CelciusUnit.hpp>
+#include <utilities/units/CelsiusUnit.hpp>
 #include <utilities/units/FahrenheitUnit.hpp>
 #include <utilities/units/TemperatureUnit_Impl.hpp>
 #include <utilities/units/UnitFactory.hpp>
@@ -350,7 +350,7 @@ boost::optional<Unit> ScheduleTypeLimits::units(std::string unitType, bool retur
           result->cast<TemperatureUnit>().setAsRelative();
         }
         else {
-          result = createCelciusTemperature();
+          result = createCelsiusTemperature();
           result->cast<TemperatureUnit>().setAsRelative();
         }
       }
@@ -416,7 +416,7 @@ boost::optional<Unit> ScheduleTypeLimits::units(std::string unitType, bool retur
           result = createFahrenheitTemperature();
         }
         else {
-          result = createCelciusTemperature();
+          result = createCelsiusTemperature();
         }
       }
       break;

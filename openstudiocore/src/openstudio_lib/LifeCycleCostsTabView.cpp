@@ -194,8 +194,6 @@ void LifeCycleCostsView::createWidgets()
 
 QWidget * LifeCycleCostsView::createInflationRatesWidget()
 {
-  bool isConnected = false;
-
   int rowCount = 0;
   int columnCount = 0;
 

@@ -58,7 +58,7 @@ OPENSTUDIO_ENUM(UnitSystem,
   ((Wh))
   ((Therm))
   ((Misc1))
-  ((Celcius))
+  ((Celsius))
   ((Fahrenheit))
 );
  *  \endcode 
@@ -74,7 +74,7 @@ OPENSTUDIO_ENUM(UnitSystem,
   ((Wh))
   ((Therm))
   ((Misc1))
-  ((Celcius))
+  ((Celsius))
   ((Fahrenheit))
 );
 

@@ -60,7 +60,7 @@
   #include <utilities/units/Misc1Unit.hpp>
   #include <utilities/units/FahrenheitUnit.hpp>
   #include <utilities/units/page.hpp>
-  #include <utilities/units/CelciusUnit.hpp>
+  #include <utilities/units/CelsiusUnit.hpp>
   #include <utilities/units/QuantityRegex.hpp>
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/UnitFactory.hpp>

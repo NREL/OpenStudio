@@ -17,6 +17,7 @@ SET( runmanager_src
   Job.hpp
   Job_Impl.cpp
   Job_Impl.hpp
+  JobState.hpp
   RunManager.cpp
   RunManager.hpp
   RunManager_Impl.cpp
@@ -261,6 +262,7 @@ SET( runmanager_test_src
   Test/ParallelEnergyPlusJob_GTest.cpp
   Test/ErrorEstimation_GTest.cpp
   Test/JSON_GTest.cpp
+  Test/ExternallyManagedJobs_GTest.cpp
   "${CMAKE_BINARY_DIR}/src/runmanager/Test/ToolBin.hxx"
 )
 

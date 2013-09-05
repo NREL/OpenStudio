@@ -55,55 +55,53 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const Files &t_outputFiles
+      const JobState &t_state
       )
   {
     switch(t_type.value())
     {
       case JobType::EnergyPlus:
-        return createEnergyPlusJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createEnergyPlusJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::ExpandObjects:
-        return createExpandObjectsJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createExpandObjectsJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::Basement:
-        return createBasementJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createBasementJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::Slab:
-        return createSlabJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createSlabJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::XMLPreprocessor:
-        return createXMLPreprocessorJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createXMLPreprocessorJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::ModelToIdf:
-        return createModelToIdfJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createModelToIdfJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::ModelToRad:
-        return createModelToRadJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createModelToRadJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::IdfToModel:
-        return createIdfToModelJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createIdfToModelJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::CalculateEconomics:
-        return createCalculateEconomicsJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createCalculateEconomicsJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::ReadVars:
-        return createReadVarsJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createReadVarsJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::PreviewIES:
-        return createPreviewIESJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createPreviewIESJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::Ruby:
-        return createRubyJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createRubyJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::UserScript:
-        return createUserScriptJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createUserScriptJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::Null:
-        return createNullJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createNullJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::EnergyPlusPostProcess:
-        return createEnergyPlusPostProcessJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createEnergyPlusPostProcessJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::OpenStudioPostProcess:
-        return createOpenStudioPostProcessJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createOpenStudioPostProcessJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::EnergyPlusPreProcess:
-        return createEnergyPlusPreProcessJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createEnergyPlusPreProcessJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::ModelToRadPreProcess:
-        return createModelToRadPreProcessJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createModelToRadPreProcessJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::ParallelEnergyPlusJoin:
-        return createParallelEnergyPlusJoinJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createParallelEnergyPlusJoinJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::ParallelEnergyPlusSplit:
-        return createParallelEnergyPlusSplitJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createParallelEnergyPlusSplitJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       case JobType::Dakota:
-        return createDakotaJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_lastRun, t_jobErrors, t_outputFiles);
+        return createDakotaJob(t_tools, t_params, t_files, t_url_search_paths, t_loading, *t_uuid, t_state);
       default:
         throw std::domain_error("Unknown domain value to createJob");
     };
@@ -117,12 +115,10 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ModelToIdfJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ModelToIdfJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createModelToIdfJob(
@@ -146,12 +142,10 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ModelToRadJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ModelToRadJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createModelToRadJob(
@@ -177,12 +171,10 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::IdfToModelJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::IdfToModelJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createIdfToModelJob(
@@ -207,12 +199,10 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::CalculateEconomicsJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::CalculateEconomicsJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   // Creates a job that handles processing of EnergyPlus job outputs
@@ -223,12 +213,10 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::EnergyPlusPostProcessJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::EnergyPlusPostProcessJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   // Creates a job that handles processing of EnergyPlus job outputs from an OSM file
@@ -239,12 +227,10 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::OpenStudioPostProcessJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::OpenStudioPostProcessJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   // Creates a job that handles prepping an input file by enabling sql output
@@ -255,12 +241,10 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::EnergyPlusPreProcessJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::EnergyPlusPreProcessJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createModelToRadPreProcessJob(
@@ -270,12 +254,10 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ModelToRadPreProcessJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ModelToRadPreProcessJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createEnergyPlusJob(
@@ -285,13 +267,11 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
     return Job(boost::shared_ptr<detail::Job_Impl>(new detail::EnergyPlusJob(*t_uuid,
-            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createEnergyPlusJob(
@@ -361,13 +341,11 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
     return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ExpandObjectsJob(*t_uuid,
-            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createXMLPreprocessorJob(
@@ -377,13 +355,11 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
     return Job(boost::shared_ptr<detail::Job_Impl>(new detail::XMLPreprocessorJob(*t_uuid,
-            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createPreviewIESJob(
@@ -408,13 +384,11 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
     return Job(boost::shared_ptr<detail::Job_Impl>(new detail::PreviewIESJob(*t_uuid,
-            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createRubyJob(
@@ -441,13 +415,11 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
     return Job(boost::shared_ptr<detail::Job_Impl>(new detail::RubyJob(*t_uuid,
-            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createUserScriptJob (
@@ -457,13 +429,11 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
     return Job(boost::shared_ptr<detail::Job_Impl>(new detail::UserScriptJob(*t_uuid,
-            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createUserScriptJob(
@@ -495,7 +465,7 @@ namespace runmanager {
     }
     return Job(boost::shared_ptr<detail::Job_Impl>(
           new detail::RubyJob(*t_uuid,Tools(),t_builder.toParams(),
-            normalizeURLs(files,t_url_search_paths,t_loading,*t_uuid), detail::JobState())));
+            normalizeURLs(files,t_url_search_paths,t_loading,*t_uuid), JobState())));
   }
 
   Job JobFactory::createNullJob(
@@ -505,20 +475,18 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
     return Job(boost::shared_ptr<detail::Job_Impl>(new detail::NullJob(*t_uuid,
-            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createNullJob(
       const boost::optional<openstudio::UUID> &t_uuid)
   {
     return Job(boost::shared_ptr<detail::Job_Impl>(new detail::NullJob(*t_uuid,
-            Tools(), JobParams(), Files(), detail::JobState())));
+            Tools(), JobParams(), Files(), JobState())));
   }
 
   Job JobFactory::createReadVarsJob(
@@ -528,13 +496,11 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
     return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ReadVarsJob(*t_uuid,
-            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createParallelEnergyPlusSplitJob(
@@ -544,13 +510,11 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
     return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ParallelEnergyPlusSplitJob(*t_uuid,
-            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createParallelEnergyPlusJoinJob(int t_numSplits, int t_offset)
@@ -560,7 +524,7 @@ namespace runmanager {
     p.append("offset", boost::lexical_cast<std::string>(t_offset));
 
     return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ParallelEnergyPlusJoinJob(createUUID(),
-            Tools(), p, Files(), detail::JobState())));
+            Tools(), p, Files(), JobState())));
   }
 
   Job JobFactory::createParallelEnergyPlusSplitJob(int t_numSplits, int t_offset)
@@ -570,14 +534,14 @@ namespace runmanager {
     p.append("offset", boost::lexical_cast<std::string>(t_offset));
 
     return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ParallelEnergyPlusSplitJob(createUUID(),
-            Tools(), p, Files(), detail::JobState())));
+            Tools(), p, Files(), JobState())));
   }
 
   Job JobFactory::createEnergyPlusJob(const std::string &t_filename)
   {
     JobParams p;
     p.append("filename", t_filename);
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::EnergyPlusJob(createUUID(), Tools(), p, Files(), detail::JobState())));
+    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::EnergyPlusJob(createUUID(), Tools(), p, Files(), JobState())));
   }
 
   Job JobFactory::createParallelEnergyPlusJobTree(
@@ -604,13 +568,11 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
     return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ParallelEnergyPlusJoinJob(*t_uuid,
-            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createBasementJob(
@@ -620,13 +582,11 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
     return Job(boost::shared_ptr<detail::Job_Impl>(new detail::BasementJob(*t_uuid,
-            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createSlabJob(
@@ -636,13 +596,11 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
     return Job(boost::shared_ptr<detail::Job_Impl>(new detail::SlabJob(*t_uuid,
-            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createDakotaJob(
@@ -652,13 +610,11 @@ namespace runmanager {
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths,
       bool t_loading,
       const boost::optional<openstudio::UUID> &t_uuid,
-      const boost::optional<openstudio::DateTime> &t_lastRun,
-      const JobErrors &t_jobErrors,
-      const openstudio::runmanager::Files &t_outputFiles
+      const JobState &t_state
       )
   {
     return Job(boost::shared_ptr<detail::Job_Impl>(new detail::DakotaJob(*t_uuid,
-            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), detail::JobState(t_lastRun, t_jobErrors, t_outputFiles))));
+            t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Files JobFactory::normalizeURLs(

@@ -24,6 +24,7 @@
 
 namespace openstudio {
 namespace model {
+
 namespace detail {
 
   class MODEL_API Construction_Impl : public LayeredConstruction_Impl 

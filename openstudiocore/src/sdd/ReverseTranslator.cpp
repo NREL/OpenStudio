@@ -49,6 +49,8 @@
 #include <model/RunPeriod_Impl.hpp>
 #include <model/YearDescription.hpp>
 #include <model/YearDescription_Impl.hpp>
+#include <model/OutputControlReportingTolerances.hpp>
+#include <model/OutputControlReportingTolerances_Impl.hpp>
 
 #include <energyplus/ReverseTranslator.hpp>
 
@@ -601,34 +603,38 @@ namespace sdd {
 
       // Lights - Reg Ltg, NonReg Ltg
       meter = model::Meter(*result);
-      meter.setFuelType(FuelType::Gas);
+      meter.setFuelType(FuelType::Electricity);
       meter.setEndUseType(EndUseType::InteriorLights);
       meter.setSpecificEndUse("Reg Ltg");
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
 
       meter = model::Meter(*result);
-      meter.setFuelType(FuelType::Gas);
+      meter.setFuelType(FuelType::Electricity);
       meter.setEndUseType(EndUseType::InteriorLights);
       meter.setSpecificEndUse("NonReg Ltg");
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
 
       meter = model::Meter(*result);
-      meter.setFuelType(FuelType::Gas);
+      meter.setFuelType(FuelType::Electricity);
       meter.setEndUseType(EndUseType::ExteriorLights);
       meter.setSpecificEndUse("Reg Ltg");
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
 
       meter = model::Meter(*result);
-      meter.setFuelType(FuelType::Gas);
+      meter.setFuelType(FuelType::Electricity);
       meter.setEndUseType(EndUseType::ExteriorLights);
       meter.setSpecificEndUse("NonReg Ltg");
       meter.setInstallLocationType(InstallLocationType::Facility);
       meter.setReportingFrequency("Hourly");
+
+      model::OutputControlReportingTolerances rt = result->getUniqueModelObject<model::OutputControlReportingTolerances>();
+      rt.setToleranceforTimeCoolingSetpointNotMet(0.56);
+      rt.setToleranceforTimeHeatingSetpointNotMet(0.56);
     }
-
+    
     return result;
   }
 

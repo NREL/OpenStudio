@@ -40,6 +40,7 @@
 #include <utilities/idf/ValidityReport.hpp>
 #include <utilities/idf/Workspace.hpp>
 
+#include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
@@ -72,8 +73,11 @@
 #include <model/SetpointManagerSingleZoneReheat.hpp>
 #include <model/ZoneHVACBaseboardConvectiveWater.hpp>
 #include <model/ZoneHVACFourPipeFanCoil.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
+#include <model/ZoneHVACLowTempRadiantConstFlow.hpp>
+#include <model/ZoneHVACLowTemperatureRadiantElectric.hpp>
+#include <model/ZoneHVACLowTempRadiantVarFlow.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
+#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
 #include <model/ZoneHVACUnitHeater.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump.hpp>
 

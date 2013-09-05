@@ -20,39 +20,39 @@
 #include <gtest/gtest.h>
 #include <utilities/units/test/UnitsFixture.hpp>
 
-#include <utilities/units/CelciusUnit.hpp>
+#include <utilities/units/CelsiusUnit.hpp>
 #include <utilities/units/Scale.hpp>
 
 #include <utilities/core/Exception.hpp>
 
 using openstudio::Unit;
 using openstudio::UnitSystem;
-using openstudio::CelciusUnit;
+using openstudio::CelsiusUnit;
 using openstudio::Exception;
 
-using openstudio::createCelciusTemperature;
+using openstudio::createCelsiusTemperature;
 
-TEST_F(UnitsFixture,CelciusUnit_Constructors)
+TEST_F(UnitsFixture,CelsiusUnit_Constructors)
 {
-  LOG(Debug,"CelciusUnit_Constructors");
+  LOG(Debug,"CelsiusUnit_Constructors");
 
-  CelciusUnit T1(1);
+  CelsiusUnit T1(1);
 
   EXPECT_EQ(1,T1.baseUnitExponent("C"));
   EXPECT_EQ(0,T1.baseUnitExponent("ft"));
   T1.setBaseUnitExponent("C",0);
   EXPECT_EQ(0,T1.baseUnitExponent("C"));
 
-  CelciusUnit T2(T1);
-  EXPECT_EQ(UnitSystem::Celcius,T2.system().value());
+  CelsiusUnit T2(T1);
+  EXPECT_EQ(UnitSystem::Celsius,T2.system().value());
 }
 
-TEST_F(UnitsFixture,CelciusUnit_ArithmeticOperators)
+TEST_F(UnitsFixture,CelsiusUnit_ArithmeticOperators)
 {
-  LOG(Debug,"CelciusUnit_ArithmeticOperators");
+  LOG(Debug,"CelsiusUnit_ArithmeticOperators");
 
-  Unit T1 = CelciusUnit(1);
-  Unit T2 = CelciusUnit(1);
+  Unit T1 = CelsiusUnit(1);
+  Unit T2 = CelsiusUnit(1);
 
   // /=
   T2 /= T1;
@@ -72,11 +72,11 @@ TEST_F(UnitsFixture,CelciusUnit_ArithmeticOperators)
 
 }
 
-TEST_F(UnitsFixture,CelciusUnit_CreateFunctions)
+TEST_F(UnitsFixture,CelsiusUnit_CreateFunctions)
 {
-  CelciusUnit u;
+  CelsiusUnit u;
 
-  u = createCelciusTemperature();
+  u = createCelsiusTemperature();
   EXPECT_EQ(1,u.baseUnitExponent("C"));
   EXPECT_EQ(0,u.scale().exponent);
   EXPECT_EQ("C",u.standardString());
@@ -84,8 +84,8 @@ TEST_F(UnitsFixture,CelciusUnit_CreateFunctions)
 
 }
 
-TEST_F(UnitsFixture,CelciusUnit_AbsoluteRelative) {
-  CelciusUnit T(1);
+TEST_F(UnitsFixture,CelsiusUnit_AbsoluteRelative) {
+  CelsiusUnit T(1);
   EXPECT_TRUE(T.isAbsolute());
   T.setAsRelative();
   EXPECT_FALSE(T.isAbsolute());

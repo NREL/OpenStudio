@@ -23,8 +23,6 @@
 #include <analysis/AnalysisAPI.hpp>
 #include <analysis/AnalysisObject_Impl.hpp>
 
-#include <analysis/Analysis.hpp>
-
 #include <analysis/Problem.hpp>
 #include <analysis/Algorithm.hpp>
 #include <analysis/DataPoint.hpp>
@@ -42,6 +40,8 @@ namespace runmanager {
 }
 
 namespace analysis {
+
+class AnalysisSerializationOptions;
 
 namespace detail {
 
@@ -186,7 +186,7 @@ namespace detail {
      *  openstudio::Exception if dataPoint.variableValues() are not valid for problem(). Should be
      *  called before running a given workflow. Usually called by Algorithm, but may also be called
      *  directly by a user to run custom analyses. */
-    bool addDataPoint(const DataPoint& dataPoint);
+    bool addDataPoint(DataPoint& dataPoint);
 
     /** Adds a DataPoint to this analysis and returns true if measures are valid for problem(),
      *  the resulting DataPoint is not yet in this Analysis, and if not dataPointsAreInvalid. */
@@ -241,18 +241,23 @@ namespace detail {
     /** Returns a csv summary of all the data points in this analysis. */
     Table summaryTable() const;
 
+    /// Relocate path data from originalBase to newBase.
+    virtual void updateInputPathData(const openstudio::path& originalBase,
+                                     const openstudio::path& newBase);
+
     //@}
-    /** @name Serialization */
+    /** @name Serialization
+     *  Methods to save to json format. See AnalysisObject.hpp, openstudio::analysis::loadJSON for
+     *  the de-serialization methods. */
     //@{
 
-    bool saveJSON(openstudio::path p,
-                  AnalysisSerializationScope scope=AnalysisSerializationScope::Full,
+    bool saveJSON(const openstudio::path& p,
+                  const AnalysisSerializationOptions& options,
                   bool overwrite=false) const;
 
-    std::ostream& toJSON(std::ostream& os,
-                         AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
+    std::ostream& toJSON(std::ostream& os,const AnalysisSerializationOptions& options) const;
 
-    std::string toJSON(AnalysisSerializationScope scope=AnalysisSerializationScope::Full) const;
+    std::string toJSON(const AnalysisSerializationOptions& options) const;
 
     //@}
     /** @name Protected in or Absent from Public Class */
@@ -260,10 +265,8 @@ namespace detail {
 
     virtual QVariant toVariant() const;
 
-    /** Finalizes Analysis JSON by a) appending DataPoints to toVariant() if scope ==
-     *  AnalysisSerializationScope::Full, and b) wrapping those contents in a map with version
-     *  meta-data and the "analysis" indicator. */
-    QVariant toVariant(AnalysisSerializationScope scope) const;
+    /** Finalizes Analysis JSON based on options. */
+    QVariant toVariant(const AnalysisSerializationOptions& options) const;
 
     static Analysis fromVariant(const QVariant& variant,const VersionString& version);
 

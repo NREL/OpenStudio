@@ -27,6 +27,7 @@
 #include <pat_app/PatApp.hpp>
 #include <pat_app/PatMainWindow.hpp>
 
+#include <analysis/Analysis.hpp>
 #include <analysis/DataPoint.hpp>
 #include <analysis/DiscreteVariable.hpp>
 #include <analysis/DiscreteVariable_Impl.hpp>

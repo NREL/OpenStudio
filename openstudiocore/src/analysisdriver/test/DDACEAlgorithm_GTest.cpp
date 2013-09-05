@@ -29,6 +29,7 @@
 #include <project/AnalysisRecord.hpp>
 
 #include <analysis/Analysis.hpp>
+#include <analysis/Analysis_Impl.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/DataPoint.hpp>
 #include <analysis/DDACEAlgorithmOptions.hpp>

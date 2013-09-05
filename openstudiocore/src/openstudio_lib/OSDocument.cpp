@@ -58,6 +58,8 @@
 #include <openstudio_lib/VariablesTabController.hpp>
 #include <openstudio_lib/YearSettingsWidget.hpp>
 
+#include <analysis/Analysis.hpp>
+
 #include <model/Component.hpp>
 #include <model/Model_Impl.hpp>
 #include <model/WeatherFile.hpp>

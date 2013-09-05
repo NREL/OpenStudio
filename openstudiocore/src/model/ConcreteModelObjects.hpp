@@ -20,6 +20,9 @@
 #ifndef MODEL_CONCRETEMODELOBJECTS_HPP
 #define MODEL_CONCRETEMODELOBJECTS_HPP
 
+ #include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
+ #include <model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp>
+
 #include <model/AirGap.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
@@ -44,11 +47,15 @@
 #include <model/ChillerElectricEIR.hpp>
 #include <model/CoilCoolingDXSingleSpeed.hpp>
 #include <model/CoilCoolingDXTwoSpeed.hpp>
+#include <model/CoilCoolingLowTempRadiantConstFlow.hpp>
+#include <model/CoilCoolingLowTempRadiantVarFlow.hpp>
 #include <model/CoilCoolingWater.hpp>
 #include <model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp>
 #include <model/CoilHeatingDXSingleSpeed.hpp>
 #include <model/CoilHeatingElectric.hpp>
 #include <model/CoilHeatingGas.hpp>
+#include <model/CoilHeatingLowTempRadiantConstFlow.hpp>
+#include <model/CoilHeatingLowTempRadiantVarFlow.hpp>
 #include <model/CoilHeatingWater.hpp>
 #include <model/CoilHeatingWaterToAirHeatPumpEquationFit.hpp>
 #include <model/CoilHeatingWaterBaseboard.hpp>
@@ -110,6 +117,7 @@
 #include <model/GasMixture.hpp>
 #include <model/GenericModelObject.hpp>
 #include <model/GlareSensor.hpp>
+#include <model/GroundHeatExchangerVertical.hpp>
 #include <model/HeatBalanceAlgorithm.hpp>
 #include <model/HeatExchangerAirToAirSensibleAndLatent.hpp>
 #include <model/HotWaterEquipment.hpp>
@@ -172,6 +180,7 @@
 #include <model/SetpointManagerSingleZoneReheat.hpp>
 #include <model/SetpointManagerWarmest.hpp>
 #include <model/Shade.hpp>
+#include <model/ShadingControl.hpp>
 #include <model/ShadingSurface.hpp>
 #include <model/ShadingSurfaceGroup.hpp>
 #include <model/ShadowCalculation.hpp>
@@ -227,6 +236,9 @@
 #include <model/ZoneHVACEquipmentList.hpp>
 #include <model/ZoneHVACIdealLoadsAirSystem.hpp>
 #include <model/ZoneHVACFourPipeFanCoil.hpp>
+#include <model/ZoneHVACLowTemperatureRadiantElectric.hpp>
+#include <model/ZoneHVACLowTempRadiantConstFlow.hpp>
+#include <model/ZoneHVACLowTempRadiantVarFlow.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
 #include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump.hpp>
@@ -257,11 +269,15 @@
 #include <model/ClimateZones_Impl.hpp>
 #include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
 #include <model/CoilCoolingDXTwoSpeed_Impl.hpp>
+#include <model/CoilCoolingLowTempRadiantConstFlow_Impl.hpp>
+#include <model/CoilCoolingLowTempRadiantVarFlow_Impl.hpp>
 #include <model/CoilCoolingWater_Impl.hpp>
 #include <model/CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp>
 #include <model/CoilHeatingDXSingleSpeed_Impl.hpp>
 #include <model/CoilHeatingElectric_Impl.hpp>
 #include <model/CoilHeatingGas_Impl.hpp>
+#include <model/CoilHeatingLowTempRadiantConstFlow_Impl.hpp>
+#include <model/CoilHeatingLowTempRadiantVarFlow_Impl.hpp>
 #include <model/CoilHeatingWater_Impl.hpp>
 #include <model/CoilHeatingWaterToAirHeatPumpEquationFit_Impl.hpp>
 #include <model/CoilHeatingWaterBaseboard_Impl.hpp>
@@ -323,6 +339,7 @@
 #include <model/GasMixture_Impl.hpp>
 #include <model/GenericModelObject_Impl.hpp>
 #include <model/GlareSensor_Impl.hpp>
+#include <model/GroundHeatExchangerVertical_Impl.hpp>
 #include <model/HeatBalanceAlgorithm_Impl.hpp>
 #include <model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp>
 #include <model/HotWaterEquipment_Impl.hpp>
@@ -386,6 +403,7 @@
 #include <model/SetpointManagerSingleZoneReheat_Impl.hpp>
 #include <model/SetpointManagerWarmest_Impl.hpp>
 #include <model/Shade_Impl.hpp>
+#include <model/ShadingControl_Impl.hpp>
 #include <model/ShadingSurface_Impl.hpp>
 #include <model/ShadingSurfaceGroup_Impl.hpp>
 #include <model/ShadowCalculation_Impl.hpp>
@@ -441,6 +459,9 @@
 #include <model/ZoneHVACEquipmentList_Impl.hpp>
 #include <model/ZoneHVACIdealLoadsAirSystem_Impl.hpp>
 #include <model/ZoneHVACFourPipeFanCoil_Impl.hpp>
+#include <model/ZoneHVACLowTemperatureRadiantElectric_Impl.hpp>
+#include <model/ZoneHVACLowTempRadiantConstFlow_Impl.hpp>
+#include <model/ZoneHVACLowTempRadiantVarFlow_Impl.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
 #include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>

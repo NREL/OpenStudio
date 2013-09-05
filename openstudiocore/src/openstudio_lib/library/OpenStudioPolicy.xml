@@ -11,6 +11,10 @@
     <rule IddField="Nominal Capacity" Access="HIDDEN"/>
     <rule IddField="Free Convection Capacity" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_GroundHeatExchanger_Vertical">
+    <rule IddField="Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_Coil_Cooling_Water">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
@@ -50,7 +54,14 @@
     <rule IddField="Outdoor Dry-Bulb Temperature Sensor Node Name" Access="HIDDEN"/>
     <rule IddField="Availability Manager List Name" Access="HIDDEN"/>
   </POLICY>
-  
+  <POLICY IddObjectType="OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow">
+    <rule IddField="Low Temp Radiant Constant Flow Heating Coil Name" Access="LOCKED"/>
+    <rule IddField="Low Temp Radiant Constant Flow Cooling Coil Name" Access="LOCKED"/>
+  </POLICY>    
+  <POLICY IddObjectType="OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow">
+    <rule IddField="Low Temp Radiant Variable Flow Heating Coil Name" Access="LOCKED"/>
+    <rule IddField="Low Temp Radiant Variable Flow Cooling Coil Name" Access="LOCKED"/>
+  </POLICY>   
   <POLICY IddObjectType="OS_Connector_Splitter">
     <rule IddField="Inlet Branch Name" Access="HIDDEN"/>
     <rule IddField="Outlet Branch Name" Access="HIDDEN"/>
@@ -106,6 +117,12 @@
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_EvaporativeFluidCooler_SingleSpeed">
+    <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Supply Water Storage Tank Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_SetpointManager_SingleZone_Reheat">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
@@ -231,7 +248,15 @@
     <rule IddField="Region number for calculating HSPF" Access="HIDDEN"/>
     <rule IddField="Evaporator Air Inlet Node Name" Access="HIDDEN"/>
   </POLICY>
-    <POLICY IddObjectType="OS_Coil_Cooling_WaterToAirHeatPump_EquationFit">
+  <POLICY IddObjectType="OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlow">
+    <rule IddField="Cooling Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Cooling Water Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>  
+  <POLICY IddObjectType="OS_Coil_Cooling_LowTemperatureRadiant_VariableFlow">
+    <rule IddField="Cooling Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Cooling Water Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>     
+  <POLICY IddObjectType="OS_Coil_Cooling_WaterToAirHeatPump_EquationFit">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
@@ -301,8 +326,16 @@
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
-    <rule IddField="Part Load Fraction Correlation Curve Name" Access="HIDDEN"/>
+    <rule IddField="Part Load Fraction Correlation Curve Name" Access="LOCKED"/>
     <rule IddField="Temperature Setpoint Node Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_Heating_LowTemperatureRadiant_ConstantFlow">
+    <rule IddField="Heating Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heating Water Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_Heating_LowTemperatureRadiant_VariableFlow">
+    <rule IddField="Heating Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heating Water Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_AirLoopHVAC_ZoneSplitter">
     <rule IddField="Name" Access="LOCKED"/>

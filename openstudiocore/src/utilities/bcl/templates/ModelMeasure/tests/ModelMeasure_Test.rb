@@ -1,4 +1,5 @@
 require 'openstudio'
+
 require 'openstudio/ruleset/ShowRunnerOutput'
 
 require "#{File.dirname(__FILE__)}/../measure.rb"
@@ -6,12 +7,7 @@ require "#{File.dirname(__FILE__)}/../measure.rb"
 require 'test/unit'
 
 class ModelMeasure_Test < Test::Unit::TestCase
-  
-  # def setup
-  # end
 
-  # def teardown
-  # end
   
   def test_ModelMeasure
      

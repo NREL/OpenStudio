@@ -151,7 +151,7 @@ void VerticalTabWidget::setCurrentIndex(int index)
 
     QString style;
 
-    if (i == index)
+    if (i == static_cast<unsigned>(index))
     {
       imagePath = m_selectedPixmaps[i];
 
