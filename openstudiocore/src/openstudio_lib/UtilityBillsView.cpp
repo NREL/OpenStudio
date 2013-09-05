@@ -117,7 +117,6 @@ UtilityBillsInspectorView::UtilityBillsInspectorView(const model::Model & model,
     m_energyUseLabel(0),
     m_peakLabel(0),
     m_hiddenWidgetIndex(0),
-    m_warningWidgetIndex(0),
     m_visibleWidgetIndex(0)
 {
   createWidgets();
@@ -177,13 +176,10 @@ void UtilityBillsInspectorView::createWidgets()
   QWidget* hiddenWidget = new QWidget();
   m_hiddenWidgetIndex = this->stackedWidget()->insertWidget(0, hiddenWidget);
 
-  QWidget* warningWidget = new QWidget(); // TODO remove
-  m_warningWidgetIndex = this->stackedWidget()->addWidget(warningWidget);
-
   QWidget* visibleWidget = new QWidget();
   m_visibleWidgetIndex = this->stackedWidget()->addWidget(visibleWidget);
 
-  setCorrectDefaultView();
+  stackedWidget()->setCurrentIndex(m_visibleWidgetIndex);
 
   bool isConnected = false;
 
@@ -199,19 +195,6 @@ void UtilityBillsInspectorView::createWidgets()
   isConnected = connect( yd->getImpl<openstudio::model::detail::YearDescription_Impl>().get(), SIGNAL(onChange()),
     this, SLOT(updateRunPeriodDates()) );
   OS_ASSERT(isConnected);
-
-  // Warning widget if no weather file // TODO remove
-
-  vLayout = new QVBoxLayout();
-  vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-  vLayout->setSpacing(10);
-
-  label = new QLabel();
-  label->setPixmap(QPixmap(":/images/utility_calibration_warning.png"));
-  label->setAlignment(Qt::AlignCenter);
-  vLayout->addWidget(label,0,Qt::AlignCenter);
-  warningWidget->setLayout(vLayout);
-  warningWidget->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
 
   // Regular inspector body
 
@@ -473,27 +456,18 @@ void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityB
   addBillingPeriodWidgets();
 }
 
-void UtilityBillsInspectorView::setCorrectDefaultView()
-{
-  if(runPeriodDates()){
-    this->stackedWidget()->setCurrentIndex(m_hiddenWidgetIndex);
-  } else {
-    this->stackedWidget()->setCurrentIndex(m_warningWidgetIndex);
-  }
-}
-
 void UtilityBillsInspectorView::setCorrectInspectorView()
 {
   if(runPeriodDates()){
     this->stackedWidget()->setCurrentIndex(m_visibleWidgetIndex);
   } else {
-    this->stackedWidget()->setCurrentIndex(m_warningWidgetIndex);
+    this->stackedWidget()->setCurrentIndex(m_hiddenWidgetIndex);
   }
 }
 
 void UtilityBillsInspectorView::detach()
 {
-  setCorrectDefaultView();
+  setCorrectInspectorView();
 
   m_name->unbind();
   m_consumptionUnits->unbind();
@@ -790,11 +764,6 @@ void UtilityBillsInspectorView::updatePeakLabelText(const QString& text)
 void UtilityBillsInspectorView::updateRunPeriodDates()
 {
   updateRunPeriodDatesLabel();
-
-  // TODO remove
-  if(!runPeriodDates()){
-    this->stackedWidget()->setCurrentIndex(m_hiddenWidgetIndex);
-  }
 
   showSubTabView(runPeriodDates());
 }

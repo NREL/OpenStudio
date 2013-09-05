@@ -106,7 +106,6 @@ protected slots:
 
 private:
 
-  void setCorrectDefaultView();
   void setCorrectInspectorView();
   void createWidgets();
   void getSortedBills();
@@ -167,7 +166,6 @@ private:
   QString m_peakUnits;
 
   int m_hiddenWidgetIndex;
-  int m_warningWidgetIndex; // TODO remove
   int m_visibleWidgetIndex;
   
 signals:
