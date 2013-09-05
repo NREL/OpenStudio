@@ -26,6 +26,8 @@
 #include <QDir>
 #include <QObject>
 
+class QStackedWidget;
+
 namespace openstudio {
 
 namespace model {
@@ -57,6 +59,12 @@ public:
 
 private:
   boost::shared_ptr<UtilityBillsController> m_utilityBillsController;
+  QStackedWidget * m_utilityBillsStackedWidget;
+  int m_warningWidgetIndex;
+  int m_visibleWidgetIndex;
+
+private slots:
+  void showSubTabView(bool showSubTabView);
  
 };
 

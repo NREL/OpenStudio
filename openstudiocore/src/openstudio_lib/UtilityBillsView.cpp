@@ -177,7 +177,7 @@ void UtilityBillsInspectorView::createWidgets()
   QWidget* hiddenWidget = new QWidget();
   m_hiddenWidgetIndex = this->stackedWidget()->insertWidget(0, hiddenWidget);
 
-  QWidget* warningWidget = new QWidget();
+  QWidget* warningWidget = new QWidget(); // TODO remove
   m_warningWidgetIndex = this->stackedWidget()->addWidget(warningWidget);
 
   QWidget* visibleWidget = new QWidget();
@@ -200,7 +200,7 @@ void UtilityBillsInspectorView::createWidgets()
     this, SLOT(updateRunPeriodDates()) );
   OS_ASSERT(isConnected);
 
-  // Warning widget if no weather file
+  // Warning widget if no weather file // TODO remove
 
   vLayout = new QVBoxLayout();
   vLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
@@ -791,9 +791,12 @@ void UtilityBillsInspectorView::updateRunPeriodDates()
 {
   updateRunPeriodDatesLabel();
 
+  // TODO remove
   if(!runPeriodDates()){
     this->stackedWidget()->setCurrentIndex(m_hiddenWidgetIndex);
   }
+
+  showSubTabView(runPeriodDates());
 }
 
 

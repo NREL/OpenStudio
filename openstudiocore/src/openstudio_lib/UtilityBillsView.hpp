@@ -167,9 +167,12 @@ private:
   QString m_peakUnits;
 
   int m_hiddenWidgetIndex;
-  int m_warningWidgetIndex;
+  int m_warningWidgetIndex; // TODO remove
   int m_visibleWidgetIndex;
   
+signals:
+  void showSubTabView(bool showSubTabView);
+
 private slots:
   void addBillingPeriod(bool checked);
   void deleteBillingPeriod(int index);
