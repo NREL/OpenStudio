@@ -20,12 +20,15 @@
 #ifndef UTILITIES_CLOUD_AWSPROVIDER_IMPL_HPP
 #define UTILITIES_CLOUD_AWSPROVIDER_IMPL_HPP
 
+#include <utilities/cloud/CloudProvider.hpp>
 #include <utilities/cloud/CloudProvider_Impl.hpp>
+
+#include <QProcess>
 
 namespace openstudio{
 namespace detail{
 
-  /// AWSProvider is a CloudProvider that provides access to Amazon EC2 resources.
+  /// AWSProvider is a CloudProvider that provides access to Amazon EC2 and CloudWatch services.
   class UTILITIES_API AWSProvider_Impl : public CloudProvider_Impl {
 
     Q_OBJECT
@@ -125,57 +128,69 @@ namespace detail{
     /** @name Class members */
     //@{
 
-    //@}
-
+    // returns the AWS access key
     std::string accessKey() const;
 
+    // returns the AWS secret key
     std::string secretKey() const;
 
+    // performs a cursory regex validation of both keys, and returns true if they match
     bool setKeys(std::string accessKey, std::string secretKey) const;
 
+    // run an action against the AWS-SDK ruby gem
+    QVariantMap awsRequest(std::string request, std::string service = "EC2") const;
+
+    // set the number of worker nodes to start
+    void setNumWorkers(const unsigned numWorkers);
+
+    //@}
+
+  private slots:
+
+    void onServerStarted(int, QProcess::ExitStatus);
+    void onWorkerStarted(int, QProcess::ExitStatus);
+    void onServerStopped(int, QProcess::ExitStatus);
+    void onWorkerStopped(int, QProcess::ExitStatus);
+
   private:
+
+    CloudSession m_cloudSession;
+
+    bool loadCredentials() const;
+    bool saveCredentials() const;
+    bool validAccessKey(std::string accessKey) const;
+    bool validSecretKey(std::string secretKey) const;
+
+    mutable std::string m_accessKey;
+    mutable std::string m_secretKey;
+    mutable bool m_validAccessKey;
+    mutable bool m_validSecretKey;
+
+    unsigned m_numWorkers;
+
+    QProcess* m_startServerProcess;
+    QProcess* m_startWorkerProcess;
+    QProcess* m_stopServerProcess;
+    QProcess* m_stopWorkerProcess;
+    bool m_serverStarted;
+    bool m_workerStarted;
+    bool m_serverStopped;
+    bool m_workerStopped;
+    bool m_terminated;
+
+    mutable std::vector<std::string> m_errors;
+    mutable std::vector<std::string> m_warnings;
+
+    void clearErrorsAndWarnings() const;
+    void logError(const std::string& error) const;
+    void logWarning(const std::string& warning) const;
 
     // configure logging
     REGISTER_LOGGER("utilities.cloud.AWSProvider");
 
-    bool loadCredentials() const;
-
-    bool saveCredentials() const;
-
-    bool validAccessKey(std::string accessKey) const;
-
-    bool validSecretKey(std::string secretKey) const;
-
-    QVariantMap awsRequest(std::string request, std::string service = "EC2") const;
-
-    // members
-
-    mutable std::string m_accessKey;
-
-    mutable std::string m_secretKey;
-
-    mutable bool m_validAccessKey;
-
-    mutable bool m_validSecretKey;
-
-    bool m_userAgreementSigned;
-
-    unsigned m_numWorkers;
-
-    void setNumWorkers(const unsigned numWorkers);
-
-    void clearErrorsAndWarnings() const;
-
-    mutable std::vector<std::string> m_errors;
-
-    mutable std::vector<std::string> m_warnings;
-
-    void logError(const std::string& error) const;
-
-    void logWarning(const std::string& warning) const;
   };
 
-} // detail;
+} // detail
 } // openstudio
 
 #endif // UTILITIES_CLOUD_AWSPROVIDER_IMPL_HPP
