@@ -843,6 +843,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateFanVariableVolume(fan);
       break;
     }
+  case openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical :
+    {
+      model::GroundHeatExchangerVertical groundHeatExchangerVertical = modelObject.cast<GroundHeatExchangerVertical>();
+      retVal = translateGroundHeatExchangerVertical(groundHeatExchangerVertical);
+      break;
+    }
   case openstudio::IddObjectType::OS_HeatBalanceAlgorithm :
     {
       model::HeatBalanceAlgorithm mo = modelObject.cast<HeatBalanceAlgorithm>();

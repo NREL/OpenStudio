@@ -279,6 +279,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(GasEquipmentDefinition);
     REGISTER_CONSTRUCTOR(GasMixture);
     REGISTER_CONSTRUCTOR(GlareSensor);
+	REGISTER_CONSTRUCTOR(GroundHeatExchangerVertical);
     REGISTER_CONSTRUCTOR(HeatBalanceAlgorithm);
     REGISTER_CONSTRUCTOR(HeatExchangerAirToAirSensibleAndLatent);
     REGISTER_CONSTRUCTOR(HotWaterEquipment);
@@ -531,6 +532,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(GasEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(GasMixture);
     REGISTER_COPYCONSTRUCTORS(GlareSensor);
+	REGISTER_COPYCONSTRUCTORS(GroundHeatExchangerVertical);
     REGISTER_COPYCONSTRUCTORS(HeatBalanceAlgorithm);
     REGISTER_COPYCONSTRUCTORS(HeatExchangerAirToAirSensibleAndLatent);
     REGISTER_COPYCONSTRUCTORS(HotWaterEquipment);
