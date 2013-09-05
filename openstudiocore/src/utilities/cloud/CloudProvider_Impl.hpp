@@ -50,6 +50,12 @@ namespace detail{
 
     virtual std::string cloudProviderType() const = 0;
 
+    virtual std::string userAgreementText() const = 0;
+
+    virtual bool userAgreementSigned() const = 0;
+
+    virtual void signUserAgreement(bool agree) = 0;
+
     virtual bool loadSettings(bool overwriteExisting = false) = 0;
 
     virtual bool saveToSettings(bool overwriteExisting = false) const = 0;
@@ -144,18 +150,6 @@ namespace detail{
     /// returns the name of this type of cloud provider, e.g. 'AWSProvider'
     /// blocking call
     virtual std::string type() const = 0;
-
-    /// returns the user agreement text
-    /// blocking call
-    virtual std::string userAgreementText() const = 0;
-
-    /// returns true if the user has signed the user agreement
-    /// blocking call
-    virtual bool userAgreementSigned() const = 0;
-
-    /// signs the user agreement if passed in true, unsigns if passed in false
-    /// blocking call
-    virtual void signUserAgreement(bool agree) = 0;
 
     /// returns true if this computer is connected to the internet
     /// blocking call, clears errors and warnings

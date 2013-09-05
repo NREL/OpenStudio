@@ -38,10 +38,15 @@ namespace openstudio{
     VagrantSettings_Impl::VagrantSettings_Impl(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
                                                const openstudio::path& workerPath, const openstudio::Url& workerUrl,
                                                bool haltOnStop, const std::string& username, const std::string& password)
-      : CloudSettings_Impl(), m_serverPath(serverPath), m_serverUrl(serverUrl), 
+      : CloudSettings_Impl(), m_userAgreementSigned(false),
+        m_serverPath(serverPath), m_serverUrl(serverUrl), 
         m_workerPath(workerPath), m_workerUrl(workerUrl), m_haltOnStop(haltOnStop),
         m_username(username), m_password(password)
     {
+      QSettings settings("OpenStudio", toQString(cloudProviderType()));
+      if (settings.value("userAgreementSigned").toString() == "Yes"){
+        m_userAgreementSigned = true;
+      }
     }
 
     VagrantSettings_Impl::~VagrantSettings_Impl()
@@ -53,9 +58,34 @@ namespace openstudio{
       return VagrantProvider_Impl::cloudProviderType();
     }
 
+    std::string VagrantSettings_Impl::userAgreementText() const
+    {
+      return "Do you agree?";
+    }
+
+    bool VagrantSettings_Impl::userAgreementSigned() const
+    {
+      return m_userAgreementSigned;
+    }
+
+    void VagrantSettings_Impl::signUserAgreement(bool agree)
+    {
+      m_userAgreementSigned = agree;
+      onChange();
+    }
+
     bool VagrantSettings_Impl::loadSettings(bool overwriteExisting)
     {
       QSettings settings("OpenStudio", toQString(cloudProviderType()));
+
+      // only set this if overwriteExisting is true
+      if (overwriteExisting){
+        if (settings.value("userAgreementSigned").toString() == "Yes"){
+          m_userAgreementSigned = true;
+        }else{
+          m_userAgreementSigned = false;
+        }
+      }
 
       if (overwriteExisting || m_serverPath.empty()){
         m_serverPath = toPath(settings.value("serverPath").toString());
@@ -73,6 +103,7 @@ namespace openstudio{
         m_workerUrl = settings.value("workerUrl").toString();
       }
 
+      // only set this if overwriteExisting is true
       if (overwriteExisting){
         if (settings.value("haltOnStop").toString() == "Yes"){
           m_haltOnStop = true;
@@ -81,11 +112,11 @@ namespace openstudio{
         }
       }
 
-      // DLM: i thought we wanted to write these to a file in ~/.ssh?
       if (overwriteExisting || m_username.empty()){
         m_username = settings.value("username").toString().toStdString();
       }
 
+      // TODO: read password from a file in ~/.ssh
       if (overwriteExisting || m_password.empty()){
         m_password = settings.value("password").toString().toStdString();
       }
@@ -102,6 +133,14 @@ namespace openstudio{
     bool VagrantSettings_Impl::saveToSettings(bool overwriteExisting) const
     {
       QSettings settings("OpenStudio", toQString(cloudProviderType()));
+
+      if (overwriteExisting || settings.value("userAgreementSigned").isNull()){
+        if (m_userAgreementSigned){
+          settings.setValue("userAgreementSigned", "Yes");
+        }else{
+          settings.setValue("userAgreementSigned", "No");
+        }
+      }
 
       if (overwriteExisting || settings.value("serverPath").isNull()){
         settings.setValue("serverPath", toQString(m_serverPath));
@@ -127,11 +166,11 @@ namespace openstudio{
         }
       }
 
-      // DLM: i thought we wanted to write these to a file in ~/.ssh?
       if (overwriteExisting || settings.value("username").isNull()){
         settings.setValue("username", toQString(m_username));
       }
 
+      // TODO: write password to a file in ~/.ssh
       if (overwriteExisting || settings.value("password").isNull()){
         settings.setValue("password", toQString(m_password));
       }
@@ -255,36 +294,6 @@ namespace openstudio{
       return VagrantProvider_Impl::cloudProviderType();
     }
 
-    std::string VagrantProvider_Impl::userAgreementText() const
-    {
-      return "Do you agree?";
-    }
-
-    bool VagrantProvider_Impl::userAgreementSigned() const
-    {
-      QSettings settings("OpenStudio", toQString(cloudProviderType()));
-      QString value = settings.value("userAgreementSigned", "No").toString();
-
-      bool result = false;
-      if (value == "Yes"){
-        result = true;
-      }
-
-      return result;
-    }
-
-    void VagrantProvider_Impl::signUserAgreement(bool agree)
-    {
-      QString value;
-      if (agree){
-        value = "Yes";
-      }else{
-        value = "No";
-      }
-      QSettings settings("OpenStudio", toQString(cloudProviderType()));
-      settings.setValue("userAgreementSigned", value);
-    }
-
     bool VagrantProvider_Impl::internetAvailable() const
     {
       clearErrorsAndWarnings();
@@ -403,7 +412,7 @@ namespace openstudio{
     /// non-blocking call, clears errors and warnings
     bool VagrantProvider_Impl::startServer()
     {
-      if (!userAgreementSigned()){
+      if (!m_vagrantSettings.userAgreementSigned()){
         return false;
       }
       if (m_serverStarted){
@@ -457,7 +466,7 @@ namespace openstudio{
 
     bool VagrantProvider_Impl::startWorkers()
     {
-      if (!userAgreementSigned()){
+      if (!m_vagrantSettings.userAgreementSigned()){
         return false;
       }
       if (m_workerStarted){

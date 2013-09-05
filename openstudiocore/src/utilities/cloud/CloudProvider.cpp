@@ -148,7 +148,22 @@ namespace openstudio{
   {
     return getImpl<detail::CloudSettings_Impl>()->cloudProviderType();
   }
-  
+
+  std::string CloudSettings::userAgreementText() const
+  {
+    return getImpl<detail::CloudSettings_Impl>()->userAgreementText();
+  }
+
+  bool CloudSettings::userAgreementSigned() const
+  {
+    return getImpl<detail::CloudSettings_Impl>()->userAgreementSigned();
+  }
+
+  void CloudSettings::signUserAgreement(bool agree)
+  {
+    getImpl<detail::CloudSettings_Impl>()->signUserAgreement(agree);
+  }
+
   bool CloudSettings::loadSettings(bool overwriteExisting)
   {
     return getImpl<detail::CloudSettings_Impl>()->loadSettings(overwriteExisting);
@@ -231,21 +246,6 @@ namespace openstudio{
   std::string CloudProvider::type() const
   {
     return getImpl<detail::CloudProvider_Impl>()->type();
-  }
-
-  std::string CloudProvider::userAgreementText() const
-  {
-    return getImpl<detail::CloudProvider_Impl>()->userAgreementText();
-  }
-
-  bool CloudProvider::userAgreementSigned() const
-  {
-    return getImpl<detail::CloudProvider_Impl>()->userAgreementSigned();
-  }
-
-  void CloudProvider::signUserAgreement(bool agree)
-  {
-    getImpl<detail::CloudProvider_Impl>()->signUserAgreement(agree);
   }
 
   bool CloudProvider::internetAvailable() const

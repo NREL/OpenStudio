@@ -58,6 +58,12 @@ namespace detail{
 
     virtual std::string cloudProviderType() const;
 
+    virtual std::string userAgreementText() const;
+
+    virtual bool userAgreementSigned() const;
+
+    virtual void signUserAgreement(bool agree);
+
     virtual bool loadSettings(bool overwriteExisting = false);
 
     virtual bool saveToSettings(bool overwriteExisting = false) const;
@@ -100,6 +106,7 @@ namespace detail{
     // configure logging
     REGISTER_LOGGER("utilities.cloud.VagrantSettings");
 
+    bool m_userAgreementSigned;
     openstudio::path m_serverPath;
     openstudio::Url m_serverUrl;
     openstudio::path m_workerPath;
@@ -167,18 +174,6 @@ namespace detail{
     /// returns the name of this type of cloud provider, e.g. 'AWSProvider'
     /// blocking call
     virtual std::string type() const;
-
-    /// returns the user agreement text
-    /// blocking call
-    virtual std::string userAgreementText() const;
-
-    /// returns true if the user has signed the user agreement
-    /// blocking call
-    virtual bool userAgreementSigned() const;
-
-    /// signs the user agreement if passed in true, unsigns if passed in false
-    /// blocking call
-    virtual void signUserAgreement(bool agree);
 
     /// returns true if this computer is connected to the internet
     /// blocking call, clears errors and warnings
