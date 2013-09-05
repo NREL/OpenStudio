@@ -22,9 +22,14 @@
 
 // utilities
 #include <project/AttributeRecord.hpp>
+#include <project/CloudSessionRecord.hpp>
+#include <project/CloudSettingsRecord.hpp>
 #include <project/FileReferenceRecord.hpp>
 #include <project/TagRecord.hpp>
+#include <project/UrlRecord.hpp>
 #include <project/URLSearchPathRecord.hpp>
+#include <project/VagrantSessionRecord.hpp>
+#include <project/VagrantSettingsRecord.hpp>
 
 // runmanager
 #include <project/WorkflowRecord.hpp>
@@ -55,9 +60,14 @@
 
 // utilities
 #include <project/AttributeRecord_Impl.hpp>
+#include <project/CloudSessionRecord_Impl.hpp>
+#include <project/CloudSettingsRecord_Impl.hpp>
 #include <project/FileReferenceRecord_Impl.hpp>
 #include <project/TagRecord_Impl.hpp>
+#include <project/UrlRecord_Impl.hpp>
 #include <project/URLSearchPathRecord_Impl.hpp>
+#include <project/VagrantSessionRecord_Impl.hpp>
+#include <project/VagrantSettingsRecord_Impl.hpp>
 
 // runmanager
 #include <project/WorkflowRecord_Impl.hpp>

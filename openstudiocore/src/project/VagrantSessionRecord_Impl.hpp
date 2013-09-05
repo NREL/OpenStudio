@@ -23,13 +23,10 @@
 #include <project/ProjectAPI.hpp>
 #include <project/CloudSessionRecord_Impl.hpp>
 
-// TODO: Delete this include if no derived classes (and no VagrantSessionRecordType enum).
-#include <project/VagrantSessionRecord.hpp>
-
 namespace openstudio {
-namespace NAMESPACE {
-  class VagrantSession;
-}
+
+class VagrantSession;
+
 namespace project {
 
 namespace detail {
@@ -41,12 +38,7 @@ namespace detail {
     /** @name Constructors and Destructors */
     //@{
 
-    // TODO: May need to remove type enum if VagrantSession is a leaf of the inheritance tree.
-    // TODO: Replace ProjectDatabase& database with parent Record and/or add more 
-    // construtors to match public class.
-    // TODO: Find-replace on 'NAMESPACE'.
-    VagrantSessionRecord_Impl(const NAMESPACE::VagrantSession& vagrantSession,
-                              const VagrantSessionRecordType& vagrantSessionRecordType,
+    VagrantSessionRecord_Impl(const VagrantSession& vagrantSession,
                               ProjectDatabase& database);
 
     /** Constructor from query. Throws if bad query. */
@@ -58,20 +50,6 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    /** Returns the direct parent of this object, if it exists. */
-    virtual boost::optional<ObjectRecord> parent() const;
-
-    /** Returns objects directly owned by this Record. Children are removed when this Record 
-     *  is removed. */
-    virtual std::vector<ObjectRecord> children() const;
-
-    /** Returns objects referenced, but not owned, by this Record. */
-    virtual std::vector<ObjectRecord> resources() const;
-
-    /** Returns join relationships between this object and others. Such relationships will be 
-     *  removed when either record in the relationship is removed. */
-    virtual std::vector<JoinRecord> joinRecords() const;
-
     /** Save the row that corresponds to this record in projectDatabase. */
     virtual void saveRow(ProjectDatabase& projectDatabase);
 
@@ -79,11 +57,9 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // ADD METHODS FOR RETRIEVING PARENT, CHILD, AND RESOURCE RECORDS AS DESIRED
+    virtual CloudSession cloudSession() const;
 
-    // ADD METHODS FOR GETTING/SETTING SPECIFIC DATA FIELDS AS DESIRED
-
-    NAMESPACE::VagrantSession vagrantSession() const;
+    VagrantSession vagrantSession() const;
 
     //@}
    protected:
@@ -104,11 +80,6 @@ namespace detail {
 
    private:
     REGISTER_LOGGER("openstudio.project.VagrantSessionRecord");
-
-    // TODO: Delete enums if no derived classes.
-    VagrantSessionRecordType m_vagrantSessionRecordType;
-
-    VagrantSessionRecordType m_lastVagrantSessionRecordType;
   };
 
 } // detail

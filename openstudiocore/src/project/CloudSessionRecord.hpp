@@ -128,6 +128,9 @@ class PROJECT_API CloudSessionRecord : public ObjectRecord {
                      ProjectDatabase database);
 
   /// @endcond
+
+  void constructRelatedRecords(const CloudSession& cloudSession,
+                               ProjectDatabase& databaase);
  private:
   REGISTER_LOGGER("openstudio.project.CloudSessionRecord");
 };

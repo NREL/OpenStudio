@@ -23,14 +23,13 @@
 #include <project/ProjectAPI.hpp>
 #include <project/CloudSettingsRecord_Impl.hpp>
 
-// TODO: Delete this include if no derived classes (and no VagrantSettingsRecordType enum).
-#include <project/VagrantSettingsRecord.hpp>
-
 namespace openstudio {
-namespace NAMESPACE {
-  class VagrantSettings;
-}
+
+class VagrantSettings;
+
 namespace project {
+
+class UrlRecord;
 
 namespace detail {
 
@@ -41,12 +40,7 @@ namespace detail {
     /** @name Constructors and Destructors */
     //@{
 
-    // TODO: May need to remove type enum if VagrantSettings is a leaf of the inheritance tree.
-    // TODO: Replace ProjectDatabase& database with parent Record and/or add more 
-    // construtors to match public class.
-    // TODO: Find-replace on 'NAMESPACE'.
-    VagrantSettingsRecord_Impl(const NAMESPACE::VagrantSettings& vagrantSettings,
-                               const VagrantSettingsRecordType& vagrantSettingsRecordType,
+    VagrantSettingsRecord_Impl(const VagrantSettings& vagrantSettings,
                                ProjectDatabase& database);
 
     /** Constructor from query. Throws if bad query. */
@@ -58,19 +52,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    /** Returns the direct parent of this object, if it exists. */
-    virtual boost::optional<ObjectRecord> parent() const;
-
     /** Returns objects directly owned by this Record. Children are removed when this Record 
      *  is removed. */
     virtual std::vector<ObjectRecord> children() const;
-
-    /** Returns objects referenced, but not owned, by this Record. */
-    virtual std::vector<ObjectRecord> resources() const;
-
-    /** Returns join relationships between this object and others. Such relationships will be 
-     *  removed when either record in the relationship is removed. */
-    virtual std::vector<JoinRecord> joinRecords() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
     virtual void saveRow(ProjectDatabase& projectDatabase);
@@ -79,11 +63,33 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // ADD METHODS FOR RETRIEVING PARENT, CHILD, AND RESOURCE RECORDS AS DESIRED
+    UrlRecord serverUrlRecord() const;
 
-    // ADD METHODS FOR GETTING/SETTING SPECIFIC DATA FIELDS AS DESIRED
+    UrlRecord workerUrlRecord() const;
 
-    NAMESPACE::VagrantSettings vagrantSettings() const;
+    virtual CloudSettings cloudSettings() const;
+
+    VagrantSettings vagrantSettings() const;
+
+    //@}
+        /** @name Setters */
+    //@{
+
+    /** Impl-only method. Reverts record id values back to last state. For use in constructor
+     *  so can access old related records for comparison and possible removal. */
+    void revertToLastRecordIds();
+
+    /** Impl-only method. */
+    void setServerUrlRecordId(int id);
+
+    /** Impl-only method. */
+    void clearServerUrlRecordId();
+
+    /** Impl-only method. */
+    void setWorkerUrlRecordId(int id);
+
+    /** Impl-only method. */
+    void clearWorkerUrlRecordId();
 
     //@}
    protected:
@@ -105,10 +111,21 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.project.VagrantSettingsRecord");
 
-    // TODO: Delete enums if no derived classes.
-    VagrantSettingsRecordType m_vagrantSettingsRecordType;
+    bool m_userAgreementSigned;
+    openstudio::path m_serverPath;
+    int m_serverUrlRecordId;
+    openstudio::path m_workerPath;
+    int m_workerUrlRecordId;
+    bool m_haltOnStop;
+    std::string m_username;
 
-    VagrantSettingsRecordType m_lastVagrantSettingsRecordType;
+    bool m_lastUserAgreementSigned;
+    openstudio::path m_lastServerPath;
+    int m_lastServerUrlRecordId;
+    openstudio::path m_lastWorkerPath;
+    int m_lastWorkerUrlRecordId;
+    bool m_lastHaltOnStop;
+    std::string m_lastUsername;
   };
 
 } // detail

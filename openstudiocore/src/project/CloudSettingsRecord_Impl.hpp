@@ -23,13 +23,12 @@
 #include <project/ProjectAPI.hpp>
 #include <project/ObjectRecord_Impl.hpp>
 
-// TODO: Delete this include if no derived classes (and no CloudSettingsRecordType enum).
 #include <project/CloudSettingsRecord.hpp>
 
 namespace openstudio {
-namespace NAMESPACE {
-  class CloudSettings;
-}
+
+class CloudSettings;
+
 namespace project {
 
 namespace detail {
@@ -41,11 +40,7 @@ namespace detail {
     /** @name Constructors and Destructors */
     //@{
 
-    // TODO: May need to remove type enum if CloudSettings is a leaf of the inheritance tree.
-    // TODO: Replace ProjectDatabase& database with parent Record and/or add more 
-    // construtors to match public class.
-    // TODO: Find-replace on 'NAMESPACE'.
-    CloudSettingsRecord_Impl(const NAMESPACE::CloudSettings& cloudSettings,
+    CloudSettingsRecord_Impl(const CloudSettings& cloudSettings,
                              const CloudSettingsRecordType& cloudSettingsRecordType,
                              ProjectDatabase& database);
 
@@ -83,11 +78,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // ADD METHODS FOR RETRIEVING PARENT, CHILD, AND RESOURCE RECORDS AS DESIRED
-
-    // ADD METHODS FOR GETTING/SETTING SPECIFIC DATA FIELDS AS DESIRED
-
-    NAMESPACE::CloudSettings cloudSettings() const;
+    virtual CloudSettings cloudSettings() const = 0;
 
     //@}
    protected:
@@ -109,7 +100,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.project.CloudSettingsRecord");
 
-    // TODO: Delete enums if no derived classes.
     CloudSettingsRecordType m_cloudSettingsRecordType;
 
     CloudSettingsRecordType m_lastCloudSettingsRecordType;

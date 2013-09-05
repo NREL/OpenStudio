@@ -25,6 +25,8 @@
 
 #include <project/ProjectDatabase.hpp>
 #include <project/AnalysisRecord.hpp>
+#include <project/CloudSessionRecord.hpp>
+#include <project/CloudSettingsRecord.hpp>
 #include <project/DataPointRecord.hpp>
 #include <project/DakotaAlgorithmRecord.hpp>
 #include <project/DakotaAlgorithmRecord_Impl.hpp>
@@ -93,6 +95,7 @@ namespace detail {
     : m_projectDir(completeAndNormalize(projectDir)),
       m_analysisDriver(analysisDriver),
       m_analysis(analysis),
+      m_cloudSessionSettingsDirty(false),
       m_logFile(projectDir / toPath("project.log"))
   {
     if (m_analysis) {
@@ -314,6 +317,38 @@ namespace detail {
 
   bool SimpleProject_Impl::isRunning() const {
     return analysisDriver().isRunning();
+  }
+
+  boost::optional<CloudSession> SimpleProject_Impl::cloudSession() const {
+    if (!m_cloudSession && !m_cloudSessionSettingsDirty) {
+      // check database
+      CloudSessionRecordVector cloudSessionRecords = CloudSessionRecord::getCloudSessionRecords(projectDatabase());
+      if (cloudSessionRecords.size() > 1u) {
+        LOG(Debug,"SimpleProject has " << cloudSessionRecords.size() 
+            << " CloudSessionRecords saved in the ProjectDatabase. "
+            << "Was expecting to have 0 or 1. Will use the first one.");
+      }
+      if (!cloudSessionRecords.empty()) {
+        m_cloudSession = cloudSessionRecords[0].cloudSession();
+      }
+    }
+    return m_cloudSession;
+  }
+
+  boost::optional<CloudSettings> SimpleProject_Impl::cloudSettings() const {
+    if (!m_cloudSettings && !m_cloudSessionSettingsDirty) {
+      // check database
+      CloudSettingsRecordVector cloudSettingsRecords = CloudSettingsRecord::getCloudSettingsRecords(projectDatabase());
+      if (cloudSettingsRecords.size() > 1u) {
+        LOG(Debug,"SimpleProject has " << cloudSettingsRecords.size() 
+            << " CloudSettingsRecords saved in the ProjectDatabase. "
+            << "Was expecting to have 0 or 1. Will use the first one.");
+      }
+      if (!cloudSettingsRecords.empty()) {
+        m_cloudSettings = cloudSettingsRecords[0].cloudSettings();
+      }
+    }
+    return m_cloudSettings;
   }
 
   AnalysisRunOptions SimpleProject_Impl::standardRunOptions() const {
@@ -862,6 +897,26 @@ namespace detail {
     return result;
   }
 
+  void SimpleProject_Impl::setCloudSession(const CloudSession& session) {
+    m_cloudSession = session;
+    m_cloudSessionSettingsDirty = true;
+  }
+
+  void SimpleProject_Impl::clearCloudSession() {
+    m_cloudSession.reset();
+    m_cloudSessionSettingsDirty = true;
+  }
+
+  void SimpleProject_Impl::setCloudSettings(const CloudSettings& settings) {
+    m_cloudSettings = settings;
+    m_cloudSessionSettingsDirty = true;
+  }
+
+  void SimpleProject_Impl::clearCloudSettings() {
+    m_cloudSettings.reset();
+    m_cloudSessionSettingsDirty = true;
+  }
+
   openstudio::path SimpleProject_Impl::zipFileForCloud() const {
     openstudio::path tempDir;
     if (m_zipFileForCloud.empty()) {
@@ -1163,6 +1218,78 @@ namespace detail {
     analysis::Analysis analysis = this->analysis();
     AnalysisDriver analysisDriver = this->analysisDriver();
     saveAnalysis(analysis, analysisDriver);
+
+    if (m_cloudSessionSettingsDirty) {
+      {
+        // remove old records as needed
+        ProjectDatabase database = analysisDriver.database();
+        ObjectRecordVector toRemove;
+
+        CloudSessionRecordVector cloudSessions = CloudSessionRecord::getCloudSessionRecords(database);
+        if (!cloudSessions.empty()) {
+          if (!m_cloudSession || (cloudSessions[0].handle() != m_cloudSession->uuid())) {
+            toRemove.push_back(cloudSessions[0]);
+          }
+          if (cloudSessions.size() > 1u) {
+            LOG(Debug,"Multiple CloudSession records found.");
+          }
+        }
+
+        CloudSettingsRecordVector cloudSettings = CloudSettingsRecord::getCloudSettingsRecords(database);
+        if (!cloudSettings.empty()) {
+          if (!m_cloudSettings || (cloudSettings[0].handle() != m_cloudSettings->uuid())) {
+            toRemove.push_back(cloudSettings[0]);
+          }
+          if (cloudSettings.size() > 1u) {
+            LOG(Debug,"Multiple CloudSettings records found.");
+          }
+        }
+
+        if (!toRemove.empty()) {
+
+          bool didStartTransaction = database.startTransaction();
+          if (!didStartTransaction) {
+            LOG(Debug,"Unable to start transation.");
+          }
+
+          BOOST_FOREACH(ObjectRecord& nextToRemove,toRemove) {
+            database.removeRecord(nextToRemove);
+          }
+
+          database.save();
+          if (disStartTransaction) {
+            database.commitTransaction();
+          }
+        }
+
+        database.unloadUnusedCleanRecords();
+      }
+
+      {
+        // Save session and settings as needed
+        ProjectDatabase database = analysisDriver.database();
+
+        bool didStartTransaction = database.startTransaction();
+        if (!didStartTransaction) {
+          LOG(Debug,"Unable to start transation.");
+        }
+
+        if (m_cloudSession) {
+          CloudSessionRecord cloudSessionRecord = CloudSessionRecord::factoryFromCloudSession(*m_cloudSession,database);
+        }
+
+        if (m_cloudSettings) {
+          CloudSettingsRecord cloudSettingsRecord = CloudSettingsRecord::factoryFromCloudSettings(*m_cloudSettings,database);
+        }
+
+        database.save();
+        if (disStartTransaction) {
+          database.commitTransaction();
+        }
+      }
+
+      m_cloudSessionSettingsDirty = false;
+    }
   }
 
   bool SimpleProject_Impl::saveAs(const openstudio::path& newProjectDir) const {
@@ -1822,6 +1949,14 @@ bool SimpleProject::isRunning() const {
   return getImpl()->isRunning();
 }
 
+boost::optional<CloudSession> SimpleProject::cloudSession() const {
+  return getImpl()->cloudSession();
+}
+
+boost::optional<CloudSettings> SimpleProject::cloudSettings() const {
+  return getImpl()->cloudSettings();
+}
+
 bool SimpleProject::modelsRequireUpdate() const {
   return getImpl()->modelsRequireUpdate();
 }
@@ -1871,6 +2006,22 @@ bool SimpleProject::clearAllResults() {
 
 bool SimpleProject::removeAllDataPoints() {
   return getImpl()->removeAllDataPoints();
+}
+
+void SimpleProject::setCloudSession(const CloudSession& session) {
+  return getImpl()->setCloudSession(session);
+}
+
+void SimpleProject::clearCloudSession() {
+  return getImpl()->clearCloudSession();
+}
+
+void SimpleProject::setCloudSettings(const CloudSettings& settings) {
+  return getImpl()->setCloudSettings(settings);
+}
+
+void SimpleProject::clearCloudSettings() {
+  return getImpl()->clearCloudSettings();
 }
 
 openstudio::path SimpleProject::zipFileForCloud() const {

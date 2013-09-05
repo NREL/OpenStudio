@@ -24,9 +24,9 @@
 #include <project/ObjectRecord.hpp>
 
 namespace openstudio {
-namespace NAMESPACE {
-  class CloudSettings;
-}
+
+class CloudSettings;
+
 namespace project {
 
 namespace detail {
@@ -35,18 +35,17 @@ namespace detail {
 
 } // detail
 
-// TODO: Populate or delete this enumeration if there are/are not any derived types, respectively.
 /** \class CloudSettingsRecordType
  *  \brief ObjectRecord types that derive from CloudSettingsRecord.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
  *  macro call is:
  *  \code
 OPENSTUDIO_ENUM(CloudSettingsRecordType,
-    ((CloudSettingsRecordDerivedRecord1))
+    ((VagrantSettingsRecord))
 );
  *  \endcode */
 OPENSTUDIO_ENUM(CloudSettingsRecordType,
-    ((CloudSettingsRecordDerivedRecord1))
+    ((VagrantSettingsRecord))
 );
 
 /** \class CloudSettingsRecordColumns
@@ -62,8 +61,14 @@ OPENSTUDIO_ENUM(CloudSettingsRecordColumns,
   ((timestampCreate)(TEXT)(5))
   ((timestampLast)(TEXT)(6))
   ((uuidLast)(TEXT)(7))
-  // TODO: Add Columns to Record Class (and Derived-Class)-Specific Data.
   ((cloudSettingsRecordType)(INTEGER)(8))
+  ((userAgreementSigned)(BOOLEAN)(9))
+  ((serverPath)(TEXT)(10))
+  ((serverUrlRecordId)(INTEGER)(11))
+  ((workerPath)(TEXT)(12))
+  ((workerUrlRecordId)(13))
+  ((haltOnStop)(BOOLEAN)(14))
+  ((username)(TEXT)(15))
 );
 
 /** CloudSettingsRecord is a ObjectRecord. */
@@ -77,22 +82,12 @@ class PROJECT_API CloudSettingsRecord : public ObjectRecord {
   /** @name Constructors and Destructors */
   //@{
 
-  // TODO: Delete if CloudSettings is abstract, make private if CloudSettings is concrete and has derived classes.
-  // TODO: Replace ProjectDatabase& database (or add another object if it is ok for CloudSettingsRecord to be and orphan) with const& to parent Record if the Table contains a parent id.
-  // TODO: Find-replace on 'NAMESPACE'.
-  CloudSettingsRecord(const NAMESPACE::CloudSettings& cloudSettings, ProjectDatabase& database);
-
-  // TODO: Delete if CloudSettings is abstract, make private if CloudSettings is concrete and has derived classes.
-  CloudSettingsRecord(const QSqlQuery& query, ProjectDatabase& database);
-
   virtual ~CloudSettingsRecord() {}
 
   //@}
 
-  // TODO: Add a call to createTable in ProjectDatabase_Impl::initialize().
   static std::string databaseTableName();
 
-  // TODO: Add a call to this updatePathData method in ProjectDatabase_Impl::updatePathData.
   static void updatePathData(ProjectDatabase database,
                              const openstudio::path& originalBase,
                              const openstudio::path& newBase);
@@ -101,8 +96,7 @@ class PROJECT_API CloudSettingsRecord : public ObjectRecord {
    *  derived type. */
   static boost::optional<CloudSettingsRecord> factoryFromQuery(const QSqlQuery& query, ProjectDatabase& database);
 
-  // TODO: Delete if no derived classes.
-  static CloudSettingsRecord factoryFromCloudSettings(const NAMESPACE::CloudSettings& cloudSettings, ProjectDatabase& database);
+  static CloudSettingsRecord factoryFromCloudSettings(const CloudSettings& cloudSettings, ProjectDatabase& database);
 
   static std::vector<CloudSettingsRecord> getCloudSettingsRecords(ProjectDatabase& database);
 
@@ -111,11 +105,7 @@ class PROJECT_API CloudSettingsRecord : public ObjectRecord {
   /** @name Getters */
   //@{
 
-  // ADD METHODS FOR RETRIEVING PARENT, CHILD, AND RESOURCE RECORDS AS DESIRED
-
-  // ADD METHODS FOR GETTING/SETTING SPECIFIC DATA FIELDS AS DESIRED
-
-  NAMESPACE::CloudSettings cloudSettings() const;
+  CloudSettings cloudSettings() const;
 
   //@}
  protected:

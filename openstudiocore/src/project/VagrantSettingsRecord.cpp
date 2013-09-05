@@ -20,11 +20,10 @@
 #include <project/VagrantSettingsRecord.hpp>
 #include <project/VagrantSettingsRecord_Impl.hpp>
 
-#include <project/JoinRecord.hpp>
-// TODO: Add derived class includes for factory methods if this is a base class.
+#include <project/ProjectDatabase.hpp>
+#include <project/UrlRecord.hpp>
 
-// TODO: Replace with derived class includes if this is a base class.
-#include <NAMESPACE/VagrantSettings.hpp>
+#include <utilities/cloud/VagrantProvider.hpp>
 
 #include <utilities/core/Assert.hpp>
 
@@ -33,15 +32,17 @@ namespace project {
 
 namespace detail {
 
-  VagrantSettingsRecord_Impl::VagrantSettingsRecord_Impl(const NAMESPACE::VagrantSettings& vagrantSettings,
-                                                         const VagrantSettingsRecordType& vagrantSettingsRecordType,
+  VagrantSettingsRecord_Impl::VagrantSettingsRecord_Impl(const VagrantSettings& vagrantSettings,
                                                          ProjectDatabase& database)
-    : CloudSettingsRecord_Impl(vagrantSettings, database),
-  // TODO: Delete member enum initialization if deleted from _Impl.hpp
-      m_vagrantSettingsRecordType(vagrantSettingsRecordType)
+    : CloudSettingsRecord_Impl(vagrantSettings, 
+                               CloudSettingsRecordType::VagrantSettingsRecord,
+                               database),
+      m_userAgreementSigned(vagrantSettings.userAgreementSigned()),
+      m_serverPath(vagrantSettings.serverPath()),
+      m_workerPath(vagrantSettings.workerPath()),
+      m_haltOnStop(vagrantSettings.haltOnStop()),
+      m_username(vagrantSettings.username())
   {
-    OS_ASSERT(false);
-    // TODO: Initialize data members, check constructor call for base class.
   }
 
   VagrantSettingsRecord_Impl::VagrantSettingsRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
@@ -53,53 +54,39 @@ namespace detail {
 
     QVariant value;
 
-    // TODO: Delete deserialization of enum if deleted from _Impl.hpp
-    value = query.value(VagrantSettingsRecord::ColumnsType::vagrantSettingsRecordType);
+    value = query.value(VagrantSettingsRecord::ColumnsType::userAgreementSigned);
     OS_ASSERT(value.isValid() && !value.isNull());
-    m_vagrantSettingsRecordType = VagrantSettingsRecordType(value.toInt());
+    m_userAgreementSigned = value.toBool();
 
-    // TODO: Extract data members from query. Templates follow.
+    value = query.value(VagrantSettingsRecord::ColumnsType::serverPath);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_serverPath = toPath(value.toString());
 
-    // Required data member
-    // value = query.value(VagrantSettingsRecord::ColumnsType::DATAMEMBERNAME);
-    // OS_ASSERT(value.isValid() && !value.isNull());
-    // m_DATAMEMBERNAME = value.toTYPE();
+    value = query.value(VagrantSettingsRecord::ColumnsType::serverUrlRecordId);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_serverUrlRecordId = value.toInt();
 
-    // Optional data member
-    // value = query.value(VagrantSettingsRecord::ColumnsType::DATAMEMBERNAME);
-    // if (value.isValid() && !value.isNull()) {
-    //   m_DATAMEMBERNAME = value.toTYPE();
-    // }
+    value = query.value(VagrantSettingsRecord::ColumnsType::workerPath);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_workerPath = toPath(value.toString());
 
-  }
+    value = query.value(VagrantSettingsRecord::ColumnsType::workerUrlRecordId);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_workerUrlRecordId = value.toInt();
 
-  boost::optional<ObjectRecord> VagrantSettingsRecord_Impl::parent() const {
-    // Return this object's parent, if it has one. See ComponentAttributeRecord_Impl
-    // for an example.
-    OS_ASSERT(false);
-    return boost::none;
+    value = query.value(VagrantSettingsRecord::ColumnsType::haltOnStop);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_haltOnStop = value.toBool();
+
+    value = query.value(VagrantSettingsRecord::ColumnsType::username);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_username = value.toString().toStdString();
   }
 
   std::vector<ObjectRecord> VagrantSettingsRecord_Impl::children() const {
-    // Return this object's children. See ComponentReferenceRecord_Impl for an example.
-    OS_ASSERT(false);
     ObjectRecordVector result;
-    return result;
-  }
-
-  std::vector<ObjectRecord> VagrantSettingsRecord_Impl::resources() const {
-    // Return this object's resources. See ModelObjectActionSetRelationshipRecord_Impl
-    // for an example.
-    OS_ASSERT(false);
-    ObjectRecordVector result;
-    return result;
-  }
-
-  std::vector<JoinRecord> VagrantSettingsRecord_Impl::joinRecords() const {
-    // Return the join relationships between this object and others. See
-    // ModelObjectActionSetRelationshipRecord_Impl for an example.
-    OS_ASSERT(false);
-    JoinRecordVector result;
+    result.push_back(serverUrlRecord().cast<ObjectRecord>());
+    result.push_back(workerUrlRecord().cast<ObjectRecord>());
     return result;
   }
 
@@ -110,25 +97,63 @@ namespace detail {
     assertExec(query);
   }
 
-  NAMESPACE::VagrantSettings VagrantSettingsRecord::vagrantSettings() const {
-    // TODO: De-serialize the object here.
-    OS_ASSERT(false);
+  UrlRecord VagrantSettingsRecord::serverUrlRecord() const {
+    ProjectDatabase database = projectDatabase();
+    return UrlRecord::getUrlRecord(m_serverUrlRecordId,database).get();
+  }
+
+  UrlRecord VagrantSettingsRecord::workerUrlRecord() const {
+    ProjectDatabase database = projectDatabase();
+    return UrlRecord::getUrlRecord(m_workerUrlRecordId,database).get();
+  }
+
+  CloudSettings VagrantSettingsRecord::cloudSettings() const {
+    return vagrantSettings.cast<CloudSettings>();
+  }
+
+  VagrantSettings VagrantSettingsRecord::vagrantSettings() const {
+    return VagrantSettings(handle(),
+                           uuidLast(),
+                           m_userAgreementSigned,
+                           m_serverPath,
+                           serverUrlRecord().url(),
+                           m_workerPath,
+                           workerUrlRecord().url(),
+                           m_haltOnStop,
+                           m_username);
+  }
+
+  void VagrantSettingsRecord_Impl::revertToLastRecordIds() {
+    m_serverUrlRecordId = m_lastServerUrlRecordId;
+    m_workerUrlRecordId = m_lastWorkerUrlRecordId;
+  }
+
+  void VagrantSettingsRecord_Impl::setServerUrlRecordId(int id) {
+    m_serverUrlRecordId = id;
+  }
+
+  void VagrantSettingsRecord_Impl::clearServerUrlRecordId() {
+    m_serverUrlRecordId.reset();
+  }
+
+  void VagrantSettingsRecord_Impl::setWorkerUrlRecordId(int id) {
+    m_workerUrlRecordId = id;
+  }
+
+  void VagrantSettingsRecord_Impl::clearWorkerUrlRecordId() {
+    m_workerUrlRecordId.reset();
   }
 
   void VagrantSettingsRecord_Impl::bindValues(QSqlQuery& query) const {
     CloudSettingsRecord_Impl::bindValues(query);
 
-    // TODO: Delete bind for enum if no derived classes.
-    query.bindValue(VagrantSettingsRecord::ColumnsType::vagrantSettingsRecordType,m_vagrantSettingsRecordType.value());
-    // Template for required data.
-    // query.bindValue(VagrantSettingsRecord::ColumnsType::DATAMEMBERNAME,m_DATAMEMBERNAME);
-    // Template for optional data.
-    // if (m_DATAMEMBERNAME) {
-    //   query.bindValue(VagrantSettingsRecord::ColumnsType::DATAMEMBERNAME,*m_DATAMEMBERNAME);
-    // }
-    // else {
-    //   query.bindValue(VagrantSettingsRecord::ColumnsType::DATAMEMBERNAME,QVariant(QVariant::TYPE));
-    // }
+    query.bindValue(VagrantSettingsRecord::ColumnsType::userAgreementSigned,m_userAgreementSigned);
+    query.bindValue(VagrantSettingsRecord::ColumnsType::serverPath,toQString(m_serverPath));
+    query.bindValue(VagrantSettingsRecord::ColumnsType::serverUrlRecordId,m_serverUrlRecordId);
+    query.bindValue(VagrantSettingsRecord::ColumnsType::workerPath,toQString(m_workerPath));
+    query.bindValue(VagrantSettingsRecord::ColumnsType::workerUrlRecordId,m_workerUrlRecordId);
+    query.bindValue(VagrantSettingsRecord::ColumnsType::haltOnStop,m_haltOnStop);
+    query.bindValue(VagrantSettingsRecord::ColumnsType::username,m_username);
   }
 
   void VagrantSettingsRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
@@ -140,24 +165,33 @@ namespace detail {
 
     QVariant value;
 
-    // TODO: Delete if no derived classes.
-    value = query.value(VagrantSettingsRecord::ColumnsType::vagrantSettingsRecordType);
+    value = query.value(VagrantSettingsRecord::ColumnsType::userAgreementSigned);
     OS_ASSERT(value.isValid() && !value.isNull());
-    m_lastVagrantSettingsRecordType = VagrantSettingsRecordType(value.toInt());
+    m_lastUserAgreementSigned = value.toBool();
 
-    // Template for required data.
-    // value = query.value(VagrantSettingsRecord::ColumnsType::DATAMEMBERNAME);
-    // OS_ASSERT(value.isValid() && !value.isNull());
-    // m_lastDATAMEMBERNAME = value.toTYPE();
+    value = query.value(VagrantSettingsRecord::ColumnsType::serverPath);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastServerPath = toPath(value.toString());
 
-    // Template for optional data.
-    // value = query.value(VagrantSettingsRecord::ColumnsType::DATAMEMBERNAME);
-    // if (value.isValid() && !value.isNull()) {
-    //   m_lastDATAMEMBERNAME = value.toTYPE();
-    // }
-    // else {
-    //   m_lastDATAMEMBERNAME.reset();
-    // }
+    value = query.value(VagrantSettingsRecord::ColumnsType::serverUrlRecordId);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastServerUrlRecordId = value.toInt();
+
+    value = query.value(VagrantSettingsRecord::ColumnsType::workerPath);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastWorkerPath = toPath(value.toString());
+
+    value = query.value(VagrantSettingsRecord::ColumnsType::workerUrlRecordId);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastWorkerUrlRecordId = value.toInt();
+
+    value = query.value(VagrantSettingsRecord::ColumnsType::haltOnStop);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastHaltOnStop = value.toBool();
+
+    value = query.value(VagrantSettingsRecord::ColumnsType::username);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastUsername = value.toString().toStdString();
   }
 
   bool VagrantSettingsRecord_Impl::compareValues(const QSqlQuery& query) const {
@@ -169,24 +203,33 @@ namespace detail {
 
     QVariant value;
 
-    // TODO: Delete if no derived classes.
-    value = query.value(VagrantSettingsRecord::ColumnsType::vagrantSettingsRecordType);
+    value = query.value(VagrantSettingsRecord::ColumnsType::userAgreementSigned);
     OS_ASSERT(value.isValid() && !value.isNull());
-    result = result && (m_vagrantSettingsRecordType == VagrantSettingsRecordType(value.toInt()));
+    result = result && (m_userAgreementSigned == value.toBool());
 
-    // Template for required data.
-    // value = query.value(VagrantSettingsRecord::ColumnsType::DATAMEMBERNAME);
-    // OS_ASSERT(value.isValid() && !value.isNull());
-    // result = result && (m_DATAMEMBERNAME == value.toTYPE());
+    value = query.value(VagrantSettingsRecord::ColumnsType::serverPath);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_serverPath == toPath(value.toString()));
 
-    // Template for optional data.
-    // value = query.value(VagrantSettingsRecord::ColumnsType::DATAMEMBERNAME);
-    // if (value.isValid() && !value.isNull()) {
-    //   result = result && m_DATAMEMBERNAME && (*m_DATAMEMBERNAME == value.toTYPE());
-    // }
-    // else {
-    //   result = result && !m_DATAMEMBERNAME;
-    // }
+    value = query.value(VagrantSettingsRecord::ColumnsType::serverUrlRecordId);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_serverUrlRecordId == value.toInt());
+
+    value = query.value(VagrantSettingsRecord::ColumnsType::workerPath);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_workerPath == toPath(value.toString()));
+
+    value = query.value(VagrantSettingsRecord::ColumnsType::workerUrlRecordId);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_workerUrlRecordId == value.toInt());
+
+    value = query.value(VagrantSettingsRecord::ColumnsType::haltOnStop);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_haltOnStop == value.toBool());
+
+    value = query.value(VagrantSettingsRecord::ColumnsType::username);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_username == value.toString().toStdString());
 
     return result;
   }
@@ -194,31 +237,36 @@ namespace detail {
   void VagrantSettingsRecord_Impl::saveLastValues() {
     CloudSettingsRecord_Impl::saveLastValues();
 
-    // TODO: Delete if no derived types.
-    m_lastVagrantSettingsRecordType = m_vagrantSettingsRecordType;
-    // m_lastDATAMEMBERNAME = m_DATAMEMBERNAME;
+    m_lastUserAgreementSsigned = m_userAgreementSigned;
+    m_lastServerPath = m_serverPath;
+    m_lastServerUrlRecordId = m_serverUrlRecordId;
+    m_lastWorkerPath = m_workerPath;
+    m_lastWorkerUrlRecordId = m_workerUrlRecordId;
+    m_lastHaltOnStop = m_haltOnStop;
+    m_lastUsername = m_username;
   }
 
   void VagrantSettingsRecord_Impl::revertToLastValues() {
     CloudSettingsRecord_Impl::revertToLastValues();
 
-    // TODO: Delete if no derived types.
-    m_vagrantSettingsRecordType = m_lastVagrantSettingsRecordType;
-    // m_DATAMEMBERNAME = m_lastDATAMEMBERNAME;
+    m_userAgreementSigned = m_lastUserAgreementSigned;
+    m_serverPath = m_lastServerPath;
+    m_serverUrlRecordId = m_lastServerUrlRecordId;
+    m_workerPath = m_lastWorkerPath;
+    m_workerUrlRecordId = m_lastWorkerUrlRecordId;
+    m_haltOnStop = m_lastHaltOnStop;
+    m_username = m_lastUsername;
   }
 
 } // detail
 
-VagrantSettingsRecord::VagrantSettingsRecord(const NAMESPACE::VagrantSettings& vagrantSettings, ProjectDatabase& database)
+VagrantSettingsRecord::VagrantSettingsRecord(const VagrantSettings& vagrantSettings, ProjectDatabase& database)
   : CloudSettingsRecord(boost::shared_ptr<detail::VagrantSettingsRecord_Impl>(
         new detail::VagrantSettingsRecord_Impl(vagrantSettings, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::VagrantSettingsRecord_Impl>());
-
-  OS_ASSERT(false);
-  // TODO: Align with final public constructors.
-  // TODO: Handle relationships (setting id fields) as needed.
+  constructRelatedRecords(vagrantSettings,database);
 }
 
 VagrantSettingsRecord::VagrantSettingsRecord(const QSqlQuery& query, ProjectDatabase& database)
@@ -233,65 +281,26 @@ boost::optional<VagrantSettingsRecord> VagrantSettingsRecord::factoryFromQuery(c
 {
   OptionalVagrantSettingsRecord result;
 
-  // Template for base classes. See, for instance, MeasureRecord::factoryFromQuery.
-  // int vagrantSettingsRecordType = query.value(VagrantSettingsRecordColumns::vagrantSettingsRecordType).toInt();
-
-  // switch (vagrantSettingsRecordType) {
-  //   case VagrantSettingsRecordType::FIRSTDERIVEDTYPE : 
-  //     result = FIRSTDERIVEDTYPE(query, database).cast<VagrantSettingsRecord>();
-  //    break;
-  //   default :
-  //     LOG(Error,"Unknown VagrantSettingsRecordType " << vagrantSettingsRecordType);
-  //     return boost::none;
-  // }
-
-  // Template for classes with no derived classes.
-  // try {
-  //   result = VagrantSettingsRecord(query,database);
-  // }
-  // catch (const std::exception& e) {
-  //   LOG(Error,"Unable to construct VagrantSettingsRecord from query, because '"
-  //       << e.what() << "'.");
-  // }
+  try {
+    result = VagrantSettingsRecord(query,database);
+  }
+  catch (const std::exception& e) {
+    LOG(Error,"Unable to construct VagrantSettingsRecord from query, because '"
+        << e.what() << "'.");
+  }
 
   return result;
-}
-
-VagrantSettingsRecord VagrantSettingsRecord::factoryFromVagrantSettings(const NAMESPACE::VagrantSettings& vagrantSettings, ProjectDatabase& database)
-{
-  // TODO: Delete if no derived classes.
-  OS_ASSERT(false);
-
-  // Template. See, for instance, StandardsFilterObjectAttributeRecord::factoryFromFilter.
-
-  // if (vagrantSettings.optionalCast<NAMESPACE::FIRST_DERIVED_CLASS>()) {
-  //   return FIRST_DERIVED_CLASSRecord(vagrantSettings.cast<NAMESPACE::FIRST_DERIVED_CLASS>(), database);
-  // else if {
-  //   ...
-  // }
-
-  OS_ASSERT(false);
-  return VagrantSettingsRecord(boost::shared_ptr<detail::VagrantSettingsRecord_Impl>());
 }
 
 std::vector<VagrantSettingsRecord> VagrantSettingsRecord::getVagrantSettingsRecords(ProjectDatabase& database) {
   std::vector<VagrantSettingsRecord> result;
 
   QSqlQuery query(*(database.qSqlDatabase()));
-  // TODO: Check class used to determine databaseTableName().
-  // TODO: Check (or add) the WHERE portion of the query. See getAttributeRecords for a non-type WHERE statement.
   query.prepare(toQString("SELECT * FROM " + CloudSettingsRecord::databaseTableName() + " WHERE cloudSettingsRecordType=:cloudSettingsRecordType"));
   query.bindValue(":cloudSettingsRecordType", CloudSettingsRecordType::VagrantSettingsRecord);
   assertExec(query);
   while (query.next()) {
-    // TODO: Choose appropriate implementation.
-
-    // OptionalVagrantSettingsRecord vagrantSettingsRecord = VagrantSettingsRecord::factoryFromQuery(query, database);
-    // if (vagrantSettingsRecord) {
-    //   result.push_back(*vagrantSettingsRecord);
-    // }
-
-    // result.push_back(VagrantSettingsRecord(query, database));
+    result.push_back(VagrantSettingsRecord(query, database));
   }
 
   return result;
@@ -301,24 +310,26 @@ boost::optional<VagrantSettingsRecord> VagrantSettingsRecord::getVagrantSettings
   boost::optional<VagrantSettingsRecord> result;
 
   QSqlQuery query(*(database.qSqlDatabase()));
-  // TODO: Check class used to determine databaseTableName().
-  // TODO: Check the WHERE portion of the query.
   query.prepare(toQString("SELECT * FROM " + CloudSettingsRecord::databaseTableName() + " WHERE cloudSettingsRecordType=:cloudSettingsRecordType AND id=:id"));
   query.bindValue(":cloudSettingsRecordType", CloudSettingsRecordType::VagrantSettingsRecord);
   query.bindValue(":id",id);
   assertExec(query);
   if (query.first()) {
-    // TODO: Choose appropriate implementation.
-
-    // result = VagrantSettingsRecord::factoryFromQuery(query, database);
-
-    // result = VagrantSettingsRecord(query, database);
+    result = VagrantSettingsRecord(query, database);
   }
 
   return result;
 }
 
-NAMESPACE::VagrantSettings VagrantSettingsRecord::vagrantSettings() const {
+UrlRecord VagrantSettingsRecord::serverUrlRecord() const {
+  return getImpl<detail::VagrantSettingsRecord_Impl>()->serverUrlRecord();
+}
+
+UrlRecord VagrantSettingsRecord::workerUrlRecord() const {
+  return getImpl<detail::VagrantSettingsRecord_Impl>()->workerUrlRecord();
+}
+
+VagrantSettings VagrantSettingsRecord::vagrantSettings() const {
   return getImpl<detail::VagrantSettingsRecord_Impl>()->vagrantSettings();
 }
 
@@ -335,6 +346,24 @@ VagrantSettingsRecord::VagrantSettingsRecord(boost::shared_ptr<detail::VagrantSe
 }
 /// @endcond
 
+void VagrantSettingsRecord::constructRelatedRecords(const VagrantSettings& vagrantSettings, ProjectDatabase& database) {
+  VagrantSettingsRecord copyOfThis(getImpl<detail::VagrantSettingsRecord_Impl>());
+  bool isNew = database.isNewRecord(copyOfThis);
+  if (!isNew) {
+    getImpl<detail::VagrantSettingsRecord_Impl>()->revertToLastRecordIds();
+  }
+
+  if (isNew || (getImpl<detail::VagrantSettingsRecord_Impl>()->lastUuidLast() != cloudSession.versionUUID())) {
+    // remove any existing UrlRecords that have this object as its parent
+    ObjectRecordVector childUrls = children();
+    BOOST_FOREACH(ObjectRecord& childUrl,childUrls) {
+      database.removeRecord(childUrl);
+    }
+    // create new UrlRecords 
+    UrlRecord serverUrlRecord(vagrantSettings.serverUrl(),copyOfThis);
+    UrlRecord workerUrlRecord(vagrantSettings.workerUrl(),copyOfThis);
+  }
+}
+
 } // project
 } // openstudio
-

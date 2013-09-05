@@ -23,13 +23,9 @@
 #include <project/ProjectAPI.hpp>
 #include <project/ObjectRecord_Impl.hpp>
 
-// TODO: Delete this include if no derived classes (and no UrlRecordType enum).
-#include <project/UrlRecord.hpp>
+#include <utilities/core/Url.hpp>
 
 namespace openstudio {
-namespace NAMESPACE {
-  class Url;
-}
 namespace project {
 
 namespace detail {
@@ -41,13 +37,8 @@ namespace detail {
     /** @name Constructors and Destructors */
     //@{
 
-    // TODO: May need to remove type enum if Url is a leaf of the inheritance tree.
-    // TODO: Replace ProjectDatabase& database with parent Record and/or add more 
-    // construtors to match public class.
-    // TODO: Find-replace on 'NAMESPACE'.
-    UrlRecord_Impl(const NAMESPACE::Url& url,
-                   const UrlRecordType& urlRecordType,
-                   ProjectDatabase& database);
+    UrlRecord_Impl(const openstudio::Url& url,
+                   ObjectRecord& parentRecord);
 
     /** Constructor from query. Throws if bad query. */
     UrlRecord_Impl(const QSqlQuery& query, ProjectDatabase& database);
@@ -83,11 +74,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // ADD METHODS FOR RETRIEVING PARENT, CHILD, AND RESOURCE RECORDS AS DESIRED
-
-    // ADD METHODS FOR GETTING/SETTING SPECIFIC DATA FIELDS AS DESIRED
-
-    NAMESPACE::Url url() const;
+    openstudio::Url url() const;
 
     //@}
    protected:
@@ -109,10 +96,13 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.project.UrlRecord");
 
-    // TODO: Delete enums if no derived classes.
-    UrlRecordType m_urlRecordType;
+    std::string m_parentDatabaseTableName;
+    int m_parentRecordId;
+    openstudio::Url m_url;
 
-    UrlRecordType m_lastUrlRecordType;
+    std::string m_lastParentDatabaseTableName;
+    int m_lastParentRecordId;
+    openstudio::Url m_lastUrl;
   };
 
 } // detail
@@ -121,4 +111,3 @@ namespace detail {
 } // openstudio
 
 #endif // PROJECT_URLRECORD_IMPL_HPP
-

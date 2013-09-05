@@ -292,7 +292,7 @@ namespace detail {
       test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisOnServer(bool)));
       OS_ASSERT(test);
 
-      success = m_requestRun->requestAnalysisUUIDs(project().analysis().uuid());
+      success = m_requestRun->requestAnalysisUUIDs(project().projectDatabase().handle());
     }
 
     if (!success) {
@@ -316,7 +316,7 @@ namespace detail {
         OS_ASSERT(test);
 
         success = m_requestRun->startPostAnalysisJSON(
-              project().analysis().uuid(),
+              project().projectDatabase().handle(),
               project().analysis().toJSON(AnalysisSerializationOptions(project().projectDir())));
       }
       else {

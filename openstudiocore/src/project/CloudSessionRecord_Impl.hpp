@@ -87,7 +87,21 @@ namespace detail {
 
     std::vector<UrlRecord> workerUrlRecords() const;
 
-    CloudSession cloudSession() const;
+    virtual CloudSession cloudSession() const = 0;
+
+    //@}
+    /** @name Setters */
+    //@{
+
+    /** Impl-only method. Reverts record id values back to last state. For use in constructor
+     *  so can access old related records for comparison and possible removal. */
+    void revertToLastRecordIds();
+
+    /** Impl-only method. */
+    void setServerUrlRecordId(int id);
+
+    /** Impl-only method. */
+    void clearServerUrlRecordId();
 
     //@}
    protected:

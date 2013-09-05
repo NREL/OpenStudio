@@ -24,9 +24,9 @@
 #include <project/CloudSessionRecord.hpp>
 
 namespace openstudio {
-namespace NAMESPACE {
-  class VagrantSession;
-}
+
+class VagrantSession;
+
 namespace project {
 
 namespace detail {
@@ -35,39 +35,19 @@ namespace detail {
 
 } // detail
 
-// TODO: Populate or delete this enumeration if there are/are not any derived types, respectively.
-/** \class VagrantSessionRecordType
- *  \brief ObjectRecord types that derive from VagrantSessionRecord.
- *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
- *  macro call is:
- *  \code
-OPENSTUDIO_ENUM(VagrantSessionRecordType,
-    ((VagrantSessionRecordDerivedRecord1))
-);
- *  \endcode */
-OPENSTUDIO_ENUM(VagrantSessionRecordType,
-    ((VagrantSessionRecordDerivedRecord1))
-);
-
 /** VagrantSessionRecord is a CloudSessionRecord. */
 class PROJECT_API VagrantSessionRecord : public CloudSessionRecord {
  public:
 
   typedef detail::VagrantSessionRecord_Impl ImplType;
-  // TODO: Check this typedef. The generator script assumes that the hierarchy is only two deep   // from ObjectRecord.
   typedef CloudSessionRecordColumns ColumnsType;
-  // TODO: Check this typedef too.
   typedef CloudSessionRecord ObjectRecordType;
 
   /** @name Constructors and Destructors */
   //@{
 
-  // TODO: Delete if VagrantSession is abstract, make private if VagrantSession is concrete and has derived classes.
-  // TODO: Replace ProjectDatabase& database (or add another object if it is ok for VagrantSessionRecord to be and orphan) with const& to parent Record if the Table contains a parent id.
-  // TODO: Find-replace on 'NAMESPACE'.
-  VagrantSessionRecord(const NAMESPACE::VagrantSession& vagrantSession, ProjectDatabase& database);
+  VagrantSessionRecord(const VagrantSession& vagrantSession, ProjectDatabase& database);
 
-  // TODO: Delete if VagrantSession is abstract, make private if VagrantSession is concrete and has derived classes.
   VagrantSessionRecord(const QSqlQuery& query, ProjectDatabase& database);
 
   virtual ~VagrantSessionRecord() {}
@@ -78,9 +58,6 @@ class PROJECT_API VagrantSessionRecord : public CloudSessionRecord {
    *  derived type. */
   static boost::optional<VagrantSessionRecord> factoryFromQuery(const QSqlQuery& query, ProjectDatabase& database);
 
-  // TODO: Delete if no derived classes.
-  static VagrantSessionRecord factoryFromVagrantSession(const NAMESPACE::VagrantSession& vagrantSession, ProjectDatabase& database);
-
   static std::vector<VagrantSessionRecord> getVagrantSessionRecords(ProjectDatabase& database);
 
   static boost::optional<VagrantSessionRecord> getVagrantSessionRecord(int id, ProjectDatabase& database);
@@ -88,11 +65,7 @@ class PROJECT_API VagrantSessionRecord : public CloudSessionRecord {
   /** @name Getters */
   //@{
 
-  // ADD METHODS FOR RETRIEVING PARENT, CHILD, AND RESOURCE RECORDS AS DESIRED
-
-  // ADD METHODS FOR GETTING/SETTING SPECIFIC DATA FIELDS AS DESIRED
-
-  NAMESPACE::VagrantSession vagrantSession() const;
+  VagrantSession vagrantSession() const;
 
   //@}
  protected:

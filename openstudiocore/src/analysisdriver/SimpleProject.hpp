@@ -37,7 +37,8 @@
 namespace openstudio {
 
 class BCLMeasure;
-class CloudProvider;
+class CloudSession;
+class CloudSettings;
 class FileReference;
 class ProgressBar;
 class Workspace;
@@ -185,9 +186,9 @@ class ANALYSISDRIVER_API SimpleProject {
   /** Returns true if the analysis() is being run by analysisDriver(). */
   bool isRunning() const;
 
-  /** Returns this project's cloud provider if it exists. If an earlier session has been
-   *  stored in the ProjectDatabase, will attempt to reconnect. */
-  boost::optional<CloudProvider> cloudProvider() const;
+  boost::optional<CloudSession> cloudSession() const;
+
+  boost::optional<CloudSettings> cloudSettings() const;
 
   project::ProjectDatabase projectDatabase() const;
 
@@ -286,11 +287,17 @@ class ANALYSISDRIVER_API SimpleProject {
    *  if operation is incomplete (if not all files can be removed from the file system). */
   bool removeAllDataPoints();
 
-  /** Sets this project's CloudProvider to provider, which ensures that the current
-   *  CloudSession will be stored in projectDatabase() upon save(). */
-  void setCloudProvider(const CloudProvider provider);
+  /** Sets this project's CloudSession to session, which ensures that it will be stored in 
+   *  projectDatabase() upon save(). */
+  void setCloudSession(const CloudSession& session);
 
-  void clearCloudProvider();
+  void clearCloudSession();
+
+  /** Sets this project's CloudSettings to settings, which ensures that it will be stored in 
+   *  projectDatabase() upon save(). */
+  void setCloudSettings(const CloudSettings& settings);
+
+  void clearCloudSettings();
 
   /** Creates a zip file of the items needed to run individual DataPoints on a remote system, and
    *  returns the path to that (temporary) file. The file is deleted by SimpleProject's destructor. */
