@@ -549,25 +549,26 @@ namespace openstudio{
         QFile file(toQString(analysisZipFile));
         if (file.open(QIODevice::ReadOnly)){
 
-          QString bound="-------marge"; // DLM: can this be anything we want?
+          QString bound="-------3dpj1k39xoa84u4804ee1156snfxl6"; 
 
           QByteArray data(QString("--" + bound + "\r\n").toAscii());
-          data += "Content-Disposition: form-data; name=\"action\"\r\n\r\n";
-          data += "\r\n";
-          data += QString("--" + bound + "\r\n").toAscii();
-          data += "Content-Disposition: form-data; name=\"seed_zip\"; filename=\"seed_zip.zip\"\r\n";
+          //data += "Content-Disposition: form-data; name=\"action\"\r\n\r\n";
+          //data += "\r\n";
+          //data += QString("--" + bound + "\r\n").toAscii();
+          data += "Content-Disposition: form-data; name=\"file\"; filename=\"seed_zip.zip\"\r\n";
           data += "Content-Type: application/zip\r\n\r\n";
           data.append(file.readAll());
           data += "\r\n";
           data += QString("--" + bound + "\r\n.").toAscii();
           data += "\r\n";
-
           file.close();
 
           QString id = toQString(removeBraces(analysisUUID));
           QUrl url(m_url.toString().append("/analyses/").append(id).append("/upload.json")); 
 
           QNetworkRequest request(url);
+          request.setRawHeader(QString("Accept").toAscii(), QString("*/*; q=0.5, application/xml").toAscii());
+          request.setRawHeader(QString("Accept-Encoding").toAscii(), QString("gzip,deflate").toAscii());
           request.setRawHeader(QString("Content-Type").toAscii(),QString("multipart/form-data; boundary=" + bound).toAscii());
           request.setRawHeader(QString("Content-Length").toAscii(), QString::number(data.length()).toAscii());
          
