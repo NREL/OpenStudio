@@ -33,6 +33,10 @@
 #include <project/AlgorithmRecord_Impl.hpp>
 #include <project/AttributeRecord.hpp>
 #include <project/AttributeRecord_Impl.hpp>
+#include <project/CloudSessionRecord.hpp>
+#include <project/CloudSessionRecord_Impl.hpp>
+#include <project/CloudSettingsRecord.hpp>
+#include <project/CloudSettingsRecord_Impl.hpp>
 #include <project/ContinuousVariableRecord.hpp>
 #include <project/DataPointRecord.hpp>
 #include <project/DataPointRecord_Impl.hpp>
@@ -52,6 +56,8 @@
 #include <project/ProblemRecord_Impl.hpp>
 #include <project/TagRecord.hpp>
 #include <project/TagRecord_Impl.hpp>
+#include <project/UrlRecord.hpp>
+#include <project/UrlRecord_Impl.hpp>
 #include <project/URLSearchPathRecord.hpp>
 #include <project/URLSearchPathRecord_Impl.hpp>
 #include <project/VariableRecord.hpp>
@@ -61,6 +67,8 @@
 
 #include <project/DataPoint_Measure_JoinRecord.hpp>
 #include <project/DataPoint_Measure_JoinRecord_Impl.hpp>
+
+#include <analysis/DataPoint.hpp>
 
 #include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/Workflow.hpp>
@@ -84,6 +92,8 @@
 #include <QSqlDriver>
 #include <QSqlQuery>
 #include <QSqlError>
+
+using namespace openstudio::analysis;
 
 namespace openstudio {
 namespace project {
@@ -566,6 +576,8 @@ namespace detail {
     AlgorithmRecord::updatePathData(other,originalBase,newBase);
     AnalysisRecord::updatePathData(other,originalBase,newBase);
     AttributeRecord::updatePathData(other,originalBase,newBase);
+    CloudSessionRecord::updatePathData(other,originalBase,newBase);
+    CloudSettingsRecord::updatePathData(other,originalBase,newBase);
     DataPointRecord::updatePathData(other,originalBase,newBase);
     DataPointValueRecord::updatePathData(other,originalBase,newBase);
     FileReferenceRecord::updatePathData(other,originalBase,newBase);
@@ -573,6 +585,7 @@ namespace detail {
     MeasureRecord::updatePathData(other,originalBase,newBase);
     ProblemRecord::updatePathData(other,originalBase,newBase);
     TagRecord::updatePathData(other,originalBase,newBase);
+    UrlRecord::updatePathData(other,originalBase,newBase);
     URLSearchPathRecord::updatePathData(other,originalBase,newBase);
     OSArgumentRecord::updatePathData(other,originalBase,newBase);
     VariableRecord::updatePathData(other,originalBase,newBase);
@@ -709,6 +722,10 @@ namespace detail {
 
     if (dbv < VersionString("1.0.4")) {
       update_1_0_3_to_1_0_4(dbv);
+    }
+
+    if (dbv < VersionString("1.0.5")) {
+      update_1_0_4_to_1_0_5(dbv);
     }
 
     if ((dbv != osv) || (!dbv.fidelityEqual(osv))) {
@@ -904,6 +921,8 @@ namespace detail {
     createTable<AlgorithmRecord>();
     createTable<AnalysisRecord>();
     createTable<AttributeRecord>();
+    createTable<CloudSessionRecord>();
+    createTable<CloudSettingsRecord>();
     createTable<DataPointRecord>();
     createTable<DataPointValueRecord>();
     createTable<FileReferenceRecord>();
@@ -913,6 +932,7 @@ namespace detail {
     createTable<ProjectDatabaseRecord>();
     createTable<TagRecord>();
     createTable<OSArgumentRecord>();
+    createTable<UrlRecord>();
     createTable<URLSearchPathRecord>();
     createTable<VariableRecord>();
     createTable<WorkflowRecord>();
@@ -2211,6 +2231,50 @@ namespace detail {
     save();
     test = this->commitTransaction();
     OS_ASSERT(test);
+  }
+
+  void ProjectDatabase_Impl::update_1_0_4_to_1_0_5(const VersionString& startVersion) {
+    bool didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    LOG(Info,"Adding column for run type to " << DataPointRecord::databaseTableName() << ".");
+
+    ProjectDatabase database(this->shared_from_this());
+    QSqlQuery query(*(database.qSqlDatabase()));
+
+    DataPointRecordColumns runTypeColumn("runType");
+    query.prepare(QString::fromStdString(
+        "ALTER TABLE " + DataPointRecord::databaseTableName() + " ADD COLUMN " +
+        runTypeColumn.valueName() + " " + runTypeColumn.valueDescription()));
+    assertExec(query);
+    query.clear();
+
+    save();
+    bool test = this->commitTransaction();
+    OS_ASSERT(test);
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    // By default, set all DataPoints to DataPointRunType::Local.
+    query.prepare(QString::fromStdString("UPDATE " + DataPointRecord::databaseTableName() +
+        " SET runType=:runType"));
+    query.bindValue(":runType",DataPointRunType(DataPointRunType::Local).value());
+    assertExec(query);
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    createTable<CloudSessionRecord>();
+    createTable<CloudSettingsRecord>();
+    createTable<UrlRecord>();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);    
   }
 
   void ProjectDatabase_Impl::setProjectDatabaseRecord(const ProjectDatabaseRecord& projectDatabaseRecord)

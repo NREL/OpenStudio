@@ -35,6 +35,7 @@
   using namespace openstudio;
 
   #include <utilities/core/Application.hpp>
+  #include <QAction> 
 %}
 
 %include <utilities/cloud/Cloud.i>

@@ -205,10 +205,16 @@ PROJECT_WRAP(Record);
 PROJECT_WRAP(ObjectRecord);
 PROJECT_WRAP(ProjectDatabaseRecord);
 
-OBJECTRECORD_WRAP(TagRecord);
+
 OBJECTRECORD_WRAP(AttributeRecord);
 OBJECTRECORD_WRAP(FileReferenceRecord);
+OBJECTRECORD_WRAP(CloudSessionRecord);
+OBJECTRECORD_WRAP(CloudSettingsRecord);
+OBJECTRECORD_WRAP(TagRecord);
+OBJECTRECORD_WRAP(UrlRecord);
 OBJECTRECORD_WRAP(URLSearchPathRecord);
+OBJECTRECORD_WRAP(VagrantSessionRecord);
+OBJECTRECORD_WRAP(VagrantSettingsRecord);
 
 OBJECTRECORD_WRAP(WorkflowRecord);
 
