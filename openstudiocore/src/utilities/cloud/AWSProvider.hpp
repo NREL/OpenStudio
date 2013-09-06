@@ -22,7 +22,106 @@
 
 #include <utilities/cloud/CloudProvider.hpp>
 
-namespace openstudio{
+namespace openstudio {
+namespace detail {
+
+  class AWSSettings_Impl;
+  class AWSSession_Impl;
+  class AWSProvider_Impl;
+
+}
+
+  /// AWSSettings is a CloudSettings.
+  class UTILITIES_API AWSSettings : public CloudSettings {
+   public:
+    /** @name Constructor */
+    //@{
+
+    /// default constructor, loads defaults from settings
+    AWSSettings();
+
+    /** Constructor provided for deserialization; not for general use. */
+    AWSSettings(const UUID& uuid,
+                const UUID& versionUUID);
+
+    //@}
+    /** @name Destructors */
+    //@{
+
+    /// virtual destructor
+    virtual ~AWSSettings();
+
+    //@}
+    /** @name Inherited members */
+    //@{
+
+    //@}
+    /** @name Class members */
+    //@{
+    //@}
+   protected:
+
+    AWSSettings(const boost::shared_ptr<detail::AWSSettings_Impl>& impl);
+
+    typedef detail::AWSSettings_Impl ImplType;
+
+    friend class CloudSettings;
+
+   private:
+
+  };
+
+  /// \relates AWSSettings
+  typedef boost::optional<AWSSettings> OptionalAWSSettings;
+
+  /// AWSSession is a CloudSession.
+  class UTILITIES_API AWSSession : public CloudSession {
+   public:
+
+    /** @name Constructor */
+    //@{
+
+    //constructor
+    AWSSession(const std::string& sessionId,
+               const boost::optional<Url>& serverUrl,
+               const std::vector<Url>& workerUrls);
+
+    /** Constructor provided for deserialization; not for general use. */
+    AWSSession(const UUID& uuid,
+               const UUID& versionUUID,
+               const std::string& sessionId,
+               const boost::optional<Url>& serverUrl,
+               const std::vector<Url>& workerUrls);
+
+    //@}
+    /** @name Destructors */
+    //@{
+
+    /// virtual destructor
+    virtual ~AWSSession();
+
+    //@}
+    /** @name Inherited members */
+    //@{
+
+    //@}
+    /** @name Class members */
+    //@{
+
+   protected:
+
+    AWSSession(const boost::shared_ptr<detail::AWSSession_Impl>& impl);
+
+    typedef detail::AWSSession_Impl ImplType;
+
+    friend class CloudSession;
+
+   private:
+
+  };
+
+  /// \relates AWSSession
+  typedef boost::optional<AWSSession> OptionalAWSSession;
 
   /// AWSProvider is a CloudProvider that provides access to Amazon EC2 and CloudWatch services.
   class UTILITIES_API AWSProvider : public CloudProvider {
@@ -49,6 +148,14 @@ namespace openstudio{
     unsigned numWorkers();
 
     //@}
+  protected:
+
+    AWSProvider(const boost::shared_ptr<detail::AWSProvider_Impl>& impl);
+
+    typedef detail::AWSProvider_Impl ImplType;
+
+    friend class CloudProvider;
+
   private:
 
     // no body on purpose, do not want this generated

@@ -24,7 +24,7 @@
 #include <model/ModelObject.hpp>
 #include <model/ModelExtensibleGroup.hpp>
 
-#include <utilities/Data/Vector.hpp>
+#include <utilities/data/Vector.hpp>
 
 namespace openstudio {
 

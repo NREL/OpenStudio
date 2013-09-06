@@ -39,7 +39,7 @@ namespace openstudio{
     /** @name Constructor */
     //@{
 
-    // default constructor, loads defaults from settings
+    /// default constructor, loads defaults from settings
     VagrantSettings();
 
     /** Constructor provided for deserialization; not for general use. */
