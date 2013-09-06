@@ -1,14 +1,8 @@
 
 OS:Version,
-<<<<<<< .mine
-  {4f0fbb7d-cc92-41b3-a620-1091a558fb38}, !- Handle
-  1.0.3;                                  !- Version Identifier
-
-=======
   {136c4874-9749-4ef9-8694-da52987b6e41}, !- Handle
   1.0.5;                                  !- Version Identifier
 
->>>>>>> .theirs
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
   Always On Discrete,                     !- Name
@@ -2477,7 +2471,7 @@ OS:Coil:Cooling:CooledBeam,
 
 OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
   {3667b348-2052-4711-9cd2-7226dc650e72}, !- Handle
-  Air Terminal Single Duct Constant Volume Cooled Beam 1, !- Name
+  Cooled Beam, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Cooled Beam Type
   ,                                       !- Supply Air Inlet Node Name

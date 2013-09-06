@@ -15,6 +15,7 @@
     <file>images/cancel_simulation_button.png</file>
     <file>images/check.png</file>
     <file>images/chiller_air.png</file>
+    <file>images/chilled_beam.png</file>    
     <file>images/coilheatinglowtemprad_constflow.png</file>
     <file>images/coilheatinglowtemprad_varflow.png</file>    
     <file>images/coilheatingwater_baseboard.png</file>
@@ -29,15 +30,10 @@
     <file>images/contextual_arrow.png</file>
     <file>images/controller_icon_off.png</file>
     <file>images/controller_icon_on.png</file>
-<<<<<<< HEAD
-    <file>images/chilled_beam.png</file>
 		<file>images/coilcoolingchilledbeam.png</file>
-		<file>images/cool_coil.png</file>
-=======
     <file>images/cool_coil.png</file>
     <file>images/coilcoolinglowtemprad_constflow.png</file>   
     <file>images/coilcoolinglowtemprad_varflow.png</file>      
->>>>>>> develop
     <file>images/cooling_tower.png</file>
     <file>images/delete-icon.png</file>
     <file>images/delete.png</file>
@@ -211,21 +207,17 @@
     <file>images/mini_icons/building.png</file>
     <file>images/mini_icons/building_story.png</file>
     <file>images/mini_icons/chiller_air.png</file>
+    <file>images/mini_icons/chilled_beam.png</file>    
     <file>images/mini_icons/construction.png</file>
     <file>images/mini_icons/construction_gnd.png</file>
     <file>images/mini_icons/construction_undergnd.png</file>
     <file>images/mini_icons/construct_inter_source.png</file>
     <file>images/mini_icons/coilheatingwater_baseboard_mini.png</file>
     <file>images/mini_icons/coil_ht_dx_singlespeed_mini.png</file>
-<<<<<<< HEAD
-    <file>images/mini_icons/chilled_beam.png</file>
 		<file>images/mini_icons/coilcoolingchilledbeam_mini.png</file>	
 		<file>images/mini_icons/cool_coil.png</file>
-=======
-    <file>images/mini_icons/cool_coil.png</file>
     <file>images/mini_icons/coilcoolinglowtemprad_constflow.png</file>   
     <file>images/mini_icons/coilcoolinglowtemprad_varflow.png</file>     
->>>>>>> develop
     <file>images/mini_icons/cooling_tower.png</file>
     <file>images/mini_icons/daylighting_control.png</file>
     <file>images/mini_icons/default_construction_set.png</file>
