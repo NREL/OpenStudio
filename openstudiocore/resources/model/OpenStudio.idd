@@ -6034,7 +6034,80 @@ OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
        \type real
        \minimum> 0
        \default 0.001
-
+       
+OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
+       \memo Central air system terminal unit, single duct, constant volume, with cooled beam
+       \memo (active or passive).
+       \min-fields 14
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference ConnectionObject
+  A3, \field Availability Schedule Name
+       \type object-list
+       \required-field
+       \object-list ScheduleNames
+  A4, \field Cooled Beam Type
+       \type choice
+       \required-field
+       \key Active
+       \key Passive
+  A5, \field Supply Air Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A6, \field Supply Air Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A7, \field Cooling Coil Name
+							\note  Needs to match the cooled beam cooling coil object CoolingCoilCooledBeam
+       \type object-list
+       \required-field
+       \object-list CoolingCoilCooledBeam
+  N1, \field Supply Air Volumetric Flow Rate
+       \type real
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+       \default autosize
+  N2, \field Maximum Total Chilled Water Volumetric Flow Rate
+       \type real
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+       \default autosize
+  N3, \field Number of Beams
+       \note Number of individual beam units in the zone
+       \type integer
+       \minimum> 0
+       \autosizable
+       \default autosize
+  N4, \field Beam Length
+       \note Length of an individual beam unit
+       \type real
+       \units m
+       \minimum> 0.0
+       \autosizable
+       \default autosize
+  N5, \field Design Inlet Water Temperature
+       \type real
+       \units C
+       \minimum 0.0
+       \default 15.0
+  N6, \field Design Outlet Water Temperature
+       \type real
+       \units C
+       \minimum 0.0
+       \default 17.0
+  N7; \field Coefficient of Induction Kin
+       \type real
+       \autocalculatable
+       \minimum 0.0
+       \maximum 4.0
+       \default Autocalculate
+       
 OS:AirTerminal:SingleDuct:Uncontrolled,
        \min-fields 6
   A1, \field Handle
@@ -6922,6 +6995,65 @@ OS:GroundHeatExchanger:Vertical,
   N17;  \field G-Function G Value
         \type real
 
+OS:Coil:Cooling:CooledBeam,
+						 \min-fields 13
+		A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference CoolingCoilCooledBeam
+       \reference ConnectionObject
+  A3 ,\field Chilled Water Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A4 ,\field Chilled Water Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  N1, \field Coil Surface Area per Coil Length
+       \type real
+       \units m2/m
+       \minimum 0.0
+       \default 5.422
+  N2 ,\field Model Parameter a
+       \type real
+       \minimum 0.0
+       \default 15.3
+  N3 , \field Model Parameter n1
+       \type real
+       \minimum 0.0
+       \default 0.0
+  N4, \field Model Parameter n2
+       \type real
+       \minimum 0.0
+       \default 0.84
+  N5, \field Model Parameter n3
+       \type real
+       \minimum 0.0
+       \default 0.12
+  N6, \field Model Parameter a0
+       \note Free area of the coil in plan view per unit beam length
+       \type real
+       \units m2/m
+       \minimum 0.0
+       \default 0.171
+  N7, \field Model Parameter K1
+       \type real
+       \minimum 0.0
+       \default 0.0057
+  N8, \field Model Parameter n
+       \type real
+       \minimum 0.0
+       \default 0.4 
+  N9; \field Leaving Pipe Inside Diameter
+       \type real
+       \units m
+       \minimum> 0.0
+       \default 0.0145
+       
 OS:Coil:Cooling:DX:SingleSpeed,
        \min-fields 15
   A1, \field Handle

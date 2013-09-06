@@ -2454,3 +2454,33 @@ OS:GroundHeatExchanger:Vertical,
   3.003,                                  !- G-Function Ln(T/Ts) Value 35
   72.511;                                 !- G-Function G Value 35
 
+OS:Coil:Cooling:CooledBeam,
+  {9409bb35-2087-4798-897c-a6703b5a7669}, !- Handle
+  Coil Cooling Cooled Beam,               !- Name
+  ,                                       !- Chilled Water Inlet Node Name
+  ,                                       !- Chilled Water Outlet Node Name
+  5.422,                                  !- Coil Surface Area per Coil Length {m2/m}
+  15.3,                                   !- Model Parameter a
+  0.0,                                    !- Model Parameter n1
+  0.84,                                   !- Model Parameter n2
+  0.12,                                   !- Model Parameter n3
+  0.171,                                  !- Model Parameter a0 {m2/m}
+  0.0057,                                 !- Model Parameter K1
+  0.4,                                    !- Model Parameter n
+  0.0145;                                 !- Leaving Pipe Inside Diameter {m}
+
+OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
+  {3667b348-2052-4711-9cd2-7226dc650e72}, !- Handle
+  Cooled Beam, !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Cooled Beam Type
+  ,                                       !- Supply Air Inlet Node Name
+  ,                                       !- Supply Air Outlet Node Name
+  {9409bb35-2087-4798-897c-a6703b5a7669}, !- Cooling Coil Name
+  autosize,                               !- Supply Air Volumetric Flow Rate {m3/s}
+  autosize,                               !- Maximum Total Chilled Water Volumetric Flow Rate {m3/s}
+  autosize,                               !- Number of Beams
+  autosize,                               !- Beam Length {m}
+  15.0,                                   !- Design Inlet Water Temperature {C}
+  17.0,                                   !- Design Outlet Water Temperature {C}
+  Autocalculate;                          !- Coefficient of Induction Kin

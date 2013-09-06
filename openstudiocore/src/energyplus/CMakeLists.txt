@@ -18,6 +18,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateAirLoopHVACUnitaryHeatPumpAirToAir.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACZoneMixer.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACZoneSplitter.cpp
+  ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeCooledBeam.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctParallelPIUReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctUncontrolled.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVReheat.cpp

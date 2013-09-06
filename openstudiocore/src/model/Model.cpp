@@ -192,6 +192,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirLoopHVACOutdoorAirSystem);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneMixer);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneSplitter);
+    REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeCooledBeam);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctParallelPIUReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctUncontrolled);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVReheat);
@@ -208,6 +209,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CFactorUndergroundWallConstruction);
     REGISTER_CONSTRUCTOR(ChillerElectricEIR);
     REGISTER_CONSTRUCTOR(ClimateZones);
+    REGISTER_CONSTRUCTOR(CoilCoolingCooledBeam);
     REGISTER_CONSTRUCTOR(CoilCoolingDXSingleSpeed);
     REGISTER_CONSTRUCTOR(CoilCoolingDXTwoSpeed);
     REGISTER_CONSTRUCTOR(CoilCoolingLowTempRadiantConstFlow);
@@ -446,6 +448,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACOutdoorAirSystem);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneMixer);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneSplitter);
+    REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeCooledBeam);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctParallelPIUReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctUncontrolled);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVReheat);
@@ -462,6 +465,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CFactorUndergroundWallConstruction);
     REGISTER_COPYCONSTRUCTORS(ClimateZones);
     REGISTER_COPYCONSTRUCTORS(ChillerElectricEIR);
+    REGISTER_COPYCONSTRUCTORS(CoilCoolingCooledBeam);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXTwoSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingLowTempRadiantConstFlow);
