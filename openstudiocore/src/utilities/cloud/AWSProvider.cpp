@@ -41,7 +41,6 @@ namespace openstudio{
 
     AWSProvider_Impl::AWSProvider_Impl()
       : CloudProvider_Impl(),
-        m_cloudSession(this->type(), toString(createUUID()), OptionalUrl(), UrlVector()),
         m_validAccessKey(false),
         m_validSecretKey(false),
         m_numWorkers(0),
@@ -124,10 +123,10 @@ namespace openstudio{
       return false;
     }
 
-    CloudSession AWSProvider_Impl::session() const
+    /*CloudSession AWSProvider_Impl::session() const
     {
       return m_cloudSession;
-    }
+    }*/
 
     bool AWSProvider_Impl::reconnect(const CloudSession& session)
     {

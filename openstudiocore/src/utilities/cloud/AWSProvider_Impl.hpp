@@ -80,6 +80,14 @@ namespace detail{
     /// blocking call, clears errors and warnings
     virtual bool validateCredentials() const;
 
+    /// returns the current settings
+    /// blocking call
+    virtual CloudSettings settings() const;
+
+    /// returns true if can assign settings
+    /// blocking call, clears errors and warnings
+    virtual bool setSettings(const CloudSettings& settings);
+
     /// returns the current session id
     /// blocking call
     virtual CloudSession session() const;
@@ -154,7 +162,7 @@ namespace detail{
 
   private:
 
-    CloudSession m_cloudSession;
+    // CloudSession m_cloudSession;
 
     bool loadCredentials() const;
     bool saveCredentials() const;
