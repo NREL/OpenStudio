@@ -29,6 +29,8 @@
 #include <QPixmap>
 #include <QProgressBar>
 #include <QProgressDialog>
+#include <QFileInfo>
+#include <QDirIterator>
 
 #include <boost/filesystem.hpp>
 
@@ -301,97 +303,88 @@ namespace runmanager {
       std::map<openstudio::path, int> &t_searchedPaths) const
   {
     std::vector<openstudio::path> results;
-    typedef boost::filesystem::basic_recursive_directory_iterator<openstudio::path> diritr;
 
-    if (!safeExists(t_path) || !boost::filesystem::is_directory(t_path))
+    std::deque<std::pair<int, openstudio::path> > pathsToSearch;
+    pathsToSearch.push_front(std::make_pair(0, t_path));
+
+    int max_depth = 2;
+    QFileInfo basefi(openstudio::toQString(t_path));
+
+    if (!basefi.exists() || !basefi.isDir())
     {
       // Search dir does not exist / is not a directory
       return results;
     }
 
-    diritr begin(t_path);
-    diritr end;
-
- 
-    while (begin != end)
+    while (!pathsToSearch.empty())
     {
-      try {
-        if (boost::filesystem::is_directory(*begin))
+      QFileInfoList qfil = QDir(openstudio::toQString(pathsToSearch.front().second), "", QDir::Name, QDir::AllEntries | QDir::NoDotAndDotDot | QDir::System | QDir::Hidden).entryInfoList();
+
+      int cur_depth = pathsToSearch.front().first;
+      ++t_searchedPaths[pathsToSearch.front().second];
+
+
+      for (QFileInfoList::const_iterator itr = qfil.begin();
+           itr != qfil.end();
+           ++itr)
+      {
+        QString p = itr->absoluteFilePath();
+        QFileInfo fi(*itr);
+
+        openstudio::path curPath = openstudio::toPath(p);
+	
+        if (t_dlg)
         {
-          if (t_dlg)
-          {
-            t_dlg->setLabelText(toQString("Scanning For Tools In: " + shortenPath(*begin)));
-          }
+          t_dlg->setLabelText(toQString("Scanning For Tools In: " + shortenPath(curPath)));
+        }
 
-          if (begin.level() > 2)
+        // We only want files, not directories
+        if (fi.isReadable() && fi.isDir() && cur_depth < max_depth)
+        {
+          if (openstudio::toPath("/proc") == curPath
+            || openstudio::toPath("/dev") == curPath
+            || openstudio::toPath("/etc") == curPath
+            || openstudio::toPath("/tmp") == curPath
+            || openstudio::toPath("/var") == curPath
+            || openstudio::toPath("/sys") == curPath
+            || openstudio::toPath("/media") == curPath
+            || openstudio::toPath("/mnt") == curPath
+            || openstudio::toPath("/Volumes") == curPath
+            || subPathMatch(curPath, boost::regex("lib.*", boost::regex::perl))
+            || subPathMatch(curPath, boost::regex("share", boost::regex::perl))
+            || openstudio::toPath("C:/Windows") == curPath
+            || openstudio::toPath("C:/$Recycle.Bin") == curPath
+            || subPathMatch(curPath, boost::regex("\\..*", boost::regex::perl))
+            || subPathMatch(curPath, boost::regex("Temp.*", boost::regex::perl|boost::regex::icase)))
           {
-            begin.no_push();
-          }
+            // don't scan it if it matches these things
+          } else {
 
-          ++t_searchedPaths[*begin];
-
-          openstudio::path p(*begin);
-          
-          if (openstudio::toPath("/proc") == p
-            || openstudio::toPath("/dev") == p
-            || openstudio::toPath("/etc") == p
-            || openstudio::toPath("/tmp") == p
-            || openstudio::toPath("/var") == p
-            || openstudio::toPath("/sys") == p
-            || openstudio::toPath("/media") == p
-            || openstudio::toPath("/mnt") == p
-            || openstudio::toPath("/Volumes") == p
-            || subPathMatch(*begin, boost::regex("lib.*", boost::regex::perl))
-            || subPathMatch(*begin, boost::regex("share", boost::regex::perl))
-            || openstudio::toPath("C:/Windows") == p
-            || openstudio::toPath("C:/$Recycle.Bin") == p
-            || subPathMatch(*begin, boost::regex("\\..*", boost::regex::perl))
-            || subPathMatch(*begin, boost::regex("Temp.*", boost::regex::perl|boost::regex::icase)))
-          {
-            begin.no_push();
-          }
-        } else {
-          // We only want files, not directories
-          if (boost::filesystem::is_regular_file(*begin))
-          {
-            openstudio::path pstart = *begin;
-
-            if (t_searchedPaths[pstart.parent_path()] > 1)
+            // Otherwise queue for scanning
+            if (t_searchedPaths[curPath] > 1)
             {
-              // we've already searched this directory's files once
-              // let's move on to the next thing
-              begin.pop();
+              // we've already scanned it, no reason to add it nowa
             } else {
-              for (std::vector<std::string>::const_iterator itr = t_names.begin();
-                itr != t_names.end();
-                ++itr)
-              {
-                if (boost::iequals(toString(pstart.filename()), *itr))
-                {
-                  results.push_back(*begin);
-                }
-              }
+              pathsToSearch.push_back(std::make_pair(cur_depth + 1, curPath));
             }
           }
         }
 
-      } catch (const boost::filesystem::basic_filesystem_error<openstudio::path> &e) {
-        //Ignore FS errors
-        LOG(Debug, "FileSystem Error: " << e.what());
+
+        if (fi.isFile() && fi.isReadable() && !fi.isDir())
+        {
+          for (std::vector<std::string>::const_iterator itr = t_names.begin();
+               itr != t_names.end();
+               ++itr)
+          {
+            if (boost::iequals(toString(curPath.filename()), *itr))
+            {
+              results.push_back(curPath);
+            }
+          }
+        }
       }
 
-      try {
-        if (begin != end)
-        {
-          ++begin;
-        }
-      } catch (const boost::filesystem::basic_filesystem_error<openstudio::path> &) {
-        begin.no_push();
-        if (begin != end)
-        {
-          ++begin;
-        }
-      }
 
       if (t_dlg)
       {
@@ -403,6 +396,8 @@ namespace runmanager {
         t_dlg->setValue(t_dlg->value() + 1);
         openstudio::Application::instance().processEvents();
       }
+
+      pathsToSearch.pop_front();
     }
 
     return results;

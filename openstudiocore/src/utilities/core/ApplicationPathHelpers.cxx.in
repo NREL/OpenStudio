@@ -30,6 +30,26 @@
 #include <dlfcn.h>
 #endif
 
+
+  bool pathBeginsWith(const openstudio::path &t_shorter, const openstudio::path &t_longer)
+  {
+    openstudio::path::const_iterator begin1 = t_shorter.begin();
+    openstudio::path::const_iterator end1 = t_shorter.end();
+
+    openstudio::path::const_iterator begin2 = t_longer.begin();
+    openstudio::path::const_iterator end2 = t_longer.end();
+
+    if (std::distance(begin1, end1) > std::distance(begin2, end2))
+    {
+      return false; // the run dir has fewer elements than the build dir - cannot be running from builddir
+    }
+
+    // if the rundir begins with the builddir, we know it's running from the builddir
+    return std::equal(begin1, end1, begin2);
+    
+  }
+
+
 namespace openstudio {
 
   openstudio::path getApplicationSourceDirectory() {
@@ -111,9 +131,12 @@ namespace openstudio {
         rundir = openstudio::toPath(std::string(&buf.front(), pathlen));
       }
 
-#ifdef Q_OS_MAC
-      if (rundir.filename() != "MacOS" && rundir.filename() != "openstudio")
+#ifdef Q_OS_MAC 
+      if (pathBeginsWith(getApplicationBuildDirectory(), rundir))
       {
+        // we are definitely running from the build dir, let's reset the path to a known place
+        rundir = getApplicationBuildDirectory() / openstudio::toPath("Products/OpenStudio.app/Contents/MacOS");
+      } else if (rundir.filename() != "MacOS" && rundir.filename() != "openstudio") {
         // We are not running from a regular run directory, try Qt method instead
         openstudio::path p = openstudio::toPath(QCoreApplication::applicationDirPath());
         if (!p.empty())
@@ -250,21 +273,8 @@ namespace openstudio {
     openstudio::path runDir = getApplicationRunDirectory();
 #endif
 
-    openstudio::path::const_iterator begin1 = buildDir.begin();
-    openstudio::path::const_iterator end1 = buildDir.end();
-
-    openstudio::path::const_iterator begin2 = runDir.begin();
-    openstudio::path::const_iterator end2 = runDir.end();
-
-    if (std::distance(begin1, end1) > std::distance(begin2, end2))
-    {
-      return false; // the run dir has fewer elements than the build dir - cannot be running from builddir
-    }
-
-    // if the rundir begins with the builddir, we know it's running from the builddir
-    return std::equal(begin1, end1, begin2);
+    return pathBeginsWith(buildDir, runDir);
   }
-
 
 
 openstudio::path getApplicationOutputDirectory(const std::string& outdir) {
