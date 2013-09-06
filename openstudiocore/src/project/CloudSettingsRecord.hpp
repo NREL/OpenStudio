@@ -112,8 +112,6 @@ class PROJECT_API CloudSettingsRecord : public ObjectRecord {
   //@}
  protected:
   /// @cond
-  typedef detail::CloudSettingsRecord_Impl ImplType;
-
   explicit CloudSettingsRecord(boost::shared_ptr<detail::CloudSettingsRecord_Impl> impl);
 
   friend class detail::CloudSettingsRecord_Impl;

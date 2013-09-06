@@ -76,8 +76,6 @@ class PROJECT_API VagrantSettingsRecord : public CloudSettingsRecord {
   //@}
  protected:
   /// @cond
-  typedef detail::VagrantSettingsRecord_Impl ImplType;
-
   explicit VagrantSettingsRecord(boost::shared_ptr<detail::VagrantSettingsRecord_Impl> impl);
 
   friend class detail::VagrantSettingsRecord_Impl;

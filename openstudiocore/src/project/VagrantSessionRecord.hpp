@@ -70,8 +70,6 @@ class PROJECT_API VagrantSessionRecord : public CloudSessionRecord {
   //@}
  protected:
   /// @cond
-  typedef detail::VagrantSessionRecord_Impl ImplType;
-
   explicit VagrantSessionRecord(boost::shared_ptr<detail::VagrantSessionRecord_Impl> impl);
 
   friend class detail::VagrantSessionRecord_Impl;

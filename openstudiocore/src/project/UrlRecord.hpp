@@ -94,8 +94,6 @@ class PROJECT_API UrlRecord : public ObjectRecord {
   //@}
  protected:
   /// @cond
-  typedef detail::UrlRecord_Impl ImplType;
-
   explicit UrlRecord(boost::shared_ptr<detail::UrlRecord_Impl> impl);
 
   friend class detail::UrlRecord_Impl;

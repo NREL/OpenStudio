@@ -117,8 +117,6 @@ class PROJECT_API CloudSessionRecord : public ObjectRecord {
   //@}
  protected:
   /// @cond
-  typedef detail::CloudSessionRecord_Impl ImplType;
-
   explicit CloudSessionRecord(boost::shared_ptr<detail::CloudSessionRecord_Impl> impl);
 
   friend class detail::CloudSessionRecord_Impl;
