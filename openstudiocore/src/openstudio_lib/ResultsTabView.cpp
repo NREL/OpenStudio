@@ -702,7 +702,7 @@ struct UtilityBillSorter
 {
   UtilityBillSorter() {}
 
-  bool UtilityBillSorter::operator()(const model::UtilityBill& left, const model::UtilityBill& right) const {
+  bool operator()(const model::UtilityBill& left, const model::UtilityBill& right) const {
     return (left.fuelType() < right.fuelType());
   }
 };

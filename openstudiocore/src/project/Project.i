@@ -41,6 +41,8 @@
   #include <runmanager/lib/SimulationEngine.hpp>
   #include <runmanager/lib/ErrorEstimation.hpp>
   
+  #include <utilities/cloud/AWSProvider.hpp>
+  #include <utilities/cloud/VagrantProvider.hpp>
   #include <utilities/data/Attribute.hpp>
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>

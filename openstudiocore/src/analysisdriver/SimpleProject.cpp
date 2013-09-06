@@ -322,7 +322,8 @@ namespace detail {
   boost::optional<CloudSession> SimpleProject_Impl::cloudSession() const {
     if (!m_cloudSession && !m_cloudSessionSettingsDirty) {
       // check database
-      CloudSessionRecordVector cloudSessionRecords = CloudSessionRecord::getCloudSessionRecords(projectDatabase());
+      ProjectDatabase database = projectDatabase();
+      CloudSessionRecordVector cloudSessionRecords = CloudSessionRecord::getCloudSessionRecords(database);
       if (cloudSessionRecords.size() > 1u) {
         LOG(Debug,"SimpleProject has " << cloudSessionRecords.size() 
             << " CloudSessionRecords saved in the ProjectDatabase. "
@@ -338,7 +339,8 @@ namespace detail {
   boost::optional<CloudSettings> SimpleProject_Impl::cloudSettings() const {
     if (!m_cloudSettings && !m_cloudSessionSettingsDirty) {
       // check database
-      CloudSettingsRecordVector cloudSettingsRecords = CloudSettingsRecord::getCloudSettingsRecords(projectDatabase());
+      ProjectDatabase database = projectDatabase();
+      CloudSettingsRecordVector cloudSettingsRecords = CloudSettingsRecord::getCloudSettingsRecords(database);
       if (cloudSettingsRecords.size() > 1u) {
         LOG(Debug,"SimpleProject has " << cloudSettingsRecords.size() 
             << " CloudSettingsRecords saved in the ProjectDatabase. "

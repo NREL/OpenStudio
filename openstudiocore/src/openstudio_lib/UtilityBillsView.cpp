@@ -692,7 +692,8 @@ QString UtilityBillsInspectorView::getPeakLabelText()
 void UtilityBillsInspectorView::addBillingPeriod(bool checked)
 {
   if(m_utilityBill.is_initialized()){
-    addBillingPeriodWidget(m_utilityBill.get().addBillingPeriod());
+    model::BillingPeriod newBillingPeriod = m_utilityBill.get().addBillingPeriod();
+    addBillingPeriodWidget(newBillingPeriod);
   }
 }
 
