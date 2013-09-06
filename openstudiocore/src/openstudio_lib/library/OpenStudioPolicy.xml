@@ -186,7 +186,14 @@
   <POLICY IddObjectType="OS_Curve_Quadratic">
     <rule IddField="Name" Access="LOCKED"/>
   </POLICY>
-  <POLICY IddObjectType="OS_Coil_Cooling_DX_SingleSpeed">
+  <POLICY IddObjectType="OS_Coil_Cooling_CooledBeam">
+		<rule IddField="Chilled Water Inlet Node Name" Access="HIDDEN"/>
+		<rule IddField="Chilled Water Outlet Node Name" Access="HIDDEN"/>
+		
+		
+		
+	</POLICY>
+	<POLICY IddObjectType="OS_Coil_Cooling_DX_SingleSpeed">
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
@@ -347,7 +354,13 @@
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
-  <POLICY IddObjectType="OS_AirTerminal_SingleDuct_Uncontrolled">
+  <POLICY IddObjectType="OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam">
+		<rule IddField="Availability Schedule Name" Access="HIDDEN"/>
+		<rule IddField="Supply Air Inlet Node Name" Access="HIDDEN"/>
+		<rule IddField="Supply Air Outlet Node Name" Access="HIDDEN"/>
+		<rule IddField="Cooling Coil Name" Access="HIDDEN"/>
+	</POLICY>
+	<POLICY IddObjectType="OS_AirTerminal_SingleDuct_Uncontrolled">
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
     <rule IddField="Inlet Air Node Name" Access="HIDDEN"/>
     <rule IddField="Zone Supply Air Node Name" Access="HIDDEN"/>
