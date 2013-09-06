@@ -83,6 +83,8 @@ SET( data_src
   data/Attribute.hpp
   data/Attribute_Impl.hpp
   data/Attribute.cpp
+  data/CalibrationResult.hpp
+  data/CalibrationResult.cpp   
   data/EndUses.hpp
   data/EndUses.cpp 
   data/Matrix.hpp
@@ -408,6 +410,7 @@ SET( ${target_name}_test_src
   data/Test/DataFixture.hpp
   data/Test/DataFixture.cpp
   data/Test/Attribute_GTest.cpp
+  data/Test/CalibrationResult_GTest.cpp
   data/Test/EndUses_GTest.cpp
   data/Test/Matrix_GTest.cpp
   data/Test/TimeSeries_GTest.cpp
@@ -510,6 +513,7 @@ SET( ${target_name}_swig_src
   time/DateTime.i
   data/Data.i
   data/Attribute.i
+  data/CalibrationResult.i
   data/EndUses.i
   data/Matrix.i
   data/TimeSeries.i

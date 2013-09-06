@@ -148,7 +148,9 @@ MODELOBJECT_TEMPLATES(ResourceObject);
 UNIQUEMODELOBJECT_TEMPLATES(Version);
 UNIQUEMODELOBJECT_TEMPLATES(LifeCycleCostParameters);
 UNIQUEMODELOBJECT_TEMPLATES(RadianceParameters);
-MODELOBJECT_TEMPLATES(LifeCycleCost);
+MODELOBJECT_TEMPLATES(Meter);
+MODELOBJECT_TEMPLATES(LifeCycleCost); // Probably need to make a ModelEconomics.i file for these
+MODELOBJECT_TEMPLATES(UtilityBill); // Probably need to make a ModelEconomics.i file for these
 MODELOBJECT_TEMPLATES(ComponentData);
 MODELOBJECT_TEMPLATES(ScheduleTypeLimits); // Needed for OutputVariable
 MODELOBJECT_TEMPLATES(ScheduleBase); // Needed for OutputVariable
@@ -166,7 +168,9 @@ SWIG_MODELOBJECT(ResourceObject);
 SWIG_UNIQUEMODELOBJECT(Version);
 SWIG_UNIQUEMODELOBJECT(LifeCycleCostParameters);
 SWIG_UNIQUEMODELOBJECT(RadianceParameters);
-SWIG_MODELOBJECT(LifeCycleCost);
+SWIG_MODELOBJECT(Meter);
+SWIG_MODELOBJECT(LifeCycleCost); // Probably need to make a ModelEconomics.i file for these
+SWIG_MODELOBJECT(UtilityBill); // Probably need to make a ModelEconomics.i file for these
 SWIG_MODELOBJECT(ComponentData);
 SWIG_MODELOBJECT(ScheduleTypeLimits); // Needed for OutputVariable
 SWIG_MODELOBJECT(ScheduleBase); // Needed for OutputVariable

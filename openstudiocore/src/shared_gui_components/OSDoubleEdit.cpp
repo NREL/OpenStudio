@@ -84,6 +84,54 @@ void OSDoubleEdit2::bind(model::ModelObject& modelObject,
   completeBind();
 }
 
+void OSDoubleEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
+                         DoubleGetter get,
+                         boost::optional<DoubleSetter> set,
+                         boost::optional<NoFailAction> reset,
+                         boost::optional<NoFailAction> autosize,
+                         boost::optional<NoFailAction> autocalculate,
+                         boost::optional<BasicQuery> isDefaulted,
+                         boost::optional<BasicQuery> isAutosized,
+                         boost::optional<BasicQuery> isAutocalculated)
+{
+  m_modelExtensibleGroup = modelExtensibleGroup;
+  m_modelObject = modelExtensibleGroup.getOptionalObject<model::ModelObject>();
+  m_get = get;
+  m_set = set;
+  m_reset = reset;
+  m_autosize = autosize;
+  m_autocalculate = autocalculate;
+  m_isDefaulted = isDefaulted;
+  m_isAutosized = isAutosized;
+  m_isAutocalculated = isAutocalculated;
+
+  completeBind();
+}
+
+void OSDoubleEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
+                         OptionalDoubleGetter get,
+                         boost::optional<DoubleSetter> set,
+                         boost::optional<NoFailAction> reset,
+                         boost::optional<NoFailAction> autosize,
+                         boost::optional<NoFailAction> autocalculate,
+                         boost::optional<BasicQuery> isDefaulted,
+                         boost::optional<BasicQuery> isAutosized,
+                         boost::optional<BasicQuery> isAutocalculated)
+{
+  m_modelExtensibleGroup = modelExtensibleGroup;
+  m_modelObject = modelExtensibleGroup.getOptionalObject<model::ModelObject>();
+  m_getOptional = get;
+  m_set = set;
+  m_reset = reset;
+  m_autosize = autosize;
+  m_autocalculate = autocalculate;
+  m_isDefaulted = isDefaulted;
+  m_isAutosized = isAutosized;
+  m_isAutocalculated = isAutocalculated;
+
+  completeBind();
+}
+
 void OSDoubleEdit2::completeBind() {
 
   // only let one of autosize/autocalculate
@@ -115,6 +163,7 @@ void OSDoubleEdit2::unbind() {
   if (m_modelObject){
     this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
     m_modelObject.reset();
+    m_modelExtensibleGroup.reset();
     m_get.reset();
     m_getOptional.reset();
     m_set.reset();
@@ -171,6 +220,13 @@ void OSDoubleEdit2::onEditingFinished() {
 }
 
 void OSDoubleEdit2::onModelObjectChange() {
+  if (m_modelExtensibleGroup){
+    if (m_modelExtensibleGroup->empty()){
+      // this is equivalent to onModelObjectRemove for the extensible group
+      unbind();
+      return;
+    }
+  }
   refreshTextAndLabel();
 }
 

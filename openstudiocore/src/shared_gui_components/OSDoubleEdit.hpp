@@ -23,6 +23,7 @@
 #include <shared_gui_components/FieldMethodTypedefs.hpp>
 
 #include <model/ModelObject.hpp>
+#include <model/ModelExtensibleGroup.hpp>
 
 #include <utilities/core/Logger.hpp>
 
@@ -60,6 +61,26 @@ class OSDoubleEdit2: public QLineEdit {
             boost::optional<BasicQuery> isAutosized=boost::none,
             boost::optional<BasicQuery> isAutocalculated=boost::none);
 
+  void bind(model::ModelExtensibleGroup& modelExtensibleGroup,
+            DoubleGetter get,
+            boost::optional<DoubleSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<NoFailAction> autosize=boost::none,
+            boost::optional<NoFailAction> autocalculate=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none,
+            boost::optional<BasicQuery> isAutosized=boost::none,
+            boost::optional<BasicQuery> isAutocalculated=boost::none);
+
+  void bind(model::ModelExtensibleGroup& modelExtensibleGroup,
+            OptionalDoubleGetter get,
+            boost::optional<DoubleSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<NoFailAction> autosize=boost::none,
+            boost::optional<NoFailAction> autocalculate=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none,
+            boost::optional<BasicQuery> isAutosized=boost::none,
+            boost::optional<BasicQuery> isAutocalculated=boost::none);
+
   void unbind();
 
  private slots:
@@ -71,7 +92,8 @@ class OSDoubleEdit2: public QLineEdit {
   void onModelObjectRemove(Handle handle);
 
  private:
-  boost::optional<model::ModelObject> m_modelObject;
+  boost::optional<model::ModelObject> m_modelObject; // will be set if attached to ModelObject or ModelExtensibleGroup
+  boost::optional<model::ModelExtensibleGroup> m_modelExtensibleGroup; // will only be set if attached to ModelExtensibleGroup
   boost::optional<DoubleGetter> m_get;
   boost::optional<OptionalDoubleGetter> m_getOptional;
   boost::optional<DoubleSetter> m_set;
