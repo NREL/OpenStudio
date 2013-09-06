@@ -41,7 +41,7 @@ namespace runmanager {
 
 namespace analysis {
 
-class AnalysisSerializationOptions;
+struct AnalysisSerializationOptions;
 
 namespace detail {
 

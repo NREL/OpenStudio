@@ -1945,21 +1945,21 @@ std::string VersionTranslator::update_0_11_5_to_0_11_6(const IdfFile& idf_0_11_5
 
               boost::optional<std::string> s;
 
-              if( s = object2.getString(0) ) {
+              if( (s = object2.getString(0)) ) {
                 newPortList.setString(0,s.get());
               }
 
-              if( s = object2.getString(1) ) {
+              if( (s = object2.getString(1)) ) {
                 newPortList.setString(1,s.get());
               }
               
-              if( s = object.getString(0) ) {
+              if( (s = object.getString(0)) ) {
                 newPortList.setString(2,s.get());
               }
 
               for( unsigned i = 2; i < object2.numFields(); i++ ) {
 
-                if( s = object2.getString(i) ) {
+                if( (s = object2.getString(i)) ) {
                   newPortList.setString(i + 1, s.get());
                 }
 

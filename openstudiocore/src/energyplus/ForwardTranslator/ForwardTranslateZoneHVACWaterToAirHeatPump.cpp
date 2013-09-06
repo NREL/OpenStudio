@@ -98,7 +98,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
 
   if( boost::optional<Node> node = modelObject.inletNode() )
   {
-    if( s = node->name() )
+    if( (s = node->name()) )
     {
       airInletNodeName = s;
 
@@ -111,7 +111,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
 
   if( boost::optional<Node> node = modelObject.outletNode() )
   {
-    if( s = node->name() )
+    if( (s = node->name()) )
     {
       airOutletNodeName = s;
 
@@ -154,7 +154,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
   {
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFlowRateDuringCoolingOperation,"Autosize");
   }
-  else if( value = modelObject.supplyAirFlowRateDuringCoolingOperation() )
+  else if( (value = modelObject.supplyAirFlowRateDuringCoolingOperation()) )
   {
     idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFlowRateDuringCoolingOperation,value.get());
   }
@@ -164,7 +164,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
   {
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation,"Autosize");
   }
-  else if( value = modelObject.supplyAirFlowRateDuringHeatingOperation() )
+  else if( (value = modelObject.supplyAirFlowRateDuringHeatingOperation()) )
   {
     idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFlowRateDuringHeatingOperation,value.get());
   }
@@ -174,7 +174,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
   {
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded,"Autosize");
   } 
-  else if( value = modelObject.supplyAirFlowRateWhenNoCoolingorHeatingisNeeded() )
+  else if( (value = modelObject.supplyAirFlowRateWhenNoCoolingorHeatingisNeeded()) )
   {
     idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded,value.get());
   }
@@ -184,7 +184,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
   {
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirFlowRateDuringCoolingOperation,"Autosize");
   }
-  else if( value = modelObject.outdoorAirFlowRateDuringCoolingOperation() )
+  else if( (value = modelObject.outdoorAirFlowRateDuringCoolingOperation()) )
   {
     idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirFlowRateDuringCoolingOperation,value.get());
   }
@@ -194,7 +194,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
   {
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirFlowRateDuringHeatingOperation,"Autosize");
   }
-  else if( value = modelObject.outdoorAirFlowRateDuringHeatingOperation() )
+  else if( (value = modelObject.outdoorAirFlowRateDuringHeatingOperation()) )
   {
     idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirFlowRateDuringHeatingOperation,value.get());
   }
@@ -204,7 +204,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
   {
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded,"Autosize");
   }
-  else if( value = modelObject.outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() )
+  else if( (value = modelObject.outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded()) )
   {
     idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded,value.get());
   }
@@ -261,25 +261,25 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
   }
 
   //Maximum Cycling Rate
-  if( value = modelObject.maximumCyclingRate() )
+  if( (value = modelObject.maximumCyclingRate()) )
   {
     idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::MaximumCyclingRate,value.get());
   }
 
   //Heat Pump Time Constant
-  if( value = modelObject.heatPumpTimeConstant() )
+  if( (value = modelObject.heatPumpTimeConstant()) )
   {
     idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpTimeConstant,value.get());
   }
 
   //Fraction of On-Cycle Power Use
-  if( value = modelObject.fractionofOnCyclePowerUse())
+  if( (value = modelObject.fractionofOnCyclePowerUse()) )
   {
     idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::FractionofOnCyclePowerUse,value.get());
   }
 
   //Heat Pump Fan Delay Time
-  if( value = modelObject.heatPumpFanDelayTime() )
+  if( (value = modelObject.heatPumpFanDelayTime()) )
   {
     idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpFanDelayTime,value.get());
   }
@@ -321,13 +321,13 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
   {
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater,"Autosize"); 
   }
-  else if( value = modelObject.maximumSupplyAirTemperaturefromSupplementalHeater() )
+  else if( (value = modelObject.maximumSupplyAirTemperaturefromSupplementalHeater()) )
   {
     idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater,value.get());
   }
 
   // MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation
-  if( value = modelObject.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() )
+  if( (value = modelObject.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation()) )
   {
     idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation,value.get());
   }

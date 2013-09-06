@@ -41,7 +41,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveFanPressureRise(Curv
   OptionalString s;
   OptionalDouble d;
 
-  if(s = modelObject.name()) {
+  if((s = modelObject.name())) {
     idfObject.setName(*s);
   }
 
@@ -53,10 +53,10 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveFanPressureRise(Curv
   idfObject.setDouble(Curve_FanPressureRiseFields::MaximumValueofQfan,modelObject.maximumValueofQfan());
   idfObject.setDouble(Curve_FanPressureRiseFields::MinimumValueofPsm,modelObject.minimumValueofPsm());
   idfObject.setDouble(Curve_FanPressureRiseFields::MaximumValueofPsm,modelObject.maximumValueofPsm());
-  if (d = modelObject.minimumCurveOutput()) {
+  if ((d = modelObject.minimumCurveOutput())) {
     idfObject.setDouble(Curve_FanPressureRiseFields::MinimumCurveOutput,*d);
   }
-  if (d = modelObject.maximumCurveOutput()) {
+  if ((d = modelObject.maximumCurveOutput())) {
     idfObject.setDouble(Curve_FanPressureRiseFields::MaximumCurveOutput,*d);
   }
 

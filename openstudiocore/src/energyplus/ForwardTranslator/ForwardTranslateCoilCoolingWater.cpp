@@ -68,7 +68,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingWater( CoilCoo
   {
     idfObject.setString(Coil_Cooling_WaterFields::DesignWaterFlowRate,"Autosize"); 
   }
-  else if( value = modelObject.designWaterFlowRate() )
+  else if( (value = modelObject.designWaterFlowRate()) )
   {
     idfObject.setDouble(Coil_Cooling_WaterFields::DesignWaterFlowRate,value.get());
   }
@@ -79,7 +79,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingWater( CoilCoo
   {
     idfObject.setString(Coil_Cooling_WaterFields::DesignAirFlowRate,"Autosize");
   }
-  else if( value = modelObject.designAirFlowRate() )
+  else if( (value = modelObject.designAirFlowRate()) )
   {
     idfObject.setDouble(Coil_Cooling_WaterFields::DesignAirFlowRate,value.get());
   }
@@ -90,7 +90,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingWater( CoilCoo
   {
     idfObject.setString(Coil_Cooling_WaterFields::DesignInletWaterTemperature,"Autosize");
   }
-  else if( value = modelObject.designInletWaterTemperature() )
+  else if( (value = modelObject.designInletWaterTemperature()) )
   {
     idfObject.setDouble(Coil_Cooling_WaterFields::DesignInletWaterTemperature,value.get());
   }
@@ -101,7 +101,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingWater( CoilCoo
   {
     idfObject.setString(Coil_Cooling_WaterFields::DesignInletAirTemperature,"Autosize");
   }
-  else if( value = modelObject.designInletAirTemperature() )
+  else if( (value = modelObject.designInletAirTemperature()) )
   {
     idfObject.setDouble(Coil_Cooling_WaterFields::DesignInletAirTemperature,value.get());
   }
@@ -112,7 +112,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingWater( CoilCoo
   {
     idfObject.setString(Coil_Cooling_WaterFields::DesignOutletAirTemperature,"Autosize");
   }
-  else if( value = modelObject.designOutletAirTemperature() )
+  else if( (value = modelObject.designOutletAirTemperature()) )
   {
     idfObject.setDouble(Coil_Cooling_WaterFields::DesignOutletAirTemperature,value.get());
   }
@@ -123,7 +123,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingWater( CoilCoo
   {
     idfObject.setString(Coil_Cooling_WaterFields::DesignInletAirHumidityRatio,"Autosize");
   }
-  else if( value = modelObject.designInletAirHumidityRatio() )
+  else if( (value = modelObject.designInletAirHumidityRatio()) )
   {
     idfObject.setDouble(Coil_Cooling_WaterFields::DesignInletAirHumidityRatio,value.get());
   }
@@ -134,7 +134,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingWater( CoilCoo
   {
     idfObject.setString(Coil_Cooling_WaterFields::DesignOutletAirHumidityRatio,"Autosize");
   }
-  else if( value = modelObject.designOutletAirHumidityRatio() )
+  else if( (value = modelObject.designOutletAirHumidityRatio()) )
   {
     idfObject.setDouble(Coil_Cooling_WaterFields::DesignOutletAirHumidityRatio,value.get());
   }

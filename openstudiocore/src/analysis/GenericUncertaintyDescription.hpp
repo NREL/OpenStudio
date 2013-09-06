@@ -26,7 +26,7 @@
 namespace openstudio {
 
 class Attribute;
-class AttributeDescription;
+struct AttributeDescription;
 
 namespace analysis {
 

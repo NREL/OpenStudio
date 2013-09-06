@@ -93,7 +93,7 @@ OptionalModelObject ReverseTranslator::translateSetpointManagerSingleZoneReheat(
 
     if( modelObject )
     {
-      if( space = modelObject->optionalCast<Space>() )
+      if( (space = modelObject->optionalCast<Space>()) )
       {
         if( boost::optional<ThermalZone> thermalZone = space->thermalZone() )
         {

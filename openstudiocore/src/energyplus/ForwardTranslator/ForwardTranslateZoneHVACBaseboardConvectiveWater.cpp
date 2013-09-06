@@ -95,7 +95,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACBaseboardConvecti
     {
       idfObject.setString(ZoneHVAC_Baseboard_Convective_WaterFields::UFactorTimesAreaValue,"Autosize");
     }
-    else if( value = coilHeatBBConvWater.uFactorTimesAreaValue() )
+    else if( (value = coilHeatBBConvWater.uFactorTimesAreaValue()) )
     {
       idfObject.setDouble(ZoneHVAC_Baseboard_Convective_WaterFields::UFactorTimesAreaValue,value.get());
     }
@@ -106,7 +106,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACBaseboardConvecti
     {
       idfObject.setString(ZoneHVAC_Baseboard_Convective_WaterFields::MaximumWaterFlowRate,"Autosize");
     }
-    else if( value = coilHeatBBConvWater.maximumWaterFlowRate() )
+    else if( (value = coilHeatBBConvWater.maximumWaterFlowRate()) )
     {
       idfObject.setDouble(ZoneHVAC_Baseboard_Convective_WaterFields::MaximumWaterFlowRate,value.get());
     }
@@ -117,7 +117,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACBaseboardConvecti
     {
       idfObject.setDouble(ZoneHVAC_Baseboard_Convective_WaterFields::ConvergenceTolerance,0.001);
     }
-    else if( value = coilHeatBBConvWater.convergenceTolerance())
+    else if( (value = coilHeatBBConvWater.convergenceTolerance()) )
     {
       idfObject.setDouble(ZoneHVAC_Baseboard_Convective_WaterFields::ConvergenceTolerance,value.get());
     }

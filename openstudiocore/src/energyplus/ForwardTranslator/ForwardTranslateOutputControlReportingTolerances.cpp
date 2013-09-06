@@ -46,12 +46,12 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputControlReportingTol
 
   boost::optional<double> value;
 
-  if( value = modelObject.toleranceforTimeCoolingSetpointNotMet() )
+  if( (value = modelObject.toleranceforTimeCoolingSetpointNotMet()) )
   {
     idfObject.setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet,value.get());
   }
 
-  if( value = modelObject.toleranceforTimeHeatingSetpointNotMet() )
+  if( (value = modelObject.toleranceforTimeHeatingSetpointNotMet()) )
   {
     idfObject.setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet,value.get());
   }

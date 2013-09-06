@@ -910,7 +910,7 @@ namespace detail {
         (status == openstudio::runmanager::TreeStatusEnum::Failed))
     {
       openstudio::runmanager::Job parentJob = *job;
-      while (job = parentJob.parent()) {
+      while ((job = parentJob.parent())) {
         parentJob = *job;
       }
       return parentJob;
