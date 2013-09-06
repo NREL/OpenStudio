@@ -18,13 +18,29 @@
  **********************************************************************/
 
 #include <pat_app/CloudMonitor.hpp>
+#include <pat_app/RunTabController.hpp>
+#include <pat_app/RunView.hpp>
+#include <pat_app/PatApp.hpp>
 #include <utilities/cloud/CloudProvider.hpp>
 #include <utilities/cloud/CloudProvider_Impl.hpp>
+#include <utilities/cloud/VagrantProvider.hpp>
+#include <utilities/cloud/VagrantProvider_Impl.hpp>
 #include <utilities/core/Assert.hpp>
+#include <pat_app/VagrantConfiguration.hxx>
 
 namespace openstudio {
 
 namespace pat {
+
+CloudMonitor::CloudMonitor()
+  : QObject()  
+{    
+  makeProvider();
+}      
+
+CloudMonitor::~CloudMonitor()
+{
+}
 
 QSharedPointer<CloudProvider> CloudMonitor::cloudProvider() const
 {
@@ -37,32 +53,88 @@ void CloudMonitor::setCloudProvider(QSharedPointer<CloudProvider> cloudProvider)
 
   bool bingo;
 
-  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(serverStarting()),this,SIGNAL(serverStarting()));
-  OS_ASSERT(bingo);
+  if( m_cloudProvider )
+  {
+    bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(serverStarted(const Url&)),
+                    this,SLOT(onCloudStartupComplete()));
+    OS_ASSERT(bingo);
 
-  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(serverStarted(const Url&)),
-                  this,SIGNAL(serverStarted(const Url&)));
-  OS_ASSERT(bingo);
+    bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(terminateComplete()),
+                   this,SLOT(onCloudTerminateComplete()));
+    OS_ASSERT(bingo);
+  }
+}
 
-  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(workerStarting()),
-                  this,SIGNAL(workerStarting()));
-  OS_ASSERT(bingo);
+void CloudMonitor::toggleCloud(bool on)
+{
+  if( cloudProvider() )
+  {
+    if( QSharedPointer<RunTabController> runTabController = PatApp::instance()->runTabController() )
+    {
+      RunView * runView = runTabController->runView; 
 
-  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(workerStarted(const Url&)),
-                  this,SIGNAL(workerStarted(const Url&)));
-  OS_ASSERT(bingo);
+      OS_ASSERT(runView);
 
-  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(allWorkersStarted()),
-                  this,SIGNAL(allWorkersStarted()));
-  OS_ASSERT(bingo);
+      runView->runStatusView->toggleCloudButton->setEnabled(false);
+    }
 
-  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(terminating()),
-                  this,SIGNAL(terminating()));
-  OS_ASSERT(bingo);
+    if( on )
+    {
+      cloudProvider()->startServer();
+    }
+    else
+    {
+      cloudProvider()->terminate();
+    }
+  }
+}
 
-  bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(terminateComplete()),
-                  this,SIGNAL(terminateComplete()));
-  OS_ASSERT(bingo);
+void CloudMonitor::onCloudStartupComplete()
+{
+  if( QSharedPointer<RunTabController> runTabController = PatApp::instance()->runTabController() )
+  {
+    RunView * runView = runTabController->runView; 
+
+    OS_ASSERT(runView);
+    
+    runView->runStatusView->toggleCloudButton->setStarting(false);
+
+    runView->runStatusView->toggleCloudButton->setEnabled(true);
+  }
+}
+
+void CloudMonitor::onCloudTerminateComplete()
+{
+  makeProvider();
+
+  if( QSharedPointer<RunTabController> runTabController = PatApp::instance()->runTabController() )
+  {
+    RunView * runView = runTabController->runView; 
+
+    OS_ASSERT(runView);
+
+    runView->runStatusView->toggleCloudButton->setStopping(false);
+
+    runView->runStatusView->toggleCloudButton->setEnabled(true);
+  }
+}
+
+QSharedPointer<VagrantProvider> CloudMonitor::makeProvider()
+{
+  // create the vagrant provider
+  path serverPath = vagrantServerPath();
+  Url serverUrl("http://localhost:8080");
+  path workerPath = vagrantWorkerPath();
+  Url workerUrl("http://localhost:8081");
+
+  QSharedPointer<VagrantProvider> provider;
+  provider = QSharedPointer<VagrantProvider>(new VagrantProvider(serverPath, serverUrl, workerPath, workerUrl));
+
+  provider->signUserAgreement(true);
+
+  setCloudProvider(provider);
+
+  return provider;
 }
 
 } // pat

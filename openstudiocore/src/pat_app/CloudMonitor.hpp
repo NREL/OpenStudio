@@ -30,6 +30,7 @@
 namespace openstudio {
 
 class CloudProvider;
+class VagrantProvider;
 
 namespace pat {
 
@@ -45,6 +46,10 @@ class CloudMonitor : public QObject
   Q_OBJECT
 
   public:
+
+  CloudMonitor();
+
+  virtual ~CloudMonitor();
 
   QSharedPointer<CloudProvider> cloudProvider() const;
 
@@ -66,7 +71,17 @@ class CloudMonitor : public QObject
 
   void terminateComplete();
 
+  private slots:
+
+  void toggleCloud(bool on);
+
+  void onCloudStartupComplete();
+
+  void onCloudTerminateComplete();
+
   private:
+
+  QSharedPointer<VagrantProvider> makeProvider();
 
   QSharedPointer<CloudProvider> m_cloudProvider;
 };

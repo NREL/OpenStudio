@@ -23,7 +23,6 @@
 #include <pat_app/RunView.hpp>
 #include <pat_app/PatMainWindow.hpp>
 #include <pat_app/PatVerticalTabWidget.hpp>
-#include <pat_app/VagrantConfiguration.hxx>
 
 #include <analysis/DataPoint_Impl.hpp>
 #include <analysis/Measure.hpp>
@@ -37,7 +36,6 @@
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/Job.hpp>
 
-#include <utilities/cloud/VagrantProvider.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Path.hpp>
@@ -60,7 +58,8 @@ RunTabController::RunTabController()
   bingo = connect(runView->runStatusView, SIGNAL(playButtonClicked(bool)), this, SLOT(onPlayButtonClicked(bool)));
   OS_ASSERT(bingo);
 
-  bingo = connect(runView->runStatusView->toggleCloudButton,SIGNAL(toggled(bool)),this,SLOT(toggleCloud(bool)));
+  bingo = connect(runView->runStatusView->toggleCloudButton,SIGNAL(toggled(bool)),
+                  PatApp::instance()->cloudMonitor().data(),SLOT(toggleCloud(bool)));
   OS_ASSERT(bingo);
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
@@ -94,26 +93,6 @@ RunTabController::RunTabController()
     runView->dataPointRunListView->setListController(m_dataPointRunListController);
     runView->dataPointRunListView->setDelegate(m_dataPointRunItemDelegate);
   }
-
-  makeProvider();
-}
-
-QSharedPointer<VagrantProvider> RunTabController::makeProvider()
-{
-  // create the vagrant provider
-  path serverPath = vagrantServerPath();
-  Url serverUrl("http://localhost:8080");
-  path workerPath = vagrantWorkerPath();
-  Url workerUrl("http://localhost:8081");
-
-  QSharedPointer<VagrantProvider> provider;
-  provider = QSharedPointer<VagrantProvider>(new VagrantProvider(serverPath, serverUrl, workerPath, workerUrl));
-
-  provider->signUserAgreement(true);
-
-  PatApp::instance()->cloudMonitor()->setCloudProvider(provider);
-
-  return provider;
 }
 
 RunTabController::~RunTabController()
@@ -289,48 +268,6 @@ void RunTabController::onPlayButtonClicked(bool clicked)
 
   // important to call, this controls tab 1 and 2 access
   onIterationProgress();
-}
-
-void RunTabController::toggleCloud(bool on)
-{
-  bool bingo;
-
-  if( on )
-  {
-    bingo = connect(PatApp::instance()->cloudMonitor().data(),SIGNAL(serverStarted(const Url&)),
-                    this,SLOT(onCloudStartupComplete()));
-    OS_ASSERT(bingo);
-
-    runView->runStatusView->toggleCloudButton->setEnabled(false);
-
-    PatApp::instance()->cloudMonitor()->cloudProvider()->startServer();
-  }
-  else
-  {
-    bingo = connect(PatApp::instance()->cloudMonitor().data(),SIGNAL(terminateComplete()),
-                   this,SLOT(onCloudTerminateComplete()));
-    OS_ASSERT(bingo);
-
-    runView->runStatusView->toggleCloudButton->setEnabled(false);
-
-    PatApp::instance()->cloudMonitor()->cloudProvider()->terminate();
-  }
-}
-
-void RunTabController::onCloudStartupComplete()
-{
-  runView->runStatusView->toggleCloudButton->setStarting(false);
-
-  runView->runStatusView->toggleCloudButton->setEnabled(true);
-}
-
-void RunTabController::onCloudTerminateComplete()
-{
-  runView->runStatusView->toggleCloudButton->setStopping(false);
-
-  makeProvider();
-
-  runView->runStatusView->toggleCloudButton->setEnabled(true);
 }
 
 void RunTabController::onIterationProgress()

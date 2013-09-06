@@ -1157,6 +1157,26 @@ QSharedPointer<MainRightColumnController> PatApp::mainRightColumnController() co
   return m_mainRightColumnController;
 }
 
+QSharedPointer<DesignAlternativesTabController> PatApp::designAlternativesTabController() const
+{
+  return m_designAlternativesTabController;
+}
+
+QSharedPointer<MeasuresTabController> PatApp::measuresTabController() const
+{
+  return m_measuresTabController;
+}
+
+QSharedPointer<ResultsTabController> PatApp::resultsTabController() const
+{
+  return m_resultsTabController;
+}
+
+QSharedPointer<RunTabController> PatApp::runTabController() const
+{
+  return m_runTabController;
+}
+
 void PatApp::addMeasure()
 {
   m_measureManager.addMeasure();

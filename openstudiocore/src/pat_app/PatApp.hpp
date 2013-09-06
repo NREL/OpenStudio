@@ -129,6 +129,14 @@ class PatApp : public QApplication, public BaseApp
 
   QSharedPointer<MainRightColumnController> mainRightColumnController() const;
 
+  QSharedPointer<DesignAlternativesTabController> designAlternativesTabController() const;
+
+  QSharedPointer<MeasuresTabController> measuresTabController() const;
+
+  QSharedPointer<ResultsTabController> resultsTabController() const;
+
+  QSharedPointer<RunTabController> runTabController() const;
+
   MeasureManager &measureManager();
 
   const MeasureManager &measureManager() const;
