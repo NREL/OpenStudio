@@ -27,6 +27,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QHttpMultiPart>
 #include <QMutex>
 #include <QFile>
 
@@ -545,22 +546,39 @@ namespace openstudio{
 
       if (exists(analysisZipFile)){
 
-        QString id = toQString(removeBraces(analysisUUID));
-        QUrl url(m_url.toString().append("/analyses/").append(id).append("/upload.json")); // DLM: is this right?
-
         QFile file(toQString(analysisZipFile));
-        QByteArray postData = file.readAll().toBase64(); // DLM: is this right?  
+        if (file.open(QIODevice::ReadOnly)){
 
-        QNetworkRequest request(url);
-        //request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-zip-compressed"); // DLM: is this right?
-        request.setHeader(QNetworkRequest::ContentLengthHeader, postData.size()); // DLM: is this right?
+          QString bound="-------3dpj1k39xoa84u4804ee1156snfxl6"; 
 
-        m_networkReply = m_networkAccessManager->post(request, postData);
+          QByteArray data(QString("--" + bound + "\r\n").toAscii());
+          //data += "Content-Disposition: form-data; name=\"action\"\r\n\r\n";
+          //data += "\r\n";
+          //data += QString("--" + bound + "\r\n").toAscii();
+          data += "Content-Disposition: form-data; name=\"file\"; filename=\"seed_zip.zip\"\r\n";
+          data += "Content-Type: application/zip\r\n\r\n";
+          data.append(file.readAll());
+          data += "\r\n";
+          data += QString("--" + bound + "\r\n.").toAscii();
+          data += "\r\n";
+          file.close();
 
-        bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processUploadAnalysisFiles()));
-        OS_ASSERT(test);
+          QString id = toQString(removeBraces(analysisUUID));
+          QUrl url(m_url.toString().append("/analyses/").append(id).append("/upload.json")); 
 
-        return true;
+          QNetworkRequest request(url);
+          request.setRawHeader(QString("Accept").toAscii(), QString("*/*; q=0.5, application/xml").toAscii());
+          request.setRawHeader(QString("Accept-Encoding").toAscii(), QString("gzip,deflate").toAscii());
+          request.setRawHeader(QString("Content-Type").toAscii(),QString("multipart/form-data; boundary=" + bound).toAscii());
+          request.setRawHeader(QString("Content-Length").toAscii(), QString::number(data.length()).toAscii());
+         
+          m_networkReply = m_networkAccessManager->post(request, data);
+
+          bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processUploadAnalysisFiles()));
+          OS_ASSERT(test);
+
+          return true;
+        }
 
       }else{
         logError("File does not exist");
@@ -799,22 +817,7 @@ namespace openstudio{
     {
       return false;
     }
-/*
-    bool OSServer_Impl::connect(const std::string& signal,
-                                const QObject* qObject,
-                                const std::string& slot,
-                                Qt::ConnectionType type) const
-    {
-      return QObject::connect(this, signal.c_str(), qObject, slot.c_str(), type);
-    }
 
-    bool OSServer_Impl::disconnect(const char* signal,
-                                   const QObject* receiver,
-                                   const char* slot) const
-    {
-      return QObject::disconnect(this,signal,receiver,slot);
-    }
-*/
     void OSServer_Impl::processAvailable()
     {
       bool success = false;

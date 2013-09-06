@@ -174,9 +174,6 @@ class ANALYSIS_API Analysis : public AnalysisObject {
 
   std::vector<DataPoint> failedDataPoints() const;
 
-  // HERE -- Check directory(), or missing FileReferences? directory() seems most robust for
-  // failed DataPoints (if we don't need/want to register a remote directory upon importing
-  // JSON).
   /** Return all complete \link DataPoint DataPoints\endlink with runType() ==
    *  DataPointRunType::CloudDetailed and an empty directory(). */
   std::vector<DataPoint> dataPointsNeedingDetails() const;
