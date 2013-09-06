@@ -41,19 +41,45 @@ namespace openstudio {
 
   class EndUses;
 
-namespace isomodel {
+namespace isomodel { 
+
+//flag to turn on debug printing of many intermediate variables to stdout
+#define DEBUG false
+/*
+
+*/
+ISOMODEL_API Vector mult(const double* v1, const double s1, int size);
+ISOMODEL_API Vector mult(const Vector& v1, const double s1);
+ISOMODEL_API Vector mult(const Vector& v1, const double* v2);
+ISOMODEL_API Vector mult(const Vector& v1, const Vector& v2);
+ISOMODEL_API Vector div(const Vector& v1,const double s1);
+ISOMODEL_API Vector div(const double s1, const Vector& v1);
+ISOMODEL_API Vector div(const Vector& v1, const Vector& v2);
+ISOMODEL_API Vector sum(const Vector& v1, const Vector& v2);
+ISOMODEL_API Vector sum(const Vector& v1, const double v2);
+ISOMODEL_API Vector dif(const Vector& v1, const Vector& v2);
+ISOMODEL_API Vector dif(const Vector& v1, const double v2);
+ISOMODEL_API Vector dif(const double v1, const Vector& v2);
+#ifdef max
+  #undef max
+#endif
+ISOMODEL_API Vector max(const Vector& v1, const Vector& v2);
+ISOMODEL_API Vector max(const Vector& v1, double val);
+ISOMODEL_API double max(const Vector& v1);
+#ifdef min
+  #undef min
+#endif
+ISOMODEL_API Vector min(const Vector& v1, double val);
+ISOMODEL_API double min(const Vector& v1);
+ISOMODEL_API Vector abs(const Vector& v1);
+ISOMODEL_API Vector pow(const Vector& v1, const double xp);
+
+  struct ISOMODEL_API ISOResults{    
+      std::vector<EndUses> monthlyResults;
+  };
 
   class ISOMODEL_API SimModel {
-  public:
-
-    SimModel();
-
-    virtual ~SimModel();
-
-    /** Can't get the shared_ptr to work with EndUses so revert to just pointer **/
-    EndUses* simulate() const;
-  
-  private:
+  private:      
     boost::shared_ptr<Population> pop;
     boost::shared_ptr<Location> location;
     boost::shared_ptr<Lighting> lights;
@@ -61,7 +87,7 @@ namespace isomodel {
     boost::shared_ptr<Structure> structure;
     boost::shared_ptr<Heating> heating;
     boost::shared_ptr<Cooling> cooling;
-    boost::shared_ptr<Ventilation> ventilation;        
+    boost::shared_ptr<Ventilation> ventilation;  
 
     void scheduleAndOccupancy(Vector& weekdayOccupiedMegaseconds, 
             Vector& weekdayUnoccupiedMegaseconds,
@@ -169,6 +195,8 @@ namespace isomodel {
             double phi_I_tot,
             double frac_hrs_wk_day,
             Vector& v_Qfan_tot,
+            Vector& v_Qneed_ht,
+            Vector& v_Qneed_cl,
             double& Qneed_ht_yr,
             double& Qneed_cl_yr) const;
     void hvac(const Vector& v_Qneed_ht,
@@ -187,8 +215,7 @@ namespace isomodel {
     void energyGeneration() const;
     void heatedWater(Vector& v_Q_dhw_elec, Vector& v_Q_dhw_gas) const;
 
-    /** Can't get the shared_ptr to work with EndUses so revert to just pointer **/
-    EndUses* outputGeneration(const Vector& v_Qelec_ht,
+    ISOResults outputGeneration(const Vector& v_Qelec_ht,
             const Vector& v_Qcl_elec_tot,
             const Vector& v_Q_illum_tot,
             const Vector& v_Q_illum_ext_tot,
@@ -199,11 +226,20 @@ namespace isomodel {
             const Vector& v_Qcl_gas_tot,
             const Vector& v_Q_dhw_gas,
             double frac_hrs_wk_day) const;
-
-
+  public:
+    void setPop(boost::shared_ptr<Population> value){pop=value;}
+    void setLocation(boost::shared_ptr<Location> value){location=value;}
+    void setLights(boost::shared_ptr<Lighting> value){lights=value;}
+    void setBuilding(boost::shared_ptr<Building> value){building=value;}
+    void setStructure(boost::shared_ptr<Structure> value){structure=value;}
+    void setHeating(boost::shared_ptr<Heating> value){heating=value;}
+    void setCooling(boost::shared_ptr<Cooling> value){cooling=value;}
+    void setVentilation(boost::shared_ptr<Ventilation> value){ventilation=value;}
+    SimModel();
+    virtual ~SimModel();
+    ISOResults simulate() const;
     REGISTER_LOGGER("openstudio.isomodel.SimModel");
   };
-
 } // isomodel
 } // openstudio
 
