@@ -108,6 +108,10 @@ namespace detail {
     virtual void updatePathData(const openstudio::path& originalBase,
                                 const openstudio::path& newBase);
 
+    /** Impl-only method. Can be used during construction to determine if related 
+     *  records should be refreshed. */
+    UUID lastUuidLast() const;
+
    protected:
 
     /// bind values to a query for saving

@@ -30,9 +30,109 @@
 
 namespace openstudio{
   
+  class CloudSettings;
   class CloudSession;
 
 namespace detail{
+
+  /// CloudSettings_Impl is an abstract base class that returns the information needed to use a CloudProvider (e.g. username, password, etc)
+  class UTILITIES_API CloudSettings_Impl {
+  public:
+
+    /** Constructor provided for deserialization; not for general use. */
+    CloudSettings_Impl(const UUID& uuid,
+                       const UUID& versionUUID);
+
+    virtual ~CloudSettings_Impl();
+
+    /** Unique identifier for OSP. */
+    UUID uuid() const;
+
+    /** Unique identifier of version for OSP. (To avoid unnecessary overhead when nothing 
+     *  has changed.) */
+    UUID versionUUID() const;
+
+    virtual std::string cloudProviderType() const = 0;
+
+    virtual std::string userAgreementText() const = 0;
+
+    virtual bool userAgreementSigned() const = 0;
+
+    virtual void signUserAgreement(bool agree) = 0;
+
+    virtual bool loadSettings(bool overwriteExisting = false) = 0;
+
+    virtual bool saveToSettings(bool overwriteExisting = false) const = 0;
+
+  protected:
+
+    CloudSettings_Impl();
+
+    /** Changes the versionUUID. */
+    void onChange();
+
+  private:
+    // configure logging
+    REGISTER_LOGGER("utilities.cloud.CloudSettings");
+
+    UUID m_uuid;
+    UUID m_versionUUID;
+  };
+
+  /// CloudSession_Impl is an abstract base class for the information needed to identify and reconnect to compute nodes started by a previous CloudProvider.
+  class UTILITIES_API CloudSession_Impl {
+   public:
+
+    /** Constructor provided for deserialization; not for general use. */
+    CloudSession_Impl(const UUID& uuid,
+                      const UUID& versionUUID,
+                      const std::string& sessionId,
+                      const boost::optional<Url>& serverUrl,
+                      const std::vector<Url>& workerUrls);
+
+    virtual ~CloudSession_Impl();
+
+    /** Unique identifier for OSP. */
+    UUID uuid() const;
+
+    /** Unique identifier of version for OSP. (To avoid unnecessary overhead when nothing 
+     *  has changed.) */
+    UUID versionUUID() const;
+
+    virtual std::string cloudProviderType() const = 0;
+    
+    std::string sessionId() const;
+    
+    boost::optional<Url> serverUrl() const;
+    
+    void setServerUrl(const Url& serverUrl);
+    
+    void resetServerUrl();
+    
+    std::vector<Url> workerUrls() const;
+    
+    void addWorkerUrl(const Url& workerUrl);
+    
+    void clearWorkerUrls();
+  
+   protected:
+    CloudSession_Impl(const std::string& sessionId, 
+                      const boost::optional<Url>& serverUrl, 
+                      const std::vector<Url>& workerUrls);
+
+    /** Changes the versionUUID. */
+    void onChange();
+
+   private:
+    UUID m_uuid;
+    UUID m_versionUUID;
+    std::string m_sessionId;
+    boost::optional<Url> m_serverUrl;
+    std::vector<Url> m_workerUrls;
+
+    // configure logging
+    REGISTER_LOGGER("utilities.cloud.CloudSession");
+  };
 
   /// CloudProvider_Impl is an abstract base class for classes that provide cloud resources.
   class UTILITIES_API CloudProvider_Impl : public QObject {
@@ -62,18 +162,6 @@ namespace detail{
     /// blocking call
     virtual std::string type() const = 0;
 
-    /// returns the user agreement text
-    /// blocking call
-    virtual std::string userAgreementText() const = 0;
-
-    /// returns true if the user has signed the user agreement
-    /// blocking call
-    virtual bool userAgreementSigned() const = 0;
-
-    /// signs the user agreement if passed in true, unsigns if passed in false
-    /// blocking call
-    virtual void signUserAgreement(bool agree) = 0;
-
     /// returns true if this computer is connected to the internet
     /// blocking call, clears errors and warnings
     virtual bool internetAvailable() const = 0;
@@ -85,6 +173,14 @@ namespace detail{
     /// returns true if the cloud service validates user credentials
     /// blocking call, clears errors and warnings
     virtual bool validateCredentials() const = 0;
+
+    /// returns the current settings
+    /// blocking call
+    virtual CloudSettings settings() const = 0;
+
+    /// returns true if can assign settings
+    /// blocking call, clears errors and warnings
+    virtual bool setSettings(const CloudSettings& settings) = 0;
 
     /// returns the current session id
     /// blocking call

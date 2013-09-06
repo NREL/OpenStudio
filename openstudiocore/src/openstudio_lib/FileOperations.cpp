@@ -551,7 +551,7 @@ namespace openstudio {
         openstudio::runmanager::ConfigOptions co(true);
 
         analysis::Problem prob = p->analysis().problem();
-        analysisdriver::AnalysisRunOptions runOptions = p->standardRunOptions();
+        analysisdriver::AnalysisRunOptions runOptions = standardRunOptions(*p);
         std::vector<runmanager::WorkItem> workitems(prob.createWorkflow(p->baselineDataPoint(), runOptions.rubyIncludeDirectory()).toWorkItems());
 
         if (useRadianceForDaylightingCalculations)

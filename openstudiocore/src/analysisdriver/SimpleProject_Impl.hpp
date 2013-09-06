@@ -33,6 +33,8 @@
 
 #include <utilities/bcl/BCLMeasure.hpp>
 
+#include <utilities/cloud/CloudProvider.hpp>
+
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/Path.hpp>
 #include <utilities/core/FileLogSink.hpp>
@@ -131,6 +133,10 @@ namespace detail {
 
     /** Returns true if the analysis() is being run by analysisDriver(). */
     bool isRunning() const;
+
+    boost::optional<CloudSession> cloudSession() const;
+
+    boost::optional<CloudSettings> cloudSettings() const;
 
     /** Returns basic run options for this project. */
     AnalysisRunOptions standardRunOptions() const;
@@ -232,6 +238,18 @@ namespace detail {
      *  if operation is incomplete (if not all files can be removed from the file system). */
     bool removeAllDataPoints();
 
+    /** Sets this project's CloudSession to session, which ensures that it will be stored in 
+     *  projectDatabase() upon save(). */
+    void setCloudSession(const CloudSession& session);
+
+    void clearCloudSession();
+
+    /** Sets this project's CloudSettings to settings, which ensures that it will be stored in 
+     *  projectDatabase() upon save(). */
+    void setCloudSettings(const CloudSettings& settings);
+
+    void clearCloudSettings();
+
     /** Creates a zip file of the items needed to run individual DataPoints on a remote system, and
      *  returns the path to that (temporary) file. The file is deleted by SimpleProject's destructor. */
     openstudio::path zipFileForCloud() const;
@@ -278,6 +296,9 @@ namespace detail {
     openstudio::path m_projectDir;
     analysisdriver::AnalysisDriver m_analysisDriver;
     mutable boost::optional<analysis::Analysis> m_analysis; // mutable for lazy load on open
+    mutable boost::optional<CloudSession> m_cloudSession;   // mutable for lazy load on open
+    mutable boost::optional<CloudSettings> m_cloudSettings; // mutable for lazy load on open
+    mutable bool m_cloudSessionSettingsDirty; // don't lazy load if user has explicitly set
     FileLogSink m_logFile;
 
     mutable boost::optional<model::Model> m_seedModel; // clear optional when analysis's seed changes

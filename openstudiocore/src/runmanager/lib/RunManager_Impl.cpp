@@ -2357,6 +2357,32 @@ namespace detail {
     }
   }
 
+  void RunManager_Impl::updateJob(const Job &t_job)
+  {
+    try {
+      Job j = getJob(t_job.uuid());
+      j.updateJob(t_job);
+    } catch (const std::out_of_range &) {
+      // job didn't exist
+      enqueue(t_job, true, m_dbfile.parent_path());
+    }
+  }
+
+  void RunManager_Impl::updateJob(const Job &t_job, const openstudio::path &t_path)
+  {
+    try {
+      Job j = getJob(t_job.uuid());
+      j.updateJob(t_job);
+      if (j.getBasePath() != t_path)
+      {
+        j.setBasePath(t_path);
+      }
+    } catch (const std::out_of_range &) {
+      // job didn't exist
+      enqueue(t_job, true, t_path);
+    }
+  }
+
   void RunManager_Impl::updateJobs(const std::vector<Job> &t_jobTrees)
   {
     LOG(Info, "Updating jobs: " << t_jobTrees.size());
@@ -2364,13 +2390,7 @@ namespace detail {
          itr != t_jobTrees.end();
          ++itr)
     {
-      try {
-        Job j = getJob(itr->uuid());
-        j.updateJob(*itr);
-      } catch (const std::out_of_range &) {
-        // job didn't exist
-        enqueue(*itr, true, m_dbfile.parent_path());
-      }
+      updateJob(*itr);
     }
   }
 

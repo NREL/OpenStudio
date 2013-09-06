@@ -411,6 +411,8 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << "  // TODO: Add a call to createTable in ProjectDatabase_Impl::initialize().\n"
       result << "  static std::string databaseTableName();\n\n"
       
+      result << "  static UpdateByIdQueryData updateByIdQueryData();\n\n"
+      
       if (@baseClassName == "ObjectRecord")
     
         result << "  // TODO: Add a call to this updatePathData method in ProjectDatabase_Impl::updatePathData.\n"
@@ -508,7 +510,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
     end
     
     result << "    /** Save the row that corresponds to this record in projectDatabase. */\n"
-    result << "    virtual void saveRow(ProjectDatabase& projectDatabase);\n\n"
+    result << "    virtual void saveRow(const boost::shared_ptr<QSqlDatabase>& database);\n\n"
     
     result << "    //@}\n"
     result << "    /** @name Getters */\n"
@@ -582,8 +584,8 @@ class ProjectClassGenerator < SubProjectClassGenerator
       
     end
     
-    result << "  void " << @className << "_Impl::saveRow(ProjectDatabase& projectDatabase) {\n"
-    result << "    QSqlQuery query(*(projectDatabase.qSqlDatabase()));\n"
+    result << "  void " << @className << "_Impl::saveRow(const boost::shared_ptr<QSqlDatabase>& database) {\n"
+    result << "    QSqlQuery query(*database);\n"
     result << "    this->makeUpdateByIdQuery<" << @className << ">(query);\n"
     result << "    this->bindValues(query);\n"
     result << "    assertExec(query);\n"
@@ -635,6 +637,54 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << "std::string " << @className << "::databaseTableName() {\n"
       result << "  return \"" << @className << "s\";\n"
       result << "}\n\n"
+      
+      result << "UpdateByIdQueryData UrlRecord::updateByIdQueryData() {\n"
+      result << "  static UpdateByIdQueryData result;\n"
+      result << "  if (result.queryString.empty()) {\n"
+      result << "    // numeric column identifiers\n"
+      result << "    result.columnValues = ColumnsType::getValues();\n"
+      result << "\n"
+      result << "    // query string\n"
+      result << "    std::stringstream ss;\n"
+      result << "    ss << "UPDATE " << databaseTableName() << " SET ";\n"
+      result << "    int expectedValue = 0;\n"
+      result << "    for (std::set<int>::const_iterator it = result.columnValues.begin(),\n"
+      result << "         itend = result.columnValues.end(); it != itend; ++it)\n"
+      result << "    {\n"
+      result << "      // require 0 based columns, don't skip any\n"
+      result << "      OS_ASSERT(*it == expectedValue);\n"
+      result << "      // column name is name, type is description\n"
+      result << "      ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);\n"
+      result << "      // is this the last column?\n"
+      result << "      std::set<int>::const_iterator nextIt = it;\n"
+      result << "      ++nextIt;\n"
+      result << "      if (nextIt == itend) {\n"
+      result << "        ss << " ";\n"
+      result << "      }\n"
+      result << "      else {\n"
+      result << "        ss << ", ";\n"
+      result << "      }\n"
+      result << "      ++expectedValue;\n"
+      result << "    }\n"
+      result << "    ss << "WHERE id=:id";\n"
+      result << "    result.queryString = ss.str();\n"
+      result << "\n"
+      result << "    // null values\n"
+      result << "    for (std::set<int>::const_iterator it = result.columnValues.begin(),\n"
+      result << "         itend = result.columnValues.end(); it != itend; ++it)\n"
+      result << "    {\n"
+      result << "      // bind all values to avoid parameter mismatch error\n"
+      result << "      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {\n"
+      result << "        result.nulls.push_back(QVariant(QVariant::Int));\n"
+      result << "      }\n"
+      result << "      else {\n"
+      result << "        result.nulls.push_back(QVariant(QVariant::String));\n"
+      result << "      }\n"
+      result << "    }\n"
+      result << "  }\n"
+      result << "  return result;\n"
+      result << "}\n\n"
+      
     end
     
     if (@baseClassName == "ObjectRecord")
@@ -1000,7 +1050,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
       result << " " * constructorPreamble.size << "ProjectDatabase database)\n"
       result << "  : " << @baseClassName << "(impl, database)\n"
       result << "{\n"
-      result << "  OS_ASSERTgetImpl<detail::" << @className << "_Impl>());\n"
+      result << "  OS_ASSERT(getImpl<detail::" << @className << "_Impl>());\n"
       result << "}\n"
     end
 
