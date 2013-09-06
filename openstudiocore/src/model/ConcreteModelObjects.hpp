@@ -29,6 +29,7 @@
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirLoopHVACZoneMixer.hpp>
 #include <model/AirLoopHVACZoneSplitter.hpp>
+#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
 #include <model/AirTerminalSingleDuctUncontrolled.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat.hpp>
@@ -45,6 +46,7 @@
 #include <model/CFactorUndergroundWallConstruction.hpp>
 #include <model/ClimateZones.hpp>
 #include <model/ChillerElectricEIR.hpp>
+#include <model/CoilCoolingCooledBeam.hpp>
 #include <model/CoilCoolingDXSingleSpeed.hpp>
 #include <model/CoilCoolingDXTwoSpeed.hpp>
 #include <model/CoilCoolingLowTempRadiantConstFlow.hpp>
@@ -117,6 +119,7 @@
 #include <model/GasMixture.hpp>
 #include <model/GenericModelObject.hpp>
 #include <model/GlareSensor.hpp>
+#include <model/GroundHeatExchangerVertical.hpp>
 #include <model/HeatBalanceAlgorithm.hpp>
 #include <model/HeatExchangerAirToAirSensibleAndLatent.hpp>
 #include <model/HotWaterEquipment.hpp>
@@ -209,6 +212,7 @@
 #include <model/ThermochromicGlazing.hpp>
 #include <model/TimeDependentValuation.hpp>
 #include <model/Timestep.hpp>
+#include <model/UtilityBill.hpp>
 #include <model/UtilityCost_Charge_Block.hpp>
 #include <model/UtilityCost_Charge_Simple.hpp>
 #include <model/UtilityCost_Computation.hpp>
@@ -249,6 +253,7 @@
 #include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
 #include <model/AirLoopHVACZoneMixer_Impl.hpp>
 #include <model/AirLoopHVACZoneSplitter_Impl.hpp>
+#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
 #include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
@@ -265,6 +270,7 @@
 #include <model/CFactorUndergroundWallConstruction_Impl.hpp>
 #include <model/ChillerElectricEIR_Impl.hpp>
 #include <model/ClimateZones_Impl.hpp>
+#include <model/CoilCoolingCooledBeam_Impl.hpp>
 #include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
 #include <model/CoilCoolingDXTwoSpeed_Impl.hpp>
 #include <model/CoilCoolingLowTempRadiantConstFlow_Impl.hpp>
@@ -337,6 +343,7 @@
 #include <model/GasMixture_Impl.hpp>
 #include <model/GenericModelObject_Impl.hpp>
 #include <model/GlareSensor_Impl.hpp>
+#include <model/GroundHeatExchangerVertical_Impl.hpp>
 #include <model/HeatBalanceAlgorithm_Impl.hpp>
 #include <model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp>
 #include <model/HotWaterEquipment_Impl.hpp>
@@ -430,6 +437,7 @@
 #include <model/ThermostatSetpointDualSetpoint_Impl.hpp>
 #include <model/TimeDependentValuation_Impl.hpp>
 #include <model/Timestep_Impl.hpp>
+#include <model/UtilityBill_Impl.hpp>
 #include <model/UtilityCost_Charge_Block_Impl.hpp>
 #include <model/UtilityCost_Charge_Simple_Impl.hpp>
 #include <model/UtilityCost_Computation_Impl.hpp>

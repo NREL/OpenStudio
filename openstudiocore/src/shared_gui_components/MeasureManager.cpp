@@ -65,8 +65,6 @@
 #include "BCLMeasureDialog.hpp"
 #include "ProcessEventsProgressBar.hpp"
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 
 
@@ -221,7 +219,7 @@ std::string MeasureManager::suggestMeasureGroupName(const BCLMeasure &t_measure)
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() ){
     analysis::Analysis analysis = project->analysis();
     analysis::Problem problem = analysis.problem();
-    BOOST_FOREACH(const analysis::InputVariable& variable, problem.variables()){
+    Q_FOREACH(const analysis::InputVariable& variable, problem.variables()){
       allNames.insert(variable.name());
       allNames.insert(variable.displayName());
     }
@@ -250,10 +248,10 @@ std::string MeasureManager::suggestMeasureName(const BCLMeasure &t_measure, bool
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() ){
     analysis::Analysis analysis = project->analysis();
     analysis::Problem problem = analysis.problem();
-    BOOST_FOREACH(const analysis::InputVariable& variable, problem.variables()){
+    Q_FOREACH(const analysis::InputVariable& variable, problem.variables()){
       boost::optional<analysis::MeasureGroup> discreteVariable = variable.optionalCast<analysis::MeasureGroup>();
       if (discreteVariable){
-        BOOST_FOREACH(const analysis::Measure& measure, discreteVariable->measures(false)){
+        Q_FOREACH(const analysis::Measure& measure, discreteVariable->measures(false)){
           allNames.insert(measure.name());
           allNames.insert(measure.displayName());
         }
@@ -315,7 +313,7 @@ void MeasureManager::updateMeasures(analysisdriver::SimpleProject &t_project,
       }
       ss << " failed";
       QString errors;
-      BOOST_FOREACH(const std::string& failMessage,failMessages) {
+      Q_FOREACH(const std::string& failMessage,failMessages) {
         errors.append(QString::fromStdString(failMessage));
         errors.append("\n\n");
       }

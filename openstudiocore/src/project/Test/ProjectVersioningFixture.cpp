@@ -249,6 +249,7 @@ void ProjectVersioningFixture::addAnalysis(ProjectDatabase& database) {
                                   true,
                                   false,
                                   true,
+                                  analysis::DataPointRunType::Local,
                                   values,
                                   DoubleVector(1u,double(rand()) * 10000.0 / double(RAND_MAX)),
                                   toPath("C:/projectPath/aDataPointPath/"),

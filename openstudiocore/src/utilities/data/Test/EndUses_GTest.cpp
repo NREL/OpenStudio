@@ -204,6 +204,15 @@ TEST_F(DataFixture, EndUses2)
 
 }
 
+TEST_F(DataFixture, EndUses3)
+{
+  // EndUseCategoryType is a subset of EndUseType
+  BOOST_FOREACH(int i, EndUseCategoryType::getValues()){
+    EndUseCategoryType endUseCategoryType(i);
+    EXPECT_NO_THROW(EndUseType(endUseCategoryType.valueName())) << endUseCategoryType.valueName();
+  }
+}
+
 TEST_F(DataFixture, EndUses_Conversions)
 {
 

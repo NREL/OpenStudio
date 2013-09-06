@@ -21,11 +21,14 @@
 
 #include <openstudio_lib/LifeCycleCostsTabView.hpp>
 #include <openstudio_lib/LocationTabView.hpp>
+#include <openstudio_lib/UtilityBillsView.hpp>
+#include <openstudio_lib/UtilityBillsController.hpp>
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
 
 #include <QLabel>
+#include <QStackedWidget>
 
 namespace openstudio {
 
@@ -39,26 +42,54 @@ LocationTabController::LocationTabController(const model::Model & model,
   LifeCycleCostsView * lifeCycleCostsView = new LifeCycleCostsView(model);
   mainContentWidget()->addSubTab("Life Cycle Costs",lifeCycleCostsView,LIFE_CYCLE_COSTS);
 
-  QLabel * underConstructionLabel;
+  QLabel * label;
     
-  // Hack code to remove when tab active
-  underConstructionLabel = new QLabel();
-  underConstructionLabel->setPixmap(QPixmap(":/images/coming_soon_utility_rates.png"));
-  underConstructionLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  mainContentWidget()->addSubTab("Utility Rates",underConstructionLabel,UTILITY_RATES);
+  label = new QLabel();
+  label->setPixmap(QPixmap(":/images/utility_calibration_warning.png"));
+  label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
+  m_utilityBillsController = boost::shared_ptr<UtilityBillsController>(new UtilityBillsController(model));
+
+  m_utilityBillsStackedWidget = new QStackedWidget();
+  m_warningWidgetIndex = m_utilityBillsStackedWidget->addWidget(label);
+  m_visibleWidgetIndex = m_utilityBillsStackedWidget->addWidget(m_utilityBillsController->subTabView()); 
+
+  mainContentWidget()->addSubTab("Utility Bills",m_utilityBillsStackedWidget,UTILITY_BILLS);
+
+  m_utilityBillsStackedWidget->setCurrentIndex(m_warningWidgetIndex);
+
+  bool isConnected = false;
+
+  isConnected = connect(m_utilityBillsController->subTabView()->inspectorView(),SIGNAL(showSubTabView(bool)),
+    this,SLOT(showSubTabView(bool)));
+  OS_ASSERT(isConnected);
 
   // Hack code to remove when tab active
-  //underConstructionLabel = new QLabel();
-  //underConstructionLabel->setPixmap(QPixmap(":/images/coming_soon_ground_temperature.png"));
-  //underConstructionLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  //mainContentWidget()->addSubTab("Ground Temperature",underConstructionLabel,GROUND_TEMPERATURE);
+  label = new QLabel();
+  label->setPixmap(QPixmap(":/images/coming_soon_utility_rates.png"));
+  label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+  mainContentWidget()->addSubTab("Utility Rates",label,UTILITY_RATES);
 
   // Hack code to remove when tab active
-  //underConstructionLabel = new QLabel();
-  //underConstructionLabel->setPixmap(QPixmap(":/images/coming_soon_water_mains_temperature.png"));
-  //underConstructionLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  //mainContentWidget()->addSubTab("Water Mains Temperature",underConstructionLabel,WATER_MAINS_TEMPERATURE);
+  //label = new QLabel();
+  //label->setPixmap(QPixmap(":/images/coming_soon_ground_temperature.png"));
+  //label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+  //mainContentWidget()->addSubTab("Ground Temperature",label,GROUND_TEMPERATURE);
 
+  // Hack code to remove when tab active
+  //label = new QLabel();
+  //label->setPixmap(QPixmap(":/images/coming_soon_water_mains_temperature.png"));
+  //label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+  //mainContentWidget()->addSubTab("Water Mains Temperature",label,WATER_MAINS_TEMPERATURE);
+}
+
+void LocationTabController::showSubTabView(bool showSubTabView)
+{
+  if(showSubTabView){
+    m_utilityBillsStackedWidget->setCurrentIndex(m_visibleWidgetIndex);
+  } else {
+    m_utilityBillsStackedWidget->setCurrentIndex(m_warningWidgetIndex);
+  }
 }
 
 } // openstudio

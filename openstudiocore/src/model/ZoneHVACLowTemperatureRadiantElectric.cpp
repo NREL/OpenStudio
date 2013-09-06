@@ -183,7 +183,7 @@ namespace detail {
 						else if(istringEqual("Floor", surfaceType) && istringEqual("Floors",surfGrpName)){
 							surfaces.push_back(surface);
 						}
-						else if(istringEqual("Floor", surfaceType) || istringEqual("Ceiling", surfaceType) && istringEqual("CeilingsandFloors",surfGrpName)){
+						else if(istringEqual("Floor", surfaceType) || (istringEqual("Ceiling", surfaceType) && istringEqual("CeilingsandFloors",surfGrpName))){
 							surfaces.push_back(surface);
 						}
 						else if(istringEqual("AllSurfaces",surfGrpName)){

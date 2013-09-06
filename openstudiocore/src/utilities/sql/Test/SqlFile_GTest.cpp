@@ -63,7 +63,8 @@ TEST_F(SqlFileFixture, EnvPeriods)
   std::vector<std::string> availableEnvPeriods = sqlFile.availableEnvPeriods();
   ASSERT_FALSE(availableEnvPeriods.empty());
   EXPECT_EQ(static_cast<unsigned>(1), availableEnvPeriods.size());
-  EXPECT_EQ("Chicago Ohare Intl Ap IL USA TMY3 WMO#=725300", availableEnvPeriods[0]);
+  //EXPECT_EQ("Chicago Ohare Intl Ap IL USA TMY3 WMO#=725300", availableEnvPeriods[0]);
+  EXPECT_EQ("CHICAGO OHARE INTL AP IL USA TMY3 WMO#=725300", availableEnvPeriods[0]);
 }
 
 TEST_F(SqlFileFixture, TimeSeriesValues)
@@ -71,7 +72,8 @@ TEST_F(SqlFileFixture, TimeSeriesValues)
   std::vector<std::string> availableEnvPeriods = sqlFile.availableEnvPeriods();
   ASSERT_FALSE(availableEnvPeriods.empty());
   EXPECT_EQ(static_cast<unsigned>(1), availableEnvPeriods.size());
-  EXPECT_EQ("Chicago Ohare Intl Ap IL USA TMY3 WMO#=725300", availableEnvPeriods[0]);
+  //EXPECT_EQ("Chicago Ohare Intl Ap IL USA TMY3 WMO#=725300", availableEnvPeriods[0]);
+  EXPECT_EQ("CHICAGO OHARE INTL AP IL USA TMY3 WMO#=725300", availableEnvPeriods[0]);
 
   openstudio::OptionalTimeSeries ts = sqlFile.timeSeries(availableEnvPeriods[0], "Hourly", "Site Outdoor Air Drybulb Temperature",  "Environment");
   ASSERT_TRUE(ts);

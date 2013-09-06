@@ -156,7 +156,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
 	idfObject.setString(ZoneHVAC_UnitHeaterFields::MaximumSupplyAirFlowRate,"Autosize");
   }
 
-  else if ( value = modelObject.maximumSupplyAirFlowRate())
+  else if ( (value = modelObject.maximumSupplyAirFlowRate()) )
   {
      idfObject.setDouble(ZoneHVAC_UnitHeaterFields::MaximumSupplyAirFlowRate,*value);
   }
@@ -219,7 +219,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
 	idfObject.setString(ZoneHVAC_UnitHeaterFields::MaximumHotWaterorSteamFlowRate,"Autosize");
   }
 
-  else if ( value = modelObject.maximumHotWaterFlowRate())
+  else if ( (value = modelObject.maximumHotWaterFlowRate()) )
   {
      idfObject.setDouble(ZoneHVAC_UnitHeaterFields::MaximumHotWaterorSteamFlowRate,*value);
   }

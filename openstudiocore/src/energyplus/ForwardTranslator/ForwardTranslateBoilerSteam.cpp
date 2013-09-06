@@ -60,28 +60,28 @@ boost::optional<IdfObject> ForwardTranslator::translateBoilerSteam( BoilerSteam 
 
   // FuelType
 
-  if( s = modelObject.fuelType() )
+  if( (s = modelObject.fuelType()) )
   {
     idfObject.setString(Boiler_SteamFields::FuelType,s.get());
   }
 
   // MaximumOperatingPressure
 
-  if( value = modelObject.maximumOperatingPressure() )
+  if( (value = modelObject.maximumOperatingPressure()) )
   {
     idfObject.setDouble(Boiler_SteamFields::MaximumOperatingPressure,value.get());
   }
 
   // TheoreticalEfficiency
 
-  if( value = modelObject.theoreticalEfficiency() )
+  if( (value = modelObject.theoreticalEfficiency()) )
   {
     idfObject.setDouble(Boiler_SteamFields::TheoreticalEfficiency,value.get());
   }
 
   // DesignOutletSteamTemperature
 
-  if( value = modelObject.designOutletSteamTemperature() )
+  if( (value = modelObject.designOutletSteamTemperature()) )
   {
     idfObject.setDouble(Boiler_SteamFields::DesignOutletSteamTemperature,value.get());
   }
@@ -92,49 +92,49 @@ boost::optional<IdfObject> ForwardTranslator::translateBoilerSteam( BoilerSteam 
   {
     idfObject.setString(Boiler_SteamFields::NominalCapacity,"Autosized");
   }
-  else if( value = modelObject.nominalCapacity() )
+  else if( (value = modelObject.nominalCapacity()) )
   {
     idfObject.setDouble(Boiler_SteamFields::NominalCapacity,value.get());
   }
 
   // MinimumPartLoadRatio
 
-  if( value = modelObject.minimumPartLoadRatio() )
+  if( (value = modelObject.minimumPartLoadRatio()) )
   {
     idfObject.setDouble(Boiler_SteamFields::MinimumPartLoadRatio,value.get());
   }
 
   // MaximumPartLoadRatio
 
-  if( value = modelObject.maximumPartLoadRatio() )
+  if( (value = modelObject.maximumPartLoadRatio()) )
   {
     idfObject.setDouble(Boiler_SteamFields::MaximumPartLoadRatio,value.get());
   }
 
   // OptimumPartLoadRatio
 
-  if( value = modelObject.optimumPartLoadRatio() )
+  if( (value = modelObject.optimumPartLoadRatio()) )
   {
     idfObject.setDouble(Boiler_SteamFields::OptimumPartLoadRatio,value.get());
   }
 
   // Coefficient1ofFuelUseFunctionofPartLoadRatioCurve
 
-  if( value = modelObject.coefficient1ofFuelUseFunctionofPartLoadRatioCurve() )
+  if( (value = modelObject.coefficient1ofFuelUseFunctionofPartLoadRatioCurve()) )
   {
     idfObject.setDouble(Boiler_SteamFields::Coefficient1ofFuelUseFunctionofPartLoadRatioCurve,value.get());
   }
 
   // Coefficient2ofFuelUseFunctionofPartLoadRatioCurve
 
-  if( value = modelObject.coefficient2ofFuelUseFunctionofPartLoadRatioCurve() )
+  if( (value = modelObject.coefficient2ofFuelUseFunctionofPartLoadRatioCurve()) )
   {
     idfObject.setDouble(Boiler_SteamFields::Coefficient2ofFuelUseFunctionofPartLoadRatioCurve,value.get());
   }
 
   // Coefficient3ofFuelUseFunctionofPartLoadRatioCurve
 
-  if( value = modelObject.coefficient3ofFuelUseFunctionofPartLoadRatioCurve() )
+  if( (value = modelObject.coefficient3ofFuelUseFunctionofPartLoadRatioCurve()) )
   {
     idfObject.setDouble(Boiler_SteamFields::Coefficient3ofFuelUseFunctionofPartLoadRatioCurve,value.get());
   }
@@ -161,7 +161,7 @@ boost::optional<IdfObject> ForwardTranslator::translateBoilerSteam( BoilerSteam 
 
   // SizingFactor
 
-  if( value = modelObject.sizingFactor() )
+  if( (value = modelObject.sizingFactor()) )
   {
     idfObject.setDouble(Boiler_SteamFields::SizingFactor,value.get());
   }

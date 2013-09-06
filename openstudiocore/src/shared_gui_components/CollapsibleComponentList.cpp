@@ -25,8 +25,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <QBoxLayout>
 #include <QButtonGroup>
 #include <QPainter>
@@ -106,7 +104,7 @@ std::vector<CollapsibleComponent *> CollapsibleComponentList::collapsibleCompone
 {
   std::vector<CollapsibleComponent *> result;
 
-  BOOST_FOREACH(QAbstractButton * button, m_collapsibleComponentGroup->buttons().toVector().toStdVector()){
+  Q_FOREACH(QAbstractButton * button, m_collapsibleComponentGroup->buttons().toVector().toStdVector()){
     result.push_back(qobject_cast<CollapsibleComponent *>(button));
   }
 
@@ -118,9 +116,9 @@ std::vector<Component *> CollapsibleComponentList::components()
   std::vector<Component *> result;
   std::vector<Component *> components;
 
-  BOOST_FOREACH(QAbstractButton * button, m_collapsibleComponentGroup->buttons().toVector().toStdVector()){
+  Q_FOREACH(QAbstractButton * button, m_collapsibleComponentGroup->buttons().toVector().toStdVector()){
     components = qobject_cast<CollapsibleComponent *>(button)->componentList()->components();
-    BOOST_FOREACH(Component * component, components){
+    Q_FOREACH(Component * component, components){
       result.push_back(component);
     }
     components.clear();
@@ -192,7 +190,7 @@ void CollapsibleComponentList::paintEvent(QPaintEvent * event)
 
 void CollapsibleComponentList::setCollapsibleComponents(const std::vector<CollapsibleComponent *> & collapsibleComponents)
 {
-  BOOST_FOREACH(CollapsibleComponent * collapsibleComponent, collapsibleComponents)
+  Q_FOREACH(CollapsibleComponent * collapsibleComponent, collapsibleComponents)
   {
     addCollapsibleComponent(collapsibleComponent);
   }

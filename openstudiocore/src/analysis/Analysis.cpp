@@ -292,6 +292,19 @@ namespace detail {
     return result;
   }
 
+  std::vector<DataPoint> Analysis_Impl::dataPointsNeedingDetails() const {
+    DataPointVector result;
+    BOOST_FOREACH(const DataPoint& dataPoint, m_dataPoints) {
+      if (dataPoint.isComplete() && 
+          (dataPoint.runType() == DataPointRunType::CloudDetailed) &&
+          dataPoint.directory().empty())
+      {
+        result.push_back(dataPoint);
+      }
+    }
+    return result;
+  }
+
   std::vector<DataPoint> Analysis_Impl::getDataPoints(
       const std::vector<QVariant>& variableValues) const
   {
@@ -976,6 +989,10 @@ std::vector<DataPoint> Analysis::successfulDataPoints() const {
 
 std::vector<DataPoint> Analysis::failedDataPoints() const {
   return getImpl<detail::Analysis_Impl>()->failedDataPoints();
+}
+
+std::vector<DataPoint> Analysis::dataPointsNeedingDetails() const {
+  return getImpl<detail::Analysis_Impl>()->dataPointsNeedingDetails();
 }
 
 std::vector<DataPoint> Analysis::getDataPoints(const std::vector<QVariant>& variableValues) const

@@ -27,6 +27,135 @@
 
 namespace openstudio{
 
+  namespace detail{
+    class VagrantSettings_Impl;
+    class VagrantSession_Impl;
+    class VagrantProvider_Impl;
+  }
+
+  /// VagrantSettings is a CloudSettings.
+  class UTILITIES_API VagrantSettings : public CloudSettings {
+  public:
+    /** @name Constructor */
+    //@{
+
+    /// default constructor, loads defaults from settings
+    VagrantSettings();
+
+    /** Constructor provided for deserialization; not for general use. */
+    VagrantSettings(const UUID& uuid,
+                    const UUID& versionUUID,
+                    bool userAgreementSigned,
+                    const openstudio::path& serverPath,
+                    const openstudio::Url& serverUrl,
+                    const openstudio::path& workerPath,
+                    const openstudio::Url& workerUrl,
+                    bool haltOnStop,
+                    const std::string& username);
+
+    //@}
+    /** @name Destructors */
+    //@{
+
+    /// virtual destructor
+    virtual ~VagrantSettings();
+
+    //@}
+    /** @name Inherited members */
+    //@{
+
+    //@}
+    /** @name Class members */
+    //@{
+
+    openstudio::path serverPath()const; 
+
+    void setServerPath(const openstudio::path& serverPath);
+
+    openstudio::Url serverUrl() const;
+
+    void setServerUrl(const openstudio::Url& serverUrl);
+
+    openstudio::path workerPath() const;
+
+    void setWorkerPath(const openstudio::path& workerPath);
+
+    openstudio::Url workerUrl() const;
+
+    void setWorkerUrl(const openstudio::Url& workerUrl);
+
+    bool haltOnStop() const;
+
+    void setHaltOnStop(bool haltOnStop);
+
+    std::string username() const;
+
+    void setUsername(const std::string& username);
+
+    std::string password() const;
+
+    void setPassword(const std::string& password);
+
+    //@}
+
+  protected:
+    
+    VagrantSettings(const boost::shared_ptr<detail::VagrantSettings_Impl>& impl);
+   
+    typedef detail::VagrantSettings_Impl ImplType;
+
+    friend class CloudSettings;
+
+  private:
+
+  };
+
+  /// VagrantSession is a CloudSession.
+  class UTILITIES_API VagrantSession : public CloudSession {
+  public:
+
+    /** @name Constructor */
+    //@{
+
+    //constructor
+    VagrantSession(const std::string& sessionId, 
+                   const boost::optional<Url>& serverUrl, 
+                   const std::vector<Url>& workerUrls);
+
+    /** Constructor provided for deserialization; not for general use. */
+    VagrantSession(const UUID& uuid,
+                   const UUID& versionUUID,
+                   const std::string& sessionId,
+                   const boost::optional<Url>& serverUrl,
+                   const std::vector<Url>& workerUrls);
+    
+    //@}
+    /** @name Destructors */
+    //@{
+
+    /// virtual destructor
+    virtual ~VagrantSession();
+
+    //@}
+    /** @name Inherited members */
+    //@{
+
+    //@}
+    /** @name Class members */
+    //@{
+
+  protected:
+
+    VagrantSession(const boost::shared_ptr<detail::VagrantSession_Impl>& impl);
+    
+    typedef detail::VagrantSession_Impl ImplType;
+
+    friend class CloudSession;
+
+  private:
+
+  };
+
   /// VagrantProvider is a CloudProvider that provides access to local Vagrant virtual machines for testing.
   class UTILITIES_API VagrantProvider : public CloudProvider {
   public:
@@ -34,10 +163,8 @@ namespace openstudio{
     /** @name Constructor */
     //@{
 
-    /// constructor
-    VagrantProvider(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
-                    const openstudio::path& workerPath, const openstudio::Url& workerUrl,
-                    bool haltOnStop = true);
+    /// default constructor, loads settings
+    VagrantProvider();
 
     //@}
     /** @name Destructors */
@@ -58,6 +185,15 @@ namespace openstudio{
     bool terminateComplete() const;
 
     //@}
+
+  protected:
+
+    VagrantProvider(const boost::shared_ptr<detail::VagrantProvider_Impl>& impl);
+    
+    typedef detail::VagrantProvider_Impl ImplType;
+
+    friend class CloudProvider;
+
   private:
 
     // no body on purpose, do not want this generated

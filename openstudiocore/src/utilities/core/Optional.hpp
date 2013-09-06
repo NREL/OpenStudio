@@ -37,7 +37,6 @@ namespace openstudio {
   typedef boost::optional<unsigned> OptionalUnsigned;
   typedef boost::optional<int> OptionalInt;
   typedef boost::optional<std::string> OptionalString;
-  typedef boost::optional<QUrl> OptionalURL;
 
   UTILITIES_API std::ostream& operator<<(std::ostream& os, const boost::optional<double>& x);
   UTILITIES_API std::ostream& operator<<(std::ostream& os, const boost::optional<unsigned>& x);

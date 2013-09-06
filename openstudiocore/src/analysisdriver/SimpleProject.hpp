@@ -37,6 +37,8 @@
 namespace openstudio {
 
 class BCLMeasure;
+class CloudSession;
+class CloudSettings;
 class FileReference;
 class ProgressBar;
 class Workspace;
@@ -139,14 +141,11 @@ class ANALYSISDRIVER_API SimpleProject {
   /** @name Getters and Queries */
   //@{
 
+  /** Directory containing this SimpleProject. */
   openstudio::path projectDir() const;
 
-  /** Returns this SimpleProject's AnalysisDriver. Should be used to run analysis(). */
-  AnalysisDriver analysisDriver() const;
-
-  project::ProjectDatabase projectDatabase() const;
-
-  runmanager::RunManager runManager() const;
+  /** Returns true if the analysis is already being held in memory. */
+  bool analysisIsLoaded() const;
 
   /** Returns the AnalysisRecord in projectDatabase corresponding to analysis(). Always re-
    *  retrieves from the database. */
@@ -167,6 +166,10 @@ class ANALYSISDRIVER_API SimpleProject {
    *  otherwise. */
   boost::optional<Workspace> seedIdf(ProgressBar* progressBar = NULL) const;
 
+  /** Returns true if the seed model or any alternate models need version translation, or if
+   *  the analysis weather file cannot be located. */
+  bool modelsRequireUpdate() const;
+
   /** Returns the BCLMeasures in this project's scripts directory. */
   std::vector<BCLMeasure> measures() const;
 
@@ -177,18 +180,19 @@ class ANALYSISDRIVER_API SimpleProject {
 
   std::vector<ruleset::OSArgument> getStoredArguments(const BCLMeasure& measure) const;
 
-  /** Returns true if the analysis is already being held in memory. */
-  bool analysisIsLoaded() const;
+  /** Returns this SimpleProject's AnalysisDriver. Can be used to run analysis(). */
+  AnalysisDriver analysisDriver() const;
 
   /** Returns true if the analysis() is being run by analysisDriver(). */
   bool isRunning() const;
 
-  /** Returns basic run options for this project. */
-  AnalysisRunOptions standardRunOptions() const;
+  boost::optional<CloudSession> cloudSession() const;
 
-  /** Returns true if the seed model or any alternate models need version translation, or if
-   *  the analysis weather file cannot be located. */
-  bool modelsRequireUpdate() const;
+  boost::optional<CloudSettings> cloudSettings() const;
+
+  project::ProjectDatabase projectDatabase() const;
+
+  runmanager::RunManager runManager() const;
 
   //@}
   /** @name PAT-Specific Getters and Queries */
@@ -283,6 +287,18 @@ class ANALYSISDRIVER_API SimpleProject {
    *  if operation is incomplete (if not all files can be removed from the file system). */
   bool removeAllDataPoints();
 
+  /** Sets this project's CloudSession to session, which ensures that it will be stored in 
+   *  projectDatabase() upon save(). */
+  void setCloudSession(const CloudSession& session);
+
+  void clearCloudSession();
+
+  /** Sets this project's CloudSettings to settings, which ensures that it will be stored in 
+   *  projectDatabase() upon save(). */
+  void setCloudSettings(const CloudSettings& settings);
+
+  void clearCloudSettings();
+
   /** Creates a zip file of the items needed to run individual DataPoints on a remote system, and
    *  returns the path to that (temporary) file. The file is deleted by SimpleProject's destructor. */
   openstudio::path zipFileForCloud() const;
@@ -360,6 +376,9 @@ ANALYSISDRIVER_API boost::optional<SimpleProject> openPATProject(
  *  TODO: Evaluate deprecation of this in favor of refactoring SimpleProject::saveAs. */
 ANALYSISDRIVER_API boost::optional<SimpleProject> saveAs(const SimpleProject& project,
                                                          const openstudio::path& newProjectDir);
+
+/** Returns basic run options for project. */
+ANALYSISDRIVER_API AnalysisRunOptions standardRunOptions(const SimpleProject& project);
 
 } // analysisdriver
 } // openstudio

@@ -22,6 +22,7 @@
 
 #include <utilities/cloud/CloudProvider.hpp>
 #include <utilities/cloud/CloudProvider_Impl.hpp>
+#include <utilities/cloud/VagrantProvider.hpp>
 
 #include <utilities/core/Path.hpp>
 #include <utilities/core/Url.hpp>
@@ -33,6 +34,140 @@ class QStringList;
 namespace openstudio{
 namespace detail{
 
+  /// VagrantSettings_Impl is a CloudSettings_Impl.
+  class UTILITIES_API VagrantSettings_Impl : public CloudSettings_Impl {
+  public:
+
+    /** @name Constructor */
+    //@{
+
+    VagrantSettings_Impl();
+
+    VagrantSettings_Impl(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
+                         const openstudio::path& workerPath, const openstudio::Url& workerUrl,
+                         bool haltOnStop, const std::string& username, const std::string& password);
+
+    /** Constructor provided for deserialization; not for general use. */
+    VagrantSettings_Impl(const UUID& uuid,
+                         const UUID& versionUUID,
+                         bool userAgreementSigned,
+                         const openstudio::path& serverPath,
+                         const openstudio::Url& serverUrl,
+                         const openstudio::path& workerPath,
+                         const openstudio::Url& workerUrl,
+                         bool haltOnStop,
+                         const std::string& username);
+
+    //@}
+    /** @name Destructors */
+    //@{
+
+    virtual ~VagrantSettings_Impl();
+
+    //@}
+    /** @name Inherited members */
+    //@{
+
+    virtual std::string cloudProviderType() const;
+
+    virtual std::string userAgreementText() const;
+
+    virtual bool userAgreementSigned() const;
+
+    virtual void signUserAgreement(bool agree);
+
+    virtual bool loadSettings(bool overwriteExisting = false);
+
+    virtual bool saveToSettings(bool overwriteExisting = false) const;
+
+    //@}
+    /** @name Class members */
+    //@{
+
+    openstudio::path serverPath()const; 
+
+    void setServerPath(const openstudio::path& serverPath);
+
+    openstudio::Url serverUrl() const;
+
+    void setServerUrl(const openstudio::Url& serverUrl);
+
+    openstudio::path workerPath() const;
+
+    void setWorkerPath(const openstudio::path& workerPath);
+
+    openstudio::Url workerUrl() const;
+
+    void setWorkerUrl(const openstudio::Url& workerUrl);
+
+    bool haltOnStop() const;
+
+    void setHaltOnStop(bool haltOnStop);
+
+    std::string username() const;
+
+    void setUsername(const std::string& username);
+
+    std::string password() const;
+
+    void setPassword(const std::string& password);
+
+    //@}
+
+  private:
+    // configure logging
+    REGISTER_LOGGER("utilities.cloud.VagrantSettings");
+
+    bool m_userAgreementSigned;
+    openstudio::path m_serverPath;
+    openstudio::Url m_serverUrl;
+    openstudio::path m_workerPath;
+    openstudio::Url m_workerUrl;
+    bool m_haltOnStop;
+    std::string m_username;
+    std::string m_password;
+  };
+
+  /// VagrantSession_Impl is a CloudSession_Impl.
+  class UTILITIES_API VagrantSession_Impl : public CloudSession_Impl {
+  public:
+    /** @name Constructor */
+    //@{
+
+    VagrantSession_Impl(const std::string& sessionId, 
+                        const boost::optional<Url>& serverUrl, 
+                        const std::vector<Url>& workerUrls);
+
+    /** Constructor provided for deserialization; not for general use. */
+    VagrantSession_Impl(const UUID& uuid,
+                        const UUID& versionUUID,
+                        const std::string& sessionId,
+                        const boost::optional<Url>& serverUrl,
+                        const std::vector<Url>& workerUrls);
+    
+    //@}
+    /** @name Destructors */
+    //@{
+
+    virtual ~VagrantSession_Impl();
+
+    //@}
+    /** @name Inherited members */
+    //@{
+
+    virtual std::string cloudProviderType() const;
+
+    //@}
+    /** @name Class members */
+    //@{
+
+    //@}
+
+  private:
+    // configure logging
+    REGISTER_LOGGER("utilities.cloud.VagrantSession");
+  };
+
   /// VagrantProvider is a CloudProvider that provides access to local Vagrant virtual machines for testing.
   class UTILITIES_API VagrantProvider_Impl : public CloudProvider_Impl {
 
@@ -43,10 +178,8 @@ namespace detail{
     /** @name Constructor */
     //@{
 
-    /// constructor
-    VagrantProvider_Impl(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
-                         const openstudio::path& workerPath, const openstudio::Url& workerUrl,
-                         bool haltOnStop);
+    /// default constructor, loads settings
+    VagrantProvider_Impl();
 
     //@}
     /** @name Destructors */
@@ -63,18 +196,6 @@ namespace detail{
     /// blocking call
     virtual std::string type() const;
 
-    /// returns the user agreement text
-    /// blocking call
-    virtual std::string userAgreementText() const;
-
-    /// returns true if the user has signed the user agreement
-    /// blocking call
-    virtual bool userAgreementSigned() const;
-
-    /// signs the user agreement if passed in true, unsigns if passed in false
-    /// blocking call
-    virtual void signUserAgreement(bool agree);
-
     /// returns true if this computer is connected to the internet
     /// blocking call, clears errors and warnings
     virtual bool internetAvailable() const;
@@ -86,6 +207,14 @@ namespace detail{
     /// returns true if the cloud service validates user credentials
     /// blocking call, clears errors and warnings
     virtual bool validateCredentials() const;
+
+    /// returns the current settings
+    /// blocking call
+    virtual CloudSettings settings() const;
+
+    /// returns true if can assign settings
+    /// blocking call, clears errors and warnings
+    virtual bool setSettings(const CloudSettings& settings);
 
     /// returns the current session id
     /// blocking call
@@ -135,6 +264,9 @@ namespace detail{
     /** @name Class members */
     //@{
 
+    // returns the cloud provider type
+    static std::string cloudProviderType();
+
     /// returns true if server and worker have terminated 
     // DLM: give different name to avoid clash with signal terminateComplete
     bool is_terminateComplete() const;
@@ -150,13 +282,8 @@ namespace detail{
 
   private:
 
-    CloudSession m_cloudSession;
-
-    openstudio::path m_serverPath;
-    openstudio::Url m_serverUrl;
-    openstudio::path m_workerPath;
-    openstudio::Url m_workerUrl;
-    bool m_haltOnStop;
+    VagrantSettings m_vagrantSettings;
+    VagrantSession m_vagrantSession;
 
     QProcess* m_startServerProcess;
     QProcess* m_startWorkerProcess;

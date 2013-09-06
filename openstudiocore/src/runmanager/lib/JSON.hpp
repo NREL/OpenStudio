@@ -21,11 +21,11 @@ namespace openstudio {
 
     class WorkItem;
     class JobType;
-    class FileInfo;
-    class ToolInfo;
-    class JobParam;
+    struct FileInfo;
+    struct ToolInfo;
+    struct JobParam;
     class ErrorType;
-    class JobErrors;
+    struct JobErrors;
 
     namespace detail
     {

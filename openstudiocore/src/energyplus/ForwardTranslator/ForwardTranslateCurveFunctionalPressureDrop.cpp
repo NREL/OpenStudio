@@ -41,21 +41,21 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveFunctionalPressureDr
   OptionalString s;
   OptionalDouble d;
 
-  if(s = modelObject.name()) {
+  if((s = modelObject.name())) {
     idfObject.setName(*s);
   }
 
   idfObject.setDouble(Curve_Functional_PressureDropFields::Diameter,modelObject.diameter());
-  if (d = modelObject.minorLossCoefficient()) {
+  if ((d = modelObject.minorLossCoefficient())) {
     idfObject.setDouble(Curve_Functional_PressureDropFields::MinorLossCoefficient,*d);
   }
-  if (d = modelObject.length()) {
+  if ((d = modelObject.length())) {
     idfObject.setDouble(Curve_Functional_PressureDropFields::Length,*d);
   }
-  if (d = modelObject.roughness()) {
+  if ((d = modelObject.roughness())) {
     idfObject.setDouble(Curve_Functional_PressureDropFields::Roughness,*d);
   }
-  if (d = modelObject.fixedFrictionFactor()) {
+  if ((d = modelObject.fixedFrictionFactor())) {
     idfObject.setDouble(Curve_Functional_PressureDropFields::FixedFrictionFactor,*d);
   }
 

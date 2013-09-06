@@ -25,6 +25,8 @@
 
 #include <project/ProjectDatabase.hpp>
 #include <project/AnalysisRecord.hpp>
+#include <project/CloudSessionRecord.hpp>
+#include <project/CloudSettingsRecord.hpp>
 #include <project/DataPointRecord.hpp>
 #include <project/DakotaAlgorithmRecord.hpp>
 #include <project/DakotaAlgorithmRecord_Impl.hpp>
@@ -93,6 +95,7 @@ namespace detail {
     : m_projectDir(completeAndNormalize(projectDir)),
       m_analysisDriver(analysisDriver),
       m_analysis(analysis),
+      m_cloudSessionSettingsDirty(false),
       m_logFile(projectDir / toPath("project.log"))
   {
     if (m_analysis) {
@@ -316,47 +319,38 @@ namespace detail {
     return analysisDriver().isRunning();
   }
 
-  AnalysisRunOptions SimpleProject_Impl::standardRunOptions() const {
-    openstudio::path workingDirectory = projectDir();
-
-    // tools
-    runmanager::ConfigOptions configOpts(true);
-    runManager().setConfigOptions(configOpts);
-    runmanager::Tools tools = configOpts.getTools();
-    openstudio::path rubyIncludeDirectory = getOpenStudioRubyIncludePath();
-    openstudio::path dakotaExePath;
-    try {
-      runmanager::ToolInfo dakotaTool = tools.getTool("dakota");
-      dakotaExePath = dakotaTool.localBinPath;
-      LOG(Debug,"Set dakota.exe path to " << toString(dakotaExePath) << ".");
+  boost::optional<CloudSession> SimpleProject_Impl::cloudSession() const {
+    if (!m_cloudSession && !m_cloudSessionSettingsDirty) {
+      // check database
+      ProjectDatabase database = projectDatabase();
+      CloudSessionRecordVector cloudSessionRecords = CloudSessionRecord::getCloudSessionRecords(database);
+      if (cloudSessionRecords.size() > 1u) {
+        LOG(Debug,"SimpleProject has " << cloudSessionRecords.size() 
+            << " CloudSessionRecords saved in the ProjectDatabase. "
+            << "Was expecting to have 0 or 1. Will use the first one.");
+      }
+      if (!cloudSessionRecords.empty()) {
+        m_cloudSession = cloudSessionRecords[0].cloudSession();
+      }
     }
-    catch (...) {}
+    return m_cloudSession;
+  }
 
-    analysisdriver::AnalysisRunOptions runOptions(workingDirectory,
-                                                  rubyIncludeDirectory,
-                                                  dakotaExePath);
-    runOptions.setRunManagerTools(tools);
-
-    // weather file path
-    openstudio::path seedPath = analysis().seed().path();
-    if (boost::filesystem::exists(seedPath)) {
-      openstudio::path searchPath = seedPath.parent_path() / toPath(seedPath.stem()) / toPath("files");
-      LOG(Debug,"Appending search path for weather files: " << toString(searchPath));
-      runOptions.setUrlSearchPaths(std::vector<openstudio::URLSearchPath>(1u,searchPath));
+  boost::optional<CloudSettings> SimpleProject_Impl::cloudSettings() const {
+    if (!m_cloudSettings && !m_cloudSessionSettingsDirty) {
+      // check database
+      ProjectDatabase database = projectDatabase();
+      CloudSettingsRecordVector cloudSettingsRecords = CloudSettingsRecord::getCloudSettingsRecords(database);
+      if (cloudSettingsRecords.size() > 1u) {
+        LOG(Debug,"SimpleProject has " << cloudSettingsRecords.size() 
+            << " CloudSettingsRecords saved in the ProjectDatabase. "
+            << "Was expecting to have 0 or 1. Will use the first one.");
+      }
+      if (!cloudSettingsRecords.empty()) {
+        m_cloudSettings = cloudSettingsRecords[0].cloudSettings();
+      }
     }
-
-    // ETH@20130306 - Is this the best option?
-    // DLM: for now we will let run manager manage the number of jobs running at a time
-    //      even though this does result in long time to queue initially
-    // DLM: i did confirm that the data points in the run list update correctly if this is set
-    //runOptions.setQueueSize(configOpts.getMaxLocalJobs());
-
-    // DLM: in the future would be good to set JobCleanUpBehavior to standard
-    // however there seem to be intermittant failures when this is done (bug 1077)
-    // for now keep this setting, should also be a user option for debugging
-    runOptions.setJobCleanUpBehavior(analysisdriver::JobCleanUpBehavior::none);
-
-    return runOptions;
+    return m_cloudSettings;
   }
 
   bool SimpleProject_Impl::modelsRequireUpdate() const {
@@ -862,6 +856,26 @@ namespace detail {
     return result;
   }
 
+  void SimpleProject_Impl::setCloudSession(const CloudSession& session) {
+    m_cloudSession = session;
+    m_cloudSessionSettingsDirty = true;
+  }
+
+  void SimpleProject_Impl::clearCloudSession() {
+    m_cloudSession.reset();
+    m_cloudSessionSettingsDirty = true;
+  }
+
+  void SimpleProject_Impl::setCloudSettings(const CloudSettings& settings) {
+    m_cloudSettings = settings;
+    m_cloudSessionSettingsDirty = true;
+  }
+
+  void SimpleProject_Impl::clearCloudSettings() {
+    m_cloudSettings.reset();
+    m_cloudSessionSettingsDirty = true;
+  }
+
   openstudio::path SimpleProject_Impl::zipFileForCloud() const {
     openstudio::path tempDir;
     if (m_zipFileForCloud.empty()) {
@@ -1094,6 +1108,7 @@ namespace detail {
                                              optTempPoint.isComplete(),
                                              optTempPoint.failed(),
                                              optTempPoint.selected(),
+                                             optTempPoint.runType(),
                                              variableValues,
                                              optTempPoint.responseValues(),
                                              optTempPoint.objectiveValues(),
@@ -1120,6 +1135,7 @@ namespace detail {
                               tempPoint.isComplete(),
                               tempPoint.failed(),
                               tempPoint.selected(),
+                              tempPoint.runType(),
                               variableValues,
                               tempPoint.responseValues(),
                               tempPoint.directory(),
@@ -1161,6 +1177,78 @@ namespace detail {
     analysis::Analysis analysis = this->analysis();
     AnalysisDriver analysisDriver = this->analysisDriver();
     saveAnalysis(analysis, analysisDriver);
+
+    if (m_cloudSessionSettingsDirty) {
+      {
+        // remove old records as needed
+        ProjectDatabase database = analysisDriver.database();
+        ObjectRecordVector toRemove;
+
+        CloudSessionRecordVector cloudSessions = CloudSessionRecord::getCloudSessionRecords(database);
+        if (!cloudSessions.empty()) {
+          if (!m_cloudSession || (cloudSessions[0].handle() != m_cloudSession->uuid())) {
+            toRemove.push_back(cloudSessions[0]);
+          }
+          if (cloudSessions.size() > 1u) {
+            LOG(Debug,"Multiple CloudSession records found.");
+          }
+        }
+
+        CloudSettingsRecordVector cloudSettings = CloudSettingsRecord::getCloudSettingsRecords(database);
+        if (!cloudSettings.empty()) {
+          if (!m_cloudSettings || (cloudSettings[0].handle() != m_cloudSettings->uuid())) {
+            toRemove.push_back(cloudSettings[0]);
+          }
+          if (cloudSettings.size() > 1u) {
+            LOG(Debug,"Multiple CloudSettings records found.");
+          }
+        }
+
+        if (!toRemove.empty()) {
+
+          bool didStartTransaction = database.startTransaction();
+          if (!didStartTransaction) {
+            LOG(Debug,"Unable to start transation.");
+          }
+
+          BOOST_FOREACH(ObjectRecord& nextToRemove,toRemove) {
+            database.removeRecord(nextToRemove);
+          }
+
+          database.save();
+          if (didStartTransaction) {
+            database.commitTransaction();
+          }
+        }
+
+        database.unloadUnusedCleanRecords();
+      }
+
+      {
+        // Save session and settings as needed
+        ProjectDatabase database = analysisDriver.database();
+
+        bool didStartTransaction = database.startTransaction();
+        if (!didStartTransaction) {
+          LOG(Debug,"Unable to start transation.");
+        }
+
+        if (m_cloudSession) {
+          CloudSessionRecord cloudSessionRecord = CloudSessionRecord::factoryFromCloudSession(*m_cloudSession,database);
+        }
+
+        if (m_cloudSettings) {
+          CloudSettingsRecord cloudSettingsRecord = CloudSettingsRecord::factoryFromCloudSettings(*m_cloudSettings,database);
+        }
+
+        database.save();
+        if (didStartTransaction) {
+          database.commitTransaction();
+        }
+      }
+
+      m_cloudSessionSettingsDirty = false;
+    }
   }
 
   bool SimpleProject_Impl::saveAs(const openstudio::path& newProjectDir) const {
@@ -1820,8 +1908,12 @@ bool SimpleProject::isRunning() const {
   return getImpl()->isRunning();
 }
 
-AnalysisRunOptions SimpleProject::standardRunOptions() const {
-  return getImpl()->standardRunOptions();
+boost::optional<CloudSession> SimpleProject::cloudSession() const {
+  return getImpl()->cloudSession();
+}
+
+boost::optional<CloudSettings> SimpleProject::cloudSettings() const {
+  return getImpl()->cloudSettings();
 }
 
 bool SimpleProject::modelsRequireUpdate() const {
@@ -1873,6 +1965,22 @@ bool SimpleProject::clearAllResults() {
 
 bool SimpleProject::removeAllDataPoints() {
   return getImpl()->removeAllDataPoints();
+}
+
+void SimpleProject::setCloudSession(const CloudSession& session) {
+  return getImpl()->setCloudSession(session);
+}
+
+void SimpleProject::clearCloudSession() {
+  return getImpl()->clearCloudSession();
+}
+
+void SimpleProject::setCloudSettings(const CloudSettings& settings) {
+  return getImpl()->setCloudSettings(settings);
+}
+
+void SimpleProject::clearCloudSettings() {
+  return getImpl()->clearCloudSettings();
 }
 
 openstudio::path SimpleProject::zipFileForCloud() const {
@@ -2031,6 +2139,52 @@ boost::optional<SimpleProject> saveAs(const SimpleProject& project,
   }
   return result;
 }
+
+AnalysisRunOptions standardRunOptions(const SimpleProject& project) {
+  openstudio::path workingDirectory = project.projectDir();
+
+  // tools
+  runmanager::ConfigOptions configOpts(true);
+  project.runManager().setConfigOptions(configOpts);
+  runmanager::Tools tools = configOpts.getTools();
+  openstudio::path rubyIncludeDirectory = getOpenStudioRubyIncludePath();
+  openstudio::path dakotaExePath;
+  try {
+    runmanager::ToolInfo dakotaTool = tools.getTool("dakota");
+    dakotaExePath = dakotaTool.localBinPath;
+    LOG_FREE(Debug,"openstudio.analysisdriver.SimpleProject",
+             "Set dakota.exe path to " << toString(dakotaExePath) << ".");
+  }
+  catch (...) {}
+
+  analysisdriver::AnalysisRunOptions runOptions(workingDirectory,
+                                                rubyIncludeDirectory,
+                                                dakotaExePath);
+  runOptions.setRunManagerTools(tools);
+
+  // weather file path
+  openstudio::path seedPath = project.analysis().seed().path();
+  if (boost::filesystem::exists(seedPath)) {
+    openstudio::path searchPath = seedPath.parent_path() / toPath(seedPath.stem()) / toPath("files");
+    LOG_FREE(Debug,"openstudio.analysisdriver.SimpleProject",
+             "Appending search path for weather files: " << toString(searchPath));
+    runOptions.setUrlSearchPaths(std::vector<openstudio::URLSearchPath>(1u,searchPath));
+  }
+
+  // ETH@20130306 - Is this the best option?
+  // DLM: for now we will let run manager manage the number of jobs running at a time
+  //      even though this does result in long time to queue initially
+  // DLM: i did confirm that the data points in the run list update correctly if this is set
+  //runOptions.setQueueSize(configOpts.getMaxLocalJobs());
+
+  // DLM: in the future would be good to set JobCleanUpBehavior to standard
+  // however there seem to be intermittant failures when this is done (bug 1077)
+  // for now keep this setting, should also be a user option for debugging
+  runOptions.setJobCleanUpBehavior(analysisdriver::JobCleanUpBehavior::none);
+
+  return runOptions;
+}
+
 
 } // analysisdriver
 } // openstudio

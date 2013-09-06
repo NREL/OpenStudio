@@ -41,8 +41,10 @@
 
   #include <analysis/ConcreteAnalysisObjects.hpp>
 
-  #include <utilities/idf/URLSearchPath.hpp>
+  #include <utilities/cloud/AWSProvider.hpp>
+  #include <utilities/cloud/VagrantProvider.hpp>
   #include <utilities/core/FileReference.hpp>
+  #include <utilities/idf/URLSearchPath.hpp>
 
   // to be ignored
   class QAction;

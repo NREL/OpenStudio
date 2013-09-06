@@ -239,14 +239,14 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
   // Name
 
-  if( s = plantLoop.name() )
+  if( (s = plantLoop.name()) )
   {
     idfObject.setName(s.get());
   }
 
   // Fluid Type
 
-  if( s = plantLoop.fluidType() )
+  if( (s = plantLoop.fluidType()) )
   {
     idfObject.setString(PlantLoopFields::FluidType,s.get());
   }
@@ -260,14 +260,14 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
 
   // Maximum Loop Temperature
 
-  if( value = plantLoop.maximumLoopTemperature() )
+  if( (value = plantLoop.maximumLoopTemperature()) )
   {
     idfObject.setDouble(PlantLoopFields::MaximumLoopTemperature,value.get());
   } 
 
   // Minimum Loop Temperature
 
-  if( value = plantLoop.minimumLoopTemperature() )
+  if( (value = plantLoop.minimumLoopTemperature()) )
   {
     idfObject.setDouble(PlantLoopFields::MinimumLoopTemperature,value.get());
   } 
@@ -278,7 +278,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     idfObject.setString(PlantLoopFields::MaximumLoopFlowRate,"Autosize");
   }
-  else if( value = plantLoop.maximumLoopFlowRate() )
+  else if( (value = plantLoop.maximumLoopFlowRate()) )
   {
     idfObject.setDouble(PlantLoopFields::MaximumLoopFlowRate,value.get());
   }
@@ -289,7 +289,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     idfObject.setString(PlantLoopFields::MinimumLoopFlowRate,"Autosize");
   }
-  else if( value = plantLoop.minimumLoopFlowRate() )
+  else if( (value = plantLoop.minimumLoopFlowRate()) )
   {
     idfObject.setDouble(PlantLoopFields::MinimumLoopFlowRate,value.get());
   }
@@ -304,14 +304,14 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   {
     idfObject.setString(PlantLoopFields::PlantLoopVolume,"Autocalculate");
   }
-  else if( value = plantLoop.plantLoopVolume() )
+  else if( (value = plantLoop.plantLoopVolume()) )
   {
     idfObject.setDouble(PlantLoopFields::PlantLoopVolume,value.get());
   }
 
   // Common Pipe Simulation
 
-  if( s = plantLoop.commonPipeSimulation() )
+  if( (s = plantLoop.commonPipeSimulation()) )
   {
     idfObject.setString(PlantLoopFields::CommonPipeSimulation,s.get());
   } 
