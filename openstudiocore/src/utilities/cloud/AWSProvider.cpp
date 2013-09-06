@@ -51,6 +51,30 @@ namespace openstudio{
     AWSSettings_Impl::~AWSSettings_Impl()
     {}
 
+    std::string AWSSettings_Impl::cloudProviderType() const {
+      return AWSProvider_Impl::cloudProviderType();
+    }
+
+    std::string AWSSettings_Impl::userAgreementText() const {
+      return std::string();
+    }
+
+    bool AWSSettings_Impl::userAgreementSigned() const {
+      return false;
+    }
+
+    void AWSSettings_Impl::signUserAgreement(bool agree) {
+
+    }
+
+    bool AWSSettings_Impl::loadSettings(bool overwriteExisting) {
+      return false;
+    }
+
+    bool AWSSettings_Impl::saveToSettings(bool overwriteExisting) const {
+      return false;
+    }
+
     AWSSession_Impl::AWSSession_Impl(const std::string& sessionId,
                                      const boost::optional<Url>& serverUrl,
                                      const std::vector<Url>& workerUrls)
@@ -366,6 +390,65 @@ namespace openstudio{
 
 
   } // detail
+
+  AWSSettings::AWSSettings()
+    : CloudSettings(boost::shared_ptr<detail::AWSSettings_Impl>(
+                      new detail::AWSSettings_Impl()))
+  {
+    OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
+  }
+
+  AWSSettings::AWSSettings(const UUID& uuid,
+                           const UUID& versionUUID)
+    : CloudSettings(boost::shared_ptr<detail::AWSSettings_Impl>(
+                      new detail::AWSSettings_Impl(uuid,versionUUID)))
+  {
+    OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
+  }
+
+  AWSSettings::~AWSSettings()
+  {}
+
+  AWSSettings::AWSSettings(const boost::shared_ptr<detail::AWSSettings_Impl>& impl)
+    : CloudSettings(impl)
+  {
+    OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
+  }
+
+  AWSSession::AWSSession(const std::string& sessionId,
+                         const boost::optional<Url>& serverUrl,
+                         const std::vector<Url>& workerUrls)
+    : CloudSession(boost::shared_ptr<detail::AWSSession_Impl>(
+                     new detail::AWSSession_Impl(sessionId,
+                                                 serverUrl,
+                                                 workerUrls)))
+  {
+    OS_ASSERT(getImpl<detail::AWSSession_Impl>());
+  }
+
+  AWSSession::AWSSession(const UUID& uuid,
+                         const UUID& versionUUID,
+                         const std::string& sessionId,
+                         const boost::optional<Url>& serverUrl,
+                         const std::vector<Url>& workerUrls)
+    : CloudSession(boost::shared_ptr<detail::AWSSession_Impl>(
+                     new detail::AWSSession_Impl(uuid,
+                                                 versionUUID,
+                                                 sessionId,
+                                                 serverUrl,
+                                                 workerUrls)))
+  {
+    OS_ASSERT(getImpl<detail::AWSSession_Impl>());
+  }
+
+  AWSSession::~AWSSession()
+  {}
+
+  AWSSession::AWSSession(const boost::shared_ptr<detail::AWSSession_Impl>& impl)
+    : CloudSession(impl)
+  {
+    OS_ASSERT(getImpl<detail::AWSSession_Impl>());
+  }
 
   AWSProvider::AWSProvider()
     : CloudProvider(boost::shared_ptr<detail::AWSProvider_Impl>(new detail::AWSProvider_Impl()))

@@ -53,6 +53,18 @@ namespace detail{
     /** @name Inherited members */
     //@{
 
+    virtual std::string cloudProviderType() const;
+
+    virtual std::string userAgreementText() const;
+
+    virtual bool userAgreementSigned() const;
+
+    virtual void signUserAgreement(bool agree);
+
+    virtual bool loadSettings(bool overwriteExisting = false);
+
+    virtual bool saveToSettings(bool overwriteExisting = false) const;
+
     //@}
     /** @name Class members */
     //@{
