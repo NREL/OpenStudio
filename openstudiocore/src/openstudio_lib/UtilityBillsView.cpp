@@ -179,7 +179,7 @@ void UtilityBillsInspectorView::createWidgets()
   QWidget* visibleWidget = new QWidget();
   m_visibleWidgetIndex = this->stackedWidget()->addWidget(visibleWidget);
 
-  stackedWidget()->setCurrentIndex(m_visibleWidgetIndex);
+  setCorrectInspectorView();
 
   bool isConnected = false;
 
@@ -467,7 +467,7 @@ void UtilityBillsInspectorView::setCorrectInspectorView()
 
 void UtilityBillsInspectorView::detach()
 {
-  setCorrectInspectorView();
+  this->stackedWidget()->setCurrentIndex(m_hiddenWidgetIndex);
 
   m_name->unbind();
   m_consumptionUnits->unbind();
@@ -732,7 +732,6 @@ void UtilityBillsInspectorView::setBillFormat(int index)
   setBillFormat(m_billFormat);
 }
 
-
 void UtilityBillsInspectorView::updateEnergyUseLabelText()
 {
   m_energyUseUnits = m_consumptionUnits->currentText();
@@ -766,6 +765,8 @@ void UtilityBillsInspectorView::updateRunPeriodDates()
   updateRunPeriodDatesLabel();
 
   showSubTabView(runPeriodDates());
+
+  setCorrectInspectorView();
 }
 
 
