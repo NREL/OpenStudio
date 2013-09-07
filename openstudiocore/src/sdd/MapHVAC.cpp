@@ -3495,7 +3495,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     OS_ASSERT(mo);
 
     model::HVACComponent fan = mo->cast<model::HVACComponent>();
- 
+    
     // Heating Coil
 
     QDomElement heatingCoilElement = element.firstChildElement("CoilHtg"); 
@@ -3530,6 +3530,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     // Name
 
     ptac.setName(name);
+
+    // FanCtrl
+    
+    QDomElement fanCtrlElement = element.firstChildElement("FanCtrl"); 
+
+    if( istringEqual(fanCtrlElement.text().toStdString(),"Continuous") )
+    {
+      model::Schedule schedule = model.alwaysOnDiscreteSchedule();
+
+      ptac.setSupplyAirFanOperatingModeSchedule(schedule);
+    }
 
     return ptac;
   }
