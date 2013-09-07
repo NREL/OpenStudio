@@ -246,6 +246,7 @@ namespace detail{
     mutable std::vector<std::string> m_warnings;
 
     void clearErrorsAndWarnings();
+    void logNetworkReply(const std::string& methodName) const;
     void logError(const std::string& error) const;
     void logNetworkError(int error) const;
     void logWarning(const std::string& warning) const;
