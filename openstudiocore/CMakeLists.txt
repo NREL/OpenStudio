@@ -136,6 +136,7 @@ SET( project_directories
   energyplus
   radiance
   gbxml
+  isomodel
   osversion
   ruleset
   runmanager/lib
@@ -851,6 +852,7 @@ export(TARGETS openstudio_runmanager
                openstudio_analysis
                openstudio_radiance
                openstudio_gbxml
+               openstudio_isomodel
                openstudio_lib
                openstudio_plugin
                openstudio_sdd
