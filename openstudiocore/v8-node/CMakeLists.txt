@@ -38,3 +38,5 @@ IF(BUILD_TESTING)
 ENDIF(BUILD_TESTING)
 
 
+INSTALL(FILES "OpenStudio.js" DESTINATION "lib/openstudio/node")
+

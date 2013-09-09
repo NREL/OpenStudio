@@ -611,6 +611,12 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     # add this target to a "global" variable so v8 tests can require these
     LIST( APPEND ALL_V8_BINDING_TARGETS "${swig_target}" )
     SET( ALL_V8_BINDING_TARGETS "${ALL_V8_BINDING_TARGETS}" PARENT_SCOPE )
+
+    IF(BUILD_NODE_MODULES)
+      INSTALL(TARGETS ${swig_target} DESTINATION "lib/openstudio/node")
+    ELSE()
+      INSTALL(TARGETS ${swig_target} DESTINATION "lib/openstudio/v8")
+    ENDIF()
   ENDIF()
   
 
