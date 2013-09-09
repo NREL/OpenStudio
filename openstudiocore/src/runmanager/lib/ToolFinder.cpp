@@ -139,6 +139,8 @@ namespace runmanager {
     } else  {
       runbase = openstudio::getApplicationRunDirectory().parent_path();
     }
+#else 
+    runbase = openstudio::getSharedResourcesPath();
 #endif
 
     struct ComparePaths
@@ -342,7 +344,7 @@ namespace runmanager {
             || openstudio::toPath("/mnt") == p
             || openstudio::toPath("/Volumes") == p
             || subPathMatch(*begin, boost::regex("lib.*", boost::regex::perl))
-            || subPathMatch(*begin, boost::regex("share", boost::regex::perl))
+            || (subPathMatch(*begin, boost::regex("share", boost::regex::perl)) && !subPathMatch(*begin, boost::regex("openstudio", boost::regex::perl)))
             || openstudio::toPath("C:/Windows") == p
             || openstudio::toPath("C:/$Recycle.Bin") == p
             || subPathMatch(*begin, boost::regex("\\..*", boost::regex::perl))
@@ -488,6 +490,7 @@ namespace runmanager {
          itr != t_searchPaths.end();
          ++itr)
     {
+      LOG(Info, "Scanning top level directory: " << openstudio::toString(*itr) << " for tools");
       std::vector<openstudio::path> found = findExecutables(*itr, t_names, dlg, searchedPaths);
       files.insert(found.begin(), found.end());
     }
