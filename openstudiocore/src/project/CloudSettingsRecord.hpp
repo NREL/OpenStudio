@@ -66,7 +66,7 @@ OPENSTUDIO_ENUM(CloudSettingsRecordColumns,
   ((serverPath)(TEXT)(10))
   ((serverUrlRecordId)(INTEGER)(11))
   ((workerPath)(TEXT)(12))
-  ((workerUrlRecordId)(13))
+  ((workerUrlRecordId)(INTEGER)(13))
   ((haltOnStop)(BOOLEAN)(14))
   ((username)(TEXT)(15))
 );
