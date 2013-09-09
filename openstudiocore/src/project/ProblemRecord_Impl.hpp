@@ -38,7 +38,6 @@ namespace detail {
   /** ProblemRecord_Impl is a ObjectRecord_Impl that is the implementation class for
    * ProblemRecord.*/
   class PROJECT_API ProblemRecord_Impl : public ObjectRecord_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */

@@ -43,7 +43,6 @@ namespace detail {
   /** MeasureRecord_Impl is a ObjectRecord_Impl that is the implementation class for
    *  MeasureRecord.*/
   class PROJECT_API MeasureRecord_Impl : public ObjectRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

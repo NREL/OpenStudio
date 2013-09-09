@@ -34,7 +34,6 @@ namespace detail {
   /** DataPoint_Measure_JoinRecord_Impl is a JoinRecord_Impl that is the
    *  implementation class for DataPoint_Measure_JoinRecord. */
   class PROJECT_API DataPoint_Measure_JoinRecord_Impl : public JoinRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
