@@ -511,6 +511,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         OS_ASSERT(valueSI);
         oaController.setEconomizerMaximumLimitDryBulbTemperature(valueSI->value());
       }
+      else
+      {
+        oaController.resetEconomizerMaximumLimitDryBulbTemperature();
+      }
 
       // EconolowTempLockout
       QDomElement econoLowTempLockoutElement = airSystemOACtrlElement.firstChildElement("EconoLowTempLockout");
@@ -523,6 +527,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         OptionalQuantity valueSI = QuantityConverter::instance().convert(valueIP, UnitSystem(UnitSystem::Celsius));
         OS_ASSERT(valueSI);
         oaController.setEconomizerMinimumLimitDryBulbTemperature(valueSI->value());
+      }
+      else
+      {
+        oaController.resetEconomizerMinimumLimitDryBulbTemperature();
       }
     }
   }
