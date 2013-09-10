@@ -174,17 +174,6 @@ namespace openstudio{
     virtual ~VagrantProvider();
 
     //@}
-    /** @name Inherited members */
-    //@{
-
-    //@}
-    /** @name Class members */
-    //@{
-
-    /// returns true if server and worker have terminated
-    bool terminateComplete() const;
-
-    //@}
 
   protected:
 
