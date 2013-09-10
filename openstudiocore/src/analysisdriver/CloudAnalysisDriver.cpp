@@ -290,11 +290,76 @@ namespace detail {
     }
 
     if (success) {
-      // see if the analysis needs to be posted
-      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisOnServer(bool)));
+      // see if the project needs to be created
+      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(projectOnServer(bool)));
       OS_ASSERT(test);
 
-      success = m_requestRun->requestAnalysisUUIDs(project().projectDatabase().handle());
+      success = m_requestRun->requestProjectUUIDs();
+    }
+
+    if (!success) {
+      registerRunRequestFailure();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::projectOnServer(bool success) {
+    bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(projectOnServer(bool)));
+    OS_ASSERT(test);
+
+    if (!success) {
+      logError("Run request failed on checking if the project is already on the server.");
+    }
+
+    if (success) {
+      UUIDVector projects = m_requestRun->lastProjectUUIDs();
+
+      if (std::find(projects.begin(),
+                    projects.end(),
+                    project().projectDatabase().handle()) == projects.end()) 
+      {
+        // project is not yet on server, create it
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(projectCreated(bool)));
+        OS_ASSERT(test);
+
+        success = m_requestRun->requestCreateProject(project().projectDatabase().handle());
+      }
+      else {
+        // see if the analysis needs to be posted
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisOnServer(bool)));
+        OS_ASSERT(test);
+
+        success = m_requestRun->requestAnalysisUUIDs(project().projectDatabase().handle());
+      }
+    }
+
+    if (!success) {
+      registerRunRequestFailure();
+    }
+  }
+  
+  void CloudAnalysisDriver_Impl::projectCreated(bool success) {
+    bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(projectCreated(bool)));
+    OS_ASSERT(test);
+
+    if (!success) {
+      logError("Run request failed on trying to create project.");
+    }
+
+    if (success) {
+      success = m_requestRun->lastCreateProjectSuccess();
+      if (!success) {
+        logError("Run request failed because creating the project failed.");
+      }
+    }
+
+    if (success) {
+      // project was not on the server, so analysis can't be either, post it.
+      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisPosted(bool)));
+      OS_ASSERT(test);
+
+      success = m_requestRun->startPostAnalysisJSON(
+            project().projectDatabase().handle(),
+            project().analysis().toJSON(AnalysisSerializationOptions(project().projectDir())));
     }
 
     if (!success) {

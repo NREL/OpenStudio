@@ -172,36 +172,40 @@ namespace detail {
 
      // 1. Is the server available?
      void availableForRun(bool success);
-     // 2. If so, does the server know about our analysis?
+     // 2. If so, does the server know about out project?
+     void projectOnServer(bool success);
+     // 3. If not, create it
+     void projectCreated(bool success);
+     // 4. Does the server know about our analysis?
      void analysisOnServer(bool success);
-     // 3a. If not, post it.
+     // 5a. If not, post it.
      void analysisPosted(bool success);
-     // 3b. If so, are there any data points on the server?
+     // 5b. If so, are there any data points on the server?
      void allDataPointUUIDsReturned(bool success);
 
-     // 4. If posted analysis (3a) or there are no data points (3b and result is empty),
+     // 6. If posted analysis (3a) or there are no data points (3b and result is empty),
      //    upload the analysis files.
      void analysisUploaded(bool success);
 
-     // 5a. If there were data points (3b with non-empty result), figure out all the queues.
+     // 7a. If there were data points (3b with non-empty result), figure out all the queues.
      //     Gets complete data points.
      void readyToSortOutQueues(bool success);
 
-     // 5b. If the analysis was uploaded (4), populate the postQueue and start posting
+     // 7b. If the analysis was uploaded (4), populate the postQueue and start posting
      //     DataPoints.
 
-     // 6. Keep posting DataPoints until the postQueue is empty.
+     // 8. Keep posting DataPoints until the postQueue is empty.
      void dataPointQueued(bool success);
 
-     // 7. Is the analysis already running on the server?
+     // 9. Is the analysis already running on the server?
      //    (Could skip this step if uploaded analysis, but doesn't seem worth the extra
      //    state to do so.)
      void analysisRunningOnServer(bool success);
 
-     // 8. If not, kick it off.
+     // 10. If not, kick it off.
      void analysisStarted(bool success);
 
-     // 9. Start the monitoring process (if already running or just kicked off).
+     // 11. Start the monitoring process (if already running or just kicked off).
 
      // MONITORING =============================================================
 
