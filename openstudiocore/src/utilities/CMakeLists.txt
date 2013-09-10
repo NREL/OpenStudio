@@ -473,6 +473,15 @@ SET( ${target_name}_test_src
   bcl/test/OnDemandGenerator_GTest.cpp
 )
 
+IF (BUILD_TESTING AND VAGRANT_FOUND) 
+  CONFIGURE_FILE("cloud/test/Vagrant.hxx.in" "${CMAKE_CURRENT_BINARY_DIR}/cloud/test/Vagrant.hxx" )
+  LIST(APPEND ${target_name}_test_src
+    cloud/test/VagrantFixture.hpp
+    cloud/test/VagrantFixture.cpp
+    cloud/test/VagrantProvider_GTest.cpp
+  )
+ENDIF (BUILD_TESTING AND VAGRANT_FOUND)
+
 SET( ${target_name}_swig_src
   #  Utilities.i
   ${idd_swig_src}

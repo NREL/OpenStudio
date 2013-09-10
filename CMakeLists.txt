@@ -94,12 +94,23 @@ ENDIF()
 # Require that DAKOTA_FOUND
 #
 # Some code (certain analysisdriver tests) are conditionally compiled depending on 
-# the value of this variable.
+# whether Dakota is found on the system. If this variable is set to true, CMake will give a configure
+# error in the case that Dakota is not found.
 #
 # Dakota is an optional third party algorithm library that we use through its command line
 # interface.
 OPTION( REQUIRE_DAKOTA "Ensure Dakota (third party analysis tool) is found" OFF )
 MARK_AS_ADVANCED( REQUIRE_DAKOTA )
+
+# Find openstudio-server for the purposes of doing local cloud testing with Vagrant.
+# 
+# Some code (certain utilities and analysisdriver tests) are conditionally compiled depending on 
+# whether this path is provided. If REQUIRE_VAGRANT, CMake will give a configure error in 
+# the case that this path is not provided.
+OPTION( REQUIRE_VAGRANT "Ensure that openstudio-server is located on this system." OFF)
+MARK_AS_ADVANCED( REQUIRE_VAGRANT )
+SET( OSSERVER_PATH "" CACHE PATH "Path to your openstudio-server repository.")
+MARK_AS_ADVANCED( OSSERVER_PATH )
 
 IF(MSVC)
   # need to know if using the Express edition of Visual Studio, devenv is split into multiple programs
@@ -611,6 +622,8 @@ ExternalProject_Add( OpenStudioCore
     -DBUILD_RUBY_GEM:BOOL=${BUILD_RUBY_GEM}
     -DBUILD_RUBY_GEM_WITH_LIBS:BOOL=${BUILD_RUBY_GEM_WITH_LIBS}
     -DREQUIRE_DAKOTA:BOOL=${REQUIRE_DAKOTA}
+    -DREQUIRE_VAGRANT:BOOL=${REQUIRE_VAGRANT}
+    -DOSSERVER_PATH:STRING=${OSSERVER_PATH}
     -DMSVC_IS_EXPRESS:BOOL=${MSVC_IS_EXPRESS}
     -DUSE_PCH:BOOL=${USE_PCH}
     -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
