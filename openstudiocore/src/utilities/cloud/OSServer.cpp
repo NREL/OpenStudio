@@ -77,9 +77,11 @@ namespace openstudio{
     bool OSServer_Impl::available(int msec)
     {
       if (requestAvailable()){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastAvailable();
+        }
       }
-      return lastAvailable();
+      return false;
     }
 
     bool OSServer_Impl::lastAvailable() const
@@ -90,9 +92,11 @@ namespace openstudio{
     std::vector<UUID> OSServer_Impl::projectUUIDs(int msec)
     {
       if (requestProjectUUIDs()){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastProjectUUIDs();
+        }
       }
-      return lastProjectUUIDs();
+      return std::vector<UUID>();
     }
 
     std::vector<UUID> OSServer_Impl::lastProjectUUIDs() const
@@ -103,9 +107,11 @@ namespace openstudio{
     bool OSServer_Impl::createProject(const UUID& projectUUID, int msec) 
     {
       if (requestCreateProject(projectUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastCreateProjectSuccess();
+        }
       }
-      return lastCreateProjectSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastCreateProjectSuccess() const
@@ -116,9 +122,11 @@ namespace openstudio{
     bool OSServer_Impl::deleteProject(const UUID& projectUUID, int msec) 
     {
       if (requestDeleteProject(projectUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastDeleteProjectSuccess();
+        }
       }
-      return lastDeleteProjectSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastDeleteProjectSuccess() const
@@ -129,9 +137,11 @@ namespace openstudio{
     std::vector<UUID> OSServer_Impl::analysisUUIDs(const UUID& projectUUID, int msec)
     {
       if (requestAnalysisUUIDs(projectUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastAnalysisUUIDs();
+        }
       }
-      return lastAnalysisUUIDs();
+      return std::vector<UUID>();
     }
 
     std::vector<UUID> OSServer_Impl::lastAnalysisUUIDs() const
@@ -142,9 +152,11 @@ namespace openstudio{
     bool OSServer_Impl::postAnalysisJSON(const UUID& projectUUID, const std::string& analysisJSON, int msec)
     {
       if (startPostAnalysisJSON(projectUUID, analysisJSON)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastPostAnalysisJSONSuccess();
+        }
       }
-      return lastPostAnalysisJSONSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastPostAnalysisJSONSuccess() const
@@ -155,9 +167,11 @@ namespace openstudio{
     bool OSServer_Impl::postDataPointJSON(const UUID& analysisUUID, const std::string& dataPointJSON, int msec)
     {
       if (startPostDataPointJSON(analysisUUID, dataPointJSON)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastPostDataPointJSONSuccess();
+        }
       }
-      return lastPostDataPointJSONSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastPostDataPointJSONSuccess() const
@@ -168,9 +182,11 @@ namespace openstudio{
     bool OSServer_Impl::uploadAnalysisFiles(const UUID& analysisUUID, const openstudio::path& analysisZipFile, int msec)
     {
       if (startUploadAnalysisFiles(analysisUUID, analysisZipFile)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastUploadAnalysisFilesSuccess();
+        }
       }
-      return lastUploadAnalysisFilesSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastUploadAnalysisFilesSuccess() const
@@ -181,9 +197,11 @@ namespace openstudio{
     bool OSServer_Impl::start(const UUID& analysisUUID, int msec)
     {
       if (requestStart(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastStartSuccess();
+        }
       }
-      return lastStartSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastStartSuccess() const
@@ -194,9 +212,11 @@ namespace openstudio{
     bool OSServer_Impl::isAnalysisQueued(const UUID& analysisUUID, int msec)
     {
       if (requestIsAnalysisQueued(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastIsAnalysisQueued();
+        }
       }
-      return lastIsAnalysisQueued();
+      return false;
     }
 
     bool OSServer_Impl::lastIsAnalysisQueued() const
@@ -207,9 +227,11 @@ namespace openstudio{
     bool OSServer_Impl::isAnalysisRunning(const UUID& analysisUUID, int msec)
     {
       if (requestIsAnalysisRunning(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastIsAnalysisRunning();
+        }
       }
-      return lastIsAnalysisRunning();
+      return false;
     }
 
     bool OSServer_Impl::lastIsAnalysisRunning() const
@@ -220,9 +242,11 @@ namespace openstudio{
     bool OSServer_Impl::stop(const UUID& analysisUUID, int msec)
     {
       if (requestStop(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastStopSuccess();
+        }
       }
-      return lastStopSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastStopSuccess() const
@@ -233,9 +257,11 @@ namespace openstudio{
     std::vector<UUID> OSServer_Impl::dataPointUUIDs(const UUID& analysisUUID, int msec)
     {
       if (requestDataPointUUIDs(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastDataPointUUIDs();
+        }
       }
-      return lastDataPointUUIDs();
+      return std::vector<UUID>();
     }
 
     std::vector<UUID> OSServer_Impl::lastDataPointUUIDs() const
@@ -246,9 +272,11 @@ namespace openstudio{
     std::vector<UUID> OSServer_Impl::runningDataPointUUIDs(const UUID& analysisUUID, int msec)
     {
       if (requestRunningDataPointUUIDs(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastRunningDataPointUUIDs();
+        }
       }
-      return lastRunningDataPointUUIDs();
+      return std::vector<UUID>();
     }
 
     std::vector<UUID> OSServer_Impl::lastRunningDataPointUUIDs() const
@@ -259,9 +287,11 @@ namespace openstudio{
     std::vector<UUID> OSServer_Impl::queuedDataPointUUIDs(const UUID& analysisUUID, int msec)
     {
       if (requestQueuedDataPointUUIDs(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastQueuedDataPointUUIDs();
+        }
       }
-      return lastQueuedDataPointUUIDs();
+      return std::vector<UUID>();
     }
 
     std::vector<UUID> OSServer_Impl::lastQueuedDataPointUUIDs() const
@@ -272,9 +302,11 @@ namespace openstudio{
     std::vector<UUID> OSServer_Impl::completeDataPointUUIDs(const UUID& analysisUUID, int msec)
     {
       if (requestCompleteDataPointUUIDs(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastCompleteDataPointUUIDs();
+        }
       }
-      return lastCompleteDataPointUUIDs();
+      return std::vector<UUID>();
     }
 
     std::vector<UUID> OSServer_Impl::lastCompleteDataPointUUIDs() const
@@ -285,9 +317,11 @@ namespace openstudio{
     std::string OSServer_Impl::dataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID, int msec)
     {
       if (requestDataPointJSON(analysisUUID, dataPointUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastDataPointJSON();
+        }
       }
-      return lastDataPointJSON();
+      return "";
     }
 
     std::string OSServer_Impl::lastDataPointJSON() const
@@ -298,9 +332,11 @@ namespace openstudio{
     bool OSServer_Impl::downloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath, int msec)
     {
       if (startDownloadDataPoint(analysisUUID, dataPointUUID, downloadPath)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastDownloadDataPointSuccess();
+        }
       }
-      return lastDownloadDataPointSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastDownloadDataPointSuccess() const

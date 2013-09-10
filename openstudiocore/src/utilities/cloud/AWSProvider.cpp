@@ -109,15 +109,202 @@ namespace openstudio{
       //Make sure a QApplication exists
       openstudio::Application::instance().application();
 
-      if (loadCredentials()) {
-        validateCredentials();
-      }
+      // todo: move this to AWSSettings?
+      loadCredentials();
     }
 
     std::string AWSProvider_Impl::type() const
     {
       return "AWSProvider";
     }
+
+    unsigned AWSProvider_Impl::numWorkers() const
+    {
+      return m_numWorkers;
+    }
+
+    CloudSettings AWSProvider_Impl::settings() const {
+      return m_awsSettings;
+    }
+
+    bool AWSProvider_Impl::setSettings(const CloudSettings& settings) {
+      if (OptionalAWSSettings candidate = settings.optionalCast<AWSSettings>()) {
+        m_awsSettings = *candidate;
+        return true;
+      }
+      return false;
+    }
+
+    CloudSession AWSProvider_Impl::session() const
+    {
+      return m_awsSession;
+    }
+
+    bool AWSProvider_Impl::setSession(const CloudSession& session)
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::lastInternetAvailable() const
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::lastServiceAvailable() const
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::lastValidateCredentials() const
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::serverStarted() const
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::workersStarted() const
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::running() const
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::terminateStarted() const
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::terminateCompleted() const
+    {
+      // todo
+      return false;
+    }
+
+    std::vector<std::string> AWSProvider_Impl::errors() const
+    {
+      return std::vector<std::string>();
+    }
+
+    std::vector<std::string> AWSProvider_Impl::warnings() const
+    {
+      return std::vector<std::string>();
+    }
+
+    bool AWSProvider_Impl::internetAvailable(int msec)
+    {
+      // todo: make use non-blocking requestInternetAvailable
+      return serviceAvailable(msec);
+    }
+
+    bool AWSProvider_Impl::serviceAvailable(int msec)
+    {
+      // todo: make use non-blocking requestServiceAvailable
+      QVariantMap map = awsRequest("describe_availability_zones");
+      if (!map.keys().contains("error")) {
+        return true;
+      }
+      int code = map["error"].toMap()["code"].toInt();
+      return (code != 503);
+    }
+
+    bool AWSProvider_Impl::validateCredentials(int msec)
+    {
+      // todo: make use non-blocking requestValidateCredentials
+      if (m_validAccessKey && m_validSecretKey) {
+        return true;
+      }
+
+      QVariantMap map = awsRequest("describe_availability_zones");
+      if (!map.keys().contains("error")) {
+        m_validAccessKey = true;
+        m_validSecretKey = true;
+        return true;
+      }
+
+      int code = map["error"].toMap()["code"].toInt();
+      if (code == 401) {
+        m_validAccessKey = false;
+      } else if (code == 403) {
+        m_validAccessKey = true;
+        m_validSecretKey = false;
+      }
+      return false;
+    }
+
+    bool AWSProvider_Impl::waitForServer(int msec)
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::waitForWorkers(int msec)
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::waitForTerminated(int msec)
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::requestInternetAvailable()
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::requestServiceAvailable()
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::requestValidateCredentials()
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::requestStartServer()
+    {
+      // todo: make non-blocking
+      //QVariantMap map = awsRequest("launch_instance");
+      //return !map.keys().contains("error");
+      return false;
+    }
+
+    bool AWSProvider_Impl::requestStartWorkers()
+    {
+      // todo: make non-blocking
+      //QVariantMap map = awsRequest("launch_slaves");
+      //return !map.keys().contains("error");
+      return false;
+    }
+
+    bool AWSProvider_Impl::requestTerminate()
+    {
+      // todo
+      return false;
+    }
+
+
+/*  TODO: move this to AWSSettings
 
     std::string AWSProvider_Impl::userAgreementText() const
     {
@@ -143,118 +330,7 @@ namespace openstudio{
       QSettings settings("OpenStudio", "AWSProvider");
       settings.setValue("userAgreementSigned", value);
     }
-
-    bool AWSProvider_Impl::internetAvailable() const
-    {
-      return serviceAvailable();
-    }
-
-    bool AWSProvider_Impl::serviceAvailable() const
-    {
-      QVariantMap map = awsRequest("describe_availability_zones");
-      if (!map.keys().contains("error")) {
-        return true;
-      }
-      int code = map["error"].toMap()["code"].toInt();
-      return (code != 503);
-    }
-
-    bool AWSProvider_Impl::validateCredentials() const
-    {
-      if (m_validAccessKey && m_validSecretKey) {
-        return true;
-      }
-
-      QVariantMap map = awsRequest("describe_availability_zones");
-      if (!map.keys().contains("error")) {
-        m_validAccessKey = true;
-        m_validSecretKey = true;
-        return true;
-      }
-
-      int code = map["error"].toMap()["code"].toInt();
-      if (code == 401) {
-        m_validAccessKey = false;
-      } else if (code == 403) {
-        m_validAccessKey = true;
-        m_validSecretKey = false;
-      }
-      return false;
-    }
-
-    CloudSettings AWSProvider_Impl::settings() const {
-      return m_awsSettings;
-    }
-
-    bool AWSProvider_Impl::setSettings(const CloudSettings& settings) {
-      if (OptionalAWSSettings candidate = settings.optionalCast<AWSSettings>()) {
-        m_awsSettings = *candidate;
-        return true;
-      }
-      return false;
-    }
-
-    CloudSession AWSProvider_Impl::session() const
-    {
-      return m_awsSession;
-    }
-
-    bool AWSProvider_Impl::reconnect(const CloudSession& session)
-    {
-      return false;
-    }
-
-    boost::optional<Url> AWSProvider_Impl::serverUrl() const
-    {
-      return OptionalUrl();
-    }
-
-    bool AWSProvider_Impl::startServer()
-    {
-      QVariantMap map = awsRequest("launch_instance");
-      return !map.keys().contains("error");
-    }
-
-    std::vector<Url> AWSProvider_Impl::workerUrls() const
-    {
-      return UrlVector();
-    }
-
-    unsigned AWSProvider_Impl::numWorkers() const
-    {
-      return m_numWorkers;
-    }
-
-    bool AWSProvider_Impl::startWorkers()
-    {
-      QVariantMap map = awsRequest("launch_slaves");
-      return !map.keys().contains("error");
-    }
-
-    bool AWSProvider_Impl::running() const
-    {
-      return false;
-    }
-
-    bool AWSProvider_Impl::terminate()
-    {
-      return false;
-    }
-
-    bool AWSProvider_Impl::terminated() const
-    {
-      return false;
-    }
-
-    std::vector<std::string> AWSProvider_Impl::errors() const
-    {
-      return std::vector<std::string>();
-    }
-
-    std::vector<std::string> AWSProvider_Impl::warnings() const
-    {
-      return std::vector<std::string>();
-    }
+*/
 
     std::string AWSProvider_Impl::cloudProviderType() {
       return "AWSProvider";
@@ -277,8 +353,6 @@ namespace openstudio{
       m_warnings.push_back(warning);
       LOG(Warn, warning);
     }
-
-
 
     bool AWSProvider_Impl::loadCredentials() const {
       QFile file(QDir::homePath() + "/.ssh/aws");
@@ -453,10 +527,6 @@ namespace openstudio{
   AWSProvider::AWSProvider()
     : CloudProvider(boost::shared_ptr<detail::AWSProvider_Impl>(new detail::AWSProvider_Impl()))
   {
-  }
-
-  unsigned AWSProvider::numWorkers() {
-    return getImpl<detail::AWSProvider_Impl>()->numWorkers();
   }
 
   AWSProvider::AWSProvider(const boost::shared_ptr<detail::AWSProvider_Impl>& impl)
