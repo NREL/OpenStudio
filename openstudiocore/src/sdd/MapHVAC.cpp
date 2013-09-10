@@ -3712,6 +3712,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       pthp.setMaximumSupplyAirTemperaturefromSupplementalHeater(value);
     }
 
+    // FanCtrl
+    
+    QDomElement fanCtrlElement = element.firstChildElement("FanCtrl"); 
+
+    if( istringEqual(fanCtrlElement.text().toStdString(),"Continuous") )
+    {
+      model::Schedule schedule = model.alwaysOnDiscreteSchedule();
+
+      pthp.setSupplyAirFanOperatingModeSchedule(schedule);
+    }
+
     return pthp;
   }
   else if( istringEqual(type,"Baseboard") )
