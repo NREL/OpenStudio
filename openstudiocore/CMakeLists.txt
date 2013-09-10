@@ -110,16 +110,6 @@ ENDIF()
 OPTION( REQUIRE_DAKOTA "Ensure Dakota (third party analysis tool) is found" OFF )
 MARK_AS_ADVANCED( REQUIRE_DAKOTA )
 
-# Find VirtualBox, Vagrant, and openstudio-server for the purposes of doing local cloud testing.
-# 
-# Some code (certain utilities and analysisdriver tests) are conditionally compiled depending on 
-# whether these dependencies are located. If REQUIRE_VAGRANT, CMake will give a configure error in 
-# the case that the required dependencies are not found.
-OPTION( REQUIRE_VAGRANT "Ensure that VirtualBox, Vagrant, and openstudio-server are located on this system." OFF)
-MARK_AS_ADVANCED( REQUIRE_VAGRANT )
-OPTION( OSSERVER_PATH "Path to your openstudio-server repository." "" )
-MARK_AS_ADVANCED( OSSERVER_PATH )
-
 # Use PCH
 OPTION( USE_PCH "Use precompiled headers" OFF )
 
@@ -388,16 +378,6 @@ ELSE (REQUIRE_DAKOTA)
   ENDIF(DAKOTA_FOUND)
 ENDIF(REQUIRE_DAKOTA)
 SET(DAKOTA_FOUND ${DAKOTA_FOUND} CACHE INTERNAL "Boolean indicating whether Dakota was found.")
-
-IF (EXISTS "${OSSERVER_PATH}")
-  SET (VAGRANT_FOUND TRUE)
-ELSE (EXISTS "${OSSERVER_PATH}")
-  SET (VAGRANT_FOUND FALSE)
-  IF (REQUIRE_VAGRANT) 
-    MESSAGE(SEND_ERROR "Error: Required resource openstudio-server not found.")
-  ENDIF (REQUIRE_VAGRANT)
-ENDIF(EXISTS "${OSSERVER_PATH}")
-SET(VAGRANT_FOUND ${VAGRANT_FOUND} CACHE INTERNAL "Boolean indicating whether VirtualBox and openstudio-server were found.")
 
 # Doxygen
 IF( BUILD_DOCUMENTATION )
