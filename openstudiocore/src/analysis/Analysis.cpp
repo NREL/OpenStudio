@@ -703,8 +703,13 @@ namespace detail {
   void Analysis_Impl::updateInputPathData(const openstudio::path& originalBase,
                                           const openstudio::path& newBase)
   {
+    LOG(Debug,"Updating paths that were relative to '" << toString(originalBase) << 
+        "' to be relative to '" << toString(newBase) << "' now.");
+
     // seed
     openstudio::path temp = relocatePath(seed().path(),originalBase,newBase);
+    LOG(Debug,"Seed was at '" << toString(seed().path()) << "', relocatePath determined that it "
+      << "should now be at '" << toString(temp) << "'.");
     if (!temp.empty()) {
       m_seed.setPath(temp);
     }

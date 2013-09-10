@@ -847,7 +847,7 @@ void SpaceLoadInstancesWidget::onBuildingRelationshipChange(int index, Handle ne
     return;
   }
 
-  if ((index == OS_BuildingFields::SpaceTypeName)){
+  if (index == OS_BuildingFields::SpaceTypeName){
     m_dirty = true;
     QTimer::singleShot(0, this, SLOT(refresh()));
   }
@@ -866,7 +866,7 @@ void SpaceLoadInstancesWidget::onSpaceRelationshipChange(int index, Handle newHa
     return;
   }
 
-  if ((index == OS_SpaceFields::SpaceTypeName)){
+  if (index == OS_SpaceFields::SpaceTypeName){
     m_dirty = true;
     QTimer::singleShot(0, this, SLOT(refresh()));
   }
