@@ -68,25 +68,34 @@ namespace runmanager {
 
   ToolVersion ToolFinder::parseToolVersion(const openstudio::path &t_path)
   {
-    std::string pathstr = toString(t_path);
+    QSharedPointer<ToolVersion> toolver;
 
-    LOG(Debug, "Parsing tool version number from string: " << pathstr);
-
-    boost::regex reg(".*?V?([0-9]+)[\\.-]([0-9]+)[\\.-]?([0-9]*)([\\.-][0-9]+)?.*");
-
-    boost::smatch results;
-    if (boost::regex_match(pathstr, results, reg))
+    for (openstudio::path::iterator itr = t_path.begin();
+         itr != t_path.end();
+         ++itr)
     {
-      int major = atoi(results[1].str().c_str());
-      int minor = atoi(results[2].str().c_str());
-      std::string build_str = results[3].str();
-      if (!build_str.empty()) {
-        int build = atoi(build_str.c_str());
-        return ToolVersion(major,minor,build);
-      }
+      std::string pathstr = openstudio::toString(*itr);
+      LOG(Debug, "Parsing tool version number from string: " << pathstr);
 
-      return ToolVersion(major,minor);      
-    } else {
+      boost::regex reg(".*?V?([0-9]+)[\\.-]([0-9]+)[\\.-]?([0-9]*)([\\.-][0-9]+)?.*");
+
+      boost::smatch results;
+      if (boost::regex_match(pathstr, results, reg))
+      {
+        int major = atoi(results[1].str().c_str());
+        int minor = atoi(results[2].str().c_str());
+        std::string build_str = results[3].str();
+        if (!build_str.empty()) {
+          int build = atoi(build_str.c_str());
+          toolver = QSharedPointer<ToolVersion>(new ToolVersion(major,minor,build));
+        }
+
+        toolver = QSharedPointer<ToolVersion>(new ToolVersion(major,minor));
+      } 
+    }
+
+    if (!toolver) 
+    {
       openstudio::path iddpath = t_path.parent_path() / openstudio::toPath("Energy+.idd");
 
       if (safeExists(iddpath))
@@ -107,13 +116,14 @@ namespace runmanager {
             int minor = atoi(results[2].str().c_str());
             int build = atoi(results[3].str().c_str());
 
-            return ToolVersion(major,minor,build);
+            toolver = QSharedPointer<ToolVersion>(new ToolVersion(major,minor, build));
           }
         }
       }
     }
 
-    return ToolVersion();
+    // return last version parsed.
+    return toolver?*toolver:ToolVersion();
   }
 
 
