@@ -387,6 +387,7 @@ SET( ${target_name}_test_src
   ${idf_test_moc_src}
   ${sql_test_src}
   cloud/test/AWSProvider_GTest.cpp
+  cloud/test/VagrantProvider_GTest.cpp
   core/test/CoreFixture.hpp
   core/test/CoreFixture.cpp
   core/test/Checksum_GTest.cpp

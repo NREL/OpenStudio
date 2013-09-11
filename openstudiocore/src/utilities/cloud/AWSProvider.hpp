@@ -144,8 +144,6 @@ namespace detail {
     /** @name Class members */
     //@{
 
-    // returns the current number of worker nodes
-    unsigned numWorkers();
 
     //@}
   protected:
