@@ -246,57 +246,47 @@ void LocalLibraryController::showMyMeasuresFolder()
 
 QSharedPointer<LibraryTypeListController> LocalLibraryController::createLibraryListController(const QDomDocument & taxonomy, LocalLibrary::LibrarySource source)
 {
-  std::map<MeasureType,QString> types;
-
-  types.insert( std::pair<MeasureType,QString>(MeasureType::EnergyPlusMeasure,"ENERGYPLUS MEASURES") );
-  types.insert( std::pair<MeasureType,QString>(MeasureType::ModelMeasure,"OPENSTUDIO MEASURES") );
-
   QSharedPointer<LibraryTypeListController> libraryTypeListController = QSharedPointer<LibraryTypeListController>(new LibraryTypeListController());  
 
-  for( std::map<MeasureType,QString>::const_iterator it = types.begin();
-       it != types.end();
-       it++ )
+  QSharedPointer<LibraryTypeItem> libraryTypeItem = QSharedPointer<LibraryTypeItem>(new LibraryTypeItem("Measures"));
+
+  libraryTypeListController->addItem(libraryTypeItem);
+
+  QSharedPointer<LibraryGroupListController> libraryGroupListController = libraryTypeItem->libraryGroupListController();
+
+  libraryGroupListController->setSelectionController(libraryTypeListController->selectionController());
+
+  QDomElement docElem = taxonomy.documentElement();
+
+  for( QDomNode n = docElem.firstChild(); !n.isNull(); n = n.nextSibling() )
   {
-    QSharedPointer<LibraryTypeItem> libraryTypeItem = QSharedPointer<LibraryTypeItem>(new LibraryTypeItem(it->second));
+    QDomElement taxonomyElement = n.toElement();
 
-    libraryTypeListController->addItem(libraryTypeItem);
+    QString groupName = taxonomyElement.firstChildElement("name").text();
 
-    QSharedPointer<LibraryGroupListController> libraryGroupListController = libraryTypeItem->libraryGroupListController();
+    QSharedPointer<LibraryGroupItem> groupItem = QSharedPointer<LibraryGroupItem>(new LibraryGroupItem(groupName, m_app));
+    libraryGroupListController->addItem(QSharedPointer<LibraryGroupItem>(groupItem));
+    QSharedPointer<LibrarySubGroupListController> subGroupListController = groupItem->librarySubGroupListController();
 
-    libraryGroupListController->setSelectionController(libraryTypeListController->selectionController());
+    subGroupListController->setSelectionController(libraryGroupListController->selectionController());
 
-    QDomElement docElem = taxonomy.documentElement();
+    QDomNodeList termElements = taxonomyElement.elementsByTagName("term");
 
-    for( QDomNode n = docElem.firstChild(); !n.isNull(); n = n.nextSibling() )
+    for( uint j = 0; j < termElements.length(); j++ )
     {
-      QDomElement taxonomyElement = n.toElement();
+      QDomElement termElement = termElements.at(j).toElement();
 
-      QString groupName = taxonomyElement.firstChildElement("name").text();
+      QString subGroupName = termElement.firstChildElement("name").text();
 
-      QSharedPointer<LibraryGroupItem> groupItem = QSharedPointer<LibraryGroupItem>(new LibraryGroupItem(groupName, m_app));
-      libraryGroupListController->addItem(QSharedPointer<LibraryGroupItem>(groupItem));
-      QSharedPointer<LibrarySubGroupListController> subGroupListController = groupItem->librarySubGroupListController();
+      QString taxonomyTag = groupName + "." + subGroupName;
 
-      subGroupListController->setSelectionController(libraryGroupListController->selectionController());
+      QSharedPointer<LibrarySubGroupItem> item = QSharedPointer<LibrarySubGroupItem>(new LibrarySubGroupItem(subGroupName,taxonomyTag,source, m_app));
+  
+      subGroupListController->addItem(item);
 
-      QDomNodeList termElements = taxonomyElement.elementsByTagName("term");
+      QSharedPointer<LibraryListController> libraryListController = item->libraryListController();
 
-      for( uint j = 0; j < termElements.length(); j++ )
-      {
-        QDomElement termElement = termElements.at(j).toElement();
-
-        QString subGroupName = termElement.firstChildElement("name").text();
-
-        QString taxonomyTag = groupName + "." + subGroupName;
-
-        QSharedPointer<LibrarySubGroupItem> item = QSharedPointer<LibrarySubGroupItem>(new LibrarySubGroupItem(subGroupName,taxonomyTag,source,it->first, m_app));
-    
-        subGroupListController->addItem(item);
-
-        QSharedPointer<LibraryListController> libraryListController = item->libraryListController();
-
-        libraryListController->setSelectionController(subGroupListController->selectionController());
-      }
+      libraryListController->setSelectionController(subGroupListController->selectionController());
     }
   }
 
@@ -453,13 +443,12 @@ void LibraryGroupListController::reset()
 
 LibrarySubGroupItem::LibrarySubGroupItem(const QString & name, const QString & taxonomyTag, 
                                          LocalLibrary::LibrarySource source,
-                                         MeasureType type,
                                          BaseApp *t_app)
   : OSListItem(),
     m_app(t_app),
     m_name(name)
 {
-  m_libraryListController = QSharedPointer<LibraryListController>( new LibraryListController(taxonomyTag,source,type, m_app) );
+  m_libraryListController = QSharedPointer<LibraryListController>( new LibraryListController(taxonomyTag, source, m_app) );
 }
 
 
@@ -587,12 +576,22 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
   if( QSharedPointer<LibraryItem> libraryItem = dataSource.objectCast<LibraryItem>() )
   {
+    MeasureType measureType = libraryItem->m_bclMeasure.measureType();
+
     // NOTE: replaces needed to trim unwanted curly braces
     QString measureUUID = libraryItem->m_bclMeasure.uuid().toString().replace("{", "").replace("}", "").toStdString().c_str();
 
     std::vector<std::string> localUUIDs = (LocalBCL::instance().measureUids());
 
     LibraryItemView * widget = new LibraryItemView();
+
+    if (measureType == MeasureType::ModelMeasure){
+      widget->m_measureTypeBadge->setText("OS");
+    }else if (measureType == MeasureType::EnergyPlusMeasure){
+      widget->m_measureTypeBadge->setText("E+");
+    }else if (measureType == MeasureType::ReportingMeasure){
+      widget->m_measureTypeBadge->setText("Rp");
+    }
 
     if(std::find(localUUIDs.begin(), localUUIDs.end(), measureUUID.toStdString()) != localUUIDs.end()){
       widget->m_bclBadge->setVisible(true);
@@ -638,13 +637,11 @@ void LibraryItemDelegate::selectedChanged()
 
 LibraryListController::LibraryListController(const QString & taxonomyTag, 
                                              LocalLibrary::LibrarySource source, 
-                                             MeasureType type,
                                              BaseApp *t_app)
   : OSListController(),
     m_app(t_app),
     m_taxonomyTag(taxonomyTag),
-    m_source(source),
-    m_type(type)
+    m_source(source)
 {
   createItems();
 }
@@ -686,16 +683,18 @@ void LibraryListController::createItems()
   {
     if( m_taxonomyTag.compare(QString::fromStdString(it->taxonomyTag()),Qt::CaseInsensitive) == 0 )
     {
-      if( it->measureType() == m_type )
-      { 
-        QSharedPointer<LibraryItem> item = QSharedPointer<LibraryItem>(new LibraryItem(*it, m_app));
+      // cannot use measures that rely on SketchUpAPI in this application
+      if (it->usesSketchUpAPI()){
+        continue;
+      }
 
-        item->setController(this);
+      QSharedPointer<LibraryItem> item = QSharedPointer<LibraryItem>(new LibraryItem(*it, m_app));
 
-        // Don't show measures that were created with a newer version of OpenStudio
-        if (item->isAvailable()){
-          m_items.push_back(item);
-        }
+      item->setController(this);
+
+      // Don't show measures that were created with a newer version of OpenStudio
+      if (item->isAvailable()){
+        m_items.push_back(item);
       }
     }
   }

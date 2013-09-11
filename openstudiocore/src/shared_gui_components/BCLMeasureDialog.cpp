@@ -68,6 +68,8 @@ BCLMeasureDialog::BCLMeasureDialog(const BCLMeasure& bclMeasure, QWidget* parent
     measureTypeString = "EnergyPlus Measure";
   }else if ( measureType == MeasureType::UtilityMeasure){
     measureTypeString = "Utility Measure";
+  }else if ( measureType == MeasureType::ReportingMeasure){
+    measureTypeString = "Reporting Measure";
   }
   int index = m_measureTypeComboBox->findText(measureTypeString);
   m_measureTypeComboBox->setCurrentIndex(index);
@@ -105,6 +107,8 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
     measureType = MeasureType::EnergyPlusMeasure;
   }else if ( measureTypeStr == "Utility Measure"){
     measureType = MeasureType::UtilityMeasure;
+  }else if ( measureTypeStr == "Reporting Measure"){
+    measureType = MeasureType::ReportingMeasure;
   }
 
   bool usesSketchUpAPI = false; //disabled for now, m_usesSketchUpAPI->isChecked();
@@ -286,6 +290,7 @@ void BCLMeasureDialog::init()
   m_measureTypeComboBox->addItem("OpenStudio Measure");
   m_measureTypeComboBox->addItem("EnergyPlus Measure");
   //m_measureTypeComboBox->addItem("Utility Measure"); // Disable for now
+  m_measureTypeComboBox->addItem("Reporting Measure");
   m_measureTypeComboBox->setCurrentIndex(0);
   vLayout2->addWidget(m_measureTypeComboBox);
   vLayout2->addSpacing(10);

@@ -82,6 +82,10 @@ namespace openstudio{
       measureTemplate = ":/templates/UtilityMeasure/measure.rb";
       testTemplate = ":/templates/UtilityMeasure/tests/UtilityMeasure_Test.rb";
       templateName = "UtilityMeasure";
+    }else if (measureType == MeasureType::ReportingMeasure){
+      measureTemplate = ":/templates/ReportingMeasure/measure.rb";
+      testTemplate = ":/templates/ReportingMeasure/tests/ReportingMeasure_Test.rb";
+      templateName = "ReportingMeasure";
     }
 
     QString measureString;
@@ -165,6 +169,12 @@ namespace openstudio{
 
     m_bclXML = *bclXML;
 
+    // remove deprecated attributes
+    m_bclXML.removeAttribute("Measure Function");
+    m_bclXML.removeAttribute("MeasureFunction");
+    m_bclXML.removeAttribute("Requires EnergyPlus Results");
+    m_bclXML.removeAttribute("RequiresEnergyPlusResults");
+
     // check for required attributes, and update old attributes
     boost::optional<Attribute> measureType = m_bclXML.getAttribute("Measure Type");
     if (!measureType){
@@ -174,22 +184,7 @@ namespace openstudio{
         m_bclXML.removeAttribute("MeasureType");
       }
     }
-    boost::optional<Attribute> measureFunction = m_bclXML.getAttribute("Measure Function");
-    if (!measureFunction){
-      measureFunction = m_bclXML.getAttribute("MeasureFunction");
-      if (measureFunction){
-        m_bclXML.addAttribute(Attribute("Measure Function", measureFunction->valueAsString()));
-        m_bclXML.removeAttribute("MeasureFunction");
-      }
-    }
-    boost::optional<Attribute> requiresEnergyPlusResults = m_bclXML.getAttribute("Requires EnergyPlus Results");
-    if (!requiresEnergyPlusResults){
-      requiresEnergyPlusResults = m_bclXML.getAttribute("RequiresEnergyPlusResults");
-      if (requiresEnergyPlusResults){
-        m_bclXML.addAttribute(Attribute("Requires EnergyPlus Results", requiresEnergyPlusResults->valueAsBoolean()));
-        m_bclXML.removeAttribute("RequiresEnergyPlusResults");
-      }
-    }
+
     boost::optional<Attribute> usesSketchUpAPI = m_bclXML.getAttribute("Uses SketchUp API");
     if (!usesSketchUpAPI){
       usesSketchUpAPI = m_bclXML.getAttribute("UsesSketchUpAPI");
@@ -199,7 +194,7 @@ namespace openstudio{
       }
     }
 
-    if (!measureType || !measureFunction || !requiresEnergyPlusResults || !usesSketchUpAPI){
+    if (!measureType || !usesSketchUpAPI){
       LOG_AND_THROW("'" << toString(dir) << "' is not a valid measure");
     }
 
