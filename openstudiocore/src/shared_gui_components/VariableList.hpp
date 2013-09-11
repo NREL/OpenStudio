@@ -82,7 +82,7 @@ class VariableGroupItem : public OSListItem
 
   public:
 
-  VariableGroupItem(std::vector<MeasureType> measureTypes, const QString & label, bool filterFixed, BaseApp *t_baseApp);
+  VariableGroupItem(MeasureType measureType, const QString & label, bool filterFixed, BaseApp *t_baseApp);
 
   QSharedPointer<VariableListController> variableListController() const;
 
@@ -115,7 +115,7 @@ class VariableListController : public OSListController
 
   public:
 
-  VariableListController(std::vector<MeasureType> measureTypes, bool designAlternatives, BaseApp *t_baseApp);
+  VariableListController(MeasureType measureType, bool designAlternatives, BaseApp *t_baseApp);
 
   QSharedPointer<OSListItem> itemAt(int i);
 
@@ -127,7 +127,7 @@ class VariableListController : public OSListController
 
   void moveDown(analysis::MeasureGroup variable);
 
-  std::vector<MeasureType> measureTypes() const;
+  MeasureType measureType() const;
 
   public slots:
 
@@ -141,7 +141,7 @@ class VariableListController : public OSListController
   void addItemForDroppedMeasureImpl(QDropEvent * event, bool t_fixed);
 
   BaseApp *m_app;
-  std::vector<MeasureType> m_measureTypes;
+  MeasureType m_measureType;
   bool m_filterFixed;
 
   std::vector<analysis::MeasureGroup> variables() const;

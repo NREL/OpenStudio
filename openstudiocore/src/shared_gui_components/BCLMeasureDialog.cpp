@@ -72,9 +72,6 @@ BCLMeasureDialog::BCLMeasureDialog(const BCLMeasure& bclMeasure, QWidget* parent
   int index = m_measureTypeComboBox->findText(measureTypeString);
   m_measureTypeComboBox->setCurrentIndex(index);
 
-  index = m_measureFunctionComboBox->findText(toQString(bclMeasure.measureFunction().valueDescription()));
-  m_measureFunctionComboBox->setCurrentIndex(index);
-
   QStringList taxonomyParts = toQString(bclMeasure.taxonomyTag()).split('.');
   if (taxonomyParts.size() > 0){
     index = m_taxonomyFirstLevelComboBox->findText(taxonomyParts[0]);
@@ -110,10 +107,6 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
     measureType = MeasureType::UtilityMeasure;
   }
 
-  std::string measureFunctionStr = toString(m_measureFunctionComboBox->currentText());
-  MeasureFunction measureFunction(measureFunctionStr);
-
-  bool requiresEnergyPlusResults = m_requiresEnergyPlusResults->isChecked();
   bool usesSketchUpAPI = false; //disabled for now, m_usesSketchUpAPI->isChecked();
 
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
@@ -149,8 +142,6 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
       result->setModelerDescription(modelerDescription);
       result->setTaxonomyTag(taxonomyTag);
       result->setMeasureType(measureType);
-      result->setMeasureFunction(measureFunction);
-      result->setRequiresEnergyPlusResults(requiresEnergyPlusResults);
       result->setUsesSketchUpAPI(usesSketchUpAPI);
       result->save();
     }
@@ -158,7 +149,7 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
     try{
     // starting new measure
     result = BCLMeasure(name, className, measureDir, taxonomyTag,
-                        measureType, measureFunction, requiresEnergyPlusResults, usesSketchUpAPI);
+                        measureType, usesSketchUpAPI);
     result->setDescription(description);
     result->setModelerDescription(modelerDescription);
     result->save();
@@ -179,8 +170,6 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
 {
   m_taxonomySecondLevelComboBox->clear();
   m_taxonomySecondLevelComboBox->setEnabled(false);
-  m_measureFunctionComboBox->setCurrentIndex(0);
-  m_requiresEnergyPlusResults->setChecked(false);
 
   if (newName == "Envelope"){
     m_taxonomySecondLevelComboBox->addItem("Fenestration");
@@ -228,8 +217,6 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
   }else if (newName == "Reporting"){
-    m_measureFunctionComboBox->setCurrentIndex(1);
-    m_requiresEnergyPlusResults->setChecked(true);
     m_taxonomySecondLevelComboBox->addItem("QAQC");
     m_taxonomySecondLevelComboBox->addItem("Troubleshooting");
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
@@ -304,19 +291,6 @@ void BCLMeasureDialog::init()
   vLayout2->addSpacing(10);
 
   label = new QLabel;
-  label->setText("Measure Function:");
-  label->setObjectName("H2");
-  vLayout2->addWidget(label);
-  m_measureFunctionComboBox = new QComboBox(this);
-  m_measureFunctionComboBox->addItem("Measure");
-  m_measureFunctionComboBox->addItem("Report"); 
-  //m_measureFunctionComboBox->addItem("Other"); // Disable for now
-  m_measureFunctionComboBox->setCurrentIndex(0);
-  m_measureFunctionComboBox->setEnabled(false);
-  vLayout2->addWidget(m_measureFunctionComboBox);
-  vLayout2->addSpacing(10);
-
-  label = new QLabel;
   label->setText("Taxonomy:");
   label->setObjectName("H2");
   vLayout2->addWidget(label);
@@ -335,24 +309,6 @@ void BCLMeasureDialog::init()
   m_taxonomySecondLevelComboBox = new QComboBox(this);
   tempHLayout->addWidget(m_taxonomySecondLevelComboBox);
   vLayout2->addLayout(tempHLayout);
-  vLayout2->addSpacing(10);
-
-  m_requiresEnergyPlusResults = new QRadioButton(this);
-  m_requiresEnergyPlusResults->setText("Yes");
-  m_requiresEnergyPlusResults->setChecked(false);
-  m_requiresEnergyPlusResults->setEnabled(false);
-  QRadioButton* notRequiresEnergyPlusResults = new QRadioButton(this);
-  notRequiresEnergyPlusResults->setText("No");
-  notRequiresEnergyPlusResults->setChecked(true);
-  notRequiresEnergyPlusResults->setEnabled(false);
-  tempHLayout = new QHBoxLayout;
-  tempHLayout->addWidget(m_requiresEnergyPlusResults);
-  tempHLayout->addWidget(notRequiresEnergyPlusResults);
-  tempHLayout->addStretch();
-  QGroupBox* groupBox = new QGroupBox(this);
-  groupBox->setTitle("Requires EnergyPlus Results");
-  groupBox->setLayout(tempHLayout);
-  vLayout2->addWidget(groupBox);
   vLayout2->addSpacing(10);
 
   /* Disable for now 

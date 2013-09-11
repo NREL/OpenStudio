@@ -44,24 +44,51 @@ OSResult OSRunner::result() const {
   return m_result;
 }
 
-boost::optional<openstudio::path> OSRunner::lastSqlFilePath() const
+boost::optional<openstudio::model::Model> OSRunner::lastOpenStudioModel() const
 {
-  return m_lastSqlFilePath;
+  if (m_lastOpenStudioModel){
+    return m_lastOpenStudioModel;
+  }
+
+  if (m_lastOpenStudioModelPath){
+    m_lastOpenStudioModel = model::Model::load(*m_lastOpenStudioModelPath);
+  }
+
+  return m_lastOpenStudioModel;
+}
+
+boost::optional<openstudio::Workspace> OSRunner::lastEnergyPlusWorkspace() const
+{
+  if (m_lastEnergyPlusWorkspace){
+    return m_lastEnergyPlusWorkspace;
+  }
+
+  if (m_lastEnergyPlusWorkspacePath){
+    m_lastEnergyPlusWorkspace = Workspace::load(*m_lastEnergyPlusWorkspacePath);
+  }
+
+  return m_lastEnergyPlusWorkspace;
+}
+
+boost::optional<openstudio::SqlFile> OSRunner::lastEnergyPlusSqlFile() const
+{
+  if (m_lastEnergyPlusSqlFile){
+    return m_lastEnergyPlusSqlFile;
+  }
+
+  if (m_lastEnergyPlusSqlFilePath){
+    try {
+      m_lastEnergyPlusSqlFile = SqlFile(*m_lastEnergyPlusSqlFilePath);
+    }catch(const std::exception&){
+    }
+  }
+
+  return m_lastEnergyPlusSqlFile;
 }
 
 bool OSRunner::inSelection(const openstudio::model::ModelObject& modelObject) const {
   return true;
 }  
-
-void OSRunner::setLastSqlFilePath(const openstudio::path& lastSqlFilePath)
-{
-  m_lastSqlFilePath = lastSqlFilePath;
-}
-
-void OSRunner::resetLastSqlFilePath()
-{
-  m_lastSqlFilePath.reset();
-}
 
 std::map<std::string, OSArgument> OSRunner::getUserInput(std::vector<OSArgument>& arguments) const
 {
@@ -465,6 +492,66 @@ boost::optional<openstudio::WorkspaceObject> OSRunner::getOptionalWorkspaceObjec
   boost::optional<WorkspaceObject> result = workspace.getObject(handle);
 
   return result;
+}
+
+void OSRunner::setOpenStudioModel(const openstudio::model::Model& lastOpenStudioModel)
+{
+  m_lastOpenStudioModel = lastOpenStudioModel;
+  m_lastOpenStudioModelPath.reset();
+}
+
+void OSRunner::resetLastOpenStudioModel()
+{
+  m_lastOpenStudioModel.reset();
+  m_lastOpenStudioModelPath.reset();
+}
+
+void OSRunner::setOpenStudioModelPath(const openstudio::path& lastOpenStudioModelPath)
+{
+  m_lastOpenStudioModelPath = lastOpenStudioModelPath;
+  m_lastOpenStudioModel.reset();
+}
+
+void OSRunner::resetLastOpenStudioModelPath()
+{
+  m_lastOpenStudioModel.reset();
+  m_lastOpenStudioModelPath.reset();
+}
+
+void OSRunner::setLastEnergyPlusWorkspace(const openstudio::Workspace& lastEnergyPlusWorkspace)
+{
+  m_lastEnergyPlusWorkspace = lastEnergyPlusWorkspace;
+  m_lastEnergyPlusWorkspacePath.reset();
+}
+
+void OSRunner::resetLastEnergyPlusWorkspace()
+{
+  m_lastEnergyPlusWorkspace.reset();
+  m_lastEnergyPlusWorkspacePath.reset();
+}
+
+void OSRunner::setLastEnergyPlusWorkspacePath(const openstudio::path& lastEnergyPlusWorkspacePath)
+{
+  m_lastEnergyPlusWorkspacePath = lastEnergyPlusWorkspacePath;
+  m_lastEnergyPlusWorkspace.reset();
+}
+
+void OSRunner::resetLastEnergyPlusWorkspacePath()
+{
+  m_lastEnergyPlusWorkspace.reset();
+  m_lastEnergyPlusWorkspacePath.reset();
+}
+
+void OSRunner::setLastEnergyPlusSqlFilePath(const openstudio::path& lastEnergyPlusSqlFilePath)
+{
+  m_lastEnergyPlusSqlFilePath = lastEnergyPlusSqlFilePath;
+  m_lastEnergyPlusSqlFile.reset();
+}
+
+void OSRunner::resetLastEnergyPlusSqlFilePath()
+{
+  m_lastEnergyPlusSqlFilePath.reset();
+  m_lastEnergyPlusSqlFile.reset();
 }
 
 } // ruleset

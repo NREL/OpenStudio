@@ -189,16 +189,23 @@ namespace detail {
     if (rjb.userScriptJob()){
 
       try {
-        boost::shared_ptr<Job_Impl> parentJob = parent();
-        if (parentJob){
-          while(parentJob && parentJob->parent()){
-            parentJob = parentJob->parent();
-          }
+        FileInfo osm = allInputFiles().getLastByExtension("osm");
+        std::string lastOpenStudioModelPathArgument = "--lastOpenStudioModelPath=" + toString(osm.fullPath);
+        addParameter("ruby", lastOpenStudioModelPathArgument);
+      } catch (const std::exception &) {
+      }
 
-          FileInfo sql = parentJob->treeOutputFiles().getLastByExtension("sql");
-          std::string lastSqlFilePathArgument = "--lastSqlFilePath=" + toString(sql.fullPath);
-          addParameter("ruby", lastSqlFilePathArgument);
-        } 
+      try {
+        FileInfo idf = allInputFiles().getLastByExtension("idf");
+        std::string lastEnergyPlusWorkspacePathArgument = "--lastEnergyPlusWorkspacePath=" + toString(idf.fullPath);
+        addParameter("ruby", lastEnergyPlusWorkspacePathArgument);
+      } catch (const std::exception &) {
+      }
+
+      try {
+        FileInfo sql = allInputFiles().getLastByFilename("eplusout.sql");
+        std::string lastEnergyPlusSqlFilePathArgument = "--lastEnergyPlusSqlFilePath=" + toString(sql.fullPath);
+        addParameter("ruby", lastEnergyPlusSqlFilePathArgument);
       } catch (const std::exception &) {
       }
     }

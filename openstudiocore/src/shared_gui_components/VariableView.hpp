@@ -67,7 +67,7 @@ class RectangularDropZone : public QWidget
 
   virtual ~RectangularDropZone() {}
 
-  void setAcceptedMimeTypes(const QStringList & types);
+  void setAcceptedMimeType(const QString & type);
 
   QLabel * nameLabel;
 
@@ -85,7 +85,7 @@ class RectangularDropZone : public QWidget
 
   private:
 
-  QStringList m_acceptedMimeTypes;
+  QString m_acceptedMimeType;
 };
 
 class NewGroupDropZone : public RectangularDropZone

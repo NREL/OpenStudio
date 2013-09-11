@@ -24,6 +24,11 @@
 
 #include <ruleset/OSResult.hpp>
 
+#include <model/Model.hpp>
+
+#include <utilities/idf/Workspace.hpp>
+#include <utilities/sql/SqlFile.hpp>
+
 #include <utilities/core/Logger.hpp>
 
 namespace openstudio {
@@ -63,8 +68,14 @@ class RULESET_API OSRunner {
    *  run method.) */
   OSResult result() const;
 
-  /** Returns the path to the last SqlFile generated in the workflow if available. */
-  boost::optional<openstudio::path> lastSqlFilePath() const;
+  /** Returns a copy of the last Model generated in the workflow if available. */
+  boost::optional<openstudio::model::Model> lastOpenStudioModel() const;
+
+  /** Returns a copy of the last EnergyPlus Workspace generated in the workflow if available. */
+  boost::optional<openstudio::Workspace> lastEnergyPlusWorkspace() const;
+
+  /** Returns a copy of the last EnergyPlus SqlFile generated in the workflow if available. */
+  boost::optional<openstudio::SqlFile> lastEnergyPlusSqlFile() const;
 
   /** Tests if the given ModelObject is in the application's current selection. Base class
    *  implementation always returns true. */
@@ -73,12 +84,6 @@ class RULESET_API OSRunner {
   //@}
   /** @name Actions */
   //@{
-
-  /** Sets the path to the last SqlFile generated in the workflow. */
-  void setLastSqlFilePath(const openstudio::path& lastSqlFilePath);
-
-  /** Resets the path to the last SqlFile generated in the workflow. */
-  void resetLastSqlFilePath();
 
   /** Gets user input using dialog boxes, etc. Result is map of name to argument. Result is empty
    *  if user cancels or user did not provide values for all required arguments. Base class
@@ -206,12 +211,41 @@ class RULESET_API OSRunner {
 	  const openstudio::Workspace& workspace);
 
   //@}
+
+ protected:
+
+  // supports in-memory job chaining
+  void setOpenStudioModel(const openstudio::model::Model& lastOpenStudioModel);
+  void resetLastOpenStudioModel();
+
+  // clears m_lastOpenStudioModel
+  void setOpenStudioModelPath(const openstudio::path& lastOpenStudioModelPath);
+  void resetLastOpenStudioModelPath();
+
+  // supports in-memory job chaining
+  void setLastEnergyPlusWorkspace(const openstudio::Workspace& lastEnergyPlusWorkspace);
+  void resetLastEnergyPlusWorkspace();
+
+  // clears m_lastEnergyPlusWorkspace
+  void setLastEnergyPlusWorkspacePath(const openstudio::path& lastEnergyPlusWorkspacePath);
+  void resetLastEnergyPlusWorkspacePath();
+
+  // clears m_lastEnergyPlusSqlFile
+  void setLastEnergyPlusSqlFilePath(const openstudio::path& lastEnergyPlusSqlFilePath);
+  void resetLastEnergyPlusSqlFilePath();
+
  private:
   REGISTER_LOGGER("openstudio.ruleset.OSRunner");
 
   OSResult m_result;
   std::string m_channel;
-  boost::optional<openstudio::path> m_lastSqlFilePath;
+
+  mutable boost::optional<openstudio::model::Model> m_lastOpenStudioModel;
+  boost::optional<openstudio::path> m_lastOpenStudioModelPath;
+  mutable boost::optional<openstudio::Workspace> m_lastEnergyPlusWorkspace;
+  boost::optional<openstudio::path> m_lastEnergyPlusWorkspacePath;
+  mutable boost::optional<openstudio::SqlFile> m_lastEnergyPlusSqlFile;
+  boost::optional<openstudio::path> m_lastEnergyPlusSqlFilePath;
 };
 
 } // ruleset
