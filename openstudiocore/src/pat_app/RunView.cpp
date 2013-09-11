@@ -45,8 +45,6 @@
 #include <QPainter>
 #include <QStyleOption>
 
-#include <boost/foreach.hpp>
-
 #include <fstream>
 
 namespace openstudio {
@@ -639,18 +637,18 @@ void DataPointJobItemView::update()
   dataPointJobContentView->clear();
 
   std::vector<std::string> initialConditions = jobErrors.initialConditions();
-  BOOST_FOREACH(const std::string& initialCondition, initialConditions){
+  Q_FOREACH(const std::string& initialCondition, initialConditions){
     dataPointJobContentView->addInitialConditionMessage(initialCondition);
   }
 
   std::vector<std::string> finalConditions = jobErrors.finalConditions();
-  BOOST_FOREACH(const std::string& finalCondition, finalConditions){
+  Q_FOREACH(const std::string& finalCondition, finalConditions){
     dataPointJobContentView->addFinalConditionMessage(finalCondition);
   }
 
   std::vector<std::string> errors = jobErrors.errors();
   dataPointJobHeaderView->setNumErrors(errors.size());
-  BOOST_FOREACH(const std::string& errorMessage, errors){
+  Q_FOREACH(const std::string& errorMessage, errors){
     dataPointJobContentView->addErrorMessage(errorMessage);
   }
 
@@ -672,12 +670,12 @@ void DataPointJobItemView::update()
 
   std::vector<std::string> warnings = jobErrors.warnings();
   dataPointJobHeaderView->setNumWarnings(warnings.size());
-  BOOST_FOREACH(const std::string& warningMessage, warnings){
+  Q_FOREACH(const std::string& warningMessage, warnings){
     dataPointJobContentView->addWarningMessage(warningMessage);
   }
 
   std::vector<std::string> infos = jobErrors.infos();
-  BOOST_FOREACH(const std::string& infoMessage, infos){
+  Q_FOREACH(const std::string& infoMessage, infos){
     dataPointJobContentView->addInfoMessage(infoMessage);
   }
 

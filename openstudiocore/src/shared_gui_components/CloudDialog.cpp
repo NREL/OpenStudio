@@ -301,8 +301,9 @@ void CloudDialog::on_okButton(bool checked)
 
 void CloudDialog::iAcceptClicked(bool checked)
 {
-  AWSProvider awsProvider;
-  awsProvider.signUserAgreement(checked);
+  // TODO Update this to work with current CloudSettings API
+  //AWSProvider awsProvider;
+  //awsProvider.signUserAgreement(checked);
 
   this->okButton()->setEnabled(checked);
 
@@ -663,9 +664,11 @@ void  VagrantProviderWidget::loadData()
   openstudio::path workerPath;
   openstudio::Url workerUrl;
 
-  VagrantProvider vagrantProvider(serverPath,serverUrl,workerPath,workerUrl);
-  std::vector<Url> workerUrls = vagrantProvider.workerUrls();
-  boost::optional<Url> optionalServerUrl = vagrantProvider.serverUrl();
+  // TODO fix this to use new VagrantSettings API
+  // VagrantProvider vagrantProvider(serverPath,serverUrl,workerPath,workerUrl);
+  VagrantProvider vagrantProvider;
+  //std::vector<Url> workerUrls = vagrantProvider.workerUrls();
+  //boost::optional<Url> optionalServerUrl = vagrantProvider.serverUrl();
 
   bool isChecked = true;
   m_runOnStartUpCheckBox->setChecked(isChecked);

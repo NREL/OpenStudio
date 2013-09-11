@@ -197,9 +197,37 @@ class WaterToAirInspectorView : public BaseInspectorView
 
   InspectorGadget * m_coilControllerInspectorGadget;
 
-  LoopChooserView * m_loopChooserView;
+  LoopChooserView * m_loopChooserView, * m_coolingLoopChooserView;
 
   bool m_displayIP;
+};
+
+
+class AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView : public BaseInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView(QWidget * parent = 0);
+
+  virtual ~AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView() {}
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
+
+  signals:
+
+  void addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  void removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  private:
+
+  boost::optional<model::ModelObject> m_modelObject;
+
+  InspectorGadget * m_inspectorGadget;
+
+  LoopChooserView * m_coolingLoopChooserView;
 };
 
 class AirTerminalSingleDuctVAVReheatInspectorView : public BaseInspectorView

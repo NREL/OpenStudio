@@ -50,6 +50,7 @@ namespace detail {
       bool complete,
       bool failed,
       bool selected,
+      DataPointRunType runType,
       const std::vector<QVariant>& variableValues,
       const std::vector<double>& responseValues,
       const std::vector<double>& objectiveValues,
@@ -71,6 +72,7 @@ namespace detail {
                      complete,
                      failed,
                      selected,
+                     runType,
                      variableValues,
                      responseValues,
                      directory,
@@ -96,6 +98,7 @@ namespace detail {
       bool complete,
       bool failed,
       bool selected,
+      DataPointRunType runType,
       const std::vector<QVariant>& variableValues,
       const std::vector<double>& responseValues,
       const std::vector<double>& objectiveValues,
@@ -118,6 +121,7 @@ namespace detail {
                      complete,
                      failed,
                      selected,
+                     runType,
                      variableValues,
                      responseValues,
                      directory,
@@ -153,6 +157,26 @@ namespace detail {
   void OptimizationDataPoint_Impl::clearResults() {
     DataPoint_Impl::clearResults();
     m_objectiveValues.clear();
+  }
+
+  bool OptimizationDataPoint_Impl::updateFromJSON(const AnalysisJSONLoadResult& loadResult, boost::optional<runmanager::RunManager>& runManager) {
+    if (loadResult.analysisObject) {
+      if (OptionalOptimizationDataPoint loaded = loadResult.analysisObject->optionalCast<OptimizationDataPoint>()) {
+        bool result = DataPoint_Impl::updateFromJSON(loadResult,runManager);
+        if (result) {
+          m_objectiveValues = loaded->objectiveValues();
+        }
+        return result;
+      }
+      else {
+        LOG(Info,"Cannot update OptimizationDataPoint because the AnalysisObject loaded from JSON is not an OptimizationDataPoint.");
+      }
+    }
+    else {
+      LOG(Info,"Cannot update DataPoint from JSON because the JSON string could not be loaded.");
+    }
+
+    return false;
   }
 
   void OptimizationDataPoint_Impl::setObjectiveValues(const std::vector<double> values) {
@@ -203,6 +227,7 @@ namespace detail {
                                  slice.isComplete(),
                                  slice.failed(),
                                  slice.selected(),
+                                 slice.runType(),
                                  slice.variableValues(),
                                  slice.responseValues(),
                                  objectiveValues,
@@ -234,6 +259,7 @@ OptimizationDataPoint::OptimizationDataPoint(const UUID& uuid,
                                              bool complete,
                                              bool failed,
                                              bool selected,
+                                             DataPointRunType runType,
                                              const std::vector<QVariant>& variableValues,
                                              const std::vector<double>& responseValues,
                                              const std::vector<double>& objectiveValues,
@@ -256,6 +282,7 @@ OptimizationDataPoint::OptimizationDataPoint(const UUID& uuid,
                                                          complete,
                                                          failed,
                                                          selected,
+                                                         runType,
                                                          variableValues,
                                                          responseValues,
                                                          objectiveValues,
@@ -280,6 +307,7 @@ OptimizationDataPoint::OptimizationDataPoint(const UUID& uuid,
                                              bool complete,
                                              bool failed,
                                              bool selected,
+                                             DataPointRunType runType,
                                              const std::vector<QVariant>& variableValues,
                                              const std::vector<double>& responseValues,
                                              const std::vector<double>& objectiveValues,
@@ -303,6 +331,7 @@ OptimizationDataPoint::OptimizationDataPoint(const UUID& uuid,
                                                          complete,
                                                          failed,
                                                          selected,
+                                                         runType,
                                                          variableValues,
                                                          responseValues,
                                                          objectiveValues,

@@ -23,6 +23,7 @@
 #include <analysis/AnalysisAPI.hpp>
 #include <analysis/AnalysisObject.hpp>
 
+#include <utilities/core/Enum.hpp>
 #include <utilities/core/Path.hpp>
 
 #include <QVariant>
@@ -38,6 +39,7 @@ class Tag;
 
 namespace runmanager {
   class Job;
+  class RunManager;
 }
 
 namespace model {
@@ -63,6 +65,23 @@ struct ANALYSIS_API DataPointSerializationOptions {
                                 bool t_osServerView=true);
 };
 
+/** \class DataPointRunType
+ *  \brief List of DataPoint run types.
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+ *  macro call is:
+ *  \code
+OPENSTUDIO_ENUM(DataPointRunType,
+    ((Local))
+    ((CloudSlim))
+    ((CloudDetailed))
+);
+ *  \endcode */
+OPENSTUDIO_ENUM(DataPointRunType,
+    ((Local))
+    ((CloudSlim))
+    ((CloudDetailed))
+);
+
 /** DataPoint is an AnalysisObject that describes a single simulation run/to be run for a given
  *  Analysis. New \link DataPoint DataPoints \endlink are constructed using
  *  Problem::createDataPoint, since the DataPoint variableValues only make sense in the context of
@@ -86,6 +105,7 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
             bool complete,
             bool failed,
             bool selected,
+            DataPointRunType runType,
             const std::vector<QVariant>& variableValues,
             const std::vector<double>& responseValues,
             const openstudio::path& directory,
@@ -109,6 +129,7 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
             bool complete,
             bool failed,
             bool selected,
+            DataPointRunType runType,
             const std::vector<QVariant>& variableValues,
             const std::vector<double>& responseValues,
             const openstudio::path& directory,
@@ -153,6 +174,8 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
 
   /** Returns true if the DataPoint is selected (to be simulated in the next batch). */
   bool selected() const;
+
+  DataPointRunType runType() const;
 
   /** Returns the variableValues to be applied in simulating this DataPoint. (That is, inputData
    *  will be the result of applying variableValues to the Analysis seed file.) */
@@ -221,6 +244,8 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
 
   void setSelected(bool selected);
 
+  void setRunType(const DataPointRunType& runType);
+
   /** Sets the run directory for this DataPoint. Generally called by
    *  analysisdriver::AnalysisDriver. */
   void setDirectory(const openstudio::path& directory);
@@ -232,6 +257,13 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   //@}
   /** @name Actions */
   //@{
+
+  /** Update high level results from json. */
+  bool updateFromJSON(const std::string& json, boost::optional<runmanager::RunManager>& runManager);
+
+  /** Whoever downloaded the zip file should have setDirectory(), and had the file placed in
+   *  directory() / toPath("dataPoint.zip"). */
+  bool updateDetails(boost::optional<runmanager::RunManager>& runManager);
 
   /** Clear model, workspace, and sqlFile from cache. */
   void clearFileDataFromCache() const;

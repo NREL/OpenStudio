@@ -50,7 +50,7 @@ OptionalModelObject ReverseTranslator::translateSiteWaterMainsTemperature( const
     boost::optional<ModelObject> mo2 = translateAndMapWorkspaceObject(wo.get());
     if( mo2 )
     {
-      if( schedule = mo2->optionalCast<Schedule>() )
+      if( (schedule = mo2->optionalCast<Schedule>()) )
       {
         mo.setTemperatureSchedule(schedule.get());
       }

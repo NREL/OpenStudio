@@ -224,7 +224,7 @@ void RunTabController::onPlayButtonClicked(bool clicked)
       // DLM: todo add a progress bar here as queueing all the points can take a while
 
       // request new run
-      analysisdriver::AnalysisRunOptions runOptions = project->standardRunOptions();
+      analysisdriver::AnalysisRunOptions runOptions = standardRunOptions(*project);
       analysisdriver::CurrentAnalysis currentAnalysis = analysisDriver.run(analysis, runOptions);
 
       // start the run

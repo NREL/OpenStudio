@@ -48,11 +48,11 @@ boost::optional<model::ModelObject> ReverseTranslator::translateExteriorLights(
   OptionalString s;
   OptionalDouble d;
 
-  if (s = workspaceObject.name()) {
+  if ((s = workspaceObject.name())) {
     definition.setName(*s + " Definition");
   }
 
-  if (d = workspaceObject.getDouble(Exterior_LightsFields::DesignLevel)) {
+  if ((d = workspaceObject.getDouble(Exterior_LightsFields::DesignLevel))){
     definition.setDesignLevel(*d);
   }
 
@@ -81,15 +81,15 @@ boost::optional<model::ModelObject> ReverseTranslator::translateExteriorLights(
 
   OS_ASSERT(exteriorLights);
 
-  if (s = workspaceObject.name()) {
+  if ((s = workspaceObject.name())) {
     exteriorLights->setName(*s);
   }
 
-  if (s = workspaceObject.getString(Exterior_LightsFields::ControlOption,false,true)) {
+  if ((s = workspaceObject.getString(Exterior_LightsFields::ControlOption,false,true))) {
     exteriorLights->setControlOption(*s);
   }
 
-  if (s = workspaceObject.getString(Exterior_LightsFields::EndUseSubcategory,false,true)) {
+  if ((s = workspaceObject.getString(Exterior_LightsFields::EndUseSubcategory,false,true))) {
     exteriorLights->setEndUseSubcategory(*s);
   }
 

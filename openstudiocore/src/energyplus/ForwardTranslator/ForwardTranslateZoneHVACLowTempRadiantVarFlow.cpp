@@ -87,7 +87,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
 	boost::optional<std::string> thermalZoneName;
 	if( boost::optional<ThermalZone> zone = modelObject.thermalZone() )
 	{
-		if( s = zone->name() )
+		if( (s = zone->name()) )
 		{
 			thermalZoneName = s;
 
@@ -131,7 +131,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
 
  
 	//field Hydronic Tubing Inside Diameter
-	if( value = modelObject.hydronicTubingInsideDiameter() )
+	if( (value = modelObject.hydronicTubingInsideDiameter()) )
 	{
 		idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingInsideDiameter,value.get());
 	}
@@ -141,7 +141,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
 	{
 		idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingLength,"Autosize");
 	}		
-	else if( value = modelObject.hydronicTubingLength() )
+	else if( (value = modelObject.hydronicTubingLength()) )
 	{
 		idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingLength,value.get());
 	}
@@ -165,7 +165,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
 		{
 				idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumHotWaterFlow,"Autosize");
 		}				
-		else if( value = coilHeat.maximumHotWaterFlow() )
+		else if( (value = coilHeat.maximumHotWaterFlow()) )
 		{
 				idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumHotWaterFlow,value.get());
 		}
@@ -193,7 +193,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
 		}
 	
 		//field Heating Control Throttling Range
-		if( value = coilHeat.heatingControlThrottlingRange() )
+		if( (value = coilHeat.heatingControlThrottlingRange()) )
 		{
 				idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingControlThrottlingRange,value.get());
 		}
@@ -221,7 +221,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
 		{
 			idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumColdWaterFlow,"Autosize");
 		}
-		else if( value = coilCool.maximumColdWaterFlow() )
+		else if( (value = coilCool.maximumColdWaterFlow()) )
 		{
 			idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumColdWaterFlow,value.get());
 		}
@@ -250,7 +250,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
 
 		//field Cooling Control Throttling Range
 		
-		if( value = coilCool.coolingControlThrottlingRange() )
+		if( (value = coilCool.coolingControlThrottlingRange()) )
 		{
 			idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingControlThrottlingRange,value.get());
 		}
@@ -268,7 +268,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
 		idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlType,coilCool.condensationControlType());
 
 		//field Condensation Control Dewpoint Offset
-		if( value = coilCool.condensationControlDewpointOffset() )
+		if( (value = coilCool.condensationControlDewpointOffset()) )
 		{
 			idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlDewpointOffset,value.get());
 		}

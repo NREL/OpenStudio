@@ -37,6 +37,8 @@
 #include <model/SimulationControl_Impl.hpp>
 #include <model/Building.hpp>
 #include <model/Building_Impl.hpp>
+#include <model/UtilityBill.hpp>
+#include <model/UtilityBill_Impl.hpp>
 #include <model/ConcreteModelObjects.hpp>
 
 #include <utilities/idf/Workspace.hpp>
@@ -216,16 +218,18 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   if (fullModelTranslation){
 
     // ensure that building exists
-    if (!model.getOptionalUniqueModelObject<model::Building>()){
-      model::Building building = model.getUniqueModelObject<model::Building>();
-      translateAndMapModelObject(building);
+    boost::optional<model::Building> building = model.building();
+    if (!building){
+      building = model.getUniqueModelObject<model::Building>();
     }
+    translateAndMapModelObject(*building);
 
     // ensure that simulation control exists
-    if (!model.getOptionalUniqueModelObject<model::SimulationControl>()){
-      model::SimulationControl simulationControl = model.getUniqueModelObject<model::SimulationControl>();
-      translateAndMapModelObject(simulationControl);
+    boost::optional<model::SimulationControl> simulationControl = model.getOptionalUniqueModelObject<model::SimulationControl>();
+    if (!simulationControl){
+      simulationControl = model.getUniqueModelObject<model::SimulationControl>();
     }
+    translateAndMapModelObject(*simulationControl);
 
     // Add a ProgramControl object to force a single threaded simulation
     IdfObject programControl(openstudio::IddObjectType::ProgramControl);
@@ -233,16 +237,19 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     m_idfObjects.push_back(programControl);
 
     // ensure that sizing parameters control exists
-    if (!model.getOptionalUniqueModelObject<model::SizingParameters>()){
-      model::SizingParameters sizingParameters = model.getUniqueModelObject<model::SizingParameters>();
-      translateAndMapModelObject(sizingParameters);
+    boost::optional<model::SizingParameters> sizingParameters = model.getOptionalUniqueModelObject<model::SizingParameters>();
+    if (!sizingParameters){
+      sizingParameters = model.getUniqueModelObject<model::SizingParameters>();
     }
+    translateAndMapModelObject(*sizingParameters);
 
-    // ensure that at least one run period exists
-    if (!model.getOptionalUniqueModelObject<model::RunPeriod>()){
-      model::RunPeriod runPeriod = model.getUniqueModelObject<model::RunPeriod>();
-      translateAndMapModelObject(runPeriod);
+    // ensure that run period exists
+    // DLM: should this only be done if there is a WeatherFile object?
+    boost::optional<model::RunPeriod> runPeriod = model.runPeriod();
+    if (!runPeriod){
+      runPeriod = model.getUniqueModelObject<model::RunPeriod>();
     }
+    translateAndMapModelObject(*runPeriod);
 
     // add a global geometry rules object
     IdfObject globalGeometryRules(openstudio::IddObjectType::GlobalGeometryRules);
@@ -263,6 +270,15 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       
       // always add this object so E+ results section exists
       lifeCycleCostParameters = model.getUniqueModelObject<LifeCycleCostParameters>();
+    }
+    translateAndMapModelObject(*lifeCycleCostParameters);
+  
+    // create meters for utility bill objects
+    std::vector<UtilityBill> utilityBills = model.getModelObjects<UtilityBill>();
+    BOOST_FOREACH(UtilityBill utilityBill, utilityBills){
+      // these meters and variables will be translated later
+      Meter consumptionMeter = utilityBill.consumptionMeter();
+      boost::optional<Meter> peakDemandMeter = utilityBill.peakDemandMeter();
     }
   }
 
@@ -367,6 +383,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::AirLoopHVAC airLoopHVAC = modelObject.cast<AirLoopHVAC>();
       retVal = translateAirLoopHVAC(airLoopHVAC);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam :
+    {
+      model::AirTerminalSingleDuctConstantVolumeCooledBeam airTerminal = modelObject.cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
+      retVal = translateAirTerminalSingleDuctConstantVolumeCooledBeam(airTerminal);
       break;
     }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ParallelPIU_Reheat :
@@ -801,11 +823,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       model::ElectricEquipment equipment = modelObject.cast<ElectricEquipment>();
       retVal = translateElectricEquipment(equipment);
       break;
-    }
+    }     
   case openstudio::IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial :
     {
       model::EvaporativeCoolerDirectResearchSpecial evap = modelObject.cast<EvaporativeCoolerDirectResearchSpecial>();
       retVal = translateEvaporativeCoolerDirectResearchSpecial(evap);
+      break;
+    }
+  case openstudio::IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed :
+    {
+      model::EvaporativeFluidCoolerSingleSpeed evap = modelObject.cast<EvaporativeFluidCoolerSingleSpeed>();
+      retVal = translateEvaporativeFluidCoolerSingleSpeed(evap);
       break;
     }
   case openstudio::IddObjectType::OS_Exterior_Lights :
@@ -835,6 +863,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::FanVariableVolume fan = modelObject.cast<FanVariableVolume>();
       retVal = translateFanVariableVolume(fan);
+      break;
+    }
+  case openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical :
+    {
+      model::GroundHeatExchangerVertical groundHeatExchangerVertical = modelObject.cast<GroundHeatExchangerVertical>();
+      retVal = translateGroundHeatExchangerVertical(groundHeatExchangerVertical);
       break;
     }
   case openstudio::IddObjectType::OS_HeatBalanceAlgorithm :
@@ -1009,6 +1043,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       PumpVariableSpeed pump = modelObject.cast<PumpVariableSpeed>();
       retVal = translatePumpVariableSpeed(pump);
+      break;
+    }
+  case openstudio::IddObjectType::OS_OutputControl_ReportingTolerances :
+    {
+      model::OutputControlReportingTolerances outputControl = modelObject.cast<OutputControlReportingTolerances>();
+      retVal = translateOutputControlReportingTolerances(outputControl);
       break;
     }
   case openstudio::IddObjectType::OS_Output_Variable :
@@ -1511,6 +1551,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneAirContaminantBalance);
   result.push_back(IddObjectType::OS_ZoneAirHeatBalanceAlgorithm);
   result.push_back(IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial);
+  result.push_back(IddObjectType::OS_OutputControl_ReportingTolerances);
 
   result.push_back(IddObjectType::OS_Site);
   result.push_back(IddObjectType::OS_Site_GroundReflectance);
@@ -1574,6 +1615,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryCoolOnly);
   result.push_back(IddObjectType::OS_AirLoopHVAC_ZoneMixer);
   result.push_back(IddObjectType::OS_AirLoopHVAC_ZoneSplitter);
+  result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam);
   result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled);
   result.push_back(IddObjectType::OS_AvailabilityManagerAssignmentList);
   result.push_back(IddObjectType::OS_AvailabilityManager_Scheduled);
@@ -1581,10 +1623,10 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_SingleSpeed);
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_TwoSpeed);
   result.push_back(IddObjectType::OS_Coil_Cooling_Water);
-	result.push_back(IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit);
+	 result.push_back(IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit);
   result.push_back(IddObjectType::OS_Coil_Heating_Gas);
   result.push_back(IddObjectType::OS_Coil_Heating_Water);
-	result.push_back(IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit);
+	 result.push_back(IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit);
   result.push_back(IddObjectType::OS_Connection);
   result.push_back(IddObjectType::OS_Connector_Mixer);
   result.push_back(IddObjectType::OS_Connector_Splitter);
@@ -1621,7 +1663,6 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_VariableFlow);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
-
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);
 

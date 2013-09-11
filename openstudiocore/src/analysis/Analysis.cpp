@@ -292,6 +292,19 @@ namespace detail {
     return result;
   }
 
+  std::vector<DataPoint> Analysis_Impl::dataPointsNeedingDetails() const {
+    DataPointVector result;
+    BOOST_FOREACH(const DataPoint& dataPoint, m_dataPoints) {
+      if (dataPoint.isComplete() && 
+          (dataPoint.runType() == DataPointRunType::CloudDetailed) &&
+          dataPoint.directory().empty())
+      {
+        result.push_back(dataPoint);
+      }
+    }
+    return result;
+  }
+
   std::vector<DataPoint> Analysis_Impl::getDataPoints(
       const std::vector<QVariant>& variableValues) const
   {
@@ -690,8 +703,13 @@ namespace detail {
   void Analysis_Impl::updateInputPathData(const openstudio::path& originalBase,
                                           const openstudio::path& newBase)
   {
+    LOG(Debug,"Updating paths that were relative to '" << toString(originalBase) << 
+        "' to be relative to '" << toString(newBase) << "' now.");
+
     // seed
     openstudio::path temp = relocatePath(seed().path(),originalBase,newBase);
+    LOG(Debug,"Seed was at '" << toString(seed().path()) << "', relocatePath determined that it "
+      << "should now be at '" << toString(temp) << "'.");
     if (!temp.empty()) {
       m_seed.setPath(temp);
     }
@@ -976,6 +994,10 @@ std::vector<DataPoint> Analysis::successfulDataPoints() const {
 
 std::vector<DataPoint> Analysis::failedDataPoints() const {
   return getImpl<detail::Analysis_Impl>()->failedDataPoints();
+}
+
+std::vector<DataPoint> Analysis::dataPointsNeedingDetails() const {
+  return getImpl<detail::Analysis_Impl>()->dataPointsNeedingDetails();
 }
 
 std::vector<DataPoint> Analysis::getDataPoints(const std::vector<QVariant>& variableValues) const

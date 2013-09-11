@@ -59,7 +59,7 @@ void CloudMonitor::setCloudProvider(QSharedPointer<CloudProvider> cloudProvider)
                     this,SLOT(onCloudStartupComplete()));
     OS_ASSERT(bingo);
 
-    bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(terminateComplete()),
+    bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(terminated()),
                    this,SLOT(onCloudTerminateComplete()));
     OS_ASSERT(bingo);
   }
@@ -80,11 +80,11 @@ void CloudMonitor::toggleCloud(bool on)
 
     if( on )
     {
-      cloudProvider()->startServer();
+      cloudProvider()->requestStartServer();
     }
     else
     {
-      cloudProvider()->terminate();
+      cloudProvider()->requestTerminate();
     }
   }
 }
@@ -128,9 +128,10 @@ QSharedPointer<VagrantProvider> CloudMonitor::makeProvider()
   Url workerUrl("http://localhost:8081");
 
   QSharedPointer<VagrantProvider> provider;
-  provider = QSharedPointer<VagrantProvider>(new VagrantProvider(serverPath, serverUrl, workerPath, workerUrl));
+  // TODO fix this to use new Settings api
+  provider = QSharedPointer<VagrantProvider>(new VagrantProvider());
 
-  provider->signUserAgreement(true);
+  //provider->signUserAgreement(true);
 
   setCloudProvider(provider);
 

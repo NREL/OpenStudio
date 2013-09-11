@@ -38,6 +38,7 @@ class AirGap;
 class AirLoopHVAC;
 class AirLoopHVACUnitaryHeatPumpAirToAir;
 class AirLoopHVACZoneSplitter;
+class AirTerminalSingleDuctConstantVolumeCooledBeam;
 class AirTerminalSingleDuctParallelPIUReheat;
 class AirTerminalSingleDuctUncontrolled;
 class AirTerminalSingleDuctVAVReheat;
@@ -92,6 +93,7 @@ class DistrictCooling;
 class DistrictHeating;
 class ElectricEquipment;
 class EvaporativeCoolerDirectResearchSpecial;
+class EvaporativeFluidCoolerSingleSpeed;
 class ExteriorLights;
 class FanConstantVolume;
 class FanOnOff;
@@ -100,6 +102,7 @@ class FFactorGroundFloorConstruction;
 class Gas;
 class GasEquipment;
 class GasMixture;
+class GroundHeatExchangerVertical;
 class HeatBalanceAlgorithm;
 class HeatExchangerAirToAirSensibleAndLatent;
 class HotWaterEquipment;
@@ -118,6 +121,7 @@ class Meter;
 class Node;
 class OtherEquipment;
 class OutsideSurfaceConvectionAlgorithm;
+class OutputControlReportingTolerances;
 class OutputVariable;
 class People;
 class PipeAdiabatic;
@@ -264,6 +268,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateAirLoopHVACZoneSplitter( model::AirLoopHVACZoneSplitter & airLoopHVACZoneSplitter );
 
+  boost::optional<IdfObject> translateAirTerminalSingleDuctConstantVolumeCooledBeam ( model::AirTerminalSingleDuctConstantVolumeCooledBeam & modelObject );
+  
   boost::optional<IdfObject> translateAirTerminalSingleDuctParallelPIUReheat( model::AirTerminalSingleDuctParallelPIUReheat & modelObject );
 
   boost::optional<IdfObject> translateAirTerminalSingleDuctUncontrolled( model::AirTerminalSingleDuctUncontrolled & modelObject );
@@ -372,6 +378,8 @@ class ENERGYPLUS_API ForwardTranslator {
   
   boost::optional<IdfObject> translateElectricEquipment( model::ElectricEquipment & modelObject );
 
+  boost::optional<IdfObject> translateEvaporativeFluidCoolerSingleSpeed( model::EvaporativeFluidCoolerSingleSpeed & modelObject );
+  
   boost::optional<IdfObject> translateExteriorLights(model::ExteriorLights& modelObject);
 
   boost::optional<IdfObject> translateFanConstantVolume( model::FanConstantVolume & modelObject );
@@ -389,6 +397,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateGasEquipment( model::GasEquipment & modelObject );
 
   boost::optional<IdfObject> translateGasMixture( model::GasMixture & modelObject );
+
+  boost::optional<IdfObject> translateGroundHeatExchangerVertical( model::GroundHeatExchangerVertical & modelObject );
 
   boost::optional<IdfObject> translateHeatBalanceAlgorithm( model::HeatBalanceAlgorithm & modelObject );
 
@@ -425,6 +435,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateOtherEquipment(model::OtherEquipment& modelObject);
 
   boost::optional<IdfObject> translateOutsideSurfaceConvectionAlgorithm( model::OutsideSurfaceConvectionAlgorithm & modelObject );
+
+  boost::optional<IdfObject> translateOutputControlReportingTolerances( model::OutputControlReportingTolerances & modelObject );
 
   boost::optional<IdfObject> translateOutputVariable( model::OutputVariable & modelObject );
 

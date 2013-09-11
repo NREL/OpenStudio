@@ -108,6 +108,12 @@ namespace detail {
       /// update job trees
       void updateJobs(const std::vector<Job> &t_jobs);
 
+      /// update job tree
+      void updateJob(const Job &t_job);
+
+      /// update job tree
+      void updateJob(const Job &t_job, const openstudio::path &t_dir);
+
       std::string jobsToJson() const;
 
       std::vector<Job> jobsForExport() const;

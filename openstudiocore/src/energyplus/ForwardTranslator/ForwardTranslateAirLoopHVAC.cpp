@@ -231,7 +231,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   {
     idfObject.setString(openstudio::AirLoopHVACFields::DesignSupplyAirFlowRate,"AutoSize");
   }
-  else if( val = airLoopHVAC.designSupplyAirFlowRate() )
+  else if( (val = airLoopHVAC.designSupplyAirFlowRate()) )
   {
     idfObject.setDouble(openstudio::AirLoopHVACFields::DesignSupplyAirFlowRate,val.get());
   }

@@ -57,7 +57,6 @@
 #include <utilities/bcl/LocalBCL.hpp>
 #include <utilities/core/Application.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/System.hpp>
 #include <utilities/core/ZipFile.hpp>
@@ -517,7 +516,7 @@ bool PatApp::setSeed(const FileReference& currentSeedLocation) {
       m_project->seedIdf(processEventsProgressBar);
       
       // update any duplicate measures of different versions
-      BOOST_FOREACH(const BCLMeasure& measure, result.second) {
+      Q_FOREACH(const BCLMeasure& measure, result.second) {
         measureManager().updateMeasure(*m_project,measure);
       }
 

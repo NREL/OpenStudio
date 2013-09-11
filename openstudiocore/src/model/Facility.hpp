@@ -27,6 +27,7 @@
 
 namespace openstudio {
 
+class CalibrationResult;
 class EndUses;
 
 namespace model {
@@ -686,8 +687,13 @@ class MODEL_API Facility : public ParentObject {
   boost::optional<EndUses> endUses() const;
 
   /// Returns the underlying Attribute of the EndUse object.
-  /// Attribute name: endUsesAttribute
   boost::optional<Attribute> endUsesAttribute() const;
+
+  /// Returns a CalibrationResult object containing data related to model calibration.
+  boost::optional<CalibrationResult> calibrationResult() const;
+
+  /// Returns the underlying Attribute of the CalibrationResult object.
+  boost::optional<Attribute> calibrationResultAttribute() const;
 
   //@}
 

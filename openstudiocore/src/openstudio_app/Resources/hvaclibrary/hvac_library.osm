@@ -1,6 +1,7 @@
+
 OS:Version,
-  {1ce1aa37-0a17-44e1-863b-48cb5ca5c8ed}, !- Handle
-  1.0.4;                                  !- Version Identifier
+  {136c4874-9749-4ef9-8694-da52987b6e41}, !- Handle
+  1.0.5;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -389,15 +390,42 @@ OS:Curve:Quadratic,
 
 OS:EvaporativeCooler:Direct:ResearchSpecial,
   {8d3b17e0-88c9-4d17-9de4-0b9dd0481b36}, ! Handle
-  OS:EvaporativeCooler:Direct:ResearchSpecial 1, ! Name
+  OS:EvaporativeCooler:Direct:ResearchSpecial, ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
-  1,                                      ! Cooler Effectiveness
-  0,                                      ! Recirculating Water Pump Power Consumption {W}
-  ,                                       ! Air Inlet Node Name
-  ,                                       ! Air Outlet Node Name
-  ,                                       ! Sensor Node Name
-  0,                                      ! Drift Loss Fraction
-  0;                                      ! Blowdown Concentration Ratio
+  1,                                      !- Cooler Effectiveness
+  0,                                      !- Recirculating Water Pump Power Consumption {W}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Sensor Node Name
+  0,                                      !- Drift Loss Fraction
+  0;                                      !- Blowdown Concentration Ratio
+
+OS:EvaporativeFluidCooler:SingleSpeed,
+  {b04f495c-cbc1-4d89-acec-e5f7711f00de}, !- Handle
+  Evaporative Fluid Cooler Single Speed, !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  autosize,                               !- Design Air Flow Rate {m3/s}
+  autosize,                               !- Fan Power at Design Air Flow Rate {W}
+  0.03,                                   !- Design Spray Water Flow Rate {m3/s}
+  UFactorTimesAreaAndDesignWaterFlowRate, !- Performance Input Method
+  ,                                       !- Outdoor Air Inlet Node Name
+  ,                                       !- Standard Design Capacity {W}
+  autosize,                               !- U-factor Times Area Value at Design Air Flow Rate {W/K}
+  autosize,                               !- Design Water Flow Rate {m3/s}
+  ,                                       !- User Specified Design Capacity {W}
+  ,                                       !- Design Entering Water Temperature {C}
+  ,                                       !- Design Entering Air Temperature {C}
+  ,                                       !- Design Entering Air Wet-bulb Temperature {C}
+  FanCycling,                             !- Capacity Control
+  1,                                      !- Sizing Factor
+  SaturatedExit,                          !- Evaporation Loss Mode
+  ,                                       !- Evaporation Loss Factor {percent/K}
+  0.008,                                  !- Drift Loss Percent {percent}
+  ConcentrationRatio,                     !- Blowdown Calculation Mode
+  3,                                      !- Blowdown Concentration Ratio
+  ,                                       !- Blowdown Makeup Water Usage Schedule Name
+  ;                                       !- Supply Water Storage Tank Name
 
 OS:AirTerminal:SingleDuct:Uncontrolled,
   {b883cca7-f436-48ce-ad23-7e8310c7a85d}, ! Handle
@@ -2109,7 +2137,7 @@ OS:Schedule:Day,
 
 OS:ZoneHVAC:LowTemperatureRadiant:Electric,
   {2630717b-a04c-4254-8ead-7be8b9f29a65}, !- Handle
-  Low Temperature Radiant Electric, !- Name
+  Low Temperature Radiant Electric,       !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   Ceilings,                               !- Radiant Surface Type
   autosize,                               !- Maximum Electrical Power to Panel {W}
@@ -2179,7 +2207,7 @@ OS:Schedule:Day,
 
 OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow,
   {b663c064-e5c7-4097-b85d-be8e73fec664}, !- Handle
-  Coil Heating Low Temp Rad Const Flow, !- Name
+  Coil Heating Low Temp Rad Const Flow,   !- Name
   ,                                       !- Heating Water Inlet Node Name
   ,                                       !- Heating Water Outlet Node Name
   {c6f277a7-8ea3-44c3-aaf6-4214a974fd19}, !- Heating High Water Temperature Schedule Name
@@ -2249,7 +2277,7 @@ OS:Schedule:Day,
 
 OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow,
   {ef54dfa0-4b17-4c66-9fef-582882b6678f}, !- Handle
-  Coil Cooling Low Temp Rad Const Flow, !- Name
+  Coil Cooling Low Temp Rad Const Flow,   !- Name
   ,                                       !- Cooling Water Inlet Node Name
   ,                                       !- Cooling Water Outlet Node Name
   {e8ad3d13-8608-4b2e-916a-38985eb5ac41}, !- Cooling High Water Temperature Schedule Name
@@ -2261,7 +2289,7 @@ OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow,
 
 OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
   {bc476496-ed8c-466f-8782-7956baa99b85}, !- Handle
-  Low Temp Radiant Const Flow, !- Name
+  Low Temp Radiant Const Flow,            !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Radiant Surface Type
   ,                                       !- Hydronic Tubing Inside Diameter {m}
@@ -2326,7 +2354,7 @@ OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow,
 
 OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
   {2839ddaf-2907-4c75-bcd1-c1f5a2000e5e}, !- Handle
-  Low Temp Radiant Var Flow, !- Name
+  Low Temp Radiant Var Flow,              !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   {0bb8d9e1-257b-4f72-872b-1c8352ebcff5}, !- Low Temp Radiant Variable Flow Heating Coil Name
   {bc6be488-1c8b-43d3-8064-00a09ab21444}, !- Low Temp Radiant Variable Flow Cooling Coil Name
@@ -2334,4 +2362,125 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
   ,                                       !- Hydronic Tubing Inside Diameter {m}
   ,                                       !- Hydronic Tubing Length {m}
   ;                                       !- Temperature Control Type
-  
+
+OS:GroundHeatExchanger:Vertical,
+  {2a737b1f-3c8b-4532-b605-aaddf5b555d0}, !- Handle
+  Ground Heat Exchanger Vertical 1,       !- Name
+  ,                                       !- Inlet Node Name
+  ,                                       !- Outlet Node Name
+  0.0033,                                 !- Maximum Flow Rate {m3/s}
+  120,                                    !- Number of Bore Holes
+  76.2,                                   !- Bore Hole Length {m}
+  0.063508,                               !- Bore Hole Radius {m}
+  0.692626,                               !- Ground Thermal Conductivity {W/m-K}
+  2347000,                                !- Ground Thermal Heat Capacity {J/m3-K}
+  13.375,                                 !- Ground Temperature {C}
+  0.0033,                                 !- Design Flow Rate {m3/s}
+  0.692626,                               !- Grout Thermal Conductivity {W/m-K}
+  0.391312,                               !- Pipe Thermal Conductivity {W/m-K}
+  0.0266667,                              !- Pipe Out Diameter {m}
+  0.0253977,                              !- U-Tube Distance {m}
+  0.00241285,                             !- Pipe Thickness {m}
+  2,                                      !- Maximum Length of Simulation
+  0.0005,                                 !- G-Function Reference Ratio {dimensionless}
+  -15.2996,                               !- G-Function Ln(T/Ts) Value 1
+  -0.348322,                              !- G-Function G Value 1
+  -14.201,                                !- G-Function Ln(T/Ts) Value 2
+  0.022208,                               !- G-Function G Value 2
+  -13.2202,                               !- G-Function Ln(T/Ts) Value 3
+  0.412345,                               !- G-Function G Value 3
+  -12.2086,                               !- G-Function Ln(T/Ts) Value 4
+  0.867498,                               !- G-Function G Value 4
+  -11.1888,                               !- G-Function Ln(T/Ts) Value 5
+  1.357839,                               !- G-Function G Value 5
+  -10.1816,                               !- G-Function Ln(T/Ts) Value 6
+  1.852024,                               !- G-Function G Value 6
+  -9.1815,                                !- G-Function Ln(T/Ts) Value 7
+  2.345656,                               !- G-Function G Value 7
+  -8.6809,                                !- G-Function Ln(T/Ts) Value 8
+  2.593958,                               !- G-Function G Value 8
+  -8.5,                                   !- G-Function Ln(T/Ts) Value 9
+  2.679,                                  !- G-Function G Value 9
+  -7.8,                                   !- G-Function Ln(T/Ts) Value 10
+  3.023,                                  !- G-Function G Value 10
+  -7.2,                                   !- G-Function Ln(T/Ts) Value 11
+  3.32,                                   !- G-Function G Value 11
+  -6.5,                                   !- G-Function Ln(T/Ts) Value 12
+  3.681,                                  !- G-Function G Value 12
+  -5.9,                                   !- G-Function Ln(T/Ts) Value 13
+  4.071,                                  !- G-Function G Value 13
+  -5.2,                                   !- G-Function Ln(T/Ts) Value 14
+  4.828,                                  !- G-Function G Value 14
+  -4.5,                                   !- G-Function Ln(T/Ts) Value 15
+  6.253,                                  !- G-Function G Value 15
+  -3.963,                                 !- G-Function Ln(T/Ts) Value 16
+  7.894,                                  !- G-Function G Value 16
+  -3.27,                                  !- G-Function Ln(T/Ts) Value 17
+  11.82,                                  !- G-Function G Value 17
+  -2.864,                                 !- G-Function Ln(T/Ts) Value 18
+  15.117,                                 !- G-Function G Value 18
+  -2.577,                                 !- G-Function Ln(T/Ts) Value 19
+  18.006,                                 !- G-Function G Value 19
+  -2.171,                                 !- G-Function Ln(T/Ts) Value 20
+  22.887,                                 !- G-Function G Value 20
+  -1.884,                                 !- G-Function Ln(T/Ts) Value 21
+  26.924,                                 !- G-Function G Value 21
+  -1.191,                                 !- G-Function Ln(T/Ts) Value 22
+  38.004,                                 !- G-Function G Value 22
+  -0.497,                                 !- G-Function Ln(T/Ts) Value 23
+  49.919,                                 !- G-Function G Value 23
+  -0.274,                                 !- G-Function Ln(T/Ts) Value 24
+  53.407,                                 !- G-Function G Value 24
+  -0.051,                                 !- G-Function Ln(T/Ts) Value 25
+  56.632,                                 !- G-Function G Value 25
+  0.196,                                  !- G-Function Ln(T/Ts) Value 26
+  59.825,                                 !- G-Function G Value 26
+  0.419,                                  !- G-Function Ln(T/Ts) Value 27
+  62.349,                                 !- G-Function G Value 27
+  0.642,                                  !- G-Function Ln(T/Ts) Value 28
+  64.524,                                 !- G-Function G Value 28
+  0.873,                                  !- G-Function Ln(T/Ts) Value 29
+  66.412,                                 !- G-Function G Value 29
+  1.112,                                  !- G-Function Ln(T/Ts) Value 30
+  67.993,                                 !- G-Function G Value 30
+  1.335,                                  !- G-Function Ln(T/Ts) Value 31
+  69.162,                                 !- G-Function G Value 31
+  1.679,                                  !- G-Function Ln(T/Ts) Value 32
+  70.476,                                 !- G-Function G Value 32
+  2.028,                                  !- G-Function Ln(T/Ts) Value 33
+  71.361,                                 !- G-Function G Value 33
+  2.275,                                  !- G-Function Ln(T/Ts) Value 34
+  71.79,                                  !- G-Function G Value 34
+  3.003,                                  !- G-Function Ln(T/Ts) Value 35
+  72.511;                                 !- G-Function G Value 35
+
+OS:Coil:Cooling:CooledBeam,
+  {9409bb35-2087-4798-897c-a6703b5a7669}, !- Handle
+  Coil Cooling Cooled Beam,               !- Name
+  ,                                       !- Chilled Water Inlet Node Name
+  ,                                       !- Chilled Water Outlet Node Name
+  5.422,                                  !- Coil Surface Area per Coil Length {m2/m}
+  15.3,                                   !- Model Parameter a
+  0.0,                                    !- Model Parameter n1
+  0.84,                                   !- Model Parameter n2
+  0.12,                                   !- Model Parameter n3
+  0.171,                                  !- Model Parameter a0 {m2/m}
+  0.0057,                                 !- Model Parameter K1
+  0.4,                                    !- Model Parameter n
+  0.0145;                                 !- Leaving Pipe Inside Diameter {m}
+
+OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
+  {3667b348-2052-4711-9cd2-7226dc650e72}, !- Handle
+  Cooled Beam, !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Cooled Beam Type
+  ,                                       !- Supply Air Inlet Node Name
+  ,                                       !- Supply Air Outlet Node Name
+  {9409bb35-2087-4798-897c-a6703b5a7669}, !- Cooling Coil Name
+  autosize,                               !- Supply Air Volumetric Flow Rate {m3/s}
+  autosize,                               !- Maximum Total Chilled Water Volumetric Flow Rate {m3/s}
+  autosize,                               !- Number of Beams
+  autosize,                               !- Beam Length {m}
+  15.0,                                   !- Design Inlet Water Temperature {C}
+  17.0,                                   !- Design Outlet Water Temperature {C}
+  Autocalculate;                          !- Coefficient of Induction Kin

@@ -185,13 +185,14 @@ namespace detail {
 if (_className::iddObjectType() == typeToCreate) { \
   result = boost::shared_ptr<_className##_Impl>(new _className##_Impl(object,this,keepHandle)); \
 }
-
+	REGISTER_CONSTRUCTOR(EvaporativeFluidCoolerSingleSpeed);
     REGISTER_CONSTRUCTOR(AirGap);
     REGISTER_CONSTRUCTOR(AirLoopHVAC);
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatPumpAirToAir);
     REGISTER_CONSTRUCTOR(AirLoopHVACOutdoorAirSystem);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneMixer);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneSplitter);
+    REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeCooledBeam);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctParallelPIUReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctUncontrolled);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVReheat);
@@ -208,6 +209,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CFactorUndergroundWallConstruction);
     REGISTER_CONSTRUCTOR(ChillerElectricEIR);
     REGISTER_CONSTRUCTOR(ClimateZones);
+    REGISTER_CONSTRUCTOR(CoilCoolingCooledBeam);
     REGISTER_CONSTRUCTOR(CoilCoolingDXSingleSpeed);
     REGISTER_CONSTRUCTOR(CoilCoolingDXTwoSpeed);
     REGISTER_CONSTRUCTOR(CoilCoolingLowTempRadiantConstFlow);
@@ -279,6 +281,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(GasEquipmentDefinition);
     REGISTER_CONSTRUCTOR(GasMixture);
     REGISTER_CONSTRUCTOR(GlareSensor);
+	REGISTER_CONSTRUCTOR(GroundHeatExchangerVertical);
     REGISTER_CONSTRUCTOR(HeatBalanceAlgorithm);
     REGISTER_CONSTRUCTOR(HeatExchangerAirToAirSensibleAndLatent);
     REGISTER_CONSTRUCTOR(HotWaterEquipment);
@@ -371,6 +374,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ThermalZone);
     REGISTER_CONSTRUCTOR(TimeDependentValuation);
     REGISTER_CONSTRUCTOR(Timestep);
+    REGISTER_CONSTRUCTOR(UtilityBill);
     REGISTER_CONSTRUCTOR(UtilityCost_Charge_Block);
     REGISTER_CONSTRUCTOR(UtilityCost_Charge_Simple);
     REGISTER_CONSTRUCTOR(UtilityCost_Computation);
@@ -437,13 +441,14 @@ if (_className::iddObjectType() == typeToCreate) { \
         *originalObjectImplPtr,this,keepHandle)); \
   } \
 }
-
+    REGISTER_COPYCONSTRUCTORS(EvaporativeFluidCoolerSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(AirGap);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVAC);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatPumpAirToAir);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACOutdoorAirSystem);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneMixer);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneSplitter);
+    REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeCooledBeam);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctParallelPIUReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctUncontrolled);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVReheat);
@@ -460,6 +465,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CFactorUndergroundWallConstruction);
     REGISTER_COPYCONSTRUCTORS(ClimateZones);
     REGISTER_COPYCONSTRUCTORS(ChillerElectricEIR);
+    REGISTER_COPYCONSTRUCTORS(CoilCoolingCooledBeam);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXTwoSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingLowTempRadiantConstFlow);
@@ -531,6 +537,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(GasEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(GasMixture);
     REGISTER_COPYCONSTRUCTORS(GlareSensor);
+	REGISTER_COPYCONSTRUCTORS(GroundHeatExchangerVertical);
     REGISTER_COPYCONSTRUCTORS(HeatBalanceAlgorithm);
     REGISTER_COPYCONSTRUCTORS(HeatExchangerAirToAirSensibleAndLatent);
     REGISTER_COPYCONSTRUCTORS(HotWaterEquipment);
@@ -623,6 +630,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ThermalZone);
     REGISTER_COPYCONSTRUCTORS(TimeDependentValuation);
     REGISTER_COPYCONSTRUCTORS(Timestep);
+    REGISTER_COPYCONSTRUCTORS(UtilityBill);
     REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Block);
     REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Simple);
     REGISTER_COPYCONSTRUCTORS(UtilityCost_Computation);
@@ -727,6 +735,63 @@ if (_className::iddObjectType() == typeToCreate) { \
     }
 
     return m_cachedLifeCycleCostParameters;
+  }
+
+  boost::optional<RunPeriod> Model_Impl::runPeriod() const
+  {
+    if (m_cachedRunPeriod){
+      return m_cachedRunPeriod;
+    }
+
+    boost::optional<RunPeriod> result = this->model().getOptionalUniqueModelObject<RunPeriod>();
+    if (result){
+      m_cachedRunPeriod = result;
+      bool connected = QObject::connect(result->getImpl<RunPeriod_Impl>().get(),
+                                        SIGNAL(onRemoveFromWorkspace(Handle)),
+                                        this,
+                                        SLOT(clearCachedRunPeriod()));
+      OS_ASSERT(connected);
+    }
+
+    return m_cachedRunPeriod;
+  }
+
+  boost::optional<YearDescription> Model_Impl::yearDescription() const
+  {
+    if (m_cachedYearDescription){
+      return m_cachedYearDescription;
+    }
+
+    boost::optional<YearDescription> result = this->model().getOptionalUniqueModelObject<YearDescription>();
+    if (result){
+      m_cachedYearDescription = result;
+      bool connected = QObject::connect(result->getImpl<YearDescription_Impl>().get(),
+                                        SIGNAL(onRemoveFromWorkspace(Handle)),
+                                        this,
+                                        SLOT(clearCachedYearDescription()));
+      OS_ASSERT(connected);
+    }
+
+    return m_cachedYearDescription;
+  }
+
+  boost::optional<WeatherFile> Model_Impl::weatherFile() const
+  {
+    if (m_cachedWeatherFile){
+      return m_cachedWeatherFile;
+    }
+
+    boost::optional<WeatherFile> result = this->model().getOptionalUniqueModelObject<WeatherFile>();
+    if (result){
+      m_cachedWeatherFile = result;
+      bool connected = QObject::connect(result->getImpl<WeatherFile_Impl>().get(),
+                                        SIGNAL(onRemoveFromWorkspace(Handle)),
+                                        this,
+                                        SLOT(clearCachedWeatherFile()));
+      OS_ASSERT(connected);
+    }
+
+    return m_cachedWeatherFile;
   }
 
   Schedule Model_Impl::alwaysOnDiscreteSchedule() const
@@ -1023,6 +1088,20 @@ if (_className::iddObjectType() == typeToCreate) { \
     m_cachedLifeCycleCostParameters.reset();
   }
 
+  void Model_Impl::clearCachedRunPeriod()
+  {
+    m_cachedRunPeriod.reset();
+  }
+
+  void Model_Impl::clearCachedYearDescription()
+  {
+    m_cachedYearDescription.reset();
+  }
+
+  void Model_Impl::clearCachedWeatherFile()
+  {
+    m_cachedWeatherFile.reset();
+  }
 } // detail
 
 Model::Model()
@@ -1097,6 +1176,21 @@ boost::optional<Building> Model::building() const
 boost::optional<LifeCycleCostParameters> Model::lifeCycleCostParameters() const
 {
   return getImpl<detail::Model_Impl>()->lifeCycleCostParameters();
+}
+
+boost::optional<RunPeriod> Model::runPeriod() const
+{
+  return getImpl<detail::Model_Impl>()->runPeriod();
+}
+
+boost::optional<YearDescription> Model::yearDescription() const
+{
+  return getImpl<detail::Model_Impl>()->yearDescription();
+}
+
+boost::optional<WeatherFile> Model::weatherFile() const
+{
+  return getImpl<detail::Model_Impl>()->weatherFile();
 }
 
 Schedule Model::alwaysOnDiscreteSchedule() const

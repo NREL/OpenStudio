@@ -503,7 +503,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     // Thermostat
     boost::optional<ThermostatSetpointDualSetpoint> thermostat;
     boost::optional<IdfObject> idfThermostat;
-    if(thermostat = modelObject.thermostatSetpointDualSetpoint() )
+    if((thermostat = modelObject.thermostatSetpointDualSetpoint()))
     {
       IdfObject zoneControlThermostat(openstudio::IddObjectType::ZoneControl_Thermostat);
       zoneControlThermostat.setString(ZoneControl_ThermostatFields::Name,modelObject.name().get() + " Thermostat");

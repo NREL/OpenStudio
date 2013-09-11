@@ -25,10 +25,9 @@
 
 #include <project/DataPointRecord.hpp>
 
+#include <analysis/DataPoint.hpp>
+
 namespace openstudio {
-namespace analysis {
-  class DataPoint;
-} // analysis
 namespace project {
 
 class AnalysisRecord;
@@ -103,6 +102,8 @@ namespace detail {
     bool failed() const;
 
     bool selected() const;
+
+    analysis::DataPointRunType runType() const;
 
     openstudio::path directory() const;
 
@@ -185,6 +186,7 @@ namespace detail {
     bool m_complete;
     bool m_failed;
     bool m_selected;
+    analysis::DataPointRunType m_runType;
     openstudio::path m_directory;
     boost::optional<int> m_osmInputDataRecordId;
     boost::optional<int> m_idfInputDataRecordId;
@@ -198,6 +200,7 @@ namespace detail {
     bool m_lastComplete;
     bool m_lastFailed;
     bool m_lastSelected;
+    analysis::DataPointRunType m_lastRunType;
     openstudio::path m_lastDirectory;
     boost::optional<int> m_lastOsmInputDataRecordId;
     boost::optional<int> m_lastIdfInputDataRecordId;
