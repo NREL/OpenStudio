@@ -151,7 +151,7 @@ namespace detail {
     m_checkDataPointsRunningInsteadOfAnalysis = false;
     m_lastGetRunningDataPointsSuccess = false;
 
-    if (OptionalUrl url = provider().serverUrl()) {
+    if (OptionalUrl url = provider().session().serverUrl()) {
 
       m_requestRun = OSServer(*url);
 
@@ -188,7 +188,7 @@ namespace detail {
       m_lastGetRunningDataPointsSuccess = false;
     }
 
-    if (OptionalUrl url = provider().serverUrl()) {
+    if (OptionalUrl url = provider().session().serverUrl()) {
 
       m_requestStop = OSServer(*url);
 
@@ -242,7 +242,7 @@ namespace detail {
       }
       if (!m_checkForResultsToDownload) {
 
-        if (OptionalUrl url = provider().serverUrl()) {
+        if (OptionalUrl url = provider().session().serverUrl()) {
           m_checkForResultsToDownload = OSServer(*url);
 
           // request completed data point uuids
@@ -913,7 +913,7 @@ namespace detail {
 
     bool success(false);
 
-    if (OptionalUrl url = provider().serverUrl()) {
+    if (OptionalUrl url = provider().session().serverUrl()) {
       m_monitorDataPoints = OSServer(*url);
 
       bool test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(completeDataPointUUIDsReturned(bool)));
@@ -967,7 +967,7 @@ namespace detail {
 
     bool success(false);
 
-    if (OptionalUrl url = provider().serverUrl()) {
+    if (OptionalUrl url = provider().session().serverUrl()) {
       m_requestJson = OSServer(*url);
 
       bool test = m_requestJson->connect(SIGNAL(requestProcessed(bool)),this,SLOT(jsonDownloadComplete(bool)));
@@ -1008,7 +1008,7 @@ namespace detail {
 
     bool success(false);
 
-    if (OptionalUrl url = provider().serverUrl()) {
+    if (OptionalUrl url = provider().session().serverUrl()) {
       m_requestDetails = OSServer(*url);
 
       bool test = m_requestDetails->connect(SIGNAL(requestProcessed(bool)),this,SLOT(detailsDownloadComplete(bool)));
