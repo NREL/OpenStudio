@@ -128,10 +128,17 @@ QSharedPointer<VagrantProvider> CloudMonitor::makeProvider()
   Url workerUrl("http://localhost:8081");
 
   QSharedPointer<VagrantProvider> provider;
-  // TODO fix this to use new Settings api
   provider = QSharedPointer<VagrantProvider>(new VagrantProvider());
 
-  //provider->signUserAgreement(true);
+  VagrantSettings vagrantSettings;
+  vagrantSettings.setServerUrl(serverUrl);
+  vagrantSettings.setWorkerUrl(workerUrl);
+  vagrantSettings.setServerPath(serverPath);
+  vagrantSettings.setWorkerPath(workerPath);
+  vagrantSettings.signUserAgreement(true);
+  vagrantSettings.setHaltOnStop(true);
+
+  provider->setSettings(vagrantSettings);
 
   setCloudProvider(provider);
 
