@@ -133,7 +133,7 @@ QWidget * VariableGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     // reporting measures cannot have measure groups
     bool fixedMeasuresOnly = (m_fixedMeasuresOnly || (measureType == MeasureType::ReportingMeasure));
-    VariableGroupItemView * variableGroupItemView = new VariableGroupItemView(fixedMeasuresOnly);
+    VariableGroupItemView * variableGroupItemView = new VariableGroupItemView(fixedMeasuresOnly, measureType);
 
     if (!fixedMeasuresOnly)
     {

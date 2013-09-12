@@ -586,11 +586,11 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     LibraryItemView * widget = new LibraryItemView();
 
     if (measureType == MeasureType::ModelMeasure){
-      widget->m_measureTypeBadge->setText("OS");
+      widget->m_measureTypeBadge->setIcon(QIcon(":/shared_gui_components/images/openstudio_measure_icon.png"));
     }else if (measureType == MeasureType::EnergyPlusMeasure){
-      widget->m_measureTypeBadge->setText("E+");
+      widget->m_measureTypeBadge->setIcon(QIcon(":/shared_gui_components/images/energyplus_measure_icon.png"));
     }else if (measureType == MeasureType::ReportingMeasure){
-      widget->m_measureTypeBadge->setText("Rp");
+      widget->m_measureTypeBadge->setIcon(QIcon(":/shared_gui_components/images/report_measure_icon.png"));
     }
 
     if(std::find(localUUIDs.begin(), localUUIDs.end(), measureUUID.toStdString()) != localUUIDs.end()){

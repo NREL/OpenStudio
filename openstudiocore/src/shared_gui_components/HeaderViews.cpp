@@ -24,6 +24,8 @@
 #include <QStyleOption>
 #include <QPainter>
 
+#include <utilities/bcl/BCLMeasure.hpp>
+
 namespace openstudio{
   
 LightHeaderToggleButton::LightHeaderToggleButton(QWidget * parent)
@@ -112,6 +114,13 @@ LightGradientHeader::LightGradientHeader(QWidget * parent)
 
   mainHLayout->addWidget(toggleButton);
 
+  m_measureTypeBadge = new QPushButton();
+  m_measureTypeBadge->setFixedSize(25,25);
+  m_measureTypeBadge->setCheckable(false);
+  m_measureTypeBadge->setFlat(true);
+  m_measureTypeBadge->setVisible(false);
+  mainHLayout->addWidget(m_measureTypeBadge);
+
   label = new QLabel();
   style.clear();
   style.append("QLabel { ");
@@ -119,6 +128,24 @@ LightGradientHeader::LightGradientHeader(QWidget * parent)
   style.append("} ");
   label->setStyleSheet(style);
   mainHLayout->addWidget(label);
+}
+
+void LightGradientHeader::setMeasureType(MeasureType measureType)
+{
+  bool found = false;
+
+  if (measureType == MeasureType::ModelMeasure){
+    m_measureTypeBadge->setIcon(QIcon(":/shared_gui_components/images/openstudio_measure_icon.png"));
+    found = true;
+  }else if (measureType == MeasureType::EnergyPlusMeasure){
+    m_measureTypeBadge->setIcon(QIcon(":/shared_gui_components/images/energyplus_measure_icon.png"));
+    found = true;
+  }else if (measureType == MeasureType::ReportingMeasure){
+    m_measureTypeBadge->setIcon(QIcon(":/shared_gui_components/images/report_measure_icon.png"));
+    found = true;
+  }
+
+  m_measureTypeBadge->setVisible(found);
 }
 
 LightHeader::LightHeader(QWidget * parent)
