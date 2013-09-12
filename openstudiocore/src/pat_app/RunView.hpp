@@ -92,12 +92,17 @@ class RunStatusView : public QWidget
 
    void playButtonClicked(bool);
 
+ private slots:
+
+   void checkInternetAvailability();
+
  private:
 
   PlayButton* m_playButton;
   PatProgressBar* m_progressBar;
   QLabel* m_percentComplete;
   QLabel* m_percentFailed;
+  QLabel* m_cloudProviderStatus;
 };
 
 class ToggleCloudButton : public GrayButton

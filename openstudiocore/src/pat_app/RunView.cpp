@@ -20,6 +20,7 @@
 #include <pat_app/RunView.hpp>
 
 #include <pat_app/PatApp.hpp>
+#include <pat_app/CloudMonitor.hpp>
 
 #include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/OSListView.hpp"
@@ -34,6 +35,7 @@
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/Workflow.hpp>
 
+#include <utilities/cloud/CloudProvider.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/time/DateTime.hpp>
 
@@ -43,8 +45,9 @@
 #include <QPushButton>
 #include <QScrollArea>
 #include <QStyleOption>
-#include <QVBoxLayout>
 #include <QTextEdit>
+#include <QTimer>
+#include <QVBoxLayout>
 
 #include <fstream>
 
@@ -58,7 +61,6 @@ RunView::RunView()
   setTitle("Run Simulations");
 
   // Main Content
-
   mainContent = new QWidget();
 
   QVBoxLayout * mainContentVLayout = new QVBoxLayout();
@@ -139,6 +141,18 @@ RunStatusView::RunStatusView()
 
   mainHLayout->addStretch();
 
+  // Cloud Provider Status
+
+  m_cloudProviderStatus = new QLabel();
+  mainHLayout->addWidget(m_cloudProviderStatus);
+  m_cloudProviderStatus->setPixmap(QPixmap(":/images/internet_no_connection.png"));
+
+  QTimer * timer = new QTimer(this);
+  timer->start(2000);
+  isConnected = connect(timer, SIGNAL(timeout()),
+                        this, SLOT(checkInternetAvailability()));
+  OS_ASSERT(isConnected);
+
   // Start Cloud
 
   toggleCloudButton = new ToggleCloudButton();
@@ -208,6 +222,25 @@ void RunStatusView::setProgress(int numCompletedJobs, int numFailedJobs, int num
   }else{
     m_percentFailed->setText("");
     m_percentComplete->setText("");
+  }
+}
+
+void RunStatusView::checkInternetAvailability()
+{
+  static bool internetAvailable = false;
+  static bool internetAvailableLastTime = false;
+  static bool internetAvailableTimeBerforeLast = false;
+
+  internetAvailableTimeBerforeLast = internetAvailableLastTime;
+  internetAvailableLastTime = internetAvailable;
+
+  QSharedPointer<CloudProvider> cloudProvider = PatApp::instance()->cloudMonitor()->cloudProvider();
+  internetAvailable = cloudProvider->internetAvailable();
+
+  if(internetAvailable && internetAvailableLastTime && internetAvailableTimeBerforeLast){
+    m_cloudProviderStatus->setPixmap(QPixmap(":/images/internet_yes_connection.png"));
+  } else if(!internetAvailable && !internetAvailableLastTime && !internetAvailableTimeBerforeLast){
+    m_cloudProviderStatus->setPixmap(QPixmap(":/images/internet_no_connection.png"));
   }
 }
 
