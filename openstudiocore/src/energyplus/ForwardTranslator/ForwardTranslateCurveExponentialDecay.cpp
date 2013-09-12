@@ -42,7 +42,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveExponentialDecay(
   OptionalString s;
   OptionalDouble d;
 
-  if (s = modelObject.name()) {
+  if ((s = modelObject.name())) {
     idfObject.setName(*s);
   }
 
@@ -51,10 +51,10 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveExponentialDecay(
   idfObject.setDouble(Curve_ExponentialDecayFields::Coefficient3C3,modelObject.coefficient3C3());
   idfObject.setDouble(Curve_ExponentialDecayFields::MinimumValueofx,modelObject.minimumValueofx());
   idfObject.setDouble(Curve_ExponentialDecayFields::MaximumValueofx,modelObject.maximumValueofx());
-  if (d = modelObject.minimumCurveOutput()) {
+  if ((d = modelObject.minimumCurveOutput())) {
     idfObject.setDouble(Curve_ExponentialDecayFields::MinimumCurveOutput,*d);
   }
-  if (d = modelObject.maximumCurveOutput()) {
+  if ((d = modelObject.maximumCurveOutput())) {
     idfObject.setDouble(Curve_ExponentialDecayFields::MaximumCurveOutput,*d);
   }
   if (!modelObject.isInputUnitTypeforxDefaulted()) {

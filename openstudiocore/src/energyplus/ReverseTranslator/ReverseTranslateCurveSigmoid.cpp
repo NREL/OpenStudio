@@ -37,41 +37,41 @@ boost::optional<ModelObject> ReverseTranslator::translateCurveSigmoid(
   OptionalString s;
   OptionalDouble d;
   
-  if(s = workspaceObject.name()) {
+  if ((s = workspaceObject.name())) {
     curve.setName(*s);
   }
 
-  if (d = workspaceObject.getDouble(Curve_SigmoidFields::Coefficient1C1)) {
+  if ((d = workspaceObject.getDouble(Curve_SigmoidFields::Coefficient1C1))) {
     curve.setCoefficient1C1(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_SigmoidFields::Coefficient2C2)) {
+  if ((d = workspaceObject.getDouble(Curve_SigmoidFields::Coefficient2C2))) {
     curve.setCoefficient2C2(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_SigmoidFields::Coefficient3C3)) {
+  if ((d = workspaceObject.getDouble(Curve_SigmoidFields::Coefficient3C3))) {
     curve.setCoefficient3C3(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_SigmoidFields::Coefficient4C4)) {
+  if ((d = workspaceObject.getDouble(Curve_SigmoidFields::Coefficient4C4))) {
     curve.setCoefficient4C4(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_SigmoidFields::Coefficient5C5)) {
+  if ((d = workspaceObject.getDouble(Curve_SigmoidFields::Coefficient5C5))) {
     curve.setCoefficient5C5(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_SigmoidFields::MinimumValueofx)) {
+  if ((d = workspaceObject.getDouble(Curve_SigmoidFields::MinimumValueofx))) {
     curve.setMinimumValueofx(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_SigmoidFields::MaximumValueofx)) {
+  if ((d = workspaceObject.getDouble(Curve_SigmoidFields::MaximumValueofx))) {
     curve.setMaximumValueofx(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_SigmoidFields::MinimumCurveOutput)) {
+  if ((d = workspaceObject.getDouble(Curve_SigmoidFields::MinimumCurveOutput))) {
     curve.setMinimumCurveOutput(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_SigmoidFields::MaximumCurveOutput)) {
+  if ((d = workspaceObject.getDouble(Curve_SigmoidFields::MaximumCurveOutput))) {
     curve.setMaximumCurveOutput(*d);
   }
-  if (s = workspaceObject.getString(Curve_SigmoidFields::InputUnitTypeforx,false,true)) {
+  if ((s = workspaceObject.getString(Curve_SigmoidFields::InputUnitTypeforx,false,true))) {
     curve.setInputUnitTypeforx(*s);
   }
-  if (s = workspaceObject.getString(Curve_SigmoidFields::OutputUnitType,false,true)) {
+  if ((s = workspaceObject.getString(Curve_SigmoidFields::OutputUnitType,false,true))) {
     curve.setOutputUnitType(*s);
   }
 

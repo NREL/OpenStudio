@@ -88,7 +88,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("0.11.6")] = &VersionTranslator::update_0_11_5_to_0_11_6;
   m_updateMethods[VersionString("1.0.2")] = &VersionTranslator::update_1_0_1_to_1_0_2;
   m_updateMethods[VersionString("1.0.3")] = &VersionTranslator::update_1_0_2_to_1_0_3;
-  m_updateMethods[VersionString("1.0.5")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.1.0")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -131,6 +131,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.0.2"));
   m_startVersions.push_back(VersionString("1.0.3"));
   m_startVersions.push_back(VersionString("1.0.4"));
+  m_startVersions.push_back(VersionString("1.0.5"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -1945,21 +1946,21 @@ std::string VersionTranslator::update_0_11_5_to_0_11_6(const IdfFile& idf_0_11_5
 
               boost::optional<std::string> s;
 
-              if( s = object2.getString(0) ) {
+              if( (s = object2.getString(0)) ) {
                 newPortList.setString(0,s.get());
               }
 
-              if( s = object2.getString(1) ) {
+              if( (s = object2.getString(1)) ) {
                 newPortList.setString(1,s.get());
               }
               
-              if( s = object.getString(0) ) {
+              if( (s = object.getString(0)) ) {
                 newPortList.setString(2,s.get());
               }
 
               for( unsigned i = 2; i < object2.numFields(); i++ ) {
 
-                if( s = object2.getString(i) ) {
+                if( (s = object2.getString(i)) ) {
                   newPortList.setString(i + 1, s.get());
                 }
 

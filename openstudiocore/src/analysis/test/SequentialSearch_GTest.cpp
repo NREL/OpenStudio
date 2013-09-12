@@ -213,6 +213,7 @@ TEST_F(AnalysisFixture, SequentialSearch) {
                                                          true,
                                                          false,
                                                          true,
+                                                         DataPointRunType::Local,
                                                          values,
                                                          DoubleVector(),
                                                          objectiveValues,

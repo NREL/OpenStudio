@@ -162,7 +162,21 @@ namespace detail{
     bool startDownloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath);
 
     //@}
+    /** @name Signals, Slots, Threads */
+    //@{
 
+    /** Connect signal from this OSServer to slot on qObject. */
+//    bool connect(const std::string& signal,
+//                 const QObject* qObject,
+//                 const std::string& slot,
+//                 Qt::ConnectionType type = Qt::AutoConnection) const;
+
+    /** Disconnect signal from this OSServer to slot on receiver. */
+//    bool disconnect(const char* signal=0,
+//                    const QObject* receiver=0,
+//                    const char* slot=0) const;
+
+    //@}
   signals:
 
     void requestProcessed(bool success);
@@ -232,6 +246,7 @@ namespace detail{
     mutable std::vector<std::string> m_warnings;
 
     void clearErrorsAndWarnings();
+    void logNetworkReply(const std::string& methodName) const;
     void logError(const std::string& error) const;
     void logNetworkError(int error) const;
     void logWarning(const std::string& warning) const;

@@ -715,6 +715,47 @@ INCLUDE_DIRECTORIES( "${CMAKE_BINARY_DIR}/src/" )
 # Include the resources, should happen after find EnergyPlus
 ADD_SUBDIRECTORY(resources)
 
+
+# Set up embedded ruby for use with 'aws-sdk'
+
+IF (WIN32)
+  SET(AWS_RUBY_PATH ruby-2.0.0-aws-win32)
+  SET(AWS_RUBY_DESTINATION ".")
+  SET(AWS_RUBY_EXTENSION ".zip")
+
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-win32.zip)
+  SET(AWS_RUBY_CHECKSUM 47a865d1be6c03d09cc0fc652adb53f9)
+ELSEIF(APPLE)
+  SET(AWS_RUBY_PATH ruby-2.0.0-aws-Darwin)
+  SET(AWS_RUBY_DESTINATION ".")
+
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Darwin.tar.bz2)
+  SET(AWS_RUBY_CHECKSUM ffc7dea105f3b6e3215ab2a32e7127ce)
+  SET(AWS_RUBY_EXTENSION ".tar.bz2")
+
+  #  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Darwin.tar.gz)
+  #  SET(AWS_RUBY_CHECKSUM 60e404dd025ce65ca583bb7e671e1c09)
+  #  SET(AWS_RUBY_EXTENSION ".tar.gz")
+ELSEIF(UNIX)
+  SET(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-x86_64)
+  SET(AWS_RUBY_DESTINATION "lib/openstudio")
+
+  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Linux-x86_64.tar.bz2)
+  SET(AWS_RUBY_CHECKSUM b2f8b2a41be2a63eca58b73dab908493)
+  SET(AWS_RUBY_EXTENSION ".tar.bz2")
+
+  #  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Linux-x86_64.tar.gz)
+  #  SET(AWS_RUBY_CHECKSUM c1636829b77859d77c272c6d6da766cf)
+  #  SET(AWS_RUBY_EXTENSION ".tar.gz")
+ENDIF()
+
+FILE(DOWNLOAD ${AWS_RUBY_URL} "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EXTENSION}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 EXPECTED_MD5 ${AWS_RUBY_CHECKSUM})
+execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}")
+EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}${AWS_RUBY_EXTENSION}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+INSTALL( DIRECTORY "${CMAKE_BINARY_DIR}/${AWS_RUBY_PATH}" DESTINATION "${AWS_RUBY_DESTINATION}" )
+
+# end ruby aws-sdk info
+
 FOREACH( D ${project_directories} )
   ADD_SUBDIRECTORY( src/${D} )
 ENDFOREACH()
@@ -889,3 +930,4 @@ IF (NOT UNIX)
       DESTINATION "Ruby/openstudio")
   ENDIF(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
 ENDIF()
+

@@ -60,7 +60,7 @@ boost::optional<IdfObject> ForwardTranslator::translateBoilerHotWater( BoilerHot
 
   // FuelType
 
-  if( s = modelObject.fuelType() )
+  if( (s = modelObject.fuelType()) )
   {
     idfObject.setString(Boiler_HotWaterFields::FuelType,s.get());
   }
@@ -71,21 +71,21 @@ boost::optional<IdfObject> ForwardTranslator::translateBoilerHotWater( BoilerHot
   {
     idfObject.setString(Boiler_HotWaterFields::NominalCapacity,"Autosize");
   }
-  else if( value = modelObject.nominalCapacity() )
+  else if( (value = modelObject.nominalCapacity()) )
   {
     idfObject.setDouble(Boiler_HotWaterFields::NominalCapacity,value.get());
   }
 
   // NominalThermalEfficiency
   
-  if( value = modelObject.nominalThermalEfficiency() )
+  if( (value = modelObject.nominalThermalEfficiency()) )
   {
     idfObject.setDouble(Boiler_HotWaterFields::NominalThermalEfficiency,value.get());
   }
 
   // EfficiencyCurveTemperatureEvaluationVariable
 
-  if ( s = modelObject.efficiencyCurveTemperatureEvaluationVariable() )
+  if ( (s = modelObject.efficiencyCurveTemperatureEvaluationVariable()) )
   {
     idfObject.setString(Boiler_HotWaterFields::EfficiencyCurveTemperatureEvaluationVariable,s.get());
   }
@@ -102,7 +102,7 @@ boost::optional<IdfObject> ForwardTranslator::translateBoilerHotWater( BoilerHot
 
   // DesignWaterOutletTemperature
 
-  if( value = modelObject.designWaterOutletTemperature() )
+  if( (value = modelObject.designWaterOutletTemperature()) )
   {
     idfObject.setDouble(Boiler_HotWaterFields::DesignWaterOutletTemperature,value.get());
   }
@@ -113,28 +113,28 @@ boost::optional<IdfObject> ForwardTranslator::translateBoilerHotWater( BoilerHot
   {
     idfObject.setString(Boiler_HotWaterFields::DesignWaterFlowRate,"Autosize");
   }
-  else if( value = modelObject.designWaterFlowRate() )
+  else if( (value = modelObject.designWaterFlowRate()) )
   {
     idfObject.setDouble(Boiler_HotWaterFields::DesignWaterFlowRate,value.get());
   }
 
   // MinimumPartLoadRatio
 
-  if( value = modelObject.minimumPartLoadRatio() )
+  if( (value = modelObject.minimumPartLoadRatio()) )
   {
     idfObject.setDouble(Boiler_HotWaterFields::MinimumPartLoadRatio,value.get());
   }
 
   // MaximumPartLoadRatio
 
-  if( value = modelObject.maximumPartLoadRatio() )
+  if( (value = modelObject.maximumPartLoadRatio()) )
   {
     idfObject.setDouble(Boiler_HotWaterFields::MaximumPartLoadRatio,value.get());
   }
 
   // OptimumPartLoadRatio
 
-  if( value = modelObject.optimumPartLoadRatio() )
+  if( (value = modelObject.optimumPartLoadRatio()) )
   {
     idfObject.setDouble(Boiler_HotWaterFields::OptimumPartLoadRatio,value.get());
   }
@@ -161,28 +161,28 @@ boost::optional<IdfObject> ForwardTranslator::translateBoilerHotWater( BoilerHot
 
   // WaterOutletUpperTemperatureLimit
 
-  if( value = modelObject.waterOutletUpperTemperatureLimit() )
+  if( (value = modelObject.waterOutletUpperTemperatureLimit()) )
   {
     idfObject.setDouble(Boiler_HotWaterFields::WaterOutletUpperTemperatureLimit,value.get());
   }
 
   // BoilerFlowMode
 
-  if( s = modelObject.boilerFlowMode() )
+  if( (s = modelObject.boilerFlowMode()) )
   {
     idfObject.setString(Boiler_HotWaterFields::BoilerFlowMode,s.get());
   } 
 
   // ParasiticElectricLoad
 
-  if( value = modelObject.parasiticElectricLoad() )
+  if( (value = modelObject.parasiticElectricLoad()) )
   {
     idfObject.setDouble(Boiler_HotWaterFields::ParasiticElectricLoad,value.get());
   }
 
   // SizingFactor
 
-  if( value = modelObject.sizingFactor() )
+  if( (value = modelObject.sizingFactor()) )
   {
     idfObject.setDouble(Boiler_HotWaterFields::SizingFactor,value.get());
   }

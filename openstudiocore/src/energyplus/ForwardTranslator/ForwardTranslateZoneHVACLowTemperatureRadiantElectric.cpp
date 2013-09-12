@@ -87,7 +87,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTemperatureRad
 	boost::optional<std::string> thermalZoneName;
 	if( boost::optional<ThermalZone> zone = modelObject.thermalZone() )
 	{
-		if( s = zone->name() )
+		if( (s = zone->name()) )
 		{
 			thermalZoneName = s;
 
@@ -134,7 +134,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTemperatureRad
 	{
 		idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ElectricFields::MaximumElectricalPowertoPanel,"Autosize");
 	}
-	else if( value = modelObject.maximumElectricalPowertoPanel() )
+	else if( (value = modelObject.maximumElectricalPowertoPanel()) )
 	{
 		idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ElectricFields::MaximumElectricalPowertoPanel,value.get());
 	}
@@ -146,7 +146,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTemperatureRad
 	}
 	
 	// Field Heating Throttling Range
-	if( value = modelObject.heatingThrottlingRange() )
+	if( (value = modelObject.heatingThrottlingRange()) )
 	{
 		idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ElectricFields::HeatingThrottlingRange,value.get());
 	}

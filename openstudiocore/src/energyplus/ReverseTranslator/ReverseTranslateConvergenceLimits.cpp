@@ -42,19 +42,19 @@ boost::optional<model::ModelObject> ReverseTranslator::translateConvergenceLimit
 
   ConvergenceLimits convergenceLimits = m_model.getUniqueModelObject<ConvergenceLimits>();
 
-  if (i = workspaceObject.getInt(ConvergenceLimitsFields::MinimumSystemTimestep)) {
+  if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MinimumSystemTimestep))) {
     convergenceLimits.setMinimumSystemTimestep(*i);
   }
 
-  if (i = workspaceObject.getInt(ConvergenceLimitsFields::MaximumHVACIterations)) {
+  if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MaximumHVACIterations))) {
     convergenceLimits.setMaximumHVACIterations(*i);
   }
   
-  if (i = workspaceObject.getInt(ConvergenceLimitsFields::MinimumPlantIterations)) {
+  if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MinimumPlantIterations))) {
     convergenceLimits.setMinimumPlantIterations(*i);
   }
 
-  if (i = workspaceObject.getInt(ConvergenceLimitsFields::MaximumPlantIterations)) {
+  if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MaximumPlantIterations))) {
     convergenceLimits.setMaximumPlantIterations(*i);
   }
 

@@ -47,6 +47,9 @@ SET( ${target_name}_src
   AirLoopHVACZoneSplitter.hpp
   AirLoopHVACZoneSplitter_Impl.hpp
   AirLoopHVACZoneSplitter.cpp
+  AirTerminalSingleDuctConstantVolumeCooledBeam.hpp
+  AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeCooledBeam.cpp
   AirTerminalSingleDuctParallelPIUReheat.hpp
   AirTerminalSingleDuctParallelPIUReheat_Impl.hpp
   AirTerminalSingleDuctParallelPIUReheat.cpp
@@ -98,6 +101,9 @@ SET( ${target_name}_src
   ClimateZones.hpp
   ClimateZones_Impl.hpp
   ClimateZones.cpp
+  CoilCoolingCooledBeam.hpp
+  CoilCoolingCooledBeam_Impl.hpp
+  CoilCoolingCooledBeam.cpp
   CoilCoolingDXSingleSpeed.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
   CoilCoolingDXSingleSpeed.cpp
@@ -329,6 +335,9 @@ SET( ${target_name}_src
   Glazing.hpp
   Glazing_Impl.hpp
   Glazing.cpp
+  GroundHeatExchangerVertical.hpp
+  GroundHeatExchangerVertical_Impl.hpp
+  GroundHeatExchangerVertical.cpp
   HeatBalanceAlgorithm.hpp
   HeatBalanceAlgorithm_Impl.hpp
   HeatBalanceAlgorithm.cpp
@@ -679,6 +688,9 @@ SET( ${target_name}_src
   Version.hpp
   Version_Impl.hpp
   Version.cpp
+  UtilityBill.hpp
+  UtilityBill_Impl.hpp
+  UtilityBill.cpp
   UtilityCost_Charge_Block.hpp
   UtilityCost_Charge_Block_Impl.hpp
   UtilityCost_Charge_Block.cpp
@@ -806,6 +818,7 @@ SET( ${target_name}_moc
   AirLoopHVACOutdoorAirSystem_Impl.hpp
   AirLoopHVACZoneMixer_Impl.hpp
   AirLoopHVACZoneSplitter_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp
   AirTerminalSingleDuctParallelPIUReheat_Impl.hpp
   AirTerminalSingleDuctUncontrolled_Impl.hpp
   AirTerminalSingleDuctVAVReheat_Impl.hpp
@@ -823,6 +836,7 @@ SET( ${target_name}_moc
   CFactorUndergroundWallConstruction_Impl.hpp
   ChillerElectricEIR_Impl.hpp
   ClimateZones_Impl.hpp
+  CoilCoolingCooledBeam_Impl.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
   CoilCoolingDXTwoSpeed_Impl.hpp
 	CoilCoolingLowTempRadiantVarFlow_Impl.hpp
@@ -897,6 +911,7 @@ SET( ${target_name}_moc
   GasMixture_Impl.hpp
   GlareSensor_Impl.hpp
   Glazing_Impl.hpp
+  GroundHeatExchangerVertical_Impl.hpp
   HeatBalanceAlgorithm_Impl.hpp
   HeatExchangerAirToAirSensibleAndLatent_Impl.hpp
   HotWaterEquipment_Impl.hpp
@@ -1013,6 +1028,7 @@ SET( ${target_name}_moc
   TimeDependentValuation_Impl.hpp
   Timestep_Impl.hpp
   Version_Impl.hpp
+  UtilityBill_Impl.hpp
   UtilityCost_Charge_Block_Impl.hpp
   UtilityCost_Charge_Simple_Impl.hpp
   UtilityCost_Computation_Impl.hpp
@@ -1077,6 +1093,7 @@ SET( ${target_name}_test_src
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp
   test/AirLoopHVAC_GTest.cpp
+  test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
   test/Alpha1_GTest.cpp
   test/AvailabilityManagerAssignmentList_GTest.cpp
@@ -1088,6 +1105,7 @@ SET( ${target_name}_test_src
   test/Building_GTest.cpp
   test/ChillerElectricEIR_GTest.cpp
   test/ClimateZones_GTest.cpp
+  test/CoilCoolingCooledBeam_GTest.cpp
   test/CoilCoolingDXSingleSpeed_GTest.cpp
   test/CoilCoolingDXTwoSpeed_GTest.cpp
   test/CoilCoolingLowTempRadiantConstFlow_GTest.cpp
@@ -1130,6 +1148,7 @@ SET( ${target_name}_test_src
   test/GasMixture_GTest.cpp
   test/Gas_GTest.cpp
   test/GlareSensor_GTest.cpp
+  test/GroundHeatExchangerVertical_GTest.cpp
   test/HotWaterEquipment_GTest.cpp
   test/HeatExchangerAirToAirSensibleAndLatent_GTest.cpp
   test/IlluminanceMap_GTest.cpp
@@ -1202,6 +1221,7 @@ SET( ${target_name}_test_src
   test/Surface_GTest.cpp
   test/ThermalZone_GTest.cpp
   test/TimeDependentValuation_GTest.cpp
+  test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
   test/WaterUseConnections_GTest.cpp
   test/WaterUseEquipment_GTest.cpp

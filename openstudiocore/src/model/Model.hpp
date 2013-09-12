@@ -24,6 +24,7 @@
 #include <model/ModelObject.hpp>
 
 #include <utilities/idf/Workspace.hpp>
+#include <utilities/core/Assert.hpp>
 
 #include <vector>
 
@@ -35,6 +36,9 @@ namespace model {
 
 class Building;
 class LifeCycleCostParameters;
+class RunPeriod;
+class YearDescription;
+class WeatherFile;
 class Component;
 class ComponentData;
 class Schedule;
@@ -92,6 +96,18 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get the LifeCycleCostParameters object if there is one, this implementation uses a cached reference to the LifeCycleCostParameters
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<LifeCycleCostParameters>(). */
   boost::optional<LifeCycleCostParameters> lifeCycleCostParameters() const;
+
+  /** Get the RunPeriod object if there is one, this implementation uses a cached reference to the RunPeriod
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<RunPeriod>(). */
+  boost::optional<RunPeriod> runPeriod() const;
+
+  /** Get the YearDescription object if there is one, this implementation uses a cached reference to the YearDescription
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<YearDescription>(). */
+  boost::optional<YearDescription> yearDescription() const;
+
+  /** Get the WeatherFile object if there is one, this implementation uses a cached reference to the WeatherFile
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<WeatherFile>(). */
+  boost::optional<WeatherFile> weatherFile() const;
 
   /** Get an always on schedule with discrete type limits if there is one.
    *  create a new schedule if necessary and add it to the model */
@@ -242,7 +258,7 @@ class MODEL_API Model : public openstudio::Workspace {
     boost::optional<T> result;
     std::vector<T> intermediate = getModelObjectsByName<T>(name,true);
     if (!intermediate.empty()) {
-      BOOST_ASSERT(intermediate.size() == 1u);
+      OS_ASSERT(intermediate.size() == 1u);
       result = intermediate[0];
     }
     return result;

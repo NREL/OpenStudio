@@ -56,21 +56,21 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerWaterCoil( Cont
 
   // ControlVariable
 
-  if( s = modelObject.controlVariable() )
+  if( (s = modelObject.controlVariable()) )
   {
     idfObject.setString(Controller_WaterCoilFields::ControlVariable,s.get());
   }
 
   // Action
 
-  if( s = modelObject.action() )
+  if( (s = modelObject.action()) )
   {
     idfObject.setString(Controller_WaterCoilFields::Action,s.get());
   }
 
   // ActuatorVariable
 
-  if( s = modelObject.actuatorVariable() )
+  if( (s = modelObject.actuatorVariable()) )
   {
     idfObject.setString(Controller_WaterCoilFields::ActuatorVariable,s.get());
   }
@@ -95,7 +95,7 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerWaterCoil( Cont
   {
     idfObject.setString(Controller_WaterCoilFields::ControllerConvergenceTolerance,"Autosize");
   }
-  else if( value = modelObject.controllerConvergenceTolerance() )
+  else if( (value = modelObject.controllerConvergenceTolerance()) )
   {
     idfObject.setDouble(Controller_WaterCoilFields::ControllerConvergenceTolerance,value.get());
   }
@@ -106,14 +106,14 @@ boost::optional<IdfObject> ForwardTranslator::translateControllerWaterCoil( Cont
   {
     idfObject.setString(Controller_WaterCoilFields::MaximumActuatedFlow,"Autosize");
   }
-  else if( value = modelObject.maximumActuatedFlow() )
+  else if( (value = modelObject.maximumActuatedFlow()) )
   {
     idfObject.setDouble(Controller_WaterCoilFields::MaximumActuatedFlow,value.get());
   }
 
   // MinimumActuatedFlow
 
-  if( value = modelObject.minimumActuatedFlow() )
+  if( (value = modelObject.minimumActuatedFlow()) )
   {
     idfObject.setDouble(Controller_WaterCoilFields::MinimumActuatedFlow,value.get());
   }

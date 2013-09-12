@@ -23,6 +23,8 @@
 
 #include <analysis/DataPoint.hpp>
 
+#include <model/UtilityBill.hpp>
+
 #include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/FileInfo.hpp>
 
@@ -62,6 +64,8 @@ ResultsTabController::ResultsTabController()
     m_baselineDataPointResultListController = QSharedPointer<BaselineDataPointResultListController>(new BaselineDataPointResultListController(analysis));
     m_dataPointResultsListController = QSharedPointer<DataPointResultsListController>(new DataPointResultsListController(analysis));
     m_dataPointResultItemDelegate = QSharedPointer<DataPointResultItemDelegate>(new DataPointResultItemDelegate());
+    m_dataPointCalibrationListController = QSharedPointer<DataPointCalibrationListController>(new DataPointCalibrationListController(analysis));
+    m_dataPointCalibrationItemDelegate = QSharedPointer<DataPointCalibrationItemDelegate>(new DataPointCalibrationItemDelegate(resultsView->calibrationMaxNMBE(), resultsView->calibrationMaxCVRMSE()));
 
     // can only select one item between both lists
     m_dataPointResultsListController->setSelectionController(m_baselineDataPointResultListController->selectionController());
@@ -74,11 +78,21 @@ ResultsTabController::ResultsTabController()
     bingo = connect(m_dataPointResultsListController->selectionController().data(),SIGNAL(selectionChanged(std::vector<QPointer<OSListItem> >)),this,SLOT(enableOpenDirectoryButton()));
     OS_ASSERT(bingo);
 
+    bingo = connect(resultsView,SIGNAL(calibrationThresholdsChanged(double, double)),m_dataPointCalibrationItemDelegate.data(),SLOT(setCalibrationThresholds(double, double)));
+    OS_ASSERT(bingo);
+
+    // want to reset the list after changing the delegate
+    bingo = connect(resultsView,SIGNAL(calibrationThresholdsChanged(double, double)),resultsView->dataPointCalibrationListView,SLOT(refreshAllViews()));
+    OS_ASSERT(bingo);
+
     resultsView->baselineDataPointResultListView->setListController(m_baselineDataPointResultListController);
     resultsView->baselineDataPointResultListView->setDelegate(m_dataPointResultItemDelegate);
 
     resultsView->dataPointResultsListView->setListController(m_dataPointResultsListController);
     resultsView->dataPointResultsListView->setDelegate(m_dataPointResultItemDelegate);
+
+    resultsView->dataPointCalibrationListView->setListController(m_dataPointCalibrationListController);
+    resultsView->dataPointCalibrationListView->setDelegate(m_dataPointCalibrationItemDelegate);
    }
 }
 
@@ -221,8 +235,8 @@ void ResultsTabController::disableOpenDirectoryButton()
 
 DataPointResultListItem::DataPointResultListItem(const openstudio::analysis::DataPoint& dataPoint,
                                                  const openstudio::analysis::DataPoint& baselineDataPoint,
-                                                 bool aleternateRow)
-  : m_dataPoint(dataPoint), m_baselineDataPoint(baselineDataPoint), m_aleternateRow(aleternateRow)
+                                                 bool alternateRow)
+  : m_dataPoint(dataPoint), m_baselineDataPoint(baselineDataPoint), m_alternateRow(alternateRow)
 {
 }
 
@@ -236,9 +250,31 @@ openstudio::analysis::DataPoint DataPointResultListItem::baselineDataPoint() con
   return m_baselineDataPoint;
 }
 
-bool DataPointResultListItem::aleternateRow() const
+bool DataPointResultListItem::alternateRow() const
 {
-  return m_aleternateRow;
+  return m_alternateRow;
+}
+
+DataPointCalibrationListItem::DataPointCalibrationListItem(const openstudio::analysis::DataPoint& dataPoint,
+                                                           const openstudio::analysis::DataPoint& baselineDataPoint,
+                                                           bool alternateRow)
+  : m_dataPoint(dataPoint), m_baselineDataPoint(baselineDataPoint), m_alternateRow(alternateRow)
+{
+}
+
+openstudio::analysis::DataPoint DataPointCalibrationListItem::dataPoint() const
+{
+  return m_dataPoint;
+}
+
+openstudio::analysis::DataPoint DataPointCalibrationListItem::baselineDataPoint() const
+{
+  return m_baselineDataPoint;
+}
+
+bool DataPointCalibrationListItem::alternateRow() const
+{
+  return m_alternateRow;
 }
 
 QWidget * DataPointResultItemDelegate::view(QSharedPointer<OSListItem> dataSource)
@@ -246,7 +282,7 @@ QWidget * DataPointResultItemDelegate::view(QSharedPointer<OSListItem> dataSourc
   QSharedPointer<DataPointResultListItem> dataPointResultListItem = dataSource.dynamicCast<DataPointResultListItem>();
   openstudio::analysis::DataPoint dataPoint = dataPointResultListItem->dataPoint();
   openstudio::analysis::DataPoint baselineDataPoint = dataPointResultListItem->baselineDataPoint();
-  bool alternateRow = dataPointResultListItem->aleternateRow();
+  bool alternateRow = dataPointResultListItem->alternateRow();
 
   DataPointResultsView* result = new DataPointResultsView(dataPoint, baselineDataPoint, alternateRow);
   result->setHasEmphasis(dataPointResultListItem->isSelected());
@@ -258,6 +294,37 @@ QWidget * DataPointResultItemDelegate::view(QSharedPointer<OSListItem> dataSourc
   OS_ASSERT(test);
 
   return result;
+}
+
+DataPointCalibrationItemDelegate::DataPointCalibrationItemDelegate(double maxNMBE, double maxCVRMSE)
+ : m_calibrationMaxNMBE(maxNMBE), m_calibrationMaxCVRMSE(maxCVRMSE)
+{}
+
+QWidget * DataPointCalibrationItemDelegate::view(QSharedPointer<OSListItem> dataSource)
+{
+  QSharedPointer<DataPointCalibrationListItem> dataPointCalibrationListItem = dataSource.dynamicCast<DataPointCalibrationListItem>();
+  OS_ASSERT(dataPointCalibrationListItem);
+
+  openstudio::analysis::DataPoint dataPoint = dataPointCalibrationListItem->dataPoint();
+  openstudio::analysis::DataPoint baselineDataPoint = dataPointCalibrationListItem->baselineDataPoint();
+  bool alternateRow = dataPointCalibrationListItem->alternateRow();
+
+  DataPointCalibrationView* result = new DataPointCalibrationView(dataPoint, baselineDataPoint, alternateRow, m_calibrationMaxNMBE, m_calibrationMaxCVRMSE);
+  result->setHasEmphasis(dataPointCalibrationListItem->isSelected());
+
+  bool test = connect(result,SIGNAL(clicked()),dataPointCalibrationListItem.data(),SLOT(toggleSelected()));
+  OS_ASSERT(test);
+
+  test = connect(dataPointCalibrationListItem.data(),SIGNAL(selectedChanged(bool)),result,SLOT(setHasEmphasis(bool)));
+  OS_ASSERT(test);
+
+  return result;
+}
+
+void DataPointCalibrationItemDelegate::setCalibrationThresholds(double maxNMBE, double maxCVRMSE)
+{
+  m_calibrationMaxNMBE = maxNMBE;
+  m_calibrationMaxCVRMSE = maxCVRMSE;
 }
 
 BaselineDataPointResultListController::BaselineDataPointResultListController(const openstudio::analysis::Analysis& analysis)
@@ -326,7 +393,7 @@ std::vector<openstudio::analysis::DataPoint> DataPointResultsListController::dat
   }
 
   analysis::DataPoint baselineDataPoint = project.get().baselineDataPoint();
-  BOOST_FOREACH(const analysis::DataPoint& dataPoint, m_analysis.dataPoints()){
+  Q_FOREACH(const analysis::DataPoint& dataPoint, m_analysis.dataPoints()){
     if (dataPoint.uuid() != baselineDataPoint.uuid()){
       result.push_back(dataPoint);
     }
@@ -334,6 +401,50 @@ std::vector<openstudio::analysis::DataPoint> DataPointResultsListController::dat
 
   return result;
 }
+
+DataPointCalibrationListController::DataPointCalibrationListController(const openstudio::analysis::Analysis& analysis)
+  : m_analysis(analysis)
+{
+}
+
+QSharedPointer<OSListItem> DataPointCalibrationListController::itemAt(int i)
+{
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  if(project){
+    analysis::DataPoint baselineDataPoint = project.get().baselineDataPoint();
+    std::vector<openstudio::analysis::DataPoint> dataPoints = this->dataPoints();
+    if (i >= 0 && i < (int)dataPoints.size()){
+      bool alternateRow = ((i % 2) == 1);
+      QSharedPointer<OSListItem> item = QSharedPointer<OSListItem>(new DataPointCalibrationListItem(dataPoints[i], baselineDataPoint, alternateRow));
+      item->setController(this);
+      return item;
+    }
+  }
+  return QSharedPointer<OSListItem>();
+}
+
+int DataPointCalibrationListController::count()
+{
+  return (int)this->dataPoints().size();
+}
+
+std::vector<openstudio::analysis::DataPoint> DataPointCalibrationListController::dataPoints()
+{
+  std::vector<openstudio::analysis::DataPoint> result;
+
+  boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
+  if(!project){
+    return result;
+  }
+
+  analysis::DataPoint baselineDataPoint = project.get().baselineDataPoint();
+  Q_FOREACH(const analysis::DataPoint& dataPoint, m_analysis.dataPoints()){
+    result.push_back(dataPoint);
+  }
+
+  return result;
+}
+
 
 
 }

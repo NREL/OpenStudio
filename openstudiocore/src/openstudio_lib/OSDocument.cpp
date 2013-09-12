@@ -524,6 +524,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
                                 ":images/off_run_tab.png" );
   connect(m_runTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
           m_mainRightColumnController.get(),SLOT(configureForRunSimulationSubTab(int)));
+  // DLM: this signal is not connected, is it needed?
   connect(this, SIGNAL(modelSaving(const openstudio::path &)), 
           m_runTabController.get(), SLOT(saveDatabase(const openstudio::path &)));
   connect(m_runTabController.get(), SIGNAL(useRadianceStateChanged(bool)),
@@ -551,9 +552,11 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   m_resultsTabController->searchForExistingResults(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources") / openstudio::toPath("run"));
 
+  // DLM: this signal is not connected, is it needed?
   connect(m_runTabController.get(), SIGNAL(toolsUpdated()),
       m_scriptsTabController.get(), SIGNAL(updateRubyInterpreterWarning()));
 
+  // DLM: this signal is not connected, is it needed?
   connect(m_scriptsTabController.get(), SIGNAL(toolsUpdated()),
       this, SLOT(markAsModified()));
 
@@ -563,6 +566,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   connect(this, SIGNAL(toolsUpdated()),
           this, SLOT(markAsModified()));
 
+  // DLM: this signal is not connected, is it needed?
   connect(this, SIGNAL(toolsUpdated()),
       m_scriptsTabController.get(), SIGNAL(updateRubyInterpreterWarning()));
 

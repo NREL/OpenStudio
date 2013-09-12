@@ -410,6 +410,7 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
                         true,
                         false,
                         true,
+                        DataPointRunType::Local,
                         values,
                         responseValues,
                         toPath("myProject/fakeDataPoint/"),

@@ -29,6 +29,7 @@ class FileReference;
 
 namespace analysis {
   class DataPoint;
+  class DataPointRunType;
 } // analysis
 namespace project {
 
@@ -84,6 +85,7 @@ OPENSTUDIO_ENUM(DataPointRecordColumns,
   ((dakotaParametersFiles)(TEXT)(18))
   ((idfInputDataRecordId)(INTEGER)(19))
   ((selected)(BOOLEAN)(20))
+  ((runType)(INTEGER)(21))
 );
 
 /** DataPointRecord is a ObjectRecord*/
@@ -143,6 +145,8 @@ class PROJECT_API DataPointRecord : public ObjectRecord {
   bool failed() const;
 
   bool selected() const;
+
+  analysis::DataPointRunType runType() const;
 
   openstudio::path directory() const;
 

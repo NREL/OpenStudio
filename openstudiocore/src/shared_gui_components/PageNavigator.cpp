@@ -21,8 +21,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <QBoxLayout>
 #include <QButtonGroup>
 #include <QPushButton>
@@ -115,7 +113,7 @@ void PageNavigator::createLayout()
 
 void PageNavigator::makeNumberedButtons()
 {
-  BOOST_FOREACH(QAbstractButton * button, m_buttonGroup->buttons().toVector().toStdVector()){
+  Q_FOREACH(QAbstractButton * button, m_buttonGroup->buttons().toVector().toStdVector()){
     m_buttonGroup->removeButton(button);
     if(button){
       delete button;

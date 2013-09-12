@@ -18,7 +18,7 @@ class Exceptions3_Test < Test::Unit::TestCase
     OpenStudio::System::testExceptions2
     OpenStudio::System::testExceptions3
     OpenStudio::System::testExceptions4
-
+    OpenStudio::System::testExceptions5
   end
 end
 

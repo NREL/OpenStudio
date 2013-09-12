@@ -32,7 +32,7 @@
 
 namespace openstudio{
 
-class IddKeyProperties;
+struct IddKeyProperties;
 
 namespace detail{
   class IddKey_Impl;

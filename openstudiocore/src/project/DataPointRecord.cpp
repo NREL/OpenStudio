@@ -55,6 +55,8 @@
 
 #include <boost/bind.hpp>
 
+using namespace openstudio::analysis;
+
 // DLM: I believe this will work cross-platform, I don't think ';' is allowed in a path on any system?
 const char pathSep = ';';
 
@@ -79,6 +81,7 @@ namespace detail {
       m_complete(dataPoint.isComplete()),
       m_failed(dataPoint.failed()),
       m_selected(dataPoint.selected()),
+      m_runType(dataPoint.runType()),
       m_directory(dataPoint.directory()),
       m_dakotaParametersFiles(dataPoint.dakotaParametersFiles())
   {
@@ -120,6 +123,10 @@ namespace detail {
     value = query.value(DataPointRecordColumns::selected);
     OS_ASSERT(value.isValid() && !value.isNull());
     m_selected = value.toBool();
+
+    value = query.value(DataPointRecordColumns::runType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_runType = DataPointRunType(value.toInt());
 
     value = query.value(DataPointRecordColumns::directory);
     OS_ASSERT(value.isValid() && !value.isNull());
@@ -244,6 +251,10 @@ namespace detail {
 
   bool DataPointRecord_Impl::selected() const {
     return m_selected;
+  }
+
+  analysis::DataPointRunType DataPointRecord_Impl::runType() const {
+    return m_runType;
   }
 
   openstudio::path DataPointRecord_Impl::directory() const {
@@ -482,6 +493,7 @@ namespace detail {
                                m_complete,
                                m_failed,
                                m_selected,
+                               m_runType,
                                variableValues,
                                responseValues(),
                                m_directory,
@@ -582,6 +594,7 @@ namespace detail {
     query.bindValue(DataPointRecordColumns::complete, m_complete);
     query.bindValue(DataPointRecordColumns::failed, m_failed);
     query.bindValue(DataPointRecordColumns::selected, m_selected);
+    query.bindValue(DataPointRecordColumns::runType, m_runType.value());
     query.bindValue(DataPointRecordColumns::directory, toQString(m_directory));
     if (m_osmInputDataRecordId) {
       query.bindValue(DataPointRecordColumns::inputDataRecordId, *m_osmInputDataRecordId);
@@ -650,6 +663,10 @@ namespace detail {
     value = query.value(DataPointRecordColumns::selected);
     OS_ASSERT(value.isValid() && !value.isNull());
     m_lastSelected = value.toBool();
+
+    value = query.value(DataPointRecordColumns::runType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastRunType = DataPointRunType(value.toInt());
 
     value = query.value(DataPointRecordColumns::directory);
     OS_ASSERT(value.isValid() && !value.isNull());
@@ -729,6 +746,10 @@ namespace detail {
     OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_selected == value.toBool());
 
+    value = query.value(DataPointRecordColumns::runType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_runType == DataPointRunType(value.toInt()));
+
     value = query.value(DataPointRecordColumns::directory);
     OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_directory == toPath(value.toString()));
@@ -785,6 +806,7 @@ namespace detail {
     m_lastComplete = m_complete;
     m_lastFailed = m_failed;
     m_lastSelected = m_selected;
+    m_lastRunType = m_runType;
     m_lastDirectory = m_directory;
     m_lastOsmInputDataRecordId = m_osmInputDataRecordId;
     m_lastIdfInputDataRecordId = m_idfInputDataRecordId;
@@ -802,6 +824,7 @@ namespace detail {
     m_complete = m_lastComplete;
     m_failed = m_lastFailed;
     m_selected = m_lastSelected;
+    m_runType = m_lastRunType;
     m_directory = m_lastDirectory;
     m_osmInputDataRecordId = m_lastOsmInputDataRecordId;
     m_idfInputDataRecordId = m_lastIdfInputDataRecordId;
@@ -1015,6 +1038,10 @@ bool DataPointRecord::failed() const {
 
 bool DataPointRecord::selected() const {
   return getImpl<detail::DataPointRecord_Impl>()->selected();
+}
+
+analysis::DataPointRunType DataPointRecord::runType() const {
+  return getImpl<detail::DataPointRecord_Impl>()->runType();
 }
 
 openstudio::path DataPointRecord::directory() const {

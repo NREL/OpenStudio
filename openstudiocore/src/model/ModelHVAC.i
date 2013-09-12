@@ -58,12 +58,14 @@ MODELOBJECT_TEMPLATES(SetpointManagerWarmest);
 MODELOBJECT_TEMPLATES(Splitter);
 MODELOBJECT_TEMPLATES(AirLoopHVACZoneSplitter);
 MODELOBJECT_TEMPLATES(ConnectorSplitter);
+MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeCooledBeam);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctParallelPIUReheat);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctUncontrolled);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctVAVReheat);
 MODELOBJECT_TEMPLATES(BoilerHotWater);
 MODELOBJECT_TEMPLATES(BoilerSteam);
 MODELOBJECT_TEMPLATES(ChillerElectricEIR);
+MODELOBJECT_TEMPLATES(CoilCoolingCooledBeam);
 MODELOBJECT_TEMPLATES(CoilCoolingDXSingleSpeed);
 MODELOBJECT_TEMPLATES(CoilCoolingDXTwoSpeed);
 MODELOBJECT_TEMPLATES(CoilCoolingLowTempRadiantConstFlow);
@@ -106,6 +108,7 @@ MODELOBJECT_TEMPLATES(WaterUseEquipmentDefinition);
 MODELOBJECT_TEMPLATES(WaterUseEquipment);
 MODELOBJECT_TEMPLATES(WaterUseConnections);
 MODELOBJECT_TEMPLATES(HeatExchangerAirToAirSensibleAndLatent);
+MODELOBJECT_TEMPLATES(GroundHeatExchangerVertical);
 
 SWIG_MODELOBJECT(PortList);
 SWIG_MODELOBJECT(Loop);
@@ -142,12 +145,14 @@ SWIG_MODELOBJECT(SetpointManagerWarmest);
 SWIG_MODELOBJECT(Splitter);
 SWIG_MODELOBJECT(AirLoopHVACZoneSplitter);
 SWIG_MODELOBJECT(ConnectorSplitter);
+SWIG_MODELOBJECT(AirTerminalSingleDuctConstantVolumeCooledBeam);
 SWIG_MODELOBJECT(AirTerminalSingleDuctParallelPIUReheat);
 SWIG_MODELOBJECT(AirTerminalSingleDuctUncontrolled);
 SWIG_MODELOBJECT(AirTerminalSingleDuctVAVReheat);
 SWIG_MODELOBJECT(BoilerHotWater);
 SWIG_MODELOBJECT(BoilerSteam);
 SWIG_MODELOBJECT(ChillerElectricEIR);
+SWIG_MODELOBJECT(CoilCoolingCooledBeam);
 SWIG_MODELOBJECT(CoilCoolingDXSingleSpeed);
 SWIG_MODELOBJECT(CoilCoolingDXTwoSpeed);
 SWIG_MODELOBJECT(CoilCoolingLowTempRadiantConstFlow);
@@ -190,6 +195,7 @@ SWIG_MODELOBJECT(WaterUseEquipmentDefinition);
 SWIG_MODELOBJECT(WaterUseEquipment);
 SWIG_MODELOBJECT(WaterUseConnections);
 SWIG_MODELOBJECT(HeatExchangerAirToAirSensibleAndLatent);
+SWIG_MODELOBJECT(GroundHeatExchangerVertical);
 
 #if defined SWIGCSHARP
 

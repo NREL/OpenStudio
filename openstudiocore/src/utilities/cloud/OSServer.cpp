@@ -27,6 +27,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QHttpMultiPart>
 #include <QMutex>
 #include <QFile>
 
@@ -76,9 +77,11 @@ namespace openstudio{
     bool OSServer_Impl::available(int msec)
     {
       if (requestAvailable()){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastAvailable();
+        }
       }
-      return lastAvailable();
+      return false;
     }
 
     bool OSServer_Impl::lastAvailable() const
@@ -89,9 +92,11 @@ namespace openstudio{
     std::vector<UUID> OSServer_Impl::projectUUIDs(int msec)
     {
       if (requestProjectUUIDs()){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastProjectUUIDs();
+        }
       }
-      return lastProjectUUIDs();
+      return std::vector<UUID>();
     }
 
     std::vector<UUID> OSServer_Impl::lastProjectUUIDs() const
@@ -102,9 +107,11 @@ namespace openstudio{
     bool OSServer_Impl::createProject(const UUID& projectUUID, int msec) 
     {
       if (requestCreateProject(projectUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastCreateProjectSuccess();
+        }
       }
-      return lastCreateProjectSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastCreateProjectSuccess() const
@@ -115,9 +122,11 @@ namespace openstudio{
     bool OSServer_Impl::deleteProject(const UUID& projectUUID, int msec) 
     {
       if (requestDeleteProject(projectUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastDeleteProjectSuccess();
+        }
       }
-      return lastDeleteProjectSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastDeleteProjectSuccess() const
@@ -128,9 +137,11 @@ namespace openstudio{
     std::vector<UUID> OSServer_Impl::analysisUUIDs(const UUID& projectUUID, int msec)
     {
       if (requestAnalysisUUIDs(projectUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastAnalysisUUIDs();
+        }
       }
-      return lastAnalysisUUIDs();
+      return std::vector<UUID>();
     }
 
     std::vector<UUID> OSServer_Impl::lastAnalysisUUIDs() const
@@ -141,9 +152,11 @@ namespace openstudio{
     bool OSServer_Impl::postAnalysisJSON(const UUID& projectUUID, const std::string& analysisJSON, int msec)
     {
       if (startPostAnalysisJSON(projectUUID, analysisJSON)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastPostAnalysisJSONSuccess();
+        }
       }
-      return lastPostAnalysisJSONSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastPostAnalysisJSONSuccess() const
@@ -154,9 +167,11 @@ namespace openstudio{
     bool OSServer_Impl::postDataPointJSON(const UUID& analysisUUID, const std::string& dataPointJSON, int msec)
     {
       if (startPostDataPointJSON(analysisUUID, dataPointJSON)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastPostDataPointJSONSuccess();
+        }
       }
-      return lastPostDataPointJSONSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastPostDataPointJSONSuccess() const
@@ -167,9 +182,11 @@ namespace openstudio{
     bool OSServer_Impl::uploadAnalysisFiles(const UUID& analysisUUID, const openstudio::path& analysisZipFile, int msec)
     {
       if (startUploadAnalysisFiles(analysisUUID, analysisZipFile)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastUploadAnalysisFilesSuccess();
+        }
       }
-      return lastUploadAnalysisFilesSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastUploadAnalysisFilesSuccess() const
@@ -180,9 +197,11 @@ namespace openstudio{
     bool OSServer_Impl::start(const UUID& analysisUUID, int msec)
     {
       if (requestStart(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastStartSuccess();
+        }
       }
-      return lastStartSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastStartSuccess() const
@@ -193,9 +212,11 @@ namespace openstudio{
     bool OSServer_Impl::isAnalysisQueued(const UUID& analysisUUID, int msec)
     {
       if (requestIsAnalysisQueued(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastIsAnalysisQueued();
+        }
       }
-      return lastIsAnalysisQueued();
+      return false;
     }
 
     bool OSServer_Impl::lastIsAnalysisQueued() const
@@ -206,9 +227,11 @@ namespace openstudio{
     bool OSServer_Impl::isAnalysisRunning(const UUID& analysisUUID, int msec)
     {
       if (requestIsAnalysisRunning(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastIsAnalysisRunning();
+        }
       }
-      return lastIsAnalysisRunning();
+      return false;
     }
 
     bool OSServer_Impl::lastIsAnalysisRunning() const
@@ -219,9 +242,11 @@ namespace openstudio{
     bool OSServer_Impl::stop(const UUID& analysisUUID, int msec)
     {
       if (requestStop(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastStopSuccess();
+        }
       }
-      return lastStopSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastStopSuccess() const
@@ -232,9 +257,11 @@ namespace openstudio{
     std::vector<UUID> OSServer_Impl::dataPointUUIDs(const UUID& analysisUUID, int msec)
     {
       if (requestDataPointUUIDs(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastDataPointUUIDs();
+        }
       }
-      return lastDataPointUUIDs();
+      return std::vector<UUID>();
     }
 
     std::vector<UUID> OSServer_Impl::lastDataPointUUIDs() const
@@ -245,9 +272,11 @@ namespace openstudio{
     std::vector<UUID> OSServer_Impl::runningDataPointUUIDs(const UUID& analysisUUID, int msec)
     {
       if (requestRunningDataPointUUIDs(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastRunningDataPointUUIDs();
+        }
       }
-      return lastRunningDataPointUUIDs();
+      return std::vector<UUID>();
     }
 
     std::vector<UUID> OSServer_Impl::lastRunningDataPointUUIDs() const
@@ -258,9 +287,11 @@ namespace openstudio{
     std::vector<UUID> OSServer_Impl::queuedDataPointUUIDs(const UUID& analysisUUID, int msec)
     {
       if (requestQueuedDataPointUUIDs(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastQueuedDataPointUUIDs();
+        }
       }
-      return lastQueuedDataPointUUIDs();
+      return std::vector<UUID>();
     }
 
     std::vector<UUID> OSServer_Impl::lastQueuedDataPointUUIDs() const
@@ -271,9 +302,11 @@ namespace openstudio{
     std::vector<UUID> OSServer_Impl::completeDataPointUUIDs(const UUID& analysisUUID, int msec)
     {
       if (requestCompleteDataPointUUIDs(analysisUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastCompleteDataPointUUIDs();
+        }
       }
-      return lastCompleteDataPointUUIDs();
+      return std::vector<UUID>();
     }
 
     std::vector<UUID> OSServer_Impl::lastCompleteDataPointUUIDs() const
@@ -284,9 +317,11 @@ namespace openstudio{
     std::string OSServer_Impl::dataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID, int msec)
     {
       if (requestDataPointJSON(analysisUUID, dataPointUUID)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastDataPointJSON();
+        }
       }
-      return lastDataPointJSON();
+      return "";
     }
 
     std::string OSServer_Impl::lastDataPointJSON() const
@@ -297,9 +332,11 @@ namespace openstudio{
     bool OSServer_Impl::downloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath, int msec)
     {
       if (startDownloadDataPoint(analysisUUID, dataPointUUID, downloadPath)){
-        waitForFinished(msec);
+        if (waitForFinished(msec)){
+          return lastDownloadDataPointSuccess();
+        }
       }
-      return lastDownloadDataPointSuccess();
+      return false;
     }
 
     bool OSServer_Impl::lastDownloadDataPointSuccess() const
@@ -366,7 +403,7 @@ namespace openstudio{
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processAvailable()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processAvailable()));
       OS_ASSERT(test);
 
       return true;
@@ -386,7 +423,7 @@ namespace openstudio{
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processProjectUUIDs()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processProjectUUIDs()));
       OS_ASSERT(test);
 
       return true;
@@ -407,9 +444,7 @@ namespace openstudio{
   
       QVariantMap map;
       map["_id"] = id;
-      //"created_at": "2013-08-27T20:40:38Z",
       map["name"] = id;
-      //"updated_at": "2013-08-27T20:40:38Z",
       map["uuid"] = id;
       map["analyses"] = QVariantList();
       
@@ -427,7 +462,7 @@ namespace openstudio{
 
         m_networkReply = m_networkAccessManager->post(request, postData);
 
-        bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processCreateProject()));
+        bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processCreateProject()));
         OS_ASSERT(test);
 
         return true;
@@ -451,7 +486,7 @@ namespace openstudio{
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->deleteResource(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDeleteProject()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDeleteProject()));
       OS_ASSERT(test);
 
       return true;
@@ -468,12 +503,11 @@ namespace openstudio{
       m_lastAnalysisUUIDs.clear();
 
       QString id = toQString(removeBraces(projectUUID));
-      //QUrl url(m_url.toString().append("/projects/").append(id).append("/analyses.json"));
       QUrl url(m_url.toString().append("/projects/").append(id).append(".json"));
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processAnalysisUUIDs()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processAnalysisUUIDs()));
       OS_ASSERT(test);
 
       return true;
@@ -500,7 +534,7 @@ namespace openstudio{
 
       m_networkReply = m_networkAccessManager->post(request, postData);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processPostAnalysisJSON()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processPostAnalysisJSON()));
       OS_ASSERT(test);
 
       return true;
@@ -527,7 +561,7 @@ namespace openstudio{
 
       m_networkReply = m_networkAccessManager->post(request, postData);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processPostDataPointJSON()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processPostDataPointJSON()));
       OS_ASSERT(test);
 
       return true;
@@ -545,22 +579,35 @@ namespace openstudio{
 
       if (exists(analysisZipFile)){
 
-        QString id = toQString(removeBraces(analysisUUID));
-        QUrl url(m_url.toString().append("/analyses/").append(id).append("/upload.json")); // DLM: is this right?
-
         QFile file(toQString(analysisZipFile));
-        QByteArray postData = file.readAll().toBase64(); // DLM: is this right?  
+        if (file.open(QIODevice::ReadOnly)){
 
-        QNetworkRequest request(url);
-        //request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-zip-compressed"); // DLM: is this right?
-        request.setHeader(QNetworkRequest::ContentLengthHeader, postData.size()); // DLM: is this right?
+          QString bound="-------3dpj1k39xoa84u4804ee1156snfxl6"; 
 
-        m_networkReply = m_networkAccessManager->post(request, postData);
+          QByteArray data(QString("--" + bound + "\r\n").toAscii());
+          data += "Content-Disposition: form-data; name=\"file\"; filename=\"seed_zip.zip\"\r\n";
+          data += "Content-Type: application/x-zip-compressed\r\n\r\n";
+          data.append(file.readAll());
+          data += "\r\n";
+          data += QString("--" + bound + "--\r\n.").toAscii();
+          data += "\r\n";
+          file.close();
 
-        bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processUploadAnalysisFiles()));
-        OS_ASSERT(test);
+          QString id = toQString(removeBraces(analysisUUID));
+          QUrl url(m_url.toString().append("/analyses/").append(id).append("/upload.json")); 
 
-        return true;
+          QNetworkRequest request(url);
+          request.setRawHeader(QString("Cache-Control").toAscii(),QString("no-cache").toAscii());
+          request.setRawHeader(QString("Content-Type").toAscii(),QString("multipart/form-data; boundary=" + bound).toAscii());
+          request.setRawHeader(QString("Content-Length").toAscii(), QString::number(data.length()).toAscii());
+         
+          m_networkReply = m_networkAccessManager->post(request, data);
+
+          bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processUploadAnalysisFiles()));
+          OS_ASSERT(test);
+
+          return true;
+        }
 
       }else{
         logError("File does not exist");
@@ -598,7 +645,7 @@ namespace openstudio{
 
         m_networkReply = m_networkAccessManager->post(request, postData);
 
-        bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processStart()));
+        bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processStart()));
         OS_ASSERT(test);
 
         return true;
@@ -622,7 +669,7 @@ namespace openstudio{
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processIsAnalysisQueued()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processIsAnalysisQueued()));
       OS_ASSERT(test);
 
       return true;
@@ -643,7 +690,7 @@ namespace openstudio{
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processIsAnalysisRunning()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processIsAnalysisRunning()));
       OS_ASSERT(test);
 
       return true;
@@ -678,7 +725,7 @@ namespace openstudio{
 
         m_networkReply = m_networkAccessManager->post(request, postData);
 
-        bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processStop()));
+        bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processStop()));
         OS_ASSERT(test);
 
         return true;
@@ -698,13 +745,11 @@ namespace openstudio{
       m_lastDataPointUUIDs.clear();
 
       QString id = toQString(removeBraces(analysisUUID));
-      //QUrl url(m_url.toString().append("/analyses/").append(id).append("/data_points.json"));
-      //QUrl url(m_url.toString().append("/analyses/").append(id).append(".json"));
       QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json"));
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDataPointUUIDs()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDataPointUUIDs()));
       OS_ASSERT(test);
 
       return true;
@@ -725,7 +770,7 @@ namespace openstudio{
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processRunningDataPointUUIDs()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processRunningDataPointUUIDs()));
       OS_ASSERT(test);
 
       return true;
@@ -746,7 +791,7 @@ namespace openstudio{
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processQueuedDataPointUUIDs()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processQueuedDataPointUUIDs()));
       OS_ASSERT(test);
 
       return true;
@@ -767,7 +812,7 @@ namespace openstudio{
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processCompleteDataPointUUIDs()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processCompleteDataPointUUIDs()));
       OS_ASSERT(test);
 
       return true;
@@ -784,12 +829,11 @@ namespace openstudio{
       m_lastDataPointJSON = "";
 
       QString id = toQString(removeBraces(dataPointUUID));
-      //QUrl url(m_url.toString().append("/data_points/").append(id).append("/data_points.json"));
       QUrl url(m_url.toString().append("/data_points/").append(id).append(".json"));
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
-      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDataPointJSON()));
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDataPointJSON()));
       OS_ASSERT(test);
 
       return true;
@@ -803,6 +847,8 @@ namespace openstudio{
     void OSServer_Impl::processAvailable()
     {
       bool success = false;
+
+      logNetworkReply("processAvailable");
 
       if (m_networkReply->error() == QNetworkReply::NoError){
         m_lastAvailable = true;
@@ -823,6 +869,8 @@ namespace openstudio{
     {
       bool success = false;
 
+      logNetworkReply("processProjectUUIDs");
+
       if (m_networkReply->error() == QNetworkReply::NoError){
         m_lastProjectUUIDs = processListOfUUID(m_networkReply->readAll(), success);
       }else{
@@ -840,6 +888,8 @@ namespace openstudio{
     void OSServer_Impl::processCreateProject()
     {
       bool success = false;
+
+      logNetworkReply("processCreateProject");
 
       if (m_networkReply->error() == QNetworkReply::NoError){
         m_lastCreateProjectSuccess = true;
@@ -860,6 +910,8 @@ namespace openstudio{
     {
       bool success = false;
 
+      logNetworkReply("processDeleteProject");
+
       if (m_networkReply->error() == QNetworkReply::NoError){
         m_lastDeleteProjectSuccess = true;
         success = true;
@@ -879,12 +931,13 @@ namespace openstudio{
     {
       bool success = false;
 
+      logNetworkReply("processAnalysisUUIDs");
+
       if (m_networkReply->error() == QNetworkReply::NoError){
-        //m_lastAnalysisUUIDs = processListOfUUID(m_networkReply->readAll(), success);
 
         bool test;
         QJson::Parser parser;
-        QVariant variant = parser.parse(m_networkReply->readAll(), &test);
+        QVariant variant = parser.parse(m_networkReply, &test);
 
         if (test){
 
@@ -924,6 +977,8 @@ namespace openstudio{
     {
       bool success = false;
 
+      logNetworkReply("processPostAnalysisJSON");
+
       if (m_networkReply->error() == QNetworkReply::NoError){
         m_lastPostAnalysisJSONSuccess = true;
         success = true;
@@ -942,6 +997,8 @@ namespace openstudio{
     void OSServer_Impl::processPostDataPointJSON()
     {
       bool success = false;
+
+      logNetworkReply("processPostDataPointJSON");
 
       if (m_networkReply->error() == QNetworkReply::NoError){
         m_lastPostDataPointJSONSuccess = true;
@@ -962,6 +1019,8 @@ namespace openstudio{
     {
       bool success = false;
 
+      logNetworkReply("processUploadAnalysisFiles");
+
       if (m_networkReply->error() == QNetworkReply::NoError){
         m_lastUploadAnalysisFilesSuccess = true;
         success = true;
@@ -980,6 +1039,8 @@ namespace openstudio{
     void OSServer_Impl::processStart()
     {
       bool success = false;
+
+      logNetworkReply("processStart");
 
       if (m_networkReply->error() == QNetworkReply::NoError){
         m_lastStartSuccess = true;
@@ -1000,11 +1061,13 @@ namespace openstudio{
     {
       bool success = false;
 
+      logNetworkReply("processIsAnalysisQueued");
+
       if (m_networkReply->error() == QNetworkReply::NoError){
 
         bool test;
         QJson::Parser parser;
-        QVariant variant = parser.parse(m_networkReply->readAll(), &test);
+        QVariant variant = parser.parse(m_networkReply, &test);
 
         if (test){
 
@@ -1044,11 +1107,13 @@ namespace openstudio{
     {
       bool success = false;
 
+      logNetworkReply("processIsAnalysisRunning");
+
       if (m_networkReply->error() == QNetworkReply::NoError){
 
         bool test;
         QJson::Parser parser;
-        QVariant variant = parser.parse(m_networkReply->readAll(), &test);
+        QVariant variant = parser.parse(m_networkReply, &test);
 
         if (test){
 
@@ -1088,6 +1153,8 @@ namespace openstudio{
     {
       bool success = false;
 
+      logNetworkReply("processStop");
+
       if (m_networkReply->error() == QNetworkReply::NoError){
         m_lastStopSuccess = true;
         success = true;
@@ -1107,12 +1174,13 @@ namespace openstudio{
     {
       bool success = false;
 
+      logNetworkReply("processDataPointUUIDs");
+
       if (m_networkReply->error() == QNetworkReply::NoError){
-        //m_lastDataPointUUIDs = processListOfUUID(m_networkReply->readAll(), success);
 
         bool test;
         QJson::Parser parser;
-        QVariant variant = parser.parse(m_networkReply->readAll(), &test);
+        QVariant variant = parser.parse(m_networkReply, &test);
 
         if (test){
 
@@ -1151,8 +1219,35 @@ namespace openstudio{
     {
       bool success = false;
 
+      logNetworkReply("processRunningDataPointUUIDs");
+
       if (m_networkReply->error() == QNetworkReply::NoError){
-        m_lastRunningDataPointUUIDs = processListOfUUID(m_networkReply->readAll(), success);
+
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply, &test);
+
+        if (test){
+
+          QVariantMap map = variant.toMap();
+
+          if (map.contains("data_points")){
+            
+            QVariantList list = map["data_points"].toList();
+
+            QJson::Serializer serializer;
+            QByteArray json = serializer.serialize(list, &test);
+            if (test){
+              m_lastRunningDataPointUUIDs = processListOfUUID(json, success);
+            }
+  
+          }else{
+            logError("Incorrect JSON response");
+          }
+
+        }else{
+          logError("Could not parse JSON response");
+        }
       }else{
         logNetworkError(m_networkReply->error());
       }
@@ -1169,8 +1264,35 @@ namespace openstudio{
     {
       bool success = false;
 
+      logNetworkReply("processQueuedDataPointUUIDs");
+
       if (m_networkReply->error() == QNetworkReply::NoError){
-        m_lastQueuedDataPointUUIDs = processListOfUUID(m_networkReply->readAll(), success);
+
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply, &test);
+
+        if (test){
+
+          QVariantMap map = variant.toMap();
+
+          if (map.contains("data_points")){
+            
+            QVariantList list = map["data_points"].toList();
+
+            QJson::Serializer serializer;
+            QByteArray json = serializer.serialize(list, &test);
+            if (test){
+              m_lastQueuedDataPointUUIDs = processListOfUUID(json, success);
+            }
+  
+          }else{
+            logError("Incorrect JSON response");
+          }
+
+        }else{
+          logError("Could not parse JSON response");
+        }
       }else{
         logNetworkError(m_networkReply->error());
       }
@@ -1187,8 +1309,35 @@ namespace openstudio{
     {
       bool success = false;
 
+      logNetworkReply("processCompleteDataPointUUIDs");
+
       if (m_networkReply->error() == QNetworkReply::NoError){
-        m_lastCompleteDataPointUUIDs = processListOfUUID(m_networkReply->readAll(), success);
+
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply, &test);
+
+        if (test){
+
+          QVariantMap map = variant.toMap();
+
+          if (map.contains("data_points")){
+            
+            QVariantList list = map["data_points"].toList();
+
+            QJson::Serializer serializer;
+            QByteArray json = serializer.serialize(list, &test);
+            if (test){
+              m_lastCompleteDataPointUUIDs = processListOfUUID(json, success);
+            }
+  
+          }else{
+            logError("Incorrect JSON response");
+          }
+
+        }else{
+          logError("Could not parse JSON response");
+        }
       }else{
         logNetworkError(m_networkReply->error());
       }
@@ -1205,10 +1354,12 @@ namespace openstudio{
     {
       bool success = false;
 
+      logNetworkReply("processDataPointJSON");
+
       if (m_networkReply->error() == QNetworkReply::NoError){
         bool test;
         QJson::Parser parser;
-        QVariant variant = parser.parse(m_networkReply->readAll(), &test);
+        QVariant variant = parser.parse(m_networkReply, &test);
         if (test){
           QJson::Serializer serializer;
           QByteArray json = serializer.serialize(variant, &test);
@@ -1233,6 +1384,36 @@ namespace openstudio{
     {
       m_errors.clear();
       m_warnings.clear();
+    }
+
+    void OSServer_Impl::logNetworkReply(const std::string& methodName) const
+    {
+      bool doLog = false;
+
+      if (doLog && m_networkReply){
+        LogLevel level = Warn;
+
+        LOG(level, methodName);
+
+        QNetworkRequest request = m_networkReply->request();
+
+        LOG(level, "Request Url");
+        LOG(level, toString(request.url().toString()));
+
+        LOG(level, "Request Header");
+        for(int i=0; i<request.rawHeaderList().size(); ++i){
+          QString str(request.rawHeaderList()[i].constData());
+          LOG(level, toString(str) << ": " << toString(request.rawHeader(request.rawHeaderList()[i] ).constData()));
+        }
+
+        LOG(level, "Reply Header");
+        for(int i=0; i<m_networkReply->rawHeaderList().size(); ++i){
+          QString str(m_networkReply->rawHeaderList()[i].constData());
+          LOG(level, toString(str) << ": " << toString(m_networkReply->rawHeader(m_networkReply->rawHeaderList()[i] ).constData()));
+        }
+
+        // DLM: do not call m_networkReply->readAll() here because this will clear the buffer and cannot be reset
+      }
     }
 
     void OSServer_Impl::logError(const std::string& error) const
@@ -1661,6 +1842,21 @@ namespace openstudio{
   bool OSServer::startDownloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath) 
   {
     return getImpl<detail::OSServer_Impl>()->startDownloadDataPoint(analysisUUID, dataPointUUID, downloadPath);
+  }
+
+  bool OSServer::connect(const char* signal,
+                         const QObject* qObject,
+                         const char* slot,
+                         Qt::ConnectionType type) const
+  {
+    return QObject::connect(getImpl<detail::OSServer_Impl>().get(), signal, qObject, slot, type);
+  }
+
+  bool OSServer::disconnect(const char* signal,
+                            const QObject* receiver,
+                            const char* slot) const
+  {
+    return QObject::disconnect(getImpl<detail::OSServer_Impl>().get(), signal, receiver, slot);
   }
 
 } // openstudio

@@ -93,7 +93,7 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVAC( const WorkspaceObje
   {
     airLoopHVAC.autosizeDesignSupplyAirFlowRate();
   }
-  else if( val = workspaceObject.getDouble(AirLoopHVACFields::DesignSupplyAirFlowRate) )
+  else if( (val = workspaceObject.getDouble(AirLoopHVACFields::DesignSupplyAirFlowRate)) )
   {
     airLoopHVAC.setDesignSupplyAirFlowRate(val.get());
   }
@@ -264,7 +264,7 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVAC( const WorkspaceObje
               break;
             }
 
-            for( int j = 1; optionalString = _zoneEquipmentList->getString(j); j = j + 4 )
+            for( int j = 1; (optionalString = _zoneEquipmentList->getString(j)); j = j + 4 )
             {
               boost::optional<std::string> zoneEquipmentName = _zoneEquipmentList->getString(j+1) ;
               // Possible Zone Equipment
