@@ -55,6 +55,11 @@ class AnalysisDriverTestLibrarySingleton {
  private:
   openstudio::path m_outputDataDirectory;
   std::vector<openstudio::path> m_baselineModels;  
+
+  static bool pathStemEquals(const openstudio::path& p, const std::string& str);
+
+  void setProblem(SimpleProject& project,
+                  const LibraryProblem& libraryProblem);  
 };
 
 typedef openstudio::Singleton<AnalysisDriverTestLibrarySingleton> AnalysisDriverTestLibrary;

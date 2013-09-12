@@ -156,6 +156,7 @@ namespace detail {
       m_requestRun = OSServer(*url);
 
       // make sure the server is available
+      LOG(Debug,"Checking that server is available.");
       bool test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(availableForRun(bool)));
       OS_ASSERT(test);
 
@@ -290,10 +291,13 @@ namespace detail {
     }
 
     if (success) {
+      LOG(Debug,"Server is available.");
+
       // see if the project needs to be created
       test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(projectOnServer(bool)));
       OS_ASSERT(test);
 
+      LOG(Debug,"Requesting project UUIDs.");
       success = m_requestRun->requestProjectUUIDs();
     }
 
@@ -317,6 +321,7 @@ namespace detail {
                     projects.end(),
                     project().projectDatabase().handle()) == projects.end()) 
       {
+        LOG(Debug,"Project is not yet on server, create it.");
         // project is not yet on server, create it
         test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(projectCreated(bool)));
         OS_ASSERT(test);
@@ -324,6 +329,7 @@ namespace detail {
         success = m_requestRun->requestCreateProject(project().projectDatabase().handle());
       }
       else {
+        LOG(Debug,"Project is on server, see if analysis is on server.");
         // see if the analysis needs to be posted
         test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisOnServer(bool)));
         OS_ASSERT(test);
@@ -353,6 +359,7 @@ namespace detail {
     }
 
     if (success) {
+      LOG(Debug,"Successfully created the project. Now post the analysis.");
       // project was not on the server, so analysis can't be either, post it.
       test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisPosted(bool)));
       OS_ASSERT(test);
@@ -378,6 +385,7 @@ namespace detail {
     if (success) {
       UUIDVector analysisUUIDs = m_requestRun->lastAnalysisUUIDs();
       if (std::find(analysisUUIDs.begin(),analysisUUIDs.end(),project().analysis().uuid()) == analysisUUIDs.end()) {
+        LOG(Debug,"The analysis is not on the server, so post it.");
         // analysis not found -- post it
         test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisPosted(bool)));
         OS_ASSERT(test);
@@ -387,6 +395,7 @@ namespace detail {
               project().analysis().toJSON(AnalysisSerializationOptions(project().projectDir())));
       }
       else {
+        LOG(Debug,"The analysis is on the server, see if there are data points there.");
         // analysis found -- see if there are any data points already on the server
         test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(allDataPointUUIDsReturned(bool)));
         OS_ASSERT(test);
@@ -417,6 +426,7 @@ namespace detail {
 
     if (success) {
       // upload the analysis
+      LOG(Debug,"The analysis was posted, now upload its files.");
       test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisUploaded(bool)));
       OS_ASSERT(test);
 
@@ -439,6 +449,7 @@ namespace detail {
 
     if (success) {
       if (m_requestRun->lastDataPointUUIDs().empty()) {
+        LOG(Debug,"There are not data points, go ahead and upload the analysis files.");
         // no data points posted yet, upload the analysis files
         test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisUploaded(bool)));
         OS_ASSERT(test);
@@ -447,6 +458,7 @@ namespace detail {
                                                          project().zipFileForCloud());
       }
       else {
+        LOG(Debug,"There are data points. Get some more information so the queues can be sorted out.");
         // there are data points, sort out all the queues--have list of all data points
         // server knows about. need list of complete data points to determine waiting versus
         // downloading queues
@@ -478,6 +490,7 @@ namespace detail {
     }
 
     if (success) {
+      LOG(Debug,"The analysis files were successfully uploaded. Start posting data points.");
       // start posting DataPoints
       test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointQueued(bool)));
       OS_ASSERT(test);
@@ -503,6 +516,7 @@ namespace detail {
     }
 
     if (success) {
+      LOG(Debug,"Have the server data point information we need. Now sort out the client-side queues.");
       UUIDVector allUUIDs = m_requestRun->lastDataPointUUIDs();
       UUIDVector completeUUIDs = m_requestRun->lastCompleteDataPointUUIDs();
 
@@ -544,6 +558,7 @@ namespace detail {
       }
 
       if (m_postQueue.size() > 0) {
+        LOG(Debug,"Have some data points to post, so do it.");
         // start posting DataPoints
         test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointQueued(bool)));
         OS_ASSERT(test);
@@ -555,6 +570,7 @@ namespace detail {
         success = postNextDataPoint();
       }
       else {
+        LOG(Debug,"No data points need to be posted, so see if the analysis is already running.");
         // all data points are already posted, go ahead and see if the analysis is running on
         // the server
         test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisRunningOnServer(bool)));
@@ -585,8 +601,10 @@ namespace detail {
     }
 
     if (success) {
+      LOG(Debug,"Data point successfully posted.");
       // see if you make another post or go on to starting the analysis
       if (m_postQueue.empty()) {
+        LOG(Debug,"All done posting data points, see if this analysis is already running on the server.");
         // done posting --move on
         bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointQueued(bool)));
         OS_ASSERT(test);
@@ -617,11 +635,13 @@ namespace detail {
 
     if (success) {
       if (m_requestRun->lastIsAnalysisRunning()) {
+        LOG(Debug,"The analysis is already running, so monitor progress.");
         // analysis is already running, start monitoring data points (this process will also
         // start downloading results if either of those queues are not empty).
         startMonitoring();
       }
       else {
+        LOG(Debug,"The analysis is not running. Start it.");
         // start the analysis
         test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisStarted(bool)));
         OS_ASSERT(test);
@@ -651,6 +671,7 @@ namespace detail {
     }
 
     if (success) {
+      LOG(Debug,"The analysis was started. Monitor it.");
       startMonitoring();
     }
 
@@ -670,6 +691,8 @@ namespace detail {
     if (success) {
       UUIDVector temp = m_monitorDataPoints->lastCompleteDataPointUUIDs();
       std::set<UUID> completeUUIDs(temp.begin(),temp.end());
+      LOG(Debug,"Received reply to request for complete data point uuids. There are " 
+          << completeUUIDs.size() << ".");
       DataPointVector::iterator it = m_waitingQueue.begin();
       while (it != m_waitingQueue.end()) {
         if (completeUUIDs.find(it->uuid()) != completeUUIDs.end()) {
@@ -737,6 +760,7 @@ namespace detail {
     }
 
     if (success) {
+      LOG(Debug,"The analysis is still running. Ask for complete data point uuids.");
       test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(completeDataPointUUIDsReturned(bool)));
       OS_ASSERT(test);
 
@@ -964,6 +988,9 @@ namespace detail {
 
   bool CloudAnalysisDriver_Impl::postNextDataPoint() {
     DataPoint toQueue = m_postQueue.front();
+    if (toQueue.runType() == DataPointRunType::Local) {
+      toQueue.setRunType(DataPointRunType::CloudSlim);
+    }
     m_postQueue.pop_front();
     bool result = m_requestRun->startPostDataPointJSON(
           project().analysis().uuid(),
