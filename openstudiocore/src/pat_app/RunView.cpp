@@ -18,8 +18,10 @@
 **********************************************************************/
 
 #include <pat_app/RunView.hpp>
-#include "../shared_gui_components/Buttons.hpp"
+
 #include <pat_app/PatApp.hpp>
+
+#include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/OSCollapsibleView.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
@@ -28,22 +30,21 @@
 #include <analysis/DataPoint.hpp>
 #include <analysis/DataPoint_Impl.hpp>
 
+#include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/Job.hpp>
-
-#include <utilities/time/DateTime.hpp>
 
 #include <utilities/core/Assert.hpp>
+#include <utilities/time/DateTime.hpp>
 
-#include <QVBoxLayout>
-#include <QTextEdit>
 #include <QLabel>
+#include <QPainter>
+#include <QPaintEvent>
 #include <QPushButton>
 #include <QScrollArea>
-#include <QPaintEvent>
-#include <QPainter>
 #include <QStyleOption>
+#include <QVBoxLayout>
+#include <QTextEdit>
 
 #include <fstream>
 
@@ -313,13 +314,6 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
   : OSHeader(new HeaderToggleButton()), m_dataPoint(dataPoint)
 {
   setFixedHeight(30);
-  QString style;
-  style.append("openstudio--pat--DataPointRunHeaderView { ");
-  style.append("background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, ");
-  style.append("stop: 0 #cccccc, stop: 0.5 #f2f2f2, stop: 1.0 #cccccc); ");
-  style.append("border: 1px solid #8C8C8C; ");
-  style.append("} ");
-  setStyleSheet(style);
 
   QHBoxLayout * mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(5,5,5,5);
@@ -353,6 +347,14 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
   m_errors = new QLabel();
   m_errors->setFixedWidth(75);
   mainHLayout->addWidget(m_errors);
+
+  this->setCheckable(true);
+
+  bool isConnected = false;
+
+  isConnected = connect(this,SIGNAL(clicked(bool)),
+                this,SLOT(on_clicked(bool)));
+  OS_ASSERT(isConnected);
 
   update();
 }
@@ -423,6 +425,32 @@ void DataPointRunHeaderView::update()
   m_status->setText(status);
   m_status->setStyleSheet(statusStyle);
 
+  // set if the header is checked
+  this->blockSignals(true);
+  this->setChecked(m_dataPoint.selected());
+  this->blockSignals(false);
+
+  QString style;
+  if(this->isChecked()){
+    style.append("openstudio--pat--DataPointRunHeaderView  { ");
+    style.append("background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, ");
+    style.append("stop: 0 #ffd573, stop: 0.5 #ffeec7, stop: 1.0 #ffd573); ");
+    style.append("border: 1px solid #8C8C8C; ");
+    style.append("} ");
+  }
+  else{
+    style.append("openstudio--pat--DataPointRunHeaderView  { ");
+    style.append("background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, ");
+    style.append("stop: 0 #cccccc, stop: 0.5 #f2f2f2, stop: 1.0 #cccccc); ");
+    style.append("border: 1px solid #8C8C8C; ");
+    style.append("} ");
+  }
+  setStyleSheet(style);
+}
+
+void DataPointRunHeaderView::on_clicked(bool checked)
+{
+  m_dataPoint.setSelected(checked);
 }
 
 DataPointRunContentView::DataPointRunContentView()

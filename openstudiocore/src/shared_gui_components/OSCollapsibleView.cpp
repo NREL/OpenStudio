@@ -29,8 +29,9 @@
 namespace openstudio {
 
 OSHeader::OSHeader(QPushButton * button)
-  : QWidget()
+  : QPushButton()
 {
+  this->setFlat(true);
   toggleButton = button;
 }
 
@@ -71,7 +72,6 @@ void OSCollapsibleView::setHeader(QWidget * header)
     OS_ASSERT(bingo);
   }
 }
-
 
 void OSCollapsibleView::setContent(QWidget * content)
 {

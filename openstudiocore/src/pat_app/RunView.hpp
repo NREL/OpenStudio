@@ -21,6 +21,7 @@
 #define OPENSTUDIO_RUNVIEW_H
 
 #include <pat_app/PatMainTabView.hpp>
+
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/HeaderViews.hpp"
 #include "../shared_gui_components/Buttons.hpp"
@@ -150,6 +151,8 @@ class DataPointRunHeaderView : public OSHeader
  public slots:
 
   void update();
+
+  void on_clicked(bool checked);
 
  private:
 
