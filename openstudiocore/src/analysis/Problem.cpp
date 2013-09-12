@@ -1926,6 +1926,9 @@ namespace detail {
     OptionalFileReferenceType currentType; // main-line energy model format
     std::set<FileReferenceType> allTypes;  // all types seen so far
 
+    // DLM: add the unknown type here, note this is treating unknown more like none
+    allTypes.insert(FileReferenceType::Unknown);
+
     if (OptionalAnalysisObject parent = this->parent()) {
       currentType = parent->cast<Analysis>().seed().fileType();
       allTypes.insert(*currentType);

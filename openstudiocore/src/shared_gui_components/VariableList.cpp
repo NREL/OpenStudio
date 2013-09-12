@@ -409,7 +409,7 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
         index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
       } else if (m_measureType == MeasureType::EnergyPlusMeasure) {
         index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlusPreProcess);
-      } else if (m_measureType == MeasureType::EnergyPlusMeasure) {
+      } else if (m_measureType == MeasureType::ReportingMeasure) {
         index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::OpenStudioPostProcess);
       }
       OS_ASSERT(index);
