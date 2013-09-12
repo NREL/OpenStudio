@@ -48,6 +48,7 @@ namespace openstudio{
         m_lastPostDataPointJSONSuccess(false),
         m_lastUploadAnalysisFilesSuccess(false),
         m_lastStartSuccess(false),
+        m_lastIsAnalysisQueued(false),
         m_lastIsAnalysisRunning(false),
         m_lastStopSuccess(false),
         m_lastDataPointUUIDs(),
@@ -187,6 +188,19 @@ namespace openstudio{
     bool OSServer_Impl::lastStartSuccess() const
     {
       return m_lastStartSuccess;
+    }
+
+    bool OSServer_Impl::isAnalysisQueued(const UUID& analysisUUID, int msec)
+    {
+      if (requestIsAnalysisQueued(analysisUUID)){
+        waitForFinished(msec);
+      }
+      return lastIsAnalysisQueued();
+    }
+
+    bool OSServer_Impl::lastIsAnalysisQueued() const
+    {
+      return m_lastIsAnalysisQueued;
     }
 
     bool OSServer_Impl::isAnalysisRunning(const UUID& analysisUUID, int msec)
@@ -593,9 +607,46 @@ namespace openstudio{
       return false;
     }
 
+    bool OSServer_Impl::requestIsAnalysisQueued(const UUID& analysisUUID)
+    {
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastIsAnalysisQueued = false;
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append(".json"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processIsAnalysisQueued()));
+      OS_ASSERT(test);
+
+      return true;
+    }
+
     bool OSServer_Impl::requestIsAnalysisRunning(const UUID& analysisUUID)
     {
-      return false;
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastIsAnalysisRunning = false;
+
+      QString id = toQString(removeBraces(analysisUUID));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append(".json"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = connect(m_networkReply, SIGNAL(finished()), this, SLOT(processIsAnalysisRunning()));
+      OS_ASSERT(test);
+
+      return true;
     }
 
     bool OSServer_Impl::requestStop(const UUID& analysisUUID)
@@ -670,7 +721,7 @@ namespace openstudio{
       m_lastRunningDataPointUUIDs.clear();
 
       QString id = toQString(removeBraces(analysisUUID));
-      QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json=running"));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json?jobs=running"));
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
@@ -691,7 +742,7 @@ namespace openstudio{
       m_lastQueuedDataPointUUIDs.clear();
 
       QString id = toQString(removeBraces(analysisUUID));
-      QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json=queued"));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json?jobs=queued"));
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
@@ -712,7 +763,7 @@ namespace openstudio{
       m_lastCompleteDataPointUUIDs.clear();
 
       QString id = toQString(removeBraces(analysisUUID));
-      QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json=complete"));
+      QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json?jobs=complete"));
       QNetworkRequest request(url);
       m_networkReply = m_networkAccessManager->get(request);
 
@@ -933,6 +984,94 @@ namespace openstudio{
       if (m_networkReply->error() == QNetworkReply::NoError){
         m_lastStartSuccess = true;
         success = true;
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processIsAnalysisQueued()
+    {
+      bool success = false;
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply->readAll(), &test);
+
+        if (test){
+
+          QVariantMap map = variant.toMap();
+
+          if (map.contains("status")){
+            success = true;
+            QString status = map["status"].toString();
+
+            if (status == "queued"){
+              m_lastIsAnalysisQueued = true;
+            }else{
+              m_lastIsAnalysisQueued = false;
+            }
+
+          }else{
+            logError("Incorrect JSON response");
+          }
+
+        }else{
+          logError("Could not parse JSON response");
+        }
+
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
+    void OSServer_Impl::processIsAnalysisRunning()
+    {
+      bool success = false;
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+
+        bool test;
+        QJson::Parser parser;
+        QVariant variant = parser.parse(m_networkReply->readAll(), &test);
+
+        if (test){
+
+          QVariantMap map = variant.toMap();
+
+          if (map.contains("status")){
+            success = true;
+            QString status = map["status"].toString();
+
+            if (status == "running"){
+              m_lastIsAnalysisRunning = true;
+            }else{
+              m_lastIsAnalysisRunning = false;
+            }
+
+          }else{
+            logError("Incorrect JSON response");
+          }
+
+        }else{
+          logError("Could not parse JSON response");
+        }
+
       }else{
         logNetworkError(m_networkReply->error());
       }
@@ -1329,6 +1468,16 @@ namespace openstudio{
     return getImpl<detail::OSServer_Impl>()->lastStartSuccess();
   }
 
+  bool OSServer::isAnalysisQueued(const UUID& analysisUUID, int msec)
+  {
+    return getImpl<detail::OSServer_Impl>()->isAnalysisQueued(analysisUUID, msec);
+  }
+
+  bool OSServer::lastIsAnalysisQueued() const
+  {
+    return getImpl<detail::OSServer_Impl>()->lastIsAnalysisQueued();
+  }
+
   bool OSServer::isAnalysisRunning(const UUID& analysisUUID, int msec)
   {
     return getImpl<detail::OSServer_Impl>()->isAnalysisRunning(analysisUUID, msec);
@@ -1467,6 +1616,11 @@ namespace openstudio{
   bool OSServer::requestStart(const UUID& analysisUUID) 
   {
     return getImpl<detail::OSServer_Impl>()->requestStart(analysisUUID);
+  }
+
+  bool OSServer::requestIsAnalysisQueued(const UUID& analysisUUID) 
+  {
+    return getImpl<detail::OSServer_Impl>()->requestIsAnalysisQueued(analysisUUID);
   }
 
   bool OSServer::requestIsAnalysisRunning(const UUID& analysisUUID) 

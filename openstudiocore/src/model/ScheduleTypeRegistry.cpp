@@ -130,8 +130,8 @@ ScheduleTypeLimits ScheduleTypeRegistrySingleton::getOrCreateScheduleTypeLimits(
 ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
 {
   const ScheduleType scheduleTypes[] =
-  {
-    {"AirLoopHVACUnitaryHeatPumpAirToAir","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+  { 
+	  {"AirLoopHVACUnitaryHeatPumpAirToAir","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirLoopHVACUnitaryHeatPumpAirToAir","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"AirTerminalSingleDuctParallelPIUReheat","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirTerminalSingleDuctUncontrolled","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
@@ -179,6 +179,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"DesignSpecificationOutdoorAir","Outdoor Air Flow Rate","outdoorAirFlowRateFractionSchedule",true,"",0.0,1.0},
     {"ElectricEquipment","Electric Equipment","schedule",true,"",0.0,1.0},
     {"EvaporativeCoolerDirectResearchSpecial","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"EvaporativeFluidCoolerSingleSpeed","Blowdown Makeup Water Usage","blowdownMakeupWaterUsageSchedule",true,"VolumetricFlowRate",0.0,OptionalDouble()},
     {"ExteriorLights","Exterior Lights","schedule",true,"",0.0,1.0},
     {"FanConstantVolume","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"FanOnOff","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
