@@ -494,7 +494,7 @@ boost::optional<openstudio::WorkspaceObject> OSRunner::getOptionalWorkspaceObjec
   return result;
 }
 
-void OSRunner::setOpenStudioModel(const openstudio::model::Model& lastOpenStudioModel)
+void OSRunner::setLastOpenStudioModel(const openstudio::model::Model& lastOpenStudioModel)
 {
   m_lastOpenStudioModel = lastOpenStudioModel;
   m_lastOpenStudioModelPath.reset();
@@ -506,7 +506,7 @@ void OSRunner::resetLastOpenStudioModel()
   m_lastOpenStudioModelPath.reset();
 }
 
-void OSRunner::setOpenStudioModelPath(const openstudio::path& lastOpenStudioModelPath)
+void OSRunner::setLastOpenStudioModelPath(const openstudio::path& lastOpenStudioModelPath)
 {
   m_lastOpenStudioModelPath = lastOpenStudioModelPath;
   m_lastOpenStudioModel.reset();

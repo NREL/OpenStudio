@@ -30,13 +30,56 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
       runner.registerError("Cannot find last model.")
       return false
     end
+    model = model.get
     
     sqlFile = runner.lastEnergyPlusSqlFile
     if sqlFile.empty?
       runner.registerError("Cannot find last sql file.")
       return false
     end
+    sqlFile = sqlFile.get
+    
+    # perform queries on the sql file
+    # look at eplustbl.htm to see how queries in tabulardatawithstrings correspond
+    
+    query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='InputVerificationandResultsSummary' AND ReportForString='Entire Facility' AND TableName='General' AND RowName='Program Version and Build' AND ColumnName='Value'"    
+    
+    s = sqlFile.execAndReturnFirstString(query)
+    if s.empty?
+      s = "Unknown"
+      runner.registerWarning("Cannot read E+ version")
+    else
+      s = s.get
+      runner.registerInfo("E+ version = #{s}")
+    end
 
+    query = "SELECT Value FROM tabulardatawithstrings WHERE ReportName='InputVerificationandResultsSummary' AND ReportForString='Entire Facility' AND TableName='Window-Wall Ratio' AND RowName='Gross Wall Area' AND ColumnName='Total' AND Units='m2'"    
+    
+    d = sqlFile.execAndReturnFirstDouble(query)
+    if s.empty?
+      d = 0
+      runner.registerWarning("Cannot read Gross Wall Area")
+    else
+      d = d.get
+      runner.registerInfo("Gross Wall Area = #{d}")
+    end    
+    
+    # if we want this report could write out a csv, html, or any other file here
+    
+    File.open("report.csv", 'w') do |file|
+      file << "#{s}, #{d}"
+    end
+    
+    # if we write out OpenStudio attributes then these will be imported into PAT database
+    # these can then be accessed using ProjectMeasures
+    attributes = OpenStudio::AttributeVector.new
+    attributes << OpenStudio::Attribute.new("GrossWallArea", d)
+    attributes << OpenStudio::Attribute.new("EnergyPlusVersion", s)
+    
+    result = OpenStudio::Attribute.new("report", attributes)
+    
+    result.saveToXml(OpenStudio::Path.new("report.xml"))
+    
     #reporting final condition
     runner.registerFinalCondition("Goodbye.")
     

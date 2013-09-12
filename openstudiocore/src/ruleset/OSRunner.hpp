@@ -212,14 +212,12 @@ class RULESET_API OSRunner {
 
   //@}
 
- protected:
-
   // supports in-memory job chaining
-  void setOpenStudioModel(const openstudio::model::Model& lastOpenStudioModel);
+  void setLastOpenStudioModel(const openstudio::model::Model& lastOpenStudioModel);
   void resetLastOpenStudioModel();
 
   // clears m_lastOpenStudioModel
-  void setOpenStudioModelPath(const openstudio::path& lastOpenStudioModelPath);
+  void setLastOpenStudioModelPath(const openstudio::path& lastOpenStudioModelPath);
   void resetLastOpenStudioModelPath();
 
   // supports in-memory job chaining
