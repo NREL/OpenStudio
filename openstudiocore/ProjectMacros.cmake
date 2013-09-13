@@ -660,9 +660,9 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
           DESTINATION \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/Resources/\")
       ENDIF()
       " )
+    ELSE(WIN32 OR APPLE)
+      INSTALL(TARGETS ${swig_target} DESTINATION "lib/openstudio/${V8_TYPE}")
     ENDIF()
-  ELSE(WIN32 OR APPLE)
-    INSTALL(TARGETS ${swig_target} DESTINATION "lib/openstudio/${V8_TYPE}")
   ENDIF()
 
 
