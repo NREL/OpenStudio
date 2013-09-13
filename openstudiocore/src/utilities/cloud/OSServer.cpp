@@ -391,13 +391,14 @@ namespace openstudio{
 
     bool OSServer_Impl::requestAvailable()
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastAvailable = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
 
       QUrl url(m_url);
       QNetworkRequest request(url);
@@ -411,13 +412,14 @@ namespace openstudio{
 
     bool OSServer_Impl::requestProjectUUIDs()
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastProjectUUIDs.clear();
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
 
       QUrl url(m_url.toString().append("/projects.json"));
       QNetworkRequest request(url);
@@ -431,13 +433,14 @@ namespace openstudio{
     
     bool OSServer_Impl::requestCreateProject(const UUID& projectUUID)
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastCreateProjectSuccess = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
 
       QString id = toQString(removeBraces(projectUUID));
       QUrl url(m_url.toString().append("/projects.json"));
@@ -473,13 +476,14 @@ namespace openstudio{
 
     bool OSServer_Impl::requestDeleteProject(const UUID& projectUUID)
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastDeleteProjectSuccess = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
 
       QString id = toQString(removeBraces(projectUUID));
       QUrl url(m_url.toString().append("/projects/").append(id));
@@ -494,13 +498,14 @@ namespace openstudio{
 
     bool OSServer_Impl::requestAnalysisUUIDs(const UUID& projectUUID)
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastAnalysisUUIDs.clear();
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
 
       QString id = toQString(removeBraces(projectUUID));
       QUrl url(m_url.toString().append("/projects/").append(id).append(".json"));
@@ -515,13 +520,14 @@ namespace openstudio{
 
     bool OSServer_Impl::startPostAnalysisJSON(const UUID& projectUUID, const std::string& analysisJSON)
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastPostAnalysisJSONSuccess = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
 
       QString id = toQString(removeBraces(projectUUID));
       QUrl url(m_url.toString().append("/projects/").append(id).append("/analyses.json"));
@@ -542,13 +548,14 @@ namespace openstudio{
 
     bool OSServer_Impl::startPostDataPointJSON(const UUID& analysisUUID, const std::string& dataPointJSON)
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastPostDataPointJSONSuccess = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
 
       QString id = toQString(removeBraces(analysisUUID));
       QUrl url(m_url.toString().append("/analyses/").append(id).append("/data_points.json"));
@@ -569,13 +576,14 @@ namespace openstudio{
 
     bool OSServer_Impl::startUploadAnalysisFiles(const UUID& analysisUUID, const openstudio::path& analysisZipFile)
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastUploadAnalysisFilesSuccess = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
 
       if (exists(analysisZipFile)){
 
@@ -618,13 +626,14 @@ namespace openstudio{
 
     bool OSServer_Impl::requestStart(const UUID& analysisUUID)
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastStartSuccess = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
 
       QString id = toQString(removeBraces(analysisUUID));
       QUrl url(m_url.toString().append("/analyses/").append(id).append("/action.json"));
@@ -656,13 +665,14 @@ namespace openstudio{
 
     bool OSServer_Impl::requestIsAnalysisQueued(const UUID& analysisUUID)
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastIsAnalysisQueued = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
 
       QString id = toQString(removeBraces(analysisUUID));
       QUrl url(m_url.toString().append("/analyses/").append(id).append(".json"));
@@ -677,13 +687,14 @@ namespace openstudio{
 
     bool OSServer_Impl::requestIsAnalysisRunning(const UUID& analysisUUID)
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastIsAnalysisRunning = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
 
       QString id = toQString(removeBraces(analysisUUID));
       QUrl url(m_url.toString().append("/analyses/").append(id).append(".json"));
@@ -698,13 +709,14 @@ namespace openstudio{
 
     bool OSServer_Impl::requestStop(const UUID& analysisUUID)
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastStopSuccess = false;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
 
       QString id = toQString(removeBraces(analysisUUID));
       QUrl url(m_url.toString().append("/analyses/").append(id).append("/action.json"));
@@ -736,13 +748,14 @@ namespace openstudio{
 
     bool OSServer_Impl::requestDataPointUUIDs(const UUID& analysisUUID)
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastDataPointUUIDs.clear();
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
 
       QString id = toQString(removeBraces(analysisUUID));
       QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json"));
@@ -757,13 +770,14 @@ namespace openstudio{
 
     bool OSServer_Impl::requestRunningDataPointUUIDs(const UUID& analysisUUID)
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
 
       clearErrorsAndWarnings();
 
       m_lastRunningDataPointUUIDs.clear();
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
 
       QString id = toQString(removeBraces(analysisUUID));
       QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json?jobs=running"));
@@ -778,13 +792,13 @@ namespace openstudio{
 
     bool OSServer_Impl::requestQueuedDataPointUUIDs(const UUID& analysisUUID)
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
-
       clearErrorsAndWarnings();
 
       m_lastQueuedDataPointUUIDs.clear();
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
 
       QString id = toQString(removeBraces(analysisUUID));
       QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json?jobs=queued"));
@@ -799,13 +813,13 @@ namespace openstudio{
 
     bool OSServer_Impl::requestCompleteDataPointUUIDs(const UUID& analysisUUID)
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
-
       clearErrorsAndWarnings();
 
       m_lastCompleteDataPointUUIDs.clear();
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
 
       QString id = toQString(removeBraces(analysisUUID));
       QUrl url(m_url.toString().append("/analyses/").append(id).append("/status.json?jobs=complete"));
@@ -820,13 +834,13 @@ namespace openstudio{
 
     bool OSServer_Impl::requestDataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID)
     {
-      if (!m_mutex->tryLock()){
-        return false;
-      }
-
       clearErrorsAndWarnings();
 
       m_lastDataPointJSON = "";
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
 
       QString id = toQString(removeBraces(dataPointUUID));
       QUrl url(m_url.toString().append("/data_points/").append(id).append(".json"));
@@ -841,7 +855,25 @@ namespace openstudio{
 
     bool OSServer_Impl::startDownloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath)
     {
-      return false;
+      clearErrorsAndWarnings();
+
+      m_lastDownloadDataPointSuccess = false;
+
+      m_lastDownloadDataPointPath = downloadPath;
+
+      if (!m_mutex->tryLock()){
+        return false;
+      }
+
+      QString id = toQString(removeBraces(dataPointUUID));
+      QUrl url(m_url.toString().append("/data_points/").append(id).append("/download"));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->get(request);
+
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDownloadDataPointComplete()));
+      OS_ASSERT(test);
+
+      return true;
     }
 
     void OSServer_Impl::processAvailable()
@@ -1379,7 +1411,35 @@ namespace openstudio{
 
       emit requestProcessed(success);
     }
-    
+     
+    void OSServer_Impl::processDownloadDataPointComplete()
+    {
+      bool success = false;
+
+      logNetworkReply("processDownloadDataPointComplete");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        
+        QFile file(toQString(m_lastDownloadDataPointPath));
+        if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)){
+          file.write(m_networkReply->readAll());
+          m_lastDownloadDataPointSuccess = true;
+          success = true;
+          file.close();
+        }
+        
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;
+
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
     void OSServer_Impl::clearErrorsAndWarnings()
     {
       m_errors.clear();

@@ -51,6 +51,16 @@ OPTION( BUILD_WITH_OPENSSL "Build With OpenSSL Support For SSH Connections" ON )
 # Build SimXML
 OPTION( BUILD_SIMXML "Build with SimXml support" OFF )
 
+# Package Radiance and EnergyPlus for convenience 
+OPTION( PACKAGE_RADIANCE_AND_ENERGYPLUS "Package Radiance and EnergyPlus" OFF )
+MARK_AS_ADVANCED(FORCE PACKAGE_RADIANCE_AND_ENERGYPLUS)
+
+IF (PACKAGE_RADIANCE_AND_ENERGYPLUS)
+  MESSAGE(WARNING "Packaging of Radiance and EnergyPlus is intended for internal use and deployment only")
+  SET(ENERGYPLUS_LOCATION "" CACHE PATH "Location of EnergyPlus to Package")
+  SET(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
+ENDIF()
+
 # Build Ruby gem
 OPTION( BUILD_RUBY_GEM "Build Ruby Gem" OFF )
 
@@ -640,6 +650,9 @@ ExternalProject_Add( OpenStudioCore
     -DDOXYGEN_DOT_EXECUTABLE:STRING=${DOXYGEN_DOT_EXECUTABLE}
     -DBoostLog_DIR:STRING=${BoostLog_DIR}
     -DQJSON_DIR:STRING=${QJSON_DIR}
+    -DPACKAGE_RADIANCE_AND_ENERGYPLUS:BOOL=${PACKAGE_RADIANCE_AND_ENERGYPLUS}
+    -DENERGYPLUS_LOCATION:PATH=${ENERGYPLUS_LOCATION}
+    -DRADIANCE_LOCATION:PATH=${RADIANCE_LOCATION}
     INSTALL_COMMAND ""
 )
 

@@ -125,6 +125,18 @@ TEST_F(GeometryFixture, Plane_FromPointAndNormal2)
   EXPECT_TRUE(plane1.equal(plane2));
 }
 
+TEST_F(GeometryFixture, Plane_FromPointAndNormal3)
+{
+  Point3d point1(0,0,0);
+  Point3d point2(0,0,1);
+  Vector3d normal(0,0,1);
+
+  Plane plane1(point1, normal);
+  Plane plane2(point2, normal);
+  EXPECT_TRUE(plane1.parallel(plane2));
+  EXPECT_FALSE(plane1.equal(plane2));
+}
+
 TEST_F(GeometryFixture, Plane_FromPointsDegenerate)
 {
   std::vector<Point3d> points;
@@ -242,12 +254,12 @@ TEST_F(GeometryFixture, Plane_FromPoints4)
 
 TEST_F(GeometryFixture, Plane_FromPoints4_Small)
 {
-  // points have area of 1 mm^2
+  // points have area of 1 cm^2
   std::vector<Point3d> points;
-  points.push_back(Point3d(0,         0, 0));
-  points.push_back(Point3d(0.001,     0, 0));
-  points.push_back(Point3d(0.001, 0.001, 0));
-  points.push_back(Point3d(0,     0.001, 0));
+  points.push_back(Point3d(0,       0, 0));
+  points.push_back(Point3d(0.01,    0, 0));
+  points.push_back(Point3d(0.01, 0.01, 0));
+  points.push_back(Point3d(0,    0.01, 0));
 
   Point3d point(10,10,0);
   Vector3d normal(0,0,1);

@@ -217,6 +217,8 @@ namespace detail{
 
     void processDataPointJSON();
 
+    void processDownloadDataPointComplete();
+
   private:
 
     Url m_url;
@@ -242,6 +244,8 @@ namespace detail{
     std::vector<UUID> m_lastCompleteDataPointUUIDs;
     std::string m_lastDataPointJSON;
     bool m_lastDownloadDataPointSuccess;
+    path m_lastDownloadDataPointPath;
+
     mutable std::vector<std::string> m_errors;
     mutable std::vector<std::string> m_warnings;
 

@@ -18,6 +18,7 @@
 **********************************************************************/
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/PathHelpers.hpp>
 
 #include <QCoreApplication>
 #include <sstream>
@@ -54,7 +55,7 @@ namespace openstudio {
     {
       openstudio::path candidate;
 #if defined(Q_OS_MAC)
-      candidate = getApplicationRunDirectory() / openstudio::toPath("../../../sharedresources");
+      candidate = getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources");
 #else
       candidate = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio");
 #endif
@@ -120,12 +121,12 @@ namespace openstudio {
         rundir = rundir.parent_path().parent_path() / openstudio::toPath("bin");
       }
       
-      return rundir;
+      return completeAndNormalize(rundir);
 #else
       Dl_info rInfo; 
       memset( &rInfo, 0, sizeof(rInfo) ); 
       if ( !dladdr((void*)(&getApplicationRunDirectory), &rInfo)  || !rInfo.dli_fname ) { 
-        return openstudio::toPath(QCoreApplication::applicationDirPath());
+        return completeAndNormalize(openstudio::toPath(QCoreApplication::applicationDirPath()));
       } 
 
 
@@ -187,7 +188,7 @@ namespace openstudio {
 //      std::cout << "Rundir: " << openstudio::toString(rundir) << std::endl; 
 
 
-      return rundir;
+      return completeAndNormalize(rundir);
 #endif    
   }
 
@@ -204,11 +205,11 @@ namespace openstudio {
 #endif
     } else {
 #ifdef Q_OS_LINUX
-      return getApplicationRunDirectory() / openstudio::toPath("../${RUBY_MODULE_ARCH_DIR}");
+      return getApplicationRunDirectory().parent_path() / openstudio::toPath("${RUBY_MODULE_ARCH_DIR}");
 #elif defined(Q_OS_MAC)
       return getApplicationRunDirectory(); // get the fixed up ones in the application path
 #else
-      return getApplicationRunDirectory() / openstudio::toPath("../Ruby/openstudio"); 
+      return getApplicationRunDirectory().parent_path() / openstudio::toPath("Ruby/openstudio"); 
 #endif
     }
   }
@@ -347,9 +348,9 @@ openstudio::path getOpenStudioRubyScriptsPath() {
 #ifdef Q_OS_LINUX
     return getApplicationInstallDirectory() / openstudio::toPath("share/openstudio/Ruby");
 #elif defined(Q_OS_MAC)
-    return getApplicationRunDirectory() / openstudio::toPath("../../../Ruby");
+    return getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("Ruby");
 #else
-    return getApplicationRunDirectory() / openstudio::toPath("../Ruby");
+    return getApplicationRunDirectory().parent_path() / openstudio::toPath("Ruby");
 #endif
   }
 }
