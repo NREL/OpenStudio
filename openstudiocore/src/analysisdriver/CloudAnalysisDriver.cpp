@@ -40,9 +40,9 @@ namespace analysisdriver {
 
 namespace detail {
 
-  CloudAnalysisDriver_Impl::CloudAnalysisDriver_Impl(const CloudProvider& provider,
+  CloudAnalysisDriver_Impl::CloudAnalysisDriver_Impl(const CloudSession& session,
                                                      const SimpleProject& project)
-    : m_provider(provider),
+    : m_session(session),
       m_project(project),
       m_lastRunSuccess(false),
       m_lastStopSuccess(false),
@@ -51,8 +51,8 @@ namespace detail {
       m_lastGetRunningDataPointsSuccess(false)
   {}
 
-  CloudProvider CloudAnalysisDriver_Impl::provider() const {
-    return m_provider;
+  CloudSession CloudAnalysisDriver_Impl::session() const {
+    return m_session;
   }
 
   SimpleProject CloudAnalysisDriver_Impl::project() const {
@@ -151,7 +151,7 @@ namespace detail {
     m_checkDataPointsRunningInsteadOfAnalysis = false;
     m_lastGetRunningDataPointsSuccess = false;
 
-    if (OptionalUrl url = provider().session().serverUrl()) {
+    if (OptionalUrl url = session().serverUrl()) {
 
       m_requestRun = OSServer(*url);
 
@@ -168,7 +168,7 @@ namespace detail {
       return true;
     }
 
-    logError("Cannot start a run because the CloudProvider has not been started or has been terminated.");
+    logError("Cannot start a run because the CloudSession has not been started or has been terminated.");
     emit runRequestComplete(false);
     return true;
   }
@@ -189,7 +189,7 @@ namespace detail {
       m_lastGetRunningDataPointsSuccess = false;
     }
 
-    if (OptionalUrl url = provider().session().serverUrl()) {
+    if (OptionalUrl url = session().serverUrl()) {
 
       m_requestStop = OSServer(*url);
 
@@ -205,7 +205,7 @@ namespace detail {
       return true;
     }
 
-    logError("Cannot stop the run because the CloudProvider has not been started or has been terminated.");
+    logError("Cannot stop the run because the CloudSession has not been started or has been terminated.");
     emit stopRequestComplete(false);
     return true;
   }
@@ -243,7 +243,7 @@ namespace detail {
       }
       if (!m_checkForResultsToDownload) {
 
-        if (OptionalUrl url = provider().session().serverUrl()) {
+        if (OptionalUrl url = session().serverUrl()) {
           m_checkForResultsToDownload = OSServer(*url);
 
           // request completed data point uuids
@@ -258,7 +258,7 @@ namespace detail {
           return true;
         }
 
-        logError("Cannot request a detailed results download because the CloudProvider has not been started or has been terminated.");
+        logError("Cannot request a detailed results download because the CloudSession has not been started or has been terminated.");
         emit detailedDownloadRequestsComplete(false);
         return true;
       }
@@ -523,7 +523,7 @@ namespace detail {
       BOOST_FOREACH(const DataPoint& missingPoint, project().analysis().dataPointsToQueue()) {
         // ETH@20130830 -- Is missingPoint waiting on already running results, or does it
         //     need to be re-run? Maybe need --force boolean. Then download complete results
-        //     if reconnected to CloudProvider, but force re-run if had previously completed
+        //     if reconnected to CloudSession, but force re-run if had previously completed
         //     successfully.
         if (std::find(allUUIDs.begin(),allUUIDs.end(),missingPoint.uuid()) == allUUIDs.end()) {
           // post queue -- need to be run and are not in allUUIDs
@@ -1005,7 +1005,7 @@ namespace detail {
 
     bool success(false);
 
-    if (OptionalUrl url = provider().session().serverUrl()) {
+    if (OptionalUrl url = session().serverUrl()) {
       m_monitorDataPoints = OSServer(*url);
 
       bool test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(completeDataPointUUIDsReturned(bool)));
@@ -1014,7 +1014,7 @@ namespace detail {
       success = m_monitorDataPoints->requestCompleteDataPointUUIDs(project().analysis().uuid());
     }
     else {
-      logError("Cannot start monitoring this run because the CloudProvider has been terminated.");
+      logError("Cannot start monitoring this run because the CloudSession has been terminated.");
       emit runRequestComplete(false);
       return success;
     }
@@ -1059,7 +1059,7 @@ namespace detail {
 
     bool success(false);
 
-    if (OptionalUrl url = provider().session().serverUrl()) {
+    if (OptionalUrl url = session().serverUrl()) {
       m_requestJson = OSServer(*url);
 
       bool test = m_requestJson->connect(SIGNAL(requestProcessed(bool)),this,SLOT(jsonDownloadComplete(bool)));
@@ -1068,7 +1068,7 @@ namespace detail {
       success = requestNextJsonDownload();
     }
     else {
-      logError("Cannot start download of DataPoint because the CloudProvider has been terminated.");
+      logError("Cannot start download of DataPoint because the CloudSession has been terminated.");
       emit jsonDownloadRequestsComplete(false);
       return success;
     }
@@ -1100,7 +1100,7 @@ namespace detail {
 
     bool success(false);
 
-    if (OptionalUrl url = provider().session().serverUrl()) {
+    if (OptionalUrl url = session().serverUrl()) {
       m_requestDetails = OSServer(*url);
 
       bool test = m_requestDetails->connect(SIGNAL(requestProcessed(bool)),this,SLOT(detailsDownloadComplete(bool)));
@@ -1109,7 +1109,7 @@ namespace detail {
       success = requestNextDetailsDownload();
     }
     else {
-      logError("Cannot start download of DataPoint details because the CloudProvider has been terminated.");
+      logError("Cannot start download of DataPoint details because the CloudSession has been terminated.");
       emit detailedDownloadRequestsComplete(false);
       return success;
     }
@@ -1180,14 +1180,14 @@ namespace detail {
 
 } // detail
 
-CloudAnalysisDriver::CloudAnalysisDriver(const CloudProvider& provider,
+CloudAnalysisDriver::CloudAnalysisDriver(const CloudSession& session,
                                          const SimpleProject& project)
   : m_impl(boost::shared_ptr<detail::CloudAnalysisDriver_Impl>(
-             new detail::CloudAnalysisDriver_Impl(provider,project)))
+             new detail::CloudAnalysisDriver_Impl(session,project)))
 {}
 
-CloudProvider CloudAnalysisDriver::provider() const {
-  return getImpl<detail::CloudAnalysisDriver_Impl>()->provider();
+CloudSession CloudAnalysisDriver::session() const {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->session();
 }
 
 SimpleProject CloudAnalysisDriver::project() const {
