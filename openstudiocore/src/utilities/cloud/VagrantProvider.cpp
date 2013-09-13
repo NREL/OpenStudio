@@ -702,6 +702,10 @@ namespace openstudio{
         // already checking
         return false;
       }
+      if (!m_vagrantSession.serverUrl()){
+        // need this to check in real life
+        return false;
+      }
 
       clearErrorsAndWarnings();
 
@@ -726,6 +730,10 @@ namespace openstudio{
     {
       if (m_checkWorkerRunningProcess){
         // already checking
+        return false;
+      }
+      if (m_vagrantSession.workerUrls().empty()){
+        // need this to check in real life
         return false;
       }
 
