@@ -906,10 +906,15 @@ namespace openstudio{
       QString output = m_checkServerRunningProcess->readAllStandardOutput();
       QString errors = m_checkServerRunningProcess->readAllStandardError();
 
-      // if running this is expected
-      //default                   running (virtualbox)
-      if (output.contains("running (virtualbox)")){
-        m_lastServerRunning = true;
+      if (m_vagrantSettings.haltOnStop()){
+        // if running this is expected
+        //default                   running (virtualbox)
+        if (output.contains("running (virtualbox)")){
+          m_lastServerRunning = true;
+        }
+      }else{
+        // depend on local state variable in this case
+        m_lastServerRunning = !m_serverStopped;
       }
 
       m_checkServerRunningProcess->deleteLater();
@@ -923,10 +928,15 @@ namespace openstudio{
       QString output = m_checkWorkerRunningProcess->readAllStandardOutput();
       QString errors = m_checkWorkerRunningProcess->readAllStandardError();
 
-      // if running this is expected
-      // default                   running (virtualbox)
-      if (output.contains("running (virtualbox)")){
-        m_lastWorkerRunning = true;
+      if (m_vagrantSettings.haltOnStop()){
+        // if running this is expected
+        // default                   running (virtualbox)
+        if (output.contains("running (virtualbox)")){
+          m_lastWorkerRunning = true;
+        }
+      }else{
+        // depend on local state variable in this case
+        m_lastWorkerRunning = !m_workerStopped;
       }
 
       m_checkWorkerRunningProcess->deleteLater();
