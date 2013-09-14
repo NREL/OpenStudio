@@ -88,9 +88,9 @@ namespace runmanager {
         if (!build_str.empty()) {
           int build = atoi(build_str.c_str());
           toolver = QSharedPointer<ToolVersion>(new ToolVersion(major,minor,build));
+        } else {
+          toolver = QSharedPointer<ToolVersion>(new ToolVersion(major,minor));
         }
-
-        toolver = QSharedPointer<ToolVersion>(new ToolVersion(major,minor));
       } 
     }
 
