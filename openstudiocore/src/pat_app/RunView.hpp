@@ -165,6 +165,8 @@ class DataPointRunHeaderView : public OSHeader
 
   void on_downloadClicked(bool checked);
 
+  void on_clearClicked(bool checked);
+
  private:
 
   enum DownloadState
@@ -176,6 +178,8 @@ class DataPointRunHeaderView : public OSHeader
 
   void setDownloadState(const DownloadState downloadState);
 
+  void setClearState(bool canClear);
+
   openstudio::analysis::DataPoint m_dataPoint;
 
   QLabel* m_name;
@@ -186,6 +190,7 @@ class DataPointRunHeaderView : public OSHeader
   QLabel* m_errors;
 
   QPushButton* m_download;
+  QPushButton* m_clear;
 };
 
 class DataPointRunContentView : public OSListView

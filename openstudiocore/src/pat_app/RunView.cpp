@@ -396,6 +396,19 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
   QSpacerItem* horizontalSpacer = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
   mainHLayout->addSpacerItem(horizontalSpacer);
 
+  m_clear = new QPushButton();
+  m_clear->setCheckable(false);
+  m_clear->setFlat(true);
+  m_clear->setFixedSize(QSize(18,18));
+  mainHLayout->addWidget(m_clear);
+
+  isConnected = connect(m_clear,SIGNAL(clicked(bool)),
+                this,SLOT(on_clearClicked(bool)));
+  OS_ASSERT(isConnected);
+
+  horizontalSpacer = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+  mainHLayout->addSpacerItem(horizontalSpacer);
+
   this->setCheckable(true);
 
   isConnected = connect(this,SIGNAL(clicked(bool)),
@@ -496,6 +509,9 @@ void DataPointRunHeaderView::update()
   // TODO get actual state
   DownloadState downloadState = this->DOWNLOADABLE;
   setDownloadState(downloadState);
+
+  bool canClear = true;
+  setClearState(canClear);
 }
 
 void DataPointRunHeaderView::setDownloadState(const DownloadState downloadState)
@@ -523,6 +539,23 @@ void DataPointRunHeaderView::setDownloadState(const DownloadState downloadState)
   m_download->setStyleSheet(style);
 }
 
+void DataPointRunHeaderView::setClearState(bool canClear)
+{
+  QString style;
+  if(canClear){
+    style.append("QPushButton {"
+                               "background-image:url(':/images/clear_results_enabled.png');"
+                               "  border:none;"
+                               "}");
+  } else {
+    style.append("QPushButton {"
+                               "background-image:url(':/images/clear_results_disabled.png');"
+                               "  border:none;"
+                               "}");
+  }
+  m_clear->setStyleSheet(style);
+}
+
 void DataPointRunHeaderView::on_clicked(bool checked)
 {
   m_dataPoint.setSelected(checked);
@@ -531,6 +564,11 @@ void DataPointRunHeaderView::on_clicked(bool checked)
 void DataPointRunHeaderView::on_downloadClicked(bool checked)
 {
   // TODO this->m_dataPoint....
+}
+
+void DataPointRunHeaderView::on_clearClicked(bool checked)
+{
+  this->m_dataPoint.clearResults();
 }
 
 DataPointRunContentView::DataPointRunContentView()
