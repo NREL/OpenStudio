@@ -381,9 +381,22 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
   m_errors->setFixedWidth(75);
   mainHLayout->addWidget(m_errors);
 
-  this->setCheckable(true);
+  m_download = new QPushButton();
+  m_download->setCheckable(false);
+  m_download->setFlat(true);
+  m_download->setFixedSize(QSize(18,18));
+  mainHLayout->addWidget(m_download);
 
   bool isConnected = false;
+
+  isConnected = connect(m_download,SIGNAL(clicked(bool)),
+                this,SLOT(on_downloadClicked(bool)));
+  OS_ASSERT(isConnected);
+
+  QSpacerItem* horizontalSpacer = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+  mainHLayout->addSpacerItem(horizontalSpacer);
+
+  this->setCheckable(true);
 
   isConnected = connect(this,SIGNAL(clicked(bool)),
                 this,SLOT(on_clicked(bool)));
@@ -479,11 +492,45 @@ void DataPointRunHeaderView::update()
     style.append("} ");
   }
   setStyleSheet(style);
+
+  // TODO get actual state
+  DownloadState downloadState = this->DOWNLOADABLE;
+  setDownloadState(downloadState);
+}
+
+void DataPointRunHeaderView::setDownloadState(const DownloadState downloadState)
+{
+  QString style;
+  if(downloadState == NOT_DOWNLOADABLE){
+    style.append("QPushButton {"
+                               "background-image:url(':/images/results_no_download.png');"
+                               "  border:none;"
+                               "}");
+  } else if (downloadState == DOWNLOADABLE){
+    style.append("QPushButton {"
+                               "background-image:url(':/images/results_yes_download.png');"
+                               "  border:none;"
+                               "}");
+  } else if (downloadState == DOWNLOADED){
+    style.append("QPushButton {"
+                               "background-image:url(':/images/results_downloaded.png');"
+                               "  border:none;"
+                               "}");
+  } else {
+    // should never get here
+    OS_ASSERT(false);
+  }
+  m_download->setStyleSheet(style);
 }
 
 void DataPointRunHeaderView::on_clicked(bool checked)
 {
   m_dataPoint.setSelected(checked);
+}
+
+void DataPointRunHeaderView::on_downloadClicked(bool checked)
+{
+  // TODO this->m_dataPoint....
 }
 
 DataPointRunContentView::DataPointRunContentView()

@@ -33,6 +33,8 @@
 
 #include <QProgressBar>
 
+class QPushButton;
+
 namespace openstudio{
 
 class DateTime;
@@ -157,9 +159,22 @@ class DataPointRunHeaderView : public OSHeader
 
   void update();
 
+ private slots:
+
   void on_clicked(bool checked);
 
+  void on_downloadClicked(bool checked);
+
  private:
+
+  enum DownloadState
+  {
+    NOT_DOWNLOADABLE,
+    DOWNLOADABLE,
+    DOWNLOADED
+  };
+
+  void setDownloadState(const DownloadState downloadState);
 
   openstudio::analysis::DataPoint m_dataPoint;
 
@@ -169,6 +184,8 @@ class DataPointRunHeaderView : public OSHeader
   QLabel* m_nas;
   QLabel* m_warnings;
   QLabel* m_errors;
+
+  QPushButton* m_download;
 };
 
 class DataPointRunContentView : public OSListView
