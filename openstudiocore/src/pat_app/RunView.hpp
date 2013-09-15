@@ -94,6 +94,8 @@ class RunStatusView : public QWidget
 
    void playButtonClicked(bool);
 
+   void cloudAvailable(bool);
+
  private slots:
 
    void checkInternetAvailability();

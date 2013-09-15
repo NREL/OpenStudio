@@ -238,8 +238,10 @@ void RunStatusView::checkInternetAvailability()
   internetAvailable = cloudProvider->internetAvailable();
 
   if(internetAvailable && internetAvailableLastTime && internetAvailableTimeBerforeLast){
+    emit cloudAvailable(true);
     m_cloudProviderStatus->setPixmap(QPixmap(":/images/internet_yes_connection.png"));
   } else if(!internetAvailable && !internetAvailableLastTime && !internetAvailableTimeBerforeLast){
+    emit cloudAvailable(false);
     m_cloudProviderStatus->setPixmap(QPixmap(":/images/internet_no_connection.png"));
   }
 }
