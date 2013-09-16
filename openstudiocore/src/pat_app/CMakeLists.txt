@@ -80,6 +80,8 @@ SET( ${target_name}_SRC
   ../shared_gui_components/MeasureDragData.hpp
   ../shared_gui_components/MeasureManager.cpp
   ../shared_gui_components/MeasureManager.hpp
+  ../shared_gui_components/MonitorUseDialog.cpp
+  ../shared_gui_components/MonitorUseDialog.hpp
   ../shared_gui_components/OSCheckBox.cpp
   ../shared_gui_components/OSCheckBox.hpp
   ../shared_gui_components/OSCollapsibleView.cpp
@@ -162,6 +164,7 @@ SET( ${target_name}_moc
   ../shared_gui_components/LocalLibraryView.hpp
   ../shared_gui_components/MeasureDragData.hpp
   ../shared_gui_components/MeasureManager.hpp
+  ../shared_gui_components/MonitorUseDialog.hpp
   ../shared_gui_components/OSCheckBox.hpp
   ../shared_gui_components/OSCollapsibleView.hpp
   ../shared_gui_components/OSComboBox.hpp

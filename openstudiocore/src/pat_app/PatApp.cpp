@@ -197,6 +197,9 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
   isConnected = connect(mainWindow, SIGNAL(openCloudDlgClicked()),this,SLOT(openCloudDlg()));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(mainWindow, SIGNAL(openMonitorUseDlgClicked()),this,SLOT(openMonitorUseDlg()));
+  OS_ASSERT(isConnected);
+
   isConnected = connect(mainWindow, SIGNAL(helpClicked()),this,SLOT(showHelp()));
   OS_ASSERT(isConnected);
 
@@ -456,6 +459,25 @@ void PatApp::openCloudDlg()
 void PatApp::on_closeCloudDlg()
 {
 // TODO m_cloudDialog
+}
+
+void PatApp::openMonitorUseDlg()
+{
+  if(!m_monitorUseDialog){
+    m_monitorUseDialog = new MonitorUseDialog();
+
+    bool isConnected = connect(m_monitorUseDialog, SIGNAL(rejected()),
+                               this, SLOT(on_closeMonitorUseDlg()));
+    OS_ASSERT(isConnected);
+  }
+  if(m_monitorUseDialog && !m_monitorUseDialog->isVisible()){
+    m_monitorUseDialog->show();
+  }
+}
+
+void PatApp::on_closeMonitorUseDlg()
+{
+// TODO m_monitorUseDialog
 }
 
 void PatApp::showHelp()
@@ -723,6 +745,10 @@ void PatApp::showVerticalTab(int verticalId)
       mainWindow->verticalTabWidget->mainViewSwitcher->setView(m_runTabController->runView);
       mainWindow->hideRightColumn();
       m_mainRightColumnController->editController()->reset();
+      // TODO wire signal / slot for internet availability
+      //bool isConnected = connect(m_?, SIGNAL(?()),
+      //                           this, SLOT(on_?()));
+      //OS_ASSERT(isConnected);
 
       break;
     case RESULTS:

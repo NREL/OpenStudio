@@ -43,7 +43,8 @@
 #define EDIT_WIDTH 150
 #define ADDRESS_WIDTH 110
 #define PORT_WIDTH 30
-#define TEXT_WIDTH 300
+#define TEXT_WIDTH 350
+#define TEXT_HEIGHT 400
 
 namespace openstudio {
 
@@ -129,11 +130,14 @@ void CloudDialog::createWidgets()
   m_rightLoginLayout = new QVBoxLayout();
   mainLoginLayout->addLayout(m_rightLoginLayout);
 
-  AWSProvider awsProvider;
-
   m_legalAgreement = new QLabel;
   m_legalAgreement->hide();
-  m_legalAgreement->setText("TBD NREL Legal statement");
+  m_legalAgreement->setWordWrap(true);
+  m_legalAgreement->setFixedHeight(TEXT_HEIGHT);
+  m_legalAgreement->setFixedWidth(TEXT_WIDTH);
+  // TODO this text to be set by vagrant and aws providers, once API support such calls
+  // m_legalAgreement->setText(userAgreementText());
+  m_legalAgreement->setText("OpenStudio is provided by the National Renewable Energy Laboratory (“NREL”), which is operated by Alliance for Sustainable Energy, LLC, (“Alliance”) for the U.S. Department of Energy (“DOE”).  NREL, Alliance and DOE are not responsible for any charges incurred as a result of using OpenStudio in connection with web services, cloud services or any other third party computing services.  You are solely responsible for establishing, maintaining, terminating and paying for any third party computing services and are solely responsible for complying with any terms and conditions required by third party service providers. Terminating OpenStudio may not terminate third party computing services used in connection with OpenStudio, and you are solely responsible for verifying that computing services and associated charges are terminated.\n\nTHE SOFTWARE IS PROVIDED BY DOE/NREL/ALLIANCE \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE EXPRESSLY DISCLAIMED.  IN NO EVENT SHALL DOE/NREL/ALLIANCE BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER, INCLUDING BUT NOT LIMITED TO CLAIMS ASSOCIATED WITH THE LOSS OF DATA OR PROFITS, WHICH MAY RESULT FROM ANY ACTION IN CONTRACT, NEGLIGENCE OR OTHER TORTIOUS CLAIM THAT ARISES OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THE SOFTWARE. YOU AGREE TO INDEMNIFY DOE/NREL/ALLIANCE, AND ITS AFFILIATES, OFFICERS, AGENTS, AND EMPLOYEES AGAINST ANY CLAIM OR DEMAND, INCLUDING REASONABLE ATTORNEYS' FEES, RELATED TO YOUR USE, RELIANCE, OR ADOPTION OF THE SOFTWARE FOR ANY PURPOSE WHATSOEVER.");
   // TODO
   //boost::optional<CloudProviderWidget *> cloudProviderWidget = this->getCurrentCloudProviderWidget();
   //if(cloudProviderWidget.is_initialized()){

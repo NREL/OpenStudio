@@ -34,6 +34,7 @@
 #include "../shared_gui_components/BaseApp.hpp"
 #include "../shared_gui_components/BuildingComponentDialog.hpp"
 #include "../shared_gui_components/CloudDialog.hpp"
+#include "../shared_gui_components/MonitorUseDialog.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSDialog.hpp"
 
@@ -195,6 +196,10 @@ class PatApp : public QApplication, public BaseApp
 
   void on_closeCloudDlg();
 
+  void openMonitorUseDlg();
+
+  void on_closeMonitorUseDlg();
+
   void showHelp();
 
   void showAbout();
@@ -244,6 +249,7 @@ class PatApp : public QApplication, public BaseApp
   QPointer<StartupView> m_startupView;
   QPointer<BuildingComponentDialog> m_onlineBclDialog;
   QPointer<CloudDialog> m_cloudDialog;
+  QPointer<MonitorUseDialog> m_monitorUseDialog;
 
   QSharedPointer<DesignAlternativesTabController> m_designAlternativesTabController;
   QSharedPointer<MainRightColumnController> m_mainRightColumnController;

@@ -130,6 +130,9 @@ PatMainWindow::PatMainWindow(QWidget *parent) :
   isConnected = connect(mainMenu, SIGNAL(openCloudDlgClicked()), this, SIGNAL(openCloudDlgClicked()));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(mainMenu, SIGNAL(openMonitorUseDlgClicked()), this, SIGNAL(openMonitorUseDlgClicked()));
+  OS_ASSERT(isConnected);
+
   isConnected = connect(mainMenu, SIGNAL(helpClicked()),this,SIGNAL(helpClicked()));
   OS_ASSERT(isConnected);
 

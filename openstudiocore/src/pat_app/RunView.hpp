@@ -21,6 +21,7 @@
 #define OPENSTUDIO_RUNVIEW_H
 
 #include <pat_app/PatMainTabView.hpp>
+
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/HeaderViews.hpp"
 #include "../shared_gui_components/Buttons.hpp"
@@ -31,6 +32,8 @@
 #include <boost/optional.hpp>
 
 #include <QProgressBar>
+
+class QPushButton;
 
 namespace openstudio{
 
@@ -91,12 +94,19 @@ class RunStatusView : public QWidget
 
    void playButtonClicked(bool);
 
+   void cloudAvailable(bool);
+
+ private slots:
+
+   void checkInternetAvailability();
+
  private:
 
   PlayButton* m_playButton;
   PatProgressBar* m_progressBar;
   QLabel* m_percentComplete;
   QLabel* m_percentFailed;
+  QLabel* m_cloudProviderStatus;
 };
 
 class ToggleCloudButton : public GrayButton
@@ -138,7 +148,26 @@ class DataPointRunHeaderView : public OSHeader
 
   void update();
 
+ private slots:
+
+  void on_clicked(bool checked);
+
+  void on_downloadClicked(bool checked);
+
+  void on_clearClicked(bool checked);
+
  private:
+
+  enum DownloadState
+  {
+    NOT_DOWNLOADABLE,
+    DOWNLOADABLE,
+    DOWNLOADED
+  };
+
+  void setDownloadState(const DownloadState downloadState);
+
+  void setClearState(bool canClear);
 
   openstudio::analysis::DataPoint m_dataPoint;
 
@@ -148,6 +177,9 @@ class DataPointRunHeaderView : public OSHeader
   QLabel* m_nas;
   QLabel* m_warnings;
   QLabel* m_errors;
+
+  QPushButton* m_download;
+  QPushButton* m_clear;
 };
 
 class DataPointRunContentView : public OSListView

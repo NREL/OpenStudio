@@ -18,8 +18,11 @@
 **********************************************************************/
 
 #include <pat_app/RunView.hpp>
-#include "../shared_gui_components/Buttons.hpp"
+
 #include <pat_app/PatApp.hpp>
+#include <pat_app/CloudMonitor.hpp>
+
+#include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/OSCollapsibleView.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
@@ -28,22 +31,23 @@
 #include <analysis/DataPoint.hpp>
 #include <analysis/DataPoint_Impl.hpp>
 
+#include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/Job.hpp>
 
+#include <utilities/cloud/CloudProvider.hpp>
+#include <utilities/core/Assert.hpp>
 #include <utilities/time/DateTime.hpp>
 
-#include <utilities/core/Assert.hpp>
-
-#include <QVBoxLayout>
-#include <QTextEdit>
 #include <QLabel>
+#include <QPainter>
+#include <QPaintEvent>
 #include <QPushButton>
 #include <QScrollArea>
-#include <QPaintEvent>
-#include <QPainter>
 #include <QStyleOption>
+#include <QTextEdit>
+#include <QTimer>
+#include <QVBoxLayout>
 
 #include <fstream>
 
@@ -57,7 +61,6 @@ RunView::RunView()
   setTitle("Run Simulations");
 
   // Main Content
-
   mainContent = new QWidget();
 
   QVBoxLayout * mainContentVLayout = new QVBoxLayout();
@@ -138,6 +141,18 @@ RunStatusView::RunStatusView()
 
   mainHLayout->addStretch();
 
+  // Cloud Provider Status
+
+  m_cloudProviderStatus = new QLabel();
+  mainHLayout->addWidget(m_cloudProviderStatus);
+  m_cloudProviderStatus->setPixmap(QPixmap(":/images/internet_no_connection.png"));
+
+  QTimer * timer = new QTimer(this);
+  timer->start(2000);
+  isConnected = connect(timer, SIGNAL(timeout()),
+                        this, SLOT(checkInternetAvailability()));
+  OS_ASSERT(isConnected);
+
   // Start Cloud
 
   toggleCloudButton = new ToggleCloudButton();
@@ -207,6 +222,27 @@ void RunStatusView::setProgress(int numCompletedJobs, int numFailedJobs, int num
   }else{
     m_percentFailed->setText("");
     m_percentComplete->setText("");
+  }
+}
+
+void RunStatusView::checkInternetAvailability()
+{
+  static bool internetAvailable = false;
+  static bool internetAvailableLastTime = false;
+  static bool internetAvailableTimeBerforeLast = false;
+
+  internetAvailableTimeBerforeLast = internetAvailableLastTime;
+  internetAvailableLastTime = internetAvailable;
+
+  QSharedPointer<CloudProvider> cloudProvider = PatApp::instance()->cloudMonitor()->cloudProvider();
+  internetAvailable = cloudProvider->internetAvailable();
+
+  if(internetAvailable && internetAvailableLastTime && internetAvailableTimeBerforeLast){
+    emit cloudAvailable(true);
+    m_cloudProviderStatus->setPixmap(QPixmap(":/images/internet_yes_connection.png"));
+  } else if(!internetAvailable && !internetAvailableLastTime && !internetAvailableTimeBerforeLast){
+    emit cloudAvailable(false);
+    m_cloudProviderStatus->setPixmap(QPixmap(":/images/internet_no_connection.png"));
   }
 }
 
@@ -325,13 +361,6 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
   : OSHeader(new HeaderToggleButton()), m_dataPoint(dataPoint)
 {
   setFixedHeight(30);
-  QString style;
-  style.append("openstudio--pat--DataPointRunHeaderView { ");
-  style.append("background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, ");
-  style.append("stop: 0 #cccccc, stop: 0.5 #f2f2f2, stop: 1.0 #cccccc); ");
-  style.append("border: 1px solid #8C8C8C; ");
-  style.append("} ");
-  setStyleSheet(style);
 
   QHBoxLayout * mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(5,5,5,5);
@@ -365,6 +394,40 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
   m_errors = new QLabel();
   m_errors->setFixedWidth(75);
   mainHLayout->addWidget(m_errors);
+
+  m_download = new QPushButton();
+  m_download->setCheckable(false);
+  m_download->setFlat(true);
+  m_download->setFixedSize(QSize(18,18));
+  mainHLayout->addWidget(m_download);
+
+  bool isConnected = false;
+
+  isConnected = connect(m_download,SIGNAL(clicked(bool)),
+                this,SLOT(on_downloadClicked(bool)));
+  OS_ASSERT(isConnected);
+
+  QSpacerItem* horizontalSpacer = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+  mainHLayout->addSpacerItem(horizontalSpacer);
+
+  m_clear = new QPushButton();
+  m_clear->setCheckable(false);
+  m_clear->setFlat(true);
+  m_clear->setFixedSize(QSize(18,18));
+  mainHLayout->addWidget(m_clear);
+
+  isConnected = connect(m_clear,SIGNAL(clicked(bool)),
+                this,SLOT(on_clearClicked(bool)));
+  OS_ASSERT(isConnected);
+
+  horizontalSpacer = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+  mainHLayout->addSpacerItem(horizontalSpacer);
+
+  this->setCheckable(true);
+
+  isConnected = connect(this,SIGNAL(clicked(bool)),
+                this,SLOT(on_clicked(bool)));
+  OS_ASSERT(isConnected);
 
   update();
 }
@@ -435,6 +498,91 @@ void DataPointRunHeaderView::update()
   m_status->setText(status);
   m_status->setStyleSheet(statusStyle);
 
+  // set if the header is checked
+  this->blockSignals(true);
+  this->setChecked(m_dataPoint.selected());
+  this->blockSignals(false);
+
+  QString style;
+  if(this->isChecked()){
+    style.append("openstudio--pat--DataPointRunHeaderView  { ");
+    style.append("background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, ");
+    style.append("stop: 0 #ffd573, stop: 0.5 #ffeec7, stop: 1.0 #ffd573); ");
+    style.append("border: 1px solid #8C8C8C; ");
+    style.append("} ");
+  }
+  else{
+    style.append("openstudio--pat--DataPointRunHeaderView  { ");
+    style.append("background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, ");
+    style.append("stop: 0 #cccccc, stop: 0.5 #f2f2f2, stop: 1.0 #cccccc); ");
+    style.append("border: 1px solid #8C8C8C; ");
+    style.append("} ");
+  }
+  setStyleSheet(style);
+
+  // TODO get actual state
+  DownloadState downloadState = this->DOWNLOADABLE;
+  setDownloadState(downloadState);
+
+  bool canClear = true;
+  setClearState(canClear);
+}
+
+void DataPointRunHeaderView::setDownloadState(const DownloadState downloadState)
+{
+  QString style;
+  if(downloadState == NOT_DOWNLOADABLE){
+    style.append("QPushButton {"
+                               "background-image:url(':/images/results_no_download.png');"
+                               "  border:none;"
+                               "}");
+  } else if (downloadState == DOWNLOADABLE){
+    style.append("QPushButton {"
+                               "background-image:url(':/images/results_yes_download.png');"
+                               "  border:none;"
+                               "}");
+  } else if (downloadState == DOWNLOADED){
+    style.append("QPushButton {"
+                               "background-image:url(':/images/results_downloaded.png');"
+                               "  border:none;"
+                               "}");
+  } else {
+    // should never get here
+    OS_ASSERT(false);
+  }
+  m_download->setStyleSheet(style);
+}
+
+void DataPointRunHeaderView::setClearState(bool canClear)
+{
+  QString style;
+  if(canClear){
+    style.append("QPushButton {"
+                               "background-image:url(':/images/clear_results_enabled.png');"
+                               "  border:none;"
+                               "}");
+  } else {
+    style.append("QPushButton {"
+                               "background-image:url(':/images/clear_results_disabled.png');"
+                               "  border:none;"
+                               "}");
+  }
+  m_clear->setStyleSheet(style);
+}
+
+void DataPointRunHeaderView::on_clicked(bool checked)
+{
+  m_dataPoint.setSelected(checked);
+}
+
+void DataPointRunHeaderView::on_downloadClicked(bool checked)
+{
+  // TODO this->m_dataPoint....
+}
+
+void DataPointRunHeaderView::on_clearClicked(bool checked)
+{
+  this->m_dataPoint.clearResults();
 }
 
 DataPointRunContentView::DataPointRunContentView()
