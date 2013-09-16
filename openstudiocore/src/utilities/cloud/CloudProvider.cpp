@@ -142,6 +142,11 @@ namespace openstudio{
     {
     }
 
+    bool CloudProvider_Impl::lastRunning() const
+    {
+      return (this->lastServerRunning() && this->lastWorkersRunning());
+    }
+
   } // detail
 
   CloudSettings::CloudSettings(const boost::shared_ptr<detail::CloudSettings_Impl>& impl)
@@ -316,9 +321,19 @@ namespace openstudio{
     return getImpl<detail::CloudProvider_Impl>()->workersStarted();
   }
 
-  bool CloudProvider::running() const
+  bool CloudProvider::lastServerRunning() const
   {
-    return getImpl<detail::CloudProvider_Impl>()->running();
+    return getImpl<detail::CloudProvider_Impl>()->lastServerRunning();
+  }
+
+  bool CloudProvider::lastWorkersRunning() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->lastWorkersRunning();
+  }
+
+  bool CloudProvider::lastRunning() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->lastRunning();
   }
 
   bool CloudProvider::terminateStarted() const
@@ -326,9 +341,9 @@ namespace openstudio{
     return getImpl<detail::CloudProvider_Impl>()->terminateStarted();
   }
 
-  bool CloudProvider::terminateCompleted() const
+  bool CloudProvider::lastTerminateCompleted() const
   {
-    return getImpl<detail::CloudProvider_Impl>()->terminateCompleted();
+    return getImpl<detail::CloudProvider_Impl>()->lastTerminateCompleted();
   }
 
   std::vector<std::string> CloudProvider::errors() const
@@ -366,9 +381,24 @@ namespace openstudio{
     return getImpl<detail::CloudProvider_Impl>()->waitForWorkers(msec);
   }
 
+  bool CloudProvider::serverRunning(int msec)
+  {
+    return getImpl<detail::CloudProvider_Impl>()->serverRunning(msec);
+  }
+
+  bool CloudProvider::workersRunning(int msec)
+  {
+    return getImpl<detail::CloudProvider_Impl>()->workersRunning(msec);
+  }
+
   bool CloudProvider::waitForTerminated(int msec) 
   {
     return getImpl<detail::CloudProvider_Impl>()->waitForTerminated(msec);
+  }
+
+  bool CloudProvider::terminateCompleted(int msec)
+  {
+    return getImpl<detail::CloudProvider_Impl>()->terminateCompleted(msec);
   }
 
   bool CloudProvider::requestInternetAvailable() 
@@ -396,10 +426,24 @@ namespace openstudio{
     return getImpl<detail::CloudProvider_Impl>()->requestStartWorkers();
   }
 
+  bool CloudProvider::requestServerRunning()
+  {
+    return getImpl<detail::CloudProvider_Impl>()->requestServerRunning();
+  }
+
+  bool CloudProvider::requestWorkersRunning()
+  {
+    return getImpl<detail::CloudProvider_Impl>()->requestWorkersRunning();
+  }
+
   bool CloudProvider::requestTerminate()
   {
     return getImpl<detail::CloudProvider_Impl>()->requestTerminate();
   }
 
+  bool CloudProvider::requestTerminateCompleted()
+  {
+    return getImpl<detail::CloudProvider_Impl>()->requestTerminateCompleted();
+  }
 
 } // openstudio

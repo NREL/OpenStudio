@@ -1491,7 +1491,7 @@ namespace detail {
   std::vector<BCLMeasure> SimpleProject_Impl::importSeedModelMeasures(ProgressBar* progressBar) {
     BCLMeasureVector result;
     openstudio::path projectPath = seedDir() / toPath(seed().path().stem());
-    if (boost::filesystem::exists(projectPath)) {
+    if (boost::filesystem::exists(projectPath / toPath("project.osp"))) {
 
       // open seed model project
       SimpleProjectOptions options;
@@ -1792,7 +1792,11 @@ boost::optional<SimpleProject> SimpleProject::create(const openstudio::path& pro
   OptionalSimpleProject result;
 
   if (!boost::filesystem::exists(projectDir)) {
-    bool ok = boost::filesystem::create_directories(projectDir);
+    bool ok = false;
+    try {
+      ok = boost::filesystem::create_directories(projectDir);
+    }
+    catch (...) {}
     if (!ok) {
       LOG(Error,"Cannot create a SimpleProject at " << toString(projectDir) << ", because "
           << "the directory cannot be created.");

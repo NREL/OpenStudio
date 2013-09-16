@@ -42,7 +42,6 @@ namespace detail{
   /** MeasureGroupRecord_Impl is an DiscreteVariableRecord_Impl that is the
    *  implementation class for MeasureGroupRecord.*/
   class PROJECT_API MeasureGroupRecord_Impl : public DiscreteVariableRecord_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */

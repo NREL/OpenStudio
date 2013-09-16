@@ -44,7 +44,6 @@ namespace detail {
 
   /** NullMeasureRecord_Impl is a MeasureRecord_Impl that is the implementation class for NullMeasureRecord.*/
   class PROJECT_API NullMeasureRecord_Impl : public MeasureRecord_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */

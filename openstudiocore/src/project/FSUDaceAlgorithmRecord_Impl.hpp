@@ -36,7 +36,6 @@ namespace detail {
   /** FSUDaceAlgorithmRecord_Impl is a DakotaAlgorithmRecord_Impl that is the implementation class
    *  for FSUDaceAlgorithmRecord.*/
   class PROJECT_API FSUDaceAlgorithmRecord_Impl : public DakotaAlgorithmRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

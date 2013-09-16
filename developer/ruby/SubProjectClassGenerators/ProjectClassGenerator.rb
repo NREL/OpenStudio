@@ -43,7 +43,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
   def initialize(className, baseClassName, pImpl, qobject)
     raise "ProjectClassMethods assumes that the class to be generated derives from Record." if baseClassName.empty?
     raise "Project classes must follow the pImpl idiom. Please re-run with -p as an argument." if not pImpl
-    raise "Project classes are QObjects. Please re-run with -q as an argument." if not qobject
+    raise "New project classes should not be QObjects. Please re-run without listing -q ." if qobject
   
     super(className, baseClassName, pImpl, qobject)
     

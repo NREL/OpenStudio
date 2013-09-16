@@ -34,7 +34,6 @@ namespace detail {
   /** SequentialSearchRecord_Impl is an OpenStudioAlgorithmRecord_Impl that is the implementation 
    *  class for SequentialSearchRecord.*/
   class PROJECT_API SequentialSearchRecord_Impl : public OpenStudioAlgorithmRecord_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */
