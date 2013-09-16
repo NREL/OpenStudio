@@ -176,7 +176,13 @@ namespace openstudio{
       return false;
     }
 
-    bool AWSProvider_Impl::running() const
+    bool AWSProvider_Impl::lastServerRunning() const
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::lastWorkersRunning() const
     {
       // todo
       return false;
@@ -188,7 +194,7 @@ namespace openstudio{
       return false;
     }
 
-    bool AWSProvider_Impl::terminateCompleted() const
+    bool AWSProvider_Impl::lastTerminateCompleted() const
     {
       // todo
       return false;
@@ -257,7 +263,25 @@ namespace openstudio{
       return false;
     }
 
+    bool AWSProvider_Impl::serverRunning(int msec)
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::workersRunning(int msec)
+    {
+      // todo
+      return false;
+    }
+
     bool AWSProvider_Impl::waitForTerminated(int msec)
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::terminateCompleted(int msec)
     {
       // todo
       return false;
@@ -297,12 +321,29 @@ namespace openstudio{
       return false;
     }
 
+    bool AWSProvider_Impl::requestServerRunning()
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::requestWorkersRunning()
+    {
+      // todo
+      return false;
+    }
+
     bool AWSProvider_Impl::requestTerminate()
     {
       // todo
       return false;
     }
 
+    bool AWSProvider_Impl::requestTerminateCompleted()
+    {
+      // todo
+      return false;
+    }
 
 /*  TODO: move this to AWSSettings
 

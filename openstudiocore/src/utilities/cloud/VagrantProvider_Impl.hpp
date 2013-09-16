@@ -217,11 +217,13 @@ namespace detail{
 
     virtual bool workersStarted() const;
 
-    virtual bool running() const;
+    virtual bool lastServerRunning() const;
+
+    virtual bool lastWorkersRunning() const;
 
     virtual bool terminateStarted() const;
 
-    virtual bool terminateCompleted() const;
+    virtual bool lastTerminateCompleted() const;
 
     virtual std::vector<std::string> errors() const;
     
@@ -241,7 +243,13 @@ namespace detail{
 
     virtual bool waitForWorkers(int msec);
 
+    virtual bool serverRunning(int msec);
+
+    virtual bool workersRunning(int msec);
+
     virtual bool waitForTerminated(int msec);
+
+    virtual bool terminateCompleted(int msec);
 
     //@}
     /** @name Inherited non-blocking class members */
@@ -257,7 +265,13 @@ namespace detail{
 
     virtual bool requestStartWorkers();
 
+    virtual bool requestServerRunning();
+
+    virtual bool requestWorkersRunning();
+
     virtual bool requestTerminate();
+
+    virtual bool requestTerminateCompleted();
 
     //@}
     /** @name Class members */
@@ -278,9 +292,15 @@ namespace detail{
 
     void onWorkerStarted(int, QProcess::ExitStatus);
 
+    void onCheckServerRunningComplete(int, QProcess::ExitStatus);
+
+    void onCheckWorkerRunningComplete(int, QProcess::ExitStatus);
+
     void onServerStopped(int, QProcess::ExitStatus);
 
     void onWorkerStopped(int, QProcess::ExitStatus);
+
+    void onCheckTerminatedComplete(int, QProcess::ExitStatus);
 
   private:
 
@@ -288,6 +308,10 @@ namespace detail{
     bool requestInternetAvailableRequestFinished() const;
     bool requestServiceAvailableFinished() const;
     bool requestValidateCredentialsFinished() const;
+    bool requestServerRunningFinished() const;
+    bool requestWorkersRunningFinished() const;
+    bool requestTerminateFinished() const;
+    bool requestTerminateCompletedFinished() const;
 
     VagrantSettings m_vagrantSettings;
     VagrantSession m_vagrantSession;
@@ -298,16 +322,22 @@ namespace detail{
     QProcess* m_checkServiceProcess;
     QProcess* m_startServerProcess;
     QProcess* m_startWorkerProcess;
+    QProcess* m_checkServerRunningProcess;
+    QProcess* m_checkWorkerRunningProcess;
     QProcess* m_stopServerProcess;
     QProcess* m_stopWorkerProcess;
+    QProcess* m_checkTerminatedProcess;
     bool m_lastInternetAvailable;
     bool m_lastServiceAvailable;
     bool m_lastValidateCredentials;
-    bool m_serverStarted;
-    bool m_workerStarted;
-    bool m_serverStopped;
-    bool m_workerStopped;
-    bool m_terminateStarted;
+    bool m_serverStarted; // local state variable
+    bool m_workerStarted; // local state variable
+    bool m_lastServerRunning;
+    bool m_lastWorkerRunning;
+    bool m_serverStopped; // local state variable
+    bool m_workerStopped; // local state variable
+    bool m_terminateStarted; // local state variable
+    bool m_lastTerminateCompleted;
 
     mutable std::vector<std::string> m_errors;
     mutable std::vector<std::string> m_warnings;
