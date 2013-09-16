@@ -36,6 +36,7 @@
 #include <runmanager/lib/Workflow.hpp>
 
 #include <utilities/cloud/CloudProvider.hpp>
+#include <utilities/cloud/VagrantProvider.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/time/DateTime.hpp>
 
@@ -234,8 +235,8 @@ void RunStatusView::checkInternetAvailability()
   internetAvailableTimeBerforeLast = internetAvailableLastTime;
   internetAvailableLastTime = internetAvailable;
 
-  QSharedPointer<CloudProvider> cloudProvider = PatApp::instance()->cloudMonitor()->cloudProvider();
-  internetAvailable = cloudProvider->internetAvailable();
+  VagrantProvider cloudProvider;
+  internetAvailable = cloudProvider.internetAvailable();
 
   if(internetAvailable && internetAvailableLastTime && internetAvailableTimeBerforeLast){
     emit cloudAvailable(true);
