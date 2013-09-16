@@ -160,11 +160,13 @@ namespace detail{
 
     virtual bool workersStarted() const;
 
-    virtual bool running() const;
+    virtual bool lastServerRunning() const;
+
+    virtual bool lastWorkersRunning() const;
 
     virtual bool terminateStarted() const;
 
-    virtual bool terminateCompleted() const;
+    virtual bool lastTerminateCompleted() const;
 
     virtual std::vector<std::string> errors() const;
     
@@ -184,7 +186,13 @@ namespace detail{
 
     virtual bool waitForWorkers(int msec);
 
+    virtual bool serverRunning(int msec);
+
+    virtual bool workersRunning(int msec);
+
     virtual bool waitForTerminated(int msec);
+
+    virtual bool terminateCompleted(int msec);
 
     //@}
     /** @name Inherited non-blocking class members */
@@ -200,7 +208,13 @@ namespace detail{
 
     virtual bool requestStartWorkers();
 
+    virtual bool requestServerRunning();
+
+    virtual bool requestWorkersRunning();
+
     virtual bool requestTerminate();
+
+    virtual bool requestTerminateCompleted();
 
     //@}
     /** @name Class members */
