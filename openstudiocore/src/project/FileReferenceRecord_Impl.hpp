@@ -35,7 +35,6 @@ namespace detail {
 
   /** FileReferenceRecord_Impl is a ObjectRecord_Impl that is the implementation class for FileReferenceRecord.*/
   class PROJECT_API FileReferenceRecord_Impl : public ObjectRecord_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */

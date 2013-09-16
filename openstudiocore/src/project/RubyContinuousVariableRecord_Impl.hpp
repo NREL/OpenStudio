@@ -37,7 +37,6 @@ namespace detail {
 
   /** RubyContinuousVariableRecord_Impl is a ContinuousVariableRecord_Impl that is the implementation class for RubyContinuousVariableRecord.*/
   class PROJECT_API RubyContinuousVariableRecord_Impl : public ContinuousVariableRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

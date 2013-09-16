@@ -35,7 +35,6 @@ namespace detail {
   /** DataPointValueRecord_Impl is a ObjectRecord_Impl that is the implementation class for 
    *  DataPointValueRecord. */
   class PROJECT_API DataPointValueRecord_Impl : public ObjectRecord_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */

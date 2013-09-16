@@ -31,7 +31,6 @@ namespace detail {
 
   /** OutputVariableRecord_Impl is a VariableRecord_Impl that is the implementation class for OutputVariableRecord.*/
   class PROJECT_API OutputVariableRecord_Impl : public VariableRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
