@@ -235,6 +235,7 @@ void RunStatusView::checkInternetAvailability()
   internetAvailableTimeBerforeLast = internetAvailableLastTime;
   internetAvailableLastTime = internetAvailable;
 
+  // TODO this should use the correct provider(i.e. Vagrant, AwsProvider, etc)
   VagrantProvider cloudProvider;
   internetAvailable = cloudProvider.internetAvailable();
 
@@ -525,8 +526,7 @@ void DataPointRunHeaderView::update()
   DownloadState downloadState = this->DOWNLOADABLE;
   setDownloadState(downloadState);
 
-  bool canClear = true;
-  setClearState(canClear);
+  setClearState(!m_dataPoint.directory().empty());
 }
 
 void DataPointRunHeaderView::setDownloadState(const DownloadState downloadState)
@@ -554,10 +554,10 @@ void DataPointRunHeaderView::setDownloadState(const DownloadState downloadState)
   m_download->setStyleSheet(style);
 }
 
-void DataPointRunHeaderView::setClearState(bool canClear)
+void DataPointRunHeaderView::setClearState(bool hasDataToClear)
 {
   QString style;
-  if(canClear){
+  if(hasDataToClear){
     style.append("QPushButton {"
                                "background-image:url(':/images/clear_results_enabled.png');"
                                "  border:none;"
@@ -569,6 +569,7 @@ void DataPointRunHeaderView::setClearState(bool canClear)
                                "}");
   }
   m_clear->setStyleSheet(style);
+  m_clear->setEnabled(hasDataToClear);
 }
 
 void DataPointRunHeaderView::on_clicked(bool checked)

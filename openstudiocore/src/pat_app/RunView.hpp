@@ -167,7 +167,7 @@ class DataPointRunHeaderView : public OSHeader
 
   void setDownloadState(const DownloadState downloadState);
 
-  void setClearState(bool canClear);
+  void setClearState(bool hasDataToClear);
 
   openstudio::analysis::DataPoint m_dataPoint;
 
