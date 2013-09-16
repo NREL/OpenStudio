@@ -20,27 +20,28 @@
 #ifndef OPENSTUDIO_CLOUDMONITOR_HPP
 #define OPENSTUDIO_CLOUDMONITOR_HPP
 
+#include "RunView.hpp"
 #include <QObject>
 #include <QSharedPointer>
 #include <utilities/core/Path.hpp>
 #include <utilities/core/Url.hpp>
+#include <utilities/cloud/CloudProvider.hpp>
 #include <vector>
 #include <map>
 
+class QThread;
+class QMutex;
+
 namespace openstudio {
 
-class CloudProvider;
 class VagrantProvider;
+//class CloudProvider;
+//class CloudSettings;
 
 namespace pat {
 
-// CloudMonitor encapsulates CloudProvider, forwards signals from CloudProvider,
-// and keeps the PatApp GUI/state current with CloudProvider.  CloudMonitor should issue dialogs
-// as needed to inform user about what is going on with CloudProvider.
-// Since CloudProvider instances might be created and destroyed while PatApp is running,
-// connect to signals on CloudMonitor instead of connecting directly to CloudProvider.  
-// CloudProvider connections will be broken anytime setCloudProvider is used.  
-// Consider this class the glue between the GUI application and the CloudProvider backend.
+class CloudMonitorWorker;
+
 class CloudMonitor : public QObject
 {
   Q_OBJECT
@@ -51,39 +52,81 @@ class CloudMonitor : public QObject
 
   virtual ~CloudMonitor();
 
-  QSharedPointer<CloudProvider> cloudProvider() const;
+  void setCloudSettings(const CloudSettings & settings);
 
-  void setCloudProvider(QSharedPointer<CloudProvider> cloudProvider);
+  CloudSettings cloudSettings() const;
 
-  signals:
-    
-  void serverStarting();
+  bool starting();
 
-  void serverStarted(const Url& url);
+  bool stopping();
 
-  void workerStarting();
+  public slots:
 
-  void workerStarted(const Url& url);
-
-  void allWorkersStarted();
-
-  void terminating();
-
-  void terminateComplete();
+  // If cloud is on then turn off, and vice versa
+  void toggleCloud();
 
   private slots:
-
-  void toggleCloud(bool on);
 
   void onCloudStartupComplete();
 
   void onCloudTerminateComplete();
 
+  void setCloudButtonStatus(ToggleCloudButton::Status status);
+
   private:
 
-  QSharedPointer<VagrantProvider> makeProvider();
+  Q_DISABLE_COPY(CloudMonitor);
+
+  void setCloudProvider(QSharedPointer<CloudProvider> cloudProvider);
+
+  void createTestSettings();
 
   QSharedPointer<CloudProvider> m_cloudProvider;
+
+  QSharedPointer<QThread> m_workerThread;
+
+  QSharedPointer<CloudMonitorWorker> m_worker;
+
+  QSharedPointer<QMutex> m_mutex;
+};
+
+// This class is assigned to its own thread,
+// where it will continuously check that the UI is accurately reporting the condition of the cloud.
+class CloudMonitorWorker : public QObject
+{
+  Q_OBJECT
+
+  public:
+
+  CloudMonitorWorker(CloudMonitor * monitor);
+
+  virtual ~CloudMonitorWorker();
+
+  void setCloudSettings(const CloudSettings & settings);
+
+  public slots:
+
+  // Start up a timer
+  void clockIn();
+   
+  signals:
+
+  void finished();
+
+  void cloudStatus(ToggleCloudButton::Status status);
+
+  private slots:
+
+  // Does work when the timer expires
+  void nowGetToWork();
+
+  private:
+
+  QSharedPointer<QTimer> m_timer;
+
+  boost::optional<CloudSettings> m_cloudSettings;
+
+  QPointer<CloudMonitor> m_monitor;  
 };
 
 } // pat

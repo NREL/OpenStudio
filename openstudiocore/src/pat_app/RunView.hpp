@@ -105,32 +105,19 @@ class ToggleCloudButton : public GrayButton
 
  public:
 
-  // These are the possible states in order
-  // Not Running, Starting, Running, Stopping
-  // isChecked() == true means the cloud is running, or starting
-  // isChecked() == false means the cloud is not running, or stopping
+  enum Status { STARTING, RUNNING, STOPPING, STOPPED };
 
   ToggleCloudButton();
 
-  bool isStarting() const;
-
-  void setStarting(bool isStarting);
-
-  bool isStopping() const;
-
-  void setStopping(bool isStopping);
+  void setStatus(Status status);
 
  protected:
-
-  void nextCheckState();
 
   void updateText();
 
  private:
 
-  bool m_starting;
-
-  bool m_stopping;
+  Status m_status;
 
   QString m_turnOnText;
 

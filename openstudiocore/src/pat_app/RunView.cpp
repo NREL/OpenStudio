@@ -212,13 +212,10 @@ void RunStatusView::setProgress(int numCompletedJobs, int numFailedJobs, int num
 
 ToggleCloudButton::ToggleCloudButton()
   : GrayButton(),
-    m_starting(false),
-    m_stopping(false)
+    m_status(STOPPED)
 {
   m_turnOnText  = "Turn On Cloud";
   m_turnOffText = "Turn Off Cloud";
-
-  setCheckable(true);
 
   QFontMetrics fm(font());
   int onWidth = fm.width(m_turnOnText);
@@ -238,76 +235,91 @@ ToggleCloudButton::ToggleCloudButton()
 
 void ToggleCloudButton::updateText()
 {
-  if( ! isChecked() && ! m_starting && ! m_stopping )
+  if( m_status == STOPPED )
   {
     setText(m_turnOnText);
+
+    setEnabled(true);
   }
-  else if( m_starting )
+  else if( m_status == STARTING )
   {
     setText("Starting");
+
+    setEnabled(false);
   }
-  else if( isChecked() )
+  else if( m_status == RUNNING )
   {
     setText(m_turnOffText);
+
+    setEnabled(true);
   }
-  else if( m_stopping )
+  else if( m_status == STOPPING )
   {
     setText("Stopping");
+
+    setEnabled(false);
   }
 }
 
-bool ToggleCloudButton::isStarting() const
+void ToggleCloudButton::setStatus(Status status)
 {
-  return m_starting;
-}
-
-void ToggleCloudButton::setStarting(bool isStarting)
-{
-  m_starting = isStarting;
+  m_status = status;
 
   updateText();
 }
 
-bool ToggleCloudButton::isStopping() const
-{
-  return m_stopping;
-}
-
-void ToggleCloudButton::setStopping(bool isStopping)
-{
-  m_stopping = isStopping;
-
-  updateText();
-}
-
-void ToggleCloudButton::nextCheckState()
-{
-  if( ! isChecked() && ! m_starting && ! m_stopping ) // Not Running
-  {
-    m_starting = true; 
-    setChecked(true);
-  }
-  else if( m_starting )
-  {
-    m_starting = false;
-    m_stopping = false;
-    setChecked(true); 
-  }
-  else if( isChecked() ) // Running
-  {
-    m_starting = false;
-    m_stopping = true;
-    setChecked(false);  
-  }
-  else if( m_stopping )
-  {
-    m_stopping = false;
-    m_starting = false;
-    setChecked(false);
-  }
-
-  updateText();
-}
+//bool ToggleCloudButton::isStarting() const
+//{
+//  return m_starting;
+//}
+//
+//void ToggleCloudButton::setStarting(bool isStarting)
+//{
+//  m_starting = isStarting;
+//
+//  updateText();
+//}
+//
+//bool ToggleCloudButton::isStopping() const
+//{
+//  return m_stopping;
+//}
+//
+//void ToggleCloudButton::setStopping(bool isStopping)
+//{
+//  m_stopping = isStopping;
+//
+//  updateText();
+//}
+//
+//void ToggleCloudButton::nextCheckState()
+//{
+//  //if( ! isChecked() && ! m_starting && ! m_stopping ) // Not Running
+//  //{
+//  //  m_starting = true; 
+//  //  setChecked(true);
+//  //}
+//  //else if( m_starting )
+//  //{
+//  //  m_starting = false;
+//  //  m_stopping = false;
+//  //  setChecked(true); 
+//  //}
+//  //else if( isChecked() ) // Running
+//  //{
+//  //  m_starting = false;
+//  //  m_stopping = true;
+//  //  setChecked(false);  
+//  //}
+//  //else if( m_stopping )
+//  //{
+//  //  m_stopping = false;
+//  //  m_starting = false;
+//  //  setChecked(false);
+//  //}
+//
+//  updateText();
+//}
 
 DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataPoint& dataPoint)
   : OSHeader(new HeaderToggleButton()), m_dataPoint(dataPoint)

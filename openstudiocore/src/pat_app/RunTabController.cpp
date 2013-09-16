@@ -58,8 +58,8 @@ RunTabController::RunTabController()
   bingo = connect(runView->runStatusView, SIGNAL(playButtonClicked(bool)), this, SLOT(onPlayButtonClicked(bool)));
   OS_ASSERT(bingo);
 
-  bingo = connect(runView->runStatusView->toggleCloudButton,SIGNAL(toggled(bool)),
-                  PatApp::instance()->cloudMonitor().data(),SLOT(toggleCloud(bool)));
+  bingo = connect(runView->runStatusView->toggleCloudButton,SIGNAL(clicked()),
+                  PatApp::instance()->cloudMonitor().data(),SLOT(toggleCloud()));
   OS_ASSERT(bingo);
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
