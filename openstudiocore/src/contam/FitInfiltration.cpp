@@ -43,7 +43,7 @@
 
 void usage(boost::program_options::options_description desc)
 {
-  std::cout << "Usage: FitInfiltration --inputPath=./path/to/input.osm" << std::endl;
+  std::cout << "Usage: FitInfiltration --input-path=./path/to/input.osm" << std::endl;
   std::cout << "   or: FitInfiltration input.osm" << std::endl;
   std::cout << desc << std::endl;
 }
@@ -205,13 +205,15 @@ int main(int argc, char *argv[])
   desc.add_options()
     ("flow,f", boost::program_options::value<double>(&flow), "leakage flow rate per envelope area [m^3/h/m^2]")
     ("help,h", "print help message")
-    ("inputPath,i", boost::program_options::value<std::string>(&inputPathString), "path to input OSM file")
+    ("input-path,i", boost::program_options::value<std::string>(&inputPathString), "path to input OSM file")
     ("level,l", boost::program_options::value<std::string>(&leakageDescriptorString), "airtightness: Leaky|Average|Tight (default: Average)")
-    ("outputPath,o", boost::program_options::value<std::string>(&outputPathString), "path to output OSM file")
-    ("quiet,q", "suppress progress output");
+    ("no-osm", "suppress output of OSM file")
+    ("output-path,o", boost::program_options::value<std::string>(&outputPathString), "path to output OSM file")
+    ("quiet,q", "suppress progress output")
+    ("write-coeffs","write out coefficients in coeffs.txt");
 
   boost::program_options::positional_options_description pos;
-  pos.add("inputPath", -1);
+  pos.add("input-path", -1);
     
   boost::program_options::variables_map vm;
   // The following try/catch block is necessary to avoid uncaught
@@ -239,13 +241,27 @@ int main(int argc, char *argv[])
 
   bool verbose=true;
   if(vm.count("quiet"))
+  {
     verbose=false;
+  }
 
-  if (!vm.count("inputPath"))
+  bool noOsm=false;
+  if(vm.count("no-osm"))
+  {
+    noOsm=true;
+  }
+
+  if (!vm.count("input-path"))
   {
     std::cout << "No input path given." << std::endl << std::endl;
     usage(desc);
     return EXIT_FAILURE;
+  }
+
+  bool writeCoeffs=false;
+  if(vm.count("write-coeffs"))
+  {
+    writeCoeffs=true;
   }
 
   openstudio::path inputPath = openstudio::toPath(inputPathString);
@@ -395,11 +411,42 @@ int main(int argc, char *argv[])
 
   // Write out new OSM
   // QString outstring = openstudio::toQString(inputPathString).replace(".osm",openstudio::toQString(leakageDescriptorString)+".osm");
-  openstudio::path outPath = openstudio::toPath(outputPathString);
-  if(!model->save(outPath,true))
+  if(!noOsm)
   {
-    std::cout << "Failed to write OSM file." << std::endl;
-    return EXIT_FAILURE;
+    openstudio::path outPath = openstudio::toPath(outputPathString);
+      if(!model->save(outPath,true))
+      {
+        std::cout << "Failed to write OSM file." << std::endl;
+        return EXIT_FAILURE;
+      }
+  }
+
+  // Write out the coefficients if required
+  if(writeCoeffs)
+  {
+    QFile txtfile("coeffs.txt");
+    if(!txtfile.open(QFile::WriteOnly))
+    {
+      std::cout << "Failed to open file 'coeffs.txt'" << std::endl;
+      std::cout << "Check that this file location is accessible and may be written." << std::endl;
+    }
+    else
+    {
+      QTextStream coeffs(&txtfile);
+      BOOST_FOREACH(handleInt, spaceMap)
+      {
+        boost::optional<openstudio::model::Space> space = model->getModelObject<openstudio::model::Space>(handleInt.first);
+        if(!space)
+        {
+          std::cout << "Failed to find space " << openstudio::toString(handleInt.first)<< std::endl;
+          return EXIT_FAILURE;
+        }
+        coeffs << openstudio::toString(space.get().handle()) << ' ' 
+          << density*Q10[handleInt.second] << ' '
+          << C[handleInt.second] << ' '
+          << D[handleInt.second] << '\n';
+      }
+    }
   }
     
   return EXIT_SUCCESS;
