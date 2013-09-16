@@ -110,7 +110,7 @@ std::string argumentExtractorRubyFunction() {
   ss << "    args = userScript.arguments(model)" << std::endl;
   ss << "  elsif type == \"workspace\"" << std::endl;
   ss << "    args = userScript.arguments(workspace)" << std::endl;
-  ss << "  elseif type == \"translation\"" << std::endl;
+  ss << "  elsif type == \"translation\"" << std::endl;
   ss << "    args = userScript.arguments(model)" << std::endl;
   ss << "    userScript.arguments(workspace).each { |arg|" << std::endl;
   ss << "      args << arg" << std::endl;
