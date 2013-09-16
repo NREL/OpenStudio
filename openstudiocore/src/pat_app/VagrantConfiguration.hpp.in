@@ -26,9 +26,9 @@ namespace openstudio {
 
 namespace pat {
 
-path vagrantServerPath() { return path("${VAGRANT_SERVER_PATH}"); }
+path vagrantServerPath() { return path(toPath("${VAGRANT_SERVER_PATH}")); }
 
-path vagrantWorkerPath() { return path("${VAGRANT_WORKER_PATH}"); }
+path vagrantWorkerPath() { return path(toPath("${VAGRANT_WORKER_PATH}")); }
 
 } // pat
 
