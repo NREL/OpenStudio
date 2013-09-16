@@ -40,14 +40,18 @@ namespace detail{
 
     /** Constructor provided for deserialization; not for general use. */
     AWSSettings_Impl(const UUID& uuid,
-                     const UUID& versionUUID);
+                     const UUID& versionUUID,
+                     bool userAgreementSigned,
+                     const Url& serverUrl,
+                     const std::vector<Url>& workerUrls,
+                     const std::string& accessKey);
 
     //@}
     /** @name Destructors */
     //@{
 
     /// virtual destructor
-    virtual ~AWSSettings_Impl();
+    virtual ~AWSSettings_Impl() {};
 
     //@}
     /** @name Inherited members */
@@ -68,10 +72,49 @@ namespace detail{
     //@}
     /** @name Class members */
     //@{
+
+    // returns the url of the server node
+    Url serverUrl() const;
+
+    // sets the url of the server node
+    void setServerUrl(const Url& serverUrl);
+
+    // returns the urls of all worker nodes 
+    std::vector<Url> workerUrls() const;
+
+    // set the urls of all worker nodes
+    void setWorkerUrls(const std::vector<Url>& workerUrls);
+
+    // returns the AWS access key
+    std::string accessKey() const;
+
+    // sets the AWS access key if it's valid
+    bool setAccessKey(std::string accessKey);
+
+    // returns the AWS secret key
+    std::string secretKey() const;
+
+    // sets the AWS secret key if it's valid
+    bool setSecretKey(std::string secretKey);
+
+    // performs a cursory regex and returns true if it's valid
+    bool validAccessKey(std::string accessKey) const;
+
+    // performs a cursory regex and returns true if it's valid
+    bool validSecretKey(std::string secretKey) const;
+
     //@}
    private:
     // configure logging
     REGISTER_LOGGER("utilities.cloud.AWSSettings");
+
+    bool m_userAgreementSigned;
+    Url m_serverUrl;
+    std::vector<Url> m_workerUrls;
+    mutable std::string m_accessKey;
+    mutable std::string m_secretKey;
+    mutable bool m_validAccessKey;
+    mutable bool m_validSecretKey;
   };
 
   /// AWSSession_Impl is a CloudSession_Impl.
@@ -95,7 +138,7 @@ namespace detail{
     /** @name Destructors */
     //@{
 
-    virtual ~AWSSession_Impl();
+    virtual ~AWSSession_Impl() {};
 
     //@}
     /** @name Inherited members */
@@ -124,7 +167,7 @@ namespace detail{
     /** @name Constructor */
     //@{
 
-    /// default constructor
+    /// default constructor, loads settings
     AWSProvider_Impl();
 
     //@}
@@ -209,15 +252,6 @@ namespace detail{
     // returns the cloud provider type
     static std::string cloudProviderType();
 
-    // returns the AWS access key
-    std::string accessKey() const;
-
-    // returns the AWS secret key
-    std::string secretKey() const;
-
-    // performs a cursory regex validation of both keys, and returns true if they match
-    bool setKeys(std::string accessKey, std::string secretKey) const;
-
     // run an action against the AWS-SDK ruby gem
     QVariantMap awsRequest(std::string request, std::string service = "EC2") const;
 
@@ -229,36 +263,36 @@ namespace detail{
   private slots:
 
     void onServerStarted(int, QProcess::ExitStatus);
-    void onWorkerStarted(int, QProcess::ExitStatus);
+
+    void onWorkersStarted(int, QProcess::ExitStatus);
+
     void onServerStopped(int, QProcess::ExitStatus);
-    void onWorkerStopped(int, QProcess::ExitStatus);
+
+    void onWorkersStopped(int, QProcess::ExitStatus);
 
   private:
+
+    bool requestInternetAvailableRequestFinished() const;
+    bool requestServiceAvailableFinished() const;
+    bool requestValidateCredentialsFinished() const;
 
     AWSSettings m_awsSettings;
     AWSSession m_awsSession;
 
-    bool loadCredentials() const;
-    bool saveCredentials() const;
-    bool validAccessKey(std::string accessKey) const;
-    bool validSecretKey(std::string secretKey) const;
-
-    mutable std::string m_accessKey;
-    mutable std::string m_secretKey;
-    mutable bool m_validAccessKey;
-    mutable bool m_validSecretKey;
-
     unsigned m_numWorkers;
 
     QProcess* m_startServerProcess;
-    QProcess* m_startWorkerProcess;
+    QProcess* m_startWorkersProcess;
     QProcess* m_stopServerProcess;
-    QProcess* m_stopWorkerProcess;
+    QProcess* m_stopWorkersProcess;
+    bool m_lastInternetAvailable;
+    bool m_lastServiceAvailable;
+    bool m_lastValidateCredentials;
     bool m_serverStarted;
-    bool m_workerStarted;
+    bool m_workersStarted;
     bool m_serverStopped;
-    bool m_workerStopped;
-    bool m_terminated;
+    bool m_workersStopped;
+    bool m_terminateStarted;
 
     mutable std::vector<std::string> m_errors;
     mutable std::vector<std::string> m_warnings;

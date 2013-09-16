@@ -40,40 +40,139 @@ namespace openstudio{
   namespace detail{
 
     AWSSettings_Impl::AWSSettings_Impl()
-      : CloudSettings_Impl()
+      : CloudSettings_Impl(),
+        m_validAccessKey(false),
+        m_validSecretKey(false)
     {}
 
     AWSSettings_Impl::AWSSettings_Impl(const UUID& uuid,
-                                       const UUID& versionUUID)
-      : CloudSettings_Impl(uuid,versionUUID)
-    {}
-
-    AWSSettings_Impl::~AWSSettings_Impl()
-    {}
+                                       const UUID& versionUUID,
+                                       bool userAgreementSigned,
+                                       const Url& serverUrl,
+                                       const std::vector<Url>& workerUrls,
+                                       const std::string& accessKey)
+      : CloudSettings_Impl(uuid,versionUUID),
+        m_validAccessKey(false),
+        m_validSecretKey(false)
+    {
+      //todo
+    }
 
     std::string AWSSettings_Impl::cloudProviderType() const {
       return AWSProvider_Impl::cloudProviderType();
     }
 
     std::string AWSSettings_Impl::userAgreementText() const {
-      return std::string();
+      return "OpenStudio is provided by the National Renewable Energy Laboratory (\"NREL\"), which is operated by Alliance for Sustainable Energy, LLC, (\"Alliance\") for the U.S. Department of Energy (\"DOE\").  NREL, Alliance and DOE are not responsible for any charges incurred as a result of using OpenStudio in connection with web services, cloud services or any other third party computing services.  You are solely responsible for establishing, maintaining, terminating and paying for any third party computing services and are solely responsible for complying with any terms and conditions required by third party service providers.  Terminating OpenStudio may not terminate third party computing services used in connection with OpenStudio, and you are solely responsible for verifying that computing services and associated charges are terminated.\n\nTHE SOFTWARE IS PROVIDED BY DOE/NREL/ALLIANCE \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE EXPRESSLY DISCLAIMED.  IN NO EVENT SHALL DOE/NREL/ALLIANCE BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER, INCLUDING BUT NOT LIMITED TO CLAIMS ASSOCIATED WITH THE LOSS OF DATA OR PROFITS, WHICH MAY RESULT FROM ANY ACTION IN CONTRACT, NEGLIGENCE OR OTHER TORTIOUS CLAIM THAT ARISES OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THE SOFTWARE. YOU AGREE TO INDEMNIFY DOE/NREL/ALLIANCE, AND ITS AFFILIATES, OFFICERS, AGENTS, AND EMPLOYEES AGAINST ANY CLAIM OR DEMAND, INCLUDING REASONABLE ATTORNEYS' FEES, RELATED TO YOUR USE, RELIANCE, OR ADOPTION OF THE SOFTWARE FOR ANY PURPOSE WHATSOEVER.";
     }
 
     bool AWSSettings_Impl::userAgreementSigned() const {
-      return false;
+      return m_userAgreementSigned;
     }
 
     void AWSSettings_Impl::signUserAgreement(bool agree) {
-
+      m_userAgreementSigned = agree;
+      onChange();
     }
 
     bool AWSSettings_Impl::loadSettings(bool overwriteExisting) {
+      QSettings settings("OpenStudio", toQString(cloudProviderType()));
+
+      // only set this if overwriteExisting is true
+      if (overwriteExisting){
+        if (settings.value("userAgreementSigned").toString() == "Yes"){
+          m_userAgreementSigned = true;
+        }else{
+          m_userAgreementSigned = false;
+        }
+      }
+
+      QFile file(QDir::homePath() + "/.ssh/aws");
+      if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QJson::Parser parser;
+        bool ok = false;
+        QVariantMap map = parser.parse(QString(file.readAll()).toUtf8(), &ok).toMap();
+        
+        if (ok) {
+          if (validAccessKey(toString(map["accessKey"].toString())) && validSecretKey(toString(map["secretKey"].toString()))) {
+            m_accessKey = toString(map["accessKey"].toString());
+            m_secretKey = toString(map["secretKey"].toString());
+            return true;
+          }
+        }
+      }
       return false;
     }
 
     bool AWSSettings_Impl::saveToSettings(bool overwriteExisting) const {
+      QVariantMap json;
+      json.insert("accessKey", toQString(m_accessKey));
+      json.insert("secretKey", toQString(m_secretKey));
+      
+      QJson::Serializer serializer;
+      if (QDir::home().exists(".ssh") || QDir::home().mkdir(".ssh")) {
+        QFile file(QDir::homePath() + "/.ssh/aws");
+        if (file.open(QIODevice::WriteOnly)) {
+          file.write(serializer.serialize(json));
+          file.close();
+          return true;
+        }
+      }
       return false;
     }
+
+    Url AWSSettings_Impl::serverUrl() const {
+      //todo
+      return Url();
+    }
+
+    void AWSSettings_Impl::setServerUrl(const Url& serverUrl) {
+      m_serverUrl = serverUrl;
+    }
+
+    std::vector<Url> AWSSettings_Impl::workerUrls() const {
+      //todo
+      return std::vector<Url>();
+    }
+
+    void AWSSettings_Impl::setWorkerUrls(const std::vector<Url>& workerUrls) {
+      m_workerUrls = workerUrls;
+    }
+
+    std::string AWSSettings_Impl::accessKey() const {
+      return m_accessKey;
+    }
+
+    bool AWSSettings_Impl::setAccessKey(std::string accessKey) {
+      if (validAccessKey(accessKey)) {
+        m_accessKey = accessKey;
+        return true;
+      }
+      return false;
+    }
+    
+    std::string AWSSettings_Impl::secretKey() const {
+      return m_secretKey;
+    }
+
+    bool AWSSettings_Impl::setSecretKey(std::string secretKey) {
+      if (validSecretKey(secretKey)) {
+        m_secretKey = secretKey;
+        return true;
+      }
+      return false;
+    }
+
+    bool AWSSettings_Impl::validAccessKey(std::string accessKey) const {
+      return QRegExp("[A-Z0-9]{20}").exactMatch(toQString(accessKey));
+    }
+
+    bool AWSSettings_Impl::validSecretKey(std::string secretKey) const {
+      return QRegExp("[a-zA-Z0-9/+]{40}").exactMatch(toQString(secretKey));
+    }
+
+    
+
 
     AWSSession_Impl::AWSSession_Impl(const std::string& sessionId,
                                      const boost::optional<Url>& serverUrl,
@@ -89,9 +188,6 @@ namespace openstudio{
       : CloudSession_Impl(uuid,versionUUID,sessionId,serverUrl,workerUrls)
     {}
 
-    AWSSession_Impl::~AWSSession_Impl()
-    {}
-
     std::string AWSSession_Impl::cloudProviderType() const {
       return AWSProvider_Impl::cloudProviderType();
     }
@@ -100,17 +196,14 @@ namespace openstudio{
       : CloudProvider_Impl(),
         m_awsSettings(),
         m_awsSession(toString(createUUID()),boost::none,std::vector<Url>()),
-        m_validAccessKey(false),
-        m_validSecretKey(false),
         m_numWorkers(0),
-        m_startServerProcess(NULL), m_startWorkerProcess(NULL),
-        m_serverStarted(false), m_workerStarted(false), m_serverStopped(false), m_workerStopped(false), m_terminated(false)
+        m_startServerProcess(NULL), m_startWorkersProcess(NULL),
+        m_serverStarted(false), m_workersStarted(false), m_serverStopped(false), m_workersStopped(false), m_terminateStarted(false)
     {
       //Make sure a QApplication exists
       openstudio::Application::instance().application();
 
-      // todo: move this to AWSSettings?
-      loadCredentials();
+      // load credentials
     }
 
     std::string AWSProvider_Impl::type() const
@@ -148,32 +241,27 @@ namespace openstudio{
 
     bool AWSProvider_Impl::lastInternetAvailable() const
     {
-      // todo
-      return false;
+      return m_lastInternetAvailable;
     }
 
     bool AWSProvider_Impl::lastServiceAvailable() const
     {
-      // todo
-      return false;
+      return m_lastServiceAvailable;
     }
 
     bool AWSProvider_Impl::lastValidateCredentials() const
     {
-      // todo
-      return false;
+      return m_lastValidateCredentials;
     }
 
     bool AWSProvider_Impl::serverStarted() const
     {
-      // todo
-      return false;
+      return m_serverStarted;
     }
 
     bool AWSProvider_Impl::workersStarted() const
     {
-      // todo
-      return false;
+      return m_workersStarted;
     }
 
     bool AWSProvider_Impl::running() const
@@ -184,24 +272,22 @@ namespace openstudio{
 
     bool AWSProvider_Impl::terminateStarted() const
     {
-      // todo
-      return false;
+      return m_terminateStarted;
     }
 
     bool AWSProvider_Impl::terminateCompleted() const
     {
-      // todo
-      return false;
+      return (m_serverStopped && m_workersStopped);
     }
 
     std::vector<std::string> AWSProvider_Impl::errors() const
     {
-      return std::vector<std::string>();
+      return m_errors;
     }
 
     std::vector<std::string> AWSProvider_Impl::warnings() const
     {
-      return std::vector<std::string>();
+      return m_warnings;
     }
 
     bool AWSProvider_Impl::internetAvailable(int msec)
@@ -224,23 +310,23 @@ namespace openstudio{
     bool AWSProvider_Impl::validateCredentials(int msec)
     {
       // todo: make use non-blocking requestValidateCredentials
-      if (m_validAccessKey && m_validSecretKey) {
-        return true;
-      }
+      //if (m_validAccessKey && m_validSecretKey) {
+      //  return true;
+      //}
 
       QVariantMap map = awsRequest("describe_availability_zones");
       if (!map.keys().contains("error")) {
-        m_validAccessKey = true;
-        m_validSecretKey = true;
+        //m_validAccessKey = true;
+        //m_validSecretKey = true;
         return true;
       }
 
       int code = map["error"].toMap()["code"].toInt();
       if (code == 401) {
-        m_validAccessKey = false;
+        //m_validAccessKey = false;
       } else if (code == 403) {
-        m_validAccessKey = true;
-        m_validSecretKey = false;
+        //m_validAccessKey = true;
+        //m_validSecretKey = false;
       }
       return false;
     }
@@ -277,8 +363,16 @@ namespace openstudio{
 
     bool AWSProvider_Impl::requestValidateCredentials()
     {
-      // todo
-      return false;
+      clearErrorsAndWarnings();
+
+      m_lastValidateCredentials = false;
+
+      if ((m_awsSettings.accessKey() == "vagrant") &&
+          (m_awsSettings.secretKey() == "vagrant")){
+        m_lastValidateCredentials = true;
+      }
+
+      return true;
     }
 
     bool AWSProvider_Impl::requestStartServer()
@@ -305,11 +399,6 @@ namespace openstudio{
 
 
 /*  TODO: move this to AWSSettings
-
-    std::string AWSProvider_Impl::userAgreementText() const
-    {
-      return "NREL is not responsible for any charges you may incur as a result of using the OpenStudio suite with Amazon Web Services.";
-    }
 
     bool AWSProvider_Impl::userAgreementSigned() const
     {
@@ -354,71 +443,10 @@ namespace openstudio{
       LOG(Warn, warning);
     }
 
-    bool AWSProvider_Impl::loadCredentials() const {
-      QFile file(QDir::homePath() + "/.ssh/aws");
-      if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QJson::Parser parser;
-        bool ok = false;
-        QVariantMap map = parser.parse(QString(file.readAll()).toUtf8(), &ok).toMap();
-        
-        if (ok) {
-          if (validAccessKey(toString(map["accessKey"].toString())) && validSecretKey(toString(map["secretKey"].toString()))) {
-            m_accessKey = toString(map["accessKey"].toString());
-            m_secretKey = toString(map["secretKey"].toString());
-            return true;
-          }
-        }
-      }
-      return false;
-    }
-
-    bool AWSProvider_Impl::saveCredentials() const {
-      QVariantMap json;
-      json.insert("accessKey", toQString(m_accessKey));
-      json.insert("secretKey", toQString(m_secretKey));
-      
-      QJson::Serializer serializer;
-      if (QDir::home().exists(".ssh") || QDir::home().mkdir(".ssh")) {
-        QFile file(QDir::homePath() + "/.ssh/aws");
-        if (file.open(QIODevice::WriteOnly)) {
-          file.write(serializer.serialize(json));
-          file.close();
-          return true;
-        }
-      }
-      return false;
-    }
-
-    bool AWSProvider_Impl::validAccessKey(std::string accessKey) const {
-      return QRegExp("[A-Z0-9]{20}").exactMatch(toQString(accessKey));
-    }
-
-    bool AWSProvider_Impl::validSecretKey(std::string secretKey) const {
-      return QRegExp("[a-zA-Z0-9/+]{40}").exactMatch(toQString(secretKey));
-    }
-
-    std::string AWSProvider_Impl::accessKey() const {
-      return m_accessKey;
-    }
-    
-    std::string AWSProvider_Impl::secretKey() const {
-      return m_secretKey;
-    }
-    
-    bool AWSProvider_Impl::setKeys(std::string accessKey, std::string secretKey) const {
-      if (validAccessKey(accessKey) && validSecretKey(secretKey)) {
-        m_accessKey = accessKey;
-        m_secretKey = secretKey;
-
-        return true;
-      }
-      return false;
-    }
-
     QVariantMap AWSProvider_Impl::awsRequest(std::string request, std::string service) const {
       QString script = toQString(getOpenStudioRubyScriptsPath() / toPath("cloud/aws.rb"));
       QProcess *ruby2 = new QProcess();
-      ruby2->start("\"C:\\Ruby200\\bin\\ruby.exe\"", QStringList() << script << toQString(accessKey()) << toQString(secretKey()) << toQString(service) << toQString(request));
+      ruby2->start("\"C:\\Ruby200\\bin\\ruby.exe\"", QStringList() << script << toQString(m_awsSettings.accessKey()) << toQString(m_awsSettings.secretKey()) << toQString(service) << toQString(request));
       ruby2->waitForFinished();
       QString output = ruby2->readAllStandardOutput();
       QString errors = ruby2->readAllStandardError();
@@ -449,7 +477,7 @@ namespace openstudio{
     {
     }
 
-    void AWSProvider_Impl::onWorkerStarted(int, QProcess::ExitStatus)
+    void AWSProvider_Impl::onWorkersStarted(int, QProcess::ExitStatus)
     {
     }
 
@@ -457,7 +485,7 @@ namespace openstudio{
     {
     }
 
-    void AWSProvider_Impl::onWorkerStopped(int, QProcess::ExitStatus)
+    void AWSProvider_Impl::onWorkersStopped(int, QProcess::ExitStatus)
     {
     }
 
@@ -473,21 +501,68 @@ namespace openstudio{
   }
 
   AWSSettings::AWSSettings(const UUID& uuid,
-                           const UUID& versionUUID)
+                           const UUID& versionUUID,
+                           bool userAgreementSigned,
+                           const Url& serverUrl,
+                           const std::vector<Url>& workerUrls,
+                           const std::string& accessKey)
     : CloudSettings(boost::shared_ptr<detail::AWSSettings_Impl>(
-                      new detail::AWSSettings_Impl(uuid,versionUUID)))
+                      new detail::AWSSettings_Impl(uuid,
+                                                   versionUUID,
+                                                   userAgreementSigned,
+                                                   serverUrl,
+                                                   workerUrls,
+                                                   accessKey)))
   {
     OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
   }
-
-  AWSSettings::~AWSSettings()
-  {}
 
   AWSSettings::AWSSettings(const boost::shared_ptr<detail::AWSSettings_Impl>& impl)
     : CloudSettings(impl)
   {
     OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
   }
+
+  Url AWSSettings::serverUrl() const {
+    return getImpl<detail::AWSSettings_Impl>()->serverUrl(); 
+  }
+
+  void AWSSettings::setServerUrl(const Url& serverUrl) {
+    getImpl<detail::AWSSettings_Impl>()->setServerUrl(serverUrl);
+  }
+
+  std::vector<Url> AWSSettings::workerUrls() const {
+    return getImpl<detail::AWSSettings_Impl>()->workerUrls(); 
+  }
+
+  void AWSSettings::setWorkerUrls(const std::vector<Url>& workerUrls) {
+    getImpl<detail::AWSSettings_Impl>()->setWorkerUrls(workerUrls);
+  }
+
+  std::string AWSSettings::accessKey() const {
+    return getImpl<detail::AWSSettings_Impl>()->accessKey();
+  }
+
+  bool AWSSettings::setAccessKey(std::string accessKey) {
+    return getImpl<detail::AWSSettings_Impl>()->setAccessKey(accessKey);
+  }
+
+  std::string AWSSettings::secretKey() const {
+    return getImpl<detail::AWSSettings_Impl>()->secretKey();
+  }
+
+  bool AWSSettings::setSecretKey(std::string secretKey) {
+    return getImpl<detail::AWSSettings_Impl>()->setSecretKey(secretKey);
+  }
+
+  bool AWSSettings::validAccessKey(std::string accessKey) const {
+    return getImpl<detail::AWSSettings_Impl>()->validAccessKey(accessKey);
+  }
+
+  bool AWSSettings::validSecretKey(std::string secretKey) const {
+    return getImpl<detail::AWSSettings_Impl>()->validSecretKey(secretKey);
+  }
+
 
   AWSSession::AWSSession(const std::string& sessionId,
                          const boost::optional<Url>& serverUrl,

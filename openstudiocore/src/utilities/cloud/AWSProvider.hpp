@@ -42,14 +42,18 @@ namespace detail {
 
     /** Constructor provided for deserialization; not for general use. */
     AWSSettings(const UUID& uuid,
-                const UUID& versionUUID);
+                const UUID& versionUUID,
+                bool userAgreementSigned,
+                const Url& serverUrl,
+                const std::vector<Url>& workerUrls,
+                const std::string& accessKey);
 
     //@}
     /** @name Destructors */
     //@{
 
     /// virtual destructor
-    virtual ~AWSSettings();
+    virtual ~AWSSettings() {};
 
     //@}
     /** @name Inherited members */
@@ -58,6 +62,37 @@ namespace detail {
     //@}
     /** @name Class members */
     //@{
+
+    // returns the url of the server node
+    Url serverUrl() const;
+
+    // sets the url of the server node
+    void setServerUrl(const Url& serverUrl);
+
+    // returns the urls of all worker nodes 
+    std::vector<Url> workerUrls() const;
+
+    // set the urls of all worker nodes
+    void setWorkerUrls(const std::vector<Url>& workerUrls);
+
+    // returns the AWS access key
+    std::string accessKey() const;
+
+    // sets the AWS access key if it's valid
+    bool setAccessKey(std::string accessKey);
+
+    // returns the AWS secret key
+    std::string secretKey() const;
+
+    // sets the AWS secret key if it's valid
+    bool setSecretKey(std::string secretKey);
+
+    // performs a cursory regex and returns true if it's valid
+    bool validAccessKey(std::string accessKey) const;
+
+    // performs a cursory regex and returns true if it's valid
+    bool validSecretKey(std::string secretKey) const;
+
     //@}
    protected:
 
