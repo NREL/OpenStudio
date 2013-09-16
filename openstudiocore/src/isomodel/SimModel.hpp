@@ -71,6 +71,7 @@ ISOMODEL_API double max(const Vector& v1);
 #endif
 ISOMODEL_API Vector min(const Vector& v1, double val);
 ISOMODEL_API double min(const Vector& v1);
+
 ISOMODEL_API Vector abs(const Vector& v1);
 ISOMODEL_API Vector pow(const Vector& v1, const double xp);
 

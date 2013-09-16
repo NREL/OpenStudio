@@ -190,9 +190,9 @@ namespace isomodel {
 
     void parseLine(std::string line);
     void loadBuilding(const char* buildingFile);
-    boost::shared_ptr<WeatherData> loadWeather();
     int weatherState(std::string header);
   public:
+    boost::shared_ptr<WeatherData> loadWeather();
     void load(const char* buildingFile);
     UserModel();
     virtual ~UserModel();    

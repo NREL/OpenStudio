@@ -2478,9 +2478,7 @@ Ebldg.yr=sum(Ebldg.mon);
 } // isomodel
 } // openstudio
 
-
 int main(int argc, char* argv[]) {
-
   if(argc < 2) {
     std::cout << "Usage: " << argv[0] << " <filename.ISO>" <<endl;
     return -1;
