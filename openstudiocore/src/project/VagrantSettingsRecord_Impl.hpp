@@ -35,7 +35,6 @@ namespace detail {
 
   /** VagrantSettingsRecord_Impl is a CloudSettingsRecord_Impl that is the implementation class for VagrantSettingsRecord.*/
   class PROJECT_API VagrantSettingsRecord_Impl : public CloudSettingsRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

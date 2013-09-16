@@ -35,7 +35,6 @@ namespace detail {
 
   /** DiscreteVariableRecord_Impl is a InputVariableRecord_Impl that is the implementation class for DiscreteVariableRecord.*/
   class PROJECT_API DiscreteVariableRecord_Impl : public InputVariableRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

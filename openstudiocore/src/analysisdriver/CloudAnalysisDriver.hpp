@@ -31,7 +31,7 @@
 
 namespace openstudio {
 
-class CloudProvider;
+class CloudSession;
 
 namespace analysis {
   class DataPoint;
@@ -47,14 +47,14 @@ namespace detail {
 
 } // detail
 
-/** CloudProvider launches and watches cloud runs of SimpleProjects. As results become
+/** CloudAnalysisDriver launches and watches cloud runs of SimpleProjects. As results become
  *  available, they are downloaded and re-integrated into project. */
 class ANALYSISDRIVER_API CloudAnalysisDriver {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  CloudAnalysisDriver(const CloudProvider& provider,
+  CloudAnalysisDriver(const CloudSession& session,
                       const SimpleProject& project);
 
   virtual ~CloudAnalysisDriver() {}
@@ -63,7 +63,7 @@ class ANALYSISDRIVER_API CloudAnalysisDriver {
   /** @name Getters */
   //@{
 
-  CloudProvider provider() const;
+  CloudSession session() const;
 
   SimpleProject project() const;
 
@@ -96,14 +96,14 @@ class ANALYSISDRIVER_API CloudAnalysisDriver {
   /** @name Non-blocking class members */
   //@{
 
-  /** Request the project() to run on the provider(). Returns false if isRunning().
+  /** Request the project() to run on session(). Returns false if isRunning().
    *  Otherwise returns true and emits runRequestComplete(bool success) when either the
    *  analysis has stopped running on the server or the process has failed. The ultimate
    *  value of success will also be available from lastRunSuccess(). This method will try
    *  to pick up where a previous run left off. */
   bool requestRun();
 
-  /** Request the project() to stop running on the provider(). Returns false if not
+  /** Request the project() to stop running on the session(). Returns false if not
    *  (isRunning() || isDownloading()). Otherwise returns true and emits
    *  stopRequestComplete(bool success) when the analysis has stopped running and the 
    *  download queue is empty, or the process has failed. The ultimate value of

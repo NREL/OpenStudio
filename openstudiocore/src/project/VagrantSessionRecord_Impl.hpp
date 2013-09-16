@@ -33,7 +33,6 @@ namespace detail {
 
   /** VagrantSessionRecord_Impl is a CloudSessionRecord_Impl that is the implementation class for VagrantSessionRecord.*/
   class PROJECT_API VagrantSessionRecord_Impl : public CloudSessionRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -104,7 +104,8 @@ ENDIF()
 # Require that DAKOTA_FOUND
 #
 # Some code (certain analysisdriver tests) are conditionally compiled depending on 
-# the value of this variable.
+# whether Dakota is found on the system. If this variable is set to true, CMake will give a configure
+# error in the case that Dakota is not found.
 #
 # Dakota is an optional third party algorithm library that we use through its command line
 # interface.

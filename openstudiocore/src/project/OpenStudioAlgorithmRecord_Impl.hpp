@@ -32,7 +32,6 @@ namespace detail {
 
   /** OpenStudioAlgorithmRecord_Impl is a AlgorithmRecord_Impl that is the implementation class for OpenStudioAlgorithmRecord.*/
   class PROJECT_API OpenStudioAlgorithmRecord_Impl : public AlgorithmRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{
