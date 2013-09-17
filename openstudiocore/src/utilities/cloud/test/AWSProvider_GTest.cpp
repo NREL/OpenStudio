@@ -30,5 +30,6 @@ using namespace openstudio;
 TEST(AWSProvider, AWSProviderTest)
 {
   AWSProvider awsProvider;
+  awsProvider.serverInstanceTypes();
   cout << awsProvider.serviceAvailable() << endl;
 }
