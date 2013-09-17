@@ -213,6 +213,8 @@ namespace detail{
 
     virtual bool lastValidateCredentials() const;
 
+    virtual bool lastResourcesAvailableToStart() const;
+
     virtual bool serverStarted() const;
 
     virtual bool workersStarted() const;
@@ -239,6 +241,8 @@ namespace detail{
 
     virtual bool validateCredentials(int msec);
 
+    virtual bool resourcesAvailableToStart(int msec);
+
     virtual bool waitForServer(int msec);
 
     virtual bool waitForWorkers(int msec);
@@ -260,6 +264,8 @@ namespace detail{
     virtual bool requestServiceAvailable();
 
     virtual bool requestValidateCredentials();
+
+    virtual bool requestResourcesAvailableToStart();
 
     virtual bool requestStartServer();
 
@@ -308,6 +314,7 @@ namespace detail{
     bool requestInternetAvailableRequestFinished() const;
     bool requestServiceAvailableFinished() const;
     bool requestValidateCredentialsFinished() const;
+    bool requestResourcesAvailableToStartFinished() const;
     bool requestServerRunningFinished() const;
     bool requestWorkersRunningFinished() const;
     bool requestTerminateFinished() const;
@@ -330,6 +337,7 @@ namespace detail{
     bool m_lastInternetAvailable;
     bool m_lastServiceAvailable;
     bool m_lastValidateCredentials;
+    bool m_lastResourcesAvailableToStart;
     bool m_serverStarted; // local state variable
     bool m_workerStarted; // local state variable
     bool m_lastServerRunning;

@@ -311,6 +311,11 @@ namespace openstudio{
     return getImpl<detail::CloudProvider_Impl>()->lastValidateCredentials();
   }
 
+  bool CloudProvider::lastResourcesAvailableToStart() const
+  {
+    return getImpl<detail::CloudProvider_Impl>()->lastResourcesAvailableToStart();
+  }
+
   bool CloudProvider::serverStarted() const
   {
     return getImpl<detail::CloudProvider_Impl>()->serverStarted();
@@ -371,6 +376,11 @@ namespace openstudio{
     return getImpl<detail::CloudProvider_Impl>()->validateCredentials(msec);
   }
 
+  bool CloudProvider::resourcesAvailableToStart(int msec) 
+  {
+    return getImpl<detail::CloudProvider_Impl>()->resourcesAvailableToStart(msec);
+  }
+
   bool CloudProvider::waitForServer(int msec) 
   {
     return getImpl<detail::CloudProvider_Impl>()->waitForServer(msec);
@@ -414,6 +424,11 @@ namespace openstudio{
   bool CloudProvider::requestValidateCredentials() 
   {
     return getImpl<detail::CloudProvider_Impl>()->requestValidateCredentials();
+  }
+
+  bool CloudProvider::requestResourcesAvailableToStart() 
+  {
+    return getImpl<detail::CloudProvider_Impl>()->requestResourcesAvailableToStart();
   }
 
   bool CloudProvider::requestStartServer()
