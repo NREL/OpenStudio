@@ -32,7 +32,6 @@ namespace detail {
 
   /** UrlRecord_Impl is a ObjectRecord_Impl that is the implementation class for UrlRecord.*/
   class PROJECT_API UrlRecord_Impl : public ObjectRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

@@ -176,15 +176,21 @@ namespace detail{
 
     virtual bool lastValidateCredentials() const = 0;
 
+    virtual bool lastResourcesAvailableToStart() const = 0;
+
     virtual bool serverStarted() const = 0;
 
     virtual bool workersStarted() const = 0;
 
-    virtual bool running() const = 0;
+    virtual bool lastServerRunning() const = 0;
+
+    virtual bool lastWorkersRunning() const = 0;
+
+    virtual bool lastRunning() const;
 
     virtual bool terminateStarted() const = 0;
 
-    virtual bool terminateCompleted() const = 0;
+    virtual bool lastTerminateCompleted() const = 0;
 
     virtual std::vector<std::string> errors() const = 0;
     
@@ -200,11 +206,19 @@ namespace detail{
 
     virtual bool validateCredentials(int msec) = 0;
 
+    virtual bool resourcesAvailableToStart(int msec) = 0;
+
     virtual bool waitForServer(int msec) = 0;
 
     virtual bool waitForWorkers(int msec) = 0;
 
+    virtual bool serverRunning(int msec) = 0;
+
+    virtual bool workersRunning(int msec) = 0;
+
     virtual bool waitForTerminated(int msec) = 0;
+
+    virtual bool terminateCompleted(int msec) = 0;
 
     //@}
     /** @name Non-blocking class members */
@@ -216,11 +230,19 @@ namespace detail{
 
     virtual bool requestValidateCredentials() = 0;
 
+    virtual bool requestResourcesAvailableToStart() = 0;
+
     virtual bool requestStartServer() = 0;
 
     virtual bool requestStartWorkers() = 0;
 
+    virtual bool requestServerRunning() = 0;
+
+    virtual bool requestWorkersRunning() = 0;
+
     virtual bool requestTerminate() = 0;
+
+    virtual bool requestTerminateCompleted() = 0;
 
     //@}
 

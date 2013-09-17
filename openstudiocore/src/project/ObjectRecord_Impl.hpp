@@ -49,7 +49,6 @@ namespace detail {
   class ProjectDatabase_Impl;
 
   class PROJECT_API ObjectRecord_Impl : public Record_Impl {
-    Q_OBJECT;
    public:
 
     /// constructor with no database

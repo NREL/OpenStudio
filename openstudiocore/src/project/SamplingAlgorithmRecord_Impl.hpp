@@ -36,7 +36,6 @@ namespace detail {
   /** SamplingAlgorithmRecord_Impl is a DakotaAlgorithmRecord_Impl that is the implementation class
    *  for SamplingAlgorithmRecord.*/
   class PROJECT_API SamplingAlgorithmRecord_Impl : public DakotaAlgorithmRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

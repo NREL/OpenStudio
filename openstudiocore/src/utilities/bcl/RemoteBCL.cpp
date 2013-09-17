@@ -231,7 +231,7 @@ namespace openstudio{
       OS_ASSERT(test);
       test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
         this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-      OS_ASSERT(test);
+      //OS_ASSERT(test);
 
       QNetworkRequest request = QNetworkRequest(QUrl(url));
       request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -271,7 +271,7 @@ namespace openstudio{
       OS_ASSERT(test);
       test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
         this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-      OS_ASSERT(test);
+      //OS_ASSERT(test);
 
       QNetworkRequest request = QNetworkRequest(QUrl(url));
       request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -494,7 +494,7 @@ namespace openstudio{
       OS_ASSERT(test);
       test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
         this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-      OS_ASSERT(test);
+      //OS_ASSERT(test);
 
       QNetworkRequest request = QNetworkRequest(QUrl(url));
       request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -599,7 +599,7 @@ namespace openstudio{
     OS_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    OS_ASSERT(test);
+    //OS_ASSERT(test);
 
     m_downloadReply = m_networkManager->post(request, data);
         
@@ -635,7 +635,7 @@ namespace openstudio{
     OS_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    OS_ASSERT(test);
+    //OS_ASSERT(test);
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -711,7 +711,7 @@ namespace openstudio{
     OS_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    OS_ASSERT(test);
+    //OS_ASSERT(test);
 
     m_downloadReply = m_networkManager->get(request);
 
@@ -753,7 +753,7 @@ namespace openstudio{
     OS_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    OS_ASSERT(test);
+    //OS_ASSERT(test);
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -795,7 +795,7 @@ namespace openstudio{
     OS_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    OS_ASSERT(test);
+    //OS_ASSERT(test);
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -838,7 +838,7 @@ namespace openstudio{
     OS_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    OS_ASSERT(test);
+    //OS_ASSERT(test);
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -881,7 +881,7 @@ namespace openstudio{
     OS_ASSERT(test);
     test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
       this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-    OS_ASSERT(test);
+    //OS_ASSERT(test);
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");

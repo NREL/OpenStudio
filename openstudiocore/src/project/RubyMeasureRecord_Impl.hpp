@@ -44,7 +44,6 @@ namespace detail {
 
   /** RubyMeasureRecord_Impl is a MeasureRecord_Impl that is the implementation class for RubyMeasureRecord.*/
   class PROJECT_API RubyMeasureRecord_Impl : public MeasureRecord_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */
