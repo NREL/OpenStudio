@@ -41,21 +41,22 @@ namespace openstudio{
 
     AWSSettings_Impl::AWSSettings_Impl()
       : CloudSettings_Impl(),
+        m_userAgreementSigned(false),
         m_validAccessKey(false),
         m_validSecretKey(false)
-    {}
+    {
+      loadSettings();
+    }
 
     AWSSettings_Impl::AWSSettings_Impl(const UUID& uuid,
                                        const UUID& versionUUID,
-                                       bool userAgreementSigned,
-                                       const Url& serverUrl,
-                                       const std::vector<Url>& workerUrls,
-                                       const std::string& accessKey)
+                                       bool userAgreementSigned)
       : CloudSettings_Impl(uuid,versionUUID),
         m_validAccessKey(false),
         m_validSecretKey(false)
     {
-      //todo
+      loadSettings();
+      m_userAgreementSigned = userAgreementSigned;
     }
 
     std::string AWSSettings_Impl::cloudProviderType() const {
@@ -79,73 +80,59 @@ namespace openstudio{
       QSettings settings("OpenStudio", toQString(cloudProviderType()));
 
       // only set this if overwriteExisting is true
-      if (overwriteExisting){
-        if (settings.value("userAgreementSigned").toString() == "Yes"){
+      if (overwriteExisting) {
+        if (settings.value("userAgreementSigned").toString() == "Yes") {
           m_userAgreementSigned = true;
-        }else{
+        } else {
           m_userAgreementSigned = false;
         }
       }
 
-      QFile file(QDir::homePath() + "/.ssh/aws");
-      if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QJson::Parser parser;
-        bool ok = false;
-        QVariantMap map = parser.parse(QString(file.readAll()).toUtf8(), &ok).toMap();
-        
-        if (ok) {
-          if (validAccessKey(toString(map["accessKey"].toString())) && validSecretKey(toString(map["secretKey"].toString()))) {
-            m_accessKey = toString(map["accessKey"].toString());
-            m_secretKey = toString(map["secretKey"].toString());
-            return true;
-          }
+      if (overwriteExisting || m_accessKey.empty()) {
+        std::string accessKey = settings.value("accessKey").toString().toStdString();
+        setAccessKey(accessKey);
+      }
+
+      if (overwriteExisting || m_secretKey.empty()) {
+        QFile file(QDir::homePath() + "/.ssh/aws");
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+          std::string secretKey = QString(file.readAll()).toStdString();
+          setSecretKey(secretKey);
         }
       }
-      return false;
+      return true;
     }
 
     bool AWSSettings_Impl::saveToSettings(bool overwriteExisting) const {
-      QVariantMap json;
-      json.insert("accessKey", toQString(m_accessKey));
-      json.insert("secretKey", toQString(m_secretKey));
+      QSettings settings("OpenStudio", toQString(cloudProviderType()));
+
+      if (overwriteExisting || settings.value("accessKey").isNull()){
+        settings.setValue("accessKey", toQString(m_accessKey));
+      }
       
-      QJson::Serializer serializer;
-      if (QDir::home().exists(".ssh") || QDir::home().mkdir(".ssh")) {
-        QFile file(QDir::homePath() + "/.ssh/aws");
-        if (file.open(QIODevice::WriteOnly)) {
-          file.write(serializer.serialize(json));
-          file.close();
-          return true;
+      QFile file(QDir::homePath() + "/.ssh/aws");
+      if (overwriteExisting || !file.exists()) {
+        if (QDir::home().exists(".ssh") || QDir::home().mkdir(".ssh")) {
+          QFile file(QDir::homePath() + "/.ssh/aws");
+          if (file.open(QIODevice::WriteOnly)) {
+            file.write(m_secretKey.c_str());
+            file.close();
+          }
+        } else {
+          return false;
         }
       }
-      return false;
-    }
-
-    Url AWSSettings_Impl::serverUrl() const {
-      //todo
-      return Url();
-    }
-
-    void AWSSettings_Impl::setServerUrl(const Url& serverUrl) {
-      m_serverUrl = serverUrl;
-    }
-
-    std::vector<Url> AWSSettings_Impl::workerUrls() const {
-      //todo
-      return std::vector<Url>();
-    }
-
-    void AWSSettings_Impl::setWorkerUrls(const std::vector<Url>& workerUrls) {
-      m_workerUrls = workerUrls;
+      return true;
     }
 
     std::string AWSSettings_Impl::accessKey() const {
       return m_accessKey;
     }
 
-    bool AWSSettings_Impl::setAccessKey(std::string accessKey) {
+    bool AWSSettings_Impl::setAccessKey(const std::string& accessKey) {
       if (validAccessKey(accessKey)) {
         m_accessKey = accessKey;
+        m_validAccessKey = true;
         return true;
       }
       return false;
@@ -155,7 +142,7 @@ namespace openstudio{
       return m_secretKey;
     }
 
-    bool AWSSettings_Impl::setSecretKey(std::string secretKey) {
+    bool AWSSettings_Impl::setSecretKey(const std::string& secretKey) {
       if (validSecretKey(secretKey)) {
         m_secretKey = secretKey;
         return true;
@@ -163,15 +150,29 @@ namespace openstudio{
       return false;
     }
 
-    bool AWSSettings_Impl::validAccessKey(std::string accessKey) const {
+    bool AWSSettings_Impl::validAccessKey(const std::string& accessKey) const {
       return QRegExp("[A-Z0-9]{20}").exactMatch(toQString(accessKey));
     }
 
-    bool AWSSettings_Impl::validSecretKey(std::string secretKey) const {
+    bool AWSSettings_Impl::validSecretKey(const std::string& secretKey) const {
       return QRegExp("[a-zA-Z0-9/+]{40}").exactMatch(toQString(secretKey));
     }
 
-    
+    bool AWSSettings_Impl::terminationDelayEnabled() {
+      return m_terminationDelayEnabled;
+    }
+
+    void AWSSettings_Impl::setTerminationDelayEnabled(bool enabled) {
+      m_terminationDelayEnabled = enabled;
+    }
+
+    unsigned AWSSettings_Impl::terminationDelay() {
+      return m_terminationDelay;
+    }
+
+    void AWSSettings_Impl::setTerminationDelay(const unsigned delay) {
+      m_terminationDelay = delay;
+    }
 
 
     AWSSession_Impl::AWSSession_Impl(const std::string& sessionId,
@@ -192,6 +193,57 @@ namespace openstudio{
       return AWSProvider_Impl::cloudProviderType();
     }
 
+    Url AWSSession_Impl::serverUrl() const {
+      return m_serverUrl;
+    }
+
+    void AWSSession_Impl::setServerUrl(const Url& serverUrl) {
+      m_serverUrl = serverUrl;
+      onChange();
+    }
+
+    std::vector<Url> AWSSession_Impl::workerUrls() const {
+      return m_workerUrls;
+    }
+
+    void AWSSession_Impl::setWorkerUrls(const std::vector<Url>& workerUrls) {
+      m_workerUrls = workerUrls;
+      onChange();
+    }
+
+    std::string AWSSession_Impl::timestamp() const {
+      return m_timestamp;
+    }
+
+    void AWSSession_Impl::setTimestamp(const std::string& timestamp) {
+      m_timestamp = timestamp;
+    }
+
+    std::string AWSSession_Impl::region() const {
+      return m_region;
+    }
+
+    void AWSSession_Impl::setRegion(const std::string& region) {
+      m_region = region;
+    }
+
+    std::string AWSSession_Impl::serverInstanceType() const {
+      return m_serverInstanceType;
+    }
+
+    void AWSSession_Impl::setServerInstanceType(const std::string& instanceType) {
+      m_serverInstanceType = instanceType;
+    }
+
+    std::string AWSSession_Impl::workerInstanceType() const {
+      return m_workerInstanceType;
+    }
+
+    void AWSSession_Impl::setWorkerInstanceType(const std::string& instanceType) {
+      m_workerInstanceType = instanceType;
+    }
+
+    
     AWSProvider_Impl::AWSProvider_Impl()
       : CloudProvider_Impl(),
         m_awsSettings(),
@@ -203,12 +255,18 @@ namespace openstudio{
       //Make sure a QApplication exists
       openstudio::Application::instance().application();
 
+      m_regions.push_back("us-east-1");
+      m_serverInstanceTypes.push_back("m1.medium");
+      m_serverInstanceTypes.push_back("m1.large");
+      m_serverInstanceTypes.push_back("m1.xlarge");
+      m_workerInstanceTypes.push_back("c1.xlarge");
+
       // load credentials
     }
 
     std::string AWSProvider_Impl::type() const
     {
-      return "AWSProvider";
+      return cloudProviderType();
     }
 
     unsigned AWSProvider_Impl::numWorkers() const
@@ -397,30 +455,6 @@ namespace openstudio{
       return false;
     }
 
-
-/*  TODO: move this to AWSSettings
-
-    bool AWSProvider_Impl::userAgreementSigned() const
-    {
-      QSettings settings("OpenStudio", "AWSProvider");
-      QString value = settings.value("userAgreementSigned", "No").toString();
-
-      bool result = false;
-      if (value == "Yes"){
-        result = true;
-      }
-
-      return result;
-    }
-
-    void AWSProvider_Impl::signUserAgreement(bool agree)
-    {
-      QString value = agree ? "Yes" : "No";
-      QSettings settings("OpenStudio", "AWSProvider");
-      settings.setValue("userAgreementSigned", value);
-    }
-*/
-
     std::string AWSProvider_Impl::cloudProviderType() {
       return "AWSProvider";
     }
@@ -472,6 +506,94 @@ namespace openstudio{
       m_numWorkers = numWorkers;
     }
 
+    std::vector<std::string> AWSProvider_Impl::availableRegions() const {
+      return m_regions;
+    }
+
+    std::string AWSProvider_Impl::region() const {
+      return m_awsSession.region();
+    }
+
+    void AWSProvider_Impl::setRegion(const std::string& region) {
+      m_awsSession.setRegion(region);
+    }
+
+    std::vector<std::string> AWSProvider_Impl::serverInstanceTypes() const {
+      return m_serverInstanceTypes;
+    }
+
+    std::string AWSProvider_Impl::defaultServerInstanceType() const {
+      return "m1.large";
+    }
+
+    std::string AWSProvider_Impl::serverInstanceType() const {
+      return m_awsSession.serverInstanceType();
+    }
+
+    void AWSProvider_Impl::setServerInstanceType(const std::string& instanceType) {
+      return m_awsSession.setServerInstanceType(instanceType);
+    }
+
+    std::vector<std::string> AWSProvider_Impl::workerInstanceTypes() const {
+      return m_workerInstanceTypes;
+    }
+
+    std::string AWSProvider_Impl::defaultWorkerInstanceType() const {
+      return "c1.xlarge";
+    }
+
+    std::string AWSProvider_Impl::workerInstanceType() const {
+      return m_awsSession.workerInstanceType();
+    }
+
+    void AWSProvider_Impl::setWorkerInstanceType(const std::string& instanceType) {
+      return m_awsSession.setWorkerInstanceType(instanceType);
+    }
+
+    bool AWSProvider_Impl::terminationDelayEnabled() {
+      return m_awsSettings.terminationDelay();
+    }
+
+    void AWSProvider_Impl::setTerminationDelayEnabled(bool enabled) {
+      m_awsSettings.terminationDelayEnabled();
+    }
+
+    unsigned AWSProvider_Impl::terminationDelay() {
+      return m_awsSettings.terminationDelay();
+    }
+
+    void AWSProvider_Impl::setTerminationDelay(const unsigned delay) {
+      m_awsSettings.setTerminationDelay(delay);
+    }
+
+    std::string AWSProvider_Impl::userAgreementText() const {
+      return m_awsSettings.userAgreementText();
+    }
+
+    bool AWSProvider_Impl::userAgreementSigned() const {
+      return m_awsSettings.userAgreementSigned();
+    }
+
+    void AWSProvider_Impl::signUserAgreement(bool agree) {
+      m_awsSettings.signUserAgreement(agree);
+    }
+
+    std::string AWSProvider_Impl::accessKey() const {
+      return m_awsSettings.accessKey();
+    }
+
+    bool AWSProvider_Impl::setAccessKey(const std::string& accessKey) {
+      return m_awsSettings.setAccessKey(accessKey);
+    }
+
+    std::string AWSProvider_Impl::secretKey() const {
+      return m_awsSettings.secretKey();
+    }
+
+    bool AWSProvider_Impl::setSecretKey(const std::string& secretKey) {
+      return m_awsSettings.setSecretKey(secretKey);
+    }
+
 
     void AWSProvider_Impl::onServerStarted(int, QProcess::ExitStatus)
     {
@@ -502,17 +624,11 @@ namespace openstudio{
 
   AWSSettings::AWSSettings(const UUID& uuid,
                            const UUID& versionUUID,
-                           bool userAgreementSigned,
-                           const Url& serverUrl,
-                           const std::vector<Url>& workerUrls,
-                           const std::string& accessKey)
+                           bool userAgreementSigned)
     : CloudSettings(boost::shared_ptr<detail::AWSSettings_Impl>(
                       new detail::AWSSettings_Impl(uuid,
                                                    versionUUID,
-                                                   userAgreementSigned,
-                                                   serverUrl,
-                                                   workerUrls,
-                                                   accessKey)))
+                                                   userAgreementSigned)))
   {
     OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
   }
@@ -523,27 +639,11 @@ namespace openstudio{
     OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
   }
 
-  Url AWSSettings::serverUrl() const {
-    return getImpl<detail::AWSSettings_Impl>()->serverUrl(); 
-  }
-
-  void AWSSettings::setServerUrl(const Url& serverUrl) {
-    getImpl<detail::AWSSettings_Impl>()->setServerUrl(serverUrl);
-  }
-
-  std::vector<Url> AWSSettings::workerUrls() const {
-    return getImpl<detail::AWSSettings_Impl>()->workerUrls(); 
-  }
-
-  void AWSSettings::setWorkerUrls(const std::vector<Url>& workerUrls) {
-    getImpl<detail::AWSSettings_Impl>()->setWorkerUrls(workerUrls);
-  }
-
   std::string AWSSettings::accessKey() const {
     return getImpl<detail::AWSSettings_Impl>()->accessKey();
   }
 
-  bool AWSSettings::setAccessKey(std::string accessKey) {
+  bool AWSSettings::setAccessKey(const std::string& accessKey) {
     return getImpl<detail::AWSSettings_Impl>()->setAccessKey(accessKey);
   }
 
@@ -551,16 +651,32 @@ namespace openstudio{
     return getImpl<detail::AWSSettings_Impl>()->secretKey();
   }
 
-  bool AWSSettings::setSecretKey(std::string secretKey) {
+  bool AWSSettings::setSecretKey(const std::string& secretKey) {
     return getImpl<detail::AWSSettings_Impl>()->setSecretKey(secretKey);
   }
 
-  bool AWSSettings::validAccessKey(std::string accessKey) const {
+  bool AWSSettings::validAccessKey(const std::string& accessKey) const {
     return getImpl<detail::AWSSettings_Impl>()->validAccessKey(accessKey);
   }
 
-  bool AWSSettings::validSecretKey(std::string secretKey) const {
+  bool AWSSettings::validSecretKey(const std::string& secretKey) const {
     return getImpl<detail::AWSSettings_Impl>()->validSecretKey(secretKey);
+  }
+
+  bool AWSSettings::terminationDelayEnabled() {
+    return getImpl<detail::AWSSettings_Impl>()->terminationDelayEnabled();
+  }
+
+   void AWSSettings::setTerminationDelayEnabled(bool enabled) {
+    getImpl<detail::AWSSettings_Impl>()->setTerminationDelayEnabled(enabled);
+  }
+
+  unsigned AWSSettings::terminationDelay() {
+    return getImpl<detail::AWSSettings_Impl>()->terminationDelay();
+  }
+
+  void AWSSettings::setTerminationDelay(const unsigned delay) {
+    getImpl<detail::AWSSettings_Impl>()->setTerminationDelay(delay);
   }
 
 
@@ -590,14 +706,60 @@ namespace openstudio{
     OS_ASSERT(getImpl<detail::AWSSession_Impl>());
   }
 
-  AWSSession::~AWSSession()
-  {}
-
   AWSSession::AWSSession(const boost::shared_ptr<detail::AWSSession_Impl>& impl)
     : CloudSession(impl)
   {
     OS_ASSERT(getImpl<detail::AWSSession_Impl>());
   }
+
+  Url AWSSession::serverUrl() const {
+    return getImpl<detail::AWSSession_Impl>()->serverUrl(); 
+  }
+
+  void AWSSession::setServerUrl(const Url& serverUrl) {
+    getImpl<detail::AWSSession_Impl>()->setServerUrl(serverUrl);
+  }
+
+  std::vector<Url> AWSSession::workerUrls() const {
+    return getImpl<detail::AWSSession_Impl>()->workerUrls(); 
+  }
+
+  void AWSSession::setWorkerUrls(const std::vector<Url>& workerUrls) {
+    getImpl<detail::AWSSession_Impl>()->setWorkerUrls(workerUrls);
+  }
+
+  std::string AWSSession::timestamp() const {
+    return getImpl<detail::AWSSession_Impl>()->timestamp();
+  }
+
+  void AWSSession::setTimestamp(const std::string& timestamp) {
+    getImpl<detail::AWSSession_Impl>()->setTimestamp(timestamp);
+  }
+  
+  std::string AWSSession::region() const {
+    return getImpl<detail::AWSSession_Impl>()->region();
+  }
+
+  void AWSSession::setRegion(const std::string& region) {
+    getImpl<detail::AWSSession_Impl>()->setRegion(region);
+  }
+
+  std::string AWSSession::serverInstanceType() const {
+    return getImpl<detail::AWSSession_Impl>()->serverInstanceType();
+  }
+
+  void AWSSession::setServerInstanceType(const std::string& instanceType) {
+    getImpl<detail::AWSSession_Impl>()->setServerInstanceType(instanceType);
+  }
+
+  std::string AWSSession::workerInstanceType() const {
+    return getImpl<detail::AWSSession_Impl>()->workerInstanceType();
+  }
+
+  void AWSSession::setWorkerInstanceType(const std::string& instanceType) {
+    getImpl<detail::AWSSession_Impl>()->setWorkerInstanceType(instanceType);
+  }
+
 
   AWSProvider::AWSProvider()
     : CloudProvider(boost::shared_ptr<detail::AWSProvider_Impl>(new detail::AWSProvider_Impl()))
@@ -609,5 +771,102 @@ namespace openstudio{
   {
     OS_ASSERT(getImpl<detail::AWSProvider_Impl>());
   }
+
+  std::string AWSProvider::userAgreementText() const {
+    return getImpl<detail::AWSProvider_Impl>()->userAgreementText();
+  }
+
+  bool AWSProvider::userAgreementSigned() const {
+    return getImpl<detail::AWSProvider_Impl>()->userAgreementSigned();
+  }
+
+  void AWSProvider::signUserAgreement(bool agree) {
+    getImpl<detail::AWSProvider_Impl>()->signUserAgreement(agree);
+  }
+
+  std::string AWSProvider::accessKey() const {
+    return getImpl<detail::AWSProvider_Impl>()->accessKey();
+  }
+
+  bool AWSProvider::setAccessKey(const std::string& accessKey) {
+    return getImpl<detail::AWSProvider_Impl>()->setAccessKey(accessKey);
+  }
+
+  std::string AWSProvider::secretKey() const {
+    return getImpl<detail::AWSProvider_Impl>()->secretKey();
+  }
+
+  bool AWSProvider::setSecretKey(const std::string& secretKey) {
+    return getImpl<detail::AWSProvider_Impl>()->setSecretKey(secretKey);
+  }
+
+  unsigned AWSProvider::numWorkers() const {
+    return getImpl<detail::AWSProvider_Impl>()->numWorkers();
+  }
+  
+  void AWSProvider::setNumWorkers(const unsigned numWorkers) {
+    return getImpl<detail::AWSProvider_Impl>()->setNumWorkers(numWorkers);
+  }
+
+  std::vector<std::string> AWSProvider::availableRegions() const {
+    return getImpl<detail::AWSProvider_Impl>()->availableRegions();
+  }
+
+  std::string AWSProvider::region() const {
+    return getImpl<detail::AWSProvider_Impl>()->region();
+  }
+
+  void AWSProvider::setRegion(const std::string& region) {
+    getImpl<detail::AWSProvider_Impl>()->setRegion(region);
+  }
+
+  std::vector<std::string> AWSProvider::serverInstanceTypes() const {
+    return getImpl<detail::AWSProvider_Impl>()->serverInstanceTypes();
+  }
+
+  std::string AWSProvider::defaultServerInstanceType() const {
+    return getImpl<detail::AWSProvider_Impl>()->defaultServerInstanceType();
+  }
+
+  std::string AWSProvider::serverInstanceType() const {
+    return getImpl<detail::AWSProvider_Impl>()->serverInstanceType();
+  }
+
+  void AWSProvider::setServerInstanceType(const std::string& instanceType) {
+    getImpl<detail::AWSProvider_Impl>()->setServerInstanceType(instanceType);
+  }
+
+  std::vector<std::string> AWSProvider::workerInstanceTypes() const {
+    return getImpl<detail::AWSProvider_Impl>()->workerInstanceTypes();
+  }
+
+  std::string AWSProvider::defaultWorkerInstanceType() const {
+    return getImpl<detail::AWSProvider_Impl>()->defaultWorkerInstanceType();
+  }
+
+  std::string AWSProvider::workerInstanceType() const {
+    return getImpl<detail::AWSProvider_Impl>()->workerInstanceType();
+  }
+
+  void AWSProvider::setWorkerInstanceType(const std::string& instanceType) {
+    getImpl<detail::AWSProvider_Impl>()->setWorkerInstanceType(instanceType);
+  }
+
+  bool AWSProvider::terminationDelayEnabled() {
+    return getImpl<detail::AWSProvider_Impl>()->terminationDelayEnabled();
+  }
+
+  void AWSProvider::setTerminationDelayEnabled(bool enabled) {
+    getImpl<detail::AWSProvider_Impl>()->setTerminationDelayEnabled(enabled);
+  }
+
+  unsigned AWSProvider::terminationDelay() {
+    return getImpl<detail::AWSProvider_Impl>()->terminationDelay();
+  }
+
+  void AWSProvider::setTerminationDelay(const unsigned delay) {
+    getImpl<detail::AWSProvider_Impl>()->setTerminationDelay(delay);
+  }
+
 
 } // openstudio

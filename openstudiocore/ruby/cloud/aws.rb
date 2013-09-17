@@ -186,6 +186,9 @@ begin
     when 'describe_availability_zones'
       resp = @aws.client.describe_availability_zones
       puts resp.data.to_json
+    when 'total_instances'
+      resp = @aws.client.describe_instance_status
+      puts ({:instances => resp.data[:instance_status_set].length}.to_json)
     when 'launch_server'
       @timestamp = Time.now.to_i
       @group = @aws.security_groups.create("sec-group-#{@timestamp}")

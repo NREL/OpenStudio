@@ -41,10 +41,7 @@ namespace detail{
     /** Constructor provided for deserialization; not for general use. */
     AWSSettings_Impl(const UUID& uuid,
                      const UUID& versionUUID,
-                     bool userAgreementSigned,
-                     const Url& serverUrl,
-                     const std::vector<Url>& workerUrls,
-                     const std::string& accessKey);
+                     bool userAgreementSigned);
 
     //@}
     /** @name Destructors */
@@ -73,35 +70,35 @@ namespace detail{
     /** @name Class members */
     //@{
 
-    // returns the url of the server node
-    Url serverUrl() const;
-
-    // sets the url of the server node
-    void setServerUrl(const Url& serverUrl);
-
-    // returns the urls of all worker nodes 
-    std::vector<Url> workerUrls() const;
-
-    // set the urls of all worker nodes
-    void setWorkerUrls(const std::vector<Url>& workerUrls);
-
     // returns the AWS access key
     std::string accessKey() const;
 
     // sets the AWS access key if it's valid
-    bool setAccessKey(std::string accessKey);
+    bool setAccessKey(const std::string& accessKey);
 
     // returns the AWS secret key
     std::string secretKey() const;
 
     // sets the AWS secret key if it's valid
-    bool setSecretKey(std::string secretKey);
+    bool setSecretKey(const std::string& secretKey);
 
     // performs a cursory regex and returns true if it's valid
-    bool validAccessKey(std::string accessKey) const;
+    bool validAccessKey(const std::string& accessKey) const;
 
     // performs a cursory regex and returns true if it's valid
-    bool validSecretKey(std::string secretKey) const;
+    bool validSecretKey(const std::string& secretKey) const;
+
+    // returns true if there should be a delay before terminating after simulations are complete
+    bool terminationDelayEnabled();
+
+    // sets whether a termination delay should occur
+    void setTerminationDelayEnabled(bool enabled);
+
+    // returns the termination delay in minutes
+    unsigned terminationDelay();
+
+    // sets the termination delay in minutes
+    void setTerminationDelay(const unsigned delay);
 
     //@}
    private:
@@ -109,12 +106,12 @@ namespace detail{
     REGISTER_LOGGER("utilities.cloud.AWSSettings");
 
     bool m_userAgreementSigned;
-    Url m_serverUrl;
-    std::vector<Url> m_workerUrls;
     mutable std::string m_accessKey;
     mutable std::string m_secretKey;
     mutable bool m_validAccessKey;
     mutable bool m_validSecretKey;
+    bool m_terminationDelayEnabled;
+    unsigned m_terminationDelay;
   };
 
   /// AWSSession_Impl is a CloudSession_Impl.
@@ -149,12 +146,66 @@ namespace detail{
     //@}
     /** @name Class members */
     //@{
+    
+    // returns the url of the server node
+    Url serverUrl() const;
+
+    // sets the url of the server node
+    void setServerUrl(const Url& serverUrl);
+
+    // returns the urls of all worker nodes 
+    std::vector<Url> workerUrls() const;
+
+    // set the urls of all worker nodes
+    void setWorkerUrls(const std::vector<Url>& workerUrls);
+
+    // returns the key pair's private key
+    std::string privateKey() const;
+
+    // sets the key pair's private key
+    void setPrivateKey(const std::string& privateKey);
+
+    // returns the timestamp associated with the security group and key pair
+    std::string timestamp() const;
+
+    // sets the timestamp
+    void setTimestamp(const std::string& timestamp);
+
+    // returns the AWS region
+    std::string region() const;
+
+    // sets the AWS region
+    void setRegion(const std::string& region);
+
+    // returns the server instance type
+    std::string serverInstanceType() const;
+
+    // sets the server instance type
+    void setServerInstanceType(const std::string& instanceType);
+
+    // returns the worker instance type
+    std::string workerInstanceType() const;
+
+    // sets the worker instance type
+    void setWorkerInstanceType(const std::string& instanceType);
 
     //@}
 
   private:
     // configure logging
     REGISTER_LOGGER("utilities.cloud.AWSSession");
+
+    Url m_serverUrl;
+
+    std::vector<Url> m_workerUrls;
+
+    std::string m_timestamp;
+
+    std::string m_region;
+
+    std::string m_serverInstanceType;
+
+    std::string m_workerInstanceType;
   };
 
   /// AWSProvider is a CloudProvider that provides access to Amazon EC2 and CloudWatch services.
@@ -252,11 +303,74 @@ namespace detail{
     // returns the cloud provider type
     static std::string cloudProviderType();
 
+    std::string userAgreementText() const;
+
+    bool userAgreementSigned() const;
+
+    void signUserAgreement(bool agree);
+
+    // returns the AWS access key
+    std::string accessKey() const;
+
+    // sets the AWS access key if it's valid
+    bool setAccessKey(const std::string& accessKey);
+
+    // returns the AWS secret key
+    std::string secretKey() const;
+
+    // sets the AWS secret key if it's valid
+    bool setSecretKey(const std::string& secretKey);
+
     // run an action against the AWS-SDK ruby gem
     QVariantMap awsRequest(std::string request, std::string service = "EC2") const;
 
     // set the number of worker nodes to start
     void setNumWorkers(const unsigned numWorkers);
+
+    // return a list of available AWS regions
+    std::vector<std::string> availableRegions() const;
+
+    // returns the AWS region
+    std::string region() const;
+
+    // sets the AWS region
+    void setRegion(const std::string& region);
+
+    // returns a list of server instance types
+    std::vector<std::string> serverInstanceTypes() const;
+
+    // returns the recommended default server instance type
+    std::string defaultServerInstanceType() const;
+
+    // returns the server instance type
+    std::string serverInstanceType() const;
+
+    // sets the server instance type
+    void setServerInstanceType(const std::string& instanceType);
+
+    // returns a list of worker instance types
+    std::vector<std::string> workerInstanceTypes() const;
+
+    // returns the recommended default worker instance type
+    std::string defaultWorkerInstanceType() const;
+
+    // returns the worker instance type
+    std::string workerInstanceType() const;
+
+    // sets the worker instance type
+    void setWorkerInstanceType(const std::string& instanceType);
+
+    // returns true if there should be a delay before terminating after simulations are complete
+    bool terminationDelayEnabled();
+
+    // sets whether a termination delay should occur
+    void setTerminationDelayEnabled(bool enabled);
+
+    // returns the termination delay in minutes
+    unsigned terminationDelay();
+
+    // sets the termination delay in minutes
+    void setTerminationDelay(const unsigned delay);
 
     //@}
 
@@ -280,6 +394,9 @@ namespace detail{
     AWSSession m_awsSession;
 
     unsigned m_numWorkers;
+    std::vector<std::string> m_regions;
+    std::vector<std::string> m_serverInstanceTypes;
+    std::vector<std::string> m_workerInstanceTypes;
 
     QProcess* m_startServerProcess;
     QProcess* m_startWorkersProcess;

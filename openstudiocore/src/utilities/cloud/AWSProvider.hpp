@@ -43,10 +43,7 @@ namespace detail {
     /** Constructor provided for deserialization; not for general use. */
     AWSSettings(const UUID& uuid,
                 const UUID& versionUUID,
-                bool userAgreementSigned,
-                const Url& serverUrl,
-                const std::vector<Url>& workerUrls,
-                const std::string& accessKey);
+                bool userAgreementSigned);
 
     //@}
     /** @name Destructors */
@@ -63,35 +60,35 @@ namespace detail {
     /** @name Class members */
     //@{
 
-    // returns the url of the server node
-    Url serverUrl() const;
-
-    // sets the url of the server node
-    void setServerUrl(const Url& serverUrl);
-
-    // returns the urls of all worker nodes 
-    std::vector<Url> workerUrls() const;
-
-    // set the urls of all worker nodes
-    void setWorkerUrls(const std::vector<Url>& workerUrls);
-
     // returns the AWS access key
     std::string accessKey() const;
 
     // sets the AWS access key if it's valid
-    bool setAccessKey(std::string accessKey);
+    bool setAccessKey(const std::string& accessKey);
 
     // returns the AWS secret key
     std::string secretKey() const;
 
     // sets the AWS secret key if it's valid
-    bool setSecretKey(std::string secretKey);
+    bool setSecretKey(const std::string& secretKey);
 
     // performs a cursory regex and returns true if it's valid
-    bool validAccessKey(std::string accessKey) const;
+    bool validAccessKey(const std::string& accessKey) const;
 
     // performs a cursory regex and returns true if it's valid
-    bool validSecretKey(std::string secretKey) const;
+    bool validSecretKey(const std::string& secretKey) const;
+
+    // returns true if there should be a delay before terminating after simulations are complete
+    bool terminationDelayEnabled();
+
+    // sets whether a termination delay should occur
+    void setTerminationDelayEnabled(bool enabled);
+
+    // returns the termination delay in minutes
+    unsigned terminationDelay();
+
+    // sets the termination delay in minutes
+    void setTerminationDelay(const unsigned delay);
 
     //@}
    protected:
@@ -133,7 +130,7 @@ namespace detail {
     //@{
 
     /// virtual destructor
-    virtual ~AWSSession();
+    virtual ~AWSSession() {};
 
     //@}
     /** @name Inherited members */
@@ -142,6 +139,44 @@ namespace detail {
     //@}
     /** @name Class members */
     //@{
+
+    // returns the url of the server node
+    Url serverUrl() const;
+
+    // sets the url of the server node
+    void setServerUrl(const Url& serverUrl);
+
+    // returns the urls of all worker nodes 
+    std::vector<Url> workerUrls() const;
+
+    // set the urls of all worker nodes
+    void setWorkerUrls(const std::vector<Url>& workerUrls);
+
+    // returns the timestamp associated with the security group and key pair
+    std::string timestamp() const;
+
+    // sets the timestamp
+    void setTimestamp(const std::string& timestamp);
+
+    // returns the AWS region
+    std::string region() const;
+
+    // sets the AWS region
+    void setRegion(const std::string& region);
+
+    // returns the server instance type
+    std::string serverInstanceType() const;
+
+    // sets the server instance type
+    void setServerInstanceType(const std::string& instanceType);
+
+    // returns the worker instance type
+    std::string workerInstanceType() const;
+
+    // sets the worker instance type
+    void setWorkerInstanceType(const std::string& instanceType);
+
+    //@}
 
    protected:
 
@@ -178,6 +213,75 @@ namespace detail {
     //@}
     /** @name Class members */
     //@{
+
+    std::string userAgreementText() const;
+
+    bool userAgreementSigned() const;
+
+    void signUserAgreement(bool agree);
+
+    // returns the AWS access key
+    std::string accessKey() const;
+
+    // sets the AWS access key if it's valid
+    bool setAccessKey(const std::string& accessKey);
+
+    // returns the AWS secret key
+    std::string secretKey() const;
+
+    // sets the AWS secret key if it's valid
+    bool setSecretKey(const std::string& secretKey);
+
+    // returns the number of worker nodes
+    unsigned numWorkers() const;
+
+    // set the number of worker nodes to start
+    void setNumWorkers(const unsigned numWorkers);
+
+    // return a list of available AWS regions
+    std::vector<std::string> availableRegions() const;
+
+    // returns the AWS region
+    std::string region() const;
+
+    // sets the AWS region
+    void setRegion(const std::string& region);
+
+    // returns a list of server instance types
+    std::vector<std::string> serverInstanceTypes() const;
+
+    // returns the recommended default server instance type
+    std::string defaultServerInstanceType() const;
+
+    // returns the server instance type
+    std::string serverInstanceType() const;
+
+    // sets the server instance type
+    void setServerInstanceType(const std::string& instanceType);
+
+    // returns a list of worker instance types
+    std::vector<std::string> workerInstanceTypes() const;
+
+    // returns the recommended default worker instance type
+    std::string defaultWorkerInstanceType() const;
+
+    // returns the worker instance type
+    std::string workerInstanceType() const;
+
+    // sets the worker instance type
+    void setWorkerInstanceType(const std::string& instanceType);
+
+    // returns true if there should be a delay before terminating after simulations are complete
+    bool terminationDelayEnabled();
+
+    // sets whether a termination delay should occur
+    void setTerminationDelayEnabled(bool enabled);
+
+    // returns the termination delay in minutes
+    unsigned terminationDelay();
+
+    // sets the termination delay in minutes
+    void setTerminationDelay(const unsigned delay);
 
 
     //@}
