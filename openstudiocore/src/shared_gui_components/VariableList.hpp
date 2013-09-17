@@ -82,7 +82,7 @@ class VariableGroupItem : public OSListItem
 
   public:
 
-  VariableGroupItem(MeasureType type, const QString & label, bool filterFixed, BaseApp *t_baseApp);
+  VariableGroupItem(MeasureType measureType, const QString & label, bool filterFixed, BaseApp *t_baseApp);
 
   QSharedPointer<VariableListController> variableListController() const;
 
@@ -115,7 +115,7 @@ class VariableListController : public OSListController
 
   public:
 
-  VariableListController(MeasureType type, bool designAlternatives, BaseApp *t_baseApp);
+  VariableListController(MeasureType measureType, bool designAlternatives, BaseApp *t_baseApp);
 
   QSharedPointer<OSListItem> itemAt(int i);
 
@@ -141,7 +141,7 @@ class VariableListController : public OSListController
   void addItemForDroppedMeasureImpl(QDropEvent * event, bool t_fixed);
 
   BaseApp *m_app;
-  MeasureType m_type;
+  MeasureType m_measureType;
   bool m_filterFixed;
 
   std::vector<analysis::MeasureGroup> variables() const;
@@ -153,7 +153,7 @@ class VariableItem : public OSListItem
 
   public:
 
-  VariableItem(const analysis::MeasureGroup & variable, MeasureType type, BaseApp *t_app);
+  VariableItem(const analysis::MeasureGroup & variable, MeasureType measureType, BaseApp *t_app);
 
   QSharedPointer<MeasureListController> measureListController() const { return m_measureListController; }
 
@@ -161,7 +161,7 @@ class VariableItem : public OSListItem
 
   analysis::MeasureGroup variable() const { return m_variable; }
 
-  MeasureType measureType() const { return m_type; }
+  MeasureType measureType() const { return m_measureType; }
 
   bool isFixedMeasure();
 
@@ -184,7 +184,7 @@ class VariableItem : public OSListItem
 
   analysis::MeasureGroup m_variable;
 
-  MeasureType m_type;
+  MeasureType m_measureType;
 };
 
 class VariableItemDelegate : public OSItemDelegate

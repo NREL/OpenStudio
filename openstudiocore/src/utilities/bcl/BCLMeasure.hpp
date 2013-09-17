@@ -45,34 +45,14 @@ namespace openstudio{
     ((ModelMeasure)(Model Measure)) 
     ((EnergyPlusMeasure)(EnergyPlus Measure)) 
     ((UtilityMeasure)(Utility Measure))
+    ((ReportingMeasure)(Reporting Measure)) 
   );
    *  \endcode */
   OPENSTUDIO_ENUM( MeasureType,
     ((ModelMeasure)(Model Measure)) 
     ((EnergyPlusMeasure)(EnergyPlus Measure)) 
     ((UtilityMeasure)(Utility Measure))
-  );
-
-  /** \class MeasureFunction
-   *  \brief Enumeration of the types of BCLMeasure, by functionality.
-   *  \details Measures accept, operate on, and then return a single energy model. They are 
-   *  typically used to model one discrete change, such as replacing the overhead lighting in a 
-   *  space. Reports accept data, often an energy model, and then write out some sort of file, 
-   *  perhaps in XML, CSV, or HTML format. As BCLMeasures are essentially small computer programs,
-   *  they may be used to provide other functionalities, hence the catch-all category of Other.
-   *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro 
-   *  call is: 
-   *  \code
-  OPENSTUDIO_ENUM( MeasureFunction,
-    ((Measure)(Measure))
-    ((Report)(Report))
-    ((Other)(Other))
-  );
-   *  \endcode */
-  OPENSTUDIO_ENUM( MeasureFunction,
-    ((Measure)(Measure))
-    ((Report)(Report))
-    ((Other)(Other))
+    ((ReportingMeasure)(Reporting Measure)) 
   );
 
   /** BCLMeasure is a class for managing the contents of a BCL Measure directory including the xml description file.
@@ -91,8 +71,6 @@ namespace openstudio{
                const openstudio::path& dir,
                const std::string& taxonomyTag,
                MeasureType measureType,
-               MeasureFunction measureFunction,
-               bool requiresEnergyPlusResults,
                bool usesSketchUpAPI);
 
     /// Constructor for downloaded measures, path is to directory containing "measure.xml" file
@@ -160,10 +138,6 @@ namespace openstudio{
 
     MeasureType measureType() const;
 
-    MeasureFunction measureFunction() const;
-
-    bool requiresEnergyPlusResults() const;
-
     bool usesSketchUpAPI() const;
 
     /** Returns the path of the primary Ruby script if the file exists and is
@@ -193,10 +167,6 @@ namespace openstudio{
     void setTaxonomyTag(const std::string& taxonomyTag);
 
     void setMeasureType(const MeasureType& measureType);
-
-    void setMeasureFunction(const MeasureFunction& measureFunction);
-
-    void setRequiresEnergyPlusResults(bool requiresEnergyPlusResults);
 
     void setUsesSketchUpAPI(bool usesSketchUpAPI);
 
