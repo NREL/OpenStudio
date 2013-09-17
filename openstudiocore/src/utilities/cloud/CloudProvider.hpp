@@ -234,6 +234,9 @@ namespace openstudio{
     /// returns the last state of the validate credentials check
     bool lastValidateCredentials() const;
 
+    /// returns the last state of the resources available to start check
+    bool lastResourcesAvailableToStart() const;
+
     /// returns true if requestStartServer has been called
     /// relies on local state variable, not network requests
     /// this will return true before serverRunning() returns true
@@ -283,6 +286,10 @@ namespace openstudio{
     /// blocking call, clears errors and warnings
     bool validateCredentials(int msec=30000);
 
+    /// returns true if the cloud service has sufficient resources to start the requested instances
+    /// blocking call, clears errors and warnings
+    bool resourcesAvailableToStart(int msec=30000);
+
     /// waits up to msec milliseconds and returns true if server url becomes available in that time
     /// call requestStartServer before calling this function
     bool waitForServer(int msec=300000);
@@ -323,6 +330,10 @@ namespace openstudio{
     /// starts a request to check if the cloud service validates user credentials
     /// clears errors and warnings
     bool requestValidateCredentials();
+
+    /// starts a request to check if the cloud service has sufficient resources to start the requested instances
+    /// clears errors and warnings
+    bool requestResourcesAvailableToStart();
 
     /// returns true if the cloud server successfully begins to start the server node
     /// returns false if terminated, clears errors and warnings

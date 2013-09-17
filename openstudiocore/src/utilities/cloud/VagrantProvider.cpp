@@ -320,6 +320,7 @@ namespace openstudio{
         m_lastInternetAvailable(false),
         m_lastServiceAvailable(false),
         m_lastValidateCredentials(false),
+        m_lastResourcesAvailableToStart(false),
         m_serverStarted(false),
         m_workerStarted(false),
         m_lastServerRunning(false),
@@ -440,6 +441,11 @@ namespace openstudio{
       return m_lastValidateCredentials;
     }
 
+    bool VagrantProvider_Impl::lastResourcesAvailableToStart() const
+    {
+      return m_lastResourcesAvailableToStart;
+    }
+
     bool VagrantProvider_Impl::serverStarted() const
     {
       return m_serverStarted;
@@ -508,6 +514,17 @@ namespace openstudio{
         boost::function1<bool, VagrantProvider_Impl*> f = &VagrantProvider_Impl::requestValidateCredentialsFinished;
         if (waitForFinished(msec, f)){
           return lastValidateCredentials();
+        }
+      }
+      return false;
+    }
+
+    bool VagrantProvider_Impl::resourcesAvailableToStart(int msec)
+    {
+      if (requestResourcesAvailableToStart()){
+        boost::function1<bool, VagrantProvider_Impl*> f = &VagrantProvider_Impl::requestResourcesAvailableToStartFinished;
+        if (waitForFinished(msec, f)){
+          return lastResourcesAvailableToStart();
         }
       }
       return false;
@@ -628,6 +645,18 @@ namespace openstudio{
       return true;
     }
 
+    bool VagrantProvider_Impl::requestResourcesAvailableToStart() 
+    {
+      // DLM: this would be a non-blocking network call, taking shortcut here
+      // could use a QTimer to simulate if we really want to
+
+      clearErrorsAndWarnings();
+
+      m_lastResourcesAvailableToStart = true;
+
+      return true;
+    }
+
     bool VagrantProvider_Impl::requestStartServer()
     {
       if (!m_vagrantSettings.userAgreementSigned()){
@@ -719,6 +748,7 @@ namespace openstudio{
       QStringList args;
       addProcessArguments(args);
       args << "status";
+      args << "default";
 
       m_checkServerRunningProcess->setWorkingDirectory(toQString(m_vagrantSettings.serverPath()));
       m_checkServerRunningProcess->start(processName(), args);
@@ -749,6 +779,7 @@ namespace openstudio{
       QStringList args;
       addProcessArguments(args);
       args << "status";
+      args << "default";
 
       m_checkWorkerRunningProcess->setWorkingDirectory(toQString(m_vagrantSettings.workerPath()));
       m_checkWorkerRunningProcess->start(processName(), args);
@@ -827,6 +858,7 @@ namespace openstudio{
       QStringList args;
       addProcessArguments(args);
       args << "status";
+      args << "default";
 
       m_checkTerminatedProcess->setWorkingDirectory(toQString(m_vagrantSettings.serverPath()));
       m_checkTerminatedProcess->start(processName(), args);
@@ -1078,6 +1110,11 @@ namespace openstudio{
     }
 
     bool VagrantProvider_Impl::requestValidateCredentialsFinished() const
+    {
+      return true;
+    }
+
+    bool VagrantProvider_Impl::requestResourcesAvailableToStartFinished() const
     {
       return true;
     }

@@ -164,6 +164,12 @@ namespace openstudio{
       return false;
     }
 
+    bool AWSProvider_Impl::lastResourcesAvailableToStart() const
+    {
+      // todo
+      return false;
+    }
+
     bool AWSProvider_Impl::serverStarted() const
     {
       // todo
@@ -251,6 +257,12 @@ namespace openstudio{
       return false;
     }
 
+    bool AWSProvider_Impl::resourcesAvailableToStart(int msec)
+    {
+      // todo
+      return false;
+    }
+
     bool AWSProvider_Impl::waitForServer(int msec)
     {
       // todo
@@ -300,6 +312,12 @@ namespace openstudio{
     }
 
     bool AWSProvider_Impl::requestValidateCredentials()
+    {
+      // todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::requestResourcesAvailableToStart()
     {
       // todo
       return false;
