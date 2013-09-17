@@ -1506,55 +1506,59 @@ namespace detail {
         // ETH: Fixed measures would be more distinct if they were WorkItems, not
         // MeasureGroups.
 
-        int fixedMeasureInsertIndex(0);
+        // where to insert model measures from new seed
+        int modelMeasureInsertIndex(0); 
         if (OptionalMeasureGroup altModelVar = getAlternativeModelVariable()) {
           if (OptionalInt altModelVarIndex = problem.getVariableIndexByUUID(altModelVar->uuid())) {
-            fixedMeasureInsertIndex = *altModelVarIndex + 1;
+            modelMeasureInsertIndex = *altModelVarIndex + 1; // after alternative model variable
           }
         }
 
-        bool previousMeasureWasModelMeasure(true);
+        // where to insert energyplus measures from new seed
+        int energyplusMeasureInsertIndex = modelMeasureInsertIndex + 1;
+        if (OptionalInt oIndex = problem.getWorkflowStepIndexByJobType(JobType::ExpandObjects)){
+          // first choice placement is after ExpandObjects job
+          energyplusMeasureInsertIndex = *oIndex + 1;
+        }else if (OptionalInt oIndex = problem.getWorkflowStepIndexByJobType(JobType::ModelToIdf)){
+          // second is after ModelToIdf job
+          energyplusMeasureInsertIndex = *oIndex + 1;
+        }else{
+          LOG(Info,"Could not locate appropriate place in workflow for EnergyPlus Measures.");
+          return result;
+        }
+
+        // where to insert reporting measures from new seed
+        int reportingMeasureInsertIndex = energyplusMeasureInsertIndex + 1;
+        if (OptionalInt oIndex = problem.getWorkflowStepIndexByJobType(JobType::EnergyPlus)){
+          // first choice placement is after EnergyPlus job
+          reportingMeasureInsertIndex = *oIndex + 1;
+        }else{
+          LOG(Info,"Could not locate appropriate place in workflow for Reporting Measures.");
+          return result;
+        }
+
+        // loop through seed model workflow
         BOOST_FOREACH(const WorkflowStep& seedModelStep,sp->analysis().problem().workflow()) {
+
           if (isPATFixedMeasure(seedModelStep)) {
+            // seedModelStep needs to be imported as a fixed measure
 
+            // fixedMeasure as it lives with the osm
             RubyMeasure fixedMeasure = seedModelStep.inputVariable().cast<MeasureGroup>().measures(false)[0].cast<RubyMeasure>();
-
-            // change insert index if this is first EnergyPlus measure
-            if ((fixedMeasure.inputFileType() == FileReferenceType(FileReferenceType::IDF)) &&
-                (previousMeasureWasModelMeasure))
-            {
-              // first choice placement is after ExpandObjects job
-              OptionalInt oIndex = problem.getWorkflowStepIndexByJobType(JobType::ExpandObjects);
-              // second is after ModelToIdf job
-              if (!oIndex) {
-                oIndex = problem.getWorkflowStepIndexByJobType(JobType::ModelToIdf);
-              }
-              // third is to try to put ModelToIdf job at the end, then EnergyPlus measures
-              if (!oIndex) {
-                if (problem.push(WorkItem(JobType::ModelToIdf))) {
-                  oIndex = problem.numWorkflowSteps() - 1;
-                }
-              }
-              if (oIndex) {
-                fixedMeasureInsertIndex = *oIndex + 1;
-              }
-              else {
-                LOG(Info,"Could not insert EnergyPlus measures from new seed model, "
-                    << "because could not locate appropriate place in workflow to put them.");
-                return result;
-              }
-            }
 
             // see if measure is already in project
             OptionalBCLMeasure seedMeasure = fixedMeasure.measure();
             if (seedMeasure) {
+
               OptionalBCLMeasure projectMeasure = getMeasureByUUID(seedMeasure->uuid());
               if (projectMeasure && (*projectMeasure != *seedMeasure)) {
-                result.push_back(*seedMeasure);
+                // result only
+                result.push_back(*seedMeasure); 
               }
               if (!projectMeasure) {
                 projectMeasure = insertMeasure(*seedMeasure);
               }
+
               OS_ASSERT(projectMeasure);
               // add new variable with that measure, same arguments as seed model
               RubyMeasure newMeasure(*projectMeasure);
@@ -1563,8 +1567,21 @@ namespace detail {
               newMeasure.setDescription(fixedMeasure.description());
               newMeasure.setArguments(fixedMeasure.arguments());
               MeasureGroup newDVar(projectMeasure->name(),MeasureVector(1u,newMeasure));
-              problem.insert(fixedMeasureInsertIndex,newDVar);
-              ++fixedMeasureInsertIndex;
+
+              // change insert index if this is first EnergyPlus measure
+              if (seedMeasure->measureType() == MeasureType::ModelMeasure){
+                problem.insert(modelMeasureInsertIndex,newDVar);
+                ++modelMeasureInsertIndex;
+                ++energyplusMeasureInsertIndex;
+                ++reportingMeasureInsertIndex;
+              }else if (seedMeasure->measureType() == MeasureType::EnergyPlusMeasure){
+                problem.insert(energyplusMeasureInsertIndex,newDVar);
+                ++energyplusMeasureInsertIndex;
+                ++reportingMeasureInsertIndex;
+              }else if (seedMeasure->measureType() == MeasureType::ReportingMeasure){
+                problem.insert(reportingMeasureInsertIndex,newDVar);
+                ++reportingMeasureInsertIndex;
+              }
             }
           }
         }
