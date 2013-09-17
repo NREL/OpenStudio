@@ -2,12 +2,12 @@
 mkdir /home/ubuntu/test
 
 # Change Host
-#echo MASTER_IP MASTER_DNS MASTER_HOSTNAME >> /etc/hosts
-echo MASTER_IP MASTER_HOSTNAME >> /etc/hosts
+#echo SERVER_IP SERVER_DNS SERVER_HOSTNAME >> /etc/hosts
+echo SERVER_IP SERVER_HOSTNAME >> /etc/hosts
 
 # Replace Hostname 
-#echo "slave1" > /etc/hostname
-#sudo hostname slave
+#echo "worker1" > /etc/hostname
+#sudo hostname worker
 #hostname
 #replace hostname in /etc/hosts
 
