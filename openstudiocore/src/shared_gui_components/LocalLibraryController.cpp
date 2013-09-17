@@ -586,11 +586,14 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     LibraryItemView * widget = new LibraryItemView();
 
     if (measureType == MeasureType::ModelMeasure){
-      widget->m_measureTypeBadge->setIcon(QIcon(":/shared_gui_components/images/openstudio_measure_icon.png"));
+      widget->m_measureTypeBadge->setPixmap(QPixmap(":/shared_gui_components/images/openstudio_measure_icon.png").scaled(25,25));
+      widget->m_measureTypeBadge->setVisible(true);
     }else if (measureType == MeasureType::EnergyPlusMeasure){
-      widget->m_measureTypeBadge->setIcon(QIcon(":/shared_gui_components/images/energyplus_measure_icon.png"));
+      widget->m_measureTypeBadge->setPixmap(QPixmap(":/shared_gui_components/images/energyplus_measure_icon.png").scaled(25,25));
+      widget->m_measureTypeBadge->setVisible(true);
     }else if (measureType == MeasureType::ReportingMeasure){
-      widget->m_measureTypeBadge->setIcon(QIcon(":/shared_gui_components/images/report_measure_icon.png"));
+      widget->m_measureTypeBadge->setPixmap(QPixmap(":/shared_gui_components/images/report_measure_icon.png").scaled(25,25));
+      widget->m_measureTypeBadge->setVisible(true);
     }
 
     if(std::find(localUUIDs.begin(), localUUIDs.end(), measureUUID.toStdString()) != localUUIDs.end()){
@@ -662,6 +665,17 @@ int LibraryListController::count()
   return m_items.size();
 }
 
+// simple struct for sorting measures
+struct MeasureSorter{
+  // sort by type and then name
+  bool operator()(const BCLMeasure& lhs, const BCLMeasure& rhs){
+    if (lhs.measureType() != rhs.measureType()){
+      return lhs.measureType() < rhs.measureType();
+    }
+    return (lhs.name() < rhs.name());
+  }
+};
+
 void LibraryListController::createItems()
 {
   m_items.clear();
@@ -676,6 +690,9 @@ void LibraryListController::createItems()
   {
     measures = m_app->measureManager().bclMeasures();
   }
+
+  // sort measures
+  std::sort(measures.begin(), measures.end(), MeasureSorter());
 
   for( std::vector<BCLMeasure>::iterator it = measures.begin();
        it != measures.end();

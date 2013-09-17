@@ -65,13 +65,14 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
     end    
     
     # if we want this report could write out a csv, html, or any other file here
-    
+    runner.registerInfo("Writing CSV report 'report.csv'")
     File.open("report.csv", 'w') do |file|
       file << "#{s}, #{d}"
     end
     
     # if we write out OpenStudio attributes then these will be imported into PAT database
     # these can then be accessed using ProjectMeasures
+    runner.registerInfo("Writing OpenStudio attributes")
     attributes = OpenStudio::AttributeVector.new
     attributes << OpenStudio::Attribute.new("GrossWallArea", d)
     attributes << OpenStudio::Attribute.new("EnergyPlusVersion", s)

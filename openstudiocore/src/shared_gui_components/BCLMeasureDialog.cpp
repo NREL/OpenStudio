@@ -170,6 +170,16 @@ void BCLMeasureDialog::nameChanged(const QString& newName)
   m_classNameLabel->setText(toQString(className));
 }
 
+void BCLMeasureDialog::measureTypeChanged(const QString& newName)
+{
+  if (newName == "Reporting Measure"){
+    int index = m_taxonomyFirstLevelComboBox->findText("Reporting");
+    m_taxonomyFirstLevelComboBox->setCurrentIndex(index);
+  }else{
+    m_taxonomyFirstLevelComboBox->setCurrentIndex(0);
+  }
+}
+
 void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
 {
   m_taxonomySecondLevelComboBox->clear();
@@ -346,6 +356,9 @@ void BCLMeasureDialog::init()
   bool test = connect(m_nameLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(nameChanged(const QString&)));
   OS_ASSERT(test);
 
+  test = connect(m_measureTypeComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(measureTypeChanged(const QString&)));
+  OS_ASSERT(test);
+  
   test = connect(m_taxonomyFirstLevelComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(firstLevelTaxonomyChanged(const QString&)));
   OS_ASSERT(test);
 

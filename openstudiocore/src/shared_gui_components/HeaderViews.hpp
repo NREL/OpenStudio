@@ -75,7 +75,7 @@ class LightGradientHeader : public OSHeader
 
   private:
 
-  QPushButton * m_measureTypeBadge;
+  QLabel * m_measureTypeBadge;
   HeaderToggleButton * m_arrow;
 };
 

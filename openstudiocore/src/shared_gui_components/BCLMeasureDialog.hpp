@@ -54,6 +54,8 @@ class BCLMeasureDialog : public OSDialog
 
     void nameChanged(const QString& newName);
 
+    void measureTypeChanged(const QString& newName);
+
     void firstLevelTaxonomyChanged(const QString& newName);
 
   private:

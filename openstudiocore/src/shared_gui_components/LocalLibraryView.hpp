@@ -110,7 +110,7 @@ class LibraryItemView : public OSDragableView
   virtual ~LibraryItemView() {}
 
   QLabel * label;
-  QPushButton  * m_measureTypeBadge;
+  QLabel * m_measureTypeBadge;
   QLabel * m_bclBadge;
 
   public slots:

@@ -2,10 +2,26 @@ require 'openstudio'
 
 require "#{File.dirname(__FILE__)}/../measure.rb"
 
+require 'fileutils'
+
 require 'test/unit'
 
 class ReportingMeasure_Test < Test::Unit::TestCase
+    
+  # paths to expected test files, includes osm and eplusout.sql
+  def modelPath
+    return "#{File.dirname(__FILE__)}/ExampleModel.osm"
+  end
   
+  def runDir
+    return "#{File.dirname(__FILE__)}/ExampleModel/"
+  end
+  
+  def sqlPath
+    return "#{File.dirname(__FILE__)}/ExampleModel/ModelToIdf/EnergyPlus-0/eplusout.sql"
+  end
+  
+  # create test files if they do not exist
   def setup
     if not File.exist?(modelPath())
       puts "Creating example model"
@@ -32,21 +48,17 @@ class ReportingMeasure_Test < Test::Unit::TestCase
     end
   end
 
-  # def teardown
-  # end
-  
-  def modelPath
-    return "#{File.dirname(__FILE__)}/ExampleModel.osm"
+  # delete test files, comment this out if you do not want to run EnergyPlus each time you run tests
+  def teardown
+    if File.exist?(modelPath())
+      FileUtils.rm(modelPath())
+    end
+    if File.exist?(runDir())
+      FileUtils.rm_rf(runDir())
+    end
   end
   
-  def runDir
-    return "#{File.dirname(__FILE__)}/ExampleModel/"
-  end
-  
-  def sqlPath
-    return "#{File.dirname(__FILE__)}/ExampleModel/ModelToIdf/EnergyPlus-0/eplusout.sql"
-  end
-  
+  # the actual test
   def test_ReportingMeasure
      
     assert(File.exist?(modelPath()))
@@ -68,7 +80,7 @@ class ReportingMeasure_Test < Test::Unit::TestCase
     result = runner.result
     assert(result.value.valueName == "Fail")
     
-    # set up runner
+    # set up runner, this will happen automatically when measure is run in PAT
     runner.setLastOpenStudioModelPath(OpenStudio::Path.new(modelPath))    
     runner.setLastEnergyPlusSqlFilePath(OpenStudio::Path.new(sqlPath))    
        
