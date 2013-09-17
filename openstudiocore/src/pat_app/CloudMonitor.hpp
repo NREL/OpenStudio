@@ -60,6 +60,10 @@ class CloudMonitor : public QObject
 
   bool stopping();
 
+  signals:
+
+  void internetAvailable(bool isAvailable);
+
   public slots:
 
   // If cloud is on then turn off, and vice versa
@@ -114,6 +118,8 @@ class CloudMonitorWorker : public QObject
   void finished();
 
   void cloudStatus(ToggleCloudButton::Status status);
+
+  void internetAvailable(bool isAvailable);
 
   private slots:
 

@@ -148,10 +148,12 @@ RunStatusView::RunStatusView()
   mainHLayout->addWidget(m_cloudProviderStatus);
   m_cloudProviderStatus->setPixmap(QPixmap(":/images/internet_no_connection.png"));
 
-  QTimer * timer = new QTimer(this);
-  timer->start(2000);
-  isConnected = connect(timer, SIGNAL(timeout()),
-                        this, SLOT(checkInternetAvailability()));
+  QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
+  isConnected = connect(cloudMonitor.data(), SIGNAL(internetAvailable(bool)),
+                        this, SIGNAL(internetAvailable(bool)));
+  OS_ASSERT(isConnected);
+  isConnected = connect(cloudMonitor.data(), SIGNAL(internetAvailable(bool)),
+                        this, SLOT(on_internetAvailable(bool)));
   OS_ASSERT(isConnected);
 
   // Start Cloud
@@ -226,24 +228,11 @@ void RunStatusView::setProgress(int numCompletedJobs, int numFailedJobs, int num
   }
 }
 
-void RunStatusView::checkInternetAvailability()
+void RunStatusView::on_internetAvailable(bool isAvailable)
 {
-  static bool internetAvailable = false;
-  static bool internetAvailableLastTime = false;
-  static bool internetAvailableTimeBerforeLast = false;
-
-  internetAvailableTimeBerforeLast = internetAvailableLastTime;
-  internetAvailableLastTime = internetAvailable;
-
-  // TODO this should use the correct provider(i.e. Vagrant, AwsProvider, etc)
-  VagrantProvider cloudProvider;
-  internetAvailable = cloudProvider.internetAvailable();
-
-  if(internetAvailable && internetAvailableLastTime && internetAvailableTimeBerforeLast){
-    emit cloudAvailable(true);
+  if(isAvailable){
     m_cloudProviderStatus->setPixmap(QPixmap(":/images/internet_yes_connection.png"));
-  } else if(!internetAvailable && !internetAvailableLastTime && !internetAvailableTimeBerforeLast){
-    emit cloudAvailable(false);
+  } else {
     m_cloudProviderStatus->setPixmap(QPixmap(":/images/internet_no_connection.png"));
   }
 }
@@ -360,7 +349,16 @@ void ToggleCloudButton::setStatus(Status status)
 //}
 
 DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataPoint& dataPoint)
-  : OSHeader(new HeaderToggleButton()), m_dataPoint(dataPoint)
+  : OSHeader(new HeaderToggleButton()),
+  m_dataPoint(dataPoint),
+  m_name(0),
+  m_lastRunTime(0),
+  m_status(0),
+  m_nas(0),
+  m_warnings(0),
+  m_errors(0),
+  m_download(0),
+  m_clear(0)
 {
   setFixedHeight(30);
 
@@ -398,7 +396,7 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
   mainHLayout->addWidget(m_errors);
 
   m_download = new QPushButton();
-  m_download->setCheckable(false);
+  m_download->setCheckable(true);
   m_download->setFlat(true);
   m_download->setFixedSize(QSize(18,18));
   mainHLayout->addWidget(m_download);
@@ -406,7 +404,7 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
   bool isConnected = false;
 
   isConnected = connect(m_download,SIGNAL(clicked(bool)),
-                this,SLOT(on_downloadClicked(bool)));
+                        this,SLOT(on_downloadClicked(bool)));
   OS_ASSERT(isConnected);
 
   QSpacerItem* horizontalSpacer = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
@@ -522,34 +520,43 @@ void DataPointRunHeaderView::update()
   }
   setStyleSheet(style);
 
-  // TODO get actual state
-  DownloadState downloadState = this->DOWNLOADABLE;
-  setDownloadState(downloadState);
-
   setClearState(!m_dataPoint.directory().empty());
 }
 
-void DataPointRunHeaderView::setDownloadState(const DownloadState downloadState)
+void DataPointRunHeaderView::setDownloadEnabled(const bool enabled)
 {
+  m_download->setEnabled(enabled);
+  
   QString style;
-  if(downloadState == NOT_DOWNLOADABLE){
-    style.append("QPushButton {"
-                               "background-image:url(':/images/results_no_download.png');"
-                               "  border:none;"
-                               "}");
-  } else if (downloadState == DOWNLOADABLE){
-    style.append("QPushButton {"
-                               "background-image:url(':/images/results_yes_download.png');"
-                               "  border:none;"
-                               "}");
-  } else if (downloadState == DOWNLOADED){
-    style.append("QPushButton {"
-                               "background-image:url(':/images/results_downloaded.png');"
-                               "  border:none;"
-                               "}");
+  if(enabled){
+    if(m_download->isChecked()){
+      style.append("QPushButton {"
+                                 "background-image:url(':/images/results_yes_download.png');"
+                                 "  border:none;"
+                                 "}");
+    } else {
+      style.append("QPushButton {"
+                                 "background-image:url(':/images/results_no_download.png');"
+                                 "  border:none;"
+                                 "}");
+    }
   } else {
-    // should never get here
-    OS_ASSERT(false);
+    m_download->blockSignals(true);
+    m_download->setChecked(false);
+    m_download->blockSignals(false);
+    // Determine if datapoint has detailed data
+    if(this->m_dataPoint.complete() && !this->m_dataPoint.directory().empty()){
+      m_download->setEnabled(enabled);
+      style.append("QPushButton {"
+                                 "background-image:url(':/images/results_downloaded.png');"
+                                 "  border:none;"
+                                 "}");
+    } else {
+      style.append("QPushButton {"
+                                 "background-image:url(':/images/results_no_download.png');"
+                                 "  border:none;"
+                                 "}");
+    }
   }
   m_download->setStyleSheet(style);
 }
@@ -575,16 +582,37 @@ void DataPointRunHeaderView::setClearState(bool hasDataToClear)
 void DataPointRunHeaderView::on_clicked(bool checked)
 {
   m_dataPoint.setSelected(checked);
+  bool hasDataToClear = !m_dataPoint.directory().empty();
+  setClearState(hasDataToClear);
 }
 
 void DataPointRunHeaderView::on_downloadClicked(bool checked)
 {
-  // TODO this->m_dataPoint....
+  QString style;
+  if(checked){
+    this->m_dataPoint.setRunType(analysis::DataPointRunType::CloudDetailed);
+    style.append("QPushButton {"
+                               "background-image:url(':/images/results_yes_download.png');"
+                               "  border:none;"
+                               "}");
+  } else {
+    this->m_dataPoint.setRunType(analysis::DataPointRunType::CloudSlim);
+    style.append("QPushButton {"
+                               "background-image:url(':/images/results_no_download.png');"
+                               "  border:none;"
+                               "}");
+  }
+  m_download->setStyleSheet(style);
 }
 
 void DataPointRunHeaderView::on_clearClicked(bool checked)
 {
   this->m_dataPoint.clearResults();
+}
+
+void DataPointRunHeaderView::on_internetAvailable(bool isAvailable)
+{
+  setDownloadEnabled(isAvailable);
 }
 
 DataPointRunContentView::DataPointRunContentView()
@@ -601,6 +629,10 @@ DataPointRunItemView::DataPointRunItemView(const openstudio::analysis::DataPoint
  
   dataPointRunContentView = new DataPointRunContentView(); 
   setContent(dataPointRunContentView);
+
+  bool isConnected = connect(PatApp::instance()->cloudMonitor().data(),SIGNAL(internetAvailable(bool)),
+                             dataPointRunHeaderView,SLOT(on_internetAvailable(bool)));
+  OS_ASSERT(isConnected);
 }
 
 DataPointJobHeaderView::DataPointJobHeaderView()

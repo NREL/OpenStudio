@@ -745,10 +745,6 @@ void PatApp::showVerticalTab(int verticalId)
       mainWindow->verticalTabWidget->mainViewSwitcher->setView(m_runTabController->runView);
       mainWindow->hideRightColumn();
       m_mainRightColumnController->editController()->reset();
-      // TODO wire signal / slot for internet availability
-      //bool isConnected = connect(m_?, SIGNAL(?()),
-      //                           this, SLOT(on_?()));
-      //OS_ASSERT(isConnected);
 
       break;
     case RESULTS:

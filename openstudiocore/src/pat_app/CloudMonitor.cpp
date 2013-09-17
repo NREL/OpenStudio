@@ -50,6 +50,9 @@ CloudMonitor::CloudMonitor()
   bingo = connect(m_worker.data(),SIGNAL(cloudStatus(ToggleCloudButton::Status)),
                   this,SLOT(setCloudButtonStatus(ToggleCloudButton::Status)));
   OS_ASSERT(bingo);
+  bingo = connect(m_worker.data(),SIGNAL(internetAvailable(bool)),
+                  this,SIGNAL(internetAvailable(bool)));
+  OS_ASSERT(bingo);
   m_workerThread->start();
 
   createTestSettings();
@@ -253,6 +256,8 @@ void CloudMonitorWorker::clockIn()
 
 void CloudMonitorWorker::nowGetToWork()
 {
+  // TODO we should use the actual current provider(i.e. Vagrant, AwsProvider, etc)
+
   if( m_cloudSettings )
   {
     if( ! m_monitor->starting() && ! m_monitor->stopping() )
@@ -297,6 +302,25 @@ void CloudMonitorWorker::nowGetToWork()
         std::cout << "boom" << std::endl;
       }
     }
+
+    // Check Internet Availability
+
+    static bool internetAvailableCurrently = false;
+    static bool internetAvailableLastTime = false;
+    static bool internetAvailableTimeBeforeLast = false;
+
+    internetAvailableTimeBeforeLast = internetAvailableLastTime;
+    internetAvailableLastTime = internetAvailableCurrently;
+
+    VagrantProvider cloudProvider;
+    internetAvailableCurrently = cloudProvider.internetAvailable();
+
+    if(internetAvailableCurrently && internetAvailableLastTime && internetAvailableTimeBeforeLast){
+      emit internetAvailable(true);
+    } else if(!internetAvailableCurrently && !internetAvailableLastTime && !internetAvailableTimeBeforeLast){
+      emit internetAvailable(false);
+    }
+
   }
 }
 

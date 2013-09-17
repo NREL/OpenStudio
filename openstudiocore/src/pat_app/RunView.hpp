@@ -94,11 +94,11 @@ class RunStatusView : public QWidget
 
    void playButtonClicked(bool);
 
-   void cloudAvailable(bool);
+   void internetAvailable(bool isAvailable);
 
  private slots:
 
-   void checkInternetAvailability();
+  void on_internetAvailable(bool isAvailable);
 
  private:
 
@@ -156,16 +156,11 @@ class DataPointRunHeaderView : public OSHeader
 
   void on_clearClicked(bool checked);
 
+  void on_internetAvailable(bool isAvailable);
+
  private:
 
-  enum DownloadState
-  {
-    NOT_DOWNLOADABLE,
-    DOWNLOADABLE,
-    DOWNLOADED
-  };
-
-  void setDownloadState(const DownloadState downloadState);
+  void setDownloadEnabled(const bool enabled);
 
   void setClearState(bool hasDataToClear);
 

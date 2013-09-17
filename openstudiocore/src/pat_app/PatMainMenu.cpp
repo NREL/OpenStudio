@@ -19,6 +19,9 @@
 
 #include <pat_app/PatMainMenu.hpp>
 
+#include <pat_app/PatApp.hpp>
+#include <pat_app/CloudMonitor.hpp>
+
 #include <utilities/core/Assert.hpp>
 
 #include <QMenu>
@@ -130,8 +133,12 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
 
   m_cloudMenu->addAction(m_openCloudDlgAction);
 
-  // TODO use CloudProvider availability signal to enable
   m_openMonitorUseDlgAction = new QAction(tr("Monitor Use"),this);
+  m_openMonitorUseDlgAction->setEnabled(false);
+
+  isConnected = connect(PatApp::instance()->cloudMonitor().data(),SIGNAL(internetAvailable(bool)),
+                        this,SLOT(on_internetAvailable(bool)));
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_openMonitorUseDlgAction, SIGNAL(triggered()),this,SIGNAL(openMonitorUseDlgClicked()));
   OS_ASSERT(isConnected);
@@ -179,6 +186,11 @@ void PatMainMenu::configure(bool haveCurrentProject)
 }
 
 /**************************** SLOTS ****************************/
+
+void PatMainMenu::on_internetAvailable(bool isAvailable)
+{
+  m_openMonitorUseDlgAction->setEnabled(isAvailable);
+}
 
 }
 
