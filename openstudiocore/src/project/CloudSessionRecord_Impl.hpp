@@ -38,7 +38,6 @@ namespace detail {
   /** CloudSessionRecord_Impl is a ObjectRecord_Impl that is the implementation class for 
    *  CloudSessionRecord.*/
   class PROJECT_API CloudSessionRecord_Impl : public ObjectRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

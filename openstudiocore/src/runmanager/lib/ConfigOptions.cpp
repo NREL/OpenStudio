@@ -83,32 +83,6 @@ namespace runmanager {
       m_toolLocations.insert(tools.begin(), tools.end());
       loadQSettingsData();
     }
-    
-    /*
-
-#ifdef Q_OS_WIN32
-    openstudio::path defaultpath = openstudio::toPath("C:/EnergyPlusV6-0-0/");
-
-    m_toolLocations.insert(std::make_pair(ToolVersion(6, 0, 0), ToolLocationInfo(ToolType::EnergyPlus, defaultpath, openstudio::path())));
-    m_defaultIDFLocation = defaultpath / openstudio::toPath("ExampleFiles");
-    m_defaultEPWLocation = defaultpath / openstudio::toPath("WeatherData");
-#elif defined(Q_OS_MAC)
-    openstudio::path defaultpath = openstudio::toPath("/Applications/EnergyPlus-6-0-0/bin");
-
-    m_toolLocations[ToolVersion(6, 0, 0)] = ToolLocationInfo(ToolType::EnergyPlus, defaultpath, openstudio::path());
-    m_defaultIDFLocation = defaultpath / openstudio::toPath("../Examples");
-    m_defaultEPWLocation = defaultpath / openstudio::toPath("../WeatherData");
-#else
-    openstudio::path defaultpath = openstudio::toPath("/usr/local/EnergyPlus-6-0-0/bin/");
-
-    m_toolLocations[ToolVersion(6, 0, 0)] = ToolLocationInfo(ToolType::EnergyPlus, defaultpath, openstudio::path());
-    m_defaultIDFLocation = defaultpath / openstudio::toPath("../Examples");
-    m_defaultEPWLocation = defaultpath / openstudio::toPath("../WeatherData");
-#endif
-
-*/
-
-
   }
 
   void ConfigOptions::setToolLocation(const ToolVersion &t_epv, const ToolLocationInfo &t_info)
@@ -985,6 +959,12 @@ namespace runmanager {
     search.push_back(openstudio::toPath("/"));
     search.push_back(openstudio::toPath("/usr/local"));
 #endif
+    
+    if (!openstudio::applicationIsRunningFromBuildDirectory())
+    {
+      search.push_back(openstudio::getSharedResourcesPath());
+    }
+
     search.push_back(toPath(QDir::homePath()));
 
     std::vector<std::pair<openstudio::runmanager::ToolVersion, openstudio::runmanager::ToolLocationInfo> >

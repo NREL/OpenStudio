@@ -2496,6 +2496,113 @@ TEST_F(ModelFixture, Surface_Intersect_UShape){
   }
 }
 
+
+TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_1){
+  double tol = 0.001;
+
+  Model model;
+  Space space1(model);
+  Space space2(model);
+
+  Point3dVector points1;
+  points1.push_back(Point3d(0,  0,  0));
+  points1.push_back(Point3d(10, 0,  0));
+  points1.push_back(Point3d(10, 10, 0));
+  points1.push_back(Point3d(0,  10, 0));
+  Surface surface1(points1, model);
+  surface1.setSpace(space1);
+  double surface1Area = surface1.grossArea();
+
+  Point3dVector points2;
+  points2.push_back(Point3d(0,  10, 0));
+  points2.push_back(Point3d(10+tol, 10, 0));
+  points2.push_back(Point3d(10+tol,  0, 0));
+  points2.push_back(Point3d(0,  0, 0));
+  Surface surface2(points2, model);
+  surface2.setSpace(space2);
+  double surface2Area = surface2.grossArea();
+
+  EXPECT_FALSE(surface1.adjacentSurface());
+
+  Plane plane1(points1);
+  Plane plane2(points2);
+  EXPECT_TRUE(plane1.reverseEqual(plane2));
+  EXPECT_TRUE(plane2.reverseEqual(plane1));
+  EXPECT_FALSE(plane1.equal(plane2));
+
+  EXPECT_EQ(1u, space1.surfaces().size());
+  EXPECT_EQ(4u, surface1.vertices().size());
+  EXPECT_EQ(1u, space2.surfaces().size());
+  EXPECT_EQ(4u, surface2.vertices().size());
+
+  EXPECT_TRUE(surface1.intersect(surface2));
+
+  EXPECT_EQ(1u, space1.surfaces().size());
+  EXPECT_EQ(4u, surface1.vertices().size());
+  EXPECT_EQ(1u, space2.surfaces().size());
+  EXPECT_EQ(4u, surface2.vertices().size());
+
+  EXPECT_FALSE(surface1.adjacentSurface());
+
+  space1.matchSurfaces(space2);
+
+  ASSERT_TRUE(surface1.adjacentSurface());
+  EXPECT_EQ(surface2.handle(), surface1.adjacentSurface()->handle());
+}
+
+TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_2){
+  double tol = 0.001;
+
+  Model model;
+  Space space1(model);
+  Space space2(model);
+
+  Point3dVector points1;
+  points1.push_back(Point3d(0,  0,  0));
+  points1.push_back(Point3d(10, 0,  0));
+  points1.push_back(Point3d(10, 10, 0));
+  points1.push_back(Point3d(0,  10, 0));
+  Surface surface1(points1, model);
+  surface1.setSpace(space1);
+  double surface1Area = surface1.grossArea();
+
+  Point3dVector points2;
+  points2.push_back(Point3d(0,  10, 0));
+  points2.push_back(Point3d(10-tol, 10, 0));
+  points2.push_back(Point3d(10-tol,  0, 0));
+  points2.push_back(Point3d(0,  0, 0));
+  Surface surface2(points2, model);
+  surface2.setSpace(space2);
+  double surface2Area = surface2.grossArea();
+
+  EXPECT_FALSE(surface1.adjacentSurface());
+
+  Plane plane1(points1);
+  Plane plane2(points2);
+  EXPECT_TRUE(plane1.reverseEqual(plane2));
+  EXPECT_TRUE(plane2.reverseEqual(plane1));
+  EXPECT_FALSE(plane1.equal(plane2));
+
+  EXPECT_EQ(1u, space1.surfaces().size());
+  EXPECT_EQ(4u, surface1.vertices().size());
+  EXPECT_EQ(1u, space2.surfaces().size());
+  EXPECT_EQ(4u, surface2.vertices().size());
+
+  EXPECT_TRUE(surface1.intersect(surface2));
+
+  EXPECT_EQ(1u, space1.surfaces().size());
+  EXPECT_EQ(4u, surface1.vertices().size());
+  EXPECT_EQ(1u, space2.surfaces().size());
+  EXPECT_EQ(4u, surface2.vertices().size());
+
+  EXPECT_FALSE(surface1.adjacentSurface());
+
+  space1.matchSurfaces(space2);
+
+  ASSERT_TRUE(surface1.adjacentSurface());
+  EXPECT_EQ(surface2.handle(), surface1.adjacentSurface()->handle());
+}
+
 TEST_F(ModelFixture, Surface_Figure8_SameSense){
 
   Model model;

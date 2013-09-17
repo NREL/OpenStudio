@@ -158,64 +158,8 @@ SET( ${target_name}_src
 )
 
 SET( ${target_name}_moc
-  JoinRecord_Impl.hpp
-  ObjectRecord_Impl.hpp
   ProjectDatabase_Impl.hpp
-  ProjectDatabaseRecord_Impl.hpp
   Record_Impl.hpp
-
-  # utilities
-
-  AttributeRecord_Impl.hpp
-  CloudSessionRecord_Impl.hpp
-  CloudSettingsRecord_Impl.hpp
-  FileReferenceRecord_Impl.hpp
-  TagRecord_Impl.hpp
-  UrlRecord_Impl.hpp
-  URLSearchPathRecord_Impl.hpp
-  VagrantSessionRecord_Impl.hpp
-  VagrantSettingsRecord_Impl.hpp
-
-  # runmanager
-
-  WorkflowRecord_Impl.hpp
-
-  # ruleset
-
-  OSArgumentRecord_Impl.hpp
-
-  # analysis
-
-  AlgorithmRecord_Impl.hpp
-  AnalysisRecord_Impl.hpp
-  ContinuousVariableRecord_Impl.hpp
-  DakotaAlgorithmRecord_Impl.hpp
-  DataPointRecord_Impl.hpp
-  DataPointValueRecord_Impl.hpp
-  DataPoint_Measure_JoinRecord_Impl.hpp
-  DDACEAlgorithmRecord_Impl.hpp
-  DesignOfExperimentsRecord_Impl.hpp
-  DiscreteVariableRecord_Impl.hpp
-  FSUDaceAlgorithmRecord_Impl.hpp
-  FunctionRecord_Impl.hpp
-  InputVariableRecord_Impl.hpp
-  LinearFunctionRecord_Impl.hpp
-  MeasureGroupRecord_Impl.hpp
-  MeasureRecord_Impl.hpp
-  NullMeasureRecord_Impl.hpp
-  OpenStudioAlgorithmRecord_Impl.hpp
-  OptimizationDataPointRecord_Impl.hpp
-  OptimizationProblemRecord_Impl.hpp
-  OutputAttributeVariableRecord_Impl.hpp
-  OutputVariableRecord_Impl.hpp
-  ParameterStudyAlgorithmRecord_Impl.hpp
-  ProblemRecord_Impl.hpp
-  PSUADEDaceAlgorithmRecord_Impl.hpp
-  RubyContinuousVariableRecord_Impl.hpp
-  RubyMeasureRecord_Impl.hpp
-  SamplingAlgorithmRecord_Impl.hpp
-  SequentialSearchRecord_Impl.hpp
-  VariableRecord_Impl.hpp
 )
 
 qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )

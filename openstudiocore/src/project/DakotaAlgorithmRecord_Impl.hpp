@@ -32,7 +32,6 @@ namespace detail {
 
   /** DakotaAlgorithmRecord_Impl is a AlgorithmRecord_Impl that is the implementation class for DakotaAlgorithmRecord.*/
   class PROJECT_API DakotaAlgorithmRecord_Impl : public AlgorithmRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

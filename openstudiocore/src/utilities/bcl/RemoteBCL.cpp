@@ -234,7 +234,6 @@ namespace openstudio{
 #ifndef QT_NO_OPENSSL
       test = connect(m_networkManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError>&)), 
         this, SLOT(catchSslErrors(QNetworkReply*, const QList<QSslError>&)));
-      OS_ASSERT(test);
 #endif
 
       QNetworkRequest request = QNetworkRequest(QUrl(url));

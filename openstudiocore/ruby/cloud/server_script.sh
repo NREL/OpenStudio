@@ -2,11 +2,11 @@
 mkdir /home/ubuntu/test
 
 # Change Host
-echo localhost localhost master >> /etc/hosts
+echo localhost localhost server >> /etc/hosts
 
 # Replace Hostname
-#echo "slave1" > /etc/hostname
-#sudo hostname slave
+#echo "worker1" > /etc/hostname
+#sudo hostname worker
 #hostname
 #replace hostname in /etc/hosts
 
