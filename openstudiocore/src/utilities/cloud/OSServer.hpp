@@ -87,17 +87,20 @@ namespace openstudio{
     bool isAnalysisRunning(const UUID& analysisUUID, int msec=30000);
     bool lastIsAnalysisRunning() const;
 
+    bool isAnalysisComplete(const UUID& analysisUUID, int msec=30000);
+    bool lastIsAnalysisComplete() const;
+
     bool stop(const UUID& analysisUUID, int msec=30000);
     bool lastStopSuccess() const;
 
     std::vector<UUID> dataPointUUIDs(const UUID& analysisUUID, int msec=30000);
     std::vector<UUID> lastDataPointUUIDs() const;
 
-    std::vector<UUID> runningDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
-    std::vector<UUID> lastRunningDataPointUUIDs() const;
-
     std::vector<UUID> queuedDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
     std::vector<UUID> lastQueuedDataPointUUIDs() const;
+
+    std::vector<UUID> runningDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
+    std::vector<UUID> lastRunningDataPointUUIDs() const;
 
     std::vector<UUID> completeDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
     std::vector<UUID> lastCompleteDataPointUUIDs() const;
@@ -139,6 +142,8 @@ namespace openstudio{
     bool requestIsAnalysisQueued(const UUID& analysisUUID);
 
     bool requestIsAnalysisRunning(const UUID& analysisUUID);
+
+    bool requestIsAnalysisComplete(const UUID& analysisUUID);
 
     bool requestStop(const UUID& analysisUUID);
 
