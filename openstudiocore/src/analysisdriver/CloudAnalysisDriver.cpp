@@ -157,7 +157,7 @@ namespace detail {
 
       // make sure the server is available
       LOG(Debug,"Checking that server is available.");
-      bool test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(availableForRun(bool)));
+      bool test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(availableForRun(bool)),Qt::QueuedConnection);
       OS_ASSERT(test);
 
       test = m_requestRun->requestAvailable();
@@ -194,7 +194,7 @@ namespace detail {
       m_requestStop = OSServer(*url);
 
       // request analysis to stop
-      bool test = m_requestStop->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisStopped(bool)));
+      bool test = m_requestStop->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisStopped(bool)),Qt::QueuedConnection);
       OS_ASSERT(test);
 
       test = m_requestStop->requestStop(project().analysis().uuid());
@@ -247,7 +247,7 @@ namespace detail {
           m_checkForResultsToDownload = OSServer(*url);
 
           // request completed data point uuids
-          bool test = m_checkForResultsToDownload->connect(SIGNAL(requestProcessed(bool)),this,SLOT(areResultsAvailableForDownload(bool)));
+          bool test = m_checkForResultsToDownload->connect(SIGNAL(requestProcessed(bool)),this,SLOT(areResultsAvailableForDownload(bool)),Qt::QueuedConnection);
           OS_ASSERT(test);
 
           test = m_checkForResultsToDownload->requestCompleteDataPointUUIDs(project().analysis().uuid());
@@ -294,7 +294,7 @@ namespace detail {
       LOG(Debug,"Server is available.");
 
       // see if the project needs to be created
-      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(projectOnServer(bool)));
+      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(projectOnServer(bool)),Qt::QueuedConnection);
       OS_ASSERT(test);
 
       LOG(Debug,"Requesting project UUIDs.");
@@ -323,7 +323,7 @@ namespace detail {
       {
         LOG(Debug,"Project is not yet on server, create it.");
         // project is not yet on server, create it
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(projectCreated(bool)));
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(projectCreated(bool)),Qt::QueuedConnection);
         OS_ASSERT(test);
 
         success = m_requestRun->requestCreateProject(project().projectDatabase().handle());
@@ -331,7 +331,7 @@ namespace detail {
       else {
         LOG(Debug,"Project is on server, see if analysis is on server.");
         // see if the analysis needs to be posted
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisOnServer(bool)));
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisOnServer(bool)),Qt::QueuedConnection);
         OS_ASSERT(test);
 
         success = m_requestRun->requestAnalysisUUIDs(project().projectDatabase().handle());
@@ -361,7 +361,7 @@ namespace detail {
     if (success) {
       LOG(Debug,"Successfully created the project. Now post the analysis.");
       // project was not on the server, so analysis can't be either, post it.
-      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisPosted(bool)));
+      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisPosted(bool)),Qt::QueuedConnection);
       OS_ASSERT(test);
 
       success = m_requestRun->startPostAnalysisJSON(
@@ -387,7 +387,7 @@ namespace detail {
       if (std::find(analysisUUIDs.begin(),analysisUUIDs.end(),project().analysis().uuid()) == analysisUUIDs.end()) {
         LOG(Debug,"The analysis is not on the server, so post it.");
         // analysis not found -- post it
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisPosted(bool)));
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisPosted(bool)),Qt::QueuedConnection);
         OS_ASSERT(test);
 
         success = m_requestRun->startPostAnalysisJSON(
@@ -397,7 +397,7 @@ namespace detail {
       else {
         LOG(Debug,"The analysis is on the server, see if there are data points there.");
         // analysis found -- see if there are any data points already on the server
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(allDataPointUUIDsReturned(bool)));
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(allDataPointUUIDsReturned(bool)),Qt::QueuedConnection);
         OS_ASSERT(test);
 
         success = m_requestRun->requestDataPointUUIDs(project().analysis().uuid());
@@ -427,7 +427,7 @@ namespace detail {
     if (success) {
       // upload the analysis
       LOG(Debug,"The analysis was posted, now upload its files.");
-      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisUploaded(bool)));
+      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisUploaded(bool)),Qt::QueuedConnection);
       OS_ASSERT(test);
 
       success = m_requestRun->startUploadAnalysisFiles(project().analysis().uuid(),
@@ -451,7 +451,7 @@ namespace detail {
       if (m_requestRun->lastDataPointUUIDs().empty()) {
         LOG(Debug,"There are not data points, go ahead and upload the analysis files.");
         // no data points posted yet, upload the analysis files
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisUploaded(bool)));
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisUploaded(bool)),Qt::QueuedConnection);
         OS_ASSERT(test);
 
         success = m_requestRun->startUploadAnalysisFiles(project().analysis().uuid(),
@@ -462,7 +462,7 @@ namespace detail {
         // there are data points, sort out all the queues--have list of all data points
         // server knows about. need list of complete data points to determine waiting versus
         // downloading queues
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(readyToSortOutQueues(bool)));
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(readyToSortOutQueues(bool)),Qt::QueuedConnection);
         OS_ASSERT(test);
 
         success = m_requestRun->requestCompleteDataPointUUIDs(project().analysis().uuid());
@@ -492,7 +492,7 @@ namespace detail {
     if (success) {
       LOG(Debug,"The analysis files were successfully uploaded. Start posting data points.");
       // start posting DataPoints
-      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointQueued(bool)));
+      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointQueued(bool)),Qt::QueuedConnection);
       OS_ASSERT(test);
 
       // initialize queue
@@ -560,7 +560,7 @@ namespace detail {
       if (m_postQueue.size() > 0) {
         LOG(Debug,"Have some data points to post, so do it.");
         // start posting DataPoints
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointQueued(bool)));
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointQueued(bool)),Qt::QueuedConnection);
         OS_ASSERT(test);
 
         // initialize queue
@@ -573,7 +573,7 @@ namespace detail {
         LOG(Debug,"No data points need to be posted, so see if the analysis is already running.");
         // all data points are already posted, go ahead and see if the analysis is running on
         // the server
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisRunningOnServer(bool)));
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisRunningOnServer(bool)),Qt::QueuedConnection);
         OS_ASSERT(test);
 
         success = m_requestRun->requestIsAnalysisRunning(project().analysis().uuid());
@@ -609,7 +609,7 @@ namespace detail {
         bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointQueued(bool)));
         OS_ASSERT(test);
 
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisRunningOnServer(bool)));
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisRunningOnServer(bool)),Qt::QueuedConnection);
         OS_ASSERT(test);
 
         // see if the analysis is already running
@@ -643,7 +643,7 @@ namespace detail {
       else {
         LOG(Debug,"The analysis is not running. Start it.");
         // start the analysis
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisStarted(bool)));
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisStarted(bool)),Qt::QueuedConnection);
         OS_ASSERT(test);
 
         success = m_requestRun->requestStart(project().analysis().uuid());
@@ -725,13 +725,13 @@ namespace detail {
       else {
         LOG(Info,"Waiting on " << m_waitingQueue.size() << " DataPoints.");
         if (m_checkDataPointsRunningInsteadOfAnalysis) {
-          test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointsStillRunning(bool)));
+          test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointsStillRunning(bool)),Qt::QueuedConnection);
           OS_ASSERT(test);
 
           success = m_monitorDataPoints->requestRunningDataPointUUIDs(project().analysis().uuid());
         }
         else {
-          test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisStillRunning(bool)));
+          test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisStillRunning(bool)),Qt::QueuedConnection);
           OS_ASSERT(test);
 
           success = m_monitorDataPoints->requestIsAnalysisRunning(project().analysis().uuid());
@@ -761,7 +761,7 @@ namespace detail {
 
     if (success) {
       LOG(Debug,"The analysis is still running. Ask for complete data point uuids.");
-      test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(completeDataPointUUIDsReturned(bool)));
+      test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(completeDataPointUUIDsReturned(bool)),Qt::QueuedConnection);
       OS_ASSERT(test);
 
       success = m_monitorDataPoints->requestCompleteDataPointUUIDs(project().analysis().uuid());
@@ -784,7 +784,7 @@ namespace detail {
       // keep monitoring - will use running data point uuids after check to see if got more results
       m_lastGetRunningDataPointsSuccess = true;
 
-      test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(completeDataPointUUIDsReturned(bool)));
+      test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(completeDataPointUUIDsReturned(bool)),Qt::QueuedConnection);
       OS_ASSERT(test);
 
       success = m_monitorDataPoints->requestCompleteDataPointUUIDs(project().analysis().uuid());
@@ -1008,7 +1008,7 @@ namespace detail {
     if (OptionalUrl url = session().serverUrl()) {
       m_monitorDataPoints = OSServer(*url);
 
-      bool test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(completeDataPointUUIDsReturned(bool)));
+      bool test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(completeDataPointUUIDsReturned(bool)),Qt::QueuedConnection);
       OS_ASSERT(test);
 
       success = m_monitorDataPoints->requestCompleteDataPointUUIDs(project().analysis().uuid());
@@ -1062,7 +1062,7 @@ namespace detail {
     if (OptionalUrl url = session().serverUrl()) {
       m_requestJson = OSServer(*url);
 
-      bool test = m_requestJson->connect(SIGNAL(requestProcessed(bool)),this,SLOT(jsonDownloadComplete(bool)));
+      bool test = m_requestJson->connect(SIGNAL(requestProcessed(bool)),this,SLOT(jsonDownloadComplete(bool)),Qt::QueuedConnection);
       OS_ASSERT(test);
 
       success = requestNextJsonDownload();
@@ -1103,7 +1103,7 @@ namespace detail {
     if (OptionalUrl url = session().serverUrl()) {
       m_requestDetails = OSServer(*url);
 
-      bool test = m_requestDetails->connect(SIGNAL(requestProcessed(bool)),this,SLOT(detailsDownloadComplete(bool)));
+      bool test = m_requestDetails->connect(SIGNAL(requestProcessed(bool)),this,SLOT(detailsDownloadComplete(bool)),Qt::QueuedConnection);
       OS_ASSERT(test);
 
       success = requestNextDetailsDownload();
