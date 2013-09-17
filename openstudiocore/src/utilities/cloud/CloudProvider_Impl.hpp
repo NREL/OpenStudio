@@ -176,6 +176,8 @@ namespace detail{
 
     virtual bool lastValidateCredentials() const = 0;
 
+    virtual bool lastResourcesAvailableToStart() const = 0;
+
     virtual bool serverStarted() const = 0;
 
     virtual bool workersStarted() const = 0;
@@ -204,6 +206,8 @@ namespace detail{
 
     virtual bool validateCredentials(int msec) = 0;
 
+    virtual bool resourcesAvailableToStart(int msec) = 0;
+
     virtual bool waitForServer(int msec) = 0;
 
     virtual bool waitForWorkers(int msec) = 0;
@@ -225,6 +229,8 @@ namespace detail{
     virtual bool requestServiceAvailable() = 0;
 
     virtual bool requestValidateCredentials() = 0;
+
+    virtual bool requestResourcesAvailableToStart() = 0;
 
     virtual bool requestStartServer() = 0;
 
