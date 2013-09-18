@@ -169,6 +169,14 @@ void MonitorUseDialog::createWidgets()
   isConnected = connect(timer, SIGNAL(timeout()),
                         this, SLOT(updateData()));
   OS_ASSERT(isConnected);
+
+  // OS SETTINGS
+
+  #ifdef Q_WS_MAC
+    setWindowFlags(Qt::FramelessWindowHint);
+  #else
+    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
+  #endif
 }
 
 //// SLOTS

@@ -263,11 +263,7 @@ private:
 
   QLineEdit * m_secretKeyLineEdit;
 
-  QLineEdit * m_selectPrivateKeyLineEdit;
-
   QLineEdit * m_numberOfWorkerInstancesLineEdit;
-
-  QLineEdit * m_elasticStorageCapacityLineEdit;
 
 };
 
