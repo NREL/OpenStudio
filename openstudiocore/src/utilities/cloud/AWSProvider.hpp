@@ -43,7 +43,10 @@ namespace detail {
     /** Constructor provided for deserialization; not for general use. */
     AWSSettings(const UUID& uuid,
                 const UUID& versionUUID,
-                bool userAgreementSigned);
+                bool userAgreementSigned,
+                unsigned numWorkers,
+                bool terminationDelayEnabled,
+                unsigned terminationDelay);
 
     //@}
     /** @name Destructors */
@@ -78,14 +81,20 @@ namespace detail {
     // performs a cursory regex and returns true if it's valid
     bool validSecretKey(const std::string& secretKey) const;
 
+    // returns the saved default number of workers
+    unsigned numWorkers() const;
+
+    // set the number of worker nodes to start (and returns the new number)
+    unsigned setNumWorkers(const unsigned numWorkers);
+
     // returns true if there should be a delay before terminating after simulations are complete
-    bool terminationDelayEnabled();
+    bool terminationDelayEnabled() const;
 
     // sets whether a termination delay should occur
     void setTerminationDelayEnabled(bool enabled);
 
     // returns the termination delay in minutes
-    unsigned terminationDelay();
+    unsigned terminationDelay() const;
 
     // sets the termination delay in minutes
     void setTerminationDelay(const unsigned delay);
@@ -176,6 +185,9 @@ namespace detail {
     // sets the worker instance type
     void setWorkerInstanceType(const std::string& instanceType);
 
+    // returns the number of workers for this session
+    unsigned numWorkers() const;
+
     //@}
 
    protected:
@@ -235,8 +247,8 @@ namespace detail {
     // returns the number of worker nodes
     unsigned numWorkers() const;
 
-    // set the number of worker nodes to start
-    void setNumWorkers(const unsigned numWorkers);
+    // set the number of worker nodes to start (and returns the new number)
+    unsigned setNumWorkers(const unsigned numWorkers);
 
     // return a list of available AWS regions
     std::vector<std::string> availableRegions() const;
@@ -272,16 +284,19 @@ namespace detail {
     void setWorkerInstanceType(const std::string& instanceType);
 
     // returns true if there should be a delay before terminating after simulations are complete
-    bool terminationDelayEnabled();
+    bool terminationDelayEnabled() const;
 
     // sets whether a termination delay should occur
     void setTerminationDelayEnabled(bool enabled);
 
     // returns the termination delay in minutes
-    unsigned terminationDelay();
+    unsigned terminationDelay() const;
 
     // sets the termination delay in minutes
     void setTerminationDelay(const unsigned delay);
+
+    // returns the number of workers for this session
+    unsigned numSessionWorkers() const;
 
 
     //@}

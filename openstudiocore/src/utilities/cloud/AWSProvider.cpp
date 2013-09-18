@@ -43,20 +43,29 @@ namespace openstudio{
       : CloudSettings_Impl(),
         m_userAgreementSigned(false),
         m_validAccessKey(false),
-        m_validSecretKey(false)
+        m_validSecretKey(false),
+        m_numWorkers(2),
+        m_terminationDelayEnabled(false),
+        m_terminationDelay(0)
     {
-      loadSettings();
+      loadSettings(true);
     }
 
     AWSSettings_Impl::AWSSettings_Impl(const UUID& uuid,
                                        const UUID& versionUUID,
-                                       bool userAgreementSigned)
+                                       bool userAgreementSigned,
+                                       unsigned numWorkers,
+                                       bool terminationDelayEnabled,
+                                       unsigned terminationDelay)
       : CloudSettings_Impl(uuid,versionUUID),
         m_validAccessKey(false),
         m_validSecretKey(false)
     {
-      loadSettings();
+      loadSettings(true);
       m_userAgreementSigned = userAgreementSigned;
+      setNumWorkers(numWorkers);
+      setTerminationDelayEnabled(terminationDelayEnabled);
+      setTerminationDelay(terminationDelay);
     }
 
     std::string AWSSettings_Impl::cloudProviderType() const {
@@ -72,8 +81,10 @@ namespace openstudio{
     }
 
     void AWSSettings_Impl::signUserAgreement(bool agree) {
-      m_userAgreementSigned = agree;
-      onChange();
+      if (m_userAgreementSigned != agree) {
+        m_userAgreementSigned = agree;
+        onChange();
+      }
     }
 
     bool AWSSettings_Impl::loadSettings(bool overwriteExisting) {
@@ -81,11 +92,7 @@ namespace openstudio{
 
       // only set this if overwriteExisting is true
       if (overwriteExisting) {
-        if (settings.value("userAgreementSigned").toString() == "Yes") {
-          m_userAgreementSigned = true;
-        } else {
-          m_userAgreementSigned = false;
-        }
+        m_userAgreementSigned = (settings.value("userAgreementSigned").toString() == "Yes");
       }
 
       if (overwriteExisting || m_accessKey.empty()) {
@@ -100,11 +107,30 @@ namespace openstudio{
           setSecretKey(secretKey);
         }
       }
-      return true;
+
+      if (overwriteExisting && !settings.value("numWorkers").isNull()) {
+        setNumWorkers(settings.value("numWorkers").toUInt());
+      }
+
+      if (overwriteExisting && !settings.value("terminationDelayEnabled").isNull()) {
+        setTerminationDelayEnabled(settings.value("terminationDelayEnabled").toBool());
+      }
+
+      if (overwriteExisting && !settings.value("terminationDelay").isNull()) {
+        setTerminationDelay(settings.value("terminationDelay").toUInt());
+      }
+
+      onChange();
+
+      return !(m_accessKey.empty() || m_secretKey.empty());
     }
 
     bool AWSSettings_Impl::saveToSettings(bool overwriteExisting) const {
       QSettings settings("OpenStudio", toQString(cloudProviderType()));
+
+      if (overwriteExisting || settings.value("userAgreementSigned").isNull()){
+        settings.setValue("userAgreementSigned", m_userAgreementSigned ? "Yes" : "No");
+      }
 
       if (overwriteExisting || settings.value("accessKey").isNull()){
         settings.setValue("accessKey", toQString(m_accessKey));
@@ -113,15 +139,25 @@ namespace openstudio{
       QFile file(QDir::homePath() + "/.ssh/aws");
       if (overwriteExisting || !file.exists()) {
         if (QDir::home().exists(".ssh") || QDir::home().mkdir(".ssh")) {
-          QFile file(QDir::homePath() + "/.ssh/aws");
           if (file.open(QIODevice::WriteOnly)) {
             file.write(m_secretKey.c_str());
-            file.close();
           }
-        } else {
-          return false;
         }
       }
+      file.close();
+
+      if (overwriteExisting || settings.value("numWorkers").isNull()) {
+        settings.setValue("numWorkers", m_numWorkers);
+      }
+
+      if (overwriteExisting || settings.value("terminationDelayEnabled").isNull()) {
+        settings.setValue("terminationDelayEnabled", m_terminationDelayEnabled);
+      }
+
+      if (overwriteExisting || settings.value("terminationDelay").isNull()) {
+        settings.setValue("terminationDelay", m_terminationDelay);
+      }
+
       return true;
     }
 
@@ -131,8 +167,11 @@ namespace openstudio{
 
     bool AWSSettings_Impl::setAccessKey(const std::string& accessKey) {
       if (validAccessKey(accessKey)) {
-        m_accessKey = accessKey;
-        m_validAccessKey = true;
+        if (m_accessKey != accessKey) {
+          m_accessKey = accessKey;
+          m_validAccessKey = true;
+          onChange();
+        }
         return true;
       }
       return false;
@@ -144,7 +183,11 @@ namespace openstudio{
 
     bool AWSSettings_Impl::setSecretKey(const std::string& secretKey) {
       if (validSecretKey(secretKey)) {
-        m_secretKey = secretKey;
+        if (m_secretKey != secretKey) {
+          m_secretKey = secretKey;
+          m_validSecretKey = true;
+          onChange();
+        }
         return true;
       }
       return false;
@@ -158,20 +201,38 @@ namespace openstudio{
       return QRegExp("[a-zA-Z0-9/+]{40}").exactMatch(toQString(secretKey));
     }
 
-    bool AWSSettings_Impl::terminationDelayEnabled() {
+    unsigned AWSSettings_Impl::numWorkers() const {
+      return m_numWorkers;
+    }
+
+    unsigned AWSSettings_Impl::setNumWorkers(const unsigned numWorkers) {
+      if (numWorkers > 0 && numWorkers < 20 && m_numWorkers != numWorkers) {
+        m_numWorkers = numWorkers;
+        onChange();
+      }
+      return m_numWorkers;
+    }
+
+    bool AWSSettings_Impl::terminationDelayEnabled() const {
       return m_terminationDelayEnabled;
     }
 
     void AWSSettings_Impl::setTerminationDelayEnabled(bool enabled) {
-      m_terminationDelayEnabled = enabled;
+      if (m_terminationDelayEnabled != enabled) {
+        m_terminationDelayEnabled = enabled;
+        onChange();
+      }
     }
 
-    unsigned AWSSettings_Impl::terminationDelay() {
+    unsigned AWSSettings_Impl::terminationDelay() const {
       return m_terminationDelay;
     }
 
     void AWSSettings_Impl::setTerminationDelay(const unsigned delay) {
-      m_terminationDelay = delay;
+      if (m_terminationDelay != delay) {
+        m_terminationDelay = delay;
+        onChange();
+      }
     }
 
 
@@ -248,7 +309,6 @@ namespace openstudio{
       : CloudProvider_Impl(),
         m_awsSettings(),
         m_awsSession(toString(createUUID()),boost::none,std::vector<Url>()),
-        m_numWorkers(0),
         m_startServerProcess(NULL), m_startWorkersProcess(NULL),
         m_serverStarted(false), m_workersStarted(false), m_serverStopped(false), m_workersStopped(false), m_terminateStarted(false)
     {
@@ -256,9 +316,11 @@ namespace openstudio{
       openstudio::Application::instance().application();
 
       m_regions.push_back("us-east-1");
+      m_serverInstanceTypes.push_back("t1.micro");
       m_serverInstanceTypes.push_back("m1.medium");
       m_serverInstanceTypes.push_back("m1.large");
       m_serverInstanceTypes.push_back("m1.xlarge");
+      m_workerInstanceTypes.push_back("t1.micro");
       m_workerInstanceTypes.push_back("c1.xlarge");
 
       // load credentials
@@ -271,7 +333,7 @@ namespace openstudio{
 
     unsigned AWSProvider_Impl::numWorkers() const
     {
-      return m_numWorkers;
+      return m_awsSettings.numWorkers();
     }
 
     CloudSettings AWSProvider_Impl::settings() const {
@@ -314,8 +376,7 @@ namespace openstudio{
 
     bool AWSProvider_Impl::lastResourcesAvailableToStart() const
     {
-      // todo
-      return false;
+      return m_lastResourcesAvailableToStart;
     }
 
     bool AWSProvider_Impl::serverStarted() const
@@ -565,9 +626,9 @@ namespace openstudio{
       return QVariantMap();
     }
 
-    void AWSProvider_Impl::setNumWorkers(const unsigned numWorkers)
+    unsigned AWSProvider_Impl::setNumWorkers(const unsigned numWorkers)
     {
-      m_numWorkers = numWorkers;
+      return m_awsSettings.setNumWorkers(numWorkers);
     }
 
     std::vector<std::string> AWSProvider_Impl::availableRegions() const {
@@ -587,7 +648,7 @@ namespace openstudio{
     }
 
     std::string AWSProvider_Impl::defaultServerInstanceType() const {
-      return "m1.large";
+      return "m1.medium";
     }
 
     std::string AWSProvider_Impl::serverInstanceType() const {
@@ -614,7 +675,7 @@ namespace openstudio{
       return m_awsSession.setWorkerInstanceType(instanceType);
     }
 
-    bool AWSProvider_Impl::terminationDelayEnabled() {
+    bool AWSProvider_Impl::terminationDelayEnabled() const {
       return m_awsSettings.terminationDelay();
     }
 
@@ -622,12 +683,16 @@ namespace openstudio{
       m_awsSettings.terminationDelayEnabled();
     }
 
-    unsigned AWSProvider_Impl::terminationDelay() {
+    unsigned AWSProvider_Impl::terminationDelay() const {
       return m_awsSettings.terminationDelay();
     }
 
     void AWSProvider_Impl::setTerminationDelay(const unsigned delay) {
       m_awsSettings.setTerminationDelay(delay);
+    }
+
+    unsigned AWSProvider_Impl::numSessionWorkers() const {
+      return m_awsSession.numWorkers();
     }
 
     std::string AWSProvider_Impl::userAgreementText() const {
@@ -688,11 +753,17 @@ namespace openstudio{
 
   AWSSettings::AWSSettings(const UUID& uuid,
                            const UUID& versionUUID,
-                           bool userAgreementSigned)
+                           bool userAgreementSigned,
+                           unsigned numWorkers,
+                           bool terminationDelayEnabled,
+                           unsigned terminationDelay)
     : CloudSettings(boost::shared_ptr<detail::AWSSettings_Impl>(
                       new detail::AWSSettings_Impl(uuid,
                                                    versionUUID,
-                                                   userAgreementSigned)))
+                                                   userAgreementSigned,
+                                                   numWorkers,
+                                                   terminationDelayEnabled,
+                                                   terminationDelay)))
   {
     OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
   }
@@ -727,7 +798,15 @@ namespace openstudio{
     return getImpl<detail::AWSSettings_Impl>()->validSecretKey(secretKey);
   }
 
-  bool AWSSettings::terminationDelayEnabled() {
+  unsigned AWSSettings::numWorkers() const {
+    return getImpl<detail::AWSSettings_Impl>()->numWorkers();
+  }
+
+  unsigned AWSSettings::setNumWorkers(const unsigned numWorkers) {
+    return getImpl<detail::AWSSettings_Impl>()->setNumWorkers(numWorkers);
+  }
+
+  bool AWSSettings::terminationDelayEnabled() const {
     return getImpl<detail::AWSSettings_Impl>()->terminationDelayEnabled();
   }
 
@@ -735,7 +814,7 @@ namespace openstudio{
     getImpl<detail::AWSSettings_Impl>()->setTerminationDelayEnabled(enabled);
   }
 
-  unsigned AWSSettings::terminationDelay() {
+  unsigned AWSSettings::terminationDelay() const {
     return getImpl<detail::AWSSettings_Impl>()->terminationDelay();
   }
 
@@ -785,7 +864,7 @@ namespace openstudio{
   }
 
   std::vector<Url> AWSSession::workerUrls() const {
-    return getImpl<detail::AWSSession_Impl>()->workerUrls(); 
+    return getImpl<detail::AWSSession_Impl>()->workerUrls();
   }
 
   void AWSSession::setWorkerUrls(const std::vector<Url>& workerUrls) {
@@ -822,6 +901,10 @@ namespace openstudio{
 
   void AWSSession::setWorkerInstanceType(const std::string& instanceType) {
     getImpl<detail::AWSSession_Impl>()->setWorkerInstanceType(instanceType);
+  }
+  
+  unsigned AWSSession::numWorkers() const {
+    return getImpl<detail::AWSSession_Impl>()->workerUrls().size();
   }
 
 
@@ -868,7 +951,7 @@ namespace openstudio{
     return getImpl<detail::AWSProvider_Impl>()->numWorkers();
   }
   
-  void AWSProvider::setNumWorkers(const unsigned numWorkers) {
+  unsigned AWSProvider::setNumWorkers(const unsigned numWorkers) {
     return getImpl<detail::AWSProvider_Impl>()->setNumWorkers(numWorkers);
   }
 
@@ -916,7 +999,7 @@ namespace openstudio{
     getImpl<detail::AWSProvider_Impl>()->setWorkerInstanceType(instanceType);
   }
 
-  bool AWSProvider::terminationDelayEnabled() {
+  bool AWSProvider::terminationDelayEnabled() const {
     return getImpl<detail::AWSProvider_Impl>()->terminationDelayEnabled();
   }
 
@@ -924,12 +1007,16 @@ namespace openstudio{
     getImpl<detail::AWSProvider_Impl>()->setTerminationDelayEnabled(enabled);
   }
 
-  unsigned AWSProvider::terminationDelay() {
+  unsigned AWSProvider::terminationDelay() const {
     return getImpl<detail::AWSProvider_Impl>()->terminationDelay();
   }
 
   void AWSProvider::setTerminationDelay(const unsigned delay) {
     getImpl<detail::AWSProvider_Impl>()->setTerminationDelay(delay);
+  }
+
+  unsigned AWSProvider::numSessionWorkers() const {
+    return getImpl<detail::AWSProvider_Impl>()->numSessionWorkers();
   }
 
 

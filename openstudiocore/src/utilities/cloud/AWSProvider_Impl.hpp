@@ -41,7 +41,10 @@ namespace detail{
     /** Constructor provided for deserialization; not for general use. */
     AWSSettings_Impl(const UUID& uuid,
                      const UUID& versionUUID,
-                     bool userAgreementSigned);
+                     bool userAgreementSigned,
+                     unsigned numWorkers,
+                     bool terminationDelayEnabled,
+                     unsigned terminationDelay);
 
     //@}
     /** @name Destructors */
@@ -88,14 +91,20 @@ namespace detail{
     // performs a cursory regex and returns true if it's valid
     bool validSecretKey(const std::string& secretKey) const;
 
+    // returns the saved default number of workers
+    unsigned numWorkers() const;
+
+    // set the number of worker nodes to start (and returns the new number)
+    unsigned setNumWorkers(const unsigned numWorkers);
+
     // returns true if there should be a delay before terminating after simulations are complete
-    bool terminationDelayEnabled();
+    bool terminationDelayEnabled() const;
 
     // sets whether a termination delay should occur
     void setTerminationDelayEnabled(bool enabled);
 
     // returns the termination delay in minutes
-    unsigned terminationDelay();
+    unsigned terminationDelay() const;
 
     // sets the termination delay in minutes
     void setTerminationDelay(const unsigned delay);
@@ -106,10 +115,11 @@ namespace detail{
     REGISTER_LOGGER("utilities.cloud.AWSSettings");
 
     bool m_userAgreementSigned;
-    mutable std::string m_accessKey;
-    mutable std::string m_secretKey;
-    mutable bool m_validAccessKey;
-    mutable bool m_validSecretKey;
+    std::string m_accessKey;
+    std::string m_secretKey;
+    bool m_validAccessKey;
+    bool m_validSecretKey;
+    unsigned m_numWorkers;
     bool m_terminationDelayEnabled;
     unsigned m_terminationDelay;
   };
@@ -344,8 +354,8 @@ namespace detail{
     // run an action against the AWS-SDK ruby gem
     QVariantMap awsRequest(std::string request, std::string service = "EC2") const;
 
-    // set the number of worker nodes to start
-    void setNumWorkers(const unsigned numWorkers);
+    // set the number of worker nodes to start (and returns the new number)
+    unsigned setNumWorkers(const unsigned numWorkers);
 
     // return a list of available AWS regions
     std::vector<std::string> availableRegions() const;
@@ -381,16 +391,32 @@ namespace detail{
     void setWorkerInstanceType(const std::string& instanceType);
 
     // returns true if there should be a delay before terminating after simulations are complete
-    bool terminationDelayEnabled();
+    bool terminationDelayEnabled() const;
 
     // sets whether a termination delay should occur
     void setTerminationDelayEnabled(bool enabled);
 
     // returns the termination delay in minutes
-    unsigned terminationDelay();
+    unsigned terminationDelay() const;
 
     // sets the termination delay in minutes
     void setTerminationDelay(const unsigned delay);
+
+    // returns the number of workers for this session
+    unsigned numSessionWorkers() const;
+
+    // returns the EC2 estimated charges from CloudWatch in USD
+    //double estimatedCharges() const;
+
+    // returns the total uptime in minutes of this session
+    //unsigned totalSessionUptime() const;
+
+    // returns the total number of instances running on EC2 associated with this session
+    //unsigned totalSessionInstances() const;
+
+    // returns the total number of instances running on EC2
+    //unsigned totalInstances() const;
+
 
     //@}
 
@@ -413,7 +439,6 @@ namespace detail{
     AWSSettings m_awsSettings;
     AWSSession m_awsSession;
 
-    unsigned m_numWorkers;
     std::vector<std::string> m_regions;
     std::vector<std::string> m_serverInstanceTypes;
     std::vector<std::string> m_workerInstanceTypes;
@@ -425,6 +450,7 @@ namespace detail{
     bool m_lastInternetAvailable;
     bool m_lastServiceAvailable;
     bool m_lastValidateCredentials;
+    unsigned m_lastResourcesAvailableToStart;
     bool m_serverStarted;
     bool m_workersStarted;
     bool m_serverStopped;
