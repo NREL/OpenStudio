@@ -19,26 +19,22 @@
 
 #include "MonitorUseDialog.hpp"
 
-// TODO is VagrantProvider required?
 #include <utilities/cloud/AWSProvider.hpp>
 #include <utilities/cloud/AWSProvider_Impl.hpp>
-#include <utilities/cloud/CloudProvider.hpp>
-#include <utilities/cloud/CloudProvider_Impl.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
 #include <utilities/core/Assert.hpp>
 
 #include <QBoxLayout>
+#include <QDesktopServices>
 #include <QLabel>
 #include <QPushButton>
 #include <QTimer>
+#include <QUrl>
 
-#define BILLING_CHARGE "Estimated Monthly Billing Charge: $"
+#define BILLING_CHARGE "Current Charges: "
 #define MINUTES " minutes"
 #define TIME_RUNNING "Total Time Running: "
 #define NUM_INSTANCES "Instances Running on Current Project: "
 #define TOTAL_NUM_INSTANCES "Total Instances Running: " 
-#define CLOUD_OFF "Cloud Off for All Projects"
 #define WARNING "Stopping the cloud will terminate all instances.  Any detailed results not selected for download will be lost."
 #define TEXT_WIDTH 300
 #define STATUS_WIDTH 150
@@ -48,7 +44,7 @@ namespace openstudio {
 MonitorUseDialog::MonitorUseDialog(QWidget* parent)
   : OSDialog(false, parent)
 {
-  this->setWindowTitle("Monitor Use"); // TODO not showing
+  this->setWindowTitle("Monitor Use");
   this->setSizeHint(QSize(350,300));
   this->cancelButton()->hide();
   createWidgets();
@@ -140,12 +136,18 @@ void MonitorUseDialog::createWidgets()
 
   /////
 
-  m_cloudStatus = new QLabel;
-  m_cloudStatus->setText(CLOUD_OFF);
-  m_cloudStatus->setFixedWidth(STATUS_WIDTH);
-  m_cloudStatus->setStyleSheet("QLabel {color: orange;}");
-  // TODO m_cloudStatus->setPixmap(QPixmap(":/images/???.png"));
+  m_cloudStatus = new QPushButton;
+  m_cloudStatus->setFixedSize(QSize(192,47));
+  QString style;
+  style.append("QPushButton {"
+               "  background-image:url(':/shared_gui_components/images/manage_all_button.png');"
+               "  border:none;"
+               "}");
+  m_cloudStatus->setStyleSheet(style);
   layout->addWidget(m_cloudStatus,0,Qt::AlignTop | Qt::AlignLeft);
+  bool isConnected = connect(m_cloudStatus, SIGNAL(clicked(bool)),
+                             this, SLOT(on_cloudStatus(bool)));
+  OS_ASSERT(isConnected);
 
   /////
 
@@ -164,8 +166,8 @@ void MonitorUseDialog::createWidgets()
 
   QTimer * timer = new QTimer(this);
   timer->start(10000);
-  bool isConnected = connect(timer, SIGNAL(timeout()),
-                             this, SLOT(updateData()));
+  isConnected = connect(timer, SIGNAL(timeout()),
+                        this, SLOT(updateData()));
   OS_ASSERT(isConnected);
 }
 
@@ -173,22 +175,42 @@ void MonitorUseDialog::createWidgets()
 
 void  MonitorUseDialog::updateData()
 {
-  //VagrantProvider vagrantProvider;
-  //AWSProvider awsProvider;
+  AWSProvider awsProvider;
 
-  QString text("N/A");
+  ////////////////////////////////////////////////////////////////////////////
+  // TODO delete the following code
 
-  m_billingCharge->setText(text);
+  QString temp("N/A");
 
-  QString temp(text);
-  temp += MINUTES; 
+  m_billingCharge->setText(temp);
+
   m_timeRunning->setText(temp);
 
-  m_numInstances->setText(text);
+  m_numInstances->setText(temp);
 
-  m_totalNumInstances->setText(text);
+  m_totalNumInstances->setText(temp);
 
-  // TODO m_cloudStatus->setText(text);
+  ////////////////////////////////////////////////////////////////////////////
+  // TODO uncomment the following code
+
+  //QString temp;
+
+  //temp = temp.setNum(awsProvider.estimatedCharges();
+  //temp.prepend('$');
+  //m_billingCharge->setText(temp.setNum(awsProvider.estimatedCharges()));
+
+  //temp = temp.setNum(awsProvider.totalSessionUptime());
+  //temp += MINUTES; 
+  //m_timeRunning->setText(temp);
+
+  //m_numInstances->setText(temp.setNum(awsProvider.totalSessionInstances()));
+
+  //m_totalNumInstances->setText(temp.setNum(awsProvider.totalInstances()));
+}
+
+void  MonitorUseDialog::on_cloudStatus(bool checked)
+{
+  QDesktopServices::openUrl(QUrl("http://aws.amazon.com/console"));
 }
 
 } // openstudio
