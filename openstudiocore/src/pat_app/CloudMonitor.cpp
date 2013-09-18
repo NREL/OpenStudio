@@ -78,7 +78,7 @@ void CloudMonitor::setCloudSettings(const CloudSettings & settings)
   }
   else if( settings.optionalCast<VagrantSettings>() )
   {
-    setCloudProvider(m_cloudProvider = QSharedPointer<VagrantProvider>(new VagrantProvider()));
+    setCloudProvider(QSharedPointer<VagrantProvider>(new VagrantProvider()));
 
     m_cloudProvider->setSettings(settings);
   }
@@ -111,7 +111,7 @@ bool CloudMonitor::starting()
 
   if( m_cloudProvider )
   {
-    if( m_cloudProvider->serverStarted() && ! m_cloudProvider->running() ) 
+    if( m_cloudProvider->serverStarted() && ! m_cloudProvider->serverRunning() ) 
     { 
       result = true; 
     }
@@ -128,13 +128,20 @@ bool CloudMonitor::stopping()
 
   if( m_cloudProvider )
   {
-    if( m_cloudProvider->terminateStarted() && ! m_cloudProvider->terminateCompleted() ) 
+    if( m_cloudProvider->terminateStarted() && serverRunning() ) 
     { 
       result = true; 
     }
   }
 
   return result;
+}
+
+bool CloudMonitor::serverRunning()
+{
+  m_cloudProvider->requestServerRunning();
+
+  return false;
 }
 
 void CloudMonitor::setCloudProvider(QSharedPointer<CloudProvider> cloudProvider)
@@ -159,7 +166,7 @@ void CloudMonitor::toggleCloud()
 {
   if( m_cloudProvider )
   {
-    if( m_cloudProvider->running() )
+    if( m_cloudProvider->serverStarted() )
     {
       m_mutex->lock();
 
@@ -167,11 +174,13 @@ void CloudMonitor::toggleCloud()
 
       setCloudButtonStatus(ToggleCloudButton::STOPPING);
     }
-    else if( ! m_cloudProvider->serverStarted() && ! m_cloudProvider->workersStarted() )
+    else
     {
       m_mutex->lock();
 
       m_cloudProvider->requestStartServer();
+
+      //m_cloudProvider->requestStartWorkers();
 
       setCloudButtonStatus(ToggleCloudButton::STARTING);
     }
@@ -244,11 +253,7 @@ void CloudMonitorWorker::setCloudSettings(const CloudSettings & settings)
 
 void CloudMonitorWorker::clockIn()
 {
-  m_timer = QSharedPointer<QTimer>(new QTimer());
-  bool bingo;
-  bingo = connect(m_timer.data(),SIGNAL(timeout()),this,SLOT(nowGetToWork()));
-  OS_ASSERT(bingo);
-  m_timer->start(5000);
+  nowGetToWork();
 }
 
 void CloudMonitorWorker::nowGetToWork()
@@ -259,31 +264,10 @@ void CloudMonitorWorker::nowGetToWork()
     {
       if( boost::optional<VagrantSettings> settings = m_cloudSettings->optionalCast<VagrantSettings>() )
       {
-        QString processName;
-#ifdef _WINDOWS
-        processName = "cmd.exe";
-#else
-        processName = "sh";
-#endif
+        VagrantProvider provider;
+        provider.setSettings(settings.get());
 
-        QStringList args;
-#ifdef _WINDOWS
-        args << "/C";
-        args << "vagrant.bat";
-#else
-        args << "vagrant";
-#endif
-        args << "status";
-        args << "default";
-
-        QProcess process;
-        process.setWorkingDirectory(toQString(settings->serverPath()));
-        process.start(processName, args);
-        process.waitForFinished();
-
-        QString result(process.readAllStandardOutput());
-
-        if( result.contains("running") )
+        if( provider.serverRunning() )
         {
           emit cloudStatus(ToggleCloudButton::RUNNING);
         }
@@ -294,9 +278,9 @@ void CloudMonitorWorker::nowGetToWork()
       }
       else if( boost::optional<AWSSettings> settings =  m_cloudSettings->optionalCast<AWSSettings>() )
       {
-        std::cout << "boom" << std::endl;
       }
     }
+    QTimer::singleShot(5000,this,SLOT(nowGetToWork()));
   }
 }
 

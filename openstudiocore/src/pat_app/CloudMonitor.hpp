@@ -34,10 +34,6 @@ class QMutex;
 
 namespace openstudio {
 
-class VagrantProvider;
-//class CloudProvider;
-//class CloudSettings;
-
 namespace pat {
 
 class CloudMonitorWorker;
@@ -59,6 +55,8 @@ class CloudMonitor : public QObject
   bool starting();
 
   bool stopping();
+
+  bool serverRunning();
 
   public slots:
 
@@ -111,8 +109,6 @@ class CloudMonitorWorker : public QObject
    
   signals:
 
-  void finished();
-
   void cloudStatus(ToggleCloudButton::Status status);
 
   private slots:
@@ -122,7 +118,7 @@ class CloudMonitorWorker : public QObject
 
   private:
 
-  QSharedPointer<QTimer> m_timer;
+  Q_DISABLE_COPY(CloudMonitorWorker);
 
   boost::optional<CloudSettings> m_cloudSettings;
 
