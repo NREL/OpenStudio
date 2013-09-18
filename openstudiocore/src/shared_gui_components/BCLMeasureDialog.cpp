@@ -68,12 +68,11 @@ BCLMeasureDialog::BCLMeasureDialog(const BCLMeasure& bclMeasure, QWidget* parent
     measureTypeString = "EnergyPlus Measure";
   }else if ( measureType == MeasureType::UtilityMeasure){
     measureTypeString = "Utility Measure";
+  }else if ( measureType == MeasureType::ReportingMeasure){
+    measureTypeString = "Reporting Measure";
   }
   int index = m_measureTypeComboBox->findText(measureTypeString);
   m_measureTypeComboBox->setCurrentIndex(index);
-
-  index = m_measureFunctionComboBox->findText(toQString(bclMeasure.measureFunction().valueDescription()));
-  m_measureFunctionComboBox->setCurrentIndex(index);
 
   QStringList taxonomyParts = toQString(bclMeasure.taxonomyTag()).split('.');
   if (taxonomyParts.size() > 0){
@@ -108,12 +107,10 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
     measureType = MeasureType::EnergyPlusMeasure;
   }else if ( measureTypeStr == "Utility Measure"){
     measureType = MeasureType::UtilityMeasure;
+  }else if ( measureTypeStr == "Reporting Measure"){
+    measureType = MeasureType::ReportingMeasure;
   }
 
-  std::string measureFunctionStr = toString(m_measureFunctionComboBox->currentText());
-  MeasureFunction measureFunction(measureFunctionStr);
-
-  bool requiresEnergyPlusResults = false; //disabled for now, m_requiresEnergyPlusResults->isChecked();
   bool usesSketchUpAPI = false; //disabled for now, m_usesSketchUpAPI->isChecked();
 
   openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
@@ -149,8 +146,6 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
       result->setModelerDescription(modelerDescription);
       result->setTaxonomyTag(taxonomyTag);
       result->setMeasureType(measureType);
-      result->setMeasureFunction(measureFunction);
-      result->setRequiresEnergyPlusResults(requiresEnergyPlusResults);
       result->setUsesSketchUpAPI(usesSketchUpAPI);
       result->save();
     }
@@ -158,7 +153,7 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
     try{
     // starting new measure
     result = BCLMeasure(name, className, measureDir, taxonomyTag,
-                        measureType, measureFunction, requiresEnergyPlusResults, usesSketchUpAPI);
+                        measureType, usesSketchUpAPI);
     result->setDescription(description);
     result->setModelerDescription(modelerDescription);
     result->save();
@@ -173,6 +168,16 @@ void BCLMeasureDialog::nameChanged(const QString& newName)
 {
   std::string className = BCLMeasure::className(toString(newName));
   m_classNameLabel->setText(toQString(className));
+}
+
+void BCLMeasureDialog::measureTypeChanged(const QString& newName)
+{
+  if (newName == "Reporting Measure"){
+    int index = m_taxonomyFirstLevelComboBox->findText("Reporting");
+    m_taxonomyFirstLevelComboBox->setCurrentIndex(index);
+  }else{
+    m_taxonomyFirstLevelComboBox->setCurrentIndex(0);
+  }
 }
 
 void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
@@ -295,20 +300,9 @@ void BCLMeasureDialog::init()
   m_measureTypeComboBox->addItem("OpenStudio Measure");
   m_measureTypeComboBox->addItem("EnergyPlus Measure");
   //m_measureTypeComboBox->addItem("Utility Measure"); // Disable for now
+  m_measureTypeComboBox->addItem("Reporting Measure");
   m_measureTypeComboBox->setCurrentIndex(0);
   vLayout2->addWidget(m_measureTypeComboBox);
-  vLayout2->addSpacing(10);
-
-  label = new QLabel;
-  label->setText("Measure Function:");
-  label->setObjectName("H2");
-  vLayout2->addWidget(label);
-  m_measureFunctionComboBox = new QComboBox(this);
-  m_measureFunctionComboBox->addItem("Measure");
-  //m_measureFunctionComboBox->addItem("Report"); // Disable for now
-  //m_measureFunctionComboBox->addItem("Other"); // Disable for now
-  m_measureFunctionComboBox->setCurrentIndex(0);
-  vLayout2->addWidget(m_measureFunctionComboBox);
   vLayout2->addSpacing(10);
 
   label = new QLabel;
@@ -331,24 +325,6 @@ void BCLMeasureDialog::init()
   tempHLayout->addWidget(m_taxonomySecondLevelComboBox);
   vLayout2->addLayout(tempHLayout);
   vLayout2->addSpacing(10);
-
-  /* Disable for now 
-  m_requiresEnergyPlusResults = new QRadioButton(this);
-  m_requiresEnergyPlusResults->setText("Yes");
-  m_requiresEnergyPlusResults->setChecked(false);
-  QRadioButton* notRequiresEnergyPlusResults = new QRadioButton(this);
-  notRequiresEnergyPlusResults->setText("No");
-  notRequiresEnergyPlusResults->setChecked(true);
-  tempHLayout = new QHBoxLayout;
-  tempHLayout->addWidget(m_requiresEnergyPlusResults);
-  tempHLayout->addWidget(notRequiresEnergyPlusResults);
-  tempHLayout->addStretch();
-  QGroupBox* groupBox = new QGroupBox(this);
-  groupBox->setTitle("Requires EnergyPlus Results");
-  groupBox->setLayout(tempHLayout);
-  vLayout2->addWidget(groupBox);
-  vLayout2->addSpacing(10);
-  */
 
   /* Disable for now 
   m_usesSketchUpAPI = new QRadioButton(this);
@@ -380,6 +356,9 @@ void BCLMeasureDialog::init()
   bool test = connect(m_nameLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(nameChanged(const QString&)));
   OS_ASSERT(test);
 
+  test = connect(m_measureTypeComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(measureTypeChanged(const QString&)));
+  OS_ASSERT(test);
+  
   test = connect(m_taxonomyFirstLevelComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(firstLevelTaxonomyChanged(const QString&)));
   OS_ASSERT(test);
 

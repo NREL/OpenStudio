@@ -656,7 +656,7 @@ namespace openstudio{
       QUrl url(m_url.toString().append("/analyses/").append(id).append("/action.json"));
 
       QVariantMap map;
-      map["action"] = "start";
+      map["analysis_action"] = "start";
       
       bool test;
       QJson::Serializer serializer;
@@ -761,7 +761,7 @@ namespace openstudio{
       QUrl url(m_url.toString().append("/analyses/").append(id).append("/action.json"));
 
       QVariantMap map;
-      map["action"] = "stop";
+      map["analysis_action"] = "stop";
       
       bool test;
       QJson::Serializer serializer;
@@ -1151,6 +1151,7 @@ namespace openstudio{
               success = true;
               QString status = analysisMap["status"].toString();
 
+              // possible status are 'queued', 'started', 'completed'
               if (status == "queued"){
                 m_lastIsAnalysisQueued = true;
               }else{
@@ -1201,6 +1202,7 @@ namespace openstudio{
               success = true;
               QString status = analysisMap["status"].toString();
 
+              // possible status are 'queued', 'started', 'completed'
               if (status == "started"){
                 m_lastIsAnalysisRunning = true;
               }else{
@@ -1251,6 +1253,7 @@ namespace openstudio{
               success = true;
               QString status = analysisMap["status"].toString();
 
+              // possible status are 'queued', 'started', 'completed'
               if (status == "completed"){
                 m_lastIsAnalysisComplete = true;
               }else{

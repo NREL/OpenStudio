@@ -354,6 +354,7 @@ namespace openstudio{
     query.exec("SELECT uid, version_id FROM Components");
     while (query.next())
     {
+      // DLM: this does not look like it is handling error of missing file correctly
       boost::optional<BCLComponent> current(toString(toPath(m_libraryPath) / toPath(query.value(0).toString()) / toPath(query.value(1).toString())));
       if (current)
       {
@@ -370,7 +371,7 @@ namespace openstudio{
     query.exec("SELECT uid, version_id FROM Measures");
     while (query.next())
     {
-      boost::optional<BCLMeasure> current(toPath(m_libraryPath) / toPath(query.value(0).toString()) / toPath(query.value(1).toString()));
+      boost::optional<BCLMeasure> current = BCLMeasure::load(toPath(m_libraryPath) / toPath(query.value(0).toString()) / toPath(query.value(1).toString()));
       if (current)
       {
         allMeasures.push_back(*current);
@@ -399,6 +400,7 @@ namespace openstudio{
     query.exec(toQString("SELECT uid, version_id FROM Components where name LIKE \"%"+searchTerm+"%\" OR description LIKE \"%"+searchTerm+"%\""));
     while (query.next())
     {
+      // DLM: this does not look like it is handling error of missing file correctly
       boost::optional<BCLComponent> current(toString(toPath(m_libraryPath) / toPath(query.value(0).toString()) / toPath(query.value(1).toString())));
       if (current)
       {
@@ -423,7 +425,7 @@ namespace openstudio{
       "OR description LIKE \"%"+searchTerm+"%\" OR modeler_description LIKE \"%"+searchTerm+"%\""));
     while (query.next())
     {
-      boost::optional<BCLMeasure> current(toPath(m_libraryPath) / toPath(query.value(0).toString()) / toPath(query.value(1).toString()));
+      boost::optional<BCLMeasure> current = BCLMeasure::load(toPath(m_libraryPath) / toPath(query.value(0).toString()) / toPath(query.value(1).toString()));
       if (current)
       {
         results.push_back(*current);
