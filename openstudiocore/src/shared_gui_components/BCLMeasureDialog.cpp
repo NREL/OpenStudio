@@ -186,12 +186,13 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
   m_taxonomySecondLevelComboBox->setEnabled(false);
 
   if (newName == "Envelope"){
-    m_taxonomySecondLevelComboBox->addItem("Fenestration");
-    m_taxonomySecondLevelComboBox->addItem("Daylighting");
     m_taxonomySecondLevelComboBox->addItem("Form");
-    m_taxonomySecondLevelComboBox->addItem("Infiltration");
     m_taxonomySecondLevelComboBox->addItem("Opaque");
-    m_taxonomySecondLevelComboBox->setCurrentIndex(0);
+	m_taxonomySecondLevelComboBox->addItem("Fenestration");
+	m_taxonomySecondLevelComboBox->addItem("Construction Sets");
+    m_taxonomySecondLevelComboBox->addItem("Daylighting");
+    m_taxonomySecondLevelComboBox->addItem("Infiltration");
+	m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
   }else if (newName == "Electric Lighting"){
     m_taxonomySecondLevelComboBox->addItem("Controls");
@@ -201,6 +202,12 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
   }else if (newName == "Equipment"){
     m_taxonomySecondLevelComboBox->addItem("Controls");
     m_taxonomySecondLevelComboBox->addItem("Electric Equipment");
+    m_taxonomySecondLevelComboBox->addItem("Gas Equipment");
+    m_taxonomySecondLevelComboBox->setCurrentIndex(0);
+    m_taxonomySecondLevelComboBox->setEnabled(true);
+  }else if (newName == "People"){
+    m_taxonomySecondLevelComboBox->addItem("Characteristics");
+    m_taxonomySecondLevelComboBox->addItem("Schedules");
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
   }else if (newName == "HVAC"){
@@ -214,8 +221,6 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
     m_taxonomySecondLevelComboBox->addItem("Whole System");
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
-  }else if (newName == "HVAC"){
-    
   }else if (newName == "Service Water Heating"){
     m_taxonomySecondLevelComboBox->addItem("Water Use");
     m_taxonomySecondLevelComboBox->addItem("Water Heating");
@@ -224,6 +229,11 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
     m_taxonomySecondLevelComboBox->setEnabled(true);
   }else if (newName == "Onsite Power Generation"){
     m_taxonomySecondLevelComboBox->addItem("Photovoltaic");
+    m_taxonomySecondLevelComboBox->setCurrentIndex(0);
+    m_taxonomySecondLevelComboBox->setEnabled(true);
+  }else if (newName == "Whole Building"){
+    m_taxonomySecondLevelComboBox->addItem("Schedules");
+    m_taxonomySecondLevelComboBox->addItem("Space Types");
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
   }else if (newName == "Economics"){
@@ -314,10 +324,12 @@ void BCLMeasureDialog::init()
   m_taxonomyFirstLevelComboBox->addItem("Envelope");
   m_taxonomyFirstLevelComboBox->addItem("Electric Lighting");
   m_taxonomyFirstLevelComboBox->addItem("Equipment");
+  m_taxonomyFirstLevelComboBox->addItem("People");
   m_taxonomyFirstLevelComboBox->addItem("HVAC");
   m_taxonomyFirstLevelComboBox->addItem("Refrigeration");
   m_taxonomyFirstLevelComboBox->addItem("Service Water Heating");
   m_taxonomyFirstLevelComboBox->addItem("Onsite Power Generation");
+  m_taxonomyFirstLevelComboBox->addItem("Whole Building");
   m_taxonomyFirstLevelComboBox->addItem("Economics");
   m_taxonomyFirstLevelComboBox->addItem("Reporting");
   tempHLayout->addWidget(m_taxonomyFirstLevelComboBox);
