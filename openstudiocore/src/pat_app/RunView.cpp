@@ -103,10 +103,6 @@ RunStatusView::RunStatusView()
 
   this->setLayout(mainHLayout);
 
-  //QWidget* space = new QWidget();
-  //space->setFixedWidth(200);
-  //mainHLayout->addWidget(space);
-
   mainHLayout->addStretch();
 
   // Run / Play button area
@@ -584,6 +580,23 @@ void DataPointRunHeaderView::on_clicked(bool checked)
   m_dataPoint.setSelected(checked);
   bool hasDataToClear = !m_dataPoint.directory().empty();
   setClearState(hasDataToClear);
+
+  m_download->blockSignals(true);
+  m_download->setChecked(false);
+  m_download->blockSignals(false);
+  this->m_dataPoint.setRunType(analysis::DataPointRunType::CloudSlim);
+  QString style;
+  if(checked){
+    style.append("QPushButton {"
+                               "background-image:url(':/images/results_no_download.png');"
+                               "  border:none;"
+                               "}");
+    m_download->setEnabled(true);
+  } else {
+    style = "";
+    m_download->setEnabled(false);
+  }
+  m_download->setStyleSheet(style);
 }
 
 void DataPointRunHeaderView::on_downloadClicked(bool checked)
