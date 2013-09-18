@@ -1,5 +1,7 @@
 require 'openstudio'
 
+require 'openstudio/ruleset/ShowRunnerOutput'
+
 require "#{File.dirname(__FILE__)}/../measure.rb"
 
 require 'fileutils'
@@ -88,9 +90,10 @@ class ReportingMeasure_Test < Test::Unit::TestCase
     argument_map = OpenStudio::Ruleset::OSArgumentMap.new
     measure.run(runner, argument_map)
     result = runner.result
+    show_output(result)
     assert(result.value.valueName == "Success")
     assert(result.warnings.size == 0)
-    assert(result.info.size == 2)
+    assert(result.info.size == 4)
     
   end  
 
