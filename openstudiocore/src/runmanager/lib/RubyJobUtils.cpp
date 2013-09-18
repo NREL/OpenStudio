@@ -206,6 +206,10 @@ openstudio::path RubyJobBuilder::script() const {
   return m_script;
 }
 
+bool RubyJobBuilder::userScriptJob() const {
+  return m_userScriptJob;
+}
+
 void RubyJobBuilder::setScriptFile(const openstudio::path &t_script)
 {
   m_script = t_script;

@@ -214,7 +214,6 @@ class LibrarySubGroupItem : public OSListItem
 
   LibrarySubGroupItem(const QString & name, const QString & taxonomyTag, 
                       LocalLibrary::LibrarySource source,
-                      MeasureType type,
                       BaseApp *t_app);
 
   virtual ~LibrarySubGroupItem() {}
@@ -330,7 +329,6 @@ class LibraryListController : public OSListController
 
   LibraryListController(const QString & taxonomyTag, 
                         LocalLibrary::LibrarySource source,
-                        MeasureType type,
                         BaseApp *t_app);
 
   virtual ~LibraryListController() {}
@@ -354,8 +352,6 @@ class LibraryListController : public OSListController
   QString m_taxonomyTag;
 
   LocalLibrary::LibrarySource m_source;
-
-  MeasureType m_type;
 
   std::vector<QSharedPointer<LibraryItem> > m_items;
 };
