@@ -126,6 +126,43 @@ namespace openstudio{
       createIndexes();
     }
 
+
+    void SqlFile_Impl::removeIndexes()
+    {
+      if (m_connectionOpen)
+      {
+        try {
+          execAndThrowOnError("DROP INDEX rmdTI;");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error dropping index: " + std::string(e.what()));
+        }
+
+        try {
+          execAndThrowOnError("DROP INDEX rmdDI;");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error dropping index: " + std::string(e.what()));
+        }
+
+        try {
+          execAndThrowOnError("DROP INDEX rvdTI;");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error dropping index: " + std::string(e.what()));
+        }
+
+        try {
+          execAndThrowOnError("DROP INDEX rvdDI;");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error dropping index: " + std::string(e.what()));
+        }
+
+        try {
+          execAndThrowOnError("DROP INDEX dmhdHRI;");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error dropping index: " + std::string(e.what()));
+        }
+      }
+    }
+
     void SqlFile_Impl::createIndexes()
     {
       if (m_connectionOpen)
