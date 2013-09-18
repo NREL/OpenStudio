@@ -114,7 +114,7 @@ bool CloudMonitor::starting()
 
   if( m_cloudProvider )
   {
-    if( m_cloudProvider->serverStarted() && ! m_cloudProvider->running() ) 
+    if( m_cloudProvider->serverStarted() ) // TODO call no longer available && ! m_cloudProvider->running() ) 
     { 
       result = true; 
     }
@@ -162,7 +162,8 @@ void CloudMonitor::toggleCloud()
 {
   if( m_cloudProvider )
   {
-    if( m_cloudProvider->running() )
+    if( true )
+    //if( m_cloudProvider->running() ) // TODO call no longer available
     {
       m_mutex->lock();
 
