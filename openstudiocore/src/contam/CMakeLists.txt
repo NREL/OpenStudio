@@ -6,6 +6,8 @@ SET( ${target_name}_src
   ForwardTranslator.cpp
   ReverseTranslator.hpp
   ReverseTranslator.cpp
+  InfiltrationCalculator.hpp
+  InfiltrationCalculator.cpp
   PrjReader.hpp
   PrjReader.cpp
   PrjWriter.hpp
