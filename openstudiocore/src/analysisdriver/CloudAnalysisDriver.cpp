@@ -153,6 +153,13 @@ namespace detail {
     m_checkDataPointsRunningInsteadOfAnalysis = false;
     m_lastGetRunningDataPointsSuccess = false;
 
+    // see if trivially complete
+    if (project().analysis().dataPointsToQueue().empty()) {
+      LOG(Info,"Nothing to run. Run request trivially successful.");
+      m_lastRunSuccess = true;
+      return false; // false because no signal to wait for
+    }
+
     if (OptionalUrl url = session().serverUrl()) {
 
       m_requestRun = OSServer(*url);
@@ -500,6 +507,7 @@ namespace detail {
       // initialize queue
       DataPointVector dataPoints = project().analysis().dataPointsToQueue();
       m_postQueue = std::deque<DataPoint>(dataPoints.begin(),dataPoints.end());
+      OS_ASSERT(!m_postQueue.empty());
 
       success = postNextDataPoint();
     }
@@ -779,12 +787,14 @@ namespace detail {
           test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointsStillRunning(bool)),Qt::QueuedConnection);
           OS_ASSERT(test);
 
+          System::msleep(1000); // wait 1 second
           success = m_monitorDataPoints->requestRunningDataPointUUIDs(project().analysis().uuid());
         }
         else {
           test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisStillRunning(bool)),Qt::QueuedConnection);
           OS_ASSERT(test);
 
+          System::msleep(1000); // wait 1 second
           success = m_monitorDataPoints->requestIsAnalysisRunning(project().analysis().uuid());
         }
       }
@@ -815,6 +825,7 @@ namespace detail {
       test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(completeDataPointUUIDsReturned(bool)),Qt::QueuedConnection);
       OS_ASSERT(test);
 
+      System::msleep(1000); // wait 1 second
       success = m_monitorDataPoints->requestCompleteDataPointUUIDs(project().analysis().uuid());
     }
 
@@ -838,6 +849,7 @@ namespace detail {
       test = m_monitorDataPoints->connect(SIGNAL(requestProcessed(bool)),this,SLOT(completeDataPointUUIDsReturned(bool)),Qt::QueuedConnection);
       OS_ASSERT(test);
 
+      System::msleep(1000); // wait 1 second
       success = m_monitorDataPoints->requestCompleteDataPointUUIDs(project().analysis().uuid());
     }
 
@@ -971,9 +983,11 @@ namespace detail {
     if (success) {
       UUIDVector temp = m_checkForResultsToDownload->lastCompleteDataPointUUIDs();
       std::set<UUID> completeUUIDs(temp.begin(),temp.end());
+      LOG(Debug,"Found " << completeUUIDs.size() << " complete DataPoints on the server.");
       DataPointVector::iterator it = m_preDetailsQueue.begin();
       while (it != m_preDetailsQueue.end()) {
         if (completeUUIDs.find(it->uuid()) != completeUUIDs.end()) {
+          LOG(Debug,"Found the DataPoint whose details need to be downloaded. Adding to queue.");
           m_detailsQueue.push_back(*it);
           it = m_preDetailsQueue.erase(it);
         }
@@ -1177,6 +1191,8 @@ namespace detail {
     OS_ASSERT(m_requestDetails);
     DataPoint needsDetails = m_detailsQueue.front();
     openstudio::path resultsDirectory = project().projectDir() / toPath("dataPoint_" + removeBraces(needsDetails.uuid()));
+    LOG(Debug,"Trying to get DataPoint '" << needsDetails.name() << "' details and put them in '" 
+        << toString(resultsDirectory) << "'.");
     if (boost::filesystem::exists(resultsDirectory)) {
       boost::filesystem::remove_all(resultsDirectory);
     }
