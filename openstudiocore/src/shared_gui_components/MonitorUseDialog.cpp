@@ -187,7 +187,7 @@ void  MonitorUseDialog::updateData()
 
   QString temp;
 
-  temp = temp.setNum(awsProvider.estimatedCharges();
+  temp = temp.setNum(awsProvider.estimatedCharges());
   temp.prepend('$');
   m_billingCharge->setText(temp.setNum(awsProvider.estimatedCharges()));
 
