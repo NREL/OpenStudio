@@ -185,35 +185,19 @@ void  MonitorUseDialog::updateData()
 {
   AWSProvider awsProvider;
 
-  ////////////////////////////////////////////////////////////////////////////
-  // TODO delete the following code
+  QString temp;
 
-  QString temp("N/A");
+  temp = temp.setNum(awsProvider.estimatedCharges();
+  temp.prepend('$');
+  m_billingCharge->setText(temp.setNum(awsProvider.estimatedCharges()));
 
-  m_billingCharge->setText(temp);
-
+  temp = temp.setNum(awsProvider.totalSessionUptime());
+  temp += MINUTES; 
   m_timeRunning->setText(temp);
 
-  m_numInstances->setText(temp);
+  m_numInstances->setText(temp.setNum(awsProvider.totalSessionInstances()));
 
-  m_totalNumInstances->setText(temp);
-
-  ////////////////////////////////////////////////////////////////////////////
-  // TODO uncomment the following code
-
-  //QString temp;
-
-  //temp = temp.setNum(awsProvider.estimatedCharges();
-  //temp.prepend('$');
-  //m_billingCharge->setText(temp.setNum(awsProvider.estimatedCharges()));
-
-  //temp = temp.setNum(awsProvider.totalSessionUptime());
-  //temp += MINUTES; 
-  //m_timeRunning->setText(temp);
-
-  //m_numInstances->setText(temp.setNum(awsProvider.totalSessionInstances()));
-
-  //m_totalNumInstances->setText(temp.setNum(awsProvider.totalInstances()));
+  m_totalNumInstances->setText(temp.setNum(awsProvider.totalInstances()));
 }
 
 void  MonitorUseDialog::on_cloudStatus(bool checked)
