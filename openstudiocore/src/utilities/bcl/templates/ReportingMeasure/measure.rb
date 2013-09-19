@@ -80,6 +80,9 @@ class ReportingMeasure < OpenStudio::Ruleset::ReportingUserScript
     result = OpenStudio::Attribute.new("report", attributes)
     
     result.saveToXml(OpenStudio::Path.new("report.xml"))
+
+    #closing the sql file
+    sqlFile.close()
     
     #reporting final condition
     runner.registerFinalCondition("Goodbye.")
