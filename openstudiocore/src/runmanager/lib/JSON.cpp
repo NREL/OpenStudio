@@ -446,6 +446,7 @@ namespace detail {
     QVariantMap qvm;
 
     qvm["name"] = toQString(t_tool.name);
+    qvm["version"] = toQString(t_tool.version.toString());
     qvm["local_bin_path"] = toQString(t_tool.localBinPath);
     qvm["remote_archive"] = toQString(t_tool.remoteArchive);
     qvm["remote_exe"] = toQString(t_tool.remoteExe);
@@ -457,13 +458,15 @@ namespace detail {
   ToolInfo JSON::toToolInfo(const QVariant &t_variant, const VersionString& t_version) {
     QVariantMap qvm = t_variant.toMap();
 
-    if (qvm.empty() || !qvm.contains("name") || !qvm.contains("version")) {
+    // should check for "version", but there was a bug in which toVariant(ToolInfo) was not 
+    // serializing the version. try to limp along by filling in a blank ToolVersion.
+    if (qvm.empty() || !qvm.contains("name") || (!qvm.contains("version") && (t_version > VersionString("1.0.5")))) {
       throw std::runtime_error("Unable to find ToolInfo object at expected location");
     }
 
     return ToolInfo(
         toString(qvm["name"].toString()),
-        ToolVersion::fromString(toString(qvm["version"].toString())),
+        qvm.contains("version") ? ToolVersion::fromString(toString(qvm["version"].toString())) : ToolVersion(),
         toPath(qvm["local_bin_path"].toString()),
         toPath(qvm["remote_archive"].toString()),
         toPath(qvm["remote_exe"].toString()),

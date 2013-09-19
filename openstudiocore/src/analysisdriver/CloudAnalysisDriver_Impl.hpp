@@ -205,7 +205,11 @@ namespace detail {
      // 10. If not, kick it off.
      void analysisStarted(bool success);
 
-     // 11. Start the monitoring process (if already running or just kicked off).
+     // 11. Wait up to 10 + 2 per data point tries (w/ 1s of sleep) for the server to 
+     //     report that the analysis is running.
+     void waitingForAnalysisToStart(bool success);
+
+     // 12. Start the monitoring process (if already running or just kicked off).
 
      // MONITORING =============================================================
 
@@ -259,6 +263,8 @@ namespace detail {
     // request run process
     boost::optional<OSServer> m_requestRun;
     std::deque<analysis::DataPoint> m_postQueue;
+    unsigned m_analysisNotRunningCount;
+    unsigned m_maxAnalysisNotRunningCount;
 
     // watch for complete data points
     boost::optional<OSServer> m_monitorDataPoints;
