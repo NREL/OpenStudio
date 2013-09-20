@@ -449,6 +449,7 @@ namespace detail {
     qvm["local_bin_path"] = toQString(t_tool.localBinPath);
     qvm["remote_archive"] = toQString(t_tool.remoteArchive);
     qvm["remote_exe"] = toQString(t_tool.remoteExe);
+    qvm["version"] = toQString(t_tool.version.toString());
     qvm["out_file_filter"] = toQString(boost::lexical_cast<std::string>(t_tool.outFileFilter));
 
     return QVariant(qvm);
