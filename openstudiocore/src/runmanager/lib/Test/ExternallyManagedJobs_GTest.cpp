@@ -49,7 +49,7 @@ TEST_F(RunManagerTestFixture, ExternalJob)
   boost::filesystem::create_directories(openstudio::tempDir() / openstudio::toPath("externaljob"));
 
   openstudio::runmanager::Workflow orig("Null->Null->Null->Null");
-  openstudio::runmanager::Job jorig = orig.create(openstudio::tempDir() / openstudio::toPath("ExternallyManagedJobs"));
+  openstudio::runmanager::Job jorig = orig.create(openstudio::tempDir() / openstudio::toPath("externaljob"));
 
   openstudio::runmanager::RunManager rorig(rmpath1, true, true, false); // runmanager is starting in paused state
   rorig.enqueue(jorig, true);
