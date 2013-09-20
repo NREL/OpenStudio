@@ -48,6 +48,16 @@ namespace openstudio {
           static Job toJob(const std::string &t_jsonString, bool t_externallyManaged);
 
           //@}
+          /** @name std::vector<Job> High-Level Methods */
+          //@{
+
+          static std::vector<Job> toVectorOfJob(const QVariant &t_variant, const VersionString& t_version, bool t_externallyManaged);
+
+          static QVariant toVariant(const std::vector<Job> &t_jobs);
+
+          static std::string toJSON(const std::vector<Job> &t_jobs);
+
+          //@}
           /** @name WorkItem High-Level Methods */
           //@{
 
@@ -59,16 +69,24 @@ namespace openstudio {
 
           static WorkItem toWorkItem(const std::string &t_json);
 
-
           //@}
-          /** @name std::vector<Job> High-Level Methods */
+          /** @name std::vector<WorkItem> High-Level Methods */
           //@{
 
-          static std::vector<Job> toVectorOfJob(const QVariant &t_variant, const VersionString& t_version, bool t_externallyManaged);
+          static QVariant toVariant(const std::vector<WorkItem> &t_workItems);
 
-          static QVariant toVariant(const std::vector<Job> &t_jobs);
+          static bool saveJSON(const std::vector<WorkItem> &t_workItems,
+                               const openstudio::path &t_p,
+                               bool t_overwrite=false);
 
-          static std::string toJSON(const std::vector<Job> &t_jobs);
+          static std::string toJSON(const std::vector<WorkItem> &t_workItems);
+
+          static std::vector<WorkItem> toVectorOfWorkItem(const QVariant &t_variant,
+                                                          const VersionString& version);
+
+          static std::vector<WorkItem> toVectorOfWorkItem(const openstudio::path &t_pathToJson);
+
+          static std::vector<WorkItem> toVectorOfWorkItem(const std::string &t_json);
 
           //@}
         private:
