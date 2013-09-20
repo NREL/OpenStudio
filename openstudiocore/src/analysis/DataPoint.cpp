@@ -514,7 +514,8 @@ namespace detail {
     OS_ASSERT(m_topLevelJob);
     if (runManager) {
       // HERE -- files are now in directory(), need to update paths
-      runManager->updateJob(*m_topLevelJob, directory());
+      // ETH@20130920 - Current implementation appears to be stuck in an infinite loop
+//      runManager->updateJob(*m_topLevelJob, directory());
     }
 
     // get file references for

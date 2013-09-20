@@ -105,7 +105,7 @@ namespace detail {
   }
 
   bool CloudAnalysisDriver_Impl::isDownloading() const {
-    return (m_requestJson || m_requestDetails);
+    return (m_requestJson || m_checkForResultsToDownload || m_requestDetails);
   }
 
   std::vector<std::string> CloudAnalysisDriver_Impl::errors() const {
@@ -248,11 +248,16 @@ namespace detail {
                           m_preDetailsQueue.end(),
                           actualDataPoint.get()) == m_preDetailsQueue.end());
       if (!found) {
+        LOG(Debug,"Adding DataPoint '" << actualDataPoint->name() 
+            << "' to the pre-download details queue.");
         m_preDetailsQueue.push_back(*actualDataPoint);
       }
       if (!m_checkForResultsToDownload) {
 
         if (OptionalUrl url = session().serverUrl()) {
+
+          LOG(Debug,"Not yet downloading details, start the process by making sure there are results on the server.");
+
           m_checkForResultsToDownload = OSServer(*url);
 
           // request completed data point uuids
@@ -922,6 +927,7 @@ namespace detail {
       DataPoint toUpdate = m_detailsQueue.front();
       m_detailsQueue.pop_front();
       boost::optional<RunManager> rm = project().runManager();
+      LOG(Debug,"Getting detailed results for DataPoint '" << toUpdate.name() << "'.");
       bool test = toUpdate.updateDetails(rm);
       project().save();
       emit dataPointDetailsComplete(project().analysis().uuid(),toUpdate.uuid());
@@ -1014,8 +1020,10 @@ namespace detail {
     if (!success) {
       registerDownloadDetailsRequestFailure();
     }
-
-    m_checkForResultsToDownload.reset();
+    else {
+      appendErrorsAndWarnings(*m_checkForResultsToDownload);
+      m_checkForResultsToDownload.reset();
+    }
   }
 
   void CloudAnalysisDriver_Impl::clearErrorsAndWarnings() {
@@ -1198,14 +1206,21 @@ namespace detail {
     }
     boost::filesystem::create_directory(resultsDirectory);
     needsDetails.setDirectory(resultsDirectory);
+    project().save();
     return m_requestDetails->startDownloadDataPoint(project().analysis().uuid(),
                                                     needsDetails.uuid(),
                                                     resultsDirectory / toPath("dataPoint.zip"));
   }
 
   void CloudAnalysisDriver_Impl::registerDownloadingDetailsFailure() {
-    appendErrorsAndWarnings(*m_requestDetails);
-    m_requestDetails.reset();
+    if (m_checkForResultsToDownload) {
+      appendErrorsAndWarnings(*m_checkForResultsToDownload);
+      m_checkForResultsToDownload.reset();
+    }
+    if (m_requestDetails) {
+      appendErrorsAndWarnings(*m_requestDetails);
+      m_requestDetails.reset();
+    }
     // ETH@20130830 - Not sure what to do with the queues. Am at least clearing them upon
     //     requestRun, and also requiring this driver not to be downloading when requestRun.
     emit detailedDownloadRequestsComplete(false);
