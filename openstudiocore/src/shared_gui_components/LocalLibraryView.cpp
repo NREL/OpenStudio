@@ -177,6 +177,11 @@ LibraryItemView::LibraryItemView(QWidget * parent)
 
   setLayout(mainHBoxLayout);
 
+  m_measureTypeBadge = new QLabel(this);
+  m_measureTypeBadge->setFixedSize(25,25);
+  m_measureTypeBadge->setVisible(false);
+  mainHBoxLayout->addWidget(m_measureTypeBadge,Qt::AlignLeft);
+
   m_bclBadge = new QLabel("BCL",this);
   m_bclBadge->setFixedWidth(25);
   m_bclBadge->setStyleSheet("QLabel { color: #4B7DB0; font-size: 10pt; }");

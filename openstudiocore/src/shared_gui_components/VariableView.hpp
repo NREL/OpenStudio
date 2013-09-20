@@ -31,6 +31,8 @@ class QPushButton;
 
 namespace openstudio {
 
+class MeasureType;
+
 namespace measuretab {
 
 class MeasuresView;
@@ -105,7 +107,7 @@ class VariableGroupItemView : public OSCollapsibleView
 
   public:
 
-  VariableGroupItemView(bool t_fixedMeasuresOnly);
+  VariableGroupItemView(bool t_fixedMeasuresOnly, MeasureType measureType);
 
   virtual ~VariableGroupItemView() {}
 

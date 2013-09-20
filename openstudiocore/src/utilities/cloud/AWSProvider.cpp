@@ -243,6 +243,26 @@ namespace openstudio{
       m_workerInstanceType = instanceType;
     }
 
+    double AWSSession_Impl::estimatedCharges() const {
+      //todo
+      return 0.0;
+    }
+
+    unsigned AWSSession_Impl::totalSessionUptime() const {
+      //todo
+      return 0;
+    }
+
+    unsigned AWSSession_Impl::totalSessionInstances() const {
+      //todo
+      return 0;
+    }
+
+    unsigned AWSSession_Impl::totalInstances() const {
+      //todo
+      return 0;
+    }
+
     
     AWSProvider_Impl::AWSProvider_Impl()
       : CloudProvider_Impl(),
@@ -630,6 +650,22 @@ namespace openstudio{
       m_awsSettings.setTerminationDelay(delay);
     }
 
+    double AWSProvider_Impl::estimatedCharges() const {
+      return m_awsSession.estimatedCharges();
+    }
+
+    unsigned AWSProvider_Impl::totalSessionUptime() const {
+      return m_awsSession.totalSessionUptime();
+    }
+
+    unsigned AWSProvider_Impl::totalSessionInstances() const {
+      return m_awsSession.totalSessionInstances();
+    }
+
+    unsigned AWSProvider_Impl::totalInstances() const {
+      return m_awsSession.totalInstances();
+    }
+
     std::string AWSProvider_Impl::userAgreementText() const {
       return m_awsSettings.userAgreementText();
     }
@@ -824,6 +860,22 @@ namespace openstudio{
     getImpl<detail::AWSSession_Impl>()->setWorkerInstanceType(instanceType);
   }
 
+  double AWSSession::estimatedCharges() const {
+    return getImpl<detail::AWSSession_Impl>()->estimatedCharges();
+  }
+
+  unsigned AWSSession::totalSessionUptime() const {
+    return getImpl<detail::AWSSession_Impl>()->totalSessionUptime();
+  }
+
+  unsigned AWSSession::totalSessionInstances() const {
+    return getImpl<detail::AWSSession_Impl>()->totalSessionInstances();
+  }
+
+  unsigned AWSSession::totalInstances() const {
+    return getImpl<detail::AWSSession_Impl>()->totalInstances();
+  }
+
 
   AWSProvider::AWSProvider()
     : CloudProvider(boost::shared_ptr<detail::AWSProvider_Impl>(new detail::AWSProvider_Impl()))
@@ -930,6 +982,22 @@ namespace openstudio{
 
   void AWSProvider::setTerminationDelay(const unsigned delay) {
     getImpl<detail::AWSProvider_Impl>()->setTerminationDelay(delay);
+  }
+
+  double AWSProvider::estimatedCharges() const {
+    return getImpl<detail::AWSProvider_Impl>()->estimatedCharges();
+  }
+
+  unsigned AWSProvider::totalSessionUptime() const {
+    return getImpl<detail::AWSProvider_Impl>()->totalSessionUptime();
+  }
+
+  unsigned AWSProvider::totalSessionInstances() const {
+    return getImpl<detail::AWSProvider_Impl>()->totalSessionInstances();
+  }
+
+  unsigned AWSProvider::totalInstances() const {
+    return getImpl<detail::AWSProvider_Impl>()->totalInstances();
   }
 
 

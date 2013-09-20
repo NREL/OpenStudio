@@ -189,6 +189,18 @@ namespace detail{
     // sets the worker instance type
     void setWorkerInstanceType(const std::string& instanceType);
 
+    // returns the EC2 estimated charges from CloudWatch in USD
+    double estimatedCharges() const;
+
+    // returns the total uptime in minutes of this session
+    unsigned totalSessionUptime() const;
+
+    // returns the total number of instances running on EC2 associated with this session
+    unsigned totalSessionInstances() const;
+
+    // returns the total number of instances running on EC2
+    unsigned totalInstances() const;
+
     //@}
 
   private:
@@ -391,6 +403,18 @@ namespace detail{
 
     // sets the termination delay in minutes
     void setTerminationDelay(const unsigned delay);
+
+    // returns the EC2 estimated charges from CloudWatch in USD
+    double estimatedCharges() const;
+
+    // returns the total uptime in minutes of this session
+    unsigned totalSessionUptime() const;
+
+    // returns the total number of instances running on EC2 associated with this session
+    unsigned totalSessionInstances() const;
+
+    // returns the total number of instances running on EC2
+    unsigned totalInstances() const;
 
     //@}
 
