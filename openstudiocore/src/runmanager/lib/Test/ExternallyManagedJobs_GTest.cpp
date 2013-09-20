@@ -27,9 +27,12 @@
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/Workflow.hpp>
 #include <runmanager/lib/WorkItem.hpp>
+#include <runmanager/lib/JSON.hpp>
+
 #include <QDir>
 #include <utilities/core/Application.hpp>
 #include <utilities/core/System.hpp>
+#include <boost/filesystem.hpp>
 
 #ifdef _MSC_VER
 #include <Windows.h>
@@ -37,6 +40,48 @@
 
 using namespace openstudio;
 using namespace openstudio::runmanager;
+
+TEST_F(RunManagerTestFixture, ExternalJob)
+{
+  openstudio::path rmpath1 = openstudio::tempDir() / openstudio::toPath("externaljob/rm1.db");
+  openstudio::path rmpath2 = openstudio::tempDir() / openstudio::toPath("externaljob/rm2.db");
+
+  boost::filesystem::create_directories(openstudio::tempDir() / openstudio::toPath("externaljob"));
+
+  openstudio::runmanager::Workflow orig("Null->Null->Null->Null");
+  openstudio::runmanager::Job jorig = orig.create(openstudio::tempDir() / openstudio::toPath("ExternallyManagedJobs"));
+
+  openstudio::runmanager::RunManager rorig(rmpath1, true, true, false); // runmanager is starting in paused state
+  rorig.enqueue(jorig, true);
+
+
+  {
+    openstudio::runmanager::RunManager rnew(rmpath2, true, false, false);
+    rnew.updateJob(openstudio::runmanager::detail::JSON::toJob(openstudio::runmanager::detail::JSON::toJSON(jorig), true));
+    Job updated = rnew.getJob(jorig.uuid());
+    EXPECT_FALSE(updated.lastRun());
+  }
+
+  EXPECT_FALSE(jorig.lastRun());
+  rorig.setPaused(false);
+  rorig.waitForFinished();
+  EXPECT_TRUE(jorig.lastRun());
+
+  {
+    openstudio::runmanager::RunManager rnew(rmpath2, false, false, false);
+    Job updated = rnew.getJob(jorig.uuid());
+    EXPECT_FALSE(updated.lastRun());
+    rnew.updateJob(openstudio::runmanager::detail::JSON::toJob(openstudio::runmanager::detail::JSON::toJSON(jorig), true));
+    EXPECT_TRUE(updated.lastRun());
+  }
+
+  {
+    openstudio::runmanager::RunManager rnew(rmpath2, false, false, false);
+    Job updated = rnew.getJob(jorig.uuid());
+    EXPECT_TRUE(updated.lastRun());
+  }
+
+}
 
 TEST_F(RunManagerTestFixture, ExternallyManagedJobs)
 {
