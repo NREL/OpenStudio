@@ -82,7 +82,7 @@ OPTION( BUILD_SIMXML "Build with SimXml support" OFF )
 OPTION( BUILD_SDD "Build with SDD support" ON )
 
 # Build CONTAM
-OPTION( BUILD_CONTAM "Build with CONTAM support" OFF )
+OPTION( BUILD_CONTAM "Build with CONTAM support" ON )
 
 # Build R package
 OPTION( BUILD_R "Build R package" OFF )

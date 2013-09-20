@@ -18,6 +18,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
+#include <contam/InfiltrationCalculator.hpp>
 #include <contam/ForwardTranslator.hpp>
 #include <contam/SimTxt.hpp>
 #include <model/Model.hpp>
@@ -447,6 +448,19 @@ int main(int argc, char *argv[])
           << D[handleInt.second] << '\n';
       }
     }
+  }
+
+  openstudio::contam::InfiltrationCalculator calc(*model);
+
+  calc.run();
+
+  std::map<openstudio::Handle,openstudio::contam::DesignFlowRateCoeffs> coeffs = calc.coeffs();
+
+  std::pair <openstudio::Handle,openstudio::contam::DesignFlowRateCoeffs> handleCoeff;
+  BOOST_FOREACH(handleCoeff, coeffs)
+  {
+    std::cout << openstudio::toString(handleCoeff.first) << ' ' << handleCoeff.second.Idesign() << ' '
+              << handleCoeff.second.C() << ' ' << handleCoeff.second.D() <<std::endl;
   }
     
   return EXIT_SUCCESS;

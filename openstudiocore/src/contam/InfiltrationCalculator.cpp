@@ -63,14 +63,22 @@
 namespace openstudio {
 namespace contam {
 
-InfiltrationCalculator::InfiltrationCalculator(openstudio::model::Model model, int ndirs,
-                                               std::string leakageDescriptor, ProgressBar *progressBar) 
+InfiltrationCalculator::InfiltrationCalculator(openstudio::model::Model model,
+                                               std::string leakageDescriptor, int ndirs,
+                                               ProgressBar *progressBar) 
   : m_model(model), m_leakageDescriptor(leakageDescriptor), m_progressBar(progressBar)
 {
-  setDirections(ndirs);
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.InfiltrationCalculator"));
   m_logSink.setThreadId(QThread::currentThread());
+
+  setDirections(ndirs);
+  m_flowSpec=false;
+
+  // Ugly hard code to programs
+  contamExe = openstudio::toPath("C:\\Program Files (x86)\\NIST\\CONTAM 3.1\\ContamX3.exe");
+  simreadExe = openstudio::toPath("C:\\Users\\jwd131\\Software\\CONTAM\\simread31.exe");
+ 
 }
 
 int InfiltrationCalculator::directions() const
@@ -86,6 +94,11 @@ void InfiltrationCalculator::setDirections(int ndirs)
     ndirs = 4;
   }
   m_ndirs=ndirs;
+}
+
+std::map<Handle,DesignFlowRateCoeffs> InfiltrationCalculator::coeffs() const
+{
+  return m_coeffMap;
 }
 
 bool InfiltrationCalculator::run()

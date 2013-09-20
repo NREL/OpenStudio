@@ -86,11 +86,16 @@ private:
 class CONTAM_API InfiltrationCalculator
 {
 public:
-  InfiltrationCalculator(openstudio::model::Model model, int ndirs=4,
-    std::string leakageDescriptor="Average", ProgressBar *progressBar=0);
+  InfiltrationCalculator(openstudio::model::Model model, std::string leakageDescriptor="Average", 
+    int ndirs=4, ProgressBar *progressBar=0);
 
   int directions() const;
   void setDirections(int ndirs);
+  std::string leakageDescriptor() const;
+  void setLeakageDescriptor(std::string leakageDescriptor);
+  double flowAt75Pa() const;
+  void setFlowAt75Pa(double flow);
+  std::map<Handle,DesignFlowRateCoeffs> coeffs() const;
 
   bool run();
   void apply();
@@ -110,7 +115,7 @@ private:
   openstudio::model::Model m_model;
   int m_ndirs;
   std::string m_leakageDescriptor;
-
+  bool m_flowSpec;
   std::map<Handle,DesignFlowRateCoeffs> m_coeffMap;
 
   // These probably don't belong here, but I'll put them here temporarily
