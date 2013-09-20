@@ -25,6 +25,8 @@
 
 #include <QProcess>
 
+#include <boost/function.hpp>
+
 namespace openstudio{
 namespace detail{
 
@@ -198,6 +200,18 @@ namespace detail{
 
     // sets the worker instance type
     void setWorkerInstanceType(const std::string& instanceType);
+
+    // returns the EC2 estimated charges from CloudWatch in USD
+    double estimatedCharges() const;
+
+    // returns the total uptime in minutes of this session
+    unsigned totalSessionUptime() const;
+
+    // returns the total number of instances running on EC2 associated with this session
+    unsigned totalSessionInstances() const;
+
+    // returns the total number of instances running on EC2
+    unsigned totalInstances() const;
 
     //@}
 
@@ -406,17 +420,16 @@ namespace detail{
     unsigned numSessionWorkers() const;
 
     // returns the EC2 estimated charges from CloudWatch in USD
-    //double estimatedCharges() const;
+    double estimatedCharges() const;
 
     // returns the total uptime in minutes of this session
-    //unsigned totalSessionUptime() const;
+    unsigned totalSessionUptime() const;
 
     // returns the total number of instances running on EC2 associated with this session
-    //unsigned totalSessionInstances() const;
+    unsigned totalSessionInstances() const;
 
     // returns the total number of instances running on EC2
-    //unsigned totalInstances() const;
-
+    unsigned totalInstances() const;
 
     //@}
 
@@ -424,17 +437,23 @@ namespace detail{
 
     void onServerStarted(int, QProcess::ExitStatus);
 
-    void onWorkersStarted(int, QProcess::ExitStatus);
+    void onWorkerStarted(int, QProcess::ExitStatus);
 
     void onServerStopped(int, QProcess::ExitStatus);
 
-    void onWorkersStopped(int, QProcess::ExitStatus);
+    void onWorkerStopped(int, QProcess::ExitStatus);
 
   private:
-
+    
+    bool waitForFinished(int msec, const boost::function1<bool, AWSProvider_Impl*>& f);
     bool requestInternetAvailableRequestFinished() const;
     bool requestServiceAvailableFinished() const;
     bool requestValidateCredentialsFinished() const;
+    bool requestResourcesAvailableToStartFinished() const;
+    bool requestServerRunningFinished() const;
+    bool requestWorkersRunningFinished() const;
+    bool requestTerminateFinished() const;
+    bool requestTerminateCompletedFinished() const;
 
     AWSSettings m_awsSettings;
     AWSSession m_awsSession;
@@ -443,19 +462,26 @@ namespace detail{
     std::vector<std::string> m_serverInstanceTypes;
     std::vector<std::string> m_workerInstanceTypes;
 
+    QProcess* m_checkServiceProcess;
     QProcess* m_startServerProcess;
     QProcess* m_startWorkersProcess;
+    QProcess* m_checkServerRunningProcess;
+    QProcess* m_checkWorkerRunningProcess;
     QProcess* m_stopServerProcess;
     QProcess* m_stopWorkersProcess;
+    QProcess* m_checkTerminatedProcess;
     bool m_lastInternetAvailable;
     bool m_lastServiceAvailable;
     bool m_lastValidateCredentials;
     unsigned m_lastResourcesAvailableToStart;
     bool m_serverStarted;
     bool m_workersStarted;
+    bool m_lastServerRunning;
+    bool m_lastWorkersRunning;
     bool m_serverStopped;
     bool m_workersStopped;
     bool m_terminateStarted;
+    bool m_lastTerminateCompleted;
 
     mutable std::vector<std::string> m_errors;
     mutable std::vector<std::string> m_warnings;

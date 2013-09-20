@@ -188,6 +188,18 @@ namespace detail {
     // returns the number of workers for this session
     unsigned numWorkers() const;
 
+    // returns the EC2 estimated charges from CloudWatch in USD
+    double estimatedCharges() const;
+
+    // returns the total uptime in minutes of this session
+    unsigned totalSessionUptime() const;
+
+    // returns the total number of instances running on EC2 associated with this session
+    unsigned totalSessionInstances() const;
+
+    // returns the total number of instances running on EC2
+    unsigned totalInstances() const;
+
     //@}
 
    protected:
@@ -297,6 +309,18 @@ namespace detail {
 
     // returns the number of workers for this session
     unsigned numSessionWorkers() const;
+
+    // returns the EC2 estimated charges from CloudWatch in USD
+    double estimatedCharges() const;
+
+    // returns the total uptime in minutes of this session
+    unsigned totalSessionUptime() const;
+
+    // returns the total number of instances running on EC2 associated with this session
+    unsigned totalSessionInstances() const;
+
+    // returns the total number of instances running on EC2
+    unsigned totalInstances() const;
 
 
     //@}

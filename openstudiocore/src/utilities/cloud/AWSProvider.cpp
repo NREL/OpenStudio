@@ -24,6 +24,7 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Path.hpp>
 #include <utilities/core/String.hpp>
+#include <utilities/core/System.hpp>
 
 #include <qjson/parser.h>
 #include <qjson/serializer.h>
@@ -35,6 +36,8 @@
 #include <QTemporaryFile>
 #include <QTextStream>
 #include <QUrl>
+
+#include <algorithm>
 
 namespace openstudio{
   namespace detail{
@@ -278,6 +281,7 @@ namespace openstudio{
 
     void AWSSession_Impl::setTimestamp(const std::string& timestamp) {
       m_timestamp = timestamp;
+      onChange();
     }
 
     std::string AWSSession_Impl::region() const {
@@ -304,31 +308,69 @@ namespace openstudio{
       m_workerInstanceType = instanceType;
     }
 
+    double AWSSession_Impl::estimatedCharges() const {
+      //todo
+      return 0.0;
+    }
+
+    unsigned AWSSession_Impl::totalSessionUptime() const {
+      //todo
+      return 0;
+    }
+
+    unsigned AWSSession_Impl::totalSessionInstances() const {
+      //todo
+      return 0;
+    }
+
+    unsigned AWSSession_Impl::totalInstances() const {
+      //todo
+      return 0;
+    }
+
     
     AWSProvider_Impl::AWSProvider_Impl()
       : CloudProvider_Impl(),
         m_awsSettings(),
         m_awsSession(toString(createUUID()),boost::none,std::vector<Url>()),
-        m_startServerProcess(NULL), m_startWorkersProcess(NULL),
-        m_serverStarted(false), m_workersStarted(false), m_serverStopped(false), m_workersStopped(false), m_terminateStarted(false)
+        m_checkServiceProcess(0),
+        m_startServerProcess(0),
+        m_startWorkersProcess(0),
+        m_checkServerRunningProcess(0),
+        m_checkWorkerRunningProcess(0),
+        m_stopServerProcess(0),
+        m_stopWorkersProcess(0),
+        m_checkTerminatedProcess(0),
+        m_lastInternetAvailable(false),
+        m_lastServiceAvailable(false),
+        m_lastValidateCredentials(false),
+        m_lastResourcesAvailableToStart(false),
+        m_serverStarted(false),
+        m_workersStarted(false),
+        m_lastServerRunning(false),
+        m_lastWorkersRunning(false),
+        m_serverStopped(false),
+        m_workersStopped(false),
+        m_terminateStarted(false),
+        m_lastTerminateCompleted(false)
     {
       //Make sure a QApplication exists
       openstudio::Application::instance().application();
 
       m_regions.push_back("us-east-1");
+
       m_serverInstanceTypes.push_back("t1.micro");
       m_serverInstanceTypes.push_back("m1.medium");
       m_serverInstanceTypes.push_back("m1.large");
       m_serverInstanceTypes.push_back("m1.xlarge");
+
       m_workerInstanceTypes.push_back("t1.micro");
       m_workerInstanceTypes.push_back("c1.xlarge");
-
-      // load credentials
     }
 
     std::string AWSProvider_Impl::type() const
     {
-      return cloudProviderType();
+      return AWSProvider_Impl::cloudProviderType();
     }
 
     unsigned AWSProvider_Impl::numWorkers() const
@@ -341,11 +383,29 @@ namespace openstudio{
     }
 
     bool AWSProvider_Impl::setSettings(const CloudSettings& settings) {
-      if (OptionalAWSSettings candidate = settings.optionalCast<AWSSettings>()) {
-        m_awsSettings = *candidate;
-        return true;
+      clearErrorsAndWarnings();
+
+      boost::optional<AWSSettings> awsSettings = settings.optionalCast<AWSSettings>();
+      if (!awsSettings){
+        // wrong type of settings
+        return false;
       }
-      return false;
+      if (m_serverStarted || m_startServerProcess){
+        // can't change settings once server has been started or is starting
+        return false;
+      }
+      if (m_workersStarted || m_startWorkersProcess){
+        // can't change settings once workers have been started or are starting
+        return false;
+      }
+      if (m_terminateStarted){
+        // can't change settings once terminate is called
+        return false;
+      }
+
+      m_awsSettings = *awsSettings;
+
+      return true;
     }
 
     CloudSession AWSProvider_Impl::session() const
@@ -355,8 +415,43 @@ namespace openstudio{
 
     bool AWSProvider_Impl::setSession(const CloudSession& session)
     {
-      // todo
-      return false;
+      clearErrorsAndWarnings();
+
+      boost::optional<AWSSession> awsSession = session.optionalCast<AWSSession>();
+      if (!awsSession){
+        // wrong type of session
+        return false;
+      }
+      if (awsSession->serverUrl().isEmpty()){
+        // session to set should be a non-empty one
+        return false;
+      }
+      if (awsSession->workerUrls().size() == 0){
+        // session to set should be a non-empty one
+        return false;
+      }
+      if (m_serverStarted || m_startServerProcess){
+        // can't change session once server has been started or is starting
+        return false;
+      }
+      if (m_workersStarted || m_startWorkersProcess){
+        // can't change session once workers have been started or are starting
+        return false;
+      }
+      if (m_terminateStarted){
+        // can't change session once terminate has been called
+        return false;
+      }
+
+      m_awsSession = *awsSession;
+
+      // assumes that the other session is already started
+      m_serverStarted = true;
+      m_workersStarted = true;
+
+      // should we emit a signal here?
+
+      return true;
     }
 
     bool AWSProvider_Impl::lastInternetAvailable() const
@@ -391,14 +486,12 @@ namespace openstudio{
 
     bool AWSProvider_Impl::lastServerRunning() const
     {
-      // todo
-      return false;
+      return m_lastServerRunning;
     }
 
     bool AWSProvider_Impl::lastWorkersRunning() const
     {
-      // todo
-      return false;
+      return m_lastWorkersRunning;
     }
 
     bool AWSProvider_Impl::terminateStarted() const
@@ -464,7 +557,12 @@ namespace openstudio{
 
     bool AWSProvider_Impl::resourcesAvailableToStart(int msec)
     {
-      // todo
+      if (requestResourcesAvailableToStart()){
+        boost::function1<bool, AWSProvider_Impl*> f = &AWSProvider_Impl::requestResourcesAvailableToStartFinished;
+        if (waitForFinished(msec, f)){
+          return lastResourcesAvailableToStart();
+        }
+      }
       return false;
     }
 
@@ -640,7 +738,10 @@ namespace openstudio{
     }
 
     void AWSProvider_Impl::setRegion(const std::string& region) {
-      m_awsSession.setRegion(region);
+      if (std::find(m_regions.begin(), m_regions.end(), region) != m_regions.end())
+      {
+        m_awsSession.setRegion(region);
+      }
     }
 
     std::vector<std::string> AWSProvider_Impl::serverInstanceTypes() const {
@@ -695,6 +796,89 @@ namespace openstudio{
       return m_awsSession.numWorkers();
     }
 
+    bool AWSProvider_Impl::waitForFinished(int msec, const boost::function1<bool, AWSProvider_Impl*>& f) {
+      int msecPerLoop = 20;
+      int numTries = msec / msecPerLoop;
+      int current = 0;
+      while (true)
+      {
+        if (f(this)){
+          return true;
+        }
+
+        // this calls process events
+        System::msleep(msecPerLoop);
+
+        if (current > numTries){
+          m_errors.push_back("Wait for finished timed out");
+          break;
+        }
+
+        ++current;
+      }
+
+      return false;
+    }
+
+    double AWSProvider_Impl::estimatedCharges() const {
+      return m_awsSession.estimatedCharges();
+    }
+
+    unsigned AWSProvider_Impl::totalSessionUptime() const {
+      return m_awsSession.totalSessionUptime();
+    }
+
+    unsigned AWSProvider_Impl::totalSessionInstances() const {
+      return m_awsSession.totalSessionInstances();
+    }
+
+    unsigned AWSProvider_Impl::totalInstances() const {
+      return m_awsSession.totalInstances();
+    }
+
+    bool AWSProvider_Impl::requestInternetAvailableRequestFinished() const
+    {
+      //todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::requestServiceAvailableFinished() const
+    {
+      return (m_checkServiceProcess == 0);
+    }
+
+    bool AWSProvider_Impl::requestValidateCredentialsFinished() const
+    {
+      //todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::requestResourcesAvailableToStartFinished() const
+    {
+      //todo
+      return false;
+    }
+
+    bool AWSProvider_Impl::requestServerRunningFinished() const
+    {
+      return (m_checkServerRunningProcess == 0);
+    }
+
+    bool AWSProvider_Impl::requestWorkersRunningFinished() const
+    {
+      return (m_checkWorkerRunningProcess == 0);
+    }
+
+    bool AWSProvider_Impl::requestTerminateFinished() const
+    {
+      return (m_serverStopped && m_workersStopped);
+    }
+
+    bool AWSProvider_Impl::requestTerminateCompletedFinished() const
+    {
+      return (m_checkTerminatedProcess == 0);
+    }
+
     std::string AWSProvider_Impl::userAgreementText() const {
       return m_awsSettings.userAgreementText();
     }
@@ -726,18 +910,73 @@ namespace openstudio{
 
     void AWSProvider_Impl::onServerStarted(int, QProcess::ExitStatus)
     {
+      OS_ASSERT(m_startServerProcess);
+
+      QString output = m_startServerProcess->readAllStandardOutput();
+      QString errors = m_startServerProcess->readAllStandardError();
+      
+      //m_awsSession.setServerUrl();
+
+      m_serverStarted = true;
+
+      emit CloudProvider_Impl::serverStarted(m_awsSession.serverUrl());
+
+      m_startServerProcess->deleteLater();
+      m_startServerProcess = 0;
     }
 
-    void AWSProvider_Impl::onWorkersStarted(int, QProcess::ExitStatus)
+    void AWSProvider_Impl::onWorkerStarted(int, QProcess::ExitStatus)
     {
+      OS_ASSERT(m_startWorkersProcess);
+
+      QString output = m_startWorkersProcess->readAllStandardOutput();
+      QString errors = m_startWorkersProcess->readAllStandardError();
+      
+      m_awsSession.clearWorkerUrls();
+      //m_awsSession.addWorkerUrl();
+
+      m_workersStarted = true;
+
+      //emit CloudProvider_Impl::workerStarted(m_awsSession.workerUrls());
+
+      //if all, emit CloudProvider_Impl::allWorkersStarted();
+
+      m_startWorkersProcess->deleteLater();
+      m_startWorkersProcess = 0;
     }
 
     void AWSProvider_Impl::onServerStopped(int, QProcess::ExitStatus)
     {
+      OS_ASSERT(m_stopServerProcess);
+
+      QString output = m_stopServerProcess->readAllStandardOutput();
+      QString errors = m_stopServerProcess->readAllStandardError();
+
+      m_serverStopped = true;
+
+      if (m_serverStopped && m_workersStopped){
+        emit CloudProvider_Impl::terminated();
+      }
+
+      m_startServerProcess->deleteLater();
+      m_startServerProcess = 0;
     }
 
-    void AWSProvider_Impl::onWorkersStopped(int, QProcess::ExitStatus)
+    void AWSProvider_Impl::onWorkerStopped(int, QProcess::ExitStatus)
     {
+      OS_ASSERT(m_stopWorkersProcess);
+
+      QString output = m_stopWorkersProcess->readAllStandardOutput();
+      QString errors = m_stopWorkersProcess->readAllStandardError();
+
+      m_workersStopped = true;
+
+      if (m_serverStopped && m_workersStopped){
+        emit CloudProvider_Impl::terminated();
+      }
+
+      m_stopWorkersProcess->deleteLater();
+      m_stopWorkersProcess = 0;
     }
 
 
@@ -907,6 +1146,22 @@ namespace openstudio{
     return getImpl<detail::AWSSession_Impl>()->workerUrls().size();
   }
 
+  double AWSSession::estimatedCharges() const {
+    return getImpl<detail::AWSSession_Impl>()->estimatedCharges();
+  }
+
+  unsigned AWSSession::totalSessionUptime() const {
+    return getImpl<detail::AWSSession_Impl>()->totalSessionUptime();
+  }
+
+  unsigned AWSSession::totalSessionInstances() const {
+    return getImpl<detail::AWSSession_Impl>()->totalSessionInstances();
+  }
+
+  unsigned AWSSession::totalInstances() const {
+    return getImpl<detail::AWSSession_Impl>()->totalInstances();
+  }
+
 
   AWSProvider::AWSProvider()
     : CloudProvider(boost::shared_ptr<detail::AWSProvider_Impl>(new detail::AWSProvider_Impl()))
@@ -1017,6 +1272,22 @@ namespace openstudio{
 
   unsigned AWSProvider::numSessionWorkers() const {
     return getImpl<detail::AWSProvider_Impl>()->numSessionWorkers();
+  }
+
+  double AWSProvider::estimatedCharges() const {
+    return getImpl<detail::AWSProvider_Impl>()->estimatedCharges();
+  }
+
+  unsigned AWSProvider::totalSessionUptime() const {
+    return getImpl<detail::AWSProvider_Impl>()->totalSessionUptime();
+  }
+
+  unsigned AWSProvider::totalSessionInstances() const {
+    return getImpl<detail::AWSProvider_Impl>()->totalSessionInstances();
+  }
+
+  unsigned AWSProvider::totalInstances() const {
+    return getImpl<detail::AWSProvider_Impl>()->totalInstances();
   }
 
 
