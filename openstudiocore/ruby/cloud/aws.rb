@@ -108,7 +108,7 @@ end
 def launch_workers(num, server_ip)
   user_data = File.read(File.expand_path(File.dirname(__FILE__))+'/worker_script.sh.template')
   user_data.gsub!(/SERVER_IP/, server_ip)
-  user_data.gsub!(/SERVER_HOSTNAME/, 'MASTER')
+  user_data.gsub!(/SERVER_HOSTNAME/, 'master')
   user_data.gsub!(/SERVER_ALIAS/, "")
 
   instances = []
@@ -118,7 +118,7 @@ def launch_workers(num, server_ip)
                                    :security_groups => @group,
                                    :user_data => user_data,
                                    :instance_type => @worker_instance_type)
-    @server.add_tag("Name", :value => "OpenStudio-Worker V#{OPENSTUDIO_VERSION}")
+    worker.add_tag("Name", :value => "OpenStudio-Worker V#{OPENSTUDIO_VERSION}")
     instances.push(worker)
   end
   sleep 5 while instances.any? { |instance| instance.status == :pending }
