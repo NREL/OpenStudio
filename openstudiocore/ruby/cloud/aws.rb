@@ -218,10 +218,16 @@ begin
       end
 
       @timestamp = Time.now.to_i
-      @group = @aws.security_groups.create("sec-group-#{@timestamp}")
+
+      # find if an existing openstudio-server-vX security group exists and use that
+      @group = @aws.security_groups.filter("group-name", "openstudio-server-sg-v1").first
+      if @group.nil?
+        @group = @aws.security_groups.create("openstudio-server-sg-v1")
+        @group.allow_ping() # allow ping
+        @group.authorize_ingress(:tcp, 1..65535)# all traffic
+      end
+
       @server_instance_type = @params['instance_type']
-      @group.allow_ping() # allow ping
-      @group.authorize_ingress(:tcp, 1..65535)# all traffic
 
       @key_pair = @aws.key_pairs.create("key-pair-#{@timestamp}")
       @private_key = @key_pair.private_key
@@ -246,7 +252,15 @@ begin
 
       @workers = []
       @timestamp = @params['timestamp']
-      @group = @aws.security_groups.filter('group-name', "sec-group-#{@timestamp}").first
+
+      # find if an existing openstudio-server-vX security group exists and use that
+      @group = @aws.security_groups.filter("group-name", "openstudio-worker-sg-v1").first
+      if @group.nil?
+        @group = @aws.security_groups.create("openstudio-worker-sg-v1")
+        @group.allow_ping() # allow ping
+        @group.authorize_ingress(:tcp, 1..65535)# all traffic
+      end
+
       @key_pair = @aws.key_pairs.filter('key-name', "key-pair-#{@timestamp}").first
       @private_key = File.read(@params['private_key'])
       @worker_instance_type = @params['instance_type']
