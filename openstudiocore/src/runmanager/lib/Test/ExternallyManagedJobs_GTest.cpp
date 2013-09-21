@@ -98,11 +98,12 @@ TEST_F(RunManagerTestFixture, ExternalJob)
     openstudio::runmanager::RunManager rnew(rmpath2, false, false, false);
     Job updated = rnew.getJob(jorig.uuid());
     EXPECT_FALSE(updated.lastRun());
-    rnew.updateJob(openstudio::runmanager::detail::JSON::toJob(openstudio::runmanager::detail::JSON::toJSON(jorig), true),
+    std::string json = openstudio::runmanager::detail::JSON::toJSON(jorig);
+    rnew.updateJob(openstudio::runmanager::detail::JSON::toJob(json, true),
         basedir / openstudio::toPath("copied"));
     EXPECT_TRUE(updated.lastRun());
     FileInfo fi2 = updated.treeAllFiles().getLastByFilename("eplusout.sql");
-    EXPECT_EQ(fi2.fullPath, basedir / openstudio::toPath("copied") / openstudio::toPath("ModelToIdf/ExpandObjects-0/EnergyPlus-0/eplusout.sql"));
+    EXPECT_EQ(basedir / openstudio::toPath("copied") / openstudio::toPath("ModelToIdf/ExpandObjects-0/EnergyPlus-0/eplusout.sql"), fi2.fullPath);
     EXPECT_TRUE(fi2.exists);
   }
 

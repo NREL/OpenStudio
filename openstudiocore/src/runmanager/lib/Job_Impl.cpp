@@ -1210,6 +1210,25 @@ namespace detail {
     emit treeChanged(m_id);
   }
 
+  Files Job_Impl::relativeOutputFiles() const
+  {
+    return Files(relativeOutputFilesInternal(outputFiles(), outdir()));
+  }
+
+  std::vector<FileInfo> Job_Impl::relativeOutputFilesInternal(const openstudio::runmanager::Files &t_outputFiles,
+      const openstudio::path &t_outpath) const
+  {
+    std::vector<FileInfo> fis = t_outputFiles.files();
+    for (std::vector<FileInfo>::iterator itr = fis.begin();
+        itr != fis.end();
+        ++itr)
+    {
+      itr->fullPath = openstudio::relativePath(itr->fullPath, t_outpath);
+    }
+
+    return fis;
+  }
+
   void Job_Impl::emitFinished(const openstudio::runmanager::JobErrors &t_e, const boost::optional<QDateTime> &t_lastRun,
       const Files &t_outputFiles)
   {
@@ -1222,15 +1241,7 @@ namespace detail {
       openstudio::DateTime dt = openstudio::toDateTime(*t_lastRun);
       LOG(Debug, "Date converted: " << openstudio::toString(m_id) << " " << dt);
 
-      std::vector<FileInfo> fis = t_outputFiles.files();
-      for (std::vector<FileInfo>::iterator itr = fis.begin();
-           itr != fis.end();
-           ++itr)
-      {
-        itr->fullPath = openstudio::relativePath(itr->fullPath, outpath);
-      }
-
-      emit finishedExt(m_id, t_e, dt, fis);
+      emit finishedExt(m_id, t_e, dt, relativeOutputFilesInternal(t_outputFiles, outpath));
     }
 
     emit finished(m_id, t_e);
@@ -1593,7 +1604,26 @@ namespace detail {
     if (m_basePath != t_basePath)
     {
       m_basePath = t_basePath;
+      m_outdir = boost::none;
       basePathChanged();
+    }
+  }
+
+  void Job_Impl::setBasePathRecursive(const openstudio::path &t_basePath)
+  {
+    setBasePath(t_basePath);
+
+    QReadLocker l(&m_mutex);
+    for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr = m_children.begin();
+         itr != m_children.end();
+         ++itr)
+    {
+      (*itr)->setBasePathRecursive(t_basePath);
+    }
+
+    if (m_finishedJob)
+    {
+      m_finishedJob->setBasePathRecursive(t_basePath);
     }
   }
 
@@ -1711,6 +1741,7 @@ namespace detail {
     }
 
 
+    m_params = t_other->m_params;
 
     JobState oldState = m_jobState;
     JobState newState = t_other->m_jobState;

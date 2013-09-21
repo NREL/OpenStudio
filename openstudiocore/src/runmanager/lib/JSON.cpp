@@ -7,6 +7,7 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Json.hpp>
 #include <utilities/core/Compare.hpp>
+#include <utilities/core/PathHelpers.hpp>
 
 #include <qjson/parser.h>
 
@@ -21,7 +22,7 @@ namespace detail {
       map["files"] = toVariant(t_jobTree.rawInputFiles());
     }
 
-    std::vector<JobParam> params = cleanupParams(t_jobTree.params()).params();
+    std::vector<JobParam> params = cleanupParams(t_jobTree.params(), t_jobTree.getBasePath()).params();
     if (!params.empty())
     {
       map["params"] = toVariant(params);
@@ -37,8 +38,9 @@ namespace detail {
       map["last_run"] = QVariant(toQString(t_jobTree.lastRun()->toISO8601()));
     }
 
-    if (!t_jobTree.outputFiles().empty()) {
-      map["output_files"] = toVariant(t_jobTree.outputFiles());
+    Files outputFiles = t_jobTree.relativeOutputFiles();
+    if (!outputFiles.files().empty()) {
+      map["output_files"] = toVariant(outputFiles.files());
     }
 
     map["errors"] = toVariant(t_jobTree.errors());
@@ -152,11 +154,28 @@ namespace detail {
     return toJob(jobData,version,t_externallyManaged);
   }
 
-  JobParams JSON::cleanupParams(JobParams t_params)
+  JobParams JSON::cleanupParams(JobParams t_params, const openstudio::path &t_basedir)
   {
     if (t_params.has("jobExternallyManaged"))
     {
       t_params.remove("jobExternallyManaged");
+    }
+
+    if (t_params.has("outdir"))
+    {
+      try {
+        /*
+        openstudio::path p = openstudio::toPath(t_params.get("outdir").children.at(0).value);
+        std::cout << "outdir: " << openstudio::toString(p) << std::endl;
+        std::cout << "basedir: " << openstudio::toString(t_basedir) << std::endl;
+
+        p = openstudio::relativePath(p, t_basedir);
+        std::cout << "relativedir: " << openstudio::toString(p) << std::endl;
+        */
+        t_params.remove("outdir");
+        //t_params.append("outdir", openstudio::toString(p));
+      } catch (...) {
+      }
     }
 
     return t_params;
@@ -169,7 +188,7 @@ namespace detail {
     if (!t_workItem.tools.tools().empty()) {
       map["tools"] = toVariant(t_workItem.tools.tools());
     }
-    std::vector<JobParam> params = cleanupParams(t_workItem.params).params();
+    std::vector<JobParam> params = cleanupParams(t_workItem.params, openstudio::path()).params();
     if (!params.empty())
     {
       map["params"] = toVariant(params);
