@@ -66,8 +66,8 @@ AWS.config(
     :region => ARGV[2],
     :ssl_verify_peer => false
 )
-@server_image_id = 'ami-155e147c'
-@worker_image_id = 'ami-c1450fa8'
+@server_image_id = 'ami-e9642e80'
+@worker_image_id = 'ami-27642e4e'
 
 if ARGV[3] == "EC2"
   @aws = AWS::EC2.new
