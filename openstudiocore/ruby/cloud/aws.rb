@@ -25,6 +25,7 @@
 # == Usage
 #
 #  ruby aws.rb xxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx us-east-1 EC2 launch_server "{\"instance_type\":\"t1.micro\"}"
+#  ruby aws.rb access_key secret_key us-east-1 EC2 launch_worker "{\"instance_type\":\"t1.micro\"}"
 #
 #  ARGV[0] - Access Key
 #  ARGV[1] - Secret Key
@@ -93,7 +94,9 @@ def launch_server
     error(-1, "Server status: #{@server.status}")
   end
 
+
   processors = send_command(@server.ip_address, 'nproc | tr -d "\n"')
+  processors = 0 if processors.nil?  # sometimes this returns nothing, so put in a default
   @server = create_struct(@server, processors)
 end
 
@@ -119,6 +122,7 @@ def launch_workers(num, server_ip)
 
   # todo: fix this - sometimes returns nil
   processors = send_command(instances[0].ip_address, 'nproc | tr -d "\n"')
+  processors = 0 if processors.nil?  # sometimes this returns nothing, so put in a default
   instances.each { |instance| @workers.push(create_struct(instance, processors)) }
 end
 
