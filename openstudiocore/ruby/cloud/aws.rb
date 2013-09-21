@@ -43,6 +43,10 @@ require 'net/scp'
 require 'net/ssh'
 require 'tempfile'
 
+# Not sure how we want to deal with this, but in the tag, I would like to specify the right
+# version of openstudio so that in the AWS Management Console it is meaningful.
+OPENSTUDIO_VERSION="1.0.5"
+
 def error(code, msg)
   puts ({:error => {:code => code, :message => msg}}.to_json)
   exit(1)
@@ -89,6 +93,7 @@ def launch_server
                                   :security_groups => @group,
                                   :user_data => user_data,
                                   :instance_type => @server_instance_type)
+  @server.add_tag("Name", :value => "OpenStudio-Server V#{OPENSTUDIO_VERSION}")
   sleep 5 while @server.status == :pending
   if @server.status != :running
     error(-1, "Server status: #{@server.status}")
@@ -113,6 +118,7 @@ def launch_workers(num, server_ip)
                                    :security_groups => @group,
                                    :user_data => user_data,
                                    :instance_type => @worker_instance_type)
+    @server.add_tag("Name", :value => "OpenStudio-Worker V#{OPENSTUDIO_VERSION}")
     instances.push(worker)
   end
   sleep 5 while instances.any? { |instance| instance.status == :pending }
