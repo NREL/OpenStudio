@@ -129,6 +129,8 @@ class RunStatusView : public QWidget
 
   void on_selectAllDownloads(bool checked);
 
+  void on_selectAllClears(bool checked);
+
  private:
 
   PlayButton* m_playButton;
@@ -136,6 +138,7 @@ class RunStatusView : public QWidget
   QLabel* m_percentComplete;
   QLabel* m_percentFailed;
   QLabel* m_cloudProviderStatus;
+  QPushButton * m_selectAllClears;
   QPushButton * m_selectAllDownloads;
 };
 
@@ -149,12 +152,19 @@ class DataPointRunHeaderView : public OSHeader
 
   virtual ~DataPointRunHeaderView() {}
 
+  enum ClearBtnState{
+    CAN_CLEAR,
+    CANT_CLEAR
+  };
+
   enum DownloadBtnState{
     CAN_DOWNLOAD,
     CANT_DOWNLOAD,
     DOWNLOADED,
     NOT_VISIBLE
   };
+
+  ClearBtnState m_clearBtnState;
 
   DownloadBtnState m_downloadBtnState;
 

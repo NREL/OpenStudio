@@ -196,6 +196,25 @@ RunStatusView::RunStatusView()
 
   horizontalSpacer = new QSpacerItem(14, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
   buttonHLayout->addSpacerItem(horizontalSpacer); 
+  
+  m_selectAllClears = new QPushButton(this);
+  m_selectAllClears->setFlat(true);
+  m_selectAllClears->setFixedSize(QSize(18,18));
+  style.append("QPushButton {"
+                              "background-image:url(':/images/clear_results_enabled.png');"
+                              "  border:none;"
+                              "}");
+  m_selectAllClears->setStyleSheet(style);
+  isConnected = connect(m_selectAllClears, SIGNAL(clicked(bool)),
+                        this, SLOT(on_selectAllClears(bool)));
+  OS_ASSERT(isConnected);
+  buttonHLayout->addWidget(m_selectAllClears);
+
+  label = new QLabel("All");
+  buttonHLayout->addWidget(label); 
+
+  horizontalSpacer = new QSpacerItem(10, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+  buttonHLayout->addSpacerItem(horizontalSpacer); 
 
 }
 
@@ -415,6 +434,7 @@ void ToggleCloudButton::setStatus(Status status)
 
 DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataPoint& dataPoint)
   : OSHeader(new HeaderToggleButton()),
+  m_clearBtnState(-1),
   m_downloadBtnState(-1),
   m_dataPoint(dataPoint),
   m_name(0),
@@ -635,11 +655,13 @@ void DataPointRunHeaderView::setClearState(bool hasDataToClear)
 {
   QString style;
   if(hasDataToClear){
+    m_clearBtnState = CAN_CLEAR;
     style.append("QPushButton {"
                                "background-image:url(':/images/clear_results_enabled.png');"
                                "  border:none;"
                                "}");
   } else {
+    m_clearBtnState = CANT_CLEAR;
     style.append("QPushButton {"
                                "background-image:url(':/images/clear_results_disabled.png');"
                                "  border:none;"
