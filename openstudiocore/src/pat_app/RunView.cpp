@@ -434,8 +434,8 @@ void ToggleCloudButton::setStatus(Status status)
 
 DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataPoint& dataPoint)
   : OSHeader(new HeaderToggleButton()),
-  m_clearBtnState(-1),
-  m_downloadBtnState(-1),
+  m_clearBtnState(DataPointRunHeaderView::CAN_CLEAR),
+  m_downloadBtnState(DataPointRunHeaderView::CAN_DOWNLOAD),
   m_dataPoint(dataPoint),
   m_name(0),
   m_lastRunTime(0),
