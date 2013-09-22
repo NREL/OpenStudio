@@ -127,6 +127,8 @@ class RunStatusView : public QWidget
 
   void on_cloudStatus(ToggleCloudButton::Status status);
 
+  void on_selectAllDownloads(bool checked);
+
  private:
 
   PlayButton* m_playButton;
@@ -134,6 +136,7 @@ class RunStatusView : public QWidget
   QLabel* m_percentComplete;
   QLabel* m_percentFailed;
   QLabel* m_cloudProviderStatus;
+  QPushButton * m_selectAllDownloads;
 };
 
 class DataPointRunHeaderView : public OSHeader
@@ -145,6 +148,15 @@ class DataPointRunHeaderView : public OSHeader
   DataPointRunHeaderView(const openstudio::analysis::DataPoint& dataPoint);
 
   virtual ~DataPointRunHeaderView() {}
+
+  enum DownloadBtnState{
+    CAN_DOWNLOAD,
+    CANT_DOWNLOAD,
+    DOWNLOADED,
+    NOT_VISIBLE
+  };
+
+  DownloadBtnState m_downloadBtnState;
 
  public slots:
 

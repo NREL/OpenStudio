@@ -93,17 +93,26 @@ RunView::RunView()
 RunStatusView::RunStatusView()
   : QWidget()
 {
-  setFixedHeight(60);
+  setFixedHeight(80);
   setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
   setStyleSheet("openstudio--pat--RunStatusView { background: #D5D5D5; border-bottom: 1px solid #8C8C8C; }");
+
+  QVBoxLayout * mainVLayout = new QVBoxLayout(); 
+  mainVLayout->setContentsMargins(5,5,5,5);
+  mainVLayout->setSpacing(5);
+  this->setLayout(mainVLayout);
 
   QHBoxLayout * mainHLayout = new QHBoxLayout(); 
   mainHLayout->setContentsMargins(5,5,5,5);
   mainHLayout->setSpacing(5);
-
-  this->setLayout(mainHLayout);
-
   mainHLayout->addStretch();
+  mainVLayout->addLayout(mainHLayout);
+
+  QHBoxLayout * buttonHLayout = new QHBoxLayout(); 
+  buttonHLayout->setContentsMargins(5,5,5,5);
+  buttonHLayout->setSpacing(0);
+  buttonHLayout->addStretch();
+  mainVLayout->addLayout(buttonHLayout);
 
   // Run / Play button area
 
@@ -161,6 +170,33 @@ RunStatusView::RunStatusView()
   mainHLayout->addWidget(toggleCloudButton);
 
   mainHLayout->addStretch();
+
+  // "Select All" Button Layout
+
+  QLabel * label = 0;
+
+  QSpacerItem * horizontalSpacer = 0;
+
+  m_selectAllDownloads = new QPushButton(this);
+  m_selectAllDownloads->setFlat(true);
+  m_selectAllDownloads->setFixedSize(QSize(18,18));
+  QString style;
+  style.append("QPushButton {"
+                              "background-image:url(':/images/results_yes_download.png');"
+                              "  border:none;"
+                              "}"); 
+  m_selectAllDownloads->setStyleSheet(style);
+  isConnected = connect(m_selectAllDownloads, SIGNAL(clicked(bool)),
+                        this, SLOT(on_selectAllDownloads(bool)));
+  OS_ASSERT(isConnected);
+  buttonHLayout->addWidget(m_selectAllDownloads);
+
+  label = new QLabel("All");
+  buttonHLayout->addWidget(label);
+
+  horizontalSpacer = new QSpacerItem(14, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+  buttonHLayout->addSpacerItem(horizontalSpacer); 
+
 }
 
 void RunStatusView::paintEvent(QPaintEvent * e)
@@ -379,6 +415,7 @@ void ToggleCloudButton::setStatus(Status status)
 
 DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataPoint& dataPoint)
   : OSHeader(new HeaderToggleButton()),
+  m_downloadBtnState(-1),
   m_dataPoint(dataPoint),
   m_name(0),
   m_lastRunTime(0),
@@ -559,11 +596,13 @@ void DataPointRunHeaderView::setDownloadEnabled(const bool enabled)
   QString style;
   if(enabled){
     if(m_download->isChecked()){
+      m_downloadBtnState = CAN_DOWNLOAD;
       style.append("QPushButton {"
                                  "background-image:url(':/images/results_yes_download.png');"
                                  "  border:none;"
                                  "}");
     } else {
+      m_downloadBtnState = CANT_DOWNLOAD;
       style.append("QPushButton {"
                                  "background-image:url(':/images/results_no_download.png');"
                                  "  border:none;"
@@ -576,11 +615,13 @@ void DataPointRunHeaderView::setDownloadEnabled(const bool enabled)
     // Determine if datapoint has detailed data
     if(this->m_dataPoint.complete() && !this->m_dataPoint.directory().empty()){
       m_download->setEnabled(enabled);
+      m_downloadBtnState = DOWNLOADED;
       style.append("QPushButton {"
                                  "background-image:url(':/images/results_downloaded.png');"
                                  "  border:none;"
                                  "}");
     } else {
+      m_downloadBtnState = CANT_DOWNLOAD;
       style.append("QPushButton {"
                                  "background-image:url(':/images/results_no_download.png');"
                                  "  border:none;"
@@ -620,12 +661,14 @@ void DataPointRunHeaderView::on_clicked(bool checked)
   this->m_dataPoint.setRunType(analysis::DataPointRunType::CloudSlim);
   QString style;
   if(checked){
+    m_downloadBtnState = CANT_DOWNLOAD;
     style.append("QPushButton {"
                                "background-image:url(':/images/results_no_download.png');"
                                "  border:none;"
                                "}");
     m_download->setEnabled(true);
   } else {
+    m_downloadBtnState = NOT_VISIBLE;
     style = "";
     m_download->setEnabled(false);
   }
@@ -637,12 +680,14 @@ void DataPointRunHeaderView::on_downloadClicked(bool checked)
   QString style;
   if(checked){
     this->m_dataPoint.setRunType(analysis::DataPointRunType::CloudDetailed);
+    m_downloadBtnState = CAN_DOWNLOAD;
     style.append("QPushButton {"
                                "background-image:url(':/images/results_yes_download.png');"
                                "  border:none;"
                                "}");
   } else {
     this->m_dataPoint.setRunType(analysis::DataPointRunType::CloudSlim);
+    m_downloadBtnState = CANT_DOWNLOAD;
     style.append("QPushButton {"
                                "background-image:url(':/images/results_no_download.png');"
                                "  border:none;"
