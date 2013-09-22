@@ -151,6 +151,9 @@ RunStatusView::RunStatusView()
   isConnected = connect(cloudMonitor.data(), SIGNAL(internetAvailable(bool)),
                         this, SLOT(on_internetAvailable(bool)));
   OS_ASSERT(isConnected);
+  isConnected = connect(cloudMonitor.data(), SIGNAL(cloudStatus(ToggleCloudButton::Status)),
+                        this, SLOT(on_cloudStatus(ToggleCloudButton::Status)));
+  OS_ASSERT(isConnected);
 
   // Start Cloud
 
@@ -231,6 +234,36 @@ void RunStatusView::on_internetAvailable(bool isAvailable)
   } else {
     m_cloudProviderStatus->setPixmap(QPixmap(":/images/internet_no_connection.png"));
   }
+}
+
+void RunStatusView::on_cloudStatus(ToggleCloudButton::Status status)
+{
+  switch(status)
+  {
+    // TODO
+    case ToggleCloudButton::STARTING:
+      break;
+    case ToggleCloudButton::RUNNING:
+      break;
+    case ToggleCloudButton::STOPPING:
+      break;
+    case ToggleCloudButton::STOPPED:
+      break;
+    default:
+      OS_ASSERT(false);
+  }
+}
+
+void RunStatusView::on_selectAllDownloads(bool checked)
+{
+      // TODO
+
+}
+
+void RunStatusView::on_selectAllClears(bool checked)
+{
+      // TODO
+
 }
 
 ToggleCloudButton::ToggleCloudButton()

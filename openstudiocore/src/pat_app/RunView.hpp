@@ -72,6 +72,31 @@ class RunView : public PatMainTabView
     OSListView * dataPointRunListView;
 };
 
+class ToggleCloudButton : public GrayButton
+{
+  Q_OBJECT
+
+ public:
+
+  enum Status { STARTING, RUNNING, STOPPING, STOPPED };
+
+  ToggleCloudButton();
+
+  void setStatus(Status status);
+
+ protected:
+
+  void updateText();
+
+ private:
+
+  Status m_status;
+
+  QString m_turnOnText;
+
+  QString m_turnOffText;
+};
+
 class RunStatusView : public QWidget
 {
   Q_OBJECT
@@ -100,6 +125,8 @@ class RunStatusView : public QWidget
 
   void on_internetAvailable(bool isAvailable);
 
+  void on_cloudStatus(ToggleCloudButton::Status status);
+
  private:
 
   PlayButton* m_playButton;
@@ -107,31 +134,6 @@ class RunStatusView : public QWidget
   QLabel* m_percentComplete;
   QLabel* m_percentFailed;
   QLabel* m_cloudProviderStatus;
-};
-
-class ToggleCloudButton : public GrayButton
-{
-  Q_OBJECT
-
- public:
-
-  enum Status { STARTING, RUNNING, STOPPING, STOPPED };
-
-  ToggleCloudButton();
-
-  void setStatus(Status status);
-
- protected:
-
-  void updateText();
-
- private:
-
-  Status m_status;
-
-  QString m_turnOnText;
-
-  QString m_turnOffText;
 };
 
 class DataPointRunHeaderView : public OSHeader

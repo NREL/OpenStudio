@@ -50,6 +50,9 @@ CloudMonitor::CloudMonitor()
   bingo = connect(m_worker.data(),SIGNAL(cloudStatus(ToggleCloudButton::Status)),
                   this,SLOT(setCloudButtonStatus(ToggleCloudButton::Status)));
   OS_ASSERT(bingo);
+  bingo = connect(m_worker.data(),SIGNAL(cloudStatus(ToggleCloudButton::Status)),
+                  this,SIGNAL(cloudStatus(ToggleCloudButton::Status)));
+  OS_ASSERT(bingo);
   bingo = connect(m_worker.data(),SIGNAL(internetAvailable(bool)),
                   this,SIGNAL(internetAvailable(bool)));
   OS_ASSERT(bingo);

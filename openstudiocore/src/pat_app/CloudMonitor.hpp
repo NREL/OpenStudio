@@ -62,6 +62,8 @@ class CloudMonitor : public QObject
 
   signals:
 
+  void cloudStatus(ToggleCloudButton::Status status);
+
   void internetAvailable(bool isAvailable);
 
   public slots:
