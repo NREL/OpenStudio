@@ -38,8 +38,8 @@
 #include <QStackedWidget>
 
 #define NO_PROVIDER ""
-#define VAGRANT_PROVIDER "VagrantProviderWidget"
-#define AMAZON_PROVIDER "AmazonProviderWidget"
+#define VAGRANT_PROVIDER "Vagrant"
+#define AMAZON_PROVIDER "Amazon EC2"
 #define EDIT_WIDTH 150
 #define ADDRESS_WIDTH 110
 #define PORT_WIDTH 30
@@ -135,15 +135,9 @@ void CloudDialog::createWidgets()
   m_legalAgreement->setWordWrap(true);
   m_legalAgreement->setFixedHeight(TEXT_HEIGHT);
   m_legalAgreement->setFixedWidth(TEXT_WIDTH);
-  // TODO this text to be set by vagrant and aws providers, once API support such calls
-  // m_legalAgreement->setText(userAgreementText());
-  m_legalAgreement->setText("OpenStudio is provided by the National Renewable Energy Laboratory (“NREL”), which is operated by Alliance for Sustainable Energy, LLC, (“Alliance”) for the U.S. Department of Energy (“DOE”).  NREL, Alliance and DOE are not responsible for any charges incurred as a result of using OpenStudio in connection with web services, cloud services or any other third party computing services.  You are solely responsible for establishing, maintaining, terminating and paying for any third party computing services and are solely responsible for complying with any terms and conditions required by third party service providers. Terminating OpenStudio may not terminate third party computing services used in connection with OpenStudio, and you are solely responsible for verifying that computing services and associated charges are terminated.\n\nTHE SOFTWARE IS PROVIDED BY DOE/NREL/ALLIANCE \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE EXPRESSLY DISCLAIMED.  IN NO EVENT SHALL DOE/NREL/ALLIANCE BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER, INCLUDING BUT NOT LIMITED TO CLAIMS ASSOCIATED WITH THE LOSS OF DATA OR PROFITS, WHICH MAY RESULT FROM ANY ACTION IN CONTRACT, NEGLIGENCE OR OTHER TORTIOUS CLAIM THAT ARISES OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THE SOFTWARE. YOU AGREE TO INDEMNIFY DOE/NREL/ALLIANCE, AND ITS AFFILIATES, OFFICERS, AGENTS, AND EMPLOYEES AGAINST ANY CLAIM OR DEMAND, INCLUDING REASONABLE ATTORNEYS' FEES, RELATED TO YOUR USE, RELIANCE, OR ADOPTION OF THE SOFTWARE FOR ANY PURPOSE WHATSOEVER.");
-  // TODO
-  //boost::optional<CloudProviderWidget *> cloudProviderWidget = this->getCurrentCloudProviderWidget();
-  //if(cloudProviderWidget.is_initialized()){
-  //  cloudProviderWidget.get()->saveData();
-  //  m_legalAgreement->setText(awsProvider.userAgreementText().c_str()); 
-  //}
+
+  AWSProvider awsProvider;
+  m_legalAgreement->setText(awsProvider.userAgreementText().c_str());
 
   m_rightLoginLayout->addWidget(m_legalAgreement,0,Qt::AlignTop | Qt::AlignLeft);
 
@@ -305,13 +299,7 @@ void CloudDialog::on_okButton(bool checked)
 
 void CloudDialog::iAcceptClicked(bool checked)
 {
-  // TODO Update this to work with current CloudSettings API
-  //AWSProvider awsProvider;
-  //awsProvider.signUserAgreement(checked);
-
   this->okButton()->setEnabled(checked);
-
-  // show / hide leftLayout
 }
 
 void CloudDialog::cloudResourceChanged(const QString & text)
@@ -324,14 +312,14 @@ void CloudDialog::cloudResourceChanged(const QString & text)
     this->m_loginStackedWidget->setCurrentIndex(m_blankProviderIdx);
     this->m_settingsStackedWidget->setCurrentIndex(m_blankProviderIdx);
   } else if(text == VAGRANT_PROVIDER) {
-    this->okButton()->setEnabled(true);
+    this->okButton()->setEnabled(m_iAcceptCheckBox->isChecked());
     m_legalAgreement->show();
     m_iAcceptCheckBox->show();
     this->m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
     this->m_loginStackedWidget->setCurrentIndex(m_vagrantProviderIdx);
     this->m_settingsStackedWidget->setCurrentIndex(m_vagrantProviderIdx);
   } else if(text == AMAZON_PROVIDER) {
-    this->okButton()->setEnabled(true);
+    this->okButton()->setEnabled(m_iAcceptCheckBox->isChecked());
     m_legalAgreement->show();
     m_iAcceptCheckBox->show();
     this->m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
@@ -663,16 +651,7 @@ void VagrantProviderWidget::createSettingsWidget()
 
 void  VagrantProviderWidget::loadData()
 {
-  openstudio::path serverPath;
-  openstudio::Url serverUrl;
-  openstudio::path workerPath;
-  openstudio::Url workerUrl;
-
-  // TODO fix this to use new VagrantSettings API
-  // VagrantProvider vagrantProvider(serverPath,serverUrl,workerPath,workerUrl);
   VagrantProvider vagrantProvider;
-  //std::vector<Url> workerUrls = vagrantProvider.workerUrls();
-  //boost::optional<Url> optionalServerUrl = vagrantProvider.serverUrl();
 
   bool isChecked = true;
   m_runOnStartUpCheckBox->setChecked(isChecked);
@@ -693,7 +672,6 @@ void  VagrantProviderWidget::loadData()
 
 void  VagrantProviderWidget::saveData()
 {
-
   bool isChecked = true;
   isChecked = m_runOnStartUpCheckBox->isChecked();
 
@@ -720,7 +698,6 @@ void VagrantProviderWidget::serverDirButtonClicked(bool checked)
                                                    QDir::homePath());
 
   if(!dir.length()) return;
-
 }
 
 void VagrantProviderWidget::workerDirButtonClicked(bool checked)
@@ -731,7 +708,6 @@ void VagrantProviderWidget::workerDirButtonClicked(bool checked)
                                                    QDir::homePath());
 
   if(!dir.length()) return;
-
 }
 
 
@@ -745,9 +721,7 @@ AmazonProviderWidget::AmazonProviderWidget(QWidget * parent)
   m_workerInstanceTypeComboBox(0),
   m_accessKeyLineEdit(0),
   m_secretKeyLineEdit(0),
-  m_selectPrivateKeyLineEdit(0),
-  m_numberOfWorkerInstancesLineEdit(0),
-  m_elasticStorageCapacityLineEdit(0)
+  m_numberOfWorkerInstancesLineEdit(0)
 {
   createLoginWidget();
   createSettingsWidget();
@@ -786,22 +760,12 @@ void AmazonProviderWidget::createLoginWidget()
   m_secretKeyLineEdit = new QLineEdit();
   m_secretKeyLineEdit->setFixedWidth(EDIT_WIDTH);
   m_leftLoginLayout->addWidget(m_secretKeyLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
-  
-  label = new QLabel;
-  label->setObjectName("H2");
-  label->setText("Select Private Key File");
-  m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
-    
-  m_selectPrivateKeyLineEdit = new QLineEdit();
-  m_secretKeyLineEdit->setFixedWidth(EDIT_WIDTH);
-  m_leftLoginLayout->addWidget(m_selectPrivateKeyLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_leftLoginLayout->addStretch();
 
   // RIGHT LOGIN PAGE
 
   // m_rightLoginLayout N/A
-
 }
 
 void AmazonProviderWidget::createSettingsWidget()
@@ -851,15 +815,6 @@ void AmazonProviderWidget::createSettingsWidget()
   m_numberOfWorkerInstancesLineEdit = new QLineEdit();
   m_numberOfWorkerInstancesLineEdit->setFixedWidth(EDIT_WIDTH);
   m_leftSettingsLayout->addWidget(m_numberOfWorkerInstancesLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
-  
-  label = new QLabel;
-  label->setObjectName("H2");
-  label->setText("Elastic Storage Capacity (GB)");
-  m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
-  
-  m_elasticStorageCapacityLineEdit = new QLineEdit();
-  m_elasticStorageCapacityLineEdit->setFixedWidth(EDIT_WIDTH);
-  m_leftSettingsLayout->addWidget(m_elasticStorageCapacityLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_leftSettingsLayout->addStretch();
 
@@ -881,41 +836,75 @@ void AmazonProviderWidget::createSettingsWidget()
 void  AmazonProviderWidget::loadData()
 {
   AWSProvider awsProvider;
-  
-  //m_regionComboBox;
-  //m_serverInstanceTypeComboBox;
-  //m_workerInstanceTypeComboBox;
-  //
-  //Q_FOREACH(const QString & item, possibleItems){
-  //  comboBox->addItem(item);
-  //}
-  //int index = comboBox->findText(savedItem);
-  //// verify the saved item is in the set of possible items
-  //OS_ASSERT(index != -1);
-  //comboBox->setCurrentIndex(index);
 
-  //m_accessKeyLineEdit->setText(awsProvider.accessKey());
-  //m_secretKeyLineEdit->setText(awsProvider.secretKey());
+  m_accessKeyLineEdit->setText(awsProvider.accessKey().c_str());
 
-  QString text;
-  m_numberOfWorkerInstancesLineEdit->setText(text.setNum(awsProvider.numWorkers()));
+  m_secretKeyLineEdit->setText(awsProvider.secretKey().c_str());
+
+  int index = -1;
+
+  std::vector<std::string> availableRegions = awsProvider.availableRegions();
+  Q_FOREACH(const std::string & region, availableRegions){
+    m_regionComboBox->addItem(region.c_str());
+  }
+
+  index = m_regionComboBox->findText(awsProvider.region().c_str());
+  if(index == -1) index = 0;
+  m_regionComboBox->setCurrentIndex(index);
+
+  std::vector<std::string> serverInstanceTypes = awsProvider.serverInstanceTypes();
+  Q_FOREACH(const std::string & serverInstanceType, serverInstanceTypes){
+    m_serverInstanceTypeComboBox->addItem(serverInstanceType.c_str());
+  }
+
+  index = m_serverInstanceTypeComboBox->findText(awsProvider.serverInstanceType().c_str());
+  if(index == -1){
+    index = m_serverInstanceTypeComboBox->findText(awsProvider.defaultServerInstanceType().c_str());
+  }
+  m_serverInstanceTypeComboBox->setCurrentIndex(index);
+
+  std::vector<std::string> workerInstanceTypes = awsProvider.workerInstanceTypes();
+  Q_FOREACH(const std::string & workerInstanceType, workerInstanceTypes){
+    m_workerInstanceTypeComboBox->addItem(workerInstanceType.c_str());
+  }
+
+  index = m_workerInstanceTypeComboBox->findText(awsProvider.workerInstanceType().c_str());
+  if(index == -1){
+    index = m_workerInstanceTypeComboBox->findText(awsProvider.defaultWorkerInstanceType().c_str());
+  }
+  m_workerInstanceTypeComboBox->setCurrentIndex(index);
+
+  QString temp;
+  m_numberOfWorkerInstancesLineEdit->setText(temp.setNum(awsProvider.numWorkers()));
+
+  m_waitCheckBox->setChecked(awsProvider.terminationDelayEnabled());
+
+  m_waitLineEdit->setText(temp.setNum(awsProvider.terminationDelay()));
 }
 
 void  AmazonProviderWidget::saveData()
 {
   AWSProvider awsProvider;
 
-  QString text;
+  awsProvider.setAccessKey(m_accessKeyLineEdit->text().toStdString());
 
-  text = m_regionComboBox->currentText();
-  text = m_serverInstanceTypeComboBox->currentText();
-  text = m_workerInstanceTypeComboBox->currentText();
+  awsProvider.setSecretKey(m_secretKeyLineEdit->text().toStdString());
 
-  //awsProvider.setKeys(m_accessKeyLineEdit->text(),m_secretKeyLineEdit->text());
+  awsProvider.setRegion(m_regionComboBox->currentText().toStdString());
 
-  text = m_numberOfWorkerInstancesLineEdit->text();
-  unsigned numWorkers = text.toUInt();
-  //awsProvider.setNumWorkers();
+  awsProvider.setServerInstanceType(m_serverInstanceTypeComboBox->currentText().toStdString());
+
+  awsProvider.setWorkerInstanceType(m_workerInstanceTypeComboBox->currentText().toStdString());
+
+  QString temp;
+
+  unsigned numWorkers = m_numberOfWorkerInstancesLineEdit->text().toUInt();
+  awsProvider.setNumWorkers(numWorkers);
+ 
+  awsProvider.setTerminationDelayEnabled(m_waitCheckBox->isChecked());
+
+  unsigned wait = m_waitLineEdit->text().toUInt();
+  awsProvider.setTerminationDelay(wait);
 }
 
 //***** SLOTS *****

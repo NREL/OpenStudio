@@ -22,21 +22,11 @@
 
 #include <shared_gui_components/OSDialog.hpp>
 
-#include <utilities/core/Optional.hpp>
-
-class QCheckBox;
-class QComboBox;
 class QLabel;
 class QLineEdit;
-class QStackedWidget;
-class QVBoxLayout;
+class QPushButton;
 
 namespace openstudio{
-
-class AmazonProviderWidget;
-class BlankProviderWidget;
-class CloudProviderWidget;
-class VagrantProviderWidget;
 
 class MonitorUseDialog : public OSDialog
 {
@@ -56,11 +46,12 @@ private:
   QLabel * m_timeRunning;
   QLabel * m_numInstances;
   QLabel * m_totalNumInstances;
-  QLabel * m_cloudStatus;
+  QPushButton * m_cloudStatus;
 
 private slots:
 
   void updateData();
+  void on_cloudStatus(bool checked);
 
 };
 

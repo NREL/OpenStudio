@@ -73,6 +73,29 @@ class RunView : public PatMainTabView
     OSListView * dataPointRunListView;
 };
 
+class ToggleCloudButton : public GrayButton
+{
+  Q_OBJECT
+
+ public:
+
+  ToggleCloudButton();
+
+  void setStatus(CloudStatus status);
+
+ protected:
+
+  void updateText();
+
+ private:
+
+  CloudStatus m_status;
+
+  QString m_turnOnText;
+
+  QString m_turnOffText;
+};
+
 class RunStatusView : public QWidget
 {
   Q_OBJECT
@@ -101,6 +124,10 @@ class RunStatusView : public QWidget
 
   void on_internetAvailable(bool isAvailable);
 
+  void on_selectAllDownloads(bool checked);
+
+  void on_selectAllClears(bool checked);
+
  private:
 
   PlayButton* m_playButton;
@@ -108,29 +135,8 @@ class RunStatusView : public QWidget
   QLabel* m_percentComplete;
   QLabel* m_percentFailed;
   QLabel* m_cloudProviderStatus;
-};
-
-class ToggleCloudButton : public GrayButton
-{
-  Q_OBJECT
-
- public:
-
-  ToggleCloudButton();
-
-  void setStatus(CloudStatus status);
-
- protected:
-
-  void updateText();
-
- private:
-
-  CloudStatus m_status;
-
-  QString m_turnOnText;
-
-  QString m_turnOffText;
+  QPushButton * m_selectAllClears;
+  QPushButton * m_selectAllDownloads;
 };
 
 class DataPointRunHeaderView : public OSHeader
@@ -142,6 +148,22 @@ class DataPointRunHeaderView : public OSHeader
   DataPointRunHeaderView(const openstudio::analysis::DataPoint& dataPoint);
 
   virtual ~DataPointRunHeaderView() {}
+
+  enum ClearBtnState{
+    CAN_CLEAR,
+    CANT_CLEAR
+  };
+
+  enum DownloadBtnState{
+    CAN_DOWNLOAD,
+    CANT_DOWNLOAD,
+    DOWNLOADED,
+    NOT_VISIBLE
+  };
+
+  ClearBtnState m_clearBtnState;
+
+  DownloadBtnState m_downloadBtnState;
 
  public slots:
 

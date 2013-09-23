@@ -85,6 +85,7 @@
     <file alias="shared_gui_components/images/fast_reverse.png">../shared_gui_components/images/fast_reverse.png</file>
     <file alias="shared_gui_components/images/forward.png">../shared_gui_components/images/forward.png</file>
     <file alias="shared_gui_components/images/gray_add_icon.png">../shared_gui_components/images/gray_add_icon.png</file>
+    <file alias="shared_gui_components/images/manage_all_button.png">../shared_gui_components/images/manage_all_button.png</file>
     <file alias="shared_gui_components/images/open_my_measures.png">../shared_gui_components/images/open_my_measures.png</file>
     <file alias="shared_gui_components/images/open_my_measures_press.png">../shared_gui_components/images/open_my_measures_press.png</file>
     <file alias="shared_gui_components/images/openstudio_measure_icon.png">../shared_gui_components/images/openstudio_measure_icon.png</file>
