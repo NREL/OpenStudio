@@ -724,7 +724,7 @@ IF (WIN32)
   SET(AWS_RUBY_EXTENSION ".zip")
 
   SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-win32.zip)
-  SET(AWS_RUBY_CHECKSUM ba3635f434acc641d01ac8ac61f012be)
+  SET(AWS_RUBY_CHECKSUM 912351a66912d437fd62f206e533f9d9)
 ELSEIF(APPLE)
   SET(AWS_RUBY_PATH ruby-2.0.0-aws-Darwin)
   SET(AWS_RUBY_DESTINATION ".")

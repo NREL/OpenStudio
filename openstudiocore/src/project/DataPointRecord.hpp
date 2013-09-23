@@ -25,6 +25,7 @@
 
 namespace openstudio {
 
+class Attribute;
 class FileReference;
 
 namespace analysis {
@@ -222,9 +223,10 @@ class PROJECT_API DataPointRecord : public ObjectRecord {
       ProjectDatabase& database,
       bool isNew);
 
-  std::vector<FileReferenceRecord> saveChildFileReferences(
-      const std::vector<FileReference>& childFileReferences,
+  std::vector<FileReferenceRecord> saveChildXmlFileReferences(
+      std::vector<FileReference> childFileReferences,
       std::vector<FileReferenceRecord> oldFileReferenceRecords,
+      std::vector<Attribute> outputAttributes,
       DataPointRecord& copyOfThis,
       ProjectDatabase& database,
       bool isNew);
