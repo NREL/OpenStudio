@@ -135,7 +135,7 @@ void CloudMonitor::startCloud()
 
     m_cloudProvider->requestStartServer();
 
-    m_cloudProvider->requestStartWorkers();
+    //m_cloudProvider->requestStartWorkers();
   }
 }
 
@@ -257,10 +257,15 @@ void CloudMonitor::onServerStarted()
 {
   m_serverStarted = true;
 
-  if( m_serverStarted && m_allWorkersStarted )
+  if( m_cloudProvider && m_status == CLOUD_STARTING )
   {
-    onCloudStartupComplete();
+    m_cloudProvider->requestStartWorkers();
   }
+
+  //if( m_serverStarted && m_allWorkersStarted )
+  //{
+  //  onCloudStartupComplete();
+  //}
 }
 
 void CloudMonitor::onAllWorkersStarted()
