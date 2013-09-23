@@ -50,8 +50,10 @@ class CloudMonitor : public QObject
 
   virtual ~CloudMonitor();
 
+  // A reliable method to retrieve the cloud status
   CloudStatus status() const;
 
+  // Return a new CloudProvider with from settings and session.
   static CloudProvider newCloudProvider(const CloudSettings & settings, 
                                         const boost::optional<CloudSession> & session = boost::none);
 
@@ -78,6 +80,7 @@ class CloudMonitor : public QObject
   
   protected:
 
+  // We don't want to expose this pulically.  CloudMonitor should insulate m_cloudProvider.
   boost::optional<CloudProvider> cloudProvider() const;
 
   // Dont assign to m_cloudProvider directly
@@ -110,12 +113,19 @@ class CloudMonitor : public QObject
   // encountered if the cloud is started up externally, like from AWS interface.
   void onCloudUnexpectedlyStarted();
 
+  // When startup is completely done, set status to CLOUD_RUNNING
+  // and enable UI as required.
   void onCloudStartupComplete();
 
+  // For now start server and workers in series, 
+  // once the server has started, then start the workers
   void onServerStarted();
 
+  // When all workers have started, and assuming server has already started,
+  // call onCloudStartupComplete for final initialization
   void onAllWorkersStarted();
 
+  // Reset the cloud provider, renable UI, etc.
   void onCloudTerminateComplete();
 
   private:
@@ -152,6 +162,11 @@ class CloudMonitor : public QObject
   friend class InitializeCloudWorker;
 };
 
+// The purpose of this class is to initialize the m_cloudProvider member of
+// CloudMonitor and make sure that the UI reflects the proper state.  
+// The CloudProvider instance should be initialized based on the project settings, and 
+// session.  If there is no session then reset m_cloudProvider
+// If the cloud is running, first turn it off.
 class InitializeCloudWorker : public QObject
 {
   Q_OBJECT
