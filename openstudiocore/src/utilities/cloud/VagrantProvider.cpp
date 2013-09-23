@@ -31,6 +31,8 @@
 #include <QNetworkRequest>
 #include <QMutex>
 
+#include <boost/bind.hpp>
+
 namespace openstudio{
   namespace detail{
         
