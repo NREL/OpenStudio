@@ -21,6 +21,7 @@
 #define OPENSTUDIO_RUNVIEW_H
 
 #include <pat_app/PatMainTabView.hpp>
+#include "PatConstants.hpp"
 
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/HeaderViews.hpp"
@@ -115,11 +116,9 @@ class ToggleCloudButton : public GrayButton
 
  public:
 
-  enum Status { STARTING, RUNNING, STOPPING, STOPPED };
-
   ToggleCloudButton();
 
-  void setStatus(Status status);
+  void setStatus(CloudStatus status);
 
  protected:
 
@@ -127,7 +126,7 @@ class ToggleCloudButton : public GrayButton
 
  private:
 
-  Status m_status;
+  CloudStatus m_status;
 
   QString m_turnOnText;
 

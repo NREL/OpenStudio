@@ -31,33 +31,34 @@
 #include <pat_app/VagrantConfiguration.hxx>
 #include <QThread>
 #include <QTimer>
-#include <QMutex>
 
 namespace openstudio {
 
 namespace pat {
 
 CloudMonitor::CloudMonitor()
-  : QObject()  
+  : QObject(),
+    m_serverStarted(false),
+    m_allWorkersStarted(false)
 {    
-  m_mutex = QSharedPointer<QMutex>(new QMutex());
+  setStatus(CLOUD_STOPPED);
 
   m_workerThread = QSharedPointer<QThread>(new QThread());
   m_worker = QSharedPointer<CloudMonitorWorker>(new CloudMonitorWorker(this));
   m_worker->moveToThread(m_workerThread.data());
-  qRegisterMetaType<ToggleCloudButton::Status>("ToggleCloudButton::Status");
+  qRegisterMetaType<CloudStatus>("CloudStatus");
   bool bingo;
-  bingo = connect(m_worker.data(),SIGNAL(cloudStatus(ToggleCloudButton::Status)),
-                  this,SLOT(setCloudButtonStatus(ToggleCloudButton::Status)));
-  OS_ASSERT(bingo);
   bingo = connect(m_worker.data(),SIGNAL(internetAvailable(bool)),
                   this,SIGNAL(internetAvailable(bool)));
   OS_ASSERT(bingo);
+  //bingo = connect(m_worker.data(),SIGNAL(cloudConfigurationChanged()),
+  //                this,SLOT(initializeCloudSession()));
+  //OS_ASSERT(bingo);
   m_workerThread->start();
 
-  createTestSettings();
+  //initializeCloudSession();
 
-  m_worker->clockIn();
+  m_worker->startWorking();
 }      
 
 CloudMonitor::~CloudMonitor()
@@ -66,88 +67,7 @@ CloudMonitor::~CloudMonitor()
   m_workerThread->wait();
 }
 
-void CloudMonitor::setCloudSettings(const CloudSettings & settings)
-{
-  if( m_cloudProvider )
-  {
-    m_cloudProvider.clear();
-  }
-
-  if( settings.optionalCast<AWSSettings>() )
-  {
-    setCloudProvider(QSharedPointer<AWSProvider>(new AWSProvider()));
-
-    m_cloudProvider->setSettings(settings);
-  }
-  else if( settings.optionalCast<VagrantSettings>() )
-  {
-    setCloudProvider(QSharedPointer<VagrantProvider>(new VagrantProvider()));
-
-    m_cloudProvider->setSettings(settings);
-  }
-
-  m_worker->setCloudSettings(settings);
-}
-
-CloudSettings CloudMonitor::cloudSettings() const
-{
-  if( m_cloudProvider )
-  {
-    return m_cloudProvider->settings();
-  }
-  else
-  {
-    return AWSSettings();
-  }
-}
-
-//QSharedPointer<CloudProvider> CloudMonitor::cloudProvider() const
-//{
-//  return m_cloudProvider;
-//}
-
-bool CloudMonitor::starting()
-{
-  QMutexLocker locker(m_mutex.data());
-
-  bool result(false);
-
-  if( m_cloudProvider )
-  {
-    if( m_cloudProvider->serverStarted() && ! m_cloudProvider->serverRunning() ) 
-    { 
-      result = true; 
-    }
-  }
-
-  return result;
-}
-
-bool CloudMonitor::stopping()
-{
-  QMutexLocker locker(m_mutex.data());
-
-  bool result(false);
-
-  if( m_cloudProvider )
-  {
-    if( m_cloudProvider->terminateStarted() && serverRunning() ) 
-    { 
-      result = true; 
-    }
-  }
-
-  return result;
-}
-
-bool CloudMonitor::serverRunning()
-{
-  m_cloudProvider->requestServerRunning();
-
-  return false;
-}
-
-void CloudMonitor::setCloudProvider(QSharedPointer<CloudProvider> cloudProvider)
+void CloudMonitor::setCloudProvider(boost::optional<CloudProvider> cloudProvider)
 {
   m_cloudProvider = cloudProvider;
 
@@ -156,7 +76,11 @@ void CloudMonitor::setCloudProvider(QSharedPointer<CloudProvider> cloudProvider)
   if( m_cloudProvider )
   {
     bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(serverStarted(const Url&)),
-                    this,SLOT(onCloudStartupComplete()));
+                    this,SLOT(onServerStarted()));
+    OS_ASSERT(bingo);
+
+    bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(allWorkersStarted()),
+                    this,SLOT(onAllWorkersStarted()));
     OS_ASSERT(bingo);
   
     bingo = connect(m_cloudProvider->getImpl<detail::CloudProvider_Impl>().get(),SIGNAL(terminated()),
@@ -165,33 +89,141 @@ void CloudMonitor::setCloudProvider(QSharedPointer<CloudProvider> cloudProvider)
   }
 }
 
+boost::optional<CloudProvider> CloudMonitor::cloudProvider() const
+{
+  return m_cloudProvider;
+}
+
 void CloudMonitor::toggleCloud()
 {
   if( m_cloudProvider )
   {
-    if( m_cloudProvider->serverStarted() )
+    if( m_status == CLOUD_RUNNING )
     {
-      m_mutex->lock();
-
       m_cloudProvider->requestTerminate();
 
-      setCloudButtonStatus(ToggleCloudButton::STOPPING);
+      setStatus(CLOUD_STOPPING);
     }
-    else
+    else if( m_status == CLOUD_STOPPED )
     {
-      m_mutex->lock();
+      startCloud();
 
-      m_cloudProvider->requestStartServer();
-
-      //m_cloudProvider->requestStartWorkers();
-
-      setCloudButtonStatus(ToggleCloudButton::STARTING);
+      setStatus(CLOUD_STARTING);
     }
+  }
+  else if( ! currentProjectSession() )
+  {
+    CloudSettings settings = createTestSettings();
+
+    CloudProvider provider = newCloudProvider(settings);
+
+    setCloudProvider(provider);
+
+    startCloud();
+
+    setStatus(CLOUD_STARTING);
   }
 }
 
-void CloudMonitor::setCloudButtonStatus(ToggleCloudButton::Status status)
+void CloudMonitor::startCloud()
 {
+  if( m_cloudProvider && m_status == CLOUD_STOPPED )
+  {
+    m_serverStarted = false;
+
+    m_allWorkersStarted = false;
+
+    m_cloudProvider->requestStartServer();
+
+    m_cloudProvider->requestStartWorkers();
+  }
+}
+
+boost::optional<CloudSession> CloudMonitor::currentProjectSession()
+{
+  boost::optional<CloudSession> session;
+
+  if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() )
+  {
+    session = project->cloudSession();
+  }
+
+  return session;
+}
+
+boost::optional<CloudSettings> CloudMonitor::currentProjectSettings()
+{
+  boost::optional<CloudSettings> settings;
+
+  if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() )
+  {
+    settings = project->cloudSettings();
+  }
+
+  return settings;
+}
+
+void CloudMonitor::setCurrentProjectSession(const CloudSession & session)
+{
+  if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() )
+  {
+    project->setCloudSession(session);
+  }
+}
+
+void CloudMonitor::setCurrentProjectSettings(const CloudSettings & settings)
+{
+  if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() )
+  {
+    project->setCloudSettings(settings);
+  }
+}
+
+CloudProvider CloudMonitor::newCloudProvider(const CloudSettings & settings, 
+                                             const boost::optional<CloudSession> & session)
+{
+  boost::optional<CloudProvider> cloudProvider;
+
+  if( settings.optionalCast<AWSSettings>() )
+  {
+    AWSProvider awsProvider;
+
+    cloudProvider = awsProvider;
+
+    cloudProvider->setSettings(settings);
+
+    if( session )
+    {
+      OS_ASSERT(session->optionalCast<AWSSession>());
+
+      cloudProvider->setSession(session.get());
+    }
+  }
+  else if( settings.optionalCast<VagrantSettings>() )
+  {
+    VagrantProvider vagrantProvider;
+
+    cloudProvider = vagrantProvider;
+
+    cloudProvider->setSettings(settings);
+
+    if( session )
+    {
+      OS_ASSERT(session->optionalCast<VagrantSession>());
+
+      cloudProvider->setSession(session.get());
+    }
+  } 
+
+  OS_ASSERT(cloudProvider);
+
+  return cloudProvider.get();
+}
+
+void CloudMonitor::setStatus(CloudStatus status)
+{
+  m_status = status;
+
   if( QSharedPointer<RunTabController> runTabController = PatApp::instance()->runTabController() )
   {
     RunView * runView = runTabController->runView; 
@@ -202,32 +234,63 @@ void CloudMonitor::setCloudButtonStatus(ToggleCloudButton::Status status)
   }
 }
 
+CloudStatus CloudMonitor::status() const
+{
+  return m_status;
+}
+
 void CloudMonitor::onCloudStartupComplete()
 {
-  setCloudButtonStatus(ToggleCloudButton::RUNNING);
+  OS_ASSERT(m_cloudProvider);
 
-  m_mutex->unlock();
+  // TODO figure out why this causes problems when we try to restart
+  // Maybe bug in project, maybe bug in CloudMonitor
+
+  //setCurrentProjectSession(m_cloudProvider->session());
+
+  //setCurrentProjectSettings(m_cloudProvider->settings());
+
+  setStatus(CLOUD_RUNNING);
+}
+
+void CloudMonitor::onServerStarted()
+{
+  m_serverStarted = true;
+
+  if( m_serverStarted && m_allWorkersStarted )
+  {
+    onCloudStartupComplete();
+  }
+}
+
+void CloudMonitor::onAllWorkersStarted()
+{
+  m_allWorkersStarted = true;
+
+  if( m_serverStarted && m_allWorkersStarted )
+  {
+    onCloudStartupComplete();
+  }
 }
 
 void CloudMonitor::onCloudTerminateComplete()
 {
-  createTestSettings();
+  m_serverStarted = false;
 
-  setCloudButtonStatus(ToggleCloudButton::STOPPED);
+  m_allWorkersStarted = false;
 
-  m_mutex->unlock();
+  m_cloudProvider = boost::none;
+
+  setStatus(CLOUD_STOPPED);
 }
 
-void CloudMonitor::createTestSettings()
+CloudSettings CloudMonitor::createTestSettings() const
 {
   // create the vagrant provider
   path serverPath = vagrantServerPath();
   Url serverUrl("http://localhost:8080");
   path workerPath = vagrantWorkerPath();
   Url workerUrl("http://localhost:8081");
-
-  QSharedPointer<VagrantProvider> provider;
-  provider = QSharedPointer<VagrantProvider>(new VagrantProvider());
 
   VagrantSettings vagrantSettings;
   vagrantSettings.setServerUrl(serverUrl);
@@ -236,8 +299,104 @@ void CloudMonitor::createTestSettings()
   vagrantSettings.setWorkerPath(workerPath);
   vagrantSettings.signUserAgreement(true);
   vagrantSettings.setHaltOnStop(true);
+
+  return vagrantSettings;
+}
+
+void CloudMonitor::initializeCloudSession()
+{
+  if( QSharedPointer<RunTabController> runTabController = PatApp::instance()->runTabController() )
+  {
+    RunView * runView = runTabController->runView; 
   
-  setCloudSettings(vagrantSettings);
+    OS_ASSERT(runView);
+    
+    runView->runStatusView->toggleCloudButton->setEnabled(false);
+  }
+
+  m_initializeCloudThread = QSharedPointer<QThread>(new QThread());
+
+  m_initializeCloudWorker = QSharedPointer<InitializeCloudWorker>(new InitializeCloudWorker(this));
+
+  bool bingo;
+
+  bingo = connect(m_initializeCloudWorker.data(),SIGNAL(doneWorking()),this,SLOT(onCloudSessionInitializeComplete()));
+
+  OS_ASSERT(bingo);
+
+  m_initializeCloudWorker->moveToThread(m_initializeCloudThread.data());
+
+  m_initializeCloudThread->start();
+
+  m_initializeCloudWorker->startWorking();
+}
+
+void CloudMonitor::onCloudSessionInitializeComplete()
+{
+  if( QSharedPointer<RunTabController> runTabController = PatApp::instance()->runTabController() )
+  {
+    RunView * runView = runTabController->runView; 
+  
+    OS_ASSERT(runView);
+    
+    runView->runStatusView->toggleCloudButton->setEnabled(true);
+  }
+
+  m_initializeCloudThread->quit();
+  m_initializeCloudThread.clear();
+  m_initializeCloudWorker.clear();
+}
+
+void CloudMonitor::onCloudConnectionLost()
+{
+}
+
+void CloudMonitor::onCloudUnexpectedlyStarted()
+{
+}
+
+InitializeCloudWorker::InitializeCloudWorker(CloudMonitor * monitor)
+  : QObject(),
+    m_monitor(monitor)
+{
+}
+
+InitializeCloudWorker::~InitializeCloudWorker()
+{
+}
+
+void InitializeCloudWorker::startWorking()
+{
+  if( m_monitor->status() != CLOUD_STOPPED )
+  {
+  }
+  else
+  {
+    boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
+
+    boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
+    
+    if( settings )
+    {
+      boost::optional<CloudProvider> cloudProvider = CloudMonitor::newCloudProvider(settings.get(),session);
+
+      if( cloudProvider )
+      {
+        if( cloudProvider->serverRunning() )
+        {
+          m_monitor->setStatus(CLOUD_RUNNING);
+        }
+        else
+        {
+          m_monitor->setStatus(CLOUD_STOPPED);
+        }
+
+        m_monitor->setCloudProvider(cloudProvider);
+      }
+    }
+  }
+
+  emit doneWorking();
 }
 
 CloudMonitorWorker::CloudMonitorWorker(CloudMonitor * monitor)
@@ -249,62 +408,81 @@ CloudMonitorWorker::~CloudMonitorWorker()
 {
 }
 
-void CloudMonitorWorker::setCloudSettings(const CloudSettings & settings)
+void CloudMonitorWorker::startWorking()
 {
-  m_cloudSettings = settings;
+  checkForNewSession();
+
+  checkForInternetConnection();
+
+  checkForCloudConnection();
+
+  QTimer::singleShot(5000,this,SLOT(startWorking()));
 }
 
-void CloudMonitorWorker::clockIn()
-{
-  nowGetToWork();
-}
-
-void CloudMonitorWorker::nowGetToWork()
+void CloudMonitorWorker::checkForInternetConnection()
 {
   // TODO we should use the actual current provider(i.e. Vagrant, AwsProvider, etc)
 
-  if( m_cloudSettings )
+  static bool internetAvailableCurrently = false;
+  static bool internetAvailableLastTime = false;
+  static bool internetAvailableTimeBeforeLast = false;
+
+  internetAvailableTimeBeforeLast = internetAvailableLastTime;
+  internetAvailableLastTime = internetAvailableCurrently;
+
+  VagrantProvider cloudProvider;
+  internetAvailableCurrently = cloudProvider.internetAvailable();
+
+  if(internetAvailableCurrently && internetAvailableLastTime && internetAvailableTimeBeforeLast){
+    emit internetAvailable(true);
+  } else if(!internetAvailableCurrently && !internetAvailableLastTime && !internetAvailableTimeBeforeLast){
+    emit internetAvailable(false);
+  }
+}
+
+void CloudMonitorWorker::checkForCloudConnection()
+{
+}
+
+void CloudMonitorWorker::checkForNewSession()
+{
+  if( m_monitor->status() != CLOUD_STARTING &&
+      m_monitor->status() != CLOUD_STOPPING )
   {
-    if( ! m_monitor->starting() && ! m_monitor->stopping() )
+    boost::optional<CloudSession> session;
+    boost::optional<CloudSettings> settings;
+
+    if( boost::optional<CloudProvider> provider = m_monitor->cloudProvider() )
     {
-      if( boost::optional<VagrantSettings> settings = m_cloudSettings->optionalCast<VagrantSettings>() )
-      {
-        VagrantProvider provider;
-        provider.setSettings(settings.get());
-
-        if( provider.serverRunning() )
-        {
-          emit cloudStatus(ToggleCloudButton::RUNNING);
-        }
-        else
-        {
-          emit cloudStatus(ToggleCloudButton::STOPPED);
-        }
-      }
-      else if( boost::optional<AWSSettings> settings =  m_cloudSettings->optionalCast<AWSSettings>() )
-      {
-      }
+      session = provider->session();
+      settings = provider->settings();
     }
 
-    // Check Internet Availability
+    boost::optional<CloudSettings> currentProjectSettings = m_monitor->currentProjectSettings();
+    boost::optional<CloudSession> currentProjectSession = m_monitor->currentProjectSession();
 
-    static bool internetAvailableCurrently = false;
-    static bool internetAvailableLastTime = false;
-    static bool internetAvailableTimeBeforeLast = false;
-
-    internetAvailableTimeBeforeLast = internetAvailableLastTime;
-    internetAvailableLastTime = internetAvailableCurrently;
-
-    VagrantProvider cloudProvider;
-    internetAvailableCurrently = cloudProvider.internetAvailable();
-
-    if(internetAvailableCurrently && internetAvailableLastTime && internetAvailableTimeBeforeLast){
-      emit internetAvailable(true);
-    } else if(!internetAvailableCurrently && !internetAvailableLastTime && !internetAvailableTimeBeforeLast){
-      emit internetAvailable(false);
+    if( session && currentProjectSession && 
+        settings && currentProjectSettings ) 
+    {
+      if( ( currentProjectSession->getImpl<detail::CloudSession_Impl>() != 
+            session->getImpl<detail::CloudSession_Impl>() ) ||
+          ( currentProjectSettings->getImpl<detail::CloudSettings_Impl>() != 
+            settings->getImpl<detail::CloudSettings_Impl>() )
+        )
+      {
+        emit cloudConfigurationChanged();
+      } 
+    } 
+    else if( (session && ! currentProjectSession) ||
+             (currentProjectSession && ! session ) )
+    {
+      emit cloudConfigurationChanged();
     }
-
-    QTimer::singleShot(5000,this,SLOT(nowGetToWork()));
+    else if( (settings && ! currentProjectSettings) ||
+             (currentProjectSettings && ! settings ) )
+    {
+      emit cloudConfigurationChanged();
+    }
   }
 }
 

@@ -239,7 +239,7 @@ void RunStatusView::on_internetAvailable(bool isAvailable)
 
 ToggleCloudButton::ToggleCloudButton()
   : GrayButton(),
-    m_status(STOPPED)
+    m_status(CLOUD_STOPPED)
 {
   m_turnOnText  = "Turn On Cloud";
   m_turnOffText = "Turn Off Cloud";
@@ -262,25 +262,25 @@ ToggleCloudButton::ToggleCloudButton()
 
 void ToggleCloudButton::updateText()
 {
-  if( m_status == STOPPED )
+  if( m_status == CLOUD_STOPPED )
   {
     setText(m_turnOnText);
 
     setEnabled(true);
   }
-  else if( m_status == STARTING )
+  else if( m_status == CLOUD_STARTING )
   {
     setText("Starting");
 
     setEnabled(false);
   }
-  else if( m_status == RUNNING )
+  else if( m_status == CLOUD_RUNNING )
   {
     setText(m_turnOffText);
 
     setEnabled(true);
   }
-  else if( m_status == STOPPING )
+  else if( m_status == CLOUD_STOPPING )
   {
     setText("Stopping");
 
@@ -288,7 +288,7 @@ void ToggleCloudButton::updateText()
   }
 }
 
-void ToggleCloudButton::setStatus(Status status)
+void ToggleCloudButton::setStatus(CloudStatus status)
 {
   m_status = status;
 

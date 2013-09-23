@@ -21,6 +21,7 @@
 #define OPENSTUDIO_CLOUDMONITOR_HPP
 
 #include "RunView.hpp"
+#include "PatConstants.hpp"
 #include <QObject>
 #include <QSharedPointer>
 #include <utilities/core/Path.hpp>
@@ -30,13 +31,14 @@
 #include <map>
 
 class QThread;
-class QMutex;
 
 namespace openstudio {
 
 namespace pat {
 
 class CloudMonitorWorker;
+
+class InitializeCloudWorker;
 
 class CloudMonitor : public QObject
 {
@@ -48,15 +50,22 @@ class CloudMonitor : public QObject
 
   virtual ~CloudMonitor();
 
-  void setCloudSettings(const CloudSettings & settings);
+  CloudStatus status() const;
 
-  CloudSettings cloudSettings() const;
+  static CloudProvider newCloudProvider(const CloudSettings & settings, 
+                                        const boost::optional<CloudSession> & session = boost::none);
 
-  bool starting();
+  // Return the session stored in the App's current project
+  static boost::optional<CloudSession> currentProjectSession();
 
-  bool stopping();
+  // Return the settings stored in the App's current project
+  static boost::optional<CloudSettings> currentProjectSettings();
 
-  bool serverRunning();
+  // Set the session in the App's current project
+  static void setCurrentProjectSession(const CloudSession & session);
+
+  // Set the settings in the App's current project
+  static void setCurrentProjectSettings(const CloudSettings & settings);
 
   signals:
 
@@ -66,30 +75,106 @@ class CloudMonitor : public QObject
 
   // If cloud is on then turn off, and vice versa
   void toggleCloud();
+  
+  protected:
+
+  boost::optional<CloudProvider> cloudProvider() const;
+
+  // Dont assign to m_cloudProvider directly
+  // This method makes the requred connections
+  void setCloudProvider(boost::optional<CloudProvider> cloudProvider);
 
   private slots:
 
+  // Initialize the monitor using the current project's cloud session.
+  // If no session then make sure the UI indicates the cloud is off.
+  // This will only work if the current status is stopped.
+
+  // The CloudMonitorWorker should continuously check that the
+  // m_cloudProvider session matches what is in the current project.
+  // If there is a descrepency then this slot should be called.
+  void initializeCloudSession();
+
+  // We don't want the initialization to block so we 
+  // handle the initialization in two parts
+  void onCloudSessionInitializeComplete();
+
+  // The CloudMonitorWorker should call this when m_status says running,
+  // but the cloud is not available.  This is an indication that something went wrong.
+  // Inform with a dialog and try to reinitialize.
+  void onCloudConnectionLost();
+
+  // The CloudMonitorWorker should call this when m_status says stopped,
+  // but the cloud referred to by the current session is actually available.
+  // The UI should reflect that the cloud is running.  This condition might be
+  // encountered if the cloud is started up externally, like from AWS interface.
+  void onCloudUnexpectedlyStarted();
+
   void onCloudStartupComplete();
 
-  void onCloudTerminateComplete();
+  void onServerStarted();
 
-  void setCloudButtonStatus(ToggleCloudButton::Status status);
+  void onAllWorkersStarted();
+
+  void onCloudTerminateComplete();
 
   private:
 
   Q_DISABLE_COPY(CloudMonitor);
 
-  void setCloudProvider(QSharedPointer<CloudProvider> cloudProvider);
+  // Temporary settings for development
+  CloudSettings createTestSettings() const;
 
-  void createTestSettings();
+  // Set m_status and make sure the button visually shows that status
+  // CloudMonitorWorker will make sure m_status is accurate
+  void setStatus(CloudStatus status);
 
-  QSharedPointer<CloudProvider> m_cloudProvider;
+  void startCloud();
+
+  bool m_serverStarted;
+
+  bool m_allWorkersStarted;
+
+  boost::optional<CloudProvider> m_cloudProvider;
 
   QSharedPointer<QThread> m_workerThread;
 
   QSharedPointer<CloudMonitorWorker> m_worker;
 
-  QSharedPointer<QMutex> m_mutex;
+  QSharedPointer<QThread> m_initializeCloudThread;
+
+  QSharedPointer<InitializeCloudWorker> m_initializeCloudWorker;
+
+  CloudStatus m_status;
+
+  friend class CloudMonitorWorker;
+
+  friend class InitializeCloudWorker;
+};
+
+class InitializeCloudWorker : public QObject
+{
+  Q_OBJECT
+
+  public:
+
+  InitializeCloudWorker(CloudMonitor * monitor);
+
+  virtual ~InitializeCloudWorker();
+
+  signals:
+
+  void doneWorking();
+
+  public slots:
+
+  void startWorking();
+
+  private:
+
+  Q_DISABLE_COPY(InitializeCloudWorker);
+
+  QPointer<CloudMonitor> m_monitor;  
 };
 
 // This class is assigned to its own thread,
@@ -104,29 +189,39 @@ class CloudMonitorWorker : public QObject
 
   virtual ~CloudMonitorWorker();
 
-  void setCloudSettings(const CloudSettings & settings);
-
   public slots:
 
-  // Start up a timer
-  void clockIn();
-   
+  void startWorking();
+
   signals:
 
-  void cloudStatus(ToggleCloudButton::Status status);
+  void cloudConnectionLost();
+
+  void cloudConnectionEstablished();
 
   void internetAvailable(bool isAvailable);
 
-  private slots:
-
-  // Does work when the timer expires
-  void nowGetToWork();
+  void cloudConfigurationChanged();
 
   private:
 
   Q_DISABLE_COPY(CloudMonitorWorker);
 
-  boost::optional<CloudSettings> m_cloudSettings;
+  // Check CloudMonitor status,
+  // if status is CLOUD_RUNNING then make sure it is still running
+  // if status is CLOUD_RUNNING but test does not agree then 
+  // emit cloudConnectionLost
+  // Similarly, if status is CLOUD_STOPPED, but the cloud was in fact found to be running,
+  // then emit cloudConnectionEstablished
+  void checkForCloudConnection();
+
+  // Check the status of the internet connection and emit internetAvailable
+  void checkForInternetConnection();
+
+  // See if there is a current session and that it is the same
+  // session that we are monitoring.  
+  // If it is not then emit cloudSessionChanged
+  void checkForNewSession();
 
   QPointer<CloudMonitor> m_monitor;  
 };

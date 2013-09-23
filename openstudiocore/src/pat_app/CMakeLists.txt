@@ -24,6 +24,7 @@ SET( ${target_name}_SRC
   PatAPI.hpp
   PatApp.cpp
   PatApp.hpp
+  PatConstants.hpp
   PatMainMenu.cpp
   PatMainMenu.hpp
   PatMainTabView.cpp
