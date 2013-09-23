@@ -189,6 +189,8 @@ SET( ${target_name}_test_src
   Test/AlgorithmRecord_GTest.cpp
   Test/AnalysisRecord_GTest.cpp
   Test/AttributeRecord_GTest.cpp
+  Test/CloudSessionRecord_GTest.cpp
+  Test/CloudSettingsRecord_GTest.cpp
   Test/DataPointRecord_GTest.cpp
   Test/MeasureGroupRecord_GTest.cpp
   Test/FileReferenceRecord_GTest.cpp

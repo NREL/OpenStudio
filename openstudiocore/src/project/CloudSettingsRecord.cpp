@@ -40,8 +40,6 @@ namespace detail {
     : ObjectRecord_Impl(database,cloudSettings.uuid(),"","","",cloudSettings.versionUUID()),
       m_cloudSettingsRecordType(cloudSettingsRecordType)
   {
-    OS_ASSERT(false);
-    // TODO: Initialize data members, check constructor call for base class.
   }
 
   CloudSettingsRecord_Impl::CloudSettingsRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
