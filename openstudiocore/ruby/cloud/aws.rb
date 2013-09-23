@@ -24,8 +24,7 @@
 #
 # == Usage
 #
-#  ruby aws.rb xxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx us-east-1 EC2 launch_server "{\"instance_type\":\"t1.micro\"}"
-#  ruby aws.rb access_key secret_key us-east-1 EC2 launch_worker "{\"instance_type\":\"t1.micro\"}"
+#  ruby aws.rb access_key secret_key us-east-1 EC2 launch_server "{\"instance_type\":\"t1.micro\"}"
 #
 #  ARGV[0] - Access Key
 #  ARGV[1] - Secret Key
@@ -52,7 +51,7 @@ def error(code, msg)
   exit(1)
 end
 
-if ARGV.length < 4
+if ARGV.length < 5
   error(-1, 'Invalid number of args')
 end
 
@@ -109,7 +108,7 @@ def launch_workers(num, server_ip)
   user_data = File.read(File.expand_path(File.dirname(__FILE__))+'/worker_script.sh.template')
   user_data.gsub!(/SERVER_IP/, server_ip)
   user_data.gsub!(/SERVER_HOSTNAME/, 'master')
-  user_data.gsub!(/SERVER_ALIAS/, "")
+  user_data.gsub!(/SERVER_ALIAS/, '')
 
   instances = []
   num.times do
