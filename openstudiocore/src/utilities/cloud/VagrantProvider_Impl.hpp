@@ -31,11 +31,24 @@
 #include <boost/function.hpp>
 
 class QStringList;
+class QString;
 class QNetworkAccessManager;
 class QNetworkReply;
 
 namespace openstudio{
 namespace detail{
+  struct UTILITIES_API ProcessResults {
+
+    ProcessResults(int t_exitCode, QProcess::ExitStatus t_exitStatus, const QString &t_output, const QString &t_error)
+      : exitCode(t_exitCode), exitStatus(t_exitStatus), output(t_output), error(t_error)
+    {
+    }
+
+    int exitCode;
+    QProcess::ExitStatus exitStatus;
+    QString output;
+    QString error; 
+  };
 
   /// VagrantSettings_Impl is a CloudSettings_Impl.
   class UTILITIES_API VagrantSettings_Impl : public CloudSettings_Impl {
@@ -310,7 +323,7 @@ namespace detail{
 
   private:
 
-    bool waitForFinished(int msec, const boost::function1<bool, VagrantProvider_Impl*>& f);
+    bool waitForFinished(int msec, const boost::function<bool ()>& f);
     bool requestInternetAvailableRequestFinished() const;
     bool requestServiceAvailableFinished() const;
     bool requestValidateCredentialsFinished() const;
@@ -319,6 +332,26 @@ namespace detail{
     bool requestWorkersRunningFinished() const;
     bool requestTerminateFinished() const;
     bool requestTerminateCompletedFinished() const;
+
+    ProcessResults handleProcessCompleted(QProcess *& t_qp);
+
+    QProcess *makeCheckServiceProcess() const;
+    QProcess *makeStartServerProcess() const;
+    QProcess *makeStartWorkerProcess() const;
+    QProcess *makeCheckServerRunningProcess() const;
+    QProcess *makeCheckWorkerRunningProcess() const;
+    QProcess *makeStopServerProcess() const;
+    QProcess *makeStopWorkerProcess() const;
+    QProcess *makeCheckTerminateProcess() const;
+
+    bool parseServiceAvailableResults(const ProcessResults &);
+    bool parseServerStartedResults(const ProcessResults &);
+    bool parseWorkerStartedResults(const ProcessResults &);
+    bool parseCheckServerRunningResults(const ProcessResults &);
+    bool parseCheckWorkerRunningResults(const ProcessResults &);
+    bool parseServerStoppedResults(const ProcessResults &);
+    bool parseWorkerStoppedResults(const ProcessResults &);
+    bool parseCheckTerminatedResults(const ProcessResults &);
 
     VagrantSettings m_vagrantSettings;
     VagrantSession m_vagrantSession;
