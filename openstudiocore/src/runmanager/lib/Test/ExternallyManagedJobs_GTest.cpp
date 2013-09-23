@@ -28,10 +28,12 @@
 #include <runmanager/lib/Workflow.hpp>
 #include <runmanager/lib/WorkItem.hpp>
 #include <runmanager/lib/JSON.hpp>
+#include <model/Model.hpp>
 
 #include <QDir>
 #include <utilities/core/Application.hpp>
 #include <utilities/core/System.hpp>
+#include <utilities/core/PathHelpers.hpp>
 #include <boost/filesystem.hpp>
 
 #ifdef _MSC_VER
@@ -43,13 +45,33 @@ using namespace openstudio::runmanager;
 
 TEST_F(RunManagerTestFixture, ExternalJob)
 {
-  openstudio::path rmpath1 = openstudio::tempDir() / openstudio::toPath("externaljob/rm1.db");
-  openstudio::path rmpath2 = openstudio::tempDir() / openstudio::toPath("externaljob/rm2.db");
+  openstudio::path basedir = openstudio::tempDir() / openstudio::toPath("externaljob");
+  openstudio::path rmpath1 = basedir / openstudio::toPath("rm1.db");
+  openstudio::path rmpath2 = basedir / openstudio::toPath("rm2.db");
 
-  boost::filesystem::create_directories(openstudio::tempDir() / openstudio::toPath("externaljob"));
+  boost::filesystem::create_directories(basedir);
 
-  openstudio::runmanager::Workflow orig("Null->Null->Null->Null");
-  openstudio::runmanager::Job jorig = orig.create(openstudio::tempDir() / openstudio::toPath("externaljob"));
+  openstudio::runmanager::Workflow orig("ModelToIdf->ExpandObjects->EnergyPlus");
+  openstudio::path origdir = basedir / openstudio::toPath("jobrun");
+  openstudio::path infile = origdir / openstudio::toPath("ExampleModel.osm");
+  openstudio::path weatherdir = resourcesPath() / openstudio::toPath("runmanager") / openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw");
+
+  openstudio::model::Model exampleModel = openstudio::model::exampleModel();
+  exampleModel.save(infile, true);
+
+  orig.setInputFiles(infile, weatherdir);
+  
+  // Build list of tools
+  openstudio::runmanager::Tools tools 
+    = openstudio::runmanager::ConfigOptions::makeTools(
+          energyPlusExePath().parent_path(), 
+          openstudio::path(), 
+          openstudio::path(), 
+          openstudio::path(),
+          openstudio::path());
+  orig.add(tools);
+
+  openstudio::runmanager::Job jorig = orig.create(origdir);
 
   openstudio::runmanager::RunManager rorig(rmpath1, true, true, false); // runmanager is starting in paused state
   rorig.enqueue(jorig, true);
@@ -67,12 +89,22 @@ TEST_F(RunManagerTestFixture, ExternalJob)
   rorig.waitForFinished();
   EXPECT_TRUE(jorig.lastRun());
 
+  FileInfo fi = jorig.treeAllFiles().getLastByFilename("eplusout.sql");
+  EXPECT_EQ(fi.fullPath, origdir / openstudio::toPath("ModelToIdf/ExpandObjects-0/EnergyPlus-0/eplusout.sql"));
+
   {
+    openstudio::removeDirectory(basedir / openstudio::toPath("copied"));
+    openstudio::copyDirectory(basedir / openstudio::toPath("jobrun"), basedir / openstudio::toPath("copied"));
     openstudio::runmanager::RunManager rnew(rmpath2, false, false, false);
     Job updated = rnew.getJob(jorig.uuid());
     EXPECT_FALSE(updated.lastRun());
-    rnew.updateJob(openstudio::runmanager::detail::JSON::toJob(openstudio::runmanager::detail::JSON::toJSON(jorig), true));
+    std::string json = openstudio::runmanager::detail::JSON::toJSON(jorig);
+    rnew.updateJob(openstudio::runmanager::detail::JSON::toJob(json, true),
+        basedir / openstudio::toPath("copied"));
     EXPECT_TRUE(updated.lastRun());
+    FileInfo fi2 = updated.treeAllFiles().getLastByFilename("eplusout.sql");
+    EXPECT_EQ(basedir / openstudio::toPath("copied") / openstudio::toPath("ModelToIdf/ExpandObjects-0/EnergyPlus-0/eplusout.sql"), fi2.fullPath);
+    EXPECT_TRUE(fi2.exists);
   }
 
   {

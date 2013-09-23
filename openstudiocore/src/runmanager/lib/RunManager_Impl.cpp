@@ -2375,10 +2375,7 @@ namespace detail {
     try {
       Job j = getJob(t_job.uuid());
       j.updateJob(t_job);
-      if (j.getBasePath() != t_path)
-      {
-        j.setBasePath(t_path);
-      }
+      j.setBasePathRecursive(t_path);
     } catch (const std::out_of_range &) {
       // job didn't exist
       enqueue(t_job, true, t_path);
