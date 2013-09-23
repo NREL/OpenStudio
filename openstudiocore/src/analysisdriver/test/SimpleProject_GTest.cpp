@@ -64,6 +64,8 @@
 #include <model/WeatherFile.hpp>
 
 #include <utilities/bcl/BCLMeasure.hpp>
+#include <utilities/cloud/VagrantProvider.hpp>
+#include <utilities/cloud/VagrantProvider_Impl.hpp>
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/core/UnzipFile.hpp>
@@ -470,59 +472,113 @@ TEST_F(AnalysisDriverFixture, SimpleProject_ZipFileForCloud) {
 }
 
 TEST_F(AnalysisDriverFixture,SimpleProject_AnalysisFixUpOfFilePaths) {
-    // GET SIMPLE PROJECT
-    SimpleProject project = getCleanSimpleProject("SimpleProject_AnalysisFixUpOfFilePaths");
-    Analysis analysis = project.analysis();
+  // GET SIMPLE PROJECT
+  SimpleProject project = getCleanSimpleProject("SimpleProject_AnalysisFixUpOfFilePaths");
+  Analysis analysis = project.analysis();
 
-    // SET PROBLEM
-    Problem problem = retrieveProblem("BuggyBCLMeasure",true,false);
-    analysis.setProblem(problem);
+  // SET PROBLEM
+  Problem problem = retrieveProblem("BuggyBCLMeasure",true,false);
+  analysis.setProblem(problem);
 
-    // DEFINE SEED
-    Model model = model::exampleModel();
-    openstudio::path p = toPath("./example.osm");
-    model.save(p,true);
-    FileReference seedModel(p);
-    analysis.setSeed(seedModel);
+  // DEFINE SEED
+  Model model = model::exampleModel();
+  openstudio::path p = toPath("./example.osm");
+  model.save(p,true);
+  FileReference seedModel(p);
+  analysis.setSeed(seedModel);
 
-    // MAKE SELF CONTAINED
-    project.makeSelfContained();
-    project.save();
+  // MAKE SELF CONTAINED
+  project.makeSelfContained();
+  project.save();
 
-    // CREATE A COPY IN ANOTHER LOCATION
-    openstudio::path newProjectDir = project.projectDir().parent_path() / toPath("SimpleProjectAnalysisFixUpOfFilePathsCopy");
-    boost::filesystem::remove_all(newProjectDir);
-    OptionalSimpleProject oProjectCopy = saveAs(project,newProjectDir);
-    ASSERT_TRUE(oProjectCopy);
-    SimpleProject projectCopy = *oProjectCopy;
+  // CREATE A COPY IN ANOTHER LOCATION
+  openstudio::path newProjectDir = project.projectDir().parent_path() / toPath("SimpleProjectAnalysisFixUpOfFilePathsCopy");
+  boost::filesystem::remove_all(newProjectDir);
+  OptionalSimpleProject oProjectCopy = saveAs(project,newProjectDir);
+  ASSERT_TRUE(oProjectCopy);
+  SimpleProject projectCopy = *oProjectCopy;
 
-    // UPDATE PATHS IN ORIGINAL ANALYSIS
-    EXPECT_NE(project.projectDir(),projectCopy.projectDir());
-    analysis.updateInputPathData(project.projectDir(),projectCopy.projectDir());
+  // UPDATE PATHS IN ORIGINAL ANALYSIS
+  EXPECT_NE(project.projectDir(),projectCopy.projectDir());
+  analysis.updateInputPathData(project.projectDir(),projectCopy.projectDir());
 
-    // BCLMeasure and Seed Paths should be the same.
-    Analysis analysisCopy = projectCopy.analysis();
-    EXPECT_EQ(analysisCopy.seed().path(),analysis.seed().path());
-    InputVariableVector variablesCopy = analysisCopy.problem().variables();
-    InputVariableVector variables = analysis.problem().variables();
-    ASSERT_EQ(variablesCopy.size(),variables.size());
-    for (unsigned i = 0, n = variablesCopy.size(); i < n; ++i) {
-      ASSERT_TRUE(variablesCopy[i].optionalCast<MeasureGroup>());
-      ASSERT_TRUE(variables[i].optionalCast<MeasureGroup>());
-      MeasureGroup measureGroupCopy = variablesCopy[i].cast<MeasureGroup>();
-      MeasureGroup measureGroup = variables[i].cast<MeasureGroup>();
-      ASSERT_EQ(measureGroupCopy.measures(false).size(),measureGroup.measures(false).size());
-      MeasureVector measuresCopy = measureGroupCopy.measures(false);
-      MeasureVector measures = measureGroup.measures(false);
-      for (unsigned j = 0, m = measuresCopy.size(); j < m; ++j) {
-        if (measuresCopy[j].optionalCast<RubyMeasure>()) {
-          ASSERT_TRUE(measures[j].optionalCast<RubyMeasure>());
-          RubyMeasure rubyMeasureCopy = measuresCopy[j].cast<RubyMeasure>();
-          RubyMeasure rubyMeasure = measures[j].cast<RubyMeasure>();
-          ASSERT_TRUE(rubyMeasureCopy.usesBCLMeasure());
-          ASSERT_TRUE(rubyMeasure.usesBCLMeasure());
-          EXPECT_EQ(rubyMeasureCopy.bclMeasureDirectory(),rubyMeasure.bclMeasureDirectory());
-        }
+  // BCLMeasure and Seed Paths should be the same.
+  Analysis analysisCopy = projectCopy.analysis();
+  EXPECT_EQ(analysisCopy.seed().path(),analysis.seed().path());
+  InputVariableVector variablesCopy = analysisCopy.problem().variables();
+  InputVariableVector variables = analysis.problem().variables();
+  ASSERT_EQ(variablesCopy.size(),variables.size());
+  for (unsigned i = 0, n = variablesCopy.size(); i < n; ++i) {
+    ASSERT_TRUE(variablesCopy[i].optionalCast<MeasureGroup>());
+    ASSERT_TRUE(variables[i].optionalCast<MeasureGroup>());
+    MeasureGroup measureGroupCopy = variablesCopy[i].cast<MeasureGroup>();
+    MeasureGroup measureGroup = variables[i].cast<MeasureGroup>();
+    ASSERT_EQ(measureGroupCopy.measures(false).size(),measureGroup.measures(false).size());
+    MeasureVector measuresCopy = measureGroupCopy.measures(false);
+    MeasureVector measures = measureGroup.measures(false);
+    for (unsigned j = 0, m = measuresCopy.size(); j < m; ++j) {
+      if (measuresCopy[j].optionalCast<RubyMeasure>()) {
+        ASSERT_TRUE(measures[j].optionalCast<RubyMeasure>());
+        RubyMeasure rubyMeasureCopy = measuresCopy[j].cast<RubyMeasure>();
+        RubyMeasure rubyMeasure = measures[j].cast<RubyMeasure>();
+        ASSERT_TRUE(rubyMeasureCopy.usesBCLMeasure());
+        ASSERT_TRUE(rubyMeasure.usesBCLMeasure());
+        EXPECT_EQ(rubyMeasureCopy.bclMeasureDirectory(),rubyMeasure.bclMeasureDirectory());
       }
     }
+  }
+}
+
+TEST_F(AnalysisDriverFixture,SimpleProject_SaveCloudData) {
+  {
+    SimpleProject project = getCleanPATProject("SimpleProject_SaveCloudData");
+
+    // create basic vagrant data
+    VagrantSettings settings;
+    settings.setServerPath(toPath("C:/projects/openstudio-server/vagrant/server")); // fake, but realistic path
+    settings.setServerUrl(Url("http://localhost:8080"));
+    settings.setWorkerPath(toPath("C:/projects/openstudio-server/vagrant/worker")); // fake, but realistic path
+    settings.setWorkerUrl(Url("http://localhost:8081"));
+    settings.setHaltOnStop(true);
+    settings.setUsername("vagrant");
+    settings.setPassword("vagrant");
+    settings.signUserAgreement(true);
+    VagrantSession session(toString(createUUID()),
+                           Url("http://localhost:8080"),
+                           UrlVector(1u,Url("http://localhost:8081")));
+
+    // save in project
+    project.setCloudSettings(settings);
+    EXPECT_TRUE(project.cloudSettings());
+    project.setCloudSession(session);
+    EXPECT_TRUE(project.cloudSession());
+    project.save();
+  }
+
+  {
+    // reopen project and verify that can retrieve vagrant data
+    SimpleProject project = getPATProject("SimpleProject_SaveCloudData");
+
+    ASSERT_TRUE(project.cloudSettings());
+    ASSERT_TRUE(project.cloudSettings()->optionalCast<VagrantSettings>());
+    VagrantSettings settings = project.cloudSettings()->cast<VagrantSettings>();
+    EXPECT_EQ("VagrantProvider",settings.cloudProviderType());
+    EXPECT_TRUE(settings.userAgreementSigned());
+    EXPECT_EQ(toPath("C:/projects/openstudio-server/vagrant/server"),settings.serverPath());
+    EXPECT_EQ(Url("http://localhost:8080"),settings.serverUrl());
+    EXPECT_EQ(toPath("C:/projects/openstudio-server/vagrant/worker"),settings.workerPath());
+    EXPECT_EQ(Url("http://localhost:8081"),settings.workerUrl());
+    EXPECT_TRUE(settings.haltOnStop());
+    EXPECT_EQ("vagrant",settings.username());
+    EXPECT_EQ("",settings.password());
+    ASSERT_TRUE(project.cloudSession());
+    ASSERT_TRUE(project.cloudSession()->optionalCast<VagrantSession>());
+    VagrantSession session = project.cloudSession()->cast<VagrantSession>();
+    EXPECT_EQ("VagrantProvider",session.cloudProviderType());
+    ASSERT_TRUE(session.serverUrl());
+    EXPECT_EQ(Url("http://localhost:8080"),session.serverUrl().get());
+    ASSERT_EQ(1u,session.workerUrls().size());
+    EXPECT_EQ(Url("http://localhost:8081"),session.workerUrls()[0]);
+
+  }
 }

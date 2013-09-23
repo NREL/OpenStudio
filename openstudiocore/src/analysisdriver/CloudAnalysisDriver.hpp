@@ -96,9 +96,10 @@ class ANALYSISDRIVER_API CloudAnalysisDriver {
   /** @name Non-blocking class members */
   //@{
 
-  /** Request the project() to run on session(). Returns false if isRunning().
-   *  Otherwise returns true and emits runRequestComplete(bool success) when either the
-   *  analysis has stopped running on the server or the process has failed. The ultimate
+  /** Request the project() to run on session(). Returns false if isRunning() or 
+   *  isStopping() or isDownloading(). Also returns false if there are no data points to 
+   *  queue. Otherwise returns true and emits runRequestComplete(bool success) when either 
+   *  the analysis has stopped running on the server or the process has failed. The ultimate
    *  value of success will also be available from lastRunSuccess(). This method will try
    *  to pick up where a previous run left off. */
   bool requestRun();
