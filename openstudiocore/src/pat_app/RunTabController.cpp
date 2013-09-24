@@ -92,6 +92,8 @@ RunTabController::RunTabController()
 
     runView->dataPointRunListView->setListController(m_dataPointRunListController);
     runView->dataPointRunListView->setDelegate(m_dataPointRunItemDelegate);
+
+    refresh();
   }
 }
 
@@ -309,6 +311,7 @@ void RunTabController::reqestRefresh()
 void RunTabController::refresh()
 {
   m_refreshScheduled = false;
+  runView->runStatusView->toggleCloudButton->setStatus(PatApp::instance()->cloudMonitor()->status());
   QTimer::singleShot(0, runView->dataPointRunListView, SLOT(refreshAllViews()));
 }
 

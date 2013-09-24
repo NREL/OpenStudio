@@ -472,6 +472,8 @@ void ReconnectCloudWorker::startWorking()
       m_status = CLOUD_RUNNING;
     }
   }
+
+  emit doneWorking();
 }
 
 CloudStatus ReconnectCloudWorker::status() const
