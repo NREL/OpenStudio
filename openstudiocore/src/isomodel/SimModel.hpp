@@ -60,17 +60,13 @@ ISOMODEL_API Vector sum(const Vector& v1, const double v2);
 ISOMODEL_API Vector dif(const Vector& v1, const Vector& v2);
 ISOMODEL_API Vector dif(const Vector& v1, const double v2);
 ISOMODEL_API Vector dif(const double v1, const Vector& v2);
-#ifdef max
-  #undef max
-#endif
-ISOMODEL_API Vector max(const Vector& v1, const Vector& v2);
-ISOMODEL_API Vector max(const Vector& v1, double val);
-ISOMODEL_API double max(const Vector& v1);
-#ifdef min
-  #undef min
-#endif
-ISOMODEL_API Vector min(const Vector& v1, double val);
-ISOMODEL_API double min(const Vector& v1);
+
+ISOMODEL_API Vector maximum(const Vector& v1, const Vector& v2);
+ISOMODEL_API Vector maximum(const Vector& v1, double val);
+ISOMODEL_API double maximum(const Vector& v1);
+
+ISOMODEL_API Vector minimum(const Vector& v1, double val);
+ISOMODEL_API double minimum(const Vector& v1);
 
 ISOMODEL_API Vector abs(const Vector& v1);
 ISOMODEL_API Vector pow(const Vector& v1, const double xp);

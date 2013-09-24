@@ -19,13 +19,14 @@
 #ifndef ISOMODEL_WEATHER_DATA_HPP
 #define ISOMODEL_WEATHER_DATA_HPP
 
+#include "ISOModelAPI.hpp"
 #include <utilities/data/Vector.hpp>
 #include <utilities/data/Matrix.hpp>
 
 namespace openstudio {
 namespace isomodel {
 
-class WeatherData
+class ISOMODEL_API WeatherData
 {
 public:
   WeatherData(void);

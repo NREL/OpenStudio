@@ -585,6 +585,8 @@ CREATE_SRC_GROUPS( "${analysis_resources_src}" )
 SET(ENERGYPLUS_OUTPUTS "")
 
 SET(isomodel_resources_src
+  isomodel/exampleModel.ISO
+  isomodel/weather.epw
 )
 
 # update the resources

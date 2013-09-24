@@ -189,7 +189,7 @@ void one(Vector& vec){
     }
     return vd;
   }
-  double max(const Vector& v1){
+  double maximum(const Vector& v1){
     double max = -DBL_MAX;
     for(uint i = 0;i<v1.size();i++) {
       if(v1[i]>max)
@@ -197,21 +197,21 @@ void one(Vector& vec){
     }
     return max;
   }
-  Vector max(const Vector& v1, const Vector& v2){
+  Vector maximum(const Vector& v1, const Vector& v2){
     Vector vx = Vector(v1.size());
     for(uint i = 0;i<v1.size();i++) {
       vx[i] = std::max(v1[i],v2[i]);
     }
     return vx;
   }
-  Vector max(const Vector& v1, double val){
+  Vector maximum(const Vector& v1, double val){
     Vector vx = Vector(v1.size());
     for(uint i = 0;i<v1.size();i++) {
       vx[i] = std::max(v1[i],val);
     }
     return vx;
   }
-  double min(const Vector& v1){
+  double minimum(const Vector& v1){
     double min = DBL_MAX;
     for(uint i = 0;i<v1.size();i++) {
       if(v1[i]<min)
@@ -219,7 +219,7 @@ void one(Vector& vec){
     }
     return min;
   }
-  Vector min(const Vector& v1, double val) {
+  Vector minimum(const Vector& v1, double val) {
     Vector vn = Vector(v1.size());
     for(uint i = 0;i<v1.size();i++) {
       vn[i] = std::min(v1[i],val);
@@ -1355,7 +1355,7 @@ tot_env_A=sum(In.wall_area)+sum(In.win_area);
     Vector dbtMultQ4 = mult(dbtPowered,n_stack_coeff * v_Q4pa);
     printVector("dbtMultQ4", dbtMultQ4);
 
-    Vector v_qv_stack_ht=max(dbtMultQ4, 0.001); //%qv_stack_heating m3/h/m2
+    Vector v_qv_stack_ht=maximum(dbtMultQ4, 0.001); //%qv_stack_heating m3/h/m2
     dbtDiff = dif(location->weather()->mdbt(),v_Tc_avg);
     printVector("dbtDiff", dbtDiff);
     dbtDiffAbs = abs(dbtDiff);
@@ -1366,7 +1366,7 @@ tot_env_A=sum(In.wall_area)+sum(In.win_area);
     printVector("dbtPowered", dbtPowered);
     dbtMultQ4 = mult(dbtPowered,n_stack_coeff * v_Q4pa);
     printVector("dbtMultQ4", dbtMultQ4);
-    Vector v_qv_stack_cl=max(dbtMultQ4, 0.001); //%qv_stack_cooling
+    Vector v_qv_stack_cl=maximum(dbtMultQ4, 0.001); //%qv_stack_cooling
     printVector("v_qv_stack_ht",v_qv_stack_ht);
     printVector("v_qv_stack_cl",v_qv_stack_cl);
 
@@ -1401,8 +1401,8 @@ v_qv_stack_cl=max(n_stack_coeff.*v_Q4pa*(h_stack.*abs(W.mdbt-v_Tc_avg)).^n_stack
     printVector("v_qv_wind_cl",v_qv_wind_cl);
 
     double n_sw_coeff = 0.14;
-    Vector v_qv_ht_max = max(v_qv_stack_ht, v_qv_wind_ht);
-    Vector v_qv_cl_max = max(v_qv_stack_cl, v_qv_wind_cl);
+    Vector v_qv_ht_max = maximum(v_qv_stack_ht, v_qv_wind_ht);
+    Vector v_qv_cl_max = maximum(v_qv_stack_cl, v_qv_wind_cl);
     printVector("v_qv_ht_max",v_qv_ht_max);
     printVector("v_qv_cl_max",v_qv_cl_max);
 
@@ -1655,7 +1655,7 @@ n_rhoC_a = 1.22521.*0.001012; % rho*Cp for air (MJ/m3/K)
     printVector("v_Vair_cl",v_Vair_cl);
 
 
-    Vector v_Vair_tot = max(sum(v_Vair_ht,v_Vair_cl), div(mult(megasecondsInMonth,ventilation->supplyRate()*frac_hrs_wk_day,12),1000));//% compute air flow in m3
+    Vector v_Vair_tot = maximum(sum(v_Vair_ht,v_Vair_cl), div(mult(megasecondsInMonth,ventilation->supplyRate()*frac_hrs_wk_day,12),1000));//% compute air flow in m3
     printVector("v_Vair_tot",v_Vair_tot);
     Vector fanPower = mult(v_Vair_tot,ventilation->fanPower()*ventilation->fanControlFactor());
     printVector("fanPower",fanPower);
@@ -1972,7 +1972,7 @@ Q_dhw_yr = In.DHW_demand*(n_dhw_tset-n_dhw_tsupply).*n_CP_h20; % total annual en
     Vector v_frac_MonthlyDemand_yr = div(v_MonthlyDemand, daysInYear);
     Vector v_Qe_demand = div(v_frac_MonthlyDemand_yr, heating->hotWaterDistributionEfficiency());
     Vector v_Q_dhw_demand = div(v_Qe_demand, kWh2MJ);
-    Vector v_Q_dhw_need = max(div(dif(v_Q_dhw_demand,v_Q_dhw_solar), heating->hotWaterSystemEfficiency()),0);
+    Vector v_Q_dhw_need = maximum(div(dif(v_Q_dhw_demand,v_Q_dhw_solar), heating->hotWaterSystemEfficiency()),0);
     Vector Z(v_Q_dhw_need.size());
     printVector("v_MonthlyDemand",v_MonthlyDemand);
     printVector("v_frac_MonthlyDemand_yr",v_frac_MonthlyDemand_yr);
@@ -2485,15 +2485,162 @@ int main(int argc, char* argv[]) {
   }
   openstudio::isomodel::UserModel umodel;
   umodel.load(argv[1]);
+  std::cout << umodel.terrainClass() << std::endl;
+std::cout << umodel.floorArea() << std::endl;
+std::cout << umodel.buildingHeight() << std::endl;
+std::cout << umodel.buildingOccupancyFrom() << std::endl;
+std::cout << umodel.buildingOccupancyTo() << std::endl;
+std::cout << umodel.equivFullLoadOccupancyFrom() << std::endl;
+std::cout << umodel.equivFullLoadOccupancyTo() << std::endl;
+std::cout << umodel.peopleDensityOccupied() << std::endl;
+std::cout << umodel.peopleDensityUnoccupied() << std::endl;
+std::cout << umodel.heatingOccupiedSetpoint() << std::endl;
+std::cout << umodel.heatingUnoccupiedSetpoint() << std::endl;
+std::cout << umodel.coolingOccupiedSetpoint() << std::endl;
+std::cout << umodel.coolingUnoccupiedSetpoint() << std::endl;
+std::cout << umodel.elecPowerAppliancesOccupied() << std::endl;
+std::cout << umodel.elecPowerAppliancesUnoccupied() << std::endl;
+std::cout << umodel.gasPowerAppliancesOccupied() << std::endl;
+std::cout << umodel.gasPowerAppliancesUnoccupied() << std::endl;
+std::cout << umodel.lightingPowerIntensityOccupied() << std::endl;
+std::cout << umodel.lightingPowerIntensityUnoccupied() << std::endl;
+std::cout << umodel.exteriorLightingPower() << std::endl;
+std::cout << umodel.daylightSensorSystem() << std::endl;
+std::cout << umodel.lightingOccupancySensorSystem() << std::endl;
+std::cout << umodel.constantIlluminationControl() << std::endl;
+std::cout << umodel.coolingSystemCOP() << std::endl;
+std::cout << umodel.coolingSystemIPLV() << std::endl;
+std::cout << umodel.heatingEnergyCarrier() << std::endl;
+std::cout << umodel.heatingSystemEfficiency() << std::endl;
+std::cout << umodel.ventilationType() << std::endl;
+std::cout << umodel.freshAirFlowRate() << std::endl;
+std::cout << umodel.supplyExhaustRate() << std::endl;
+std::cout << umodel.heatRecovery() << std::endl;
+std::cout << umodel.exhaustAirRecirclation() << std::endl;
+std::cout << umodel.buildingAirLeakage() << std::endl;
+std::cout << umodel.dhwDemand() << std::endl;
+std::cout << umodel.dhwEfficiency() << std::endl;
+std::cout << umodel.dhwDistributionSystem() << std::endl;
+std::cout << umodel.dhwEnergyCarrier() << std::endl;
+std::cout << umodel.bemType() << std::endl;
+std::cout << umodel.interiorHeatCapacity() << std::endl;
+std::cout << umodel.specificFanPower() << std::endl;
+std::cout << umodel.fanFlowControlFactor() << std::endl;
+std::cout << umodel.roofSHGC() << std::endl;
+std::cout << umodel.wallAreaS() << std::endl;
+std::cout << umodel.wallAreaSE() << std::endl;
+std::cout << umodel.wallAreaE() << std::endl;
+std::cout << umodel.wallAreaNE() << std::endl;
+std::cout << umodel.wallAreaN() << std::endl;
+std::cout << umodel.wallAreaNW() << std::endl;
+std::cout << umodel.wallAreaW() << std::endl;
+std::cout << umodel.wallAreaSW() << std::endl;
+std::cout << umodel.roofArea() << std::endl;
+std::cout << umodel.wallUvalueS() << std::endl;
+std::cout << umodel.wallUvalueSE() << std::endl;
+std::cout << umodel.wallUvalueE() << std::endl;
+std::cout << umodel.wallUvalueNE() << std::endl;
+std::cout << umodel.wallUvalueN() << std::endl;
+std::cout << umodel.wallUvalueNW() << std::endl;
+std::cout << umodel.wallUvalueW() << std::endl;
+std::cout << umodel.wallUvalueSW() << std::endl;
+std::cout << umodel.roofUValue() << std::endl;
+std::cout << umodel.wallSolarAbsorptionS() << std::endl;
+std::cout << umodel.wallSolarAbsorptionSE() << std::endl;
+std::cout << umodel.wallSolarAbsorptionE() << std::endl;
+std::cout << umodel.wallSolarAbsorptionNE() << std::endl;
+std::cout << umodel.wallSolarAbsorptionN() << std::endl;
+std::cout << umodel.wallSolarAbsorptionNW() << std::endl;
+std::cout << umodel.wallSolarAbsorptionW() << std::endl;
+std::cout << umodel.wallSolarAbsorptionSW() << std::endl;
+std::cout << umodel.roofSolarAbsorption() << std::endl;
+std::cout << umodel.wallThermalEmissivityS() << std::endl;
+std::cout << umodel.wallThermalEmissivitySE() << std::endl;
+std::cout << umodel.wallThermalEmissivityE() << std::endl;
+std::cout << umodel.wallThermalEmissivityNE() << std::endl;
+std::cout << umodel.wallThermalEmissivityN() << std::endl;
+std::cout << umodel.wallThermalEmissivityNW() << std::endl;
+std::cout << umodel.wallThermalEmissivityW() << std::endl;
+std::cout << umodel.wallThermalEmissivitySW() << std::endl;
+std::cout << umodel.roofThermalEmissivity() << std::endl;
+std::cout << umodel.windowAreaS() << std::endl;
+std::cout << umodel.windowAreaSE() << std::endl;
+std::cout << umodel.windowAreaE() << std::endl;
+std::cout << umodel.windowAreaNE() << std::endl;
+std::cout << umodel.windowAreaN() << std::endl;
+std::cout << umodel.windowAreaNW() << std::endl;
+std::cout << umodel.windowAreaW() << std::endl;
+std::cout << umodel.windowAreaSW() << std::endl;
+std::cout << umodel.skylightArea() << std::endl;
+std::cout << umodel.windowUvalueS() << std::endl;
+std::cout << umodel.windowUvalueSE() << std::endl;
+std::cout << umodel.windowUvalueE() << std::endl;
+std::cout << umodel.windowUvalueNE() << std::endl;
+std::cout << umodel.windowUvalueN() << std::endl;
+std::cout << umodel.windowUvalueNW() << std::endl;
+std::cout << umodel.windowUvalueW() << std::endl;
+std::cout << umodel.windowUvalueSW() << std::endl;
+std::cout << umodel.skylightUvalue() << std::endl;
+std::cout << umodel.windowSHGCS() << std::endl;
+std::cout << umodel.windowSHGCSE() << std::endl;
+std::cout << umodel.windowSHGCE() << std::endl;
+std::cout << umodel.windowSHGCNE() << std::endl;
+std::cout << umodel.windowSHGCN() << std::endl;
+std::cout << umodel.windowSHGCNW() << std::endl;
+std::cout << umodel.windowSHGCW() << std::endl;
+std::cout << umodel.windowSHGCSW() << std::endl;
+std::cout << umodel.skylightSHGC() << std::endl;
+std::cout << umodel.windowSCFS() << std::endl;
+std::cout << umodel.windowSCFSE() << std::endl;
+std::cout << umodel.windowSCFE() << std::endl;
+std::cout << umodel.windowSCFNE() << std::endl;
+std::cout << umodel.windowSCFN() << std::endl;
+std::cout << umodel.windowSCFNW() << std::endl;
+std::cout << umodel.windowSCFW() << std::endl;
+std::cout << umodel.windowSCFSW() << std::endl;
+std::cout << umodel.windowSDFS() << std::endl;
+std::cout << umodel.windowSDFSE() << std::endl;
+std::cout << umodel.windowSDFE() << std::endl;
+std::cout << umodel.windowSDFNE() << std::endl;
+std::cout << umodel.windowSDFN() << std::endl;
+std::cout << umodel.windowSDFNW() << std::endl;
+std::cout << umodel.windowSDFW() << std::endl;
+std::cout << umodel.windowSDFSW() << std::endl;
+std::cout << umodel.exteriorHeatCapacity() << std::endl;
+std::cout << umodel.infiltration() << std::endl;
+std::cout << umodel.hvacWasteFactor() << std::endl;
+std::cout << umodel.hvacHeatingLossFactor() << std::endl;
+std::cout << umodel.hvacCoolingLossFactor() << std::endl;
+std::cout << umodel.dhwDistributionEfficiency() << std::endl;
+std::cout << umodel.heatingPumpControl() << std::endl;
+std::cout << umodel.coolingPumpControl() << std::endl;
+std::cout << umodel.heatGainPerPerson() << std::endl;
+
+  WeatherData wd = *umodel.loadWeather();
+
+  Matrix msolar = wd.msolar();
+  Matrix mhdbt = wd.mhdbt();
+  Matrix mhEgh = wd.mhEgh();
+  Vector mEgh = wd.mEgh();
+  Vector mdbt = wd.mdbt();
+  Vector mwind = wd.mwind();
+  printMatrix("msolar", msolar);
+  printMatrix("mhdbt", mhdbt);
+  printMatrix("mhEgh", mhEgh);
+  printVector("mEgh", mEgh);
+  printVector("mdbt", mdbt);
+  printVector("mwind", mwind);
+
   openstudio::isomodel::SimModel simModel = umodel.toSimModel();
   //mimic montecarlo of 100 iterations
-  for(int i = 0;i<99;i++){
+  /*
+  for(int i = 0;i<1;i++){
     if(i%10==0)
       std::cout << "Simulating Building... "<< i << std::endl;
     //can speed up simulate by a factor of 5 if you pass
     //in an ISOResults by reference so there isn't as much copying.
     simModel.simulate();
-  }
+  }*/
   ISOResults results = simModel.simulate();
   std::cout <<std::endl << "Results:" <<std::endl;
   std::cout << "Month,ElecHeat,ElecCool,ElecIntLights,ElecExtLights,ElecFans,ElecPump,ElecEquip,ElectDHW,GasHeat,GasCool,GasEqiup,GasDHW" <<std::endl;

@@ -5,7 +5,11 @@ namespace isomodel {
 
 EpwData::EpwData(void)
 {
-	this->data = new double *[7];
+	this->data = new double * [7];
+  for(int c = 0;c<7;c++)
+	{
+		data[c] = NULL;
+	}
 }
 
 
@@ -19,7 +23,7 @@ void EpwData::parseHeader(string line)
 {
 	stringstream linestream (line);
 	string s;
-  cout << "Weather Location Header: "<<endl;
+  //cout << "Weather Location Header: "<<endl;
 	for(int i = 0;i<10;i++)
 	{
 		getline(linestream, s, ',');
@@ -27,23 +31,23 @@ void EpwData::parseHeader(string line)
 		{	
 		case 1:
 			this->location = s;
-			cout << "\tLocation: " << s <<endl;
+			//cout << "\tLocation: " << s <<endl;
 			break;
 		case 5:
 			this->stationid = s;
-			cout << "\tStation ID: " << s <<endl;
+			//cout << "\tStation ID: " << s <<endl;
 			break;
 		case 6:
 			this->latitude = atof(s.c_str());
-			cout << "\tLatitude: " << s <<endl;
+			//cout << "\tLatitude: " << s <<endl;
 			break;
 		case 7:
 			this->longitude = atof(s.c_str());
-			cout << "\tLongitude: " << s <<endl;
+			//cout << "\tLongitude: " << s <<endl;
 			break;
 		case 8:
 			this->timezone = (int)atof(s.c_str());
-			cout << "\tTimezone: " << s <<endl;
+			//cout << "\tTimezone: " << s <<endl;
 			break;
 		default:
 			break;
