@@ -38,7 +38,11 @@ namespace pat {
 
 class CloudMonitorWorker;
 
-class InitializeCloudWorker;
+class StartCloudWorker;
+
+class StopCloudWorker;
+
+class ReconnectCloudWorker;
 
 class CloudMonitor : public QObject
 {
@@ -64,43 +68,39 @@ class CloudMonitor : public QObject
   static boost::optional<CloudSettings> currentProjectSettings();
 
   // Set the session in the App's current project
-  static void setCurrentProjectSession(const CloudSession & session);
+  static void setCurrentProjectSession(const boost::optional<CloudSession> & session);
 
   // Set the settings in the App's current project
-  static void setCurrentProjectSettings(const CloudSettings & settings);
+  static void setCurrentProjectSettings(const boost::optional<CloudSettings> & settings);
+
+  // Temporary settings for development
+  static CloudSettings createTestSettings();
 
   signals:
 
   void internetAvailable(bool isAvailable);
 
+  void startCloudCompleted();
+
+  void stopCloudCompleted();
+
+  void reconnectCloudCompleted();
+
   public slots:
 
   // If cloud is on then turn off, and vice versa
   void toggleCloud();
+
+  // Start new cloud session
+  void startCloud();
+
+  // Stop current project cloud session
+  void stopCloud();
+
+  // Restablish connection to current project session
+  void reconnectCloud();
   
-  protected:
-
-  // We don't want to expose this pulically.  CloudMonitor should insulate m_cloudProvider.
-  boost::optional<CloudProvider> cloudProvider() const;
-
-  // Dont assign to m_cloudProvider directly
-  // This method makes the requred connections
-  void setCloudProvider(boost::optional<CloudProvider> cloudProvider);
-
   private slots:
-
-  // Initialize the monitor using the current project's cloud session.
-  // If no session then make sure the UI indicates the cloud is off.
-  // This will only work if the current status is stopped.
-
-  // The CloudMonitorWorker should continuously check that the
-  // m_cloudProvider session matches what is in the current project.
-  // If there is a descrepency then this slot should be called.
-  void initializeCloudSession();
-
-  // We don't want the initialization to block so we 
-  // handle the initialization in two parts
-  void onCloudSessionInitializeComplete();
 
   // The CloudMonitorWorker should call this when m_status says running,
   // but the cloud is not available.  This is an indication that something went wrong.
@@ -115,31 +115,20 @@ class CloudMonitor : public QObject
 
   // When startup is completely done, set status to CLOUD_RUNNING
   // and enable UI as required.
-  void onCloudStartupComplete();
-
-  // For now start server and workers in series, 
-  // once the server has started, then start the workers
-  void onServerStarted();
-
-  // When all workers have started, and assuming server has already started,
-  // call onCloudStartupComplete for final initialization
-  void onAllWorkersStarted();
+  void onStartCloudWorkerComplete();
 
   // Reset the cloud provider, renable UI, etc.
-  void onCloudTerminateComplete();
+  void onStopCloudWorkerComplete();
+
+  void onReconnectCloudWorkerComplete();
 
   private:
 
   Q_DISABLE_COPY(CloudMonitor);
 
-  // Temporary settings for development
-  CloudSettings createTestSettings() const;
-
   // Set m_status and make sure the button visually shows that status
   // CloudMonitorWorker will make sure m_status is accurate
   void setStatus(CloudStatus status);
-
-  void startCloud();
 
   bool m_serverStarted;
 
@@ -151,31 +140,32 @@ class CloudMonitor : public QObject
 
   QSharedPointer<CloudMonitorWorker> m_worker;
 
-  QSharedPointer<QThread> m_initializeCloudThread;
+  QSharedPointer<QThread> m_startCloudThread;
 
-  QSharedPointer<InitializeCloudWorker> m_initializeCloudWorker;
+  QSharedPointer<StartCloudWorker> m_startCloudWorker;
+
+  QSharedPointer<QThread> m_stopCloudThread;
+
+  QSharedPointer<StopCloudWorker> m_stopCloudWorker;
+
+  QSharedPointer<QThread> m_reconnectCloudThread;
+
+  QSharedPointer<ReconnectCloudWorker> m_reconnectCloudWorker;
 
   CloudStatus m_status;
 
   friend class CloudMonitorWorker;
-
-  friend class InitializeCloudWorker;
 };
 
-// The purpose of this class is to initialize the m_cloudProvider member of
-// CloudMonitor and make sure that the UI reflects the proper state.  
-// The CloudProvider instance should be initialized based on the project settings, and 
-// session.  If there is no session then reset m_cloudProvider
-// If the cloud is running, first turn it off.
-class InitializeCloudWorker : public QObject
+class StartCloudWorker : public QObject
 {
   Q_OBJECT
 
   public:
 
-  InitializeCloudWorker(CloudMonitor * monitor);
+  StartCloudWorker(CloudMonitor * monitor);
 
-  virtual ~InitializeCloudWorker();
+  virtual ~StartCloudWorker();
 
   signals:
 
@@ -187,9 +177,63 @@ class InitializeCloudWorker : public QObject
 
   private:
 
-  Q_DISABLE_COPY(InitializeCloudWorker);
+  Q_DISABLE_COPY(StartCloudWorker);
 
   QPointer<CloudMonitor> m_monitor;  
+};
+
+class StopCloudWorker : public QObject
+{
+  Q_OBJECT
+
+  public:
+
+  StopCloudWorker(CloudMonitor * monitor);
+
+  virtual ~StopCloudWorker();
+
+  signals:
+
+  void doneWorking();
+
+  public slots:
+
+  void startWorking();
+
+  private:
+
+  Q_DISABLE_COPY(StopCloudWorker);
+
+  QPointer<CloudMonitor> m_monitor;  
+};
+
+class ReconnectCloudWorker : public QObject
+{
+  Q_OBJECT
+
+  public:
+
+  ReconnectCloudWorker(CloudMonitor * monitor);
+
+  virtual ~ReconnectCloudWorker();
+
+  CloudStatus status() const;
+
+  signals:
+
+  void doneWorking();
+
+  public slots:
+
+  void startWorking();
+
+  private:
+
+  Q_DISABLE_COPY(ReconnectCloudWorker);
+
+  QPointer<CloudMonitor> m_monitor;
+
+  CloudStatus m_status;
 };
 
 // This class is assigned to its own thread,

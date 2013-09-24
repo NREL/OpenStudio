@@ -1126,6 +1126,8 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
     isConnected = analysis.connect(SIGNAL(seedChanged()), this, SLOT(analysisSeedChanged()));
     OS_ASSERT(isConnected);
 
+    m_cloudMonitor->reconnectCloud();
+
     // DLM: where should this logic live?
     // DLM: tabs 3 and 4 were not getting enabled once we did have data points, if we want to do this
     // we need to enable those somewhere
