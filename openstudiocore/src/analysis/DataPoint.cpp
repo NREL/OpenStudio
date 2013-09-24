@@ -458,7 +458,7 @@ namespace detail {
         if (loaded->uuid() == uuid()) {
           // generally require the variableValues to be the same, the loaded point to be complete
           if ((variableValues() != loaded->variableValues()) || (!loaded->complete())) {
-            LOG(Info,"Cannot update DataPoint with a JSON version that is not complete or has different variable values.");
+            LOG(Warn,"Cannot update DataPoint with a JSON version that is not complete or has different variable values.");
             return false;
           }
           m_complete = loaded->complete();
@@ -479,15 +479,15 @@ namespace detail {
           return true;
         }
         else {
-          LOG(Info,"Cannot update DataPoint because the DataPoint loaded from JSON has a different UUID.");
+          LOG(Warn,"Cannot update DataPoint because the DataPoint loaded from JSON has a different UUID.");
         }
       }
       else {
-        LOG(Info,"Cannot update DataPoint because the AnalysisObject loaded from JSON is not a DataPoint.");
+        LOG(Warn,"Cannot update DataPoint because the AnalysisObject loaded from JSON is not a DataPoint.");
       }
     }
     else {
-      LOG(Info,"Cannot update DataPoint from JSON because the JSON string could not be loaded.");
+      LOG(Warn,"Cannot update DataPoint from JSON because the JSON string could not be loaded.");
     }
 
     return false;
@@ -514,6 +514,7 @@ namespace detail {
     OS_ASSERT(m_topLevelJob);
     if (runManager) {
       // HERE -- files are now in directory(), need to update paths
+      // ETH@20130920 - Current implementation appears to be stuck in an infinite loop
       runManager->updateJob(*m_topLevelJob, directory());
     }
 
