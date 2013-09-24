@@ -833,6 +833,20 @@ namespace detail {
     return result;
   }
 
+  struct BoostPolygonAreaGreater{
+    bool operator()(const BoostPolygon& left, const BoostPolygon& right){
+      boost::optional<double> leftA = getArea(verticesFromBoostPolygon(left));
+      if (!leftA){
+        leftA = 0;
+      }
+      boost::optional<double> rightA = getArea(verticesFromBoostPolygon(right));
+      if (!rightA){
+        rightA = 0;
+      }
+      return (*leftA > *rightA);
+    }
+  };
+
   bool Surface_Impl::intersect(Surface& otherSurface)
   {
     double tol = 0.01; // 1 cm tolerance
@@ -925,7 +939,14 @@ namespace detail {
     // close polygon, use helper method which combines close points
     boost::geometry::append(otherFacePolygon, point3dToTuple(otherFaceVertices[0], allPoints, tol));
     
-    // do we need to check if either polygon overlaps itself?
+    // check if either polygon overlaps itself
+    try{
+      boost::geometry::detail::overlay::has_self_intersections(facePolygon);
+      boost::geometry::detail::overlay::has_self_intersections(otherFacePolygon);
+    }catch(const boost::geometry::overlay_invalid_input_exception&){
+      LOG(Error, "Cannot intersect self intersecting polygon");
+      return false;
+    }
 
     // intersect the points in face coordinates, 
     std::vector<BoostPolygon> intersectionResult;
@@ -937,8 +958,30 @@ namespace detail {
     }
 
     // non-zero intersection
-
     // could match here but will save that for other discrete operation
+
+    // sort intersections by size, biggest first
+    std::sort(intersectionResult.begin(), intersectionResult.end(), BoostPolygonAreaGreater());
+    if (intersectionResult.size() > 1){
+      BOOST_FOREACH(BoostPolygon p, intersectionResult){
+        std::vector<Point3d> testVertices = verticesFromBoostPolygon(p);
+        boost::optional<double> testArea = getArea(testVertices);
+        if (testArea){
+          LOG(Info, "Area: " << *testArea);
+        }
+      }
+    }
+    
+    // check biggest intersection
+    std::vector<Point3d> testVertices = verticesFromBoostPolygon(intersectionResult[0]);
+    boost::optional<double> testArea = getArea(testVertices);
+    if (!testArea){
+      LOG(Info, "Cannot compute intersection area");
+      return false;
+    }else if (*testArea < tol*tol){
+      LOG(Info, "Ignoring very small intersection of " << *testArea << "m^2");
+      return false;
+    }
 
     // this surface minus the intersection
     std::vector<BoostPolygon> faceDifferenceResult;
@@ -964,6 +1007,15 @@ namespace detail {
 
       // new vertices in face coordinates
       std::vector<Point3d> intersectionVertices = verticesFromBoostPolygon(intersectionResult[i]);
+
+      boost::optional<double> intersectionArea = getArea(intersectionVertices);
+      if (!intersectionArea){
+        LOG(Info, "Cannot compute intersection area");
+        return false;
+      }else if (*intersectionArea < tol*tol){
+        LOG(Info, "Ignoring very small intersection of " << *intersectionArea << "m^2");
+        continue;
+      }
 
       // new surface in this space
       std::vector<Point3d> newBuildingVertices = faceTransformation * intersectionVertices;
@@ -1003,6 +1055,15 @@ namespace detail {
 
         // new vertices in face coordinates, do not add last point
         std::vector<Point3d> faceDifferenceVertices = verticesFromBoostPolygon(faceDifferenceResult[i]);
+      
+        boost::optional<double> faceDifferenceArea = getArea(faceDifferenceVertices);
+        if (!faceDifferenceArea){
+          LOG(Info, "Cannot compute difference area");
+          return false;
+        }else if (*faceDifferenceArea < tol*tol){
+          LOG(Info, "Ignoring very small difference of " << *faceDifferenceArea << "m^2");
+          continue;
+        }
 
         // new surface in this space
         std::vector<Point3d> newBuildingVertices = faceTransformation * faceDifferenceVertices;
@@ -1033,6 +1094,15 @@ namespace detail {
 
         // new vertices in face coordinates, do not add last point
         std::vector<Point3d> otherFaceDifferenceVertices = verticesFromBoostPolygon(otherFaceDifferenceResult[i]);
+        
+        boost::optional<double> faceDifferenceArea = getArea(otherFaceDifferenceVertices);
+        if (!faceDifferenceArea){
+          LOG(Info, "Cannot compute difference area");
+          return false;
+        }else if (*faceDifferenceArea < tol*tol){
+          LOG(Info, "Ignoring very small difference of " << *faceDifferenceArea << "m^2");
+          continue;
+        }
 
         // new surface in other space
         std::vector<Point3d> newOtherBuildingVertices = faceTransformation * otherFaceDifferenceVertices;
