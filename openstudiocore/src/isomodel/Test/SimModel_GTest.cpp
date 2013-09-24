@@ -268,18 +268,18 @@ EXPECT_EQ(0.00090079185025864915, testVal = results.monthlyResults[9].getEndUse(
 EXPECT_EQ(0.065472347285332952, testVal = results.monthlyResults[10].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
 EXPECT_EQ(1.0373822892817233, testVal = results.monthlyResults[11].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Heating) );
 
-EXPECT_EQ(1.7976931348623158e+304, testVal = results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-EXPECT_EQ(1.7976931348623158e+304, testVal = results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-EXPECT_EQ(1.7976931348623158e+304, testVal = results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-EXPECT_EQ(1.7976931348623158e+304, testVal = results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-EXPECT_EQ(1.7976931348623158e+304, testVal = results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-EXPECT_EQ(1.7976931348623158e+304, testVal = results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-EXPECT_EQ(1.7976931348623158e+304, testVal = results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-EXPECT_EQ(1.7976931348623158e+304, testVal = results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-EXPECT_EQ(1.7976931348623158e+304, testVal = results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-EXPECT_EQ(1.7976931348623158e+304, testVal = results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-EXPECT_EQ(1.7976931348623158e+304, testVal = results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
-EXPECT_EQ(1.7976931348623158e+304, testVal = results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+EXPECT_EQ(0, testVal = results.monthlyResults[0].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+EXPECT_EQ(0, testVal = results.monthlyResults[1].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+EXPECT_EQ(0, testVal = results.monthlyResults[2].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+EXPECT_EQ(0, testVal = results.monthlyResults[3].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+EXPECT_EQ(0, testVal = results.monthlyResults[4].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+EXPECT_EQ(0, testVal = results.monthlyResults[5].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+EXPECT_EQ(0, testVal = results.monthlyResults[6].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+EXPECT_EQ(0, testVal = results.monthlyResults[7].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+EXPECT_EQ(0, testVal = results.monthlyResults[8].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+EXPECT_EQ(0, testVal = results.monthlyResults[9].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+EXPECT_EQ(0, testVal = results.monthlyResults[10].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
+EXPECT_EQ(0, testVal = results.monthlyResults[11].getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::WaterSystems) );
 
 
 EXPECT_EQ(0, testVal = results.monthlyResults[0].getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling) );

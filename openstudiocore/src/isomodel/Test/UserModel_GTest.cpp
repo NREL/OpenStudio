@@ -340,7 +340,7 @@ TEST_F(ISOModelFixture, UserModel)
   EXPECT_EQ(0.0, userModel.exhaustAirRecirclation());
   EXPECT_EQ(2.4610800585487800, userModel.buildingAirLeakage());
   EXPECT_EQ(0.0, userModel.dhwDemand());
-  EXPECT_EQ(0.0, userModel.dhwEfficiency());
+  EXPECT_EQ(0.9, userModel.dhwEfficiency());
   EXPECT_EQ(0.791092991177229, userModel.dhwDistributionSystem());//unmodified by load
   EXPECT_EQ(1.0, userModel.dhwEnergyCarrier());
   EXPECT_EQ(1.0, userModel.bemType());
