@@ -1683,7 +1683,15 @@ namespace detail {
 
   void Job_Impl::updateJob(const boost::shared_ptr<Job_Impl> &t_other)
   {
-    LOG(Info, "Updating job: " << toString(uuid().toString()));
+
+	if (t_other.get() == this)
+	{
+	  LOG(Info, "Updating job is current job nothing to do: " << toString(uuid().toString())); 
+	  return;
+	} else {
+      LOG(Info, "Updating job: " << toString(uuid().toString()));
+	}
+
     QWriteLocker l(&m_mutex);
 
     if (!m_externallyManaged
