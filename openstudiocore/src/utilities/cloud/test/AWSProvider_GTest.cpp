@@ -31,5 +31,6 @@ TEST(AWSProvider, AWSProviderTest)
 {
   AWSProvider awsProvider;
   awsProvider.serverInstanceTypes();
+  cout << awsProvider.validateCredentials() << endl;
   cout << awsProvider.serviceAvailable() << endl;
 }
