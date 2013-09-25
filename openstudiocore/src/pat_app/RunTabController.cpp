@@ -109,6 +109,12 @@ void RunTabController::onPlayButtonClicked(bool clicked)
 
   runmanager::RunManager runManager = project->runManager();
   analysis::Analysis analysis = project->analysis();
+
+  // DLM: if connected to cloud, get a cloud analysis driver here
+  // TODO: Kyle, how to get the current session here?
+  // TODO: Elaine, does the cloud analysis driver need a place to live?  
+  // should I set the cloud analysis driver on the project?
+
   analysisdriver::AnalysisDriver analysisDriver = project->analysisDriver();
 
   if (clicked){
@@ -120,6 +126,9 @@ void RunTabController::onPlayButtonClicked(bool clicked)
       onIterationProgress();
       return;
     }
+
+    // DLM: Elaine, what do I need to do here if I have a cloud analysis driver?
+    // what is current analysis? how will this be coordinated with cloud analysis driver?
 
     // check if we already have current analysis
     std::vector<analysisdriver::CurrentAnalysis> currentAnalyses = analysisDriver.currentAnalyses();
@@ -200,6 +209,8 @@ void RunTabController::onPlayButtonClicked(bool clicked)
       // I generally try to lean away from putting too much UI code in the base libraries, so
       // I'm calling this from here instead of from SimpleProject
       {
+        // DLM: I don't need to do this if running on cloud right?
+
         runmanager::ConfigOptions co(true);
         co.findTools(true, true, true, true);
         co.saveQSettings();
@@ -281,6 +292,8 @@ void RunTabController::onIterationProgress()
 
   runmanager::RunManager runManager = project->runManager();
   analysis::Analysis analysis = project->analysis();
+
+  // DLM: can we make this return the cloud analysis driver for simplicity?
   analysisdriver::AnalysisDriver analysisDriver = project->analysisDriver();
   std::vector<analysisdriver::CurrentAnalysis> currentAnalyses = analysisDriver.currentAnalyses();
 
