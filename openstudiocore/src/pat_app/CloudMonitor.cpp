@@ -122,10 +122,8 @@ CloudMonitor::CloudMonitor()
   bingo = connect(m_recoverCloudWorker.data(),SIGNAL(doneWorking()),this,SLOT(onRecoverCloudWorkerComplete()));
   OS_ASSERT(bingo);
 
-  // Start the CloudMonitorWorker 
+  // Start the CloudMonitorWorker thread
   m_workerThread->start();
-
-  m_worker->startWorking();
 }      
 
 CloudMonitor::~CloudMonitor()
@@ -175,6 +173,8 @@ void CloudMonitor::onStartCloudWorkerComplete()
   m_startCloudThread.clear();
 
   setStatus(CLOUD_RUNNING);
+
+  m_worker->monitorCloudRunning();
 }
 
 void CloudMonitor::stopCloud()
@@ -533,7 +533,7 @@ CloudMonitorWorker::~CloudMonitorWorker()
 {
 }
 
-void CloudMonitorWorker::startWorking()
+void CloudMonitorWorker::monitorCloudRunning()
 {
   if( m_monitor->status() == CLOUD_RUNNING )
   {
@@ -545,9 +545,11 @@ void CloudMonitorWorker::startWorking()
     {
       emit cloudConnectionError();
     }
+    else
+    {
+      QTimer::singleShot(5000,this,SLOT(monitorCloudRunning()));
+    }
   }
-
-  QTimer::singleShot(5000,this,SLOT(startWorking()));
 }
 
 bool CloudMonitorWorker::checkInternetAvailable() const

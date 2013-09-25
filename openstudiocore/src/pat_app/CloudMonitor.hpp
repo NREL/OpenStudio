@@ -291,7 +291,7 @@ class CloudMonitorWorker : public QObject
 
   public slots:
 
-  void startWorking();
+  void monitorCloudRunning();
 
   signals:
 
