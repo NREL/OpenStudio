@@ -493,6 +493,12 @@ namespace runmanager {
   {
     return m_impl->externallyManaged();
   }
+
+  void Job::sendSignals()
+  {
+    return m_impl->sendSignals();
+  }
+
 }
 }
 

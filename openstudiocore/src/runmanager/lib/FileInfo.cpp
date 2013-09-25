@@ -31,7 +31,12 @@ FileInfo::FileInfo(const std::string &t_filename,
                    bool t_exists)
   : fullPath(t_fullPath), filename(t_filename), 
     exists(t_exists), lastModified(t_lastModified), key(t_key)
-{}
+{
+  if (fullPath.empty())
+  {
+    fullPath = openstudio::toPath(t_filename);
+  }
+}
 
 FileInfo::FileInfo(const openstudio::path &t_path, const std::string &t_key)
   : fullPath(t_path),

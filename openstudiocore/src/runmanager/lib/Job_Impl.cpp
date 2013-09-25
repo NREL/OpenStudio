@@ -1223,7 +1223,11 @@ namespace detail {
         itr != fis.end();
         ++itr)
     {
-      itr->fullPath = openstudio::relativePath(itr->fullPath, t_outpath);
+      openstudio::path p = openstudio::relativePath(itr->fullPath, t_outpath);
+      if (!p.empty())
+      {
+        itr->fullPath = p;
+      }
     }
 
     return fis;
@@ -1686,7 +1690,7 @@ namespace detail {
 
 	if (t_other.get() == this)
 	{
-	  LOG(Info, "Updating job is current job nothing to do: " << toString(uuid().toString())); 
+	  LOG(Info, "Updating job is current job, nothing to do: " << toString(uuid().toString())); 
 	  return;
 	} else {
       LOG(Info, "Updating job: " << toString(uuid().toString()));
@@ -1755,7 +1759,44 @@ namespace detail {
     JobState newState = t_other->m_jobState;
 
     m_jobState = newState;
+    l.unlock();
 
+	sendSignals(oldState, newState);
+
+    for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr = myChildren.begin();
+         itr != myChildren.end();
+         ++itr)
+    {
+      for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr2 = otherChildren.begin();
+           itr2 != otherChildren.end();
+           ++itr2)
+      {
+        if ((*itr)->uuid() == (*itr2)->uuid())
+        {
+          (*itr)->updateJob(*itr2);
+          break;
+        }
+      }
+    }
+
+    if (myHasFinishedJob)
+    {
+      myFinishedJob->updateJob(otherFinishedJob);
+    }
+  }
+
+
+  void Job_Impl::sendSignals()
+  {
+	QReadLocker l(&m_mutex);
+	JobState state = m_jobState;
+	l.unlock();
+
+    sendSignals(JobState(), state);
+  }
+
+  void Job_Impl::sendSignals(JobState oldState, JobState newState)
+  {
     bool sendStatus = false;
     if (oldState.status != newState.status)
     {
@@ -1785,7 +1826,6 @@ namespace detail {
                         newFiles.begin(), newFiles.end(),
                         std::back_inserter(diffFiles));
 
-    l.unlock();
 
     if (sendStarted)
     {
@@ -1807,28 +1847,8 @@ namespace detail {
       LOG(Debug, "updateJob: emitFinished()");
       emitFinished(newState.errors, newState.lastRun, Files(std::vector<FileInfo>(newFiles.begin(), newFiles.end())));
     }
-
-    for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr = myChildren.begin();
-         itr != myChildren.end();
-         ++itr)
-    {
-      for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr2 = otherChildren.begin();
-           itr2 != otherChildren.end();
-           ++itr2)
-      {
-        if ((*itr)->uuid() == (*itr2)->uuid())
-        {
-          (*itr)->updateJob(*itr2);
-          break;
-        }
-      }
-    }
-
-    if (myHasFinishedJob)
-    {
-      myFinishedJob->updateJob(otherFinishedJob);
-    }
   }
+
 
   bool Job_Impl::externallyManaged() const
   {

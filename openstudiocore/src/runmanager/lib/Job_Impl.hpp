@@ -309,6 +309,10 @@ namespace detail {
       /// \returns true if this job is externallyManaged
       bool externallyManaged() const;
 
+      // send job state and file output signals as if the job had gone from no state
+	    // to the current state
+      void sendSignals();
+
     protected:
       /// Called when the base path has changed
       virtual void basePathChanged() = 0;
@@ -389,7 +393,6 @@ namespace detail {
       /// Updates the list of tracked files for timestamps and checksums
 //      void updateFiles(std::map<openstudio::path, FileTrack> &t_files);
 
-
     private slots:
 
       void threadFinished();
@@ -464,6 +467,8 @@ namespace detail {
       void maximumClean();
 
       void standardClean();
+	  
+      void sendSignals(JobState oldState, JobState newState);
 
       std::vector<FileInfo> relativeOutputFilesInternal(const openstudio::runmanager::Files &t_outputFiles, const openstudio::path &t_outdir) const;
 

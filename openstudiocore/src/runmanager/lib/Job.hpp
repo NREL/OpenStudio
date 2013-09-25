@@ -362,6 +362,11 @@ namespace detail {
       /// \returns all output files relative to the rundir
       Files relativeOutputFiles() const;
 
+      // send job state and file output signals as if the job had gone from no state
+      // to the current state
+      void sendSignals();
+
+
     protected:
       Job(const boost::shared_ptr<detail::Job_Impl> &t_impl);
 
