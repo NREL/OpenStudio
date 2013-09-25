@@ -1,7 +1,7 @@
 <measure>
   <name>Replace OpenStudio Model</name>
   <uid>d234ecee-c118-44e7-a381-db0a8917d751</uid>
-  <version_id>5fd5cdad-94df-4c8e-9098-b7366b2870bf</version_id>
+  <version_id>71d2543d-5d6a-46bc-bba5-15fdc7b75c10</version_id>
   <description></description>
   <modeler_description></modeler_description>
   <provenances/>
@@ -13,16 +13,6 @@
       <name>Measure Type</name>
       <value>ModelMeasure</value>
       <datatype>string</datatype>
-    </attribute>
-    <attribute>
-      <name>Measure Function</name>
-      <value>Measure</value>
-      <datatype>string</datatype>
-    </attribute>
-    <attribute>
-      <name>Requires EnergyPlus Results</name>
-      <value>false</value>
-      <datatype>boolean</datatype>
     </attribute>
     <attribute>
       <name>Uses SketchUp API</name>
@@ -42,16 +32,16 @@
       <checksum>EA4A772C</checksum>
     </file>
     <file>
-      <filename>EnvelopeAndLoadTestModel_01.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>1C34D03F</checksum>
-    </file>
-    <file>
       <filename>ReplaceModel_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
       <checksum>3CA7D4D5</checksum>
+    </file>
+    <file>
+      <filename>EnvelopeAndLoadTestModel_01.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>15D4B9DC</checksum>
     </file>
   </files>
 </measure>

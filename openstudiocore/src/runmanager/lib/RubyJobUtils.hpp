@@ -126,6 +126,8 @@ namespace runmanager {
 
       openstudio::path script() const;
 
+      bool userScriptJob() const;
+
       /// Sets the name of the ruby script file to execute
       void setScriptFile(const openstudio::path &t_script);
 

@@ -724,13 +724,13 @@ IF (WIN32)
   SET(AWS_RUBY_EXTENSION ".zip")
 
   SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-win32.zip)
-  SET(AWS_RUBY_CHECKSUM 47a865d1be6c03d09cc0fc652adb53f9)
+  SET(AWS_RUBY_CHECKSUM 912351a66912d437fd62f206e533f9d9)
 ELSEIF(APPLE)
   SET(AWS_RUBY_PATH ruby-2.0.0-aws-Darwin)
   SET(AWS_RUBY_DESTINATION ".")
 
   SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Darwin.tar.bz2)
-  SET(AWS_RUBY_CHECKSUM ffc7dea105f3b6e3215ab2a32e7127ce)
+  SET(AWS_RUBY_CHECKSUM 32f8d2d6944a9dfee4586e0ea4652f61)
   SET(AWS_RUBY_EXTENSION ".tar.bz2")
 
   #  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Darwin.tar.gz)
@@ -741,7 +741,7 @@ ELSEIF(UNIX)
   SET(AWS_RUBY_DESTINATION "lib/openstudio")
 
   SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Linux-x86_64.tar.bz2)
-  SET(AWS_RUBY_CHECKSUM b2f8b2a41be2a63eca58b73dab908493)
+  SET(AWS_RUBY_CHECKSUM de22f5a6fc3d7688f12f81dfb8373fc8)
   SET(AWS_RUBY_EXTENSION ".tar.bz2")
 
   #  SET(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-aws-Linux-x86_64.tar.gz)

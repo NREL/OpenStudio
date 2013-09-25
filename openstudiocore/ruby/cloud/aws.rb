@@ -29,7 +29,7 @@
 #  ARGV[0] - Access Key
 #  ARGV[1] - Secret Key
 #  ARGV[2] - Service (e.g. "EC2" or "CloudWatch")
-#  ARGV[3] - Command (e.g. "describe_availability_zones")
+#  ARGV[3] - Command (e.g. "launch_server")
 #  ARGV[4] - Optional json with parameters associated with command
 #
 ######################################################################
@@ -40,7 +40,6 @@ require 'net/http'
 require 'net/scp'
 require 'net/ssh'
 require 'tempfile'
-#require 'active_support/core_ext/hash/conversions'
 
 def error(code, msg)
   puts ({:error => {:code => code, :message => msg}}.to_json)
@@ -61,9 +60,10 @@ AWS.config(
     :secret_access_key => ARGV[1],
     :ssl_verify_peer => false
 )
-@image_id = 'ami-d0f89fb9'
-@master_instance_type = 't1.micro'
-@slave_instance_type = 't1.micro'
+@server_image_id = 'ami-d3074eba'
+@worker_image_id = 'ami-9d074ef4'
+@server_instance_type = 't1.micro'
+@worker_instance_type = 't1.micro'
 
 if ARGV[2] == "CloudWatch"
   @aws = AWS::CloudWatch.new
@@ -80,39 +80,39 @@ def create_struct(instance)
   return instance_struct.new(instance, instance.instance_id, instance.ip_address, instance.dns_name)
 end
 
-def launch_master
-  user_data = File.read(File.expand_path(File.dirname(__FILE__))+'/master_script.sh')
-  @master = @aws.instances.create(:image_id => @image_id,
+def launch_server
+  user_data = File.read(File.expand_path(File.dirname(__FILE__))+'/server_script.sh')
+  @server = @aws.instances.create(:image_id => @server_image_id,
                                   :key_pair => @key_pair,
                                   :security_groups => @group,
                                   :user_data => user_data,
-                                  :instance_type => @master_instance_type)
-  sleep 5 while @master.status == :pending
-  if @master.status != :running
-    error(-1, "Master status: #{@master.status}")
+                                  :instance_type => @server_instance_type)
+  sleep 5 while @server.status == :pending
+  if @server.status != :running
+    error(-1, "Server status: #{@server.status}")
   end
 
-  @master = create_struct(@master)
+  @server = create_struct(@server)
 end
 
-def launch_slaves(num, master_ip)
-  user_data = File.read(File.expand_path(File.dirname(__FILE__))+'/slave_script_template.sh')
-  user_data.gsub!(/MASTER_IP/, master_ip)
-  user_data.gsub!(/MASTER_HOSTNAME/, 'master_name')
+def launch_workers(num, server_ip)
+  user_data = File.read(File.expand_path(File.dirname(__FILE__))+'/worker_script_template.sh')
+  user_data.gsub!(/SERVER_IP/, server_ip)
+  user_data.gsub!(/SERVER_HOSTNAME/, 'server_name')
   instances = []
   num.times do
-    slave = @aws.instances.create(:image_id => @image_id,
-                                  :key_pair => @key_pair,
-                                  :security_groups => @group,
-                                  :user_data => user_data,
-                                  :instance_type => @slave_instance_type)
-    instances.push(slave)
+    worker = @aws.instances.create(:image_id => @worker_image_id,
+                                   :key_pair => @key_pair,
+                                   :security_groups => @group,
+                                   :user_data => user_data,
+                                   :instance_type => @worker_instance_type)
+    instances.push(worker)
   end
   sleep 5 while instances.any? { |instance| instance.status == :pending }
   if instances.any? { |instance| instance.status != :running }
-    error(-1, "Slave status: Not running")
+    error(-1, "Worker status: Not running")
   end
-  instances.each { |instance| @slaves.push(create_struct(instance)) }
+  instances.each { |instance| @workers.push(create_struct(instance)) }
 end
 
 def upload_file(host, local_path, remote_path)
@@ -186,7 +186,10 @@ begin
     when 'describe_availability_zones'
       resp = @aws.client.describe_availability_zones
       puts resp.data.to_json
-    when 'launch_master'
+    when 'total_instances'
+      resp = @aws.client.describe_instance_status
+      puts ({:instances => resp.data[:instance_status_set].length}.to_json)
+    when 'launch_server'
       @timestamp = Time.now.to_i
       @group = @aws.security_groups.create("sec-group-#{@timestamp}")
       # web traffic
@@ -208,69 +211,67 @@ begin
       #File.open("ec2.pem", "w") do |f| f.write(@key_pair.private_key)
       #end
 
-      launch_master()
+      launch_server()
 
       puts ({:timestamp => @timestamp,
              :private_key => @key_pair.private_key,
-             :master => {
-                 :id => @master.id,
-                 :ip => @master.ip,
-                 :dns => @master.dns
+             :server => {
+                 :id => @server.id,
+                 :ip => @server.ip,
+                 :dns => @server.dns
              }}.to_json)
-    when 'launch_slaves'
+    when 'launch_workers'
       if ARGV.length < 5
         error(-1, 'Invalid number of args')
       end
 
-      @slaves = []
+      @workers = []
       @timestamp = @params['timestamp']
       @group = @aws.security_groups.filter('group-name', "sec-group-#{@timestamp}").first
       @key_pair = @aws.key_pairs.filter('key-name', "key-pair-#{@timestamp}").first
       @private_key = File.read(@params['private_key'])
-      @master = @aws.instances[@params['master_id']]
-      error(-1, "Master node does not exist") unless @master.exists?
-      @master = create_struct(@master)
-      launch_slaves(@params['num'], @master.ip)
-      #@slaves.push(create_struct(@aws.instances['i-7db7641f']))
-      #@slaves.push(create_struct(@aws.instances['i-deaf08b4']))
+      @server = @aws.instances[@params['server_id']]
+      error(-1, "Server node does not exist") unless @server.exists?
+      @server = create_struct(@server)
+      launch_workers(@params['num'], @server.ip)
+      #@workers.push(create_struct(@aws.instances['i-7db7641f']))
+      #@workers.push(create_struct(@aws.instances['i-deaf08b4']))
 
-      slave_ips = ''
-      @slaves.each { |slave| slave_ips << "#{slave.ip}\n" }
-      file = Tempfile.new('hosts_slave_file')
-      file.write(slave_ips)
+      worker_ips = ''
+      @workers.each { |worker| worker_ips << "#{worker.ip}\n" }
+      file = Tempfile.new('hosts_worker_file')
+      file.write(worker_ips)
       file.close
-      upload_file(@master.ip, file.path, '/home/ubuntu/hosts_slave_file.sh')
+      upload_file(@server.ip, file.path, '/home/ubuntu/hosts_worker_file.sh')
       file.unlink
 
       logins = ''
-      logins << "#{@master.dns}|ubuntu|ubuntu\n"
-      @slaves.each { |slave| logins << "#{slave.dns}|ubuntu|ubuntu\n" }
+      logins << "#{@server.dns}|ubuntu|ubuntu\n"
+      @workers.each { |worker| logins << "#{worker.dns}|ubuntu|ubuntu\n" }
       file = Tempfile.new('logins')
       file.write(logins)
       file.close
-      upload_file(@master.ip, file.path, 'ip_addresses')
+      upload_file(@server.ip, file.path, 'ip_addresses')
       file.unlink
 
       prefix = File.expand_path(File.dirname(__FILE__))+'/'
       upload_files = [prefix + 'setup-ssh-keys.sh', prefix + 'setup-ssh-worker-nodes.sh', prefix + 'setup-ssh-worker-nodes.expect', prefix + 'start_rserve.sh', prefix + 'R_config.rb']
       upload_files.each do |file|
-        upload_file(@master.ip, file, File.basename(file))
+        upload_file(@server.ip, file, File.basename(file))
       end
 
-      send_command(@master.ip, 'chmod 774 ~/setup-ssh-keys.sh; chmod 774 ~/setup-ssh-worker-nodes.expect; chmod 774 ~/setup-ssh-worker-nodes.sh; chmod 774 ~/start_rserve.sh; chmod 774 ~/R_config.rb; sh ~/setup-ssh-keys.sh; sh ~/setup-ssh-worker-nodes.sh; nohup ~/start_rserve.sh </dev/null >/dev/null 2>&1 &')
-      shell_command(@master.ip, '/usr/local/rbenv/shims/ruby ~/R_config.rb')
+      send_command(@server.ip, 'chmod 774 ~/setup-ssh-keys.sh; chmod 774 ~/setup-ssh-worker-nodes.expect; chmod 774 ~/setup-ssh-worker-nodes.sh; chmod 774 ~/start_rserve.sh; chmod 774 ~/R_config.rb; sh ~/setup-ssh-keys.sh; sh ~/setup-ssh-worker-nodes.sh; nohup ~/start_rserve.sh </dev/null >/dev/null 2>&1 &')
+      shell_command(@server.ip, '/usr/local/rbenv/shims/ruby ~/R_config.rb')
 
-      slave_json = []
-      @slaves.each { |slave|
-        slave_json.push({
-                            :id => slave.id,
-                            :ip => slave.ip,
-                            :dns => slave.dns
-                        })
+      worker_json = []
+      @workers.each { |worker|
+        worker_json.push({
+                             :id => worker.id,
+                             :ip => worker.ip,
+                             :dns => worker.dns
+                         })
       }
-      puts ({:timestamp => @timestamp,
-             :private_key => @key_pair.private_key,
-             :slaves => slave_json}.to_json)
+      puts ({:workers => worker_json}.to_json)
 
     when 'terminate_instance'
       if ARGV.length < 5

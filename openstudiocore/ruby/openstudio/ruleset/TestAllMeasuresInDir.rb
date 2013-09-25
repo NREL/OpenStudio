@@ -94,9 +94,11 @@ Dir.glob("#{dir}/*/") do |measure_dir|
     if measure.measureType == "ModelMeasure".to_MeasureType
       args = user_script_class.new.arguments(OpenStudio::Model::Model.new)
     elsif measure.measureType == "EnergyPlusMeasure".to_MeasureType
-      args = user_script_class.new.arguments(OpenStudio::Workspace.new)
+      args = user_script_class.new.arguments(OpenStudio::Workspace.new)   
     elsif measure.measureType == "UtilityMeasure".to_MeasureType
       args = user_script_class.new.arguments()
+    elsif measure.measureType == "ReportingMeasure".to_MeasureType
+      args = user_script_class.new.arguments()      
     end
     
     if not args or args.class != OpenStudio::Ruleset::OSArgumentVector
