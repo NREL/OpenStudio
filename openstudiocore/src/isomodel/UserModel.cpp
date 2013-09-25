@@ -34,6 +34,9 @@ namespace isomodel {
   SimModel UserModel::toSimModel() const
   {
     SimModel sim = SimModel();
+    if(!_valid){
+      return *((SimModel*)NULL);
+    }
 
     boost::shared_ptr<Population> pop(new Population);
     pop->setDaysStart(_buildingOccupancyFrom);
@@ -613,15 +616,21 @@ namespace isomodel {
     result[i] = '\0';
   }
   boost::shared_ptr<WeatherData> UserModel::loadWeather(){
+    boost::shared_ptr<WeatherData> wdata(new WeatherData);
     std::vector<std::string> linesplit;
     char* weatherFilename = new char[_weatherFilePath.length() + strlen(this->dataFile)];
     resolveFilename(this->dataFile,_weatherFilePath.c_str(),weatherFilename);
+    if ( !boost::filesystem::exists( weatherFilename ) )
+    {
+      std::cout << "Weather File Not Found: " << _weatherFilePath << std::endl;
+      _valid = false;
+      return wdata;//using shared_ptr doesn't compile with any attempt at returning null
+    }
     string line;
     EpwData edata;
     edata.loadData(weatherFilename);
 
     int state = 0, row=0;
-    boost::shared_ptr<WeatherData> wdata(new WeatherData);
     Matrix _msolar(12,8);
     Matrix _mhdbt(12,24);
     Matrix _mhEgh(12,24);
@@ -683,8 +692,15 @@ namespace isomodel {
     return wdata;
   }
   void UserModel::load(const char* buildingFile){
-    loadBuilding(buildingFile);
     this->dataFile = buildingFile;
+    _valid = true;
+    if ( !boost::filesystem::exists( buildingFile ) )
+    {
+      std::cout << "ISO Model File Not Found: " << buildingFile << std::endl;
+      _valid = false;
+      return;
+    }
+    loadBuilding(buildingFile);
     _weather = loadWeather();
   }
 

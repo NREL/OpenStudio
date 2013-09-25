@@ -24,6 +24,7 @@
 #include <isomodel/EpwData.hpp>
 #include <isomodel/SimModel.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/filesystem.hpp>
 #include <utilities/core/Logger.hpp>
 
 namespace openstudio {
@@ -39,6 +40,7 @@ namespace isomodel {
     void parseStructure(std::string attributeName, const char* attributeValue);
     REGISTER_LOGGER("openstudio.isomodel.UserModel");
     boost::shared_ptr<WeatherData> _weather; 
+    bool _valid;
     double _terrainClass;
     double _floorArea;
     double _buildingHeight;
@@ -198,6 +200,16 @@ namespace isomodel {
     virtual ~UserModel();    
     SimModel toSimModel() const;
 
+    /**
+     * Indicates whether or not the user model loaded in correctly
+     * If either the ISO file or the Weather File cannot be found
+     * valid will be false
+     * userModel.load(<filename>)
+     * if(userModel.valid()){
+     *     userModel.toSimModel().simulate();
+     * }
+     */
+    bool valid(){return _valid;}
     const char * weatherFilePath(){return _weatherFilePath.c_str();}
     double terrainClass(){return _terrainClass;} const 
     double floorArea(){return _floorArea;} const 
@@ -301,7 +313,7 @@ namespace isomodel {
     double windowSDFSW(){return _windowSDFSW;} const
 
 
-
+    void setValid(bool val){_valid = val;}
     void setWallUvalueW(double val){_wallUvalueW=val;}
     void setWallUvalueNW(double val){_wallUvalueNW=val;}
     void setWallUvalueN(double val){_wallUvalueN=val;}

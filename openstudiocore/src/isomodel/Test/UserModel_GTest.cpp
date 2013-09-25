@@ -297,8 +297,12 @@ TEST_F(ISOModelFixture, UserModel)
 
   std::string wpath;
   wpath = "test";
+  userModel.load("test");
+  EXPECT_FALSE(userModel.valid());
   userModel.setWeatherFilePath(wpath);
   EXPECT_EQ(0, std::strcmp("test",userModel.weatherFilePath()));
+  userModel.loadWeather();
+  EXPECT_FALSE(userModel.valid());
 
   path p = resourcesPath() / openstudio::toPath("isomodel/exampleModel.ISO");
   wpath = "";
