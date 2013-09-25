@@ -69,7 +69,7 @@ AWS.config(
 if ARGV[5] == "cc2.8xlarge"
   @worker_image_id = 'ami-834316ea'
 else
-  @worker_image_id = 'ami-ebc98082'  #todo
+  @worker_image_id = 'ami-c1b7e2a8'
 end
 
 if ARGV[3] == "EC2"
