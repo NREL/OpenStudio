@@ -44,7 +44,7 @@ require 'tempfile'
 
 # Not sure how we want to deal with this, but in the tag, I would like to specify the right
 # version of openstudio so that in the AWS Management Console it is meaningful.
-OPENSTUDIO_VERSION="1.0.5"
+OPENSTUDIO_VERSION="1.0.6"
 
 def error(code, msg)
   puts ({:error => {:code => code, :message => msg}}.to_json)
@@ -66,7 +66,11 @@ AWS.config(
     :ssl_verify_peer => false
 )
 @server_image_id = 'ami-ad4e1bc4'
-@worker_image_id = 'ami-834316ea'
+if ARGV[5] == "cc2.8xlarge"
+  @worker_image_id = 'ami-834316ea'
+else
+  @worker_image_id = 'ami-ebc98082'  #todo
+end
 
 if ARGV[3] == "EC2"
   @aws = AWS::EC2.new
