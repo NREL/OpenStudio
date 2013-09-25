@@ -32,6 +32,7 @@
 #include <analysisdriver/AnalysisDriver.hpp>
 #include <analysisdriver/AnalysisRunOptions.hpp>
 #include <analysisdriver/CurrentAnalysis.hpp>
+#include <analysisdriver/CloudAnalysisDriver.hpp>
 
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/Job.hpp>
@@ -110,28 +111,69 @@ void RunTabController::onPlayButtonClicked(bool clicked)
   runmanager::RunManager runManager = project->runManager();
   analysis::Analysis analysis = project->analysis();
 
-  // DLM: if connected to cloud, get a cloud analysis driver here
-  // TODO: Kyle, how to get the current session here?
-  // TODO: Elaine, does the cloud analysis driver need a place to live?  
-  // should I set the cloud analysis driver on the project?
-
+  boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
   analysisdriver::AnalysisDriver analysisDriver = project->analysisDriver();
 
   if (clicked){
 
+    // Make sure everything is in a kosher state for starting the simulation
+
+    // need a seed model
     boost::optional<model::Model> seedModel = project->seedModel();
     if (!seedModel){
       // todo: check message
       QMessageBox::warning(runView, "No Baseline Model", "Cannot run analysis until a baseline model has been set on the first tab.");
+      
+      // important to call, this controls tab 1 and 2 access
       onIterationProgress();
       return;
     }
 
-    // DLM: Elaine, what do I need to do here if I have a cloud analysis driver?
-    // what is current analysis? how will this be coordinated with cloud analysis driver?
+    // version translation and weather file
+    if (project->modelsRequireUpdate()) {
+      std::stringstream question;
+      question << "One or more of your models (baseline or alternate) needs to be updated to OpenStudio Version ";
+      question << openStudioVersion() << ", or the weather file needs to be located. Do you want to proceed?";
+      if ((!project->analysis().weatherFile()) || (!boost::filesystem::exists(project->analysis().weatherFile()->path()))) {
+        question << " (Results will be cleared because your weather file must be reset.)";
+      }
+
+      QMessageBox::StandardButton test = QMessageBox::question(runView, "Update Models", toQString(question.str()), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+      if (test == QMessageBox::Yes) {
+        bool ok = project->updateModels();
+        if (!ok) {
+          QMessageBox::critical(runView, "Incomplete Upgrade", QString("The upgrade process was only partially successful. If there are errors, you may also want to check project.log for more information."));
+        }
+        PatApp::instance()->processEvents(); // results may need to be cleared, which would negate next question
+        if (!(project->analysis().completeDataPoints().empty())) {
+          question.str("");
+          question << "The input models were just updated and the project contains old results. Do you want to clear all results before proceeding? (Choosing no could result in design alternatives simulated with different versions of OpenStudio.)";
+          QMessageBox::StandardButton test = QMessageBox::question(runView, "Clear Results", toQString(question.str()), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+          if (test == QMessageBox::Yes) {
+            bool completeRemoval = project->clearAllResults();
+            if (!completeRemoval) {
+              QMessageBox::critical( runView, "Incomplete File Removal", QString("Removed all results from this project, but could not remove all of the result files.") );
+            }
+          }
+        }
+        project->save();
+
+      } else {
+             
+        // important to call, this controls tab 1 and 2 access
+        onIterationProgress();
+        return;
+      }
+    }
 
     // check if we already have current analysis
-    std::vector<analysisdriver::CurrentAnalysis> currentAnalyses = analysisDriver.currentAnalyses();
+    std::vector<analysisdriver::CurrentAnalysis> currentAnalyses;
+    if (cloudAnalysisDriver){
+      // no-op for the cloud, currentAnalyses will be empty
+    }else{
+      currentAnalyses = analysisDriver.currentAnalyses();
+    }
+
     if (currentAnalyses.empty()){
 
       // disable the app until we have started the first batch of jobs
@@ -163,53 +205,11 @@ void RunTabController::onPlayButtonClicked(bool clicked)
         PatApp::instance()->processEvents();
       }
 
-      // Make sure everything is in a kosher state for starting the simulation
-
-      // version translation and weather file
-      if (project->modelsRequireUpdate()) {
-        std::stringstream question;
-        question << "One or more of your models (baseline or alternate) needs to be updated to OpenStudio Version ";
-        question << openStudioVersion() << ", or the weather file needs to be located. Do you want to proceed?";
-        if ((!project->analysis().weatherFile()) || (!boost::filesystem::exists(project->analysis().weatherFile()->path()))) {
-          question << " (Results will be cleared because your weather file must be reset.)";
-        }
-        QMessageBox::StandardButton test = QMessageBox::question(runView, "Update Models", toQString(question.str()), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-        if (test == QMessageBox::Yes) {
-          bool ok = project->updateModels();
-          if (!ok) {
-            QMessageBox::critical(runView, "Incomplete Upgrade", QString("The upgrade process was only partially successful. If there are errors, you may also want to check project.log for more information."));
-          }
-          PatApp::instance()->processEvents(); // results may need to be cleared, which would negate next question
-          if (!(project->analysis().completeDataPoints().empty())) {
-            question.str("");
-            question << "The input models were just updated and the project contains old results. Do you want to clear all results before proceeding? (Choosing no could result in design alternatives simulated with different versions of OpenStudio.)";
-            QMessageBox::StandardButton test = QMessageBox::question(runView, "Clear Results", toQString(question.str()), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-            if (test == QMessageBox::Yes) {
-              bool completeRemoval = project->clearAllResults();
-              if (!completeRemoval) {
-                QMessageBox::critical( runView, "Incomplete File Removal", QString("Removed all results from this project, but could not remove all of the result files.") );
-              }
-            }
-          }
-          project->save();
-        }
-        else {
-               
-          // enable the app
-          PatApp::instance()->mainWindow->setEnabled(true);
-          PatApp::instance()->mainWindow->setFocus();
-        
-          // important to call, this controls tab 1 and 2 access
-          onIterationProgress();
-
-          return;
-        }
-      }
-
       // I generally try to lean away from putting too much UI code in the base libraries, so
       // I'm calling this from here instead of from SimpleProject
-      {
-        // DLM: I don't need to do this if running on cloud right?
+      if (!cloudAnalysisDriver){
+
+        // need to check for E+ if running locally
 
         runmanager::ConfigOptions co(true);
         co.findTools(true, true, true, true);
@@ -236,21 +236,40 @@ void RunTabController::onPlayButtonClicked(bool clicked)
 
       // DLM: todo add a progress bar here as queueing all the points can take a while
 
-      // request new run
-      analysisdriver::AnalysisRunOptions runOptions = standardRunOptions(*project);
-      analysisdriver::CurrentAnalysis currentAnalysis = analysisDriver.run(analysis, runOptions);
+      if (cloudAnalysisDriver){
 
-      // start the run
-      analysisDriver.unpauseQueue();
+        // start the run
+        cloudAnalysisDriver->requestRun();
 
-      // connect currentAnalysis to update progress on this
-      bool isConnected = currentAnalysis.connect(SIGNAL(iterationProgress(int,int)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
-      OS_ASSERT(isConnected);
+        // DLM: do something when run starts or doesn't...
+        // Kyle, is this a CloudMonitor thing?
 
-      // connect currentAnalysis to update progress in PatApp
-      // DLM: this re-enables tabs if analysis completes when we are not on this tab
-      isConnected = currentAnalysis.connect(SIGNAL(iterationProgress(int,int)), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
-      OS_ASSERT(isConnected);
+        // connect currentAnalysis to update progress on this
+        bool isConnected = cloudAnalysisDriver->connect(SIGNAL(resultsChanged()), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
+        OS_ASSERT(isConnected);
+
+        // connect currentAnalysis to update progress in PatApp
+        // DLM: this re-enables tabs if analysis completes when we are not on this tab
+        isConnected = cloudAnalysisDriver->connect(SIGNAL(resultsChanged()), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
+        OS_ASSERT(isConnected);
+      }else{
+
+        // request new run
+        analysisdriver::AnalysisRunOptions runOptions = standardRunOptions(*project);
+        analysisdriver::CurrentAnalysis currentAnalysis = analysisDriver.run(analysis, runOptions);
+
+        // start the run
+        analysisDriver.unpauseQueue();
+
+        // connect currentAnalysis to update progress on this
+        bool isConnected = currentAnalysis.connect(SIGNAL(iterationProgress(int,int)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
+        OS_ASSERT(isConnected);
+
+        // connect currentAnalysis to update progress in PatApp
+        // DLM: this re-enables tabs if analysis completes when we are not on this tab
+        isConnected = currentAnalysis.connect(SIGNAL(iterationProgress(int,int)), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
+        OS_ASSERT(isConnected);
+      }
 
       // enable the app
       PatApp::instance()->mainWindow->setEnabled(true);
@@ -268,9 +287,22 @@ void RunTabController::onPlayButtonClicked(bool clicked)
     PatApp::instance()->mainWindow->setEnabled(false);
     PatApp::instance()->processEvents();
 
-    // request stop
-    project->runManager().setPaused(true);
-    project->stop();
+    if (cloudAnalysisDriver){
+      // request stop
+      cloudAnalysisDriver->requestStop(false);
+
+      // DLM: do something when stop completes or doesn't...
+      // when will 
+      // Kyle, is this a CloudMonitor thing?
+
+
+
+
+    }else{
+      // request stop
+      project->runManager().setPaused(true);
+      project->stop();
+    }
 
     // DLM: disconnect currentAnalysis from this or will currentAnalysis be destroyed?
 
@@ -293,16 +325,20 @@ void RunTabController::onIterationProgress()
   runmanager::RunManager runManager = project->runManager();
   analysis::Analysis analysis = project->analysis();
 
-  // DLM: can we make this return the cloud analysis driver for simplicity?
+  boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
   analysisdriver::AnalysisDriver analysisDriver = project->analysisDriver();
-  std::vector<analysisdriver::CurrentAnalysis> currentAnalyses = analysisDriver.currentAnalyses();
 
+  // DLM: Elaine will these work when running on the cloud?
   int numCompletedJobs = (int)analysis.completeDataPoints().size();
   int totalNumJobs = (int)analysis.completeDataPoints().size() + (int)analysis.dataPointsToQueue().size();
   int numFailedJobs = (int)analysis.failedDataPoints().size();
 
   if (numCompletedJobs == totalNumJobs){
-    runManager.setPaused(true);
+    if (cloudAnalysisDriver){
+      // DLM: start timer to shut down cloud?
+    }else{
+      runManager.setPaused(true);
+    }
   }
 
   bool isRunning = project->isRunning();

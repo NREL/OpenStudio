@@ -320,7 +320,17 @@ namespace detail {
   }
 
   bool SimpleProject_Impl::isRunning() const {
-    return analysisDriver().isRunning();
+    //DLM: Elaine does this look right?  Should we or these?
+    bool result = false;
+    if (m_cloudAnalysisDriver){
+      //result = m_cloudAnalysisDriver->isRunning();
+      result = m_cloudAnalysisDriver->isRunning() || m_cloudAnalysisDriver->isDownloading() ||  m_cloudAnalysisDriver->isStopping();
+      // DLM: should we be checking connected to cloud here too?
+    }else{
+      result = m_analysisDriver.isRunning();
+    }
+
+    return result;
   }
 
   boost::optional<CloudAnalysisDriver> SimpleProject_Impl::cloudAnalysisDriver() const {
