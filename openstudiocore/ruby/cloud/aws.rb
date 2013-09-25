@@ -94,10 +94,24 @@ def find_processors(instance)
   processors = nil
   if instance == "cc2.8xlarge"
     processors = 32
-  elsif instance == "m2.xlarge"
+  elsif instance == "c1.xlarge"
+    processors = 8
+  elsif instance == "m2.4xlarge"
+    processors = 8
+  elsif instance == "m2.2xlarge"
     processors = 4
-  else  
+  elsif instance == "m2.xlarge"
+    processors = 4  
+  elsif instance == "m1.xlarge"
+    processors = 4
+  elsif instance == "m1.large"
     processors = 2
+  elsif instance == "m3.xlarge"
+    processors = 4
+  elsif instance == "m3.2xlarge"
+    processors = 8  
+  else  
+    processors = 1
   end 
 
   processors  
