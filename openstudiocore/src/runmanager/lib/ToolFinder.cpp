@@ -165,6 +165,8 @@ namespace runmanager {
         bool path2_in_rundir = !t_runbase.empty() && !openstudio::relativePath(t_path2, t_runbase).empty();
         bool path2_is_shorter = std::distance(t_path1.begin(), t_path1.end())
                     > std::distance(t_path2.begin(), t_path2.end());
+        bool path1_is_aws = subPathMatch(t_path1, boost::regex(".*aws.*", boost::regex::perl));
+        bool path2_is_aws = subPathMatch(t_path2, boost::regex(".*aws.*", boost::regex::perl));
 
 
         // return the shortest path that exists. Unless one of the two exists in the run dir,
@@ -177,7 +179,11 @@ namespace runmanager {
             || (!t_path2.empty() 
                 && !t_path1.empty() 
                 && !path1_exists 
-                && path2_exists)) 
+                && path2_exists)
+            || (!t_path2.empty()
+                && path1_is_aws
+                && !path2_is_aws)
+                )
         {
           return t_path2;
         } else {
@@ -415,7 +421,7 @@ namespace runmanager {
     return results;
   }
 
-  bool ToolFinder::subPathMatch(const openstudio::path &t_path, const boost::regex &t_regex) const
+  bool ToolFinder::subPathMatch(const openstudio::path &t_path, const boost::regex &t_regex)
   {
     for (openstudio::path::const_iterator itr = t_path.begin();
          itr != t_path.end();
