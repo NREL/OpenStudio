@@ -346,6 +346,12 @@ void ToggleCloudButton::updateText()
 
     setEnabled(false);
   }
+  else if( m_status == CLOUD_ERROR )
+  {
+    setText("Error");
+
+    setEnabled(false);
+  }
 }
 
 void ToggleCloudButton::setStatus(CloudStatus status)

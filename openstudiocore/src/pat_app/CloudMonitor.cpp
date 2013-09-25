@@ -38,6 +38,53 @@ namespace openstudio {
 
 namespace pat {
 
+namespace detail {
+
+void stopCloud()
+{
+  boost::optional<CloudProvider> provider;
+
+  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession(); 
+  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
+
+  // If there is already a session, try to connect to that
+  if( session && settings ) 
+  {
+    provider = CloudMonitor::newCloudProvider(settings.get(),session);
+  }
+
+  if( provider->requestTerminate() )
+  {
+    provider->waitForTerminated();
+  }
+}
+
+CloudProvider startCloud()
+{
+  boost::optional<CloudProvider> provider;
+
+  // TODO: Grab these from PatApp
+  CloudSettings settings = CloudMonitor::createTestSettings();
+
+  provider = CloudMonitor::newCloudProvider(settings);
+
+  OS_ASSERT(provider);
+
+  if( provider->requestStartServer() )
+  {
+    provider->waitForServer();
+  }
+
+  if( provider->requestStartWorkers() )
+  {
+    provider->waitForWorkers();
+  }
+
+  return provider.get();
+}
+
+} // namespace detail
+
 CloudMonitor::CloudMonitor()
   : QObject(),
     m_serverStarted(false),
@@ -70,6 +117,11 @@ CloudMonitor::CloudMonitor()
   // ReconnectCloudWorker
   m_reconnectCloudWorker = QSharedPointer<ReconnectCloudWorker>(new ReconnectCloudWorker(this));
   bingo = connect(m_reconnectCloudWorker.data(),SIGNAL(doneWorking()),this,SLOT(onReconnectCloudWorkerComplete()));
+  OS_ASSERT(bingo);
+
+  // RecoverCloudWorker
+  m_recoverCloudWorker = QSharedPointer<RecoverCloudWorker>(new RecoverCloudWorker(this));
+  bingo = connect(m_recoverCloudWorker.data(),SIGNAL(doneWorking()),this,SLOT(onRecoverCloudWorkerComplete()));
   OS_ASSERT(bingo);
 
   // Start the CloudMonitorWorker 
@@ -114,6 +166,10 @@ void CloudMonitor::startCloud()
 
 void CloudMonitor::onStartCloudWorkerComplete()
 {
+  CloudMonitor::setCurrentProjectSession(m_startCloudWorker->session());
+
+  CloudMonitor::setCurrentProjectSettings(m_startCloudWorker->settings());
+
   m_startCloudThread->quit();
 
   m_startCloudThread->wait();
@@ -121,8 +177,6 @@ void CloudMonitor::onStartCloudWorkerComplete()
   m_startCloudThread.clear();
 
   setStatus(CLOUD_RUNNING);
-
-  emit startCloudCompleted();
 }
 
 void CloudMonitor::stopCloud()
@@ -143,6 +197,9 @@ void CloudMonitor::stopCloud()
 
 void CloudMonitor::onStopCloudWorkerComplete()
 {
+  CloudMonitor::setCurrentProjectSession(boost::none);
+  CloudMonitor::setCurrentProjectSettings(boost::none);
+
   m_stopCloudThread->quit();
 
   m_stopCloudThread->wait();
@@ -150,8 +207,6 @@ void CloudMonitor::onStopCloudWorkerComplete()
   m_stopCloudThread.clear();
 
   setStatus(CLOUD_STOPPED);
-
-  emit stopCloudCompleted();
 }
 
 void CloudMonitor::reconnectCloud()
@@ -186,9 +241,43 @@ void CloudMonitor::onReconnectCloudWorkerComplete()
     setStatus(CLOUD_RUNNING);
   }
 
-  emit reconnectCloudCompleted();
-
   // TODO Handle other states
+}
+
+void CloudMonitor::onCloudConnectionLost()
+{
+  setStatus(CLOUD_ERROR);
+
+  QMessageBox message(PatApp::instance()->mainWindow);
+  message.setText("OpenStudio Cloud connection was unexpectedly lost.");
+  message.exec();
+
+  recoverCloud();
+}
+
+void CloudMonitor::recoverCloud()
+{
+  m_recoverCloudThread = QSharedPointer<QThread>(new QThread());
+
+  m_recoverCloudWorker->moveToThread(m_recoverCloudThread.data());
+
+  m_recoverCloudThread->start();
+
+  m_recoverCloudWorker->startWorking();
+}
+
+void CloudMonitor::onRecoverCloudWorkerComplete()
+{
+  m_recoverCloudThread->quit();
+
+  m_recoverCloudThread->wait();
+
+  m_recoverCloudThread.clear();
+
+  CloudMonitor::setCurrentProjectSettings(boost::none);
+  CloudMonitor::setCurrentProjectSession(boost::none);
+
+  setStatus(CLOUD_STOPPED);
 }
 
 boost::optional<CloudSession> CloudMonitor::currentProjectSession()
@@ -324,17 +413,6 @@ CloudSettings CloudMonitor::createTestSettings()
   return vagrantSettings;
 }
 
-void CloudMonitor::onCloudConnectionLost()
-{
-  QMessageBox message(PatApp::instance()->mainWindow);
-  message.setText("OpenStudio Cloud connection was unexpectedly lost.");
-  message.exec();
-}
-
-void CloudMonitor::onCloudUnexpectedlyStarted()
-{
-}
-
 StartCloudWorker::StartCloudWorker(CloudMonitor * monitor)
   : QObject(),
     m_monitor(monitor)
@@ -345,52 +423,22 @@ StartCloudWorker::~StartCloudWorker()
 {
 }
 
+boost::optional<CloudSettings> StartCloudWorker::settings() const
+{
+  return m_settings;
+}
+
+boost::optional<CloudSession> StartCloudWorker::session() const
+{
+  return m_session;
+}
+
 void StartCloudWorker::startWorking()
 {
-  // Add event loop to wait for cloud to stop
-  //QEventLoop loop;
-  //bool bingo;
-  //bingo = connect(m_monitor,SIGNAL(stopCloudCompleted()),&loop,SLOT(quit()));
-  //OS_ASSERT(bingo);
+  CloudProvider provider = detail::startCloud();
 
-  //m_monitor->stopCloud();
-
-  //loop.exec();
-
-  boost::optional<CloudProvider> provider;
-
-  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession(); 
-  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
-
-  // If there is already a session, try to connect to that
-  if( session && settings ) 
-  {
-    provider = CloudMonitor::newCloudProvider(settings.get(),session);
-  }
-  else
-  {
-    // TODO: Grab these from PatApp
-    settings = CloudMonitor::createTestSettings();
-
-    provider = CloudMonitor::newCloudProvider(settings.get());
-  }
-
-  OS_ASSERT(provider);
-
-  //m_monitor->setCloudProvider(provider.get());
-
-  if( provider->requestStartServer() )
-  {
-    provider->waitForServer();
-  }
-
-  if( provider->requestStartWorkers() )
-  {
-    provider->waitForWorkers();
-  }
-
-  CloudMonitor::setCurrentProjectSession(provider->session());
-  CloudMonitor::setCurrentProjectSettings(provider->settings());
+  m_session = provider.session();
+  m_settings = provider.settings();
 
   emit doneWorking();
 }
@@ -407,35 +455,7 @@ StopCloudWorker::~StopCloudWorker()
 
 void StopCloudWorker::startWorking()
 {
-  boost::optional<CloudProvider> provider;
-
-  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession(); 
-  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
-
-  // If there is already a session, try to connect to that
-  if( session && settings ) 
-  {
-    provider = CloudMonitor::newCloudProvider(settings.get(),session);
-  }
-  else
-  {
-    // TODO: Grab these from PatApp
-    settings = CloudMonitor::createTestSettings();
-
-    provider = CloudMonitor::newCloudProvider(settings.get());
-  }
-
-  OS_ASSERT(provider);
-
-  //m_monitor->setCloudProvider(provider.get());
-
-  if( provider->requestTerminate() )
-  {
-    provider->waitForTerminated();
-  }
-
-  CloudMonitor::setCurrentProjectSession(boost::none);
-  CloudMonitor::setCurrentProjectSettings(boost::none);
+  detail::stopCloud();
 
   emit doneWorking();
 }
@@ -487,14 +507,32 @@ CloudMonitorWorker::CloudMonitorWorker(CloudMonitor * monitor)
 {
 }
 
+RecoverCloudWorker::RecoverCloudWorker(CloudMonitor * monitor)
+  : QObject(),
+    m_monitor(monitor)
+{
+}
+
+RecoverCloudWorker::~RecoverCloudWorker()
+{
+}
+
+void RecoverCloudWorker::startWorking()
+{
+  // TODO try to reconnect
+  
+  // If we cant reconnect then stop cloud as cleanly as possible
+  detail::stopCloud();
+
+  emit doneWorking();
+}
+
 CloudMonitorWorker::~CloudMonitorWorker()
 {
 }
 
 void CloudMonitorWorker::startWorking()
 {
-  checkForNewSession();
-
   checkForInternetConnection();
 
   checkForCloudConnection();
@@ -525,73 +563,29 @@ void CloudMonitorWorker::checkForInternetConnection()
 
 void CloudMonitorWorker::checkForCloudConnection()
 {
-  //if( m_monitor->status() == CLOUD_RUNNING )
-  //{
-  //  boost::optional<CloudSession> session;
-  //  boost::optional<CloudSettings> settings;
+  if( m_monitor->status() == CLOUD_RUNNING )
+  {
+    boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
+    boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
 
-  //  boost::optional<CloudProvider> provider = m_monitor->cloudProvider();
+    // TODO Consider emitting and display an error dialog in CloudMonitor
+    OS_ASSERT(session);    
+    OS_ASSERT(settings);
 
-  //  OS_ASSERT(provider);
+    CloudProvider newProvider = CloudMonitor::newCloudProvider(settings.get(),session.get());
 
-  //  session = provider->session();
-  //  settings = provider->settings();
+    bool serverRunning = newProvider.serverRunning(); 
+    bool workersRunning = newProvider.workersRunning();
 
-  //  OS_ASSERT(session);    
-  //  OS_ASSERT(settings);
+    if( (! serverRunning) || (! workersRunning) )
+    {
+      //newProvider.requestTerminate();
 
-  //  CloudProvider newProvider = CloudMonitor::newCloudProvider(settings.get(),session.get());
+      //newProvider.waitForTerminated();
 
-  //  bool serverRunning = newProvider.serverRunning(); 
-  //  bool workersRunning = newProvider.workersRunning();
-
-  //  if( (! serverRunning) || (! workersRunning) )
-  //  {
-  //    emit cloudConnectionLost();
-  //  }
-  //}
-}
-
-void CloudMonitorWorker::checkForNewSession()
-{
-  //if( m_monitor->status() != CLOUD_STARTING &&
-  //    m_monitor->status() != CLOUD_STOPPING )
-  //{
-  //  boost::optional<CloudSession> session;
-  //  boost::optional<CloudSettings> settings;
-
-  //  if( boost::optional<CloudProvider> provider = m_monitor->cloudProvider() )
-  //  {
-  //    session = provider->session();
-  //    settings = provider->settings();
-  //  }
-
-  //  boost::optional<CloudSettings> currentProjectSettings = m_monitor->currentProjectSettings();
-  //  boost::optional<CloudSession> currentProjectSession = m_monitor->currentProjectSession();
-
-  //  if( session && currentProjectSession && 
-  //      settings && currentProjectSettings ) 
-  //  {
-  //    if( ( currentProjectSession->getImpl<detail::CloudSession_Impl>() != 
-  //          session->getImpl<detail::CloudSession_Impl>() ) ||
-  //        ( currentProjectSettings->getImpl<detail::CloudSettings_Impl>() != 
-  //          settings->getImpl<detail::CloudSettings_Impl>() )
-  //      )
-  //    {
-  //      emit cloudConfigurationChanged();
-  //    } 
-  //  } 
-  //  else if( (session && ! currentProjectSession) ||
-  //           (currentProjectSession && ! session ) )
-  //  {
-  //    emit cloudConfigurationChanged();
-  //  }
-  //  else if( (settings && ! currentProjectSettings) ||
-  //           (currentProjectSettings && ! settings ) )
-  //  {
-  //    emit cloudConfigurationChanged();
-  //  }
-  //}
+      emit cloudConnectionLost();
+    }
+  }
 }
 
 } // pat
