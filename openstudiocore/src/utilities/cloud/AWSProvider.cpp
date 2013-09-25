@@ -37,6 +37,8 @@
 #include <QTextStream>
 #include <QUrl>
 
+#include <boost/bind.hpp>
+
 #include <algorithm>
 
 namespace openstudio{
@@ -328,36 +330,47 @@ namespace openstudio{
       return 0;
     }
 
-    
+
     AWSProvider_Impl::AWSProvider_Impl()
       : CloudProvider_Impl(),
         m_awsSettings(),
         m_awsSession(toString(createUUID()),boost::none,std::vector<Url>()),
+        m_script(getOpenStudioRubyScriptsPath() / toPath("cloud/aws.rb")),
         m_checkServiceProcess(0),
+        m_checkValidateProcess(0),
         m_startServerProcess(0),
-        m_startWorkersProcess(0),
+        m_startWorkerProcess(0),
         m_checkServerRunningProcess(0),
         m_checkWorkerRunningProcess(0),
         m_stopServerProcess(0),
-        m_stopWorkersProcess(0),
+        m_stopWorkerProcess(0),
         m_checkTerminatedProcess(0),
         m_lastInternetAvailable(false),
         m_lastServiceAvailable(false),
         m_lastValidateCredentials(false),
         m_lastResourcesAvailableToStart(false),
         m_serverStarted(false),
-        m_workersStarted(false),
+        m_workerStarted(false),
         m_lastServerRunning(false),
-        m_lastWorkersRunning(false),
+        m_lastWorkerRunning(false),
         m_serverStopped(false),
-        m_workersStopped(false),
+        m_workerStopped(false),
         m_terminateStarted(false),
         m_lastTerminateCompleted(false)
     {
       //Make sure a QApplication exists
       openstudio::Application::instance().application();
 
+      m_ruby = getOpenStudioAWSRubyPath();
+      
+#if defined(Q_OS_WIN32)
+      m_ruby /= toPath("bin/ruby.exe");
+#else
+      m_ruby /= toPath("bin/ruby");
+#endif
+
       m_regions.push_back("us-east-1");
+      m_awsSession.setRegion(defaultRegion());
 
       m_serverInstanceTypes.push_back("t1.micro");
       m_serverInstanceTypes.push_back("m1.medium");
@@ -394,7 +407,7 @@ namespace openstudio{
         // can't change settings once server has been started or is starting
         return false;
       }
-      if (m_workersStarted || m_startWorkersProcess){
+      if (m_workerStarted || m_startWorkerProcess){
         // can't change settings once workers have been started or are starting
         return false;
       }
@@ -434,7 +447,7 @@ namespace openstudio{
         // can't change session once server has been started or is starting
         return false;
       }
-      if (m_workersStarted || m_startWorkersProcess){
+      if (m_workerStarted || m_startWorkerProcess){
         // can't change session once workers have been started or are starting
         return false;
       }
@@ -447,7 +460,7 @@ namespace openstudio{
 
       // assumes that the other session is already started
       m_serverStarted = true;
-      m_workersStarted = true;
+      m_workerStarted = true;
 
       // should we emit a signal here?
 
@@ -481,7 +494,7 @@ namespace openstudio{
 
     bool AWSProvider_Impl::workersStarted() const
     {
-      return m_workersStarted;
+      return m_workerStarted;
     }
 
     bool AWSProvider_Impl::lastServerRunning() const
@@ -491,7 +504,7 @@ namespace openstudio{
 
     bool AWSProvider_Impl::lastWorkersRunning() const
     {
-      return m_lastWorkersRunning;
+      return m_lastWorkerRunning;
     }
 
     bool AWSProvider_Impl::terminateStarted() const
@@ -501,7 +514,7 @@ namespace openstudio{
 
     bool AWSProvider_Impl::lastTerminateCompleted() const
     {
-      return (m_serverStopped && m_workersStopped);
+      return (m_serverStopped && m_workerStopped);
     }
 
     std::vector<std::string> AWSProvider_Impl::errors() const
@@ -516,41 +529,30 @@ namespace openstudio{
 
     bool AWSProvider_Impl::internetAvailable(int msec)
     {
-      // todo: make use non-blocking requestInternetAvailable
-      return serviceAvailable(msec);
+      if (requestInternetAvailable()){
+        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestInternetAvailableRequestFinished, this))){
+          return lastInternetAvailable();
+        }
+      }
+      return false;
     }
 
     bool AWSProvider_Impl::serviceAvailable(int msec)
     {
-      // todo: make use non-blocking requestServiceAvailable
-      QVariantMap map = awsRequest("describe_availability_zones");
-      if (!map.keys().contains("error")) {
-        return true;
+      if (requestServiceAvailable()){
+        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServiceAvailableFinished, this))){
+          return lastServiceAvailable();
+        }
       }
-      int code = map["error"].toMap()["code"].toInt();
-      return (code != 503);
+      return false;
     }
 
     bool AWSProvider_Impl::validateCredentials(int msec)
     {
-      // todo: make use non-blocking requestValidateCredentials
-      //if (m_validAccessKey && m_validSecretKey) {
-      //  return true;
-      //}
-
-      QVariantMap map = awsRequest("describe_availability_zones");
-      if (!map.keys().contains("error")) {
-        //m_validAccessKey = true;
-        //m_validSecretKey = true;
-        return true;
-      }
-
-      int code = map["error"].toMap()["code"].toInt();
-      if (code == 401) {
-        //m_validAccessKey = false;
-      } else if (code == 403) {
-        //m_validAccessKey = true;
-        //m_validSecretKey = false;
+      if (requestValidateCredentials()){
+        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestValidateCredentialsFinished, this))){
+          return lastValidateCredentials();
+        }
       }
       return false;
     }
@@ -558,8 +560,7 @@ namespace openstudio{
     bool AWSProvider_Impl::resourcesAvailableToStart(int msec)
     {
       if (requestResourcesAvailableToStart()){
-        boost::function1<bool, AWSProvider_Impl*> f = &AWSProvider_Impl::requestResourcesAvailableToStartFinished;
-        if (waitForFinished(msec, f)){
+        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestResourcesAvailableToStartFinished, this))){
           return lastResourcesAvailableToStart();
         }
       }
@@ -568,37 +569,46 @@ namespace openstudio{
 
     bool AWSProvider_Impl::waitForServer(int msec)
     {
-      // todo
-      return false;
+      return waitForFinished(msec, boost::bind(&AWSProvider_Impl::serverStarted, this));
     }
 
     bool AWSProvider_Impl::waitForWorkers(int msec)
     {
-      // todo
-      return false;
+      return waitForFinished(msec, boost::bind(&AWSProvider_Impl::workersStarted, this));
     }
 
     bool AWSProvider_Impl::serverRunning(int msec)
     {
-      // todo
+      if (requestServerRunning()){
+        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServerRunningFinished, this))){
+          return lastServerRunning();
+        }
+      }
       return false;
     }
 
     bool AWSProvider_Impl::workersRunning(int msec)
     {
-      // todo
+      if (requestWorkersRunning()){
+        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestWorkersRunningFinished, this))){
+          return lastWorkersRunning();
+        }
+      }
       return false;
     }
 
     bool AWSProvider_Impl::waitForTerminated(int msec)
     {
-      // todo
-      return false;
+      return waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTerminateFinished, this));
     }
 
     bool AWSProvider_Impl::terminateCompleted(int msec)
     {
-      // todo
+      if (requestTerminateCompleted()){
+        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTerminateCompletedFinished, this))){
+          return lastTerminateCompleted();
+        }
+      }
       return false;
     }
 
@@ -610,26 +620,34 @@ namespace openstudio{
 
     bool AWSProvider_Impl::requestServiceAvailable()
     {
-      // todo
-      return false;
+      if (m_checkServiceProcess){
+        // already checking
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastServiceAvailable = false;
+
+      m_checkServiceProcess = makeCheckServiceProcess();
+
+      return true;
     }
 
     bool AWSProvider_Impl::requestValidateCredentials()
     {
-      /*
+      if (m_checkValidateProcess){
+        // already checking
+        return false;
+      }
+
       clearErrorsAndWarnings();
 
       m_lastValidateCredentials = false;
 
-      if ((m_awsSettings.accessKey() == "vagrant") &&
-          (m_awsSettings.secretKey() == "vagrant")){
-        m_lastValidateCredentials = true;
-      }
+      m_checkValidateProcess = makeCheckValidateProcess();
 
       return true;
-      */
-      // todo
-      return false;
     }
 
     bool AWSProvider_Impl::requestResourcesAvailableToStart()
@@ -700,6 +718,14 @@ namespace openstudio{
       LOG(Warn, warning);
     }
 
+    void AWSProvider_Impl::addProcessArguments(QStringList& args) const
+    {
+      args << toQString(m_script);
+      args << toQString(m_awsSettings.accessKey());
+      args << toQString(m_awsSettings.secretKey());
+      args << toQString(m_awsSession.region());
+    }
+
     QVariantMap AWSProvider_Impl::awsRequest(std::string request, std::string service) const {
       QString script = toQString(getOpenStudioRubyScriptsPath() / toPath("cloud/aws.rb"));
       QProcess *ruby2 = new QProcess();
@@ -731,6 +757,10 @@ namespace openstudio{
 
     std::vector<std::string> AWSProvider_Impl::availableRegions() const {
       return m_regions;
+    }
+
+    std::string AWSProvider_Impl::defaultRegion() const {
+      return "us-east-1";
     }
 
     std::string AWSProvider_Impl::region() const {
@@ -796,13 +826,29 @@ namespace openstudio{
       return m_awsSession.numWorkers();
     }
 
-    bool AWSProvider_Impl::waitForFinished(int msec, const boost::function1<bool, AWSProvider_Impl*>& f) {
+    double AWSProvider_Impl::estimatedCharges() const {
+      return m_awsSession.estimatedCharges();
+    }
+
+    unsigned AWSProvider_Impl::totalSessionUptime() const {
+      return m_awsSession.totalSessionUptime();
+    }
+
+    unsigned AWSProvider_Impl::totalSessionInstances() const {
+      return m_awsSession.totalSessionInstances();
+    }
+
+    unsigned AWSProvider_Impl::totalInstances() const {
+      return m_awsSession.totalInstances();
+    }
+
+    bool AWSProvider_Impl::waitForFinished(int msec, const boost::function<bool ()>& f) {
       int msecPerLoop = 20;
       int numTries = msec / msecPerLoop;
       int current = 0;
       while (true)
       {
-        if (f(this)){
+        if (f()){
           return true;
         }
 
@@ -820,22 +866,6 @@ namespace openstudio{
       return false;
     }
 
-    double AWSProvider_Impl::estimatedCharges() const {
-      return m_awsSession.estimatedCharges();
-    }
-
-    unsigned AWSProvider_Impl::totalSessionUptime() const {
-      return m_awsSession.totalSessionUptime();
-    }
-
-    unsigned AWSProvider_Impl::totalSessionInstances() const {
-      return m_awsSession.totalSessionInstances();
-    }
-
-    unsigned AWSProvider_Impl::totalInstances() const {
-      return m_awsSession.totalInstances();
-    }
-
     bool AWSProvider_Impl::requestInternetAvailableRequestFinished() const
     {
       //todo
@@ -849,8 +879,7 @@ namespace openstudio{
 
     bool AWSProvider_Impl::requestValidateCredentialsFinished() const
     {
-      //todo
-      return false;
+      return (m_checkValidateProcess == 0);
     }
 
     bool AWSProvider_Impl::requestResourcesAvailableToStartFinished() const
@@ -871,12 +900,259 @@ namespace openstudio{
 
     bool AWSProvider_Impl::requestTerminateFinished() const
     {
-      return (m_serverStopped && m_workersStopped);
+      return (m_serverStopped && m_workerStopped);
     }
 
     bool AWSProvider_Impl::requestTerminateCompletedFinished() const
     {
       return (m_checkTerminatedProcess == 0);
+    }
+
+    ProcessResults AWSProvider_Impl::handleProcessCompleted(QProcess *& t_qp)
+    {
+      OS_ASSERT(t_qp);
+
+      ProcessResults pr(t_qp->exitCode(), t_qp->exitStatus(), t_qp->readAllStandardOutput(),
+          t_qp->readAllStandardError());
+
+      t_qp->deleteLater();
+      t_qp = 0;
+
+      return pr;
+    }
+
+    QProcess *AWSProvider_Impl::makeCheckServiceProcess() const
+    {
+      QProcess *p = new QProcess();
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                          this, SLOT(onCheckServiceComplete(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+      QStringList args;
+      addProcessArguments(args);
+      args << toQString("EC2");
+      args << toQString("describe_availability_zones");
+      
+      p->start(toQString(m_ruby), args);
+
+      return p;
+    }
+
+    QProcess *AWSProvider_Impl::makeCheckValidateProcess() const
+    {
+      QProcess *p = new QProcess();
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                          this, SLOT(onCheckValidateComplete(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+      QStringList args;
+      addProcessArguments(args);
+      args << toQString("EC2");
+      args << toQString("describe_availability_zones");
+      
+      p->start(toQString(m_ruby), args);
+
+      return p;
+    }
+
+    QProcess *AWSProvider_Impl::makeStartServerProcess() const
+    {
+      QProcess *p = new QProcess();
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                          this, SLOT(onServerStarted(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+
+      QStringList args;
+      //addProcessArguments(args);
+      args << "up";
+
+      //p->setWorkingDirectory(toQString(m_vagrantSettings.serverPath()));
+      //p->start(processName(), args);
+
+      return p;
+    }
+
+    QProcess *AWSProvider_Impl::makeStartWorkerProcess() const
+    {
+      QProcess *p = new QProcess();
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                          this, SLOT(onWorkerStarted(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+
+
+      QStringList args;
+      //addProcessArguments(args);
+      args << "up";
+
+      //p->setWorkingDirectory(toQString(m_vagrantSettings.workerPath()));
+      //p->start(processName(), args);
+
+      return p;
+    }
+
+    QProcess *AWSProvider_Impl::makeCheckServerRunningProcess() const
+    {
+      QProcess *p = new QProcess();
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                          this, SLOT(onCheckServerRunningComplete(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+
+      QStringList args;
+      //addProcessArguments(args);
+      args << "status";
+      args << "default";
+
+      //p->setWorkingDirectory(toQString(m_vagrantSettings.serverPath()));
+      //p->start(processName(), args);
+
+      return p;
+    }
+
+    QProcess *AWSProvider_Impl::makeCheckWorkerRunningProcess() const
+    {
+      QProcess *p = new QProcess();
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                          this, SLOT(onCheckWorkerRunningComplete(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+
+      QStringList args;
+      //addProcessArguments(args);
+      args << "status";
+      args << "default";
+
+      //p->setWorkingDirectory(toQString(m_vagrantSettings.workerPath()));
+      //p->start(processName(), args);
+      return p;
+    }
+
+    QProcess *AWSProvider_Impl::makeStopServerProcess() const
+    {
+      QProcess *p = new QProcess();
+      //p->setWorkingDirectory(toQString(m_vagrantSettings.serverPath()));
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+          this, SLOT(onServerStopped(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+
+      QStringList args;
+      //addProcessArguments(args);
+      args << "halt";
+      //p->start(processName(), args);
+      return p;
+    }
+
+    QProcess *AWSProvider_Impl::makeStopWorkerProcess() const
+    {
+      QProcess *p = new QProcess();
+      //p->setWorkingDirectory(toQString(m_vagrantSettings.workerPath()));
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+          this, SLOT(onWorkerStopped(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+
+      QStringList args;
+      //addProcessArguments(args);
+      args << "halt";
+      //p->start(processName(), args);
+      return p;
+    }
+
+    QProcess *AWSProvider_Impl::makeCheckTerminateProcess() const
+    {
+      QProcess *p = new QProcess();
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                          this, SLOT(onCheckTerminatedComplete(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+
+      QStringList args;
+      //addProcessArguments(args);
+      args << "status";
+      args << "default";
+
+      //p->setWorkingDirectory(toQString(m_vagrantSettings.serverPath()));
+      //p->start(processName(), args);
+      return p;
+    }
+
+    bool AWSProvider_Impl::parseServiceAvailableResults(const ProcessResults &t_results)
+    {
+      QJson::Parser parser;
+      bool ok = false;
+      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
+      if (ok) {
+        if (!map.keys().contains("error")) return true;
+
+        int code = map["error"].toMap()["code"].toInt();
+        return (code != 503);
+      } else {
+        logError("Error parsing serviceAvailable JSON: " + toString(parser.errorString()));
+      }
+      
+      return false;
+    }
+
+    bool AWSProvider_Impl::parseValidateCredentialsResults(const ProcessResults &t_results)
+    {
+      QJson::Parser parser;
+      bool ok = false;
+      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
+      if (ok) {
+        if (!map.keys().contains("error")) return true;
+
+        int code = map["error"].toMap()["code"].toInt();
+        if (code == 401) {
+          logWarning("Invalid Access Key");
+        } else if (code == 403) {
+          logWarning("Invalid Secret Key");
+        }
+      } else {
+        logError("Error parsing validateCredentials JSON: " + toString(parser.errorString()));
+      }
+      
+      return false;
+    }
+
+    bool AWSProvider_Impl::parseServerStartedResults(const ProcessResults &t_results)
+    {
+      /*if (m_awsSession.serverUrl())
+      {
+        m_awsSession.setServerUrl(*m_awsSession.serverUrl());
+      }*/
+      return true;
+    }
+
+    bool AWSProvider_Impl::parseWorkerStartedResults(const ProcessResults &t_results)
+    {
+      m_awsSession.clearWorkerUrls();
+      //m_awsSession.addWorkerUrl(m_awsSettings.workerUrl());
+      return true;
+    }
+
+    bool AWSProvider_Impl::parseCheckServerRunningResults(const ProcessResults &t_results)
+    {
+      // if running this is expected
+      //default                   running (virtualbox)
+      return t_results.output.contains("running (virtualbox)");
+    }
+
+    bool AWSProvider_Impl::parseCheckWorkerRunningResults(const ProcessResults &t_results)
+    {
+      // if running this is expected
+      //default                   running (virtualbox)
+      return t_results.output.contains("running (virtualbox)");
+    }
+
+    bool AWSProvider_Impl::parseServerStoppedResults(const ProcessResults &t_results)
+    {
+      return true;
+    }
+
+    bool AWSProvider_Impl::parseWorkerStoppedResults(const ProcessResults &t_results)
+    {
+      return true;
+    }
+
+    bool AWSProvider_Impl::parseCheckTerminatedResults(const ProcessResults &t_results)
+    {
+      // if halt on stop this is expected:
+      // default                   poweroff (virtualbox)
+      return t_results.output.contains("poweroff (virtualbox)");
     }
 
     std::string AWSProvider_Impl::userAgreementText() const {
@@ -908,6 +1184,26 @@ namespace openstudio{
     }
 
 
+    void AWSProvider_Impl::processInternetAvailable()
+    {
+      /*if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastInternetAvailable = true;
+      }
+
+      m_networkReply->deleteLater();
+      m_networkReply = 0;*/
+    }
+
+    void AWSProvider_Impl::onCheckServiceComplete(int, QProcess::ExitStatus)
+    {
+      m_lastServiceAvailable = parseServiceAvailableResults(handleProcessCompleted(m_checkServiceProcess));
+    }
+
+    void AWSProvider_Impl::onCheckValidateComplete(int, QProcess::ExitStatus)
+    {
+      m_lastValidateCredentials = parseValidateCredentialsResults(handleProcessCompleted(m_checkValidateProcess));
+    }
+    
     void AWSProvider_Impl::onServerStarted(int, QProcess::ExitStatus)
     {
       OS_ASSERT(m_startServerProcess);
@@ -927,24 +1223,50 @@ namespace openstudio{
 
     void AWSProvider_Impl::onWorkerStarted(int, QProcess::ExitStatus)
     {
-      OS_ASSERT(m_startWorkersProcess);
+      OS_ASSERT(m_startWorkerProcess);
 
-      QString output = m_startWorkersProcess->readAllStandardOutput();
-      QString errors = m_startWorkersProcess->readAllStandardError();
+      QString output = m_startWorkerProcess->readAllStandardOutput();
+      QString errors = m_startWorkerProcess->readAllStandardError();
       
       m_awsSession.clearWorkerUrls();
       //m_awsSession.addWorkerUrl();
 
-      m_workersStarted = true;
+      m_workerStarted = true;
 
       //emit CloudProvider_Impl::workerStarted(m_awsSession.workerUrls());
 
       //if all, emit CloudProvider_Impl::allWorkersStarted();
 
-      m_startWorkersProcess->deleteLater();
-      m_startWorkersProcess = 0;
+      m_startWorkerProcess->deleteLater();
+      m_startWorkerProcess = 0;
     }
 
+    void AWSProvider_Impl::onCheckServerRunningComplete(int, QProcess::ExitStatus)
+    {
+      bool running = parseCheckServerRunningResults(handleProcessCompleted(m_checkServerRunningProcess));
+      //if (m_awsSettings.haltOnStop()){
+        if (running) {
+          m_lastServerRunning = true;
+        }
+      //}else{
+        // depend on local state variable in this case
+        m_lastServerRunning = !m_serverStopped;
+      //}
+    }
+    
+    void AWSProvider_Impl::onCheckWorkerRunningComplete(int, QProcess::ExitStatus)
+    {
+      bool running = parseCheckWorkerRunningResults(handleProcessCompleted(m_checkWorkerRunningProcess));
+      //if (m_awsSettings.haltOnStop()){
+        if (running){
+          m_lastWorkerRunning = true;
+        }
+      //}else{
+        // depend on local state variable in this case
+        m_lastWorkerRunning = !m_workerStopped;
+      //}
+    }
+    
     void AWSProvider_Impl::onServerStopped(int, QProcess::ExitStatus)
     {
       OS_ASSERT(m_stopServerProcess);
@@ -954,7 +1276,7 @@ namespace openstudio{
 
       m_serverStopped = true;
 
-      if (m_serverStopped && m_workersStopped){
+      if (m_serverStopped && m_workerStopped){
         emit CloudProvider_Impl::terminated();
       }
 
@@ -964,19 +1286,38 @@ namespace openstudio{
 
     void AWSProvider_Impl::onWorkerStopped(int, QProcess::ExitStatus)
     {
-      OS_ASSERT(m_stopWorkersProcess);
+      OS_ASSERT(m_stopWorkerProcess);
 
-      QString output = m_stopWorkersProcess->readAllStandardOutput();
-      QString errors = m_stopWorkersProcess->readAllStandardError();
+      QString output = m_stopWorkerProcess->readAllStandardOutput();
+      QString errors = m_stopWorkerProcess->readAllStandardError();
 
-      m_workersStopped = true;
+      m_workerStopped = true;
 
-      if (m_serverStopped && m_workersStopped){
+      if (m_serverStopped && m_workerStopped){
         emit CloudProvider_Impl::terminated();
       }
 
-      m_stopWorkersProcess->deleteLater();
-      m_stopWorkersProcess = 0;
+      m_stopWorkerProcess->deleteLater();
+      m_stopWorkerProcess = 0;
+    }
+
+    void AWSProvider_Impl::onCheckTerminatedComplete(int, QProcess::ExitStatus)
+    {
+      // note, it's important that this functon is always called, to clean up the QProcess object
+      bool terminated = parseCheckTerminatedResults(handleProcessCompleted(m_checkTerminatedProcess));
+
+      //if (m_awsSettings.haltOnStop()){
+        if (terminated) {
+          // depend on local state variable for the worker status
+          if (m_workerStopped){
+            m_lastTerminateCompleted = true;
+          }
+        }
+      //}else{
+        // depend on local state variable in this case
+        m_lastTerminateCompleted = m_terminateStarted;
+      //}
+
     }
 
 
@@ -1212,6 +1553,10 @@ namespace openstudio{
 
   std::vector<std::string> AWSProvider::availableRegions() const {
     return getImpl<detail::AWSProvider_Impl>()->availableRegions();
+  }
+
+  std::string AWSProvider::defaultRegion() const {
+    return getImpl<detail::AWSProvider_Impl>()->defaultRegion();
   }
 
   std::string AWSProvider::region() const {

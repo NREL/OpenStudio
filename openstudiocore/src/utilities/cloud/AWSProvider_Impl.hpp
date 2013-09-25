@@ -22,6 +22,7 @@
 
 #include <utilities/cloud/CloudProvider_Impl.hpp>
 #include <utilities/cloud/AWSProvider.hpp>
+#include <Utilities/core/Path.hpp>
 
 #include <QProcess>
 
@@ -29,6 +30,18 @@
 
 namespace openstudio{
 namespace detail{
+  struct UTILITIES_API ProcessResults {
+
+    ProcessResults(int t_exitCode, QProcess::ExitStatus t_exitStatus, const QString &t_output, const QString &t_error)
+      : exitCode(t_exitCode), exitStatus(t_exitStatus), output(t_output), error(t_error)
+    {
+    }
+
+    int exitCode;
+    QProcess::ExitStatus exitStatus;
+    QString output;
+    QString error; 
+  };
 
   /// AWSSettings_Impl is a CloudSettings_Impl.
   class UTILITIES_API AWSSettings_Impl : public CloudSettings_Impl {
@@ -112,6 +125,7 @@ namespace detail{
     void setTerminationDelay(const unsigned delay);
 
     //@}
+
    private:
     // configure logging
     REGISTER_LOGGER("utilities.cloud.AWSSettings");
@@ -374,6 +388,9 @@ namespace detail{
     // return a list of available AWS regions
     std::vector<std::string> availableRegions() const;
 
+    // return the recommended default region
+    std::string defaultRegion() const;
+
     // returns the AWS region
     std::string region() const;
 
@@ -435,17 +452,29 @@ namespace detail{
 
   private slots:
 
+    void processInternetAvailable();
+
+    void onCheckServiceComplete(int, QProcess::ExitStatus);
+
+    void onCheckValidateComplete(int, QProcess::ExitStatus);
+
     void onServerStarted(int, QProcess::ExitStatus);
 
     void onWorkerStarted(int, QProcess::ExitStatus);
+
+    void onCheckServerRunningComplete(int, QProcess::ExitStatus);
+
+    void onCheckWorkerRunningComplete(int, QProcess::ExitStatus);
 
     void onServerStopped(int, QProcess::ExitStatus);
 
     void onWorkerStopped(int, QProcess::ExitStatus);
 
+    void onCheckTerminatedComplete(int, QProcess::ExitStatus);
+
   private:
     
-    bool waitForFinished(int msec, const boost::function1<bool, AWSProvider_Impl*>& f);
+    bool waitForFinished(int msec, const boost::function<bool ()>& f);
     bool requestInternetAvailableRequestFinished() const;
     bool requestServiceAvailableFinished() const;
     bool requestValidateCredentialsFinished() const;
@@ -455,31 +484,56 @@ namespace detail{
     bool requestTerminateFinished() const;
     bool requestTerminateCompletedFinished() const;
 
+    ProcessResults handleProcessCompleted(QProcess *& t_qp);
+
+    QProcess *makeCheckServiceProcess() const;
+    QProcess *makeCheckValidateProcess() const;
+    QProcess *makeStartServerProcess() const;
+    QProcess *makeStartWorkerProcess() const;
+    QProcess *makeCheckServerRunningProcess() const;
+    QProcess *makeCheckWorkerRunningProcess() const;
+    QProcess *makeStopServerProcess() const;
+    QProcess *makeStopWorkerProcess() const;
+    QProcess *makeCheckTerminateProcess() const;
+
+    bool parseServiceAvailableResults(const ProcessResults &);
+    bool parseValidateCredentialsResults(const ProcessResults &);
+    bool parseServerStartedResults(const ProcessResults &);
+    bool parseWorkerStartedResults(const ProcessResults &);
+    bool parseCheckServerRunningResults(const ProcessResults &);
+    bool parseCheckWorkerRunningResults(const ProcessResults &);
+    bool parseServerStoppedResults(const ProcessResults &);
+    bool parseWorkerStoppedResults(const ProcessResults &);
+    bool parseCheckTerminatedResults(const ProcessResults &);
+
     AWSSettings m_awsSettings;
     AWSSession m_awsSession;
 
+    path m_ruby;
+    path m_script;
     std::vector<std::string> m_regions;
     std::vector<std::string> m_serverInstanceTypes;
     std::vector<std::string> m_workerInstanceTypes;
 
     QProcess* m_checkServiceProcess;
+    QProcess* m_checkValidateProcess;
     QProcess* m_startServerProcess;
-    QProcess* m_startWorkersProcess;
+    QProcess* m_startWorkerProcess;
     QProcess* m_checkServerRunningProcess;
     QProcess* m_checkWorkerRunningProcess;
     QProcess* m_stopServerProcess;
-    QProcess* m_stopWorkersProcess;
+    QProcess* m_stopWorkerProcess;
     QProcess* m_checkTerminatedProcess;
     bool m_lastInternetAvailable;
     bool m_lastServiceAvailable;
     bool m_lastValidateCredentials;
-    unsigned m_lastResourcesAvailableToStart;
+    bool m_lastResourcesAvailableToStart;
     bool m_serverStarted;
-    bool m_workersStarted;
+    bool m_workerStarted;
     bool m_lastServerRunning;
-    bool m_lastWorkersRunning;
+    bool m_lastWorkerRunning;
     bool m_serverStopped;
-    bool m_workersStopped;
+    bool m_workerStopped;
     bool m_terminateStarted;
     bool m_lastTerminateCompleted;
 
@@ -489,6 +543,8 @@ namespace detail{
     void clearErrorsAndWarnings() const;
     void logError(const std::string& error) const;
     void logWarning(const std::string& warning) const;
+
+    void addProcessArguments(QStringList& args) const;
 
     // configure logging
     REGISTER_LOGGER("utilities.cloud.AWSProvider");

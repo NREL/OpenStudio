@@ -265,6 +265,9 @@ namespace detail {
     // return a list of available AWS regions
     std::vector<std::string> availableRegions() const;
 
+    // return the recommended default region
+    std::string defaultRegion() const;
+
     // returns the AWS region
     std::string region() const;
 

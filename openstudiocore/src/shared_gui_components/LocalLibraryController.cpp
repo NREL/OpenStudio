@@ -586,13 +586,13 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     LibraryItemView * widget = new LibraryItemView();
 
     if (measureType == MeasureType::ModelMeasure){
-      widget->m_measureTypeBadge->setPixmap(QPixmap(":/shared_gui_components/images/openstudio_measure_icon.png").scaled(25,25));
+      widget->m_measureTypeBadge->setPixmap(QPixmap(":/shared_gui_components/images/openstudio_measure_icon.png").scaled(25,25,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
       widget->m_measureTypeBadge->setVisible(true);
     }else if (measureType == MeasureType::EnergyPlusMeasure){
-      widget->m_measureTypeBadge->setPixmap(QPixmap(":/shared_gui_components/images/energyplus_measure_icon.png").scaled(25,25));
+      widget->m_measureTypeBadge->setPixmap(QPixmap(":/shared_gui_components/images/energyplus_measure_icon.png").scaled(25,25,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
       widget->m_measureTypeBadge->setVisible(true);
     }else if (measureType == MeasureType::ReportingMeasure){
-      widget->m_measureTypeBadge->setPixmap(QPixmap(":/shared_gui_components/images/report_measure_icon.png").scaled(25,25));
+      widget->m_measureTypeBadge->setPixmap(QPixmap(":/shared_gui_components/images/report_measure_icon.png").scaled(25,25,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
       widget->m_measureTypeBadge->setVisible(true);
     }
 
