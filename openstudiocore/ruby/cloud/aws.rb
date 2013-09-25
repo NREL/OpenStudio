@@ -65,12 +65,6 @@ AWS.config(
     :region => ARGV[2],
     :ssl_verify_peer => false
 )
-@server_image_id = 'ami-ad4e1bc4'
-if ARGV[5] == "cc2.8xlarge"
-  @worker_image_id = 'ami-834316ea'
-else
-  @worker_image_id = 'ami-c1b7e2a8'
-end
 
 if ARGV[3] == "EC2"
   @aws = AWS::EC2.new
@@ -84,9 +78,29 @@ if ARGV.length == 6
   @params = JSON.parse(ARGV[5])
 end
 
+@server_image_id = 'ami-ad4e1bc4'
+if @params['instance_type'] == "cc2.8xlarge"
+  @worker_image_id = 'ami-834316ea'
+else
+  @worker_image_id = 'ami-c1b7e2a8'
+end
+
 def create_struct(instance, procs)
   instance_struct = Struct.new(:instance, :id, :ip, :dns, :procs)
   return instance_struct.new(instance, instance.instance_id, instance.ip_address, instance.dns_name, procs)
+end
+
+def find_processors(instance)
+  processors = nil
+  if instance == "cc2.8xlarge"
+    processors = 32
+  elsif instance == "m2.xlarge"
+    processors = 4
+  else  
+    processors = 2
+  end 
+
+  processors  
 end
 
 def launch_server
@@ -102,9 +116,9 @@ def launch_server
     error(-1, "Server status: #{@server.status}")
   end
 
-
-  processors = send_command(@server.ip_address, 'nproc | tr -d "\n"')
-  processors = 0 if processors.nil?  # sometimes this returns nothing, so put in a default
+  processors = find_processors(@server_instance_type)
+  #processors = send_command(@server.ip_address, 'nproc | tr -d "\n"')
+  #processors = 0 if processors.nil?  # sometimes this returns nothing, so put in a default
   @server = create_struct(@server, processors)
 end
 
@@ -130,8 +144,9 @@ def launch_workers(num, server_ip)
   end
 
   # todo: fix this - sometimes returns nil
-  processors = send_command(instances[0].ip_address, 'nproc | tr -d "\n"')
-  processors = 0 if processors.nil?  # sometimes this returns nothing, so put in a default
+  processors = find_processors(@worker_instance_type)
+  #processors = send_command(instances[0].ip_address, 'nproc | tr -d "\n"')
+  #processors = 0 if processors.nil?  # sometimes this returns nothing, so put in a default
   instances.each { |instance| @workers.push(create_struct(instance, processors)) }
 end
 
