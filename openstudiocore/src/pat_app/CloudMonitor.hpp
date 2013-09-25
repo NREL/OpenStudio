@@ -44,6 +44,8 @@ class StopCloudWorker;
 
 class ReconnectCloudWorker;
 
+class RecoverCloudWorker;
+
 class CloudMonitor : public QObject
 {
   Q_OBJECT
@@ -78,13 +80,8 @@ class CloudMonitor : public QObject
 
   signals:
 
+  // This will be removed.  Use ::status() to get information about the cloud.
   void internetAvailable(bool isAvailable);
-
-  void startCloudCompleted();
-
-  void stopCloudCompleted();
-
-  void reconnectCloudCompleted();
 
   public slots:
 
@@ -97,21 +94,22 @@ class CloudMonitor : public QObject
   // Stop current project cloud session
   void stopCloud();
 
-  // Restablish connection to current project session
+  // Restablish connection to current project session.
+  // Use this when you open a new project that has a running session.
   void reconnectCloud();
   
   private slots:
 
+  // After a cloud connection is lost, this method will try to get things going again.
+  // or at least make sure everything is shutdown, such as orphan nodes.
+  void recoverCloud();
+
+  void onRecoverCloudWorkerComplete();
+
   // The CloudMonitorWorker should call this when m_status says running,
   // but the cloud is not available.  This is an indication that something went wrong.
   // Inform with a dialog and try to reinitialize.
-  void onCloudConnectionLost();
-
-  // The CloudMonitorWorker should call this when m_status says stopped,
-  // but the cloud referred to by the current session is actually available.
-  // The UI should reflect that the cloud is running.  This condition might be
-  // encountered if the cloud is started up externally, like from AWS interface.
-  void onCloudUnexpectedlyStarted();
+  void onCloudConnectionError();
 
   // When startup is completely done, set status to CLOUD_RUNNING
   // and enable UI as required.
@@ -152,6 +150,10 @@ class CloudMonitor : public QObject
 
   QSharedPointer<ReconnectCloudWorker> m_reconnectCloudWorker;
 
+  QSharedPointer<QThread> m_recoverCloudThread;
+
+  QSharedPointer<RecoverCloudWorker> m_recoverCloudWorker;
+
   CloudStatus m_status;
 
   friend class CloudMonitorWorker;
@@ -167,6 +169,10 @@ class StartCloudWorker : public QObject
 
   virtual ~StartCloudWorker();
 
+  boost::optional<CloudSettings> settings() const;
+
+  boost::optional<CloudSession> session() const;
+
   signals:
 
   void doneWorking();
@@ -180,6 +186,10 @@ class StartCloudWorker : public QObject
   Q_DISABLE_COPY(StartCloudWorker);
 
   QPointer<CloudMonitor> m_monitor;  
+
+  boost::optional<CloudSettings> m_settings;
+
+  boost::optional<CloudSession> m_session; 
 };
 
 class StopCloudWorker : public QObject
@@ -236,6 +246,33 @@ class ReconnectCloudWorker : public QObject
   CloudStatus m_status;
 };
 
+// The purpose of RecoverCloudWorker is to recover a cloud session
+// that was reportedly not responding.
+class RecoverCloudWorker : public QObject
+{
+  Q_OBJECT
+
+  public:
+
+  RecoverCloudWorker(CloudMonitor * monitor);
+
+  virtual ~RecoverCloudWorker();
+
+  signals:
+
+  void doneWorking();
+
+  public slots:
+
+  void startWorking();
+
+  private:
+
+  Q_DISABLE_COPY(RecoverCloudWorker);
+
+  QPointer<CloudMonitor> m_monitor;
+};
+
 // This class is assigned to its own thread,
 // where it will continuously check that the UI is accurately reporting the condition of the cloud.
 class CloudMonitorWorker : public QObject
@@ -248,41 +285,37 @@ class CloudMonitorWorker : public QObject
 
   virtual ~CloudMonitorWorker();
 
+  bool internetAvailable() const;
+
+  bool cloudRunning() const;
+
   public slots:
 
   void startWorking();
 
   signals:
 
-  void cloudConnectionLost();
-
-  void cloudConnectionEstablished();
-
-  void internetAvailable(bool isAvailable);
-
-  void cloudConfigurationChanged();
+  void cloudConnectionError();
 
   private:
 
   Q_DISABLE_COPY(CloudMonitorWorker);
 
+  // if status is CLOUD_RUNNING then make sure there is an intenet connection
+  // Check the status of the internet connection and emit internetAvailable
+  bool checkInternetAvailable() const;
+
   // Check CloudMonitor status,
   // if status is CLOUD_RUNNING then make sure it is still running
   // if status is CLOUD_RUNNING but test does not agree then 
   // emit cloudConnectionLost
-  // Similarly, if status is CLOUD_STOPPED, but the cloud was in fact found to be running,
-  // then emit cloudConnectionEstablished
-  void checkForCloudConnection();
-
-  // Check the status of the internet connection and emit internetAvailable
-  void checkForInternetConnection();
-
-  // See if there is a current session and that it is the same
-  // session that we are monitoring.  
-  // If it is not then emit cloudSessionChanged
-  void checkForNewSession();
+  bool checkCloudRunning() const;
 
   QPointer<CloudMonitor> m_monitor;  
+
+  bool m_internetAvailable;
+
+  bool m_cloudRunning;
 };
 
 } // pat

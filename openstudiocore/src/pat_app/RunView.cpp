@@ -147,17 +147,6 @@ RunStatusView::RunStatusView()
 
   mainHLayout->addStretch();
 
-  // Cloud Provider Status
-
-  m_cloudProviderStatus = new QLabel();
-  mainHLayout->addWidget(m_cloudProviderStatus);
-  m_cloudProviderStatus->setPixmap(QPixmap(":/images/internet_no_connection.png"));
-
-  QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
-  isConnected = connect(cloudMonitor.data(), SIGNAL(internetAvailable(bool)),
-                        this, SLOT(on_internetAvailable(bool)));
-  OS_ASSERT(isConnected);
-
   // Start Cloud
 
   toggleCloudButton = new ToggleCloudButton();
@@ -276,15 +265,6 @@ void RunStatusView::setProgress(int numCompletedJobs, int numFailedJobs, int num
   }
 }
 
-void RunStatusView::on_internetAvailable(bool isAvailable)
-{
-  if(isAvailable){
-    m_cloudProviderStatus->setPixmap(QPixmap(":/images/internet_yes_connection.png"));
-  } else {
-    m_cloudProviderStatus->setPixmap(QPixmap(":/images/internet_no_connection.png"));
-  }
-}
-
 void RunStatusView::on_selectAllDownloads(bool checked)
 {
       // TODO
@@ -343,6 +323,12 @@ void ToggleCloudButton::updateText()
   else if( m_status == CLOUD_STOPPING )
   {
     setText("Stopping");
+
+    setEnabled(false);
+  }
+  else if( m_status == CLOUD_ERROR )
+  {
+    setText("Error");
 
     setEnabled(false);
   }
@@ -699,11 +685,6 @@ void DataPointRunHeaderView::on_clearClicked(bool checked)
   this->m_dataPoint.clearResults();
 }
 
-void DataPointRunHeaderView::on_internetAvailable(bool isAvailable)
-{
-  setDownloadEnabled(isAvailable);
-}
-
 DataPointRunContentView::DataPointRunContentView()
   : OSListView()
 {
@@ -718,10 +699,6 @@ DataPointRunItemView::DataPointRunItemView(const openstudio::analysis::DataPoint
  
   dataPointRunContentView = new DataPointRunContentView(); 
   setContent(dataPointRunContentView);
-
-  bool isConnected = connect(PatApp::instance()->cloudMonitor().data(),SIGNAL(internetAvailable(bool)),
-                             dataPointRunHeaderView,SLOT(on_internetAvailable(bool)));
-  OS_ASSERT(isConnected);
 }
 
 DataPointJobHeaderView::DataPointJobHeaderView()
