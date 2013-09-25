@@ -1259,8 +1259,6 @@ void PatApp::disableTabsDuringRun()
 {
   bool isRunning = project()->isRunning();
 
-  // DLM: should we be checking connected to cloud here too?
-
   // user cannot navigate to tabs 1 or 2 if we are running
   if(isRunning){
     mainWindow->verticalTabWidget->enableTab(false, PatApp::MEASURES);

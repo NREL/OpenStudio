@@ -166,6 +166,26 @@ void RunTabController::onPlayButtonClicked(bool clicked)
       }
     }
 
+    // only need to check for E+ if running locally
+    if (!cloudAnalysisDriver){
+      runmanager::ConfigOptions co(true);
+      co.findTools(true, true, true, true);
+      co.saveQSettings();
+
+      if (co.getTools().getAllByName("energyplus").tools().size() == 0)
+      {
+        /// \todo check for specific version of energy plus
+        QMessageBox::information(runView,
+            "Missing EnergyPlus",
+            "EnergyPlus could not be located, simulation aborted.",
+            QMessageBox::Ok);
+
+        // important to call, this controls tab 1 and 2 access
+        onIterationProgress();
+        return;
+      }
+    }
+
     // check if we already have current analysis
     std::vector<analysisdriver::CurrentAnalysis> currentAnalyses;
     if (cloudAnalysisDriver){
@@ -205,35 +225,6 @@ void RunTabController::onPlayButtonClicked(bool clicked)
         PatApp::instance()->processEvents();
       }
 
-      // I generally try to lean away from putting too much UI code in the base libraries, so
-      // I'm calling this from here instead of from SimpleProject
-      if (!cloudAnalysisDriver){
-
-        // need to check for E+ if running locally
-
-        runmanager::ConfigOptions co(true);
-        co.findTools(true, true, true, true);
-        co.saveQSettings();
-
-        if (co.getTools().getAllByName("energyplus").tools().size() == 0)
-        {
-          /// \todo check for specific version of energy plus
-          QMessageBox::information(runView,
-              "Missing EnergyPlus",
-              "EnergyPlus could not be located, simulation aborted.",
-              QMessageBox::Ok);
-
-          // enable the app
-          PatApp::instance()->mainWindow->setEnabled(true);
-          PatApp::instance()->mainWindow->setFocus();
-
-          // important to call, this controls tab 1 and 2 access
-          onIterationProgress();
-
-          return;
-        }
-      }
-
       // DLM: todo add a progress bar here as queueing all the points can take a while
 
       if (cloudAnalysisDriver){
@@ -242,15 +233,15 @@ void RunTabController::onPlayButtonClicked(bool clicked)
         cloudAnalysisDriver->requestRun();
 
         // DLM: do something when run starts or doesn't...
-        // Kyle, is this a CloudMonitor thing?
+        // Kyle, is this a CloudMonitor thing or does that belong in this class?
 
         // connect currentAnalysis to update progress on this
-        bool isConnected = cloudAnalysisDriver->connect(SIGNAL(resultsChanged()), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
+        bool isConnected = cloudAnalysisDriver->connect(SIGNAL(dataPointComplete(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
         OS_ASSERT(isConnected);
 
         // connect currentAnalysis to update progress in PatApp
         // DLM: this re-enables tabs if analysis completes when we are not on this tab
-        isConnected = cloudAnalysisDriver->connect(SIGNAL(resultsChanged()), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
+        isConnected = cloudAnalysisDriver->connect(SIGNAL(dataPointComplete(const openstudio::UUID&, const openstudio::UUID&)), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
         OS_ASSERT(isConnected);
       }else{
 
@@ -288,15 +279,19 @@ void RunTabController::onPlayButtonClicked(bool clicked)
     PatApp::instance()->processEvents();
 
     if (cloudAnalysisDriver){
-      // request stop
-      cloudAnalysisDriver->requestStop(false);
 
-      // DLM: do something when stop completes or doesn't...
-      // when will 
-      // Kyle, is this a CloudMonitor thing?
+      // DLM: it is a big deal to quit the cloud, should we prompt the user?
+      QMessageBox::StandardButton test = QMessageBox::question(runView, "Stop Cloud", "Do you want to stop the cloud?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+      if (test == QMessageBox::Yes) {
+        // request stop
+        cloudAnalysisDriver->requestStop(false);
 
+        // DLM: do something when stop completes or doesn't... we don't really care about stop if we shut down cloud
+        // Kyle, is this a CloudMonitor thing or does that belong in this class?
 
-
+        /// DLM: shut down cloud now?
+        QTimer::singleShot(0, PatApp::instance()->cloudMonitor().data(), SLOT(stopCloud()));
+      }
 
     }else{
       // request stop
@@ -328,7 +323,6 @@ void RunTabController::onIterationProgress()
   boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
   analysisdriver::AnalysisDriver analysisDriver = project->analysisDriver();
 
-  // DLM: Elaine will these work when running on the cloud?
   int numCompletedJobs = (int)analysis.completeDataPoints().size();
   int totalNumJobs = (int)analysis.completeDataPoints().size() + (int)analysis.dataPointsToQueue().size();
   int numFailedJobs = (int)analysis.failedDataPoints().size();
@@ -336,6 +330,8 @@ void RunTabController::onIterationProgress()
   if (numCompletedJobs == totalNumJobs){
     if (cloudAnalysisDriver){
       // DLM: start timer to shut down cloud?
+      int timeout = 0; // TODO: get from settings
+      QTimer::singleShot(timeout, PatApp::instance()->cloudMonitor().data(), SLOT(stopCloud()));
     }else{
       runManager.setPaused(true);
     }

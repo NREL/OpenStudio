@@ -324,7 +324,7 @@ namespace detail {
     bool result = false;
     if (m_cloudAnalysisDriver){
       //result = m_cloudAnalysisDriver->isRunning();
-      result = m_cloudAnalysisDriver->isRunning() || m_cloudAnalysisDriver->isDownloading() ||  m_cloudAnalysisDriver->isStopping();
+      result = m_cloudAnalysisDriver->isRunning() || m_cloudAnalysisDriver->isDownloading() ||  m_cloudAnalysisDriver->isStopping() || m_cloudAnalysisDriver->lastRunSuccess();
       // DLM: should we be checking connected to cloud here too?
     }else{
       result = m_analysisDriver.isRunning();
