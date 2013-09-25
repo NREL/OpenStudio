@@ -300,14 +300,20 @@ namespace openstudio{
       query.exec(QString("SELECT version_id FROM Measures WHERE uid='%1'").arg(escape(uid)));
       if (query.next())
       {
-        return boost::optional<BCLMeasure>(toPath(m_libraryPath) / toPath(uid) / toPath(toString(query.value(0).toString())));
+        try{
+          return boost::optional<BCLMeasure>(toPath(m_libraryPath) / toPath(uid) / toPath(toString(query.value(0).toString())));
+        }catch(const std::exception&){
+        }
       }
       return boost::none;
     }
     query.exec(QString("SELECT version_id FROM Measures WHERE uid='%1' AND version_id='%2'").arg(escape(uid), escape(versionId)));
     if (query.next())
     {
-      return boost::optional<BCLMeasure>(toPath(m_libraryPath) / toPath(uid) / toPath(versionId));
+      try{
+        return boost::optional<BCLMeasure>(toPath(m_libraryPath) / toPath(uid) / toPath(versionId));
+      }catch(const std::exception&){
+      }
     }
     return boost::none;
   }

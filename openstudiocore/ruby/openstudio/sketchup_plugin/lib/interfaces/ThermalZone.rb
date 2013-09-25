@@ -94,7 +94,7 @@ module OpenStudio
         # check ZoneAirInletPortList
         if @model_object.isEmpty(9) # ZoneAirInletPortList
           watcher_enabled = disable_watcher
-          portlist = OpenStudio::Model::PortList.new(@model_interface.openstudio_model)
+          portlist = OpenStudio::Model::PortList.new(@model_object)
           @model_object.setPointer(9, portlist.handle)
           enable_watcher if watcher_enabled
         end
@@ -102,7 +102,7 @@ module OpenStudio
         # check ZoneAirExhaustPortList
         if @model_object.isEmpty(10) # ZoneAirExhaustPortList
           watcher_enabled = disable_watcher
-          portlist = OpenStudio::Model::PortList.new(@model_interface.openstudio_model)
+          portlist = OpenStudio::Model::PortList.new(@model_object)
           @model_object.setPointer(10, portlist.handle)
           enable_watcher if watcher_enabled
         end

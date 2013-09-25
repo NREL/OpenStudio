@@ -1305,6 +1305,10 @@ bool CloudAnalysisDriver::isRunning() const {
   return getImpl<detail::CloudAnalysisDriver_Impl>()->isRunning();
 }
 
+bool CloudAnalysisDriver::isStopping() const {
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->isStopping();
+}
+
 bool CloudAnalysisDriver::isDownloading() const {
   return getImpl<detail::CloudAnalysisDriver_Impl>()->isDownloading();
 }
