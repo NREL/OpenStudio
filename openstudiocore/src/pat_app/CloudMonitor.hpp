@@ -80,6 +80,7 @@ class CloudMonitor : public QObject
 
   signals:
 
+  // This will be removed.  Use ::status() to get information about the cloud.
   void internetAvailable(bool isAvailable);
 
   public slots:
@@ -108,7 +109,7 @@ class CloudMonitor : public QObject
   // The CloudMonitorWorker should call this when m_status says running,
   // but the cloud is not available.  This is an indication that something went wrong.
   // Inform with a dialog and try to reinitialize.
-  void onCloudConnectionLost();
+  void onCloudConnectionError();
 
   // When startup is completely done, set status to CLOUD_RUNNING
   // and enable UI as required.
@@ -284,32 +285,37 @@ class CloudMonitorWorker : public QObject
 
   virtual ~CloudMonitorWorker();
 
+  bool internetAvailable() const;
+
+  bool cloudRunning() const;
+
   public slots:
 
   void startWorking();
 
   signals:
 
-  void cloudConnectionLost();
-
-  void internetAvailable(bool isAvailable);
-
-  void cloudConfigurationChanged();
+  void cloudConnectionError();
 
   private:
 
   Q_DISABLE_COPY(CloudMonitorWorker);
 
+  // if status is CLOUD_RUNNING then make sure there is an intenet connection
+  // Check the status of the internet connection and emit internetAvailable
+  bool checkInternetAvailable() const;
+
   // Check CloudMonitor status,
   // if status is CLOUD_RUNNING then make sure it is still running
   // if status is CLOUD_RUNNING but test does not agree then 
   // emit cloudConnectionLost
-  void checkForCloudConnection();
-
-  // Check the status of the internet connection and emit internetAvailable
-  void checkForInternetConnection();
+  bool checkCloudRunning() const;
 
   QPointer<CloudMonitor> m_monitor;  
+
+  bool m_internetAvailable;
+
+  bool m_cloudRunning;
 };
 
 } // pat

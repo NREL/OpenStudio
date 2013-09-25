@@ -118,11 +118,7 @@ class RunStatusView : public QWidget
 
    void playButtonClicked(bool);
 
-   void internetAvailable(bool isAvailable);
-
  private slots:
-
-  void on_internetAvailable(bool isAvailable);
 
   void on_selectAllDownloads(bool checked);
 
@@ -134,7 +130,6 @@ class RunStatusView : public QWidget
   PatProgressBar* m_progressBar;
   QLabel* m_percentComplete;
   QLabel* m_percentFailed;
-  QLabel* m_cloudProviderStatus;
   QPushButton * m_selectAllClears;
   QPushButton * m_selectAllDownloads;
 };
@@ -176,8 +171,6 @@ class DataPointRunHeaderView : public OSHeader
   void on_downloadClicked(bool checked);
 
   void on_clearClicked(bool checked);
-
-  void on_internetAvailable(bool isAvailable);
 
  private:
 

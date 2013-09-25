@@ -96,12 +96,10 @@ CloudMonitor::CloudMonitor()
   m_workerThread = QSharedPointer<QThread>(new QThread());
   m_worker = QSharedPointer<CloudMonitorWorker>(new CloudMonitorWorker(this));
   m_worker->moveToThread(m_workerThread.data());
+
   bool bingo;
-  bingo = connect(m_worker.data(),SIGNAL(internetAvailable(bool)),
-                  this,SIGNAL(internetAvailable(bool)));
-  OS_ASSERT(bingo);
-  bingo = connect(m_worker.data(),SIGNAL(cloudConnectionLost()),
-                  this,SLOT(onCloudConnectionLost()));
+  bingo = connect(m_worker.data(),SIGNAL(cloudConnectionError()),
+                  this,SLOT(onCloudConnectionError()));
   OS_ASSERT(bingo);
 
   // StartCloudWorker
@@ -244,9 +242,13 @@ void CloudMonitor::onReconnectCloudWorkerComplete()
   // TODO Handle other states
 }
 
-void CloudMonitor::onCloudConnectionLost()
+void CloudMonitor::onCloudConnectionError()
 {
   setStatus(CLOUD_ERROR);
+
+  // Get state of everything from m_worker
+  // m_worker->internetAvailable()
+  // m_worker->cloudRunning()
 
   QMessageBox message(PatApp::instance()->mainWindow);
   message.setText("OpenStudio Cloud connection was unexpectedly lost.");
@@ -533,16 +535,24 @@ CloudMonitorWorker::~CloudMonitorWorker()
 
 void CloudMonitorWorker::startWorking()
 {
-  checkForInternetConnection();
+  if( m_monitor->status() == CLOUD_RUNNING )
+  {
+    m_internetAvailable = checkInternetAvailable();
 
-  checkForCloudConnection();
+    m_cloudRunning = checkCloudRunning();
+
+    if( ! (m_internetAvailable && m_cloudRunning))
+    {
+      emit cloudConnectionError();
+    }
+  }
 
   QTimer::singleShot(5000,this,SLOT(startWorking()));
 }
 
-void CloudMonitorWorker::checkForInternetConnection()
+bool CloudMonitorWorker::checkInternetAvailable() const
 {
-  // TODO we should use the actual current provider(i.e. Vagrant, AwsProvider, etc)
+  bool result = true;
 
   static bool internetAvailableCurrently = false;
   static bool internetAvailableLastTime = false;
@@ -555,37 +565,46 @@ void CloudMonitorWorker::checkForInternetConnection()
   internetAvailableCurrently = cloudProvider.internetAvailable();
 
   if(internetAvailableCurrently && internetAvailableLastTime && internetAvailableTimeBeforeLast){
-    emit internetAvailable(true);
+    result = true;
   } else if(!internetAvailableCurrently && !internetAvailableLastTime && !internetAvailableTimeBeforeLast){
-    emit internetAvailable(false);
+    result = false;
   }
+
+  return result;
 }
 
-void CloudMonitorWorker::checkForCloudConnection()
+bool CloudMonitorWorker::checkCloudRunning() const
 {
-  if( m_monitor->status() == CLOUD_RUNNING )
+  bool cloudRunning = true;
+
+  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
+  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
+
+  // TODO Consider emitting and display an error dialog in CloudMonitor
+  OS_ASSERT(session);    
+  OS_ASSERT(settings);
+
+  CloudProvider newProvider = CloudMonitor::newCloudProvider(settings.get(),session.get());
+
+  bool serverRunning = newProvider.serverRunning(); 
+  bool workersRunning = newProvider.workersRunning();
+
+  if( (! serverRunning) || (! workersRunning) )
   {
-    boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
-    boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
-
-    // TODO Consider emitting and display an error dialog in CloudMonitor
-    OS_ASSERT(session);    
-    OS_ASSERT(settings);
-
-    CloudProvider newProvider = CloudMonitor::newCloudProvider(settings.get(),session.get());
-
-    bool serverRunning = newProvider.serverRunning(); 
-    bool workersRunning = newProvider.workersRunning();
-
-    if( (! serverRunning) || (! workersRunning) )
-    {
-      //newProvider.requestTerminate();
-
-      //newProvider.waitForTerminated();
-
-      emit cloudConnectionLost();
-    }
+    cloudRunning = false;
   }
+
+  return cloudRunning;
+}
+
+bool CloudMonitorWorker::internetAvailable() const
+{
+  return m_internetAvailable;
+}
+
+bool CloudMonitorWorker::cloudRunning() const
+{
+  return m_cloudRunning;
 }
 
 } // pat
