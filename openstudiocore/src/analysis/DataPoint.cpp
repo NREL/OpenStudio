@@ -551,6 +551,8 @@ namespace detail {
     }
     catch (...) {}
 
+    onChange(AnalysisObject_Impl::Benign);
+
     return true;
   }
 
