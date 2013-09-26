@@ -155,15 +155,33 @@ namespace detail {
     // sets the url of the server node
     void setServerUrl(const Url& serverUrl);
 
+    // returns the server instance ID
+    std::string serverId() const;
+
+    // sets the server instance ID
+    void setServerId(const std::string& serverId);
+
+    // returns the number of server processor cores
+    unsigned numServerProcessors() const;
+
+    // sets the number of server processor cores
+    void setNumServerProcessors(const unsigned numServerProcessors);
+
     // returns the urls of all worker nodes 
     std::vector<Url> workerUrls() const;
 
     // set the urls of all worker nodes
     void setWorkerUrls(const std::vector<Url>& workerUrls);
 
+    // returns the key pair's private key
+    std::string privateKey() const;
+
+    // sets the key pair's private key
+    void setPrivateKey(const std::string& privateKey);
+
     // returns the timestamp associated with the security group and key pair
     std::string timestamp() const;
-
+    
     // sets the timestamp
     void setTimestamp(const std::string& timestamp);
 
@@ -188,17 +206,11 @@ namespace detail {
     // returns the number of workers for this session
     unsigned numWorkers() const;
 
-    // returns the EC2 estimated charges from CloudWatch in USD
-    double estimatedCharges() const;
-
     // returns the total uptime in minutes of this session
     unsigned totalSessionUptime() const;
 
     // returns the total number of instances running on EC2 associated with this session
     unsigned totalSessionInstances() const;
-
-    // returns the total number of instances running on EC2
-    unsigned totalInstances() const;
 
     //@}
 

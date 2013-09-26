@@ -179,6 +179,18 @@ namespace detail{
     // sets the url of the server node
     void setServerUrl(const Url& serverUrl);
 
+    // returns the server instance ID
+    std::string serverId() const;
+
+    // sets the server instance ID
+    void setServerId(const std::string& serverId);
+
+    // returns the number of server processor cores
+    unsigned numServerProcessors() const;
+
+    // sets the number of server processor cores
+    void setNumServerProcessors(const unsigned numServerProcessors);
+
     // returns the urls of all worker nodes 
     std::vector<Url> workerUrls() const;
 
@@ -215,17 +227,11 @@ namespace detail{
     // sets the worker instance type
     void setWorkerInstanceType(const std::string& instanceType);
 
-    // returns the EC2 estimated charges from CloudWatch in USD
-    double estimatedCharges() const;
-
     // returns the total uptime in minutes of this session
     unsigned totalSessionUptime() const;
 
     // returns the total number of instances running on EC2 associated with this session
     unsigned totalSessionInstances() const;
-
-    // returns the total number of instances running on EC2
-    unsigned totalInstances() const;
 
     //@}
 
@@ -235,7 +241,15 @@ namespace detail{
 
     Url m_serverUrl;
 
+    std::string m_serverId;
+
+    unsigned m_numServerProcessors;
+
     std::vector<Url> m_workerUrls;
+
+    std::vector<std::string> m_workerIds;
+
+    std::string m_privateKey;
 
     std::string m_timestamp;
 
@@ -452,11 +466,13 @@ namespace detail{
 
   private slots:
 
-    void processInternetAvailable();
+    void onCheckInternetComplete(int, QProcess::ExitStatus);
 
     void onCheckServiceComplete(int, QProcess::ExitStatus);
 
     void onCheckValidateComplete(int, QProcess::ExitStatus);
+
+    void onCheckResourcesComplete(int, QProcess::ExitStatus);
 
     void onServerStarted(int, QProcess::ExitStatus);
 
@@ -475,10 +491,12 @@ namespace detail{
   private:
     
     bool waitForFinished(int msec, const boost::function<bool ()>& f);
-    bool requestInternetAvailableRequestFinished() const;
+    bool requestInternetAvailableFinished() const;
     bool requestServiceAvailableFinished() const;
     bool requestValidateCredentialsFinished() const;
     bool requestResourcesAvailableToStartFinished() const;
+    bool requestServerStartedFinished() const;
+    bool requestWorkerStartedFinished() const;
     bool requestServerRunningFinished() const;
     bool requestWorkersRunningFinished() const;
     bool requestTerminateFinished() const;
@@ -486,8 +504,10 @@ namespace detail{
 
     ProcessResults handleProcessCompleted(QProcess *& t_qp);
 
+    QProcess *makeCheckInternetProcess() const;
     QProcess *makeCheckServiceProcess() const;
     QProcess *makeCheckValidateProcess() const;
+    QProcess *makeCheckResourcesProcess() const;
     QProcess *makeStartServerProcess() const;
     QProcess *makeStartWorkerProcess() const;
     QProcess *makeCheckServerRunningProcess() const;
@@ -498,6 +518,7 @@ namespace detail{
 
     bool parseServiceAvailableResults(const ProcessResults &);
     bool parseValidateCredentialsResults(const ProcessResults &);
+    bool parseResourcesAvailableToStartResults(const ProcessResults &);
     bool parseServerStartedResults(const ProcessResults &);
     bool parseWorkerStartedResults(const ProcessResults &);
     bool parseCheckServerRunningResults(const ProcessResults &);
@@ -505,6 +526,9 @@ namespace detail{
     bool parseServerStoppedResults(const ProcessResults &);
     bool parseWorkerStoppedResults(const ProcessResults &);
     bool parseCheckTerminatedResults(const ProcessResults &);
+
+    unsigned lastTotalInstances() const;
+    double lastEstimatedCharges() const;
 
     AWSSettings m_awsSettings;
     AWSSession m_awsSession;
@@ -514,9 +538,11 @@ namespace detail{
     std::vector<std::string> m_regions;
     std::vector<std::string> m_serverInstanceTypes;
     std::vector<std::string> m_workerInstanceTypes;
-
+    
+    QProcess* m_checkInternetProcess;
     QProcess* m_checkServiceProcess;
     QProcess* m_checkValidateProcess;
+    QProcess* m_checkResourcesProcess;
     QProcess* m_startServerProcess;
     QProcess* m_startWorkerProcess;
     QProcess* m_checkServerRunningProcess;
@@ -536,6 +562,8 @@ namespace detail{
     bool m_workerStopped;
     bool m_terminateStarted;
     bool m_lastTerminateCompleted;
+    unsigned m_lastTotalInstances;
+    double m_lastEstimatedCharges;
 
     mutable std::vector<std::string> m_errors;
     mutable std::vector<std::string> m_warnings;
