@@ -55,8 +55,8 @@ if ARGV.length < 5
   error(-1, 'Invalid number of args')
 end
 
-if ARGV[0].empty? && ARGV[1].empty?
-  error(401, 'AuthFailure')
+if ARGV[0].empty? || ARGV[1].empty?
+  error(401, 'Missing authentication arguments')
 end
 
 AWS.config(
@@ -79,7 +79,7 @@ if ARGV.length == 6
 end
 
 @server_image_id = 'ami-afeebbc6'
-if @params['instance_type'] == "cc2.8xlarge"
+if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
   @worker_image_id = 'ami-ffeebb96'
 else
   @worker_image_id = 'ami-0deebb64'
@@ -91,30 +91,29 @@ def create_struct(instance, procs)
 end
 
 def find_processors(instance)
-  processors = nil
-  if instance == "cc2.8xlarge"
+  processors = 1
+  case instance
+  when 'cc2.8xlarge'
     processors = 32
-  elsif instance == "c1.xlarge"
+  when 'c1.xlarge'
     processors = 8
-  elsif instance == "m2.4xlarge"
+  when 'm2.4xlarge'
     processors = 8
-  elsif instance == "m2.2xlarge"
+  when 'm2.2xlarge'
     processors = 4
-  elsif instance == "m2.xlarge"
+  when 'm2.xlarge'
     processors = 4  
-  elsif instance == "m1.xlarge"
+  when 'm1.xlarge'
     processors = 4
-  elsif instance == "m1.large"
+  when 'm1.large'
     processors = 2
-  elsif instance == "m3.xlarge"
+  when 'm3.xlarge'
     processors = 4
-  elsif instance == "m3.2xlarge"
-    processors = 8  
-  else  
-    processors = 1
+  when 'm3.2xlarge'
+    processors = 8
   end 
 
-  processors  
+  return processors
 end
 
 def launch_server
@@ -124,7 +123,7 @@ def launch_server
                                   :security_groups => @group,
                                   :user_data => user_data,
                                   :instance_type => @server_instance_type)
-  @server.add_tag("Name", :value => "OpenStudio-Server V#{OPENSTUDIO_VERSION}")
+  @server.add_tag('Name', :value => "OpenStudio-Server V#{OPENSTUDIO_VERSION}")
   sleep 5 while @server.status == :pending
   if @server.status != :running
     error(-1, "Server status: #{@server.status}")
@@ -149,7 +148,7 @@ def launch_workers(num, server_ip)
                                    :security_groups => @group,
                                    :user_data => user_data,
                                    :instance_type => @worker_instance_type)
-    worker.add_tag("Name", :value => "OpenStudio-Worker V#{OPENSTUDIO_VERSION}")
+    worker.add_tag('Name', :value => "OpenStudio-Worker V#{OPENSTUDIO_VERSION}")
     instances.push(worker)
   end
   sleep 5 while instances.any? { |instance| instance.status == :pending }
@@ -238,15 +237,24 @@ end
 
 begin
   case ARGV[4]
-    when 'estimated_charges'
-      resp = @aws.client.get_metric_statistics({:namespace=>'AWS/Billing', :metric_name=>'EstimatedCharges', :start_time=>'2013-09-01T23:59:59Z', :end_time=>'2013-09-24T23:59:59Z', :period=>1380, :statistics=>['Sum']})
-      puts resp.data.to_json
     when 'describe_availability_zones'
       resp = @aws.client.describe_availability_zones
       puts resp.data.to_json
     when 'total_instances'
       resp = @aws.client.describe_instance_status
       puts ({:instances => resp.data[:instance_status_set].length}.to_json)
+    when 'instance_status'
+      resp = nil
+      if ARGV.length < 6
+        resp = @aws.client.describe_instance_status
+      else
+        resp = @aws.client.describe_instance_status({:instance_ids=>[@params['instance_id']]})
+      end
+      output = Hash.new
+      resp.data[:instance_status_set].each { |instance|
+        output[instance[:instance_id]] = instance[:instance_state][:name]
+      }
+      puts output.to_json
     when 'launch_server'
       if ARGV.length < 6
         error(-1, 'Invalid number of args')
@@ -255,9 +263,9 @@ begin
       @timestamp = Time.now.to_i
 
       # find if an existing openstudio-server-vX security group exists and use that
-      @group = @aws.security_groups.filter("group-name", "openstudio-server-sg-v1").first
+      @group = @aws.security_groups.filter('group-name', 'openstudio-server-sg-v1').first
       if @group.nil?
-        @group = @aws.security_groups.create("openstudio-server-sg-v1")
+        @group = @aws.security_groups.create('openstudio-server-sg-v1')
         @group.allow_ping() # allow ping
         @group.authorize_ingress(:tcp, 1..65535)# all traffic
       end
@@ -289,9 +297,9 @@ begin
       @timestamp = @params['timestamp']
 
       # find if an existing openstudio-server-vX security group exists and use that
-      @group = @aws.security_groups.filter("group-name", "openstudio-worker-sg-v1").first
+      @group = @aws.security_groups.filter('group-name', 'openstudio-worker-sg-v1').first
       if @group.nil?
-        @group = @aws.security_groups.create("openstudio-worker-sg-v1")
+        @group = @aws.security_groups.create('openstudio-worker-sg-v1')
         @group.allow_ping() # allow ping
         @group.authorize_ingress(:tcp, 1..65535)# all traffic
       end
@@ -304,7 +312,7 @@ begin
       @server = create_struct(@server, @params['server_procs'])
 
       launch_workers(@params['num'], @server.ip)
-      #@workers.push(create_struct(@aws.instances['i-xxxxxxxx'], -1))
+      #@workers.push(create_struct(@aws.instances['i-xxxxxxxx'], 1))
       #processors = send_command(@workers[0].ip, 'nproc | tr -d "\n"')
       #@workers[0].procs = processors
 
@@ -362,6 +370,10 @@ begin
       #  group.delete
       #end
       #todo: delete key pair
+
+    when 'estimated_charges'
+      resp = @aws.client.get_metric_statistics({:namespace=>'AWS/Billing', :metric_name=>'EstimatedCharges', :start_time=>'2013-09-01T23:59:59Z', :end_time=>'2013-09-24T23:59:59Z', :period=>1380, :statistics=>['Sum']})
+      #puts resp
 
     else
       error(-1, "Unknown command: #{ARGV[4]} (#{ARGV[3]})")
