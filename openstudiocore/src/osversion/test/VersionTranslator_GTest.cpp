@@ -33,6 +33,8 @@
 #include <model/ConstructionBase_Impl.hpp>
 #include <model/Building.hpp>
 #include <model/Building_Impl.hpp>
+#include <model/Version.hpp>
+#include <model/Version_Impl.hpp>
 
 #include <utilities/bcl/RemoteBCL.hpp>
 #include <utilities/bcl/LocalBCL.hpp>
@@ -147,6 +149,60 @@ TEST_F(OSVersionFixture,VersionTranslator_ExampleComponent) {
       EXPECT_TRUE(result);
     }
   }
+}
+
+TEST_F(OSVersionFixture,VersionTranslator_FutureVersion_ExampleModel) {
+  osversion::VersionTranslator translator;
+
+  model::Model model = model::exampleModel();
+
+  // it is not generally a good idea to mess with the version like this
+  boost::optional<WorkspaceObject> object = model.versionObject();
+  ASSERT_TRUE(object);
+  boost::optional<model::Version> version = object->optionalCast<model::Version>();
+  ASSERT_TRUE(version);
+  VersionString vs(version->versionIdentifier());
+
+  int major = vs.major();
+  int minor = vs.minor();
+  boost::optional<int> patch = vs.patch();
+  ASSERT_TRUE(patch);
+
+  std::stringstream ss;
+
+  // version translate current model
+  ss.str("");
+  ss << model;
+  boost::optional<model::Model> m2 = translator.loadModel(ss);
+  EXPECT_TRUE(m2);
+
+  // increment patch
+  ss.str("");
+  ss << major << "." << minor << "." << *patch+1;
+  EXPECT_TRUE(version->setString(0, ss.str()));
+  ss.str("");
+  ss << model;
+  m2 = translator.loadModel(ss);
+  EXPECT_TRUE(m2);
+
+  // increment minor
+  ss.str("");
+  ss << major << "." << minor+1 << "." << 0;
+  EXPECT_TRUE(version->setString(0, ss.str()));
+  ss.str("");
+  ss << model;
+  m2 = translator.loadModel(ss);
+  EXPECT_TRUE(m2);
+
+  // increment major
+  ss.str("");
+  ss << major+1 << "." << 0 << "." << 0;
+  EXPECT_TRUE(version->setString(0, ss.str()));
+  ss.str("");
+  ss << model;
+  m2 = translator.loadModel(ss);
+  EXPECT_TRUE(m2);
+
 }
 
 TEST_F(OSVersionFixture,VersionTranslator_AllDefaultObjects) {
