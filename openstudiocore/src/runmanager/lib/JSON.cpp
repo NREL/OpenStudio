@@ -225,11 +225,11 @@ namespace detail {
     QVariantList qvl;
 
     int index(0);
-    for (std::vector<Job>::const_iterator itr = t_workItems.begin();
+    for (std::vector<WorkItem>::const_iterator itr = t_workItems.begin();
          itr != t_workItems.end();
          ++itr)
     {
-      qvm = toVariant(*itr).toMap();
+      QVariantMap qvm = toVariant(*itr).toMap();
       qvm["work_item_index"] = QVariant(index);
       qvl.push_back(qvm);
       ++index;
@@ -258,12 +258,27 @@ namespace detail {
   std::vector<WorkItem> JSON::toVectorOfWorkItem(const QVariant &t_variant,
                                                  const VersionString& version)
   {
-
+    return deserializeOrderedVector<WorkItem>(
+               t_variant.toList(),
+               "work_item_index",
+               boost::function<WorkItem (const QVariant&)>(boost::bind(JSON::toWorkItem,_1,version)));
   }
 
-  std::vector<WorkItem> JSON::toVectorOfWorkItem(const openstudio::path &t_pathToJson);
+  std::vector<WorkItem> JSON::toVectorOfWorkItem(const openstudio::path &t_pathToJson) {
+    QVariant variant = loadJSON(t_pathToJson);
+    VersionString version = extractOpenStudioVersion(variant);
 
-  std::vector<WorkItem> JSON::toVectorOfWorkItem(const std::string &t_json);
+    QVariant workItemsData = variant.toMap()["work_items"];
+    return toVectorOfWorkItem(workItemsData,version);
+  }
+
+  std::vector<WorkItem> JSON::toVectorOfWorkItem(const std::string &t_json) {
+    QVariant variant = loadJSON(t_json);
+    VersionString version = extractOpenStudioVersion(variant);
+
+    QVariant workItemsData = variant.toMap()["work_items"];
+    return toVectorOfWorkItem(workItemsData,version);
+  }
 
   // JobType
 

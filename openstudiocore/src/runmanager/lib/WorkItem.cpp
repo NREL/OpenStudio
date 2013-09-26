@@ -22,6 +22,8 @@
 
 #include "RubyJobUtils.hpp"
 
+#include <runmanager/lib/JSON.hpp>
+
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
@@ -187,25 +189,25 @@ bool saveJSON(const std::vector<WorkItem> &t_workItems,
               const openstudio::path& p,
               bool overwrite)
 {
-  return JSON::saveJSON(t_workItems,p,overwrite);
+  return detail::JSON::saveJSON(t_workItems,p,overwrite);
 }
 
 std::ostream& toJSON(const std::vector<WorkItem> &t_workItems,
                      std::ostream& os)
 {
-  os << JSON::toJSON(t_workItems);
+  os << detail::JSON::toJSON(t_workItems);
   return os;
 }
 
 std::string toJSON(const std::vector<WorkItem> &t_workItems) {
-  return JSON::toJSON(t_workItems);
+  return detail::JSON::toJSON(t_workItems);
 }
 
-std::string<WorkItem> toVectorOfWorkItem(const openstudio::path &t_pathToJson) {
-  return JSON::toVectorOfWorkItem(t_pathToJson);
+std::vector<WorkItem> toVectorOfWorkItem(const openstudio::path &t_pathToJson) {
+  return detail::JSON::toVectorOfWorkItem(t_pathToJson);
 }
 
-std::string<WorkItem> toVectorOfWorkItem(std::istream &t_json) {
+std::vector<WorkItem> toVectorOfWorkItem(std::istream &t_json) {
   // istream -> string code from
   // http://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
   std::string contents;
@@ -213,11 +215,11 @@ std::string<WorkItem> toVectorOfWorkItem(std::istream &t_json) {
   contents.resize(t_json.tellg());
   t_json.seekg(0, std::ios::beg);
   t_json.read(&contents[0], contents.size());
-  return JSON::toVectorOfWorkItem(contents);
+  return detail::JSON::toVectorOfWorkItem(contents);
 }
 
 std::vector<WorkItem> toVectorOfWorkItem(const std::string &t_json) {
-  return JSON::toVectorOfWorkItem(t_json);
+  return detail::JSON::toVectorOfWorkItem(t_json);
 }
 
 } // runmanager

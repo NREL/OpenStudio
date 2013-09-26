@@ -1192,6 +1192,39 @@ std::string DataPoint::toJSON(const DataPointSerializationOptions& options) cons
   return getImpl<detail::DataPoint_Impl>()->toJSON(options);
 }
 
+boost::optional<DataPoint> DataPoint::loadJSON(const openstudio::path& p,
+                                               const openstudio::path& newProjectDir)
+{
+  OptionalDataPoint result;
+  AnalysisJSONLoadResult loadResult = analysis::loadJSON(p);
+  if (loadResult.analysisObject && loadResult.analysisObject->optionalCast<DataPoint>()) {
+    result = loadResult.analysisObject->cast<DataPoint>();
+  }
+  return result;
+}
+
+boost::optional<DataPoint> DataPoint::loadJSON(std::istream& json,
+                                               const openstudio::path& newProjectDir)
+{
+  OptionalDataPoint result;
+  AnalysisJSONLoadResult loadResult = analysis::loadJSON(json);
+  if (loadResult.analysisObject && loadResult.analysisObject->optionalCast<DataPoint>()) {
+    result = loadResult.analysisObject->cast<DataPoint>();
+  }
+  return result;
+}
+
+boost::optional<DataPoint> DataPoint::loadJSON(const std::string& json,
+                                               const openstudio::path& newProjectDir)
+{
+  OptionalDataPoint result;
+  AnalysisJSONLoadResult loadResult = analysis::loadJSON(json);
+  if (loadResult.analysisObject && loadResult.analysisObject->optionalCast<DataPoint>()) {
+    result = loadResult.analysisObject->cast<DataPoint>();
+  }
+  return result;
+}
+
 /// @cond
 DataPoint::DataPoint(boost::shared_ptr<detail::DataPoint_Impl> impl)
   : AnalysisObject(impl)

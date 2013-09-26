@@ -18,9 +18,14 @@
 **********************************************************************/
 
 #include <utilities/bcl/BCL.hpp>
-#include <utilities/data/Attribute.hpp>
+
+#include <utilities/bcl/LocalBCL.hpp>
+#include <utilities/bcl/RemoteBCL.hpp>
+#include <utilities/bcl/BCLComponent.hpp>
+#include <utilities/bcl/BCLMeasure.hpp>
 
 #include <utilities/core/Assert.hpp>
+#include <utilities/data/Attribute.hpp>
 
 #include <QDomElement>
 
@@ -583,6 +588,75 @@ namespace openstudio{
 
   BCL::~BCL()
   {
+  }
+
+
+  boost::optional<BCLComponent> getComponent(const std::string& uid,
+                                             const std::string& versionId)
+  {
+    OptionalBCLComponent localComponent = LocalBCL::instance().getComponent(uid,versionId);
+
+    // if versionId specified, done if localComponent exists
+    if (!versionId.empty() && localComponent) {
+      return localComponent;
+    }
+
+    // versionId.empty() or !localComponent
+    RemoteBCL remoteBCL;
+    OptionalBCLComponent remoteComponent = remoteBCL.getComponent(uid,versionId);
+    bool test(false);
+    if (remoteComponent) {
+      // get whatever version is in the LocalBCL now
+      if (!localComponent) {
+        localComponent = LocalBCL::instance().getComponent(uid);
+      }
+      if (localComponent && (localComponent.get() != remoteComponent.get())) {
+        test = LocalBCL::instance().removeComponent(*localComponent);
+        OS_ASSERT(test);
+        localComponent.reset();
+      }
+      if (!localComponent) {
+        test = LocalBCL::instance().addComponent(*remoteComponent);
+        OS_ASSERT(test);
+        localComponent = LocalBCL::instance().getComponent(uid,versionId);
+        OS_ASSERT(localComponent);
+        OS_ASSERT(localComponent.get() == remoteComponent.get());
+      }
+    }
+
+    return localComponent;
+  }
+
+  boost::optional<BCLMeasure> getMeasure(const std::string& uid,
+                                         const std::string& versionId)
+  {
+    OptionalBCLMeasure localMeasure = LocalBCL::instance().getMeasure(uid,versionId);
+
+    // if versionId specified, done if localMeasure exists
+    if (!versionId.empty() && localMeasure) {
+      return localMeasure;
+    }
+
+    // versionId.empty() or !localMeasure
+    RemoteBCL remoteBCL;
+    OptionalBCLMeasure remoteMeasure = remoteBCL.getMeasure(uid,versionId);
+    bool test(false);
+    if (remoteMeasure) {
+      if (localMeasure && (localMeasure.get() != remoteMeasure.get())) {
+        test = LocalBCL::instance().removeMeasure(*localMeasure);
+        OS_ASSERT(test);
+        localMeasure.reset();
+      }
+      if (!localMeasure) {
+        test = LocalBCL::instance().addMeasure(*remoteMeasure);
+        OS_ASSERT(test);
+        localMeasure = LocalBCL::instance().getMeasure(uid,versionId);
+        OS_ASSERT(localMeasure);
+        OS_ASSERT(localMeasure.get() == remoteMeasure.get());
+      }
+    }
+
+    return localMeasure;
   }
 
 } // openstudio
