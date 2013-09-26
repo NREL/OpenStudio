@@ -90,6 +90,8 @@ CloudMonitor::CloudMonitor()
     m_serverStarted(false),
     m_allWorkersStarted(false)
 {    
+  m_showVagrant = showVagrant();
+
   setStatus(CLOUD_STOPPED);
 
   // CloudMonitorWorker, used to report if something goes wrong

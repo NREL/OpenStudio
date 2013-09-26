@@ -19,6 +19,8 @@
 
 #include "CloudDialog.hpp"
 
+#include <pat_app/CloudMonitor.hpp>
+
 #include <utilities/cloud/AWSProvider.hpp>
 #include <utilities/cloud/AWSProvider_Impl.hpp>
 #include <utilities/cloud/CloudProvider.hpp>
@@ -26,6 +28,8 @@
 #include <utilities/cloud/VagrantProvider.hpp>
 #include <utilities/cloud/VagrantProvider_Impl.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Path.hpp>
+#include <utilities/core/Url.hpp>
 
 #include <QBoxLayout>
 #include <QCheckBox>
@@ -36,6 +40,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QStackedWidget>
+#include <QUrl>
 
 #define NO_PROVIDER ""
 #define VAGRANT_PROVIDER "Vagrant"
@@ -107,7 +112,9 @@ void CloudDialog::createWidgets()
   m_leftLoginLayout->addWidget(m_cloudResourceComboBox,0,Qt::AlignTop | Qt::AlignLeft);
  
   m_cloudResourceComboBox->addItem(NO_PROVIDER);
-  m_cloudResourceComboBox->addItem(VAGRANT_PROVIDER);
+  pat::CloudMonitor cloudMonitor;
+  bool showVagrant = cloudMonitor.showVagrantOption();
+  if(showVagrant) m_cloudResourceComboBox->addItem(VAGRANT_PROVIDER);
   m_cloudResourceComboBox->addItem(AMAZON_PROVIDER);
 
   isConnected = connect(m_cloudResourceComboBox, SIGNAL(currentIndexChanged(const QString &)),
@@ -280,12 +287,26 @@ void CloudDialog::on_cancelButton(bool checked)
 
 void CloudDialog::on_okButton(bool checked)
 {
-
- if(m_pageStackedWidget->currentIndex() == m_loginPageIdx){
+  if(m_pageStackedWidget->currentIndex() == m_loginPageIdx){
+    if( m_cloudResourceComboBox->currentText() == AMAZON_PROVIDER){
+      AWSProvider awsProvider;
+      // TODO these can be used in realtime (i.e. per keystroke)
+      //bool validAccessKey = awsProvider.validAccessKey(m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString());
+      //bool validSecretKey = awsProvider.validSecretKey(m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString());
+      bool validAccessKey = awsProvider.setAccessKey(m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString());
+      if(!validAccessKey){
+        QString error("You have entered an invalid Access Key");
+        QMessageBox::critical(this, "Login Failed", error);
+        return;
+      }
+      bool validSecretKey = awsProvider.setSecretKey(m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString());
+      if(!validSecretKey){
+        QString error("You have entered an invalid Secret Key");
+        QMessageBox::critical(this, "Login Failed", error);
+        return;
+      }
+    }
     m_pageStackedWidget->setCurrentIndex(m_settingsPageIdx);
-    // TODO test login settings, pop error and exit if need be
-    //QString error("Error");
-    //QMessageBox::critical(this, "Alert", error);
     this->backButton()->show();
     this->okButton()->setText("Save");
   } else if(m_pageStackedWidget->currentIndex() == m_settingsPageIdx){
@@ -442,30 +463,30 @@ void CloudProviderWidget::waitClicked(bool checked)
 //****************************************************************************************************
 
 
-  BlankProviderWidget::BlankProviderWidget(QWidget * parent)
-    : CloudProviderWidget(parent)
-  {
-  }
+BlankProviderWidget::BlankProviderWidget(QWidget * parent)
+  : CloudProviderWidget(parent)
+{
+}
 
-  BlankProviderWidget::~BlankProviderWidget()
-  {
-  }
+BlankProviderWidget::~BlankProviderWidget()
+{
+}
 
-  void BlankProviderWidget::loadData()
-  {
-  }
+void BlankProviderWidget::loadData()
+{
+}
 
-  void BlankProviderWidget::saveData()
-  {
-  }
+void BlankProviderWidget::saveData()
+{
+}
 
-  void BlankProviderWidget::createLoginWidget()
-  {
-  }
+void BlankProviderWidget::createLoginWidget()
+{
+}
 
-  void BlankProviderWidget::createSettingsWidget()
-  {
-  }
+void BlankProviderWidget::createSettingsWidget()
+{
+}
 
 
 //****************************************************************************************************
@@ -476,8 +497,6 @@ VagrantProviderWidget::VagrantProviderWidget(QWidget * parent)
   m_runOnStartUpCheckBox(0),
   m_serverUsernameLineEdit(0),
   m_serverPasswordLineEdit(0),
-  m_workerUsernameLineEdit(0),
-  m_workerPasswordLineEdit(0),
   m_serverDirLineEdit(0),
   m_serverAddressIpLineEdit(0),
   m_serverPortIpLineEdit(0),
@@ -502,7 +521,7 @@ void VagrantProviderWidget::createLoginWidget()
 
   label = new QLabel;
   label->setObjectName("H2");
-  label->setText("Server Username");
+  label->setText("Username");
   m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_serverUsernameLineEdit = new QLineEdit();
@@ -511,30 +530,12 @@ void VagrantProviderWidget::createLoginWidget()
 
   label = new QLabel;
   label->setObjectName("H2");
-  label->setText("Server Password");
+  label->setText("Password");
   m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_serverPasswordLineEdit = new QLineEdit();
   m_serverPasswordLineEdit->setFixedWidth(EDIT_WIDTH);
   m_leftLoginLayout->addWidget(m_serverPasswordLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
-
-  label = new QLabel;
-  label->setObjectName("H2");
-  label->setText("Worker Instance");
-  m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
-
-  m_workerUsernameLineEdit = new QLineEdit();
-  m_workerUsernameLineEdit->setFixedWidth(EDIT_WIDTH);
-  m_leftLoginLayout->addWidget(m_workerUsernameLineEdit,0,Qt::AlignTop | Qt::AlignLeft);
-  
-  label = new QLabel;
-  label->setObjectName("H2");
-  label->setText("Worker Password");
-  m_leftLoginLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
-    
-  m_workerPasswordLineEdit = new QLineEdit();
-  m_workerPasswordLineEdit->setFixedWidth(EDIT_WIDTH);
-  m_leftLoginLayout->addWidget(m_workerPasswordLineEdit);
 
   m_leftLoginLayout->addStretch();
 
@@ -651,63 +652,86 @@ void VagrantProviderWidget::createSettingsWidget()
 
 void  VagrantProviderWidget::loadData()
 {
-  VagrantProvider vagrantProvider;
+  VagrantSettings vagrantSettings;
+  QUrl url;
+  QString temp;  
 
   bool isChecked = true;
   m_runOnStartUpCheckBox->setChecked(isChecked);
 
-  QString text("N/A");
+  m_serverUsernameLineEdit->setText(vagrantSettings.username().c_str());
+  m_serverPasswordLineEdit->setText(vagrantSettings.password().c_str());
 
-  m_serverUsernameLineEdit->setText(text);
-  m_serverPasswordLineEdit->setText(text);
-  m_workerUsernameLineEdit->setText(text);
-  m_workerPasswordLineEdit->setText(text);
-  m_serverDirLineEdit->setText(text);
-  m_serverAddressIpLineEdit->setText(text);
-  m_serverPortIpLineEdit->setText(text);
-  m_workerDirLineEdit->setText(text);
-  m_workerAddressIpLineEdit->setText(text);
-  m_workerPortIpLineEdit->setText(text);
+  url = vagrantSettings.serverUrl();
+  m_serverAddressIpLineEdit->setText(url.path());
+  m_serverPortIpLineEdit->setText(temp.setNum(url.port()));
+  m_serverDirLineEdit->setText(toQString(vagrantSettings.serverPath()));
+
+  url = vagrantSettings.serverUrl();
+  m_workerAddressIpLineEdit->setText(url.path());
+  m_workerPortIpLineEdit->setText(temp.setNum(url.port()));
+  m_workerDirLineEdit->setText(toQString(vagrantSettings.workerPath()));
+
+  // TODO
+  //m_waitCheckBox->setChecked(vagrantSettings.terminationDelayEnabled());
+
+  //m_waitLineEdit->setText(temp.setNum(vagrantSettings.terminationDelay()));
 }
 
 void  VagrantProviderWidget::saveData()
 {
+  VagrantSettings vagrantSettings;
+
   bool isChecked = true;
   isChecked = m_runOnStartUpCheckBox->isChecked();
 
-  QString text;
-  text = m_serverUsernameLineEdit->text();
-  text = m_serverPasswordLineEdit->text();
-  text = m_workerUsernameLineEdit->text();
-  text = m_workerPasswordLineEdit->text();
-  text = m_serverDirLineEdit->text();
-  text = m_serverAddressIpLineEdit->text();
-  text = m_serverPortIpLineEdit->text();
-  text = m_workerDirLineEdit->text();
-  text = m_workerAddressIpLineEdit->text();
-  text = m_workerPortIpLineEdit->text();
+  vagrantSettings.setUsername(m_serverUsernameLineEdit->text().toStdString());
+  vagrantSettings.setPassword(m_serverPasswordLineEdit->text().toStdString());
+  vagrantSettings.setServerPath(toPath(m_serverDirLineEdit->text().toStdString()));
+
+  Url url;
+  
+  url.setPath( m_serverAddressIpLineEdit->text());
+  url.setPort(m_serverPortIpLineEdit->text().toInt());
+  vagrantSettings.setServerUrl(url);
+  
+  vagrantSettings.setWorkerPath(toPath(m_workerDirLineEdit->text().toStdString()));
+
+  url.setPath(m_workerAddressIpLineEdit->text());
+  url.setPort(m_workerPortIpLineEdit->text().toInt());
+  vagrantSettings.setWorkerUrl(url);
+
+  // TODO
+  //vagrantSettings.setTerminationDelayEnabled(m_waitCheckBox->isChecked());
+
+  //unsigned wait = m_waitLineEdit->text().toUInt();
+  //vagrantSettings.setTerminationDelay(wait);
 }
 
 //***** SLOTS *****
 
 void VagrantProviderWidget::serverDirButtonClicked(bool checked)
 {
-  // TODO
   QString dir = QFileDialog::getExistingDirectory( this,
                                                    tr("Choose Directory"),
                                                    QDir::homePath());
 
-  if(!dir.length()) return;
+  if(dir.length()){
+    m_serverDirLineEdit->setText(dir);
+    m_serverDirLineEdit->setToolTip(dir);
+  }
 }
 
 void VagrantProviderWidget::workerDirButtonClicked(bool checked)
 {
-  // TODO
   QString dir = QFileDialog::getExistingDirectory( this,
                                                    tr("Choose Directory"),
                                                    QDir::homePath());
 
-  if(!dir.length()) return;
+  if(dir.length()){
+    m_workerDirLineEdit->setText(dir);
+    m_workerDirLineEdit->setToolTip(dir);
+  }
 }
 
 
@@ -781,7 +805,6 @@ void AmazonProviderWidget::createSettingsWidget()
   m_leftSettingsLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
   m_regionComboBox = new QComboBox();
-  m_regionComboBox->addItem("East","us-east-1");
   m_leftSettingsLayout->addWidget(m_regionComboBox,0,Qt::AlignTop | Qt::AlignLeft);
 
   label = new QLabel;
@@ -836,38 +859,55 @@ void AmazonProviderWidget::createSettingsWidget()
 void  AmazonProviderWidget::loadData()
 {
   AWSProvider awsProvider;
+  AWSSettings awsSettings;
 
-  m_accessKeyLineEdit->setText(awsProvider.accessKey().c_str());
+  m_accessKeyLineEdit->setText(awsSettings.accessKey().c_str());
 
-  m_secretKeyLineEdit->setText(awsProvider.secretKey().c_str());
+  m_secretKeyLineEdit->setText(awsSettings.secretKey().c_str());
 
   int index = -1;
+
+  for(int idx = 0; idx < m_regionComboBox->count(); idx++){
+    m_regionComboBox->removeItem(idx);
+  }
 
   std::vector<std::string> availableRegions = awsProvider.availableRegions();
   Q_FOREACH(const std::string & region, availableRegions){
     m_regionComboBox->addItem(region.c_str());
   }
 
+  // TODO should awsSettings API have this call?
   index = m_regionComboBox->findText(awsProvider.region().c_str());
   if(index == -1) index = 0;
   m_regionComboBox->setCurrentIndex(index);
+
+
+  for(int idx = 0; idx < m_serverInstanceTypeComboBox->count(); idx++){
+    m_serverInstanceTypeComboBox->removeItem(idx);
+  }
 
   std::vector<std::string> serverInstanceTypes = awsProvider.serverInstanceTypes();
   Q_FOREACH(const std::string & serverInstanceType, serverInstanceTypes){
     m_serverInstanceTypeComboBox->addItem(serverInstanceType.c_str());
   }
 
+  // TODO should awsSettings API have this call?
   index = m_serverInstanceTypeComboBox->findText(awsProvider.serverInstanceType().c_str());
   if(index == -1){
     index = m_serverInstanceTypeComboBox->findText(awsProvider.defaultServerInstanceType().c_str());
   }
   m_serverInstanceTypeComboBox->setCurrentIndex(index);
 
+  for(int idx = 0; idx < m_workerInstanceTypeComboBox->count(); idx++){
+    m_workerInstanceTypeComboBox->removeItem(idx);
+  }
+
   std::vector<std::string> workerInstanceTypes = awsProvider.workerInstanceTypes();
   Q_FOREACH(const std::string & workerInstanceType, workerInstanceTypes){
     m_workerInstanceTypeComboBox->addItem(workerInstanceType.c_str());
   }
 
+  // TODO should awsSettings API have this call?
   index = m_workerInstanceTypeComboBox->findText(awsProvider.workerInstanceType().c_str());
   if(index == -1){
     index = m_workerInstanceTypeComboBox->findText(awsProvider.defaultWorkerInstanceType().c_str());
@@ -875,20 +915,24 @@ void  AmazonProviderWidget::loadData()
   m_workerInstanceTypeComboBox->setCurrentIndex(index);
 
   QString temp;
+  // TODO should awsSettings API have this call?
   m_numberOfWorkerInstancesLineEdit->setText(temp.setNum(awsProvider.numWorkers()));
 
-  m_waitCheckBox->setChecked(awsProvider.terminationDelayEnabled());
+  m_waitCheckBox->setChecked(awsSettings.terminationDelayEnabled());
 
-  m_waitLineEdit->setText(temp.setNum(awsProvider.terminationDelay()));
+  m_waitLineEdit->setText(temp.setNum(awsSettings.terminationDelay()));
 }
 
 void  AmazonProviderWidget::saveData()
 {
   AWSProvider awsProvider;
+  AWSSettings awsSettings;
 
-  awsProvider.setAccessKey(m_accessKeyLineEdit->text().toStdString());
+  bool validAccessKey = awsProvider.setAccessKey(m_accessKeyLineEdit->text().toStdString());
+  OS_ASSERT(validAccessKey);
 
-  awsProvider.setSecretKey(m_secretKeyLineEdit->text().toStdString());
+  bool validSecretKey = awsProvider.setSecretKey(m_secretKeyLineEdit->text().toStdString());
+  OS_ASSERT(validSecretKey);
 
   awsProvider.setRegion(m_regionComboBox->currentText().toStdString());
 
