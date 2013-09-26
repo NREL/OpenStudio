@@ -1165,22 +1165,28 @@ namespace openstudio{
           } else if (componentType == "measure") {
             path measureXmlPath = dest / toPath("measure.xml");
             // open the measure to figure out uid and vid
-            BCLMeasure measure(measureXmlPath.parent_path());
-            std::string uid = measure.uid();
-            std::string versionId = measure.versionId();
+            boost::optional<BCLMeasure> measure;
+            try{
+              measure = BCLMeasure(measureXmlPath.parent_path());
 
-            // check if component has proper uid and vid
-            if (!uid.empty() && !versionId.empty()){
+              std::string uid = measure->uid();
+              std::string versionId = measure->versionId();
 
-              dest = toPath(LocalBCL::instance().libraryPath().append(toQString("/"+uid+"/"+versionId)));
+              // check if component has proper uid and vid
+              if (!uid.empty() && !versionId.empty()){
 
-              removeDirectory(dest);
-              if (copyDirectory(measureXmlPath.parent_path(), dest))
-              {
-                // Add to LocalBCL
-                m_lastMeasureDownload = BCLMeasure(dest);
-                LocalBCL::instance().addMeasure(*m_lastMeasureDownload);
+                dest = toPath(LocalBCL::instance().libraryPath().append(toQString("/"+uid+"/"+versionId)));
+
+                removeDirectory(dest);
+                if (copyDirectory(measureXmlPath.parent_path(), dest))
+                {
+                  // Add to LocalBCL
+                  m_lastMeasureDownload = BCLMeasure(dest);
+                  LocalBCL::instance().addMeasure(*m_lastMeasureDownload);
+                }
               }
+            }catch(const std::exception&){
+              LOG(Error, "Unable to create measure from download: " + toString(measureXmlPath.parent_path()));
             }
           }
         }else{

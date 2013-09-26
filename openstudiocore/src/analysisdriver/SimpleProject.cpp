@@ -117,6 +117,10 @@ namespace detail {
     }
   }
 
+  SimpleProject SimpleProject_Impl::simpleProject() const {
+    return SimpleProject(boost::const_pointer_cast<SimpleProject_Impl>(shared_from_this()));
+  }
+
   openstudio::path SimpleProject_Impl::projectDir() const {
     return m_projectDir;
   }
@@ -317,6 +321,15 @@ namespace detail {
 
   bool SimpleProject_Impl::isRunning() const {
     return analysisDriver().isRunning();
+  }
+
+  boost::optional<CloudAnalysisDriver> SimpleProject_Impl::cloudAnalysisDriver() const {
+    if (!m_cloudAnalysisDriver) {
+      if (boost::optional<CloudSession> session = cloudSession()) {
+        m_cloudAnalysisDriver = CloudAnalysisDriver(*session,simpleProject());
+      }
+    }
+    return m_cloudAnalysisDriver;
   }
 
   boost::optional<CloudSession> SimpleProject_Impl::cloudSession() const {
@@ -858,24 +871,44 @@ namespace detail {
     return result;
   }
 
-  void SimpleProject_Impl::setCloudSession(const CloudSession& session) {
-    m_cloudSession = session;
-    m_cloudSessionSettingsDirty = true;
+  void SimpleProject_Impl::clearCloudAnalysisDriver() {
+    m_cloudAnalysisDriver.reset();
   }
 
-  void SimpleProject_Impl::clearCloudSession() {
-    m_cloudSession.reset();
-    m_cloudSessionSettingsDirty = true;
+  bool SimpleProject_Impl::setCloudSession(const CloudSession& session) {
+    if (!m_cloudAnalysisDriver) {
+      m_cloudSession = session;
+      m_cloudSessionSettingsDirty = true;
+      return true;
+    }
+    return false;
   }
 
-  void SimpleProject_Impl::setCloudSettings(const CloudSettings& settings) {
-    m_cloudSettings = settings;
-    m_cloudSessionSettingsDirty = true;
+  bool SimpleProject_Impl::clearCloudSession() {
+    if (!m_cloudAnalysisDriver) {
+      m_cloudSession.reset();
+      m_cloudSessionSettingsDirty = true;
+      return true;
+    }
+    return false;
   }
 
-  void SimpleProject_Impl::clearCloudSettings() {
-    m_cloudSettings.reset();
-    m_cloudSessionSettingsDirty = true;
+  bool SimpleProject_Impl::setCloudSettings(const CloudSettings& settings) {
+    if (!m_cloudAnalysisDriver) {
+      m_cloudSettings = settings;
+      m_cloudSessionSettingsDirty = true;
+      return true;
+    }
+    return false;
+  }
+
+  bool SimpleProject_Impl::clearCloudSettings() {
+    if (!m_cloudAnalysisDriver) {
+      m_cloudSettings.reset();
+      m_cloudSessionSettingsDirty = true;
+      return true;
+    }
+    return false;
   }
 
   openstudio::path SimpleProject_Impl::zipFileForCloud() const {
@@ -1931,6 +1964,10 @@ bool SimpleProject::isRunning() const {
   return getImpl()->isRunning();
 }
 
+boost::optional<CloudAnalysisDriver> SimpleProject::cloudAnalysisDriver() const {
+  return getImpl()->cloudAnalysisDriver();
+}
+
 boost::optional<CloudSession> SimpleProject::cloudSession() const {
   return getImpl()->cloudSession();
 }
@@ -1990,19 +2027,23 @@ bool SimpleProject::removeAllDataPoints() {
   return getImpl()->removeAllDataPoints();
 }
 
-void SimpleProject::setCloudSession(const CloudSession& session) {
+void SimpleProject::clearCloudAnalysisDriver() {
+  getImpl()->clearCloudAnalysisDriver();
+}
+
+bool SimpleProject::setCloudSession(const CloudSession& session) {
   return getImpl()->setCloudSession(session);
 }
 
-void SimpleProject::clearCloudSession() {
+bool SimpleProject::clearCloudSession() {
   return getImpl()->clearCloudSession();
 }
 
-void SimpleProject::setCloudSettings(const CloudSettings& settings) {
+bool SimpleProject::setCloudSettings(const CloudSettings& settings) {
   return getImpl()->setCloudSettings(settings);
 }
 
-void SimpleProject::clearCloudSettings() {
+bool SimpleProject::clearCloudSettings() {
   return getImpl()->clearCloudSettings();
 }
 
