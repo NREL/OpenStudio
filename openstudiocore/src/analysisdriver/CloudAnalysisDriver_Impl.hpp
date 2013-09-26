@@ -147,10 +147,12 @@ namespace detail {
     void detailedDownloadRequestsComplete(bool success);
 
     //@}
-    /** @name AnalysisDriver Progress Signals */
+    /** @name AnalysisDriver/CurrentAnalysis Progress Signals */
     //@{
 
     void resultsChanged();
+
+    void iterationProgress(int numCompletedJobs,int numJobsInIteration);
 
     // emitted when data point posted to server
     void dataPointQueued(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
@@ -227,6 +229,9 @@ namespace detail {
      // slim results received
      void jsonDownloadComplete(bool success);
 
+     // pause between slim and detailed results
+     void addToDetailsQueue();
+
      // detailed results received
      void detailsDownloadComplete(bool success);
 
@@ -263,6 +268,7 @@ namespace detail {
     // request run process
     boost::optional<OSServer> m_requestRun;
     std::deque<analysis::DataPoint> m_postQueue;
+    boost::optional<unsigned> m_numDataPointsComplete, m_numDataPointsInRun;
     unsigned m_analysisNotRunningCount;
     unsigned m_maxAnalysisNotRunningCount;
 
@@ -275,6 +281,9 @@ namespace detail {
     // download slim data points
     boost::optional<OSServer> m_requestJson;
     std::deque<analysis::DataPoint> m_jsonQueue;
+
+    // pause between downloading slim and detailed results
+    std::deque<analysis::DataPoint> m_pauseBetweenJsonAndDetailsQueue;
 
     // download detailed results
     boost::optional<OSServer> m_requestDetails;
