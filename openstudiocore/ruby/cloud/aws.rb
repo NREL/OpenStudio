@@ -78,7 +78,7 @@ if ARGV.length == 6
   @params = JSON.parse(ARGV[5])
 end
 
-@server_image_id = 'ami-afeebbc6'
+@server_image_id = 'ami-59114530'
 if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
   @worker_image_id = 'ami-ffeebb96'
 else
