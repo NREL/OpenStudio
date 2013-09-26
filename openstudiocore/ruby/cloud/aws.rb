@@ -44,7 +44,7 @@ require 'tempfile'
 
 # Not sure how we want to deal with this, but in the tag, I would like to specify the right
 # version of openstudio so that in the AWS Management Console it is meaningful.
-OPENSTUDIO_VERSION="1.0.6"
+OPENSTUDIO_VERSION="1.1.0"
 
 def error(code, msg)
   puts ({:error => {:code => code, :message => msg}}.to_json)
@@ -80,9 +80,9 @@ end
 
 @server_image_id = 'ami-59114530'
 if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
-  @worker_image_id = 'ami-ffeebb96'
+  @worker_image_id = 'ami-691b4f00'
 else
-  @worker_image_id = 'ami-0deebb64'
+  @worker_image_id = 'ami-731b4f1a'
 end
 
 def create_struct(instance, procs)
@@ -171,13 +171,13 @@ def upload_file(host, local_path, remote_path)
     end
   rescue SystemCallError, Timeout::Error => e
     # port 22 might not be available immediately after the instance finishes launching
-    return if retries == 2
+    return if retries == 5
     retries += 1
     sleep 1
     retry
   rescue
     # Unknown upload error, retry
-    return if retries == 2
+    return if retries == 5
     retries += 1
     sleep 1
     retry
@@ -188,16 +188,16 @@ end
 def send_command(host, command)
   retries = 0
   begin
-    output = ''
+    #output = ''
     Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
-      response = ssh.exec!(command)
-      output += response if !response.nil?
+      response = ssh.exec(command)
+      #output += response if !response.nil?
     end
-    return output
+    #return output
   rescue Net::SSH::HostKeyMismatch => e
     e.remember_host!
     # key mismatch, retry
-    return if retries == 2
+    return if retries == 5
     retries += 1
     sleep 1
     retry
@@ -205,7 +205,7 @@ def send_command(host, command)
     error(-1, "Incorrect private key")
   rescue SystemCallError, Timeout::Error => e
     # port 22 might not be available immediately after the instance finishes launching
-    return if retries == 2
+    return if retries == 5
     retries += 1
     sleep 1
     retry
@@ -324,7 +324,7 @@ begin
       upload_file(@server.ip, file.path, 'ip_addresses')
       file.unlink
       send_command(@server.ip, 'chmod 664 /home/ubuntu/ip_addresses')
-      send_command(@server.ip, '~/setup-ssh-keys.expect')
+      send_command(@server.ip, '~/setup-ssh-keys.sh')
       send_command(@server.ip, '~/setup-ssh-worker-nodes.sh ip_addresses')
 
       mongoid = File.read(File.expand_path(File.dirname(__FILE__))+'/mongoid.yml.template')
@@ -333,7 +333,7 @@ begin
       file.write(mongoid)
       file.close
       upload_file(@server.ip, file.path, '/mnt/openstudio/rails-models/mongoid.yml')
-
+      upload_file(@server.ip, file.path, '~/mongoid.yml')
       @workers.each { |worker| upload_file(worker.ip, file.path, '/mnt/openstudio/rails-models/mongoid.yml') }
       file.unlink
 
