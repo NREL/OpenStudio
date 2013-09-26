@@ -46,6 +46,7 @@ OPENSTUDIO_ENUM(CloudSettingsRecordType,
  *  \endcode */
 OPENSTUDIO_ENUM(CloudSettingsRecordType,
     ((VagrantSettingsRecord))
+    ((AWSSettingsRecord))
 );
 
 /** \class CloudSettingsRecordColumns
@@ -69,6 +70,9 @@ OPENSTUDIO_ENUM(CloudSettingsRecordColumns,
   ((workerUrlRecordId)(INTEGER)(13))
   ((haltOnStop)(BOOLEAN)(14))
   ((username)(TEXT)(15))
+  ((numWorkers)(INTEGER)(16))
+  ((terminationDelayEnabled)(BOOLEAN)(17))
+  ((terminationDelay)(INTEGER)(18))
 );
 
 /** CloudSettingsRecord is a ObjectRecord. */

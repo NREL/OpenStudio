@@ -728,6 +728,10 @@ namespace detail {
       update_1_0_4_to_1_0_5(dbv);
     }
 
+    if (dbv < VersionString("1.1.0")) {
+      update_1_0_6_to_1_1_0(dbv);
+    }
+
     if ((dbv != osv) || (!dbv.fidelityEqual(osv))) {
       LOG(Info,"Updating database version to " << osv << ".");
       bool didStartTransaction = startTransaction();
@@ -2275,6 +2279,57 @@ namespace detail {
     save();
     test = this->commitTransaction();
     OS_ASSERT(test);    
+  }
+
+  void ProjectDatabase_Impl::update_1_0_6_to_1_1_0(const VersionString& startVersion) {
+    bool didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    LOG(Info,"Adding columns for numWorkers, terminationDelayEnabled, and terminationDelay to "
+        << CloudSettingsRecord::databaseTableName() << ".");
+
+    ProjectDatabase database(this->shared_from_this());
+    QSqlQuery query(*(database.qSqlDatabase()));
+
+    CloudSettingsRecordColumns numWorkersColumn("numWorkers");
+    query.prepare(QString::fromStdString(
+        "ALTER TABLE " + CloudSettingsRecord::databaseTableName() + " ADD COLUMN " +
+        numWorkersColumn.valueName() + " " + numWorkersColumn.valueDescription()));
+    assertExec(query);
+    query.clear();
+
+    CloudSettingsRecordColumns terminationDelayEnabledColumn("terminationDelayEnabled");
+    query.prepare(QString::fromStdString(
+        "ALTER TABLE " + CloudSettingsRecord::databaseTableName() + " ADD COLUMN " +
+        terminationDelayEnabledColumn.valueName() + " " + terminationDelayEnabledColumn.valueDescription()));
+    assertExec(query);
+    query.clear();
+
+    CloudSettingsRecordColumns terminationDelayColumn("terminationDelay");
+    query.prepare(QString::fromStdString(
+        "ALTER TABLE " + CloudSettingsRecord::databaseTableName() + " ADD COLUMN " +
+        terminationDelayColumn.valueName() + " " + terminationDelayColumn.valueDescription()));
+    assertExec(query);
+    query.clear();
+
+    save();
+    bool test = this->commitTransaction();
+    OS_ASSERT(test);
+    // HERE -- Add this code when add terminationDelay data to VagrantSettings
+    /* didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    // HERE -- Check assumption.
+    // By default, set all VagrantSettings to have terminationDelayEnabled==false.
+    query.prepare(QString::fromStdString("UPDATE " + CloudSettingsRecord::databaseTableName() +
+                  " SET terminationDelayEnabled=:terminationDelayEnabled"));
+    query.bindValue(":terminationDelayEnabled",false);
+    assertExec(query);
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test); */
   }
 
   void ProjectDatabase_Impl::setProjectDatabaseRecord(const ProjectDatabaseRecord& projectDatabaseRecord)

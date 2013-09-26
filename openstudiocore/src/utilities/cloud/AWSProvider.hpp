@@ -40,6 +40,10 @@ namespace detail {
     /// default constructor, loads defaults from settings
     AWSSettings();
 
+    // HERE -- Is it true that the keys and their valid booleans should not be
+    // saved in the OSP database?
+    // HERE -- Should termination delay be unsigned, or boost::optional<unsigned>?
+    // What should its value be if !terminationDelayEnabled?
     /** Constructor provided for deserialization; not for general use. */
     AWSSettings(const UUID& uuid,
                 const UUID& versionUUID,
