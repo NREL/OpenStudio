@@ -1023,8 +1023,8 @@ namespace openstudio{
       OS_ASSERT(test);
       QStringList args;
       addProcessArguments(args);
-      args << toQString("EC2");
-      args << toQString("describe_availability_zones");
+      args << QString("EC2");
+      args << QString("describe_availability_zones");
       
       p->start(toQString(m_ruby), args);
 
@@ -1039,8 +1039,8 @@ namespace openstudio{
       OS_ASSERT(test);
       QStringList args;
       addProcessArguments(args);
-      args << toQString("EC2");
-      args << toQString("describe_availability_zones");
+      args << QString("EC2");
+      args << QString("describe_availability_zones");
       
       p->start(toQString(m_ruby), args);
 
@@ -1055,8 +1055,8 @@ namespace openstudio{
       OS_ASSERT(test);
       QStringList args;
       addProcessArguments(args);
-      args << toQString("EC2");
-      args << toQString("describe_availability_zones");
+      args << QString("EC2");
+      args << QString("describe_availability_zones");
       
       p->start(toQString(m_ruby), args);
 
@@ -1071,8 +1071,8 @@ namespace openstudio{
       OS_ASSERT(test);
       QStringList args;
       addProcessArguments(args);
-      args << toQString("EC2");
-      args << toQString("total_instances");
+      args << QString("EC2");
+      args << QString("total_instances");
       
       p->start(toQString(m_ruby), args);
 
@@ -1087,8 +1087,8 @@ namespace openstudio{
       OS_ASSERT(test);
       QStringList args;
       addProcessArguments(args);
-      args << toQString("EC2");
-      args << toQString("launch_server");
+      args << QString("EC2");
+      args << QString("launch_server");
       
       QVariantMap options;
       options.insert("instance_type", toQString(serverInstanceType()));
