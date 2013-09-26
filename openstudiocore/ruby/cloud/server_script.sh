@@ -12,6 +12,7 @@ fi
 # copy all the setup scripts to the appropriate home directory
 cp /data/launch-instance/setup* /home/ubuntu/
 chmod 775 /home/ubuntu/setup*
+chown ubuntu:ubuntu /home/ubuntu/setup*
 
 # Force the generation of various directories that are in the EBS mnt
 sudo rm -rf /mnt/openstudio

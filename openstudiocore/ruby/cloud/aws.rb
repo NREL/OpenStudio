@@ -78,11 +78,11 @@ if ARGV.length == 6
   @params = JSON.parse(ARGV[5])
 end
 
-@server_image_id = 'ami-ad4e1bc4'
+@server_image_id = 'ami-afeebbc6'
 if @params['instance_type'] == "cc2.8xlarge"
-  @worker_image_id = 'ami-834316ea'
+  @worker_image_id = 'ami-ffeebb96'
 else
-  @worker_image_id = 'ami-c1b7e2a8'
+  @worker_image_id = 'ami-0deebb64'
 end
 
 def create_struct(instance, procs)
@@ -316,7 +316,8 @@ begin
       upload_file(@server.ip, file.path, 'ip_addresses')
       file.unlink
       send_command(@server.ip, 'chmod 664 /home/ubuntu/ip_addresses')
-      send_command(@server.ip, '/home/ubuntu/setup-ssh-keys.expect; /home/ubuntu/setup-ssh-worker-nodes.sh ip_addresses')
+      send_command(@server.ip, '~/setup-ssh-keys.expect')
+      send_command(@server.ip, '~/setup-ssh-worker-nodes.sh ip_addresses')
 
       mongoid = File.read(File.expand_path(File.dirname(__FILE__))+'/mongoid.yml.template')
       mongoid.gsub!(/SERVER_IP/, @server.ip)
