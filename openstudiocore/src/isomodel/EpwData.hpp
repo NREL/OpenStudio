@@ -52,7 +52,7 @@ public:
 	EpwData(void);
 	~EpwData(void);
 
-	void loadData(const char*);
+	void loadData(std::string);
   std::string toISOData();
 
 };

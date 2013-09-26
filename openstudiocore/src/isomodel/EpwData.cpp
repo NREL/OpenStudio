@@ -131,7 +131,7 @@ std::string EpwData::toISOData(){
 	}
   return sstream.str();
 }
-void EpwData::loadData(const char* fn)
+void EpwData::loadData(std::string fn)
 {
 	string line;
 	ifstream myfile (fn);

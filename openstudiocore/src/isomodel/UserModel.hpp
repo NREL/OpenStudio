@@ -36,8 +36,9 @@ namespace isomodel {
 
   class ISOMODEL_API UserModel {
   private:
-    void resolveFilename(const char* baseFile, const char* relativeFile, char* result);
+    std::string resolveFilename(std::string baseFile, std::string relativeFile);
     void parseStructure(std::string attributeName, const char* attributeValue);
+
     REGISTER_LOGGER("openstudio.isomodel.UserModel");
     boost::shared_ptr<WeatherData> _weather; 
     bool _valid;
@@ -187,17 +188,30 @@ namespace isomodel {
     double _heatGainPerPerson;
 
     std::string _weatherFilePath;
-    const char* dataFile;
+    std::string dataFile;
 
 
     void parseLine(std::string line);
-    void loadBuilding(const char* buildingFile);
+    void loadBuilding(std::string buildingFile);
     int weatherState(std::string header);
   public:
+    /**
+     * Loads the specified weather data from disk.
+     * Exposed to allow for separate loading from Ruby Scripts
+     * Call setWeatherFilePath(path) then loadWeather() to update
+     * the UserModel with a new set of weather data
+     */
     boost::shared_ptr<WeatherData> loadWeather();
-    void load(const char* buildingFile);
+    /**
+     * Loads an ISO model from the specified .ISO file
+     */
+    void load(std::string buildingFile);
     UserModel();
-    virtual ~UserModel();    
+    virtual ~UserModel();  
+    /**
+     * Generates a SimModel from the specified parameters of the 
+     * UserModel
+     */  
     SimModel toSimModel() const;
 
     /**
@@ -210,7 +224,7 @@ namespace isomodel {
      * }
      */
     bool valid(){return _valid;}
-    const char * weatherFilePath(){return _weatherFilePath.c_str();}
+    std::string weatherFilePath(){return _weatherFilePath;}
     double terrainClass(){return _terrainClass;} const 
     double floorArea(){return _floorArea;} const 
     double buildingHeight(){return _buildingHeight;} const 

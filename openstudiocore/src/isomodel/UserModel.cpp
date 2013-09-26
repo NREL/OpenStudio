@@ -557,7 +557,7 @@ namespace isomodel {
       cout << "Unknown Attribute: "<< attributeName << " = " << attributeValue <<endl;
     }    
   }
-  void UserModel::loadBuilding(const char* buildingFile){
+  void UserModel::loadBuilding(std::string buildingFile){
     string line;
     ifstream inputFile (buildingFile);
     if (inputFile.is_open()) {
@@ -589,42 +589,52 @@ namespace isomodel {
       else 
         return -1;
     }
-  void UserModel::resolveFilename(const char* baseFile, const char* relativeFile, char* result){
+  std::string UserModel::resolveFilename(std::string baseFile, std::string relativeFile){
     unsigned int lastSeparator = 0;
     unsigned int i = 0;
     const char separatorChar = '/';
     const char winSeparatorChar = '\\';
-    for(;i<strlen(baseFile);i++)
+    std::string result;
+    for(;i<baseFile.length();i++)
     {
-      result[i] = (baseFile[i] == winSeparatorChar) ? separatorChar : baseFile[i];
+      result += (baseFile[i] == winSeparatorChar) ? separatorChar : baseFile[i];
       if(result[i] == separatorChar)
       {
         lastSeparator = i;
       }
     }
-    i = lastSeparator;
-    
-    if(strlen(relativeFile) > 0){
-      //if first char is not a separator
-      if(relativeFile[0] != separatorChar && relativeFile[0] != winSeparatorChar)
-        i++;  
+    result = result.substr(0, lastSeparator+1);
+    unsigned int j=0;
+    if(relativeFile.length() > 0){
+      //if first char is a separator, skip it
+      if(relativeFile[0] == separatorChar || relativeFile[0] == winSeparatorChar)
+        j++;  
     }
-    for(unsigned int j=0;j<strlen(relativeFile);j++,i++)
+    for(;j<relativeFile.length();j++,i++)
     {
-      result[i] = (relativeFile[i] == winSeparatorChar) ? separatorChar : relativeFile[j];
+      result += (relativeFile[j] == winSeparatorChar) ? separatorChar : relativeFile[j];
     }
-    result[i] = '\0';
+    return result;
   }
   boost::shared_ptr<WeatherData> UserModel::loadWeather(){
     boost::shared_ptr<WeatherData> wdata(new WeatherData);
     std::vector<std::string> linesplit;
-    char* weatherFilename = new char[_weatherFilePath.length() + strlen(this->dataFile)];
-    resolveFilename(this->dataFile,_weatherFilePath.c_str(),weatherFilename);
-    if ( !boost::filesystem::exists( weatherFilename ) )
+    std::string weatherFilename;
+    //see if weather file path is absolute path
+    //if so, use it, else assemble relative path
+    if(boost::filesystem::exists( _weatherFilePath ))
     {
-      std::cout << "Weather File Not Found: " << _weatherFilePath << std::endl;
-      _valid = false;
-      return wdata;//using shared_ptr doesn't compile with any attempt at returning null
+      weatherFilename = _weatherFilePath;      
+    }
+    else
+    {
+      weatherFilename = resolveFilename(this->dataFile,_weatherFilePath);
+      if ( !boost::filesystem::exists( weatherFilename ) )
+      {
+        std::cout << "Weather File Not Found: " << _weatherFilePath << std::endl;
+        _valid = false;
+        return wdata;//using shared_ptr doesn't compile with any attempt at returning null
+      }
     }
     string line;
     EpwData edata;
@@ -691,7 +701,7 @@ namespace isomodel {
     
     return wdata;
   }
-  void UserModel::load(const char* buildingFile){
+  void UserModel::load(std::string buildingFile){
     this->dataFile = buildingFile;
     _valid = true;
     if ( !boost::filesystem::exists( buildingFile ) )

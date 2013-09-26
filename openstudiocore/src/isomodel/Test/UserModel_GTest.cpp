@@ -295,12 +295,11 @@ TEST_F(ISOModelFixture, UserModel)
   EXPECT_EQ(0.0184589116025784, userModel.coolingPumpControl());
   EXPECT_EQ(0.976673863929532, userModel.heatGainPerPerson());
 
-  std::string wpath;
-  wpath = "test";
-  userModel.load("test");
+  std::string wpath = "test";
+  userModel.load(wpath);
   EXPECT_FALSE(userModel.valid());
   userModel.setWeatherFilePath(wpath);
-  EXPECT_EQ(0, std::strcmp("test",userModel.weatherFilePath()));
+  EXPECT_EQ(0, userModel.weatherFilePath().compare(wpath));
   userModel.loadWeather();
   EXPECT_FALSE(userModel.valid());
 
@@ -440,7 +439,7 @@ TEST_F(ISOModelFixture, UserModel)
   EXPECT_EQ(1.0, userModel.heatingPumpControl());
   EXPECT_EQ(1.0, userModel.coolingPumpControl());
   EXPECT_EQ(120.0, userModel.heatGainPerPerson());
-  EXPECT_EQ(0, std::strcmp("weather.epw",userModel.weatherFilePath()));
+  EXPECT_EQ(0, userModel.weatherFilePath().compare("weather.epw"));
   WeatherData wd = *userModel.loadWeather();
 
   Matrix msolar = wd.msolar();
