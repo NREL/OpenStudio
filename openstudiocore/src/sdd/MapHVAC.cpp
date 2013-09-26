@@ -455,6 +455,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
       newOASystem.addToNode(supplyInletNode);
 
+      // Name
+      QDomElement nameElement = airSystemOACtrlElement.firstChildElement("Name");
+      if( ! nameElement.text().isEmpty() )
+      {
+        oaController.setName(nameElement.text().toStdString());
+        newOASystem.setName(nameElement.text().toStdString() + " OA System");
+      }
+
       // MaxOARat
       QDomElement maxOARatElement = airSystemOACtrlElement.firstChildElement("MaxOARat");
       bool ok;
@@ -2063,7 +2071,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
       {
         model::ControllerOutdoorAir oaController(model);
 
+        oaController.setName(airLoopHVAC->name().get() + " OA Controller");
+
         model::AirLoopHVACOutdoorAirSystem newOASystem(model,oaController);
+
+        newOASystem.setName(airLoopHVAC->name().get() + " OA System");
 
         model::Node supplyInletNode = airLoopHVAC->supplyInletNode(); 
 
