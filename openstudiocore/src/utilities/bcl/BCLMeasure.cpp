@@ -169,11 +169,12 @@ namespace openstudio{
 
     m_bclXML = *bclXML;
 
+    // ACS: This causes the version_id to change, disabling for now
     // remove deprecated attributes
-    m_bclXML.removeAttribute("Measure Function");
-    m_bclXML.removeAttribute("MeasureFunction");
-    m_bclXML.removeAttribute("Requires EnergyPlus Results");
-    m_bclXML.removeAttribute("RequiresEnergyPlusResults");
+    // m_bclXML.removeAttribute("Measure Function");
+    // m_bclXML.removeAttribute("MeasureFunction");
+    // m_bclXML.removeAttribute("Requires EnergyPlus Results");
+    // m_bclXML.removeAttribute("RequiresEnergyPlusResults");
 
     // check for required attributes, and update old attributes
     boost::optional<Attribute> measureType = m_bclXML.getAttribute("Measure Type");
@@ -200,6 +201,10 @@ namespace openstudio{
 
     // these may throw later, test here now
     usesSketchUpAPI->valueAsBoolean();
+
+    if (m_bclXML.versionId() != bclXML->versionId()){
+      LOG_AND_THROW("Measure version_id is no longer valid");
+    }
   }
 
   BCLMeasure::~BCLMeasure()

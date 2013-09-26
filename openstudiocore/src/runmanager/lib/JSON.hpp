@@ -130,7 +130,7 @@ namespace openstudio {
           
           /// \returns JobParams with job state management params (jobExternallyManaged) removed. Similar 
           ///          work is performed when savings Jobs to the RunManager database
-          static JobParams cleanupParams(JobParams t_params);
+          static JobParams cleanupParams(JobParams t_params, const openstudio::path &t_baseDir);
       };
     }
   }

@@ -601,7 +601,7 @@ namespace detail {
       void persistJobStatus(const openstudio::UUID &t_uuid, const JobErrors &t_errors, const boost::optional<openstudio::DateTime> &t_lastRun,
           const Files &t_files)
       {
-        LOG(Debug, "Persisting job status for " << openstudio::toString(t_uuid));
+        LOG(Debug, "(" << openstudio::toString(m_dbPath) << ") Persisting job status for " << openstudio::toString(t_uuid));
         m_db.begin();
         deleteJobStatus(t_uuid);
         deleteJobFiles<RunManagerDB::OutputFileInfo, RunManagerDB::OutputRequiredFile>(t_uuid);
@@ -749,7 +749,7 @@ namespace detail {
                   std::vector<URLSearchPath>(),
                   true,
                   uuid,
-                  JobState(dt, e, f, AdvancedStatus(AdvancedStatusEnum::Idle))
+                  JobState(dt, e, f, AdvancedStatus(AdvancedStatusEnum::Idle), openstudio::path())
                   );
 
               loadedjobs.push_back(std::make_pair(*itr, j));
@@ -1740,6 +1740,11 @@ namespace detail {
 
     lock.unlock();
 
+	  if (job.externallyManaged())
+	  {
+      job.sendSignals();
+    }
+
     std::vector<openstudio::runmanager::Job> children = job.children();
 
     for (std::vector<openstudio::runmanager::Job>::const_iterator itr = children.begin();
@@ -2366,6 +2371,8 @@ namespace detail {
       // job didn't exist
       enqueue(t_job, true, m_dbfile.parent_path());
     }
+
+    openstudio::Application::instance().processEvents();
   }
 
   void RunManager_Impl::updateJob(const Job &t_job, const openstudio::path &t_path)
@@ -2373,14 +2380,13 @@ namespace detail {
     try {
       Job j = getJob(t_job.uuid());
       j.updateJob(t_job);
-      if (j.getBasePath() != t_path)
-      {
-        j.setBasePath(t_path);
-      }
+      j.setBasePathRecursive(t_path);
     } catch (const std::out_of_range &) {
       // job didn't exist
       enqueue(t_job, true, t_path);
     }
+
+    openstudio::Application::instance().processEvents(1);
   }
 
   void RunManager_Impl::updateJobs(const std::vector<Job> &t_jobTrees)

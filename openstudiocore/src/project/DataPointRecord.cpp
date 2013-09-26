@@ -44,13 +44,13 @@
 #include <analysis/OptimizationDataPoint_Impl.hpp>
 
 #include <utilities/data/Attribute.hpp>
-
 #include <utilities/data/Tag.hpp>
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/Compare.hpp>
+#include <utilities/core/Finder.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
 #include <boost/bind.hpp>
@@ -460,7 +460,9 @@ namespace detail {
     }
     FileReferenceRecordVector frrs = xmlOutputDataRecords();
     Q_FOREACH(const FileReferenceRecord& frr,frrs) {
-      xmlOutputData.push_back(frr.fileReference());
+      if (frr.name() != "fake.xml") {
+        xmlOutputData.push_back(frr.fileReference());
+      }
     }
     AttributeRecordVector ars = attributeRecords();
     Q_FOREACH(const AttributeRecord& ar,ars) {
@@ -1220,11 +1222,12 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
     getImpl<detail::DataPointRecord_Impl>()->clearSqlOutputDataRecordId();
   }
   FileReferenceVector xmlOutputData = dataPoint.xmlOutputData();
-  saveChildFileReferences(xmlOutputData,
-                          xmlOutputDataRecords(),
-                          copyOfThis,
-                          database,
-                          isNew);
+  saveChildXmlFileReferences(xmlOutputData,
+                             xmlOutputDataRecords(),
+                             dataPoint.outputAttributes(),
+                             copyOfThis,
+                             database,
+                             isNew);
 
   // Remove old response function values
   if (!isNew) {
@@ -1295,13 +1298,39 @@ boost::optional<FileReferenceRecord> DataPointRecord::saveChildFileReference(
   return result;
 }
 
-std::vector<FileReferenceRecord> DataPointRecord::saveChildFileReferences(
-    const std::vector<FileReference>& childFileReferences,
+std::vector<FileReferenceRecord> DataPointRecord::saveChildXmlFileReferences(
+    std::vector<FileReference> childFileReferences,
     std::vector<FileReferenceRecord> oldFileReferenceRecords,
+    std::vector<Attribute> outputAttributes,
     DataPointRecord& copyOfThis,
     ProjectDatabase& database,
     bool isNew)
 {
+  if (childFileReferences.empty() && !outputAttributes.empty()) {
+    // CloudSlim DataPoint. Make or re-use fake FileReference for attribute storage.
+    NameFinder<FileReferenceRecord> finder("fake.xml",true);
+    FileReferenceRecordVector::iterator it = std::find_if(
+        oldFileReferenceRecords.begin(),
+        oldFileReferenceRecords.end(),
+        finder);
+    if (it != oldFileReferenceRecords.end()) {
+      childFileReferences.push_back(FileReference(it->handle(),
+                                                  createUUID(),
+                                                  it->name(),
+                                                  it->displayName(),
+                                                  it->description(),
+                                                  it->path(),
+                                                  it->fileType(),
+                                                  it->timestampCreate(),
+                                                  it->timestampLast(),
+                                                  it->checksumCreate(),
+                                                  it->checksumLast()));
+    }
+    else {
+      childFileReferences.push_back(FileReference(toPath("fake.xml")));
+    }
+  }
+
   FileReferenceRecordVector result;
   Q_FOREACH(const FileReference& childFileReference, childFileReferences) {
     bool save(true);
@@ -1330,14 +1359,21 @@ std::vector<FileReferenceRecord> DataPointRecord::saveChildFileReferences(
     if (save || isNew) {
       result.push_back(FileReferenceRecord(childFileReference,copyOfThis));
       // save attributes
-      OptionalAttribute wrapperAttribute = Attribute::loadFromXml(childFileReference.path());
-      if (wrapperAttribute &&
-          (wrapperAttribute->valueType() == AttributeValueType::AttributeVector))
-      {
-        Q_FOREACH(const Attribute& attribute,wrapperAttribute->valueAsAttributeVector()) {
-          AttributeRecord attributeRecord(attribute,result.back());
-          Q_UNUSED(attributeRecord);
+      AttributeVector attsToSave;
+      if (childFileReference.name() == "fake.xml") {
+        attsToSave = outputAttributes;
+      }
+      else {
+        OptionalAttribute wrapperAttribute = Attribute::loadFromXml(childFileReference.path());
+        if (wrapperAttribute &&
+            (wrapperAttribute->valueType() == AttributeValueType::AttributeVector))
+        {
+          attsToSave = wrapperAttribute->valueAsAttributeVector();
         }
+      }
+      Q_FOREACH(const Attribute& attribute,attsToSave) {
+        AttributeRecord attributeRecord(attribute,result.back());
+        Q_UNUSED(attributeRecord);
       }
     }
   }

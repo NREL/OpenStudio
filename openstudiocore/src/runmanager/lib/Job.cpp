@@ -48,6 +48,15 @@ namespace runmanager {
     m_impl->setIndex(index);
   }
 
+  JobParams Job::allParams() const
+  {
+    return m_impl->allParams();
+  }
+
+  Files Job::relativeOutputFiles() const
+  {
+    return m_impl->relativeOutputFiles();
+  }
 
   UUID Job::uuid() const 
   {
@@ -422,6 +431,11 @@ namespace runmanager {
     m_impl->setBasePath(t_basePath);
   }
 
+  void Job::setBasePathRecursive(const openstudio::path &t_basePath)
+  {
+    m_impl->setBasePathRecursive(t_basePath);
+  }
+
   bool Job::operator==(const Job &rhs) const
   {
     return m_impl->uuid() == rhs.m_impl->uuid();
@@ -484,6 +498,12 @@ namespace runmanager {
   {
     return m_impl->externallyManaged();
   }
+
+  void Job::sendSignals()
+  {
+    return m_impl->sendSignals();
+  }
+
 }
 }
 

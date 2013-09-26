@@ -162,7 +162,7 @@ class DataPointJobHeaderView : public OSHeader
 
   void setLastRunTime(const boost::optional<openstudio::DateTime>& lastRunTime);
 
-  void setStatus(const openstudio::runmanager::AdvancedStatus& status);
+  void setStatus(const openstudio::runmanager::AdvancedStatus& status, bool isCanceled);
 
   void setNA(bool na);
 

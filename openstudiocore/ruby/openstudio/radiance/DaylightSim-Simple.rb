@@ -1007,8 +1007,12 @@ if (!epwFile.empty?)
 
   epw2weapath = nil
 
-  if (!OpenStudio::applicationIsRunningFromBuildDirectory() && /darwin/.match(RUBY_PLATFORM))
-    epw2weapath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path().parent_path() / OpenStudio::Path.new("bin") / OpenStudio::Path.new("epw2wea")
+  if (/darwin/.match(RUBY_PLATFORM))
+    if (OpenStudio::applicationIsRunningFromBuildDirectory())
+      epw2weapath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path().parent_path() / OpenStudio::Path.new("epw2wea")
+    else
+      epw2weapath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path().parent_path() / OpenStudio::Path.new("bin") / OpenStudio::Path.new("epw2wea")
+    end
   else
     epw2weapath = OpenStudio::getApplicationRunDirectory() / OpenStudio::Path.new("epw2wea")
   end

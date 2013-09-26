@@ -67,6 +67,10 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
       QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar, true);
       QCoreApplication::setAttribute(Qt::AA_MacPluginApplication, true);
 
+      static char *argv[] = {NULL};
+      static int argc = sizeof(argv) / sizeof(char*) - 1;
+      m_qApplication = new QApplication(argc, argv, gui);
+ 
 #if defined(Q_OS_MAC)
       openstudio::path p = getApplicationRunDirectory().parent_path().parent_path().parent_path() / toPath("Ruby/openstudio");
       QCoreApplication::addLibraryPath(QString::fromStdString(toString(p)));
@@ -82,10 +86,6 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
 
       // And for any other random cases
       QCoreApplication::addLibraryPath(toQString(getApplicationRunDirectory().parent_path() / toPath("share/openstudio/qtplugins")));
-       
-      static char *argv[] = {NULL};
-      static int argc = sizeof(argv) / sizeof(char*) - 1;
-      m_qApplication = new QApplication(argc, argv, gui);
       dynamic_cast<QApplication*>(m_qApplication)->setQuitOnLastWindowClosed(false);
       defaultInstance = true;
 

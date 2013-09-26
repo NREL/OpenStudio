@@ -22,11 +22,26 @@
 
 #include <utilities/cloud/CloudProvider_Impl.hpp>
 #include <utilities/cloud/AWSProvider.hpp>
+#include <Utilities/core/Path.hpp>
 
 #include <QProcess>
 
+#include <boost/function.hpp>
+
 namespace openstudio{
 namespace detail{
+  struct UTILITIES_API ProcessResults {
+
+    ProcessResults(int t_exitCode, QProcess::ExitStatus t_exitStatus, const QString &t_output, const QString &t_error)
+      : exitCode(t_exitCode), exitStatus(t_exitStatus), output(t_output), error(t_error)
+    {
+    }
+
+    int exitCode;
+    QProcess::ExitStatus exitStatus;
+    QString output;
+    QString error; 
+  };
 
   /// AWSSettings_Impl is a CloudSettings_Impl.
   class UTILITIES_API AWSSettings_Impl : public CloudSettings_Impl {
@@ -41,7 +56,10 @@ namespace detail{
     /** Constructor provided for deserialization; not for general use. */
     AWSSettings_Impl(const UUID& uuid,
                      const UUID& versionUUID,
-                     bool userAgreementSigned);
+                     bool userAgreementSigned,
+                     unsigned numWorkers,
+                     bool terminationDelayEnabled,
+                     unsigned terminationDelay);
 
     //@}
     /** @name Destructors */
@@ -88,28 +106,36 @@ namespace detail{
     // performs a cursory regex and returns true if it's valid
     bool validSecretKey(const std::string& secretKey) const;
 
+    // returns the saved default number of workers
+    unsigned numWorkers() const;
+
+    // set the number of worker nodes to start (and returns the new number)
+    unsigned setNumWorkers(const unsigned numWorkers);
+
     // returns true if there should be a delay before terminating after simulations are complete
-    bool terminationDelayEnabled();
+    bool terminationDelayEnabled() const;
 
     // sets whether a termination delay should occur
     void setTerminationDelayEnabled(bool enabled);
 
     // returns the termination delay in minutes
-    unsigned terminationDelay();
+    unsigned terminationDelay() const;
 
     // sets the termination delay in minutes
     void setTerminationDelay(const unsigned delay);
 
     //@}
+
    private:
     // configure logging
     REGISTER_LOGGER("utilities.cloud.AWSSettings");
 
     bool m_userAgreementSigned;
-    mutable std::string m_accessKey;
-    mutable std::string m_secretKey;
-    mutable bool m_validAccessKey;
-    mutable bool m_validSecretKey;
+    std::string m_accessKey;
+    std::string m_secretKey;
+    bool m_validAccessKey;
+    bool m_validSecretKey;
+    unsigned m_numWorkers;
     bool m_terminationDelayEnabled;
     unsigned m_terminationDelay;
   };
@@ -153,6 +179,18 @@ namespace detail{
     // sets the url of the server node
     void setServerUrl(const Url& serverUrl);
 
+    // returns the server instance ID
+    std::string serverId() const;
+
+    // sets the server instance ID
+    void setServerId(const std::string& serverId);
+
+    // returns the number of server processor cores
+    unsigned numServerProcessors() const;
+
+    // sets the number of server processor cores
+    void setNumServerProcessors(const unsigned numServerProcessors);
+
     // returns the urls of all worker nodes 
     std::vector<Url> workerUrls() const;
 
@@ -189,6 +227,12 @@ namespace detail{
     // sets the worker instance type
     void setWorkerInstanceType(const std::string& instanceType);
 
+    // returns the total uptime in minutes of this session
+    unsigned totalSessionUptime() const;
+
+    // returns the total number of instances running on EC2 associated with this session
+    unsigned totalSessionInstances() const;
+
     //@}
 
   private:
@@ -197,7 +241,15 @@ namespace detail{
 
     Url m_serverUrl;
 
+    std::string m_serverId;
+
+    unsigned m_numServerProcessors;
+
     std::vector<Url> m_workerUrls;
+
+    std::vector<std::string> m_workerIds;
+
+    std::string m_privateKey;
 
     std::string m_timestamp;
 
@@ -344,11 +396,14 @@ namespace detail{
     // run an action against the AWS-SDK ruby gem
     QVariantMap awsRequest(std::string request, std::string service = "EC2") const;
 
-    // set the number of worker nodes to start
-    void setNumWorkers(const unsigned numWorkers);
+    // set the number of worker nodes to start (and returns the new number)
+    unsigned setNumWorkers(const unsigned numWorkers);
 
     // return a list of available AWS regions
     std::vector<std::string> availableRegions() const;
+
+    // return the recommended default region
+    std::string defaultRegion() const;
 
     // returns the AWS region
     std::string region() const;
@@ -381,55 +436,134 @@ namespace detail{
     void setWorkerInstanceType(const std::string& instanceType);
 
     // returns true if there should be a delay before terminating after simulations are complete
-    bool terminationDelayEnabled();
+    bool terminationDelayEnabled() const;
 
     // sets whether a termination delay should occur
     void setTerminationDelayEnabled(bool enabled);
 
     // returns the termination delay in minutes
-    unsigned terminationDelay();
+    unsigned terminationDelay() const;
 
     // sets the termination delay in minutes
     void setTerminationDelay(const unsigned delay);
+
+    // returns the number of workers for this session
+    unsigned numSessionWorkers() const;
+
+    // returns the EC2 estimated charges from CloudWatch in USD
+    double estimatedCharges() const;
+
+    // returns the total uptime in minutes of this session
+    unsigned totalSessionUptime() const;
+
+    // returns the total number of instances running on EC2 associated with this session
+    unsigned totalSessionInstances() const;
+
+    // returns the total number of instances running on EC2
+    unsigned totalInstances() const;
 
     //@}
 
   private slots:
 
+    void onCheckInternetComplete(int, QProcess::ExitStatus);
+
+    void onCheckServiceComplete(int, QProcess::ExitStatus);
+
+    void onCheckValidateComplete(int, QProcess::ExitStatus);
+
+    void onCheckResourcesComplete(int, QProcess::ExitStatus);
+
     void onServerStarted(int, QProcess::ExitStatus);
 
-    void onWorkersStarted(int, QProcess::ExitStatus);
+    void onWorkerStarted(int, QProcess::ExitStatus);
+
+    void onCheckServerRunningComplete(int, QProcess::ExitStatus);
+
+    void onCheckWorkerRunningComplete(int, QProcess::ExitStatus);
 
     void onServerStopped(int, QProcess::ExitStatus);
 
-    void onWorkersStopped(int, QProcess::ExitStatus);
+    void onWorkerStopped(int, QProcess::ExitStatus);
+
+    void onCheckTerminatedComplete(int, QProcess::ExitStatus);
 
   private:
-
-    bool requestInternetAvailableRequestFinished() const;
+    
+    bool waitForFinished(int msec, const boost::function<bool ()>& f);
+    bool requestInternetAvailableFinished() const;
     bool requestServiceAvailableFinished() const;
     bool requestValidateCredentialsFinished() const;
+    bool requestResourcesAvailableToStartFinished() const;
+    bool requestServerStartedFinished() const;
+    bool requestWorkerStartedFinished() const;
+    bool requestServerRunningFinished() const;
+    bool requestWorkersRunningFinished() const;
+    bool requestTerminateFinished() const;
+    bool requestTerminateCompletedFinished() const;
+
+    ProcessResults handleProcessCompleted(QProcess *& t_qp);
+
+    QProcess *makeCheckInternetProcess() const;
+    QProcess *makeCheckServiceProcess() const;
+    QProcess *makeCheckValidateProcess() const;
+    QProcess *makeCheckResourcesProcess() const;
+    QProcess *makeStartServerProcess() const;
+    QProcess *makeStartWorkerProcess() const;
+    QProcess *makeCheckServerRunningProcess() const;
+    QProcess *makeCheckWorkerRunningProcess() const;
+    QProcess *makeStopServerProcess() const;
+    QProcess *makeStopWorkerProcess() const;
+    QProcess *makeCheckTerminateProcess() const;
+
+    bool parseServiceAvailableResults(const ProcessResults &);
+    bool parseValidateCredentialsResults(const ProcessResults &);
+    bool parseResourcesAvailableToStartResults(const ProcessResults &);
+    bool parseServerStartedResults(const ProcessResults &);
+    bool parseWorkerStartedResults(const ProcessResults &);
+    bool parseCheckServerRunningResults(const ProcessResults &);
+    bool parseCheckWorkerRunningResults(const ProcessResults &);
+    bool parseServerStoppedResults(const ProcessResults &);
+    bool parseWorkerStoppedResults(const ProcessResults &);
+    bool parseCheckTerminatedResults(const ProcessResults &);
+
+    unsigned lastTotalInstances() const;
+    double lastEstimatedCharges() const;
 
     AWSSettings m_awsSettings;
     AWSSession m_awsSession;
 
-    unsigned m_numWorkers;
+    path m_ruby;
+    path m_script;
     std::vector<std::string> m_regions;
     std::vector<std::string> m_serverInstanceTypes;
     std::vector<std::string> m_workerInstanceTypes;
-
+    
+    QProcess* m_checkInternetProcess;
+    QProcess* m_checkServiceProcess;
+    QProcess* m_checkValidateProcess;
+    QProcess* m_checkResourcesProcess;
     QProcess* m_startServerProcess;
-    QProcess* m_startWorkersProcess;
+    QProcess* m_startWorkerProcess;
+    QProcess* m_checkServerRunningProcess;
+    QProcess* m_checkWorkerRunningProcess;
     QProcess* m_stopServerProcess;
-    QProcess* m_stopWorkersProcess;
+    QProcess* m_stopWorkerProcess;
+    QProcess* m_checkTerminatedProcess;
     bool m_lastInternetAvailable;
     bool m_lastServiceAvailable;
     bool m_lastValidateCredentials;
+    bool m_lastResourcesAvailableToStart;
     bool m_serverStarted;
-    bool m_workersStarted;
+    bool m_workerStarted;
+    bool m_lastServerRunning;
+    bool m_lastWorkerRunning;
     bool m_serverStopped;
-    bool m_workersStopped;
+    bool m_workerStopped;
     bool m_terminateStarted;
+    bool m_lastTerminateCompleted;
+    unsigned m_lastTotalInstances;
+    double m_lastEstimatedCharges;
 
     mutable std::vector<std::string> m_errors;
     mutable std::vector<std::string> m_warnings;
@@ -437,6 +571,8 @@ namespace detail{
     void clearErrorsAndWarnings() const;
     void logError(const std::string& error) const;
     void logWarning(const std::string& warning) const;
+
+    void addProcessArguments(QStringList& args) const;
 
     // configure logging
     REGISTER_LOGGER("utilities.cloud.AWSProvider");
