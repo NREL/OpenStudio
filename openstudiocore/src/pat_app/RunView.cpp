@@ -386,9 +386,14 @@ void DataPointJobHeaderView::setLastRunTime(const boost::optional<openstudio::Da
   }
 }
 
-void DataPointJobHeaderView::setStatus(const openstudio::runmanager::AdvancedStatus& status)
+void DataPointJobHeaderView::setStatus(const openstudio::runmanager::AdvancedStatus& status, bool isCanceled)
 {
-  m_status->setText(toQString(status.toString()));
+  if (!isCanceled)
+  {
+    m_status->setText(toQString(status.toString()));
+  } else {
+    m_status->setText("Canceled");
+  }
 }
 
 void DataPointJobHeaderView::setNA(bool na)
@@ -522,7 +527,7 @@ void DataPointJobItemView::update()
   OS_ASSERT(m_workflowStepJob.job);
 
   dataPointJobHeaderView->setLastRunTime(m_workflowStepJob.job->lastRun());
-  dataPointJobHeaderView->setStatus(m_workflowStepJob.job->status());
+  dataPointJobHeaderView->setStatus(m_workflowStepJob.job->status(), m_workflowStepJob.job->canceled());
 
   openstudio::runmanager::JobErrors jobErrors = m_workflowStepJob.job->errors();
 
