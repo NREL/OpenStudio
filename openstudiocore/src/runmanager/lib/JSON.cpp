@@ -46,6 +46,12 @@ namespace detail {
     map["errors"] = toVariant(t_jobTree.errors());
     map["status"] = toVariant(t_jobTree.status());
 
+    if (t_jobTree.allParams().has("flatoutdir"))
+    {
+      openstudio::path outdir = openstudio::toPath(t_jobTree.outdir().filename());
+      map["outdir"] = toQString(outdir);
+    }
+
     if (!t_jobTree.children().empty()) {
       map["children"] = toVariant(t_jobTree.children());
     }
@@ -120,7 +126,8 @@ namespace detail {
           lastRun,
           toJobErrors(map["errors"], t_version),
           map.contains("output_files") ? Files(toVectorOfFileInfo(map["output_files"],t_version)) : Files(),
-          map.contains("status") ? toAdvancedStatus(map["status"], t_version) : AdvancedStatus()
+          map.contains("status") ? toAdvancedStatus(map["status"], t_version) : AdvancedStatus(),
+          map.contains("outdir") ? openstudio::toPath(map["outdir"].toString()) : openstudio::path()
           )
         );
 
