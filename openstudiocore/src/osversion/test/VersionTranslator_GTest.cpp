@@ -211,14 +211,14 @@ TEST_F(OSVersionFixture,VersionTranslator_FutureVersion_ExampleModel) {
   m2 = translator.loadModel(ss);
   EXPECT_FALSE(m2);
 
-  aStepToFar = VersionString(major+1,1,0);
+  aStepTooFar = VersionString(major+1,1,0);
   EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, aStepTooFar.str()));
   ss.str("");
   ss << model;
   m2 = translator.loadModel(ss);
   EXPECT_FALSE(m2);
 
-  aStepToFar = VersionString(major+1,4);
+  aStepTooFar = VersionString(major+1,4);
   EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, aStepTooFar.str()));
   ss.str("");
   ss << model;

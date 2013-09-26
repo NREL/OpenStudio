@@ -22,7 +22,7 @@
 
 #include <utilities/cloud/CloudProvider_Impl.hpp>
 #include <utilities/cloud/AWSProvider.hpp>
-#include <Utilities/core/Path.hpp>
+#include <utilities/core/Path.hpp>
 
 #include <QProcess>
 
