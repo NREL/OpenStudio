@@ -48,6 +48,11 @@ namespace runmanager {
     m_impl->setIndex(index);
   }
 
+  JobParams Job::allParams() const
+  {
+    return m_impl->allParams();
+  }
+
   Files Job::relativeOutputFiles() const
   {
     return m_impl->relativeOutputFiles();
