@@ -606,22 +606,10 @@ namespace openstudio{
     OptionalBCLComponent remoteComponent = remoteBCL.getComponent(uid,versionId);
     bool test(false);
     if (remoteComponent) {
-      // get whatever version is in the LocalBCL now
-      if (!localComponent) {
-        localComponent = LocalBCL::instance().getComponent(uid);
-      }
-      if (localComponent && (localComponent.get() != remoteComponent.get())) {
-        test = LocalBCL::instance().removeComponent(*localComponent);
-        OS_ASSERT(test);
-        localComponent.reset();
-      }
-      if (!localComponent) {
-        test = LocalBCL::instance().addComponent(*remoteComponent);
-        OS_ASSERT(test);
-        localComponent = LocalBCL::instance().getComponent(uid,versionId);
-        OS_ASSERT(localComponent);
-        OS_ASSERT(localComponent.get() == remoteComponent.get());
-      }
+      // RemoteBCL class handles updating the LocalBCL
+      localComponent = LocalBCL::instance().getComponent(uid,versionId);
+      OS_ASSERT(localComponent);
+      OS_ASSERT(localComponent.get() == remoteComponent.get());
     }
 
     return localComponent;
@@ -640,20 +628,11 @@ namespace openstudio{
     // versionId.empty() or !localMeasure
     RemoteBCL remoteBCL;
     OptionalBCLMeasure remoteMeasure = remoteBCL.getMeasure(uid,versionId);
-    bool test(false);
     if (remoteMeasure) {
-      if (localMeasure && (localMeasure.get() != remoteMeasure.get())) {
-        test = LocalBCL::instance().removeMeasure(*localMeasure);
-        OS_ASSERT(test);
-        localMeasure.reset();
-      }
-      if (!localMeasure) {
-        test = LocalBCL::instance().addMeasure(*remoteMeasure);
-        OS_ASSERT(test);
-        localMeasure = LocalBCL::instance().getMeasure(uid,versionId);
-        OS_ASSERT(localMeasure);
-        OS_ASSERT(localMeasure.get() == remoteMeasure.get());
-      }
+      // RemoteBCL class handles updating the LocalBCL
+      localMeasure = LocalBCL::instance().getMeasure(uid,versionId);
+      OS_ASSERT(localMeasure);
+      OS_ASSERT(localMeasure.get() == remoteMeasure.get());
     }
 
     return localMeasure;
