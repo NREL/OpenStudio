@@ -316,7 +316,7 @@ begin
       upload_file(@server.ip, file.path, 'ip_addresses')
       file.unlink
       send_command(@server.ip, 'chmod 664 /home/ubuntu/ip_addresses')
-      send_command(@server.ip, '~/setup-ssh-keys.expect; ~/setup-ssh-worker-nodes.sh ip_addresses')
+      send_command(@server.ip, '/home/ubuntu/setup-ssh-keys.expect; /home/ubuntu/setup-ssh-worker-nodes.sh ip_addresses')
 
       mongoid = File.read(File.expand_path(File.dirname(__FILE__))+'/mongoid.yml.template')
       mongoid.gsub!(/SERVER_IP/, @server.ip)
