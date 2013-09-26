@@ -604,7 +604,6 @@ namespace openstudio{
     // versionId.empty() or !localComponent
     RemoteBCL remoteBCL;
     OptionalBCLComponent remoteComponent = remoteBCL.getComponent(uid,versionId);
-    bool test(false);
     if (remoteComponent) {
       // RemoteBCL class handles updating the LocalBCL
       localComponent = LocalBCL::instance().getComponent(uid,versionId);
