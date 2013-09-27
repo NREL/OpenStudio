@@ -1200,8 +1200,8 @@ namespace openstudio{
       OS_ASSERT(test);
       QStringList args;
       addProcessArguments(args);
-      args << toQString("EC2");
-      args << toQString("instance_status");
+      args << QString("EC2");
+      args << QString("instance_status");
       
       QVariantMap options;
       options.insert("instance_id", toQString(m_awsSession.serverId()));
@@ -1222,8 +1222,8 @@ namespace openstudio{
       OS_ASSERT(test);
       QStringList args;
       addProcessArguments(args);
-      args << toQString("EC2");
-      args << toQString("instance_status");
+      args << QString("EC2");
+      args << QString("instance_status");
       
       p->start(toQString(m_ruby), args);
 
