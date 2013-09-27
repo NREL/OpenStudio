@@ -749,7 +749,7 @@ namespace detail {
                   std::vector<URLSearchPath>(),
                   true,
                   uuid,
-                  JobState(dt, e, f, AdvancedStatus(AdvancedStatusEnum::Idle))
+                  JobState(dt, e, f, AdvancedStatus(AdvancedStatusEnum::Idle), openstudio::path())
                   );
 
               loadedjobs.push_back(std::make_pair(*itr, j));
@@ -1740,6 +1740,11 @@ namespace detail {
 
     lock.unlock();
 
+	  if (job.externallyManaged())
+	  {
+      job.sendSignals();
+    }
+
     std::vector<openstudio::runmanager::Job> children = job.children();
 
     for (std::vector<openstudio::runmanager::Job>::const_iterator itr = children.begin();
@@ -2367,7 +2372,7 @@ namespace detail {
       enqueue(t_job, true, m_dbfile.parent_path());
     }
 
-    openstudio::Application::instance().processEvents(1);
+    openstudio::Application::instance().processEvents();
   }
 
   void RunManager_Impl::updateJob(const Job &t_job, const openstudio::path &t_path)

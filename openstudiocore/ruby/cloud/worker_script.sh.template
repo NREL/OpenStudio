@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Change Host File Entries
-ENTRY="localhost localhost master"
+ENTRY="SERVER_IP SERVER_HOSTNAME SERVER_ALIAS"
 FILE=/etc/hosts
 if grep -q "$ENTRY" $FILE; then
   echo "entry already exists"
@@ -17,7 +17,6 @@ chown ubuntu:ubuntu /home/ubuntu/setup*
 # Force the generation of various directories that are in the EBS mnt
 sudo rm -rf /mnt/openstudio
 sudo mkdir -p /mnt/openstudio
-sudo chmod 777 /var/www/rails/openstudio/public
 
 # save some files into the right directory
 cp /data/prototype/pat/SimulateDataPoint.rb /mnt/openstudio/

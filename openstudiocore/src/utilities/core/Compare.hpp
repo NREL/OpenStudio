@@ -55,7 +55,7 @@ struct UTILITIES_API IstringCompare{
 };
 
 /** Small functor object for case insensitive std::string compare in pairs of std::string,
-   *   tests first strings then seconds. Used in maps of type and name to objects. */
+ *   tests first strings then seconds. Used in maps of type and name to objects. */
 struct UTILITIES_API IstringPairCompare {
   bool operator()(const std::pair<std::string, std::string>& x,
                   const std::pair<std::string, std::string>& y) const;
@@ -64,6 +64,12 @@ struct UTILITIES_API IstringPairCompare {
 class UTILITIES_API VersionString {
  public:
   explicit VersionString(const std::string& version);
+
+  VersionString(int major,int minor);
+
+  VersionString(int major,int minor,int patch);
+
+  VersionString(int major,int minor,int patch,int build);
 
   std::string str() const;
 
@@ -88,6 +94,10 @@ class UTILITIES_API VersionString {
   bool operator>=(const VersionString& other) const;
 
   bool fidelityEqual(const VersionString& other) const;
+
+  /** Returns true if it is plausible for nextVersionCandidate to be the
+   *  next version after this one. */
+  bool isNextVersion(const VersionString& nextVersionCandidate) const;
 
  private:
   std::string m_str;

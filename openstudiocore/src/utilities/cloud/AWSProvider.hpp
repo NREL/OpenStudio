@@ -43,7 +43,10 @@ namespace detail {
     /** Constructor provided for deserialization; not for general use. */
     AWSSettings(const UUID& uuid,
                 const UUID& versionUUID,
-                bool userAgreementSigned);
+                bool userAgreementSigned,
+                unsigned numWorkers,
+                bool terminationDelayEnabled,
+                unsigned terminationDelay);
 
     //@}
     /** @name Destructors */
@@ -78,14 +81,20 @@ namespace detail {
     // performs a cursory regex and returns true if it's valid
     bool validSecretKey(const std::string& secretKey) const;
 
+    // returns the saved default number of workers
+    unsigned numWorkers() const;
+
+    // set the number of worker nodes to start (and returns the new number)
+    unsigned setNumWorkers(const unsigned numWorkers);
+
     // returns true if there should be a delay before terminating after simulations are complete
-    bool terminationDelayEnabled();
+    bool terminationDelayEnabled() const;
 
     // sets whether a termination delay should occur
     void setTerminationDelayEnabled(bool enabled);
 
     // returns the termination delay in minutes
-    unsigned terminationDelay();
+    unsigned terminationDelay() const;
 
     // sets the termination delay in minutes
     void setTerminationDelay(const unsigned delay);
@@ -125,6 +134,22 @@ namespace detail {
                const boost::optional<Url>& serverUrl,
                const std::vector<Url>& workerUrls);
 
+    /** Full constructor */
+    AWSSession(const UUID& uuid,
+               const UUID& versionUUID,
+               const std::string& sessionId,
+               const boost::optional<Url>& serverUrl,
+               const std::string& serverId,
+               const unsigned numServerProcessors,
+               const std::vector<Url>& workerUrls,
+               const std::vector<std::string>& workerIds,
+               const unsigned numWorkerProcessors,
+               const std::string& privateKey,
+               const std::string& timestamp,
+               const std::string& region,
+               const std::string& serverInstanceType,
+               const std::string& workerInstanceType);
+
     //@}
     /** @name Destructors */
     //@{
@@ -146,15 +171,45 @@ namespace detail {
     // sets the url of the server node
     void setServerUrl(const Url& serverUrl);
 
+    // returns the server instance ID
+    std::string serverId() const;
+
+    // sets the server instance ID
+    void setServerId(const std::string& serverId);
+
+    // returns the number of server processor cores
+    unsigned numServerProcessors() const;
+
+    // sets the number of server processor cores
+    void setNumServerProcessors(const unsigned numServerProcessors);
+
     // returns the urls of all worker nodes 
     std::vector<Url> workerUrls() const;
 
     // set the urls of all worker nodes
     void setWorkerUrls(const std::vector<Url>& workerUrls);
 
+    // returns the worker instance IDs
+    std::vector<std::string> workerIds() const;
+
+    // sets the worker instance IDs
+    void setWorkerIds(const std::vector<std::string>& workerIds);
+
+    // returns the number of processor cores per worker
+    unsigned numWorkerProcessors() const;
+
+    // sets the number of processor cores per worker
+    void setNumWorkerProcessors(const unsigned numWorkerProcessors);
+
+    // returns the key pair's private key
+    std::string privateKey() const;
+
+    // sets the key pair's private key
+    void setPrivateKey(const std::string& privateKey);
+
     // returns the timestamp associated with the security group and key pair
     std::string timestamp() const;
-
+    
     // sets the timestamp
     void setTimestamp(const std::string& timestamp);
 
@@ -176,17 +231,14 @@ namespace detail {
     // sets the worker instance type
     void setWorkerInstanceType(const std::string& instanceType);
 
-    // returns the EC2 estimated charges from CloudWatch in USD
-    double estimatedCharges() const;
+    // returns the number of workers for this session
+    unsigned numWorkers() const;
 
     // returns the total uptime in minutes of this session
     unsigned totalSessionUptime() const;
 
     // returns the total number of instances running on EC2 associated with this session
     unsigned totalSessionInstances() const;
-
-    // returns the total number of instances running on EC2
-    unsigned totalInstances() const;
 
     //@}
 
@@ -247,11 +299,14 @@ namespace detail {
     // returns the number of worker nodes
     unsigned numWorkers() const;
 
-    // set the number of worker nodes to start
-    void setNumWorkers(const unsigned numWorkers);
+    // set the number of worker nodes to start (and returns the new number)
+    unsigned setNumWorkers(const unsigned numWorkers);
 
     // return a list of available AWS regions
     std::vector<std::string> availableRegions() const;
+
+    // return the recommended default region
+    std::string defaultRegion() const;
 
     // returns the AWS region
     std::string region() const;
@@ -284,16 +339,19 @@ namespace detail {
     void setWorkerInstanceType(const std::string& instanceType);
 
     // returns true if there should be a delay before terminating after simulations are complete
-    bool terminationDelayEnabled();
+    bool terminationDelayEnabled() const;
 
     // sets whether a termination delay should occur
     void setTerminationDelayEnabled(bool enabled);
 
     // returns the termination delay in minutes
-    unsigned terminationDelay();
+    unsigned terminationDelay() const;
 
     // sets the termination delay in minutes
     void setTerminationDelay(const unsigned delay);
+
+    // returns the number of workers for this session
+    unsigned numSessionWorkers() const;
 
     // returns the EC2 estimated charges from CloudWatch in USD
     double estimatedCharges() const;

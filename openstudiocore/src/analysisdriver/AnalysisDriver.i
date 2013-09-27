@@ -31,6 +31,7 @@
   #include <analysisdriver/AnalysisRunOptions.hpp>
   #include <analysisdriver/AnalysisDriverWatcher.hpp>
   #include <analysisdriver/SimpleProject.hpp>
+  #include <analysisdriver/CloudAnalysisDriver.hpp>
 
   #include <project/ProjectDatabase.hpp>
   #include <project/AnalysisRecord.hpp>
@@ -138,5 +139,6 @@ ANALYSISDRIVER_WRAP(AnalysisDriver)
 
 ANALYSISDRIVER_WRAP(AnalysisDriverWatcher)
 ANALYSISDRIVER_WRAP(SimpleProject)
+ANALYSISDRIVER_WRAP(CloudAnalysisDriver)
 
 #endif // ANALYSISDRIVER_ANALYSISDRIVER_I

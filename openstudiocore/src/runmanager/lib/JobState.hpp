@@ -20,11 +20,13 @@ namespace runmanager {
     JobState(const boost::optional<DateTime> &t_lastRun, 
              const JobErrors &t_errors, 
              const Files &t_outputFiles,
-             const AdvancedStatus &t_status)
+             const AdvancedStatus &t_status,
+             const openstudio::path &t_outdir)
       : lastRun(t_lastRun ? toQDateTime(*t_lastRun) : boost::optional<QDateTime>()), 
         errors(t_errors), 
         outputFiles(t_outputFiles), 
-        status(t_status)
+        status(t_status),
+        outdir(t_outdir)
     {
     }
 
@@ -32,6 +34,7 @@ namespace runmanager {
     JobErrors errors;
     Files outputFiles;
     AdvancedStatus status;
+    openstudio::path outdir;
   };
 
 }

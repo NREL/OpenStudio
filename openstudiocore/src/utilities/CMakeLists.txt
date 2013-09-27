@@ -476,6 +476,7 @@ SET( ${target_name}_test_src
 
 SET( ${target_name}_swig_src
   #  Utilities.i
+  ${CMAKE_BINARY_DIR}/src/OpenStudio.hxx
   ${idd_swig_src}
   ${idf_swig_src}
   ${sql_swig_src}

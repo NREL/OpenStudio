@@ -258,6 +258,9 @@ namespace detail {
       /// \returns the time the job completed
       boost::optional<openstudio::DateTime> endTime() const;
 
+      /// return all the specific params this job has appended onto the list of
+      /// params acquired from all dependencies
+      JobParams allParams() const;
 
       
       /// \returns true if this job or any job under it is running
@@ -361,6 +364,11 @@ namespace detail {
 
       /// \returns all output files relative to the rundir
       Files relativeOutputFiles() const;
+
+      // send job state and file output signals as if the job had gone from no state
+      // to the current state
+      void sendSignals();
+
 
     protected:
       Job(const boost::shared_ptr<detail::Job_Impl> &t_impl);
