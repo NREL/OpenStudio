@@ -37,18 +37,6 @@ class QNetworkReply;
 
 namespace openstudio{
 namespace detail{
-  struct UTILITIES_API ProcessResults {
-
-    ProcessResults(int t_exitCode, QProcess::ExitStatus t_exitStatus, const QString &t_output, const QString &t_error)
-      : exitCode(t_exitCode), exitStatus(t_exitStatus), output(t_output), error(t_error)
-    {
-    }
-
-    int exitCode;
-    QProcess::ExitStatus exitStatus;
-    QString output;
-    QString error; 
-  };
 
   /// VagrantSettings_Impl is a CloudSettings_Impl.
   class UTILITIES_API VagrantSettings_Impl : public CloudSettings_Impl {

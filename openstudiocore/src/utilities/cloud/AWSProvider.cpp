@@ -33,6 +33,7 @@
 #include <QFile>
 #include <QProcess>
 #include <QSettings>
+#include <QString>
 #include <QTemporaryFile>
 #include <QTextStream>
 #include <QUrl>
@@ -750,14 +751,34 @@ namespace openstudio{
 
     bool AWSProvider_Impl::requestServerRunning()
     {
-      // todo
-      return false;
+      if (m_checkServerRunningProcess){
+        // already checking
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastServerRunning = false;
+
+      m_checkServerRunningProcess = makeCheckServerRunningProcess();
+
+      return true;
     }
 
     bool AWSProvider_Impl::requestWorkersRunning()
     {
-      // todo
-      return false;
+      if (m_checkWorkerRunningProcess){
+        // already checking
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastWorkerRunning = false;
+
+      m_checkWorkerRunningProcess = makeCheckWorkerRunningProcess();
+
+      return true;
     }
 
     bool AWSProvider_Impl::requestTerminate()
@@ -1125,14 +1146,18 @@ namespace openstudio{
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckServerRunningComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
-
       QStringList args;
-      //addProcessArguments(args);
-      args << "status";
-      args << "default";
-
-      //p->setWorkingDirectory(toQString(m_vagrantSettings.serverPath()));
-      //p->start(processName(), args);
+      addProcessArguments(args);
+      args << toQString("EC2");
+      args << toQString("instance_status");
+      
+      QVariantMap options;
+      options.insert("instance_id", toQString(m_awsSession.serverId()));
+      QJson::Serializer serializer;
+      serializer.setIndentMode(QJson::IndentCompact);
+      args << QString(serializer.serialize(options));
+      
+      p->start(toQString(m_ruby), args);
 
       return p;
     }
@@ -1143,14 +1168,13 @@ namespace openstudio{
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckWorkerRunningComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
-
       QStringList args;
-      //addProcessArguments(args);
-      args << "status";
-      args << "default";
+      addProcessArguments(args);
+      args << toQString("EC2");
+      args << toQString("instance_status");
+      
+      p->start(toQString(m_ruby), args);
 
-      //p->setWorkingDirectory(toQString(m_vagrantSettings.workerPath()));
-      //p->start(processName(), args);
       return p;
     }
 
@@ -1283,16 +1307,41 @@ namespace openstudio{
 
     bool AWSProvider_Impl::parseWorkerStartedResults(const ProcessResults &t_results)
     {
-      m_awsSession.clearWorkerUrls();
-      //m_awsSession.addWorkerUrl(m_awsSettings.workerUrl());
-      return true;
+      // todo
+      /*QJson::Parser parser;
+      bool ok = false;
+      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
+      if (ok) {
+        if (!map.keys().contains("error")) {
+          m_lastTotalInstances = map["instances"].toUInt();
+          if (m_awsSettings.numWorkers() + 1 + m_lastTotalInstances <= 20) return true;
+        } else {
+          logError(map["error"].toMap()["message"].toString().toStdString());
+        } 
+      } else {
+        logError("Error parsing workerStarted JSON: " + toString(parser.errorString()));
+      }*/
+      
+      return false;
     }
 
     bool AWSProvider_Impl::parseCheckServerRunningResults(const ProcessResults &t_results)
     {
-      // if running this is expected
-      //default                   running (virtualbox)
-      return t_results.output.contains("running (virtualbox)");
+      QJson::Parser parser;
+      bool ok = false;
+      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
+      if (ok) {
+        if (!map.keys().contains("error")) {
+          std::string status = map[toQString(m_awsSession.serverId())].toString().toStdString();
+          if (status == "running") return true;
+        } else {
+          logError(map["error"].toMap()["message"].toString().toStdString());
+        } 
+      } else {
+        logError("Error parsing checkServerRunning JSON: " + toString(parser.errorString()));
+      }
+      
+      return false;
     }
 
     bool AWSProvider_Impl::parseCheckWorkerRunningResults(const ProcessResults &t_results)
@@ -1375,48 +1424,17 @@ namespace openstudio{
 
     void AWSProvider_Impl::onWorkerStarted(int, QProcess::ExitStatus)
     {
-      OS_ASSERT(m_startWorkerProcess);
-
-      QString output = m_startWorkerProcess->readAllStandardOutput();
-      QString errors = m_startWorkerProcess->readAllStandardError();
-      
-      m_awsSession.clearWorkerUrls();
-      //m_awsSession.addWorkerUrl();
-
-      m_workerStarted = true;
-
-      //emit CloudProvider_Impl::workerStarted(m_awsSession.workerUrls());
-
-      //if all, emit CloudProvider_Impl::allWorkersStarted();
-
-      m_startWorkerProcess->deleteLater();
-      m_startWorkerProcess = 0;
+      m_workerStarted = parseServerStartedResults(handleProcessCompleted(m_startServerProcess));
     }
 
     void AWSProvider_Impl::onCheckServerRunningComplete(int, QProcess::ExitStatus)
     {
-      bool running = parseCheckServerRunningResults(handleProcessCompleted(m_checkServerRunningProcess));
-      //if (m_awsSettings.haltOnStop()){
-        if (running) {
-          m_lastServerRunning = true;
-        }
-      //}else{
-        // depend on local state variable in this case
-        m_lastServerRunning = !m_serverStopped;
-      //}
+      m_lastServerRunning = parseCheckServerRunningResults(handleProcessCompleted(m_checkServerRunningProcess));
     }
     
     void AWSProvider_Impl::onCheckWorkerRunningComplete(int, QProcess::ExitStatus)
     {
-      bool running = parseCheckWorkerRunningResults(handleProcessCompleted(m_checkWorkerRunningProcess));
-      //if (m_awsSettings.haltOnStop()){
-        if (running){
-          m_lastWorkerRunning = true;
-        }
-      //}else{
-        // depend on local state variable in this case
-        m_lastWorkerRunning = !m_workerStopped;
-      //}
+      m_lastWorkerRunning = parseCheckWorkerRunningResults(handleProcessCompleted(m_checkWorkerRunningProcess));
     }
     
     void AWSProvider_Impl::onServerStopped(int, QProcess::ExitStatus)
