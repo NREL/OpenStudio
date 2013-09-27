@@ -25,6 +25,7 @@
 #include <utilities/core/Path.hpp>
 
 #include <QProcess>
+#include <QTemporaryFile>
 
 #include <boost/function.hpp>
 
@@ -178,10 +179,10 @@ namespace detail{
     //@{
     
     // returns the url of the server node
-    Url serverUrl() const;
+    //Url serverUrl() const;
 
     // sets the url of the server node
-    void setServerUrl(const Url& serverUrl);
+    //void setServerUrl(const Url& serverUrl);
 
     // returns the server instance ID
     std::string serverId() const;
@@ -196,7 +197,7 @@ namespace detail{
     void setNumServerProcessors(const unsigned numServerProcessors);
 
     // returns the urls of all worker nodes 
-    std::vector<Url> workerUrls() const;
+    //std::vector<Url> workerUrls() const;
 
     // set the urls of all worker nodes
     void setWorkerUrls(const std::vector<Url>& workerUrls);
@@ -558,6 +559,7 @@ namespace detail{
     std::vector<std::string> m_regions;
     std::vector<std::string> m_serverInstanceTypes;
     std::vector<std::string> m_workerInstanceTypes;
+    mutable QTemporaryFile m_privateKey;
     
     QProcess* m_checkInternetProcess;
     QProcess* m_checkServiceProcess;
