@@ -318,6 +318,8 @@ void CloudMonitor::setCurrentProjectSession(const boost::optional<CloudSession> 
     {
       project->setCloudSession(session.get());
     }
+
+    project->save();
   }
 }
 
@@ -333,6 +335,8 @@ void CloudMonitor::setCurrentProjectSettings(const boost::optional<CloudSettings
     {
       project->setCloudSettings(settings.get());
     }
+
+    project->save();
   }
 }
 
