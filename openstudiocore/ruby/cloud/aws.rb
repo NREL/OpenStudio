@@ -80,9 +80,9 @@ end
 
 @server_image_id = 'ami-b51b4fdc'
 if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
-  @worker_image_id = 'ami-691b4f00'
+  @worker_image_id = 'ami-8b0c58e2'
 else
-  @worker_image_id = 'ami-731b4f1a'
+  @worker_image_id = 'ami-410d5928'
 end
 
 def create_struct(instance, procs)
@@ -188,12 +188,12 @@ end
 def send_command(host, command)
   retries = 0
   begin
-    #output = ''
+    output = ''
     Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
-      response = ssh.exec(command)
-      #output += response if !response.nil?
+      response = ssh.exec!(command)
+      output += response if !response.nil?
     end
-    #return output
+    return output
   rescue Net::SSH::HostKeyMismatch => e
     e.remember_host!
     # key mismatch, retry
@@ -223,12 +223,12 @@ def download_file(host, remote_path, local_path)
     end
   rescue SystemCallError, Timeout::Error => e
     # port 22 might not be available immediately after the instance finishes launching
-    return if retries == 2
+    return if retries == 5
     retries += 1
     sleep 1
     retry
   rescue
-    return if retries == 2
+    return if retries == 5
     retries += 1
     sleep 1
     retry
@@ -333,7 +333,7 @@ begin
       file.write(mongoid)
       file.close
       upload_file(@server.ip, file.path, '/mnt/openstudio/rails-models/mongoid.yml')
-      upload_file(@server.ip, file.path, '~/mongoid.yml')
+      #upload_file(@server.ip, file.path, '~/mongoid.yml')
       @workers.each { |worker| upload_file(worker.ip, file.path, '/mnt/openstudio/rails-models/mongoid.yml') }
       file.unlink
 
