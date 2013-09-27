@@ -30,18 +30,6 @@
 
 namespace openstudio{
 namespace detail{
-  struct UTILITIES_API ProcessResults {
-
-    ProcessResults(int t_exitCode, QProcess::ExitStatus t_exitStatus, const QString &t_output, const QString &t_error)
-      : exitCode(t_exitCode), exitStatus(t_exitStatus), output(t_output), error(t_error)
-    {
-    }
-
-    int exitCode;
-    QProcess::ExitStatus exitStatus;
-    QString output;
-    QString error; 
-  };
 
   /// AWSSettings_Impl is a CloudSettings_Impl.
   class UTILITIES_API AWSSettings_Impl : public CloudSettings_Impl {
@@ -147,15 +135,31 @@ namespace detail{
     //@{
 
     AWSSession_Impl(const std::string& sessionId,
-                        const boost::optional<Url>& serverUrl,
-                        const std::vector<Url>& workerUrls);
+                    const boost::optional<Url>& serverUrl,
+                    const std::vector<Url>& workerUrls);
 
     /** Constructor provided for deserialization; not for general use. */
     AWSSession_Impl(const UUID& uuid,
-                        const UUID& versionUUID,
-                        const std::string& sessionId,
-                        const boost::optional<Url>& serverUrl,
-                        const std::vector<Url>& workerUrls);
+                    const UUID& versionUUID,
+                    const std::string& sessionId,
+                    const boost::optional<Url>& serverUrl,
+                    const std::vector<Url>& workerUrls);
+
+    /** Full constructor */
+    AWSSession_Impl(const UUID& uuid,
+                    const UUID& versionUUID,
+                    const std::string& sessionId,
+                    const boost::optional<Url>& serverUrl,
+                    const std::string& serverId,
+                    const unsigned numServerProcessors,
+                    const std::vector<Url>& workerUrls,
+                    const std::vector<std::string>& workerIds,
+                    const unsigned numWorkerProcessors,
+                    const std::string& privateKey,
+                    const std::string& timestamp,
+                    const std::string& region,
+                    const std::string& serverInstanceType,
+                    const std::string& workerInstanceType);
 
     //@}
     /** @name Destructors */
@@ -196,6 +200,18 @@ namespace detail{
 
     // set the urls of all worker nodes
     void setWorkerUrls(const std::vector<Url>& workerUrls);
+
+    // returns the worker instance IDs
+    std::vector<std::string> workerIds() const;
+
+    // sets the worker instance IDs
+    void setWorkerIds(const std::vector<std::string>& workerIds);
+
+    // returns the number of processor cores per worker
+    unsigned numWorkerProcessors() const;
+
+    // sets the number of processor cores per worker
+    void setNumWorkerProcessors(const unsigned numWorkerProcessors);
 
     // returns the key pair's private key
     std::string privateKey() const;
@@ -248,6 +264,8 @@ namespace detail{
     std::vector<Url> m_workerUrls;
 
     std::vector<std::string> m_workerIds;
+
+    unsigned m_numWorkerProcessors;
 
     std::string m_privateKey;
 

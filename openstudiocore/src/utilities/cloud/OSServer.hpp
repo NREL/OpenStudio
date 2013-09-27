@@ -105,6 +105,9 @@ namespace openstudio{
     std::vector<UUID> completeDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
     std::vector<UUID> lastCompleteDataPointUUIDs() const;
 
+    std::vector<UUID> downloadReadyDataPointUUIDs(const UUID& analysisUUID, int msec=30000);
+    std::vector<UUID> lastDownloadReadyDataPointUUIDs() const;
+
     std::string dataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID, int msec=30000);
     std::string lastDataPointJSON() const;
 
@@ -154,6 +157,8 @@ namespace openstudio{
     bool requestQueuedDataPointUUIDs(const UUID& analysisUUID);
 
     bool requestCompleteDataPointUUIDs(const UUID& analysisUUID);
+
+    bool requestDownloadReadyDataPointUUIDs(const UUID& analysisUUID);
 
     bool requestDataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID);
 

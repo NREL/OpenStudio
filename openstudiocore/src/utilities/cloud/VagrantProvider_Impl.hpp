@@ -37,18 +37,6 @@ class QNetworkReply;
 
 namespace openstudio{
 namespace detail{
-  struct UTILITIES_API ProcessResults {
-
-    ProcessResults(int t_exitCode, QProcess::ExitStatus t_exitStatus, const QString &t_output, const QString &t_error)
-      : exitCode(t_exitCode), exitStatus(t_exitStatus), output(t_output), error(t_error)
-    {
-    }
-
-    int exitCode;
-    QProcess::ExitStatus exitStatus;
-    QString output;
-    QString error; 
-  };
 
   /// VagrantSettings_Impl is a CloudSettings_Impl.
   class UTILITIES_API VagrantSettings_Impl : public CloudSettings_Impl {
@@ -61,7 +49,8 @@ namespace detail{
 
     VagrantSettings_Impl(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
                          const openstudio::path& workerPath, const openstudio::Url& workerUrl,
-                         bool haltOnStop, const std::string& username, const std::string& password);
+                         bool haltOnStop, const std::string& username, const std::string& password,
+                         bool terminationDelayEnabled, unsigned terminationDelay);
 
     /** Constructor provided for deserialization; not for general use. */
     VagrantSettings_Impl(const UUID& uuid,
@@ -72,7 +61,9 @@ namespace detail{
                          const openstudio::path& workerPath,
                          const openstudio::Url& workerUrl,
                          bool haltOnStop,
-                         const std::string& username);
+                         const std::string& username,
+                         bool terminationDelayEnabled, 
+                         unsigned terminationDelay);
 
     //@}
     /** @name Destructors */
@@ -128,6 +119,14 @@ namespace detail{
 
     void setPassword(const std::string& password);
 
+    bool terminationDelayEnabled();
+
+    void setTerminationDelayEnabled(bool enabled);
+
+    unsigned terminationDelay();
+
+    void setTerminationDelay(const unsigned delay);
+
     //@}
 
   private:
@@ -142,6 +141,8 @@ namespace detail{
     bool m_haltOnStop;
     std::string m_username;
     std::string m_password;
+    bool m_terminationDelayEnabled;
+    unsigned m_terminationDelay;
   };
 
   /// VagrantSession_Impl is a CloudSession_Impl.
