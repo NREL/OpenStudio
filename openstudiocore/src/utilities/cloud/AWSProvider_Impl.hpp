@@ -25,6 +25,7 @@
 #include <utilities/core/Path.hpp>
 
 #include <QProcess>
+#include <QTemporaryFile>
 
 #include <boost/function.hpp>
 
@@ -558,6 +559,7 @@ namespace detail{
     std::vector<std::string> m_regions;
     std::vector<std::string> m_serverInstanceTypes;
     std::vector<std::string> m_workerInstanceTypes;
+    mutable QTemporaryFile m_privateKey;
     
     QProcess* m_checkInternetProcess;
     QProcess* m_checkServiceProcess;

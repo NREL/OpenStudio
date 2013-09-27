@@ -475,6 +475,8 @@ namespace openstudio{
 
       m_workerInstanceTypes.push_back("t1.micro");
       m_workerInstanceTypes.push_back("c1.xlarge");
+
+      m_privateKey.setAutoRemove(false);
     }
 
     std::string AWSProvider_Impl::type() const
@@ -790,10 +792,18 @@ namespace openstudio{
 
     bool AWSProvider_Impl::requestStartWorkers()
     {
-      // todo: make non-blocking
-      //QVariantMap map = awsRequest("launch_slaves");
-      //return !map.keys().contains("error");
-      return false;
+      if (m_startWorkerProcess){
+        // already checking
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_workerStarted = false;
+
+      m_startWorkerProcess = makeStartWorkerProcess();
+
+      return true;
     }
 
     bool AWSProvider_Impl::requestServerRunning()
@@ -1180,14 +1190,28 @@ namespace openstudio{
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onWorkerStarted(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
-
-
       QStringList args;
-      //addProcessArguments(args);
-      args << "up";
+      addProcessArguments(args);
+      args << QString("EC2");
+      args << QString("launch_workers");
+      
+      QVariantMap options;
+      options.insert("instance_type", toQString(serverInstanceType()));
+      options.insert("num", m_awsSettings.numWorkers());
+      options.insert("server_id", toQString(m_awsSession.serverId()));
+      options.insert("server_procs", m_awsSession.numServerProcessors());
+      options.insert("timestamp", toQString(m_awsSession.timestamp()));
 
-      //p->setWorkingDirectory(toQString(m_vagrantSettings.workerPath()));
-      //p->start(processName(), args);
+      if (m_privateKey.open()) {
+        m_privateKey.write(m_awsSession.privateKey().c_str());
+        options.insert("private_key", m_privateKey.fileName());
+        m_privateKey.close();
+      }
+      QJson::Serializer serializer;
+      serializer.setIndentMode(QJson::IndentCompact);
+      args << QString(serializer.serialize(options));
+      
+      p->start(toQString(m_ruby), args);
 
       return p;
     }
@@ -1360,20 +1384,31 @@ namespace openstudio{
 
     bool AWSProvider_Impl::parseWorkerStartedResults(const ProcessResults &t_results)
     {
-      // todo
-      /*QJson::Parser parser;
+      m_privateKey.remove();
+      QJson::Parser parser;
       bool ok = false;
       QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
       if (ok) {
         if (!map.keys().contains("error")) {
-          m_lastTotalInstances = map["instances"].toUInt();
-          if (m_awsSettings.numWorkers() + 1 + m_lastTotalInstances <= 20) return true;
+          std::vector<Url> workerUrls;
+          std::vector<std::string> workerIds;
+          unsigned numWorkerProcessors = 0;
+          Q_FOREACH(QVariant worker, map["workers"].toList()) {
+            workerUrls.push_back(Url(worker.toMap()["ip"].toString()));
+            workerIds.push_back(worker.toMap()["id"].toString().toStdString());
+            if (numWorkerProcessors == 0) numWorkerProcessors = worker.toMap()["procs"].toUInt();
+          }
+          m_awsSession.setWorkerUrls(workerUrls);
+          m_awsSession.setWorkerIds(workerIds);
+          m_awsSession.setNumWorkerProcessors(numWorkerProcessors);
+          
+          return true;
         } else {
           logError(map["error"].toMap()["message"].toString().toStdString());
         } 
       } else {
         logError("Error parsing workerStarted JSON: " + toString(parser.errorString()));
-      }*/
+      }
       
       return false;
     }
@@ -1530,8 +1565,8 @@ namespace openstudio{
 
     void AWSProvider_Impl::onWorkerStarted(int, QProcess::ExitStatus)
     {
-      m_workerStarted = parseServerStartedResults(handleProcessCompleted(m_startServerProcess));
-      m_startServerProcess = 0;
+      m_workerStarted = parseWorkerStartedResults(handleProcessCompleted(m_startWorkerProcess));
+      m_startWorkerProcess = 0;
     }
 
     void AWSProvider_Impl::onCheckServerRunningComplete(int, QProcess::ExitStatus)
