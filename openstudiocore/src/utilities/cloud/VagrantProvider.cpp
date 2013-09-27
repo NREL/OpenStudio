@@ -1016,10 +1016,7 @@ namespace openstudio{
 
     bool VagrantProvider_Impl::parseServerStartedResults(const ProcessResults &t_results)
     {
-      if (m_vagrantSession.serverUrl())
-      {
-        m_vagrantSession.setServerUrl(*m_vagrantSession.serverUrl());
-      }
+      m_vagrantSession.setServerUrl(m_vagrantSettings.serverUrl());
       return true;
     }
 
