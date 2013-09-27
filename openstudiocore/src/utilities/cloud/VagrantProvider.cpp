@@ -30,23 +30,31 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QMutex>
+#include <QFile>
+#include <QDir>
 
 namespace openstudio{
   namespace detail{
         
     VagrantSettings_Impl::VagrantSettings_Impl()
-      : CloudSettings_Impl()
+      : CloudSettings_Impl(),
+        m_haltOnStop(true),
+        m_terminationDelayEnabled(false),
+        m_terminationDelay(0)
     {
       this->loadSettings(true);
     }
 
     VagrantSettings_Impl::VagrantSettings_Impl(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
                                                const openstudio::path& workerPath, const openstudio::Url& workerUrl,
-                                               bool haltOnStop, const std::string& username, const std::string& password)
+                                               bool haltOnStop, const std::string& username, const std::string& password,
+                                               bool terminationDelayEnabled, unsigned terminationDelay)
       : CloudSettings_Impl(), m_userAgreementSigned(false),
         m_serverPath(serverPath), m_serverUrl(serverUrl), 
         m_workerPath(workerPath), m_workerUrl(workerUrl), m_haltOnStop(haltOnStop),
-        m_username(username), m_password(password)
+        m_username(username), m_password(password),
+        m_terminationDelayEnabled(terminationDelayEnabled),
+        m_terminationDelay(terminationDelay)
     {
       QSettings settings("OpenStudio", toQString(cloudProviderType()));
       if (settings.value("userAgreementSigned").toString() == "Yes"){
@@ -62,7 +70,9 @@ namespace openstudio{
                                                const openstudio::path& workerPath,
                                                const openstudio::Url& workerUrl,
                                                bool haltOnStop,
-                                               const std::string& username)
+                                               const std::string& username,
+                                               bool terminationDelayEnabled, 
+                                               unsigned terminationDelay)
       : CloudSettings_Impl(uuid,versionUUID),
         m_userAgreementSigned(userAgreementSigned),
         m_serverPath(serverPath),
@@ -70,7 +80,9 @@ namespace openstudio{
         m_workerPath(workerPath),
         m_workerUrl(workerUrl),
         m_haltOnStop(haltOnStop),
-        m_username(username)
+        m_username(username),
+        m_terminationDelayEnabled(terminationDelayEnabled),
+        m_terminationDelay(terminationDelay)
     {}
 
     VagrantSettings_Impl::~VagrantSettings_Impl()
@@ -140,9 +152,27 @@ namespace openstudio{
         m_username = settings.value("username").toString().toStdString();
       }
 
-      // TODO: read password from a file in ~/.ssh
       if (overwriteExisting || m_password.empty()){
-        m_password = settings.value("password").toString().toStdString();
+        QFile file(QDir::homePath() + "/.ssh/vagrant");
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+          m_password = QString(file.readAll()).toStdString();
+        }
+      }
+
+      // only set this if overwriteExisting is true
+      if (overwriteExisting){
+        if (settings.value("terminationDelayEnabled").toString() == "Yes"){
+          m_terminationDelayEnabled = true;
+        }else{
+          m_terminationDelayEnabled = false;
+        }
+      }
+
+      // only set this if overwriteExisting is true
+      if (overwriteExisting){
+        if (!settings.value("terminationDelay").isNull()){
+          m_terminationDelay = settings.value("terminationDelay").toUInt();
+        }
       }
 
       onChange();
@@ -194,11 +224,28 @@ namespace openstudio{
         settings.setValue("username", toQString(m_username));
       }
 
-      // TODO: write password to a file in ~/.ssh
-      if (overwriteExisting || settings.value("password").isNull()){
-        settings.setValue("password", toQString(m_password));
+      QFile file(QDir::homePath() + "/.ssh/vagrant");
+      if (overwriteExisting || !file.exists()){
+        if (QDir::home().exists(".ssh") || QDir::home().mkdir(".ssh")) {
+          if (file.open(QIODevice::WriteOnly)) {
+            file.write(m_password.c_str());
+            file.close();
+          }
+        }
+      }
+      
+      if (overwriteExisting || settings.value("terminationDelayEnabled").isNull()){
+        if (m_terminationDelayEnabled){
+          settings.setValue("terminationDelayEnabled", "Yes");
+        }else{
+          settings.setValue("terminationDelayEnabled", "No");
+        }
       }
 
+      if (overwriteExisting || settings.value("terminationDelay").isNull()){
+        settings.setValue("terminationDelay", QString::number(m_terminationDelay));
+      }
+      
       return true;
     }
 
@@ -279,6 +326,27 @@ namespace openstudio{
       // not stored in OSP, so no onChange()
     }
 
+    bool VagrantSettings_Impl::terminationDelayEnabled()
+    {
+      return m_terminationDelayEnabled;
+    }
+
+    void VagrantSettings_Impl::setTerminationDelayEnabled(bool enabled)
+    {
+      m_terminationDelayEnabled = enabled;
+      onChange();
+    }
+
+    unsigned VagrantSettings_Impl::terminationDelay()
+    {
+      return m_terminationDelay;
+    }
+
+    void VagrantSettings_Impl::setTerminationDelay(const unsigned delay)
+    {
+      m_terminationDelay = delay;
+      onChange();
+    }
 
     VagrantSession_Impl::VagrantSession_Impl(const std::string& sessionId, 
                                              const boost::optional<Url>& serverUrl, 
@@ -816,14 +884,7 @@ namespace openstudio{
                             this, SLOT(onServerStopped(int, QProcess::ExitStatus)));
         OS_ASSERT(test);
 
-        m_stopWorkerProcess = new QProcess();
-        m_stopWorkerProcess->setWorkingDirectory(toQString(m_vagrantSettings.workerPath()));
-        test = connect(m_stopWorkerProcess, SIGNAL(finished(int, QProcess::ExitStatus)), 
-                       this, SLOT(onWorkerStopped(int, QProcess::ExitStatus)));
-        OS_ASSERT(test);
-
         m_stopServerProcess->start(processName(), args);
-        m_stopWorkerProcess->start(processName(), args);
 
       }else{
         m_serverStopped = true;
@@ -984,12 +1045,20 @@ namespace openstudio{
 
       m_serverStopped = true;
 
-      if (m_serverStopped && m_workerStopped){
-        emit CloudProvider_Impl::terminated();
-      }
-
       m_startServerProcess->deleteLater();
       m_startServerProcess = 0;
+
+      QStringList args;
+      addProcessArguments(args);
+      args << "halt";
+
+      m_stopWorkerProcess = new QProcess();
+      m_stopWorkerProcess->setWorkingDirectory(toQString(m_vagrantSettings.workerPath()));
+      bool test = connect(m_stopWorkerProcess, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                          this, SLOT(onWorkerStopped(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+
+      m_stopWorkerProcess->start(processName(), args);
     }
 
     void VagrantProvider_Impl::onWorkerStopped(int, QProcess::ExitStatus)
@@ -1155,7 +1224,9 @@ namespace openstudio{
                                    const openstudio::path& workerPath,
                                    const openstudio::Url& workerUrl,
                                    bool haltOnStop,
-                                   const std::string& username)
+                                   const std::string& username, 
+                                   bool terminationDelayEnabled, 
+                                   unsigned terminationDelay)
     : CloudSettings(boost::shared_ptr<detail::VagrantSettings_Impl>(
                         new detail::VagrantSettings_Impl(uuid,
                                                          versionUUID,
@@ -1165,7 +1236,9 @@ namespace openstudio{
                                                          workerPath,
                                                          workerUrl,
                                                          haltOnStop,
-                                                         username)))
+                                                         username, 
+                                                         terminationDelayEnabled, 
+                                                         terminationDelay)))
   {
     OS_ASSERT(getImpl<detail::VagrantSettings_Impl>());
   }
@@ -1248,6 +1321,26 @@ namespace openstudio{
   void VagrantSettings::setPassword(const std::string& password)
   {
     getImpl<detail::VagrantSettings_Impl>()->setPassword(password);
+  }
+
+  bool VagrantSettings::terminationDelayEnabled()
+  {
+    return getImpl<detail::VagrantSettings_Impl>()->terminationDelayEnabled();
+  }
+
+  void VagrantSettings::setTerminationDelayEnabled(bool enabled)
+  {
+    getImpl<detail::VagrantSettings_Impl>()->setTerminationDelayEnabled(enabled);
+  }
+
+  unsigned VagrantSettings::terminationDelay()
+  {
+    return getImpl<detail::VagrantSettings_Impl>()->terminationDelay();
+  }
+
+  void VagrantSettings::setTerminationDelay(const unsigned delay)
+  {
+    getImpl<detail::VagrantSettings_Impl>()->setTerminationDelay(delay);
   }
 
   VagrantSession::VagrantSession(const std::string& sessionId, 
