@@ -1,7 +1,7 @@
 development:
   sessions:
     default:
-      database: openstudio_server_development
+      database: os_dev
       hosts:
         - SERVER_IP:27017
       options:
