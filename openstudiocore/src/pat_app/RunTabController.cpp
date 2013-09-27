@@ -232,12 +232,35 @@ void RunTabController::onPlayButtonClicked(bool clicked)
         // start the run
         cloudAnalysisDriver->requestRun();
 
-        // DLM: do something when run starts or doesn't...
-        // Kyle, is this a CloudMonitor thing or does that belong in this class?
-
         // connect currentAnalysis to update progress on this
         bool isConnected = cloudAnalysisDriver->connect(SIGNAL(dataPointComplete(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
         OS_ASSERT(isConnected);
+
+        //DLM: brainstorming signals:
+
+        // tell cloudMonitor that we are starting to run a new analysis, resets counters etc
+        // cloudMonitor.newRunStarting();
+
+        // cloud monitor may attempt to rerun if we fail to start
+        //bool isConnected = cloudAnalysisDriver->connect(SIGNAL(runRequestComplete(bool)), cloudMonitor, SLOT(onRunRequestComplete()));
+        //OS_ASSERT(isConnected);
+
+        // cloud monitor will prompt us to shut down the cloud if we request that it stop
+        //bool isConnected = cloudAnalysisDriver->connect(SIGNAL(stopRequestComplete(bool)), cloudMonitor, SLOT(onStopRequestComplete()));
+        //OS_ASSERT(isConnected);
+        
+        // cloud monitor will attempt to download again or cancel download, can call redownload or removedownload
+        //bool isConnected = cloudAnalysisDriver->connect(SIGNAL(jsonDownloadRequestComplete(bool, uuid)), cloudMonitor, SLOT(onJSONDownloadRequestComplete(bool, uuid)));
+        //OS_ASSERT(isConnected);
+
+        // cloud monitor will attempt to download again or cancel download, can call redownload or removedownload
+        //bool isConnected = cloudAnalysisDriver->connect(SIGNAL(detailedDownloadRequestComplete(bool, uuid)), cloudMonitor, SLOT(onDetailedDownloadRequestComplete(bool, uuid)));
+        //OS_ASSERT(isConnected);
+
+        // tell cloud monitor when we are done
+        //bool isConnected = this->connect(SIGNAL(runComplete()), cloudMonitor, SLOT(onRunComplete()));
+        //OS_ASSERT(isConnected);
+
 
         // connect currentAnalysis to update progress in PatApp
         // DLM: this re-enables tabs if analysis completes when we are not on this tab
@@ -286,11 +309,9 @@ void RunTabController::onPlayButtonClicked(bool clicked)
         // request stop
         cloudAnalysisDriver->requestStop(false);
 
-        // DLM: do something when stop completes or doesn't... we don't really care about stop if we shut down cloud
-        // Kyle, is this a CloudMonitor thing or does that belong in this class?
-
         /// DLM: shut down cloud now?
-        QTimer::singleShot(0, PatApp::instance()->cloudMonitor().data(), SLOT(stopCloud()));
+        //  DLM: no, cloud monitor will shut down cloud if needed in response to stopRequestComplete
+        //QTimer::singleShot(0, PatApp::instance()->cloudMonitor().data(), SLOT(stopCloud()));
       }
 
     }else{
@@ -330,8 +351,11 @@ void RunTabController::onIterationProgress()
   if (numCompletedJobs == totalNumJobs){
     if (cloudAnalysisDriver){
       // DLM: start timer to shut down cloud?
-      int timeout = 0; // TODO: get from settings
-      QTimer::singleShot(timeout, PatApp::instance()->cloudMonitor().data(), SLOT(stopCloud()));
+      // DLM: no cloud monitor will start timer to shut down cloud in response to runComplete
+      //int timeout = 0; // TODO: get from settings
+      //QTimer::singleShot(timeout, PatApp::instance()->cloudMonitor().data(), SLOT(stopCloud()));
+
+      //emit runComplete();
     }else{
       runManager.setPaused(true);
     }

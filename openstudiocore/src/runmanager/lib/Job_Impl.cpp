@@ -524,6 +524,16 @@ namespace detail {
       {
         return *m_outdir;
       }
+
+      if (!m_jobState.outdir.empty())
+      {
+        openstudio::path dir = m_jobState.outdir;
+        if (!dir.is_complete())
+        {
+          dir = m_basePath / dir;
+        }
+        return dir;
+      }
     }
 
     if (allParams().has("flatoutdir"))

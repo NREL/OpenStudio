@@ -749,7 +749,7 @@ namespace detail {
                   std::vector<URLSearchPath>(),
                   true,
                   uuid,
-                  JobState(dt, e, f, AdvancedStatus(AdvancedStatusEnum::Idle))
+                  JobState(dt, e, f, AdvancedStatus(AdvancedStatusEnum::Idle), openstudio::path())
                   );
 
               loadedjobs.push_back(std::make_pair(*itr, j));

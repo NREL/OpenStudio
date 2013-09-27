@@ -42,6 +42,7 @@
 #include <utilities/bcl/BCLComponent.hpp>
 
 #include <utilities/idf/IdfObject.hpp>
+#include <utilities/idd/OS_Version_FieldEnums.hxx>
 
 #include <utilities/core/Compare.hpp>
 
@@ -177,32 +178,52 @@ TEST_F(OSVersionFixture,VersionTranslator_FutureVersion_ExampleModel) {
   EXPECT_TRUE(m2);
 
   // increment patch
-  ss.str("");
-  ss << major << "." << minor << "." << *patch+1;
-  EXPECT_TRUE(version->setString(0, ss.str()));
+  VersionString nextPatch(major,minor,*patch+1);
+  EXPECT_TRUE(vs.isNextVersion(nextPatch));
+  EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, nextPatch.str()));
   ss.str("");
   ss << model;
   m2 = translator.loadModel(ss);
   EXPECT_TRUE(m2);
 
   // increment minor
-  ss.str("");
-  ss << major << "." << minor+1 << "." << 0;
-  EXPECT_TRUE(version->setString(0, ss.str()));
+  VersionString nextMinor(major,minor+1,0);
+  EXPECT_TRUE(vs.isNextVersion(nextMinor));
+  EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, nextMinor.str()));
   ss.str("");
   ss << model;
   m2 = translator.loadModel(ss);
   EXPECT_TRUE(m2);
 
   // increment major
-  ss.str("");
-  ss << major+1 << "." << 0 << "." << 0;
-  EXPECT_TRUE(version->setString(0, ss.str()));
+  VersionString nextMajor(major+1,0,0);
+  EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, nextMajor.str()));
   ss.str("");
   ss << model;
   m2 = translator.loadModel(ss);
   EXPECT_TRUE(m2);
 
+  // too far ahead
+  VersionString aStepTooFar(major,minor+1,1);
+  EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, aStepTooFar.str()));
+  ss.str("");
+  ss << model;
+  m2 = translator.loadModel(ss);
+  EXPECT_FALSE(m2);
+
+  aStepTooFar = VersionString(major+1,1,0);
+  EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, aStepTooFar.str()));
+  ss.str("");
+  ss << model;
+  m2 = translator.loadModel(ss);
+  EXPECT_FALSE(m2);
+
+  aStepTooFar = VersionString(major+1,4);
+  EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, aStepTooFar.str()));
+  ss.str("");
+  ss << model;
+  m2 = translator.loadModel(ss);
+  EXPECT_FALSE(m2);
 }
 
 TEST_F(OSVersionFixture,VersionTranslator_AllDefaultObjects) {

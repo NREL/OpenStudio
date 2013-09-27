@@ -30,6 +30,22 @@ using namespace openstudio;
 TEST(AWSProvider, AWSProviderTest)
 {
   AWSProvider awsProvider;
-  awsProvider.serverInstanceTypes();
-  cout << awsProvider.serviceAvailable() << endl;
+
+  //awsProvider.serverInstanceTypes();
+
+  //awsProvider.internetAvailable();
+
+  //awsProvider.serviceAvailable();
+
+  //awsProvider.validateCredentials();
+
+  //awsProvider.resourcesAvailableToStart();
+
+  // Takes over 1 minute
+  //awsProvider.setServerInstanceType("t1.micro");
+  //awsProvider.waitForServer(120000);
+
+  //awsProvider.waitForWorkers(120000);
+
+  //awsProvider.serverRunning();
 }
