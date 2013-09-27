@@ -494,6 +494,8 @@ namespace detail{
 
     void onServerStarted(int, QProcess::ExitStatus);
 
+    void onServerStartedError(QProcess::ProcessError error);
+
     void onWorkerStarted(int, QProcess::ExitStatus);
 
     void onCheckServerRunningComplete(int, QProcess::ExitStatus);
@@ -520,7 +522,7 @@ namespace detail{
     bool requestTerminateFinished() const;
     bool requestTerminateCompletedFinished() const;
 
-    ProcessResults handleProcessCompleted(QProcess *& t_qp);
+    ProcessResults handleProcessCompleted(QProcess * t_qp);
 
     QProcess *makeCheckInternetProcess() const;
     QProcess *makeCheckServiceProcess() const;

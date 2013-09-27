@@ -381,7 +381,7 @@ begin
   end
     #puts \"Status: #{resp.http_response.status}\"
 rescue Exception => e
-  if defined? e.message && e.message == 'getaddrinfo: No such host is known. '
+  if e.message == 'getaddrinfo: No such host is known. '
     error(503, 'Offline')
   elsif defined? e.http_response
     error(e.http_response.status, e.code)
