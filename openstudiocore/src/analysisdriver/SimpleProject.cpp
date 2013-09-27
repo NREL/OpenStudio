@@ -1321,6 +1321,7 @@ namespace detail {
   void SimpleProject_Impl::onSeedChanged() const {
     m_seedModel.reset();
     m_seedIdf.reset();
+    m_measureArguments.clear(); // need to re-load arguments
   }
 
   openstudio::path SimpleProject_Impl::alternateModelsDir() const {
