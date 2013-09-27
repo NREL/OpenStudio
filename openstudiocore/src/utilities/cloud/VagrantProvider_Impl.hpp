@@ -334,7 +334,7 @@ namespace detail{
     bool requestTerminateFinished() const;
     bool requestTerminateCompletedFinished() const;
 
-    ProcessResults handleProcessCompleted(QProcess *& t_qp);
+    ProcessResults handleProcessCompleted(QProcess * t_qp);
 
     QProcess *makeCheckServiceProcess() const;
     QProcess *makeStartServerProcess() const;
