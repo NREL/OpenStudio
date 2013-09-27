@@ -290,16 +290,16 @@ namespace openstudio{
       return AWSProvider_Impl::cloudProviderType();
     }
 
-    Url AWSSession_Impl::serverUrl() const {
-      return m_serverUrl;
-    }
+//    Url AWSSession_Impl::serverUrl() const {
+//      return m_serverUrl;
+//    }
 
-    void AWSSession_Impl::setServerUrl(const Url& serverUrl) {
-      if (m_serverUrl != serverUrl) {
-        m_serverUrl = serverUrl;
-        onChange();
-      }
-    }
+//    void AWSSession_Impl::setServerUrl(const Url& serverUrl) {
+//      if (m_serverUrl != serverUrl) {
+//        m_serverUrl = serverUrl;
+//        onChange();
+//      }
+//   }
 
     std::string AWSSession_Impl::serverId() const {
       return m_serverId;
@@ -323,9 +323,9 @@ namespace openstudio{
       }
     }
 
-    std::vector<Url> AWSSession_Impl::workerUrls() const {
-      return m_workerUrls;
-    }
+//    std::vector<Url> AWSSession_Impl::workerUrls() const {
+//      return m_workerUrls;
+//    }
 
     void AWSSession_Impl::setWorkerUrls(const std::vector<Url>& workerUrls) {
       if (m_workerUrls != workerUrls) {
@@ -531,7 +531,7 @@ namespace openstudio{
         // wrong type of session
         return false;
       }
-      if (awsSession->serverUrl().isEmpty()){
+      if (!awsSession->serverUrl()){
         // session to set should be a non-empty one
         return false;
       }
@@ -1343,6 +1343,7 @@ namespace openstudio{
         if (!map.keys().contains("error")) {
           m_awsSession.setTimestamp(map["timestamp"].toString().toStdString());
           m_awsSession.setPrivateKey(map["private_key"].toString().toStdString());
+          std::string url = map["server"].toMap()["ip"].toString().toStdString();
           m_awsSession.setServerUrl(Url(map["server"].toMap()["ip"].toString()));
           m_awsSession.setServerId(map["server"].toMap()["id"].toString().toStdString());
           m_awsSession.setNumServerProcessors(map["server"].toMap()["procs"].toUInt());
@@ -1747,13 +1748,13 @@ namespace openstudio{
     OS_ASSERT(getImpl<detail::AWSSession_Impl>());
   }
 
-  Url AWSSession::serverUrl() const {
-    return getImpl<detail::AWSSession_Impl>()->serverUrl(); 
-  }
+  //Url AWSSession::serverUrl() const {
+  //  return getImpl<detail::AWSSession_Impl>()->serverUrl(); 
+  //}
 
-  void AWSSession::setServerUrl(const Url& serverUrl) {
-    getImpl<detail::AWSSession_Impl>()->setServerUrl(serverUrl);
-  }
+  //void AWSSession::setServerUrl(const Url& serverUrl) {
+  //  getImpl<detail::AWSSession_Impl>()->setServerUrl(serverUrl);
+  //}
 
   std::string AWSSession::serverId() const {
     return getImpl<detail::AWSSession_Impl>()->serverId(); 
@@ -1771,9 +1772,9 @@ namespace openstudio{
     getImpl<detail::AWSSession_Impl>()->setNumServerProcessors(numServerProcessors);
   }
 
-  std::vector<Url> AWSSession::workerUrls() const {
-    return getImpl<detail::AWSSession_Impl>()->workerUrls();
-  }
+  //std::vector<Url> AWSSession::workerUrls() const {
+  //  return getImpl<detail::AWSSession_Impl>()->workerUrls();
+  //}
 
   void AWSSession::setWorkerUrls(const std::vector<Url>& workerUrls) {
     getImpl<detail::AWSSession_Impl>()->setWorkerUrls(workerUrls);
