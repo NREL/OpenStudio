@@ -553,11 +553,14 @@ namespace detail {
     } else {
       try {
         parentpath = toPath(m_params.get("outdir").children.at(0).value);
-      } catch (const std::exception &e) {
-        LOG(Error, "Error getting 'outdir' from parents. Error in Job configuration" << e.what());
-        if (t_throws)
+      } catch (const std::exception &) {
+        if (m_basePath.empty())
         {
-          throw;
+          LOG(Error, "Error getting 'outdir' from parents, and no basepath set. Error in Job configuration");
+          if (t_throws)
+          {
+            throw;
+          }
         }
       }
     }
