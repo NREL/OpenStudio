@@ -290,16 +290,16 @@ namespace openstudio{
       return AWSProvider_Impl::cloudProviderType();
     }
 
-    Url AWSSession_Impl::serverUrl() const {
-      return m_serverUrl;
-    }
+//    Url AWSSession_Impl::serverUrl() const {
+//      return m_serverUrl;
+//    }
 
-    void AWSSession_Impl::setServerUrl(const Url& serverUrl) {
-      if (m_serverUrl != serverUrl) {
-        m_serverUrl = serverUrl;
-        onChange();
-      }
-    }
+//    void AWSSession_Impl::setServerUrl(const Url& serverUrl) {
+//      if (m_serverUrl != serverUrl) {
+//        m_serverUrl = serverUrl;
+//        onChange();
+//      }
+//   }
 
     std::string AWSSession_Impl::serverId() const {
       return m_serverId;
@@ -323,9 +323,9 @@ namespace openstudio{
       }
     }
 
-    std::vector<Url> AWSSession_Impl::workerUrls() const {
-      return m_workerUrls;
-    }
+//    std::vector<Url> AWSSession_Impl::workerUrls() const {
+//      return m_workerUrls;
+//    }
 
     void AWSSession_Impl::setWorkerUrls(const std::vector<Url>& workerUrls) {
       if (m_workerUrls != workerUrls) {
@@ -531,7 +531,7 @@ namespace openstudio{
         // wrong type of session
         return false;
       }
-      if (awsSession->serverUrl().isEmpty()){
+      if (!awsSession->serverUrl()){
         // session to set should be a non-empty one
         return false;
       }
@@ -665,12 +665,7 @@ namespace openstudio{
 
     bool AWSProvider_Impl::waitForServer(int msec)
     {
-      if (requestStartServer()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServerStartedFinished, this))){
-          return serverStarted();
-        }
-      }
-      return false;
+      return waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServerStartedFinished, this));
     }
 
     bool AWSProvider_Impl::waitForWorkers(int msec)
@@ -1075,7 +1070,7 @@ namespace openstudio{
       return (m_checkTerminatedProcess == 0);
     }
 
-    ProcessResults AWSProvider_Impl::handleProcessCompleted(QProcess *& t_qp)
+    ProcessResults AWSProvider_Impl::handleProcessCompleted(QProcess * t_qp)
     {
       OS_ASSERT(t_qp);
 
@@ -1083,7 +1078,6 @@ namespace openstudio{
           t_qp->readAllStandardError());
 
       t_qp->deleteLater();
-      t_qp = 0;
 
       return pr;
     }
@@ -1158,6 +1152,11 @@ namespace openstudio{
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onServerStarted(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
+
+      test = connect(p, SIGNAL(error(QProcess::ProcessError)), 
+                     this, SLOT(onServerStartedError(QProcess::ProcessError)));
+      OS_ASSERT(test);
+
       QStringList args;
       addProcessArguments(args);
       args << QString("EC2");
@@ -1169,6 +1168,7 @@ namespace openstudio{
       serializer.setIndentMode(QJson::IndentCompact);
       args << QString(serializer.serialize(options));
       
+      //LOG(Info, "makeStartServerProcess: " << toString(m_ruby) << " " << toString(args.join(" ")));
       p->start(toQString(m_ruby), args);
 
       return p;
@@ -1343,6 +1343,7 @@ namespace openstudio{
         if (!map.keys().contains("error")) {
           m_awsSession.setTimestamp(map["timestamp"].toString().toStdString());
           m_awsSession.setPrivateKey(map["private_key"].toString().toStdString());
+          std::string url = map["server"].toMap()["ip"].toString().toStdString();
           m_awsSession.setServerUrl(Url(map["server"].toMap()["ip"].toString()));
           m_awsSession.setServerId(map["server"].toMap()["id"].toString().toStdString());
           m_awsSession.setNumServerProcessors(map["server"].toMap()["procs"].toUInt());
@@ -1477,41 +1478,72 @@ namespace openstudio{
     void AWSProvider_Impl::onCheckInternetComplete(int, QProcess::ExitStatus)
     {
       m_lastInternetAvailable = parseServiceAvailableResults(handleProcessCompleted(m_checkInternetProcess));
+      m_checkInternetProcess = 0;
     }
 
     void AWSProvider_Impl::onCheckServiceComplete(int, QProcess::ExitStatus)
     {
       m_lastServiceAvailable = parseServiceAvailableResults(handleProcessCompleted(m_checkServiceProcess));
+      m_checkServiceProcess = 0;
     }
 
     void AWSProvider_Impl::onCheckValidateComplete(int, QProcess::ExitStatus)
     {
       m_lastValidateCredentials = parseValidateCredentialsResults(handleProcessCompleted(m_checkValidateProcess));
+      m_checkValidateProcess = 0;
     }
 
     void AWSProvider_Impl::onCheckResourcesComplete(int, QProcess::ExitStatus)
     {
       m_lastResourcesAvailableToStart = parseResourcesAvailableToStartResults(handleProcessCompleted(m_checkResourcesProcess));
+      m_checkResourcesProcess = 0;
     }
     
     void AWSProvider_Impl::onServerStarted(int, QProcess::ExitStatus)
     {
+      // DLM: requestServerStartedFinished was checking for m_startServerProcess == 0
+      // however, handleProcessCompleted was setting that before parseServerStartedResults could run
       m_serverStarted = parseServerStartedResults(handleProcessCompleted(m_startServerProcess));
+      m_startServerProcess = 0;
+    }
+
+    void AWSProvider_Impl::onServerStartedError(QProcess::ProcessError error)
+    {
+      if (error == QProcess::FailedToStart){
+        LOG(Error, "The process failed to start. Either the invoked program is missing, or you may have insufficient permissions to invoke the program.");
+      }else if (error == QProcess::Crashed){
+        LOG(Error, "The process crashed some time after starting successfully.");
+      }else if (error == QProcess::Timedout){
+        LOG(Error, "The last waitFor...() function timed out. The state of QProcess is unchanged, and you can try calling waitFor...() again.");
+      }else if (error == QProcess::WriteError){
+        LOG(Error, "An error occurred when attempting to write to the process. For example, the process may not be running, or it may have closed its input channel.");
+      }else if (error == QProcess::ReadError){
+        LOG(Error, "An error occurred when attempting to read from the process. For example, the process may not be running.");
+      }else if (error == QProcess::ReadError){
+        LOG(Error, "An unknown error occurred. This is the default return value of error().");
+      }
+
+      m_serverStarted = false;
+      m_startServerProcess->deleteLater();
+      m_startServerProcess = 0;
     }
 
     void AWSProvider_Impl::onWorkerStarted(int, QProcess::ExitStatus)
     {
       m_workerStarted = parseServerStartedResults(handleProcessCompleted(m_startServerProcess));
+      m_startServerProcess = 0;
     }
 
     void AWSProvider_Impl::onCheckServerRunningComplete(int, QProcess::ExitStatus)
     {
       m_lastServerRunning = parseCheckServerRunningResults(handleProcessCompleted(m_checkServerRunningProcess));
+      m_checkServerRunningProcess = 0;
     }
     
     void AWSProvider_Impl::onCheckWorkerRunningComplete(int, QProcess::ExitStatus)
     {
       m_lastWorkerRunning = parseCheckWorkerRunningResults(handleProcessCompleted(m_checkWorkerRunningProcess));
+      m_checkWorkerRunningProcess = 0;
     }
     
     void AWSProvider_Impl::onServerStopped(int, QProcess::ExitStatus)
@@ -1527,8 +1559,8 @@ namespace openstudio{
         emit CloudProvider_Impl::terminated();
       }
 
-      m_startServerProcess->deleteLater();
-      m_startServerProcess = 0;
+      m_stopServerProcess->deleteLater();
+      m_stopServerProcess = 0;
     }
 
     void AWSProvider_Impl::onWorkerStopped(int, QProcess::ExitStatus)
@@ -1552,6 +1584,7 @@ namespace openstudio{
     {
       // note, it's important that this functon is always called, to clean up the QProcess object
       bool terminated = parseCheckTerminatedResults(handleProcessCompleted(m_checkTerminatedProcess));
+      m_checkTerminatedProcess = 0;
 
       //if (m_awsSettings.haltOnStop()){
         if (terminated) {
@@ -1715,13 +1748,13 @@ namespace openstudio{
     OS_ASSERT(getImpl<detail::AWSSession_Impl>());
   }
 
-  Url AWSSession::serverUrl() const {
-    return getImpl<detail::AWSSession_Impl>()->serverUrl(); 
-  }
+  //Url AWSSession::serverUrl() const {
+  //  return getImpl<detail::AWSSession_Impl>()->serverUrl(); 
+  //}
 
-  void AWSSession::setServerUrl(const Url& serverUrl) {
-    getImpl<detail::AWSSession_Impl>()->setServerUrl(serverUrl);
-  }
+  //void AWSSession::setServerUrl(const Url& serverUrl) {
+  //  getImpl<detail::AWSSession_Impl>()->setServerUrl(serverUrl);
+  //}
 
   std::string AWSSession::serverId() const {
     return getImpl<detail::AWSSession_Impl>()->serverId(); 
@@ -1739,9 +1772,9 @@ namespace openstudio{
     getImpl<detail::AWSSession_Impl>()->setNumServerProcessors(numServerProcessors);
   }
 
-  std::vector<Url> AWSSession::workerUrls() const {
-    return getImpl<detail::AWSSession_Impl>()->workerUrls();
-  }
+  //std::vector<Url> AWSSession::workerUrls() const {
+  //  return getImpl<detail::AWSSession_Impl>()->workerUrls();
+  //}
 
   void AWSSession::setWorkerUrls(const std::vector<Url>& workerUrls) {
     getImpl<detail::AWSSession_Impl>()->setWorkerUrls(workerUrls);

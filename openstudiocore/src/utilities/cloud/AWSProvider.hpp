@@ -166,10 +166,10 @@ namespace detail {
     //@{
 
     // returns the url of the server node
-    Url serverUrl() const;
+    //Url serverUrl() const;
 
     // sets the url of the server node
-    void setServerUrl(const Url& serverUrl);
+    //void setServerUrl(const Url& serverUrl);
 
     // returns the server instance ID
     std::string serverId() const;
@@ -184,7 +184,7 @@ namespace detail {
     void setNumServerProcessors(const unsigned numServerProcessors);
 
     // returns the urls of all worker nodes 
-    std::vector<Url> workerUrls() const;
+    //std::vector<Url> workerUrls() const;
 
     // set the urls of all worker nodes
     void setWorkerUrls(const std::vector<Url>& workerUrls);

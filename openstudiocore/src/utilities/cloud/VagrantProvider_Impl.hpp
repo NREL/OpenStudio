@@ -49,7 +49,8 @@ namespace detail{
 
     VagrantSettings_Impl(const openstudio::path& serverPath, const openstudio::Url& serverUrl,
                          const openstudio::path& workerPath, const openstudio::Url& workerUrl,
-                         bool haltOnStop, const std::string& username, const std::string& password);
+                         bool haltOnStop, const std::string& username, const std::string& password,
+                         bool terminationDelayEnabled, unsigned terminationDelay);
 
     /** Constructor provided for deserialization; not for general use. */
     VagrantSettings_Impl(const UUID& uuid,
@@ -60,7 +61,9 @@ namespace detail{
                          const openstudio::path& workerPath,
                          const openstudio::Url& workerUrl,
                          bool haltOnStop,
-                         const std::string& username);
+                         const std::string& username,
+                         bool terminationDelayEnabled, 
+                         unsigned terminationDelay);
 
     //@}
     /** @name Destructors */
@@ -116,6 +119,14 @@ namespace detail{
 
     void setPassword(const std::string& password);
 
+    bool terminationDelayEnabled();
+
+    void setTerminationDelayEnabled(bool enabled);
+
+    unsigned terminationDelay();
+
+    void setTerminationDelay(const unsigned delay);
+
     //@}
 
   private:
@@ -130,6 +141,8 @@ namespace detail{
     bool m_haltOnStop;
     std::string m_username;
     std::string m_password;
+    bool m_terminationDelayEnabled;
+    unsigned m_terminationDelay;
   };
 
   /// VagrantSession_Impl is a CloudSession_Impl.
@@ -321,7 +334,7 @@ namespace detail{
     bool requestTerminateFinished() const;
     bool requestTerminateCompletedFinished() const;
 
-    ProcessResults handleProcessCompleted(QProcess *& t_qp);
+    ProcessResults handleProcessCompleted(QProcess * t_qp);
 
     QProcess *makeCheckServiceProcess() const;
     QProcess *makeStartServerProcess() const;

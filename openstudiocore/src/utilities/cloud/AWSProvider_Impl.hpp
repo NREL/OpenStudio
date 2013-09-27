@@ -178,10 +178,10 @@ namespace detail{
     //@{
     
     // returns the url of the server node
-    Url serverUrl() const;
+    //Url serverUrl() const;
 
     // sets the url of the server node
-    void setServerUrl(const Url& serverUrl);
+    //void setServerUrl(const Url& serverUrl);
 
     // returns the server instance ID
     std::string serverId() const;
@@ -196,7 +196,7 @@ namespace detail{
     void setNumServerProcessors(const unsigned numServerProcessors);
 
     // returns the urls of all worker nodes 
-    std::vector<Url> workerUrls() const;
+    //std::vector<Url> workerUrls() const;
 
     // set the urls of all worker nodes
     void setWorkerUrls(const std::vector<Url>& workerUrls);
@@ -494,6 +494,8 @@ namespace detail{
 
     void onServerStarted(int, QProcess::ExitStatus);
 
+    void onServerStartedError(QProcess::ProcessError error);
+
     void onWorkerStarted(int, QProcess::ExitStatus);
 
     void onCheckServerRunningComplete(int, QProcess::ExitStatus);
@@ -520,7 +522,7 @@ namespace detail{
     bool requestTerminateFinished() const;
     bool requestTerminateCompletedFinished() const;
 
-    ProcessResults handleProcessCompleted(QProcess *& t_qp);
+    ProcessResults handleProcessCompleted(QProcess * t_qp);
 
     QProcess *makeCheckInternetProcess() const;
     QProcess *makeCheckServiceProcess() const;
