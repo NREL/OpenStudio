@@ -22,7 +22,7 @@
 
 #include <utilities/cloud/CloudProvider_Impl.hpp>
 #include <utilities/cloud/AWSProvider.hpp>
-#include <Utilities/core/Path.hpp>
+#include <utilities/core/Path.hpp>
 
 #include <QProcess>
 
@@ -30,18 +30,6 @@
 
 namespace openstudio{
 namespace detail{
-  struct UTILITIES_API ProcessResults {
-
-    ProcessResults(int t_exitCode, QProcess::ExitStatus t_exitStatus, const QString &t_output, const QString &t_error)
-      : exitCode(t_exitCode), exitStatus(t_exitStatus), output(t_output), error(t_error)
-    {
-    }
-
-    int exitCode;
-    QProcess::ExitStatus exitStatus;
-    QString output;
-    QString error; 
-  };
 
   /// AWSSettings_Impl is a CloudSettings_Impl.
   class UTILITIES_API AWSSettings_Impl : public CloudSettings_Impl {

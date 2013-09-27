@@ -33,11 +33,11 @@ TEST(AWSProvider, AWSProviderTest)
 
   //awsProvider.serverInstanceTypes();
 
+  //awsProvider.internetAvailable();
+
   //awsProvider.serviceAvailable();
 
   //awsProvider.validateCredentials();
-
-  //awsProvider.internetAvailable();
 
   //awsProvider.resourcesAvailableToStart();
 
@@ -46,4 +46,6 @@ TEST(AWSProvider, AWSProviderTest)
   //awsProvider.waitForServer(120000);
 
   //awsProvider.waitForWorkers(120000);
+
+  //awsProvider.serverRunning();
 }

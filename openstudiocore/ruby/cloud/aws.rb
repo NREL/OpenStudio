@@ -372,6 +372,7 @@ begin
       #todo: delete key pair
 
     when 'estimated_charges'
+      # fix this
       resp = @aws.client.get_metric_statistics({:namespace=>'AWS/Billing', :metric_name=>'EstimatedCharges', :start_time=>'2013-09-01T23:59:59Z', :end_time=>'2013-09-24T23:59:59Z', :period=>1380, :statistics=>['Sum']})
       #puts resp
 
@@ -380,10 +381,12 @@ begin
   end
     #puts \"Status: #{resp.http_response.status}\"
 rescue Exception => e
-  if e.message == 'getaddrinfo: No such host is known. '
+  if defined? e.message && e.message == 'getaddrinfo: No such host is known. '
     error(503, 'Offline')
+  elsif defined? e.http_response
+    error(e.http_response.status, e.code)
+  else
+    puts e
   end
-  #puts Hash.from_xml(e.http_response.body).to_json
-  puts e
-  #error(e.http_response.status, e.code)
+
 end
