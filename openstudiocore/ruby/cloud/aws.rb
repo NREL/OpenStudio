@@ -186,7 +186,7 @@ end
 
 
 def send_command(host, command)
-  retries = 0
+  #retries = 0
   begin
     output = ''
     Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
@@ -197,16 +197,16 @@ def send_command(host, command)
   rescue Net::SSH::HostKeyMismatch => e
     e.remember_host!
     # key mismatch, retry
-    return if retries == 5
-    retries += 1
+    #return if retries == 5
+    #retries += 1
     sleep 1
     retry
   rescue Net::SSH::AuthenticationFailed
     error(-1, "Incorrect private key")
   rescue SystemCallError, Timeout::Error => e
     # port 22 might not be available immediately after the instance finishes launching
-    return if retries == 5
-    retries += 1
+    #return if retries == 5
+    #retries += 1
     sleep 1
     retry
   rescue Exception => e
@@ -214,6 +214,45 @@ def send_command(host, command)
     puts e.backtrace.inspect
   end
 end
+
+#======================= send command ======================#
+    # Send a command through SSH Shell to an instance. 
+    # Need to pass instance object and the command as a string.     
+def shell_command(host, command)
+  begin
+  #f = File.open('net-ssh-log.txt', 'w')
+  Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
+    channel = ssh.open_channel do |ch|
+      ch.exec "#{command}" do |ch, success|
+        raise "could not execute #{command}" unless success
+        
+        # "on_data" is called when the process writes something to stdout
+        #ch.on_data do |c, data|
+          #$stdout.print data
+        #  f.puts "#{data.inspect}"
+        #end
+
+        # "on_extended_data" is called when the process writes something to stderr
+        #ch.on_extended_data do |c, type, data|
+          #$stderr.print data
+        #  f.puts "#{data.inspect}"
+        #end
+        #ch.on_close {f.close}
+      end
+    end 
+  end
+  rescue Net::SSH::HostKeyMismatch => e
+     e.remember_host!
+     #puts "key mismatch, retry"
+     sleep 1
+     retry
+  rescue SystemCallError, Timeout::Error => e
+     # port 22 might not be available immediately after the instance finishes launching
+     sleep 1
+     # puts "Not Yet"
+     retry
+  end
+end      
 
 def download_file(host, remote_path, local_path)
   retries = 0
@@ -323,9 +362,9 @@ begin
       file.close
       upload_file(@server.ip, file.path, 'ip_addresses')
       file.unlink
-      send_command(@server.ip, 'chmod 664 /home/ubuntu/ip_addresses')
-      send_command(@server.ip, '~/setup-ssh-keys.sh')
-      send_command(@server.ip, '~/setup-ssh-worker-nodes.sh ip_addresses')
+      shell_command(@server.ip, 'chmod 664 /home/ubuntu/ip_addresses')
+      shell_command(@server.ip, '~/setup-ssh-keys.sh')
+      shell_command(@server.ip, '~/setup-ssh-worker-nodes.sh ip_addresses')
 
       mongoid = File.read(File.expand_path(File.dirname(__FILE__))+'/mongoid.yml.template')
       mongoid.gsub!(/SERVER_IP/, @server.ip)
@@ -333,13 +372,13 @@ begin
       file.write(mongoid)
       file.close
       upload_file(@server.ip, file.path, '/mnt/openstudio/rails-models/mongoid.yml')
-      #upload_file(@server.ip, file.path, '~/mongoid.yml')
+      
       @workers.each { |worker| upload_file(worker.ip, file.path, '/mnt/openstudio/rails-models/mongoid.yml') }
       file.unlink
 
       # Does this command crash it?
-      send_command(@server.ip, 'chmod 664 /mnt/openstudio/rails-models/mongoid.yml')
-      @workers.each { |worker| send_command(worker.ip, 'chmod 664 /mnt/openstudio/rails-models/mongoid.yml') }
+      shell_command(@server.ip, 'chmod 664 /mnt/openstudio/rails-models/mongoid.yml')
+      @workers.each { |worker| shell_command(worker.ip, 'chmod 664 /mnt/openstudio/rails-models/mongoid.yml') }
 
       worker_json = []
       @workers.each { |worker|
