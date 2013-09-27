@@ -44,7 +44,7 @@ require 'tempfile'
 
 # Not sure how we want to deal with this, but in the tag, I would like to specify the right
 # version of openstudio so that in the AWS Management Console it is meaningful.
-OPENSTUDIO_VERSION="1.0.6"
+OPENSTUDIO_VERSION="1.1.0"
 
 def error(code, msg)
   puts ({:error => {:code => code, :message => msg}}.to_json)
@@ -55,8 +55,8 @@ if ARGV.length < 5
   error(-1, 'Invalid number of args')
 end
 
-if ARGV[0].empty? && ARGV[1].empty?
-  error(401, 'AuthFailure')
+if ARGV[0].empty? || ARGV[1].empty?
+  error(401, 'Missing authentication arguments')
 end
 
 AWS.config(
@@ -78,11 +78,11 @@ if ARGV.length == 6
   @params = JSON.parse(ARGV[5])
 end
 
-@server_image_id = 'ami-afeebbc6'
-if @params['instance_type'] == "cc2.8xlarge"
-  @worker_image_id = 'ami-ffeebb96'
+@server_image_id = 'ami-b51b4fdc'
+if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
+  @worker_image_id = 'ami-691b4f00'
 else
-  @worker_image_id = 'ami-0deebb64'
+  @worker_image_id = 'ami-731b4f1a'
 end
 
 def create_struct(instance, procs)
@@ -91,30 +91,29 @@ def create_struct(instance, procs)
 end
 
 def find_processors(instance)
-  processors = nil
-  if instance == "cc2.8xlarge"
+  processors = 1
+  case instance
+  when 'cc2.8xlarge'
     processors = 32
-  elsif instance == "c1.xlarge"
+  when 'c1.xlarge'
     processors = 8
-  elsif instance == "m2.4xlarge"
+  when 'm2.4xlarge'
     processors = 8
-  elsif instance == "m2.2xlarge"
+  when 'm2.2xlarge'
     processors = 4
-  elsif instance == "m2.xlarge"
+  when 'm2.xlarge'
     processors = 4  
-  elsif instance == "m1.xlarge"
+  when 'm1.xlarge'
     processors = 4
-  elsif instance == "m1.large"
+  when 'm1.large'
     processors = 2
-  elsif instance == "m3.xlarge"
+  when 'm3.xlarge'
     processors = 4
-  elsif instance == "m3.2xlarge"
-    processors = 8  
-  else  
-    processors = 1
+  when 'm3.2xlarge'
+    processors = 8
   end 
 
-  processors  
+  return processors
 end
 
 def launch_server
@@ -124,7 +123,7 @@ def launch_server
                                   :security_groups => @group,
                                   :user_data => user_data,
                                   :instance_type => @server_instance_type)
-  @server.add_tag("Name", :value => "OpenStudio-Server V#{OPENSTUDIO_VERSION}")
+  @server.add_tag('Name', :value => "OpenStudio-Server V#{OPENSTUDIO_VERSION}")
   sleep 5 while @server.status == :pending
   if @server.status != :running
     error(-1, "Server status: #{@server.status}")
@@ -149,7 +148,7 @@ def launch_workers(num, server_ip)
                                    :security_groups => @group,
                                    :user_data => user_data,
                                    :instance_type => @worker_instance_type)
-    worker.add_tag("Name", :value => "OpenStudio-Worker V#{OPENSTUDIO_VERSION}")
+    worker.add_tag('Name', :value => "OpenStudio-Worker V#{OPENSTUDIO_VERSION}")
     instances.push(worker)
   end
   sleep 5 while instances.any? { |instance| instance.status == :pending }
@@ -172,13 +171,13 @@ def upload_file(host, local_path, remote_path)
     end
   rescue SystemCallError, Timeout::Error => e
     # port 22 might not be available immediately after the instance finishes launching
-    return if retries == 2
+    return if retries == 5
     retries += 1
     sleep 1
     retry
   rescue
     # Unknown upload error, retry
-    return if retries == 2
+    return if retries == 5
     retries += 1
     sleep 1
     retry
@@ -189,16 +188,16 @@ end
 def send_command(host, command)
   retries = 0
   begin
-    output = ''
+    #output = ''
     Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
-      response = ssh.exec!(command)
-      output += response if !response.nil?
+      response = ssh.exec(command)
+      #output += response if !response.nil?
     end
-    return output
+    #return output
   rescue Net::SSH::HostKeyMismatch => e
     e.remember_host!
     # key mismatch, retry
-    return if retries == 2
+    return if retries == 5
     retries += 1
     sleep 1
     retry
@@ -206,7 +205,7 @@ def send_command(host, command)
     error(-1, "Incorrect private key")
   rescue SystemCallError, Timeout::Error => e
     # port 22 might not be available immediately after the instance finishes launching
-    return if retries == 2
+    return if retries == 5
     retries += 1
     sleep 1
     retry
@@ -238,15 +237,24 @@ end
 
 begin
   case ARGV[4]
-    when 'estimated_charges'
-      resp = @aws.client.get_metric_statistics({:namespace=>'AWS/Billing', :metric_name=>'EstimatedCharges', :start_time=>'2013-09-01T23:59:59Z', :end_time=>'2013-09-24T23:59:59Z', :period=>1380, :statistics=>['Sum']})
-      puts resp.data.to_json
     when 'describe_availability_zones'
       resp = @aws.client.describe_availability_zones
       puts resp.data.to_json
     when 'total_instances'
       resp = @aws.client.describe_instance_status
       puts ({:instances => resp.data[:instance_status_set].length}.to_json)
+    when 'instance_status'
+      resp = nil
+      if ARGV.length < 6
+        resp = @aws.client.describe_instance_status
+      else
+        resp = @aws.client.describe_instance_status({:instance_ids=>[@params['instance_id']]})
+      end
+      output = Hash.new
+      resp.data[:instance_status_set].each { |instance|
+        output[instance[:instance_id]] = instance[:instance_state][:name]
+      }
+      puts output.to_json
     when 'launch_server'
       if ARGV.length < 6
         error(-1, 'Invalid number of args')
@@ -255,9 +263,9 @@ begin
       @timestamp = Time.now.to_i
 
       # find if an existing openstudio-server-vX security group exists and use that
-      @group = @aws.security_groups.filter("group-name", "openstudio-server-sg-v1").first
+      @group = @aws.security_groups.filter('group-name', 'openstudio-server-sg-v1').first
       if @group.nil?
-        @group = @aws.security_groups.create("openstudio-server-sg-v1")
+        @group = @aws.security_groups.create('openstudio-server-sg-v1')
         @group.allow_ping() # allow ping
         @group.authorize_ingress(:tcp, 1..65535)# all traffic
       end
@@ -289,9 +297,9 @@ begin
       @timestamp = @params['timestamp']
 
       # find if an existing openstudio-server-vX security group exists and use that
-      @group = @aws.security_groups.filter("group-name", "openstudio-worker-sg-v1").first
+      @group = @aws.security_groups.filter('group-name', 'openstudio-worker-sg-v1').first
       if @group.nil?
-        @group = @aws.security_groups.create("openstudio-worker-sg-v1")
+        @group = @aws.security_groups.create('openstudio-worker-sg-v1')
         @group.allow_ping() # allow ping
         @group.authorize_ingress(:tcp, 1..65535)# all traffic
       end
@@ -304,7 +312,7 @@ begin
       @server = create_struct(@server, @params['server_procs'])
 
       launch_workers(@params['num'], @server.ip)
-      #@workers.push(create_struct(@aws.instances['i-xxxxxxxx'], -1))
+      #@workers.push(create_struct(@aws.instances['i-xxxxxxxx'], 1))
       #processors = send_command(@workers[0].ip, 'nproc | tr -d "\n"')
       #@workers[0].procs = processors
 
@@ -316,7 +324,7 @@ begin
       upload_file(@server.ip, file.path, 'ip_addresses')
       file.unlink
       send_command(@server.ip, 'chmod 664 /home/ubuntu/ip_addresses')
-      send_command(@server.ip, '~/setup-ssh-keys.expect')
+      send_command(@server.ip, '~/setup-ssh-keys.sh')
       send_command(@server.ip, '~/setup-ssh-worker-nodes.sh ip_addresses')
 
       mongoid = File.read(File.expand_path(File.dirname(__FILE__))+'/mongoid.yml.template')
@@ -325,7 +333,7 @@ begin
       file.write(mongoid)
       file.close
       upload_file(@server.ip, file.path, '/mnt/openstudio/rails-models/mongoid.yml')
-
+      upload_file(@server.ip, file.path, '~/mongoid.yml')
       @workers.each { |worker| upload_file(worker.ip, file.path, '/mnt/openstudio/rails-models/mongoid.yml') }
       file.unlink
 
@@ -363,15 +371,22 @@ begin
       #end
       #todo: delete key pair
 
+    when 'estimated_charges'
+      # fix this
+      resp = @aws.client.get_metric_statistics({:namespace=>'AWS/Billing', :metric_name=>'EstimatedCharges', :start_time=>'2013-09-01T23:59:59Z', :end_time=>'2013-09-24T23:59:59Z', :period=>1380, :statistics=>['Sum']})
+      #puts resp
+
     else
       error(-1, "Unknown command: #{ARGV[4]} (#{ARGV[3]})")
   end
     #puts \"Status: #{resp.http_response.status}\"
 rescue Exception => e
-  if e.message == 'getaddrinfo: No such host is known. '
+  if defined? e.message && e.message == 'getaddrinfo: No such host is known. '
     error(503, 'Offline')
+  elsif defined? e.http_response
+    error(e.http_response.status, e.code)
+  else
+    puts e
   end
-  #puts Hash.from_xml(e.http_response.body).to_json
-  puts e
-  #error(e.http_response.status, e.code)
+
 end
