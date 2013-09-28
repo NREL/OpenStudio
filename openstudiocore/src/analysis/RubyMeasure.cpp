@@ -307,7 +307,7 @@ namespace detail {
   }
 
   bool RubyMeasure_Impl::updateMeasure(const BCLMeasure& newVersion,
-                                            std::vector<ruleset::OSArgument> newArguments)
+                                       std::vector<ruleset::OSArgument> newArguments)
   {
     if (!usesBCLMeasure() || (newVersion.uuid() != m_bclMeasureUUID.get())) {
       return false;

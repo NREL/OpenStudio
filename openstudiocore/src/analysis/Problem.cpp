@@ -895,7 +895,7 @@ namespace detail {
         // see if should clear
         bool clearCompound = false;
         if (OptionalRubyContinuousVariable rcv = variable.optionalCast<RubyContinuousVariable>()) {
-          if (rcv->measure() == compoundRubyMeasure.get()) {
+          if (!(rcv->measure() == compoundRubyMeasure.get())) {
             clearCompound = true;
           }
         }
