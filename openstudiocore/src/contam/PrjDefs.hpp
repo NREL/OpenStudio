@@ -180,6 +180,7 @@
 #define BIT_NSW    14
 #define BIT_NESW   15
 
+/*
 namespace BitMath { // Take that, C++!
 const unsigned int E = BIT_E;
 const unsigned int N = BIT_N;
@@ -197,5 +198,6 @@ const unsigned int ESW = BIT_ESW;
 const unsigned int NSW = BIT_NSW;
 const unsigned int NESW = BIT_NESW;
 }
+*/
 
 #endif

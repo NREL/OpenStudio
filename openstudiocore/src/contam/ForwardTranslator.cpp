@@ -19,7 +19,6 @@
  **********************************************************************/
 
 #include <contam/ForwardTranslator.hpp>
-#include <contam/PrjData.hpp>
 #include <contam/WindPressure.hpp>
 
 #include <model/Model.hpp>
@@ -57,6 +56,8 @@
 namespace openstudio {
 namespace contam {
 
+/*
+
 ForwardTranslator::ForwardTranslator()
 {
   m_valid=false;
@@ -64,11 +65,11 @@ ForwardTranslator::ForwardTranslator()
   m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.ForwardTranslator"));
   m_logSink.setThreadId(QThread::currentThread());
   m_progressBar = 0;
-  m_data.read(":/templates/template.prj",false);
-  if(m_data.valid)
+  m_data.read(":/templates/template.prj");
+  if(m_data.valid())
   {
     // The template is a legal PRJ file, so it has one level. Not for long.
-    m_data.levels.clear();
+    m_data.setLevels(std::vector<prj::Level>());
   }
 }
 
@@ -208,7 +209,7 @@ boost::optional<std::string> ForwardTranslator::translateToString(const openstud
                                                                   bool translateHVAC, std::string leakageDescriptor)
 {
   if(translate(model,translateHVAC,leakageDescriptor))
-    return boost::optional<std::string>(m_data.print().toStdString());
+    return boost::optional<std::string>(m_data.toString());
   return false;
 }
 
@@ -259,7 +260,7 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
     if(name)
       modelDescr = QString("Automatically generated from \"%1\" OpenStudio model").arg(openstudio::toQString(name.get()));
   }
-  m_data.rc.prjdesc = modelDescr;
+  m_data.rc.setPrjdesc(modelDescr);
   std::vector<openstudio::model::BuildingStory> stories = model.getModelObjects<openstudio::model::BuildingStory>();
   // Translate each building story into a level and generate a lookup table by handle.
   if (m_progressBar)
@@ -274,7 +275,7 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
   BOOST_FOREACH(const openstudio::model::BuildingStory& buildingStory, stories)
   {
     openstudio::contam::prj::Level level;
-    level.name = QString("<%1>").arg(nr);
+    level.setName(QString("<%1>").arg(nr).toStdString());
     m_levelMap[buildingStory.handle()] = nr;
     double ht = buildingStory.nominalFloortoFloorHeight();
     totalHeight += ht;
@@ -282,17 +283,17 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
     double z = totalHeight;
     if(elevation)
       z = *elevation;
-    level.nr = nr;
-    level.refht = QString("%1").arg(z);
-    level.delht = QString("%1").arg(ht);
-    m_data.levels << level;
+    level.setNr(nr);
+    level.setRefht(QString("%1").arg(z).toStdString());
+    level.setDelht(QString("%1").arg(ht).toStdString());
+    m_data.levels().push_back(level);
     nr++;
     if (m_progressBar)
     {
       m_progressBar->setValue(m_progressBar->value() + 1);
     }
   }
-  m_data.rc.wind_H = QString().sprintf("%g",totalHeight);
+  m_data.rc.setWind_H(QString().sprintf("%g",totalHeight),toStdString());
   // Check for levels - translation can't proceed without levels
   if(m_data.levels.size() == 0)
   {
@@ -316,8 +317,8 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
     openstudio::contam::prj::Zone zone;
     m_zoneMap[thermalZone.handle()] = nr;
     //volumeMap[thermalZone.name().get()] = nr;
-    zone.nr = nr;
-    zone.name = QString("Zone_%1").arg(nr);
+    zone.setNr(nr);
+    zone.setName(QString("Zone_%1").arg(nr).toStdString());
     boost::optional<double> volume = thermalZone.volume();
     QString volString("0.0");
     if(volume)
@@ -342,7 +343,7 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
         volString = QString("%1").arg(vol);
       }
     }
-    zone.Vol = volString;
+    zone.setVol(volString.toStdString());
     zone.setVariablePressure(true);
     zone.setVariableContaminants(true);
     // Set level - this is not great and will fail to create a legitimate model in cases
@@ -360,7 +361,7 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
     }
     if(levelNr)
     {
-      zone.pl = levelNr;
+      zone.setPl(levelNr);
     }
     else
     {
@@ -369,8 +370,8 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
       return false;
     }
     // set T0
-    zone.T0 = QString("293.15");
-    m_data.zones << zone;
+    zone.setT0(QString("293.15").toStdString());
+    m_data.zones().push_back(zone);
     if (m_progressBar)
     {
       m_progressBar->setValue(m_progressBar->value() + 1);
@@ -389,7 +390,7 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
   nr = 0;
   // Loop over surfaces and generate paths
   QList <openstudio::Handle>used;
-  double wind_H = m_data.rc.wind_H.toDouble();
+  double wind_H = QString().fromStdString(m_data.rc.wind_H()).toDouble();
   BOOST_FOREACH(openstudio::model::Surface surface,surfaces)
   {
     openstudio::contam::prj::Path path;
@@ -428,7 +429,7 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
         }
         continue;
       }
-      openstudio::contam::prj::Zone *zone = &(m_data.zones[zoneNr-1]);
+      openstudio::contam::prj::Zone *zone = &(m_data.zones()[zoneNr-1]);
       // Get the surface area - will need to do more work here later if large openings are present
       double area = surface.grossArea();
       std::string type = surface.surfaceType();
@@ -439,20 +440,20 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
         averageZ += point.z();
       }
       // Now set the path info
-      path.relHt = QString().sprintf("%g",averageZ / numVertices - m_data.levels[zone->pl-1].refht.toDouble());
-      path.pld = zone->pl;
-      path.mult = QString().sprintf("%g",area);
+      path.setRelHt(QString().sprintf("%g",averageZ / numVertices - QString().fromStdString(m_data.levels[zone->pl-1].refht()).toDouble()).toStdString());
+      path.setPld(zone->pl());
+      path.setMult(QString().sprintf("%g",area).toStdString());
       // Now for the type specific info
       if(bc == "Outdoors")
       {
         // Make an exterior flow path
-        path.pzn = zone->nr;
-        path.pzm = -1;
+        path.setPzn(zone->nr());
+        path.setPzm(-1);
         // Set the wind-related stuff here
-        path.wazm = QString().sprintf("%g",openstudio::radToDeg(surface.azimuth()));
+        path.setWazm(QString().sprintf("%g",openstudio::radToDeg(surface.azimuth())).toStdString());
         path.setWindPressure(true);
-        path.wPmod = QString().sprintf("%g",openstudio::wind::pressureModifier(openstudio::wind::Default,wind_H));
-        path.pw = 4; // Assume standard template
+        path.setWPmod(QString().sprintf("%g",openstudio::wind::pressureModifier(openstudio::wind::Default,wind_H)).toStdString());
+        path.setPw(4); // Assume standard template
         // Set flow element
         if(type == "RoofCeiling")
         {
@@ -1403,6 +1404,8 @@ std::vector<LogMessage> ForwardTranslator::errors() const
 
   return result;
 }
+
+*/
 
 } // contam
 } // openstudio

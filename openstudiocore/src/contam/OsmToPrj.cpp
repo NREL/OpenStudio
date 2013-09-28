@@ -82,6 +82,7 @@ int main(int argc, char *argv[])
     }
 
     openstudio::path prjPath = inputPath.replace_extension(openstudio::toPath("prj").string());
+    /*
     openstudio::contam::ForwardTranslator translator;
     QFile file(openstudio::toQString(prjPath));
     if(file.open(QFile::WriteOnly))
@@ -108,6 +109,7 @@ int main(int argc, char *argv[])
     // The details on what we should do with these maps are still unclear
     // openstudio::path mapPath = inputPath.replace_extension(openstudio::toPath("map").string());
     // translator.writeMaps(mapPath);
+    */
   }
   else
   {

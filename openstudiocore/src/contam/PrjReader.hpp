@@ -14,22 +14,22 @@
  *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ *  02110-1301  USA
  **********************************************************************/
 #ifndef PRJREADER_H
 #define PRJREADER_H
 
-#include <utilities/core/Logger.hpp>
-
 #include <QTextStream>
 #include <QStringList>
+#include <QVector>
 #include <QSharedPointer>
 
-#include "PrjDefs.hpp"
+#include "PrjDefines.hpp"
 
-CONTAMNAMESPACESTART
-namespace prj
-{
+namespace openstudio {
+namespace contam {
+namespace prj {
 
 class Reader
 {
@@ -37,103 +37,162 @@ public:
     explicit Reader(QTextStream *stream);
     explicit Reader(QString string, int starting=0);
     ~Reader();
+
     float readFloat(DECFILELINE);
     double readDouble(DECFILELINE);
-    QString readString(DECFILELINE);
+    STRING readString(DECFILELINE);
     int readInt(DECFILELINE);
-    QString readLine(DECFILELINE);
+    unsigned int readUInt(DECFILELINE);
+
+    STRING readLine(DECFILELINE);
     void read999(DECFILELINE);
-    void read999(QString mesg DECCFILELINE);
+    void read999(STRING mesg DECCFILELINE);
     void readEnd(DECFILELINE);
+
     void skipSection(DECFILELINE);
-    QString storeSection(DECFILELINE);
+    STRING readSection(DECFILELINE);
     int lineNumber(){return m_lineNumber;}
-    QVector<int> readIntArray(DECFILELINEC bool terminated=false);
-    template <class T> QList<T*> readSectionPointers(DECFILELINEC QString name=QString());
-    template <class T> QList<T> readSectionList(DECFILELINEC QString name=QString());
-    template <class T> QVector<T> readSectionVector(DECFILELINEC QString name=QString());
-    template <class T> QVector<QSharedPointer<T> > readElementVector(DECFILELINEC QString name=QString());
+
+    template <class T> VECTOR<T> readSectionVector(DECFILELINEC STRING name=STRING_INIT);
+
+    VECTOR<int> readIntVector(DECFILELINEC bool terminated=false);
+//    std::vector<int> readIntStdVector(DECFILELINEC bool terminated=false);
+//    template <class T> QList<T*> readSectionPointers(DECFILELINEC STRING name=STRING_INIT);
+//    template <class T> QList<T> readSectionList(DECFILELINEC STRING name=STRING_INIT);
+//    template <class T, template <class T> class V> V<T> readSectionVector(DECFILELINEC STRING name);
+//    template <class T> QVector<T> readSectionQVector(DECFILELINEC STRING name=STRING_INIT);
+//    template <class T> std::vector<T> readSectionStdVector(DECFILELINEC STRING name=STRING_INIT);
+    template <class T> QVector<QSharedPointer<T> > readElementVector(DECFILELINEC STRING name=STRING_INIT);
+
     template <class T> T read(DECFILELINE);
     template <class T> T readNumber(DECFILELINE);
 
-
 private:
+    QString readQString(DECFILELINE);
+    std::string readStdString(DECFILELINE);
+    QString readLineQString(DECFILELINE);
+
     QTextStream *stream;
     int m_lineNumber;
     bool allocated;
     QStringList entries;
-	void error(QString mesg DECCFILELINE);
-
-	REGISTER_LOGGER("openstudio.contam.prj.Reader");
 };
 
-template <class T> QList<T*> Reader::readSectionPointers(DECFILELINEC QString name)
+template <class T> VECTOR<T> Reader::readSectionVector(DECFILELINEC STRING name)
 {
-    QList<T*> list;
-    T *object;
     int n = readInt(ARGFILELINE);
+    VECTOR<T> vector;
     for(int i=0;i<n;i++)
     {
-        object = new T();
-        list << object;
-        object->read(this);
+        T value;
+        value.read(*this);
+        vector.push_back(value);
     }
-    if(name.isNull())
-        read999(QString("Failed to find section termination") ARGCFILELINE);
+    if(IS_NULL(name))
+        read999("Failed to find section termination" ARGCFILELINE);
     else
-        read999(QString("Failed to find %1 section termination").arg(name) ARGCFILELINE);
-    return list;
-}
-
-template <class T> QList<T> Reader::readSectionList(DECFILELINEC QString name)
-{
-    QList<T> list;
-    int n = readInt(ARGFILELINE);
-    for(int i=0;i<n;i++)
-    {
-        T object;
-        object.read(this);
-        list << object;
-    }
-    if(name.isNull())
-        read999(QString("Failed to find section termination") ARGCFILELINE);
-    else
-        read999(QString("Failed to find %1 section termination").arg(name) ARGCFILELINE);
-    return list;
-}
-
-template <class T> QVector<T> Reader::readSectionVector(DECFILELINEC QString name)
-{
-    int n = readInt(ARGFILELINE);
-    QVector<T> vector(n);
-    for(int i=0;i<n;i++)
-        vector[i].read(this);
-    if(name.isNull())
-        read999(QString("Failed to find section termination") ARGCFILELINE);
-    else
-        read999(QString("Failed to find %1 section termination").arg(name) ARGCFILELINE);
+        read999("Failed to find "+name+" section termination" ARGCFILELINE);
     return vector;
 }
 
-template <class T> QVector<QSharedPointer<T> > Reader::readElementVector(DECFILELINEC QString name)
+//template <class T> QList<T*> Reader::readSectionPointers(DECFILELINEC STRING name)
+//{
+//    QList<T*> list;
+//    T *object;
+//    int n = readInt(ARGFILELINE);
+//    for(int i=0;i<n;i++)
+//    {
+//        object = new T();
+//        list << object;
+//        object->read(this);
+//    }
+//    if(IS_NULL(name))
+//        read999("Failed to find section termination" ARGCFILELINE);
+//    else
+//        read999("Failed to find "+name+" section termination" ARGCFILELINE);
+//    return list;
+//}
+
+//template <class T> QList<T> Reader::readSectionList(DECFILELINEC STRING name)
+//{
+//    QList<T> list;
+//    int n = readInt(ARGFILELINE);
+//    for(int i=0;i<n;i++)
+//    {
+//        T object;
+//        object.read(this);
+//        list << object;
+//    }
+//    if(IS_NULL(name))
+//        read999("Failed to find section termination" ARGCFILELINE);
+//    else
+//        read999("Failed to find "+name+" section termination" ARGCFILELINE);
+//    return list;
+//}
+
+//template <class T, template <class T> class V> V<T> Reader::readSectionVector(DECFILELINEC STRING name)
+//{
+//    int n = readInt(ARGFILELINE);
+//    V<T> vector(n);
+//    for(int i=0;i<n;i++)
+//        vector[i].read(*this);
+//    if(IS_NULL(name))
+//        read999("Failed to find section termination" ARGCFILELINE);
+//    else
+//        read999("Failed to find "+name+" section termination" ARGCFILELINE);
+//    return vector;
+//}
+
+//template <class T> QVector<T> Reader::readSectionQVector(DECFILELINEC STRING name)
+//{
+//    int n = readInt(ARGFILELINE);
+//    QVector<T> vector(n);
+//    for(int i=0;i<n;i++)
+//        vector[i].read(*this);
+//    if(IS_NULL(name))
+//        read999("Failed to find section termination" ARGCFILELINE);
+//    else
+//        read999("Failed to find "+name+" section termination" ARGCFILELINE);
+//    return vector;
+//}
+
+//template <class T> std::vector<T> Reader::readSectionStdVector(DECFILELINEC STRING name)
+//{
+//    int n = readInt(ARGFILELINE);
+//    std::vector<T> vector;
+//    for(int i=0;i<n;i++)
+//    {
+//        T v;
+//        v.read(*this);
+//        vector.push_back(v);
+//    }
+//    if(IS_NULL(name))
+//        read999("Failed to find section termination" ARGCFILELINE);
+//    else
+//        read999("Failed to find "+name+" section termination" ARGCFILELINE);
+//    return vector;
+//}
+
+template <class T> QVector<QSharedPointer<T> > Reader::readElementVector(DECFILELINEC STRING name)
 {
     int n = readInt(ARGFILELINE);
     QVector<QSharedPointer<T> > vector(n);
     for(int i=0;i<n;i++)
-	{
-		// No reset in 4.8
-        QSharedPointer<T> element(T::readElement(this));
+    {
+        // No reset in 4.8
+        QSharedPointer<T> element(T::readElement(*this));
         vector[i].swap(element);
         //vector[i].reset(T::readElement(this));
-	}
-    if(name.isNull())
-        read999(QString("Failed to find section termination") ARGCFILELINE);
+    }
+    if(IS_NULL(name))
+        read999("Failed to find section termination" ARGCFILELINE);
     else
-        read999(QString("Failed to find %1 section termination").arg(name) ARGCFILELINE);
+        read999("Failed to find "+name+" section termination" ARGCFILELINE);
     return vector;
 }
 
-}
-CONTAMNAMESPACEEND
+} // prj
+} // contam
+} // openstudio
 
 #endif // PRJREADER_H

@@ -23,7 +23,7 @@
 
 #include "ContamAPI.hpp"
 
-#include <contam/PrjData.hpp>
+#include <contam/PrjModel.hpp>
 
 #include <utilities/idf/Handle.hpp>
 #include <utilities/core/Path.hpp>
@@ -57,7 +57,7 @@ public:
   static bool modelToPrj(const openstudio::model::Model& model, const openstudio::path& path,
     bool translateHVAC=true, std::string leakageDescriptor=std::string("Average"), ProgressBar* progressBar=NULL);
 
-  bool valid() const {return m_valid && m_data.valid;}
+  bool valid() const {return m_valid && m_data.valid();}
   std::map <Handle, int> surfaceMap() const {return m_surfaceMap;}
   std::map <Handle, int> zoneMap() const {return m_zoneMap;}
 
@@ -78,7 +78,7 @@ private:
   std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
   Handle reverseLookup(QMap<Handle,int> map, int nr, const char *name);
 
-  prj::Data m_data;
+  prj::Model m_data;
   // Maps - will be populated after a call of translateToPrj
   // All map to the CONTAM index (1,2,...,nElement)
   QMap<QString,int> m_afeMap;

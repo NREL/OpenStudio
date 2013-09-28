@@ -4,23 +4,27 @@ SET( ${target_name}_src
   ContamAPI.hpp
   ForwardTranslator.hpp
   ForwardTranslator.cpp
-  ReverseTranslator.hpp
-  ReverseTranslator.cpp
   InfiltrationCalculator.hpp
   InfiltrationCalculator.cpp
   PrjReader.hpp
   PrjReader.cpp
   PrjWriter.hpp
   PrjWriter.cpp
-  PrjObjects.hpp
-  PrjObjects.cpp
-  PrjDefs.hpp
-  PrjData.hpp
-  PrjData.cpp
   SimTxt.hpp
   SimTxt.cpp
   WindPressure.hpp
   WindPressure.cpp
+  PrjDefines.hpp
+  PrjModel.hpp
+  PrjModel.cpp
+  PrjPublic.hpp
+  PrjPublic.cpp
+  PrjPrivate.hpp
+  PrjPrivate.cpp
+  PrjSubobjects.hpp
+  PrjSubobjects.cpp
+  PrjSubobjectsPrivate.hpp
+  PrjSubobjectsPrivate.cpp
 )
 
 # resource files
@@ -84,13 +88,13 @@ TARGET_LINK_LIBRARIES( OsmToPrj
   openstudio_contam
 )
 
-add_executable(PrjToOsm PrjToOsm.cpp)
-
-TARGET_LINK_LIBRARIES( PrjToOsm
-  ${${target_name}_depends}
-  openstudio_osversion
-  openstudio_contam
-)
+#add_executable(PrjToOsm PrjToOsm.cpp)
+#
+#TARGET_LINK_LIBRARIES( PrjToOsm
+#  ${${target_name}_depends}
+#  openstudio_osversion
+#  openstudio_contam
+#)
 
 add_executable(FitInfiltration FitInfiltration.cpp)
 

@@ -14,16 +14,16 @@
  *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ *  02110-1301  USA
  **********************************************************************/
 #include "PrjReader.hpp"
 #include <iostream>
 #include <stdlib.h>
-#include "PrjData.hpp"
 
-CONTAMNAMESPACESTART
-namespace prj
-{
+namespace openstudio {
+namespace contam {
+namespace prj {
 
 Reader::Reader(QTextStream *stream):stream(stream),m_lineNumber(0),allocated(false)
 {
@@ -44,74 +44,178 @@ Reader::~Reader()
 float Reader::readFloat(DECFILELINE)
 {
     bool ok;
-    QString string = readString(ARGFILELINE);
+    QString string = readQString(ARGFILELINE);
     float value = string.toFloat(&ok);
     if(!ok)
-        error(QString("Floating point (float) conversion error at line %1 for \"%2\"").arg(m_lineNumber).arg(string) ARGCFILELINE);
+    {
+        QString mesg=QString("Floating point (float) conversion error at line %1 for \"%2\"")
+                .arg(m_lineNumber).arg(string);
+#ifndef NOFILELINE
+        mesg +=  QString(" (%1,%2)").arg(file).arg(line);
+#endif
+        ERROR(mesg.toStdString());
+    }
     return value;
 }
 
 double Reader::readDouble(DECFILELINE)
 {
     bool ok;
-    QString string = readString(ARGFILELINE);
+    QString string = readQString(ARGFILELINE);
     double value = string.toDouble(&ok);
     if(!ok)
-        error(QString("Floating point (double) conversion error at line %1 for \"%2\"").arg(m_lineNumber).arg(string) ARGCFILELINE);
+    {
+        QString mesg=QString("Floating point (double) conversion error at line %1 for \"%2\"")
+                .arg(m_lineNumber).arg(string);
+#ifndef NOFILELINE
+        mesg +=  QString(" (%1,%2)").arg(file).arg(line);
+#endif
+        ERROR(mesg.toStdString());
+    }
     return value;
 }
 
-QString Reader::readString(DECFILELINE)
+QString Reader::readQString(DECFILELINE)
 {
     while(1)
     {
         while(this->entries.size() == 0)
         {
             QString input = stream->readLine();
+#ifdef DEBUG
+            std::cout << "Line read: " << input.toStdString() << std::endl;
+#endif
             if(input.isNull())
-                error(QString("Failed to read input at line %1").arg(m_lineNumber) ARGCFILELINE);
+            {
+                QString mesg=QString("Failed to read input at line %1").arg(m_lineNumber);
+#ifndef NOFILELINE
+                mesg +=  QString(" (%1,%2)").arg(file).arg(line);
+#endif
+                ERROR(mesg.toStdString());
+            }
             m_lineNumber++;
             while(input[0]=='!')
             {
                 input = stream->readLine();
+#ifdef DEBUG
+                std::cout << "Line read: " << input.toStdString() << std::endl;
+#endif
                 if(input.isNull())
-                    error(QString("Failed to read input at line %1").arg(m_lineNumber) ARGCFILELINE);
+                {
+                    QString mesg=QString("Failed to read input at line %1").arg(m_lineNumber);
+#ifndef NOFILELINE
+                    mesg +=  QString(" (%1,%2)").arg(file).arg(line);
+#endif
+                    ERROR(mesg.toStdString());
+                }
                 m_lineNumber++;
             }
             entries = input.split(" ",QString::SkipEmptyParts);
         }
         QString out = entries.takeFirst();
         if(out[0] == '!')
+        {
             entries.clear();
+        }
         else
+        {
+#ifdef DEBUG
+            std::cout << "String return: " << out.toStdString() << std::endl;
+#endif
             return out;
+        }
     }
+}
+
+std::string Reader::readStdString(DECFILELINE)
+{
+    return readQString(ARGFILELINE).toStdString();
+}
+
+STRING Reader::readString(DECFILELINE)
+{
+#ifdef STD_STRING
+    return readQString(ARGFILELINE).toStdString();
+#else
+    return readQString(ARGFILELINE);
+#endif
 }
 
 int Reader::readInt(DECFILELINE)
 {
     bool ok;
-    QString string = readString(ARGFILELINE);
+    QString string = readQString(ARGFILELINE);
     int value = string.toInt(&ok);
     if(!ok)
-        error(QString("Integer conversion error at line %1 for \"%2\"").arg(m_lineNumber).arg(string) ARGCFILELINE);
+    {
+        QString mesg=QString("Integer conversion error at line %1 for \"%2\"").arg(m_lineNumber).arg(string);
+#ifndef NOFILELINE
+        mesg +=  QString(" (%1,%2)").arg(file).arg(line);
+#endif
+        ERROR(mesg.toStdString());
+    }
     return value;
 }
 
-QString Reader::readLine(DECFILELINE)
+unsigned int Reader::readUInt(DECFILELINE)
+{
+    bool ok;
+    QString string = readQString(ARGFILELINE);
+    int value = string.toUInt(&ok);
+    if(!ok)
+    {
+        QString mesg=QString("Unsigned integer conversion error at line %1 for \"%2\"").arg(m_lineNumber).arg(string);
+#ifndef NOFILELINE
+        mesg +=  QString(" (%1,%2)").arg(file).arg(line);
+#endif
+        ERROR(mesg.toStdString());
+    }
+    return value;
+}
+
+STRING Reader::readLine(DECFILELINE)
+{
+#ifdef STD_STRING
+    return readLineQString(ARGFILELINE).toStdString();
+#else
+    return readLineQString(ARGFILELINE);
+#endif
+}
+
+QString Reader::readLineQString(DECFILELINE)
 {
     /* Dump any other input */
     if(entries.size())
+    {
         entries.clear();
+    }
     QString input = stream->readLine();
+#ifdef DEBUG
+    std::cout << "Line read: " << input.toStdString() << std::endl;
+#endif
     if(input.isNull())
-        error(QString("Failed to read input at line %1").arg(m_lineNumber) ARGCFILELINE);
+    {
+        QString mesg=QString("Failed to read input at line %1").arg(m_lineNumber);
+#ifndef NOFILELINE
+        mesg +=  QString(" (%1,%2)").arg(file).arg(line);
+#endif
+        ERROR(mesg.toStdString());
+    }
     m_lineNumber++;
     while(input[0]=='!')
     {
         input = stream->readLine();
+#ifdef DEBUG
+        std::cout << "Line read: " << input.toStdString() << std::endl;
+#endif
         if(input.isNull())
-            error(QString("Failed to read input at line %1").arg(m_lineNumber) ARGCFILELINE);
+        {
+            QString mesg=QString("Failed to read input at line %1").arg(m_lineNumber);
+#ifndef NOFILELINE
+            mesg +=  QString(" (%1,%2)").arg(file).arg(line);
+#endif
+            ERROR(mesg.toStdString());
+        }
         m_lineNumber++;
     }
     return input;
@@ -119,50 +223,77 @@ QString Reader::readLine(DECFILELINE)
 
 void Reader::read999(DECFILELINE)
 {
-    QString input = readLine(ARGFILELINE);
+    QString input = readLineQString(ARGFILELINE);
     if(!input.startsWith(QString("-999")))
-        error(QString("Failed to read -999 at line %1").arg(m_lineNumber) ARGCFILELINE);
+    {
+        QString mesg=QString("Failed to read -999 at line %1").arg(m_lineNumber);
+#ifndef NOFILELINE
+        mesg +=  QString(" (%1,%2)").arg(file).arg(line);
+#endif
+        ERROR(mesg.toStdString());
+    }
 }
 
-void Reader::read999(QString mesg DECCFILELINE)
+void Reader::read999(STRING mesg DECCFILELINE)
 {
-    QString input = readLine(ARGFILELINE);
+    QString input = readLineQString(ARGFILELINE);
+    QString qmesg;
     if(!input.startsWith(QString("-999")))
-        error(mesg+(QString(" at line %1").arg(m_lineNumber)) ARGCFILELINE);
+    {
+#ifdef STD_STRING
+        qmesg = QString().fromStdString(mesg) + QString(" at line %1").arg(m_lineNumber);
+#else
+        qmesg = mesg + QString(" at line %1").arg(m_lineNumber);
+#endif
+#ifndef NOFILELINE
+        qmesg +=  QString(" (%1,%2)").arg(file).arg(line);
+#endif
+        ERROR(qmesg.toStdString());
+    }
 }
 
 void Reader::readEnd(DECFILELINE)
 {
-    QString input = readLine(ARGFILELINE);
+    QString input = readLineQString(ARGFILELINE);
     if(!input.startsWith(QString("* end project file.")))
-        error(QString("Failed to read file end at line %1").arg(m_lineNumber) ARGCFILELINE);
+    {
+        QString mesg = QString("Failed to read file end at line %1").arg(m_lineNumber);
+#ifndef NOFILELINE
+        mesg +=  QString(" (%1,%2)").arg(file).arg(line);
+#endif
+        ERROR(mesg.toStdString());
+    }
 }
 
 void Reader::skipSection(DECFILELINE)
 {
-    QString input;
-    while(1)
-    {
-        input = readLine(ARGFILELINE);
-        if(input.startsWith(QString("-999")))
-            break;
-    }
+    readSection(ARGFILELINE);
 }
 
-QString Reader::storeSection(DECFILELINE)
+STRING Reader::readSection(DECFILELINE)
 {
     QString section;
     while(1)
     {
         QString input = stream->readLine();
         if(input.isNull())
-            error(QString("Failed to read input at line %1").arg(m_lineNumber) ARGCFILELINE);
+        {
+            QString mesg = QString("Failed to read input at line %1").arg(m_lineNumber);
+#ifndef NOFILELINE
+            mesg +=  QString(" (%1,%2)").arg(file).arg(line);
+#endif
+            ERROR(mesg.toStdString());
+        }
         m_lineNumber++;
         section += input + '\n';
         if(input.startsWith(QString("-999")))
             break;
     }
+#ifdef STD_STRING
+    return section.toStdString();
+#else
     return section;
+#endif
 }
 
 //QList<int> PrjReader::readIntArray(const char *file, int line, bool terminated)
@@ -176,20 +307,40 @@ QString Reader::storeSection(DECFILELINE)
 //    return list;
 //}
 
-QVector<int> Reader::readIntArray(DECFILELINEC bool terminated)
+VECTOR<int> Reader::readIntVector(DECFILELINEC bool terminated)
 {
     int n = readInt(ARGFILELINE);
-    QVector<int> list(n);
+    VECTOR<int> vector;
     for(int i=0;i<n;i++)
-        list[i] = readInt(ARGFILELINE);
+    {
+        vector.push_back(readInt(ARGFILELINE));
+    }
     if(terminated)
-        read999(QString("Failed to find section termination") ARGCFILELINE);
-    return list;
+    {
+        read999("Failed to find section termination" ARGCFILELINE);
+    }
+    return vector;
 }
+
+//std::vector<int> Reader::readIntStdVector(DECFILELINEC bool terminated)
+//{
+//    int n = readInt(ARGFILELINE);
+//    std::vector<int> list;
+//    for(int i=0;i<n;i++)
+//        list.push_back(readInt(ARGFILELINE));
+//    if(terminated)
+//        read999("Failed to find section termination" ARGCFILELINE);
+//    return list;
+//}
 
 template <> int Reader::read<int>(DECFILELINE)
 {
     return readInt(ARGFILELINE);
+}
+
+template <> unsigned int Reader::read<unsigned int>(DECFILELINE)
+{
+    return readUInt(ARGFILELINE);
 }
 
 template <> double Reader::read<double>(DECFILELINE)
@@ -204,7 +355,12 @@ template <> float Reader::read<float>(DECFILELINE)
 
 template <> QString Reader::read<QString>(DECFILELINE)
 {
-    return readString(ARGFILELINE);
+    return readQString(ARGFILELINE);
+}
+
+template <> std::string Reader::read<std::string>(DECFILELINE)
+{
+    return readStdString(ARGFILELINE);
 }
 
 template <> double Reader::readNumber<double>(DECFILELINE)
@@ -220,23 +376,35 @@ template <> float Reader::readNumber<float>(DECFILELINE)
 template <> QString Reader::readNumber<QString>(DECFILELINE)
 {
     bool ok;
-    QString string = readString(ARGFILELINE);
+    QString string = readQString(ARGFILELINE);
     string.toDouble(&ok);
     if(!ok)
-        error(QString("Invalid number \"%2\" on line %1").arg(m_lineNumber).arg(string) ARGCFILELINE);
+    {
+        QString mesg = QString("Invalid number \"%2\" on line %1").arg(m_lineNumber).arg(string);
+#ifndef NOFILELINE
+        mesg +=  QString(" (%1,%2)").arg(file).arg(line);
+#endif
+        ERROR(mesg.toStdString());
+    }
     return string;
 }
 
-void Reader::error(QString mesg DECCFILELINE)
+template <> std::string Reader::readNumber<std::string>(DECFILELINE)
 {
-	LOG(Error, mesg.toStdString());
-//#ifdef NOFILELINE
-//    std::cout << mesg.toStdString() << std::endl;
-//#else
-//    std::cout << mesg.toStdString() << '(' << file << ',' << line << ")\n";
-//#endif
-//    exit(EXIT_FAILURE);
+    bool ok;
+    QString string = readQString(ARGFILELINE);
+    string.toDouble(&ok);
+    if(!ok)
+    {
+        QString mesg = QString("Invalid number \"%2\" on line %1").arg(m_lineNumber).arg(string);
+#ifndef NOFILELINE
+        mesg +=  QString(" (%1,%2)").arg(file).arg(line);
+#endif
+        ERROR(mesg.toStdString());
+    }
+    return string.toStdString();
 }
 
-}
-CONTAMNAMESPACEEND
+} // prj
+} // contam
+} // openstudio

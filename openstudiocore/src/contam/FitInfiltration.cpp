@@ -56,6 +56,7 @@ QVector<double> runCase(std::map <openstudio::Handle,int> spaceMap,
                         openstudio::path simreadExePath, bool verbose=false)
 {
   QVector<double> results(spaceMap.size(),0.0);
+  /*
   std::map<openstudio::Handle,int> surfaceMap = translator.surfaceMap();
   translator.setSteadyWeather(windSpeed,windDirection);
   QString fileName = QString("temporary-%1-%2.prj").arg(windSpeed).arg(windDirection);
@@ -183,11 +184,13 @@ QVector<double> runCase(std::map <openstudio::Handle,int> spaceMap,
       results[indexIter->second] += flow0[index][0];
     }
   }
+  */
   return results;
 }
 
 int main(int argc, char *argv[])
 {
+  /*
   // Some ugly hard coded paths
   // Windows
   openstudio::path contamExePath = openstudio::toPath("C:\\Program Files (x86)\\NIST\\CONTAM 3.1\\ContamX3.exe");
@@ -462,6 +465,6 @@ int main(int argc, char *argv[])
     std::cout << openstudio::toString(handleCoeff.first) << ' ' << handleCoeff.second.Idesign() << ' '
               << handleCoeff.second.C() << ' ' << handleCoeff.second.D() <<std::endl;
   }
-    
+  */
   return EXIT_SUCCESS;
 }
