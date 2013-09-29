@@ -197,6 +197,9 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
   isConnected = connect(mainWindow, SIGNAL(openCloudDlgClicked()),this,SLOT(openCloudDlg()));
   OS_ASSERT(isConnected);
 
+  //isConnected = connect(mainWindow, SIGNAL(cloudConnectionLost()),this,SLOT(openLostCloudConnectionDlg()));
+  //OS_ASSERT(isConnected);
+
   isConnected = connect(mainWindow, SIGNAL(openMonitorUseDlgClicked()),this,SLOT(openMonitorUseDlg()));
   OS_ASSERT(isConnected);
 
@@ -444,6 +447,10 @@ void PatApp::on_closeBclDlg()
 
 void PatApp::openCloudDlg()
 {
+  // TODO remove
+  //openLostCloudConnectionDlg();
+  //return;
+
   if(!m_cloudDialog){
     m_cloudDialog = new CloudDialog();
 
@@ -459,6 +466,25 @@ void PatApp::openCloudDlg()
 void PatApp::on_closeCloudDlg()
 {
 // TODO m_cloudDialog
+}
+
+void PatApp::openLostCloudConnectionDlg()
+{
+  if(!m_lostCloudConnectiopnDialog){
+    m_lostCloudConnectiopnDialog = new LostCloudConnectionDialog();
+
+    bool isConnected = connect(m_lostCloudConnectiopnDialog, SIGNAL(rejected()),
+                               this, SLOT(on_closeBclDlg()));
+    OS_ASSERT(isConnected);
+  }
+  if(m_lostCloudConnectiopnDialog && !m_lostCloudConnectiopnDialog->isVisible()){
+    m_lostCloudConnectiopnDialog->show();
+  }
+}
+
+void PatApp::on_closeLostCloudConnectionDlg()
+{
+// TODO m_lostCloudConnectiopnDialog
 }
 
 void PatApp::openMonitorUseDlg()
