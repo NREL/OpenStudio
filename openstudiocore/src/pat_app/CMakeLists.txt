@@ -209,7 +209,6 @@ CONFIGURE_FILE(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
 # configure vagrant 
 SET(VAGRANT_SERVER_PATH "" CACHE PATH "Pat to vagrant openstudio server")
 SET(VAGRANT_WORKER_PATH "" CACHE PATH "Pat to vagrant openstudio worker")
-SET(SHOW_VAGRANT "false" CACHE BOOL "Show vagrant option to GUI users")
 CONFIGURE_FILE(VagrantConfiguration.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/VagrantConfiguration.hxx")
 
 IF( WIN32 )

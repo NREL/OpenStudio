@@ -656,6 +656,10 @@ qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
 # generate rules for building source files from the resources
 qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
 
+# configure vagrant 
+SET(SHOW_VAGRANT "false" CACHE BOOL "Show vagrant option to GUI users")
+CONFIGURE_FILE(VagrantConfiguration.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/VagrantConfiguration.hxx")
+
 ADD_LIBRARY( ${target_name}
   SHARED
   ${${target_name}_SRC}

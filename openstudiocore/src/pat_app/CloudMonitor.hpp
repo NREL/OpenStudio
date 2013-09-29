@@ -78,8 +78,6 @@ class CloudMonitor : public QObject
   // Temporary settings for development
   static CloudSettings createTestSettings();
 
-  bool showVagrantOption() {return m_showVagrant;}
-
   signals:
 
   // This will be removed.  Use ::status() to get information about the cloud.
@@ -159,8 +157,6 @@ class CloudMonitor : public QObject
   CloudStatus m_status;
 
   friend class CloudMonitorWorker;
-
-  bool m_showVagrant;
 };
 
 class StartCloudWorker : public QObject

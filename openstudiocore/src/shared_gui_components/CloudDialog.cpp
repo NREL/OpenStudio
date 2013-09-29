@@ -19,7 +19,7 @@
 
 #include "CloudDialog.hpp"
 
-#include <pat_app/CloudMonitor.hpp>
+#include <openstudio_lib/VagrantConfiguration.hxx>
 
 #include <utilities/cloud/AWSProvider.hpp>
 #include <utilities/cloud/AWSProvider_Impl.hpp>
@@ -112,9 +112,7 @@ void CloudDialog::createWidgets()
   m_leftLoginLayout->addWidget(m_cloudResourceComboBox,0,Qt::AlignTop | Qt::AlignLeft);
  
   m_cloudResourceComboBox->addItem(NO_PROVIDER);
-  pat::CloudMonitor cloudMonitor;
-  bool showVagrant = cloudMonitor.showVagrantOption();
-  if(showVagrant) m_cloudResourceComboBox->addItem(VAGRANT_PROVIDER);
+  if(showVagrant()) m_cloudResourceComboBox->addItem(VAGRANT_PROVIDER);
   m_cloudResourceComboBox->addItem(AMAZON_PROVIDER);
 
   isConnected = connect(m_cloudResourceComboBox, SIGNAL(currentIndexChanged(const QString &)),
@@ -672,10 +670,9 @@ void  VagrantProviderWidget::loadData()
   m_workerPortIpLineEdit->setText(temp.setNum(url.port()));
   m_workerDirLineEdit->setText(toQString(vagrantSettings.workerPath()));
 
-  // TODO
-  //m_waitCheckBox->setChecked(vagrantSettings.terminationDelayEnabled());
+  m_waitCheckBox->setChecked(vagrantSettings.terminationDelayEnabled());
 
-  //m_waitLineEdit->setText(temp.setNum(vagrantSettings.terminationDelay()));
+  m_waitLineEdit->setText(temp.setNum(vagrantSettings.terminationDelay()));
 }
 
 void  VagrantProviderWidget::saveData()
@@ -701,11 +698,10 @@ void  VagrantProviderWidget::saveData()
   url.setPort(m_workerPortIpLineEdit->text().toInt());
   vagrantSettings.setWorkerUrl(url);
 
-  // TODO
-  //vagrantSettings.setTerminationDelayEnabled(m_waitCheckBox->isChecked());
+  vagrantSettings.setTerminationDelayEnabled(m_waitCheckBox->isChecked());
 
-  //unsigned wait = m_waitLineEdit->text().toUInt();
-  //vagrantSettings.setTerminationDelay(wait);
+  unsigned wait = m_waitLineEdit->text().toUInt();
+  vagrantSettings.setTerminationDelay(wait);
 }
 
 //***** SLOTS *****

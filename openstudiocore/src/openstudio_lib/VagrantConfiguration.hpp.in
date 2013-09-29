@@ -17,22 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_PAT_VAGRANTCONFIGURATION
-#define OPENSTUDIO_PAT_VAGRANTCONFIGURATION
-
-#include <utilities/core/Path.hpp>
+#ifndef OPENSTUDIO_VAGRANTCONFIGURATION
+#define OPENSTUDIO_VAGRANTCONFIGURATION
 
 namespace openstudio {
 
-namespace pat {
-
-path vagrantServerPath() { return path(toPath("${VAGRANT_SERVER_PATH}")); }
-
-path vagrantWorkerPath() { return path(toPath("${VAGRANT_WORKER_PATH}")); }
-
-} // pat
+bool showVagrant() { return (strcmp("${SHOW_VAGRANT}","true") == 0) ? true : false; }
 
 } // openstudio
 
-#endif // OPENSTUDIO_PAT_VAGRANTCONFIGURATION
+#endif // OPENSTUDIO_VAGRANTCONFIGURATION
 
