@@ -31,6 +31,7 @@
 #include <utilities/cloud/OSServer.hpp>
 #include <utilities/cloud/OSServer_Impl.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/System.hpp>
 #include <pat_app/VagrantConfiguration.hxx>
 
 #include <QThread>
@@ -86,6 +87,24 @@ CloudProvider startCloud()
   {
     provider->waitForWorkers();
   }
+
+  boost::optional<Url> serverUrl = provider->session().serverUrl();
+
+  OS_ASSERT(serverUrl);
+
+  for(int i = 0; i < 15; i++)
+  {
+    OSServer server(serverUrl.get());
+
+    if( server.available() )
+    {
+      break;
+    }
+    else
+    {
+      System::msleep(3000);
+    }
+  } 
 
   return provider.get();
 }
