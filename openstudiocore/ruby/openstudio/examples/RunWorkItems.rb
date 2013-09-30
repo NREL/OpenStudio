@@ -71,7 +71,7 @@ json_path = model_folder_path / OpenStudio::Path.new("work_items.json")
 raise "Expected file '" + json_path.to_s + "' does not exist." if not File.exists?(json_path.to_s)
 
 # model_folder_path exists, so create log file 
-log_file = OpenStudio::FileLogSink.new(model_folder_path / OpenStudio::Path.new("RunWorkItems.log")
+log_file = OpenStudio::FileLogSink.new(model_folder_path / OpenStudio::Path.new("RunWorkItems.log"))
 log_file.setLogLevel(log_level)
 OpenStudio::Logger::instance.standardOutLogger.disable
 

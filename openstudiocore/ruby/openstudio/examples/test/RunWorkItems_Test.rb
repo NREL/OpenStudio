@@ -90,6 +90,7 @@ class RunWorkItems_Test < Test::Unit::TestCase
     arg_map = OpenStudio::Ruleset::convertOSArgumentVectorToMap(args)
     arg_map["relative_building_rotation"].setValue(45.0)    
     ruby_job = OpenStudio::Runmanager::RubyJobBuilder.new(rotate_bldg_measure,arg_map)
+    ruby_job.setIncludeDir(OpenStudio::Path.new("#{$OpenStudio_Dir}"))
     work_items << ruby_job.toWorkItem
 
     # get measure definition for next four measure instances and place a copy in scripts folder
@@ -108,6 +109,7 @@ class RunWorkItems_Test < Test::Unit::TestCase
     arg_map["sillHeight"].setValue(30.0)
     arg_map["facade"].setValue("South")
     ruby_job = OpenStudio::Runmanager::RubyJobBuilder.new(wwr_measure,arg_map)
+    ruby_job.setIncludeDir(OpenStudio::Path.new("#{$OpenStudio_Dir}"))
     work_items << ruby_job.toWorkItem
 
     # OpenStudio Measure 3: Set the North WWR
@@ -115,6 +117,7 @@ class RunWorkItems_Test < Test::Unit::TestCase
     arg_map["sillHeight"].setValue(60.0)
     arg_map["facade"].setValue("North")
     ruby_job = OpenStudio::Runmanager::RubyJobBuilder.new(wwr_measure,arg_map)
+    ruby_job.setIncludeDir(OpenStudio::Path.new("#{$OpenStudio_Dir}"))
     work_items << ruby_job.toWorkItem
 
     # OpenStudio Measure 4: Set the East WWR
@@ -122,6 +125,7 @@ class RunWorkItems_Test < Test::Unit::TestCase
     arg_map["sillHeight"].setValue(30.0)
     arg_map["facade"].setValue("East")
     ruby_job = OpenStudio::Runmanager::RubyJobBuilder.new(wwr_measure,arg_map)
+    ruby_job.setIncludeDir(OpenStudio::Path.new("#{$OpenStudio_Dir}"))
     work_items << ruby_job.toWorkItem
 
     # OpenStudio Measure 5: Set the West WWR
@@ -129,6 +133,7 @@ class RunWorkItems_Test < Test::Unit::TestCase
     arg_map["sillHeight"].setValue(30.0)
     arg_map["facade"].setValue("West")
     ruby_job = OpenStudio::Runmanager::RubyJobBuilder.new(wwr_measure,arg_map)
+    ruby_job.setIncludeDir(OpenStudio::Path.new("#{$OpenStudio_Dir}"))
     work_items << ruby_job.toWorkItem
 
     # ModelToIdf
@@ -146,6 +151,7 @@ class RunWorkItems_Test < Test::Unit::TestCase
     args = OpenStudio::Ruleset::getArguments(xcel_measure,model)
     arg_map = OpenStudio::Ruleset::convertOSArgumentVectorToMap(args)
     ruby_job = OpenStudio::Runmanager::RubyJobBuilder.new(xcel_measure,arg_map)
+    ruby_job.setIncludeDir(OpenStudio::Path.new("#{$OpenStudio_Dir}"))
     work_items << ruby_job.toWorkItem
 
     # EnergyPlus
