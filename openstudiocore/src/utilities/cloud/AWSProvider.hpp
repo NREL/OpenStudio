@@ -383,9 +383,6 @@ namespace detail {
 
   private:
 
-    // no body on purpose, do not want this generated
-    AWSProvider(const AWSProvider& other);
-
   };
 
 } // openstudio

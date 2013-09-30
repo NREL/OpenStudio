@@ -195,9 +195,6 @@ namespace openstudio{
 
   private:
 
-    // no body on purpose, do not want this generated
-    VagrantProvider(const VagrantProvider& other);
-
   };
 
 } // openstudio
