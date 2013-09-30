@@ -543,11 +543,19 @@ void CloudMonitorWorker::monitorCloudRunning()
 {
   if( m_monitor->status() == CLOUD_RUNNING )
   {
-    m_internetAvailable = checkInternetAvailable();
-
     m_cloudRunning = checkCloudRunning();
 
-    if( ! (m_internetAvailable && m_cloudRunning))
+    if( ! m_cloudRunning )
+    {
+      m_authenticated = checkAuthenticated();
+    }
+
+    if( ! m_authenticated )
+    {
+      m_internetAvailable = checkInternetAvailable();
+    }
+
+    if( ! m_cloudRunning )
     {
       emit cloudConnectionError();
     }
@@ -603,6 +611,23 @@ bool CloudMonitorWorker::checkCloudRunning() const
   }
 
   return cloudRunning;
+}
+
+bool CloudMonitorWorker::checkAuthenticated() const
+{
+  bool authenticated = true;
+
+  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
+  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
+
+  OS_ASSERT(session);    
+  OS_ASSERT(settings);
+
+  CloudProvider newProvider = CloudMonitor::newCloudProvider(settings.get(),session.get());
+
+  // TODO Figure out if authenticated.
+
+  return authenticated;
 }
 
 bool CloudMonitorWorker::internetAvailable() const
