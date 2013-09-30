@@ -25,6 +25,7 @@
 #include <utilities/core/Path.hpp>
 
 #include <QProcess>
+#include <QTemporaryFile>
 
 #include <boost/function.hpp>
 
@@ -112,6 +113,24 @@ namespace detail{
     // sets the termination delay in minutes
     void setTerminationDelay(const unsigned delay);
 
+    // returns the AWS region
+    std::string region() const;
+
+    // sets the AWS region
+    void setRegion(const std::string& region);
+
+    // returns the server instance type
+    std::string serverInstanceType() const;
+
+    // sets the server instance type
+    void setServerInstanceType(const std::string& instanceType);
+
+    // returns the worker instance type
+    std::string workerInstanceType() const;
+
+    // sets the worker instance type
+    void setWorkerInstanceType(const std::string& instanceType);
+
     //@}
 
    private:
@@ -126,6 +145,9 @@ namespace detail{
     unsigned m_numWorkers;
     bool m_terminationDelayEnabled;
     unsigned m_terminationDelay;
+    std::string m_region;
+    std::string m_serverInstanceType;
+    std::string m_workerInstanceType;
   };
 
   /// AWSSession_Impl is a CloudSession_Impl.
@@ -176,12 +198,6 @@ namespace detail{
     //@}
     /** @name Class members */
     //@{
-    
-    // returns the url of the server node
-    Url serverUrl() const;
-
-    // sets the url of the server node
-    void setServerUrl(const Url& serverUrl);
 
     // returns the server instance ID
     std::string serverId() const;
@@ -195,17 +211,11 @@ namespace detail{
     // sets the number of server processor cores
     void setNumServerProcessors(const unsigned numServerProcessors);
 
-    // returns the urls of all worker nodes 
-    std::vector<Url> workerUrls() const;
-
-    // set the urls of all worker nodes
-    void setWorkerUrls(const std::vector<Url>& workerUrls);
-
     // returns the worker instance IDs
     std::vector<std::string> workerIds() const;
 
-    // sets the worker instance IDs
-    void setWorkerIds(const std::vector<std::string>& workerIds);
+    // add a worker instance ID
+    void addWorkerId(const std::string& workerId);
 
     // returns the number of processor cores per worker
     unsigned numWorkerProcessors() const;
@@ -255,13 +265,9 @@ namespace detail{
     // configure logging
     REGISTER_LOGGER("utilities.cloud.AWSSession");
 
-    Url m_serverUrl;
-
     std::string m_serverId;
 
     unsigned m_numServerProcessors;
-
-    std::vector<Url> m_workerUrls;
 
     std::vector<std::string> m_workerIds;
 
@@ -494,15 +500,15 @@ namespace detail{
 
     void onServerStarted(int, QProcess::ExitStatus);
 
+    void onServerStartedError(QProcess::ProcessError error);
+
     void onWorkerStarted(int, QProcess::ExitStatus);
 
     void onCheckServerRunningComplete(int, QProcess::ExitStatus);
 
     void onCheckWorkerRunningComplete(int, QProcess::ExitStatus);
 
-    void onServerStopped(int, QProcess::ExitStatus);
-
-    void onWorkerStopped(int, QProcess::ExitStatus);
+    void onInstancesStopped(int, QProcess::ExitStatus);
 
     void onCheckTerminatedComplete(int, QProcess::ExitStatus);
 
@@ -520,7 +526,7 @@ namespace detail{
     bool requestTerminateFinished() const;
     bool requestTerminateCompletedFinished() const;
 
-    ProcessResults handleProcessCompleted(QProcess *& t_qp);
+    ProcessResults handleProcessCompleted(QProcess * t_qp);
 
     QProcess *makeCheckInternetProcess() const;
     QProcess *makeCheckServiceProcess() const;
@@ -530,8 +536,7 @@ namespace detail{
     QProcess *makeStartWorkerProcess() const;
     QProcess *makeCheckServerRunningProcess() const;
     QProcess *makeCheckWorkerRunningProcess() const;
-    QProcess *makeStopServerProcess() const;
-    QProcess *makeStopWorkerProcess() const;
+    QProcess *makeStopInstancesProcess() const;
     QProcess *makeCheckTerminateProcess() const;
 
     bool parseServiceAvailableResults(const ProcessResults &);
@@ -541,8 +546,7 @@ namespace detail{
     bool parseWorkerStartedResults(const ProcessResults &);
     bool parseCheckServerRunningResults(const ProcessResults &);
     bool parseCheckWorkerRunningResults(const ProcessResults &);
-    bool parseServerStoppedResults(const ProcessResults &);
-    bool parseWorkerStoppedResults(const ProcessResults &);
+    bool parseInstancesStoppedResults(const ProcessResults &);
     bool parseCheckTerminatedResults(const ProcessResults &);
 
     unsigned lastTotalInstances() const;
@@ -556,6 +560,7 @@ namespace detail{
     std::vector<std::string> m_regions;
     std::vector<std::string> m_serverInstanceTypes;
     std::vector<std::string> m_workerInstanceTypes;
+    mutable QTemporaryFile m_privateKey;
     
     QProcess* m_checkInternetProcess;
     QProcess* m_checkServiceProcess;
@@ -565,8 +570,7 @@ namespace detail{
     QProcess* m_startWorkerProcess;
     QProcess* m_checkServerRunningProcess;
     QProcess* m_checkWorkerRunningProcess;
-    QProcess* m_stopServerProcess;
-    QProcess* m_stopWorkerProcess;
+    QProcess* m_stopInstancesProcess;
     QProcess* m_checkTerminatedProcess;
     bool m_lastInternetAvailable;
     bool m_lastServiceAvailable;
@@ -576,8 +580,7 @@ namespace detail{
     bool m_workerStarted;
     bool m_lastServerRunning;
     bool m_lastWorkerRunning;
-    bool m_serverStopped;
-    bool m_workerStopped;
+    bool m_instancesStopped;
     bool m_terminateStarted;
     bool m_lastTerminateCompleted;
     unsigned m_lastTotalInstances;
@@ -591,7 +594,7 @@ namespace detail{
     void logWarning(const std::string& warning) const;
 
     void addProcessArguments(QStringList& args) const;
-
+    
     // configure logging
     REGISTER_LOGGER("utilities.cloud.AWSProvider");
 

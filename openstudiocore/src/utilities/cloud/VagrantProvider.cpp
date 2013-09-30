@@ -991,7 +991,7 @@ namespace openstudio{
     }
 
 
-    ProcessResults VagrantProvider_Impl::handleProcessCompleted(QProcess *& t_qp)
+    ProcessResults VagrantProvider_Impl::handleProcessCompleted(QProcess * t_qp)
     {
       OS_ASSERT(t_qp);
 
@@ -999,7 +999,6 @@ namespace openstudio{
           t_qp->readAllStandardError());
 
       t_qp->deleteLater();
-      t_qp = 0;
 
       return pr;
     }
@@ -1012,6 +1011,7 @@ namespace openstudio{
     void VagrantProvider_Impl::onCheckServiceComplete(int, QProcess::ExitStatus)
     {
       m_lastServiceAvailable = parseServiceAvailableResults(handleProcessCompleted(m_checkServiceProcess));
+      m_checkServiceProcess = 0;
     }
 
     bool VagrantProvider_Impl::parseServerStartedResults(const ProcessResults &t_results)
@@ -1023,6 +1023,7 @@ namespace openstudio{
     void VagrantProvider_Impl::onServerStarted(int, QProcess::ExitStatus)
     {
       m_serverStarted = parseServerStartedResults(handleProcessCompleted(m_startServerProcess));
+      m_startServerProcess = 0;
 
       if (m_serverStarted)
       {
@@ -1040,6 +1041,7 @@ namespace openstudio{
     void VagrantProvider_Impl::onWorkerStarted(int, QProcess::ExitStatus)
     {
       m_workerStarted = parseWorkerStartedResults(handleProcessCompleted(m_startWorkerProcess));
+      m_startWorkerProcess = 0;
 
       if (m_workerStarted)
       {
@@ -1058,6 +1060,8 @@ namespace openstudio{
     void VagrantProvider_Impl::onCheckServerRunningComplete(int, QProcess::ExitStatus)
     {
       bool running = parseCheckServerRunningResults(handleProcessCompleted(m_checkServerRunningProcess));
+      m_checkServerRunningProcess = 0;
+
       if (m_vagrantSettings.haltOnStop()){
         if (running) {
           m_lastServerRunning = true;
@@ -1078,6 +1082,8 @@ namespace openstudio{
     void VagrantProvider_Impl::onCheckWorkerRunningComplete(int, QProcess::ExitStatus)
     {
       bool running = parseCheckWorkerRunningResults(handleProcessCompleted(m_checkWorkerRunningProcess));
+      m_checkWorkerRunningProcess = 0;
+
       if (m_vagrantSettings.haltOnStop()){
         if (running){
           m_lastWorkerRunning = true;
@@ -1096,6 +1102,7 @@ namespace openstudio{
     void VagrantProvider_Impl::onServerStopped(int, QProcess::ExitStatus)
     {
       m_serverStopped = parseServerStoppedResults(handleProcessCompleted(m_stopServerProcess));
+      m_stopServerProcess = 0;
       
       m_stopWorkerProcess = makeStopWorkerProcess();
     }
@@ -1108,6 +1115,7 @@ namespace openstudio{
     void VagrantProvider_Impl::onWorkerStopped(int, QProcess::ExitStatus)
     {
       m_workerStopped = parseWorkerStoppedResults(handleProcessCompleted(m_stopWorkerProcess));
+      m_stopWorkerProcess = 0;
 
       if (m_serverStopped && m_workerStopped){
         emit CloudProvider_Impl::terminated();
@@ -1125,6 +1133,7 @@ namespace openstudio{
     {
       // note, it's important that this functon is always called, to clean up the QProcess object
       bool terminated = parseCheckTerminatedResults(handleProcessCompleted(m_checkTerminatedProcess));
+      m_checkTerminatedProcess = 0;
 
       if (m_vagrantSettings.haltOnStop()){
         if (terminated) {

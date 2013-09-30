@@ -66,9 +66,9 @@ AWS.config(
     :ssl_verify_peer => false
 )
 
-if ARGV[3] == "EC2"
+if ARGV[3] == 'EC2'
   @aws = AWS::EC2.new
-elsif ARGV[3] == "CloudWatch"
+elsif ARGV[3] == 'CloudWatch'
   @aws = AWS::CloudWatch.new
 else
   error(-1, "Unrecognized AWS service: #{ARGV[3]}")
@@ -78,11 +78,11 @@ if ARGV.length == 6
   @params = JSON.parse(ARGV[5])
 end
 
-@server_image_id = 'ami-b51b4fdc'
+@server_image_id = 'ami-914317f8'
 if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
-  @worker_image_id = 'ami-8b0c58e2'
+  @worker_image_id = 'ami-d94317b0'
 else
-  @worker_image_id = 'ami-410d5928'
+  @worker_image_id = 'ami-ab4317c2'
 end
 
 def create_struct(instance, procs)
@@ -186,7 +186,7 @@ end
 
 
 def send_command(host, command)
-  retries = 0
+  #retries = 0
   begin
     output = ''
     Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
@@ -197,16 +197,16 @@ def send_command(host, command)
   rescue Net::SSH::HostKeyMismatch => e
     e.remember_host!
     # key mismatch, retry
-    return if retries == 5
-    retries += 1
+    #return if retries == 5
+    #retries += 1
     sleep 1
     retry
   rescue Net::SSH::AuthenticationFailed
     error(-1, "Incorrect private key")
   rescue SystemCallError, Timeout::Error => e
     # port 22 might not be available immediately after the instance finishes launching
-    return if retries == 5
-    retries += 1
+    #return if retries == 5
+    #retries += 1
     sleep 1
     retry
   rescue Exception => e
@@ -214,6 +214,45 @@ def send_command(host, command)
     puts e.backtrace.inspect
   end
 end
+
+#======================= send command ======================#
+    # Send a command through SSH Shell to an instance. 
+    # Need to pass instance object and the command as a string.     
+def shell_command(host, command)
+  begin
+  #f = File.open('net-ssh-log.txt', 'w')
+  Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
+    channel = ssh.open_channel do |ch|
+      ch.exec "#{command}" do |ch, success|
+        raise "could not execute #{command}" unless success
+        
+        # "on_data" is called when the process writes something to stdout
+        #ch.on_data do |c, data|
+          #$stdout.print data
+        #  f.puts "#{data.inspect}"
+        #end
+
+        # "on_extended_data" is called when the process writes something to stderr
+        #ch.on_extended_data do |c, type, data|
+          #$stderr.print data
+        #  f.puts "#{data.inspect}"
+        #end
+        #ch.on_close {f.close}
+      end
+    end 
+  end
+  rescue Net::SSH::HostKeyMismatch => e
+     e.remember_host!
+     #puts "key mismatch, retry"
+     sleep 1
+     retry
+  rescue SystemCallError, Timeout::Error => e
+     # port 22 might not be available immediately after the instance finishes launching
+     sleep 1
+     # puts "Not Yet"
+     retry
+  end
+end      
 
 def download_file(host, remote_path, local_path)
   retries = 0
@@ -242,7 +281,8 @@ begin
       puts resp.data.to_json
     when 'total_instances'
       resp = @aws.client.describe_instance_status
-      puts ({:instances => resp.data[:instance_status_set].length}.to_json)
+      puts ({:instances => resp.data[:instance_status_set].length,
+             :region => ARGV[2]}.to_json)
     when 'instance_status'
       resp = nil
       if ARGV.length < 6
@@ -323,9 +363,9 @@ begin
       file.close
       upload_file(@server.ip, file.path, 'ip_addresses')
       file.unlink
-      send_command(@server.ip, 'chmod 664 /home/ubuntu/ip_addresses')
-      send_command(@server.ip, '~/setup-ssh-keys.sh')
-      send_command(@server.ip, '~/setup-ssh-worker-nodes.sh ip_addresses')
+      shell_command(@server.ip, 'chmod 664 /home/ubuntu/ip_addresses')
+      shell_command(@server.ip, '~/setup-ssh-keys.sh')
+      shell_command(@server.ip, '~/setup-ssh-worker-nodes.sh ip_addresses')
 
       mongoid = File.read(File.expand_path(File.dirname(__FILE__))+'/mongoid.yml.template')
       mongoid.gsub!(/SERVER_IP/, @server.ip)
@@ -333,13 +373,13 @@ begin
       file.write(mongoid)
       file.close
       upload_file(@server.ip, file.path, '/mnt/openstudio/rails-models/mongoid.yml')
-      #upload_file(@server.ip, file.path, '~/mongoid.yml')
+      
       @workers.each { |worker| upload_file(worker.ip, file.path, '/mnt/openstudio/rails-models/mongoid.yml') }
       file.unlink
 
       # Does this command crash it?
-      send_command(@server.ip, 'chmod 664 /mnt/openstudio/rails-models/mongoid.yml')
-      @workers.each { |worker| send_command(worker.ip, 'chmod 664 /mnt/openstudio/rails-models/mongoid.yml') }
+      shell_command(@server.ip, 'chmod 664 /mnt/openstudio/rails-models/mongoid.yml')
+      @workers.each { |worker| shell_command(worker.ip, 'chmod 664 /mnt/openstudio/rails-models/mongoid.yml') }
 
       worker_json = []
       @workers.each { |worker|
@@ -356,20 +396,56 @@ begin
       if ARGV.length < 6
         error(-1, 'Invalid number of args')
       end
+      instances = []
+
       server = @aws.instances[@params['server_id']]
-      error(-1, "Server node #{server_id} does not exist") unless server.exists?
-      server.terminate
+      error(-1, "Server node #{@params['server_id']} does not exist") unless server.exists?
+
+      #@timestamp = @aws.client.describe_instances({:instance_ids=>[@params['server_id']]}).data[:instance_index][@params['server_id']][:key_name][9,10]
+      @timestamp = server.key_name[9,10]
+
+      instances.push(server)
       @params['worker_ids'].each { |worker_id|
         worker = @aws.instances[worker_id]
         error(-1, "Worker node #{worker_id} does not exist") unless worker.exists?
-        worker.terminate
+        instances.push(worker)
       }
 
-      # When session is fully terminated, then delete key pair and security group
-      #@aws.security_groups.filter('group-name', "sec-group-#{@params['timestamp']}").each do |group|
-      #  group.delete
-      #end
-      #todo: delete key pair
+      instances.each{ |instance|
+        instance.terminate
+      }
+      sleep 5 while instances.any? { |instance| instance.status != :terminated }
+
+      # When session is fully terminated, then delete the key pair
+      #@aws.client.delete_security_group({:group_name=>'openstudio-server-sg-v1'}"})
+      #@aws.client.delete_security_group({:group_name=>'openstudio-worker-sg-v1'}"})
+      @aws.client.delete_key_pair({:key_name=>"key-pair-#{@timestamp}"})
+
+    when 'termination_status'
+      if ARGV.length < 6
+        error(-1, 'Invalid number of args')
+      end
+      notTerminated = 0
+
+      server = @aws.instances[@params['server_id']]
+      notTerminated += 1 if (server.exists? && server.status != :terminated)
+
+      @params['worker_ids'].each { |worker_id|
+        worker = @aws.instances[worker_id]
+        notTerminated += 1 if (worker.exists? && worker.status != :terminated)
+      }
+
+      puts ({:all_instances_terminated => (notTerminated == 0)}.to_json)
+
+    when 'session_uptime'
+      if ARGV.length < 6
+        error(-1, 'Invalid number of args')
+      end
+      server_id = @params['server_id']
+      #No need to call AWS, but we can
+      #minutes = (Time.now.to_i - @aws.client.describe_instances({:instance_ids=>[server_id]}).data[:instance_index][server_id][:launch_time].to_i)/60
+      minutes = (Time.now.to_i - @params['timestamp'].to_i)/60
+      puts ({:session_uptime => minutes}.to_json)
 
     when 'estimated_charges'
       # fix this
@@ -381,12 +457,12 @@ begin
   end
     #puts \"Status: #{resp.http_response.status}\"
 rescue Exception => e
-  if defined? e.message && e.message == 'getaddrinfo: No such host is known. '
+  if e.message == 'getaddrinfo: No such host is known. '
     error(503, 'Offline')
   elsif defined? e.http_response
     error(e.http_response.status, e.code)
-  else
-    puts e
+  elseif e != 'exit'
+    error(-1, "#{e}: #{e.backtrace}")
   end
 
 end
