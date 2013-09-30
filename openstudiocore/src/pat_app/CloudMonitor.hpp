@@ -303,6 +303,9 @@ class CloudMonitorWorker : public QObject
 
   Q_DISABLE_COPY(CloudMonitorWorker);
 
+  // DLM: I added this to avoid compile error
+  bool checkAuthenticated() const;
+
   // if status is CLOUD_RUNNING then make sure there is an intenet connection
   // Check the status of the internet connection and emit internetAvailable
   bool checkInternetAvailable() const;
