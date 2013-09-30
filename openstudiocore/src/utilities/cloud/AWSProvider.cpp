@@ -313,16 +313,6 @@ namespace openstudio{
                                      const UUID& versionUUID,
                                      const std::string& sessionId,
                                      const boost::optional<Url>& serverUrl,
-                                     const std::vector<Url>& workerUrls)
-      : CloudSession_Impl(uuid,versionUUID,sessionId,serverUrl,workerUrls),
-        m_numServerProcessors(0),
-        m_numWorkerProcessors(0)
-    {}
-
-    AWSSession_Impl::AWSSession_Impl(const UUID& uuid,
-                                     const UUID& versionUUID,
-                                     const std::string& sessionId,
-                                     const boost::optional<Url>& serverUrl,
                                      const std::string& serverId,
                                      const unsigned numServerProcessors,
                                      const std::vector<Url>& workerUrls,
@@ -1705,8 +1695,6 @@ namespace openstudio{
       m_checkTerminatedProcess = 0;
     }
 
-
-
   } // detail
 
   AWSSettings::AWSSettings()
@@ -1817,21 +1805,6 @@ namespace openstudio{
                          const std::vector<Url>& workerUrls)
     : CloudSession(boost::shared_ptr<detail::AWSSession_Impl>(
                      new detail::AWSSession_Impl(sessionId,
-                                                 serverUrl,
-                                                 workerUrls)))
-  {
-    OS_ASSERT(getImpl<detail::AWSSession_Impl>());
-  }
-
-  AWSSession::AWSSession(const UUID& uuid,
-                         const UUID& versionUUID,
-                         const std::string& sessionId,
-                         const boost::optional<Url>& serverUrl,
-                         const std::vector<Url>& workerUrls)
-    : CloudSession(boost::shared_ptr<detail::AWSSession_Impl>(
-                     new detail::AWSSession_Impl(uuid,
-                                                 versionUUID,
-                                                 sessionId,
                                                  serverUrl,
                                                  workerUrls)))
   {

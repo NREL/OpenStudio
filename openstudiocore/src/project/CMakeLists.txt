@@ -26,6 +26,12 @@ SET( ${target_name}_src
   AttributeRecord.hpp
   AttributeRecord_Impl.hpp
   AttributeRecord.cpp
+  AWSSessionRecord.hpp
+  AWSSessionRecord_Impl.hpp
+  AWSSessionRecord.cpp
+  AWSSettingsRecord.hpp
+  AWSSettingsRecord_Impl.hpp
+  AWSSettingsRecord.cpp
   CloudSessionRecord.hpp
   CloudSessionRecord_Impl.hpp
   CloudSessionRecord.cpp
@@ -221,3 +227,4 @@ IF( BUILD_TESTING )
       openstudio_runmanager_resources
       openstudio_project_resources)
 ENDIF()
+

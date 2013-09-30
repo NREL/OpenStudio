@@ -2240,12 +2240,15 @@ AnalysisRunOptions standardRunOptions(const SimpleProject& project) {
   // DLM: for now we will let run manager manage the number of jobs running at a time
   //      even though this does result in long time to queue initially
   // DLM: i did confirm that the data points in the run list update correctly if this is set
-  //runOptions.setQueueSize(configOpts.getMaxLocalJobs());
+  // ETH: hoping uncommenting this and setting it to 50 eases the problems David saw with
+  // running 100's of points on his local machine
+  runOptions.setQueueSize(50);
 
   // DLM: in the future would be good to set JobCleanUpBehavior to standard
   // however there seem to be intermittant failures when this is done (bug 1077)
   // for now keep this setting, should also be a user option for debugging
-  runOptions.setJobCleanUpBehavior(analysisdriver::JobCleanUpBehavior::none);
+  // ETH: changing back to standard, i think the bugs have been squashed
+  runOptions.setJobCleanUpBehavior(analysisdriver::JobCleanUpBehavior::standard);
 
   return runOptions;
 }
