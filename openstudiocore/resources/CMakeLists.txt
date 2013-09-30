@@ -330,6 +330,8 @@ SET(project_resources_src
   project/version/project_1_0_3.db  
   project/version/project_1_0_4.osp
   project/version/project_1_0_4.db  
+  project/version/project_1_0_6.osp
+  project/version/project_1_0_6.db  
 )
 
 # update the resources

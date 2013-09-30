@@ -67,6 +67,16 @@ class ANALYSISDRIVER_API CloudAnalysisDriver {
 
   SimpleProject project() const;
 
+  /** Returns the number of data points the CloudAnalysisDriver has been asked to process
+   *  since the last time all the queues were cleared. */
+  unsigned numDataPointsInIteration() const;
+
+  /** Returns the number of data points in all of the processing queues. */
+  unsigned numIncompleteDataPoints() const;
+
+  /** Returns the number of data points in this iteration that are no longer being processed. */
+  unsigned numCompleteDataPoints() const;
+
   //@}
   /** @name Blocking Class Members */
   //@{

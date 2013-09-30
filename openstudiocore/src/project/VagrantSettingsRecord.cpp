@@ -124,8 +124,8 @@ namespace detail {
                            workerUrlRecord().url(),
                            m_haltOnStop,
                            m_username,
-                           false, // DLM: TODO
-                           0); // DLM: TODO
+                           false,
+                           0);
   }
 
   void VagrantSettingsRecord_Impl::revertToLastRecordIds() {
