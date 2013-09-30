@@ -165,12 +165,6 @@ namespace detail {
     /** @name Class members */
     //@{
 
-    // returns the url of the server node
-    //Url serverUrl() const;
-
-    // sets the url of the server node
-    //void setServerUrl(const Url& serverUrl);
-
     // returns the server instance ID
     std::string serverId() const;
 
@@ -183,17 +177,11 @@ namespace detail {
     // sets the number of server processor cores
     void setNumServerProcessors(const unsigned numServerProcessors);
 
-    // returns the urls of all worker nodes 
-    //std::vector<Url> workerUrls() const;
-
-    // set the urls of all worker nodes
-    void setWorkerUrls(const std::vector<Url>& workerUrls);
-
     // returns the worker instance IDs
     std::vector<std::string> workerIds() const;
 
-    // sets the worker instance IDs
-    void setWorkerIds(const std::vector<std::string>& workerIds);
+    // add a worker instance ID
+    void addWorkerId(const std::string& workerId);
 
     // returns the number of processor cores per worker
     unsigned numWorkerProcessors() const;
