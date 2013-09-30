@@ -234,7 +234,7 @@ void Model::readZoneIc(Reader &input)
 #endif
                 ERROR(mesg.toStdString());
             }
-            VECTOR<RX> ic;
+            VECTOR_TYPE<RX> ic;
             for(unsigned int j=0;j<nctm;j++)
             {
                 ic.push_back(input.readNumber<RX>(FILELINE));
@@ -278,6 +278,18 @@ STRING Model::writeZoneIc(int start)
 //}
 
 //template void Model::addAirflowElement(PlrTest1);
+
+int Model::airflowElementNrByName(STRING name) const
+{
+  for(int i=0;i<m_airflowElements.size();i++)
+  {
+    if(m_airflowElements[i]->name() == name)
+    {
+      return m_airflowElements[i]->nr();
+    }
+  }
+  return 0;
+}
 
 } // prj
 } // contam

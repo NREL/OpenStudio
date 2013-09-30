@@ -307,10 +307,10 @@ STRING Reader::readSection(DECFILELINE)
 //    return list;
 //}
 
-VECTOR<int> Reader::readIntVector(DECFILELINEC bool terminated)
+VECTOR_TYPE<int> Reader::readIntVector(DECFILELINEC bool terminated)
 {
     int n = readInt(ARGFILELINE);
-    VECTOR<int> vector;
+    VECTOR_TYPE<int> vector;
     for(int i=0;i<n;i++)
     {
         vector.push_back(readInt(ARGFILELINE));

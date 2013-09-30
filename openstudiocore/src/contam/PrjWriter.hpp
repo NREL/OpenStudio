@@ -32,7 +32,7 @@ namespace openstudio {
 namespace contam {
 namespace prj {
 
-template <class T> STRING writeSection(VECTOR<QSharedPointer<T> > vector, STRING label=STRING_INIT, int start=0)
+template <class T> STRING writeSection(VECTOR_TYPE<QSharedPointer<T> > vector, STRING label=STRING_INIT, int start=0)
 {
     QString string;
     int number = vector.size()-start;
@@ -134,7 +134,7 @@ template <class T, template <class T> class U> QString writeArray(U<T> list, QSt
     return string;
 }
 
-template <class T> STRING writeArray(VECTOR<T> vector, STRING label=STRING_INIT, int start=0)
+template <class T> STRING writeArray(VECTOR_TYPE<T> vector, STRING label=STRING_INIT, int start=0)
 {
     STRING string;
     int number = vector.size()-start;

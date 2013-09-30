@@ -52,16 +52,16 @@
 #endif
 
 #ifndef STD_VECTOR
-#define VECTOR QVector
+#define VECTOR_TYPE QVector
 #else
-#define VECTOR std::vector
+#define VECTOR_TYPE std::vector
 #endif
 
 #ifndef STD_MAP
-#define MAP QMap
+#define MAP_TYPE QMap
 #else
 #include <map>
-#define MAP std::map
+#define MAP_TYPE std::map
 #endif
 
 #ifdef RX_IS_STRING

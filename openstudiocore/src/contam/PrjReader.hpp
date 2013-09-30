@@ -53,9 +53,9 @@ public:
     STRING readSection(DECFILELINE);
     int lineNumber(){return m_lineNumber;}
 
-    template <class T> VECTOR<T> readSectionVector(DECFILELINEC STRING name=STRING_INIT);
+    template <class T> VECTOR_TYPE<T> readSectionVector(DECFILELINEC STRING name=STRING_INIT);
 
-    VECTOR<int> readIntVector(DECFILELINEC bool terminated=false);
+    VECTOR_TYPE<int> readIntVector(DECFILELINEC bool terminated=false);
 //    std::vector<int> readIntStdVector(DECFILELINEC bool terminated=false);
 //    template <class T> QList<T*> readSectionPointers(DECFILELINEC STRING name=STRING_INIT);
 //    template <class T> QList<T> readSectionList(DECFILELINEC STRING name=STRING_INIT);
@@ -78,10 +78,10 @@ private:
     QStringList entries;
 };
 
-template <class T> VECTOR<T> Reader::readSectionVector(DECFILELINEC STRING name)
+template <class T> VECTOR_TYPE<T> Reader::readSectionVector(DECFILELINEC STRING name)
 {
     int n = readInt(ARGFILELINE);
-    VECTOR<T> vector;
+    VECTOR_TYPE<T> vector;
     for(int i=0;i<n;i++)
     {
         T value;

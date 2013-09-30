@@ -48,60 +48,60 @@ public:
         m_rc = rc;
     }
 
-    VECTOR<int> contaminants() const
+    VECTOR_TYPE<int> contaminants() const
     {
         return m_contaminants;
     }
 
-    VECTOR <Species> species() const
+    VECTOR_TYPE <Species> species() const
     {
         return m_species;
     }
-    void setSpecies(const VECTOR<Species> species)
+    void setSpecies(const VECTOR_TYPE<Species> species)
     {
         m_species = species;
         rebuildContaminants();
     }
 
-    VECTOR <Level> levels() const
+    VECTOR_TYPE <Level> levels() const
     {
         return m_levels;
     }
-    void setLevels(const VECTOR<Level> levels)
+    void setLevels(const VECTOR_TYPE<Level> levels)
     {
         m_levels = levels;
     }
 
-    VECTOR <DaySchedule> daySchedules() const
+    VECTOR_TYPE <DaySchedule> daySchedules() const
     {
         return m_daySchedules;
     }
-    void setDaySchedules(const VECTOR<DaySchedule> daySchedules)
+    void setDaySchedules(const VECTOR_TYPE<DaySchedule> daySchedules)
     {
         m_daySchedules = daySchedules;
     }
 
-    VECTOR <WeekSchedule> weekSchedules() const
+    VECTOR_TYPE <WeekSchedule> weekSchedules() const
     {
         return m_weekSchedules;
     }
-    void setWeekSchedules(const VECTOR<WeekSchedule> weekSchedules)
+    void setWeekSchedules(const VECTOR_TYPE<WeekSchedule> weekSchedules)
     {
         m_weekSchedules = weekSchedules;
     }
 
-    VECTOR <WindPressureProfile> windPressureProfiles() const
+    VECTOR_TYPE <WindPressureProfile> windPressureProfiles() const
     {
         return m_windPressureProfiles;
     }
-    void setWindPressureProfiles(const VECTOR<WindPressureProfile> windPressureProfiles)
+    void setWindPressureProfiles(const VECTOR_TYPE<WindPressureProfile> windPressureProfiles)
     {
         m_windPressureProfiles = windPressureProfiles;
     }
 
-    VECTOR<PlrTest1> getPlrTest1()
+    VECTOR_TYPE<PlrTest1> getPlrTest1()
     {
-        VECTOR<PlrTest1> afe;
+        VECTOR_TYPE<PlrTest1> afe;
         for(int i=0;i<m_airflowElements.size();i++)
         {
           if(m_airflowElements[i]->dataType() == "plr_test1")
@@ -120,9 +120,11 @@ public:
 //        m_airflowElements.push_back(QSharedPointer<AirflowElement>((AirflowElement*)copy));
 //    }
 
-    VECTOR<CdvDat> getCdvDat()
+    int airflowElementNrByName(STRING name) const;
+
+    VECTOR_TYPE<CdvDat> getCdvDat()
     {
-        VECTOR<CdvDat> ctrl;
+        VECTOR_TYPE<CdvDat> ctrl;
         for(int i=0;i<m_controlNodes.size();i++)
         {
             QSharedPointer<CdvDat> cast = m_controlNodes[i].dynamicCast<CdvDat>();
@@ -146,22 +148,31 @@ public:
         }
     }
 
-    VECTOR <Ahs> ahs() const
+    VECTOR_TYPE <Ahs> ahs() const
     {
         return m_ahs;
     }
-    void setAhs(const VECTOR<Ahs> ahs)
+    void setAhs(const VECTOR_TYPE<Ahs> ahs)
     {
         m_ahs = ahs;
     }
 
-    VECTOR<Zone> zones() const
+    VECTOR_TYPE<Zone> zones() const
     {
         return m_zones;
     }
-    void setZones(const VECTOR<Zone> zones)
+    void setZones(const VECTOR_TYPE<Zone> zones)
     {
         m_zones = zones;
+    }
+
+    VECTOR_TYPE<Path> paths() const
+    {
+        return m_paths;
+    }
+    void setPaths(const VECTOR_TYPE<Path> paths)
+    {
+        m_paths = paths;
     }
 
     bool valid() const
@@ -173,30 +184,30 @@ private:
     void rebuildContaminants();
     void readZoneIc(Reader &input);
     STRING writeZoneIc(int start=0);
-    template <class T> STRING writeSectionVector(VECTOR<T> vector, STRING label=STRING_INIT, int start=0);
+    template <class T> STRING writeSectionVector(VECTOR_TYPE<T> vector, STRING label=STRING_INIT, int start=0);
     template <class T, template <class T> class U> STRING writeSectionVector(U<QSharedPointer<T> > vector,
                                                                              STRING label=STRING_INIT,
                                                                              int start=0);
 
     bool m_valid;
 
-    MAP<STRING,STRING> m_unsupported;
+    MAP_TYPE<STRING,STRING> m_unsupported;
 
     RunControl m_rc;
-    VECTOR<int> m_contaminants;
-    VECTOR<Species> m_species;
-    VECTOR<Level> m_levels;
-    VECTOR<DaySchedule> m_daySchedules;
-    VECTOR<WeekSchedule> m_weekSchedules;
-    VECTOR<WindPressureProfile> m_windPressureProfiles;
+    VECTOR_TYPE<int> m_contaminants;
+    VECTOR_TYPE<Species> m_species;
+    VECTOR_TYPE<Level> m_levels;
+    VECTOR_TYPE<DaySchedule> m_daySchedules;
+    VECTOR_TYPE<WeekSchedule> m_weekSchedules;
+    VECTOR_TYPE<WindPressureProfile> m_windPressureProfiles;
     QVector<QSharedPointer<AirflowElement> > m_airflowElements;
     QVector<QSharedPointer<ControlNode> > m_controlNodes;
-    VECTOR<Ahs> m_ahs;
-    VECTOR<Zone> m_zones;
-    VECTOR<Path> m_paths;
+    VECTOR_TYPE<Ahs> m_ahs;
+    VECTOR_TYPE<Zone> m_zones;
+    VECTOR_TYPE<Path> m_paths;
 };
 
-template <class T> STRING Model::writeSectionVector(VECTOR<T> vector, STRING label, int start)
+template <class T> STRING Model::writeSectionVector(VECTOR_TYPE<T> vector, STRING label, int start)
 {
     STRING string;
     int number = vector.size()-start;
