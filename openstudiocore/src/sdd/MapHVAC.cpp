@@ -2334,19 +2334,21 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
     if( istringEqual(reheatCtrlMthdElement.text().toStdString(),"DualMaximum") )
     {
       terminal.setDamperHeatingAction("Reverse");
-
-      QDomElement htgAirFlowMaxElement = trmlUnitElement.firstChildElement("HtgAirFlowMax");
-      value = htgAirFlowMaxElement.text().toDouble(&ok);
-      if( ok && primaryAirFlow )
-      {
-         value = unitToUnit(value,"cfm","m^3/s").get();
-         double fraction = value / primaryAirFlow.get();
-         terminal.setMaximumFlowFractionDuringReheat(fraction);
-      }
     }
     else
     {
       terminal.setDamperHeatingAction("Normal");
+    }
+
+    terminal.setConstantMinimumAirFlowFraction(0.0);
+
+    QDomElement htgAirFlowMaxElement = trmlUnitElement.firstChildElement("HtgAirFlowMax");
+    value = htgAirFlowMaxElement.text().toDouble(&ok);
+    if( ok && primaryAirFlow )
+    {
+       value = unitToUnit(value,"cfm","m^3/s").get();
+       double fraction = value / primaryAirFlow.get();
+       terminal.setMaximumFlowFractionDuringReheat(fraction);
     }
 
     result = terminal;
