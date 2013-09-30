@@ -70,6 +70,7 @@
     <file alias="shared_gui_components/images/arrow_up.png">../shared_gui_components/images/arrow_up.png</file>
     <file alias="shared_gui_components/images/arrow_up_over.png">../shared_gui_components/images/arrow_up_over.png</file>
     <file alias="shared_gui_components/images/arrow_up_press.png">../shared_gui_components/images/arrow_up_press.png</file>
+    <file alias="shared_gui_components/images/clear_cloud_session.png">../shared_gui_components/images/clear_cloud_session.png</file>
     <file alias="shared_gui_components/images/delete_softer.png">../shared_gui_components/images/delete_softer.png</file>
     <file alias="shared_gui_components/images/delete_softer_over.png">../shared_gui_components/images/delete_softer_over.png</file>
     <file alias="shared_gui_components/images/delete_softer_press.png">../shared_gui_components/images/delete_softer_press.png</file>
@@ -85,6 +86,7 @@
     <file alias="shared_gui_components/images/fast_reverse.png">../shared_gui_components/images/fast_reverse.png</file>
     <file alias="shared_gui_components/images/forward.png">../shared_gui_components/images/forward.png</file>
     <file alias="shared_gui_components/images/gray_add_icon.png">../shared_gui_components/images/gray_add_icon.png</file>
+    <file alias="shared_gui_components/images/launch_aws.png">../shared_gui_components/images/launch_aws.png</file>
     <file alias="shared_gui_components/images/manage_all_button.png">../shared_gui_components/images/manage_all_button.png</file>
     <file alias="shared_gui_components/images/open_my_measures.png">../shared_gui_components/images/open_my_measures.png</file>
     <file alias="shared_gui_components/images/open_my_measures_press.png">../shared_gui_components/images/open_my_measures_press.png</file>

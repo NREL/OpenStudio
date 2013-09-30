@@ -447,10 +447,6 @@ void PatApp::on_closeBclDlg()
 
 void PatApp::openCloudDlg()
 {
-  // TODO remove
-  //openLostCloudConnectionDlg();
-  //return;
-
   if(!m_cloudDialog){
     m_cloudDialog = new CloudDialog();
 

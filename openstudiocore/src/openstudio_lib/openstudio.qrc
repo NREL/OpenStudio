@@ -30,7 +30,7 @@
     <file>images/contextual_arrow.png</file>
     <file>images/controller_icon_off.png</file>
     <file>images/controller_icon_on.png</file>
-		<file>images/coilcoolingchilledbeam.png</file>
+    <file>images/coilcoolingchilledbeam.png</file>
     <file>images/cool_coil.png</file>
     <file>images/coilcoolinglowtemprad_constflow.png</file>   
     <file>images/coilcoolinglowtemprad_varflow.png</file>      
@@ -215,8 +215,8 @@
     <file>images/mini_icons/construct_inter_source.png</file>
     <file>images/mini_icons/coilheatingwater_baseboard_mini.png</file>
     <file>images/mini_icons/coil_ht_dx_singlespeed_mini.png</file>
-		<file>images/mini_icons/coilcoolingchilledbeam_mini.png</file>	
-		<file>images/mini_icons/cool_coil.png</file>
+    <file>images/mini_icons/coilcoolingchilledbeam_mini.png</file>	
+    <file>images/mini_icons/cool_coil.png</file>
     <file>images/mini_icons/coilcoolinglowtemprad_constflow.png</file>   
     <file>images/mini_icons/coilcoolinglowtemprad_varflow.png</file>     
     <file>images/mini_icons/cooling_tower.png</file>
@@ -321,7 +321,6 @@
 
     <file>library/tid_api.xml</file>
 
-
     <file alias="shared_gui_components/images/add_script_icon.png">../shared_gui_components/images/add_script_icon.png</file>
     <file alias="shared_gui_components/images/add_script_icon_over.png">../shared_gui_components/images/add_script_icon_over.png</file>
     <file alias="shared_gui_components/images/add_script_icon_press.png">../shared_gui_components/images/add_script_icon_press.png</file>
@@ -331,6 +330,7 @@
     <file alias="shared_gui_components/images/arrow_up.png">../shared_gui_components/images/arrow_up.png</file>
     <file alias="shared_gui_components/images/arrow_up_over.png">../shared_gui_components/images/arrow_up_over.png</file>
     <file alias="shared_gui_components/images/arrow_up_press.png">../shared_gui_components/images/arrow_up_press.png</file>
+    <file alias="shared_gui_components/images/clear_cloud_session.png">../shared_gui_components/images/clear_cloud_session.png</file>
     <file alias="shared_gui_components/images/delete_softer.png">../shared_gui_components/images/delete_softer.png</file>
     <file alias="shared_gui_components/images/delete_softer_over.png">../shared_gui_components/images/delete_softer_over.png</file>
     <file alias="shared_gui_components/images/delete_softer_press.png">../shared_gui_components/images/delete_softer_press.png</file>
@@ -346,6 +346,7 @@
     <file alias="shared_gui_components/images/fast_reverse.png">../shared_gui_components/images/fast_reverse.png</file>
     <file alias="shared_gui_components/images/forward.png">../shared_gui_components/images/forward.png</file>
     <file alias="shared_gui_components/images/gray_add_icon.png">../shared_gui_components/images/gray_add_icon.png</file>
+    <file alias="shared_gui_components/images/launch_aws.png">../shared_gui_components/images/launch_aws.png</file>
     <file alias="shared_gui_components/images/open_my_measures.png">../shared_gui_components/images/open_my_measures.png</file>
     <file alias="shared_gui_components/images/open_my_measures_press.png">../shared_gui_components/images/open_my_measures_press.png</file>
     <file alias="shared_gui_components/images/openstudio_measure_icon.png">../shared_gui_components/images/openstudio_measure_icon.png</file>

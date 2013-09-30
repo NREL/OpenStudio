@@ -22,6 +22,8 @@
 
 #include <shared_gui_components/OSDialog.hpp>
 
+class QVBoxLayout;
+
 namespace openstudio{
 
 class LostCloudConnectionDialog : public OSDialog
@@ -36,13 +38,13 @@ public:
 
 protected slots:
 
-  //virtual void on_cancelButton(bool checked);
-
   //virtual void on_okButton(bool checked);
 
 private:
 
   void createWidgets();
+
+  void createCloudConnectionWidgets(QVBoxLayout * vLayout);
 
 private slots:
 
