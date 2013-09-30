@@ -28,6 +28,8 @@
 #include <utilities/cloud/VagrantProvider_Impl.hpp>
 #include <utilities/cloud/AWSProvider.hpp>
 #include <utilities/cloud/AWSProvider_Impl.hpp>
+#include <utilities/cloud/OSServer.hpp>
+#include <utilities/cloud/OSServer_Impl.hpp>
 #include <utilities/core/Assert.hpp>
 #include <pat_app/VagrantConfiguration.hxx>
 #include <QThread>
@@ -509,12 +511,6 @@ CloudStatus ReconnectCloudWorker::status() const
   return m_status;
 }
 
-CloudMonitorWorker::CloudMonitorWorker(CloudMonitor * monitor)
-  : QObject(),
-    m_monitor(monitor)
-{
-}
-
 RecoverCloudWorker::RecoverCloudWorker(CloudMonitor * monitor)
   : QObject(),
     m_monitor(monitor)
@@ -535,6 +531,13 @@ void RecoverCloudWorker::startWorking()
   emit doneWorking();
 }
 
+CloudMonitorWorker::CloudMonitorWorker(CloudMonitor * monitor)
+  : QObject(),
+    m_monitor(monitor),
+    m_count(0)
+{
+}
+
 CloudMonitorWorker::~CloudMonitorWorker()
 {
 }
@@ -543,7 +546,12 @@ void CloudMonitorWorker::monitorCloudRunning()
 {
   if( m_monitor->status() == CLOUD_RUNNING )
   {
-    m_cloudRunning = checkCloudRunning();
+    m_cloudServiceRunning = checkCloudServiceRunning();
+
+    if( ! m_cloudServiceRunning )
+    {
+      m_cloudRunning = checkCloudRunning();
+    }
 
     if( ! m_cloudRunning )
     {
@@ -555,8 +563,15 @@ void CloudMonitorWorker::monitorCloudRunning()
       m_internetAvailable = checkInternetAvailable();
     }
 
-    if( ! m_cloudRunning )
+    if( ! m_cloudServiceRunning )
     {
+      m_count++;
+    }
+
+    if( ! m_cloudServiceRunning && (m_count == 3) )
+    {
+      m_count = 0;
+
       emit cloudConnectionError();
     }
     else
@@ -609,8 +624,24 @@ bool CloudMonitorWorker::checkCloudRunning() const
   {
     cloudRunning = false;
   }
-
+  
   return cloudRunning;
+}
+
+bool CloudMonitorWorker::checkCloudServiceRunning() const
+{
+  bool cloudServiceRunning = false;
+
+  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
+
+  OS_ASSERT(session);    
+  if( boost::optional<Url> serverUrl = session->serverUrl() )
+  {
+    OSServer server(serverUrl.get());
+    cloudServiceRunning = server.available();
+  }
+  
+  return cloudServiceRunning;
 }
 
 bool CloudMonitorWorker::checkAuthenticated() const
@@ -638,6 +669,11 @@ bool CloudMonitorWorker::internetAvailable() const
 bool CloudMonitorWorker::cloudRunning() const
 {
   return m_cloudRunning;
+}
+
+bool CloudMonitorWorker::cloudServiceRunning() const
+{
+  return m_cloudServiceRunning;
 }
 
 bool CloudMonitorWorker::authenticated() const

@@ -287,9 +287,11 @@ class CloudMonitorWorker : public QObject
 
   bool internetAvailable() const;
 
+  bool authenticated() const;
+
   bool cloudRunning() const;
 
-  bool authenticated() const;
+  bool cloudServiceRunning() const;
 
   public slots:
 
@@ -303,15 +305,15 @@ class CloudMonitorWorker : public QObject
 
   Q_DISABLE_COPY(CloudMonitorWorker);
 
-  // if status is CLOUD_RUNNING then make sure there is an intenet connection
-  // Check the status of the internet connection and emit internetAvailable
   bool checkInternetAvailable() const;
 
-  // Check CloudMonitor status,
-  // if status is CLOUD_RUNNING then make sure it is still running
-  // if status is CLOUD_RUNNING but test does not agree then 
-  // emit cloudConnectionLost
+  // Check that server and worker(s) are running
   bool checkCloudRunning() const;
+
+  // Check that the openstudio service is running on the server
+  bool checkCloudServiceRunning() const;
+
+  bool checkAuthenticated() const;
 
   QPointer<CloudMonitor> m_monitor;  
 
@@ -320,6 +322,10 @@ class CloudMonitorWorker : public QObject
   bool m_authenticated;
 
   bool m_cloudRunning;
+
+  bool m_cloudServiceRunning;
+
+  int m_count;
 };
 
 } // pat
