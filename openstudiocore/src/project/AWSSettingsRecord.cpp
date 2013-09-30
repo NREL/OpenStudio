@@ -21,10 +21,9 @@
 #include <project/AWSSettingsRecord_Impl.hpp>
 
 #include <project/JoinRecord.hpp>
-// TODO: Add derived class includes for factory methods if this is a base class.
 
-// TODO: Replace with derived class includes if this is a base class.
-#include <NAMESPACE/AWSSettings.hpp>
+#include <utilities/cloud/AWSProvider.hpp>
+#include <utilities/cloud/AWSProvider_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
 
@@ -33,15 +32,14 @@ namespace project {
 
 namespace detail {
 
-  AWSSettingsRecord_Impl::AWSSettingsRecord_Impl(const NAMESPACE::AWSSettings& aWSSettings,
-                                                 const AWSSettingsRecordType& aWSSettingsRecordType,
+  AWSSettingsRecord_Impl::AWSSettingsRecord_Impl(const AWSSettings& awsSettings,
                                                  ProjectDatabase& database)
-    : CloudSettingsRecord_Impl(aWSSettings, database),
-  // TODO: Delete member enum initialization if deleted from _Impl.hpp
-      m_aWSSettingsRecordType(aWSSettingsRecordType)
+    : CloudSettingsRecord_Impl(awsSettings, CloudSettingsRecordType::AWSSettingsRecord, database),
+      m_userAgreementSigned(awsSettings.userAgreementSigned()),
+      m_numWorkers(awsSettings.numWorkers()),
+      m_terminationDelayEnabled(awsSettings.terminationDelayEnabled()),
+      m_terminationDelay(awsSettings.terminationDelay())
   {
-    OS_ASSERT(false);
-    // TODO: Initialize data members, check constructor call for base class.
   }
 
   AWSSettingsRecord_Impl::AWSSettingsRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
@@ -53,54 +51,22 @@ namespace detail {
 
     QVariant value;
 
-    // TODO: Delete deserialization of enum if deleted from _Impl.hpp
-    value = query.value(AWSSettingsRecord::ColumnsType::aWSSettingsRecordType);
+    value = query.value(AWSSettingsRecord::ColumnsType::userAgreementSigned);
     OS_ASSERT(value.isValid() && !value.isNull());
-    m_aWSSettingsRecordType = AWSSettingsRecordType(value.toInt());
+    m_userAgreementSigned = value.toBool();
 
-    // TODO: Extract data members from query. Templates follow.
+    value = query.value(AWSSettingsRecord::ColumnsType::numWorkers);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_numWorkers = value.toUInt();
 
-    // Required data member
-    // value = query.value(AWSSettingsRecord::ColumnsType::DATAMEMBERNAME);
-    // OS_ASSERT(value.isValid() && !value.isNull());
-    // m_DATAMEMBERNAME = value.toTYPE();
+    value = query.value(AWSSettingsRecord::ColumnsType::terminationDelayEnabled);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_terminationDelayEnabled = value.toBool();
 
-    // Optional data member
-    // value = query.value(AWSSettingsRecord::ColumnsType::DATAMEMBERNAME);
-    // if (value.isValid() && !value.isNull()) {
-    //   m_DATAMEMBERNAME = value.toTYPE();
-    // }
+    value = query.value(AWSSettingsRecord::ColumnsType::terminationDelay);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_terminationDelay = value.toUInt();
 
-  }
-
-  boost::optional<ObjectRecord> AWSSettingsRecord_Impl::parent() const {
-    // Return this object's parent, if it has one. See ComponentAttributeRecord_Impl
-    // for an example.
-    OS_ASSERT(false);
-    return boost::none;
-  }
-
-  std::vector<ObjectRecord> AWSSettingsRecord_Impl::children() const {
-    // Return this object's children. See ComponentReferenceRecord_Impl for an example.
-    OS_ASSERT(false);
-    ObjectRecordVector result;
-    return result;
-  }
-
-  std::vector<ObjectRecord> AWSSettingsRecord_Impl::resources() const {
-    // Return this object's resources. See ModelObjectActionSetRelationshipRecord_Impl
-    // for an example.
-    OS_ASSERT(false);
-    ObjectRecordVector result;
-    return result;
-  }
-
-  std::vector<JoinRecord> AWSSettingsRecord_Impl::joinRecords() const {
-    // Return the join relationships between this object and others. See
-    // ModelObjectActionSetRelationshipRecord_Impl for an example.
-    OS_ASSERT(false);
-    JoinRecordVector result;
-    return result;
   }
 
   void AWSSettingsRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase>& database) {
@@ -110,25 +76,26 @@ namespace detail {
     assertExec(query);
   }
 
-  NAMESPACE::AWSSettings AWSSettingsRecord::aWSSettings() const {
-    // TODO: De-serialize the object here.
-    OS_ASSERT(false);
+  CloudSettings AWSSettingsRecord_Impl::cloudSettings() const {
+    return awsSettings().cast<CloudSettings>();
+  }
+
+  AWSSettings AWSSettingsRecord_Impl::awsSettings() const {
+    return AWSSettings(handle(),
+                       uuidLast(),
+                       m_userAgreementSigned,
+                       m_numWorkers,
+                       m_terminationDelayEnabled,
+                       m_terminationDelay);
   }
 
   void AWSSettingsRecord_Impl::bindValues(QSqlQuery& query) const {
     CloudSettingsRecord_Impl::bindValues(query);
 
-    // TODO: Delete bind for enum if no derived classes.
-    query.bindValue(AWSSettingsRecord::ColumnsType::aWSSettingsRecordType,m_aWSSettingsRecordType.value());
-    // Template for required data.
-    // query.bindValue(AWSSettingsRecord::ColumnsType::DATAMEMBERNAME,m_DATAMEMBERNAME);
-    // Template for optional data.
-    // if (m_DATAMEMBERNAME) {
-    //   query.bindValue(AWSSettingsRecord::ColumnsType::DATAMEMBERNAME,*m_DATAMEMBERNAME);
-    // }
-    // else {
-    //   query.bindValue(AWSSettingsRecord::ColumnsType::DATAMEMBERNAME,QVariant(QVariant::TYPE));
-    // }
+    query.bindValue(AWSSettingsRecord::ColumnsType::userAgreementSigned,m_userAgreementSigned);
+    query.bindValue(AWSSettingsRecord::ColumnsType::numWorkers,m_numWorkers);
+    query.bindValue(AWSSettingsRecord::ColumnsType::terminationDelayEnabled,m_terminationDelayEnabled);
+    query.bindValue(AWSSettingsRecord::ColumnsType::terminationDelay,m_terminationDelay);
   }
 
   void AWSSettingsRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
@@ -140,24 +107,22 @@ namespace detail {
 
     QVariant value;
 
-    // TODO: Delete if no derived classes.
-    value = query.value(AWSSettingsRecord::ColumnsType::aWSSettingsRecordType);
+    value = query.value(AWSSettingsRecord::ColumnsType::userAgreementSigned);
     OS_ASSERT(value.isValid() && !value.isNull());
-    m_lastAWSSettingsRecordType = AWSSettingsRecordType(value.toInt());
+    m_lastUserAgreementSigned = value.toBool();
 
-    // Template for required data.
-    // value = query.value(AWSSettingsRecord::ColumnsType::DATAMEMBERNAME);
-    // OS_ASSERT(value.isValid() && !value.isNull());
-    // m_lastDATAMEMBERNAME = value.toTYPE();
+    value = query.value(AWSSettingsRecord::ColumnsType::numWorkers);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastNumWorkers = value.toUInt();
 
-    // Template for optional data.
-    // value = query.value(AWSSettingsRecord::ColumnsType::DATAMEMBERNAME);
-    // if (value.isValid() && !value.isNull()) {
-    //   m_lastDATAMEMBERNAME = value.toTYPE();
-    // }
-    // else {
-    //   m_lastDATAMEMBERNAME.reset();
-    // }
+    value = query.value(AWSSettingsRecord::ColumnsType::terminationDelayEnabled);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastTerminationDelayEnabled = value.toBool();
+
+    value = query.value(AWSSettingsRecord::ColumnsType::terminationDelay);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastTerminationDelay = value.toUInt();
+
   }
 
   bool AWSSettingsRecord_Impl::compareValues(const QSqlQuery& query) const {
@@ -169,24 +134,21 @@ namespace detail {
 
     QVariant value;
 
-    // TODO: Delete if no derived classes.
-    value = query.value(AWSSettingsRecord::ColumnsType::aWSSettingsRecordType);
+    value = query.value(AWSSettingsRecord::ColumnsType::userAgreementSigned);
     OS_ASSERT(value.isValid() && !value.isNull());
-    result = result && (m_aWSSettingsRecordType == AWSSettingsRecordType(value.toInt()));
+    result = result && (m_userAgreementSigned == value.toBool());
 
-    // Template for required data.
-    // value = query.value(AWSSettingsRecord::ColumnsType::DATAMEMBERNAME);
-    // OS_ASSERT(value.isValid() && !value.isNull());
-    // result = result && (m_DATAMEMBERNAME == value.toTYPE());
+    value = query.value(AWSSettingsRecord::ColumnsType::numWorkers);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_numWorkers == value.toUInt());
 
-    // Template for optional data.
-    // value = query.value(AWSSettingsRecord::ColumnsType::DATAMEMBERNAME);
-    // if (value.isValid() && !value.isNull()) {
-    //   result = result && m_DATAMEMBERNAME && (*m_DATAMEMBERNAME == value.toTYPE());
-    // }
-    // else {
-    //   result = result && !m_DATAMEMBERNAME;
-    // }
+    value = query.value(AWSSettingsRecord::ColumnsType::terminationDelayEnabled);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_terminationDelayEnabled == value.toBool());
+
+    value = query.value(AWSSettingsRecord::ColumnsType::terminationDelay);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_terminationDelay == value.toUInt());
 
     return result;
   }
@@ -194,31 +156,29 @@ namespace detail {
   void AWSSettingsRecord_Impl::saveLastValues() {
     CloudSettingsRecord_Impl::saveLastValues();
 
-    // TODO: Delete if no derived types.
-    m_lastAWSSettingsRecordType = m_aWSSettingsRecordType;
-    // m_lastDATAMEMBERNAME = m_DATAMEMBERNAME;
+    m_lastUserAgreementSigned = m_userAgreementSigned;
+    m_lastNumWorkers = m_numWorkers;
+    m_lastTerminationDelayEnabled = m_terminationDelayEnabled;
+    m_lastTerminationDelay = m_terminationDelay;
   }
 
   void AWSSettingsRecord_Impl::revertToLastValues() {
     CloudSettingsRecord_Impl::revertToLastValues();
 
-    // TODO: Delete if no derived types.
-    m_aWSSettingsRecordType = m_lastAWSSettingsRecordType;
-    // m_DATAMEMBERNAME = m_lastDATAMEMBERNAME;
+    m_userAgreementSigned = m_lastUserAgreementSigned;
+    m_numWorkers = m_lastNumWorkers;
+    m_terminationDelayEnabled = m_lastTerminationDelayEnabled;
+    m_terminationDelay = m_lastTerminationDelay;
   }
 
 } // detail
 
-AWSSettingsRecord::AWSSettingsRecord(const NAMESPACE::AWSSettings& aWSSettings, ProjectDatabase& database)
+AWSSettingsRecord::AWSSettingsRecord(const AWSSettings& awsSettings, ProjectDatabase& database)
   : CloudSettingsRecord(boost::shared_ptr<detail::AWSSettingsRecord_Impl>(
-        new detail::AWSSettingsRecord_Impl(aWSSettings, database)),
+        new detail::AWSSettingsRecord_Impl(awsSettings, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::AWSSettingsRecord_Impl>());
-
-  OS_ASSERT(false);
-  // TODO: Align with final public constructors.
-  // TODO: Handle relationships (setting id fields) as needed.
 }
 
 AWSSettingsRecord::AWSSettingsRecord(const QSqlQuery& query, ProjectDatabase& database)
@@ -233,65 +193,25 @@ boost::optional<AWSSettingsRecord> AWSSettingsRecord::factoryFromQuery(const QSq
 {
   OptionalAWSSettingsRecord result;
 
-  // Template for base classes. See, for instance, MeasureRecord::factoryFromQuery.
-  // int aWSSettingsRecordType = query.value(AWSSettingsRecordColumns::aWSSettingsRecordType).toInt();
-
-  // switch (aWSSettingsRecordType) {
-  //   case AWSSettingsRecordType::FIRSTDERIVEDTYPE : 
-  //     result = FIRSTDERIVEDTYPE(query, database).cast<AWSSettingsRecord>();
-  //    break;
-  //   default :
-  //     LOG(Error,"Unknown AWSSettingsRecordType " << aWSSettingsRecordType);
-  //     return boost::none;
-  // }
-
-  // Template for classes with no derived classes.
-  // try {
-  //   result = AWSSettingsRecord(query,database);
-  // }
-  // catch (const std::exception& e) {
-  //   LOG(Error,"Unable to construct AWSSettingsRecord from query, because '"
-  //       << e.what() << "'.");
-  // }
+  try {
+    result = AWSSettingsRecord(query,database);
+  }
+  catch (const std::exception& e) {
+    LOG(Error,"Unable to construct AWSSettingsRecord from query, because '" << e.what() << "'.");
+  }
 
   return result;
-}
-
-AWSSettingsRecord AWSSettingsRecord::factoryFromAWSSettings(const NAMESPACE::AWSSettings& aWSSettings, ProjectDatabase& database)
-{
-  // TODO: Delete if no derived classes.
-  OS_ASSERT(false);
-
-  // Template. See, for instance, StandardsFilterObjectAttributeRecord::factoryFromFilter.
-
-  // if (aWSSettings.optionalCast<NAMESPACE::FIRST_DERIVED_CLASS>()) {
-  //   return FIRST_DERIVED_CLASSRecord(aWSSettings.cast<NAMESPACE::FIRST_DERIVED_CLASS>(), database);
-  // else if {
-  //   ...
-  // }
-
-  OS_ASSERT(false);
-  return AWSSettingsRecord(boost::shared_ptr<detail::AWSSettingsRecord_Impl>());
 }
 
 std::vector<AWSSettingsRecord> AWSSettingsRecord::getAWSSettingsRecords(ProjectDatabase& database) {
   std::vector<AWSSettingsRecord> result;
 
   QSqlQuery query(*(database.qSqlDatabase()));
-  // TODO: Check class used to determine databaseTableName().
-  // TODO: Check (or add) the WHERE portion of the query. See getAttributeRecords for a non-type WHERE statement.
   query.prepare(toQString("SELECT * FROM " + CloudSettingsRecord::databaseTableName() + " WHERE cloudSettingsRecordType=:cloudSettingsRecordType"));
   query.bindValue(":cloudSettingsRecordType", CloudSettingsRecordType::AWSSettingsRecord);
   assertExec(query);
   while (query.next()) {
-    // TODO: Choose appropriate implementation.
-
-    // OptionalAWSSettingsRecord aWSSettingsRecord = AWSSettingsRecord::factoryFromQuery(query, database);
-    // if (aWSSettingsRecord) {
-    //   result.push_back(*aWSSettingsRecord);
-    // }
-
-    // result.push_back(AWSSettingsRecord(query, database));
+    result.push_back(AWSSettingsRecord(query, database));
   }
 
   return result;
@@ -301,25 +221,19 @@ boost::optional<AWSSettingsRecord> AWSSettingsRecord::getAWSSettingsRecord(int i
   boost::optional<AWSSettingsRecord> result;
 
   QSqlQuery query(*(database.qSqlDatabase()));
-  // TODO: Check class used to determine databaseTableName().
-  // TODO: Check the WHERE portion of the query.
   query.prepare(toQString("SELECT * FROM " + CloudSettingsRecord::databaseTableName() + " WHERE cloudSettingsRecordType=:cloudSettingsRecordType AND id=:id"));
   query.bindValue(":cloudSettingsRecordType", CloudSettingsRecordType::AWSSettingsRecord);
   query.bindValue(":id",id);
   assertExec(query);
   if (query.first()) {
-    // TODO: Choose appropriate implementation.
-
-    // result = AWSSettingsRecord::factoryFromQuery(query, database);
-
-    // result = AWSSettingsRecord(query, database);
+    result = AWSSettingsRecord(query, database);
   }
 
   return result;
 }
 
-NAMESPACE::AWSSettings AWSSettingsRecord::aWSSettings() const {
-  return getImpl<detail::AWSSettingsRecord_Impl>()->aWSSettings();
+AWSSettings AWSSettingsRecord::awsSettings() const {
+  return getImpl<detail::AWSSettingsRecord_Impl>()->awsSettings();
 }
 
 /// @cond

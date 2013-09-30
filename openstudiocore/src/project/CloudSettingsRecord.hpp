@@ -42,6 +42,7 @@ namespace detail {
  *  \code
 OPENSTUDIO_ENUM(CloudSettingsRecordType,
     ((VagrantSettingsRecord))
+    ((AWSSettingsRecord))
 );
  *  \endcode */
 OPENSTUDIO_ENUM(CloudSettingsRecordType,

@@ -24,9 +24,9 @@
 #include <project/CloudSessionRecord.hpp>
 
 namespace openstudio {
-namespace NAMESPACE {
-  class AWSSession;
-}
+
+class AWSSession;
+
 namespace project {
 
 namespace detail {
@@ -35,39 +35,19 @@ namespace detail {
 
 } // detail
 
-// TODO: Populate or delete this enumeration if there are/are not any derived types, respectively.
-/** \class AWSSessionRecordType
- *  \brief ObjectRecord types that derive from AWSSessionRecord.
- *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
- *  macro call is:
- *  \code
-OPENSTUDIO_ENUM(AWSSessionRecordType,
-    ((AWSSessionRecordDerivedRecord1))
-);
- *  \endcode */
-OPENSTUDIO_ENUM(AWSSessionRecordType,
-    ((AWSSessionRecordDerivedRecord1))
-);
-
 /** AWSSessionRecord is a CloudSessionRecord. */
 class PROJECT_API AWSSessionRecord : public CloudSessionRecord {
  public:
 
   typedef detail::AWSSessionRecord_Impl ImplType;
-  // TODO: Check this typedef. The generator script assumes that the hierarchy is only two deep   // from ObjectRecord.
   typedef CloudSessionRecordColumns ColumnsType;
-  // TODO: Check this typedef too.
   typedef CloudSessionRecord ObjectRecordType;
 
   /** @name Constructors and Destructors */
   //@{
 
-  // TODO: Delete if AWSSession is abstract, make private if AWSSession is concrete and has derived classes.
-  // TODO: Replace ProjectDatabase& database (or add another object if it is ok for AWSSessionRecord to be and orphan) with const& to parent Record if the Table contains a parent id.
-  // TODO: Find-replace on 'NAMESPACE'.
-  AWSSessionRecord(const NAMESPACE::AWSSession& aWSSession, ProjectDatabase& database);
+  AWSSessionRecord(const AWSSession& awsSession, ProjectDatabase& database);
 
-  // TODO: Delete if AWSSession is abstract, make private if AWSSession is concrete and has derived classes.
   AWSSessionRecord(const QSqlQuery& query, ProjectDatabase& database);
 
   virtual ~AWSSessionRecord() {}
@@ -78,9 +58,6 @@ class PROJECT_API AWSSessionRecord : public CloudSessionRecord {
    *  derived type. */
   static boost::optional<AWSSessionRecord> factoryFromQuery(const QSqlQuery& query, ProjectDatabase& database);
 
-  // TODO: Delete if no derived classes.
-  static AWSSessionRecord factoryFromAWSSession(const NAMESPACE::AWSSession& aWSSession, ProjectDatabase& database);
-
   static std::vector<AWSSessionRecord> getAWSSessionRecords(ProjectDatabase& database);
 
   static boost::optional<AWSSessionRecord> getAWSSessionRecord(int id, ProjectDatabase& database);
@@ -88,17 +65,11 @@ class PROJECT_API AWSSessionRecord : public CloudSessionRecord {
   /** @name Getters */
   //@{
 
-  // ADD METHODS FOR RETRIEVING PARENT, CHILD, AND RESOURCE RECORDS AS DESIRED
-
-  // ADD METHODS FOR GETTING/SETTING SPECIFIC DATA FIELDS AS DESIRED
-
-  NAMESPACE::AWSSession aWSSession() const;
+  AWSSession awsSession() const;
 
   //@}
  protected:
   /// @cond
-  typedef detail::AWSSessionRecord_Impl ImplType;
-
   explicit AWSSessionRecord(boost::shared_ptr<detail::AWSSessionRecord_Impl> impl);
 
   friend class detail::AWSSessionRecord_Impl;

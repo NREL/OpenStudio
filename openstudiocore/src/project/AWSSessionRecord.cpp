@@ -20,28 +20,35 @@
 #include <project/AWSSessionRecord.hpp>
 #include <project/AWSSessionRecord_Impl.hpp>
 
-#include <project/JoinRecord.hpp>
-// TODO: Add derived class includes for factory methods if this is a base class.
+#include <project/ProjectDatabase.hpp>
+#include <project/UrlRecord.hpp>
 
-// TODO: Replace with derived class includes if this is a base class.
-#include <NAMESPACE/AWSSession.hpp>
+#include <utilities/cloud/AWSProvider.hpp>
+#include <utilities/cloud/AWSProvider_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Containers.hpp>
+
+#include <boost/foreach.hpp>
 
 namespace openstudio {
 namespace project {
 
 namespace detail {
 
-  AWSSessionRecord_Impl::AWSSessionRecord_Impl(const NAMESPACE::AWSSession& aWSSession,
-                                               const AWSSessionRecordType& aWSSessionRecordType,
+  AWSSessionRecord_Impl::AWSSessionRecord_Impl(const AWSSession& awsSession,
                                                ProjectDatabase& database)
-    : CloudSessionRecord_Impl(aWSSession, database),
-  // TODO: Delete member enum initialization if deleted from _Impl.hpp
-      m_aWSSessionRecordType(aWSSessionRecordType)
+    : CloudSessionRecord_Impl(awsSession,
+                              CloudSessionRecordType::AWSSessionRecord,
+                              database),
+      m_numServerProcessors(awsSession.numServerProcessors()),
+      m_numWorkerProcessors(awsSession.numWorkerProcessors()),
+      m_privateKey(awsSession.privateKey()),
+      m_timestamp(awsSession.timestamp()),
+      m_region(awsSession.region()),
+      m_serverInstanceType(awsSession.serverInstanceType()),
+      m_workerInstanceType(awsSession.workerInstanceType())
   {
-    OS_ASSERT(false);
-    // TODO: Initialize data members, check constructor call for base class.
   }
 
   AWSSessionRecord_Impl::AWSSessionRecord_Impl(const QSqlQuery& query, ProjectDatabase& database)
@@ -53,54 +60,33 @@ namespace detail {
 
     QVariant value;
 
-    // TODO: Delete deserialization of enum if deleted from _Impl.hpp
-    value = query.value(AWSSessionRecord::ColumnsType::aWSSessionRecordType);
+    value = query.value(AWSSessionRecord::ColumnsType::numServerProcessors);
     OS_ASSERT(value.isValid() && !value.isNull());
-    m_aWSSessionRecordType = AWSSessionRecordType(value.toInt());
+    m_numServerProcessors = value.toUInt();
 
-    // TODO: Extract data members from query. Templates follow.
+    value = query.value(AWSSessionRecord::ColumnsType::numWorkerProcessors);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_numWorkerProcessors = value.toUInt();
 
-    // Required data member
-    // value = query.value(AWSSessionRecord::ColumnsType::DATAMEMBERNAME);
-    // OS_ASSERT(value.isValid() && !value.isNull());
-    // m_DATAMEMBERNAME = value.toTYPE();
+    value = query.value(AWSSessionRecord::ColumnsType::privateKey);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_privateKey = value.toString().toStdString();
 
-    // Optional data member
-    // value = query.value(AWSSessionRecord::ColumnsType::DATAMEMBERNAME);
-    // if (value.isValid() && !value.isNull()) {
-    //   m_DATAMEMBERNAME = value.toTYPE();
-    // }
+    value = query.value(AWSSessionRecord::ColumnsType::timestamp);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_timestamp = value.toString().toStdString();
 
-  }
+    value = query.value(AWSSessionRecord::ColumnsType::region);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_region = value.toString().toStdString();
 
-  boost::optional<ObjectRecord> AWSSessionRecord_Impl::parent() const {
-    // Return this object's parent, if it has one. See ComponentAttributeRecord_Impl
-    // for an example.
-    OS_ASSERT(false);
-    return boost::none;
-  }
+    value = query.value(AWSSessionRecord::ColumnsType::serverInstanceType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_serverInstanceType = value.toString().toStdString();
 
-  std::vector<ObjectRecord> AWSSessionRecord_Impl::children() const {
-    // Return this object's children. See ComponentReferenceRecord_Impl for an example.
-    OS_ASSERT(false);
-    ObjectRecordVector result;
-    return result;
-  }
-
-  std::vector<ObjectRecord> AWSSessionRecord_Impl::resources() const {
-    // Return this object's resources. See ModelObjectActionSetRelationshipRecord_Impl
-    // for an example.
-    OS_ASSERT(false);
-    ObjectRecordVector result;
-    return result;
-  }
-
-  std::vector<JoinRecord> AWSSessionRecord_Impl::joinRecords() const {
-    // Return the join relationships between this object and others. See
-    // ModelObjectActionSetRelationshipRecord_Impl for an example.
-    OS_ASSERT(false);
-    JoinRecordVector result;
-    return result;
+    value = query.value(AWSSessionRecord::ColumnsType::workerInstanceType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_workerInstanceType = value.toString().toStdString();
   }
 
   void AWSSessionRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase>& database) {
@@ -110,25 +96,49 @@ namespace detail {
     assertExec(query);
   }
 
-  NAMESPACE::AWSSession AWSSessionRecord::aWSSession() const {
-    // TODO: De-serialize the object here.
-    OS_ASSERT(false);
+  CloudSession AWSSessionRecord_Impl::cloudSession() const {
+    return awsSession().cast<CloudSession>();
+  }
+
+  AWSSession AWSSessionRecord_Impl::awsSession() const {
+    OptionalUrl serverUrl;
+    std::string serverId;
+    if (OptionalUrlRecord sur = serverUrlRecord()) {
+      serverUrl = sur->url();
+      serverId = sur->name();
+    }
+    UrlVector workerUrls;
+    StringVector workerIds;
+    BOOST_FOREACH(const UrlRecord& wur,workerUrlRecords()) {
+      workerUrls.push_back(wur.url());
+      workerIds.push_back(wur.name());
+    }
+    return AWSSession(handle(),
+                      uuidLast(),
+                      sessionId(),
+                      serverUrl,
+                      serverId,
+                      m_numServerProcessors,
+                      workerUrls,
+                      workerIds,
+                      m_numWorkerProcessors,
+                      m_privateKey,
+                      m_timestamp,
+                      m_region,
+                      m_serverInstanceType,
+                      m_workerInstanceType);
   }
 
   void AWSSessionRecord_Impl::bindValues(QSqlQuery& query) const {
     CloudSessionRecord_Impl::bindValues(query);
 
-    // TODO: Delete bind for enum if no derived classes.
-    query.bindValue(AWSSessionRecord::ColumnsType::aWSSessionRecordType,m_aWSSessionRecordType.value());
-    // Template for required data.
-    // query.bindValue(AWSSessionRecord::ColumnsType::DATAMEMBERNAME,m_DATAMEMBERNAME);
-    // Template for optional data.
-    // if (m_DATAMEMBERNAME) {
-    //   query.bindValue(AWSSessionRecord::ColumnsType::DATAMEMBERNAME,*m_DATAMEMBERNAME);
-    // }
-    // else {
-    //   query.bindValue(AWSSessionRecord::ColumnsType::DATAMEMBERNAME,QVariant(QVariant::TYPE));
-    // }
+    query.bindValue(AWSSessionRecord::ColumnsType::numServerProcessors,m_numServerProcessors);
+    query.bindValue(AWSSessionRecord::ColumnsType::numWorkerProcessors,m_numWorkerProcessors);
+    query.bindValue(AWSSessionRecord::ColumnsType::privateKey,toQString(m_privateKey));
+    query.bindValue(AWSSessionRecord::ColumnsType::timestamp,toQString(m_timestamp));
+    query.bindValue(AWSSessionRecord::ColumnsType::region,toQString(m_region));
+    query.bindValue(AWSSessionRecord::ColumnsType::serverInstanceType,toQString(m_serverInstanceType));
+    query.bindValue(AWSSessionRecord::ColumnsType::workerInstanceType,toQString(m_workerInstanceType));
   }
 
   void AWSSessionRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
@@ -140,24 +150,33 @@ namespace detail {
 
     QVariant value;
 
-    // TODO: Delete if no derived classes.
-    value = query.value(AWSSessionRecord::ColumnsType::aWSSessionRecordType);
+    value = query.value(AWSSessionRecord::ColumnsType::numServerProcessors);
     OS_ASSERT(value.isValid() && !value.isNull());
-    m_lastAWSSessionRecordType = AWSSessionRecordType(value.toInt());
+    m_lastNumServerProcessors = value.toUInt();
 
-    // Template for required data.
-    // value = query.value(AWSSessionRecord::ColumnsType::DATAMEMBERNAME);
-    // OS_ASSERT(value.isValid() && !value.isNull());
-    // m_lastDATAMEMBERNAME = value.toTYPE();
+    value = query.value(AWSSessionRecord::ColumnsType::numWorkerProcessors);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastNumWorkerProcessors = value.toUInt();
 
-    // Template for optional data.
-    // value = query.value(AWSSessionRecord::ColumnsType::DATAMEMBERNAME);
-    // if (value.isValid() && !value.isNull()) {
-    //   m_lastDATAMEMBERNAME = value.toTYPE();
-    // }
-    // else {
-    //   m_lastDATAMEMBERNAME.reset();
-    // }
+    value = query.value(AWSSessionRecord::ColumnsType::privateKey);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastPrivateKey = value.toString().toStdString();
+
+    value = query.value(AWSSessionRecord::ColumnsType::timestamp);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastTimestamp = value.toString().toStdString();
+
+    value = query.value(AWSSessionRecord::ColumnsType::region);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastRegion = value.toString().toStdString();
+
+    value = query.value(AWSSessionRecord::ColumnsType::serverInstanceType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastServerInstanceType = value.toString().toStdString();
+
+    value = query.value(AWSSessionRecord::ColumnsType::workerInstanceType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastWorkerInstanceType = value.toString().toStdString();
   }
 
   bool AWSSessionRecord_Impl::compareValues(const QSqlQuery& query) const {
@@ -169,24 +188,33 @@ namespace detail {
 
     QVariant value;
 
-    // TODO: Delete if no derived classes.
-    value = query.value(AWSSessionRecord::ColumnsType::aWSSessionRecordType);
+    value = query.value(AWSSessionRecord::ColumnsType::numServerProcessors);
     OS_ASSERT(value.isValid() && !value.isNull());
-    result = result && (m_aWSSessionRecordType == AWSSessionRecordType(value.toInt()));
+    result = result && (m_numServerProcessors == value.toUInt());
 
-    // Template for required data.
-    // value = query.value(AWSSessionRecord::ColumnsType::DATAMEMBERNAME);
-    // OS_ASSERT(value.isValid() && !value.isNull());
-    // result = result && (m_DATAMEMBERNAME == value.toTYPE());
+    value = query.value(AWSSessionRecord::ColumnsType::numWorkerProcessors);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_numWorkerProcessors == value.toUInt());
 
-    // Template for optional data.
-    // value = query.value(AWSSessionRecord::ColumnsType::DATAMEMBERNAME);
-    // if (value.isValid() && !value.isNull()) {
-    //   result = result && m_DATAMEMBERNAME && (*m_DATAMEMBERNAME == value.toTYPE());
-    // }
-    // else {
-    //   result = result && !m_DATAMEMBERNAME;
-    // }
+    value = query.value(AWSSessionRecord::ColumnsType::privateKey);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_privateKey == value.toString().toStdString());
+
+    value = query.value(AWSSessionRecord::ColumnsType::timestamp);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_timestamp == value.toString().toStdString());
+
+    value = query.value(AWSSessionRecord::ColumnsType::region);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_region == value.toString().toStdString());
+
+    value = query.value(AWSSessionRecord::ColumnsType::serverInstanceType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_serverInstanceType == value.toString().toStdString());
+
+    value = query.value(AWSSessionRecord::ColumnsType::workerInstanceType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_workerInstanceType == value.toString().toStdString());
 
     return result;
   }
@@ -194,31 +222,35 @@ namespace detail {
   void AWSSessionRecord_Impl::saveLastValues() {
     CloudSessionRecord_Impl::saveLastValues();
 
-    // TODO: Delete if no derived types.
-    m_lastAWSSessionRecordType = m_aWSSessionRecordType;
-    // m_lastDATAMEMBERNAME = m_DATAMEMBERNAME;
+    m_lastNumServerProcessors = m_numServerProcessors;
+    m_lastNumWorkerProcessors = m_numWorkerProcessors;
+    m_lastPrivateKey = m_privateKey;
+    m_lastTimestamp = m_timestamp;
+    m_lastRegion = m_region;
+    m_lastServerInstanceType = m_serverInstanceType;
+    m_lastWorkerInstanceType = m_workerInstanceType;
   }
 
   void AWSSessionRecord_Impl::revertToLastValues() {
     CloudSessionRecord_Impl::revertToLastValues();
 
-    // TODO: Delete if no derived types.
-    m_aWSSessionRecordType = m_lastAWSSessionRecordType;
-    // m_DATAMEMBERNAME = m_lastDATAMEMBERNAME;
+    m_numServerProcessors = m_lastNumServerProcessors;
+    m_numWorkerProcessors = m_lastNumWorkerProcessors;
+    m_privateKey = m_lastPrivateKey;
+    m_timestamp = m_lastTimestamp;
+    m_region = m_lastRegion;
+    m_serverInstanceType = m_lastServerInstanceType;
+    m_workerInstanceType = m_lastWorkerInstanceType;
   }
 
 } // detail
 
-AWSSessionRecord::AWSSessionRecord(const NAMESPACE::AWSSession& aWSSession, ProjectDatabase& database)
+AWSSessionRecord::AWSSessionRecord(const AWSSession& awsSession, ProjectDatabase& database)
   : CloudSessionRecord(boost::shared_ptr<detail::AWSSessionRecord_Impl>(
-        new detail::AWSSessionRecord_Impl(aWSSession, database)),
+        new detail::AWSSessionRecord_Impl(awsSession, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::AWSSessionRecord_Impl>());
-
-  OS_ASSERT(false);
-  // TODO: Align with final public constructors.
-  // TODO: Handle relationships (setting id fields) as needed.
 }
 
 AWSSessionRecord::AWSSessionRecord(const QSqlQuery& query, ProjectDatabase& database)
@@ -233,65 +265,25 @@ boost::optional<AWSSessionRecord> AWSSessionRecord::factoryFromQuery(const QSqlQ
 {
   OptionalAWSSessionRecord result;
 
-  // Template for base classes. See, for instance, MeasureRecord::factoryFromQuery.
-  // int aWSSessionRecordType = query.value(AWSSessionRecordColumns::aWSSessionRecordType).toInt();
-
-  // switch (aWSSessionRecordType) {
-  //   case AWSSessionRecordType::FIRSTDERIVEDTYPE : 
-  //     result = FIRSTDERIVEDTYPE(query, database).cast<AWSSessionRecord>();
-  //    break;
-  //   default :
-  //     LOG(Error,"Unknown AWSSessionRecordType " << aWSSessionRecordType);
-  //     return boost::none;
-  // }
-
-  // Template for classes with no derived classes.
-  // try {
-  //   result = AWSSessionRecord(query,database);
-  // }
-  // catch (const std::exception& e) {
-  //   LOG(Error,"Unable to construct AWSSessionRecord from query, because '"
-  //       << e.what() << "'.");
-  // }
+  try {
+    result = AWSSessionRecord(query,database);
+  }
+  catch (const std::exception& e) {
+    LOG(Error,"Unable to construct AWSSessionRecord from query, because '" << e.what() << "'.");
+  }
 
   return result;
-}
-
-AWSSessionRecord AWSSessionRecord::factoryFromAWSSession(const NAMESPACE::AWSSession& aWSSession, ProjectDatabase& database)
-{
-  // TODO: Delete if no derived classes.
-  OS_ASSERT(false);
-
-  // Template. See, for instance, StandardsFilterObjectAttributeRecord::factoryFromFilter.
-
-  // if (aWSSession.optionalCast<NAMESPACE::FIRST_DERIVED_CLASS>()) {
-  //   return FIRST_DERIVED_CLASSRecord(aWSSession.cast<NAMESPACE::FIRST_DERIVED_CLASS>(), database);
-  // else if {
-  //   ...
-  // }
-
-  OS_ASSERT(false);
-  return AWSSessionRecord(boost::shared_ptr<detail::AWSSessionRecord_Impl>());
 }
 
 std::vector<AWSSessionRecord> AWSSessionRecord::getAWSSessionRecords(ProjectDatabase& database) {
   std::vector<AWSSessionRecord> result;
 
   QSqlQuery query(*(database.qSqlDatabase()));
-  // TODO: Check class used to determine databaseTableName().
-  // TODO: Check (or add) the WHERE portion of the query. See getAttributeRecords for a non-type WHERE statement.
   query.prepare(toQString("SELECT * FROM " + CloudSessionRecord::databaseTableName() + " WHERE cloudSessionRecordType=:cloudSessionRecordType"));
   query.bindValue(":cloudSessionRecordType", CloudSessionRecordType::AWSSessionRecord);
   assertExec(query);
   while (query.next()) {
-    // TODO: Choose appropriate implementation.
-
-    // OptionalAWSSessionRecord aWSSessionRecord = AWSSessionRecord::factoryFromQuery(query, database);
-    // if (aWSSessionRecord) {
-    //   result.push_back(*aWSSessionRecord);
-    // }
-
-    // result.push_back(AWSSessionRecord(query, database));
+    result.push_back(AWSSessionRecord(query, database));
   }
 
   return result;
@@ -301,25 +293,19 @@ boost::optional<AWSSessionRecord> AWSSessionRecord::getAWSSessionRecord(int id, 
   boost::optional<AWSSessionRecord> result;
 
   QSqlQuery query(*(database.qSqlDatabase()));
-  // TODO: Check class used to determine databaseTableName().
-  // TODO: Check the WHERE portion of the query.
   query.prepare(toQString("SELECT * FROM " + CloudSessionRecord::databaseTableName() + " WHERE cloudSessionRecordType=:cloudSessionRecordType AND id=:id"));
   query.bindValue(":cloudSessionRecordType", CloudSessionRecordType::AWSSessionRecord);
   query.bindValue(":id",id);
   assertExec(query);
   if (query.first()) {
-    // TODO: Choose appropriate implementation.
-
-    // result = AWSSessionRecord::factoryFromQuery(query, database);
-
-    // result = AWSSessionRecord(query, database);
+    result = AWSSessionRecord(query, database);
   }
 
   return result;
 }
 
-NAMESPACE::AWSSession AWSSessionRecord::aWSSession() const {
-  return getImpl<detail::AWSSessionRecord_Impl>()->aWSSession();
+AWSSession AWSSessionRecord::awsSession() const {
+  return getImpl<detail::AWSSessionRecord_Impl>()->awsSession();
 }
 
 /// @cond

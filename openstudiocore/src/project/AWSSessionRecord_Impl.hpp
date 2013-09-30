@@ -27,9 +27,9 @@
 #include <project/AWSSessionRecord.hpp>
 
 namespace openstudio {
-namespace NAMESPACE {
-  class AWSSession;
-}
+
+class AWSSession;
+
 namespace project {
 
 namespace detail {
@@ -40,12 +40,7 @@ namespace detail {
     /** @name Constructors and Destructors */
     //@{
 
-    // TODO: May need to remove type enum if AWSSession is a leaf of the inheritance tree.
-    // TODO: Replace ProjectDatabase& database with parent Record and/or add more 
-    // construtors to match public class.
-    // TODO: Find-replace on 'NAMESPACE'.
-    AWSSessionRecord_Impl(const NAMESPACE::AWSSession& aWSSession,
-                          const AWSSessionRecordType& aWSSessionRecordType,
+    AWSSessionRecord_Impl(const AWSSession& awsSession,
                           ProjectDatabase& database);
 
     /** Constructor from query. Throws if bad query. */
@@ -57,20 +52,6 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    /** Returns the direct parent of this object, if it exists. */
-    virtual boost::optional<ObjectRecord> parent() const;
-
-    /** Returns objects directly owned by this Record. Children are removed when this Record 
-     *  is removed. */
-    virtual std::vector<ObjectRecord> children() const;
-
-    /** Returns objects referenced, but not owned, by this Record. */
-    virtual std::vector<ObjectRecord> resources() const;
-
-    /** Returns join relationships between this object and others. Such relationships will be 
-     *  removed when either record in the relationship is removed. */
-    virtual std::vector<JoinRecord> joinRecords() const;
-
     /** Save the row that corresponds to this record in projectDatabase. */
     virtual void saveRow(const boost::shared_ptr<QSqlDatabase>& database);
 
@@ -78,11 +59,9 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // ADD METHODS FOR RETRIEVING PARENT, CHILD, AND RESOURCE RECORDS AS DESIRED
+    virtual CloudSession cloudSession() const;
 
-    // ADD METHODS FOR GETTING/SETTING SPECIFIC DATA FIELDS AS DESIRED
-
-    NAMESPACE::AWSSession aWSSession() const;
+    AWSSession awsSession() const;
 
     //@}
    protected:
@@ -104,10 +83,21 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.project.AWSSessionRecord");
 
-    // TODO: Delete enums if no derived classes.
-    AWSSessionRecordType m_aWSSessionRecordType;
+    unsigned m_numServerProcessors;
+    unsigned m_numWorkerProcessors;
+    std::string m_privateKey;
+    std::string m_timestamp;
+    std::string m_region;
+    std::string m_serverInstanceType;
+    std::string m_workerInstanceType;
 
-    AWSSessionRecordType m_lastAWSSessionRecordType;
+    unsigned m_lastNumServerProcessors;
+    unsigned m_lastNumWorkerProcessors;
+    std::string m_lastPrivateKey;
+    std::string m_lastTimestamp;
+    std::string m_lastRegion;
+    std::string m_lastServerInstanceType;
+    std::string m_lastWorkerInstanceType;
   };
 
 } // detail

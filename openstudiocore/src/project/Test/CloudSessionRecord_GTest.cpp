@@ -23,6 +23,8 @@
 #include <project/VagrantSessionRecord.hpp>
 #include <project/VagrantSessionRecord_Impl.hpp>
 
+#include <utilities/cloud/AWSProvider.hpp>
+#include <utilities/cloud/AWSProvider_Impl.hpp>
 #include <utilities/cloud/VagrantProvider.hpp>
 #include <utilities/cloud/VagrantProvider_Impl.hpp>
 
@@ -94,3 +96,29 @@ TEST_F(ProjectFixture,CloudSessionRecord_VagrantPopulated) {
     EXPECT_EQ(Url("http://localhost:8081"),vagrantSession.workerUrls()[0]);
   }
 }
+
+TEST_F(ProjectFixture,CloudSessionRecord_AWSDefault) {
+  {
+    ProjectDatabase database = getCleanDatabase("CloudSessionRecord_AWSDefault");
+
+    AWSProvider provider;
+    CloudSession session = provider.session();
+
+    CloudSessionRecord record = CloudSessionRecord::factoryFromCloudSession(session,database);
+    database.save();
+
+    EXPECT_EQ(1u,CloudSessionRecord::getCloudSessionRecords(database).size());
+  }
+  {
+    ProjectDatabase database = getExistingDatabase("CloudSessionRecord_AWSDefault");
+
+    EXPECT_EQ(1u,CloudSessionRecord::getCloudSessionRecords(database).size());
+    ASSERT_FALSE(CloudSessionRecord::getCloudSessionRecords(database).empty());
+
+    CloudSessionRecord record = CloudSessionRecord::getCloudSessionRecords(database)[0];
+
+    CloudSession session = record.cloudSession();
+    EXPECT_TRUE(session.optionalCast<AWSSession>());
+  }
+}
+

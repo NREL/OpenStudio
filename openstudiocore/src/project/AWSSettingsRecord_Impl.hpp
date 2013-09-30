@@ -57,6 +57,8 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    virtual CloudSettings cloudSettings() const;
+
     AWSSettings awsSettings() const;
 
     //@}

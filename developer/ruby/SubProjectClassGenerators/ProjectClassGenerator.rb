@@ -617,7 +617,7 @@ class ProjectClassGenerator < SubProjectClassGenerator
     
     else
       
-      result << "  NAMESPACE::" << @serializedClass << " " << @className << "::" << @serializedClassArgument
+      result << "  NAMESPACE::" << @serializedClass << " " << @className << "_Impl::" << @serializedClassArgument
       result << "() const {\n"    
       result << "    // TODO: De-serialize the object here.\n"
       result << "    OS_ASSERT(false);\n"
