@@ -324,6 +324,10 @@ namespace detail {
     void registerDownloadDetailsRequestFailure();
 
     void checkForRunCompleteOrStopped();
+
+    bool inIteration(const analysis::DataPoint& dataPoint) const;
+
+    bool inProcessingQueues(const analysis::DataPoint& dataPoint) const;
   };
 
 } // detail

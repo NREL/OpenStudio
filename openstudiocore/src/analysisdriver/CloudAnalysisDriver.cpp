@@ -21,6 +21,8 @@
 #include <analysisdriver/CloudAnalysisDriver_Impl.hpp>
 
 #include <project/ProjectDatabase.hpp>
+#include <project/DataPointRecord.hpp>
+#include <project/DataPointRecord_Impl.hpp>
 
 #include <analysis/Analysis.hpp>
 
@@ -35,6 +37,7 @@
 #include <QTimer>
 
 using namespace openstudio::analysis;
+using namespace openstudio::project;
 using namespace openstudio::runmanager;
 
 namespace openstudio {
@@ -264,42 +267,13 @@ namespace detail {
       return false;
     }
 
-    // HERE
-    // Need to think through queues.
-    // No longer deleting them when done.
-    // Instead, refresh on requestRun.
-    // However, could requestRun, finish, requestRun again with different points
-    // Reasonable to request DataPoint not in iteration
-    //
-    // Should this method clear the queues ever?
-    // Maybe not. Just pick up from last run.
-    if (isRunning() || isDownloading()) {
-      // data point could be somewhere in-process
-
-    }
-    else {
-      //
-
-    }
-
-    // data point must be complete or selected and actively running
-    bool found(false);
     if (!actualDataPoint->complete()) {
-      if (actualDataPoint->selected() && (isRunning() || isDownloading())) {
-        // see if data point is being run or if json is being downloaded
-        found = !(std::find(m_postQueue.begin(),
-                            m_postQueue.end(),
-                            actualDataPoint.get()) == m_postQueue.end());
-        found = found ||
-                !(std::find(m_waitingQueue.begin(),
-                            m_waitingQueue.end(),
-                            actualDataPoint.get()) == m_waitingQueue.end());
-        found = found ||
-                !(std::find(m_jsonQueue.begin(),
-                            m_jsonQueue.end(),
-                            actualDataPoint.get()) == m_jsonQueue.end()); 
+      // then needs to be actively running on the cloud to continue
+      bool keepGoing(false);
+      if (isRunning() || isDownloading()) {
+        keepGoing = inIteration(*actualDataPoint);
       }
-      if (!found) {
+      if (!keepGoing) {
         return false;
       }
     }
@@ -312,21 +286,15 @@ namespace detail {
       clearErrorsAndWarnings();
     }
 
-    // see if already in process
-    found = found || !(std::find(m_detailsQueue.begin(),
-                                 m_detailsQueue.end(),
-                                 actualDataPoint.get()) == m_detailsQueue.end());
+    // see if already in process, in which case, the right thing should happen automatically
+    bool found = inProcessingQueues(*actualDataPoint);
   
     // if not, see if there are results on the server
     if (!found) {
-      found = !(std::find(m_preDetailsQueue.begin(),
-                          m_preDetailsQueue.end(),
-                          actualDataPoint.get()) == m_preDetailsQueue.end());
-      if (!found) {
-        LOG(Debug,"Adding DataPoint '" << actualDataPoint->name() 
-            << "' to the pre-download details queue.");
-        m_preDetailsQueue.push_back(*actualDataPoint);
-      }
+      LOG(Debug,"Adding DataPoint '" << actualDataPoint->name() << "' to the pre-download "
+          << "details queue.");
+      m_preDetailsQueue.push_back(*actualDataPoint);
+
       if (!m_checkForResultsToDownload) {
 
         if (OptionalUrl url = session().serverUrl()) {
@@ -1004,7 +972,7 @@ namespace detail {
       std::set<UUID> readyUUIDs(temp.begin(),temp.end());
       LOG(Debug,"Received reply to request for data points ready for download. There are "
           << readyUUIDs.size() << ".");
-      DataPointVector it = m_preDetailsQueue.begin();
+      DataPointVector::iterator it = m_preDetailsQueue.begin();
       while (it != m_preDetailsQueue.end()) {
         if (readyUUIDs.find(it->uuid()) != readyUUIDs.end()) {
           m_detailsQueue.push_back(*it);
@@ -1062,9 +1030,7 @@ namespace detail {
       m_detailsQueue.pop_front();
       emit resultsChanged();
       emit dataPointDetailsComplete(project().analysis().uuid(),toUpdate.uuid());
-      if (m_numDataPointsComplete) {
-        emit iterationProgress(numCompleteDataPoints(),numDataPointsInIteration());
-      }
+      emit iterationProgress(numCompleteDataPoints(),numDataPointsInIteration());
       if (!test) {
         logWarning("Incorporation of DataPoint '" + toUpdate.name() + "', " + removeBraces(toUpdate.uuid()) + " files and details failed.");
       }
@@ -1292,7 +1258,7 @@ namespace detail {
 
     // don't register failure here. calling method will do so.
 
-    return success
+    return success;
   }
 
   bool CloudAnalysisDriver_Impl::startActualDownloads() {
@@ -1391,6 +1357,29 @@ namespace detail {
         emit analysisComplete(project().analysis().uuid());
       }
     }
+  }
+
+  bool CloudAnalysisDriver_Impl::inIteration(const DataPoint &dataPoint) const {
+    return !(std::find(m_iteration.begin(),m_iteration.end(),dataPoint) == m_iteration.end());
+  }
+
+  bool CloudAnalysisDriver_Impl::inProcessingQueues(const DataPoint &dataPoint) const {
+    if (std::find(m_postQueue.begin(),m_postQueue.end(),dataPoint) != m_postQueue.end()) {
+      return true;
+    }
+    if (std::find(m_waitingQueue.begin(),m_waitingQueue.end(),dataPoint) != m_waitingQueue.end()) {
+      return true;
+    }
+    if (std::find(m_jsonQueue.begin(),m_jsonQueue.end(),dataPoint) != m_jsonQueue.end()) {
+      return true;
+    }
+    if (std::find(m_preDetailsQueue.begin(),m_preDetailsQueue.end(),dataPoint) != m_preDetailsQueue.end()) {
+      return true;
+    }
+    if (std::find(m_detailsQueue.begin(),m_detailsQueue.end(),dataPoint) != m_detailsQueue.end()) {
+      return true;
+    }
+    return false;
   }
 
 } // detail
