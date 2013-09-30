@@ -30,9 +30,14 @@
 #include <utilities/cloud/AWSProvider_Impl.hpp>
 #include <utilities/core/Assert.hpp>
 #include <pat_app/VagrantConfiguration.hxx>
+
 #include <QThread>
 #include <QTimer>
 #include <QMessageBox>
+#include <QFile>
+#include <QDir>
+#include <QRegExp>
+#include <QStringList>
 
 namespace openstudio {
 
@@ -404,6 +409,41 @@ CloudStatus CloudMonitor::status() const
 
 CloudSettings CloudMonitor::createTestSettings()
 {
+  bool aws = false;
+
+  if (aws){
+    std::string accessKey;
+    std::string secretKey;
+
+    QFile file(QDir::homePath() + "/.aws_secrets");
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+      char buf[1024];
+      while (file.readLine(buf, sizeof(buf)) != -1){
+        QRegExp rx("access_key_id:\\s(.*)");
+        if (rx.exactMatch(buf)){
+          accessKey = rx.capturedTexts()[1].toStdString();
+        }
+
+        rx = QRegExp("secret_access_key:\\s(.*)");
+        if (rx.exactMatch(buf)){
+         secretKey = rx.capturedTexts()[1].toStdString();
+        }
+      }
+    }
+
+    if (accessKey.empty() || secretKey.empty()){
+      //LOG(Error, "Invalid credentials for AWSProvider");
+    }else{
+      AWSSettings awsSettings;
+      awsSettings.setAccessKey(accessKey);
+      awsSettings.setSecretKey(secretKey);
+      awsSettings.setServerInstanceType("t1.micro");
+      awsSettings.setWorkerInstanceType("t1.micro");
+
+      return awsSettings;
+    }
+  }
+
   // create the vagrant provider
   path serverPath = vagrantServerPath();
   Url serverUrl("http://localhost:8080");
