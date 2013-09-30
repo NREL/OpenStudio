@@ -249,6 +249,7 @@ void CloudMonitor::onCloudConnectionError()
   // Get state of everything from m_worker
   // m_worker->internetAvailable()
   // m_worker->cloudRunning()
+  // m_worker->authenticated()
 
   QMessageBox message(PatApp::instance()->mainWindow);
   message.setText("OpenStudio Cloud connection was unexpectedly lost.");
@@ -611,6 +612,11 @@ bool CloudMonitorWorker::internetAvailable() const
 bool CloudMonitorWorker::cloudRunning() const
 {
   return m_cloudRunning;
+}
+
+bool CloudMonitorWorker::authenticated() const
+{
+  return m_authenticated;
 }
 
 } // pat

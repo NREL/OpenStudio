@@ -289,6 +289,8 @@ class CloudMonitorWorker : public QObject
 
   bool cloudRunning() const;
 
+  bool authenticated() const;
+
   public slots:
 
   void monitorCloudRunning();
@@ -314,6 +316,8 @@ class CloudMonitorWorker : public QObject
   QPointer<CloudMonitor> m_monitor;  
 
   bool m_internetAvailable;
+
+  bool m_authenticated;
 
   bool m_cloudRunning;
 };
