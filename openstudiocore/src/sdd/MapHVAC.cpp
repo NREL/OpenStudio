@@ -2334,19 +2334,21 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
     if( istringEqual(reheatCtrlMthdElement.text().toStdString(),"DualMaximum") )
     {
       terminal.setDamperHeatingAction("Reverse");
-
-      QDomElement htgAirFlowMaxElement = trmlUnitElement.firstChildElement("HtgAirFlowMax");
-      value = htgAirFlowMaxElement.text().toDouble(&ok);
-      if( ok && primaryAirFlow )
-      {
-         value = unitToUnit(value,"cfm","m^3/s").get();
-         double fraction = value / primaryAirFlow.get();
-         terminal.setMaximumFlowFractionDuringReheat(fraction);
-      }
     }
     else
     {
       terminal.setDamperHeatingAction("Normal");
+    }
+
+    terminal.setConstantMinimumAirFlowFraction(0.0);
+
+    QDomElement htgAirFlowMaxElement = trmlUnitElement.firstChildElement("HtgAirFlowMax");
+    value = htgAirFlowMaxElement.text().toDouble(&ok);
+    if( ok && primaryAirFlow )
+    {
+       value = unitToUnit(value,"cfm","m^3/s").get();
+       double fraction = value / primaryAirFlow.get();
+       terminal.setMaximumFlowFractionDuringReheat(fraction);
     }
 
     result = terminal;
@@ -2855,36 +2857,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
   }
 
-  // At this time undo any hard sized CondenserWater system pumps.
-  // We don't have full specifications for tower sizing.
-
-  if( istringEqual(typeElement.text().toStdString(),"CondenserWater") )
-  {
-    std::vector<model::ModelObject> constantPumps;
-    constantPumps = plantLoop.supplyComponents(model::PumpConstantSpeed::iddObjectType());
-
-    for(std::vector<model::ModelObject>::iterator it = constantPumps.begin();
-        it != constantPumps.end();
-        it++)
-    {
-      it->cast<model::PumpConstantSpeed>().autosizeRatedFlowRate();
-      it->cast<model::PumpConstantSpeed>().autosizeRatedPowerConsumption();
-    }
-
-    std::vector<model::ModelObject> variablePumps;
-    variablePumps = plantLoop.supplyComponents(model::PumpVariableSpeed::iddObjectType());
-
-    for(std::vector<model::ModelObject>::iterator it = variablePumps.begin();
-        it != variablePumps.end();
-        it++)
-    {
-      it->cast<model::PumpVariableSpeed>().autosizeRatedFlowRate();
-      it->cast<model::PumpVariableSpeed>().autosizeRatedPowerConsumption();
-    }
-  }
-
   // Translate PlantLoop::MaximumLoopFlowRate
-  if( ! autosize() && (! istringEqual(typeElement.text().toStdString(),"CondenserWater")) )
+  if( ! autosize() )
   {
     std::vector<model::ModelObject> constantPumps;
     constantPumps = plantLoop.supplyComponents(plantLoop.supplyInletNode(),
@@ -2932,21 +2906,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       }
     }
   }
-
-  // AvailSchRef 
-  //QDomElement availSchRefElement = fluidSysElement.firstChildElement("AvailSchRef");
-  //boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(availSchRefElement.text().toStdString());
-  //if( schedule )
-  //{
-  //  std::vector<model::ModelObject> constantPumps;
-  //  constantPumps = plantLoop.supplyComponents(model::PumpConstantSpeed::iddObjectType());
-  //  for( std::vector<model::ModelObject>::iterator it = constantPumps.begin();
-  //       it != constantPumps.end();
-  //       it++ )
-  //  {
-  //    it->cast<model::PumpConstantSpeed>().setPumpFlowRateSchedule(schedule.get());
-  //  }
-  //}
 
   return plantLoop;
 }
@@ -3205,6 +3164,64 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
   QDomElement nameElement = htRejElement.firstChildElement("Name");
   
   tower.setName(nameElement.text().toStdString());
+
+  if( ! autosize() )
+  {
+    bool ok;
+    double value;
+
+    // PerformanceInputMethod
+    tower.setPerformanceInputMethod("NominalCapacity");
+
+    tower.resetDesignWaterFlowRate();
+
+    tower.resetUFactorTimesAreaValueatDesignAirFlowRate();
+
+    tower.resetUFactorTimesAreaValueatFreeConvectionAirFlowRate();
+
+    //// AirFlowCap
+    //QDomElement airFlowCapElement = htRejElement.firstChildElement("AirFlowCap");
+    //value = airFlowCapElement.text().toDouble(&ok);
+
+    //if( ok )
+    //{
+    //  // DesignAirFlowRate
+    //  tower.setDesignAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
+
+    //  // AirFlowRateinFreeConvectionRegime
+    //  tower.setAirFlowRateinFreeConvectionRegime(0.0);  
+    //}
+
+
+    //// TotFanHP
+    //QDomElement totFanHPElement = htRejElement.firstChildElement("TotFanHP");
+    //value = totFanHPElement.text().toDouble(&ok);
+
+    //if( ok )
+    //{
+    //  // FanPoweratDesignAirFlowRate
+    //  tower.setFanPoweratDesignAirFlowRate(value * 745.7);
+    //}
+
+
+    // CapRtd
+    QDomElement capRtdElement = htRejElement.firstChildElement("CapRtd");
+    value = capRtdElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      // NominalCapacity
+      double cap = unitToUnit(value,"Btu/h","W").get();
+
+      tower.setNominalCapacity(cap);
+
+      double power = 0.0105 * cap;
+
+      tower.setFanPoweratDesignAirFlowRate(power);
+
+      tower.setDesignAirFlowRate(0.5 * 1.275 * power / 190.0);
+    }
+  }
 
   return tower;
 }

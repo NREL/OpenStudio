@@ -41,11 +41,33 @@ TEST(AWSProvider, AWSProviderTest)
 
   //awsProvider.resourcesAvailableToStart();
 
-  // Takes over 1 minute
-  //awsProvider.setServerInstanceType("t1.micro");
-  //awsProvider.waitForServer(120000);
-
-  //awsProvider.waitForWorkers(120000);
+ /* awsProvider.setServerInstanceType("t1.micro");
+  awsProvider.requestStartServer();
+  awsProvider.waitForServer();
 
   //awsProvider.serverRunning();
+
+  awsProvider.setWorkerInstanceType("t1.micro");
+  awsProvider.requestStartWorkers();
+  awsProvider.waitForWorkers();
+  
+  if (awsProvider.warnings().size()) {
+    cout << "WARNINGS:" << endl;
+    Q_FOREACH(std::string warning, awsProvider.warnings()) {
+      cout << "  " << warning << cout;
+    }
+  }
+  
+  if (awsProvider.errors().size()) {
+    cout << "ERRORS:" << endl;
+    Q_FOREACH(std::string error, awsProvider.errors()) {
+      cout << "  " << error << cout;
+    }
+  }
+
+  awsProvider.workersRunning();
+*/
+  awsProvider.totalSessionUptime();
+
+  awsProvider.totalSessionInstances();
 }
