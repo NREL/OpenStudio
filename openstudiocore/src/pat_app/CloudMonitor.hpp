@@ -307,13 +307,13 @@ class CloudMonitorWorker : public QObject
 
   bool checkInternetAvailable() const;
 
+  bool checkAuthenticated() const;
+
   // Check that server and worker(s) are running
   bool checkCloudRunning() const;
 
   // Check that the openstudio service is running on the server
   bool checkCloudServiceRunning() const;
-
-  bool checkAuthenticated() const;
 
   QPointer<CloudMonitor> m_monitor;  
 
