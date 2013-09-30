@@ -288,7 +288,7 @@ void CloudDialog::on_okButton(bool checked)
   if(m_pageStackedWidget->currentIndex() == m_loginPageIdx){
     if( m_cloudResourceComboBox->currentText() == AMAZON_PROVIDER){
       AWSProvider awsProvider;
-      // TODO these can be used in realtime (i.e. per keystroke)
+      // Note: these can be used in realtime (i.e. per keystroke)
       //bool validAccessKey = awsProvider.validAccessKey(m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString());
       //bool validSecretKey = awsProvider.validSecretKey(m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString());
       bool validAccessKey = awsProvider.setAccessKey(m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString());
@@ -872,8 +872,7 @@ void  AmazonProviderWidget::loadData()
     m_regionComboBox->addItem(region.c_str());
   }
 
-  // TODO should awsSettings API have this call?
-  index = m_regionComboBox->findText(awsProvider.region().c_str());
+  index = m_regionComboBox->findText(awsSettings.region().c_str());
   if(index == -1) index = 0;
   m_regionComboBox->setCurrentIndex(index);
 
@@ -887,8 +886,7 @@ void  AmazonProviderWidget::loadData()
     m_serverInstanceTypeComboBox->addItem(serverInstanceType.c_str());
   }
 
-  // TODO should awsSettings API have this call?
-  index = m_serverInstanceTypeComboBox->findText(awsProvider.serverInstanceType().c_str());
+  index = m_serverInstanceTypeComboBox->findText(awsSettings.serverInstanceType().c_str());
   if(index == -1){
     index = m_serverInstanceTypeComboBox->findText(awsProvider.defaultServerInstanceType().c_str());
   }
@@ -903,16 +901,14 @@ void  AmazonProviderWidget::loadData()
     m_workerInstanceTypeComboBox->addItem(workerInstanceType.c_str());
   }
 
-  // TODO should awsSettings API have this call?
-  index = m_workerInstanceTypeComboBox->findText(awsProvider.workerInstanceType().c_str());
+  index = m_workerInstanceTypeComboBox->findText(awsSettings.workerInstanceType().c_str());
   if(index == -1){
     index = m_workerInstanceTypeComboBox->findText(awsProvider.defaultWorkerInstanceType().c_str());
   }
   m_workerInstanceTypeComboBox->setCurrentIndex(index);
 
   QString temp;
-  // TODO should awsSettings API have this call?
-  m_numberOfWorkerInstancesLineEdit->setText(temp.setNum(awsProvider.numWorkers()));
+  m_numberOfWorkerInstancesLineEdit->setText(temp.setNum(awsSettings.numWorkers()));
 
   m_waitCheckBox->setChecked(awsSettings.terminationDelayEnabled());
 
