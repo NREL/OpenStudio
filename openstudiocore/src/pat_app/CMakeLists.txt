@@ -4,8 +4,8 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
 
 # source files
 SET( ${target_name}_SRC
-  CloudMonitor.hpp
   CloudMonitor.cpp
+  CloudMonitor.hpp
   DesignAlternativesTabController.cpp
   DesignAlternativesTabController.hpp
   DesignAlternativesView.cpp
@@ -77,6 +77,8 @@ SET( ${target_name}_SRC
   ../shared_gui_components/LocalLibraryController.hpp
   ../shared_gui_components/LocalLibraryView.cpp
   ../shared_gui_components/LocalLibraryView.hpp
+  ../shared_gui_components/LostCloudConnectionDialog.cpp
+  ../shared_gui_components/LostCloudConnectionDialog.hpp
   ../shared_gui_components/MeasureDragData.cpp
   ../shared_gui_components/MeasureDragData.hpp
   ../shared_gui_components/MeasureManager.cpp
@@ -163,6 +165,7 @@ SET( ${target_name}_moc
   ../shared_gui_components/HeaderViews.hpp
   ../shared_gui_components/LocalLibraryController.hpp
   ../shared_gui_components/LocalLibraryView.hpp
+  ../shared_gui_components/LostCloudConnectionDialog.hpp
   ../shared_gui_components/MeasureDragData.hpp
   ../shared_gui_components/MeasureManager.hpp
   ../shared_gui_components/MonitorUseDialog.hpp

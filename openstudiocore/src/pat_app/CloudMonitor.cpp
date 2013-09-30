@@ -89,7 +89,8 @@ CloudMonitor::CloudMonitor()
   : QObject(),
     m_serverStarted(false),
     m_allWorkersStarted(false)
-{    
+{
+
   setStatus(CLOUD_STOPPED);
 
   // CloudMonitorWorker, used to report if something goes wrong

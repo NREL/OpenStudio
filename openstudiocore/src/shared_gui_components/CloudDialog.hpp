@@ -213,10 +213,6 @@ private:
 
   QLineEdit * m_serverPasswordLineEdit;
 
-  QLineEdit * m_workerUsernameLineEdit;
-
-  QLineEdit * m_workerPasswordLineEdit;
-
   QLineEdit * m_serverDirLineEdit;
 
   QLineEdit * m_serverAddressIpLineEdit;
@@ -245,6 +241,10 @@ public:
 
   virtual void saveData();
 
+  QLineEdit * m_accessKeyLineEdit;
+
+  QLineEdit * m_secretKeyLineEdit;
+
 protected:
 
   virtual void createLoginWidget();
@@ -258,10 +258,6 @@ private:
   QComboBox * m_serverInstanceTypeComboBox;
 
   QComboBox * m_workerInstanceTypeComboBox;
-
-  QLineEdit * m_accessKeyLineEdit;
-
-  QLineEdit * m_secretKeyLineEdit;
 
   QLineEdit * m_numberOfWorkerInstancesLineEdit;
 

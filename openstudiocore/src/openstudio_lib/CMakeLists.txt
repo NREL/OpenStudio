@@ -379,6 +379,8 @@ SET( ${target_name}_SRC
   ../shared_gui_components/LocalLibraryController.hpp
   ../shared_gui_components/LocalLibraryView.cpp
   ../shared_gui_components/LocalLibraryView.hpp
+  ../shared_gui_components/LostCloudConnectionDialog.cpp
+  ../shared_gui_components/LostCloudConnectionDialog.hpp
   ../shared_gui_components/MeasureDragData.cpp
   ../shared_gui_components/MeasureDragData.hpp
   ../shared_gui_components/MeasureManager.cpp
@@ -614,6 +616,7 @@ SET( ${target_name}_moc
   ../shared_gui_components/EditController.hpp
   ../shared_gui_components/EditView.hpp
   ../shared_gui_components/HeaderViews.hpp
+  ../shared_gui_components/LostCloudConnectionDialog.hpp
   ../shared_gui_components/LocalLibraryController.hpp
   ../shared_gui_components/LocalLibraryView.hpp
   ../shared_gui_components/MeasureDragData.hpp
@@ -652,6 +655,10 @@ qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
 
 # generate rules for building source files from the resources
 qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
+
+# configure vagrant 
+SET(SHOW_VAGRANT "false" CACHE BOOL "Show vagrant option to GUI users")
+CONFIGURE_FILE(VagrantConfiguration.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/VagrantConfiguration.hxx")
 
 ADD_LIBRARY( ${target_name}
   SHARED

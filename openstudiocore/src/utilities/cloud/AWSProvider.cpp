@@ -672,7 +672,7 @@ namespace openstudio{
 
     bool AWSProvider_Impl::waitForWorkers(int msec)
     {
-      return waitForFinished(msec, boost::bind(&AWSProvider_Impl::workersStarted, this));
+      return waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestWorkerStartedFinished, this));
     }
 
     bool AWSProvider_Impl::serverRunning(int msec)
@@ -1052,7 +1052,7 @@ namespace openstudio{
 
     bool AWSProvider_Impl::requestWorkerStartedFinished() const
     {
-      return (m_workerStarted == 0);
+      return (m_startWorkerProcess == 0);
     }
 
     bool AWSProvider_Impl::requestResourcesAvailableToStartFinished() const
@@ -1072,7 +1072,7 @@ namespace openstudio{
 
     bool AWSProvider_Impl::requestTerminateFinished() const
     {
-      return (m_serverStopped && m_workerStopped);
+      return (m_stopServerProcess == 0) && (m_stopWorkerProcess == 0);
     }
 
     bool AWSProvider_Impl::requestTerminateCompletedFinished() const
