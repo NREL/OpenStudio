@@ -128,6 +128,18 @@ namespace openstudio{
         setTerminationDelay(settings.value("terminationDelay").toUInt());
       }
 
+      if (overwriteExisting && !settings.value("region").isNull()) {
+        setRegion(settings.value("region").toString().toStdString());
+      }
+
+      if (overwriteExisting && !settings.value("serverInstanceType").isNull()) {
+        setServerInstanceType(settings.value("serverInstanceType").toString().toStdString());
+      }
+
+      if (overwriteExisting && !settings.value("workerInstanceType").isNull()) {
+        setWorkerInstanceType(settings.value("workerInstanceType").toString().toStdString());
+      }
+
       onChange();
 
       return !(m_accessKey.empty() || m_secretKey.empty());
@@ -164,6 +176,18 @@ namespace openstudio{
 
       if (overwriteExisting || settings.value("terminationDelay").isNull()) {
         settings.setValue("terminationDelay", m_terminationDelay);
+      }
+
+      if (overwriteExisting || settings.value("region").isNull()) {
+        settings.setValue("region", toQString(m_region));
+      }
+
+      if (overwriteExisting || settings.value("serverInstanceType").isNull()) {
+        settings.setValue("serverInstanceType", toQString(m_serverInstanceType));
+      }
+
+      if (overwriteExisting || settings.value("workerInstanceType").isNull()) {
+        settings.setValue("workerInstanceType", toQString(m_workerInstanceType));
       }
 
       return true;
@@ -239,6 +263,39 @@ namespace openstudio{
     void AWSSettings_Impl::setTerminationDelay(const unsigned delay) {
       if (m_terminationDelay != delay) {
         m_terminationDelay = delay;
+        onChange();
+      }
+    }
+
+    std::string AWSSettings_Impl::region() const {
+      return m_region;
+    }
+
+    void AWSSettings_Impl::setRegion(const std::string& region) {
+      if (m_region != region) {
+        m_region = region;
+        onChange();
+      }
+    }
+
+    std::string AWSSettings_Impl::serverInstanceType() const {
+      return m_serverInstanceType;
+    }
+
+    void AWSSettings_Impl::setServerInstanceType(const std::string& instanceType) {
+      if (m_serverInstanceType != instanceType) {
+        m_serverInstanceType = instanceType;
+        onChange();
+      }
+    }
+
+    std::string AWSSettings_Impl::workerInstanceType() const {
+      return m_workerInstanceType;
+    }
+
+    void AWSSettings_Impl::setWorkerInstanceType(const std::string& instanceType) {
+      if (m_workerInstanceType != instanceType) {
+        m_workerInstanceType = instanceType;
         onChange();
       }
     }
@@ -1728,6 +1785,30 @@ namespace openstudio{
 
   void AWSSettings::setTerminationDelay(const unsigned delay) {
     getImpl<detail::AWSSettings_Impl>()->setTerminationDelay(delay);
+  }
+
+  std::string AWSSettings::region() const {
+    return getImpl<detail::AWSSettings_Impl>()->region();
+  }
+
+  void AWSSettings::setRegion(const std::string& region) {
+    getImpl<detail::AWSSettings_Impl>()->setRegion(region);
+  }
+
+  std::string AWSSettings::serverInstanceType() const {
+    return getImpl<detail::AWSSettings_Impl>()->serverInstanceType();
+  }
+
+  void AWSSettings::setServerInstanceType(const std::string& instanceType) {
+    getImpl<detail::AWSSettings_Impl>()->setServerInstanceType(instanceType);
+  }
+
+  std::string AWSSettings::workerInstanceType() const {
+    return getImpl<detail::AWSSettings_Impl>()->workerInstanceType();
+  }
+
+  void AWSSettings::setWorkerInstanceType(const std::string& instanceType) {
+    getImpl<detail::AWSSettings_Impl>()->setWorkerInstanceType(instanceType);
   }
 
 

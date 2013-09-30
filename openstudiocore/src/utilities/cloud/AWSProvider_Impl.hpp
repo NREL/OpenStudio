@@ -113,6 +113,24 @@ namespace detail{
     // sets the termination delay in minutes
     void setTerminationDelay(const unsigned delay);
 
+    // returns the AWS region
+    std::string region() const;
+
+    // sets the AWS region
+    void setRegion(const std::string& region);
+
+    // returns the server instance type
+    std::string serverInstanceType() const;
+
+    // sets the server instance type
+    void setServerInstanceType(const std::string& instanceType);
+
+    // returns the worker instance type
+    std::string workerInstanceType() const;
+
+    // sets the worker instance type
+    void setWorkerInstanceType(const std::string& instanceType);
+
     //@}
 
    private:
@@ -127,6 +145,9 @@ namespace detail{
     unsigned m_numWorkers;
     bool m_terminationDelayEnabled;
     unsigned m_terminationDelay;
+    std::string m_region;
+    std::string m_serverInstanceType;
+    std::string m_workerInstanceType;
   };
 
   /// AWSSession_Impl is a CloudSession_Impl.
