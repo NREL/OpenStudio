@@ -20,16 +20,21 @@
 #include <project/CloudSessionRecord.hpp>
 #include <project/CloudSessionRecord_Impl.hpp>
 
+#include <project/AWSSessionRecord.hpp>
+#include <project/AWSSessionRecord_Impl.hpp>
 #include <project/JoinRecord.hpp>
 #include <project/ProjectDatabase.hpp>
 #include <project/UrlRecord.hpp>
 #include <project/VagrantSessionRecord.hpp>
 #include <project/VagrantSessionRecord_Impl.hpp>
 
+#include <utilities/cloud/AWSProvider.hpp>
+#include <utilities/cloud/AWSProvider_Impl.hpp>
 #include <utilities/cloud/VagrantProvider.hpp>
 #include <utilities/cloud/VagrantProvider_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Containers.hpp>
 
 namespace openstudio {
 namespace project {
@@ -309,6 +314,9 @@ boost::optional<CloudSessionRecord> CloudSessionRecord::factoryFromQuery(const Q
     case CloudSessionRecordType::VagrantSessionRecord : 
       result = VagrantSessionRecord(query, database).cast<CloudSessionRecord>();
      break;
+    case CloudSessionRecordType::AWSSessionRecord :
+      result = AWSSessionRecord(query, database).cast<CloudSessionRecord>();
+     break;
     default :
       LOG(Error,"Unknown CloudSessionRecordType " << cloudSessionRecordType);
       return boost::none;
@@ -322,6 +330,9 @@ CloudSessionRecord CloudSessionRecord::factoryFromCloudSession(const CloudSessio
 {
   if (cloudSession.optionalCast<VagrantSession>()) {
     return VagrantSessionRecord(cloudSession.cast<VagrantSession>(), database);
+  }
+  if (cloudSession.optionalCast<AWSSession>()) {
+    return AWSSessionRecord(cloudSession.cast<AWSSession>(), database);
   }
 
   OS_ASSERT(false);
@@ -403,12 +414,25 @@ void CloudSessionRecord::constructRelatedRecords(const CloudSession& cloudSessio
       database.removeRecord(childUrl);
     }
     // create new UrlRecords 
+    OptionalAWSSession awsSession = cloudSession.optionalCast<AWSSession>();
     if (OptionalUrl serverUrl = cloudSession.serverUrl()) {
       UrlRecord serverRecord(*serverUrl,copyOfThis);
+      if (awsSession) {
+        serverRecord.setName(awsSession->serverId());
+      }
       getImpl<detail::CloudSessionRecord_Impl>()->setServerUrlRecordId(serverRecord.id());
     }
+    StringVector workerIds;
+    if (awsSession) {
+      workerIds = awsSession->workerIds();
+    }
+    unsigned index(0);
     BOOST_FOREACH(const Url& workerUrl, cloudSession.workerUrls()) {
       UrlRecord workerRecord(workerUrl,copyOfThis);
+      if (index < workerIds.size()) {
+        workerRecord.setName(workerIds[index]);
+      }
+      ++index;
     }
   }
 }

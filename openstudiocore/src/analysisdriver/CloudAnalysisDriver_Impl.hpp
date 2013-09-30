@@ -61,6 +61,16 @@ namespace detail {
 
     SimpleProject project() const;
 
+    /** Returns the number of data points the CloudAnalysisDriver has been asked to process
+     *  since the last time all the queues were cleared. */
+    unsigned numDataPointsInIteration() const;
+
+    /** Returns the number of data points in all of the processing queues. */
+    unsigned numIncompleteDataPoints() const;
+
+    /** Returns the number of data points in this iteration that are no longer being processed. */
+    unsigned numCompleteDataPoints() const;
+
     //@}
     /** @name Blocking Class Members */
     //@{
@@ -230,7 +240,7 @@ namespace detail {
      void jsonDownloadComplete(bool success);
 
      // pause between slim and detailed results
-     void addToDetailsQueue();
+     void readyForDownloadDataPointUUIDsReturned(bool success);
 
      // detailed results received
      void detailsDownloadComplete(bool success);
@@ -245,12 +255,6 @@ namespace detail {
 
      // 2. Wait (almost-as) usual. If isStopping() and all processes have stopped, emit
      //    signal.
-
-     // DOWNLOADING SPECIFIC POINTS ============================================
-
-     // 1. If not already in queue for download, see if there are results that can be
-     //    downloaded. If so, just add the point(s) to the regular dowload queue.
-     void areResultsAvailableForDownload(bool success);
 
    private:
     REGISTER_LOGGER("openstudio.analysisdriver.CloudAnalysisDriver");
@@ -267,8 +271,10 @@ namespace detail {
 
     // request run process
     boost::optional<OSServer> m_requestRun;
+    std::vector<analysis::DataPoint> m_iteration; // DataPoints in this iteration
+    bool m_processingQueuesInitialized; // if false, processing queues empty just because
+                                        // still spinning up process
     std::deque<analysis::DataPoint> m_postQueue;
-    boost::optional<unsigned> m_numDataPointsComplete, m_numDataPointsInRun;
     unsigned m_analysisNotRunningCount;
     unsigned m_maxAnalysisNotRunningCount;
 
@@ -282,8 +288,9 @@ namespace detail {
     boost::optional<OSServer> m_requestJson;
     std::deque<analysis::DataPoint> m_jsonQueue;
 
-    // pause between downloading slim and detailed results
-    std::deque<analysis::DataPoint> m_pauseBetweenJsonAndDetailsQueue;
+    // check to see if details can be downloaded
+    boost::optional<OSServer> m_checkForResultsToDownload;
+    std::vector<analysis::DataPoint> m_preDetailsQueue;
 
     // download detailed results
     boost::optional<OSServer> m_requestDetails;
@@ -291,10 +298,6 @@ namespace detail {
 
     // stop analysis
     boost::optional<OSServer> m_requestStop;
-
-    // download detailed results for particular data points
-    boost::optional<OSServer> m_checkForResultsToDownload;
-    std::vector<analysis::DataPoint> m_preDetailsQueue;
 
     void clearErrorsAndWarnings();
     void logError(const std::string& error);
@@ -311,6 +314,8 @@ namespace detail {
     void registerDownloadingJsonFailure();
 
     bool startDownloadingDetails();
+    bool startDetailsReadyMonitoring();
+    bool startActualDownloads();
     bool requestNextDetailsDownload();
     void registerDownloadingDetailsFailure();
 
@@ -319,6 +324,10 @@ namespace detail {
     void registerDownloadDetailsRequestFailure();
 
     void checkForRunCompleteOrStopped();
+
+    bool inIteration(const analysis::DataPoint& dataPoint) const;
+
+    bool inProcessingQueues(const analysis::DataPoint& dataPoint) const;
   };
 
 } // detail

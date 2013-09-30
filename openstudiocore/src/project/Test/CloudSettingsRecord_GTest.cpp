@@ -23,6 +23,8 @@
 #include <project/VagrantSettingsRecord.hpp>
 #include <project/VagrantSettingsRecord_Impl.hpp>
 
+#include <utilities/cloud/AWSProvider.hpp>
+#include <utilities/cloud/AWSProvider_Impl.hpp>
 #include <utilities/cloud/VagrantProvider.hpp>
 #include <utilities/cloud/VagrantProvider_Impl.hpp>
 
@@ -101,5 +103,30 @@ TEST_F(ProjectFixture,CloudSettingsRecord_VagrantWithSettings) {
     EXPECT_TRUE(vagrantSettings.haltOnStop());
     EXPECT_EQ("vagrant",vagrantSettings.username());
     EXPECT_EQ("",vagrantSettings.password());
+  }
+}
+
+TEST_F(ProjectFixture,CloudSettingsRecord_AWSDefault) {
+  {
+    ProjectDatabase database = getCleanDatabase("CloudSettingsRecord_AWSDefault");
+
+    AWSProvider provider;
+    CloudSettings settings = provider.settings();
+
+    CloudSettingsRecord record = CloudSettingsRecord::factoryFromCloudSettings(settings,database);
+    database.save();
+
+    EXPECT_EQ(1u,CloudSettingsRecord::getCloudSettingsRecords(database).size());
+  }
+  {
+    ProjectDatabase database = getExistingDatabase("CloudSettingsRecord_AWSDefault");
+
+    EXPECT_EQ(1u,CloudSettingsRecord::getCloudSettingsRecords(database).size());
+    ASSERT_FALSE(CloudSettingsRecord::getCloudSettingsRecords(database).empty());
+
+    CloudSettingsRecord record = CloudSettingsRecord::getCloudSettingsRecords(database)[0];
+
+    CloudSettings settings = record.cloudSettings();
+    EXPECT_TRUE(settings.optionalCast<AWSSettings>());
   }
 }

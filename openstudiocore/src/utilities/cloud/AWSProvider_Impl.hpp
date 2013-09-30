@@ -165,13 +165,6 @@ namespace detail{
                     const UUID& versionUUID,
                     const std::string& sessionId,
                     const boost::optional<Url>& serverUrl,
-                    const std::vector<Url>& workerUrls);
-
-    /** Full constructor */
-    AWSSession_Impl(const UUID& uuid,
-                    const UUID& versionUUID,
-                    const std::string& sessionId,
-                    const boost::optional<Url>& serverUrl,
                     const std::string& serverId,
                     const unsigned numServerProcessors,
                     const std::vector<Url>& workerUrls,
