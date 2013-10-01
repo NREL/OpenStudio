@@ -185,17 +185,21 @@ void  MonitorUseDialog::updateData()
 {
   AWSProvider awsProvider;
 
+  boost::optional<AWSSession> awsSession = awsProvider.session().optionalCast<AWSSession>();
+
+  OS_ASSERT(awsSession);
+
   QString temp;
 
   temp = temp.setNum(awsProvider.estimatedCharges());
   temp.prepend('$');
   m_billingCharge->setText(temp.setNum(awsProvider.estimatedCharges()));
 
-  temp = temp.setNum(awsProvider.totalSessionUptime());
+  temp = temp.setNum(awsSession->totalSessionUptime());
   temp += MINUTES; 
   m_timeRunning->setText(temp);
 
-  m_numInstances->setText(temp.setNum(awsProvider.totalSessionInstances()));
+  m_numInstances->setText(temp.setNum(awsSession->totalSessionInstances()));
 
   m_totalNumInstances->setText(temp.setNum(awsProvider.totalInstances()));
 }
