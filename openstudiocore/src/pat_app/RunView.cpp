@@ -482,6 +482,8 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
 
 void DataPointRunHeaderView::update()
 {
+  this->setDisabled(m_dataPoint.complete());
+
   boost::optional<openstudio::runmanager::Job> topLevelJob = m_dataPoint.topLevelJob();
 
   boost::optional<openstudio::DateTime> lastRunTime;
