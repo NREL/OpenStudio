@@ -934,7 +934,7 @@ namespace openstudio{
       args << toQString(m_script);
       args << toQString(m_awsSettings.accessKey());
       args << toQString(m_awsSettings.secretKey());
-      args << toQString(m_awsSession.region());
+      args << toQString(m_awsSettings.region());
     }
 
     double AWSProvider_Impl::estimatedCharges() const {
