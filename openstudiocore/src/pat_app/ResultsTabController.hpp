@@ -59,6 +59,8 @@ class ResultsTabController : public QObject
 
     void openDirectory();
 
+    void downloadResults();
+
     void enableViewFileButton();
 
     void disableViewFileButton();

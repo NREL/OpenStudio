@@ -52,6 +52,9 @@ ResultsTabController::ResultsTabController()
   OS_ASSERT(test);
 
   test = connect(resultsView, SIGNAL(openDirButtonClicked(bool)), this, SLOT(openDirectory()));
+  OS_ASSERT(test); 
+  
+  test = connect(resultsView, SIGNAL(downloadResultsButtonClicked(bool)), this, SLOT(downloadResults()));
   OS_ASSERT(test);
 
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
@@ -199,6 +202,11 @@ void ResultsTabController::openDirectory()
       QDesktopServices::openUrl(QUrl("file:///" + path));    }
   }
 
+}
+
+void ResultsTabController::downloadResults()
+{
+  // TODO great things
 }
 
 void ResultsTabController::enableViewFileButton()

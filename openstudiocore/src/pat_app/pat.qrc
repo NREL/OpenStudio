@@ -17,6 +17,8 @@
     <file>images/combo_box_arrows_gray.png</file>
     <file>images/design_alts_big.png</file>
     <file>images/divider_dots.png</file>
+    <file>images/download_detailed_results_button.png</file>
+    <file>images/download_detailed_results_disabled.png</file>
     <file>images/download_icon_results_page.png</file>
     <file>images/edit_button_disabled.png</file>
     <file>images/edit_button_on.png</file>
@@ -27,6 +29,8 @@
     <file>images/internet_no_connection.png</file>
     <file>images/internet_yes_connection.png</file>
     <file>images/measures_big.png</file>
+    <file>images/open_file_in_OS_button.png</file>
+    <file>images/open_file_in_OS_button_disabled.png</file>
     <file>images/OS_icon.png</file>
     <file>images/OS_icon_gray.png</file>
     <file>images/pa_16.png</file>

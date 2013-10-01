@@ -67,6 +67,8 @@ class ResultsView : public PatMainTabView
 
     void openDirButtonClicked(bool clicked);
 
+    void downloadResultsButtonClicked(bool clicked);
+
     void calibrationThresholdsChanged(double maxNMBE, double maxCVRMSE);
 
   public slots:
@@ -79,20 +81,34 @@ class ResultsView : public PatMainTabView
 
     void enableOpenDirectoryButton(bool enable);
 
+    void enableDownloadResultsButton(bool enable);
+
     void selectCalibrationMethod(const QString &);
 
   private:
+
+    void downloadResultsButtonEnabled(bool enabled);
+
+    void openButtonEnabled(bool enabled);
+  
     QStackedWidget * m_stackedWidget;
 
     QPushButton * m_standardResultsBtn;
     QPushButton * m_calibrationResultsBtn;
     QPushButton* m_viewFileButton;
+    QPushButton* m_downloadResultsButton;
 
     QLabel* m_calibrationMethodLabel;
     double m_calibrationMaxNMBE;
     double m_calibrationMaxCVRMSE;
 
     OpenDirectoryButton* m_openDirButton;
+
+  private slots:
+
+    void on_downloadResultsButtonClicked(bool checked);
+
+    void on_openButtonClicked(bool checked);
 };
 
 class ResultsHeader : public QWidget
