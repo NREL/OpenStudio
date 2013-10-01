@@ -267,25 +267,23 @@ def wait_command(host, command)
           
           # "on_data" is called when the process writes something to stdout
           ch.on_data do |c, data|
-            #$stdout.print data
             @logger.info("#{data.inspect}")
             if data.chomp == "true"
               @logger.info("wait_command #{command} is true")
               flag = 1
             else
-              sleep 1
+              sleep 5
             end
           end
   
           # "on_extended_data" is called when the process writes something to stderr
           ch.on_extended_data do |c, type, data|
-            #$stderr.print data
             @logger.info("#{data.inspect}")
             if data == "true"
               @logger.info("wait_command #{command} is true")
 	      flag = 1
 	    else
-              sleep 1  
+              sleep 5  
             end
           end
         end
@@ -412,8 +410,12 @@ begin
       #@workers[0].procs = processors
 
       #wait for user_data to complete execution
+      @logger.info("server user_data")
       wait_command(@server.ip, '[ -e /home/ubuntu/user_data_done ] && echo "true"')
-      @workers.each { |worker| wait_command(@worker.ip, '[ -e /home/ubuntu/user_data_done ] && echo "true"') }
+      @logger.info("worker user_data")
+      @workers.each { |worker| wait_command(worker.ip, '[ -e /home/ubuntu/user_data_done ] && echo "true"') }
+      #wait_command(@workers.first.ip, "[ -e /home/ubuntu/user_data_done ] && echo 'true'") 
+
 
       ips = "master|#{@server.ip}|#{@server.dns}|#{@server.procs}|ubuntu|ubuntu\n"
       @workers.each { |worker| ips << "worker|#{worker.ip}|#{worker.dns}|#{worker.procs}|ubuntu|ubuntu\n" }
