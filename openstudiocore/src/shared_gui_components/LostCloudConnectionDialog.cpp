@@ -19,7 +19,7 @@
 
 #include "LostCloudConnectionDialog.hpp"
 
-//#include <pat_app/CloudMonitor.hpp>
+#include <pat_app/CloudMonitor.hpp>
 #include <pat_app/PatApp.hpp>
 
 #include <utilities/core/Assert.hpp>
@@ -63,7 +63,8 @@ void LostCloudConnectionDialog::createWidgets()
 
   this->cancelButton()->hide();
 
-  //QSharedPointer<pat::CloudMonitor> cloudMonitor = pat::PatApp::instance()->cloudMonitor();
+  QSharedPointer<pat::CloudMonitor> cloudMonitor = pat::PatApp::instance()->cloudMonitor();
+  pat::CloudMonitorWorker worker(cloudMonitor.data());
 
   QLabel * label = 0;
 
@@ -92,7 +93,7 @@ void LostCloudConnectionDialog::createWidgets()
   // 1 Determine if there is an internet connection
   label = new QLabel;
   vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
-  //isOK = cloudMonitor; // TODO make a call and get a bool response
+  isOK = worker.internetAvailable();
   if(isOK){
     label->setText("<FONT COLOR = GREEN>1. <FONT COLOR = BLACK>" + tr("Internet Connection: ") + "<b> <FONT COLOR = GREEN>" + tr("yes") + "</b>");
   } else {
@@ -111,7 +112,7 @@ void LostCloudConnectionDialog::createWidgets()
   // 2 Determine if the cloud login is accepted
   label = new QLabel;
   vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
-  //cloudMonitor; // TODO make a call and get a bool response
+  isOK = worker.authenticated();
   if(isOK){
     label->setText("<FONT COLOR = GREEN>2. <FONT COLOR = BLACK>" + tr("Cloud Log-in: ") + "<b> <FONT COLOR = GREEN>" + tr("accepted") + "</b>");
   } else {
@@ -124,8 +125,7 @@ void LostCloudConnectionDialog::createWidgets()
   // 3 Determine if there is a cloud connection
   label = new QLabel;
   vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
-  //cloudMonitor; // TODO make a call and get a bool response
-
+  isOK = worker.cloudRunning();
   if(isOK){
     label->setText("<FONT COLOR = GREEN>3. <FONT COLOR = BLACK>" + tr("Cloud Connection: ") + "<b> <FONT COLOR = GREEN>" + tr("reconnected") + "</b>");
 
@@ -266,7 +266,8 @@ void LostCloudConnectionDialog::on_launchAWSConsole(bool checked)
 
 void LostCloudConnectionDialog::on_clearCloudSession(bool checked)
 {
-  // TODO cleasr session
+  QSharedPointer<pat::CloudMonitor> cloudMonitor = pat::PatApp::instance()->cloudMonitor();
+  cloudMonitor.data()->stopCloud();
 }
 
 } // openstudio
