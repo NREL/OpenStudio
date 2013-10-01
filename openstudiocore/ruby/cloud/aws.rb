@@ -41,6 +41,7 @@ require 'net/http'
 require 'net/scp'
 require 'net/ssh'
 require 'tempfile'
+require 'logger'
 
 # Not sure how we want to deal with this, but in the tag, I would like to specify the right
 # version of openstudio so that in the AWS Management Console it is meaningful.
@@ -118,6 +119,7 @@ end
 
 def launch_server
   user_data = File.read(File.expand_path(File.dirname(__FILE__))+'/server_script.sh')
+  @logger.info("server user_data #{user_data.inspect}")
   @server = @aws.instances.create(:image_id => @server_image_id,
                                   :key_pair => @key_pair,
                                   :security_groups => @group,
@@ -140,7 +142,7 @@ def launch_workers(num, server_ip)
   user_data.gsub!(/SERVER_IP/, server_ip)
   user_data.gsub!(/SERVER_HOSTNAME/, 'master')
   user_data.gsub!(/SERVER_ALIAS/, '')
-
+  @logger.info("worker user_data #{user_data.inspect}")
   instances = []
   num.times do
     worker = @aws.instances.create(:image_id => @worker_image_id,
@@ -220,39 +222,86 @@ end
     # Need to pass instance object and the command as a string.     
 def shell_command(host, command)
   begin
-  #f = File.open('net-ssh-log.txt', 'w')
+  @logger.info("ssh_command #{command}")
   Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
     channel = ssh.open_channel do |ch|
       ch.exec "#{command}" do |ch, success|
         raise "could not execute #{command}" unless success
         
         # "on_data" is called when the process writes something to stdout
-        #ch.on_data do |c, data|
+        ch.on_data do |c, data|
           #$stdout.print data
-        #  f.puts "#{data.inspect}"
-        #end
+          @logger.info("#{data.inspect}")
+        end
 
         # "on_extended_data" is called when the process writes something to stderr
-        #ch.on_extended_data do |c, type, data|
+        ch.on_extended_data do |c, type, data|
           #$stderr.print data
-        #  f.puts "#{data.inspect}"
-        #end
-        #ch.on_close {f.close}
+          @logger.info("#{data.inspect}")
+        end
       end
     end 
   end
   rescue Net::SSH::HostKeyMismatch => e
      e.remember_host!
-     #puts "key mismatch, retry"
+     @logger.info("key mismatch, retry")
      sleep 1
      retry
   rescue SystemCallError, Timeout::Error => e
      # port 22 might not be available immediately after the instance finishes launching
      sleep 1
-     # puts "Not Yet"
+     @logger.info("Not Yet")
      retry
   end
 end      
+
+def wait_command(host, command)
+  begin
+  flag = 0
+  while flag == 0 do
+    @logger.info("wait_command #{command}")
+    Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
+      channel = ssh.open_channel do |ch|
+        ch.exec "#{command}" do |ch, success|
+          raise "could not execute #{command}" unless success
+          
+          # "on_data" is called when the process writes something to stdout
+          ch.on_data do |c, data|
+            @logger.info("#{data.inspect}")
+            if data.chomp == "true"
+              @logger.info("wait_command #{command} is true")
+              flag = 1
+            else
+              sleep 5
+            end
+          end
+  
+          # "on_extended_data" is called when the process writes something to stderr
+          ch.on_extended_data do |c, type, data|
+            @logger.info("#{data.inspect}")
+            if data == "true"
+              @logger.info("wait_command #{command} is true")
+	      flag = 1
+	    else
+              sleep 5  
+            end
+          end
+        end
+      end
+  end  
+  end
+  rescue Net::SSH::HostKeyMismatch => e
+     e.remember_host!
+     @logger.info("key mismatch, retry")
+     sleep 1
+     retry
+  rescue SystemCallError, Timeout::Error => e
+     # port 22 might not be available immediately after the instance finishes launching
+     sleep 1
+     @logger.info("Not Yet")
+     retry
+  end
+end  
 
 def download_file(host, remote_path, local_path)
   retries = 0
@@ -275,10 +324,13 @@ def download_file(host, remote_path, local_path)
 end
 
 begin
+  @logger = Logger.new("aws.log")
+  @logger.info("initialized")
   case ARGV[4]
     when 'describe_availability_zones'
       resp = @aws.client.describe_availability_zones
       puts resp.data.to_json
+      @logger.info("availability_zones #{resp.data.to_json}")
     when 'total_instances'
       resp = @aws.client.describe_instance_status
       puts ({:instances => resp.data[:instance_status_set].length,
@@ -309,7 +361,7 @@ begin
         @group.allow_ping() # allow ping
         @group.authorize_ingress(:tcp, 1..65535)# all traffic
       end
-
+      @logger.info("server_group #{@group}")
       @server_instance_type = @params['instance_type']
 
       @key_pair = @aws.key_pairs.create("key-pair-#{@timestamp}")
@@ -325,6 +377,7 @@ begin
                  :dns => @server.dns,
                  :procs => @server.procs
              }}.to_json)
+     @logger.info("server info #{({:timestamp => @timestamp,:private_key => @private_key,:server => {:id => @server.id,:ip => @server.ip,:dns => @server.dns,:procs => @server.procs}}.to_json)}")        
     when 'launch_workers'
       if ARGV.length < 6
         error(-1, 'Invalid number of args')
@@ -343,7 +396,7 @@ begin
         @group.allow_ping() # allow ping
         @group.authorize_ingress(:tcp, 1..65535)# all traffic
       end
-
+      @logger.info("worker_group #{@group}")
       @key_pair = @aws.key_pairs.filter('key-name', "key-pair-#{@timestamp}").first
       @private_key = File.read(@params['private_key'])
       @worker_instance_type = @params['instance_type']
@@ -356,6 +409,14 @@ begin
       #processors = send_command(@workers[0].ip, 'nproc | tr -d "\n"')
       #@workers[0].procs = processors
 
+      #wait for user_data to complete execution
+      @logger.info("server user_data")
+      wait_command(@server.ip, '[ -e /home/ubuntu/user_data_done ] && echo "true"')
+      @logger.info("worker user_data")
+      @workers.each { |worker| wait_command(worker.ip, '[ -e /home/ubuntu/user_data_done ] && echo "true"') }
+      #wait_command(@workers.first.ip, "[ -e /home/ubuntu/user_data_done ] && echo 'true'") 
+
+
       ips = "master|#{@server.ip}|#{@server.dns}|#{@server.procs}|ubuntu|ubuntu\n"
       @workers.each { |worker| ips << "worker|#{worker.ip}|#{worker.dns}|#{worker.procs}|ubuntu|ubuntu\n" }
       file = Tempfile.new('ip_addresses')
@@ -363,6 +424,7 @@ begin
       file.close
       upload_file(@server.ip, file.path, 'ip_addresses')
       file.unlink
+      @logger.info("ips #{ips}")
       shell_command(@server.ip, 'chmod 664 /home/ubuntu/ip_addresses')
       shell_command(@server.ip, '~/setup-ssh-keys.sh')
       shell_command(@server.ip, '~/setup-ssh-worker-nodes.sh ip_addresses')
@@ -373,7 +435,6 @@ begin
       file.write(mongoid)
       file.close
       upload_file(@server.ip, file.path, '/mnt/openstudio/rails-models/mongoid.yml')
-      
       @workers.each { |worker| upload_file(worker.ip, file.path, '/mnt/openstudio/rails-models/mongoid.yml') }
       file.unlink
 
@@ -391,7 +452,7 @@ begin
                          })
       }
       puts ({:workers => worker_json}.to_json)
-
+      @logger.info("workers #{({:workers => worker_json}.to_json)}")
     when 'terminate_session'
       if ARGV.length < 6
         error(-1, 'Invalid number of args')
