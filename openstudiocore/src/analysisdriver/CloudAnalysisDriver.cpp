@@ -297,6 +297,7 @@ namespace detail {
     bool found = inProcessingQueues(*actualDataPoint);
   
     // if not, see if there are results on the server
+    bool success = true;
     if (!found) {
       LOG(Debug,"Adding DataPoint '" << actualDataPoint->name() << "' to the pre-download "
           << "details queue.");
@@ -304,30 +305,12 @@ namespace detail {
 
       if (!m_checkForResultsToDownload) {
 
-        if (OptionalUrl url = session().serverUrl()) {
+        success = success && startDetailsReadyMonitoring();
 
-          LOG(Debug,"Not yet downloading details, start the process by making sure there are results on the server.");
-
-          m_checkForResultsToDownload = OSServer(*url);
-
-          // request completed data point uuids
-          bool test = m_checkForResultsToDownload->connect(SIGNAL(requestProcessed(bool)),this,SLOT(areResultsAvailableForDownload(bool)),Qt::QueuedConnection);
-          OS_ASSERT(test);
-
-          test = m_checkForResultsToDownload->requestCompleteDataPointUUIDs(project().analysis().uuid());
-          if (!test) {
-            registerDownloadDetailsRequestFailure();
-          }
-
-          return true;
-        }
-
-        logError("Cannot request a detailed results download because the CloudSession has not been started or has been terminated.");
-        return false;
       }
     }
 
-    return true;
+    return success;
   }
 
   bool CloudAnalysisDriver_Impl::connect(const std::string& signal,
