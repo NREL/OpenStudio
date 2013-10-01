@@ -195,6 +195,13 @@ namespace detail {
       return false; // false because no signal to wait for
     }
 
+    // make sure run type is a cloud run type
+    BOOST_FOREACH(DataPoint& dataPoint,m_iteration) {
+      if (dataPoint.runType() == DataPointRunType::Local) {
+        dataPoint.setRunType(DataPointRunType::CloudSlim);
+      }
+    }
+
     if (OptionalUrl url = session().serverUrl()) {
 
       m_requestRun = OSServer(*url);
