@@ -715,7 +715,6 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   myLibraryList->addModelObjectType(IddObjectType::OS_DefaultScheduleSet, "Default Schedule Sets");
   myLibraryList->addModelObjectType(IddObjectType::OS_DefaultConstructionSet, "Default Construction Sets");
   myLibraryList->addModelObjectType(IddObjectType::OS_SpaceType, "Space Types");
-	 //myLibraryList->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam, "Chilled Beam");
 
   setLibraryView(myLibraryList);
 
@@ -846,7 +845,8 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit,"Coil Cooling Water To Air HP");
   libraryWidget->addModelObjectType(IddObjectType::OS_Boiler_HotWater,"Boiler Hot Water");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam, "Air Terminal Chilled Beam");
-	 libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_Reheat,"AirTerminal Single Duct VAV Reheat");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_Reheat,"AirTerminal Single Duct VAV Reheat");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_ParallelPIU_Reheat,"AirTerminal Single Duct Parallel PIU Reheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled,"AirTerminal Single Duct Uncontrolled");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem,"AirLoopHVAC Outdoor Air System");
 
