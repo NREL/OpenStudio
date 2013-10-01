@@ -1373,6 +1373,7 @@ CloudSettings PatApp::createTestSettings()
     AWSSettings awsSettings;
     if (awsSettings.setAccessKey(accessKey)){
       if (awsSettings.setSecretKey(secretKey)){
+        awsSettings.setRegion("us-east-1");
         awsSettings.setServerInstanceType("t1.micro");
         awsSettings.setWorkerInstanceType("t1.micro");
         return awsSettings;
