@@ -287,17 +287,17 @@ void CloudDialog::on_okButton(bool checked)
 {
   if(m_pageStackedWidget->currentIndex() == m_loginPageIdx){
     if( m_cloudResourceComboBox->currentText() == AMAZON_PROVIDER){
-      AWSProvider awsProvider;
+      AWSSettings awsSettings;
       // Note: these can be used in realtime (i.e. per keystroke)
-      //bool validAccessKey = awsProvider.validAccessKey(m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString());
-      //bool validSecretKey = awsProvider.validSecretKey(m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString());
-      bool validAccessKey = awsProvider.setAccessKey(m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString());
+      //bool validAccessKey = awsSettings.validAccessKey(m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString());
+      //bool validSecretKey = awsSettings.validSecretKey(m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString());
+      bool validAccessKey = awsSettings.setAccessKey(m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString());
       if(!validAccessKey){
         QString error("You have entered an invalid Access Key");
         QMessageBox::critical(this, "Login Failed", error);
         return;
       }
-      bool validSecretKey = awsProvider.setSecretKey(m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString());
+      bool validSecretKey = awsSettings.setSecretKey(m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString());
       if(!validSecretKey){
         QString error("You have entered an invalid Secret Key");
         QMessageBox::critical(this, "Login Failed", error);
@@ -917,30 +917,29 @@ void  AmazonProviderWidget::loadData()
 
 void  AmazonProviderWidget::saveData()
 {
-  AWSProvider awsProvider;
   AWSSettings awsSettings;
 
-  bool validAccessKey = awsProvider.setAccessKey(m_accessKeyLineEdit->text().toStdString());
+  bool validAccessKey = awsSettings.setAccessKey(m_accessKeyLineEdit->text().toStdString());
   OS_ASSERT(validAccessKey);
 
-  bool validSecretKey = awsProvider.setSecretKey(m_secretKeyLineEdit->text().toStdString());
+  bool validSecretKey = awsSettings.setSecretKey(m_secretKeyLineEdit->text().toStdString());
   OS_ASSERT(validSecretKey);
 
-  awsProvider.setRegion(m_regionComboBox->currentText().toStdString());
+  awsSettings.setRegion(m_regionComboBox->currentText().toStdString());
 
-  awsProvider.setServerInstanceType(m_serverInstanceTypeComboBox->currentText().toStdString());
+  awsSettings.setServerInstanceType(m_serverInstanceTypeComboBox->currentText().toStdString());
 
-  awsProvider.setWorkerInstanceType(m_workerInstanceTypeComboBox->currentText().toStdString());
+  awsSettings.setWorkerInstanceType(m_workerInstanceTypeComboBox->currentText().toStdString());
 
   QString temp;
 
   unsigned numWorkers = m_numberOfWorkerInstancesLineEdit->text().toUInt();
-  awsProvider.setNumWorkers(numWorkers);
+  awsSettings.setNumWorkers(numWorkers);
  
-  awsProvider.setTerminationDelayEnabled(m_waitCheckBox->isChecked());
+  awsSettings.setTerminationDelayEnabled(m_waitCheckBox->isChecked());
 
   unsigned wait = m_waitLineEdit->text().toUInt();
-  awsProvider.setTerminationDelay(wait);
+  awsSettings.setTerminationDelay(wait);
 }
 
 //***** SLOTS *****
