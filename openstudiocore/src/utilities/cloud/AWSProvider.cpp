@@ -503,17 +503,6 @@ namespace openstudio{
         LOG_AND_THROW("Ruby 2.0 executable cannot be found.");
       }
 
-      m_regions.push_back("us-east-1");
-      m_awsSession.setRegion(defaultRegion());
-
-      m_serverInstanceTypes.push_back("t1.micro");
-      m_serverInstanceTypes.push_back("m1.medium");
-      m_serverInstanceTypes.push_back("m1.large");
-      m_serverInstanceTypes.push_back("m1.xlarge");
-
-      m_workerInstanceTypes.push_back("t1.micro");
-      m_workerInstanceTypes.push_back("c1.xlarge");
-
       m_privateKey.setAutoRemove(false);
     }
 
@@ -958,125 +947,9 @@ namespace openstudio{
       args << toQString(m_awsSession.region());
     }
 
-    QVariantMap AWSProvider_Impl::awsRequest(std::string request, std::string service) const {
-      QString script = toQString(getOpenStudioRubyScriptsPath() / toPath("cloud/aws.rb"));
-      QProcess *ruby2 = new QProcess();
-      ruby2->start("\"C:\\Ruby200\\bin\\ruby.exe\"", QStringList() << script << toQString(m_awsSettings.accessKey()) << toQString(m_awsSettings.secretKey()) << toQString(service) << toQString(request));
-      ruby2->waitForFinished();
-      QString output = ruby2->readAllStandardOutput();
-      QString errors = ruby2->readAllStandardError();
-      LOG(Debug, output.toStdString());
-
-      if (errors.length()) {
-        LOG(Error, errors.toStdString());
-      } else {
-        QJson::Parser parser;
-        bool ok = false;
-        QVariantMap map = parser.parse(output.toUtf8(), &ok).toMap();
-        if (ok) {
-          return map;
-        } else {
-          LOG(Error, "Error parsing JSON: " + toString(parser.errorString()));
-        }
-      }
-      return QVariantMap();
-    }
-
-    unsigned AWSProvider_Impl::setNumWorkers(const unsigned numWorkers)
-    {
-      return m_awsSettings.setNumWorkers(numWorkers);
-    }
-
-    std::vector<std::string> AWSProvider_Impl::availableRegions() const {
-      return m_regions;
-    }
-
-    std::string AWSProvider_Impl::defaultRegion() const {
-      return "us-east-1";
-    }
-
-    std::string AWSProvider_Impl::region() const {
-      return m_awsSession.region();
-    }
-
-    void AWSProvider_Impl::setRegion(const std::string& region) {
-      if (std::find(m_regions.begin(), m_regions.end(), region) != m_regions.end())
-      {
-        m_awsSession.setRegion(region);
-      }
-    }
-
-    std::vector<std::string> AWSProvider_Impl::serverInstanceTypes() const {
-      return m_serverInstanceTypes;
-    }
-
-    std::string AWSProvider_Impl::defaultServerInstanceType() const {
-      return "m1.medium";
-    }
-
-    std::string AWSProvider_Impl::serverInstanceType() const {
-      if (m_awsSession.serverInstanceType().empty()) return defaultServerInstanceType();
-      return m_awsSession.serverInstanceType();
-    }
-
-    void AWSProvider_Impl::setServerInstanceType(const std::string& instanceType) {
-      if (std::find(m_serverInstanceTypes.begin(), m_serverInstanceTypes.end(), instanceType) != m_serverInstanceTypes.end())
-      {
-        m_awsSession.setServerInstanceType(instanceType);
-      }
-    }
-
-    std::vector<std::string> AWSProvider_Impl::workerInstanceTypes() const {
-      return m_workerInstanceTypes;
-    }
-
-    std::string AWSProvider_Impl::defaultWorkerInstanceType() const {
-      return "c1.xlarge";
-    }
-
-    std::string AWSProvider_Impl::workerInstanceType() const {
-      if (m_awsSession.workerInstanceType().empty()) return defaultWorkerInstanceType();
-      return m_awsSession.workerInstanceType();
-    }
-
-    void AWSProvider_Impl::setWorkerInstanceType(const std::string& instanceType) {
-      if (std::find(m_workerInstanceTypes.begin(), m_workerInstanceTypes.end(), instanceType) != m_workerInstanceTypes.end())
-      {
-        m_awsSession.setWorkerInstanceType(instanceType);
-      }
-    }
-
-    bool AWSProvider_Impl::terminationDelayEnabled() const {
-      return m_awsSettings.terminationDelay();
-    }
-
-    void AWSProvider_Impl::setTerminationDelayEnabled(bool enabled) {
-      m_awsSettings.terminationDelayEnabled();
-    }
-
-    unsigned AWSProvider_Impl::terminationDelay() const {
-      return m_awsSettings.terminationDelay();
-    }
-
-    void AWSProvider_Impl::setTerminationDelay(const unsigned delay) {
-      m_awsSettings.setTerminationDelay(delay);
-    }
-
-    unsigned AWSProvider_Impl::numSessionWorkers() const {
-      return m_awsSession.numWorkers();
-    }
-
     double AWSProvider_Impl::estimatedCharges() const {
       //todo
       return 0.0;
-    }
-
-    unsigned AWSProvider_Impl::totalSessionUptime() const {
-      return m_awsSession.totalSessionUptime();
-    }
-
-    unsigned AWSProvider_Impl::totalSessionInstances() const {
-      return m_awsSession.totalSessionInstances();
     }
 
     unsigned AWSProvider_Impl::totalInstances() const {
@@ -1251,7 +1124,7 @@ namespace openstudio{
       args << QString("launch_server");
       
       QVariantMap options;
-      options.insert("instance_type", toQString(serverInstanceType()));
+      options.insert("instance_type", toQString(m_awsSettings.serverInstanceType()));
       QJson::Serializer serializer;
       serializer.setIndentMode(QJson::IndentCompact);
       args << QString(serializer.serialize(options));
@@ -1274,7 +1147,7 @@ namespace openstudio{
       args << QString("launch_workers");
       
       QVariantMap options;
-      options.insert("instance_type", toQString(serverInstanceType()));
+      options.insert("instance_type", toQString(m_awsSettings.workerInstanceType()));
       options.insert("num", m_awsSettings.numWorkers());
       options.insert("server_id", toQString(m_awsSession.serverId()));
       options.insert("server_procs", m_awsSession.numServerProcessors());
@@ -1603,22 +1476,6 @@ namespace openstudio{
 
     void AWSProvider_Impl::signUserAgreement(bool agree) {
       m_awsSettings.signUserAgreement(agree);
-    }
-
-    std::string AWSProvider_Impl::accessKey() const {
-      return m_awsSettings.accessKey();
-    }
-
-    bool AWSProvider_Impl::setAccessKey(const std::string& accessKey) {
-      return m_awsSettings.setAccessKey(accessKey);
-    }
-
-    std::string AWSProvider_Impl::secretKey() const {
-      return m_awsSettings.secretKey();
-    }
-
-    bool AWSProvider_Impl::setSecretKey(const std::string& secretKey) {
-      return m_awsSettings.setSecretKey(secretKey);
     }
 
 
@@ -1984,109 +1841,44 @@ namespace openstudio{
   void AWSProvider::signUserAgreement(bool agree) {
     getImpl<detail::AWSProvider_Impl>()->signUserAgreement(agree);
   }
-
-  std::string AWSProvider::accessKey() const {
-    return getImpl<detail::AWSProvider_Impl>()->accessKey();
-  }
-
-  bool AWSProvider::setAccessKey(const std::string& accessKey) {
-    return getImpl<detail::AWSProvider_Impl>()->setAccessKey(accessKey);
-  }
-
-  std::string AWSProvider::secretKey() const {
-    return getImpl<detail::AWSProvider_Impl>()->secretKey();
-  }
-
-  bool AWSProvider::setSecretKey(const std::string& secretKey) {
-    return getImpl<detail::AWSProvider_Impl>()->setSecretKey(secretKey);
-  }
-
-  unsigned AWSProvider::numWorkers() const {
-    return getImpl<detail::AWSProvider_Impl>()->numWorkers();
-  }
   
-  unsigned AWSProvider::setNumWorkers(const unsigned numWorkers) {
-    return getImpl<detail::AWSProvider_Impl>()->setNumWorkers(numWorkers);
+
+  std::vector<std::string> AWSProvider::availableRegions() {
+    std::vector<std::string> regions;
+    regions.push_back("us-east-1");
+    return regions;
   }
 
-  std::vector<std::string> AWSProvider::availableRegions() const {
-    return getImpl<detail::AWSProvider_Impl>()->availableRegions();
+  std::string AWSProvider::defaultRegion() {
+    return "us-east-1";
   }
 
-  std::string AWSProvider::defaultRegion() const {
-    return getImpl<detail::AWSProvider_Impl>()->defaultRegion();
+  std::vector<std::string> AWSProvider::serverInstanceTypes() {
+    std::vector<std::string> serverInstanceTypes;
+    serverInstanceTypes.push_back("t1.micro");
+    serverInstanceTypes.push_back("m1.medium");
+    serverInstanceTypes.push_back("m1.large");
+    serverInstanceTypes.push_back("m1.xlarge");
+    return serverInstanceTypes;
   }
 
-  std::string AWSProvider::region() const {
-    return getImpl<detail::AWSProvider_Impl>()->region();
+  std::string AWSProvider::defaultServerInstanceType() {
+    return "m1.medium";
   }
 
-  void AWSProvider::setRegion(const std::string& region) {
-    getImpl<detail::AWSProvider_Impl>()->setRegion(region);
+  std::vector<std::string> AWSProvider::workerInstanceTypes() {
+    std::vector<std::string> workerInstanceTypes;
+    workerInstanceTypes.push_back("t1.micro");
+    workerInstanceTypes.push_back("c1.xlarge");
+    return workerInstanceTypes;
   }
 
-  std::vector<std::string> AWSProvider::serverInstanceTypes() const {
-    return getImpl<detail::AWSProvider_Impl>()->serverInstanceTypes();
-  }
-
-  std::string AWSProvider::defaultServerInstanceType() const {
-    return getImpl<detail::AWSProvider_Impl>()->defaultServerInstanceType();
-  }
-
-  std::string AWSProvider::serverInstanceType() const {
-    return getImpl<detail::AWSProvider_Impl>()->serverInstanceType();
-  }
-
-  void AWSProvider::setServerInstanceType(const std::string& instanceType) {
-    getImpl<detail::AWSProvider_Impl>()->setServerInstanceType(instanceType);
-  }
-
-  std::vector<std::string> AWSProvider::workerInstanceTypes() const {
-    return getImpl<detail::AWSProvider_Impl>()->workerInstanceTypes();
-  }
-
-  std::string AWSProvider::defaultWorkerInstanceType() const {
-    return getImpl<detail::AWSProvider_Impl>()->defaultWorkerInstanceType();
-  }
-
-  std::string AWSProvider::workerInstanceType() const {
-    return getImpl<detail::AWSProvider_Impl>()->workerInstanceType();
-  }
-
-  void AWSProvider::setWorkerInstanceType(const std::string& instanceType) {
-    getImpl<detail::AWSProvider_Impl>()->setWorkerInstanceType(instanceType);
-  }
-
-  bool AWSProvider::terminationDelayEnabled() const {
-    return getImpl<detail::AWSProvider_Impl>()->terminationDelayEnabled();
-  }
-
-  void AWSProvider::setTerminationDelayEnabled(bool enabled) {
-    getImpl<detail::AWSProvider_Impl>()->setTerminationDelayEnabled(enabled);
-  }
-
-  unsigned AWSProvider::terminationDelay() const {
-    return getImpl<detail::AWSProvider_Impl>()->terminationDelay();
-  }
-
-  void AWSProvider::setTerminationDelay(const unsigned delay) {
-    getImpl<detail::AWSProvider_Impl>()->setTerminationDelay(delay);
-  }
-
-  unsigned AWSProvider::numSessionWorkers() const {
-    return getImpl<detail::AWSProvider_Impl>()->numSessionWorkers();
+  std::string AWSProvider::defaultWorkerInstanceType() {
+    return "c1.xlarge";
   }
 
   double AWSProvider::estimatedCharges() const {
     return getImpl<detail::AWSProvider_Impl>()->estimatedCharges();
-  }
-
-  unsigned AWSProvider::totalSessionUptime() const {
-    return getImpl<detail::AWSProvider_Impl>()->totalSessionUptime();
-  }
-
-  unsigned AWSProvider::totalSessionInstances() const {
-    return getImpl<detail::AWSProvider_Impl>()->totalSessionInstances();
   }
 
   unsigned AWSProvider::totalInstances() const {

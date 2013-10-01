@@ -290,83 +290,26 @@ namespace detail {
 
     void signUserAgreement(bool agree);
 
-    // returns the AWS access key
-    std::string accessKey() const;
-
-    // sets the AWS access key if it's valid
-    bool setAccessKey(const std::string& accessKey);
-
-    // returns the AWS secret key
-    std::string secretKey() const;
-
-    // sets the AWS secret key if it's valid
-    bool setSecretKey(const std::string& secretKey);
-
-    // returns the number of worker nodes
-    unsigned numWorkers() const;
-
-    // set the number of worker nodes to start (and returns the new number)
-    unsigned setNumWorkers(const unsigned numWorkers);
-
     // return a list of available AWS regions
-    std::vector<std::string> availableRegions() const;
+    static std::vector<std::string> availableRegions();
 
     // return the recommended default region
-    std::string defaultRegion() const;
-
-    // returns the AWS region
-    std::string region() const;
-
-    // sets the AWS region
-    void setRegion(const std::string& region);
+    static std::string defaultRegion();
 
     // returns a list of server instance types
-    std::vector<std::string> serverInstanceTypes() const;
+    static std::vector<std::string> serverInstanceTypes();
 
     // returns the recommended default server instance type
-    std::string defaultServerInstanceType() const;
-
-    // returns the server instance type
-    std::string serverInstanceType() const;
-
-    // sets the server instance type
-    void setServerInstanceType(const std::string& instanceType);
+    static std::string defaultServerInstanceType();
 
     // returns a list of worker instance types
-    std::vector<std::string> workerInstanceTypes() const;
+    static std::vector<std::string> workerInstanceTypes();
 
     // returns the recommended default worker instance type
-    std::string defaultWorkerInstanceType() const;
-
-    // returns the worker instance type
-    std::string workerInstanceType() const;
-
-    // sets the worker instance type
-    void setWorkerInstanceType(const std::string& instanceType);
-
-    // returns true if there should be a delay before terminating after simulations are complete
-    bool terminationDelayEnabled() const;
-
-    // sets whether a termination delay should occur
-    void setTerminationDelayEnabled(bool enabled);
-
-    // returns the termination delay in minutes
-    unsigned terminationDelay() const;
-
-    // sets the termination delay in minutes
-    void setTerminationDelay(const unsigned delay);
-
-    // returns the number of workers for this session
-    unsigned numSessionWorkers() const;
+    static std::string defaultWorkerInstanceType();
 
     // returns the EC2 estimated charges from CloudWatch in USD
     double estimatedCharges() const;
-
-    // returns the total uptime in minutes of this session
-    unsigned totalSessionUptime() const;
-
-    // returns the total number of instances running on EC2 associated with this session
-    unsigned totalSessionInstances() const;
 
     // returns the total number of instances running on EC2
     unsigned totalInstances() const;
