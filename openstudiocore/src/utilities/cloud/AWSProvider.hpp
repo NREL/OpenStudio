@@ -99,6 +99,24 @@ namespace detail {
     // sets the termination delay in minutes
     void setTerminationDelay(const unsigned delay);
 
+    // returns the AWS region
+    std::string region() const;
+
+    // sets the AWS region
+    void setRegion(const std::string& region);
+
+    // returns the server instance type
+    std::string serverInstanceType() const;
+
+    // sets the server instance type
+    void setServerInstanceType(const std::string& instanceType);
+
+    // returns the worker instance type
+    std::string workerInstanceType() const;
+
+    // sets the worker instance type
+    void setWorkerInstanceType(const std::string& instanceType);
+
     //@}
    protected:
 
