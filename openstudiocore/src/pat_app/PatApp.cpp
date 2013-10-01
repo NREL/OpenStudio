@@ -1348,7 +1348,7 @@ void PatApp::setCurrentProjectSettings(const boost::optional<CloudSettings> & se
 
 CloudSettings PatApp::createTestSettings()
 {
-  bool aws = false;
+  bool aws = true;
 
   if (aws){
     std::string accessKey;
@@ -1360,26 +1360,23 @@ CloudSettings PatApp::createTestSettings()
       while (file.readLine(buf, sizeof(buf)) != -1){
         QRegExp rx("access_key_id:\\s(.*)");
         if (rx.exactMatch(buf)){
-          accessKey = rx.capturedTexts()[1].toStdString();
+          accessKey = rx.capturedTexts()[1].trimmed().toStdString();
         }
 
         rx = QRegExp("secret_access_key:\\s(.*)");
         if (rx.exactMatch(buf)){
-         secretKey = rx.capturedTexts()[1].toStdString();
+         secretKey = rx.capturedTexts()[1].trimmed().toStdString();
         }
       }
     }
 
-    if (accessKey.empty() || secretKey.empty()){
-      //LOG(Error, "Invalid credentials for AWSProvider");
-    }else{
-      AWSSettings awsSettings;
-      awsSettings.setAccessKey(accessKey);
-      awsSettings.setSecretKey(secretKey);
-      awsSettings.setServerInstanceType("t1.micro");
-      awsSettings.setWorkerInstanceType("t1.micro");
-
-      return awsSettings;
+    AWSSettings awsSettings;
+    if (awsSettings.setAccessKey(accessKey)){
+      if (awsSettings.setSecretKey(secretKey)){
+        awsSettings.setServerInstanceType("t1.micro");
+        awsSettings.setWorkerInstanceType("t1.micro");
+        return awsSettings;
+      }
     }
   }
 

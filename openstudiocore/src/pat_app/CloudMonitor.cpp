@@ -90,6 +90,7 @@ CloudProvider startCloud()
 
   boost::optional<Url> serverUrl = provider->session().serverUrl();
 
+  // DLM: should probably handle the case where this fails?
   OS_ASSERT(serverUrl);
 
   for(int i = 0; i < 15; i++)
