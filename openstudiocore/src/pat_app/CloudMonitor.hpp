@@ -20,15 +20,15 @@
 #ifndef OPENSTUDIO_CLOUDMONITOR_HPP
 #define OPENSTUDIO_CLOUDMONITOR_HPP
 
-#include "RunView.hpp"
 #include "PatConstants.hpp"
+#include "RunView.hpp"
 #include <QObject>
 #include <QSharedPointer>
+#include <utilities/cloud/CloudProvider.hpp>
 #include <utilities/core/Path.hpp>
 #include <utilities/core/Url.hpp>
-#include <utilities/cloud/CloudProvider.hpp>
-#include <vector>
 #include <map>
+#include <vector>
 
 class QThread;
 
@@ -59,24 +59,15 @@ class CloudMonitor : public QObject
   // A reliable method to retrieve the cloud status
   CloudStatus status() const;
 
-  // Return a new CloudProvider with from settings and session.
+  // Return a new CloudProvider from settings and session.
   static CloudProvider newCloudProvider(const CloudSettings & settings, 
                                         const boost::optional<CloudSession> & session = boost::none);
 
   // Return the session stored in the App's current project
   static boost::optional<CloudSession> currentProjectSession();
 
-  // Return the settings stored in the App's current project
-  static boost::optional<CloudSettings> currentProjectSettings();
-
   // Set the session in the App's current project
   static void setCurrentProjectSession(const boost::optional<CloudSession> & session);
-
-  // Set the settings in the App's current project
-  static void setCurrentProjectSettings(const boost::optional<CloudSettings> & settings);
-
-  // Temporary settings for development
-  static CloudSettings createTestSettings();
 
   signals:
 

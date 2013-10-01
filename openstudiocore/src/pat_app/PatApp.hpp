@@ -45,8 +45,8 @@
 #include <utilities/core/UUID.hpp>
 #include <utilities/plot/ProgressBar.hpp>
 
-#include <vector>
 #include <map>
+#include <vector>
 
 class QEvent;
 
@@ -68,20 +68,20 @@ namespace ruleset {
 
 namespace pat {
 
+class AddToModelView;
+class CloudMonitor;
 class DesignAlternativesTabController;
 class InspectorController;
 class LibraryTabWidget;
 class MainRightColumnController;
-class PatMainWindow;
+class MainWindow;
 class MeasuresTabController;
 class OSItemId;
+class PatMainWindow;
 class ResultsTabController;
 class RunTabController;
-class SystemComponent;
-class MainWindow;
-class AddToModelView;
 class StartupView;
-class CloudMonitor;
+class SystemComponent;
 
 class PatApp : public QApplication, public BaseApp
 {
@@ -149,6 +149,15 @@ class PatApp : public QApplication, public BaseApp
   }
 
   virtual void updateSelectedMeasureState();
+
+  // Return the settings stored in the App's current project
+  static boost::optional<CloudSettings> currentProjectSettings();
+
+  // Set the settings in the App's current project
+  static void setCurrentProjectSettings(const boost::optional<CloudSettings> & settings);
+
+  // Temporary settings for development
+  static CloudSettings createTestSettings();
 
   enum VerticalTabID
   {

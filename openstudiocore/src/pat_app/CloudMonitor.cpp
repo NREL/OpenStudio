@@ -18,10 +18,12 @@
  **********************************************************************/
 
 #include "CloudMonitor.hpp"
-#include "RunTabController.hpp"
-#include "RunView.hpp"
+
 #include "PatApp.hpp"
 #include "PatMainWindow.hpp"
+#include "RunTabController.hpp"
+#include "RunView.hpp"
+
 #include <utilities/cloud/CloudProvider.hpp>
 #include <utilities/cloud/CloudProvider_Impl.hpp>
 #include <utilities/cloud/VagrantProvider.hpp>
@@ -32,15 +34,14 @@
 #include <utilities/cloud/OSServer_Impl.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/System.hpp>
-#include <pat_app/VagrantConfiguration.hxx>
 
-#include <QThread>
-#include <QTimer>
-#include <QMessageBox>
-#include <QFile>
 #include <QDir>
+#include <QFile>
+#include <QMessageBox>
 #include <QRegExp>
 #include <QStringList>
+#include <QThread>
+#include <QTimer>
 
 namespace openstudio {
 
@@ -52,8 +53,8 @@ void stopCloud()
 {
   boost::optional<CloudProvider> provider;
 
-  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession(); 
-  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
+  boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
+  boost::optional<CloudSettings> settings = PatApp::instance()->currentProjectSettings();
 
   // If there is already a session, try to connect to that
   if( session && settings ) 
@@ -71,8 +72,7 @@ CloudProvider startCloud()
 {
   boost::optional<CloudProvider> provider;
 
-  // TODO: Grab these from PatApp
-  CloudSettings settings = CloudMonitor::createTestSettings();
+  CloudSettings settings = PatApp::instance()->createTestSettings();
 
   provider = CloudMonitor::newCloudProvider(settings);
 
@@ -191,7 +191,7 @@ void CloudMonitor::onStartCloudWorkerComplete()
 {
   CloudMonitor::setCurrentProjectSession(m_startCloudWorker->session());
 
-  CloudMonitor::setCurrentProjectSettings(m_startCloudWorker->settings());
+  PatApp::instance()->setCurrentProjectSettings(m_startCloudWorker->settings());
 
   m_startCloudThread->quit();
 
@@ -223,7 +223,7 @@ void CloudMonitor::stopCloud()
 void CloudMonitor::onStopCloudWorkerComplete()
 {
   CloudMonitor::setCurrentProjectSession(boost::none);
-  CloudMonitor::setCurrentProjectSettings(boost::none);
+  PatApp::instance()->setCurrentProjectSettings(boost::none);
 
   m_stopCloudThread->quit();
 
@@ -236,7 +236,8 @@ void CloudMonitor::onStopCloudWorkerComplete()
 
 void CloudMonitor::reconnectCloud()
 {
-  boost::optional<CloudSettings> settings = currentProjectSettings();
+  boost::optional<CloudSettings> settings = PatApp::instance()->currentProjectSettings();
+
   boost::optional<CloudSession> session = currentProjectSession();
 
   if( session && settings && (m_status == CLOUD_STOPPED) )
@@ -304,7 +305,7 @@ void CloudMonitor::onRecoverCloudWorkerComplete()
 
   m_recoverCloudThread.clear();
 
-  CloudMonitor::setCurrentProjectSettings(boost::none);
+  PatApp::instance()->setCurrentProjectSettings(boost::none);
   CloudMonitor::setCurrentProjectSession(boost::none);
 
   setStatus(CLOUD_STOPPED);
@@ -322,18 +323,6 @@ boost::optional<CloudSession> CloudMonitor::currentProjectSession()
   return session;
 }
 
-boost::optional<CloudSettings> CloudMonitor::currentProjectSettings()
-{
-  boost::optional<CloudSettings> settings;
-
-  if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() )
-  {
-    settings = project->cloudSettings();
-  }
-
-  return settings;
-}
-
 void CloudMonitor::setCurrentProjectSession(const boost::optional<CloudSession> & session)
 {
   if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() )
@@ -345,23 +334,6 @@ void CloudMonitor::setCurrentProjectSession(const boost::optional<CloudSession> 
     else
     {
       project->setCloudSession(session.get());
-    }
-
-    project->save();
-  }
-}
-
-void CloudMonitor::setCurrentProjectSettings(const boost::optional<CloudSettings> & settings)
-{
-  if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() )
-  {
-    if( ! settings )
-    {
-      project->clearCloudSettings();
-    }
-    else
-    {
-      project->setCloudSettings(settings.get());
     }
 
     project->save();
@@ -426,60 +398,6 @@ void CloudMonitor::setStatus(CloudStatus status)
 CloudStatus CloudMonitor::status() const
 {
   return m_status;
-}
-
-CloudSettings CloudMonitor::createTestSettings()
-{
-  bool aws = false;
-
-  if (aws){
-    std::string accessKey;
-    std::string secretKey;
-
-    QFile file(QDir::homePath() + "/.aws_secrets");
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-      char buf[1024];
-      while (file.readLine(buf, sizeof(buf)) != -1){
-        QRegExp rx("access_key_id:\\s(.*)");
-        if (rx.exactMatch(buf)){
-          accessKey = rx.capturedTexts()[1].toStdString();
-        }
-
-        rx = QRegExp("secret_access_key:\\s(.*)");
-        if (rx.exactMatch(buf)){
-         secretKey = rx.capturedTexts()[1].toStdString();
-        }
-      }
-    }
-
-    if (accessKey.empty() || secretKey.empty()){
-      //LOG(Error, "Invalid credentials for AWSProvider");
-    }else{
-      AWSSettings awsSettings;
-      awsSettings.setAccessKey(accessKey);
-      awsSettings.setSecretKey(secretKey);
-      awsSettings.setServerInstanceType("t1.micro");
-      awsSettings.setWorkerInstanceType("t1.micro");
-
-      return awsSettings;
-    }
-  }
-
-  // create the vagrant provider
-  path serverPath = vagrantServerPath();
-  Url serverUrl("http://localhost:8080");
-  path workerPath = vagrantWorkerPath();
-  Url workerUrl("http://localhost:8081");
-
-  VagrantSettings vagrantSettings;
-  vagrantSettings.setServerUrl(serverUrl);
-  vagrantSettings.setWorkerUrl(workerUrl);
-  vagrantSettings.setServerPath(serverPath);
-  vagrantSettings.setWorkerPath(workerPath);
-  vagrantSettings.signUserAgreement(true);
-  vagrantSettings.setHaltOnStop(true);
-
-  return vagrantSettings;
 }
 
 StartCloudWorker::StartCloudWorker(CloudMonitor * monitor)
@@ -547,7 +465,7 @@ void ReconnectCloudWorker::startWorking()
   boost::optional<CloudProvider> provider;
 
   boost::optional<CloudSession> session = CloudMonitor::currentProjectSession(); 
-  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
+  boost::optional<CloudSettings> settings = PatApp::instance()->currentProjectSettings();
 
   // If there is already a session, try to connect to that
   if( session && settings ) 
@@ -668,7 +586,7 @@ bool CloudMonitorWorker::checkCloudRunning() const
   bool cloudRunning = true;
 
   boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
-  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
+  boost::optional<CloudSettings> settings = PatApp::instance()->currentProjectSettings();
 
   // TODO Consider emitting and display an error dialog in CloudMonitor
   OS_ASSERT(session);    
@@ -708,7 +626,7 @@ bool CloudMonitorWorker::checkAuthenticated() const
   bool authenticated = true;
 
   boost::optional<CloudSession> session = CloudMonitor::currentProjectSession();
-  boost::optional<CloudSettings> settings = CloudMonitor::currentProjectSettings();
+  boost::optional<CloudSettings> settings = PatApp::instance()->currentProjectSettings();
 
   OS_ASSERT(session);    
   OS_ASSERT(settings);

@@ -36,6 +36,7 @@
 #include <pat_app/RunTabController.hpp>
 #include <pat_app/RunView.hpp>
 #include <pat_app/StartupView.hpp>
+#include <pat_app/VagrantConfiguration.hxx>
 
 #include "../shared_gui_components/BCLMeasureDialog.hpp"
 #include "../shared_gui_components/BuildingComponentDialog.hpp"
@@ -55,13 +56,17 @@
 
 #include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/bcl/LocalBCL.hpp>
+#include <utilities/cloud/AWSProvider.hpp>
+#include <utilities/cloud/AWSProvider_Impl.hpp>
+#include <utilities/cloud/CloudProvider.hpp>
+#include <utilities/cloud/CloudProvider_Impl.hpp>
+#include <utilities/cloud/VagrantProvider.hpp>
+#include <utilities/cloud/VagrantProvider_Impl.hpp>
 #include <utilities/core/Application.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/System.hpp>
 #include <utilities/core/ZipFile.hpp>
-#include <utilities/cloud/CloudProvider.hpp>
-#include <utilities/cloud/CloudProvider_Impl.hpp>
 
 #include <boost/filesystem.hpp>
 
@@ -1310,6 +1315,89 @@ QWidget *PatApp::mainWidget() {
 QSharedPointer<CloudMonitor> PatApp::cloudMonitor() const
 {
   return m_cloudMonitor;
+}
+
+boost::optional<CloudSettings> PatApp::currentProjectSettings()
+{
+  boost::optional<CloudSettings> settings;
+
+  if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() )
+  {
+    settings = project->cloudSettings();
+  }
+
+  return settings;
+}
+
+void PatApp::setCurrentProjectSettings(const boost::optional<CloudSettings> & settings)
+{
+  if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() )
+  {
+    if( ! settings )
+    {
+      project->clearCloudSettings();
+    }
+    else
+    {
+      project->setCloudSettings(settings.get());
+    }
+
+    project->save();
+  }
+}
+
+CloudSettings PatApp::createTestSettings()
+{
+  bool aws = false;
+
+  if (aws){
+    std::string accessKey;
+    std::string secretKey;
+
+    QFile file(QDir::homePath() + "/.aws_secrets");
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+      char buf[1024];
+      while (file.readLine(buf, sizeof(buf)) != -1){
+        QRegExp rx("access_key_id:\\s(.*)");
+        if (rx.exactMatch(buf)){
+          accessKey = rx.capturedTexts()[1].toStdString();
+        }
+
+        rx = QRegExp("secret_access_key:\\s(.*)");
+        if (rx.exactMatch(buf)){
+         secretKey = rx.capturedTexts()[1].toStdString();
+        }
+      }
+    }
+
+    if (accessKey.empty() || secretKey.empty()){
+      //LOG(Error, "Invalid credentials for AWSProvider");
+    }else{
+      AWSSettings awsSettings;
+      awsSettings.setAccessKey(accessKey);
+      awsSettings.setSecretKey(secretKey);
+      awsSettings.setServerInstanceType("t1.micro");
+      awsSettings.setWorkerInstanceType("t1.micro");
+
+      return awsSettings;
+    }
+  }
+
+  // create the vagrant provider
+  path serverPath = vagrantServerPath();
+  Url serverUrl("http://localhost:8080");
+  path workerPath = vagrantWorkerPath();
+  Url workerUrl("http://localhost:8081");
+
+  VagrantSettings vagrantSettings;
+  vagrantSettings.setServerUrl(serverUrl);
+  vagrantSettings.setWorkerUrl(workerUrl);
+  vagrantSettings.setServerPath(serverPath);
+  vagrantSettings.setWorkerPath(workerPath);
+  vagrantSettings.signUserAgreement(true);
+  vagrantSettings.setHaltOnStop(true);
+
+  return vagrantSettings;
 }
 
 NewProjectDialog::NewProjectDialog(QWidget * parent)
