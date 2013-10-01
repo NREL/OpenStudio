@@ -56,6 +56,9 @@ SET( ${target_name}_src
   AirTerminalSingleDuctUncontrolled.hpp
   AirTerminalSingleDuctUncontrolled_Impl.hpp
   AirTerminalSingleDuctUncontrolled.cpp
+  AirTerminalSingleDuctVAVNoReheat.hpp
+  AirTerminalSingleDuctVAVNoReheat_Impl.hpp
+  AirTerminalSingleDuctVAVNoReheat.cpp
   AirTerminalSingleDuctVAVReheat.hpp
   AirTerminalSingleDuctVAVReheat_Impl.hpp
   AirTerminalSingleDuctVAVReheat.cpp
@@ -821,6 +824,7 @@ SET( ${target_name}_moc
   AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp
   AirTerminalSingleDuctParallelPIUReheat_Impl.hpp
   AirTerminalSingleDuctUncontrolled_Impl.hpp
+  AirTerminalSingleDuctVAVNoReheat_Impl.hpp
   AirTerminalSingleDuctVAVReheat_Impl.hpp
   AirToAirComponent_Impl.hpp
   AirWallMaterial_Impl.hpp
@@ -1095,6 +1099,7 @@ SET( ${target_name}_test_src
   test/AirLoopHVAC_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
+  test/AirTerminalSingleDuctVAVNoReheat_Gtest.cpp
   test/Alpha1_GTest.cpp
   test/AvailabilityManagerAssignmentList_GTest.cpp
   test/AvailabilityManagerNightCycle_GTest.cpp
