@@ -45,7 +45,7 @@ require 'logger'
 
 # Not sure how we want to deal with this, but in the tag, I would like to specify the right
 # version of openstudio so that in the AWS Management Console it is meaningful.
-OPENSTUDIO_VERSION="1.1.0"
+OPENSTUDIO_VERSION='1.1.0'
 
 def error(code, msg)
   puts ({:error => {:code => code, :message => msg}}.to_json)
@@ -79,11 +79,11 @@ if ARGV.length == 6
   @params = JSON.parse(ARGV[5])
 end
 
-@server_image_id = 'ami-914317f8'
+@server_image_id = 'ami-2f90c746'
 if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
-  @worker_image_id = 'ami-d94317b0'
+  @worker_image_id = 'ami-d792c5be'
 else
-  @worker_image_id = 'ami-ab4317c2'
+  @worker_image_id = 'ami-9792c5fe'
 end
 
 def create_struct(instance, procs)
@@ -333,7 +333,7 @@ begin
       @logger.info("availability_zones #{resp.data.to_json}")
     when 'total_instances'
       resp = @aws.client.describe_instance_status
-      puts ({:instances => resp.data[:instance_status_set].length,
+      puts ({:total_instances => resp.data[:instance_status_set].length,
              :region => ARGV[2]}.to_json)
     when 'instance_status'
       resp = nil
@@ -511,7 +511,7 @@ begin
     when 'estimated_charges'
       # fix this
       resp = @aws.client.get_metric_statistics({:namespace=>'AWS/Billing', :metric_name=>'EstimatedCharges', :start_time=>'2013-09-01T23:59:59Z', :end_time=>'2013-09-24T23:59:59Z', :period=>1380, :statistics=>['Sum']})
-      #puts resp
+      puts ({:estimated_charges => 0}.to_json)
 
     else
       error(-1, "Unknown command: #{ARGV[4]} (#{ARGV[3]})")
