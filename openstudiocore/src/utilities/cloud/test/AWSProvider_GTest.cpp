@@ -29,6 +29,7 @@ using namespace openstudio;
 
 TEST(AWSProvider, AWSProviderTest)
 {
+  AWSProvider::serverInstanceTypes();
   AWSProvider awsProvider;
 
   //awsProvider.serverInstanceTypes();
@@ -67,7 +68,8 @@ TEST(AWSProvider, AWSProviderTest)
 
   awsProvider.workersRunning();
 */
-  awsProvider.totalSessionUptime();
+  boost::optional<AWSSession> awsSession = awsProvider.session().optionalCast<AWSSession>();
+  awsSession->totalSessionUptime();
 
-  awsProvider.totalSessionInstances();
+  awsSession->totalSessionInstances();
 }
