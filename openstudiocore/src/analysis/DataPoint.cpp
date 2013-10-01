@@ -513,8 +513,7 @@ namespace detail {
     // fix up topLevelJob
     OS_ASSERT(m_topLevelJob);
     if (runManager) {
-      // HERE -- files are now in directory(), need to update paths
-      // ETH@20130920 - Current implementation appears to be stuck in an infinite loop
+      // files are now in directory(), need to update paths
       runManager->updateJob(*m_topLevelJob, directory());
     }
 
@@ -529,22 +528,64 @@ namespace detail {
     runmanager::Files allFiles = topLevelJob()->treeAllFiles();
     try {
       openstudio::path osmInputDataPath = allFiles.getLastByExtension("osm").fullPath;
+      if (!boost::filesystem::exists(osmInputDataPath)) {
+        // check to see if this was the seed model
+        if (toString(osmInputDataPath.parent_path().stem()) == "seed") {
+          LOG(Debug,"Last OSM is the seed model. Point this local DataPoint to the local "
+              << "seed model.");
+          OS_ASSERT(parent());
+          osmInputDataPath = parent()->cast<Analysis>().seed().path();
+        }
+        else {
+          LOG(Debug,"After unzipping the DataPoint's details and updating its topLevelJob "
+              << "with the directory information, RunManager is reporting '" 
+              << toString(osmInputDataPath) << "' as the last OSM file path, even though "
+              << "that location does not exist.");
+        }
+      }
       setOsmInputData(FileReference(osmInputDataPath));
     }
     catch (...) {}
     try {
       openstudio::path idfInputDataPath = allFiles.getLastByExtension("idf").fullPath;
+      if (!boost::filesystem::exists(idfInputDataPath)) {
+                // check to see if this was the seed model
+        if (toString(idfInputDataPath.parent_path().stem()) == "seed") {
+          LOG(Debug,"Last IDF is the seed model. Point this local DataPoint to the local "
+              << "seed model.");
+          OS_ASSERT(parent());
+          idfInputDataPath = parent()->cast<Analysis>().seed().path();
+        }
+        else {
+          LOG(Debug,"After unzipping the DataPoint's details and updating its topLevelJob "
+              << "with the directory information, RunManager is reporting '" 
+              << toString(idfInputDataPath) << "' as the last IDF file path, even though "
+              << "that location does not exist.");
+        }
+      }
       setIdfInputData(FileReference(idfInputDataPath));
     }
     catch (...) {}
     try {
       openstudio::path sqlOutputDataPath = allFiles.getLastByExtension("sql").fullPath;
+      if (!boost::filesystem::exists(sqlOutputDataPath)) {
+        LOG(Debug,"After unzipping the DataPoint's details and updating its topLevelJob "
+            << "with the directory information, RunManager is reporting '" 
+            << toString(sqlOutputDataPath) << "' as the last SQL file path, even though "
+            << "that location does not exist.");
+      }
       setSqlOutputData(FileReference(sqlOutputDataPath));
     }
     catch (...) {}
     try {
       FileReferenceVector xmlOutputData;
       Q_FOREACH(const runmanager::FileInfo& file, allFiles.getAllByExtension("xml").files()) {
+        if (!boost::filesystem::exists(file.fullPath)) {
+          LOG(Debug,"After unzipping the DataPoint's details and updating its topLevelJob "
+              << "with the directory information, RunManager is reporting '" 
+              << toString(file.fullPath) << "' as an XML file path, even though that "
+              << "location does not exist.");
+        }
         xmlOutputData.push_back(FileReference(file.fullPath));
       }
       setXmlOutputData(xmlOutputData);
