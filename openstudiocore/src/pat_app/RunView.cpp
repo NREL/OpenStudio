@@ -234,7 +234,13 @@ void RunStatusView::setProgress(int numCompletedJobs, int numFailedJobs, int num
     m_playButton->setChecked(true);
   }else{
     if (numCompletedJobs == 0){
-      m_playButton->setText("Run");
+      QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
+      CloudMonitorWorker worker(cloudMonitor.data());
+      if(worker.internetAvailable() && worker.authenticated() && worker.cloudRunning()){
+        m_playButton->setText("Run on Cloud");
+      } else {
+        m_playButton->setText("Run Locally");
+      }
       m_playButton->setChecked(false);
     }else if (numCompletedJobs == numJobsInIteration){
       m_playButton->setText("Complete");
