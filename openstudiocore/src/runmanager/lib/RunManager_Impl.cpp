@@ -2378,7 +2378,25 @@ namespace detail {
   /// update job tree, and be willing to change the UUID in the process
   void RunManager_Impl::updateJob(const openstudio::UUID &t_uuid, const Job &t_job)
   {
-    assert("implement me" && false);
+
+    try {
+      Job j = getJob(t_uuid);
+      bool requeue = false;
+      if (j.uuid() != t_job.uuid())
+      {
+        requeue = true;
+        remove(j); // remove the old one from the db
+      }
+      j.updateJob(t_job, true); // update the old one to have the features of the new one
+
+      if (requeue)
+      {
+        enqueue(t_job, true, j.getBasePath().empty()?m_dbfile.parent_path():j.getBasePath());
+      }
+    } catch (const std::out_of_range &) {
+      // uuid didn't exist, we want to throw this back out
+      throw;
+    }
   }
 
 
