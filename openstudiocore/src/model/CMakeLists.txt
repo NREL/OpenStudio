@@ -50,6 +50,9 @@ SET( ${target_name}_src
   AirTerminalSingleDuctConstantVolumeCooledBeam.hpp
   AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp
   AirTerminalSingleDuctConstantVolumeCooledBeam.cpp
+  AirTerminalSingleDuctConstantVolumeReheat.hpp
+  AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeReheat.cpp
   AirTerminalSingleDuctParallelPIUReheat.hpp
   AirTerminalSingleDuctParallelPIUReheat_Impl.hpp
   AirTerminalSingleDuctParallelPIUReheat.cpp
@@ -822,6 +825,7 @@ SET( ${target_name}_moc
   AirLoopHVACZoneMixer_Impl.hpp
   AirLoopHVACZoneSplitter_Impl.hpp
   AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp
   AirTerminalSingleDuctParallelPIUReheat_Impl.hpp
   AirTerminalSingleDuctUncontrolled_Impl.hpp
   AirTerminalSingleDuctVAVNoReheat_Impl.hpp
@@ -1098,6 +1102,7 @@ SET( ${target_name}_test_src
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp
   test/AirLoopHVAC_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp
+  test/AirTerminalSingleDuctConstantVolumeReheat_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVNoReheat_Gtest.cpp
   test/Alpha1_GTest.cpp
