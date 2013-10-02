@@ -46,7 +46,7 @@ require 'time'
 
 # Not sure how we want to deal with this, but in the tag, I would like to specify the right
 # version of openstudio so that in the AWS Management Console it is meaningful.
-OPENSTUDIO_VERSION='1.1.0'
+OPENSTUDIO_VERSION='${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}'
 
 def error(code, msg)
   puts ({:error => {:code => code, :message => msg},
