@@ -192,6 +192,9 @@ namespace detail {
     // returns the number of processor cores per worker
     unsigned numWorkerProcessors() const;
 
+    // returns the key pair's private key
+    std::string privateKey() const;
+
     // returns the timestamp associated with the security group and key pair
     std::string timestamp() const;
     
@@ -238,9 +241,6 @@ namespace detail {
 
     // sets the key pair's private key
     void setPrivateKey(const std::string& privateKey);
-
-    // returns the key pair's private key
-    std::string privateKey() const;
 
     // sets the timestamp
     void setTimestamp(const std::string& timestamp);
