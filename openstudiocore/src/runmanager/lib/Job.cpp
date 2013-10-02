@@ -510,6 +510,11 @@ namespace runmanager {
     m_impl->makeExternallyManaged();
   }
 
+  void Job::setStatus(const AdvancedStatus &t_status)
+  {
+    m_impl->setStatus(t_status);
+  }
+
 }
 }
 

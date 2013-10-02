@@ -1072,6 +1072,7 @@ namespace detail {
     QWriteLocker l(&m_mutex);
     if (!m_hasRunSinceLoading)
     {
+      m_jobState.status = t_stat;
       l.unlock();
       emit statusChanged(t_stat);
       emit treeChanged(m_id);
@@ -1849,6 +1850,15 @@ namespace detail {
     sendSignals(oldState, newState, oldUUID, newUUID);
   }
 
+  void Job_Impl::setStatus(const AdvancedStatus &t_status)
+  {
+    if (!externallyManaged())
+    {
+      throw std::runtime_error("Unable to set status on non-externally managed job");
+    } else {
+      emitStatusChanged(t_status);
+    }
+  }
 
   void Job_Impl::sendSignals()
   {

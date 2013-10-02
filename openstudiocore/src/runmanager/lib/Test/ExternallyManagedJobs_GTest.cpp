@@ -43,6 +43,29 @@
 using namespace openstudio;
 using namespace openstudio::runmanager;
 
+TEST_F(RunManagerTestFixture, UpdateJobStatus)
+{
+  openstudio::runmanager::Job j = openstudio::runmanager::Workflow("Null").create();
+  openstudio::runmanager::Job j2 = openstudio::runmanager::Workflow("Null").create();
+
+  j.makeExternallyManaged();
+
+  ASSERT_EQ(AdvancedStatus(AdvancedStatusEnum::Idle), j.status());
+  ASSERT_EQ(AdvancedStatus(AdvancedStatusEnum::Idle), j2.status());
+
+  ASSERT_ANY_THROW(j2.setStatus(AdvancedStatus(AdvancedStatusEnum::Queuing))); // not allowed to set status, not externally managed
+  ASSERT_EQ(AdvancedStatus(AdvancedStatusEnum::Idle), j2.status()); // and no change expected
+
+  ASSERT_NO_THROW(j.setStatus(AdvancedStatus(AdvancedStatusEnum::Queuing))); 
+  ASSERT_EQ(AdvancedStatus(AdvancedStatusEnum::Queuing), j.status());
+  
+  // And note that advanced messages are allowed too
+  ASSERT_NO_THROW(j.setStatus(AdvancedStatus(AdvancedStatusEnum::Queuing, "Waiting in remote queue"))); 
+  ASSERT_EQ(AdvancedStatus(AdvancedStatusEnum::Queuing), j.status().value());
+  ASSERT_EQ("Waiting in remote queue", j.status().description());
+
+}
+
 TEST_F(RunManagerTestFixture, UpdateJobUUID)
 {
   openstudio::runmanager::Job j = openstudio::runmanager::Workflow("Null").create();

@@ -373,6 +373,8 @@ namespace detail {
       // to the current state
       void sendSignals();
 
+      /// Sets the advancedstatus of the current job. Only allowed on externally managed jobs
+      void setStatus(const AdvancedStatus &t_status);
 
     protected:
       Job(const boost::shared_ptr<detail::Job_Impl> &t_impl);

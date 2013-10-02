@@ -316,6 +316,10 @@ namespace detail {
       /// sets this job (and children) as being externally managed
       void makeExternallyManaged();
 
+      /// Sets the advancedstatus of the current job. Only allowed on externally managed jobs
+      void setStatus(const AdvancedStatus &t_status);
+
+
     protected:
       /// Called when the base path has changed
       virtual void basePathChanged() = 0;
