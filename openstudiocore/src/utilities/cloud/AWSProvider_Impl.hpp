@@ -48,7 +48,11 @@ namespace detail{
                      bool userAgreementSigned,
                      unsigned numWorkers,
                      bool terminationDelayEnabled,
-                     unsigned terminationDelay);
+                     unsigned terminationDelay/*,
+                     std::string region,
+                     std::string serverInstanceType,
+                     std::string workerInstanceType*/);
+    // @ETH: This will need three more inputs
 
     //@}
     /** @name Destructors */
@@ -392,12 +396,6 @@ namespace detail{
     // returns the cloud provider type
     static std::string cloudProviderType();
 
-    std::string userAgreementText() const;
-
-    bool userAgreementSigned() const;
-
-    void signUserAgreement(bool agree);
-
     // return a list of available AWS regions
     static std::vector<std::string> availableRegions();
 
@@ -417,10 +415,10 @@ namespace detail{
     static std::string defaultWorkerInstanceType();
 
     // returns the EC2 estimated charges from CloudWatch in USD
-    double estimatedCharges() const;
+    double estimatedCharges(int msec);
 
-    // returns the total number of instances running on EC2
-    unsigned totalInstances() const;
+    // returns the total number of instances running on EC2 in the current region
+    unsigned totalInstances(int msec);
 
     //@}
 
@@ -448,8 +446,15 @@ namespace detail{
 
     void onCheckTerminatedComplete(int, QProcess::ExitStatus);
 
+    void onCheckEstimatedChargesComplete(int, QProcess::ExitStatus);
+
+    void onCheckTotalInstancesComplete(int, QProcess::ExitStatus);
+
   private:
     
+    bool requestEstimatedCharges();
+    bool requestTotalInstances();
+
     bool waitForFinished(int msec, const boost::function<bool ()>& f);
     bool requestInternetAvailableFinished() const;
     bool requestServiceAvailableFinished() const;
@@ -461,6 +466,8 @@ namespace detail{
     bool requestWorkersRunningFinished() const;
     bool requestTerminateFinished() const;
     bool requestTerminateCompletedFinished() const;
+    bool requestEstimatedChargesFinished() const;
+    bool requestTotalInstancesFinished() const;
 
     ProcessResults handleProcessCompleted(QProcess * t_qp);
 
@@ -474,6 +481,8 @@ namespace detail{
     QProcess *makeCheckWorkerRunningProcess() const;
     QProcess *makeStopInstancesProcess() const;
     QProcess *makeCheckTerminateProcess() const;
+    QProcess *makeCheckEstimatedChargesProcess() const;
+    QProcess *makeCheckTotalInstancesProcess() const;
 
     bool parseServiceAvailableResults(const ProcessResults &);
     bool parseValidateCredentialsResults(const ProcessResults &);
@@ -484,9 +493,11 @@ namespace detail{
     bool parseCheckWorkerRunningResults(const ProcessResults &);
     bool parseInstancesStoppedResults(const ProcessResults &);
     bool parseCheckTerminatedResults(const ProcessResults &);
+    double parseCheckEstimatedChargesResults(const ProcessResults &);
+    unsigned parseCheckTotalInstancesResults(const ProcessResults &);
 
-    unsigned lastTotalInstances() const;
     double lastEstimatedCharges() const;
+    unsigned lastTotalInstances() const;
 
     AWSSettings m_awsSettings;
     AWSSession m_awsSession;
@@ -505,6 +516,8 @@ namespace detail{
     QProcess* m_checkWorkerRunningProcess;
     QProcess* m_stopInstancesProcess;
     QProcess* m_checkTerminatedProcess;
+    QProcess* m_checkEstimatedChargesProcess;
+    QProcess* m_checkTotalInstancesProcess;
     bool m_lastInternetAvailable;
     bool m_lastServiceAvailable;
     bool m_lastValidateCredentials;
@@ -516,8 +529,8 @@ namespace detail{
     bool m_instancesStopped;
     bool m_terminateStarted;
     bool m_lastTerminateCompleted;
-    unsigned m_lastTotalInstances;
     double m_lastEstimatedCharges;
+    unsigned m_lastTotalInstances;
 
     mutable std::vector<std::string> m_errors;
     mutable std::vector<std::string> m_warnings;
