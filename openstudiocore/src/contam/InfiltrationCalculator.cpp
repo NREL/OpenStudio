@@ -274,7 +274,9 @@ boost::optional<std::map<Handle,DesignFlowRateCoeffs> > InfiltrationCalculator::
   double density = 1.2041;
   openstudio::contam::ForwardTranslator translator;
 
-  if(!translator.translate(m_model,false,leakageDescriptor))
+  translator.setAirtightnessLevel(leakageDescriptor);
+  
+  if(!translator.translate(m_model,false))
   {
     LOG(Error, "Translation failed, check errors and warnings for more information.");
     return false;

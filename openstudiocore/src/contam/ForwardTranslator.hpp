@@ -45,21 +45,25 @@ public:
   ForwardTranslator();
   boost::optional<std::string> translateToString(const openstudio::model::Model& model,
     bool translateHVAC=true, std::string leakageDescriptor=std::string("Average"));
-  bool translate(const openstudio::model::Model& model,bool translateHVAC=true,
-    std::string leakageDescriptor=std::string("Average"),ProgressBar *progressBar=0);
-  bool translate(const openstudio::model::Model& model,std::map<std::string,int> afeMap,bool translateHVAC=true,
-    ProgressBar *progressBar=0);
-  bool translate(const openstudio::model::Model& model, double leakageRate=27.1, bool translateHVAC=true, 
-    ProgressBar *progressBar=0);
-  boost::optional<std::string> toString();
-  bool toPrj(const openstudio::path& path);
+  //bool translate(const openstudio::model::Model& model,bool translateHVAC=true,
+  //  std::string leakageDescriptor=std::string("Average"),ProgressBar *progressBar=0);
 
+  bool translate(const openstudio::model::Model& model,bool translateHVAC=true,ProgressBar *progressBar=0);
+  std::string toString();
+  bool toPrj(const openstudio::path& path);
+  
+  //bool translate(const openstudio::model::Model& model, double leakageRate=27.1, bool translateHVAC=true, 
+  //  ProgressBar *progressBar=0);
+  
   static bool modelToPrj(const openstudio::model::Model& model, const openstudio::path& path,
     bool translateHVAC=true, std::string leakageDescriptor=std::string("Average"), ProgressBar* progressBar=NULL);
 
   bool valid() const {return m_valid && m_data.valid();}
   std::map <Handle, int> surfaceMap() const {return m_surfaceMap;}
   std::map <Handle, int> zoneMap() const {return m_zoneMap;}
+
+  bool setAirtightnessLevel(std::string level);
+  bool setExteriorFlowRate(double flow,double n=0.65,double deltaP=75.0);
 
   // We will need more functions like this that modify the CONTAM model
   bool setSteadyWeather(double windSpeed, double windDirection);
@@ -81,7 +85,7 @@ private:
   prj::Model m_data;
   // Maps - will be populated after a call of translateToPrj
   // All map to the CONTAM index (1,2,...,nElement)
-  QMap<QString,int> m_afeMap;
+  std::map<std::string,int> m_afeMap;  // Map from descriptor ("exterior", "floor", etc.) to CONTAM airflow element index
   QMap <Handle, int> m_levelMap;      // Building story to level map by handle
   std::map <Handle, int> m_zoneMap;       // Thermal zone to airflow zone map by handle
   //QMap <std::string, int> volumeMap; // Map of AHS volumes - may not be needed

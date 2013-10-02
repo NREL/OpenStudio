@@ -71,6 +71,11 @@ public:
     {
         m_levels = levels;
     }
+    void addLevel(Level level)
+    {
+        level.setNr(m_levels.size()+1);
+        m_levels.push_back(level);
+    }
 
     VECTOR_TYPE <DaySchedule> daySchedules() const
     {
@@ -156,6 +161,11 @@ public:
     {
         m_ahs = ahs;
     }
+    void addAhs(Ahs ahs)
+    {
+        ahs.setNr(m_ahs.size()+1);
+        m_ahs.push_back(ahs);
+    }
 
     VECTOR_TYPE<Zone> zones() const
     {
@@ -165,6 +175,11 @@ public:
     {
         m_zones = zones;
     }
+    void addZone(Zone zone)
+    {
+        zone.setNr(m_zones.size()+1);
+        m_zones.push_back(zone);
+    }
 
     VECTOR_TYPE<Path> paths() const
     {
@@ -173,6 +188,11 @@ public:
     void setPaths(const VECTOR_TYPE<Path> paths)
     {
         m_paths = paths;
+    }
+    void addPath(Path path)
+    {
+        path.setNr(m_paths.size()+1);
+        m_paths.push_back(path);
     }
 
     bool valid() const
