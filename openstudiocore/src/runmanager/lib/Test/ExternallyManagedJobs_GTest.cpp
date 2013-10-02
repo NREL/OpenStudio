@@ -49,39 +49,39 @@ TEST_F(RunManagerTestFixture, UpdateJobUUID)
   openstudio::runmanager::Job j2 = openstudio::runmanager::Workflow("NullJob").create();
   openstudio::runmanager::Job j3 = openstudio::runmanager::Workflow("EnergyPlus").create();
 
-  openstudio::uuid juuid = j.uuid();
-  openstudio::uuid j2uuid = j2.uuid();
-  openstudio::uuid j3uuid = j3.uuid();
+  openstudio::UUID juuid = j.uuid();
+  openstudio::UUID j2uuid = j2.uuid();
+  openstudio::UUID j3uuid = j3.uuid();
 
   ASSERT_NE(juuid, j2uuid);
   ASSERT_NE(juuid, j3uuid);
   ASSERT_NE(j2uuid, j3uuid);
 
-  ASSERT_ANY_THROW(j.update(j2)); // not allowed to update UUID normally
-  ASSERT_NO_THROW(j.update(j2, true)); // allowed with optional uuid flag
+  ASSERT_ANY_THROW(j.updateJob(j2, false)); // not allowed to update UUID normally
+  ASSERT_NO_THROW(j.updateJob(j2, true)); // allowed with optional uuid flag
 
   // now the UUID's should be equal
   ASSERT_EQ(j.uuid(), j2.uuid());
   
 
-  ASSERT_ANY_THROW(j.update(j3)); // update from j3 is never allowed because...
-  ASSERT_ANY_THROW(j.update(j3, true)); // the job types do not match
+  ASSERT_ANY_THROW(j.updateJob(j3, false)); // update from j3 is never allowed because...
+  ASSERT_ANY_THROW(j.updateJob(j3, true)); // the job types do not match
 }
 
-TEST_F(RunManagerTestFixture, UpdateJobWithTree)
+TEST_F(RunManagerTestFixture, UpdateJobUUIDWithTree)
 {
   openstudio::runmanager::Job j = openstudio::runmanager::Workflow("NullJob->NullJob").create();
   openstudio::runmanager::Job j2 = openstudio::runmanager::Workflow("NullJob->NullJob").create();
   openstudio::runmanager::Job j3 = openstudio::runmanager::Workflow("NullJob->EnergyPlus").create();
 
-  ASSERT_ANY_THROW(j.update(j2)); // not allowed to update UUID normally
-  ASSERT_NO_THROW(j.update(j2, true)); // allowed with optional uuid flag
+  ASSERT_ANY_THROW(j.updateJob(j2, false)); // not allowed to update UUID normally
+  ASSERT_NO_THROW(j.updateJob(j2, true)); // allowed with optional uuid flag
 
   // now the UUID's should be equal
   ASSERT_EQ(j.uuid(), j2.uuid());
  
   ASSERT_NE(j.uuid(), j3.uuid());
-  ASSERT_ANY_THROW(j.update(j3, true)); // try to update, but should fail because of child mismatch
+  ASSERT_ANY_THROW(j.updateJob(j3, true)); // try to update, but should fail because of child mismatch
   ASSERT_NE(j.uuid(), j3.uuid()); // make sure it didn't update the top level ID even with the child failure
  
 }
@@ -98,7 +98,7 @@ TEST_F(RunManagerTestFixture, UpdateJobUUIDViaRunManager)
 
   // note this j2 is not moved into the runmanager, "updateJob" creates a copy of the job tree
   // and adds the copy
-  rm.updateJob(j2, true); // essentially add j2, because it didn't exist yet, and make it externally managed
+  rm.updateJob(j2); // essentially add j2, because it didn't exist yet, and make it externally managed
 
   ASSERT_NE(j.uuid(), j2.uuid());
   ASSERT_NO_THROW(rm.getJob(j2.uuid()));
@@ -109,7 +109,7 @@ TEST_F(RunManagerTestFixture, UpdateJobUUIDViaRunManager)
 
   // and now this one *will* throw
   //
-  ASSERT_THROW(rm.getJob(j2.uuid()));
+  ASSERT_ANY_THROW(rm.getJob(j2.uuid()));
 
 
 }

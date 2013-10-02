@@ -1698,16 +1698,16 @@ namespace detail {
   }
 
 
-  void Job_Impl::updateJob(const boost::shared_ptr<Job_Impl> &t_other)
+  void Job_Impl::updateJob(const boost::shared_ptr<Job_Impl> &t_other, bool t_allowUUIDUpdate)
   {
 
-	if (t_other.get() == this)
-	{
-	  LOG(Info, "Updating job is current job, nothing to do: " << toString(uuid().toString())); 
-	  return;
-	} else {
+    if (t_other.get() == this)
+    {
+      LOG(Info, "Updating job is current job, nothing to do: " << toString(uuid().toString())); 
+      return;
+    } else {
       LOG(Info, "Updating job: " << toString(uuid().toString()));
-	}
+    }
 
     QWriteLocker l(&m_mutex);
 
@@ -1716,6 +1716,9 @@ namespace detail {
     {
       throw std::runtime_error("Job updating is only valid for externallyManaged jobs");
     }
+
+    openstudio::UUID oldUUID = m_id;
+    openstudio::UUID newUUID = t_other->uuid();
 
     if (m_id != t_other->uuid())
     {
@@ -1774,7 +1777,7 @@ namespace detail {
     m_jobState = newState;
     l.unlock();
 
-	sendSignals(oldState, newState);
+    sendSignals(oldState, newState, oldUUID, newUUID);
 
     for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr = myChildren.begin();
          itr != myChildren.end();
@@ -1786,7 +1789,7 @@ namespace detail {
       {
         if ((*itr)->uuid() == (*itr2)->uuid())
         {
-          (*itr)->updateJob(*itr2);
+          (*itr)->updateJob(*itr2, t_allowUUIDUpdate);
           break;
         }
       }
@@ -1794,21 +1797,22 @@ namespace detail {
 
     if (myHasFinishedJob)
     {
-      myFinishedJob->updateJob(otherFinishedJob);
+      myFinishedJob->updateJob(otherFinishedJob, t_allowUUIDUpdate);
     }
   }
 
 
   void Job_Impl::sendSignals()
   {
-	QReadLocker l(&m_mutex);
-	JobState state = m_jobState;
-	l.unlock();
+    QReadLocker l(&m_mutex);
+    JobState state = m_jobState;
+    openstudio::UUID id = m_id;
+    l.unlock();
 
-    sendSignals(JobState(), state);
+    sendSignals(JobState(), state, id, id);
   }
 
-  void Job_Impl::sendSignals(JobState oldState, JobState newState)
+  void Job_Impl::sendSignals(JobState oldState, JobState newState, const openstudio::UUID &t_oldUUID, const openstudio::UUID &t_newUUID)
   {
     bool sendStatus = false;
     if (oldState.status != newState.status)
@@ -1831,6 +1835,8 @@ namespace detail {
       sendStarted = true;
     }
 
+    bool uuidchanged = t_oldUUID != t_newUUID;
+
     std::vector<FileInfo> diffFiles;
     std::set<FileInfo> oldFiles(oldState.outputFiles.files().begin(), oldState.outputFiles.files().end());
     std::set<FileInfo> newFiles(newState.outputFiles.files().begin(), newState.outputFiles.files().end());
@@ -1839,6 +1845,10 @@ namespace detail {
                         newFiles.begin(), newFiles.end(),
                         std::back_inserter(diffFiles));
 
+    if (uuidchanged) {
+      LOG(Debug, "updateJob: uuidChanged()");
+      emit uuidChanged(t_oldUUID, t_newUUID);
+    }
 
     if (sendStarted)
     {
@@ -1860,6 +1870,7 @@ namespace detail {
       LOG(Debug, "updateJob: emitFinished()");
       emitFinished(newState.errors, newState.lastRun, Files(std::vector<FileInfo>(newFiles.begin(), newFiles.end())));
     }
+
   }
 
 

@@ -2366,7 +2366,7 @@ namespace detail {
   {
     try {
       Job j = getJob(t_job.uuid());
-      j.updateJob(t_job);
+      j.updateJob(t_job, false);
     } catch (const std::out_of_range &) {
       // job didn't exist
       enqueue(t_job, true, m_dbfile.parent_path());
@@ -2375,11 +2375,18 @@ namespace detail {
     openstudio::Application::instance().processEvents();
   }
 
+  /// update job tree, and be willing to change the UUID in the process
+  void RunManager_Impl::updateJob(const openstudio::UUID &t_uuid, const Job &t_job)
+  {
+    assert("implement me" && false);
+  }
+
+
   void RunManager_Impl::updateJob(const Job &t_job, const openstudio::path &t_path)
   {
     try {
       Job j = getJob(t_job.uuid());
-      j.updateJob(t_job);
+      j.updateJob(t_job, false);
       j.setBasePathRecursive(t_path);
     } catch (const std::out_of_range &) {
       // job didn't exist

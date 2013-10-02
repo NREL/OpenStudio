@@ -489,9 +489,9 @@ namespace runmanager {
     return detail::JSON::toJSON(*this);
   }
 
-  void Job::updateJob(const Job &t_other)
+  void Job::updateJob(const Job &t_other, bool t_allowUUIDUpdate)
   {
-    m_impl->updateJob(t_other.m_impl);
+    m_impl->updateJob(t_other.m_impl, t_allowUUIDUpdate);
   }
 
   bool Job::externallyManaged() const

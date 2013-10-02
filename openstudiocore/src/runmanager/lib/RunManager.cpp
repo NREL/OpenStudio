@@ -303,6 +303,11 @@ namespace runmanager {
     m_impl->updateJob(t_job, t_path);
   }
 
+  void RunManager::updateJob(const openstudio::UUID &t_uuid, const Job &t_job)
+  {
+    m_impl->updateJob(t_uuid, t_job);
+  }
+
   void RunManager::updateJob(const openstudio::runmanager::Job &t_job)
   {
     m_impl->updateJob(t_job);
