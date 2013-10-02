@@ -110,6 +110,10 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslatePumpConstantSpeed.cpp
   ForwardTranslator/ForwardTranslatePumpVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateRefractionExtinctionGlazing.cpp
+  ForwardTranslator/ForwardTranslateRefrigerationCase.cpp
+  ForwardTranslator/ForwardTranslateRefrigerationCompressor.cpp
+  ForwardTranslator/ForwardTranslateRefrigerationCondenserAirCooled.cpp
+  ForwardTranslator/ForwardTranslateRefrigerationSystem.cpp
   ForwardTranslator/ForwardTranslateRoofVegetation.cpp
   ForwardTranslator/ForwardTranslateRunPeriod.cpp
   ForwardTranslator/ForwardTranslateRunPeriodControlDaylightSavingTime.cpp
