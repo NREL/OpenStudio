@@ -124,6 +124,8 @@ class RunStatusView : public QWidget
 
   void on_selectAllClears(bool checked);
 
+  void updateCloudData();
+
  private:
 
   PlayButton* m_playButton;
@@ -132,6 +134,8 @@ class RunStatusView : public QWidget
   QLabel* m_percentFailed;
   QPushButton * m_selectAllClears;
   QPushButton * m_selectAllDownloads;
+  QLabel * m_cloudTime;
+  QLabel * m_cloudInstances;
 };
 
 class DataPointRunHeaderView : public OSHeader

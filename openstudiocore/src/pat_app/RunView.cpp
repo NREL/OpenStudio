@@ -35,6 +35,8 @@
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/Workflow.hpp>
 
+#include <utilities/cloud/AWSProvider.hpp>
+#include <utilities/cloud/AWSProvider_Impl.hpp>
 #include <utilities/cloud/CloudProvider.hpp>
 #include <utilities/cloud/VagrantProvider.hpp>
 #include <utilities/core/Assert.hpp>
@@ -152,6 +154,20 @@ RunStatusView::RunStatusView()
   toggleCloudButton = new ToggleCloudButton();
   mainHLayout->addWidget(toggleCloudButton);
 
+  // Cloud Status
+  m_cloudTime = new QLabel(this);
+  m_cloudInstances = new QLabel(this);
+  QVBoxLayout * vLayout = new QVBoxLayout();
+  vLayout->setContentsMargins(0,0,0,0);
+  vLayout->addWidget(m_cloudTime);
+  vLayout->addWidget(m_cloudInstances);
+  mainHLayout->addLayout(vLayout);
+  QTimer * timer = new QTimer(this);
+  timer->start(30000);
+  isConnected = connect(timer, SIGNAL(timeout()),
+                        this, SLOT(updateCloudData()));
+  OS_ASSERT(isConnected);
+
   mainHLayout->addStretch();
 
   // "Select All" Button Layout
@@ -234,7 +250,13 @@ void RunStatusView::setProgress(int numCompletedJobs, int numFailedJobs, int num
     m_playButton->setChecked(true);
   }else{
     if (numCompletedJobs == 0){
-      m_playButton->setText("Run");
+      QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
+      CloudMonitorWorker worker(cloudMonitor.data());
+      if(worker.internetAvailable() && worker.authenticated() && worker.cloudRunning()){
+        m_playButton->setText("Run on Cloud");
+      } else {
+        m_playButton->setText("Run Locally");
+      }
       m_playButton->setChecked(false);
     }else if (numCompletedJobs == numJobsInIteration){
       m_playButton->setText("Complete");
@@ -267,14 +289,33 @@ void RunStatusView::setProgress(int numCompletedJobs, int numFailedJobs, int num
 
 void RunStatusView::on_selectAllDownloads(bool checked)
 {
-      // TODO
-
+  // TODO
 }
 
 void RunStatusView::on_selectAllClears(bool checked)
 {
-      // TODO
+  // TODO
+}
 
+void RunStatusView::updateCloudData()
+{
+  AWSProvider awsProvider;
+  boost::optional<AWSSession> awsSession = awsProvider.session().optionalCast<AWSSession>();
+  OS_ASSERT(awsSession);
+
+  QString temp;
+
+  temp = temp.setNum(awsSession->totalSessionUptime());
+  temp.prepend("<b>");
+  temp.prepend("Time: ");
+  temp += " minutes </b>"; 
+  m_cloudTime->setText(temp);
+
+  temp = temp.setNum(awsSession->totalSessionInstances());
+  temp.prepend("<b>");
+  temp.prepend("Instances: ");
+  temp += "</b>";
+  m_cloudInstances->setText(temp);
 }
 
 ToggleCloudButton::ToggleCloudButton()
