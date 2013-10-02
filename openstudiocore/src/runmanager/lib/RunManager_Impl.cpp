@@ -341,6 +341,14 @@ namespace detail {
         m_db.commit();
       }
 
+      void deleteJobTree(const openstudio::runmanager::Job &t_job)
+      {
+        QMutexLocker l(&m_mutex);
+        m_db.begin();
+        deleteJobRecursiveInternal(t_job);
+        m_db.commit();
+      }
+
       void deleteJobRecursiveInternal(const openstudio::runmanager::Job &t_job)
       {
         std::vector<openstudio::runmanager::Job> children = t_job.children();
@@ -1688,6 +1696,7 @@ namespace detail {
           }
         }
       }
+
       m_workflowkeys.insert(key);
     }
 
@@ -1740,8 +1749,8 @@ namespace detail {
 
     lock.unlock();
 
-	  if (job.externallyManaged())
-	  {
+    if (job.externallyManaged())
+    {
       job.sendSignals();
     }
 
@@ -2366,7 +2375,9 @@ namespace detail {
   {
     try {
       Job j = getJob(t_job.uuid());
+      m_dbholder->deleteJobTree(t_job);
       j.updateJob(t_job, false);
+      m_dbholder->persistJobTree(t_job);
     } catch (const std::out_of_range &) {
       // job didn't exist
       enqueue(t_job, true, m_dbfile.parent_path());
@@ -2381,18 +2392,9 @@ namespace detail {
 
     try {
       Job j = getJob(t_uuid);
-      bool requeue = false;
-      if (j.uuid() != t_job.uuid())
-      {
-        requeue = true;
-        remove(j); // remove the old one from the db
-      }
+      m_dbholder->deleteJobTree(t_job);
       j.updateJob(t_job, true); // update the old one to have the features of the new one
-
-      if (requeue)
-      {
-        enqueue(t_job, true, j.getBasePath().empty()?m_dbfile.parent_path():j.getBasePath());
-      }
+      m_dbholder->persistJobTree(t_job);
     } catch (const std::out_of_range &) {
       // uuid didn't exist, we want to throw this back out
       throw;
@@ -2404,7 +2406,9 @@ namespace detail {
   {
     try {
       Job j = getJob(t_job.uuid());
+      m_dbholder->deleteJobTree(t_job);
       j.updateJob(t_job, false);
+      m_dbholder->persistJobTree(t_job);
       j.setBasePathRecursive(t_path);
     } catch (const std::out_of_range &) {
       // job didn't exist
