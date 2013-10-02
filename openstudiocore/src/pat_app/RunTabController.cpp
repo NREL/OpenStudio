@@ -69,13 +69,23 @@ RunTabController::RunTabController()
     analysis::DataPoint baselineDataPoint = project->baselineDataPoint();
 
     analysis::Analysis analysis = project->analysis();
+    boost::optional<analysisdriver::CloudAnalysisDriver> cloudAnalysisDriver = project->cloudAnalysisDriver();
     analysisdriver::AnalysisDriver analysisDriver = project->analysisDriver();
+    std::vector<analysisdriver::CurrentAnalysis> currentAnalyses;
 
-    // connect currentAnalysis to refresh if data point is queued
-    bool bingo = analysisDriver.connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(reqestRefresh()), Qt::QueuedConnection);
-    OS_ASSERT(bingo);
+    // refresh this tab when data points are queued
+    if (cloudAnalysisDriver){
+      bool bingo = cloudAnalysisDriver->connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(reqestRefresh()), Qt::QueuedConnection);
+      OS_ASSERT(bingo);
 
-    std::vector<analysisdriver::CurrentAnalysis> currentAnalyses = analysisDriver.currentAnalyses();
+      // currentAnalyses is empty for cloudAnalysisDriver
+    }else{
+      bool bingo = analysisDriver.connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(reqestRefresh()), Qt::QueuedConnection);
+      OS_ASSERT(bingo);
+
+     currentAnalyses = analysisDriver.currentAnalyses();
+    }
+
     if (!currentAnalyses.empty()){
       // connect currentAnalysis to update progress on this
       bingo = currentAnalyses[0].connect(SIGNAL(iterationProgress(int,int)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
@@ -229,12 +239,14 @@ void RunTabController::onPlayButtonClicked(bool clicked)
 
       if (cloudAnalysisDriver){
 
-        // start the run
-        cloudAnalysisDriver->requestRun();
+        // refresh this tab when data points are queued
+        bool bingo = cloudAnalysisDriver->connect(SIGNAL(dataPointQueued(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(reqestRefresh()), Qt::QueuedConnection);
+        OS_ASSERT(bingo);
 
         // connect currentAnalysis to update progress on this
         bool isConnected = cloudAnalysisDriver->connect(SIGNAL(dataPointComplete(const openstudio::UUID&, const openstudio::UUID&)), this, SLOT(onIterationProgress()), Qt::QueuedConnection);
         OS_ASSERT(isConnected);
+
 
         //DLM: brainstorming signals:
 
@@ -266,6 +278,9 @@ void RunTabController::onPlayButtonClicked(bool clicked)
         // DLM: this re-enables tabs if analysis completes when we are not on this tab
         isConnected = cloudAnalysisDriver->connect(SIGNAL(dataPointComplete(const openstudio::UUID&, const openstudio::UUID&)), PatApp::instance(), SLOT(disableTabsDuringRun()), Qt::QueuedConnection);
         OS_ASSERT(isConnected);
+
+        // start the run
+        cloudAnalysisDriver->requestRun();
       }else{
 
         // request new run
@@ -418,7 +433,7 @@ QWidget * DataPointRunItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
   DataPointRunItemView* result = new DataPointRunItemView(dataPoint);
   bool test = connect(dataPoint.getImpl<openstudio::analysis::detail::DataPoint_Impl>().get(), SIGNAL(changed(ChangeType)),
-                      result->dataPointRunHeaderView, SLOT(update()));
+                      result, SLOT(update()));
   OS_ASSERT(test);
 
   if (dataPoint.topLevelJob()){
