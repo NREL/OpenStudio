@@ -1,7 +1,7 @@
 
 OS:Version,
-  {136c4874-9749-4ef9-8694-da52987b6e41}, !- Handle
-  1.0.5;                                  !- Version Identifier
+  {1b25e67a-cf6a-4b01-a0ec-5518d0163d29}, !- Handle
+  1.1.0;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -402,7 +402,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
 
 OS:EvaporativeFluidCooler:SingleSpeed,
   {b04f495c-cbc1-4d89-acec-e5f7711f00de}, !- Handle
-  Evaporative Fluid Cooler Single Speed, !- Name
+  Evaporative Fluid Cooler Single Speed,  !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
   autosize,                               !- Design Air Flow Rate {m3/s}
@@ -434,6 +434,19 @@ OS:AirTerminal:SingleDuct:Uncontrolled,
   ,                                       ! Inlet Air Node Name
   ,                                       ! Zone Supply Air Node Name
   AutoSize;                               ! Maximum Air Flow Rate {m3/s}
+
+OS:AirTerminal:SingleDuct:VAV:NoReheat,
+  {bede16a8-c558-4028-9110-70994233f6f9}, !- Handle
+  Air Terminal VAV with No Reheat,        !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  autosize,                               !- Maximum Air Flow Rate {m3/s}
+  Constant,                               !- Zone Minimum Air Flow Input Method
+  0.3,                                    !- Constant Minimum Air Flow Fraction
+  ,                                       !- Fixed Minimum Air Flow Rate {m3/s}
+  ,                                       !- Minimum Air Flow Fraction Schedule Name
+  ;                                       !- Design Specification Outdoor Air Object Name
 
 OS:AirTerminal:SingleDuct:VAV:Reheat,
   {293eff65-3e25-4c91-97bc-a0d600b4e09b}, ! Handle
@@ -2471,7 +2484,7 @@ OS:Coil:Cooling:CooledBeam,
 
 OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
   {3667b348-2052-4711-9cd2-7226dc650e72}, !- Handle
-  Cooled Beam, !- Name
+  Cooled Beam,                            !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Cooled Beam Type
   ,                                       !- Supply Air Inlet Node Name
@@ -2484,3 +2497,4 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
   15.0,                                   !- Design Inlet Water Temperature {C}
   17.0,                                   !- Design Outlet Water Temperature {C}
   Autocalculate;                          !- Coefficient of Induction Kin
+
