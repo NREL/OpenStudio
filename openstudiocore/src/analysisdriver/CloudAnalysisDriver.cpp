@@ -304,10 +304,13 @@ namespace detail {
       m_preDetailsQueue.push_back(*actualDataPoint);
 
       if (!m_checkForResultsToDownload) {
-
         success = success && startDetailsReadyMonitoring();
-
       }
+    }
+
+    if (!success) {
+      logError("Was unable to request which data points are ready for download.");
+      registerDownloadingDetailsFailure();
     }
 
     return success;
@@ -1235,11 +1238,12 @@ namespace detail {
 
     if (OptionalUrl url = session().serverUrl()) {
       m_checkForResultsToDownload = OSServer(*url);
+      LOG(Debug,"Spinning up process to check for data points that are ready to download.");
 
       bool test = m_checkForResultsToDownload->connect(SIGNAL(requestProcessed(bool)),this,SLOT(readyForDownloadDataPointUUIDsReturned(bool)),Qt::QueuedConnection);
       OS_ASSERT(test);
 
-      success = success && m_checkForResultsToDownload->requestDownloadReadyDataPointUUIDs(project().analysis().uuid());
+      success = m_checkForResultsToDownload->requestDownloadReadyDataPointUUIDs(project().analysis().uuid());
     }
     else {
       logError("Cannot start monitoring for data points that are ready to download because the CloudSession has been terminated.");
