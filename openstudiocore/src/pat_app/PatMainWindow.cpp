@@ -19,6 +19,7 @@
 
 #include <pat_app/PatMainWindow.hpp>
 
+#include <pat_app/CloudMonitor.hpp>
 #include <pat_app/HorizontalTabWidget.hpp>
 #include <pat_app/PatApp.hpp>
 #include <pat_app/PatMainMenu.hpp>
@@ -36,6 +37,7 @@
 #include <QGraphicsView>
 #include <QListWidget>
 #include <QMenuBar>
+#include <QMessageBox>
 #include <QScrollArea>
 #include <QSettings>
 #include <QSizePolicy>
@@ -167,6 +169,19 @@ void PatMainWindow::setMainRightColumnView(QWidget * widget)
 
 void PatMainWindow::closeEvent(QCloseEvent *event)
 {
+  QSharedPointer<CloudMonitor> cloudMonitor = PatApp::instance()->cloudMonitor();
+  CloudMonitorWorker worker(cloudMonitor.data());
+
+  if(worker.cloudRunning()){
+    int result = QMessageBox::warning(this, 
+                  "Close PAT?", 
+                  "The cloud is running and charges are accruing.  Are you sure you want to close PAT?", 
+                  QMessageBox::Ok, 
+                  QMessageBox::Cancel);
+
+    if(result == QMessageBox::Cancel) return;
+  }
+
   qobject_cast<PatApp *>(QApplication::instance())->quit();
   writeSettings();
 
