@@ -175,6 +175,7 @@
     <file>images/toggle_on_over.png</file>
     <file>images/fan_variable.png</file>
     <file>images/utility_calibration_warning.png</file>
+    <file>images/vav_noreheat.png</file>
     <file>images/vav-reheat.png</file>
     <file>images/v_divider_dots.png</file>
     <file>images/wahpDXCC.png</file>    
@@ -308,6 +309,7 @@
     <file>images/mini_icons/system_type_2.png</file>
     <file>images/mini_icons/thermal_zone.png</file>
     <file>images/mini_icons/variable_fan.png</file>
+    <file>images/mini_icons/vav_noreheat.png</file>
     <file>images/mini_icons/vav-reheat.png</file>
     <file>images/mini_icons/wahpDXCC_mini.png</file>        
     <file>images/mini_icons/wahpDXHC_mini.png</file>    

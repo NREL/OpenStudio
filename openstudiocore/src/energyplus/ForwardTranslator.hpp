@@ -196,7 +196,7 @@ class ZoneHVACPackagedTerminalAirConditioner;
 class ZoneHVACWaterToAirHeatPump;
 class ZoneHVACEquipmentList;
 class ZoneHVACUnitHeater;
-
+class AirTerminalSingleDuctVAVNoReheat;
 }
 
 namespace energyplus {
@@ -587,6 +587,9 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> createAirLoopHVACSupplyPath( model::AirLoopHVAC & airLoopHVAC );
 
   boost::optional<IdfObject> createAirLoopHVACReturnPath( model::AirLoopHVAC & airLoopHVAC );
+  
+  boost::optional<IdfObject> translateAirTerminalSingleDuctVAVNoReheat( model::AirTerminalSingleDuctVAVNoReheat & modelObject );
+
 
   // helper method used by ForwardTranslatePlantLoop
   IdfObject populateBranch( IdfObject & branchIdfObject, std::vector<model::ModelObject> & modelObjects,	model::PlantLoop & plantLoop);
