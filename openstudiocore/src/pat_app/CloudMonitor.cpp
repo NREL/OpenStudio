@@ -275,7 +275,9 @@ void CloudMonitor::onCloudConnectionError()
 {
   setStatus(CLOUD_ERROR);
 
-  PatApp::instance()->openLostCloudConnectionDlg();
+  PatApp::instance()->openLostCloudConnectionDlg(m_worker.data()->internetAvailable(),m_worker.data()->authenticated(),m_worker.data()->cloudRunning());
+
+  bool clearSession = PatApp::instance()->lostCloudConnectionDlgClearSession();
 
   recoverCloud();
 }

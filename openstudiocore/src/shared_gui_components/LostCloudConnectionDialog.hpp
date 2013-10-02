@@ -32,9 +32,14 @@ class LostCloudConnectionDialog : public OSDialog
 
 public:
 
-  LostCloudConnectionDialog(QWidget * parent = 0);
+  LostCloudConnectionDialog(bool internetAvailable,
+    bool authenticated,
+    bool cloudRunning,
+    QWidget * parent = 0);
 
   virtual ~LostCloudConnectionDialog();
+
+  bool clearCloudSession() {return m_clearCloudSession;}
 
 protected slots:
 
@@ -42,9 +47,13 @@ protected slots:
 
 private:
 
-  void createWidgets();
+  void createWidgets(bool internetAvailable,
+    bool authenticated,
+    bool cloudRunning);
 
   void createCloudConnectionWidgets(QVBoxLayout * vLayout);
+
+  bool m_clearCloudSession;
 
 private slots:
 
