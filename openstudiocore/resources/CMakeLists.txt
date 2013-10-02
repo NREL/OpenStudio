@@ -93,6 +93,15 @@ SET(ENERGYPLUS_OUTPUTS "")
 
 SET(model_resources_src
   model/OpenStudio.idd
+  model/intersection_tests/22.osm
+  model/intersection_tests/74.osm
+  model/intersection_tests/131.osm
+  model/intersection_tests/136.osm
+  model/intersection_tests/145.osm
+  model/intersection_tests/146.osm
+  model/intersection_tests/156.osm
+  model/intersection_tests/test3.osm
+  model/intersection_tests/test4.osm
 )
 
 
