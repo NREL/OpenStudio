@@ -510,7 +510,7 @@ namespace openstudio{
 
       if (applicationIsRunningFromBuildDirectory())
       {
-        m_script = getApplicationBuildDirectory() / openstudio::toPath("ruby/aws.rb");
+        m_script = getApplicationBuildDirectory() / openstudio::toPath("ruby/cloud/aws.rb");
       } else {
 #ifdef Q_OS_LINUX
         m_script = getApplicationInstallDirectory() / openstudio::toPath("share/openstudio/Ruby/cloud/aws.rb");
