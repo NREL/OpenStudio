@@ -54,7 +54,10 @@ namespace openstudio{
         m_validSecretKey(false),
         m_numWorkers(2),
         m_terminationDelayEnabled(false),
-        m_terminationDelay(0)
+        m_terminationDelay(0),
+        m_region(AWSProvider::defaultRegion()),
+        m_serverInstanceType(AWSProvider::defaultServerInstanceType()),
+        m_workerInstanceType(AWSProvider::defaultWorkerInstanceType())
     {
       loadSettings(true);
     }
@@ -64,7 +67,10 @@ namespace openstudio{
                                        bool userAgreementSigned,
                                        unsigned numWorkers,
                                        bool terminationDelayEnabled,
-                                       unsigned terminationDelay)
+                                       unsigned terminationDelay/*,
+                                       std::string region,
+                                       std::string serverInstanceType,
+                                       std::string workerInstanceType*/)
       : CloudSettings_Impl(uuid,versionUUID),
         m_validAccessKey(false),
         m_validSecretKey(false)
@@ -74,6 +80,10 @@ namespace openstudio{
       setNumWorkers(numWorkers);
       setTerminationDelayEnabled(terminationDelayEnabled);
       setTerminationDelay(terminationDelay);
+      // todo
+      //setRegion(region);
+      //setServerInstanceType(serverInstanceType);
+      //setWorkerInstanceType(workerInstanceType);
     }
 
     std::string AWSSettings_Impl::cloudProviderType() const {
@@ -198,9 +208,10 @@ namespace openstudio{
     }
 
     bool AWSSettings_Impl::setAccessKey(const std::string& accessKey) {
-      if (validAccessKey(accessKey)) {
-        if (m_accessKey != accessKey) {
-          m_accessKey = accessKey;
+      std::string key = toQString(accessKey).trimmed().toStdString();
+      if (validAccessKey(key)) {
+        if (m_accessKey != key) {
+          m_accessKey = key;
           m_validAccessKey = true;
           onChange();
         }
@@ -214,9 +225,10 @@ namespace openstudio{
     }
 
     bool AWSSettings_Impl::setSecretKey(const std::string& secretKey) {
-      if (validSecretKey(secretKey)) {
-        if (m_secretKey != secretKey) {
-          m_secretKey = secretKey;
+      std::string key = toQString(secretKey).trimmed().toStdString();
+      if (validSecretKey(key)) {
+        if (m_secretKey != key) {
+          m_secretKey = key;
           m_validSecretKey = true;
           onChange();
         }
@@ -456,7 +468,6 @@ namespace openstudio{
       : CloudProvider_Impl(),
         m_awsSettings(),
         m_awsSession(toString(createUUID()),boost::none,std::vector<Url>()),
-        m_script(getOpenStudioRubyScriptsPath() / toPath("cloud/aws.rb")),
         m_checkInternetProcess(0),
         m_checkServiceProcess(0),
         m_checkValidateProcess(0),
@@ -467,6 +478,8 @@ namespace openstudio{
         m_checkWorkerRunningProcess(0),
         m_stopInstancesProcess(0),
         m_checkTerminatedProcess(0),
+        m_checkEstimatedChargesProcess(0),
+        m_checkTotalInstancesProcess(0),
         m_lastInternetAvailable(false),
         m_lastServiceAvailable(false),
         m_lastValidateCredentials(false),
@@ -477,7 +490,9 @@ namespace openstudio{
         m_lastWorkerRunning(false),
         m_instancesStopped(false),
         m_terminateStarted(false),
-        m_lastTerminateCompleted(false)
+        m_lastTerminateCompleted(false),
+        m_lastEstimatedCharges(0),
+        m_lastTotalInstances(0)
     {
       //Make sure a QApplication exists
       openstudio::Application::instance().application();
@@ -491,6 +506,22 @@ namespace openstudio{
 #endif
       if (!boost::filesystem::exists(m_ruby)) {
         LOG_AND_THROW("Ruby 2.0 executable cannot be found.");
+      }
+
+      if (applicationIsRunningFromBuildDirectory())
+      {
+        m_script = getApplicationBuildDirectory() / openstudio::toPath("ruby/aws.rb");
+      } else {
+#ifdef Q_OS_LINUX
+        m_script = getApplicationInstallDirectory() / openstudio::toPath("share/openstudio/Ruby/cloud/aws.rb");
+#elif defined(Q_OS_MAC)
+        m_script = getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("Ruby/cloud/aws.rb");
+#else
+        m_script = getApplicationRunDirectory().parent_path() / openstudio::toPath("Ruby/cloud/aws.rb");
+#endif
+      }
+      if (!boost::filesystem::exists(m_script)) {
+        LOG_AND_THROW("AWS script cannot be found.");
       }
 
       m_privateKey.setAutoRemove(false);
@@ -629,7 +660,17 @@ namespace openstudio{
 
     bool AWSProvider_Impl::lastTerminateCompleted() const
     {
-      return m_instancesStopped;
+      return m_lastEstimatedCharges;
+    }
+
+    double AWSProvider_Impl::lastEstimatedCharges() const
+    {
+      return m_lastEstimatedCharges;
+    }
+
+    unsigned AWSProvider_Impl::lastTotalInstances() const
+    {
+      return m_lastTotalInstances;
     }
 
     std::vector<std::string> AWSProvider_Impl::errors() const
@@ -725,6 +766,26 @@ namespace openstudio{
         }
       }
       return false;
+    }
+
+    double AWSProvider_Impl::estimatedCharges(int msec)
+    {
+      if (requestEstimatedCharges()){
+        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestEstimatedChargesFinished, this))){
+          return lastEstimatedCharges();
+        }
+      }
+      return 0;
+    }
+
+    unsigned AWSProvider_Impl::totalInstances(int msec)
+    {
+      if (requestTotalInstances()){
+        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTotalInstancesFinished, this))){
+          return lastTotalInstances();
+        }
+      }
+      return 0;
     }
 
     bool AWSProvider_Impl::requestInternetAvailable()
@@ -907,6 +968,38 @@ namespace openstudio{
       return true;
     }
 
+    bool AWSProvider_Impl::requestEstimatedCharges()
+    {
+      if (m_checkEstimatedChargesProcess){
+        // already checking
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastEstimatedCharges = 0;
+
+      m_checkEstimatedChargesProcess = makeCheckEstimatedChargesProcess();
+
+      return true;
+    }
+
+    bool AWSProvider_Impl::requestTotalInstances()
+    {
+      if (m_checkTotalInstancesProcess){
+        // already checking
+        return false;
+      }
+
+      clearErrorsAndWarnings();
+
+      m_lastTotalInstances = 0;
+
+      m_checkTotalInstancesProcess = makeCheckTotalInstancesProcess();
+
+      return true;
+    }
+
     std::string AWSProvider_Impl::cloudProviderType() {
       return "AWSProvider";
     }
@@ -935,16 +1028,6 @@ namespace openstudio{
       args << toQString(m_awsSettings.accessKey());
       args << toQString(m_awsSettings.secretKey());
       args << toQString(m_awsSettings.region());
-    }
-
-    double AWSProvider_Impl::estimatedCharges() const {
-      //todo
-      return 0.0;
-    }
-
-    unsigned AWSProvider_Impl::totalInstances() const {
-      //todo
-      return 0;
     }
 
     bool AWSProvider_Impl::waitForFinished(int msec, const boost::function<bool ()>& f) {
@@ -1019,6 +1102,16 @@ namespace openstudio{
     bool AWSProvider_Impl::requestTerminateCompletedFinished() const
     {
       return (m_checkTerminatedProcess == 0);
+    }
+
+    bool AWSProvider_Impl::requestEstimatedChargesFinished() const
+    {
+      return (m_checkEstimatedChargesProcess == 0);
+    }
+
+    bool AWSProvider_Impl::requestTotalInstancesFinished() const
+    {
+      return (m_checkTotalInstancesProcess == 0);
     }
 
     ProcessResults AWSProvider_Impl::handleProcessCompleted(QProcess * t_qp)
@@ -1251,6 +1344,38 @@ namespace openstudio{
       return p;
     }
 
+    QProcess *AWSProvider_Impl::makeCheckEstimatedChargesProcess() const
+    {
+      QProcess *p = new QProcess();
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                          this, SLOT(onCheckEstimatedChargesComplete(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+      QStringList args;
+      addProcessArguments(args);
+      args << QString("CloudWatch");
+      args << QString("estimated_charges");
+      
+      p->start(toQString(m_ruby), args);
+
+      return p;
+    }
+
+    QProcess *AWSProvider_Impl::makeCheckTotalInstancesProcess() const
+    {
+      QProcess *p = new QProcess();
+      bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
+                          this, SLOT(onCheckTotalInstancesComplete(int, QProcess::ExitStatus)));
+      OS_ASSERT(test);
+      QStringList args;
+      addProcessArguments(args);
+      args << QString("EC2");
+      args << QString("total_instances");
+      
+      p->start(toQString(m_ruby), args);
+
+      return p;
+    }
+
     bool AWSProvider_Impl::parseServiceAvailableResults(const ProcessResults &t_results)
     {
       QJson::Parser parser;
@@ -1456,18 +1581,41 @@ namespace openstudio{
       return false;
     }
 
-    std::string AWSProvider_Impl::userAgreementText() const {
-      return m_awsSettings.userAgreementText();
+    double AWSProvider_Impl::parseCheckEstimatedChargesResults(const ProcessResults &t_results)
+    {
+      QJson::Parser parser;
+      bool ok = false;
+      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
+      if (ok) {
+        if (!map.keys().contains("error")) {
+          return map["estimated_charges"].toDouble();
+        } else {
+          logError(map["error"].toMap()["message"].toString().toStdString());
+        } 
+      } else {
+        logError("Error parsing checkEstimatedCharges JSON: " + toString(parser.errorString()));
+      }
+      
+      return false;
     }
 
-    bool AWSProvider_Impl::userAgreementSigned() const {
-      return m_awsSettings.userAgreementSigned();
+    unsigned AWSProvider_Impl::parseCheckTotalInstancesResults(const ProcessResults &t_results)
+    {
+      QJson::Parser parser;
+      bool ok = false;
+      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
+      if (ok) {
+        if (!map.keys().contains("error")) {
+          return map["total_instances"].toUInt();
+        } else {
+          logError(map["error"].toMap()["message"].toString().toStdString());
+        } 
+      } else {
+        logError("Error parsing checkTotalInstances JSON: " + toString(parser.errorString()));
+      }
+      
+      return false;
     }
-
-    void AWSProvider_Impl::signUserAgreement(bool agree) {
-      m_awsSettings.signUserAgreement(agree);
-    }
-
 
     void AWSProvider_Impl::onCheckInternetComplete(int, QProcess::ExitStatus)
     {
@@ -1550,6 +1698,18 @@ namespace openstudio{
     {
       m_lastTerminateCompleted = parseCheckTerminatedResults(handleProcessCompleted(m_checkTerminatedProcess));
       m_checkTerminatedProcess = 0;
+    }
+
+    void AWSProvider_Impl::onCheckEstimatedChargesComplete(int, QProcess::ExitStatus)
+    {
+      m_lastEstimatedCharges = parseCheckEstimatedChargesResults(handleProcessCompleted(m_checkEstimatedChargesProcess));
+      m_checkEstimatedChargesProcess = 0;
+    }
+
+    void AWSProvider_Impl::onCheckTotalInstancesComplete(int, QProcess::ExitStatus)
+    {
+      m_lastTotalInstances = parseCheckTotalInstancesResults(handleProcessCompleted(m_checkTotalInstancesProcess));
+      m_checkTotalInstancesProcess = 0;
     }
 
   } // detail
@@ -1802,20 +1962,7 @@ namespace openstudio{
   {
     OS_ASSERT(getImpl<detail::AWSProvider_Impl>());
   }
-
-  std::string AWSProvider::userAgreementText() const {
-    return getImpl<detail::AWSProvider_Impl>()->userAgreementText();
-  }
-
-  bool AWSProvider::userAgreementSigned() const {
-    return getImpl<detail::AWSProvider_Impl>()->userAgreementSigned();
-  }
-
-  void AWSProvider::signUserAgreement(bool agree) {
-    getImpl<detail::AWSProvider_Impl>()->signUserAgreement(agree);
-  }
   
-
   std::vector<std::string> AWSProvider::availableRegions() {
     std::vector<std::string> regions;
     regions.push_back("us-east-1");
@@ -1850,12 +1997,12 @@ namespace openstudio{
     return "c1.xlarge";
   }
 
-  double AWSProvider::estimatedCharges() const {
-    return getImpl<detail::AWSProvider_Impl>()->estimatedCharges();
+  double AWSProvider::estimatedCharges(int msec) {
+    return getImpl<detail::AWSProvider_Impl>()->estimatedCharges(msec);
   }
 
-  unsigned AWSProvider::totalInstances() const {
-    return getImpl<detail::AWSProvider_Impl>()->totalInstances();
+  unsigned AWSProvider::totalInstances(int msec) {
+    return getImpl<detail::AWSProvider_Impl>()->totalInstances(msec);
   }
 
 

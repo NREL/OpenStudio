@@ -44,6 +44,7 @@
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
+#include <model/AirTerminalSingleDuctConstantVolumeReheat.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
 #include <model/AirTerminalSingleDuctUncontrolled.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat.hpp>

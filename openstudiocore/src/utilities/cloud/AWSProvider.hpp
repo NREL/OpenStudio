@@ -46,7 +46,11 @@ namespace detail {
                 bool userAgreementSigned,
                 unsigned numWorkers,
                 bool terminationDelayEnabled,
-                unsigned terminationDelay);
+                unsigned terminationDelay/*,
+                std::string region,
+                std::string serverInstanceType,
+                std::string workerInstanceType*/);
+    // @ETH: This will need three more inputs
 
     //@}
     /** @name Destructors */
@@ -179,56 +183,29 @@ namespace detail {
     // returns the server instance ID
     std::string serverId() const;
 
-    // sets the server instance ID
-    void setServerId(const std::string& serverId);
-
     // returns the number of server processor cores
     unsigned numServerProcessors() const;
-
-    // sets the number of server processor cores
-    void setNumServerProcessors(const unsigned numServerProcessors);
 
     // returns the worker instance IDs
     std::vector<std::string> workerIds() const;
 
-    // add a worker instance ID
-    void addWorkerId(const std::string& workerId);
-
     // returns the number of processor cores per worker
     unsigned numWorkerProcessors() const;
-
-    // sets the number of processor cores per worker
-    void setNumWorkerProcessors(const unsigned numWorkerProcessors);
 
     // returns the key pair's private key
     std::string privateKey() const;
 
-    // sets the key pair's private key
-    void setPrivateKey(const std::string& privateKey);
-
     // returns the timestamp associated with the security group and key pair
     std::string timestamp() const;
     
-    // sets the timestamp
-    void setTimestamp(const std::string& timestamp);
-
     // returns the AWS region
     std::string region() const;
-
-    // sets the AWS region
-    void setRegion(const std::string& region);
 
     // returns the server instance type
     std::string serverInstanceType() const;
 
-    // sets the server instance type
-    void setServerInstanceType(const std::string& instanceType);
-
     // returns the worker instance type
     std::string workerInstanceType() const;
-
-    // sets the worker instance type
-    void setWorkerInstanceType(const std::string& instanceType);
 
     // returns the number of workers for this session
     unsigned numWorkers() const;
@@ -248,6 +225,34 @@ namespace detail {
     typedef detail::AWSSession_Impl ImplType;
 
     friend class CloudSession;
+    friend class detail::AWSProvider_Impl;
+
+    // sets the server instance ID
+    void setServerId(const std::string& serverId);
+
+    // sets the number of server processor cores
+    void setNumServerProcessors(const unsigned numServerProcessors);
+
+    // add a worker instance ID
+    void addWorkerId(const std::string& workerId);
+
+    // sets the number of processor cores per worker
+    void setNumWorkerProcessors(const unsigned numWorkerProcessors);
+
+    // sets the key pair's private key
+    void setPrivateKey(const std::string& privateKey);
+
+    // sets the timestamp
+    void setTimestamp(const std::string& timestamp);
+
+    // sets the AWS region
+    void setRegion(const std::string& region);
+
+    // sets the server instance type
+    void setServerInstanceType(const std::string& instanceType);
+
+    // sets the worker instance type
+    void setWorkerInstanceType(const std::string& instanceType);
 
    private:
 
@@ -277,12 +282,6 @@ namespace detail {
     /** @name Class members */
     //@{
 
-    std::string userAgreementText() const;
-
-    bool userAgreementSigned() const;
-
-    void signUserAgreement(bool agree);
-
     // return a list of available AWS regions
     static std::vector<std::string> availableRegions();
 
@@ -302,10 +301,10 @@ namespace detail {
     static std::string defaultWorkerInstanceType();
 
     // returns the EC2 estimated charges from CloudWatch in USD
-    double estimatedCharges() const;
+    double estimatedCharges(int msec=30000);
 
-    // returns the total number of instances running on EC2
-    unsigned totalInstances() const;
+    // returns the total number of instances running on EC2 in the current region
+    unsigned totalInstances(int msec=30000);
 
 
     //@}

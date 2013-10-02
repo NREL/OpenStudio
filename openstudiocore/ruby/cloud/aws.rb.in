@@ -37,18 +37,20 @@
 
 require 'aws'
 require 'json'
+require 'logger'
 require 'net/http'
 require 'net/scp'
 require 'net/ssh'
 require 'tempfile'
-require 'logger'
+require 'time'
 
 # Not sure how we want to deal with this, but in the tag, I would like to specify the right
 # version of openstudio so that in the AWS Management Console it is meaningful.
-OPENSTUDIO_VERSION='1.1.0'
+OPENSTUDIO_VERSION='${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}'
 
 def error(code, msg)
-  puts ({:error => {:code => code, :message => msg}}.to_json)
+  puts ({:error => {:code => code, :message => msg},
+         :arguments => ARGV[2..-1]}.to_json)
   exit(1)
 end
 
@@ -58,6 +60,18 @@ end
 
 if ARGV[0].empty? || ARGV[1].empty?
   error(401, 'Missing authentication arguments')
+end
+
+if ARGV[2].empty?
+  error(-1, 'Missing region argument')
+end
+
+if ARGV[3].empty?
+  error(-1, 'Missing service argument')
+end
+
+if ARGV[4].empty?
+  error(-1, 'Missing command argument')
 end
 
 AWS.config(
@@ -79,11 +93,11 @@ if ARGV.length == 6
   @params = JSON.parse(ARGV[5])
 end
 
-@server_image_id = 'ami-2f90c746'
+@server_image_id = 'ami-59cd9a30'
 if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
-  @worker_image_id = 'ami-d792c5be'
+  @worker_image_id = 'ami-f5cf989c'
 else
-  @worker_image_id = 'ami-9792c5fe'
+  @worker_image_id = 'ami-ddcf98b4'
 end
 
 def create_struct(instance, procs)
@@ -373,7 +387,7 @@ begin
              :private_key => @private_key,
              :server => {
                  :id => @server.id,
-                 :ip => @server.ip,
+                 :ip => 'http://' + @server.ip,
                  :dns => @server.dns,
                  :procs => @server.procs
              }}.to_json)
@@ -418,7 +432,7 @@ begin
 
 
       ips = "master|#{@server.ip}|#{@server.dns}|#{@server.procs}|ubuntu|ubuntu\n"
-      @workers.each { |worker| ips << "worker|#{worker.ip}|#{worker.dns}|#{worker.procs}|ubuntu|ubuntu\n" }
+      @workers.each { |worker| ips << "worker|#{worker.ip}|#{worker.dns}|#{worker.procs}|ubuntu|ubuntu|true\n" }
       file = Tempfile.new('ip_addresses')
       file.write(ips)
       file.close
@@ -446,7 +460,7 @@ begin
       @workers.each { |worker|
         worker_json.push({
                              :id => worker.id,
-                             :ip => worker.ip,
+                             :ip => 'http://' + worker.ip,
                              :dns => worker.dns,
                              :procs => worker.procs
                          })
@@ -509,9 +523,14 @@ begin
       puts ({:session_uptime => minutes}.to_json)
 
     when 'estimated_charges'
-      # fix this
-      resp = @aws.client.get_metric_statistics({:namespace=>'AWS/Billing', :metric_name=>'EstimatedCharges', :start_time=>'2013-09-01T23:59:59Z', :end_time=>'2013-09-24T23:59:59Z', :period=>1380, :statistics=>['Sum']})
-      puts ({:estimated_charges => 0}.to_json)
+      endTime = Time.now.utc
+      startTime = endTime - 86400
+      resp = @aws.client.get_metric_statistics({:dimensions=>[{:name=>'ServiceName',:value=>'AmazonEC2'},{:name=>'Currency',:value=>'USD'}], :metric_name=>'EstimatedCharges', :namespace=>'AWS/Billing', :start_time=>startTime.iso8601, :end_time=>endTime.iso8601, :period=>300, :statistics=>['Maximum']})
+      error(-1, 'No Billing Data') if resp.data[:datapoints].length == 0
+      datapoints = resp.data[:datapoints]
+      datapoints.sort! { |a,b| a[:timestamp] <=> b[:timestamp] }
+      puts ({:estimated_charges => datapoints[-1][:maximum],
+             :timestamp => datapoints[-1][:timestamp].to_i}.to_json)
 
     else
       error(-1, "Unknown command: #{ARGV[4]} (#{ARGV[3]})")

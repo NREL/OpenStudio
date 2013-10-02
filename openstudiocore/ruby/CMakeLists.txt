@@ -14,7 +14,7 @@ ENDIF()
 INCLUDE(GetPrerequisites)
 
 # find all source
-file(GLOB_RECURSE RUBY_SRC "openstudio/*.rb")
+file(GLOB_RECURSE RUBY_SRC "openstudio/*.rb" "cloud/*.template" "cloud/*.sh")
 
 # find all tests
 file(GLOB_RECURSE RUBY_TEST_SRC "openstudio/*_Test.rb")
@@ -57,6 +57,9 @@ FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/Win32API.so" DESTINATION "${CMAKE_CURRENT_B
 CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/ruby/openstudio_test.in" "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio_test.rb" )
 CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/ruby/openstudio/sketchup_plugin/Startup.in" "${CMAKE_CURRENT_BINARY_DIR}/install/SketchUp/Plugins/OpenStudio/Startup.rb" )
 FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/openstudio/sketchup_plugin/OpenStudio.rb" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/install/SketchUp/Plugins" )
+
+CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/ruby/cloud/aws.rb.in" "${CMAKE_CURRENT_BINARY_DIR}/aws.rb" )
+INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/aws.rb" DESTINATION "Ruby/cloud" )
 
 # install qt plugins and fixup for apple
 
