@@ -313,6 +313,9 @@ namespace detail {
 	    // to the current state
       void sendSignals();
 
+      /// sets this job (and children) as being externally managed
+      void makeExternallyManaged();
+
     protected:
       /// Called when the base path has changed
       virtual void basePathChanged() = 0;
@@ -438,6 +441,7 @@ namespace detail {
 
       /// Emitted when a Job's UUID has changed via a updateJob() call
       void uuidChanged(const openstudio::UUID &t_oldUUID, const openstudio::UUID &t_newUUID);
+
 
     private:
       REGISTER_LOGGER("openstudio.runmanager.Job_Impl");

@@ -504,6 +504,12 @@ namespace runmanager {
     return m_impl->sendSignals();
   }
 
+
+  void Job::makeExternallyManaged()
+  {
+    m_impl->makeExternallyManaged();
+  }
+
 }
 }
 

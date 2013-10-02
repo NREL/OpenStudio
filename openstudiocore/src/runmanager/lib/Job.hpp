@@ -363,6 +363,9 @@ namespace detail {
       /// \returns true if the job is flagged as externally managed
       bool externallyManaged() const;
 
+      /// sets this job (and children) as being externally managed
+      void makeExternallyManaged();
+
       /// \returns all output files relative to the rundir
       Files relativeOutputFiles() const;
 

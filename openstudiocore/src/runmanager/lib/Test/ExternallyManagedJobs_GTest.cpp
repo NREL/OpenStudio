@@ -45,9 +45,13 @@ using namespace openstudio::runmanager;
 
 TEST_F(RunManagerTestFixture, UpdateJobUUID)
 {
-  openstudio::runmanager::Job j = openstudio::runmanager::Workflow("NullJob").create();
-  openstudio::runmanager::Job j2 = openstudio::runmanager::Workflow("NullJob").create();
+  openstudio::runmanager::Job j = openstudio::runmanager::Workflow("Null").create();
+  openstudio::runmanager::Job j2 = openstudio::runmanager::Workflow("Null").create();
   openstudio::runmanager::Job j3 = openstudio::runmanager::Workflow("EnergyPlus").create();
+
+  j.makeExternallyManaged();
+  j2.makeExternallyManaged();
+  j3.makeExternallyManaged();
 
   openstudio::UUID juuid = j.uuid();
   openstudio::UUID j2uuid = j2.uuid();
@@ -70,9 +74,14 @@ TEST_F(RunManagerTestFixture, UpdateJobUUID)
 
 TEST_F(RunManagerTestFixture, UpdateJobUUIDWithTree)
 {
-  openstudio::runmanager::Job j = openstudio::runmanager::Workflow("NullJob->NullJob").create();
-  openstudio::runmanager::Job j2 = openstudio::runmanager::Workflow("NullJob->NullJob").create();
-  openstudio::runmanager::Job j3 = openstudio::runmanager::Workflow("NullJob->EnergyPlus").create();
+  openstudio::runmanager::Job j = openstudio::runmanager::Workflow("Null->Null").create();
+  openstudio::runmanager::Job j2 = openstudio::runmanager::Workflow("Null->Null").create();
+  openstudio::runmanager::Job j3 = openstudio::runmanager::Workflow("Null->EnergyPlus").create();
+
+  j.makeExternallyManaged();
+  j2.makeExternallyManaged();
+  j3.makeExternallyManaged();
+
 
   ASSERT_ANY_THROW(j.updateJob(j2, false)); // not allowed to update UUID normally
   ASSERT_NO_THROW(j.updateJob(j2, true)); // allowed with optional uuid flag
@@ -88,8 +97,11 @@ TEST_F(RunManagerTestFixture, UpdateJobUUIDWithTree)
 
 TEST_F(RunManagerTestFixture, UpdateJobUUIDViaRunManager)
 {
-  openstudio::runmanager::Job j = openstudio::runmanager::Workflow("NullJob->NullJob").create();
-  openstudio::runmanager::Job j2 = openstudio::runmanager::Workflow("NullJob->NullJob").create();
+  openstudio::runmanager::Job j = openstudio::runmanager::Workflow("Null->Null").create();
+  openstudio::runmanager::Job j2 = openstudio::runmanager::Workflow("Null->Null").create();
+
+  j.makeExternallyManaged();
+  j2.makeExternallyManaged();
 
   openstudio::runmanager::RunManager rm;
   
