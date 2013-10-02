@@ -303,7 +303,7 @@ namespace detail {
       void setBasePathRecursive(const openstudio::path &t_basePath);
 
       /// Update this job tree with the details from the other job tree
-      void updateJob(const boost::shared_ptr<Job_Impl> &t_other);
+      void updateJob(const boost::shared_ptr<Job_Impl> &t_other, bool t_allowUUIDUpdate);
 
 
       /// \returns true if this job is externallyManaged
@@ -312,6 +312,13 @@ namespace detail {
       // send job state and file output signals as if the job had gone from no state
 	    // to the current state
       void sendSignals();
+
+      /// sets this job (and children) as being externally managed
+      void makeExternallyManaged();
+
+      /// Sets the advancedstatus of the current job. Only allowed on externally managed jobs
+      void setStatus(const AdvancedStatus &t_status);
+
 
     protected:
       /// Called when the base path has changed
@@ -436,6 +443,10 @@ namespace detail {
       /// Emitted when a process has finished on a remote server
       void remoteProcessFinished(const openstudio::UUID &t_uuid, int t_remoteid, int t_remotetaskid);
 
+      /// Emitted when a Job's UUID has changed via a updateJob() call
+      void uuidChanged(const openstudio::UUID &t_oldUUID, const openstudio::UUID &t_newUUID);
+
+
     private:
       REGISTER_LOGGER("openstudio.runmanager.Job_Impl");
 
@@ -468,7 +479,7 @@ namespace detail {
 
       void standardClean();
 	  
-      void sendSignals(JobState oldState, JobState newState);
+      void sendSignals(JobState oldState, JobState newState, const openstudio::UUID &t_oldUUID, const openstudio::UUID &t_newUUID);
 
       std::vector<FileInfo> relativeOutputFilesInternal(const openstudio::runmanager::Files &t_outputFiles, const openstudio::path &t_outdir) const;
 

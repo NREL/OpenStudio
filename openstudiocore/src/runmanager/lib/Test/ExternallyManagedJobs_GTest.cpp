@@ -43,6 +43,113 @@
 using namespace openstudio;
 using namespace openstudio::runmanager;
 
+TEST_F(RunManagerTestFixture, UpdateJobStatus)
+{
+  openstudio::runmanager::Job j = openstudio::runmanager::Workflow("Null").create();
+  openstudio::runmanager::Job j2 = openstudio::runmanager::Workflow("Null").create();
+
+  j.makeExternallyManaged();
+
+  ASSERT_EQ(AdvancedStatus(AdvancedStatusEnum::Idle), j.status());
+  ASSERT_EQ(AdvancedStatus(AdvancedStatusEnum::Idle), j2.status());
+
+  ASSERT_ANY_THROW(j2.setStatus(AdvancedStatus(AdvancedStatusEnum::Queuing))); // not allowed to set status, not externally managed
+  ASSERT_EQ(AdvancedStatus(AdvancedStatusEnum::Idle), j2.status()); // and no change expected
+
+  ASSERT_NO_THROW(j.setStatus(AdvancedStatus(AdvancedStatusEnum::Queuing))); 
+  ASSERT_EQ(AdvancedStatus(AdvancedStatusEnum::Queuing), j.status());
+  
+  // And note that advanced messages are allowed too
+  ASSERT_NO_THROW(j.setStatus(AdvancedStatus(AdvancedStatusEnum::Queuing, "Waiting in remote queue"))); 
+  ASSERT_EQ(AdvancedStatus(AdvancedStatusEnum::Queuing), j.status().value());
+  ASSERT_EQ("Waiting in remote queue", j.status().description());
+
+}
+
+TEST_F(RunManagerTestFixture, UpdateJobUUID)
+{
+  openstudio::runmanager::Job j = openstudio::runmanager::Workflow("Null").create();
+  openstudio::runmanager::Job j2 = openstudio::runmanager::Workflow("Null").create();
+  openstudio::runmanager::Job j3 = openstudio::runmanager::Workflow("EnergyPlus").create();
+
+  j.makeExternallyManaged();
+  j2.makeExternallyManaged();
+  j3.makeExternallyManaged();
+
+  openstudio::UUID juuid = j.uuid();
+  openstudio::UUID j2uuid = j2.uuid();
+  openstudio::UUID j3uuid = j3.uuid();
+
+  ASSERT_NE(juuid, j2uuid);
+  ASSERT_NE(juuid, j3uuid);
+  ASSERT_NE(j2uuid, j3uuid);
+
+  ASSERT_ANY_THROW(j.updateJob(j2, false)); // not allowed to update UUID normally
+  ASSERT_NO_THROW(j.updateJob(j2, true)); // allowed with optional uuid flag
+
+  // now the UUID's should be equal
+  ASSERT_EQ(j.uuid(), j2.uuid());
+  
+
+  ASSERT_ANY_THROW(j.updateJob(j3, false)); // update from j3 is never allowed because...
+  ASSERT_ANY_THROW(j.updateJob(j3, true)); // the job types do not match
+}
+
+TEST_F(RunManagerTestFixture, UpdateJobUUIDWithTree)
+{
+  openstudio::runmanager::Job j = openstudio::runmanager::Workflow("Null->Null").create();
+  openstudio::runmanager::Job j2 = openstudio::runmanager::Workflow("Null->Null").create();
+  openstudio::runmanager::Job j3 = openstudio::runmanager::Workflow("Null->EnergyPlus").create();
+
+  j.makeExternallyManaged();
+  j2.makeExternallyManaged();
+  j3.makeExternallyManaged();
+
+
+  ASSERT_ANY_THROW(j.updateJob(j2, false)); // not allowed to update UUID normally
+  ASSERT_NO_THROW(j.updateJob(j2, true)); // allowed with optional uuid flag
+
+  // now the UUID's should be equal
+  ASSERT_EQ(j.uuid(), j2.uuid());
+ 
+  ASSERT_NE(j.uuid(), j3.uuid());
+  ASSERT_ANY_THROW(j.updateJob(j3, true)); // try to update, but should fail because of child mismatch
+  ASSERT_NE(j.uuid(), j3.uuid()); // make sure it didn't update the top level ID even with the child failure
+ 
+}
+
+TEST_F(RunManagerTestFixture, UpdateJobUUIDViaRunManager)
+{
+  openstudio::runmanager::Job j = openstudio::runmanager::Workflow("Null->Null").create();
+  openstudio::runmanager::Job j2 = openstudio::runmanager::Workflow("Null->Null").create();
+
+  j.makeExternallyManaged();
+  j2.makeExternallyManaged();
+
+  openstudio::runmanager::RunManager rm;
+  
+  ASSERT_ANY_THROW(rm.getJob(j.uuid()));  
+  ASSERT_ANY_THROW(rm.getJob(j2.uuid()));  
+
+  // note this j2 is not moved into the runmanager, "updateJob" creates a copy of the job tree
+  // and adds the copy
+  rm.updateJob(j2); // essentially add j2, because it didn't exist yet, and make it externally managed
+
+  ASSERT_NE(j.uuid(), j2.uuid());
+  ASSERT_NO_THROW(rm.getJob(j2.uuid()));
+
+  rm.updateJob(j2.uuid(), j); // Update the job with J2's uuid to have j's uuid
+
+  ASSERT_NO_THROW(rm.getJob(j.uuid())); // now this will with no longer throw
+
+  // and now this one *will* throw
+  //
+  ASSERT_ANY_THROW(rm.getJob(j2.uuid()));
+
+
+}
+
+
 TEST_F(RunManagerTestFixture, ExternalJob)
 {
   openstudio::path basedir = openstudio::tempDir() / openstudio::toPath("externaljob");
