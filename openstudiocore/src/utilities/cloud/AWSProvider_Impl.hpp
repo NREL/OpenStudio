@@ -48,11 +48,10 @@ namespace detail{
                      bool userAgreementSigned,
                      unsigned numWorkers,
                      bool terminationDelayEnabled,
-                     unsigned terminationDelay/*,
+                     unsigned terminationDelay,
                      std::string region,
                      std::string serverInstanceType,
-                     std::string workerInstanceType*/);
-    // @ETH: This will need three more inputs
+                     std::string workerInstanceType);
 
     //@}
     /** @name Destructors */
