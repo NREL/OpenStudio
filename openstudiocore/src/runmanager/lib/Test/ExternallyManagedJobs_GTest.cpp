@@ -155,6 +155,7 @@ TEST_F(RunManagerTestFixture, ExternalJob)
   openstudio::path basedir = openstudio::tempDir() / openstudio::toPath("externaljob");
   openstudio::path rmpath1 = basedir / openstudio::toPath("rm1.db");
   openstudio::path rmpath2 = basedir / openstudio::toPath("rm2.db");
+  openstudio::path rmpath3 = basedir / openstudio::toPath("rm3.db");
 
   boost::filesystem::create_directories(basedir);
 
@@ -219,6 +220,52 @@ TEST_F(RunManagerTestFixture, ExternalJob)
     EXPECT_TRUE(updated.lastRun());
     FileInfo fi2 = updated.treeAllFiles().getLastByFilename("eplusout.sql");
     EXPECT_EQ(basedir / openstudio::toPath("copied") / openstudio::toPath("5-EnergyPlus-0/eplusout.sql"), fi2.fullPath);
+    EXPECT_TRUE(fi2.exists);
+    boost::filesystem::exists(fi2.fullPath);
+  }
+
+  {
+    openstudio::removeDirectory(basedir / openstudio::toPath("copied2"));
+    openstudio::copyDirectory(basedir / openstudio::toPath("jobrun"), basedir / openstudio::toPath("copied2"));
+    openstudio::runmanager::RunManager rnew(rmpath3, true, true, false);
+
+    // update with initial job having compatible structure but different uuids
+    openstudio::runmanager::Job externalJob = orig.create(openstudio::path());
+    externalJob.makeExternallyManaged();
+    externalJob.setStatus(AdvancedStatusEnum(AdvancedStatusEnum::Queuing));
+    rnew.updateJob(externalJob);
+    EXPECT_FALSE(externalJob.uuid() == jorig2.uuid());
+    EXPECT_FALSE(externalJob.lastRun());
+
+    // update to waiting in queue
+    externalJob.setStatus(AdvancedStatusEnum(AdvancedStatusEnum::WaitingInQueue));
+
+    // since we are still operating on the original, not the copy that RunManager created for it
+    // (something special that only updateJob() does, not enqueue(), it's documented in the function
+    // call), we need to update with the new status.
+    rnew.updateJob(externalJob);
+    EXPECT_FALSE(externalJob.uuid() == jorig2.uuid());
+    EXPECT_FALSE(externalJob.lastRun());
+
+    // get update from server with real uuids
+    std::string json = openstudio::runmanager::detail::JSON::toJSON(jorig2);
+    openstudio::runmanager::Job externalJob2 = openstudio::runmanager::detail::JSON::toJob(json, true);
+    rnew.updateJob(externalJob.uuid(), externalJob2);
+    EXPECT_FALSE(externalJob.uuid() == jorig2.uuid());
+    EXPECT_TRUE(externalJob2.uuid() == jorig2.uuid());
+    EXPECT_TRUE(externalJob2.lastRun());
+
+    // download detailed results
+    rnew.updateJob(externalJob2, basedir / openstudio::toPath("copied2"));
+    
+
+    // we now need to get the job that runmanager has in it, not the copies we have locally,
+    // remember, runmanager, on an "updateJob" call copies the job if it doesn't already
+    // exist, it does not take ownership of the job you pass in
+    Job externalJob2FromRM = rnew.getJob(externalJob2.uuid());
+    EXPECT_TRUE(externalJob2FromRM.lastRun());
+    FileInfo fi2 = externalJob2FromRM.treeAllFiles().getLastByFilename("eplusout.sql");
+    EXPECT_EQ(basedir / openstudio::toPath("copied2") / openstudio::toPath("5-EnergyPlus-0/eplusout.sql"), fi2.fullPath);
     EXPECT_TRUE(fi2.exists);
     boost::filesystem::exists(fi2.fullPath);
   }

@@ -456,23 +456,36 @@ namespace detail {
     if (loadResult.analysisObject) {
       if (OptionalDataPoint loaded = loadResult.analysisObject->optionalCast<DataPoint>()) {
         if (loaded->uuid() == uuid()) {
-          // generally require the variableValues to be the same, the loaded point to be complete
-          if ((variableValues() != loaded->variableValues()) || (!loaded->complete())) {
-            LOG(Warn,"Cannot update DataPoint with a JSON version that is not complete or has different variable values.");
+          // require the variableValues to be the same
+          if ((variableValues() != loaded->variableValues())) {
+            LOG(Warn,"Cannot update DataPoint with a JSON version that has different variable values.");
             return false;
           }
           m_complete = loaded->complete();
-          OS_ASSERT(m_complete);
           m_failed = loaded->failed();
           m_responseValues = loaded->responseValues();
+
           // do not pull file references over since they are not generally available for loading
           // do pull job data over because it contains errors and warnings
-          m_topLevelJob = loaded->topLevelJob();
+
+          boost::optional<runmanager::Job> loadedTopLevelJob = loaded->topLevelJob();
+          OS_ASSERT(loadedTopLevelJob);
           if (runManager) {
-            // HERE -- job not in runManager yet, directory().empty(), no local copy of files yet
-            runManager->updateJob(*m_topLevelJob);
+            if (m_topLevelJob){
+              // HERE -- job is in runManager
+              runmanager::Job tmpJob = *loadedTopLevelJob;
+              runManager->updateJob(m_topLevelJob->uuid(), tmpJob);
+              m_topLevelJob = tmpJob;
+            }else{
+              // HERE -- job not in runManager yet, directory().empty(), no local copy of files yet
+              runmanager::Job tmpJob = *loadedTopLevelJob;
+              runManager->updateJob(tmpJob);
+              m_topLevelJob = tmpJob;
+            }
+            LOG(Info, "Datapoint '" << toString(this->uuid()) << "' topLevelJob = '" << toString(m_topLevelJob->uuid()) << "'");
           }
-          OS_ASSERT(m_topLevelJob);
+          
+
           m_tags = loaded->tags();
           m_outputAttributes = loaded->outputAttributes();
           onChange(AnalysisObject_Impl::Benign);
@@ -514,7 +527,9 @@ namespace detail {
     OS_ASSERT(m_topLevelJob);
     if (runManager) {
       // files are now in directory(), need to update paths
-      runManager->updateJob(*m_topLevelJob, directory());
+      runmanager::Job tmpJob = *m_topLevelJob;
+      runManager->updateJob(tmpJob, directory());
+      m_topLevelJob = tmpJob;
     }
 
     // get file references for
