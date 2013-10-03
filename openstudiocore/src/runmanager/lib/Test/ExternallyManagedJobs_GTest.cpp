@@ -155,6 +155,7 @@ TEST_F(RunManagerTestFixture, ExternalJob)
   openstudio::path basedir = openstudio::tempDir() / openstudio::toPath("externaljob");
   openstudio::path rmpath1 = basedir / openstudio::toPath("rm1.db");
   openstudio::path rmpath2 = basedir / openstudio::toPath("rm2.db");
+  openstudio::path rmpath3 = basedir / openstudio::toPath("rm3.db");
 
   boost::filesystem::create_directories(basedir);
 
@@ -226,7 +227,7 @@ TEST_F(RunManagerTestFixture, ExternalJob)
   {
     openstudio::removeDirectory(basedir / openstudio::toPath("copied2"));
     openstudio::copyDirectory(basedir / openstudio::toPath("jobrun"), basedir / openstudio::toPath("copied2"));
-    openstudio::runmanager::RunManager rnew(rmpath2, false, false, false);
+    openstudio::runmanager::RunManager rnew(rmpath3, true, true, false);
 
     // update with initial job having compatible structure but different uuids
     openstudio::runmanager::Job externalJob = orig.create(openstudio::path());
