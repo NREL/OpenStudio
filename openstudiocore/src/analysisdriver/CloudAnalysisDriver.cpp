@@ -25,12 +25,18 @@
 #include <project/DataPointRecord_Impl.hpp>
 
 #include <analysis/Analysis.hpp>
+#include <analysis/Problem.hpp>
 
 #include <runmanager/lib/RunManager.hpp>
+#include <runmanager/lib/Job.hpp>
+#include <runmanager/lib/Workflow.hpp>
+#include <runmanager/lib/AdvancedStatus.hpp>
+#include <runmanager/lib/JSON.hpp>
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/System.hpp>
+#include <utilities/idf/URLSearchPath.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -653,7 +659,16 @@ namespace detail {
 
     if (success) {
       success = m_requestRun->lastPostDataPointJSONSuccess();
-      if (!success) {
+      if (success) {
+
+        OS_ASSERT(!m_waitingQueue.empty());
+        DataPoint lastQueued = m_waitingQueue.back();
+        boost::optional<Job> topLevelJob = lastQueued.topLevelJob();
+        OS_ASSERT(topLevelJob);
+        topLevelJob->setStatus(AdvancedStatusEnum(AdvancedStatusEnum::WaitingInQueue));
+        project().save();
+
+      }else{
         logError("Run request failed because a DataPoint JSON did not post successfully.");
       }
     }
@@ -1110,13 +1125,43 @@ namespace detail {
     }
     m_postQueue.pop_front();
 
-    // DLM: TODO create job, serialize to json, deserialize, set advanced status to Queuing
+    // get json before we add the dummy job
+    std::string toQueueJson = toQueue.toJSON(DataPointSerializationOptions(project().projectDir()));
+    bool result = m_requestRun->startPostDataPointJSON(project().analysis().uuid(), toQueueJson);
 
-    m_waitingQueue.push_back(toQueue);
-    bool result = m_requestRun->startPostDataPointJSON(
-          project().analysis().uuid(),
-          toQueue.toJSON(DataPointSerializationOptions(project().projectDir())));
-    emit dataPointQueued(project().analysis().uuid(),toQueue.uuid());
+    // DLM: what to do if result is false?
+
+    if (result){
+
+      m_waitingQueue.push_back(toQueue);
+
+      // here we are going to create a dummy job to attach to the datapoint for saving job state
+      runmanager::Workflow workflow = project().analysis().problem().createWorkflow(toQueue,openstudio::path());
+      runmanager::Job job = workflow.create(openstudio::path(),
+                                            openstudio::path(),
+                                            openstudio::path(),
+                                            std::vector<URLSearchPath>());
+      runmanager::JobFactory::optimizeJobTree(job);
+      
+      // can only set status on externally managed jobs
+      job.makeExternallyManaged();
+      job.setStatus(AdvancedStatusEnum(AdvancedStatusEnum::Queuing));
+
+      // update job in database
+      project().runManager().updateJob(job);
+
+      // attach externalJob to datapoint
+      project().analysis().setDataPointRunInformation(toQueue, job, std::vector<openstudio::path>());
+      
+      // make sure things are good
+      boost::optional<Job> topLevelJob = toQueue.topLevelJob();
+      OS_ASSERT(topLevelJob);
+      OS_ASSERT(topLevelJob->externallyManaged());
+      project().save();
+
+      emit dataPointQueued(project().analysis().uuid(),toQueue.uuid());
+    }
+
     return result;
   }
 

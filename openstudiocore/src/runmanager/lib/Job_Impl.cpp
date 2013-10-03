@@ -1756,7 +1756,7 @@ namespace detail {
 
       if (myChildrenIds != otherChildrenIds)
       {
-        throw std::runtime_error("Job children do not match, unable to updateJob");
+        throw std::runtime_error("Job children UUIDs do not match, unable to updateJob");
       }
 
     } else {
@@ -1815,19 +1815,27 @@ namespace detail {
     l.unlock();
 
 
-    // update children first, to make sure they can be updated
-    for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr = myChildren.begin();
-         itr != myChildren.end();
-         ++itr)
+    if (t_allowUUIDUpdate)
     {
-      for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr2 = otherChildren.begin();
-           itr2 != otherChildren.end();
-           ++itr2)
+      if (myChildren.size() == 1)
       {
-        if ((*itr)->uuid() == (*itr2)->uuid())
+        myChildren[0]->updateJob(otherChildren[0], true);
+      }
+    } else {
+      // update children first, to make sure they can be updated
+      for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr = myChildren.begin();
+          itr != myChildren.end();
+          ++itr)
+      {
+        for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr2 = otherChildren.begin();
+            itr2 != otherChildren.end();
+            ++itr2)
         {
-          (*itr)->updateJob(*itr2, t_allowUUIDUpdate);
-          break;
+          if ((*itr)->uuid() == (*itr2)->uuid())
+          {
+            (*itr)->updateJob(*itr2, t_allowUUIDUpdate);
+            break;
+          }
         }
       }
     }
