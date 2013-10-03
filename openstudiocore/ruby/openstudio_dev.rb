@@ -69,6 +69,7 @@ require 'openstudioanalysis'
 require 'openstudiolib'
 require 'openstudioplugin'
 require 'openstudioosversion'
+require 'openstudioisomodel'
 
 # optional extensions
 if ($OpenStudio_SimXML)
