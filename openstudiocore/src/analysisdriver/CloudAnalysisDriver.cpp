@@ -660,7 +660,7 @@ namespace detail {
     if (success) {
       success = m_requestRun->lastPostDataPointJSONSuccess();
       if (success) {
-
+/* Jason look here
         OS_ASSERT(!m_waitingQueue.empty());
         DataPoint lastQueued = m_waitingQueue.back();
         boost::optional<Job> topLevelJob = lastQueued.topLevelJob();
@@ -668,6 +668,7 @@ namespace detail {
         topLevelJob->setStatus(AdvancedStatusEnum(AdvancedStatusEnum::WaitingInQueue));
         // no need to call updateJob because we have the same job that is in the database
         project().save();
+*/
       }else{
         logError("Run request failed because a DataPoint JSON did not post successfully.");
       }
@@ -1135,6 +1136,7 @@ namespace detail {
 
       m_waitingQueue.push_back(toQueue);
 
+/* Jason look here:
       // here we are going to create a dummy job to attach to the datapoint for saving job state
       runmanager::Workflow workflow = project().analysis().problem().createWorkflow(toQueue,openstudio::path());
       runmanager::Job job = workflow.create(openstudio::path(),
@@ -1147,19 +1149,29 @@ namespace detail {
       job.makeExternallyManaged();
       job.setStatus(AdvancedStatusEnum(AdvancedStatusEnum::Queuing));
 
-      // update job in database
-      project().runManager().updateJob(job);
-
-      // get job out of database, we want to attach to real job
-      job = project().runManager().getJob(job.uuid());
+      // add job to database
+      project().runManager().enqueue(job, true);
 
       // attach externalJob to datapoint
-      project().analysis().setDataPointRunInformation(toQueue, job, std::vector<openstudio::path>());
-      
+      bool test = project().analysis().setDataPointRunInformation(toQueue, job, std::vector<openstudio::path>());
+      OS_ASSERT(test);
+
       // make sure things are good
       boost::optional<Job> topLevelJob = toQueue.topLevelJob();
       OS_ASSERT(topLevelJob);
+      OS_ASSERT(topLevelJob->uuid() == job.uuid());
       OS_ASSERT(topLevelJob->externallyManaged());
+      try{
+        project().runManager().getJob(topLevelJob->uuid());
+      }catch (const std::out_of_range &) {
+        std::cout << "UUID is " << toString(job.uuid()) << std::endl;
+        std::cout << "DB has " << std::endl;
+        BOOST_FOREACH(runmanager::Job j, project().runManager().getJobs()){
+          std::cout << "  " << toString(j.uuid()) << std::endl;
+        }
+        OS_ASSERT(false);
+      }
+*/
       project().save();
 
       emit dataPointQueued(project().analysis().uuid(),toQueue.uuid());
