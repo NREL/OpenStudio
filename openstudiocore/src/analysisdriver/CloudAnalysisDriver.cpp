@@ -660,7 +660,7 @@ namespace detail {
     if (success) {
       success = m_requestRun->lastPostDataPointJSONSuccess();
       if (success) {
-/* Jason look here
+
         OS_ASSERT(!m_waitingQueue.empty());
         DataPoint lastQueued = m_waitingQueue.back();
         boost::optional<Job> topLevelJob = lastQueued.topLevelJob();
@@ -668,7 +668,7 @@ namespace detail {
         topLevelJob->setStatus(AdvancedStatusEnum(AdvancedStatusEnum::WaitingInQueue));
         // no need to call updateJob because we have the same job that is in the database
         project().save();
-*/
+
       }else{
         logError("Run request failed because a DataPoint JSON did not post successfully.");
       }
@@ -1136,9 +1136,14 @@ namespace detail {
 
       m_waitingQueue.push_back(toQueue);
 
-/* Jason look here:
       // here we are going to create a dummy job to attach to the datapoint for saving job state
       runmanager::Workflow workflow = project().analysis().problem().createWorkflow(toQueue,openstudio::path());
+
+      // DLM: need to make this workflow's hash appear unique to run manager or it will not enqueue it
+      JobParams dataPointUUID;
+      dataPointUUID.append("dataPointUUID", openstudio::toString(toQueue.uuid()));
+      workflow.add(dataPointUUID);
+
       runmanager::Job job = workflow.create(openstudio::path(),
                                             openstudio::path(),
                                             openstudio::path(),
@@ -1171,7 +1176,7 @@ namespace detail {
         }
         OS_ASSERT(false);
       }
-*/
+
       project().save();
 
       emit dataPointQueued(project().analysis().uuid(),toQueue.uuid());
