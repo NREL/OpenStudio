@@ -83,29 +83,33 @@ CloudProvider startCloud()
     provider->waitForServer();
   }
 
+  // DLM: quit if server fails?
+  
   if( provider->requestStartWorkers() )
   {
     provider->waitForWorkers();
   }
 
+  // DLM: quit if workers fail?
+
   boost::optional<Url> serverUrl = provider->session().serverUrl();
+ 
+  if(serverUrl){
 
-  // DLM: should probably handle the case where this fails?
-  OS_ASSERT(serverUrl);
-
-  for(int i = 0; i < 15; i++)
-  {
-    OSServer server(serverUrl.get());
-
-    if( server.available() )
+    for(int i = 0; i < 15; i++)
     {
-      break;
-    }
-    else
-    {
-      System::msleep(3000);
-    }
-  } 
+      OSServer server(serverUrl.get());
+
+      if( server.available() )
+      {
+        break;
+      }
+      else
+      {
+        System::msleep(3000);
+      }
+    } 
+  }
 
   return provider.get();
 }
