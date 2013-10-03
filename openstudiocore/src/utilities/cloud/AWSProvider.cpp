@@ -67,10 +67,10 @@ namespace openstudio{
                                        bool userAgreementSigned,
                                        unsigned numWorkers,
                                        bool terminationDelayEnabled,
-                                       unsigned terminationDelay/*,
+                                       unsigned terminationDelay,
                                        std::string region,
                                        std::string serverInstanceType,
-                                       std::string workerInstanceType*/)
+                                       std::string workerInstanceType)
       : CloudSettings_Impl(uuid,versionUUID),
         m_validAccessKey(false),
         m_validSecretKey(false)
@@ -80,10 +80,9 @@ namespace openstudio{
       setNumWorkers(numWorkers);
       setTerminationDelayEnabled(terminationDelayEnabled);
       setTerminationDelay(terminationDelay);
-      // todo
-      //setRegion(region);
-      //setServerInstanceType(serverInstanceType);
-      //setWorkerInstanceType(workerInstanceType);
+      setRegion(region);
+      setServerInstanceType(serverInstanceType);
+      setWorkerInstanceType(workerInstanceType);
     }
 
     std::string AWSSettings_Impl::cloudProviderType() const {
@@ -1726,14 +1725,20 @@ namespace openstudio{
                            bool userAgreementSigned,
                            unsigned numWorkers,
                            bool terminationDelayEnabled,
-                           unsigned terminationDelay)
+                           unsigned terminationDelay,
+                           std::string region,
+                           std::string serverInstanceType,
+                           std::string workerInstanceType)
     : CloudSettings(boost::shared_ptr<detail::AWSSettings_Impl>(
                       new detail::AWSSettings_Impl(uuid,
                                                    versionUUID,
                                                    userAgreementSigned,
                                                    numWorkers,
                                                    terminationDelayEnabled,
-                                                   terminationDelay)))
+                                                   terminationDelay,
+                                                   region,
+                                                   serverInstanceType,
+                                                   workerInstanceType)))
   {
     OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
   }
