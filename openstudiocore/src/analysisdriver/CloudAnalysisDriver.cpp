@@ -666,8 +666,8 @@ namespace detail {
         boost::optional<Job> topLevelJob = lastQueued.topLevelJob();
         OS_ASSERT(topLevelJob);
         topLevelJob->setStatus(AdvancedStatusEnum(AdvancedStatusEnum::WaitingInQueue));
+        // no need to call updateJob because we have the same job that is in the database
         project().save();
-
       }else{
         logError("Run request failed because a DataPoint JSON did not post successfully.");
       }
@@ -1149,6 +1149,9 @@ namespace detail {
 
       // update job in database
       project().runManager().updateJob(job);
+
+      // get job out of database, we want to attach to real job
+      job = project().runManager().getJob(job.uuid());
 
       // attach externalJob to datapoint
       project().analysis().setDataPointRunInformation(toQueue, job, std::vector<openstudio::path>());
