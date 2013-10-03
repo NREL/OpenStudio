@@ -1134,14 +1134,14 @@ void PlrOrfPrivate::readDetails(Reader &input)
     u_D = input.read<int>(FILELINE);
 }
 
-PlrLeakPrivate::PlrLeakPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX coef,RX pres,RX area1,RX area2,RX area3,int u_A1,int u_A2,int u_A3,int u_dP):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),lam(lam),turb(turb),expt(expt),coef(coef),pres(pres),area1(area1),area2(area2),area3(area3),u_A1(u_A1),u_A2(u_A2),u_A3(u_A3),u_dP(u_dP)
+PlrLeakPrivate::PlrLeakPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX coef,RX pres,RX area1,RX area2,RX area3,int u_A1,int u_A2,int u_A3,int u_dP):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),coef(coef),pres(pres),area1(area1),area2(area2),area3(area3),u_A1(u_A1),u_A2(u_A2),u_A3(u_A3),u_dP(u_dP)
 {}
 
 void PlrLeakPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     lam = input.readNumber<RX>(FILELINE);
@@ -1158,10 +1158,10 @@ void PlrLeakPrivate::read(Reader &input)
     u_dP = input.read<int>(FILELINE);
 }
 
-STRING PlrLeakPrivate::write()
+STRING PlrLeakPrivate::write(STRING datatype)
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + datatype + ' ' + name + '\n';
     string += desc + '\n';
     string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(coef) + ' ' + TO_STRING(pres) + ' ' + TO_STRING(area1) + ' ' + TO_STRING(area2) + ' ' + TO_STRING(area3) + ' ' + TO_STRING(u_A1) + ' ' + TO_STRING(u_A2) + ' ' + TO_STRING(u_A3) + ' ' + TO_STRING(u_dP) + '\n';
     return string;
@@ -1183,14 +1183,14 @@ void PlrLeakPrivate::readDetails(Reader &input)
     u_dP = input.read<int>(FILELINE);
 }
 
-PlrConnPrivate::PlrConnPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX area,RX coef,int u_A):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),lam(lam),turb(turb),expt(expt),area(area),coef(coef),u_A(u_A)
+PlrConnPrivate::PlrConnPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX area,RX coef,int u_A):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),area(area),coef(coef),u_A(u_A)
 {}
 
 void PlrConnPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     lam = input.readNumber<RX>(FILELINE);
@@ -1204,7 +1204,7 @@ void PlrConnPrivate::read(Reader &input)
 STRING PlrConnPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_conn " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(area) + ' ' + TO_STRING(coef) + ' ' + TO_STRING(u_A) + '\n';
     return string;
@@ -1220,14 +1220,14 @@ void PlrConnPrivate::readDetails(Reader &input)
     u_A = input.read<int>(FILELINE);
 }
 
-PlrQcnPrivate::PlrQcnPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),lam(lam),turb(turb),expt(expt)
+PlrQcnPrivate::PlrQcnPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt)
 {}
 
 void PlrQcnPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     lam = input.readNumber<RX>(FILELINE);
@@ -1238,7 +1238,7 @@ void PlrQcnPrivate::read(Reader &input)
 STRING PlrQcnPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_qcn " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + '\n';
     return string;
@@ -1251,14 +1251,14 @@ void PlrQcnPrivate::readDetails(Reader &input)
     expt = input.readNumber<RX>(FILELINE);
 }
 
-PlrFcnPrivate::PlrFcnPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),lam(lam),turb(turb),expt(expt)
+PlrFcnPrivate::PlrFcnPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt)
 {}
 
 void PlrFcnPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     lam = input.readNumber<RX>(FILELINE);
@@ -1269,7 +1269,7 @@ void PlrFcnPrivate::read(Reader &input)
 STRING PlrFcnPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_fcn " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + '\n';
     return string;
@@ -1321,14 +1321,14 @@ void PlrTest1Private::readDetails(Reader &input)
     u_F = input.read<int>(FILELINE);
 }
 
-PlrTest2Private::PlrTest2Private(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dP1(dP1),F1(F1),dP2(dP2),F2(F2),u_P1(u_P1),u_F1(u_F1),u_P2(u_P2),u_F2(u_F2)
+PlrTest2Private::PlrTest2Private(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dP1(dP1),F1(F1),dP2(dP2),F2(F2),u_P1(u_P1),u_F1(u_F1),u_P2(u_P2),u_F2(u_F2)
 {}
 
 void PlrTest2Private::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     lam = input.readNumber<RX>(FILELINE);
@@ -1347,7 +1347,7 @@ void PlrTest2Private::read(Reader &input)
 STRING PlrTest2Private::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_test2 " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(dP1) + ' ' + TO_STRING(F1) + ' ' + TO_STRING(dP2) + ' ' + TO_STRING(F2) + ' ' + TO_STRING(u_P1) + ' ' + TO_STRING(u_F1) + ' ' + TO_STRING(u_P2) + ' ' + TO_STRING(u_F2) + '\n';
     return string;
@@ -1368,14 +1368,14 @@ void PlrTest2Private::readDetails(Reader &input)
     u_F2 = input.read<int>(FILELINE);
 }
 
-PlrCrackPrivate::PlrCrackPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX length,RX width,int u_L,int u_W):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),lam(lam),turb(turb),expt(expt),length(length),width(width),u_L(u_L),u_W(u_W)
+PlrCrackPrivate::PlrCrackPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX length,RX width,int u_L,int u_W):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),length(length),width(width),u_L(u_L),u_W(u_W)
 {}
 
 void PlrCrackPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     lam = input.readNumber<RX>(FILELINE);
@@ -1390,7 +1390,7 @@ void PlrCrackPrivate::read(Reader &input)
 STRING PlrCrackPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_crack " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(length) + ' ' + TO_STRING(width) + ' ' + TO_STRING(u_L) + ' ' + TO_STRING(u_W) + '\n';
     return string;
@@ -1407,14 +1407,14 @@ void PlrCrackPrivate::readDetails(Reader &input)
     u_W = input.read<int>(FILELINE);
 }
 
-PlrStairPrivate::PlrStairPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX Ht,RX Area,RX peo,int tread,int u_A,int u_D):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),lam(lam),turb(turb),expt(expt),Ht(Ht),Area(Area),peo(peo),tread(tread),u_A(u_A),u_D(u_D)
+PlrStairPrivate::PlrStairPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX Ht,RX Area,RX peo,int tread,int u_A,int u_D):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),Ht(Ht),Area(Area),peo(peo),tread(tread),u_A(u_A),u_D(u_D)
 {}
 
 void PlrStairPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     lam = input.readNumber<RX>(FILELINE);
@@ -1431,7 +1431,7 @@ void PlrStairPrivate::read(Reader &input)
 STRING PlrStairPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_stair " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(Ht) + ' ' + TO_STRING(Area) + ' ' + TO_STRING(peo) + ' ' + TO_STRING(tread) + ' ' + TO_STRING(u_A) + ' ' + TO_STRING(u_D) + '\n';
     return string;
@@ -1450,14 +1450,14 @@ void PlrStairPrivate::readDetails(Reader &input)
     u_D = input.read<int>(FILELINE);
 }
 
-PlrShaftPrivate::PlrShaftPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX Ht,RX area,RX perim,RX rough,int u_A,int u_D,int u_P,int u_R):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),lam(lam),turb(turb),expt(expt),Ht(Ht),area(area),perim(perim),rough(rough),u_A(u_A),u_D(u_D),u_P(u_P),u_R(u_R)
+PlrShaftPrivate::PlrShaftPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX Ht,RX area,RX perim,RX rough,int u_A,int u_D,int u_P,int u_R):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),Ht(Ht),area(area),perim(perim),rough(rough),u_A(u_A),u_D(u_D),u_P(u_P),u_R(u_R)
 {}
 
 void PlrShaftPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     lam = input.readNumber<RX>(FILELINE);
@@ -1476,7 +1476,7 @@ void PlrShaftPrivate::read(Reader &input)
 STRING PlrShaftPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_shaft " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(Ht) + ' ' + TO_STRING(area) + ' ' + TO_STRING(perim) + ' ' + TO_STRING(rough) + ' ' + TO_STRING(u_A) + ' ' + TO_STRING(u_D) + ' ' + TO_STRING(u_P) + ' ' + TO_STRING(u_R) + '\n';
     return string;
@@ -1497,14 +1497,14 @@ void PlrShaftPrivate::readDetails(Reader &input)
     u_R = input.read<int>(FILELINE);
 }
 
-PlrBdqPrivate::PlrBdqPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX Cp,RX xp,RX Cn,RX xn):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),lam(lam),Cp(Cp),xp(xp),Cn(Cn),xn(xn)
+PlrBdqPrivate::PlrBdqPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX Cp,RX xp,RX Cn,RX xn):nr(nr),icon(icon),name(name),desc(desc),lam(lam),Cp(Cp),xp(xp),Cn(Cn),xn(xn)
 {}
 
 void PlrBdqPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     lam = input.readNumber<RX>(FILELINE);
@@ -1517,7 +1517,7 @@ void PlrBdqPrivate::read(Reader &input)
 STRING PlrBdqPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_bdq " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(lam) + ' ' + TO_STRING(Cp) + ' ' + TO_STRING(xp) + ' ' + TO_STRING(Cn) + ' ' + TO_STRING(xn) + '\n';
     return string;
@@ -1532,14 +1532,14 @@ void PlrBdqPrivate::readDetails(Reader &input)
     xn = input.readNumber<RX>(FILELINE);
 }
 
-PlrBdfPrivate::PlrBdfPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX Cp,RX xp,RX Cn,RX xn):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),lam(lam),Cp(Cp),xp(xp),Cn(Cn),xn(xn)
+PlrBdfPrivate::PlrBdfPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX Cp,RX xp,RX Cn,RX xn):nr(nr),icon(icon),name(name),desc(desc),lam(lam),Cp(Cp),xp(xp),Cn(Cn),xn(xn)
 {}
 
 void PlrBdfPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     lam = input.readNumber<RX>(FILELINE);
@@ -1552,7 +1552,7 @@ void PlrBdfPrivate::read(Reader &input)
 STRING PlrBdfPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_bdf " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(lam) + ' ' + TO_STRING(Cp) + ' ' + TO_STRING(xp) + ' ' + TO_STRING(Cn) + ' ' + TO_STRING(xn) + '\n';
     return string;
@@ -1567,14 +1567,14 @@ void PlrBdfPrivate::readDetails(Reader &input)
     xn = input.readNumber<RX>(FILELINE);
 }
 
-QfrQabPrivate::QfrQabPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,RX a,RX b):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),a(a),b(b)
+QfrQabPrivate::QfrQabPrivate(int nr,int icon,STRING name,STRING desc,RX a,RX b):nr(nr),icon(icon),name(name),desc(desc),a(a),b(b)
 {}
 
 void QfrQabPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     a = input.readNumber<RX>(FILELINE);
@@ -1584,7 +1584,7 @@ void QfrQabPrivate::read(Reader &input)
 STRING QfrQabPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " qfr_qab " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(a) + ' ' + TO_STRING(b) + '\n';
     return string;
@@ -1596,14 +1596,14 @@ void QfrQabPrivate::readDetails(Reader &input)
     b = input.readNumber<RX>(FILELINE);
 }
 
-QfrFabPrivate::QfrFabPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,RX a,RX b):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),a(a),b(b)
+QfrFabPrivate::QfrFabPrivate(int nr,int icon,STRING name,STRING desc,RX a,RX b):nr(nr),icon(icon),name(name),desc(desc),a(a),b(b)
 {}
 
 void QfrFabPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     a = input.readNumber<RX>(FILELINE);
@@ -1613,7 +1613,7 @@ void QfrFabPrivate::read(Reader &input)
 STRING QfrFabPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " qfr_fab " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(a) + ' ' + TO_STRING(b) + '\n';
     return string;
@@ -1625,14 +1625,14 @@ void QfrFabPrivate::readDetails(Reader &input)
     b = input.readNumber<RX>(FILELINE);
 }
 
-QfrCrackPrivate::QfrCrackPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,RX a,RX b,RX length,RX width,RX depth,int nB,int u_L,int u_W,int u_D):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),a(a),b(b),length(length),width(width),depth(depth),nB(nB),u_L(u_L),u_W(u_W),u_D(u_D)
+QfrCrackPrivate::QfrCrackPrivate(int nr,int icon,STRING name,STRING desc,RX a,RX b,RX length,RX width,RX depth,int nB,int u_L,int u_W,int u_D):nr(nr),icon(icon),name(name),desc(desc),a(a),b(b),length(length),width(width),depth(depth),nB(nB),u_L(u_L),u_W(u_W),u_D(u_D)
 {}
 
 void QfrCrackPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     a = input.readNumber<RX>(FILELINE);
@@ -1649,7 +1649,7 @@ void QfrCrackPrivate::read(Reader &input)
 STRING QfrCrackPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " qfr_crack " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(a) + ' ' + TO_STRING(b) + ' ' + TO_STRING(length) + ' ' + TO_STRING(width) + ' ' + TO_STRING(depth) + ' ' + TO_STRING(nB) + ' ' + TO_STRING(u_L) + ' ' + TO_STRING(u_W) + ' ' + TO_STRING(u_D) + '\n';
     return string;
@@ -1668,14 +1668,14 @@ void QfrCrackPrivate::readDetails(Reader &input)
     u_D = input.read<int>(FILELINE);
 }
 
-QfrTest2Private::QfrTest2Private(int nr,int icon,STRING dataType,STRING name,STRING desc,RX a,RX b,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),a(a),b(b),dP1(dP1),F1(F1),dP2(dP2),F2(F2),u_P1(u_P1),u_F1(u_F1),u_P2(u_P2),u_F2(u_F2)
+QfrTest2Private::QfrTest2Private(int nr,int icon,STRING name,STRING desc,RX a,RX b,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2):nr(nr),icon(icon),name(name),desc(desc),a(a),b(b),dP1(dP1),F1(F1),dP2(dP2),F2(F2),u_P1(u_P1),u_F1(u_F1),u_P2(u_P2),u_F2(u_F2)
 {}
 
 void QfrTest2Private::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    // dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     a = input.readNumber<RX>(FILELINE);
@@ -1693,7 +1693,7 @@ void QfrTest2Private::read(Reader &input)
 STRING QfrTest2Private::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " qfr_test2 " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(a) + ' ' + TO_STRING(b) + ' ' + TO_STRING(dP1) + ' ' + TO_STRING(F1) + ' ' + TO_STRING(dP2) + ' ' + TO_STRING(F2) + ' ' + TO_STRING(u_P1) + ' ' + TO_STRING(u_F1) + ' ' + TO_STRING(u_P2) + ' ' + TO_STRING(u_F2) + '\n';
     return string;
@@ -1713,14 +1713,14 @@ void QfrTest2Private::readDetails(Reader &input)
     u_F2 = input.read<int>(FILELINE);
 }
 
-AfeDorPrivate::AfeDorPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dTmin,RX ht,RX wd,RX cd,int u_T,int u_H,int u_W):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dTmin(dTmin),ht(ht),wd(wd),cd(cd),u_T(u_T),u_H(u_H),u_W(u_W)
+AfeDorPrivate::AfeDorPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dTmin,RX ht,RX wd,RX cd,int u_T,int u_H,int u_W):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dTmin(dTmin),ht(ht),wd(wd),cd(cd),u_T(u_T),u_H(u_H),u_W(u_W)
 {}
 
 void AfeDorPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     lam = input.readNumber<RX>(FILELINE);
@@ -1738,7 +1738,7 @@ void AfeDorPrivate::read(Reader &input)
 STRING AfeDorPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " dor_door " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(dTmin) + ' ' + TO_STRING(ht) + ' ' + TO_STRING(wd) + ' ' + TO_STRING(cd) + ' ' + TO_STRING(u_T) + ' ' + TO_STRING(u_H) + ' ' + TO_STRING(u_W) + '\n';
     return string;
@@ -1758,14 +1758,14 @@ void AfeDorPrivate::readDetails(Reader &input)
     u_W = input.read<int>(FILELINE);
 }
 
-DrPl2Private::DrPl2Private(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dH,RX ht,RX wd,RX cd,int u_H,int u_W):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dH(dH),ht(ht),wd(wd),cd(cd),u_H(u_H),u_W(u_W)
+DrPl2Private::DrPl2Private(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dH,RX ht,RX wd,RX cd,int u_H,int u_W):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dH(dH),ht(ht),wd(wd),cd(cd),u_H(u_H),u_W(u_W)
 {}
 
 void DrPl2Private::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     lam = input.readNumber<RX>(FILELINE);
@@ -1782,7 +1782,7 @@ void DrPl2Private::read(Reader &input)
 STRING DrPl2Private::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " dor_pl2 " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(dH) + ' ' + TO_STRING(ht) + ' ' + TO_STRING(wd) + ' ' + TO_STRING(cd) + ' ' + TO_STRING(u_H) + ' ' + TO_STRING(u_W) + '\n';
     return string;
@@ -1801,14 +1801,14 @@ void DrPl2Private::readDetails(Reader &input)
     u_W = input.read<int>(FILELINE);
 }
 
-AfeCmfPrivate::AfeCmfPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,RX Flow,int u_F):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),Flow(Flow),u_F(u_F)
+AfeCmfPrivate::AfeCmfPrivate(int nr,int icon,STRING name,STRING desc,RX Flow,int u_F):nr(nr),icon(icon),name(name),desc(desc),Flow(Flow),u_F(u_F)
 {}
 
 void AfeCmfPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     Flow = input.readNumber<RX>(FILELINE);
@@ -1818,7 +1818,7 @@ void AfeCmfPrivate::read(Reader &input)
 STRING AfeCmfPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " fan_cmf " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(Flow) + ' ' + TO_STRING(u_F) + '\n';
     return string;
@@ -1830,14 +1830,14 @@ void AfeCmfPrivate::readDetails(Reader &input)
     u_F = input.read<int>(FILELINE);
 }
 
-AfeCvfPrivate::AfeCvfPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,RX Flow,int u_F):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),Flow(Flow),u_F(u_F)
+AfeCvfPrivate::AfeCvfPrivate(int nr,int icon,STRING name,STRING desc,RX Flow,int u_F):nr(nr),icon(icon),name(name),desc(desc),Flow(Flow),u_F(u_F)
 {}
 
 void AfeCvfPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     Flow = input.readNumber<RX>(FILELINE);
@@ -1847,7 +1847,7 @@ void AfeCvfPrivate::read(Reader &input)
 STRING AfeCvfPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " fan_cvf " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(Flow) + ' ' + TO_STRING(u_F) + '\n';
     return string;
@@ -1859,14 +1859,14 @@ void AfeCvfPrivate::readDetails(Reader &input)
     u_F = input.read<int>(FILELINE);
 }
 
-AfeFanPrivate::AfeFanPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX rdens,RX fdf,RX sop,RX off,std::vector<RX> fpc,RX Sarea,int u_Sa,std::vector<FanDataPoint> data):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),lam(lam),turb(turb),expt(expt),rdens(rdens),fdf(fdf),sop(sop),off(off),fpc(fpc),Sarea(Sarea),u_Sa(u_Sa),data(data)
+AfeFanPrivate::AfeFanPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX rdens,RX fdf,RX sop,RX off,std::vector<RX> fpc,RX Sarea,int u_Sa,std::vector<FanDataPoint> data):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),rdens(rdens),fdf(fdf),sop(sop),off(off),fpc(fpc),Sarea(Sarea),u_Sa(u_Sa),data(data)
 {}
 
 void AfeFanPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     lam = input.readNumber<RX>(FILELINE);
@@ -1893,7 +1893,7 @@ void AfeFanPrivate::read(Reader &input)
 STRING AfeFanPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " fan_fan " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(rdens) + ' ' + TO_STRING(fdf) + ' ' + TO_STRING(sop) + ' ' + TO_STRING(off) + '\n';
     for(int i=0;i<4;i++)
@@ -1930,14 +1930,14 @@ void AfeFanPrivate::readDetails(Reader &input)
 
 }
 
-AfeCsfPrivate::AfeCsfPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,int u_x,int u_y,std::vector<DataPoint> data):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),u_x(u_x),u_y(u_y),data(data)
+AfeCsfPrivate::AfeCsfPrivate(int nr,int icon,STRING name,STRING desc,int u_x,int u_y,std::vector<DataPoint> data):nr(nr),icon(icon),name(name),desc(desc),u_x(u_x),u_y(u_y),data(data)
 {}
 
 void AfeCsfPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     int npts = input.read<int>(FILELINE);
@@ -1952,10 +1952,10 @@ void AfeCsfPrivate::read(Reader &input)
 
 }
 
-STRING AfeCsfPrivate::write()
+STRING AfeCsfPrivate::write(STRING datatype)
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + datatype + ' ' + name + '\n';
     string += desc + '\n';
     string += TO_STRING(data.size()) + ' ' + TO_STRING(u_x) + ' ' + TO_STRING(u_y) + '\n';
     for(unsigned int i=0;i<data.size();i++)
@@ -1979,14 +1979,14 @@ void AfeCsfPrivate::readDetails(Reader &input)
 
 }
 
-AfeSupPrivate::AfeSupPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,int sched,int u_H,std::vector<AirflowSubelementData> subelements):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),sched(sched),u_H(u_H),subelements(subelements)
+AfeSupPrivate::AfeSupPrivate(int nr,int icon,STRING name,STRING desc,int sched,int u_H,std::vector<AirflowSubelementData> subelements):nr(nr),icon(icon),name(name),desc(desc),sched(sched),u_H(u_H),subelements(subelements)
 {}
 
 void AfeSupPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     int nse = input.read<int>(FILELINE);
@@ -2004,7 +2004,7 @@ void AfeSupPrivate::read(Reader &input)
 STRING AfeSupPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " sup_afe " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(subelements.size()) + ' ' + TO_STRING(sched) + ' ' + TO_STRING(u_H) + '\n';
     for(unsigned int i=0;i<subelements.size();i++)

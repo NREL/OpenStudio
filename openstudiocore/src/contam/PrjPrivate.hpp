@@ -724,13 +724,13 @@ public:
 class PlrLeakPrivate : public QSharedData
 {
 public:
-    PlrLeakPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX coef=RX_INIT(0),RX pres=RX_INIT(0),RX area1=RX_INIT(0),RX area2=RX_INIT(0),RX area3=RX_INIT(0),int u_A1=0,int u_A2=0,int u_A3=0,int u_dP=0);
+    PlrLeakPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX coef=RX_INIT(0),RX pres=RX_INIT(0),RX area1=RX_INIT(0),RX area2=RX_INIT(0),RX area3=RX_INIT(0),int u_A1=0,int u_A2=0,int u_A3=0,int u_dP=0);
     void read(Reader &reader);
-    STRING write();
+    STRING write(STRING datatype);
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    //STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX lam;  // laminar flow coefficient (R4)
@@ -750,13 +750,13 @@ public:
 class PlrConnPrivate : public QSharedData
 {
 public:
-    PlrConnPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX area=RX_INIT(0),RX coef=RX_INIT(0),int u_A=0);
+    PlrConnPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX area=RX_INIT(0),RX coef=RX_INIT(0),int u_A=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX lam;  // laminar flow coefficient (R4)
@@ -770,13 +770,13 @@ public:
 class PlrQcnPrivate : public QSharedData
 {
 public:
-    PlrQcnPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0));
+    PlrQcnPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0));
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX lam;  // laminar flow coefficient (R4)
@@ -787,13 +787,13 @@ public:
 class PlrFcnPrivate : public QSharedData
 {
 public:
-    PlrFcnPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0));
+    PlrFcnPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0));
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX lam;  // laminar flow coefficient (R4)
@@ -825,13 +825,13 @@ public:
 class PlrTest2Private : public QSharedData
 {
 public:
-    PlrTest2Private(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dP1=RX_INIT(0),RX F1=RX_INIT(0),RX dP2=RX_INIT(0),RX F2=RX_INIT(0),int u_P1=0,int u_F1=0,int u_P2=0,int u_F2=0);
+    PlrTest2Private(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dP1=RX_INIT(0),RX F1=RX_INIT(0),RX dP2=RX_INIT(0),RX F2=RX_INIT(0),int u_P1=0,int u_F1=0,int u_P2=0,int u_F2=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX lam;  // laminar flow coefficient (R4)
@@ -850,13 +850,13 @@ public:
 class PlrCrackPrivate : public QSharedData
 {
 public:
-    PlrCrackPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX length=RX_INIT(0),RX width=RX_INIT(0),int u_L=0,int u_W=0);
+    PlrCrackPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX length=RX_INIT(0),RX width=RX_INIT(0),int u_L=0,int u_W=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX lam;  // laminar flow coefficient (R4)
@@ -871,13 +871,13 @@ public:
 class PlrStairPrivate : public QSharedData
 {
 public:
-    PlrStairPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX Ht=RX_INIT(0),RX Area=RX_INIT(0),RX peo=RX_INIT(0),int tread=0,int u_A=0,int u_D=0);
+    PlrStairPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX Ht=RX_INIT(0),RX Area=RX_INIT(0),RX peo=RX_INIT(0),int tread=0,int u_A=0,int u_D=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX lam;  // laminar flow coefficient (R4)
@@ -894,13 +894,13 @@ public:
 class PlrShaftPrivate : public QSharedData
 {
 public:
-    PlrShaftPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX Ht=RX_INIT(0),RX area=RX_INIT(0),RX perim=RX_INIT(0),RX rough=RX_INIT(0),int u_A=0,int u_D=0,int u_P=0,int u_R=0);
+    PlrShaftPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX Ht=RX_INIT(0),RX area=RX_INIT(0),RX perim=RX_INIT(0),RX rough=RX_INIT(0),int u_A=0,int u_D=0,int u_P=0,int u_R=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX lam;  // laminar flow coefficient (R4)
@@ -919,13 +919,13 @@ public:
 class PlrBdqPrivate : public QSharedData
 {
 public:
-    PlrBdqPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX Cp=RX_INIT(0),RX xp=RX_INIT(0),RX Cn=RX_INIT(0),RX xn=RX_INIT(0));
+    PlrBdqPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX Cp=RX_INIT(0),RX xp=RX_INIT(0),RX Cn=RX_INIT(0),RX xn=RX_INIT(0));
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX lam;  // laminar flow coefficient {R4}
@@ -938,13 +938,13 @@ public:
 class PlrBdfPrivate : public QSharedData
 {
 public:
-    PlrBdfPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX Cp=RX_INIT(0),RX xp=RX_INIT(0),RX Cn=RX_INIT(0),RX xn=RX_INIT(0));
+    PlrBdfPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX Cp=RX_INIT(0),RX xp=RX_INIT(0),RX Cn=RX_INIT(0),RX xn=RX_INIT(0));
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX lam;  // laminar flow coefficient {R4}
@@ -957,13 +957,13 @@ public:
 class QfrQabPrivate : public QSharedData
 {
 public:
-    QfrQabPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0));
+    QfrQabPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0));
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX a;  // dP = a*Q + b*Q*Q {R4}
@@ -973,13 +973,13 @@ public:
 class QfrFabPrivate : public QSharedData
 {
 public:
-    QfrFabPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0));
+    QfrFabPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0));
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX a;  // dP = a*F + b*F*F {R4}
@@ -989,13 +989,13 @@ public:
 class QfrCrackPrivate : public QSharedData
 {
 public:
-    QfrCrackPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0),RX length=RX_INIT(0),RX width=RX_INIT(0),RX depth=RX_INIT(0),int nB=0,int u_L=0,int u_W=0,int u_D=0);
+    QfrCrackPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0),RX length=RX_INIT(0),RX width=RX_INIT(0),RX depth=RX_INIT(0),int nB=0,int u_L=0,int u_W=0,int u_D=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX a;  // dP = a*F + b*F*F {R4}
@@ -1012,13 +1012,13 @@ public:
 class QfrTest2Private : public QSharedData
 {
 public:
-    QfrTest2Private(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0),RX dP1=RX_INIT(0),RX F1=RX_INIT(0),RX dP2=RX_INIT(0),RX F2=RX_INIT(0),int u_P1=0,int u_F1=0,int u_P2=0,int u_F2=0);
+    QfrTest2Private(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0),RX dP1=RX_INIT(0),RX F1=RX_INIT(0),RX dP2=RX_INIT(0),RX F2=RX_INIT(0),int u_P1=0,int u_F1=0,int u_P2=0,int u_F2=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX a;  // dP = a*F + b*F*F {R4}
@@ -1036,13 +1036,13 @@ public:
 class AfeDorPrivate : public QSharedData
 {
 public:
-    AfeDorPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dTmin=RX_INIT(0),RX ht=RX_INIT(0),RX wd=RX_INIT(0),RX cd=RX_INIT(0),int u_T=0,int u_H=0,int u_W=0);
+    AfeDorPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dTmin=RX_INIT(0),RX ht=RX_INIT(0),RX wd=RX_INIT(0),RX cd=RX_INIT(0),int u_T=0,int u_H=0,int u_W=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX lam;  // laminar flow coefficient (R4)
@@ -1060,13 +1060,13 @@ public:
 class DrPl2Private : public QSharedData
 {
 public:
-    DrPl2Private(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dH=RX_INIT(0),RX ht=RX_INIT(0),RX wd=RX_INIT(0),RX cd=RX_INIT(0),int u_H=0,int u_W=0);
+    DrPl2Private(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dH=RX_INIT(0),RX ht=RX_INIT(0),RX wd=RX_INIT(0),RX cd=RX_INIT(0),int u_H=0,int u_W=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX lam;  // laminar flow coefficient (R4)
@@ -1083,13 +1083,13 @@ public:
 class AfeCmfPrivate : public QSharedData
 {
 public:
-    AfeCmfPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX Flow=RX_INIT(0),int u_F=0);
+    AfeCmfPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX Flow=RX_INIT(0),int u_F=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX Flow;  // design flow rate [kg/s] (R4)
@@ -1099,13 +1099,13 @@ public:
 class AfeCvfPrivate : public QSharedData
 {
 public:
-    AfeCvfPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX Flow=RX_INIT(0),int u_F=0);
+    AfeCvfPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX Flow=RX_INIT(0),int u_F=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX Flow;  // design flow rate [m^3/s] (R4)
@@ -1115,13 +1115,13 @@ public:
 class AfeFanPrivate : public QSharedData
 {
 public:
-    AfeFanPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX rdens=RX_INIT(0),RX fdf=RX_INIT(0),RX sop=RX_INIT(0),RX off=RX_INIT(0),std::vector<RX> fpc=std::vector<RX>(),RX Sarea=RX_INIT(0),int u_Sa=0,std::vector<FanDataPoint> data=std::vector<FanDataPoint>());
+    AfeFanPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX rdens=RX_INIT(0),RX fdf=RX_INIT(0),RX sop=RX_INIT(0),RX off=RX_INIT(0),std::vector<RX> fpc=std::vector<RX>(),RX Sarea=RX_INIT(0),int u_Sa=0,std::vector<FanDataPoint> data=std::vector<FanDataPoint>());
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX lam;  // laminar flow coefficient (R4)
@@ -1140,13 +1140,13 @@ public:
 class AfeCsfPrivate : public QSharedData
 {
 public:
-    AfeCsfPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,int u_x=0,int u_y=0,std::vector<DataPoint> data=std::vector<DataPoint>());
+    AfeCsfPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int u_x=0,int u_y=0,std::vector<DataPoint> data=std::vector<DataPoint>());
     void read(Reader &reader);
-    STRING write();
+    STRING write(STRING datatype);
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     int u_x;  // units for x (I2)
@@ -1157,13 +1157,13 @@ public:
 class AfeSupPrivate : public QSharedData
 {
 public:
-    AfeSupPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,int sched=0,int u_H=0,std::vector<AirflowSubelementData> subelements=std::vector<AirflowSubelementData>());
+    AfeSupPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int sched=0,int u_H=0,std::vector<AirflowSubelementData> subelements=std::vector<AirflowSubelementData>());
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     int sched;  // scheduled sub-element number (IX) (only one)

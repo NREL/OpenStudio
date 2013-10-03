@@ -1341,16 +1341,15 @@ private:
 class CONTAM_API PlrLeak : public AirflowElement
 {
 public:
-    PlrLeak(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX coef=RX_INIT(0),RX pres=RX_INIT(0),RX area1=RX_INIT(0),RX area2=RX_INIT(0),RX area3=RX_INIT(0),int u_A1=0,int u_A2=0,int u_A3=0,int u_dP=0);
+    PlrLeak(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX coef=RX_INIT(0),RX pres=RX_INIT(0),RX area1=RX_INIT(0),RX area2=RX_INIT(0),RX area3=RX_INIT(0),int u_A1=0,int u_A2=0,int u_A3=0,int u_dP=0);
     void read(Reader &input);
-    STRING write();
+    virtual STRING write();
     void readDetails(Reader &input);
     int nr() const;
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    virtual STRING dataType() const = 0;
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1383,10 +1382,43 @@ private:
     QExplicitlySharedDataPointer<PlrLeakPrivate> d;
 };
 
+class CONTAM_API PlrLeak1 : public PlrLeak
+{
+public:
+  PlrLeak1(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),
+    RX expt=RX_INIT(0),RX coef=RX_INIT(0),RX pres=RX_INIT(0),RX area1=RX_INIT(0),RX area2=RX_INIT(0),RX area3=RX_INIT(0),
+    int u_A1=0,int u_A2=0,int u_A3=0,int u_dP=0) : PlrLeak(nr,icon,name,desc,lam,turb,expt,coef,pres,area1,area2,
+                                                           area3,u_A1,u_A2,u_A3,u_dP)
+  {}
+  STRING dataType() const {return "plr_leak1";}
+};
+
+class CONTAM_API PlrLeak2 : public PlrLeak
+{
+public:
+  PlrLeak2(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),
+    RX expt=RX_INIT(0),RX coef=RX_INIT(0),RX pres=RX_INIT(0),RX area1=RX_INIT(0),RX area2=RX_INIT(0),RX area3=RX_INIT(0),
+    int u_A1=0,int u_A2=0,int u_A3=0,int u_dP=0) : PlrLeak(nr,icon,name,desc,lam,turb,expt,coef,pres,area1,area2,
+                                                           area3,u_A1,u_A2,u_A3,u_dP)
+  {}
+  STRING dataType() const {return "plr_leak2";}
+};
+
+class CONTAM_API PlrLeak3 : public PlrLeak
+{
+public:
+  PlrLeak3(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),
+    RX expt=RX_INIT(0),RX coef=RX_INIT(0),RX pres=RX_INIT(0),RX area1=RX_INIT(0),RX area2=RX_INIT(0),RX area3=RX_INIT(0),
+    int u_A1=0,int u_A2=0,int u_A3=0,int u_dP=0) : PlrLeak(nr,icon,name,desc,lam,turb,expt,coef,pres,area1,area2,
+                                                           area3,u_A1,u_A2,u_A3,u_dP)
+  {}
+  STRING dataType() const {return "plr_leak3";}
+};
+
 class CONTAM_API PlrConn : public AirflowElement
 {
 public:
-    PlrConn(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX area=RX_INIT(0),RX coef=RX_INIT(0),int u_A=0);
+    PlrConn(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX area=RX_INIT(0),RX coef=RX_INIT(0),int u_A=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1394,8 +1426,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "plr_conn";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1419,7 +1450,7 @@ private:
 class CONTAM_API PlrQcn : public AirflowElement
 {
 public:
-    PlrQcn(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0));
+    PlrQcn(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0));
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1427,8 +1458,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "plr_qcn";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1446,7 +1476,7 @@ private:
 class CONTAM_API PlrFcn : public AirflowElement
 {
 public:
-    PlrFcn(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0));
+    PlrFcn(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0));
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1454,8 +1484,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "plr_fcn";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1507,7 +1536,7 @@ private:
 class CONTAM_API PlrTest2 : public AirflowElement
 {
 public:
-    PlrTest2(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dP1=RX_INIT(0),RX F1=RX_INIT(0),RX dP2=RX_INIT(0),RX F2=RX_INIT(0),int u_P1=0,int u_F1=0,int u_P2=0,int u_F2=0);
+    PlrTest2(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dP1=RX_INIT(0),RX F1=RX_INIT(0),RX dP2=RX_INIT(0),RX F2=RX_INIT(0),int u_P1=0,int u_F1=0,int u_P2=0,int u_F2=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1515,8 +1544,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "plr_test2";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1550,7 +1578,7 @@ private:
 class CONTAM_API PlrCrack : public AirflowElement
 {
 public:
-    PlrCrack(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX length=RX_INIT(0),RX width=RX_INIT(0),int u_L=0,int u_W=0);
+    PlrCrack(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX length=RX_INIT(0),RX width=RX_INIT(0),int u_L=0,int u_W=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1558,8 +1586,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "plr_crack";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1585,7 +1612,7 @@ private:
 class CONTAM_API PlrStair : public AirflowElement
 {
 public:
-    PlrStair(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX Ht=RX_INIT(0),RX Area=RX_INIT(0),RX peo=RX_INIT(0),int tread=0,int u_A=0,int u_D=0);
+    PlrStair(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX Ht=RX_INIT(0),RX Area=RX_INIT(0),RX peo=RX_INIT(0),int tread=0,int u_A=0,int u_D=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1593,8 +1620,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "plr_stair";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1624,7 +1650,7 @@ private:
 class CONTAM_API PlrShaft : public AirflowElement
 {
 public:
-    PlrShaft(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX Ht=RX_INIT(0),RX area=RX_INIT(0),RX perim=RX_INIT(0),RX rough=RX_INIT(0),int u_A=0,int u_D=0,int u_P=0,int u_R=0);
+    PlrShaft(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX Ht=RX_INIT(0),RX area=RX_INIT(0),RX perim=RX_INIT(0),RX rough=RX_INIT(0),int u_A=0,int u_D=0,int u_P=0,int u_R=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1632,8 +1658,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "plr_shaft";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1667,7 +1692,7 @@ private:
 class CONTAM_API PlrBdq : public AirflowElement
 {
 public:
-    PlrBdq(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX Cp=RX_INIT(0),RX xp=RX_INIT(0),RX Cn=RX_INIT(0),RX xn=RX_INIT(0));
+    PlrBdq(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX Cp=RX_INIT(0),RX xp=RX_INIT(0),RX Cn=RX_INIT(0),RX xn=RX_INIT(0));
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1675,8 +1700,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "plr_bdq";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1698,7 +1722,7 @@ private:
 class CONTAM_API PlrBdf : public AirflowElement
 {
 public:
-    PlrBdf(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX Cp=RX_INIT(0),RX xp=RX_INIT(0),RX Cn=RX_INIT(0),RX xn=RX_INIT(0));
+    PlrBdf(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX Cp=RX_INIT(0),RX xp=RX_INIT(0),RX Cn=RX_INIT(0),RX xn=RX_INIT(0));
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1706,8 +1730,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "plr_bdf";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1729,7 +1752,7 @@ private:
 class CONTAM_API QfrQab : public AirflowElement
 {
 public:
-    QfrQab(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0));
+    QfrQab(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0));
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1737,8 +1760,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "qfr_qab";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1754,7 +1776,7 @@ private:
 class CONTAM_API QfrFab : public AirflowElement
 {
 public:
-    QfrFab(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0));
+    QfrFab(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0));
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1762,8 +1784,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "qfr_fab";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1779,7 +1800,7 @@ private:
 class CONTAM_API QfrCrack : public AirflowElement
 {
 public:
-    QfrCrack(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0),RX length=RX_INIT(0),RX width=RX_INIT(0),RX depth=RX_INIT(0),int nB=0,int u_L=0,int u_W=0,int u_D=0);
+    QfrCrack(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0),RX length=RX_INIT(0),RX width=RX_INIT(0),RX depth=RX_INIT(0),int nB=0,int u_L=0,int u_W=0,int u_D=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1787,8 +1808,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "qfr_crack";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1818,7 +1838,7 @@ private:
 class CONTAM_API QfrTest2 : public AirflowElement
 {
 public:
-    QfrTest2(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0),RX dP1=RX_INIT(0),RX F1=RX_INIT(0),RX dP2=RX_INIT(0),RX F2=RX_INIT(0),int u_P1=0,int u_F1=0,int u_P2=0,int u_F2=0);
+    QfrTest2(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX a=RX_INIT(0),RX b=RX_INIT(0),RX dP1=RX_INIT(0),RX F1=RX_INIT(0),RX dP2=RX_INIT(0),RX F2=RX_INIT(0),int u_P1=0,int u_F1=0,int u_P2=0,int u_F2=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1826,8 +1846,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "qfr_test2";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1859,7 +1878,7 @@ private:
 class CONTAM_API AfeDor : public AirflowElement
 {
 public:
-    AfeDor(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dTmin=RX_INIT(0),RX ht=RX_INIT(0),RX wd=RX_INIT(0),RX cd=RX_INIT(0),int u_T=0,int u_H=0,int u_W=0);
+    AfeDor(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dTmin=RX_INIT(0),RX ht=RX_INIT(0),RX wd=RX_INIT(0),RX cd=RX_INIT(0),int u_T=0,int u_H=0,int u_W=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1867,8 +1886,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "dor_door";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1900,7 +1918,7 @@ private:
 class CONTAM_API DrPl2 : public AirflowElement
 {
 public:
-    DrPl2(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dH=RX_INIT(0),RX ht=RX_INIT(0),RX wd=RX_INIT(0),RX cd=RX_INIT(0),int u_H=0,int u_W=0);
+    DrPl2(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dH=RX_INIT(0),RX ht=RX_INIT(0),RX wd=RX_INIT(0),RX cd=RX_INIT(0),int u_H=0,int u_W=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1908,8 +1926,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "dor_pl2";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1939,7 +1956,7 @@ private:
 class CONTAM_API AfeCmf : public AirflowElement
 {
 public:
-    AfeCmf(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX Flow=RX_INIT(0),int u_F=0);
+    AfeCmf(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX Flow=RX_INIT(0),int u_F=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1947,8 +1964,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "fan_cmf";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1964,7 +1980,7 @@ private:
 class CONTAM_API AfeCvf : public AirflowElement
 {
 public:
-    AfeCvf(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX Flow=RX_INIT(0),int u_F=0);
+    AfeCvf(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX Flow=RX_INIT(0),int u_F=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1972,8 +1988,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "fan_cvf";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1989,7 +2004,7 @@ private:
 class CONTAM_API AfeFan : public AirflowElement
 {
 public:
-    AfeFan(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX rdens=RX_INIT(0),RX fdf=RX_INIT(0),RX sop=RX_INIT(0),RX off=RX_INIT(0),std::vector<RX> fpc=std::vector<RX>(),RX Sarea=RX_INIT(0),int u_Sa=0,std::vector<FanDataPoint> data=std::vector<FanDataPoint>());
+    AfeFan(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX rdens=RX_INIT(0),RX fdf=RX_INIT(0),RX sop=RX_INIT(0),RX off=RX_INIT(0),std::vector<RX> fpc=std::vector<RX>(),RX Sarea=RX_INIT(0),int u_Sa=0,std::vector<FanDataPoint> data=std::vector<FanDataPoint>());
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1997,8 +2012,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "fan_fan";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -2029,10 +2043,10 @@ private:
     QExplicitlySharedDataPointer<AfeFanPrivate> d;
 };
 
-class CONTAM_API AfeCsf : public AirflowElement
+class AfeCsf : public AirflowElement
 {
 public:
-    AfeCsf(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,int u_x=0,int u_y=0,std::vector<DataPoint> data=std::vector<DataPoint>());
+    AfeCsf(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int u_x=0,int u_y=0,std::vector<DataPoint> data=std::vector<DataPoint>());
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -2040,8 +2054,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const = 0;
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -2056,10 +2069,46 @@ private:
     QExplicitlySharedDataPointer<AfeCsfPrivate> d;
 };
 
+class CONTAM_API AfeFsp : public AfeCsf
+{
+public:
+  AfeFsp(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int u_x=0,
+    int u_y=0,std::vector<DataPoint> data=std::vector<DataPoint>()) : AfeCsf(nr,icon,name,desc,u_x,u_y,data)
+  {}
+  STRING dataType() const {return "csf_fsp";}
+};
+
+class CONTAM_API AfeQsp : public AfeCsf
+{
+public:
+  AfeQsp(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int u_x=0,
+    int u_y=0,std::vector<DataPoint> data=std::vector<DataPoint>()) : AfeCsf(nr,icon,name,desc,u_x,u_y,data)
+  {}
+  STRING dataType() const {return "csf_qsp";}
+};
+
+class CONTAM_API AfePsf : public AfeCsf
+{
+public:
+  AfePsf(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int u_x=0,
+    int u_y=0,std::vector<DataPoint> data=std::vector<DataPoint>()) : AfeCsf(nr,icon,name,desc,u_x,u_y,data)
+  {}
+  STRING dataType() const {return "csf_psf";}
+};
+
+class CONTAM_API AfePsq : public AfeCsf
+{
+public:
+  AfePsq(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int u_x=0,
+    int u_y=0,std::vector<DataPoint> data=std::vector<DataPoint>()) : AfeCsf(nr,icon,name,desc,u_x,u_y,data)
+  {}
+  STRING dataType() const {return "csf_psq";}
+};
+
 class CONTAM_API AfeSup : public AirflowElement
 {
 public:
-    AfeSup(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,int sched=0,int u_H=0,std::vector<AirflowSubelementData> subelements=std::vector<AirflowSubelementData>());
+    AfeSup(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int sched=0,int u_H=0,std::vector<AirflowSubelementData> subelements=std::vector<AirflowSubelementData>());
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -2067,8 +2116,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "sup_afe";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;

@@ -5300,166 +5300,196 @@ AirflowElement* AirflowElement::readElement(Reader &input)
     {
     case AirflowElement::PL_ORFC:
     {
-        PlrOrf *obj = new PlrOrf(nr,icon,dataType,name,desc);
+        PlrOrf *obj = new PlrOrf(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::PL_LEAK1:
+    {
+      PlrLeak1 *obj = new PlrLeak1(nr,icon,name,desc);
+      obj->readDetails(input);
+      out = (AirflowElement*)obj;
+      break;
+    }
     case AirflowElement::PL_LEAK2:
+    {
+      PlrLeak2 *obj = new PlrLeak2(nr,icon,name,desc);
+      obj->readDetails(input);
+      out = (AirflowElement*)obj;
+      break;
+    }
     case AirflowElement::PL_LEAK3:
     {
-        PlrLeak *obj = new PlrLeak(nr,icon,dataType,name,desc);
+        PlrLeak3 *obj = new PlrLeak3(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::PL_CONN:
     {
-        PlrConn *obj = new PlrConn(nr,icon,dataType,name,desc);
+        PlrConn *obj = new PlrConn(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::PL_QCN:
     {
-        PlrQcn *obj = new PlrQcn(nr,icon,dataType,name,desc);
+        PlrQcn *obj = new PlrQcn(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::PL_FCN:
     {
-        PlrFcn *obj = new PlrFcn(nr,icon,dataType,name,desc);
+        PlrFcn *obj = new PlrFcn(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::PL_TEST1:
     {
-        PlrTest1 *obj = new PlrTest1(nr,icon,dataType,name,desc);
+        PlrTest1 *obj = new PlrTest1(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::PL_TEST2:
     {
-        PlrTest2 *obj = new PlrTest2(nr,icon,dataType,name,desc);
+        PlrTest2 *obj = new PlrTest2(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::PL_CRACK:
     {
-        PlrCrack *obj = new PlrCrack(nr,icon,dataType,name,desc);
+        PlrCrack *obj = new PlrCrack(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::PL_STAIR:
     {
-        PlrStair *obj = new PlrStair(nr,icon,dataType,name,desc);
+        PlrStair *obj = new PlrStair(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::PL_SHAFT:
     {
-        PlrShaft *obj = new PlrShaft(nr,icon,dataType,name,desc);
+        PlrShaft *obj = new PlrShaft(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::PL_BDQ:
     {
-        PlrBdq *obj = new PlrBdq(nr,icon,dataType,name,desc);
+        PlrBdq *obj = new PlrBdq(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::PL_BDF:
     {
-        PlrBdf *obj = new PlrBdf(nr,icon,dataType,name,desc);
+        PlrBdf *obj = new PlrBdf(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::QFR_QAB:
     {
-        QfrQab *obj = new QfrQab(nr,icon,dataType,name,desc);
+        QfrQab *obj = new QfrQab(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::QFR_QAF:
     {
-        QfrFab *obj = new QfrFab(nr,icon,dataType,name,desc);
+        QfrFab *obj = new QfrFab(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::QFR_CRACK:
     {
-        QfrCrack *obj = new QfrCrack(nr,icon,dataType,name,desc);
+        QfrCrack *obj = new QfrCrack(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::QFR_TEST2:
     {
-        QfrTest2 *obj = new QfrTest2(nr,icon,dataType,name,desc);
+        QfrTest2 *obj = new QfrTest2(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::DR_DOOR:
     {
-        AfeDor *obj = new AfeDor(nr,icon,dataType,name,desc);
+        AfeDor *obj = new AfeDor(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::DR_PL2:
     {
-        DrPl2 *obj = new DrPl2(nr,icon,dataType,name,desc);
+        DrPl2 *obj = new DrPl2(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::FN_CMF:
     {
-        AfeCmf *obj = new AfeCmf(nr,icon,dataType,name,desc);
+        AfeCmf *obj = new AfeCmf(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::FN_CVF:
     {
-        AfeCvf *obj = new AfeCvf(nr,icon,dataType,name,desc);
+        AfeCvf *obj = new AfeCvf(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::FN_FAN:
     {
-        AfeFan *obj = new AfeFan(nr,icon,dataType,name,desc);
+        AfeFan *obj = new AfeFan(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::CS_FSP:
+    {
+        AfeFsp *obj = new AfeFsp(nr,icon,name,desc);
+        obj->readDetails(input);
+        out = (AirflowElement*)obj;
+        break;
+    }
     case AirflowElement::CS_QSP:
+    {
+        AfeQsp *obj = new AfeQsp(nr,icon,name,desc);
+        obj->readDetails(input);
+        out = (AirflowElement*)obj;
+        break;
+    }
     case AirflowElement::CS_PSF:
+    {
+        AfePsf *obj = new AfePsf(nr,icon,name,desc);
+        obj->readDetails(input);
+        out = (AirflowElement*)obj;
+        break;
+    }
     case AirflowElement::CS_PSQ:
     {
-        AfeCsf *obj = new AfeCsf(nr,icon,dataType,name,desc);
+        AfePsq *obj = new AfePsq(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
     }
     case AirflowElement::AF_SUP:
     {
-        AfeSup *obj = new AfeSup(nr,icon,dataType,name,desc);
+        AfeSup *obj = new AfeSup(nr,icon,name,desc);
         obj->readDetails(input);
         out = (AirflowElement*)obj;
         break;
@@ -5630,14 +5660,14 @@ void PlrOrf::setU_D(const int u_D)
 }
 
 
-PlrLeak::PlrLeak(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX coef,RX pres,RX area1,RX area2,RX area3,int u_A1,int u_A2,int u_A3,int u_dP)
+PlrLeak::PlrLeak(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX coef,RX pres,RX area1,RX area2,RX area3,int u_A1,int u_A2,int u_A3,int u_dP)
 {
-    d = new PlrLeakPrivate(nr,icon,dataType,name,desc,lam,turb,expt,coef,pres,area1,area2,area3,u_A1,u_A2,u_A3,u_dP);
+    d = new PlrLeakPrivate(nr,icon,name,desc,lam,turb,expt,coef,pres,area1,area2,area3,u_A1,u_A2,u_A3,u_dP);
 }
 
 STRING PlrLeak::write()
 {
-    return d->write();
+    return d->write(dataType());
 }
 
 void PlrLeak::read(Reader &input)
@@ -5670,15 +5700,10 @@ void PlrLeak::setIcon(const int icon)
     d->icon = icon;
 }
 
-STRING PlrLeak::dataType() const
-{
-    return d->dataType;
-}
-
-void PlrLeak::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
-}
+//STRING PlrLeak::dataType() const
+//{
+//    return d->dataType;
+//}
 
 STRING PlrLeak::name() const
 {
@@ -5821,9 +5846,9 @@ void PlrLeak::setU_dP(const int u_dP)
 }
 
 
-PlrConn::PlrConn(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX area,RX coef,int u_A)
+PlrConn::PlrConn(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX area,RX coef,int u_A)
 {
-    d = new PlrConnPrivate(nr,icon,dataType,name,desc,lam,turb,expt,area,coef,u_A);
+    d = new PlrConnPrivate(nr,icon,name,desc,lam,turb,expt,area,coef,u_A);
 }
 
 STRING PlrConn::write()
@@ -5859,16 +5884,6 @@ int PlrConn::icon() const
 void PlrConn::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING PlrConn::dataType() const
-{
-    return d->dataType;
-}
-
-void PlrConn::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING PlrConn::name() const
@@ -5952,9 +5967,9 @@ void PlrConn::setU_A(const int u_A)
 }
 
 
-PlrQcn::PlrQcn(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt)
+PlrQcn::PlrQcn(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt)
 {
-    d = new PlrQcnPrivate(nr,icon,dataType,name,desc,lam,turb,expt);
+    d = new PlrQcnPrivate(nr,icon,name,desc,lam,turb,expt);
 }
 
 STRING PlrQcn::write()
@@ -5990,16 +6005,6 @@ int PlrQcn::icon() const
 void PlrQcn::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING PlrQcn::dataType() const
-{
-    return d->dataType;
-}
-
-void PlrQcn::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING PlrQcn::name() const
@@ -6053,9 +6058,9 @@ void PlrQcn::setExpt(const RX expt)
 }
 
 
-PlrFcn::PlrFcn(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt)
+PlrFcn::PlrFcn(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt)
 {
-    d = new PlrFcnPrivate(nr,icon,dataType,name,desc,lam,turb,expt);
+    d = new PlrFcnPrivate(nr,icon,name,desc,lam,turb,expt);
 }
 
 STRING PlrFcn::write()
@@ -6091,16 +6096,6 @@ int PlrFcn::icon() const
 void PlrFcn::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING PlrFcn::dataType() const
-{
-    return d->dataType;
-}
-
-void PlrFcn::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING PlrFcn::name() const
@@ -6285,9 +6280,9 @@ void PlrTest1::setU_F(const int u_F)
 }
 
 
-PlrTest2::PlrTest2(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2)
+PlrTest2::PlrTest2(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2)
 {
-    d = new PlrTest2Private(nr,icon,dataType,name,desc,lam,turb,expt,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2);
+    d = new PlrTest2Private(nr,icon,name,desc,lam,turb,expt,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2);
 }
 
 STRING PlrTest2::write()
@@ -6323,16 +6318,6 @@ int PlrTest2::icon() const
 void PlrTest2::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING PlrTest2::dataType() const
-{
-    return d->dataType;
-}
-
-void PlrTest2::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING PlrTest2::name() const
@@ -6466,9 +6451,9 @@ void PlrTest2::setU_F2(const int u_F2)
 }
 
 
-PlrCrack::PlrCrack(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX length,RX width,int u_L,int u_W)
+PlrCrack::PlrCrack(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX length,RX width,int u_L,int u_W)
 {
-    d = new PlrCrackPrivate(nr,icon,dataType,name,desc,lam,turb,expt,length,width,u_L,u_W);
+    d = new PlrCrackPrivate(nr,icon,name,desc,lam,turb,expt,length,width,u_L,u_W);
 }
 
 STRING PlrCrack::write()
@@ -6504,16 +6489,6 @@ int PlrCrack::icon() const
 void PlrCrack::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING PlrCrack::dataType() const
-{
-    return d->dataType;
-}
-
-void PlrCrack::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING PlrCrack::name() const
@@ -6607,9 +6582,9 @@ void PlrCrack::setU_W(const int u_W)
 }
 
 
-PlrStair::PlrStair(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX Ht,RX Area,RX peo,int tread,int u_A,int u_D)
+PlrStair::PlrStair(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX Ht,RX Area,RX peo,int tread,int u_A,int u_D)
 {
-    d = new PlrStairPrivate(nr,icon,dataType,name,desc,lam,turb,expt,Ht,Area,peo,tread,u_A,u_D);
+    d = new PlrStairPrivate(nr,icon,name,desc,lam,turb,expt,Ht,Area,peo,tread,u_A,u_D);
 }
 
 STRING PlrStair::write()
@@ -6645,16 +6620,6 @@ int PlrStair::icon() const
 void PlrStair::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING PlrStair::dataType() const
-{
-    return d->dataType;
-}
-
-void PlrStair::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING PlrStair::name() const
@@ -6768,9 +6733,9 @@ void PlrStair::setU_D(const int u_D)
 }
 
 
-PlrShaft::PlrShaft(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX Ht,RX area,RX perim,RX rough,int u_A,int u_D,int u_P,int u_R)
+PlrShaft::PlrShaft(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX Ht,RX area,RX perim,RX rough,int u_A,int u_D,int u_P,int u_R)
 {
-    d = new PlrShaftPrivate(nr,icon,dataType,name,desc,lam,turb,expt,Ht,area,perim,rough,u_A,u_D,u_P,u_R);
+    d = new PlrShaftPrivate(nr,icon,name,desc,lam,turb,expt,Ht,area,perim,rough,u_A,u_D,u_P,u_R);
 }
 
 STRING PlrShaft::write()
@@ -6806,16 +6771,6 @@ int PlrShaft::icon() const
 void PlrShaft::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING PlrShaft::dataType() const
-{
-    return d->dataType;
-}
-
-void PlrShaft::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING PlrShaft::name() const
@@ -6949,9 +6904,9 @@ void PlrShaft::setU_R(const int u_R)
 }
 
 
-PlrBdq::PlrBdq(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX Cp,RX xp,RX Cn,RX xn)
+PlrBdq::PlrBdq(int nr,int icon,STRING name,STRING desc,RX lam,RX Cp,RX xp,RX Cn,RX xn)
 {
-    d = new PlrBdqPrivate(nr,icon,dataType,name,desc,lam,Cp,xp,Cn,xn);
+    d = new PlrBdqPrivate(nr,icon,name,desc,lam,Cp,xp,Cn,xn);
 }
 
 STRING PlrBdq::write()
@@ -6987,16 +6942,6 @@ int PlrBdq::icon() const
 void PlrBdq::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING PlrBdq::dataType() const
-{
-    return d->dataType;
-}
-
-void PlrBdq::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING PlrBdq::name() const
@@ -7070,9 +7015,9 @@ void PlrBdq::setXn(const RX xn)
 }
 
 
-PlrBdf::PlrBdf(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX Cp,RX xp,RX Cn,RX xn)
+PlrBdf::PlrBdf(int nr,int icon,STRING name,STRING desc,RX lam,RX Cp,RX xp,RX Cn,RX xn)
 {
-    d = new PlrBdfPrivate(nr,icon,dataType,name,desc,lam,Cp,xp,Cn,xn);
+    d = new PlrBdfPrivate(nr,icon,name,desc,lam,Cp,xp,Cn,xn);
 }
 
 STRING PlrBdf::write()
@@ -7108,16 +7053,6 @@ int PlrBdf::icon() const
 void PlrBdf::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING PlrBdf::dataType() const
-{
-    return d->dataType;
-}
-
-void PlrBdf::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING PlrBdf::name() const
@@ -7191,9 +7126,9 @@ void PlrBdf::setXn(const RX xn)
 }
 
 
-QfrQab::QfrQab(int nr,int icon,STRING dataType,STRING name,STRING desc,RX a,RX b)
+QfrQab::QfrQab(int nr,int icon,STRING name,STRING desc,RX a,RX b)
 {
-    d = new QfrQabPrivate(nr,icon,dataType,name,desc,a,b);
+    d = new QfrQabPrivate(nr,icon,name,desc,a,b);
 }
 
 STRING QfrQab::write()
@@ -7229,16 +7164,6 @@ int QfrQab::icon() const
 void QfrQab::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING QfrQab::dataType() const
-{
-    return d->dataType;
-}
-
-void QfrQab::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING QfrQab::name() const
@@ -7282,9 +7207,9 @@ void QfrQab::setB(const RX b)
 }
 
 
-QfrFab::QfrFab(int nr,int icon,STRING dataType,STRING name,STRING desc,RX a,RX b)
+QfrFab::QfrFab(int nr,int icon,STRING name,STRING desc,RX a,RX b)
 {
-    d = new QfrFabPrivate(nr,icon,dataType,name,desc,a,b);
+    d = new QfrFabPrivate(nr,icon,name,desc,a,b);
 }
 
 STRING QfrFab::write()
@@ -7320,16 +7245,6 @@ int QfrFab::icon() const
 void QfrFab::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING QfrFab::dataType() const
-{
-    return d->dataType;
-}
-
-void QfrFab::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING QfrFab::name() const
@@ -7373,9 +7288,9 @@ void QfrFab::setB(const RX b)
 }
 
 
-QfrCrack::QfrCrack(int nr,int icon,STRING dataType,STRING name,STRING desc,RX a,RX b,RX length,RX width,RX depth,int nB,int u_L,int u_W,int u_D)
+QfrCrack::QfrCrack(int nr,int icon,STRING name,STRING desc,RX a,RX b,RX length,RX width,RX depth,int nB,int u_L,int u_W,int u_D)
 {
-    d = new QfrCrackPrivate(nr,icon,dataType,name,desc,a,b,length,width,depth,nB,u_L,u_W,u_D);
+    d = new QfrCrackPrivate(nr,icon,name,desc,a,b,length,width,depth,nB,u_L,u_W,u_D);
 }
 
 STRING QfrCrack::write()
@@ -7411,16 +7326,6 @@ int QfrCrack::icon() const
 void QfrCrack::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING QfrCrack::dataType() const
-{
-    return d->dataType;
-}
-
-void QfrCrack::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING QfrCrack::name() const
@@ -7534,9 +7439,9 @@ void QfrCrack::setU_D(const int u_D)
 }
 
 
-QfrTest2::QfrTest2(int nr,int icon,STRING dataType,STRING name,STRING desc,RX a,RX b,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2)
+QfrTest2::QfrTest2(int nr,int icon,STRING name,STRING desc,RX a,RX b,RX dP1,RX F1,RX dP2,RX F2,int u_P1,int u_F1,int u_P2,int u_F2)
 {
-    d = new QfrTest2Private(nr,icon,dataType,name,desc,a,b,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2);
+    d = new QfrTest2Private(nr,icon,name,desc,a,b,dP1,F1,dP2,F2,u_P1,u_F1,u_P2,u_F2);
 }
 
 STRING QfrTest2::write()
@@ -7572,16 +7477,6 @@ int QfrTest2::icon() const
 void QfrTest2::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING QfrTest2::dataType() const
-{
-    return d->dataType;
-}
-
-void QfrTest2::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING QfrTest2::name() const
@@ -7705,9 +7600,9 @@ void QfrTest2::setU_F2(const int u_F2)
 }
 
 
-AfeDor::AfeDor(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dTmin,RX ht,RX wd,RX cd,int u_T,int u_H,int u_W)
+AfeDor::AfeDor(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dTmin,RX ht,RX wd,RX cd,int u_T,int u_H,int u_W)
 {
-    d = new AfeDorPrivate(nr,icon,dataType,name,desc,lam,turb,expt,dTmin,ht,wd,cd,u_T,u_H,u_W);
+    d = new AfeDorPrivate(nr,icon,name,desc,lam,turb,expt,dTmin,ht,wd,cd,u_T,u_H,u_W);
 }
 
 STRING AfeDor::write()
@@ -7743,16 +7638,6 @@ int AfeDor::icon() const
 void AfeDor::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING AfeDor::dataType() const
-{
-    return d->dataType;
-}
-
-void AfeDor::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING AfeDor::name() const
@@ -7876,9 +7761,9 @@ void AfeDor::setU_W(const int u_W)
 }
 
 
-DrPl2::DrPl2(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dH,RX ht,RX wd,RX cd,int u_H,int u_W)
+DrPl2::DrPl2(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dH,RX ht,RX wd,RX cd,int u_H,int u_W)
 {
-    d = new DrPl2Private(nr,icon,dataType,name,desc,lam,turb,expt,dH,ht,wd,cd,u_H,u_W);
+    d = new DrPl2Private(nr,icon,name,desc,lam,turb,expt,dH,ht,wd,cd,u_H,u_W);
 }
 
 STRING DrPl2::write()
@@ -7914,16 +7799,6 @@ int DrPl2::icon() const
 void DrPl2::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING DrPl2::dataType() const
-{
-    return d->dataType;
-}
-
-void DrPl2::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING DrPl2::name() const
@@ -8037,9 +7912,9 @@ void DrPl2::setU_W(const int u_W)
 }
 
 
-AfeCmf::AfeCmf(int nr,int icon,STRING dataType,STRING name,STRING desc,RX Flow,int u_F)
+AfeCmf::AfeCmf(int nr,int icon,STRING name,STRING desc,RX Flow,int u_F)
 {
-    d = new AfeCmfPrivate(nr,icon,dataType,name,desc,Flow,u_F);
+    d = new AfeCmfPrivate(nr,icon,name,desc,Flow,u_F);
 }
 
 STRING AfeCmf::write()
@@ -8075,16 +7950,6 @@ int AfeCmf::icon() const
 void AfeCmf::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING AfeCmf::dataType() const
-{
-    return d->dataType;
-}
-
-void AfeCmf::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING AfeCmf::name() const
@@ -8128,9 +7993,9 @@ void AfeCmf::setU_F(const int u_F)
 }
 
 
-AfeCvf::AfeCvf(int nr,int icon,STRING dataType,STRING name,STRING desc,RX Flow,int u_F)
+AfeCvf::AfeCvf(int nr,int icon,STRING name,STRING desc,RX Flow,int u_F)
 {
-    d = new AfeCvfPrivate(nr,icon,dataType,name,desc,Flow,u_F);
+    d = new AfeCvfPrivate(nr,icon,name,desc,Flow,u_F);
 }
 
 STRING AfeCvf::write()
@@ -8166,16 +8031,6 @@ int AfeCvf::icon() const
 void AfeCvf::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING AfeCvf::dataType() const
-{
-    return d->dataType;
-}
-
-void AfeCvf::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING AfeCvf::name() const
@@ -8219,9 +8074,9 @@ void AfeCvf::setU_F(const int u_F)
 }
 
 
-AfeFan::AfeFan(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX rdens,RX fdf,RX sop,RX off,std::vector<RX> fpc,RX Sarea,int u_Sa,std::vector<FanDataPoint> data)
+AfeFan::AfeFan(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX rdens,RX fdf,RX sop,RX off,std::vector<RX> fpc,RX Sarea,int u_Sa,std::vector<FanDataPoint> data)
 {
-    d = new AfeFanPrivate(nr,icon,dataType,name,desc,lam,turb,expt,rdens,fdf,sop,off,fpc,Sarea,u_Sa,data);
+    d = new AfeFanPrivate(nr,icon,name,desc,lam,turb,expt,rdens,fdf,sop,off,fpc,Sarea,u_Sa,data);
 }
 
 STRING AfeFan::write()
@@ -8257,16 +8112,6 @@ int AfeFan::icon() const
 void AfeFan::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING AfeFan::dataType() const
-{
-    return d->dataType;
-}
-
-void AfeFan::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING AfeFan::name() const
@@ -8400,14 +8245,14 @@ void AfeFan::setData(const std::vector<FanDataPoint> data)
 }
 
 
-AfeCsf::AfeCsf(int nr,int icon,STRING dataType,STRING name,STRING desc,int u_x,int u_y,std::vector<DataPoint> data)
+AfeCsf::AfeCsf(int nr,int icon,STRING name,STRING desc,int u_x,int u_y,std::vector<DataPoint> data)
 {
-    d = new AfeCsfPrivate(nr,icon,dataType,name,desc,u_x,u_y,data);
+    d = new AfeCsfPrivate(nr,icon,name,desc,u_x,u_y,data);
 }
 
 STRING AfeCsf::write()
 {
-    return d->write();
+    return d->write(dataType());
 }
 
 void AfeCsf::read(Reader &input)
@@ -8438,16 +8283,6 @@ int AfeCsf::icon() const
 void AfeCsf::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING AfeCsf::dataType() const
-{
-    return d->dataType;
-}
-
-void AfeCsf::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING AfeCsf::name() const
@@ -8501,9 +8336,9 @@ void AfeCsf::setData(const std::vector<DataPoint> data)
 }
 
 
-AfeSup::AfeSup(int nr,int icon,STRING dataType,STRING name,STRING desc,int sched,int u_H,std::vector<AirflowSubelementData> subelements)
+AfeSup::AfeSup(int nr,int icon,STRING name,STRING desc,int sched,int u_H,std::vector<AirflowSubelementData> subelements)
 {
-    d = new AfeSupPrivate(nr,icon,dataType,name,desc,sched,u_H,subelements);
+    d = new AfeSupPrivate(nr,icon,name,desc,sched,u_H,subelements);
 }
 
 STRING AfeSup::write()
@@ -8539,16 +8374,6 @@ int AfeSup::icon() const
 void AfeSup::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING AfeSup::dataType() const
-{
-    return d->dataType;
-}
-
-void AfeSup::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING AfeSup::name() const
