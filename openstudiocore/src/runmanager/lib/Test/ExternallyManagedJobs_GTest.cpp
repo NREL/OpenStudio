@@ -239,7 +239,11 @@ TEST_F(RunManagerTestFixture, ExternalJob)
 
     // update to waiting in queue
     externalJob.setStatus(AdvancedStatusEnum(AdvancedStatusEnum::WaitingInQueue));
-    //rnew.updateJob(externalJob);
+
+    // since we are still operating on the original, not the copy that RunManager created for it
+    // (something special that only updateJob() does, not enqueue(), it's documented in the function
+    // call), we need to update with the new status.
+    rnew.updateJob(externalJob);
     EXPECT_FALSE(externalJob.uuid() == jorig2.uuid());
     EXPECT_FALSE(externalJob.lastRun());
 
@@ -253,8 +257,14 @@ TEST_F(RunManagerTestFixture, ExternalJob)
 
     // download detailed results
     rnew.updateJob(externalJob2, basedir / openstudio::toPath("copied2"));
-    EXPECT_TRUE(externalJob2.lastRun());
-    FileInfo fi2 = externalJob2.treeAllFiles().getLastByFilename("eplusout.sql");
+    
+
+    // we now need to get the job that runmanager has in it, not the copies we have locally,
+    // remember, runmanager, on an "updateJob" call copies the job if it doesn't already
+    // exist, it does not take ownership of the job you pass in
+    Job externalJob2FromRM = rnew.getJob(externalJob2.uuid());
+    EXPECT_TRUE(externalJob2FromRM.lastRun());
+    FileInfo fi2 = externalJob2FromRM.treeAllFiles().getLastByFilename("eplusout.sql");
     EXPECT_EQ(basedir / openstudio::toPath("copied2") / openstudio::toPath("5-EnergyPlus-0/eplusout.sql"), fi2.fullPath);
     EXPECT_TRUE(fi2.exists);
     boost::filesystem::exists(fi2.fullPath);
