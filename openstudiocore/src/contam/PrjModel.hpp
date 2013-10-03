@@ -125,6 +125,18 @@ public:
 //        m_airflowElements.push_back(QSharedPointer<AirflowElement>((AirflowElement*)copy));
 //    }
 
+    template <class T> void addAirflowElement(T element)
+    {
+        T *copy = new T;
+        *copy = element;
+        AirflowElement *pointer = dynamic_cast<AirflowElement*>(copy);
+        if(pointer)
+        {
+            copy->setNr(m_airflowElements.size()+1);
+            m_airflowElements.push_back(QSharedPointer<AirflowElement>(pointer));
+        }
+    }
+
     int airflowElementNrByName(STRING name) const;
 
     VECTOR_TYPE<CdvDat> getCdvDat()

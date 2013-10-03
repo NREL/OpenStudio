@@ -1091,14 +1091,14 @@ void SupDatPrivate::readDetails(Reader &input)
 }
 
 
-PlrOrfPrivate::PlrOrfPrivate(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX area,RX dia,RX coef,RX Re,int u_A,int u_D):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),lam(lam),turb(turb),expt(expt),area(area),dia(dia),coef(coef),Re(Re),u_A(u_A),u_D(u_D)
+PlrOrfPrivate::PlrOrfPrivate(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX area,RX dia,RX coef,RX Re,int u_A,int u_D):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),area(area),dia(dia),coef(coef),Re(Re),u_A(u_A),u_D(u_D)
 {}
 
 void PlrOrfPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     lam = input.readNumber<RX>(FILELINE);
@@ -1115,7 +1115,7 @@ void PlrOrfPrivate::read(Reader &input)
 STRING PlrOrfPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_orfc " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(area) + ' ' + TO_STRING(dia) + ' ' + TO_STRING(coef) + ' ' + TO_STRING(Re) + ' ' + TO_STRING(u_A) + ' ' + TO_STRING(u_D) + '\n';
     return string;
@@ -1282,14 +1282,14 @@ void PlrFcnPrivate::readDetails(Reader &input)
     expt = input.readNumber<RX>(FILELINE);
 }
 
-PlrTest1Private::PlrTest1Private(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dP,RX Flow,int u_P,int u_F):nr(nr),icon(icon),dataType(dataType),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dP(dP),Flow(Flow),u_P(u_P),u_F(u_F)
+PlrTest1Private::PlrTest1Private(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dP,RX Flow,int u_P,int u_F):nr(nr),icon(icon),name(name),desc(desc),lam(lam),turb(turb),expt(expt),dP(dP),Flow(Flow),u_P(u_P),u_F(u_F)
 {}
 
 void PlrTest1Private::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
     icon = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE);
     name = input.readString(FILELINE);
     desc = input.readLine(FILELINE);
     lam = input.readNumber<RX>(FILELINE);
@@ -1304,7 +1304,7 @@ void PlrTest1Private::read(Reader &input)
 STRING PlrTest1Private::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + ' ' + dataType + ' ' + name + '\n';
+    string += TO_STRING(nr) + ' ' + TO_STRING(icon) + " plr_test1 " + name + '\n';
     string += desc + '\n';
     string += TO_STRING(lam) + ' ' + TO_STRING(turb) + ' ' + TO_STRING(expt) + ' ' + TO_STRING(dP) + ' ' + TO_STRING(Flow) + ' ' + TO_STRING(u_P) + ' ' + TO_STRING(u_F) + '\n';
     return string;

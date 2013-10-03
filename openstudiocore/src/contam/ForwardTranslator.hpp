@@ -43,6 +43,8 @@ class CONTAM_API ForwardTranslator
 {
 public:
   ForwardTranslator();
+  ForwardTranslator(std::string leakageDescriptor);
+  ForwardTranslator(double flow,double n=0.65,double deltaP=75.0);
   boost::optional<std::string> translateToString(const openstudio::model::Model& model,
     bool translateHVAC=true, std::string leakageDescriptor=std::string("Average"));
   //bool translate(const openstudio::model::Model& model,bool translateHVAC=true,

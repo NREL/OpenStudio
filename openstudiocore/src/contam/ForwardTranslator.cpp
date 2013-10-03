@@ -72,6 +72,38 @@ ForwardTranslator::ForwardTranslator()
   setAirtightnessLevel("Average");
 }
 
+ForwardTranslator::ForwardTranslator(std::string leakageDescriptor)
+{
+  m_valid=false;
+  m_logSink.setLogLevel(Warn);
+  m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.ForwardTranslator"));
+  m_logSink.setThreadId(QThread::currentThread());
+  m_progressBar = 0;
+  m_data.read(":/templates/template.prj");
+  if(m_data.valid())
+  {
+    // The template is a legal PRJ file, so it has one level. Not for long.
+    m_data.setLevels(std::vector<prj::Level>());
+  }
+  setAirtightnessLevel(leakageDescriptor);
+}
+
+ForwardTranslator::ForwardTranslator(double flow,double n,double deltaP)
+{
+  m_valid=false;
+  m_logSink.setLogLevel(Warn);
+  m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.ForwardTranslator"));
+  m_logSink.setThreadId(QThread::currentThread());
+  m_progressBar = 0;
+  m_data.read(":/templates/template.prj");
+  if(m_data.valid())
+  {
+    // The template is a legal PRJ file, so it has one level. Not for long.
+    m_data.setLevels(std::vector<prj::Level>());
+  }
+  setExteriorFlowRate(flow,n,deltaP);
+}
+
 int ForwardTranslator::tableLookup(QMap<std::string,int> map, std::string str, const char *name)
 {
   int nr = map.value(str,0);
@@ -208,6 +240,17 @@ bool ForwardTranslator::setAirtightnessLevel(std::string level)
     return false;
   }
   afeMap["roof"] = nr;
+  m_afeMap = afeMap;
+  return true;
+}
+
+bool ForwardTranslator::setExteriorFlowRate(double flow,double n,double deltaP)
+{
+  std::map<std::string,int> afeMap;
+  afeMap["exterior"] = addAirflowElement("CustomExterior",flow,n,deltaP);
+  afeMap["roof"] = addAirflowElement("CustomRoof",flow,n,deltaP);
+  afeMap["interior"] = addAirflowElement("CustomInterior",2*flow,n,deltaP);
+  afeMap["floor"] = addAirflowElement("CustomFloor",2*flow,n,deltaP);
   m_afeMap = afeMap;
   return true;
 }
@@ -1373,7 +1416,7 @@ bool ForwardTranslator::setSteadyWeather(double windSpeed, double windDirection)
   return false;
 }
 
-static double setLamCoef(double Ct, double x)
+static double laminarCoefficient(double Ct, double x)
 {
   // Ct  turbulent flow coefficient
   // x   exponent
@@ -1410,32 +1453,29 @@ int ForwardTranslator::addAirflowElement(std::string name, double flow,double n,
   // flow - volume flow rate in m^3/h
   // deltaP - pressure difference in Pa
   // n - exponent  
-  int nr = 0;
-  /*
+
   double RHOAIR = 1.20410;    // density of standard air
   double SRHO = 1.097315;     // sqrt( RHOAIR )
     
   double F = RHOAIR*flow/3600.0;  // mass flow in kg/s
 
   double Ct = F/(SRHO*std::pow(deltaP,n));
-  double Cl = setLamCoef(Ct,n);
+  double Cl = laminarCoefficient(Ct,n);
 
-  prj::Plr_Test1 *afe = new prj::Plr_Test1;
-  nr = afe->nr = m_data.airflowElements.size()+1;
-  afe->icon = OPNG;
-  afe->dtype = "plr_test1";
-  afe->name = openstudio::toQString(name);
-  afe->lam = QString().sprintf("%g",Cl);
-  afe->turb = QString().sprintf("%g",Ct);
-  afe->expt = QString().sprintf("%g",n);
-  afe->dP = QString().sprintf("%g",deltaP);
-  afe->Flow = QString().sprintf("%g",F);
-  afe->u_P = 0;
-  afe-> u_F = 1; // Display units are m^3/h
+  std::string lam = QString().sprintf("%g",Cl).toStdString();
+  std::string turb = QString().sprintf("%g",Ct).toStdString();
+  std::string expt = QString().sprintf("%g",n).toStdString();
+  std::string dP = QString().sprintf("%g",deltaP).toStdString();
+  std::string Flow = QString().sprintf("%g",F).toStdString();
+  int u_P = 0;
+  int u_F = 1; // Display units are m^3/h
 
-  m_data.airflowElements << QSharedPointer<prj::AirflowElement>(afe);
-  */
-  return nr;
+  // Create a 1-point test element with display units of m^3/h
+  prj::PlrTest1 afe(0, 0, name, " ", lam, turb, expt, dP, Flow, u_P, u_F);
+
+  m_data.addAirflowElement(afe);
+
+  return afe.nr();
 }
 
 std::vector<LogMessage> ForwardTranslator::warnings() const

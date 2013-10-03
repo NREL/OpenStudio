@@ -701,13 +701,13 @@ public:
 class PlrOrfPrivate : public QSharedData
 {
 public:
-    PlrOrfPrivate(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX area=RX_INIT(0),RX dia=RX_INIT(0),RX coef=RX_INIT(0),RX Re=RX_INIT(0),int u_A=0,int u_D=0);
+    PlrOrfPrivate(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX area=RX_INIT(0),RX dia=RX_INIT(0),RX coef=RX_INIT(0),RX Re=RX_INIT(0),int u_A=0,int u_D=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    //STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX lam;  // laminar flow coefficient (R4)
@@ -804,13 +804,13 @@ public:
 class PlrTest1Private : public QSharedData
 {
 public:
-    PlrTest1Private(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dP=RX_INIT(0),RX Flow=RX_INIT(0),int u_P=0,int u_F=0);
+    PlrTest1Private(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dP=RX_INIT(0),RX Flow=RX_INIT(0),int u_P=0,int u_F=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // element number (IX); in order from 1 to _nafe
     int icon;  // icon used to represent flow path (I2) {W}
-    STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
+    // STRING dataType;  // element data type (CS) element type names are stored in _afe_dnames in dtype order.
     STRING name;  // element name (CS) {W}
     STRING desc;  // element description (CS) {W} may be blank
     RX lam;  // laminar flow coefficient (R4)

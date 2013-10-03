@@ -5479,9 +5479,9 @@ AirflowElement* AirflowElement::readElement(Reader &input)
     return out;
 }
 
-PlrOrf::PlrOrf(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX area,RX dia,RX coef,RX Re,int u_A,int u_D)
+PlrOrf::PlrOrf(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX area,RX dia,RX coef,RX Re,int u_A,int u_D)
 {
-    d = new PlrOrfPrivate(nr,icon,dataType,name,desc,lam,turb,expt,area,dia,coef,Re,u_A,u_D);
+    d = new PlrOrfPrivate(nr,icon,name,desc,lam,turb,expt,area,dia,coef,Re,u_A,u_D);
 }
 
 STRING PlrOrf::write()
@@ -5517,16 +5517,6 @@ int PlrOrf::icon() const
 void PlrOrf::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING PlrOrf::dataType() const
-{
-    return d->dataType;
-}
-
-void PlrOrf::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING PlrOrf::name() const
@@ -6164,9 +6154,9 @@ void PlrFcn::setExpt(const RX expt)
 }
 
 
-PlrTest1::PlrTest1(int nr,int icon,STRING dataType,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dP,RX Flow,int u_P,int u_F)
+PlrTest1::PlrTest1(int nr,int icon,STRING name,STRING desc,RX lam,RX turb,RX expt,RX dP,RX Flow,int u_P,int u_F)
 {
-    d = new PlrTest1Private(nr,icon,dataType,name,desc,lam,turb,expt,dP,Flow,u_P,u_F);
+    d = new PlrTest1Private(nr,icon,name,desc,lam,turb,expt,dP,Flow,u_P,u_F);
 }
 
 STRING PlrTest1::write()
@@ -6202,16 +6192,6 @@ int PlrTest1::icon() const
 void PlrTest1::setIcon(const int icon)
 {
     d->icon = icon;
-}
-
-STRING PlrTest1::dataType() const
-{
-    return d->dataType;
-}
-
-void PlrTest1::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 STRING PlrTest1::name() const

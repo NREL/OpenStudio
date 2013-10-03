@@ -1293,7 +1293,7 @@ public:
     virtual int icon() const = 0;
     virtual void setIcon(const int icon) = 0;
     virtual STRING dataType() const = 0;
-    virtual void setDataType(const STRING dataType) = 0;
+//    virtual void setDataType(const STRING dataType) = 0;
     virtual STRING name() const = 0;
     virtual void setName(const STRING name) = 0;
     virtual STRING desc() const = 0;
@@ -1303,7 +1303,7 @@ public:
 class CONTAM_API PlrOrf : public AirflowElement
 {
 public:
-    PlrOrf(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX area=RX_INIT(0),RX dia=RX_INIT(0),RX coef=RX_INIT(0),RX Re=RX_INIT(0),int u_A=0,int u_D=0);
+    PlrOrf(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX area=RX_INIT(0),RX dia=RX_INIT(0),RX coef=RX_INIT(0),RX Re=RX_INIT(0),int u_A=0,int u_D=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1311,8 +1311,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "plr_orfc";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;
@@ -1474,7 +1473,7 @@ private:
 class CONTAM_API PlrTest1 : public AirflowElement
 {
 public:
-    PlrTest1(int nr=0,int icon=0,STRING dataType=STRING_INIT,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dP=RX_INIT(0),RX Flow=RX_INIT(0),int u_P=0,int u_F=0);
+    PlrTest1(int nr=0,int icon=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX lam=RX_INIT(0),RX turb=RX_INIT(0),RX expt=RX_INIT(0),RX dP=RX_INIT(0),RX Flow=RX_INIT(0),int u_P=0,int u_F=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
@@ -1482,8 +1481,7 @@ public:
     void setNr(const int nr);
     int icon() const;
     void setIcon(const int icon);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "plr_test1";}
     STRING name() const;
     void setName(const STRING name);
     STRING desc() const;

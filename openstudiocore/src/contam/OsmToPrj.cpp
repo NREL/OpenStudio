@@ -29,7 +29,7 @@
 
 void usage( boost::program_options::options_description desc)
 {
-  std::cout << "Usage: OsmToPrj --inputPath=./path/to/input.osm" << std::endl;
+  std::cout << "Usage: OsmToPrj --input-path=./path/to/input.osm" << std::endl;
   std::cout << "   or: OsmToPrj input.osm" << std::endl;
   std::cout << desc << std::endl;
 }
@@ -41,9 +41,6 @@ int main(int argc, char *argv[])
   double flow=27.1;
   bool setLevel = true;
   boost::program_options::options_description desc("Allowed options");
-  desc.add_options()
-    ("help", "print help message")
-    ("inputPath", boost::program_options::value<std::string>(&inputPathString), "path to OSM file");
 
   desc.add_options()
     ("flow,f", boost::program_options::value<double>(&flow), "leakage flow rate per envelope area [m^3/h/m^2]")
@@ -126,6 +123,10 @@ int main(int argc, char *argv[])
   if(setLevel)
   {
     translator.setAirtightnessLevel(leakageDescriptorString);
+  }
+  else
+  {
+    translator.setExteriorFlowRate(flow);
   }
   QFile file(openstudio::toQString(prjPath));
   if(file.open(QFile::WriteOnly))
