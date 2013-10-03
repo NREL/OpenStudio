@@ -19,15 +19,13 @@
 
 #include "LostCloudConnectionDialog.hpp"
 
-#include <pat_app/CloudMonitor.hpp>
-#include <pat_app/PatApp.hpp>
-
 #include <utilities/core/Assert.hpp>
 
 #include <QBoxLayout>
 #include <QDesktopServices>
 #include <QLabel>
 #include <QPushButton>
+#include <QUrl>
 
 #define RED '#FF0000'
 #define GREEN '#00FF00'
@@ -37,19 +35,25 @@
 
 namespace openstudio {
 
-LostCloudConnectionDialog::LostCloudConnectionDialog(QWidget* parent)
-  : OSDialog(false, parent)
+LostCloudConnectionDialog::LostCloudConnectionDialog(bool internetAvailable,
+  bool authenticated,
+  bool cloudRunning,
+  QWidget* parent)
+  : OSDialog(false, parent),
+    m_clearCloudSession(false)
 {
   this->setWindowTitle("Lost Cloud Connection");
   this->setSizeHint(QSize(500,300));
-  createWidgets();
+  createWidgets(internetAvailable,authenticated,cloudRunning);
 }
 
 LostCloudConnectionDialog::~LostCloudConnectionDialog()
 {
 }
 
-void LostCloudConnectionDialog::createWidgets()
+void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
+  bool authenticated,
+  bool cloudRunning)
 {
   //// OS SETTINGS
 
@@ -63,12 +67,7 @@ void LostCloudConnectionDialog::createWidgets()
 
   this->cancelButton()->hide();
 
-  QSharedPointer<pat::CloudMonitor> cloudMonitor = pat::PatApp::instance()->cloudMonitor();
-  pat::CloudMonitorWorker worker(cloudMonitor.data());
-
   QLabel * label = 0;
-
-  bool isOK = true;
   
   QVBoxLayout * mainLayout = new QVBoxLayout;
   mainLayout->setContentsMargins(QMargins(0,0,0,0));
@@ -93,8 +92,8 @@ void LostCloudConnectionDialog::createWidgets()
   // 1 Determine if there is an internet connection
   label = new QLabel;
   vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
-  isOK = worker.internetAvailable();
-  if(isOK){
+
+  if(internetAvailable){
     label->setText("<FONT COLOR = GREEN>1. <FONT COLOR = BLACK>" + tr("Internet Connection: ") + "<b> <FONT COLOR = GREEN>" + tr("yes") + "</b>");
   } else {
     label->setText("<FONT COLOR = RED>1. <FONT COLOR = BLACK>" + tr("Internet Connection: ") + "<b> <FONT COLOR = RED>" + tr("no") + "</b>");
@@ -112,8 +111,7 @@ void LostCloudConnectionDialog::createWidgets()
   // 2 Determine if the cloud login is accepted
   label = new QLabel;
   vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
-  isOK = worker.authenticated();
-  if(isOK){
+  if(authenticated){
     label->setText("<FONT COLOR = GREEN>2. <FONT COLOR = BLACK>" + tr("Cloud Log-in: ") + "<b> <FONT COLOR = GREEN>" + tr("accepted") + "</b>");
   } else {
     label->setText("<FONT COLOR = RED>2. <FONT COLOR = BLACK>" + tr("Cloud Log-in: ") + "<b> <FONT COLOR = RED>" + tr("denied") + "</b>");
@@ -125,8 +123,7 @@ void LostCloudConnectionDialog::createWidgets()
   // 3 Determine if there is a cloud connection
   label = new QLabel;
   vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
-  isOK = worker.cloudRunning();
-  if(isOK){
+  if(cloudRunning){
     label->setText("<FONT COLOR = GREEN>3. <FONT COLOR = BLACK>" + tr("Cloud Connection: ") + "<b> <FONT COLOR = GREEN>" + tr("reconnected") + "</b>");
 
     label = new QLabel;
@@ -266,8 +263,7 @@ void LostCloudConnectionDialog::on_launchAWSConsole(bool checked)
 
 void LostCloudConnectionDialog::on_clearCloudSession(bool checked)
 {
-  QSharedPointer<pat::CloudMonitor> cloudMonitor = pat::PatApp::instance()->cloudMonitor();
-  cloudMonitor.data()->stopCloud();
+  m_clearCloudSession = true;
 }
 
 } // openstudio

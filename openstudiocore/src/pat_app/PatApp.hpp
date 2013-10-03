@@ -178,6 +178,12 @@ class PatApp : public QApplication, public BaseApp
 
   virtual QSharedPointer<EditController> editController();
 
+  void openLostCloudConnectionDlg(bool internetAvailable,
+    bool authenticated,
+    bool cloudRunning);
+
+  bool lostCloudConnectionDlgClearSession();
+
  signals:
 
   void userMeasuresDirChanged();
@@ -205,8 +211,6 @@ class PatApp : public QApplication, public BaseApp
   void openCloudDlg();
 
   void on_closeCloudDlg();
-
-  void openLostCloudConnectionDlg();
 
   void on_closeLostCloudConnectionDlg();
 
