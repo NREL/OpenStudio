@@ -141,8 +141,8 @@ void CloudDialog::createWidgets()
   m_legalAgreement->setFixedHeight(TEXT_HEIGHT);
   m_legalAgreement->setFixedWidth(TEXT_WIDTH);
 
-  AWSProvider awsProvider;
-  m_legalAgreement->setText(awsProvider.userAgreementText().c_str());
+  AWSSettings awsSettings;
+  m_legalAgreement->setText(awsSettings.userAgreementText().c_str());
 
   m_rightLoginLayout->addWidget(m_legalAgreement,0,Qt::AlignTop | Qt::AlignLeft);
 
