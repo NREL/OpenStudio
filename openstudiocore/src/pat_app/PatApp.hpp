@@ -34,7 +34,6 @@
 #include "../shared_gui_components/BaseApp.hpp"
 #include "../shared_gui_components/BuildingComponentDialog.hpp"
 #include "../shared_gui_components/CloudDialog.hpp"
-#include "../shared_gui_components/LostCloudConnectionDialog.hpp"
 #include "../shared_gui_components/MonitorUseDialog.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSDialog.hpp"
@@ -178,12 +177,6 @@ class PatApp : public QApplication, public BaseApp
 
   virtual QSharedPointer<EditController> editController();
 
-  void openLostCloudConnectionDlg(bool internetAvailable,
-    bool authenticated,
-    bool cloudRunning);
-
-  bool lostCloudConnectionDlgClearSession();
-
  signals:
 
   void userMeasuresDirChanged();
@@ -211,8 +204,6 @@ class PatApp : public QApplication, public BaseApp
   void openCloudDlg();
 
   void on_closeCloudDlg();
-
-  void on_closeLostCloudConnectionDlg();
 
   void openMonitorUseDlg();
 
@@ -267,7 +258,6 @@ class PatApp : public QApplication, public BaseApp
   QPointer<StartupView> m_startupView;
   QPointer<BuildingComponentDialog> m_onlineBclDialog;
   QPointer<CloudDialog> m_cloudDialog;
-  QPointer<LostCloudConnectionDialog> m_lostCloudConnectiopnDialog;
   QPointer<MonitorUseDialog> m_monitorUseDialog;
 
   QSharedPointer<DesignAlternativesTabController> m_designAlternativesTabController;

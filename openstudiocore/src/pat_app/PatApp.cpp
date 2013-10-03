@@ -466,36 +466,6 @@ void PatApp::on_closeCloudDlg()
 // TODO m_cloudDialog
 }
 
-void PatApp::openLostCloudConnectionDlg(bool internetAvailable,
-    bool authenticated,
-    bool cloudRunning)
-{
-  if(!m_lostCloudConnectiopnDialog){
-    m_lostCloudConnectiopnDialog = new LostCloudConnectionDialog(internetAvailable,authenticated,cloudRunning);
-
-    bool isConnected = connect(m_lostCloudConnectiopnDialog, SIGNAL(rejected()),
-                               this, SLOT(on_closeBclDlg()));
-    OS_ASSERT(isConnected);
-  }
-  if(m_lostCloudConnectiopnDialog && !m_lostCloudConnectiopnDialog->isVisible()){
-    m_lostCloudConnectiopnDialog->show();
-  }
-}
-
-void PatApp::on_closeLostCloudConnectionDlg()
-{
-// TODO m_lostCloudConnectiopnDialog
-}
-
-bool PatApp::lostCloudConnectionDlgClearSession()
-{
-  if(m_lostCloudConnectiopnDialog){
-    return m_lostCloudConnectiopnDialog->clearCloudSession();
-  } else {
-    return false;
-  }
-}
-
 void PatApp::openMonitorUseDlg()
 {
   if(!m_monitorUseDialog){

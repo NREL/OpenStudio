@@ -279,11 +279,41 @@ void CloudMonitor::onCloudConnectionError()
 {
   setStatus(CLOUD_ERROR);
 
-  PatApp::instance()->openLostCloudConnectionDlg(m_worker.data()->internetAvailable(),m_worker.data()->authenticated(),m_worker.data()->cloudRunning());
+  openLostCloudConnectionDlg(m_worker.data()->internetAvailable(),m_worker.data()->authenticated(),m_worker.data()->cloudRunning());
 
-  bool clearSession = PatApp::instance()->lostCloudConnectionDlgClearSession();
+  bool clearSession = lostCloudConnectionDlgClearSession();
 
   recoverCloud();
+}
+
+void CloudMonitor::openLostCloudConnectionDlg(bool internetAvailable,
+    bool authenticated,
+    bool cloudRunning)
+{
+  if(!m_lostCloudConnectiopnDialog){
+    m_lostCloudConnectiopnDialog = new LostCloudConnectionDialog(internetAvailable,authenticated,cloudRunning);
+
+    bool isConnected = connect(m_lostCloudConnectiopnDialog, SIGNAL(rejected()),
+                               this, SLOT(on_closeBclDlg()));
+    OS_ASSERT(isConnected);
+  }
+  if(m_lostCloudConnectiopnDialog && !m_lostCloudConnectiopnDialog->isVisible()){
+    m_lostCloudConnectiopnDialog->show();
+  }
+}
+
+void CloudMonitor::on_closeLostCloudConnectionDlg()
+{
+// TODO m_lostCloudConnectiopnDialog
+}
+
+bool CloudMonitor::lostCloudConnectionDlgClearSession()
+{
+  if(m_lostCloudConnectiopnDialog){
+    return m_lostCloudConnectiopnDialog->clearCloudSession();
+  } else {
+    return false;
+  }
 }
 
 void CloudMonitor::recoverCloud()

@@ -22,11 +22,16 @@
 
 #include "PatConstants.hpp"
 #include "RunView.hpp"
+
+#include "../shared_gui_components/LostCloudConnectionDialog.hpp"
+
 #include <QObject>
 #include <QSharedPointer>
+
 #include <utilities/cloud/CloudProvider.hpp>
 #include <utilities/core/Path.hpp>
 #include <utilities/core/Url.hpp>
+
 #include <map>
 #include <vector>
 
@@ -111,6 +116,8 @@ class CloudMonitor : public QObject
 
   void onReconnectCloudWorkerComplete();
 
+  void on_closeLostCloudConnectionDlg();
+
   private:
 
   Q_DISABLE_COPY(CloudMonitor);
@@ -118,6 +125,12 @@ class CloudMonitor : public QObject
   // Set m_status and make sure the button visually shows that status
   // CloudMonitorWorker will make sure m_status is accurate
   void setStatus(CloudStatus status);
+
+  void openLostCloudConnectionDlg(bool internetAvailable,
+    bool authenticated,
+    bool cloudRunning);
+
+  bool lostCloudConnectionDlgClearSession();
 
   bool m_serverStarted;
 
@@ -144,6 +157,8 @@ class CloudMonitor : public QObject
   QSharedPointer<QThread> m_recoverCloudThread;
 
   QSharedPointer<RecoverCloudWorker> m_recoverCloudWorker;
+
+  QPointer<LostCloudConnectionDialog> m_lostCloudConnectiopnDialog;
 
   CloudStatus m_status;
 
