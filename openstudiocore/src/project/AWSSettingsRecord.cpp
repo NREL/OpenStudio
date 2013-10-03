@@ -38,7 +38,10 @@ namespace detail {
       m_userAgreementSigned(awsSettings.userAgreementSigned()),
       m_numWorkers(awsSettings.numWorkers()),
       m_terminationDelayEnabled(awsSettings.terminationDelayEnabled()),
-      m_terminationDelay(awsSettings.terminationDelay())
+      m_terminationDelay(awsSettings.terminationDelay()),
+      m_region(awsSettings.region()),
+      m_serverInstanceType(awsSettings.serverInstanceType()),
+      m_workerInstanceType(awsSettings.workerInstanceType())
   {
   }
 
@@ -67,6 +70,17 @@ namespace detail {
     OS_ASSERT(value.isValid() && !value.isNull());
     m_terminationDelay = value.toUInt();
 
+    value = query.value(AWSSettingsRecord::ColumnsType::region);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_region = value.toString().toStdString();
+
+    value = query.value(AWSSettingsRecord::ColumnsType::serverInstanceType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_serverInstanceType = value.toString().toStdString();
+
+    value = query.value(AWSSettingsRecord::ColumnsType::workerInstanceType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_workerInstanceType = value.toString().toStdString();
   }
 
   void AWSSettingsRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase>& database) {
@@ -86,7 +100,10 @@ namespace detail {
                        m_userAgreementSigned,
                        m_numWorkers,
                        m_terminationDelayEnabled,
-                       m_terminationDelay);
+                       m_terminationDelay,
+                       m_region,
+                       m_serverInstanceType,
+                       m_workerInstanceType);
   }
 
   void AWSSettingsRecord_Impl::bindValues(QSqlQuery& query) const {
@@ -96,6 +113,9 @@ namespace detail {
     query.bindValue(AWSSettingsRecord::ColumnsType::numWorkers,m_numWorkers);
     query.bindValue(AWSSettingsRecord::ColumnsType::terminationDelayEnabled,m_terminationDelayEnabled);
     query.bindValue(AWSSettingsRecord::ColumnsType::terminationDelay,m_terminationDelay);
+    query.bindValue(AWSSettingsRecord::ColumnsType::region,toQString(m_region));
+    query.bindValue(AWSSettingsRecord::ColumnsType::serverInstanceType,toQString(m_serverInstanceType));
+    query.bindValue(AWSSettingsRecord::ColumnsType::workerInstanceType,toQString(m_workerInstanceType));
   }
 
   void AWSSettingsRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
@@ -123,6 +143,17 @@ namespace detail {
     OS_ASSERT(value.isValid() && !value.isNull());
     m_lastTerminationDelay = value.toUInt();
 
+    value = query.value(AWSSettingsRecord::ColumnsType::region);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastRegion = value.toString().toStdString();
+
+    value = query.value(AWSSettingsRecord::ColumnsType::serverInstanceType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastServerInstanceType = value.toString().toStdString();
+
+    value = query.value(AWSSettingsRecord::ColumnsType::workerInstanceType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    m_lastWorkerInstanceType = value.toString().toStdString();
   }
 
   bool AWSSettingsRecord_Impl::compareValues(const QSqlQuery& query) const {
@@ -150,6 +181,18 @@ namespace detail {
     OS_ASSERT(value.isValid() && !value.isNull());
     result = result && (m_terminationDelay == value.toUInt());
 
+    value = query.value(AWSSettingsRecord::ColumnsType::region);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_region == value.toString().toStdString());
+
+    value = query.value(AWSSettingsRecord::ColumnsType::serverInstanceType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_serverInstanceType == value.toString().toStdString());
+
+    value = query.value(AWSSettingsRecord::ColumnsType::workerInstanceType);
+    OS_ASSERT(value.isValid() && !value.isNull());
+    result = result && (m_workerInstanceType == value.toString().toStdString());
+
     return result;
   }
 
@@ -160,6 +203,9 @@ namespace detail {
     m_lastNumWorkers = m_numWorkers;
     m_lastTerminationDelayEnabled = m_terminationDelayEnabled;
     m_lastTerminationDelay = m_terminationDelay;
+    m_lastRegion = m_region;
+    m_lastServerInstanceType = m_serverInstanceType;
+    m_lastWorkerInstanceType = m_workerInstanceType;
   }
 
   void AWSSettingsRecord_Impl::revertToLastValues() {
@@ -169,6 +215,9 @@ namespace detail {
     m_numWorkers = m_lastNumWorkers;
     m_terminationDelayEnabled = m_lastTerminationDelayEnabled;
     m_terminationDelay = m_lastTerminationDelay;
+    m_region = m_lastRegion;
+    m_serverInstanceType = m_lastServerInstanceType;
+    m_workerInstanceType = m_lastWorkerInstanceType;
   }
 
 } // detail
