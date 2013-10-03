@@ -152,8 +152,6 @@ namespace detail {
 
     void stopRequestComplete(bool success);
 
-    void jsonDownloadRequestsComplete(bool success);
-
     void detailedDownloadRequestsComplete(bool success);
 
     //@}
@@ -166,6 +164,9 @@ namespace detail {
 
     // emitted when data point posted to server
     void dataPointQueued(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
+
+    // emitted when data point reported as running
+    void dataPointRunning(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
 
     // emitted when data point slim results downloaded and incorporated into project
     void dataPointComplete(const openstudio::UUID& analysis, const openstudio::UUID& dataPoint);
@@ -217,21 +218,28 @@ namespace detail {
      // 10. If not, kick it off.
      void analysisStarted(bool success);
 
-     // 11. Wait up to 10 + 2 per data point tries (w/ 1s of sleep) for the server to 
+     // 11. Wait up to 20 + 2 per data point tries (w/ 1s of sleep) for the server to
      //     report that the analysis is running.
      void waitingForAnalysisToStart(bool success);
 
-     // 12. Start the monitoring process (if already running or just kicked off).
+     // 12. Wait up to 30 tries (w/ 1s of sleep in between) for the server to report that
+     //     at least one DataPoint is running.
+     void waitingForADataPointToStart(bool success);
+
+     // 13. Start the monitoring process (if already running or just kicked off).
 
      // MONITORING =============================================================
 
      // watch for complete data points
      void completeDataPointUUIDsReturned(bool success);
 
-     // make sure analysis is still running (try to avoid spinning when nothing is happening)
+     // make sure analysis is still running
+     // (try to avoid spinning when nothing is happening)
      void analysisStillRunning(bool success);
 
-     // see if data points are still running (optional part of the stopping process)
+     // see if data points are still running
+     // (mark DataPoints that are running, and also make sure something is happening. only allow
+     // 5 successive instances of nothing running)
      void dataPointsStillRunning(bool success);
 
      // DOWNLOADING ============================================================
@@ -269,20 +277,22 @@ namespace detail {
     std::vector<std::string> m_errors;
     std::vector<std::string> m_warnings;
 
-    // request run process
-    boost::optional<OSServer> m_requestRun;
     std::vector<analysis::DataPoint> m_iteration; // DataPoints in this iteration
     bool m_processingQueuesInitialized; // if false, processing queues empty just because
                                         // still spinning up process
+
+    // request run process
+    boost::optional<OSServer> m_requestRun;
     std::deque<analysis::DataPoint> m_postQueue;
     unsigned m_analysisNotRunningCount;
     unsigned m_maxAnalysisNotRunningCount;
+    // the following are used in starting the run and in monitoring
+    unsigned m_dataPointsNotRunningCount;
+    unsigned m_maxDataPointsNotRunningCount;
 
     // watch for complete data points
     boost::optional<OSServer> m_monitorDataPoints;
     std::vector<analysis::DataPoint> m_waitingQueue;
-    bool m_checkDataPointsRunningInsteadOfAnalysis;
-    bool m_lastGetRunningDataPointsSuccess;
 
     // download slim data points
     boost::optional<OSServer> m_requestJson;
@@ -291,6 +301,8 @@ namespace detail {
     // check to see if details can be downloaded
     boost::optional<OSServer> m_checkForResultsToDownload;
     std::vector<analysis::DataPoint> m_preDetailsQueue;
+    bool m_onlyProcessingDownloadRequests; // to distinguish between main request being
+                                           // run or download of details
 
     // download detailed results
     boost::optional<OSServer> m_requestDetails;
@@ -298,6 +310,7 @@ namespace detail {
 
     // stop analysis
     boost::optional<OSServer> m_requestStop;
+    bool m_waitForAlreadyRunningDataPoints;
 
     void clearErrorsAndWarnings();
     void logError(const std::string& error);
@@ -320,8 +333,6 @@ namespace detail {
     void registerDownloadingDetailsFailure();
 
     void registerStopRequestFailure();
-
-    void registerDownloadDetailsRequestFailure();
 
     void checkForRunCompleteOrStopped();
 
