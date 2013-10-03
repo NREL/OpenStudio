@@ -1072,6 +1072,7 @@ namespace detail {
     QWriteLocker l(&m_mutex);
     if (!m_hasRunSinceLoading)
     {
+      m_jobState.status = t_stat;
       l.unlock();
       emit statusChanged(t_stat);
       emit treeChanged(m_id);
@@ -1698,16 +1699,16 @@ namespace detail {
   }
 
 
-  void Job_Impl::updateJob(const boost::shared_ptr<Job_Impl> &t_other)
+  void Job_Impl::updateJob(const boost::shared_ptr<Job_Impl> &t_other, bool t_allowUUIDUpdate)
   {
 
-	if (t_other.get() == this)
-	{
-	  LOG(Info, "Updating job is current job, nothing to do: " << toString(uuid().toString())); 
-	  return;
-	} else {
+    if (t_other.get() == this)
+    {
+      LOG(Info, "Updating job is current job, nothing to do: " << toString(uuid().toString())); 
+      return;
+    } else {
       LOG(Info, "Updating job: " << toString(uuid().toString()));
-	}
+    }
 
     QWriteLocker l(&m_mutex);
 
@@ -1717,34 +1718,63 @@ namespace detail {
       throw std::runtime_error("Job updating is only valid for externallyManaged jobs");
     }
 
-    if (m_id != t_other->uuid())
+    openstudio::UUID oldUUID = m_id;
+    openstudio::UUID newUUID = t_other->uuid();
+
+    if (!t_allowUUIDUpdate && oldUUID != newUUID)
     {
-      throw std::runtime_error("Jobs do not match, unable to updateJob");
+      throw std::runtime_error("Jobs UUIDs do not match, unable to updateJob");
+    } 
+
+    if (t_allowUUIDUpdate && m_jobType != t_other->jobType())
+    {
+      throw std::runtime_error("Jobs types do not match, unable to updateJob");
     }
 
     std::vector<boost::shared_ptr<Job_Impl> > myChildren = m_children;
-    std::set<openstudio::UUID> myChildrenIds;
-
-    for (std::vector<boost::shared_ptr<Job_Impl> >::const_iterator itr = myChildren.begin();
-         itr != myChildren.end();
-         ++itr)
-    {
-      myChildrenIds.insert((*itr)->uuid());
-    }
-
     std::vector<boost::shared_ptr<Job_Impl> > otherChildren = t_other->children();
-    std::set<openstudio::UUID> otherChildrenIds;
 
-    for (std::vector<boost::shared_ptr<Job_Impl> >::const_iterator itr = otherChildren.begin();
-         itr != otherChildren.end();
-         ++itr)
+    if (!t_allowUUIDUpdate)
     {
-      otherChildrenIds.insert((*itr)->uuid());
-    }
+      std::set<openstudio::UUID> myChildrenIds;
 
-    if (myChildrenIds != otherChildrenIds)
-    {
-      throw std::runtime_error("Job children do not match, unable to updateJob");
+      for (std::vector<boost::shared_ptr<Job_Impl> >::const_iterator itr = myChildren.begin();
+          itr != myChildren.end();
+          ++itr)
+      {
+        myChildrenIds.insert((*itr)->uuid());
+      }
+
+      std::set<openstudio::UUID> otherChildrenIds;
+
+      for (std::vector<boost::shared_ptr<Job_Impl> >::const_iterator itr = otherChildren.begin();
+          itr != otherChildren.end();
+          ++itr)
+      {
+        otherChildrenIds.insert((*itr)->uuid());
+      }
+
+      if (myChildrenIds != otherChildrenIds)
+      {
+        throw std::runtime_error("Job children do not match, unable to updateJob");
+      }
+
+    } else {
+      size_t mynumChildren = myChildren.size();
+      size_t othernumChildren = otherChildren.size();
+
+      if (mynumChildren != othernumChildren || mynumChildren > 1)
+      {
+        throw std::runtime_error("Unable to update UUIDs with more than one child job or mismatched child sizes");
+      }
+
+      if (mynumChildren == 1 && othernumChildren == 1)
+      {
+        if (myChildren[0]->jobType() != otherChildren[0]->jobType())
+        {
+          throw std::runtime_error("Unable to update UUIDs with mismatched child job types");
+        }
+      }
     }
 
     boost::shared_ptr<Job_Impl> myFinishedJob = m_finishedJob;
@@ -1759,23 +1789,33 @@ namespace detail {
 
     if (myHasFinishedJob)
     {
-      if (myFinishedJob->uuid() != otherFinishedJob->uuid())
+      if (!t_allowUUIDUpdate)
       {
-        throw std::runtime_error("Finished jobs do not match, unable to updateJob");
+        if (myFinishedJob->uuid() != otherFinishedJob->uuid())
+        {
+          throw std::runtime_error("Finished jobs UUIDs do not match, unable to updateJob");
+        }
+      } else {
+        if (myFinishedJob->jobType() != otherFinishedJob->jobType())
+        {
+          throw std::runtime_error("Finished jobs types do not match, unable to updateJob");
+        }
       }
     }
 
 
-    m_params = t_other->m_params;
+
+    JobParams newparams = t_other->m_params;
+    Tools newtools = t_other->m_tools;
+    Files newfiles = t_other->m_inputFiles;
 
     JobState oldState = m_jobState;
     JobState newState = t_other->m_jobState;
 
-    m_jobState = newState;
     l.unlock();
 
-	sendSignals(oldState, newState);
 
+    // update children first, to make sure they can be updated
     for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr = myChildren.begin();
          itr != myChildren.end();
          ++itr)
@@ -1786,7 +1826,7 @@ namespace detail {
       {
         if ((*itr)->uuid() == (*itr2)->uuid())
         {
-          (*itr)->updateJob(*itr2);
+          (*itr)->updateJob(*itr2, t_allowUUIDUpdate);
           break;
         }
       }
@@ -1794,21 +1834,43 @@ namespace detail {
 
     if (myHasFinishedJob)
     {
-      myFinishedJob->updateJob(otherFinishedJob);
+      myFinishedJob->updateJob(otherFinishedJob, t_allowUUIDUpdate);
+    }
+
+
+    // then update myself and send signals
+    l.relock();
+    m_jobState = newState;
+    m_inputFiles = newfiles;
+    m_tools = newtools;
+    m_params = newparams;
+    m_id = newUUID;
+    l.unlock();
+
+    sendSignals(oldState, newState, oldUUID, newUUID);
+  }
+
+  void Job_Impl::setStatus(const AdvancedStatus &t_status)
+  {
+    if (!externallyManaged())
+    {
+      throw std::runtime_error("Unable to set status on non-externally managed job");
+    } else {
+      emitStatusChanged(t_status);
     }
   }
 
-
   void Job_Impl::sendSignals()
   {
-	QReadLocker l(&m_mutex);
-	JobState state = m_jobState;
-	l.unlock();
+    QReadLocker l(&m_mutex);
+    JobState state = m_jobState;
+    openstudio::UUID id = m_id;
+    l.unlock();
 
-    sendSignals(JobState(), state);
+    sendSignals(JobState(), state, id, id);
   }
 
-  void Job_Impl::sendSignals(JobState oldState, JobState newState)
+  void Job_Impl::sendSignals(JobState oldState, JobState newState, const openstudio::UUID &t_oldUUID, const openstudio::UUID &t_newUUID)
   {
     bool sendStatus = false;
     if (oldState.status != newState.status)
@@ -1831,6 +1893,8 @@ namespace detail {
       sendStarted = true;
     }
 
+    bool uuidchanged = t_oldUUID != t_newUUID;
+
     std::vector<FileInfo> diffFiles;
     std::set<FileInfo> oldFiles(oldState.outputFiles.files().begin(), oldState.outputFiles.files().end());
     std::set<FileInfo> newFiles(newState.outputFiles.files().begin(), newState.outputFiles.files().end());
@@ -1839,6 +1903,10 @@ namespace detail {
                         newFiles.begin(), newFiles.end(),
                         std::back_inserter(diffFiles));
 
+    if (uuidchanged) {
+      LOG(Debug, "updateJob: uuidChanged()");
+      emit uuidChanged(t_oldUUID, t_newUUID);
+    }
 
     if (sendStarted)
     {
@@ -1860,6 +1928,7 @@ namespace detail {
       LOG(Debug, "updateJob: emitFinished()");
       emitFinished(newState.errors, newState.lastRun, Files(std::vector<FileInfo>(newFiles.begin(), newFiles.end())));
     }
+
   }
 
 
@@ -1868,6 +1937,31 @@ namespace detail {
     QReadLocker l(&m_mutex);
     return m_externallyManaged;
   }
+
+  /// sets this job (and children) as being externally managed
+  void Job_Impl::makeExternallyManaged()
+  {
+
+    QWriteLocker l(&m_mutex);
+    m_externallyManaged = true;
+    if (!m_params.has("jobExternallyManaged"))
+    {
+      m_params.append("jobExternallyManaged", "true");
+    }
+
+    for (std::vector<boost::shared_ptr<Job_Impl> >::iterator itr = m_children.begin();
+         itr != m_children.end();
+         ++itr)
+    {
+      (*itr)->makeExternallyManaged();
+    }
+
+    if (m_finishedJob)
+    {
+      m_finishedJob->makeExternallyManaged();
+    }
+  }
+
 }
 }
 }

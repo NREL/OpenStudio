@@ -341,6 +341,14 @@ namespace detail {
         m_db.commit();
       }
 
+      void deleteJobTree(const openstudio::runmanager::Job &t_job)
+      {
+        QMutexLocker l(&m_mutex);
+        m_db.begin();
+        deleteJobRecursiveInternal(t_job);
+        m_db.commit();
+      }
+
       void deleteJobRecursiveInternal(const openstudio::runmanager::Job &t_job)
       {
         std::vector<openstudio::runmanager::Job> children = t_job.children();
@@ -1688,6 +1696,7 @@ namespace detail {
           }
         }
       }
+
       m_workflowkeys.insert(key);
     }
 
@@ -1740,8 +1749,8 @@ namespace detail {
 
     lock.unlock();
 
-	  if (job.externallyManaged())
-	  {
+    if (job.externallyManaged())
+    {
       job.sendSignals();
     }
 
@@ -2366,7 +2375,9 @@ namespace detail {
   {
     try {
       Job j = getJob(t_job.uuid());
-      j.updateJob(t_job);
+      m_dbholder->deleteJobTree(t_job);
+      j.updateJob(t_job, false);
+      m_dbholder->persistJobTree(t_job);
     } catch (const std::out_of_range &) {
       // job didn't exist
       enqueue(t_job, true, m_dbfile.parent_path());
@@ -2375,11 +2386,29 @@ namespace detail {
     openstudio::Application::instance().processEvents();
   }
 
+  /// update job tree, and be willing to change the UUID in the process
+  void RunManager_Impl::updateJob(const openstudio::UUID &t_uuid, const Job &t_job)
+  {
+
+    try {
+      Job j = getJob(t_uuid);
+      m_dbholder->deleteJobTree(t_job);
+      j.updateJob(t_job, true); // update the old one to have the features of the new one
+      m_dbholder->persistJobTree(t_job);
+    } catch (const std::out_of_range &) {
+      // uuid didn't exist, we want to throw this back out
+      throw;
+    }
+  }
+
+
   void RunManager_Impl::updateJob(const Job &t_job, const openstudio::path &t_path)
   {
     try {
       Job j = getJob(t_job.uuid());
-      j.updateJob(t_job);
+      m_dbholder->deleteJobTree(t_job);
+      j.updateJob(t_job, false);
+      m_dbholder->persistJobTree(t_job);
       j.setBasePathRecursive(t_path);
     } catch (const std::out_of_range &) {
       // job didn't exist

@@ -13,6 +13,7 @@
     <file>images/boiler_steam.png</file>
     <file>images/bug.png</file>
     <file>images/cancel_simulation_button.png</file>
+    <file>images/cav_reheat.png</file>
     <file>images/check.png</file>
     <file>images/chiller_air.png</file>
     <file>images/chilled_beam.png</file>    
@@ -208,6 +209,7 @@
     <file>images/mini_icons/boiler_steam.png</file>
     <file>images/mini_icons/building.png</file>
     <file>images/mini_icons/building_story.png</file>
+    <file>images/mini_icons/cav_reheat.png</file>
     <file>images/mini_icons/chiller_air.png</file>
     <file>images/mini_icons/chilled_beam.png</file>    
     <file>images/mini_icons/construction.png</file>

@@ -73,6 +73,7 @@ namespace detail {
       ///   - childrenChanged(const openstudio::UUID &id) - emitted after the list of children has changed
       ///   - parentChanged(const openstudio::UUID &id) - emitted after the parent has changed
       ///   - treeChanged() - emitted if any of the jobs in the job tree (this one or any children) have changed in any way
+      ///   - uuidChanged(const openstudio::UUID &oldId, const openstudio::UUID &newId) - emitted if the UUID of this job changed
       /// \param[in] signal signal to connect to
       /// \param[in] receiver signal receiver
       /// \param[in] method receiving slot
@@ -353,7 +354,7 @@ namespace detail {
       ///
       /// Specifically, the static content: input files, params and tools remain static
       /// but the state, output files, last runtime are updated.
-      void updateJob(const Job &t_other);
+      void updateJob(const Job &t_other, bool t_allowUUIDUpdate);
 
       Job &operator=(Job rhs);
 
@@ -362,6 +363,9 @@ namespace detail {
       /// \returns true if the job is flagged as externally managed
       bool externallyManaged() const;
 
+      /// sets this job (and children) as being externally managed
+      void makeExternallyManaged();
+
       /// \returns all output files relative to the rundir
       Files relativeOutputFiles() const;
 
@@ -369,6 +373,8 @@ namespace detail {
       // to the current state
       void sendSignals();
 
+      /// Sets the advancedstatus of the current job. Only allowed on externally managed jobs
+      void setStatus(const AdvancedStatus &t_status);
 
     protected:
       Job(const boost::shared_ptr<detail::Job_Impl> &t_impl);
