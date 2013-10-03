@@ -31,6 +31,7 @@
 #include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/Workflow.hpp>
 #include <runmanager/lib/AdvancedStatus.hpp>
+#include <runmanager/lib/JSON.hpp>
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
@@ -660,7 +661,9 @@ namespace detail {
       success = m_requestRun->lastPostDataPointJSONSuccess();
       if (success) {
 
-        boost::optional<Job> topLevelJob = m_waitingQueue.back().topLevelJob();
+        OS_ASSERT(!m_waitingQueue.empty());
+        DataPoint lastQueued = m_waitingQueue.back();
+        boost::optional<Job> topLevelJob = lastQueued.topLevelJob();
         OS_ASSERT(topLevelJob);
         topLevelJob->setStatus(AdvancedStatusEnum(AdvancedStatusEnum::WaitingInQueue));
         project().save();
@@ -1139,19 +1142,21 @@ namespace detail {
                                             openstudio::path(),
                                             std::vector<URLSearchPath>());
       runmanager::JobFactory::optimizeJobTree(job);
+      
+      // can only set status on externally managed jobs
+      job.makeExternallyManaged();
+      job.setStatus(AdvancedStatusEnum(AdvancedStatusEnum::Queuing));
 
-      // serialize job to JSON which marks it as externally managed
-      std::string jobJSON = job.toJSON();
-      runmanager::Job externalJob = Job::fromJSON(jobJSON);
+      // update job in database
+      project().runManager().updateJob(job);
 
       // attach externalJob to datapoint
-      project().analysis().setDataPointRunInformation(toQueue, externalJob, std::vector<openstudio::path>());
-      project().runManager().updateJob(externalJob);
-
-      // can only set status on externally managed jobs
+      project().analysis().setDataPointRunInformation(toQueue, job, std::vector<openstudio::path>());
+      
+      // make sure things are good
       boost::optional<Job> topLevelJob = toQueue.topLevelJob();
       OS_ASSERT(topLevelJob);
-      topLevelJob->setStatus(AdvancedStatusEnum(AdvancedStatusEnum::Queuing));
+      OS_ASSERT(topLevelJob->externallyManaged());
       project().save();
 
       emit dataPointQueued(project().analysis().uuid(),toQueue.uuid());

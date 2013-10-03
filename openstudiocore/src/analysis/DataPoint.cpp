@@ -473,14 +473,16 @@ namespace detail {
           if (runManager) {
             if (m_topLevelJob){
               // HERE -- job is in runManager
-              UUID oldJobUUID = m_topLevelJob->uuid();
-              m_topLevelJob = loadedTopLevelJob;
-              runManager->updateJob(oldJobUUID, *m_topLevelJob);
+              runmanager::Job tmpJob = *loadedTopLevelJob;
+              runManager->updateJob(m_topLevelJob->uuid(), tmpJob);
+              m_topLevelJob = tmpJob;
             }else{
               // HERE -- job not in runManager yet, directory().empty(), no local copy of files yet
-              m_topLevelJob = loadedTopLevelJob;
-              runManager->updateJob(*m_topLevelJob);
+              runmanager::Job tmpJob = *loadedTopLevelJob;
+              runManager->updateJob(tmpJob);
+              m_topLevelJob = tmpJob;
             }
+            LOG(Info, "Datapoint '" << toString(this->uuid()) << "' topLevelJob = '" << toString(m_topLevelJob->uuid()) << "'");
           }
           
 
@@ -525,7 +527,9 @@ namespace detail {
     OS_ASSERT(m_topLevelJob);
     if (runManager) {
       // files are now in directory(), need to update paths
-      runManager->updateJob(*m_topLevelJob, directory());
+      runmanager::Job tmpJob = *m_topLevelJob;
+      runManager->updateJob(tmpJob, directory());
+      m_topLevelJob = tmpJob;
     }
 
     // get file references for

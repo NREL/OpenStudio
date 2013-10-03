@@ -224,6 +224,42 @@ TEST_F(RunManagerTestFixture, ExternalJob)
   }
 
   {
+    openstudio::removeDirectory(basedir / openstudio::toPath("copied2"));
+    openstudio::copyDirectory(basedir / openstudio::toPath("jobrun"), basedir / openstudio::toPath("copied2"));
+    openstudio::runmanager::RunManager rnew(rmpath2, false, false, false);
+
+    // update with initial job having compatible structure but different uuids
+    openstudio::runmanager::Job externalJob = orig.create(openstudio::path());
+    externalJob.makeExternallyManaged();
+    externalJob.setStatus(AdvancedStatusEnum(AdvancedStatusEnum::Queuing));
+    rnew.updateJob(externalJob);
+    EXPECT_FALSE(externalJob.uuid() == jorig2.uuid());
+    EXPECT_FALSE(externalJob.lastRun());
+
+    // update to waiting in queue
+    externalJob.setStatus(AdvancedStatusEnum(AdvancedStatusEnum::WaitingInQueue));
+    //rnew.updateJob(externalJob);
+    EXPECT_FALSE(externalJob.uuid() == jorig2.uuid());
+    EXPECT_FALSE(externalJob.lastRun());
+
+    // get update from server with real uuids
+    std::string json = openstudio::runmanager::detail::JSON::toJSON(jorig2);
+    openstudio::runmanager::Job externalJob2 = openstudio::runmanager::detail::JSON::toJob(json, true);
+    rnew.updateJob(externalJob.uuid(), externalJob2);
+    EXPECT_FALSE(externalJob.uuid() == jorig2.uuid());
+    EXPECT_TRUE(externalJob2.uuid() == jorig2.uuid());
+    EXPECT_TRUE(externalJob2.lastRun());
+
+    // download detailed results
+    rnew.updateJob(externalJob2, basedir / openstudio::toPath("copied2"));
+    EXPECT_TRUE(externalJob2.lastRun());
+    FileInfo fi2 = externalJob2.treeAllFiles().getLastByFilename("eplusout.sql");
+    EXPECT_EQ(basedir / openstudio::toPath("copied2") / openstudio::toPath("5-EnergyPlus-0/eplusout.sql"), fi2.fullPath);
+    EXPECT_TRUE(fi2.exists);
+    boost::filesystem::exists(fi2.fullPath);
+  }
+
+  {
     openstudio::runmanager::RunManager rnew(rmpath2, false, false, false);
     Job updated = rnew.getJob(jorig2.uuid());
     EXPECT_TRUE(updated.lastRun());
