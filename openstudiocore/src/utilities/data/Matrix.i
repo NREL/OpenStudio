@@ -13,6 +13,24 @@ namespace openstudio{
 class Matrix{
 public:
 
+  #ifdef SWIGPYTHON
+    %typemap(in) (unsigned i, unsigned j) {
+      long a, b;
+
+      if (PyTuple_Check($input)) {
+        if (!PyArg_ParseTuple($input,"ll", &a, &b)) {
+          PyErr_SetString(PyExc_TypeError,"tuple must have 2 elements");
+          return NULL;
+        }
+        $1 = a;
+        $2 = b;
+      } else {
+        PyErr_SetString(PyExc_TypeError,"expected a tuple.");
+        return NULL;
+      }
+    }
+  #endif
+
   // constructors
   Matrix();
   Matrix(unsigned M, unsigned N);
