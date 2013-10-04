@@ -1599,7 +1599,7 @@ namespace openstudio{
             }
           }
           if (running.size() == m_awsSession.workerIds().size()) return true;
-          QString output = QString(notRunning.size()) + "/" + QString(m_awsSession.workerIds().size()) + " workers are not running (" + toQString(boost::algorithm::join(notRunning, ", ")) + ")";
+          QString output = QString::number(notRunning.size()) + "/" + QString::number(m_awsSession.workerIds().size()) + " workers are not running (" + toQString(boost::algorithm::join(notRunning, ", ")) + ")";
           logError(output.toStdString());
         } else {
           logError(map["error"].toMap()["message"].toString().toStdString());
