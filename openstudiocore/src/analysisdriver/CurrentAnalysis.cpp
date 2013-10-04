@@ -94,6 +94,12 @@ namespace detail {
     return m_dakotaJobErrors;
   }
 
+  AnalysisStatus CurrentAnalysis_Impl::status() const
+  {
+    // todo:
+    return AnalysisStatus::Error;
+  }
+
   bool CurrentAnalysis_Impl::connect(const std::string& signal,
                                      const QObject* qObject,
                                      const std::string& slot,
@@ -380,6 +386,11 @@ int CurrentAnalysis::totalNumJobsInOSIteration() const {
 
 boost::optional<runmanager::JobErrors> CurrentAnalysis::dakotaJobErrors() const {
   return getImpl()->dakotaJobErrors();
+}
+
+AnalysisStatus CurrentAnalysis::status() const
+{
+  return getImpl()->status();
 }
 
 bool CurrentAnalysis::operator==(const CurrentAnalysis& other) const {

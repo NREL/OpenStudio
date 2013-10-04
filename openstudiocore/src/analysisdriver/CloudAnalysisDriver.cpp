@@ -98,6 +98,12 @@ namespace detail {
     return (numDataPointsInIteration() - numIncompleteDataPoints());
   }
 
+  AnalysisStatus CloudAnalysisDriver_Impl::status() const
+  {
+    // todo:
+    return AnalysisStatus::Error;
+  }
+
   bool CloudAnalysisDriver_Impl::run(int msec) {
     if (requestRun()) {
       waitForFinished(msec);
@@ -1470,6 +1476,11 @@ unsigned CloudAnalysisDriver::numIncompleteDataPoints() const {
 
 unsigned CloudAnalysisDriver::numCompleteDataPoints() const {
   return getImpl<detail::CloudAnalysisDriver_Impl>()->numCompleteDataPoints();
+}
+
+AnalysisStatus CloudAnalysisDriver::status() const
+{
+  return getImpl<detail::CloudAnalysisDriver_Impl>()->status();
 }
 
 bool CloudAnalysisDriver::run(int msec) {
