@@ -63,7 +63,7 @@ namespace detail {
       m_maxAnalysisNotRunningCount(0),
       m_dataPointsNotRunningCount(0),
       m_maxDataPointsNotRunningCount(0),
-      m_onlyProcessingDownloadRequests(false),
+      m_onlyProcessingDownloadRequests(true),
       m_waitForAlreadyRunningDataPoints(false)
   {}
 
@@ -239,13 +239,7 @@ namespace detail {
 
     m_lastStopSuccess = false;
     // running or downloading, so let errors and warnings accumulate
-
-    // if waitForAlreadyRunningDataPoints, switch the monitoring process to look for
-    // data points running, not analysis running
-    if (waitForAlreadyRunningDataPoints) {
-      m_checkDataPointsRunningInsteadOfAnalysis = true;
-      m_lastGetRunningDataPointsSuccess = false;
-    }
+    m_waitForAlreadyRunningDataPoints = waitForAlreadyRunningDataPoints;
 
     if (OptionalUrl url = session().serverUrl()) {
 
@@ -283,7 +277,7 @@ namespace detail {
     if (!actualDataPoint->complete()) {
       // then needs to be actively running on the cloud to continue
       bool keepGoing(false);
-      if (isRunning() || isDownloading()) {
+      if ((!m_onlyProcessingDownloadRequests) && (isRunning() || isDownloading())) {
         keepGoing = inIteration(*actualDataPoint);
       }
       if (!keepGoing) {
@@ -294,20 +288,43 @@ namespace detail {
     // this is probably already set, but just to be sure
     actualDataPoint->setRunType(DataPointRunType::CloudDetailed);
 
-    m_lastDownloadDetailedResultsSuccess = false;
     if (!(isRunning() || isDownloading())) {
-      clearErrorsAndWarnings();
+      // if not running or downloading rignt now, can be sure that only downloading is
+      // going to be going on
+      m_onlyProcessingDownloadRequests = true;
     }
 
-    // see if already in process, in which case, the right thing should happen automatically
-    bool found = inProcessingQueues(*actualDataPoint);
+    if (m_onlyProcessingDownloadRequests) {
+      m_lastDownloadDetailedResultsSuccess = false;
+    }
+
+    bool found(false);
+    if (m_onlyProcessingDownloadRequests && !isDownloading()) {
+      clearErrorsAndWarnings();
+      // new set of requests. call this an "iteration"
+      m_iteration.clear();
+      m_postQueue.clear();
+      m_waitingQueue.clear();
+      m_jsonQueue.clear();
+      m_preDetailsQueue.clear();
+      m_detailsQueue.clear();
+      m_processingQueuesInitialized = false;
+    }
+    else {
+      // see if already in process, in which case, the right thing should happen automatically
+      found = inIteration(*actualDataPoint) &&
+              (!m_processingQueuesInitialized || inProcessingQueues(*actualDataPoint))
+    }
   
     // if not, see if there are results on the server
-    bool success = true;
+    bool success(true);
     if (!found) {
       LOG(Debug,"Adding DataPoint '" << actualDataPoint->name() << "' to the pre-download "
           << "details queue.");
       m_preDetailsQueue.push_back(*actualDataPoint);
+      if (!inIteration(*actualDataPoint)) {
+        m_iteration.push_back(*actualDataPoint);
+      }
 
       if (!m_checkForResultsToDownload) {
         success = success && startDetailsReadyMonitoring();
@@ -791,6 +808,7 @@ namespace detail {
           success = false;
         }
         else {
+          // HERE -- Replace with QTimer
           System::msleep(1000); // wait 1 second
           success = m_requestRun->requestIsAnalysisRunning(project().analysis().uuid());
         }
@@ -832,7 +850,7 @@ namespace detail {
         }
         else {
           System::msleep(1000);
-          success = m_requestRun->requestRunningDataPointUUIDs(proejct().analysis().uuid());
+          success = m_requestRun->requestRunningDataPointUUIDs(project().analysis().uuid());
         }
       }
     }
@@ -1165,6 +1183,7 @@ namespace detail {
     appendErrorsAndWarnings(*m_requestRun);
     m_requestRun.reset();
     emit runRequestComplete(false);
+    m_onlyProcessingDownloadRequests = true;
   }
 
   bool CloudAnalysisDriver_Impl::postNextDataPoint() {
@@ -1429,13 +1448,17 @@ namespace detail {
       appendErrorsAndWarnings(*m_requestDetails);
       m_requestDetails.reset();
     }
-    emit detailedDownloadRequestsComplete(false);
+    if (m_onlyProcessingDownloadRequests) {
+      OS_ASSERT(!m_lastDownloadDetailedResultsSuccess);
+      emit detailedDownloadRequestsComplete(m_lastDownloadDetailedResultsSuccess);
+    }
   }
 
   void CloudAnalysisDriver_Impl::registerStopRequestFailure() {
     appendErrorsAndWarnings(*m_requestStop);
     m_requestStop.reset();
-    emit stopRequestComplete(false);
+    OS_ASSERT(!m_lastStopSuccess);
+    emit stopRequestComplete(m_lastStopSuccess);
   }
 
   void CloudAnalysisDriver_Impl::checkForRunCompleteOrStopped() {
@@ -1470,6 +1493,7 @@ namespace detail {
         else {
           emit runRequestComplete(m_lastRunSuccess);
           emit analysisComplete(project().analysis().uuid());
+          m_onlyProcessingDownloadRequests = true; // no longer running
         }
       }
     }

@@ -2000,6 +2000,7 @@ TEST_F(ModelFixture, Surface_Intersect_CutIntoTwo){
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
+  EXPECT_GT(surface1Area,0.0);
 
   Point3dVector points2;
   points2.push_back(Point3d(3, 10, 0));
@@ -2272,6 +2273,7 @@ TEST_F(ModelFixture, Surface_Intersect_Complex){
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
+  EXPECT_GT(surface1Area,0.0);
 
   Point3dVector points2;
   points2.push_back(Point3d(5, 15, 0));
@@ -2285,6 +2287,7 @@ TEST_F(ModelFixture, Surface_Intersect_Complex){
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
+  EXPECT_GT(surface2Area,0.0);
 
   Plane plane1(points1);
   Plane plane2(points2);
@@ -2398,6 +2401,7 @@ TEST_F(ModelFixture, Surface_Intersect_UShape){
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
+  EXPECT_GT(surface1Area,0.0);
 
   Point3dVector points2;
   points2.push_back(Point3d(2, 15, 0));
@@ -2411,6 +2415,7 @@ TEST_F(ModelFixture, Surface_Intersect_UShape){
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
+  EXPECT_GT(surface2Area,0.0);
 
   Plane plane1(points1);
   Plane plane2(points2);
@@ -2512,6 +2517,7 @@ TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_1){
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
+  EXPECT_GT(surface1Area,0.0);
 
   Point3dVector points2;
   points2.push_back(Point3d(0,  10, 0));
@@ -2521,6 +2527,7 @@ TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_1){
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
+  EXPECT_GT(surface2Area,0.0);
 
   EXPECT_FALSE(surface1.adjacentSurface());
 
@@ -2565,6 +2572,7 @@ TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_2){
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
+  EXPECT_GT(surface1Area,0.0);
 
   Point3dVector points2;
   points2.push_back(Point3d(0,  10, 0));
@@ -2574,6 +2582,7 @@ TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_2){
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
+  EXPECT_GT(surface2Area,0.0);
 
   EXPECT_FALSE(surface1.adjacentSurface());
 

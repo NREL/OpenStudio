@@ -222,6 +222,8 @@ namespace detail {
      //     report that the analysis is running.
      void waitingForAnalysisToStart(bool success);
 
+     void askAgainIfAnalysisRunning();
+
      // 12. Wait up to 30 tries (w/ 1s of sleep in between) for the server to report that
      //     at least one DataPoint is running.
      void waitingForADataPointToStart(bool success);
