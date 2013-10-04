@@ -23,6 +23,7 @@
 #include <osversion/VersionTranslator.hpp>
 #include <utilities/core/CommandLine.hpp>
 #include <utilities/core/Path.hpp>
+#include <utilities/sql/SqlFile.hpp>
 
 #include <string>
 #include <iostream>
@@ -32,6 +33,35 @@ void usage( boost::program_options::options_description desc)
   std::cout << "Usage: OsmToPrj --input-path=./path/to/input.osm" << std::endl;
   std::cout << "   or: OsmToPrj input.osm" << std::endl;
   std::cout << desc << std::endl;
+}
+
+static boost::optional<openstudio::path> findFile(openstudio::path base, std::string filename)
+{
+  //boost::filesystem::recursive_directory_iterator(base);
+  //boost::filesystem::recursive_directory_iterator();
+  //boost::filesystem2::basic_recursive_directory_iterator(base);
+  if(boost::filesystem::is_directory(base))
+  {
+    openstudio::path filepath = base / openstudio::toPath(filename);
+    std::cout<<"Looking for "<<openstudio::toString(filepath)<<std::endl;
+    if(boost::filesystem::exists(filepath))
+    {
+      return boost::optional<openstudio::path>(filepath);
+    }
+    // WHY!?!?!
+    boost::filesystem2::path basepath(openstudio::toString(base));
+    boost::filesystem::directory_iterator iter(basepath);
+    boost::filesystem::directory_iterator end;
+    for(;iter!=end;++iter)
+    {
+      boost::optional<openstudio::path> optional = findFile(openstudio::toPath(iter->path().string()),filename);
+      if(optional)
+      {
+        return optional;
+      }
+    }
+  }
+  return false;
 }
 
 int main(int argc, char *argv[])
@@ -87,26 +117,9 @@ int main(int argc, char *argv[])
   {
     // Probably should do a sanity check of input - but maybe later
     setLevel = false;
-    // Build the airflow element map 
-    /*
-    if(!translator.translate(*model,flow,false))
-    {
-      std::cout << "Translation failed, check errors and warnings for more information." << std::endl;
-      return EXIT_FAILURE;
-    }
-    */
-  }
-  else
-  {
-    /*
-    if(!translator.translate(*model,false,leakageDescriptorString))
-    {
-      std::cout << "Translation failed, check errors and warnings for more information." << std::endl;
-      return EXIT_FAILURE;
-    }
-    */
   }
   
+  // Open the model
   openstudio::path inputPath = openstudio::toPath(inputPathString);
   openstudio::osversion::VersionTranslator vt;
   boost::optional<openstudio::model::Model> model = vt.loadModel(inputPath);
@@ -115,6 +128,15 @@ int main(int argc, char *argv[])
   {
     std::cout << "Unable to load file '"<< inputPathString << "' as an OpenStudio model." << std::endl;
     return EXIT_FAILURE;
+  }
+
+  // Try to find and connect a results file
+  openstudio::path dir = inputPath.parent_path() / inputPath.stem();
+  boost::optional<openstudio::path> sqlpath = findFile(dir,"eplusout.sql");
+  if(sqlpath)
+  {
+    std::cout<<"Found results file!"<<std::endl;
+    model->setSqlFile(openstudio::SqlFile(*sqlpath));
   }
 
   openstudio::path prjPath = inputPath.replace_extension(openstudio::toPath("prj").string());

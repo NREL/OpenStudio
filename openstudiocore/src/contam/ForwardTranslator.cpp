@@ -1278,6 +1278,8 @@ bool ForwardTranslator::translate(const openstudio::model::Model& model, bool tr
     boost::optional<openstudio::SqlFile> sqlFile = model.sqlFile();
     if(sqlFile)
     {
+      std::cout << "Simulation results attached, can't do that yet." << std::endl;
+      return false;
       std::string envPeriod; 
       BOOST_FOREACH(std::string t, sqlFile->availableEnvPeriods())
       {
