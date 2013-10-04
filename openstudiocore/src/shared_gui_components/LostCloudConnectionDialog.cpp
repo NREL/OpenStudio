@@ -76,7 +76,7 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
 
   label = new QLabel;
   label->setWordWrap(true);
-  label->setFixedSize(QSize(LABEL_WIDTH,27));
+  label->setFixedSize(QSize(LABEL_WIDTH,36));
   label->setText("The project was running in the cloud when the connection was lost.  The cloud may still be running and accruing charges.");
   mainLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
@@ -100,7 +100,7 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
 
     label = new QLabel;
     label->setWordWrap(true);
-    label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,40));
+    label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,53));
     label->setText("Connect your computer to the internet.  Once you have connected to the internet, click the Run Simulations tab\'s button labeled <b>" + tr("\"Try to Reconnect Cloud\"") + "</b>" + ". Remember that cloud charges may currently be accruing.");
     vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
@@ -132,6 +132,8 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
 
     mainLayout->addStretch();
   } else {
+    label->setWordWrap(true);
+    label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,53));
     label->setText("<FONT COLOR = RED>3. <FONT COLOR = BLACK>" + tr("Cloud Connection: ") + "<b> <FONT COLOR = RED>" + tr("unable to reconnect. ") + "</b>" + "<FONT COLOR = BLACK>" + tr("Remember that cloud charges may currently be accruing."));
     createCloudConnectionWidgets(vLayout);
     mainLayout->addStretch();
@@ -154,7 +156,7 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
         
   label = new QLabel;
   label->setWordWrap(true);
-  label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,40));
+  label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,53));
   label->setText("Connect your computer to the internet.  Once you have connected to the internet, click the Run Simulations tab\'s button labeled <b>" + tr("\"Try to Reconnect Cloud\"") + "</b>" + ". Remember that cloud charges may currently be accruing.");
   vLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
     
@@ -172,7 +174,7 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
 
   label = new QLabel;
   label->setWordWrap(true);
-  label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,27));
+  label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,36));
   label->setText("<b>" + tr("Try again now. ") + "</b>" + tr("Close this dialog and click the Run Simulations tab\'s button labeled \"Try to Reconnect Cloud\"."));
   hLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
@@ -190,7 +192,7 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
 
   label = new QLabel;
   label->setWordWrap(true);
-  label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,27));
+  label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,36));
   label->setText("<b>" + tr("Quit the ParametricAnalysisTool and try again later. ") + "</b>" + tr("Close this dialog and quit the application."));
   hLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
@@ -208,7 +210,7 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
 
   label = new QLabel;
   label->setWordWrap(true);
-  label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,40));
+  label->setFixedSize(QSize(LABEL_WIDTH - INDENT - INDENT,53));
   label->setText("<b>" + tr("Stop the cloud and clear the session. ") + "</b>" + tr("Use the AWS Console to cancel the cloud session and stop charges, and clear this session in the ParametricAnalysisTool.  This will stop the cloud charges, but will also result in the loss of all session results."));
   hLayout->addWidget(label,0,Qt::AlignTop | Qt::AlignLeft);
 
