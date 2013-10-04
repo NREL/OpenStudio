@@ -58,6 +58,7 @@ namespace detail {
       m_lastRunSuccess(false),
       m_lastStopSuccess(false),
       m_lastDownloadDetailedResultsSuccess(false),
+      m_status(AnalysisStatus::Idle),
       m_processingQueuesInitialized(false),
       m_analysisNotRunningCount(0),
       m_maxAnalysisNotRunningCount(0),
@@ -100,8 +101,7 @@ namespace detail {
 
   AnalysisStatus CloudAnalysisDriver_Impl::status() const
   {
-    // todo:
-    return AnalysisStatus::Error;
+    return m_status;
   }
 
   bool CloudAnalysisDriver_Impl::run(int msec) {
@@ -1117,6 +1117,13 @@ namespace detail {
     m_errors.insert(m_errors.end(),temp.begin(),temp.end());
     temp = server.warnings();
     m_warnings.insert(m_warnings.end(),temp.begin(),temp.end());
+  }
+
+  void CloudAnalysisDriver_Impl::setStatus(AnalysisStatus status) {
+    if (m_status != status){
+      m_status = status;
+      emit analysisStatusChanged(m_status);
+    }
   }
 
   void CloudAnalysisDriver_Impl::registerRunRequestFailure() {

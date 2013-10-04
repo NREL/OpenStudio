@@ -184,6 +184,9 @@ namespace detail {
     boost::optional<openstudio::UUID> m_dakotaJob;
     boost::optional<runmanager::JobErrors> m_dakotaJobErrors;
     std::vector<analysis::DataPoint> m_queuedDakotaDataPoints;
+    AnalysisStatus m_status;
+
+    void setStatus(AnalysisStatus status);
   };
 
 } // detail

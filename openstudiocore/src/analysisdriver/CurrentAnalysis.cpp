@@ -54,7 +54,8 @@ namespace detail {
       m_runOptions(runOptions),
       m_numOSJobsInIteration(0),
       m_numOSJobsComplete(0),
-      m_dakotaStarted(false)
+      m_dakotaStarted(false),
+      m_status(AnalysisStatus::Idle)
   {}
 
   analysis::Analysis CurrentAnalysis_Impl::analysis() const {
@@ -96,8 +97,7 @@ namespace detail {
 
   AnalysisStatus CurrentAnalysis_Impl::status() const
   {
-    // todo:
-    return AnalysisStatus::Error;
+    return m_status;
   }
 
   bool CurrentAnalysis_Impl::connect(const std::string& signal,
@@ -341,6 +341,13 @@ namespace detail {
       }
 
       cancelAllJobs(jobs);
+    }
+  }
+
+  void CurrentAnalysis_Impl::setStatus(AnalysisStatus status) {
+    if (m_status != status){
+      m_status = status;
+      emit analysisStatusChanged(m_status);
     }
   }
 

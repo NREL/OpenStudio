@@ -270,6 +270,7 @@ namespace detail {
     bool m_lastRunSuccess;
     bool m_lastStopSuccess;
     bool m_lastDownloadDetailedResultsSuccess;
+    AnalysisStatus m_status;
 
     std::vector<std::string> m_errors;
     std::vector<std::string> m_warnings;
@@ -308,6 +309,7 @@ namespace detail {
     void logError(const std::string& error);
     void logWarning(const std::string& warning);
     void appendErrorsAndWarnings(const OSServer& server);
+    void setStatus(AnalysisStatus status);
 
     void registerRunRequestFailure();
     bool postNextDataPoint();
