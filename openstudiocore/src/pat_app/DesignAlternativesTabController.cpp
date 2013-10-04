@@ -21,17 +21,23 @@
 #include <pat_app/MeasuresTabController.hpp>
 #include <pat_app/DesignAlternativesView.hpp>
 #include <pat_app/PatApp.hpp>
+
 #include "../shared_gui_components/HeaderViews.hpp"
 #include "../shared_gui_components/OSListView.hpp"
+
 #include <pat_app/PatMainWindow.hpp>
+
+#include <analysis/Analysis.hpp>
 #include <analysis/DataPoint.hpp>
 #include <analysis/Problem.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/NullPerturbation_Impl.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/NullMeasure_Impl.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
+
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QMessageBox>
@@ -125,8 +131,8 @@ void DesignAlternativesTabController::updateButtonStatusBasedOnSelectionNow()
       {
         analysis::Problem problem = project->analysis().problem();
 
-        // Get all of the selected perturbations.
-        std::vector<analysis::DiscretePerturbation> selectedperts;
+        // Get all of the selected measures.
+        std::vector<analysis::Measure> selectedperts;
 
         for( std::vector<QPointer<OSListItem> >::const_iterator it = items.begin(); 
              it != items.end();
@@ -134,13 +140,13 @@ void DesignAlternativesTabController::updateButtonStatusBasedOnSelectionNow()
         {
           if( measuretab::MeasureItem * measureItem = qobject_cast<measuretab::MeasureItem *>(*it) )
           {
-            selectedperts.push_back(measureItem->perturbation());
+            selectedperts.push_back(measureItem->measure());
           }
         }
 
         // Get all of the variables.
         std::vector<analysis::InputVariable> vars = problem.variables();
-        std::vector<analysis::DiscreteVariable> discreteVars = subsetCastVector<analysis::DiscreteVariable>(vars);
+        std::vector<analysis::MeasureGroup> measureGroups = subsetCastVector<analysis::MeasureGroup>(vars);
 
         // If any of the variables have more than one pert, then flag.
 
@@ -149,20 +155,20 @@ void DesignAlternativesTabController::updateButtonStatusBasedOnSelectionNow()
 
         bool duplicateVarSelections = false;
 
-        for( std::vector<analysis::DiscreteVariable>::const_iterator varit = discreteVars.begin();
-             varit != discreteVars.end();
+        for( std::vector<analysis::MeasureGroup>::const_iterator varit = measureGroups.begin();
+             varit != measureGroups.end();
              varit++ )
         {
 
           int varSelections = 0;
 
-          std::vector<analysis::DiscretePerturbation> varperts = varit->perturbations(false);
+          std::vector<analysis::Measure> varperts = varit->measures(false);
 
-          for( std::vector<analysis::DiscretePerturbation>::const_iterator varPertIt = varperts.begin();
+          for( std::vector<analysis::Measure>::const_iterator varPertIt = varperts.begin();
                varPertIt != varperts.end();
                varPertIt++ )
           {
-            std::vector<analysis::DiscretePerturbation>::iterator match = std::find(selectedperts.begin(),selectedperts.end(),*varPertIt);
+            std::vector<analysis::Measure>::iterator match = std::find(selectedperts.begin(),selectedperts.end(),*varPertIt);
 
             if(match != selectedperts.end())
             {
@@ -315,16 +321,16 @@ std::vector<analysis::DataPoint> DesignAltListController::dataPoints() const
   return dataPoints;
 }
 
-std::string DesignAltListController::suggestDesignAltName(const boost::optional<analysis::DiscretePerturbation>& pert) const
+std::string DesignAltListController::suggestDesignAltName(const boost::optional<analysis::Measure>& measure) const
 {
   std::string baseName = "New Design Alternative";
-  if (pert){
-    baseName = pert->displayName() + " Only";
+  if (measure){
+    baseName = measure->displayName() + " Only";
   }
 
   std::set<std::string> allNames;
   if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() ){
-    BOOST_FOREACH(const analysis::DataPoint& dataPoint, project->analysis().dataPoints()){
+    Q_FOREACH(const analysis::DataPoint& dataPoint, project->analysis().dataPoints()){
       allNames.insert(dataPoint.name());
       allNames.insert(dataPoint.displayName());
     }
@@ -396,10 +402,10 @@ void DesignAltListController::addOneItemForEachSelectedMeasure()
 
     int duplicates = 0;
 
-    // Get all of the selected perturbations.
+    // Get all of the selected measures.
     std::vector<QPointer<OSListItem> > items = m_measureSelectionController->selectedItems();
 
-    std::vector<analysis::DiscretePerturbation> selectedperts;
+    std::vector<analysis::Measure> selectedperts;
 
     for( std::vector<QPointer<OSListItem> >::const_iterator it = items.begin(); 
          it != items.end();
@@ -407,26 +413,26 @@ void DesignAltListController::addOneItemForEachSelectedMeasure()
     {
       if( measuretab::MeasureItem * measureItem = qobject_cast<measuretab::MeasureItem *>(*it) )
       {
-        selectedperts.push_back(measureItem->perturbation());
+        selectedperts.push_back(measureItem->measure());
       }
     }
 
     // Get all of the variables in the problem.
     std::vector<analysis::InputVariable> vars = problem.variables();
-    std::vector<analysis::DiscreteVariable> discreteVars = subsetCastVector<analysis::DiscreteVariable>(vars);
+    std::vector<analysis::MeasureGroup> measureGroups = subsetCastVector<analysis::MeasureGroup>(vars);
 
     // Loop over the selected perts
-    for( std::vector<analysis::DiscretePerturbation>::const_iterator pertIter = selectedperts.begin();
+    for( std::vector<analysis::Measure>::const_iterator pertIter = selectedperts.begin();
          pertIter != selectedperts.end();
          pertIter++ )
     {
-      std::vector<analysis::DiscretePerturbation> newPointPerts;
+      std::vector<analysis::Measure> newPointPerts;
 
-      for( std::vector<analysis::DiscreteVariable>::const_iterator varIter = discreteVars.begin();
-           varIter != discreteVars.end();
+      for( std::vector<analysis::MeasureGroup>::const_iterator varIter = measureGroups.begin();
+           varIter != measureGroups.end();
            varIter++ )
       {
-        std::vector<analysis::DiscretePerturbation> varperts = varIter->perturbations(false);
+        std::vector<analysis::Measure> varperts = varIter->measures(false);
 
         if (varperts.size() == 1)
         {
@@ -434,12 +440,12 @@ void DesignAltListController::addOneItemForEachSelectedMeasure()
           newPointPerts.push_back(varperts.front());
         } else {
           // See if the selected pert is in the variable
-          std::vector<analysis::DiscretePerturbation>::const_iterator matchIt = std::find(varperts.begin(),varperts.end(),*pertIter);
+          std::vector<analysis::Measure>::const_iterator matchIt = std::find(varperts.begin(),varperts.end(),*pertIter);
 
           if( matchIt == varperts.end())
           {
             // get the null pert for this variable and add it to selectedperts
-            std::vector<analysis::NullPerturbation> nullPerts = subsetCastVector<analysis::NullPerturbation>(varperts);
+            std::vector<analysis::NullMeasure> nullPerts = subsetCastVector<analysis::NullMeasure>(varperts);
 
             OS_ASSERT(nullPerts.size() > 0);
 
@@ -500,10 +506,10 @@ void DesignAltListController::addOneItemWithAllSelectedMeasures()
   {
     analysis::Problem problem = project->analysis().problem();
 
-    // Get all of the selected perturbations.
+    // Get all of the selected measures.
     std::vector<QPointer<OSListItem> > items = m_measureSelectionController->selectedItems();
 
-    std::vector<analysis::DiscretePerturbation> selectedperts;
+    std::vector<analysis::Measure> selectedperts;
 
     for( std::vector<QPointer<OSListItem> >::const_iterator it = items.begin(); 
          it != items.end();
@@ -511,21 +517,21 @@ void DesignAltListController::addOneItemWithAllSelectedMeasures()
     {
       if( measuretab::MeasureItem * measureItem = qobject_cast<measuretab::MeasureItem *>(*it) )
       {
-        selectedperts.push_back(measureItem->perturbation());
+        selectedperts.push_back(measureItem->measure());
       }
     }
 
-    std::vector<analysis::DiscretePerturbation> newPointPerts;
+    std::vector<analysis::Measure> newPointPerts;
 
-    // Get all of the variables in the problem.  If a variable does not have a selected perturbation, then use the null pert.
+    // Get all of the variables in the problem.  If a variable does not have a selected measure, then use the null pert.
     std::vector<analysis::InputVariable> vars = problem.variables();
-    std::vector<analysis::DiscreteVariable> discreteVars = subsetCastVector<analysis::DiscreteVariable>(vars);
+    std::vector<analysis::MeasureGroup> measureGroups = subsetCastVector<analysis::MeasureGroup>(vars);
 
-    for( std::vector<analysis::DiscreteVariable>::const_iterator it = discreteVars.begin();
-        it != discreteVars.end();
+    for( std::vector<analysis::MeasureGroup>::const_iterator it = measureGroups.begin();
+        it != measureGroups.end();
         it++ )
     {
-      std::vector<analysis::DiscretePerturbation> varperts = it->perturbations(false);
+      std::vector<analysis::Measure> varperts = it->measures(false);
 
 
       if (varperts.size() == 1)
@@ -533,11 +539,11 @@ void DesignAltListController::addOneItemWithAllSelectedMeasures()
         // this is a fixed measure
         newPointPerts.push_back(varperts.front());
       } else {
-        std::vector<analysis::DiscretePerturbation>::const_iterator matchIt = std::find_first_of(selectedperts.begin(),selectedperts.end(),varperts.begin(),varperts.end());
+        std::vector<analysis::Measure>::const_iterator matchIt = std::find_first_of(selectedperts.begin(),selectedperts.end(),varperts.begin(),varperts.end());
         if( matchIt == selectedperts.end())
         {
           // get the null pert for this variable and add it to selectedperts
-          std::vector<analysis::NullPerturbation> nullPerts = subsetCastVector<analysis::NullPerturbation>(varperts);
+          std::vector<analysis::NullMeasure> nullPerts = subsetCastVector<analysis::NullMeasure>(varperts);
 
           OS_ASSERT(nullPerts.size() > 0);
 
@@ -677,9 +683,9 @@ QSharedPointer<OSListItem> PerturbationListController::itemAt(int i)
 {
   if( i >= 0 && i < count() )
   {
-    analysis::DiscretePerturbation pert = perturbations()[i];
+    analysis::Measure measure = measures()[i];
 
-    QSharedPointer<PerturbationItem> item = QSharedPointer<PerturbationItem>(new PerturbationItem(pert));
+    QSharedPointer<PerturbationItem> item = QSharedPointer<PerturbationItem>(new PerturbationItem(measure));
 
     return item;
   }
@@ -689,12 +695,12 @@ QSharedPointer<OSListItem> PerturbationListController::itemAt(int i)
 
 int PerturbationListController::count()
 {
-  return (int)perturbations().size();
+  return (int)measures().size();
 }
 
-std::vector<analysis::DiscretePerturbation> PerturbationListController::perturbations() const
+std::vector<analysis::Measure> PerturbationListController::measures() const
 {
-  std::vector<analysis::DiscretePerturbation > result;
+  std::vector<analysis::Measure > result;
 
   if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() )
   {
@@ -702,13 +708,13 @@ std::vector<analysis::DiscretePerturbation> PerturbationListController::perturba
 
     std::vector<QVariant> variableValues = m_designAltItem->dataPoint().variableValues();
 
-    std::vector<boost::optional<analysis::DiscretePerturbation> > discretePerturbations = problem.getDiscretePerturbations(variableValues);
+    std::vector<boost::optional<analysis::Measure> > measures = problem.getMeasures(variableValues);
 
-    for( std::vector<boost::optional<analysis::DiscretePerturbation> >::iterator it = discretePerturbations.begin();
-         it != discretePerturbations.end();
+    for( std::vector<boost::optional<analysis::Measure> >::iterator it = measures.begin();
+         it != measures.end();
          it++ )
     {
-      if( *it && (! (*it)->optionalCast<analysis::NullPerturbation>()) )
+      if( *it && (! (*it)->optionalCast<analysis::NullMeasure>()) )
       {
         result.push_back(**it);
       }
@@ -718,43 +724,43 @@ std::vector<analysis::DiscretePerturbation> PerturbationListController::perturba
   return result;
 }
 
-PerturbationItem::PerturbationItem(const analysis::DiscretePerturbation & pert)
+PerturbationItem::PerturbationItem(const analysis::Measure & measure)
   : OSListItem(),
-    m_pert(pert)
+    m_measure(measure)
 {
 }
 
 QString PerturbationItem::name() const
 {
-  return openstudio::toQString(m_pert.name());
+  return openstudio::toQString(m_measure.name());
 }
 
 bool PerturbationItem::isFixedMeasureItem() const
 {
-  boost::optional<analysis::DiscreteVariable> parent = discreteVariableParent();
+  boost::optional<analysis::MeasureGroup> parent = measureGroupParent();
 
   if (parent)
   {
-    return parent->perturbations(false).size() == 1;
+    return parent->measures(false).size() == 1;
   }
 
   return false;
 }
 
-boost::optional<analysis::DiscreteVariable> PerturbationItem::discreteVariableParent() const
+boost::optional<analysis::MeasureGroup> PerturbationItem::measureGroupParent() const
 {
-  boost::optional<analysis::AnalysisObject> parent = m_pert.parent();
+  boost::optional<analysis::AnalysisObject> parent = m_measure.parent();
 
   if (parent)
   {
-    boost::optional<analysis::DiscreteVariable> var = parent->cast<analysis::DiscreteVariable>();
+    boost::optional<analysis::MeasureGroup> var = parent->cast<analysis::MeasureGroup>();
     if (var)
     {
       return var;
     }
   }
 
-  return boost::optional<analysis::DiscreteVariable>();
+  return boost::optional<analysis::MeasureGroup>();
 }
 
 QWidget * PerturbationItemDelegate::view(QSharedPointer<OSListItem> dataSource)
@@ -781,4 +787,5 @@ QWidget * PerturbationItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 } // pat
 
 } // openstudio
+
 

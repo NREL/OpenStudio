@@ -126,6 +126,43 @@ namespace openstudio{
       createIndexes();
     }
 
+
+    void SqlFile_Impl::removeIndexes()
+    {
+      if (m_connectionOpen)
+      {
+        try {
+          execAndThrowOnError("DROP INDEX rmdTI;");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error dropping index: " + std::string(e.what()));
+        }
+
+        try {
+          execAndThrowOnError("DROP INDEX rmdDI;");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error dropping index: " + std::string(e.what()));
+        }
+
+        try {
+          execAndThrowOnError("DROP INDEX rvdTI;");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error dropping index: " + std::string(e.what()));
+        }
+
+        try {
+          execAndThrowOnError("DROP INDEX rvdDI;");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error dropping index: " + std::string(e.what()));
+        }
+
+        try {
+          execAndThrowOnError("DROP INDEX dmhdHRI;");
+        } catch (const std::runtime_error &e) {
+          LOG(Trace, "Error dropping index: " + std::string(e.what()));
+        }
+      }
+    }
+
     void SqlFile_Impl::createIndexes()
     {
       if (m_connectionOpen)
@@ -655,8 +692,6 @@ namespace openstudio{
       if (m_db)
       {
         sqlite3_stmt* sqlStmtPtr;
-        std::map<int,std::string> envPeriods;
-        std::map<int,std::string>::iterator envPeriodsItr;
 
         std::string stmt = 
           "select sum(VariableValue), VariableName, ReportingFrequency, VariableUnits "
@@ -724,7 +759,8 @@ namespace openstudio{
         code = sqlite3_step(sqlStmtPtr);
         while(code == SQLITE_ROW)
         {
-          envPeriods.insert(std::pair<int,std::string>( sqlite3_column_int(sqlStmtPtr,0), columnText(sqlite3_column_text(sqlStmtPtr,1)) ) );
+          std::string queryEnvPeriod = boost::to_upper_copy(columnText(sqlite3_column_text(sqlStmtPtr,1)));
+          envPeriods.insert(std::pair<int,std::string>( sqlite3_column_int(sqlStmtPtr,0), queryEnvPeriod ) );
           code = sqlite3_step(sqlStmtPtr);
         }
         sqlite3_finalize(sqlStmtPtr);
@@ -749,9 +785,10 @@ namespace openstudio{
               envPeriodsItr != envPeriods.end();
               envPeriodsItr++)
           {
-            m_dataDictionary.insert(DataDictionaryItem(dictionaryIndex,(*envPeriodsItr).first,name,keyValue,(*envPeriodsItr).second,rf,units,table));
+            std::string queryEnvPeriod = boost::to_upper_copy(envPeriodsItr->second);
+            m_dataDictionary.insert(DataDictionaryItem(dictionaryIndex,envPeriodsItr->first,name,keyValue,queryEnvPeriod,rf,units,table));
             LOG(Trace,"Creating data dictionary item " << dictionaryIndex << ", " << (*envPeriodsItr).first 
-                << ", " << name << ", " << keyValue << ", " << (*envPeriodsItr).second << ", " << rf << ", " 
+                << ", " << name << ", " << keyValue << ", " << queryEnvPeriod << ", " << rf << ", " 
                 << units << ", " << table << ".");
           }
 
@@ -779,7 +816,8 @@ namespace openstudio{
               envPeriodsItr != envPeriods.end();
               envPeriodsItr++)
           {
-            m_dataDictionary.insert(DataDictionaryItem(dictionaryIndex,(*envPeriodsItr).first,name,keyValue,(*envPeriodsItr).second,rf,units,table));
+            std::string queryEnvPeriod = boost::to_upper_copy(envPeriodsItr->second);
+            m_dataDictionary.insert(DataDictionaryItem(dictionaryIndex,envPeriodsItr->first,name,keyValue,queryEnvPeriod,rf,units,table));
           }
 
           // step to next row
@@ -1037,14 +1075,16 @@ namespace openstudio{
 
     std::vector<std::string> SqlFile_Impl::availableVariableNames(const std::string& envPeriod, const std::string& reportingFrequency) const
     {
+      std::string queryEnvPeriod = boost::to_upper_copy(envPeriod);
+
       std::vector<std::string> vec;
       std::string variableName;
       DataDictionaryTable::index<name>::type::iterator iname;
-      for (iname=m_dataDictionary.get<name>().begin();iname!=m_dataDictionary.get<name>().end();++iname)
+      for (iname=m_dataDictionary.get<name>().begin(); iname!=m_dataDictionary.get<name>().end(); ++iname)
       {
-        if (((*iname).envPeriod == envPeriod) && ((*iname).reportingFrequency == reportingFrequency))
+        if ((iname->envPeriod == queryEnvPeriod) && (iname->reportingFrequency == reportingFrequency))
         {
-          variableName = (*iname).name;
+          variableName = iname->name;
           if (std::find(vec.begin(), vec.end(), variableName) == vec.end())
           {
             vec.push_back(variableName);
@@ -1056,14 +1096,16 @@ namespace openstudio{
 
     std::vector<std::string> SqlFile_Impl::availableReportingFrequencies(const std::string& envPeriod)
     {
+      std::string queryEnvPeriod = boost::to_upper_copy(envPeriod);
+
       std::vector<std::string> vec;
       std::string reportingFrequencyName;
       DataDictionaryTable::index<reportingFrequency>::type::iterator ireportingFrequency;
-      for (ireportingFrequency=m_dataDictionary.get<reportingFrequency>().begin();ireportingFrequency!=m_dataDictionary.get<reportingFrequency>().end();++ireportingFrequency)
+      for (ireportingFrequency=m_dataDictionary.get<reportingFrequency>().begin(); ireportingFrequency!=m_dataDictionary.get<reportingFrequency>().end(); ++ireportingFrequency)
       {
-        if ((*ireportingFrequency).envPeriod == envPeriod)
+        if (ireportingFrequency->envPeriod == queryEnvPeriod)
         {
-          reportingFrequencyName = (*ireportingFrequency).reportingFrequency;
+          reportingFrequencyName = ireportingFrequency->reportingFrequency;
           if (std::find(vec.begin(), vec.end(), reportingFrequencyName) == vec.end())
           {
             vec.push_back(reportingFrequencyName);
@@ -1091,7 +1133,7 @@ namespace openstudio{
     boost::optional<EnvironmentType> SqlFile_Impl::environmentType(const std::string& envPeriod) const
     {
       boost::optional<EnvironmentType> result;
-      std::string query = "SELECT EnvironmentType FROM environmentperiods WHERE EnvironmentName='" + envPeriod + "'";
+      std::string query = "SELECT EnvironmentType FROM environmentperiods WHERE EnvironmentName='" + envPeriod + "' COLLATE NOCASE";
       boost::optional<int> temp = execAndReturnFirstInt(query);
       if (temp){
         try{
@@ -1671,9 +1713,9 @@ namespace openstudio{
       std::vector<std::string> vec;
       std::string envPeriodName;
       DataDictionaryTable::index<envPeriod>::type::iterator ienvPeriod;
-      for (ienvPeriod=m_dataDictionary.get<envPeriod>().begin();ienvPeriod!=m_dataDictionary.get<envPeriod>().end();++ienvPeriod)
+      for (ienvPeriod=m_dataDictionary.get<envPeriod>().begin(); ienvPeriod!=m_dataDictionary.get<envPeriod>().end(); ++ienvPeriod)
       {
-        envPeriodName = (*ienvPeriod).envPeriod;
+        envPeriodName = ienvPeriod->envPeriod;
         if (std::find(vec.begin(), vec.end(), envPeriodName) == vec.end())
         {
           vec.push_back(envPeriodName);
@@ -1684,16 +1726,18 @@ namespace openstudio{
 
     std::vector<std::string> SqlFile_Impl::availableKeyValues(const std::string& envPeriod, const std::string& reportingFrequency, const std::string& timeSeriesName)
     {
+      std::string queryEnvPeriod = boost::to_upper_copy(envPeriod);
+
       std::vector<std::string> vec;
       std::string keyValueName;
       DataDictionaryTable::index<keyValue>::type::iterator ikeyValue;
-      for (ikeyValue=m_dataDictionary.get<keyValue>().begin();ikeyValue!=m_dataDictionary.get<keyValue>().end();++ikeyValue)
+      for (ikeyValue=m_dataDictionary.get<keyValue>().begin(); ikeyValue!=m_dataDictionary.get<keyValue>().end(); ++ikeyValue)
       {
-        if (((*ikeyValue).envPeriod == envPeriod) &&
-            ((*ikeyValue).reportingFrequency == reportingFrequency) &&
-            ((*ikeyValue).name == timeSeriesName) )
+        if ((ikeyValue->envPeriod == queryEnvPeriod) &&
+            (ikeyValue->reportingFrequency == reportingFrequency) &&
+            (ikeyValue->name == timeSeriesName) )
         {
-          keyValueName = (*ikeyValue).keyValue;
+          keyValueName = ikeyValue->keyValue;
           if (std::find(vec.begin(), vec.end(), keyValueName) == vec.end())
           {
             vec.push_back(keyValueName);
@@ -1725,7 +1769,9 @@ namespace openstudio{
 
     boost::optional<double> SqlFile_Impl::runPeriodValue(const std::string& envPeriod, const std::string& timeSeriesName, const std::string& keyValue)
     {
-      DataDictionaryTable::index<envPeriodReportingFrequencyNameKeyValue>::type::iterator iEpRfNKv = m_dataDictionary.get<envPeriodReportingFrequencyNameKeyValue>().find(boost::make_tuple(envPeriod, ReportingFrequency(ReportingFrequency::RunPeriod).valueName(), timeSeriesName, keyValue));
+      std::string queryEnvPeriod = boost::to_upper_copy(envPeriod);
+
+      DataDictionaryTable::index<envPeriodReportingFrequencyNameKeyValue>::type::iterator iEpRfNKv = m_dataDictionary.get<envPeriodReportingFrequencyNameKeyValue>().find(boost::make_tuple(queryEnvPeriod, ReportingFrequency(ReportingFrequency::RunPeriod).valueName(), timeSeriesName, keyValue));
 
       if (iEpRfNKv == m_dataDictionary.get<envPeriodReportingFrequencyNameKeyValue>().end() ){
         return boost::optional<double>();
@@ -2106,7 +2152,7 @@ namespace openstudio{
             sqlite3_finalize(sqlStmtPtr);
           }
           // minutes - 1 to remove starting minute
-          return boost::optional<openstudio::Time>(openstudio::Time(0,0,minutes-1,0));
+          return boost::optional<openstudio::Time>(openstudio::Time(0,0,int(std::ceil(minutes-1.0)),0));
           break;
         default:
           // unsupported
@@ -2137,7 +2183,7 @@ namespace openstudio{
         }
         sqlite3_finalize(sqlStmtPtr);
       }
-      return openstudio::DateTime(openstudio::Date(monthOfYear(month),day), openstudio::Time(0,hour, minute, 0.0));
+      return openstudio::DateTime(openstudio::Date(monthOfYear(month),day), openstudio::Time(0, hour, minute, 0));
     }
 
     openstudio::OptionalTimeSeries SqlFile_Impl::timeSeries(const DataDictionaryItem& dataDictionary)
@@ -2198,13 +2244,13 @@ namespace openstudio{
           if ((month==0) || (day==0)) // then values in db are null - assumed run period
           {
             startDate=firstDateTime();
-            openstudio::DateTime dateTime(startDate + openstudio::Time(0,0,interval,0.0));
+            openstudio::DateTime dateTime(startDate + openstudio::Time(0,0,interval,0));
             stdDaysFromFirstReport.push_back((dateTime-startDate).totalDays());
             lastDateTime = dateTime;
           }
           else
           {
-            openstudio::DateTime dateTime(openstudio::Date(monthOfYear(month),day,year), openstudio::Time(0,hour, minute, 0.0));
+            openstudio::DateTime dateTime(openstudio::Date(monthOfYear(month),day,year), openstudio::Time(0,hour, minute, 0));
             if (count==0) { 
               startDate=dateTime;
             } else {
@@ -2212,7 +2258,7 @@ namespace openstudio{
               if (dateTime < lastDateTime)
               {
                 ++year;
-                dateTime = openstudio::DateTime(openstudio::Date(monthOfYear(month),day,year), openstudio::Time(0,hour, minute, 0.0));
+                dateTime = openstudio::DateTime(openstudio::Date(monthOfYear(month),day,year), openstudio::Time(0,hour, minute, 0));
               }
             }
             stdDaysFromFirstReport.push_back((dateTime-startDate).totalDays());
@@ -2224,6 +2270,10 @@ namespace openstudio{
         }
         // must finalize to prevent memory leaks
         sqlite3_finalize(sqlStmtPtr);
+
+        // remove year before passing to TimeSeries
+        startDate = DateTime(Date(startDate.date().monthOfYear(), startDate.date().dayOfMonth()), startDate.time());
+        
         ts = openstudio::TimeSeries(startDate, stdDaysFromFirstReport, stdValues, units);
       }
       return ts;
@@ -2268,7 +2318,7 @@ namespace openstudio{
           day = sqlite3_column_int(sqlStmtPtr, 1);
           hour = sqlite3_column_int(sqlStmtPtr, 2);
           minute = sqlite3_column_int(sqlStmtPtr, 3);
-          openstudio::DateTime dateTime(openstudio::Date(monthOfYear(month),day), openstudio::Time(0,hour, minute, 0.0));
+          openstudio::DateTime dateTime(openstudio::Date(monthOfYear(month),day), openstudio::Time(0,hour, minute, 0));
           dateTimes.push_back(dateTime);
 
           // step to next row
@@ -2283,17 +2333,20 @@ namespace openstudio{
 
     openstudio::OptionalTimeSeries SqlFile_Impl::timeSeries(const std::string& envPeriod, const std::string& reportingFrequency, const std::string& timeSeriesName, const std::string& keyValue)
     {
-      LOG(Debug, "Making time series for envPeriod = '" << envPeriod <<
+      //std::string queryEnvPeriod = envPeriod;
+      std::string queryEnvPeriod = boost::to_upper_copy(envPeriod);
+
+      LOG(Debug, "Making time series for envPeriod = '" << queryEnvPeriod <<
           "', reportingFrequency = '" << reportingFrequency <<
           "', timeSeriesName = '" << timeSeriesName <<
           "', keyValue = '" << keyValue << "'");
 
       openstudio::OptionalTimeSeries ts;
-      DataDictionaryTable::index<envPeriodReportingFrequencyNameKeyValue>::type::iterator iEpRfNKv = m_dataDictionary.get<envPeriodReportingFrequencyNameKeyValue>().find(boost::make_tuple(envPeriod, reportingFrequency, timeSeriesName, keyValue));
+      DataDictionaryTable::index<envPeriodReportingFrequencyNameKeyValue>::type::iterator iEpRfNKv = m_dataDictionary.get<envPeriodReportingFrequencyNameKeyValue>().find(boost::make_tuple(queryEnvPeriod, reportingFrequency, timeSeriesName, keyValue));
 
       if (iEpRfNKv == m_dataDictionary.get<envPeriodReportingFrequencyNameKeyValue>().end()) {
         // not found
-        LOG(Debug,"Tuple: " << envPeriod << ", " << reportingFrequency << ", " << timeSeriesName << ", " << keyValue << " not found in data dictionary.");
+        LOG(Debug,"Tuple: " << queryEnvPeriod << ", " << reportingFrequency << ", " << timeSeriesName << ", " << keyValue << " not found in data dictionary.");
       } else if (!iEpRfNKv->timeSeries.values().empty()) {
         ts = iEpRfNKv->timeSeries;
       } else {// lazy caching
@@ -2693,7 +2746,7 @@ namespace openstudio{
       std::vector<std::string> names;
 
       std::stringstream s;
-      s << "select MapName from daylightmaps where Environment = '" << envPeriod << "'";
+      s << "select MapName from daylightmaps where Environment = '" << envPeriod << "' COLLATE NOCASE";
 
       sqlite3_stmt* sqlStmtPtr;
 
@@ -3060,7 +3113,7 @@ namespace openstudio{
       {
         std::pair<int, DateTime> pair;
         pair.first = sqlite3_column_int(sqlStmtPtr,0);
-        pair.second = DateTime( Date( monthOfYear( sqlite3_column_int(sqlStmtPtr,1) ), sqlite3_column_int(sqlStmtPtr,2) ), Time( 0, sqlite3_column_int(sqlStmtPtr, 3), 0, 0.0) );
+        pair.second = DateTime( Date( monthOfYear( sqlite3_column_int(sqlStmtPtr,1) ), sqlite3_column_int(sqlStmtPtr,2) ), Time( 0, sqlite3_column_int(sqlStmtPtr, 3), 0, 0) );
         reportIndicesDates.push_back( pair );
         // step to next row
         code = sqlite3_step(sqlStmtPtr);
@@ -3097,7 +3150,7 @@ namespace openstudio{
       /// must finalize to prevent memory leaks
       sqlite3_finalize(sqlStmtPtr);
 
-      return DateTime(Date(monthOfYear(month),dayOfMonth), Time(0,hour, 0, 0.0));
+      return DateTime(Date(monthOfYear(month),dayOfMonth), Time(0,hour, 0, 0));
     }
 
     boost::optional<int> SqlFile_Impl::illuminanceMapHourlyReportIndex(const int& mapIndex, const DateTime& dateTime) const

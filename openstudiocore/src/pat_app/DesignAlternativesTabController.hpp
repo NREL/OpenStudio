@@ -22,7 +22,7 @@
 
 #include "../shared_gui_components/OSListView.hpp"
 #include <analysis/DataPoint.hpp>
-#include <analysis/DiscretePerturbation.hpp>
+#include <analysis/Measure.hpp>
 #include <QObject>
 #include <QPointer>
 #include <QSharedPointer>
@@ -140,7 +140,7 @@ class DesignAltListController : public OSListController
 
   std::vector<analysis::DataPoint> dataPoints() const;
 
-  std::string suggestDesignAltName(const boost::optional<analysis::DiscretePerturbation>& pert) const;
+  std::string suggestDesignAltName(const boost::optional<analysis::Measure>& measure) const;
 
   QSharedPointer<OSItemSelectionController> m_measureSelectionController;
 };
@@ -207,7 +207,7 @@ class PerturbationListController : public OSListController
 
   private:
 
-  std::vector<analysis::DiscretePerturbation> perturbations() const;
+  std::vector<analysis::Measure> measures() const;
 
   QPointer<DesignAltItem> m_designAltItem;
 };
@@ -218,16 +218,16 @@ class PerturbationItem : public OSListItem
 
   public:
 
-  PerturbationItem(const analysis::DiscretePerturbation & pert);
+  PerturbationItem(const analysis::Measure & measure);
   virtual ~PerturbationItem() {}
 
   QString name() const;
   bool isFixedMeasureItem() const;
 
   private:
-  boost::optional<analysis::DiscreteVariable> discreteVariableParent() const;
+  boost::optional<analysis::MeasureGroup> measureGroupParent() const;
 
-  analysis::DiscretePerturbation m_pert;
+  analysis::Measure m_measure;
 };
 
 class PerturbationItemDelegate : public OSItemDelegate

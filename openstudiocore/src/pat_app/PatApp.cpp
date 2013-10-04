@@ -55,8 +55,8 @@
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/RubyJobUtils.hpp>
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/ZipFile.hpp>
 #include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/bcl/LocalBCL.hpp>
@@ -491,7 +491,7 @@ bool PatApp::setSeed(const FileReference& currentSeedLocation) {
       m_project->seedIdf(processEventsProgressBar);
       
       // update any duplicate measures of different versions
-      BOOST_FOREACH(const BCLMeasure& measure, result.second) {
+      Q_FOREACH(const BCLMeasure& measure, result.second) {
         measureManager().updateMeasure(*m_project,measure);
       }
 
@@ -678,8 +678,6 @@ void PatApp::showVerticalTab(int verticalId)
   m_measuresTabController.clear();
   m_resultsTabController.clear();
 
-  bool isConnected = false;
-
   switch( m_mainTabId )
   {
     case MEASURES:
@@ -821,7 +819,7 @@ void PatApp::exportXml()
   //make results.xml inside the project directory
   openstudio::path resultsXmlPath = projectPath / toPath("results.xml");
   openstudio::analysis::exportxml::ExportXML newXMLdoc;
-  bool xmlExportSuccess = newXMLdoc.exportXML(*m_project, toQString(resultsXmlPath));
+  newXMLdoc.exportXML(*m_project, toQString(resultsXmlPath));
 
   //make qaqc.xml inside the project directory
   openstudio::path rubyIncludePath = getOpenStudioRubyIncludePath();

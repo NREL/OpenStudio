@@ -750,7 +750,7 @@ double Economics::getPayBack( const std::vector< double >& cashFlowSavings )
       result = cashFlowSavings[0] / cashFlowSavings[1];
     }
   }
-  return abs(result);
+  return fabs(result);
 }
 
 double Economics::payBack( const std::vector< double >& cashFlowSavings )
@@ -861,7 +861,7 @@ bool Economics::recursiveNewtonCalc( const std::vector<double>& cashFlows, doubl
     polynomialSum += cashFlows.at(i)/(pow((1 + guess), static_cast<int>(i)));
   }
 
-  if(abs(polynomialSum) <= MAX_ERR){
+  if(fabs(polynomialSum) <= MAX_ERR){
     return success = true;
   };
 

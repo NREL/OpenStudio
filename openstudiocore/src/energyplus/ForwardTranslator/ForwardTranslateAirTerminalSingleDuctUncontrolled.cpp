@@ -68,7 +68,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctUnco
   {
     idfObject.setString(openstudio::AirTerminal_SingleDuct_UncontrolledFields::MaximumAirFlowRate,"AutoSize");
   }
-  else if( value = modelObject.maximumAirFlowRate() )
+  else if( (value = modelObject.maximumAirFlowRate()) )
   {
     idfObject.setDouble(openstudio::AirTerminal_SingleDuct_UncontrolledFields::MaximumAirFlowRate,value.get());
   }

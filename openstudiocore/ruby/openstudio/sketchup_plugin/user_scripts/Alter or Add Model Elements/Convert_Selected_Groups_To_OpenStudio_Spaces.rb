@@ -44,18 +44,34 @@ class ConvertGroupsToOpenStudioSpaces < OpenStudio::Ruleset::ModelUserScript
 
     #make array of groups, and make unique
     groupsAndComponents = []
+    puts "Status: Making array of groups, checking manifold solid."
     selection.each do |entity|
       if entity.class.to_s == "Sketchup::Group" or entity.class.to_s == "Sketchup::ComponentInstance"
         if entity.drawing_interface == nil
-          entity.make_unique #this is only needed if a group was copied.
-          groupsAndComponents << entity
+          if entity.manifold?
+            entity.make_unique #this is only needed if a group was copied.
+            groupsAndComponents << entity
+          else
+            puts "*(warning) Space not created, geometry of group is not a manifold solid."
+          end
         else
           puts "#{entity.drawing_interface.model_object.name} is already an OpenStudio Model Object."
         end
       end
     end
 
+    #creating intersections
+    puts "Status: Intersecting group geometry before making spaces."
+    groupsAndComponents.each do |groupAndComponent|
+      if groupAndComponent.class.to_s == "Sketchup::Group"
+        groupAndComponent.entities.intersect_with(true, groupAndComponent.transformation, groupAndComponent, groupAndComponent.transformation, false, groupsAndComponents)
+      elsif groupAndComponent.class.to_s == "Sketchup::ComponentInstance"
+        groupAndComponent.definition.entities.intersect_with(true, groupAndComponent.transformation, groupAndComponent.definition, groupAndComponent.transformation, false, groupsAndComponents)
+      end
+    end
+
     #loop through groups
+    puts "Status: Creating space geometry using observers."
     groupsAndComponents.each do |groupAndComponent|
 
       #store name of group
@@ -77,11 +93,6 @@ class ConvertGroupsToOpenStudioSpaces < OpenStudio::Ruleset::ModelUserScript
         tempGroup = entity.entities.add_instance(groupAndComponent.definition.entities.parent, groupAndComponent.transformation*entity.transformation)
       end
 
-      #issue warning if group is not manifold solid
-      if not groupAndComponent.manifold?
-        puts "*(warning) The geometry in #{space.name} is not a manifold solid, and may not run properly in an EnergyPlus simulation."
-      end
-
       #explode temp copy so observers can classify, then erase original geometry
       tempGroup.explode
       groupAndComponent.erase! #could be nice to through this on a disabled layer instead of deleting it, similar to space diagram and projected geometry
@@ -92,11 +103,13 @@ class ConvertGroupsToOpenStudioSpaces < OpenStudio::Ruleset::ModelUserScript
 
       #doesn't support nested groups to be used for shading an interior partition surfaces - todo
 
-    end
-    
-  end
+      #surface matching had timing issue
 
-end
+    end #end of groupsAndComponents.each do
+
+  end  #end of run
+
+end #end of user script
 
 # this call registers your script with the OpenStudio SketchUp plug-in
 ConvertGroupsToOpenStudioSpaces.new.registerWithApplication

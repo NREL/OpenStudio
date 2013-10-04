@@ -99,7 +99,7 @@ namespace detail {
       if (model)
       {
         bool change = filesChanged(m_files, *t_lastrun);
-        return filesChanged(m_files, *t_lastrun);
+        return change;
       } else {
         // if the model file we are using has not been established yet,
         // return outofdate
@@ -155,6 +155,13 @@ namespace detail {
         errors.addError(ErrorType::Error, "Unable to load model: " + toString(m_model->fullPath));
         errors.result = ruleset::OSResultValue::Fail;
       } else {
+
+        // temp code
+        if (allParams().has("keepRunControlSpecialDays"))
+        {
+          ft.setKeepRunControlSpecialDays(true);
+        }
+
         openstudio::Workspace workspace = ft.translateModel(*m);
 
         if (workspace.numObjects() > 0){

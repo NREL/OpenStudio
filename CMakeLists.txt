@@ -3,8 +3,8 @@ CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
 PROJECT(OpenStudio)
 
 SET(CMAKE_VERSION_MAJOR 1)
-SET(CMAKE_VERSION_MINOR 0)
-SET(CMAKE_VERSION_PATCH 3)
+SET(CMAKE_VERSION_MINOR 1)
+SET(CMAKE_VERSION_PATCH 0)
 
 SET(SUBVERSION_REVISION "Unknown")
 SET(CMAKE_VERSION_BUILD "${SUBVERSION_REVISION}" CACHE STRING "Build number") # svn revision
@@ -51,9 +51,18 @@ OPTION( BUILD_WITH_OPENSSL "Build With OpenSSL Support For SSH Connections" ON )
 # Build SimXML
 OPTION( BUILD_SIMXML "Build with SimXml support" OFF )
 
+# Package Radiance and EnergyPlus for convenience 
+OPTION( PACKAGE_RADIANCE_AND_ENERGYPLUS "Package Radiance and EnergyPlus" OFF )
+MARK_AS_ADVANCED(FORCE PACKAGE_RADIANCE_AND_ENERGYPLUS)
+
+IF (PACKAGE_RADIANCE_AND_ENERGYPLUS)
+  MESSAGE(WARNING "Packaging of Radiance and EnergyPlus is intended for internal use and deployment only")
+  SET(ENERGYPLUS_LOCATION "" CACHE PATH "Location of EnergyPlus to Package")
+  SET(RADIANCE_LOCATION "" CACHE PATH "Location of Radiance to Package")
+ENDIF()
+
 # Build Ruby gem
 OPTION( BUILD_RUBY_GEM "Build Ruby Gem" OFF )
-
 
 IF (BUILD_V8_BINDINGS)
   IF(WIN32)
@@ -95,7 +104,8 @@ ENDIF()
 # Require that DAKOTA_FOUND
 #
 # Some code (certain analysisdriver tests) are conditionally compiled depending on 
-# the value of this variable.
+# whether Dakota is found on the system. If this variable is set to true, CMake will give a configure
+# error in the case that Dakota is not found.
 #
 # Dakota is an optional third party algorithm library that we use through its command line
 # interface.
@@ -117,6 +127,18 @@ IF(QT_QMAKE_EXECUTABLE)
   OPTION( BUILD_QT "Build Qt" OFF)
 ELSE()
   OPTION( BUILD_QT "Build Qt" ON)
+ENDIF()
+
+# Apple Sanity Check
+IF(APPLE)
+  IF (NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+    MESSAGE(FATAL_ERROR "OSX Deployment Target Must Be Set")
+  ENDIF()
+
+  IF (NOT CMAKE_OSX_SYSROOT)
+    MESSAGE(FATAL_ERROR "OSX Sysroot must be set")
+  ENDIF()
+
 ENDIF()
 
 include(${CMAKE_SOURCE_DIR}/ExternalProject.cmake)
@@ -175,6 +197,7 @@ ENDIF()
 FIND_PROGRAM( RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH )
 FIND_PACKAGE( Ruby )
 
+
 IF(WIN32 AND MSVC AND CMAKE_CL_64)
   MESSAGE(WARNING "64bit Support on Windows is EXPERIMENTAL. Ruby 2.0.0 will be built. The Sketchup plugin will not work. Expect problems with ruby support in general. Unless you've already built Boost and Qt you probably want to let this super build do it. There are lots of warnings, so we are disabling warnings as errors.") 
 ENDIF()
@@ -189,6 +212,15 @@ ELSE()
   # Always provide ruby on Windows
   OPTION(BUILD_RUBY "Build Ruby" ON)
   MARK_AS_ADVANCED(BUILD_RUBY)
+ENDIF()
+
+IF ( NOT BUILD_RUBY AND NOT BUILD_SWIG )
+  SET(RUBY_VER "${RUBY_VERSION_MAJOR}.${RUBY_VERSION_MINOR}.${RUBY_VERSION_PATCH}")
+
+  IF(${RUBY_VER} VERSION_GREATER "1.8.8"
+      AND ${SWIG_VERSION} VERSION_LESS "2.0.10")
+    MESSAGE(SEND_ERROR "For Ruby >= 1.9.0, SWIG >= 2.0.10 is required. Use of the BUILD_SWIG option is suggested")
+  ENDIF()
 ENDIF()
 
 IF(BUILD_NODE)
@@ -299,8 +331,8 @@ IF(BUILD_SWIG)
     ELSE()
       # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
       ExternalProject_Add( SWIG
-        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swig-2.0.9.tar.gz
-        URL_MD5 54d534b14a70badc226129159412ea85
+        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swig-2.0.10.tar.gz
+        URL_MD5 6d5e7ad05b4a404e5e85db9befb70c9a
         PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
         CONFIGURE_COMMAND ../SWIG/configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
         BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE)
@@ -311,8 +343,8 @@ IF(BUILD_SWIG)
   ELSE()
     # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
     ExternalProject_Add( SWIG
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swigwin-2.0.9.zip
-      URL_MD5 a1dc34766cf599f49e2092f7973c85f4
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swigwin-2.0.10.zip
+      URL_MD5 cbb7006ecc912f056a2ec7f322fe59fb
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ""
       INSTALL_COMMAND ""
@@ -323,11 +355,13 @@ ENDIF()
 
 IF(BUILD_BOOST)
   IF(APPLE)
+    STRING(REGEX MATCH "[0-9]+\\.[0-9]+" OSX_SDK_VERSION ${CMAKE_OSX_SYSROOT})
     ExternalProject_Add( Boost
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_47_0.tar.gz
       URL_MD5 b0d9b288627b6a57d41d425d4f467592
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 variant=release variant=debug address-model=32_64 architecture=x86 --layout=tagged  --without-python --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT} install
+      PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_43.diff
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 variant=release variant=debug address-model=32_64 macosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET} macosx-version=${OSX_SDK_VERSION}  architecture=x86 --layout=tagged  --without-python --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT} install
       INSTALL_COMMAND ""
       )
     SET(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
@@ -410,6 +444,12 @@ IF(BUILD_QT)
     # We're going to explicitly use the SDK specified in the configuration by the user
     SET(APPLE_SDK_COMMAND -sdk ${CMAKE_OSX_SYSROOT} )
 
+    IF (CMAKE_OSX_SYSROOT MATCHES ".*10.7.sdk")
+      SET(APPLE_PATCH_COMMAND "${CMAKE_COMMAND}" -E rename "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src/3rdparty/webkit/WebKitLibraries/libWebKitSystemInterfaceMountainLion.a" "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src/3rdparty/webkit/WebKitLibraries/libWebKitSystemInterfaceMountainLion.a.bak" COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src/3rdparty/webkit/WebKitLibraries/libWebKitSystemInterfaceLion.a" "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src/3rdparty/webkit/WebKitLibraries/libWebKitSystemInterfaceMountainLion.a")
+    ELSE()
+      SET(APPLE_PATCH_COMMAND "")
+    ENDIF()
+
     # At the moment we are building all of debug,release,x86 and x86_64
     # it would appear that calling "make" in some way that CMake can detect that we are calling
     # make (and attempt to pass parameters to the child make jobs) is breaking our ability to install
@@ -418,7 +458,7 @@ IF(BUILD_QT)
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-4.8.5.tar.gz
       URL_MD5 1864987bdbb2f58f8ae8b350dfdbe133
       CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/configure  ${APPLE_SDK_COMMAND} -debug-and-release -opensource -arch x86 -arch x86_64 -qt-sql-sqlite -plugin-sql-sqlite -nomake examples -nomake demos -nomake docs -no-qt3support -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
-      PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/Qt/src ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src
+      PATCH_COMMAND ${APPLE_PATCH_COMMAND}
       BUILD_COMMAND $(MAKE) -f ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build/Makefile      
       INSTALL_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build && make -j1 install"
       )
@@ -610,6 +650,9 @@ ExternalProject_Add( OpenStudioCore
     -DDOXYGEN_DOT_EXECUTABLE:STRING=${DOXYGEN_DOT_EXECUTABLE}
     -DBoostLog_DIR:STRING=${BoostLog_DIR}
     -DQJSON_DIR:STRING=${QJSON_DIR}
+    -DPACKAGE_RADIANCE_AND_ENERGYPLUS:BOOL=${PACKAGE_RADIANCE_AND_ENERGYPLUS}
+    -DENERGYPLUS_LOCATION:PATH=${ENERGYPLUS_LOCATION}
+    -DRADIANCE_LOCATION:PATH=${RADIANCE_LOCATION}
     INSTALL_COMMAND ""
 )
 

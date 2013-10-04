@@ -103,7 +103,7 @@ namespace detail {
                                                            const DakotaParametersFile& params);
 
     //@}
-    /** @name Protected in Public Class */
+    /** @name Protected in or Absent from Public Class */
     //@{
 
     virtual void reset();
@@ -116,6 +116,8 @@ namespace detail {
 
     /** Sets the RunManager job. */
     void setJob(const runmanager::Job& job);
+
+    virtual QVariant toVariant() const;
 
     //@}
    private:

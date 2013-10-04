@@ -18,9 +18,12 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateAirLoopHVACUnitaryHeatPumpAirToAir.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACZoneMixer.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACZoneSplitter.cpp
+  ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeCooledBeam.cpp
+  ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctParallelPIUReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctUncontrolled.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVReheat.cpp
+  ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVNoReheat.cpp
   ForwardTranslator/ForwardTranslateAirWallMaterial.cpp
   ForwardTranslator/ForwardTranslateBlind.cpp
   ForwardTranslator/ForwardTranslateBoilerHotWater.cpp
@@ -38,6 +41,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateCoilHeatingWater.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingWaterToAirHeatPumpEquationFit.cpp
   ForwardTranslator/ForwardTranslateConstruction.cpp
+  ForwardTranslator/ForwardTranslateConstructionWithInternalSource.cpp
   ForwardTranslator/ForwardTranslateConvergenceLimits.cpp
   ForwardTranslator/ForwardTranslateControllerMechanicalVentilation.cpp
   ForwardTranslator/ForwardTranslateControllerOutdoorAir.cpp
@@ -69,6 +73,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateDistrictHeating.cpp
   ForwardTranslator/ForwardTranslateElectricEquipment.cpp
   ForwardTranslator/ForwardTranslateEvaporativeCoolerDirectResearchSpecial.cpp
+  ForwardTranslator/ForwardTranslateEvaporativeFluidCoolerSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateExteriorLights.cpp
   ForwardTranslator/ForwardTranslateFanConstantVolume.cpp
   ForwardTranslator/ForwardTranslateFanOnOff.cpp
@@ -77,6 +82,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateGas.cpp
   ForwardTranslator/ForwardTranslateGasEquipment.cpp
   ForwardTranslator/ForwardTranslateGasMixture.cpp
+  ForwardTranslator/ForwardTranslateGroundHeatExchangerVertical.cpp
   ForwardTranslator/ForwardTranslateHeatBalanceAlgorithm.cpp
   ForwardTranslator/ForwardTranslateHeatExchangerAirToAirSensibleAndLatent.cpp
   ForwardTranslator/ForwardTranslateHotWaterEquipment.cpp
@@ -95,6 +101,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateNode.cpp
   ForwardTranslator/ForwardTranslateOtherEquipment.cpp
   ForwardTranslator/ForwardTranslateOutsideSurfaceConvectionAlgorithm.cpp
+  ForwardTranslator/ForwardTranslateOutputControlReportingTolerances.cpp
   ForwardTranslator/ForwardTranslateOutputVariable.cpp
   ForwardTranslator/ForwardTranslatePeople.cpp
   ForwardTranslator/ForwardTranslatePipeAdiabatic.cpp
@@ -125,6 +132,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateSetpointManagerWarmest.cpp
   ForwardTranslator/ForwardTranslateShade.cpp
   ForwardTranslator/ForwardTranslateShadowCalculation.cpp
+  ForwardTranslator/ForwardTranslateShadingControl.cpp
   ForwardTranslator/ForwardTranslateShadingSurface.cpp
   ForwardTranslator/ForwardTranslateShadingSurfaceGroup.cpp
   ForwardTranslator/ForwardTranslateSimpleGlazing.cpp
@@ -160,6 +168,9 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateZoneHVACEquipmentList.cpp
   ForwardTranslator/ForwardTranslateZoneHVACFourPipeFanCoil.cpp    
   ForwardTranslator/ForwardTranslateZoneHVACIdealLoadsAirSystem.cpp
+  ForwardTranslator/ForwardTranslateZoneHVACLowTemperatureRadiantElectric.cpp
+  ForwardTranslator/ForwardTranslateZoneHVACLowTempRadiantConstFlow.cpp
+  ForwardTranslator/ForwardTranslateZoneHVACLowTempRadiantVarFlow.cpp
   ForwardTranslator/ForwardTranslateZoneHVACPackagedTerminalHeatPump.cpp
   ForwardTranslator/ForwardTranslateZoneHVACPackagedTerminalAirConditioner.cpp
   ForwardTranslator/ForwardTranslateZoneHVACWaterToAirHeatPump.cpp 
@@ -171,7 +182,9 @@ SET( ${target_name}_src
   ReverseTranslator.cpp
   ReverseTranslator/ReverseTranslateAirLoopHVAC.cpp
   ReverseTranslator/ReverseTranslateAirLoopHVACOutdoorAirSystem.cpp
+  ReverseTranslator/ReverseTranslateAirTerminalSingleDuctConstantVolumeReheat.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctUncontrolled.cpp
+  ReverseTranslator/ReverseTranslateAirTerminalSingleDuctVAVNoReheat.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctVAVReheat.cpp
   ReverseTranslator/ReverseTranslateBuilding.cpp
   ReverseTranslator/ReverseTranslateBuildingSurfaceDetailed.cpp
@@ -202,10 +215,12 @@ SET( ${target_name}_src
   ReverseTranslator/ReverseTranslateDesignSpecificationOutdoorAir.cpp
   ReverseTranslator/ReverseTranslateElectricEquipment.cpp
   ReverseTranslator/ReverseTranslateEvaporativeCoolerDirectResearchSpecial.cpp
+  ReverseTranslator/ReverseTranslateEvaporativeFluidCoolerSingleSpeed.cpp
   ReverseTranslator/ReverseTranslateExteriorLights.cpp
   ReverseTranslator/ReverseTranslateFanConstantVolume.cpp
   ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp 
   ReverseTranslator/ReverseTranslateGasEquipment.cpp
+  ReverseTranslator/ReverseTranslateGroundHeatExchangerVertical.cpp
   ReverseTranslator/ReverseTranslateHeatBalanceAlgorithm.cpp
   ReverseTranslator/ReverseTranslateHotWaterEquipment.cpp
   ReverseTranslator/ReverseTranslateInternalMass.cpp
@@ -304,6 +319,9 @@ SET( ${target_name}_test_src
   Test/SubSurface_GTest.cpp
   Test/Surface_GTest.cpp
   Test/ThermalZone_GTest.cpp
+  Test/ZoneHVACLowTemperatureRadiantConstFlow_GTest.cpp
+  Test/ZoneHVACLowTempRadiantElectric_GTest.cpp
+  Test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
 )
 
 SET( ${target_name}_swig_src

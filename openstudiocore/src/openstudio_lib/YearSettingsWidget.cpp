@@ -376,9 +376,6 @@ void YearSettingsWidget::refresh()
       boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
       openstudio::path resourcesPath = openstudio::toPath(doc->modelTempDir()) / openstudio::toPath("resources");
       epwFile = weatherFile->file(resourcesPath);
-      if (epwFile){
-        DayOfWeek epwStartDayOfWeek = epwFile->startDayOfWeek();
-      }
     }
 
     // Refresh Daylight Savings Time

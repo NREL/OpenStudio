@@ -19,6 +19,7 @@
 
 #include "RunManager.hpp"
 #include "RunManagerStatus.hpp"
+#include "JSON.hpp"
 
 #include "Workflow.hpp"
 #include "RunManager_Impl.hpp"
@@ -296,10 +297,81 @@ namespace runmanager {
     return m_impl->getJobs(t_indexes);
   }
 
-  void RunManager::loadJobs(const openstudio::path &t_db)
+
+  void RunManager::updateJob(const openstudio::runmanager::Job &t_job, const openstudio::path &t_path)
   {
-    m_impl->loadJobs(t_db);
+    LOG(Info, "We are re-creating the updating job as an externally managed job, we may want to reevaluate this");
+    m_impl->updateJob(detail::JSON::toJob(detail::JSON::toJSON(t_job), true), t_path);
   }
+
+  void RunManager::updateJob(const openstudio::UUID &t_uuid, const Job &t_job)
+  {
+    LOG(Info, "We are re-creating the updating job as an externally managed job, we may want to reevaluate this");
+    m_impl->updateJob(t_uuid, detail::JSON::toJob(detail::JSON::toJSON(t_job), true));
+  }
+
+  void RunManager::updateJob(const openstudio::runmanager::Job &t_job)
+  {
+    LOG(Info, "We are re-creating the updating job as an externally managed job, we may want to reevaluate this");
+    m_impl->updateJob(detail::JSON::toJob(detail::JSON::toJSON(t_job), true));
+  }
+
+
+  /// Load all of the jobs from the given JSON string, merging job trees
+  void RunManager::updateJobs(const std::string &t_json, bool t_externallyManaged)
+  {
+    QVariant variant = loadJSON(t_json);
+    VersionString version = extractOpenStudioVersion(variant);
+    updateJobs(variant.toMap()["jobs"], version, t_externallyManaged);
+  }
+
+  /// Load all of the jobs from the given JSON structure represented by a QVariant,
+  /// merging job trees
+  void RunManager::updateJobs(const QVariant &t_variant, const VersionString &t_version, bool t_externallyManaged)
+  {
+    updateJobs(detail::JSON::toVectorOfJob(t_variant, t_version, t_externallyManaged));
+  }
+
+  /// merge job trees
+  void RunManager::updateJobs(const std::vector<Job> &t_jobs)
+  {
+    m_impl->updateJobs(t_jobs);
+  }
+
+  void RunManager::loadJobs(const openstudio::path &t_path)
+  {
+    m_impl->loadJobs(t_path);
+  }
+
+
+
+  std::string RunManager::jobsToJson() const
+  {
+    return detail::JSON::toJSON(jobsForExport());
+  }
+
+  std::vector<Job> RunManager::jobsForExport() const
+  {
+    std::vector<Job> retval;
+
+    std::vector<Job> currentJobs = getJobs();
+
+    for (std::vector<Job>::const_iterator itr = currentJobs.begin();
+         itr != currentJobs.end();
+         ++itr)
+    {
+      // only parent jobs get saved
+      if (!itr->parent())
+      {
+        retval.push_back(*itr);
+      }
+    }
+
+    LOG(Debug, "Returning jobs for export: " << retval.size());
+
+    return retval;
+  }
+
 
   openstudio::runmanager::ConfigOptions RunManager::getConfigOptions() const
   {

@@ -20,6 +20,13 @@
 #include <analysis/Variable.hpp>
 #include <analysis/Variable_Impl.hpp>
 
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+#include <analysis/OutputAttributeVariable.hpp>
+#include <analysis/OutputAttributeVariable_Impl.hpp>
+#include <analysis/RubyContinuousVariable.hpp>
+#include <analysis/RubyContinuousVariable_Impl.hpp>
+
 namespace openstudio {
 namespace analysis {
 
@@ -40,6 +47,34 @@ namespace detail {
   Variable_Impl::Variable_Impl(const Variable_Impl &other)
     : AnalysisObject_Impl(other)
   {}
+
+  Variable Variable_Impl::factoryFromVariant(const QVariant& variant, const VersionString& version) {
+    QVariantMap map = variant.toMap();
+
+    std::string variableType;
+    if (map.contains("variable_type")) {
+      variableType = map["variable_type"].toString().toStdString();
+    }
+    else if (map.contains("workflow_step_type")) {
+      variableType = map["workflow_step_type"].toString().toStdString();
+    }
+    else {
+      LOG_AND_THROW("Unable to find Variable in expected location.");
+    }
+
+    if (variableType == "MeasureGroup") {
+      return MeasureGroup_Impl::fromVariant(variant,version);
+    }
+    if (variableType == "OutputAttributeVariable") {
+      return OutputAttributeVariable_Impl::fromVariant(variant,version);
+    }
+    if (variableType == "RubyContinuousVariable") {
+      return RubyContinuousVariable_Impl::fromVariant(variant,version);
+    }
+
+    LOG_AND_THROW("Unexpected variable_type or workflow_step_type " << variableType << ".");
+    return OptionalVariable().get();
+  }
 
 } // detail
 

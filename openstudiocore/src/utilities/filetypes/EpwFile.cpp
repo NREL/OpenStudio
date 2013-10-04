@@ -198,7 +198,6 @@ bool EpwFile::parse()
         if (endDate && lastDate){
           Time delta = endDate.get() - lastDate.get();
           if (std::abs(delta.totalDays()) > 1){
-            double totalDays = delta.totalDays();
             realYear = false;
           }
 

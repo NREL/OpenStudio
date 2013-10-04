@@ -36,7 +36,6 @@ namespace detail {
   /** PSUADEDaceAlgorithmRecord_Impl is a DakotaAlgorithmRecord_Impl that is the implementation class for PSUADEDaceAlgorithmRecord.*/
 
   class PROJECT_API PSUADEDaceAlgorithmRecord_Impl : public DakotaAlgorithmRecord_Impl {
-    Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
     //@{

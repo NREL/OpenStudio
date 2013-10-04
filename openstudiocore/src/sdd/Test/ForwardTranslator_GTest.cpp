@@ -25,6 +25,7 @@
 
 #include <model/Model.hpp>
 #include <model/SimpleGlazing.hpp>
+#include <model/MasslessOpaqueMaterial.hpp>
 #include <model/Construction.hpp>
 #include <model/SubSurface.hpp>
 #include <model/SubSurface_Impl.hpp>
@@ -41,21 +42,33 @@ TEST_F(SDDFixture, ForwardTranslator_exampleModel)
 {
   Model model = exampleModel();
 
+  // change to constructions that can be translated to sdd
   SimpleGlazing simpleGlazing(model);
   simpleGlazing.setName("Test Glazing");
   simpleGlazing.setSolarHeatGainCoefficient(0.5);
   simpleGlazing.setUFactor(2);
   simpleGlazing.setVisibleTransmittance(0.7);
 
-  MaterialVector layers;
-  layers.push_back(simpleGlazing);
+  MaterialVector windowLayers;
+  windowLayers.push_back(simpleGlazing);
 
-  Construction construction(model);
-  construction.setLayers(layers);
+  Construction windowConstruction(model);
+  windowConstruction.setLayers(windowLayers);
+
+  MasslessOpaqueMaterial doorLayer(model);
+  doorLayer.setName("Test Door");
+
+  MaterialVector doorLayers;
+  doorLayers.push_back(doorLayer);
+
+  Construction doorConstruction(model);
+  doorConstruction.setLayers(doorLayers);
 
   BOOST_FOREACH(SubSurface subSurface, model.getModelObjects<SubSurface>()){
     if ((subSurface.subSurfaceType() == "FixedWindow") || (subSurface.subSurfaceType() == "OperableWindow")){
-      subSurface.setConstruction(construction);
+      subSurface.setConstruction(windowConstruction);
+    }else if ((subSurface.subSurfaceType() == "Door") || (subSurface.subSurfaceType() == "OverheadDoor")){
+      subSurface.setConstruction(doorConstruction);
     }
   }
 

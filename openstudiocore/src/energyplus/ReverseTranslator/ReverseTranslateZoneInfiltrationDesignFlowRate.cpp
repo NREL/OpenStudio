@@ -104,7 +104,7 @@ OptionalModelObject ReverseTranslator::translateZoneInfiltrationDesignFlowRate( 
   }else if(istringEqual("Flow/ExteriorWallArea", *s)){
     d = workspaceObject.getDouble(openstudio::ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea);
     if (d){
-      infiltration.setFlowperExteriorSurfaceArea(*d);
+      infiltration.setFlowperExteriorWallArea(*d);
     }else{
       LOG(Error, "Flow/ExteriorWallArea value not found for workspace object " << workspaceObject);
     }

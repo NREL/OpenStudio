@@ -178,6 +178,24 @@ class UTILITIES_API IdfExtensibleGroup {
     return result;
   }
 
+  /** Get the parent object. */
+  template<typename T>
+  T getObject() const { 
+    T result(boost::dynamic_pointer_cast<typename T::ImplType>(m_impl));
+    return result; 
+  }
+
+  /** Get the parent object. */
+  template<typename T>
+  boost::optional<T> getOptionalObject() const { 
+    boost::optional<T> result;
+    boost::shared_ptr<typename T::ImplType> p = boost::dynamic_pointer_cast<typename T::ImplType>(m_impl);
+    if (p){
+     result = T(p);
+    }
+    return result; 
+  }
+
   //@}
  protected:
   ///@cond

@@ -267,7 +267,7 @@ boost::optional<InputVariableRecord> InputVariableRecord::factoryFromQuery(
 
   switch (inputVariableRecordType) {
     case InputVariableRecordType::DiscreteVariableRecord :
-      result = DiscreteVariableRecord(query, database).cast<InputVariableRecord>();
+      result = DiscreteVariableRecord::factoryFromQuery(query, database);
       break;
     case InputVariableRecordType::ContinuousVariableRecord :
       result = ContinuousVariableRecord::factoryFromQuery(query,database);
@@ -287,9 +287,9 @@ InputVariableRecord InputVariableRecord::factoryFromInputVariable(
 {
   if (analysis::OptionalDiscreteVariable discreteVariable = inputVariable.optionalCast<analysis::DiscreteVariable>())
   {
-    return DiscreteVariableRecord(*discreteVariable,
-                                  problemRecord,
-                                  workflowIndex);
+    return DiscreteVariableRecord::factoryFromDiscreteVariable(*discreteVariable,
+                                                               problemRecord,
+                                                               workflowIndex);
   }
   if (analysis::OptionalContinuousVariable continuousVariable = inputVariable.optionalCast<analysis::ContinuousVariable>())
   {
@@ -310,10 +310,10 @@ InputVariableRecord InputVariableRecord::factoryFromInputVariable(
 {
   if (analysis::OptionalDiscreteVariable discreteVariable = inputVariable.optionalCast<analysis::DiscreteVariable>())
   {
-    return DiscreteVariableRecord(*discreteVariable,
-                                  functionRecord,
-                                  variableVectorIndex,
-                                  functionCoefficient);
+    return DiscreteVariableRecord::factoryFromDiscreteVariable(*discreteVariable,
+                                                               functionRecord,
+                                                               variableVectorIndex,
+                                                               functionCoefficient);
   }
   if (analysis::OptionalContinuousVariable continuousVariable = inputVariable.optionalCast<analysis::ContinuousVariable>())
   {

@@ -40,6 +40,7 @@
 
 #include <energyplus/ReverseTranslator.hpp>
 
+#include <utilities/data/CalibrationResult.hpp>
 #include <utilities/data/EndUses.hpp>
 #include <utilities/data/Attribute.hpp>
 #include <utilities/idf/IdfFile.hpp>
@@ -170,45 +171,56 @@ namespace detail {
       if (building)
       {
         LOG(Debug,"Extracting attributes from model::Building.");
-        boost::optional<Attribute> attribute = building->getAttribute("floorArea");
-        if (attribute){
+        boost::optional<Attribute> attribute;
+        
+        boost::optional<double> value = building->floorArea();
+        if (value){
+          attribute = Attribute("floorArea", *value, "m^2");
           attribute->setDisplayName("Floor Area");
-          attribute->setUnits("m^2");
           attributes.push_back(*attribute);
         }
 
-        attribute = building->getAttribute("conditionedFloorArea");
-        if (attribute){
+        value = building->conditionedFloorArea();
+        if (value){
+          attribute = Attribute("conditionedFloorArea", *value, "m^2");
           attribute->setDisplayName("Conditioned Floor Area");
-          attribute->setUnits("m^2");
           attributes.push_back(*attribute);
         }
       }
 
       boost::optional<model::Facility> facility = model->getOptionalUniqueModelObject<model::Facility>();
       if (facility){
-        LOG(Debug,"Extracting attributes from model::Facility.");      
-        boost::optional<Attribute> attribute = facility->getAttribute("economicsCapitalCost");
-        if (attribute){
+        LOG(Debug,"Extracting attributes from model::Facility.");     
+
+        boost::optional<Attribute> attribute;
+
+        boost::optional<double> value = facility->economicsCapitalCost();
+        if (value){
+          attribute = Attribute("economicsCapitalCost", *value, "$");
           attribute->setDisplayName("Capital Cost");
-          attribute->setUnits("$");
           attributes.push_back(*attribute);
         }
 
-        attribute = facility->getAttribute("economicsTLCC");
-        if (attribute){
+        value = facility->economicsTLCC();
+        if (value){
+          attribute = Attribute("economicsTLCC", *value, "$");
           attribute->setDisplayName("Total Life Cycle Cost");
-          attribute->setUnits("$");
-          attributes.push_back(*attribute);
-        }
-        attribute = facility->getAttribute("annualWaterTotalCost");
-        if (attribute){
-          attribute->setDisplayName("Annual Water Total Cost");
-          attribute->setUnits("$");
           attributes.push_back(*attribute);
         }
 
-        attribute = facility->getAttribute("endUsesAttribute");
+        value = facility->annualWaterTotalCost();
+        if (value){
+          attribute = Attribute("annualWaterTotalCost", *value, "$");
+          attribute->setDisplayName("Annual Water Total Cost");
+          attributes.push_back(*attribute);
+        }
+
+        attribute = facility->endUsesAttribute();
+        if (attribute){
+          attributes.push_back(*attribute);
+        }
+
+        attribute = facility->calibrationResultAttribute();
         if (attribute){
           attributes.push_back(*attribute);
         }
@@ -217,16 +229,19 @@ namespace detail {
       boost::optional<model::TimeDependentValuation> timeDependentValuation = model->getOptionalUniqueModelObject<model::TimeDependentValuation>();
       if (timeDependentValuation){
         LOG(Debug,"Extracting attributes from model::TimeDependentValuation.");      
-        boost::optional<Attribute> attribute = timeDependentValuation->getAttribute("energyTimeDependentValuation");
-        if (attribute){
+        boost::optional<Attribute> attribute;
+        
+        boost::optional<double> value = timeDependentValuation->energyTimeDependentValuation();
+        if (value){
+          attribute = Attribute("energyTimeDependentValuation", *value, "J");
           attribute->setDisplayName("Energy Time Dependent Valuation");
-          attribute->setUnits("J");
           attributes.push_back(*attribute);
         }
-        attribute = timeDependentValuation->getAttribute("costTimeDependentValuation");
-        if (attribute){
+
+        value = timeDependentValuation->costTimeDependentValuation();
+        if (value){
+          attribute = Attribute("costTimeDependentValuation", *value, "$");
           attribute->setDisplayName("Cost Time Dependent Valuation");
-          attribute->setUnits("$");
           attributes.push_back(*attribute);
         }
       }

@@ -175,7 +175,7 @@ bool OSQuantityVector::isAbsolute() const {
     return tu->isAbsolute();
   }
   LOG_AND_THROW("Could not evaluate OSQuantityVector::isAbsolute because the units are in system "
-                << system().valueName() << ", not Celcius or Fahrenheit.");
+                << system().valueName() << ", not Celsius or Fahrenheit.");
   return false;
 }
 
@@ -189,7 +189,7 @@ void OSQuantityVector::setAsAbsolute() {
   }
   else {
     LOG_AND_THROW("Could not OSQuantityVector::setAsAbsolute because the units are in system "
-                  << system().valueName() << ", not Celcius or Fahrenheit.");
+                  << system().valueName() << ", not Celsius or Fahrenheit.");
   }
 }
 
@@ -199,7 +199,7 @@ void OSQuantityVector::setAsRelative() {
   }
   else {
     LOG_AND_THROW("Could not OSQuantityVector::setAsRelative because the units are in system "
-                  << system().valueName() << ", not Celcius or Fahrenheit.");
+                  << system().valueName() << ", not Celsius or Fahrenheit.");
   }
 }
 

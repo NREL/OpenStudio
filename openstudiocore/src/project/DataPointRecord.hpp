@@ -25,14 +25,17 @@
 
 namespace openstudio {
 
+class Attribute;
 class FileReference;
 
 namespace analysis {
   class DataPoint;
+  class DataPointRunType;
 } // analysis
 namespace project {
 
 class AnalysisRecord;
+class AttributeRecord;
 class ProblemRecord;
 class FileReferenceRecord;
 class TagRecord;
@@ -82,6 +85,8 @@ OPENSTUDIO_ENUM(DataPointRecordColumns,
   ((topLevelJobUUID)(TEXT)(17))
   ((dakotaParametersFiles)(TEXT)(18))
   ((idfInputDataRecordId)(INTEGER)(19))
+  ((selected)(BOOLEAN)(20))
+  ((runType)(INTEGER)(21))
 );
 
 /** DataPointRecord is a ObjectRecord*/
@@ -130,12 +135,19 @@ class PROJECT_API DataPointRecord : public ObjectRecord {
   /** Returns the ProblemRecord associated with this DataPointRecord (as a resource). */
   ProblemRecord problemRecord() const;
 
-  /** Returns true if this data point has been run/simulated. Returns true even if failed(). */
+  /** Returns true if this data point has been run/simulated. Returns true even if failed().
+   *  \deprecated */
   bool isComplete() const;
+
+  bool complete() const;
 
   /** Returns true if this data point has been run, but the simulation failed. Returns false
    *  otherwise. (Always returns false if !complete().) */
   bool failed() const;
+
+  bool selected() const;
+
+  analysis::DataPointRunType runType() const;
 
   openstudio::path directory() const;
 
@@ -151,15 +163,15 @@ class PROJECT_API DataPointRecord : public ObjectRecord {
 
   boost::optional<FileReferenceRecord> sqlOutputDataRecord() const;
 
-  /** Returns the FileReferenceRecord that points to this DataPointRecord's XML output data.
-   *  Attributes associated with that file may be accessed through
-   *  xmlOutputDataRecord()->attributeRecords() if xmlOutputDataRecord(), isComplete() and not
-   *  failed(). */
-  boost::optional<FileReferenceRecord> xmlOutputDataRecord() const;
+  /** Returns the FileReferenceRecords that point to this DataPointRecord's XML output data. */
+  std::vector<FileReferenceRecord> xmlOutputDataRecords() const;
 
   boost::optional<openstudio::UUID> topLevelJobUUID() const;
 
   std::vector<TagRecord> tagRecords() const;
+
+  /** Assembles all the AttributeRecords associated with xmlOutputDataRecords(). */
+  std::vector<AttributeRecord> attributeRecords() const;
 
   analysis::DataPoint dataPoint() const;
 
@@ -207,6 +219,14 @@ class PROJECT_API DataPointRecord : public ObjectRecord {
   boost::optional<FileReferenceRecord> saveChildFileReference(
       const boost::optional<FileReference>& childFileReference,
       boost::optional<FileReferenceRecord> oldFileReferenceRecord,
+      DataPointRecord& copyOfThis,
+      ProjectDatabase& database,
+      bool isNew);
+
+  std::vector<FileReferenceRecord> saveChildXmlFileReferences(
+      std::vector<FileReference> childFileReferences,
+      std::vector<FileReferenceRecord> oldFileReferenceRecords,
+      std::vector<Attribute> outputAttributes,
       DataPointRecord& copyOfThis,
       ProjectDatabase& database,
       bool isNew);

@@ -23,7 +23,7 @@
 #include <analysis/DataPoint.hpp>
 #include <analysis/Problem.hpp>
 #include <analysis/Problem_Impl.hpp>
-#include <analysis/RubyPerturbation_Impl.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
 #include <analysis/WorkflowStep.hpp>
 #include <analysis/WorkflowStep_Impl.hpp>
 
@@ -40,10 +40,10 @@ namespace detail {
   RubyContinuousVariable_Impl::RubyContinuousVariable_Impl(
       const std::string& name,
       const ruleset::UserScriptArgument& argument,
-      const RubyPerturbation& perturbation)
+      const RubyMeasure& measure)
     : ContinuousVariable_Impl(name),
       m_argument(argument),
-      m_perturbation(perturbation)
+      m_measure(measure)
   {
     ruleset::UserScriptArgumentType argType = m_argument.type();
     if (!((argType == ruleset::UserScriptArgumentType::Double) ||
@@ -52,7 +52,7 @@ namespace detail {
       LOG_AND_THROW("RubyContinuousVariables can only be constructed from Double or Quantity "
                     << "UserScriptArguments.")
     }
-    connectChild(m_perturbation,false);
+    connectChild(m_measure,false);
   }
 
   RubyContinuousVariable_Impl::RubyContinuousVariable_Impl(
@@ -67,7 +67,7 @@ namespace detail {
       boost::optional<double> increment,
       boost::optional<int> nSteps,
       const ruleset::UserScriptArgument& argument,
-      const RubyPerturbation& perturbation)
+      const RubyMeasure& measure)
     : ContinuousVariable_Impl(uuid,
                               versionUUID,
                               name,
@@ -79,24 +79,24 @@ namespace detail {
                               increment,
                               nSteps),
       m_argument(argument),
-      m_perturbation(perturbation)
+      m_measure(measure)
   {
-    connectChild(m_perturbation,false);
+    connectChild(m_measure,false);
   }
 
   RubyContinuousVariable_Impl::RubyContinuousVariable_Impl(const RubyContinuousVariable_Impl &other)
     : ContinuousVariable_Impl(other),
       m_argument(other.argument().clone()),
-      m_perturbation(other.perturbation().clone().cast<RubyPerturbation>())
+      m_measure(other.measure().clone().cast<RubyMeasure>())
   {
-    connectChild(m_perturbation,false);
+    connectChild(m_measure,false);
   }
 
   AnalysisObject RubyContinuousVariable_Impl::clone() const {
     boost::shared_ptr<RubyContinuousVariable_Impl> impl(new RubyContinuousVariable_Impl(*this));
     RubyContinuousVariable result(impl);
-    RubyPerturbation perturbation = result.perturbation();
-    perturbation.setParent(result);
+    RubyMeasure measure = result.measure();
+    measure.setParent(result);
     return result;
   }
 
@@ -107,11 +107,11 @@ namespace detail {
   }
 
   boost::optional<FileReferenceType> RubyContinuousVariable_Impl::inputFileType() const {
-    return perturbation().inputFileType();
+    return measure().inputFileType();
   }
 
   boost::optional<FileReferenceType> RubyContinuousVariable_Impl::outputFileType() const {
-    return perturbation().outputFileType();
+    return measure().outputFileType();
   }
 
   bool RubyContinuousVariable_Impl::isValid(const QVariant& value) const {
@@ -131,8 +131,8 @@ namespace detail {
       const openstudio::path& rubyIncludeDirectory) const
   {
     // This is only complete if this is the only RubyContinuousVariable using this
-    // RubyPerturbation.
-    RubyPerturbation pertClone = perturbation().clone().cast<RubyPerturbation>();
+    // RubyMeasure.
+    RubyMeasure pertClone = measure().clone().cast<RubyMeasure>();
     ruleset::OSArgument arg = argument().clone();
     arg.setValue(value.toDouble());
     pertClone.setArgument(arg);
@@ -143,8 +143,8 @@ namespace detail {
     return m_argument;
   }
 
-  RubyPerturbation RubyContinuousVariable_Impl::perturbation() const {
-    return m_perturbation;
+  RubyMeasure RubyContinuousVariable_Impl::measure() const {
+    return m_measure;
   }
 
   void RubyContinuousVariable_Impl::setArgument(const ruleset::OSArgument& argument) {
@@ -152,26 +152,26 @@ namespace detail {
     onChange(AnalysisObject_Impl::InvalidatesResults);
   }
 
-  bool RubyContinuousVariable_Impl::setRubyPerturbation(const RubyPerturbation& perturbation) {
-    if (!fileTypesAreCompatible(m_perturbation,
-                                perturbation.inputFileType(),
-                                perturbation.outputFileType()))
+  bool RubyContinuousVariable_Impl::setRubyMeasure(const RubyMeasure& measure) {
+    if (!fileTypesAreCompatible(m_measure,
+                                measure.inputFileType(),
+                                measure.outputFileType()))
     {
       return false;
     }
-    disconnectChild(m_perturbation);
-    m_perturbation = perturbation;
-    connectChild(m_perturbation,true);
+    disconnectChild(m_measure);
+    m_measure = measure;
+    connectChild(m_measure,true);
     onChange(AnalysisObject_Impl::InvalidatesResults);
     return true;
   }
 
   bool RubyContinuousVariable_Impl::fileTypesAreCompatible(
-      const RubyPerturbation& childRubyPerturbation,
+      const RubyMeasure& childRubyMeasure,
       const boost::optional<FileReferenceType>& proposedInputFileType,
       const boost::optional<FileReferenceType>& proposedOutputFileType) const
   {
-    // RubyPerturbation stands alone in this variable, so only need to check with problem.
+    // RubyMeasure stands alone in this variable, so only need to check with problem.
     if (OptionalAnalysisObject parent = this->parent()) {
       if (!(parent->cast<WorkflowStep>().fileTypesAreCompatible(proposedInputFileType,
                                                                 proposedOutputFileType)))
@@ -182,16 +182,80 @@ namespace detail {
     return true;
   }
 
+  QVariant RubyContinuousVariable_Impl::toVariant() const {
+    QVariantMap variableData = ContinuousVariable_Impl::toVariant().toMap();
+
+    variableData["variable_type"] = QString("RubyContinuousVariable");
+    variableData["argument"] = ruleset::detail::toVariant(argument());
+
+    return QVariant(variableData);
+  }
+
+  RubyContinuousVariable RubyContinuousVariable_Impl::fromVariant(const QVariant& variant,
+                                                                  const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+
+    // dummy measure. need to do something better sometime (like make sure overload version of
+    // this method is always called)
+    RubyMeasure dummyMeasure(toPath("*.rb"),
+                             FileReferenceType::Unknown,
+                             FileReferenceType::Unknown);
+
+    return RubyContinuousVariable(
+          toUUID(map["uuid"].toString().toStdString()),
+          toUUID(map["version_uuid"].toString().toStdString()),
+          map.contains("name") ? map["name"].toString().toStdString() : std::string(),
+          map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+          map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+          map.contains("uncertainty_description") ? analysis::detail::toUncertaintyDescription(map["uncertainty_description"],version) : OptionalUncertaintyDescription(),
+          map.contains("minimum") ? map["minimum"].toDouble() : OptionalDouble(),
+          map.contains("maximum") ? map["maximum"].toDouble() : OptionalDouble(),
+          map.contains("increment") ? map["increment"].toDouble() : OptionalDouble(),
+          map.contains("n_steps") ? map["n_steps"].toInt() : OptionalInt(),
+          ruleset::detail::toOSArgument(map["argument"],version),
+          dummyMeasure);
+  }
+
+  RubyContinuousVariable RubyContinuousVariable_Impl::fromVariant(const QVariant& variant,
+                                                                  const Measure& measure,
+                                                                  const VersionString& version)
+  {
+    QVariantMap map = variant.toMap();
+
+    OS_ASSERT(measure.optionalCast<RubyMeasure>());
+
+    return RubyContinuousVariable(
+          toUUID(map["uuid"].toString().toStdString()),
+          toUUID(map["version_uuid"].toString().toStdString()),
+          map.contains("name") ? map["name"].toString().toStdString() : std::string(),
+          map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
+          map.contains("description") ? map["description"].toString().toStdString() : std::string(),
+          map.contains("uncertainty_description") ? analysis::detail::toUncertaintyDescription(map["uncertainty_description"],version) : OptionalUncertaintyDescription(),
+          map.contains("minimum") ? map["minimum"].toDouble() : OptionalDouble(),
+          map.contains("maximum") ? map["maximum"].toDouble() : OptionalDouble(),
+          map.contains("increment") ? map["increment"].toDouble() : OptionalDouble(),
+          map.contains("n_steps") ? map["n_steps"].toInt() : OptionalInt(),
+          ruleset::detail::toOSArgument(map["argument"],version),
+          measure.cast<RubyMeasure>());
+  }
+
+  void RubyContinuousVariable_Impl::updateInputPathData(const openstudio::path& originalBase,
+                                                        const openstudio::path& newBase)
+  {
+    m_measure.getImpl<detail::RubyMeasure_Impl>()->updateInputPathData(originalBase,newBase);
+  }
+
 } // detail
 
 RubyContinuousVariable::RubyContinuousVariable(const std::string& name,
                                                const ruleset::UserScriptArgument& argument,
-                                               const RubyPerturbation& perturbation)
+                                               const RubyMeasure& measure)
   : ContinuousVariable(boost::shared_ptr<detail::RubyContinuousVariable_Impl>(
-        new detail::RubyContinuousVariable_Impl(name,argument,perturbation)))
+        new detail::RubyContinuousVariable_Impl(name,argument,measure)))
 {
   RubyContinuousVariable copyOfThis(getImpl<detail::RubyContinuousVariable_Impl>());
-  perturbation.setParent(copyOfThis);
+  measure.setParent(copyOfThis);
 }
 
 RubyContinuousVariable::RubyContinuousVariable(const UUID& uuid,
@@ -205,7 +269,7 @@ RubyContinuousVariable::RubyContinuousVariable(const UUID& uuid,
                                                boost::optional<double> increment,
                                                boost::optional<int> nSteps,
                                                const ruleset::UserScriptArgument& argument,
-                                               const RubyPerturbation& perturbation)
+                                               const RubyMeasure& measure)
   : ContinuousVariable(boost::shared_ptr<detail::RubyContinuousVariable_Impl>(
         new detail::RubyContinuousVariable_Impl(uuid,
                                                 versionUUID,
@@ -218,26 +282,34 @@ RubyContinuousVariable::RubyContinuousVariable(const UUID& uuid,
                                                 increment,
                                                 nSteps,
                                                 argument,
-                                                perturbation)))
+                                                measure)))
 {
   RubyContinuousVariable copyOfThis(getImpl<detail::RubyContinuousVariable_Impl>());
-  perturbation.setParent(copyOfThis);
+  measure.setParent(copyOfThis);
 }
 
 ruleset::UserScriptArgument RubyContinuousVariable::argument() const {
   return getImpl<detail::RubyContinuousVariable_Impl>()->argument();
 }
 
-RubyPerturbation RubyContinuousVariable::perturbation() const {
-  return getImpl<detail::RubyContinuousVariable_Impl>()->perturbation();
+RubyMeasure RubyContinuousVariable::measure() const {
+  return getImpl<detail::RubyContinuousVariable_Impl>()->measure();
+}
+
+RubyMeasure RubyContinuousVariable::perturbation() const {
+  return getImpl<detail::RubyContinuousVariable_Impl>()->measure();
 }
 
 void RubyContinuousVariable::setArgument(const ruleset::OSArgument& argument) {
   getImpl<detail::RubyContinuousVariable_Impl>()->setArgument(argument);
 }
 
-bool RubyContinuousVariable::setRubyPerturbation(const RubyPerturbation& perturbation) {
-  return getImpl<detail::RubyContinuousVariable_Impl>()->setRubyPerturbation(perturbation);
+bool RubyContinuousVariable::setRubyMeasure(const RubyMeasure& measure) {
+  return getImpl<detail::RubyContinuousVariable_Impl>()->setRubyMeasure(measure);
+}
+
+bool RubyContinuousVariable::setRubyPerturbation(const RubyMeasure& measure) {
+  return getImpl<detail::RubyContinuousVariable_Impl>()->setRubyMeasure(measure);
 }
 
 /// @cond
@@ -246,11 +318,11 @@ RubyContinuousVariable::RubyContinuousVariable(boost::shared_ptr<detail::RubyCon
 {}
 
 bool RubyContinuousVariable::fileTypesAreCompatible(
-    const RubyPerturbation& childRubyPerturbation,
+    const RubyMeasure& childRubyMeasure,
     const boost::optional<FileReferenceType>& proposedInputFileType,
     const boost::optional<FileReferenceType>& proposedOutputFileType) const
 {
-  return getImpl<detail::RubyContinuousVariable_Impl>()->fileTypesAreCompatible(childRubyPerturbation,
+  return getImpl<detail::RubyContinuousVariable_Impl>()->fileTypesAreCompatible(childRubyMeasure,
                                                                                 proposedInputFileType,
                                                                                 proposedOutputFileType);
 }

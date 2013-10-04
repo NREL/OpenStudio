@@ -13,8 +13,12 @@
     <file>images/boiler_steam.png</file>
     <file>images/bug.png</file>
     <file>images/cancel_simulation_button.png</file>
+    <file>images/cav_reheat.png</file>
     <file>images/check.png</file>
     <file>images/chiller_air.png</file>
+    <file>images/chilled_beam.png</file>    
+    <file>images/coilheatinglowtemprad_constflow.png</file>
+    <file>images/coilheatinglowtemprad_varflow.png</file>    
     <file>images/coilheatingwater_baseboard.png</file>
     <file>images/combo_box_arrows.png</file>
     <file>images/combo_box_arrows_gray.png</file>
@@ -27,7 +31,10 @@
     <file>images/contextual_arrow.png</file>
     <file>images/controller_icon_off.png</file>
     <file>images/controller_icon_on.png</file>
+    <file>images/coilcoolingchilledbeam.png</file>
     <file>images/cool_coil.png</file>
+    <file>images/coilcoolinglowtemprad_constflow.png</file>   
+    <file>images/coilcoolinglowtemprad_varflow.png</file>      
     <file>images/cooling_tower.png</file>
     <file>images/delete-icon.png</file>
     <file>images/delete.png</file>
@@ -47,6 +54,7 @@
     <file>images/dxcoolingcoil_singlespeed.png</file>
     <file>images/dxcoolingcoil_2speed.png</file>
     <file>images/electric_furnace.png</file>
+    <file>images/evap_fluid_cooler.png</file>
     <file>images/fan_constant.png</file>
     <file>images/fan_on_off.png</file>   
     <file>images/fast_forward.png</file>
@@ -55,6 +63,7 @@
     <file>images/forward.png</file>
     <file>images/four_pipe_fan_coil.png</file>    
     <file>images/furnace.png</file>    
+    <file>images/ground_heat_exchanger_vertical.png</file>
     <file>images/header-backgnd-1px-wide.png</file>
     <file>images/heat_coil.png</file>
     <file>images/heat_pump3.png</file>
@@ -70,6 +79,8 @@
     <file>images/loop_button_over.png</file>
     <file>images/loop_button_press.png</file>
     <file>images/loop_name_icon.png</file>
+    <file>images/lowtempradiant_constflow.png</file>   
+    <file>images/lowtempradiant_varflow.png</file>       
     <file>images/mixer.png</file>
     <file>images/OAMixer.png</file>
     <file>images/off_building_stories_tab.png</file>
@@ -164,6 +175,8 @@
     <file>images/toggle_on.png</file>
     <file>images/toggle_on_over.png</file>
     <file>images/fan_variable.png</file>
+    <file>images/utility_calibration_warning.png</file>
+    <file>images/vav_noreheat.png</file>
     <file>images/vav-reheat.png</file>
     <file>images/v_divider_dots.png</file>
     <file>images/wahpDXCC.png</file>    
@@ -176,6 +189,7 @@
     <file>images/watertoairHP.png</file>
     <file>images/wizard.png</file>
     <file>images/zone.png</file>
+    <file>images/zonehvac_low_temperature_radiant_electric.png</file>
     <file>images/zone_icon_off.png</file>
     <file>images/zone_icon_pressed.png</file>
     <file>images/zoom-in-over.png</file>
@@ -195,14 +209,19 @@
     <file>images/mini_icons/boiler_steam.png</file>
     <file>images/mini_icons/building.png</file>
     <file>images/mini_icons/building_story.png</file>
+    <file>images/mini_icons/cav_reheat.png</file>
     <file>images/mini_icons/chiller_air.png</file>
+    <file>images/mini_icons/chilled_beam.png</file>    
     <file>images/mini_icons/construction.png</file>
     <file>images/mini_icons/construction_gnd.png</file>
     <file>images/mini_icons/construction_undergnd.png</file>
     <file>images/mini_icons/construct_inter_source.png</file>
     <file>images/mini_icons/coilheatingwater_baseboard_mini.png</file>
     <file>images/mini_icons/coil_ht_dx_singlespeed_mini.png</file>
-    <file>images/mini_icons/cool_coil.png</file>
+		<file>images/mini_icons/coilcoolingchilledbeam_mini.png</file>	
+		<file>images/mini_icons/cool_coil.png</file>
+    <file>images/mini_icons/coilcoolinglowtemprad_constflow.png</file>   
+    <file>images/mini_icons/coilcoolinglowtemprad_varflow.png</file>     
     <file>images/mini_icons/cooling_tower.png</file>
     <file>images/mini_icons/daylighting_control.png</file>
     <file>images/mini_icons/default_construction_set.png</file>
@@ -216,6 +235,7 @@
     <file>images/mini_icons/electric_equipment.png</file>
     <file>images/mini_icons/electric_equipment_definition.png</file>
     <file>images/mini_icons/electric_furnace_mini.png</file>
+    <file>images/mini_icons/evap_fluid_cooler.png</file>
     <file>images/mini_icons/facility.png</file>
     <file>images/mini_icons/fan_constant.png</file>
     <file>images/mini_icons/fan_on_off_mini.png</file>   
@@ -227,7 +247,10 @@
     <file>images/mini_icons/gas_equipment_definition.png</file>
     <file>images/mini_icons/glare_sensor.png</file> 
     <file>images/mini_icons/grassanddirt.png</file> 
+    <file>images/mini_icons/ground_heat_exchanger_vertical.png</file>
     <file>images/mini_icons/heat_coil.png</file>
+    <file>images/mini_icons/coilheatinglowtemprad_constflow.png</file>
+    <file>images/mini_icons/coilheatinglowtemprad_varflow.png</file>    
     <file>images/mini_icons/heat_pump3.png</file>
     <file>images/mini_icons/heat_transfer_mini.png</file>
     <file>images/mini_icons/illuminance_map.png</file>
@@ -239,6 +262,9 @@
     <file>images/mini_icons/internal_mass_definition.png</file>
     <file>images/mini_icons/lights.png</file>
     <file>images/mini_icons/lights_definition.png</file>
+    <file>images/mini_icons/zonehvac_low_temperature_radiant_electric.png</file>    
+    <file>images/mini_icons/lowtempradiant_constflow.png</file>
+    <file>images/mini_icons/lowtempradiant_varflow.png</file>    
     <file>images/mini_icons/luminaire.png</file>
     <file>images/mini_icons/luminaire_definition.png</file>
     <file>images/mini_icons/material.png</file>
@@ -284,7 +310,7 @@
     <file>images/mini_icons/system_type_1.png</file>
     <file>images/mini_icons/system_type_2.png</file>
     <file>images/mini_icons/thermal_zone.png</file>
-    <file>images/mini_icons/variable_fan.png</file>
+    <file>images/mini_icons/vav_noreheat.png</file>
     <file>images/mini_icons/vav-reheat.png</file>
     <file>images/mini_icons/wahpDXCC_mini.png</file>        
     <file>images/mini_icons/wahpDXHC_mini.png</file>    
@@ -318,15 +344,18 @@
     <file alias="shared_gui_components/images/duplicate_off.png">../shared_gui_components/images/duplicate_off.png</file>
     <file alias="shared_gui_components/images/duplicate_over.png">../shared_gui_components/images/duplicate_over.png</file>
     <file alias="shared_gui_components/images/duplicate_press.png">../shared_gui_components/images/duplicate_press.png</file>
+    <file alias="shared_gui_components/images/energyplus_measure_icon.png">../shared_gui_components/images/energyplus_measure_icon.png</file>
     <file alias="shared_gui_components/images/fast_forward.png">../shared_gui_components/images/fast_forward.png</file>
     <file alias="shared_gui_components/images/fast_reverse.png">../shared_gui_components/images/fast_reverse.png</file>
     <file alias="shared_gui_components/images/forward.png">../shared_gui_components/images/forward.png</file>
     <file alias="shared_gui_components/images/gray_add_icon.png">../shared_gui_components/images/gray_add_icon.png</file>
     <file alias="shared_gui_components/images/open_my_measures.png">../shared_gui_components/images/open_my_measures.png</file>
     <file alias="shared_gui_components/images/open_my_measures_press.png">../shared_gui_components/images/open_my_measures_press.png</file>
+    <file alias="shared_gui_components/images/openstudio_measure_icon.png">../shared_gui_components/images/openstudio_measure_icon.png</file>
     <file alias="shared_gui_components/images/pause_regular.png">../shared_gui_components/images/pause_regular.png</file>
     <file alias="shared_gui_components/images/pause_over.png">../shared_gui_components/images/pause_over.png</file>
     <file alias="shared_gui_components/images/pause_press.png">../shared_gui_components/images/pause_press.png</file>
+    <file alias="shared_gui_components/images/report_measure_icon.png">../shared_gui_components/images/report_measure_icon.png</file>
     <file alias="shared_gui_components/images/reverse.png">../shared_gui_components/images/reverse.png</file>
     <file alias="shared_gui_components/images/rotating_arrow.png">../shared_gui_components/images/rotating_arrow.png</file>
     <file alias="shared_gui_components/images/run_cancel.png">../shared_gui_components/images/run_cancel.png</file>

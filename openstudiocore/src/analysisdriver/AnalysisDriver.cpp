@@ -310,6 +310,7 @@ namespace detail {
             << currentAnalysis->analysis().problem().name()
             << "' from Dakota parameters file '" << toString(file.fullPath) << "'.");
         LOG(Debug,"Offending parameters file: \n" << boost::filesystem::ifstream(file.fullPath));
+        dataPoint = algorithm.createNextDataPoint(analysis,*params);
         writeDakotaResultsFile(dataPoint,file.fullPath);
       }
       else if (dataPoint->isComplete()) {
@@ -909,7 +910,7 @@ namespace detail {
         (status == openstudio::runmanager::TreeStatusEnum::Failed))
     {
       openstudio::runmanager::Job parentJob = *job;
-      while (job = parentJob.parent()) {
+      while ((job = parentJob.parent())) {
         parentJob = *job;
       }
       return parentJob;
@@ -933,11 +934,19 @@ namespace detail {
     OptionalString fileText;
     if (dataPoint) {
       fileText = dataPoint->problem().getDakotaResultsFile(*dataPoint);
+      LOG(Debug,"Printing Dakota results file for dataPoint " << dataPoint->name()
+          << ", " << toString(dataPoint->uuid()) << ".");
+    }
+    else {
+      LOG(Debug,"No dataPoint given for '" << toString(resultsFilePath) << "'.");
     }
 
     boost::filesystem::ofstream resultsFile(resultsFilePath);
     if (fileText) {
       resultsFile << *fileText;
+      if (fileText.get().empty()) {
+        LOG(Debug,"Printed text for '" << toString(resultsFilePath) << "', but it is empty.");
+      }
     }
     resultsFile.close();
   }

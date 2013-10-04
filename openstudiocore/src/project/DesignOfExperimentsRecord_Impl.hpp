@@ -36,7 +36,6 @@ namespace detail {
   /** DesignOfExperimentsRecord_Impl is an OpenStudioAlgorithmRecord_Impl that is the 
    *  implementation class for DesignOfExperimentsRecord.*/
   class PROJECT_API DesignOfExperimentsRecord_Impl : public OpenStudioAlgorithmRecord_Impl {
-    Q_OBJECT;
    public:
 
     /** @name Constructors and Destructors */

@@ -120,6 +120,19 @@ namespace detail {
       /// Load all of the jobs from the given database file into the current RunManager, enqueuing them
       void loadJobs(const openstudio::path &t_path);
 
+      /// merge existing job trees
+      void updateJobs(const std::vector<Job> &t_jobs);
+
+      /// merge / update the given job, setting the base path to the given t_path
+      void updateJob(const Job &t_job, const openstudio::path &t_path);
+
+      /// merge / update the given job
+      void updateJob(const Job &t_job);
+
+      /// update job tree, and be willing to change the UUID in the process
+      void updateJob(const openstudio::UUID &t_uuid, const Job &t_job);
+
+
       /// Update all out of date jobs to be runnable again
       void setOutOfDateRunnable();
 

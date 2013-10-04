@@ -8,6 +8,8 @@
 #include <model/Construction_Impl.hpp>
 #include <model/MasslessOpaqueMaterial.hpp>
 #include <model/MasslessOpaqueMaterial_Impl.hpp>
+#include <model/AirGap.hpp>
+#include <model/AirGap_Impl.hpp>
 #include <model/StandardOpaqueMaterial.hpp>
 #include <model/StandardOpaqueMaterial_Impl.hpp>
 #include <model/FFactorGroundFloorConstruction.hpp>
@@ -57,6 +59,10 @@ namespace sdd {
         QDomElement materialElement = materialElements.at(i).toElement();
         std::string materialName = escapeName(materialElement.text());
         boost::optional<model::Material> material = model.getModelObjectByName<model::Material>(materialName);
+        if( ! material )
+        {
+          LOG(Error,"Construction: " << construction.name().get() << " references material: " << materialName << " that is not defined.");
+        }
         OS_ASSERT(material); // what type of error handling do we want?
         materials.push_back(*material);
       }
@@ -648,20 +654,6 @@ namespace sdd {
     if (constructionBase.optionalCast<model::Construction>()){
       model::Construction construction = constructionBase.cast<model::Construction>();
 
-      // return empty unless only on layer of MasslessOpaqueMaterial
-      std::vector<model::Material> layers = construction.layers();
-      if (layers.size() != 1){
-        return boost::none;
-      }
-
-      if (!layers[0].optionalCast<model::MasslessOpaqueMaterial>()){
-        return boost::none;
-      }
-
-      // DLM: check if used by any doors?  Can't just use model object sources if inheritance
-
-      model::MasslessOpaqueMaterial material = layers[0].cast<model::MasslessOpaqueMaterial>();
-      
       result = doc.createElement("DrCons");
       
       // name
@@ -670,16 +662,33 @@ namespace sdd {
       result->appendChild(nameElement);
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
-      // UFactor
-      // os units = W/m2-K, sdd units = Btu/(hr*f2t*F)
-      double uFactor = material.thermalConductance();
-      Quantity uFactorSI(uFactor, WhUnit(WhExpnt(1,0,-2,-1)));
-      OptionalQuantity uFactorIP = QuantityConverter::instance().convert(uFactorSI, btuSys);
-      OS_ASSERT(uFactorIP);
-      OS_ASSERT(uFactorIP->units() == BTUUnit(BTUExpnt(1,-2,-1,-1)));
-      QDomElement uFactorElement = doc.createElement("UFactor");
-      result->appendChild(uFactorElement);
-      uFactorElement.appendChild(doc.createTextNode(QString::number(uFactorIP->value())));
+      // can only get UFactor for special cases
+      bool foundUFactor = false;
+
+      std::vector<model::Material> layers = construction.layers();
+      if (layers.size() == 1){
+        if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()){
+
+          model::MasslessOpaqueMaterial material = layers[0].cast<model::MasslessOpaqueMaterial>();
+
+          // UFactor
+          // os units = W/m2-K, sdd units = Btu/(hr*f2t*F)
+          double uFactor = material.thermalConductance();
+          Quantity uFactorSI(uFactor, WhUnit(WhExpnt(1,0,-2,-1)));
+          OptionalQuantity uFactorIP = QuantityConverter::instance().convert(uFactorSI, btuSys);
+          OS_ASSERT(uFactorIP);
+          OS_ASSERT(uFactorIP->units() == BTUUnit(BTUExpnt(1,-2,-1,-1)));
+          QDomElement uFactorElement = doc.createElement("UFactor");
+          result->appendChild(uFactorElement);
+          uFactorElement.appendChild(doc.createTextNode(QString::number(uFactorIP->value())));
+
+          foundUFactor = true;
+        }
+      }
+
+      if (!foundUFactor){
+        LOG(Error, "Could not calculate UFactor for DrCons '" << name << "'");
+      }
 
       // mark the construction as translated, not the material
       m_translatedObjects[construction.handle()] = result.get();
@@ -698,18 +707,6 @@ namespace sdd {
     if (constructionBase.optionalCast<model::Construction>()){
       model::Construction construction = constructionBase.cast<model::Construction>();
 
-      // return empty unless only on layer of SimpleGlazing
-      std::vector<model::Material> layers = construction.layers();
-      if (layers.size() != 1){
-        return boost::none;
-      }
-
-      if (!layers[0].optionalCast<model::SimpleGlazing>()){
-        return boost::none;
-      }
-
-      model::SimpleGlazing simpleGlazing = layers[0].cast<model::SimpleGlazing>();
-      
       result = doc.createElement("FenCons");
       
       // name
@@ -718,29 +715,51 @@ namespace sdd {
       result->appendChild(nameElement);
       nameElement.appendChild(doc.createTextNode(escapeName(name)));
 
-      // SHGC
-      double shgc = simpleGlazing.solarHeatGainCoefficient();
-      QDomElement shgcElement = doc.createElement("SHGC"); 
-      result->appendChild(shgcElement);
-      shgcElement.appendChild(doc.createTextNode(QString::number(shgc)));
+      // can only get SHGC, TVis, UFactor for special cases
+      bool foundUFactor = false;
+      bool foundVT = false;
 
-      // UFactor
-      // os units = W/m2-K, sdd units = Btu/(hr*f2t*F)
-      double uFactor = simpleGlazing.uFactor();
-      Quantity uFactorSI(uFactor, WhUnit(WhExpnt(1,0,-2,-1)));
-      OptionalQuantity uFactorIP = QuantityConverter::instance().convert(uFactorSI, btuSys);
-      OS_ASSERT(uFactorIP);
-      OS_ASSERT(uFactorIP->units() == BTUUnit(BTUExpnt(1,-2,-1,-1)));
-      QDomElement uFactorElement = doc.createElement("UFactor");
-      result->appendChild(uFactorElement);
-      uFactorElement.appendChild(doc.createTextNode(QString::number(uFactorIP->value())));
+      std::vector<model::Material> layers = construction.layers();
+      if (layers.size() == 1){
+        if (layers[0].optionalCast<model::SimpleGlazing>()){
 
-      // VT
-      boost::optional<double> vt = simpleGlazing.visibleTransmittance();
-      if (vt){
-        QDomElement vtElement = doc.createElement("VT"); 
-        result->appendChild(vtElement);
-        vtElement.appendChild(doc.createTextNode(QString::number(*vt)));
+          model::SimpleGlazing simpleGlazing = layers[0].cast<model::SimpleGlazing>();
+          
+          // SHGC
+          double shgc = simpleGlazing.solarHeatGainCoefficient();
+          QDomElement shgcElement = doc.createElement("SHGC"); 
+          result->appendChild(shgcElement);
+          shgcElement.appendChild(doc.createTextNode(QString::number(shgc)));
+
+          // UFactor
+          // os units = W/m2-K, sdd units = Btu/(hr*f2t*F)
+          double uFactor = simpleGlazing.uFactor();
+          Quantity uFactorSI(uFactor, WhUnit(WhExpnt(1,0,-2,-1)));
+          OptionalQuantity uFactorIP = QuantityConverter::instance().convert(uFactorSI, btuSys);
+          OS_ASSERT(uFactorIP);
+          OS_ASSERT(uFactorIP->units() == BTUUnit(BTUExpnt(1,-2,-1,-1)));
+          QDomElement uFactorElement = doc.createElement("UFactor");
+          result->appendChild(uFactorElement);
+          uFactorElement.appendChild(doc.createTextNode(QString::number(uFactorIP->value())));
+
+          foundUFactor = true;
+
+          // VT
+          boost::optional<double> vt = simpleGlazing.visibleTransmittance();
+          if (vt){
+            QDomElement vtElement = doc.createElement("VT"); 
+            result->appendChild(vtElement);
+            vtElement.appendChild(doc.createTextNode(QString::number(*vt)));
+
+            foundVT = true;
+          }
+        }
+      }
+
+      if (!foundUFactor){
+        LOG(Error, "Could not calculate SHGC, UFactor, or VT for FenCons '" << name << "'");
+      }else if (!foundVT){
+        LOG(Error, "Could not calculate VT for FenCons '" << name << "'");
       }
 
       // mark the construction as translated, not the material
@@ -907,6 +926,26 @@ namespace sdd {
       QDomElement rValueElement = doc.createElement("RVal");
       result->appendChild(rValueElement);
       rValueElement.appendChild(doc.createTextNode(QString::number(rValueIP->value())));
+    }else if (material.optionalCast<model::AirGap>()){
+      model::AirGap airGap = material.cast<model::AirGap>();
+      result = doc.createElement("Mat");
+      m_translatedObjects[airGap.handle()] = *result;
+
+      // name
+      std::string name = airGap.name().get();
+      QDomElement nameElement = doc.createElement("Name");
+      result->appendChild(nameElement);
+      nameElement.appendChild(doc.createTextNode(escapeName(name)));
+
+      // thermalResistance
+      // os units = m2-K/W, sdd units = hr*ft2*degF/Btu
+      double thermalResistance = airGap.thermalResistance();
+      Quantity rValueWh(thermalResistance, WhUnit(WhExpnt(-1,0,2,1)));
+      OptionalQuantity rValueIP = QuantityConverter::instance().convert(rValueWh, btuSys);
+      OS_ASSERT(rValueIP);
+      OS_ASSERT(rValueIP->units() ==  BTUUnit(BTUExpnt(-1,2,1,1)));
+      QDomElement rValueElement = doc.createElement("RVal");
+      result->appendChild(rValueElement);
     }
 
     return result;

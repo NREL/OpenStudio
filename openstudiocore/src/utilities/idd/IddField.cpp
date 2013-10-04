@@ -95,8 +95,8 @@ namespace detail {
         // figure out based on SIUnits
         OptionalUnit siUnit = getUnits(false);
         if (siUnit) {
-          // if default is Celcius, return Fahrenheit
-          if (siUnit->system() == UnitSystem::Celcius) {
+          // if default is Celsius, return Fahrenheit
+          if (siUnit->system() == UnitSystem::Celsius) {
             return convert(Quantity(1.0,*siUnit),UnitSystem(UnitSystem::Fahrenheit)).get().units();
           }
           // if default is not SI, return as-is

@@ -39,8 +39,8 @@
 #include <utilities/units/ThermUnit_Impl.hpp>
 #include <utilities/units/Misc1Unit.hpp>
 #include <utilities/units/Misc1Unit_Impl.hpp>
-#include <utilities/units/CelciusUnit.hpp>
-#include <utilities/units/CelciusUnit_Impl.hpp>
+#include <utilities/units/CelsiusUnit.hpp>
+#include <utilities/units/CelsiusUnit_Impl.hpp>
 #include <utilities/units/FahrenheitUnit.hpp>
 #include <utilities/units/FahrenheitUnit_Impl.hpp>
 
@@ -364,8 +364,8 @@ std::string UnitFactorySingleton::lookupPrettyString(const std::string& standard
 
 UnitFactorySingleton::UnitFactorySingleton() {
 
-  // Celcius Base Units ========================================================
-  registerUnit(createCelciusTemperature);
+  // Celsius Base Units ========================================================
+  registerUnit(createCelsiusTemperature);
 
 
   // Fahrenheit Base Units =====================================================
@@ -638,7 +638,7 @@ UnitSystem getSystem(const std::string& unitString) {
     return unit->system();
   }
 
-  unit = createUnit(unitString,UnitSystem::Celcius);
+  unit = createUnit(unitString,UnitSystem::Celsius);
   if (unit && (unit->system() != UnitSystem::Mixed)) {
     return unit->system();
   }
@@ -768,8 +768,8 @@ Unit createDimensionlessUnit(UnitSystem system) {
     return WhUnit();
   case UnitSystem::Misc1:
     return Misc1Unit();
-  case UnitSystem::Celcius:
-    return CelciusUnit();
+  case UnitSystem::Celsius:
+    return CelsiusUnit();
   case UnitSystem::Fahrenheit:
     return FahrenheitUnit();
   default:
@@ -836,7 +836,7 @@ boost::optional<Unit> createUnit(const std::string& unitString) {
     return unit;
   }
 
-  unit = createUnit(unitString,UnitSystem::Celcius);
+  unit = createUnit(unitString,UnitSystem::Celsius);
   if (unit && (unit->system() != UnitSystem::Mixed)) {
     return unit;
   }

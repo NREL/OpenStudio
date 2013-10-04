@@ -24,9 +24,9 @@
 #include <pat_app/PatVerticalTabWidget.hpp>
 
 #include <analysis/DataPoint_Impl.hpp>
-#include <analysis/DiscretePerturbation.hpp>
-#include <analysis/NullPerturbation.hpp>
-#include <analysis/NullPerturbation_Impl.hpp>
+#include <analysis/Measure.hpp>
+#include <analysis/NullMeasure.hpp>
+#include <analysis/NullMeasure_Impl.hpp>
 
 #include <analysisdriver/AnalysisDriver.hpp>
 #include <analysisdriver/AnalysisRunOptions.hpp>
@@ -217,7 +217,7 @@ void RunTabController::onPlayButtonClicked(bool clicked)
       // DLM: todo add a progress bar here as queueing all the points can take a while
 
       // request new run
-      analysisdriver::AnalysisRunOptions runOptions = project->standardRunOptions();
+      analysisdriver::AnalysisRunOptions runOptions = standardRunOptions(*project);
       analysisdriver::CurrentAnalysis currentAnalysis = analysisDriver.run(analysis, runOptions);
 
       // start the run

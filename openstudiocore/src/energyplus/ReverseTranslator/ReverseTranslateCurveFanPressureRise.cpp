@@ -37,38 +37,38 @@ boost::optional<ModelObject> ReverseTranslator::translateCurveFanPressureRise(
   OptionalString s;
   OptionalDouble d;
   
-  if(s = workspaceObject.name()) {
+  if ((s = workspaceObject.name())) {
     curve.setName(*s);
   }
 
-  if (d = workspaceObject.getDouble(Curve_FanPressureRiseFields::Coefficient1C1)) {
+  if ((d = workspaceObject.getDouble(Curve_FanPressureRiseFields::Coefficient1C1))) {
     curve.setCoefficient1C1(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_FanPressureRiseFields::Coefficient2C2)) {
+  if ((d = workspaceObject.getDouble(Curve_FanPressureRiseFields::Coefficient2C2))) {
     curve.setCoefficient2C2(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_FanPressureRiseFields::Coefficient3C3)) {
+  if ((d = workspaceObject.getDouble(Curve_FanPressureRiseFields::Coefficient3C3))) {
     curve.setCoefficient3C3(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_FanPressureRiseFields::Coefficient4C4)) {
+  if ((d = workspaceObject.getDouble(Curve_FanPressureRiseFields::Coefficient4C4))) {
     curve.setCoefficient4C4(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_FanPressureRiseFields::MinimumValueofQfan)) {
+  if ((d = workspaceObject.getDouble(Curve_FanPressureRiseFields::MinimumValueofQfan))) {
     curve.setMinimumValueofQfan(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_FanPressureRiseFields::MaximumValueofQfan)) {
+  if ((d = workspaceObject.getDouble(Curve_FanPressureRiseFields::MaximumValueofQfan))) {
     curve.setMaximumValueofQfan(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_FanPressureRiseFields::MinimumValueofPsm)) {
+  if ((d = workspaceObject.getDouble(Curve_FanPressureRiseFields::MinimumValueofPsm))) {
     curve.setMinimumValueofPsm(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_FanPressureRiseFields::MaximumValueofPsm)) {
+  if ((d = workspaceObject.getDouble(Curve_FanPressureRiseFields::MaximumValueofPsm))) {
     curve.setMaximumValueofPsm(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_FanPressureRiseFields::MinimumCurveOutput)) {
+  if ((d = workspaceObject.getDouble(Curve_FanPressureRiseFields::MinimumCurveOutput))) {
     curve.setMinimumCurveOutput(*d);
   }
-  if (d = workspaceObject.getDouble(Curve_FanPressureRiseFields::MaximumCurveOutput)) {
+  if ((d = workspaceObject.getDouble(Curve_FanPressureRiseFields::MaximumCurveOutput))) {
     curve.setMaximumCurveOutput(*d);
   }
 

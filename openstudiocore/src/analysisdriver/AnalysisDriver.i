@@ -31,6 +31,7 @@
   #include <analysisdriver/AnalysisRunOptions.hpp>
   #include <analysisdriver/AnalysisDriverWatcher.hpp>
   #include <analysisdriver/SimpleProject.hpp>
+  #include <analysisdriver/CloudAnalysisDriver.hpp>
 
   #include <project/ProjectDatabase.hpp>
   #include <project/AnalysisRecord.hpp>
@@ -39,12 +40,12 @@
   #include <runmanager/lib/SimulationEngine.hpp>
   #include <runmanager/lib/ErrorEstimation.hpp>
 
-  #include <analysis/Analysis.hpp>
-  #include <analysis/DiscreteVariable.hpp>
-  #include <analysis/OptimizationDataPoint.hpp>
+  #include <analysis/ConcreteAnalysisObjects.hpp>
 
-  #include <utilities/idf/URLSearchPath.hpp>
+  #include <utilities/cloud/AWSProvider.hpp>
+  #include <utilities/cloud/VagrantProvider.hpp>
   #include <utilities/core/FileReference.hpp>
+  #include <utilities/idf/URLSearchPath.hpp>
 
   // to be ignored
   class QAction;
@@ -138,5 +139,6 @@ ANALYSISDRIVER_WRAP(AnalysisDriver)
 
 ANALYSISDRIVER_WRAP(AnalysisDriverWatcher)
 ANALYSISDRIVER_WRAP(SimpleProject)
+ANALYSISDRIVER_WRAP(CloudAnalysisDriver)
 
 #endif // ANALYSISDRIVER_ANALYSISDRIVER_I

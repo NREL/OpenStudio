@@ -22,7 +22,7 @@
 #include <project/ProjectDatabase.hpp>
 #include <project/ProblemRecord.hpp>
 #include <project/FunctionRecord.hpp>
-#include <project/RubyPerturbationRecord.hpp>
+#include <project/RubyMeasureRecord.hpp>
 #include <project/OSArgumentRecord.hpp>
 
 #include <analysis/RubyContinuousVariable.hpp>
@@ -70,7 +70,7 @@ namespace detail {
 
     value = query.value(RubyContinuousVariableRecord::ColumnsType::rubyPerturbationRecordId);
     OS_ASSERT(value.isValid() && !value.isNull());
-    m_rubyPerturbationRecordId = value.toInt();
+    m_rubyMeasureRecordId = value.toInt();
   }
 
   std::vector<ObjectRecord> RubyContinuousVariableRecord_Impl::children() const {
@@ -81,7 +81,7 @@ namespace detail {
 
   std::vector<ObjectRecord> RubyContinuousVariableRecord_Impl::resources() const {
     ObjectRecordVector result;
-    result.push_back(rubyPerturbationRecord());
+    result.push_back(rubyMeasureRecord());
     return result;
   }
 
@@ -110,10 +110,10 @@ namespace detail {
     return *result;
   }
 
-  RubyPerturbationRecord RubyContinuousVariableRecord_Impl::rubyPerturbationRecord() const {
-    OptionalRubyPerturbationRecord result;
+  RubyMeasureRecord RubyContinuousVariableRecord_Impl::rubyMeasureRecord() const {
+    OptionalRubyMeasureRecord result;
     ProjectDatabase database = projectDatabase();
-    result = RubyPerturbationRecord::getRubyPerturbationRecord(m_rubyPerturbationRecordId,database);
+    result = RubyMeasureRecord::getRubyMeasureRecord(m_rubyMeasureRecordId,database);
     OS_ASSERT(result);
     return *result;
   }
@@ -132,7 +132,7 @@ namespace detail {
 
   analysis::RubyContinuousVariable RubyContinuousVariableRecord_Impl::rubyContinuousVariable() const {
     ruleset::OSArgument argument = osArgumentRecord().osArgument();
-    analysis::RubyPerturbation perturbation = rubyPerturbationRecord().rubyPerturbation();
+    analysis::RubyMeasure measure = rubyMeasureRecord().rubyMeasure();
     return analysis::RubyContinuousVariable(handle(),
                                             uuidLast(),
                                             name(),
@@ -144,22 +144,22 @@ namespace detail {
                                             increment(),
                                             nSteps(),
                                             argument,
-                                            perturbation);
+                                            measure);
   }
 
   void RubyContinuousVariableRecord_Impl::revertToLastRecordIds() {
-    m_rubyPerturbationRecordId = m_lastRubyPerturbationRecordId;
+    m_rubyMeasureRecordId = m_lastRubyMeasureRecordId;
   }
 
-  void RubyContinuousVariableRecord_Impl::setRubyPerturbationRecordId(int id) {
-    m_rubyPerturbationRecordId = id;
+  void RubyContinuousVariableRecord_Impl::setRubyMeasureRecordId(int id) {
+    m_rubyMeasureRecordId = id;
     this->onChange(false);
   }
 
   void RubyContinuousVariableRecord_Impl::bindValues(QSqlQuery& query) const {
     ContinuousVariableRecord_Impl::bindValues(query);
 
-    query.bindValue(RubyContinuousVariableRecord::ColumnsType::rubyPerturbationRecordId,m_rubyPerturbationRecordId);
+    query.bindValue(RubyContinuousVariableRecord::ColumnsType::rubyPerturbationRecordId,m_rubyMeasureRecordId);
   }
 
   void RubyContinuousVariableRecord_Impl::setLastValues(const QSqlQuery& query, ProjectDatabase& projectDatabase) {
@@ -173,7 +173,7 @@ namespace detail {
 
     value = query.value(RubyContinuousVariableRecord::ColumnsType::rubyPerturbationRecordId);
     OS_ASSERT(value.isValid() && !value.isNull());
-    m_lastRubyPerturbationRecordId = value.toInt();
+    m_lastRubyMeasureRecordId = value.toInt();
   }
 
   bool RubyContinuousVariableRecord_Impl::compareValues(const QSqlQuery& query) const {
@@ -187,7 +187,7 @@ namespace detail {
 
     value = query.value(RubyContinuousVariableRecord::ColumnsType::rubyPerturbationRecordId);
     OS_ASSERT(value.isValid() && !value.isNull());
-    result = result && (m_rubyPerturbationRecordId == value.toInt());
+    result = result && (m_rubyMeasureRecordId == value.toInt());
 
     return result;
   }
@@ -195,13 +195,13 @@ namespace detail {
   void RubyContinuousVariableRecord_Impl::saveLastValues() {
     ContinuousVariableRecord_Impl::saveLastValues();
 
-    m_lastRubyPerturbationRecordId = m_rubyPerturbationRecordId;
+    m_lastRubyMeasureRecordId = m_rubyMeasureRecordId;
   }
 
   void RubyContinuousVariableRecord_Impl::revertToLastValues() {
     ContinuousVariableRecord_Impl::revertToLastValues();
 
-    m_rubyPerturbationRecordId = m_lastRubyPerturbationRecordId;
+    m_rubyMeasureRecordId = m_lastRubyMeasureRecordId;
   }
 
 } // detail
@@ -315,8 +315,8 @@ OSArgumentRecord RubyContinuousVariableRecord::osArgumentRecord() const {
   return getImpl<detail::RubyContinuousVariableRecord_Impl>()->osArgumentRecord();
 }
 
-RubyPerturbationRecord RubyContinuousVariableRecord::rubyPerturbationRecord() const {
-  return getImpl<detail::RubyContinuousVariableRecord_Impl>()->rubyPerturbationRecord();
+RubyMeasureRecord RubyContinuousVariableRecord::rubyMeasureRecord() const {
+  return getImpl<detail::RubyContinuousVariableRecord_Impl>()->rubyMeasureRecord();
 }
 
 analysis::RubyContinuousVariable RubyContinuousVariableRecord::rubyContinuousVariable() const {
@@ -339,11 +339,10 @@ void RubyContinuousVariableRecord::constructRelatedRecords(const analysis::Varia
     getImpl<detail::RubyContinuousVariableRecord_Impl>()->revertToLastRecordIds();
   }
 
-  // Save resource RubyPerturbation
+  // Save resource RubyMeasure
   if (isNew || rubyContinuousVariable.perturbation().isDirty()) {
-    RubyPerturbationRecord rubyPerturbationRecord(rubyContinuousVariable.perturbation(),
-                                                  database);
-    getImpl<detail::RubyContinuousVariableRecord_Impl>()->setRubyPerturbationRecordId(rubyPerturbationRecord.id());
+    RubyMeasureRecord rubyMeasureRecord(rubyContinuousVariable.measure(),database);
+    getImpl<detail::RubyContinuousVariableRecord_Impl>()->setRubyMeasureRecordId(rubyMeasureRecord.id());
   }
 
   // Save child OSArgument
@@ -370,4 +369,5 @@ void RubyContinuousVariableRecord::constructRelatedRecords(const analysis::Varia
 
 } // project
 } // openstudio
+
 

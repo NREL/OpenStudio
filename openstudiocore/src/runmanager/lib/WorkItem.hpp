@@ -32,10 +32,6 @@ namespace openstudio {
 
 class FileReferenceType;
 
-namespace ruleset {
-  class ModelRuleset;
-}
-
 namespace runmanager {
 
 class RUNMANAGER_API WorkItem {
@@ -50,7 +46,6 @@ class RUNMANAGER_API WorkItem {
            const openstudio::runmanager::JobParams &t_params,
            const openstudio::runmanager::Files &t_files,
            const std::string &t_jobkeyname="");
-  WorkItem(const openstudio::ruleset::ModelRuleset& modelRuleset);
 
   //@}
   /** @name Getters and Queries */
@@ -90,6 +85,21 @@ class RUNMANAGER_API WorkItem {
 
   REGISTER_LOGGER("openstudio.runmanager.WorkItem");
 };
+
+RUNMANAGER_API bool saveJSON(const std::vector<WorkItem> &t_workItems,
+                             const openstudio::path& p,
+                             bool overwrite=false);
+
+RUNMANAGER_API std::ostream& toJSON(const std::vector<WorkItem> &t_workItems,
+                                    std::ostream& os);
+
+RUNMANAGER_API std::string toJSON(const std::vector<WorkItem> &t_workItems);
+
+RUNMANAGER_API std::vector<WorkItem> toVectorOfWorkItem(const openstudio::path &t_pathToJson);
+
+RUNMANAGER_API std::vector<WorkItem> toVectorOfWorkItem(std::istream &t_json);
+
+RUNMANAGER_API std::vector<WorkItem> toVectorOfWorkItem(const std::string &t_json);
 
 } // runmanager
 } // openstudio

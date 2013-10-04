@@ -45,8 +45,6 @@
 #include <QPainter>
 #include <QStyleOption>
 
-#include <boost/foreach.hpp>
-
 #include <fstream>
 
 namespace openstudio {
@@ -388,9 +386,14 @@ void DataPointJobHeaderView::setLastRunTime(const boost::optional<openstudio::Da
   }
 }
 
-void DataPointJobHeaderView::setStatus(const openstudio::runmanager::AdvancedStatus& status)
+void DataPointJobHeaderView::setStatus(const openstudio::runmanager::AdvancedStatus& status, bool isCanceled)
 {
-  m_status->setText(toQString(status.toString()));
+  if (!isCanceled)
+  {
+    m_status->setText(toQString(status.toString()));
+  } else {
+    m_status->setText("Canceled");
+  }
 }
 
 void DataPointJobHeaderView::setNA(bool na)
@@ -513,8 +516,8 @@ void DataPointJobItemView::paintEvent(QPaintEvent * e)
 
 void DataPointJobItemView::update()
 {
-  if (m_workflowStepJob.discretePerturbation) {
-    dataPointJobHeaderView->setName(m_workflowStepJob.discretePerturbation->name());
+  if (m_workflowStepJob.measure) {
+    dataPointJobHeaderView->setName(m_workflowStepJob.measure->name());
   }
   else {
     OS_ASSERT(m_workflowStepJob.step.isWorkItem());
@@ -524,7 +527,7 @@ void DataPointJobItemView::update()
   OS_ASSERT(m_workflowStepJob.job);
 
   dataPointJobHeaderView->setLastRunTime(m_workflowStepJob.job->lastRun());
-  dataPointJobHeaderView->setStatus(m_workflowStepJob.job->status());
+  dataPointJobHeaderView->setStatus(m_workflowStepJob.job->status(), m_workflowStepJob.job->canceled());
 
   openstudio::runmanager::JobErrors jobErrors = m_workflowStepJob.job->errors();
 
@@ -533,18 +536,18 @@ void DataPointJobItemView::update()
   dataPointJobContentView->clear();
 
   std::vector<std::string> initialConditions = jobErrors.initialConditions();
-  BOOST_FOREACH(const std::string& initialCondition, initialConditions){
+  Q_FOREACH(const std::string& initialCondition, initialConditions){
     dataPointJobContentView->addInitialConditionMessage(initialCondition);
   }
 
   std::vector<std::string> finalConditions = jobErrors.finalConditions();
-  BOOST_FOREACH(const std::string& finalCondition, finalConditions){
+  Q_FOREACH(const std::string& finalCondition, finalConditions){
     dataPointJobContentView->addFinalConditionMessage(finalCondition);
   }
 
   std::vector<std::string> errors = jobErrors.errors();
   dataPointJobHeaderView->setNumErrors(errors.size());
-  BOOST_FOREACH(const std::string& errorMessage, errors){
+  Q_FOREACH(const std::string& errorMessage, errors){
     dataPointJobContentView->addErrorMessage(errorMessage);
   }
 
@@ -566,12 +569,12 @@ void DataPointJobItemView::update()
 
   std::vector<std::string> warnings = jobErrors.warnings();
   dataPointJobHeaderView->setNumWarnings(warnings.size());
-  BOOST_FOREACH(const std::string& warningMessage, warnings){
+  Q_FOREACH(const std::string& warningMessage, warnings){
     dataPointJobContentView->addWarningMessage(warningMessage);
   }
 
   std::vector<std::string> infos = jobErrors.infos();
-  BOOST_FOREACH(const std::string& infoMessage, infos){
+  Q_FOREACH(const std::string& infoMessage, infos){
     dataPointJobContentView->addInfoMessage(infoMessage);
   }
 

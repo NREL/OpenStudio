@@ -94,6 +94,9 @@ namespace openstudio{
         /// get value at date and time
         double value(const DateTime& dateTime) const;
 
+        /// get values between start and end date times
+        Vector values(const DateTime& startDateTime, const DateTime& endDateTime) const;
+
         /// get the value used for out of range data
         double outOfRangeValue() const;
 
@@ -129,6 +132,9 @@ namespace openstudio{
 
         // value used for out of range data
         double m_outOfRangeValue; 
+
+        // true if the time series should support wrap around dates, e.g. 4/11-4/10 without specific year
+        bool m_wrapAround;
     };
   } // detail
 
@@ -202,6 +208,9 @@ namespace openstudio{
 
       /// get value at date and time
       double value(const DateTime& dateTime) const;
+
+      /// get values between start and end date times
+      Vector values(const DateTime& startDateTime, const DateTime& endDateTime) const;
 
       /// get the value used for out of range data
       double outOfRangeValue() const;

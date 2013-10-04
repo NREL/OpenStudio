@@ -27,6 +27,7 @@
 #include <analysis/DakotaParametersFile.hpp>
 
 #include <utilities/core/Assert.hpp>
+#include <runmanager/lib/JSON.hpp>
 
 #include <sstream>
 
@@ -132,6 +133,22 @@ namespace detail {
     m_outFileReference.reset();
     m_job.reset();
     onChange(AnalysisObject_Impl::Benign);
+  }
+
+  QVariant DakotaAlgorithm_Impl::toVariant() const {
+    QVariantMap map = Algorithm_Impl::toVariant().toMap();
+
+    if (OptionalFileReference restartFile = restartFileReference()) {
+      map["restart_file"] = openstudio::detail::toVariant(*restartFile);
+    }
+    if (OptionalFileReference outFile = outFileReference()) {
+      map["out_file"] = openstudio::detail::toVariant(*outFile);
+    }
+    if (boost::optional<runmanager::Job> j = job()) {
+      map["job"] = runmanager::detail::JSON::toVariant(j.get());
+    }
+
+    return QVariant(map);
   }
 
 } // detail

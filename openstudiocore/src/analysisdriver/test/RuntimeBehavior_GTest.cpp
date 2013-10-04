@@ -178,14 +178,3 @@ TEST_F(AnalysisDriverFixture,RuntimeBehavior_StopOpenStudioAnalysis) {
   EXPECT_EQ(0u,analysisDriver.currentAnalyses().size());
 }
 
-TEST_F(AnalysisDriverFixture,RuntimeBehavior_StopAndRestartCustomAnalysis) {
-}
-
-TEST_F(AnalysisDriverFixture,RuntimeBehavior_StopAndRestartOpenStudioAnalysis) {
-}
-
-TEST_F(AnalysisDriverFixture,RuntimeBehavior_ClearAndRerunCustomAnalysis) {
-}
-
-TEST_F(AnalysisDriverFixture,RuntimeBehavior_ClearAndRerunOpenStudioAnalysis) {
-}

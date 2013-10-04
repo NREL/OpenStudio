@@ -58,6 +58,8 @@
 #include <openstudio_lib/VariablesTabController.hpp>
 #include <openstudio_lib/YearSettingsWidget.hpp>
 
+#include <analysis/Analysis.hpp>
+
 #include <model/Component.hpp>
 #include <model/Model_Impl.hpp>
 #include <model/WeatherFile.hpp>
@@ -78,8 +80,8 @@
 
 #include <analysis/DataPoint.hpp>
 #include <analysis/Problem.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/NullPerturbation.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/NullMeasure.hpp>
 
 #include <runmanager/lib/WorkItem.hpp>
 
@@ -229,7 +231,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
     openstudio::analysis::Problem problem = m_simpleProject->analysis().problem();
 
     // add swap variable
-    openstudio::analysis::DiscreteVariable dvar("Alternative Model",openstudio::analysis::DiscretePerturbationVector(1u,openstudio::analysis::NullPerturbation()));
+    openstudio::analysis::MeasureGroup dvar("Alternative Model",openstudio::analysis::MeasureVector(1u,openstudio::analysis::NullMeasure()));
     problem.push(dvar);
 
     // set up simulation workflow
@@ -522,6 +524,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
                                 ":images/off_run_tab.png" );
   connect(m_runTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
           m_mainRightColumnController.get(),SLOT(configureForRunSimulationSubTab(int)));
+  // DLM: this signal is not connected, is it needed?
   connect(this, SIGNAL(modelSaving(const openstudio::path &)), 
           m_runTabController.get(), SLOT(saveDatabase(const openstudio::path &)));
   connect(m_runTabController.get(), SIGNAL(useRadianceStateChanged(bool)),
@@ -549,9 +552,11 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   m_resultsTabController->searchForExistingResults(openstudio::toPath(m_modelTempDir) / openstudio::toPath("resources") / openstudio::toPath("run"));
 
+  // DLM: this signal is not connected, is it needed?
   connect(m_runTabController.get(), SIGNAL(toolsUpdated()),
       m_scriptsTabController.get(), SIGNAL(updateRubyInterpreterWarning()));
 
+  // DLM: this signal is not connected, is it needed?
   connect(m_scriptsTabController.get(), SIGNAL(toolsUpdated()),
       this, SLOT(markAsModified()));
 
@@ -561,6 +566,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   connect(this, SIGNAL(toolsUpdated()),
           this, SLOT(markAsModified()));
 
+  // DLM: this signal is not connected, is it needed?
   connect(this, SIGNAL(toolsUpdated()),
       m_scriptsTabController.get(), SIGNAL(updateRubyInterpreterWarning()));
 
