@@ -294,7 +294,7 @@ void CloudMonitor::openLostCloudConnectionDlg(bool internetAvailable,
     m_lostCloudConnectiopnDialog = new LostCloudConnectionDialog(internetAvailable,authenticated,cloudRunning);
 
     bool isConnected = connect(m_lostCloudConnectiopnDialog, SIGNAL(rejected()),
-                               this, SLOT(on_closeBclDlg()));
+                               this, SLOT(on_closeLostCloudConnectionDlg()));
     OS_ASSERT(isConnected);
   }
   if(m_lostCloudConnectiopnDialog && !m_lostCloudConnectiopnDialog->isVisible()){
