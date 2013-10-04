@@ -44,9 +44,7 @@ require 'net/ssh'
 require 'tempfile'
 require 'time'
 
-# Not sure how we want to deal with this, but in the tag, I would like to specify the right
-# version of openstudio so that in the AWS Management Console it is meaningful.
-OPENSTUDIO_VERSION='1.1.0'
+OPENSTUDIO_VERSION='${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}'
 
 def error(code, msg)
   puts ({:error => {:code => code, :message => msg},
@@ -93,11 +91,11 @@ if ARGV.length == 6
   @params = JSON.parse(ARGV[5])
 end
 
-@server_image_id = 'ami-59cd9a30'
+@server_image_id = 'ami-cbffa8a2'
 if ARGV.length >= 6 && @params['instance_type'] == 'cc2.8xlarge'
-  @worker_image_id = 'ami-f5cf989c'
+  @worker_image_id = 'ami-d7ffa8be'
 else
-  @worker_image_id = 'ami-ddcf98b4'
+  @worker_image_id = 'ami-73fea91a'
 end
 
 def create_struct(instance, procs)
@@ -108,25 +106,25 @@ end
 def find_processors(instance)
   processors = 1
   case instance
-  when 'cc2.8xlarge'
-    processors = 32
-  when 'c1.xlarge'
-    processors = 8
-  when 'm2.4xlarge'
-    processors = 8
-  when 'm2.2xlarge'
-    processors = 4
-  when 'm2.xlarge'
-    processors = 4  
-  when 'm1.xlarge'
-    processors = 4
-  when 'm1.large'
-    processors = 2
-  when 'm3.xlarge'
-    processors = 4
-  when 'm3.2xlarge'
-    processors = 8
-  end 
+    when 'cc2.8xlarge'
+      processors = 32
+    when 'c1.xlarge'
+      processors = 8
+    when 'm2.4xlarge'
+      processors = 8
+    when 'm2.2xlarge'
+      processors = 4
+    when 'm2.xlarge'
+      processors = 4
+    when 'm1.xlarge'
+      processors = 4
+    when 'm1.large'
+      processors = 2
+    when 'm3.xlarge'
+      processors = 4
+    when 'm3.2xlarge'
+      processors = 8
+  end
 
   return processors
 end
@@ -232,95 +230,95 @@ def send_command(host, command)
 end
 
 #======================= send command ======================#
-    # Send a command through SSH Shell to an instance. 
-    # Need to pass instance object and the command as a string.     
+# Send a command through SSH Shell to an instance.
+# Need to pass instance object and the command as a string.
 def shell_command(host, command)
   begin
-  @logger.info("ssh_command #{command}")
-  Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
-    channel = ssh.open_channel do |ch|
-      ch.exec "#{command}" do |ch, success|
-        raise "could not execute #{command}" unless success
-        
-        # "on_data" is called when the process writes something to stdout
-        ch.on_data do |c, data|
-          #$stdout.print data
-          @logger.info("#{data.inspect}")
-        end
-
-        # "on_extended_data" is called when the process writes something to stderr
-        ch.on_extended_data do |c, type, data|
-          #$stderr.print data
-          @logger.info("#{data.inspect}")
-        end
-      end
-    end 
-  end
-  rescue Net::SSH::HostKeyMismatch => e
-     e.remember_host!
-     @logger.info("key mismatch, retry")
-     sleep 1
-     retry
-  rescue SystemCallError, Timeout::Error => e
-     # port 22 might not be available immediately after the instance finishes launching
-     sleep 1
-     @logger.info("Not Yet")
-     retry
-  end
-end      
-
-def wait_command(host, command)
-  begin
-  flag = 0
-  while flag == 0 do
-    @logger.info("wait_command #{command}")
+    @logger.info("ssh_command #{command}")
     Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
       channel = ssh.open_channel do |ch|
         ch.exec "#{command}" do |ch, success|
           raise "could not execute #{command}" unless success
-          
+
           # "on_data" is called when the process writes something to stdout
           ch.on_data do |c, data|
+            #$stdout.print data
             @logger.info("#{data.inspect}")
-            if data.chomp == "true"
-              @logger.info("wait_command #{command} is true")
-              flag = 1
-            else
-              sleep 5
-            end
           end
-  
+
           # "on_extended_data" is called when the process writes something to stderr
           ch.on_extended_data do |c, type, data|
+            #$stderr.print data
             @logger.info("#{data.inspect}")
-            if data == "true"
-              @logger.info("wait_command #{command} is true")
-	      flag = 1
-	    else
-              sleep 5  
+          end
+        end
+      end
+    end
+  rescue Net::SSH::HostKeyMismatch => e
+    e.remember_host!
+    @logger.info("key mismatch, retry")
+    sleep 1
+    retry
+  rescue SystemCallError, Timeout::Error => e
+    # port 22 might not be available immediately after the instance finishes launching
+    sleep 1
+    @logger.info("Not Yet")
+    retry
+  end
+end
+
+def wait_command(host, command)
+  begin
+    flag = 0
+    while flag == 0 do
+      @logger.info("wait_command #{command}")
+      Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
+        channel = ssh.open_channel do |ch|
+          ch.exec "#{command}" do |ch, success|
+            raise "could not execute #{command}" unless success
+
+            # "on_data" is called when the process writes something to stdout
+            ch.on_data do |c, data|
+              @logger.info("#{data.inspect}")
+              if data.chomp == "true"
+                @logger.info("wait_command #{command} is true")
+                flag = 1
+              else
+                sleep 5
+              end
+            end
+
+            # "on_extended_data" is called when the process writes something to stderr
+            ch.on_extended_data do |c, type, data|
+              @logger.info("#{data.inspect}")
+              if data == "true"
+                @logger.info("wait_command #{command} is true")
+                flag = 1
+              else
+                sleep 5
+              end
             end
           end
         end
       end
-  end  
-  end
+    end
   rescue Net::SSH::HostKeyMismatch => e
-     e.remember_host!
-     @logger.info("key mismatch, retry")
-     sleep 1
-     retry
+    e.remember_host!
+    @logger.info("key mismatch, retry")
+    sleep 1
+    retry
   rescue SystemCallError, Timeout::Error => e
-     # port 22 might not be available immediately after the instance finishes launching
-     sleep 1
-     @logger.info("Not Yet")
-     retry
+    # port 22 might not be available immediately after the instance finishes launching
+    sleep 1
+    @logger.info("Not Yet")
+    retry
   end
-end  
+end
 
 def download_file(host, remote_path, local_path)
   retries = 0
   begin
-    Net::SCP.start(host,'ubuntu', :key_data => [@private_key]) do |scp|
+    Net::SCP.start(host, 'ubuntu', :key_data => [@private_key]) do |scp|
       scp.download! remote_path, local_path
     end
   rescue SystemCallError, Timeout::Error => e
@@ -354,7 +352,7 @@ begin
       if ARGV.length < 6
         resp = @aws.client.describe_instance_status
       else
-        resp = @aws.client.describe_instance_status({:instance_ids=>[@params['instance_id']]})
+        resp = @aws.client.describe_instance_status({:instance_ids => [@params['instance_id']]})
       end
       output = Hash.new
       resp.data[:instance_status_set].each { |instance|
@@ -373,7 +371,7 @@ begin
       if @group.nil?
         @group = @aws.security_groups.create('openstudio-server-sg-v1')
         @group.allow_ping() # allow ping
-        @group.authorize_ingress(:tcp, 1..65535)# all traffic
+        @group.authorize_ingress(:tcp, 1..65535) # all traffic
       end
       @logger.info("server_group #{@group}")
       @server_instance_type = @params['instance_type']
@@ -391,7 +389,7 @@ begin
                  :dns => @server.dns,
                  :procs => @server.procs
              }}.to_json)
-     @logger.info("server info #{({:timestamp => @timestamp,:private_key => @private_key,:server => {:id => @server.id,:ip => @server.ip,:dns => @server.dns,:procs => @server.procs}}.to_json)}")        
+      @logger.info("server info #{({:timestamp => @timestamp, :private_key => @private_key, :server => {:id => @server.id, :ip => @server.ip, :dns => @server.dns, :procs => @server.procs}}.to_json)}")
     when 'launch_workers'
       if ARGV.length < 6
         error(-1, 'Invalid number of args')
@@ -408,7 +406,7 @@ begin
       if @group.nil?
         @group = @aws.security_groups.create('openstudio-worker-sg-v1')
         @group.allow_ping() # allow ping
-        @group.authorize_ingress(:tcp, 1..65535)# all traffic
+        @group.authorize_ingress(:tcp, 1..65535) # all traffic
       end
       @logger.info("worker_group #{@group}")
       @key_pair = @aws.key_pairs.filter('key-name', "key-pair-#{@timestamp}").first
@@ -477,7 +475,7 @@ begin
       error(-1, "Server node #{@params['server_id']} does not exist") unless server.exists?
 
       #@timestamp = @aws.client.describe_instances({:instance_ids=>[@params['server_id']]}).data[:instance_index][@params['server_id']][:key_name][9,10]
-      @timestamp = server.key_name[9,10]
+      @timestamp = server.key_name[9, 10]
 
       instances.push(server)
       @params['worker_ids'].each { |worker_id|
@@ -486,7 +484,7 @@ begin
         instances.push(worker)
       }
 
-      instances.each{ |instance|
+      instances.each { |instance|
         instance.terminate
       }
       sleep 5 while instances.any? { |instance| instance.status != :terminated }
@@ -494,7 +492,7 @@ begin
       # When session is fully terminated, then delete the key pair
       #@aws.client.delete_security_group({:group_name=>'openstudio-server-sg-v1'}"})
       #@aws.client.delete_security_group({:group_name=>'openstudio-worker-sg-v1'}"})
-      @aws.client.delete_key_pair({:key_name=>"key-pair-#{@timestamp}"})
+      @aws.client.delete_key_pair({:key_name => "key-pair-#{@timestamp}"})
 
     when 'termination_status'
       if ARGV.length < 6
@@ -525,10 +523,10 @@ begin
     when 'estimated_charges'
       endTime = Time.now.utc
       startTime = endTime - 86400
-      resp = @aws.client.get_metric_statistics({:dimensions=>[{:name=>'ServiceName',:value=>'AmazonEC2'},{:name=>'Currency',:value=>'USD'}], :metric_name=>'EstimatedCharges', :namespace=>'AWS/Billing', :start_time=>startTime.iso8601, :end_time=>endTime.iso8601, :period=>300, :statistics=>['Maximum']})
+      resp = @aws.client.get_metric_statistics({:dimensions => [{:name => 'ServiceName', :value => 'AmazonEC2'}, {:name => 'Currency', :value => 'USD'}], :metric_name => 'EstimatedCharges', :namespace => 'AWS/Billing', :start_time => startTime.iso8601, :end_time => endTime.iso8601, :period => 300, :statistics => ['Maximum']})
       error(-1, 'No Billing Data') if resp.data[:datapoints].length == 0
       datapoints = resp.data[:datapoints]
-      datapoints.sort! { |a,b| a[:timestamp] <=> b[:timestamp] }
+      datapoints.sort! { |a, b| a[:timestamp] <=> b[:timestamp] }
       puts ({:estimated_charges => datapoints[-1][:maximum],
              :timestamp => datapoints[-1][:timestamp].to_i}.to_json)
 
@@ -541,7 +539,7 @@ rescue Exception => e
     error(503, 'Offline')
   elsif defined? e.http_response
     error(e.http_response.status, e.code)
-  elseif e != 'exit'
+  elsif e != 'exit'
     error(-1, "#{e}: #{e.backtrace}")
   end
 

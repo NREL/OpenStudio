@@ -129,6 +129,10 @@ namespace detail {
       /// merge / update the given job
       void updateJob(const Job &t_job);
 
+      /// update job tree, and be willing to change the UUID in the process
+      void updateJob(const openstudio::UUID &t_uuid, const Job &t_job);
+
+
       /// Update all out of date jobs to be runnable again
       void setOutOfDateRunnable();
 

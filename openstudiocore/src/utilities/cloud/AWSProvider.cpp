@@ -67,10 +67,10 @@ namespace openstudio{
                                        bool userAgreementSigned,
                                        unsigned numWorkers,
                                        bool terminationDelayEnabled,
-                                       unsigned terminationDelay/*,
+                                       unsigned terminationDelay,
                                        std::string region,
                                        std::string serverInstanceType,
-                                       std::string workerInstanceType*/)
+                                       std::string workerInstanceType)
       : CloudSettings_Impl(uuid,versionUUID),
         m_validAccessKey(false),
         m_validSecretKey(false)
@@ -80,10 +80,9 @@ namespace openstudio{
       setNumWorkers(numWorkers);
       setTerminationDelayEnabled(terminationDelayEnabled);
       setTerminationDelay(terminationDelay);
-      // todo
-      //setRegion(region);
-      //setServerInstanceType(serverInstanceType);
-      //setWorkerInstanceType(workerInstanceType);
+      setRegion(region);
+      setServerInstanceType(serverInstanceType);
+      setWorkerInstanceType(workerInstanceType);
     }
 
     std::string AWSSettings_Impl::cloudProviderType() const {
@@ -468,7 +467,6 @@ namespace openstudio{
       : CloudProvider_Impl(),
         m_awsSettings(),
         m_awsSession(toString(createUUID()),boost::none,std::vector<Url>()),
-        m_script(getOpenStudioRubyScriptsPath() / toPath("cloud/aws.rb")),
         m_checkInternetProcess(0),
         m_checkServiceProcess(0),
         m_checkValidateProcess(0),
@@ -507,6 +505,19 @@ namespace openstudio{
 #endif
       if (!boost::filesystem::exists(m_ruby)) {
         LOG_AND_THROW("Ruby 2.0 executable cannot be found.");
+      }
+
+      if (applicationIsRunningFromBuildDirectory())
+      {
+        m_script = getApplicationBuildDirectory() / openstudio::toPath("ruby/cloud/aws.rb");
+      } else {
+#ifdef Q_OS_LINUX
+        m_script = getApplicationInstallDirectory() / openstudio::toPath("share/openstudio/Ruby/cloud/aws.rb");
+#elif defined(Q_OS_MAC)
+        m_script = getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("Ruby/cloud/aws.rb");
+#else
+        m_script = getApplicationRunDirectory().parent_path() / openstudio::toPath("Ruby/cloud/aws.rb");
+#endif
       }
       if (!boost::filesystem::exists(m_script)) {
         LOG_AND_THROW("AWS script cannot be found.");
@@ -1714,14 +1725,20 @@ namespace openstudio{
                            bool userAgreementSigned,
                            unsigned numWorkers,
                            bool terminationDelayEnabled,
-                           unsigned terminationDelay)
+                           unsigned terminationDelay,
+                           std::string region,
+                           std::string serverInstanceType,
+                           std::string workerInstanceType)
     : CloudSettings(boost::shared_ptr<detail::AWSSettings_Impl>(
                       new detail::AWSSettings_Impl(uuid,
                                                    versionUUID,
                                                    userAgreementSigned,
                                                    numWorkers,
                                                    terminationDelayEnabled,
-                                                   terminationDelay)))
+                                                   terminationDelay,
+                                                   region,
+                                                   serverInstanceType,
+                                                   workerInstanceType)))
   {
     OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
   }
