@@ -79,6 +79,8 @@ class CloudMonitor : public QObject
   // This will be removed.  Use ::status() to get information about the cloud.
   void internetAvailable(bool isAvailable);
 
+  void cloudStatusChanged(CloudStatus newStatus);
+
   public slots:
 
   // If cloud is on then turn off, and vice versa

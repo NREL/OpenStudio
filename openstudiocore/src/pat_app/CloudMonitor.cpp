@@ -413,7 +413,12 @@ CloudProvider CloudMonitor::newCloudProvider(const CloudSettings & settings,
 
 void CloudMonitor::setStatus(CloudStatus status)
 {
-  m_status = status;
+  if( status != m_status )
+  {
+    m_status = status;
+
+    emit cloudStatusChanged(status);
+  }
 
   if( QSharedPointer<RunTabController> runTabController = PatApp::instance()->runTabController() )
   {
