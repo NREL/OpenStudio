@@ -728,8 +728,8 @@ namespace detail {
       update_1_0_4_to_1_0_5(dbv);
     }
 
-    if (dbv < VersionString("1.1.0")) {
-      update_1_0_6_to_1_1_0(dbv);
+    if (dbv < VersionString("1.0.7")) {
+      update_1_0_6_to_1_0_7(dbv);
     }
 
     if ((dbv != osv) || (!dbv.fidelityEqual(osv))) {
@@ -2281,7 +2281,7 @@ namespace detail {
     OS_ASSERT(test);    
   }
 
-  void ProjectDatabase_Impl::update_1_0_6_to_1_1_0(const VersionString& startVersion) {
+  void ProjectDatabase_Impl::update_1_0_6_to_1_0_7(const VersionString& startVersion) {
 
     if (startVersion > VersionString("1.0.4")) {
 
