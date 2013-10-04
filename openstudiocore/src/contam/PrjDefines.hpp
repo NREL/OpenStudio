@@ -53,8 +53,10 @@
 
 #ifndef STD_VECTOR
 #define VECTOR_TYPE QVector
+#define VECTOR_SIZE_T int
 #else
 #define VECTOR_TYPE std::vector
+#define VECTOR_SIZE_T unsigned int
 #endif
 
 #ifndef STD_MAP

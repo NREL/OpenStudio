@@ -2950,133 +2950,243 @@ ControlNode* ControlNode::readElement(Reader &input)
     switch(kind)
     {
     case ControlNode::CT_PAS:
+    {
+        PasDat *obj = new PasDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_ABS:
+    {
+        AbsDat *obj = new AbsDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_BIN:
+    {
+        BinDat *obj = new BinDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_INT:
+    {
+        IntDat *obj = new IntDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_INV:
+    {
+        InvDat *obj = new InvDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_AND:
+    {
+        AndDat *obj = new AndDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_OR:
+    {
+        OrDat *obj = new OrDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_XOR:
+    {
+        XorDat *obj = new XorDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_ADD:
+    {
+        AddDat *obj = new AddDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_SUB:
+    {
+        SubDat *obj = new SubDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_MUL:
+    {
+        MulDat *obj = new MulDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_DIV:
+    {
+        DivDat *obj = new DivDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_LLS:
+    {
+        LlsDat *obj = new LlsDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_ULS:
+    {
+        UlsDat *obj = new UlsDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_LLC:
+    {
+        LlcDat *obj = new LlcDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_ULC:
+    {
+        UlcDat *obj = new UlcDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_SPH:
     {
-        CtrlDat *obj = new CtrlDat(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc);
+        SphDat *obj = new SphDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
         out = (ControlNode*)obj;
         break;
     }
     case ControlNode::CT_SNS:
     {
-        SnsDat *obj = new SnsDat(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc);
+        SnsDat *obj = new SnsDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
         obj->readDetails(input);
         out = (ControlNode*)obj;
         break;
     }
     case ControlNode::CT_SCH:
     {
-        SchDat *obj = new SchDat(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc);
+        SchDat *obj = new SchDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
         obj->readDetails(input);
         out = (ControlNode*)obj;
         break;
     }
     case ControlNode::CT_SET:
     {
-        SetDat *obj = new SetDat(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc);
+        SetDat *obj = new SetDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
         obj->readDetails(input);
         out = (ControlNode*)obj;
         break;
     }
     case ControlNode::CT_CVF:
+    {
+        CvfDat *obj = new CvfDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        obj->readDetails(input);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_DVF:
     {
-        CdvDat *obj = new CdvDat(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc);
+        DvfDat *obj = new DvfDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
         obj->readDetails(input);
         out = (ControlNode*)obj;
         break;
     }
     case ControlNode::CT_LOG:
     {
-        LogDat *obj = new LogDat(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc);
+        LogDat *obj = new LogDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
         obj->readDetails(input);
         out = (ControlNode*)obj;
         break;
     }
     case ControlNode::CT_MOD:
     {
-        ModDat *obj = new ModDat(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc);
+        ModDat *obj = new ModDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
         obj->readDetails(input);
         out = (ControlNode*)obj;
         break;
     }
     case ControlNode::CT_HYS:
     {
-        HysDat *obj = new HysDat(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc);
+        HysDat *obj = new HysDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
         obj->readDetails(input);
         out = (ControlNode*)obj;
         break;
     }
     case ControlNode::CT_DLS:
     {
-        DlsDat *obj = new DlsDat(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc);
+        DlsDat *obj = new DlsDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
         obj->readDetails(input);
         out = (ControlNode*)obj;
         break;
     }
     case ControlNode::CT_DLX:
     {
-        DlxDat *obj = new DlxDat(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc);
+        DlxDat *obj = new DlxDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
         obj->readDetails(input);
         out = (ControlNode*)obj;
         break;
     }
     case ControlNode::CT_RAV:
     {
-        RavDat *obj = new RavDat(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc);
+        RavDat *obj = new RavDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
         obj->readDetails(input);
         out = (ControlNode*)obj;
         break;
     }
     case ControlNode::CT_SUM:
+    {
+        SumAvg *obj = new SumAvg(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        obj->readDetails(input);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_AVG:
+    {
+        AvgDat *obj = new AvgDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        obj->readDetails(input);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_MAX:
+    {
+        MaxDat *obj = new MaxDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        obj->readDetails(input);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_MIN:
     {
-        SumAvg *obj = new SumAvg(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc);
+        MinDat *obj = new MinDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
         obj->readDetails(input);
         out = (ControlNode*)obj;
         break;
     }
     case ControlNode::CT_LBS:
+    {
+        LbsDat *obj = new LbsDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
+        obj->readDetails(input);
+        out = (ControlNode*)obj;
+        break;
+    }
     case ControlNode::CT_UBS:
     {
-        BanDat *obj = new BanDat(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc);
+        UbsDat *obj = new UbsDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
         obj->readDetails(input);
         out = (ControlNode*)obj;
         break;
     }
     case ControlNode::CT_PC1:
     {
-        PcDat *obj = new PcDat(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc);
+        PcDat *obj = new PcDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
         obj->readDetails(input);
         out = (ControlNode*)obj;
         break;
     }
     case ControlNode::CT_PI1:
     {
-        PicDat *obj = new PicDat(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc);
+        PicDat *obj = new PicDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
         obj->readDetails(input);
         out = (ControlNode*)obj;
         break;
     }
     case ControlNode::CT_SUP:
     {
-        SupDat *obj = new SupDat(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc);
+        SupDat *obj = new SupDat(nr,seqnr,flags,inreq,n1,n2,name,desc);
         obj->readDetails(input);
         out = (ControlNode*)obj;
         break;
@@ -3096,14 +3206,14 @@ ControlNode* ControlNode::readElement(Reader &input)
     return out;
 }
 
-CtrlDat::CtrlDat(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc)
+CtrlDat::CtrlDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc)
 {
-    d = new CtrlDatPrivate(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc);
+    d = new CtrlDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc);
 }
 
 std::string CtrlDat::write()
 {
-    return d->write();
+    return d->write(dataType());
 }
 
 void CtrlDat::read(Reader &input)
@@ -3119,16 +3229,6 @@ int CtrlDat::nr() const
 void CtrlDat::setNr(const int nr)
 {
     d->nr = nr;
-}
-
-STRING CtrlDat::dataType() const
-{
-    return d->dataType;
-}
-
-void CtrlDat::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 int CtrlDat::seqnr() const
@@ -3202,9 +3302,9 @@ void CtrlDat::setDesc(const STRING desc)
 }
 
 
-SnsDat::SnsDat(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale,RX tau,RX oldsig,int source,int type,int measure,RX X,RX Y,RX relHt,STRING units,STRING species)
+SnsDat::SnsDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale,RX tau,RX oldsig,int source,int type,int measure,RX X,RX Y,RX relHt,STRING units,STRING species)
 {
-    d = new SnsDatPrivate(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc,offset,scale,tau,oldsig,source,type,measure,X,Y,relHt,units,species);
+    d = new SnsDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,offset,scale,tau,oldsig,source,type,measure,X,Y,relHt,units,species);
 }
 
 STRING SnsDat::write()
@@ -3230,16 +3330,6 @@ int SnsDat::nr() const
 void SnsDat::setNr(const int nr)
 {
     d->nr = nr;
-}
-
-STRING SnsDat::dataType() const
-{
-    return d->dataType;
-}
-
-void SnsDat::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 int SnsDat::seqnr() const
@@ -3433,9 +3523,9 @@ void SnsDat::setSpecies(const STRING species)
 }
 
 
-SchDat::SchDat(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int ps)
+SchDat::SchDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int ps)
 {
-    d = new SchDatPrivate(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc,ps);
+    d = new SchDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,ps);
 }
 
 STRING SchDat::write()
@@ -3461,16 +3551,6 @@ int SchDat::nr() const
 void SchDat::setNr(const int nr)
 {
     d->nr = nr;
-}
-
-STRING SchDat::dataType() const
-{
-    return d->dataType;
-}
-
-void SchDat::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 int SchDat::seqnr() const
@@ -3554,9 +3634,9 @@ void SchDat::setPs(const int ps)
 }
 
 
-SetDat::SetDat(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX value)
+SetDat::SetDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX value)
 {
-    d = new SetDatPrivate(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc,value);
+    d = new SetDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,value);
 }
 
 STRING SetDat::write()
@@ -3582,16 +3662,6 @@ int SetDat::nr() const
 void SetDat::setNr(const int nr)
 {
     d->nr = nr;
-}
-
-STRING SetDat::dataType() const
-{
-    return d->dataType;
-}
-
-void SetDat::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 int SetDat::seqnr() const
@@ -3675,14 +3745,14 @@ void SetDat::setValue(const RX value)
 }
 
 
-CdvDat::CdvDat(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,STRING valuename)
+CdvDat::CdvDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,STRING valuename)
 {
-    d = new CdvDatPrivate(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc,valuename);
+    d = new CdvDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,valuename);
 }
 
 STRING CdvDat::write()
 {
-    return d->write();
+    return d->write(dataType());
 }
 
 void CdvDat::read(Reader &input)
@@ -3703,16 +3773,6 @@ int CdvDat::nr() const
 void CdvDat::setNr(const int nr)
 {
     d->nr = nr;
-}
-
-STRING CdvDat::dataType() const
-{
-    return d->dataType;
-}
-
-void CdvDat::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 int CdvDat::seqnr() const
@@ -3796,9 +3856,9 @@ void CdvDat::setValuename(const STRING valuename)
 }
 
 
-LogDat::LogDat(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale,int udef,STRING header,STRING units)
+LogDat::LogDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale,int udef,STRING header,STRING units)
 {
-    d = new LogDatPrivate(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc,offset,scale,udef,header,units);
+    d = new LogDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,offset,scale,udef,header,units);
 }
 
 STRING LogDat::write()
@@ -3824,16 +3884,6 @@ int LogDat::nr() const
 void LogDat::setNr(const int nr)
 {
     d->nr = nr;
-}
-
-STRING LogDat::dataType() const
-{
-    return d->dataType;
-}
-
-void LogDat::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 int LogDat::seqnr() const
@@ -3957,9 +4007,9 @@ void LogDat::setUnits(const STRING units)
 }
 
 
-ModDat::ModDat(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale)
+ModDat::ModDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale)
 {
-    d = new ModDatPrivate(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc,offset,scale);
+    d = new ModDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,offset,scale);
 }
 
 STRING ModDat::write()
@@ -3985,16 +4035,6 @@ int ModDat::nr() const
 void ModDat::setNr(const int nr)
 {
     d->nr = nr;
-}
-
-STRING ModDat::dataType() const
-{
-    return d->dataType;
-}
-
-void ModDat::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 int ModDat::seqnr() const
@@ -4088,9 +4128,9 @@ void ModDat::setScale(const RX scale)
 }
 
 
-HysDat::HysDat(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX slack,RX slope,RX oldsig)
+HysDat::HysDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX slack,RX slope,RX oldsig)
 {
-    d = new HysDatPrivate(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc,slack,slope,oldsig);
+    d = new HysDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,slack,slope,oldsig);
 }
 
 STRING HysDat::write()
@@ -4116,16 +4156,6 @@ int HysDat::nr() const
 void HysDat::setNr(const int nr)
 {
     d->nr = nr;
-}
-
-STRING HysDat::dataType() const
-{
-    return d->dataType;
-}
-
-void HysDat::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 int HysDat::seqnr() const
@@ -4229,9 +4259,9 @@ void HysDat::setOldsig(const RX oldsig)
 }
 
 
-DlsDat::DlsDat(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int dsincr,int dsdecr)
+DlsDat::DlsDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int dsincr,int dsdecr)
 {
-    d = new DlsDatPrivate(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc,dsincr,dsdecr);
+    d = new DlsDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,dsincr,dsdecr);
 }
 
 STRING DlsDat::write()
@@ -4257,16 +4287,6 @@ int DlsDat::nr() const
 void DlsDat::setNr(const int nr)
 {
     d->nr = nr;
-}
-
-STRING DlsDat::dataType() const
-{
-    return d->dataType;
-}
-
-void DlsDat::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 int DlsDat::seqnr() const
@@ -4360,9 +4380,9 @@ void DlsDat::setDsdecr(const int dsdecr)
 }
 
 
-DlxDat::DlxDat(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int tauincr,int taudecr)
+DlxDat::DlxDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int tauincr,int taudecr)
 {
-    d = new DlxDatPrivate(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc,tauincr,taudecr);
+    d = new DlxDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,tauincr,taudecr);
 }
 
 STRING DlxDat::write()
@@ -4388,16 +4408,6 @@ int DlxDat::nr() const
 void DlxDat::setNr(const int nr)
 {
     d->nr = nr;
-}
-
-STRING DlxDat::dataType() const
-{
-    return d->dataType;
-}
-
-void DlxDat::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 int DlxDat::seqnr() const
@@ -4491,9 +4501,9 @@ void DlxDat::setTaudecr(const int taudecr)
 }
 
 
-RavDat::RavDat(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int tspan)
+RavDat::RavDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int tspan)
 {
-    d = new RavDatPrivate(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc,tspan);
+    d = new RavDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,tspan);
 }
 
 STRING RavDat::write()
@@ -4519,16 +4529,6 @@ int RavDat::nr() const
 void RavDat::setNr(const int nr)
 {
     d->nr = nr;
-}
-
-STRING RavDat::dataType() const
-{
-    return d->dataType;
-}
-
-void RavDat::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 int RavDat::seqnr() const
@@ -4612,14 +4612,14 @@ void RavDat::setTspan(const int tspan)
 }
 
 
-SumAvg::SumAvg(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,std::vector<int> pc)
+SumAvg::SumAvg(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,std::vector<int> pc)
 {
-    d = new SumAvgPrivate(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc,pc);
+    d = new SumAvgPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,pc);
 }
 
 STRING SumAvg::write()
 {
-    return d->write();
+    return d->write(dataType());
 }
 
 void SumAvg::read(Reader &input)
@@ -4640,16 +4640,6 @@ int SumAvg::nr() const
 void SumAvg::setNr(const int nr)
 {
     d->nr = nr;
-}
-
-STRING SumAvg::dataType() const
-{
-    return d->dataType;
-}
-
-void SumAvg::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 int SumAvg::seqnr() const
@@ -4733,14 +4723,14 @@ void SumAvg::setPc(const std::vector<int> pc)
 }
 
 
-BanDat::BanDat(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX band)
+BanDat::BanDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX band)
 {
-    d = new BanDatPrivate(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc,band);
+    d = new BanDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,band);
 }
 
 STRING BanDat::write()
 {
-    return d->write();
+    return d->write(dataType());
 }
 
 void BanDat::read(Reader &input)
@@ -4761,16 +4751,6 @@ int BanDat::nr() const
 void BanDat::setNr(const int nr)
 {
     d->nr = nr;
-}
-
-STRING BanDat::dataType() const
-{
-    return d->dataType;
-}
-
-void BanDat::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 int BanDat::seqnr() const
@@ -4854,9 +4834,9 @@ void BanDat::setBand(const RX band)
 }
 
 
-PcDat::PcDat(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX kp)
+PcDat::PcDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX kp)
 {
-    d = new PcDatPrivate(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc,kp);
+    d = new PcDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,kp);
 }
 
 STRING PcDat::write()
@@ -4882,16 +4862,6 @@ int PcDat::nr() const
 void PcDat::setNr(const int nr)
 {
     d->nr = nr;
-}
-
-STRING PcDat::dataType() const
-{
-    return d->dataType;
-}
-
-void PcDat::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 int PcDat::seqnr() const
@@ -4975,9 +4945,9 @@ void PcDat::setKp(const RX kp)
 }
 
 
-PicDat::PicDat(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX kp,RX ki,RX oldsig,RX olderr)
+PicDat::PicDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX kp,RX ki,RX oldsig,RX olderr)
 {
-    d = new PicDatPrivate(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc,kp,ki,oldsig,olderr);
+    d = new PicDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,kp,ki,oldsig,olderr);
 }
 
 STRING PicDat::write()
@@ -5003,16 +4973,6 @@ int PicDat::nr() const
 void PicDat::setNr(const int nr)
 {
     d->nr = nr;
-}
-
-STRING PicDat::dataType() const
-{
-    return d->dataType;
-}
-
-void PicDat::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 int PicDat::seqnr() const
@@ -5126,9 +5086,9 @@ void PicDat::setOlderr(const RX olderr)
 }
 
 
-SupDat::SupDat(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int def,int se,int in,int out)
+SupDat::SupDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int def,int se,int in,int out)
 {
-    d = new SupDatPrivate(nr,dataType,seqnr,flags,inreq,n1,n2,name,desc,def,se,in,out);
+    d = new SupDatPrivate(nr,seqnr,flags,inreq,n1,n2,name,desc,def,se,in,out);
 }
 
 STRING SupDat::write()
@@ -5154,16 +5114,6 @@ int SupDat::nr() const
 void SupDat::setNr(const int nr)
 {
     d->nr = nr;
-}
-
-STRING SupDat::dataType() const
-{
-    return d->dataType;
-}
-
-void SupDat::setDataType(const STRING dataType)
-{
-    d->dataType = dataType;
 }
 
 int SupDat::seqnr() const

@@ -139,12 +139,12 @@ public:
 
     int airflowElementNrByName(STRING name) const;
 
-    VECTOR_TYPE<CdvDat> getCdvDat()
+    VECTOR_TYPE<CvfDat> getCvfDat()
     {
-        VECTOR_TYPE<CdvDat> ctrl;
+        VECTOR_TYPE<CvfDat> ctrl;
         for(int i=0;i<m_controlNodes.size();i++)
         {
-            QSharedPointer<CdvDat> cast = m_controlNodes[i].dynamicCast<CdvDat>();
+            QSharedPointer<CvfDat> cast = m_controlNodes[i].dynamicCast<CvfDat>();
             if(!cast.isNull())
             {
                 ctrl.push_back(*(cast.data()));

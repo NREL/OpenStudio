@@ -526,13 +526,13 @@ STRING WindPressureProfilePrivate::write()
 }
 
 
-CtrlDatPrivate::CtrlDatPrivate(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc):nr(nr),dataType(dataType),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc)
+CtrlDatPrivate::CtrlDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc)
 {}
 
 void CtrlDatPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE); // Should really check this
     seqnr = input.read<int>(FILELINE);
     flags = input.read<unsigned int>(FILELINE);
     inreq = input.read<int>(FILELINE);
@@ -542,22 +542,22 @@ void CtrlDatPrivate::read(Reader &input)
     desc = input.readLine(FILELINE);
 }
 
-std::string CtrlDatPrivate::write()
+std::string CtrlDatPrivate::write(STRING datatype)
 {
     std::string string;
-    string += TO_STRING(nr) + ' ' + dataType + '\n';
+    string += TO_STRING(nr) + ' ' + datatype + '\n';
     string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
     string += desc + '\n';
     return string;
 }
 
-SnsDatPrivate::SnsDatPrivate(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale,RX tau,RX oldsig,int source,int type,int measure,RX X,RX Y,RX relHt,STRING units,STRING species):nr(nr),dataType(dataType),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),offset(offset),scale(scale),tau(tau),oldsig(oldsig),source(source),type(type),measure(measure),X(X),Y(Y),relHt(relHt),units(units),species(species)
+SnsDatPrivate::SnsDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale,RX tau,RX oldsig,int source,int type,int measure,RX X,RX Y,RX relHt,STRING units,STRING species):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),offset(offset),scale(scale),tau(tau),oldsig(oldsig),source(source),type(type),measure(measure),X(X),Y(Y),relHt(relHt),units(units),species(species)
 {}
 
 void SnsDatPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE); // Should really check this
     seqnr = input.read<int>(FILELINE);
     flags = input.read<unsigned int>(FILELINE);
     inreq = input.read<int>(FILELINE);
@@ -582,7 +582,7 @@ void SnsDatPrivate::read(Reader &input)
 STRING SnsDatPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + dataType + '\n';
+    string += TO_STRING(nr) + " sns\n";
     string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
     string += desc + '\n';
     string += TO_STRING(offset) + ' ' + TO_STRING(scale) + ' ' + TO_STRING(tau) + ' ' + TO_STRING(oldsig) + ' ' + TO_STRING(source) + ' ' + TO_STRING(type) + ' ' + TO_STRING(measure) + ' ' + TO_STRING(X) + ' ' + TO_STRING(Y) + ' ' + TO_STRING(relHt) + ' ' + units + ' ' + species + '\n';
@@ -605,13 +605,13 @@ void SnsDatPrivate::readDetails(Reader &input)
     species = input.readString(FILELINE);
 }
 
-SchDatPrivate::SchDatPrivate(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int ps):nr(nr),dataType(dataType),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),ps(ps)
+SchDatPrivate::SchDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int ps):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),ps(ps)
 {}
 
 void SchDatPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE); // Should really check this
     seqnr = input.read<int>(FILELINE);
     flags = input.read<unsigned int>(FILELINE);
     inreq = input.read<int>(FILELINE);
@@ -625,7 +625,7 @@ void SchDatPrivate::read(Reader &input)
 STRING SchDatPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + dataType + '\n';
+    string += TO_STRING(nr) + " sch\n";
     string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
     string += desc + '\n';
     string += TO_STRING(ps) + '\n';
@@ -637,13 +637,13 @@ void SchDatPrivate::readDetails(Reader &input)
     ps = input.read<int>(FILELINE);
 }
 
-SetDatPrivate::SetDatPrivate(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX value):nr(nr),dataType(dataType),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),value(value)
+SetDatPrivate::SetDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX value):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),value(value)
 {}
 
 void SetDatPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE); // Should really check this
     seqnr = input.read<int>(FILELINE);
     flags = input.read<unsigned int>(FILELINE);
     inreq = input.read<int>(FILELINE);
@@ -657,7 +657,7 @@ void SetDatPrivate::read(Reader &input)
 STRING SetDatPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + dataType + '\n';
+    string += TO_STRING(nr) + " set\n";
     string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
     string += desc + '\n';
     string += TO_STRING(value) + '\n';
@@ -669,13 +669,13 @@ void SetDatPrivate::readDetails(Reader &input)
     value = input.readNumber<RX>(FILELINE);
 }
 
-CdvDatPrivate::CdvDatPrivate(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,STRING valuename):nr(nr),dataType(dataType),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),valuename(valuename)
+CdvDatPrivate::CdvDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,STRING valuename):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),valuename(valuename)
 {}
 
 void CdvDatPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE); // Should really check this
     seqnr = input.read<int>(FILELINE);
     flags = input.read<unsigned int>(FILELINE);
     inreq = input.read<int>(FILELINE);
@@ -686,10 +686,10 @@ void CdvDatPrivate::read(Reader &input)
     valuename = input.readLine(FILELINE);
 }
 
-STRING CdvDatPrivate::write()
+STRING CdvDatPrivate::write(STRING datatype)
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + dataType + '\n';
+    string += TO_STRING(nr) + ' ' + datatype + '\n';
     string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
     string += desc + '\n';
     string += valuename + '\n';
@@ -701,13 +701,13 @@ void CdvDatPrivate::readDetails(Reader &input)
     valuename = input.readLine(FILELINE);
 }
 
-LogDatPrivate::LogDatPrivate(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale,int udef,STRING header,STRING units):nr(nr),dataType(dataType),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),offset(offset),scale(scale),udef(udef),header(header),units(units)
+LogDatPrivate::LogDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale,int udef,STRING header,STRING units):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),offset(offset),scale(scale),udef(udef),header(header),units(units)
 {}
 
 void LogDatPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE); // Should really check this
     seqnr = input.read<int>(FILELINE);
     flags = input.read<unsigned int>(FILELINE);
     inreq = input.read<int>(FILELINE);
@@ -725,7 +725,7 @@ void LogDatPrivate::read(Reader &input)
 STRING LogDatPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + dataType + '\n';
+    string += TO_STRING(nr) + " log\n";
     string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
     string += desc + '\n';
     string += TO_STRING(offset) + ' ' + TO_STRING(scale) + ' ' + TO_STRING(udef) + ' ' + header + ' ' + units + '\n';
@@ -741,13 +741,13 @@ void LogDatPrivate::readDetails(Reader &input)
     units = input.readString(FILELINE);
 }
 
-ModDatPrivate::ModDatPrivate(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale):nr(nr),dataType(dataType),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),offset(offset),scale(scale)
+ModDatPrivate::ModDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX offset,RX scale):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),offset(offset),scale(scale)
 {}
 
 void ModDatPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE); // Should really check this
     seqnr = input.read<int>(FILELINE);
     flags = input.read<unsigned int>(FILELINE);
     inreq = input.read<int>(FILELINE);
@@ -762,7 +762,7 @@ void ModDatPrivate::read(Reader &input)
 STRING ModDatPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + dataType + '\n';
+    string += TO_STRING(nr) + " mod\n";
     string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
     string += desc + '\n';
     string += TO_STRING(offset) + ' ' + TO_STRING(scale) + '\n';
@@ -775,13 +775,13 @@ void ModDatPrivate::readDetails(Reader &input)
     scale = input.readNumber<RX>(FILELINE);
 }
 
-HysDatPrivate::HysDatPrivate(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX slack,RX slope,RX oldsig):nr(nr),dataType(dataType),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),slack(slack),slope(slope),oldsig(oldsig)
+HysDatPrivate::HysDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX slack,RX slope,RX oldsig):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),slack(slack),slope(slope),oldsig(oldsig)
 {}
 
 void HysDatPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE); // Should really check this
     seqnr = input.read<int>(FILELINE);
     flags = input.read<unsigned int>(FILELINE);
     inreq = input.read<int>(FILELINE);
@@ -797,7 +797,7 @@ void HysDatPrivate::read(Reader &input)
 STRING HysDatPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + dataType + '\n';
+    string += TO_STRING(nr) + " hys\n";
     string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
     string += desc + '\n';
     string += TO_STRING(slack) + ' ' + TO_STRING(slope) + ' ' + TO_STRING(oldsig) + '\n';
@@ -811,13 +811,13 @@ void HysDatPrivate::readDetails(Reader &input)
     oldsig = input.readNumber<RX>(FILELINE);
 }
 
-DlsDatPrivate::DlsDatPrivate(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int dsincr,int dsdecr):nr(nr),dataType(dataType),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),dsincr(dsincr),dsdecr(dsdecr)
+DlsDatPrivate::DlsDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int dsincr,int dsdecr):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),dsincr(dsincr),dsdecr(dsdecr)
 {}
 
 void DlsDatPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE); // Should really check this
     seqnr = input.read<int>(FILELINE);
     flags = input.read<unsigned int>(FILELINE);
     inreq = input.read<int>(FILELINE);
@@ -832,7 +832,7 @@ void DlsDatPrivate::read(Reader &input)
 STRING DlsDatPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + dataType + '\n';
+    string += TO_STRING(nr) + " dls\n";
     string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
     string += desc + '\n';
     string += TO_STRING(dsincr) + ' ' + TO_STRING(dsdecr) + '\n';
@@ -845,13 +845,13 @@ void DlsDatPrivate::readDetails(Reader &input)
     dsdecr = input.read<int>(FILELINE);
 }
 
-DlxDatPrivate::DlxDatPrivate(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int tauincr,int taudecr):nr(nr),dataType(dataType),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),tauincr(tauincr),taudecr(taudecr)
+DlxDatPrivate::DlxDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int tauincr,int taudecr):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),tauincr(tauincr),taudecr(taudecr)
 {}
 
 void DlxDatPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE); // Should really check this
     seqnr = input.read<int>(FILELINE);
     flags = input.read<unsigned int>(FILELINE);
     inreq = input.read<int>(FILELINE);
@@ -866,7 +866,7 @@ void DlxDatPrivate::read(Reader &input)
 STRING DlxDatPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + dataType + '\n';
+    string += TO_STRING(nr) + " dlx\n";
     string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
     string += desc + '\n';
     string += TO_STRING(tauincr) + ' ' + TO_STRING(taudecr) + '\n';
@@ -879,13 +879,13 @@ void DlxDatPrivate::readDetails(Reader &input)
     taudecr = input.read<int>(FILELINE);
 }
 
-RavDatPrivate::RavDatPrivate(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int tspan):nr(nr),dataType(dataType),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),tspan(tspan)
+RavDatPrivate::RavDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int tspan):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),tspan(tspan)
 {}
 
 void RavDatPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE); // Should really check this
     seqnr = input.read<int>(FILELINE);
     flags = input.read<unsigned int>(FILELINE);
     inreq = input.read<int>(FILELINE);
@@ -899,7 +899,7 @@ void RavDatPrivate::read(Reader &input)
 STRING RavDatPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + dataType + '\n';
+    string += TO_STRING(nr) + " rav\n";
     string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
     string += desc + '\n';
     string += TO_STRING(tspan) + '\n';
@@ -911,13 +911,13 @@ void RavDatPrivate::readDetails(Reader &input)
     tspan = input.read<int>(FILELINE);
 }
 
-SumAvgPrivate::SumAvgPrivate(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,std::vector<int> pc):nr(nr),dataType(dataType),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),pc(pc)
+SumAvgPrivate::SumAvgPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,std::vector<int> pc):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),pc(pc)
 {}
 
 void SumAvgPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE); // Should really check this
     seqnr = input.read<int>(FILELINE);
     flags = input.read<unsigned int>(FILELINE);
     inreq = input.read<int>(FILELINE);
@@ -930,14 +930,14 @@ void SumAvgPrivate::read(Reader &input)
         pc.push_back(input.read<int>(FILELINE));
 }
 
-STRING SumAvgPrivate::write()
+STRING SumAvgPrivate::write(STRING datatype)
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + dataType + '\n';
+    string += TO_STRING(nr) + ' ' + datatype + '\n';
     string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
     string += desc + '\n';
     string += TO_STRING(pc.size()) + '\n';
-    for(unsigned int i=0;i<pc.size();i++)
+    for(VECTOR_SIZE_T i=0;i<pc.size();i++)
         string += TO_STRING(pc[i]) + ' ';
     string += '\n';
     return string;
@@ -950,13 +950,13 @@ void SumAvgPrivate::readDetails(Reader &input)
         pc.push_back(input.read<int>(FILELINE));
 }
 
-BanDatPrivate::BanDatPrivate(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX band):nr(nr),dataType(dataType),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),band(band)
+BanDatPrivate::BanDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX band):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),band(band)
 {}
 
 void BanDatPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE); // Should really check this
     seqnr = input.read<int>(FILELINE);
     flags = input.read<unsigned int>(FILELINE);
     inreq = input.read<int>(FILELINE);
@@ -967,10 +967,10 @@ void BanDatPrivate::read(Reader &input)
     band = input.readNumber<RX>(FILELINE);
 }
 
-STRING BanDatPrivate::write()
+STRING BanDatPrivate::write(STRING datatype)
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + dataType + '\n';
+    string += TO_STRING(nr) + ' ' + datatype + '\n';
     string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
     string += desc + '\n';
     string += TO_STRING(band) + '\n';
@@ -982,13 +982,13 @@ void BanDatPrivate::readDetails(Reader &input)
     band = input.readNumber<RX>(FILELINE);
 }
 
-PcDatPrivate::PcDatPrivate(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX kp):nr(nr),dataType(dataType),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),kp(kp)
+PcDatPrivate::PcDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX kp):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),kp(kp)
 {}
 
 void PcDatPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE); // Should really check this
     seqnr = input.read<int>(FILELINE);
     flags = input.read<unsigned int>(FILELINE);
     inreq = input.read<int>(FILELINE);
@@ -1002,7 +1002,7 @@ void PcDatPrivate::read(Reader &input)
 STRING PcDatPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + dataType + '\n';
+    string += TO_STRING(nr) + " pc1\n";
     string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
     string += desc + '\n';
     string += TO_STRING(kp) + '\n';
@@ -1014,13 +1014,13 @@ void PcDatPrivate::readDetails(Reader &input)
     kp = input.readNumber<RX>(FILELINE);
 }
 
-PicDatPrivate::PicDatPrivate(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX kp,RX ki,RX oldsig,RX olderr):nr(nr),dataType(dataType),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),kp(kp),ki(ki),oldsig(oldsig),olderr(olderr)
+PicDatPrivate::PicDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,RX kp,RX ki,RX oldsig,RX olderr):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),kp(kp),ki(ki),oldsig(oldsig),olderr(olderr)
 {}
 
 void PicDatPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE); // Should really check this
     seqnr = input.read<int>(FILELINE);
     flags = input.read<unsigned int>(FILELINE);
     inreq = input.read<int>(FILELINE);
@@ -1037,7 +1037,7 @@ void PicDatPrivate::read(Reader &input)
 STRING PicDatPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + dataType + '\n';
+    string += TO_STRING(nr) + " pi1\n";
     string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
     string += desc + '\n';
     string += TO_STRING(kp) + ' ' + TO_STRING(ki) + ' ' + TO_STRING(oldsig) + ' ' + TO_STRING(olderr) + '\n';
@@ -1052,13 +1052,13 @@ void PicDatPrivate::readDetails(Reader &input)
     olderr = input.readNumber<RX>(FILELINE);
 }
 
-SupDatPrivate::SupDatPrivate(int nr,STRING dataType,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int def,int se,int in,int out):nr(nr),dataType(dataType),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),def(def),se(se),in(in),out(out)
+SupDatPrivate::SupDatPrivate(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,STRING name,STRING desc,int def,int se,int in,int out):nr(nr),seqnr(seqnr),flags(flags),inreq(inreq),n1(n1),n2(n2),name(name),desc(desc),def(def),se(se),in(in),out(out)
 {}
 
 void SupDatPrivate::read(Reader &input)
 {
     nr = input.read<int>(FILELINE);
-    dataType = input.readString(FILELINE);
+    STRING dataType = input.readString(FILELINE); // Should really check this
     seqnr = input.read<int>(FILELINE);
     flags = input.read<unsigned int>(FILELINE);
     inreq = input.read<int>(FILELINE);
@@ -1075,7 +1075,7 @@ void SupDatPrivate::read(Reader &input)
 STRING SupDatPrivate::write()
 {
     STRING string;
-    string += TO_STRING(nr) + ' ' + dataType + '\n';
+    string += TO_STRING(nr) + " sup\n";
     string += TO_STRING(seqnr) + ' ' + TO_STRING(flags) + ' ' + TO_STRING(inreq) + ' ' + TO_STRING(n1) + ' ' + TO_STRING(n2) + ' ' + name + '\n';
     string += desc + '\n';
     string += TO_STRING(def) + ' ' + TO_STRING(se) + ' ' + TO_STRING(in) + ' ' + TO_STRING(out) + '\n';

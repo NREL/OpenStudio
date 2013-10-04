@@ -371,12 +371,12 @@ public:
 class CtrlDatPrivate : public QSharedData
 {
 public:
-    CtrlDatPrivate(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT);
+    CtrlDatPrivate(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT);
     void read(Reader &reader);
-    std::string write();
+    STRING write(STRING datatype);
     
     int nr;  // node (SketchPad) number (IX); in order from 1 to _nctrl
-    STRING dataType;  // node data type (CS)
+    //STRING dataType;  // node data type (CS)
     int seqnr;  // computation sequence number (IX); set in ContamW
     unsigned int flags;  // flags for offset & scale, time constant, and 1D sensor (U2)
     int inreq;  // number of required inputs (I2) {W}
@@ -389,12 +389,12 @@ public:
 class SnsDatPrivate : public QSharedData
 {
 public:
-    SnsDatPrivate(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX offset=RX_INIT(0),RX scale=RX_INIT(0),RX tau=RX_INIT(0),RX oldsig=RX_INIT(0),int source=0,int type=0,int measure=0,RX X=RX_INIT(0),RX Y=RX_INIT(0),RX relHt=RX_INIT(0),STRING units=STRING_INIT,STRING species=STRING_INIT);
+    SnsDatPrivate(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX offset=RX_INIT(0),RX scale=RX_INIT(0),RX tau=RX_INIT(0),RX oldsig=RX_INIT(0),int source=0,int type=0,int measure=0,RX X=RX_INIT(0),RX Y=RX_INIT(0),RX relHt=RX_INIT(0),STRING units=STRING_INIT,STRING species=STRING_INIT);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // node (SketchPad) number (IX); in order from 1 to _nctrl
-    STRING dataType;  // node data type (CS)
+    //STRING dataType;  // node data type (CS)
     int seqnr;  // computation sequence number (IX); set in ContamW
     unsigned int flags;  // flags for offset & scale, time constant, and 1D sensor (U2)
     int inreq;  // number of required inputs (I2) {W}
@@ -419,12 +419,12 @@ public:
 class SchDatPrivate : public QSharedData
 {
 public:
-    SchDatPrivate(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int ps=0);
+    SchDatPrivate(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int ps=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // node (SketchPad) number (IX); in order from 1 to _nctrl
-    STRING dataType;  // node data type (CS)
+    //STRING dataType;  // node data type (CS)
     int seqnr;  // computation sequence number (IX); set in ContamW
     unsigned int flags;  // flags for offset & scale, time constant, and 1D sensor (U2)
     int inreq;  // number of required inputs (I2) {W}
@@ -438,12 +438,12 @@ public:
 class SetDatPrivate : public QSharedData
 {
 public:
-    SetDatPrivate(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX value=RX_INIT(0));
+    SetDatPrivate(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX value=RX_INIT(0));
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // node (SketchPad) number (IX); in order from 1 to _nctrl
-    STRING dataType;  // node data type (CS)
+    //STRING dataType;  // node data type (CS)
     int seqnr;  // computation sequence number (IX); set in ContamW
     unsigned int flags;  // flags for offset & scale, time constant, and 1D sensor (U2)
     int inreq;  // number of required inputs (I2) {W}
@@ -457,12 +457,12 @@ public:
 class CdvDatPrivate : public QSharedData
 {
 public:
-    CdvDatPrivate(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,STRING valuename=STRING_INIT);
+    CdvDatPrivate(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,STRING valuename=STRING_INIT);
     void read(Reader &reader);
-    STRING write();
+    STRING write(STRING datatype);
     void readDetails(Reader &input);
     int nr;  // node (SketchPad) number (IX); in order from 1 to _nctrl
-    STRING dataType;  // node data type (CS)
+    //STRING dataType;  // node data type (CS)
     int seqnr;  // computation sequence number (IX); set in ContamW
     unsigned int flags;  // flags for offset & scale, time constant, and 1D sensor (U2)
     int inreq;  // number of required inputs (I2) {W}
@@ -476,12 +476,12 @@ public:
 class LogDatPrivate : public QSharedData
 {
 public:
-    LogDatPrivate(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX offset=RX_INIT(0),RX scale=RX_INIT(0),int udef=0,STRING header=STRING_INIT,STRING units=STRING_INIT);
+    LogDatPrivate(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX offset=RX_INIT(0),RX scale=RX_INIT(0),int udef=0,STRING header=STRING_INIT,STRING units=STRING_INIT);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // node (SketchPad) number (IX); in order from 1 to _nctrl
-    STRING dataType;  // node data type (CS)
+    //STRING dataType;  // node data type (CS)
     int seqnr;  // computation sequence number (IX); set in ContamW
     unsigned int flags;  // flags for offset & scale, time constant, and 1D sensor (U2)
     int inreq;  // number of required inputs (I2) {W}
@@ -499,12 +499,12 @@ public:
 class ModDatPrivate : public QSharedData
 {
 public:
-    ModDatPrivate(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX offset=RX_INIT(0),RX scale=RX_INIT(0));
+    ModDatPrivate(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX offset=RX_INIT(0),RX scale=RX_INIT(0));
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // node (SketchPad) number (IX); in order from 1 to _nctrl
-    STRING dataType;  // node data type (CS)
+    //STRING dataType;  // node data type (CS)
     int seqnr;  // computation sequence number (IX); set in ContamW
     unsigned int flags;  // flags for offset & scale, time constant, and 1D sensor (U2)
     int inreq;  // number of required inputs (I2) {W}
@@ -519,12 +519,12 @@ public:
 class HysDatPrivate : public QSharedData
 {
 public:
-    HysDatPrivate(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX slack=RX_INIT(0),RX slope=RX_INIT(0),RX oldsig=RX_INIT(0));
+    HysDatPrivate(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX slack=RX_INIT(0),RX slope=RX_INIT(0),RX oldsig=RX_INIT(0));
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // node (SketchPad) number (IX); in order from 1 to _nctrl
-    STRING dataType;  // node data type (CS)
+    //STRING dataType;  // node data type (CS)
     int seqnr;  // computation sequence number (IX); set in ContamW
     unsigned int flags;  // flags for offset & scale, time constant, and 1D sensor (U2)
     int inreq;  // number of required inputs (I2) {W}
@@ -540,12 +540,12 @@ public:
 class DlsDatPrivate : public QSharedData
 {
 public:
-    DlsDatPrivate(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int dsincr=0,int dsdecr=0);
+    DlsDatPrivate(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int dsincr=0,int dsdecr=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // node (SketchPad) number (IX); in order from 1 to _nctrl
-    STRING dataType;  // node data type (CS)
+    //STRING dataType;  // node data type (CS)
     int seqnr;  // computation sequence number (IX); set in ContamW
     unsigned int flags;  // flags for offset & scale, time constant, and 1D sensor (U2)
     int inreq;  // number of required inputs (I2) {W}
@@ -560,12 +560,12 @@ public:
 class DlxDatPrivate : public QSharedData
 {
 public:
-    DlxDatPrivate(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int tauincr=0,int taudecr=0);
+    DlxDatPrivate(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int tauincr=0,int taudecr=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // node (SketchPad) number (IX); in order from 1 to _nctrl
-    STRING dataType;  // node data type (CS)
+    //STRING dataType;  // node data type (CS)
     int seqnr;  // computation sequence number (IX); set in ContamW
     unsigned int flags;  // flags for offset & scale, time constant, and 1D sensor (U2)
     int inreq;  // number of required inputs (I2) {W}
@@ -580,12 +580,12 @@ public:
 class RavDatPrivate : public QSharedData
 {
 public:
-    RavDatPrivate(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int tspan=0);
+    RavDatPrivate(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int tspan=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // node (SketchPad) number (IX); in order from 1 to _nctrl
-    STRING dataType;  // node data type (CS)
+    //STRING dataType;  // node data type (CS)
     int seqnr;  // computation sequence number (IX); set in ContamW
     unsigned int flags;  // flags for offset & scale, time constant, and 1D sensor (U2)
     int inreq;  // number of required inputs (I2) {W}
@@ -599,12 +599,12 @@ public:
 class SumAvgPrivate : public QSharedData
 {
 public:
-    SumAvgPrivate(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,std::vector<int> pc=std::vector<int>());
+    SumAvgPrivate(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,std::vector<int> pc=std::vector<int>());
     void read(Reader &reader);
-    STRING write();
+    STRING write(STRING datatype);
     void readDetails(Reader &input);
     int nr;  // node (SketchPad) number (IX); in order from 1 to _nctrl
-    STRING dataType;  // node data type (CS)
+    //STRING dataType;  // node data type (CS)
     int seqnr;  // computation sequence number (IX); set in ContamW
     unsigned int flags;  // flags for offset & scale, time constant, and 1D sensor (U2)
     int inreq;  // number of required inputs (I2) {W}
@@ -618,12 +618,12 @@ public:
 class BanDatPrivate : public QSharedData
 {
 public:
-    BanDatPrivate(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX band=RX_INIT(0));
+    BanDatPrivate(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX band=RX_INIT(0));
     void read(Reader &reader);
-    STRING write();
+    STRING write(STRING datatype);
     void readDetails(Reader &input);
     int nr;  // node (SketchPad) number (IX); in order from 1 to _nctrl
-    STRING dataType;  // node data type (CS)
+    //STRING dataType;  // node data type (CS)
     int seqnr;  // computation sequence number (IX); set in ContamW
     unsigned int flags;  // flags for offset & scale, time constant, and 1D sensor (U2)
     int inreq;  // number of required inputs (I2) {W}
@@ -637,12 +637,12 @@ public:
 class PcDatPrivate : public QSharedData
 {
 public:
-    PcDatPrivate(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX kp=RX_INIT(0));
+    PcDatPrivate(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX kp=RX_INIT(0));
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // node (SketchPad) number (IX); in order from 1 to _nctrl
-    STRING dataType;  // node data type (CS)
+    //STRING dataType;  // node data type (CS)
     int seqnr;  // computation sequence number (IX); set in ContamW
     unsigned int flags;  // flags for offset & scale, time constant, and 1D sensor (U2)
     int inreq;  // number of required inputs (I2) {W}
@@ -656,12 +656,12 @@ public:
 class PicDatPrivate : public QSharedData
 {
 public:
-    PicDatPrivate(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX kp=RX_INIT(0),RX ki=RX_INIT(0),RX oldsig=RX_INIT(0),RX olderr=RX_INIT(0));
+    PicDatPrivate(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX kp=RX_INIT(0),RX ki=RX_INIT(0),RX oldsig=RX_INIT(0),RX olderr=RX_INIT(0));
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // node (SketchPad) number (IX); in order from 1 to _nctrl
-    STRING dataType;  // node data type (CS)
+    //STRING dataType;  // node data type (CS)
     int seqnr;  // computation sequence number (IX); set in ContamW
     unsigned int flags;  // flags for offset & scale, time constant, and 1D sensor (U2)
     int inreq;  // number of required inputs (I2) {W}
@@ -678,12 +678,12 @@ public:
 class SupDatPrivate : public QSharedData
 {
 public:
-    SupDatPrivate(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int def=0,int se=0,int in=0,int out=0);
+    SupDatPrivate(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int def=0,int se=0,int in=0,int out=0);
     void read(Reader &reader);
     STRING write();
     void readDetails(Reader &input);
     int nr;  // node (SketchPad) number (IX); in order from 1 to _nctrl
-    STRING dataType;  // node data type (CS)
+    //STRING dataType;  // node data type (CS)
     int seqnr;  // computation sequence number (IX); set in ContamW
     unsigned int flags;  // flags for offset & scale, time constant, and 1D sensor (U2)
     int inreq;  // number of required inputs (I2) {W}
@@ -696,7 +696,6 @@ public:
     int in;  // input sub-node number (IX)
     int out;  // output sub-node number (IX)
 };
-
 
 class PlrOrfPrivate : public QSharedData
 {

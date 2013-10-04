@@ -716,7 +716,6 @@ public:
     virtual int nr() const = 0;
     virtual void setNr(const int nr) = 0;
     virtual STRING dataType() const = 0;
-    virtual void setDataType(const STRING dataType) = 0;
     virtual int seqnr() const = 0;
     virtual void setSeqnr(const int seqnr) = 0;
     virtual unsigned int flags() const = 0;
@@ -733,17 +732,15 @@ public:
     virtual void setDesc(const STRING desc) = 0;
 };
 
-class CONTAM_API CtrlDat : public ControlNode
+class CtrlDat : public ControlNode
 {
 public:
-    CtrlDat(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT);
+    CtrlDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT);
     void read(Reader &input);
     std::string write();
-    
     int nr() const;
     void setNr(const int nr);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    virtual STRING dataType() const=0;
     int seqnr() const;
     void setSeqnr(const int seqnr);
     unsigned int flags() const;
@@ -762,17 +759,169 @@ private:
     QExplicitlySharedDataPointer<CtrlDatPrivate> d;
 };
 
+class CONTAM_API PasDat : public CtrlDat
+{
+public:
+    PasDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+    {}
+    STRING dataType() const {return "pas";}
+};
+
+class CONTAM_API AbsDat : public CtrlDat
+{
+public:
+    AbsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+    {}
+    STRING dataType() const {return "abs";}
+};
+
+class CONTAM_API BinDat : public CtrlDat
+{
+public:
+    BinDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+    {}
+    STRING dataType() const {return "bin";}
+};
+
+class CONTAM_API IntDat : public CtrlDat
+{
+public:
+    IntDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+    {}
+    STRING dataType() const {return "int";}
+};
+
+class CONTAM_API InvDat : public CtrlDat
+{
+public:
+    InvDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+    {}
+    STRING dataType() const {return "inv";}
+};
+
+class CONTAM_API AndDat : public CtrlDat
+{
+public:
+    AndDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+    {}
+    STRING dataType() const {return "and";}
+};
+
+class CONTAM_API OrDat : public CtrlDat
+{
+public:
+    OrDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+    {}
+    STRING dataType() const {return "od";}
+};
+
+class CONTAM_API XorDat : public CtrlDat
+{
+public:
+    XorDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+    {}
+    STRING dataType() const {return "xor";}
+};
+
+class CONTAM_API AddDat : public CtrlDat
+{
+public:
+    AddDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+    {}
+    STRING dataType() const {return "add";}
+};
+
+class CONTAM_API SubDat : public CtrlDat
+{
+public:
+    SubDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+    {}
+    STRING dataType() const {return "sub";}
+};
+
+class CONTAM_API MulDat : public CtrlDat
+{
+public:
+    MulDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+    {}
+    STRING dataType() const {return "mul";}
+};
+
+class CONTAM_API DivDat : public CtrlDat
+{
+public:
+    DivDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+    {}
+    STRING dataType() const {return "div";}
+};
+
+class CONTAM_API LlsDat : public CtrlDat
+{
+public:
+    LlsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+    {}
+    STRING dataType() const {return "lls";}
+};
+
+class CONTAM_API UlsDat : public CtrlDat
+{
+public:
+    UlsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+    {}
+    STRING dataType() const {return "uls";}
+};
+
+class CONTAM_API LlcDat : public CtrlDat
+{
+public:
+    LlcDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+    {}
+    STRING dataType() const {return "llc";}
+};
+
+class CONTAM_API UlcDat : public CtrlDat
+{
+public:
+    UlcDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+    {}
+    STRING dataType() const {return "ulc";}
+};
+
+class CONTAM_API SphDat : public CtrlDat
+{
+public:
+    SphDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT) : CtrlDat(nr,seqnr,flags,inreq,n1,n2,name,desc)
+    {}
+    STRING dataType() const {return "sph";}
+};
+
 class CONTAM_API SnsDat : public ControlNode
 {
 public:
-    SnsDat(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX offset=RX_INIT(0),RX scale=RX_INIT(0),RX tau=RX_INIT(0),RX oldsig=RX_INIT(0),int source=0,int type=0,int measure=0,RX X=RX_INIT(0),RX Y=RX_INIT(0),RX relHt=RX_INIT(0),STRING units=STRING_INIT,STRING species=STRING_INIT);
+    SnsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX offset=RX_INIT(0),RX scale=RX_INIT(0),RX tau=RX_INIT(0),RX oldsig=RX_INIT(0),int source=0,int type=0,int measure=0,RX X=RX_INIT(0),RX Y=RX_INIT(0),RX relHt=RX_INIT(0),STRING units=STRING_INIT,STRING species=STRING_INIT);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
     int nr() const;
     void setNr(const int nr);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "sns";}
     int seqnr() const;
     void setSeqnr(const int seqnr);
     unsigned int flags() const;
@@ -818,14 +967,13 @@ private:
 class CONTAM_API SchDat : public ControlNode
 {
 public:
-    SchDat(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int ps=0);
+    SchDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int ps=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
     int nr() const;
     void setNr(const int nr);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "sch";}
     int seqnr() const;
     void setSeqnr(const int seqnr);
     unsigned int flags() const;
@@ -849,14 +997,13 @@ private:
 class CONTAM_API SetDat : public ControlNode
 {
 public:
-    SetDat(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX value=RX_INIT(0));
+    SetDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX value=RX_INIT(0));
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
     int nr() const;
     void setNr(const int nr);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "set";}
     int seqnr() const;
     void setSeqnr(const int seqnr);
     unsigned int flags() const;
@@ -880,14 +1027,13 @@ private:
 class CONTAM_API CdvDat : public ControlNode
 {
 public:
-    CdvDat(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,STRING valuename=STRING_INIT);
+    CdvDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,STRING valuename=STRING_INIT);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
     int nr() const;
     void setNr(const int nr);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    virtual STRING dataType() const=0;
     int seqnr() const;
     void setSeqnr(const int seqnr);
     unsigned int flags() const;
@@ -908,17 +1054,38 @@ private:
     QExplicitlySharedDataPointer<CdvDatPrivate> d;
 };
 
+class CONTAM_API CvfDat : public CdvDat
+{
+public:
+    CvfDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT,STRING valuename=STRING_INIT) : CdvDat(nr,seqnr,flags,inreq,n1,n2,name,
+                                                                          desc,valuename)
+    {}
+    STRING dataType() const {return "cvf";}
+
+};
+
+class CONTAM_API DvfDat : public CdvDat
+{
+public:
+    DvfDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT,STRING valuename=STRING_INIT) : CdvDat(nr,seqnr,flags,inreq,n1,n2,name,
+                                                                          desc,valuename)
+    {}
+    STRING dataType() const {return "dvf";}
+
+};
+
 class CONTAM_API LogDat : public ControlNode
 {
 public:
-    LogDat(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX offset=RX_INIT(0),RX scale=RX_INIT(0),int udef=0,STRING header=STRING_INIT,STRING units=STRING_INIT);
+    LogDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX offset=RX_INIT(0),RX scale=RX_INIT(0),int udef=0,STRING header=STRING_INIT,STRING units=STRING_INIT);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
     int nr() const;
     void setNr(const int nr);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "log";}
     int seqnr() const;
     void setSeqnr(const int seqnr);
     unsigned int flags() const;
@@ -950,14 +1117,13 @@ private:
 class CONTAM_API ModDat : public ControlNode
 {
 public:
-    ModDat(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX offset=RX_INIT(0),RX scale=RX_INIT(0));
+    ModDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX offset=RX_INIT(0),RX scale=RX_INIT(0));
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
     int nr() const;
     void setNr(const int nr);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "mod";}
     int seqnr() const;
     void setSeqnr(const int seqnr);
     unsigned int flags() const;
@@ -983,14 +1149,13 @@ private:
 class CONTAM_API HysDat : public ControlNode
 {
 public:
-    HysDat(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX slack=RX_INIT(0),RX slope=RX_INIT(0),RX oldsig=RX_INIT(0));
+    HysDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX slack=RX_INIT(0),RX slope=RX_INIT(0),RX oldsig=RX_INIT(0));
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
     int nr() const;
     void setNr(const int nr);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "hys";}
     int seqnr() const;
     void setSeqnr(const int seqnr);
     unsigned int flags() const;
@@ -1018,14 +1183,13 @@ private:
 class CONTAM_API DlsDat : public ControlNode
 {
 public:
-    DlsDat(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int dsincr=0,int dsdecr=0);
+    DlsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int dsincr=0,int dsdecr=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
     int nr() const;
     void setNr(const int nr);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "dls";}
     int seqnr() const;
     void setSeqnr(const int seqnr);
     unsigned int flags() const;
@@ -1051,14 +1215,13 @@ private:
 class CONTAM_API DlxDat : public ControlNode
 {
 public:
-    DlxDat(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int tauincr=0,int taudecr=0);
+    DlxDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int tauincr=0,int taudecr=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
     int nr() const;
     void setNr(const int nr);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const{return "dlx";}
     int seqnr() const;
     void setSeqnr(const int seqnr);
     unsigned int flags() const;
@@ -1084,14 +1247,13 @@ private:
 class CONTAM_API RavDat : public ControlNode
 {
 public:
-    RavDat(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int tspan=0);
+    RavDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int tspan=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
     int nr() const;
     void setNr(const int nr);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "rav";}
     int seqnr() const;
     void setSeqnr(const int seqnr);
     unsigned int flags() const;
@@ -1115,14 +1277,13 @@ private:
 class CONTAM_API SumAvg : public ControlNode
 {
 public:
-    SumAvg(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,std::vector<int> pc=std::vector<int>());
+    SumAvg(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,std::vector<int> pc=std::vector<int>());
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
     int nr() const;
     void setNr(const int nr);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    virtual STRING dataType() const {return "sum";}
     int seqnr() const;
     void setSeqnr(const int seqnr);
     unsigned int flags() const;
@@ -1143,17 +1304,46 @@ private:
     QExplicitlySharedDataPointer<SumAvgPrivate> d;
 };
 
-class CONTAM_API BanDat : public ControlNode
+class CONTAM_API AvgDat : public SumAvg
 {
 public:
-    BanDat(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX band=RX_INIT(0));
+    AvgDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT,std::vector<int> pc=std::vector<int>()) : SumAvg(nr,seqnr,flags,inreq,n1,
+                                                                                    n2,name,desc,pc)
+    {}
+    STRING dataType() const {return "avg";}
+};
+
+class CONTAM_API MaxDat : public SumAvg
+{
+public:
+    MaxDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT,std::vector<int> pc=std::vector<int>()) : SumAvg(nr,seqnr,flags,inreq,n1,
+                                                                                    n2,name,desc,pc)
+    {}
+    STRING dataType() const {return "max";}
+};
+
+class CONTAM_API MinDat : public SumAvg
+{
+public:
+    MinDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT,std::vector<int> pc=std::vector<int>()) : SumAvg(nr,seqnr,flags,inreq,n1,
+                                                                                    n2,name,desc,pc)
+    {}
+    STRING dataType() const {return "min";}
+};
+
+class BanDat : public ControlNode
+{
+public:
+    BanDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX band=RX_INIT(0));
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
     int nr() const;
     void setNr(const int nr);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    virtual STRING dataType() const=0;
     int seqnr() const;
     void setSeqnr(const int seqnr);
     unsigned int flags() const;
@@ -1174,17 +1364,34 @@ private:
     QExplicitlySharedDataPointer<BanDatPrivate> d;
 };
 
+class CONTAM_API LbsDat : public BanDat
+{
+public:
+    LbsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT,RX band=RX_INIT(0)) : BanDat(nr,seqnr,flags,inreq,n1,n2,name,desc,band)
+    {}
+    STRING dataType() const {return "lbs";}
+};
+
+class CONTAM_API UbsDat : public BanDat
+{
+public:
+    UbsDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,
+           STRING desc=STRING_INIT,RX band=RX_INIT(0)) : BanDat(nr,seqnr,flags,inreq,n1,n2,name,desc,band)
+    {}
+    virtual STRING dataType() const {return "ubs";}
+};
+
 class CONTAM_API PcDat : public ControlNode
 {
 public:
-    PcDat(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX kp=RX_INIT(0));
+    PcDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX kp=RX_INIT(0));
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
     int nr() const;
     void setNr(const int nr);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "pc1";}
     int seqnr() const;
     void setSeqnr(const int seqnr);
     unsigned int flags() const;
@@ -1208,14 +1415,13 @@ private:
 class CONTAM_API PicDat : public ControlNode
 {
 public:
-    PicDat(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX kp=RX_INIT(0),RX ki=RX_INIT(0),RX oldsig=RX_INIT(0),RX olderr=RX_INIT(0));
+    PicDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,RX kp=RX_INIT(0),RX ki=RX_INIT(0),RX oldsig=RX_INIT(0),RX olderr=RX_INIT(0));
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
     int nr() const;
     void setNr(const int nr);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "pi1";}
     int seqnr() const;
     void setSeqnr(const int seqnr);
     unsigned int flags() const;
@@ -1245,14 +1451,13 @@ private:
 class CONTAM_API SupDat : public ControlNode
 {
 public:
-    SupDat(int nr=0,STRING dataType=STRING_INIT,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int def=0,int se=0,int in=0,int out=0);
+    SupDat(int nr=0,int seqnr=0,unsigned int flags=0,int inreq=0,int n1=0,int n2=0,STRING name=STRING_INIT,STRING desc=STRING_INIT,int def=0,int se=0,int in=0,int out=0);
     void read(Reader &input);
     STRING write();
     void readDetails(Reader &input);
     int nr() const;
     void setNr(const int nr);
-    STRING dataType() const;
-    void setDataType(const STRING dataType);
+    STRING dataType() const {return "sup";}
     int seqnr() const;
     void setSeqnr(const int seqnr);
     unsigned int flags() const;
