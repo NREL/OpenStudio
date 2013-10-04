@@ -42,6 +42,7 @@ LostCloudConnectionDialog::LostCloudConnectionDialog(bool internetAvailable,
   : OSDialog(false, parent),
     m_clearCloudSession(false)
 {
+  this->setModal(true);
   this->setWindowTitle("Lost Cloud Connection");
   this->setSizeHint(QSize(500,300));
   createWidgets(internetAvailable,authenticated,cloudRunning);
