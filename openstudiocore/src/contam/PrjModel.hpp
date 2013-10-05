@@ -220,6 +220,7 @@ private:
     template <class T, template <class T> class U> STRING writeSectionVector(U<QSharedPointer<T> > vector,
                                                                              STRING label=STRING_INIT,
                                                                              int start=0);
+template <class T> STRING writeArray(VECTOR_TYPE<T> vector, STRING label=STRING_INIT, int start=0);
 
     bool m_valid;
 
@@ -278,6 +279,25 @@ template <class T, template <class T> class U> STRING Model::writeSectionVector(
     }
     string += "-999\n";
     return string;
+}
+
+template <class T> STRING Model::writeArray(VECTOR_TYPE<T> vector, STRING label, int start)
+{
+    STRING string;
+    int number = vector.size()-start;
+    if(IS_NULL(label))
+    {
+        string += TO_STRING(number) + '\n';
+    }
+    else
+    {
+        string += TO_STRING(number) + " ! " + label + '\n';
+    }
+    for(unsigned int i=start;i<vector.size();i++)
+    {
+        string += ' ' + TO_STRING(vector[i]);
+    }
+    return string +'\n';
 }
 
 } // prj

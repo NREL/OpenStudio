@@ -8,8 +8,6 @@ SET( ${target_name}_src
   InfiltrationCalculator.cpp
   PrjReader.hpp
   PrjReader.cpp
-  PrjWriter.hpp
-  PrjWriter.cpp
   SimTxt.hpp
   SimTxt.cpp
   WindPressure.hpp

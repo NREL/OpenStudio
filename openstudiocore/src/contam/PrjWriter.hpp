@@ -31,7 +31,7 @@
 namespace openstudio {
 namespace contam {
 namespace prj {
-
+/*
 template <class T> STRING writeSection(VECTOR_TYPE<QSharedPointer<T> > vector, STRING label=STRING_INIT, int start=0)
 {
     QString string;
@@ -154,7 +154,7 @@ template <class T> STRING writeArray(VECTOR_TYPE<T> vector, STRING label=STRING_
 }
 
 QString writeEmptySection(QString label=QString());
-
+*/
 } // prj
 } // contam
 } // openstudio

@@ -23,7 +23,7 @@ namespace openstudio {
 namespace contam {
 namespace prj
 {
-
+/*
 QString writeEmptySection(QString label)
 {
     QString string;
@@ -33,7 +33,7 @@ QString writeEmptySection(QString label)
         string += QString("0 ! %1\n").arg(label);
     return string + QString("-999\n");
 }
-
+*/
 } // prj
 } // contam
 } // openstudio
