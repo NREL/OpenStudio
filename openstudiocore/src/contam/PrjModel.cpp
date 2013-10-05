@@ -18,7 +18,6 @@
  **********************************************************************/
 #include "PrjModel.hpp"
 #include "PrjReader.hpp"
-#include "PrjWriter.hpp"
 #include <QFile>
 
 namespace openstudio {
@@ -150,7 +149,7 @@ STRING Model::toString()
     // Section 5: Week Schedules
     output += writeSectionVector(m_weekSchedules,"week-schedules:");
     // Section 6: Wind Pressure Profiles
-    output += writeSectionVector(m_windPressureProfiles,"wind pressure profiles");
+    output += writeSectionVector(m_windPressureProfiles,"wind pressure profiles:");
     // Section 7: Kinetic Reactions
     output += m_unsupported["KineticReaction"];
     // Section 8a: Filter Elements
