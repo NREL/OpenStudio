@@ -6561,8 +6561,8 @@ OS:Refrigeration:SecondarySystem,
         \default General
 
 OS:Refrigeration:WalkIn,
-        \extensible:12
-        \min-fields 29
+        \extensible:1
+        \min-fields 23
   A1,   \field Handle
         \type handle
         \required-field
@@ -6694,21 +6694,34 @@ OS:Refrigeration:WalkIn,
         \note Some examples:
         \note R15 is U 0.3785 W/m2-K
         \note R5 is U 1.136 W/m2-K
-  A11,  \field Zone 1 Name
+  A11;  \field WalkIn Zone Boundary
+        \begin-extensible
+        \required-field
+        \type object-list
+        \object-list RefrigerationWalkInZoneBoundaryNames
+
+OS:Refrigeration:WalkIn:ZoneBoundary,
+        \min-fields 9
+  A1,   \field Handle
+        \type handle
+        \required-field
+  A2,   \field Name
+        \type alpha
+        \required-field
+        \reference RefrigerationWalkInZoneBoundaryNames
+  A3,   \field Zone Name
         \note This must be a controlled zone and appear in a ZoneHVAC:EquipmentConnections object.
         \begin-extensible
         \required-field
         \type object-list
         \object-list ThermalZoneNames
-        \note The walkin cooler can face multiple zones.  The heat exchange with each zone
-        \note    must be input separately
-  N13,  \field Total Insulated Surface Area Facing Zone 1
+  N1,   \field Total Insulated Surface Area Facing Zone
         \type real
         \required-field
         \units m2
         \minimum> 0.0
         \note Area should include walls and ceilings, but not doors
-  N14,  \field Insulated Surface U-Value Facing Zone 1
+  N2,   \field Insulated Surface U-Value Facing Zone
         \type real
         \units W/m2-K
         \default 0.3154
@@ -6718,22 +6731,22 @@ OS:Refrigeration:WalkIn,
         \note Some examples:
         \note R15 is U 0.3785 W/m2-K
         \note R5 is U 1.136 W/m2-K
-  N15,  \field Area of Glass Reach In Doors Facing Zone 1
+  N3,   \field Area of Glass Reach In Doors Facing Zone
         \type real
         \units m2
         \default 0.0
-  N16,  \field Height of Glass Reach In Doors Facing Zone 1
+  N4,   \field Height of Glass Reach In Doors Facing Zone
         \type real
         \units m
         \default 1.5
-  N17,  \field Glass Reach In Door U Value Facing Zone 1
+  N5,   \field Glass Reach In Door U Value Facing Zone
         \type real
         \units W/m2-K
         \minimum> 0.0
         \default 1.136
         \note The default value corresponds to R5
         \note To convert other Archaic American R-values to U, divide 5.678 by the R-value
-  A12,  \field Glass Reach In Door Opening Schedule Name Facing Zone 1
+  A4,   \field Glass Reach In Door Opening Schedule Name Facing Zone
         \type object-list
         \object-list ScheduleNames
         \note Schedule values should all be between 0.0 and 1.0.
@@ -6741,15 +6754,15 @@ OS:Refrigeration:WalkIn,
         \note  then the schedule would hold the value 0.3 during working hours
         \note  and 0 during other hours
         \note  If no schedule name is entered, default is 5% open time during all hours
-  N18,  \field Area of Stocking Doors Facing Zone 1
+  N6,   \field Area of Stocking Doors Facing Zone
         \type real
         \units m2
         \default 0.0
-  N19,  \field Height of Stocking Doors Facing Zone 1
+  N7,   \field Height of Stocking Doors Facing Zone
         \type real
         \units m
         \default 3.0
-  N20,  \field Stocking Door U Value Facing Zone 1
+  N8,   \field Stocking Door U Value Facing Zone
         \type real
         \units W/m2-K
         \minimum> 0.0
@@ -6759,7 +6772,7 @@ OS:Refrigeration:WalkIn,
         \note Some examples:
         \note R5 is U 1.136 W/m2-K
         \note R18 is U 0.3154 W/m2-K
-  A13,  \field Stocking Door Opening Schedule Name Facing Zone 1
+  A5,   \field Stocking Door Opening Schedule Name Facing Zone
         \type object-list
         \object-list ScheduleNames
         \note Schedule values should all be between 0.0 and 1.0.
@@ -6767,7 +6780,7 @@ OS:Refrigeration:WalkIn,
         \note  then the schedule would hold the value 0.3 during working hours
         \note  and 0 during other hours
         \note  If no schedule name is entered, default is 5% open time during all hours
-  A14;  \field Stocking Door Opening Protection Type Facing Zone 1
+  A6;   \field Stocking Door Opening Protection Type Facing Zone
         \type choice
         \key None
         \key AirCurtain

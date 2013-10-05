@@ -30,7 +30,9 @@ namespace model {
 class ModelObjectList;
 class RefrigerationCase;
 class RefrigerationCompressor;
-//class RefrigerationWalkin;
+class RefrigerationWalkin;
+class RefrigerationSecondarySystem;
+//class RefrigerationCondenserCascade;
 //class RefrigerationAllTypesCondenser;
 //class RefrigerationSubcooler;
 class ThermalZone;
@@ -76,12 +78,16 @@ namespace detail {
 
     std::vector<RefrigerationCase> cases() const;
 
-    //std::vector<RefrigerationWalkin> walkins() const;
+    std::vector<RefrigerationWalkin> walkins() const;
 
     std::vector<RefrigerationCompressor> compressors() const;
 
+    std::vector<RefrigerationSecondarySystem> secondarySystemLoads() const;
+
+    //std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads() const;
+
     template <class T>
-    std::vector<T> casesOrWalkins() const;
+    std::vector<T> listTemplate(const boost::optional<ModelObjectList>& modelObjectList) const;
 
     // TODO: Check return type. From object lists, some candidates are: ModelObjectList.
     boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList() const;
@@ -140,15 +146,14 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    //void removeAllCasesOrWalkins(const std::vector<ModelObject>& modelObjects);
     template <class T>
-    void removeAllCasesOrWalkins();
+    void removeAllTemplate( const boost::optional<ModelObjectList>& modelObjectList );
 
     template <class T>
-    void removeCaseOrWalkin( const T & refrigerationCaseOrWalkin );
+    void removeTemplate( const T & modelObject, const boost::optional<ModelObjectList>& modelObjectList );
 
     template <class T>
-    bool addCaseOrWalkin( const T & refrigerationCaseOrWalkin );
+    bool addTemplate( const T & modelObject, const boost::optional<ModelObjectList>& modelObjectList );
 
     bool addCase( const RefrigerationCase & refrigerationCase);
 
@@ -156,17 +161,29 @@ namespace detail {
 
     void removeAllCases();
 
-    //bool addWalkin( const RefrigerationWalkin & refrigerationWalkin);
+    bool addWalkin( const RefrigerationWalkin & refrigerationWalkin);
 
-    //void removeWalkin( RefrigerationWalkin & refrigerationWalkin);
+    void removeWalkin( RefrigerationWalkin & refrigerationWalkin);
 
-    //void removeAllWalkins();
+    void removeAllWalkins();
 
     bool addCompressor( const RefrigerationCompressor & compressor);
 
     void removeCompressor( const RefrigerationCompressor & compressor);
 
     void removeAllCompressors();
+
+    bool addSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
+
+    void removeSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
+
+    void removeAllSecondarySystemLoads();
+
+    //bool addCascadeCondenserLoad( const RefrigerationCondenserCascade & refrigerationCondenserCascade);
+
+    //void removeCascadeCondenserLoad( const RefrigerationCondenserCascade & refrigerationCondenserCascade);
+
+    //void removeAllCascadeCondenserLoads();
 
     // TODO: Check argument type. From object lists, some candidates are: ModelObjectList.
     bool setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList);

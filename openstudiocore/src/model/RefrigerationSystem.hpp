@@ -32,7 +32,9 @@ class ModelObjectList;
 //class RefrigerationAllTypesCondenser;
 class RefrigerationCase;
 class RefrigerationCompressor;
-//class RefrigerationWalkin;
+class RefrigerationWalkin;
+class RefrigerationSecondarySystem;
+//class RefrigerationCondenserCascade;
 //class RefrigerationSubcooler;
 class ThermalZone;
 
@@ -76,13 +78,13 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   std::vector<RefrigerationCase> cases() const;
 
-  //bool addWalkin( const RefrigerationWalkin & refrigerationWalkin);
+  bool addWalkin( const RefrigerationWalkin & refrigerationWalkin);
 
-  //void removeWalkin( RefrigerationWalkin & refrigerationWalkin);
+  void removeWalkin( RefrigerationWalkin & refrigerationWalkin);
 
-  //void removeAllWalkins();
+  void removeAllWalkins();
 
-  //std::vector<RefrigerationWalkin> walkins();
+  std::vector<RefrigerationWalkin> walkins();
 
   bool addCompressor( const RefrigerationCompressor & compressor);
 
@@ -91,6 +93,22 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   void removeAllCompressors();
 
   std::vector<RefrigerationCompressor> compressors() const;
+
+  bool addSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
+
+  void removeSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
+
+  void removeAllSecondarySystemLoads();
+
+  std::vector<RefrigerationSecondarySystem> secondarySystemLoads() const;
+
+  //bool addCascadeCondenserLoad( const RefrigerationCondenserCascade & refrigerationCondenserCascade);
+
+  //void removeCascadeCondenserLoad( const RefrigerationCondenserCascade & refrigerationCondenserCascade);
+
+  //void removeAllCascadeCondenserLoads();
+
+  //std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads() const;
 
   /** @name Getters */
   //@{

@@ -22,12 +22,16 @@
 MODELOBJECT_TEMPLATES(RefrigerationCase);
 MODELOBJECT_TEMPLATES(RefrigerationCompressor);
 MODELOBJECT_TEMPLATES(RefrigerationCondenserAirCooled);
+MODELOBJECT_TEMPLATES(RefrigerationSecondarySystem);
 MODELOBJECT_TEMPLATES(RefrigerationSystem);
+MODELOBJECT_TEMPLATES(RefrigerationWalkIn);
 
 SWIG_MODELOBJECT(RefrigerationCase);
 SWIG_MODELOBJECT(RefrigerationCompressor);
 SWIG_MODELOBJECT(RefrigerationCondenserAirCooled);
+SWIG_MODELOBJECT(RefrigerationSecondarySystem);
 SWIG_MODELOBJECT(RefrigerationSystem);
+SWIG_MODELOBJECT(RefrigerationWalkIn);
 
 #if defined SWIGCSHARP
 

@@ -322,7 +322,9 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(RefrigerationCase);
     REGISTER_CONSTRUCTOR(RefrigerationCompressor);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserAirCooled);
+    REGISTER_CONSTRUCTOR(RefrigerationSecondarySystem);
     REGISTER_CONSTRUCTOR(RefrigerationSystem);
+    REGISTER_CONSTRUCTOR(RefrigerationWalkIn);
     REGISTER_CONSTRUCTOR(RenderingColor);
     REGISTER_CONSTRUCTOR(RoofVegetation);
     REGISTER_CONSTRUCTOR(RunPeriod);
@@ -401,7 +403,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);  
     REGISTER_CONSTRUCTOR(ZoneHVACIdealLoadsAirSystem);
     REGISTER_CONSTRUCTOR(ZoneHVACFourPipeFanCoil);
-				REGISTER_CONSTRUCTOR(ZoneHVACLowTemperatureRadiantElectric);
+	REGISTER_CONSTRUCTOR(ZoneHVACLowTemperatureRadiantElectric);
     REGISTER_CONSTRUCTOR(ZoneHVACLowTempRadiantConstFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACLowTempRadiantVarFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACPackagedTerminalHeatPump);
@@ -579,7 +581,9 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(RefrigerationCase);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCompressor);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserAirCooled);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationSecondarySystem);
     REGISTER_COPYCONSTRUCTORS(RefrigerationSystem);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationWalkIn);
     REGISTER_COPYCONSTRUCTORS(RenderingColor);
     REGISTER_COPYCONSTRUCTORS(RoofVegetation);
     REGISTER_COPYCONSTRUCTORS(RunPeriod);
@@ -658,7 +662,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveWater);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACIdealLoadsAirSystem);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACFourPipeFanCoil);
-				REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTemperatureRadiantElectric);
+	REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTemperatureRadiantElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTempRadiantConstFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTempRadiantVarFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACPackagedTerminalHeatPump);

@@ -157,7 +157,9 @@
 #include <model/RefrigerationCase.hpp>
 #include <model/RefrigerationCompressor.hpp>
 #include <model/RefrigerationCondenserAirCooled.hpp>
+#include <model/RefrigerationSecondarySystem.hpp>
 #include <model/RefrigerationSystem.hpp>
+#include <model/RefrigerationWalkIn.hpp>
 #include <model/RenderingColor.hpp>
 #include <model/RoofVegetation.hpp>
 #include <model/RunPeriod.hpp>
@@ -382,7 +384,9 @@
 #include <model/RefrigerationCase_Impl.hpp>
 #include <model/RefrigerationCompressor_Impl.hpp>
 #include <model/RefrigerationCondenserAirCooled_Impl.hpp>
+#include <model/RefrigerationSecondarySystem_Impl.hpp>
 #include <model/RefrigerationSystem_Impl.hpp>
+#include <model/RefrigerationWalkIn_Impl.hpp>
 #include <model/RenderingColor_Impl.hpp>
 #include <model/RoofVegetation_Impl.hpp>
 #include <model/RunPeriod_Impl.hpp>
