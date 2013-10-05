@@ -54,8 +54,7 @@ namespace detail {
       m_runOptions(runOptions),
       m_numOSJobsInIteration(0),
       m_numOSJobsComplete(0),
-      m_dakotaStarted(false),
-      m_status(AnalysisStatus::Idle)
+      m_dakotaStarted(false)
   {}
 
   analysis::Analysis CurrentAnalysis_Impl::analysis() const {
@@ -93,11 +92,6 @@ namespace detail {
 
   boost::optional<runmanager::JobErrors> CurrentAnalysis_Impl::dakotaJobErrors() const {
     return m_dakotaJobErrors;
-  }
-
-  AnalysisStatus CurrentAnalysis_Impl::status() const
-  {
-    return m_status;
   }
 
   bool CurrentAnalysis_Impl::connect(const std::string& signal,
@@ -344,13 +338,6 @@ namespace detail {
     }
   }
 
-  void CurrentAnalysis_Impl::setStatus(AnalysisStatus status) {
-    if (m_status != status){
-      m_status = status;
-      emit analysisStatusChanged(m_status);
-    }
-  }
-
 } // detail
 
 CurrentAnalysis::CurrentAnalysis(const analysis::Analysis& analysis,
@@ -393,11 +380,6 @@ int CurrentAnalysis::totalNumJobsInOSIteration() const {
 
 boost::optional<runmanager::JobErrors> CurrentAnalysis::dakotaJobErrors() const {
   return getImpl()->dakotaJobErrors();
-}
-
-AnalysisStatus CurrentAnalysis::status() const
-{
-  return getImpl()->status();
 }
 
 bool CurrentAnalysis::operator==(const CurrentAnalysis& other) const {

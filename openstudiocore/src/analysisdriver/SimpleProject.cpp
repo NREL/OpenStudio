@@ -22,6 +22,7 @@
 
 #include <analysisdriver/CurrentAnalysis.hpp>
 #include <analysisdriver/AnalysisRunOptions.hpp>
+#include <analysisdriver/AnalysisDriverEnums.hpp>
 
 #include <project/ProjectDatabase.hpp>
 #include <project/AnalysisRecord.hpp>
@@ -321,6 +322,11 @@ namespace detail {
 
   bool SimpleProject_Impl::isRunning() const {
     return analysisDriver().isRunning();
+  }
+
+  AnalysisStatus SimpleProject_Impl::status() const
+  {
+    return analysisDriver().status();
   }
 
   boost::optional<CloudAnalysisDriver> SimpleProject_Impl::cloudAnalysisDriver() const {
@@ -1963,6 +1969,10 @@ bool SimpleProject::analysisIsLoaded() const {
 
 bool SimpleProject::isRunning() const {
   return getImpl()->isRunning();
+}
+
+AnalysisStatus SimpleProject::status() const {
+  return getImpl()->status();
 }
 
 boost::optional<CloudAnalysisDriver> SimpleProject::cloudAnalysisDriver() const {

@@ -138,6 +138,8 @@ namespace detail {
     /** Returns true if the analysis() is being run by analysisDriver(). */
     bool isRunning() const;
 
+    AnalysisStatus status() const;
+
     /** If there is a CloudSession, returns a CloudAnalysisDriver for this project. */
     boost::optional<CloudAnalysisDriver> cloudAnalysisDriver() const;
 

@@ -45,6 +45,7 @@ namespace analysisdriver {
 
 class AnalysisRunOptions;
 class CurrentAnalysis;
+class AnalysisStatus;
 
 namespace detail {
 
@@ -104,6 +105,8 @@ class ANALYSISDRIVER_API AnalysisDriver {
 
   /** Returns true if this AnalysisDriver is running (is actively queuing and monitoring jobs). */
   bool isRunning() const;
+
+  AnalysisStatus status() const;
 
   /** Call this method between .run calls and code that should execute once the analysis is
    *  finished. If no argument is specified, will run to completion and return true. If a

@@ -218,6 +218,8 @@ namespace detail {
 
       m_requestRun = OSServer(*url);
 
+      setStatus(AnalysisStatus::Starting);
+
       // make sure the server is available
       LOG(Debug,"Checking that server is available.");
       bool test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(availableForRun(bool)),Qt::QueuedConnection);
@@ -256,6 +258,8 @@ namespace detail {
     if (OptionalUrl url = session().serverUrl()) {
 
       m_requestStop = OSServer(*url);
+
+      setStatus(AnalysisStatus::Stopping);
 
       // request analysis to stop
       bool test = m_requestStop->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisStopped(bool)),Qt::QueuedConnection);
@@ -1129,6 +1133,7 @@ namespace detail {
   void CloudAnalysisDriver_Impl::registerRunRequestFailure() {
     appendErrorsAndWarnings(*m_requestRun);
     m_requestRun.reset();
+    setStatus(AnalysisStatus::Error);
     emit runRequestComplete(false);
   }
 
@@ -1213,6 +1218,7 @@ namespace detail {
     }
     else {
       logError("Cannot start monitoring this run because the CloudSession has been terminated.");
+      setStatus(AnalysisStatus::Error);
       emit runRequestComplete(false);
       return success;
     }
@@ -1238,6 +1244,8 @@ namespace detail {
     appendErrorsAndWarnings(*m_requestRun); // keep any warnings registered with this server
     m_requestRun.reset();
 
+    setStatus(AnalysisStatus::Running);
+
     return success;
   }
 
@@ -1245,6 +1253,7 @@ namespace detail {
     appendErrorsAndWarnings(*m_monitorDataPoints);
     m_monitorDataPoints.reset();
     OS_ASSERT(m_postQueue.empty());
+    setStatus(AnalysisStatus::Error);
     emit runRequestComplete(false);
   }
 
@@ -1402,6 +1411,7 @@ namespace detail {
   void CloudAnalysisDriver_Impl::registerStopRequestFailure() {
     appendErrorsAndWarnings(*m_requestStop);
     m_requestStop.reset();
+    setStatus(AnalysisStatus::Error);
     emit stopRequestComplete(false);
   }
 
@@ -1418,6 +1428,7 @@ namespace detail {
         m_requestStop.reset();
         m_lastStopSuccess = true;
 
+        setStatus(AnalysisStatus::Idle);
         emit stopRequestComplete(true);
         emit analysisStopped(project().analysis().uuid());
       }
@@ -1428,6 +1439,7 @@ namespace detail {
               << " (total number of points in run).");
         }
         m_lastRunSuccess = true;
+        setStatus(AnalysisStatus::Idle);
         emit runRequestComplete(true);
         emit analysisComplete(project().analysis().uuid());
       }

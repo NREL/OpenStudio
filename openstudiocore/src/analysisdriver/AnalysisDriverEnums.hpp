@@ -47,7 +47,6 @@ OPENSTUDIO_ENUM(AnalysisStatus,
   ((Starting))
   ((Running))
   ((Stopping))
-  ((Complete))
   ((Error)));
   
 } // analysisdriver
