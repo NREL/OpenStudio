@@ -245,6 +245,7 @@ namespace detail {
       UUIDVector::iterator it = std::find(m_stopping.begin(),m_stopping.end(),analysisUUID);
       m_stopping.erase(it);
 
+      // this will be caught by catchAnalysisCompleteOrStopped which will set status
       emit analysisStopped(analysisUUID);
     }
     else {
@@ -482,6 +483,8 @@ namespace detail {
         openstudio::UUID analysisUUID = currentAnalysis->analysis().uuid();
         m_currentAnalyses.erase(currentAnalysis);
         LOG(Debug,"Analysis " << toString(analysisUUID) << "complete. The Dakota job has completed.");
+        
+        // this will be caught by catchAnalysisCompleteOrStopped which will set status
         emit analysisComplete(analysisUUID);
       }
     }
@@ -563,6 +566,8 @@ namespace detail {
       if (analysisCompleteFlag) {
         m_currentAnalyses.erase(currentAnalysis);
         LOG(Debug, "Analysis " << toString(analysis.uuid()) << " complete. There are no more data points to run.");
+        
+        // this will be caught by catchAnalysisCompleteOrStopped which will set status
         emit analysisComplete(analysis.uuid());
       }
       return;

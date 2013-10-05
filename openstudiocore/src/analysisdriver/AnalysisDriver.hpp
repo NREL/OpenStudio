@@ -51,6 +51,7 @@ namespace detail {
 
   class AnalysisDriver_Impl;
   class CurrentAnalysis_Impl;
+  class SimpleProject_Impl;
 
 } // detail
 
@@ -141,6 +142,7 @@ class ANALYSISDRIVER_API AnalysisDriver {
 
   friend class detail::AnalysisDriver_Impl;
   friend class detail::CurrentAnalysis_Impl;
+  friend class detail::SimpleProject_Impl;
 
   explicit AnalysisDriver(boost::shared_ptr<detail::AnalysisDriver_Impl> impl);
 

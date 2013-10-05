@@ -1418,6 +1418,7 @@ namespace detail {
   void CloudAnalysisDriver_Impl::registerDownloadDetailsRequestFailure() {
     appendErrorsAndWarnings(*m_checkForResultsToDownload);
     m_checkForResultsToDownload.reset();
+    //setStatus(AnalysisStatus::Error); // DLM: should we do this?
     emit detailedDownloadRequestsComplete(false);
   }
 

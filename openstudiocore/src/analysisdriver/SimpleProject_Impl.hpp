@@ -70,6 +70,7 @@ namespace project {
 namespace analysisdriver {
 
 class SimpleProjectOptions;
+class AnalysisStatus;
 
 namespace detail {
 
@@ -306,6 +307,10 @@ namespace detail {
    public slots:
 
     void onSeedChanged() const;
+
+   signals:
+
+    void analysisStatusChanged(AnalysisStatus newStatus) const;
 
    private:
     REGISTER_LOGGER("openstudio.analysisdriver.SimpleProject");
